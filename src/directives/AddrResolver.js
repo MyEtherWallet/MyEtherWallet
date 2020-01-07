@@ -2,7 +2,6 @@ import { toChecksumAddress } from '@/helpers/addressUtils';
 import WAValidator from 'wallet-address-validator';
 import { Misc } from '@/helpers';
 import Resolution, { ResolutionError } from '@unstoppabledomains/resolution';
-const resolution = new Resolution();
 
 const AddrResolver = {
   bind: function(el, binding, vnode) {
@@ -11,6 +10,7 @@ const AddrResolver = {
       ? vnode.context.$parent.currency
       : network.type.name;
     let address = '';
+    const resolution = new Resolution({ ens: { network: network } });
     vnode.context.$parent.$watch('$store.state.network', function(e) {
       network = e;
       parentCurrency = e.type.name;
@@ -78,15 +78,13 @@ const AddrResolver = {
       try {
         const address = await resolution.addressOrThrow(domain, parentCurrency);
         if (!checkDarklist(address)) {
-          const addCheck = WAValidator.validate(address, parentCurrency);
-          if (addCheck) {
-            _this.isValidAddress = addCheck;
-            _this.hexAddress = toChecksumAddress(address);
-            removeElements();
-            messagePar.classList.add('resolver-addr');
-            messagePar.innerText = _this.hexAddress;
-            el.parentNode.parentNode.appendChild(messagePar);
-          }
+          _this.isValidAddress = true;
+          _this.hexAddress =
+            parentCurrency === 'ETH' ? toChecksumAddress(address) : address;
+          removeElements();
+          messagePar.classList.add('resolver-addr');
+          messagePar.innerText = _this.hexAddress;
+          el.parentNode.parentNode.appendChild(messagePar);
         }
       } catch (err) {
         removeElements();
