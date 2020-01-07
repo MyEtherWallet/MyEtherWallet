@@ -29,11 +29,11 @@
     "unsubscribe": "Отписаться"
   },
   "manage-funds": {
-    "add-funds": "Add Funds",
-    "withdraw-funds": "Withdraw Funds",
+    "add-funds": "Пополнить счёт",
+    "withdraw-funds": "Вывод средств",
     "avail-balance": "Доступный баланс",
-    "how-much-eth-add": "How much ETH do you want to add ?",
-    "how-much-eth-withdraw": "How much ETH do you want to withdraw ?",
+    "how-much-eth-add": "Сколько ETH вы хотите внести ?",
+    "how-much-eth-withdraw": "Сколько ETH вы хотите вывести ?",
     "subscription-fund": "Ваш фонд подписки",
     "should-update": "должен быть обновлен в течение минуты.",
     "in-wallet": "должен быть в вашем кошельке в течение минуты.",
