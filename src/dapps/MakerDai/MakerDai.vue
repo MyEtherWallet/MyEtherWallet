@@ -233,9 +233,10 @@ export default {
   data() {
     return {
       activeCdpId: 0,
-      currentlyLoading: '',
+      curentlyLoading: '',
       destAddressProxy: '',
       destAddressHasProxy: false,
+      makerCreated: false,
       afterUpdate: [],
       allCdpIds: [],
       activeCdp: {},
@@ -281,6 +282,7 @@ export default {
       sysServices: {},
       targetPrice: 0,
       valuesUpdated: 0,
+      retryCount: 0,
       currentPath: '/interface/dapps/',
       afterLoadShow: 'HOME'
     };

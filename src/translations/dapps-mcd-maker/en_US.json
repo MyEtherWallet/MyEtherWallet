@@ -152,5 +152,8 @@
   "approve-dai": "Approve DAI",
   "approve-maker": "Approve Maker",
   "submit-max": "Submit Max",
-  "detail-information": "Detail Information"
+  "detail-information": "Detail Information",
+  "migration-contract-balance": "Migration contract current balance",
+  "get-maker-to-migrate": "Get Maker to pay the stability fee to migrate to a MCD",
+  "approve-maker-to-migrate": "Approve Maker to allow the migration contract to withdraw the stability fee"
 }
