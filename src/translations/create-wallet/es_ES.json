@@ -47,7 +47,8 @@
     "title-tab": "By Mnemonic Phrase",
     "extra-word": "Extra Word",
     "value": "Value",
-    "invalid-mnemonic": "Invalid Mnemonic",
+    "please-enter-9-char": "Please Enter At Least 9 Characters",
+    "invalid-mnemonic": "Error: Invalid Mnemonic",
     "do-you-extra-word": "Do you have an Extra Word?",
     "access-wallet-extra-word-popover": "Some mnemonic phrases are generated with an extra word chosen by the user for added security. It acts as a 13th or 25th word to your phrase, sometimes referred to as a 'password'. If you did not create an extra word when you made your phrase, you should leave this field blank.",
     "extra-word-popover": "You can add an extra word to your phrase for added security. However, you will need this word everytime you wish to access your phrase. Some wallets may not support adding an extra word when using mnemonic phrases.",
@@ -76,7 +77,11 @@
       "change-pw": "change your password. Please",
       "do-not-forget": "DO NOT FORGET",
       "requirements": "this PHRASE and EXTRA WORD (if used)"
-    }
+    },
+    "invalid-network-id": "Invalid networkId signature returned. Expected: {networkId} , Got: {signedChainId} InvalidNetworkId",
+    "fields-missing": "Some fields are still missing!",
+    "does-not-match-extra-word": "Mnemonic and extra word doesn't match! Please check your input!",
+    "input-does-not-match": "Mnemonic doesn't match! Please write it down correctly!"
   },
   "created": {
     "title": "Success",
