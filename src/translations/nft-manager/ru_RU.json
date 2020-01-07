@@ -10,7 +10,7 @@
   "loading-range": " Загрузка {first} - {last}",
   "reloading": "перезагрузка",
   "none-owned": "У вас нет NFTs",
-  "custom": "Пользовательский NFT",
+  "custom": "Add custom NFT",
   "nft-are": "NFT это",
   "ph-token-addr": "Адрес контракта токена",
   "no-method-no-token": "Контракт NFT токена не включает в себя необходимый метод добавления как пользовательский NFT или у вас нет {token}",
@@ -18,5 +18,7 @@
   "name": "NFT имя",
   "invalid-addr": "Указан неверный адрес.",
   "nft": "NFT",
-  "manager": "Менеджер"
+  "manager": "Менеджер",
+  "select-item": "Select an item to see details or add your custom NFT.",
+  "avail-nft": "Available NFT"
 }
