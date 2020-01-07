@@ -149,7 +149,7 @@
   "what-is-dashes-vault": "A value of -- indicates this Vault has no DAI so these calculations are only meaningful if this Vault has created DAI",
   "load-operations": "Loading: Multi Collateral Operations",
   "load-types": "Loading: Multi Collateral Types",
-  "approve-dai": "Утвердить Dai",
+  "approve-dai": "Утвердить DAI",
   "approve-maker": "Утвердить Maker",
   "submit-max": "Отправить Макс.",
   "detail-information": "Подробная Информация"
