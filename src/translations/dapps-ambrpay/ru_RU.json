@@ -3,6 +3,8 @@
   "title": "Ambrpay",
   "withdraw-funds": "Вывод средств",
   "add-funds": "Пополнить счёт",
+  "add": "Добавить",
+  "withdraw": "Вывести",
   "balance": "Баланс подписок",
   "my-subscriptions": "Мои подписки",
   "automation-fee": "1% комиссия автоматизации будет добавлена к сумме",
@@ -27,12 +29,25 @@
     "unsubscribe": "Отписаться"
   },
   "manage-funds": {
-    "funds": "Средства",
+    "add-funds": "Add Funds",
+    "withdraw-funds": "Withdraw Funds",
     "avail-balance": "Доступный баланс",
-    "how-much-eth": "Сколько ETH вы хотите",
+    "how-much-eth-add": "How much ETH do you want to add ?",
+    "how-much-eth-withdraw": "How much ETH do you want to withdraw ?",
     "subscription-fund": "Ваш фонд подписки",
     "should-update": "должен быть обновлен в течение минуты.",
     "in-wallet": "должен быть в вашем кошельке в течение минуты.",
     "withdraw-fund": "Фонд для вывода средств"
+  },
+  "errors": {
+    "amount-higher-zero": "Сумма должна быть больше 0",
+    "amount-higher-balance": "Сумма выше баланса",
+    "amount-higher-sub-balance": "Сумма выше, чем баланс подписки"
+  },
+  "sub-form": {
+    "min-greater": "Минимальная сумма 0.01 или выше",
+    "higher-than-bal": "Сумма выше баланса (включая комиссию 1% за автоматизацию)",
+    "enter-correct-num": "Пожалуйста, введите правильное количество",
+    "cannot-exceed": "Количество не может превышать 365 дней"
   }
 }
