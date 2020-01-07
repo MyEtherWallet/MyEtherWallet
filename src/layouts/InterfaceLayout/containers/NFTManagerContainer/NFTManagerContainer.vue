@@ -474,7 +474,7 @@ export default {
           return data.json();
         })
         .then(rawJson => {
-          if (rawJson.total) {
+          if (rawJson.total >= 0) {
             this.nftData[contract].count = rawJson.total;
             this.countsRetrieved = true;
             const getNestedObject = (nestedObj = [], pathArr, token) => {
