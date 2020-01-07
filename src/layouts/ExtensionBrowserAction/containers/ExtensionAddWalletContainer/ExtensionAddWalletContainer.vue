@@ -228,7 +228,6 @@ export default {
     openAddressOption() {
       this.loading = true;
       const mnemonicPhrase = this.mnemonicPhrase;
-
       MnemonicWallet(mnemonicPhrase, this.password)
         .then(wallet => {
           this.loading = false;
