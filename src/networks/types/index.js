@@ -24,7 +24,7 @@ import RSK from './RSK.js';
 import RSKTEST from './RSKTEST.js';
 import TOMO from './TOMO.js';
 import UBQ from './UBQ.js';
-import WEB from './WEB.js';
+import MINTME from './MINTME.js';
 import TT from './TT.js';
 import SUM from './SUM.js';
 import DXN from './DXN.js';
@@ -57,7 +57,7 @@ export {
   RSKTEST,
   TOMO,
   UBQ,
-  WEB,
+  MINTME,
   TT,
   SUM,
   DXN,
