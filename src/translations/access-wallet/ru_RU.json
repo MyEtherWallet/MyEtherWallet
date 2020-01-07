@@ -26,7 +26,8 @@
       "title": "Аппаратный доступ",
       "button-buy": "Купить",
       "button-choose": "Продолжить"
-    }
+    },
+    "examples": "Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet"
   },
   "software": {
     "option-title": "Программный доступ",

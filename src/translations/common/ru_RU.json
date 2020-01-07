@@ -12,12 +12,15 @@
   "previous": "Назад",
   "thank-you": "Спасибо",
   "back": "Назад",
+  "okay": "Окей",
   "next": "Далее",
   "copy": "Скопировать",
   "copied": "Скопировано",
   "clear": "Очистить",
   "edit": "Редактировать",
   "cancel": "Отменить",
+  "close": "Закрыть",
+  "submit": "Отправить",
   "more": "Еще",
   "yes": "Да",
   "no": "Нет",
@@ -159,5 +162,6 @@
   "spaceman": "Космонавт",
   "disconnected": "Отсоединено",
   "mew-icon": "Иконка MEW",
-  "kitties": "kitties"
+  "kitties": "kitties",
+  "mewtopia": "MEWtopia"
 }

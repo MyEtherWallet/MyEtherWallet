@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import Misc from '@/helpers/misc';
 import platform from 'platform';
 
 export default {
@@ -74,20 +75,28 @@ export default {
   computed: {
     issueLinkOut() {
       const subject = `Issue on ${this.url}`;
-      const body = `
-        Browser: ${this.browser},
-        Os: ${this.os},
-        Device: ${this.device},
-        url: ${this.url}
-        Wallet Address: ${this.url}
-
-
-        ${this.description}
-      `;
+      const body =
+        'Browser: ' +
+        this.browser +
+        ', \n' +
+        'Os: ' +
+        this.os +
+        ', \n' +
+        'Device: ' +
+        this.device +
+        ',\n' +
+        'url: ' +
+        this.url +
+        ', \n' +
+        'Wallet Address: ' +
+        this.address +
+        ',' +
+        '\n\n' +
+        this.description;
       // eslint-disable-next-line
       return `mailto:support@myetherwallet.com?subject=${encodeURIComponent(
-        subject
-      )}&body=${encodeURIComponent(body)}`;
+        Misc.stripTags(subject)
+      )}&body=${encodeURIComponent(Misc.stripTags(body))}`;
     }
   },
   watch: {
