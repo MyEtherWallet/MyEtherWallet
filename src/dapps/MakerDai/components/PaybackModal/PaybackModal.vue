@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="$t('dappsMaker.payback-title')"
+      :title="$t('dappsMCDMaker.payback-title')"
       centered
       class="bootstrap-modal nopadding"
       hide-footer
@@ -10,35 +10,41 @@
       lazy
     >
       <div class="contents">
-        <p class="top-message">{{ $t('dappsMaker.payback-notice') }}</p>
+        <p class="top-message">{{ $t('dappsMCDMaker.payback-notice') }}</p>
         <div class="input-container">
           <div class="top-buttons">
-            <p @click="currentDai">{{ $t('dappsMaker.set-max') }}</p>
+            <p @click="currentDai">{{ $t('dappsMCDMaker.max-available') }}</p>
           </div>
           <div :class="['dai-amount', hasEnoughDai ? '' : 'danger']">
             <input v-model="amount" />
-            <p class="floating-text">{{ $t('dappsMaker.dai') }}</p>
+            <p class="floating-text">{{ $t('dappsMCDMaker.dai') }}</p>
           </div>
         </div>
 
-        <expanding-option title="Detail Information">
+        <expanding-option :title="$t('dappsMCDMaker.detail-information')">
           <ul class="details">
             <li>
-              <p>{{ $t('dappsMaker.outstanding-dai') }}</p>
+              <p>{{ $t('dappsMCDMaker.outstanding-dai') }}</p>
               <p>
-                <b>{{ displayFixedValue(debtValue(), 3) }}</b>
-                {{ $t('dappsMaker.dai') }}
+                <b>
+                  {{
+                    values.debtValue
+                      ? displayFixedValue(values.debtValue, 3)
+                      : 0
+                  }}
+                </b>
+                {{ $t('dappsMCDMaker.dai') }}
               </p>
             </li>
             <li>
-              <p>{{ $t('dappsMaker.projected-liquidation') }}</p>
+              <p>{{ $t('dappsMCDMaker.projected-liquidation') }}</p>
               <p>
                 <b>{{ displayFixedValue(newLiquidationPrice(), 2) }}</b>
                 {{ fiatCurrency }}
               </p>
             </li>
             <li>
-              <p>{{ $t('dappsMaker.projected-collat-ratio') }}</p>
+              <p>{{ $t('dappsMCDMaker.projected-collat-ratio') }}</p>
               <p>
                 <b>
                   {{
@@ -55,26 +61,57 @@
         <div class="buttons">
           <div v-if="needsDaiApprove()">
             <standard-button
-              :options="approveDaiButton"
+              :options="{
+                title: $t('dappsMCDMaker.approve-dai'),
+                buttonStyle: 'green-border',
+                fullWidth: true,
+                noMinWidth: true
+              }"
               :click-function="approveDai"
+            />
+          </div>
+          <div v-if="needsMkrApprove()">
+            <standard-button
+              :options="{
+                title: $t('dappsMCDMaker.approve-maker'),
+                buttonStyle: 'green-border',
+                fullWidth: true,
+                noMinWidth: true
+              }"
+              :click-function="approveMkr"
             />
           </div>
         </div>
         <div class="buttons">
           <standard-button
-            :options="cancelButton"
+            :options="{
+              title: $t('common.cancel'),
+              buttonStyle: 'green-border',
+              noMinWidth: true,
+              fullWidth: true
+            }"
             :click-function="closeModal"
           />
           <div>
             <standard-button
               v-if="max"
-              :options="submitMaxButton"
+              :options="{
+                title: $t('dappsMCDMaker.submit-max'),
+                buttonStyle: 'green',
+                noMinWidth: true,
+                fullWidth: true
+              }"
               :button-disabled="canProceed ? false : true"
               :click-function="submitBtn"
             />
             <standard-button
               v-if="!max"
-              :options="submitButton"
+              :options="{
+                title: $t('common.submit'),
+                buttonStyle: 'green',
+                noMinWidth: true,
+                fullWidth: true
+              }"
               :button-disabled="canProceed ? false : true"
               :click-function="submitBtn"
             />
@@ -128,30 +165,7 @@ export default {
       max: false,
       currentCdpLoaded: false,
       fiatCurrency: 'USD',
-      cancelButton: {
-        title: 'Cancel',
-        buttonStyle: 'green-border',
-        noMinWidth: true,
-        fullWidth: true
-      },
-      submitButton: {
-        title: 'Submit',
-        buttonStyle: 'green',
-        noMinWidth: true,
-        fullWidth: true
-      },
-      submitMaxButton: {
-        title: 'Submit Max',
-        buttonStyle: 'green',
-        noMinWidth: true,
-        fullWidth: true
-      },
-      approveDaiButton: {
-        title: 'Approve Dai',
-        buttonStyle: 'green-border',
-        fullWidth: true,
-        noMinWidth: true
-      },
+      digitalCurrency: 'ETH',
       suppliedFrom: {
         symbol: 'ETH',
         name: 'Ethereum'

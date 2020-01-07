@@ -432,9 +432,9 @@ export async function doUpdate(self, Toast) {
   if (self.creatingCdp) {
     self.creatingCdp = false;
     await self.updateActiveCdp();
-    Toast.responseHandler(self.$t('dappsMaker.vault-created'), Toast.INFO);
+    Toast.responseHandler(self.$t('dappsMCDMaker.vault-created'), Toast.INFO);
   } else {
     self.valuesUpdated++;
-    Toast.responseHandler(self.$t('dappsMaker.vault-updated'), Toast.INFO);
+    Toast.responseHandler(self.$t('dappsMCDMaker.vault-updated'), Toast.INFO);
   }
 }

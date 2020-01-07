@@ -75,7 +75,12 @@
         <p v-show="error !== ''" class="error">{{ error }}</p>
         <div class="button-container-block">
           <standard-button
-            :options="continueButtonOptions"
+            :options="{
+              title: $t('common.continue'),
+              buttonStyle: 'green',
+              noMinWidth: true,
+              fullWidth: true
+            }"
             :spinner="spinner"
             :click-function="unlockWallet"
           />
@@ -113,12 +118,6 @@ export default {
     return {
       spinner: false,
       error: '',
-      continueButtonOptions: {
-        title: this.$t('common.continue'),
-        buttonStyle: 'green',
-        noMinWidth: true,
-        fullWidth: true
-      },
       mnemonicPhrase: new Array(this.mnemonicSize).fill(''),
       mnemonic24: false,
       mnemonicSize: 12,

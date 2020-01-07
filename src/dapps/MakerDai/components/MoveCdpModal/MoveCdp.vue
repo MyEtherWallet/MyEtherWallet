@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="$t('dappsMaker.move-title')"
+      :title="$t('dappsMCDMaker.move-title')"
       hide-footer
       centered
       class="bootstrap-modal nopadding"
@@ -11,18 +11,18 @@
     >
       <div class="modal-content">
         <p class="top-text">
-          {{ $t('dappsMaker.move-notice') }}
+          {{ $t('dappsMCDMaker.move-notice') }}
         </p>
         <check-box @changeStatus="checkBoxClicked">
           <template v-slot:terms
             ><p class="checkbox-label">
-              {{ $t('dappsMaker.understand-and-agree') }}
+              {{ $t('dappsMCDMaker.understand-and-agree') }}
             </p></template
           >
         </check-box>
 
         <div class="input-container">
-          <label>{{ $t('dappsMaker.move-question') }}</label>
+          <label>{{ $t('dappsMCDMaker.move-question') }}</label>
           <div class="input-box">
             <input v-model="address" />
           </div>
@@ -30,21 +30,32 @@
         <div>
           <div v-if="destAddressHasProxy">
             <p>
-              {{ $t('dappsMaker.proxy-address', { value: destAddressProxy }) }}
+              {{
+                $t('dappsMCDMaker.proxy-address', { value: destAddressProxy })
+              }}
             </p>
-            {{ $t('dappsMaker.move-with-proxy') }}
+            {{ $t('dappsMCDMaker.move-with-proxy') }}
           </div>
           <div v-if="!destAddressHasProxy">
-            {{ $t('dappsMaker.move-without-proxy') }}
+            {{ $t('dappsMCDMaker.move-without-proxy') }}
           </div>
         </div>
         <div class="buttons">
           <standard-button
-            :options="cancelButton"
+            :options="{
+              title: $t('common.cancel'),
+              buttonStyle: 'green-border',
+              noMinWidth: true
+            }"
             :click-function="closeModal"
           />
           <standard-button
-            :options="submitButton"
+            :options="{
+              title: $t('common.submit'),
+              buttonStyle: 'green',
+              noMinWidth: true,
+              fullWidth: true
+            }"
             :button-disabled="btnActive ? false : true"
             :click-function="moveCdp"
           />
@@ -106,17 +117,8 @@ export default {
     return {
       address: '',
       checkBoxChecked: false,
-      cancelButton: {
-        title: 'Cancel',
-        buttonStyle: 'green-border',
-        noMinWidth: true
-      },
-      submitButton: {
-        title: 'Submit',
-        buttonStyle: 'green',
-        noMinWidth: true,
-        fullWidth: true
-      }
+      textValues: {},
+      mkrToken: {}
     };
   },
   computed: {

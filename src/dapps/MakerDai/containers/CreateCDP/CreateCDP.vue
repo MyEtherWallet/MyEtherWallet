@@ -15,16 +15,16 @@
     />
     <loading-overlay
       v-if="loading"
-      :loadingmessage="$t('dappsMaker.creating-message')"
+      :loadingmessage="$t('dappsMCDMaker.creating-message')"
     />
     <div class="manage-container">
-      <p class="top-title">{{ $t('dappsMaker.maker_title') }}</p>
-      <p class="top-title-sub">{{ $t('dappsMaker.create-instruct') }}</p>
+      <h3 class="mb-3 ">{{ $t('dappsMaker.maker_title') }}</h3>
+      <div class="mb-5">{{ $t('dappsMaker.create-instruct') }}</div>
 
       <div class="currency-ops-new">
         <div class="currency-picker-container">
           <div class="interface__block-title">
-            {{ $t('dappsMaker.collateral') }}
+            {{ $t('dappsMCDMaker.collateral') }}
           </div>
           <currency-picker
             :currencies="collateralOptions"
@@ -40,8 +40,11 @@
             ]"
           />
           <div class="input-block-message">
+            <p v-if="!hasEnoughEth" class="red-text">
+              {{ $t('dappsMCDMaker.not-enough-funds') }}
+            </p>
             <p>
-              {{ $t('dappsMaker.min-collat') }}
+              {{ $t('dappsMCDMaker.min-collat') }}
               <b>{{ displayFixedValue(minDeposit, 6) }}</b>
               {{ selectedCurrency.symbol }}
             </p>
@@ -62,12 +65,12 @@
         </div>
         <div>
           <div class="interface__block-title">
-            {{ $t('dappsMaker.generate') }}
+            {{ $t('dappsMCDMaker.generate') }}
           </div>
           <div class="dropdown-text-container dropdown-container">
             <p>
               <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
-              {{ $t('dappsMaker.dai') }}
+              {{ $t('dappsMCDMaker.dai') }}
               <span class="subname">- Maker DAI</span>
             </p>
           </div>
@@ -83,14 +86,14 @@
           />
           <div class="input-block-message">
             <p>
-              {{ $t('dappsMaker.min-generate') }}
+              {{ $t('dappsMCDMaker.min-generate') }}
               <b>{{ displayFixedValue(minCreate, 6) }}</b>
-              {{ $t('dappsMaker.dai') }}
+              {{ $t('dappsMCDMaker.dai') }}
             </p>
             <p v-show="ethQty > 0">
-              {{ $t('dappsMaker.max-generate') }}
+              {{ $t('dappsMCDMaker.max-generate') }}
               <b>{{ displayFixedValue(maxDaiDraw, 6) }}</b>
-              {{ $t('dappsMaker.dai') }}
+              {{ $t('dappsMCDMaker.dai') }}
             </p>
           </div>
         </div>
@@ -101,7 +104,7 @@
           <li>
             <p>
               {{
-                $t('dappsMaker.min-required', {
+                $t('dappsMCDMaker.min-required', {
                   value: selectedCurrency ? selectedCurrency.symbol : 'ETH'
                 })
               }}
@@ -112,25 +115,25 @@
             </p>
           </li>
           <li>
-            <p>{{ $t('dappsMaker.liquid-price') }}</p>
+            <p>{{ $t('dappsMCDMaker.liquid-price') }}</p>
             <p>
               <b>{{ liquidationPrice }}</b>
               {{ $t('common.currency.usd') }}
             </p>
           </li>
           <li>
-            <p>{{ $t('dappsMaker.current-price-info') }}</p>
+            <p>{{ $t('dappsMCDMaker.current-price-info') }}</p>
             <p>
               {{ displayFixedValue(getCurrentPrice, 2) }}
               {{ $t('common.currency.usd') }}
             </p>
           </li>
           <li>
-            <p>{{ $t('dappsMaker.liquidation-penalty') }}</p>
+            <p>{{ $t('dappsMCDMaker.liquidation-penalty') }}</p>
             <p>{{ displayPercentValue(liquidationPenalty) }}%</p>
           </li>
           <li>
-            <p>{{ $t('dappsMaker.collateral-ratio') }}</p>
+            <p>{{ $t('dappsMCDMaker.collateral-ratio') }}</p>
             <p
               :class="[
                 veryRisky ? 'red-text' : '',
@@ -141,7 +144,7 @@
             </p>
           </li>
           <li>
-            <p>{{ $t('dappsMaker.minimum-ratio') }}</p>
+            <p>{{ $t('dappsMCDMaker.minimum-ratio') }}</p>
             <p>{{ displayPercentValue(liquidationRatio) }}%</p>
           </li>
         </ul>
@@ -151,7 +154,7 @@
           <li>
             <p>
               {{
-                $t('dappsMaker.stability-fee-in-mkr', {
+                $t('dappsMCDMaker.stability-fee-in-mkr', {
                   value: displayFixedPercent(stabilityFee).toString()
                 })
               }}
@@ -162,7 +165,7 @@
       <div v-if="!hasProxy" class="buttons-container">
         <div
           class="submit-button large-round-button-green-filled"
-          @click="BuildProxy"
+          @click="BuildProxy()"
         >
           Create Proxy
         </div>
@@ -186,7 +189,7 @@
           ]"
           @click="openDaiConfirmation"
         >
-          {{ $t('dappsMaker.collat-and-generate-vault') }}
+          {{ $t('dappsMCDMaker.collat-and-generate-vault') }}
         </div>
       </div>
     </div>
@@ -332,6 +335,9 @@ export default {
       }
       return false;
     },
+    hasProxy() {
+      return this.getValueOrFunction('proxyAddress');
+    },
     valuePresent() {
       return toBigNumber(this.ethQty).gt(0);
     },
@@ -462,8 +468,7 @@ export default {
       this.emptyMakerCreated = true;
     },
     BuildProxy() {
-      console.log(this.emptyMakerCreated); // todo remove dev item
-      if (this.emptyMakerCreated) {
+      if (this.setupComplete) {
         this.getValueOrFunction('getProxy')().then(proxy => {
           this.proxyAddress = proxy;
           if (!this.proxyAddress) {

@@ -244,7 +244,8 @@ export default class SwapProviders {
                     .times(this.rate)
                     .toFixed(6)
                     .toString(10);
-                }
+                },
+                additional: entry.additional || {}
               };
             }
           }),

@@ -81,7 +81,13 @@
       <div v-show="!reLoading">
         <h3 class="no-nft-notice">{{ $t('nftManager.no-nft') }}</h3>
         <standard-button
-          :options="onlyCustom"
+          :options="{
+            title: $t('nftManager.add-custom'),
+            buttonStyle: 'green',
+            helpCenter: false,
+            noMinWidth: true,
+            fullWidth: false
+          }"
           :click-function="openCustomModal"
         />
       </div>
@@ -167,13 +173,6 @@ export default {
       customNFTs: [],
       forRemoval: {},
       collectionLoading: false,
-      onlyCustom: {
-        title: this.$t('nftManager.add-custom'),
-        buttonStyle: 'green',
-        helpCenter: false,
-        noMinWidth: true,
-        fullWidth: false
-      },
       nftObjectClone: {}
     };
   },
@@ -440,39 +439,41 @@ export default {
           return data.json();
         })
         .then(rawJson => {
-          this.nftData[contract].count = rawJson.total;
-          this.countsRetrieved = true;
-          const getNestedObject = (nestedObj, pathArr, token) => {
-            return pathArr.reduce((obj, key) => {
-              if (key === '@tokenvalue@') {
-                key = token.toString();
-              }
-              return obj && obj[key] !== 'undefined' ? obj[key] : undefined;
-            }, nestedObj);
-          };
+          if (rawJson.total) {
+            this.nftData[contract].count = rawJson.total;
+            this.countsRetrieved = true;
+            const getNestedObject = (nestedObj = [], pathArr, token) => {
+              return pathArr.reduce((obj, key) => {
+                if (key === '@tokenvalue@') {
+                  key = token.toString();
+                }
+                return obj && obj[key] !== 'undefined' ? obj[key] : undefined;
+              }, nestedObj);
+            };
 
-          const metadataKeys = this.nftData[contract].metadataKeys || [
-            'kitties'
-          ];
-          const imageKey = this.nftData[contract].imageKey || 'image_url_png';
+            const metadataKeys = this.nftData[contract].metadataKeys || [
+              'kitties'
+            ];
+            const imageKey = this.nftData[contract].imageKey || 'image_url_png';
 
-          const list = getNestedObject(rawJson, metadataKeys)
-            ? getNestedObject(rawJson, metadataKeys).map(val => {
-                return {
-                  contract: contract,
-                  token: val.id,
-                  image: val[imageKey]
-                    ? `${URL_BASE}/image?path=${val[imageKey]}`
-                    : ''
-                };
-              })
-            : [];
-          if (list.length > 0) {
-            this.nftData[contract].details = list.slice(0, 9);
-            this.$set(this.nftData[contract], 'details', list.slice(0, 9));
-            return this.nftData[contract].details;
+            const list = getNestedObject(rawJson, metadataKeys)
+              ? getNestedObject(rawJson, metadataKeys).map(val => {
+                  return {
+                    contract: contract,
+                    token: val.id,
+                    image: val[imageKey]
+                      ? `${URL_BASE}/image?path=${val[imageKey]}`
+                      : ''
+                  };
+                })
+              : [];
+            if (list.length > 0) {
+              this.nftData[contract].details = list.slice(0, 9);
+              this.$set(this.nftData[contract], 'details', list.slice(0, 9));
+              return this.nftData[contract].details;
+            }
+            return [];
           }
-          return [];
         })
         .then(list => {
           if (!list) return;

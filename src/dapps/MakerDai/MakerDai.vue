@@ -68,83 +68,92 @@
       @checkForProxy="checkIfDestAddressHasProxy"
     >
     </move-cdp-modal>
+
     <back-button :path="backPath()">
       <div class="back-bar-container">
         <div v-if="showMoveOrClose" class="header-buttons-container">
           <div class="inner-container">
             <button class="move-btn" @click="showMove">
-              <h4>{{ $t('dappsMaker.move-vault') }}</h4>
+              <h4>{{ $t('dappsMCDMaker.move-vault') }}</h4>
             </button>
           </div>
         </div>
       </div>
     </back-button>
+
     <div
-      v-show="makerActive && listCdps && showManageable"
-      class="buttons-container"
+      v-if="makerActive && listCdps && showManageable"
+      class="px-5 pt-3 pb-5"
     >
-      <div v-for="(value, idx) in cdps" :key="idx + value">
-        <div
-          :class="[
-            'dapps-button',
-            activeValues.cdpId === value ? 'active' : ''
-          ]"
-        >
-          <div @click="openManage(value)">
-            <h4>{{ $t('dappsMaker.vault-id') }} #{{ value }}</h4>
-          </div>
+      <h3 class="mb-3">Select your vault to see details.</h3>
+      <div class="buttons-container">
+        <div v-for="(value, idx) in cdps" :key="idx + value">
+          <b-button
+            variant="primary"
+            class="mr-2 mb-1"
+            @click="openManage(value)"
+          >
+            <b>{{ $t('dappsMaker.vault-id') }}</b>
+            <b-badge variant="light" class="ml-2" style="font-size: 15px;"
+              ># {{ value }}</b-badge
+            >
+          </b-button>
         </div>
       </div>
     </div>
 
-    <router-view
-      :active-cdp-id="activeCdpId"
-      :loading-state="curentlyLoading"
-      :build-empty="buildEmpty"
-      :maker-active="makerActive"
-      :eth-price="ethPrice"
-      :liquidation-penalty="liquidationPenalty"
-      :stability-fee="stabilityFee"
-      :liquidation-ratio="liquidationRatio"
-      :price-service="priceService"
-      :cdp-service="cdpService"
-      :proxy-service="proxyService"
-      :cdps="cdps"
-      :cdps-without-proxy="cdpsWithoutProxy"
-      :cdp-details-loaded="cdpDetailsLoaded"
-      :tokens-with-balance="tokensWithBalance"
-      :migration-in-progress="migrationInProgress"
-      :open-close-modal="openCloseModal"
-      :open-move-modal="openMoveModal"
-      :values-updated="valuesUpdated"
-      :values="activeValues"
-      :maker-created="makerCreated"
+    <div class="px-5 py-3">
+      <router-view
+        :active-cdp-id="activeCdpId"
+        :loading-state="curentlyLoading"
+        :build-empty="buildEmpty"
+        :maker-active="makerActive"
+        :eth-price="ethPrice"
+        :liquidation-penalty="liquidationPenalty"
+        :stability-fee="stabilityFee"
+        :liquidation-ratio="liquidationRatio"
+        :price-service="priceService"
+        :cdp-service="cdpService"
+        :proxy-service="proxyService"
+        :cdps="cdps"
+        :cdps-without-proxy="cdpsWithoutProxy"
+        :cdp-details-loaded="cdpDetailsLoaded"
+        :tokens-with-balance="tokensWithBalance"
+        :migration-in-progress="migrationInProgress"
+        :open-close-modal="openCloseModal"
+        :open-move-modal="openMoveModal"
+        :values-updated="valuesUpdated"
+        :values="activeValues"
+        :maker-created="makerCreated"
       :get-collateral-options="getCollateralOptions"
-      :get-value-or-function="getValueOrFunction"
-      :get-cdp="getCdp"
-      :has-cdp="hasCdp"
-      @activeCdpId="setupCdpManageFunc"
-      @cdpOpened="addCdp"
-      @cdpClosed="removeCdp"
-      @modalHidden="modalHidden"
-      @managerUpdate="doUpdate"
-      @showWithdraw="showWithdraw"
-      @showPayback="showPayback"
-      @showGenerate="showGenerate"
-      @showDeposit="showDeposit"
-      @migrateCdp="migrateCdpExternal"
-      @proceedtoCreateOrManage="proceedtoCreateOrManage"
-      @approveCurrency="approveCurrency"
-      @setActiveCdpId="setActiveCdpId"
-      @setAfterLoadPage="setAfterLoadPage"
-    >
-    </router-view>
+        :get-value-or-function="getValueOrFunction"
+        :get-cdp="getCdp"
+        :has-cdp="hasCdp"
+        @activeCdpId="setupCdpManageFunc"
+        @cdpOpened="addCdp"
+        @cdpClosed="removeCdp"
+        @modalHidden="modalHidden"
+        @managerUpdate="doUpdate"
+        @showWithdraw="showWithdraw"
+        @showPayback="showPayback"
+        @showGenerate="showGenerate"
+        @showDeposit="showDeposit"
+        @migrateCdp="migrateCdpExternal"
+        @proceedtoCreateOrManage="proceedtoCreateOrManage"
+        @approveCurrency="approveCurrency"
+        @setActiveCdpId="setActiveCdpId"
+        @setAfterLoadPage="setAfterLoadPage"
+      >
+      </router-view>
+    </div>
+    <interface-footer />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
+import InterfaceContainerFooter from '@/layouts/InterfaceLayout/components/InterfaceContainerFooter';
 import MoveCdpModal from './components/MoveCdpModal';
 import GenerateModal from './components/GenerateModal';
 import DepositModal from './components/DepositModal';
@@ -203,6 +212,7 @@ export default {
     'withdraw-modal': WithdrawModal,
     'payback-modal': PaybackModal,
     'back-button': BackButton,
+    'interface-footer': InterfaceContainerFooter,
     'move-cdp-modal': MoveCdpModal
   },
   props: {
@@ -224,7 +234,7 @@ export default {
   data() {
     return {
       activeCdpId: 0,
-      curentlyLoading: '',
+      currentlyLoading: '',
       destAddressProxy: '',
       destAddressHasProxy: false,
       makerCreated: false,
@@ -592,9 +602,9 @@ export default {
     },
     async setupMCD() {
       try {
-        this.curentlyLoading = this.$t('dappsMaker.loading-mcd-operations');
+        this.currentlyLoading = 'dappsMCDMaker.load-operations';
         this._typeService = this.maker.service(ServiceRoles.CDP_TYPE);
-        this.curentlyLoading = this.$t('dappsMaker.loading-collateral-types');
+        this.currentlyLoading = 'dappsMCDMaker.load-types';
         this.mcdCurrencies = this._typeService.cdpTypes.reduce((acc, entry) => {
           acc[entry.currency.symbol] = entry;
           acc[entry.currency.symbol].symbol = entry.currency.symbol;
@@ -610,16 +620,23 @@ export default {
     async setupMakerInstance() {
       const web3 = this.web3;
       const _self = this;
-      this.curentlyLoading = this.$t('dappsMaker.loading-wallet');
-      const MewMakerPlugin = MewPlugin(
-        web3,
-        _self.account.address,
-        async () => {
-          if (_self.$route.path.includes('maker-dai')) {
-            await _self.doUpdate();
+      if (!this.showLoading) {
+        this.gotoHome();
+      } else {
+        this.gotoLoading();
+      }
+
+      try {
+        this.currentlyLoading = 'dappsMCDMaker.loading-wallet';
+        const MewMakerPlugin = MewPlugin(
+          web3,
+          _self.account.address,
+          async () => {
+            if (_self.$route.path.includes('maker-dai')) {
+              await _self.doUpdate();
+            }
           }
-        }
-      );
+        );
 
       this.maker = await Maker.create('inject', {
         provider: { inject: web3.currentProvider },
@@ -673,7 +690,7 @@ export default {
       this.setupMCD();
       try {
         await this.maker.authenticate();
-        this.curentlyLoading = this.$t('dappsMaker.loading-system');
+        this.currentlyLoading = 'dappsMCDMaker.loading-system';
 
         await setupServices(this, this.maker);
 
@@ -696,7 +713,7 @@ export default {
 
         this.currentProxy = await this.getProxy();
 
-        this.curentlyLoading = this.$t('dappsMaker.loading-locating-vaults');
+        this.currentlyLoading = 'dappsMCDMaker.loading-locating-vaults';
         try {
           const { withType, withProxy, withoutProxy } = await locateCdps(
             this,
@@ -711,7 +728,7 @@ export default {
         }
 
         if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
-          this.curentlyLoading = this.$t('dappsMaker.loading-vaults');
+          this.currentlyLoading = 'dappsMCDMaker.loading-vaults';
           await this.loadCdpDetails(this.cdps, this.cdpsWithoutProxy);
         }
       } catch (e) {

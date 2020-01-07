@@ -1,3 +1,40 @@
+### Release v5.2.9
+
+### Feature
+
+- Update address book [#1795](https://github.com/MyEtherWallet/MyEtherWallet/pull/1795)
+
+### Devop
+
+### Devop
+- Notification pruning[#1755](https://github.com/MyEtherWallet/MyEtherWallet/pull/1755)
+- Enable translations dropdown and add in the other languages [#1703] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1703)
+- Reduce injected web3 file size to less than 1mb [#1813](https://github.com/MyEtherWallet/MyEtherWallet/pull/1813)
+- Display information related to kyber slippage for high values [#1794](https://github.com/MyEtherWallet/MyEtherWallet/pull/1794)
+- Notification pruning[#1755](https://github.com/MyEtherWallet/MyEtherWallet/pull/1755)
+- Add gasLimit field to batch transactions[#1702](https://github.com/MyEtherWallet/MyEtherWallet/pull/1702)
+- Manually update locally stored networks [#1810](https://github.com/MyEtherWallet/MyEtherWallet/pull/1810)
+
+### Bug
+
+- Ui fix maker dai [#1787](https://github.com/MyEtherWallet/MyEtherWallet/pull/1787)
+- Hide blockexplorrer link on irrelevant pages and add back tx history for cx header [#1800](https://github.com/MyEtherWallet/MyEtherWallet/pull/1800)
+- Fix issue with withdrawing ETH from CDP [#1811](https://github.com/MyEtherWallet/MyEtherWallet/pull/1811)
+- Fix header items for other languages [#1791](https://github.com/MyEtherWallet/MyEtherWallet/pull/1791)
+
+
+### Release v5.2.8-hotfix.2
+
+### Bug
+
+- Fix error with send-offline-helper page load [#1790](https://github.com/MyEtherWallet/MyEtherWallet/pull/1790)
+
+### Release v5.2.8-hotfix.1
+
+### Bug
+
+- Fix Schedule View [#1781](https://github.com/MyEtherWallet/MyEtherWallet/pull/1781)
+
 ### Release v5.2.8
 
 ### Bug

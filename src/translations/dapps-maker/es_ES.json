@@ -19,7 +19,7 @@
   "dai-position": "DAI Position",
   "generated": "Generated",
   "payback": "Pay back",
-  "max-available": "Max. available to generate",
+  "max-available-gen": "Max. available to generate",
   "generate": "Generate",
   "min-collat": "Minimum collateralize to",
   "max-generate": "Maximum generate to",
@@ -105,6 +105,7 @@
   "migrate-single-collateral-to-multi-collateral": "Migrate Single Collateral CDP to Multi-Collateral Vault",
   "not-enough-sai": "There is not enough SAI available to migrate CDPs at this time. Please try again later.",
   "needs-at-least-20": "Only CDPs with more than 20 and less than {value} SAI can be upgraded at the moment.",
+  "current-balance": "Current balance amount",
   "current-sai-balance": "Current amount: {value}",
   "upgrade-sai-to-dai": "Upgrade your SAI to DAI ",
   "min-required": "Min {value} required",
@@ -149,5 +150,12 @@
   "set": "Set",
   "earn-with-dai": "Earn savings on your DAI",
   "dai-stable-coin": "DAI Stablecoin",
-  "what-is-dashes-vault": "A value of -- indicates this Vault has no DAI so these calculations are only meaningful if this Vault has created DAI"
+  "what-is-dashes-vault": "A value of -- indicates this Vault has no DAI so these calculations are only meaningful if this Vault has created DAI",
+  "check-balance": "Check Balance",
+  "your-cdps": "Your CDPs",
+  "migrate-description": "Exchange your old DAI (aka SAI) for the new DAI.",
+  "transfer-cdp-description": "Transfer your old CDP to a Multi-Collateral Vault.",
+  "manage-your-vault-description": "Make changes to your Vault or close it out.",
+  "create-vault-description": "Open a Multi-Collateral Vault to generate DAI based on your collateral.",
+  "dai-savings-description": "Check on your DAI holdings, set an allowance for your collateral, and deploy a proxy to save on transaction time and gas."
 }

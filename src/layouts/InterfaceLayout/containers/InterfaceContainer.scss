@@ -20,7 +20,6 @@
 %interface-container {
   border-radius: 5px;
   grid-area: main;
-  //overflow: hidden;
   background: $background-color-white;
 
   @media all and (max-width: $tablet-width) {

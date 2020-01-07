@@ -14,7 +14,7 @@ import {
 } from '@/helpers/notificationFormatters';
 import BigNumber from 'bignumber.js';
 
-const addNotification = function({ commit, state }, val) {
+const addNotification = function({ dispatch, commit, state }, val) {
   let address;
 
   if (val[1] != undefined) {
@@ -36,9 +36,10 @@ const addNotification = function({ commit, state }, val) {
     state.network.type.name
   );
   commit('ADD_NOTIFICATION', newNotif);
+  dispatch('pruneNotifications');
 };
 
-const addSwapNotification = async function({ commit, state }, val) {
+const addSwapNotification = async function({ dispatch, commit, state }, val) {
   const address = val[swapIndexes.address].toLowerCase();
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
@@ -54,6 +55,51 @@ const addSwapNotification = async function({ commit, state }, val) {
   );
 
   commit('ADD_NOTIFICATION', newNotif);
+  dispatch('pruneNotifications');
+};
+
+const pruneNotifications = ({ commit, state }) => {
+  const newNotif = {};
+
+  Object.keys(state.notifications).forEach(item => {
+    newNotif[item] = state.notifications[item];
+  });
+
+  const removeEntries = async entries => {
+    const entry = entries.pop();
+    if (entry) {
+      const address = state.account.address.toLowerCase();
+
+      const idIndex = newNotif[address].findIndex(item => item.id === entry.id);
+      if (idIndex > -1) {
+        newNotif[address].splice(idIndex, 1);
+      }
+      return removeEntries(entries);
+    }
+    return newNotif;
+  };
+  if (!newNotif[state.account.address]) return;
+  const check = newNotif[state.account.address]
+    .filter(item => item.network === state.network.type.name)
+    .sort((a, b) => {
+      a = a.timestamp;
+      b = b.timestamp;
+
+      return a > b ? -1 : a < b ? 1 : 0;
+    })
+    .slice(25)
+    .filter(item => {
+      return (
+        (new Date().getTime() - new Date(item.timestamp).getTime()) / 86400000 >
+        5
+      );
+    });
+
+  if (check.length > 0) {
+    removeEntries(check).then(result => {
+      commit('UPDATE_NOTIFICATION', result);
+    });
+  }
 };
 
 const addCustomPath = function({ commit, state }, val) {
@@ -114,6 +160,23 @@ const decryptWallet = function({ commit, dispatch }, params) {
       )
     );
   }
+};
+
+const removeNotification = function({ commit, state }, val) {
+  // address, index, object
+  const address = val[0].toLowerCase();
+  const newNotif = {};
+
+  Object.keys(state.notifications).forEach(item => {
+    newNotif[item] = state.notifications[item];
+  });
+
+  const idIndex = newNotif[address].findIndex(entry => entry.id === val[1].id);
+  if (idIndex > -1) {
+    newNotif[address].splice(idIndex, 1);
+  }
+
+  commit('UPDATE_NOTIFICATION', newNotif);
 };
 
 const setAccountBalance = function({ commit }, balance) {
@@ -267,7 +330,9 @@ export default {
   clearWallet,
   createAndSignTx,
   decryptWallet,
+  pruneNotifications,
   removeCustomPath,
+  removeNotification,
   setAccountBalance,
   setGasPrice,
   setState,
