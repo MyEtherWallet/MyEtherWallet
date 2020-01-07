@@ -86,14 +86,22 @@
   "etherscan-tx-url": "https://etherscan.io/tx/[[txHash]]",
   "etherscan-address-url": "https://etherscan.io/address/[[address]]",
   "address-book": {
+    "edit": "Edit",
+    "add": "Add",
     "title": "Управление адресами контактов",
-    "add-up-to": "Вы можете добавить максимум до 10 контактных адресов.",
+    "add-up-to": "You can add up to 10 contact addresses maximum.",
     "nickname": "Имя",
-    "remove": "Удалить",
+    "remove-addr": "Remove Address",
     "add-addr": "Добавить адрес в книгу контактов",
     "cannot-add": "Невозможно добавить без адреса",
     "successfully-added": "Успешно добавлено в адресную книгу",
-    "already-exists": "Этот адрес уже существует в книге контактов"
+    "already-exists": "Этот адрес уже существует в книге контактов",
+    "add-new": "Add a New Contact",
+    "edit-addr": "Edit Address",
+    "address": "Address",
+    "update": "Update",
+    "success-update": "Successfully updated",
+    "save-addr": "Save Address"
   },
   "import-error": "Что-то пошло не так при импорте файла, пожалуйста, убедитесь, что файл является допустимым",
   "account-content": {

@@ -1,0 +1,10 @@
+{
+  "sign-failed": "Sign failed",
+  "not-connected": "Cannot read property 'requestId' of null",
+  "update-firmware-to-v4": "Please update your Secalot firmware to version 4 or greater.",
+  "wallet-not-initialized": "Ethereum wallet on your Secalot is not initialized.",
+  "last-pin-try": "Invalid PIN-code. Be careful, after entering a wrong PIN-code three times in a row, your Secalot Ethereum wallet would be permanently wiped.",
+  "invalid-pin-code": "PIN-code not verified.",
+  "invalid-pin-code-length": "Invalid PIN-code length.",
+  "timeout": "Operation timed out."
+}

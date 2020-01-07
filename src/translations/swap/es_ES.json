@@ -19,7 +19,8 @@
     "string": "Provider | Providers",
     "no-provider-found": "No providers found :(",
     "loading-rates": "Please wait while we load provider rates...",
-    "load-rate-error": "An Error occurred while retrieving the rates for {from-currency} to {to-currency}. Please wait a moment and try again"
+    "load-rate-error": "An Error occurred while retrieving the rates for {from-currency} to {to-currency}. Please wait a moment and try again",
+    "kyber-slippage": "Slippage of {value}% possible"
   },
   "warning": {
     "unable-validate-addr": "Currently unable to validate addresses for {currency}. It is likely correct, but Please double check it is correct before sending.",
