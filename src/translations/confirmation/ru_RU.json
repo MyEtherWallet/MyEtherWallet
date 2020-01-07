@@ -7,5 +7,5 @@
   "success": "Готово",
   "error": "Ошибка",
   "waiting-for-hash": "Ожидание хеша транзакции",
-  "confirm-transactions": "Confirmation (Total of {unSignedArray} transactions)`"
+  "confirm-transactions": "Подтверждение (Всего {unSignedArray} транзакций)`"
 }
