@@ -59,7 +59,7 @@
           <div class="the-form gas-amount">
             <input
               v-model="toData"
-              :disabled="selectedCoinType.symbol !== 'ETH'"
+              :disabled="selectedCoinType.symbol !== network.type.name"
               type="string"
               placeholder="e.g. 0x65746865726d696e652d657531"
             />
