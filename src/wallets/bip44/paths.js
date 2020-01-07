@@ -143,6 +143,10 @@ const lightstreamsNetwork = {
   path: "m/44'/60'/0'",
   label: 'Lightstreams Network'
 };
+const mintmeComCoin = {
+  path: "m/44'/227'/0'/0",
+  label: 'MintMe.com Coin'
+};
 export {
   ethereum,
   ethereumClassic,
@@ -179,5 +183,6 @@ export {
   poaNetwork,
   reoscChain,
   dexon,
-  lightstreamsNetwork
+  lightstreamsNetwork,
+  mintmeComCoin
 };
