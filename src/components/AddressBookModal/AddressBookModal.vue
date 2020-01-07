@@ -135,7 +135,9 @@ export default {
           this.contactNickname === this.addressBook[this.currentIdx].nickname
         );
       }
-      return !this.contactAddress || !this.isValidAddress;
+      return (
+        !this.contactAddress || !this.isValidAddress || !this.contactNickname
+      );
     }
   },
   watch: {
@@ -187,7 +189,10 @@ export default {
     },
     addContact() {
       const alreadyExists = Object.keys(this.addressBook).some(key => {
-        return this.addressBook[key].address === this.contactAddress;
+        return (
+          this.addressBook[key].address.toLowerCase() ===
+          this.contactAddress.toLowerCase()
+        );
       });
 
       if (alreadyExists) {
