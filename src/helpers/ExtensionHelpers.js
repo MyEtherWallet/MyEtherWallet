@@ -41,15 +41,12 @@ const addWalletToStore = (
 
     if (addType === 'edit') {
       if (foundNickname) {
-        Toast.responseHandler(this.$t('mew-cx.nickname-found'), Toast.WARN);
+        Toast.responseHandler('mewcx.nickname-found', Toast.WARN);
         return;
       }
     } else {
       if (foundAddress) {
-        Toast.responseHandler(
-          this.$t('mew-cx.address-already-stored'),
-          Toast.ERROR
-        );
+        Toast.responseHandler('mewcx.address-already-stored', Toast.ERROR);
         return;
       }
     }
@@ -66,7 +63,7 @@ const addWalletToStore = (
       chrome.storage.sync.set(obj, callback);
     } catch (e) {
       Toast.responseHandler(
-        this.$t('mew-cx.something-went-wrong'),
+        this.$t('mewcx.something-went-wrong'),
         Toast.ERROR
       );
     }
@@ -88,7 +85,7 @@ const deleteWalletFromStore = (addr, callback) => {
   try {
     chrome.storage.sync.remove(toChecksumAddress(addr).toLowerCase(), callback);
   } catch (e) {
-    Toast.responseHandler(this.$t('mew-cx.something-went-wrong'), Toast.ERROR);
+    Toast.responseHandler(this.$t('mewcx.something-went-wrong'), Toast.ERROR);
   }
 };
 

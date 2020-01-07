@@ -116,10 +116,10 @@
       <div v-if="!!wallet && !wallet.isPubOnly" class="my-priv-container">
         <div class="text-container">
           <h3>{{ $t('interface.account-content.my-priv') }}</h3>
-          <p>{{ wallet.getPrivateKeyString().replace('0x', '') }}</p>
+          <p>{{ wallet.getPrivateKeyString() }}</p>
         </div>
         <qrcode
-          :value="wallet.getPrivateKeyString().replace('0x', '')"
+          :value="wallet.getPrivateKeyString()"
           :options="{ size: 120 }"
         />
       </div>
