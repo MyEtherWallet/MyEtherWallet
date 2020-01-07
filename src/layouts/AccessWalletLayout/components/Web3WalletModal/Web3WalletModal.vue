@@ -4,7 +4,7 @@
     :title="
       isMetaMask
         ? $t('accessWallet.metamask.modal.title')
-        : $t('mewcx.access-view-mew')
+        : $t('mewcx.access-via-mew')
     "
     hide-footer
     static
