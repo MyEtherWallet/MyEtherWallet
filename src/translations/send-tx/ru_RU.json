@@ -42,8 +42,10 @@
   "success": {
     "title": "Готово",
     "sub-title": "Транзакция отправлена!",
-    "button-check-status": "Проверить статус на Etherscan.io"
+    "button-check-status": "Проверить статус на Etherscan.io",
+    "button-check-explorer": "Проверить статус на {explorrerName}"
   },
+  "invalid-data": "Provided data is invalid or empty!",
   "via-contract": "Через контракт",
   "import-json": "Импорт JSON",
   "retrieved": "Получено",
