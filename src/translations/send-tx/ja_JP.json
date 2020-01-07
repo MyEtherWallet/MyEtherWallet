@@ -42,8 +42,10 @@
   "success": {
     "title": "Success",
     "sub-title": "Transaction sent!",
-    "button-check-status": "Check Status on Etherscan.io"
+    "button-check-status": "Check Status on Etherscan.io",
+    "button-check-explorer": "Check Status on {explorrerName}"
   },
+  "invalid-data": "Provided data is invalid or empty!",
   "via-contract": "Via Contract",
   "import-json": "Import JSON",
   "retrieved": "Retrieved",
