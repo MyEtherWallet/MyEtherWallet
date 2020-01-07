@@ -62,12 +62,12 @@
     "description": "Опишите проблему"
   },
   "issue-log": {
-    "oops": "Oops",
-    "error-text": "Something went wrong. You can help us fix it by submitting a report about this error.",
+    "oops": "Ой",
+    "error-text": "Что-то пошло не так. Вы можете помочь нам, отправив отчет об этой ошибке.",
     "inform-error": "Вы хотите сообщить MEW об этой ошибке?",
     "never-show": "Больше не показывать",
-    "send-button": "Send error report to MEW",
-    "no-thanks": "No thanks",
+    "send-button": "Отправить MEW отчет об ошибке",
+    "no-thanks": "Нет, спасибо",
     "show-error-details": "Show error details"
   },
   "wallet": {
