@@ -12,12 +12,15 @@
   "previous": "Назад",
   "thank-you": "Спасибо",
   "back": "Назад",
+  "okay": "Окей",
   "next": "Далее",
   "copy": "Скопировать",
   "copied": "Скопировано",
   "clear": "Очистить",
   "edit": "Редактировать",
   "cancel": "Отменить",
+  "close": "Закрыть",
+  "submit": "Отправить",
   "more": "Еще",
   "yes": "Да",
   "no": "Нет",
@@ -59,13 +62,9 @@
     "description": "Опишите проблему"
   },
   "issue-log": {
-    "oops": "Oops",
     "error-text": "Что-то пошло не так",
     "inform-error": "Вы хотите сообщить MEW об этой ошибке?",
-    "never-show": "Больше не показывать",
-    "send-button": "Send error report to MEW",
-    "no-thanks": "No thanks",
-    "show-error-details": "Show error details"
+    "never-show": "Больше не показывать"
   },
   "wallet": {
     "create-new": "Создать новый кошелек",
@@ -163,5 +162,6 @@
   "spaceman": "Космонавт",
   "disconnected": "Отсоединено",
   "mew-icon": "Иконка MEW",
-  "kitties": "kitties"
+  "kitties": "kitties",
+  "mewtopia": "MEWtopia"
 }
