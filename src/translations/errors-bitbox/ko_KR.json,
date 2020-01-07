@@ -1,9 +1,0 @@
-{
-  "unexpected": "Unexpected error",
-  "invalid-password": "The password is incorrect. Attempts remaining: ",
-  "user-abort": "The transaction was canceled by the user. To confirm a transaction, hold the BitBox touch button for 4 seconds.",
-  "user-timeout": "Timed out. To confirm a transaction, hold the BitBox touch button for 4 seconds.",
-  "not-initialized": "The BitBox is not initialized. Use Shift Cryptosecurity's BitBox App to set up a wallet.",
-  "upgrade-firmware": "Please upgrade to the newest firmware using Shift Cryptosecurity's BitBox App.",
-  "unsupported-firmware": "MyEtherWallet does not yet support this version of the firmware"
-}
