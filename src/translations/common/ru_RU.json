@@ -59,9 +59,13 @@
     "description": "Опишите проблему"
   },
   "issue-log": {
+    "oops": "Oops",
     "error-text": "Что-то пошло не так",
     "inform-error": "Вы хотите сообщить MEW об этой ошибке?",
-    "never-show": "Больше не показывать"
+    "never-show": "Больше не показывать",
+    "send-button": "Send error report to MEW",
+    "no-thanks": "No thanks",
+    "show-error-details": "Show error details"
   },
   "wallet": {
     "create-new": "Создать новый кошелек",
