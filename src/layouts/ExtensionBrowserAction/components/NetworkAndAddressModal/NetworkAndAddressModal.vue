@@ -14,7 +14,6 @@
             class="collapse-open-button"
             variant="primary"
           >
-            <p class="button-number">1</p>
             <div class="network">
               <p>{{ $t('common.network') }}</p>
               <p class="network-name monospace">
@@ -86,16 +85,19 @@
                   <div class="dropdown-button-container">
                     <b-dropdown
                       id="hd-derivation-path"
-                      :text="getPathLabel(selectedPath)"
+                      :text="`${getPathLabel(selectedPath)} (${selectedPath})`"
                       right
                       class="dropdown-button-2"
                     >
                       <b-dropdown-item
                         v-for="(val, key) in availablePaths"
                         :key="'base' + key"
-                        :class="selectedPath === val.path ? 'active' : ''"
+                        :class="[
+                          selectedPath === val.path ? 'active' : '',
+                          'dropdown-paths'
+                        ]"
                         @click="changePath(key)"
-                        >{{ val.label }}</b-dropdown-item
+                        >{{ val.label }} <span>({{ val.path }})</span></b-dropdown-item
                       >
                       <b-dropdown-divider />
                       <b-dropdown-item>
@@ -107,7 +109,9 @@
                         :class="selectedPath === val.path ? 'active' : ''"
                         class="custom-networks"
                       >
-                        <div @click="changePath(key)">{{ val.label }}</div>
+                        <div @click="changePath(key)">
+                          {{ val.label }} <span>({{ val.path }})</span>
+                        </div>
                         <span>
                           <i
                             class="fa fa-times-circle"
@@ -171,8 +175,8 @@
 
                   <ul class="address-block table-header fours">
                     <li>{{ $t('accessWallet.id') }}</li>
-                    <li>{{ $t('common.address') }}</li>
-                    <li>{{ $t('common.balance') }}</li>
+                    <li>{{ $t('common.addr') }}</li>
+                    <li>{{ $t('common.balance.string') }}</li>
                   </ul>
 
                   <ul
@@ -555,4 +559,14 @@ export default {
 
 <style lang="scss" scoped>
 @import 'NetworkAndAddressModal.scss';
+</style>
+
+<style lang="scss">
+.dropdown-paths {
+  .dropdown-item {
+    align-items: center;
+    display: flex !important;
+    justify-content: space-between;
+  }
+}
 </style>

@@ -91,7 +91,7 @@
               <div class="dropdown-button-container">
                 <b-dropdown
                   id="hd-derivation-path"
-                  :text="`${getPathLabel(selectedPath)} (${selectedPath}`"
+                  :text="`${getPathLabel(selectedPath)} (${selectedPath})`"
                   right
                   class="dropdown-button-2"
                 >

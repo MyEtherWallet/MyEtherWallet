@@ -55,13 +55,18 @@
           </ul>
         </div>
         <div class="button-container">
-          <expanding-option :title="$t('mewcx.password')">
+          <expanding-option
+            :title="$t('createWallet.mnemonic.do-you-extra-word')"
+            :popover="
+              $t('createWallet.mnemonic.access-wallet-extra-word-popover')
+            "
+          >
             <div class="input-container">
               <div class="mnemonic-password-input">
                 <input
                   v-model="locPassword"
                   :type="show ? 'text' : 'password'"
-                  :placeholder="$t('mewcx.enter-pw')"
+                  :placeholder="$t('createWallet.mnemonic.type-in')"
                 />
                 <img
                   :src="show ? showIcon : hide"

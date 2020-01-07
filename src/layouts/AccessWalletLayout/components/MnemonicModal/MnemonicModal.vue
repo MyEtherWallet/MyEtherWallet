@@ -146,6 +146,7 @@ export default {
       e.preventDefault();
       e.stopPropagation();
       this.spinner = true;
+      console.log(this.mnemonicPhrase, this.password);
       MnemonicWallet(this.mnemonicPhrase.join(' '), this.password)
         .then(wallet => {
           this.password = '';

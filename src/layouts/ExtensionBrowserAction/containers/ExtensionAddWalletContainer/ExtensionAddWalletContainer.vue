@@ -89,7 +89,6 @@ import byJsonImgHov from '@/assets/images/icons/button-software-no-padding.svg';
 import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
 import privateKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
 import generateImgHov from '@/assets/images/home/icon-wallet.svg';
-//import AccessWalletButton from '@/layouts/AccessWalletLayout/components/AccessWalletButton';
 import AccessWalletButton from '../../components/AccessWalletButton';
 import ImportKeystoreModal from '../../components/ImportKeystoreModal';
 import ImportPrivateKeyModal from '../../components/ImportPrivateKeyModal';
@@ -229,6 +228,7 @@ export default {
     openAddressOption() {
       this.loading = true;
       const mnemonicPhrase = this.mnemonicPhrase;
+
       MnemonicWallet(mnemonicPhrase, this.password)
         .then(wallet => {
           this.loading = false;
