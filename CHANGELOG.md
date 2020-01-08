@@ -1,3 +1,7 @@
+### Bug
+
+- Hide other translations on mobile [#1834] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1834)
+
 ### Release v5.2.9
 
 ### Feature
