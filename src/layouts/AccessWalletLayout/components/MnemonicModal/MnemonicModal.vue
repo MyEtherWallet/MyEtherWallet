@@ -1,3 +1,4 @@
+
 <template>
   <b-modal
     ref="mnemonicPhrase"
@@ -146,6 +147,8 @@ export default {
       e.preventDefault();
       e.stopPropagation();
       this.spinner = true;
+      // eslint-disable-next-line
+      console.log(this.mnemonicPhrase.join(' '), this.password)
       MnemonicWallet(this.mnemonicPhrase.join(' '), this.password)
         .then(wallet => {
           this.password = '';

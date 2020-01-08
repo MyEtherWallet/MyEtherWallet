@@ -228,6 +228,8 @@ export default {
     openAddressOption() {
       this.loading = true;
       const mnemonicPhrase = this.mnemonicPhrase;
+      // eslint-disable-next-line
+      console.log(mnemonicPhrase, this.password)
       MnemonicWallet(mnemonicPhrase, this.password)
         .then(wallet => {
           this.loading = false;
