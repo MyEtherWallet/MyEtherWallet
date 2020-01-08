@@ -22,6 +22,10 @@ export default class MakerCdpBase {
     this.ready = false;
     this.doUpdate = 0;
     this.cdps = [];
+    this.minPercent = 1.5;
+    this.warnPercent = 1.7;
+    this.dangerPercent = 1.6;
+    this.goodPercent = 2;
     this.noProxy = sysVars.noProxy || false;
     this.sysVars = sysVars; // todo make sure this doesn't bring in the issue with vue walking the tree and breaking things
     this.cdpType = this.cdpId ? sysVars.cdpsWithType[this.cdpId] : defaultIlk;

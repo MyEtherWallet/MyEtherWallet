@@ -152,6 +152,7 @@
           </li>
         </ul>
       </div>
+
       <div v-if="!hasProxy" class="buttons-container">
         <div
           class="submit-button large-round-button-green-filled"
@@ -160,6 +161,7 @@
           Create Proxy
         </div>
       </div>
+
       <div
         v-if="selectedCurrency.symbol !== 'ETH' && !hasEnoughAllowance()"
         class="buttons-container"
@@ -171,6 +173,7 @@
           Set Allowance
         </div>
       </div>
+
       <div class="buttons-container">
         <div
           :class="[
@@ -314,11 +317,14 @@ export default {
       if (!this.hasProxy) return false;
       if (toBigNumber(this.ethQty).isNaN() || toBigNumber(this.daiQty).isNaN())
         return false;
+
       if (toBigNumber(this.ethQty).gt(0)) {
         if (toBigNumber(this.ethQty).lte(this.values.minEth)) return false;
+
         if (this.emptyMakerCreated) {
           if (toBigNumber(this.makerCDP.minDai).gt(this.daiQty)) return false;
-        } else if (toBigNumber(20).gt(this.daiQty)) return false;
+        } else if (toBigNumber(this.minDaiValue).gt(this.daiQty)) return false;
+
         if (toBigNumber(this.maxDaiDraw).lte(toBigNumber(this.daiQty)))
           return false;
         if (this.emptyMakerCreated) {
@@ -410,6 +416,9 @@ export default {
       return null;
     },
     minCreate() {
+      if (this.emptyMakerCreated) {
+        return this.makerCDP.minDai;
+      }
       return 20;
     }
   },
