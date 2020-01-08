@@ -160,8 +160,8 @@ export default {
     sortedAddressBook() {
       const addrBk = this.addressBook;
       return addrBk.sort((a, b) => {
-        a = a.nickname.toLowerCase();
-        b = b.nickname.toLowerCase();
+        a = a.nickname.toString().toLowerCase();
+        b = b.nickname.toString().toLowerCase();
 
         return a < b ? -1 : a > b ? 1 : 0;
       });

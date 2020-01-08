@@ -299,8 +299,8 @@ export default {
     ...mapState(['network', 'online', 'addressBook']),
     sortedAddressBook() {
       return this.addressBook.slice().sort((a, b) => {
-        a = a.nickname.toLowerCase();
-        b = b.nickname.toLowerCase();
+        a = a.nickname.toString().toLowerCase();
+        b = b.nickname.toString().toLowerCase();
 
         return a < b ? -1 : a > b ? 1 : 0;
       });
