@@ -81,7 +81,7 @@ export default {
     unlockWallet() {
       this.spinner = true;
       this.$store
-        .dispatch('decryptWallet', [
+        .dispatch('main/decryptWallet', [
           new WalletInterface(this.actualPrivKey, false, privKeyType)
         ])
         .then(() => {

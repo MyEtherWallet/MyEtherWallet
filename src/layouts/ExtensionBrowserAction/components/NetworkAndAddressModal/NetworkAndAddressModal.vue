@@ -419,7 +419,7 @@ export default {
       if (customPath) {
         this.customPath.path = customPath;
         this.$store
-          .dispatch('addCustomPath', {
+          .dispatch('main/addCustomPath', {
             label: this.customPath.label,
             path: customPath
           })
