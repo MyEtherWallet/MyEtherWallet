@@ -82,7 +82,7 @@ export default {
   },
   computed: {
     loadingMessage() {
-      return this.loadingState;
+      return this.$t(this.loadingState);
     },
     hasCdps() {
       return this.cdps.length > 0;

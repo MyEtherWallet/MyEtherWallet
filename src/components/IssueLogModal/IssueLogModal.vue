@@ -10,39 +10,54 @@
         static
         lazy
       >
-        <div class="modal-contents">
-          <div class="modal-header-block">
-            <h2 class="title">{{ $t('common.issue-log.error-text') }}</h2>
-            <p class="sub-text">
+        <div class="new-issue-log">
+          <div class="large-header">{{ $t('common.issue-log.oops') }}</div>
+          <div class="sub-header">
+            {{ $t('common.issue-log.error-text') }}
+          </div>
+          <div class="buttons mt-5">
+            <div class="button-block-text">
               {{ $t('common.issue-log.inform-error') }}
-            </p>
-          </div>
-          <div class="modal-user-input-block">
-            <code>
-              {{ JSON.stringify(error) }}
-            </code>
-          </div>
-          <div class="modal-button-block">
-            <standard-button
-              :options="cancelButtonOptions"
-              :click-function="() => sendError(false)"
-            />
-            <standard-button
-              :options="sendButtonOptions"
-              :click-function="() => sendError(true)"
-            />
-          </div>
-          <div v-if="showSkipper" class="button-block">
-            <div class="checkbox-container">
-              <label for="terms" @click="neverShow = !neverShow">
-                <span :class="[neverShow ? 'enable' : '', 'custom-marker']">
-                  <i v-if="neverShow" class="fa fa-check" />
-                </span>
-                <input name="terms" type="checkbox" />
-                {{ $t('common.issue-log.never-show') }}
-              </label>
+            </div>
+            <div class="mt-3 d-flex">
+              <b-btn class="mr-1" @click="() => sendError(true)">{{
+                $t('common.issue-log.send-button')
+              }}</b-btn>
+              <b-btn
+                variant="outline-secondary"
+                @click="() => sendError(false)"
+                >{{ $t('common.issue-log.no-thanks') }}</b-btn
+              >
+            </div>
+
+            <div v-if="showSkipper" class="button-block mt-3">
+              <div class="checkbox-container">
+                <label for="terms" @click="neverShow = !neverShow">
+                  <span :class="[neverShow ? 'enable' : '', 'custom-marker']">
+                    <i v-if="neverShow" class="fa fa-check" />
+                  </span>
+                  <input name="terms" type="checkbox" />
+                  {{ $t('common.issue-log.never-show') }}
+                </label>
+              </div>
+            </div>
+
+            <div
+              v-b-toggle.collapse-error-detail
+              class="mt-5 show-error-detail"
+            >
+              {{ $t('common.issue-log.show-error-details') }}
             </div>
           </div>
+
+          <b-collapse id="collapse-error-detail" class="mt-2">
+            <b-card>
+              <pre class="error-detail"
+                >{{ JSON.stringify(error) }}
+</pre
+              >
+            </b-card>
+          </b-collapse>
         </div>
 
         <!-- .modal-contents -->
@@ -54,14 +69,11 @@
 </template>
 
 <script>
-import StandardButton from '@/components/Buttons/StandardButton';
 import store from 'store';
 
 export default {
   name: 'IssueLogModal',
-  components: {
-    'standard-button': StandardButton
-  },
+  components: {},
   props: {
     error: {
       type: Object,
@@ -76,17 +88,6 @@ export default {
   },
   data() {
     return {
-      cancelButtonOptions: {
-        title: 'Cancel',
-        buttonStyle: 'green-border',
-        noMinWidth: true,
-        fullWidth: true
-      },
-      sendButtonOptions: {
-        title: 'Send',
-        buttonStyle: 'green',
-        noMinWidth: true
-      },
       errorCount: 0,
       showSkipper: false,
       neverShow: false

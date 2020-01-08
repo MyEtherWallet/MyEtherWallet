@@ -290,7 +290,7 @@ export default {
             Toast.responseHandler(resp, Toast.SUCCESS);
           })
           .catch(err => {
-=            Toast.responseHandler(err, Toast.ERROR);
+            Toast.responseHandler(err, Toast.ERROR);
           });
       } catch (err) {
         Toast.responseHandler(err, Toast.ERROR);

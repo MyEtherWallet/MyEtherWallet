@@ -177,7 +177,10 @@
               {{ $t('interface.address-book.add-up-to') }}
             </p>
             <div class="table-container">
-              <table v-if="addressBook.length > 0" class="contact-container">
+              <table
+                v-if="sortedAddressBook.length > 0"
+                class="contact-container"
+              >
                 <colgroup>
                   <col width="5%" />
                   <col width="55%" />
@@ -194,7 +197,7 @@
                 </thead>
                 <tbody>
                   <tr
-                    v-for="(contact, index) in addressBook"
+                    v-for="(contact, index) in sortedAddressBook"
                     :key="contact.key"
                   >
                     <td class="numbered">{{ index + 1 }}.</td>
@@ -215,7 +218,7 @@
                         >{{ contact.address }}</a
                       >
                     </td>
-                    <td>
+                    <td class="addr-nickname">
                       {{ contact.nickname }}
                     </td>
                     <td>
@@ -229,49 +232,6 @@
                   </tr>
                 </tbody>
               </table>
-            </div>
-
-            <span v-if="addrBookErrMsg" class="err">{{
-              $t(addrBookErrMsg)
-            }}</span>
-
-            <div class="address-inputs">
-              <blockie
-                v-show="isValidAddress"
-                :address="contactAddress"
-                width="32px"
-                height="32px"
-                class="blockie-image"
-              />
-              <input
-                v-model="contactAddress"
-                v-addr-resolver="'contactAddress'"
-                :class="isValidAddress ? 'blockie-input' : ''"
-                :placeholder="$t('common.addr')"
-                type="text"
-              />
-            </div>
-            <div class="addr-btn-container">
-              <input
-                v-model="contactNickname"
-                :placeholder="$t('interface.address-book.nickname')"
-                class="nickname-input"
-                type="text"
-              />
-              <standard-button
-                :options="{
-                  title: $t('interface.config.add-contact'),
-                  buttonStyle: 'green',
-                  rightArrow: false,
-                  leftArrow: false,
-                  fullWidth: true,
-                  noMinWidth: false
-                }"
-                :button-disabled="
-                  !contactAddress || !isValidAddress || addrBookErrMsg !== null
-                "
-                :click-function="addContact"
-              />
             </div>
             <div class="addr-btn-container">
               <button
@@ -337,6 +297,14 @@ export default {
   },
   computed: {
     ...mapState(['network', 'online', 'addressBook']),
+    sortedAddressBook() {
+      return this.addressBook.slice().sort((a, b) => {
+        a = a.nickname.toString().toLowerCase();
+        b = b.nickname.toString().toLowerCase();
+
+        return a < b ? -1 : a > b ? 1 : 0;
+      });
+    },
     gasPriceInputs() {
       return {
         economy: {
@@ -562,39 +530,6 @@ export default {
         });
 
       this.ethPrice = price.data.ETH.quotes.USD.price;
-    },
-    addContact() {
-      const alreadyExists = Object.keys(this.addressBook).some(key => {
-        return this.addressBook[key].address === this.contactAddress;
-      });
-
-      if (this.addressBook.length > 9) {
-        this.addrBookErrMsg = 'interface.address-book.add-up-to';
-        this.contactAddress = '';
-        this.contactNickname = '';
-        return;
-      } else if (alreadyExists) {
-        Toast.responseHandler(
-          new Error(this.$t('interface.address-book.already-exists')),
-          Toast.ERROR
-        );
-        this.contactAddress = '';
-        this.contactNickname = '';
-        return;
-      }
-
-      this.addrBookErrMsg = null;
-
-      this.addressBook.push({
-        address: this.contactAddress,
-        currency: 'ETH',
-        nickname: this.contactNickname || this.addressBook.length + 1
-      });
-
-      this.$store.dispatch('setAddressBook', this.addressBook);
-
-      this.contactAddress = '';
-      this.contactNickname = '';
     },
     openAddrBookModal(action, idx) {
       this.currentAddressIdx = action === 'edit' ? idx : null;
