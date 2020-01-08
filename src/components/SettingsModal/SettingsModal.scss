@@ -200,6 +200,12 @@ $mobile-width: 530px;
         display: flex;
       }
 
+      .addr-nickname {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
       .contact-addr {
         color: $light-blue-8;
         overflow: hidden;
