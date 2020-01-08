@@ -244,7 +244,7 @@ export default {
           label: this.customLabel
         };
         this.$store
-          .dispatch('addCustomPath', {
+          .dispatch('main/addCustomPath', {
             label: this.customLabel,
             path: customPath
           })
