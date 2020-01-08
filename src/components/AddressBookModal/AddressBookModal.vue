@@ -129,7 +129,7 @@ export default {
         EDIT: 'edit',
         ADD: 'add'
       }
-    }
+    };
   },
   computed: {
     ...mapState(['addressBook']),
