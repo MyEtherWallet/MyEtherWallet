@@ -97,7 +97,8 @@
                           'dropdown-paths'
                         ]"
                         @click="changePath(key)"
-                        >{{ val.label }} <span>({{ val.path }})</span></b-dropdown-item
+                        >{{ val.label }}
+                        <span>({{ val.path }})</span></b-dropdown-item
                       >
                       <b-dropdown-divider />
                       <b-dropdown-item>
