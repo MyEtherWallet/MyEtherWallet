@@ -2,12 +2,33 @@
 
 $collepse-width: 650px;
 
+.product-title-mobile {
+  display: none;
+
+  @media all and (max-width: $collepse-width) {
+    & {
+      display: block;
+    }
+  }
+}
+
+.product-title-desktop {
+  display: block;
+
+  @media all and (max-width: $collepse-width) {
+    & {
+      display: none;
+    }
+  }
+}
+
 .crypto-kitties-details {
   @extend %interface-container;
 }
 
 .crypto-kitties-details-content-container {
   padding: 30px;
+
   @media all and (max-width: $collepse-width) {
     padding: 10px;
   }
@@ -19,7 +40,8 @@ $collepse-width: 650px;
   justify-content: center;
 
   @media all and (max-width: $collepse-width) {
-    flex-direction: column-reverse;
+    display: block;
+    //flex-direction: column;
     margin-top: 20px;
     padding: 0 15px;
   }
@@ -28,18 +50,27 @@ $collepse-width: 650px;
 .kitty-image {
   margin-right: 30px;
   width: 250px;
+
+  img {
+    width: 100%;
+  }
+
   @media all and (max-width: $collepse-width) {
     margin: 0 auto;
     max-width: 350px;
     width: 100%;
-  }
-  img {
-    width: 100%;
+
+    img {
+      max-width: 250px;
+      display: block;
+      margin: 0 auto;
+    }
   }
 }
 
 .kitty-text {
   margin: auto 0;
+
   h3 {
     font-weight: 600;
     margin-bottom: 10px;
@@ -57,6 +88,7 @@ $collepse-width: 650px;
   margin: 0 auto;
   margin-top: 40px;
   max-width: 300px;
+
   @media all and (max-width: $collepse-width) {
     margin-top: 20px;
     max-width: 500px;
