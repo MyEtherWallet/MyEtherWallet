@@ -2,7 +2,7 @@
   <div>
     <loading-sign
       :loadingmessage1="loadingMessage"
-      :loadingmessage2="$t('dappsMaker.initial-loading-two')"
+      :loadingmessage2="$t('dappsMCDMaker.initial-loading-two')"
     />
   </div>
 </template>

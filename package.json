@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.2.8-hotfix.2",
+  "version": "5.2.9",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -62,7 +62,7 @@
     "@ensdomains/dnsregistrar": "0.3.9",
     "@ethereum-alarm-clock/lib": "0.3.5",
     "@keepkey/keepkey.js": "1.2.3",
-    "@ledgerhq/hw-app-eth": "5.2.0",
+    "@ledgerhq/hw-app-eth": "5.3.0",
     "@ledgerhq/hw-transport-u2f": "5.2.0",
     "@ledgerhq/hw-transport-webusb": "5.2.0",
     "@makerdao/currency": "0.9.6",
@@ -93,7 +93,7 @@
     "eslint": "6.8.0",
     "eslint-plugin-prettier": "3.1.2",
     "eslint-plugin-security": "1.4.0",
-    "eslint-plugin-vue": "6.1.1",
+    "eslint-plugin-vue": "6.1.2",
     "eth-ens-namehash": "2.0.8",
     "ethereum-ens": "0.7.7",
     "ethereumjs-common": "1.5.0",
@@ -144,7 +144,7 @@
     "web3-core-method": "1.2.4",
     "web3-core-requestmanager": "1.2.4",
     "web3-utils": "1.2.4",
-    "webpack": "4.41.4",
+    "webpack": "4.41.5",
     "worker-loader": "2.0.0",
     "zxcvbn": "4.4.2"
   },

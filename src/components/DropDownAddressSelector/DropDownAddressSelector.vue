@@ -204,7 +204,7 @@ export default {
         return;
       } else if (!this.isValidAddress) {
         Toast.responseHandler(
-          this.$t('ens.addr-resolver.invalid-eth-addr'),
+          this.$t('ens.ens-resolver.invalid-eth-addr'),
           Toast.ERROR
         );
         return;

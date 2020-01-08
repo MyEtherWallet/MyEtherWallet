@@ -86,9 +86,7 @@
                     />
                     {{ $t('common.buy-eth') }}
                   </b-nav-item>
-                  <b-nav-item v-if="isHomePage" to="/" exact>{{
-                    $t('common.home')
-                  }}</b-nav-item>
+
                   <b-nav-item-dropdown
                     v-if="!isMewCx"
                     id="my-nav-dropdown"
@@ -126,12 +124,8 @@
                       }})</b-dropdown-item
                     >
                   </b-nav-item-dropdown>
-
-                  <!-- Commented for now waiting for all Translations to be done -->
-                  <!-- <div v-show="!isMewCx" class="language-menu-container">
-                    <div class="arrows">
-                      <i class="fa fa-angle-down" aria-hidden="true" />
-                    </div>
+                  <div v-show="!isMewCx" class="language-menu-container">
+                    <div class="down-arrow"></div>
                     <b-nav-item-dropdown
                       class="language-menu"
                       extra-toggle-classes="nav-link-custom"
@@ -156,11 +150,11 @@
                         :active="$root._i18n.locale === language.langCode"
                         :data-language-code="language.langCode"
                         :data-flag-name="language.flag"
-                        @click="languageItemClicked"
+                        @click="languageItemClicked(language)"
                         >{{ language.name }}</b-dropdown-item
                       >
                     </b-nav-item-dropdown>
-                  </div> -->
+                  </div>
                   <div class="notification-menu-container">
                     <notification
                       v-if="
@@ -168,14 +162,6 @@
                           $route.fullPath.includes('interface')
                       "
                       ref="notification"
-                    />
-                    <extension-notification
-                      v-if="
-                        isMewCx &&
-                          !$route.fullPath.includes('view-wallet-info') &&
-                          !$route.fullPath.includes('interface')
-                      "
-                      ref="extensionNotification"
                     />
                   </div>
                   <b-nav-item
@@ -254,7 +240,6 @@ import IssueLogModal from '@/components/IssueLogModal';
 import BigNumber from 'bignumber.js';
 import MobileMenu from './components/MobileMenu';
 import DisconnectedModal from '@/components/DisconnectedModal';
-import ExtensionNotification from '@/layouts/ExtensionBrowserAction/containers/ExtensionNotification';
 import DecisionTree from '@/components/DecisionTree';
 import CxHeader from '@/layouts/ExtensionBrowserAction/components/CxHeader';
 
@@ -273,7 +258,6 @@ export default {
     'user-reminder-button': UserReminderButton,
     'mobile-menu': MobileMenu,
     'disconnected-modal': DisconnectedModal,
-    'extension-notification': ExtensionNotification,
     'decision-tree': DecisionTree,
     'cx-header': CxHeader
   },
@@ -284,25 +268,25 @@ export default {
         // { name: 'Deutsch', flag: 'de', langCode: 'de_DL' },
         // { name: 'Ελληνικά', flag: 'gr', langCode: 'gr_GR' },
         { name: 'English', flag: 'en', langCode: 'en_US' },
-        { name: 'Español', flag: 'es', langCode: 'es_ES' },
+        // { name: 'Español', flag: 'es', langCode: 'es_ES' },
         // { name: 'Farsi', flag: 'ir', langCode: 'ir_IR' },
         // { name: 'Suomi', flag: 'fi', langCode: 'fi_FI' },
         // { name: 'Magyar', flag: 'hu', langCode: 'hu_HU' },
         // { name: 'Haitian Creole', flag: 'ht', langCode: 'ht_HT' },
         // { name: 'Bahasa Indonesia', flag: 'id', langCode: 'id_ID' },
         // { name: 'Italiano', flag: 'it', langCode: 'it_IT' },
-        { name: '日本語', flag: 'ja', langCode: 'ja_JP' },
-        { name: '한국어', flag: 'ko', langCode: 'ko_KR' },
+        // { name: '日本語', flag: 'ja', langCode: 'ja_JP' },
+        // { name: '한국어', flag: 'ko', langCode: 'ko_KR' },
         // { name: 'Nederlands', flag: 'nl', langCode: 'nl_NL' },
         // { name: 'Norsk Bokmål', flag: 'no', langCode: 'no_NO' },
         // { name: 'Polski', flag: 'pl', langCode: 'pl_PL' },
         // { name: 'Português', flag: 'pt', langCode: 'pt_PT' },
-        { name: 'Русский', flag: 'ru', langCode: 'ru_RU' },
+        { name: 'Русский', flag: 'ru', langCode: 'ru_RU' }
         // { name: 'ภาษาไทย', flag: 'th', langCode: 'th_TH' },
         // { name: 'Türkçe', flag: 'tr', langCode: 'tr_TR' },
         // { name: 'Tiếng Việt', flag: 'vn', langCode: 'vn_VN' },
-        { name: '简体中文', flag: 'zh-Hans', langCode: 'zh_CN' },
-        { name: '繁體中文', flag: 'tw', langCode: 'zh_TW' }
+        // { name: '简体中文', flag: 'zh-Hans', langCode: 'zh_CN' },
+        // { name: '繁體中文', flag: 'tw', langCode: 'zh_TW' }
       ],
       currentName: 'English',
       currentFlag: 'en',
@@ -392,7 +376,6 @@ export default {
 
     this.$eventHub.$on('issueModal', (error, resolve) => {
       // eslint-disable-next-line
-      console.log(error);
       let errorPop = store.get('errorPop') || 0;
       errorPop += 1;
       store.set('errorPop', errorPop);
@@ -436,14 +419,11 @@ export default {
         this.isMobileMenuOpen = false;
       });
     },
-    languageItemClicked(e) {
-      const code = e.target.parentNode.getAttribute('data-language-code');
-      const flag = e.target.parentNode.getAttribute('data-flag-name');
-
-      this.$i18n.locale = code;
-      this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
-      this.currentFlag = flag;
-      store.set('locale', code);
+    languageItemClicked(obj) {
+      this.$i18n.locale = obj.langCode;
+      this.currentName = obj.name;
+      this.currentFlag = obj.flag;
+      store.set('locale', obj.langCode);
     },
     logout() {
       this.$refs.logout.$refs.logout.show();

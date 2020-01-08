@@ -33,7 +33,8 @@
                       @change="selectGasType(key)"
                     />
                     <label :for="key">
-                      {{ key | capitalize }} ({{ gasPriceInputs[key].gwei }}
+                      {{ $t('interface.' + key) }}
+                      ({{ gasPriceInputs[key].gwei }}
                       {{ $t('common.gas.gwei') }})
                     </label>
                   </div>
@@ -80,7 +81,13 @@
             </div>
             <div class="button-block">
               <standard-button
-                :options="buttonSave"
+                :options="{
+                  title: $t('common.save'),
+                  buttonStyle: 'green',
+                  rightArrow: false,
+                  leftArrow: false,
+                  mobileFullWidth: true
+                }"
                 :button-disabled="selectedGasType === 'other' && customGas < 1"
                 :click-function="saveGasChanges"
               />
@@ -108,13 +115,27 @@
                 @change="receiveUploadedFile"
               />
               <standard-button
-                :options="buttonUploadFile"
+                :options="{
+                  title: $t('interface.config.upload-f'),
+                  buttonStyle: 'green-border',
+                  rightArrow: false,
+                  leftArrow: false,
+                  fullWidth: true,
+                  noMinWidth: true
+                }"
                 :click-function="uploadFile"
               />
             </div>
             <div class="button-block">
               <standard-button
-                :options="buttonImport"
+                :options="{
+                  title: $t('interface.config.import-short'),
+                  buttonStyle: 'green',
+                  rightArrow: false,
+                  leftArrow: false,
+                  fullWidth: true,
+                  noMinWidth: false
+                }"
                 :button-disabled="importedFile === ''"
                 :click-function="setDataFromImportedFile"
               />
@@ -135,7 +156,15 @@
                 rel="noopener noreferrer"
                 class="export-button"
               >
-                <standard-button :options="buttonExport" />
+                <standard-button
+                  :options="{
+                    title: $t('interface.config.export-short'),
+                    buttonStyle: 'green',
+                    rightArrow: false,
+                    leftArrow: false,
+                    mobileFullWidth: true
+                  }"
+                />
               </a>
             </div>
           </full-width-dropdown>
@@ -250,36 +279,6 @@ export default {
   },
   data() {
     return {
-      buttonSave: {
-        title: 'Save',
-        buttonStyle: 'green',
-        rightArrow: false,
-        leftArrow: false,
-        mobileFullWidth: true
-      },
-      buttonExport: {
-        title: 'Export',
-        buttonStyle: 'green',
-        rightArrow: false,
-        leftArrow: false,
-        mobileFullWidth: true
-      },
-      buttonUploadFile: {
-        title: 'Upload File...',
-        buttonStyle: 'green-border',
-        rightArrow: false,
-        leftArrow: false,
-        fullWidth: true,
-        noMinWidth: true
-      },
-      buttonImport: {
-        title: 'Import',
-        buttonStyle: 'green',
-        rightArrow: false,
-        leftArrow: false,
-        fullWidth: true,
-        noMinWidth: false
-      },
       inputFileName: '',
       selectedGasType: 'regular',
       customGas: 0,

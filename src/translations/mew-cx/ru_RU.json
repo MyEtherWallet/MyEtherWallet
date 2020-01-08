@@ -66,10 +66,10 @@
   "done": "Готово",
   "confirm-send": "Подтвердить и отправить",
   "your-tx-hash": "Ваш TxHash",
-  "mewcx": "MEWcx",
+  "mewcx": "MEW CX",
   "welcome-header": "Расширение MyEtherWallet для Chrome",
   "mew-cx-official": "Официальное расширение MyEtherWallet для Chrome",
-  "no-wallet-add": "You don't have any wallet saved. Click and add Wallet to get started",
+  "no-wallet-add": "У вас нет сохраненных кошельков. Нажмите \"Добавить кошелек\", чтобы начать",
   "use-burner": "Использовать разовый аккаунт",
   "by-entering-pw": "Введя свой пароль, вы принимаете наш",
   "trying-to-access-mew": "пытается получить доступ к MEW CX. Пожалуйста, выберите кошелек, который вы хотите подключить.",
@@ -82,11 +82,13 @@
   "token-added-success": "Токен успешно добавлен!",
   "copy-success": "Копирование успешно",
   "invalid-mnemonic": "Неверная мнемоническая фраза",
+  "coingecko": "Coingecko",
   "buy-eth": "Купить ETH",
-  "generate-wallet-description": "Generate your own unique Ethereum wallet. Receive a public address (0x...) and encrypt it with a password.",
+  "generate-wallet-description": "Создайте свой собственный уникальный кошелек Ethereum. Получите публичный адрес (0x...) и зашифруйте его паролем.",
   "mnemonic-phrase": "Мнемоническая фраза",
   "mnemonic-phrase-description": "Добавьте ваш кошелек с помощью мнемонической фразы. Мнемонические фразы состоят из 12-24 слов, но иногда содержат дополнительное слово для большей безопасности.",
   "private-key-description": "Добавьте ваш кошелек с помощью закрытого ключа. Закрытые ключи имеют 64 шестнадцатеричных символа.",
   "keystore-file-description": "Добавьте ваш кошелек с помощью файла-хранилищa ключей. Файл-хранилищe ключей содержит ваш закрытый ключ, зашифрованный в формат файла JSON.",
-  "chrome-cx": "Расширение для Chrome"
+  "chrome-cx": "Расширение для Chrome",
+  "access-via-mew": "Доступ через MEW CX"
 }

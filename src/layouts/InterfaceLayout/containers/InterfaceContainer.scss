@@ -18,10 +18,9 @@
 }
 
 %interface-container {
-  //border-radius: 5px;
+  border-radius: 5px;
   grid-area: main;
-  //overflow: hidden;
-  //background: $background-color-white;
+  background: $background-color-white;
 
   @media all and (max-width: $tablet-width) {
     margin-bottom: 10px;

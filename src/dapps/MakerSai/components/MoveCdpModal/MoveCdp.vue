@@ -40,11 +40,20 @@
         </div>
         <div class="buttons">
           <standard-button
-            :options="cancelButton"
+            :options="{
+              title: $t('common.cancel'),
+              buttonStyle: 'green-border',
+              noMinWidth: true
+            }"
             :click-function="closeModal"
           />
           <standard-button
-            :options="submitButton"
+            :options="{
+              title: $t('common.submit'),
+              buttonStyle: 'green',
+              noMinWidth: true,
+              fullWidth: true
+            }"
             :button-disabled="btnActive ? false : true"
             :click-function="moveCdp"
           />
@@ -116,18 +125,7 @@ export default {
       modalDetailInformation: false,
       checkBoxChecked: false,
       textValues: {},
-      mkrToken: {},
-      cancelButton: {
-        title: 'Cancel',
-        buttonStyle: 'green-border',
-        noMinWidth: true
-      },
-      submitButton: {
-        title: 'Submit',
-        buttonStyle: 'green',
-        noMinWidth: true,
-        fullWidth: true
-      }
+      mkrToken: {}
     };
   },
   computed: {

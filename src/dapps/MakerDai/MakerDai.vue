@@ -74,7 +74,7 @@
         <div v-if="showMoveOrClose" class="header-buttons-container">
           <div class="inner-container">
             <button class="move-btn" @click="showMove">
-              <h4>{{ $t('dappsMaker.move-vault') }}</h4>
+              <h4>{{ $t('dappsMCDMaker.move-vault') }}</h4>
             </button>
           </div>
         </div>
@@ -105,7 +105,7 @@
     <div class="px-5 py-3">
       <router-view
         :active-cdp-id="activeCdpId"
-        :loading-state="curentlyLoading"
+        :loading-state="currentlyLoading"
         :build-empty="buildEmpty"
         :maker-active="makerActive"
         :eth-price="ethPrice"
@@ -233,9 +233,10 @@ export default {
   data() {
     return {
       activeCdpId: 0,
-      curentlyLoading: '',
+      currentlyLoading: '',
       destAddressProxy: '',
       destAddressHasProxy: false,
+      makerCreated: false,
       afterUpdate: [],
       allCdpIds: [],
       activeCdp: {},
@@ -281,6 +282,7 @@ export default {
       sysServices: {},
       targetPrice: 0,
       valuesUpdated: 0,
+      retryCount: 0,
       currentPath: '/interface/dapps/',
       afterLoadShow: 'HOME'
     };
@@ -599,9 +601,9 @@ export default {
     },
     async setupMCD() {
       try {
-        this.curentlyLoading = 'Loading: Multi Collateral Operations';
+        this.currentlyLoading = 'dappsMCDMaker.load-operations';
         this._typeService = this.maker.service(ServiceRoles.CDP_TYPE);
-        this.curentlyLoading = 'Loading: Multi Collateral Types';
+        this.currentlyLoading = 'dappsMCDMaker.load-types';
         this.mcdCurrencies = this._typeService.cdpTypes.reduce((acc, entry) => {
           acc[entry.currency.symbol] = entry;
           acc[entry.currency.symbol].symbol = entry.currency.symbol;
@@ -626,7 +628,7 @@ export default {
       }
 
       try {
-        this.curentlyLoading = this.$t('dappsMaker.loading-wallet');
+        this.currentlyLoading = 'dappsMCDMaker.loading-wallet';
         const MewMakerPlugin = MewPlugin(
           web3,
           _self.account.address,
@@ -666,7 +668,7 @@ export default {
       this.setupMCD();
       try {
         await this.maker.authenticate();
-        this.curentlyLoading = this.$t('dappsMaker.loading-system');
+        this.currentlyLoading = 'dappsMCDMaker.loading-system';
 
         await setupServices(this, this.maker);
 
@@ -694,7 +696,7 @@ export default {
 
         this.currentProxy = await this.getProxy();
 
-        this.curentlyLoading = this.$t('dappsMaker.loading-locating-vaults');
+        this.currentlyLoading = 'dappsMCDMaker.loading-locating-vaults';
         try {
           const { withType, withProxy, withoutProxy } = await locateCdps(
             this,
@@ -709,7 +711,7 @@ export default {
         }
 
         if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
-          this.curentlyLoading = this.$t('dappsMaker.loading-vaults');
+          this.currentlyLoading = 'dappsMCDMaker.loading-vaults';
           await this.loadCdpDetails(this.cdps, this.cdpsWithoutProxy);
         }
       } catch (e) {
