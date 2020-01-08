@@ -11,7 +11,8 @@
   "sotd": {
     "title": "A Joint Effort With State of The Dapps",
     "info": "By submitting your Dapp information, you acknowledge that your Dapp will be listed on {url}",
-    "url": "stateofthedapps.com"
+    "url": "stateofthedapps.com",
+    "name": "State of the Dapps"
   },
   "about-your-dapp": {
     "name": "Dapp name",
@@ -80,5 +81,6 @@
   "add-social": "Add a social account",
   "congrats": "Congratulations",
   "congrats-msg": "It takes about 3-5 business days to review your Dapp. And an email will be sent to you if the the status update.",
-  "strength-of": "Strength of Information"
+  "strength-of": "Strength of Information",
+  "contact-support": "Contact Support"
 }

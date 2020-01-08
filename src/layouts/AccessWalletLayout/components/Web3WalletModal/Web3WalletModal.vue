@@ -4,7 +4,7 @@
     :title="
       isMetaMask
         ? $t('accessWallet.metamask.modal.title')
-        : $t('mewcx.access-view-mew')
+        : $t('mewcx.access-via-mew')
     "
     hide-footer
     static
@@ -102,7 +102,7 @@
           <img alt class="icon mew cx" src="@/assets/images/mew-cx-logo.png" />
         </div>
         <div class="d-block content-container text-center">
-          <h4>{{ $t('accessWallet.metamask.warning.install-promt') }}</h4>
+          <h4>{{ $t('mewcx.install-prompt') }}</h4>
         </div>
         <div class="accept-terms hidden">
           <label class="checkbox-container">

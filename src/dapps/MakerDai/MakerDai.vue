@@ -105,7 +105,7 @@
     <div class="px-5 py-3">
       <router-view
         :active-cdp-id="activeCdpId"
-        :loading-state="curentlyLoading"
+        :loading-state="currentlyLoading"
         :build-empty="buildEmpty"
         :maker-active="makerActive"
         :eth-price="ethPrice"
@@ -125,7 +125,7 @@
         :values-updated="valuesUpdated"
         :values="activeValues"
         :maker-created="makerCreated"
-      :get-collateral-options="getCollateralOptions"
+        :get-collateral-options="getCollateralOptions"
         :get-value-or-function="getValueOrFunction"
         :get-cdp="getCdp"
         :has-cdp="hasCdp"
@@ -626,17 +626,16 @@ export default {
         this.gotoLoading();
       }
 
-      try {
-        this.currentlyLoading = 'dappsMCDMaker.loading-wallet';
-        const MewMakerPlugin = MewPlugin(
-          web3,
-          _self.account.address,
-          async () => {
-            if (_self.$route.path.includes('maker-dai')) {
-              await _self.doUpdate();
-            }
+      this.currentlyLoading = 'dappsMCDMaker.loading-wallet';
+      const MewMakerPlugin = MewPlugin(
+        web3,
+        _self.account.address,
+        async () => {
+          if (_self.$route.path.includes('maker-dai')) {
+            await _self.doUpdate();
           }
-        );
+        }
+      );
 
       this.maker = await Maker.create('inject', {
         provider: { inject: web3.currentProvider },

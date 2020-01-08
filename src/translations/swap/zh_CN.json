@@ -65,8 +65,11 @@
     "email": "Email",
     "popover-email": "Only used if any problems arise with the deposit, otherwise if omitted the value will be refunded to the sending address if any problems arise.",
     "verification-code": "Verification Code",
-    "button-submit": "Submit"
+    "button-submit": "Submit",
+    "email-placeholder": "user@example.com"
   },
   "order-id": "{provider} order ID",
-  "swap-widget": "Swap Widget"
+  "swap-widget": "Swap Widget",
+  "from-min": "From Min",
+  "max": "Max"
 }
