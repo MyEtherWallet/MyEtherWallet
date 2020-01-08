@@ -33,7 +33,8 @@
                       @change="selectGasType(key)"
                     />
                     <label :for="key">
-                      {{ key | capitalize }} ({{ gasPriceInputs[key].gwei }}
+                      {{ $t('interface.' + key) }}
+                      ({{ gasPriceInputs[key].gwei }}
                       {{ $t('common.gas.gwei') }})
                     </label>
                   </div>
@@ -80,7 +81,13 @@
             </div>
             <div class="button-block">
               <standard-button
-                :options="buttonSave"
+                :options="{
+                  title: $t('common.save'),
+                  buttonStyle: 'green',
+                  rightArrow: false,
+                  leftArrow: false,
+                  mobileFullWidth: true
+                }"
                 :button-disabled="selectedGasType === 'other' && customGas < 1"
                 :click-function="saveGasChanges"
               />
@@ -108,13 +115,27 @@
                 @change="receiveUploadedFile"
               />
               <standard-button
-                :options="buttonUploadFile"
+                :options="{
+                  title: $t('interface.config.upload-f'),
+                  buttonStyle: 'green-border',
+                  rightArrow: false,
+                  leftArrow: false,
+                  fullWidth: true,
+                  noMinWidth: true
+                }"
                 :click-function="uploadFile"
               />
             </div>
             <div class="button-block">
               <standard-button
-                :options="buttonImport"
+                :options="{
+                  title: $t('interface.config.import-short'),
+                  buttonStyle: 'green',
+                  rightArrow: false,
+                  leftArrow: false,
+                  fullWidth: true,
+                  noMinWidth: false
+                }"
                 :button-disabled="importedFile === ''"
                 :click-function="setDataFromImportedFile"
               />
@@ -135,7 +156,15 @@
                 rel="noopener noreferrer"
                 class="export-button"
               >
-                <standard-button :options="buttonExport" />
+                <standard-button
+                  :options="{
+                    title: $t('interface.config.export-short'),
+                    buttonStyle: 'green',
+                    rightArrow: false,
+                    leftArrow: false,
+                    mobileFullWidth: true
+                  }"
+                />
               </a>
             </div>
           </full-width-dropdown>
@@ -148,7 +177,10 @@
               {{ $t('interface.address-book.add-up-to') }}
             </p>
             <div class="table-container">
-              <table v-if="addressBook.length > 0" class="contact-container">
+              <table
+                v-if="sortedAddressBook.length > 0"
+                class="contact-container"
+              >
                 <colgroup>
                   <col width="5%" />
                   <col width="55%" />
@@ -165,7 +197,7 @@
                 </thead>
                 <tbody>
                   <tr
-                    v-for="(contact, index) in addressBook"
+                    v-for="(contact, index) in sortedAddressBook"
                     :key="contact.key"
                   >
                     <td class="numbered">{{ index + 1 }}.</td>
@@ -186,60 +218,43 @@
                         >{{ contact.address }}</a
                       >
                     </td>
-                    <td>
+                    <td class="addr-nickname">
                       {{ contact.nickname }}
                     </td>
                     <td>
-                      <span class="remove-txt" @click="removeContact(index)">
-                        {{ $t('interface.address-book.remove') }}
+                      <span
+                        class="edit-txt"
+                        @click="openAddrBookModal('edit', index)"
+                      >
+                        {{ $t('interface.address-book.edit') }}
                       </span>
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
-
-            <span v-if="addrBookErrMsg" class="err">{{ addrBookErrMsg }}</span>
-
-            <div class="address-inputs">
-              <blockie
-                v-show="isValidAddress"
-                :address="contactAddress"
-                width="32px"
-                height="32px"
-                class="blockie-image"
-              />
-              <input
-                v-model="contactAddress"
-                v-addr-resolver="'contactAddress'"
-                :class="isValidAddress ? 'blockie-input' : ''"
-                :placeholder="$t('common.addr')"
-                type="text"
-              />
-            </div>
             <div class="addr-btn-container">
-              <input
-                v-model="contactNickname"
-                :placeholder="$t('interface.address-book.nickname')"
-                class="nickname-input"
-                type="text"
-              />
-              <standard-button
-                :options="buttonAddress"
-                :button-disabled="
-                  !contactAddress || !isValidAddress || addrBookErrMsg !== null
-                "
-                :click-function="addContact"
-              />
+              <button
+                :class="addressBook.length >= 10 ? 'disabled' : ''"
+                @click="openAddrBookModal('add')"
+              >
+                +{{ $t('interface.address-book.add') }}
+              </button>
             </div>
           </full-width-dropdown>
         </div>
       </b-modal>
     </div>
+    <address-book-modal
+      ref="addressBook"
+      :current-idx="currentAddressIdx"
+      :title="addrBookModalTitle"
+    />
   </div>
 </template>
 
 <script>
+import AddressBookModal from '@/components/AddressBookModal';
 import FullWidthDropdownMenu from '@/components/FullWidthDropdownMenu';
 import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
@@ -252,6 +267,7 @@ export default {
   name: 'Settings',
   components: {
     'full-width-dropdown': FullWidthDropdownMenu,
+    'address-book-modal': AddressBookModal,
     blockie: Blockie
   },
   props: {
@@ -266,44 +282,6 @@ export default {
   },
   data() {
     return {
-      buttonSave: {
-        title: 'Save',
-        buttonStyle: 'green',
-        rightArrow: false,
-        leftArrow: false,
-        mobileFullWidth: true
-      },
-      buttonExport: {
-        title: 'Export',
-        buttonStyle: 'green',
-        rightArrow: false,
-        leftArrow: false,
-        mobileFullWidth: true
-      },
-      buttonUploadFile: {
-        title: 'Upload File...',
-        buttonStyle: 'green-border',
-        rightArrow: false,
-        leftArrow: false,
-        fullWidth: true,
-        noMinWidth: true
-      },
-      buttonImport: {
-        title: 'Import',
-        buttonStyle: 'green',
-        rightArrow: false,
-        leftArrow: false,
-        fullWidth: true,
-        noMinWidth: false
-      },
-      buttonAddress: {
-        title: 'Add Contact',
-        buttonStyle: 'green',
-        rightArrow: false,
-        leftArrow: false,
-        fullWidth: true,
-        noMinWidth: false
-      },
       inputFileName: '',
       selectedGasType: 'regular',
       customGas: 0,
@@ -313,14 +291,20 @@ export default {
       file: '',
       importedFile: '',
       popup: false,
-      isValidAddress: false,
-      contactAddress: '',
-      contactNickname: '',
-      addrBookErrMsg: null
+      currentAddressIdx: null,
+      addrBookModalTitle: ''
     };
   },
   computed: {
     ...mapState(['network', 'online', 'addressBook']),
+    sortedAddressBook() {
+      return this.addressBook.slice().sort((a, b) => {
+        a = a.nickname.toString().toLowerCase();
+        b = b.nickname.toString().toLowerCase();
+
+        return a < b ? -1 : a > b ? 1 : 0;
+      });
+    },
     gasPriceInputs() {
       return {
         economy: {
@@ -547,43 +531,13 @@ export default {
 
       this.ethPrice = price.data.ETH.quotes.USD.price;
     },
-    removeContact(idx) {
-      this.addressBook.splice(idx, 1);
-      this.$store.dispatch('setAddressBook', this.addressBook);
-      this.addrBookErrMsg = null;
-    },
-    addContact() {
-      const alreadyExists = Object.keys(this.addressBook).some(key => {
-        return this.addressBook[key].address === this.contactAddress;
-      });
-
-      if (this.addressBook.length > 9) {
-        this.addrBookErrMsg = this.$t('interface.address-book.add-up-to');
-        this.contactAddress = '';
-        this.contactNickname = '';
-        return;
-      } else if (alreadyExists) {
-        Toast.responseHandler(
-          new Error(this.$t('interface.address-book.already-exists')),
-          Toast.ERROR
-        );
-        this.contactAddress = '';
-        this.contactNickname = '';
-        return;
-      }
-
-      this.addrBookErrMsg = null;
-
-      this.addressBook.push({
-        address: this.contactAddress,
-        currency: 'ETH',
-        nickname: this.contactNickname || this.addressBook.length + 1
-      });
-
-      this.$store.dispatch('setAddressBook', this.addressBook);
-
-      this.contactAddress = '';
-      this.contactNickname = '';
+    openAddrBookModal(action, idx) {
+      this.currentAddressIdx = action === 'edit' ? idx : null;
+      this.addrBookModalTitle =
+        action === 'add'
+          ? this.$t('interface.address-book.add-new')
+          : this.$t('interface.address-book.edit-addr');
+      this.$refs.addressBook.$refs.addressBookModal.show();
     }
   }
 };

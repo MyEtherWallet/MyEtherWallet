@@ -1,5 +1,6 @@
 {
   "home": "Home",
+  "info": "Info",
   "faqs": "FAQs",
   "cstm-support": "Customer Support",
   "contact-support": "Contact Support",
@@ -11,12 +12,15 @@
   "previous": "Previous",
   "thank-you": "Thank you",
   "back": "Back",
+  "okay": "Okay",
   "next": "Next",
   "copy": "Copy",
   "copied": "Copied",
   "clear": "Clear",
   "edit": "Edit",
   "cancel": "Cancel",
+  "close": "Close",
+  "submit": "Submit",
   "more": "More",
   "yes": "Yes",
   "no": "No",
@@ -58,9 +62,13 @@
     "description": "Describe the issue"
   },
   "issue-log": {
-    "error-text": "Something went wrong",
+    "oops": "Oops",
+    "error-text": "Something went wrong. You can help us fix it by submitting a report about this error.",
     "inform-error": "Do you want to inform MEW about this error?",
-    "never-show": "Never show again"
+    "never-show": "Never show again",
+    "send-button": "Send error report to MEW",
+    "no-thanks": "No thanks",
+    "show-error-details": "Show error details"
   },
   "wallet": {
     "create-new": "Create A New Wallet",
@@ -158,5 +166,6 @@
   "spaceman": "Spaceman",
   "disconnected": "Disconnected",
   "mew-icon": "Mew Icon",
-  "kitties": "kitties"
+  "kitties": "kitties",
+  "mewtopia": "MEWtopia"
 }
