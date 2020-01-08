@@ -47,7 +47,7 @@
               <p>{{ $t('dappsMCDMaker.max-generate-available') }}</p>
               <p>
                 <b>{{
-                  values.maxDai ? displayFixedValue(values.maxDai) : 0
+                  displayFixedValue(maxDai())
                 }}</b>
                 {{ $t('dappsMCDMaker.dai') }}
               </p>

@@ -28,9 +28,7 @@
               <p>
                 <b>
                   {{
-                    values.debtValue
-                      ? displayFixedValue(values.debtValue, 3)
-                      : 0
+                  displayFixedValue(debtValue(), 3)
                   }}
                 </b>
                 {{ $t('dappsMCDMaker.dai') }}
