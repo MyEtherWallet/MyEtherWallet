@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { isValidPrivate } from 'ethereumjs-util';
+import { isHexString } from 'ethereumjs-util';
 import hide from '@/assets/images/icons/hide-password.svg';
 import showIcon from '@/assets/images/icons/show-password.svg';
 import { Toast } from '@/helpers';
@@ -89,8 +89,7 @@ export default {
       locPassword: this.password,
       showIcon: showIcon,
       hide: hide,
-      locPrivKey: this.privKey,
-      validPriv: false
+      locPrivKey: this.privKey
     };
   },
   computed: {
@@ -98,6 +97,10 @@ export default {
       return (
         this.locPassword !== '' && this.locPrivKey !== '' && this.validPriv
       );
+    },
+    validPriv() {
+      const _priv = this.locPrivKey.replace('0x', '');
+      return isHexString('0x' + _priv, 32);
     }
   },
   watch: {
@@ -109,7 +112,6 @@ export default {
     },
     locPrivKey(newVal) {
       try {
-        this.validPriv = isValidPrivate(Buffer.from(newVal, 'hex'));
         this.$emit('privateKey', newVal);
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);

@@ -9,11 +9,23 @@
     >
       <div class="button-container">
         <standard-button
-          :options="removeButton"
+          :options="{
+            title: $t('nftManager.remove'),
+            buttonStyle: 'red',
+            helpCenter: false,
+            noMinWidth: true,
+            fullWidth: false
+          }"
           :click-function="continueRemove"
         />
         <standard-button
-          :options="cancelButton"
+          :options="{
+            title: $t('common.cancel'),
+            buttonStyle: 'grey-border',
+            helpCenter: false,
+            noMinWidth: true,
+            fullWidth: false
+          }"
           :click-function="cancelRemove"
         />
       </div>
@@ -35,24 +47,6 @@ export default {
         return {};
       }
     }
-  },
-  data() {
-    return {
-      removeButton: {
-        title: `${this.$t('nftManager.remove')}`,
-        buttonStyle: 'red',
-        helpCenter: false,
-        noMinWidth: true,
-        fullWidth: false
-      },
-      cancelButton: {
-        title: `${this.$t('common.cancel')}`,
-        buttonStyle: 'grey-border',
-        helpCenter: false,
-        noMinWidth: true,
-        fullWidth: false
-      }
-    };
   },
   methods: {
     continueRemove() {

@@ -14,7 +14,7 @@
       <warning-message />
     </div>
     <div class="modal-content-block">
-      <form class="private-key-form">
+      <div class="private-key-form">
         <div class="input-container">
           <input
             ref="privateKeyInput"
@@ -23,15 +23,20 @@
             type="text"
             name="PrivateKey"
             autocomplete="off"
+            @keypress.enter="unlockWallet"
           />
         </div>
         <standard-button
           :button-disabled="notValid"
-          :options="accessWalletButtonOptions"
+          :options="{
+            title: $t('common.wallet.access'),
+            buttonStyle: 'green',
+            noMinWidth: true
+          }"
           :click-function="unlockWallet"
           class="submit-button"
         />
-      </form>
+      </div>
       <div class="customer-support-block">
         <customer-support />
       </div>
@@ -55,11 +60,6 @@ export default {
   },
   data() {
     return {
-      accessWalletButtonOptions: {
-        title: this.$t('common.wallet.access'),
-        buttonStyle: 'green',
-        noMinWidth: true
-      },
       privateKey: '',
       spinner: false
     };
@@ -69,6 +69,11 @@ export default {
     notValid() {
       const _priv = this.privateKey.replace('0x', '');
       return !isHexString('0x' + _priv, 32);
+    },
+    actualPrivKey() {
+      return this.privateKey.substr(0, 2) === '0x'
+        ? this.privateKey.replace('0x', '')
+        : this.privateKey;
     }
   },
   mounted() {},
@@ -77,10 +82,10 @@ export default {
       this.spinner = true;
       this.$store
         .dispatch('decryptWallet', [
-          new WalletInterface(this.privateKey, false, privKeyType)
+          new WalletInterface(this.actualPrivKey, false, privKeyType)
         ])
         .then(() => {
-          this.privateKey = '';
+          this.actualPrivKey = '';
           this.spinner = false;
           this.$router.push({
             path: 'interface'

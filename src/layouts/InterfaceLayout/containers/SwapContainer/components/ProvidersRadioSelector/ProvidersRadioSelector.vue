@@ -428,7 +428,7 @@ export default {
         return [
           `${toBigNumber(details.minValue).toFixed(6)} ${
             details.fromCurrency
-          } (From Min.)`
+          } (${this.$t('swap.from-min')}.)`
         ];
       }
       return '';
@@ -437,7 +437,7 @@ export default {
       if (details.maxValue > 0) {
         return `${toBigNumber(details.maxValue).toFixed(6)} ${
           details.fromCurrency
-        } (Max.)`;
+        } (${this.$t('swap.max')}.)`;
       }
       return '';
     },

@@ -23,7 +23,7 @@
           <ul class="qa__contents">
             <li v-for="prop in Object.keys(faqs)" :key="prop">
               <div class="qa__contents--title" @click="openFAQ(prop)">
-                <h3>{{ faqs[prop].title }}</h3>
+                <h3>{{ $t(faqs[prop].title) }}</h3>
                 <div class="show-more-buttons">
                   <div
                     :class="faqs[prop].open ? 'faq-open' : ''"
@@ -39,13 +39,13 @@
                 class="qa__contents--content"
               >
                 <div class="qa-text">
-                  {{ faqs[prop].content }}
+                  {{ $t(faqs[prop].content) }}
                   <a
-                    :href="faqs[prop].link"
+                    :href="$t(faqs[prop].link)"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {{ faqs[prop].linkText }}
+                    {{ $t(faqs[prop].linkText) }}
                   </a>
                 </div>
               </div>
@@ -68,40 +68,40 @@ export default {
       faqs: {
         faq1: {
           open: false,
-          title: this.$t('home.faqs.create-wallet.title'),
-          content: this.$t('home.faqs.create-wallet.text'),
-          linkText: this.$t('home.faqs.button-here'),
+          title: 'home.faqs.create-wallet.title',
+          content: 'home.faqs.create-wallet.text',
+          linkText: 'home.faqs.button-here',
           link:
             'https://kb.myetherwallet.com/getting-started/creating-a-new-wallet-on-myetherwallet.html'
         },
         faq2: {
           open: false,
-          title: this.$t('home.faqs.mewconnect.title'),
-          content: this.$t('home.faqs.mewconnect.text'),
-          linkText: this.$t('home.faqs.button-here'),
+          title: 'home.faqs.mewconnect.title',
+          content: 'home.faqs.mewconnect.text',
+          linkText: 'home.faqs.button-here',
           link: 'https://mewconnect.myetherwallet.com/'
         },
         faq3: {
           open: false,
-          title: this.$t('home.faqs.other-wallets.title'),
-          content: this.$t('home.faqs.other-wallets.text'),
-          linkText: this.$t('home.faqs.button-here'),
+          title: 'home.faqs.other-wallets.title',
+          content: 'home.faqs.other-wallets.text',
+          linkText: 'home.faqs.button-here',
           link:
             'https://kb.myetherwallet.com/getting-started/accessing-your-new-eth-wallet.html'
         },
         faq4: {
           open: false,
-          title: this.$t('home.faqs.send-txs.title'),
-          content: this.$t('home.faqs.send-txs.text'),
-          linkText: this.$t('home.faqs.button-here'),
+          title: 'home.faqs.send-txs.title',
+          content: 'home.faqs.send-txs.text',
+          linkText: 'home.faqs.button-here',
           link:
             'https://kb.myetherwallet.com/transactions/how-to-send-transaction.html'
         },
         faq5: {
           open: false,
-          title: this.$t('home.faqs.forgot-pwd.title'),
-          content: this.$t('home.faqs.forgot-pwd.text'),
-          linkText: this.$t('home.faqs.button-here'),
+          title: 'home.faqs.forgot-pwd.title',
+          content: 'home.faqs.forgot-pwd.text',
+          linkText: 'home.faqs.button-here',
           link:
             'https://kb.myetherwallet.com/private-keys-passwords/lost-eth-private-key.html'
         }

@@ -427,7 +427,7 @@ export default {
         this.fetchTokenBalance(token);
         await this.fetchTokens();
         Toast.responseHandler(
-          this.$t('mew-cx.token-added-success'),
+          this.$t('mewcx.token-added-success'),
           Toast.SUCCESS
         );
       }
@@ -589,7 +589,7 @@ export default {
     copyAddress() {
       this.$refs.addressInput.select();
       document.execCommand('copy');
-      Toast.responseHandler(this.$t('mew-cx.copy-success'), Toast.SUCCESS);
+      Toast.responseHandler(this.$t('mewcx.copy-success'), Toast.SUCCESS);
     },
     viewAllTokens(bool) {
       if (bool) {
