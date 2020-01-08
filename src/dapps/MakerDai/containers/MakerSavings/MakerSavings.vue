@@ -9,12 +9,14 @@
       </h3>
       <div>
         {{
-        $t('dappsMCDMaker.dai-savings-rate', {
-        value: displayPercentValue(yearlyRate)
-        })
+          $t('dappsMCDMaker.dai-savings-rate', {
+            value: displayPercentValue(yearlyRate)
+          })
         }}
       </div>
-      <div>{{ $t('dappsMCDMaker.deposited-amount', { value: deposited }) }}</div>
+      <div>
+        {{ $t('dappsMCDMaker.deposited-amount', { value: deposited }) }}
+      </div>
       <div class="currency-picker-container">
         <div v-if="showSetupScreen">
           <div>
@@ -56,15 +58,13 @@
               <b-button
                 :class="['submit-btn', showDepositDisplay ? 'active' : '']"
                 @click="showDeposit(true)"
-              >{{ $t('dappsMCDMaker.deposit') }}
-              </b-button
-              >
+                >{{ $t('dappsMCDMaker.deposit') }}
+              </b-button>
               <b-button
                 :class="['submit-btn', !showDepositDisplay ? 'active' : '']"
                 @click="showDeposit(false)"
-              >{{ $t('dappsMCDMaker.withdraw') }}
-              </b-button
-              >
+                >{{ $t('dappsMCDMaker.withdraw') }}
+              </b-button>
             </b-button-group>
           </div>
 

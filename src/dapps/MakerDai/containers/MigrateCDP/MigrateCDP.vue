@@ -18,7 +18,7 @@
         ></b-form-input>
         <b-button variant="secondary" @click="checkMigrateContractSaiBalance">{{
           $t('dappsMCDMaker.check-balance')
-          }}</b-button>
+        }}</b-button>
       </div>
 
       <div v-show="noSaiAvailable && !needsAtLeast20">
@@ -26,9 +26,9 @@
       </div>
       <div v-show="needsAtLeast20" style="padding: 10px">
         {{
-        $t('dappsMCDMaker.needs-at-least-20', {
-        value: migrateContractBalance
-        })
+          $t('dappsMCDMaker.needs-at-least-20', {
+            value: migrateContractBalance
+          })
         }}
       </div>
     </div>

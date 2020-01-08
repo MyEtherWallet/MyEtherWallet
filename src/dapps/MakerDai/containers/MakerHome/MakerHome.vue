@@ -27,7 +27,7 @@
           :click="goToManage"
           :loading="!makerActive ? true : false"
           :loading-msg="loadingMessage"
-        /></b-col>
+      /></b-col>
       <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
         <card
           :title="$t('dappsMCDMaker.create-a-vault')"
@@ -36,14 +36,14 @@
           :click="gotoCreate"
           :loading="!makerActive ? true : false"
           :loading-msg="loadingMessage"
-        /></b-col>
+      /></b-col>
       <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
         <card
           :title="$t('dappsMCDMaker.dai-savings')"
           :text="$t('dappsMCDMaker.create-vault-description')"
           button="Go"
           :click="goToSave"
-        /></b-col>
+      /></b-col>
     </b-row>
   </div>
 </template>
