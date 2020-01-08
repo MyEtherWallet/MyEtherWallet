@@ -27,6 +27,7 @@
 - Fix issue with withdrawing ETH from CDP [#1811](https://github.com/MyEtherWallet/MyEtherWallet/pull/1811)
 - Fix header items for other languages [#1791](https://github.com/MyEtherWallet/MyEtherWallet/pull/1791)
 - Update mewcx wording [#1829] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1829)
+- Sort address book and compare add address by lowercase [#1828] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1828)
 
 ### Release v5.2.8-hotfix.2
 
