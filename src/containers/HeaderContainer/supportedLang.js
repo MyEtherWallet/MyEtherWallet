@@ -15,7 +15,7 @@ const supportedLang = [
   // { name: 'Norsk Bokmål', flag: 'no', langCode: 'no_NO' },
   // { name: 'Polski', flag: 'pl', langCode: 'pl_PL' },
   // { name: 'Português', flag: 'pt', langCode: 'pt_PT' },
-  { name: 'Русский', flag: 'ru', langCode: 'ru_RU' },
+  { name: 'Русский', flag: 'ru', langCode: 'ru_RU' }
   // { name: 'ภาษาไทย', flag: 'th', langCode: 'th_TH' },
   // { name: 'Türkçe', flag: 'tr', langCode: 'tr_TR' },
   // { name: 'Tiếng Việt', flag: 'vn', langCode: 'vn_VN' },
