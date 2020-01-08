@@ -232,17 +232,59 @@ export default class Kyber {
       .toNumber();
   }
 
+  async ethEquivalentQty(fromCurrency) {
+    return await this.getExpactedRateInTokens('ETH', fromCurrency, 0.5);
+  }
+
+  async rateDivergence(rate, fromCurrency, toCurrency, fromValue) {
+    if (toBigNumber(rate).lte(0)) return toBigNumber(-1);
+    const val = await this.ethEquivalentQty(
+      fromCurrency,
+      toCurrency,
+      fromValue
+    );
+
+    const equivalentRate = await this.getExpactedRateInTokens(
+      fromCurrency,
+      toCurrency,
+      val || 0.5,
+      true
+    );
+
+    const difference = toBigNumber(rate).div(equivalentRate);
+    const value = toBigNumber(1).minus(difference);
+    if (value.gt(0)) {
+      return value;
+    }
+    return toBigNumber(0);
+  }
+
   async getRate(fromCurrency, toCurrency, fromValue) {
     const rate = await this.getExpactedRateInTokens(
       fromCurrency,
       toCurrency,
       this.getRateForUnit ? 1 : fromValue
     );
+
+    const diff = await this.rateDivergence(
+      rate,
+      fromCurrency,
+      toCurrency,
+      fromValue
+    );
+    const additional = {};
+    if (diff.gt(0.001)) {
+      additional['display'] = {
+        txtKey: 'kyber-slippage',
+        value: diff.times(100).toFixed(2, BigNumber.ROUND_HALF_UP)
+      };
+    }
     return {
       fromCurrency,
       toCurrency,
       provider: this.name,
-      rate: this.calculateTrueRate(rate)
+      rate: this.calculateTrueRate(rate),
+      additional: additional
     };
   }
 
@@ -274,7 +316,7 @@ export default class Kyber {
     if (new BigNumber(inWei).gt(-1)) {
       return this.convertToTokenBase(kyberBaseCurrency, inWei);
     }
-    return -1;
+    return 0;
   }
 
   getInitialCurrencyEntries(collectMapFrom, collectMapTo) {

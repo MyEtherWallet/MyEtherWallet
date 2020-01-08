@@ -11,8 +11,8 @@
           :class="strengthClass"
           :type="password.showPassword ? 'text' : 'password'"
           :value="value"
+          :placeholder="$t('createWallet.mnemonic.please-enter-9-char')"
           name="password"
-          placeholder="Please Enter At Least 9 Characters"
           autocomplete="off"
           @input="updateValue($event.target.value)"
         />

@@ -1,0 +1,379 @@
+[
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "tub_",
+        "type": "address"
+      },
+      {
+        "name": "cup",
+        "type": "bytes32"
+      },
+      {
+        "name": "wad",
+        "type": "uint256"
+      }
+    ],
+    "name": "draw",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "tub_",
+        "type": "address"
+      },
+      {
+        "name": "cup",
+        "type": "bytes32"
+      },
+      {
+        "name": "jam",
+        "type": "uint256"
+      },
+      {
+        "name": "wad",
+        "type": "uint256"
+      },
+      {
+        "name": "otc_",
+        "type": "address"
+      }
+    ],
+    "name": "wipeAndFree",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "tub_",
+        "type": "address"
+      },
+      {
+        "name": "cup",
+        "type": "bytes32"
+      },
+      {
+        "name": "wad",
+        "type": "uint256"
+      }
+    ],
+    "name": "lockAndDraw",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "tub_",
+        "type": "address"
+      },
+      {
+        "name": "wad",
+        "type": "uint256"
+      }
+    ],
+    "name": "lockAndDraw",
+    "outputs": [
+      {
+        "name": "cup",
+        "type": "bytes32"
+      }
+    ],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "registry_",
+        "type": "address"
+      },
+      {
+        "name": "tub_",
+        "type": "address"
+      }
+    ],
+    "name": "createAndOpen",
+    "outputs": [
+      {
+        "name": "proxy",
+        "type": "address"
+      },
+      {
+        "name": "cup",
+        "type": "bytes32"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "tub_",
+        "type": "address"
+      },
+      {
+        "name": "cup",
+        "type": "bytes32"
+      },
+      {
+        "name": "otc_",
+        "type": "address"
+      }
+    ],
+    "name": "shut",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "tub_",
+        "type": "address"
+      },
+      {
+        "name": "cup",
+        "type": "bytes32"
+      },
+      {
+        "name": "wad",
+        "type": "uint256"
+      },
+      {
+        "name": "otc_",
+        "type": "address"
+      }
+    ],
+    "name": "wipe",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "tub_",
+        "type": "address"
+      },
+      {
+        "name": "cup",
+        "type": "bytes32"
+      },
+      {
+        "name": "wad",
+        "type": "uint256"
+      }
+    ],
+    "name": "wipe",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "tub_",
+        "type": "address"
+      }
+    ],
+    "name": "open",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "tub_",
+        "type": "address"
+      },
+      {
+        "name": "cup",
+        "type": "bytes32"
+      }
+    ],
+    "name": "shut",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "tub_",
+        "type": "address"
+      },
+      {
+        "name": "cup",
+        "type": "bytes32"
+      }
+    ],
+    "name": "lock",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "registry_",
+        "type": "address"
+      },
+      {
+        "name": "tub_",
+        "type": "address"
+      },
+      {
+        "name": "wad",
+        "type": "uint256"
+      }
+    ],
+    "name": "createOpenLockAndDraw",
+    "outputs": [
+      {
+        "name": "proxy",
+        "type": "address"
+      },
+      {
+        "name": "cup",
+        "type": "bytes32"
+      }
+    ],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "tub_",
+        "type": "address"
+      },
+      {
+        "name": "cup",
+        "type": "bytes32"
+      },
+      {
+        "name": "lad",
+        "type": "address"
+      }
+    ],
+    "name": "give",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "registry_",
+        "type": "address"
+      },
+      {
+        "name": "tub_",
+        "type": "address"
+      }
+    ],
+    "name": "createOpenAndLock",
+    "outputs": [
+      {
+        "name": "proxy",
+        "type": "address"
+      },
+      {
+        "name": "cup",
+        "type": "bytes32"
+      }
+    ],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "tub_",
+        "type": "address"
+      },
+      {
+        "name": "cup",
+        "type": "bytes32"
+      },
+      {
+        "name": "jam",
+        "type": "uint256"
+      }
+    ],
+    "name": "free",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "tub_",
+        "type": "address"
+      },
+      {
+        "name": "cup",
+        "type": "bytes32"
+      },
+      {
+        "name": "jam",
+        "type": "uint256"
+      },
+      {
+        "name": "wad",
+        "type": "uint256"
+      }
+    ],
+    "name": "wipeAndFree",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  }
+]

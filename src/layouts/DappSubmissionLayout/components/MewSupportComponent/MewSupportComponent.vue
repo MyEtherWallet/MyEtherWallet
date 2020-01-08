@@ -17,7 +17,7 @@
         rel="noopener noreferrer"
         href="mailto:support@myetherwallet.com"
         target="_blank"
-        >{{ $t('common.contact-support') }}</b-link
+        >{{ $t('dappsSubmission.contact-support') }}</b-link
       >
     </div>
   </div>

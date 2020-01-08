@@ -600,12 +600,6 @@
     }
   }
 
-  .dropdown-toggle::after {
-    position: absolute !important;
-    right: 13px !important;
-    top: 16px !important;
-  }
-
   // *********************************************************************
   // [Bootstrap] Dropdown language menu style
   // *********************************************************************
@@ -1616,4 +1610,8 @@
     background-color: transparent !important;
     border: none !important;
   }
+}
+
+.height--full {
+  height: 100%;
 }

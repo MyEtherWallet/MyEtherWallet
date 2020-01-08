@@ -86,7 +86,12 @@
 
         <div class="submit-button-container">
           <standard-button
-            :options="buttonSendTx"
+            :options="{
+              title: $t('sendTx.confirmation.button'),
+              buttonStyle: 'green',
+              mobileFullWidth: true,
+              helpCenter: true
+            }"
             :button-disabled="signedTx !== '' ? false : true"
             :click-function="sendTx"
           />
@@ -159,25 +164,11 @@ export default {
       transactionSigned: false,
       tokenTransferTo: '',
       tokenTransferVal: '',
-      tokenSymbol: '',
-      buttonSendTx: {
-        title: `${this.$t('sendTx.confirmation.button')}`,
-        buttonStyle: 'green',
-        mobileFullWidth: true,
-        helpCenter: true
-      }
+      tokenSymbol: ''
     };
   },
   computed: {
-    ...mapState(['web3', 'network']),
-    signedTransaction() {
-      if (this.signedMessage) {
-        return this.signedMessage;
-      } else if (this.isHardwareWallet) {
-        return this.$t('confirmation.approve-on-device');
-      }
-      return '';
-    }
+    ...mapState(['web3', 'network'])
   },
   watch: {
     data(newVal) {

@@ -41,7 +41,7 @@ describe('TeamLayout.vue', () => {
     }
   });
 
-  it('should render correct titleAndTextContents data', () => {
+  xit('should render correct titleAndTextContents data', () => {
     const { titleAndTextContents } = wrapper.vm.$data;
 
     if (titleAndTextContents.title) {

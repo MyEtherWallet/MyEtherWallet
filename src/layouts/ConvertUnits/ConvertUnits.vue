@@ -2,7 +2,15 @@
   <div class="convert-units">
     <div class="wrap">
       <div class="page-container">
-        <div class="page-title"><page-title :options="titleOptions" /></div>
+        <div class="page-title">
+          <page-title
+            :options="{
+              title: $t('convertUnits.page.title'),
+              boldSubTitle: '',
+              textContent: [$t('convertUnits.page.desc')]
+            }"
+          />
+        </div>
 
         <div><unit-input :options="options" /></div>
 
@@ -44,11 +52,6 @@ export default {
   },
   data() {
     return {
-      titleOptions: {
-        title: this.$t('convertUnits.page.title'),
-        boldSubTitle: '',
-        textContent: [this.$t('convertUnits.page.desc')]
-      },
       etherUnitRef: [
         {
           name: 'Wei',

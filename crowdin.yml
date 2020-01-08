@@ -1,3 +1,7 @@
 files:
   - source: /src/translations/**/en_US.json
     translation: /%original_path%/%locale_with_underscore%.json
+    ignore: [
+      /src/layouts/DappSubmissionLayout,
+      /src/layouts/TermsOfService
+    ]
