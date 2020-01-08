@@ -51,40 +51,46 @@ describe('SwapSendToModal.vue', () => {
     });
   });
 
-  xit('should render correct fromAddress data', () => {
+  it('should render correct fromAddress data', () => {
     const fromAddress = {
       name: 'name',
       value: 'value',
       address: 'address'
     };
     wrapper.setData({ fromAddress });
-    expect(
-      wrapper.vm.$el.querySelector('.from-address .value').textContent.trim()
-    ).toEqual(
-      wrapper.vm.$data.fromAddress.value +
-        ' ' +
-        wrapper.vm.$data.fromAddress.name
-    );
-    expect(
-      wrapper.vm.$el.querySelector('.from-address .address').textContent.trim()
-    ).toEqual(wrapper.vm.$data.fromAddress.address);
+    wrapper.vm.$nextTick(() => {
+      expect(
+        wrapper.vm.$el.querySelector('.from-address .value').textContent.trim()
+      ).toEqual(
+        wrapper.vm.$data.fromAddress.value +
+          '\n            ' +
+          wrapper.vm.$data.fromAddress.name
+      );
+      expect(
+        wrapper.vm.$el
+          .querySelector('.from-address .address')
+          .textContent.trim()
+      ).toEqual(wrapper.vm.$data.fromAddress.address);
+    });
   });
 
-  xit('should render correct toAddress data', () => {
+  it('should render correct toAddress data', () => {
     const toAddress = {
       name: 'name',
       value: 'value',
       address: 'address'
     };
     wrapper.setData({ toAddress });
-    expect(
-      wrapper.vm.$el.querySelector('.to-address .value').textContent.trim()
-    ).toEqual(
-      wrapper.vm.$data.toAddress.value + ' ' + wrapper.vm.$data.toAddress.name
-    );
-    expect(
-      wrapper.vm.$el.querySelector('.to-address .address').textContent.trim()
-    ).toEqual(wrapper.vm.$data.toAddress.address);
+    wrapper.vm.$nextTick(() => {
+      expect(wrapper.find('.to-address .value').text()).toEqual(
+        wrapper.vm.$data.toAddress.value +
+          '\n            ' +
+          wrapper.vm.$data.toAddress.name
+      );
+      expect(wrapper.find('.to-address .address').text()).toEqual(
+        wrapper.vm.$data.toAddress.address
+      );
+    });
   });
 
   it('should render correct confirm send button', () => {
@@ -94,18 +100,15 @@ describe('SwapSendToModal.vue', () => {
       address: 'address'
     };
     wrapper.setData({ fromAddress });
-    expect(
-      wrapper.vm.$el
-        .querySelector('.confirm-send-button h4')
-        .textContent.trim()
-        .indexOf(wrapper.vm.$data.fromAddress.value)
-    ).toBeGreaterThan(-1);
-    expect(
-      wrapper.vm.$el
-        .querySelector('.confirm-send-button h4')
-        .textContent.trim()
-        .indexOf(wrapper.vm.$data.fromAddress.name)
-    ).toBeGreaterThan(-1);
+    wrapper.vm.$nextTick(() => {
+      const elContainer = wrapper.find('.confirm-send-button h4');
+      expect(
+        elContainer.text().indexOf(wrapper.vm.$data.fromAddress.value)
+      ).toBeGreaterThan(-1);
+      expect(
+        elContainer.text().indexOf(wrapper.vm.$data.fromAddress.name)
+      ).toBeGreaterThan(-1);
+    });
   });
 
   it('should render correct swapDetails props', () => {
@@ -119,15 +122,18 @@ describe('SwapSendToModal.vue', () => {
       toAddress: '0xF54F78F67feCDd37e0C009aB4cCD6549A69540D4'
     };
     wrapper.setProps({ swapDetails });
-
-    expect(wrapper.vm.$data.fromAddress.value).toEqual(swapDetails.fromValue);
-    expect(wrapper.vm.$data.fromAddress.name).toEqual(swapDetails.fromCurrency);
-    expect(wrapper.vm.$data.fromAddress.address).toEqual(
-      swapDetails.fromAddress
-    );
-    expect(wrapper.vm.$data.toAddress.value).toEqual(swapDetails.toValue);
-    expect(wrapper.vm.$data.toAddress.name).toEqual(swapDetails.toCurrency);
-    expect(wrapper.vm.$data.toAddress.address).toEqual(swapDetails.toAddress);
+    wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.$data.fromAddress.value).toEqual(swapDetails.fromValue);
+      expect(wrapper.vm.$data.fromAddress.name).toEqual(
+        swapDetails.fromCurrency
+      );
+      expect(wrapper.vm.$data.fromAddress.address).toEqual(
+        swapDetails.fromAddress
+      );
+      expect(wrapper.vm.$data.toAddress.value).toEqual(swapDetails.toValue);
+      expect(wrapper.vm.$data.toAddress.name).toEqual(swapDetails.toCurrency);
+      expect(wrapper.vm.$data.toAddress.address).toEqual(swapDetails.toAddress);
+    });
   });
 
   describe('SwapSendToModal.vue Methods', () => {

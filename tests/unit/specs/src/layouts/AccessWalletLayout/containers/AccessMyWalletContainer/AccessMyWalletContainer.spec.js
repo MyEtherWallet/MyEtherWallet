@@ -75,12 +75,14 @@ describe('AccessMyWalletContainer.vue', () => {
   it('should render correct hardwareBrand props', () => {
     const hardwareBrand = 'hardwareBrand';
     wrapper.setData({ hardwareBrand });
-    expect(
-      wrapper
-        .find('.submit-button')
-        .text()
-        .indexOf(hardwareBrand)
-    ).toBeGreaterThan(-1);
+    wrapper.vm.$nextTick(() => {
+      expect(
+        wrapper
+          .find('.submit-button')
+          .text()
+          .indexOf(hardwareBrand)
+      ).toBeGreaterThan(-1);
+    });
   });
 
   it('should render correct softwareModalOpen method', () => {

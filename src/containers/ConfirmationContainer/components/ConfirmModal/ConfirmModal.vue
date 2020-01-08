@@ -70,7 +70,7 @@
               </div>
               <div class="grid-block">
                 <p>{{ $t('sendTx.tx-fee') }}</p>
-                <p>{{ fee }} {{ network.type.currencyName }}</p>
+                <p>{{ transactionFee }} {{ network.type.currencyName }}</p>
               </div>
               <div class="grid-block">
                 <p>{{ $t('sendTx.nonce') }}</p>
@@ -117,7 +117,7 @@ export default {
       type: Function,
       default: function() {}
     },
-    fee: {
+    transactionFee: {
       type: String,
       default: ''
     },

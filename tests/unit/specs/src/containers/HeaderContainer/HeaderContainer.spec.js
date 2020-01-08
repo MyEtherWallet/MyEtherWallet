@@ -31,7 +31,8 @@ const mockRoute = {
 };
 
 const eventHub = {
-  $on: sinon.stub()
+  $on: sinon.stub(),
+  $off: sinon.stub()
 };
 
 describe('HeaderContainer.vue', () => {
@@ -155,12 +156,14 @@ describe('HeaderContainer.vue', () => {
         .indexOf('fixed-header-border-bottom')
     ).toBe(-1);
     wrapper.setData({ isMobileMenuOpen: true });
-    expect(
-      wrapper
-        .find('.fixed-header')
-        .classes()
-        .indexOf('fixed-header-border-bottom')
-    ).toBeGreaterThan(-1);
+    wrapper.vm.$nextTick(() => {
+      expect(
+        wrapper
+          .find('.fixed-header')
+          .classes()
+          .indexOf('fixed-header-border-bottom')
+      ).toBeGreaterThan(-1);
+    });
   });
 
   xit('should render correct isPageOnTop data', () => {
@@ -186,20 +189,24 @@ describe('HeaderContainer.vue', () => {
   });
 
   it('should render correct showGetFreeWallet data', () => {
-    wrapper.setData({ isPageOnTop: false });
-    expect(
-      wrapper
-        .find('.first-button')
-        .classes()
-        .indexOf('hide')
-    ).toBeGreaterThan(-1);
+    wrapper.setData({ isPageOnTop: false, isMewCx: false });
+    wrapper.vm.$nextTick(() => {
+      expect(
+        wrapper
+          .find('.first-button')
+          .classes()
+          .indexOf('hide')
+      ).toBeGreaterThan(-1);
+    });
     wrapper.setData({ showGetFreeWallet: true });
-    expect(
-      wrapper
-        .find('.first-button')
-        .classes()
-        .indexOf('show')
-    ).toBeGreaterThan(-1);
+    wrapper.vm.$nextTick(() => {
+      expect(
+        wrapper
+          .find('.first-button')
+          .classes()
+          .indexOf('show')
+      ).toBeGreaterThan(-1);
+    });
   });
 
   xit('should render correct supportedLanguages data', () => {

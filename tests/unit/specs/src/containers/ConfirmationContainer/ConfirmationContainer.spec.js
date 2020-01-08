@@ -25,7 +25,8 @@ const BModalStub = {
 };
 
 const eventHub = {
-  $on: sinon.stub()
+  $on: sinon.stub(),
+  $off: sinon.stub()
 };
 
 describe('ConfirmationContainer.vue', () => {
@@ -68,13 +69,15 @@ describe('ConfirmationContainer.vue', () => {
     checkboxElement.trigger('click');
     wrapper.setData({ transactionFee: String(100) });
 
-    expect(
-      wrapper.vm.$el
-        .querySelectorAll('.padding-container .grid-block')[3]
-        .querySelectorAll('p')[1]
-        .textContent.trim()
-        .indexOf(wrapper.vm.$data.transactionFee)
-    ).toBeGreaterThan(-1);
+    wrapper.vm.$nextTick(() => {
+      const txFeeContainer = wrapper
+        .findAll('.padding-container .grid-block')
+        .at(3);
+      const txFeeContainerValue = txFeeContainer.findAll('p').at(1);
+      expect(
+        txFeeContainerValue.text().indexOf(wrapper.vm.transactionFee)
+      ).toBeGreaterThan(-1);
+    });
   });
 
   it('should render correct fromAddress data', () => {
@@ -124,7 +127,7 @@ describe('ConfirmationContainer.vue', () => {
     ).toEqual(String(wrapper.vm.$data.nonce));
   });
 
-  it('should render correct data data', () => {
+  it('should render correct data in data', () => {
     const checkboxElement = wrapper.find('.sliding-switch-white .switch input');
     checkboxElement.trigger('click');
     expect(
@@ -149,9 +152,16 @@ describe('ConfirmationContainer.vue', () => {
     wrapper.setData({
       toAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
     });
-    expect(
-      wrapper.vm.$el.querySelectorAll('.address')[1].textContent.trim()
-    ).toEqual(wrapper.vm.toAddress);
+
+    wrapper.vm.$nextTick(() => {
+      expect(
+        wrapper.vm.$el.querySelectorAll('.address')[1].textContent.trim()
+      ).toEqual(wrapper.vm.toAddress);
+    });
+  });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
   });
 
   // describe('ConfirmationContainer.vue Methods', () => {
@@ -270,7 +280,4 @@ describe('ConfirmationContainer.vue', () => {
   //     expect(wrapper.vm.$data.selectedCurrency.name).toEqual('Ethereum');
   //   });
   // });
-  it('should dismount properly', () => {
-    expect(wrapper.destroy()).toBe(undefined);
-  });
 });

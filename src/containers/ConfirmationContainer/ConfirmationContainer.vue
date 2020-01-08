@@ -5,7 +5,7 @@
       ref="confirmModal"
       :confirm-send-tx="sendTx"
       :signed-tx="signedTx"
-      :fee="transactionFee"
+      :transaction-fee="transactionFee"
       :is-hardware-wallet="isHardwareWallet"
       :gas-price="gasPrice"
       :from="fromAddress"
