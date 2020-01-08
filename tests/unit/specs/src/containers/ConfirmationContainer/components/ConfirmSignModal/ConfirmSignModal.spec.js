@@ -81,4 +81,8 @@ describe('ConfirmSignModal.vue', () => {
       expect(confirmSignMessage).toHaveBeenCalled();
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

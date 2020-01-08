@@ -75,4 +75,8 @@ describe('AccessWalletLayout.vue', () => {
   });
 
   describe('AccessWalletLayout.vue Methods', () => {});
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

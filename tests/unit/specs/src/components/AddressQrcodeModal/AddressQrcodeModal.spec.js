@@ -44,4 +44,8 @@ describe('AddressQrcodeModal.vue', () => {
       expect(document.execCommand).toHaveBeenCalled();
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

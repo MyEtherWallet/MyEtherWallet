@@ -35,4 +35,9 @@ describe('SwapConfirmationModal.vue', () => {
 
   it(' [Needs Implementations] should render correct fromArray to currenPicker element', () => {});
   describe('SwapConfirmationModal.vue Methods', () => {});
+
+  // it('dismounts', () => {
+  //   wrapper.destroy();
+  //   expect(wrapper.exists()).toBe(false);
+  // });
 });

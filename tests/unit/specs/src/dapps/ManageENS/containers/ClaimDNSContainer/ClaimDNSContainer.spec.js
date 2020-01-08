@@ -97,4 +97,8 @@ describe('ClaimDNSContainer.vue', () => {
         .indexOf(wrapper.vm.fullDomainName)
     ).toBeGreaterThan(-1);
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

@@ -54,4 +54,8 @@ describe('NotificationsContainer.vue', () => {
       expect(showModal).toHaveBeenCalled();
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

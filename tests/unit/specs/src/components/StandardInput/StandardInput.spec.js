@@ -79,4 +79,8 @@ describe('StandardInput.vue', () => {
       wrapper.vm.$el.querySelector('.the-text').textContent.trim()
     ).toEqual(options.topTextInfo);
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

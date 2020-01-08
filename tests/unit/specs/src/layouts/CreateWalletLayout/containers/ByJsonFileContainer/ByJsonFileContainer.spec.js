@@ -88,4 +88,8 @@ describe('ByJsonFileContainer.vue', () => {
       expect(showModal.called).toBe(true);
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

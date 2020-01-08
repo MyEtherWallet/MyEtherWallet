@@ -270,4 +270,7 @@ describe('ConfirmationContainer.vue', () => {
   //     expect(wrapper.vm.$data.selectedCurrency.name).toEqual('Ethereum');
   //   });
   // });
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

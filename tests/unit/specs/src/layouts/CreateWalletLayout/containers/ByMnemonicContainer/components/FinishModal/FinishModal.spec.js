@@ -48,4 +48,7 @@ describe('FinishModal.vue', () => {
       '<button class="mid-round-button-green-filled close-button"></button>'
     );
   });
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

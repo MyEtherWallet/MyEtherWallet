@@ -54,4 +54,9 @@ describe('InterfaceAddress.vue', () => {
       wrapper.find('#popover-ref-copy').trigger('click');
     });
   });
+
+  it('dismounts', () => {
+    wrapper.destroy();
+    expect(wrapper.exists()).toBe(false);
+  });
 });

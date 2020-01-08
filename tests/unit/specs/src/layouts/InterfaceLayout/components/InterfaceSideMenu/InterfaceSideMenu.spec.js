@@ -58,4 +58,9 @@ describe('InterfaceSideMenu.vue', () => {
   //     if (i == 2) expect(groupTitleElement.isVisible()).toBe(true);
   //   }
   // });
+
+  // it('dismounts', () => {
+  //   wrapper.destroy();
+  //   expect(wrapper.exists()).toBe(false);
+  // });
 });

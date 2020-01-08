@@ -46,4 +46,8 @@ xdescribe('ByJsonBlock.vue', () => {
   });
 
   describe('ByJsonBlock.vue Methods', () => {});
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

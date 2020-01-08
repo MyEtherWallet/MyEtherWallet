@@ -118,4 +118,8 @@ describe('EnterPinNumberModal.vue', () => {
       expect(wrapper.vm.$data.acknowledgedTerms).toBe(false);
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

@@ -64,4 +64,8 @@ describe('CreateWalletInput.vue', () => {
   });
 
   describe('CreateWalletInput.vue Methods', () => {});
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

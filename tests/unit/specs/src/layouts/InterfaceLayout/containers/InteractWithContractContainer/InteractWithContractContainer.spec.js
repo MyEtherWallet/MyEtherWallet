@@ -162,4 +162,9 @@ describe('InteractWithContractContainer.vue', () => {
       // wrapper.findAll('.copy-buttons span').at(1).trigger('click');
     });
   });
+
+  it('dismounts', () => {
+    wrapper.destroy();
+    expect(wrapper.exists()).toBe(false);
+  });
 });

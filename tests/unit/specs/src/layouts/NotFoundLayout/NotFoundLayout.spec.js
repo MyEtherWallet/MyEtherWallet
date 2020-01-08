@@ -28,4 +28,8 @@ describe('NotFoundLayout.vue', () => {
   it('renders correctly', () => {
     expect(wrapper).toMatchSnapshot();
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

@@ -37,4 +37,8 @@ describe('IssuesLogModal.vue', () => {
       expect(wrapper.vm.$data.checkboxChecked).toBe(false);
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

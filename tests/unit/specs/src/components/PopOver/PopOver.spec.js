@@ -56,4 +56,8 @@ describe('PopOver.vue', () => {
       wrapper.vm.$data.popOverId
     );
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

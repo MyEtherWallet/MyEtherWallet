@@ -42,4 +42,8 @@ xdescribe('MnemonicTableToPrint.vue', () => {
         .indexOf('full-mnemonic')
     ).toBeGreaterThan(-1);
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

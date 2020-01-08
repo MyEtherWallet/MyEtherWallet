@@ -66,4 +66,8 @@ xdescribe('LoadingSign.vue', () => {
       wrapper.vm.$el.querySelector('.loading-message2').textContent.trim()
     ).toEqual(loadingmessage2);
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

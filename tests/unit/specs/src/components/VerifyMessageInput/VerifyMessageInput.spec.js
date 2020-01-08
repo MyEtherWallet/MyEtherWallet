@@ -54,4 +54,8 @@ describe('VerifyMessageInput.vue', () => {
     expect(wrapper.vm.$data.showMessage).toBe(false);
     expect(wrapper.vm.$data.message).toBe('');
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

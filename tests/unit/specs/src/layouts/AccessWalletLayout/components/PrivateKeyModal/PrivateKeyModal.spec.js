@@ -129,5 +129,9 @@ describe('PrivateKeyModal.vue', () => {
         expect(spy.calledWith({ path: 'interface' })).toBe(true);
       });
     });
+
+    it('should dismount properly', () => {
+      expect(wrapper.destroy()).toBe(undefined);
+    });
   });
 });

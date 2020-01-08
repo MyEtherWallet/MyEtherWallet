@@ -48,4 +48,8 @@ describe('MewConnectModal.vue', () => {
     wrapper.setData({ QrCode: QrCode });
     expect(wrapper.vm.$data.QrCode).toEqual(QrCode);
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

@@ -56,4 +56,9 @@ describe('DappButtons.vue', () => {
     ).toEqual(icon);
   });
   describe('DappButtons.vue Methods', () => {});
+
+  it('dismounts', () => {
+    wrapper.destroy();
+    expect(wrapper.exists()).toBe(false);
+  });
 });

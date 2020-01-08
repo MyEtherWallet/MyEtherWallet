@@ -84,4 +84,8 @@ describe('AccordionMenu.vue', () => {
       expect(wrapper.emitted().titleClicked).toBeTruthy();
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

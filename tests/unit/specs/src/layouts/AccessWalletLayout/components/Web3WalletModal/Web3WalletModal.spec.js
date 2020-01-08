@@ -99,4 +99,8 @@ describe('Web3WalletModal.vue', () => {
   it('should render component', () => {
     expect(true).toBe(true);
   });
+
+  // it('should dismount properly', () => {
+  //   expect(wrapper.destroy()).toBe(undefined);
+  // });
 });

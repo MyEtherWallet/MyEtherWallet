@@ -1,37 +1,34 @@
-import MenuTitle from '@/components/MenuTitle/MenuTitle.vue';
 import { shallowMount } from '@vue/test-utils';
-import { Tooling } from '@@/helpers';
-import Vue from 'vue';
+import VerifyMessageLayout from '@/layouts/VerifyMessageLayout/VerifyMessageLayout.vue';
 
-describe('MenuTitle.vue', () => {
+import { Tooling } from '@@/helpers';
+
+describe('VerifyMessageLayout.vue', () => {
   let localVue, i18n, wrapper, store;
-  const title = 'title';
+
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-    Vue.config.warnHandler = () => {};
   });
 
   beforeEach(() => {
-    wrapper = shallowMount(MenuTitle, {
+    wrapper = shallowMount(VerifyMessageLayout, {
       localVue,
       i18n,
       store,
       attachToDocument: true,
-      props: { title }
+      mocks: {
+        _t: () => {},
+        $t: () => {}
+      }
     });
   });
 
-  it('should render correct title props', () => {
-    wrapper.setData({ title });
-    expect(
-      wrapper.vm.$el.querySelector('.the-title').textContent.trim()
-    ).toEqual(title);
+  it('should render correctly', () => {
+    expect(wrapper).toMatchSnapshot();
   });
-
-  describe('MenuTitle.vue Methods', () => {});
 
   it('should dismount properly', () => {
     expect(wrapper.destroy()).toBe(undefined);

@@ -44,4 +44,9 @@ describe('InterfaceBalanceModal.vue', () => {
       ).toEqual(value);
     }
   });
+
+  it('dismounts', () => {
+    wrapper.destroy();
+    expect(wrapper.exists()).toBe(false);
+  });
 });

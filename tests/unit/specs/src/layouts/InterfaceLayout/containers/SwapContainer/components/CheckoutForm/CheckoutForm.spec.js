@@ -135,4 +135,9 @@ describe('CheckoutForm.vue', () => {
   });
 
   describe('CheckoutForm.vue Methods', () => {});
+
+  it('dismounts', () => {
+    wrapper.destroy();
+    expect(wrapper.exists()).toBe(false);
+  });
 });

@@ -76,4 +76,8 @@ describe('DropDownUnitSelector.vue', () => {
       expect(wrapper.vm.$data.dropdownOpen).toBe(false);
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

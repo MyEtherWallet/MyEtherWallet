@@ -32,4 +32,8 @@ describe('SomeHelpfulTips.vue', () => {
   });
 
   describe('SomeHelpfulTips.vue Methods', () => {});
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

@@ -3,7 +3,7 @@ import HardwareModal from '@/layouts/AccessWalletLayout/components/HardwareModal
 import { Tooling } from '@@/helpers';
 
 describe('HardwareModal.vue', () => {
-  let localVue, i18n, store;
+  let localVue, i18n, store, wrapper;
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -16,7 +16,7 @@ describe('HardwareModal.vue', () => {
 
   beforeEach(() => {
     // eslint-disable-next-line
-    const wrapper = shallowMount(HardwareModal, {
+    wrapper = shallowMount(HardwareModal, {
       localVue,
       i18n,
       store,
@@ -48,4 +48,8 @@ describe('HardwareModal.vue', () => {
   });
 
   describe('HardwareModal.vue Methods', () => {});
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

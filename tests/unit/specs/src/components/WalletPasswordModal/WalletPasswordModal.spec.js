@@ -74,4 +74,8 @@ describe('WalletPasswordModal.vue', () => {
     expect(wrapper.vm.$data.passphrase).toBe('');
     wrapper.vm.$emit('showHardwarePassword');
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

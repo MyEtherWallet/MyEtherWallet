@@ -33,4 +33,8 @@ describe('Congratulations.vue', () => {
   });
 
   describe('Congratulations.vue Methods', () => {});
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

@@ -56,4 +56,7 @@ describe('ByMnemonicContainer.vue', () => {
       expect(wrapper.vm.$data.mnemonic24).toBe(true);
     });
   });
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

@@ -63,4 +63,8 @@ describe('InitialENSStateContainer.vue', () => {
       expect(checkDomain.called).toBe(true);
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

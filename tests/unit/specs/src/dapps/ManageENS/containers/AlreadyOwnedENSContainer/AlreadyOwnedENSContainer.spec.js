@@ -110,4 +110,8 @@ xdescribe('AlreadyOwnedENSContainer.vue', () => {
         .textContent.trim()
     ).toEqual(resolverAddress);
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

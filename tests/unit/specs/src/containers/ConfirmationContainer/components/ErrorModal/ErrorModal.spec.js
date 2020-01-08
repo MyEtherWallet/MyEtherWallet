@@ -72,4 +72,8 @@ describe('ErrorModal.vue', () => {
       expect(hideModal.called).toBe(true);
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

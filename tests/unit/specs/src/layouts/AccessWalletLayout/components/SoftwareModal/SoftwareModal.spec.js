@@ -106,5 +106,9 @@ describe('SoftwareModal.vue', () => {
       wrapper.vm.continueAccess();
       expect(openPrivateKeyInput.called).toBe(true);
     });
+
+    it('should dismount properly', () => {
+      expect(wrapper.destroy()).toBe(undefined);
+    });
   });
 });

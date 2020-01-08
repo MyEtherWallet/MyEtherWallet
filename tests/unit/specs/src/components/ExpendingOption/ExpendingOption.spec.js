@@ -70,4 +70,8 @@ describe('ExpandingOption.vue', () => {
       expect(wrapper.vm.$data.expanded).toBe(true);
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

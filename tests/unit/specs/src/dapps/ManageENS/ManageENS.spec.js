@@ -96,4 +96,8 @@ xdescribe('ManageENS.vue', () => {
       String(step)
     );
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

@@ -31,4 +31,8 @@ describe('NameForbiddenENSContainer.vue', () => {
         .textContent.trim()
     ).toEqual(`${domainName} is not available yet!`);
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

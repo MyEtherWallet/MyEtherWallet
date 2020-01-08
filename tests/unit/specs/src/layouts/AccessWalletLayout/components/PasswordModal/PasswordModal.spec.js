@@ -39,4 +39,8 @@ describe('PasswordModal.vue', () => {
       expect(wrapper.vm.$data.show).toBe(false);
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

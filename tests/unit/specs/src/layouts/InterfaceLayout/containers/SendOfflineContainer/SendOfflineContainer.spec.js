@@ -100,4 +100,9 @@ xdescribe('SendOfflineContainer.vue', () => {
       ).toEqual(wrapper.vm.$data.tabs[i].desc);
     }
   });
+
+  it('dismounts', () => {
+    wrapper.destroy();
+    expect(wrapper.exists()).toBe(false);
+  });
 });

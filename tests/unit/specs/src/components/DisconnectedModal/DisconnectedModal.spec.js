@@ -50,4 +50,8 @@ describe('DisconnectedModal.vue', () => {
       expect(hideModal.called).toBe(false);
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

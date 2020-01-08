@@ -61,4 +61,8 @@ describe('InterfaceLayout.vue', () => {
   //   );
   // });
   // describe('InterfaceLayout.vue Methods', () => {});
+  // it('dismounts', () => {
+  //   wrapper.destroy();
+  //   expect(wrapper.exists()).toBe(false);
+  // });
 });

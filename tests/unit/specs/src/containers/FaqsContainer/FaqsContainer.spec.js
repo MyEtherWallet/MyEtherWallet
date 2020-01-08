@@ -45,4 +45,8 @@ describe('FaqsContainer.vue', () => {
   });
 
   describe('FaqsContainer.vue Methods', () => {});
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

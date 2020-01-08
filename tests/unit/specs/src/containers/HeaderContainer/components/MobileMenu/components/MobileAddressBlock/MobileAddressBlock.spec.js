@@ -26,4 +26,8 @@ describe('MobileAddressBlock.vue', () => {
       wrapper.vm.$el.querySelector('.the-address').textContent.trim()
     ).toEqual(wrapper.vm.account.address);
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

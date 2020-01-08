@@ -38,4 +38,8 @@ describe('WarningMessage.vue', () => {
         .textContent.trim()
     ).toEqual(wrapper.props().options.link.text);
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

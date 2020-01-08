@@ -124,4 +124,9 @@ describe('DeployContractContainer.vue', () => {
       expect(window.pageYOffset).toBe(0);
     });
   });
+
+  it('dismounts', () => {
+    wrapper.destroy();
+    expect(wrapper.exists()).toBe(false);
+  });
 });

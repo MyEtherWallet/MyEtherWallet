@@ -122,4 +122,9 @@ describe('SendCurrencyContainer.vue', () => {
       symbol: 'ETH'
     });
   });
+
+  it('dismounts', () => {
+    wrapper.destroy();
+    expect(wrapper.exists()).toBe(false);
+  });
 });

@@ -112,4 +112,8 @@ describe('IssuesLogModal.vue', () => {
       expect(wrapper.vm.$data.neverShow).toBe(false);
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

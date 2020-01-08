@@ -130,4 +130,8 @@ describe('ManageFundsModal.vue', () => {
     expect(wrapper.vm.$data.actionStep).toBe(true);
     expect(hideModal.called).toBe(true);
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

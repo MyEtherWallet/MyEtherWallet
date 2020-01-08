@@ -111,4 +111,8 @@ describe('SubscriptionForm.vue', () => {
     expect(wrapper.vm.$data.amountErrMsg).toEqual('');
     expect(wrapper.vm.$data.intervalErrMsg).toEqual('');
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

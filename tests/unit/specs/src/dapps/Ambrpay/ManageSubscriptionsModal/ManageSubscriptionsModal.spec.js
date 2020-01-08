@@ -108,4 +108,8 @@ describe('ManageSubscriptionsModal.vue', () => {
       });
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

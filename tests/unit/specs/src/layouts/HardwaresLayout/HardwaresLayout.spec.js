@@ -36,4 +36,8 @@ describe('HardwaresLayout.vue', () => {
       expect(aHref.getAttribute('href')).toEqual(href);
     }
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

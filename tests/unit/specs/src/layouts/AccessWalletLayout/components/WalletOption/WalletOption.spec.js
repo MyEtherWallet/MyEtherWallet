@@ -47,4 +47,8 @@ describe('WalletOption.vue', () => {
         .indexOf('selected')
     ).toBeGreaterThan(-1);
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

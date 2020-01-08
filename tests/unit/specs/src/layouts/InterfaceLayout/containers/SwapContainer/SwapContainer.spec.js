@@ -143,4 +143,9 @@ describe('SwapContainer.vue', () => {
   //     expect(showModal.called).toBe(true);
   //   });
   // });
+
+  it('dismounts', () => {
+    wrapper.destroy();
+    expect(wrapper.exists()).toBe(false);
+  });
 });

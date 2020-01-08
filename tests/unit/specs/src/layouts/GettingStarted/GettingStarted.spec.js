@@ -120,4 +120,8 @@ describe('GettingStarted.vue', () => {
       expect(wrapper.vm.$data.cwwCurrent).toBe(0);
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

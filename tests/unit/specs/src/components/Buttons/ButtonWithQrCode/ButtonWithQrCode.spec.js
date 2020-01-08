@@ -28,4 +28,8 @@ describe('ButtonWithQrCode.vue', () => {
       wrapper.vm.$el.querySelector('div div .the-button').textContent.trim()
     ).toEqual(buttonname);
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

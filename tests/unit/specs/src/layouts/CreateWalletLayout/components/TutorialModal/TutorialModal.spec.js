@@ -28,4 +28,8 @@ describe('TutorialModal.vue', () => {
     spanElement.trigger('click');
     expect(skip).toHaveBeenCalled();
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

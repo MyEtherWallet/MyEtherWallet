@@ -86,4 +86,9 @@ describe('SwapCurrencyPicker.vue', () => {
       expect(wrapper.vm.$data['open']).toBe(false);
     });
   });
+
+  it('dismounts', () => {
+    wrapper.destroy();
+    expect(wrapper.exists()).toBe(false);
+  });
 });

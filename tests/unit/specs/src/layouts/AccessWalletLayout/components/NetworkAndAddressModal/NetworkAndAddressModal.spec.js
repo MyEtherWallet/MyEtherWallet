@@ -63,5 +63,9 @@ describe('NetworkAndAddressModal.vue', () => {
       customPath = { label: '', path: '' };
       expect(wrapper.vm.$data.customPath).toEqual(customPath);
     });
+
+    it('should dismount properly', () => {
+      expect(wrapper.destroy()).toBe(undefined);
+    });
   });
 });

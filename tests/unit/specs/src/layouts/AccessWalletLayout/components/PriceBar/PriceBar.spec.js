@@ -67,4 +67,8 @@ describe('PriceBar.vue', () => {
   });
 
   describe('PriceBar.vue Methods', () => {});
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

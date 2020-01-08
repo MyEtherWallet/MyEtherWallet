@@ -53,4 +53,8 @@ xdescribe('MobileLanguageSelector.vue', () => {
       const liElement = liElements[i];
     }
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

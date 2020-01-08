@@ -26,4 +26,9 @@ describe('InterfaceContainerTitle.vue', () => {
     const hTitle = wrapper.vm.$el.querySelector('.content-title h2');
     expect(hTitle.textContent.trim()).toEqual(title);
   });
+
+  it('dismounts', () => {
+    wrapper.destroy();
+    expect(wrapper.exists()).toBe(false);
+  });
 });

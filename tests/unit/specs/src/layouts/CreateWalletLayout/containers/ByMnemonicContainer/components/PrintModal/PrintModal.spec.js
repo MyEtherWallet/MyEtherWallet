@@ -85,4 +85,7 @@ describe('PrintModal.vue', () => {
   // it('should render component', () => {
   //   expect(PrintModal).toMatchSnapshot();
   // });
+  // it('should dismount properly', () => {
+  //   expect(wrapper.destroy()).toBe(undefined);
+  // });
 });

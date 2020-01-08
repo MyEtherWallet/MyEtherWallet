@@ -42,4 +42,9 @@ describe('VerifyMessageContainer.vue', () => {
   });
 
   it('should render correct content', () => {});
+
+  it('dismounts', () => {
+    wrapper.destroy();
+    expect(wrapper.exists()).toBe(false);
+  });
 });

@@ -70,4 +70,8 @@ describe('StandardDropdown.vue', () => {
       //expect(wrapper.vm.$data.open).toBe(false);
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

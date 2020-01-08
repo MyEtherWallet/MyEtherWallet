@@ -73,4 +73,8 @@ describe('MobileMenuButton.vue', () => {
       ).toBe(-1);
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

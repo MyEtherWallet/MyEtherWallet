@@ -94,4 +94,8 @@ describe('FooterContainer.vue', () => {
       expect(contents[i].to).toEqual(contentsElement.vm.to);
     }
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

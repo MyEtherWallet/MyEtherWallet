@@ -58,4 +58,8 @@ describe('DropDownAddressSelector.vue', () => {
       expect(wrapper.vm.$data.validAddress).toBe(true);
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

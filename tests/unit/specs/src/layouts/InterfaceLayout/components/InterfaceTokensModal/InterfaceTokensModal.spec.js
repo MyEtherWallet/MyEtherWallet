@@ -67,4 +67,9 @@ describe('InterfaceTokensModal.vue', () => {
       expect(addToken.called).toBe(true);
     });
   });
+
+  it('dismounts', () => {
+    wrapper.destroy();
+    expect(wrapper.exists()).toBe(false);
+  });
 });

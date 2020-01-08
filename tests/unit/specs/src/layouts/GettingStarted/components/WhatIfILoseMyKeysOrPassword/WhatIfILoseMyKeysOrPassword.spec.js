@@ -32,4 +32,8 @@ describe('WhatIfILoseMyKeysOrPassword.vue', () => {
   });
 
   describe('WhatIfILoseMyKeysOrPassword.vue Methods', () => {});
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

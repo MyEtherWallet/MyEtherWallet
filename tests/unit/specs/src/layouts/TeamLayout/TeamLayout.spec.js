@@ -69,4 +69,9 @@ describe('TeamLayout.vue', () => {
       );
     }
   });
+
+  it('dismounts', () => {
+    wrapper.destroy();
+    expect(wrapper.exists()).toBe(false);
+  });
 });

@@ -30,4 +30,8 @@ xdescribe('RoundButton.vue', () => {
       wrapper.vm.$el.querySelector('.round-button button').textContent.trim()
     ).toEqual(title);
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

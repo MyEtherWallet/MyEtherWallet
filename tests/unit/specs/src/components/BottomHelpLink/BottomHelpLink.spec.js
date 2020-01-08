@@ -27,4 +27,8 @@ describe('BottomHelpLink.vue', () => {
     wrapper.setProps({ type });
     expect(wrapper.find('.issues').exists()).toBe(false);
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

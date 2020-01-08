@@ -91,5 +91,9 @@ describe('MnemonicPasswordModal.vue', () => {
         wrapper.vm.unlockWallet();
       });
     });
+
+    it('should dismount properly', () => {
+      expect(wrapper.destroy()).toBe(undefined);
+    });
   });
 });

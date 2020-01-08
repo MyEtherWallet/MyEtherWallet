@@ -47,4 +47,8 @@ describe('WhereAreMyFundsStored.vue', () => {
     ).toEqual(0);
   });
   describe('WhereAreMyFundsStored.vue Methods', () => {});
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });

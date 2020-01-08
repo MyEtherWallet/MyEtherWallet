@@ -93,6 +93,10 @@ xdescribe('MnemonicModal.vue', () => {
         expect(inputField.element.value).toEqual('');
       }
     });
+
+    it('should dismount properly', () => {
+      expect(wrapper.destroy()).toBe(undefined);
+    });
   });
 
   describe('MnemonicModal.vue Methods', () => {
@@ -174,6 +178,10 @@ xdescribe('MnemonicModal.vue', () => {
       wrapper.vm.$nextTick(() => {
         wrapper.vm.openPasswordModal();
       });
+    });
+
+    it('should dismount properly', () => {
+      expect(wrapper.destroy()).toBe(undefined);
     });
   });
 });

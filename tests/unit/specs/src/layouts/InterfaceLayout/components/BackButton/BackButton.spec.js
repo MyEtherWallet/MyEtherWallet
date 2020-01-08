@@ -49,4 +49,9 @@ describe('BackButton.vue', () => {
       expect(spy.calledWith(goToPath)).toBe(true);
     });
   });
+
+  it('dismounts', () => {
+    wrapper.destroy();
+    expect(wrapper.exists()).toBe(false);
+  });
 });

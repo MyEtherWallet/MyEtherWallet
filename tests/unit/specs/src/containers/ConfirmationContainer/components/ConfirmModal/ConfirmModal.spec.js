@@ -158,4 +158,8 @@ describe('ConfirmModal.vue', () => {
       expect(wrapper.vm.modalDetailInformation).toBe(true);
     });
   });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
+  });
 });
