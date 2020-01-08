@@ -19,6 +19,7 @@
 
 ### Bug
 
+- Fix footer elements margin and paddings [#1827](https://github.com/MyEtherWallet/MyEtherWallet/pull/1827)
 - Fix swap confirmation modal text break [#1821](https://github.com/MyEtherWallet/MyEtherWallet/pull/1821)
 - Fix swap confirmation modal text break [#1819](https://github.com/MyEtherWallet/MyEtherWallet/pull/1819)
 - Fix currency picker freeze [#1820](https://github.com/MyEtherWallet/MyEtherWallet/pull/1820)
