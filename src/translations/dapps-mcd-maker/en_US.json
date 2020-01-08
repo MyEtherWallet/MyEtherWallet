@@ -155,5 +155,19 @@
   "load-types": "Loading: Multi Collateral Types",
   "loading-locating-vaults": "Checking For Vaults",
   "loading-vaults": "Loading: Current Vaults",
-  "loading-your-vault": "Loading your vault"
+  "loading-your-vault": "Loading your vault",
+  "cdp-portal": "CDP Portal",
+  "cdp-updated": "Vault Updated",
+  "cdp-created": "Vault Created",
+  "migrateCdp": "Migrate CDP {value}",
+  "no-cdps-to-migrate-found": "No CDPs found needing migration",
+  "loading-your-cdps": "Loading your CDPs",
+  "current-balance": "Current balance amount",
+  "check-balance": "Check Balance",
+  "your-cdps": "Your CDPs",
+  "migrate-description": "Exchange your old DAI (aka SAI) for the new DAI.",
+  "transfer-cdp-description": "Transfer your old CDP to a Multi-Collateral Vault.",
+  "manage-your-vault-description": "Make changes to your Vault or close it out.",
+  "create-vault-description": "Open a Multi-Collateral Vault to generate DAI based on your collateral.",
+  "dai-savings-description": "Check on your DAI holdings, set an allowance for your collateral, and deploy a proxy to save on transaction time and gas."
 }
