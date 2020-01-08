@@ -23,7 +23,6 @@ import store from 'store';
 import supportedLang from '@/containers/HeaderContainer/supportedLang';
 
 export default {
-  components: {},
   props: {
     open: {
       type: Boolean,
@@ -38,14 +37,11 @@ export default {
       supportedLanguages: supportedLang
     };
   },
-  computed: {},
   watch: {
     open(newVal) {
       this.menuOpen = newVal;
     }
   },
-  mounted() {},
-  created() {},
   methods: {
     languageItemClicked(e) {
       const code = e.target.getAttribute('data-language-code') || 'en_US';

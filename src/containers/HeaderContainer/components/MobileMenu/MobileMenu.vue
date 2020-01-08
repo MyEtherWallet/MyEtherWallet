@@ -136,6 +136,8 @@ import MobileBalanceBlock from './components/MobileBalanceBlock';
 import MobileNetworkBlock from './components/MobileNetworkBlock';
 import MobileLanguageSelector from './components/MobileLanguageSelector';
 import { Misc } from '@/helpers';
+import store from 'store';
+import supportedLang from '../../supportedLang';
 
 export default {
   components: {
@@ -169,7 +171,8 @@ export default {
       langSelectorOpen: false,
       currentLang: 'English',
       currentFlag: 'en',
-      isMewCx: isMewCx
+      isMewCx: isMewCx,
+      supportedLanguages: supportedLang
     };
   },
   computed: {
@@ -185,6 +188,24 @@ export default {
     }
   },
   mounted() {
+    if (Misc.doesExist(store.get('locale'))) {
+      const storedLocale = this.supportedLanguages.find(item => {
+        return item.langCode === store.get('locale');
+      });
+      this._i18n.locale = store.get('locale');
+      this.currentFlag = storedLocale.flag;
+    } else {
+      const storedLocale = this.supportedLanguages.find(item => {
+        return item.langCode === this._i18n.locale;
+      });
+      store.set('locale', storedLocale.langCode);
+      this.currentFlag = storedLocale.flag;
+    }
+
+    this.currentLang = this.supportedLanguages.find(
+      item => item.flag === this.currentFlag
+    ).name;
+
     window.onscroll = () => {
       this.onPageScroll();
     };
