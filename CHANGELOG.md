@@ -19,6 +19,7 @@
 
 ### Bug
 
+- Fix footer elements margin and paddings [#1827](https://github.com/MyEtherWallet/MyEtherWallet/pull/1827)
 - Fix swap confirmation modal text break [#1821](https://github.com/MyEtherWallet/MyEtherWallet/pull/1821)
 - Fix swap confirmation modal text break [#1819](https://github.com/MyEtherWallet/MyEtherWallet/pull/1819)
 - Fix currency picker freeze [#1820](https://github.com/MyEtherWallet/MyEtherWallet/pull/1820)
@@ -26,6 +27,9 @@
 - Hide blockexplorrer link on irrelevant pages and add back tx history for cx header [#1800](https://github.com/MyEtherWallet/MyEtherWallet/pull/1800)
 - Fix issue with withdrawing ETH from CDP [#1811](https://github.com/MyEtherWallet/MyEtherWallet/pull/1811)
 - Fix header items for other languages [#1791](https://github.com/MyEtherWallet/MyEtherWallet/pull/1791)
+- Fix NFT Loading [#1831] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1831)
+- Update mewcx wording [#1829] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1829)
+- Sort address book and compare add address by lowercase [#1828] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1828)
 
 ### Release v5.2.8-hotfix.2
 
