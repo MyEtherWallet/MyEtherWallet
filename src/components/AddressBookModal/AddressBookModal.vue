@@ -117,11 +117,7 @@ export default {
     return {
       contactNickname: '',
       contactAddress: '',
-      isValidAddress: false,
-      addressBookActions: {
-        EDIT: 'Edit Address',
-        ADD: 'Add a New Contact'
-      }
+      isValidAddress: false
     };
   },
   computed: {
@@ -136,6 +132,12 @@ export default {
         );
       }
       return !this.contactAddress || !this.isValidAddress;
+    },
+    addressBookActions() {
+      return {
+        EDIT: this.$t('interface.address-book.edit-addr'),
+        ADD: this.$t('interface.address-book.add-new')
+      };
     }
   },
   watch: {
