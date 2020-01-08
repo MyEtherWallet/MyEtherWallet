@@ -126,7 +126,7 @@
       <div v-show="!online">
         {{ $t('nftManager.nft-are') }}
       </div>
-      <div class="not-supported-txt" v-show="online">
+      <div v-show="online" class="not-supported-txt">
         {{ $t('nftManager.not-supported', { value: network.type.name_long }) }}
       </div>
     </div>
