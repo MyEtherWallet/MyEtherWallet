@@ -1,10 +1,9 @@
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, RouterLinkStub } from '@vue/test-utils';
 import SwapContainer from '@/layouts/InterfaceLayout/containers/SwapContainer/SwapContainer.vue';
 import { Tooling } from '@@/helpers';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
 import SwapConfirmationModal from '@/layouts/InterfaceLayout/containers/SwapContainer/components/SwapConfirmationModal/SwapConfirmationModal.vue';
 import sinon from 'sinon';
-import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 const showModal = sinon.spy();
 

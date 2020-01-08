@@ -1,11 +1,10 @@
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, RouterLinkStub } from '@vue/test-utils';
 import ByMnemonicContainer from '@/layouts/CreateWalletLayout/containers/ByMnemonicContainer/ByMnemonicContainer.vue';
 import VerificationModal from '@/layouts/CreateWalletLayout/containers/ByMnemonicContainer/components/VerificationModal/VerificationModal.vue';
 import FinishModal from '@/layouts/CreateWalletLayout/containers/ByMnemonicContainer/components/FinishModal/FinishModal.vue';
 import CreateWalletInputFooter from '@/layouts/CreateWalletLayout/components/CreateWalletInputFooter';
 import PopOver from '@/components/PopOver/PopOver.vue';
 import { Tooling } from '@@/helpers';
-import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 describe('ByMnemonicContainer.vue', () => {
   let localVue, i18n, wrapper, store;

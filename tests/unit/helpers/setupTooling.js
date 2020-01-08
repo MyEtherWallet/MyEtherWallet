@@ -12,6 +12,7 @@ import { state, getters } from '@@/helpers/mockStore';
 function createLocalVueInstance() {
   const localVue = createLocalVue();
   localVue.use(VueI18n);
+
   localVue.use(BootstrapVue);
   localVue.use(VueX);
   localVue.use(VueToast);
@@ -23,6 +24,7 @@ function createLocalVueInstance() {
     value = value.toString().toLowerCase();
     return value.charAt(0).toUpperCase() + value.slice(1);
   });
+
   const i18n = new VueI18n({
     locale: 'en_US',
     fallbackLocale: 'en_US',
@@ -50,21 +52,6 @@ function createLocalVueInstance() {
   };
 }
 
-const RouterLinkStub = {
-  name: 'router-link',
-  template: '<div class="routerlink"><slot></slot></div>',
-  props: ['to']
-};
-
-// likely will remove this function
-// function createShallowMountWrapper(component, suppliedOptions, baseOptions = {}){
-//   if(typeof baseOptions === 'boolean' && baseOptions){
-//     baseOptions = baseOptions || createLocalVueInstance();
-//   }
-//
-//   return shallowMount(component, {baseOptions, ...suppliedOptions});
-// }
-export { RouterLinkStub };
 export default {
   createLocalVueInstance
 };

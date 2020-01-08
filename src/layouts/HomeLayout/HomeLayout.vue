@@ -12,7 +12,6 @@ import AboutContainer from '@/containers/AboutContainer';
 import FaqsContainer from '@/containers/FaqsContainer';
 import Social from './components/Social';
 import TopBanner from './components/TopBanner';
-import { mapState } from 'vuex';
 
 export default {
   name: 'HomeContainer',
@@ -21,15 +20,6 @@ export default {
     about: AboutContainer,
     faqs: FaqsContainer,
     social: Social
-  },
-  data() {
-    return {
-      address: '',
-      resolvedAddress: ''
-    };
-  },
-  computed: {
-    ...mapState(['online'])
   }
 };
 </script>

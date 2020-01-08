@@ -1,8 +1,8 @@
 import { shallowMount, RouterLinkStub } from '@vue/test-utils';
-import HomeLayout from '@/layouts/HomeLayout/HomeLayout.vue';
+import PhishingCatcherLayout from '@/layouts/PhishingCatcherLayout/PhishingCatcherLayout.vue';
 import { Tooling } from '@@/helpers';
 
-describe('HomeLayout.vue', () => {
+describe('PhishingCatcherLayout.vue', () => {
   let localVue, i18n, wrapper, store;
 
   beforeAll(() => {
@@ -13,19 +13,36 @@ describe('HomeLayout.vue', () => {
   });
 
   beforeEach(() => {
-    wrapper = shallowMount(HomeLayout, {
+    wrapper = shallowMount(PhishingCatcherLayout, {
       localVue,
       i18n,
       store,
       attachToDocument: true,
       stubs: {
         'router-link': RouterLinkStub
+      },
+      computed: {
+        linkQuery() {
+          return {
+            url: 'https://www.some-phishing-site.net',
+            'phishing-address': 'https://www.some-phishing-site.net'
+          };
+        }
       }
     });
   });
 
   it('renders correctly', () => {
     expect(wrapper).toMatchSnapshot();
+  });
+
+  it('Has url in linkQuery', () => {
+    const url = 'https://www.some-phishing-site.net';
+    const code = wrapper.find('code');
+    const supposedValue = `<code>
+          ${url}
+        </code>`;
+    expect(code.html()).toEqual(supposedValue);
   });
 
   it('dismounts', () => {

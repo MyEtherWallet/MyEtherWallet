@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, RouterLinkStub } from '@vue/test-utils';
 import GettingStarted from '@/layouts/GettingStarted/GettingStarted.vue';
 import Congratulations from '@/layouts/GettingStarted/components/Congratulations/Congratulations.vue';
 import SomeHelpfulTips from '@/layouts/GettingStarted/components/SomeHelpfulTips/SomeHelpfulTips.vue';
@@ -6,7 +6,6 @@ import WhatIfILoseMyKeysOrPassword from '@/layouts/GettingStarted/components/Wha
 import WhatIsMyEtherWallet from '@/layouts/GettingStarted/components/WhatIsMyEtherWallet/WhatIsMyEtherWallet.vue';
 import WhereAreMyFundsStored from '@/layouts/GettingStarted/components/WhereAreMyFundsStored/WhereAreMyFundsStored.vue';
 import { Tooling } from '@@/helpers';
-import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 describe('GettingStarted.vue', () => {
   let localVue, i18n, wrapper, store;

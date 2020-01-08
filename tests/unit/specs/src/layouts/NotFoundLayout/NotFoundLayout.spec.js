@@ -1,8 +1,8 @@
-import { shallowMount, RouterLinkStub } from '@vue/test-utils';
-import HomeLayout from '@/layouts/HomeLayout/HomeLayout.vue';
+import { mount } from '@vue/test-utils';
+import NotFoundLayout from '@/layouts/NotFoundLayout/NotFoundLayout.vue';
 import { Tooling } from '@@/helpers';
 
-describe('HomeLayout.vue', () => {
+describe('NotFoundLayout.vue', () => {
   let localVue, i18n, wrapper, store;
 
   beforeAll(() => {
@@ -13,23 +13,19 @@ describe('HomeLayout.vue', () => {
   });
 
   beforeEach(() => {
-    wrapper = shallowMount(HomeLayout, {
+    wrapper = mount(NotFoundLayout, {
       localVue,
       i18n,
       store,
       attachToDocument: true,
-      stubs: {
-        'router-link': RouterLinkStub
+      mocks: {
+        _t: () => {},
+        $t: () => {}
       }
     });
   });
 
   it('renders correctly', () => {
     expect(wrapper).toMatchSnapshot();
-  });
-
-  it('dismounts', () => {
-    wrapper.destroy();
-    expect(wrapper.exists()).toBe(false);
   });
 });

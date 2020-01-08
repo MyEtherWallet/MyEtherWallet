@@ -1,7 +1,6 @@
-import { mount } from '@vue/test-utils';
+import { mount, RouterLinkStub } from '@vue/test-utils';
 import FooterContainer from '@/containers/FooterContainer/FooterContainer.vue';
 import { Tooling } from '@@/helpers';
-import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 describe('FooterContainer.vue', () => {
   let localVue, i18n, wrapper, store;

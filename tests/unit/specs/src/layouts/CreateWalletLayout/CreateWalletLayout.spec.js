@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import CreateWalletLayout from '@/layouts/CreateWalletLayout/CreateWalletLayout.vue';
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, RouterLinkStub } from '@vue/test-utils';
 import ByMnemonicContainer from '@/layouts/CreateWalletLayout/containers/ByMnemonicContainer/ByMnemonicContainer.vue';
 import ByJsonFileContainer from '@/layouts/CreateWalletLayout/containers/ByJsonFileContainer/ByJsonFileContainer.vue';
 import CreateWalletInput from '@/layouts/CreateWalletLayout/components/CreateWalletInput/CreateWalletInput.vue';
@@ -11,7 +11,6 @@ import ScanToDownloadModal from '@/layouts/CreateWalletLayout/components/ScanToD
 import CreateWalletInputFooter from '@/layouts/CreateWalletLayout/components/CreateWalletInputFooter/CreateWalletInputFooter.vue';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
-import { RouterLinkStub } from '@@/helpers/setupTooling';
 import IpadModal from '@/components/IpadModal';
 
 describe('CreateWalletLayout.vue', () => {

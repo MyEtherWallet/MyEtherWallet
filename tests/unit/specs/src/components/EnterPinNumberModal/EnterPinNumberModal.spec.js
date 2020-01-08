@@ -1,9 +1,8 @@
 import Vue from 'vue';
 import EnterPinNumberModal from '@/components/EnterPinNumberModal/EnterPinNumberModal.vue';
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, RouterLinkStub } from '@vue/test-utils';
 import { Tooling } from '@@/helpers';
 import StandardButton from '@/components/Buttons/StandardButton';
-import { RouterLinkStub } from '@@/helpers/setupTooling';
 import sinon from 'sinon';
 
 const hideModal = sinon.stub();

@@ -1,9 +1,8 @@
 // import Vue from 'vue';
-// import { shallowMount } from '@vue/test-utils';
+// import { shallowMount, RouterLinkStub } from '@vue/test-utils';
 // import Web3WalletModal from '@/layouts/AccessWalletLayout/components/Web3WalletModal/Web3WalletModal.vue';
 // import { Tooling } from '@@/helpers';
 // import { state } from '@@/helpers/mockStore';
-// import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 describe('Web3WalletModal.vue', () => {
   // let localVue, i18n, wrapper, store;

@@ -1,11 +1,10 @@
 import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, RouterLinkStub } from '@vue/test-utils';
 import ByJsonFileContainer from '@/layouts/CreateWalletLayout/containers/ByJsonFileContainer/ByJsonFileContainer.vue';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
 import ByJsonBlock from '@/layouts/CreateWalletLayout/components/ByJsonBlock/ByJsonBlock.vue';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
-import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 const showModal = sinon.stub();
 const hideModal = sinon.stub();

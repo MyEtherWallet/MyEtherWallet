@@ -1,8 +1,7 @@
-import { shallowMount, mount } from '@vue/test-utils';
+import { shallowMount, mount, RouterLinkStub } from '@vue/test-utils';
 import SoftwareModal from '@/layouts/AccessWalletLayout/components/SoftwareModal/SoftwareModal.vue';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
-import { RouterLinkStub } from '@@/helpers/setupTooling';
 import Vue from 'vue';
 
 const BModalStub = {

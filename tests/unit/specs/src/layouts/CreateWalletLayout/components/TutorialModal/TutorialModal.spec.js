@@ -1,7 +1,6 @@
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, RouterLinkStub } from '@vue/test-utils';
 import TutorialModal from '@/layouts/CreateWalletLayout/components/TutorialModal/TutorialModal.vue';
 import { Tooling } from '@@/helpers';
-import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 describe('TutorialModal.vue', () => {
   let localVue, i18n, wrapper, store;

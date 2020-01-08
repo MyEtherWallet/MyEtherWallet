@@ -1,9 +1,8 @@
 import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, RouterLinkStub } from '@vue/test-utils';
 import AccessWalletLayout from '@/layouts/AccessWalletLayout/AccessWalletLayout.vue';
 import { Tooling } from '@@/helpers';
 import PriceBar from '@/layouts/AccessWalletLayout/components/PriceBar/PriceBar.vue';
-import { RouterLinkStub } from '@@/helpers/setupTooling';
 import BigNumber from 'bignumber.js';
 
 function roundPercentage(num) {

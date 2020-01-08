@@ -38,14 +38,7 @@
               </div>
             </div>
           </router-link>
-          <router-link
-            :to="
-              wallet === null || wallet === undefined
-                ? '/access-my-wallet'
-                : '/interface'
-            "
-            class="nounderline"
-          >
+          <router-link to="/access-my-wallet" class="nounderline">
             <div class="card-block unlock-wallet">
               <div class="card-image flex-col-1-1-vertical-center">
                 <img alt src="~@/assets/images/home/unlock-wallet.png" />
@@ -83,13 +76,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
 export default {
   data() {
     return {};
-  },
-  computed: {
-    ...mapState(['wallet'])
   }
 };
 </script>

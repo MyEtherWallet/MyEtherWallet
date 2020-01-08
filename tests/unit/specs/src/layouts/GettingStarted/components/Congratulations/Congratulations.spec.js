@@ -1,7 +1,6 @@
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, RouterLinkStub } from '@vue/test-utils';
 import Congratulations from '@/layouts/GettingStarted/components/Congratulations/Congratulations.vue';
 import { Tooling } from '@@/helpers';
-import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 describe('Congratulations.vue', () => {
   let localVue, i18n, wrapper, store;
