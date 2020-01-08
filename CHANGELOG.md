@@ -1,3 +1,6 @@
+### Bug 
+- Fix translations for address book [#1833] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1833)
+
 ### Release v5.2.9
 
 ### Feature
