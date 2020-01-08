@@ -2,7 +2,7 @@
   <div class="addr-book-modal">
     <b-modal
       ref="addressBookModal"
-      :title="title"
+      :title="$t(title)"
       hide-footer
       centered
       static
@@ -10,7 +10,7 @@
     >
       <div class="modal-contents">
         <div
-          v-show="title === addressBookActions.ADD"
+          v-show="modalAction === addressBookActions.ADD"
           class="add-new-container"
         >
           <p class="title-header">{{ $t('interface.address-book.address') }}</p>
@@ -31,7 +31,10 @@
             />
           </div>
         </div>
-        <div v-show="title === addressBookActions.EDIT" class="edit-address">
+        <div
+          v-show="modalAction === addressBookActions.EDIT"
+          class="edit-address"
+        >
           <div class="addr-container">
             <blockie
               :address="contactAddress"
@@ -53,7 +56,7 @@
           </p>
           <div
             :class="
-              title === addressBookActions.EDIT
+              modalAction === addressBookActions.EDIT
                 ? 'nickname-input-container'
                 : ''
             "
@@ -70,7 +73,7 @@
                 @click="updateAddrBook()"
               >
                 {{
-                  title === addressBookActions.EDIT
+                  modalAction === addressBookActions.EDIT
                     ? $t('interface.address-book.update')
                     : $t('interface.address-book.add')
                 }}
@@ -79,7 +82,7 @@
           </div>
         </div>
         <p
-          v-show="title === addressBookActions.EDIT"
+          v-show="modalAction === addressBookActions.EDIT"
           class="remove-txt"
           @click="removeContact()"
         >
@@ -100,6 +103,10 @@ export default {
     blockie: Blockie
   },
   props: {
+    modalAction: {
+      type: String,
+      default: ''
+    },
     title: {
       type: String,
       default: ''
@@ -117,14 +124,18 @@ export default {
     return {
       contactNickname: '',
       contactAddress: '',
-      isValidAddress: false
-    };
+      isValidAddress: false,
+      addressBookActions: {
+        EDIT: 'edit',
+        ADD: 'add'
+      }
+    }
   },
   computed: {
     ...mapState(['addressBook']),
     isBtnDisabled() {
       if (
-        this.title === this.addressBookActions.EDIT &&
+        this.modalAction === this.addressBookActions.EDIT &&
         this.addressBook[this.currentIdx]
       ) {
         return (
@@ -132,17 +143,11 @@ export default {
         );
       }
       return !this.contactAddress || !this.isValidAddress;
-    },
-    addressBookActions() {
-      return {
-        EDIT: this.$t('interface.address-book.edit-addr'),
-        ADD: this.$t('interface.address-book.add-new')
-      };
     }
   },
   watch: {
     currentIdx() {
-      if (this.title === this.addressBookActions.EDIT) {
+      if (this.modalAction === this.addressBookActions.EDIT) {
         this.contactAddress = this.addressBook[this.currentIdx].address;
         this.contactNickname = this.addressBook[this.currentIdx].nickname;
       } else {
@@ -169,7 +174,7 @@ export default {
       this.isValidAddress = obj.valid;
     },
     updateAddrBook() {
-      this.title === this.addressBookActions.EDIT
+      this.modalAction === this.addressBookActions.EDIT
         ? this.updateContact()
         : this.addContact();
     },

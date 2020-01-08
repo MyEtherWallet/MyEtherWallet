@@ -246,6 +246,7 @@
       ref="addressBook"
       :current-idx="currentAddressIdx"
       :title="addrBookModalTitle"
+      :modal-action="modalAction"
     />
   </div>
 </template>
@@ -289,7 +290,8 @@ export default {
       importedFile: '',
       popup: false,
       currentAddressIdx: null,
-      addrBookModalTitle: ''
+      addrBookModalTitle: '',
+      modalAction: ''
     };
   },
   computed: {
@@ -522,10 +524,11 @@ export default {
     },
     openAddrBookModal(action, idx) {
       this.currentAddressIdx = action === 'edit' ? idx : null;
+      this.modalAction = action;
       this.addrBookModalTitle =
         action === 'add'
-          ? this.$t('interface.address-book.add-new')
-          : this.$t('interface.address-book.edit-addr');
+          ? 'interface.address-book.add-new'
+          : 'interface.address-book.edit-addr';
       this.$refs.addressBook.$refs.addressBookModal.show();
     }
   }
