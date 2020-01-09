@@ -143,6 +143,10 @@ const lightstreamsNetwork = {
   path: "m/44'/60'/0'",
   label: 'Lightstreams Network'
 };
+const ethercore = {
+  path: "m/44'/466'/0'",
+  label: 'EtherCore'
+};
 export {
   ethereum,
   ethereumClassic,
@@ -179,5 +183,6 @@ export {
   poaNetwork,
   reoscChain,
   dexon,
-  lightstreamsNetwork
+  lightstreamsNetwork,
+  ethercore
 };
