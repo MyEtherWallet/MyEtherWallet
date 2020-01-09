@@ -136,7 +136,6 @@ import MobileBalanceBlock from './components/MobileBalanceBlock';
 import MobileNetworkBlock from './components/MobileNetworkBlock';
 import MobileLanguageSelector from './components/MobileLanguageSelector';
 import { Misc } from '@/helpers';
-import store from 'store';
 import supportedLang from '../../supportedLang';
 
 export default {
@@ -176,7 +175,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'blockNumber'])
+    ...mapState(['account', 'blockNumber', 'locale'])
   },
   watch: {
     $route(newVal) {
@@ -185,32 +184,28 @@ export default {
       } else {
         this.isHomePage = true;
       }
+    },
+    locale() {
+      this.getCurrentLang();
     }
   },
   mounted() {
-    if (Misc.doesExist(store.get('locale'))) {
-      const storedLocale = this.supportedLanguages.find(item => {
-        return item.langCode === store.get('locale');
-      });
-      this._i18n.locale = store.get('locale');
-      this.currentFlag = storedLocale.flag;
-    } else {
-      const storedLocale = this.supportedLanguages.find(item => {
-        return item.langCode === this._i18n.locale;
-      });
-      store.set('locale', storedLocale.langCode);
-      this.currentFlag = storedLocale.flag;
-    }
-
-    this.currentLang = this.supportedLanguages.find(
-      item => item.flag === this.currentFlag
-    ).name;
+    this.getCurrentLang();
 
     window.onscroll = () => {
       this.onPageScroll();
     };
   },
   methods: {
+    getCurrentLang() {
+      const storedLocale = this.supportedLanguages.find(item => {
+        return item.langCode === this.locale;
+      });
+
+      this._i18n.locale = this.locale;
+      this.currentFlag = storedLocale.flag;
+      this.currentLang = storedLocale.name;
+    },
     langChange(data) {
       this.currentLang = data;
     },
