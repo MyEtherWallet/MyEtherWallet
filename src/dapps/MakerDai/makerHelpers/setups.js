@@ -304,6 +304,7 @@ export async function buildEmpty(self) {
 export async function buildCdpObject(cdpId, options = {}, useOld = false) {
   const sysVars = {
     ...options,
+    minDaiValue: this.minDaiValue,
     tokens: this.tokens,
     balances: this.balances,
     _proxyAddress: this.proxyAddress,

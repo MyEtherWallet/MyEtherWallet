@@ -234,6 +234,7 @@ export default {
   data() {
     return {
       activeCdpId: 0,
+      minDaiValue: 20,
       currentlyLoading: '',
       destAddressProxy: '',
       destAddressHasProxy: false,
@@ -705,6 +706,7 @@ export default {
         this.systemValues = {
           stabilityFee: this.stabilityFee,
           minEth: this.minEth,
+          minDai: this.minDaiValue,
           liquidationRatio: this.liquidationRatio,
           liquidationPenalty: this.liquidationPenalty,
           targetPrice: this._targetPrice

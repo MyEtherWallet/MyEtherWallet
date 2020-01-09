@@ -21,7 +21,7 @@ const { DAI } = Maker;
 export default class MakerCDP extends MakerCdpBase {
   constructor(cdpId, web3, services, sysVars) {
     super(cdpId, web3, services, sysVars);
-    this.minDai = 20.5;
+    this.minDai = sysVars.minDaiValue || 20.5;
     this.DAI_NAME = 'MDAI';
   }
 
@@ -404,7 +404,7 @@ export default class MakerCDP extends MakerCdpBase {
       this.calcCollatRatio(
         this.collateralAmount,
         this.debtValue.plus(amount)
-      ).gt(2) ||
+      ).gt(this.goodPercent) ||
       acknowledgeBypass
     ) {
       try {
@@ -425,7 +425,7 @@ export default class MakerCDP extends MakerCdpBase {
     if (
       this.debtValue.eq(0) ||
       this.calcCollatRatio(this.ethCollateral.minus(amount), this.debtValue).gt(
-        1.5
+        this.minPercent
       ) ||
       acknowledgeBypass
     ) {
