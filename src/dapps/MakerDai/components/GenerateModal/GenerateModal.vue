@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="$t('dappsMaker.generate-title')"
+      :title="$t('dappsMCDMaker.generate-title')"
       centered
       class="bootstrap-modal nopadding"
       hide-footer
@@ -12,30 +12,30 @@
       <div class="contents">
         <div class="inputs">
           <div class="interface__block-title">
-            {{ $t('dappsMaker.generate-question') }}
+            {{ $t('dappsMCDMaker.generate-question') }}
           </div>
           <div class="top-buttons">
             <p class="total">
-              <span>{{ $t('dappsMaker.total') }}</span>
+              <span>{{ $t('dappsMCDMaker.total') }}</span>
               {{ displayFixedValue(newTotal, 10) }}
               <!--              {{ newTotal }}-->
               DAI
             </p>
             <p class="max" @click="maxDai">
-              {{ $t('dappsMaker.max-balance') }}
+              {{ $t('dappsMCDMaker.max-available') }}
             </p>
           </div>
           <div :class="['input-box', allOk ? '' : 'danger']">
             <input v-model="amount" />
-            <p class="input-unit">{{ $t('dappsMaker.dai') }}</p>
+            <p class="input-unit">{{ $t('dappsMCDMaker.dai') }}</p>
           </div>
           <div class="sub-text">
             <p v-if="!canGenerateDaiAmount" class="above-max">
-              {{ $t('dappsMaker.above-max-dai') }}
+              {{ $t('dappsMCDMaker.above-max-dai') }}
             </p>
             <p>
               {{
-                $t('dappsMaker.collateral-ratio-val', {
+                $t('dappsMCDMaker.collateral-ratio-val', {
                   value: displayFixedPercent(newCollateralRatio())
                 })
               }}
@@ -45,18 +45,18 @@
         <expanding-option title="Details">
           <div class="detail-container">
             <div class="grid-block">
-              <p>{{ $t('dappsMaker.max-generate-available') }}</p>
+              <p>{{ $t('dappsMCDMaker.max-generate-available') }}</p>
               <p>
                 <b>{{
                   values.maxDai ? displayFixedValue(values.maxDai) : 0
                 }}</b>
-                {{ $t('dappsMaker.dai') }}
+                {{ $t('dappsMCDMaker.dai') }}
               </p>
             </div>
             <div class="grid-block">
               <p>
                 {{
-                  $t('dappsMaker.projectedLiquidation', {
+                  $t('dappsMCDMaker.projectedLiquidation', {
                     currency: currentCdpType
                   })
                 }}
@@ -67,7 +67,7 @@
               </p>
             </div>
             <div class="grid-block">
-              <p>{{ $t('dappsMaker.projected-collat-ratio') }}</p>
+              <p>{{ $t('dappsMCDMaker.projected-collat-ratio') }}</p>
               <p>
                 <b>{{ displayFixedPercent(newCollateralRatio()) }}%</b>
               </p>
@@ -82,10 +82,10 @@
           <div class="grid-block">
             <div class="sign">⚠️</div>
             <div class="text-content">
-              <p class="title">{{ $t('dappsMaker.caution') }}</p>
+              <p class="title">{{ $t('dappsMCDMaker.caution') }}</p>
               <p class="warning-details">
                 {{
-                  $t('dappsMaker.liquidation-risk', {
+                  $t('dappsMCDMaker.liquidation-risk-multi', {
                     value: displayFixedPercent(newCollateralRatio())
                   })
                 }}
@@ -93,7 +93,7 @@
               <check-box @changeStatus="checkBoxClicked">
                 <template v-slot:terms>
                   <p class="checkbox-label">
-                    {{ $t('dappsMaker.understand-and-agree') }}
+                    {{ $t('dappsMCDMaker.understand-and-agree') }}
                   </p>
                 </template>
               </check-box>
@@ -103,11 +103,19 @@
 
         <div class="buttons">
           <standard-button
-            :options="cancelButton"
+            :options="{
+              title: $t('common.cancel'),
+              buttonStyle: 'green-border',
+              noMinWidth: true
+            }"
             :click-function="closeModal"
           />
           <standard-button
-            :options="generateButton"
+            :options="{
+              title: $t('dappsMCDMaker.generate'),
+              buttonStyle: 'green',
+              noMinWidth: true
+            }"
             :button-disabled="canProceed ? false : true"
             :click-function="submitBtn"
           />
@@ -208,17 +216,7 @@ export default {
       textValues: {},
       fiatCurrency: 'USD',
       digitalCurrency: 'ETH',
-      currentCdpType: 'ETH',
-      cancelButton: {
-        title: 'Cancel',
-        buttonStyle: 'green-border',
-        noMinWidth: true
-      },
-      generateButton: {
-        title: 'Generate',
-        buttonStyle: 'green',
-        noMinWidth: true
-      }
+      currentCdpType: 'ETH'
     };
   },
   computed: {

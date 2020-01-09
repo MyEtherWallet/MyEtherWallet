@@ -625,10 +625,10 @@ export default {
       if (this.creatingCdp) {
         this.creatingCdp = false;
         await this.updateActiveCdp();
-        Toast.responseHandler(this.$t('dapps-maker.cdp-closed'), Toast.INFO);
+        Toast.responseHandler(this.$t('dapps-maker.cdp-created'), Toast.INFO);
       } else {
         this.valuesUpdated++;
-        Toast.responseHandler(this.$t('dapps-maker.cdp-closed'), Toast.INFO);
+        Toast.responseHandler(this.$t('dapps-maker.cdp-updated'), Toast.INFO);
       }
     },
 
@@ -795,6 +795,7 @@ export default {
       }
 
       const services = {
+        account: this.account,
         _proxyService: this._proxyService,
         priceService: this.priceService,
         _cdpService: this._cdpService,
@@ -848,9 +849,17 @@ export default {
     },
     freeEth(val) {
       if (val[1] === null) {
-        this.currentCdp.freeEth(val[0]);
+        this.currentCdp.freeEth(val[0]).then(() => {
+          if (this.$route.path.includes('maker-sai')) {
+            this.doUpdate();
+          }
+        });
       } else {
-        this.currentCdp.freeEth(val[0], val[1]);
+        this.currentCdp.freeEth(val[0], val[1]).then(() => {
+          if (this.$route.path.includes('maker-sai')) {
+            this.doUpdate();
+          }
+        });
       }
     },
     drawDai(val) {

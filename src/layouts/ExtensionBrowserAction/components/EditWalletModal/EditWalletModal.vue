@@ -79,7 +79,7 @@ export default {
     saveWalletCb() {
       this.$refs.editModal.hide();
       Toast.responseHandler(
-        this.$t('mew-cx.wallet-update-success'),
+        this.$t('mewcx.wallet-update-success'),
         Toast.SUCCESS
       );
     }

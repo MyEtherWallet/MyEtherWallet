@@ -255,10 +255,12 @@ export default {
     generateWalletFromPriv(priv, type) {
       this.loading = true;
       const privKey = priv ? priv : this.privateKey;
+      const parsedPrivKey =
+        privKey.substr(0, 2) === '0x' ? privKey.replace('0x', '') : privKey;
       const worker = new walletWorker();
       worker.postMessage({
         type: 'generateFromPrivateKey',
-        data: [privKey, this.password]
+        data: [parsedPrivKey, this.password]
       });
       worker.onmessage = e => {
         const newJson = {};
@@ -301,7 +303,11 @@ export default {
     },
     storeWalletCb() {
       this.loading = false;
-      this.$eventHub.$emit('showSuccessModal', 'Successfully added a wallet!');
+      this.$eventHub.$emit(
+        'showSuccessModal',
+        'Successfully added a wallet!',
+        null
+      );
       this.$router.push('/');
       this.reset();
       this.toggleVerifyDetails(false, '');
@@ -452,7 +458,7 @@ export default {
       if (Array.isArray(e)) {
         this.mnemonicPhrase = e.join(' ');
       } else {
-        Toast.responseHandler(this.$t('mew-cx.invalid-mnemonic'), Toast.ERROR);
+        Toast.responseHandler(this.$t('mewcx.invalid-mnemonic'), Toast.ERROR);
       }
     },
     updateSelectedPath(e) {

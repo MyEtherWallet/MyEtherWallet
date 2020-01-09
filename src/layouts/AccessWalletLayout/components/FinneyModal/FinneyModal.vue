@@ -34,9 +34,6 @@
         </div>
       </div>
     </div>
-    <div v-if="false" class="finney-mobile">
-      {{ $t('accessWallet.finney.mobile') }}
-    </div>
   </b-modal>
 </template>
 

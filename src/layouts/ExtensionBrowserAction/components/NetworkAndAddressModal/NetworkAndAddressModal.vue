@@ -22,7 +22,6 @@
                 {{ selectedNetwork.service }})
               </p>
             </div>
-            <p v-if="false" class="right-button">{{ $t('common.cancel') }}</p>
           </b-btn>
           <b-collapse
             id="collapse1"
