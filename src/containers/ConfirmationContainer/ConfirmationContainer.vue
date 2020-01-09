@@ -576,7 +576,7 @@ export default {
       if (this.raw.generateOnly) return;
       this.showSuccessModal(
         `${this.$t('sendTx.success.sub-title')}`,
-        'Okay',
+        `${this.$t('common.okay')}`,
         this.network.type.blockExplorerTX.replace(
           '[[txHash]]',
           this.signedTxObject.tx.hash

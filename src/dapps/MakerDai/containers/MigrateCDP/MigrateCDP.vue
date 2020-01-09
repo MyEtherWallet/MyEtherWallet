@@ -1,68 +1,100 @@
 <template>
-  <div>
-    <div class="currency-ops-new">
-      <div style="padding: 10px">
-        <p @click="checkMigrateContractSaiBalance">
-          <b>
-            {{
-              $t('dappsMaker.current-sai-balance', {
-                value: migrateContractBalance
-              })
-            }}</b
-          >
-        </p>
-        <div v-show="noSaiAvailable && !needsAtLeast20">
-          {{ $t('dappsMaker.not-enough-sai') }}
+  <div style="max-width: 500px;">
+    <div class="d-flex align-items-center mb-5">
+      <h3 class="mr-2 ">
+        {{ $t('dappsMCDMaker.migrate-single-collateral-to-multi-collateral') }}
+      </h3>
+      <img :src="DaiIcon" class="icon-size" height="26" width="26" />
+    </div>
+    <div>
+      <div class="mb-5">
+        <div class="mb-2">
+          <b>{{ $t('dappsMCDMaker.migration-contract-balance') }}</b>
         </div>
-        <div v-show="needsAtLeast20" style="padding: 10px">
-          {{
-            $t('dappsMaker.needs-at-least-20', {
-              value: migrateContractBalance
-            })
-          }}
-        </div>
+        <b-form-input
+          v-model="migrateContractBalance"
+          readonly
+          class="mb-1"
+        ></b-form-input>
+        <b-button variant="secondary" @click="checkMigrateContractSaiBalance">{{
+          $t('dappsMCDMaker.check-balance')
+        }}</b-button>
       </div>
 
-      <div class="currency-picker-container">
-        <div class="interface__block-title">
-          {{ $t('dappsMaker.migrate-single-collateral-to-multi-collateral') }}
-        </div>
-        <h4 v-show="!cdpDetailsLoaded">
-          {{ $t('dappsMaker.loading-your-cdps') }}
-        </h4>
-        <div v-for="cdpId in cdps" :key="cdpId">
-          <div
-            :class="[
-              'dropdown-text-container',
-              'dropdown-container',
-              'no-point',
-              cdpId === selectedCdp ? 'selectedCDP' : ''
-            ]"
-            @click="selectCDP(cdpId)"
-          >
-            <p>
-              <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
-              {{ cdpId }}
-              <span class="subname">- CDP </span>
-            </p>
-          </div>
-        </div>
-        <div v-show="noCdpsToMigrateFound">
-          {{ $t('dappsMaker.no-cdps-to-migrate-found') }}
-        </div>
-        <div class="buttons-container">
-          <div
-            :class="[
-              validInputs ? '' : 'disabled',
-              'submit-button large-round-button-green-filled'
-            ]"
-            @click="beginMigration"
-          >
-            {{ $t('dappsMaker.migrate') }}
-          </div>
+      <div v-show="noSaiAvailable && !needsAtLeast20">
+        {{ $t('dappsMCDMaker.not-enough-sai') }}
+      </div>
+      <div v-show="needsAtLeast20" style="padding: 10px">
+        {{
+          $t('dappsMCDMaker.needs-at-least-20', {
+            value: migrateContractBalance
+          })
+        }}
+      </div>
+    </div>
+
+    <div class="currency-picker-container">
+      <div class="mb-2">
+        <b>{{ $t('dappsMCDMaker.your-cdps') }}</b>
+      </div>
+
+      <div v-if="!cdpDetailsLoaded" class="d-flex align-items-center">
+        <b-spinner class="mr-3" variant="primary" label="Spinning"></b-spinner>
+        <div>
+          {{ $t('dappsMCDMaker.loading-your-cdps') }}
         </div>
       </div>
-      <div></div>
+      <div v-for="cdpId in cdps" :key="cdpId">
+        <div
+          :class="[
+            'dropdown-text-container',
+            'dropdown-container',
+            'no-point',
+            cdpId === selectedCdp ? 'selectedCDP' : ''
+          ]"
+          @click="selectCDP(cdpId)"
+        >
+          <p>
+            <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
+            {{ cdpId }}
+            <span class="subname">- {{ $t('dappsMCDMaker.cdp') }} </span>
+          </p>
+        </div>
+      </div>
+      <div v-show="noCdpsToMigrateFound">
+        {{ $t('dappsMCDMaker.no-cdps-to-migrate-found') }}
+      </div>
+      <p v-show="mkrNeeded">{{ $t('dappsMCDMaker.get-maker-to-migrate') }}</p>
+      <div v-show="mkrNeeded" class="buttons-container">
+        <div
+          :class="['submit-button large-round-button-green-filled']"
+          @click="getMkr"
+        >
+          {{ $t('dappsMCDMaker.get-mkr') }}
+        </div>
+      </div>
+      <p v-show="approvalNeeded && !mkrNeeded">
+        {{ $t('dappsMCDMaker.approve-maker-to-migrate') }}
+      </p>
+      <div v-show="approvalNeeded && !mkrNeeded" class="buttons-container">
+        <div
+          :class="['submit-button large-round-button-green-filled']"
+          @click="beginMigration"
+        >
+          {{ $t('dappsMCDMaker.approve-maker') }}
+        </div>
+      </div>
+      <div class="buttons-container">
+        <div
+          :class="[
+            validInputs ? '' : 'disabled',
+            'submit-button large-round-button-green-filled'
+          ]"
+          @click="beginMigration"
+        >
+          {{ $t('dappsMCDMaker.migrate') }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -73,6 +105,7 @@ import BigNumber from 'bignumber.js';
 import { addresses, ERC20, locateOldCdps } from '../../makerHelpers';
 import ethUnit from 'ethjs-unit';
 import { Toast } from '@/helpers';
+import DaiIcon from '@/assets/images/currency/coins/AllImages/DAI.svg';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -100,6 +133,10 @@ export default {
       type: Function,
       default: function() {}
     },
+    valuesUpdated: {
+      type: Number,
+      default: 0
+    },
     getValueOrFunction: {
       type: Function,
       default: function() {}
@@ -107,6 +144,7 @@ export default {
   },
   data() {
     return {
+      DaiIcon: DaiIcon,
       cdps: [],
       daiGenerated: 0,
       migrateContractBalance: 0,
@@ -116,7 +154,10 @@ export default {
       migrationNotPossible: false,
       cdpDetailsLoaded: false,
       noSaiAvailable: false,
-      needsAtLeast20: false
+      needsAtLeast20: false,
+      approvalNeeded: false,
+      governanceFee: toBigNumber(0),
+      mkrBalance: toBigNumber(0)
     };
   },
   computed: {
@@ -131,15 +172,26 @@ export default {
       );
     },
     validInputs() {
-      return this.selectedCdp !== 0 && this.migrationPossible;
+      return (
+        this.selectedCdp !== 0 &&
+        this.migrationPossible &&
+        !this.mkrNeeded &&
+        !this.approvalNeeded
+      );
     },
     noCdpsToMigrateFound() {
       return this.cdps.length === 0 && this.cdpDetailsLoaded;
+    },
+    mkrNeeded() {
+      return toBigNumber(this.mkrBalance).lt(this.governanceFee);
     }
   },
   watch: {
     $route: 'setup',
-    makerActive: 'setup'
+    makerActive: 'setup',
+    valuesUpdated() {
+      this.findCdps();
+    }
   },
   async mounted() {
     this.setup();
@@ -158,6 +210,7 @@ export default {
           value => (this.migrateContractBalance = value)
         );
         this.checkMigrateContractSaiBalance();
+        this.getMkrBalance();
       }
     },
     async findCdps() {
@@ -175,7 +228,8 @@ export default {
           this.selectedCdp,
           this.proxyAddress
         );
-        const _governanceFee = (await details.getGovernanceFee()).toBigNumber();
+        this.getMkrBalance();
+        this.governanceFee = (await details.getGovernanceFee()).toBigNumber();
         const cdpDaiBalance = (await details.getDebtValue()).toBigNumber();
         this.cdpBalances[this.selectedCdp] = { balance: cdpDaiBalance };
         const contractHasEnough = await this.checkMigrateContractSaiBalance(
@@ -185,9 +239,12 @@ export default {
           this.needsAtLeast20 = true;
         }
         if (contractHasEnough) {
-          const needsApproval = await this.needsApproval(_governanceFee);
-          if (needsApproval) {
-            const approve = await this.approveMkr(_governanceFee);
+          this.approvalNeeded = await this.needsApproval(this.governanceFee);
+          if (this.approvalNeeded) {
+            const approvalAmount = toBigNumber(this.governanceFee).gt(1000000)
+              ? this.governanceFee
+              : 1000000;
+            const approve = await this.approveMkr(approvalAmount);
             this.web3.eth.sendTransaction(approve).catch(err => {
               Toast.responseHandler(err, Toast.ERROR);
             });
@@ -201,7 +258,33 @@ export default {
         }
       }
     },
-
+    getMkr() {
+      const mkrNeeded = this.governanceFee;
+      if (toBigNumber(this.mkrBalance).lt(mkrNeeded)) {
+        this.suppliedToAmount = toBigNumber(mkrNeeded)
+          .minus(toBigNumber(this.mkrBalance))
+          .plus(toBigNumber(mkrNeeded).times(0.01))
+          .toNumber();
+        if (toBigNumber(this.suppliedToAmount).lt(0.000001)) {
+          this.suppliedToAmount = 0.000001;
+        }
+        this.suppliedFrom = {
+          symbol: 'ETH',
+          name: 'Ethereum'
+        };
+        this.suppliedTo = {
+          symbol: 'MKR',
+          name: 'Maker'
+        };
+        this.$eventHub.$emit(
+          'showSwapWidgetTo',
+          this.account.address,
+          this.suppliedFrom,
+          this.suppliedTo,
+          this.suppliedToAmount
+        );
+      }
+    },
     // MIGRATION
     async migrate(cdpId) {
       const mig = this.maker
@@ -209,29 +292,29 @@ export default {
         .getMigration('single-to-multi-cdp');
       return await mig.execute(cdpId);
     },
+    async getMkrBalance() {
+      const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_GOV);
+
+      const currentApproval = await contract.methods
+        .balanceOf(this.account.address)
+        .call();
+
+      this.mkrBalance = toBigNumber(currentApproval);
+    },
     async needsApproval(requiredApproval) {
       const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_GOV);
 
       const currentApproval = await contract.methods
         .allowance(this.account.address, this.proxyAddress)
         .call();
-
-      return currentApproval < requiredApproval;
+      return toBigNumber(currentApproval).lt(toBigNumber(requiredApproval));
     },
-    async approveMkr() {
+    async approveMkr(value) {
       const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_GOV);
 
       // was getting a too big decimal error.  So, just approve the entire maker balance
       const data = contract.methods
-        .approve(
-          this.proxyAddress,
-          ethUnit
-            .toWei(
-              await contract.methods.balanceOf(this.account.address).call(),
-              'ether'
-            )
-            .toString()
-        )
+        .approve(this.proxyAddress, ethUnit.toWei(value, 'ether').toString())
         .encodeABI();
       return {
         from: this.account.address,
@@ -253,12 +336,19 @@ export default {
           this.needsAtLeast20 = false;
         }
         this.daiGenerated = this.cdpBalances[this.selectedCdp];
+        const details = await this.getValueOrFunction('_cdpService').getCdp(
+          cdpSelected,
+          this.proxyAddress
+        );
+        this.getMkrBalance();
+        this.governanceFee = (await details.getGovernanceFee()).toBigNumber();
       } else {
         const details = await this.getValueOrFunction('_cdpService').getCdp(
           cdpSelected,
           this.proxyAddress
         );
-        const _governanceFee = (await details.getGovernanceFee()).toBigNumber();
+        this.getMkrBalance();
+        this.governanceFee = (await details.getGovernanceFee()).toBigNumber();
         const cdpDaiBalance = (await details.getDebtValue()).toBigNumber();
         this.checkMigrateContractSaiBalance(cdpDaiBalance);
         if (cdpDaiBalance.lt(20)) {
@@ -269,8 +359,11 @@ export default {
         this.daiGenerated = cdpDaiBalance.toString();
         this.cdpBalances[this.selectedCdp] = {
           balance: cdpDaiBalance,
-          fee: _governanceFee
+          fee: this.governanceFee
         };
+        this.approvalNeeded = await this.needsApproval(
+          this.governanceFee || 1000000
+        );
       }
     },
     async checkMigrateContractSaiBalance(cdpBalance = 0) {

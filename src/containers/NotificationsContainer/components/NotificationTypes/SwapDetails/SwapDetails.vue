@@ -63,7 +63,7 @@
         <li class="notification-type-status">
           <p>{{ $t('common.status') }}:</p>
           <div class="detail-data">
-            <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
+            <p :class="['status', txStatus.class]">({{ $t(txStatus.text) }})</p>
           </div>
         </li>
         <li v-if="isEthereum">

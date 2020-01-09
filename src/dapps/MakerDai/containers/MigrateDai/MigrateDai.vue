@@ -1,44 +1,39 @@
 <template>
-  <div>
-    <div class="currency-ops-new">
-      <div class="info-box">
-        {{ $t('dappsMaker.upgrade-informational') }}
+  <div style="max-width: 500px;">
+    <div class="d-flex align-items-center mb-3">
+      <h3 class="mr-2 ">{{ $t('dappsMCDMaker.upgrade-sai-to-dai') }}</h3>
+      <img :src="DaiIcon" class="icon-size" />
+    </div>
+    <div style="max-width: 500px;" class="mb-5">
+      {{ $t('dappsMCDMaker.upgrade-informational') }}
+    </div>
+    <div class="top-buttons">
+      <p @click="setMax">{{ $t('dappsMCDMaker.entire-sai-balance') }}</p>
+    </div>
+    <div class="dropdown-text-container dropdown-container no-point">
+      <p>
+        <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
+        {{ $t('dappsMCDMaker.sai') }}
+      </p>
+    </div>
+    <input
+      v-model="daiQty"
+      :class="[
+        'currency-picker-container',
+        'dropdown-text-container',
+        'dropdown-container'
+      ]"
+    />
+    <div class="buttons-container">
+      <div
+        :class="[
+          validInputs ? '' : 'disabled',
+          'submit-button large-round-button-green-filled'
+        ]"
+        @click="submitTransaction"
+      >
+        {{ $t('dappsMCDMaker.upgrade') }}
       </div>
-      <div class="currency-picker-container">
-        <div class="interface__block-title">
-          {{ $t('dappsMaker.upgrade-sai-to-dai') }}
-          <img :src="DaiIcon" class="icon-size" />
-        </div>
-        <div class="top-buttons">
-          <p @click="setMax">{{ $t('dappsMaker.entire-sai-balance') }}</p>
-        </div>
-        <div class="dropdown-text-container dropdown-container no-point">
-          <p>
-            <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
-            {{ $t('dappsMaker.sai') }}
-          </p>
-        </div>
-        <input
-          v-model="daiQty"
-          :class="[
-            'currency-picker-container',
-            'dropdown-text-container',
-            'dropdown-container'
-          ]"
-        />
-        <div class="buttons-container">
-          <div
-            :class="[
-              validInputs ? '' : 'disabled',
-              'submit-button large-round-button-green-filled'
-            ]"
-            @click="submitTransaction"
-          >
-            {{ $t('dappsMaker.upgrade') }}
-          </div>
-        </div>
-      </div>
-      <div></div>
     </div>
   </div>
 </template>

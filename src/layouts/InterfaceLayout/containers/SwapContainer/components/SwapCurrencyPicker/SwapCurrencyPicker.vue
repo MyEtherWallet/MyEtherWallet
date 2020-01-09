@@ -127,7 +127,7 @@ export default {
     return {
       icon: '',
       localCurrencies: [],
-      selectedCurrency: { name: 'Select an item', abi: '', address: '' },
+      selectedCurrency: {},
       open: false,
       search: '',
       abi: '',

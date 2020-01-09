@@ -4,7 +4,7 @@
       <div class="text-container">
         <p class="header">{{ parent.$t('dappsSubmission.sotd.title') }}</p>
         <img
-          :alt="parent.$t('footer.sotd')"
+          :alt="parent.$t('dappsSubmission.sotd.name')"
           src="~@/assets/images/icons/dapps/sotd.png"
         />
       </div>

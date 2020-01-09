@@ -7,7 +7,13 @@ import {
   maxEthDraw,
   maxDai
 } from './helpers';
-const { MKR, DAI } = Maker;
+import SaiProxy from './SaiProxyCreateAndExecute';
+import DSProxy from '@/dapps/MakerDai/makerHelpers/ABIs/DSProxy';
+import { padZeros, hexlify } from './ethersHelpers';
+import { createCurrency, createGetCurrency } from '@makerdao/currency';
+import { Toast } from '@/helpers';
+
+const { MKR, DAI, ETH } = Maker;
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -169,14 +175,14 @@ export default class MakerCDP {
           this.debtValue,
           this.ethPrice,
           this.minEth.times(0)
-        );
+        ).toFixed(18);
       }
       return maxEthDraw(
         this.ethCollateral,
         this.liquidationRatio,
         this.debtValue,
         this.ethPrice
-      );
+      ).toFixed(18);
     }
     return toBigNumber(0);
   }
@@ -225,6 +231,14 @@ export default class MakerCDP {
   }
 
   async updateValues(cdpId = this.cdpId) {
+    try {
+      this.byte32Id = hexlify(
+        padZeros(this.web3.utils.numberToHex(this.cdpId), 32)
+      );
+    } catch (e) {
+      // eslint-disable-next-line
+      console.error(e);
+    }
     this._proxyAddress = await this.services.getProxy();
     this.noProxy = this._proxyAddress === null;
     if (this._proxyAddress) {
@@ -354,11 +368,35 @@ export default class MakerCDP {
           return;
         }
         this.needsUpdate = true;
-        await this.cdpService.freeEthProxy(
-          this._proxyAddress,
-          this.cdpId,
-          amount
+        const currencies = {};
+        currencies.ETH = createCurrency('ETH');
+        const getCurrency = createGetCurrency(currencies);
+        const contractAddress = '0x526af336d614ade5cc252a407062b8861af998f5';
+        const contract = new this.web3.eth.Contract(SaiProxy, contractAddress);
+        const data1 = contract.methods
+          .free(
+            this.cdpService._tubContract().address,
+            this.byte32Id,
+            getCurrency(amount, ETH).toFixed('wei')
+          )
+          .encodeABI();
+        const proxyContract = new this.web3.eth.Contract(
+          DSProxy,
+          this._proxyAddress
         );
+        const data = proxyContract.methods
+          .execute(contractAddress, data1)
+          .encodeABI();
+        return this.web3.eth
+          .sendTransaction({
+            to: this._proxyAddress,
+            from: this.currentAddress,
+            data: data,
+            gas: 2000000
+          })
+          .catch(err => {
+            Toast.responseHandler(err, Toast.ERROR);
+          });
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);

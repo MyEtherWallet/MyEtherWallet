@@ -43,11 +43,25 @@ export default {
     window.chrome.storage.sync.get(null, item => {
       if (item.hasOwnProperty('defNetwork')) {
         const networkProps = JSON.parse(item['defNetwork']);
-        const network = _self.$store.state.Networks[networkProps.key].find(
-          actualNetwork => {
-            return actualNetwork.url === networkProps.url;
-          }
-        );
+        let network = {};
+        if (networkProps.hasOwnProperty('url')) {
+          network = _self.$store.state.Networks[networkProps.key][0];
+          window.chrome.storage.sync.set(
+            {
+              defNetwork: JSON.stringify({
+                key: network.type.name,
+                service: network.service
+              })
+            },
+            () => {}
+          );
+        } else {
+          network = _self.$store.state.Networks[networkProps.key].find(
+            actualNetwork => {
+              return actualNetwork.service === networkProps.service;
+            }
+          );
+        }
         _self.$store.dispatch('switchNetwork', network).then(() => {
           _self.$store.dispatch('setWeb3Instance');
         });

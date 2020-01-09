@@ -88,6 +88,7 @@ const isValidENSAddress = function(address) {
   }
   return address.lastIndexOf('.') != -1;
 };
+
 const sanitizeHex = hex => {
   hex = hex.substring(0, 2) == '0x' ? hex.substring(2) : hex;
   if (hex == '') return '0x';
