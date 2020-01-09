@@ -1,6 +1,7 @@
 ### Bug
 
 - Hide other translations on mobile [#1834](https://github.com/MyEtherWallet/MyEtherWallet/pull/1834)
+- Fix translations for address book [#1833](https://github.com/MyEtherWallet/MyEtherWallet/pull/1833)
 
 ### Release v5.2.9
 
