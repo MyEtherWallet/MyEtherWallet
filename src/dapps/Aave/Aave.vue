@@ -142,7 +142,7 @@ export default {
   },
   async mounted() {
     this.lendingPoolContractAddress =
-      '0x9C6C63aA0cD4557d7aE6D9306C06C093A2e35408';
+      '0x24a42fD28C976A61Df5D00D0599C34c4f90748c8';
     this.lendingPoolAddressesProviderContract = new this.web3.eth.Contract(
       LendingPoolAddressesProviderAbi,
       this.lendingPoolContractAddress
@@ -169,6 +169,7 @@ export default {
         )
           .toFixed(2)
           .toString();
+        console.error('info', this.healthFactor)
         this.aggregatedEthBalance = new BigNumber(
           unit.fromWei(info.totalLiquidityETH, 'ether')
         )
