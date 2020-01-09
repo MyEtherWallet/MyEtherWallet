@@ -124,23 +124,7 @@ describe('HeaderContainer.vue', () => {
     });
   });
 
-  xit('should render correct isPageOnTop data', () => {
-    expect(
-      wrapper
-        .find('.scrollup-container')
-        //.classes()
-        .indexOf('active')
-    ).toBe(-1);
-    wrapper.setData({ isPageOnTop: false });
-    expect(
-      wrapper
-        .find('.scrollup-container')
-        .classes()
-        .indexOf('active')
-    ).toBeGreaterThan(-1);
-  });
-
-  xit('should render correct currentName data', () => {
+  it('should render correct currentName data', () => {
     expect(
       wrapper.vm.$el
         .querySelector('.current-language-flag p')
@@ -166,50 +150,27 @@ describe('HeaderContainer.vue', () => {
     });
   });
 
-  xit('should render correct isPageOnTop data', () => {
-    expect(
-      wrapper
-        .find('.scrollup-container')
-        //.classes()
-        .indexOf('active')
-    ).toBe(-1);
-    wrapper.setData({ isPageOnTop: false });
-    expect(
-      wrapper
-        .find('.scrollup-container')
-        .classes()
-        .indexOf('active')
-    ).toBeGreaterThan(-1);
-  });
-
-  xit('should render correct isHomePage data', () => {
-    expect(wrapper.findAll('.b-nav-item').length).toBe(4);
+  it('should render correct isHomePage data', async () => {
+    expect(wrapper.findAll('.b-nav-item').length).toBe(1);
     wrapper.setData({ isHomePage: false });
-    expect(wrapper.findAll('.b-nav-item').length).toBe(2);
+    await wrapper.vm.$nextTick();
+    expect(wrapper.findAll('.b-nav-item').length).toBe(1);
   });
 
-  it('should render correct showGetFreeWallet data', () => {
+  it('should render correct showGetFreeWallet data', async () => {
     wrapper.setData({ isPageOnTop: false, isMewCx: false });
-    wrapper.vm.$nextTick(() => {
-      expect(
-        wrapper
-          .find('.first-button')
-          .classes()
-          .indexOf('hide')
-      ).toBeGreaterThan(-1);
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find('.first-button').classes()).toContain('hide');
+    wrapper.setData({
+      showGetFreeWallet: true,
+      isPageOnTop: false,
+      isMewCx: false
     });
-    wrapper.setData({ showGetFreeWallet: true });
-    wrapper.vm.$nextTick(() => {
-      expect(
-        wrapper
-          .find('.first-button')
-          .classes()
-          .indexOf('show')
-      ).toBeGreaterThan(-1);
-    });
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find('.first-button').classes()).toContain('show');
   });
 
-  xit('should render correct supportedLanguages data', () => {
+  it('should render correct supportedLanguages data', () => {
     const dropDownItems = wrapper.vm.$el.querySelectorAll(
       '.language-menu-container b-dropdown-item-stub'
     );
@@ -225,14 +186,6 @@ describe('HeaderContainer.vue', () => {
   });
 
   describe('HeaderContainer.vue Methods', () => {
-    xit('should render correct scrollTop method', () => {
-      window.pageXOffset = 100;
-      window.pageYOffset = 100;
-      //wrapper.vm.scrollTop();
-      expect(window.pageXOffset).toBe(0);
-      expect(window.pageYOffset).toBe(0);
-    });
-
     it('should render correct logout method', () => {
       expect(showModal.called).toBe(false);
       wrapper.vm.logout();

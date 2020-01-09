@@ -39,25 +39,17 @@ describe('SendCurrencyContainer.vue', () => {
     });
   });
 
-  it('should render correct isValidAddress data', () => {
-    const address = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
-    wrapper.setData({ address });
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.vm.$data.isValidAddress).toBe(true);
-    });
+  it('should render correct amount data', () => {
+    const textWrap = wrapper.find('.amount-number input');
+    expect(textWrap.element.value).toEqual(String(wrapper.vm.$data.toValue));
   });
 
-  xit('should render correct amount data', () => {
-    expect(wrapper.vm.$el.querySelector('.amount-number input').value).toEqual(
-      String(wrapper.vm.$data.value)
-    );
-  });
-
-  xit('should render correct "data" data', () => {
+  it('should render correct "data" data', async done => {
     wrapper.setData({ advancedExpand: true });
-    expect(wrapper.vm.$el.querySelector('.user-input input').value).toEqual(
-      wrapper.vm.$data.data
-    );
+    await wrapper.vm.$nextTick();
+    const dataInput = wrapper.findAll('.user-input input').at(0);
+    expect(dataInput.element.value).toEqual(wrapper.vm.data);
+    done();
   });
 
   it('should render correct gasLimit data', () => {
@@ -68,11 +60,11 @@ describe('SendCurrencyContainer.vue', () => {
   });
 
   describe('SendCurrencyContainer.vue Methods', () => {
-    xit('should render correct selectedCurrency data', () => {
+    it('should render correct selectedCurrency data', () => {
       const currencyElements = wrapper.findAll(
         '.currency-picker-container .item-container div'
       );
-      for (let i = 0; i < currencyElements.length; i++) {
+      for (let i = 0; i < currencyElements.length - 1; i++) {
         const currencyElement = currencyElements.at(i);
         currencyElement.trigger('click');
         const selectedCurrency = wrapper.vm.$data.selectedCurrency;

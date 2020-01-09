@@ -70,23 +70,17 @@ describe('ConfirmModal.vue', () => {
 
   it('should render correct gasPrice props', () => {
     wrapper.setData({ modalDetailInformation: true });
-    expect(
-      wrapper.vm.$el
-        .querySelectorAll('.grid-block')[2]
-        .querySelectorAll('p')[1]
-        .textContent.trim()
-    ).toEqual(wrapper.props().gasPrice + ' Gwei');
+    const gridBlock = wrapper.findAll('.grid-block').at(2);
+    const pTag = gridBlock.findAll('p').at(1);
+    expect(pTag.text()).toContain(wrapper.props().gasPrice + ' Gwei');
   });
 
-  it('should render correct fee props', () => {
+  it('should render correct fee props', async () => {
     wrapper.setData({ modalDetailInformation: true });
-    expect(
-      wrapper.vm.$el
-        .querySelectorAll('.grid-block')[3]
-        .querySelectorAll('p')[1]
-        .textContent.trim()
-        .indexOf(wrapper.props().fee)
-    ).toBeGreaterThan(-1);
+    await wrapper.vm.$nextTick();
+    const gridBlock = wrapper.findAll('.grid-block').at(3);
+    const pTag = gridBlock.findAll('p').at(1);
+    expect(pTag.text()).toContain(wrapper.props().transactionFee);
   });
 
   it('should render correct nonce props', () => {

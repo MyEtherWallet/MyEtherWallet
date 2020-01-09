@@ -26,10 +26,14 @@ describe('CurrencyPicker.vue', () => {
       computed: {
         networkToken() {
           return { symbol: 'ETH', name: 'Ethereum' };
+        },
+        localCurrency() {
+          return currency;
         }
       },
       propsData: {
-        currency: currency
+        currency: currency,
+        selectedCurrency: {}
       }
     });
   });
@@ -54,7 +58,7 @@ describe('CurrencyPicker.vue', () => {
     ).toBeGreaterThan(-1);
   });
 
-  it('should show elements according to token props', () => {
+  it('should show elements according to token props', async () => {
     expect(
       wrapper
         .findAll('.dropdown-container p')
@@ -68,66 +72,61 @@ describe('CurrencyPicker.vue', () => {
         .isVisible()
     ).toBe(true);
     wrapper.setProps({ token: false });
-    wrapper.vm.$nextTick(() => {
-      expect(
-        wrapper
-          .findAll('.dropdown-container p')
-          .at(0)
-          .isVisible()
-      ).toBe(false);
-      expect(
-        wrapper
-          .findAll('.dropdown-container p')
-          .at(1)
-          .isVisible()
-      ).toBe(false);
-    });
+    await wrapper.vm.$nextTick();
+    expect(
+      wrapper
+        .findAll('.dropdown-container p')
+        .at(0)
+        .isVisible()
+    ).toBe(false);
+    expect(
+      wrapper
+        .findAll('.dropdown-container p')
+        .at(1)
+        .isVisible()
+    ).toBe(false);
   });
 
-  it('should render correct search data', () => {
+  it('should render correct search data', async () => {
     const search = 'search';
     wrapper.setData({ search: search });
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.find('.dropdown-search-container input').text()).toEqual(
-        search
-      );
-    });
+    await wrapper.vm.$nextTick();
+    const element = wrapper.find('.dropdown-search-container input').element;
+    expect(element.value).toEqual(search);
   });
 
-  xit('should render correct currency props', () => {
+  it('should render correct currency props', () => {
     const currencyElements = wrapper.findAll('.item-container div');
     const wrappers = currencyElements.wrappers;
 
-    wrappers.forEach((currencyElement, i) => {
-      console.log(wrapper.vm.localCurrency[i]);
+    for (let i = 0; i < wrappers.length - 1; i++) {
       const name = wrapper.vm.localCurrency[i].name;
       expect(
-        currencyElement
+        wrappers[i]
           .findAll('p')
           .at(0)
           .text()
           .indexOf(name)
       ).toBeGreaterThan(-1);
       expect(
-        currencyElement
+        wrappers[i]
           .findAll('p')
           .at(2)
           .text()
       ).toEqual(name);
-    });
+    }
   });
 
-  it('should render correct search method', () => {
+  it('should render correct search method', async () => {
     const search = 'Bit';
     const inputElement = wrapper.find('.dropdown-search-container input');
     inputElement.setValue(search);
     inputElement.trigger('change');
-    wrapper.vm.$nextTick(() => {
-      const { localCurrency } = wrapper.vm;
-      const { name, symbol } = currency[0];
-      expect(localCurrency[0].name).toEqual(name);
-      expect(localCurrency[0].symbol).toEqual(symbol);
-    });
+    await wrapper.vm.$nextTick();
+    const { localCurrency } = wrapper.vm;
+    const { name, symbol } = currency[0];
+    expect(localCurrency[0].name).toEqual(name);
+    expect(localCurrency[0].symbol).toEqual(symbol);
   });
 
   describe('CurrencyPicker.vue Methods', () => {
@@ -139,17 +138,19 @@ describe('CurrencyPicker.vue', () => {
       expect(wrapper.vm.$data['open']).toBe(false);
     });
 
-    it('should render correct localCurrency data when button is triggered', () => {
+    it('should render correct localCurrency data when button is triggered', async () => {
+      const dropdownContainer = wrapper.find('.dropdown-container');
+      dropdownContainer.trigger('click');
+      await wrapper.vm.$nextTick();
       const currencyElements = wrapper.findAll('.item-container div');
-      for (let i = 0; i < currencyElements.length; i++) {
+      for (let i = 0; i < currencyElements.length - 1; i++) {
         const currencyElement = currencyElements.at(i);
         const currency = wrapper.vm.localCurrency[i];
         currencyElement.trigger('click');
-        wrapper.vm.$nextTick(() => {
-          const { name, symbol } = wrapper.vm.$data.selectedCurrency;
-          expect(currency.name).toEqual(name);
-          expect(currency.symbol).toEqual(symbol);
-        });
+        await wrapper.vm.$nextTick();
+        const { name, symbol } = wrapper.vm.selectedCurrency;
+        expect(currency.name).toEqual(name);
+        expect(currency.symbol).toEqual(symbol);
       }
     });
   });
