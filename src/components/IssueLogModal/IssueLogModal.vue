@@ -52,10 +52,7 @@
 
           <b-collapse id="collapse-error-detail" class="mt-2">
             <b-card>
-              <pre class="error-detail"
-                >{{ JSON.stringify(error) }}
-</pre
-              >
+              <textarea v-model="errorDetails" class="error-detail"></textarea>
             </b-card>
           </b-collapse>
         </div>
@@ -88,6 +85,7 @@ export default {
   },
   data() {
     return {
+      errorDetails: JSON.stringify(this.error),
       errorCount: 0,
       showSkipper: false,
       neverShow: false
