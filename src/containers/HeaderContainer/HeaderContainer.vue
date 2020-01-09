@@ -280,7 +280,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['network', 'web3', 'account', 'gettingStartedDone']),
+    ...mapState(['network', 'web3', 'account', 'gettingStartedDone', 'locale']),
     showButtons() {
       if (
         this.address === null &&
@@ -320,29 +320,16 @@ export default {
     },
     web3() {
       this.setHighGasPrice();
+    },
+    locale() {
+      this.getCurrentLang();
     }
   },
   created() {
     this.$eventHub.$on('open-settings', this.openSettings);
   },
   mounted() {
-    if (Misc.doesExist(store.get('locale'))) {
-      const storedLocale = this.supportedLanguages.find(item => {
-        return item.langCode === store.get('locale');
-      });
-      this._i18n.locale = store.get('locale');
-      this.currentFlag = storedLocale.flag;
-    } else {
-      const storedLocale = this.supportedLanguages.find(item => {
-        return item.langCode === this._i18n.locale;
-      });
-      store.set('locale', storedLocale.langCode);
-      this.currentFlag = storedLocale.flag;
-    }
-
-    this.currentName = this.supportedLanguages.find(
-      item => item.flag === this.currentFlag
-    ).name;
+    this.getCurrentLang();
 
     // On load, if page is not on top, apply small menu and show scroll top button
     this.onPageScroll();
@@ -381,6 +368,15 @@ export default {
     this.$eventHub.$off('open-settings');
   },
   methods: {
+    getCurrentLang() {
+      const storedLocale = this.supportedLanguages.find(item => {
+        return item.langCode === this.locale;
+      });
+
+      this._i18n.locale = this.locale;
+      this.currentFlag = storedLocale.flag;
+      this.currentName = storedLocale.name;
+    },
     setHighGasPrice() {
       this.web3.eth
         .getGasPrice()
@@ -401,7 +397,7 @@ export default {
       this.$i18n.locale = obj.langCode;
       this.currentName = obj.name;
       this.currentFlag = obj.flag;
-      store.set('locale', obj.langCode);
+      this.$store.dispatch('setLocale', obj.langCode);
     },
     logout() {
       this.$refs.logout.$refs.logout.show();

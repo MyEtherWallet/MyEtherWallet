@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import store from 'store';
 import supportedLang from '@/containers/HeaderContainer/supportedLang';
 
 export default {
@@ -50,7 +49,8 @@ export default {
       this._i18n.locale = code;
       this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
       this.currentFlag = flag;
-      store.set('locale', code);
+
+      this.$store.dispatch('setLocale', code);
       this.$emit('isopen', false);
       this.$emit('currentlang', this.currentName);
       this.$emit('currentflag', this.currentFlag);

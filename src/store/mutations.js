@@ -94,6 +94,11 @@ const SET_WEB3_INSTANCE = function(state, web3) {
   state.web3 = web3;
 };
 
+const SET_LOCALE = function(state, val) {
+  state.locale = val;
+  store.set('locale', val);
+};
+
 const SWITCH_NETWORK = function(state, networkObj) {
   state.network = networkObj;
   const _netObj = Object.assign({}, networkObj);
@@ -143,5 +148,6 @@ export default {
   GETTING_STARTED_DONE,
   UPDATE_BLOCK_NUMBER,
   SAVE_QUERY_VAL,
-  SET_ADDRESS_BOOK
+  SET_ADDRESS_BOOK,
+  SET_LOCALE
 };
