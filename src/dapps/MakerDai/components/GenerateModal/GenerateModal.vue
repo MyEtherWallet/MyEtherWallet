@@ -290,9 +290,9 @@ export default {
       if (this.currentCdp && this.amount > 0) {
         return this.currentCdp
           .calcCollatRatioDaiChg(toBigNumber(this.amount), true)
-          .gte(2);
+          .gte(this.currentCdp.goodPercent);
       } else if (this.currentCdp) {
-        return toBigNumber(this.currentCdp.collateralizationRatio).gte(2);
+        return toBigNumber(this.currentCdp.collateralizationRatio).gte(this.currentCdp.goodPercent);
       }
       return true;
     },
@@ -300,9 +300,9 @@ export default {
       if (this.currentCdp && this.amount > 0) {
         return this.currentCdp
           .calcCollatRatioDaiChg(toBigNumber(this.amount), true)
-          .lte(1.5);
+          .lte(this.currentCdp.minPercent);
       } else if (this.currentCdp) {
-        return toBigNumber(this.currentCdp.collateralizationRatio).lte(1.5);
+        return toBigNumber(this.currentCdp.collateralizationRatio).lte(this.currentCdp.minPercent);
       }
       return true;
     },

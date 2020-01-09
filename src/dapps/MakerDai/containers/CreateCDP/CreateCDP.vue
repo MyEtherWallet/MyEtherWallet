@@ -314,6 +314,8 @@ export default {
       daiQty: 0,
       txInfo: {},
       loading: false,
+      liquidationRatioFallback: 1.501,
+      minDaiFallback: 20,
       selectedCurrency: { symbol: 'ETH', name: 'ETH-A' }
     };
   },
@@ -336,7 +338,7 @@ export default {
         if (this.emptyMakerCreated) {
           if (toBigNumber(this.collatRatio).lte(this.makerCDP.liquidationRatio))
             return false;
-        } else if (toBigNumber(this.collatRatio).lte(1.501)) return false;
+        } else if (toBigNumber(this.collatRatio).lte(this.liquidationRatioFallback)) return false;
         return this.hasEnoughEth;
       }
       return false;
@@ -376,9 +378,11 @@ export default {
       return toBigNumber(this.calcDaiDraw(this.ethQty)).minus(bufferVal);
     },
     risky() {
-      const collRatio = this.collatRatio;
-      if (toBigNumber(collRatio).gt(0)) {
-        return toBigNumber(collRatio).lte(2);
+      if (this.emptyMakerCreated) {
+        const collRatio = this.collatRatio;
+        if (toBigNumber(collRatio).gt(0)) {
+          return toBigNumber(collRatio).lte(this.makerCDP.goodPercent);
+        }
       }
       return false;
     },
@@ -389,9 +393,11 @@ export default {
       return '--';
     },
     veryRisky() {
-      const collRatio = this.collatRatio;
-      if (toBigNumber(collRatio).gt(0)) {
-        return toBigNumber(collRatio).lte(1.75);
+      if (this.emptyMakerCreated) {
+        const collRatio = this.collatRatio;
+        if (toBigNumber(collRatio).gt(0)) {
+          return toBigNumber(collRatio).lte(this.makerCDP.warnPercent);
+        }
       }
       return false;
     },
@@ -430,7 +436,7 @@ export default {
       if (this.emptyMakerCreated) {
         return this.makerCDP.minDai;
       }
-      return 20;
+      return this.minDaiFallback;
     }
   },
   watch: {

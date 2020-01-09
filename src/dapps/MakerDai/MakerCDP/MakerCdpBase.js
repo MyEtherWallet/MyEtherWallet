@@ -22,10 +22,6 @@ export default class MakerCdpBase {
     this.ready = false;
     this.doUpdate = 0;
     this.cdps = [];
-    this.minPercent = 1.5;
-    this.warnPercent = 1.7;
-    this.dangerPercent = 1.6;
-    this.goodPercent = 2;
     this.noProxy = sysVars.noProxy || false;
     this.sysVars = sysVars; // todo make sure this doesn't bring in the issue with vue walking the tree and breaking things
     this.cdpType = this.cdpId ? sysVars.cdpsWithType[this.cdpId] : defaultIlk;
@@ -39,6 +35,8 @@ export default class MakerCdpBase {
     this.migrated = false;
     this.migrateCdpActive = false;
     this.migrateCdpStage = 0;
+    this.goodPercentMargin = 0.5;
+    this.warnPercentMargin = 0.25;
     this.cdpTypeObject = services._mcdManager
       ? services._mcdManager.get('mcd:cdpType').getCdpType(null, this.cdpType)
       : services.mcdCurrencies['ETH'];
@@ -105,12 +103,24 @@ export default class MakerCdpBase {
     return this.cdp.collateralAvailable;
   }
 
+  get minPercent(){
+    return this.liquidationRatio;
+  }
+
+  get warnPercent(){
+    return this.liquidationRatio.plus(this.goodPercentMargin);
+  }
+
+   get goodPercent(){
+    return this.liquidationRatio.plus(this.warnPercentMargin);
+   }
+
   get collateralStatus() {
-    if (this.collateralizationRatio.gte(this.liquidationRatio.plus(0.5))) {
+    if (this.collateralizationRatio.gte(this.liquidationRatio.plus(this.warnPercentMargin))) {
       return 'green';
     } else if (
-      this.collateralizationRatio.gte(this.liquidationRatio.plus(0.25)) &&
-      this.collateralizationRatio.lte(this.liquidationRatio.plus(0.5))
+      this.collateralizationRatio.gte(this.liquidationRatio.plus(this.goodPercentMargin)) &&
+      this.collateralizationRatio.lte(this.liquidationRatio.plus(this.warnPercentMargin))
     ) {
       return 'orange';
     }
