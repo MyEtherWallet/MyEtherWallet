@@ -99,7 +99,8 @@
     <address-book-modal
       ref="addressBook"
       :selected-address="selectedAddress"
-      :title="$t('interface.address-book.add-new')"
+      :title="'interface.address-book.add-new'"
+      :modal-action="'add'"
     />
   </div>
 </template>
