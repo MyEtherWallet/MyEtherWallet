@@ -1,6 +1,6 @@
 import tokens from '@/tokens/tokens-web.json';
 import contracts from '@/contracts/contract-abi-web.json';
-import mintme from '@/assets/images/networks/web.svg';
+import mintme from '@/assets/images/networks/mintme.svg';
 
 export default {
   name: 'MINTME',
