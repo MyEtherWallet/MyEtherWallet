@@ -27,8 +27,9 @@ import {
   metadium,
   dexon,
   lightstreamsNetwork,
-  ledgerEthereum,
-  mintmeComCoin
+  mintmeComCoin,
+  ethercore,
+  ledgerEthereum
 } from './paths';
 const renamedLedger = Object.assign({}, ledgerEthereum);
 renamedLedger.label = 'Ledger';
@@ -63,5 +64,6 @@ export default [
   metadium,
   dexon,
   lightstreamsNetwork,
-  mintmeComCoin
+  mintmeComCoin,
+  ethercore
 ];

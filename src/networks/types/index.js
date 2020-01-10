@@ -29,6 +29,7 @@ import TT from './TT.js';
 import SUM from './SUM.js';
 import DXN from './DXN.js';
 import PHT from './PHT.js';
+import ERE from './ERE.js';
 
 export {
   AKA,
@@ -61,5 +62,6 @@ export {
   TT,
   SUM,
   DXN,
-  PHT
+  PHT,
+  ERE
 };

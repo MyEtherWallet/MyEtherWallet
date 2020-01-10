@@ -69,6 +69,11 @@ export default {
     notValid() {
       const _priv = this.privateKey.replace('0x', '');
       return !isHexString('0x' + _priv, 32);
+    },
+    actualPrivKey() {
+      return this.privateKey.substr(0, 2) === '0x'
+        ? this.privateKey.replace('0x', '')
+        : this.privateKey;
     }
   },
   mounted() {},
@@ -77,10 +82,10 @@ export default {
       this.spinner = true;
       this.$store
         .dispatch('decryptWallet', [
-          new WalletInterface(this.privateKey, false, privKeyType)
+          new WalletInterface(this.actualPrivKey, false, privKeyType)
         ])
         .then(() => {
-          this.privateKey = '';
+          this.actualPrivKey = '';
           this.spinner = false;
           this.$router.push({
             path: 'interface'
