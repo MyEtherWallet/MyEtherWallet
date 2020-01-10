@@ -93,7 +93,7 @@
             class="mr-2 mb-1"
             @click="openManage(value)"
           >
-            <b>{{ $t('dappsMaker.vault-id') }}</b>
+            <b>{{ $t('dappsMCDMaker.vault-id') }}</b>
             <b-badge variant="light" class="ml-2" style="font-size: 15px;"
               ># {{ value }}</b-badge
             >
@@ -105,7 +105,7 @@
     <div class="px-5 py-3">
       <router-view
         :active-cdp-id="activeCdpId"
-        :loading-state="curentlyLoading"
+        :loading-state="currentlyLoading"
         :build-empty="buildEmpty"
         :maker-active="makerActive"
         :eth-price="ethPrice"
@@ -236,6 +236,7 @@ export default {
       currentlyLoading: '',
       destAddressProxy: '',
       destAddressHasProxy: false,
+      makerCreated: false,
       afterUpdate: [],
       allCdpIds: [],
       activeCdp: {},
@@ -281,6 +282,7 @@ export default {
       sysServices: {},
       targetPrice: 0,
       valuesUpdated: 0,
+      retryCount: 0,
       currentPath: '/interface/dapps/',
       afterLoadShow: 'HOME'
     };

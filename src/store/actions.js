@@ -195,6 +195,10 @@ const setState = function({ commit }, stateObj) {
   commit('INIT_STATES', stateObj);
 };
 
+const setLocale = function({ commit }, locale) {
+  commit('SET_LOCALE', locale);
+};
+
 const setWeb3Instance = function({ dispatch, commit, state }, provider) {
   const hostUrl = state.network.url
     ? url.parse(state.network.url)
@@ -345,5 +349,6 @@ export default {
   gettingStartedDone,
   updateBlockNumber,
   saveQueryVal,
-  setAddressBook
+  setAddressBook,
+  setLocale
 };

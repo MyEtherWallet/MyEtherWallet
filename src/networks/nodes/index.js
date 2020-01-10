@@ -51,6 +51,7 @@ import thundercore from './thundercore';
 import sum from './sum';
 import dexon from './dexon';
 import pht from './pht';
+import ere from './ere';
 
 export {
   akaremote,
@@ -105,5 +106,6 @@ export {
   thundercore,
   sum,
   dexon,
-  pht
+  pht,
+  ere
 };

@@ -3,8 +3,8 @@
     <b-row align-content="stretch">
       <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
         <card
-          :title="$t('dappsMaker.migrate-old-dai-to-new-dai')"
-          :text="$t('dappsMaker.migrate-description')"
+          :title="$t('dappsMCDMaker.migrate-old-dai-to-new-dai')"
+          :text="$t('dappsMCDMaker.migrate-description')"
           button="Go"
           :click="migrateDai"
         />
@@ -12,17 +12,17 @@
       <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
         <card
           :title="
-            $t('dappsMaker.migrate-single-collateral-to-multi-collateral')
+            $t('dappsMCDMaker.migrate-single-collateral-to-multi-collateral')
           "
-          :text="$t('dappsMaker.transfer-cdp-description')"
+          :text="$t('dappsMCDMaker.transfer-cdp-description')"
           button="Go"
           :click="migrateCDP"
         />
       </b-col>
       <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
         <card
-          :title="$t('dappsMaker.manage-your-vault')"
-          :text="$t('dappsMaker.transfer-cdp-description')"
+          :title="$t('dappsMCDMaker.manage-your-vault')"
+          :text="$t('dappsMCDMaker.transfer-cdp-description')"
           button="Go"
           :click="goToManage"
           :loading="!makerActive ? true : false"
@@ -30,8 +30,8 @@
       /></b-col>
       <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
         <card
-          :title="$t('dappsMaker.create-a-vault')"
-          :text="$t('dappsMaker.create-vault-description')"
+          :title="$t('dappsMCDMaker.create-a-vault')"
+          :text="$t('dappsMCDMaker.create-vault-description')"
           button="Go"
           :click="gotoCreate"
           :loading="!makerActive ? true : false"
@@ -39,8 +39,8 @@
       /></b-col>
       <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
         <card
-          :title="$t('dappsMaker.dai-savings')"
-          :text="$t('dappsMaker.create-vault-description')"
+          :title="$t('dappsMCDMaker.dai-savings')"
+          :text="$t('dappsMCDMaker.create-vault-description')"
           button="Go"
           :click="goToSave"
       /></b-col>
@@ -82,7 +82,7 @@ export default {
   },
   computed: {
     loadingMessage() {
-      return this.loadingState;
+      return this.$t(this.loadingState);
     },
     hasCdps() {
       return this.cdps.length > 0;

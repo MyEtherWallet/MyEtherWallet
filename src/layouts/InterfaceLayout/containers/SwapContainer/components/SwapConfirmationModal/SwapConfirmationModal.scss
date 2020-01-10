@@ -48,7 +48,8 @@
 
 .swap-detail {
   display: grid;
-  grid-template-columns: 1fr 80px 1fr;
+  grid-template-columns: 250px 80px 250px;
+  justify-content: center;
   margin-top: 20px;
   margin-bottom: 20px;
 }
@@ -58,6 +59,7 @@
   background-color: $background-color-1;
   padding: 20px;
   border-radius: 5px;
+  overflow-wrap: break-word;
 }
 
 .right-arrow {

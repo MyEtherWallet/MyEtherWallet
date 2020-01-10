@@ -86,9 +86,7 @@
                     />
                     {{ $t('common.buy-eth') }}
                   </b-nav-item>
-                  <b-nav-item v-if="isHomePage" to="/" exact>{{
-                    $t('common.home')
-                  }}</b-nav-item>
+
                   <b-nav-item-dropdown
                     v-if="!isMewCx"
                     id="my-nav-dropdown"
@@ -126,13 +124,8 @@
                       }})</b-dropdown-item
                     >
                   </b-nav-item-dropdown>
-                  <b-nav-item v-if="!isMewCx" to="/#faqs">{{
-                    $t('common.faqs')
-                  }}</b-nav-item>
                   <div v-show="!isMewCx" class="language-menu-container">
-                    <div class="arrows">
-                      <i class="fa fa-angle-down" aria-hidden="true" />
-                    </div>
+                    <div class="down-arrow"></div>
                     <b-nav-item-dropdown
                       class="language-menu"
                       extra-toggle-classes="nav-link-custom"
@@ -249,6 +242,7 @@ import MobileMenu from './components/MobileMenu';
 import DisconnectedModal from '@/components/DisconnectedModal';
 import DecisionTree from '@/components/DecisionTree';
 import CxHeader from '@/layouts/ExtensionBrowserAction/components/CxHeader';
+import supportedLang from './supportedLang';
 
 const events = {
   issueModal: 'issueModal',
@@ -271,30 +265,7 @@ export default {
   data() {
     const isMewCx = Misc.isMewCx();
     return {
-      supportedLanguages: [
-        // { name: 'Deutsch', flag: 'de', langCode: 'de_DL' },
-        // { name: 'Ελληνικά', flag: 'gr', langCode: 'gr_GR' },
-        { name: 'English', flag: 'en', langCode: 'en_US' },
-        // { name: 'Español', flag: 'es', langCode: 'es_ES' },
-        // { name: 'Farsi', flag: 'ir', langCode: 'ir_IR' },
-        // { name: 'Suomi', flag: 'fi', langCode: 'fi_FI' },
-        // { name: 'Magyar', flag: 'hu', langCode: 'hu_HU' },
-        // { name: 'Haitian Creole', flag: 'ht', langCode: 'ht_HT' },
-        // { name: 'Bahasa Indonesia', flag: 'id', langCode: 'id_ID' },
-        // { name: 'Italiano', flag: 'it', langCode: 'it_IT' },
-        // { name: '日本語', flag: 'ja', langCode: 'ja_JP' },
-        // { name: '한국어', flag: 'ko', langCode: 'ko_KR' },
-        // { name: 'Nederlands', flag: 'nl', langCode: 'nl_NL' },
-        // { name: 'Norsk Bokmål', flag: 'no', langCode: 'no_NO' },
-        // { name: 'Polski', flag: 'pl', langCode: 'pl_PL' },
-        // { name: 'Português', flag: 'pt', langCode: 'pt_PT' },
-        { name: 'Русский', flag: 'ru', langCode: 'ru_RU' }
-        // { name: 'ภาษาไทย', flag: 'th', langCode: 'th_TH' },
-        // { name: 'Türkçe', flag: 'tr', langCode: 'tr_TR' },
-        // { name: 'Tiếng Việt', flag: 'vn', langCode: 'vn_VN' },
-        // { name: '简体中文', flag: 'zh-Hans', langCode: 'zh_CN' },
-        // { name: '繁體中文', flag: 'tw', langCode: 'zh_TW' }
-      ],
+      supportedLanguages: supportedLang,
       currentName: 'English',
       currentFlag: 'en',
       isPageOnTop: true,
@@ -309,7 +280,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['network', 'web3', 'account', 'gettingStartedDone']),
+    ...mapState(['network', 'web3', 'account', 'gettingStartedDone', 'locale']),
     showButtons() {
       if (
         this.address === null &&
@@ -349,29 +320,16 @@ export default {
     },
     web3() {
       this.setHighGasPrice();
+    },
+    locale() {
+      this.getCurrentLang();
     }
   },
   created() {
     this.$eventHub.$on('open-settings', this.openSettings);
   },
   mounted() {
-    if (Misc.doesExist(store.get('locale'))) {
-      const storedLocale = this.supportedLanguages.find(item => {
-        return item.langCode === store.get('locale');
-      });
-      this._i18n.locale = store.get('locale');
-      this.currentFlag = storedLocale.flag;
-    } else {
-      const storedLocale = this.supportedLanguages.find(item => {
-        return item.langCode === this._i18n.locale;
-      });
-      store.set('locale', storedLocale.langCode);
-      this.currentFlag = storedLocale.flag;
-    }
-
-    this.currentName = this.supportedLanguages.find(
-      item => item.flag === this.currentFlag
-    ).name;
+    this.getCurrentLang();
 
     // On load, if page is not on top, apply small menu and show scroll top button
     this.onPageScroll();
@@ -410,6 +368,15 @@ export default {
     this.$eventHub.$off('open-settings');
   },
   methods: {
+    getCurrentLang() {
+      const storedLocale = this.supportedLanguages.find(item => {
+        return item.langCode === this.locale;
+      });
+
+      this._i18n.locale = this.locale;
+      this.currentFlag = storedLocale.flag;
+      this.currentName = storedLocale.name;
+    },
     setHighGasPrice() {
       this.web3.eth
         .getGasPrice()
@@ -430,7 +397,7 @@ export default {
       this.$i18n.locale = obj.langCode;
       this.currentName = obj.name;
       this.currentFlag = obj.flag;
-      store.set('locale', obj.langCode);
+      this.$store.dispatch('setLocale', obj.langCode);
     },
     logout() {
       this.$refs.logout.$refs.logout.show();

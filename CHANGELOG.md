@@ -1,14 +1,21 @@
+### Bug
+
+- Hide other translations on mobile [#1834](https://github.com/MyEtherWallet/MyEtherWallet/pull/1834)
+- Fix translations for address book [#1833](https://github.com/MyEtherWallet/MyEtherWallet/pull/1833)
+
 ### Release v5.2.9
 
 ### Feature
 
+- Update error log modal design [#1816](https://github.com/MyEtherWallet/MyEtherWallet/pull/1816)
 - Update address book [#1795](https://github.com/MyEtherWallet/MyEtherWallet/pull/1795)
 
 ### Devop
 
-### Devop
+- Release cleanup [#1817](https://github.com/MyEtherWallet/MyEtherWallet/pull/1817)
+- Update NFT manager UI [#1808](https://github.com/MyEtherWallet/MyEtherWallet/pull/1808)
 - Notification pruning[#1755](https://github.com/MyEtherWallet/MyEtherWallet/pull/1755)
-- Enable translations dropdown and add in the other languages [#1703] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1703)
+- Enable translations dropdown and add in the other languages [#1703](https://github.com/MyEtherWallet/MyEtherWallet/pull/1703)
 - Reduce injected web3 file size to less than 1mb [#1813](https://github.com/MyEtherWallet/MyEtherWallet/pull/1813)
 - Display information related to kyber slippage for high values [#1794](https://github.com/MyEtherWallet/MyEtherWallet/pull/1794)
 - Notification pruning[#1755](https://github.com/MyEtherWallet/MyEtherWallet/pull/1755)
@@ -17,11 +24,17 @@
 
 ### Bug
 
+- Fix footer elements margin and paddings [#1827](https://github.com/MyEtherWallet/MyEtherWallet/pull/1827)
+- Fix swap confirmation modal text break [#1821](https://github.com/MyEtherWallet/MyEtherWallet/pull/1821)
+- Fix swap confirmation modal text break [#1819](https://github.com/MyEtherWallet/MyEtherWallet/pull/1819)
+- Fix currency picker freeze [#1820](https://github.com/MyEtherWallet/MyEtherWallet/pull/1820)
 - Ui fix maker dai [#1787](https://github.com/MyEtherWallet/MyEtherWallet/pull/1787)
 - Hide blockexplorrer link on irrelevant pages and add back tx history for cx header [#1800](https://github.com/MyEtherWallet/MyEtherWallet/pull/1800)
 - Fix issue with withdrawing ETH from CDP [#1811](https://github.com/MyEtherWallet/MyEtherWallet/pull/1811)
 - Fix header items for other languages [#1791](https://github.com/MyEtherWallet/MyEtherWallet/pull/1791)
-
+- Fix NFT Loading [#1831](https://github.com/MyEtherWallet/MyEtherWallet/pull/1831)
+- Update mewcx wording [#1829](https://github.com/MyEtherWallet/MyEtherWallet/pull/1829)
+- Sort address book and compare add address by lowercase [#1828](https://github.com/MyEtherWallet/MyEtherWallet/pull/1828)
 
 ### Release v5.2.8-hotfix.2
 
