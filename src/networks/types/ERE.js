@@ -9,8 +9,8 @@ export default {
   blockExplorerTX: 'https://explorer.ethercore.org/tx/[[txHash]]',
   blockExplorerAddr: 'https://explorer.ethercore.org/addr/[[address]]',
   chainID: 466,
-  tokens: [],
-  contracts: [],
+  tokens: tokens,
+  contracts: contracts,
   icon: ere,
   currencyName: 'ERE'
 };
