@@ -27,6 +27,7 @@ import {
   metadium,
   dexon,
   lightstreamsNetwork,
+  ethercore,
   ledgerEthereum
 } from './paths';
 const renamedLedger = Object.assign({}, ledgerEthereum);
@@ -61,5 +62,6 @@ export default [
   solidum,
   metadium,
   dexon,
-  lightstreamsNetwork
+  lightstreamsNetwork,
+  ethercore
 ];
