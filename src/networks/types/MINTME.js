@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-web.json';
-import contracts from '@/contracts/contract-abi-web.json';
+import tokens from '@/tokens/tokens-mintme.json';
+import contracts from '@/contracts/contract-abi-mintme.json';
 import mintme from '@/assets/images/networks/mintme.svg';
 
 export default {
