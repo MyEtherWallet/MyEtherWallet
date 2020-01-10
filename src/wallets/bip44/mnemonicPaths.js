@@ -27,6 +27,7 @@ import {
   metadium,
   dexon,
   lightstreamsNetwork,
+  mintmeComCoin,
   ethercore,
   ledgerEthereum
 } from './paths';
@@ -63,5 +64,6 @@ export default [
   metadium,
   dexon,
   lightstreamsNetwork,
+  mintmeComCoin,
   ethercore
 ];
