@@ -146,7 +146,7 @@ const lightstreamsNetwork = {
 const mintmeComCoin = {
   path: "m/44'/227'/0'/0",
   label: 'MintMe.com Coin'
-}
+};
 const ethercore = {
   path: "m/44'/466'/0'",
   label: 'EtherCore'
