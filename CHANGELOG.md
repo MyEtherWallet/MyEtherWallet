@@ -1,6 +1,13 @@
 ### Bug
 
+- Fix error log details size [#1837](https://github.com/MyEtherWallet/MyEtherWallet/pull/1837)
+- Hide other translations on mobile [#1834](https://github.com/MyEtherWallet/MyEtherWallet/pull/1834)
 - Fix translations for address book [#1833](https://github.com/MyEtherWallet/MyEtherWallet/pull/1833)
+
+### Devop
+
+- Add EtherCore support [#1825](https://github.com/MyEtherWallet/MyEtherWallet/pull/1825)
+- Migrate Webchain to Mintme [#1824](https://github.com/MyEtherWallet/MyEtherWallet/pull/1824)
 
 ### Release v5.2.9
 
