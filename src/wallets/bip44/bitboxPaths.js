@@ -20,7 +20,8 @@ import {
   tomoChain,
   mixBlockchain,
   iolite,
-  lightstreamsNetwork
+  lightstreamsNetwork,
+  ethercore
 } from './paths';
 export default [
   ethereum,
@@ -44,5 +45,6 @@ export default [
   tomoChain,
   mixBlockchain,
   iolite,
-  lightstreamsNetwork
+  lightstreamsNetwork,
+  ethercore
 ];
