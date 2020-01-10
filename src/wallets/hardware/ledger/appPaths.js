@@ -21,7 +21,8 @@ import {
   TOMO,
   UBQ,
   TT,
-  PHT
+  PHT,
+  ERE
 } from '@/networks/types';
 import {
   ledgerEthereum,
@@ -48,7 +49,8 @@ import {
   rskMainnet,
   rskTestnet,
   thundercore,
-  lightstreamsNetwork
+  lightstreamsNetwork,
+  ethercore
 } from '../../bip44/paths';
 const appList = [
   {
@@ -165,6 +167,11 @@ const appList = [
     network: PHT,
     prefixes: ["m/44'/60'"],
     paths: [lightstreamsNetwork]
+  },
+  {
+    network: ERE,
+    prefixes: ["m/44'/466'"],
+    paths: [ethercore]
   }
 ];
 export default appList;
