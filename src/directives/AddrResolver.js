@@ -126,7 +126,6 @@ const AddrResolver = {
         }
       } else if (e !== '') {
         const isValid = WAValidator.validate(e, parentCurrency);
-        console.error('isValid', isValid)
         if (isValid) {
           _this.isValidAddress = isValid;
           _this.hexAddress =
