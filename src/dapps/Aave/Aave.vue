@@ -81,13 +81,17 @@
 
 <script>
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
-import LendingPoolAbi from './abi/LendingPoolAbi.js';
-import LendingPoolAddressesProviderAbi from './abi/LendingPoolAddressesProviderAbi.js';
+import LendingPoolAbi from './abi/LendingPoolAbi';
+import LendingPoolAddressesProviderAbi from './abi/LendingPoolAddressesProviderAbi';
 // import ATokenAbi from './abi/AToken.js';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { Toast } from '@/helpers';
+
+import graphql from './graphql'
+import {computeUserSummaryData} from './helpers'
+
 export default {
   components: {
     'back-button': BackButton
@@ -126,6 +130,7 @@ export default {
         : this.$t('dappsAave.repay');
     }
   },
+
   watch: {
     '$route.params.token'(newVal) {
       this.token = newVal;
@@ -141,6 +146,16 @@ export default {
     }
   },
   async mounted() {
+    // ========= summary stuff start ==================
+    const res1 = await graphql.useUserPositionUpdateSubscriptionSubscription(this.account.address);
+    const res2 = await graphql.useReserveUpdateSubscriptionSubscription();
+    const res3 = await graphql.getEthUsdPrice();
+    console.log(res1); // todo remove dev item
+    console.log(res2); // todo remove dev item
+    console.log(res3); // todo remove dev item
+    const summary = computeUserSummaryData(res2, res1, "abc", res3, Date.now());
+    console.log(summary); // todo remove dev item
+    // ========= summary stuff end ==================
     this.lendingPoolContractAddress =
       '0x24a42fD28C976A61Df5D00D0599C34c4f90748c8';
     this.lendingPoolAddressesProviderContract = new this.web3.eth.Contract(
@@ -157,8 +172,10 @@ export default {
 
     this.getUserInfo();
     this.getReserves();
+
   },
   methods: {
+
     async getUserInfo() {
       try {
         const info = await this.lendingPoolContract.methods
@@ -309,6 +326,8 @@ export default {
     }
   }
 };
+
+
 </script>
 
 <style lang="scss" scoped>
