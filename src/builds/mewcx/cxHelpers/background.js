@@ -65,13 +65,8 @@ const networkChanger = items => {
         defChainID: store.state.main.network.type.chainID,
         defNetVersion: res,
         defNetwork: JSON.stringify({
-<<<<<<< HEAD
-          url: store.state.main.network.url,
+          service: store.state.main.network.service,
           key: store.state.main.network.type.name
-=======
-          service: store.state.network.service,
-          key: store.state.network.type.name
->>>>>>> 1a1201a3f7b2c496e6d0a0d002a7a7dc895d0eb3
         })
       });
     });
@@ -102,27 +97,18 @@ chrome.storage.onChanged.addListener(items => {
           return actualNetwork.service === networkProps.service;
         }
       );
-<<<<<<< HEAD
-      store.dispatch('switchNetwork', network).then(() => {
-        store.dispatch('setWeb3Instance', network.url).then(() => {
-          store.state.main.web3.eth.net.getId().then(res => {
-            chrome.storage.sync.set({
-              defChainID: store.state.main.network.type.chainID,
-              defNetVersion: res
-=======
       store
         .dispatch(
           'switchNetwork',
-          network ? store.state.Networks[networkProps.key][0] : network
+          network ? store.state.main.Networks[networkProps.key][0] : network
         )
         .then(() => {
           store.dispatch('setWeb3Instance', network.url).then(() => {
-            store.state.web3.eth.net.getId().then(res => {
+            store.state.main.web3.eth.net.getId().then(res => {
               chrome.storage.sync.set({
-                defChainID: store.state.network.type.chainID,
+                defChainID: store.state.main.network.type.chainID,
                 defNetVersion: res
               });
->>>>>>> 1a1201a3f7b2c496e6d0a0d002a7a7dc895d0eb3
             });
           });
         });
