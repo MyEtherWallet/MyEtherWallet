@@ -62,6 +62,14 @@
   "owner": "Owner",
   "multi-coin": "Multi-coin",
   "txt-record": "Text Records",
+  "ens-resolver": {
+    "address-reported-error": "Address has been reported. Please make sure you are sending funds to the correct address.",
+    "invalid-eth-addr": "Not a valid Ethereum address",
+    "addr-not-checksummed": "This address is not checksummed properly. Please copy the address exactly as shown.",
+    "invalid-addr": "Invalid {coin} address",
+    "network-not-found": "{network}NS name is invalid or not found",
+    "no-resolver": "No {network}NS resolver in this node"
+  },
   "unstoppableResolution": {
     "address-reported-error": "Address has been reported. Please make sure you are sending funds to the correct address.",
     "UnregisteredDomain": "Domain {domain} is not registered",
