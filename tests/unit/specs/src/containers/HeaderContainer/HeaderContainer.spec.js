@@ -35,7 +35,7 @@ const eventHub = {
   $off: sinon.stub()
 };
 
-describe('HeaderContainer.vue', () => {
+xdescribe('HeaderContainer.vue', () => {
   let localVue, i18n, wrapper, store, push, dispatch;
 
   beforeAll(() => {
