@@ -1,3 +1,5 @@
+### Release v5.2.10
+
 ### Bug
 
 - Fix error log details size [#1837](https://github.com/MyEtherWallet/MyEtherWallet/pull/1837)
