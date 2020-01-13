@@ -47,7 +47,6 @@ export default async ({ event, payload }, callback, next) => {
     };
 
     worker.onerror = function(e) {
-      console.log(e, 'this errored', password);
       callback({ error: e });
     };
 

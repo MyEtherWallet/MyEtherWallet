@@ -86,9 +86,35 @@ const deleteWalletFromStore = (addr, callback) => {
   }
 };
 
+const networkSwitch = (item, _self) => {
+  if (item.hasOwnProperty('defNetwork')) {
+    const networkProps = JSON.parse(item['defNetwork']);
+    let network = {};
+    if (networkProps.hasOwnProperty('url')) {
+      network = _self.$store.state.Networks[networkProps.key].find(
+        actualNetwork => {
+          return actualNetwork.url === networkProps.url;
+        }
+      );
+    } else {
+      network = _self.$store.state.Networks[networkProps.key].find(
+        actualNetwork => {
+          return actualNetwork.service === networkProps.service;
+        }
+      );
+    }
+    _self.$store.dispatch('switchNetwork', network).then(() => {
+      _self.$store.dispatch('setWeb3Instance');
+    });
+  } else {
+    _self.$store.dispatch('setWeb3Instance');
+  }
+};
+
 export default {
   getAccounts,
   addWalletToStore,
   getPrivFromMnemonicWallet,
-  deleteWalletFromStore
+  deleteWalletFromStore,
+  networkSwitch
 };
