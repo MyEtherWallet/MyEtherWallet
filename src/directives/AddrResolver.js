@@ -63,7 +63,6 @@ const AddrResolver = {
     };
 
     const resolveViaENS = function(domain) {
-      console.log('resolving via ens!');
       const _this = vnode.context;
       const ens = _this.$store.state.ens;
       const errorPar = document.createElement('p');
@@ -212,7 +211,6 @@ const AddrResolver = {
       try {
         if (resolution.serviceName(domain) === 'ENS')
           return resolveViaENS(domain);
-        console.log('resolving via resolution');
         const address = await resolution.addressOrThrow(domain, parentCurrency);
         if (!checkDarklist(address)) {
           _this.isValidAddress = true;
