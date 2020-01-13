@@ -126,7 +126,7 @@
       <div v-show="!online">
         {{ $t('nftManager.nft-are') }}
       </div>
-      <div v-show="online">
+      <div v-show="online" class="not-supported-txt">
         {{ $t('nftManager.not-supported', { value: network.type.name_long }) }}
       </div>
     </div>
@@ -474,7 +474,7 @@ export default {
           return data.json();
         })
         .then(rawJson => {
-          if (rawJson.total) {
+          if (rawJson.total >= 0) {
             this.nftData[contract].count = rawJson.total;
             this.countsRetrieved = true;
             const getNestedObject = (nestedObj = [], pathArr, token) => {

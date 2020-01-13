@@ -99,7 +99,8 @@
     <address-book-modal
       ref="addressBook"
       :selected-address="selectedAddress"
-      :title="$t('interface.address-book.add-new')"
+      :title="'interface.address-book.add-new'"
+      :modal-action="'add'"
     />
   </div>
 </template>
@@ -156,6 +157,15 @@ export default {
         (this.isValidAddress &&
           this.selectedAddress.toLowerCase() !== this.hexAddress.toLowerCase())
       );
+    },
+    sortedAddressBook() {
+      const addrBk = this.addressBook;
+      return addrBk.sort((a, b) => {
+        a = a.nickname.toString().toLowerCase();
+        b = b.nickname.toString().toLowerCase();
+
+        return a < b ? -1 : a > b ? 1 : 0;
+      });
     }
   },
   watch: {
@@ -191,44 +201,6 @@ export default {
     debouncedInput: utils._.debounce(function(e) {
       this.selectedAddress = e.target.value;
     }, 300),
-    addAddress() {
-      const alreadyExists = Object.keys(this.addressBook).some(key => {
-        return this.addressBook[key].address === this.selectedAddress;
-      });
-
-      if (!this.selectedAddress) {
-        Toast.responseHandler(
-          this.$t('interface.address-book.cannot-add'),
-          Toast.ERROR
-        );
-        return;
-      } else if (!this.isValidAddress) {
-        Toast.responseHandler(
-          this.$t('ens.ens-resolver.invalid-eth-addr'),
-          Toast.ERROR
-        );
-        return;
-      } else if (alreadyExists) {
-        Toast.responseHandler(
-          this.$t('interface.address-book.already-exists'),
-          Toast.ERROR
-        );
-        return;
-      }
-
-      this.addressBook.push({
-        address: this.selectedAddress,
-        currency: 'ETH',
-        nickname: this.addressBook.length + 1
-      });
-
-      this.setAddressBook(this.addressBook);
-
-      Toast.responseHandler(
-        this.$t('interface.address-book.successfully-added'),
-        Toast.SUCCESS
-      );
-    },
     updateAddresses(address) {
       this.addresses = address
         ? [
@@ -236,9 +208,9 @@ export default {
               address: address,
               currency: BASE_CURRENCY
             },
-            ...this.addressBook
+            ...this.sortedAddressBook
           ]
-        : [...this.addressBook];
+        : [...this.sortedAddressBook];
     },
     copyToClipboard(ref) {
       ref.select();

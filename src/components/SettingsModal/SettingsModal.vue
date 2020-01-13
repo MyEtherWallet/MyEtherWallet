@@ -177,7 +177,10 @@
               {{ $t('interface.address-book.add-up-to') }}
             </p>
             <div class="table-container">
-              <table v-if="addressBook.length > 0" class="contact-container">
+              <table
+                v-if="sortedAddressBook.length > 0"
+                class="contact-container"
+              >
                 <colgroup>
                   <col width="5%" />
                   <col width="55%" />
@@ -194,7 +197,7 @@
                 </thead>
                 <tbody>
                   <tr
-                    v-for="(contact, index) in addressBook"
+                    v-for="(contact, index) in sortedAddressBook"
                     :key="contact.key"
                   >
                     <td class="numbered">{{ index + 1 }}.</td>
@@ -215,7 +218,7 @@
                         >{{ contact.address }}</a
                       >
                     </td>
-                    <td>
+                    <td class="addr-nickname">
                       {{ contact.nickname }}
                     </td>
                     <td>
@@ -246,6 +249,7 @@
       ref="addressBook"
       :current-idx="currentAddressIdx"
       :title="addrBookModalTitle"
+      :modal-action="modalAction"
     />
   </div>
 </template>
@@ -289,11 +293,20 @@ export default {
       importedFile: '',
       popup: false,
       currentAddressIdx: null,
-      addrBookModalTitle: ''
+      addrBookModalTitle: '',
+      modalAction: ''
     };
   },
   computed: {
     ...mapState('main', ['network', 'online', 'addressBook']),
+    sortedAddressBook() {
+      return this.addressBook.slice().sort((a, b) => {
+        a = a.nickname.toString().toLowerCase();
+        b = b.nickname.toString().toLowerCase();
+
+        return a < b ? -1 : a > b ? 1 : 0;
+      });
+    },
     gasPriceInputs() {
       return {
         economy: {
@@ -518,10 +531,11 @@ export default {
     },
     openAddrBookModal(action, idx) {
       this.currentAddressIdx = action === 'edit' ? idx : null;
+      this.modalAction = action;
       this.addrBookModalTitle =
         action === 'add'
-          ? this.$t('interface.address-book.add-new')
-          : this.$t('interface.address-book.edit-addr');
+          ? 'interface.address-book.add-new'
+          : 'interface.address-book.edit-addr';
       this.$refs.addressBook.$refs.addressBookModal.show();
     }
   }
