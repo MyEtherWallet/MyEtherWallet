@@ -10,30 +10,30 @@ import MAValidator from 'multicoin-address-validator';
 import getMultiCoinAddress from '@/helpers/ENSMultiCoin.js';
 
 const AddrResolver = {
-  bind: function (el, binding, vnode) {
+  bind: function(el, binding, vnode) {
     let network = vnode.context.$store.state.network;
     let parentCurrency = vnode.context.$parent.currency
       ? vnode.context.$parent.currency
       : network.type.name;
     let address = '';
     const resolution = new Resolution({ ens: { network: network } });
-    vnode.context.$parent.$watch('$store.state.network', function (e) {
+    vnode.context.$parent.$watch('$store.state.network', function(e) {
       network = e;
       parentCurrency = e.type.name;
       removeElements();
       actualProcess(address);
     });
-    vnode.context.$parent.$watch('currency', function (e) {
+    vnode.context.$parent.$watch('currency', function(e) {
       parentCurrency = e;
       removeElements();
       actualProcess(address);
     });
-    vnode.context.$watch(binding.value, function (e) {
+    vnode.context.$watch(binding.value, function(e) {
       address = e;
       removeElements();
       actualProcess(e);
     });
-    const removeElements = function () {
+    const removeElements = function() {
       const child = el.parentNode.parentNode.lastChild;
       Object.keys(child.classList).forEach(item => {
         if (
@@ -44,7 +44,7 @@ const AddrResolver = {
         }
       });
     };
-    const actualProcess = async function (e) {
+    const actualProcess = async function(e) {
       const _this = vnode.context;
       if (e === '') {
         removeElements();
@@ -62,7 +62,7 @@ const AddrResolver = {
       } else resolveDomain(e);
     };
 
-    const resolveViaENS = function (domain) {
+    const resolveViaENS = function(domain) {
       console.log('resolving via ens!');
       const _this = vnode.context;
       const ens = _this.$store.state.ens;
@@ -80,7 +80,7 @@ const AddrResolver = {
             removeElements();
             _this.isValidAddress = false;
             _this.hexAddress = '';
-            // eslint-disable-next-line	
+            // eslint-disable-next-line
             errorPar.innerText = _this.$t('ens.ens-resolver.no-resolver', { network: network.type.name[0] });
             el.parentNode.parentNode.appendChild(errorPar);
           } else {
@@ -116,7 +116,7 @@ const AddrResolver = {
                     })
                     .catch(() => {
                       removeElements();
-                      // eslint-disable-next-line	
+                      // eslint-disable-next-line
                       errorPar.innerText = _this.$t('ens.ens-resolver.network-not-found', { network: network.type.name[0] });
                       _this.isValidAddress = false;
                       _this.hexAddress = '';
@@ -124,7 +124,7 @@ const AddrResolver = {
                     });
                 } else {
                   removeElements();
-                  // eslint-disable-next-line	
+                  // eslint-disable-next-line
                   errorPar.innerText = _this.$t('ens.ens-resolver.network-not-found', { network: network.type.name[0] });
                   _this.isValidAddress = false;
                   _this.hexAddress = '';
@@ -133,8 +133,7 @@ const AddrResolver = {
               });
           }
         }
-      }
-      else if (domain !== '') {
+      } else if (domain !== '') {
         const isValid = WAValidator.validate(domain, parentCurrency);
         if (isValid) {
           _this.isValidAddress = isValid;
@@ -166,7 +165,7 @@ const AddrResolver = {
                   errorPar.innerText = _this.$t(
                     'ens.ens-resolver.addr-not-checksummed'
                   );
-                  // 'Incorrect checksum: check address format on EthVM';	
+                  // 'Incorrect checksum: check address format on EthVM';
                 } else {
                   errorPar.innerText = _this.$t(
                     'ens.ens-resolver.invalid-addr',
@@ -189,7 +188,7 @@ const AddrResolver = {
       }
     };
 
-    const checkDarklist = function (addr) {
+    const checkDarklist = function(addr) {
       const _this = vnode.context;
       const messagePar = document.createElement('p');
       const isDarklisted = Misc.isDarklisted(addr);
@@ -207,11 +206,12 @@ const AddrResolver = {
       return false;
     };
 
-    const resolveDomain = async function (domain) {
+    const resolveDomain = async function(domain) {
       const messagePar = document.createElement('p');
       const _this = vnode.context;
       try {
-        if (resolution.serviceName(domain) === 'ENS') return resolveViaENS(domain);
+        if (resolution.serviceName(domain) === 'ENS')
+          return resolveViaENS(domain);
         console.log('resolving via resolution');
         const address = await resolution.addressOrThrow(domain, parentCurrency);
         if (!checkDarklist(address)) {
