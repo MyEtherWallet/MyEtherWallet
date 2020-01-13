@@ -1,6 +1,14 @@
 ### Bug
 
+- Fix error log details size [#1837](https://github.com/MyEtherWallet/MyEtherWallet/pull/1837)
+- Hide other translations on mobile [#1834](https://github.com/MyEtherWallet/MyEtherWallet/pull/1834)
 - Fix translations for address book [#1833](https://github.com/MyEtherWallet/MyEtherWallet/pull/1833)
+
+### Devop
+
+- Add EtherCore support [#1825](https://github.com/MyEtherWallet/MyEtherWallet/pull/1825)
+- Migrate Webchain to Mintme [#1824](https://github.com/MyEtherWallet/MyEtherWallet/pull/1824)
+-
 
 ### Release v5.2.9
 
@@ -8,7 +16,7 @@
 
 - Update error log modal design [#1816](https://github.com/MyEtherWallet/MyEtherWallet/pull/1816)
 - Update address book [#1795](https://github.com/MyEtherWallet/MyEtherWallet/pull/1795)
-
+- Update packages [#1852](https://github.com/MyEtherWallet/MyEtherWallet/pull/1852/files#diff-b9cfc7f2cdf78a7f4b91a753d10865a2R61)
 ### Devop
 
 - Release cleanup [#1817](https://github.com/MyEtherWallet/MyEtherWallet/pull/1817)
@@ -31,9 +39,9 @@
 - Hide blockexplorrer link on irrelevant pages and add back tx history for cx header [#1800](https://github.com/MyEtherWallet/MyEtherWallet/pull/1800)
 - Fix issue with withdrawing ETH from CDP [#1811](https://github.com/MyEtherWallet/MyEtherWallet/pull/1811)
 - Fix header items for other languages [#1791](https://github.com/MyEtherWallet/MyEtherWallet/pull/1791)
-- Fix NFT Loading [#1831] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1831)
-- Update mewcx wording [#1829] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1829)
-- Sort address book and compare add address by lowercase [#1828] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1828)
+- Fix NFT Loading [#1831](https://github.com/MyEtherWallet/MyEtherWallet/pull/1831)
+- Update mewcx wording [#1829](https://github.com/MyEtherWallet/MyEtherWallet/pull/1829)
+- Sort address book and compare add address by lowercase [#1828](https://github.com/MyEtherWallet/MyEtherWallet/pull/1828)
 
 ### Release v5.2.8-hotfix.2
 
