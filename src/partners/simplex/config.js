@@ -13,6 +13,14 @@ const SimplexCurrencies = {
     EUR: {
       symbol: 'EUR',
       name: 'Euro'
+    },
+    CAD: {
+      symbol: 'CAD',
+      name: 'Canadian Dollar'
+    },
+    JPY: {
+      symbol: 'JPY',
+      name: 'Japanese Yen'
     }
   },
   digital: {
