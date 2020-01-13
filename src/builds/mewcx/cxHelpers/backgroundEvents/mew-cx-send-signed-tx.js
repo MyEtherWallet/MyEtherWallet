@@ -3,7 +3,6 @@ import { CX_SEND_SIGNED_TX } from '../cxEvents';
 import store from '@/store';
 export default async ({ event, payload }, callback, next) => {
   if (event !== CX_SEND_SIGNED_TX) return next();
-  console.log('gets here');
   let funcHash = '';
   let errored = false;
   const listenerFunc = () => {
@@ -20,12 +19,10 @@ export default async ({ event, payload }, callback, next) => {
       });
     }
   };
-  console.log('calls the thing');
   store.state.web3.eth
     .sendSignedTransaction(payload.signedTx)
     .once('transactionHash', hash => {
       funcHash = hash;
-      console.log('gets here with hash', hash);
       store.dispatch('addNotification', [
         'Hash',
         payload.raw.from,
