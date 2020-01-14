@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ByJsonFileContainer.vue should render correctly 1`] = `
+<div class="create-wallet-by-json-file">
+  <div centered="" hide-footer="" hide-header="" static="" lazy="" class="bootstrap-modal no-padding">
+    <div class="modal-content-block"><img src="@/assets/images/modal/garlands.png">
+      <div class="d-block text-center"><i aria-hidden="true" class="check-icon fa fa-check"></i>
+        <h2 class="title">
+          Success
+        </h2>
+        <p>Your have created your wallet successfully.</p>
+      </div>
+      <div class="buttons">
+        <standard-button-stub options="[object Object]" clickfunction="function () { [native code] }" style="display: none;"></standard-button-stub>
+        <standard-button-stub options="[object Object]" clickfunction="function () { [native code] }"></standard-button-stub>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="nav-tab-user-input-box">
+      <b-tabs-stub tag="div">
+        <div class="progress-bar"></div>
+        <b-tab-stub active="true" tag="div" buttonid="" title="By Keystore File">
+          <div class="title-block">
+            <div class="title-popover">
+              <h3>Save My Keystore File</h3>
+            </div>
+          </div>
+          <div class="contents">
+            <div class="content-block">
+              <div class="icon-block"><img src="" alt="" class="icon"></div>
+              <div class="text-block">
+                <h6>Don't Lose It</h6>
+                <p>Be careful, it can not be recovered if you lose it.</p>
+              </div>
+            </div>
+            <div class="content-block">
+              <div class="icon-block"><img src="" alt="" class="icon"></div>
+              <div class="text-block">
+                <h6>Don't Share It</h6>
+                <p>Your funds will be stolen if you use this file on a malicious phishing site.</p>
+              </div>
+            </div>
+            <div class="content-block">
+              <div class="icon-block"><img src="" alt="" class="icon"></div>
+              <div class="text-block">
+                <h6>Make a Backup</h6>
+                <p>Secure it like the millions of dollars it may one day be worth.</p>
+              </div>
+            </div>
+          </div>
+          <div class="user-input-container">
+            <div class="user-input">
+              <div class="user-button"><a href="" download="" rel="noopener noreferrer" class="disable next-button large-round-button-green-filled nopadding">
+                  <!---->
+                  <div class="generating"><i class="fa fa-spinner fa-lg fa-spin"></i>
+                    <p>Please wait while we generate your keystore file...</p>
+                  </div>
+                </a></div>
+            </div>
+          </div>
+        </b-tab-stub>
+      </b-tabs-stub>
+    </div>
+  </div>
+</div>
+`;

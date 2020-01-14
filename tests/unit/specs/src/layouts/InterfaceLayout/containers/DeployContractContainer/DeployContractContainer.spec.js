@@ -1,11 +1,8 @@
 import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import DeployContractContainer from '@/layouts/InterfaceLayout/containers/DeployContractContainer/DeployContractContainer.vue';
-// import InterfaceBottomText from '@/components/InterfaceBottomText/InterfaceBottomText.vue';
-// import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
-// import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
 
 describe('DeployContractContainer.vue', () => {
@@ -44,67 +41,67 @@ describe('DeployContractContainer.vue', () => {
     });
     wrapper.find('div'); // added to suppress eslint warning
   });
-  it('should render correct bytecode', () => {
+
+  afterEach(() => {
+    wrapper.destroy();
+  });
+
+  it('should render correct bytecode', async () => {
     const bytecode = 'bytecode';
     wrapper.setData({ bytecode });
-    expect(wrapper.vm.$el.querySelectorAll('textarea')[0].value).toEqual(
-      wrapper.vm.$data.bytecode
-    );
+    await wrapper.vm.$nextTick();
+    const textarea = wrapper.findAll('textarea').at(0).element.value;
+    expect(textarea).toEqual(bytecode);
   });
 
-  it('should render correct abi', () => {
+  it('should render correct abi', async () => {
     const abi = 'abi';
     wrapper.setData({ abi });
-    expect(wrapper.vm.$el.querySelectorAll('textarea')[1].value).toEqual(
-      wrapper.vm.$data.abi
-    );
+    await wrapper.vm.$nextTick();
+    const textarea = wrapper.findAll('textarea').at(1).element.value;
+    expect(textarea).toEqual(abi);
   });
 
-  it('should render correct bytecode', () => {
-    const bytecode = 'bytecode';
-    wrapper.setData({ bytecode });
-    expect(wrapper.vm.$el.querySelectorAll('textarea')[0].value).toEqual(
-      wrapper.vm.$data.bytecode
-    );
-  });
-
-  it('should render correct abi', () => {
-    const abi = 'abi';
-    wrapper.setData({ abi });
-    expect(wrapper.vm.$el.querySelectorAll('textarea')[1].value).toEqual(
-      wrapper.vm.$data.abi
-    );
-  });
-
-  it('should render correct contractName', () => {
+  it('should render correct contractName', async () => {
     const contractName = 'contractName';
     wrapper.setData({ contractName });
-    expect(
-      wrapper.vm.$el.querySelectorAll('.contract-name input')[0].value
-    ).toEqual(contractName);
+    await wrapper.vm.$nextTick();
+    const input = wrapper.findAll('.contract-name input').at(0).element.value;
+    expect(input).toEqual(contractName);
   });
 
   it('should render correct contractName placeholder', () => {
-    expect(
-      wrapper.vm.$el.querySelectorAll('.contract-name input')[0].placeholder
-    ).toEqual('Name for the contract');
+    const placeholder = wrapper
+      .findAll('.contract-name input')
+      .at(0)
+      .attributes().placeholder;
+    expect(placeholder).toEqual('Name for the contract');
   });
 
-  it('should render correct validAbi', () => {
-    expect(
-      wrapper.vm.$el
-        .querySelector('i.good-button')
-        .className.indexOf('not-good')
-    ).toBeGreaterThan(-1);
+  it('should have correct value for isValidAbi', async () => {
+    const abi = '[]';
+    wrapper.setData({ abi });
+    await wrapper.vm.$nextTick();
+    const icon = wrapper.findAll('i.good-button').at(1);
+    expect(icon.classes()).not.toContain('not-good');
+  });
+
+  it('should have correct value for isValidByte', async () => {
+    const bytecode = '0xabcdef1234';
+    wrapper.setData({ bytecode });
+    await wrapper.vm.$nextTick();
+    const icon = wrapper.findAll('i.good-button').at(0);
+    expect(icon.classes()).not.toContain('not-good');
   });
 
   it('should clear the form', () => {
-    wrapper.setData({
-      bytecode: '0x0x0x',
-      abi: '0x0x0x',
-      contractName: 'Contract'
-    });
-    wrapper.find('.clear-all-btn').trigger('click');
+    const clearFunc = jest.spyOn(wrapper.vm, 'clear');
+    const button = wrapper.find('.clear-all-btn');
+    button.trigger('click');
+    expect(clearFunc).toHaveBeenCalled();
+    expect(wrapper.vm.bytecode).toEqual('');
+    expect(wrapper.vm.abi).toEqual('');
+    expect(wrapper.vm.contractName).toEqual('');
   });
 
   describe('DeployContractContainer.vue Methods', () => {

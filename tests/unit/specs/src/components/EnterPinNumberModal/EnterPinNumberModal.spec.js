@@ -17,7 +17,8 @@ const BModalStub = {
 };
 
 const eventHub = {
-  $on: sinon.stub()
+  $on: sinon.stub(),
+  $off: sinon.stub()
 };
 
 describe('EnterPinNumberModal.vue', () => {
@@ -48,7 +49,7 @@ describe('EnterPinNumberModal.vue', () => {
     });
   });
 
-  it('should render correct acknowledgedTerms data', () => {
+  it('should render correct acknowledgedTerms data', async () => {
     expect(
       wrapper
         .find('.custom-marker')
@@ -56,6 +57,7 @@ describe('EnterPinNumberModal.vue', () => {
         .indexOf('enable')
     ).toBe(-1);
     wrapper.setData({ acknowledgedTerms: true });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .find('.custom-marker')
@@ -81,24 +83,21 @@ describe('EnterPinNumberModal.vue', () => {
     expect(wrapper.vm.$data.pin).toBe(strPosition);
   });
 
-  it('should render correct pin data', () => {
+  it('should render correct pin data', async () => {
     const pin = 'pin';
     wrapper.setData({ pin });
-    expect(
-      wrapper.vm.$el.querySelector('.modal-contents .input-container input')
-        .value
-    ).toEqual(wrapper.vm.$data.pin);
+    await wrapper.vm.$nextTick();
+    const input = wrapper.find('.modal-contents .input-container input').element
+      .value;
+    expect(input).toEqual(pin);
   });
 
-  it('should render correct deviceInfo data', () => {
+  it('should render correct deviceInfo data', async () => {
     const deviceInfo = { name: 'deviceInfo' };
     wrapper.setData({ deviceInfo });
-    expect(
-      wrapper.vm.$el
-        .querySelector('.pin-input-block .main-title')
-        .textContent.trim()
-        .indexOf(deviceInfo.name)
-    ).toBeGreaterThan(-1);
+    await wrapper.vm.$nextTick();
+    const element = wrapper.find('.pin-input-block .main-title').text();
+    expect(element).toEqual(deviceInfo.name);
   });
 
   describe('EnterPinNumberModal.vue Methods', () => {

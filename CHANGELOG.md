@@ -17,6 +17,7 @@
 - Update error log modal design [#1816](https://github.com/MyEtherWallet/MyEtherWallet/pull/1816)
 - Update address book [#1795](https://github.com/MyEtherWallet/MyEtherWallet/pull/1795)
 - Update packages [#1852](https://github.com/MyEtherWallet/MyEtherWallet/pull/1852/files#diff-b9cfc7f2cdf78a7f4b91a753d10865a2R61)
+
 ### Devop
 
 - Release cleanup [#1817](https://github.com/MyEtherWallet/MyEtherWallet/pull/1817)
