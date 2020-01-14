@@ -85,7 +85,7 @@
   "invalid-mnemonic": "Неверная мнемоническая фраза",
   "coingecko": "Coingecko",
   "buy-eth": "Купить ETH",
-  "generate-wallet-description": "Generate your own unique Ethereum wallet. Receive a public address (0x...) and set a password for wallet encryption.",
+  "generate-wallet-description": "Создайте свой собственный уникальный кошелек Ethereum. Получите публичный адрес (0x...) и установите пароль.",
   "mnemonic-phrase": "Мнемоническая фраза",
   "mnemonic-phrase-description": "Добавьте ваш кошелек с помощью мнемонической фразы. Мнемонические фразы состоят из 12-24 слов, но иногда содержат дополнительное слово для большей безопасности.",
   "private-key-description": "Добавьте ваш кошелек с помощью закрытого ключа. Закрытые ключи имеют 64 шестнадцатеричных символа.",
