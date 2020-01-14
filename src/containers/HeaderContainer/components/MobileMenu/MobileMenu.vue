@@ -8,7 +8,7 @@
       @currentflag="flagChange"
     />
 
-    <!-- Mobile menu header ************************************ -->
+    <!-- Mobile menu header (STARTS) -->
     <div
       :class="!isOnTop && !isMenuOpen ? 'small-menu' : ''"
       class="mobile-menu-header"
@@ -49,21 +49,37 @@
         />
       </div>
     </div>
-    <!-- Mobile menu header ************************************ -->
-    <!-- Mobile menu shadow backdrop ************************************ -->
+    <!-- Mobile menu header (ENDS) -->
+
+    <!-- Mobile menu shadow backdrop (STARTS) -->
     <div
       :class="isMenuOpen ? 'menu-open' : ''"
       class="mobile-menu-shadow-backdrop"
     ></div>
-    <!-- Mobile menu shadow backdrop ************************************ -->
-    <!-- Mobile menu content ************************************ -->
+    <!-- Mobile menu shadow backdrop (ENDS) -->
+
+    <!-- ============================================================================================================================================= -->
+    <!-- ============================================================================================================================================= -->
+    <div
+      class="mobile-menu-content-container"
+      :class="isMenuOpen ? 'menu-open' : ''"
+    >
+      <mobile-menu-content v-if="account.address" :close-menu="closeMenu" />
+      111
+      <mobile-network-block :block-number="blockNumber" />
+      111
+    </div>
+
+    <!-- ============================================================================================================================================= -->
+    <!-- ============================================================================================================================================= -->
+
+    <!-- Mobile menu contents (STARTS) -->
     <div
       :class="isMenuOpen ? 'menu-open' : ''"
       class="mobile-menu-content--container"
     >
       <div class="mobile-menu-content">
         <div v-if="account.address" class="block--container">
-          <mobile-balance-block />
           <mobile-network-block :block-number="blockNumber" />
         </div>
         <ul>
@@ -125,14 +141,14 @@
         </div>
       </div>
     </div>
-    <!-- Mobile menu content ************************************ -->
+    <!-- Mobile menu contents (ENDS) -->
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import MobileMenuContent from './components/MobileMenuContent';
 import MobileMenuButton from './components/MobileMenuButton';
-import MobileBalanceBlock from './components/MobileBalanceBlock';
 import MobileNetworkBlock from './components/MobileNetworkBlock';
 import MobileLanguageSelector from './components/MobileLanguageSelector';
 import { Misc } from '@/helpers';
@@ -140,8 +156,8 @@ import supportedLang from '../../supportedLang';
 
 export default {
   components: {
+    'mobile-menu-content': MobileMenuContent,
     'mobile-menu-button': MobileMenuButton,
-    'mobile-balance-block': MobileBalanceBlock,
     'mobile-network-block': MobileNetworkBlock,
     'mobile-language-selector': MobileLanguageSelector
   },
@@ -223,6 +239,9 @@ export default {
       } else {
         this.isOnTop = true;
       }
+    },
+    closeMenu() {
+      this.isMenuOpen = false;
     }
   }
 };

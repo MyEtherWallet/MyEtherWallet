@@ -1,27 +1,32 @@
 <template>
-  <div class="mobile-network-block">
+  <div class="mobile-info-block">
     <interface-network-modal ref="interfaceNetworkModal" />
-    <div class="wrap">
-      <div class="top-block">
-        <div class="block-title">
-          {{ $t('common.network') }}
-        </div>
-        <button class="change-button" @click="networkModalOpen">
-          {{ $t('interface.network-modal.button-change') }}
-        </button>
-      </div>
-      <div class="bottom-block">
-        <p v-if="account.identifier !== identifier" class="network">
-          {{ network.service + '(' + network.type.name + ')' }}
-        </p>
-        <!--<p v-show="parsedNetwork !== ''" class="network">M{{ parsedNetwork }}</p>-->
 
-        <p class="last-block">
-          {{ $t('interface.network-modal.last-block') }}# : {{ blockNumber }}
-        </p>
-        <i v-show="parsedNetwork === ''" class="fa fa-spinner fa-spin" />
+    <div class="d-flex align-items-center">
+      <div>
+        <div class="info-block-title font-reset">
+          Current {{ $t('common.network') }}
+        </div>
+
+        <div
+          v-if="account.identifier !== identifier"
+          class="info-block-value text-monospace pl-3"
+        >
+          {{ network.service + '(' + network.type.name + ')' }}
+        </div>
+
+        <div class="last-block font-reset pl-3">
+          {{ $t('interface.network-modal.last-block') }}#:
+          <span class="text-monospace ">{{ blockNumber }}</span>
+        </div>
+      </div>
+
+      <div class="ml-auto" @click="networkModalOpen">
+        <i class="setting fa fa-cog" aria-hidden="true"></i>
       </div>
     </div>
+
+    <i v-show="parsedNetwork === ''" class="fa fa-spinner fa-spin" />
   </div>
 </template>
 

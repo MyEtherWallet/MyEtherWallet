@@ -1,19 +1,35 @@
 <template>
-  <div class="mobile-address-block">
-    <interface-balance-modal ref="balanceModal" :balance="accountBalance" />
-    <div class="wrap">
-      <div class="top-block">
-        <div class="block-title">{{ $t('common.balance.string') }}</div>
-        <button class="show-balance-button" @click="showBalanceModal">
-          <img src="~@/assets/images/icons/more.svg" alt />
-        </button>
+  <div class="mobile-info-block">
+    <div class="info-block-title font-reset">
+      {{ $t('common.balance.total') }}
+    </div>
+
+    <div class="info-block-value text-monospace pl-3">
+      {{ accountBalance
+      }}<span class="font-reset">{{ network.type.currencyName }}</span>
+    </div>
+
+    <div class="pl-3">
+      <div class="equivalent-values-title font-reset">
+        {{ $t('interface.check-balance.equivalent') }}
       </div>
-      <div class="bottom-block">
-        <p class="the-address">
-          {{ accountBalance }}
-          {{ network.type.currencyName }}
-        </p>
-      </div>
+      <ul class="equivalent-values-data pl-3">
+        <li
+          v-for="ev in equivalentValues"
+          :key="ev.key"
+          class="d-flex align-items-center"
+        >
+          <img
+            :src="
+              require(`@/assets/images/currency/${ev.name.toLowerCase()}.svg`)
+            "
+            alt
+            class="mr-2"
+          />
+          <div class="mr-2 text-monospace">{{ ev.name }}</div>
+          <div class="text-monospace">{{ ev.value }}</div>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -22,20 +38,55 @@
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import BigNumber from 'bignumber.js';
-import InterfaceBalanceModal from '@/layouts/InterfaceLayout/components/InterfaceBalanceModal';
 
 export default {
-  components: {
-    'interface-balance-modal': InterfaceBalanceModal
+  components: {},
+  data() {
+    return {
+      equivalentValues: [
+        {
+          name: 'BTC',
+          value: ''
+        },
+        {
+          name: 'REP',
+          value: ''
+        },
+        {
+          name: 'CHF',
+          value: ''
+        },
+        {
+          name: 'USD',
+          value: ''
+        },
+        {
+          name: 'EUR',
+          value: ''
+        },
+        {
+          name: 'GBP',
+          value: ''
+        }
+      ]
+    };
   },
   computed: {
-    ...mapState(['network', 'web3', 'account']),
+    ...mapState(['network', 'web3', 'account', 'online']),
     accountBalance() {
       return this.web3.utils.fromWei(
         new BigNumber(this.account.balance).toFixed(),
         'ether'
       );
     }
+  },
+  watch: {
+    balance() {
+      this.fetchBalanceData();
+    }
+  },
+  mounted() {
+    this.fetchBalanceData();
   },
   methods: {
     showBalanceModal() {
@@ -52,6 +103,32 @@ export default {
           .catch(err => {
             Toast.responseHandler(err, Toast.ERROR);
           });
+      }
+    },
+    async fetchBalanceData() {
+      if (this.online) {
+        const newArr = [];
+        const url = 'https://cryptorates.mewapi.io/convert/ETH';
+        const fetchValues = await fetch(url);
+        const values = await fetchValues.json();
+        delete values['lastCalled'];
+        Object.keys(values).forEach(item => {
+          if (
+            this.equivalentValues.find(curr => {
+              return curr.name === item;
+            })
+          ) {
+            const objectRes = {
+              name: item,
+              value: new BigNumber(this.accountBalance)
+                .multipliedBy(new BigNumber(values[item]))
+                .decimalPlaces(18)
+                .toFixed()
+            };
+            newArr.push(objectRes);
+          }
+        });
+        this.equivalentValues = newArr;
       }
     }
   }

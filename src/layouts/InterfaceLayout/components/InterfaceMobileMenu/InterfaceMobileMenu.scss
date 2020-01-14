@@ -1,5 +1,15 @@
 @import '~@/scss/GlobalVariables';
 
+.new-mobile-interface-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+}
+
 .interface-mobile-menu .mobile-menu-container {
   position: relative;
 

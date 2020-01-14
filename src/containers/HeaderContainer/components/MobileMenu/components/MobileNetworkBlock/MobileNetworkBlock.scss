@@ -1,48 +1,48 @@
-@import '~@/scss/GlobalVariables';
+//@import '~@/scss/GlobalVariables';
 
-//********************************************************
-// Wrap
-//********************************************************
-.wrap {
-  background-color: $light-blue-4;
-  color: $white;
-  margin: 0 10px;
-  padding: 20px;
-  border-radius: 5px;
+* {
+  color: #383838;
 }
 
-//********************************************************
-// Top Block
-//********************************************************
-.top-block {
-  display: flex;
-  align-items: flex-start;
-  .block-title {
-    line-height: initial;
-    font-size: 24px;
-    font-weight: 500;
-    color: $white;
-  }
-  .change-button {
-    margin-left: auto;
-    background-color: transparent;
-    border: 1px solid $white;
-    border-radius: 4px;
-    color: $white;
-    padding: 7px 20px;
+.font-reset {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
 
-    &:active {
-      background-color: rgba(0, 0, 0, 0.1);
-    }
+.mobile-info-block {
+  width: 100%;
+  background-color: #ffffff61;
+  border-radius: 20px;
+  padding: 10px 15px;
+}
+
+.info-block-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.info-block-value {
+  font-size: 15px;
+  span {
+    font-size: 10px;
+    margin-left: 5px;
   }
 }
 
-.bottom-block {
-  margin-top: 15px;
-  p {
-    font-size: 16px;
-    line-height: 24px;
+.last-block {
+  font-size: 12px;
+  font-weight: 400;
+
+  span {
+    font-size: inherit;
     font-weight: 400;
-    color: $white;
+  }
+}
+
+.setting {
+  font-size: 30px;
+  opacity: 0.7;
+  cursor: pointer;
+  &:active {
+    opacity: 1;
   }
 }
