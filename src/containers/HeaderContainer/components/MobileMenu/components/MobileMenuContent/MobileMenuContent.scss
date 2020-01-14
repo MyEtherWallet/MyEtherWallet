@@ -1,0 +1,20 @@
+//@import '~@/scss/GlobalVariables';
+
+.menu-content-header {
+  padding: 0 20px;
+  cursor: pointer;
+  i {
+    font-size: 50px;
+  }
+}
+
+.mobile-menu-content {
+  //display: none;
+  width: 100%;
+  height: 100%;
+  //background-color: #7acbcc;
+}
+
+.content-block {
+  padding: 10px;
+}

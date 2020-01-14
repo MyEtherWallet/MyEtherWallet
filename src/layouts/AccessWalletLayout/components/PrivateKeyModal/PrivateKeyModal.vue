@@ -85,7 +85,7 @@ export default {
           new WalletInterface(this.actualPrivKey, false, privKeyType)
         ])
         .then(() => {
-          this.actualPrivKey = '';
+          //this.actualPrivKey = '';
           this.spinner = false;
           this.$router.push({
             path: 'interface'

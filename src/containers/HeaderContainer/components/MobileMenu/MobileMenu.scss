@@ -4,6 +4,21 @@ $menu-opening-animation-duration: 0.2s;
 $logo-resizing-animation-duration: 0.2s;
 $mobile-menu-z-index: 999;
 
+.mobile-menu-content-container {
+  position: fixed;
+  top: -1000px;
+  left: 0px;
+  z-index: 999;
+  transition: top 0.2s ease;
+  height: 100vh;
+  width: 100vw;
+  background-color: #dcdcdc;
+
+  &.menu-open {
+    top: 0px;
+  }
+}
+
 //********************************************************
 // mobile-menu
 //********************************************************
@@ -96,7 +111,7 @@ $mobile-menu-z-index: 999;
   z-index: $mobile-menu-z-index - 2;
   top: 0;
   left: 0;
-  background-color: black;
+  background-color: #0000007a;
   height: 100vh;
   width: 100vw;
   opacity: 0;
