@@ -1,7 +1,10 @@
 //@import '~@/scss/GlobalVariables';
 
 .menu-content-header {
-  padding: 0 20px;
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  //padding: 0 20px;
   cursor: pointer;
   i {
     font-size: 50px;
