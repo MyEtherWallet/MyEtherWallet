@@ -1,5 +1,6 @@
 ### Bug
 
+- Remove excess maker wording and add to translations [#1853](https://github.com/MyEtherWallet/MyEtherWallet/pull/1853)
 - Fix error log details size [#1837](https://github.com/MyEtherWallet/MyEtherWallet/pull/1837)
 - Hide other translations on mobile [#1834](https://github.com/MyEtherWallet/MyEtherWallet/pull/1834)
 - Fix translations for address book [#1833](https://github.com/MyEtherWallet/MyEtherWallet/pull/1833)
