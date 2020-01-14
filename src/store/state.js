@@ -55,7 +55,8 @@ const state = {
   blockNumber: 0,
   linkQuery: {},
   addressBook: addressBook,
-  locale: store.get('locale') !== undefined ? store.get('locale') : 'en_US'
+  locale: store.get('locale') !== undefined ? store.get('locale') : 'en_US',
+  tempHide: false
 };
 
 export default state;
