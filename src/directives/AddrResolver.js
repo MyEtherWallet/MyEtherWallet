@@ -75,7 +75,6 @@ const AddrResolver = {
             errorPar.innerText = _this.$t('ens.ens-resolver.no-resolver', { network: network.type.name[0]});
             el.parentNode.parentNode.appendChild(errorPar);
           } else {
-            console.error('in here????')
             getMultiCoinAddress(ens, normalise(e), parentCurrency)
               .then(address => {
                 if (!checkDarklist(address)) {
