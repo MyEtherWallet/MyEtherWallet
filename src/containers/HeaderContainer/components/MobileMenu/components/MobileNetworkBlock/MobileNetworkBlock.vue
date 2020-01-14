@@ -4,7 +4,7 @@
 
     <div class="d-flex align-items-center">
       <div>
-        <div class="info-block-title font-reset">
+        <div class="info-block-title font-reset text-uppercase mb-1">
           Current {{ $t('common.network') }}
         </div>
 
@@ -16,6 +16,7 @@
         </div>
 
         <div class="last-block font-reset pl-3">
+          <i class="fa fa-angle-right" aria-hidden="true"></i>
           {{ $t('interface.network-modal.last-block') }}#:
           <span class="text-monospace ">{{ blockNumber }}</span>
         </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="mobile-info-block">
-    <div class="info-block-title font-reset">
+    <div class="info-block-title text-uppercase font-reset mb-1">
       {{ $t('common.balance.total') }}
     </div>
 
@@ -11,6 +11,7 @@
 
     <div class="pl-3">
       <div class="equivalent-values-title font-reset">
+        <i class="fa fa-angle-right" aria-hidden="true"></i>
         {{ $t('interface.check-balance.equivalent') }}
       </div>
       <ul class="equivalent-values-data pl-3">
