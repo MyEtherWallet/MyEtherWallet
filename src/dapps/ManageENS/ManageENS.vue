@@ -370,9 +370,7 @@ export default {
       } else if (this.parsedTld === this.registrarTLD) {
         try {
           const resolver = await this.ens.resolver('resolver.eth');
-          console.error("resolver", resolver)
           this.publicResolverAddress = await resolver.addr();
-          console.error('publicResolverAddress', this.publicResolverAddress)
           if (
             this.registrarType === REGISTRAR_TYPES.FIFS &&
             !this.isSubDomain

@@ -261,7 +261,6 @@ export default {
   computed: {
     ...mapState(['web3']),
     isValidAddresses() {
-      console.error('currencyInputs', this.currencyInputs)
       for (const type in this.currencyInputs) {
         if (
           this.currencyInputs[type].value !== '' &&
