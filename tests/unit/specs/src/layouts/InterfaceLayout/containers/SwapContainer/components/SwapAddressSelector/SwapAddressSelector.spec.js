@@ -1,6 +1,7 @@
 import { shallowMount } from '@vue/test-utils';
 import SwapAddressSelector from '@/layouts/InterfaceLayout/containers/SwapContainer/components/SwapAddressSelector/SwapAddressSelector.vue';
-
+import VueX from 'vuex';
+import { state, getters } from '@@/helpers/mockStore';
 import { Tooling } from '@@/helpers';
 
 describe('SwapAddressSelector.vue', () => {
@@ -10,7 +11,15 @@ describe('SwapAddressSelector.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new VueX.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
   });
 
   beforeEach(() => {
