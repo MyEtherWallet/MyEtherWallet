@@ -50,7 +50,6 @@ describe('InterfaceTokens.vue', () => {
     });
 
     Vue.config.warnHandler = () => {};
-    Vue.config.errorHandler = () => {};
   });
 
   beforeEach(() => {
