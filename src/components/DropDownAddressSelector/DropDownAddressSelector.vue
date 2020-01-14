@@ -143,7 +143,6 @@ export default {
       selectedAddress: '',
       isValidAddress: false,
       dropdownOpen: false,
-      addresses: [],
       toAddressCheckMark: false,
       hexAddress: '',
       currentAddress: ''
@@ -166,6 +165,14 @@ export default {
 
         return a < b ? -1 : a > b ? 1 : 0;
       });
+    },
+    addresses() {
+      return this.currentAddress
+        ? [
+            { address: this.currentAddress, currency: BASE_CURRENCY },
+            ...this.sortedAddressBook
+          ]
+        : [...this.sortedAddressBook];
     }
   },
   watch: {
@@ -174,14 +181,6 @@ export default {
       this.isValidAddress = false;
       this.hexAddress = '';
       this.$refs.addressInput.value = '';
-    },
-    currentAddress(address) {
-      if (this.addresses.findIndex(addr => addr.address === address) === -1) {
-        this.updateAddresses(address);
-      }
-    },
-    addressBook() {
-      this.updateAddresses(this.currentAddress);
     },
     hexAddress() {
       this.validateAddress();
@@ -200,17 +199,6 @@ export default {
     debouncedInput: utils._.debounce(function(e) {
       this.selectedAddress = e.target.value;
     }, 300),
-    updateAddresses(address) {
-      this.addresses = address
-        ? [
-            {
-              address: address,
-              currency: BASE_CURRENCY
-            },
-            ...this.sortedAddressBook
-          ]
-        : [...this.sortedAddressBook];
-    },
     copyToClipboard(ref) {
       ref.select();
       document.execCommand('copy');
