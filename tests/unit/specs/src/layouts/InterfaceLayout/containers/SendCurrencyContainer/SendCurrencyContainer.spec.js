@@ -7,7 +7,6 @@ import PopOver from '@/components/PopOver/PopOver.vue';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
 import { Tooling } from '@@/helpers';
 import { state, getters } from '@@/helpers/mockStore';
-import sinon from 'sinon';
 
 describe('SendCurrencyContainer.vue', () => {
   let localVue, i18n, wrapper, store;

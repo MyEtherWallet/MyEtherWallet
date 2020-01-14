@@ -10,7 +10,6 @@
 - Migrate Webchain to Mintme [#1824](https://github.com/MyEtherWallet/MyEtherWallet/pull/1824)
 - Modularize store state [#1722][https://github.com/MyEtherWallet/MyEtherWallet/pull/1722]
 
-
 ### Release v5.2.9
 
 ### Feature
