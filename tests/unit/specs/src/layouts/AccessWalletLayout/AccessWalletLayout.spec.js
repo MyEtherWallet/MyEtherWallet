@@ -5,6 +5,8 @@ import { Tooling } from '@@/helpers';
 import PriceBar from '@/layouts/AccessWalletLayout/components/PriceBar/PriceBar.vue';
 import { RouterLinkStub } from '@@/helpers/setupTooling';
 import BigNumber from 'bignumber.js';
+import VueX from 'vuex';
+import { state, getters } from '@@/helpers/mockStore';
 
 function roundPercentage(num) {
   return new BigNumber(num).toFixed(2);
@@ -17,7 +19,15 @@ describe('AccessWalletLayout.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new VueX.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
 
     Vue.config.warnHandler = () => {};
   });
