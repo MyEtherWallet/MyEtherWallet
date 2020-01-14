@@ -7,6 +7,7 @@ import { RouterLinkStub } from '@@/helpers/setupTooling';
 import BigNumber from 'bignumber.js';
 import VueX from 'vuex';
 import { state, getters } from '@@/helpers/mockStore';
+import { fetch } from 'whatwg-fetch';
 
 function roundPercentage(num) {
   return new BigNumber(num).toFixed(2);
@@ -33,6 +34,8 @@ describe('AccessWalletLayout.vue', () => {
   });
 
   beforeEach(() => {
+    global.fetch = fetch;
+
     wrapper = shallowMount(AccessWalletLayout, {
       localVue,
       i18n,
