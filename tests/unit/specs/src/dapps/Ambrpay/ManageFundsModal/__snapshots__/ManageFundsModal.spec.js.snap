@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ManageFundsModal.vue should render correctly 1`] = `
+<div class="modal-container" availablebalanceusd="1">
+  <div title="Add Funds" centered="" hide-footer="" static="" lazy="">
+    <div class="modal-contents">
+      <div class="balance-container"><span class="funds-txt">Available Balance</span>
+        <div>
+          <p class="funds-txt">
+            5 ETH
+          </p>
+          <p class="text-right">$</p>
+        </div>
+      </div>
+      <hr>
+      <div class="action-container">
+        <p class="funds-txt">
+          How much ETH do you want to add ?
+        </p> <span class="eth-text">ETH</span> <input type="number" class="mt-3">
+        <p class="err-msg pl-2" style="display: none;"></p>
+      </div>
+      <!---->
+      <div class="btn-container"><button class="mew-btn mt-4 mb-4 disabled">
+          Add
+        </button></div>
+    </div>
+  </div>
+</div>
+`;

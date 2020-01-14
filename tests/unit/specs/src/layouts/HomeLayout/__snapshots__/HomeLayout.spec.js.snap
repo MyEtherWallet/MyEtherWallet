@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HomeLayout.vue renders correctly 1`] = `
+<div class="home">
+  <top-banner-stub></top-banner-stub>
+  <about-stub></about-stub>
+  <faqs-stub></faqs-stub>
+  <social-stub></social-stub>
+</div>
+`;

@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Social.vue should render correct contents 1`] = `
+<div class="social">
+  <div class="wrap">
+    <div class="page-container">
+      <div class="flex-col-vertical-center content">
+        <div class="title">
+          <h2>Join MEW Community</h2>
+        </div>
+        <div class="icons"><a href="https://www.facebook.com/MyEtherWallet" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+            <div class="Facebook"><img src="" alt="">
+              <p>Facebook</p>
+            </div>
+          </a><a href="https://twitter.com/myetherwallet" aria-label="Twitter" target="_blank" rel="noopener noreferrer">
+            <div class="Twitter"><img src="" alt="">
+              <p>Twitter</p>
+            </div>
+          </a><a href="https://medium.com/@myetherwallet" aria-label="Medium" target="_blank" rel="noopener noreferrer">
+            <div class="Medium"><img src="" alt="">
+              <p>Medium</p>
+            </div>
+          </a><a href="https://www.reddit.com/r/myetherwallet" aria-label="reddit" target="_blank" rel="noopener noreferrer">
+            <div class="reddit"><img src="" alt="">
+              <p>Reddit</p>
+            </div>
+          </a><a href="https://www.github.com/myetherwallet" aria-label="github" target="_blank" rel="noopener noreferrer">
+            <div class="github"><img src="" alt="">
+              <p>Github</p>
+            </div>
+          </a></div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

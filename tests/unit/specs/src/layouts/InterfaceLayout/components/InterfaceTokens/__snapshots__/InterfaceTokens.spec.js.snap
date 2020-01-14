@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InterfaceTokens.vue should render correctly 1`] = `
+<div class="transaction-tokens">
+  <div>
+    <div title="Add Custom Tokens" hide-footer="" centered="" static="" lazy="" class="bootstrap-modal nopadding max-height-1">
+      <form class="tokens-modal-body">
+        <div><input placeholder="Token Contract Address" name="Address" type="text" class="custom-input-text-1" aria-required="true" aria-invalid="false"> <span class="error-message" style="display: none;">
+          Invalid address given.
+        </span> <input placeholder="Token Symbol" name="Symbol" type="text" class="custom-input-text-1"> <input placeholder="Decimals" name="Decimal" type="number" min="0" max="18" class="custom-input-text-1"> <span class="error-message" style="display: none;">
+          Invalid Decimal. Decimal can only be between 0 and 18.
+        </span></div>
+        <div class="button-block"><button class="disabled save-button large-round-button-green-filled clickable">
+            Save
+          </button>
+          <interface-bottom-text-stub link="https://kb.myetherwallet.com" linktext="Help Center" question="Don't know what it is?"></interface-bottom-text-stub>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="tokens-container">
+      <div class="token-search">
+        <div class="block-title">
+          <div class="title-container">
+            <h4>Tokens</h4> <img alt="" src="~@/assets/images/icons/change.svg">
+          </div>
+          <p>+ Custom Tokens</p>
+        </div>
+        <div class="search-block"><input placeholder="Search" autocomplete="off"> <i aria-hidden="true" class="fa fa-search"></i></div>
+      </div>
+      <div class="cant-load" style="display: none;">
+        Can't load balances in offline mode
+      </div>
+      <div class="token-table-container">
+        <table style="display: none;"></table>
+        <table style="display: none;"></table>
+        <div class="spinner-container"><i class="fa fa-spinner fa-spin"></i></div>
+        <div class="spinner-container" style="display: none;">
+          No tokens found :(
+        </div>
+      </div>
+      <!---->
+    </div>
+    <interface-ads-stub></interface-ads-stub>
+  </div>
+</div>
+`;

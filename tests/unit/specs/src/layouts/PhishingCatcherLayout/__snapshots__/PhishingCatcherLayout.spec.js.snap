@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PhishingCatcherLayout.vue renders correctly 1`] = `
+<div class="phishing-catcher-contianer">
+  <div class="catcher-text">
+    <h4>YOU HAVE BEEN REDIRECTED!</h4>
+    <div>
+      <div class="code-container"><code>
+          https://www.some-phishing-site.net
+        </code></div>
+      <p>
+        This site has been flagged for suspicious activity, <br>
+        so we've redirected your browser. Stay safe out there
+      </p>
+    </div>
+  </div>
+</div>
+`;

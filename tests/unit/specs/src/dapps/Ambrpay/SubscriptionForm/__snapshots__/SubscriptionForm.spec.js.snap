@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SubscriptionForm.vue should render correctly 1`] = `
+<div class="subscription-container">
+  <div class="subscription-content">
+    <div class="subscription-form-container">
+      <b-container-stub tag="div">
+        <b-row-stub tag="div" class="address-block">
+          <dropdown-address-selector-stub title="To Address" currency="ETH"></dropdown-address-selector-stub>
+        </b-row-stub>
+        <b-row-stub tag="div">
+          <b-col-stub cols="12" md="5" tag="div" class="mt-3"><span class="label-text">Type</span>
+            <div class="fake-input">
+              <p><img src="@/assets/images/currency/eth.svg" class="currency-icon"> <span class="token-txt">ETH</span>-Ethereum
+              </p>
+            </div>
+          </b-col-stub>
+          <b-col-stub cols="12" md="7" tag="div" class="amount-container mt-3">
+            <div class="amount-text"><span class="label-text">Amount</span> <span class="action-text entire-balance">Entire Balance</span></div> <input type="number" placeholder="0.01" min="0.01">
+            <p class="sub-text">1% automation-fee will be added on top</p>
+            <p class="sub-text err-msg" style="display: none;">
+
+            </p>
+          </b-col-stub>
+        </b-row-stub>
+        <b-row-stub tag="div" class="row-style mt-1 interval-container"><span class="label-text">Interval in Every</span> <span class="days-text" style="display: none;">Day(s)</span> <input placeholder="Enter the number of day(s)" type="number" min="1" max="365">
+          <p class="sub-text err-msg" style="display: none;">
+
+          </p>
+        </b-row-stub>
+        <b-row-stub tag="div" class="mt-5 button-container">
+          <b-button-stub target="_self" event="click" routertag="a" variant="secondary" type="button" tag="button" class="active-sub-btn my-subscriptions-container">Manage Subscriptions
+          </b-button-stub>
+          <b-button-stub target="_self" event="click" routertag="a" variant="secondary" type="button" tag="button" class="mew-btn disabled">Start Recurring</b-button-stub>
+        </b-row-stub>
+        <b-row-stub tag="div">
+          <div class="clear-all-btn mx-auto mt-3">
+            Clear All
+          </div>
+        </b-row-stub>
+      </b-container-stub>
+    </div>
+  </div>
+</div>
+`;

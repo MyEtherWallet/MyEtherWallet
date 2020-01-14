@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VerifyMessageLayout.vue should render correctly 1`] = `
+<div class="verify-message-layout">
+  <div class="page-container">
+    <div class="title-block">
+      <h2></h2>
+    </div>
+    <div class="verify-content-container">
+      <div class="send-form">
+        <div class="title-container">
+          <div class="title">
+            <h4>:</h4>
+            <div class="copy-buttons"><span></span> <span></span></div>
+          </div>
+        </div>
+        <div class="the-form signature"><textarea placeholder="
+      {
+        &quot;address&quot;: &quot;0xdecaf9cd2367cdbb726e904cd6397edfcae6068d&quot;,
+        &quot;msg&quot;: &quot;no one is giving away free ETH&quot;,
+        &quot;sig&quot;:
+          &quot;0xfd53681a1bbbdbd6074a884e628540f129c57
+          634c055f91d45615c943db446fb0acc35ef34bf9
+          05a78b634d4a88769b80432b4714ba2b19e2fda9
+          814a95a1dbb1b&quot;,
+        &quot;version&quot;: &quot;3&quot;,
+        &quot;signer&quot;: &quot;MEW&quot;
+      }
+    " name="signature" class="custom-textarea-1"></textarea></div>
+        <div>
+          <!---->
+          <!---->
+        </div>
+      </div>
+      <div class="submit-button-container">
+        <div class="buttons"><button class="disabled submit-button large-round-button-green-filled clickable">
+
+          </button></div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

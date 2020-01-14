@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TopBanner.vue should render correct contents 1`] = `
+<div class="top-banner">
+  <div class="wrap">
+    <div class="page-container">
+      <div class="flex-col-vertical-center banner">
+        <div class="banner-text">
+          <h1>Ethereum's</h1>
+          <h1>Original Wallet</h1>
+          <p>MyEtherWallet (our friends call us MEW) is a free, client-side interface helping you interact with the Ethereum blockchain. Our easy-to-use, open-source platform allows you to generate wallets, interact with smart contracts, and so much more.</p>
+        </div>
+        <div class="banner-image"><img alt="" src="~@/assets/images/home/big-spaceman.png"></div>
+      </div>
+      <div class="grid-col-2 promo-cards"><a class="nounderline">
+          <div class="card-block create-wallet">
+            <div class="card-image flex-col-1-1-vertical-center"><img alt="" src="~@/assets/images/home/create-wallet.png"></div>
+            <div class="flex--column--space-between">
+              <div>
+                <div class="title">
+                  <h3>Create A New Wallet</h3>
+                </div>
+                <div class="card-content">
+                  <p class="color-white content-text">
+                    Generate your own unique Ethereum wallet. Receive a public address (0x...) and choose a method for access and recovery.
+                  </p>
+                </div>
+              </div>
+              <div class="card-content">
+                <p class="get-started button">
+                  Get Started
+                  <img alt="" src="~@/assets/images/icons/right-arrow.png"></p>
+              </div>
+            </div>
+          </div>
+        </a> <a class="nounderline">
+          <div class="card-block unlock-wallet">
+            <div class="card-image flex-col-1-1-vertical-center"><img alt="" src="~@/assets/images/home/unlock-wallet.png"></div>
+            <div class="flex--column--space-between">
+              <div>
+                <div class="title">
+                  <h3>Access My Wallet</h3>
+                </div>
+                <div class="card-content">
+                  <p class="color-white content-text">
+                    Connect to the blockchain using the wallet of your choice.
+                  </p>
+                  <ul>
+                    <li>Send and Swap ETH &amp; Tokens</li>
+                    <li>Sign &amp; Verify Messages</li>
+                    <li>Interact with Contracts, ENS, Dapps, and more!</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="card-content">
+                <p class="get-started button">
+                  Access Now
+                  <img alt="" src="~@/assets/images/icons/right-arrow.png"></p>
+              </div>
+            </div>
+          </div>
+        </a></div>
+    </div>
+  </div>
+</div>
+`;

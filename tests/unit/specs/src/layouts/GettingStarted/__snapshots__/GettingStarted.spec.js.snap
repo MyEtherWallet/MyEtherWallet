@@ -1,0 +1,168 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GettingStarted.vue should render correctly 1`] = `
+<div class="create-wallet-warnings">
+  <!---->
+  <div class="wrap">
+    <div class="nav-dots">
+      <p><i aria-hidden="true" class="fa fa-angle-up"></i></p>
+      <ul>
+        <li class="active"></li>
+        <li class=""></li>
+        <li class=""></li>
+        <li class=""></li>
+        <li class=""></li>
+        <li class=""></li>
+      </ul>
+      <p><i aria-hidden="true" class="fa fa-angle-down"></i></p>
+    </div>
+    <div class="what-is-mew cww cww1">
+      <div class="block-progressbar">
+        <dir class="block-progressbar__container">
+          <div class="block-progressbar__title">
+            About MyEtherWallet
+          </div>
+          <div class="block-progressbar__progressbar">
+            <div class="__20percent"></div>
+          </div>
+          <div class="block-progressbar__content">
+            <h4>What is MyEtherWallet?</h4>
+            <p>MyEtherWallet (MEW) is a free, open-source, client-side interface. MEW allows you to interact directly with the blockchain, while you remain in full control of your keys and funds.</p>
+            <p>Please think about this carefully. YOU are the one who is in control. MEW is not a bank or exchange. We don't hold your keys, your funds, or your information. This means we can't access accounts, recover keys, reset passwords, or reverse transactions.</p>
+            <div class="block-progressbar__warning">
+              WARNING: You And Only You Are Responsible For Your Security.
+            </div>
+          </div>
+        </dir>
+      </div>
+    </div>
+    <div class="what-is-mew cww cww2 positionBottom">
+      <div class="block-progressbar">
+        <dir class="block-progressbar__container">
+          <div class="block-progressbar__title">
+            About MyEtherWallet
+          </div>
+          <div class="block-progressbar__progressbar">
+            <div class="__40percent"></div>
+          </div>
+          <div class="block-progressbar__content">
+            <h4>Where are my funds stored?</h4>
+            <p>Your tokens and coins are not on MyEtherWallet. Just like they aren't on your hardware wallet, on MetaMask, or on blockchain explorers. All funds are on the blockchain itself. This means that we do not control them. We are a doorway that allows you to interact with the blockchain in a convenient way.</p>
+            <div class="block-progressbar__warning">
+              WARNING: MyEtherWallet Does Not Control Your Funds. You Do!
+            </div>
+            <div class="block-progressbar__sliding-switch-expender">
+              <div class="title">
+                <h4>What is Blockchain?</h4>
+                <div class="sliding-switch sliding-switch-white"><label class="switch"><input type="checkbox"> <span class="slider round"></span></label></div>
+              </div>
+              <!---->
+            </div>
+          </div>
+        </dir>
+      </div>
+    </div>
+    <div class="what-is-mew cww cww3 positionBottom">
+      <div class="block-progressbar">
+        <dir class="block-progressbar__container">
+          <div class="block-progressbar__title">
+            About Security
+          </div>
+          <div class="block-progressbar__progressbar">
+            <div class="__60percent"></div>
+          </div>
+          <div class="block-progressbar__content">
+            <h4>What if I lose my keys or password?</h4>
+            <i18n-stub tag="p" path="gettingStarted.lost-password.desc"><span slot="goneForever" alt="">GONE FOREVER</span></i18n-stub>
+            <ul>
+              <li>Write Your Keys And Password Down. Keep Them Safe.</li>
+              <li>Don't Store Your Keys And Password on Your Computer or Phone.</li>
+            </ul>
+            <div class="block-progressbar__warning">
+              Warning: We Can't Restore Your Keys or Reset Your Password
+            </div>
+          </div>
+        </dir>
+      </div>
+    </div>
+    <div class="what-is-mew cww cww4 positionBottom">
+      <div class="block-progressbar">
+        <dir class="block-progressbar__container">
+          <div class="block-progressbar__title">
+            About Security
+          </div>
+          <div class="block-progressbar__progressbar">
+            <div class="__80percent"></div>
+          </div>
+          <div class="block-progressbar__content">
+            <h4>Some helpful tips</h4>
+            <div class="tips">
+              <div>
+                <h5>Never give your Private Key to anyone</h5>
+                <p>That includes your keystore file and mnemonic phrase.</p>
+              </div>
+              <div>
+                <h5>Don't trust any free ETH</h5>
+                <p>If they're giving away free ETH, it's not real. If they email you saying they're us, it's not real. If they ask for your private key, it's not real.</p>
+              </div>
+              <div>
+                <h5>Bookmark our website</h5>
+                <i18n-stub tag="p" path="gettingStarted.helpful-tips.tip3.desc"><a slot="link" href="https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en" rel="noopener noreferrer" target="_blank">Chrome extension</a></i18n-stub>
+              </div>
+              <div>
+                <h5>Buy a hardware wallet</h5>
+                <i18n-stub tag="p" path="gettingStarted.helpful-tips.tip4.desc"><a slot="link" href="#/hardware-wallet-affiliates" rel="noopener noreferrer" target="_blank">here</a></i18n-stub>
+              </div>
+              <div>
+                <h5>Feel free to contact us</h5>
+                <i18n-stub tag="p" path="gettingStarted.helpful-tips.tip5.desc"><a slot="link" href="mailto:support@myetherwallet.com" rel="noopener noreferrer" target="_blank">support@myetherwallet.com</a></i18n-stub>
+              </div>
+            </div>
+          </div>
+        </dir>
+      </div>
+    </div>
+    <what-is-upside-stub progressbarvalue="__90percent" class="cww cww5 positionBottom"></what-is-upside-stub>
+    <div class="what-is-mew cww cww6 positionBottom">
+      <div class="block-progressbar">
+        <dir class="block-progressbar__container">
+          <div class="block-progressbar__title">
+            Congratulations!
+          </div>
+          <div class="block-progressbar__progressbar">
+            <div class="__100percent"></div>
+          </div>
+          <div class="block-progressbar__content text-cented"><img alt="" src="~@/assets/images/icons/drink.svg">
+            <i18n-stub tag="p" path="gettingStarted.congratulations.desc"><a slot="helpCenter" rel="noopener noreferrer" target="_blank" href="https://kb.myetherwallet.com">Help Center</a></i18n-stub>
+            <div class="done-button mid-round-button-green-filled-green-border">
+              Get Started
+            </div>
+          </div>
+        </dir>
+      </div>
+    </div>
+    <div class="create-wallet-warnings__footer-container">
+      <div class="create-wallet-warnings__continue-button">
+        <!---->
+        <standard-button-stub options="[object Object]" clickfunction="function () { [native code] }"></standard-button-stub>
+        <!---->
+      </div>
+      <div class="create-wallet-warnings__footer">
+        <div class="create-wallet-warnings__links"><a class="footer-color">
+            Home
+          </a> <a class="footer-color">
+            Privacy
+          </a> <a class="footer-color">
+            Terms
+          </a></div>
+        <div class="create-wallet-warnings__copyright">
+          <p class="footer-color">© 2019 MyEtherWallet. All Rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="next-button">
+    Next
+  </div>
+</div>
+`;

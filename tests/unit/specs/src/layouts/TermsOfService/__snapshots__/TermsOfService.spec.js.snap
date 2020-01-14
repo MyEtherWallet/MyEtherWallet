@@ -1,0 +1,188 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TermsOfService.vue should render correctly 1`] = `
+<div>
+  <div class="terms-and-conditions">
+    <div class="wrap">
+      <div class="page-container">
+        <div class="content-width-limit">
+          <div class="page-header">
+            <h1></h1>
+            <h6></h6> <br><br><br><br>
+            <!---->
+          </div>
+          <div class="content">
+            <h3>
+
+            </h3> <br>
+            <!----> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p>
+          </div> <br><br>
+          <div class="content">
+            <h3>
+
+            </h3> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <!---->
+          </div> <br><br>
+          <div class="content">
+            <h3>
+
+            </h3> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p>
+          </div> <br><br>
+          <div class="content">
+            <h3></h3> <br>
+            <!---->
+          </div> <br><br>
+          <div class="content">
+            <h3></h3> <br>
+            <p>
+
+            </p>
+          </div> <br><br>
+          <div class="content">
+            <h3></h3> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p>
+          </div> <br><br>
+          <div class="content">
+            <h3></h3> <br>
+            <p>
+
+            </p>
+          </div> <br><br>
+          <div class="content">
+            <h3></h3> <br>
+            <p>
+
+            </p>
+          </div> <br><br>
+          <div class="content">
+            <h3></h3> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p>
+          </div> <br><br>
+          <div class="content">
+            <h3></h3> <br>
+            <p>
+
+            </p> <br>
+            <p>
+
+            </p>
+          </div> <br><br>
+          <div class="content">
+            <h3></h3> <br>
+            <p>
+
+            </p>
+          </div> <br><br>
+          <div class="content">
+            <h3></h3> <br>
+            <!---->
+          </div> <br>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

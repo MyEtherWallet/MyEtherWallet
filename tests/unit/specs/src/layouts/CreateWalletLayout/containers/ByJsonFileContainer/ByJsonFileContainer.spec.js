@@ -5,6 +5,7 @@ import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessM
 import ByJsonBlock from '@/layouts/CreateWalletLayout/components/ByJsonBlock/ByJsonBlock.vue';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
+import * as createWallet from '@/translations/create-wallet/en_US.json';
 
 const showModal = sinon.stub();
 const hideModal = sinon.stub();
@@ -17,6 +18,11 @@ const BModalStub = {
     show: showModal,
     hide: hideModal
   }
+};
+const newObj = Object.assign({}, { createWallet: createWallet });
+
+const translator = function(keyname) {
+  return keyname.split('.').reduce((o, i) => o[i], newObj);
 };
 
 describe('ByJsonFileContainer.vue', () => {
@@ -45,38 +51,49 @@ describe('ByJsonFileContainer.vue', () => {
     });
   });
 
-  xit('should render correct contents data', () => {
-    const contentElements = wrapper.vm.$el.querySelectorAll(
-      '.contents .content-block'
-    );
-    for (const [i, contentElement] of contentElements.entries()) {
-      expect(contentElement.querySelector('h6').textContent.trim()).toEqual(
-        wrapper.vm.$data.contents[i].title
-      );
-      expect(contentElement.querySelector('p').textContent.trim()).toEqual(
-        wrapper.vm.$data.contents[i].desc
-      );
-    }
+  afterAll(() => {
+    wrapper.destroy();
   });
 
-  it('should render correct downloadable data', () => {
+  it('should render correctly', () => {
+    expect(wrapper).toMatchSnapshot();
+  });
+
+  it('should render correct contents data', () => {
+    const contentElements = wrapper.findAll('.contents .content-block');
+
+    contentElements.wrappers.forEach((contentElement, i) => {
+      const header = contentElement.find('h6').text();
+      const pTag = contentElement.find('p').text();
+      if (header && pTag) {
+        expect(header).toEqual(translator(wrapper.vm.$data.contents[i].title));
+        expect(pTag).toEqual(translator(wrapper.vm.$data.contents[i].desc));
+      }
+    });
+  });
+
+  it('should render correct downloadable data', async () => {
     wrapper.setData({ downloadable: true });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('.user-input-container span').exists()).toBe(true);
     wrapper.setData({ downloadable: false });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('.user-input-container span').exists()).toBe(false);
   });
 
-  it('should render correct walletJson data', () => {
+  it('should render correct walletJson data', async () => {
     const walletJson = 'walletJson';
     wrapper.setData({ walletJson });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper.vm.$el.querySelector('.user-button a').getAttribute('href')
     ).toEqual(walletJson);
   });
 
-  it('should render correct name data', () => {
+  it('should render correct name data', async () => {
     const name = 'name';
     wrapper.setData({ name });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper.vm.$el.querySelector('.user-button a').getAttribute('download')
     ).toEqual(name);

@@ -44,6 +44,10 @@ describe('ManageFundsModal.vue', () => {
     wrapper.destroy();
   });
 
+  it('should render correctly', () => {
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('should render the correct data', () => {
     expect(wrapper.vm.$data.actionStep).toEqual(true);
     expect(wrapper.vm.$data.ethAmount).toEqual(0);
@@ -53,11 +57,13 @@ describe('ManageFundsModal.vue', () => {
   it('should set ethAmount and errMsg to null if manageFundsText differ', () => {
     wrapper.setData({ ethAmount: 3 });
     wrapper.setData({ errMsg: 'Amount higher than balance' });
+    expect(wrapper.vm.errMsg).toEqual('Amount higher than balance');
+    expect(wrapper.vm.ethAmount).toEqual(3);
     wrapper.setProps({ manageFundsText: 'Withdraw' });
-    wrapper.setProps({ manageFundsText: 'Add' });
-
-    expect(wrapper.vm.$data.ethAmount).toEqual(0);
-    expect(wrapper.vm.$data.errMsg).toEqual('');
+    wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.ethAmount).toEqual(0);
+      expect(wrapper.vm.errMsg).toEqual('');
+    });
   });
 
   it('should keep ethAmount and errMsg if manageFundsText the same', () => {
@@ -67,26 +73,28 @@ describe('ManageFundsModal.vue', () => {
     expect(wrapper.vm.$data.ethAmount).toEqual(3);
   });
 
-  it('should set the correct error message when value is 0', () => {
+  it('should set the correct error message when value is 0', async () => {
     const input = wrapper.find('input');
     input.setValue(0);
+    await wrapper.vm.$nextTick();
     expect(wrapper.vm.$data.errMsg).toEqual('Amount must be higher than 0');
   });
 
-  it('should set the correct error message when value is greater than account balance', () => {
+  it('should set the correct error message when value is greater than account balance', async () => {
     const input = wrapper.find('input');
 
     wrapper.setData({ account: { balance: 5 } });
     input.setValue(10);
+    await wrapper.vm.$nextTick();
     expect(wrapper.vm.$data.errMsg).toEqual('Amount higher than balance');
   });
 
-  it('should set the correct error message when value is greater than account balance', () => {
-    const input = wrapper.find('input');
-
-    wrapper.setProps({ manageFundsText: 'Withdraw' });
-    input.setValue(6);
-    expect(wrapper.vm.$data.errMsg).toEqual(
+  it('should set the correct error message when value is greater than subscription balance', async () => {
+    wrapper.setProps({ manageFundsText: 'Withdraw', availableBalanceEth: 5 });
+    await wrapper.vm.$nextTick();
+    wrapper.setData({ ethAmount: 7 });
+    await wrapper.vm.$nextTick();
+    expect(wrapper.vm.errMsg).toEqual(
       'Amount higher than subscription balance'
     );
   });

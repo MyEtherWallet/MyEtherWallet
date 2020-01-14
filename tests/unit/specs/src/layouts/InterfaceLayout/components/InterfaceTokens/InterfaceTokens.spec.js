@@ -54,46 +54,61 @@ describe('InterfaceTokens.vue', () => {
     });
   });
 
-  it('should render correct search data', () => {
+  afterAll(() => {
+    wrapper.destroy();
+  });
+
+  it('should render correctly', () => {
+    expect(wrapper).toMatchSnapshot();
+  });
+
+  it('should render correct search data', async () => {
     const search = 'search';
     wrapper.setData({ search });
-    expect(wrapper.vm.$el.querySelector('.search-block input').value).toEqual(
-      search
-    );
+    await wrapper.vm.$nextTick();
+    const input = wrapper.find('.search-block input').element.value;
+    expect(input).toEqual(search);
   });
 
-  xit('should render correct customTokens data', () => {
+  it('should render correct customTokens data', () => {
     wrapper.setData({ customTokens });
 
-    const tableElement = wrapper.vm.$el.querySelectorAll(
-      '.token-table-container table'
-    )[0];
-    const trElements = tableElement.querySelectorAll('tr');
-
-    for (const [i, trElement] of trElements.entries()) {
-      expect(trElement.querySelectorAll('td')[0].textContent.trim()).toEqual(
-        customTokens[i].name
-      );
-      expect(trElement.querySelectorAll('td')[1].textContent.trim()).toEqual(
-        String(customTokens[i].balance)
-      );
-    }
+    const tableElement = wrapper.findAll('.token-table-container table').at(0);
+    const trElements = tableElement.findAll('tr');
+    trElements.wrappers.forEach((trElement, i) => {
+      expect(
+        trElement
+          .findAll('td')
+          .at(0)
+          .element.text()
+      ).toEqual(customTokens[i].name);
+      expect(
+        trElement
+          .findAll('td')
+          .at(1)
+          .element.text()
+      ).toEqual(String(customTokens[i].balance));
+    });
   });
 
-  xit('should render correct localTokens data', () => {
+  it('should render correct localTokens data', () => {
     wrapper.setData({ localTokens });
-    const tableElement = wrapper.vm.$el.querySelectorAll(
-      '.token-table-container table'
-    )[1];
-    const trElements = tableElement.querySelectorAll('tr');
-    for (const [i, trElement] of trElements.entries()) {
-      expect(trElement.querySelectorAll('td')[0].textContent.trim()).toEqual(
-        localTokens[i].name
-      );
-      expect(trElement.querySelectorAll('td')[1].textContent.trim()).toEqual(
-        String(localTokens[i].balance)
-      );
-    }
+    const tableElement = wrapper.findAll('.token-table-container table').at(1);
+    const trElements = tableElement.findAll('tr');
+    trElements.wrappers.forEach((trElement, i) => {
+      expect(
+        trElement
+          .findAll('td')
+          .at(0)
+          .element.text()
+      ).toEqual(localTokens[i].name);
+      expect(
+        trElement
+          .findAll('td')
+          .at(1)
+          .element.text()
+      ).toEqual(String(localTokens[i].balance));
+    });
   });
 
   describe('InterfaceTokens.vue Methods', () => {
@@ -101,5 +116,9 @@ describe('InterfaceTokens.vue', () => {
       wrapper.vm.addTokenModal();
       expect(showModal.called).toBe(true);
     });
+  });
+
+  it('should dismount properly', () => {
+    expect(wrapper.destroy()).toBe(undefined);
   });
 });

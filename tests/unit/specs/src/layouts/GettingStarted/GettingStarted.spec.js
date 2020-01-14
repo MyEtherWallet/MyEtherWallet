@@ -34,46 +34,49 @@ describe('GettingStarted.vue', () => {
     });
   });
 
-  it('should render correct cwwCurrent data', () => {
+  it('should render correctly', () => {
+    expect(wrapper).toMatchSnapshot();
+  });
+
+  it('should render correct cwwCurrent data', async () => {
     expect(
       wrapper
         .findAll('ul li')
         .at(0)
         .classes()
-        .indexOf('active')
-    ).toBeGreaterThan(-1);
+    ).toContain('active');
     wrapper.setData({ cwwCurrent: 1 });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .findAll('ul li')
         .at(1)
         .classes()
-        .indexOf('active')
-    ).toBeGreaterThan(-1);
+    ).toContain('active');
     wrapper.setData({ cwwCurrent: 2 });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .findAll('ul li')
         .at(2)
         .classes()
-        .indexOf('active')
-    ).toBeGreaterThan(-1);
+    ).toContain('active');
     wrapper.setData({ cwwCurrent: 3 });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .findAll('ul li')
         .at(3)
         .classes()
-        .indexOf('active')
-    ).toBeGreaterThan(-1);
+    ).toContain('active');
     wrapper.setData({ cwwCurrent: 4 });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .findAll('ul li')
         .at(4)
         .classes()
-        .indexOf('active')
-    ).toBeGreaterThan(-1);
+    ).toContain('active');
   });
 
   it('should update cwwCurrent data when mouse wheel down', () => {

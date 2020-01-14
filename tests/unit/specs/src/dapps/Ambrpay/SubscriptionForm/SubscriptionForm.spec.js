@@ -38,6 +38,10 @@ describe('SubscriptionForm.vue', () => {
     wrapper.destroy();
   });
 
+  it('should render correctly', () => {
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('should be a vue instance', () => {
     expect(wrapper.isVueInstance).toBeTruthy();
   });
@@ -52,28 +56,28 @@ describe('SubscriptionForm.vue', () => {
     expect(wrapper.vm.$data.intervalErrMsg).toEqual('');
   });
 
-  it('should set an amount error message if sendAmount < 0.01', () => {
+  it('should set an amount error message if sendAmount < 0.01', async () => {
     const sendAmount = 0.001;
     wrapper.setData({ sendAmount });
-
+    await wrapper.vm.$nextTick();
     expect(wrapper.vm.$data.amountErrMsg).toEqual(
       'The minimum amount is 0.01 or greater'
     );
   });
 
-  it('should set an amount error message if sendAmount > account balance', () => {
+  it('should set an amount error message if sendAmount > account balance', async () => {
     const sendAmount = 1;
     wrapper.setData({ sendAmount });
-
+    await wrapper.vm.$nextTick();
     expect(wrapper.vm.$data.amountErrMsg).toEqual(
       'Amount higher than balance (including 1% automation fee)'
     );
   });
 
-  it('should set an interval error message if the number is invalid', () => {
+  it('should set an interval error message if the number is invalid', async () => {
     const intervalDays = '000';
     wrapper.setData({ intervalDays });
-
+    await wrapper.vm.$nextTick();
     expect(wrapper.vm.$data.intervalErrMsg).toEqual(
       'Please enter a correct number'
     );

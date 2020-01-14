@@ -57,42 +57,39 @@ describe('AddressBlock.vue', () => {
   });
 
   it('should render correct direction props', () => {
-    expect(
-      wrapper.vm.$el.querySelector('.identicon-container p').textContent.trim()
-    ).toEqual(capitalize(direction) + ' Address');
+    const container = wrapper.find('.identicon-container p').text();
+    expect(container).toEqual(capitalize(direction) + ' Address');
   });
 
-  it('should render correct currency props', () => {
-    wrapper.setProps({ tokenSymbol: '' });
-    expect(
-      wrapper.vm.$el.querySelector('.currency-type').textContent.trim()
-    ).toEqual(currency.toUpperCase());
+  it('should render correct currency props', async () => {
+    wrapper.setProps({ tokenSymbol: 'ETH' });
+    await wrapper.vm.$nextTick();
+    const textValue = wrapper.find('.currency-type').text();
+    expect(textValue.trim()).toEqual(currency.toUpperCase());
   });
 
   it('should render correct tokenTransferVal props', () => {
-    expect(
-      wrapper.vm.$el
-        .querySelector('.currency-amt')
-        .textContent.trim()
-        .indexOf(tokenTransferVal)
-    ).toBeGreaterThan(-1);
+    const textValue = wrapper
+      .find('.currency-amt')
+      .text()
+      .trim();
+    expect(textValue).toEqual(tokenTransferVal.trim());
   });
 
   it('should render correct tokenSymbol props', () => {
-    expect(
-      wrapper.vm.$el.querySelector('.currency-type').textContent.trim()
-    ).toEqual(tokenSymbol);
+    const textValue = wrapper.find('.currency-type').text();
+    expect(textValue).toEqual(tokenSymbol);
   });
 
-  it('should render correct value props', () => {
-    wrapper.setProps({ tokenTransferVal: '' });
-    const eth = web3.utils.fromWei(value, 'ether');
-    expect(
-      wrapper.vm.$el
-        .querySelector('.currency-amt')
-        .textContent.trim()
-        .indexOf(String(eth))
-    ).toBeGreaterThan(-1);
+  it('should render correct value props', async () => {
+    wrapper.setProps({ tokenTransferVal: '100' });
+    await wrapper.vm.$nextTick();
+    const eth = '100';
+    const textValue = wrapper
+      .find('.currency-amt')
+      .text()
+      .trim();
+    expect(textValue).toEqual(String(eth));
   });
 
   describe('AddressBlock.vue Methods', () => {});

@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NotFoundLayout.vue renders correctly 1`] = `
+<div class="not-found">
+  <div class="wrap">
+    <div class="page-container">
+      <div class="content-block">
+        <div class="block-title">404</div>
+        <div class="block-text"></div>
+        <div class="ailien-spaceship"><img src="~@/assets/images/icons/alien-spaceship.svg" alt=""></div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
