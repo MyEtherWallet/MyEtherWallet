@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IssuesLogModal.vue should render correctly 1`] = `
+<div class="wrap">
+  <div class="modal-container">
+    <div hide-footer="" hide-header="" centered="" static="" lazy="" class="bootstrap-modal nopadding">
+      <div class="new-issue-log">
+        <div class="large-header">Oops</div>
+        <div class="sub-header">
+          Something went wrong. You can help us fix it by submitting a report about this error.
+        </div>
+        <div class="buttons mt-5">
+          <div class="button-block-text">
+            Do you want to inform MEW about this error?
+          </div>
+          <div class="mt-3 d-flex">
+            <div class="b-btn mr-1"></div>
+            <div class="b-btn" variant="outline-secondary"></div>
+          </div>
+          <!---->
+          <div class="mt-5 show-error-detail" aria-controls="collapse-error-detail" aria-expanded="false" role="button">
+            Show error details
+          </div>
+        </div>
+        <b-collapse-stub id="collapse-error-detail" tag="div" class="mt-2">
+          <b-card-stub bodytag="div" title="" titletag="h4" subtitle="" subtitletag="h6" subtitletextvariant="muted" headertag="div" footertag="div" tag="div"><textarea class="error-detail"></textarea></b-card-stub>
+        </b-collapse-stub>
+      </div>
+    </div>
+  </div>
+</div>
+`;
