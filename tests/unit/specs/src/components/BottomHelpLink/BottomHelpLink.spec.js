@@ -21,10 +21,11 @@ describe('BottomHelpLink.vue', () => {
     });
   });
 
-  it('should render correct issues props data', () => {
+  it('should render correct issues props data', async () => {
     expect(wrapper.find('.issues').exists()).toBe(true);
     const type = '';
     wrapper.setProps({ type });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('.issues').exists()).toBe(false);
   });
 

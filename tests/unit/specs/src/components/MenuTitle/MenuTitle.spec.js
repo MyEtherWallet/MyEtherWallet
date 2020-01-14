@@ -24,8 +24,9 @@ describe('MenuTitle.vue', () => {
     });
   });
 
-  it('should render correct title props', () => {
+  it('should render correct title props', async () => {
     wrapper.setData({ title });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper.vm.$el.querySelector('.the-title').textContent.trim()
     ).toEqual(title);
