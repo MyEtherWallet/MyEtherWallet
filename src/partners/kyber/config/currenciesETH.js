@@ -395,6 +395,60 @@ const KyberCurrenciesETH = {
     decimals: 18,
     contractAddress: '0xe5a3229ccb22b6484594973a03a3851dcd948756'
   },
+  WABI: {
+    symbol: 'WABI',
+    name: 'WaBi',
+    decimals: 18,
+    contractAddress: '0x286bda1413a2df81731d4930ce2f862a35a609fe'
+  },
+  EDO: {
+    symbol: 'EDO',
+    name: 'Eidoo',
+    decimals: 18,
+    contractAddress: '0xced4e93198734ddaff8492d525bd258d49eb388e'
+  },
+  SUSD: {
+    symbol: 'SUSD',
+    name: 'Synth USD',
+    decimals: 18,
+    contractAddress: '0x57ab1ec28d129707052df4df418d58a2d46d5f51'
+  },
+  SPIKE: {
+    symbol: 'SPIKE',
+    name: 'Spiking',
+    decimals: 10,
+    contractAddress: '0xa7fc5d2453e3f68af0cc1b78bcfee94a1b293650'
+  },
+  SAN: {
+    symbol: 'SAN',
+    name: 'Santiment',
+    decimals: 18,
+    contractAddress: '0x7c5a0ce9267ed19b22f8cae653f198e3e8daf098'
+  },
+  USDS: {
+    symbol: 'USDS',
+    name: 'StableUSD',
+    decimals: 6,
+    contractAddress: '0xa4bdb11dc0a2bec88d24a3aa1e6bb17201112ebe'
+  },
+  NEXXO: {
+    symbol: 'NEXXO',
+    name: 'Nexxo',
+    decimals: 18,
+    contractAddress: '0x278a83b64c3e3e1139f8e8a52d96360ca3c69a3d'
+  },
+  EKG: {
+    symbol: 'EKG',
+    name: 'Ekon Gold',
+    decimals: 18,
+    contractAddress: '0x6a9b3e36436b7abde8c4e2e2a98ea40455e615cf'
+  },
+  ANT: {
+    symbol: 'ANT',
+    name: 'Aragon',
+    decimals: 18,
+    contractAddress: '0x960b236a07cf122663c4303350609a66a7b288c0'
+  },
   THISISADUMMYTOKEN: {
     symbol: 'THISISADUMMYTOKEN',
     name: 'For tests',

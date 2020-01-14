@@ -6,11 +6,10 @@ export default {
     contractAddress: '0x0e8d6b471e332f140e7d9dbb99e5e3822f728da6'
   },
   ANT: {
-    name: 'Aragon',
     symbol: 'ANT',
-    contractAddress: '0x960b236A07cf122663c4303350609A66A7B288C0',
+    name: 'Aragon',
     decimals: 18,
-    fixRateEnabled: true
+    contractAddress: '0x960b236a07cf122663c4303350609a66a7b288c0'
   },
   BAT: {
     symbol: 'BAT',
@@ -51,6 +50,25 @@ export default {
     contractAddress: '0x558ec3152e2eb2174905cd19aea4e34a23de9ad6',
     decimals: 18,
     fixRateEnabled: true
+  },
+  BUSD: {
+    name: 'Binance USD (BUSD)',
+    symbol: 'BUSD',
+    contractAddress: '0x4fabb145d64652a948d72533023f6e7a623c7c53',
+    decimals: 18,
+    fixRateEnabled: false
+  },
+  CVC: {
+    symbol: 'CVC',
+    name: 'Civic',
+    decimals: 8,
+    contractAddress: '0x41e5560054824ea6b0732e656e3ad64e20e94e45'
+  },
+  DAI: {
+    symbol: 'DAI',
+    name: 'DAI Stablecoin',
+    decimals: 18,
+    contractAddress: '0x6b175474e89094c44da98b954eedeac495271d0f'
   },
   DENT: {
     name: 'Dent',
@@ -131,13 +149,6 @@ export default {
     symbol: 'GUP',
     contractAddress: '0xf7b098298f7c69fc14610bf71d5e02c60792894c',
     decimals: 3,
-    fixRateEnabled: true
-  },
-  GUSD: {
-    name: 'Gemini Dollar',
-    symbol: 'GUSD',
-    contractAddress: '0x056fd409e1d7a124bd7017459dfea2f387b6d5cd',
-    decimals: 2,
     fixRateEnabled: true
   },
   HMQ: {
@@ -429,12 +440,6 @@ export default {
     decimals: 18,
     contractAddress: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'
   },
-  DAI: {
-    symbol: 'DAI',
-    name: 'DAI Stablecoin',
-    decimals: 18,
-    contractAddress: '0x6b175474e89094c44da98b954eedeac495271d0f'
-  },
   SNT: {
     symbol: 'SNT',
     name: 'Status Network',
@@ -512,12 +517,6 @@ export default {
     name: 'Bluzelle',
     decimals: 18,
     contractAddress: '0x5732046a883704404f284ce41ffadd5b007fd668'
-  },
-  CVC: {
-    symbol: 'CVC',
-    name: 'Civic',
-    decimals: 8,
-    contractAddress: '0x41e5560054824ea6b0732e656e3ad64e20e94e45'
   },
   POE: {
     symbol: 'POE',
@@ -674,5 +673,53 @@ export default {
     name: 'Receive Access Ecosystem',
     decimals: 18,
     contractAddress: '0xe5a3229ccb22b6484594973a03a3851dcd948756'
+  },
+  WABI: {
+    symbol: 'WABI',
+    name: 'WaBi',
+    decimals: 18,
+    contractAddress: '0x286bda1413a2df81731d4930ce2f862a35a609fe'
+  },
+  EDO: {
+    symbol: 'EDO',
+    name: 'Eidoo',
+    decimals: 18,
+    contractAddress: '0xced4e93198734ddaff8492d525bd258d49eb388e'
+  },
+  SUSD: {
+    symbol: 'SUSD',
+    name: 'Synth USD',
+    decimals: 18,
+    contractAddress: '0x57ab1ec28d129707052df4df418d58a2d46d5f51'
+  },
+  SPIKE: {
+    symbol: 'SPIKE',
+    name: 'Spiking',
+    decimals: 10,
+    contractAddress: '0xa7fc5d2453e3f68af0cc1b78bcfee94a1b293650'
+  },
+  SAN: {
+    symbol: 'SAN',
+    name: 'Santiment',
+    decimals: 18,
+    contractAddress: '0x7c5a0ce9267ed19b22f8cae653f198e3e8daf098'
+  },
+  USDS: {
+    symbol: 'USDS',
+    name: 'StableUSD',
+    decimals: 6,
+    contractAddress: '0xa4bdb11dc0a2bec88d24a3aa1e6bb17201112ebe'
+  },
+  NEXXO: {
+    symbol: 'NEXXO',
+    name: 'Nexxo',
+    decimals: 18,
+    contractAddress: '0x278a83b64c3e3e1139f8e8a52d96360ca3c69a3d'
+  },
+  EKG: {
+    symbol: 'EKG',
+    name: 'Ekon Gold',
+    decimals: 18,
+    contractAddress: '0x6a9b3e36436b7abde8c4e2e2a98ea40455e615cf'
   }
 };
