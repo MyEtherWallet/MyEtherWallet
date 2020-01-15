@@ -72,10 +72,17 @@
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <p :data-eth="ethDonationAddress" class="crypto-link">
-                    <img src="~@/assets/images/currency/eth.svg" alt />
-                    &nbsp;{{ $t('footer.donation.ether') }}
-                  </p>
+                  <div
+                    :data-eth="ethDonationAddress"
+                    class="crypto-link d-flex align-items-center"
+                  >
+                    <img
+                      class="mr-2"
+                      src="~@/assets/images/currency/eth.svg"
+                      alt
+                    />
+                    <div>{{ $t('footer.donation.ether') }}</div>
+                  </div>
                 </a>
 
                 <a
@@ -83,14 +90,17 @@
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <p
-                    class="crypto-link no-padding"
+                  <div
+                    class="crypto-link no-padding d-flex align-items-center"
                     data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
                   >
-                    <img src="~@/assets/images/currency/btc.svg" alt /> &nbsp;{{
-                      $t('footer.donation.bitcoin')
-                    }}
-                  </p>
+                    <img
+                      class="mr-2"
+                      src="~@/assets/images/currency/btc.svg"
+                      alt
+                    />
+                    <div>{{ $t('footer.donation.bitcoin') }}</div>
+                  </div>
                 </a>
               </div>
             </div>

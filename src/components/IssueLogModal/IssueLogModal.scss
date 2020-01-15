@@ -10,7 +10,7 @@
   background-repeat: no-repeat;
   background-size: 350px;
   background-position: right 0 bottom -140px;
-  padding: 20px 40px 40px 40px;
+  padding: 0 40px 40px 40px;
   & div,
   & label {
     font-family: Sans-Serif;
@@ -56,12 +56,12 @@
 }
 
 .error-detail {
-  overflow-x: auto;
-  overflow-y: auto;
-  max-height: 100px;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  width: 100%;
+  height: 150px;
+  border: 0;
+  color: black;
+  font-size: 12px;
+  resize: none;
 }
 
 .button-block {

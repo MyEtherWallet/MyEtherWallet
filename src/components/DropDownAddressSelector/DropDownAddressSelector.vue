@@ -99,7 +99,8 @@
     <address-book-modal
       ref="addressBook"
       :selected-address="selectedAddress"
-      :title="$t('interface.address-book.add-new')"
+      :title="'interface.address-book.add-new'"
+      :modal-action="'add'"
     />
   </div>
 </template>
@@ -142,7 +143,6 @@ export default {
       selectedAddress: '',
       isValidAddress: false,
       dropdownOpen: false,
-      addresses: [],
       toAddressCheckMark: false,
       hexAddress: '',
       currentAddress: ''
@@ -156,6 +156,23 @@ export default {
         (this.isValidAddress &&
           this.selectedAddress.toLowerCase() !== this.hexAddress.toLowerCase())
       );
+    },
+    sortedAddressBook() {
+      const addrBk = this.addressBook;
+      return addrBk.sort((a, b) => {
+        a = a.nickname.toString().toLowerCase();
+        b = b.nickname.toString().toLowerCase();
+
+        return a < b ? -1 : a > b ? 1 : 0;
+      });
+    },
+    addresses() {
+      return this.currentAddress
+        ? [
+            { address: this.currentAddress, currency: BASE_CURRENCY },
+            ...this.sortedAddressBook
+          ]
+        : [...this.sortedAddressBook];
     }
   },
   watch: {
@@ -164,14 +181,6 @@ export default {
       this.isValidAddress = false;
       this.hexAddress = '';
       this.$refs.addressInput.value = '';
-    },
-    currentAddress(address) {
-      if (this.addresses.findIndex(addr => addr.address === address) === -1) {
-        this.updateAddresses(address);
-      }
-    },
-    addressBook() {
-      this.updateAddresses(this.currentAddress);
     },
     hexAddress() {
       this.validateAddress();
@@ -190,55 +199,6 @@ export default {
     debouncedInput: utils._.debounce(function(e) {
       this.selectedAddress = e.target.value;
     }, 300),
-    addAddress() {
-      const alreadyExists = Object.keys(this.addressBook).some(key => {
-        return this.addressBook[key].address === this.selectedAddress;
-      });
-
-      if (!this.selectedAddress) {
-        Toast.responseHandler(
-          this.$t('interface.address-book.cannot-add'),
-          Toast.ERROR
-        );
-        return;
-      } else if (!this.isValidAddress) {
-        Toast.responseHandler(
-          this.$t('ens.ens-resolver.invalid-eth-addr'),
-          Toast.ERROR
-        );
-        return;
-      } else if (alreadyExists) {
-        Toast.responseHandler(
-          this.$t('interface.address-book.already-exists'),
-          Toast.ERROR
-        );
-        return;
-      }
-
-      this.addressBook.push({
-        address: this.selectedAddress,
-        currency: 'ETH',
-        nickname: this.addressBook.length + 1
-      });
-
-      this.$store.dispatch('setAddressBook', this.addressBook);
-
-      Toast.responseHandler(
-        this.$t('interface.address-book.successfully-added'),
-        Toast.SUCCESS
-      );
-    },
-    updateAddresses(address) {
-      this.addresses = address
-        ? [
-            {
-              address: address,
-              currency: BASE_CURRENCY
-            },
-            ...this.addressBook
-          ]
-        : [...this.addressBook];
-    },
     copyToClipboard(ref) {
       ref.select();
       document.execCommand('copy');
