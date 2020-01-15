@@ -21,7 +21,7 @@
     "lint:tests": "eslint --fix tests/",
     "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true",
     "start": "npm run update:mainlists && npm run dev",
-    "update": "npm run update:packages && npm run update:lists",
+    "update": "npm run update:packages && npm run update:lists && npm run update:swap",
     "update:lists": "node fetchLists/index.js",
     "update:mainlists": "node fetchLists/fetchMainLists.js",
     "update:packages": "node package-test.js",
