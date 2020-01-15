@@ -1,8 +1,9 @@
-import normalise from '@/helpers/normalise';
-import { Misc } from '@/helpers';
 import { toChecksumAddress } from '@/helpers/addressUtils';
-import utils from 'web3-utils';
 import WAValidator from 'wallet-address-validator';
+import { Misc } from '@/helpers';
+import Resolution, { ResolutionError } from '@unstoppabledomains/resolution';
+import normalise from '@/helpers/normalise';
+import utils from 'web3-utils';
 import { EthereumTokens } from '@/partners';
 import { canValidate } from '@/partners/helpers';
 import MAValidator from 'multicoin-address-validator';
@@ -15,6 +16,7 @@ const AddrResolver = {
       ? vnode.context.$parent.currency
       : network.type.name;
     let address = '';
+    const resolution = new Resolution({ ens: { network: network } });
     vnode.context.$parent.$watch('$store.state.network', function(e) {
       network = e;
       parentCurrency = e.type.name;
@@ -34,36 +36,42 @@ const AddrResolver = {
     const removeElements = function() {
       const child = el.parentNode.parentNode.lastChild;
       Object.keys(child.classList).forEach(item => {
-        if (child.classList[item] === 'resolver-error') {
+        if (
+          child.classList[item] === 'resolver-error' ||
+          child.classList[item] === 'resolver-addr'
+        ) {
           vnode.elm.parentNode.parentNode.removeChild(child);
         }
       });
     };
-    const actualProcess = function(e) {
-      const errorPar = document.createElement('p');
-      errorPar.classList.add('resolver-error');
+    const actualProcess = async function(e) {
+      const _this = vnode.context;
+      if (e === '') {
+        removeElements();
+        _this.isValidAddress = false;
+        _this.hexAddress = '';
+      } else if (e.startsWith('0x')) {
+        if (!checkDarklist(e)) {
+          const addrCheck = WAValidator.validate(e, parentCurrency);
+          if (addrCheck) {
+            _this.isValidAddress = addrCheck;
+            _this.hexAddress = toChecksumAddress(e);
+            removeElements();
+          }
+        }
+      } else resolveDomain(e);
+    };
+
+    const resolveViaENS = function(domain) {
       const _this = vnode.context;
       const ens = _this.$store.state.ens;
-      const checkDarklist = function(addr) {
-        const isDarklisted = Misc.isDarklisted(addr);
-        if (isDarklisted.error) {
-          removeElements();
-          _this.isValidAddress = false;
-          _this.hexAddress = '';
-          errorPar.innerText =
-            isDarklisted.msg.length > 0
-              ? isDarklisted.msg
-              : _this.$t('ens.ens-resolver.address-reported-error');
-          el.parentNode.parentNode.appendChild(errorPar);
-          return true;
-        }
-        return false;
-      };
-      if (Misc.isValidENSorEtherAddress(e)) {
-        if (Misc.isValidETHAddress(e)) {
-          if (!checkDarklist(e)) {
+      const errorPar = document.createElement('p');
+      errorPar.classList.add('resolver-error');
+      if (Misc.isValidENSorEtherAddress(domain)) {
+        if (Misc.isValidETHAddress(domain)) {
+          if (!checkDarklist(domain)) {
             _this.isValidAddress = true;
-            _this.hexAddress = toChecksumAddress(e);
+            _this.hexAddress = toChecksumAddress(domain);
             removeElements();
           }
         } else {
@@ -72,10 +80,10 @@ const AddrResolver = {
             _this.isValidAddress = false;
             _this.hexAddress = '';
             // eslint-disable-next-line
-            errorPar.innerText = _this.$t('ens.ens-resolver.no-resolver', { network: network.type.name[0]});
+            errorPar.innerText = _this.$t('ens.ens-resolver.no-resolver', { network: network.type.name[0] });
             el.parentNode.parentNode.appendChild(errorPar);
           } else {
-            getMultiCoinAddress(ens, normalise(e), parentCurrency)
+            getMultiCoinAddress(ens, normalise(domain), parentCurrency)
               .then(address => {
                 if (!checkDarklist(address)) {
                   removeElements();
@@ -94,7 +102,7 @@ const AddrResolver = {
                   EthereumTokens[parentCurrency]
                 ) {
                   ens
-                    .resolver(normalise(e))
+                    .resolver(normalise(domain))
                     .addr()
                     .then(address => {
                       if (!checkDarklist(address)) {
@@ -108,7 +116,7 @@ const AddrResolver = {
                     .catch(() => {
                       removeElements();
                       // eslint-disable-next-line
-                    errorPar.innerText = _this.$t('ens.ens-resolver.network-not-found', { network: network.type.name[0]});
+                      errorPar.innerText = _this.$t('ens.ens-resolver.network-not-found', { network: network.type.name[0] });
                       _this.isValidAddress = false;
                       _this.hexAddress = '';
                       vnode.elm.parentNode.parentNode.appendChild(errorPar);
@@ -116,7 +124,7 @@ const AddrResolver = {
                 } else {
                   removeElements();
                   // eslint-disable-next-line
-                    errorPar.innerText = _this.$t('ens.ens-resolver.network-not-found', { network: network.type.name[0]});
+                  errorPar.innerText = _this.$t('ens.ens-resolver.network-not-found', { network: network.type.name[0] });
                   _this.isValidAddress = false;
                   _this.hexAddress = '';
                   vnode.elm.parentNode.parentNode.appendChild(errorPar);
@@ -124,34 +132,34 @@ const AddrResolver = {
               });
           }
         }
-      } else if (e !== '') {
-        const isValid = WAValidator.validate(e, parentCurrency);
+      } else if (domain !== '') {
+        const isValid = WAValidator.validate(domain, parentCurrency);
         if (isValid) {
           _this.isValidAddress = isValid;
           _this.hexAddress =
-            parentCurrency === 'ETH' ? toChecksumAddress(e) : e;
+            parentCurrency === 'ETH' ? toChecksumAddress(domain) : domain;
         } else {
           if (canValidate(parentCurrency)) {
-            const isValid = MAValidator.validate(e, parentCurrency);
+            const isValid = MAValidator.validate(domain, parentCurrency);
             if (isValid) {
               _this.isValidAddress = isValid;
-              _this.hexAddress = e;
+              _this.hexAddress = domain;
             } else {
               _this.isValidAddress = false;
               _this.hexAddress = '';
               removeElements();
 
-              if (e.length > 0) {
+              if (domain.length > 0) {
                 if (
                   parentCurrency === 'ETH' &&
-                  (e.length !== 42 || !utils.isHexStrict(e))
+                  (domain.length !== 42 || !utils.isHexStrict(domain))
                 ) {
                   errorPar.innerText = _this.$t(
                     'ens.ens-resolver.invalid-eth-addr'
                   );
                 } else if (
                   parentCurrency === 'ETH' &&
-                  !utils.checkAddressChecksum(e)
+                  !utils.checkAddressChecksum(domain)
                 ) {
                   errorPar.innerText = _this.$t(
                     'ens.ens-resolver.addr-not-checksummed'
@@ -166,7 +174,6 @@ const AddrResolver = {
               } else {
                 errorPar.innerText = '';
               }
-
               el.parentNode.parentNode.appendChild(errorPar);
             }
           }
@@ -177,6 +184,62 @@ const AddrResolver = {
         _this.hexAddress = '';
         errorPar.innerText = '';
         el.parentNode.parentNode.appendChild(errorPar);
+      }
+    };
+
+    const checkDarklist = function(addr) {
+      const _this = vnode.context;
+      const messagePar = document.createElement('p');
+      const isDarklisted = Misc.isDarklisted(addr);
+      if (isDarklisted.error) {
+        removeElements();
+        _this.isValidAddress = false;
+        _this.hexAddress = '';
+        messagePar.innerText =
+          isDarklisted.msg.length > 0
+            ? isDarklisted.msg
+            : _this.$t('ens.unstoppableResolution.address-reported-error');
+        el.parentNode.parentNode.appendChild(messagePar);
+        return true;
+      }
+      return false;
+    };
+
+    const resolveDomain = async function(domain) {
+      const messagePar = document.createElement('p');
+      const _this = vnode.context;
+      try {
+        if (resolution.serviceName(domain) === 'ENS')
+          return resolveViaENS(domain);
+        const address = await resolution.addressOrThrow(domain, parentCurrency);
+        if (!checkDarklist(address)) {
+          _this.isValidAddress = true;
+          _this.hexAddress =
+            parentCurrency === 'ETH' ? toChecksumAddress(address) : address;
+          removeElements();
+          messagePar.classList.add('resolver-addr');
+          messagePar.innerText = _this.hexAddress;
+          el.parentNode.parentNode.appendChild(messagePar);
+        }
+      } catch (err) {
+        removeElements();
+        _this.isValidAddress = false;
+        _this.hexAddress = '';
+        messagePar.classList.add('resolver-error');
+        if (err instanceof ResolutionError) {
+          messagePar.innerText = _this.$t(
+            `ens.unstoppableResolution.${err.code}`,
+            {
+              domain,
+              method:
+                err.code != 'UnsupportedDomain'
+                  ? resolution.serviceName(domain)
+                  : '',
+              currencyticker: parentCurrency
+            }
+          );
+          el.parentNode.parentNode.appendChild(messagePar);
+        } else throw err;
       }
     };
   }
