@@ -163,7 +163,6 @@ const AddrResolver = {
         } catch (e) {
           if (e.message.includes('Missing validator for currency: ')) {
             _this.isValidAddress = true;
-            errorPar.classList.add('resolver-error');
             errorPar.innerText = _this.$t('swap.warning.unable-validate-addr', {
               currency: parentCurrency
             });
