@@ -146,7 +146,8 @@ describe('AlreadyOwnedENSContainer.vue', () => {
 
   it('should render multicoin section', () => {
     wrapper.setProps({
-      resolverMultiCoinSupport: true
+      resolverMultiCoinSupport: true,
+      hasAnyTxt: false
     });
     const container = wrapper.findAll('.content-container div');
     const items = Object.keys(supportedCoins);

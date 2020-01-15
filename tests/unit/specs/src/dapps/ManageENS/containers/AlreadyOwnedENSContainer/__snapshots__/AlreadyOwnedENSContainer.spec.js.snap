@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AlreadyOwnedENSContainer.vue renders correctly 1`] = `
+<div class="already-owned-container" deedowner="deedOwner" resolveraddress="resolverAddress">
+  <h3>hostName.tld is already owned.</h3>
+  <div class="content-container">
+    <p class="label">Labelhash(hostName):</p>
+    <p class="content">labelHash</p>
+  </div>
+  <div class="content-container">
+    <p class="label">Namehash(hostName.tld):</p>
+    <p class="content">nameHash</p>
+  </div>
+  <div class="content-container">
+    <p class="label">Owner:</p>
+    <p class="content">owner</p>
+  </div>
+  <div class="content-container" style="display: none;">
+    <h4>Multi-coin:</h4>
+    <div><span class="currency">ETH address:
+      </span> <span class="content">0xabcdefg</span></div>
+    <div><span class="currency">ETH address:
+      </span> <span class="content">0xabcdefg</span></div>
+  </div>
+  <div class="content-container" style="display: none;">
+    <h4>Text Records:</h4>
+    <div><span class="currency">email: </span> <span class="content">email123456</span></div>
+    <div><span class="currency">url: </span> <span class="content">url123456</span></div>
+    <div><span class="currency">avatar: </span> <span class="content">url123456</span></div>
+    <div><span class="currency">description: </span> <span class="content">string123456</span></div>
+    <div><span class="currency">notice: </span> <span class="content">string123456</span></div>
+    <div><span class="currency">keywords: </span> <span class="content">string123456</span></div>
+    <div><span class="currency">vnd.twitter: </span> <span class="content">string123456</span></div>
+    <div><span class="currency">vnd.github: </span> <span class="content">strin123456g</span></div>
+  </div>
+  <div class="owner-options">
+    <!---->
+  </div>
+  <interface-bottom-text-stub link="https://kb.myetherwallet.com" linktext="Help Center" question="Have any issues?"></interface-bottom-text-stub>
+</div>
+`;
