@@ -61,3 +61,21 @@
 .space-buffer {
   height: 150px;
 }
+
+.no-logon-content-block {
+  padding: 30px;
+
+  .login-button {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .get-wallet {
+    text-align: center;
+    padding: 10px;
+    font-size: 12px;
+    * {
+      font-size: 12px;
+    }
+  }
+}

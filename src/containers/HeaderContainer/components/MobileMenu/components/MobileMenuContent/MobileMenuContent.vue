@@ -24,6 +24,25 @@
       <mobile-network-block :block-number="blockNumber" />
       <interface-mobile-menu :close-menu="closeMenu" class="px-3" />
     </div>
+
+    <div v-if="!account.address" class="no-logon-content-block">
+      <router-link to="/access-my-wallet" @click.native="closeMenu">
+        <b-button variant="outline-primary" class="login-button">
+          <div class="font-reset">Login to access your wallet!</div>
+        </b-button>
+      </router-link>
+
+      <div class="get-wallet font-reset">
+        Don't have a wallet yet?
+        <router-link
+          class="font-reset"
+          to="/create-wallet"
+          @click.native="closeMenu"
+          >Get your wallet for free!</router-link
+        >
+      </div>
+    </div>
+
     <div class="all-menu-content-block">
       <div class="font-reset mb-4" @click="languageMenu">
         <i class="fa fa-language" aria-hidden="true"></i>
