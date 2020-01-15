@@ -213,6 +213,7 @@ export default {
           const controllerAddress = await this.ens
             .resolver(this.registrarTLD, ResolverAbi)
             .interfaceImplementer(permanentRegistrar.INTERFACE_CONTROLLER);
+          console.error('controllerAdd', controllerAddress);
           this.registrarControllerContract = new this.web3.eth.Contract(
             PermanentRegistrarControllerAbi,
             controllerAddress

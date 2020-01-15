@@ -31,7 +31,7 @@ describe('WalletOption.vue', () => {
     ).toEqual(text);
   });
 
-  it('should render correct selected props', () => {
+  it('should render correct selected props', async () => {
     expect(
       wrapper
         .find('.wallet-option-container')
@@ -40,6 +40,7 @@ describe('WalletOption.vue', () => {
     ).toBe(-1);
 
     wrapper.setProps({ selected: true });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .find('.wallet-option-container')

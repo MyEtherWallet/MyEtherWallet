@@ -91,7 +91,7 @@
   "maker-dai": "Maker DAI",
   "Vault": "Vault",
   "migration-contract-balance-below": "Not enough SAI 'old DAI' in the Maker Migration Contract to complete this migration. Please try again later or contact the maker foundation at integrate@makerdao.com",
-  "min-generate": "Minimum generate to ",
+  "min-generate": "Minimum generate to",
   "no-Vaults-to-migrate-found": "No Vaults found needing migration",
   "sai-to-dai": "Upgrade",
   "migrate": "Migrate",

@@ -21,8 +21,9 @@ describe('MobileMenuButton.vue', () => {
     });
   });
 
-  it('should render correct isMobileMenuOpen data', () => {
+  it('should render correct isMobileMenuOpen data', async () => {
     wrapper.setData({ isMobileMenuOpen: true });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .find('.menu-button')
@@ -30,6 +31,7 @@ describe('MobileMenuButton.vue', () => {
         .indexOf('menu-open')
     ).toBeGreaterThan(-1);
     wrapper.setData({ isMobileMenuOpen: false });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .find('.menu-button')
@@ -38,8 +40,9 @@ describe('MobileMenuButton.vue', () => {
     ).toBe(-1);
   });
 
-  it('should render correct ismenuopen props', () => {
+  it('should render correct ismenuopen props', async () => {
     wrapper.setProps({ ismenuopen: true });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .find('.menu-button')
@@ -47,6 +50,7 @@ describe('MobileMenuButton.vue', () => {
         .indexOf('menu-open')
     ).toBeGreaterThan(-1);
     wrapper.setProps({ ismenuopen: false });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .find('.menu-button')
@@ -56,8 +60,9 @@ describe('MobileMenuButton.vue', () => {
   });
 
   describe('MobileMenuButton.vue Methods', () => {
-    it('should change isMobileMenuOpen data when button clicked', () => {
+    it('should change isMobileMenuOpen data when button clicked', async () => {
       wrapper.find('.menu-button').trigger('click');
+      await wrapper.vm.$nextTick();
       expect(
         wrapper
           .find('.menu-button')
@@ -65,6 +70,7 @@ describe('MobileMenuButton.vue', () => {
           .indexOf('menu-open')
       ).toBeGreaterThan(-1);
       wrapper.find('.menu-button').trigger('click');
+      await wrapper.vm.$nextTick();
       expect(
         wrapper
           .find('.menu-button')

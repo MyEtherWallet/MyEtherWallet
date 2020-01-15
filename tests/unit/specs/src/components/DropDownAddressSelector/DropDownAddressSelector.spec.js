@@ -20,7 +20,7 @@ describe('DropDownAddressSelector.vue', () => {
   });
 
   beforeEach(() => {
-    shallowMount(DropDownAddressSelector, {
+    wrapper = shallowMount(DropDownAddressSelector, {
       localVue,
       i18n,
       store,

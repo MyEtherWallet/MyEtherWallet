@@ -34,9 +34,10 @@ describe('NotificationsContainer.vue', () => {
     });
   });
 
-  it('should render correct unreadCount', () => {
+  it('should render correct unreadCount', async () => {
     expect(wrapper.find('.notification-dot').isVisible()).toBe(false);
     wrapper.setData({ unreadCount: 1, detailsShown: false });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('.notification-dot').isVisible()).toBe(true);
   });
 

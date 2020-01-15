@@ -32,31 +32,35 @@ describe('StandardDropdown.vue', () => {
     ).toEqual(inputPlaceholder);
   });
 
-  it('should render correct chosenValue data', () => {
+  it('should render correct chosenValue data', async () => {
     expect(wrapper.find('.placeholder').exists()).toBe(true);
     const chosenValue = 'chosenValue';
     wrapper.setData({ chosenValue });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper.vm.$el.querySelector('.dropdown-button p').textContent.trim()
     ).toEqual(chosenValue);
     expect(wrapper.find('.placeholder').exists()).toBe(false);
   });
 
-  it('should render correct search data', () => {
+  it('should render correct search data', async () => {
     const search = 'search';
     wrapper.setData({ search });
     wrapper.setData({ open: true });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper.vm.$el.querySelector('.dropdown-search-container input').value
     ).toEqual(search);
   });
 
-  it('should render correct open data', () => {
+  it('should render correct open data', async () => {
     let open = true;
     wrapper.setData({ open });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('.dropdown-search-container').exists()).toBe(true);
     open = false;
     wrapper.setData({ open });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('.dropdown-search-container').exists()).toBe(false);
   });
 

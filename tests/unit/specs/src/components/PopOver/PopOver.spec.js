@@ -50,8 +50,9 @@ describe('PopOver.vue', () => {
     ).toEqual(popcontent);
   });
 
-  it('should render correct popoverID', () => {
+  it('should render correct popoverID', async () => {
     wrapper.setData({ popovertype: 'A' });
+    await wrapper.vm.$nextTick();
     expect(wrapper.vm.$el.querySelector('.b-btn').textContent).toEqual(
       wrapper.vm.$data.popOverId
     );

@@ -40,9 +40,10 @@ describe('MobileNetworkBlock.vue', () => {
     });
   });
 
-  it('should render correct parsedNetwork data', () => {
+  it('should render correct parsedNetwork data', async () => {
     expect(wrapper.find('.fa-spinner').isVisible()).toBe(false);
     wrapper.setData({ parsedNetwork: '' });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('.fa-spinner').isVisible()).toBe(true);
   });
 
@@ -54,8 +55,9 @@ describe('MobileNetworkBlock.vue', () => {
     ).toEqual(network.service + '(' + network.type.name + ')');
   });
 
-  it('should render correct blockNumber props data', () => {
+  it('should render correct blockNumber props data', async () => {
     wrapper.setProps({ blockNumber: 100 });
+    await wrapper.vm.$nextTick();
     expect(wrapper.vm.$data.parsedNetwork).toBe(wrapper.props().blockNumber);
   });
 

@@ -39,7 +39,6 @@ describe('InterfaceTokens.vue', () => {
     store = baseSetup.store;
 
     Vue.config.warnHandler = () => {};
-    Vue.config.errorHandler = () => {};
   });
 
   beforeEach(() => {

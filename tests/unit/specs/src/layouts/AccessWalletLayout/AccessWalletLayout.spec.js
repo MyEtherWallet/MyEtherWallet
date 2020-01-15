@@ -4,6 +4,7 @@ import AccessWalletLayout from '@/layouts/AccessWalletLayout/AccessWalletLayout.
 import { Tooling } from '@@/helpers';
 import PriceBar from '@/layouts/AccessWalletLayout/components/PriceBar/PriceBar.vue';
 import BigNumber from 'bignumber.js';
+import { fetch } from 'whatwg-fetch';
 
 function roundPercentage(num) {
   return new BigNumber(num).toFixed(2);
@@ -22,6 +23,8 @@ describe('AccessWalletLayout.vue', () => {
   });
 
   beforeEach(() => {
+    global.fetch = fetch;
+
     wrapper = shallowMount(AccessWalletLayout, {
       localVue,
       i18n,

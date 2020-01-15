@@ -23,8 +23,9 @@ describe('VerifyMessageInput.vue', () => {
     });
   });
 
-  it('should render correct message data', () => {
+  it('should render correct message data', async () => {
     wrapper.setData({ message: 'message' });
+    await wrapper.vm.$nextTick();
     expect(wrapper.vm.$el.querySelector('.the-form textarea').value).toEqual(
       wrapper.vm.$data.message
     );
@@ -37,6 +38,7 @@ describe('VerifyMessageInput.vue', () => {
       })
     });
     wrapper.setData({ showMessage: true });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('.success-message').exists()).toBe(true);
 
     wrapper.setProps({
@@ -45,6 +47,7 @@ describe('VerifyMessageInput.vue', () => {
         address: 'address'
       })
     });
+    await wrapper.vm.$nextTick();
     expect(wrapper.vm.$data.message).toEqual(wrapper.props().signature);
 
     wrapper

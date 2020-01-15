@@ -22,15 +22,17 @@ describe('HardwarePasswordModal.vue', () => {
     });
   });
 
-  it('should render correct error data', () => {
+  it('should render correct error data', async () => {
     const error = 'error';
     wrapper.setData({ error });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('p.error').text()).toEqual(error);
   });
 
-  it('should render correct password data', () => {
+  it('should render correct password data', async () => {
     const password = 'password';
     wrapper.setData({ password });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper.vm.$el.querySelector('.input-container input').value
     ).toEqual(password);

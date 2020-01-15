@@ -98,8 +98,8 @@ describe('CustomerSupport.vue', () => {
 
   it('should render correct noIcon props', async () => {
     expect(wrapper.find('.support-content').classes()).toContain('with-icon');
-    await wrapper.vm.$nextTick();
     wrapper.setProps({ noIcon: true });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('.support-content').classes()).toContain(
       'without-icon'
     );

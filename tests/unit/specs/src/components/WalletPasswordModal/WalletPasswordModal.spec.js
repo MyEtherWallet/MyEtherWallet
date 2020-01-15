@@ -48,8 +48,9 @@ describe('WalletPasswordModal.vue', () => {
     });
   });
 
-  it('should render correct passphrase data', () => {
+  it('should render correct passphrase data', async () => {
     wrapper.setData({ passphrase: 'passphrase' });
+    await wrapper.vm.$nextTick();
     const passphrase = wrapper.vm.$el
       .querySelector('.input-container input')
       .value.trim();

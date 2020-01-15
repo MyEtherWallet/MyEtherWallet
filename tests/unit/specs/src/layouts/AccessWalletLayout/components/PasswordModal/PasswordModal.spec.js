@@ -21,9 +21,10 @@ describe('PasswordModal.vue', () => {
     });
   });
 
-  it('should render password data', () => {
+  it('should render password data', async () => {
     const password = 'Strength1000!!!!AAAA***BB###';
     wrapper.setData({ password });
+    await wrapper.vm.$nextTick();
     const formPasswordValue = wrapper.vm.$el.querySelector(
       '.password-form input'
     ).value;

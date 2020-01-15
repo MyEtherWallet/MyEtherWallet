@@ -51,23 +51,25 @@ describe('FullWidthDropdownMenu.vue', () => {
     });
   });
 
-  it('should render correct title props', () => {
+  it('should render correct title props', async () => {
     const title = 'title';
     wrapper.setProps({ title });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper.vm.$el.querySelector('.the-title').textContent.trim()
     ).toEqual(title);
   });
 
-  it('should render correct popup props', () => {
+  it('should render correct popup props', async () => {
     const popup = 'popup';
     wrapper.setProps({ popup });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper.vm.$el.querySelector('.popover-content').textContent.trim()
     ).toEqual(popup);
   });
 
-  it('should render correct dropdownOpen data', () => {
+  it('should render correct dropdownOpen data', async () => {
     expect(
       wrapper
         .find('.contents-container')
@@ -75,6 +77,7 @@ describe('FullWidthDropdownMenu.vue', () => {
         .indexOf('opened')
     ).toBe(-1);
     wrapper.setData({ dropdownOpen: true });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .find('.contents-container')

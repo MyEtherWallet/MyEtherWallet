@@ -33,27 +33,32 @@ describe('InitialENSStateContainer.vue', () => {
     );
   });
 
-  it('should render correct localdomainName watch method', () => {
+  it('should render correct localdomainName watch method', async () => {
     wrapper.setData({ localDomainName: 'localDomainName' });
+    await wrapper.vm.$nextTick();
     expect(wrapper.emitted().domainNameChange).toBeTruthy();
   });
 
-  it('should render correct domainNameErr props', () => {
+  it('should render correct domainNameErr props', async () => {
     wrapper.setData({ domainNameErr: true });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('p.erroredMsg').isVisible()).toBe(true);
     wrapper.setData({ domainNameErr: false });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('p.erroredMsg').isVisible()).toBe(false);
   });
 
-  it('should show/hide contract loading warning according to contractInitiated flag', () => {
+  it('should show/hide contract loading warning according to contractInitiated flag', async () => {
     expect(wrapper.find('.contract-loading-warning').isVisible()).toBe(true);
     wrapper.setData({ contractInitiated: true });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('.contract-loading-warning').isVisible()).toBe(false);
   });
 
-  it('should show/hide spinner icon according to loading flag', () => {
+  it('should show/hide spinner icon according to loading flag', async () => {
     expect(wrapper.find('.fa-spinner').isVisible()).toBe(false);
     wrapper.setData({ loading: true });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('.fa-spinner').isVisible()).toBe(true);
   });
 
