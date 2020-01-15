@@ -280,7 +280,14 @@ export default {
     };
   },
   computed: {
-    ...mapState(['network', 'web3', 'account', 'gettingStartedDone', 'locale']),
+    ...mapState([
+      'network',
+      'web3',
+      'account',
+      'gettingStartedDone',
+      'locale',
+      'tempHide'
+    ]),
     showButtons() {
       if (
         this.address === null &&
@@ -329,6 +336,8 @@ export default {
     this.$eventHub.$on('open-settings', this.openSettings);
   },
   mounted() {
+    // Remove for next release
+    store.remove('neverReport');
     this.getCurrentLang();
 
     // On load, if page is not on top, apply small menu and show scroll top button
@@ -344,7 +353,7 @@ export default {
       let errorPop = store.get('errorPop') || 0;
       errorPop += 1;
       store.set('errorPop', errorPop);
-      if (store.get('neverReport')) {
+      if (this.tempHide) {
         resolve(false);
       } else {
         this.error = error;
