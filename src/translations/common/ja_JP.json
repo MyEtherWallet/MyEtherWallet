@@ -64,7 +64,7 @@
   "issue-log": {
     "error-text": "Something went wrong",
     "inform-error": "Do you want to inform MEW about this error?",
-    "never-show": "Never show again"
+    "hide-for-now": "Hide for now"
   },
   "wallet": {
     "create-new": "Create A New Wallet",
