@@ -152,6 +152,7 @@
   "to": "To",
   "ok": "OK",
   "buy-eth": "Buy ETH",
+  "dont-have-eth": "Don't have ETH? Buy ETH!",
   "security": "Security",
   "status": "Status",
   "time": "Time",

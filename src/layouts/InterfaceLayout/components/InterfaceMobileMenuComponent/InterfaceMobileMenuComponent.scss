@@ -1,1 +1,41 @@
 @import '~@/scss/GlobalVariables';
+
+* {
+  font-family: sans-serif;
+  user-select: none;
+}
+
+.menu-group {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 20px;
+  margin-top: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.03);
+
+  &:first-child {
+    border-top: 0;
+  }
+}
+
+.active {
+  color: black !important;
+  > p {
+    color: black !important;
+  }
+}
+
+.top-menu {
+  > p {
+    color: #c1c1c1;
+    font-size: 20px;
+    font-weight: 600;
+  }
+}
+
+.sub-menu {
+  > div {
+    color: #c1c1c1;
+    font-size: 15px;
+    font-weight: 600;
+  }
+}

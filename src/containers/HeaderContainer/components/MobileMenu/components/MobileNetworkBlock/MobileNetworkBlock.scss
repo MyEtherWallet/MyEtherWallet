@@ -4,20 +4,17 @@
   color: #383838;
 }
 
-.font-reset {
-  font-family: Verdana, Arial, Helvetica, sans-serif;
-}
-
 .mobile-info-block {
-  box-shadow: 0 0 10px #0000000f;
+  //box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   width: 100%;
-  background-color: #ffffff61;
+  //background-color: white;
+  background-color: white;
   border-radius: 20px;
-  padding: 10px 15px;
+  padding: 10px 20px;
 }
 
 .info-block-title {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 900;
 }
 
@@ -41,9 +38,9 @@
 
 .setting {
   font-size: 25px;
-  opacity: 0.7;
+  opacity: 1;
   cursor: pointer;
   &:active {
-    opacity: 1;
+    opacity: 0.7;
   }
 }

@@ -43,105 +43,28 @@
             <p>{{ $t('common.buy-eth') }}</p>
           </div>
         </a>
-        <mobile-menu-button
-          :ismenuopen="isMenuOpen"
-          @click.native="isMenuOpen = !isMenuOpen"
-        />
+        <mobile-menu-button :ismenuopen="false" @click.native="openMenu" />
       </div>
     </div>
     <!-- Mobile menu header (ENDS) -->
 
-    <!-- Mobile menu shadow backdrop (STARTS) -->
     <div
       :class="isMenuOpen ? 'menu-open' : ''"
       class="mobile-menu-shadow-backdrop"
     ></div>
-    <!-- Mobile menu shadow backdrop (ENDS) -->
 
-    <!-- ============================================================================================================================================= -->
-    <!-- ============================================================================================================================================= -->
     <div
       class="mobile-menu-content-container"
       :class="isMenuOpen ? 'menu-open' : ''"
     >
-      <mobile-menu-content v-if="account.address" :close-menu="closeMenu" />
-      111
-      <mobile-network-block :block-number="blockNumber" />
-      111
+      <mobile-menu-content
+        :close-menu="closeMenu"
+        :logout="logout"
+        :opensettings="opensettings"
+        :language-menu="languageMenuOpen"
+      />
+      <mobile-network-block v-show="false" :block-number="blockNumber" />
     </div>
-
-    <!-- ============================================================================================================================================= -->
-    <!-- ============================================================================================================================================= -->
-
-    <!-- Mobile menu contents (STARTS) -->
-    <div
-      :class="isMenuOpen ? 'menu-open' : ''"
-      class="mobile-menu-content--container"
-    >
-      <div class="mobile-menu-content">
-        <div v-if="account.address" class="block--container">
-          <mobile-network-block :block-number="blockNumber" />
-        </div>
-        <ul>
-          <li>
-            <router-link
-              to="/"
-              @click.native="
-                scrollTop();
-                isMenuOpen = false;
-              "
-            >
-              <div class="menu-link-block">
-                <div>{{ $t('common.home') }}</div>
-                <i class="fa fa-angle-right" aria-hidden="true"></i>
-              </div>
-            </router-link>
-          </li>
-          <li v-if="isHomePage && !isMewCx">
-            <router-link to="/#about-mew" @click.native="isMenuOpen = false">
-              <div class="menu-link-block">
-                <div>{{ $t('common.about') }}</div>
-                <i class="fa fa-angle-right" aria-hidden="true"></i>
-              </div>
-            </router-link>
-          </li>
-          <li v-if="isMewCx">
-            <router-link to="/#faqs" @click.native="isMenuOpen = false">
-              <div class="menu-link-block">
-                <div>{{ $t('common.faqs') }}</div>
-                <i class="fa fa-angle-right" aria-hidden="true"></i>
-              </div>
-            </router-link>
-          </li>
-          <li>
-            <div
-              class="menu-link-block"
-              @click="langSelectorOpen = !langSelectorOpen"
-            >
-              <div>{{ $t('interface.language') }}</div>
-              <div class="selected-lang">
-                <div>{{ currentLang }}</div>
-                <img
-                  :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
-                  alt
-                />
-              </div>
-              <i class="fa fa-angle-right" aria-hidden="true"></i>
-            </div>
-          </li>
-          <li v-if="account.address">
-            <div class="menu-link-block" @click="opensettings">
-              <div>{{ $t('interface.settings') }}</div>
-              <i class="fa fa-angle-right" aria-hidden="true"></i>
-            </div>
-          </li>
-        </ul>
-        <div v-if="account.address" class="logout-button" @click="logout">
-          <button>{{ $t('interface.logout') }}</button>
-        </div>
-      </div>
-    </div>
-    <!-- Mobile menu contents (ENDS) -->
   </div>
 </template>
 
@@ -213,6 +136,9 @@ export default {
     };
   },
   methods: {
+    languageMenuOpen() {
+      this.langSelectorOpen = !this.langSelectorOpen;
+    },
     getCurrentLang() {
       const storedLocale = this.supportedLanguages.find(item => {
         return item.langCode === this.locale;
@@ -222,6 +148,7 @@ export default {
       this.currentFlag = storedLocale.flag;
       this.currentLang = storedLocale.name;
     },
+
     langChange(data) {
       this.currentLang = data;
     },
@@ -240,8 +167,15 @@ export default {
         this.isOnTop = true;
       }
     },
+    openMenu() {
+      this.isMenuOpen = true;
+      const x = document.getElementsByTagName('BODY')[0];
+      x.classList.add('overflow--hidden');
+    },
     closeMenu() {
       this.isMenuOpen = false;
+      const x = document.getElementsByTagName('BODY')[0];
+      x.classList.remove('overflow--hidden');
     }
   }
 };
