@@ -15,7 +15,6 @@ const AddrResolver = {
       : network.type.name;
     let address = '';
     const resolution = new Resolution({ ens: { network: network } });
-    removeElements();
     vnode.context.$parent.$watch('$store.state.network', function(e) {
       network = e;
       parentCurrency = e.type.name;
@@ -30,17 +29,26 @@ const AddrResolver = {
       actualProcess(e);
     });
     const removeElements = function() {
-      const child = el.parentNode.parentNode.lastChild;
-      Object.keys(child.classList).forEach(item => {
-        if (
-          child.classList[item] === 'resolver-error' ||
-          child.classList[item] === 'resolver-addr'
-        ) {
-          vnode.elm.parentNode.parentNode.removeChild(child);
-        }
+      const children = el.parentNode.parentNode.children;
+      children.forEach((child, idx) => {
+        Object.keys(child.classList).forEach(item => {
+          if (
+            child.classList[item] === 'resolver-error' ||
+            child.classList[item] === 'resolver-addr'
+          ) {
+            vnode.elm.parentNode.parentNode.removeChild(
+              vnode.elm.parentNode.parentNode.childNodes[idx]
+            );
+          }
+        });
       });
     };
+    const appendElement = function(ele) {
+      removeElements();
+      vnode.elm.parentNode.parentNode.appendChild(ele);
+    };
     const actualProcess = async function(e) {
+      removeElements();
       const _this = vnode.context;
       if (e === '') {
         _this.isValidAddress = false;
@@ -69,7 +77,7 @@ const AddrResolver = {
           errorPar.innerText = _this.$t('ens.ens-resolver.no-resolver', {
             network: network.type.name[0]
           });
-          el.parentNode.parentNode.appendChild(errorPar);
+          appendElement(errorPar);
         } else {
           getMultiCoinAddress(ens, normalise(domain), parentCurrency)
             .then(address => {
@@ -77,7 +85,7 @@ const AddrResolver = {
                 _this.hexAddress = address;
                 _this.isValidAddress = true;
                 errorPar.innerText = address;
-                vnode.elm.parentNode.parentNode.appendChild(errorPar);
+                appendElement(errorPar);
               }
             })
             .catch(() => {
@@ -93,7 +101,7 @@ const AddrResolver = {
                       _this.hexAddress = toChecksumAddress(address);
                       _this.isValidAddress = true;
                       errorPar.innerText = address;
-                      vnode.elm.parentNode.parentNode.appendChild(errorPar);
+                      appendElement(errorPar);
                     }
                   })
                   .catch(() => {
@@ -102,9 +110,10 @@ const AddrResolver = {
                       'ens.ens-resolver.network-not-found',
                       { network: network.type.name[0] }
                     );
+
                     _this.isValidAddress = false;
                     _this.hexAddress = '';
-                    vnode.elm.parentNode.parentNode.appendChild(errorPar);
+                    appendElement(errorPar);
                   });
               } else {
                 // eslint-disable-next-line
@@ -114,7 +123,7 @@ const AddrResolver = {
                 );
                 _this.isValidAddress = false;
                 _this.hexAddress = '';
-                vnode.elm.parentNode.parentNode.appendChild(errorPar);
+                appendElement(errorPar);
               }
             });
         }
@@ -148,7 +157,7 @@ const AddrResolver = {
           } else {
             errorPar.innerText = '';
           }
-          el.parentNode.parentNode.appendChild(errorPar);
+          appendElement(errorPar);
         }
       }
     };
@@ -164,7 +173,7 @@ const AddrResolver = {
           isDarklisted.msg.length > 0
             ? isDarklisted.msg
             : _this.$t('ens.unstoppableResolution.address-reported-error');
-        el.parentNode.parentNode.appendChild(messagePar);
+        appendElement(messagePar);
         return true;
       }
       return false;
@@ -188,13 +197,12 @@ const AddrResolver = {
               parentCurrency === 'ETH' ? toChecksumAddress(address) : address;
             messagePar.classList.add('resolver-addr');
             messagePar.innerText = _this.hexAddress;
-            el.parentNode.parentNode.appendChild(messagePar);
+            appendElement(messagePar);
           }
         } catch (err) {
           _this.isValidAddress = false;
           _this.hexAddress = '';
           messagePar.classList.add('resolver-error');
-          console.log(err);
           if (err instanceof ResolutionError) {
             messagePar.innerText = _this.$t(
               `ens.unstoppableResolution.${err.code}`,
@@ -207,7 +215,7 @@ const AddrResolver = {
                 currencyticker: parentCurrency
               }
             );
-            el.parentNode.parentNode.appendChild(messagePar);
+            appendElement(messagePar);
           } else throw err;
         }
       } else {
