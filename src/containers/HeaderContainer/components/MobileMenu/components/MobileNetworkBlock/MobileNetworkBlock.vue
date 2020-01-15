@@ -23,7 +23,7 @@
       </div>
 
       <div class="ml-auto" @click="networkModalOpen">
-        <i class="setting fa fa-cog" aria-hidden="true"></i>
+        <i class="setting fa fa-ellipsis-v" aria-hidden="true"></i>
       </div>
     </div>
 
