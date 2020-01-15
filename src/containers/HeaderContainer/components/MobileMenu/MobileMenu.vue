@@ -136,6 +136,7 @@ import MobileBalanceBlock from './components/MobileBalanceBlock';
 import MobileNetworkBlock from './components/MobileNetworkBlock';
 import MobileLanguageSelector from './components/MobileLanguageSelector';
 import { Misc } from '@/helpers';
+import supportedLang from '../../supportedLang';
 
 export default {
   components: {
@@ -169,11 +170,12 @@ export default {
       langSelectorOpen: false,
       currentLang: 'English',
       currentFlag: 'en',
-      isMewCx: isMewCx
+      isMewCx: isMewCx,
+      supportedLanguages: supportedLang
     };
   },
   computed: {
-    ...mapState(['account', 'blockNumber'])
+    ...mapState(['account', 'blockNumber', 'locale'])
   },
   watch: {
     $route(newVal) {
@@ -182,14 +184,28 @@ export default {
       } else {
         this.isHomePage = true;
       }
+    },
+    locale() {
+      this.getCurrentLang();
     }
   },
   mounted() {
+    this.getCurrentLang();
+
     window.onscroll = () => {
       this.onPageScroll();
     };
   },
   methods: {
+    getCurrentLang() {
+      const storedLocale = this.supportedLanguages.find(item => {
+        return item.langCode === this.locale;
+      });
+
+      this._i18n.locale = this.locale;
+      this.currentFlag = storedLocale.flag;
+      this.currentLang = storedLocale.name;
+    },
     langChange(data) {
       this.currentLang = data;
     },
