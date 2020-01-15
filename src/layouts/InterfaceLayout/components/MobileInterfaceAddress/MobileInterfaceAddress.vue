@@ -19,7 +19,11 @@
           autocomplete="off"
         />
         <div class="address-end">
-          {{ address.substring(address.length - 4, address.length) }}
+          {{
+            address !== ''
+              ? address.substring(address.length - 4, address.length)
+              : ''
+          }}
         </div>
         <div class="buttons-container">
           <button @click="openQrcode">

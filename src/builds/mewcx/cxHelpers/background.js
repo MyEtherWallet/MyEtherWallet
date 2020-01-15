@@ -30,9 +30,11 @@ const networkChanger = items => {
     const networkProps = JSON.parse(items['defNetwork']);
     let network = {};
     if (networkProps.hasOwnProperty('url')) {
-      network = store.state.Networks[networkProps.key].find(actualNetwork => {
-        return actualNetwork.url === networkProps.url;
-      });
+      network = store.state.main.Networks[networkProps.key].find(
+        actualNetwork => {
+          return actualNetwork.url === networkProps.url;
+        }
+      );
 
       chrome.storage.sync.set({
         defNetwork: JSON.stringify({
@@ -41,14 +43,16 @@ const networkChanger = items => {
         })
       });
     } else {
-      network = store.state.Networks[networkProps.key].find(actualNetwork => {
-        return actualNetwork.service === networkProps.service;
-      });
+      network = store.state.main.Networks[networkProps.key].find(
+        actualNetwork => {
+          return actualNetwork.service === networkProps.service;
+        }
+      );
     }
     // eslint-disable-next-line
     if (!!network) {
-      store.dispatch('switchNetwork', network).then(() => {
-        store.dispatch('setWeb3Instance', network.url).then(() => {
+      store.dispatch('main/switchNetwork', network).then(() => {
+        store.dispatch('main/setWeb3Instance', network.url).then(() => {
           store.state.main.web3.eth.net.getId().then(res => {
             chrome.storage.sync.set({
               defChainID: store.state.main.network.type.chainID,
@@ -59,7 +63,7 @@ const networkChanger = items => {
       });
     }
   } else {
-    store.dispatch('setWeb3Instance');
+    store.dispatch('main/setWeb3Instance');
     store.state.main.web3.eth.net.getId().then(res => {
       chrome.storage.sync.set({
         defChainID: store.state.main.network.type.chainID,
@@ -99,11 +103,11 @@ chrome.storage.onChanged.addListener(items => {
       );
       store
         .dispatch(
-          'switchNetwork',
+          'main/switchNetwork',
           network ? store.state.main.Networks[networkProps.key][0] : network
         )
         .then(() => {
-          store.dispatch('setWeb3Instance', network.url).then(() => {
+          store.dispatch('main/setWeb3Instance', network.url).then(() => {
             store.state.main.web3.eth.net.getId().then(res => {
               chrome.storage.sync.set({
                 defChainID: store.state.main.network.type.chainID,

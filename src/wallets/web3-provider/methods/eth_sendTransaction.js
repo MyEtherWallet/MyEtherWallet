@@ -12,13 +12,13 @@ import { Misc } from '@/helpers';
 const setEvents = (promiObj, tx, dispatch) => {
   promiObj
     .once('transactionHash', hash => {
-      dispatch('main/addNotification', ['Hash', tx.from, tx, hash]);
+      dispatch('addNotification', ['Hash', tx.from, tx, hash]);
     })
     .once('receipt', res => {
-      dispatch('main/addNotification', ['Receipt', tx.from, tx, res]);
+      dispatch('addNotification', ['Receipt', tx.from, tx, res]);
     })
     .on('error', err => {
-      dispatch('main/addNotification', ['Error', tx.from, tx, err]);
+      dispatch('addNotification', ['Error', tx.from, tx, err]);
     });
 };
 export default async (

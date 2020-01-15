@@ -1,14 +1,27 @@
 ### Bug
 
+- Remove permanent hide on issue modal [#1856](https://github.com/MyEtherWallet/MyEtherWallet/pull/1856)
+
+### Devop
+
+- Modularize store state [#1722][https://github.com/MyEtherWallet/MyEtherWallet/pull/1722]
+
+### Release v5.2.10
+
+### Bug
+
+- Avoid incompatible Node 12 [#1845](https://github.com/MyEtherWallet/MyEtherWallet/pull/1845)
 - Fix error log details size [#1837](https://github.com/MyEtherWallet/MyEtherWallet/pull/1837)
 - Hide other translations on mobile [#1834](https://github.com/MyEtherWallet/MyEtherWallet/pull/1834)
 - Fix translations for address book [#1833](https://github.com/MyEtherWallet/MyEtherWallet/pull/1833)
+- Fix checks/updates for address [#1842](https://github.com/MyEtherWallet/MyEtherWallet/pull/1842)
 
 ### Devop
 
 - Add EtherCore support [#1825](https://github.com/MyEtherWallet/MyEtherWallet/pull/1825)
 - Migrate Webchain to Mintme [#1824](https://github.com/MyEtherWallet/MyEtherWallet/pull/1824)
-- Modularize store state [#1722][https://github.com/MyEtherWallet/MyEtherWallet/pull/1722]
+- Update ETC explorrer links [#1855](https://github.com/MyEtherWallet/MyEtherWallet/pull/1855)
+- Update packages [#1852](https://github.com/MyEtherWallet/MyEtherWallet/pull/1852/files#diff-b9cfc7f2cdf78a7f4b91a753d10865a2R61)
 
 ### Release v5.2.9
 
@@ -16,7 +29,7 @@
 
 - Update error log modal design [#1816](https://github.com/MyEtherWallet/MyEtherWallet/pull/1816)
 - Update address book [#1795](https://github.com/MyEtherWallet/MyEtherWallet/pull/1795)
-- Update packages [#1852](https://github.com/MyEtherWallet/MyEtherWallet/pull/1852/files#diff-b9cfc7f2cdf78a7f4b91a753d10865a2R61)
+
 ### Devop
 
 - Release cleanup [#1817](https://github.com/MyEtherWallet/MyEtherWallet/pull/1817)

@@ -51,7 +51,7 @@
                   : ''
               "
               class="switch-network"
-              @click="switchNetwork(net)"
+              @click="locSwitchNetwork(net)"
             >
               {{ net.service }}
             </p>
@@ -73,7 +73,7 @@
               "
               class="switch-network custom-network-item"
             >
-              <p @click="switchNetwork(net)">
+              <p @click="locSwitchNetwork(net)">
                 {{ net.service }} {{ '(' + net.type.name + ')' }}
               </p>
               <i
@@ -414,7 +414,7 @@ export default {
     expendAuth() {
       this.$refs.authForm.classList.toggle('hidden');
     },
-    switchNetwork(network) {
+    locSwitchNetwork(network) {
       this.switchNetwork(network).then(() => {
         this.setWeb3Instance().then(() => {
           this.selectedNetworkName = network.type.name;

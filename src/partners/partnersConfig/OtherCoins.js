@@ -6,6 +6,13 @@ export default {
     explorer: 'https://adascan.net/transaction/[[txHash]]',
     fixRateEnabled: true
   },
+  ARK: {
+    symbol: 'ARK',
+    name: 'Ark',
+    addressLookup: 'https://explorer.ark.io/wallets/[[address]]',
+    explorer: 'https://explorer.ark.io/transaction/[[txHash]]',
+    fixRateEnabled: true
+  },
   BCD: {
     symbol: 'BCD',
     name: 'Bitcoin Diamond',
@@ -61,8 +68,8 @@ export default {
   DCR: {
     symbol: 'DCR',
     name: 'Decred',
-    addressLookup: 'https://mainnet.decred.org/address/[[address]]',
-    explorer: 'https://mainnet.decred.org/tx/[[txHash]]',
+    addressLookup: 'https://explorer.dcrdata.org/address/[[address]]',
+    explorer: 'https://explorer.dcrdata.org/tx/[[txHash]]',
     fixRateEnabled: true
   },
   DGB: {
@@ -102,6 +109,13 @@ export default {
     explorer: 'https://neotracker.io/tx/[[txHash]]',
     fixRateEnabled: true
   },
+  GRS: {
+    symbol: 'GRS',
+    name: 'Groestlcoin',
+    addressLookup: 'http://groestlsight.groestlcoin.org/address/[[address]]',
+    explorer: 'http://groestlsight.groestlcoin.org/tx/[[txHash]]',
+    fixRateEnabled: true
+  },
   KMD: {
     symbol: 'KMD',
     name: 'Komodo',
@@ -129,6 +143,13 @@ export default {
     addressLookup:
       'https://omniexplorer.info/lookupadd.aspx?address=[[address]]',
     explorer: 'https://omniexplorer.info/lookuptx.aspx?txid=[[txHash]]',
+    fixRateEnabled: true
+  },
+  NANO: {
+    symbol: 'NANO',
+    name: 'Nano (NANO)',
+    addressLookup: 'https://www.nanode.co/account/[[address]]',
+    explorer: 'https://www.nanode.co/block/[[txHash]]',
     fixRateEnabled: true
   },
   NEBL: {
@@ -180,6 +201,13 @@ export default {
     explorer: 'https://explorer.qtum.org/tx/[[txHash]]',
     fixRateEnabled: true
   },
+  RVN: {
+    symbol: 'RVN',
+    name: 'Ravencoin (RVN)',
+    addressLookup: 'https://explorer.ravencoin.world/address/[[address]]',
+    explorer: 'https://explorer.ravencoin.world/tx/[[txHash]]',
+    fixRateEnabled: false
+  },
   SMART: {
     symbol: 'SMART',
     name: 'SmartCash',
@@ -193,6 +221,13 @@ export default {
     addressLookup: 'https://chainz.cryptoid.info/strat/address.dws?[[address]]',
     explorer: 'https://chainz.cryptoid.info/strat/tx.dws?[[txHash]]',
     fixRateEnabled: true
+  },
+  TOMO: {
+    symbol: 'TOMO',
+    name: 'TomoChain (TOMO)',
+    addressLookup: 'https://scan.tomochain.com/address/[[address]]',
+    explorer: 'https://scan.tomochain.com/txs/[[txHash]]',
+    fixRateEnabled: false
   },
   TRX: {
     symbol: 'TRX',
@@ -214,7 +249,7 @@ export default {
     name: 'VeChainThor',
     addressLookup: 'https://explorer.vtho.net/#/accounts/[[address]]',
     explorer: 'https://explorer.vtho.net/#/transactions/[[txHash]]',
-    fixRateEnabled: false
+    fixRateEnabled: true
   },
   WAVES: {
     symbol: 'WAVES',
@@ -223,12 +258,26 @@ export default {
     explorer: 'http://wavesexplorer.com/tx/[[txHash]]',
     fixRateEnabled: true
   },
+  XMR: {
+    symbol: 'XMR',
+    name: 'Monero',
+    addressLookup: null,
+    explorer: 'https://xmrchain.net/tx/[[txHash]]',
+    fixRateEnabled: true
+  },
   XRC: {
     symbol: 'XRC',
     name: 'Bitcoin Rhodium',
     addressLookup: 'https://explorer.bitcoinrh.org/xrc/Address/[[address]]',
     explorer: 'https://explorer.bitcoinrh.org/xrc/tx/[[txHash]]',
     fixRateEnabled: false
+  },
+  XTZ: {
+    symbol: 'XTZ',
+    name: 'Tezos',
+    addressLookup: 'https://mvp.tezblock.io/account/[[address]]',
+    explorer: 'https://mvp.tezblock.io/transaction/[[txHash]]',
+    fixRateEnabled: true
   },
   XVG: {
     symbol: 'XVG',

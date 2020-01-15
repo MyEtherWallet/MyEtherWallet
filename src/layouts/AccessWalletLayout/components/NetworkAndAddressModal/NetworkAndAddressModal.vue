@@ -57,7 +57,7 @@
                       ? 'current-network'
                       : ''
                   "
-                  @click="switchNetwork(net)"
+                  @click="locSwitchNetwork(net)"
                 >
                   {{ net.service }}
                 </p>
@@ -165,7 +165,7 @@
               <button class="submit-button cancel" @click="showCustomPathInput">
                 {{ $t('common.cancel') }}
               </button>
-              <button class="submit-button submit" @click="addCustomPath">
+              <button class="submit-button submit" @click="locAddCustomPath">
                 {{ $t('accessWallet.path.add-custom') }}
               </button>
             </div>
@@ -336,9 +336,11 @@ export default {
     ...mapActions('main', [
       'switchNetwork',
       'setWeb3Instance',
-      'removeCustomPath'
+      'removeCustomPath',
+      'addCustomPath',
+      'decryptWallet'
     ]),
-    switchNetwork(network) {
+    locSwitchNetwork(network) {
       this.switchNetwork(network).then(() => {
         this.setWeb3Instance();
         this.currentIndex = 0;
@@ -373,18 +375,16 @@ export default {
         this.getPaths();
       });
     },
-    addCustomPath() {
+    locAddCustomPath() {
       const customPath = pathHelpers.checkCustomPath(this.customPath.path);
       if (customPath) {
         this.customPath.path = customPath;
-        this.$store
-          .dispatch('main/addCustomPath', {
-            label: this.customPath.label,
-            path: customPath
-          })
-          .then(() => {
-            this.getPaths();
-          });
+        this.addCustomPath({
+          label: this.customPath.label,
+          path: customPath
+        }).then(() => {
+          this.getPaths();
+        });
         this.showCustomPathInput(); // reset the path input
       } else {
         this.invalidPath = this.customPath;
@@ -433,8 +433,7 @@ export default {
       });
     }, 1000),
     unlockWallet() {
-      this.$store
-        .dispatch('main/decryptWallet', [this.currentWallet])
+      this.decryptWallet([this.currentWallet])
         .then(() => {
           if (this.wallet !== null) {
             if (!this.$route.path.split('/').includes('interface')) {

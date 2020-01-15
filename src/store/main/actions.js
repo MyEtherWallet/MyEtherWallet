@@ -330,6 +330,10 @@ const saveQueryVal = function({ commit }, val) {
   commit('SAVE_QUERY_VAL', val);
 };
 
+const toggleTempHide = function({ commit }) {
+  commit('TOGGLE_TEMP_HIDE');
+};
+
 export default {
   addNotification,
   addSwapNotification,
@@ -355,5 +359,6 @@ export default {
   saveQueryVal,
   setAddressBook,
   toggleSideMenu,
-  setLocale
+  setLocale,
+  toggleTempHide
 };
