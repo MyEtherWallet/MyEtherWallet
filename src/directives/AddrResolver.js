@@ -186,15 +186,18 @@ const AddrResolver = {
         domain.indexOf('.') > 0 &&
         /^[^-]*[^-]*\.(zil|crypto)$/.test(domain)
       ) {
+        const maincur =
+          parentCurrency === network.type.name || EthereumTokens[parentCurrency]
+            ? network.type.name
+            : parentCurrency;
         try {
-          const address = await resolution.addressOrThrow(
-            domain,
-            parentCurrency
-          );
+          const address = await resolution.addressOrThrow(domain, maincur);
           if (!checkDarklist(address)) {
             _this.isValidAddress = true;
             _this.hexAddress =
-              parentCurrency === 'ETH' ? toChecksumAddress(address) : address;
+              parentCurrency === network.type.name
+                ? toChecksumAddress(address)
+                : address;
             messagePar.classList.add('resolver-addr');
             messagePar.innerText = _this.hexAddress;
             appendElement(messagePar);
