@@ -96,20 +96,13 @@ describe('CustomerSupport.vue', () => {
     ).toEqual(wrapper.vm.$data.description);
   });
 
-  it('should render correct noIcon props', () => {
-    expect(
-      wrapper
-        .find('.support-content')
-        .classes()
-        .indexOf('with-icon')
-    ).toBeGreaterThan(-1);
+  it('should render correct noIcon props', async () => {
+    expect(wrapper.find('.support-content').classes()).toContain('with-icon');
+    await wrapper.vm.$nextTick();
     wrapper.setProps({ noIcon: true });
-    expect(
-      wrapper
-        .find('.support-content')
-        .classes()
-        .indexOf('without-icon')
-    ).toBeGreaterThan(-1);
+    expect(wrapper.find('.support-content').classes()).toContain(
+      'without-icon'
+    );
   });
 
   it('should render correct issueLinkout computed data', () => {
