@@ -46,11 +46,12 @@ import exp from './exp';
 import iolite from './iolite';
 import mix from './mix';
 import reosc from './reosc';
-import web from './web';
+import mintme from './mintme';
 import thundercore from './thundercore';
 import sum from './sum';
 import dexon from './dexon';
 import pht from './pht';
+import ere from './ere';
 
 export {
   akaremote,
@@ -101,9 +102,10 @@ export {
   rsktestpublic,
   tomo,
   ubq,
-  web,
+  mintme,
   thundercore,
   sum,
   dexon,
-  pht
+  pht,
+  ere
 };
