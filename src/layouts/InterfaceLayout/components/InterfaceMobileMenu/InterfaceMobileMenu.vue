@@ -1,5 +1,6 @@
 <template>
   <div class="interface-mobile-menu">
+    <h1>{{ title }}</h1>
     <div class="mobile-menu-container">
       <b-dropdown :text="title">
         <div
