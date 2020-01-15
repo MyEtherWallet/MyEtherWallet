@@ -22,9 +22,10 @@ describe('ExpandingOption.vue', () => {
     });
   });
 
-  it('should render correct title props', () => {
+  it('should render correct title props', async () => {
     const title = 'title';
     wrapper.setProps({ title });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper.vm.$el
         .querySelector('.title-bar-container .input-title')
@@ -32,7 +33,7 @@ describe('ExpandingOption.vue', () => {
     ).toEqual(title);
   });
 
-  it('should render correct hidebottomborder props', () => {
+  it('should render correct hidebottomborder props', async () => {
     expect(
       wrapper
         .find('.expanding-option')
@@ -40,6 +41,7 @@ describe('ExpandingOption.vue', () => {
         .indexOf('hide-bottom-border')
     ).toBe(-1);
     wrapper.setProps({ hidebottomborder: true });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .find('.expanding-option')
@@ -48,7 +50,7 @@ describe('ExpandingOption.vue', () => {
     ).toBeGreaterThan(-1);
   });
 
-  it('should render correct expanded data', () => {
+  it('should render correct expanded data', async () => {
     expect(
       wrapper
         .find('.contnet-container')
@@ -56,6 +58,7 @@ describe('ExpandingOption.vue', () => {
         .indexOf('expanded')
     ).toBe(-1);
     wrapper.setData({ expanded: true });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .find('.contnet-container')

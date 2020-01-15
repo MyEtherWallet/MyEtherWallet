@@ -22,7 +22,7 @@ describe('AccordionMenu.vue', () => {
     });
   });
 
-  it('should render correct greytitle props', () => {
+  it('should render correct greytitle props', async () => {
     expect(
       wrapper
         .find('.menu-title')
@@ -30,6 +30,7 @@ describe('AccordionMenu.vue', () => {
         .indexOf('grey-title')
     ).toBe(-1);
     wrapper.setProps({ greytitle: true });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .find('.menu-title')
@@ -38,22 +39,24 @@ describe('AccordionMenu.vue', () => {
     ).toBeGreaterThan(-1);
   });
 
-  it('should render correct number props', () => {
+  it('should render correct number props', async () => {
     wrapper.setProps({ number: String(100) });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper.vm.$el.querySelector('.title-number span').textContent.trim()
     ).toEqual(wrapper.props().number);
   });
 
-  it('should render correct title props', () => {
+  it('should render correct title props', async () => {
     const title = 'title';
     wrapper.setProps({ title });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper.vm.$el.querySelectorAll('.menu-title div')[1].textContent.trim()
     ).toEqual(title);
   });
 
-  it('should render correct isopen props', () => {
+  it('should render correct isopen props', async () => {
     expect(
       wrapper
         .find('.wrap')
@@ -61,6 +64,7 @@ describe('AccordionMenu.vue', () => {
         .indexOf('opened')
     ).toBe(-1);
     wrapper.setProps({ isopen: true });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .find('.wrap')
@@ -69,9 +73,10 @@ describe('AccordionMenu.vue', () => {
     ).toBeGreaterThan(-1);
   });
 
-  it('should render correct rightText props', () => {
+  it('should render correct rightText props', async () => {
     expect(wrapper.find('.edit-button').exists()).toBe(false);
     wrapper.setProps({ rightText: 'rightText' });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('.edit-button').exists()).toBe(true);
     expect(
       wrapper.vm.$el.querySelector('.edit-button').textContent.trim()

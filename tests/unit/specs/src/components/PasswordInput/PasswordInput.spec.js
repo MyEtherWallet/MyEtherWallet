@@ -23,7 +23,7 @@ describe('PasswordInput.vue', () => {
     });
   });
 
-  it('should render correct inputValue data', () => {
+  it('should render correct inputValue data', async () => {
     const options = {
       isTextarea: true,
       value: 'value'
@@ -32,17 +32,19 @@ describe('PasswordInput.vue', () => {
     const inputValue = 'inputValue';
 
     wrapper.setData({ inputValue });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper.vm.$el.querySelector('.input-container textarea').value
     ).toEqual(inputValue);
   });
 
-  it('should render correct borderClass computed property', () => {
+  it('should render correct borderClass computed property', async () => {
     const options = {
       passwordStrength: '1'
     };
 
     wrapper.setProps({ options });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .find('.input-container')
@@ -51,7 +53,7 @@ describe('PasswordInput.vue', () => {
     ).toBeGreaterThan(-1);
   });
 
-  it('should render correct options props', () => {
+  it('should render correct options props', async () => {
     const options = {
       title: 'title',
       popover: 'popover',
@@ -64,6 +66,7 @@ describe('PasswordInput.vue', () => {
       rightInputText: 'rightInputText'
     };
     wrapper.setProps({ options });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper.vm.$el.querySelector('.input-title').textContent.trim()
     ).toEqual(options.title);

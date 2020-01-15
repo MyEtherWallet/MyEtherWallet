@@ -31,15 +31,17 @@ describe('WhereAreMyFundsStored.vue', () => {
     ).toEqual(progressBarValue);
   });
 
-  it('validate address when dropdown is selected', () => {
+  it('validate address when dropdown is selected', async () => {
     const dropdownOpen = wrapper.find('.switch input');
     dropdownOpen.trigger('click');
+    await wrapper.vm.$nextTick();
     expect(
       wrapper.vm.$el
         .querySelector('.block-progressbar__sliding-switch-expender')
         .getElementsByClassName('content').length
     ).toEqual(1);
     dropdownOpen.trigger('click');
+    await wrapper.vm.$nextTick();
     expect(
       wrapper.vm.$el
         .querySelector('.block-progressbar__sliding-switch-expender')

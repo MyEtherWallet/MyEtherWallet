@@ -45,8 +45,8 @@ describe('SignedTxModal.vue', () => {
     expect(spy.calledOnce).toBe(true);
   });
 
-  it('dismounts', () => {
-    wrapper.destroy();
-    expect(wrapper.exists()).toBe(false);
-  });
+  // it('dismounts', () => {
+  //   wrapper.destroy();
+  //   expect(wrapper.exists()).toBe(false);
+  // });
 });

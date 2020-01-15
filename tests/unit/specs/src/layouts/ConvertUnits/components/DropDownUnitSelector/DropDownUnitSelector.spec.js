@@ -40,8 +40,9 @@ describe('DropDownUnitSelector.vue', () => {
     ).toBeGreaterThan(-1);
   });
 
-  it('should render correct dropdown-input-box data', () => {
+  it('should render correct dropdown-input-box data', async () => {
     wrapper.setData({ dropdownOpen: true });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .find('.dropdown-input-box')
@@ -49,6 +50,7 @@ describe('DropDownUnitSelector.vue', () => {
         .indexOf('dropdown-open')
     ).toBeGreaterThan(-1);
     wrapper.setData({ dropdownOpen: false });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .find('.dropdown-input-box')
@@ -57,9 +59,10 @@ describe('DropDownUnitSelector.vue', () => {
     ).toBe(-1);
   });
 
-  it('should render correct options props', () => {
+  it('should render correct options props', async () => {
     const options = ['option1', 'option2'];
     wrapper.setProps({ options });
+    await wrapper.vm.$nextTick();
     const liElements = wrapper.vm.$el.querySelectorAll(
       '.dropdown-list-box ul li'
     );

@@ -24,15 +24,17 @@ describe('CreateWalletInput.vue', () => {
     });
   });
 
-  it('should render correct value props', () => {
+  it('should render correct value props', async () => {
     const value = '100';
     wrapper.setProps({ value });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper.vm.$el.querySelector('.user-input-field input').value
     ).toEqual(value);
 
     const strengthClass = 'strengthClass';
     wrapper.setData({ strengthClass });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper
         .find('span')
@@ -49,15 +51,18 @@ describe('CreateWalletInput.vue', () => {
     expect(switcher.calledWith(param)).toBe(true);
     let password = { showPassword: true };
     wrapper.setData({ password });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('img.show-password').exists()).toBe(true);
     expect(wrapper.find('img.hide-password').exists()).toBe(false);
     password = { showPassword: false };
     wrapper.setData({ password });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('img.show-password').exists()).toBe(false);
     expect(wrapper.find('img.hide-password').exists()).toBe(true);
 
     const strength = 'strength';
     wrapper.setData({ strength });
+    await wrapper.vm.$nextTick();
     expect(
       wrapper.vm.$el.querySelector('.passwd-strength span').textContent.trim()
     ).toEqual(strength);

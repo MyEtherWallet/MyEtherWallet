@@ -23,9 +23,10 @@ describe('IssuesLogModal.vue', () => {
     });
   });
 
-  it('should render correct terms props', () => {
+  it('should render correct terms props', async () => {
     expect(wrapper.find('.terms').exists()).toBe(false);
     wrapper.setProps({ terms: true });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('.terms').exists()).toBe(true);
   });
 

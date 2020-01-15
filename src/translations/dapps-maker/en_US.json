@@ -20,7 +20,7 @@
   "payback": "Pay back",
   "max-available-gen": "Max. available to generate",
   "generate": "Generate",
-  "min-collat": "Minimum collateralize to",
+  "min-collat": "Minimum collateralize to {minDeposit} {symbol}",
   "max-generate": "Maximum generate to",
   "collateral": "Collateral",
   "current-price-info": "Current price information",
