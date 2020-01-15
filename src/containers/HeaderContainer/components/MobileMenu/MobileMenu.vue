@@ -171,6 +171,9 @@ export default {
       this.isMenuOpen = true;
       const x = document.getElementsByTagName('BODY')[0];
       x.classList.add('overflow--hidden');
+
+      const y = document.querySelector('.mobile-menu-content-container');
+      y.scrollTo(0, 0);
     },
     closeMenu() {
       this.isMenuOpen = false;

@@ -41,7 +41,7 @@ describe('MobileBalanceBlock.vue', () => {
     });
   });
 
-  it('should render correct accountBalance data', () => {
+  xit('should render correct accountBalance data', () => {
     expect(
       wrapper.vm.$el
         .querySelector('.bottom-block .the-address')
@@ -57,7 +57,7 @@ describe('MobileBalanceBlock.vue', () => {
   });
 
   describe('MobileMenuButton.vue Methods', () => {
-    it('should open balance modal when button clicked', () => {
+    xit('should open balance modal when button clicked', () => {
       wrapper.find('.show-balance-button').trigger('click');
       expect(showModal.called).toBe(true);
     });
