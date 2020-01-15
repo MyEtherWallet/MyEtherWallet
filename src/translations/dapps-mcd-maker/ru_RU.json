@@ -33,7 +33,7 @@
   "collat-and-generate": "Collateralize & Generate",
   "payback-title": "Pay back DAI",
   "payback-notice": "You might be requested to sign up to three transactions if there is not enough allowance in DAI and/or MKR to complete this transaction.",
-  "outstanding-dai": "Outstanding DAI Generated",
+  "outstanding-dai": "Неуплаченные генерированные DAI",
   "stability-fee-owed": "Stability Fee Owed",
   "liquidation-risk-multi": "Your new collateral ratio of {value}% may place this Vault at risk of liquidation",
   "liquidation-risk": " Your new collateral ratio of {value}% may place Vault at risk of liquidation.",
