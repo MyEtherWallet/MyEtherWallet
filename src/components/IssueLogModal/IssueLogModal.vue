@@ -98,9 +98,6 @@ export default {
     }
   },
   mounted() {
-    this.$refs.issuelog.$on('show', () => {
-      console.log(this.error);
-    });
     const popUpCount = store.get('errorPop') || 0;
     this.errorCount = popUpCount;
     if (this.errorCount >= 5) {
