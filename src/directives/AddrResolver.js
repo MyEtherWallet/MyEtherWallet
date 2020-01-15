@@ -4,7 +4,7 @@ import { toChecksumAddress } from '@/helpers/addressUtils';
 import utils from 'web3-utils';
 import WAValidator from 'wallet-address-validator';
 import { EthereumTokens } from '@/partners';
-import { canValidate } from '@/partners/helpers';
+import { canValidateMulticoin, canValidateCoin } from '@/partners/helpers';
 import MAValidator from 'multicoin-address-validator';
 import getMultiCoinAddress from '@/helpers/ENSMultiCoin.js';
 
@@ -124,14 +124,18 @@ const AddrResolver = {
               });
           }
         }
-      } else if (e !== '') {
-        const isValid = WAValidator.validate(e, parentCurrency);
-        if (isValid) {
+      } else if (
+        e !== '' &&
+        canValidateCoin(parentCurrency) &&
+        canValidateMulticoin(parentCurrency)
+      ) {
+        if (canValidateCoin(parentCurrency)) {
+          const isValid = WAValidator.validate(e, parentCurrency);
           _this.isValidAddress = isValid;
           _this.hexAddress =
             parentCurrency === 'ETH' ? toChecksumAddress(e) : e;
         } else {
-          if (canValidate(parentCurrency)) {
+          if (canValidateMulticoin(parentCurrency)) {
             const isValid = MAValidator.validate(e, parentCurrency);
             if (isValid) {
               _this.isValidAddress = isValid;

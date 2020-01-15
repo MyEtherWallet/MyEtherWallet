@@ -35,7 +35,7 @@ export default {
     'logout-warning-modal': LogoutWarningModal
   },
   computed: {
-    ...mapState('main', ['wallet'])
+    ...mapState('main', ['wallet', 'Networks'])
   },
   watch: {
     $route(to, from) {
@@ -55,7 +55,7 @@ export default {
         const networkProps = JSON.parse(item['defNetwork']);
         let network = {};
         if (networkProps.hasOwnProperty('url')) {
-          network = _self.$store.state.Networks[networkProps.key][0];
+          network = _self.Networks[networkProps.key][0];
           window.chrome.storage.sync.set(
             {
               defNetwork: JSON.stringify({
@@ -66,14 +66,12 @@ export default {
             () => {}
           );
         } else {
-          network = _self.$store.state.Networks[networkProps.key].find(
-            actualNetwork => {
-              return actualNetwork.service === networkProps.service;
-            }
-          );
+          network = _self.Networks[networkProps.key].find(actualNetwork => {
+            return actualNetwork.service === networkProps.service;
+          });
         }
-        _self.$store.dispatch('switchNetwork', network).then(() => {
-          _self.$store.dispatch('setWeb3Instance');
+        _self.switchNetwork(network).then(() => {
+          _self.setWeb3Instance();
         });
       } else {
         _self.setWeb3Instance();

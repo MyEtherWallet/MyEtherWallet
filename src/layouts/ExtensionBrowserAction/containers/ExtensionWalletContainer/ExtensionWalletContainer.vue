@@ -147,14 +147,11 @@ export default {
             return actualNetwork.service === networkProps.service;
           }
         );
-        this.$store
-          .dispatch(
-            'switchNetwork',
-            !network ? this.$store.state.Networks[networkProps.key][0] : network
-          )
-          .then(() => {
-            this.$store.dispatch('setWeb3Instance');
-          });
+        this.switchNetwork(
+          !network ? this.$store.state.Networks[networkProps.key][0] : network
+        ).then(() => {
+          this.setWeb3Instance();
+        });
       } else {
         this.setWeb3Instance();
       }

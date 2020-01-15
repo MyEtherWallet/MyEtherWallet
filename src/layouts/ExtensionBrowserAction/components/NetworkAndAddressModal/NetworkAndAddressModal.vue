@@ -56,7 +56,7 @@
                         ? 'current-network'
                         : ''
                     "
-                    @click="switchNetwork(net)"
+                    @click="locSwitchNetwork(net)"
                   >
                     {{ net.service }}
                   </p>
@@ -157,7 +157,10 @@
                   >
                     {{ $t('common.cancel') }}
                   </button>
-                  <button class="submit-button submit" @click="addCustomPath">
+                  <button
+                    class="submit-button submit"
+                    @click="localAddCustomPath"
+                  >
                     {{ $t('accessWallet.add-custom-path') }}
                   </button>
                 </div>
@@ -375,7 +378,7 @@ export default {
       'setWeb3Instance',
       'removeCustomPath'
     ]),
-    switchNetwork(network) {
+    locSwitchNetwork(network) {
       this.switchNetwork(network).then(() => {
         this.setWeb3Instance();
         this.currentIndex = 0;
@@ -414,18 +417,16 @@ export default {
         this.getPaths();
       });
     },
-    addCustomPath() {
+    localAddCustomPath() {
       const customPath = this.checkCustomPath(this.customPath.path);
       if (customPath) {
         this.customPath.path = customPath;
-        this.$store
-          .dispatch('main/addCustomPath', {
-            label: this.customPath.label,
-            path: customPath
-          })
-          .then(() => {
-            this.getPaths();
-          });
+        this.addCustomPath({
+          label: this.customPath.label,
+          path: customPath
+        }).then(() => {
+          this.getPaths();
+        });
         this.showCustomPathInput(); // reset the path input
       } else {
         this.invalidPath = this.customPath;

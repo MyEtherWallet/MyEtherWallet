@@ -37,7 +37,7 @@
                     <i v-if="neverShow" class="fa fa-check" />
                   </span>
                   <input name="terms" type="checkbox" />
-                  {{ $t('common.issue-log.never-show') }}
+                  {{ $t('common.issue-log.hide-for-now') }}
                 </label>
               </div>
             </div>
@@ -67,6 +67,7 @@
 
 <script>
 import store from 'store';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'IssueLogModal',
@@ -92,18 +93,22 @@ export default {
     };
   },
   watch: {
-    neverShow(newVal) {
-      store.set('neverReport', newVal);
+    neverShow() {
+      this.toggleTempHide();
     }
   },
   mounted() {
+    this.$refs.issuelog.$on('show', () => {
+      console.log(this.error);
+    });
     const popUpCount = store.get('errorPop') || 0;
     this.errorCount = popUpCount;
-    if (this.errorCount >= 10) {
+    if (this.errorCount >= 5) {
       this.showSkipper = true;
     }
   },
   methods: {
+    ...mapActions('main', ['toggleTempHide']),
     sendError(bool) {
       this.resolver(bool);
       this.$refs.issuelog.hide();

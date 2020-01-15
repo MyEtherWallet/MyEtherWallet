@@ -72,7 +72,7 @@
               <div class="cancel" @click="cancel">
                 {{ $t('common.cancel') }}
               </div>
-              <div class="proceed" @click="addCustomPath">
+              <div class="proceed" @click="locAddCustomPath">
                 {{ $t('accessWallet.path.add-custom') }}
               </div>
             </div>
@@ -189,7 +189,7 @@ export default {
     });
   },
   methods: {
-    ...mapActions('main', ['removeCustomPath']),
+    ...mapActions('main', ['removeCustomPath', 'addCustomPath']),
     remove(path, idx) {
       const mappedPaths = this.selectedApp.paths.filter((item, itemIdx) => {
         if (itemIdx !== idx) return item;
@@ -236,22 +236,20 @@ export default {
 
       this.apps = loc;
     },
-    addCustomPath() {
+    locAddCustomPath() {
       const customPath = pathHelpers.checkCustomPath(this.customPath);
       if (customPath) {
         this.selectedPath = {
           path: customPath,
           label: this.customLabel
         };
-        this.$store
-          .dispatch('main/addCustomPath', {
-            label: this.customLabel,
-            path: customPath
-          })
-          .then(() => {
-            this.setupCustomPaths();
-            this.selectedApp.paths.unshift(this.selectedPath);
-          });
+        this.addCustomPath({
+          label: this.customLabel,
+          path: customPath
+        }).then(() => {
+          this.setupCustomPaths();
+          this.selectedApp.paths.unshift(this.selectedPath);
+        });
       } else {
         Toast.responseHandler(
           this.$t('access-wallet.path.ivalid-custom'),

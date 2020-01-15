@@ -95,7 +95,7 @@
 
 <script>
 import { Toast } from '@/helpers';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import Blockie from '@/components/Blockie';
 
 export default {
@@ -132,7 +132,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['addressBook']),
+    ...mapState('main', ['addressBook']),
     isBtnDisabled() {
       if (
         this.modalAction === this.addressBookActions.EDIT &&
@@ -166,9 +166,10 @@ export default {
     });
   },
   methods: {
+    ...mapActions('main', ['setAddressBook']),
     removeContact() {
       this.addressBook.splice(this.currentIdx, 1);
-      this.$store.dispatch('setAddressBook', this.addressBook);
+      this.setAddressBook(this.addressBook);
       this.$refs.addressBookModal.hide();
     },
     getToAddress(obj) {
@@ -183,7 +184,7 @@ export default {
     updateContact() {
       this.addressBook[this.currentIdx].nickname = this.contactNickname;
 
-      this.$store.dispatch('setAddressBook', this.addressBook);
+      this.setAddressBook(this.addressBook);
 
       Toast.responseHandler(
         this.$t('interface.address-book.success-update'),
@@ -218,7 +219,7 @@ export default {
         nickname: this.contactNickname || this.addressBook.length + 1
       });
 
-      this.$store.dispatch('setAddressBook', this.addressBook);
+      this.setAddressBook(this.addressBook);
 
       this.contactAddress = '';
       this.contactNickname = '';
