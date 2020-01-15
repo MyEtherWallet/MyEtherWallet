@@ -1,3 +1,6 @@
+### Bug
+- Remove permanent hide on issue modal [#1856](https://github.com/MyEtherWallet/MyEtherWallet/pull/1856)
+
 ### Release v5.2.10
 
 ### Bug
