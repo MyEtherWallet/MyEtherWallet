@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WarningMessage.vue renders correctly 1`] = `
+<div class="warning-message">
+  <div class="left">⚠️</div>
+  <div class="right">
+    <p class="title">Not recommended</p>
+    <p class="message">
+      This is not a recommended way to access your wallet.
+      Due to the sensitivity of the information involved, these options should only be used in offline settings by experienced users.
+    </p>
+    <div class="link">
+      &gt; Read:
+      <a href="https://kb.myetherwallet.com/posts/offline/using-mew-offline/" target="_blank" rel="noopener noreferrer">Using MEW Offline</a></div>
+  </div>
+</div>
+`;

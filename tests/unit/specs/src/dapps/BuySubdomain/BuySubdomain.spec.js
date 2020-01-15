@@ -31,7 +31,15 @@ describe('BuySubdomain.vue', () => {
     });
   });
 
-  xit('should render correct knownRegistrarInstances data', () => {
+  afterAll(() => {
+    wrapper.destroy();
+  });
+
+  it('renders correctly', () => {
+    expect(wrapper).toMatchSnapshot();
+  });
+
+  it('should render correct knownRegistrarInstances data', () => {
     wrapper.find('.subdomain-input input').setValue('adsfasdf');
     const web3C = newWeb3.eth.Contract;
     const knownRegistrarInstances = {};
@@ -45,8 +53,6 @@ describe('BuySubdomain.vue', () => {
       JSON.stringify(wrapper.vm.$data.knownRegistrarInstances)
     );
   });
-
-  describe('BuySubdomain.vue Methods', () => {});
 
   it('should dismount properly', () => {
     expect(wrapper.destroy()).toBe(undefined);

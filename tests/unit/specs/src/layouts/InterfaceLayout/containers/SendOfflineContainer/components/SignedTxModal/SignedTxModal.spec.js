@@ -24,7 +24,8 @@ describe('SignedTxModal.vue', () => {
       attachToDocument: true,
       propsData: {
         rawTx: rawTx,
-        pathUpdate: spy()
+        pathUpdate: spy(),
+        signedTx: '{rawTransaction: "0xabcdefg12345"}'
       }
     });
 

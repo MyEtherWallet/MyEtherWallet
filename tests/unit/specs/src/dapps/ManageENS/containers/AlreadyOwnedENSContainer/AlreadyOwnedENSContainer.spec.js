@@ -19,7 +19,7 @@ const mockRouter = {
   push: push
 };
 
-xdescribe('AlreadyOwnedENSContainer.vue', () => {
+describe('AlreadyOwnedENSContainer.vue', () => {
   let localVue, i18n, wrapper, store;
   const labelHash = 'labelHash';
   const nameHash = 'nameHash';
@@ -28,6 +28,30 @@ xdescribe('AlreadyOwnedENSContainer.vue', () => {
   const resolverAddress = 'resolverAddress';
   const hostName = 'hostName';
   const tld = 'tld';
+  const supportedCoins = {
+    ETH: {
+      id: 60,
+      symbol: 'ETH',
+      value: '0xabcdefg'
+    },
+    ETC: {
+      id: 60,
+      symbol: 'ETH',
+      value: '0xabcdefg'
+    }
+  };
+  const supportedText = {
+    email: 'email123456',
+    url: 'url123456',
+    avatar: 'url123456',
+    description: 'string123456',
+    notice: 'string123456',
+    keywords: 'string123456',
+    'vnd.twitter': 'string123456',
+    'vnd.github': 'strin123456g'
+  };
+  const resolverMultiCoinSupport = false;
+  const hasAnyTxt = false;
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -51,64 +75,102 @@ xdescribe('AlreadyOwnedENSContainer.vue', () => {
         deedOwner,
         resolverAddress,
         hostName,
-        tld
+        tld,
+        resolverMultiCoinSupport,
+        hasAnyTxt
       },
       stubs: {
         'b-modal': BModalStub
       },
       mocks: {
         $router: mockRouter
+      },
+      computed: {
+        supportedCoinsWithValue() {
+          return supportedCoins;
+        },
+        txtRecordsWithValue() {
+          return supportedText;
+        }
       }
     });
   });
 
-  xit('should render correct fullDomainName computed data', () => {
+  afterAll(() => {
+    wrapper.destroy();
+  });
+
+  it('renders correctly', () => {
+    expect(wrapper).toMatchSnapshot();
+  });
+
+  it('should render correct fullDomainName computed data', () => {
+    const container = wrapper.findAll('.already-owned-container h3');
     expect(
-      wrapper.vm.$el
-        .querySelectorAll('.already-owned-container h3')[1]
-        .textContent.trim()
-        .indexOf(wrapper.vm.fullDomainName)
-    ).toBeGreaterThan(-1);
+      container
+        .at(0)
+        .text()
+        .trim()
+    ).toContain(wrapper.vm.fullDomainName);
   });
 
   it('should render correct labelHash props', () => {
+    const container = wrapper.findAll('.content-container .content');
     expect(
-      wrapper.vm.$el
-        .querySelectorAll('.content-container .content')[0]
-        .textContent.trim()
+      container
+        .at(0)
+        .text()
+        .trim()
     ).toEqual(labelHash);
   });
 
   it('should render correct nameHash props', () => {
+    const container = wrapper.findAll('.content-container .content');
     expect(
-      wrapper.vm.$el
-        .querySelectorAll('.content-container .content')[1]
-        .textContent.trim()
+      container
+        .at(1)
+        .text()
+        .trim()
     ).toEqual(nameHash);
   });
 
   it('should render correct owner props', () => {
+    const container = wrapper.findAll('.content-container .content');
     expect(
-      wrapper.vm.$el
-        .querySelectorAll('.content-container .content')[2]
-        .textContent.trim()
+      container
+        .at(2)
+        .text()
+        .trim()
     ).toEqual(owner);
   });
 
-  it('should render correct deedOwner props', () => {
-    expect(
-      wrapper.vm.$el
-        .querySelectorAll('.content-container .content')[3]
-        .textContent.trim()
-    ).toEqual(resolverAddress);
+  it('should render multicoin section', () => {
+    wrapper.setProps({
+      resolverMultiCoinSupport: true
+    });
+    const container = wrapper.findAll('.content-container div');
+    const items = Object.keys(supportedCoins);
+    container.wrappers.forEach((item, idx) => {
+      expect(item.find('.currency').text()).toContain(
+        supportedCoins[items[idx]].symbol
+      );
+      expect(item.find('.content').text()).toEqual(
+        supportedCoins[items[idx]].value
+      );
+    });
   });
 
-  xit('should render correct resolverAddress props', () => {
-    expect(
-      wrapper.vm.$el
-        .querySelectorAll('.content-container .content')[4]
-        .textContent.trim()
-    ).toEqual(resolverAddress);
+  it('should render multicoin section', () => {
+    wrapper.setProps({
+      hasAnyTxt: true,
+      resolverMultiCoinSupport: false
+    });
+    const container = wrapper.findAll('.content-container');
+    const items = Object.keys(supportedText);
+    container.wrappers.forEach((item, idx) => {
+      expect(item.find('.currency').text()).toContain(items[idx]);
+      expect(item.find('.content').text()).toEqual(supportedText[items[idx]]);
+    });
   });
 
   it('should dismount properly', () => {

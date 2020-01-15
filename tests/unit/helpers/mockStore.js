@@ -57,7 +57,20 @@ const state = {
     getAddressString: jest.fn()
   },
   web3: newWeb3,
-  linkQuery: {}
+  linkQuery: {},
+  addressBook: [
+    {
+      address: 'mewtopiax.eth',
+      currency: 'ETH',
+      nickname: 1
+    },
+    {
+      address: '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9',
+      currency: 'ETH',
+      nickname: 2
+    }
+  ],
+  locale: 'en_US'
 };
 
 const getters = {

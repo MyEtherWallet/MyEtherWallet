@@ -29,11 +29,8 @@ export default {
     }
   },
   data() {
-    return {
-      warningTypes: ['access', 'create']
-    };
+    return {};
   },
-
   computed: {
     getString() {
       return this.warningType === 'access' ? 1 : 2;

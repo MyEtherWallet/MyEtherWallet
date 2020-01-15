@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ErrorModal.vue renders correctly 1`] = `
+<div centered="" hide-footer="" hide-header="" static="" lazy="" class="bootstrap-modal">
+  <div class="d-block text-center"><i aria-hidden="true" class="check-icon fa fa-close"></i>
+    <h2 class="title">Error</h2>
+    <p>message</p>
+  </div>
+  <div class="button-container">
+    <div class="b-btn mid-round-button-lightgrey-filled close-button">
+      An Error Occured
+    </div>
+  </div>
+</div>
+`;

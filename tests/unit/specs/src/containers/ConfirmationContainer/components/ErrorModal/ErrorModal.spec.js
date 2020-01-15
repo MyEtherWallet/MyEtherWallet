@@ -1,22 +1,24 @@
 import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import ErrorModal from '@/containers/ConfirmationContainer/components/ErrorModal/ErrorModal.vue';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
 
 const hideModal = sinon.stub();
+const showModal = sinon.stub();
 const BModalStub = {
   name: 'b-modal',
   template: '<div><slot></slot></div>',
   props: ['to'],
   methods: {
-    hide: hideModal
+    hide: hideModal,
+    show: showModal
   }
 };
 
 const BBtnStub = {
   name: 'b-btn',
-  template: '<div  class="b-btn"><slot></slot></div>'
+  template: '<div class="b-btn"><slot></slot></div>'
 };
 
 describe('ErrorModal.vue', () => {
@@ -40,7 +42,7 @@ describe('ErrorModal.vue', () => {
   });
 
   beforeEach(() => {
-    wrapper = shallowMount(ErrorModal, {
+    wrapper = mount(ErrorModal, {
       localVue,
       i18n,
       store,
@@ -56,18 +58,30 @@ describe('ErrorModal.vue', () => {
     });
   });
 
-  it('should render correct message props', () => {
-    expect(
-      wrapper.vm.$el.querySelector('.d-block p').textContent.trim()
-    ).toEqual(message);
+  afterAll(() => {
+    wrapper.destroy();
   });
 
-  it('should render correct linkMessage props', () => {
+  it('renders correctly', () => {
+    expect(wrapper).toMatchSnapshot();
+  });
+
+  it('should render correct message props', () => {
+    const message = wrapper.find('.d-block p').text();
+    expect(message.trim()).toEqual(message);
+  });
+
+  it('should render correct linkMessage props', async () => {
+    wrapper.vm.$refs.errorModal.show();
+    await wrapper.vm.$nextTick();
+    const container = wrapper.findAll('.button-container');
+    expect(container.at(0).text()).toEqual('An Error Occured');
     wrapper.setProps({ linkMessage });
+    expect(container.at(0).text()).toEqual(linkMessage);
   });
 
   describe('ErrorModal.vue Methods', () => {
-    xit('should render correct hideModal method', () => {
+    it('should render correct hideModal method', () => {
       wrapper.vm.hideModal();
       expect(hideModal.called).toBe(true);
     });

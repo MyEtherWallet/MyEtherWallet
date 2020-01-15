@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BuySubdomain.vue renders correctly 1`] = `
+<div class="buy-subdomain-container">
+  <back-button-stub path="" title=""></back-button-stub>
+  <div class="buy-subdomain-content">
+    <div class="buy-subdomain-form-container">
+      <div class="title">
+        <h4>Name Your Wallet</h4>
+      </div>
+      <div class="form">
+        <div class="subdomain-input"><input placeholder="Please Enter Sub Domain Name" type="text" class=""> <button type="button">
+            Check
+          </button></div>
+        <!---->
+      </div>
+      <div class="result-section" style="display: none;">
+        <div class="title">
+          <h4>All Sub Domains</h4>
+        </div>
+        <div class="results-container"></div>
+      </div>
+    </div>
+    <div>
+      <div class="bottom-text">
+        <p>
+          Have any issues?
+          <a href="https://kb.myetherwallet.com" target="_blank" rel="noopener noreferrer">Help Center</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+`;

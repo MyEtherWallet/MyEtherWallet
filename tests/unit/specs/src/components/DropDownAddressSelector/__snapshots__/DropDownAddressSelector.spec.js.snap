@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DropDownAddressSelector.vue renders correctly 1`] = `
+<div class="drop-down-address-selector">
+  <div class="dropdown--title">
+    <h4></h4> <button class="title-button prevent-user-select">
+      Copy
+    </button>
+  </div>
+  <div class="dropdown--content">
+    <div class="dropdown-input-box">
+      <div><input placeholder="Please enter the address" type="text" autocomplete="off"></div> <span class="save-addr-txt disabled-txt">Save Address</span>
+      <div class="blockie-place-holder-image"></div>
+      <!---->
+      <div class="dropdown-open-button"><i aria-hidden="true" class="fa fa-chevron-down"></i>
+        <!---->
+      </div>
+    </div>
+    <!---->
+  </div>
+  <address-book-modal-stub modalaction="add" title="interface.address-book.add-new" currentidx="0" selectedaddress=""></address-book-modal-stub>
+</div>
+`;

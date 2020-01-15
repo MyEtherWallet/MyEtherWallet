@@ -38,10 +38,12 @@ describe('DisconnectedModal.vue', () => {
     });
   });
 
-  xit('should render correct browser data', () => {
-    expect(
-      wrapper.vm.$el.querySelectorAll('.the-button-box')[1].textContent.trim()
-    ).toEqual(wrapper.vm.$data.okayButtonOptions.title);
+  afterAll(() => {
+    wrapper.destroy();
+  });
+
+  it('renders correctly', () => {
+    expect(wrapper).toMatchSnapshot();
   });
 
   describe('DisconnectedModal.vue Methods', () => {

@@ -48,7 +48,7 @@ export default {
       if (this.linkTo !== '/') {
         this.$router.push({ path: this.linkTo });
       }
-      this.$refs.success.hide();
+      this.$refs.errorModal.hide();
     }
   }
 };

@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Blockie.vue renders correctly 1`] = `<div class="address-identicon" style="width: 64px; height: 64px; background-image: url(data:image/png;base64,00);"></div>`;

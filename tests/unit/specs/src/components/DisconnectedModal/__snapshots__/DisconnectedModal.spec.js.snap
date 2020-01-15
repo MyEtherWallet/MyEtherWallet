@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DisconnectedModal.vue renders correctly 1`] = `
+<div class="address-qrcode-modal">
+  <div hide-footer="" hide-header="" centered="" static="" lazy="" class="bootstrap-modal nopadding">
+    <div class="modal-contents">
+      <div class="icon"><img alt="Disconnected" src="@/assets/images/icons/disconnected.png"></div>
+      <div class="modal-title">
+        Oops!
+      </div>
+      <div class="text-content">
+        Seems like you are disconnected from MEWconnect, please reconnect using the App.
+      </div>
+      <div class="ok-button">
+        <div class="standard-button">
+          <!---->
+          <div class="standard-button__green"><button class="the-button-box" style="display: none;"><i class="fa fa-spin fa-spinner fa-lg"></i></button> <button class="the-button-box">
+              OK
+              <i class="fa fa-spin fa-spinner fa-lg" style="display: none;"></i>
+              <!---->
+              <!---->
+              <!---->
+              <!---->
+              <!----></button></div>
+          <!---->
+          <!---->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
