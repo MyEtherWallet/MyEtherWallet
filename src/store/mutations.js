@@ -128,6 +128,10 @@ const SAVE_QUERY_VAL = function(state, newQuery) {
   state.linkQuery = newQuery;
 };
 
+const TOGGLE_TEMP_HIDE = function(state) {
+  state.tempHide = !state.tempHide;
+};
+
 export default {
   ADD_NOTIFICATION,
   ADD_SWAP_TRANSACTION,
@@ -149,5 +153,6 @@ export default {
   UPDATE_BLOCK_NUMBER,
   SAVE_QUERY_VAL,
   SET_ADDRESS_BOOK,
-  SET_LOCALE
+  SET_LOCALE,
+  TOGGLE_TEMP_HIDE
 };
