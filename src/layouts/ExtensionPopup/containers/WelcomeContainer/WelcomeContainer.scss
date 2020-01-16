@@ -29,9 +29,8 @@
     align-items: center;
     display: flex;
     flex-direction: column;
-    height: 303px;
     justify-content: space-around;
-    padding: 30px 0 0 0;
+    padding: 10px 0 0 0;
 
     .text-content {
       max-width: 80%;
@@ -64,6 +63,6 @@
 
 .down-arrow {
   font-size: 40px;
-  margin: 20px 0;
-  color: #c5c5c5;
+  margin: 8px 0;
+  color: $light-grey-11;
 }
