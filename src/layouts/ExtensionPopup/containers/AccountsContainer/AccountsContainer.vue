@@ -8,18 +8,18 @@
       >
         <b-tab :active="hasMyWallets" title="My Wallets" class="tab-container">
           <network-component />
-          <div class="wallet-component-container">
-            <div class="total-balance-container">
-              <p>{{ $t('common.balance.total') }}:</p>
-              <div>
-                <p>
-                  {{ concatBalance }} <b>{{ network.type.name }}</b>
-                </p>
-                <p v-if="network.type.name === 'ETH'" class="converted-balance">
-                  {{ convertedBalance }}
-                </p>
-              </div>
+          <div class="total-balance-container">
+            <p>{{ $t('common.balance.total') }}:</p>
+            <div>
+              <p>
+                {{ concatBalance }} <b>{{ network.type.name }}</b>
+              </p>
+              <p v-if="network.type.name === 'ETH'" class="converted-balance">
+                {{ convertedBalance }}
+              </p>
             </div>
+          </div>
+          <div class="wallet-component-container">
             <wallet-view-component
               v-for="item in myWallets"
               v-show="myWallets.length > 0"
