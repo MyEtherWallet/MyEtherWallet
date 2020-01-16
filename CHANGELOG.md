@@ -3,6 +3,9 @@
 - Remove excess maker wording and add to translations [#1853](https://github.com/MyEtherWallet/MyEtherWallet/pull/1853)
 - Remove permanent hide on issue modal [#1856](https://github.com/MyEtherWallet/MyEtherWallet/pull/1856)
 
+### Devop
+- Update translations [#1870] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1870)
+
 ### Release v5.2.10
 
 ### Bug
