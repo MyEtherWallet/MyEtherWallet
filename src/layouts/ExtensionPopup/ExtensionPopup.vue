@@ -20,6 +20,8 @@ import AccountsContainer from './containers/AccountsContainer';
 import { ExtensionHelpers } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
 import BigNumber from 'bignumber.js';
+import ENS from 'ethereum-ens';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -33,6 +35,9 @@ export default {
       ethPrice: 0
     };
   },
+  computed: {
+    ...mapState(['network', 'web3'])
+  },
   created() {
     window.chrome.storage.onChanged.addListener(() => {
       ExtensionHelpers.getAccounts(this.getAccountsCb);
@@ -40,6 +45,14 @@ export default {
   },
   mounted() {
     ExtensionHelpers.getAccounts(this.getAccountsCb);
+    if (this.network.type.ens) {
+      this.$store.dispatch(
+        'setENS',
+        new ENS(this.web3.currentProvider, this.network.type.ens.registry)
+      );
+    } else {
+      this.$store.dispatch('setENS', null);
+    }
   },
   methods: {
     addWallet() {

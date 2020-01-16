@@ -1,13 +1,16 @@
 @import '~@/scss/GlobalVariables';
 .quick-send-container {
-  height: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   .quick-send-header {
     align-items: center;
     background-color: $dark-blue-12;
     display: flex;
     justify-content: space-between;
-    padding: 15px;
+    padding: 20px;
 
     p {
       color: $white;
@@ -21,6 +24,10 @@
 
   .quick-send-step-contents {
     padding: 13px 10px 10px;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 
     .title {
       color: $light-blue-1;
@@ -32,6 +39,7 @@
       flex-direction: column;
       height: 230px;
       justify-content: space-around;
+      overflow-wrap: break-word;
     }
 
     .from-text {
@@ -148,6 +156,7 @@
     }
 
     .confirmation-container {
+      overflow-y: auto;
       p {
         margin-left: 0;
       }
@@ -160,7 +169,7 @@
       display: flex;
       justify-content: space-between;
       margin-bottom: 10px;
-      padding: 25px 15px;
+      padding: 15px;
 
       p {
         color: $white !important;
@@ -219,6 +228,7 @@
     display: flex;
     justify-content: center;
     padding: 15px 0;
+    border-top: 1px solid $mew-green;
 
     p {
       color: $white;
@@ -229,6 +239,7 @@
 
   .disabled {
     background-color: $dark-grey-11;
+    border-top: 1px solid $dark-grey-11;
     cursor: none;
     pointer-events: none;
   }

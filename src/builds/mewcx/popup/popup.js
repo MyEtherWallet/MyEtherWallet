@@ -138,7 +138,7 @@ router.beforeResolve((to, from, next) => {
 });
 Vue.router = router;
 
-Vue.directive('ens-resolver', AddrResolver);
+Vue.directive('addr-resolver', AddrResolver);
 Vue.filter('concatAddr', ConcatAddr);
 
 Vue.config.productionTip = false;

@@ -58,7 +58,7 @@ const router = new Router({
 });
 Vue.router = router;
 
-Vue.directive('ens-resolver', AddrResolver);
+Vue.directive('addr-resolver', AddrResolver);
 Vue.filter('concatAddr', ConcatAddr);
 
 Vue.config.productionTip = false;
