@@ -1,7 +1,7 @@
 <template>
   <div class="mobile-info-block">
     <div class="info-block-title text-uppercase font-reset mb-1">
-      {{ $t('common.balance.total') }}
+      {{ $t('common.balance.wallet') }}
     </div>
 
     <div class="info-block-value text-monospace pl-3">

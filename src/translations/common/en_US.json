@@ -114,6 +114,7 @@
   "optional": "Optional",
   "value": "Value",
   "network": "Network",
+  "current-network": "Current Network",
   "addr": "Address",
   "via-contract-address": "via Contract address",
   "lowercase-addr": "address",
@@ -121,7 +122,8 @@
   "enter-addr": "Please enter the address",
   "balance": {
     "string": "Balance",
-    "total": "Total Balance"
+    "total": "Total Balance",
+    "wallet": "Balance of your wallet"
   },
   "notifications": {
     "no-notifications": "No notifications found :(",
