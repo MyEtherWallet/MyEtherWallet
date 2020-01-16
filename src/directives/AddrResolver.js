@@ -29,19 +29,9 @@ const AddrResolver = {
       actualProcess(e);
     });
     const removeElements = function() {
-      const children = el.parentNode.parentNode.children;
-      children.forEach((child, idx) => {
-        Object.keys(child.classList).forEach(item => {
-          if (
-            child.classList[item] === 'resolver-error' ||
-            child.classList[item] === 'resolver-addr'
-          ) {
-            vnode.elm.parentNode.parentNode.removeChild(
-              vnode.elm.parentNode.parentNode.childNodes[idx]
-            );
-          }
-        });
-      });
+      vnode.elm.parentNode.parentNode
+        .querySelectorAll('.resolver-error, .resolver-addr')
+        .forEach(e => e.remove());
     };
     const appendElement = function(ele) {
       removeElements();
