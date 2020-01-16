@@ -1,8 +1,6 @@
 @import '~@/scss/GlobalVariables';
 
 .cx-menu {
-  padding: 10px 20px 10px 10px;
-  //max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -11,14 +9,6 @@
 }
 
 .cx-menu-container {
-  /*
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  width: 100%;
-  */
-  //box-shadow: 0 2px 13px rgba(0, 0, 0, 0.1);
   min-width: 960px;
   background-color: white;
   border-bottom: 1px solid #e8e8e8;
@@ -31,15 +21,6 @@ a {
 .d-flex {
   display: flex;
   align-items: center;
-}
-
-.logo-block {
-  p {
-    color: $mew-green;
-    margin-left: 10px;
-    padding-left: 15px;
-    border-left: 1px solid $mew-green;
-  }
 }
 
 .menu-items {
@@ -78,5 +59,42 @@ a {
     color: $dark-blue-1;
     font-size: 18px;
     margin-left: 7px;
+  }
+}
+
+.network-picker-title {
+  padding: 0 15px;
+  text-align: left;
+  position: relative;
+  min-width: 158px;
+
+  .network-title {
+    color: $dark-blue-2;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .network-service {
+    color: $light-grey-7;
+    font-size: 12px;
+  }
+
+  i {
+    position: absolute;
+  }
+
+  .color {
+    background-color: $dark-blue-2;
+    height: 5px;
+    width: 5px;
+    border-radius: 50%;
+    top: 8px;
+    left: 0;
+  }
+
+  .network-caret {
+    color: $dark-blue-2;
+    top: 3px;
+    right: 0;
   }
 }
