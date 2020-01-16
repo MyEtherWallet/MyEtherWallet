@@ -19,9 +19,6 @@ a:active {
 
 .wrap {
   color: $text-color-1;
-  padding: 60px 30px 40px 30px;
-  max-width: 1100px;
-  margin: 0 auto;
 }
 
 .footer-contents {
@@ -103,13 +100,12 @@ a:active {
   }
 }
 
-// .footer-contents
-
 .foot-note {
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   border-top: 1px solid $dark-blue-1;
-  margin-top: 40px;
-  padding-top: 40px;
+  padding: 20px;
 
   .links {
     display: flex;
