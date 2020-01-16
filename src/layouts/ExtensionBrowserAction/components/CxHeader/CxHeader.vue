@@ -16,7 +16,6 @@
               alt
               height="50"
             />
-            <p>{{ $t('mewcx.chrome-cx') }}</p>
           </div>
         </b-nav-item>
         <div class="spacer"></div>
@@ -97,6 +96,31 @@
             </b-nav-item-dropdown>
           </div>
         </div>
+        <b-dropdown class="cx-network-picker" no-caret right>
+          <template v-slot:button-content>
+            <div class="network-picker-title">
+              <i class="color" />
+              <p class="network-title">
+                {{ network.type.name + ' network' }}
+              </p>
+              <p class="network-service">{{ network.service }}</p>
+              <i class="fa fa-angle-down network-caret" />
+            </div>
+          </template>
+          <b-dropdown-group
+            v-for="networkName in Object.keys(Networks)"
+            :key="networkName"
+            :header="networkName + ' network'"
+          >
+            <b-dropdown-item-button
+              v-for="network in Networks[networkName]"
+              :key="network.service + networkName"
+              @click="updateNetwork(network)"
+            >
+              {{ network.service }}
+            </b-dropdown-item-button>
+          </b-dropdown-group>
+        </b-dropdown>
       </b-nav>
     </div>
   </div>
@@ -125,7 +149,7 @@ export default {
     return { isMewCx: isMewCx, gasPrice: '0' };
   },
   computed: {
-    ...mapState(['account', 'web3', 'network']),
+    ...mapState(['account', 'web3', 'network', 'Networks']),
     address() {
       return this.account.address;
     },
@@ -161,10 +185,33 @@ export default {
         .catch(e => {
           Toast.responseHandler(e, Toast.ERROR);
         });
+    },
+    updateNetwork(network) {
+      this.$store.dispatch('switchNetwork', network).then(() => {
+        this.$store.dispatch('setWeb3Instance');
+      });
     }
   }
 };
 </script>
+
+<style lang="scss">
+@import '~@/scss/GlobalVariables';
+
+.cx-network-picker {
+  .btn {
+    border: none;
+    border-radius: 0;
+    background-color: $light-green-1;
+  }
+}
+
+.show {
+  .btn {
+    background-color: $mew-green !important;
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 @import 'CxHeader.scss';
