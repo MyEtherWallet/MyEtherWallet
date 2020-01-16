@@ -28,7 +28,7 @@
     "update:swap": "node compileBaseSwapOptions.js"
   },
   "dependencies": {
-    "@sentry/browser": "5.10.2",
+    "@sentry/browser": "5.11.1",
     "@sentry/integrations": "5.10.2",
     "core-js": "3.6.1",
     "html2canvas": "1.0.0-rc.5",
