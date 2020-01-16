@@ -33,7 +33,7 @@ import reddit from '@/assets/images/icons/reddit.svg';
 import medium from '@/assets/images/icons/medium.png';
 import twitter from '@/assets/images/icons/twitter.jpg';
 import facebook from '@/assets/images/icons/facebook.png';
-import vkontakte from '@/assets/images/icons/11-512.png';
+import vkontakte from '@/assets/images/icons/vkontakte.png';
 
 export default {
   data() {
