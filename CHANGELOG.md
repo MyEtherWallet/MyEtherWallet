@@ -3,6 +3,9 @@
 - Remove excess maker wording and add to translations [#1853](https://github.com/MyEtherWallet/MyEtherWallet/pull/1853)
 - Remove permanent hide on issue modal [#1856](https://github.com/MyEtherWallet/MyEtherWallet/pull/1856)
 
+### Feature
+- Add vkontakte icon to social home page [#1872] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1872)
+
 ### Release v5.2.10
 
 ### Bug
