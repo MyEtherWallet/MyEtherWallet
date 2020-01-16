@@ -2,10 +2,10 @@
   <div class="mobile-info-block">
     <interface-network-modal ref="interfaceNetworkModal" />
 
-    <div class="d-flex align-items-center">
+    <div class="network-block-contents d-flex align-items-center">
       <div>
         <div class="info-block-title font-reset text-uppercase mb-1">
-          Current {{ $t('common.network') }}
+          {{ $t('common.current-network') }}
         </div>
 
         <div

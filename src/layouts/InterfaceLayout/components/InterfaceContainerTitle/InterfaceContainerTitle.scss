@@ -1,5 +1,15 @@
 @import '~@/scss/GlobalVariables';
 
+.interface-container-title {
+  padding: 10px;
+  padding-left: 0;
+  border-bottom: 2px solid #f2f4fa;
+}
+
 .title-block {
-  border-left: 3px soild $mew-green;
+  border-left: 5px solid $mew-green;
+  padding-left: 20px;
+  line-height: 35px;
+  font-weight: 600;
+  font-size: 25px;
 }
