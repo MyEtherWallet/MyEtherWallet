@@ -3,7 +3,6 @@
     <div class="info-block-title text-uppercase font-reset mb-1">
       {{ $t('common.balance.wallet') }}
     </div>
-
     <div class="info-block-value text-monospace pl-3">
       {{ accountBalance
       }}<span class="font-reset">{{ network.type.currencyName }}</span>
@@ -88,12 +87,9 @@ export default {
   },
   mounted() {
     this.fetchBalanceData();
+    this.getBalance();
   },
   methods: {
-    showBalanceModal() {
-      this.getBalance();
-      this.$refs.balanceModal.$refs.balance.show();
-    },
     getBalance() {
       if (this.account.address) {
         this.web3.eth

@@ -63,7 +63,6 @@
         :opensettings="opensettings"
         :language-menu="languageMenuOpen"
       />
-      <mobile-network-block v-show="false" :block-number="blockNumber" />
     </div>
   </div>
 </template>
@@ -72,7 +71,6 @@
 import { mapState } from 'vuex';
 import MobileMenuContent from './components/MobileMenuContent';
 import MobileMenuButton from './components/MobileMenuButton';
-import MobileNetworkBlock from './components/MobileNetworkBlock';
 import MobileLanguageSelector from './components/MobileLanguageSelector';
 import { Misc } from '@/helpers';
 import supportedLang from '../../supportedLang';
@@ -81,7 +79,6 @@ export default {
   components: {
     'mobile-menu-content': MobileMenuContent,
     'mobile-menu-button': MobileMenuButton,
-    'mobile-network-block': MobileNetworkBlock,
     'mobile-language-selector': MobileLanguageSelector
   },
   props: {
