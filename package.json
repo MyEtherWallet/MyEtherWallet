@@ -28,7 +28,7 @@
     "update:swap": "node compileBaseSwapOptions.js"
   },
   "dependencies": {
-    "@sentry/browser": "5.10.2",
+    "@sentry/browser": "5.11.1",
     "@sentry/integrations": "5.10.2",
     "core-js": "3.6.1",
     "html2canvas": "1.0.0-rc.5",
@@ -66,10 +66,10 @@
     "@ledgerhq/hw-transport-u2f": "5.5.0",
     "@ledgerhq/hw-transport-webusb": "5.5.0",
     "@makerdao/currency": "0.9.6",
-    "@makerdao/dai": "0.23.0-rc.5",
+    "@makerdao/dai": "0.23.1",
     "@makerdao/dai-plugin-config": "0.2.14-rc.1",
-    "@makerdao/dai-plugin-mcd": "1.0.5",
-    "@makerdao/dai-plugin-migrations": "1.0.10",
+    "@makerdao/dai-plugin-mcd": "1.0.6",
+    "@makerdao/dai-plugin-migrations": "1.0.11",
     "@myetherwallet/eth-token-balance": "0.1.6",
     "@myetherwallet/mewconnect-web-client": "2.0.0-beta.23",
     "@vue/cli-plugin-babel": "4.1.2",
