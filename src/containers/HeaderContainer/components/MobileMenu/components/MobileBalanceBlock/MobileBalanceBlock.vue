@@ -86,8 +86,10 @@ export default {
     }
   },
   mounted() {
-    this.fetchBalanceData();
     this.getBalance();
+    this.fetchBalanceData();
+
+    //console.log(this.equivalentValues);
   },
   methods: {
     getBalance() {
