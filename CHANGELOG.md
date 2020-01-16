@@ -1,3 +1,7 @@
+### Feature
+
+- Merge mobile interface menu into main top menu [#1873](https://github.com/MyEtherWallet/MyEtherWallet/pull/1873)
+
 ### Bug
 
 - Fix error log details size [#1837](https://github.com/MyEtherWallet/MyEtherWallet/pull/1837)
