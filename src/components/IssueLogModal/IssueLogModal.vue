@@ -37,7 +37,7 @@
                     <i v-if="neverShow" class="fa fa-check" />
                   </span>
                   <input name="terms" type="checkbox" />
-                  {{ $t('common.issue-log.never-show') }}
+                  {{ $t('common.issue-log.hide-for-now') }}
                 </label>
               </div>
             </div>
@@ -92,14 +92,14 @@ export default {
     };
   },
   watch: {
-    neverShow(newVal) {
-      store.set('neverReport', newVal);
+    neverShow() {
+      this.$store.dispatch('toggleTempHide');
     }
   },
   mounted() {
     const popUpCount = store.get('errorPop') || 0;
     this.errorCount = popUpCount;
-    if (this.errorCount >= 10) {
+    if (this.errorCount >= 5) {
       this.showSkipper = true;
     }
   },

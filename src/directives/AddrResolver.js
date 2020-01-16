@@ -118,36 +118,48 @@ const AddrResolver = {
             });
         }
       } else if (domain !== '') {
-        const isValid = MAValidator.validate(domain, parentCurrency);
-        _this.isValidAddress = isValid;
-        _this.hexAddress = domain;
-        if (!isValid) {
-          _this.hexAddress = '';
-          if (domain.length > 0) {
-            if (
-              parentCurrency === 'ETH' &&
-              (domain.length !== 42 || !utils.isHexStrict(domain))
-            ) {
-              errorPar.innerText = _this.$t(
-                'ens.ens-resolver.invalid-eth-addr'
-              );
-            } else if (
-              parentCurrency === 'ETH' &&
-              !utils.checkAddressChecksum(domain)
-            ) {
-              errorPar.innerText = _this.$t(
-                'ens.ens-resolver.addr-not-checksummed'
-              );
-              // 'Incorrect checksum: check address format on EthVM';
+        try {
+          const isValid = MAValidator.validate(domain, parentCurrency);
+          _this.isValidAddress = isValid;
+          _this.hexAddress = domain;
+          if (!isValid) {
+            _this.hexAddress = '';
+            if (domain.length > 0) {
+              if (
+                parentCurrency === 'ETH' &&
+                (domain.length !== 42 || !utils.isHexStrict(domain))
+              ) {
+                errorPar.innerText = _this.$t(
+                  'ens.ens-resolver.invalid-eth-addr'
+                );
+              } else if (
+                parentCurrency === 'ETH' &&
+                !utils.checkAddressChecksum(domain)
+              ) {
+                errorPar.innerText = _this.$t(
+                  'ens.ens-resolver.addr-not-checksummed'
+                );
+                // 'Incorrect checksum: check address format on EthVM';
+              } else {
+                errorPar.innerText = _this.$t('ens.ens-resolver.invalid-addr', {
+                  coin: parentCurrency
+                });
+              }
             } else {
-              errorPar.innerText = _this.$t('ens.ens-resolver.invalid-addr', {
-                coin: parentCurrency
-              });
+              errorPar.innerText = '';
             }
-          } else {
-            errorPar.innerText = '';
+            appendElement(errorPar);
           }
-          appendElement(errorPar);
+        } catch (e) {
+          if (e.message.includes('Missing validator for currency: ')) {
+            _this.isValidAddress = true;
+            errorPar.innerText = _this.$t('swap.warning.unable-validate-addr', {
+              currency: parentCurrency
+            });
+            appendElement(errorPar);
+          } else {
+            throw e;
+          }
         }
       }
     };
