@@ -4,6 +4,7 @@
 
 ### Bug
 
+- Fix tx hash link, switch address, and make cx connection with popup more stable [#1853](https://github.com/MyEtherWallet/MyEtherWallet/pull/1853)
 - Disable web3 detection [#1840](https://github.com/MyEtherWallet/MyEtherWallet/pull/1840)
 - Improve error messages for outdated dependencies [#1848](https://github.com/MyEtherWallet/MyEtherWallet/pull/1848)
 - Remove excess maker wording and add to translations [#1853](https://github.com/MyEtherWallet/MyEtherWallet/pull/1853)

@@ -19,6 +19,7 @@ export default async ({ event, payload }, callback, next) => {
       });
     }
   };
+
   store.state.web3.eth
     .sendSignedTransaction(payload.signedTx)
     .once('transactionHash', hash => {
