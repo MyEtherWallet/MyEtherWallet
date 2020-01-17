@@ -28,7 +28,10 @@
     "supply-valid-addr": "Пожалуйста, укажите подходящий {currency} адрес",
     "not-enough-funds": "У вас недостаточно средств",
     "no-swap-offline": "обмен не доступен оффлайн",
-    "swap-only-mainnet": "Обмен доступен только на mainnet"
+    "swap-only-mainnet": "Обмен доступен только на mainnet",
+    "kyber-token-list-update-failed": "Failed to update Kyber Network available token list",
+    "kyber-gasLimit-list-update-failed": "Failed to update Kyber Network trade gasLimit list",
+    "kyber-list-update-failed": "Failed to update Kyber Network default information"
   },
   "notice": {
     "retrieve-changelly-rate-failed": "Не удалось получить курс Changelly от {fromCurrency} к {toCurrency}",
