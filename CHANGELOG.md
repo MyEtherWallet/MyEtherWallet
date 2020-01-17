@@ -1,10 +1,20 @@
 ### Release v5.2.11
 
+### Devop
+
+- Run update:swap with other update script [#1859](https://github.com/MyEtherWallet/MyEtherWallet/pull/1859)
+
 ### Bug
 
+- Fix tx hash link, switch address, and make cx connection with popup more stable [#1853](https://github.com/MyEtherWallet/MyEtherWallet/pull/1853)
+- Disable web3 detection [#1840](https://github.com/MyEtherWallet/MyEtherWallet/pull/1840)
 - Improve error messages for outdated dependencies [#1848](https://github.com/MyEtherWallet/MyEtherWallet/pull/1848)
 - Remove excess maker wording and add to translations [#1853](https://github.com/MyEtherWallet/MyEtherWallet/pull/1853)
 - Remove permanent hide on issue modal [#1856](https://github.com/MyEtherWallet/MyEtherWallet/pull/1856)
+
+### Feature
+
+- Add vkontakte icon to social home page and add first time russian popup [#1872](https://github.com/MyEtherWallet/MyEtherWallet/pull/1872)
 
 ### Devop
 
@@ -27,6 +37,7 @@
 - Migrate Webchain to Mintme [#1824](https://github.com/MyEtherWallet/MyEtherWallet/pull/1824)
 - Update ETC explorrer links [#1855](https://github.com/MyEtherWallet/MyEtherWallet/pull/1855)
 - Update packages [#1852](https://github.com/MyEtherWallet/MyEtherWallet/pull/1852/files#diff-b9cfc7f2cdf78a7f4b91a753d10865a2R61)
+
 ### Release v5.2.9
 
 ### Feature
