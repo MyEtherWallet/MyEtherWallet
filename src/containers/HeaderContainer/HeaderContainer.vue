@@ -219,6 +219,7 @@
       </div>
       <!-- Desktop menu *********************************** -->
     </div>
+    <welcome-modal ref="welcome" first-time-ru="true" />
   </div>
 </template>
 
@@ -238,6 +239,7 @@ import DisconnectedModal from '@/components/DisconnectedModal';
 import DecisionTree from '@/components/DecisionTree';
 import CxHeader from '@/layouts/ExtensionBrowserAction/components/CxHeader';
 import supportedLang from './supportedLang';
+import WelcomeModal from '@/components/WelcomeModal';
 
 const events = {
   issueModal: 'issueModal',
@@ -255,7 +257,8 @@ export default {
     'mobile-menu': MobileMenu,
     'disconnected-modal': DisconnectedModal,
     'decision-tree': DecisionTree,
-    'cx-header': CxHeader
+    'cx-header': CxHeader,
+    'welcome-modal': WelcomeModal
   },
   data() {
     const isMewCx = Misc.isMewCx();
@@ -396,6 +399,14 @@ export default {
       });
     },
     languageItemClicked(obj) {
+      if (obj.langCode === 'ru_RU' && !store.get('notFirstTimeRU')) {
+        this.$refs.welcome.$refs.welcome.show();
+      }
+
+      this.$refs.welcome.$refs.welcome.$on('hidden', () => {
+        store.set('notFirstTimeRU', true);
+      });
+
       this.$i18n.locale = obj.langCode;
       this.currentName = obj.name;
       this.currentFlag = obj.flag;

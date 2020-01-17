@@ -301,6 +301,10 @@ export default {
         {
           to: 'https://www.medium.com/@myetherwallet',
           class: 'fa-medium'
+        },
+        {
+          to: 'https://vk.com/public190491855',
+          class: 'fa-vk'
         }
       ]
     };
