@@ -24,7 +24,9 @@
       <form v-show="step === 1" @submit.prevent="next">
         <div class="from-text">
           <p>{{ $t('mewcx.from') }}</p>
-          <p @click="switchWallet">{{ $t('mewcx.change') }}</p>
+          <p v-show="hasManyWallets" @click="switchWallet">
+            {{ $t('mewcx.change') }}
+          </p>
         </div>
         <wallet-view-component
           :usd="usd"
@@ -154,7 +156,6 @@ import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import Blockie from '@/components/Blockie';
 import { Misc } from '@/helpers';
 import { mapState } from 'vuex';
-import { ETH } from '@/networks/types';
 import ethUnit from 'ethjs-unit';
 import { CX_SEND_SIGNED_TX } from '@/builds/mewcx/cxHelpers/cxEvents';
 
@@ -181,6 +182,10 @@ export default {
     usd: {
       type: Number,
       default: 0
+    },
+    hasManyWallets: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -204,14 +209,16 @@ export default {
       rawTx: {},
       gasPrice: 0,
       gasLimit: 0,
-      signedTx: {},
-      txLink: ETH.blockExplorerTX
+      signedTx: {}
     };
   },
   computed: {
     ...mapState(['web3', 'network']),
     txLinkAndHash() {
-      return this.txLink.replace('[[txHash]]', this.txHash);
+      return this.network.type.blockExplorerTX.replace(
+        '[[txHash]]',
+        this.txHash
+      );
     },
     isValid() {
       if (this.step === 1) {
@@ -364,30 +371,31 @@ export default {
     async sendTransaction() {
       this.loading = true;
       const chrome = window.chrome;
-      chrome.storage.sync.get(null, res => {
-        if (res.hasOwnProperty('knownAddresses')) {
-          const arr = JSON.parse(res['knownAddresses']);
-          arr.push(this.toAddress);
+      // chrome.storage.sync.get(null, res => {
+      //   if (res.hasOwnProperty('knownAddresses')) {
+      //     const arr = JSON.parse(res['knownAddresses']);
+      //     arr.push(this.toAddress);
 
-          chrome.storage.sync.set({
-            knownAddresses: JSON.stringify(arr)
-          });
-        } else {
-          const newArr = [this.toAddress];
-          chrome.storage.sync.set({
-            knownAddresses: JSON.stringify(newArr)
-          });
-        }
-      });
+      //     chrome.storage.sync.set({
+      //       knownAddresses: JSON.stringify(arr)
+      //     });
+      //   } else {
+      //     const newArr = [this.toAddress];
+      //     chrome.storage.sync.set({
+      //       knownAddresses: JSON.stringify(newArr)
+      //     });
+      //   }
+      // });
       const payload = {
         signedTx: this.signedTx.rawTransaction,
         raw: this.raw
       };
-      window.chrome.runtime.sendMessage(
-        window.chrome.runtime.id,
+      chrome.runtime.sendMessage(
+        chrome.runtime.id,
         { event: CX_SEND_SIGNED_TX, payload: payload },
         {},
         res => {
+          this.txHash = '';
           // eslint-disable-next-line
           if (!!res && !res.hasOwnProperty('message')) {
             this.txHash = res;
