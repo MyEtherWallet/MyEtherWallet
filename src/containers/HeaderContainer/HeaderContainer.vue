@@ -224,7 +224,7 @@
       </div>
       <!-- Desktop menu *********************************** -->
     </div>
-    <welcome-modal ref="welcome" first-time-ru="true" />
+    <welcome-modal ref="welcome" :first-time-ru="firstTimeRu" />
   </div>
 </template>
 
@@ -279,7 +279,8 @@ export default {
       error: {},
       resolver: () => {},
       isMewCx: isMewCx,
-      buildType: BUILD_TYPE
+      buildType: BUILD_TYPE,
+      firstTimeRu: false
     };
   },
   computed: {
@@ -407,10 +408,12 @@ export default {
     },
     languageItemClicked(obj) {
       if (obj.langCode === 'ru_RU' && !store.get('notFirstTimeRU')) {
+        this.firstTimeRu = true;
         this.$refs.welcome.$refs.welcome.show();
       }
 
       this.$refs.welcome.$refs.welcome.$on('hidden', () => {
+        this.firstTimeRu = false;
         store.set('notFirstTimeRU', true);
       });
 
