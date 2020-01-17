@@ -1,3 +1,7 @@
+### Devop
+
+- Fix footer copyright to 2020 [#1875](https://github.com/MyEtherWallet/MyEtherWallet/pull/1875)
+
 ### Bug
 
 - Improve error messages for outdated dependencies [#1848](https://github.com/MyEtherWallet/MyEtherWallet/pull/1848)
