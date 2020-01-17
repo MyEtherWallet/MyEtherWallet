@@ -8,7 +8,7 @@
       >
         <div class="buy-eth">
           <img src="@/assets/images/icons/buy-eth.svg" alt />
-          <div class="font-reset">
+          <div class="font-reset-disabled">
             {{ $t('common.dont-have-eth') }}
           </div>
         </div>
@@ -28,40 +28,45 @@
     <div v-if="!account.address" class="no-logon-content-block">
       <router-link to="/access-my-wallet" @click.native="closeMenu">
         <b-button variant="outline-primary" class="login-button">
-          <div class="font-reset">Login to access your wallet!</div>
+          <div class="font-reset-disabled">{{ $t('common.wallet.login') }}</div>
         </b-button>
       </router-link>
 
-      <div class="get-wallet font-reset">
-        Don't have a wallet yet?
+      <div class="get-wallet font-reset-disabled">
+        {{ $t('common.wallet.no-wallet') }}
         <router-link
-          class="font-reset"
+          class="font-reset-disabled"
           to="/create-wallet"
           @click.native="closeMenu"
-          >Get your wallet for free!</router-link
+        >
+          {{ $t('common.wallet.free-wallet') }}</router-link
         >
       </div>
     </div>
 
     <div class="all-menu-content-block">
-      <div class="font-reset mb-4" @click="languageMenu">
+      <div class="font-reset-disabled mb-4" @click="languageMenu">
         <i class="fa fa-language" aria-hidden="true"></i>
-        <div>Language</div>
-      </div>
-      <div v-if="account.address" class="font-reset" @click="opensettings">
-        <i class="fa fa-cog" aria-hidden="true"></i>
-        <div>Settings</div>
+        <div>{{ $t('common.language') }}</div>
       </div>
       <div
         v-if="account.address"
-        class="font-reset logout"
+        class="font-reset-disabled"
+        @click="opensettings"
+      >
+        <i class="fa fa-cog" aria-hidden="true"></i>
+        <div>{{ $t('common.settings') }}</div>
+      </div>
+      <div
+        v-if="account.address"
+        class="font-reset-disabled logout"
         @click="
           logout();
           closeMenu();
         "
       >
         <i class="fa fa-sign-out" aria-hidden="true"></i>
-        <div>Logout</div>
+        <div>{{ $t('common.logout') }}</div>
       </div>
     </div>
     <div class="space-buffer"></div>
