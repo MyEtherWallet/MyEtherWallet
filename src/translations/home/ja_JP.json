@@ -55,5 +55,7 @@
   "social": {
     "title": "Join MEW Community"
   },
-  "lost-title": "Oops! Looks like you're lost."
+  "lost-title": "Oops! Looks like you're lost.",
+  "new-update": "New update found! Please refresh your browser to receive the most updated version",
+  "new-update-error": "Something went wrong with our service workers!"
 }
