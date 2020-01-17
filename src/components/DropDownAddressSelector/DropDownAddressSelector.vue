@@ -187,6 +187,18 @@ export default {
     },
     currency() {
       this.validateAddress(this.selectedAddress);
+    },
+    dropdownOpen(val) {
+      const hasResolverTxt =
+        document.querySelector('.resolver-error') ||
+        document.querySelector('.resolver-addr');
+      if (hasResolverTxt) {
+        val === true
+          ? document.querySelector('.resolver-error').classList.add('hidden')
+          : document
+              .querySelector('.resolver-error')
+              .classList.remove('hidden');
+      }
     }
   },
   mounted() {
