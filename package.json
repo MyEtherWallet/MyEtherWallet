@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.2.10",
+  "version": "5.2.11",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",

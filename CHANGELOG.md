@@ -1,3 +1,5 @@
+### Release v5.2.11
+
 ### Bug
 
 - Improve error messages for outdated dependencies [#1848](https://github.com/MyEtherWallet/MyEtherWallet/pull/1848)
