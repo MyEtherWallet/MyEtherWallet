@@ -78,7 +78,10 @@
     "unlock": "Unlock Wallet",
     "do-not-have": "Do not have a wallet?",
     "passphrase": "Passphrase",
-    "own": "{nickname}'s wallet"
+    "own": "{nickname}'s wallet",
+    "no-wallet": "Don't have a wallet yet?",
+    "free-wallet": "Get your wallet for free!",
+    "login": "Login to access your wallet!"
   },
   "mewconnect": {
     "string": "MEWconnect",
@@ -170,5 +173,8 @@
   "disconnected": "Disconnected",
   "mew-icon": "Mew Icon",
   "kitties": "kitties",
-  "mewtopia": "MEWtopia"
+  "mewtopia": "MEWtopia",
+  "language": "Language",
+  "logout": "Logout",
+  "settings": "Settings"
 }

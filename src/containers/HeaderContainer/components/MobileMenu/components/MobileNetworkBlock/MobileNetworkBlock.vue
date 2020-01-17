@@ -4,7 +4,7 @@
 
     <div class="network-block-contents d-flex align-items-center">
       <div>
-        <div class="info-block-title font-reset text-uppercase mb-1">
+        <div class="info-block-title font-reset-disabled text-uppercase mb-1">
           {{ $t('common.current-network') }}
         </div>
 
@@ -15,7 +15,7 @@
           {{ network.service + '(' + network.type.name + ')' }}
         </div>
 
-        <div class="last-block font-reset pl-3">
+        <div class="last-block font-reset-disabled pl-3">
           <i class="fa fa-angle-right" aria-hidden="true"></i>
           {{ $t('interface.network-modal.last-block') }}#:
           <span class="text-monospace ">{{ blockNumber }}</span>

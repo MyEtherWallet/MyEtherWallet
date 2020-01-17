@@ -1,35 +1,43 @@
 <template>
-  <div class="mobile-info-block">
-    <div class="info-block-title text-uppercase font-reset mb-1">
-      {{ $t('common.balance.wallet') }}
-    </div>
-    <div class="info-block-value text-monospace pl-3">
-      {{ accountBalance
-      }}<span class="font-reset">{{ network.type.currencyName }}</span>
+  <div class="mobile-info-block d-flex align-items-center">
+    <div>
+      <div class="info-block-title text-uppercase font-reset-disabled mb-1">
+        {{ $t('common.balance.wallet') }}
+      </div>
+      <div class="info-block-value text-monospace pl-3">
+        {{ accountBalance
+        }}<span class="font-reset-disabled">{{
+          network.type.currencyName
+        }}</span>
+      </div>
+
+      <div class="pl-3">
+        <div class="equivalent-values-title font-reset-disabled">
+          <i class="fa fa-angle-right" aria-hidden="true"></i>
+          {{ $t('interface.check-balance.equivalent') }}
+        </div>
+        <ul class="equivalent-values-data pl-3">
+          <li
+            v-for="ev in equivalentValues"
+            :key="ev.key"
+            class="d-flex align-items-center"
+          >
+            <img
+              :src="
+                require(`@/assets/images/currency/${ev.name.toLowerCase()}.svg`)
+              "
+              alt
+              class="mr-2"
+            />
+            <div class="mr-2 text-monospace">{{ ev.name }}</div>
+            <div class="text-monospace">{{ ev.value }}</div>
+          </li>
+        </ul>
+      </div>
     </div>
 
-    <div class="pl-3">
-      <div class="equivalent-values-title font-reset">
-        <i class="fa fa-angle-right" aria-hidden="true"></i>
-        {{ $t('interface.check-balance.equivalent') }}
-      </div>
-      <ul class="equivalent-values-data pl-3">
-        <li
-          v-for="ev in equivalentValues"
-          :key="ev.key"
-          class="d-flex align-items-center"
-        >
-          <img
-            :src="
-              require(`@/assets/images/currency/${ev.name.toLowerCase()}.svg`)
-            "
-            alt
-            class="mr-2"
-          />
-          <div class="mr-2 text-monospace">{{ ev.name }}</div>
-          <div class="text-monospace">{{ ev.value }}</div>
-        </li>
-      </ul>
+    <div class="ml-auto">
+      <i class="setting fa fa-ellipsis-v" aria-hidden="true"></i>
     </div>
   </div>
 </template>
