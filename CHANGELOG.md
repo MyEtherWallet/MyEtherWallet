@@ -1,3 +1,7 @@
+### Devop
+
+- Run update:swap with other update script [#1859](https://github.com/MyEtherWallet/MyEtherWallet/pull/1859)
+
 ### Bug
 
 - Disable web3 detection [#1840](https://github.com/MyEtherWallet/MyEtherWallet/pull/1840)
