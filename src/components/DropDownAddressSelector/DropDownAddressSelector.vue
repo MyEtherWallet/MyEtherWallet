@@ -189,15 +189,13 @@ export default {
       this.validateAddress(this.selectedAddress);
     },
     dropdownOpen(val) {
-      const hasResolverTxt =
+      const resolverTxtElem =
         document.querySelector('.resolver-error') ||
         document.querySelector('.resolver-addr');
-      if (hasResolverTxt) {
+      if (resolverTxtElem) {
         val === true
-          ? document.querySelector('.resolver-error').classList.add('hidden')
-          : document
-              .querySelector('.resolver-error')
-              .classList.remove('hidden');
+          ? resolverTxtElem.classList.add('hidden')
+          : resolverTxtElem.classList.remove('hidden');
       }
     }
   },
