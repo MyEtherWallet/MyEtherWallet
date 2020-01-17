@@ -19,6 +19,7 @@
 - Migrate Webchain to Mintme [#1824](https://github.com/MyEtherWallet/MyEtherWallet/pull/1824)
 - Update ETC explorrer links [#1855](https://github.com/MyEtherWallet/MyEtherWallet/pull/1855)
 - Update packages [#1852](https://github.com/MyEtherWallet/MyEtherWallet/pull/1852/files#diff-b9cfc7f2cdf78a7f4b91a753d10865a2R61)
+
 ### Release v5.2.9
 
 ### Feature
