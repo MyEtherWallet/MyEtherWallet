@@ -7,6 +7,7 @@
 ### Devop
 
 - Update Packages from greenkeeper [#1863](https://github.com/MyEtherWallet/MyEtherWallet/pull/1863)
+- Remove Price bar []()
 
 ### Release v5.2.10
 

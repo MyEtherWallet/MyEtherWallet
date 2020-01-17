@@ -1,7 +1,6 @@
 <template>
   <div>
     <access-my-wallet-container />
-    <price-bar :v-if="online && tokens.length > 1" :tokens="tokens" />
     <faqs />
   </div>
 </template>
@@ -9,7 +8,6 @@
 <script>
 import AccessMyWalletContainer from './containers/AccessMyWalletContainer';
 import FaqsContainer from '@/containers/FaqsContainer';
-import PriceBar from './components/PriceBar';
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 
@@ -17,8 +15,7 @@ export default {
   name: 'AccessWalletLayout',
   components: {
     'access-my-wallet-container': AccessMyWalletContainer,
-    faqs: FaqsContainer,
-    'price-bar': PriceBar
+    faqs: FaqsContainer
   },
   data() {
     return {
