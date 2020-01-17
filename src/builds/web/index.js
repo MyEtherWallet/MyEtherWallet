@@ -24,6 +24,16 @@ const webRoutes = [
   }
 ];
 const configRoutes = routes => {
-  return routes.concat(webRoutes);
+  const newRoutes = webRoutes.concat(routes).map(item => {
+    if (item.path.length > 1) {
+      const itemPath = item.path;
+      item.path = `/(en|ru)${itemPath}`;
+    } else {
+      item.path = `/(en|ru)`;
+    }
+
+    return item;
+  });
+  return newRoutes;
 };
 export { app, configRoutes };

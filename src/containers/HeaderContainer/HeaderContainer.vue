@@ -328,7 +328,13 @@ export default {
     web3() {
       this.setHighGasPrice();
     },
-    locale() {
+    locale(newVal, oldVal) {
+      if (BUILD_TYPE !== 'mewcx') {
+        const currentValue = oldVal.substr(0, 2);
+        const newLocale = newVal.substr(0, 2);
+        const redirectTo = this.$route.path;
+        this.$router.replace(redirectTo.replace(currentValue, newLocale));
+      }
       this.getCurrentLang();
     }
   },
