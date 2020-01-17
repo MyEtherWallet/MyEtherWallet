@@ -25,8 +25,8 @@ const AddrResolver = {
       actualProcess(address);
     });
     vnode.context.$watch(binding.value, function(e) {
-      address = e;
-      actualProcess(e);
+      address = e.trim();
+      actualProcess(address);
     });
     const removeElements = function() {
       vnode.elm.parentNode.parentNode
