@@ -10,7 +10,7 @@
   "loading-range": " Loading {first} - {last}",
   "reloading": "reloading",
   "none-owned": "You own no NFTs",
-  "custom": "Custom NFT",
+  "custom": "Add custom NFT",
   "nft-are": "NFTs are",
   "ph-token-addr": "Token Contract Address",
   "no-method-no-token": "NFT token contract doesn't include a required method to add as a custom NFT or you do not have any {token}",
@@ -18,5 +18,7 @@
   "name": "NFT name",
   "invalid-addr": "Invalid address given.",
   "nft": "NFT",
-  "manager": "Manager"
+  "manager": "Manager",
+  "select-item": "Select an item to see details or add your custom NFT.",
+  "avail-nft": "Available NFT"
 }
