@@ -1,4 +1,4 @@
-//@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .network-block-contents * {
   color: white;
@@ -7,7 +7,7 @@
 
 .mobile-info-block {
   width: 100%;
-  background-color: #00bbf3;
+  background-color: $light-blue-4;
   border-radius: 20px;
   padding: 10px 15px;
 }
