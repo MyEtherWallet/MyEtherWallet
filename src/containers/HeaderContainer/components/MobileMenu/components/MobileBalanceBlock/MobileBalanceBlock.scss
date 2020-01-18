@@ -1,4 +1,4 @@
-//@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .balance-contents * {
   color: white;
@@ -7,7 +7,7 @@
 
 .mobile-info-block {
   width: 100%;
-  background-color: #6988ff;
+  background-color: $light-blue-1;
   border-radius: 20px;
   padding: 10px 15px;
 }
