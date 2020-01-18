@@ -1,6 +1,7 @@
 <template>
   <div class="mobile-info-block d-flex align-items-center">
-    <div>
+    <interface-balance-modal ref="balanceModal" :balance="accountBalance" />
+    <div class="balance-contents">
       <div class="info-block-title text-uppercase font-reset-disabled mb-1">
         {{ $t('common.balance.wallet') }}
       </div>
@@ -10,8 +11,9 @@
           network.type.currencyName
         }}</span>
       </div>
+      <div class="py-2"></div>
 
-      <div class="pl-3">
+      <div v-if="false" class="pl-3">
         <div class="equivalent-values-title font-reset-disabled">
           <i class="fa fa-angle-right" aria-hidden="true"></i>
           {{ $t('interface.check-balance.equivalent') }}
@@ -36,7 +38,7 @@
       </div>
     </div>
 
-    <div class="ml-auto">
+    <div class="balance-contents ml-auto" @click="showBalanceModal">
       <i class="setting fa fa-ellipsis-v" aria-hidden="true"></i>
     </div>
   </div>
@@ -46,9 +48,10 @@
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import BigNumber from 'bignumber.js';
+import InterfaceBalanceModal from '@/layouts/InterfaceLayout/components/InterfaceBalanceModal';
 
 export default {
-  components: {},
+  components: { 'interface-balance-modal': InterfaceBalanceModal },
   data() {
     return {
       equivalentValues: [
@@ -100,6 +103,10 @@ export default {
     //console.log(this.equivalentValues);
   },
   methods: {
+    showBalanceModal() {
+      this.getBalance();
+      this.$refs.balanceModal.$refs.balance.show();
+    },
     getBalance() {
       if (this.account.address) {
         this.web3.eth
