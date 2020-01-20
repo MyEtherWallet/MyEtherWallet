@@ -13,7 +13,7 @@ const AddrResolver = {
     let parentCurrency = vnode.context.$parent.currency
       ? vnode.context.$parent.currency
       : network.type.name;
-    let address = ''
+    let address = '';
     const resolution = new Resolution({ ens: { network: network } });
     vnode.context.$parent.$watch('$store.state.network', function(e) {
       network = e;
