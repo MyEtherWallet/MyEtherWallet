@@ -42,50 +42,50 @@
     "option-title": "MetaMask",
     "option-text": "使用 MetaMask 扩展来访问我的钱包",
     "warning": {
-      "safari": "MetaMask is only available in these browsers:",
-      "install-promt": "Please install the Metamask extension and refresh your page.",
-      "unlock": "Can't access wallet! Please unlock your wallet through the Metamask extension"
+      "safari": "MetaMask仅适用于以下浏览器：",
+      "install-promt": "请安装 MetaMask 插件并刷新页面。",
+      "unlock": "无法访问钱包! 请通过 MetaMask 插件访问我的钱包"
     },
     "modal": {
-      "title": "Access via MetaMask",
-      "text": "Please use MyEtherWallet on a secure (SSL/HTTPS) connection to connect.",
-      "button-install": "Install Metamask",
-      "button-refresh": "Refresh",
-      "terms": "To Access my Wallet, I accept {terms}."
+      "title": "通过 MetaMask 访问",
+      "text": "请在一个安全的 (SSL/HTTPS) 连接中使用 MyEtherWallet 来连接。",
+      "button-install": "安装 MetaMask",
+      "button-refresh": "刷新",
+      "terms": "访问我的电子钱包，表示我接受{terms}。"
     }
   },
   "mnemonic": {
-    "string": "Mnemonic Phrase",
-    "value": "Value",
+    "string": "助记短语",
+    "value": "价值",
     "modal": {
-      "title": "Access by Mnemonic Phrase",
-      "text": "Please type in your mnemonic phrase."
+      "title": "通过助记短语访问我的钱包",
+      "text": "请输入您的助记短语。"
     }
   },
   "ledger": {
     "modal": {
-      "title": "Choose the App",
-      "text": "Please choose the App you have opened in Ledger"
+      "title": "选择应用",
+      "text": "请选择您已在 Ledger 中打开的应用"
     }
   },
   "private-key": {
-    "string": "Private Key",
+    "string": "私钥",
     "modal": {
-      "title": "Access by Private Key",
-      "placeholder": "Enter Private Key"
+      "title": "通过私钥访问我的钱包",
+      "placeholder": "输入私钥"
     },
-    "do-not-share": "Please {do-not} share your private key to anyone! You may lose your money if you share it"
+    "do-not-share": "请{do-not}将您的私钥分享给任何人！如果分享，您可能会蒙受资金损失"
   },
   "network-addr": {
-    "string": "Network and Address",
-    "addr-to-interact": "Address to Interact With",
-    "id": "ID",
-    "icon": "icon"
+    "string": "网络和地址",
+    "addr-to-interact": "互动地址",
+    "id": "身份码",
+    "icon": "图标"
   },
   "path": {
-    "string": "Path",
-    "hd-derivation": "HD Derivation Path",
-    "custom": "Custom Paths",
+    "string": "路径",
+    "hd-derivation": "高清衍生路径",
+    "custom": "自定义路径",
     "add-custom": "Add Custom Path",
     "ivalid-custom": "Invalid Custom Path",
     "invalid-desc": "The path: {path} is not valid for this device",
