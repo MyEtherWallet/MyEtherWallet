@@ -1,4 +1,55 @@
-const CURRENCIES = [
+const currencies = [
+  {
+    name: 'bitcoin',
+    symbol: 'btc'
+  },
+  {
+    name: 'liteCoin',
+    symbol: 'ltc'
+  },
+  {
+    name: 'denarius',
+    symbol: 'dnr'
+  },
+  {
+    name: 'peerCoin',
+    symbol: 'ppc'
+  },
+  {
+    name: 'dogeCoin',
+    symbol: 'doge'
+  },
+  {
+    name: 'beaverCoin',
+    symbol: 'bvc'
+  },
+  {
+    name: 'freiCoin',
+    symbol: 'frc'
+  },
+  {
+    name: 'protoShares',
+    symbol: 'pts'
+  },
+  {
+    name: 'megaCoin',
+    symbol: 'mec'
+  },
+  {
+    name: 'primeCoin',
+    symbol: 'xpm'
+  },
+  {
+    name: 'auroraCoin',
+    symbol: 'aur'
+  },
+  {
+    name: 'nameCoin',
+    symbol: 'nmc'
+  }
+];
+
+const multiCoinCurrencies = [
   {
     name: 'Bitcoin',
     symbol: 'btc'
@@ -329,12 +380,24 @@ const CURRENCIES = [
   }
 ];
 
-export function canValidate(currencyNameOrSymbol) {
+function canValidateMulticoin(currencyNameOrSymbol) {
   const nameOrSymbol = currencyNameOrSymbol.toLowerCase();
-  return CURRENCIES.find(function(currency) {
+  return multiCoinCurrencies.find(function(currency) {
     return (
       currency.name.toLowerCase() === nameOrSymbol ||
       currency.symbol.toLowerCase() === nameOrSymbol
     );
   });
 }
+
+function canValidateCoin(currencyNameOrSymbol) {
+  const nameOrSymbol = currencyNameOrSymbol.toLowerCase();
+  return currencies.find(function(currency) {
+    return (
+      currency.name.toLowerCase() === nameOrSymbol ||
+      currency.symbol.toLowerCase() === nameOrSymbol
+    );
+  });
+}
+
+export { canValidateMulticoin, canValidateCoin };
