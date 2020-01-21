@@ -4,6 +4,7 @@
 
 - Add vkontakte icon to social home page and add first time russian popup [#1872](https://github.com/MyEtherWallet/MyEtherWallet/pull/1872)
 - Add unstoppable domains [#1857](https://github.com/MyEtherWallet/MyEtherWallet/pull/1857)
+- ENS functionality for address book [#1888] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1888)
 
 ### Devop
 
