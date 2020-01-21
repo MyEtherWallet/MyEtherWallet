@@ -27,9 +27,9 @@ const configRoutes = routes => {
   const newRoutes = webRoutes.concat(routes).map(item => {
     if (item.path.length > 1) {
       const itemPath = item.path;
-      item.path = `/:lang(ru|en)?${itemPath}`;
+      item.path = `/:lang(ru)?${itemPath}`;
     } else {
-      item.path = `/:lang(ru|en)?`;
+      item.path = `/:lang(ru)?`;
     }
 
     return item;
