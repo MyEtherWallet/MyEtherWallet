@@ -38,4 +38,12 @@ const getStatus = userId => {
     utils.handleOrThrow(e);
   }
 };
-export { getQuote, getOrder, getStatus };
+
+const getExchangeRates = () => {
+  try {
+    return get(`${host.url}/exchange-rates`);
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
+};
+export { getQuote, getOrder, getStatus, getExchangeRates };

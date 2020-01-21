@@ -49,6 +49,7 @@ const TIME_SWAP_VALID = TIME_SWAP_VALID_DEFAULT;
 const MIN_FIAT = 50;
 const MAX_FIAT = 20000;
 const PROVIDER_NAME = 'simplex';
+const BASE_CURRENCY = 'EUR'; // todo get upgraded plan to get USD
 
 const host = {
   url: process.env.SIMPLEX_API_HOST || mewSimplex
@@ -62,5 +63,6 @@ export {
   TIME_SWAP_VALID,
   MIN_FIAT,
   MAX_FIAT,
+  BASE_CURRENCY,
   PROVIDER_NAME
 };
