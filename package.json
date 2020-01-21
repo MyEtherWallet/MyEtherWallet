@@ -28,9 +28,10 @@
     "update:swap": "node compileBaseSwapOptions.js"
   },
   "dependencies": {
-    "@sentry/browser": "5.11.1",
+    "@sentry/browser": "5.10.2",
     "@sentry/integrations": "5.10.2",
     "core-js": "3.6.1",
+    "@unstoppabledomains/resolution": "1.0.16",
     "html2canvas": "1.0.0-rc.5",
     "idna-uts46": "1.1.0",
     "levenshtein": "1.0.5",
@@ -140,6 +141,7 @@
     "web3-core-requestmanager": "1.2.4",
     "web3-utils": "1.2.4",
     "webpack": "4.41.5",
+    "weekstart": "1.0.1",
     "worker-loader": "2.0.0",
     "zxcvbn": "4.4.2"
   },
