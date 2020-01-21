@@ -1,6 +1,6 @@
 ### Feature
 
-- Translation indexing []()
+- Translation indexing [#1890](https://github.com/MyEtherWallet/MyEtherWallet/pull/1890)
 
 ### Release v5.2.11
 
