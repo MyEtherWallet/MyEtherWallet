@@ -18,6 +18,7 @@ import go from './go';
 import kovethscan from './kov-ethscan';
 import kovinfura from './kov-infura';
 import kovpocket from './kov-pocket';
+import kovmew from './kov-mew';
 import kovmewws from './kov-mew-ws';
 import metadium from './meta';
 import music from './music';
@@ -78,6 +79,7 @@ export {
   iolite,
   kovethscan,
   kovinfura,
+  kovmew,
   kovmewws,
   kovpocket,
   metadium,
