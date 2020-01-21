@@ -12,6 +12,7 @@
 ### Devop
 
 - Update EtherCore block explorrer link [#1882](https://github.com/MyEtherWallet/MyEtherWallet/pull/1882)
+- Update ledger packages [#1884](https://github.com/MyEtherWallet/MyEtherWallet/pull/1884)
 - Run update:swap with other update script [#1859](https://github.com/MyEtherWallet/MyEtherWallet/pull/1859)
 - Update translations [#1870] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1870)
 - Update Packages from greenkeeper [#1863](https://github.com/MyEtherWallet/MyEtherWallet/pull/1863)
