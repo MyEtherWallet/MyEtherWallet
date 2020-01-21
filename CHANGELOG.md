@@ -1,3 +1,7 @@
+### Devop
+
+- Add CAD and JPY as Simplex currencies [#1887](https://github.com/MyEtherWallet/MyEtherWallet/pull/1887)
+
 ### Release v5.2.11
 
 ### Feature
