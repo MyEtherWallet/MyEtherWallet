@@ -18,29 +18,29 @@
     "finney-connect": "FINNEY Connect"
   },
   "hardware": {
-    "option-title": "硬件设备",
+    "option-title": "硬件钱包",
     "warning": {
-      "not-connected": "Please make sure your device is connected."
+      "not-connected": "请确保您的设备已连接。"
     },
     "modal": {
-      "title": "Access by Hardware",
-      "button-buy": "Buy Now",
-      "button-choose": "Continue"
+      "title": "通过硬件钱包访问我的钱包",
+      "button-buy": "立即购买",
+      "button-choose": "继续"
     },
-    "examples": "Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet"
+    "examples": "Ledger Wallet，FINNEY，Trezor，BitBox，Secalot，KeepKey，XWallet"
   },
   "software": {
-    "option-title": "Software",
-    "option-text": "Keystore file, Private key, Mnemonic phrase",
+    "option-title": "软件",
+    "option-text": "Keystore文件, 密钥，助记短语",
     "modal": {
-      "title": "Access by Software",
-      "purchase-text": "Purchase a hardware wallet for the highest security when accessing your crypto.",
-      "purchase-link": "Purchase a hardware wallet...."
+      "title": "通过软件访问我的钱包",
+      "purchase-text": "购买硬件钱包，为您访问加密货币时获得最高的安全性。",
+      "purchase-link": "购买硬件钱包...."
     }
   },
   "metamask": {
-    "option-title": "Metamask",
-    "option-text": "Use the MetaMask extension to access my wallet",
+    "option-title": "MetaMask",
+    "option-text": "使用 MetaMask 扩展来访问我的钱包",
     "warning": {
       "safari": "MetaMask is only available in these browsers:",
       "install-promt": "Please install the Metamask extension and refresh your page.",
