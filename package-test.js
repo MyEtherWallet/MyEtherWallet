@@ -25,7 +25,9 @@ const EXCEPTIONS = [
   'web3-core-method',
   'web3-utils',
   '@vue/test-utils',
-  'secp256k1'
+  'sass-loader',
+  'stylelint',
+  'core-js'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
