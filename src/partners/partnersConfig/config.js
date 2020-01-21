@@ -16,7 +16,7 @@ const swapApiEndpoints = {
   kyber: '/kyber'
 };
 
-const mewSimplex = 'https://apiccswap.myetherwallet.com';
+const mewSimplex = 'http://apiccswap.mewtest.com';
 
 const swapNotificationStatuses = {
   new: 'new',
