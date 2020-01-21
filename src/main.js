@@ -58,14 +58,11 @@ Vue.use(VueMq, {
   }
 });
 Vue.prototype.$eventHub = new Vue();
-
+Vue.use(Router);
 // Regular Components
 Vue.component(VueQrcode.name, VueQrcode);
 Vue.component('popover', PopOver);
 
-//Router
-Vue.use(Router);
-Vue.router = router;
 // Directives!!!
 Vue.directive('click-outside', ClickOutside);
 Vue.directive('addr-resolver', AddrResolver);

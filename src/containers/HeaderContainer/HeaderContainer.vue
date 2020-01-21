@@ -332,12 +332,20 @@ export default {
     web3() {
       this.setHighGasPrice();
     },
-    locale(newVal, oldVal) {
+    locale(newVal) {
       if (BUILD_TYPE !== 'mewcx') {
-        const currentValue = oldVal.substr(0, 2);
         const newLocale = newVal.substr(0, 2);
-        const redirectTo = this.$route.path;
-        this.$router.replace(redirectTo.replace(currentValue, newLocale));
+        const reg = new RegExp(/\/[a-z]{2}\//gm);
+        const hasLocale = this.$route.path.match(reg);
+        let redirectTo = '';
+        if (hasLocale && newLocale === 'en') {
+          redirectTo = this.$route.path.replace(reg, '/');
+        } else if (hasLocale && newLocale !== 'en') {
+          redirectTo = this.$route.path.replace(reg, `/${newLocale}/`);
+        } else if (!hasLocale && newLocale !== 'en') {
+          redirectTo = `/${newLocale}${this.$route.path}`;
+        }
+        this.$router.replace(redirectTo);
       }
       this.getCurrentLang();
     }
@@ -346,8 +354,6 @@ export default {
     this.$eventHub.$on('open-settings', this.openSettings);
   },
   mounted() {
-    // Remove for next release
-    store.remove('neverReport');
     this.getCurrentLang();
 
     // On load, if page is not on top, apply small menu and show scroll top button

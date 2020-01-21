@@ -6,6 +6,7 @@ import { isAddress } from '@/helpers/addressUtils';
 import Misc from '@/helpers/misc';
 import { MEW_CX } from '@/builds/configs/types';
 import locStore from 'store';
+import supportedLang from '@/containers/HeaderContainer/supportedLang.js';
 
 const storeQuery = query => {
   const queryKeys = Object.keys(query);
@@ -32,32 +33,19 @@ const router = new Router({
   }
 });
 
-router.beforeEach((to, _, next) => {
-  const getCurrentLangCode = locStore.get('locale') || 'en_US';
-  if (BUILD_TYPE !== MEW_CX) {
-    if (to.path === '/') {
-      const newPath = {
-        path: `${to.path}${getCurrentLangCode.substr(0, 2)}`,
-        replace: true
-      };
-      return next(newPath);
-    } else if (!to.path.includes('en') && !to.path.includes('ru')) {
-      const newPath = {
-        path: `/${getCurrentLangCode.substr(0, 2)}${to.path}`,
-        replace: true
-      };
-      return next(newPath);
-    } else if (to.path.includes('en') || to.path.includes('ru') {
+router.beforeResolve((to, from, next) => {
+  const { lang } = to.params || 'en';
+  const storeLocale = locStore.get('locale').substr(0, 2);
 
-    })
-    store.dispatch('setLocale', getCurrentLangCode);
-    return next();
+  if (lang !== storeLocale) {
+    const getCode = supportedLang.find(item => {
+      return item.flag === lang;
+    });
+
+    store.dispatch('setLocale', getCode ? getCode.langCode : 'en_US');
   }
 
-  return next();
-});
-
-router.beforeResolve((to, from, next) => {
+  // const had
   storeQuery(to.query);
   if (to.meta.hasOwnProperty('requiresAuth')) {
     next();
@@ -79,7 +67,8 @@ router.beforeResolve((to, from, next) => {
         });
       } else {
         store.dispatch('setLastPath', to.path);
-        next({ name: 'AccessWalletLayout' });
+        console.log(to.params);
+        next({ name: 'AccessWalletLayout', params: to.params });
       }
     } else {
       if (store.state.path !== '') {

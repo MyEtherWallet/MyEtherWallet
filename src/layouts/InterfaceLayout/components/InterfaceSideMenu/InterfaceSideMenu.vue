@@ -80,7 +80,8 @@ export default {
       this.$store.commit('TOGGLE_SIDEMENU');
     },
     isTabActive(routes) {
-      return routes.includes(this.$route.path);
+      const reg = new RegExp(/\/[a-z]{2}\//gm);
+      return routes.includes(this.$route.path.replace(reg, '/'));
     },
     tabAction(tab) {
       if (!tab.hasOwnProperty('children') || tab.children.length === 0) {
