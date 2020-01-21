@@ -30,8 +30,8 @@
   "dependencies": {
     "@sentry/browser": "5.10.2",
     "@sentry/integrations": "5.10.2",
-    "core-js": "3.6.1",
     "@unstoppabledomains/resolution": "1.0.16",
+    "core-js": "3.6.1",
     "html2canvas": "1.0.0-rc.5",
     "idna-uts46": "1.1.0",
     "levenshtein": "1.0.5",

@@ -203,7 +203,7 @@
                     <td class="numbered">{{ index + 1 }}.</td>
                     <td class="addr-container">
                       <blockie
-                        :address="contact.address"
+                        :address="contact.resolverAddr"
                         width="25px"
                         height="25px"
                         class="blockie-image"
@@ -224,7 +224,7 @@
                     <td>
                       <span
                         class="edit-txt"
-                        @click="openAddrBookModal('edit', index)"
+                        @click="openAddrBookModal('edit', contact)"
                       >
                         {{ $t('interface.address-book.edit') }}
                       </span>
@@ -533,7 +533,8 @@ export default {
 
       this.ethPrice = price.data.ETH.quotes.USD.price;
     },
-    openAddrBookModal(action, idx) {
+    openAddrBookModal(action, obj) {
+      const idx = this.addressBook.indexOf(obj);
       this.currentAddressIdx = action === 'edit' ? idx : null;
       this.modalAction = action;
       this.addrBookModalTitle =
