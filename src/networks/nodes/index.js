@@ -18,6 +18,7 @@ import go from './go';
 import kovethscan from './kov-ethscan';
 import kovinfura from './kov-infura';
 import kovpocket from './kov-pocket';
+import kovmew from './kov-mew';
 import kovmewws from './kov-mew-ws';
 import metadium from './meta';
 import music from './music';
@@ -46,11 +47,12 @@ import exp from './exp';
 import iolite from './iolite';
 import mix from './mix';
 import reosc from './reosc';
-import web from './web';
+import mintme from './mintme';
 import thundercore from './thundercore';
 import sum from './sum';
 import dexon from './dexon';
 import pht from './pht';
+import ere from './ere';
 
 export {
   akaremote,
@@ -77,6 +79,7 @@ export {
   iolite,
   kovethscan,
   kovinfura,
+  kovmew,
   kovmewws,
   kovpocket,
   metadium,
@@ -101,9 +104,10 @@ export {
   rsktestpublic,
   tomo,
   ubq,
-  web,
+  mintme,
   thundercore,
   sum,
   dexon,
-  pht
+  pht,
+  ere
 };
