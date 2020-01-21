@@ -1,5 +1,8 @@
 {
   "Uncaught Error: Key derivation failed - possibly wrong passphrase": "errorsGlobal.wrong-passphrase",
   "mewcx.nickname-found": "mewcx.nickname-found",
-  "mewcx.address-already-stored": "mewcx.address-already-stored"
+  "mewcx.address-already-stored": "mewcx.address-already-stored",
+  "kyber-token-list-update-failed": "swap.warning.kyber-token-list-update-failed",
+  "kyber-gasLimit-list-update-failed": "swap.warning.kyber-gasLimit-list-update-failed",
+  "kyber-list-update-failed": "swap.warning.kyber-list-update-failed"
 }

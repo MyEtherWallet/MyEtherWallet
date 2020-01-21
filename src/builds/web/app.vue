@@ -48,9 +48,8 @@ export default {
     }
   },
   created() {
-    const succMsg =
-      'New update found! Please refresh your browser to receive the most updated version';
-    const errMsg = 'Something went wrong with our service workers!';
+    const succMsg = this.$t('home.new-update');
+    const errMsg = this.$t('home.new-update-error');
     window.addEventListener('PWA_UPDATED', () => {
       Toast.responseHandler(succMsg, Toast.SUCCESS);
     });
