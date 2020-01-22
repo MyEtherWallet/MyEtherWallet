@@ -3,18 +3,19 @@
 ### Feature
 
 - Add vkontakte icon to social home page and add first time russian popup [#1872](https://github.com/MyEtherWallet/MyEtherWallet/pull/1872)
-- Add unstoppable domains [#1857] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1857)
+- Add unstoppable domains [#1857](https://github.com/MyEtherWallet/MyEtherWallet/pull/1857)
 
 ### Devop
 
 - Update ledger packages [#1884](https://github.com/MyEtherWallet/MyEtherWallet/pull/1884)
 - Run update:swap with other update script [#1859](https://github.com/MyEtherWallet/MyEtherWallet/pull/1859)
-- Update translations [#1870] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1870)
+- Update translations [#1870](https://github.com/MyEtherWallet/MyEtherWallet/pull/1870)
 - Update Packages from greenkeeper [#1863](https://github.com/MyEtherWallet/MyEtherWallet/pull/1863)
 - Remove Price bar [#1876](https://github.com/MyEtherWallet/MyEtherWallet/pull/1876)
 
 ### Bug
 
+- Fix footer text wrapping issue [#1892](https://github.com/MyEtherWallet/MyEtherWallet/pull/1892)
 - Fix tx hash link, switch address, and make cx connection with popup more stable [#1853](https://github.com/MyEtherWallet/MyEtherWallet/pull/1853)
 - Disable web3 detection [#1840](https://github.com/MyEtherWallet/MyEtherWallet/pull/1840)
 - Improve error messages for outdated dependencies [#1848](https://github.com/MyEtherWallet/MyEtherWallet/pull/1848)
