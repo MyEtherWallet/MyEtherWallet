@@ -1,7 +1,7 @@
 // TODO: look into only using kyberTokenInfoList for ETH and parsing results differently if ROP?
 import { TIME_SWAP_VALID_DEFAULT } from '../../partnersConfig/config';
 
-import { KyberCurrenciesETH } from './currenciesETH';
+import KyberCurrenciesETH from './currenciesETH.json';
 import { KyberCurrenciesROP } from './currenciesROP';
 import { KyberCurrenciesKOV } from './currenciesKOV';
 

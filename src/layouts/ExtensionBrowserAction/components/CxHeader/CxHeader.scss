@@ -75,7 +75,7 @@ a {
   }
 
   .network-service {
-    color: $light-grey-7;
+    color: $dark-blue-2;
     font-size: 12px;
   }
 
@@ -84,7 +84,6 @@ a {
   }
 
   .color {
-    background-color: $dark-blue-2;
     height: 5px;
     width: 5px;
     border-radius: 50%;
@@ -97,4 +96,65 @@ a {
     top: 3px;
     right: 0;
   }
+}
+.network-selection-container {
+  border-bottom: 1px solid $dark-grey-11;
+  text-align: left;
+  padding: 15px 25px;
+  position: relative;
+
+  .network-title {
+    color: $dark-blue-2;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .network-service {
+    color: $dark-blue-1;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .active {
+    color: $dark-blue-2;
+  }
+
+  i {
+    position: absolute;
+  }
+
+  .color {
+    background-color: $dark-blue-2;
+    height: 5px;
+    width: 5px;
+    border-radius: 50%;
+    top: 23px;
+    left: 10px;
+  }
+
+  .network-caret {
+    color: $dark-blue-2;
+    top: 19px;
+    right: 10px;
+    font-size: small;
+    cursor: pointer;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+
+.showContents-enter-active,
+.showContents-leave-active {
+  transition: all 0.2s;
+  max-height: 230px;
+}
+.showContents-enter,
+.showContents-leave-to
+{
+  opacity: 0;
+  max-height: 0px;
 }

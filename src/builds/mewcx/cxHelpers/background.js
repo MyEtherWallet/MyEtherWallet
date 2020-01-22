@@ -177,6 +177,8 @@ chrome.tabs.query({ active: true, lastFocusedWindow: true }, function(tabs) {
 chrome.tabs.onUpdated.addListener(onUpdatedCb);
 chrome.tabs.onActivated.addListener(onActivatedCb);
 chrome.tabs.onRemoved.addListener(onRemovedCb);
+chrome.runtime.onInstalled.addListener(onInstalledCb);
+chrome.runtime.onStartup.addListener(onInstalledCb);
 
 function onRemovedCb(id) {
   if (urls[id]) {
@@ -213,6 +215,11 @@ function onActivatedCb(info) {
       chrome.runtime.onMessage.addListener(eventsListeners);
     }
   });
+}
+
+function onInstalledCb() {
+  chrome.runtime.onMessage.removeListener(eventsListeners);
+  chrome.runtime.onMessage.addListener(eventsListeners);
 }
 
 function querycB(tab) {
