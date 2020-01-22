@@ -107,7 +107,6 @@ a {
     color: $dark-blue-2;
     font-size: 12px;
     font-weight: bold;
-    cursor: pointer;
   }
 
   .network-service {
@@ -117,6 +116,7 @@ a {
   }
 
   .active {
+    font-weight: bold;
     color: $dark-blue-2;
   }
 
