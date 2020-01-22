@@ -27,12 +27,14 @@ export default {
 <style lang="scss" scoped>
 .cx-container {
   background-color: #f2f4fa;
+  height: calc(100vh - 65px);
   min-width: 960px;
 }
 
 .cx-content-wrap {
-  width: 100%;
+  height: 100%;
   position: relative;
+  width: 100%;
 }
 
 .max-width-limit {

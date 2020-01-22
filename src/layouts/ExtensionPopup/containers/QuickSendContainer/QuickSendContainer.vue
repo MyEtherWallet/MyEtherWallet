@@ -26,7 +26,9 @@
       <form v-show="step === 1" @submit.prevent="next">
         <div class="from-text">
           <p>{{ $t('mewcx.from') }}</p>
-          <p @click="switchWallet">{{ $t('mewcx.change') }}</p>
+          <p v-show="hasManyWallets" @click="switchWallet">
+            {{ $t('mewcx.change') }}
+          </p>
         </div>
         <wallet-view-component
           :usd="usd"
@@ -140,7 +142,6 @@ import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import Blockie from '@/components/Blockie';
 import { Misc } from '@/helpers';
 import { mapState } from 'vuex';
-import { ETH } from '@/networks/types';
 import ethUnit from 'ethjs-unit';
 import { WEB3_SIGN_TX } from '@/builds/mewcx/cxHelpers/cxEvents';
 
@@ -168,6 +169,10 @@ export default {
     usd: {
       type: Number,
       default: 0
+    },
+    hasManyWallets: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -190,15 +195,16 @@ export default {
       rawTx: {},
       gasPrice: 0,
       gasLimit: 0,
-      txLink: ETH.blockExplorerTX,
-      toValue: '0',
       isValidAddress: false
     };
   },
   computed: {
     ...mapState(['web3', 'network']),
     txLinkAndHash() {
-      return this.txLink.replace('[[txHash]]', this.txHash);
+      return this.network.type.blockExplorerTX.replace(
+        '[[txHash]]',
+        this.txHash
+      );
     },
     isValid() {
       if (this.step === 1) {
@@ -376,16 +382,12 @@ export default {
               msg: res.error,
               errored: true
             };
-
-            return;
           }
           if (res.hasOwnProperty('message')) {
             _self.error = {
               msg: res.message,
               errored: true
             };
-
-            return;
           }
 
           // eslint-disable-next-line

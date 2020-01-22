@@ -3,7 +3,6 @@
     <cx-footer v-if="isMewCx" />
     <div v-if="!isMewCx" class="footer">
       <!-- Modal -->
-      <feedback-modal />
       <div class="wrap">
         <div class="page-container">
           <div class="grid-col-1-1-1-2 footer-contents">
@@ -158,7 +157,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import FeedbackModal from '@/components/FeedbackModal';
 import CustomerSupport from '@/components/CustomerSupport';
 import affiliates from './affiliates.js';
 const version = VERSION;
@@ -167,7 +165,6 @@ import CxFooter from '@/layouts/ExtensionBrowserAction/components/CxFooter';
 
 export default {
   components: {
-    'feedback-modal': FeedbackModal,
     'customer-support': CustomerSupport,
     'cx-footer': CxFooter
   },
@@ -301,6 +298,10 @@ export default {
         {
           to: 'https://www.medium.com/@myetherwallet',
           class: 'fa-medium'
+        },
+        {
+          to: 'https://vk.com/public190491855',
+          class: 'fa-vk'
         }
       ]
     };
@@ -308,31 +309,8 @@ export default {
   computed: {
     ...mapState(['ethDonationAddress'])
   },
-  mounted() {
-    if (Misc.isMewCx()) {
-      this.footerContent[0].contents = this.footerContent[0].contents.filter(
-        item => {
-          if (item.to !== '/send-offline-helper') return item;
-        }
-      );
-
-      this.footerContent[2].contents = this.footerContent[2].contents.filter(
-        item => {
-          if (item.to !== '/#about-mew' && item.to !== '/#faqs') return item;
-        }
-      );
-    } else {
-      this.footerContent[0].contents = this.footerContent[0].contents.filter(
-        item => {
-          if (item.to !== '/view-wallet-info') return item;
-        }
-      );
-    }
-  },
+  mounted() {},
   methods: {
-    openFeedbackModal() {
-      this.$children[0].$refs.feedback.show();
-    },
     openContent(element) {
       const openButton = document.querySelector('.' + element + ' .open');
       const closeButton = document.querySelector('.' + element + ' .close');

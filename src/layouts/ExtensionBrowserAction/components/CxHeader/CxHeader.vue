@@ -96,30 +96,71 @@
             </b-nav-item-dropdown>
           </div>
         </div>
-        <b-dropdown class="cx-network-picker" no-caret right>
+        <b-dropdown
+          ref="cxNetworkDropdown"
+          class="cx-network-picker"
+          no-caret
+          right
+          menu-class="cx-dropdown-menu"
+        >
           <template v-slot:button-content>
             <div class="network-picker-title">
-              <i class="color" />
+              <i
+                class="color"
+                :style="{ backgroundColor: colors[network.type.name] }"
+              />
               <p class="network-title">
                 {{ network.type.name + ' network' }}
               </p>
               <p class="network-service">{{ network.service }}</p>
-              <i class="fa fa-angle-down network-caret" />
+              <i
+                :class="[
+                  'fa network-caret',
+                  networkOpen ? 'fa-angle-up' : 'fa-angle-down'
+                ]"
+              />
             </div>
           </template>
-          <b-dropdown-group
-            v-for="networkName in Object.keys(Networks)"
+          <div
+            v-for="(networkName, idx) in Object.keys(Networks)"
             :key="networkName"
-            :header="networkName + ' network'"
+            class="network-selection-container"
+            @click="toggleList(idx + 1)"
           >
-            <b-dropdown-item-button
-              v-for="network in Networks[networkName]"
-              :key="network.service + networkName"
-              @click="updateNetwork(network)"
-            >
-              {{ network.service }}
-            </b-dropdown-item-button>
-          </b-dropdown-group>
+            <div>
+              <i
+                class="color"
+                :style="{ backgroundColor: colors[networkName] }"
+              />
+              <p class="network-title">
+                {{ networkName }}
+              </p>
+              <i
+                :class="[
+                  'fa network-caret',
+                  networkShow === idx + 1 ? 'fa-minus' : 'fa-plus'
+                ]"
+              />
+            </div>
+            <transition name="showContents">
+              <div
+                v-if="networkShow === idx + 1"
+                class="network-service-container"
+              >
+                <div
+                  v-for="netList in Networks[networkName]"
+                  :key="netList.service + networkName"
+                  :class="[
+                    'network-service',
+                    netList.service === network.service ? 'active' : ''
+                  ]"
+                  @click.stop="updateNetwork(network)"
+                >
+                  {{ netList.service }}
+                </div>
+              </div>
+            </transition>
+          </div>
         </b-dropdown>
       </b-nav>
     </div>
@@ -146,7 +187,19 @@ export default {
   },
   data() {
     const isMewCx = Misc.isMewCx();
-    return { isMewCx: isMewCx, gasPrice: '0' };
+    return {
+      isMewCx: isMewCx,
+      gasPrice: '0',
+      networkOpen: false,
+      networkShow: 0,
+      colors: {
+        KOV: '#adc101',
+        ETH: '#0e97c0',
+        GOERLI: '#adc101',
+        ROP: '#adc101',
+        RIN: '#adc101'
+      }
+    };
   },
   computed: {
     ...mapState(['account', 'web3', 'network', 'Networks']),
@@ -163,7 +216,22 @@ export default {
       return Misc.getService(this.network.type.blockExplorerAddr);
     }
   },
+  mounted() {
+    this.$refs.cxNetworkDropdown.$on('show', () => {
+      this.networkOpen = true;
+    });
+    this.$refs.cxNetworkDropdown.$on('hide', () => {
+      this.networkOpen = false;
+    });
+  },
   methods: {
+    toggleList(num) {
+      if (num === this.networkShow) {
+        this.networkShow = 0;
+      } else {
+        this.networkShow = num;
+      }
+    },
     openSettings() {
       this.$refs.settings.$refs.settings.show();
       this.$refs.settings.$refs.settings.$on('hidden', () => {
@@ -189,6 +257,7 @@ export default {
     updateNetwork(network) {
       this.$store.dispatch('switchNetwork', network).then(() => {
         this.$store.dispatch('setWeb3Instance');
+        this.$refs.cxNetworkDropdown.hide();
       });
     }
   }
@@ -203,6 +272,22 @@ export default {
     border: none;
     border-radius: 0;
     background-color: $light-green-1;
+  }
+}
+
+.cx-dropdown-menu {
+  margin: 0 !important;
+  width: 100% !important;
+  margin: 0 !important;
+  border: none !important;
+  transform: translate3d(0px, 64px, 0px) !important;
+
+  .show {
+    margin: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    border: none !important;
+    transform: translate3d(0px, 64px, 0px) !important;
   }
 }
 
