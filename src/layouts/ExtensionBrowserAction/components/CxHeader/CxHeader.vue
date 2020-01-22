@@ -152,9 +152,12 @@
                   :key="netList.service + networkName"
                   :class="[
                     'network-service',
-                    netList.service === network.service ? 'active' : ''
+                    netList.service === network.service &&
+                    netList.type.name === network.type.name
+                      ? 'active'
+                      : ''
                   ]"
-                  @click.stop="updateNetwork(network)"
+                  @click.stop="updateNetwork(netList)"
                 >
                   {{ netList.service }}
                 </div>
