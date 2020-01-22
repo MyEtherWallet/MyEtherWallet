@@ -111,7 +111,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account']),
+    ...mapState('main', ['account']),
     signedMessageSignature() {
       if (this.signedMessage) {
         return this.signedMessage;

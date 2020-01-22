@@ -117,7 +117,7 @@ import Arrow from '@/assets/images/etc/single-arrow.svg';
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckoutForm from '../CheckoutForm';
-
+import { mapActions } from 'vuex';
 import { fiat, utils, qrcodeBuilder } from '@/partners';
 
 export default {
@@ -213,6 +213,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('main', ['addSwapNotification']),
     timeUpdater(swapDetails) {
       clearInterval(this.timerInterval);
       this.timeRemaining = utils.getTimeRemainingString(
@@ -230,15 +231,13 @@ export default {
       }, 1000);
     },
     redirectToPartner() {
-      this.$store
-        .dispatch('addSwapNotification', [
-          `Swap_Order`,
-          this.currentAddress,
-          this.swapDetails
-        ])
-        .then(() => {
-          this.$refs.swapconfirmation.hide();
-        });
+      this.addSwapNotification([
+        `Swap_Order`,
+        this.currentAddress,
+        this.swapDetails
+      ]).then(() => {
+        this.$refs.swapconfirmation.hide();
+      });
     },
     swapStarted(swapDetails) {
       this.timeUpdater(swapDetails);
@@ -248,15 +247,13 @@ export default {
       }
     },
     sentTransaction() {
-      this.$store
-        .dispatch('addSwapNotification', [
-          `Swap_Order`,
-          this.currentAddress,
-          this.swapDetails
-        ])
-        .then(() => {
-          this.$refs.swapconfirmation.hide();
-        });
+      this.addSwapNotification([
+        `Swap_Order`,
+        this.currentAddress,
+        this.swapDetails
+      ]).then(() => {
+        this.$refs.swapconfirmation.hide();
+      });
     }
   }
 };
