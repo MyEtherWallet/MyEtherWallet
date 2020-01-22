@@ -15,7 +15,7 @@
         :loading="loading"
         @password="updatePassword"
       />
-      <router-view
+      <!-- <router-view
         :my-wallets="myWallets"
         :watch-only-wallets="watchOnlyAddresses"
         :network="network"
@@ -28,7 +28,32 @@
         :eth-price="ethPrice"
         :watch-only-addresses="watchOnlyAddresses"
         :open-watch-only-modal="openWatchOnlyModal"
-      />
+      /> -->
+      <div v-if="!hasAccounts" class="no-wallet-found">
+        <div class="text-and-img-container">
+          <img src="@/assets/images/icons/alien.png" />
+          <p>No wallet found, please...</p>
+        </div>
+        <div class="wallet-options">
+          <button class="large-round-button-green-filled">
+            Add My Wallet
+          </button>
+          <div class="button-border-container">
+            <div class="button-border"></div>
+            <span> OR </span>
+            <div class="button-border"></div>
+          </div>
+          <button
+            class="large-round-button-green-filled"
+            @click="openWatchOnlyModal"
+          >
+            Add Watch Only Address
+          </button>
+        </div>
+      </div>
+      <div v-else>
+        WE FOUND ACCOUNTS SIRE
+      </div>
     </div>
   </div>
 </template>
@@ -62,9 +87,9 @@ export default {
       path: '',
       password: '',
       nickname: '',
-      hasAccounts: '',
       convertedBalance: '$ 0',
-      ethPrice: 0
+      ethPrice: 0,
+      hasAccounts: false
     };
   },
   computed: {
@@ -95,9 +120,6 @@ export default {
       'setWeb3Instance',
       'decryptWallet'
     ]),
-    openNetworkModal() {
-      this.$refs.network.$refs.network.show();
-    },
     async fetchEthBalance() {
       const price = await fetch(
         'https://cryptorates.mewapi.io/ticker?filter=ETH'
@@ -136,7 +158,8 @@ export default {
       if (accounts.length > 0) {
         this.processAccounts(accounts);
       } else {
-        this.$router.push('/access-my-wallet');
+        this.hasAccounts = false;
+        // this.$router.push('/access-my-wallet');
       }
     },
     getAccounts(changed) {

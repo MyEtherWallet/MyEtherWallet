@@ -32,14 +32,14 @@ export default {
     return {
       options: [
         {
-          name: 'My Wallets',
+          name: 'Wallets',
           icon: myWalletsHov,
           inActive: myWallets,
           label: 'myWallets',
           path: '/wallets'
         },
         {
-          name: 'Watch-Only Wallets',
+          name: 'My Favorites',
           icon: watchOnlyHov,
           inActive: watchOnly,
           label: 'watchOnlyWallets',

@@ -6,6 +6,7 @@
   display: flex;
   justify-content: center;
   position: relative;
+  height: 100%;
 }
 
 .wallet-side-menu-container {
@@ -16,44 +17,111 @@
 }
 
 .wallets-container {
-  min-height: 700px;
+  height: 100%;
   width: 100%;
   padding: 50px 20px 50px 90px;
 }
 
-.my-wallets-container,
-.dapps-container,
-.watch-only-container {
-  max-width: 1024px;
-  min-width: 800px;
-
-  .wallets-container-header,
-  .total-balance-container {
-    grid-column-start: 1;
-  }
-
-  .wallets,
-  .wallets-info {
-    grid-column-start: 1;
-  }
-}
-
-.wallets-container-header {
-  margin-bottom: 20px;
+.no-wallet-found {
   align-items: center;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  margin: 0 auto;
 
-  h2 {
-    margin: 0 !important;
-    font-size: 26px;
-    font-weight: 700;
+  .text-and-img-container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
   }
 
-  .add-button {
-    color: $mew-green;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 13px;
+  img {
+    width: 75px;
+  }
+
+  p,
+  span {
+    color: $light-grey-11;
+    font-weight: bold;
+  }
+
+  p {
+    font-size: 20px;
+    padding-top: 10px;
+  }
+
+  .wallet-options {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding: 15px;
+
+    button {
+      width: 325px;
+
+      &:first-child {
+        margin: 15px 0 30px;
+      }
+      &:last-child {
+        margin: 30px 0 15px;
+      }
+    }
+  }
+
+  .button-border-container {
+    display: flex;
+    align-items: center;
+
+    .button-border {
+      border-top: 1px solid $light-grey-11;
+      width: 121px;
+
+      &:first-child {
+        margin-right: 30px;
+      }
+
+      &:last-child {
+        margin-left: 30px;
+      }
+    }
   }
 }
+
+// .my-wallets-container,
+// .dapps-container,
+// .watch-only-container {
+//   max-width: 1024px;
+//   min-width: 800px;
+
+//   .wallets-container-header,
+//   .total-balance-container {
+//     grid-column-start: 1;
+//   }
+
+//   .wallets,
+//   .wallets-info {
+//     grid-column-start: 1;
+//   }
+// }
+
+// .wallets-container-header {
+//   margin-bottom: 20px;
+//   align-items: center;
+//   display: flex;
+//   justify-content: space-between;
+
+//   h2 {
+//     margin: 0 !important;
+//     font-size: 26px;
+//     font-weight: 700;
+//   }
+
+//   .add-button {
+//     color: $mew-green;
+//     cursor: pointer;
+//     font-weight: 600;
+//     font-size: 13px;
+//   }
+// }
