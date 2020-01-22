@@ -483,7 +483,9 @@ export default {
     ...mapActions('main', ['switchNetwork', 'setWeb3Instance', 'setENS']),
     setENS() {
       if (this.network.type.ens) {
-        this.setENS(new ENS(this.web3.currentProvider, this.network.type.ens.registry));
+        this.setENS(
+          new ENS(this.web3.currentProvider, this.network.type.ens.registry)
+        );
       } else {
         this.setENS(null);
       }
