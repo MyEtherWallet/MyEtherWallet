@@ -61,7 +61,7 @@ class ledgerWallet {
     }
     const txSigner = async tx => {
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.network)
+        common: commonGenerator(store.state.main.network)
       });
       const networkId = tx.getChainId();
       tx.raw[6] = networkId;

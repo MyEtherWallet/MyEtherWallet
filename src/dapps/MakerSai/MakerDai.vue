@@ -291,7 +291,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     maxDaiDraw() {
       if (this.ethQty <= 0) return 0;
       return bnOver(this.ethPrice, this.ethQty, this.liquidationRatio);

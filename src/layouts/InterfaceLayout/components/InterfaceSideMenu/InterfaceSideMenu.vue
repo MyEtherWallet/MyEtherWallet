@@ -2,7 +2,7 @@
   <div class="transactions-side-menu">
     <div class="side-menu-header">
       <img alt src="~@/assets/images/logo.png" />
-      <div @click="toggleSideMenu">
+      <div @click="startToggleSideMenu">
         <i class="fa fa-lg fa-times"></i>
       </div>
     </div>
@@ -65,7 +65,7 @@
 
 <script>
 import tabsConfig from './InterfaceSideMenu.config';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 export default {
   data() {
     return {
@@ -73,18 +73,19 @@ export default {
     };
   },
   computed: {
-    ...mapState(['online'])
+    ...mapState('main', ['online'])
   },
   methods: {
-    toggleSideMenu() {
-      this.$store.commit('TOGGLE_SIDEMENU');
+    ...mapActions('main', ['toggleSideMenu']),
+    startToggleSideMenu() {
+      this.toggleSideMenu();
     },
     isTabActive(routes) {
       return routes.includes(this.$route.path);
     },
     tabAction(tab) {
       if (!tab.hasOwnProperty('children') || tab.children.length === 0) {
-        this.toggleSideMenu();
+        this.startToggleSideMenu();
         this.$router.push({ path: tab.routes[0] });
       } else {
         this.$router.push({ path: tab.children[0].routes[0] });
