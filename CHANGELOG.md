@@ -1,3 +1,6 @@
+### Bug 
+- Set ENS in offline helper [#1891] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1891)
+
 ### Release v5.2.11
 
 ### Feature
