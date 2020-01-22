@@ -224,6 +224,7 @@
       </div>
       <!-- Desktop menu *********************************** -->
     </div>
+    <welcome-modal ref="welcome" :first-time-ru="firstTimeRu" />
   </div>
 </template>
 
@@ -243,6 +244,7 @@ import DisconnectedModal from '@/components/DisconnectedModal';
 import DecisionTree from '@/components/DecisionTree';
 import CxHeader from '@/layouts/ExtensionBrowserAction/components/CxHeader';
 import supportedLang from './supportedLang';
+import WelcomeModal from '@/components/WelcomeModal';
 
 const events = {
   issueModal: 'issueModal',
@@ -260,7 +262,8 @@ export default {
     'mobile-menu': MobileMenu,
     'disconnected-modal': DisconnectedModal,
     'decision-tree': DecisionTree,
-    'cx-header': CxHeader
+    'cx-header': CxHeader,
+    'welcome-modal': WelcomeModal
   },
   data() {
     const isMewCx = Misc.isMewCx();
@@ -276,11 +279,19 @@ export default {
       error: {},
       resolver: () => {},
       isMewCx: isMewCx,
-      buildType: BUILD_TYPE
+      buildType: BUILD_TYPE,
+      firstTimeRu: false
     };
   },
   computed: {
-    ...mapState(['network', 'web3', 'account', 'gettingStartedDone', 'locale']),
+    ...mapState([
+      'network',
+      'web3',
+      'account',
+      'gettingStartedDone',
+      'locale',
+      'tempHide'
+    ]),
     showButtons() {
       if (
         this.address === null &&
@@ -329,6 +340,8 @@ export default {
     this.$eventHub.$on('open-settings', this.openSettings);
   },
   mounted() {
+    // Remove for next release
+    store.remove('neverReport');
     this.getCurrentLang();
 
     // On load, if page is not on top, apply small menu and show scroll top button
@@ -344,7 +357,7 @@ export default {
       let errorPop = store.get('errorPop') || 0;
       errorPop += 1;
       store.set('errorPop', errorPop);
-      if (store.get('neverReport')) {
+      if (this.tempHide) {
         resolve(false);
       } else {
         this.$refs.issuelog.$refs.issuelog.show();
@@ -394,6 +407,16 @@ export default {
       });
     },
     languageItemClicked(obj) {
+      if (obj.langCode === 'ru_RU' && !store.get('notFirstTimeRU')) {
+        this.firstTimeRu = true;
+        this.$refs.welcome.$refs.welcome.show();
+      }
+
+      this.$refs.welcome.$refs.welcome.$on('hidden', () => {
+        this.firstTimeRu = false;
+        store.set('notFirstTimeRU', true);
+      });
+
       this.$i18n.locale = obj.langCode;
       this.currentName = obj.name;
       this.currentFlag = obj.flag;
