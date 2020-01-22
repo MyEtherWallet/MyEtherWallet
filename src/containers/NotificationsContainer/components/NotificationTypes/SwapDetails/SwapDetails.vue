@@ -264,7 +264,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network', 'notifications', 'wallet', 'gasPrice']),
+    ...mapState('main', [
+      'web3',
+      'network',
+      'notifications',
+      'wallet',
+      'gasPrice'
+    ]),
     errorMessage() {
       return this.errorMessageString(this.notice);
     },
