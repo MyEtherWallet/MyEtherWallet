@@ -33,6 +33,7 @@ import reddit from '@/assets/images/icons/reddit.svg';
 import medium from '@/assets/images/icons/medium.png';
 import twitter from '@/assets/images/icons/twitter.jpg';
 import facebook from '@/assets/images/icons/facebook.png';
+import vkontakte from '@/assets/images/icons/vkontakte.png';
 
 export default {
   data() {
@@ -62,6 +63,11 @@ export default {
           img: github,
           to: 'https://www.github.com/myetherwallet',
           name: 'github'
+        },
+        {
+          img: vkontakte,
+          to: 'https://vk.com/public190491855',
+          name: 'vkontakte'
         }
       ]
     };

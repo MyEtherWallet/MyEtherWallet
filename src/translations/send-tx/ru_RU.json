@@ -45,6 +45,7 @@
     "button-check-status": "Проверить статус на Etherscan.io",
     "button-check-explorer": "Проверить статус на {explorrerName}"
   },
+  "invalid-data": "Предоставленные данные являются недействительными или неполными!",
   "via-contract": "Через контракт",
   "import-json": "Импорт JSON",
   "retrieved": "Получено",

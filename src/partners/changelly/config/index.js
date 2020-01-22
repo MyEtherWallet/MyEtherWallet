@@ -1,4 +1,4 @@
-import { ChangellyCurrencies } from './currencies';
+import ChangellyCurrencies from './currencies.json';
 import {
   changellyMethods,
   statuses,
