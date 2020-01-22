@@ -87,8 +87,10 @@ Vue.use(VueI18n);
 Vue.config.keyCodes = {
   enter: [13]
 };
+const locale = window.location.pathname.replace(/^\/([^/]+).*/i, '$1');
+
 const i18n = new VueI18n({
-  locale: 'en_US',
+  locale: locale.trim().length && locale != '/' ? locale : 'en_US',
   fallbackLocale: 'en_US',
   messages: languages,
   silentTranslationWarn: true

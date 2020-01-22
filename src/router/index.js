@@ -19,8 +19,9 @@ const storeQuery = query => {
     store.dispatch('saveQueryVal', blankObj);
   }
 };
-
+const locale = window.location.pathname.replace(/^\/([^/]+).*/i, '$1');
 const router = new Router({
+  base: locale.trim().length && locale != '/' ? '/' + locale : undefined,
   mode: getMode(),
   routes: getRoutes(),
   scrollBehavior(to) {
@@ -34,16 +35,16 @@ const router = new Router({
 });
 
 router.beforeResolve((to, from, next) => {
-  const { lang } = to.params || 'en';
-  const storeLocale = locStore.get('locale').substr(0, 2);
+  // const { lang } = to.params || 'en';
+  // const storeLocale = locStore.get('locale').substr(0, 2);
 
-  if (lang !== storeLocale) {
-    const getCode = supportedLang.find(item => {
-      return item.flag === lang;
-    });
+  // if (lang !== storeLocale) {
+  //   const getCode = supportedLang.find(item => {
+  //     return item.flag === lang;
+  //   });
 
-    store.dispatch('setLocale', getCode ? getCode.langCode : 'en_US');
-  }
+  //   store.dispatch('setLocale', getCode ? getCode.langCode : 'en_US');
+  // }
 
   // const had
   storeQuery(to.query);
@@ -67,7 +68,6 @@ router.beforeResolve((to, from, next) => {
         });
       } else {
         store.dispatch('setLastPath', to.path);
-        console.log(to.params);
         next({ name: 'AccessWalletLayout', params: to.params });
       }
     } else {

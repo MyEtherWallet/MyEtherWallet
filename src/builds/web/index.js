@@ -24,17 +24,18 @@ const webRoutes = [
   }
 ];
 const configRoutes = routes => {
-  const newRoutes = webRoutes.concat(routes).map(item => {
-    if (item.path.length > 1) {
-      const itemPath = item.path;
-      item.path = `/:lang(ru)?${itemPath}`;
-    } else {
-      item.path = `/:lang(ru)?`;
-    }
+  // const newRoutes = webRoutes.concat(routes).map(item => {
+  //   if (item.path.length > 1) {
+  //     const itemPath = item.path;
+  //     item.path = `/:lang(ru)?${itemPath}`;
+  //   } else {
+  //     item.path = `/:lang(ru)?`;
+  //   }
 
-    return item;
-  });
+  //   return item;
+  // });
 
-  return newRoutes;
+  // return newRoutes;
+  return webRoutes.concat(routes);
 };
 export { app, configRoutes };

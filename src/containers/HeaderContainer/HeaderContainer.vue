@@ -333,20 +333,20 @@ export default {
       this.setHighGasPrice();
     },
     locale(newVal) {
-      if (BUILD_TYPE !== 'mewcx') {
-        const newLocale = newVal.substr(0, 2);
-        const reg = new RegExp(/\/[a-z]{2}\//gm);
-        const hasLocale = this.$route.path.match(reg);
-        let redirectTo = '';
-        if (hasLocale && newLocale === 'en') {
-          redirectTo = this.$route.path.replace(reg, '/');
-        } else if (hasLocale && newLocale !== 'en') {
-          redirectTo = this.$route.path.replace(reg, `/${newLocale}/`);
-        } else if (!hasLocale && newLocale !== 'en') {
-          redirectTo = `/${newLocale}${this.$route.path}`;
-        }
-        this.$router.replace(redirectTo);
-      }
+      // if (BUILD_TYPE !== 'mewcx') {
+      //   const newLocale = newVal.substr(0, 2);
+      //   const reg = new RegExp(/\/[a-z]{2}\//gm);
+      //   const hasLocale = this.$route.path.match(reg);
+      //   let redirectTo = '';
+      //   if (hasLocale && newLocale === 'en') {
+      //     redirectTo = this.$route.path.replace(reg, '/');
+      //   } else if (hasLocale && newLocale !== 'en') {
+      //     redirectTo = this.$route.path.replace(reg, `/${newLocale}/`);
+      //   } else if (!hasLocale && newLocale !== 'en') {
+      //     redirectTo = `/${newLocale}${this.$route.path}`;
+      //   }
+      //   this.$router.replace(redirectTo);
+      // }
       this.getCurrentLang();
     }
   },
