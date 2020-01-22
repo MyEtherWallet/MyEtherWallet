@@ -29,7 +29,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['online'])
+    ...mapState('main', ['online'])
   }
 };
 </script>

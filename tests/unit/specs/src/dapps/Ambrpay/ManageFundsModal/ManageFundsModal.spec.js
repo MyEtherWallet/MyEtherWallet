@@ -2,6 +2,8 @@ import ManageFundsModal from '@/dapps/Ambrpay/components/ManageFundsModal/Manage
 import { shallowMount } from '@vue/test-utils';
 import { Tooling } from '@@/helpers';
 import sinon from 'sinon';
+import VueX from 'vuex';
+import { state, getters } from '@@/helpers/mockStore';
 
 const hideModal = sinon.stub();
 
@@ -20,7 +22,15 @@ describe('ManageFundsModal.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new VueX.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
   });
 
   beforeEach(() => {

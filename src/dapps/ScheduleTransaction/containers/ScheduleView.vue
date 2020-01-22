@@ -409,7 +409,7 @@ export default {
     };
   },
   computed: {
-    ...mapState([
+    ...mapState('main', [
       'web3',
       'network',
       'gasPrice',

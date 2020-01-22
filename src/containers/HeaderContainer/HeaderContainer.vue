@@ -27,12 +27,7 @@
         :address="address"
       />
       <logout-modal ref="logout" />
-      <issue-log-modal
-        v-if="Object.keys.length > 0"
-        ref="issuelog"
-        :error="error"
-        :resolver="resolver"
-      />
+      <issue-log-modal ref="issuelog" :error="error" :resolver="resolver" />
 
       <!-- Desktop menu *********************************** -->
       <div class="fixed-header-wrap">
@@ -229,7 +224,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import store from 'store';
 import { Misc, Toast } from '@/helpers';
 import Blockie from '@/components/Blockie';
@@ -284,7 +279,7 @@ export default {
     };
   },
   computed: {
-    ...mapState([
+    ...mapState('main', [
       'network',
       'web3',
       'account',
@@ -340,8 +335,6 @@ export default {
     this.$eventHub.$on('open-settings', this.openSettings);
   },
   mounted() {
-    // Remove for next release
-    store.remove('neverReport');
     this.getCurrentLang();
 
     // On load, if page is not on top, apply small menu and show scroll top button
@@ -353,7 +346,6 @@ export default {
     };
 
     this.$eventHub.$on('issueModal', (error, resolve) => {
-      // eslint-disable-next-line
       let errorPop = store.get('errorPop') || 0;
       errorPop += 1;
       store.set('errorPop', errorPop);
@@ -381,6 +373,7 @@ export default {
     this.$eventHub.$off('open-settings');
   },
   methods: {
+    ...mapActions('main', ['setLocale']),
     getCurrentLang() {
       const storedLocale = this.supportedLanguages.find(item => {
         return item.langCode === this.locale;
@@ -420,7 +413,7 @@ export default {
       this.$i18n.locale = obj.langCode;
       this.currentName = obj.name;
       this.currentFlag = obj.flag;
-      this.$store.dispatch('setLocale', obj.langCode);
+      this.setLocale(obj.langCode);
     },
     logout() {
       this.$refs.logout.$refs.logout.show();
