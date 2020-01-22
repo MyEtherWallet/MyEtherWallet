@@ -1,7 +1,7 @@
 {
   "edit-modal": "Edit Modal",
   "edit": "Edit",
-  "wallet-name": "Wallet Name",
+  "wallet-name": "Address Name",
   "submit": "Submit",
   "remove-wallet": "Remove Wallet",
   "add-wallet-nickname": "Please add a wallet nickname",
@@ -38,7 +38,7 @@
   "add": "Add",
   "refresh": "Refresh",
   "view-all": "View All",
-  "add-watch-only": "Add Watch-Only Wallet",
+  "add-watch-only": "Add Watch-Only Address",
   "enter-address": "Please enter the wallet address",
   "add-my-wallet": "Add My Wallet",
   "how-would-you-add-wallet": "How would you like to add your wallet?",

@@ -65,19 +65,21 @@ const networkChanger = items => {
     }
     // eslint-disable-next-line
     if (!!network) {
-      store.dispatch('main/switchNetwork', network).then(() => {
-        store.dispatch('main/setWeb3Instance', network.url).then(() => {
-          store.state.main.web3.eth.net.getId().then(res => {
-            chrome.storage.sync.set({
-              defChainID: store.state.main.network.type.chainID,
-              defNetVersion: res
+      store.dispatch('main/switchNetwork', network, { root: true }).then(() => {
+        store
+          .dispatch('main/setWeb3Instance', network.url, { root: true })
+          .then(() => {
+            store.state.main.web3.eth.net.getId().then(res => {
+              chrome.storage.sync.set({
+                defChainID: store.state.main.network.type.chainID,
+                defNetVersion: res
+              });
             });
           });
-        });
       });
     }
   } else {
-    store.dispatch('main/setWeb3Instance');
+    store.dispatch('main/setWeb3Instance', { root: true });
     store.state.main.web3.eth.net.getId().then(res => {
       chrome.storage.sync.set({
         defChainID: store.state.main.network.type.chainID,
@@ -121,14 +123,16 @@ chrome.storage.onChanged.addListener(items => {
           network ? store.state.main.Networks[networkProps.key][0] : network
         )
         .then(() => {
-          store.dispatch('main/setWeb3Instance', network.url).then(() => {
-            store.state.main.web3.eth.net.getId().then(res => {
-              chrome.storage.sync.set({
-                defChainID: store.state.main.network.type.chainID,
-                defNetVersion: res
+          store
+            .dispatch('main/setWeb3Instance', network.url, { root: true })
+            .then(() => {
+              store.state.main.web3.eth.net.getId().then(res => {
+                chrome.storage.sync.set({
+                  defChainID: store.state.main.network.type.chainID,
+                  defNetVersion: res
+                });
               });
             });
-          });
         });
     }
   });
