@@ -370,6 +370,7 @@ import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import StandardButton from '@/components/Buttons/StandardButton';
 import ExpandingOption from '@/components/ExpandingOption';
 import ConfirmationModal from './components/ConfirmationModal';
+import ENS from 'ethereum-ens';
 
 export default {
   components: {
@@ -479,6 +480,16 @@ export default {
     }
   },
   methods: {
+    setENS() {
+      if (this.network.type.ens) {
+        this.$store.dispatch(
+          'setENS',
+          new ENS(this.web3.currentProvider, this.network.type.ens.registry)
+        );
+      } else {
+        this.$store.dispatch('setENS', null);
+      }
+    },
     getTranslatedItem(item) {
       const kebabItem = item.replace(/([A-Z])/g, '-$1').toLowerCase();
       return this.$t('withoutWallet.' + kebabItem);
@@ -526,6 +537,7 @@ export default {
         this.$store.dispatch('setWeb3Instance');
         this.stage1Btn();
         this.getTransactionDetails();
+        this.setENS();
       });
     },
     truncateData(data) {
