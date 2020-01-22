@@ -1,5 +1,6 @@
 @import '~@/scss/GlobalVariables';
-@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width - 200px) {
+@media all and (max-width: $tablet-width) {
+  //@media all and (max-width: calc(#{$tablet-width} - 1px)) {
   a,
   a:link,
   a:visited,
@@ -42,6 +43,11 @@
 
         h3 {
           font-size: 19px;
+        }
+
+        .open,
+        .close {
+          display: block;
         }
 
         p {
@@ -143,35 +149,10 @@
 
   .foot-note {
     align-items: center;
-    border-top: 1px solid $dark-blue-1;
-    margin-top: 40px;
     padding-top: 40px;
-
-    @media all and (max-width: $tablet-width) {
-      border-top: 0;
-      flex-direction: column;
-      margin-top: 0;
-
-      .links {
-        order: 1;
-        text-align: center;
-
-        a:last-child {
-          span {
-            margin-right: 0;
-            padding-right: 0;
-          }
-        }
-      }
-
-      .social {
-        order: 2;
-      }
-
-      .copyright {
-        order: 3;
-      }
-    }
+    border-top: 0;
+    flex-direction: column;
+    margin-top: 0;
 
     > div {
       //margin: 0 auto;
@@ -179,6 +160,15 @@
     }
 
     .links {
+      order: 1;
+      text-align: center;
+
+      a:last-child {
+        span {
+          margin-right: 0;
+          padding-right: 0;
+        }
+      }
       display: flex;
       align-items: center;
 
@@ -197,6 +187,7 @@
     }
 
     .copyright {
+      order: 3;
       text-align: center;
 
       p {
@@ -209,6 +200,8 @@
     }
 
     .social {
+      order: 2;
+
       @media all and (max-width: $tablet-width) {
         text-align: center;
       }
