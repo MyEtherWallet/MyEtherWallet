@@ -70,7 +70,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['network']),
+    ...mapState('main', ['network']),
     iconFetcher() {
       let icon;
       try {

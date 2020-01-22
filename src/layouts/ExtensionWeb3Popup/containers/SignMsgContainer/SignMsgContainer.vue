@@ -60,7 +60,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['linkQuery']),
+    ...mapState('main', ['linkQuery']),
     message() {
       const { msgToSign } = this.linkQuery;
       return utils.hexToAscii(msgToSign);

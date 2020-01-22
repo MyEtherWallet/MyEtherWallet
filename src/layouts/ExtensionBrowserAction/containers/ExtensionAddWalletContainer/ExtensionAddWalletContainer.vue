@@ -173,7 +173,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['path', 'linkQuery'])
+    ...mapState('main', ['path', 'linkQuery'])
   },
   mounted() {
     this.$refs.mnemonicPhrase.$refs.mnemonicPhrase.$on('hidden', () => {

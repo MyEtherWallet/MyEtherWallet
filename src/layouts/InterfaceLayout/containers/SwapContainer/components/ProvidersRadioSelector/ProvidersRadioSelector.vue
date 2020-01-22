@@ -299,7 +299,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['online', 'network']),
+    ...mapState('main', ['online', 'network']),
     displayToShow() {
       if (!this.online) {
         return 'offline';

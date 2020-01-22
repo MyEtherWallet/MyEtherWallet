@@ -176,7 +176,7 @@ import NotificationsContainer from '@/containers/NotificationsContainer';
 import SettingsModal from '@/components/SettingsModal';
 import LogoutModal from '@/components/LogoutModal';
 import { Misc, Toast } from '@/helpers';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 
@@ -205,7 +205,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'web3', 'network', 'Networks']),
+    ...mapState('main', ['account', 'web3', 'network', 'Networks']),
     address() {
       return this.account.address;
     },
@@ -228,6 +228,7 @@ export default {
     });
   },
   methods: {
+    ...mapActions('main', ['switchNetwork', 'setWeb3Instance']),
     toggleList(num) {
       if (num === this.networkShow) {
         this.networkShow = 0;
@@ -258,8 +259,8 @@ export default {
         });
     },
     updateNetwork(network) {
-      this.$store.dispatch('switchNetwork', network).then(() => {
-        this.$store.dispatch('setWeb3Instance');
+      this.switchNetwork(network).then(() => {
+        this.setWeb3Instance();
         this.$refs.cxNetworkDropdown.hide();
       });
     }

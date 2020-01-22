@@ -177,7 +177,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'network', 'web3']),
+    ...mapState('main', ['account', 'network', 'web3']),
     hasNickname() {
       return this.account.nickname !== '';
     }

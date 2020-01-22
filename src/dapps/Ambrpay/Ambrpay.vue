@@ -87,7 +87,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'account', 'network', 'online'])
+    ...mapState('main', ['web3', 'network', 'notifications', 'online'])
   },
   mounted() {
     this.init();

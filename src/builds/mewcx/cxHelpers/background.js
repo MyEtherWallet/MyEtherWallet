@@ -44,9 +44,11 @@ const networkChanger = items => {
     const networkProps = JSON.parse(items['defNetwork']);
     let network = {};
     if (networkProps.hasOwnProperty('url')) {
-      network = store.state.Networks[networkProps.key].find(actualNetwork => {
-        return actualNetwork.url === networkProps.url;
-      });
+      network = store.state.main.Networks[networkProps.key].find(
+        actualNetwork => {
+          return actualNetwork.url === networkProps.url;
+        }
+      );
 
       chrome.storage.sync.set({
         defNetwork: JSON.stringify({
@@ -55,17 +57,19 @@ const networkChanger = items => {
         })
       });
     } else {
-      network = store.state.Networks[networkProps.key].find(actualNetwork => {
-        return actualNetwork.service === networkProps.service;
-      });
+      network = store.state.main.Networks[networkProps.key].find(
+        actualNetwork => {
+          return actualNetwork.service === networkProps.service;
+        }
+      );
     }
     // eslint-disable-next-line
     if (!!network) {
-      store.dispatch('switchNetwork', network).then(() => {
-        store.dispatch('setWeb3Instance', network.url).then(() => {
-          store.state.web3.eth.net.getId().then(res => {
+      store.dispatch('main/switchNetwork', network).then(() => {
+        store.dispatch('main/setWeb3Instance', network.url).then(() => {
+          store.state.main.web3.eth.net.getId().then(res => {
             chrome.storage.sync.set({
-              defChainID: store.state.network.type.chainID,
+              defChainID: store.state.main.network.type.chainID,
               defNetVersion: res
             });
           });
@@ -73,14 +77,14 @@ const networkChanger = items => {
       });
     }
   } else {
-    store.dispatch('setWeb3Instance');
-    store.state.web3.eth.net.getId().then(res => {
+    store.dispatch('main/setWeb3Instance');
+    store.state.main.web3.eth.net.getId().then(res => {
       chrome.storage.sync.set({
-        defChainID: store.state.network.type.chainID,
+        defChainID: store.state.main.network.type.chainID,
         defNetVersion: res,
         defNetwork: JSON.stringify({
-          service: store.state.network.service,
-          key: store.state.network.type.name
+          service: store.state.main.network.service,
+          key: store.state.main.network.type.name
         })
       });
     });
@@ -106,21 +110,21 @@ chrome.storage.onChanged.addListener(items => {
       const networkProps = JSON.parse(
         Misc.stripTags(items['defNetwork'].newValue)
       );
-      const network = store.state.Networks[networkProps.key].find(
+      const network = store.state.main.Networks[networkProps.key].find(
         actualNetwork => {
           return actualNetwork.service === networkProps.service;
         }
       );
       store
         .dispatch(
-          'switchNetwork',
-          network ? store.state.Networks[networkProps.key][0] : network
+          'main/switchNetwork',
+          network ? store.state.main.Networks[networkProps.key][0] : network
         )
         .then(() => {
-          store.dispatch('setWeb3Instance', network.url).then(() => {
-            store.state.web3.eth.net.getId().then(res => {
+          store.dispatch('main/setWeb3Instance', network.url).then(() => {
+            store.state.main.web3.eth.net.getId().then(res => {
               chrome.storage.sync.set({
-                defChainID: store.state.network.type.chainID,
+                defChainID: store.state.main.network.type.chainID,
                 defNetVersion: res
               });
             });
@@ -266,7 +270,7 @@ function querycB(tab) {
         // Injects web3
         // eslint-disable-next-line
         chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
-          store.state.web3.eth.net.getId().then(() => {
+          store.state.main.web3.eth.net.getId().then(() => {
             chrome.tabs.sendMessage(tab.id, {
               event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
             });
@@ -277,7 +281,7 @@ function querycB(tab) {
       // Injects web3
       // eslint-disable-next-line
       chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
-        store.state.web3.eth.net.getId().then(() => {
+        store.state.main.web3.eth.net.getId().then(() => {
           chrome.tabs.sendMessage(tab.id, {
             event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
           });
