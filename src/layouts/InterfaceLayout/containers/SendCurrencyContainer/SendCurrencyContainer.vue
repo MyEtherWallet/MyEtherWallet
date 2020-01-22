@@ -244,7 +244,7 @@ export default {
   },
 
   computed: {
-    ...mapState([
+    ...mapState('main', [
       'account',
       'gasPrice',
       'web3',

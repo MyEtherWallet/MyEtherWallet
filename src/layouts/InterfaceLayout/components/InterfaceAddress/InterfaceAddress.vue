@@ -142,7 +142,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account'])
+    ...mapState('main', ['account'])
   },
   mounted() {
     if (this.account.address !== null) {

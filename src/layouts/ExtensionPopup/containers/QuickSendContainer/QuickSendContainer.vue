@@ -199,7 +199,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network']),
+    ...mapState('main', ['web3', 'network']),
     txLinkAndHash() {
       return this.network.type.blockExplorerTX.replace(
         '[[txHash]]',

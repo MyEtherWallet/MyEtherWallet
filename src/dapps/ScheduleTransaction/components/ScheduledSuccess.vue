@@ -103,8 +103,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(['notifications', 'web3', 'account', 'gasPrice', 'network']),
-
+    ...mapState('main', [
+      'notifications',
+      'web3',
+      'account',
+      'gasPrice',
+      'network'
+    ]),
     getPathMined() {
       return !this.mined
         ? 'scheduleTx.tx-scheduled-hash[1]'

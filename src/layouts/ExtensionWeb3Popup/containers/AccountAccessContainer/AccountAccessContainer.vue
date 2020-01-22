@@ -67,7 +67,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['linkQuery', 'web3', 'network']),
+    ...mapState('main', ['linkQuery', 'web3', 'network']),
     request() {
       const { connectionRequest, favicon } = this.linkQuery;
       const obj = {};
