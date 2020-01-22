@@ -9,8 +9,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 export default {
   components: {},
   props: {
@@ -25,9 +23,6 @@ export default {
   },
   data() {
     return {};
-  },
-  computed: {
-    ...mapState(['network', 'web3', 'online'])
   },
   watch: {},
   methods: {

@@ -42,8 +42,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 import ads from './adComponents';
 
 export default {
@@ -62,11 +60,6 @@ export default {
       currentAdIndex: 1
     };
   },
-  computed: {
-    ...mapState(['network', 'web3', 'online'])
-  },
-  watch: {},
-  mounted() {},
   methods: {
     pauseAds() {
       if (this.adInterval > 0) {

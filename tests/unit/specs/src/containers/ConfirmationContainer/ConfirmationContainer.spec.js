@@ -8,6 +8,8 @@ import ConfirmCollectionModal from '@/containers/ConfirmationContainer/component
 import VueQrcode from '@xkeshi/vue-qrcode';
 import sinon from 'sinon';
 import Web3 from 'web3';
+import VueX from 'vuex';
+import { state, getters } from '@@/helpers/mockStore';
 
 import { Tooling } from '@@/helpers';
 
@@ -35,7 +37,15 @@ describe('ConfirmationContainer.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new VueX.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
   });
 
   beforeEach(() => {
