@@ -280,6 +280,10 @@ const setENS = function({ commit }, ens) {
   commit('SET_ENS', ens);
 };
 
+const toggleSideMenu = function({ commit }) {
+  commit('TOGGLE_SIDEMENU');
+};
+
 const updateNotification = function({ commit, state }, val) {
   // address, index, object
   const address = val[0].toLowerCase();
@@ -354,6 +358,7 @@ export default {
   updateBlockNumber,
   saveQueryVal,
   setAddressBook,
+  toggleSideMenu,
   setLocale,
   toggleTempHide
 };
