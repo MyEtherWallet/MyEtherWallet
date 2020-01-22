@@ -69,5 +69,16 @@
     "invalid-addr": "Invalid {coin} address",
     "network-not-found": "{network}NS name is invalid or not found",
     "no-resolver": "No {network}NS resolver in this node"
+  },
+  "unstoppableResolution": {
+    "address-reported-error": "Address has been reported. Please make sure you are sending funds to the correct address.",
+    "UnregisteredDomain": "Domain {domain} is not registered",
+    "UnspecifiedResolver": "Domain {domain} is not configured",
+    "UnsupportedDomain": "Domain {domain} is not supported",
+    "UnspecifiedCurrency": "Domain {domain} has no {currencyTicker} attached to it",
+    "NamingServiceDown": "{method} naming service is down at the moment",
+    "UnsupportedCurrency": "{currencyTicker} is not supported",
+    "IncorrectResolverInterface": "Domain resolver is configured incorrectly for {method}",
+    "RecordNotFound": "No {recordName} record found for {domain}"
   }
 }

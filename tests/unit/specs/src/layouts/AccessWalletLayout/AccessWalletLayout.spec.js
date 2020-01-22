@@ -2,7 +2,6 @@ import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import AccessWalletLayout from '@/layouts/AccessWalletLayout/AccessWalletLayout.vue';
 import { Tooling } from '@@/helpers';
-import PriceBar from '@/layouts/AccessWalletLayout/components/PriceBar/PriceBar.vue';
 import { RouterLinkStub } from '@@/helpers/setupTooling';
 import BigNumber from 'bignumber.js';
 import VueX from 'vuex';
@@ -42,8 +41,7 @@ describe('AccessWalletLayout.vue', () => {
       store,
       attachToDocument: true,
       stubs: {
-        'router-link': RouterLinkStub,
-        'price-bar': PriceBar
+        'router-link': RouterLinkStub
       }
     });
   });
