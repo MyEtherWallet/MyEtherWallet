@@ -1,6 +1,7 @@
 ### Devop
 
 - Modularize store state [#1722](https://github.com/MyEtherWallet/MyEtherWallet/pull/1722)
+- Update packages from Greenkeeper [#1885](https://github.com/MyEtherWallet/MyEtherWallet/pull/1885)
 
 ### Release v5.2.11
 
