@@ -1,6 +1,10 @@
 ### Feature
 - ENS functionality for address book [#1888] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1888)
 
+### Devop
+
+- Update packages from Greenkeeper [#1885](https://github.com/MyEtherWallet/MyEtherWallet/pull/1885)
+
 ### Release v5.2.11
 
 ### Feature
