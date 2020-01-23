@@ -7,7 +7,7 @@
 
     <div v-if="isReady && hasNfts" class="content-container">
       <nft-side-menu
-        :supported-nft-obj="sideMenuData"
+        :supported-nft-obj="nftConfig"
         :nft-config="nftConfig"
         :initial-highlighted="selectedContract"
         :loading-complete="countsRetrieved"
@@ -155,14 +155,12 @@ import NftDetails from './components/NftDetails';
 import NftCustomAddModal from './components/NftCustomAddModal';
 import NftCustomConfirmRemove from './components/NftCustomConfirmRemove';
 import { mapState } from 'vuex';
-import hexDecoder from './binaryDecoderNFT';
 import { nftABI } from './abis';
 import StandardButton from '@/components/Buttons/StandardButton';
 import placeholderImage from '@/assets/images/icons/defaultToken.png';
 import utils from 'web3-utils';
 
-const URL_BASE =
-  'https://api.mewapi.io';
+const URL_BASE = 'https://nft.mewapi.io';
 
 export default {
   components: {
@@ -189,17 +187,13 @@ export default {
       countPerPage: 9,
       currentPage: 1,
       nftConfig: {},
-      tokenHelper: {},
-      mayHaveTokens: [true, true],
       countsRetrieved: false,
       showDetails: false,
       reLoading: false,
       selectedContract: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
       detailsFor: {},
       nftTokens: {},
-      nftData: {},
       ownedTokens: [],
-      tokenContractAddress: '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14',
       sentUpdate: 0,
       customNFTs: [],
       forRemoval: {},
@@ -208,7 +202,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'web3', 'online', 'network']),
+    ...mapState(['account', 'online', 'network']),
     nftTitle() {
       if (this.nftConfig[this.selectedContract]) {
         return this.nftConfig[this.selectedContract].name;
@@ -233,13 +227,6 @@ export default {
           : this.nftConfig[this.selectedContract].tokens;
       }
       return [];
-    },
-    totalNtfCount() {
-      if (this.nftConfig[this.selectedContract]) {
-        return this.nftConfig[this.selectedContract].tokens.length;
-      }
-
-      return 0;
     },
     ntfCount() {
       if (this.nftConfig[this.selectedContract]) {
@@ -267,15 +254,6 @@ export default {
       }
       return null;
     },
-    sideMenuData() {
-      return this.nftConfig;
-    },
-    // startIndex() {
-    //   if (this.nftConfig[this.selectedContract]) {
-    //     return this.nftConfig[this.selectedContract].currentIndex;
-    //   }
-    //   return 0;
-    // },
     activeAddress() {
       return this.account.address;
     },
@@ -346,17 +324,17 @@ export default {
       return `${URL_BASE}tokenImage?path=${nft.image}`;
     },
     removeSentNft(nft) {
-      this.nftObjectClone = utils._.clone(this.nftData[nft.contract]);
-      const afterSent = this.nftData[nft.contract].details.filter(entry => {
-        return entry.token !== nft.token;
+      this.nftObjectClone = utils._.clone(this.nftConfig[nft.contract]);
+      const afterSent = this.nftConfig[nft.contract].tokens.filter(entry => {
+        return entry.id !== nft.id;
       });
-      this.$set(this.nftData[nft.contract], 'details', afterSent);
-      this.nftData[nft.contract].count -= 1;
-      if (this.nftData[nft.contract].count === 0) this.sentUpdate += 1;
+      this.$set(this.nftConfig[nft.contract], 'tokens', afterSent);
+      if (this.nftConfig[nft.contract].tokens.length === 0)
+        this.sentUpdate += 1;
       this.showDetails = false;
     },
     resetNFT(nft) {
-      this.nftData[nft.contract] = this.nftObjectClone;
+      this.nftConfig[nft.contract] = this.nftObjectClone;
     },
     changeSelectedContract(selectedContract) {
       this.selectedContract = selectedContract;
@@ -380,25 +358,29 @@ export default {
     },
 
     async setup() {
-      const stateItems = {
-        count: 0,
-        selected: false,
-        startIndex: 0,
-        priorIndex: 0,
-        currentIndex: 0,
-        details: []
-      };
       if (this.network.type.name === 'ETH') {
         const customNFTs = store.get('customNFTs');
 
         if (customNFTs !== undefined && customNFTs !== null) {
           this.customNFTs = customNFTs;
+        } else {
+          this.customNFTs = [{}];
         }
         const configData = await this.getTokens();
         const tokenAddresses = Object.keys(configData);
         tokenAddresses.forEach(address => {
+          configData[address] = { ...configData[address] };
+          const customInformation = this.customNFTs.find(
+            item => item.contract === address
+          );
+          if (configData[address].symbol === 'UNKNOWN' && customInformation) {
+            configData[address].name = customInformation.title;
+          }
           configData[address].contract = address;
-          console.log(configData[address]); // todo remove dev item
+          configData[address].tokens = configData[address].tokens.map(item => {
+            item.contract = address;
+            return item;
+          });
           configData[address].startIndex = 0;
           configData[address].priorIndex = 0;
           configData[address].currentIndex = 0;
@@ -406,10 +388,6 @@ export default {
         this.nftConfig = { ...configData };
         this.countsRetrieved = true;
       }
-    },
-
-    async getOwnedCounts(address = this.activeAddress) {
-      return 0;
     },
     getNext() {
       this.currentPage++;
