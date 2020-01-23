@@ -97,8 +97,7 @@ const AddrResolver = {
                   .catch(() => {
                     // eslint-disable-next-line
                     errorPar.innerText = _this.$t(
-                      'ens.ens-resolver.network-not-found',
-                      { network: network.type.name[0] }
+                      'ens.ens-resolver.domain-not-found'
                     );
 
                     _this.isValidAddress = false;
