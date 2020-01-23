@@ -60,7 +60,7 @@
                           ? 'current-network'
                           : ''
                       "
-                      @click="switchNetwork(net)"
+                      @click="switchTheNetwork(net)"
                     >
                       {{ net.service }}
                     </p>
@@ -521,7 +521,7 @@ export default {
           });
       }
     },
-    switchNetwork(network) {
+    switchTheNetwork(network) {
       this.switchNetwork(network).then(() => {
         this.selectedNetwork = network;
         this.setWeb3Instance();
