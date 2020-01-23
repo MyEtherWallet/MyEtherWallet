@@ -60,7 +60,7 @@
                           ? 'current-network'
                           : ''
                       "
-                      @click="switchTheNetwork(net)"
+                      @click="callSwitchNetwork(net)"
                     >
                       {{ net.service }}
                     </p>
@@ -474,14 +474,14 @@ export default {
     }
   },
   mounted() {
-    this.switchNetwork(this.$store.state.main.network);
+    this.callSwitchNetwork(this.$store.state.main.network);
     if (this.online) {
       this.fetchBalanceData();
     }
   },
   methods: {
     ...mapActions('main', ['switchNetwork', 'setWeb3Instance', 'setENS']),
-    setENS() {
+    callSetENS() {
       if (this.network.type.ens) {
         this.setENS(
           new ENS(this.web3.currentProvider, this.network.type.ens.registry)
@@ -531,13 +531,13 @@ export default {
           });
       }
     },
-    switchTheNetwork(network) {
+    callSwitchNetwork(network) {
       this.switchNetwork(network).then(() => {
         this.selectedNetwork = network;
         this.setWeb3Instance();
         this.stage1Btn();
         this.getTransactionDetails();
-        this.setENS();
+        this.callSetENS();
       });
     },
     truncateData(data) {
