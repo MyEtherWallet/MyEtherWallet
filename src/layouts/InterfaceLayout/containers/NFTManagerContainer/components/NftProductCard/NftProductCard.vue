@@ -9,8 +9,8 @@
     <pre v-if="false">{{ data }}</pre>
     <div class="card-image mb-2">
       <img :src="getImgUrl(data.contract)" />
-<!--      <img v-if="data.itemName" :src="getImgUrl(data.itemName)" />-->
-<!--      <img v-else :src="getImgUrl(data.title)" />-->
+      <!--      <img v-if="data.itemName" :src="getImgUrl(data.itemName)" />-->
+      <!--      <img v-else :src="getImgUrl(data.title)" />-->
     </div>
     <div class="count text-dark">{{ data.tokens.length }}</div>
     <p class="nft-name font-weight-bold text-dark">{{ data.name }}</p>
@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     getImgUrl(name) {
-      switch(name){
+      switch (name) {
         case '0x06012c8cf97bead5deae237070f9587f8e7a266d':
           return require('@/assets/images/nft/products/Kitties.png');
         case '0x7e789e2dd1340971de0a9bca35b14ac0939aa330':
@@ -52,8 +52,8 @@ export default {
           return require('@/assets/images/nft/products/Cryptantcrab.png');
         case '0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d':
           return require('@/assets/images/nft/products/Decentraland.png');
-          case '0x4f41d10f7e67fd16bde916b4a6dc3dd101c57394':
-            return require('@/assets/images/nft/products/Flowerpatch.png');
+        case '0x4f41d10f7e67fd16bde916b4a6dc3dd101c57394':
+          return require('@/assets/images/nft/products/Flowerpatch.png');
         default:
           return require('@/assets/images/icons/defaultToken.png');
       }

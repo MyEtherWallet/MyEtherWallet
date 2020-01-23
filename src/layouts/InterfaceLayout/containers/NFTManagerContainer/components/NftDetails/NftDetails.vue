@@ -48,7 +48,6 @@ import { Toast } from '@/helpers';
 import SmallBackButton from '@/layouts/InterfaceLayout/components/SmallBackButton';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import StandardButton from '@/components/Buttons/StandardButton';
-import placeholderImage from '@/assets/images/icons/defaultToken.png';
 
 export default {
   components: {
@@ -143,11 +142,11 @@ export default {
         ]);
 
         return this.cryptoKittiesContract.methods
-          .transfer(this.toAddress, this.nft.token)
+          .transfer(this.toAddress, this.nft.id)
           .encodeABI();
       }
       return this.ERC721tokenContract.methods
-        .transferFrom(this.account.address, this.toAddress, this.nft.token)
+        .transferFrom(this.account.address, this.toAddress, this.nft.id)
         .encodeABI();
     },
     transfer() {
