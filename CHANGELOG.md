@@ -1,15 +1,24 @@
+### Bug
+
+- Set ENS in offline helper [#1891](https://github.com/MyEtherWallet/MyEtherWallet/pull/1891)
+
+### Devop
+
+- Modularize store state [#1722][https://github.com/MyEtherWallet/MyEtherWallet/pull/1722]
+- Update packages from Greenkeeper [#1885](https://github.com/MyEtherWallet/MyEtherWallet/pull/1885)
+
 ### Release v5.2.11
 
 ### Feature
 
 - Add vkontakte icon to social home page and add first time russian popup [#1872](https://github.com/MyEtherWallet/MyEtherWallet/pull/1872)
-- Add unstoppable domains [#1857] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1857)
+- Add unstoppable domains [#1857](https://github.com/MyEtherWallet/MyEtherWallet/pull/1857)
 
 ### Devop
 
 - Update ledger packages [#1884](https://github.com/MyEtherWallet/MyEtherWallet/pull/1884)
 - Run update:swap with other update script [#1859](https://github.com/MyEtherWallet/MyEtherWallet/pull/1859)
-- Update translations [#1870] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1870)
+- Update translations [#1870](https://github.com/MyEtherWallet/MyEtherWallet/pull/1870)
 - Update Packages from greenkeeper [#1863](https://github.com/MyEtherWallet/MyEtherWallet/pull/1863)
 - Remove Price bar [#1876](https://github.com/MyEtherWallet/MyEtherWallet/pull/1876)
 
@@ -24,7 +33,6 @@
 ### Release v5.2.10
 
 ### Bug
-
 - Avoid incompatible Node 12 [#1845](https://github.com/MyEtherWallet/MyEtherWallet/pull/1845)
 - Fix error log details size [#1837](https://github.com/MyEtherWallet/MyEtherWallet/pull/1837)
 - Hide other translations on mobile [#1834](https://github.com/MyEtherWallet/MyEtherWallet/pull/1834)
