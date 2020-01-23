@@ -3,6 +3,9 @@
 - Modularize store state [#1722](https://github.com/MyEtherWallet/MyEtherWallet/pull/1722)
 - Update packages from Greenkeeper [#1885](https://github.com/MyEtherWallet/MyEtherWallet/pull/1885)
 
+### Bug 
+- Fix modularize state bugs [#1897] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1897)
+
 ### Release v5.2.11
 
 ### Feature
