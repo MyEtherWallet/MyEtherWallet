@@ -2,17 +2,18 @@
   <b-card
     class="text-center"
     :class="[
-      data.count > 0 ? 'active' : 'inactive',
+      data.tokens.length > 0 ? 'active' : 'inactive',
       selected ? 'selected' : ''
     ]"
   >
     <pre v-if="false">{{ data }}</pre>
     <div class="card-image mb-2">
-      <img v-if="data.itemName" :src="getImgUrl(data.itemName)" />
-      <img v-else :src="getImgUrl(data.title)" />
+      <img :src="getImgUrl(data.contract)" />
+<!--      <img v-if="data.itemName" :src="getImgUrl(data.itemName)" />-->
+<!--      <img v-else :src="getImgUrl(data.title)" />-->
     </div>
-    <div class="count text-dark">{{ data.count }}</div>
-    <p class="nft-name font-weight-bold text-dark">{{ data.title }}</p>
+    <div class="count text-dark">{{ data.tokens.length }}</div>
+    <p class="nft-name font-weight-bold text-dark">{{ data.name }}</p>
   </b-card>
 </template>
 
@@ -36,20 +37,26 @@ export default {
   },
   methods: {
     getImgUrl(name) {
-      if (name == 'Kitties')
-        return require('@/assets/images/nft/products/Kitties.png');
-      if (name == 'Stamp')
-        return require('@/assets/images/nft/products/Stamp.png');
-      if (name == 'Cards')
-        return require('@/assets/images/nft/products/Cards.png');
-      if (name == 'Flowers')
-        return require('@/assets/images/nft/products/Flowers.png');
-      if (name == 'Etheremon')
-        return require('@/assets/images/nft/products/Ethermon.png');
-      if (name == 'Crabs')
-        return require('@/assets/images/nft/products/Cryptantcrab.png');
-      if (name == 'parcels')
-        return require('@/assets/images/nft/products/Decentraland.png');
+      switch(name){
+        case '0x06012c8cf97bead5deae237070f9587f8e7a266d':
+          return require('@/assets/images/nft/products/Kitties.png');
+        case '0x7e789e2dd1340971de0a9bca35b14ac0939aa330':
+          return require('@/assets/images/nft/products/Stamp.png');
+        case '0x6ebeaf8e8e946f0716e6533a6f2cefc83f60e8ab':
+          return require('@/assets/images/nft/products/Cards.png');
+        case '0x8bc67d00253fd60b1afcce88b78820413139f4c6':
+          return require('@/assets/images/nft/products/Flowers.png');
+        case '0x5d00d312e171be5342067c09bae883f9bcb2003b':
+          return require('@/assets/images/nft/products/Ethermon.png');
+        case 'Crabs':
+          return require('@/assets/images/nft/products/Cryptantcrab.png');
+        case '0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d':
+          return require('@/assets/images/nft/products/Decentraland.png');
+          case '0x4f41d10f7e67fd16bde916b4a6dc3dd101c57394':
+            return require('@/assets/images/nft/products/Flowerpatch.png');
+        default:
+          return require('@/assets/images/icons/defaultToken.png');
+      }
     }
   }
 };

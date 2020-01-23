@@ -18,22 +18,22 @@
 
       <b-row>
         <b-col
-          v-for="i in sortByCount"
-          :key="i.key"
+          v-for="v in sortByCount"
+          :key="v.key"
           cols="4"
           md="4"
           lg="3"
           class="mb-4"
         >
           <NftProductCard
-            :data="i"
-            :selected="i.contract === selected ? true : false"
-            @click.native="selectNft(i)"
+            :data="v"
+            :selected="v.contract === selected ? true : false"
+            @click.native="selectNft(v)"
           >
             <i
-              v-show="i.customNft"
+              v-show="v.customNft"
               class="fa fa-times-circle clickable remove"
-              @click="removeCustomEntry(i)"
+              @click="removeCustomEntry(v)"
             />
           </NftProductCard>
         </b-col>
@@ -42,11 +42,11 @@
     <div class="mobile-menu">
       <b-dropdown :text="currentProduct">
         <b-dropdown-item
-          v-for="i in sortByCount"
-          :key="i.key"
-          @click.native="selectNft(i)"
+          v-for="v in sortByCount"
+          :key="v.key"
+          @click.native="selectNft(v)"
         >
-          {{ i.title }} ({{ i.count }})
+          {{ v.name }} ({{ v.tokens.length }})
         </b-dropdown-item>
       </b-dropdown>
     </div>
@@ -88,10 +88,10 @@ export default {
   computed: {
     sortByCount() {
       return Object.values(this.supportedNftObj).sort((a, b) => {
-        if (a.count < b.count) {
+        if (a.tokens.length < b.tokens.length) {
           return 1;
         }
-        if (a.count > b.count) {
+        if (a.tokens.length > b.tokens.length) {
           return -1;
         }
         return 0;
@@ -118,9 +118,9 @@ export default {
       this.$emit('selected', this.selected);
     },
     selectNft(nft) {
-      this.currentProduct = nft.title + ' (' + nft.count + ')';
+      this.currentProduct = nft.name + ' (' + nft.tokens.length + ')';
       this.searchResults = [];
-      if (nft.count > 0) {
+      if (nft.tokens.length > 0) {
         this.selected = nft.contract;
         this.$emit('selected', nft.contract);
       }
