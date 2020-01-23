@@ -42,7 +42,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'network', 'web3', 'online'])
+    ...mapState('main', ['account', 'online'])
   },
   watch: {},
   mounted() {},

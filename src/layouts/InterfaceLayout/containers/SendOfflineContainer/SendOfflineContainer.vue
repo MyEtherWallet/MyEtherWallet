@@ -275,7 +275,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['wallet', 'network', 'web3', 'linkQuery']),
+    ...mapState('main', ['wallet', 'network', 'web3', 'linkQuery']),
     txSpeedMsg() {
       const net = this.network.type.name;
       // eslint-disable-next-line
