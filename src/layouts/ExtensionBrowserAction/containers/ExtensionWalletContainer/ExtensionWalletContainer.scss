@@ -89,39 +89,38 @@
   }
 }
 
-// .my-wallets-container,
-// .dapps-container,
-// .watch-only-container {
-//   max-width: 1024px;
-//   min-width: 800px;
+.all-wallets-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
 
-//   .wallets-container-header,
-//   .total-balance-container {
-//     grid-column-start: 1;
-//   }
+  h2 {
+    font-weight: bold;
+  }
 
-//   .wallets,
-//   .wallets-info {
-//     grid-column-start: 1;
-//   }
-// }
+  .search-container {
+    position: relative;
+    i {
+      position: absolute;
+      top: 5px;
 
-// .wallets-container-header {
-//   margin-bottom: 20px;
-//   align-items: center;
-//   display: flex;
-//   justify-content: space-between;
+      &:last-child {
+        right: 5px;
+        cursor: pointer;
+      }
+    }
+    input {
+      border-radius: 0 !important;
+      border: none !important;
+      min-width: 350px;
+      background: none;
+      border-bottom: 1px solid $light-grey-11 !important;
+      padding-left: 20px;
+      padding-bottom: 5px;
 
-//   h2 {
-//     margin: 0 !important;
-//     font-size: 26px;
-//     font-weight: 700;
-//   }
-
-//   .add-button {
-//     color: $mew-green;
-//     cursor: pointer;
-//     font-weight: 600;
-//     font-size: 13px;
-//   }
-// }
+      &:focus {
+        border-bottom: 1px solid $black !important;
+      }
+    }
+  }
+}

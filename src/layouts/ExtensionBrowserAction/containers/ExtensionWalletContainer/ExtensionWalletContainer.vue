@@ -15,20 +15,7 @@
         :loading="loading"
         @password="updatePassword"
       />
-      <!-- <router-view
-        :my-wallets="myWallets"
-        :watch-only-wallets="watchOnlyAddresses"
-        :network="network"
-        :toggle-password-modal="togglePasswordModal"
-        :total-balance="totalBalance"
-        :converted-balance="convertedBalance"
-        :loading="loading"
-        :open-network-modal="openNetworkModal"
-        :add-wallet="addWallet"
-        :eth-price="ethPrice"
-        :watch-only-addresses="watchOnlyAddresses"
-        :open-watch-only-modal="openWatchOnlyModal"
-      /> -->
+
       <div v-if="!hasAccounts" class="no-wallet-found">
         <div class="text-and-img-container">
           <img src="@/assets/images/icons/alien.png" />
@@ -52,7 +39,32 @@
         </div>
       </div>
       <div v-else>
-        WE FOUND ACCOUNTS SIRE
+        <div class="all-wallets-header">
+          <h2>
+            All Wallets
+          </h2>
+          <div class="search-container">
+            <i class="fa fa-search" />
+            <input
+              v-model="search"
+              class="address-search"
+              placeholder="Search for name or address"
+            />
+            <i
+              v-show="search !== ''"
+              class="fa fa-times"
+              @click="clearSearch"
+            />
+          </div>
+        </div>
+        <div class="wallet-containers">
+          <b-tabs v-model="showMyWallets">
+            <b-tab key="My Wallets" title="My Wallets">Tab contents 1</b-tab>
+            <b-tab key="Watch Only Address" title="Watch Only Address"
+              >Tab contents 2</b-tab
+            >
+          </b-tabs>
+        </div>
       </div>
     </div>
   </div>
@@ -89,7 +101,9 @@ export default {
       nickname: '',
       convertedBalance: '$ 0',
       ethPrice: 0,
-      hasAccounts: false
+      hasAccounts: false,
+      search: '',
+      showMyWallets: 0
     };
   },
   computed: {
@@ -99,6 +113,11 @@ export default {
         (this.password !== '' || this.password.length > 0) &&
         this.walletRequirePass(this.file)
       );
+    }
+  },
+  watch: {
+    showMyWallets(newVal) {
+      console.log(newVal);
     }
   },
   created() {
@@ -120,6 +139,9 @@ export default {
       'setWeb3Instance',
       'decryptWallet'
     ]),
+    clearSearch() {
+      this.search = '';
+    },
     async fetchEthBalance() {
       const price = await fetch(
         'https://cryptorates.mewapi.io/ticker?filter=ETH'
@@ -156,10 +178,10 @@ export default {
           return newObj;
         });
       if (accounts.length > 0) {
+        this.hasAccounts = true;
         this.processAccounts(accounts);
       } else {
         this.hasAccounts = false;
-        // this.$router.push('/access-my-wallet');
       }
     },
     getAccounts(changed) {
@@ -271,6 +293,10 @@ export default {
       this.totalBalance = balance.toString();
       this.watchOnlyAddresses = watchOnlyAddresses;
       this.myWallets = myWallets;
+      if (this.myWallets.length === 0 && this.watchOnlyAddresses.length > 0) {
+        console.log('what', this.watchOnlyAddresses);
+        this.showMyWallets = 1;
+      }
       this.loading = false;
       this.fetchEthBalance();
     },
