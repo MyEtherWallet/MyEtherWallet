@@ -93,6 +93,7 @@
   align-items: center;
   display: flex;
   justify-content: space-between;
+  padding: 10px;
 
   h2 {
     font-weight: bold;
@@ -123,4 +124,39 @@
       }
     }
   }
+}
+
+.wallet-container-header {
+  position: relative;
+
+  .add-and-wallet-count {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 62px;
+    width: 250px;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .add-wallet-button {
+    align-items: center;
+    border: 1px solid $mew-green;
+    color: $mew-green;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+
+    i {
+      margin-right: 5px;
+    }
+  }
+}
+
+.wallet-display-container {
+  padding-top: 20px;
 }

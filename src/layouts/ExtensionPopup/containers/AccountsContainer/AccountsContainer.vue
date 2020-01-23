@@ -250,8 +250,12 @@ export default {
     },
     async fetchBalance(address) {
       if (address !== '0x' || isAddress(address)) {
-        const balance = await this.web3.eth.getBalance(address);
-        return this.web3.utils.fromWei(balance);
+        try {
+          const balance = await this.web3.eth.getBalance(address);
+          return this.web3.utils.fromWei(balance);
+        } catch (e) {
+          return '0';
+        }
       }
     },
     moveToQuicksend() {
