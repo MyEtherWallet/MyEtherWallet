@@ -47,7 +47,7 @@ const AddrResolver = {
     };
     const resolveViaENS = function(domain) {
       const _this = vnode.context;
-      const ens = _this.$store.state.ens;
+      const ens = _this.$store.state.main.ens;
       const errorPar = document.createElement('p');
       errorPar.classList.add('resolver-error');
       if (
