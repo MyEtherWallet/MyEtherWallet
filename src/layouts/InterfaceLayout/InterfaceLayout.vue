@@ -53,7 +53,7 @@
         <div
           :class="isSidemenuOpen && 'side-nav-open'"
           class="side-nav-background"
-          @click="toggleSideMenu;"
+          @click="startToggleSideMenu;"
         />
         <div :class="isSidemenuOpen && 'side-nav-open'" class="side-nav">
           <interface-side-menu />
@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import ENS from 'ethereum-ens';
 import TokenOverview from '@/dapps/Aave/components/TokenOverview';
 import WalletPasswordModal from '@/components/WalletPasswordModal';
@@ -222,7 +222,7 @@ export default {
       }
       return null;
     },
-    ...mapState([
+    ...mapState('main', [
       'network',
       'account',
       'online',
@@ -248,6 +248,17 @@ export default {
     this.clearIntervals();
   },
   methods: {
+    ...mapActions('main', [
+      'switchNetwork',
+      'setWeb3Instance',
+      'saveQueryVal',
+      'updateBlockNumber',
+      'setAccountBalance',
+      'switchNetwork',
+      'setENS',
+      'decryptWallet',
+      'toggleSideMenu'
+    ]),
     checkPrefilled() {
       const _self = this;
       const hasLinkQuery = Object.keys(_self.linkQuery).length;
@@ -276,12 +287,12 @@ export default {
           const foundNetwork = _self.Networks[network.toUpperCase()];
           // eslint-disable-next-line
           if (!!foundNetwork) {
-            _self.$store.dispatch('switchNetwork', foundNetwork[0]).then(() => {
-              _self.$store.dispatch('setWeb3Instance');
+            _self.switchNetwork(foundNetwork[0]).then(() => {
+              _self.setWeb3Instance();
             });
           }
         }
-        _self.$store.dispatch('saveQueryVal', {});
+        _self.saveQueryVal({});
       }
     },
     clearPrefilled() {
@@ -355,8 +366,8 @@ export default {
     print() {
       this.$refs.printModal.$refs.print.show();
     },
-    toggleSideMenu() {
-      this.$store.commit('TOGGLE_SIDEMENU');
+    startToggleSideMenu() {
+      this.toggleSideMenu();
     },
     async fetchTokens() {
       this.receivedTokens = false;
@@ -524,7 +535,7 @@ export default {
         .getBlockNumber()
         .then(res => {
           this.blockNumber = res;
-          this.$store.dispatch('updateBlockNumber', res);
+          this.updateBlockNumber(res);
         })
         .catch(e => {
           Toast.responseHandler(e, Toast.ERROR);
@@ -536,7 +547,7 @@ export default {
         .getBalance(this.address.toLowerCase())
         .then(res => {
           this.balance = web3.utils.fromWei(res, 'ether');
-          this.$store.dispatch('setAccountBalance', res);
+          this.setAccountBalance(res);
         })
         .catch(e => {
           Toast.responseHandler(e, Toast.ERROR);
@@ -547,7 +558,7 @@ export default {
       window.ethereum.on('accountsChanged', account => {
         if (account.length > 1) {
           const wallet = new Web3Wallet(account[0]);
-          this.$store.dispatch('decryptWallet', [wallet, web3]);
+          this.decryptWallet([wallet, web3]);
         }
       });
     },
@@ -558,7 +569,7 @@ export default {
             networkTypes[net].chainID.toString() === `${id}` &&
             this.Networks[net]
           ) {
-            this.$store.dispatch('switchNetwork', this.Networks[net][0]);
+            this.switchNetwork(this.Networks[net][0]);
             return true;
           }
         });
@@ -592,7 +603,7 @@ export default {
               this.web3WalletPollAddress();
             }
           }
-          this.setENS();
+          this.callSetENS();
           this.getBlock();
           this.getBalance();
           this.setTokens();
@@ -630,14 +641,15 @@ export default {
           Toast.responseHandler(e, Toast.ERROR);
         });
     },
-    setENS() {
+    callSetENS() {
       if (this.network.type.ens) {
-        this.$store.dispatch(
-          'setENS',
-          new ENS(this.web3.currentProvider, this.network.type.ens.registry)
+        const newEns = new ENS(
+          this.web3.currentProvider,
+          this.network.type.ens.registry
         );
+        this.setENS(newEns);
       } else {
-        this.$store.dispatch('setENS', null);
+        this.setENS(null);
       }
     },
     clearIntervals() {
@@ -659,7 +671,7 @@ export default {
             if (this.network.type.chainID.toString() !== id) {
               Object.keys(networkTypes).some(net => {
                 if (networkTypes[net].chainID === id && this.Networks[net]) {
-                  this.$store.dispatch('switchNetwork', this.Networks[net]);
+                  this.switchNetwork(this.Networks[net]);
                   clearInterval(this.pollNetwork);
                   return true;
                 }
@@ -700,10 +712,7 @@ export default {
             address.toLowerCase() !== this.account.address.toLowerCase()
           ) {
             const wallet = new Web3Wallet(address);
-            this.$store.dispatch('decryptWallet', [
-              wallet,
-              window.web3.currentProvider
-            ]);
+            this.decryptWallet([wallet, window.web3.currentProvider]);
             clearInterval(this.pollAddress);
           }
         });

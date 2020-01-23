@@ -40,7 +40,7 @@
 <script>
 import { MewConnectWallet } from '@/wallets';
 import { Toast } from '@/helpers';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   data() {
@@ -49,14 +49,14 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3'])
+    ...mapState('main', ['web3'])
   },
   mounted() {
     this.$refs.finneyModal.$on('show', () => {
       new MewConnectWallet(this.generateQr)
         .then(wallet => {
-          if (!this.web3.eth) this.$store.dispatch('setWeb3Instance');
-          this.$store.dispatch('decryptWallet', [wallet]).then(() => {
+          if (!this.web3.eth) this.setWeb3Instance();
+          this.decryptWallet([wallet]).then(() => {
             this.$router.push({
               path: 'interface'
             });
@@ -68,6 +68,7 @@ export default {
     });
   },
   methods: {
+    ...mapActions('main', ['setWeb3Instance', 'decryptWallet']),
     generateQr(code) {
       this.qrcode = code;
     }

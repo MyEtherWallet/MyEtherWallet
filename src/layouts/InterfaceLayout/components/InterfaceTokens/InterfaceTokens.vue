@@ -152,7 +152,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['network', 'web3', 'online'])
+    ...mapState('main', ['network', 'web3', 'online'])
   },
   watch: {
     receivedTokens() {

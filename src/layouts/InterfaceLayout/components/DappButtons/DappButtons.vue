@@ -66,7 +66,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['network', 'online']),
+    ...mapState('main', ['online', 'network']),
     supported() {
       if (this.online) {
         return this.supportedNetworks.includes(this.network.type.name);
