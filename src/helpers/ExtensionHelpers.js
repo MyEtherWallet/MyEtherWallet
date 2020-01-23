@@ -91,13 +91,13 @@ const networkSwitch = (item, _self) => {
     const networkProps = JSON.parse(item['defNetwork']);
     let network = {};
     if (networkProps.hasOwnProperty('url')) {
-      network = _self.$store.state.Networks[networkProps.key].find(
+      network = _self.$store.state.main.Networks[networkProps.key].find(
         actualNetwork => {
           return actualNetwork.url === networkProps.url;
         }
       );
     } else {
-      network = _self.$store.state.Networks[networkProps.key].find(
+      network = _self.$store.state.main.Networks[networkProps.key].find(
         actualNetwork => {
           return actualNetwork.service === networkProps.service;
         }

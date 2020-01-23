@@ -58,12 +58,100 @@
           </div>
         </div>
         <div class="wallet-containers">
-          <b-tabs v-model="showMyWallets">
-            <b-tab key="My Wallets" title="My Wallets">Tab contents 1</b-tab>
-            <b-tab key="Watch Only Address" title="Watch Only Address"
-              >Tab contents 2</b-tab
+          <div class="wallet-container-header">
+            <div class="add-and-wallet-count">
+              <p>
+                Total of
+                {{
+                  showMyWallets === 0
+                    ? myWallets.length
+                    : watchOnlyAddresses.length
+                }}
+                wallets
+              </p>
+              <div class="add-wallet-button">
+                <i class="fa fa-plus" />
+                Add
+              </div>
+            </div>
+            <b-tabs
+              v-model="showMyWallets"
+              nav-class="wallet-nav"
+              active-nav-item-class="wallet-nav-active"
+              nav-wrapper-class="wallet-nav-wrapper"
             >
-          </b-tabs>
+              <b-tab title="My Wallets" title-link-class="tab-default-style">
+                <div
+                  v-if="myWallets.length > 0"
+                  class="wallet-display-container"
+                >
+                  <wallet-info-component
+                    v-for="wallet in myWallets"
+                    :key="wallet.address"
+                    :usd="ethPrice"
+                    :address="wallet.address"
+                    :balance="wallet.balance"
+                    :wallet="wallet.wallet"
+                    :nickname="wallet.nickname"
+                    :wallet-type="wallet.type"
+                    :access="togglePasswordModal"
+                    :detail="togglePasswordModal"
+                  />
+                </div>
+                <div v-else class="wallet-display-container">
+                  <div class="no-wallet-found">
+                    <div class="text-and-img-container">
+                      <img src="@/assets/images/icons/alien.png" />
+                      <p>No wallet found, please...</p>
+                    </div>
+                    <div class="wallet-options">
+                      <button class="large-round-button-green-filled">
+                        Add My Wallet
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </b-tab>
+              <b-tab
+                title="Watch Only Address"
+                title-link-class="tab-default-style"
+              >
+                <div
+                  v-if="watchOnlyAddresses.length > 0"
+                  class="wallet-display-container"
+                >
+                  <wallet-info-component
+                    v-for="wallet in watchOnlyAddresses"
+                    :key="wallet.address"
+                    :usd="ethPrice"
+                    :address="wallet.address"
+                    :balance="wallet.balance"
+                    :wallet="wallet.wallet"
+                    :nickname="wallet.nickname"
+                    :wallet-type="wallet.type"
+                    :access="togglePasswordModal"
+                    :detail="togglePasswordModal"
+                  />
+                </div>
+                <div v-else class="wallet-display-container">
+                  <div class="no-wallet-found">
+                    <div class="text-and-img-container">
+                      <img src="@/assets/images/icons/alien.png" />
+                      <p>No wallet found, please...</p>
+                    </div>
+                    <div class="wallet-options">
+                      <button
+                        class="large-round-button-green-filled"
+                        @click="openWatchOnlyModal"
+                      >
+                        Add Watch Only Address
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </b-tab>
+            </b-tabs>
+          </div>
         </div>
       </div>
     </div>
@@ -83,11 +171,13 @@ import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { mapState, mapActions } from 'vuex';
 import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
 import InterfaceNetworkModal from '@/layouts/InterfaceLayout/components/InterfaceNetworkModal';
+import WalletInfoComponent from '../../components/WalletInfoComponent';
 export default {
   components: {
     'watch-only-modal': WatchOnlyModal,
     'password-only-modal': PasswordOnlyModal,
-    'interface-network-modal': InterfaceNetworkModal
+    'interface-network-modal': InterfaceNetworkModal,
+    'wallet-info-component': WalletInfoComponent
   },
   data() {
     return {
@@ -113,11 +203,6 @@ export default {
         (this.password !== '' || this.password.length > 0) &&
         this.walletRequirePass(this.file)
       );
-    }
-  },
-  watch: {
-    showMyWallets(newVal) {
-      console.log(newVal);
     }
   },
   created() {
@@ -341,6 +426,39 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+@import '~@/scss/GlobalVariables';
+.wallet-nav-wrapper {
+  height: 62px;
+}
+
+.wallet-nav {
+  border: none !important;
+  height: 62px;
+  display: flex;
+  align-items: center;
+
+  li {
+    margin-right: 65px;
+  }
+}
+
+.wallet-nav-active {
+  font-weight: bold;
+  border: none !important;
+  border-bottom: 2px solid $dark-blue-2 !important;
+}
+
+.tab-default-style {
+  color: $dark-blue-2 !important;
+  font-size: 20px !important;
+  border: none;
+  background-color: $light-grey-2 !important;
+  border-bottom: 2px solid $light-grey-2;
+  padding: 0 0 10px;
+}
+</style>
 
 <style lang="scss" scoped>
 @import 'ExtensionWalletContainer.scss';
