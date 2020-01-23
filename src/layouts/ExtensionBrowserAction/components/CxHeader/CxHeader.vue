@@ -260,6 +260,12 @@ export default {
     },
     updateNetwork(network) {
       this.switchNetwork(network).then(() => {
+        window.chrome.storage.sync.set({
+          defNetwork: JSON.stringify({
+            service: network.service,
+            key: network.type.name
+          })
+        });
         this.setWeb3Instance();
         this.$refs.cxNetworkDropdown.hide();
       });

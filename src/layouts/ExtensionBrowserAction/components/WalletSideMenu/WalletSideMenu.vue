@@ -36,14 +36,14 @@ export default {
           icon: myWalletsHov,
           inActive: myWallets,
           label: 'myWallets',
-          path: '/wallets'
+          path: '/'
         },
         {
           name: 'My Favorites',
           icon: watchOnlyHov,
           inActive: watchOnly,
           label: 'watchOnlyWallets',
-          path: '/watch-only'
+          path: '/favorites'
         },
         {
           name: 'Dapps',
