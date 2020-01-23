@@ -4,7 +4,8 @@
 
 ### Devop
 
-- Modularize store state [#1722][https://github.com/MyEtherWallet/MyEtherWallet/pull/1722]
+- Update NFT manager to use new API [#1898](https://github.com/MyEtherWallet/MyEtherWallet/pull/1898)
+- Modularize store state [#1722](https://github.com/MyEtherWallet/MyEtherWallet/pull/1722)
 - Update packages from Greenkeeper [#1885](https://github.com/MyEtherWallet/MyEtherWallet/pull/1885)
 
 ### Release v5.2.11
@@ -33,6 +34,7 @@
 ### Release v5.2.10
 
 ### Bug
+
 - Avoid incompatible Node 12 [#1845](https://github.com/MyEtherWallet/MyEtherWallet/pull/1845)
 - Fix error log details size [#1837](https://github.com/MyEtherWallet/MyEtherWallet/pull/1837)
 - Hide other translations on mobile [#1834](https://github.com/MyEtherWallet/MyEtherWallet/pull/1834)
