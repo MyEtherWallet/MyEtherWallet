@@ -29,9 +29,9 @@
     "not-enough-funds": "У вас недостаточно средств",
     "no-swap-offline": "обмен не доступен оффлайн",
     "swap-only-mainnet": "Обмен доступен только на mainnet",
-    "kyber-token-list-update-failed": "Failed to update Kyber Network available token list",
-    "kyber-gasLimit-list-update-failed": "Failed to update Kyber Network trade gasLimit list",
-    "kyber-list-update-failed": "Failed to update Kyber Network default information"
+    "kyber-token-list-update-failed": "Не удалось обновить список токенов Kyber Network",
+    "kyber-gasLimit-list-update-failed": "Не удалось обновить список gasLimit в Kyber Network",
+    "kyber-list-update-failed": "Не удалось обновить информацию Kyber Network"
   },
   "notice": {
     "retrieve-changelly-rate-failed": "Не удалось получить курс Changelly от {fromCurrency} к {toCurrency}",
