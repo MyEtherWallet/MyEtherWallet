@@ -116,8 +116,7 @@
       min-width: 350px;
       background: none;
       border-bottom: 1px solid $light-grey-11 !important;
-      padding-left: 20px;
-      padding-bottom: 5px;
+      padding: 0 20px 5px;
 
       &:focus {
         border-bottom: 1px solid $black !important;

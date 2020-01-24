@@ -24,12 +24,6 @@
           >
             {{ $t('mewcx.submit') }}
           </button>
-          <button
-            class="remove-button large-round-button-white-filled"
-            @click.stop.prevent="removeWallet"
-          >
-            {{ $t('mewcx.remove-wallet') }}
-          </button>
         </form>
       </div>
     </b-modal>
