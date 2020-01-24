@@ -99,7 +99,7 @@
                   />
                 </div>
                 <div v-else class="wallet-display-container">
-                  <div class="no-wallet-found">
+                  <div class="no-wallet-found empty-wallet">
                     <div class="text-and-img-container">
                       <img src="@/assets/images/icons/alien.png" />
                       <p>No wallet found, please...</p>
@@ -134,7 +134,7 @@
                   />
                 </div>
                 <div v-else class="wallet-display-container">
-                  <div class="no-wallet-found">
+                  <div class="no-wallet-found empty-wallet">
                     <div class="text-and-img-container">
                       <img src="@/assets/images/icons/alien.png" />
                       <p>No wallet found, please...</p>
@@ -379,7 +379,6 @@ export default {
       this.watchOnlyAddresses = watchOnlyAddresses;
       this.myWallets = myWallets;
       if (this.myWallets.length === 0 && this.watchOnlyAddresses.length > 0) {
-        console.log('what', this.watchOnlyAddresses);
         this.showMyWallets = 1;
       }
       this.loading = false;
@@ -457,6 +456,11 @@ export default {
   background-color: $light-grey-2 !important;
   border-bottom: 2px solid $light-grey-2;
   padding: 0 0 10px;
+
+  &:hover {
+    border: none !important;
+    border-bottom: 2px solid $dark-blue-2 !important;
+  }
 }
 </style>
 
