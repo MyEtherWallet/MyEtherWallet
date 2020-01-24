@@ -1,12 +1,58 @@
 <template>
   <div class="wallet-info-container">
-    <interface-tokens-modal ref="tokenModal" :add-token="addToken" />
+    <div class="wallet-info-header">
+      <div class="address-and-blockie">
+        <div class="blockie-container">
+          <blockie :address="address" width="50px" height="50px" />
+        </div>
+        <div class="address-and-nickname-container">
+          <p>
+            <b> {{ nickname }} </b>
+          </p>
+          <p>
+            {{
+              address.substr(0, 18) +
+                '...' +
+                address.substr(address.length - 6, address.length)
+            }}
+            <img src="@/assets/images/icons/copy.svg" @click="copyAddress" />
+          </p>
+          <input ref="addressInput" v-model="address" />
+        </div>
+      </div>
+      <div class="wallet-options">
+        <b-dropdown
+          toggle-class="wallet-options-toggle"
+          no-caret
+          offset="-60"
+          menu-class="wallet-options-menu"
+        >
+          <template v-slot:button-content>
+            <i class="fa fa-ellipsis-v fa-lg" />
+          </template>
+          <b-dropdown-text
+            @click="
+              () => {
+                access(wallet, 'access');
+              }
+            "
+            >Access</b-dropdown-text
+          >
+          <b-dropdown-text @click="edit">Rename</b-dropdown-text>
+          <b-dropdown-divider></b-dropdown-divider>
+          <b-dropdown-text class="remove-text" @click="openRemoveWallet"
+            >Remove</b-dropdown-text
+          >
+        </b-dropdown>
+        <i :class="['fa fa-lg', 'fa-heart-o']" />
+      </div>
+    </div>
+    <!-- <interface-tokens-modal ref="tokenModal" :add-token="addToken" /> -->
     <edit-wallet-modal
       ref="editModal"
       :address="address"
       :name="parsedWallet.nick"
       :wallet="parsedWallet"
-      :remove-wallet="openRemoveWallet"
     />
     <remove-wallet-modal
       ref="removeWalletModal"
@@ -15,7 +61,7 @@
       :nickname="parsedWallet.nick"
       :address="address"
     />
-    <b-modal
+    <!-- <b-modal
       ref="viewAllModal"
       hide-footer
       hide-header
@@ -85,8 +131,8 @@
           </div>
         </div>
       </div>
-    </b-modal>
-    <div class="nickname-and-buttons">
+    </b-modal> -->
+    <!-- <div class="nickname-and-buttons">
       <p>
         {{ parsedWallet.nick }}
       </p>
@@ -223,7 +269,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -602,6 +648,38 @@ export default {
 };
 </script>
 
+<style lang="scss">
+@import '~@/scss/GlobalVariables';
+
+.show {
+  .wallet-options-toggle {
+    background: none !important;
+  }
+}
+
+.wallet-options-toggle {
+  border: none;
+  background: none !important;
+  padding: 0;
+}
+
+.wallet-options-menu {
+  padding: 10px;
+  min-width: 60px;
+
+  .b-dropdown-text {
+    text-align: center !important;
+    color: $dark-blue-2 !important;
+    font-weight: normal !important;
+    cursor: pointer;
+  }
+  .remove-text {
+    p {
+      color: $red-5 !important;
+    }
+  }
+}
+</style>
 <style lang="scss" scoped>
 @import 'WalletInfoComponent.scss';
 </style>
