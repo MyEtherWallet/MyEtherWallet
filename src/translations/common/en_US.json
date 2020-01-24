@@ -70,6 +70,10 @@
     "no-thanks": "No thanks",
     "show-error-details": "Show error details"
   },
+  "updates": {
+    "new": "New update found! Please refresh your browser to receive the most updated version",
+    "update-error": "Something went wrong with our service workers!"
+  },
   "wallet": {
     "create-new": "Create A New Wallet",
     "create": "Create Wallet",
