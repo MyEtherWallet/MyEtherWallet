@@ -217,7 +217,7 @@ const AddrResolver = {
                   err.code != 'UnsupportedDomain'
                     ? resolution.serviceName(domain)
                     : '',
-                currencyticker: parentCurrency
+                currencyTicker: parentCurrency
               }
             );
             appendElement(messagePar);
