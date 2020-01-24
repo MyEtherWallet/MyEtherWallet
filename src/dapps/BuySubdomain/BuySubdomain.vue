@@ -88,7 +88,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['ethDonationAddress', 'ens', 'account', 'web3']),
+    ...mapState('main', ['ethDonationAddress', 'ens', 'account', 'web3']),
     sortedResults() {
       const newArr = this.results;
       newArr.sort((a, b) => {

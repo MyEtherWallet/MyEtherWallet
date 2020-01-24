@@ -98,7 +98,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['network']),
+    ...mapState('main', ['network']),
     isValidLength() {
       return (
         this.localDomainName.replace(

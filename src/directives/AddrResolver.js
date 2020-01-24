@@ -9,13 +9,13 @@ import getMultiCoinAddress from '@/helpers/ENSMultiCoin.js';
 
 const AddrResolver = {
   bind: function(el, binding, vnode) {
-    let network = vnode.context.$store.state.network;
+    let network = vnode.context.$store.state.main.network;
     let parentCurrency = vnode.context.$parent.currency
       ? vnode.context.$parent.currency
       : network.type.name;
     let address = '';
     const resolution = new Resolution({ ens: { network: network } });
-    vnode.context.$parent.$watch('$store.state.network', function(e) {
+    vnode.context.$parent.$watch('$store.state.main.network', function(e) {
       network = e;
       parentCurrency = e.type.name;
       actualProcess(address);
