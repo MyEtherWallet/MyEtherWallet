@@ -1,6 +1,7 @@
 ### Bug
 
 - Set ENS in offline helper [#1891](https://github.com/MyEtherWallet/MyEtherWallet/pull/1891)
+- Change translations placement [#1901] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1901)
 
 ### Devop
 
