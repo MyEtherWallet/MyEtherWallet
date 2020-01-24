@@ -91,7 +91,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'account'])
+    ...mapState('main', ['web3', 'account'])
   },
   watch: {
     manageFundsText(newVal, oldVal) {
