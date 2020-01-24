@@ -8,7 +8,7 @@ export default {
   homePage: 'https://xinfin.org/',
   blockExplorerAddr: 'https://explorer.apothem.network/addr/[[address]]',
   blockExplorerTX: 'https://explorer.apothem.network/tx/[[txHash]]',
-  chainID: 50,
+  chainID: 51,
   tokens: tokens,
   contracts: contracts,
   ens: {
