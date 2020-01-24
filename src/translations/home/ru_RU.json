@@ -56,6 +56,6 @@
     "title": "Сообщество MEW"
   },
   "lost-title": "Ой! Похоже, вы потерялись.",
-  "new-update": "New update found! Please refresh your browser to receive the most updated version",
+  "new-update": "Найдено новое обновление! Пожалуйста, обновите браузер, чтобы получить самую обновленную версию",
   "new-update-error": "Something went wrong with our service workers!"
 }
