@@ -71,14 +71,14 @@
     "no-resolver": "Нет резолвера {network} НС в этом узле"
   },
   "unstoppableResolution": {
-    "address-reported-error": "Address has been reported. Please make sure you are sending funds to the correct address.",
-    "UnregisteredDomain": "Domain {domain} is not registered",
-    "UnspecifiedResolver": "Domain {domain} is not configured",
-    "UnsupportedDomain": "Domain {domain} is not supported",
-    "UnspecifiedCurrency": "Domain {domain} has no {currencyTicker} attached to it",
-    "NamingServiceDown": "{method} naming service is down at the moment",
-    "UnsupportedCurrency": "{currencyTicker} is not supported",
-    "IncorrectResolverInterface": "Domain resolver is configured incorrectly for {method}",
-    "RecordNotFound": "No {recordName} record found for {domain}"
+    "address-reported-error": "Этот адрес в черном списке. Пожалуйста, убедитесь, что вы отправляете средства на правильный адрес.",
+    "UnregisteredDomain": "Домен {domain} не зарегистрирован",
+    "UnspecifiedResolver": "Домен {domain} не настроен",
+    "UnsupportedDomain": "Домен {domain} не поддерживается",
+    "UnspecifiedCurrency": "K домену {domain} не привязан {currencyTicker}",
+    "NamingServiceDown": "Служба имён {method} в данный момент недоступна",
+    "UnsupportedCurrency": "{currencyTicker} не поддерживается",
+    "IncorrectResolverInterface": "Резолвер домена сконфигурирован неправильно для {method}",
+    "RecordNotFound": "Не найдено {recordName} записей для {domain}"
   }
 }
