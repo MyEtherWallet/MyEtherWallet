@@ -69,7 +69,10 @@
                 }}
                 wallets
               </p>
-              <div class="add-wallet-button">
+              <div
+                class="add-wallet-button"
+                @click="showMyWallets === 0 ? () => {} : openWatchOnlyModal()"
+              >
                 <i class="fa fa-plus" />
                 Add
               </div>
@@ -96,6 +99,7 @@
                     :wallet-type="wallet.type"
                     :access="togglePasswordModal"
                     :detail="togglePasswordModal"
+                    :prices="prices"
                   />
                 </div>
                 <div v-else class="wallet-display-container">
@@ -131,6 +135,7 @@
                     :wallet-type="wallet.type"
                     :access="togglePasswordModal"
                     :detail="togglePasswordModal"
+                    :prices="prices"
                   />
                 </div>
                 <div v-else class="wallet-display-container">
@@ -193,7 +198,8 @@ export default {
       ethPrice: 0,
       hasAccounts: false,
       search: '',
-      showMyWallets: 0
+      showMyWallets: 0,
+      prices: {}
     };
   },
   computed: {
@@ -212,7 +218,7 @@ export default {
     this.$refs.watchOnlyModal.$refs.watchOnlyWallet.$on('hidden', () => {
       this.loading = false;
     });
-
+    this.fetchTokenRates();
     this.getAccounts();
   },
   destroyed() {
@@ -224,6 +230,20 @@ export default {
       'setWeb3Instance',
       'decryptWallet'
     ]),
+    async fetchTokenRates() {
+      try {
+        const prices = await fetch('https://cryptorates.mewapi.io/ticker')
+          .then(res => {
+            return res.json();
+          })
+          .catch(e => {
+            console.error(e);
+          });
+        this.prices = Object.assign({}, prices.data);
+      } catch (e) {
+        console.error(e);
+      }
+    },
     clearSearch() {
       this.search = '';
     },

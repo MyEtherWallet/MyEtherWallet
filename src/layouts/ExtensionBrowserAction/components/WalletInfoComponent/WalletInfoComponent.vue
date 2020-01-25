@@ -9,14 +9,7 @@
           <p>
             <b> {{ nickname }} </b>
           </p>
-          <p>
-            {{
-              address.substr(0, 18) +
-                '...' +
-                address.substr(address.length - 6, address.length)
-            }}
-            <img src="@/assets/images/icons/copy.svg" @click="copyAddress" />
-          </p>
+          <p>{{ concattedAddr }}</p>
           <input ref="addressInput" v-model="address" />
         </div>
       </div>
@@ -45,6 +38,44 @@
           >
         </b-dropdown>
         <i :class="['fa fa-lg', 'fa-heart-o']" />
+      </div>
+    </div>
+    <div class="wallet-info-body">
+      <div class="main-wallet-content">
+        <div class="main-wallet-content-container">
+          <div class="wallet-img-container">
+            <img alt class="icon" src="~@/assets/images/icons/wallet.svg" />
+          </div>
+          <div class="wallet-value-container">
+            <p class="title">Total Wallet Value</p>
+            <p class="dollar-amt">
+              {{ walletTokensWithBalance.totalWalletBalance }}
+            </p>
+          </div>
+          <div class="wallet-value-container">
+            <p class="title">ETH Balance</p>
+            <p class="dollar-amt">{{ convertedBalance }}</p>
+            <p class="value">{{ fixedEthBalance }}</p>
+          </div>
+          <div class="wallet-value-container">
+            <p class="title">Value of Token</p>
+            <p class="dollar-amt">{{ walletTokensWithBalance.total }}</p>
+            <p class="value">
+              {{ walletTokensWithBalance.tokensWDollarAmtLength }} tokens
+            </p>
+          </div>
+        </div>
+        <div class="view-all-container">
+          <p>View all tokens</p>
+        </div>
+      </div>
+      <div class="wallet-tokens">
+        <div
+          v-for="(token, idx) in walletTokensWithBalance.tokensWDollarAmt"
+          :key="token.symbol + idx"
+        >
+          {{ token.tokenMew.symbol }} - {{ token.tokenMew.balance }}
+        </div>
       </div>
     </div>
     <!-- <interface-tokens-modal ref="tokenModal" :add-token="addToken" /> -->
@@ -286,12 +317,6 @@ import * as networkTypes from '@/networks/types';
 import utils from 'web3-utils';
 import InterfaceTokensModal from '@/layouts/InterfaceLayout/components/InterfaceTokensModal';
 export default {
-  filters: {
-    concatAddress(value) {
-      if (!value) return '';
-      return `${value.substr(0, 32)}...${value.substr(value.length - 7)}`;
-    }
-  },
   components: {
     blockie: Blockie,
     'edit-wallet-modal': EditWalletModal,
@@ -330,6 +355,12 @@ export default {
     usd: {
       type: Number,
       default: 0
+    },
+    prices: {
+      type: Object,
+      default: () => {
+        return {};
+      }
     }
   },
   data() {
@@ -348,8 +379,48 @@ export default {
       return JSON.parse(this.wallet);
     },
     convertedBalance() {
-      const balance = new BigNumber(this.balance).times(this.usd).toFixed(2);
-      return `$ ${balance}`;
+      const balance = new BigNumber(this.balance).times(this.usd).toNumber();
+      return this.toDollar(balance);
+    },
+    concattedAddr() {
+      return (
+        this.address.substr(0, 18) +
+        '...' +
+        this.address.substr(this.address.length - 6, this.address.length)
+      );
+    },
+    fixedEthBalance() {
+      const currencyBalance = new BigNumber(this.balance).toFixed(2);
+      return `${currencyBalance} ${this.network.type.currencyName}`;
+    },
+    walletTokensWithBalance() {
+      const tokensWithBalance = this.tokens.filter(item => {
+        return item.balance !== 'Load' && item.balance > 0;
+      });
+      let totalTokenAmt = 0;
+      const tokensWithDollarAmt = [];
+      tokensWithBalance.forEach(item => {
+        if (this.prices[item.symbol]) {
+          totalTokenAmt +=
+            this.prices[item.symbol].quotes.USD.price * item.balance;
+          tokensWithDollarAmt.push({
+            tokenMew: item,
+            tokenData: this.prices[item.symbol]
+          });
+        }
+      });
+
+      const currencyDollar = new BigNumber(this.balance).times(this.usd);
+      const totalWalletBalance = currencyDollar.plus(totalTokenAmt).toNumber();
+
+      return {
+        tokens: tokensWithBalance,
+        length: tokensWithBalance.length,
+        tokensWDollarAmt: tokensWithDollarAmt,
+        tokensWDollarAmtLength: tokensWithDollarAmt.length,
+        total: this.toDollar(new BigNumber(totalTokenAmt).toNumber()),
+        totalWalletBalance: this.toDollar(totalWalletBalance)
+      };
     }
   },
   watch: {
@@ -385,6 +456,17 @@ export default {
     window.chrome.storage.onChanged.removeListener(this.fetchTokens);
   },
   methods: {
+    toDollar(val) {
+      return `${val
+        .toLocaleString('en-GB', {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 2,
+          currencyDisplay: 'symbol'
+        })
+        .replace('US', '')
+        .replace('$', '$ ')}`;
+    },
     removeCustomToken(token) {
       const idx = this.customTokens.findIndex(item => {
         return item.address.toLowerCase() === token.address.toLowerCase();
