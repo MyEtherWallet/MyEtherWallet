@@ -9,7 +9,10 @@
           <p>
             <b> {{ nickname }} </b>
           </p>
-          <p>{{ concattedAddr }}</p>
+          <p>
+            {{ concattedAddr }}
+            <img src="@/assets/images/icons/copy.svg" @click="copyAddress" />
+          </p>
           <input ref="addressInput" v-model="address" />
         </div>
       </div>
@@ -24,6 +27,7 @@
             <i class="fa fa-ellipsis-v fa-lg" />
           </template>
           <b-dropdown-text
+            v-if="walletType !== 'watchOnly'"
             @click="
               () => {
                 access(wallet, 'access');
@@ -68,17 +72,125 @@
           </div>
         </div>
         <div class="view-all-container" @click="showTokens = !showTokens">
-          <p>View all tokens</p>
+          <p>{{ showTokens ? 'Hide all tokens' : 'View all tokens' }}</p>
           <i :class="['fa', showTokens ? 'fa-angle-up' : 'fa-angle-down']" />
         </div>
       </div>
       <div v-show="showTokens" class="wallet-tokens">
-        <div
+        <table v-if="walletTokensWithBalance.tokensWDollarAmt.length > 0">
+          <tr class="table-header">
+            <th>
+              TOKEN NAME
+            </th>
+            <th>
+              PRICE
+            </th>
+            <th>
+              MARKET CAP
+            </th>
+            <th>
+              CHANGE (24H)
+            </th>
+            <th>
+              CHART(24H)
+            </th>
+            <th>
+              AMOUNT
+            </th>
+            <th>
+              MY VALUE
+            </th>
+          </tr>
+          <tr
+            v-for="(token, idx) in walletTokensWithBalance.tokensWDollarAmt"
+            :key="token.symbol + `${idx}`"
+            class="table-body"
+          >
+            <td>
+              <div class="name-container">
+                <!-- <div class="token-icon">
+                  <img
+                    v-if="
+                      retrieveLogo(
+                        token.tokenMew.address,
+                        token.tokenMew.symbol
+                      ).includes('.png')
+                    "
+                    :src="
+                      retrieveLogo(
+                        token.tokenMew.address,
+                        token.tokenMew.symbol
+                      )
+                    "
+                  />
+                  <svg
+                    v-if="
+                      retrieveLogo(
+                        token.tokenMew.address,
+                        token.tokenMew.symbol
+                      ).includes('.svg')
+                    "
+                    :xmlns="
+                      retrieveLogo(
+                        token.tokenMew.address,
+                        token.tokenMew.symbol
+                      )
+                    "
+                  />
+                </div> -->
+                <p>
+                  {{ token.tokenMew.name }}
+                  ({{ token.tokenMew.symbol }})
+                </p>
+              </div>
+            </td>
+            <td>$ {{ token.tokenData.quotes.USD.price }}</td>
+            <td>$ {{ moneyFormat(token.tokenData.quotes.USD.market_cap) }}</td>
+            <td>
+              <p
+                :class="
+                  isGreateThanZero(
+                    token.tokenData.quotes.USD.percent_change_24h
+                  )
+                    ? 'green'
+                    : 'red'
+                "
+              >
+                {{ toDecimal(token.tokenData.quotes.USD.percent_change_24h) }}%
+                <i
+                  :class="[
+                    'fa',
+                    isGreateThanZero(
+                      token.tokenData.quotes.USD.percent_change_24h
+                    )
+                      ? 'fa-arrow-up'
+                      : 'fa-arrow-down'
+                  ]"
+                />
+              </p>
+            </td>
+            <td>CHART WIP</td>
+            <td>{{ token.tokenMew.balance }}</td>
+            <td>
+              {{
+                toDollar(
+                  token.tokenMew.balance * token.tokenData.quotes.USD.price
+                )
+              }}
+            </td>
+          </tr>
+        </table>
+
+        <div v-else>
+          Can't find tokens with value.
+        </div>
+
+        <!-- <div
           v-for="(token, idx) in walletTokensWithBalance.tokensWDollarAmt"
           :key="token.symbol + `${idx}`"
         >
           {{ token.tokenMew.symbol }} - {{ token.tokenMew.balance }}
-        </div>
+        </div> -->
       </div>
     </div>
     <!-- <interface-tokens-modal ref="tokenModal" :add-token="addToken" /> -->
@@ -319,6 +431,8 @@ import store from 'store';
 import * as networkTypes from '@/networks/types';
 import utils from 'web3-utils';
 import InterfaceTokensModal from '@/layouts/InterfaceLayout/components/InterfaceTokensModal';
+import masterFile from '@/master-file.json';
+
 export default {
   components: {
     blockie: Blockie,
@@ -374,7 +488,8 @@ export default {
       localTokenVersion: [],
       customTokens: [],
       localCustomTokens: [],
-      showTokens: false
+      showTokens: false,
+      masterFile: masterFile
     };
   },
   computed: {
@@ -460,6 +575,51 @@ export default {
     window.chrome.storage.onChanged.removeListener(this.fetchTokens);
   },
   methods: {
+    retrieveLogo(address, symbol) {
+      const networkMasterFile = this.masterFile.data.filter(item => {
+        return (
+          item.network.toLowerCase() === this.network.type.name.toLowerCase()
+        );
+      });
+      try {
+        return require(`@/assets/images/currency/coins/AllImages/${symbol}.svg`);
+      } catch (e) {
+        const foundToken = networkMasterFile.find(item => {
+          return (
+            utils.toChecksumAddress(item.contract_address) ===
+            utils.toChecksumAddress(address)
+          );
+        });
+
+        if (foundToken) {
+          return foundToken.icon;
+        }
+        try {
+          return require(`@/assets/images/networks/${symbol.toLowerCase()}`);
+        } catch (e) {
+          return this.network.type.icon;
+        }
+      }
+      // console.log(networkMasterFile);
+    },
+    isGreateThanZero(val) {
+      return new BigNumber(val).gt(0);
+    },
+    moneyFormat(labelValue) {
+      // Nine Zeroes for Billions
+      return Math.abs(Number(labelValue)) >= 1.0e9
+        ? new BigNumber(Math.abs(Number(labelValue)) / 1.0e9).toFixed(2) + ' B'
+        : // Six Zeroes for Millions
+        Math.abs(Number(labelValue)) >= 1.0e6
+        ? new BigNumber(Math.abs(Number(labelValue)) / 1.0e6).toFixed(2) + ' M'
+        : // Three Zeroes for Thousands
+        Math.abs(Number(labelValue)) >= 1.0e3
+        ? new BigNumber(Math.abs(Number(labelValue)) / 1.0e3).toFixed(2) + ' K'
+        : new BigNumber(Math.abs(Number(labelValue))).toFixed(2);
+    },
+    toDecimal(val) {
+      return new BigNumber(val).toFixed(2);
+    },
     toDollar(val) {
       return `${val
         .toLocaleString('en-GB', {
