@@ -117,7 +117,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network', 'account']),
+    ...mapState('main', ['web3', 'network', 'account']),
     isValidInput() {
       return (
         this.isValidAddress &&

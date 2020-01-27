@@ -161,7 +161,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     migrationPossible() {
       return (
         toBigNumber(this.daiGenerated).lt(

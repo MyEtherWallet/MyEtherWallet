@@ -82,7 +82,7 @@ import ConfirmCollectionModal from './components/ConfirmCollectionModal';
 import SuccessModal from './components/SuccessModal';
 import ErrorModal from './components/ErrorModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
 import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
 import { Toast, Misc } from '@/helpers';
@@ -170,7 +170,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['wallet', 'web3', 'account', 'network']),
+    ...mapState('main', ['wallet', 'web3', 'account', 'network']),
     fromAddress() {
       if (this.account) {
         return this.account.address;
@@ -353,6 +353,7 @@ export default {
     });
   },
   methods: {
+    ...mapActions('main', ['addNotification']),
     swapWidgetModalOpen(
       destAddress,
       fromCurrency,
@@ -495,7 +496,7 @@ export default {
         _tx.from = this.account.address;
         const _rawTx = tx.rawTransaction;
         const onError = err => {
-          this.$store.dispatch('addNotification', [
+          this.addNotification([
             noticeTypes.TRANSACTION_ERROR,
             _tx.from,
             this.unSignedArray.find(entry =>
@@ -514,7 +515,7 @@ export default {
             'Okay',
             this.network.type.blockExplorerTX.replace('[[txHash]]', hash)
           );
-          this.$store.dispatch('addNotification', [
+          this.addNotification([
             noticeTypes.TRANSACTION_HASH,
             _tx.from,
             this.unSignedArray.find(entry =>
@@ -533,7 +534,7 @@ export default {
           });
         });
         promiEvent.then(receipt => {
-          this.$store.dispatch('addNotification', [
+          this.addNotification([
             noticeTypes.TRANSACTION_RECEIPT,
             _tx.from,
             this.unSignedArray.find(entry =>

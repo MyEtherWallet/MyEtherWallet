@@ -89,7 +89,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(['wallet'])
+    ...mapState('main', ['wallet'])
   }
 };
 </script>
