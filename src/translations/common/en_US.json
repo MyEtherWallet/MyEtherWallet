@@ -113,7 +113,8 @@
   },
   "decision-tree": {
     "subcategories": "Subcategories",
-    "no-results": "Oops! No search results found."
+    "no-results": "Oops! No search results found.",
+    "quick-help": "Quick Help"
   },
   "optional": "Optional",
   "value": "Value",

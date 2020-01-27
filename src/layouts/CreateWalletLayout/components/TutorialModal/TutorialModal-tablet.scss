@@ -13,7 +13,15 @@
     padding: 15px 70px;
   }
 
-  .modal-body {
+  .tutorial-content {
+    padding: 30px;
+    background-image: url('~@/assets/images/modal/garlands.png');
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: 100%;
+  }
+
+  .modal-content .modal-body {
     background-image: url('~@/assets/images/modal/garlands.png');
     background-position: center 20px;
     background-repeat: no-repeat;
