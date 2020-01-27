@@ -1,12 +1,14 @@
-### Bug
-
-- Set ENS in offline helper [#1891](https://github.com/MyEtherWallet/MyEtherWallet/pull/1891)
+### Release v5.3.0
 
 ### Devop
 
 - Update help to quick help [#1899][https://github.com/MyEtherWallet/MyEtherWallet/pull/1899]
-- Modularize store state [#1722][https://github.com/MyEtherWallet/MyEtherWallet/pull/1722]
-- Update packages from Greenkeeper [#1885](https://github.com/MyEtherWallet/MyEtherWallet/pull/1885)
+- Update packages from Greenkeeper [#1896](https://github.com/MyEtherWallet/MyEtherWallet/pull/1896)
+- Modularize store state [#1722](https://github.com/MyEtherWallet/MyEtherWallet/pull/1722)
+
+### Bug
+
+- Set ENS in offline helper [#1891](https://github.com/MyEtherWallet/MyEtherWallet/pull/1891)
 
 ### Release v5.2.11
 
