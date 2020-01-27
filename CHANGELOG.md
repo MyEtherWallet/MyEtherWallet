@@ -1,6 +1,6 @@
 ### Develop
 
-- Update web3 packages []()
+- Update web3 packages [#1912](https://github.com/MyEtherWallet/MyEtherWallet/pull/1912)
 
 ### Release v5.2.12
 
