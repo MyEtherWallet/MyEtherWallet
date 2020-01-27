@@ -13,6 +13,7 @@
 ### Bug
 
 - Set ENS in offline helper [#1891](https://github.com/MyEtherWallet/MyEtherWallet/pull/1891)
+- Fix modularize state bugs [#1897] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1897)
 
 ### Release v5.2.11
 
