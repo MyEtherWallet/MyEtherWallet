@@ -2,16 +2,16 @@
 
 - Update web3 packages [#1912](https://github.com/MyEtherWallet/MyEtherWallet/pull/1912)
 
-### Release v5.2.12
+### Release v5.3.0
+
+### Devop
+
+- Update packages from Greenkeeper [#1896](https://github.com/MyEtherWallet/MyEtherWallet/pull/1896)
+- Modularize store state [#1722](https://github.com/MyEtherWallet/MyEtherWallet/pull/1722)
 
 ### Bug
 
 - Set ENS in offline helper [#1891](https://github.com/MyEtherWallet/MyEtherWallet/pull/1891)
-
-### Devop
-
-- Modularize store state [#1722][https://github.com/MyEtherWallet/MyEtherWallet/pull/1722]
-- Update packages from Greenkeeper [#1885](https://github.com/MyEtherWallet/MyEtherWallet/pull/1885)
 
 ### Release v5.2.11
 
