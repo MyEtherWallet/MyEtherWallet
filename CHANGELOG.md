@@ -1,3 +1,9 @@
+### Develop
+
+- Update web3 packages []()
+
+### Release v5.2.12
+
 ### Bug
 
 - Set ENS in offline helper [#1891](https://github.com/MyEtherWallet/MyEtherWallet/pull/1891)
