@@ -68,6 +68,7 @@
     "addr-not-checksummed": "Этот адрес указан неправильно. Пожалуйста, скопируйте адрес точно так, как он показан.",
     "invalid-addr": "Неверный {coin} адрес",
     "network-not-found": "{network}НС имя недопустимо или не найдено",
+    "domain-not-found": "Domain name is invalid or not found",
     "no-resolver": "Нет резолвера {network} НС в этом узле"
   },
   "unstoppableResolution": {
