@@ -1,7 +1,13 @@
+### Release v5.3.0
+
 ### Devop
 
+- Update packages from Greenkeeper [#1896](https://github.com/MyEtherWallet/MyEtherWallet/pull/1896)
 - Modularize store state [#1722](https://github.com/MyEtherWallet/MyEtherWallet/pull/1722)
-- Update packages from Greenkeeper [#1885](https://github.com/MyEtherWallet/MyEtherWallet/pull/1885)
+
+### Bug
+
+- Set ENS in offline helper [#1891](https://github.com/MyEtherWallet/MyEtherWallet/pull/1891)
 
 ### Release v5.2.11
 
@@ -106,7 +112,6 @@
 
 ### Devop
 
-- # Modularize store state [#1722][https://github.com/MyEtherWallet/MyEtherWallet/pull/1722]
 - Revert trezor version back to 7[#1737](https://github.com/MyEtherWallet/MyEtherWallet/pull/1772)
 - Refactor maker translations[#1737](https://github.com/MyEtherWallet/MyEtherWallet/pull/1737)
 - Add new MEW nodes[#1750](https://github.com/MyEtherWallet/MyEtherWallet/pull/1750)

@@ -43,14 +43,16 @@
     <div class="wallet-info-body">
       <div class="main-wallet-content">
         <div class="main-wallet-content-container">
-          <div class="wallet-img-container">
-            <img alt class="icon" src="~@/assets/images/icons/wallet.svg" />
-          </div>
-          <div class="wallet-value-container">
-            <p class="title">Total Wallet Value</p>
-            <p class="dollar-amt">
-              {{ walletTokensWithBalance.totalWalletBalance }}
-            </p>
+          <div class="wallet-value-with-img">
+            <div class="wallet-img-container">
+              <img alt class="icon" src="~@/assets/images/icons/wallet.svg" />
+            </div>
+            <div class="wallet-value-container">
+              <p class="title">Total Wallet Value</p>
+              <p class="dollar-amt">
+                {{ walletTokensWithBalance.totalWalletBalance }}
+              </p>
+            </div>
           </div>
           <div class="wallet-value-container">
             <p class="title">ETH Balance</p>
@@ -65,14 +67,15 @@
             </p>
           </div>
         </div>
-        <div class="view-all-container">
+        <div class="view-all-container" @click="showTokens = !showTokens">
           <p>View all tokens</p>
+          <i :class="['fa', showTokens ? 'fa-angle-up' : 'fa-angle-down']" />
         </div>
       </div>
-      <div class="wallet-tokens">
+      <div v-show="showTokens" class="wallet-tokens">
         <div
           v-for="(token, idx) in walletTokensWithBalance.tokensWDollarAmt"
-          :key="token.symbol + idx"
+          :key="token.symbol + `${idx}`"
         >
           {{ token.tokenMew.symbol }} - {{ token.tokenMew.balance }}
         </div>
@@ -370,7 +373,8 @@ export default {
       search: '',
       localTokenVersion: [],
       customTokens: [],
-      localCustomTokens: []
+      localCustomTokens: [],
+      showTokens: false
     };
   },
   computed: {
