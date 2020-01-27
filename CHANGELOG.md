@@ -12,6 +12,7 @@
 
 ### Bug
 
+- Change translations placement [#1901] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1901)
 - Fix community icons spacing and size [#1889](https://github.com/MyEtherWallet/MyEtherWallet/pull/1889)
 - Fix background image for welcome popup [#1886](https://github.com/MyEtherWallet/MyEtherWallet/pull/1886)
 - Fix footer text wrapping issue [#1892](https://github.com/MyEtherWallet/MyEtherWallet/pull/1892)
