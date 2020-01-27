@@ -1,7 +1,7 @@
 @import '~@/scss/GlobalVariables';
 
 .wallet-info-container {
-  padding-bottom: 20px;
+  margin: 20px 0;
   width: 100%;
 
   .wallet-info-header {
@@ -124,6 +124,61 @@
         color: $dark-grey-11
       }
     }
+  }
+
+  .wallet-tokens {
+    max-height: 200px;
+    overflow: auto;
+    margin-top: 30px;
+
+    table {
+      width: 100%;
+    }
+
+    .name-container {
+      align-items: center;
+      display: flex;
+
+      .token-icon {
+        border-radius: 50%;
+        margin-right: 15px;
+
+        img {
+          height: 50px;
+          width: 50px;
+        }
+
+        svg {
+          height: 50px;
+          width: 50px;
+        }
+      }
+    }
+
+    .table-header {
+      background-color: $light-grey-2;
+
+      th {
+        color: $light-blue-2 !important;
+        text-align: center;
+        padding: 5px 15px;
+      }
+    }
+
+    .table-body {
+      td {
+        height: 60px;
+        text-align: center;
+      }
+    }
+  }
+
+  .green {
+    color: $mew-green;
+  }
+
+  .red {
+    color: $red-7;
   }
 }
 //   .nickname-and-buttons {

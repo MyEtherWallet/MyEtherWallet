@@ -58,6 +58,31 @@ const fetchAddressDarkList = async () => {
   }
 };
 
+const fetchMasterFile = async () => {
+  try {
+    if (!fs.existsSync(configs.MASTER_FILE + '/master-file.json')) {
+      fs.writeFileSync(`${configs.MASTER_FILE}/master-file.json`, '');
+    }
+
+    const actualMasterfile = await fetch(
+      'https://cdn.jsdelivr.net/gh/MyEtherWallet/ethereum-lists@master/dist/master-file.json'
+    )
+      .then(res => res.json())
+      .catch(console.log);
+    const jsonToStore = {
+      data: actualMasterfile,
+      timestamp: Date.now()
+    };
+    console.log('Writing masterlist');
+    fs.writeFileSync(
+      `${configs.MASTER_FILE}/master-file.json`,
+      JSON.stringify(jsonToStore)
+    );
+  } catch (e) {
+    console.error(e); // Not captured by sentry
+  }
+};
+
 const fetchUrlDarklist = async () => {
   const sources = [
     {
@@ -101,16 +126,12 @@ const fetchUrlDarklist = async () => {
           });
 
           fs.writeFileSync(
-            `${configs.URL_DARKLIST_PATH}/${
-              sources[idx].identifier
-            }-blacklisted-domains.json`,
+            `${configs.URL_DARKLIST_PATH}/${sources[idx].identifier}-blacklisted-domains.json`,
             JSON.stringify(newRes)
           );
         } else {
           fs.writeFileSync(
-            `${configs.URL_DARKLIST_PATH}/${
-              sources[idx].identifier
-            }-blacklisted-domains.json`,
+            `${configs.URL_DARKLIST_PATH}/${sources[idx].identifier}-blacklisted-domains.json`,
             JSON.stringify(res)
           );
         }
@@ -153,16 +174,12 @@ const fetchUrlLightlist = async () => {
           });
 
           fs.writeFileSync(
-            `${configs.URL_LIGHTLIST_PATH}/${
-              sources[idx].identifier
-            }-whitelisted-domains.json`,
+            `${configs.URL_LIGHTLIST_PATH}/${sources[idx].identifier}-whitelisted-domains.json`,
             JSON.stringify(newRes)
           );
         } else {
           fs.writeFileSync(
-            `${configs.URL_LIGHTLIST_PATH}/${
-              sources[idx].identifier
-            }-whitelisted-domains.json`,
+            `${configs.URL_LIGHTLIST_PATH}/${sources[idx].identifier}-whitelisted-domains.json`,
             JSON.stringify(res)
           );
         }
@@ -211,7 +228,8 @@ const run = async () => {
     .then(fetchContracts)
     .then(fetchAddressDarkList)
     .then(fetchUrlDarklist)
-    .then(fetchUrlLightlist);
+    .then(fetchUrlLightlist)
+    .then(fetchMasterFile);
 };
 
 (async () => {

@@ -4,5 +4,6 @@ module.exports = {
   CONTRACTS_PATH: './src/contracts',
   ADDRESS_DARKLIST_PATH: './src/address-darklist',
   URL_DARKLIST_PATH: './src/url-darklist',
-  URL_LIGHTLIST_PATH: './src/url-lightlist'
+  URL_LIGHTLIST_PATH: './src/url-lightlist',
+  MASTER_FILE: './src'
 };
