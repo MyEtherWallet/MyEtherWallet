@@ -338,5 +338,4 @@ export default {
 <style lang="scss" scoped>
 @import 'FooterContainer-desktop.scss';
 @import 'FooterContainer-tablet.scss';
-@import 'FooterContainer-mobile.scss';
 </style>

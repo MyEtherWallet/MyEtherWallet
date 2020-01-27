@@ -1,13 +1,19 @@
 ### Release v5.3.0
 
+### Feature
+
+- ENS functionality for address book [#1888] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1888)
+
 ### Devop
 
+- Update help to quick help [#1899][https://github.com/MyEtherWallet/MyEtherWallet/pull/1899]
 - Update packages from Greenkeeper [#1896](https://github.com/MyEtherWallet/MyEtherWallet/pull/1896)
 - Modularize store state [#1722](https://github.com/MyEtherWallet/MyEtherWallet/pull/1722)
 
 ### Bug
 
 - Set ENS in offline helper [#1891](https://github.com/MyEtherWallet/MyEtherWallet/pull/1891)
+- Fix modularize state bugs [#1897] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1897)
 
 ### Release v5.2.11
 
@@ -26,6 +32,7 @@
 
 ### Bug
 
+- Fix footer text wrapping issue [#1892](https://github.com/MyEtherWallet/MyEtherWallet/pull/1892)
 - Fix tx hash link, switch address, and make cx connection with popup more stable [#1853](https://github.com/MyEtherWallet/MyEtherWallet/pull/1853)
 - Disable web3 detection [#1840](https://github.com/MyEtherWallet/MyEtherWallet/pull/1840)
 - Improve error messages for outdated dependencies [#1848](https://github.com/MyEtherWallet/MyEtherWallet/pull/1848)
