@@ -55,7 +55,5 @@
   "social": {
     "title": "Сообщество MEW"
   },
-  "lost-title": "Ой! Похоже, вы потерялись.",
-  "new-update": "Найдено новое обновление! Пожалуйста, обновите браузер, чтобы получить самую обновленную версию",
-  "new-update-error": "Something went wrong with our service workers!"
+  "lost-title": "Ой! Похоже, вы потерялись."
 }
