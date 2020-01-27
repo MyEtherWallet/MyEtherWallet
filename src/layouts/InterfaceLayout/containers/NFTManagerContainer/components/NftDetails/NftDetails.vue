@@ -89,7 +89,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'web3'])
+    ...mapState('main', ['account', 'web3'])
   },
   watch: {},
   mounted() {

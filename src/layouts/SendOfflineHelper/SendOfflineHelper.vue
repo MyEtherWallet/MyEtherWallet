@@ -60,7 +60,7 @@
                           ? 'current-network'
                           : ''
                       "
-                      @click="switchNetwork(net)"
+                      @click="callSwitchNetwork(net)"
                     >
                       {{ net.service }}
                     </p>
@@ -358,7 +358,7 @@
 
 <script>
 import { Transaction } from 'ethereumjs-tx';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import Misc from '@/helpers/misc';
 import BigNumber from 'bignumber.js';
 import web3Utils from 'web3-utils';
@@ -370,6 +370,7 @@ import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import StandardButton from '@/components/Buttons/StandardButton';
 import ExpandingOption from '@/components/ExpandingOption';
 import ConfirmationModal from './components/ConfirmationModal';
+import ENS from 'ethereum-ens';
 
 export default {
   components: {
@@ -383,7 +384,7 @@ export default {
   data() {
     return {
       networkTypes: Object.values(networkTypes),
-      selectedNetwork: this.$store.state.network,
+      selectedNetwork: this.$store.state.main.network,
       stage1: false, // Select Network
       stage2: true, // Generate Information
       stage3: false, // Enter/Upload Signed Transaction
@@ -408,8 +409,8 @@ export default {
         address: '0x',
         gasPrice: 0,
         nonce: 0,
-        chainID: this.$store.state.network.type.chainID,
-        networkName: this.$store.state.network.type.name_long
+        chainID: this.$store.state.main.network.type.chainID,
+        networkName: this.$store.state.main.network.type.name_long
       },
       generatedJson: {},
       file: '',
@@ -424,7 +425,7 @@ export default {
     };
   },
   computed: {
-    ...mapState([
+    ...mapState('main', [
       'network',
       'Networks',
       'customPaths',
@@ -473,12 +474,22 @@ export default {
     }
   },
   mounted() {
-    this.switchNetwork(this.$store.state.network);
+    this.callSwitchNetwork(this.$store.state.main.network);
     if (this.online) {
       this.fetchBalanceData();
     }
   },
   methods: {
+    ...mapActions('main', ['switchNetwork', 'setWeb3Instance', 'setENS']),
+    callSetENS() {
+      if (this.network.type.ens) {
+        this.setENS(
+          new ENS(this.web3.currentProvider, this.network.type.ens.registry)
+        );
+      } else {
+        this.setENS(null);
+      }
+    },
     getTranslatedItem(item) {
       const kebabItem = item.replace(/([A-Z])/g, '-$1').toLowerCase();
       return this.$t('withoutWallet.' + kebabItem);
@@ -520,12 +531,13 @@ export default {
           });
       }
     },
-    switchNetwork(network) {
-      this.$store.dispatch('switchNetwork', network).then(() => {
+    callSwitchNetwork(network) {
+      this.switchNetwork(network).then(() => {
         this.selectedNetwork = network;
-        this.$store.dispatch('setWeb3Instance');
+        this.setWeb3Instance();
         this.stage1Btn();
         this.getTransactionDetails();
+        this.callSetENS();
       });
     },
     truncateData(data) {
