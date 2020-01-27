@@ -52,7 +52,7 @@ import CustomerSupport from '@/components/CustomerSupport';
 import { MewConnectWallet } from '@/wallets';
 import { Toast } from '@/helpers';
 import platform from 'platform';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import IpadModal from '@/components/IpadModal';
 
 export default {
@@ -67,7 +67,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['path', 'web3'])
+    ...mapState('main', ['path', 'web3'])
   },
   mounted() {
     this.canDownloadApple =
@@ -77,8 +77,8 @@ export default {
     this.$refs.xwalletModal.$on('show', () => {
       new MewConnectWallet(this.codeDisplay)
         .then(wallet => {
-          if (!this.web3.eth) this.$store.dispatch('setWeb3Instance');
-          this.$store.dispatch('decryptWallet', [wallet]).then(() => {
+          if (!this.web3.eth) this.setWeb3Instance();
+          this.decryptWallet([wallet]).then(() => {
             this.$router.push({
               path: 'interface'
             });
@@ -93,6 +93,7 @@ export default {
     });
   },
   methods: {
+    ...mapActions('main', ['setWeb3Instance', 'decryptWallet']),
     codeDisplay(qrCode) {
       this.QrCode = qrCode;
     },

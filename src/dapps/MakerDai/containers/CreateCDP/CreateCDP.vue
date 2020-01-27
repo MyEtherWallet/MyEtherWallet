@@ -309,7 +309,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     validInputs() {
       if (!this.hasProxy) return false;
       if (toBigNumber(this.ethQty).isNaN() || toBigNumber(this.daiQty).isNaN())

@@ -3,6 +3,8 @@ import { shallowMount } from '@vue/test-utils';
 import { Tooling } from '@@/helpers';
 import InterfaceNetworkModal from '@/layouts/InterfaceLayout/components/InterfaceNetworkModal';
 import sinon from 'sinon';
+import VueX from 'vuex';
+import { state, getters } from '@@/helpers/mockStore';
 
 const showModal = sinon.stub();
 const hideModal = sinon.stub();
@@ -24,7 +26,15 @@ describe('MobileNetworkBlock.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new VueX.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
   });
 
   beforeEach(() => {

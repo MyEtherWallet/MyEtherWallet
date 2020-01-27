@@ -110,7 +110,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network', 'account', 'gasPrice', 'ens']),
+    ...mapState('main', ['web3', 'network', 'account', 'gasPrice', 'ens']),
     registrarTLD() {
       return this.network.type.ens.registrarTLD;
     },
