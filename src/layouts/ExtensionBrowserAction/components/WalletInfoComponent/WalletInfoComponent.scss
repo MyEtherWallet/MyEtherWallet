@@ -70,9 +70,17 @@
     align-items: center;
 
     .view-all-container {
+      align-items: center;
+      display: flex;
+
       p {
         color: $mew-green;
         cursor: pointer;
+        margin-right: 10px;
+      }
+
+      i {
+        color: $mew-green;
       }
     }
 
@@ -80,8 +88,9 @@
       background-color: $orange-1;
       border-radius: 50%;
       height: 40px;
-      width: 40px;
+      margin-right: 20px;
       padding: 8px 11px;
+      width: 40px;
 
       img {
         height: 20px;
@@ -91,12 +100,18 @@
 
     .main-wallet-content-container {
       display: flex;
+      justify-content: space-between;
+      width: 70%;
+    }
+
+    .wallet-value-with-img {
+      display: flex;
     }
 
     .wallet-value-container {
       .title {
         font-weight: bold;
-        color: $light-blue-1;
+        color: $light-blue-7;
       }
 
       .dollar-amt {
