@@ -109,7 +109,8 @@
   },
   "decision-tree": {
     "subcategories": "Подразделы",
-    "no-results": "Ничего не найдено"
+    "no-results": "Ничего не найдено",
+    "quick-help": "Quick Help"
   },
   "optional": "Опция",
   "value": "Сумма",
