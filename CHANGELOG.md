@@ -1,5 +1,9 @@
 ### Release v5.3.0
 
+### Feature
+
+- ENS functionality for address book [#1888] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1888)
+
 ### Devop
 
 - Update packages from Greenkeeper [#1896](https://github.com/MyEtherWallet/MyEtherWallet/pull/1896)
