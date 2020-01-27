@@ -24,7 +24,7 @@ import HeaderContainer from '@/containers/HeaderContainer';
 import ConfirmationContainer from '@/containers/ConfirmationContainer';
 import LogoutWarningModal from '@/components/LogoutWarningModal';
 
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'App',
@@ -35,7 +35,7 @@ export default {
     'logout-warning-modal': LogoutWarningModal
   },
   computed: {
-    ...mapState(['wallet'])
+    ...mapState('main', ['wallet', 'Networks'])
   },
   watch: {
     $route(to, from) {
@@ -55,7 +55,7 @@ export default {
         const networkProps = JSON.parse(item['defNetwork']);
         let network = {};
         if (networkProps.hasOwnProperty('url')) {
-          network = _self.$store.state.Networks[networkProps.key][0];
+          network = _self.Networks[networkProps.key][0];
           window.chrome.storage.sync.set(
             {
               defNetwork: JSON.stringify({
@@ -66,17 +66,15 @@ export default {
             () => {}
           );
         } else {
-          network = _self.$store.state.Networks[networkProps.key].find(
-            actualNetwork => {
-              return actualNetwork.service === networkProps.service;
-            }
-          );
+          network = _self.Networks[networkProps.key].find(actualNetwork => {
+            return actualNetwork.service === networkProps.service;
+          });
         }
-        _self.$store.dispatch('switchNetwork', network).then(() => {
-          _self.$store.dispatch('setWeb3Instance');
+        _self.switchNetwork(network).then(() => {
+          _self.setWeb3Instance();
         });
       } else {
-        _self.$store.dispatch('setWeb3Instance');
+        _self.setWeb3Instance();
       }
     });
   },
@@ -84,6 +82,9 @@ export default {
     this.$refs.logoutWarningModal.$refs.logoutWarningModal.$on('hidden', () => {
       window.scrollTo(0, 0);
     });
+  },
+  methods: {
+    ...mapActions('main', ['setWeb3Instance', 'switchNetwork'])
   }
 };
 </script>
