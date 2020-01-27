@@ -168,7 +168,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network'])
+    ...mapState('main', ['web3', 'network'])
   },
   watch: {
     data(newVal) {

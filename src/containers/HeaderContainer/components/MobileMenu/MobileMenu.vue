@@ -175,7 +175,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'blockNumber', 'locale'])
+    ...mapState('main', ['account', 'blockNumber', 'locale'])
   },
   watch: {
     $route(newVal) {

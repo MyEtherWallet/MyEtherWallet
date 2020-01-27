@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import supportedLang from '@/containers/HeaderContainer/supportedLang';
 
 export default {
@@ -42,6 +43,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('main', ['setLocale']),
     languageItemClicked(e) {
       const code = e.target.getAttribute('data-language-code') || 'en_US';
       const flag = e.target.getAttribute('data-flag-name') || 'en';
@@ -50,7 +52,7 @@ export default {
       this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
       this.currentFlag = flag;
 
-      this.$store.dispatch('setLocale', code);
+      this.setLocale(code);
       this.$emit('isopen', false);
       this.$emit('currentlang', this.currentName);
       this.$emit('currentflag', this.currentFlag);

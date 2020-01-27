@@ -103,7 +103,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3']),
+    ...mapState('main', ['web3']),
     address() {
       const hasWallet = Object.keys(this.wallet).length > 0;
       return hasWallet

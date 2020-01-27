@@ -125,7 +125,7 @@ export default {
     return { isMewCx: isMewCx, gasPrice: '0' };
   },
   computed: {
-    ...mapState(['account', 'web3', 'network']),
+    ...mapState('main', ['account', 'web3', 'network']),
     address() {
       return this.account.address;
     },

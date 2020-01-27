@@ -63,7 +63,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['network']),
+    ...mapState('main', ['network']),
     buttonCheckEtherscan() {
       return {
         // eslint-disable-next-line

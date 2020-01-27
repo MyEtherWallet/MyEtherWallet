@@ -57,7 +57,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['ens'])
+    ...mapState('main', ['ens'])
   },
   watch: {
     clearAddress() {
