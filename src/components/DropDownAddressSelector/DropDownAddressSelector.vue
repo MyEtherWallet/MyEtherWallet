@@ -114,7 +114,7 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Blockie from '@/components/Blockie';
 import { EthereumTokens, BASE_CURRENCY } from '@/partners';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { Toast } from '@/helpers';
 import utils from 'web3-utils';
 import AddressBookModal from '@/components/AddressBookModal';
@@ -153,7 +153,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['addressBook', 'account']),
+    ...mapState('main', ['addressBook', 'account']),
     hasMessage() {
       return (
         (!this.isValidAddress && this.selectedAddress.length > 0) ||
@@ -211,6 +211,7 @@ export default {
     this.currentAddress = this.account.address;
   },
   methods: {
+    ...mapActions('main', ['setAddressBook']),
     openAddrModal() {
       this.$refs.addressBook.$refs.addressBookModal.show();
     },
