@@ -70,6 +70,10 @@
     "no-thanks": "Нет, спасибо",
     "show-error-details": "Показать подробности ошибки"
   },
+  "updates": {
+    "new": "New update found! Please refresh your browser to receive the most updated version",
+    "update-error": "Something went wrong with our service workers!"
+  },
   "wallet": {
     "create-new": "Создать новый кошелек",
     "create": "Создать кошелек",
