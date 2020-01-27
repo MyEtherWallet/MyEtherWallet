@@ -6,6 +6,7 @@
 
 ### Devop
 
+- Update help to quick help [#1899][https://github.com/MyEtherWallet/MyEtherWallet/pull/1899]
 - Update packages from Greenkeeper [#1896](https://github.com/MyEtherWallet/MyEtherWallet/pull/1896)
 - Modularize store state [#1722](https://github.com/MyEtherWallet/MyEtherWallet/pull/1722)
 
