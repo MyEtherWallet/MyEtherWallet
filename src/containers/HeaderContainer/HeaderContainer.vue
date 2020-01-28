@@ -1,8 +1,8 @@
 <template>
   <div>
+    <decision-tree />
     <cx-header v-if="isMewCx" />
     <div v-if="!isMewCx" class="header">
-      <decision-tree />
       <router-link
         v-show="
           $route.fullPath === '/create-wallet' ||
