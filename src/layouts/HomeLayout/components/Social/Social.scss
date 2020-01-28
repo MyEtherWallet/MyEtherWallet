@@ -23,6 +23,11 @@
       margin-left: auto;
       flex-wrap: wrap;
 
+      > div {
+        width: 90px;
+        margin-bottom: 20px;
+      }
+
       @media all and (max-width: $tablet-width) {
         margin-top: 30px;
       }
