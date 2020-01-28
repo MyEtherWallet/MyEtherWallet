@@ -88,6 +88,17 @@
                   v-if="myWallets.length > 0"
                   class="wallet-display-container"
                 >
+                  <div class="total-balance-container">
+                    <div>
+                      <p class="portfolio-text">My Portfolio Balance</p>
+                    </div>
+                    <div>
+                      <p class="total-amt">{{ totalDollarAmount }}</p>
+                      <p class="eth-amt">
+                        {{ totalBalance }} {{ network.type.currencyName }}
+                      </p>
+                    </div>
+                  </div>
                   <wallet-info-component
                     v-for="wallet in searchResult"
                     :key="wallet.address"
@@ -168,7 +179,7 @@ import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import WatchOnlyModal from '../../components/WatchOnlyModal';
 import PasswordOnlyModal from '../../components/PasswordOnlyModal';
 import { WATCH_ONLY } from '@/wallets/bip44/walletTypes';
-import { Toast, ExtensionHelpers } from '@/helpers';
+import { Toast, ExtensionHelpers, Misc } from '@/helpers';
 import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import { WalletInterface } from '@/wallets';
@@ -204,6 +215,12 @@ export default {
   },
   computed: {
     ...mapState('main', ['web3', 'network']),
+    totalDollarAmount() {
+      const totalDollarAmt = new BigNumber(this.totalBalance).times(
+        this.ethPrice
+      );
+      return Misc.toDollar(totalDollarAmt.toNumber());
+    },
     validInput() {
       return (
         (this.password !== '' || this.password.length > 0) &&

@@ -159,3 +159,31 @@
     }
   }
 }
+
+.total-balance-container {
+  align-items: center;
+  background-color: $light-blue-1;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+
+  p {
+    color: $white;
+    margin: 0;
+  }
+
+  .portfolio-text,
+  .total-amt {
+    font-weight: bold;
+  }
+
+  .total-amt {
+    text-align: right;
+    font-size: 20px;
+  }
+
+  .portfolio-text {
+    font-size: 16px;
+  }
+}

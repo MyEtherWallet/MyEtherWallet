@@ -216,7 +216,7 @@ import BigNumber from 'bignumber.js';
 import EditWalletModal from '../EditWalletModal';
 import RemoveWalletModal from '../RemoveWalletModal';
 import { mapState } from 'vuex';
-import { Toast } from '@/helpers';
+import { Toast, Misc } from '@/helpers';
 import store from 'store';
 import * as networkTypes from '@/networks/types';
 import utils from 'web3-utils';
@@ -416,17 +416,7 @@ export default {
     toDecimal(val) {
       return new BigNumber(val).toFixed(2);
     },
-    toDollar(val) {
-      return `${val
-        .toLocaleString('en-GB', {
-          style: 'currency',
-          currency: 'USD',
-          minimumFractionDigits: 2,
-          currencyDisplay: 'symbol'
-        })
-        .replace('US', '')
-        .replace('$', '$ ')}`;
-    },
+    toDollar: Misc.toDollar,
     cancelRemove() {
       this.$refs.removeWalletModal.$refs.removeWalletModal.hide();
     },
