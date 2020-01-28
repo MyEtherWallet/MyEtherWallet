@@ -2,7 +2,9 @@
   <div class="cx-container">
     <wallet-side-menu class="side-menu" />
     <div class="max-width-limit">
-      <router-view />
+      <keep-alive>
+        <router-view />
+      </keep-alive>
     </div>
   </div>
 </template>

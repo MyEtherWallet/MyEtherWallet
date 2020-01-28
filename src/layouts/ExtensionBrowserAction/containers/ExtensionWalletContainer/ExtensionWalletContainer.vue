@@ -89,7 +89,7 @@
                   class="wallet-display-container"
                 >
                   <wallet-info-component
-                    v-for="wallet in myWallets"
+                    v-for="wallet in searchResult"
                     :key="wallet.address"
                     :usd="ethPrice"
                     :address="wallet.address"
@@ -125,7 +125,7 @@
                   class="wallet-display-container"
                 >
                   <wallet-info-component
-                    v-for="wallet in watchOnlyAddresses"
+                    v-for="wallet in searchResult"
                     :key="wallet.address"
                     :usd="ethPrice"
                     :address="wallet.address"
@@ -209,6 +209,29 @@ export default {
         (this.password !== '' || this.password.length > 0) &&
         this.walletRequirePass(this.file)
       );
+    },
+    searchResult() {
+      if (this.search !== '') {
+        if (this.showMyWallets === 0) {
+          const searchedArray = this.myWallets.filter(item => {
+            return (
+              item.address.toLowerCase().includes(this.search.toLowerCase()) ||
+              item.nickname.toLowerCase().includes(this.search.toLowerCase())
+            );
+          });
+          return searchedArray;
+        }
+        const searchedArray = this.watchOnlyAddresses.filter(item => {
+          return (
+            item.address.toLowerCase().includes(this.search.toLowerCase()) ||
+            item.nickname.toLowerCase().includes(this.search.toLowerCase())
+          );
+        });
+        return searchedArray;
+      }
+      return this.showMyWallets === 0
+        ? this.myWallets
+        : this.watchOnlyAddresses;
     }
   },
   created() {
