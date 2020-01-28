@@ -12,6 +12,10 @@
 
 ### Bug
 
+- Change translations placement [#1901] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1901)
+- Fix community icons spacing and size [#1889](https://github.com/MyEtherWallet/MyEtherWallet/pull/1889)
+- Fix background image for welcome popup [#1886](https://github.com/MyEtherWallet/MyEtherWallet/pull/1886)
+- Fix footer text wrapping issue [#1892](https://github.com/MyEtherWallet/MyEtherWallet/pull/1892)
 - Set ENS in offline helper [#1891](https://github.com/MyEtherWallet/MyEtherWallet/pull/1891)
 - Fix modularize state bugs [#1897] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1897)
 
@@ -32,7 +36,6 @@
 
 ### Bug
 
-- Fix footer text wrapping issue [#1892](https://github.com/MyEtherWallet/MyEtherWallet/pull/1892)
 - Fix tx hash link, switch address, and make cx connection with popup more stable [#1853](https://github.com/MyEtherWallet/MyEtherWallet/pull/1853)
 - Disable web3 detection [#1840](https://github.com/MyEtherWallet/MyEtherWallet/pull/1840)
 - Improve error messages for outdated dependencies [#1848](https://github.com/MyEtherWallet/MyEtherWallet/pull/1848)
