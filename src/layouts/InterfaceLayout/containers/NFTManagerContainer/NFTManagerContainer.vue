@@ -12,6 +12,7 @@
         :initial-highlighted="selectedContract"
         :loading-complete="countsRetrieved"
         :sent-update="sentUpdate"
+        :nft-card-url="nftUrl"
         @selected="changeSelectedContract"
         @openCustomModal="openCustomModal"
         @removeCustomNft="openRemovalConfirmModal"
@@ -160,8 +161,6 @@ import StandardButton from '@/components/Buttons/StandardButton';
 import placeholderImage from '@/assets/images/icons/defaultToken.png';
 import utils from 'web3-utils';
 
-const URL_BASE = 'https://nft.mewapi.io';
-
 export default {
   components: {
     'nft-custom-add-modal': NftCustomAddModal,
@@ -184,6 +183,7 @@ export default {
   data() {
     return {
       nftABI,
+      nftUrl: 'https://nft.mewapi.io',
       countPerPage: 9,
       currentPage: 1,
       nftConfig: {},
@@ -202,7 +202,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'online', 'network']),
+    ...mapState('main', ['account', 'online', 'network']),
     nftTitle() {
       if (this.nftConfig[this.selectedContract]) {
         return this.nftConfig[this.selectedContract].name;
@@ -321,7 +321,7 @@ export default {
       if (nft.customNft || nft.image === '') {
         return placeholderImage;
       }
-      return `${URL_BASE}tokenImage?path=${nft.image}`;
+      return `${this.nftUrl}tokenImage?path=${nft.image}`;
     },
     removeSentNft(nft) {
       this.nftObjectClone = utils._.clone(this.nftConfig[nft.contract]);
@@ -346,7 +346,7 @@ export default {
 
     async getTokens() {
       const data = await fetch(
-        `${URL_BASE}tokens?owner=${this.activeAddress}&chain=mainnet`,
+        `${this.nftUrl}tokens?owner=${this.activeAddress}&chain=mainnet`,
         {
           mode: 'cors',
           cache: 'no-cache',
