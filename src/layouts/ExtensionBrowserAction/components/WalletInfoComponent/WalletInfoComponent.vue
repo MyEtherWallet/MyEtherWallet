@@ -41,7 +41,10 @@
             >Remove</b-dropdown-text
           >
         </b-dropdown>
-        <i :class="['fa fa-lg', 'fa-heart-o']" />
+        <i
+          :class="['fa fa-lg', 'fa-heart-o']"
+          @click="addToFavorites(address)"
+        />
       </div>
     </div>
     <div class="wallet-info-body">
@@ -272,7 +275,8 @@ export default {
       customTokens: [],
       localCustomTokens: [],
       showTokens: false,
-      masterFile: masterFile
+      masterFile: masterFile,
+      favorited: false
     };
   },
   computed: {
@@ -335,6 +339,29 @@ export default {
     window.chrome.storage.onChanged.removeListener(this.fetchTokens);
   },
   methods: {
+    addToFavorites(address) {
+      let newArr = [];
+      window.chrome.storage.sync.get('favorites', item => {
+        newArr.push(address);
+        if (Object.keys(item).length > 0) {
+          const parsedItem = JSON.parse(item['favorites']);
+          const alreadyStored = parsedItem.find(item => {
+            item === address;
+          });
+          if (!alreadyStored) {
+            parsedItem.push(address);
+            newArr = parsedItem.slice();
+          } else {
+            newArr.splice(alreadyStored, 1);
+          }
+        }
+        console.log(newArr);
+        // window.chrome.storage.sync.set(
+        //   { favorites: JSON.stringify(newArr) },
+        //   () => {}
+        // );
+      });
+    },
     retrieveLogo(address, symbol) {
       const networkMasterFile = this.masterFile.data.filter(item => {
         return (
@@ -433,7 +460,10 @@ export default {
     openRemoveWallet() {
       this.$refs.removeWalletModal.$refs.removeWalletModal.show();
     },
-    async fetchTokens() {
+    async fetchTokens(res) {
+      if (res && res.hasOwnProperty('favorites')) {
+        this.favorited = !this.favorited;
+      }
       this.loading = true;
       let tokens = [];
       const tb = new TokenBalance(this.web3.currentProvider);
