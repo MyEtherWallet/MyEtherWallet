@@ -118,7 +118,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'account']),
+    ...mapState('main', ['web3', 'account']),
     actionTitle() {
       if (!this.actionType) {
         return this.activeDepositTab
@@ -147,15 +147,15 @@ export default {
   },
   async mounted() {
     // ========= summary stuff start ==================
-    const res1 = await graphql.useUserPositionUpdateSubscriptionSubscription(this.account.address);
-    const res2 = await graphql.useReserveUpdateSubscriptionSubscription();
-    const res3 = await graphql.getEthUsdPrice();
-    console.log(res1); // todo remove dev item
-    console.log(res2); // todo remove dev item
-    console.log(res3); // todo remove dev item
-    const summary = computeUserSummaryData(res2, res1, "abc", res3, Date.now());
-    console.log(summary); // todo remove dev item
-    // ========= summary stuff end ==================
+    // const res1 = await graphql.useUserPositionUpdateSubscriptionSubscription(this.account.address);
+    // const res2 = await graphql.useReserveUpdateSubscriptionSubscription();
+    // const res3 = await graphql.getEthUsdPrice();
+    // console.log(res1); // todo remove dev item
+    // console.log(res2); // todo remove dev item
+    // console.log(res3); // todo remove dev item
+    // const summary = computeUserSummaryData(res2, res1, "abc", res3, Date.now());
+    // console.log(summary); // todo remove dev item
+    // // ========= summary stuff end ==================
     this.lendingPoolContractAddress =
       '0x24a42fD28C976A61Df5D00D0599C34c4f90748c8';
     this.lendingPoolAddressesProviderContract = new this.web3.eth.Contract(
@@ -172,10 +172,8 @@ export default {
 
     this.getUserInfo();
     this.getReserves();
-
   },
   methods: {
-
     async getUserInfo() {
       try {
         const info = await this.lendingPoolContract.methods
@@ -186,7 +184,6 @@ export default {
         )
           .toFixed(2)
           .toString();
-        console.error('info', this.healthFactor)
         this.aggregatedEthBalance = new BigNumber(
           unit.fromWei(info.totalLiquidityETH, 'ether')
         )
@@ -202,6 +199,7 @@ export default {
         )
           .toFixed(2)
           .toString();
+        console.error("info", info)
         this.ltv = info.ltv;
         this.loadingHome = false;
       } catch (err) {
@@ -227,10 +225,11 @@ export default {
           .catch(err => {
             Toast.responseHandler(err, Toast.ERROR);
           });
-        reserveInfo.name = 'DAI';
+        // reserveInfo.name = 'DAI';
         reserveInfo.address = this.reservesAddr[i];
         // change this when I get real information
         reserveInfo.isCollateral = false;
+        console.error('reserveInfo', reserveInfo)
         this.userReserves.push(reserveInfo);
       }
       this.loadingReserves = false;

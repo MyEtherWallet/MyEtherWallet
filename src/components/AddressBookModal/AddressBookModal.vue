@@ -17,7 +17,7 @@
           <div class="address-inputs">
             <blockie
               v-show="isValidAddress"
-              :address="contactAddress"
+              :address="hexAddress"
               width="32px"
               height="32px"
               class="blockie-image"
@@ -37,7 +37,7 @@
         >
           <div class="addr-container">
             <blockie
-              :address="contactAddress"
+              :address="hexAddress"
               width="34px"
               height="34px"
               class="blockie-image mr-3"
@@ -125,6 +125,7 @@ export default {
       contactNickname: '',
       contactAddress: '',
       isValidAddress: false,
+      hexAddress: '',
       addressBookActions: {
         EDIT: 'edit',
         ADD: 'add'
@@ -147,21 +148,16 @@ export default {
       );
     }
   },
-  watch: {
-    currentIdx() {
-      if (this.modalAction === this.addressBookActions.EDIT) {
-        this.contactAddress = this.addressBook[this.currentIdx].address;
-        this.contactNickname = this.addressBook[this.currentIdx].nickname;
-      } else {
-        this.contactAddress = '';
-        this.contactNickname = '';
-      }
-    }
-  },
   mounted() {
     this.$refs.addressBookModal.$on('shown', () => {
       if (this.selectedAddress) {
         this.contactAddress = this.selectedAddress;
+      }
+
+      if (this.modalAction === this.addressBookActions.EDIT) {
+        this.contactAddress = this.addressBook[this.currentIdx].address;
+        this.contactNickname = this.addressBook[this.currentIdx].nickname;
+        this.hexAddress = this.addressBook[this.currentIdx].resolverAddr;
       }
     });
   },
@@ -171,10 +167,6 @@ export default {
       this.addressBook.splice(this.currentIdx, 1);
       this.setAddressBook(this.addressBook);
       this.$refs.addressBookModal.hide();
-    },
-    getToAddress(obj) {
-      this.contactAddress = obj.address;
-      this.isValidAddress = obj.valid;
     },
     updateAddrBook() {
       this.modalAction === this.addressBookActions.EDIT
@@ -193,6 +185,7 @@ export default {
 
       this.contactAddress = '';
       this.contactNickname = '';
+      this.hexAddress = '';
       this.$refs.addressBookModal.hide();
     },
     addContact() {
@@ -210,11 +203,13 @@ export default {
         );
         this.contactAddress = '';
         this.contactNickname = '';
+        this.hexAddress = '';
         return;
       }
 
       this.addressBook.push({
         address: this.contactAddress,
+        resolverAddr: this.hexAddress,
         currency: 'ETH',
         nickname: this.contactNickname || this.addressBook.length + 1
       });
@@ -223,6 +218,7 @@ export default {
 
       this.contactAddress = '';
       this.contactNickname = '';
+      this.hexAddress = '';
       this.$refs.addressBookModal.hide();
     }
   }

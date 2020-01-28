@@ -180,7 +180,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['online']),
+    ...mapState('main', ['online']),
     actionTitle() {
       if (!this.actionType) {
         return this.activeDepositTab
