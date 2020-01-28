@@ -31,7 +31,7 @@
     "@sentry/browser": "5.11.1",
     "@sentry/integrations": "5.11.1",
     "core-js": "3.6.1",
-    "@unstoppabledomains/resolution": "1.0.16",
+    "@unstoppabledomains/resolution": "1.0.21",
     "html2canvas": "1.0.0-rc.5",
     "idna-uts46": "1.1.0",
     "levenshtein": "1.0.5",
