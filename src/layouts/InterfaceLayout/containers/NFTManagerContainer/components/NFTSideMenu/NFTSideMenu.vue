@@ -28,6 +28,7 @@
           <NftProductCard
             :data="v"
             :selected="v.contract === selected ? true : false"
+            :nft-card-url="nftCardUrl"
             @click.native="selectNft(v)"
           >
             <i
@@ -76,6 +77,10 @@ export default {
     sentUpdate: {
       type: Number,
       default: 0
+    },
+    nftCardUrl: {
+      type: String,
+      default: ''
     }
   },
   data() {
