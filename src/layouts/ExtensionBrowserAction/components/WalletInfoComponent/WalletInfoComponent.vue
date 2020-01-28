@@ -42,8 +42,11 @@
           >
         </b-dropdown>
         <i
-          :class="['fa fa-lg', 'fa-heart-o']"
-          @click="addToFavorites(address)"
+          :class="[
+            'fa fa-lg',
+            !favorited ? 'fa-heart-o' : 'fa-heart heart-color'
+          ]"
+          @click="addToFavorites(address, nickname)"
         />
       </div>
     </div>
@@ -333,33 +336,39 @@ export default {
     window.chrome.storage.onChanged.addListener(this.fetchTokens);
   },
   mounted() {
-    this.fetchTokens();
+    window.chrome.storage.sync.get('favorites', this.fetchTokens);
   },
   destroyed() {
     window.chrome.storage.onChanged.removeListener(this.fetchTokens);
   },
   methods: {
-    addToFavorites(address) {
+    addToFavorites(address, nickname) {
       let newArr = [];
+      const dateAdded = new Date();
+      const toAdd = {
+        address,
+        nickname,
+        dateAdded
+      };
+
       window.chrome.storage.sync.get('favorites', item => {
-        newArr.push(address);
+        newArr.push(toAdd);
         if (Object.keys(item).length > 0) {
           const parsedItem = JSON.parse(item['favorites']);
           const alreadyStored = parsedItem.find(item => {
-            item === address;
+            return item.address === toAdd.address;
           });
           if (!alreadyStored) {
-            parsedItem.push(address);
+            parsedItem.push(toAdd);
             newArr = parsedItem.slice();
           } else {
             newArr.splice(alreadyStored, 1);
           }
         }
-        console.log(newArr);
-        // window.chrome.storage.sync.set(
-        //   { favorites: JSON.stringify(newArr) },
-        //   () => {}
-        // );
+        window.chrome.storage.sync.set(
+          { favorites: JSON.stringify(newArr) },
+          () => {}
+        );
       });
     },
     retrieveLogo(address, symbol) {
@@ -462,7 +471,18 @@ export default {
     },
     async fetchTokens(res) {
       if (res && res.hasOwnProperty('favorites')) {
-        this.favorited = !this.favorited;
+        const parsedRes = res.favorites.hasOwnProperty('newValue')
+          ? JSON.parse(res.favorites.newValue)
+          : JSON.parse(res.favorites);
+        const foundVal = parsedRes.find(item => {
+          return item.address === this.address;
+        });
+
+        if (foundVal) {
+          this.favorited = !this.favorited;
+        } else {
+          this.favorited = false;
+        }
       }
       this.loading = true;
       let tokens = [];
