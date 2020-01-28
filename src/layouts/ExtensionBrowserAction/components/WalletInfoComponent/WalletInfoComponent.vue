@@ -51,11 +51,14 @@
       </div>
     </div>
     <div class="wallet-info-body">
+      <div class="low-eth-warning">
+      </div>
       <div class="main-wallet-content">
         <div class="main-wallet-content-container">
           <div class="wallet-value-with-img">
-            <div class="wallet-img-container">
-              <img alt class="icon" src="~@/assets/images/icons/wallet.svg" />
+            <div :class="[page !== ''? 'no-background':'','wallet-img-container']">
+              <img alt class="icon" src="~@/assets/images/icons/wallet.svg" v-if="page === '' || walletType !== 'watchOnly'"/>
+              <img alt class="icon" src="~@/assets/images/icons/hide-password.svg" v-else/>
             </div>
             <div class="wallet-value-container">
               <p class="title">Total Wallet Value</p>
@@ -268,6 +271,10 @@ export default {
       default: () => {
         return {};
       }
+    },
+    page: {
+      type: String,
+      default: ''
     }
   },
   data() {
