@@ -20,9 +20,7 @@ const storeQuery = query => {
 };
 const getLangBasePath = () => {
   if (getMode() == 'hash') return undefined;
-  const locale = window.location.pathname
-    .replace(/^\/([^\/]+).*/i, '$1')
-    .trim();
+  const locale = window.location.pathname.replace(/^\/([^/]+).*/i, '$1').trim();
   if (Object.keys(langShortCodes).includes(locale)) return '/' + locale;
   return undefined;
 };
