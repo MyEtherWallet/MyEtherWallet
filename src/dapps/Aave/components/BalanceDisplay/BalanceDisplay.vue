@@ -72,7 +72,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['online'])
+    ...mapState('main', ['online'])
   },
   mounted() {
     if (this.online) this.getEthPrice();
