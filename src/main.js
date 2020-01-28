@@ -54,7 +54,10 @@ const getDefaultLang = () => {
   if (router.options.base) {
     const shortCode = router.options.base.replace('/', '');
     if (Object.keys(langShortCodes).includes(shortCode)) {
-      store.dispatch('main/setLocale', langShortCodes[shortCode]);
+      store.dispatch('main/setLocale', {
+        locale: langShortCodes[shortCode],
+        save: false
+      });
       return langShortCodes[shortCode];
     }
   }
