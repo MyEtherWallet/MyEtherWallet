@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 export default {
   data() {
     return {
@@ -51,7 +51,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['network', 'Networks']),
+    ...mapState('main', ['network', 'Networks']),
     titles() {
       return Object.keys(this.Networks);
     }
@@ -65,6 +65,7 @@ export default {
     });
   },
   methods: {
+    ...mapActions('main', ['switchNetwork', 'setWeb3Instance']),
     shouldBeActive(network) {
       return (
         network.service === this.network.service &&
@@ -80,14 +81,14 @@ export default {
     },
     selectNetwork(network) {
       this.$refs.networkModal.hide();
-      this.$store.dispatch('switchNetwork', network).then(() => {
+      this.switchNetwork(network).then(() => {
         window.chrome.storage.sync.set({
           defNetwork: JSON.stringify({
             service: network.service,
             key: network.type.name
           })
         });
-        this.$store.dispatch('setWeb3Instance');
+        this.setWeb3Instance();
       });
     }
   }

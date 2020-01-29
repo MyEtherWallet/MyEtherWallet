@@ -328,7 +328,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     noProxy() {
       if (this.activeCdp) {
         return this.activeCdp.noProxy;
