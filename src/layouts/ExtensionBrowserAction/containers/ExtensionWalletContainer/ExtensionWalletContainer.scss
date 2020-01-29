@@ -93,42 +93,6 @@
   }
 }
 
-.all-wallets-header {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-
-  h2 {
-    font-weight: bold;
-  }
-
-  .search-container {
-    position: relative;
-    i {
-      position: absolute;
-      top: 5px;
-
-      &:last-child {
-        right: 5px;
-        cursor: pointer;
-      }
-    }
-    input {
-      border-radius: 0 !important;
-      border: none !important;
-      min-width: 350px;
-      background: none;
-      border-bottom: 1px solid $light-grey-11 !important;
-      padding: 0 20px 5px;
-
-      &:focus {
-        border-bottom: 1px solid $black !important;
-      }
-    }
-  }
-}
-
 .wallet-container-header {
   position: relative;
 
