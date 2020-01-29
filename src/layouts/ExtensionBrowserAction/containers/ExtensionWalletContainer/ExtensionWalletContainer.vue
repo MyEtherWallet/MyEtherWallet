@@ -39,24 +39,10 @@
         </div>
       </div>
       <div v-else>
-        <div class="all-wallets-header">
-          <h2>
-            All Wallets
-          </h2>
-          <div class="search-container">
-            <i class="fa fa-search" />
-            <input
-              v-model="search"
-              class="address-search"
-              placeholder="Search for name or address"
-            />
-            <i
-              v-show="search !== ''"
-              class="fa fa-times"
-              @click="clearSearch"
-            />
-          </div>
-        </div>
+        <wallet-title-and-search-component
+          title="All Wallets"
+          @search="e => (search = e)"
+        />
         <div class="wallet-containers">
           <div class="wallet-container-header">
             <div class="add-and-wallet-count">
@@ -192,12 +178,14 @@ import { mapState, mapActions } from 'vuex';
 import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
 import InterfaceNetworkModal from '@/layouts/InterfaceLayout/components/InterfaceNetworkModal';
 import WalletInfoComponent from '../../components/WalletInfoComponent';
+import WalletTitleAndSearchComponent from '../../components/WalletTitleAndSearchComponent';
 export default {
   components: {
     'watch-only-modal': WatchOnlyModal,
     'password-only-modal': PasswordOnlyModal,
     'interface-network-modal': InterfaceNetworkModal,
-    'wallet-info-component': WalletInfoComponent
+    'wallet-info-component': WalletInfoComponent,
+    'wallet-title-and-search-component': WalletTitleAndSearchComponent
   },
   data() {
     return {
