@@ -3,7 +3,11 @@
     <wallet-side-menu class="side-menu" />
     <div class="max-width-limit">
       <keep-alive>
-        <router-view />
+        <router-view
+          :eth-price="ethPrice"
+          :token-prices="tokenPrices"
+          :wallets="wallets"
+        />
       </keep-alive>
     </div>
   </div>
@@ -11,13 +15,93 @@
 
 <script>
 import WalletSideMenu from './components/WalletSideMenu';
+import { Toast, ExtensionHelpers } from '@/helpers';
+import { mapState, mapActions } from 'vuex';
+import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
 
 export default {
   components: {
     'wallet-side-menu': WalletSideMenu
   },
   data() {
-    return {};
+    return {
+      ethPrice: 0,
+      tokenPrices: {},
+      wallets: []
+    };
+  },
+  computed: {
+    ...mapState('main', ['web3', 'network'])
+  },
+  created() {
+    window.chrome.storage.onChanged.addListener(this.networkChangeListeners);
+  },
+  mounted() {
+    this.getEthPrice();
+    this.getTokenPrices();
+    ExtensionHelpers.getAccounts(this.getAccountsCb);
+  },
+  destroyed() {
+    window.chrome.storage.onChanged.addListener(this.networkChangeListeners);
+  },
+  methods: {
+    ...mapActions('main', ['switchNetwork', 'setWeb3Instance']),
+    networkChangeListeners(changed) {
+      if (changed && changed.hasOwnProperty('defNetwork')) {
+        const networkProps = JSON.parse(changed['defNetwork'].newValue);
+        const network = this.$store.state.main.Networks[networkProps.key].find(
+          actualNetwork => {
+            return actualNetwork.service === networkProps.service;
+          }
+        );
+        this.switchNetwork(
+          !network ? this.$store.state.Networks[networkProps.key][0] : network
+        ).then(() => {
+          this.setWeb3Instance();
+        });
+      } else {
+        this.setWeb3Instance();
+      }
+    },
+    getAccountsCb(res) {
+      const accounts = Object.keys(res)
+        .filter(item => {
+          if (isAddress(item)) {
+            return item;
+          }
+        })
+        .map(item => {
+          const newObj = Object.assign(
+            {},
+            { address: toChecksumAddress(item), wallet: res[item] }
+          );
+
+          return newObj;
+        });
+      this.wallets = accounts.slice();
+    },
+    getEthPrice() {
+      fetch('https://cryptorates.mewapi.io/ticker?filter=ETH')
+        .then(res => {
+          res.json().then(response => {
+            this.ethPrice = response.data.ETH.quotes.USD.price;
+          });
+        })
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+        });
+    },
+    getTokenPrices() {
+      fetch('https://cryptorates.mewapi.io/ticker')
+        .then(res => {
+          res.json().then(response => {
+            this.tokenPrices = Object.assign({}, response.data);
+          });
+        })
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+        });
+    }
   }
 };
 </script>

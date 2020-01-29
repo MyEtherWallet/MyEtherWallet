@@ -23,8 +23,8 @@
 <script>
 import myWallets from '@/assets/images/icons/button-generate.svg';
 import myWalletsHov from '@/assets/images/icons/button-generate-hover.svg';
-import watchOnly from '@/assets/images/icons/hide-password.svg';
-import watchOnlyHov from '@/assets/images/icons/show-password.svg';
+import favorite from '@/assets/images/icons/favorites.svg';
+import favoriteHov from '@/assets/images/icons/favorites-hov.svg';
 import dapp from '@/assets/images/sidemenu/dapps.svg';
 import dappHov from '@/assets/images/sidemenu/dapps-active.svg';
 export default {
@@ -40,9 +40,9 @@ export default {
         },
         {
           name: 'My Favorites',
-          icon: watchOnlyHov,
-          inActive: watchOnly,
-          label: 'watchOnlyWallets',
+          icon: favoriteHov,
+          inActive: favorite,
+          label: 'favorites',
           path: '/favorites'
         },
         {
@@ -59,10 +59,7 @@ export default {
     shouldBeActive(label) {
       if (label === 'dapps' && this.$route.fullPath.includes('dapps'))
         return true;
-      if (
-        label === 'watchOnlyWallets' &&
-        this.$route.fullPath.includes('watch-only')
-      )
+      if (label === 'favorites' && this.$route.fullPath.includes('favorites'))
         return true;
       if (
         label === 'myWallets' &&

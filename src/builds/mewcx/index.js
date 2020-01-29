@@ -1,9 +1,7 @@
 import app from './app';
 import ExtensionBrowserAction from '@/layouts/ExtensionBrowserAction';
-// import ExtensionAddWalletContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionAddWalletContainer';
 import ExtensionWalletContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionWalletContainer';
-// import MyWalletsContainer from '@/layouts/ExtensionBrowserAction/containers/MyWalletsContainer';
-// import WatchOnlyWalletsContainer from '@/layouts/ExtensionBrowserAction/containers/WatchOnlyWalletsContainer';
+import ExtensionFavoritesContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionFavoritesContainer';
 import ViewWalletInfoLayout from '@/layouts/ViewWalletInfoLayout';
 import ExtensionDappsContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionDappsContainer';
 import ExtensionDappsItemContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionDappsItemContainer';
@@ -18,25 +16,11 @@ const cxRoutes = [
         path: '',
         component: ExtensionWalletContainer,
         meta: { requiresAuth: false }
-        // children: [
-        //   {
-        //     path: '',
-        //     meta: { requiresAuth: false },
-        //     component: MyWalletsContainer
-        //   },
-        //   {
-        //     path: 'wallets',
-        //     name: 'myWallets',
-        //     meta: { requiresAuth: false },
-        //     component: MyWalletsContainer
-        //   },
-        //   {
-        //     path: 'watch-only',
-        //     name: '',
-        //     meta: { requiresAuth: false },
-        //     component: WatchOnlyWalletsContainer
-        //   }
-        // ]
+      },
+      {
+        path: 'favorites',
+        component: ExtensionFavoritesContainer,
+        meta: { requiresAuth: false }
       },
       {
         path: 'dapps',
@@ -55,12 +39,6 @@ const cxRoutes = [
           }
         ]
       }
-      // {
-      //   path: '/access-my-wallet',
-      //   name: 'AccessWalletLayout',
-      //   component: ExtensionAddWalletContainer,
-      //   meta: { requiresAuth: false }
-      // }
     ]
   },
   {
