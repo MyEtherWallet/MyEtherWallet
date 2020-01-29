@@ -310,7 +310,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['ethDonationAddress'])
+    ...mapState('main', ['ethDonationAddress'])
   },
   mounted() {
     if (Misc.isMewCx()) {
@@ -358,5 +358,4 @@ export default {
 <style lang="scss" scoped>
 @import 'FooterContainer-desktop.scss';
 @import 'FooterContainer-tablet.scss';
-@import 'FooterContainer-mobile.scss';
 </style>

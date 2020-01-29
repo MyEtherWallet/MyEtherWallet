@@ -224,7 +224,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     showSetupScreen() {
       return !this.hasAllowance || !this.proxyPresent;
     },

@@ -67,6 +67,7 @@
 
 <script>
 import store from 'store';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'IssueLogModal',
@@ -93,7 +94,7 @@ export default {
   },
   watch: {
     neverShow() {
-      this.$store.dispatch('toggleTempHide');
+      this.toggleTempHide();
     }
   },
   mounted() {
@@ -104,6 +105,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('main', ['toggleTempHide']),
     sendError(bool) {
       this.resolver(bool);
       this.$refs.issuelog.hide();
