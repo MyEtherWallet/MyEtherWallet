@@ -33,7 +33,7 @@
             v-if="walletType !== 'watchOnly'"
             @click="
               () => {
-                access(wallet, 'access');
+                openPasswordModal(wallet, 'access', nickname);
               }
             "
             >Access</b-dropdown-text
@@ -56,7 +56,10 @@
     <div class="wallet-info-body">
       <div
         v-show="
-          (showLowBalance && network.type.name === 'ETH' && walletType !== 'watchOnly') || balanceWarnHidden
+          (showLowBalance &&
+            network.type.name === 'ETH' &&
+            walletType !== 'watchOnly') ||
+            balanceWarnHidden
         "
         class="low-eth-warning"
       >
@@ -105,14 +108,24 @@
             <div class="wallet-value-container">
               <p class="title">Total Wallet Value</p>
               <p class="dollar-amt">
-                {{ walletTokensWithBalance.totalWalletBalance }}
+                {{
+                  network.type.name === 'ETH'
+                    ? walletTokensWithBalance.totalWalletBalance
+                    : fixedEthBalance
+                }}
               </p>
             </div>
           </div>
           <div class="wallet-value-container">
-            <p class="title">ETH Balance</p>
-            <p class="dollar-amt">{{ convertedBalance }}</p>
-            <p class="value">{{ fixedEthBalance }}</p>
+            <p class="title">{{ network.type.currencyName }} Balance</p>
+            <p class="dollar-amt">
+              {{
+                network.type.name === 'ETH' ? convertedBalance : fixedEthBalance
+              }}
+            </p>
+            <p v-if="network.type.name === 'ETH'" class="value">
+              {{ fixedEthBalance }}
+            </p>
           </div>
           <div class="wallet-value-container">
             <p class="title">Value of Token</p>
@@ -122,7 +135,15 @@
             </p>
           </div>
         </div>
-        <div class="view-all-container" @click="showTokens = !showTokens">
+        <div
+          :class="[
+            'view-all-container',
+            walletTokensWithBalance.tokensWDollarAmt.length > 0
+              ? ''
+              : 'disable-token-show'
+          ]"
+          @click="showTokens = !showTokens"
+        >
           <p>{{ showTokens ? 'Hide all tokens' : 'View all tokens' }}</p>
           <i :class="['fa', showTokens ? 'fa-angle-up' : 'fa-angle-down']" />
         </div>
@@ -236,7 +257,6 @@
         </div>
       </div>
     </div>
-    <!-- <interface-tokens-modal ref="tokenModal" :add-token="addToken" /> -->
     <edit-wallet-modal
       ref="editModal"
       :address="address"
@@ -250,6 +270,10 @@
       :nickname="parsedWallet.nick"
       :address="address"
     />
+    <password-only-modal
+      ref="passwordOnlyModal"
+      :path="path"
+    />
   </div>
 </template>
 <script>
@@ -261,18 +285,16 @@ import EditWalletModal from '../EditWalletModal';
 import RemoveWalletModal from '../RemoveWalletModal';
 import { mapState } from 'vuex';
 import { Toast, Misc } from '@/helpers';
-// import store from 'store';
-// import * as networkTypes from '@/networks/types';
 import utils from 'web3-utils';
-// import InterfaceTokensModal from '@/layouts/InterfaceLayout/components/InterfaceTokensModal';
 import masterFile from '@/master-file.json';
+import PasswordOnlyModal from '../PasswordOnlyModal';
 
 export default {
   components: {
     blockie: Blockie,
     'edit-wallet-modal': EditWalletModal,
-    'remove-wallet-modal': RemoveWalletModal
-    // 'interface-tokens-modal': InterfaceTokensModal
+    'remove-wallet-modal': RemoveWalletModal,
+    'password-only-modal': PasswordOnlyModal
   },
   props: {
     address: {
@@ -290,14 +312,6 @@ export default {
     walletType: {
       type: String,
       default: 'watchOnly'
-    },
-    access: {
-      type: Function,
-      default: () => {}
-    },
-    detail: {
-      type: Function,
-      default: () => {}
     },
     balance: {
       type: String,
@@ -328,7 +342,9 @@ export default {
       showTokens: false,
       masterFile: masterFile,
       favorited: false,
-      balanceWarnHidden: false
+      balanceWarnHidden: false,
+      path: 'access',
+      password: ''
     };
   },
   computed: {
@@ -394,6 +410,55 @@ export default {
     window.chrome.storage.onChanged.removeListener(this.fetchTokens);
   },
   methods: {
+    openPasswordModal() {
+      this.$refs.passwordOnlyModal.$refs.passwordOnlyModal.$refs.modalWrapper.show();
+    },
+    // accessWallet() {
+    //   this.loading = true;
+    //   const nickname =
+    //     this.nickname !== null && this.nickname.length > 0 ? this.nickname : '';
+    //   const worker = new walletWorker();
+    //   worker.postMessage({
+    //     type: 'unlockWallet',
+    //     data: [this.file, this.password]
+    //   });
+    //   worker.onmessage = e => {
+    //     const obj = {
+    //       file: this.file,
+    //       name: e.data.filename
+    //     };
+
+    //     this.setWallet(
+    //       new WalletInterface(
+    //         Buffer.from(e.data._privKey),
+    //         false,
+    //         keyStoreType,
+    //         nickname,
+    //         JSON.stringify(obj)
+    //       )
+    //     );
+    //     this.loading = false;
+    //     this.nickname = '';
+    //   };
+    //   worker.onerror = e => {
+    //     e.preventDefault();
+    //     this.loading = false;
+    //     Toast.responseHandler(e, Toast.ERROR);
+    //   };
+    // },
+    // setWallet(wallet) {
+    //   const navTo = this.path !== 'access' ? 'view-wallet-info' : 'interface';
+    //   this.decryptWallet([wallet]);
+    //   this.loading = false;
+    //   this.password = '';
+    //   this.file = '';
+    //   this.path = '';
+    //   this.nickname = '';
+
+    //   this.$router.push({
+    //     path: navTo
+    //   });
+    // },
     addToFavorites(address, nickname) {
       let newArr = [];
       const dateAdded = new Date();

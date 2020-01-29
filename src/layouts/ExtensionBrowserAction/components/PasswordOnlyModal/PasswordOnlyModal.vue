@@ -1,11 +1,9 @@
 <template>
   <div>
-    <b-modal
+    <mewcx-modal-wrapper
       ref="passwordOnlyModal"
       :title="$t('mewcx.wallet-password')"
-      hide-footer
-      centered
-      class="bootstrap-modal"
+      direction="up"
     >
       <div class="modal-contents">
         <p>{{ $t('mewcx.wallet-encrypted') }}</p>
@@ -38,14 +36,18 @@
           </button>
         </form>
       </div>
-    </b-modal>
+    </mewcx-modal-wrapper>
   </div>
 </template>
 
 <script>
 import hide from '@/assets/images/icons/hide-password.svg';
 import showIcon from '@/assets/images/icons/show-password.svg';
+import MewcxModalWrapper from '../../wrappers/MewcxModalWrapper';
 export default {
+  components: {
+    'mewcx-modal-wrapper': MewcxModalWrapper
+  },
   props: {
     submit: {
       type: Function,

@@ -11,14 +11,14 @@
       :add-watch-only="addWatchOnlyWallet"
       :loading="loading"
     />
-    <password-only-modal
+    <!-- <password-only-modal
       ref="passwordOnlyModal"
       :path="path"
       :submit="accessWallet"
       :disabled="validInput"
       :loading="loading"
       @password="updatePassword"
-    />
+    /> -->
 
     <div v-if="!hasAccounts" class="no-wallet-found">
       <div class="text-and-img-container">
@@ -70,8 +70,11 @@
             nav-wrapper-class="wallet-nav-wrapper"
           >
             <b-tab title="My Wallets" title-link-class="tab-default-style">
-              <div v-if="myWallets.length > 0" class="wallet-display-container">
-                <div class="total-balance-container">
+              <div
+                v-if="myWallets.length > 0"
+                class="wallet-display-container"
+              >
+                <div class="total-balance-container" v-if="network.type.name === 'ETH'">
                   <div>
                     <p class="portfolio-text">My Portfolio Balance</p>
                   </div>
@@ -92,8 +95,6 @@
                     :wallet="wallet.wallet"
                     :nickname="wallet.nickname"
                     :wallet-type="wallet.type"
-                    :access="togglePasswordModal"
-                    :detail="togglePasswordModal"
                     :prices="tokenPrices"
                   />
                 </keep-alive>
@@ -130,8 +131,6 @@
                     :wallet="wallet.wallet"
                     :nickname="wallet.nickname"
                     :wallet-type="wallet.type"
-                    :access="togglePasswordModal"
-                    :detail="togglePasswordModal"
                     :prices="tokenPrices"
                   />
                 </keep-alive>
@@ -163,7 +162,7 @@
 <script>
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import WatchOnlyModal from '../../components/WatchOnlyModal';
-import PasswordOnlyModal from '../../components/PasswordOnlyModal';
+// import PasswordOnlyModal from '../../components/PasswordOnlyModal';
 import { WATCH_ONLY } from '@/wallets/bip44/walletTypes';
 import { Toast, ExtensionHelpers, Misc } from '@/helpers';
 import web3utils from 'web3-utils';
@@ -171,14 +170,14 @@ import BigNumber from 'bignumber.js';
 import { WalletInterface } from '@/wallets';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { mapState, mapActions } from 'vuex';
-import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 import WalletInfoComponent from '../../components/WalletInfoComponent';
 import WalletTitleAndSearchComponent from '../../components/WalletTitleAndSearchComponent';
 import ExtensionBrowserActionWrapper from '../../wrappers/ExtensionBrowserActionWrapper';
 export default {
   components: {
     'watch-only-modal': WatchOnlyModal,
-    'password-only-modal': PasswordOnlyModal,
+    // 'password-only-modal': PasswordOnlyModal,
     'wallet-info-component': WalletInfoComponent,
     'wallet-title-and-search-component': WalletTitleAndSearchComponent,
     'extension-browser-action-wrapper': ExtensionBrowserActionWrapper
@@ -222,12 +221,12 @@ export default {
       );
       return Misc.toDollar(totalDollarAmt.toNumber());
     },
-    validInput() {
-      return (
-        (this.password !== '' || this.password.length > 0) &&
-        this.walletRequirePass(this.file)
-      );
-    },
+    // validInput() {
+    //   return (
+    //     (this.password !== '' || this.password.length > 0) &&
+    //     this.walletRequirePass(this.file)
+    //   );
+    // },
     searchResult() {
       if (this.search !== '') {
         if (this.showMyWallets === 0) {
@@ -260,6 +259,9 @@ export default {
   watch: {
     wallets(newVal) {
       this.processAccounts(newVal);
+    },
+    network() {
+      this.processAccounts(this.wallets);
     }
   },
   mounted() {
@@ -269,61 +271,15 @@ export default {
   },
   methods: {
     ...mapActions('main', ['decryptWallet']),
-    walletRequirePass(ethjson) {
-      if (ethjson.encseed != null) return true;
-      else if (ethjson.Crypto != null || ethjson.crypto != null) return true;
-      else if (ethjson.hash != null && ethjson.locked) return true;
-      else if (ethjson.hash != null && !ethjson.locked) return false;
-      else if (ethjson.publisher == 'MyEtherWallet' && !ethjson.encrypted)
-        return false;
-      return true;
-    },
-    accessWallet() {
-      this.loading = true;
-      const nickname =
-        this.nickname !== null && this.nickname.length > 0 ? this.nickname : '';
-      const worker = new walletWorker();
-      worker.postMessage({
-        type: 'unlockWallet',
-        data: [this.file, this.password]
-      });
-      worker.onmessage = e => {
-        const obj = {
-          file: this.file,
-          name: e.data.filename
-        };
-
-        this.setWallet(
-          new WalletInterface(
-            Buffer.from(e.data._privKey),
-            false,
-            keyStoreType,
-            nickname,
-            JSON.stringify(obj)
-          )
-        );
-        this.loading = false;
-        this.nickname = '';
-      };
-      worker.onerror = e => {
-        e.preventDefault();
-        this.loading = false;
-        Toast.responseHandler(e, Toast.ERROR);
-      };
-    },
-    setWallet(wallet) {
-      const navTo = this.path !== 'access' ? 'view-wallet-info' : 'interface';
-      this.decryptWallet([wallet]);
-      this.loading = false;
-      this.password = '';
-      this.file = '';
-      this.path = '';
-      this.nickname = '';
-
-      this.$router.push({
-        path: navTo
-      });
-    },
+    // walletRequirePass(ethjson) {
+    //   if (ethjson.encseed != null) return true;
+    //   else if (ethjson.Crypto != null || ethjson.crypto != null) return true;
+    //   else if (ethjson.hash != null && ethjson.locked) return true;
+    //   else if (ethjson.hash != null && !ethjson.locked) return false;
+    //   else if (ethjson.publisher == 'MyEtherWallet' && !ethjson.encrypted)
+    //     return false;
+    //   return true;
+    // },
     togglePasswordModal(file, path, nickname) {
       const parseFile = JSON.parse(file);
       this.file = JSON.parse(parseFile.priv);
@@ -398,7 +354,7 @@ export default {
       );
     },
     openWatchOnlyModal() {
-      this.$refs.watchOnlyModal.$refs.watchOnlyWallet.show();
+      this.$refs.watchOnlyModal.$refs.watchOnlyWallet.$refs.modalWrapper.show();
     },
     updatePassword(e) {
       this.password = e;
