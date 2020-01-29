@@ -97,6 +97,7 @@
           </div>
         </div>
         <b-dropdown
+          v-if="!address"
           ref="cxNetworkDropdown"
           class="cx-network-picker"
           no-caret

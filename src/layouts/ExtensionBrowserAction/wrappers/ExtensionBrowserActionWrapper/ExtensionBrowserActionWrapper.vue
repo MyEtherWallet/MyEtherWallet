@@ -1,7 +1,9 @@
 <template>
   <div class="extension-browser-action-wrapper">
     <header>
-      <slot name="header"></slot>
+      <slot name="header">
+        <div class="spacer"></div>
+      </slot>
     </header>
     <main>
       <slot></slot>

@@ -1,15 +1,14 @@
 <template>
   <div>
-    <mewcx-modal-wrapper
-      ref="passwordOnlyModal"
-      :title="$t('mewcx.wallet-password')"
-      direction="up"
-    >
-      <div class="modal-contents">
-        <p>{{ $t('mewcx.wallet-encrypted') }}</p>
+    <mewcx-modal-wrapper ref="passwordOnlyModal" direction="up">
+      <div class="password-modal-container">
+        <div class="password-modal-title">
+          <h2>{{ title }}</h2>
+          <p>Please enter the password of your wallet to {{ title }}</p>
+        </div>
         <form>
           <div class="input-container">
-            <label for="walletPassword"> {{ $t('mewcx.password') }} </label>
+            <label for="walletPassword"> Wallet Password </label>
             <div class="password-input">
               <input
                 v-model="locPassword"
@@ -25,13 +24,13 @@
           </div>
           <button
             :class="[
-              disabled ? '' : 'disabled',
+              validInput ? '' : 'disabled',
               'submit-button large-round-button-green-filled'
             ]"
             type="submite"
             @click.prevent="submit"
           >
-            <span v-show="!loading"> {{ title }} </span>
+            <span v-show="!loading"> {{ button }} </span>
             <i v-show="loading" class="fa fa-spinner fa-spin" />
           </button>
         </form>
@@ -61,13 +60,9 @@ export default {
       type: String,
       default: ''
     },
-    disabled: {
+    validInput: {
       type: Boolean,
       default: false
-    },
-    password: {
-      type: String,
-      default: ''
     }
   },
   data() {
@@ -75,7 +70,7 @@ export default {
       showIcon: showIcon,
       hide: hide,
       show: false,
-      locPassword: this.password
+      locPassword: ''
     };
   },
   computed: {
@@ -85,6 +80,13 @@ export default {
       }
 
       return 'View Wallet Info';
+    },
+    button() {
+      if (this.path === 'access') {
+        return 'Access';
+      }
+
+      return 'View';
     }
   },
   watch: {

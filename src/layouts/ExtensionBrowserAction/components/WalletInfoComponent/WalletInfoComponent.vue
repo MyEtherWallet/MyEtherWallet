@@ -265,14 +265,17 @@
     />
     <remove-wallet-modal
       ref="removeWalletModal"
-      :cancel-remove="cancelRemove"
       :wallet-type="parsedWallet.type"
-      :nickname="parsedWallet.nick"
       :address="address"
+      :remove-wallet="removeWallet"
+      :nickname="nickname"
     />
     <password-only-modal
       ref="passwordOnlyModal"
       :path="path"
+      :valid-input="validInput"
+      :submit="accessWallet"
+      @password="e => (password = e)"
     />
   </div>
 </template>
@@ -283,11 +286,14 @@ import sortByBalance from '@/helpers/sortByBalance.js';
 import BigNumber from 'bignumber.js';
 import EditWalletModal from '../EditWalletModal';
 import RemoveWalletModal from '../RemoveWalletModal';
-import { mapState } from 'vuex';
-import { Toast, Misc } from '@/helpers';
+import { mapState, mapActions } from 'vuex';
+import { Toast, Misc, ExtensionHelpers } from '@/helpers';
 import utils from 'web3-utils';
 import masterFile from '@/master-file.json';
 import PasswordOnlyModal from '../PasswordOnlyModal';
+import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
+import { WalletInterface } from '@/wallets';
+import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 
 export default {
   components: {
@@ -349,6 +355,15 @@ export default {
   },
   computed: {
     ...mapState('main', ['network', 'web3']),
+    validInput() {
+      return (
+        (this.password !== '' || this.password.length > 0) &&
+        this.walletRequirePass(JSON.parse(this.wallet).priv)
+      );
+    },
+    file() {
+      return JSON.parse(this.wallet).priv;
+    },
     showLowBalance() {
       return new BigNumber(this.balance).lte(0.05);
     },
@@ -410,55 +425,87 @@ export default {
     window.chrome.storage.onChanged.removeListener(this.fetchTokens);
   },
   methods: {
+    ...mapActions('main', ['decryptWallet']),
+    walletRequirePass(ethjson) {
+      if (ethjson.encseed != null) return true;
+      else if (ethjson.Crypto != null || ethjson.crypto != null) return true;
+      else if (ethjson.hash != null && ethjson.locked) return true;
+      else if (ethjson.hash != null && !ethjson.locked) return false;
+      else if (ethjson.publisher == 'MyEtherWallet' && !ethjson.encrypted)
+        return false;
+      return true;
+    },
     openPasswordModal() {
       this.$refs.passwordOnlyModal.$refs.passwordOnlyModal.$refs.modalWrapper.show();
     },
-    // accessWallet() {
-    //   this.loading = true;
-    //   const nickname =
-    //     this.nickname !== null && this.nickname.length > 0 ? this.nickname : '';
-    //   const worker = new walletWorker();
-    //   worker.postMessage({
-    //     type: 'unlockWallet',
-    //     data: [this.file, this.password]
-    //   });
-    //   worker.onmessage = e => {
-    //     const obj = {
-    //       file: this.file,
-    //       name: e.data.filename
-    //     };
+    removeWallet() {
+      this.loading = true;
+      if (this.walletType !== 'watchOnly') {
+        const worker = new walletWorker();
+        worker.postMessage({
+          type: 'unlockWallet',
+          data: [this.file, this.password]
+        });
 
-    //     this.setWallet(
-    //       new WalletInterface(
-    //         Buffer.from(e.data._privKey),
-    //         false,
-    //         keyStoreType,
-    //         nickname,
-    //         JSON.stringify(obj)
-    //       )
-    //     );
-    //     this.loading = false;
-    //     this.nickname = '';
-    //   };
-    //   worker.onerror = e => {
-    //     e.preventDefault();
-    //     this.loading = false;
-    //     Toast.responseHandler(e, Toast.ERROR);
-    //   };
-    // },
-    // setWallet(wallet) {
-    //   const navTo = this.path !== 'access' ? 'view-wallet-info' : 'interface';
-    //   this.decryptWallet([wallet]);
-    //   this.loading = false;
-    //   this.password = '';
-    //   this.file = '';
-    //   this.path = '';
-    //   this.nickname = '';
+        worker.onmessage = () => {
+          this.loading = false;
+          ExtensionHelpers.deleteWalletFromStore(this.address, () => {
+            Toast.responseHandler('Removed Wallet Successfully', Toast.SUCCESS);
+            this.$refs.passwordOnlyModal.$refs.passwordOnlyModal.$refs.modalWrapper.hide();
+          });
+        };
+        worker.onerror = e => {
+          e.preventDefault();
+          this.loading = false;
+          Toast.responseHandler(e, Toast.ERROR);
+        };
+      } else {
+        ExtensionHelpers.deleteWalletFromStore(this.address, () => {
+          Toast.responseHandler('Removed Wallet Successfully', Toast.SUCCESS);
+        });
+      }
+    },
+    accessWallet() {
+      this.loading = true;
+      const nickname =
+        this.nickname !== null && this.nickname.length > 0 ? this.nickname : '';
+      const worker = new walletWorker();
+      worker.postMessage({
+        type: 'unlockWallet',
+        data: [this.file, this.password]
+      });
+      worker.onmessage = e => {
+        const obj = {
+          file: this.file,
+          name: e.data.filename
+        };
 
-    //   this.$router.push({
-    //     path: navTo
-    //   });
-    // },
+        this.setWallet(
+          new WalletInterface(
+            Buffer.from(e.data._privKey),
+            false,
+            keyStoreType,
+            nickname,
+            JSON.stringify(obj)
+          )
+        );
+        this.loading = false;
+      };
+      worker.onerror = e => {
+        e.preventDefault();
+        this.loading = false;
+        Toast.responseHandler(e, Toast.ERROR);
+      };
+    },
+    setWallet(wallet) {
+      this.decryptWallet([wallet]);
+      this.loading = false;
+      this.password = '';
+
+      this.$router.push({
+        path: 'interface'
+      });
+    },
     addToFavorites(address, nickname) {
       let newArr = [];
       const dateAdded = new Date();
@@ -513,7 +560,6 @@ export default {
           return this.network.type.icon;
         }
       }
-      // console.log(networkMasterFile);
     },
     isGreateThanZero(val) {
       return new BigNumber(val).gt(0);
@@ -534,9 +580,6 @@ export default {
       return new BigNumber(val).toFixed(2);
     },
     toDollar: Misc.toDollar,
-    cancelRemove() {
-      this.$refs.removeWalletModal.$refs.removeWalletModal.hide();
-    },
     edit() {
       this.$refs.editModal.$refs.editModal.show();
     },
@@ -574,7 +617,7 @@ export default {
       return balance;
     },
     openRemoveWallet() {
-      this.$refs.removeWalletModal.$refs.removeWalletModal.show();
+      this.$refs.removeWalletModal.$refs.removeWalletModal.$refs.modalWrapper.show();
     },
     async fetchTokens(res) {
       if (res && res.hasOwnProperty('favorites')) {

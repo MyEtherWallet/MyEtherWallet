@@ -11,14 +11,6 @@
       :add-watch-only="addWatchOnlyWallet"
       :loading="loading"
     />
-    <!-- <password-only-modal
-      ref="passwordOnlyModal"
-      :path="path"
-      :submit="accessWallet"
-      :disabled="validInput"
-      :loading="loading"
-      @password="updatePassword"
-    /> -->
 
     <div v-if="!hasAccounts" class="no-wallet-found">
       <div class="text-and-img-container">
@@ -70,11 +62,11 @@
             nav-wrapper-class="wallet-nav-wrapper"
           >
             <b-tab title="My Wallets" title-link-class="tab-default-style">
-              <div
-                v-if="myWallets.length > 0"
-                class="wallet-display-container"
-              >
-                <div class="total-balance-container" v-if="network.type.name === 'ETH'">
+              <div v-if="myWallets.length > 0" class="wallet-display-container">
+                <div
+                  v-if="network.type.name === 'ETH'"
+                  class="total-balance-container"
+                >
                   <div>
                     <p class="portfolio-text">My Portfolio Balance</p>
                   </div>
@@ -160,24 +152,19 @@
 </template>
 
 <script>
-import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import WatchOnlyModal from '../../components/WatchOnlyModal';
-// import PasswordOnlyModal from '../../components/PasswordOnlyModal';
 import { WATCH_ONLY } from '@/wallets/bip44/walletTypes';
-import { Toast, ExtensionHelpers, Misc } from '@/helpers';
 import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
-import { WalletInterface } from '@/wallets';
-import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
-import { mapState, mapActions } from 'vuex';
+import { mapState } from 'vuex';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import WalletInfoComponent from '../../components/WalletInfoComponent';
 import WalletTitleAndSearchComponent from '../../components/WalletTitleAndSearchComponent';
 import ExtensionBrowserActionWrapper from '../../wrappers/ExtensionBrowserActionWrapper';
+import { ExtensionHelpers, Misc } from '@/helpers';
 export default {
   components: {
     'watch-only-modal': WatchOnlyModal,
-    // 'password-only-modal': PasswordOnlyModal,
     'wallet-info-component': WalletInfoComponent,
     'wallet-title-and-search-component': WalletTitleAndSearchComponent,
     'extension-browser-action-wrapper': ExtensionBrowserActionWrapper
@@ -221,12 +208,6 @@ export default {
       );
       return Misc.toDollar(totalDollarAmt.toNumber());
     },
-    // validInput() {
-    //   return (
-    //     (this.password !== '' || this.password.length > 0) &&
-    //     this.walletRequirePass(this.file)
-    //   );
-    // },
     searchResult() {
       if (this.search !== '') {
         if (this.showMyWallets === 0) {
@@ -257,6 +238,16 @@ export default {
     }
   },
   watch: {
+    watchOnlyAddresses(newVal) {
+      if (newVal.length === 0 && this.myWallets.length > 0) {
+        this.showMyWallets = 0;
+      }
+    },
+    myWallets(newVal) {
+      if (newVal.length === 0 && this.watchOnlyAddresses.length > 0) {
+        this.showMyWallets = 1;
+      }
+    },
     wallets(newVal) {
       this.processAccounts(newVal);
     },
@@ -270,16 +261,6 @@ export default {
     });
   },
   methods: {
-    ...mapActions('main', ['decryptWallet']),
-    // walletRequirePass(ethjson) {
-    //   if (ethjson.encseed != null) return true;
-    //   else if (ethjson.Crypto != null || ethjson.crypto != null) return true;
-    //   else if (ethjson.hash != null && ethjson.locked) return true;
-    //   else if (ethjson.hash != null && !ethjson.locked) return false;
-    //   else if (ethjson.publisher == 'MyEtherWallet' && !ethjson.encrypted)
-    //     return false;
-    //   return true;
-    // },
     togglePasswordModal(file, path, nickname) {
       const parseFile = JSON.parse(file);
       this.file = JSON.parse(parseFile.priv);
@@ -330,7 +311,7 @@ export default {
     },
     addWatchOnlyWalletCb() {
       this.loading = false;
-      this.$refs.watchOnlyModal.$refs.watchOnlyWallet.hide();
+      this.$refs.watchOnlyModal.$refs.watchOnlyWallet.$refs.modalWrapper.hide();
       this.$eventHub.$emit(
         'showSuccessModal',
         'Successfully added a watch only wallet!'

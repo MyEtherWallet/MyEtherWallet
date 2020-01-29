@@ -2,7 +2,6 @@
   <div>
     <b-modal
       ref="modalWrapper"
-      :title="title"
       hide-footer
       hide-header
       centered
@@ -14,8 +13,8 @@
     >
       <div class="modal-contents">
         <div class="modal-closer">
-          <i class="fa fa-times-circle-o" @click="closeModal" />
           <span @click="closeModal">Cancel</span>
+          <img src="@/assets/images/icons/cancel.svg" @click="closeModal" />
         </div>
         <slot></slot>
       </div>
@@ -26,10 +25,6 @@
 <script>
 export default {
   props: {
-    title: {
-      type: String,
-      default: ''
-    },
     direction: {
       type: String,
       default: 'down'

@@ -1,24 +1,26 @@
 @import '~@/scss/GlobalVariables';
 .modal-content {
   height: 100%;
+
   .modal-closer {
+    align-items: center;
     display: flex;
     flex-direction: row-reverse;
     padding: 30px 30px 0;
     position: relative;
+
     span,
-    i {
+    img {
       color: $red-5;
       cursor: pointer;
     }
+
     span {
       font-size: 15px;
     }
-    i {
-      font-size: 25px;
-      top: 29px;
-      right: 90px;
-      position: absolute;
+
+    img {
+      height: 30px;
     }
   }
-  }
+}
