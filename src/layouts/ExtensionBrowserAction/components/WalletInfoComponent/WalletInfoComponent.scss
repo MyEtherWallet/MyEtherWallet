@@ -124,6 +124,15 @@
       }
     }
 
+    .disable-token-show {
+      pointer-events: none;
+
+      p,
+      i {
+        color: $dark-grey-11 !important;
+      }
+    }
+
     .wallet-img-container {
       background-color: $orange-1;
       border-radius: 50%;
