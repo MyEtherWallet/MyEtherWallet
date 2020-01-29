@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="33px" height="33px" viewBox="0 0 33 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Group 8</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-7.2%" y="-13.8%" width="114.5%" height="127.6%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="12" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="8.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0819970561   0 0 0 0 0.11507115   0 0 0 0 0.247367527  0 0 0 0.0332440997 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Finalization" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="my-wallet-02-copy-26" transform="translate(-491.000000, -861.000000)">
+            <g id="Group-21-Copy-3" filter="url(#filter-1)" transform="translate(452.000000, 582.000000)">
+                <g id="Group-35">
+                    <g id="Group-31" transform="translate(30.000000, 276.000000)">
+                        <g id="Group-26" transform="translate(9.000000, 3.000000)">
+                            <g id="Group-2" transform="translate(7.000000, 7.000000)">
+                                <path d="M12.5532534,1.40556074 L19.5248608,12.7110682 C20.3945138,14.1213411 19.9562548,15.9695862 18.5459819,16.8392392 C18.0726277,17.1311359 17.5274545,17.2857143 16.9713358,17.2857143 L3.02812109,17.2857143 C1.37126684,17.2857143 0.0281210889,15.9425685 0.0281210889,14.2857143 C0.0281210889,13.7295956 0.182699459,13.1844225 0.474596147,12.7110682 L7.44620352,1.40556074 C8.31585655,-0.00471213875 10.1641017,-0.442971119 11.5743746,0.426681914 C11.9725186,0.672199759 12.3077356,1.00741672 12.5532534,1.40556074 Z" id="Triangle" fill="#F5A623"></path>
+                                <text id="!" font-family="AvenirNext-Bold, Avenir Next" font-size="11" font-weight="bold" fill="#FFFFFF">
+                                    <tspan x="8" y="13">!</tspan>
+                                </text>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -11,7 +11,10 @@
           </p>
           <p>
             {{ concattedAddr }}
-            <img src="@/assets/images/icons/copy.svg" @click="copyAddress" />
+            <img
+              src="@/assets/images/icons/copy_white.png"
+              @click="copyAddress"
+            />
           </p>
           <input ref="addressInput" v-model="address" />
         </div>
@@ -51,14 +54,53 @@
       </div>
     </div>
     <div class="wallet-info-body">
-      <div class="low-eth-warning">
+      <div
+        v-show="
+          (showLowBalance && network.type.name === 'ETH' && walletType !== 'watchOnly') || balanceWarnHidden
+        "
+        class="low-eth-warning"
+      >
+        <div class="warning-container">
+          <p class="actual-warning">
+            <img src="@/assets/images/icons/exclamation.svg" />
+            The ETH balance of your wallet is running low.
+          </p>
+          <img
+            src="@/assets/images/icons/close.svg"
+            @click="balanceWarnHidden = !balanceWarnHidden"
+          />
+        </div>
+        <div class="link-container">
+          <a
+            href="https://ccswap.myetherwallet.com/#/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Buy ETH
+          </a>
+        </div>
       </div>
       <div class="main-wallet-content">
         <div class="main-wallet-content-container">
           <div class="wallet-value-with-img">
-            <div :class="[page !== ''? 'no-background':'','wallet-img-container']">
-              <img alt class="icon" src="~@/assets/images/icons/wallet.svg" v-if="page === '' || walletType !== 'watchOnly'"/>
-              <img alt class="icon" src="~@/assets/images/icons/hide-password.svg" v-else/>
+            <div
+              :class="[
+                page !== '' ? 'no-background' : '',
+                'wallet-img-container'
+              ]"
+            >
+              <img
+                v-if="page === '' || walletType !== 'watchOnly'"
+                alt
+                class="icon"
+                src="~@/assets/images/icons/wallet.svg"
+              />
+              <img
+                v-else
+                alt
+                class="icon"
+                src="~@/assets/images/icons/hide-password.svg"
+              />
             </div>
             <div class="wallet-value-container">
               <p class="title">Total Wallet Value</p>
@@ -166,15 +208,14 @@
                 "
               >
                 {{ toDecimal(token.tokenData.quotes.USD.percent_change_24h) }}%
-                <i
-                  :class="[
-                    'fa',
+                <img
+                  :src="
                     isGreateThanZero(
                       token.tokenData.quotes.USD.percent_change_24h
                     )
-                      ? 'fa-arrow-up'
-                      : 'fa-arrow-down'
-                  ]"
+                      ? require('@/assets/images/icons/arrow_up.svg')
+                      : require('@/assets/images/icons/arrow_down.svg')
+                  "
                 />
               </p>
             </td>
@@ -220,18 +261,18 @@ import EditWalletModal from '../EditWalletModal';
 import RemoveWalletModal from '../RemoveWalletModal';
 import { mapState } from 'vuex';
 import { Toast, Misc } from '@/helpers';
-import store from 'store';
-import * as networkTypes from '@/networks/types';
+// import store from 'store';
+// import * as networkTypes from '@/networks/types';
 import utils from 'web3-utils';
-import InterfaceTokensModal from '@/layouts/InterfaceLayout/components/InterfaceTokensModal';
+// import InterfaceTokensModal from '@/layouts/InterfaceLayout/components/InterfaceTokensModal';
 import masterFile from '@/master-file.json';
 
 export default {
   components: {
     blockie: Blockie,
     'edit-wallet-modal': EditWalletModal,
-    'remove-wallet-modal': RemoveWalletModal,
-    'interface-tokens-modal': InterfaceTokensModal
+    'remove-wallet-modal': RemoveWalletModal
+    // 'interface-tokens-modal': InterfaceTokensModal
   },
   props: {
     address: {
@@ -286,11 +327,15 @@ export default {
       localCustomTokens: [],
       showTokens: false,
       masterFile: masterFile,
-      favorited: false
+      favorited: false,
+      balanceWarnHidden: false
     };
   },
   computed: {
     ...mapState('main', ['network', 'web3']),
+    showLowBalance() {
+      return new BigNumber(this.balance).lte(0.05);
+    },
     parsedWallet() {
       return JSON.parse(this.wallet);
     },

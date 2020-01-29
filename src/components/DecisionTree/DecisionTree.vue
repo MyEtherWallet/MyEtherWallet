@@ -5,7 +5,11 @@
       <p>{{ $t('common.decision-tree.quick-help') }}</p>
     </button>
 
-    <customer-support :no-icon="true" :show="showCustomerSupport" v-if="!isMewCx" />
+    <customer-support
+      v-if="!isMewCx"
+      :no-icon="true"
+      :show="showCustomerSupport"
+    />
 
     <b-modal
       ref="DecisionTree"
