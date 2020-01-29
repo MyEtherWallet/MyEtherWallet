@@ -1,68 +1,86 @@
 <template>
   <div>
-    <b-modal
-      ref="removeWalletModal"
-      :title="$t('mewcx.remove-wallet')"
-      hide-footer
-      hide-header
-      centered
-      class="bootstrap-modal"
-    >
-      <div class="modal-contents">
-        <div class="warning-text-container">
-          <h2>{{ $t('mewcx.remove-wallet') }}</h2>
-          <div v-show="walletType === 'wallet'" class="text-container">
-            {{ $t('mewcx.remove-wallet-desc') }}
+    <mewcx-modal-wrapper ref="removeWalletModal" direction="up">
+      <div class="warning-text-container">
+        <h2>{{ $t('mewcx.remove-wallet') }}</h2>
+        <div v-show="walletType === 'wallet'">
+          <div class="input-container">
+            <label for="walletPassword"> Wallet Password </label>
+            <div class="password-input">
+              <input
+                v-model="locPassword"
+                :type="show ? 'text' : 'password'"
+                placeholder="Wallet password"
+                name="walletPassword"
+              />
+              <img
+                :src="show ? showIcon : hide"
+                @click.prevent="show = !show"
+              />
+            </div>
           </div>
-          <h3 v-show="walletType === 'watchOnly'">
-            {{ $t('mewcx.are-you-sure-delete') }} {{ `${nickname}` }}?
-          </h3>
         </div>
+        <h3 v-show="walletType === 'watchOnly'">
+          {{ $t('mewcx.are-you-sure-delete') }} <b>{{ nickname }}</b>
+        </h3>
         <div class="remove-modal-buttons">
-          <div class="cancel" @click="cancelRemove">
-            {{ $t('common.cancel') }}
-          </div>
           <div class="remove" @click="removeWallet">
-            {{ $t('mewcx.remove') }}
+            Confirm Remove
+          </div>
+          <div class="remove-wallet-warning">
+            <div class="warning-image">
+              <img src="@/assets/images/icons/exclamation.svg" />
+            </div>
+            <div class="warning-text">
+              Enter your wallet password to remove it. Please make sure you have
+              save the <span>Private Key</span>, <span>Mnemonic Phrase</span>,
+              or <span>Keystore File</span> and <span>Password</span> before you
+              remove your wallet.
+            </div>
           </div>
         </div>
       </div>
-    </b-modal>
+    </mewcx-modal-wrapper>
   </div>
 </template>
 
 <script>
-import { Toast, ExtensionHelpers } from '@/helpers';
-
+import MewcxModalWrapper from '../../wrappers/MewcxModalWrapper';
+import hide from '@/assets/images/icons/hide-password.svg';
+import showIcon from '@/assets/images/icons/show-password.svg';
 export default {
+  components: {
+    'mewcx-modal-wrapper': MewcxModalWrapper
+  },
   props: {
-    cancelRemove: {
-      type: Function,
-      default: () => {}
-    },
     walletType: {
-      type: String,
-      default: ''
-    },
-    nickname: {
       type: String,
       default: ''
     },
     address: {
       type: String,
       default: ''
+    },
+    removeWallet: {
+      type: Function,
+      default: () => {}
+    },
+    nickname: {
+      type: String,
+      default: ''
     }
   },
-  methods: {
-    removeWallet() {
-      ExtensionHelpers.deleteWalletFromStore(this.address, this.removeCb);
-    },
-    removeCb() {
-      this.$refs.removeWalletModal.hide();
-      Toast.responseHandler(
-        this.$t('mewcx.wallet-remove-success'),
-        Toast.SUCCESS
-      );
+  data() {
+    return {
+      showIcon: showIcon,
+      hide: hide,
+      show: false,
+      locPassword: ''
+    };
+  },
+  watch: {
+    locPassword(newVal) {
+      this.$emit('password', newVal);
     }
   }
 };

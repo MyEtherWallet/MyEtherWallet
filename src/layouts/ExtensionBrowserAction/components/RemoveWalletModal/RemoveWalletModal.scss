@@ -1,8 +1,9 @@
 @import '~@/scss/GlobalVariables';
 
 .warning-text-container {
-  padding-top: 30px;
-  text-align: center;
+  padding-top: 60px;
+  margin: 0 auto;
+  width: 405px;
 
   p {
     font-size: 16px !important;
@@ -11,42 +12,78 @@
   h2 {
     color: $dark-blue-6;
     font-weight: bold;
+    text-align: center;
+  }
+
+  h3 {
+    text-align: center;
+    margin-bottom: 15px;
   }
 
   .text-container {
     padding: 10px 30px;
   }
+
+  .password-input {
+    position: relative;
+    width: 100%;
+
+    img {
+      cursor: pointer;
+      position: absolute;
+      right: 10px;
+      top: 18px;
+    }
+
+    input {
+      width: 100%;
+    }
+  }
+
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+
+    input {
+      background-color: $white;
+      border: none;
+      padding: 15px;
+    }
+
+    label {
+      color: $dark-blue-2;
+      font-weight: bold;
+      padding-bottom: 10px;
+    }
+  }
 }
 
 .remove-modal-buttons {
-  align-items: center;
-  display: flex;
-  justify-content: space-around;
-  padding-top: 40px;
-
-  %button-temp {
-    border: 1px solid;
+  .remove {
     border-radius: 5px;
     cursor: pointer;
     flex: 1;
-    margin: 5px;
     padding: 20px;
     text-align: center;
-  }
-
-  .cancel,
-  .remove {
-    @extend %button-temp;
-  }
-
-  .remove {
     background-color: $red-7;
     border: 1px solid $red-7;
     color: $white;
   }
 
-  .cancel {
-    border: 1px solid $dark-grey-11;
-    color: $dark-grey-11;
+  .remove-wallet-warning {
+    border-radius: 5px;
+    margin-top: 20px;
+    display: flex;
+    background-color: $light-orange-3;
+    padding: 30px;
+
+    .warning-image {
+      margin-right: 15px;
+    }
+
+    span {
+      color: $red-5;
+    }
   }
 }

@@ -34,19 +34,22 @@ export default {
     ...mapState('main', ['web3', 'network'])
   },
   created() {
-    window.chrome.storage.onChanged.addListener(this.networkChangeListeners);
+    window.chrome.storage.onChanged.addListener(this.storageListener);
   },
   mounted() {
     this.getEthPrice();
     this.getTokenPrices();
-    ExtensionHelpers.getAccounts(this.getAccountsCb);
+    this.fetchAccountFromStore();
   },
   destroyed() {
-    window.chrome.storage.onChanged.addListener(this.networkChangeListeners);
+    window.chrome.storage.onChanged.addListener(this.storageListener);
   },
   methods: {
     ...mapActions('main', ['switchNetwork', 'setWeb3Instance']),
-    networkChangeListeners(changed) {
+    fetchAccountFromStore() {
+      ExtensionHelpers.getAccounts(this.getAccountsCb);
+    },
+    storageListener(changed) {
       if (changed && changed.hasOwnProperty('defNetwork')) {
         const networkProps = JSON.parse(changed['defNetwork'].newValue);
         const network = this.$store.state.main.Networks[networkProps.key].find(
@@ -61,6 +64,10 @@ export default {
         });
       } else {
         this.setWeb3Instance();
+      }
+
+      if (isAddress(Object.keys(changed)[0])) {
+        this.fetchAccountFromStore();
       }
     },
     getAccountsCb(res) {
@@ -109,7 +116,7 @@ export default {
 <style lang="scss" scoped>
 .cx-container {
   background-color: #f2f4fa;
-  height: calc(100vh - 64px);
+  min-height: calc(100vh - 64px);
   min-width: 960px;
   position: relative;
   width: 100%;
