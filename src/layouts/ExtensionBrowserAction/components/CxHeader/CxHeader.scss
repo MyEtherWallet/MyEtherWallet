@@ -70,6 +70,7 @@ a {
 
   .network-title {
     color: $dark-blue-2;
+    cursor: pointer;
     font-size: 12px;
     font-weight: bold;
   }
@@ -146,15 +147,13 @@ a {
   }
 }
 
-
 .showContents-enter-active,
 .showContents-leave-active {
   transition: all 0.2s;
   max-height: 230px;
 }
 .showContents-enter,
-.showContents-leave-to
-{
+.showContents-leave-to {
   opacity: 0;
-  max-height: 0px;
+  max-height: 0;
 }

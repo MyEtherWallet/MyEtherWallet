@@ -99,19 +99,21 @@
                       </p>
                     </div>
                   </div>
-                  <wallet-info-component
-                    v-for="wallet in searchResult"
-                    :key="wallet.address"
-                    :usd="ethPrice"
-                    :address="wallet.address"
-                    :balance="wallet.balance"
-                    :wallet="wallet.wallet"
-                    :nickname="wallet.nickname"
-                    :wallet-type="wallet.type"
-                    :access="togglePasswordModal"
-                    :detail="togglePasswordModal"
-                    :prices="prices"
-                  />
+                  <keep-alive>
+                    <wallet-info-component
+                      v-for="wallet in searchResult"
+                      :key="wallet.address"
+                      :usd="ethPrice"
+                      :address="wallet.address"
+                      :balance="wallet.balance"
+                      :wallet="wallet.wallet"
+                      :nickname="wallet.nickname"
+                      :wallet-type="wallet.type"
+                      :access="togglePasswordModal"
+                      :detail="togglePasswordModal"
+                      :prices="prices"
+                    />
+                  </keep-alive>
                 </div>
                 <div v-else class="wallet-display-container">
                   <div class="no-wallet-found empty-wallet">
@@ -135,19 +137,21 @@
                   v-if="watchOnlyAddresses.length > 0"
                   class="wallet-display-container"
                 >
-                  <wallet-info-component
-                    v-for="wallet in searchResult"
-                    :key="wallet.address"
-                    :usd="ethPrice"
-                    :address="wallet.address"
-                    :balance="wallet.balance"
-                    :wallet="wallet.wallet"
-                    :nickname="wallet.nickname"
-                    :wallet-type="wallet.type"
-                    :access="togglePasswordModal"
-                    :detail="togglePasswordModal"
-                    :prices="prices"
-                  />
+                  <keep-alive>
+                    <wallet-info-component
+                      v-for="wallet in searchResult"
+                      :key="wallet.address"
+                      :usd="ethPrice"
+                      :address="wallet.address"
+                      :balance="wallet.balance"
+                      :wallet="wallet.wallet"
+                      :nickname="wallet.nickname"
+                      :wallet-type="wallet.type"
+                      :access="togglePasswordModal"
+                      :detail="togglePasswordModal"
+                      :prices="prices"
+                    />
+                  </keep-alive>
                 </div>
                 <div v-else class="wallet-display-container">
                   <div class="no-wallet-found empty-wallet">
