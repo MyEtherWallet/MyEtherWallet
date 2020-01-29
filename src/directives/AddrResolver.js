@@ -47,7 +47,7 @@ const AddrResolver = {
     };
     const resolveViaENS = function(domain) {
       const _this = vnode.context;
-      const ens = _this.$store.state.ens;
+      const ens = _this.$store.state.main.ens;
       const errorPar = document.createElement('p');
       errorPar.classList.add('resolver-error');
       if (
@@ -97,8 +97,7 @@ const AddrResolver = {
                   .catch(() => {
                     // eslint-disable-next-line
                     errorPar.innerText = _this.$t(
-                      'ens.ens-resolver.network-not-found',
-                      { network: network.type.name[0] }
+                      'ens.ens-resolver.domain-not-found'
                     );
 
                     _this.isValidAddress = false;
@@ -217,7 +216,7 @@ const AddrResolver = {
                   err.code != 'UnsupportedDomain'
                     ? resolution.serviceName(domain)
                     : '',
-                currencyticker: parentCurrency
+                currencyTicker: parentCurrency
               }
             );
             appendElement(messagePar);

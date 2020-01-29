@@ -28,7 +28,7 @@
     "update:swap": "node compileBaseSwapOptions.js"
   },
   "dependencies": {
-    "@sentry/browser": "5.11.1",
+    "@sentry/browser": "5.11.2",
     "@sentry/integrations": "5.11.1",
     "core-js": "3.6.4",
     "@unstoppabledomains/resolution": "1.0.20",
@@ -79,7 +79,7 @@
     "@vue/eslint-config-prettier": "6.0.0",
     "@vue/test-utils": "1.0.0-beta.29",
     "@xkeshi/vue-qrcode": "git+https://github.com/MyEtherWallet/vue-qrcode.git",
-    "axios": "0.19.1",
+    "axios": "0.19.2",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.0.3",
     "babel-jest": "23.6.0",
@@ -121,7 +121,7 @@
     "remark-preset-lint-recommended": "3.0.3",
     "rskjs-util": "1.0.3",
     "sass-loader": "8.0.2",
-    "sinon": "8.1.0",
+    "sinon": "8.1.1",
     "store": "2.0.12",
     "string-replace-loader": "2.2.0",
     "stylelint": "13.0.0",
