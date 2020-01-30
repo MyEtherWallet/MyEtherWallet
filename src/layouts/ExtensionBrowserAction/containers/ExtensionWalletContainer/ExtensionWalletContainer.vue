@@ -1,6 +1,6 @@
 <template>
   <extension-browser-action-wrapper>
-    <template v-if="hasAccounts" name="header">
+    <template v-if="hasAccounts" v-slot:header>
       <wallet-title-and-search-component
         title="All Wallets"
         @search="e => (search = e)"

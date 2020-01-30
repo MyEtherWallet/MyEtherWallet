@@ -1,10 +1,12 @@
 <template>
   <mewcx-modal-wrapper ref="passwordOnlyModal" direction="up">
+    <template v-slot:modalContentTitle>
+      {{ title }}
+    </template>
+    <template v-slot:modalContentSubtext>
+      Please enter the password of your wallet to {{ title }}
+    </template>
     <div class="password-modal-container">
-      <div class="password-modal-title">
-        <h2>{{ title }}</h2>
-        <p>Please enter the password of your wallet to {{ title }}</p>
-      </div>
       <form>
         <div class="input-container">
           <label for="walletPassword"> Wallet Password </label>

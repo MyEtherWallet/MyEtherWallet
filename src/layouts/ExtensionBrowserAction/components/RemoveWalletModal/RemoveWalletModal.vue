@@ -1,8 +1,10 @@
 <template>
   <div>
     <mewcx-modal-wrapper ref="removeWalletModal" direction="up">
+      <template v-slot:modalContentTitle>
+        {{ $t('mewcx.remove-wallet') }}
+      </template>
       <div class="warning-text-container">
-        <h2>{{ $t('mewcx.remove-wallet') }}</h2>
         <div v-show="walletType === 'wallet'">
           <div class="input-container">
             <label for="walletPassword"> Wallet Password </label>

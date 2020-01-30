@@ -28,5 +28,18 @@
     margin: 0 auto;
     padding-top: 60px;
     width: 405px;
+
+    .modal-content-title {
+      text-align: center;
+
+      h2,
+      p {
+        color: $dark-blue-2;
+      }
+
+      h2 {
+        font-weight: bold;
+      }
+    }
   }
 }

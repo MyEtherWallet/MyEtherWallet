@@ -1,5 +1,8 @@
 <template>
   <mewcx-modal-wrapper ref="editWalletModal">
+    <template v-slot:modalContentTitle>
+      Rename Wallet
+    </template>
     <div class="modal-contents">
       <form>
         <div class="input-container">
