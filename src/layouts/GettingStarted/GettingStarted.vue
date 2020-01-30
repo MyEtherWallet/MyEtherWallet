@@ -56,18 +56,35 @@
         <div class="create-wallet-warnings__continue-button">
           <standard-button
             v-if="cwwCurrent != '0'"
-            :options="backButton"
-            @click.native="mouseScrollUp"
+            :options="{
+              title: $t('common.back'),
+              buttonStyle: 'green-transparent',
+              rightArrow: false,
+              noMinWidth: true,
+              buttonDisabled: false
+            }"
+            :click-function="mouseScrollUp"
           />
           <standard-button
             v-if="cwwCurrent !== 5"
-            :options="nextButton"
-            @click.native="mouseScrollDown"
+            :options="{
+              title: $t('common.next'),
+              buttonStyle: 'green',
+              rightArrow: true,
+              noMinWidth: false
+            }"
+            :click-function="mouseScrollDown"
           />
           <standard-button
             v-if="cwwCurrent == 5"
-            :options="getStartedButton"
-            @click.native="done"
+            :options="{
+              title: $t('common.get-started'),
+              buttonStyle: 'green',
+              rightArrow: false,
+              noMinWidth: true,
+              buttonDisabled: false
+            }"
+            :click-function="done"
           />
         </div>
         <div class="create-wallet-warnings__footer">
@@ -104,6 +121,7 @@ import WhatIsUpside from './components/WhatIsUpside';
 import Congratulations from './components/Congratulations';
 import StandardButton from '@/components/Buttons/StandardButton';
 import store from 'store';
+import { mapActions } from 'vuex';
 
 export default {
   components: {
@@ -118,34 +136,15 @@ export default {
   data() {
     return {
       cwwCurrent: 0,
-      cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5', 'cww6'],
-      nextButton: {
-        title: this.$t('common.next'),
-        buttonStyle: 'green',
-        rightArrow: true,
-        noMinWidth: false
-      },
-      backButton: {
-        title: this.$t('common.back'),
-        buttonStyle: 'green-transparent',
-        rightArrow: false,
-        noMinWidth: true,
-        buttonDisabled: false
-      },
-      getStartedButton: {
-        title: 'Get Started',
-        buttonStyle: 'green',
-        rightArrow: false,
-        noMinWidth: true,
-        buttonDisabled: false
-      }
+      cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5', 'cww6']
     };
   },
   methods: {
+    ...mapActions('main', ['gettingStartedDone']),
     done() {
       store.set('skipTutorial', 'done');
       this.$router.push({ path: 'create-wallet' });
-      this.$store.dispatch('gettingStartedDone');
+      this.gettingStartedDone();
     },
     mouseScrollDown: function() {
       if (this.cwwCurrent < this.cwwRefs.length - 1) {

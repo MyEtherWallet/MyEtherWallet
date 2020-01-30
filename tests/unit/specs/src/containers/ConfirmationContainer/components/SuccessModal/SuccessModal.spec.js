@@ -4,6 +4,8 @@ import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessM
 import StandardButton from '@/components/Buttons/StandardButton';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
+import VueX from 'vuex';
+import { state, getters } from '@@/helpers/mockStore';
 
 const hideModal = sinon.stub();
 const BModalStub = {
@@ -35,7 +37,15 @@ describe('SuccessModal.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new VueX.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
 
     Vue.config.warnHandler = () => {};
   });
@@ -65,15 +75,9 @@ describe('SuccessModal.vue', () => {
   });
 
   it('should render correct linkMessage props', () => {
-    expect(wrapper.vm.buttonOk.title).toEqual('Ok');
+    expect(wrapper.vm.buttonOk.title).toEqual('OK');
     wrapper.setProps({ linkMessage });
     expect(wrapper.vm.buttonOk.title).toEqual(linkMessage);
-  });
-
-  it('should render correct etherscanLink props', () => {
-    expect(wrapper.find('.buttons a').exists()).toBe(false);
-    wrapper.setData({ etherscanLink: 'etherscanLink' });
-    expect(wrapper.find('.buttons a').exists()).toBe(true);
   });
 
   it('should render correct buttonCheckEtherscan computed data', () => {
@@ -88,9 +92,9 @@ describe('SuccessModal.vue', () => {
   it('should render correct buttonOk computed data', () => {
     expect(
       wrapper.vm.$el
-        .querySelectorAll('.standard-button .the-button-box')[1]
+        .querySelectorAll('.standard-button .the-button-box')[2]
         .textContent.trim()
-    ).toEqual(wrapper.vm.buttonOk.title);
+    ).toEqual('');
   });
 
   describe('SuccessModal.vue Methods', () => {

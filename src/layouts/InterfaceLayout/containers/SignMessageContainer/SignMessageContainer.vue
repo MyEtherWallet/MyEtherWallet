@@ -13,8 +13,8 @@
 
         <div class="the-form">
           <textarea
-            v-validate="'required'"
             v-model="message"
+            v-validate="'required'"
             name="message"
             class="custom-textarea-1"
           />
@@ -63,7 +63,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'web3'])
+    ...mapState('main', ['account', 'web3'])
   },
   mounted() {
     this.$refs.signatureModal.$refs.signatureModal.$on('hidden', () => {

@@ -29,7 +29,7 @@
             {{
               unreadCount > 1
                 ? $tc('common.notifications.title', 2)
-                : $t('common.notifications.title', 1)
+                : $tc('common.notifications.title', 1)
             }}
             <div v-show="unreadCount >= 0" class="notification-count">
               <span>{{ unreadCount }}</span>
@@ -100,12 +100,12 @@
               </li>
             </ul>
             <div v-else class="notification-no-item">
-              {{ $t('common.no-notifications') }}
+              {{ $t('common.notifications.no-notifications') }}
             </div>
           </li>
         </ul>
         <div v-else class="notification-no-item">
-          {{ $t('common.no-notifications') }}
+          {{ $t('common.notifications.no-notifications') }}
         </div>
       </div>
       <div v-if="detailsShown" class="notification-item-container">
@@ -133,22 +133,22 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
 import { isAddress } from '@/helpers/addressUtils';
 import { ExtensionHelpers } from '@/helpers';
 
-import SwapNotification from './components/NotificationTypes/SwapNotification/SwapNotification';
-import TransactionNotification from './components/NotificationTypes/TransactionNotification/TransactionNotification';
-import TransactionDetails from './components/NotificationTypes/NotificationDetails';
-import SwapDetails from './components/NotificationTypes/SwapDetails';
+import SwapNotification from '@/containers/NotificationsContainer/components/NotificationTypes/SwapNotification/SwapNotification';
+import TransactionNotification from '@/containers/NotificationsContainer/components/NotificationTypes/TransactionNotification/TransactionNotification';
+import TransactionDetails from '@/containers/NotificationsContainer/components/NotificationTypes/NotificationDetails';
+import SwapDetails from '@/containers/NotificationsContainer/components/NotificationTypes/SwapDetails';
 import store from 'store';
 import {
   statusTypes,
   listComponentMapping,
   detailComponentMapping
-} from './components/config';
+} from '@/containers/NotificationsContainer/components/config';
 
 import {
   INVESTIGATE_FAILURE_KEY,
@@ -178,7 +178,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network', 'notifications']),
+    ...mapState('main', ['web3', 'network', 'notifications']),
     sortedNotifications() {
       const notificationCopy = {};
 
@@ -221,6 +221,7 @@ export default {
     window.chrome.storage.onChanged.removeListener(this.notificationsSetup);
   },
   methods: {
+    ...mapActions('main', ['updateNotification']),
     notificationsSetup() {
       ExtensionHelpers.getAccounts(items => {
         Object.keys(items).forEach(item => {
@@ -287,11 +288,7 @@ export default {
                       : notificationStatuses.FAILED;
                     entry.body.timeRemaining = -1;
                   }
-                  this.$store.dispatch('updateNotification', [
-                    item,
-                    noticeIdx,
-                    entry
-                  ]);
+                  this.updateNotification([item, noticeIdx, entry]);
                 }
               });
             });
@@ -352,11 +349,7 @@ export default {
           updatedNotif.expanded = false;
         }
 
-        this.$store.dispatch('updateNotification', [
-          address,
-          idx,
-          updatedNotif
-        ]);
+        this.updateNotification([address, idx, updatedNotif]);
       };
     },
     hasExpanded(address) {
@@ -374,32 +367,20 @@ export default {
           updatedNotif.read = true;
           updatedNotif.expanded = true;
         }
-        this.$store.dispatch('updateNotification', [
-          address,
-          idx,
-          updatedNotif
-        ]);
+        this.updateNotification([address, idx, updatedNotif]);
       });
     },
     collapseAll(address) {
       this.notifications[address].forEach((notice, idx) => {
         const updatedNotif = notice;
         updatedNotif.expanded = false;
-        this.$store.dispatch('updateNotification', [
-          address,
-          idx,
-          updatedNotif
-        ]);
+        this.updateNotification([address, idx, updatedNotif]);
       });
     },
     childUpdateNotification(idx) {
       if (typeof idx === 'undefined') return () => {};
       return updatedNotif => {
-        this.$store.dispatch('updateNotification', [
-          this.account.address,
-          idx,
-          updatedNotif
-        ]);
+        this.updateNotification([this.account.address, idx, updatedNotif]);
       };
     },
     processStatus(rawStatus) {

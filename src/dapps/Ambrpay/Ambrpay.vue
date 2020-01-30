@@ -13,12 +13,15 @@
         <div class="btns-container">
           <b-button
             class="withdraw-btn"
-            @click="openManageFundsModal('Withdraw')"
+            @click="openManageFundsModal('dappsAmbrpay.withdraw')"
             >{{ $t('dappsAmbrpay.withdraw-funds') }}</b-button
           >
-          <b-button class="add-btn" @click="openManageFundsModal('Add')">{{
-            $t('dappsAmbrpay.add-funds')
-          }}</b-button>
+          <b-button
+            class="add-btn"
+            @click="openManageFundsModal('dappsAmbrpay.add')"
+          >
+            {{ $t('dappsAmbrpay.add-funds') }}
+          </b-button>
         </div>
       </div>
       <div class="funds-container">
@@ -84,7 +87,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'account', 'network', 'online'])
+    ...mapState('main', [
+      'web3',
+      'network',
+      'notifications',
+      'online',
+      'account'
+    ])
   },
   mounted() {
     this.init();
@@ -131,7 +140,7 @@ export default {
       }
     },
     openManageFundsModal(str) {
-      this.manageFundsText = str;
+      this.manageFundsText = this.$t(str);
       this.$refs.manageFunds.$refs.manageFundsModal.show();
     },
     openManageSubModal() {

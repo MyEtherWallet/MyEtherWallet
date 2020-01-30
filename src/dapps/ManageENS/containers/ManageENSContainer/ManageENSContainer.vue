@@ -2,8 +2,8 @@
   <div class="manage-ens-container">
     <h3>{{ $t('ens.manage') }} {{ domainName }}</h3>
     <b-btn
-      v-b-toggle.multicoinsec
       v-show="resolverMultiCoinSupport"
+      v-b-toggle.multicoinsec
       class="collapse-open-button"
       variant="primary"
     >
@@ -69,8 +69,8 @@
       </div>
     </b-collapse>
     <b-btn
-      v-b-toggle.textrecords
       v-show="resolverTxtSupport"
+      v-b-toggle.textrecords
       class="collapse-open-button"
       variant="primary"
     >
@@ -102,8 +102,8 @@
           >
             <label for="updateResolver">{{ k | capitalize }}:</label>
             <input
-              v-validate="getValidation(k)"
               v-model="txtRecordInputs[k]"
+              v-validate="getValidation(k)"
               :placeholder="k | capitalize"
               :name="k"
               type="text"
@@ -259,7 +259,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3']),
+    ...mapState('main', ['web3']),
     isValidAddresses() {
       for (const type in this.currencyInputs) {
         if (

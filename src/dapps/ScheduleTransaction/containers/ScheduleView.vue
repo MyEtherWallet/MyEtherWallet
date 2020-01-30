@@ -21,7 +21,11 @@
             <b-col cols="12" md="8">
               <standard-input
                 :clear-input="clearInput"
-                :options="amountInputOptions()"
+                :options="{
+                  title: $t('sendTx.amount'),
+                  value: amount,
+                  type: 'number'
+                }"
                 @changedValue="amount = $event"
               />
               <div v-show="!isValidAmount" class="text-danger">
@@ -46,7 +50,14 @@
           <div v-show="selectedMode === supportedModes[1]">
             <standard-input
               :clear-input="clearInput"
-              :options="blockNumberInputOptions()"
+              :options="{
+                title: $t('scheduleTx.block-num'),
+                value: selectedBlockNumber,
+                placeHolder: `${this.$t(
+                  'scheduleTx.curr-block'
+                )} ${currentBlockNumber}`,
+                type: 'number'
+              }"
               @changedValue="selectedBlockNumber = $event"
             />
             <div v-show="!isValidBlockNumber" class="text-danger">
@@ -111,9 +122,8 @@
                     :key="index"
                     :class="['btn-group', bounty === timeBounty && 'selected']"
                     @click="timeBounty = bounty"
+                    >{{ bounty }}</b-button
                   >
-                    {{ bounty }}
-                  </b-button>
                 </b-button-group>
                 <div class="timebounty-gasprice-coverage">
                   {{
@@ -126,7 +136,12 @@
 
               <div v-show="advancedExpand">
                 <standard-input
-                  :options="customTimeBountyInputOptions()"
+                  :options="{
+                    title: $t('scheduleTx.time-bounty.title'),
+                    placeHolder: 'ETH',
+                    value: timeBounty,
+                    type: 'number'
+                  }"
                   :clear-input="clearInput"
                   @changedValue="timeBounty = $event"
                 />
@@ -139,7 +154,10 @@
             <b-col cols="12" sm="6" md="3">
               <standard-input
                 :clear-input="clearInput"
-                :options="bountyUsdDisplayOptions()"
+                :options="{
+                  value: timeBountyUsd,
+                  inputDisabled: true
+                }"
                 class="bounty-usd-display"
               />
             </b-col>
@@ -175,9 +193,8 @@
                       :key="index"
                       :class="['mode-btn', mode === selectedMode && 'selected']"
                       @click="selectedMode = mode"
+                      >{{ mode.name }}</b-button
                     >
-                      {{ $t(mode.name) }}
-                    </b-button>
                   </b-button-group>
                 </div>
               </b-col>
@@ -185,7 +202,12 @@
               <b-col cols="12" md="6">
                 <standard-input
                   :clear-input="clearInput"
-                  :options="executionWindowInputOptions()"
+                  :options="{
+                    title: $t('scheduleTx.exec-window'),
+                    value: windowSize,
+                    placeHolder: selectedMode.unit,
+                    type: 'number'
+                  }"
                   @changedValue="windowSize = $event"
                 />
                 <div v-show="!isValidExecutionWindow" class="text-danger">
@@ -200,7 +222,12 @@
 
             <standard-input
               :clear-input="clearInput"
-              :options="requireDepositInputOptions()"
+              :options="{
+                title: $t('scheduleTx.req-deposit'),
+                value: deposit,
+                placeHolder: $t('common.currency.eth'),
+                type: 'number'
+              }"
               @changedValue="deposit = $event"
             />
             <div v-show="!isValidDeposit" class="text-danger">
@@ -211,7 +238,11 @@
               <b-col cols="12" md="4">
                 <standard-input
                   :clear-input="clearInput"
-                  :options="futureGasPriceInputOptions()"
+                  :options="{
+                    title: $t('scheduleTx.future-gas-price'),
+                    value: futureGasPrice,
+                    type: 'number'
+                  }"
                   @changedValue="futureGasPrice = $event"
                 />
                 <div v-show="!isValidFutureGasPrice" class="text-danger">
@@ -221,7 +252,11 @@
               <b-col cols="12" md="4">
                 <standard-input
                   :clear-input="clearInput"
-                  :options="gasLimitInputOptions()"
+                  :options="{
+                    title: $t('common.gas.limit'),
+                    value: gasLimit,
+                    type: 'number'
+                  }"
                   @changedValue="gasLimit = $event"
                 />
                 <div v-show="!isValidGasLimit" class="text-danger">
@@ -231,7 +266,11 @@
               <b-col cols="12" md="4">
                 <standard-input
                   :clear-input="clearInput"
-                  :options="futureGasLimitInputOptions()"
+                  :options="{
+                    title: $t('scheduleTx.future-gas-limit'),
+                    value: futureGasLimit,
+                    type: 'number'
+                  }"
                   @changedValue="futureGasLimit = $event"
                 />
                 <div v-show="!isValidFutureGasLimit" class="text-danger">
@@ -243,7 +282,13 @@
             <standard-input
               v-if="!isTokenTransfer"
               :clear-input="clearInput"
-              :options="dataInputOptions()"
+              :options="{
+                title: $t('scheduleTx.add-data'),
+                placeHolder: `${this.$t(
+                  'scheduleTx.add-data'
+                )} (e.g. 0x7834f874g298hf298h234f)`,
+                value: data
+              }"
               @changedValue="data = $event"
             />
             <div v-show="!isValidData" class="text-danger">
@@ -299,11 +344,9 @@ import 'moment-timezone';
 import * as unit from 'ethjs-unit';
 import { Toast } from '@/helpers';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
-import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import CurrencyPicker from '../../../layouts/InterfaceLayout/components/CurrencyPicker';
 import StandardInput from '@/components/StandardInput';
 import StandardDropdown from '@/components/StandardDropdown';
-import Blockie from '@/components/Blockie';
 import { ERC20 } from '@/partners';
 import {
   calcSchedulingTotalCost,
@@ -315,12 +358,10 @@ import {
 export default {
   name: 'ScheduleView',
   components: {
-    'back-button': BackButton,
     'currency-picker': CurrencyPicker,
     'standard-input': StandardInput,
     'standard-dropdown': StandardDropdown,
     'datetime-picker': Datetime,
-    blockie: Blockie,
     'dropdown-address-selector': DropDownAddressSelector
   },
   props: {
@@ -364,88 +405,11 @@ export default {
       clearCurrency: false,
       clearInput: false,
       clearTimezone: false,
-      clearAddress: false,
-      amountInputOptions() {
-        return {
-          title: `${this.$t('sendTx.amount')}`,
-          value: this.amount,
-          type: 'number'
-        };
-      },
-      customTimeBountyInputOptions() {
-        return {
-          title: `${this.$t('scheduleTx.time-bounty.title')}`,
-          placeHolder: 'ETH',
-          value: this.timeBounty,
-          type: 'number'
-        };
-      },
-      bountyUsdDisplayOptions() {
-        return {
-          value: this.timeBountyUsd,
-          inputDisabled: true
-        };
-      },
-      blockNumberInputOptions() {
-        return {
-          title: `${this.$t('scheduleTx.block-num')}`,
-          value: this.selectedBlockNumber,
-          placeHolder: `${this.$t('scheduleTx.curr-block')} ${
-            this.currentBlockNumber
-          }`,
-          type: 'number'
-        };
-      },
-      dataInputOptions() {
-        return {
-          title: `${this.$t('scheduleTx.add-data')}`,
-          placeHolder: `${this.$t(
-            'scheduleTx.add-data'
-          )} (e.g. 0x7834f874g298hf298h234f)`,
-          value: this.data
-        };
-      },
-      gasLimitInputOptions() {
-        return {
-          title: `${this.$t('common.gas.limit')}`,
-          value: this.gasLimit,
-          type: 'number'
-        };
-      },
-      futureGasPriceInputOptions() {
-        return {
-          title: `${this.$t('scheduleTx.future-gas-price')}`,
-          value: this.futureGasPrice,
-          type: 'number'
-        };
-      },
-      futureGasLimitInputOptions() {
-        return {
-          title: `${this.$t('scheduleTx.future-gas-limit')}`,
-          value: this.futureGasLimit,
-          type: 'number'
-        };
-      },
-      requireDepositInputOptions() {
-        return {
-          title: `${this.$t('scheduleTx.req-deposit')}`,
-          value: this.deposit,
-          placeHolder: 'ETH',
-          type: 'number'
-        };
-      },
-      executionWindowInputOptions() {
-        return {
-          title: `${this.$t('scheduleTx.exec-window')}`,
-          value: this.windowSize,
-          placeHolder: this.selectedMode.unit,
-          type: 'number'
-        };
-      }
+      clearAddress: false
     };
   },
   computed: {
-    ...mapState([
+    ...mapState('main', [
       'web3',
       'network',
       'gasPrice',

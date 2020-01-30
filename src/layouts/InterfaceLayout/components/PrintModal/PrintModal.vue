@@ -29,7 +29,6 @@
   </div>
 </template>
 <script>
-import Blockie from '@/components/Blockie';
 import printJS from 'print-js';
 import html2canvas from 'html2canvas';
 import AccountContentToDisplay from './components/AccountContentToDisplay';
@@ -37,7 +36,6 @@ import AccountContentToPrint from './components/AccountContentToPrint';
 
 export default {
   components: {
-    blockie: Blockie,
     'account-content-to-display': AccountContentToDisplay,
     'account-content-to-print': AccountContentToPrint
   },

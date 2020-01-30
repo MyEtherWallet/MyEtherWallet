@@ -60,7 +60,7 @@
                           ? 'current-network'
                           : ''
                       "
-                      @click="switchNetwork(net)"
+                      @click="callSwitchNetwork(net)"
                     >
                       {{ net.service }}
                     </p>
@@ -104,16 +104,16 @@
                   <span class="detail-name"
                     >{{ $t('common.gas.current-gas') }}:</span
                   >
-                  <span class="detail-text"
-                    >{{ toGwei(genInfo.gasPrice) }}
-                    {{ $t('common.gas.gwei') }}</span
-                  >
+                  <span class="detail-text">
+                    {{ toGwei(genInfo.gasPrice) }}
+                    {{ $t('common.gas.gwei') }}
+                  </span>
                 </li>
                 <li class="detail-container">
                   <span class="detail-name">{{ $t('sendTx.retrieved') }}:</span>
-                  <span class="detail-text">
-                    {{ dateTimeDisplay(genInfo.timestamp) }}
-                  </span>
+                  <span class="detail-text">{{
+                    dateTimeDisplay(genInfo.timestamp)
+                  }}</span>
                 </li>
                 <li class="detail-container">
                   <span class="detail-name">{{ $t('sendTx.at-block') }}:</span>
@@ -130,7 +130,7 @@
               >
                 <standard-button
                   :options="{
-                    title: 'Export JSON File',
+                    title: $t('withoutWallet.export-json'),
                     buttonStyle: 'green-border',
                     noWalletTerms: true,
                     noMinWidth: true
@@ -140,12 +140,12 @@
 
               <standard-button
                 :options="{
-                  title: 'Continue',
+                  title: $t('common.continue'),
                   buttonStyle: 'green',
                   noWalletTerms: true,
                   rightArrow: true
                 }"
-                @click.native="stage2Btn"
+                :click-function="stage2Btn"
               />
             </div>
           </accordion-menu>
@@ -164,8 +164,7 @@
               v-if="wrongNetwork && correctNetwork === ''"
               tag="p"
               path="sendTx.signed-chain-id"
-            >
-            </i18n>
+            ></i18n>
             <i18n
               v-if="wrongNetwork && correctNetwork !== ''"
               tag="p"
@@ -173,7 +172,7 @@
             >
               <span slot="network">({{ correctNetwork }})</span>
             </i18n>
-            <expanding-option title="Raw Transaction">
+            <expanding-option :title="$t('sendTx.raw-tx')">
               <textarea
                 :value="JSON.stringify(rawTx)"
                 class="no-margin raw-tx-input"
@@ -190,20 +189,20 @@
               />
               <standard-button
                 :options="{
-                  title: 'Upload JSON File',
+                  title: $t('withoutWallet.upload-json'),
                   buttonStyle: 'green-border',
                   noWalletTerms: true,
                   noMinWidth: true
                 }"
-                @click.native="uploadClick()"
+                :click-function="uploadClick"
               />
               <standard-button
                 :options="{
-                  title: 'Continue',
+                  title: $t('common.continue'),
                   buttonStyle: 'green',
                   noWalletTerms: true
                 }"
-                @click.native="stage3Btn"
+                :click-function="stage3Btn"
               />
             </div>
           </accordion-menu>
@@ -279,12 +278,12 @@
             <div class="button-container">
               <standard-button
                 :options="{
-                  title: 'Send',
+                  title: $t('common.send'),
                   buttonStyle: 'green',
                   noWalletTerms: true,
                   rightArrow: true
                 }"
-                @click.native="stage4Btn"
+                :click-function="stage4Btn"
               />
             </div>
           </accordion-menu>
@@ -319,7 +318,7 @@
                     v-for="(item, idx) in Object.keys(txReceipt)"
                     :key="item + idx"
                   >
-                    <span>{{ item }}</span>
+                    <span>{{ getTranslatedItem(item) }}</span>
                     <a
                       v-if="item === 'transactionHash'"
                       :href="replaceUrl('', txReceipt[item])"
@@ -359,7 +358,7 @@
 
 <script>
 import { Transaction } from 'ethereumjs-tx';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import Misc from '@/helpers/misc';
 import BigNumber from 'bignumber.js';
 import web3Utils from 'web3-utils';
@@ -369,9 +368,9 @@ import PageTitleComponent from '@/components/PageTitleComponent';
 import AccordionMenu from '@/components/AccordionMenu';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import StandardButton from '@/components/Buttons/StandardButton';
-import StandardInput from '@/components/StandardInput';
 import ExpandingOption from '@/components/ExpandingOption';
 import ConfirmationModal from './components/ConfirmationModal';
+import ENS from 'ethereum-ens';
 
 export default {
   components: {
@@ -379,14 +378,13 @@ export default {
     'accordion-menu': AccordionMenu,
     'dropdown-address-selector': DropDownAddressSelector,
     'standard-button': StandardButton,
-    'standard-input': StandardInput,
     'expanding-option': ExpandingOption,
     'confirmation-modal': ConfirmationModal
   },
   data() {
     return {
       networkTypes: Object.values(networkTypes),
-      selectedNetwork: this.$store.state.network,
+      selectedNetwork: this.$store.state.main.network,
       stage1: false, // Select Network
       stage2: true, // Generate Information
       stage3: false, // Enter/Upload Signed Transaction
@@ -411,8 +409,8 @@ export default {
         address: '0x',
         gasPrice: 0,
         nonce: 0,
-        chainID: this.$store.state.network.type.chainID,
-        networkName: this.$store.state.network.type.name_long
+        chainID: this.$store.state.main.network.type.chainID,
+        networkName: this.$store.state.main.network.type.name_long
       },
       generatedJson: {},
       file: '',
@@ -427,7 +425,7 @@ export default {
     };
   },
   computed: {
-    ...mapState([
+    ...mapState('main', [
       'network',
       'Networks',
       'customPaths',
@@ -476,12 +474,26 @@ export default {
     }
   },
   mounted() {
-    this.switchNetwork(this.$store.state.network);
+    this.callSwitchNetwork(this.$store.state.main.network);
     if (this.online) {
       this.fetchBalanceData();
     }
   },
   methods: {
+    ...mapActions('main', ['switchNetwork', 'setWeb3Instance', 'setENS']),
+    callSetENS() {
+      if (this.network.type.ens) {
+        this.setENS(
+          new ENS(this.web3.currentProvider, this.network.type.ens.registry)
+        );
+      } else {
+        this.setENS(null);
+      }
+    },
+    getTranslatedItem(item) {
+      const kebabItem = item.replace(/([A-Z])/g, '-$1').toLowerCase();
+      return this.$t('withoutWallet.' + kebabItem);
+    },
     replaceUrl(type, hash) {
       if (type === 'address') {
         return this.network.type.blockExplorerAddr.replace('[[address]]', hash);
@@ -519,12 +531,13 @@ export default {
           });
       }
     },
-    switchNetwork(network) {
-      this.$store.dispatch('switchNetwork', network).then(() => {
+    callSwitchNetwork(network) {
+      this.switchNetwork(network).then(() => {
         this.selectedNetwork = network;
-        this.$store.dispatch('setWeb3Instance');
+        this.setWeb3Instance();
         this.stage1Btn();
         this.getTransactionDetails();
+        this.callSetENS();
       });
     },
     truncateData(data) {
@@ -546,7 +559,9 @@ export default {
       if (rawSigned) this.rawSigned = rawSigned;
       if (this.rawSigned !== '') {
         const sanitizedRawSigned = Misc.sanitizeHex(this.rawSigned);
-        const tx = new Transaction(sanitizedRawSigned);
+        const tx = new Transaction(sanitizedRawSigned, {
+          chain: this.genInfo['chainID']
+        });
         this.invalidSignature = !tx.verifySignature();
         this.chainID = tx.getChainId();
         this.wrongNetwork = !new BigNumber(

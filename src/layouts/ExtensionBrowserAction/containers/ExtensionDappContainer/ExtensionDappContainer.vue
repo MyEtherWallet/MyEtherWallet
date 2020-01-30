@@ -69,7 +69,9 @@ export default {
   methods: {
     async fetchDapp() {
       const slug = this.$route.params.slug;
-      const dapp = await fetch(`https://api.stateofthedapps.com/dapps/${slug}`)
+      const dapp = await fetch(
+        `https://swap.mewapi.io/proxy?url=https://api.stateofthedapps.com/dapps/${slug}`
+      )
         .then(res => {
           return res.json();
         })

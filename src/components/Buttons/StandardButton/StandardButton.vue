@@ -39,7 +39,7 @@
           options.paddingSmall ? 'padding-small' : ''
         ]"
         class="the-button-box"
-        @click="clickFunction"
+        @click.stop="clickFunction"
       >
         {{ options.title }}
         <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
@@ -165,6 +165,7 @@ export default {
         case 'blue-border':
           return 'standard-button__blue-border';
         default:
+          return '';
       }
     }
   },

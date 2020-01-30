@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+
 .wallet-side-menu {
   background-color: $white;
   height: 100%;
@@ -6,7 +7,15 @@
   white-space: nowrap;
   padding: 20px 0;
   padding-right: 50px;
-  transition: all 0.3s ease;
+  //transition: all 0.05s ease;
+  //max-width: 65px;
+  max-width: 100%;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    max-width: 100%;
+    //box-shadow: 10px 0 15px rgba(0, 0, 0, 0.1);
+  }
 
   .wallet-menu {
     align-items: center;
@@ -27,12 +36,13 @@
   }
 }
 
-@media only screen and (max-width: 1300px) {
+@media only screen and (max-width: 1550px) {
   .wallet-side-menu {
-    width: 70px !important;
+    transition: all 0.05s ease;
+    max-width: 65px;
 
     &:hover {
-      width: 100% !important;
+      max-width: 300px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.1) !important;
     }
   }

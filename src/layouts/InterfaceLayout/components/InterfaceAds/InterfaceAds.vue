@@ -42,16 +42,11 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import InterfaceTokensModal from '../InterfaceTokensModal';
-
 import ads from './adComponents';
 
 export default {
   components: {
-    'interface-tokens-modal': InterfaceTokensModal,
     'buy-eth-ad': ads.buyEthAd,
-    'static-ad': ads.staticAd,
     'mew-connect-ad': ads.mewConnectAd
   },
   props: {},
@@ -65,11 +60,6 @@ export default {
       currentAdIndex: 1
     };
   },
-  computed: {
-    ...mapState(['network', 'web3', 'online'])
-  },
-  watch: {},
-  mounted() {},
   methods: {
     pauseAds() {
       if (this.adInterval > 0) {
@@ -95,8 +85,6 @@ export default {
   bottom: initial;
   left: initial;
   z-index: initial;
-  padding-top: 0px;
-  padding-bottom: 0px;
   color: initial;
   text-align: initial;
 

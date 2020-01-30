@@ -85,14 +85,9 @@
 
 <script>
 import { mapState } from 'vuex';
-import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-import CurrencyPicker from '../../components/CurrencyPicker';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
-import Blockie from '@/components/Blockie';
 import tabsConfig from '../../components/InterfaceSideMenu/InterfaceSideMenu.config';
 import DappButtons from '../../components/DappButtons';
 import dapps from '@/dapps';
-import SwapWidget from '@/components/SwapWidget';
 import ButtonNftManager from './components/ButtonNftManager';
 import ButtonSendTx from './components/ButtonSendTx';
 
@@ -105,12 +100,7 @@ const toBigNumber = num => {
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie,
-    'currency-picker': CurrencyPicker,
     'dapp-buttons': DappButtons,
-    'swap-widget': SwapWidget,
     'button-nft-manager': ButtonNftManager,
     'button-send-tx': ButtonSendTx
   },
@@ -154,13 +144,13 @@ export default {
       swap: new SwapProviders(
         providers,
         {
-          network: this.$store.state.network.type.name,
-          web3: this.$store.state.web3,
+          network: this.$store.state.main.network.type.name,
+          web3: this.$store.state.main.web3,
           getRateForUnit: false
         },
         {
           tokensWithBalance: this.tokensWithBalance,
-          online: this.$store.state.online
+          online: this.$store.state.main.online
         }
       ),
       updatingRates: false,
@@ -177,7 +167,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['account', 'web3', 'network', 'online']),
+    ...mapState('main', ['account', 'web3', 'network', 'online']),
     sortedObject() {
       const arrayedDapp = [];
       const actualReturnedDapp = [];
@@ -214,7 +204,7 @@ export default {
           },
           {
             tokensWithBalance: this.tokensWithBalance,
-            online: this.$store.state.online
+            online: this.$store.state.main.online
           }
         );
       }, 500);

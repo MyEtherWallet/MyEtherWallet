@@ -2,6 +2,12 @@
 
 .cx-menu {
   padding: 10px 20px 10px 10px;
+  //max-width: 1100px;
+  margin: 0 auto;
+}
+
+.cx-header {
+  width: 100%;
 }
 
 .cx-menu-container {
@@ -13,6 +19,7 @@
   width: 100%;
   */
   //box-shadow: 0 2px 13px rgba(0, 0, 0, 0.1);
+  min-width: 960px;
   background-color: white;
   border-bottom: 1px solid #e8e8e8;
 }
@@ -53,4 +60,23 @@ a {
 
 .spacer {
   margin: 0 auto;
+}
+
+.settings-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-left: 20px;
+
+  .blockie-image {
+    position: absolute;
+    top: -9px;
+    right: 20px;
+  }
+
+  i {
+    color: $dark-blue-1;
+    font-size: 18px;
+    margin-left: 7px;
+  }
 }

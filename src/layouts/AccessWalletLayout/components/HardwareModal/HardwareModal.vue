@@ -22,7 +22,7 @@
             :text="item.text"
             :name="item.name"
             :disabled="item.disabled"
-            :tooltip-msg="item.msg"
+            :tooltip-msg="$t(item.msg)"
             :link="item.link"
             @updateSelected="updateSelected"
           />
@@ -195,16 +195,16 @@ export default {
             !window.navigator ||
             !window.navigator.usb;
           item.disabled = disable;
-          item.msg = disable ? this.$t('errorsGlobal.browser-non-web-usb') : '';
+          item.msg = disable ? 'errorsGlobal.browser-non-web-usb' : '';
         }
         if (u2fhw.includes(item.name)) {
           item.disabled = !res;
-          item.msg = !res ? this.$t('errorsGlobal.browser-non-u2f') : '';
+          item.msg = !res ? 'errorsGlobal.browser-non-u2f' : '';
         }
         if (this.isMobile()) {
           const disable = !inMobile.includes(item.name);
           item.disabled = disable;
-          item.msg = disable ? this.$t('errorsGlobal.no-mobile-support') : '';
+          item.msg = disable ? 'errorsGlobal.no-mobile-support' : '';
         }
       });
     });

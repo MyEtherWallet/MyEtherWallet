@@ -30,15 +30,8 @@
 </template>
 
 <script>
-import StandardInput from '@/components/StandardInput';
-import Standardbutton from '@/components/Buttons/StandardButton';
-
 export default {
   name: 'WalletPassword',
-  components: {
-    'standard-input': StandardInput,
-    'standard-button': Standardbutton
-  },
   data() {
     return {
       passphrase: '',

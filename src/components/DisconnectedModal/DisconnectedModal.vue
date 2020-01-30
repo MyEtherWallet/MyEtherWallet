@@ -23,7 +23,13 @@
           {{ $t('interface.mewconnect-disconnected') }}
         </div>
         <div class="ok-button">
-          <standard-button :options="okayButtonOptions" @click.native="close" />
+          <standard-button
+            :options="{
+              title: $t('common.ok'),
+              buttonStyle: 'green'
+            }"
+            :click-function="close"
+          />
         </div>
       </div>
     </b-modal>
@@ -39,14 +45,6 @@ export default {
     'standard-button': StandardButton
   },
   props: {},
-  data() {
-    return {
-      okayButtonOptions: {
-        title: this.$t('common.ok'),
-        buttonStyle: 'green'
-      }
-    };
-  },
   methods: {
     close() {
       this.$refs.disconnected.hide();

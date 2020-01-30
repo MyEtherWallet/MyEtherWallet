@@ -208,7 +208,6 @@ import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import ProvidersRadioSelector from './components/ProvidersRadioSelector';
 import SwapAddressSelector from './components/SwapAddressSelector';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import swapIcon from '@/assets/images/icons/swap-widget.svg';
 import ImageKybernetowrk from '@/assets/images/etc/kybernetwork.png';
@@ -235,18 +234,15 @@ import {
 } from '@/partners';
 
 const errorLogger = debug('v5:swapContainer');
-import SwapSendForm from './components/SwapExitToFiat';
 
 export default {
   components: {
-    'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
     'swap-currency-picker': SwapCurrencyPicker,
     'swap-address-selector': SwapAddressSelector,
     'providers-radio-selector': ProvidersRadioSelector,
     'swap-confirmation-modal': SwapConfirmationModal,
     'swap-exit-to-fiat': SwapExitToFiat,
-    'swap-send-form': SwapSendForm,
     'swap-send-to-modal': SwapSendToModal
   },
   props: {
@@ -279,8 +275,8 @@ export default {
       swap: new SwapProviders(
         providers,
         {
-          network: this.$store.state.network.type.name,
-          web3: this.$store.state.web3,
+          network: this.$store.state.main.network.type.name,
+          web3: this.$store.state.main.web3,
           getRateForUnit: false
         },
         { tokensWithBalance: this.tokensWithBalance }
@@ -325,7 +321,14 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'ens', 'gasPrice', 'web3', 'network', 'online']),
+    ...mapState('main', [
+      'account',
+      'ens',
+      'gasPrice',
+      'web3',
+      'network',
+      'online'
+    ]),
     bestRate() {
       try {
         if (this.providerData.length > 0) {
@@ -340,6 +343,7 @@ export default {
       } catch (e) {
         errorLogger(e);
       }
+      return null;
     },
     fromBelowMinAllowed() {
       if (new BigNumber(MIN_SWAP_AMOUNT).gt(new BigNumber(this.fromValue)))
@@ -775,7 +779,8 @@ export default {
                       .times(this.rate)
                       .toFixed(6)
                       .toString(10);
-                  }
+                  },
+                  additional: entry.additional || {}
                 };
               } else if (entry.provider === this.providerNames.changelly) {
                 Toast.responseHandler(

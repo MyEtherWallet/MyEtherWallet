@@ -1,0 +1,72 @@
+@import '@/layouts/InterfaceLayout/containers/InterfaceContainer';
+
+.sodapp-container {
+  @extend %interface-container;
+}
+
+.dapp-info-container {
+  display: flex;
+  padding: 20px;
+
+  .dapp-description {
+    flex: 1;
+  }
+
+  .more-info {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 30px;
+
+    img {
+      width: 100px;
+    }
+
+    .dapp-socials {
+      display: flex;
+      justify-content: space-around;
+      max-width: 250px;
+      width: 100%;
+    }
+
+    .dapp-links {
+      display: flex;
+      flex-direction: column;
+      height: auto;
+
+      a {
+        border: 1px solid $mew-green;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 10px 0;
+        text-align: center;
+
+        &:hover {
+          background-color: $mew-green;
+          color: $white;
+        }
+      }
+    }
+  }
+}
+
+@media all and (max-width: 700px) {
+  .dapp-info-container {
+    flex-direction: column-reverse;
+
+    .more-info {
+      img {
+        width: 200px;
+      }
+
+      .dapp-links {
+        flex-direction: row;
+
+        a {
+          margin: 10px;
+        }
+      }
+    }
+  }
+}

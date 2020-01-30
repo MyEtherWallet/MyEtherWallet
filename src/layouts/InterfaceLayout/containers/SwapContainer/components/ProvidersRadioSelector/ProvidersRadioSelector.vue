@@ -13,8 +13,8 @@
           <div class="mew-custom-form__radio-button">
             <input
               v-show="providerData.length > 0"
-              v-model="providerChosen"
               :id="provider.provider"
+              v-model="providerChosen"
               :value="provider.provider"
               type="radio"
               name="provider"
@@ -62,6 +62,9 @@
             <p :class="[maxCheck(provider) ? 'error-message-container' : '']">
               {{ maxNote(provider) }}
             </p>
+            <span class="slippage-text">{{
+              otherTextDisplay(provider.additional.display)
+            }}</span>
           </div>
         </li>
       </ul>
@@ -79,7 +82,8 @@
       <ul>
         <li v-for="provider in providersFound" :key="provider">
           <div class="mew-custom-form__radio-button">
-            <input type="radio" name="provider" /> <label :for="provider" />
+            <input type="radio" name="provider" />
+            <label :for="provider" />
           </div>
           <div class="provider-image">
             <img :src="providerLogo(provider)" alt />
@@ -96,7 +100,8 @@
       <ul>
         <li v-for="provider in providersFound" :key="provider">
           <div class="mew-custom-form__radio-button">
-            <input type="radio" name="provider" /> <label :for="provider" />
+            <input type="radio" name="provider" />
+            <label :for="provider" />
           </div>
           <div class="provider-image">
             <img :src="providerLogo(provider)" alt />
@@ -294,7 +299,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['online', 'network']),
+    ...mapState('main', ['online', 'network']),
     displayToShow() {
       if (!this.online) {
         return 'offline';
@@ -343,6 +348,7 @@ export default {
       } else if (this.noAvailableProviders) {
         return this.allSupportedProviders;
       }
+      return null;
     }
   },
   watch: {
@@ -422,7 +428,7 @@ export default {
         return [
           `${toBigNumber(details.minValue).toFixed(6)} ${
             details.fromCurrency
-          } (From Min.)`
+          } (${this.$t('swap.from-min')}.)`
         ];
       }
       return '';
@@ -431,7 +437,7 @@ export default {
       if (details.maxValue > 0) {
         return `${toBigNumber(details.maxValue).toFixed(6)} ${
           details.fromCurrency
-        } (Max.)`;
+        } (${this.$t('swap.max')}.)`;
       }
       return '';
     },
@@ -443,6 +449,14 @@ export default {
     normalizedRateDisplay(source) {
       const toValue = this.valueForRate(this.fromValue, source.rate);
       return `${source.fromValue} ${source.fromCurrency} = ${toValue} ${source.toCurrency}`;
+    },
+    otherTextDisplay(contentDetails) {
+      if (!contentDetails) return;
+      if (contentDetails.txtKey) {
+        return this.$t(`swap.providers.${contentDetails.txtKey}`, {
+          value: contentDetails.value
+        });
+      }
     },
     valueForRate(rate, value) {
       return toBigNumber(value)

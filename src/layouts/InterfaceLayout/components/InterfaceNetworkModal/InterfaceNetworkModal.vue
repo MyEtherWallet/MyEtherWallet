@@ -51,7 +51,7 @@
                   : ''
               "
               class="switch-network"
-              @click="switchNetwork(net)"
+              @click="locSwitchNetwork(net)"
             >
               {{ net.service }}
             </p>
@@ -73,7 +73,7 @@
               "
               class="switch-network custom-network-item"
             >
-              <p @click="switchNetwork(net)">
+              <p @click="locSwitchNetwork(net)">
                 {{ net.service }} {{ '(' + net.type.name + ')' }}
               </p>
               <i
@@ -88,7 +88,6 @@
         <div class="content-block">
           <div class="input-block-container">
             <input
-              v-validate="'required'"
               v-model="name"
               :placeholder="$t('interface.network-modal.eth-node')"
               class="custom-input-text-1"
@@ -99,8 +98,8 @@
             <select v-model="selectedNetworkName" class="custom-select-1">
               <option
                 v-for="type in types"
-                :value="type.name"
                 :key="type.name + type.name_long"
+                :value="type.name"
                 :selected="selectedNetworkName === type.name"
               >
                 {{ type.name | capitalize }} -
@@ -108,6 +107,7 @@
               </option>
             </select>
             <input
+              v-model="url"
               v-validate="{
                 required: true,
                 url: {
@@ -116,7 +116,6 @@
                   require_tld: false
                 }
               }"
-              v-model="url"
               class="custom-input-text-1"
               type="text"
               name="nodeUrl"
@@ -132,7 +131,6 @@
               autocomplete="off"
             />
             <input
-              v-validate="'required|url:require_protocol'"
               v-show="selectedNetworkName === 'CUS'"
               v-model="blockExplorerTX"
               :placeholder="$t('interface.etherscan-tx-url')"
@@ -142,7 +140,6 @@
               autocomplete="off"
             />
             <input
-              v-validate="'required|numeric'"
               v-show="selectedNetworkName === 'CUS'"
               v-model="chainID"
               :placeholder="$t('common.chain-id')"
@@ -152,7 +149,6 @@
               autocomplete="off"
             />
             <input
-              v-validate="'required|url:require_protocol'"
               v-show="selectedNetworkName === 'CUS'"
               v-model="blockExplorerAddr"
               :placeholder="$t('interface.etherscan-address-url')"
@@ -284,7 +280,7 @@ import * as networkTypes from '@/networks/types';
 import nodeList from '@/networks';
 import Misc from '@/helpers/misc';
 
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   components: {
@@ -306,7 +302,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['network', 'Networks', 'web3']),
+    ...mapState('main', ['network', 'Networks', 'web3']),
     reorderedNetworks() {
       const networks = Misc.reorderNetworks();
       return networks;
@@ -350,6 +346,7 @@ export default {
     this.selectedNetworkName = this.network.type.name;
   },
   methods: {
+    ...mapActions('main', ['switchNetwork', 'setWeb3Instance']),
     networkModalOpen() {
       this.$refs.network.$refs.network.show();
     },
@@ -417,9 +414,9 @@ export default {
     expendAuth() {
       this.$refs.authForm.classList.toggle('hidden');
     },
-    switchNetwork(network) {
-      this.$store.dispatch('switchNetwork', network).then(() => {
-        this.$store.dispatch('setWeb3Instance').then(() => {
+    locSwitchNetwork(network) {
+      this.switchNetwork(network).then(() => {
+        this.setWeb3Instance().then(() => {
           this.selectedNetworkName = network.type.name;
           if (Misc.isMewCx()) {
             this.web3.eth.net.getId().then(id => {
@@ -427,7 +424,7 @@ export default {
                 defChainID: network.type.chainID,
                 defNetVersion: id,
                 defNetwork: JSON.stringify({
-                  url: network.url,
+                  service: network.service,
                   key: network.type.name
                 })
               });

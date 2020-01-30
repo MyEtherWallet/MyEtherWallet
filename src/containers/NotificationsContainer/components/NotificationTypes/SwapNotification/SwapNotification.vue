@@ -170,15 +170,12 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network', 'notifications', 'wallet']),
+    ...mapState('main', ['web3', 'network', 'notifications', 'wallet']),
     errorMessage() {
       return this.errorMessageString(this.notice);
     },
     isError() {
       return this.notice.body.error;
-    },
-    txStatus() {
-      return this.processStatus(this.notice.swapStatus);
     },
     parseTimeRemaining() {
       const seconds = Math.floor(this.timeRemaining % 60);

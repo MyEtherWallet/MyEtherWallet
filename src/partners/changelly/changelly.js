@@ -113,6 +113,7 @@ export default class Changelly {
   }
 
   getFixedRate(fromCurrency, toCurrency, fromValue) {
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async resolve => {
       const timeout = setTimeout(() => {
         resolve({

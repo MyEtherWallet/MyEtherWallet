@@ -100,7 +100,7 @@
             }
           "
         >
-          {{ $t('common.header.access') }}
+          {{ $t('mewcx.access') }}
         </div>
         <div
           v-show="walletType !== 'watchOnly'"
@@ -297,7 +297,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network']),
+    ...mapState('main', ['network', 'web3']),
     parsedWallet() {
       return JSON.parse(this.wallet);
     },
@@ -427,7 +427,7 @@ export default {
         this.fetchTokenBalance(token);
         await this.fetchTokens();
         Toast.responseHandler(
-          this.$t('mew-cx.token-added-success'),
+          this.$t('mewcx.token-added-success'),
           Toast.SUCCESS
         );
       }
@@ -589,7 +589,7 @@ export default {
     copyAddress() {
       this.$refs.addressInput.select();
       document.execCommand('copy');
-      Toast.responseHandler(this.$t('mew-cx.copy-success'), Toast.SUCCESS);
+      Toast.responseHandler(this.$t('mewcx.copy-success'), Toast.SUCCESS);
     },
     viewAllTokens(bool) {
       if (bool) {

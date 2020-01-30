@@ -5,7 +5,7 @@
         {{ typeString }}
       </p>
       <p :class="['status', notice.read ? 'read' : 'un-read', txStatus.class]">
-        ({{ txStatus.text }})
+        ({{ $t(txStatus.text) }})
       </p>
     </div>
     <div class="time-date">
@@ -50,7 +50,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network', 'notifications', 'wallet']),
+    ...mapState('main', ['web3', 'network', 'notifications', 'wallet']),
     typeString() {
       if (notificationHeaderLabels[this.notice.type]) {
         return this.$t(notificationHeaderLabels[this.notice.type]);

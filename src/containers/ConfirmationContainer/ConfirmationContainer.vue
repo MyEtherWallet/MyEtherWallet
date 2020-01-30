@@ -54,7 +54,7 @@
       :message="successMessage"
       :link-message="linkMessage"
       :link-to="linkTo"
-      :etherscan-link="etherscanLink"
+      :tx-hash-exlporrer="txHashExlporrer"
     />
     <error-modal
       ref="errorModal"
@@ -82,7 +82,7 @@ import ConfirmCollectionModal from './components/ConfirmCollectionModal';
 import SuccessModal from './components/SuccessModal';
 import ErrorModal from './components/ErrorModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
 import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
 import { Toast, Misc } from '@/helpers';
@@ -147,7 +147,7 @@ export default {
       successMessage: 'Success',
       linkMessage: 'OK',
       linkTo: '/',
-      etherscanLink: null,
+      txHashExlporrer: '',
       dismissed: true,
       signedArray: [],
       txBatch: null,
@@ -170,11 +170,12 @@ export default {
     };
   },
   computed: {
-    ...mapState(['wallet', 'web3', 'account', 'network']),
+    ...mapState('main', ['wallet', 'web3', 'account', 'network']),
     fromAddress() {
       if (this.account) {
         return this.account.address;
       }
+      return null;
     }
   },
   watch: {
@@ -206,9 +207,9 @@ export default {
   created() {
     this.$eventHub.$on(
       'showSuccessModal',
-      (message, linkMessage, etherscanLink) => {
+      (message, linkMessage, txHashExlporrer) => {
         if (!message) message = null;
-        this.showSuccessModal(message, linkMessage, etherscanLink);
+        this.showSuccessModal(message, linkMessage, txHashExlporrer);
       }
     );
 
@@ -352,6 +353,7 @@ export default {
     });
   },
   methods: {
+    ...mapActions('main', ['addNotification']),
     swapWidgetModalOpen(
       destAddress,
       fromCurrency,
@@ -423,11 +425,11 @@ export default {
       window.scrollTo(0, 0);
       this.$refs.signConfirmModal.$refs.signConfirmation.show();
     },
-    showSuccessModal(message, linkMessage, etherscanLink) {
+    showSuccessModal(message, linkMessage, txHashExlporrer) {
       this.reset();
       if (message !== null) this.successMessage = message;
       if (linkMessage !== null) this.linkMessage = linkMessage;
-      if (etherscanLink !== null) this.etherscanLink = etherscanLink;
+      if (txHashExlporrer !== null) this.txHashExlporrer = txHashExlporrer;
       this.$refs.successModal.$refs.success.show();
     },
     showErrorModal(message, linkMessage) {
@@ -494,7 +496,7 @@ export default {
         _tx.from = this.account.address;
         const _rawTx = tx.rawTransaction;
         const onError = err => {
-          this.$store.dispatch('addNotification', [
+          this.addNotification([
             noticeTypes.TRANSACTION_ERROR,
             _tx.from,
             this.unSignedArray.find(entry =>
@@ -513,7 +515,7 @@ export default {
             'Okay',
             this.network.type.blockExplorerTX.replace('[[txHash]]', hash)
           );
-          this.$store.dispatch('addNotification', [
+          this.addNotification([
             noticeTypes.TRANSACTION_HASH,
             _tx.from,
             this.unSignedArray.find(entry =>
@@ -532,7 +534,7 @@ export default {
           });
         });
         promiEvent.then(receipt => {
-          this.$store.dispatch('addNotification', [
+          this.addNotification([
             noticeTypes.TRANSACTION_RECEIPT,
             _tx.from,
             this.unSignedArray.find(entry =>
@@ -558,7 +560,7 @@ export default {
       if (this.raw.generateOnly) return;
       this.showSuccessModal(
         `${this.$t('sendTx.success.sub-title')}`,
-        'Okay',
+        `${this.$t('common.okay')}`,
         this.network.type.blockExplorerTX.replace(
           '[[txHash]]',
           this.signedTxObject.tx.hash

@@ -62,10 +62,12 @@
         :key="button.title + index"
         :func="button.func"
         :img="button.icon"
-        :title="button.title"
-        :recommend="button.warning"
+        :title="$t(button.title)"
+        :recommend="$t(button.warning)"
         :disabled="false"
         :classname="'extension-selection'"
+        :img-padding="button.imgPadding"
+        :desc="$t(button.desc)"
       />
     </div>
   </div>
@@ -83,11 +85,12 @@ import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { SELECTED_MEW_CX_ACC } from '@/builds/mewcx/cxHelpers/cxEvents.js';
 import { Toast, ExtensionHelpers, Wallet, Misc } from '@/helpers';
 
-import byJsonImgHov from '@/assets/images/icons/button-json-hover.svg';
+import byJsonImgHov from '@/assets/images/icons/button-software-no-padding.svg';
 import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
 import privateKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
-import generateImgHov from '@/assets/images/icons/button-generate-hover.svg';
-import AccessWalletButton from '@/layouts/AccessWalletLayout/components/AccessWalletButton';
+import generateImgHov from '@/assets/images/home/icon-wallet.svg';
+//import AccessWalletButton from '@/layouts/AccessWalletLayout/components/AccessWalletButton';
+import AccessWalletButton from '../../components/AccessWalletButton';
 import ImportKeystoreModal from '../../components/ImportKeystoreModal';
 import ImportPrivateKeyModal from '../../components/ImportPrivateKeyModal';
 import VerifyDetailsModal from '../../components/VerifyDetailsModal';
@@ -112,8 +115,10 @@ export default {
         {
           key: 'GEN',
           icon: generateImgHov,
-          title: 'Generate a New Wallet',
+          title: 'mewcx.generate-wallet',
+          desc: 'mewcx.generate-wallet-description',
           warning: '',
+          imgPadding: '6px',
           func: () => {
             this.toggleGenerateWallet(true);
           }
@@ -121,7 +126,8 @@ export default {
         {
           key: mnemonicType,
           icon: byMnemImgHov,
-          title: 'Mnemonic Phrase',
+          title: 'mewcx.mnemonic-phrase',
+          desc: 'mewcx.mnemonic-phrase-description',
           warning: '',
           func: () => {
             this.toggleImportMnemonicPhrase(true);
@@ -130,7 +136,8 @@ export default {
         {
           key: privateKeyType,
           icon: privateKeyImgHov,
-          title: `Private \n Key`,
+          title: 'mewcx.private-key',
+          desc: 'mewcx.private-key-description',
           warning: '',
           func: () => {
             this.toggleImportPrivateKey(true);
@@ -139,7 +146,9 @@ export default {
         {
           key: keyStoreType,
           icon: byJsonImgHov,
-          title: 'Keystore File (UTC/JSON)',
+          title: 'mewcx.keystore-file',
+          imgPadding: '15px',
+          desc: 'mewcx.keystore-file-description',
           warning: '',
           func: () => {
             this.toggleImportKeystoreFile(true);
@@ -164,7 +173,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['path', 'linkQuery'])
+    ...mapState('main', ['path', 'linkQuery'])
   },
   mounted() {
     this.$refs.mnemonicPhrase.$refs.mnemonicPhrase.$on('hidden', () => {
@@ -246,10 +255,12 @@ export default {
     generateWalletFromPriv(priv, type) {
       this.loading = true;
       const privKey = priv ? priv : this.privateKey;
+      const parsedPrivKey =
+        privKey.substr(0, 2) === '0x' ? privKey.replace('0x', '') : privKey;
       const worker = new walletWorker();
       worker.postMessage({
         type: 'generateFromPrivateKey',
-        data: [privKey, this.password]
+        data: [parsedPrivKey, this.password]
       });
       worker.onmessage = e => {
         const newJson = {};
@@ -292,7 +303,11 @@ export default {
     },
     storeWalletCb() {
       this.loading = false;
-      this.$eventHub.$emit('showSuccessModal', 'Successfully added a wallet!');
+      this.$eventHub.$emit(
+        'showSuccessModal',
+        'Successfully added a wallet!',
+        null
+      );
       this.$router.push('/');
       this.reset();
       this.toggleVerifyDetails(false, '');
@@ -443,7 +458,7 @@ export default {
       if (Array.isArray(e)) {
         this.mnemonicPhrase = e.join(' ');
       } else {
-        Toast.responseHandler(this.$t('mew-cx.invalid-mnemonic'), Toast.ERROR);
+        Toast.responseHandler(this.$t('mewcx.invalid-mnemonic'), Toast.ERROR);
       }
     },
     updateSelectedPath(e) {

@@ -22,7 +22,7 @@ The best way to start an integration is by creating a fork of MyEtherWallet, and
 
 - To properly route to the dapp the dapps routes must be added to the router.  This is done by importing the routing.js file from the dapp sub-directory and adding it to the routes object in `src/dapps/routes.js`
 
-- Make sure all hard-coded strings are translated: Create a new folder under translations with the correct dapp name. Add an en_US.json file under it. Then add the correct route under translations/en_US.js. Add the right translations to the dapp_name/en_US.json file and make sure all translated attributes are using kebab case. 
+- Make sure all hard-coded strings are translated: Create a new folder under translations with the correct dapp name. Add an en_US.json file under it. Then add the correct route under translations/en_US.js. Add the right translations to the dapp_name/en_US.json file and make sure all translated attributes are using kebab case.
 
 - Beyond the above stated criteria a dapp is free to implement its functionality as it desires.  Yet all dapps will be reviewed and must be approved by MEW prior to inclusion.  This may include requiring changes to how a dapp is implemented.
 

@@ -1,21 +1,22 @@
 <template>
-  <div>
-    <cx-header />
+  <div class="cx-container">
     <keep-alive>
-      <router-view />
+      <div class="cx-content-wrap">
+        <wallet-side-menu class="side-menu" />
+        <div class="max-width-limit">
+          <router-view />
+        </div>
+      </div>
     </keep-alive>
-    <cx-footer />
   </div>
 </template>
 
 <script>
-import CxHeader from '@/layouts/ExtensionBrowserAction/components/CxHeader';
-import CxFooter from '@/layouts/ExtensionBrowserAction/components/CxFooter';
+import WalletSideMenu from './components/WalletSideMenu';
 
 export default {
   components: {
-    'cx-header': CxHeader,
-    'cx-footer': CxFooter
+    'wallet-side-menu': WalletSideMenu
   },
   data() {
     return {};
@@ -25,12 +26,25 @@ export default {
 
 <style lang="scss" scoped>
 .cx-container {
-  background-color: #cacaca;
+  background-color: #f2f4fa;
   min-width: 960px;
 }
 
+.cx-content-wrap {
+  width: 100%;
+  position: relative;
+}
+
 .max-width-limit {
-  max-width: 1024px;
+  max-width: 1055px;
   margin: 0 auto;
+}
+
+.side-menu {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  z-index: 1;
 }
 </style>

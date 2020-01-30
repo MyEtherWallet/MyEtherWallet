@@ -2,7 +2,11 @@
   <div class="modal-container">
     <b-modal
       ref="manageFundsModal"
-      :title="`${manageFundsText} ${$t('dappsAmbrpay.manage-funds.funds')}`"
+      :title="
+        manageFundsText === 'Add'
+          ? $t('dappsAmbrpay.manage-funds.add-funds')
+          : $t('dappsAmbrpay.manage-funds.withdraw-funds')
+      "
       centered
       hide-footer
       static
@@ -23,8 +27,11 @@
         <hr />
         <div v-if="actionStep" class="action-container">
           <p class="funds-txt">
-            {{ $t('dappsAmbrpay.manage-funds.how-much-eth') }}
-            <span class="action-txt"> {{ manageFundsText }}? </span>
+            {{
+              manageFundsText === 'Add'
+                ? $t('dappsAmbrpay.manage-funds.how-much-eth-add')
+                : $t('dappsAmbrpay.manage-funds.how-much-eth-withdraw')
+            }}
           </p>
           <span class="eth-text">{{ $t('common.currency.eth') }}</span>
           <input v-model="ethAmount" class="mt-3" type="number" />
@@ -84,7 +91,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'account'])
+    ...mapState('main', ['web3', 'account'])
   },
   watch: {
     manageFundsText(newVal, oldVal) {
@@ -102,14 +109,14 @@ export default {
       const subAccountBalance = new BigNumber(this.availableBalanceEth);
 
       if (newVal <= 0) {
-        this.errMsg = 'Amount must be higher than 0';
+        this.errMsg = this.$t('dappsAmbrpay.errors.amount-higher-zero');
       } else if (this.manageFundsText === 'Add' && value.gt(accountBalance)) {
-        this.errMsg = 'Amount higher than balance';
+        this.errMsg = this.$t('dappsAmbrpay.errors.amount-higher-balance');
       } else if (
         this.manageFundsText === 'Withdraw' &&
         value.gt(subAccountBalance)
       ) {
-        this.errMsg = 'Amount higher than subscription balance';
+        this.errMsg = this.$t('dappsAmbrpay.errors.amount-higher-sub-balance');
       } else {
         this.errMsg = '';
       }

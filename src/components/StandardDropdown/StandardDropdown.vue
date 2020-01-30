@@ -9,19 +9,21 @@
         <i aria-hidden="true" class="fa fa-angle-down"></i>
       </div>
       <div v-if="open">
-        <div class="dropdown-search-container">
-          <input v-model="search" :placeholder="$t('common.search')" />
-          <i class="fa fa-search" />
+        <div class="dropdown-list">
+          <div class="dropdown-search-container">
+            <input v-model="search" :placeholder="$t('common.search')" />
+            <i class="fa fa-search" />
+          </div>
+          <ul>
+            <li
+              v-for="(entry, idx) in localOptions"
+              :key="idx"
+              @click="setSelected(entry)"
+            >
+              {{ displayName(entry) }}
+            </li>
+          </ul>
         </div>
-        <ul class="dropdown-list">
-          <li
-            v-for="(entry, idx) in localOptions"
-            :key="idx"
-            @click="setSelected(entry)"
-          >
-            {{ displayName(entry) }}
-          </li>
-        </ul>
       </div>
     </div>
   </div>

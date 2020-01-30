@@ -48,13 +48,11 @@
           :hidebottomborder="true"
           :title="$t('sendTx.signed.tx')"
         >
-          <div class="raw-signed">
-            {{ signedTx }}
-          </div>
+          <div class="raw-signed">{{ signedTx }}</div>
         </expanding-option>
-        <expanding-option :title="$t('sendTx.raw-tx')">
-          {{ rawTx }}
-        </expanding-option>
+        <expanding-option :title="$t('sendTx.raw-tx')">{{
+          rawTx
+        }}</expanding-option>
         <div class="button-block-container">
           <standard-button :options="buttonConfirmAndSend" />
         </div>
@@ -64,18 +62,14 @@
 </template>
 
 <script>
-import StandardInput from '@/components/StandardInput';
 import Standardbutton from '@/components/Buttons/StandardButton';
 import ExpandingOption from '@/components/ExpandingOption';
 
-import AddressBlock from '../AddressBlock';
 export default {
   name: 'SendOfflineConfirmation',
   components: {
-    'standard-input': StandardInput,
     'standard-button': Standardbutton,
-    'expanding-option': ExpandingOption,
-    'address-block': AddressBlock
+    'expanding-option': ExpandingOption
   },
   props: {
     envDetails: {

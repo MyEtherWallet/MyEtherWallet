@@ -17,8 +17,8 @@
         <div class="input-container">
           <input
             ref="mnemonicPasswordInput"
-            :type="show ? 'text' : 'password'"
             v-model="password"
+            :type="show ? 'text' : 'password'"
             name="Password"
             autocomplete="off"
             placeholder="Enter password"

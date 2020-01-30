@@ -13,8 +13,28 @@
         <h2>{{ $t('interface.oops') }}</h2>
         <p>{{ $t('interface.logout-warning') }}</p>
         <div class="buttons">
-          <standard-button :options="buttonNo" @click.native="cancel" />
-          <standard-button :options="buttonYes" @click.native="logout" />
+          <standard-button
+            :options="{
+              title: $t('interface.go-back'),
+              buttonStyle: 'green-border',
+              rightArrow: false,
+              leftArrow: false,
+              fullWidth: true,
+              noMinWidth: true
+            }"
+            :click-function="cancel"
+          />
+          <standard-button
+            :options="{
+              title: $t('interface.logout-wallet'),
+              buttonStyle: 'red',
+              rightArrow: false,
+              leftArrow: false,
+              fullWidth: true,
+              noMinWidth: true
+            }"
+            :click-function="logout"
+          />
         </div>
       </div>
     </b-modal>
@@ -22,36 +42,18 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 export default {
   name: 'LogoutWarning',
-  data() {
-    return {
-      buttonNo: {
-        title: this.$t('interface.go-back'),
-        buttonStyle: 'green-border',
-        rightArrow: false,
-        leftArrow: false,
-        fullWidth: true,
-        noMinWidth: true
-      },
-      buttonYes: {
-        title: this.$t('interface.logout-wallet'),
-        buttonStyle: 'red',
-        rightArrow: false,
-        leftArrow: false,
-        fullWidth: true,
-        noMinWidth: true
-      }
-    };
-  },
   methods: {
+    ...mapActions('main', ['setLastPath', 'clearWallet']),
     logout() {
       const path = this.$route.fullPath;
       if (path !== '/interface') {
-        this.$store.dispatch('setLastPath', path);
+        this.setLastPath(path);
       }
-      this.$store.dispatch('clearWallet');
-      this.$store.dispatch('setLastPath', '');
+      this.clearWallet();
+      this.setLastPath('');
       this.$refs.logoutWarningModal.hide();
     },
     cancel() {

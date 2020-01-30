@@ -4,59 +4,67 @@
 // .modal-contents
 //***************************************************
 
-.dev-only-button {
-  position: fixed;
-  bottom: 30px;
-  left: 30px;
-  background-color: red;
+.new-issue-log {
+  background-color: #7acbcc;
+  background-image: url('~@/assets/images/home/spaceman-r.png');
+  background-repeat: no-repeat;
+  background-size: 350px;
+  background-position: right 0 bottom -140px;
+  padding: 0 40px 40px 40px;
+  & div,
+  & label {
+    font-family: Sans-Serif;
+  }
+}
+
+.large-header {
+  font-size: 110px;
   color: white;
-  font-size: 20px;
+  font-weight: 700;
+  text-shadow: 5px 5px 5px #0000000f;
+  letter-spacing: -4px;
+}
+
+.sub-header {
+  color: #4a4a4a;
+  font-size: 27px;
   font-weight: 600;
-  padding: 5px 10px;
-  cursor: pointer;
-  user-select: none;
+  max-width: 350px;
+  line-height: 32px;
+  margin-top: -10px;
 }
 
-.modal-contents {
-  padding: 40px;
-}
-
-.modal-header-block {
-  .title {
-    font-size: 30px;
-    font-weight: 700;
-    text-align: center;
-    max-width: 300px;
-    margin: 0 auto;
-    line-height: 40px;
-    color: $dark-blue-6;
-    margin-bottom: 20px;
+.buttons {
+  margin-top: 10px;
+  .button-block-text {
+    color: #4a4a4a;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 18px;
   }
-  .sub-text {
-    text-align: center;
+
+  .show-error-detail {
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-block;
   }
 }
 
-.modal-user-input-block {
-  height: 300px;
-  overflow: hidden;
-  margin: 30px;
+#collapse-error-detail {
+  opacity: 0.8;
 }
 
-.modal-button-block {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  > * {
-    margin: 0 5px;
-  }
+.error-detail {
+  width: 100%;
+  height: 150px;
+  border: 0;
+  color: black;
+  font-size: 12px;
+  resize: none;
 }
 
 .button-block {
-  padding-top: 40px;
-  text-align: center;
-
   .checkbox-container {
     margin-bottom: 30px;
 
@@ -67,14 +75,20 @@
     label {
       position: relative;
       cursor: pointer;
+      color: #4a4a4a;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 18px;
     }
 
     .custom-marker {
       background-color: $light-grey-6;
       border: 1px solid $light-grey-6;
+      padding-left: 2px;
       border-radius: 5px;
       height: 20px;
-      left: -25px;
+      left: -28px;
+      top: -1px;
       position: absolute;
       width: 20px;
     }

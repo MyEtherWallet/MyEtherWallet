@@ -20,7 +20,8 @@
               <i :class="['cc', fromAddress.name, 'cc-icon']" />
             </div>
             <p class="value">
-              {{ fromAddress.value }} <span>{{ fromAddress.name }}</span>
+              {{ fromAddress.value }}
+              <span>{{ fromAddress.name }}</span>
             </p>
             <p
               v-show="fromAddress.address !== '' && !isFromFiat"
@@ -35,14 +36,17 @@
               {{ fromAddress.address }}
             </p>
           </div>
-          <div class="right-arrow"><img :src="arrowImage" alt /></div>
+          <div class="right-arrow">
+            <img :src="arrowImage" alt />
+          </div>
           <!-- Fiat to Crypto-->
           <div v-if="!toFiat" class="to-address">
             <div class="icon">
               <i :class="['cc', toAddress.name, 'cc-icon']" />
             </div>
             <p class="value">
-              {{ toAddress.value }} <span>{{ toAddress.name }}</span>
+              {{ toAddress.value }}
+              <span>{{ toAddress.name }}</span>
             </p>
             <p v-show="toAddress.address !== ''" class="block-title">
               {{ $t('sendTx.to-addr') }}
@@ -57,7 +61,8 @@
               <i :class="['cc', toAddress.name, 'cc-icon']" />
             </div>
             <p class="value">
-              {{ toAddress.value }} <span>{{ toAddress.name }}</span>
+              {{ toAddress.value }}
+              <span>{{ toAddress.name }}</span>
             </p>
             <p class="block-title">{{ $t('common.to') }}</p>
             <p class="address">{{ fiatDest }}</p>
@@ -112,7 +117,7 @@ import Arrow from '@/assets/images/etc/single-arrow.svg';
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckoutForm from '../CheckoutForm';
-
+import { mapActions } from 'vuex';
 import { fiat, utils, qrcodeBuilder } from '@/partners';
 
 export default {
@@ -168,6 +173,7 @@ export default {
           this.swapDetails.fromCurrency
         );
       }
+      return null;
     }
   },
   watch: {
@@ -207,6 +213,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('main', ['addSwapNotification']),
     timeUpdater(swapDetails) {
       clearInterval(this.timerInterval);
       this.timeRemaining = utils.getTimeRemainingString(
@@ -224,15 +231,13 @@ export default {
       }, 1000);
     },
     redirectToPartner() {
-      this.$store
-        .dispatch('addSwapNotification', [
-          `Swap_Order`,
-          this.currentAddress,
-          this.swapDetails
-        ])
-        .then(() => {
-          this.$refs.swapconfirmation.hide();
-        });
+      this.addSwapNotification([
+        `Swap_Order`,
+        this.currentAddress,
+        this.swapDetails
+      ]).then(() => {
+        this.$refs.swapconfirmation.hide();
+      });
     },
     swapStarted(swapDetails) {
       this.timeUpdater(swapDetails);
@@ -242,15 +247,13 @@ export default {
       }
     },
     sentTransaction() {
-      this.$store
-        .dispatch('addSwapNotification', [
-          `Swap_Order`,
-          this.currentAddress,
-          this.swapDetails
-        ])
-        .then(() => {
-          this.$refs.swapconfirmation.hide();
-        });
+      this.addSwapNotification([
+        `Swap_Order`,
+        this.currentAddress,
+        this.swapDetails
+      ]).then(() => {
+        this.$refs.swapconfirmation.hide();
+      });
     }
   }
 };

@@ -19,15 +19,12 @@
       </div>
 
       <div class="buttons">
-        <a
-          v-if="etherscanLink"
-          :href="etherscanLink"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <standard-button :options="buttonCheckEtherscan" />
-        </a>
-        <standard-button :options="buttonOk" @click.native="hideModal" />
+        <standard-button
+          v-show="txHashExlporrer"
+          :options="buttonCheckEtherscan"
+          :click-function="goToLink"
+        />
+        <standard-button :options="buttonOk" :click-function="hideModal" />
       </div>
     </div>
     <!-- .modal-content-block -->
@@ -56,7 +53,7 @@ export default {
       type: String,
       default: '/'
     },
-    etherscanLink: {
+    txHashExlporrer: {
       type: String,
       default: null
     },
@@ -66,18 +63,19 @@ export default {
     }
   },
   computed: {
-    ...mapState(['network']),
+    ...mapState('main', ['network']),
     buttonCheckEtherscan() {
       return {
         // eslint-disable-next-line
-        title: `Check Status on ${this.explorrerName}`,
+        title:  this.$t('sendTx.success.button-check-explorer', { explorrerName: this.explorrerName }),
         buttonStyle: 'green-border',
         fullWidth: true
       };
     },
     buttonOk() {
       return {
-        title: this.linkMessage === '' ? 'Ok' : this.linkMessage,
+        title:
+          this.linkMessage === '' ? this.$t('common.ok') : this.linkMessage,
         buttonStyle: 'green',
         fullWidth: true
       };
@@ -87,6 +85,10 @@ export default {
     }
   },
   methods: {
+    goToLink() {
+      // eslint-disable-next-line
+      window.open(this.txHashExlporrer, '_blank');
+    },
     hideModal() {
       if (this.linkTo !== '/') {
         this.$router.push({ path: this.linkTo });

@@ -1,93 +1,98 @@
 <template>
-  <div class="view-wallet-info-layout">
-    <interface-balance-modal ref="balance" :balance="balance" />
-    <view-private-key-modal ref="viewPriv" />
-    <print-modal ref="printModal" :address="account.address" />
-    <div class="title">
-      <h2>{{ $t('footer.view-wallet-info') }}</h2>
-      <p>
-        {{ $t('accessWallet.wallet-options') }}
-      </p>
-    </div>
-    <div class="wallet-info-container">
-      <div class="wallet-info">
-        <div class="wallet-info-header">
-          <h3>{{ $t('accessWallet.wallet-info') }}</h3>
-          <router-link to="/interface">{{
-            $t('common.wallet.access')
-          }}</router-link>
-        </div>
-        <div class="balance-container">
-          <div class="balance-main-container">
-            <h4>{{ $t('common.balance.string') }}</h4>
-            <div class="balance-and-buttons">
-              <p>
-                <b v-show="!fetchingBalance">{{ balance }}</b>
-                <i
-                  v-show="fetchingBalance"
-                  class="fa fa-spinner fa-lg fa-spin"
-                />
-                {{ $t('common.currency.eth') }}
-              </p>
-              <div class="balance-button-container">
-                <i class="fa fa-refresh fa-lg" @click="fetchBalance" />
-                <img
-                  src="~@/assets/images/icons/more-black.svg"
-                  @click="openBalance"
-                />
+  <div class="page-container-block">
+    <div class="view-wallet-info-layout-container">
+      <interface-balance-modal ref="balance" :balance="balance" />
+      <view-private-key-modal ref="viewPriv" />
+      <print-modal ref="printModal" :address="account.address" />
+      <div class="page-title-block">
+        <h2>{{ $t('footer.view-wallet-info') }}</h2>
+        <p>
+          {{ $t('accessWallet.wallet-options') }}
+        </p>
+      </div>
+      <div class="page-content-block flex--row--align-stretch">
+        <div class="wallet-info">
+          <div class="wallet-info-header">
+            <h3>{{ $t('accessWallet.wallet-info') }}</h3>
+            <router-link to="/interface">{{
+              $t('common.wallet.access')
+            }}</router-link>
+          </div>
+          <div class="balance-container">
+            <div class="balance-main-container">
+              <h4>{{ $t('common.balance.string') }}</h4>
+              <div class="balance-and-buttons">
+                <p>
+                  <b v-show="!fetchingBalance">{{ balance }}</b>
+                  <i
+                    v-show="fetchingBalance"
+                    class="fa fa-spinner fa-lg fa-spin"
+                  />
+                  {{ network.type.currencyName }}
+                </p>
+                <div class="balance-button-container">
+                  <i class="fa fa-refresh fa-lg" @click="fetchBalance" />
+                  <img
+                    src="~@/assets/images/icons/more-black.svg"
+                    @click="openBalance"
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="account-details">
-          <div class="blockie-container">
-            <blockie :address="account.address" width="80px" height="80px" />
-            <i18n tag="h3" path="common.wallet.own">
-              <span slot="nickname">{{ account.nickname }}</span>
-            </i18n>
-            <div class="address-copy-container">
-              <input ref="copyAddress" :value="account.address" />
-              <p>{{ account.address | concatAddr }}</p>
-              <img src="@/assets/images/icons/copy-colored.svg" @click="copy" />
+          <div class="account-details">
+            <div class="blockie-container">
+              <blockie :address="account.address" width="80px" height="80px" />
+              <i18n tag="h3" path="common.wallet.own">
+                <span slot="nickname">{{ account.nickname }}</span>
+              </i18n>
+              <div class="address-copy-container">
+                <input ref="copyAddress" :value="account.address" />
+                <p>{{ account.address | concatAddr }}</p>
+                <img
+                  src="@/assets/images/icons/copy-colored.svg"
+                  @click="copy"
+                />
+              </div>
             </div>
-          </div>
-          <div class="other-options">
-            <div
-              v-for="option in otherOptions"
-              :key="option.key"
-              :class="[
-                disableItem(option.key) ? 'item-disabled' : '',
-                'option-item'
-              ]"
-              @click="option.func"
-            >
-              <img
-                :src="
-                  disableItem(option.key) ? option.iconDisabled : option.icon
-                "
+            <div class="other-options">
+              <div
+                v-for="option in otherOptions"
+                :key="option.key"
+                :class="[
+                  disableItem(option.key) ? 'item-disabled' : '',
+                  'option-item'
+                ]"
+                @click="option.func"
+              >
+                <img
+                  :src="
+                    disableItem(option.key) ? option.iconDisabled : option.icon
+                  "
+                />
+                <p>{{ option.name }}</p>
+              </div>
+              <a
+                ref="downloadFile"
+                :href="walletJson"
+                :download="filename"
+                target="_blank"
+                rel="noopener noreferrer"
               />
-              <p>{{ option.name }}</p>
             </div>
-            <a
-              ref="downloadFile"
-              :href="walletJson"
-              :download="filename"
-              target="_blank"
-              rel="noopener noreferrer"
-            />
           </div>
         </div>
-      </div>
-      <div class="wallet-tokens">
-        <interface-tokens
-          :tokens="tokens"
-          :get-token-balance="getTokenBalance"
-          :received-tokens="!loading"
-          :reset-token-selection="setTokensWithBalance"
-          :fetch-tokens="fetchTokens"
-          :ads="false"
-          :address="account.address"
-        />
+        <div class="wallet-tokens">
+          <interface-tokens
+            :tokens="tokens"
+            :get-token-balance="getTokenBalance"
+            :received-tokens="!loading"
+            :reset-token-selection="setTokensWithBalance"
+            :fetch-tokens="fetchTokens"
+            :ads="false"
+            :address="account.address"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -172,7 +177,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'network', 'web3']),
+    ...mapState('main', ['account', 'network', 'web3']),
     hasNickname() {
       return this.account.nickname !== '';
     }

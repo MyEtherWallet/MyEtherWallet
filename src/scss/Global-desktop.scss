@@ -1,4 +1,4 @@
-@import "~@/scss/GlobalVariables";
+@import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
   // *********************************************************************
   // CSS reset
@@ -83,7 +83,7 @@
   mark,
   audio,
   video {
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-display: block;
     font-size: 14px;
     margin: 0;
@@ -123,8 +123,8 @@
   // *********************************************************************
   // Disable WebKit Spinners
   // *********************************************************************
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
@@ -599,12 +599,6 @@
     }
   }
 
-  .dropdown-toggle::after {
-    position: absolute !important;
-    right: 13px !important;
-    top: 16px !important;
-  }
-
   // *********************************************************************
   // [Bootstrap] Dropdown language menu style
   // *********************************************************************
@@ -673,7 +667,7 @@
       width: 15px;
 
       &::after {
-        content: "!";
+        content: '!';
         font-size: 13px;
         font-weight: 600;
         padding: 0;
@@ -905,7 +899,7 @@
       &::before {
         background-color: $css-toggle-button--button-background-color;
         bottom: 3px;
-        content: "";
+        content: '';
         height: 22px;
         left: 4px;
         padding: 1px 7px;
@@ -967,7 +961,7 @@
       &::before {
         background-color: $text-white;
         bottom: 3px;
-        content: "";
+        content: '';
         height: 22px;
         left: 3px;
         padding: 1px 7px;
@@ -1058,7 +1052,7 @@
       &::after {
         border: solid $border-color-2;
         border-width: 0 3px 3px 0;
-        content: "";
+        content: '';
         // display: none;
         height: 10px;
         left: 9px;
@@ -1085,7 +1079,7 @@
       &::after {
         border: solid $border-color-2;
         border-width: 0 3px 3px 0;
-        content: "";
+        content: '';
         // display: none;
         height: 9px;
         left: 7px;
@@ -1199,7 +1193,7 @@
       background-color: $text-color-3;
       border-radius: 100px;
       color: $text-white;
-      content: "!";
+      content: '!';
       display: inline-block;
       font-size: 12px;
       line-height: 17px;
@@ -1274,7 +1268,9 @@
     background-color: $dark-grey-11;
     pointer-events: none;
   }
-} //@media all and ( min-width: calc(#{$tablet-width} + 1px) )
+}
+
+//@media all and ( min-width: calc(#{$tablet-width} + 1px) )
 
 // **********************************************************************************************************
 // Global elements for all sizes (Desktop, Tablet, Mobile)
@@ -1449,7 +1445,7 @@
 // Monospace font
 // *********************************************************************
 .monospace {
-  font-family: "Inconsolata", monospace;
+  font-family: 'Inconsolata', monospace;
   font-display: block;
 }
 
@@ -1533,12 +1529,15 @@
 .margin--top--auto {
   margin-top: auto;
 }
+
 .margin--right--auto {
   margin-right: auto;
 }
+
 .margin--bottom--auto {
   margin-bottom: auto;
 }
+
 .margin--left--auto {
   margin-left: auto;
 }
@@ -1548,6 +1547,7 @@
   flex-direction: row;
   flex-grow: initial;
   align-items: center;
+
   &.justify--center {
     justify-content: center;
   }
@@ -1557,9 +1557,16 @@
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+
   &.justify--center {
     justify-content: center;
   }
+}
+
+.flex--row--align-stretch {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
 }
 
 .flex--grow-1 {
@@ -1574,6 +1581,10 @@
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.user-select--none {
+  user-select: none;
 }
 
 //*********************************************************************
@@ -1598,4 +1609,8 @@
     background-color: transparent !important;
     border: none !important;
   }
+}
+
+.height--full {
+  height: 100%;
 }

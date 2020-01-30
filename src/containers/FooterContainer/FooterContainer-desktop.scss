@@ -1,5 +1,6 @@
 @import '~@/scss/GlobalVariables';
-@media all and (min-width: calc(#{$tablet-width} - 200px)) {
+//@media all and (min-width: $tablet-width) {
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
   a,
   a:link,
   a:visited,
@@ -42,6 +43,7 @@
         max-height: 600px;
         overflow: hidden;
         transition: all 0.3s ease;
+        padding-right: 10px;
 
         .content {
           margin-bottom: 15px;

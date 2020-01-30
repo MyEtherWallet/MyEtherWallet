@@ -19,7 +19,7 @@
             :key="item.name + idx"
             :selected="selected === item.name"
             :hover-icon="item.imgHoverPath"
-            :text="item.text"
+            :text="$t(item.text)"
             :name="item.name"
             @updateSelected="updateSelected"
           />
@@ -43,8 +43,13 @@
       <div class="button-container-block">
         <standard-button
           :button-disabled="selected !== '' ? false : true"
-          :options="continueButtonOptions"
-          @click.native="continueAccess"
+          :options="{
+            title: $t('common.continue'),
+            buttonStyle: 'green',
+            noMinWidth: true,
+            fullWidth: true
+          }"
+          :click-function="continueAccess"
         />
       </div>
       <customer-support />
@@ -89,29 +94,23 @@ export default {
   },
   data() {
     return {
-      continueButtonOptions: {
-        title: this.$t('common.continue'),
-        buttonStyle: 'green',
-        noMinWidth: true,
-        fullWidth: true
-      },
       file: '',
       selected: '',
       items: [
         {
           name: 'byJson',
           imgHoverPath: byJsonImgHov,
-          text: this.$t('accessWallet.json-file')
+          text: 'accessWallet.json-file'
         },
         {
           name: 'byMnem',
           imgHoverPath: byMnemImgHov,
-          text: this.$t('accessWallet.mnemonic.string')
+          text: 'accessWallet.mnemonic.string'
         },
         {
           name: 'byPriv',
           imgHoverPath: privKeyImgHov,
-          text: this.$t('accessWallet.private-key.string')
+          text: 'accessWallet.private-key.string'
         }
       ]
     };

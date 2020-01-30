@@ -1,6 +1,10 @@
-const env_vars = require('./ENV_VARS');
 module.exports = {
-  globals: env_vars,
+  globals: {
+    VERSION: 'readonly',
+    ROUTER_MODE: 'readonly',
+    BUILD_TYPE: 'readonly',
+    NODE_ENV: 'readonly'
+  },
   root: true,
   env: {
     node: true
@@ -21,7 +25,9 @@ module.exports = {
     'prefer-const': 'error',
     'no-var': 'error',
     'security/detect-new-buffer': 'off',
-    'security/detect-object-injection': 'off'
+    'security/detect-object-injection': 'off',
+    'require-atomic-updates': 'off',
+    'no-prototype-builtins': 'off'
   },
   parserOptions: {
     parser: 'babel-eslint'

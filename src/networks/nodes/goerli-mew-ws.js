@@ -2,7 +2,7 @@ import { GOERLI } from '../types';
 export default {
   type: GOERLI,
   service: 'myetherwallet.com-ws',
-  url: 'wss://ws.mewapi.io/goerli',
+  url: 'wss://nodes.mewapi.io/ws/goerli',
   port: 443,
   auth: false,
   username: '',
