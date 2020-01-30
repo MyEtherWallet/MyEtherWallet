@@ -1,3 +1,7 @@
+### Feature
+
+- WalletConnect & WalletLink Support [#1924] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1924)
+
 ### Release v5.3.0
 
 ### Feature
