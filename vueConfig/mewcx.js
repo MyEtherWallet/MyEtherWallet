@@ -68,9 +68,9 @@ const webpackConfig = {
 const pluginOptions = {
   configureMultiCompilerWebpack: [webpackConfigCXWeb3, webpackConfig]
 };
-if (process.env.NODE_ENV !== 'production') {
-  webpackConfig.entry = webpackConfigCXWeb3.entry;
-}
+webpackConfig.entry = webpackConfigCXWeb3.entry;
+// if (process.env.NODE_ENV !== 'production') {
+// }
 const exportObj = {
   pages: {
     index: {
@@ -84,10 +84,7 @@ const exportObj = {
       entry: 'src/builds/mewcx/public/page.js',
       template: 'src/builds/mewcx/public/page.html',
       filename: 'page.html',
-      jsFolder:
-        process.env.NODE_ENV === 'production'
-          ? 'js/background.js'
-          : 'background.js'
+      jsFolder: 'js/background.js'
     }
   },
   publicPath: './',
