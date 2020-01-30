@@ -1,42 +1,37 @@
 <template>
-  <div>
-    <mewcx-modal-wrapper ref="passwordOnlyModal" direction="up">
-      <div class="password-modal-container">
-        <div class="password-modal-title">
-          <h2>{{ title }}</h2>
-          <p>Please enter the password of your wallet to {{ title }}</p>
-        </div>
-        <form>
-          <div class="input-container">
-            <label for="walletPassword"> Wallet Password </label>
-            <div class="password-input">
-              <input
-                v-model="locPassword"
-                :type="show ? 'text' : 'password'"
-                :placeholder="$t('mewcx.create-pw')"
-                name="walletPassword"
-              />
-              <img
-                :src="show ? showIcon : hide"
-                @click.prevent="show = !show"
-              />
-            </div>
-          </div>
-          <button
-            :class="[
-              validInput ? '' : 'disabled',
-              'submit-button large-round-button-green-filled'
-            ]"
-            type="submite"
-            @click.prevent="submit"
-          >
-            <span v-show="!loading"> {{ button }} </span>
-            <i v-show="loading" class="fa fa-spinner fa-spin" />
-          </button>
-        </form>
+  <mewcx-modal-wrapper ref="passwordOnlyModal" direction="up">
+    <div class="password-modal-container">
+      <div class="password-modal-title">
+        <h2>{{ title }}</h2>
+        <p>Please enter the password of your wallet to {{ title }}</p>
       </div>
-    </mewcx-modal-wrapper>
-  </div>
+      <form>
+        <div class="input-container">
+          <label for="walletPassword"> Wallet Password </label>
+          <div class="password-input">
+            <input
+              v-model="locPassword"
+              :type="show ? 'text' : 'password'"
+              :placeholder="$t('mewcx.create-pw')"
+              name="walletPassword"
+            />
+            <img :src="show ? showIcon : hide" @click.prevent="show = !show" />
+          </div>
+        </div>
+        <button
+          :class="[
+            validInput ? '' : 'disabled',
+            'submit-button large-round-button-green-filled'
+          ]"
+          type="submite"
+          @click.prevent="submit"
+        >
+          <span v-show="!loading"> {{ button }} </span>
+          <i v-show="loading" class="fa fa-spinner fa-spin" />
+        </button>
+      </form>
+    </div>
+  </mewcx-modal-wrapper>
 </template>
 
 <script>

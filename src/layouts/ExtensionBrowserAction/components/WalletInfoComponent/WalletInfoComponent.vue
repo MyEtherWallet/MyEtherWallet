@@ -451,7 +451,7 @@ export default {
           this.loading = false;
           ExtensionHelpers.deleteWalletFromStore(this.address, () => {
             Toast.responseHandler('Removed Wallet Successfully', Toast.SUCCESS);
-            this.$refs.passwordOnlyModal.$refs.passwordOnlyModal.$refs.modalWrapper.hide();
+            this.$refs.removeWalletModal.$refs.removeWalletModal.$refs.modalWrapper.hide();
           });
         };
         worker.onerror = e => {
@@ -542,7 +542,8 @@ export default {
         );
       });
       try {
-        return require(`@/assets/images/currency/coins/AllImages/${symbol}.svg`);
+        const image = require(`@/assets/images/currency/coins/AllImages/${symbol}.svg`);
+        return image;
       } catch (e) {
         const foundToken = networkMasterFile.find(item => {
           return (
@@ -581,7 +582,7 @@ export default {
     },
     toDollar: Misc.toDollar,
     edit() {
-      this.$refs.editModal.$refs.editModal.show();
+      this.$refs.editModal.$refs.editWalletModal.$refs.modalWrapper.show();
     },
     async fetchTokenBalance(token) {
       const contractAbi = [

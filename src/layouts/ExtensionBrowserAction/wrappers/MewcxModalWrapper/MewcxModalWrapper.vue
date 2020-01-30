@@ -16,7 +16,9 @@
           <span @click="closeModal">Cancel</span>
           <img src="@/assets/images/icons/cancel.svg" @click="closeModal" />
         </div>
-        <slot></slot>
+        <div class="modal-content-container">
+          <slot></slot>
+        </div>
       </div>
     </b-modal>
   </div>
