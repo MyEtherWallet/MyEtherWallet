@@ -17,6 +17,14 @@
           <img src="@/assets/images/icons/cancel.svg" @click="closeModal" />
         </div>
         <div class="modal-content-container">
+          <div class="modal-content-title">
+            <h2>
+              <slot name="modalContentTitle"></slot>
+            </h2>
+            <p>
+              <slot name="modalContentSubtext"></slot>
+            </p>
+          </div>
           <slot></slot>
         </div>
       </div>
