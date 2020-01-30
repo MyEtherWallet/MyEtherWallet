@@ -5,6 +5,7 @@ const SECALOT = 'secalot';
 const KEEPKEY = 'keepkey';
 const MEW_CONNECT = 'mew_connect';
 const WALLET_CONNECT = 'wallet_connect';
+const WALLET_LINK = 'wallet_link';
 const KEYSTORE = 'keystore';
 const MNEMONIC = 'mnemonic';
 const WEB3_WALLET = 'web3_wallet';
@@ -20,6 +21,7 @@ export {
   KEEPKEY,
   MEW_CONNECT,
   WALLET_CONNECT,
+  WALLET_LINK,
   KEYSTORE,
   MNEMONIC,
   WEB3_WALLET,

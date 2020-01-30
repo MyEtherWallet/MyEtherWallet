@@ -30,8 +30,8 @@
   "dependencies": {
     "@sentry/browser": "5.11.2",
     "@sentry/integrations": "5.11.1",
-    "core-js": "3.6.4",
     "@unstoppabledomains/resolution": "1.0.20",
+    "core-js": "3.6.4",
     "html2canvas": "1.0.0-rc.5",
     "idna-uts46": "1.1.0",
     "levenshtein": "1.0.5",
@@ -54,6 +54,7 @@
     "vue-router": "3.1.5",
     "vue-toasted": "1.1.27",
     "vuex": "3.1.2",
+    "walletlink": "1.0.0",
     "xss": "1.0.6"
   },
   "devDependencies": {
