@@ -72,7 +72,7 @@ const rerouter = (path, next, elseParam) => {
 
   if (reroute && path.includes('manage-ens')) {
     next({ path: path.replace('/manage-ens', '') });
-    Toast.responseHandler('Manage ENS is currently unavailable', Toast.WARN);
+    Toast.responseHandler(this.$t('ens.toast.unavailable'), Toast.WARN);
   } else {
     elseParam ? next(elseParam) : next();
   }
