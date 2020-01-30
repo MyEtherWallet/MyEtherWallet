@@ -35,7 +35,7 @@
           </span>
           <i v-show="loading" class="fa fa-spinner fa-spin" />
         </button>
-        <span v-show="info.disable"> {{ info.msg }} </span>
+        <span v-show="info.disable"> {{ $t(info.msg) }} </span>
       </div>
     </div>
     <interface-bottom-text
@@ -78,7 +78,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account']),
+    ...mapState('main', ['account']),
     fullDomainName() {
       return `${this.hostName}.${this.tld}`;
     },
@@ -87,7 +87,7 @@ export default {
       if (balance === '0') {
         return {
           disable: true,
-          msg: this.$t('ens.commit.no-balance')
+          msg: 'ens.commit.no-balance'
         };
       }
       return {

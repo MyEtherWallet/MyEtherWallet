@@ -3,9 +3,9 @@
     <div class="manage-container">
       <!-- ==================================================== -->
       <div class="title-content-container">
-        <p class="cpd-title">{{ $t('dappsMaker.cdp-portal') }}</p>
+        <p class="cpd-title">{{ $t('dappsMCDMaker.cdp-portal') }}</p>
         <p class="cdp-id">
-          {{ $t('dappsMaker.position-label', { value: cdpIdDisplay }) }}
+          {{ $t('dappsMCDMaker.position-label', { value: cdpIdDisplay }) }}
         </p>
       </div>
       <!-- ==================================================== -->
@@ -15,7 +15,7 @@
         <div class="block-item">
           <div class="block-title">
             <p>
-              {{ $t('dappsMaker.liquid-price') }} ({{
+              {{ $t('dappsMCDMaker.liquid-price') }} ({{
                 $t('common.currency.eth')
               }}/{{ $t('common.currency.usd') }})
             </p>
@@ -27,7 +27,7 @@
           <div class="block-content">
             <div class="item">
               <p>
-                {{ $t('dappsMaker.current-price') }}({{
+                {{ $t('dappsMCDMaker.current-price') }}({{
                   $t('common.currency.eth')
                 }}/{{ $t('common.currency.usd') }})
               </p>
@@ -37,25 +37,25 @@
               </div>
             </div>
             <div class="item">
-              <p>{{ $t('dappsMaker.liquidation-penalty') }}</p>
+              <p>{{ $t('dappsMCDMaker.liquidation-penalty') }}</p>
               <div>{{ liquidationPenaltyDisplay }}%</div>
             </div>
           </div>
         </div>
         <div class="block-item">
           <div class="block-title">
-            <p>{{ $t('dappsMaker.collateral-ratio') }}</p>
+            <p>{{ $t('dappsMCDMaker.collateral-ratio') }}</p>
             <div :class="collateralRatioColoring">
               <span>{{ collaterlizationRatioDisplay }}%</span>
             </div>
           </div>
           <div class="block-content">
             <div class="item">
-              <p>{{ $t('dappsMaker.minimum-ratio') }}</p>
+              <p>{{ $t('dappsMCDMaker.minimum-ratio') }}</p>
               <div>{{ liquidationRatioDisplay }}%</div>
             </div>
             <div class="item">
-              <p>{{ $t('dappsMaker.stability-fee') }}</p>
+              <p>{{ $t('dappsMCDMaker.stability-fee') }}</p>
               <div>{{ stabilityFeeDisplay }}%</div>
             </div>
           </div>
@@ -67,13 +67,13 @@
       <div class="information-single-block">
         <div class="block-item">
           <div class="block-title">
-            <p>{{ $t('dappsMaker.eth-collateral') }}</p>
+            <p>{{ $t('dappsMCDMaker.eth-collateral') }}</p>
           </div>
 
           <div class="block-content-container">
             <div class="block-content">
               <div class="item">
-                <p>{{ $t('dappsMaker.deposited') }}</p>
+                <p>{{ $t('dappsMCDMaker.deposited') }}</p>
                 <div>
                   {{ ethCollateral }}
                   <span>{{ $t('common.currency.eth') }}</span>
@@ -88,7 +88,7 @@
             </div>
             <div class="block-content">
               <div class="item">
-                <p>{{ $t('dappsMaker.max-withdraw') }}</p>
+                <p>{{ $t('dappsMCDMaker.max-available') }}</p>
                 <div>
                   {{ maxEthDrawDisplay }}
                   <span>{{ $t('common.currency.eth') }}</span>
@@ -111,15 +111,15 @@
       <div class="information-single-block">
         <div class="block-item">
           <div class="block-title">
-            <p>{{ $t('dappsMaker.dai-position') }}</p>
+            <p>{{ $t('dappsMCDMaker.dai-position') }}</p>
           </div>
 
           <div class="block-content-container">
             <div class="block-content">
               <div class="item">
-                <p>{{ $t('dappsMaker.generated') }}</p>
+                <p>{{ $t('dappsMCDMaker.generated') }}</p>
                 <div>
-                  {{ debtValue }} <span>{{ $t('dappsMaker.dai') }}</span>
+                  {{ debtValue }} <span>{{ $t('dappsMCDMaker.dai') }}</span>
                 </div>
                 <div>
                   {{ debtValueDisplay }}
@@ -129,10 +129,10 @@
             </div>
             <div class="block-content">
               <div class="item">
-                <p>{{ $t('dappsMaker.max-available') }}</p>
+                <p>{{ $t('dappsMCDMaker.max-available-gen') }}</p>
                 <div>
                   {{ maxDai }}
-                  <span>{{ $t('dappsMaker.dai') }}</span>
+                  <span>{{ $t('dappsMCDMaker.dai') }}</span>
                 </div>
                 <div>
                   {{ maxUsd }}
@@ -151,12 +151,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import BottomHelpLink from '@/components/BottomHelpLink';
-import Blockie from '@/components/Blockie';
-import CloseCdpModal from '../../components/CloseCdpModal';
-import MoveCdpModal from '../../components/MoveCdpModal';
 import {
   displayFixedPercent,
   displayFixedValue,
@@ -171,11 +166,6 @@ const toBigNumber = num => {
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    'close-cdp-modal': CloseCdpModal,
-    'move-cdp-modal': MoveCdpModal,
-    blockie: Blockie,
     'help-link': BottomHelpLink
   },
   props: {
@@ -308,7 +298,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     collateralRatioColoring() {
       if (this.values) {
         if (this.values.collateralRatio >= 2) {

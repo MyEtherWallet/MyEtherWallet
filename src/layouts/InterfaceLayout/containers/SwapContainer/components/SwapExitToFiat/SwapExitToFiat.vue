@@ -25,13 +25,21 @@
               </li>
               <li>
                 <standard-input
-                  :options="inputIbanNumber"
+                  :options="{
+                    title: $t('swap.exit-to-fiat.iban-num'),
+                    popover: $t('swap.exit-to-fiat.popover-iban-num'),
+                    value: ''
+                  }"
                   @changedValue="orderDetails.iban = $event"
                 />
               </li>
               <li>
                 <standard-input
-                  :options="inputBicSwift"
+                  :options="{
+                    title: $t('swap.exit-to-fiat.bic-swift'),
+                    popover: $t('swap.exit-to-fiat.popover-bic-swift'),
+                    value: ''
+                  }"
                   @changedValue="orderDetails.bic_swift = $event"
                 />
               </li>
@@ -49,40 +57,64 @@
             <ul>
               <li>
                 <standard-input
-                  :options="inputName"
+                  :options="{
+                    title: $t('swap.exit-to-fiat.acc-owner-name'),
+                    value: ''
+                  }"
                   @changedValue="orderDetails.name = $event"
                 />
               </li>
               <li>
                 <standard-input
-                  :options="inputEmail"
+                  :options="{
+                    title: $t('swap.exit-to-fiat.email'),
+                    popover: $t('swap.exit-to-fiat.popover-email'),
+                    placeHolder: $t('swap.exit-to-fiat.email-placeholder'),
+                    value: ''
+                  }"
                   @changedValue="email = $event"
                 />
               </li>
               <li>
                 <div class="grid-billing-address">
                   <standard-input
-                    :options="inputAddress1"
+                    :options="{
+                      title: $t('swap.exit-to-fiat.billing-addr'),
+                      placeHolder: $t('swap.exit.to-fiat.addr-placeholder'),
+                      value: ''
+                    }"
                     class="address1"
                     @changedValue="orderDetails.address = $event"
                   />
                   <standard-input
-                    :options="inputAddress2"
+                    :options="{
+                      placeHolder: $t('swap.exit-to-fiat.addr-optional'),
+                      value: ''
+                    }"
                     class="address2"
                     @changedValue="orderDetails.address_complement = $event"
                   />
                   <standard-input
-                    :options="inputCity"
+                    :options="{
+                      placeHolder: $t('swap.exit-to-fiat.city'),
+                      value: ''
+                    }"
                     class="city"
                     @changedValue="orderDetails.city = $event"
                   />
                   <standard-input
-                    :options="inputState"
+                    :options="{
+                      placeHolder: $t('swap.exit-to-fiat.state'),
+                      value: ''
+                    }"
                     class="state"
                     @changedValue="orderDetails.state = $event"
                   />
                   <standard-input
-                    :options="inputZip"
+                    :options="{
+                      placeHolder: $t('swap.exit-to-fiat.zip-code'),
+                      value: ''
+                    }"
                     class="zip"
                     @changedValue="orderDetails.zip = $event"
                   />
@@ -105,12 +137,19 @@
         <div class="button-container">
           <standard-button
             v-show="!finalizingSwap"
-            :options="button3"
+            :options="{
+              title: $t('swap.exit-to-fiat.button-submit'),
+              buttonStyle: 'green',
+              value: '',
+              noWalletTerms: true
+            }"
             :button-disabled="!canSwap"
-            @click.native="
-              updateStep('');
-              stageComplete('step2');
-              createExitOrder();
+            :click-function="
+              () => {
+                updateStep('');
+                stageComplete('step2');
+                createExitOrder();
+              }
             "
           />
           <div
@@ -182,92 +221,6 @@ export default {
       steps: {
         step1: true,
         step2: false
-      },
-      inputCountryCode: {
-        title: this.$t('swap.exit-to-fiat.country-code'),
-        placeHolder: '000'
-      },
-      inputPhoneNumber: {
-        title: this.$t('swap.exit-to-fiat.phone-number'),
-        placeHolder: '000-000-0000'
-      },
-      inputVerification: {
-        title: this.$t('swap.exit-to-fiat.verification-code'),
-        placeHolder: '000000'
-      },
-      inputBicSwift: {
-        title: this.$t('swap.exit-to-fiat.bic-swift'),
-        popover: this.$t('swap.exit-to-fiat.popover-bic-swift'),
-        value: ''
-      },
-      inputAbaNumber: {
-        title: this.$t('swap.exit-to-fiat.aba-num'),
-        popover: this.$t('swap.exit-to-fiat.popover-aba-num'),
-        value: ''
-      },
-      inputIbanNumber: {
-        title: this.$t('swap.exit-to-fiat.iban-num'),
-        popover: this.$t('swap.exit-to-fiat.popover-iban-num'),
-        value: ''
-      },
-      inputName: {
-        title: this.$t('swap.exit-to-fiat.acc-owner-name'),
-        value: ''
-      },
-      inputEmail: {
-        title: this.$t('swap.exit-to-fiat.email'),
-        popover: this.$t('swap.exit-to-fiat.popover-email'),
-        placeHolder: 'user@example.com',
-        value: ''
-      },
-      inputAddress1: {
-        title: this.$t('swap.exit-to-fiat.billing-addr'),
-        placeHolder: this.$t('swap.exit.to-fiat.addr-placeholder'),
-        value: ''
-      },
-      inputAddress2: {
-        placeHolder: this.$t('swap.exit-to-fiat.addr-optional'),
-        value: ''
-      },
-      inputCity: {
-        placeHolder: this.$t('swap.exit-to-fiat.city'),
-        value: ''
-      },
-      inputState: {
-        placeHolder: this.$t('swap.exit-to-fiat.state'),
-        value: ''
-      },
-      inputZip: {
-        placeHolder: this.$t('swap.exit-to-fiat.zip-code'),
-        value: ''
-      },
-      inputCountry: {
-        placeHolder: this.$t('swap.exit-to-fiat.country'),
-        value: ''
-      },
-      button1: {
-        title: this.$t('sendTx.send'),
-        buttonStyle: 'green',
-        value: '',
-        noWalletTerms: true
-      },
-      verifyButton: {
-        title: this.$t('common.verify'),
-        buttonStyle: 'green',
-        value: '',
-        noWalletTerms: true
-      },
-      button2: {
-        title: this.$t('common.continue'),
-        buttonStyle: 'green',
-        value: '',
-        noWalletTerms: true
-      },
-      button3: {
-        title: this.$t('swap.exit-to-fiat.button-submit'),
-        buttonStyle: 'green',
-        value: '',
-        noWalletTerms: true
       },
       provider: {},
       countryCode: '',

@@ -39,9 +39,21 @@
           </div>
         </div>
         <div class="buttons">
-          <standard-button :options="cancelButton" @click.native="closeModal" />
           <standard-button
-            :options="submitButton"
+            :options="{
+              title: $t('common.cancel'),
+              buttonStyle: 'green-border',
+              noMinWidth: true
+            }"
+            :click-function="closeModal"
+          />
+          <standard-button
+            :options="{
+              title: $t('common.submit'),
+              buttonStyle: 'green',
+              noMinWidth: true,
+              fullWidth: true
+            }"
             :button-disabled="btnActive ? false : true"
             :click-function="moveCdp"
           />
@@ -113,22 +125,11 @@ export default {
       modalDetailInformation: false,
       checkBoxChecked: false,
       textValues: {},
-      mkrToken: {},
-      cancelButton: {
-        title: 'Cancel',
-        buttonStyle: 'green-border',
-        noMinWidth: true
-      },
-      submitButton: {
-        title: 'Submit',
-        buttonStyle: 'green',
-        noMinWidth: true,
-        fullWidth: true
-      }
+      mkrToken: {}
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     btnActive() {
       return Misc.isValidETHAddress(this.address) && this.checkBoxChecked;
     }

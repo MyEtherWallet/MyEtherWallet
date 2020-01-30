@@ -14,7 +14,7 @@
       <warning-message />
     </div>
     <div class="modal-content-block">
-      <form class="private-key-form">
+      <div class="private-key-form">
         <div class="input-container">
           <input
             ref="privateKeyInput"
@@ -23,15 +23,20 @@
             type="text"
             name="PrivateKey"
             autocomplete="off"
+            @keypress.enter="unlockWallet"
           />
         </div>
         <standard-button
           :button-disabled="notValid"
-          :options="accessWalletButtonOptions"
+          :options="{
+            title: $t('common.wallet.access'),
+            buttonStyle: 'green',
+            noMinWidth: true
+          }"
+          :click-function="unlockWallet"
           class="submit-button"
-          @click.native.prevent="unlockWallet"
         />
-      </form>
+      </div>
       <div class="customer-support-block">
         <customer-support />
       </div>
@@ -42,7 +47,7 @@
 <script>
 import { WalletInterface } from '@/wallets';
 import { PRIV_KEY as privKeyType } from '@/wallets/bip44/walletTypes';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { isHexString } from 'ethereumjs-util';
 import WarningMessage from '@/components/WarningMessage';
 import CustomerSupport from '@/components/CustomerSupport';
@@ -55,37 +60,35 @@ export default {
   },
   data() {
     return {
-      accessWalletButtonOptions: {
-        title: this.$t('common.wallet.access'),
-        buttonStyle: 'green',
-        noMinWidth: true
-      },
       privateKey: '',
       spinner: false
     };
   },
   computed: {
-    ...mapState(['path']),
+    ...mapState('main', ['path']),
     notValid() {
       const _priv = this.privateKey.replace('0x', '');
       return !isHexString('0x' + _priv, 32);
+    },
+    actualPrivKey() {
+      return this.privateKey.substr(0, 2) === '0x'
+        ? this.privateKey.replace('0x', '')
+        : this.privateKey;
     }
   },
-  mounted() {},
   methods: {
+    ...mapActions('main', ['decryptWallet']),
     unlockWallet() {
       this.spinner = true;
-      this.$store
-        .dispatch('decryptWallet', [
-          new WalletInterface(this.privateKey, false, privKeyType)
-        ])
-        .then(() => {
-          this.privateKey = '';
-          this.spinner = false;
-          this.$router.push({
-            path: 'interface'
-          });
+      this.decryptWallet([
+        new WalletInterface(this.actualPrivKey, false, privKeyType)
+      ]).then(() => {
+        this.actualPrivKey = '';
+        this.spinner = false;
+        this.$router.push({
+          path: 'interface'
         });
+      });
     },
     focusInput() {
       this.$refs.privateKeyInput.focus();

@@ -101,9 +101,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
-import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js/bignumber.js';
 
 const toBigNumber = num => {
@@ -111,11 +108,6 @@ const toBigNumber = num => {
 };
 
 export default {
-  components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie
-  },
   props: {
     cdpId: {
       type: String,
@@ -132,7 +124,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     hasProxy() {
       if (this.aCdp) {
         return !this.aCdp.noProxy;

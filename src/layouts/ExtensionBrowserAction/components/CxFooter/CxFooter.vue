@@ -8,11 +8,11 @@
           <div
             v-for="(item, index) in footerContent"
             :ref="item.class"
-            :class="item.class"
             :key="item.title + index"
+            :class="item.class"
           >
             <div class="content-title" @click="toggler(item.class)">
-              <h3 class="lite">{{ item.title }}</h3>
+              <h3 class="lite">{{ $t(item.title) }}</h3>
               <p class="open" @click="openContent(item.class)">
                 <i class="fa fa-plus" aria-hidden="true" />
               </p>
@@ -23,30 +23,30 @@
             <div class="content-links">
               <div class="content-links-animation-block">
                 <div
-                  v-for="(content, index) in item.contents"
-                  :key="content.text + index"
+                  v-for="(content, idx) in item.contents"
+                  :key="content.text + idx"
                   class="content"
                 >
-                  <div v-if="content.text === $t('common.customerSupport')">
+                  <div v-if="$t(content.text) === $t('common.customerSupport')">
                     <customer-support :no-icon="true" />
                   </div>
                   <router-link
                     v-else-if="content.to !== undefined"
                     :to="content.to"
                   >
-                    <p>{{ content.text }}</p>
+                    <p>{{ $t(content.text) }}</p>
                   </router-link>
                   <a
                     v-else-if="content.to === undefined"
                     :href="content.href"
-                    :aria-label="content.text"
+                    :aria-label="$t(content.text)"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <p v-if="item.class === 'e2'">
                       {{ $t(`${content.text}`) }}
                     </p>
-                    <p v-else>{{ content.text }}</p>
+                    <p v-else>{{ $t(content.text) }}</p>
                   </a>
                 </div>
               </div>
@@ -98,7 +98,7 @@
           <div class="links">
             <div v-for="(link, index) in lowerLinks" :key="link.title + index">
               <router-link v-if="link.hasOwnProperty('to')" :to="link.to">
-                <span>{{ link.title }}</span>
+                <span>{{ $t(link.title) }}</span>
               </router-link>
               <a
                 v-else
@@ -106,7 +106,7 @@
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span>{{ link.title }}</span>
+                <span>{{ $t(link.title) }}</span>
               </a>
             </div>
           </div>
@@ -117,7 +117,7 @@
                 href="https://coingecko.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                >CoinGecko</a
+                >{{ $t('footer.coingecko') }}</a
               >
               <br />
               {{ $t('footer.copyright') }}
@@ -126,8 +126,8 @@
           <div class="social">
             <a
               v-for="link in links"
-              :href="link.to"
               :key="link.class"
+              :href="link.to"
               :aria-label="link.to"
               rel="noopener noreferrer"
               target="_blank"
@@ -161,15 +161,15 @@ export default {
       version: version,
       lowerLinks: [
         {
-          title: this.$t('footer.feedback'),
+          title: 'footer.feedback',
           href: 'mailto:support@myetherwallet.com'
         },
         {
-          title: this.$t('footer.privacy'),
+          title: 'footer.privacy',
           to: '/privacy-policy'
         },
         {
-          title: this.$t('common.terms'),
+          title: 'common.terms',
           to: '/terms-of-service'
         },
         {
@@ -180,18 +180,18 @@ export default {
       footerContent: [
         {
           class: 'e1',
-          title: this.$t('footer.title.discover'),
+          title: 'footer.title.discover',
           contents: [
             {
-              text: this.$t('footer.units'),
+              text: 'footer.units',
               to: '/convert-units'
             },
             // {
-            //   text: this.$t('footer.advanced'),
+            //   text: 'footer.advanced',
             //   to: '/advanced-tools'
             // },
             {
-              text: this.$t('footer.extension'),
+              text: 'footer.extension',
               href: 'https://www.mewcx.com'
             },
             {
@@ -199,15 +199,15 @@ export default {
               to: '/hardware-wallet-affiliates'
             },
             {
-              text: this.$t('footer.sendOffline'),
+              text: 'footer.sendOffline',
               to: '/send-offline-helper'
             },
             {
-              text: this.$t('footer.verifyMessage'),
+              text: 'footer.verifyMessage',
               to: '/verify-message'
             },
             {
-              text: this.$t('footer.viewWalletInfo'),
+              text: 'footer.viewWalletInfo',
               to: '/view-wallet-info'
             },
             {
@@ -218,35 +218,35 @@ export default {
         },
         {
           class: 'e2',
-          title: this.$t('footer.title.affiliates'),
+          title: 'footer.title.affiliates',
           contents: affiliates
         },
         {
           class: 'e3',
-          title: this.$t('footer.title.mew'),
+          title: 'footer.title.mew',
           contents: [
             {
-              text: this.$t('footer.about'),
+              text: 'footer.about',
               to: '/#about-mew'
             },
             {
-              text: this.$t('footer.team'),
+              text: 'footer.team',
               to: '/team'
             },
             {
-              text: this.$t('common.faqs'),
+              text: 'common.faqs',
               to: '/#faqs'
             },
             {
-              text: 'MEWtopia',
+              text: 'common.mewtopia',
               href: 'https://www.mewtopia.com'
             },
             {
-              text: this.$t('common.customerSupport'),
+              text: 'common.customerSupport',
               href: 'mailto:support@myetherwallet.com'
             },
             {
-              text: 'Help Center',
+              text: 'common.help-center',
               href: 'https://kb.myetherwallet.com'
             }
           ]
@@ -285,7 +285,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['ethDonationAddress'])
+    ...mapState('main', ['ethDonationAddress'])
   },
   mounted() {
     if (Misc.isMewCx()) {

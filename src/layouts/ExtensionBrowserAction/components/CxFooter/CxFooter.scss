@@ -12,10 +12,16 @@ a:active {
   }
 }
 
-.wrap {
+.footer {
   background-color: $footer-background-color;
+  min-width: 960px;
+}
+
+.wrap {
   color: $text-color-1;
-  padding: 60px 60px 40px 60px;
+  padding: 60px 30px 40px 30px;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
 .footer-contents {
@@ -45,6 +51,7 @@ a:active {
 
       .content {
         margin-bottom: 5px;
+
         &:last-child {
           margin-bottom: 0;
         }
@@ -94,7 +101,9 @@ a:active {
       border-radius: 100px;
     }
   }
-} // .footer-contents
+}
+
+// .footer-contents
 
 .foot-note {
   align-items: center;

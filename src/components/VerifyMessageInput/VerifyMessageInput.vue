@@ -12,7 +12,6 @@
       </div>
       <div class="the-form signature">
         <textarea
-          v-validate="'required'"
           ref="signature"
           v-model="message"
           :placeholder="verifyMessageLabel"
@@ -84,7 +83,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3'])
+    ...mapState('main', ['web3'])
   },
   watch: {
     message(newVal) {

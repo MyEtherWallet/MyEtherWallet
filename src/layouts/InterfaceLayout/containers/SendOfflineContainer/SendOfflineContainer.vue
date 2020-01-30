@@ -59,14 +59,17 @@
           <div class="the-form gas-amount">
             <input
               v-model="toData"
-              :disabled="selectedCoinType.symbol !== 'ETH'"
+              :disabled="selectedCoinType.symbol !== network.type.name"
               type="string"
               placeholder="e.g. 0x65746865726d696e652d657531"
             />
+            <p v-show="!validData">
+              {{ $t('sendTx.invalid-data') }}
+            </p>
             <div class="good-button-container">
               <i
                 :class="[
-                  toData !== '' ? '' : 'not-good',
+                  validData && toData.length >= 2 ? '' : 'not-good',
                   'fa fa-check-circle good-button'
                 ]"
                 aria-hidden="true"
@@ -189,7 +192,6 @@
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker';
 import SignedTxModal from './components/SignedTxModal';
-import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { mapState } from 'vuex';
@@ -200,7 +202,6 @@ import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 
 export default {
   components: {
-    blockie: Blockie,
     'signed-tx-modal': SignedTxModal,
     'currency-picker': CurrencyPicker,
     'interface-container-title': InterfaceContainerTitle,
@@ -274,7 +275,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['wallet', 'network', 'web3', 'linkQuery']),
+    ...mapState('main', ['wallet', 'network', 'web3', 'linkQuery']),
     txSpeedMsg() {
       const net = this.network.type.name;
       // eslint-disable-next-line
@@ -307,6 +308,9 @@ export default {
         this.localNonce >= 0 &&
         this.localGasPrice
       );
+    },
+    validData() {
+      return Misc.validateHexString(this.toData);
     }
   },
   watch: {
@@ -315,13 +319,6 @@ export default {
     },
     nonce(newVal) {
       this.localNonce = newVal;
-    },
-    toData(newVal) {
-      if (Misc.validateHexString(newVal)) {
-        this.toData = newVal;
-      } else {
-        this.toData = '0x';
-      }
     },
     toAmt(newVal) {
       this.createDataHex(newVal, null, null);

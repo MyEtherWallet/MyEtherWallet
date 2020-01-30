@@ -44,8 +44,8 @@
             <li v-for="index in mnemonicSize" :key="index">
               <span>{{ index }}.</span>
               <input
-                v-model="mnemonicPhrase[index - 1]"
                 :ref="`mnemonicInput${index - 1}`"
+                v-model="mnemonicPhrase[index - 1]"
                 type="text"
                 name=""
               />
@@ -75,9 +75,14 @@
         <p v-show="error !== ''" class="error">{{ error }}</p>
         <div class="button-container-block">
           <standard-button
-            :options="continueButtonOptions"
+            :options="{
+              title: $t('common.continue'),
+              buttonStyle: 'green',
+              noMinWidth: true,
+              fullWidth: true
+            }"
             :spinner="spinner"
-            @click.native="unlockWallet"
+            :click-function="unlockWallet"
           />
         </div>
       </form>
@@ -113,12 +118,6 @@ export default {
     return {
       spinner: false,
       error: '',
-      continueButtonOptions: {
-        title: this.$t('common.continue'),
-        buttonStyle: 'green',
-        noMinWidth: true,
-        fullWidth: true
-      },
       mnemonicPhrase: new Array(this.mnemonicSize).fill(''),
       mnemonic24: false,
       mnemonicSize: 12,

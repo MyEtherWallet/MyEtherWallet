@@ -45,6 +45,7 @@
         <div class="item-container">
           <div
             v-for="(curr, idx) in localCurrencies"
+            :key="idx"
             :class="[
               token
                 ? selectedCurrency.symbol === curr.symbol
@@ -55,7 +56,6 @@
                 : '',
               'item'
             ]"
-            :key="idx"
             @click="selectCurrency(curr)"
           >
             <p>
@@ -124,7 +124,7 @@ export default {
     return {
       icon: '',
       localCurrencies: [],
-      selectedCurrency: { name: 'Select an item', abi: '', address: '' },
+      selectedCurrency: {},
       open: false,
       search: '',
       abi: '',

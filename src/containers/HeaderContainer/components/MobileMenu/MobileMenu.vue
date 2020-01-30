@@ -132,16 +132,15 @@
 <script>
 import { mapState } from 'vuex';
 import MobileMenuButton from './components/MobileMenuButton';
-import MobileAddressBlock from './components/MobileAddressBlock';
 import MobileBalanceBlock from './components/MobileBalanceBlock';
 import MobileNetworkBlock from './components/MobileNetworkBlock';
 import MobileLanguageSelector from './components/MobileLanguageSelector';
 import { Misc } from '@/helpers';
+import supportedLang from '../../supportedLang';
 
 export default {
   components: {
     'mobile-menu-button': MobileMenuButton,
-    'mobile-address-block': MobileAddressBlock,
     'mobile-balance-block': MobileBalanceBlock,
     'mobile-network-block': MobileNetworkBlock,
     'mobile-language-selector': MobileLanguageSelector
@@ -171,11 +170,12 @@ export default {
       langSelectorOpen: false,
       currentLang: 'English',
       currentFlag: 'en',
-      isMewCx: isMewCx
+      isMewCx: isMewCx,
+      supportedLanguages: supportedLang
     };
   },
   computed: {
-    ...mapState(['account', 'blockNumber'])
+    ...mapState('main', ['account', 'blockNumber', 'locale'])
   },
   watch: {
     $route(newVal) {
@@ -184,14 +184,28 @@ export default {
       } else {
         this.isHomePage = true;
       }
+    },
+    locale() {
+      this.getCurrentLang();
     }
   },
   mounted() {
+    this.getCurrentLang();
+
     window.onscroll = () => {
       this.onPageScroll();
     };
   },
   methods: {
+    getCurrentLang() {
+      const storedLocale = this.supportedLanguages.find(item => {
+        return item.langCode === this.locale;
+      });
+
+      this._i18n.locale = this.locale;
+      this.currentFlag = storedLocale.flag;
+      this.currentLang = storedLocale.name;
+    },
     langChange(data) {
       this.currentLang = data;
     },

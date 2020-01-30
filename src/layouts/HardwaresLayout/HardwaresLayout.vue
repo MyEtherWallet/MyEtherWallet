@@ -7,8 +7,7 @@
         </div>
         <div class="hardware-items-container">
           <div
-            v-for="item in items"
-            v-if="item.logo !== ''"
+            v-for="item in filteredItems"
             :key="item.text"
             class="hardware-item"
           >
@@ -18,9 +17,7 @@
               </p>
               <div class="price-container">
                 <span>{{ item.currency }}</span>
-                <p>
-                  {{ item.price }}
-                </p>
+                <p>{{ item.price }}</p>
               </div>
               <p class="item-description">
                 {{ getItemDesc(item.description) }}
@@ -30,9 +27,9 @@
                 class="more-info"
                 target="_blank"
                 rel="noopener noreferrer"
+                >{{ $t('buyHardwareWallet.moreInfo') }} ></a
               >
-                {{ $t('buyHardwareWallet.button-more-info') }} >
-              </a>
+              {{ $t('buyHardwareWallet.button-more-info') }} >
             </div>
             <div class="hardware-item-logo">
               <img

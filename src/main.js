@@ -87,6 +87,9 @@ Vue.use(BootstrapVue);
 
 // // Define vue-i18n
 Vue.use(VueI18n);
+Vue.config.keyCodes = {
+  enter: [13]
+};
 const i18n = new VueI18n({
   locale: 'en_US',
   fallbackLocale: 'en_US',
@@ -125,16 +128,16 @@ Sentry.init({
   release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event) {
     const network =
-      !store && !store.state && !store.state.network
-        ? store.state.network.type.name
+      !store && !store.state.main && !store.state.main.network
+        ? store.state.main.network.type.name
         : '';
     const service =
-      !store && !store.state && !store.state.network
-        ? store.state.network.service
+      !store && !store.state.main && !store.state.main.network
+        ? store.state.main.network.service
         : '';
     const identifier =
-      !store && !store.state && !store.state.account
-        ? store.state.account.identifier
+      !store && !store.state.main && !store.state.main.account
+        ? store.state.main.account.identifier
         : '';
     event.tags = {
       network: network,

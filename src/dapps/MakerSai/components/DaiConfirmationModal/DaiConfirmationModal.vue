@@ -80,8 +80,12 @@
         </div>
         <div class="button-container">
           <standard-button
-            :options="confirmButton"
-            @click.native="confirmClicked"
+            :options="{
+              title: $t('dappsMaker.confirm-and-create'),
+              buttonStyle: 'green',
+              helpCenter: true
+            }"
+            :click-function="confirmClicked"
           />
         </div>
       </div>
@@ -132,18 +136,6 @@ export default {
       default: 'Error'
     }
   },
-  data() {
-    return {
-      confirmButton: {
-        title: this.$t('dappsMaker.confirm-and-create'),
-        buttonStyle: 'green',
-        helpCenter: true
-      }
-    };
-  },
-  computed: {},
-  watch: {},
-  mounted() {},
   methods: {
     confirmClicked() {
       this.opencdp();

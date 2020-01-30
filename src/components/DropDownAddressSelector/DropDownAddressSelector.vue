@@ -3,6 +3,7 @@
     <div class="dropdown--title">
       <h4>{{ title }}</h4>
       <button
+        v-show="!hideCopy"
         class="title-button prevent-user-select"
         @click="copyToClipboard($refs.addressInput)"
       >
@@ -16,8 +17,8 @@
       >
         <div>
           <input
-            v-addr-resolver="'selectedAddress'"
             ref="addressInput"
+            v-addr-resolver="'selectedAddress'"
             :placeholder="$t('common.enter-addr')"
             type="text"
             autocomplete="off"
@@ -25,15 +26,12 @@
             @input="debouncedInput"
           />
         </div>
-
-        <i
-          :class="[
-            isValidAddress && hexAddress.length !== 0 ? '' : 'not-good',
-            hasMessage ? 'resolver-err-icon' : '',
-            'fa fa-check-circle good-button address-check'
-          ]"
-          aria-hidden="true"
-        />
+        <span
+          v-show="!hideCopy"
+          :class="['save-addr-txt', !selectedAddress ? 'disabled-txt' : '']"
+          @click="openAddrModal()"
+          >{{ $t('interface.address-book.save-addr') }}</span
+        >
         <div v-if="!isValidAddress" class="blockie-place-holder-image" />
         <div v-if="isValidAddress" class="selected-address-blockie">
           <blockie :address="hexAddress" width="30px" height="30px" />
@@ -67,7 +65,11 @@
             @click="listedAddressClick(addr.address)"
           >
             <div class="list-blockie">
-              <blockie :address="addr.address" width="30px" height="30px" />
+              <blockie
+                :address="addr.resolverAddr"
+                width="30px"
+                height="30px"
+              />
               <img
                 :alt="$t('common.currency.ethereum')"
                 class="currency-icon"
@@ -94,22 +96,16 @@
             <p v-if="addr.address !== currentAddress" class="address-note">
               {{ addr.nickname }}
             </p>
-            <i
-              v-if="toAddressCheckMark"
-              aria-hidden="true"
-              class="fa fa-check-circle good-button"
-            />
-          </li>
-          <li
-            v-show="addressBook.length < 10"
-            class="add-addr"
-            @click="addAddress()"
-          >
-            + {{ $t('interface.address-book.add-addr') }}
           </li>
         </ul>
       </div>
     </div>
+    <address-book-modal
+      ref="addressBook"
+      :selected-address="selectedAddress"
+      :title="'interface.address-book.add-new'"
+      :modal-action="'add'"
+    />
   </div>
 </template>
 
@@ -118,13 +114,15 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Blockie from '@/components/Blockie';
 import { EthereumTokens, BASE_CURRENCY } from '@/partners';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { Toast } from '@/helpers';
 import utils from 'web3-utils';
+import AddressBookModal from '@/components/AddressBookModal';
 
 export default {
   components: {
-    blockie: Blockie
+    blockie: Blockie,
+    'address-book-modal': AddressBookModal
   },
   props: {
     title: {
@@ -138,6 +136,10 @@ export default {
     clearAddress: {
       type: Boolean,
       default: false
+    },
+    hideCopy: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -145,20 +147,40 @@ export default {
       selectedAddress: '',
       isValidAddress: false,
       dropdownOpen: false,
-      addresses: [],
       toAddressCheckMark: false,
       hexAddress: '',
       currentAddress: ''
     };
   },
   computed: {
-    ...mapState(['addressBook', 'account']),
+    ...mapState('main', ['addressBook', 'account']),
     hasMessage() {
       return (
         (!this.isValidAddress && this.selectedAddress.length > 0) ||
         (this.isValidAddress &&
           this.selectedAddress.toLowerCase() !== this.hexAddress.toLowerCase())
       );
+    },
+    sortedAddressBook() {
+      const addrBk = this.addressBook;
+      return addrBk.sort((a, b) => {
+        a = a.nickname.toString().toLowerCase();
+        b = b.nickname.toString().toLowerCase();
+
+        return a < b ? -1 : a > b ? 1 : 0;
+      });
+    },
+    addresses() {
+      return this.currentAddress
+        ? [
+            {
+              address: this.currentAddress,
+              currency: BASE_CURRENCY,
+              resolverAddr: this.currentAddress
+            },
+            ...this.sortedAddressBook
+          ]
+        : [...this.sortedAddressBook];
     }
   },
   watch: {
@@ -168,77 +190,34 @@ export default {
       this.hexAddress = '';
       this.$refs.addressInput.value = '';
     },
-    currentAddress(address) {
-      if (this.addresses.findIndex(addr => addr.address === address) === -1) {
-        this.updateAddresses(address);
-      }
-    },
-    addressBook() {
-      this.updateAddresses(this.currentAddress);
-    },
     hexAddress() {
       this.validateAddress();
     },
     currency() {
       this.validateAddress(this.selectedAddress);
+    },
+    dropdownOpen(val) {
+      const resolverTxtElem =
+        document.querySelector('.resolver-error') ||
+        document.querySelector('.resolver-addr');
+      if (resolverTxtElem) {
+        val === true
+          ? resolverTxtElem.classList.add('hidden')
+          : resolverTxtElem.classList.remove('hidden');
+      }
     }
   },
   mounted() {
     this.currentAddress = this.account.address;
   },
   methods: {
+    ...mapActions('main', ['setAddressBook']),
+    openAddrModal() {
+      this.$refs.addressBook.$refs.addressBookModal.show();
+    },
     debouncedInput: utils._.debounce(function(e) {
       this.selectedAddress = e.target.value;
     }, 300),
-    addAddress() {
-      const alreadyExists = Object.keys(this.addressBook).some(key => {
-        return this.addressBook[key].address === this.selectedAddress;
-      });
-
-      if (!this.selectedAddress) {
-        Toast.responseHandler(
-          this.$t('interface.address-book.cannot-add'),
-          Toast.ERROR
-        );
-        return;
-      } else if (!this.isValidAddress) {
-        Toast.responseHandler(
-          this.$t('ens.addr-resolver.invalid-eth-addr'),
-          Toast.ERROR
-        );
-        return;
-      } else if (alreadyExists) {
-        Toast.responseHandler(
-          this.$t('interface.address-book.already-exists'),
-          Toast.ERROR
-        );
-        return;
-      }
-
-      this.addressBook.push({
-        address: this.selectedAddress,
-        currency: 'ETH',
-        nickname: this.addressBook.length + 1
-      });
-
-      this.$store.dispatch('setAddressBook', this.addressBook);
-
-      Toast.responseHandler(
-        this.$t('interface.address-book.successfully-added'),
-        Toast.SUCCESS
-      );
-    },
-    updateAddresses(address) {
-      this.addresses = address
-        ? [
-            {
-              address: address,
-              currency: BASE_CURRENCY
-            },
-            ...this.addressBook
-          ]
-        : [...this.addressBook];
-    },
     copyToClipboard(ref) {
       ref.select();
       document.execCommand('copy');

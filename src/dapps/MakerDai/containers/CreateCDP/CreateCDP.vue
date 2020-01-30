@@ -15,20 +15,16 @@
     />
     <loading-overlay
       v-if="loading"
-      :loadingmessage="$t('dappsMaker.creating-message')"
+      :loadingmessage="$t('dappsMCDMaker.creating-message')"
     />
     <div class="manage-container">
-      <p class="top-title">
-        {{ $t('dappsMaker.maker_title') }}
-      </p>
-      <p class="top-title-sub">
-        {{ $t('dappsMaker.create-instruct') }}
-      </p>
+      <h3 class="mb-3 ">{{ $t('dappsMCDMaker.maker_title') }}</h3>
+      <div class="mb-5">{{ $t('dappsMCDMaker.create-instruct') }}</div>
 
       <div class="currency-ops-new">
         <div class="currency-picker-container">
           <div class="interface__block-title">
-            {{ $t('dappsMaker.collateral') }}
+            {{ $t('dappsMCDMaker.collateral') }}
           </div>
           <currency-picker
             :currencies="collateralOptions"
@@ -45,25 +41,27 @@
           />
           <div class="input-block-message">
             <p v-if="!hasEnoughEth" class="red-text">
-              {{ $t('dappsMaker.not-enough-funds') }}
+              {{ $t('dappsMCDMaker.not-enough-funds') }}
             </p>
             <p>
-              {{ $t('dappsMaker.min-collat') }}
+              {{ $t('dappsMCDMaker.min-collat') }}
               <b>{{ displayFixedValue(minDeposit, 6) }}</b>
               {{ selectedCurrency.symbol }}
             </p>
           </div>
         </div>
-        <div class="arrow"><img :src="arrowImage" /></div>
+        <div class="arrow">
+          <img :src="arrowImage" />
+        </div>
         <div>
           <div class="interface__block-title">
-            {{ $t('dappsMaker.generate') }}
+            {{ $t('dappsMCDMaker.generate') }}
           </div>
           <div class="dropdown-text-container dropdown-container">
             <p>
               <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
-              {{ $t('dappsMaker.dai') }}
-              <span class="subname">- Maker DAI </span>
+              {{ $t('dappsMCDMaker.dai') }}
+              <span class="subname">- Maker DAI</span>
             </p>
           </div>
           <input
@@ -78,14 +76,14 @@
           />
           <div class="input-block-message">
             <p>
-              {{ $t('dappsMaker.min-generate') }}
+              {{ $t('dappsMCDMaker.min-generate') }}
               <b>{{ displayFixedValue(minCreate, 6) }}</b>
-              {{ $t('dappsMaker.dai') }}
+              {{ $t('dappsMCDMaker.dai') }}
             </p>
             <p>
-              {{ $t('dappsMaker.max-generate') }}
+              {{ $t('dappsMCDMaker.max-generate') }}
               <b>{{ displayFixedValue(maxDaiDraw, 6) }}</b>
-              {{ $t('dappsMaker.dai') }}
+              {{ $t('dappsMCDMaker.dai') }}
             </p>
           </div>
         </div>
@@ -96,7 +94,7 @@
           <li>
             <p>
               {{
-                $t('dappsMaker.min-required', {
+                $t('dappsMCDMaker.min-required', {
                   value: selectedCurrency ? selectedCurrency.symbol : 'ETH'
                 })
               }}
@@ -107,24 +105,25 @@
             </p>
           </li>
           <li>
-            <p>{{ $t('dappsMaker.liquid-price') }}</p>
+            <p>{{ $t('dappsMCDMaker.liquid-price') }}</p>
             <p>
-              <b>{{ liquidationPrice }}</b> {{ $t('common.currency.usd') }}
+              <b>{{ liquidationPrice }}</b>
+              {{ $t('common.currency.usd') }}
             </p>
           </li>
           <li>
-            <p>{{ $t('dappsMaker.current-price-info') }}</p>
+            <p>{{ $t('dappsMCDMaker.current-price-info') }}</p>
             <p>
               {{ displayFixedValue(getCurrentPrice, 2) }}
               {{ $t('common.currency.usd') }}
             </p>
           </li>
           <li>
-            <p>{{ $t('dappsMaker.liquidation-penalty') }}</p>
+            <p>{{ $t('dappsMCDMaker.liquidation-penalty') }}</p>
             <p>{{ displayPercentValue(liquidationPenalty) }}%</p>
           </li>
           <li>
-            <p>{{ $t('dappsMaker.collateral-ratio') }}</p>
+            <p>{{ $t('dappsMCDMaker.collateral-ratio') }}</p>
             <p
               :class="[
                 veryRisky ? 'red-text' : '',
@@ -135,7 +134,7 @@
             </p>
           </li>
           <li>
-            <p>{{ $t('dappsMaker.minimum-ratio') }}</p>
+            <p>{{ $t('dappsMCDMaker.minimum-ratio') }}</p>
             <p>{{ displayPercentValue(liquidationRatio) }}%</p>
           </li>
         </ul>
@@ -145,13 +144,21 @@
           <li>
             <p>
               {{
-                $t('dappsMaker.stability-fee-in-mkr', {
+                $t('dappsMCDMaker.stability-fee-in-mkr', {
                   value: displayFixedPercent(stabilityFee).toString()
                 })
               }}
             </p>
           </li>
         </ul>
+      </div>
+      <div v-if="!hasProxy" class="buttons-container">
+        <div
+          class="submit-button large-round-button-green-filled"
+          @click="BuildProxy()"
+        >
+          Create Proxy
+        </div>
       </div>
       <div
         v-if="selectedCurrency.symbol !== 'ETH' && !hasEnoughAllowance()"
@@ -172,7 +179,7 @@
           ]"
           @click="openDaiConfirmation"
         >
-          {{ $t('dappsMaker.collat-and-generate-vault') }}
+          {{ $t('dappsMCDMaker.collat-and-generate-vault') }}
         </div>
       </div>
     </div>
@@ -182,9 +189,6 @@
 <script>
 import { mapState } from 'vuex';
 import CurrencyPicker from '../../components/CurrencyPicker';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
-import Blockie from '@/components/Blockie';
 import DaiConfirmationModal from '../../components/DaiConfirmationModal';
 import LoadingOverlay from '@/components/LoadingOverlay';
 import {
@@ -205,9 +209,6 @@ const bnOver = (one, two, three) => {
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie,
     'dai-confirmation-modal': DaiConfirmationModal,
     'loading-overlay': LoadingOverlay,
     'currency-picker': CurrencyPicker
@@ -308,18 +309,18 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     validInputs() {
+      if (!this.hasProxy) return false;
       if (toBigNumber(this.ethQty).isNaN() || toBigNumber(this.daiQty).isNaN())
         return false;
       if (toBigNumber(this.ethQty).gt(0)) {
         if (toBigNumber(this.ethQty).lte(this.values.minEth)) return false;
         if (this.emptyMakerCreated) {
-          if (toBigNumber(this.makerCDP.minDai).lt(this.daiQty)) return false;
-        } else if (toBigNumber(20).lt(this.daiQty)) return false;
+          if (toBigNumber(this.makerCDP.minDai).gt(this.daiQty)) return false;
+        } else if (toBigNumber(20).gt(this.daiQty)) return false;
         if (toBigNumber(this.maxDaiDraw).lte(toBigNumber(this.daiQty)))
           return false;
-
         if (this.emptyMakerCreated) {
           if (toBigNumber(this.collatRatio).lte(this.makerCDP.liquidationRatio))
             return false;
@@ -327,6 +328,9 @@ export default {
         return this.hasEnoughEth;
       }
       return false;
+    },
+    hasProxy() {
+      return this.getValueOrFunction('proxyAddress');
     },
     hasEnoughEth() {
       if (this.emptyMakerCreated) {
@@ -353,6 +357,7 @@ export default {
       if (this.emptyMakerCreated) {
         return this.makerCDP.liquidationRatio;
       }
+      return null;
     },
     maxDaiDraw() {
       if (this.ethQty <= 0) return 0;
@@ -377,6 +382,7 @@ export default {
       if (this.emptyMakerCreated) {
         return toBigNumber(this.getValueOrFunction('minEth'));
       }
+      return null;
     },
     collateralOptions() {
       const mcdCollateralOptions = this.getValueOrFunction('mcdCurrencies');
@@ -401,6 +407,7 @@ export default {
       if (this.emptyMakerCreated) {
         return this.makerCDP.minDepositFor(this.selectedCurrency.symbol);
       }
+      return null;
     },
     minCreate() {
       return 20;
@@ -461,6 +468,23 @@ export default {
       this.makerCDP = await this.buildEmpty();
       this.$forceUpdate();
       this.emptyMakerCreated = true;
+    },
+    BuildProxy() {
+      if (this.setupComplete) {
+        this.getValueOrFunction('getProxy')().then(proxy => {
+          this.proxyAddress = proxy;
+          if (!this.proxyAddress) {
+            this.getValueOrFunction('_proxyService')
+              .build()
+              .then(() => {
+                return this.getValueOrFunction('_proxyService').currentProxy();
+              })
+              .then(res => {
+                this.proxyAddress = res;
+              });
+          }
+        });
+      }
     },
     displayPercentValue,
     displayFixedValue,

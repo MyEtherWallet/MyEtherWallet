@@ -1,0 +1,40 @@
+{
+  "title": {
+    "discover": "Инструменты",
+    "affiliates": "Партнеры",
+    "mew": "MEW",
+    "love": "Нравится {heart} MEW?"
+  },
+  "units": "Единицы",
+  "txStat": "Статус транзакции",
+  "debugs": "Отладки",
+  "extension": "MEW CX",
+  "others": "Другие",
+  "affiliates": "Партнеры",
+  "ledger": "Ledger Wallet",
+  "ethCard": "Ether Card",
+  "bitbox": "BitBox",
+  "bity": "Bity",
+  "billfodl": "Billfodl",
+  "finney": "Finney",
+  "trezor": "Trezor",
+  "secalot": "Secalot",
+  "keepkey": "KeepKey",
+  "about": "О Нас",
+  "team": "Команда",
+  "feedback": "Отзывы",
+  "privacy": "Конфиденциальность",
+  "copyright": "© 2020 MyEtherWallet. Все права защищены.",
+  "pricing-p": "Расценки взяты из",
+  "advanced": "Расширенные параметры",
+  "send-offline": "Помощник для оффлайн транзакций",
+  "sotd": "State of the Dapps",
+  "mew-connect": "MEWconnect",
+  "donation": {
+    "desc": "MyEtherWallet является ПО с открытым кодом и предоставляется сообществу бесплатно. Все это возможно благодаря вашей поддержке.",
+    "ether": "Поддержка в Ethereum",
+    "bitcoin": "Поддержка в Bitcoin"
+  },
+  "coingecko": "Coingecko",
+  "view-wallet-info": "Смотреть информацию о кошельке"
+}

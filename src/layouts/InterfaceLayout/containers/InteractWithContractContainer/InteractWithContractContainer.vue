@@ -21,7 +21,6 @@
         </div>
         <div class="the-form domain-name">
           <input
-            v-validate="'required'"
             v-model="address"
             :placeholder="$t('contract.enter-addr')"
             type="text"
@@ -53,9 +52,9 @@
         </div>
         <div class="the-form domain-name">
           <textarea
-            v-validate="'required'"
             ref="abi"
             v-model="abi"
+            v-validate="'required'"
             class="custom-textarea-1"
             name="abiField"
           />
@@ -123,9 +122,9 @@
           <div class="input-container">
             <input
               v-if="getType(input.type).type !== 'radio'"
+              v-model="inputs[input.name]"
               :disabled="noInput"
               :type="getType(input.type).type"
-              v-model="inputs[input.name]"
               class="non-bool-input"
             />
             <div
@@ -296,7 +295,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['network', 'gasPrice', 'account', 'web3']),
+    ...mapState('main', ['network', 'gasPrice', 'account', 'web3']),
     mergedContracts() {
       const customContracts = store.get('customContracts') || [];
       const concatContracts = this.network.type.contracts.concat(

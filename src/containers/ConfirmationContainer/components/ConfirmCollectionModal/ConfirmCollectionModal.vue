@@ -2,7 +2,11 @@
   <div>
     <b-modal
       ref="confirmCollection"
-      :title="`Confirmation (Total of ${unSignedArray.length} transactions)`"
+      :title="
+        $t('confirmation.confirm-transactions', {
+          unSignedArray: unSignedArray.length
+        })
+      "
       hide-footer
       centered
       class="bootstrap-modal-wide confirmation-modal nopadding"
@@ -36,9 +40,7 @@
                 <div>
                   <p>
                     - {{ web3.utils.hexToNumberString(item.value) }}
-                    <span>
-                      {{ network.type.currencyName }}
-                    </span>
+                    <span>{{ network.type.currencyName }}</span>
                   </p>
                   <div>
                     <span>{{ $t('swap.from') }}</span>
@@ -57,9 +59,7 @@
                 <div>
                   <p>
                     + {{ web3.utils.hexToNumberString(item.value) }}
-                    <span>
-                      {{ network.type.currencyName }}
-                    </span>
+                    <span>{{ network.type.currencyName }}</span>
                   </p>
                   <div>
                     <span>{{ $t('common.to') }}</span>
@@ -108,7 +108,7 @@
               ]"
               @click="sendBatchTransactions"
             >
-              {{ buttonText }}
+              {{ $t(buttonText) }}
             </div>
             <div
               v-show="sending"
@@ -142,13 +142,9 @@
   </div>
 </template>
 <script>
-import AddressBlock from '../AddressBlock';
 import { mapState } from 'vuex';
 
 export default {
-  components: {
-    'address-block': AddressBlock
-  },
   props: {
     unSignedArray: {
       type: Array,
@@ -172,12 +168,12 @@ export default {
     }
   },
   computed: {
-    ...mapState(['web3', 'network', 'account']),
+    ...mapState('main', ['web3', 'network', 'account']),
     buttonText() {
       if (!this.allSigned && this.isHardwareWallet) {
-        return this.$t('confirmation.approve-on-device');
+        return 'confirmation.approve-on-device';
       }
-      return this.$t('sendTx.confirmation.button');
+      return 'sendTx.confirmation.button';
     },
     allSigned() {
       if (this.signedArray.length === 0) return false;

@@ -47,6 +47,7 @@
       <input
         v-if="!options.isTextarea"
         ref="inputdata"
+        v-model="inputValue"
         :readonly="options.readOnly"
         :value="options.value"
         :class="[
@@ -56,16 +57,15 @@
         :placeholder="options.placeHolder"
         :type="options.type"
         :disabled="options.inputDisabled"
-        v-model="inputValue"
-        name=""
+        name
         @blur="emitValue"
       />
 
       <textarea
         v-if="options.isTextarea"
         ref="textareadata"
-        :readonly="options.readOnly"
         v-model="inputValue"
+        :readonly="options.readOnly"
         :placeholder="options.placeHolder"
         :disabled="options.inputDisabled"
         @blur="emitValue"
@@ -128,6 +128,7 @@ export default {
         case '3':
           return 'border-green';
         default:
+          return '';
       }
     }
   },

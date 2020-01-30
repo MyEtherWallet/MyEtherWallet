@@ -1,134 +1,154 @@
 <template>
-  <div v-if="!isMewCx" class="footer">
-    <!-- Modal -->
-    <feedback-modal />
-    <div class="wrap">
-      <div class="page-container">
-        <div class="grid-col-1-1-1-2 footer-contents">
-          <div
-            v-for="(item, index) in footerContent"
-            :ref="item.class"
-            :class="item.class"
-            :key="item.title + index"
-          >
-            <div class="content-title" @click="toggler(item.class)">
-              <h3 class="lite">{{ item.title }}</h3>
-              <p class="open" @click="openContent(item.class)">
-                <i class="fa fa-plus" aria-hidden="true" />
-              </p>
-              <p class="close" @click="closeContent(item.class)">
-                <i class="fa fa-minus" aria-hidden="true" />
-              </p>
-            </div>
-            <div class="content-links">
-              <div class="content-links-animation-block">
-                <div
-                  v-for="(content, index) in item.contents"
-                  :key="content.text + index"
-                  class="content"
-                >
-                  <div v-if="content.text === $t('common.cstm-support')">
-                    <customer-support :no-icon="true" />
+  <div>
+    <cx-footer v-if="isMewCx" />
+    <div v-if="!isMewCx" class="footer">
+      <!-- Modal -->
+      <feedback-modal />
+      <div class="wrap">
+        <div class="page-container">
+          <div class="grid-col-1-1-1-2 footer-contents">
+            <div
+              v-for="(item, index) in footerContent"
+              :ref="item.class"
+              :key="item.title + index"
+              :class="item.class"
+            >
+              <div class="content-title" @click="toggler(item.class)">
+                <h3 class="lite">{{ $t(item.title) }}</h3>
+                <p class="open" @click="openContent(item.class)">
+                  <i class="fa fa-plus" aria-hidden="true" />
+                </p>
+                <p class="close" @click="closeContent(item.class)">
+                  <i class="fa fa-minus" aria-hidden="true" />
+                </p>
+              </div>
+              <div class="content-links">
+                <div class="content-links-animation-block">
+                  <div
+                    v-for="(content, idx) in item.contents"
+                    :key="content.text + idx"
+                    class="content"
+                  >
+                    <div v-if="content.text === 'common.cstm-support'">
+                      <customer-support :no-icon="true" />
+                    </div>
+                    <router-link
+                      v-else-if="content.to !== undefined"
+                      :to="content.to"
+                    >
+                      <p>{{ $t(content.text) }}</p>
+                    </router-link>
+                    <a
+                      v-else-if="content.to === undefined"
+                      :href="content.href"
+                      :aria-label="content.text"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <p v-if="item.class === 'e2'">
+                        {{ $t(`${content.text}`) }}
+                      </p>
+                      <p v-else>{{ $t(content.text) }}</p>
+                    </a>
                   </div>
-                  <router-link
-                    v-else-if="content.to !== undefined"
-                    :to="content.to"
-                  >
-                    <p>{{ content.text }}</p>
-                  </router-link>
-                  <a
-                    v-else-if="content.to === undefined"
-                    :href="content.href"
-                    :aria-label="content.text"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <p v-if="item.class === 'e2'">
-                      {{ $t(`${content.text}`) }}
-                    </p>
-                    <p v-else>{{ content.text }}</p>
-                  </a>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="donate-us">
-            <div class="content-title">
-              <i18n path="footer.title.love" tag="h3">
-                <img slot="heart" src="~@/assets/images/icons/heart.svg" alt />
-              </i18n>
-            </div>
-            <div class="links">
-              <p>{{ $t('footer.donation.desc') }}</p>
+            <div class="donate-us">
+              <div class="content-title">
+                <i18n path="footer.title.love" tag="h3">
+                  <img
+                    slot="heart"
+                    src="~@/assets/images/icons/heart.svg"
+                    alt
+                  />
+                </i18n>
+              </div>
+              <div class="links">
+                <p>{{ $t('footer.donation.desc') }}</p>
 
-              <a
-                :href="'https://etherscan.io/address/' + ethDonationAddress"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <p :data-eth="ethDonationAddress" class="crypto-link">
-                  <img src="~@/assets/images/currency/eth.svg" alt />
-                  &nbsp;{{ $t('footer.donation.ether') }}
-                </p>
-              </a>
-
-              <a
-                href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <p
-                  class="crypto-link no-padding"
-                  data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
+                <a
+                  :href="'https://etherscan.io/address/' + ethDonationAddress"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  <img src="~@/assets/images/currency/btc.svg" alt /> &nbsp;{{
-                    $t('footer.donation.bitcoin')
-                  }}
-                </p>
-              </a>
+                  <div
+                    :data-eth="ethDonationAddress"
+                    class="crypto-link d-flex align-items-center"
+                  >
+                    <img
+                      class="mr-2"
+                      src="~@/assets/images/currency/eth.svg"
+                      alt
+                    />
+                    <div>{{ $t('footer.donation.ether') }}</div>
+                  </div>
+                </a>
+
+                <a
+                  href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div
+                    class="crypto-link no-padding d-flex align-items-center"
+                    data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
+                  >
+                    <img
+                      class="mr-2"
+                      src="~@/assets/images/currency/btc.svg"
+                      alt
+                    />
+                    <div>{{ $t('footer.donation.bitcoin') }}</div>
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="flex-space-between foot-note">
-          <div class="links">
-            <div v-for="(link, index) in lowerLinks" :key="link.title + index">
-              <router-link v-if="link.hasOwnProperty('to')" :to="link.to">
-                <span>{{ link.title }}</span>
-              </router-link>
-              <a
-                v-else
-                :href="link.href"
-                target="_blank"
-                rel="noopener noreferrer"
+          <div class="flex-space-between foot-note">
+            <div class="links">
+              <div
+                v-for="(link, index) in lowerLinks"
+                :key="link.title + index"
               >
-                <span>{{ link.title }}</span>
+                <router-link v-if="link.hasOwnProperty('to')" :to="link.to">
+                  <span>{{ $t(link.title) }}</span>
+                </router-link>
+                <a
+                  v-else
+                  :href="link.href"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span>{{ $t(link.title) }}</span>
+                </a>
+              </div>
+            </div>
+            <div class="copyright">
+              <p>
+                {{ $t('footer.pricing-p') }}
+                <a
+                  href="https://coingecko.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >{{ $t('footer.coingecko') }}</a
+                >
+                <br />
+                {{ $t('footer.copyright') }}
+              </p>
+            </div>
+            <div class="social">
+              <a
+                v-for="link in links"
+                :key="link.class"
+                :href="link.to"
+                :aria-label="link.to"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <i :class="'fa ' + link.class" />
               </a>
             </div>
-          </div>
-          <div class="copyright">
-            <p>
-              {{ $t('footer.pricing-p') }}
-              <a
-                href="https://coingecko.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                >{{ $t('footer.coingecko') }}</a
-              >
-              <br />
-              {{ $t('footer.copyright') }}
-            </p>
-          </div>
-          <div class="social">
-            <a
-              v-for="link in links"
-              :href="link.to"
-              :key="link.class"
-              :aria-label="link.to"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <i :class="'fa ' + link.class" />
-            </a>
           </div>
         </div>
       </div>
@@ -143,11 +163,13 @@ import CustomerSupport from '@/components/CustomerSupport';
 import affiliates from './affiliates.js';
 const version = VERSION;
 import { Misc } from '@/helpers';
+import CxFooter from '@/layouts/ExtensionBrowserAction/components/CxFooter';
 
 export default {
   components: {
     'feedback-modal': FeedbackModal,
-    'customer-support': CustomerSupport
+    'customer-support': CustomerSupport,
+    'cx-footer': CxFooter
   },
   data() {
     const isMewCx = Misc.isMewCx();
@@ -156,15 +178,15 @@ export default {
       version: version,
       lowerLinks: [
         {
-          title: this.$t('footer.feedback'),
+          title: 'footer.feedback',
           href: 'mailto:support@myetherwallet.com'
         },
         {
-          title: this.$t('footer.privacy'),
+          title: 'footer.privacy',
           to: '/privacy-policy'
         },
         {
-          title: this.$t('common.terms'),
+          title: 'common.terms',
           to: '/terms-of-service'
         },
         {
@@ -175,77 +197,77 @@ export default {
       footerContent: [
         {
           class: 'e1',
-          title: this.$t('footer.title.discover'),
+          title: 'footer.title.discover',
           contents: [
             {
-              text: this.$t('convertUnits.page.title'),
+              text: 'convertUnits.page.title',
               to: '/convert-units'
             },
             // {
-            //   text: this.$t('footer.advanced'),
+            //   text:'footer.advanced'),
             //   to: '/advanced-tools'
             // },
             {
-              text: this.$t('footer.mew-connect'),
+              text: 'footer.mew-connect',
               href: 'https://mewconnect.myetherwallet.com/#/'
             },
             {
-              text: this.$t('footer.extension'),
+              text: 'footer.extension',
               href: 'https://www.mewcx.com'
             },
             {
-              text: this.$t('buyHardwareWallet.page.title'),
+              text: 'buyHardwareWallet.page.title',
               to: '/hardware-wallet-affiliates'
             },
             {
-              text: this.$t('footer.send-offline'),
+              text: 'footer.send-offline',
               to: '/send-offline-helper'
             },
             {
-              text: this.$t('verifyMessage.title'),
+              text: 'verifyMessage.title',
               to: '/verify-message'
             },
             {
-              text: this.$t('footer.view-wallet-info'),
+              text: 'footer.view-wallet-info',
               to: '/view-wallet-info'
             },
             {
-              text: this.$t('dappsSubmission.banner-submit.submit-dapp'),
+              text: 'dappsSubmission.banner-submit.submit-dapp',
               to: '/dapp-submission'
             }
           ]
         },
         {
           class: 'e2',
-          title: this.$t('footer.title.affiliates'),
+          title: 'footer.title.affiliates',
           contents: affiliates
         },
         {
           class: 'e3',
-          title: this.$t('footer.title.mew'),
+          title: 'footer.title.mew',
           contents: [
             {
-              text: this.$t('footer.about'),
+              text: 'footer.about',
               to: '/#about-mew'
             },
             {
-              text: this.$t('footer.team'),
+              text: 'footer.team',
               to: '/team'
             },
             {
-              text: this.$t('common.faqs'),
+              text: 'common.faqs',
               to: '/#faqs'
             },
             {
-              text: 'MEWtopia',
+              text: 'common.mewtopia',
               href: 'https://www.mewtopia.com'
             },
             {
-              text: this.$t('common.cstm-support'),
+              text: 'common.cstm-support',
               href: 'mailto:support@myetherwallet.com'
             },
             {
-              text: 'Help Center',
+              text: 'common.help-center',
               href: 'https://kb.myetherwallet.com'
             }
           ]
@@ -279,12 +301,16 @@ export default {
         {
           to: 'https://www.medium.com/@myetherwallet',
           class: 'fa-medium'
+        },
+        {
+          to: 'https://vk.com/public190491855',
+          class: 'fa-vk'
         }
       ]
     };
   },
   computed: {
-    ...mapState(['ethDonationAddress'])
+    ...mapState('main', ['ethDonationAddress'])
   },
   mounted() {
     if (Misc.isMewCx()) {
@@ -332,5 +358,4 @@ export default {
 <style lang="scss" scoped>
 @import 'FooterContainer-desktop.scss';
 @import 'FooterContainer-tablet.scss';
-@import 'FooterContainer-mobile.scss';
 </style>

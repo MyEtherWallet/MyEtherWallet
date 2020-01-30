@@ -1,15 +1,11 @@
 <template>
   <div class="crypto-kitties-manager">
     <interface-container-title :title="$t('nftManager.title')" />
-    <div
-      v-if="!isReady && isOnlineAndEth"
-      class="inner-side-menu content-container"
-    >
-      <nft-side-menu :supported-nft-obj="sideMenuData" :nft-config="nftConfig">
-      </nft-side-menu>
+    <div v-if="!isReady && isOnlineAndEth">
       <loading-sign :loadingmessage1="$t('common.loading')" />
     </div>
-    <div v-if="isReady && hasNfts" class="inner-side-menu content-container">
+
+    <div v-if="isReady && hasNfts" class="content-container">
       <nft-side-menu
         :supported-nft-obj="sideMenuData"
         :nft-config="nftConfig"
@@ -19,8 +15,10 @@
         @selected="changeSelectedContract"
         @openCustomModal="openCustomModal"
         @removeCustomNft="openRemovalConfirmModal"
-      >
-      </nft-side-menu>
+      ></nft-side-menu>
+
+      <div class="block-divider" />
+
       <div v-if="showDetails">
         <nft-details
           :nft="detailsFor"
@@ -30,49 +28,80 @@
           @back="comeBack"
         ></nft-details>
       </div>
+
       <div v-if="!showDetails">
         <content-block-title :button-text="ntfCount" :title="nftTitle" />
-        <!-- TODO Clean Up Design and Improve Mobile -->
-        <div class="grid-container">
-          <div v-for="nft in nftToShow" :key="nft.key" class="kitty">
-            <div class="kitty-img" @click="showNftDetails(nft)">
-              <div v-show="!hasImage(nft)" class="placeholder">
-                <div class="animated-background"></div>
+
+        <b-row>
+          <b-col
+            v-for="nft in nftToShow"
+            :key="nft.key"
+            cols="6"
+            lg="4"
+            md="4"
+            class="mb-4"
+          >
+            <div
+              class="text-center cursor-pointer"
+              @click="showNftDetails(nft)"
+            >
+              <div
+                v-if="!hasImage(nft)"
+                class="spinner-box d-flex justify-content-center align-items-center"
+              >
+                <b-spinner
+                  label="Large Spinner"
+                  variant="secondary"
+                  style="width: 50px; height: 50px;"
+                ></b-spinner>
               </div>
-              <div v-show="hasImage(nft)">
+              <div v-show="hasImage(nft)" class="product-img">
                 <img :src="getImage(nft)" alt @load="hasLoaded(nft)" />
               </div>
-              <p>#{{ nft.token | ConcatToken }}</p>
+              <p class="text-monospace">#{{ nft.token | ConcatToken }}</p>
             </div>
-          </div>
-          <div v-show="selectedNtf.count > 9" class="internal-nav-container">
-            <span
-              v-show="startIndex > 0"
-              class="internal-nav prev"
-              @click="getPrevious()"
-            >
-              <i class="fa fa-chevron-left"></i>
-            </span>
-            <span v-show="!collectionLoading">{{
-              $t('nftManager.showing-range', {
-                first: startIndex,
-                last: endIndex
-              })
-            }}</span>
-            <span v-show="collectionLoading">{{
-              $t('nftManager.loading-range', {
-                first: startIndex,
-                last: endIndex
-              })
-            }}</span>
-            <span
-              v-show="showNextButton"
-              class="internal-nav next"
-              @click="getNext()"
-            >
-              <i class="fa fa-chevron-right"></i>
-            </span>
-          </div>
+          </b-col>
+        </b-row>
+
+        <div
+          class="pagination-container"
+          :class="collectionLoading ? 'loading' : ''"
+        >
+          <nav
+            v-show="selectedNtf.count > 9"
+            aria-label="Page navigation example"
+          >
+            <ul class="pagination justify-content-center">
+              <li
+                v-show="startIndex > 0"
+                class="page-item"
+                @click="getPrevious()"
+              >
+                <div class="page-link prev-button">Previous</div>
+              </li>
+              <li class="page-item">
+                <div
+                  v-if="startIndex + 1 != endIndex"
+                  class="page-link page-index-button"
+                >
+                  {{ startIndex + 1 }} - {{ endIndex }} ({{
+                    endIndex - startIndex
+                  }}
+                  items)
+                </div>
+                <div
+                  v-if="startIndex + 1 == endIndex"
+                  class="page-link page-index-button"
+                >
+                  {{ startIndex + 1 }}
+                  ({{ endIndex - startIndex }} items)
+                </div>
+              </li>
+              <li v-show="showNextButton" class="page-item" @click="getNext()">
+                <div class="page-link next-button">Next</div>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>
@@ -80,8 +109,14 @@
       <div v-show="!reLoading">
         <h3 class="no-nft-notice">{{ $t('nftManager.no-nft') }}</h3>
         <standard-button
-          :options="onlyCustom"
-          @click.native="openCustomModal"
+          :options="{
+            title: $t('nftManager.add-custom'),
+            buttonStyle: 'green',
+            helpCenter: false,
+            noMinWidth: true,
+            fullWidth: false
+          }"
+          :click-function="openCustomModal"
         />
       </div>
       <span v-show="reLoading">{{ $t('nftManager.reloading') }}</span>
@@ -91,7 +126,7 @@
       <div v-show="!online">
         {{ $t('nftManager.nft-are') }}
       </div>
-      <div v-show="online">
+      <div v-show="online" class="not-supported-txt">
         {{ $t('nftManager.not-supported', { value: network.type.name_long }) }}
       </div>
     </div>
@@ -105,8 +140,7 @@
       ref="customRemoveModal"
       :for-removal="forRemoval"
       @remove="removeCustomNft"
-    >
-    </nft-custom-confirm-remove-modal>
+    ></nft-custom-confirm-remove-modal>
   </div>
 </template>
 
@@ -167,18 +201,11 @@ export default {
       customNFTs: [],
       forRemoval: {},
       collectionLoading: false,
-      onlyCustom: {
-        title: this.$t('nftManager.add-custom'),
-        buttonStyle: 'green',
-        helpCenter: false,
-        noMinWidth: true,
-        fullWidth: false
-      },
       nftObjectClone: {}
     };
   },
   computed: {
-    ...mapState(['account', 'web3', 'online', 'network']),
+    ...mapState('main', ['account', 'web3', 'online', 'network']),
     endIndex() {
       if (this.nftData[this.selectedContract]) {
         if (!this.nftData[this.selectedContract].details) return 0;
@@ -188,6 +215,7 @@ export default {
           ids_retrieved > this.countPerPage ? this.countPerPage : ids_retrieved;
         return this.nftData[this.selectedContract].currentIndex + increment;
       }
+      return null;
     },
     nftTitle() {
       if (this.nftData[this.selectedContract]) {
@@ -208,6 +236,13 @@ export default {
           : this.nftData[this.selectedContract].details;
       }
       return [];
+    },
+    totalNtfCount() {
+      if (this.nftData[this.selectedContract]) {
+        return this.nftData[this.selectedContract].count;
+      }
+
+      return 0;
     },
     ntfCount() {
       if (this.nftData[this.selectedContract]) {
@@ -232,6 +267,7 @@ export default {
           this.endIndex !== ids_retrieved && this.endIndex <= ids_retrieved
         );
       }
+      return null;
     },
     sideMenuData() {
       return this.nftData;
@@ -438,35 +474,41 @@ export default {
           return data.json();
         })
         .then(rawJson => {
-          this.nftData[contract].count = rawJson.total;
-          this.countsRetrieved = true;
-          const getNestedObject = (nestedObj, pathArr, token) => {
-            return pathArr.reduce((obj, key) => {
-              if (key === '@tokenvalue@') {
-                key = token.toString();
-              }
-              return obj && obj[key] !== 'undefined' ? obj[key] : undefined;
-            }, nestedObj);
-          };
-
-          const metadataKeys = this.nftData[contract].metadataKeys || [
-            'kitties'
-          ];
-          const imageKey = this.nftData[contract].imageKey || 'image_url_png';
-
-          const list = getNestedObject(rawJson, metadataKeys).map(val => {
-            return {
-              contract: contract,
-              token: val.id,
-              image: val[imageKey]
-                ? `${URL_BASE}/image?path=${val[imageKey]}`
-                : ''
+          if (rawJson.total >= 0) {
+            this.nftData[contract].count = rawJson.total;
+            this.countsRetrieved = true;
+            const getNestedObject = (nestedObj = [], pathArr, token) => {
+              return pathArr.reduce((obj, key) => {
+                if (key === '@tokenvalue@') {
+                  key = token.toString();
+                }
+                return obj && obj[key] !== 'undefined' ? obj[key] : undefined;
+              }, nestedObj);
             };
-          });
 
-          this.nftData[contract].details = list.slice(0, 9);
-          this.$set(this.nftData[contract], 'details', list.slice(0, 9));
-          return this.nftData[contract].details;
+            const metadataKeys = this.nftData[contract].metadataKeys || [
+              'kitties'
+            ];
+            const imageKey = this.nftData[contract].imageKey || 'image_url_png';
+
+            const list = getNestedObject(rawJson, metadataKeys)
+              ? getNestedObject(rawJson, metadataKeys).map(val => {
+                  return {
+                    contract: contract,
+                    token: val.id,
+                    image: val[imageKey]
+                      ? `${URL_BASE}/image?path=${val[imageKey]}`
+                      : ''
+                  };
+                })
+              : [];
+            if (list.length > 0) {
+              this.nftData[contract].details = list.slice(0, 9);
+              this.$set(this.nftData[contract], 'details', list.slice(0, 9));
+              return this.nftData[contract].details;
+            }
+            return [];
+          }
         })
         .then(list => {
           if (!list) return;
@@ -488,6 +530,7 @@ export default {
                   });
               }
             }
+            this.collectionLoading = false;
           }
           setTimeout(() => {
             this.reLoading = false;

@@ -9,22 +9,35 @@
     >
       <div class="button-container">
         <standard-button
-          :options="removeButton"
-          @click.native="continueRemove"
+          :options="{
+            title: $t('nftManager.remove'),
+            buttonStyle: 'red',
+            helpCenter: false,
+            noMinWidth: true,
+            fullWidth: false
+          }"
+          :click-function="continueRemove"
         />
-        <standard-button :options="cancelButton" @click.native="cancelRemove" />
+        <standard-button
+          :options="{
+            title: $t('common.cancel'),
+            buttonStyle: 'grey-border',
+            helpCenter: false,
+            noMinWidth: true,
+            fullWidth: false
+          }"
+          :click-function="cancelRemove"
+        />
       </div>
     </b-modal>
   </div>
 </template>
 
 <script>
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import StandardButton from '@/components/Buttons/StandardButton';
 
 export default {
   components: {
-    'interface-bottom-text': InterfaceBottomText,
     'standard-button': StandardButton
   },
   props: {
@@ -34,24 +47,6 @@ export default {
         return {};
       }
     }
-  },
-  data() {
-    return {
-      removeButton: {
-        title: `${this.$t('nftManager.remove')}`,
-        buttonStyle: 'red',
-        helpCenter: false,
-        noMinWidth: true,
-        fullWidth: false
-      },
-      cancelButton: {
-        title: `${this.$t('common.cancel')}`,
-        buttonStyle: 'grey-border',
-        helpCenter: false,
-        noMinWidth: true,
-        fullWidth: false
-      }
-    };
   },
   methods: {
     continueRemove() {

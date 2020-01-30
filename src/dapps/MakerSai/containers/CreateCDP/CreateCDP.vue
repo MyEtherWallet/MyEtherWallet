@@ -17,153 +17,7 @@
       :loadingmessage="$t('dappsMaker.creating-message')"
     />
     <div class="manage-container">
-      Single collateral SAI (previously called DAI) is being migrated to
-      multi-collateral DAI (new DAI). Therefore any new generation should use
-      the new structure.
-      <p class="top-title">
-        {{ $t('dappsMaker.maker_title') }}
-      </p>
-      <p class="top-title-sub">
-        {{ $t('dappsMaker.create-instruct') }}
-      </p>
-
-      <!--      <div class="currency-ops-new">
-        <div class="currency-picker-container">
-          <div class="interface__block-title">
-            {{ $t('dappsMaker.collateral') }}
-          </div>
-          <div class="dropdown-text-container dropdown-container">
-            <p>
-              <span class="cc ETH cc-icon currency-symbol" />
-              {{ $t('common.currency.eth') }}
-              <span class="subname"
-                >- {{ $t('common.currency.ethereum') }}
-              </span>
-            </p>
-          </div>
-          <input
-            v-model="ethQty"
-            :class="[
-              !hasEnoughEth ? 'red-border' : '',
-              'currency-picker-container',
-              'dropdown-text-container',
-              'dropdown-container'
-            ]"
-          />
-          <div class="input-block-message">
-            <p v-if="!hasEnoughEth" class="red-text">
-              {{ $t('dappsMaker.not-enough-eth') }}
-            </p>
-            <p>
-              {{ $t('dappsMaker.min-collat') }}
-              <b>{{ displayFixedValue(minEth, 6) }}</b>
-              {{ $t('common.currency.eth') }}
-            </p>
-            <p>
-              {{ displayFixedValue(depositInPeth, 6) }}
-              {{ $t('dappsMaker.peth') }}
-            </p>
-          </div>
-        </div>
-        <div class="arrow"><img :src="arrowImage" alt /></div>
-        <div>
-          <div class="interface__block-title">
-            {{ $t('dappsMaker.generate') }}
-          </div>
-          <div class="dropdown-text-container dropdown-container">
-            <p>
-              <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
-              {{ $t('dappsMaker.dai') }}
-              <span class="subname">- {{ $t('dappsMaker.maker-dai') }} </span>
-            </p>
-          </div>
-          <input
-            v-model="daiQty"
-            :class="[
-              veryRisky ? 'red-border' : '',
-              risky && !veryRisky ? 'orange-border' : '',
-              'currency-picker-container',
-              'dropdown-text-container',
-              'dropdown-container'
-            ]"
-          />
-          <div class="input-block-message">
-            <p>
-              {{ $t('dappsMaker.max-generate') }}
-              <b>{{ displayFixedValue(maxDaiDraw, 6) }}</b>
-              {{ $t('dappsMaker.dai') }}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="cdp-info-block cdp-info-entry">
-        <ul>
-          <li>
-            <p>{{ $t('dappsMaker.min-eth-req') }}</p>
-            <p>
-              {{ displayFixedValue(minEth, 6) }} {{ $t('common.currency.eth') }}
-            </p>
-          </li>
-          <li>
-            <p>{{ $t('dappsMaker.liquid-price') }}</p>
-            <p>
-              <b>{{ liquidationPrice }}</b> {{ $t('common.currency.usd') }}
-            </p>
-          </li>
-          <li>
-            <p>{{ $t('dappsMaker.current-price-info') }}</p>
-            <p>
-              {{ displayFixedValue(ethPrice, 2) }}
-              {{ $t('common.currency.usd') }}
-            </p>
-          </li>
-          <li>
-            <p>{{ $t('dappsMaker.liquidation-penalty') }}</p>
-            <p>{{ displayPercentValue(liquidationPenalty) }}%</p>
-          </li>
-          <li>
-            <p>{{ $t('dappsMaker.collateral-ratio') }}</p>
-            <p
-              :class="[
-                veryRisky ? 'red-text' : '',
-                risky && !veryRisky ? 'orange-text' : ''
-              ]"
-            >
-              <b>{{ displayFixedPercent(collatRatio) }}%</b>
-            </p>
-          </li>
-          <li>
-            <p>{{ $t('dappsMaker.minimum-ratio') }}</p>
-            <p>{{ displayPercentValue(liquidationRatio) }}%</p>
-          </li>
-        </ul>
-      </div>
-      <div class="cdp-info-block cdp-info-entry">
-        <ul>
-          <li>
-            <p>
-              {{
-                $t('dappsMaker.stability-fee-in-mkr', {
-                  value: displayFixedPercent(stabilityFee).toString()
-                })
-              }}
-            </p>
-          </li>
-        </ul>
-      </div>
-
-      <div class="buttons-container">
-        <div
-          :class="[
-            validInputs ? '' : 'disabled',
-            'submit-button large-round-button-green-filled'
-          ]"
-          @click="openDaiConfirmation"
-        >
-          {{ $t('dappsMaker.collat-and-generate') }}
-        </div>
-      </div>-->
+      {{ $t('dappsMaker.no-longer-active-notice') }}
     </div>
   </div>
 </template>
@@ -171,9 +25,6 @@
 <script>
 import { mapState } from 'vuex';
 import ethUnit from 'ethjs-unit';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
-import Blockie from '@/components/Blockie';
 import DaiConfirmationModal from '../../components/DaiConfirmationModal';
 import LoadingOverlay from '@/components/LoadingOverlay';
 import {
@@ -197,9 +48,6 @@ const bnOver = (one, two, three) => {
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie,
     'dai-confirmation-modal': DaiConfirmationModal,
     'loading-overlay': LoadingOverlay
   },
@@ -305,7 +153,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     validInputs() {
       if (toBigNumber(this.ethQty).isNaN() || toBigNumber(this.daiQty).isNaN())
         return false;

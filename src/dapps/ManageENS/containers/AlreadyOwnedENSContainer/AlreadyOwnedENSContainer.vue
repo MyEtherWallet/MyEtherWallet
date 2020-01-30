@@ -15,7 +15,7 @@
     </div>
     <div v-show="resolverMultiCoinSupport" class="content-container">
       <h4>{{ $t('ens.multi-coin') }}:</h4>
-      <div v-for="(v, k) in supportedCoins" v-if="v.value" :key="k.id">
+      <div v-for="(v, k) in supportedCoinsWithValue" :key="k.id">
         <span class="currency"
           >{{ v.symbol }} {{ $t('common.lowercase-addr') }}:
         </span>
@@ -24,7 +24,7 @@
     </div>
     <div v-show="hasAnyTxt" class="content-container">
       <h4>{{ $t('ens.txt-record') }}:</h4>
-      <div v-for="(value, key) in txtRecords" v-if="value !== ''" :key="key">
+      <div v-for="(value, key) in txtRecordsWithValue" :key="key">
         <span class="currency">{{ key }}: </span>
         <span class="content">{{ value }}</span>
       </div>
@@ -89,9 +89,21 @@ export default {
     }
   },
   computed: {
-    ...mapState(['account']),
+    ...mapState('main', ['account']),
     fullDomainName() {
       return `${this.hostName}.${this.tld}`;
+    },
+    supportedCoinsWithValue() {
+      const coins = {};
+      for (const k in this.supportedCoins)
+        if (this.supportedCoins[k].value) coins[k] = this.supportedCoins[k];
+      return coins;
+    },
+    txtRecordsWithValue() {
+      const txtRecords = {};
+      for (const k in this.txtRecords)
+        if (this.txtRecords[k]) txtRecords[k] = this.txtRecords[k];
+      return txtRecords;
     },
     hasAnyTxt() {
       for (const i in this.txtRecords) {

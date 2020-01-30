@@ -13,8 +13,8 @@
       <form class="tokens-modal-body" @keydown.enter.prevent>
         <div>
           <input
-            v-validate="'required'"
             v-model="tokenAddress"
+            v-validate="'required'"
             :class="[
               'custom-input-text-1',
               tokenAddress !== '' && !validAddress ? 'invalid-address' : ''
@@ -30,7 +30,6 @@
             {{ $t('interface.tokens.modal.error.addr') }}
           </span>
           <input
-            v-validate="'required'"
             v-model="tokenSymbol"
             :placeholder="$t('interface.tokens.modal.ph-symbol')"
             name="Symbol"
@@ -38,7 +37,6 @@
             class="custom-input-text-1"
           />
           <input
-            v-validate="'required|numeric'"
             v-model="tokenDecimal"
             :placeholder="$t('interface.tokens.modal.ph-decimals')"
             name="Decimal"
@@ -99,7 +97,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3']),
+    ...mapState('main', ['web3']),
     allFieldsValid() {
       if (!this.validAddress) return false;
       if (this.tokenSymbol === '') return false;

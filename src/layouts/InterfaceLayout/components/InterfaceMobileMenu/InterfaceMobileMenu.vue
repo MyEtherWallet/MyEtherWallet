@@ -4,8 +4,8 @@
       <b-dropdown :text="title">
         <div
           v-for="(tab, idx) in tabData"
-          :class="tab.onlineOnly && !online ? 'disabled-item' : ''"
           :key="tab.name + idx"
+          :class="tab.onlineOnly && !online ? 'disabled-item' : ''"
           class="dropdown-menu-item"
         >
           <div
@@ -56,7 +56,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['online'])
+    ...mapState('main', ['online'])
   },
   methods: {
     isTabActive(routes) {

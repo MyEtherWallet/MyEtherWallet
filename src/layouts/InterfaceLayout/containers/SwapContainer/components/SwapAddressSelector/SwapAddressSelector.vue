@@ -13,13 +13,11 @@
 import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import { mapState } from 'vuex';
-import Blockie from '@/components/Blockie';
 import { EthereumTokens, hasIcon } from '@/partners';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 
 export default {
   components: {
-    blockie: Blockie,
     'dropdown-address-selector': DropDownAddressSelector
   },
   props: {
@@ -59,7 +57,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['ens'])
+    ...mapState('main', ['ens'])
   },
   watch: {
     clearAddress() {

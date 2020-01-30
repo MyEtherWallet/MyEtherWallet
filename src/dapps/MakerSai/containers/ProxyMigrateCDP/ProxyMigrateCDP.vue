@@ -88,7 +88,7 @@
             </div>
             <div class="block-content">
               <div class="item">
-                <p>{{ $t('dappsMaker.max-withdraw') }}</p>
+                <p>{{ $t('dappsMaker.max-available') }}</p>
                 <div>
                   {{ maxEthDrawDisplay }}
                   <span>{{ $t('common.currency.eth') }}</span>
@@ -129,7 +129,7 @@
             </div>
             <div class="block-content">
               <div class="item">
-                <p>{{ $t('dappsMaker.max-available') }}</p>
+                <p>{{ $t('dappsMaker.max-available-gen') }}</p>
                 <div>
                   {{ maxDai }}
                   <span>{{ $t('dappsMaker.dai') }}</span>
@@ -151,12 +151,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import BottomHelpLink from '@/components/BottomHelpLink';
-import Blockie from '@/components/Blockie';
-import CloseCdpModal from '../../components/CloseCdpModal';
-import MoveCdpModal from '../../components/MoveCdpModal';
 import {
   displayFixedPercent,
   displayFixedValue,
@@ -171,11 +166,6 @@ const toBigNumber = num => {
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    'close-cdp-modal': CloseCdpModal,
-    'move-cdp-modal': MoveCdpModal,
-    blockie: Blockie,
     'help-link': BottomHelpLink
   },
   props: {
@@ -308,7 +298,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     collateralRatioColoring() {
       if (this.values) {
         if (this.values.collateralRatio >= 2) {

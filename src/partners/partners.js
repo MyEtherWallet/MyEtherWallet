@@ -34,6 +34,7 @@ export default class SwapProviders {
     }
     this.providerConstructors = providers;
     this.setup(providers, environmentSupplied, misc);
+    this.startTime = Date.now();
   }
 
   setup(providers, environmentSupplied, misc) {
@@ -89,7 +90,7 @@ export default class SwapProviders {
   get ratesRetrieved() {
     let result = true;
     this.providers.forEach(provider => {
-      if (!provider.ratesRetrieved) {
+      if (!provider.ratesRetrieved && Date.now() - this.startTime < 2000) {
         result = false;
       }
     });
@@ -244,7 +245,8 @@ export default class SwapProviders {
                     .times(this.rate)
                     .toFixed(6)
                     .toString(10);
-                }
+                },
+                additional: entry.additional || {}
               };
             }
           }),
@@ -326,30 +328,24 @@ export default class SwapProviders {
     fromAddress,
     refundAddress
   }) {
-    try {
-      const swapDetails = {
-        provider: providerDetails.provider,
-        fromCurrency: providerDetails.fromCurrency,
-        fromValue: fromValue,
-        toValue: toValue,
-        toCurrency: providerDetails.toCurrency,
-        rate: providerDetails.rate,
-        minValue: providerDetails.minValue,
-        maxValue: providerDetails.maxValue,
-        toAddress: toAddress,
-        fromAddress: fromAddress,
-        timestamp: new Date().toISOString(),
-        refundAddress: refundAddress
-      };
-      if (this.providers.has(swapDetails.provider)) {
-        const provider = this.providers.get(swapDetails.provider);
-        swapDetails.maybeToken = SwapProviders.isToken(
-          swapDetails.fromCurrency
-        );
-        return provider.startSwap(swapDetails);
-      }
-    } catch (e) {
-      throw e;
+    const swapDetails = {
+      provider: providerDetails.provider,
+      fromCurrency: providerDetails.fromCurrency,
+      fromValue: fromValue,
+      toValue: toValue,
+      toCurrency: providerDetails.toCurrency,
+      rate: providerDetails.rate,
+      minValue: providerDetails.minValue,
+      maxValue: providerDetails.maxValue,
+      toAddress: toAddress,
+      fromAddress: fromAddress,
+      timestamp: new Date().toISOString(),
+      refundAddress: refundAddress
+    };
+    if (this.providers.has(swapDetails.provider)) {
+      const provider = this.providers.get(swapDetails.provider);
+      swapDetails.maybeToken = SwapProviders.isToken(swapDetails.fromCurrency);
+      return provider.startSwap(swapDetails);
     }
   }
 

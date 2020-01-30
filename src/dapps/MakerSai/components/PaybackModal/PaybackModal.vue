@@ -28,7 +28,7 @@
         </div>
         <div class="input-container">
           <div class="top-buttons">
-            <p @click="currentDai">{{ $t('dappsMaker.set-max') }}</p>
+            <p @click="currentDai">{{ $t('dappsMaker.max-available') }}</p>
           </div>
           <div :class="['dai-amount', hasEnoughDai ? '' : 'danger']">
             <input v-model="amount" />
@@ -78,24 +78,44 @@
         <div class="buttons">
           <div v-if="needsDaiApprove">
             <standard-button
-              :options="approveDaiButton"
-              @click.native="approveDai"
+              :options="{
+                title: $t('dappsMaker.approve-dai'),
+                buttonStyle: 'green-border',
+                fullWidth: true,
+                noMinWidth: true
+              }"
+              :click-function="approveDai"
             />
           </div>
           <div v-if="needsMkrApprove">
             <standard-button
-              :options="approveMkrButton"
-              @click.native="approveMkr"
+              :options="{
+                title: $t('dappsMaker.approve-maker'),
+                buttonStyle: 'green-border',
+                fullWidth: true,
+                noMinWidth: true
+              }"
+              :click-function="approveMkr"
             />
           </div>
         </div>
         <div class="buttons">
           <standard-button
-            :options="cancelButton"
+            :options="{
+              title: $t('common.cancel'),
+              buttonStyle: 'green-border',
+              noMinWidth: true,
+              fullWidth: true
+            }"
             :click-function="closeModal"
           />
           <standard-button
-            :options="submitButton"
+            :options="{
+              title: $t('common.submit'),
+              buttonStyle: 'green',
+              noMinWidth: true,
+              fullWidth: true
+            }"
             :button-disabled="canProceed ? false : true"
             :click-function="submitBtn"
           />
@@ -111,7 +131,6 @@ import { mapState } from 'vuex';
 import ethUnit from 'ethjs-unit';
 import ExpandingOption from '@/components/ExpandingOption';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
-import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
 import { displayFixedValue, displayPercentValue } from '../../helpers';
 import StandardButton from '@/components/Buttons/StandardButton';
@@ -123,7 +142,6 @@ const toBigNumber = num => {
 export default {
   components: {
     'help-center-button': HelpCenterButton,
-    'check-box': CheckBox,
     'expanding-option': ExpandingOption,
     'standard-button': StandardButton
   },
@@ -184,30 +202,6 @@ export default {
       textValues: {},
       fiatCurrency: 'USD',
       digitalCurrency: 'ETH',
-      cancelButton: {
-        title: 'Cancel',
-        buttonStyle: 'green-border',
-        noMinWidth: true,
-        fullWidth: true
-      },
-      submitButton: {
-        title: 'Submit',
-        buttonStyle: 'green',
-        noMinWidth: true,
-        fullWidth: true
-      },
-      approveMkrButton: {
-        title: 'Approve Maker',
-        buttonStyle: 'green-border',
-        fullWidth: true,
-        noMinWidth: true
-      },
-      approveDaiButton: {
-        title: 'Approve Dai',
-        buttonStyle: 'green-border',
-        fullWidth: true,
-        noMinWidth: true
-      },
       suppliedFrom: {
         symbol: 'ETH',
         name: 'Ethereum'
@@ -221,7 +215,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     amountPresent() {
       return (
         (this.amount || this.amount !== '') && !toBigNumber(this.amount).lte(0)
@@ -410,7 +404,7 @@ export default {
         return item.symbol === 'MKR';
       });
       this.daiToken = this.tokensWithBalance.find(item => {
-        return item.symbol === 'DAI';
+        return item.symbol === 'SAI';
       });
     },
     getMkr() {

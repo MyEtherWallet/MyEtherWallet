@@ -78,10 +78,10 @@
             :func="button.func"
             :img="button.img"
             :img-disabled="button.imgDisabled"
-            :title="button.title"
-            :desc="button.desc"
-            :recommend="button.recommend"
-            :tooltip="button.tooltip"
+            :title="$t(button.title)"
+            :desc="$t(button.desc)"
+            :recommend="$t(button.recommend)"
+            :tooltip="$t(button.tooltip)"
             :disabled="button.disabled"
             :classname="button.classname"
           />
@@ -102,7 +102,6 @@ import NetworkAndAddressModal from '../../components/NetworkAndAddressModal';
 import PasswordModal from '../../components/PasswordModal';
 import PrivateKeyModal from '../../components/PrivateKeyModal';
 import SoftwareModal from '../../components/SoftwareModal';
-import MnemonicPasswordModal from '../../components/MnemonicPasswordModal';
 import MnemonicModal from '../../components/MnemonicModal';
 import LedgerAppModal from '../../components/LedgerAppModal';
 import WalletPasswordModal from '@/components/WalletPasswordModal';
@@ -135,7 +134,6 @@ export default {
     'password-modal': PasswordModal,
     'private-key-modal': PrivateKeyModal,
     'mnemonic-modal': MnemonicModal,
-    'mnemonic-password-modal': MnemonicPasswordModal,
     'access-wallet-button': AccessWalletButton,
     'wallet-password-modal': WalletPasswordModal,
     'enter-pin-number-modal': EnterPinNumberModal,
@@ -154,8 +152,8 @@ export default {
       buttons: [
         {
           func: this.mewConnectModalOpen,
-          title: this.$t('common.mewconnect.string'),
-          desc: this.$t('accessWallet.mewconnect.option-text'),
+          title: 'common.mewconnect.string',
+          desc: 'accessWallet.mewconnect.option-text',
           recommend: '',
           tooltip: '',
           img: mewConnectImg,
@@ -165,9 +163,8 @@ export default {
         },
         {
           func: this.hardwareModalOpen,
-          title: this.$t('accessWallet.hardware.option-title'),
-          desc:
-            'Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet',
+          title: 'accessWallet.hardware.option-title',
+          desc: 'accessWallet.hardware.examples',
           recommend: '',
           tooltip: '',
           img: hardwareImg,
@@ -177,8 +174,8 @@ export default {
         },
         {
           func: this.web3WalletModal,
-          title: this.$t('accessWallet.web3-wallet'),
-          desc: this.$t('accessWallet.web3-wallet-desc'),
+          title: 'accessWallet.web3-wallet',
+          desc: 'accessWallet.web3-wallet-desc',
           recommend: '',
           tooltip: '',
           img: web3Img,
@@ -188,9 +185,9 @@ export default {
         },
         {
           func: this.softwareModalOpen,
-          title: this.$t('accessWallet.software.option-title'),
-          desc: this.$t('accessWallet.software.option-text'),
-          recommend: this.$t('common.not-recommended.string'),
+          title: 'accessWallet.software.option-title',
+          desc: 'accessWallet.software.option-text',
+          recommend: 'common.not-recommended.string',
           tooltip: '',
           img: softwareImg,
           imgDisabled: softwareImgDisabled,
@@ -203,7 +200,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['online', 'Networks'])
+    ...mapState('main', ['Networks', 'online'])
   },
   mounted() {
     this.$nextTick(() => {

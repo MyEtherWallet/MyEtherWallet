@@ -7,19 +7,19 @@
             <h2>{{ $t('home.social.title') }}</h2>
           </div>
           <div class="icons">
-            <a
-              v-for="(link, index) in links"
-              :href="link.to"
-              :key="link.name + index"
-              :aria-label="link.name"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div :class="link.name">
-                <img :src="link.img" alt />
-                <p>{{ link.name | capitalize }}</p>
-              </div>
-            </a>
+            <div v-for="(link, index) in links" :key="link.name + index">
+              <a
+                :href="link.to"
+                :aria-label="link.name"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div :class="link.name">
+                  <img :src="link.img" alt />
+                  <p class="link-name">{{ link.name | capitalize }}</p>
+                </div>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -33,6 +33,7 @@ import reddit from '@/assets/images/icons/reddit.svg';
 import medium from '@/assets/images/icons/medium.png';
 import twitter from '@/assets/images/icons/twitter.jpg';
 import facebook from '@/assets/images/icons/facebook.png';
+import vkontakte from '@/assets/images/icons/vkontakte.png';
 
 export default {
   data() {
@@ -62,6 +63,11 @@ export default {
           img: github,
           to: 'https://www.github.com/myetherwallet',
           name: 'github'
+        },
+        {
+          img: vkontakte,
+          to: 'https://vk.com/public190491855',
+          name: 'vkontakte'
         }
       ]
     };

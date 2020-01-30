@@ -185,9 +185,6 @@
 <script>
 import { mapState } from 'vuex';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
-import Blockie from '@/components/Blockie';
 import CloseCdpModal from './components/CloseCdpModal';
 import MoveCdpModal from './components/MoveCdpModal';
 import GenerateModal from './components/GenerateModal';
@@ -215,13 +212,10 @@ const bnOver = (one, two, three) => {
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
     'generate-modal': GenerateModal,
     'deposit-modal': DepositModal,
     'withdraw-modal': WithdrawModal,
     'payback-modal': PaybackModal,
-    blockie: Blockie,
     'back-button': BackButton,
     'close-cdp-modal': CloseCdpModal,
     'move-cdp-modal': MoveCdpModal
@@ -297,7 +291,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     maxDaiDraw() {
       if (this.ethQty <= 0) return 0;
       return bnOver(this.ethPrice, this.ethQty, this.liquidationRatio);
@@ -631,10 +625,10 @@ export default {
       if (this.creatingCdp) {
         this.creatingCdp = false;
         await this.updateActiveCdp();
-        Toast.responseHandler(this.$t('dapps-maker.cdp-closed'), Toast.INFO);
+        Toast.responseHandler(this.$t('dapps-maker.cdp-created'), Toast.INFO);
       } else {
         this.valuesUpdated++;
-        Toast.responseHandler(this.$t('dapps-maker.cdp-closed'), Toast.INFO);
+        Toast.responseHandler(this.$t('dapps-maker.cdp-updated'), Toast.INFO);
       }
     },
 
@@ -801,6 +795,7 @@ export default {
       }
 
       const services = {
+        account: this.account,
         _proxyService: this._proxyService,
         priceService: this.priceService,
         _cdpService: this._cdpService,
@@ -854,9 +849,17 @@ export default {
     },
     freeEth(val) {
       if (val[1] === null) {
-        this.currentCdp.freeEth(val[0]);
+        this.currentCdp.freeEth(val[0]).then(() => {
+          if (this.$route.path.includes('maker-sai')) {
+            this.doUpdate();
+          }
+        });
       } else {
-        this.currentCdp.freeEth(val[0], val[1]);
+        this.currentCdp.freeEth(val[0], val[1]).then(() => {
+          if (this.$route.path.includes('maker-sai')) {
+            this.doUpdate();
+          }
+        });
       }
     },
     drawDai(val) {

@@ -1,12 +1,36 @@
 const statusTypes = {
-  new: { text: 'Swap Created', class: 'status-processing' },
-  sent: { text: 'Processing', class: 'status-processing' },
-  pending: { text: 'Processing', class: 'status-processing' },
-  complete: { text: 'Success', class: 'status-succeed' },
-  failed: { text: 'Failed', class: 'status-failed' },
-  cancelled: { text: 'Cancelled', class: 'status-processing' },
-  error: { text: 'Error', class: 'status-failed' },
-  statusError: { text: 'Status Error', class: 'status-failed' }
+  new: {
+    text: 'notifications.swap-created',
+    class: 'status-processing'
+  },
+  sent: {
+    text: 'notifications.processing',
+    class: 'status-processing'
+  },
+  pending: {
+    text: 'notifications.processing',
+    class: 'status-processing'
+  },
+  complete: {
+    text: 'notifications.success',
+    class: 'status-succeed'
+  },
+  failed: {
+    text: 'notifications.failed',
+    class: 'status-failed'
+  },
+  cancelled: {
+    text: 'notifications.cancelled',
+    class: 'status-processing'
+  },
+  error: {
+    text: 'notifications.error',
+    class: 'status-failed'
+  },
+  statusError: {
+    text: 'notifications.status-error',
+    class: 'status-failed'
+  }
 };
 
 const notificationHeaderLabels = {
