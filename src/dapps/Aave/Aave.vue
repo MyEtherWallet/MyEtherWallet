@@ -1,5 +1,11 @@
 <template>
   <div class="aave-container">
+    <apollo-client
+      :address="account.address"
+      @reserveData="updateReserveData"
+      @userReserveData="updateUserReserveData"
+      @usdPriceEth="updateUsdPriceEth"
+    />
     <div class="header-container">
       <div v-if="$route.fullPath === '/interface/dapps/aave/action'">
         <div class="action-title">
@@ -80,21 +86,20 @@
 </template>
 
 <script>
+import ApolloClient from './ApolloClient.vue';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
-import LendingPoolAbi from './abi/LendingPoolAbi';
-import LendingPoolAddressesProviderAbi from './abi/LendingPoolAddressesProviderAbi';
-// import ATokenAbi from './abi/AToken.js';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { Toast } from '@/helpers';
-
-import graphql from './graphql'
-import {computeUserSummaryData} from './helpers'
+import { formatUserSummaryData, computeRawUserSummaryData, formatReserves } from '@aave/protocol-js';
+// import apolloClient from './apolloClient';
+// import { EventEmitter } from 'events';
 
 export default {
   components: {
-    'back-button': BackButton
+    'back-button': BackButton,
+    'apollo-client': ApolloClient
   },
   data() {
     return {
@@ -114,7 +119,9 @@ export default {
       reserveAddr: 0,
       currentReserveBalance: '0',
       token: {},
-      actionType: ''
+      actionType: '',
+      userReserveData: [],
+      usdPriceEth: ''
     };
   },
   computed: {
@@ -145,35 +152,44 @@ export default {
       this.actionType = newVal;
     }
   },
-  async mounted() {
-    // ========= summary stuff start ==================
-    // const res1 = await graphql.useUserPositionUpdateSubscriptionSubscription(this.account.address);
-    // const res2 = await graphql.useReserveUpdateSubscriptionSubscription();
-    // const res3 = await graphql.getEthUsdPrice();
-    // console.log(res1); // todo remove dev item
-    // console.log(res2); // todo remove dev item
-    // console.log(res3); // todo remove dev item
-    // const summary = computeUserSummaryData(res2, res1, "abc", res3, Date.now());
-    // console.log(summary); // todo remove dev item
-    // // ========= summary stuff end ==================
-    this.lendingPoolContractAddress =
-      '0x24a42fD28C976A61Df5D00D0599C34c4f90748c8';
-    this.lendingPoolAddressesProviderContract = new this.web3.eth.Contract(
-      LendingPoolAddressesProviderAbi,
-      this.lendingPoolContractAddress
-    );
-    this.lendingPool = await this.lendingPoolAddressesProviderContract.methods
-      .getLendingPool()
-      .call();
-    this.lendingPoolContract = new this.web3.eth.Contract(
-      LendingPoolAbi,
-      this.lendingPool
-    );
+  mounted() {
+    // const self = this;
+    // apolloClient.getReserveUpdateSubscription().subscribe({
+    //   next(resp) {
+    //     self.getReserves(resp.data.reserves)
+    //     // self.reserves = resp.data.reserves;
+    //   }
+    // });
 
-    this.getUserInfo();
-    this.getReserves();
   },
   methods: {
+    updateReserveData(data) {
+      this.reservesData = data;
+      this.getFormatUserSummaryData()
+      console.error('data', data)
+    },
+    updateUserReserveData(data) {
+      this.userReserveData = data;
+      this.getFormatUserSummaryData()
+      console.error('user', data)
+    },
+    updateUsdPriceEth(data) {
+      this.usdPriceEth = data;
+      this.getFormatUserSummaryData()
+      console.error('dataaaaaaa', data)
+    },
+    getFormatUserSummaryData() {
+      console.error('in here')
+      if (this.reservesData.length > 0 && this.userReserveData.length > 0 && this.usdPriceEth) {
+        console.error('hello', formatUserSummaryData(
+        this.reservesData,
+        this.userReserveData,
+        this.account.address,
+        this.usdPriceEth,
+        Date.now()
+      ))
+      }
+    },
     async getUserInfo() {
       try {
         const info = await this.lendingPoolContract.methods
@@ -199,7 +215,7 @@ export default {
         )
           .toFixed(2)
           .toString();
-        console.error("info", info)
+        // console.error('info', info);
         this.ltv = info.ltv;
         this.loadingHome = false;
       } catch (err) {
@@ -229,7 +245,7 @@ export default {
         reserveInfo.address = this.reservesAddr[i];
         // change this when I get real information
         reserveInfo.isCollateral = false;
-        console.error('reserveInfo', reserveInfo)
+        // console.error('reserveInfo', reserveInfo);
         this.userReserves.push(reserveInfo);
       }
       this.loadingReserves = false;
@@ -325,8 +341,6 @@ export default {
     }
   }
 };
-
-
 </script>
 
 <style lang="scss" scoped>
