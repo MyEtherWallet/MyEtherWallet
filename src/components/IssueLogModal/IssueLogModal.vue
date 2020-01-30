@@ -86,11 +86,16 @@ export default {
   },
   data() {
     return {
-      errorDetails: JSON.stringify(this.error),
       errorCount: 0,
       showSkipper: false,
       neverShow: false
     };
+  },
+  computed: {
+    errorDetails() {
+      console.log('1');
+      return JSON.stringify(this.error, null, 2);
+    }
   },
   watch: {
     neverShow() {
@@ -98,6 +103,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.errorDetails);
     const popUpCount = store.get('errorPop') || 0;
     this.errorCount = popUpCount;
     if (this.errorCount >= 5) {
