@@ -62,7 +62,8 @@ import {
   TrezorWallet,
   BitBoxWallet,
   SecalotWallet,
-  WalletConnectWallet
+  WalletConnectWallet,
+  WalletLinkWallet
 } from '@/wallets';
 import {
   LEDGER as LEDGER_TYPE,
@@ -72,6 +73,7 @@ import {
   KEEPKEY as KEEPKEY_TYPE,
   FINNEY as FINNEY_TYPE,
   WALLET_CONNECT as WALLETCONNECT_TYPE,
+  WALLET_LINK as WALLETLINK_TYPE,
   XWALLET as XWALLET_TYPE
 } from '@/wallets/bip44/walletTypes';
 export default {
@@ -107,6 +109,14 @@ export default {
       mayNotBeAttached: false,
       isU2FSupported: false,
       items: [
+        {
+          name: WALLETLINK_TYPE,
+          imgPath: ledger,
+          text: 'WalletLink',
+          disabled: false,
+          msg: '',
+          link: ''
+        },
         {
           name: WALLETCONNECT_TYPE,
           imgPath: ledger,
@@ -264,11 +274,28 @@ export default {
         case WALLETCONNECT_TYPE:
           WalletConnectWallet()
             .then(_newWallet => {
-              this.$store.dispatch('decryptWallet', [_newWallet]).then(() => {
-                this.$router.push({
-                  path: 'interface'
+              this.$store
+                .dispatch('main/decryptWallet', [_newWallet])
+                .then(() => {
+                  this.$router.push({
+                    path: 'interface'
+                  });
                 });
-              });
+            })
+            .catch(e => {
+              WalletConnectWallet.errorHandler(e);
+            });
+          break;
+        case WALLETLINK_TYPE:
+          WalletLinkWallet()
+            .then(_newWallet => {
+              this.$store
+                .dispatch('main/decryptWallet', [_newWallet])
+                .then(() => {
+                  this.$router.push({
+                    path: 'interface'
+                  });
+                });
             })
             .catch(e => {
               WalletConnectWallet.errorHandler(e);

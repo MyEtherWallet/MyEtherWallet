@@ -93,7 +93,6 @@ export default {
   },
   computed: {
     errorDetails() {
-      console.log('1');
       return JSON.stringify(this.error, null, 2);
     }
   },
@@ -103,7 +102,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.errorDetails);
     const popUpCount = store.get('errorPop') || 0;
     this.errorCount = popUpCount;
     if (this.errorCount >= 5) {

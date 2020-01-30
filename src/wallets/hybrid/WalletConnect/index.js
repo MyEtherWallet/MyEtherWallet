@@ -1,9 +1,7 @@
 import WalletConnect from '@walletconnect/browser';
 import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
-
 import store from '@/store';
 import { Transaction } from 'ethereumjs-tx';
-import WalletInterface from '@/wallets/WalletInterface';
 import { WALLET_CONNECT as walletConnectType } from '../../bip44/walletTypes';
 import {
   getSignTransactionObject,
@@ -11,39 +9,13 @@ import {
   getBufferFromHex,
   calculateChainIdFromV
 } from '../../utils';
-import { hashPersonalMessage, toBuffer } from 'ethereumjs-util';
 import errorHandler from './errorHandler';
 import commonGenerator from '@/helpers/commonGenerator';
+import { Misc } from '@/helpers';
+import HybridWalletInterface from '../walletInterface';
 
 const BRIDGE_URL = 'https://bridge.walletconnect.org';
 const IS_HARDWARE = true;
-
-class MEWconnectWalletInterface extends WalletInterface {
-  constructor(
-    pubkey,
-    isHardware,
-    identifier,
-    txSigner,
-    msgSigner,
-    walletConnect
-  ) {
-    super(pubkey, true, identifier);
-    this.errorHandler = errorHandler;
-    this.txSigner = txSigner;
-    this.msgSigner = msgSigner;
-    this.isHardware = isHardware;
-    this.walletConnect = walletConnect;
-  }
-  getConnection() {
-    return this.walletConnect;
-  }
-  signTransaction(txParams) {
-    return super.signTransaction(txParams, this.txSigner);
-  }
-  signMessage(msg) {
-    return super.signMessage(msg, this.msgSigner);
-  }
-}
 
 class WalletConnectWallet {
   constructor() {
@@ -60,7 +32,7 @@ class WalletConnectWallet {
         const from = tx.from;
         const networkId = tx.chainId;
         tx = new Transaction(tx, {
-          common: commonGenerator(store.state.network)
+          common: commonGenerator(store.state.main.network)
         });
         console.log(tx);
         const txJSON = tx.toJSON(true);
@@ -86,7 +58,19 @@ class WalletConnectWallet {
         });
       };
       const msgSigner = msg => {
-        return new Promise(resolve => {});
+        console.log(this.walletConnect);
+        return new Promise((resolve, reject) => {
+          const msgParams = [
+            '0x' + Misc.toBuffer(msg).toString('hex'),
+            sanitizeHex(this.walletConnect.accounts[0])
+          ];
+          this.walletConnect
+            .signPersonalMessage(msgParams)
+            .then(result => {
+              resolve(getBufferFromHex(sanitizeHex(result)));
+            })
+            .catch(reject);
+        });
       };
       if (!this.walletConnect.connected) {
         this.walletConnect.createSession().then(() => {
@@ -98,13 +82,14 @@ class WalletConnectWallet {
         });
       } else {
         resolve(
-          new MEWconnectWalletInterface(
+          new HybridWalletInterface(
             sanitizeHex(this.walletConnect.accounts[0]),
             this.isHardware,
             this.identifier,
             txSigner,
             msgSigner,
-            this.walletConnect
+            this.walletConnect,
+            errorHandler
           )
         );
       }
@@ -115,13 +100,14 @@ class WalletConnectWallet {
         WalletConnectQRCodeModal.close();
         const { accounts, chainId } = payload.params[0];
         resolve(
-          new MEWconnectWalletInterface(
+          new HybridWalletInterface(
             sanitizeHex(accounts[0]),
             this.isHardware,
             this.identifier,
             txSigner,
             msgSigner,
-            this.walletConnect
+            this.walletConnect,
+            errorHandler
           )
         );
         console.log(accounts, chainId, 'onConnect');
@@ -142,13 +128,13 @@ class WalletConnectWallet {
         throw error;
       }
       console.log(payload, 'onDisconnect');
-      this.walletConnect;
     });
   }
 }
 const createWallet = async () => {
   const walletConnectWallet = new WalletConnectWallet();
   const _tWallet = await walletConnectWallet.init();
+  walletConnectWallet.subscribeToEvents();
   return _tWallet;
 };
 createWallet.errorHandler = errorHandler;
