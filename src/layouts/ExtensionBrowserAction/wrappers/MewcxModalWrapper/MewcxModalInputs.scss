@@ -1,0 +1,29 @@
+@import '~@/scss/GlobalVariables';
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+  position: relative;
+  width: 100%;
+
+  input {
+    background-color: $white;
+    border: none;
+    padding: 15px;
+    width: 100%;
+  }
+
+  label {
+    color: $dark-blue-2;
+    font-weight: bold;
+    padding-bottom: 10px;
+  }
+
+  img {
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 18px;
+  }
+}

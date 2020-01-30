@@ -1,22 +1,5 @@
 @import '~@/scss/GlobalVariables';
-
-.input-container {
-  display: flex;
-  flex-direction: column;
-  padding: 10px 0;
-
-  input {
-    background-color: $light-grey-2;
-    border: none;
-    padding: 15px;
-  }
-
-  label {
-    color: $dark-blue-12;
-    font-weight: bold;
-  }
-}
-
+@import '~@/layouts/ExtensionBrowserAction/wrappers/MewcxModalWrapper/MewcxModalInputs';
 .submit-button {
   margin-top: 10px;
   width: 100% !important;
