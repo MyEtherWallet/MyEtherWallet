@@ -85,7 +85,7 @@ export const UserReserveDataFragmentDoc = `
 function fetchQuery(args, varName) {
   try {
     const getNestedObject = (nestedObj = [], pathArr) => {
-      if(!Array.isArray(pathArr)){
+      if (!Array.isArray(pathArr)) {
         pathArr = [pathArr];
       }
       return pathArr.reduce((obj, key) => {
@@ -94,8 +94,8 @@ function fetchQuery(args, varName) {
     };
 
     // 'https://api.thegraph.com/subgraphs/name/aave/dlp-kovan'
-    const someURL =  'https://api.thegraph.com/subgraphs/name/aave/protocol';
-   return fetch(someURL, {
+    const someURL = 'https://api.thegraph.com/subgraphs/name/aave/protocol';
+    return fetch(someURL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -104,8 +104,8 @@ function fetchQuery(args, varName) {
       body: JSON.stringify(args)
     })
       .then(r => r.json())
-     .then(val => varName ? getNestedObject(val.data, varName) : val)
-      // .then(data => console.log('data returned:', data));
+      .then(val => (varName ? getNestedObject(val.data, varName) : val));
+    // .then(data => console.log('data returned:', data));
   } catch (e) {
     // eslint-disable-next-line
     console.error(e);
@@ -120,9 +120,12 @@ function getEthUsdPrice() {
           }
         }
       `;
-  return fetchQuery({
-    query
-  }, ['priceOracle', 'usdPriceEth']);
+  return fetchQuery(
+    {
+      query
+    },
+    ['priceOracle', 'usdPriceEth']
+  );
 }
 
 export function useReservesQuery(userAddress) {
@@ -140,7 +143,7 @@ export function useReservesQuery(userAddress) {
   });
 }
 
-export const ReserveUpdateSubscriptionDocument =  `
+export const ReserveUpdateSubscriptionDocument = `
   subscription ReserveUpdateSubscription {
     reserves {
       ...ReserveData
@@ -150,7 +153,7 @@ export const ReserveUpdateSubscriptionDocument =  `
 `;
 
 export function useReserveUpdateSubscriptionSubscription() {
-  const ReserveUpdateSubscriptionDocument =  `
+  const ReserveUpdateSubscriptionDocument = `
   query ReserveUpdateSubscription {
     reserves {
       ...ReserveData
@@ -158,11 +161,13 @@ export function useReserveUpdateSubscriptionSubscription() {
   }
   ${ReserveDataFragmentDoc}
 `;
-  return fetchQuery({
-    query: ReserveUpdateSubscriptionDocument
-    // variables: { userAddress }
-  }, 'reserves');
-
+  return fetchQuery(
+    {
+      query: ReserveUpdateSubscriptionDocument
+      // variables: { userAddress }
+    },
+    'reserves'
+  );
 }
 
 export function useUserPositionUpdateSubscriptionSubscription(userAddress) {
@@ -174,11 +179,13 @@ export function useUserPositionUpdateSubscriptionSubscription(userAddress) {
   }
   ${UserReserveDataFragmentDoc}
 `;
-  return fetchQuery({
-    query: UserPositionUpdateSubscriptionDocument,
-    variables: { userAddress }
-  }, 'userReserves');
-
+  return fetchQuery(
+    {
+      query: UserPositionUpdateSubscriptionDocument,
+      variables: { userAddress }
+    },
+    'userReserves'
+  );
 }
 
 export default {
