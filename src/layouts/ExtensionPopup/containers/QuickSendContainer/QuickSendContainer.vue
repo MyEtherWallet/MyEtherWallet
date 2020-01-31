@@ -376,7 +376,6 @@ export default {
         },
         {},
         res => {
-          console.log(res);
           _self.loading = false;
           if (res.hasOwnProperty('error')) {
             _self.error = {

@@ -52,7 +52,6 @@ export default async ({ event, payload }, callback, next) => {
     };
 
     worker.onerror = function(e) {
-      console.log(e, 'worker err');
       callback({ error: e });
     };
 
@@ -71,7 +70,6 @@ export default async ({ event, payload }, callback, next) => {
               txParams,
               hash
             ]);
-            console.log(hash, 'hash');
             callback(hash);
           })
           .once('receipt', res => {
