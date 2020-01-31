@@ -1,7 +1,7 @@
 import unit from 'ethjs-unit';
 import utils from 'web3-utils';
 import EthCalls from '../web3Calls';
-import { WEB3_WALLET, WALLET_CONNECT } from '../../bip44/walletTypes';
+import { WEB3_WALLET } from '../../bip44/walletTypes';
 import EventNames from '../events';
 import { toPayload } from '../jsonrpc';
 import * as locStore from 'store';
