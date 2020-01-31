@@ -189,10 +189,6 @@ export default {
       watchOnlyAddresses: [],
       myWallets: [],
       totalBalance: '0',
-      file: '',
-      path: '',
-      password: '',
-      nickname: '',
       search: '',
       showMyWallets: 0
     };
@@ -261,15 +257,6 @@ export default {
     });
   },
   methods: {
-    togglePasswordModal(file, path, nickname) {
-      const parseFile = JSON.parse(file);
-      this.file = JSON.parse(parseFile.priv);
-      if (typeof nickname !== 'undefined') {
-        this.nickname = nickname.length > 0 ? nickname : null;
-      }
-      this.path = path;
-      this.$refs.passwordOnlyModal.$refs.passwordOnlyModal.show();
-    },
     async processAccounts(accs) {
       this.totalBalance = '0';
       this.loading = true;
@@ -336,9 +323,6 @@ export default {
     },
     openWatchOnlyModal() {
       this.$refs.watchOnlyModal.$refs.watchOnlyWallet.$refs.modalWrapper.show();
-    },
-    updatePassword(e) {
-      this.password = e;
     }
   }
 };
