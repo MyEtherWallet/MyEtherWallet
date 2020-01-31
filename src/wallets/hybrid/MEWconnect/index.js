@@ -26,6 +26,9 @@ class MEWconnectWallet {
       v1Url: V1_SIGNAL_URL,
       v2Url: V2_SIGNAL_URL
     });
+    this.mewConnect.disconnect = () => {
+      this.mewConnect.disconnectRTC();
+    };
   }
   async init(qrcode) {
     this.mewConnect.on('codeDisplay', qrcode);
@@ -79,9 +82,6 @@ class MEWconnectWallet {
       });
     };
 
-    const mewConnect = () => {
-      return this.mewConnect;
-    };
     const address = await signalerConnect(V1_SIGNAL_URL, this.mewConnect);
 
     return new HybridWalletInterface(
@@ -90,7 +90,7 @@ class MEWconnectWallet {
       this.identifier,
       txSigner,
       msgSigner,
-      mewConnect,
+      this.mewConnect,
       errorHandler
     );
   }
@@ -105,6 +105,12 @@ const signalerConnect = (url, mewConnect) => {
   return new Promise(resolve => {
     mewConnect.initiatorStart(url);
     mewConnect.on('RtcConnectedEvent', () => {
+      mewConnect.on('RtcClosedEvent', () => {
+        if (mewConnect.getConnectonState()) {
+          store._vm.$eventHub.$emit('mewConnectDisconnected');
+          store.dispatch('main/clearWallet');
+        }
+      });
       mewConnect.sendRtcMessage('address', '');
       mewConnect.once('address', data => {
         resolve(data.address);

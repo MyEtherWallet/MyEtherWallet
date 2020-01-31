@@ -21,27 +21,39 @@ class WalletConnectWallet {
   constructor() {
     this.identifier = walletConnectType;
     this.isHardware = IS_HARDWARE;
+    const tempConnection = new WalletConnect({ bridge: BRIDGE_URL });
+    tempConnection._storage.removeSession();
+    tempConnection.killSession(); // remove any leftover connections
     this.walletConnect = new WalletConnect({
       bridge: BRIDGE_URL
     });
+    this.isKilled = true;
+    this.walletConnect.on('disconnect', () => {
+      if (!this.isKilled) {
+        store._vm.$eventHub.$emit('mewConnectDisconnected');
+        store.dispatch('main/clearWallet');
+      }
+    });
+
+    this.walletConnect.disconnect = () => {
+      this.isKilled = true;
+      this.walletConnect.killSession();
+    };
   }
   init() {
-    return new Promise(resolve => {
-      console.log(Transaction);
+    return new Promise((resolve, reject) => {
       const txSigner = tx => {
         const from = tx.from;
         const networkId = tx.chainId;
         tx = new Transaction(tx, {
           common: commonGenerator(store.state.main.network)
         });
-        console.log(tx);
         const txJSON = tx.toJSON(true);
         txJSON.from = from;
         return new Promise((resolve, reject) => {
           this.walletConnect
             .signTransaction(txJSON)
             .then(signed => {
-              console.log(signed);
               const _tx = new Transaction(signed);
               const signedChainId = calculateChainIdFromV(_tx.v);
               if (signedChainId !== networkId)
@@ -58,7 +70,6 @@ class WalletConnectWallet {
         });
       };
       const msgSigner = msg => {
-        console.log(this.walletConnect);
         return new Promise((resolve, reject) => {
           const msgParams = [
             '0x' + Misc.toBuffer(msg).toString('hex'),
@@ -72,33 +83,23 @@ class WalletConnectWallet {
             .catch(reject);
         });
       };
-      if (!this.walletConnect.connected) {
-        this.walletConnect.createSession().then(() => {
+      this.walletConnect
+        .createSession()
+        .then(() => {
           const uri = this.walletConnect.uri;
           // eslint-disable-next-line security/detect-non-literal-fs-filename
           WalletConnectQRCodeModal.open(uri, () => {
-            throw new Error('QR Code Modal closed');
+            reject(new Error('QR Code Modal closed'));
           });
-        });
-      } else {
-        resolve(
-          new HybridWalletInterface(
-            sanitizeHex(this.walletConnect.accounts[0]),
-            this.isHardware,
-            this.identifier,
-            txSigner,
-            msgSigner,
-            this.walletConnect,
-            errorHandler
-          )
-        );
-      }
+        })
+        .catch(reject);
       this.walletConnect.on('connect', (error, payload) => {
         if (error) {
-          throw error;
+          return reject(error);
         }
+        this.isKilled = false;
         WalletConnectQRCodeModal.close();
-        const { accounts, chainId } = payload.params[0];
+        const { accounts } = payload.params[0];
         resolve(
           new HybridWalletInterface(
             sanitizeHex(accounts[0]),
@@ -110,31 +111,13 @@ class WalletConnectWallet {
             errorHandler
           )
         );
-        console.log(accounts, chainId, 'onConnect');
       });
-    });
-  }
-  subscribeToEvents() {
-    this.walletConnect.on('session_update', (error, payload) => {
-      if (error) {
-        throw error;
-      }
-      const { accounts, chainId } = payload.params[0];
-      console.log(accounts, chainId, 'onUpdate');
-    });
-
-    this.walletConnect.on('disconnect', (error, payload) => {
-      if (error) {
-        throw error;
-      }
-      console.log(payload, 'onDisconnect');
     });
   }
 }
 const createWallet = async () => {
   const walletConnectWallet = new WalletConnectWallet();
   const _tWallet = await walletConnectWallet.init();
-  walletConnectWallet.subscribeToEvents();
   return _tWallet;
 };
 createWallet.errorHandler = errorHandler;
