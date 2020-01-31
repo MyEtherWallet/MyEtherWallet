@@ -63,14 +63,15 @@ const webpackConfig = {
         }
       }
     ])
-  ])
+  ]),
+  optimization: {
+    splitChunks: false
+  }
 };
 const pluginOptions = {
   configureMultiCompilerWebpack: [webpackConfigCXWeb3, webpackConfig]
 };
 webpackConfig.entry = webpackConfigCXWeb3.entry;
-// if (process.env.NODE_ENV !== 'production') {
-// }
 const exportObj = {
   pages: {
     index: {
