@@ -2,6 +2,12 @@
 
 - Update web3 packages [#1912](https://github.com/MyEtherWallet/MyEtherWallet/pull/1912)
 
+### Release v5.3.0-hotfix.1
+
+### Devop
+
+- Support for new ENS registry [#1923](https://github.com/MyEtherWallet/MyEtherWallet/pull/1923)
+
 ### Release v5.3.0
 
 ### Feature

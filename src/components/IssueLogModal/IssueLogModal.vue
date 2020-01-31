@@ -86,11 +86,15 @@ export default {
   },
   data() {
     return {
-      errorDetails: JSON.stringify(this.error),
       errorCount: 0,
       showSkipper: false,
       neverShow: false
     };
+  },
+  computed: {
+    errorDetails() {
+      return JSON.stringify(this.error, null, 2);
+    }
   },
   watch: {
     neverShow() {
