@@ -82,7 +82,7 @@ const getters = {
         blockExplorerTX: 'https://etherscan.io/tx/[[txHash]]',
         chainID: 1,
         contracts: [],
-        ensResolver: '0x314159265dd8dbb310642f98f50c066173c1259b',
+        ensResolver: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
         homePage: 'https://ethereum.org',
         name: 'ETH',
         name_long: 'Ethereum',
