@@ -353,21 +353,21 @@ export default {
       };
 
       const id = chrome.runtime.id;
-      chrome.storage.sync.get(null, res => {
-        if (res.hasOwnProperty('knownAddresses')) {
-          const arr = JSON.parse(res['knownAddresses']);
-          arr.push(this.toAddress);
+      // chrome.storage.sync.get(null, res => {
+      //   if (res.hasOwnProperty('knownAddresses')) {
+      //     const arr = JSON.parse(res['knownAddresses']);
+      //     arr.push(this.toAddress);
 
-          chrome.storage.sync.set({
-            knownAddresses: JSON.stringify(arr)
-          });
-        } else {
-          const newArr = [this.toAddress];
-          chrome.storage.sync.set({
-            knownAddresses: JSON.stringify(newArr)
-          });
-        }
-      });
+      //     chrome.storage.sync.set({
+      //       knownAddresses: JSON.stringify(arr)
+      //     });
+      //   } else {
+      //     const newArr = [this.toAddress];
+      //     chrome.storage.sync.set({
+      //       knownAddresses: JSON.stringify(newArr)
+      //     });
+      //   }
+      // });
       chrome.runtime.sendMessage(
         id,
         {
@@ -376,22 +376,27 @@ export default {
         },
         {},
         res => {
+          console.log(res);
           _self.loading = false;
           if (res.hasOwnProperty('error')) {
             _self.error = {
               msg: res.error,
               errored: true
             };
+            return;
           }
           if (res.hasOwnProperty('message')) {
             _self.error = {
               msg: res.message,
               errored: true
             };
+            return;
           }
 
-          // eslint-disable-next-line
-          if (!!res && (!res.hasOwnProperty('message') || !res.hasOwnProperty('error'))) {
+          if (
+            res &&
+            (!res.hasOwnProperty('message') || !res.hasOwnProperty('error'))
+          ) {
             this.txHash = res;
             this.step += 1;
           }

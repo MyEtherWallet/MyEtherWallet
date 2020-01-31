@@ -35,7 +35,7 @@ export default async (
   const ethCalls = new EthCalls(requestManager);
   try {
     tx.nonce = !tx.nonce
-      ? await store.state.web3.eth.getTransactionCount(
+      ? await store.state.main.web3.eth.getTransactionCount(
           store.state.wallet.getAddressString()
         )
       : tx.nonce;
@@ -60,7 +60,7 @@ export default async (
         });
       } else {
         eventHub.$emit(EventNames.SHOW_TX_CONFIRM_MODAL, _tx, _response => {
-          const _promiObj = store.state.web3.eth.sendSignedTransaction(
+          const _promiObj = store.state.main.web3.eth.sendSignedTransaction(
             _response.rawTransaction
           );
 

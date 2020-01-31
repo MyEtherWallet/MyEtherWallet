@@ -16,7 +16,7 @@ export default async (
   delete localTx['nonce'];
   const ethCalls = new EthCalls(requestManager);
   tx.nonce = !tx.nonce
-    ? await store.state.web3.eth.getTransactionCount(
+    ? await store.state.main.web3.eth.getTransactionCount(
         store.state.wallet.getAddressString()
       )
     : tx.nonce;
