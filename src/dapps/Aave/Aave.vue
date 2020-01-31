@@ -61,7 +61,9 @@
       <div class="health-container">
         <span>{{ $t('dappsAave.health-factor') }}</span>
         <i v-show="loadingHome" class="fa fa-spinner fa-spin health-score" />
-        <span v-if="!loadingHome" class="health-score">{{ healthFactor }}</span>
+        <span v-if="!loadingHome" class="health-score">{{
+          userSummary.healthFactor
+        }}</span>
         <popover
           :popcontent="$t('dappsAmbrpay.ambrpay-popover')"
           class="dapp-popover"
@@ -77,9 +79,10 @@
       :ltv="ltv"
       :loading-home="loadingHome"
       :loading-reserves="loadingReserves"
-      :reserves="activeDepositTab ? userReserves : reservesData"
+      :reserves="reservesData"
       :current-reserve-balance="currentReserveBalance"
-      :health-factor="healthFactor"
+      :health-factor="userSummary.healthFactor"
+      :user-summary="userSummary"
       @emitTakeAction="emitTakeAction"
     />
   </div>
@@ -89,10 +92,8 @@
 import ApolloClient from './ApolloClient.vue';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import { mapState } from 'vuex';
-import BigNumber from 'bignumber.js';
-import * as unit from 'ethjs-unit';
 import { Toast } from '@/helpers';
-import { formatUserSummaryData, computeRawUserSummaryData, formatReserves } from '@aave/protocol-js';
+import { formatUserSummaryData, formatReserves } from '@aave/protocol-js';
 // import apolloClient from './apolloClient';
 // import { EventEmitter } from 'events';
 
@@ -115,13 +116,15 @@ export default {
       loadingReserves: true,
       reservesAddr: [],
       reservesData: [],
+      rawReserveData: [],
       userReserves: [],
       reserveAddr: 0,
       currentReserveBalance: '0',
       token: {},
       actionType: '',
       userReserveData: [],
-      usdPriceEth: ''
+      usdPriceEth: '',
+      userSummary: {}
     };
   },
   computed: {
@@ -152,131 +155,55 @@ export default {
       this.actionType = newVal;
     }
   },
-  mounted() {
-    // const self = this;
-    // apolloClient.getReserveUpdateSubscription().subscribe({
-    //   next(resp) {
-    //     self.getReserves(resp.data.reserves)
-    //     // self.reserves = resp.data.reserves;
-    //   }
-    // });
-
-  },
   methods: {
     updateReserveData(data) {
-      this.reservesData = data;
-      this.getFormatUserSummaryData()
-      console.error('data', data)
+      this.rawReserveData = data;
+      this.reservesData = formatReserves(data);
+      this.loadingReserves = false;
+      this.getFormatUserSummaryData();
     },
     updateUserReserveData(data) {
       this.userReserveData = data;
-      this.getFormatUserSummaryData()
-      console.error('user', data)
+      this.getFormatUserSummaryData();
+      // console.error('user', data);
     },
     updateUsdPriceEth(data) {
       this.usdPriceEth = data;
-      this.getFormatUserSummaryData()
-      console.error('dataaaaaaa', data)
+      this.getFormatUserSummaryData();
+      // console.error('dataaaaaaa', data);
     },
     getFormatUserSummaryData() {
-      console.error('in here')
-      if (this.reservesData.length > 0 && this.userReserveData.length > 0 && this.usdPriceEth) {
-        console.error('hello', formatUserSummaryData(
-        this.reservesData,
-        this.userReserveData,
-        this.account.address,
-        this.usdPriceEth,
-        Date.now()
-      ))
-      }
-    },
-    async getUserInfo() {
-      try {
-        const info = await this.lendingPoolContract.methods
-          .getUserAccountData(this.account.address)
-          .call();
-        this.healthFactor = new BigNumber(
-          unit.fromWei(info.healthFactor, 'ether')
-        )
-          .toFixed(2)
-          .toString();
-        this.aggregatedEthBalance = new BigNumber(
-          unit.fromWei(info.totalLiquidityETH, 'ether')
-        )
-          .toFixed(2)
-          .toString();
-        this.borrowedBalance = new BigNumber(
-          unit.fromWei(info.totalBorrowsETH, 'ether')
-        )
-          .toFixed(2)
-          .toString();
-        this.collateralBalance = new BigNumber(
-          unit.fromWei(info.totalCollateralETH, 'ether')
-        )
-          .toFixed(2)
-          .toString();
-        // console.error('info', info);
-        this.ltv = info.ltv;
+      if (
+        this.reservesData.length > 0 &&
+        this.userReserveData.length > 0 &&
+        this.usdPriceEth
+      ) {
+        this.userSummary = formatUserSummaryData(
+          this.rawReserveData,
+          this.userReserveData,
+          this.account.address,
+          this.usdPriceEth,
+          Date.now()
+        );
+        console.error('user', this.userSummary)
+        // remove all of this
+        this.borrowedBalance = this.userSummary.totalBorrowsETH;
+        this.ltv = this.userSummary.currentLiquidationThreshold;
+        this.aggregatedEthBalance = this.userSummary.totalLiquidityETH;
+        this.borrowedBalance = this.userSummary.totalBorrowsETH;
+        this.collateralBalance = this.userSummary.totalCollateralETH;
+        // remove up to here
+        this.mergeTheReserves();
         this.loadingHome = false;
-      } catch (err) {
-        Toast.responseHandler(err, Toast.ERROR);
       }
     },
-    async getReserves() {
-      try {
-        this.reservesAddr = await this.lendingPoolContract.methods
-          .getReserves()
-          .call();
-        this.getReserveData();
-        this.getUserReserveData();
-      } catch (err) {
-        Toast.responseHandler(err, Toast.ERROR);
+    mergeTheReserves() {
+      if (this.userSummary.reservesData.length > 0) {
+        this.userSummary.reservesData.forEach((reserve) => {
+          const foundReserve = this.reservesData.find((elem) => elem.name === reserve.reserve.name)
+          foundReserve.user = reserve;
+        });
       }
-    },
-    async getUserReserveData() {
-      for (let i = 0; i < this.reservesAddr.length; i++) {
-        const reserveInfo = await this.lendingPoolContract.methods
-          .getUserReserveData(this.reservesAddr[i], this.account.address)
-          .call()
-          .catch(err => {
-            Toast.responseHandler(err, Toast.ERROR);
-          });
-        // reserveInfo.name = 'DAI';
-        reserveInfo.address = this.reservesAddr[i];
-        // change this when I get real information
-        reserveInfo.isCollateral = false;
-        // console.error('reserveInfo', reserveInfo);
-        this.userReserves.push(reserveInfo);
-      }
-      this.loadingReserves = false;
-      return this.userReserves;
-    },
-    async getReserveData() {
-      for (let i = 0; i < this.reservesAddr.length; i++) {
-        const reserveInfo = await this.lendingPoolContract.methods
-          .getReserveData(this.reservesAddr[i])
-          .call()
-          .catch(err => {
-            Toast.responseHandler(err, Toast.ERROR);
-          });
-        reserveInfo.name = 'ETH';
-        reserveInfo.address = this.reservesAddr[i];
-        reserveInfo.isStable = true;
-        this.reservesData.push(reserveInfo);
-      }
-      // change this when I get real information
-      // console.error('this', this.reservesData);
-      this.loadingReserves = false;
-      // console.error('hello')
-      // console.error('hellooooo', this.reservesData[0])
-      // this.aTokenContract = new this.web3.eth.Contract(
-      //   ATokenAbi,
-      //   this.reservesData[0]
-      // );
-
-      // const info = await this.aTokenContract.methods.name().call();
-      // console.error('info', this.aTokenContract)
-      return this.reservesData;
     },
     emitTakeAction(param) {
       this.activeDepositTab ? this.deposit(param) : this.borrow(param);

@@ -16,7 +16,16 @@
     <div class="balance-row">
       <balance-display
         :loading-home="loadingHome"
-        :balance="activeDepositTab ? aggregatedEthBalance : borrowedBalance"
+        :balance-eth="
+          activeDepositTab
+            ? userSummary.totalLiquidityETH
+            : userSummary.totalBorrowsETH
+        "
+        :balance-usd="
+          activeDepositTab
+            ? userSummary.totalLiquidityUSD
+            : userSummary.totalBorrowsUSD
+        "
         :composition-percentage="100"
         :title="
           activeDepositTab
@@ -27,7 +36,8 @@
       <balance-display
         :loading-home="loadingHome"
         :composition-percentage="100"
-        :balance="activeDepositTab ? '0' : collateralBalance"
+        :balance-eth="activeDepositTab ? '0' : userSummary.totalCollateralETH"
+        :balance-usd="activeDepositTab ? '0' : userSummary.totalCollateralUSD"
         :title="
           activeDepositTab
             ? $t('dappsAave.earnings')
@@ -39,12 +49,14 @@
     <div v-if="activeBorrowTab" class="loan-container">
       <span class="loan-value">{{ $t('dappsAave.loan-value') }}</span>
       <i v-show="loadingHome" class="fa fa-spinner fa-spin" />
-      <span v-if="!loadingHome" class="loan-percent">{{ ltv }}%</span>
+      <span v-if="!loadingHome" class="loan-percent"
+        >{{ userSummary.currentLiquidationThreshold }}%</span
+      >
     </div>
     <!-- have to change the value once we get real data -->
     <summary-table
-      :reserves="reserves"
-      :health-factor="healthFactor"
+      :user-summary-reserves="userSummary.reservesData"
+      :health-factor="userSummary.healthFactor"
       :active-deposit-tab="activeDepositTab"
     />
     <action-modal
@@ -72,9 +84,11 @@ export default {
     'summary-table': SummaryTable
   },
   props: {
-    healthFactor: {
-      type: String,
-      default: ''
+    userSummary: {
+      type: Object,
+      default: () => {
+        return {};
+      }
     },
     activeBorrowTab: {
       type: Boolean,
@@ -83,22 +97,6 @@ export default {
     activeDepositTab: {
       type: Boolean,
       default: true
-    },
-    aggregatedEthBalance: {
-      type: String,
-      default: ''
-    },
-    borrowedBalance: {
-      type: String,
-      default: ''
-    },
-    collateralBalance: {
-      type: String,
-      default: ''
-    },
-    ltv: {
-      type: String,
-      default: ''
     },
     loadingHome: {
       type: Boolean,

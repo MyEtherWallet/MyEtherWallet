@@ -109,23 +109,28 @@
                 <td>
                   {{
                     depositModal
-                      ? convertToEther(token.currentATokenBalance)
-                      : convertToEther(token.availableLiquidity)
+                      ? token.user
+                        ? convertToFixed(token.user.principalATokenBalance)
+                        : 0
+                      : convertToFixed(token.availableLiquidity)
                   }}
-                  {{ token.name }}
+                  {{ token.symbol }}
                 </td>
                 <td :class="depositModal ? '' : 'stable-apr'">
                   {{
                     depositModal
-                      ? convertToEther(token.currentUnderlyingBalance)
-                      : convertFromRay(token.fixedBorrowRate) + '%'
+                      ? token.user
+                        ? convertToFixed(token.user.principalATokenBalance)
+                        : 0
+                      : convertToFixed(token.stableBorrowRate * 100) + '%'
                   }}
+                  {{ depositModal ? token.symbol : '' }}
                 </td>
                 <td :class="depositModal ? '' : 'var-apr'">
                   {{
                     depositModal
-                      ? convertFromRay(token.borrowRate)
-                      : convertFromRay(token.variableBorrowRate)
+                      ? convertToFixed(token.liquidityRate * 100)
+                      : convertToFixed(token.variableBorrowRate * 100)
                   }}%
                 </td>
                 <td>
@@ -186,8 +191,8 @@ export default {
       this.search = '';
     },
     reserves(newVal) {
-      this.localReserves = [];
-      newVal.forEach(reserve => this.localReserves.push(reserve));
+      console.error('newVal', newVal);
+      this.getLocalReserves(newVal);
     },
     search(newVal) {
       this.localReserves = [];
@@ -200,16 +205,15 @@ export default {
           }
         });
       } else {
-        this.reserves.forEach(reserve => this.localReserves.push(reserve));
+        this.getLocalReserves(this.reserves);
       }
     }
   },
-  mounted() {
-    if (this.reserves) {
-      this.reserves.forEach(reserve => this.localReserves.push(reserve));
-    }
-  },
   methods: {
+    getLocalReserves(reserves) {
+      this.localReserves = [];
+      reserves.forEach(reserve => this.localReserves.push(reserve));
+    },
     convertFromRay(int) {
       const rayUnit = new BigNumber(10).pow(27);
       const convertedInt = new BigNumber(int).div(rayUnit);
@@ -246,6 +250,9 @@ export default {
     takeAction(token) {
       this.$refs['actionModal'].hide();
       this.$router.push({ name: 'Action', params: { token: token } });
+    },
+    convertToFixed(val) {
+      return new BigNumber(val).toFixed(2).toString();
     },
     convertToEther(wei) {
       if (!wei) {

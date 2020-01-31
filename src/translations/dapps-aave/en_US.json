@@ -69,5 +69,6 @@
   "switch-interest": "Switch the interest",
   "current-interest": "Current Interest Type",
   "next-interest": "Next Interest Type",
-  "confirm-switch": "Confirm to switch"
+  "confirm-switch": "Confirm to switch",
+  "no-tokens": "There are no tokens :("
 }

@@ -50,7 +50,7 @@
             <div class="right-container">
               <!-- placeholder -->
               <p v-if="isCollateralModal" class="currency-title">ETH</p>
-              <p class="mt-4">{{ healthFactor }}</p>
+              <p class="mt-4">{{ userSummary.healthFactor }}</p>
               <!-- placeholder -->
               <p class="mt-4">22323</p>
             </div>
@@ -101,6 +101,12 @@ export default {
     popover: PopOver
   },
   props: {
+    userSummary: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    },
     activeDepositTab: {
       type: Boolean,
       default: false
@@ -110,10 +116,6 @@ export default {
       default: false
     },
     amount: {
-      type: String,
-      default: ''
-    },
-    healthFactor: {
       type: String,
       default: ''
     },
