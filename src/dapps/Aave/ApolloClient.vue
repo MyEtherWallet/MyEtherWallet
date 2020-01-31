@@ -17,7 +17,6 @@ export default {
     }
   },
   mounted() {
-
     const GRAPHQL_ENDPOINT =
       'wss://api.thegraph.com/subgraphs/name/aave/protocol-raw';
     // const QUERY_SERVER_URL =
@@ -158,11 +157,11 @@ export default {
         })
         .subscribe({
           next(resp) {
-            console.log('resp', resp)
+            console.log('resp', resp);
             vm.$emit('reserveData', resp.data.reserves);
           }
         });
     }
   }
-}
+};
 </script>

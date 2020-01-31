@@ -37,7 +37,7 @@
           {{
             activeDepositTab
               ? convertToEther(token.currentATokenBalance)
-              : collateralBalance
+              : userSummary.totalCollateralETH
           }}
           <span class="token-name">{{ token.name }}</span>
         </p>
@@ -45,7 +45,7 @@
           ${{
             activeDepositTab
               ? getUSDBalance(convertToEther(token.currentATokenBalance))
-              : getUSDBalance(collateralBalance)
+              : getUSDBalance(userSummary.totalCollateralETH)
           }}
         </p>
       </div>
@@ -115,7 +115,7 @@
       ref="confirmationModal"
       :active-deposit-tab="activeDepositTab"
       :amount="amount"
-      :health-factor="healthFactor"
+      :health-factor="userSummary.healthFactor"
       :token="token"
       @emitTakeAction="emitTakeAction"
     />
@@ -136,6 +136,12 @@ export default {
     'confirmation-modal': ConfirmationModal
   },
   props: {
+    userSummary: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    },
     activeBorrowTab: {
       type: Boolean,
       default: false
@@ -150,15 +156,7 @@ export default {
         return [];
       }
     },
-    collateralBalance: {
-      type: String,
-      default: ''
-    },
     currentReserveBalance: {
-      type: String,
-      default: ''
-    },
-    healthFactor: {
       type: String,
       default: ''
     }

@@ -48,13 +48,13 @@
         <th></th>
       </thead>
       <tbody>
-        <tr v-for="(reserve, index) in reserves" :key="reserve.key">
+        <tr v-for="(reserve, index) in userReserves" :key="reserve.key">
           <!-- need to change icon -->
           <td class="token-name">
             <img
               class="token-icon mr-2"
               src="@/assets/images/currency/eth.svg"
-            />{{ reserve.name }}
+            />{{ reserve.reserve.name }}
           </td>
           <td class="pt-3">
             <!-- placeholder -->
@@ -139,7 +139,7 @@ export default {
     'switch-interest-modal': SwitchInterestModal
   },
   props: {
-    reserves: {
+    userReserves: {
       type: Array,
       default: function() {
         return [];
@@ -160,7 +160,7 @@ export default {
     };
   },
   mounted() {
-    // console.error('reerve', this.reserves[0].isStable)
+    console.error('reerve', this.reserves)
   },
   methods: {
     useAsCollateral(idx) {
