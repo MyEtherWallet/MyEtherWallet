@@ -298,7 +298,7 @@ export default {
                 });
             })
             .catch(e => {
-              WalletConnectWallet.errorHandler(e);
+              WalletLinkWallet.errorHandler(e);
             });
           break;
         case FINNEY_TYPE:

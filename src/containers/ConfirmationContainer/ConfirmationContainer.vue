@@ -309,9 +309,12 @@ export default {
       this.responseFunction = resolve;
       this.messageToSign = data;
       this.signedMessage = '';
-      const signPromise = this.wallet.signMessage(data).then(_response => {
-        this.signedMessage = '0x' + _response.toString('hex');
-      });
+      const signPromise = this.wallet
+        .signMessage(data)
+        .then(_response => {
+          this.signedMessage = '0x' + _response.toString('hex');
+        })
+        .catch(this.wallet.errorHandler);
       if (this.account.identifier === KEEPKEY) {
         signPromise.then(() => {
           this.signConfirmationModalOpen();

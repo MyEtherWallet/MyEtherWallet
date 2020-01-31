@@ -2,7 +2,11 @@ import url from 'url';
 import web3 from 'web3';
 import Vue from 'vue';
 import MEWProvider from '@/wallets/web3-provider';
-import { MEW_CONNECT } from '@/wallets/bip44/walletTypes';
+import {
+  MEW_CONNECT,
+  WALLET_CONNECT,
+  WALLET_LINK
+} from '@/wallets/bip44/walletTypes';
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
 import { MEW_CX } from '@/builds/configs/types';
@@ -125,8 +129,13 @@ const gettingStartedDone = function({ commit }) {
 
 const clearWallet = function({ commit, state }) {
   const linkTo = state.path !== '' ? state.path : '/';
-  if (state.wallet && state.wallet.identifier === MEW_CONNECT) {
-    state.wallet.mewConnect().disconnectRTC();
+  if (
+    state.wallet &&
+    (state.wallet.identifier === MEW_CONNECT ||
+      state.wallet.identifier === WALLET_CONNECT ||
+      state.wallet.identifier === WALLET_LINK)
+  ) {
+    state.wallet.getConnection().disconnect();
   }
   Vue.router.push(linkTo);
   commit('CLEAR_WALLET');
@@ -140,15 +149,6 @@ const decryptWallet = function({ commit, dispatch }, params) {
   // if the wallet param (param[0]) is undefined or null then all the subsequent setup steps will also fail.
   // just explicitly stop it here.
   if (params[0] !== undefined && params[0] !== null) {
-    if (params[0].identifier === MEW_CONNECT) {
-      params[0].mewConnect().on('RtcClosedEvent', () => {
-        if (params[0].mewConnect().getConnectonState()) {
-          this._vm.$eventHub.$emit('mewConnectDisconnected');
-          dispatch('clearWallet');
-        }
-      });
-    }
-
     commit('DECRYPT_WALLET', params[0]);
     dispatch('setWeb3Instance', params[1]);
   } else {

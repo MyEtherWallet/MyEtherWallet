@@ -15,22 +15,27 @@ import { Misc } from '@/helpers';
 import HybridWalletInterface from '../walletInterface';
 
 const IS_HARDWARE = true;
-
+const APP_NAME = 'MEW';
+const APP_LOGO = 'https://www.myetherwallet.com/img/icons/icon192.png';
 class WalletLinkWallet {
   constructor() {
     this.identifier = walletLinkType;
     this.isHardware = IS_HARDWARE;
     this.walletLink = new WalletLink({
-      appName: 'MEW',
-      appLogoUrl: 'https://www.myetherwallet.com/img/icons/icon192.png'
+      appName: APP_NAME,
+      appLogoUrl: APP_LOGO
     });
     this.connection = this.walletLink.makeWeb3Provider(
       'realrpcurlnotrequired',
       0
     );
+    this.connection._relay.storage.clear();
+    this.connection.disconnect = () => {
+      this.connection._relay.storage.clear();
+    };
   }
   init() {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const txSigner = tx => {
         const networkId = tx.chainId;
         tx = new Transaction(tx, {
@@ -69,24 +74,23 @@ class WalletLinkWallet {
             .catch(reject);
         });
       };
-      this.connection.enable().then(accounts => {
-        console.log(this.connection);
-        resolve(
-          new HybridWalletInterface(
-            sanitizeHex(accounts[0]),
-            this.isHardware,
-            this.identifier,
-            txSigner,
-            msgSigner,
-            this.connection,
-            errorHandler
-          )
-        );
-      });
+      this.connection
+        .enable()
+        .then(accounts => {
+          resolve(
+            new HybridWalletInterface(
+              sanitizeHex(accounts[0]),
+              this.isHardware,
+              this.identifier,
+              txSigner,
+              msgSigner,
+              this.connection,
+              errorHandler
+            )
+          );
+        })
+        .catch(reject);
     });
-  }
-  disconnect() {
-    this.connection._relay.storage.clear();
   }
 }
 const createWallet = async () => {
