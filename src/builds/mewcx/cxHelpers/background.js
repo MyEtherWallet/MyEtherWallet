@@ -205,12 +205,6 @@ function onUpdatedCb(_, __, tab) {
 function onActivatedCb(info) {
   console.log('gets to on activated', info);
   chrome.tabs.get(info.tabId, function(tab) {
-    console.log(
-      typeof tab !== 'undefined',
-      Object.keys(tab).length > 0,
-      !isChromeUrl(tab.url),
-      tab
-    );
     if (
       typeof tab !== 'undefined' &&
       Object.keys(tab).length > 0 &&
@@ -220,6 +214,7 @@ function onActivatedCb(info) {
       chrome.runtime.onMessage.removeListener(eventsListeners);
       urls[info.tabId] = extractRootDomain(tab.url);
       querycB(tab);
+      console.log('here too?');
       chrome.runtime.onMessage.addListener(eventsListeners);
     }
   });

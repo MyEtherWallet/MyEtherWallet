@@ -103,13 +103,11 @@ const networkSwitch = (item, _self) => {
         }
       );
     }
-    _self.$store
-      .dispatch('main/switchNetwork', network, { root: true })
-      .then(() => {
-        _self.$store.dispatch('main/setWeb3Instance', { root: true });
-      });
+    _self.$store.dispatch('main/switchNetwork', network).then(() => {
+      _self.$store.dispatch('main/setWeb3Instance');
+    });
   } else {
-    _self.$store.dispatch('main/setWeb3Instance', { root: true });
+    _self.$store.dispatch('main/setWeb3Instance');
   }
 };
 
