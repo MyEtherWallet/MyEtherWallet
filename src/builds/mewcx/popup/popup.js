@@ -55,7 +55,7 @@ const storeQuery = query => {
       blankObj[key] = Misc.stripTags(query[key]);
     }
 
-    store.dispatch('saveQueryVal', blankObj);
+    store.dispatch('main/saveQueryVal', blankObj);
   }
 };
 

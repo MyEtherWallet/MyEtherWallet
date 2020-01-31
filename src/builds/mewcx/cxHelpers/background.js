@@ -26,7 +26,6 @@ import {
 } from './cxEvents';
 import utils from 'web3-utils';
 const chrome = window.chrome;
-console.log('gets to initial state');
 chrome.tabs.onUpdated.addListener(onUpdatedCb);
 chrome.tabs.onActivated.addListener(onActivatedCb);
 chrome.tabs.onRemoved.addListener(onRemovedCb);
@@ -136,7 +135,6 @@ const urls = {};
 // eslint-disable-next-line
 let metamaskChecker;
 const eventsListeners = (request, _, callback) => {
-  console.log('gets setup');
   if (request.event === CX_WEB3_DETECTED) {
     clearTimeout(metamaskChecker);
     metamaskChecker = setTimeout(() => {
@@ -179,7 +177,6 @@ chrome.tabs.query({ active: true, lastFocusedWindow: true }, function(tabs) {
 });
 
 function onRemovedCb(id) {
-  console.log('gets to on removed');
   if (urls[id]) {
     chrome.storage.sync.remove(urls[id], () => {});
     delete urls[id];
@@ -190,7 +187,6 @@ const isChromeUrl = url => {
   return url.startsWith('chrome://') || url.startsWith('chrome-extension://');
 };
 function onUpdatedCb(_, __, tab) {
-  console.log('gets to on udpated');
   if (
     typeof tab !== 'undefined' &&
     Object.keys(tab).length > 0 &&
@@ -203,25 +199,21 @@ function onUpdatedCb(_, __, tab) {
   }
 }
 function onActivatedCb(info) {
-  console.log('gets to on activated', info);
   chrome.tabs.get(info.tabId, function(tab) {
     if (
       typeof tab !== 'undefined' &&
       Object.keys(tab).length > 0 &&
       !isChromeUrl(tab.url)
     ) {
-      console.log('gets here');
       chrome.runtime.onMessage.removeListener(eventsListeners);
       urls[info.tabId] = extractRootDomain(tab.url);
       querycB(tab);
-      console.log('here too?');
       chrome.runtime.onMessage.addListener(eventsListeners);
     }
   });
 }
 
 function onInstalledCb() {
-  console.log('gets to on installed');
   chrome.runtime.onMessage.removeListener(eventsListeners);
   chrome.runtime.onMessage.addListener(eventsListeners);
 }
@@ -268,7 +260,6 @@ function querycB(tab) {
         chrome.tabs.update(null, { url: urlRedirect });
       } else {
         // Injects web3
-        // eslint-disable-next-line
         chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
           store.state.main.web3.eth.net.getId().then(() => {
             chrome.tabs.sendMessage(tab.id, {
@@ -279,7 +270,6 @@ function querycB(tab) {
       }
     } else {
       // Injects web3
-      // eslint-disable-next-line
       chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
         store.state.main.web3.eth.net.getId().then(() => {
           chrome.tabs.sendMessage(tab.id, {
