@@ -5,10 +5,12 @@ import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { Transaction } from 'ethereumjs-tx';
 import { WEB3_SIGN_TX } from '../cxEvents';
 import store from '@/store';
+import { toChecksumAddress } from '@/helpers/addressUtils';
+
 export default async ({ event, payload }, callback, next) => {
   if (event !== WEB3_SIGN_TX) return next();
   const worker = new walletWorker();
-  const signer = payload.signer;
+  const signer = toChecksumAddress(payload.signer).toLowerCase();
   const password = payload.password;
   const txParams = payload.params;
   const globChrome = chrome;
@@ -30,7 +32,10 @@ export default async ({ event, payload }, callback, next) => {
   };
   globChrome.storage.sync.get(signer, item => {
     const parsedItem = JSON.parse(item[signer]);
-    const keystore = JSON.parse(parsedItem.priv);
+    const keystore =
+      typeof parsedItem.priv !== 'string'
+        ? parsedItem.priv
+        : JSON.parse(parsedItem.priv);
 
     worker.postMessage({
       type: 'unlockWallet',
@@ -47,6 +52,7 @@ export default async ({ event, payload }, callback, next) => {
     };
 
     worker.onerror = function(e) {
+      console.log(e, 'worker err');
       callback({ error: e });
     };
 
@@ -55,16 +61,17 @@ export default async ({ event, payload }, callback, next) => {
       const newTx = new Transaction(txParams);
       try {
         const signedTx = await wallet.signTransaction(newTx);
-        store.state.web3.eth
+        store.state.main.web3.eth
           .sendSignedTransaction(signedTx.rawTransaction)
           .once('transactionHash', hash => {
             funcHash = hash;
-            store.dispatch('addNotification', [
+            store.dispatch('main/addNotification', [
               'Hash',
               txParams.from,
               txParams,
               hash
             ]);
+            console.log(hash, 'hash');
             callback(hash);
           })
           .once('receipt', res => {
@@ -75,7 +82,7 @@ export default async ({ event, payload }, callback, next) => {
               title: 'Transaction confirmed!',
               message: `Transaction with hash ${res.blockHash} has been mined!`
             });
-            store.dispatch('addNotification', [
+            store.dispatch('main/addNotification', [
               'Receipt',
               txParams.from,
               txParams,
@@ -91,7 +98,7 @@ export default async ({ event, payload }, callback, next) => {
               title: 'Something went wrong!',
               message: `Your transaction with hash ${funcHash} failed with error: ${err}`
             });
-            store.dispatch('addNotification', [
+            store.dispatch('main/addNotification', [
               'Error',
               txParams.from,
               txParams,

@@ -31,7 +31,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['web3', 'network'])
+    ...mapState('main', ['web3', 'network', 'Networks'])
   },
   created() {
     window.chrome.storage.onChanged.addListener(this.storageListener);
@@ -52,13 +52,11 @@ export default {
     storageListener(changed) {
       if (changed && changed.hasOwnProperty('defNetwork')) {
         const networkProps = JSON.parse(changed['defNetwork'].newValue);
-        const network = this.$store.state.main.Networks[networkProps.key].find(
-          actualNetwork => {
-            return actualNetwork.service === networkProps.service;
-          }
-        );
+        const network = this.Networks[networkProps.key].find(actualNetwork => {
+          return actualNetwork.service === networkProps.service;
+        });
         this.switchNetwork(
-          !network ? this.$store.state.Networks[networkProps.key][0] : network
+          !network ? this.Networks[networkProps.key][0] : network
         ).then(() => {
           this.setWeb3Instance();
         });
