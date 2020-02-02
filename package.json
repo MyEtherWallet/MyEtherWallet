@@ -135,7 +135,7 @@
     "vue-template-compiler": "2.6.11",
     "vue-worker": "1.2.1",
     "wallet-address-validator": "0.2.4",
-    "web3": "1.2.4",
+    "web3": "1.2.6",
     "web3-core-helpers": "1.2.4",
     "web3-core-method": "1.2.4",
     "web3-core-requestmanager": "1.2.4",
