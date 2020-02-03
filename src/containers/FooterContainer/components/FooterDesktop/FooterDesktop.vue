@@ -141,84 +141,16 @@
         <v-spacer />
         <div class="social-icons">
           <v-btn
+            v-for="i in icons"
+            :key="i.icon"
             text
             icon
-            color="blue-grey"
+            :color="iconColor"
             class="mr-1"
-            href="https://www.facebook.com/MyEtherWallet"
+            :href="i.link"
             target="_blank"
           >
-            <v-icon class="title">mdi-facebook</v-icon>
-          </v-btn>
-          <v-btn
-            text
-            icon
-            color="blue-grey"
-            class="mr-1"
-            href="https://twitter.com/myetherwallet"
-            target="_blank"
-          >
-            <v-icon class="title">mdi-twitter</v-icon>
-          </v-btn>
-          <v-btn
-            text
-            icon
-            color="blue-grey"
-            class="mr-1"
-            href="https://www.instagram.com/myetherwallet/"
-            target="_blank"
-          >
-            <v-icon class="title">mdi-instagram</v-icon>
-          </v-btn>
-          <v-btn
-            text
-            icon
-            color="blue-grey"
-            class="mr-1"
-            href="https://www.linkedin.com/company/myetherwallet"
-            target="_blank"
-          >
-            <v-icon class="title">mdi-linkedin</v-icon>
-          </v-btn>
-          <v-btn
-            text
-            icon
-            color="blue-grey"
-            class="mr-1"
-            href="https://github.com/myetherwallet"
-            target="_blank"
-          >
-            <v-icon class="title">mdi-github-circle</v-icon>
-          </v-btn>
-          <v-btn
-            text
-            icon
-            color="blue-grey"
-            class="mr-1"
-            href="https://www.reddit.com/r/MyEtherWallet/"
-            target="_blank"
-          >
-            <v-icon class="title">mdi-reddit</v-icon>
-          </v-btn>
-          <v-btn
-            text
-            icon
-            color="blue-grey"
-            class="mr-1"
-            href="https://www.youtube.com/channel/UCQU5QbObwmaHNEMsuX3uQKA"
-            target="_blank"
-          >
-            <v-icon class="title">mdi-youtube</v-icon>
-          </v-btn>
-          <v-btn
-            text
-            icon
-            color="blue-grey"
-            class="mr-1"
-            href="https://medium.com/@myetherwallet"
-            target="_blank"
-          >
-            <v-icon class="title">mdi-medium</v-icon>
+            <v-icon class="title">{{ i.icon }}</v-icon>
           </v-btn>
         </div>
       </div>
@@ -228,12 +160,49 @@
 </template>
 
 <script>
+import Vars from '@/variables.js';
 import FootNote from './components/FootNote';
 
 export default {
   name: 'FooterDesktop',
   components: { FootNote },
-  data: () => ({})
+  data: () => ({
+    iconColor: Vars.colors.footerIconColor,
+    icons: [
+      {
+        link: 'https://www.facebook.com/MyEtherWallet',
+        icon: 'mdi-facebook'
+      },
+      {
+        link: 'https://twitter.com/myetherwallet',
+        icon: 'mdi-twitter'
+      },
+      {
+        link: 'https://www.instagram.com/myetherwallet/',
+        icon: 'mdi-instagram'
+      },
+      {
+        link: 'https://www.linkedin.com/company/myetherwallet',
+        icon: 'mdi-linkedin'
+      },
+      {
+        link: 'https://github.com/myetherwallet',
+        icon: 'mdi-github-circle'
+      },
+      {
+        link: 'https://www.reddit.com/r/MyEtherWallet/',
+        icon: 'mdi-reddit'
+      },
+      {
+        link: 'https://www.youtube.com/channel/UCQU5QbObwmaHNEMsuX3uQKA',
+        icon: 'mdi-youtube'
+      },
+      {
+        link: 'https://medium.com/@myetherwallet',
+        icon: 'mdi-medium'
+      }
+    ]
+  })
 };
 </script>
 

@@ -17,7 +17,7 @@
 export default {
   props: {
     buttonclass: { default: 'button--green', type: String },
-    to: { default: '', type: String },
+    to: { default: () => {}, type: Object },
     href: { default: '', type: String },
     disabled: { default: false, type: Boolean },
     minwidth: { default: true, type: Boolean }
