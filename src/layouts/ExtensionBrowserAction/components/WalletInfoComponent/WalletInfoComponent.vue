@@ -86,23 +86,26 @@
       <div class="main-wallet-content">
         <div class="main-wallet-content-container">
           <div class="wallet-value-with-img">
-            <div
-              :class="[
-                page !== '' ? 'no-background' : '',
-                'wallet-img-container'
-              ]"
-            >
+            <div class="wallet-img-container">
               <img
-                v-if="page === '' || walletType !== 'watchOnly'"
+                v-if="page === ''"
                 alt
                 class="icon"
-                src="~@/assets/images/icons/wallet.svg"
+                src="~@/assets/images/icons/wallet-with-background.svg"
+              />
+              <img
+                v-else-if="page !== '' && walletType !== 'watchOnly'"
+                v-b-popover.hover.top="'My Wallet'"
+                alt
+                class="icon"
+                src="~@/assets/images/icons/wallet_grey.svg"
               />
               <img
                 v-else
+                v-b-popover.hover.top="'Watch Only Wallet'"
                 alt
                 class="icon"
-                src="~@/assets/images/icons/hide-password.svg"
+                src="~@/assets/images/icons/eye_grey.svg"
               />
             </div>
             <div class="wallet-value-container">
