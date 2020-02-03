@@ -1,3 +1,7 @@
+### Devop
+
+- add support for lang based paths /en /ru [#1915][https://github.com/MyEtherWallet/MyEtherWallet/pull/1915]
+
 ### Release v5.3.0
 
 ### Feature
