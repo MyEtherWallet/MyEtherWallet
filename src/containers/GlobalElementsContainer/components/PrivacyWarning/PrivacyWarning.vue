@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     openPrivacyWarning() {
-      this.sheet = true;
+      //this.sheet = true;
     }
   }
 };
