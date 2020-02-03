@@ -70,5 +70,6 @@
   "current-interest": "Current Interest Type",
   "next-interest": "Next Interest Type",
   "confirm-switch": "Confirm to switch",
-  "no-tokens": "There are no tokens :("
+  "no-tokens": "There are no tokens :(",
+  "user-no-tokens": "You have no tokens"
 }

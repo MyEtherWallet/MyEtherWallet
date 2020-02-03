@@ -102,6 +102,14 @@ export default {
     'back-button': BackButton,
     'apollo-client': ApolloClient
   },
+  props: {
+    tokensWithBalance: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
+  },
   data() {
     return {
       activeDepositTab: true,
@@ -199,9 +207,24 @@ export default {
     },
     mergeTheReserves() {
       if (this.userSummary.reservesData.length > 0) {
-        this.userSummary.reservesData.forEach((reserve) => {
-          const foundReserve = this.reservesData.find((elem) => elem.name === reserve.reserve.name)
+        this.userSummary.reservesData.forEach(reserve => {
+          const foundReserve = this.reservesData.find(
+            elem => elem.name === reserve.reserve.name
+          );
           foundReserve.user = reserve;
+        });
+      }
+      this.getReserveBalances();
+    },
+    getReserveBalances() {
+      if (this.reservesData.length > 0) {
+        this.reservesData.forEach(reserve => {
+          const foundReserve = this.tokensWithBalance.find(
+            elem => elem.symbol === reserve.symbol
+          );
+          if (foundReserve) {
+            reserve.tokenBalance = foundReserve.balance;
+          }
         });
       }
     },

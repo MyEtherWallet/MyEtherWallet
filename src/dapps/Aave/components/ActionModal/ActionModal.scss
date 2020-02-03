@@ -79,6 +79,12 @@
     width: 100%;
   }
 
+  .currency-symbol {
+    font-size: 20px;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+
   table thead {
     background-color: $light-blue-12;
     width: 100%;
@@ -125,6 +131,7 @@
     text-align: center;
     width: 100%;
   }
+  
 
   tbody {
     tr {

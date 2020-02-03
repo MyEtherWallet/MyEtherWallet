@@ -99,18 +99,30 @@
             <tbody v-if="!loadingReserves && localReserves.length > 0">
               <tr v-for="(token, index) in localReserves" :key="token.key">
                 <td class="number">{{ index + 1 }}.</td>
-                <!-- need to change icon -->
                 <td>
                   <img
+                    v-if="!getIcon(token.symbol)"
                     class="token-icon"
-                    src="@/assets/images/currency/eth.svg"
-                  />{{ token.name }}
+                    :src="
+                      require(`@/assets/images/currency/coins/AllImages/${token.symbol}.svg`)
+                    "
+                  />
+                  <span
+                    v-if="getIcon(token.symbol)"
+                    :class="[
+                      'cc',
+                      getIcon(token.symbol),
+                      'cc-icon',
+                      'currency-symbol'
+                    ]"
+                  ></span
+                  >{{ token.name }}
                 </td>
                 <td>
                   {{
                     depositModal
-                      ? token.user
-                        ? convertToFixed(token.user.principalATokenBalance)
+                      ? token.tokenBalance
+                        ? convertToFixed(token.tokenBalance)
                         : 0
                       : convertToFixed(token.availableLiquidity)
                   }}
@@ -161,6 +173,10 @@
 <script>
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
+import '@/assets/images/currency/coins/asFont/cryptocoins.css';
+import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
+import { hasIcon } from '@/partners';
+
 export default {
   props: {
     depositModal: {
@@ -210,6 +226,9 @@ export default {
     }
   },
   methods: {
+    getIcon(currency) {
+      return hasIcon(currency);
+    },
     getLocalReserves(reserves) {
       this.localReserves = [];
       reserves.forEach(reserve => this.localReserves.push(reserve));

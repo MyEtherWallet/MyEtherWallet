@@ -55,7 +55,7 @@
     </div>
     <!-- have to change the value once we get real data -->
     <summary-table
-      :user-summary-reserves="userSummary.reservesData"
+      :user-reserves="userSummary.reservesData"
       :health-factor="userSummary.healthFactor"
       :active-deposit-tab="activeDepositTab"
     />
@@ -112,6 +112,9 @@ export default {
         return [];
       }
     }
+  },
+  mounted() {
+    console.error('hello', this.userSummary)
   },
   methods: {
     openActionModal() {

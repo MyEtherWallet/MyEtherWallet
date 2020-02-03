@@ -47,19 +47,42 @@
         </th>
         <th></th>
       </thead>
-      <tbody>
+      <tbody v-if="userReserves.length === 0">
+        {{
+          $t('dappsAave.user-no-tokens')
+        }}
+      </tbody>
+      <tbody v-if="userReserves.length > 0">
         <tr v-for="(reserve, index) in userReserves" :key="reserve.key">
-          <!-- need to change icon -->
           <td class="token-name">
             <img
-              class="token-icon mr-2"
-              src="@/assets/images/currency/eth.svg"
-            />{{ reserve.reserve.name }}
+              v-if="!getIcon(reserve.reserve.symbol)"
+              class="token-icon"
+              :src="
+                require(`@/assets/images/currency/coins/AllImages/${reserve.reserve.symbol}.svg`)
+              "
+            />
+            <span
+              v-if="getIcon(reserve.reserve.symbol)"
+              :class="[
+                'cc',
+                getIcon(reserve.reserve.symbol),
+                'cc-icon',
+                'currency-symbol'
+              ]"
+            ></span
+            >{{ reserve.reserve.name }}
           </td>
-          <td class="pt-3">
+          <td v-if="activeDepositTab" class="pt-3">
             <!-- placeholder -->
-            <span>$232.32</span>
-            <span class="eth-amt">1.4343 {{ $t('common.currency.eth') }}</span>
+            <span
+              >{{ convertToFixed(reserve.principalATokenBalance) }}
+              {{ reserve.reserve.symbol }}</span
+            >
+            <span class="eth-amt"
+              >{{ convertToFixed(reserve.currentUnderlyingBalanceETH) }}
+              {{ $t('common.currency.eth') }}</span
+            >
           </td>
           <td class="pt-3">
             <!-- placeholder -->
@@ -73,7 +96,11 @@
           <td v-if="activeDepositTab">
             <div class="sliding-switch-white">
               <label class="switch">
-                <input type="checkbox" @click="useAsCollateral(index)" />
+                <input
+                  v-model="reserve.usageAsCollateralEnabledOnUser"
+                  type="checkbox"
+                  @click="useAsCollateral(index)"
+                />
                 <span class="slider round" />
               </label>
             </div>
@@ -83,18 +110,25 @@
               <div class="sliding-switch-white">
                 <label class="switch">
                   <input
-                    :checked="reserve.isStable"
+                    :checked="reserve.borrowRateMode === 'Stable'"
                     type="checkbox"
                     @click="changeType(index)"
                   />
                   <span class="slider borrow-slider round" />
                 </label>
               </div>
-              <span :class="reserve.isStable ? 'stable-txt' : 'variable-txt'">{{
-                reserve.isStable
-                  ? $t('dappsAave.stable')
-                  : $t('dappsAave.variable')
-              }}</span>
+              <span
+                :class="
+                  reserve.borrowRateMode === 'Stable'
+                    ? 'stable-txt'
+                    : 'variable-txt'
+                "
+                >{{
+                  reserve.borrowRateMode === 'Stable'
+                    ? $t('dappsAave.stable')
+                    : $t('dappsAave.variable')
+                }}</span
+              >
             </div>
           </td>
           <td class="button-container">
@@ -132,6 +166,10 @@
 <script>
 import ConfirmationModal from '@/dapps/Aave/components/ConfirmationModal';
 import SwitchInterestModal from '@/dapps/Aave/components/SwitchInterestModal';
+import { hasIcon } from '@/partners';
+import '@/assets/images/currency/coins/asFont/cryptocoins.css';
+import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -160,9 +198,15 @@ export default {
     };
   },
   mounted() {
-    console.error('reerve', this.reserves)
+    console.error('reerve', this.userReserves)
   },
   methods: {
+    convertToFixed(val) {
+      return new BigNumber(val).toFixed(2).toString();
+    },
+    getIcon(currency) {
+      return hasIcon(currency);
+    },
     useAsCollateral(idx) {
       this.reserves[idx].isCollateral = !this.reserves[idx].isCollateral;
       this.token = this.reserves[idx];

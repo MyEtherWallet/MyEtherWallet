@@ -166,6 +166,9 @@ export default {
       this.assignTokens(this.tokens, newVal);
     }
   },
+  mounted() {
+    console.error('this', this.tokens)
+  },
   methods: {
     getV3Tokens() {
       const v3Tokens = store.get('localTokens');
