@@ -133,16 +133,14 @@
     }
 
     .wallet-img-container {
-      background-color: $orange-1;
-      border-radius: 50%;
-      height: 40px;
-      margin-right: 20px;
-      padding: 8px 11px;
-      width: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 10px;
 
       img {
-        height: 20px;
-        width: 20px;
+        height: 30px;
+        width: 30px;
       }
     }
 

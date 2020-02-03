@@ -44,13 +44,12 @@
 
 <script>
 import web3utils from 'web3-utils';
-import BigNumber from 'bignumber.js';
 import { mapState } from 'vuex';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import WalletInfoComponent from '../../components/WalletInfoComponent';
 import WalletTitleAndSearchComponent from '../../components/WalletTitleAndSearchComponent';
 import ExtensionBrowserActionWrapper from '../../wrappers/ExtensionBrowserActionWrapper';
-import { ExtensionHelpers, Misc } from '@/helpers';
+
 export default {
   components: {
     'wallet-info-component': WalletInfoComponent,
