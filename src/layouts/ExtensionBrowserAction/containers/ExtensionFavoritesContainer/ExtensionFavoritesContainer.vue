@@ -6,7 +6,24 @@
         @search="e => (search = e)"
       />
     </template>
-    <div>
+    <div v-if="!hasAccounts" class="no-wallet-container">
+      <img src="@/assets/images/icons/alien.png" />
+      <h3>
+        Looks like you don't have any favorite wallets yet. Click the heart next
+        to your favorite wallet to save it here!
+      </h3>
+
+      <div class="wallet-options">
+        <b-button
+          class="large-round-button-green-filled"
+          router-tag="button"
+          to="/"
+        >
+          Go to My Wallets
+        </b-button>
+      </div>
+    </div>
+    <div v-else>
       <keep-alive>
         <wallet-info-component
           v-for="wallet in searchResult"
@@ -18,140 +35,10 @@
           :nickname="wallet.nickname"
           :wallet-type="wallet.type"
           :prices="tokenPrices"
+          page="favorites"
         />
       </keep-alive>
     </div>
-
-    <!-- <div v-if="!hasAccounts" class="no-wallet-found">
-      <div class="text-and-img-container">
-        <img src="@/assets/images/icons/alien.png" />
-        <p>No wallet found, please...</p>
-      </div>
-      <div class="wallet-options">
-        <button class="large-round-button-green-filled">
-          Add My Wallet
-        </button>
-        <div class="button-border-container">
-          <div class="button-border"></div>
-          <span> OR </span>
-          <div class="button-border"></div>
-        </div>
-        <button
-          class="large-round-button-green-filled"
-          @click="openWatchOnlyModal"
-        >
-          Add Watch Only Address
-        </button>
-      </div>
-    </div>
-    <div v-else>
-      <div class="wallet-containers">
-        <div class="wallet-container-header">
-          <div class="add-and-wallet-count">
-            <p>
-              Total of
-              {{
-                showMyWallets === 0
-                  ? myWallets.length
-                  : watchOnlyAddresses.length
-              }}
-              wallets
-            </p>
-            <div
-              class="add-wallet-button"
-              @click="showMyWallets === 0 ? () => {} : openWatchOnlyModal()"
-            >
-              <i class="fa fa-plus" />
-              Add
-            </div>
-          </div>
-          <b-tabs
-            v-model="showMyWallets"
-            nav-class="wallet-nav"
-            active-nav-item-class="wallet-nav-active"
-            nav-wrapper-class="wallet-nav-wrapper"
-          >
-            <b-tab title="My Wallets" title-link-class="tab-default-style">
-              <div v-if="myWallets.length > 0" class="wallet-display-container">
-                <div
-                  v-if="network.type.name === 'ETH'"
-                  class="total-balance-container"
-                >
-                  <div>
-                    <p class="portfolio-text">My Portfolio Balance</p>
-                  </div>
-                  <div>
-                <keep-alive>
-                  <wallet-info-component
-                    v-for="wallet in searchResult"
-                    :key="wallet.address"
-                    :usd="ethPrice"
-                    :address="wallet.address"
-                    :balance="wallet.balance"
-                    :wallet="wallet.wallet"
-                    :nickname="wallet.nickname"
-                    :wallet-type="wallet.type"
-                    :prices="tokenPrices"
-                  />
-                </keep-alive>
-              </div>
-              <div v-else class="wallet-display-container">
-                <div class="no-wallet-found empty-wallet">
-                  <div class="text-and-img-container">
-                    <img src="@/assets/images/icons/alien.png" />
-                    <p>No wallet found, please...</p>
-                  </div>
-                  <div class="wallet-options">
-                    <button class="large-round-button-green-filled">
-                      Add My Wallet
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </b-tab>
-            <b-tab
-              title="Watch Only Address"
-              title-link-class="tab-default-style"
-            >
-              <div
-                v-if="watchOnlyAddresses.length > 0"
-                class="wallet-display-container"
-              >
-                <keep-alive>
-                  <wallet-info-component
-                    v-for="wallet in searchResult"
-                    :key="wallet.address"
-                    :usd="ethPrice"
-                    :address="wallet.address"
-                    :balance="wallet.balance"
-                    :wallet="wallet.wallet"
-                    :nickname="wallet.nickname"
-                    :wallet-type="wallet.type"
-                    :prices="tokenPrices"
-                  />
-                </keep-alive>
-              </div>
-              <div v-else class="wallet-display-container">
-                <div class="no-wallet-found empty-wallet">
-                  <div class="text-and-img-container">
-                    <img src="@/assets/images/icons/alien.png" />
-                    <p>No wallet found, please...</p>
-                  </div>
-                  <div class="wallet-options">
-                    <button
-                      class="large-round-button-green-filled"
-                      @click="openWatchOnlyModal"
-                    >
-                      Add Watch Only Address
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </b-tab>
-          </b-tabs>
-        </div>
-      </div>
-    </div> -->
   </extension-browser-action-wrapper>
 </template>
 
@@ -220,17 +107,34 @@ export default {
   },
   mounted() {
     this.processAccounts(this.wallets);
+    window.chrome.storage.onChanged.addListener(changed => {
+      if (changed && changed.hasOwnProperty('favorites')) {
+        this.processAccounts(this.wallets);
+      }
+    });
   },
   methods: {
     async processAccounts(accs) {
       this.loading = true;
-      console.log(accs);
+      const accounts = [];
+      for (const account of accs) {
+        if (account !== undefined) {
+          const address = toChecksumAddress(account.address).toLowerCase();
+          delete account['address'];
+          const parsedItemWallet = JSON.parse(account.wallet);
+          account['balance'] = await this.getBalance(address);
+          account['type'] = parsedItemWallet.type;
+          account['address'] = address;
+          account['nickname'] = parsedItemWallet.nick;
+          accounts.push(account);
+        }
+      }
       window.chrome.storage.sync.get('favorites', item => {
         if (Object.keys(item).length > 0) {
           const storedFaves = JSON.parse(item.favorites);
           const favoritedWallets = [];
           storedFaves.forEach(storedAcc => {
-            const actualAccount = accs.find(wallet => {
+            const actualAccount = accounts.find(wallet => {
               return (
                 toChecksumAddress(wallet.address).toLowerCase() ===
                 toChecksumAddress(storedAcc.address).toLowerCase()
@@ -242,46 +146,9 @@ export default {
             }
           });
 
-          this.favoriteWallets = favoritedWallets.map(account => {
-            const address = toChecksumAddress(account.address).toLowerCase();
-            delete account['address'];
-            const parsedItemWallet = JSON.parse(account.wallet);
-            this.web3.eth.getBalance(address).then(res => {
-              account['balance'] = web3utils.fromWei(res);
-            });
-            account['type'] = parsedItemWallet.type;
-            account['address'] = address;
-            account['nickname'] = parsedItemWallet.nick;
-            return account;
-          });
+          this.favoriteWallets = favoritedWallets;
         }
       });
-
-      // const watchOnlyAddresses = [];
-      // const myWallets = [];
-      // for (const account of accs) {
-      //   if (account !== undefined) {
-      //     const address = toChecksumAddress(account.address).toLowerCase();
-      //     delete account['address'];
-      //     const parsedItemWallet = JSON.parse(account.wallet);
-      //     account['balance'] = await this.getBalance(address);
-      //     account['type'] = parsedItemWallet.type;
-      //     account['address'] = address;
-      //     account['nickname'] = parsedItemWallet.nick;
-      //     if (parsedItemWallet.type !== 'wallet') {
-      //       watchOnlyAddresses.push(account);
-      //     } else {
-      //       myWallets.push(account);
-      //     }
-      //   }
-      // }
-
-      // this.totalBalance = balance.toString();
-      // this.watchOnlyAddresses = watchOnlyAddresses;
-      // this.myWallets = myWallets;
-      // if (this.myWallets.length === 0 && this.watchOnlyAddresses.length > 0) {
-      //   this.showMyWallets = 1;
-      // }
       this.loading = false;
     },
     async getBalance(addr) {

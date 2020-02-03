@@ -255,6 +255,10 @@ export default {
     this.$refs.watchOnlyModal.$refs.watchOnlyWallet.$on('hidden', () => {
       this.loading = false;
     });
+
+    if (this.wallets.length > 0) {
+      this.processAccounts(this.wallets);
+    }
   },
   methods: {
     async processAccounts(accs) {
