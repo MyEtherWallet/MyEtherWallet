@@ -1,1 +1,26 @@
 @import '~@/scss/GlobalVariables';
+
+.no-wallet-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 30px 100px;
+  text-align: center;
+
+  h3 {
+    padding-top: 20px;
+  }
+  .wallet-options {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding: 15px;
+
+    button {
+      width: 325px;
+      margin: 15px 0 30px;
+    }
+  }
+}
