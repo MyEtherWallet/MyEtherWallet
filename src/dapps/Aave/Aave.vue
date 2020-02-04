@@ -80,6 +80,7 @@
       :loading-home="loadingHome"
       :loading-reserves="loadingReserves"
       :reserves="reservesData"
+      :reserves-stable="reservesStable"
       :current-reserve-balance="currentReserveBalance"
       :health-factor="userSummary.healthFactor"
       :user-summary="userSummary"
@@ -125,6 +126,7 @@ export default {
       reservesAddr: [],
       reservesData: [],
       rawReserveData: [],
+      reservesStable: [],
       userReserves: [],
       reserveAddr: 0,
       currentReserveBalance: '0',
@@ -193,7 +195,7 @@ export default {
           this.usdPriceEth,
           Date.now()
         );
-        console.error('user', this.userSummary)
+        console.error('user', this.userSummary);
         // remove all of this
         this.borrowedBalance = this.userSummary.totalBorrowsETH;
         this.ltv = this.userSummary.currentLiquidationThreshold;
@@ -217,6 +219,7 @@ export default {
       this.getReserveBalances();
     },
     getReserveBalances() {
+      const stableCoins = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
       if (this.reservesData.length > 0) {
         this.reservesData.forEach(reserve => {
           const foundReserve = this.tokensWithBalance.find(
@@ -224,6 +227,10 @@ export default {
           );
           if (foundReserve) {
             reserve.tokenBalance = foundReserve.balance;
+          }
+          if (stableCoins.findIndex(coin => coin === reserve.symbol) >= 0) {
+            this.reservesStable.push(reserve);
+            console.error('reserves', this.reservesStable);
           }
         });
       }

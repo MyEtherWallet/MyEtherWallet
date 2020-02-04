@@ -68,13 +68,13 @@
                 'cc',
                 getIcon(reserve.reserve.symbol),
                 'cc-icon',
-                'currency-symbol'
+                'currency-symbol',
+                'token-icon'
               ]"
             ></span
             >{{ reserve.reserve.name }}
           </td>
-          <td v-if="activeDepositTab" class="pt-3">
-            <!-- placeholder -->
+          <td v-if="activeDepositTab">
             <span
               >{{ convertToFixed(reserve.principalATokenBalance) }}
               {{ reserve.reserve.symbol }}</span
@@ -84,14 +84,17 @@
               {{ $t('common.currency.eth') }}</span
             >
           </td>
-          <td class="pt-3">
-            <!-- placeholder -->
-            <span>$32.32</span>
-            <span class="eth-amt">0.02 {{ $t('common.currency.eth') }}</span>
+          <td v-if="!activeDepositTab">
+            <span>${{ reserve.currentBorrowsUSD }}</span>
+            <span class="eth-amt"
+              >{{ reserve.currentBorrowsETH }}
+              {{ $t('common.currency.eth') }}</span
+            >
           </td>
           <td>
-            <!-- placeholder -->
-            8.91 %
+            <span v-if="activeDepositTab"
+              >{{ convertToFixed(reserve.reserve.liquidityRate * 100) }}%</span
+            >
           </td>
           <td v-if="activeDepositTab">
             <div class="sliding-switch-white">
@@ -198,7 +201,7 @@ export default {
     };
   },
   mounted() {
-    console.error('reerve', this.userReserves)
+    console.error('reerve', this.userReserves);
   },
   methods: {
     convertToFixed(val) {

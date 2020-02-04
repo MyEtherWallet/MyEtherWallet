@@ -86,7 +86,6 @@
   }
 
   table thead {
-    background-color: $light-blue-12;
     width: 100%;
 
     .number-header {
@@ -101,10 +100,13 @@
 
   table thead th,
   table thead th div {
+    background-color: $light-blue-12;
     color: $light-blue-2;
     font-size: 11px;
     font-weight: 600;
+    position: sticky;
     text-transform: uppercase;
+    top: 0;
   }
 
   .sort-enabled-container {
@@ -131,7 +133,6 @@
     text-align: center;
     width: 100%;
   }
-  
 
   tbody {
     tr {

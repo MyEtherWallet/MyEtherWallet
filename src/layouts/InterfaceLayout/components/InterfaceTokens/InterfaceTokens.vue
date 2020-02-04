@@ -167,7 +167,7 @@ export default {
     }
   },
   mounted() {
-    console.error('this', this.tokens)
+    console.error('this', this.tokens);
   },
   methods: {
     getV3Tokens() {
