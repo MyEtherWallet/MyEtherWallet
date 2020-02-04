@@ -1,6 +1,10 @@
 @import '~@/scss/GlobalVariables';
 .modal-content {
   height: 100%;
+  .modal-top-buttons {
+    display: flex;
+    justify-content: space-between;
+  }
 
   .modal-closer {
     align-items: center;
@@ -17,6 +21,7 @@
 
     span {
       font-size: 15px;
+      padding-left: 5px;
     }
 
     img {

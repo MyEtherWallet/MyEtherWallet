@@ -12,9 +12,14 @@
       :modal-class="modalClassStartingPoint[direction]"
     >
       <div class="modal-contents">
-        <div class="modal-closer">
-          <span @click="closeModal">Cancel</span>
-          <img src="@/assets/images/icons/cancel.svg" @click="closeModal" />
+        <div class="modal-top-buttons">
+          <slot name="modalTopButton">
+            <div></div>
+          </slot>
+          <div class="modal-closer">
+            <span @click="closeModal">Cancel</span>
+            <img src="@/assets/images/icons/cancel.svg" @click="closeModal" />
+          </div>
         </div>
         <div class="modal-content-container">
           <div class="modal-content-title">
