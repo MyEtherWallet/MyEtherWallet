@@ -1,0 +1,29 @@
+@import '~@/scss/GlobalVariables';
+@import '~@/layouts/ExtensionBrowserAction/wrappers/MewcxModalWrapper/MewcxModalInputs';
+
+.back-button {
+  align-items: center;
+  display: flex;
+  padding: 30px 30px 0;
+  position: relative;
+
+  span,
+  img {
+    color: $dark-blue-2;
+    cursor: pointer;
+  }
+
+  span {
+    font-size: 15px;
+  }
+
+  img {
+    height: 30px;
+    padding-right: 5px;
+  }
+}
+
+.submit-button {
+  margin-top: 10px;
+  width: 100% !important;
+}

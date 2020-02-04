@@ -49,7 +49,7 @@
             </p>
             <div
               class="add-wallet-button"
-              @click="showMyWallets === 0 ? () => {} : openWatchOnlyModal()"
+              @click="showMyWallets === 0 ? addWallet() : openWatchOnlyModal()"
             >
               <i class="fa fa-plus" />
               Add
@@ -77,10 +77,8 @@
                     </p>
                   </div>
                 </div>
-                <keep-alive>
+                <div v-for="wallet in searchResult" :key="wallet.address">
                   <wallet-info-component
-                    v-for="wallet in searchResult"
-                    :key="wallet.address"
                     :usd="ethPrice"
                     :address="wallet.address"
                     :balance="wallet.balance"
@@ -89,7 +87,7 @@
                     :wallet-type="wallet.type"
                     :prices="tokenPrices"
                   />
-                </keep-alive>
+                </div>
               </div>
               <div v-else class="wallet-display-container">
                 <div class="no-wallet-found empty-wallet">
@@ -98,7 +96,10 @@
                     <p>No wallet found, please...</p>
                   </div>
                   <div class="wallet-options">
-                    <button class="large-round-button-green-filled">
+                    <button
+                      class="large-round-button-green-filled"
+                      @click="addWallet"
+                    >
                       Add My Wallet
                     </button>
                   </div>
@@ -113,10 +114,8 @@
                 v-if="watchOnlyAddresses.length > 0"
                 class="wallet-display-container"
               >
-                <keep-alive>
+                <div v-for="wallet in searchResult" :key="wallet.address">
                   <wallet-info-component
-                    v-for="wallet in searchResult"
-                    :key="wallet.address"
                     :usd="ethPrice"
                     :address="wallet.address"
                     :balance="wallet.balance"
@@ -125,7 +124,7 @@
                     :wallet-type="wallet.type"
                     :prices="tokenPrices"
                   />
-                </keep-alive>
+                </div>
               </div>
               <div v-else class="wallet-display-container">
                 <div class="no-wallet-found empty-wallet">
@@ -148,6 +147,7 @@
         </div>
       </div>
     </div>
+    <add-wallet-modal ref="addWalletModal" />
   </extension-browser-action-wrapper>
 </template>
 
@@ -160,6 +160,7 @@ import { mapState } from 'vuex';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import WalletInfoComponent from '../../components/WalletInfoComponent';
 import WalletTitleAndSearchComponent from '../../components/WalletTitleAndSearchComponent';
+import AddWalletModal from '../../components/AddWalletModal';
 import ExtensionBrowserActionWrapper from '../../wrappers/ExtensionBrowserActionWrapper';
 import { ExtensionHelpers, Misc } from '@/helpers';
 export default {
@@ -167,7 +168,8 @@ export default {
     'watch-only-modal': WatchOnlyModal,
     'wallet-info-component': WalletInfoComponent,
     'wallet-title-and-search-component': WalletTitleAndSearchComponent,
-    'extension-browser-action-wrapper': ExtensionBrowserActionWrapper
+    'extension-browser-action-wrapper': ExtensionBrowserActionWrapper,
+    'add-wallet-modal': AddWalletModal
   },
   props: {
     tokenPrices: {
@@ -252,9 +254,12 @@ export default {
     }
   },
   mounted() {
-    this.$refs.watchOnlyModal.$refs.watchOnlyWallet.$on('hidden', () => {
-      this.loading = false;
-    });
+    this.$refs.watchOnlyModal.$refs.watchOnlyWallet.$refs.modalWrapper.$on(
+      'hidden',
+      () => {
+        this.loading = false;
+      }
+    );
 
     if (this.wallets.length > 0) {
       this.processAccounts(this.wallets);
@@ -298,7 +303,7 @@ export default {
       return web3utils.fromWei(balance);
     },
     addWallet() {
-      this.$router.push('access-my-wallet');
+      this.$refs.addWalletModal.$refs.addMyWallet.$refs.modalWrapper.show();
     },
     addWatchOnlyWalletCb() {
       this.loading = false;
@@ -360,7 +365,7 @@ export default {
   font-size: 20px !important;
   border: none;
   background-color: $light-grey-2 !important;
-  border-bottom: 2px solid $light-grey-2;
+  border-bottom: 2px solid $light-grey-2 !important;
   padding: 0 0 10px;
 
   &:hover {

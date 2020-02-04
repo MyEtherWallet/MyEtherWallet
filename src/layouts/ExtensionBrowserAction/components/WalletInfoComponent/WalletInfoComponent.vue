@@ -13,7 +13,7 @@
             {{ concattedAddr }}
             <img
               src="@/assets/images/icons/copy_white.png"
-              @click="copyAddress"
+              @click.stop="copyAddress"
             />
           </p>
           <input ref="addressInput" v-model="address" />
@@ -31,7 +31,7 @@
           </template>
           <b-dropdown-text
             v-if="walletType !== 'watchOnly'"
-            @click="
+            @click.stop="
               () => {
                 openPasswordModal(wallet, 'access', nickname);
               }
@@ -40,7 +40,7 @@
           >
           <b-dropdown-text @click="edit">Rename</b-dropdown-text>
           <b-dropdown-divider></b-dropdown-divider>
-          <b-dropdown-text class="remove-text" @click="openRemoveWallet"
+          <b-dropdown-text class="remove-text" @click.stop="openRemoveWallet"
             >Remove</b-dropdown-text
           >
         </b-dropdown>
@@ -49,20 +49,12 @@
             'fa fa-lg',
             !favorited ? 'fa-heart-o' : 'fa-heart heart-color'
           ]"
-          @click="addToFavorites(address, nickname)"
+          @click.stop="addToFavorites(address, nickname)"
         />
       </div>
     </div>
     <div class="wallet-info-body">
-      <div
-        v-show="
-          (showLowBalance &&
-            network.type.name === 'ETH' &&
-            walletType !== 'watchOnly') ||
-            balanceWarnHidden
-        "
-        class="low-eth-warning"
-      >
+      <div v-show="showBalanceReminder" class="low-eth-warning">
         <div class="warning-container">
           <p class="actual-warning">
             <img src="@/assets/images/icons/exclamation.svg" />
@@ -70,7 +62,7 @@
           </p>
           <img
             src="@/assets/images/icons/close.svg"
-            @click="balanceWarnHidden = !balanceWarnHidden"
+            @click.stop="balanceWarnHidden = !balanceWarnHidden"
           />
         </div>
         <div class="link-container">
@@ -145,7 +137,7 @@
               ? ''
               : 'disable-token-show'
           ]"
-          @click="showTokens = !showTokens"
+          @click.stop="showTokens = !showTokens"
         >
           <p>{{ showTokens ? 'Hide all tokens' : 'View all tokens' }}</p>
           <i :class="['fa', showTokens ? 'fa-angle-up' : 'fa-angle-down']" />
@@ -358,6 +350,13 @@ export default {
   },
   computed: {
     ...mapState('main', ['network', 'web3']),
+    showBalanceReminder() {
+      if (this.network.type.name === 'ETH' && this.walletType !== 'watchOnly') {
+        const balanceReminder = this.showLowBalance && this.balanceWarnHidden;
+        return !balanceReminder;
+      }
+      return false;
+    },
     validInput() {
       return (
         (this.password !== '' || this.password.length > 0) &&

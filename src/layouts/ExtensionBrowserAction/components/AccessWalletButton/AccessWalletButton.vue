@@ -1,62 +1,63 @@
-<template functional>
-  <div
-    :class="[props.disabled ? 'disabled' : '', 'button-block', props.classname]"
-    @click="props.func"
-  >
-    <div :style="{ padding: props.imgPadding }" class="button-image-block">
-      <img
-        :src="props.disabled ? props.imgDisabled : props.img"
-        class="button-image"
-      />
+<template>
+  <div class="wallet-buttons-container">
+    <div
+      v-for="item in info"
+      :key="item.title"
+      class="wallet-button-option"
+      @click="item.func"
+    >
+      <div class="button-option-title">
+        <p>{{ item.title }}</p>
+        <div v-if="item.recommended" class="recommended">
+          <img src="@/assets/images/icons/shield.png" />
+          <span>{{ item.recommendedText }}</span>
+        </div>
+        <div v-else class="subtext">
+          <span>{{ item.subtext }}</span>
+        </div>
+      </div>
+      <div class="img-container">
+        <img :src="item.img" />
+      </div>
     </div>
-
-    <h3>{{ props.title }}</h3>
-    <p class="desc">{{ props.desc }}</p>
-    <p :v-if="props.recommend !== ''" class="small-note">
-      {{ props.recommend }}
-    </p>
   </div>
 </template>
 
 <script>
+import generate from '@/assets/images/icons/button-generate-hover.svg';
+import importImg from '@/assets/images/icons/button-software-no-padding.svg';
 export default {
   props: {
-    func: {
+    generate: {
       type: Function,
-      default: function() {}
+      default: () => {}
     },
-    img: {
-      type: String,
-      default: ''
-    },
-    imgPadding: {
-      type: String,
-      default: 'aaaaa'
-    },
-    imgDisabled: {
-      type: String,
-      default: ''
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    desc: {
-      type: String,
-      default: ''
-    },
-    recommend: {
-      type: String,
-      default: ''
-    },
-    disabled: {
-      type: Boolean,
-      default: true
-    },
-    classname: {
-      type: String,
-      default: ''
+    import: {
+      type: Function,
+      default: () => {}
     }
+  },
+  data() {
+    return {
+      info: [
+        {
+          title: 'Generate a New Wallet',
+          subtext: '',
+          recommended: true,
+          recommendedText: 'Recommended',
+          func: () => this.generate(1),
+          img: generate
+        },
+        {
+          title: 'Import an Existing Wallet',
+          subtext: 'Keystore file / Mnemonic phrase / Private key',
+          recommended: false,
+          recommendedText: '',
+          func: () => this.import(2),
+          img: importImg
+        }
+      ]
+    };
   }
 };
 </script>
