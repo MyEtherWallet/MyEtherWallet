@@ -238,7 +238,7 @@ const isMewCx = () => {
 const dateChecker = () => {
   const today = new Date();
   const startDate = new Date('02/03/2020');
-  const endDate = new Date('02/05/2020');
+  const endDate = new Date('02/10/2020');
   return today >= startDate && today <= endDate;
 };
 
