@@ -124,7 +124,7 @@
                       ? token.tokenBalance
                         ? convertToFixed(token.tokenBalance)
                         : 0
-                      : convertToFixed(token.availableLiquidity)
+                      : getTokenAvail(token)
                   }}
                   {{ token.symbol }}
                 </td>
@@ -134,7 +134,9 @@
                       ? token.user
                         ? convertToFixed(token.user.principalATokenBalance)
                         : 0
-                      : convertToFixed(token.stableBorrowRate * 100) + '%'
+                      : token.stableBorrowRateEnabled
+                      ? convertToFixed(token.stableBorrowRate * 100) + '%'
+                      : '--'
                   }}
                   {{ depositModal ? token.symbol : '' }}
                 </td>
@@ -179,6 +181,12 @@ import { hasIcon } from '@/partners';
 
 export default {
   props: {
+    reservesStable: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    },
     depositModal: {
       type: Boolean,
       default: true
@@ -192,6 +200,10 @@ export default {
     loadingReserves: {
       type: Boolean,
       default: true
+    },
+    availEth: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -207,7 +219,6 @@ export default {
       this.search = '';
     },
     reserves(newVal) {
-      console.error('newVal', newVal);
       this.getLocalReserves(newVal);
     },
     search(newVal) {
@@ -218,6 +229,10 @@ export default {
             if (reserve.name.toLowerCase().includes(newVal.toLowerCase())) {
               this.localReserves.push(reserve);
             }
+          } else if (reserve.symbol) {
+            if (reserve.symbol.toLowerCase().includes(newVal.toLowerCase())) {
+              this.localReserves.push(reserve);
+            }
           }
         });
       } else {
@@ -226,12 +241,18 @@ export default {
     }
   },
   methods: {
+    getTokenAvail(token) {
+      const price = token.price.priceInEth;
+      const tokenAvail = new BigNumber(this.availEth).div(price).toFixed(2);
+      token.availableAmt = tokenAvail;
+      return tokenAvail;
+    },
     getIcon(currency) {
       return hasIcon(currency);
     },
     getLocalReserves(reserves) {
-      this.localReserves = [];
-      reserves.forEach(reserve => this.localReserves.push(reserve));
+      this.localReserves = reserves;
+      // reserves.forEach(reserve => this.localReserves.push(reserve));
     },
     convertFromRay(int) {
       const rayUnit = new BigNumber(10).pow(27);
@@ -239,32 +260,49 @@ export default {
       return new BigNumber(convertedInt).times(100).toFixed(2);
     },
     sort(direction, colIdx) {
-      const borrowColumnNames = [
-        'availableLiquidity',
-        'fixedBorrowRate',
-        'variableBorrowRate'
-      ];
-      const depositColumnNames = [
-        'currentATokenBalance',
-        'currentUnderlyingBalance',
-        'borrowRate'
-      ];
-      const columnNames = this.depositModal
-        ? depositColumnNames
-        : borrowColumnNames;
       if (direction === 'ascending') {
         this.localReserves.sort((a, b) => {
-          return a[columnNames[colIdx]] - b[columnNames[colIdx]];
+          const A = this.getVal(a, colIdx);
+          const B = this.getVal(b, colIdx);
+          return A - B;
         });
       } else {
         this.localReserves.sort((a, b) => {
-          return b[columnNames[colIdx]] - a[columnNames[colIdx]];
+          const A = this.getVal(a, colIdx);
+          const B = this.getVal(b, colIdx);
+          return B - A;
         });
       }
+    },
+    getVal(obj, idx) {
+      const borrowColumnNames = [
+        'availableAmt',
+        'stableBorrowRate',
+        'variableBorrowRate'
+      ];
+      const depositColumnNames = ['tokenBalance', 'user', 'liquidityRate'];
+      const columnNames = this.depositModal
+        ? depositColumnNames
+        : borrowColumnNames;
+
+      if (obj[columnNames[idx]] === undefined) {
+        return 0;
+      }
+      if (idx === 1 && !this.depositModal && !obj.stableBorrowRateEnabled) {
+        return 0;
+      }
+      if (idx === 1 && this.depositModal) {
+        return obj[columnNames[idx]].principalATokenBalance;
+      }
+
+      return obj[columnNames[idx]];
     },
     toggleTabs() {
       this.allTabActive = !this.allTabActive;
       this.stableTabActive = !this.stableTabActive;
+      this.localReserves = this.stableTabActive
+        ? this.reservesStable
+        : this.reserves;
     },
     takeAction(token) {
       this.$refs['actionModal'].hide();
@@ -290,7 +328,7 @@ export default {
 <style lang="scss">
 .action-modal {
   .modal-dialog {
-    max-width: 700px !important;
+    max-width: 800px !important;
   }
 }
 

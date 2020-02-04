@@ -6,6 +6,13 @@
     box-shadow: 0 0 0 1px $light-blue-12;
     table-layout: fixed;
     width: 100%;
+
+    .token-icon {
+      margin-right: 5px;
+      width: 20px;
+      vertical-align: middle;
+    }
+
     thead {
       background-color: $light-blue-12;
       th {
@@ -34,11 +41,11 @@
     tbody {
       tr {
         td {
-          // padding: 10px 40px;
           color: rgb(11, 40, 64);
           font-size: 12px;
           font-weight: 600;
           padding-left: 40px;
+          padding-top: 10px;
 
           &.button-container {
             display: inline-block;

@@ -64,6 +64,8 @@
       :reserves="reserves"
       :deposit-modal="activeDepositTab"
       :loading-reserves="loadingReserves"
+      :reserves-stable="reservesStable"
+      :avail-eth="userSummary.availableBorrowsETH"
     />
   </div>
 </template>
@@ -84,6 +86,12 @@ export default {
     'summary-table': SummaryTable
   },
   props: {
+    reservesStable: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    },
     userSummary: {
       type: Object,
       default: () => {
@@ -114,7 +122,7 @@ export default {
     }
   },
   mounted() {
-    console.error('hello', this.userSummary)
+    console.error('hello', this.userSummary);
   },
   methods: {
     openActionModal() {
