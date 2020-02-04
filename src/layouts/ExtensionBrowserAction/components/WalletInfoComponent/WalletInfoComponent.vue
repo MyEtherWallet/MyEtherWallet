@@ -509,7 +509,6 @@ export default {
       });
     },
     addToFavorites(address, nickname) {
-      let newArr = [];
       const dateAdded = new Date();
       const toAdd = {
         address,
@@ -518,7 +517,6 @@ export default {
       };
 
       window.chrome.storage.sync.get('favorites', item => {
-        newArr.push(toAdd);
         if (Object.keys(item).length > 0) {
           const parsedItem = JSON.parse(item['favorites']);
           const alreadyStored = parsedItem.find(item => {
@@ -526,15 +524,17 @@ export default {
           });
           if (!alreadyStored) {
             parsedItem.push(toAdd);
-            newArr = parsedItem.slice();
           } else {
-            newArr.splice(alreadyStored, 1);
+            const idx = parsedItem.findIndex(item => {
+              return item.address === toAdd.address;
+            });
+            parsedItem.splice(idx, 1);
           }
+          window.chrome.storage.sync.set(
+            { favorites: JSON.stringify(parsedItem) },
+            () => {}
+          );
         }
-        window.chrome.storage.sync.set(
-          { favorites: JSON.stringify(newArr) },
-          () => {}
-        );
       });
     },
     retrieveLogo(address, symbol) {
@@ -632,7 +632,7 @@ export default {
         });
 
         if (foundVal) {
-          this.favorited = !this.favorited;
+          this.favorited = true;
         } else {
           this.favorited = false;
         }
