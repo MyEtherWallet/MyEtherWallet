@@ -1,4 +1,8 @@
+### Release v5.3.1
+
 ### Devop
+
+- add support for lang based paths /en /ru [#1915][https://github.com/MyEtherWallet/MyEtherWallet/pull/1915]
 
 - Green keeper packages [#1938](https://github.com/MyEtherWallet/MyEtherWallet/pull/1938)
 
