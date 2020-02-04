@@ -48,9 +48,7 @@
         <th></th>
       </thead>
       <tbody v-if="userReserves.length === 0">
-        {{
-          $t('dappsAave.user-no-tokens')
-        }}
+        <p>{{ $t('dappsAave.user-no-tokens') }}</p>
       </tbody>
       <tbody v-if="userReserves.length > 0">
         <tr v-for="(reserve, index) in userReserves" :key="reserve.key">
@@ -199,9 +197,6 @@ export default {
     return {
       token: {}
     };
-  },
-  mounted() {
-    console.error('reerve', this.userReserves);
   },
   methods: {
     convertToFixed(val) {

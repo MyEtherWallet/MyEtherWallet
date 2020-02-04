@@ -121,9 +121,7 @@
                 <td>
                   {{
                     depositModal
-                      ? token.tokenBalance
-                        ? convertToFixed(token.tokenBalance)
-                        : 0
+                      ? convertToFixed(token.tokenBalance)
                       : getTokenAvail(token)
                   }}
                   {{ token.symbol }}
@@ -309,6 +307,9 @@ export default {
       this.$router.push({ name: 'Action', params: { token: token } });
     },
     convertToFixed(val) {
+      if (!val) {
+        return 0;
+      }
       return new BigNumber(val).toFixed(2).toString();
     },
     convertToEther(wei) {

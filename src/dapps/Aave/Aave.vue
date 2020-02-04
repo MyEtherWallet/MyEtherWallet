@@ -81,7 +81,6 @@
       :loading-reserves="loadingReserves"
       :reserves="reservesData"
       :reserves-stable="reservesStable"
-      :current-reserve-balance="currentReserveBalance"
       :health-factor="userSummary.healthFactor"
       :user-summary="userSummary"
       @emitTakeAction="emitTakeAction"
@@ -129,7 +128,7 @@ export default {
       reservesStable: [],
       userReserves: [],
       reserveAddr: 0,
-      currentReserveBalance: '0',
+      currentUserReserve: {},
       token: {},
       actionType: '',
       userReserveData: [],
@@ -154,12 +153,11 @@ export default {
   watch: {
     '$route.params.token'(newVal) {
       this.token = newVal;
-      if (this.token && this.activeBorrowTab) {
-        const userReserve = this.userReserves.find(reserve => {
-          return reserve.address === this.token.address;
-        });
-        this.currentReserveBalance = userReserve.currentBorrowBalance;
-      }
+      console.error('this.currentUserReserve', newVal)
+      const userReserve = this.userSummary.reservesData.find(reserve => {
+        return reserve.address === this.token.address;
+      });
+      this.currentUserReserve = userReserve ? userReserve : {};
     },
     '$route.params.actionType'(newVal) {
       this.actionType = newVal;
@@ -230,7 +228,6 @@ export default {
           }
           if (stableCoins.findIndex(coin => coin === reserve.symbol) >= 0) {
             this.reservesStable.push(reserve);
-            console.error('reserves', this.reservesStable);
           }
         });
       }
