@@ -5,7 +5,7 @@
   "sender": "Отправитель",
   "receiver": "Получатель",
   "send-tx": "Отправить транзакцию",
-  "send-tx-break": "Send {transaction}",
+  "send-tx-break": "Отправить {transaction}",
   "send-offline": "Отправить оффлайн",
   "to-addr": "Получатель",
   "from-addr": "Отправитель",
