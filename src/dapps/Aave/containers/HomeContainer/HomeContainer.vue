@@ -121,9 +121,6 @@ export default {
       }
     }
   },
-  mounted() {
-    console.error('hello', this.userSummary);
-  },
   methods: {
     openActionModal() {
       this.$refs.actionModal.$refs.actionModal.show();

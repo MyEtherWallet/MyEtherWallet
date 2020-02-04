@@ -4,6 +4,17 @@
   background-color: $white;
   padding: 20px;
 
+  .currency-symbol {
+    font-size: 20px;
+    vertical-align: middle;
+  }
+
+  .token-icon {
+    margin-right: 5px;
+    width: 20px;
+    vertical-align: middle;
+  }
+
   .title {
     color: $light-grey-18;
     font-size: 16px;
@@ -11,7 +22,6 @@
   }
 
   .header {
-    align-items: center;
     border-bottom: 1px solid $light-grey-20;
     display: flex;
     justify-content: space-between;

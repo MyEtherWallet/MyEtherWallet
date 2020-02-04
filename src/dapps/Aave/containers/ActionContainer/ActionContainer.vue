@@ -12,8 +12,12 @@
         <p class="token-balance">
           {{
             activeDepositTab
-              ? convertToEther(token.currentUnderlyingBalance)
-              : convertToEther(currentReserveBalance)
+              ? token.user
+                ? convertToFixed(token.user.principalATokenBalance)
+                : 0
+              : token.user
+              ? convertToFixed(token.user.currentBorrowsETH)
+              : 0
           }}
           <span class="token-name"> {{ token.name }} </span>
         </p>
@@ -21,7 +25,9 @@
           ${{
             activeDepositTab
               ? getUSDBalance(convertToEther(token.currentUnderlyingBalance))
-              : getUSDBalance(convertToEther(currentReserveBalance))
+              : token.user
+              ? convertToFixed(token.user.currentBorrowsUSD)
+              : 0
           }}
         </p>
       </div>
@@ -36,7 +42,7 @@
         <p class="token-balance">
           {{
             activeDepositTab
-              ? convertToEther(token.currentATokenBalance)
+              ? convertToFixed(token.tokenBalance)
               : userSummary.totalCollateralETH
           }}
           <span class="token-name">{{ token.name }}</span>
@@ -45,7 +51,7 @@
           ${{
             activeDepositTab
               ? getUSDBalance(convertToEther(token.currentATokenBalance))
-              : getUSDBalance(userSummary.totalCollateralETH)
+              : userSummary.totalCollateralUSD
           }}
         </p>
       </div>
@@ -129,6 +135,7 @@ import { Toast } from '@/helpers';
 import { mapState } from 'vuex';
 import RateModal from '@/dapps/Aave/components/RateModal';
 import ConfirmationModal from '@/dapps/Aave/components/ConfirmationModal';
+import { mapActions } from 'vuex';
 
 export default {
   components: {
@@ -155,10 +162,6 @@ export default {
       default: function() {
         return [];
       }
-    },
-    currentReserveBalance: {
-      type: String,
-      default: ''
     }
   },
   data() {
@@ -191,8 +194,9 @@ export default {
     }
   },
   watch: {
-    currentReserveBalance(newVal) {
-      this.currentReserveBalance = newVal;
+    currentUserReserve(newVal) {
+      console.error('hello', newVal)
+      this.currentUserReserve = newVal;
     },
     amount() {
       if (
@@ -215,11 +219,27 @@ export default {
     }
   },
   mounted() {
+    this.token = this.$route.params.token;
+    this.setToken(this.token);
+
+    const userReserve = this.userSummary.reservesData.find(reserve => {
+      return reserve.address === this.token.address;
+    });
+    this.currentUserReserve = userReserve ? userReserve : {};
+    console.error('this', this.currentUserReserve, this.token)
     if (this.online) {
       this.getEthPrice();
     }
   },
   methods: {
+    ...mapActions('aave', ['setToken']),
+    convertToFixed(val) {
+      if (!val) {
+        return 0;
+      }
+
+      return new BigNumber(val).toFixed(2).toString();
+    },
     takeAction() {
       this.activeBorrowTab
         ? this.$refs.rateModal.$refs.rateModal.show()
