@@ -71,7 +71,7 @@
     "show-error-details": "Показать подробности ошибки"
   },
   "updates": {
-    "new": "New update found! Please refresh your browser to receive the most updated version",
+    "new": "Найдено новое обновление! Пожалуйста, обновите браузер, чтобы получить самую обновленную версию",
     "update-error": "Something went wrong with our service workers!"
   },
   "wallet": {
