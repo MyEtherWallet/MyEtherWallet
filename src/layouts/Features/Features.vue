@@ -10,8 +10,8 @@
         <Spacer />
         <SideInfo />
       </div>
-      <Footer />
     </v-container>
+    <Footer class="component-footer" />
   </div>
 </template>
 
@@ -34,6 +34,7 @@ export default {
 .features {
   background-color: $primary-silver;
   height: 100%;
+  position: relative;
 }
 
 .left-sidemenu {
@@ -44,5 +45,11 @@ export default {
 
 .feature-content {
   flex-grow: 1;
+}
+
+.component-footer {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
-  <div>
-    Footer
-  </div>
+  <v-sheet color="white" class="py-2">
+    FooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooterFooter
+  </v-sheet>
 </template>
 
 <script>
