@@ -3,16 +3,12 @@ import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
 import store from '@/store';
 import { Transaction } from 'ethereumjs-tx';
 import { WALLET_CONNECT as walletConnectType } from '../../bip44/walletTypes';
-import {
-  getSignTransactionObject,
-  sanitizeHex,
-  getBufferFromHex,
-  calculateChainIdFromV
-} from '../../utils';
+import { sanitizeHex, getBufferFromHex } from '../../utils';
 import errorHandler from './errorHandler';
 import commonGenerator from '@/helpers/commonGenerator';
 import { Misc } from '@/helpers';
 import HybridWalletInterface from '../walletInterface';
+import PromiEvent from 'web3-core-promievent';
 
 const BRIDGE_URL = 'https://bridge.walletconnect.org';
 const IS_HARDWARE = true;
@@ -44,30 +40,26 @@ class WalletConnectWallet {
     return new Promise((resolve, reject) => {
       const txSigner = tx => {
         const from = tx.from;
-        const networkId = tx.chainId;
         tx = new Transaction(tx, {
           common: commonGenerator(store.state.main.network)
         });
         const txJSON = tx.toJSON(true);
         txJSON.from = from;
-        return new Promise((resolve, reject) => {
-          this.walletConnect
-            .signTransaction(txJSON)
-            .then(signed => {
-              const _tx = new Transaction(signed);
-              const signedChainId = calculateChainIdFromV(_tx.v);
-              if (signedChainId !== networkId)
-                throw new Error(
-                  'Invalid networkId signature returned. Expected: ' +
-                    networkId +
-                    ', Got: ' +
-                    signedChainId,
-                  'InvalidNetworkId'
-                );
-              resolve(getSignTransactionObject(_tx));
-            })
-            .catch(reject);
-        });
+        const prom = PromiEvent(false);
+        this.walletConnect
+          .sendTransaction(txJSON)
+          .then(hash => {
+            prom.eventEmitter.emit('transactionHash', hash);
+            store.state.main.web3.eth.sendTransaction.method._confirmTransaction(
+              prom,
+              hash,
+              { params: [txJSON] }
+            );
+          })
+          .catch(err => {
+            prom.reject(err);
+          });
+        return prom.eventEmitter;
       };
       const msgSigner = msg => {
         return new Promise((resolve, reject) => {

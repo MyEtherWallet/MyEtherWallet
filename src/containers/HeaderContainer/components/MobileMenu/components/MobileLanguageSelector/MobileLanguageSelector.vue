@@ -52,7 +52,7 @@ export default {
       this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
       this.currentFlag = flag;
 
-      this.setLocale(code);
+      this.setLocale({ locale: code, save: true });
       this.$emit('isopen', false);
       this.$emit('currentlang', this.currentName);
       this.$emit('currentflag', this.currentFlag);

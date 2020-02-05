@@ -413,7 +413,7 @@ export default {
       this.$i18n.locale = obj.langCode;
       this.currentName = obj.name;
       this.currentFlag = obj.flag;
-      this.setLocale(obj.langCode);
+      this.setLocale({ locale: obj.langCode, save: true });
     },
     logout() {
       this.$refs.logout.$refs.logout.show();
