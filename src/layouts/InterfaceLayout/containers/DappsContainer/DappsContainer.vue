@@ -24,7 +24,7 @@ import InterfaceContainerFooter from '../../components/InterfaceContainerFooter'
 import DappButtons from '../../components/DappButtons';
 import dapps from '@/dapps';
 import { mapState } from 'vuex';
-
+import { Misc } from '@/helpers';
 export default {
   name: 'DappsContainer',
   components: {
@@ -33,8 +33,12 @@ export default {
     'dapp-buttons': DappButtons
   },
   data() {
+    const newDapps = dapps;
+    if (Misc.dateChecker()) {
+      newDapps['manageEns'].supportedNetworks = [];
+    }
     return {
-      dapps
+      dapps: newDapps
     };
   },
   computed: {
