@@ -14,8 +14,8 @@
     "invalid-symbol": "Invalid symbols on domain"
   },
   "toast": {
-    "success-transfer": "Successfully Transferred!",
-    "success-register": "Successfully Registered!"
+    "success-register": "Successfully Registered!",
+    "unavailable": "Manage ENS is currently unavailable"
   },
   "check-domain": "Check Domain",
   "update": "Update",
