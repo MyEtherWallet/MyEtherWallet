@@ -48,6 +48,21 @@ import VeeValidate from 'vee-validate';
 import './registerServiceWorker';
 import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
+import langShortCodes from '@/translations/getShortCodes';
+
+const getDefaultLang = () => {
+  if (router.options.base) {
+    const shortCode = router.options.base.replace('/', '');
+    if (Object.keys(langShortCodes).includes(shortCode)) {
+      store.dispatch('main/setLocale', {
+        locale: langShortCodes[shortCode],
+        save: false
+      });
+      return langShortCodes[shortCode];
+    }
+  }
+  return 'en_US';
+};
 
 Vue.use(VueMq, {
   breakpoints: {
@@ -91,7 +106,7 @@ Vue.config.keyCodes = {
   enter: [13]
 };
 const i18n = new VueI18n({
-  locale: 'en_US',
+  locale: getDefaultLang(),
   fallbackLocale: 'en_US',
   messages: languages,
   silentTranslationWarn: true

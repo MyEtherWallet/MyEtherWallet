@@ -151,12 +151,15 @@ export default {
   },
 
   watch: {
+    // reserves(newVal) {
+    //   console.error('newVal', newVal)
+    // }
     '$route.params.token'(newVal) {
-
+      console.error('this', this.localReserves)
     },
-    '$route.params.actionType'(newVal) {
-      this.actionType = newVal;
-    }
+    // '$route.params.actionType'(newVal) {
+    //   this.actionType = newVal;
+    // }
   },
   methods: {
     updateReserveData(data) {

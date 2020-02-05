@@ -232,6 +232,7 @@ export default {
       this.search = '';
     },
     reserves(newVal) {
+      console.error('newVal', newVal)
       this.getLocalReserves(newVal);
     },
     search(newVal) {
