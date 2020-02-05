@@ -28,10 +28,7 @@
           <div class="headline font-weight-bold monospace">$7,244.58</div>
         </div>
       </div>
-      <Address
-        class="mt-1 mb-1"
-        address="0x5a35a33b4aad23378a12396b28a500acc4621668"
-      />
+      <Address class="mt-1 mb-1" :address="address" />
       <div class="d-flex align-center">
         <Tooltip text="Print">
           <v-btn text icon :color="iconColor">
@@ -66,7 +63,8 @@ export default {
   components: { Blockie, Address, Tooltip },
   data() {
     return {
-      iconColor: 'white'
+      iconColor: 'white',
+      address: '0xc2a933600c3fe776777b4000665409c61493d417'
     };
   }
 };
