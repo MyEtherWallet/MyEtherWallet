@@ -128,6 +128,7 @@ chrome.storage.onChanged.addListener(function(res) {
 });
 
 chrome.runtime.onMessage.addListener(function(request, _, callback) {
+  console.log(request);
   if (
     request.event === SELECTED_MEW_CX_ACC ||
     request.event === REJECT_MEW_CX_ACC

@@ -314,7 +314,10 @@ export default {
         .then(_response => {
           this.signedMessage = '0x' + _response.toString('hex');
         })
-        .catch(this.wallet.errorHandler);
+        .catch(err => {
+          console.log(err);
+          this.wallet.errorHandler(err);
+        });
       if (this.account.identifier === KEEPKEY) {
         signPromise.then(() => {
           this.signConfirmationModalOpen();
