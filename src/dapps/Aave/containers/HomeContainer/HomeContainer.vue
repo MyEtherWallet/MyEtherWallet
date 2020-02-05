@@ -55,6 +55,7 @@
     </div>
     <!-- have to change the value once we get real data -->
     <summary-table
+      :reserves="reserves"
       :user-reserves="userSummary.reservesData"
       :health-factor="userSummary.healthFactor"
       :active-deposit-tab="activeDepositTab"

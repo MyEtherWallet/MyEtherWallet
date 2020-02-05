@@ -2,9 +2,9 @@
   <div class="summary-table-container">
     <table>
       <colgroup>
-        <col width="25%" />
         <col width="20%" />
         <col width="20%" />
+        <col width="15%" />
         <col width="15%" />
         <col width="25%" />
         <col width="25%" />
@@ -47,12 +47,16 @@
         </th>
         <th></th>
       </thead>
-      <tbody v-if="userReserves.length === 0">
+      <tbody v-if="ownedReserves.length === 0">
         <p>{{ $t('dappsAave.user-no-tokens') }}</p>
       </tbody>
-      <tbody v-if="userReserves.length > 0">
-        <tr v-for="(reserve, index) in userReserves" :key="reserve.key">
-          <td class="token-name">
+      <tbody v-if="ownedReserves.length > 0">
+        <tr
+          v-for="(reserve, index) in ownedReserves"
+          :key="reserve.key"
+          :class="activeDepositTab ? 'deposit-table-tr' : 'borrow-table-tr'"
+        >
+          <td class="token-name token-header">
             <img
               v-if="!getIcon(reserve.reserve.symbol)"
               class="token-icon"
@@ -70,28 +74,41 @@
                 'token-icon'
               ]"
             ></span
-            >{{ reserve.reserve.name }}
+            >{{ reserve.reserve.symbol }}
           </td>
           <td v-if="activeDepositTab">
             <span
-              >{{ convertToFixed(reserve.principalATokenBalance) }}
+              >{{ convertToFixed(reserve.principalATokenBalance, 3) }}
               {{ reserve.reserve.symbol }}</span
             >
             <span class="eth-amt"
-              >{{ convertToFixed(reserve.currentUnderlyingBalanceETH) }}
+              >{{ convertToFixed(reserve.currentUnderlyingBalanceETH, 5) }}
               {{ $t('common.currency.eth') }}</span
             >
           </td>
           <td v-if="!activeDepositTab">
-            <span>${{ reserve.currentBorrowsUSD }}</span>
+            <span>${{ convertToFixed(reserve.currentBorrowsUSD, 3) }}</span>
             <span class="eth-amt"
-              >{{ reserve.currentBorrowsETH }}
+              >{{ convertToFixed(reserve.currentBorrowsETH, 5) }}
               {{ $t('common.currency.eth') }}</span
             >
           </td>
           <td>
+            <!-- change this to earned column -->
             <span v-if="activeDepositTab"
-              >{{ convertToFixed(reserve.reserve.liquidityRate * 100) }}%</span
+              >{{
+                convertToFixed(reserve.reserve.liquidityRate * 100, 3)
+              }}%</span
+            >
+          </td>
+          <td>
+            <span v-if="activeDepositTab"
+              >{{
+                convertToFixed(reserve.reserve.liquidityRate * 100, 3)
+              }}%</span
+            >
+            <span v-if="!activeDepositTab"
+              >{{ convertToFixed(reserve.borrowRate * 100, 3) }}%</span
             >
           </td>
           <td v-if="activeDepositTab">
@@ -109,11 +126,19 @@
           <td v-if="!activeDepositTab">
             <div class="slider-container">
               <div class="sliding-switch-white">
-                <label class="switch">
+                <label
+                  class="switch"
+                  :title="
+                    !isStableEnabled(reserve.reserve.id)
+                      ? $t('dappsAave.stable-rate-no-avail')
+                      : ''
+                  "
+                >
                   <input
+                    :disabled="!isStableEnabled(reserve.reserve.id)"
                     :checked="reserve.borrowRateMode === 'Stable'"
                     type="checkbox"
-                    @click="changeType(index)"
+                    @click="changeInterestType(index)"
                   />
                   <span class="slider borrow-slider round" />
                 </label>
@@ -156,9 +181,9 @@
     <confirmation-modal
       ref="confirmationModal"
       :active-deposit-tab="activeDepositTab"
-      :health-factor="healthFactor"
       :token="token"
       :is-collateral-modal="true"
+      :health-factor="healthFactor"
     />
     <switch-interest-modal ref="switchInterest" :token="token" />
   </div>
@@ -170,7 +195,6 @@ import SwitchInterestModal from '@/dapps/Aave/components/SwitchInterestModal';
 import { hasIcon } from '@/partners';
 import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
-import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -178,6 +202,12 @@ export default {
     'switch-interest-modal': SwitchInterestModal
   },
   props: {
+    reserves: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    },
     userReserves: {
       type: Array,
       default: function() {
@@ -198,26 +228,58 @@ export default {
       token: {}
     };
   },
+  computed: {
+    ownedReserves() {
+      const splitReserves = [];
+      this.userReserves.forEach(reserve => {
+        if (this.activeDepositTab && reserve.principalATokenBalance > 0) {
+          splitReserves.push(reserve);
+        } else if (!this.activeDepositTab && reserve.currentBorrowsETH > 0) {
+          splitReserves.push(reserve);
+        }
+      });
+      return splitReserves;
+    }
+  },
   methods: {
-    convertToFixed(val) {
-      return new BigNumber(val).toFixed(2).toString();
+    isStableEnabled(id) {
+      const reserve = this.getReserve(id);
+      return reserve.stableBorrowRateEnabled;
+    },
+    convertToFixed(val, int) {
+      if (!val || val == 0) {
+        return 0;
+      }
+
+      val = val.toString();
+      const idx = val.indexOf('.');
+      if (idx >= 0) {
+        return val.slice(0, idx + int);
+      }
     },
     getIcon(currency) {
       return hasIcon(currency);
     },
+    getReserve(id) {
+      return this.reserves.find(reserve => {
+        return reserve.id === id;
+      });
+    },
     useAsCollateral(idx) {
-      this.reserves[idx].isCollateral = !this.reserves[idx].isCollateral;
-      this.token = this.reserves[idx];
+      // this.ownedReserves[idx].usageAsCollateralEnabledOnUser = !this.ownedReserves[idx].usageAsCollateralEnabledOnUser;
+      this.token = this.userReserves[idx];
+      // this.token = this.ownedReserves.find(item => {
+      //   return item.id === idx;
+      // });
       this.$refs.confirmationModal.$refs.confirmationModal.show();
     },
-    changeType(idx) {
-      this.token = this.reserves[idx];
+    changeInterestType(idx) {
+      this.token = this.getReserve(this.userReserves[idx].reserve.id);
       this.$refs.switchInterest.$refs.switchInterest.show();
-      // this.reserves[idx].isStable = !this.reserves[idx].isStable;
     },
     goToPage(idx, actionType) {
       const params = {
-        token: this.reserves[idx]
+        token: this.getReserve(this.userReserves[idx].reserve.id)
       };
 
       if (actionType) {

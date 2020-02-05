@@ -5,14 +5,14 @@
         <span slot="token" class="title">{{ token.symbol }}</span>
       </i18n>
       <img
-        v-if="!getIcon(token.symbol)"
+        v-if="token.symbol !== undefined && !getIcon(token.symbol)"
         class="token-icon"
         :src="
           require(`@/assets/images/currency/coins/AllImages/${token.symbol}.svg`)
         "
       />
       <span
-        v-if="getIcon(token.symbol)"
+        v-if="token && getIcon(token.symbol)"
         :class="['cc', getIcon(token.symbol), 'cc-icon', 'currency-symbol']"
       ></span>
     </div>
@@ -29,7 +29,7 @@
       <div class="right-container">
         <p>{{ convertToFixed(token.utilizationRate * 100) }}%</p>
         <p>{{ convertToFixed(token.totalLiquidity) }} {{ token.symbol }}</p>
-        <p>{{ convertToFixed(token.availableLiquidty) }} {{ token.symbol }}</p>
+        <p>{{ convertToFixed(token.availableLiquidity) }} {{ token.symbol }}</p>
         <p v-if="token.stableBorrowRateEnabled" class="stable-text">
           {{ convertToFixed(token.stableBorrowRate * 100) }}%
         </p>

@@ -1,6 +1,6 @@
 import store from 'store';
 
-const token = store.get('token') !== undefined ? store.get('token') : [];
+const token = store.get('token') !== undefined ? store.get('token') : {};
 
 const state = {
   token: token

@@ -12,22 +12,16 @@
         <p class="token-balance">
           {{
             activeDepositTab
-              ? token.user
-                ? convertToFixed(token.user.principalATokenBalance)
-                : 0
-              : token.user
-              ? convertToFixed(token.user.currentBorrowsETH)
-              : 0
+              ? convertToFixed(token.user.principalATokenBalance)
+              : convertToFixed(token.user.currentBorrowsETH, 5)
           }}
-          <span class="token-name"> {{ token.name }} </span>
+          <span class="token-name"> {{ token.symbol }} </span>
         </p>
         <p class="usd-amt">
           ${{
             activeDepositTab
-              ? getUSDBalance(convertToEther(token.currentUnderlyingBalance))
-              : token.user
-              ? convertToFixed(token.user.currentBorrowsUSD)
-              : 0
+              ? convertToFixed(token.user.currentUnderlyingBalanceUSD)
+              : convertToFixed(token.user.currentBorrowsUSD)
           }}
         </p>
       </div>
@@ -42,16 +36,16 @@
         <p class="token-balance">
           {{
             activeDepositTab
-              ? convertToFixed(token.tokenBalance)
-              : userSummary.totalCollateralETH
+              ? convertToFixed(token.tokenBalance, 5)
+              : convertToFixed(userSummary.totalCollateralETH, 5)
           }}
-          <span class="token-name">{{ token.name }}</span>
+          <span class="token-name">{{ token.symbol }}</span>
         </p>
         <p class="usd-amt">
           ${{
             activeDepositTab
-              ? getUSDBalance(convertToEther(token.currentATokenBalance))
-              : userSummary.totalCollateralUSD
+              ? getUSDBalance(token)
+              : convertToFixed(userSummary.totalCollateralUSD)
           }}
         </p>
       </div>
@@ -119,9 +113,9 @@
     />
     <confirmation-modal
       ref="confirmationModal"
+      :user-summary="userSummary"
       :active-deposit-tab="activeDepositTab"
       :amount="amount"
-      :health-factor="userSummary.healthFactor"
       :token="token"
       @emitTakeAction="emitTakeAction"
     />
@@ -170,7 +164,7 @@ export default {
       amount: null,
       ethPrice: 0,
       disableBtn: false,
-      token: this.$route.params.token || {},
+      token: { user: {}, price: {} },
       actionType: this.$route.params.actionType || '',
       percentBtns: {
         twentyFivePercentEnabled: false,
@@ -194,10 +188,6 @@ export default {
     }
   },
   watch: {
-    currentUserReserve(newVal) {
-      console.error('hello', newVal)
-      this.currentUserReserve = newVal;
-    },
     amount() {
       if (
         this.activeDepositTab &&
@@ -220,25 +210,36 @@ export default {
   },
   mounted() {
     this.token = this.$route.params.token;
-    this.setToken(this.token);
+    this.callSetToken(this.token);
 
-    const userReserve = this.userSummary.reservesData.find(reserve => {
-      return reserve.address === this.token.address;
-    });
-    this.currentUserReserve = userReserve ? userReserve : {};
-    console.error('this', this.currentUserReserve, this.token)
     if (this.online) {
       this.getEthPrice();
     }
   },
   methods: {
     ...mapActions('aave', ['setToken']),
-    convertToFixed(val) {
-      if (!val) {
+    callSetToken(token) {
+      this.setToken(token);
+    },
+    findReserve(id, reserves) {
+      return reserves.find(reserve => {
+        return reserve.id ? reserve.id === id : reserve.reserve.id === id;
+      });
+    },
+    convertToFixed(val, int) {
+      if (!int) {
+        int = 3;
+      }
+
+      if (!val || val == 0) {
         return 0;
       }
 
-      return new BigNumber(val).toFixed(2).toString();
+      val = val.toString();
+      const idx = val.indexOf('.');
+      if (idx >= 0) {
+        return val.slice(0, idx + int);
+      }
     },
     takeAction() {
       this.activeBorrowTab
@@ -277,11 +278,18 @@ export default {
       }
       return new BigNumber(unit.fromWei(wei, 'ether')).toFixed(2);
     },
-    getUSDBalance(int) {
+    getUSDBalance(token) {
       let usdBalance = 0;
-      if (int) {
+
+      if (token) {
+        const ethBalance = new BigNumber(
+          new BigNumber(token.tokenBalance).times(
+            new BigNumber(token.price.priceInEth)
+          )
+        );
+
         usdBalance = new BigNumber(
-          new BigNumber(int).times(new BigNumber(this.ethPrice)) //need to add in all the token prices (not just ether)
+          new BigNumber(ethBalance).times(new BigNumber(this.ethPrice))
         )
           .toFixed(2)
           .toString();

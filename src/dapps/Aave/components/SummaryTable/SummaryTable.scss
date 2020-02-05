@@ -4,10 +4,11 @@
   table {
     border-radius: 4px;
     box-shadow: 0 0 0 1px $light-blue-12;
-    table-layout: fixed;
+    // table-layout: fixed;
     width: 100%;
 
     .token-icon {
+      font-size: 20px;
       margin-right: 5px;
       width: 20px;
       vertical-align: middle;
@@ -20,11 +21,11 @@
         font-size: 11px;
         font-weight: 600;
         padding: 10px 0;
-        padding-left: 40px;
+        // padding-left: 30px;
         text-transform: uppercase;
       }
       .token-header {
-        padding-left: 45px;
+        padding-left: 35px;
       }
       .th-container {
         color: $light-blue-2;
@@ -37,14 +38,26 @@
         display: flex;
       }
     }
-
+    
     tbody {
+      .deposit-table-tr {
+        td {
+          width: 200px;
+        }
+      }
+      .borrow-table-tr {
+        td {
+          width: 140px;
+        }
+      }
       tr {
+        vertical-align: initial;
         td {
           color: rgb(11, 40, 64);
           font-size: 12px;
           font-weight: 600;
-          padding-left: 40px;
+          padding-bottom: 10px;
+          // padding-left: 30px;
           padding-top: 10px;
 
           &.button-container {
@@ -81,6 +94,7 @@
           color: $dark-blue-2;
           font-size: 14px;
           font-weight: 600;
+          padding-left: 30px;
         }
 
         .eth-amt {

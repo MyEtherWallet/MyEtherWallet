@@ -48,9 +48,32 @@
               </p>
             </div>
             <div class="right-container">
-              <!-- placeholder -->
-              <p v-if="isCollateralModal" class="currency-title">ETH</p>
-              <p class="mt-4">{{ userSummary.healthFactor }}</p>
+              <p v-if="isCollateralModal" class="currency-title">
+                <img
+                  v-if="
+                    token.reserve !== undefined &&
+                      !getIcon(token.reserve.symbol)
+                  "
+                  class="token-icon"
+                  :src="
+                    require(`@/assets/images/currency/coins/AllImages/${token.reserve.symbol}.svg`)
+                  "
+                />
+                <span
+                  v-if="
+                    token.reserve !== undefined && getIcon(token.reserve.symbol)
+                  "
+                  :class="[
+                    'cc',
+                    getIcon(token.reserve.symbol),
+                    'cc-icon',
+                    'currency-symbol',
+                    'token-icon'
+                  ]"
+                ></span
+                ><span v-if="token.reserve">{{ token.reserve.name }}</span>
+              </p>
+              <p class="mt-4">{{ healthFactor }}</p>
               <!-- placeholder -->
               <p class="mt-4">22323</p>
             </div>
@@ -95,6 +118,9 @@
 import PopOver from '@/components/PopOver';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
+import { hasIcon } from '@/partners';
+import '@/assets/images/currency/coins/asFont/cryptocoins.css';
+import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 
 export default {
   components: {
@@ -132,9 +158,19 @@ export default {
     rateType: {
       type: String,
       default: ''
+    },
+    healthFactor: {
+      type: String,
+      default: ''
     }
   },
+  mounted() {
+    console.error("user", this.token)
+  },
   methods: {
+    getIcon(currency) {
+      return hasIcon(currency);
+    },
     takeAction() {
       const param = {
         address: this.token.address,

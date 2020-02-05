@@ -152,12 +152,7 @@ export default {
 
   watch: {
     '$route.params.token'(newVal) {
-      this.token = newVal;
-      console.error('this.currentUserReserve', newVal)
-      const userReserve = this.userSummary.reservesData.find(reserve => {
-        return reserve.address === this.token.address;
-      });
-      this.currentUserReserve = userReserve ? userReserve : {};
+
     },
     '$route.params.actionType'(newVal) {
       this.actionType = newVal;
@@ -220,6 +215,8 @@ export default {
       const stableCoins = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
       if (this.reservesData.length > 0) {
         this.reservesData.forEach(reserve => {
+          reserve.tokenBalance = 0;
+
           const foundReserve = this.tokensWithBalance.find(
             elem => elem.symbol === reserve.symbol
           );

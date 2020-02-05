@@ -146,13 +146,21 @@
                   }}%
                 </td>
                 <td>
-                  <button class="action-btn" @click="takeAction(token)">
-                    {{
-                      depositModal
-                        ? $tc('dappsAave.deposit', 1)
-                        : $t('dappsAave.borrow')
-                    }}
-                  </button>
+                  <span :title="isDisabled(token) ? disabledTooltip : ''">
+                    <button
+                      :class="[
+                        'action-btn',
+                        isDisabled(token) ? 'disabled' : ''
+                      ]"
+                      @click="takeAction(token)"
+                    >
+                      {{
+                        depositModal
+                          ? $tc('dappsAave.deposit', 1)
+                          : $t('dappsAave.borrow')
+                      }}
+                    </button>
+                  </span>
                 </td>
               </tr>
             </tbody>
@@ -212,6 +220,13 @@ export default {
       localReserves: []
     };
   },
+  computed: {
+    disabledTooltip() {
+      return this.depositModal
+        ? this.$t('dappsAave.transfer-currencies')
+        : this.$t('dappsAave.no-liquidity');
+    }
+  },
   watch: {
     depositModal() {
       this.search = '';
@@ -239,6 +254,13 @@ export default {
     }
   },
   methods: {
+    isDisabled(token) {
+      if (this.depositModal && token.tokenBalance == 0) {
+        return true;
+      } else if (!this.depositModal && token.availableLiquidity == 0) {
+        return true;
+      }
+    },
     getTokenAvail(token) {
       const price = token.price.priceInEth;
       const tokenAvail = new BigNumber(this.availEth).div(price).toFixed(2);
@@ -250,6 +272,7 @@ export default {
     },
     getLocalReserves(reserves) {
       this.localReserves = reserves;
+      console.error('this', this.localReserves)
       // reserves.forEach(reserve => this.localReserves.push(reserve));
     },
     convertFromRay(int) {
