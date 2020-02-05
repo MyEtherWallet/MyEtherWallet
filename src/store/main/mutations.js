@@ -94,9 +94,9 @@ const SET_WEB3_INSTANCE = function(state, web3) {
   state.web3 = web3;
 };
 
-const SET_LOCALE = function(state, val) {
-  state.locale = val;
-  store.set('locale', val);
+const SET_LOCALE = function(state, { locale, save }) {
+  state.locale = locale;
+  if (save) store.set('locale', locale);
 };
 
 const SWITCH_NETWORK = function(state, networkObj) {
