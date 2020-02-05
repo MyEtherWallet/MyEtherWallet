@@ -421,7 +421,7 @@ export default {
     window.chrome.storage.onChanged.addListener(this.fetchTokens);
   },
   mounted() {
-    window.chrome.storage.sync.get('favorites', this.fetchTokens);
+    window.chrome.storage.sync.get('favorites', this.checkIfFavorited);
   },
   destroyed() {
     window.chrome.storage.onChanged.removeListener(this.fetchTokens);
@@ -622,11 +622,11 @@ export default {
     openRemoveWallet() {
       this.$refs.removeWalletModal.$refs.removeWalletModal.$refs.modalWrapper.show();
     },
-    async fetchTokens(res) {
-      if (res && res.hasOwnProperty('favorites') && res.favorites.hasOwnProperty('newValue')) {
+    checkIfFavorited(res) {
+      if (res && res.hasOwnProperty('favorites')) {
         const parsedRes = res.favorites.hasOwnProperty('newValue')
           ? JSON.parse(res.favorites.newValue)
-          : JSON.parse(res.favorites);
+          : res.favorites.hasOwnProperty('oldValue') ? JSON.parse(res.favorites.oldValue) : JSON.parse(res.favorites);
         const foundVal = parsedRes.find(item => {
           return item.address === this.address;
         });
@@ -637,6 +637,9 @@ export default {
           this.favorited = false;
         }
       }
+    },
+    async fetchTokens(res) {
+      this.checkIfFavorited(res);
       this.loading = true;
       let tokens = [];
       const tb = new TokenBalance(this.web3.currentProvider);
