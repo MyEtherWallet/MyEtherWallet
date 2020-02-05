@@ -12,7 +12,7 @@ export default {
 
 <style lang="scss" scoped>
 .white-sheet {
-  border-radius: 15px;
+  border-radius: 12px;
   box-shadow: 0 0 20px #0000000f;
 }
 </style>
