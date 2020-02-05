@@ -6,7 +6,7 @@
 
 // Style reset ======================================================
 * {
-  font-family: 'Roboto';
+  font-family: "Roboto";
   color: $dark-sacramento;
 }
 
@@ -15,7 +15,7 @@ a {
 }
 
 i {
-  font-family: 'Material Icons' !important;
+  font-family: "Material Icons" !important;
 }
 
 div,
@@ -100,7 +100,7 @@ h5 {
 }
 
 .text-transform--initial {
-  text-transform: initial;
+  text-transform: initial !important;
 }
 
 .text-decoration--none {

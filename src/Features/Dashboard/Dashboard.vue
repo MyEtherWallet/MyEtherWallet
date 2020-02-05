@@ -1,10 +1,18 @@
 <template>
-  <div>Dashboard</div>
+  <div>
+    <EthBalance />
+    <Spacer />
+    <TokensValue />
+  </div>
 </template>
 
 <script>
+import Spacer from '@/components/Common/Spacer';
+import EthBalance from './EthBalance';
+import TokensValue from './TokensValue';
+
 export default {
-  components: {}
+  components: { Spacer, EthBalance, TokensValue }
 };
 </script>
 
