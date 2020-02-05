@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="20px" viewBox="0 0 16 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Group 4</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Interact-with-contract" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="contract" transform="translate(-105.000000, -221.000000)" fill="#FFFFFF">
+            <g id="nav-bar-contract-01">
+                <g id="Group-9">
+                    <g transform="translate(17.000000, 94.000000)">
+                        <g id="Group-51">
+                            <g id="Group-54" transform="translate(17.000000, 123.000000)">
+                                <g id="Group-4" transform="translate(69.000000, 4.000000)">
+                                    <g id="Group-12" transform="translate(2.000000, 0.000000)">
+                                        <g id="Group-4">
+                                            <path d="M15.2105813,2.5 L13.3853115,2.5 L13.3853115,0.625 C13.3853115,0.28 13.1127379,0 12.7768883,0 L1.82526975,0 C0.818937696,0 -1.58273394e-12,0.84125 -1.58273394e-12,1.875 L-1.58273394e-12,17.5 C-1.58273394e-12,18.87875 1.09151131,20 2.433693,20 L15.2105813,20 C15.5464309,20 15.8190045,19.72 15.8190045,19.375 L15.8190045,3.125 C15.8190045,2.78 15.5464309,2.5 15.2105813,2.5 Z M1.82526975,1.25 L12.168465,1.25 L12.168465,2.5 L1.82526975,2.5 C1.49063696,2.5 1.2168465,2.21875 1.2168465,1.875 C1.2168465,1.53125 1.49063696,1.25 1.82526975,1.25 Z M14.602158,18.75 L2.433693,18.75 C1.76199373,18.75 1.2168465,18.19 1.2168465,17.5 L1.2168465,3.635 C1.4078914,3.705 1.61110477,3.75 1.82526975,3.75 L14.602158,3.75 L14.602158,18.75 Z" id="Shape" fill-rule="nonzero"></path>
+                                            <g id="Group-2" transform="translate(4.059829, 3.651515)">
+                                                <g id="Group-3">
+                                                    <rect id="Rectangle" x="4.35207426e-14" y="8.38589981" width="8.11965812" height="1.33333333" rx="0.666666667"></rect>
+                                                    <rect id="Rectangle" x="0.811965812" y="11.4471243" width="6.4957265" height="1.33333333" rx="0.666666667"></rect>
+                                                    <text id="A" font-family="ArialRoundedMTBold, Arial Rounded MT Bold" font-size="6" font-weight="normal">
+                                                        <tspan x="1.62393162" y="6.283859">A</tspan>
+                                                    </text>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
