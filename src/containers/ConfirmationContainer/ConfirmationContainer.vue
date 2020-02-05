@@ -315,7 +315,6 @@ export default {
           this.signedMessage = '0x' + _response.toString('hex');
         })
         .catch(err => {
-          console.log(err);
           this.wallet.errorHandler(err);
         });
       if (this.account.identifier === KEEPKEY) {
