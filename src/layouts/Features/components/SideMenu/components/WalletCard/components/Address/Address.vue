@@ -43,7 +43,7 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 155px;
+  max-width: 165px;
 }
 
 .last-four {

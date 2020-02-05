@@ -3,7 +3,7 @@
     <div class="background-image">
       <img src="@/assets/images/Etc/Features/SideMenu/WalletCard.png" />
     </div>
-    <div class="info-container pa-5">
+    <div class="info-container px-4 py-5">
       <div class="d-flex">
         <div class="blockie-img">
           <blockie
@@ -28,7 +28,7 @@
           <div class="headline font-weight-bold monospace">$7,244.58</div>
         </div>
       </div>
-      <Address class="mt-1 mb-1" :address="address" />
+      <Address class="mt-1 mb-2" :address="address" />
       <div class="d-flex align-center">
         <Tooltip text="Print">
           <v-btn text icon :color="iconColor">
@@ -100,6 +100,7 @@ export default {
 }
 
 .info-container {
+  width: 100%;
   position: absolute;
   top: 0;
   left: 0;
