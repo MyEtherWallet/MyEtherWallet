@@ -1,6 +1,12 @@
 <template>
   <div>
-    <v-btn class="ml-auto" min-width="100%" outlined large color="white">
+    <v-btn
+      class="ml-auto text-transform--initial"
+      min-width="100%"
+      outlined
+      large
+      color="white"
+    >
       Buy ETH here
       <div class="ml-auto d-flex align-center">
         <img
