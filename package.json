@@ -102,7 +102,7 @@
     "ethjs-unit": "0.1.6",
     "hdkey": "1.1.1",
     "i18n-iso-countries": "4.3.1",
-    "iban": "0.0.13",
+    "iban": "0.0.14",
     "imagemin-mozjpeg": "8.0.0",
     "imagemin-webpack-plugin": "2.4.2",
     "jest-canvas-mock": "2.2.0",
