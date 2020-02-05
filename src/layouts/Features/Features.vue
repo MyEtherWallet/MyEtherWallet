@@ -1,8 +1,14 @@
 <template>
-  <div>
-    <SideMenu class="sidemenu" />
+  <div class="features">
+    <SideMenu class="left-sidemenu" />
     <v-container>
-      <router-view />
+      <div>top</div>
+      <div class="d-flex">
+        <div class="feature-content">
+          <router-view />
+        </div>
+        <div class="right-side-info-bar">side</div>
+      </div>
     </v-container>
     <Footer />
   </div>
@@ -19,9 +25,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.sidemenu {
+@import '@/assets/styles/GlobalVariables.scss';
+
+.features {
+  background-color: $primary-silver;
+  height: 100%;
+}
+
+.left-sidemenu {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.feature-content {
+  flex-grow: 1;
+}
+
+.right-side-info-bar {
+  width: 200px;
 }
 </style>

@@ -14,6 +14,7 @@ import AboutUsWhyMEW from '@/layouts/LandingPages/AboutUs/WhyMEW';
 import HowItWorks from '@/layouts/LandingPages/HowItWorks';
 
 import Features from '@/layouts/Features';
+import Dashboard from '@/Features/Dashboard';
 
 const webRoutes = [
   {
@@ -103,7 +104,17 @@ const webRoutes = [
     component: Features,
     meta: {
       requiresAuth: false
-    }
+    },
+    children: [
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: Dashboard,
+        meta: {
+          requiresAuth: false
+        }
+      }
+    ]
   }
 ];
 const configRoutes = routes => {
