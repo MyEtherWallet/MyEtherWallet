@@ -14,8 +14,8 @@
     "invalid-symbol": "Неверные символы в домене"
   },
   "toast": {
-    "success-transfer": "Перевод выполнен успешнo!",
-    "success-register": "Регистрация выполнена успешнo!"
+    "success-register": "Регистрация выполнена успешнo!",
+    "unavailable": "Manage ENS is currently unavailable"
   },
   "check-domain": "Проверить домен",
   "update": "Обновление",
