@@ -15,7 +15,7 @@
   },
   "toast": {
     "success-register": "Регистрация выполнена успешнo!",
-    "unavailable": "Manage ENS is currently unavailable"
+    "unavailable": "Управление ENS на данный момент не доступно"
   },
   "check-domain": "Проверить домен",
   "update": "Обновление",
