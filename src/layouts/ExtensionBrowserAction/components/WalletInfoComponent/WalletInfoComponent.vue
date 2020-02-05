@@ -623,7 +623,7 @@ export default {
       this.$refs.removeWalletModal.$refs.removeWalletModal.$refs.modalWrapper.show();
     },
     async fetchTokens(res) {
-      if (res && res.hasOwnProperty('favorites')) {
+      if (res && res.hasOwnProperty('favorites') && res.favorites.hasOwnProperty('newValue')) {
         const parsedRes = res.favorites.hasOwnProperty('newValue')
           ? JSON.parse(res.favorites.newValue)
           : JSON.parse(res.favorites);

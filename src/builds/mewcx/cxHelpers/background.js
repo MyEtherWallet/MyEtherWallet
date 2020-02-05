@@ -33,6 +33,11 @@ chrome.runtime.onInstalled.addListener(onInstalledCb);
 chrome.runtime.onStartup.addListener(onInstalledCb);
 // Set default values on init
 const networkChanger = items => {
+  if (!items.hasOwnProperty('favorites')) {
+    chrome.storage.sync.set({
+      favorites: JSON.stringify([])
+    });
+  }
   if (items.hasOwnProperty('defNetwork')) {
     const networkProps = JSON.parse(items['defNetwork']);
     let network = {};

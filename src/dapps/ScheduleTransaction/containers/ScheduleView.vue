@@ -193,7 +193,7 @@
                       :key="index"
                       :class="['mode-btn', mode === selectedMode && 'selected']"
                       @click="selectedMode = mode"
-                      >{{ mode.name }}</b-button
+                      >{{ $t(mode.name) }}</b-button
                     >
                   </b-button-group>
                 </div>
