@@ -3,16 +3,12 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from 'graphql-tag';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import ApolloClient from 'apollo-client';
-const EventEmitter = require('events').EventEmitter;
 
-class ApolloClient extends EventEmitter {
-
-}
 const GRAPHQL_ENDPOINT =
   'wss://api.thegraph.com/subgraphs/name/aave/protocol-raw';
-const QUERY_SERVER_URL =
-  'https://api.thegraph.com/subgraphs/name/aave/protocol-ropsten-raw';
-const MUTATIONS_SERVER_URL = 'https://dlp-api-dev.testing.aave.com/graphql';
+// const QUERY_SERVER_URL =
+//   'https://api.thegraph.com/subgraphs/name/aave/protocol-ropsten-raw';
+// const MUTATIONS_SERVER_URL = 'https://dlp-api-dev.testing.aave.com/graphql';
 
 const client = new SubscriptionClient(GRAPHQL_ENDPOINT, {
   reconnect: true

@@ -8,27 +8,29 @@
       static
       lazy
     >
-      <div class="modal-contents">
+      <div v-if="token.user" class="modal-contents">
         <div class="switch-container">
           <div class="current-container">
             <p class="title">{{ $t('dappsAave.current-interest') }}</p>
-            <!-- placeholder -->
             <p
               :class="[
                 'percent-title',
-                token.isStable ? 'stable-percent' : 'variable-percent'
+                token.user.borrowRateMode === 'Stable'
+                  ? 'stable-percent'
+                  : 'variable-percent'
               ]"
             >
-              11.44%
+              {{ convertToFixed(token.user.borrowRate * 100) }}%
             </p>
-            <!-- placeholder -->
             <p
               :class="[
                 'rate-title',
-                token.isStable ? 'stable-percent' : 'variable-percent'
+                token.user.borrowRateMode === 'Stable'
+                  ? 'stable-percent'
+                  : 'variable-percent'
               ]"
             >
-              Variable
+              {{ token.user.borrowRateMode }}
             </p>
           </div>
           <div class="icon-container">
@@ -36,23 +38,33 @@
           </div>
           <div class="next-container">
             <p class="title">{{ $t('dappsAave.next-interest') }}</p>
-            <!-- placeholder -->
             <p
               :class="[
                 'percent-title',
-                token.isStable ? 'variable-percent' : 'stable-percent'
+                token.user.borrowRateMode === 'Stable'
+                  ? 'variable-percent'
+                  : 'stable-percent'
               ]"
             >
-              1.44%
+              {{
+                token.user.borrowRateMode === 'Stable'
+                  ? convertToFixed(token.variableBorrowRate * 100)
+                  : convertToFixed(token.stableBorrowRate * 100)
+              }}%
             </p>
-            <!-- placeholder -->
             <p
               :class="[
                 'rate-title',
-                token.isStable ? 'variable-percent' : 'stable-percent'
+                token.user.borrowRateMode === 'Stable'
+                  ? 'variable-percent'
+                  : 'stable-percent'
               ]"
             >
-              Stable
+              {{
+                token.user.borrowRateMode === 'Stable'
+                  ? $t('dappsAave.variable')
+                  : $t('dappsAave.stable')
+              }}
             </p>
           </div>
         </div>
@@ -61,13 +73,29 @@
           <span class="currency-title">
             {{ $t('dappsAave.currency') }}
           </span>
-          <!-- placeholder -->
           <span class="currency-type">
-            DAI
+            <img
+              v-if="!getIcon(token.symbol)"
+              class="token-icon"
+              :src="
+                require(`@/assets/images/currency/coins/AllImages/${token.symbol}.svg`)
+              "
+            />
+            <span
+              v-if="getIcon(token.symbol)"
+              :class="[
+                'cc',
+                getIcon(token.symbol),
+                'cc-icon',
+                'currency-symbol',
+                'token-icon'
+              ]"
+            ></span>
+            {{ token.symbol }}
           </span>
         </div>
         <hr />
-        <div class="btn-container">
+        <div class="btn-container mt-4 mb-4">
           <button>{{ $t('dappsAave.confirm-switch') }}</button>
         </div>
       </div>
@@ -76,12 +104,42 @@
 </template>
 
 <script>
+import { hasIcon } from '@/partners';
+import '@/assets/images/currency/coins/asFont/cryptocoins.css';
+import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
+
 export default {
   props: {
     token: {
       type: Object,
       default: function() {
         return {};
+      }
+    }
+  },
+  watch: {
+    token(newVal) {
+      this.token = newVal;
+      console.error('newVal', newVal)
+    }
+  },
+  methods: {
+    getIcon(currency) {
+      return hasIcon(currency);
+    },
+    convertToFixed(val, int) {
+      if (!val || val == 0) {
+        return 0;
+      }
+
+      if (!int) {
+        int = 3;
+      }
+
+      val = val.toString();
+      const idx = val.indexOf('.');
+      if (idx >= 0) {
+        return val.slice(0, idx + int);
       }
     }
   }

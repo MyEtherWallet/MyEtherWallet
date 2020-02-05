@@ -17,9 +17,9 @@
       </div>
       <i v-show="loadingHome" class="fa fa-spinner fa-spin" />
       <span v-if="title !== 'Earnings' && !loadingHome">
-        <p class="balance">${{ balanceUsd }}</p>
+        <p class="balance">${{ convertToFixed(balanceUsd) }}</p>
         <p class="eth-balance">
-          {{ balanceEth }} {{ $t('common.currency.eth') }}
+          {{ convertToFixed(balanceEth) }} {{ $t('common.currency.eth') }}
         </p>
       </span>
       <div v-if="title === 'Earnings'" class="earnings-container">
@@ -42,6 +42,8 @@
 </template>
 
 <script>
+import BigNumber from 'bignumber.js';
+
 export default {
   props: {
     title: {
@@ -67,6 +69,14 @@ export default {
     loadingHome: {
       type: Boolean,
       default: true
+    }
+  },
+  methods: {
+    convertToFixed(val) {
+      if (!val) {
+        return 0;
+      }
+      return val.slice(0, val.indexOf('.') + 5);
     }
   }
   // data() {
