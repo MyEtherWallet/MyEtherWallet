@@ -11,7 +11,6 @@
       :add-watch-only="addWatchOnlyWallet"
       :loading="loading"
     />
-
     <div v-if="!hasAccounts" class="no-wallet-found">
       <div class="text-and-img-container">
         <img src="@/assets/images/icons/alien.png" />
