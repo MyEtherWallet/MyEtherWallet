@@ -82,7 +82,7 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 0;
 
   img {
     width: 100%;
@@ -101,10 +101,10 @@ export default {
 
 .info-container {
   width: 100%;
-  position: absolute;
+  position: relative;
   top: 0;
   left: 0;
-  z-index: 2;
+  z-index: 1;
 
   * {
     color: white;
