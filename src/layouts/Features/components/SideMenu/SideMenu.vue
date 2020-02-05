@@ -6,14 +6,16 @@
       </router-link>
     </div>
     <WalletCard />
+    <BuyEthButton class="mt-2" />
   </div>
 </template>
 
 <script>
 import WalletCard from './components/WalletCard';
+import BuyEthButton from './components/BuyEthButton';
 
 export default {
-  components: { WalletCard }
+  components: { WalletCard, BuyEthButton }
 };
 </script>
 
