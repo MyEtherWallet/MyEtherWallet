@@ -245,7 +245,7 @@ const toDollar = val => {
     })
     .replace('US', '')
     .replace('$', '$ ')}`;
-}
+};
 const dateChecker = () => {
   const today = new Date();
   const startDate = new Date('02/03/2020');

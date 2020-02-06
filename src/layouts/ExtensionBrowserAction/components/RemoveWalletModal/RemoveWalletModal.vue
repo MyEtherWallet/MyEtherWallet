@@ -26,7 +26,10 @@
           {{ $t('mewcx.are-you-sure-delete') }} <b>{{ nickname }}</b>
         </h3>
         <div class="remove-modal-buttons">
-          <div class="remove" @click="removeWallet">
+          <div
+            :class="[locPassword !== '' ? '' : 'disabled', 'remove']"
+            @click="removeWallet"
+          >
             Confirm Remove
           </div>
           <div class="remove-wallet-warning">

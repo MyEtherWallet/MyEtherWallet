@@ -146,7 +146,7 @@
         </div>
       </div>
     </div>
-    <add-wallet-modal ref="addWalletModal" />
+    <add-wallet-modal ref="addWalletModal" :usd="ethPrice" />
   </extension-browser-action-wrapper>
 </template>
 

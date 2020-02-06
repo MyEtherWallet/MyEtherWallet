@@ -22,6 +22,11 @@
 }
 
 .remove-modal-buttons {
+  .disable {
+    background-color: $dark-grey-11 !important;
+    pointer-events: none !important;
+  }
+
   .remove {
     border-radius: 5px;
     cursor: pointer;
