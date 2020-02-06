@@ -7,11 +7,16 @@
   position: relative;
   width: 100%;
 
-  input {
+  input,
+  textarea {
     background-color: $white;
     border: none;
     padding: 15px;
     width: 100%;
+  }
+
+  textarea {
+    height: 150px;
   }
 
   .password-input {

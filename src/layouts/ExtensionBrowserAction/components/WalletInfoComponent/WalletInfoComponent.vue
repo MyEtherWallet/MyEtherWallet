@@ -393,7 +393,7 @@ export default {
       );
     },
     fixedEthBalance() {
-      const currencyBalance = new BigNumber(this.balance).toFixed(2);
+      const currencyBalance = new BigNumber(this.balance).toFixed(3);
       return `${currencyBalance} ${this.network.type.currencyName}`;
     },
     walletTokensWithBalance() {
