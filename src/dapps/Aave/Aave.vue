@@ -155,7 +155,7 @@ export default {
     //   console.error('newVal', newVal)
     // }
     '$route.params.token'(newVal) {
-      console.error('this', this.localReserves)
+      console.error('token', this.reservesData)
     },
     // '$route.params.actionType'(newVal) {
     //   this.actionType = newVal;
@@ -209,6 +209,7 @@ export default {
           const foundReserve = this.reservesData.find(
             elem => elem.name === reserve.reserve.name
           );
+          console.error("foundREserve", foundReserve)
           foundReserve.user = reserve;
         });
       }
@@ -219,6 +220,7 @@ export default {
       if (this.reservesData.length > 0) {
         this.reservesData.forEach(reserve => {
           reserve.tokenBalance = 0;
+          reserve.user = !reserve.user ? {} : reserve.user;
 
           const foundReserve = this.tokensWithBalance.find(
             elem => elem.symbol === reserve.symbol
@@ -226,6 +228,7 @@ export default {
           if (foundReserve) {
             reserve.tokenBalance = foundReserve.balance;
           }
+
           if (stableCoins.findIndex(coin => coin === reserve.symbol) >= 0) {
             this.reservesStable.push(reserve);
           }

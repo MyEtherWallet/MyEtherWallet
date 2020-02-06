@@ -212,14 +212,6 @@ export default {
       default: ''
     }
   },
-  data() {
-    return {
-      search: '',
-      allTabActive: true,
-      stableTabActive: false,
-      localReserves: []
-    };
-  },
   computed: {
     disabledTooltip() {
       return this.depositModal
@@ -254,6 +246,18 @@ export default {
       }
     }
   },
+  mounted() {
+    this.getLocalReserves(this.reserves);
+    console.error('resrves', this.reserves)
+  },
+  data() {
+    return {
+      search: '',
+      allTabActive: true,
+      stableTabActive: false,
+      localReserves: []
+    };
+  },
   methods: {
     isDisabled(token) {
       if (this.depositModal && token.tokenBalance == 0) {
@@ -273,8 +277,6 @@ export default {
     },
     getLocalReserves(reserves) {
       this.localReserves = reserves;
-      console.error('this', this.localReserves)
-      // reserves.forEach(reserve => this.localReserves.push(reserve));
     },
     convertFromRay(int) {
       const rayUnit = new BigNumber(10).pow(27);
