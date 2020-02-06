@@ -3,11 +3,7 @@
     <div class="balance-wrapper">
       <div class="balance-container mr-3">
         <p class="title">
-          {{
-            activeDepositTab
-              ? $t('dappsAave.aave-depost-bal')
-              : $t('dappsAave.you-borrowed')
-          }}
+          {{ actionTitle }}
         </p>
         <p class="token-balance">
           {{
@@ -39,7 +35,7 @@
               ? convertToFixed(token.tokenBalance, 5)
               : convertToFixed(userSummary.totalCollateralETH, 5)
           }}
-          <span class="token-name">{{ token.symbol }}</span>
+          <span class="token-name">{{ activeDepositTab ? token.symbol : $t('common.currency.eth') }}</span>
         </p>
         <p class="usd-amt">
           ${{
@@ -165,7 +161,7 @@ export default {
       ethPrice: 0,
       disableBtn: false,
       token: { user: {}, price: {} },
-      actionType: this.$route.params.actionType || '',
+      actionType: null,
       percentBtns: {
         twentyFivePercentEnabled: false,
         fiftyPercentEnabled: false,
@@ -207,9 +203,11 @@ export default {
     }
   },
   mounted() {
-    this.token = this.$route.params.token;
+    this.token = this.$route.params.token || {};
+    this.actionType = this.$route.params.actionType || null;
+    console.error('this', this.actionType)
     this.callSetToken(this.token);
-    console.error("mounted token", this.token)
+
     if (this.online) {
       this.getEthPrice();
     }
