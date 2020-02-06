@@ -171,7 +171,7 @@ export default {
     updateUserReserveData(data) {
       this.userReserveData = data;
       this.getFormatUserSummaryData();
-      // console.error('user', data);
+      console.error('userrrrr', data);
     },
     updateUsdPriceEth(data) {
       this.usdPriceEth = data;
@@ -179,6 +179,7 @@ export default {
       // console.error('dataaaaaaa', data);
     },
     getFormatUserSummaryData() {
+      // console.error('sdfdf', this.account.address.toLowercase())
       if (
         this.reservesData.length > 0 &&
         this.userReserveData.length > 0 &&
@@ -187,7 +188,7 @@ export default {
         this.userSummary = formatUserSummaryData(
           this.rawReserveData,
           this.userReserveData,
-          this.account.address,
+          this.account.address.toLowerCase(),
           this.usdPriceEth,
           Date.now()
         );
