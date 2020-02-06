@@ -72,6 +72,94 @@
             <p v-if="error !== ''">{{ error }}</p>
           </form>
         </div>
+        <div v-if="step === 2" class="import-method-container">
+          <wallet-option
+            v-for="(item, idx) in items"
+            :key="item.name + idx"
+            :selected="selected === item.name"
+            :hover-icon="item.imgHoverPath"
+            :text="$t(item.text)"
+            :name="item.name"
+            @updateSelected="e => (selected = e)"
+          />
+          <input
+            ref="jsonInput"
+            type="file"
+            name="file"
+            style="display: none"
+            @change="uploadFile"
+          />
+        </div>
+        <div v-if="step === 3" class="unlock-wallet-container">
+          <div class="input-container">
+            <label for="walletPassword"> Password </label>
+            <div class="password-input">
+              <input
+                v-model="password"
+                :type="showPassword ? 'text' : 'password'"
+                placeholder="Password"
+                name="walletPassword"
+              />
+              <img
+                :src="showPassword ? showIcon : hide"
+                @click.prevent="showPassword = !showPassword"
+              />
+            </div>
+          </div>
+        </div>
+        <div v-if="step === 4" class="verify-wallet-container">
+          <form @submit.prevent>
+            <div class="input-container">
+              <label for="walletName"> {{ $t('mewcx.wallet-name') }} </label>
+              <input
+                v-model="walletName"
+                :placeholder="$t('mewcx.add-wallet-nickname')"
+                name="walletName"
+              />
+            </div>
+            <div class="input-container">
+              <label for="walletPassword"> Create Wallet Password </label>
+              <div class="password-input">
+                <input
+                  v-model="password"
+                  :type="showPassword ? 'text' : 'password'"
+                  placeholder="Password"
+                  name="walletPassword"
+                />
+                <img
+                  :src="showPassword ? showIcon : hide"
+                  @click.prevent="showPassword = !showPassword"
+                />
+              </div>
+            </div>
+            <div class="input-container">
+              <div class="password-input">
+                <input
+                  v-model="confirmPassword"
+                  :type="showConfirmPassword ? 'text' : 'password'"
+                  placeholder="Confirm password"
+                />
+                <img
+                  :src="showConfirmPassword ? showIcon : hide"
+                  @click.prevent="showConfirmPassword = !showConfirmPassword"
+                />
+              </div>
+            </div>
+            <p v-if="error !== ''">{{ error }}</p>
+          </form>
+        </div>
+        <div v-if="step >= 2" class="add-wallet-button-container">
+          <standard-button
+            :button-disabled="selected !== '' ? false : true"
+            :options="{
+              title: $t('common.continue'),
+              buttonStyle: 'green',
+              noMinWidth: true,
+              fullWidth: true
+            }"
+            :click-function="clickFunction"
+          />
+        </div>
       </div>
     </mewcx-modal-wrapper>
   </div>
@@ -84,6 +172,12 @@ import hide from '@/assets/images/icons/hide-password.svg';
 import showIcon from '@/assets/images/icons/show-password.svg';
 import { Toast, ExtensionHelpers } from '@/helpers';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
+import WalletOption from '@/layouts/AccessWalletLayout/components/WalletOption';
+import byJsonImgHov from '@/assets/images/icons/button-json-hover.svg';
+import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
+import privKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
+import { WalletInterface } from '@/wallets';
+import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 
 const TITLES = {
   0: {
@@ -93,18 +187,48 @@ const TITLES = {
   1: {
     title: 'Generate a New Wallet',
     subtext: false
+  },
+  2: {
+    title: 'Step 1. Choose a method',
+    subtext: 'Please choose a method to import your existing wallet'
+  },
+  3: {
+    title: 'Step 2. Unlock My Wallet',
+    subtext: 'Please enter the <specific to wallet>'
+  },
+  4: {
+    title: 'Step 3. Confirm to Add',
+    subtext: 'Please name your wallet, and create a password for it.'
   }
 };
+
+const ACCESS_TITLES = [
+  {
+    name: 'byJson',
+    imgHoverPath: byJsonImgHov,
+    text: 'accessWallet.json-file'
+  },
+  {
+    name: 'byMnem',
+    imgHoverPath: byMnemImgHov,
+    text: 'accessWallet.mnemonic.string'
+  },
+  {
+    name: 'byPriv',
+    imgHoverPath: privKeyImgHov,
+    text: 'accessWallet.private-key.string'
+  }
+];
 export default {
   components: {
     'mewcx-modal-wrapper': MewcxModalWrapper,
-    'access-wallet-button': AccessWalletButton
+    'access-wallet-button': AccessWalletButton,
+    'wallet-option': WalletOption
   },
   data() {
     return {
       step: 0,
       titles: TITLES,
-      lastStep: 0,
       walletName: '',
       password: '',
       confirmPassword: '',
@@ -112,7 +236,11 @@ export default {
       showIcon: showIcon,
       showPassword: false,
       showConfirmPassword: false,
-      loading: false
+      loading: false,
+      items: ACCESS_TITLES,
+      selected: '',
+      file: '',
+      wallet: {}
     };
   },
   computed: {
@@ -137,23 +265,144 @@ export default {
       return '';
     }
   },
-  watch: {
-    step(newVal, oldVal) {
-      this.lastStep = oldVal;
-    }
-  },
   mounted() {
     this.$refs.addMyWallet.$refs.modalWrapper.$on('hidden', () => {
       this.step = 0;
-      this.lastStep = 0;
     });
   },
   methods: {
+    uploadFile(evt) {
+      const _self = this;
+      const reader = new FileReader();
+      reader.onloadend = function(event) {
+        try {
+          _self.file = JSON.parse(event.target.result);
+          _self.step += 1;
+        } catch (e) {
+          Toast.responseHandler(e, Toast.ERROR);
+        }
+      };
+      reader.readAsBinaryString(evt.target.files[0]);
+    },
+    unlockJson() {
+      const jsonInput = this.$refs.jsonInput;
+      jsonInput.value = '';
+      jsonInput.click();
+    },
     stepChange(num) {
       this.step = num;
     },
     back() {
-      this.step = this.lastStep;
+      if (this.step === 1 || this.step > 2) {
+        this.step -= 1;
+      } else {
+        this.step -= 2;
+      }
+    },
+    accessJson() {
+      const worker = new walletWorker();
+      const _self = this;
+      _self.loading = true;
+      worker.postMessage({
+        type: 'unlockWallet',
+        data: [this.file, this.password]
+      });
+      worker.onmessage = function(e) {
+        const obj = {
+          file: _self.file,
+          name: e.data.filename
+        };
+        _self.wallet = new WalletInterface(
+          Buffer.from(e.data._privKey),
+          false,
+          keyStoreType,
+          '',
+          JSON.stringify(obj)
+        );
+        _self.step += 1;
+        _self.loading = false;
+        _self.password = '';
+        worker.terminate();
+      };
+      worker.onerror = function(e) {
+        e.preventDefault();
+        _self.loading = false;
+        Toast.responseHandler(e, Toast.ERROR);
+        worker.terminate();
+      };
+    },
+    addKeyStore() {
+      const _self = this;
+      _self.loading = true;
+      const priv = _self.wallet.getPrivateKeyString().replace('0x', '');
+      const worker = new walletWorker();
+      worker.postMessage({
+        type: 'generateFromPrivateKey',
+        data: [priv, _self.password]
+      });
+      worker.onmessage = e => {
+        const newJson = {};
+        _self.loading = false;
+        Object.keys(e.data.walletJson).forEach(key => {
+          newJson[key.toLowerCase()] = e.data.walletJson[key];
+        });
+        ExtensionHelpers.addWalletToStore(
+          `0x${e.data.walletJson.address}`,
+          JSON.stringify(e.data.walletJson),
+          this.walletName,
+          'wallet',
+          'add',
+          _self.storeWalletCb
+        );
+        worker.terminate();
+      };
+      worker.onerror = function(e) {
+        Toast.responseHandler(e, false);
+        _self.loading = false;
+        worker.terminate();
+      };
+    },
+    clickFunction() {
+      const BY_JSON = 'byJson';
+      const BY_MNEM = 'byMnem';
+      const BY_PRIV = 'byPriv';
+      if (this.step === 2) {
+        switch (this.selected) {
+          case BY_JSON:
+            this.unlockJson();
+            break;
+          case BY_MNEM:
+            break;
+          case BY_PRIV:
+            break;
+          default:
+            break;
+        }
+      } else if (this.step === 3) {
+        switch (this.selected) {
+          case BY_JSON:
+            this.accessJson();
+            break;
+          case BY_MNEM:
+            break;
+          case BY_PRIV:
+            break;
+          default:
+            break;
+        }
+      } else if (this.step === 4) {
+        switch (this.selected) {
+          case BY_JSON:
+            this.addKeyStore();
+            break;
+          case BY_MNEM:
+            break;
+          case BY_PRIV:
+            break;
+          default:
+            break;
+        }
+      }
     },
     generateWallet() {
       this.loading = true;
@@ -171,10 +420,12 @@ export default {
           'add',
           _self.storeWalletCb
         );
+        worker.terminate();
       };
       worker.onerror = function(e) {
         Toast.responseHandler(e, false);
         this.loading = false;
+        worker.terminate();
       };
     },
     storeWalletCb() {

@@ -352,8 +352,7 @@ export default {
     ...mapState('main', ['network', 'web3']),
     showBalanceReminder() {
       if (this.network.type.name === 'ETH' && this.walletType !== 'watchOnly') {
-        const balanceReminder = this.showLowBalance && this.balanceWarnHidden;
-        return !balanceReminder;
+        return this.showLowBalance;
       }
       return false;
     },
@@ -364,10 +363,11 @@ export default {
       );
     },
     file() {
-      return JSON.parse(this.wallet).priv;
+      return JSON.parse(JSON.parse(this.wallet).priv);
     },
     showLowBalance() {
-      return new BigNumber(this.balance).lte(0.05);
+      const lessThan = new BigNumber(this.balance).lte(0.05);
+      return lessThan;
     },
     parsedWallet() {
       return JSON.parse(this.wallet);
@@ -626,7 +626,9 @@ export default {
       if (res && res.hasOwnProperty('favorites')) {
         const parsedRes = res.favorites.hasOwnProperty('newValue')
           ? JSON.parse(res.favorites.newValue)
-          : res.favorites.hasOwnProperty('oldValue') ? JSON.parse(res.favorites.oldValue) : JSON.parse(res.favorites);
+          : res.favorites.hasOwnProperty('oldValue')
+          ? JSON.parse(res.favorites.oldValue)
+          : JSON.parse(res.favorites);
         const foundVal = parsedRes.find(item => {
           return item.address === this.address;
         });

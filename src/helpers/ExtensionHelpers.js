@@ -81,6 +81,18 @@ const deleteWalletFromStore = (addr, callback) => {
   });
   try {
     chrome.storage.sync.remove(toChecksumAddress(addr).toLowerCase(), callback);
+    chrome.storage.sync.get('favorites', item => {
+      const favorites = JSON.parse(item.favorites);
+      const findIdx = favorites.findIndex(item => {
+        return toChecksumAddress(item.address) === toChecksumAddress(addr);
+      });
+      if (findIdx >= 0) {
+        favorites.splice(findIdx, 1);
+      }
+      chrome.storage.sync.set({
+        favorites: JSON.stringify(favorites)
+      });
+    });
   } catch (e) {
     Toast.responseHandler(this.$t('mewcx.something-went-wrong'), Toast.ERROR);
   }
