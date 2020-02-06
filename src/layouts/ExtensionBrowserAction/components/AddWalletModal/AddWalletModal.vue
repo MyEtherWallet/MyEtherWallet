@@ -108,6 +108,30 @@
           </div>
         </div>
         <div v-if="step === 4" class="verify-wallet-container">
+          <div class="wallet-verification-container">
+            <div v-if="Object.keys(wallet).length > 0">
+              <blockie
+                width="35px"
+                height="35px"
+                :address="wallet.getAddressString()"
+              />
+            </div>
+            <div class="wallet-information">
+              <p>
+                {{ wallet.getAddressString() }}
+              </p>
+              <div class="balance-container">
+                <p class="total-text">Total Wallet Value</p>
+                <p>
+                  <span class="total-balance">{{ convertedBalance }}</span>
+                  <br />
+                  <span class="eth-balance">
+                    {{ balance }} {{ network.type.currencyName }}
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
           <form @submit.prevent>
             <div class="input-container">
               <label for="walletName"> {{ $t('mewcx.wallet-name') }} </label>
@@ -170,7 +194,7 @@ import MewcxModalWrapper from '../../wrappers/MewcxModalWrapper';
 import AccessWalletButton from '../AccessWalletButton';
 import hide from '@/assets/images/icons/hide-password.svg';
 import showIcon from '@/assets/images/icons/show-password.svg';
-import { Toast, ExtensionHelpers } from '@/helpers';
+import { Toast, ExtensionHelpers, Misc } from '@/helpers';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import WalletOption from '@/layouts/AccessWalletLayout/components/WalletOption';
 import byJsonImgHov from '@/assets/images/icons/button-json-hover.svg';
@@ -178,6 +202,9 @@ import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
 import privKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
 import { WalletInterface } from '@/wallets';
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
+import Blockie from '@/components/Blockie';
+import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
 
 const TITLES = {
   0: {
@@ -223,7 +250,14 @@ export default {
   components: {
     'mewcx-modal-wrapper': MewcxModalWrapper,
     'access-wallet-button': AccessWalletButton,
-    'wallet-option': WalletOption
+    'wallet-option': WalletOption,
+    blockie: Blockie
+  },
+  props: {
+    usd: {
+      type: Number,
+      default: 0
+    }
   },
   data() {
     return {
@@ -240,10 +274,16 @@ export default {
       items: ACCESS_TITLES,
       selected: '',
       file: '',
-      wallet: {}
+      wallet: {},
+      balance: 0
     };
   },
   computed: {
+    ...mapState('main', ['network', 'web3']),
+    convertedBalance() {
+      const balance = new BigNumber(this.balance).times(this.usd).toNumber();
+      return Misc.toDollar(balance);
+    },
     validMatchingPassword() {
       return this.password === this.confirmPassword;
     },
@@ -330,6 +370,12 @@ export default {
         Toast.responseHandler(e, Toast.ERROR);
         worker.terminate();
       };
+    },
+    async getBalance() {
+      const balance = await this.web3.eth.getBalance(
+        this.wallet.getAddressString()
+      );
+      this.balance = balance;
     },
     addKeyStore() {
       const _self = this;
