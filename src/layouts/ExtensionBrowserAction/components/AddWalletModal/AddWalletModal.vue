@@ -80,7 +80,7 @@
             :hover-icon="item.imgHoverPath"
             :text="$t(item.text)"
             :name="item.name"
-            @updateSelected="e => (selected = e)"
+            @updateSelected="updateSelected"
           />
           <input
             ref="jsonInput"
@@ -91,7 +91,7 @@
           />
         </div>
         <div v-if="step === 3" class="unlock-wallet-container">
-          <div class="input-container">
+          <div v-if="selected === 'byJson'" class="input-container">
             <label for="walletPassword"> Password </label>
             <div class="password-input">
               <input
@@ -105,6 +105,10 @@
                 @click.prevent="showPassword = !showPassword"
               />
             </div>
+          </div>
+          <div v-if="selected === 'byPriv'" class="input-container">
+            <label for="walletPassword"> Private Key </label>
+            <textarea v-model="privKey" />
           </div>
         </div>
         <div v-if="step === 4" class="verify-wallet-container">
@@ -201,7 +205,10 @@ import byJsonImgHov from '@/assets/images/icons/button-json-hover.svg';
 import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
 import privKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
 import { WalletInterface } from '@/wallets';
-import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
+import {
+  KEYSTORE as keyStoreType,
+  PRIV_KEY as privKeyType
+} from '@/wallets/bip44/walletTypes';
 import Blockie from '@/components/Blockie';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -275,7 +282,8 @@ export default {
       selected: '',
       file: '',
       wallet: {},
-      balance: 0
+      balance: 0,
+      privKey: ''
     };
   },
   computed: {
@@ -311,6 +319,13 @@ export default {
     });
   },
   methods: {
+    updateSelected(e) {
+      if (this.selected === e) {
+        this.selected = '';
+      } else {
+        this.selected = e;
+      }
+    },
     uploadFile(evt) {
       const _self = this;
       const reader = new FileReader();
@@ -377,7 +392,25 @@ export default {
       );
       this.balance = balance;
     },
+    generateWalletViaPriv() {
+      const parsedPrivKey =
+        this.privKey.substr(0, 2) === '0x'
+          ? this.privKey.replace('0x', '')
+          : this.privKey;
+      try {
+        this.wallet = new WalletInterface(
+          parsedPrivKey,
+          false,
+          privKeyType
+        );
+        this.privKey = '';
+        this.step += 1;
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
+      }
+    },
     addKeyStore() {
+      // Reuse function once state has wallet
       const _self = this;
       _self.loading = true;
       const priv = _self.wallet.getPrivateKeyString().replace('0x', '');
@@ -420,6 +453,7 @@ export default {
           case BY_MNEM:
             break;
           case BY_PRIV:
+            this.step += 1;
             break;
           default:
             break;
@@ -432,6 +466,7 @@ export default {
           case BY_MNEM:
             break;
           case BY_PRIV:
+            this.generateWalletViaPriv();
             break;
           default:
             break;
@@ -439,11 +474,10 @@ export default {
       } else if (this.step === 4) {
         switch (this.selected) {
           case BY_JSON:
+          case BY_PRIV:
             this.addKeyStore();
             break;
           case BY_MNEM:
-            break;
-          case BY_PRIV:
             break;
           default:
             break;
