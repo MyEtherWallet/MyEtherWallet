@@ -3,7 +3,11 @@
     <div class="balance-wrapper">
       <div class="balance-container mr-3">
         <p class="title">
-          {{ actionTitle }}
+          {{
+            activeDepositTab
+              ? $t('dappsAave.aave-depost-bal')
+              : $t('dappsAave.you-borrowed')
+          }}
         </p>
         <p class="token-balance">
           {{

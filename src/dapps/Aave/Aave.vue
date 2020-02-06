@@ -9,28 +9,8 @@
     <div class="header-container">
       <div v-if="$route.fullPath === '/interface/dapps/aave/action'">
         <div class="action-title">
-          {{ actionTitle }} {{ reservesData.length > 0 ? token.name : '' }}
+          {{ actionTitle }} {{ reservesData.length > 0 ? token.symbol : '' }}
         </div>
-        <!-- <i18n
-          v-if="activeDepositTab"
-          class="action-title"
-          tag="div"
-          path="dappsAave.deposit-token"
-        >
-          <span slot="token" class="token">{{
-            userReserves.length > 0 ? token.name : ''
-          }}</span>
-        </i18n>
-        <i18n
-          v-if="activeBorrowTab"
-          class="action-title"
-          tag="div"
-          path="dappsAave.borrow-token"
-        >
-          <span slot="token" class="token">{{
-            reservesData.length > 0 ? token.name : ''
-          }}</span>
-        </i18n> -->
       </div>
       <back-button
         v-if="$route.fullPath !== '/interface/dapps/aave/action'"
@@ -71,12 +51,8 @@
       </div>
     </div>
     <router-view
-      :aggregated-eth-balance="aggregatedEthBalance"
       :active-deposit-tab="activeDepositTab"
       :active-borrow-tab="activeBorrowTab"
-      :borrowed-balance="borrowedBalance"
-      :collateral-balance="collateralBalance"
-      :ltv="ltv"
       :loading-home="loadingHome"
       :loading-reserves="loadingReserves"
       :reserves="reservesData"
@@ -115,23 +91,15 @@ export default {
       activeDepositTab: true,
       activeBorrowTab: false,
       lendingPoolContract: {},
-      healthFactor: '',
-      aggregatedEthBalance: '',
-      borrowedBalance: '',
-      collateralBalance: '',
-      ltv: '',
       loadingHome: true,
       loadingReserves: true,
-      reservesAddr: [],
       reservesData: [],
       rawReserveData: [],
       reservesStable: [],
       userReserves: [],
-      reserveAddr: 0,
-      currentUserReserve: {},
-      token: {},
       actionType: '',
       userReserveData: [],
+      token: {},
       usdPriceEth: '',
       userSummary: {}
     };
@@ -149,17 +117,13 @@ export default {
         : this.$t('dappsAave.repay');
     }
   },
-
   watch: {
-    // reserves(newVal) {
-    //   console.error('newVal', newVal)
-    // }
     '$route.params.token'(newVal) {
-      console.error('token', this.reservesData)
+      this.token = newVal;
     },
-    // '$route.params.actionType'(newVal) {
-    //   this.actionType = newVal;
-    // }
+    '$route.params.actionType'(newVal) {
+      this.actionType = newVal;
+    }
   },
   methods: {
     updateReserveData(data) {
@@ -193,13 +157,6 @@ export default {
           Date.now()
         );
         console.error('user', this.userSummary);
-        // remove all of this
-        this.borrowedBalance = this.userSummary.totalBorrowsETH;
-        this.ltv = this.userSummary.currentLiquidationThreshold;
-        this.aggregatedEthBalance = this.userSummary.totalLiquidityETH;
-        this.borrowedBalance = this.userSummary.totalBorrowsETH;
-        this.collateralBalance = this.userSummary.totalCollateralETH;
-        // remove up to here
         this.mergeTheReserves();
         this.loadingHome = false;
       }
@@ -210,7 +167,6 @@ export default {
           const foundReserve = this.reservesData.find(
             elem => elem.name === reserve.reserve.name
           );
-          console.error("foundREserve", foundReserve)
           foundReserve.user = reserve;
         });
       }
