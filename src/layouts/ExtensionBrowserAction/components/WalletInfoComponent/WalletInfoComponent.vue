@@ -264,13 +264,14 @@
       :address="address"
       :remove-wallet="removeWallet"
       :nickname="nickname"
+      @password="e => {password = e}"
     />
     <password-only-modal
       ref="passwordOnlyModal"
       :path="path"
       :valid-input="validInput"
       :submit="accessWallet"
-      @password="e => (password = e)"
+      @password="e => {password = e}"
     />
   </div>
 </template>
