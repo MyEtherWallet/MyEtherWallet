@@ -191,9 +191,7 @@ export default {
     amount() {
       if (
         this.activeDepositTab &&
-        new BigNumber(this.amount).gt(
-          new BigNumber(this.convertToEther(this.token.currentATokenBalance))
-        )
+        new BigNumber(this.amount).gt(new BigNumber(this.token.tokenBalance))
       ) {
         this.errorMsg = 'Cannot exceed wallet balance';
       } else if (
@@ -211,7 +209,7 @@ export default {
   mounted() {
     this.token = this.$route.params.token;
     this.callSetToken(this.token);
-
+    console.error("mounted token", this.token)
     if (this.online) {
       this.getEthPrice();
     }
@@ -227,12 +225,12 @@ export default {
       });
     },
     convertToFixed(val, int) {
-      if (!int) {
-        int = 3;
-      }
-
       if (!val || val == 0) {
         return 0;
+      }
+
+      if (!int) {
+        int = 3;
       }
 
       val = val.toString();
@@ -251,9 +249,7 @@ export default {
       this.$emit('emitTakeAction', param);
     },
     setPercentAmount(selectedBtn, percentage) {
-      this.amount = new BigNumber(
-        this.convertToEther(this.token.currentATokenBalance)
-      )
+      this.amount = new BigNumber(this.token.tokenBalance)
         .times(percentage)
         .toFixed();
       Object.keys(this.percentBtns).forEach(btn => {
