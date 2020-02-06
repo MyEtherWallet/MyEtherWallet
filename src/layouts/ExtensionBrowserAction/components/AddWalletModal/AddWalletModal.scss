@@ -27,3 +27,19 @@
   margin-top: 10px;
   width: 100% !important;
 }
+
+.import-method-container,
+.unlock-wallet-container {
+  padding-top: 30px;
+}
+
+.import-method-container {
+  justify-content: space-around;
+  display: flex;
+  flex-direction: column;
+  min-height: 250px;
+}
+
+.add-wallet-button-container {
+  padding-top: 20px;
+}

@@ -4,6 +4,7 @@
   border: 1px solid $light-grey-14;
   border-radius: 5px;
   color: $text-black;
+  background-color: $white;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -27,6 +28,10 @@
     span {
       font-weight: 700;
     }
+  }
+
+  &:hover {
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
   }
 
   .icon {

@@ -16,6 +16,9 @@
           <slot name="modalTopButton">
             <div></div>
           </slot>
+          <slot name="modalMiddleButton">
+            <div></div>
+          </slot>
           <div class="modal-closer">
             <span @click="closeModal">Cancel</span>
             <img src="@/assets/images/icons/cancel.svg" @click="closeModal" />
