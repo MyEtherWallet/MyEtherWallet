@@ -29,9 +29,22 @@
           </div>
           <div class="right-container">
             <img
-              class="icon"
-              src="~@/assets/images/currency/coins/AllImages/DAI.svg"
+              v-if="token.symbol && !getIcon(token.symbol)"
+              class="large-token-icon"
+              :src="
+                require(`@/assets/images/currency/coins/AllImages/${token.symbol}.svg`)
+              "
             />
+            <span
+              v-if="token.symbol && getIcon(token.symbol)"
+              :class="[
+                'cc',
+                getIcon(token.symbol),
+                'cc-icon',
+                'currency-symbol',
+                'large-token-icon'
+              ]"
+            ></span>
           </div>
         </div>
         <div class="body-container">
@@ -73,7 +86,7 @@
                 ></span
                 ><span v-if="token.reserve">{{ token.reserve.name }}</span>
               </p>
-              <p class="mt-4">{{ healthFactor }}</p>
+              <p class="mt-4">{{ userSummary.healthFactor || healthFactor }}</p>
               <!-- placeholder -->
               <p class="mt-4">22323</p>
             </div>
@@ -121,6 +134,8 @@ import * as unit from 'ethjs-unit';
 import { hasIcon } from '@/partners';
 import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
+import { Toast } from '@/helpers';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -164,8 +179,13 @@ export default {
       default: ''
     }
   },
+  computed: {
+    ...mapState('main', ['online'])
+  },
   mounted() {
-    console.error("user", this.token)
+    if (this.online) {
+      this.getEthPrice();
+    }
   },
   methods: {
     getIcon(currency) {
@@ -181,19 +201,30 @@ export default {
         param['rate'] = this.selectStable ? 0 : 1;
       }
 
-      param['referral'] = 0; // do  i need to put referral code? is 0 mean no referral?
-
       this.$emit('emitTakeAction', param);
     },
     convertToUSD(balance) {
       let usdBalance = 0;
-
       if (balance) {
-        usdBalance = new BigNumber(
-          new BigNumber(balance).times(new BigNumber(this.ethPrice))
-        ).toFixed(2);
+        const ethBalance = new BigNumber(balance).times(
+          new BigNumber(this.token.price.priceInEth)
+        );
+        usdBalance = new BigNumber(ethBalance).times(this.ethPrice).toFixed(2);
       }
       return usdBalance;
+    },
+    async getEthPrice() {
+      const price = await fetch(
+        'https://cryptorates.mewapi.io/ticker?filter=ETH'
+      )
+        .then(res => {
+          return res.json();
+        })
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+        });
+      this.ethPrice =
+        typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
     }
   }
 };

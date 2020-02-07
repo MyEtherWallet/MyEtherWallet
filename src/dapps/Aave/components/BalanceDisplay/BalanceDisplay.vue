@@ -42,8 +42,6 @@
 </template>
 
 <script>
-import BigNumber from 'bignumber.js';
-
 export default {
   props: {
     title: {
@@ -79,41 +77,6 @@ export default {
       return val.slice(0, val.indexOf('.') + 5);
     }
   }
-  // data() {
-  //   return {
-  //     ethPrice: 0
-  //   };
-  // },
-  // computed: {
-  //   ...mapState('main', ['online'])
-  // },
-  // mounted() {
-  //   if (this.online) this.getEthPrice();
-  // },
-  // methods: {
-  //   getUSDBalance(balance) {
-  //     let usdBalance = 0;
-  //     if (balance) {
-  //       usdBalance = new BigNumber(
-  //         new BigNumber(balance).times(new BigNumber(this.ethPrice))
-  //       ).toFixed(2);
-  //     }
-  //     return usdBalance;
-  //   },
-  //   async getEthPrice() {
-  //     const price = await fetch(
-  //       'https://cryptorates.mewapi.io/ticker?filter=ETH'
-  //     )
-  //       .then(res => {
-  //         return res.json();
-  //       })
-  //       .catch(e => {
-  //         Toast.responseHandler(e, Toast.ERROR);
-  //       });
-  //     this.ethPrice =
-  //       typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
-  //   }
-  // }
 };
 </script>
 

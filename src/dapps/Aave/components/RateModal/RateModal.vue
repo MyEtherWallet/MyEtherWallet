@@ -12,12 +12,15 @@
         <p>{{ $t('dappsAave.select-rate-info') }}</p>
         <div class="button-container">
           <div
+            v-if="!token.stableBorrowRateEnabled"
             :class="['mr-3', selectStable ? 'selected-btn' : '']"
             @click="toggleBtns('stable')"
           >
             <img src="@/assets/images/icons/stable.svg" alt="" />
             <p>{{ $t('dappsAave.stable') }}</p>
-            <p class="stable">{{ convertFromRay(stableRate) }}%</p>
+            <p class="stable">
+              {{ convertToFixed(token.stableBorrowRate * 100) }}%
+            </p>
           </div>
           <div
             :class="selectVariable ? 'selected-btn' : ''"
@@ -25,7 +28,9 @@
           >
             <img src="@/assets/images/icons/variable.svg" alt="" />
             <p>{{ $t('dappsAave.variable') }}</p>
-            <p class="variable">{{ convertFromRay(variableRate) }}%</p>
+            <p class="variable">
+              {{ convertToFixed(token.variableBorrowRate * 100) }}%
+            </p>
           </div>
         </div>
         <div class="continue-btn-container">
@@ -44,7 +49,9 @@
       :amount="amount"
       :token="token"
       :apr="
-        selectStable ? convertFromRay(stableRate) : convertFromRay(variableRate)
+        selectStable
+          ? convertToFixed(token.stableBorrowRate * 100)
+          : convertToFixed(token.variableBorrowRate * 100)
       "
       :rate-type="selectStable ? 'Stable' : 'Variable'"
       @emitTakeAction="emitTakeAction"
@@ -53,22 +60,14 @@
 </template>
 
 <script>
-import BigNumber from 'bignumber.js';
 import ConfirmationModal from '@/dapps/Aave/components/ConfirmationModal';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
     'confirmation-modal': ConfirmationModal
   },
   props: {
-    stableRate: {
-      type: String,
-      default: ''
-    },
-    variableRate: {
-      type: String,
-      default: ''
-    },
     token: {
       type: Object,
       default: () => {
@@ -87,10 +86,11 @@ export default {
     };
   },
   methods: {
-    convertFromRay(int) {
-      const rayUnit = new BigNumber(10).pow(27);
-      const convertedInt = new BigNumber(int).div(rayUnit);
-      return new BigNumber(convertedInt).times(100).toFixed(2);
+    convertToFixed(val) {
+      if (!val) {
+        return '';
+      }
+      return new BigNumber(val).toFixed(2).toString();
     },
     toggleBtns(type) {
       if (type === 'stable') {

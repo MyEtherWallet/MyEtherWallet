@@ -48,7 +48,7 @@
         <th></th>
       </thead>
       <tbody v-if="ownedReserves.length === 0">
-        <p>{{ $t('dappsAave.user-no-tokens') }}</p>
+        <span>{{ $t('dappsAave.user-no-tokens') }}</span>
       </tbody>
       <tbody v-if="ownedReserves.length > 0">
         <tr
@@ -266,11 +266,7 @@ export default {
       });
     },
     useAsCollateral(idx) {
-      // this.ownedReserves[idx].usageAsCollateralEnabledOnUser = !this.ownedReserves[idx].usageAsCollateralEnabledOnUser;
       this.token = this.userReserves[idx];
-      // this.token = this.ownedReserves.find(item => {
-      //   return item.id === idx;
-      // });
       this.$refs.confirmationModal.$refs.confirmationModal.show();
     },
     changeInterestType(idx) {
@@ -279,7 +275,7 @@ export default {
     },
     goToPage(idx, actionType) {
       const params = {
-        token: this.getReserve(this.userReserves[idx].reserve.id)
+        token: this.getReserve(this.ownedReserves[idx].reserve.id)
       };
 
       if (actionType) {
