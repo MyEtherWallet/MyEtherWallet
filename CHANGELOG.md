@@ -1,8 +1,14 @@
+### Release v5.3.1-hotfix.1
+
+### Bug
+
+- Remove excessive web3 calls from cx [#1955][https://github.com/MyEtherWallet/MyEtherWallet/pull/1955]
+
 ### Release v5.3.1
 
 ### Devop
 
-- add support for lang based paths /en /ru [#1915][https://github.com/MyEtherWallet/MyEtherWallet/pull/1915]
+- add support for lang based paths /en /ru [#1915](https://github.com/MyEtherWallet/MyEtherWallet/pull/1915)
 - Update web3 packages [#1912](https://github.com/MyEtherWallet/MyEtherWallet/pull/1912)
 - Green keeper packages [#1938](https://github.com/MyEtherWallet/MyEtherWallet/pull/1938)
 
