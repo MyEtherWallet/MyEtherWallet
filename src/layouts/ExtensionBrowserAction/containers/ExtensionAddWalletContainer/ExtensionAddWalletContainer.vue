@@ -92,7 +92,6 @@ import generateImgHov from '@/assets/images/home/icon-wallet.svg';
 import AccessWalletButton from '../../components/AccessWalletButton';
 import ImportKeystoreModal from '../../components/ImportKeystoreModal';
 import ImportPrivateKeyModal from '../../components/ImportPrivateKeyModal';
-import VerifyDetailsModal from '../../components/VerifyDetailsModal';
 import GenerateWalletModal from '../../components/GenerateWalletModal';
 import ImportMnemonicModal from '../../components/ImportMnemonicModal';
 import NetworkAndAddressModal from '../../components/NetworkAndAddressModal';
@@ -103,7 +102,6 @@ export default {
     'access-wallet-button': AccessWalletButton,
     'import-keystore-modal': ImportKeystoreModal,
     'import-private-key-modal': ImportPrivateKeyModal,
-    'verify-details-modal': VerifyDetailsModal,
     'import-mnemonic-modal': ImportMnemonicModal,
     'generate-wallet-modal': GenerateWalletModal,
     'network-address-modal': NetworkAndAddressModal

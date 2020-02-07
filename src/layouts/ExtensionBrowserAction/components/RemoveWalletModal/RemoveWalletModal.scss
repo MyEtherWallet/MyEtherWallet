@@ -22,11 +22,6 @@
 }
 
 .remove-modal-buttons {
-  .disable {
-    background-color: $dark-grey-11 !important;
-    pointer-events: none !important;
-  }
-
   .remove {
     border-radius: 5px;
     cursor: pointer;
@@ -52,5 +47,11 @@
     span {
       color: $red-5;
     }
+  }
+
+  .disabled {
+    background-color: $dark-grey-11 !important;
+    pointer-events: none !important;
+    border: 1px solid $dark-grey-11 !important;
   }
 }

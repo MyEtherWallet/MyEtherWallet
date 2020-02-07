@@ -90,6 +90,11 @@ export default {
     locPassword(newVal) {
       this.$emit('password', newVal);
     }
+  },
+  mounted() {
+    this.$refs.passwordOnlyModal.$on('hidden', () => {
+      this.locPassword = '';
+    });
   }
 };
 </script>
