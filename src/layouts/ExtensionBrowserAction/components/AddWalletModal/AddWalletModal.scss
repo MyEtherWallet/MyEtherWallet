@@ -181,6 +181,10 @@
   }
 
   .step-item.passed {
+    p {
+      color: $white;
+    }
+
     .step-one {
       background-image: linear-gradient(to bottom, $light-blue-2, transparent);
       border-top: 2px solid $light-blue-2;
