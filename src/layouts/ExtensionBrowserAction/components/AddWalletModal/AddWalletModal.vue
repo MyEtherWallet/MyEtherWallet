@@ -9,17 +9,35 @@
       </template>
       <template v-if="step >= 2" v-slot:modalMiddleButton>
         <div class="steps-container">
-          <div class="step-item">
+          <div
+            :class="[
+              step === 2 ? 'active' : '',
+              step > 2 ? 'passed' : '',
+              'step-item one'
+            ]"
+          >
             <div class="step-one" />
-            STEP 1. Choose a method
+            <p>STEP 1. Choose a method</p>
           </div>
-          <div class="step-item">
+          <div
+            :class="[
+              step === 3 ? 'active' : '',
+              step > 3 ? 'passed' : '',
+              'step-item two'
+            ]"
+          >
             <div class="step-two" />
-            STEP 2. Unlock my wallet
+            <p>STEP 2. Unlock my wallet</p>
           </div>
-          <div class="step-item">
+          <div
+            :class="[
+              step === 4 ? 'active' : '',
+              step > 4 ? 'passed' : '',
+              'step-item three'
+            ]"
+          >
             <div class="step-three" />
-            STEP 3. Confirm to add
+            <p>STEP 3. Confirm to add</p>
           </div>
         </div>
       </template>
@@ -345,6 +363,17 @@ export default {
   mounted() {
     this.$refs.addMyWallet.$refs.modalWrapper.$on('hidden', () => {
       this.step = 0;
+      this.walletName = '';
+      this.password = '';
+      this.confirmPassword = '';
+      this.showPassword = false;
+      this.showConfirmPassword = false;
+      this.loading = false;
+      this.selected = '';
+      this.file = '';
+      this.wallet = {};
+      this.balance = 0;
+      this.privKey = '';
     });
   },
   methods: {
