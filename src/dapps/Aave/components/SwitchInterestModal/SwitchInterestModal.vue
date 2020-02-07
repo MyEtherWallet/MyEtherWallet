@@ -120,7 +120,6 @@ export default {
   watch: {
     token(newVal) {
       this.token = newVal;
-      console.error('newVal', newVal)
     }
   },
   methods: {

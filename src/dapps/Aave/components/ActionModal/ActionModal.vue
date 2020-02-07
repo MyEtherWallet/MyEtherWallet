@@ -180,7 +180,6 @@
 
 <script>
 import BigNumber from 'bignumber.js';
-import * as unit from 'ethjs-unit';
 import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import { hasIcon } from '@/partners';
@@ -212,6 +211,14 @@ export default {
       default: ''
     }
   },
+  data() {
+    return {
+      search: '',
+      allTabActive: true,
+      stableTabActive: false,
+      localReserves: []
+    };
+  },
   computed: {
     disabledTooltip() {
       return this.depositModal
@@ -224,7 +231,7 @@ export default {
       this.search = '';
     },
     reserves(newVal) {
-      console.error('newVal', newVal)
+      console.error('reserves', newVal);
       this.getLocalReserves(newVal);
     },
     search(newVal) {
@@ -248,15 +255,6 @@ export default {
   },
   mounted() {
     this.getLocalReserves(this.reserves);
-    console.error('resrves', this.reserves)
-  },
-  data() {
-    return {
-      search: '',
-      allTabActive: true,
-      stableTabActive: false,
-      localReserves: []
-    };
   },
   methods: {
     isDisabled(token) {
@@ -277,11 +275,6 @@ export default {
     },
     getLocalReserves(reserves) {
       this.localReserves = reserves;
-    },
-    convertFromRay(int) {
-      const rayUnit = new BigNumber(10).pow(27);
-      const convertedInt = new BigNumber(int).div(rayUnit);
-      return new BigNumber(convertedInt).times(100).toFixed(2);
     },
     sort(direction, colIdx) {
       if (direction === 'ascending') {
@@ -337,12 +330,6 @@ export default {
         return 0;
       }
       return new BigNumber(val).toFixed(2).toString();
-    },
-    convertToEther(wei) {
-      if (!wei) {
-        return '0';
-      }
-      return new BigNumber(unit.fromWei(wei, 'ether')).toFixed(2).toString();
     }
   }
 };

@@ -13,7 +13,7 @@
           {{
             activeDepositTab
               ? convertToFixed(token.user.principalATokenBalance)
-              : convertToFixed(token.user.currentBorrowsETH, 5)
+              : convertToFixed(token.user.currentBorrows, 5)
           }}
           <span class="token-name"> {{ token.symbol }} </span>
         </p>
@@ -39,7 +39,9 @@
               ? convertToFixed(token.tokenBalance, 5)
               : convertToFixed(userSummary.totalCollateralETH, 5)
           }}
-          <span class="token-name">{{ activeDepositTab ? token.symbol : $t('common.currency.eth') }}</span>
+          <span class="token-name">{{
+            activeDepositTab ? token.symbol : $t('common.currency.eth')
+          }}</span>
         </p>
         <p class="usd-amt">
           ${{
@@ -105,8 +107,6 @@
     </div>
     <rate-modal
       ref="rateModal"
-      :stable-rate="token.fixedBorrowRate"
-      :variable-rate="token.variableBorrowRate"
       :amount="amount"
       :token="token"
       @emitTakeAction="emitTakeAction"
@@ -124,12 +124,10 @@
 
 <script>
 import BigNumber from 'bignumber.js';
-import * as unit from 'ethjs-unit';
 import { Toast } from '@/helpers';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import RateModal from '@/dapps/Aave/components/RateModal';
 import ConfirmationModal from '@/dapps/Aave/components/ConfirmationModal';
-import { mapActions } from 'vuex';
 
 export default {
   components: {
@@ -185,22 +183,29 @@ export default {
       return this.actionType === 'Withdraw'
         ? this.$t('dappsAave.withdraw')
         : this.$t('dappsAave.repay');
+    },
+    amountToCheck() {
+      if (this.actionTitle === 'Deposit') {
+        return this.token.tokenBalance;
+      } else if (this.actionTitle === 'Borrow') {
+        return new BigNumber(this.userSummary.availableBorrowsETH).div(
+          this.token.price.priceInEth
+        );
+      } else if (this.actionTitle === 'Repay') {
+        return this.convertToFixed(this.token.user.currentBorrows);
+      } else if (this.actionTitle === 'Withdraw') {
+        return this.token.user.principalATokenBalance;
+      }
+      return false;
     }
   },
   watch: {
     amount() {
-      if (
-        this.activeDepositTab &&
-        new BigNumber(this.amount).gt(new BigNumber(this.token.tokenBalance))
-      ) {
-        this.errorMsg = 'Cannot exceed wallet balance';
-      } else if (
-        this.activeBorrowTab &&
-        new BigNumber(this.amount).gt(
-          new BigNumber(this.convertToEther(this.token.availableLiquidity))
-        )
-      ) {
-        this.errorMsg = 'Cannot exceed available balance';
+      if (this.checkAmount(this.amountToCheck)) {
+        this.errorMsg =
+          'Cannot exceed balance of ' + this.convertToFixed(this.amountToCheck);
+      } else if (this.amount <= 0) {
+        this.errorMsg = 'Must be higher than 0';
       } else {
         this.errorMsg = '';
       }
@@ -209,7 +214,6 @@ export default {
   mounted() {
     this.token = this.$route.params.token || {};
     this.actionType = this.$route.params.actionType || null;
-    console.error('this', this.actionType)
     this.callSetToken(this.token);
 
     if (this.online) {
@@ -218,6 +222,11 @@ export default {
   },
   methods: {
     ...mapActions('aave', ['setToken']),
+    checkAmount(total) {
+      if (new BigNumber(this.amount).gt(new BigNumber(total))) {
+        return true;
+      }
+    },
     callSetToken(token) {
       this.setToken(token);
     },
@@ -251,7 +260,7 @@ export default {
       this.$emit('emitTakeAction', param);
     },
     setPercentAmount(selectedBtn, percentage) {
-      this.amount = new BigNumber(this.token.tokenBalance)
+      this.amount = new BigNumber(this.amountToCheck)
         .times(percentage)
         .toFixed();
       Object.keys(this.percentBtns).forEach(btn => {
@@ -269,12 +278,6 @@ export default {
     },
     goToHome() {
       this.$router.push('/interface/dapps/aave');
-    },
-    convertToEther(wei) {
-      if (!wei) {
-        return '0';
-      }
-      return new BigNumber(unit.fromWei(wei, 'ether')).toFixed(2);
     },
     getUSDBalance(token) {
       let usdBalance = 0;

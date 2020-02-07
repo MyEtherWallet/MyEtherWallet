@@ -70,8 +70,6 @@ import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import { formatUserSummaryData, formatReserves } from '@aave/protocol-js';
-// import apolloClient from './apolloClient';
-// import { EventEmitter } from 'events';
 
 export default {
   components: {
@@ -96,7 +94,6 @@ export default {
       reservesData: [],
       rawReserveData: [],
       reservesStable: [],
-      userReserves: [],
       actionType: '',
       userReserveData: [],
       token: {},
@@ -135,15 +132,12 @@ export default {
     updateUserReserveData(data) {
       this.userReserveData = data;
       this.getFormatUserSummaryData();
-      console.error('userrrrr', data);
     },
     updateUsdPriceEth(data) {
       this.usdPriceEth = data;
       this.getFormatUserSummaryData();
-      // console.error('dataaaaaaa', data);
     },
     getFormatUserSummaryData() {
-      // console.error('sdfdf', this.account.address.toLowercase())
       if (
         this.reservesData.length > 0 &&
         this.userReserveData.length > 0 &&
