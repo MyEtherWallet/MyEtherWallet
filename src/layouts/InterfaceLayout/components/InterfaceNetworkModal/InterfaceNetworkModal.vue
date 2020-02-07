@@ -419,15 +419,12 @@ export default {
         this.setWeb3Instance().then(() => {
           this.selectedNetworkName = network.type.name;
           if (Misc.isMewCx()) {
-            this.web3.eth.net.getId().then(id => {
-              window.chrome.storage.sync.set({
-                defChainID: network.type.chainID,
-                defNetVersion: id,
-                defNetwork: JSON.stringify({
-                  service: network.service,
-                  key: network.type.name
-                })
-              });
+            window.chrome.storage.sync.set({
+              defChainID: network.type.chainID,
+              defNetwork: JSON.stringify({
+                service: network.service,
+                key: network.type.name
+              })
             });
           }
         });
