@@ -67,26 +67,20 @@ const networkChanger = items => {
         store
           .dispatch('main/setWeb3Instance', network.url, { root: true })
           .then(() => {
-            store.state.main.web3.eth.net.getId().then(res => {
-              chrome.storage.sync.set({
-                defChainID: store.state.main.network.type.chainID,
-                defNetVersion: res
-              });
+            chrome.storage.sync.set({
+              defChainID: store.state.main.network.type.chainID
             });
           });
       });
     }
   } else {
     store.dispatch('main/setWeb3Instance', { root: true });
-    store.state.main.web3.eth.net.getId().then(res => {
-      chrome.storage.sync.set({
-        defChainID: store.state.main.network.type.chainID,
-        defNetVersion: res,
-        defNetwork: JSON.stringify({
-          service: store.state.main.network.service,
-          key: store.state.main.network.type.name
-        })
-      });
+    chrome.storage.sync.set({
+      defChainID: store.state.main.network.type.chainID,
+      defNetwork: JSON.stringify({
+        service: store.state.main.network.service,
+        key: store.state.main.network.type.name
+      })
     });
   }
 };
@@ -124,11 +118,8 @@ chrome.storage.onChanged.addListener(items => {
           store
             .dispatch('main/setWeb3Instance', network.url, { root: true })
             .then(() => {
-              store.state.main.web3.eth.net.getId().then(res => {
-                chrome.storage.sync.set({
-                  defChainID: store.state.main.network.type.chainID,
-                  defNetVersion: res
-                });
+              chrome.storage.sync.set({
+                defChainID: store.state.main.network.type.chainID
               });
             });
         });
@@ -266,20 +257,16 @@ function querycB(tab) {
       } else {
         // Injects web3
         chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
-          store.state.main.web3.eth.net.getId().then(() => {
-            chrome.tabs.sendMessage(tab.id, {
-              event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
-            });
+          chrome.tabs.sendMessage(tab.id, {
+            event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
           });
         });
       }
     } else {
       // Injects web3
       chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
-        store.state.main.web3.eth.net.getId().then(() => {
-          chrome.tabs.sendMessage(tab.id, {
-            event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
-          });
+        chrome.tabs.sendMessage(tab.id, {
+          event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
         });
       });
     }
