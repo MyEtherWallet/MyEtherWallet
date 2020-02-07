@@ -7,6 +7,22 @@
           <span>Back</span>
         </div>
       </template>
+      <template v-if="step >= 2" v-slot:modalMiddleButton>
+        <div class="steps-container">
+          <div class="step-item">
+            <div class="step-one" />
+            STEP 1. Choose a method
+          </div>
+          <div class="step-item">
+            <div class="step-two" />
+            STEP 2. Unlock my wallet
+          </div>
+          <div class="step-item">
+            <div class="step-three" />
+            STEP 3. Confirm to add
+          </div>
+        </div>
+      </template>
       <template v-slot:modalContentTitle>
         {{ titles[step].title }}
       </template>
