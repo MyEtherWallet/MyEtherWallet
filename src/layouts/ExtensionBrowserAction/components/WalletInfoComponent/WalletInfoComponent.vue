@@ -275,7 +275,7 @@
       ref="passwordOnlyModal"
       :path="path"
       :valid-input="validInput"
-      :submit="accessWallet"
+      :submit="path === 'access' ? accessWallet : viewWallet"
       @password="e => (password = e)"
     />
     <verify-details-modal
@@ -482,6 +482,46 @@ export default {
         });
       }
     },
+    viewWallet() {
+      const _self = this;
+      _self.loading = true;
+      const nickname =
+        _self.nickname !== null && _self.nickname.length > 0
+          ? _self.nickname
+          : '';
+      const worker = new walletWorker();
+      worker.postMessage({
+        type: 'unlockWallet',
+        data: [_self.file, _self.password]
+      });
+      worker.onmessage = e => {
+        const obj = {
+          file: _self.file,
+          name: e.data.filename
+        };
+
+        _self
+          .decryptWallet([
+            new WalletInterface(
+              Buffer.from(e.data._privKey),
+              false,
+              keyStoreType,
+              nickname,
+              JSON.stringify(obj)
+            )
+          ])
+          .then(() => {
+            _self.loading = false;
+            _self.password = '';
+            _self.$refs.viewWallet.$refs.viewWalletModal.$refs.modalWrapper.show();
+          });
+      };
+      worker.onerror = e => {
+        e.preventDefault();
+        _self.loading = false;
+        Toast.responseHandler(e, Toast.ERROR);
+      };
+    },
     accessWallet() {
       const _self = this;
       _self.loading = true;
@@ -500,32 +540,23 @@ export default {
           name: e.data.filename
         };
 
-        this.decryptWallet([
-          new WalletInterface(
-            Buffer.from(e.data._privKey),
-            false,
-            keyStoreType,
-            nickname,
-            JSON.stringify(obj)
-          )
-        ]).then(() => {
-          this.loading = false;
-          this.password = '';
-          this.$router.push({
-            path: 'interface'
+        _self
+          .decryptWallet([
+            new WalletInterface(
+              Buffer.from(e.data._privKey),
+              false,
+              keyStoreType,
+              nickname,
+              JSON.stringify(obj)
+            )
+          ])
+          .then(() => {
+            _self.loading = false;
+            _self.password = '';
+            _self.$router.push({
+              path: 'interface'
+            });
           });
-        });
-
-        _self.setWallet(
-          new WalletInterface(
-            Buffer.from(e.data._privKey),
-            false,
-            keyStoreType,
-            nickname,
-            JSON.stringify(obj)
-          )
-        );
-        _self.loading = false;
       };
       worker.onerror = e => {
         e.preventDefault();
