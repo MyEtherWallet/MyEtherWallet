@@ -1,53 +1,40 @@
 <template>
   <div>
-    <b-modal
-      ref="verifyDetails"
-      :title="actualTitle"
-      hide-footer
-      centered
-      class="bootstrap-modal"
-    >
-      <form>
-        <div class="modal-contents">
-          <div class="input-container">
-            <label> {{ $t('mewcx.your-wallet') }} </label>
-            <wallet-view-component
-              :should-concat="false"
-              :address="address"
-              :balance="balance"
-              :usd="usd"
-            />
-          </div>
-          <div class="input-container">
-            <label> {{ $t('mewcx.nickname') }} </label>
-            <input v-model="locNickname" />
-          </div>
-          <div class="submit-button-container">
-            <div class="back-button" @click.prevent="back">
-              {{ $t('common.back') }}
+    <mewcx-modal-wrapper ref="viewWalletModal" direction="up">
+      <template v-slot:modalContentTitle>
+        View Wallet Detail
+      </template>
+      <template v-slot:modalCloserButton>
+        <div></div>
+      </template>
+      <div class="verify-details-container">
+        <div class="wallet-info-and-code">
+          <div class="blockie-and-address">
+            <div v-if="Object.keys(wallet).length > 0">
+              <blockie
+                width="35px"
+                height="35px"
+                :address="wallet.getAddressString()"
+              />
             </div>
-            <button
-              class="submit-button large-round-button-green-filled"
-              type="submit"
-              @click.prevent="
-                () => {
-                  addWallet('wallet');
-                }
-              "
-            >
-              <span v-show="!loading"> {{ $t('mewcx.add-wallet') }} </span>
-              <i v-show="loading" class="fa fa-spinner fa-spin" />
-            </button>
+            <div class="name-and-address">
+              <p>{{ nickname }}</p>
+              <p>{{ wallet.getAddressString() }}</p>
+            </div>
           </div>
+          <div class="qr-code-container"></div>
         </div>
-      </form>
-    </b-modal>
+        <div class="balance-container"></div>
+        <div class="button-container"></div>
+      </div>
+    </mewcx-modal-wrapper>
   </div>
 </template>
 
 <script>
-import WalletViewComponent from '@/layouts/ExtensionPopup/components/WalletViewComponent';
 import { mapState } from 'vuex';
+import MewcxModalWrapper from '../../wrappers/MewcxModalWrapper';
+import Blockie from '@/components/Blockie';
 import {
   KEYSTORE as keyStoreType,
   MNEMONIC as mnemonicType,
@@ -62,7 +49,8 @@ ACTUAL_TITLES[privateKeyType] = 'Private Key';
 
 export default {
   components: {
-    'wallet-view-component': WalletViewComponent
+    'mewcx-modal-wrapper': MewcxModalWrapper,
+    blockie: Blockie
   },
   props: {
     usd: {
@@ -73,24 +61,6 @@ export default {
       type: Boolean,
       default: false
     },
-    title: {
-      type: String,
-      default: ''
-    },
-    wallet: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    },
-    addWallet: {
-      type: Function,
-      default: () => {}
-    },
-    back: {
-      type: Function,
-      default: () => {}
-    },
     nickname: {
       type: String,
       default: ''
@@ -98,12 +68,11 @@ export default {
   },
   data() {
     return {
-      locNickname: this.nickname,
       balance: '0'
     };
   },
   computed: {
-    ...mapState('main', ['web3']),
+    ...mapState('main', ['web3', 'wallet']),
     address() {
       const hasWallet = Object.keys(this.wallet).length > 0;
       return hasWallet
@@ -117,9 +86,6 @@ export default {
     }
   },
   watch: {
-    locNickname(newVal) {
-      this.$emit('nicknameUpdated', newVal);
-    },
     wallet(newVal) {
       if (Object.keys(newVal).length > 0 && newVal.identifier === 'keystore') {
         this.web3.eth

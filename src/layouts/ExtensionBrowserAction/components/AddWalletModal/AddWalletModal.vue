@@ -59,7 +59,7 @@
             </div>
             <button
               :class="[
-                validInputs ? '' : 'disabled',
+                generateWalletValidation ? '' : 'disabled',
                 loading ? 'disabled' : '',
                 'submit-button large-round-button-green-filled'
               ]"
@@ -178,7 +178,7 @@
         </div>
         <div v-if="step >= 2" class="add-wallet-button-container">
           <standard-button
-            :button-disabled="selected !== '' ? false : true"
+            :button-disabled="!importWalletValidation"
             :options="{
               title: $t('common.continue'),
               buttonStyle: 'green',
@@ -295,7 +295,7 @@ export default {
     validMatchingPassword() {
       return this.password === this.confirmPassword;
     },
-    validInputs() {
+    generateWalletValidation() {
       return (
         this.walletName !== '' &&
         this.validMatchingPassword &&
@@ -304,6 +304,19 @@ export default {
         this.password.length > 7 &&
         this.confirmPassword.length > 7
       );
+    },
+    importWalletValidation() {
+      if (this.step === 2) {
+        return this.selected !== '';
+      } else if (this.step === 3) {
+        switch (this.selected) {
+          case 'byJson':
+            return this.password !== '';
+          case 'byPriv':
+            return this.privKey !== '';
+        }
+      }
+      return this.generateWalletValidation;
     },
     error() {
       if (!this.validMatchingPassword) {
@@ -398,11 +411,7 @@ export default {
           ? this.privKey.replace('0x', '')
           : this.privKey;
       try {
-        this.wallet = new WalletInterface(
-          parsedPrivKey,
-          false,
-          privKeyType
-        );
+        this.wallet = new WalletInterface(parsedPrivKey, false, privKeyType);
         this.privKey = '';
         this.step += 1;
       } catch (e) {
@@ -451,6 +460,7 @@ export default {
             this.unlockJson();
             break;
           case BY_MNEM:
+            this.step += 1;
             break;
           case BY_PRIV:
             this.step += 1;

@@ -31,12 +31,13 @@
           </template>
           <b-dropdown-text
             v-if="walletType !== 'watchOnly'"
-            @click.stop="
-              () => {
-                openPasswordModal(wallet, 'access', nickname);
-              }
-            "
+            @click.stop="openPasswordModal('access')"
             >Access</b-dropdown-text
+          >
+          <b-dropdown-text
+            v-if="walletType !== 'watchOnly'"
+            @click.stop="openPasswordModal('view')"
+            >View</b-dropdown-text
           >
           <b-dropdown-text @click="edit">Rename</b-dropdown-text>
           <b-dropdown-divider></b-dropdown-divider>
@@ -54,7 +55,11 @@
       </div>
     </div>
     <div class="wallet-info-body">
-      <div v-show="showBalanceReminder" class="low-eth-warning">
+      <div
+        v-show="showBalanceReminder"
+        v-if="balanceWarnHidden"
+        class="low-eth-warning"
+      >
         <div class="warning-container">
           <p class="actual-warning">
             <img src="@/assets/images/icons/exclamation.svg" />
@@ -264,22 +269,20 @@
       :address="address"
       :remove-wallet="removeWallet"
       :nickname="nickname"
-      @password="
-        e => {
-          password = e;
-        }
-      "
+      @password="e => (password = e)"
     />
     <password-only-modal
       ref="passwordOnlyModal"
       :path="path"
       :valid-input="validInput"
       :submit="accessWallet"
-      @password="
-        e => {
-          password = e;
-        }
-      "
+      @password="e => (password = e)"
+    />
+    <verify-details-modal
+      ref="viewWallet"
+      :wallet="wallet"
+      :usd="usd"
+      :nickname="nickname"
     />
   </div>
 </template>
@@ -298,13 +301,15 @@ import PasswordOnlyModal from '../PasswordOnlyModal';
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import { WalletInterface } from '@/wallets';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
+import VerifyDetailsModal from '../VerifyDetailsModal';
 
 export default {
   components: {
     blockie: Blockie,
     'edit-wallet-modal': EditWalletModal,
     'remove-wallet-modal': RemoveWalletModal,
-    'password-only-modal': PasswordOnlyModal
+    'password-only-modal': PasswordOnlyModal,
+    'verify-details-modal': VerifyDetailsModal
   },
   props: {
     address: {
@@ -352,7 +357,7 @@ export default {
       showTokens: false,
       masterFile: masterFile,
       favorited: false,
-      balanceWarnHidden: false,
+      balanceWarnHidden: true,
       path: 'access',
       password: ''
     };
@@ -446,7 +451,8 @@ export default {
         return false;
       return true;
     },
-    openPasswordModal() {
+    openPasswordModal(action) {
+      this.path = action;
       this.$refs.passwordOnlyModal.$refs.passwordOnlyModal.$refs.modalWrapper.show();
     },
     removeWallet() {
@@ -477,21 +483,40 @@ export default {
       }
     },
     accessWallet() {
-      this.loading = true;
+      const _self = this;
+      _self.loading = true;
       const nickname =
-        this.nickname !== null && this.nickname.length > 0 ? this.nickname : '';
+        _self.nickname !== null && _self.nickname.length > 0
+          ? _self.nickname
+          : '';
       const worker = new walletWorker();
       worker.postMessage({
         type: 'unlockWallet',
-        data: [this.file, this.password]
+        data: [_self.file, _self.password]
       });
       worker.onmessage = e => {
         const obj = {
-          file: this.file,
+          file: _self.file,
           name: e.data.filename
         };
 
-        this.setWallet(
+        this.decryptWallet([
+          new WalletInterface(
+            Buffer.from(e.data._privKey),
+            false,
+            keyStoreType,
+            nickname,
+            JSON.stringify(obj)
+          )
+        ]).then(() => {
+          this.loading = false;
+          this.password = '';
+          this.$router.push({
+            path: 'interface'
+          });
+        });
+
+        _self.setWallet(
           new WalletInterface(
             Buffer.from(e.data._privKey),
             false,
@@ -500,22 +525,16 @@ export default {
             JSON.stringify(obj)
           )
         );
-        this.loading = false;
+        _self.loading = false;
       };
       worker.onerror = e => {
         e.preventDefault();
-        this.loading = false;
+        _self.loading = false;
         Toast.responseHandler(e, Toast.ERROR);
       };
     },
-    setWallet(wallet) {
-      this.decryptWallet([wallet]);
-      this.loading = false;
-      this.password = '';
-
-      this.$router.push({
-        path: 'interface'
-      });
+    openViewWallet() {
+      this.$refs.viewWallet.$refs.viewWalletModal.$refs.modalWrapper.show();
     },
     addToFavorites(address, nickname) {
       const dateAdded = new Date();

@@ -10,6 +10,9 @@
       content-class="modal-wrapper-content"
       body-class="modal-wrapper-body"
       :modal-class="modalClassStartingPoint[direction]"
+      no-close-on-esc
+      no-close-on-backdrop
+      hide-header-close
     >
       <div class="modal-contents">
         <div class="modal-top-buttons">
@@ -19,10 +22,12 @@
           <slot name="modalMiddleButton">
             <div></div>
           </slot>
-          <div class="modal-closer">
-            <span @click="closeModal">Cancel</span>
-            <img src="@/assets/images/icons/cancel.svg" @click="closeModal" />
-          </div>
+          <slot name="modalCloserButton">
+            <div class="modal-closer">
+              <span @click="closeModal">Cancel</span>
+              <img src="@/assets/images/icons/cancel.svg" @click="closeModal" />
+            </div>
+          </slot>
         </div>
         <div class="modal-content-container">
           <div class="modal-content-title">
