@@ -111,6 +111,31 @@
   border: 2px solid $light-grey-14;
   border-left: 0;
 }
+
+%active-class {
+  &:before {
+    background-color: $dark-blue-2;
+    border: none;
+  }
+
+  &:after {
+    background-color: $dark-blue-2;
+    border: none;
+  }
+}
+
+%passed-class {
+  &:before {
+    background-color: $light-blue-2;
+    border: none;
+  }
+
+  &:after {
+    background-color: $light-blue-2;
+    border: none;
+  }
+}
+
 .steps-container {
   display: flex;
   padding: 15px 0 0 115px;
@@ -118,8 +143,72 @@
   max-height: 180px;
 
   .step-item {
-    position: relative;
+    position: absolute;
     padding-right: 30px;
+    top: -60px;
+
+    p {
+      color: $light-grey-14;
+      font-size: 12px;
+      position: absolute;
+      top: 88px;
+      width: 200px;
+      left: -60px;
+    }
+  }
+
+  .step-item.active {
+    p {
+      color: $white;
+    }
+
+    .step-one {
+      background-image: linear-gradient(to bottom, $dark-blue-2, transparent);
+      border-top: 3px solid $dark-blue-2;
+      @extend %active-class;
+    }
+
+    .step-two {
+      @extend %active-class;
+    }
+
+    .step-three {
+      background-image: linear-gradient(to top, $dark-blue-2, transparent);
+      border: none;
+      border-bottom: 3px solid $dark-blue-2;
+      @extend %active-class;
+    }
+  }
+
+  .step-item.passed {
+    .step-one {
+      background-image: linear-gradient(to bottom, $light-blue-2, transparent);
+      border-top: 2px solid $light-blue-2;
+      @extend %passed-class;
+    }
+
+    .step-two {
+      @extend %passed-class;
+    }
+
+    .step-three {
+      background-image: linear-gradient(to top, $light-blue-2, transparent);
+      border: none;
+      border-bottom: 3px solid $light-blue-2;
+      @extend %passed-class;
+    }
+  }
+
+  .one {
+    left: -180px;
+  }
+
+  .two {
+    left: 25px;
+  }
+
+  .three {
+    left: 230px;
   }
 
   .step-one,
@@ -139,30 +228,6 @@
     }
   }
 
-  .active {
-    &:before {
-      background-color: $dark-blue-2;
-      border: none;
-    }
-
-    &:after {
-      background-color: $dark-blue-2;
-      border: none;
-    }
-  }
-
-  .passed {
-    &:before {
-      background-color: $light-blue-2;
-      border: none;
-    }
-
-    &:after {
-      background-color: $light-blue-2;
-      border: none;
-    }
-  }
-
   .step-one {
     border-top: 2px solid $light-grey-14;
     border-radius: 5px;
@@ -175,10 +240,10 @@
   .step-three {
     border: 2px solid $light-grey-14;
     border-radius: 5px;
+    border-top: none;
     &:before,
     &:after {
       border: none;
-      border-radius: 0;
     }
 
     &:before {
