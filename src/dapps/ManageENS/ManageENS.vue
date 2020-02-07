@@ -61,10 +61,10 @@ import supportedTxt from './supportedTxt';
 
 const bip39 = require('bip39');
 
-// const permanentRegistrar = {
-//   INTERFACE_CONTROLLER: '0x018fac06',
-//   INTERFACE_LEGACY_REGISTRAR: '0x7ba18ba1'
-// };
+const permanentRegistrar = {
+  INTERFACE_CONTROLLER: '0x018fac06',
+  INTERFACE_LEGACY_REGISTRAR: '0x7ba18ba1'
+};
 const MULTICOIN_SUPPORT_INTERFACE = '0xf1cb7e06';
 const TEXT_RECORD_SUPPORT_INTERFACE = '0x59d1d43c';
 const REGISTRAR_TYPES = {
@@ -205,14 +205,9 @@ export default {
         );
       } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
         try {
-          // const controllerAddress = await this.ens
-          //   .resolver(this.registrarTLD, ResolverAbi)
-          //   .interfaceImplementer(permanentRegistrar.INTERFACE_CONTROLLER);
-          // temp workaround until new controller is ready
-          const controllerAddress =
-            '0xB22c1C159d12461EA124b0deb4b5b93020E6Ad16';
-          this.registrarAddress = '0xFaC7BEA255a6990f749363002136aF6556b31e04';
-          // workaround ends
+          const controllerAddress = await this.ens
+            .resolver(this.registrarTLD, ResolverAbi)
+            .interfaceImplementer(permanentRegistrar.INTERFACE_CONTROLLER);
 
           this.registrarControllerContract = new this.web3.eth.Contract(
             PermanentRegistrarControllerAbi,
