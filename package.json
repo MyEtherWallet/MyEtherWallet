@@ -125,7 +125,7 @@
     "sinon": "8.1.1",
     "store": "2.0.12",
     "string-replace-loader": "2.2.0",
-    "stylelint": "13.0.0",
+    "stylelint": "13.1.0",
     "stylelint-config-prettier": "8.0.1",
     "stylelint-config-standard": "19.0.0",
     "trezor-connect": "8.0.13",
