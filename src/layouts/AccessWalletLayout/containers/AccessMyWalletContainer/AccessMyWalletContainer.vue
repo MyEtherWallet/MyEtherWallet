@@ -14,6 +14,7 @@
       ref="hardwareModal"
       :ledger-app-open="ledgerAppModalOpen"
       :network-and-address-open="networkAndAddressOpen"
+      :bitbox-select-open="bitboxSelectModalOpen"
       :open-finney="finneyModalOpen"
       :open-xwallet="xwalletModalOpen"
       @hardwareRequiresPassword="hardwarePasswordModalOpen"
@@ -26,6 +27,15 @@
       :hardware-brand="hardwareBrand"
       @hardwareWalletOpen="hardwareWalletOpen"
     />
+
+    <bitbox-select-modal
+      ref="bitboxSelectModal"
+      @bitbox02Open="bitbox02ModalOpen"
+      @hardwareRequiresPassword="hardwarePasswordModalOpen"
+      @hardwareWalletOpen="hardwareWalletOpen"
+    />
+
+    <bitbox02-modal ref="bitbox02Modal" :device="device" />
 
     <network-and-address-modal
       ref="networkandaddressModal"
@@ -97,6 +107,8 @@ import FinneyModal from '../../components/FinneyModal';
 import AccessWalletButton from '../../components/AccessWalletButton';
 import HardwareModal from '../../components/HardwareModal';
 import HardwarePasswordModal from '../../components/HardwarePasswordModal';
+import BitboxSelectModal from '../../components/BitboxSelectModal';
+import Bitbox02Modal from '../../components/Bitbox02Modal';
 import Web3WalletModal from '../../components/Web3WalletModal';
 import MewConnectModal from '../../components/MewConnectModal';
 import NetworkAndAddressModal from '../../components/NetworkAndAddressModal';
@@ -130,6 +142,8 @@ export default {
     'network-and-address-modal': NetworkAndAddressModal,
     'hardware-modal': HardwareModal,
     'hardware-password-modal': HardwarePasswordModal,
+    'bitbox-select-modal': BitboxSelectModal,
+    'bitbox02-modal': Bitbox02Modal,
     'metamask-modal': Web3WalletModal,
     'software-modal': SoftwareModal,
     'password-modal': PasswordModal,
@@ -150,6 +164,7 @@ export default {
       hardwareAddresses: [],
       walletConstructor: function() {},
       hardwareBrand: '',
+      device: {},
       buttons: [
         {
           func: this.mewConnectModalOpen,
@@ -244,6 +259,13 @@ export default {
     },
     hardwareModalOpen() {
       this.$refs.hardwareModal.$refs.hardware.show();
+    },
+    bitboxSelectModalOpen() {
+      this.$refs.bitboxSelectModal.$refs.bitboxSelect.show();
+    },
+    bitbox02ModalOpen(bb02) {
+      this.device = bb02;
+      this.$refs.bitbox02Modal.$refs.bitbox02.show();
     },
     web3WalletModal() {
       this.checkWeb3();
