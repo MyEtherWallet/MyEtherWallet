@@ -2,6 +2,7 @@ import {
   LedgerWallet,
   TrezorWallet,
   BitBoxWallet,
+  BitBox02Wallet,
   SecalotWallet,
   KeepkeyWallet
 } from './hardware';
@@ -13,6 +14,7 @@ export {
   LedgerWallet,
   TrezorWallet,
   BitBoxWallet,
+  BitBox02Wallet,
   SecalotWallet,
   KeepkeyWallet,
   MewConnectWallet,
