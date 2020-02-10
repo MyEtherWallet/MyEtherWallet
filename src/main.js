@@ -132,37 +132,37 @@ const vue = new Vue({
   render: h => h(getApp())
 });
 
-const integration = new Integrations.Vue({ Vue, attachProps: true });
+// const integration = new Integrations.Vue({ Vue, attachProps: true });
 
-Sentry.init({
-  dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
-  integrations: [integration],
-  maxBreadcrumbs: 0,
-  environment: BUILD_TYPE,
-  requestBodies: 'small',
-  release: NODE_ENV === 'production' ? VERSION : 'develop',
-  beforeSend(event) {
-    const network =
-      !store && !store.state.main && !store.state.main.network
-        ? store.state.main.network.type.name
-        : '';
-    const service =
-      !store && !store.state.main && !store.state.main.network
-        ? store.state.main.network.service
-        : '';
-    const identifier =
-      !store && !store.state.main && !store.state.main.account
-        ? store.state.main.account.identifier
-        : '';
-    event.tags = {
-      network: network,
-      service: service,
-      walletType: identifier
-    };
-    return new Promise(resolve => {
-      vue.$eventHub.$emit('issueModal', event, resolve);
-    }).then(res => {
-      return res === true ? event : null;
-    });
-  }
-});
+// Sentry.init({
+//   dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
+//   integrations: [integration],
+//   maxBreadcrumbs: 0,
+//   environment: BUILD_TYPE,
+//   requestBodies: 'small',
+//   release: NODE_ENV === 'production' ? VERSION : 'develop',
+//   beforeSend(event) {
+//     const network =
+//       !store && !store.state.main && !store.state.main.network
+//         ? store.state.main.network.type.name
+//         : '';
+//     const service =
+//       !store && !store.state.main && !store.state.main.network
+//         ? store.state.main.network.service
+//         : '';
+//     const identifier =
+//       !store && !store.state.main && !store.state.main.account
+//         ? store.state.main.account.identifier
+//         : '';
+//     event.tags = {
+//       network: network,
+//       service: service,
+//       walletType: identifier
+//     };
+//     return new Promise(resolve => {
+//       vue.$eventHub.$emit('issueModal', event, resolve);
+//     }).then(res => {
+//       return res === true ? event : null;
+//     });
+//   }
+// });

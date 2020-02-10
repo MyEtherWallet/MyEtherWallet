@@ -1,6 +1,7 @@
 <template>
   <div class="aave-container">
     <apollo-client
+      ref="apolloClient"
       :address="account.address"
       @reserveData="updateReserveData"
       @userReserveData="updateUserReserveData"
@@ -69,7 +70,11 @@ import ApolloClient from './ApolloClient.vue';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
-import { formatUserSummaryData, formatReserves } from '@aave/protocol-js';
+import {
+  formatUserSummaryData,
+  formatReserves,
+  calculateHealthFactorFromBalances
+} from '@aave/protocol-js';
 
 export default {
   components: {
@@ -150,6 +155,7 @@ export default {
           this.usdPriceEth,
           Date.now()
         );
+        // this.userSummary.calculateHealthFactorFromBalances()
         console.error('user', this.userSummary);
         this.mergeTheReserves();
         this.loadingHome = false;
@@ -190,30 +196,34 @@ export default {
       this.activeDepositTab ? this.deposit(param) : this.borrow(param);
     },
     async deposit(param) {
-      try {
-        const depositInfo = await this.lendingPoolContract.methods
-          .deposit(param.address, param.amount, param.referral)
-          .encodeABI();
+      this.$refs.apolloClient.deposit(param);
+      console.error("param", param)
+      // try {
+      //   const depositInfo = await this.lendingPoolContract.methods
+      //     .deposit(param.address, param.amount, param.referral)
+      //     .encodeABI();
 
-        const data = {
-          from: this.account.address,
-          to: this.lendingPoolContract._address,
-          data: depositInfo
-        };
+      //   const data = {
+      //     from: this.account.address,
+      //     to: this.lendingPoolContract._address,
+      //     data: depositInfo
+      //   };
 
-        this.web3.eth
-          .sendTransaction(data)
-          .then(resp => {
-            Toast.responseHandler(resp, Toast.SUCCESS);
-          })
-          .catch(err => {
-            Toast.responseHandler(err, Toast.ERROR);
-          });
-      } catch (err) {
-        Toast.responseHandler(err, Toast.ERROR);
-      }
+      //   this.web3.eth
+      //     .sendTransaction(data)
+      //     .then(resp => {
+      //       Toast.responseHandler(resp, Toast.SUCCESS);
+      //     })
+      //     .catch(err => {
+      //       Toast.responseHandler(err, Toast.ERROR);
+      //     });
+      // } catch (err) {
+      //   Toast.responseHandler(err, Toast.ERROR);
+      // }
     },
     async borrow(param) {
+      console.error('param', param)
+      this.$refs.apolloClient.borrow(param);
       try {
         const borrowInfo = await this.lendingPoolContract.methods
           .borrow(param.address, param.amount, param.rate, param.referral)

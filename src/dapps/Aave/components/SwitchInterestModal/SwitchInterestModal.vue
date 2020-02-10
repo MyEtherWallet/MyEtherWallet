@@ -78,7 +78,7 @@
               v-if="!getIcon(token.symbol)"
               class="token-icon"
               :src="
-                require(`@/assets/images/currency/coins/AllImages/${token.symbol}.svg`)
+                require(`@/assets/images/currency/coins/AllImages/${token.symbol.toUpperCase()}.svg`)
               "
             />
             <span

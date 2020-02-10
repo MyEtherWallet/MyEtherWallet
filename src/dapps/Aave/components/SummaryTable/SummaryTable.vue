@@ -1,5 +1,5 @@
 <template>
-  <div class="summary-table-container">
+  <div v-if="ownedReserves.length > 0" class="summary-table-container">
     <table>
       <colgroup>
         <col width="20%" />
@@ -47,10 +47,7 @@
         </th>
         <th></th>
       </thead>
-      <tbody v-if="ownedReserves.length === 0">
-        <span>{{ $t('dappsAave.user-no-tokens') }}</span>
-      </tbody>
-      <tbody v-if="ownedReserves.length > 0">
+      <tbody>
         <tr
           v-for="(reserve, index) in ownedReserves"
           :key="reserve.key"
@@ -61,7 +58,7 @@
               v-if="!getIcon(reserve.reserve.symbol)"
               class="token-icon"
               :src="
-                require(`@/assets/images/currency/coins/AllImages/${reserve.reserve.symbol}.svg`)
+                require(`@/assets/images/currency/coins/AllImages/${reserve.reserve.symbol.toUpperCase()}.svg`)
               "
             />
             <span
@@ -104,7 +101,7 @@
           <td>
             <span v-if="activeDepositTab"
               >{{
-                convertToFixed(reserve.reserve.liquidityRate * 100, 3)
+                convertToFixed(reserve.reserve.liquidityRate * 100, 5)
               }}%</span
             >
             <span v-if="!activeDepositTab"
