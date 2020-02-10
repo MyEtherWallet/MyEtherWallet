@@ -1,9 +1,11 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import DappsContainer from '@/layouts/InterfaceLayout/containers/DappsContainer/DappsContainer.vue';
 import DappButtons from '@/layouts/InterfaceLayout/components/DappButtons/DappButtons.vue';
 import languages from '@/translations';
 import { Tooling } from '@@/helpers';
+import { state, getters } from '@@/helpers/mockStore';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 const RouterLinkStub = {
   name: 'router-link',
@@ -29,7 +31,15 @@ describe('DappsContainer.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new Vuex.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
 
     Vue.config.warnHandler = () => {};
   });

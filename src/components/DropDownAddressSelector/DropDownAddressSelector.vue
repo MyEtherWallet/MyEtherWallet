@@ -65,7 +65,11 @@
             @click="listedAddressClick(addr.address)"
           >
             <div class="list-blockie">
-              <blockie :address="addr.address" width="30px" height="30px" />
+              <blockie
+                :address="addr.resolverAddr"
+                width="30px"
+                height="30px"
+              />
               <img
                 :alt="$t('common.currency.ethereum')"
                 class="currency-icon"
@@ -110,7 +114,7 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Blockie from '@/components/Blockie';
 import { EthereumTokens, BASE_CURRENCY } from '@/partners';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { Toast } from '@/helpers';
 import utils from 'web3-utils';
 import AddressBookModal from '@/components/AddressBookModal';
@@ -149,7 +153,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['addressBook', 'account']),
+    ...mapState('main', ['addressBook', 'account']),
     hasMessage() {
       return (
         (!this.isValidAddress && this.selectedAddress.length > 0) ||
@@ -169,7 +173,11 @@ export default {
     addresses() {
       return this.currentAddress
         ? [
-            { address: this.currentAddress, currency: BASE_CURRENCY },
+            {
+              address: this.currentAddress,
+              currency: BASE_CURRENCY,
+              resolverAddr: this.currentAddress
+            },
             ...this.sortedAddressBook
           ]
         : [...this.sortedAddressBook];
@@ -187,12 +195,23 @@ export default {
     },
     currency() {
       this.validateAddress(this.selectedAddress);
+    },
+    dropdownOpen(val) {
+      const resolverTxtElem =
+        document.querySelector('.resolver-error') ||
+        document.querySelector('.resolver-addr');
+      if (resolverTxtElem) {
+        val === true
+          ? resolverTxtElem.classList.add('hidden')
+          : resolverTxtElem.classList.remove('hidden');
+      }
     }
   },
   mounted() {
     this.currentAddress = this.account.address;
   },
   methods: {
+    ...mapActions('main', ['setAddressBook']),
     openAddrModal() {
       this.$refs.addressBook.$refs.addressBookModal.show();
     },

@@ -7,7 +7,7 @@ export default {
   name_long: 'EtherCore',
   homePage: 'https://ethercore.org',
   blockExplorerTX: 'https://explorer.ethercore.org/tx/[[txHash]]',
-  blockExplorerAddr: 'https://explorer.ethercore.org/addr/[[address]]',
+  blockExplorerAddr: 'https://explorer.ethercore.org/address/[[address]]',
   chainID: 466,
   tokens: tokens,
   contracts: contracts,

@@ -259,7 +259,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3']),
+    ...mapState('main', ['web3']),
     isValidAddresses() {
       for (const type in this.currencyInputs) {
         if (

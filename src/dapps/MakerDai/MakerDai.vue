@@ -288,7 +288,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     currentProxyAddress() {
       return this.proxyAddress;
     },
