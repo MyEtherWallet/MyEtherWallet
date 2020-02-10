@@ -78,7 +78,7 @@ const dapps = {
     // iconDisabled: ambrpayDisabled,
     title: 'dappsAave.title',
     desc: 'dappsAave.popover',
-    supportedNetworks: [ETH.name, KOV.name]
+    supportedNetworks: [ETH.name, ROP.name]
     // lastUpdated: '11/05/2019',
     // releaseDate: '11/05/2019'
   }

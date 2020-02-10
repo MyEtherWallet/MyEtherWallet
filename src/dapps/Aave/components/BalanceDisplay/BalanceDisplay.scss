@@ -115,10 +115,27 @@
   }
 }
 
-.composition-bar {
+.composition-full-bar {
   background: $dark-grey-13;
   border-radius: 6.5px;
-  height: 9px;
+  height: 100%;
   width: 100%;
-  margin-top: 10px;
 }
+
+.composition-wrap {
+  height: 9px;
+  margin-top: 10px;
+  position:relative;
+  width: 100%;
+  div {
+    border-radius: 6.5px;
+    height: 100%;
+    left: 0;
+    top: 0;
+    position: absolute;
+  }
+  .composition-percentage-hover {
+    z-index: 1;
+  }
+}
+

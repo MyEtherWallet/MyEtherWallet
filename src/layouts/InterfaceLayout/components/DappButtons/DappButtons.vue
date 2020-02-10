@@ -3,7 +3,7 @@
     :class="[
       'dapps-button',
       supported ? '' : 'disabled',
-      title === 'Aave' ? 'aave-icon' : ''
+      title === dappsTitle.aave ? 'aave-icon' : ''
     ]"
     @click="navigateTo"
   >
@@ -16,7 +16,7 @@
     <img
       :src="supported ? icon : iconDisabled"
       :class="[
-        title === 'Ambrpay' ? 'ambrpay-icon' : '',
+        title === dappsTitle.ambrpay ? 'ambrpay-icon' : '',
         'dapp-logo',
         'dapps-icon'
       ]"
@@ -64,6 +64,14 @@ export default {
         return [];
       }
     }
+  },
+  data() {
+    return {
+      dappsTitle: {
+        ambrpay: 'Ambrpay',
+        aave: 'Aave'
+      }
+    };
   },
   computed: {
     ...mapState('main', ['online', 'network']),

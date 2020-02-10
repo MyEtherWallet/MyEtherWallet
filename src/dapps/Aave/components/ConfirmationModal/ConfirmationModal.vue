@@ -32,7 +32,7 @@
               v-if="token.symbol && !getIcon(token.symbol)"
               class="large-token-icon"
               :src="
-                require(`@/assets/images/currency/coins/AllImages/${token.symbol}.svg`)
+                require(`@/assets/images/currency/coins/AllImages/${token.symbol.toUpperCase()}.svg`)
               "
             />
             <span
@@ -69,7 +69,7 @@
                   "
                   class="token-icon"
                   :src="
-                    require(`@/assets/images/currency/coins/AllImages/${token.reserve.symbol}.svg`)
+                    require(`@/assets/images/currency/coins/AllImages/${token.reserve.symbol.toUpperCase()}.svg`)
                   "
                 />
                 <span

@@ -70,7 +70,6 @@
   "next-interest": "Next Interest Type",
   "confirm-switch": "Confirm to switch",
   "no-tokens": "There are no tokens :(",
-  "user-no-tokens": "You have no tokens",
   "transfer-currencies": "You will need to transfer this currency to your wallet to be able to deposit",
   "no-liquidity": "This currency is not available for you to borrow.",
   "stable-rate-no-avail": "Stable rate is not enabled for this currency"

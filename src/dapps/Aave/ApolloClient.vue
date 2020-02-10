@@ -37,8 +37,39 @@ export default {
     this.getReserveData();
     this.getUserData();
     this.getUsdPriceEth();
+    console.error('hello', this.borrow());
   },
   methods: {
+    deposit(param) {
+      const depositMutation = gql`
+        mutation Deposit($data: TransferFromInput!) {
+          deposit(data: $data) {
+            ...EthTransaction
+          }
+        }
+      `;
+      this.apolloClient.mutate({
+        mutation: depositMutation,
+        variables: {
+          data: param
+        }
+      });
+    },
+    borrow() {
+      const borrowMutation = gql`
+        mutation Borrow($data: BorrowInput!) {
+          borrow(data: $data) {
+            ...EthTransaction
+          }
+        }
+      `;
+      this.apolloClient.mutate({
+        mutation: borrowMutation,
+        variables: {
+          data: this.data
+        }
+      });
+    },
     getUsdPriceEth() {
       const vm = this;
       this.apolloClient
