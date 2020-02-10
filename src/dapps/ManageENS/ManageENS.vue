@@ -25,7 +25,6 @@
       :claim-func="claimFunc"
       :dns-owner="dnsOwner"
       :dns-claim="dnsClaim"
-      :transfer-func="transferFunc"
       :create-commitment="createCommitment"
       :register-with-duration="registerWithDuration"
       :minimum-age="minimumAge"
@@ -45,10 +44,8 @@
 
 <script>
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
-import RegistrarAbi from './ABI/registrarAbi';
 import PermanentRegistrarControllerAbi from './ABI/permanentRegistrarController';
 import baseRegistrarAbi from './ABI/baseRegistrarAbi';
-import DeedContractAbi from './ABI/deedContractAbi';
 import RegistryAbi from './ABI/registryAbi.js';
 import FifsRegistrarAbi from './ABI/fifsRegistrarAbi.js';
 import ResolverAbi from './ABI/resolverAbi.js';
@@ -64,10 +61,10 @@ import supportedTxt from './supportedTxt';
 
 const bip39 = require('bip39');
 
-const permanentRegistrar = {
-  INTERFACE_CONTROLLER: '0x018fac06',
-  INTERFACE_LEGACY_REGISTRAR: '0x7ba18ba1'
-};
+// const permanentRegistrar = {
+//   INTERFACE_CONTROLLER: '0x018fac06',
+//   INTERFACE_LEGACY_REGISTRAR: '0x7ba18ba1'
+// };
 const MULTICOIN_SUPPORT_INTERFACE = '0xf1cb7e06';
 const TEXT_RECORD_SUPPORT_INTERFACE = '0x59d1d43c';
 const REGISTRAR_TYPES = {
@@ -96,7 +93,6 @@ export default {
       dnsRegistrar: {},
       dnsClaim: {},
       dnsOwner: '',
-      legacyRegistrar: {},
       minimumAge: 0,
       duration: 1,
       commitmentCreated: false,
@@ -110,7 +106,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network', 'account', 'gasPrice', 'ens']),
+    ...mapState('main', ['web3', 'network', 'account', 'gasPrice', 'ens']),
     registrarTLD() {
       return this.network.type.ens.registrarTLD;
     },
@@ -178,7 +174,6 @@ export default {
       this.domainNameErr = false;
       this.dnsRegistrar = {};
       this.dnsClaim = {};
-      this.legacyRegistrar = {};
       this.minimumAge = 0;
       this.duration = 1;
       this.commitmentCreated = false;
@@ -210,9 +205,15 @@ export default {
         );
       } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
         try {
-          const controllerAddress = await this.ens
-            .resolver(this.registrarTLD, ResolverAbi)
-            .interfaceImplementer(permanentRegistrar.INTERFACE_CONTROLLER);
+          // const controllerAddress = await this.ens
+          //   .resolver(this.registrarTLD, ResolverAbi)
+          //   .interfaceImplementer(permanentRegistrar.INTERFACE_CONTROLLER);
+          // temp workaround until new controller is ready
+          const controllerAddress =
+            '0xB22c1C159d12461EA124b0deb4b5b93020E6Ad16';
+          this.registrarAddress = '0xFaC7BEA255a6990f749363002136aF6556b31e04';
+          // workaround ends
+
           this.registrarControllerContract = new this.web3.eth.Contract(
             PermanentRegistrarControllerAbi,
             controllerAddress
@@ -395,36 +396,14 @@ export default {
               Toast.responseHandler(toastText, Toast.ERROR);
               return;
             }
-            const oldRegistrarAddress = await this.ens
-              .resolver(this.registrarTLD, ResolverAbi)
-              .interfaceImplementer(
-                permanentRegistrar.INTERFACE_LEGACY_REGISTRAR
-              );
-            this.legacyRegistrar = new this.web3.eth.Contract(
-              RegistrarAbi,
-              oldRegistrarAddress
-            );
-            const domainStatus = await this.legacyRegistrar.methods
-              .entries(this.labelHash)
+            const isAvailable = await this.registrarControllerContract.methods
+              .available(this.parsedHostName)
               .call();
-            if (domainStatus[0] === '2') {
-              const deedContract = new this.web3.eth.Contract(
-                DeedContractAbi,
-                domainStatus[1]
-              );
-              this.deedOwner = await deedContract.methods.owner().call();
+            if (!isAvailable) this.getMoreInfo();
+            else {
+              this.generateKeyPhrase();
+              this.$router.push({ path: 'manage-ens/create-commitment' });
               this.loading = false;
-              this.$router.push({ path: 'manage-ens/transfer-registrar' });
-            } else {
-              const isAvailable = await this.registrarControllerContract.methods
-                .available(this.parsedHostName)
-                .call();
-              if (!isAvailable) this.getMoreInfo();
-              else {
-                this.generateKeyPhrase();
-                this.$router.push({ path: 'manage-ens/create-commitment' });
-                this.loading = false;
-              }
             }
           } else if (this.isSubDomain) {
             const owner = await this.ens.owner(this.parsedDomainName);
@@ -525,23 +504,6 @@ export default {
           .once('receipt', () => {
             this.getMoreInfo();
             Toast.responseHandler(toastRecieptText, Toast.SUCCESS);
-          });
-      } catch (e) {
-        this.loading = false;
-        const toastText = this.$t('ens.error.something-went-wrong');
-        Toast.responseHandler(toastText, Toast.ERROR);
-      }
-    },
-    transferFunc() {
-      this.loading = true;
-      try {
-        const toastText = this.$t('ens.toast.success-transfer');
-        this.legacyRegistrar.methods
-          .transferRegistrars(this.labelHash)
-          .send({ from: this.account.address })
-          .once('receipt', () => {
-            this.getMoreInfo();
-            Toast.responseHandler(toastText, Toast.SUCCESS);
           });
       } catch (e) {
         this.loading = false;

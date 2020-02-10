@@ -200,7 +200,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['online', 'Networks'])
+    ...mapState('main', ['Networks', 'online'])
   },
   mounted() {
     this.$nextTick(() => {

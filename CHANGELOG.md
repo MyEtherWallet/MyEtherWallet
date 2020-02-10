@@ -1,17 +1,75 @@
+### Release v5.3.2
+
+### Devop
+
+- Update greenkeeper package [#1954](https://github.com/MyEtherWallet/MyEtherWallet/pull/1954)
+- Update team page [#1952](https://github.com/MyEtherWallet/MyEtherWallet/pull/1952)
+
+### Release v5.3.1-hotfix.1
+
 ### Bug
 
-- Disable web3 detection [#1840](https://github.com/MyEtherWallet/MyEtherWallet/pull/1840)
-- Improve error messages for outdated dependencies [#1848](https://github.com/MyEtherWallet/MyEtherWallet/pull/1848)
-- Remove excess maker wording and add to translations [#1853](https://github.com/MyEtherWallet/MyEtherWallet/pull/1853)
-- Remove permanent hide on issue modal [#1856](https://github.com/MyEtherWallet/MyEtherWallet/pull/1856)
+- Remove excessive web3 calls from cx [#1955](https://github.com/MyEtherWallet/MyEtherWallet/pull/1955)
+
+### Release v5.3.1
+
+### Devop
+
+- add support for lang based paths /en /ru [#1915](https://github.com/MyEtherWallet/MyEtherWallet/pull/1915)
+- Update web3 packages [#1912](https://github.com/MyEtherWallet/MyEtherWallet/pull/1912)
+- Green keeper packages [#1938](https://github.com/MyEtherWallet/MyEtherWallet/pull/1938)
+
+### Release v5.3.0-hotfix.1
+
+### Devop
+
+- Support for new ENS registry [#1923](https://github.com/MyEtherWallet/MyEtherWallet/pull/1923)
+
+### Release v5.3.0
+
+### Feature
+
+- ENS functionality for address book [#1888](https://github.com/MyEtherWallet/MyEtherWallet/pull/1888)
+
+### Devop
+
+- Update packages from Greenkeeper [#1920](https://github.com/MyEtherWallet/MyEtherWallet/pull/1920)
+- Update help to quick help [#1899](https://github.com/MyEtherWallet/MyEtherWallet/pull/1899)
+- Update packages from Greenkeeper [#1896](https://github.com/MyEtherWallet/MyEtherWallet/pull/1896)
+- Modularize store state [#1722](https://github.com/MyEtherWallet/MyEtherWallet/pull/1722)
+
+### Bug
+
+- Fix broken string [#1918](https://github.com/MyEtherWallet/MyEtherWallet/pull/1918)
+- Change translations placement [#1901](https://github.com/MyEtherWallet/MyEtherWallet/pull/1901)
+- Fix community icons spacing and size [#1889](https://github.com/MyEtherWallet/MyEtherWallet/pull/1889)
+- Fix background image for welcome popup [#1886](https://github.com/MyEtherWallet/MyEtherWallet/pull/1886)
+- Fix footer text wrapping issue [#1892](https://github.com/MyEtherWallet/MyEtherWallet/pull/1892)
+- Set ENS in offline helper [#1891](https://github.com/MyEtherWallet/MyEtherWallet/pull/1891)
+- Fix modularize state bugs [#1897](https://github.com/MyEtherWallet/MyEtherWallet/pull/1897)
+
+### Release v5.2.11
 
 ### Feature
 
 - Add vkontakte icon to social home page and add first time russian popup [#1872](https://github.com/MyEtherWallet/MyEtherWallet/pull/1872)
+- Add unstoppable domains [#1857](https://github.com/MyEtherWallet/MyEtherWallet/pull/1857)
 
 ### Devop
 
+- Update ledger packages [#1884](https://github.com/MyEtherWallet/MyEtherWallet/pull/1884)
+- Run update:swap with other update script [#1859](https://github.com/MyEtherWallet/MyEtherWallet/pull/1859)
+- Update translations [#1870](https://github.com/MyEtherWallet/MyEtherWallet/pull/1870)
 - Update Packages from greenkeeper [#1863](https://github.com/MyEtherWallet/MyEtherWallet/pull/1863)
+- Remove Price bar [#1876](https://github.com/MyEtherWallet/MyEtherWallet/pull/1876)
+
+### Bug
+
+- Fix tx hash link, switch address, and make cx connection with popup more stable [#1853](https://github.com/MyEtherWallet/MyEtherWallet/pull/1853)
+- Disable web3 detection [#1840](https://github.com/MyEtherWallet/MyEtherWallet/pull/1840)
+- Improve error messages for outdated dependencies [#1848](https://github.com/MyEtherWallet/MyEtherWallet/pull/1848)
+- Remove excess maker wording and add to translations [#1853](https://github.com/MyEtherWallet/MyEtherWallet/pull/1853)
+- Remove permanent hide on issue modal [#1856](https://github.com/MyEtherWallet/MyEtherWallet/pull/1856)
 
 ### Release v5.2.10
 

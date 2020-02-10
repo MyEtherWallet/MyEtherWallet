@@ -27,12 +27,7 @@
         :address="address"
       />
       <logout-modal ref="logout" />
-      <issue-log-modal
-        v-if="Object.keys.length > 0"
-        ref="issuelog"
-        :error="error"
-        :resolver="resolver"
-      />
+      <issue-log-modal ref="issuelog" :error="error" :resolver="resolver" />
 
       <!-- Desktop menu *********************************** -->
       <div class="fixed-header-wrap">
@@ -224,12 +219,12 @@
       </div>
       <!-- Desktop menu *********************************** -->
     </div>
-    <welcome-modal ref="welcome" first-time-ru="true" />
+    <welcome-modal ref="welcome" :first-time-ru="firstTimeRu" />
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import store from 'store';
 import { Misc, Toast } from '@/helpers';
 import Blockie from '@/components/Blockie';
@@ -279,11 +274,12 @@ export default {
       error: {},
       resolver: () => {},
       isMewCx: isMewCx,
-      buildType: BUILD_TYPE
+      buildType: BUILD_TYPE,
+      firstTimeRu: false
     };
   },
   computed: {
-    ...mapState([
+    ...mapState('main', [
       'network',
       'web3',
       'account',
@@ -339,8 +335,6 @@ export default {
     this.$eventHub.$on('open-settings', this.openSettings);
   },
   mounted() {
-    // Remove for next release
-    store.remove('neverReport');
     this.getCurrentLang();
 
     // On load, if page is not on top, apply small menu and show scroll top button
@@ -352,7 +346,6 @@ export default {
     };
 
     this.$eventHub.$on('issueModal', (error, resolve) => {
-      // eslint-disable-next-line
       let errorPop = store.get('errorPop') || 0;
       errorPop += 1;
       store.set('errorPop', errorPop);
@@ -380,6 +373,7 @@ export default {
     this.$eventHub.$off('open-settings');
   },
   methods: {
+    ...mapActions('main', ['setLocale']),
     getCurrentLang() {
       const storedLocale = this.supportedLanguages.find(item => {
         return item.langCode === this.locale;
@@ -407,17 +401,19 @@ export default {
     },
     languageItemClicked(obj) {
       if (obj.langCode === 'ru_RU' && !store.get('notFirstTimeRU')) {
+        this.firstTimeRu = true;
         this.$refs.welcome.$refs.welcome.show();
       }
 
       this.$refs.welcome.$refs.welcome.$on('hidden', () => {
+        this.firstTimeRu = false;
         store.set('notFirstTimeRU', true);
       });
 
       this.$i18n.locale = obj.langCode;
       this.currentName = obj.name;
       this.currentFlag = obj.flag;
-      this.$store.dispatch('setLocale', obj.langCode);
+      this.setLocale({ locale: obj.langCode, save: true });
     },
     logout() {
       this.$refs.logout.$refs.logout.show();

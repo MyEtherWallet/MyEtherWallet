@@ -6,7 +6,7 @@
       <div class="side-menu-button">
         <round-button
           :title="$t('interface.menu.string')"
-          @click.native="toggleSideMenu"
+          @click.native="startToggleSideMenu"
         />
       </div>
     </div>
@@ -19,6 +19,7 @@
 <script>
 import RoundButton from '@/components/Buttons/RoundButton';
 import InterfaceMobileMenu from '@/layouts/InterfaceLayout/components/InterfaceMobileMenu';
+import { mapActions } from 'vuex';
 
 export default {
   components: {
@@ -35,8 +36,9 @@ export default {
     return {};
   },
   methods: {
-    toggleSideMenu() {
-      this.$store.commit('TOGGLE_SIDEMENU');
+    ...mapActions('main', ['toggleSideMenu']),
+    startToggleSideMenu() {
+      this.toggleSideMenu();
     }
   }
 };

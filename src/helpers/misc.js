@@ -166,7 +166,7 @@ const solidityType = inputType => {
 };
 
 const isDarklisted = addr => {
-  const storedDarklist = store.state.darklist.data;
+  const storedDarklist = store.state.main.darklist.data;
   const darklisted =
     storedDarklist > 0
       ? storedDarklist.findIndex(item => {
@@ -177,7 +177,7 @@ const isDarklisted = addr => {
         })
       : -1;
   const errMsg =
-    darklisted === -1 ? '' : store.state.darklist.data[darklisted].comment;
+    darklisted === -1 ? '' : store.state.main.darklist.data[darklisted].comment;
   const errObject = {
     error: darklisted === -1 ? false : true,
     msg: errMsg
@@ -235,6 +235,13 @@ const isMewCx = () => {
   return BUILD_TYPE === MEW_CX;
 };
 
+const dateChecker = () => {
+  const today = new Date();
+  const startDate = new Date('02/03/2020');
+  const endDate = new Date('02/10/2020');
+  return today >= startDate && today <= endDate;
+};
+
 export default {
   isJson,
   doesExist,
@@ -256,5 +263,6 @@ export default {
   isContractArgValid,
   stripTags,
   isMewCx,
-  toBuffer
+  toBuffer,
+  dateChecker
 };
