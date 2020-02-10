@@ -1,5 +1,6 @@
 @import '~@/scss/GlobalVariables';
-@media all and (min-width: calc(#{$tablet-width} - 200px)) {
+//@media all and (min-width: $tablet-width) {
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
   a,
   a:link,
   a:visited,

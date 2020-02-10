@@ -3,8 +3,9 @@ import store from '@/store';
 import { getMode, getRoutes } from '@/builds/configs';
 import { ExtensionHelpers } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
-import Misc from '@/helpers/misc';
+import { Toast, Misc } from '@/helpers';
 import { MEW_CX } from '@/builds/configs/types';
+import langShortCodes from '@/translations/getShortCodes';
 
 const storeQuery = query => {
   const queryKeys = Object.keys(query);
@@ -17,8 +18,14 @@ const storeQuery = query => {
     store.dispatch('main/saveQueryVal', blankObj);
   }
 };
-
+const getLangBasePath = () => {
+  if (getMode() == 'hash') return undefined;
+  const locale = window.location.pathname.replace(/^\/([^/]+).*/i, '$1').trim();
+  if (Object.keys(langShortCodes).includes(locale)) return '/' + locale;
+  return undefined;
+};
 const router = new Router({
+  base: getLangBasePath(),
   mode: getMode(),
   routes: getRoutes(),
   scrollBehavior(to) {
@@ -30,7 +37,6 @@ const router = new Router({
     window.scrollTo(0, 0);
   }
 });
-
 router.beforeResolve((to, from, next) => {
   storeQuery(to.query);
   if (to.meta.hasOwnProperty('requiresAuth')) {
@@ -59,12 +65,23 @@ router.beforeResolve((to, from, next) => {
       if (store.state.main.path !== '') {
         const localPath = store.state.main.path;
         store.dispatch('main/setLastPath', '');
-        next({ path: localPath });
+        rerouter(localPath, next, { path: localPath });
       } else {
-        next();
+        rerouter(to.fullPath, next);
       }
     }
   }
 });
+
+const rerouter = (path, next, elseParam) => {
+  const reroute = Misc.dateChecker();
+
+  if (reroute && path.includes('manage-ens')) {
+    next({ path: path.replace('/manage-ens', '') });
+    Toast.responseHandler(this.$t('ens.toast.unavailable'), Toast.WARN);
+  } else {
+    elseParam ? next(elseParam) : next();
+  }
+};
 
 export default router;
