@@ -205,6 +205,10 @@ export default {
             //   to: '/advanced-tools'
             // },
             {
+              text: 'footer.mew-wallet',
+              href: 'https://www.mewwallet.com/'
+            },
+            {
               text: 'footer.mew-connect',
               href: 'https://mewconnect.myetherwallet.com/#/'
             },
