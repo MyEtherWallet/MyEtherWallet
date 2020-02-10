@@ -45,47 +45,47 @@ export default {
         {
           img: facebook,
           to: 'https://www.facebook.com/MyEtherWallet',
-          name: 'Facebook'
+          name: this.$t('home.social.facebook')
         },
         {
           img: twitter,
           to: 'https://twitter.com/myetherwallet',
-          name: 'Twitter'
+          name: this.$t('home.social.twitter')
         },
         {
           img: medium,
           to: 'https://medium.com/@myetherwallet',
-          name: 'Medium'
+          name: this.$t('home.social.medium')
         },
         {
           img: reddit,
           to: 'https://www.reddit.com/r/myetherwallet',
-          name: 'reddit'
+          name: this.$t('home.social.reddit')
         },
         {
           img: github,
           to: 'https://www.github.com/myetherwallet',
-          name: 'github'
+          name: this.$t('home.social.github')
         },
         {
           img: vkontakte,
           to: 'https://vk.com/public190491855',
-          name: 'vkontakte'
+          name: this.$t('home.social.vkontakte')
         },
         {
           img: youtube,
           to: 'https://www.youtube.com/c/myetherwallet',
-          name: 'Youtube'
+          name: this.$t('home.social.youtube')
         },
         {
           img: mewtopia,
           to: 'https://www.mewtopia.com/',
-          name: 'MEWtopia'
+          name: this.$t('home.social.mewtopia')
         },
         {
           img: instagram,
           to: 'https://www.instagram.com/myetherwallet/',
-          name: 'Instagram'
+          name: this.$t('home.social.instagram')
         }
       ]
     };

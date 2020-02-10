@@ -1,3 +1,6 @@
+### Feature 
+- Update icons [#1961] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1961)
+
 ### Devop
 
 - Update greenkeeper package [#1954](https://github.com/MyEtherWallet/MyEtherWallet/pull/1954)
