@@ -1,3 +1,7 @@
+### Devop
+
+- Update team page [#1952](https://github.com/MyEtherWallet/MyEtherWallet/pull/1952)
+
 ### Release v5.3.1-hotfix.1
 
 ### Bug
