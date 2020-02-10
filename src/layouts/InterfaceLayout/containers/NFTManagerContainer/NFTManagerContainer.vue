@@ -86,23 +86,20 @@
                   v-if="startIndex + 1 != endIndex"
                   class="page-link page-index-button"
                 >
-                  {{ startIndex + 1 }} - {{ endIndex }} ({{
-                    endIndex - startIndex
-                  }}
-                  items)
+                  {{$t('nftManager.showing-range', {first: startIndex + 1, last: endIndex, count: endIndex - startIndex})}}
                 </div>
                 <div
                   v-if="startIndex + 1 == endIndex"
                   class="page-link page-index-button"
                 >
-                  {{ startIndex + 1 }}
-                  ({{ endIndex - startIndex }} items)
+                  {{$t('nftManager.showing', {first: startIndex + 1, count: endIndex - startIndex})}}
                 </div>
               </li>
               <li v-show="showNextButton" class="page-item" @click="getNext()">
                 <div class="page-link next-button">Next</div>
               </li>
             </ul>
+
           </nav>
         </div>
       </div>
@@ -183,7 +180,7 @@ export default {
   data() {
     return {
       nftABI,
-      nftUrl: 'https://nft2.mewapi.io',
+      nftUrl: 'https://nft2.mewapi.io/',
       countPerPage: 9,
       currentPage: 1,
       nftConfig: {},
@@ -205,6 +202,9 @@ export default {
     ...mapState('main', ['account', 'online', 'network']),
     nftTitle() {
       if (this.nftConfig[this.selectedContract]) {
+        if(this.nftConfig[this.selectedContract].symbol === 'UNKNOWN' && !this.nftConfig[this.selectedContract].custom){
+          return `${this.$t('nftManager.unknown-token-title', {address: this.nftConfig[this.selectedContract].name})}`
+        }
         return this.nftConfig[this.selectedContract].name;
       }
       return `${this.$t('common.loading')}`;
@@ -213,6 +213,17 @@ export default {
       return this.currentPage * this.countPerPage - this.countPerPage;
     },
     endIndex() {
+      if (this.nftConfig[this.selectedContract]) {
+        if (this.nftConfig[this.selectedContract].tokens.length) {
+          if (
+            this.nftConfig[this.selectedContract].tokens.length <
+            this.currentPage * this.countPerPage
+          ) {
+            return this.nftConfig[this.selectedContract].tokens.length
+          }
+          return this.currentPage * this.countPerPage;
+        }
+      }
       return this.currentPage * this.countPerPage;
     },
     nftToShow() {
@@ -373,8 +384,12 @@ export default {
           const customInformation = this.customNFTs.find(
             item => item.contract === address
           );
+          configData[address].custom = false;
           if (configData[address].symbol === 'UNKNOWN' && customInformation) {
             configData[address].name = customInformation.title;
+            configData[address].custom = true;
+          } else if(configData[address].symbol === 'UNKNOWN'){
+            configData[address].name = address;
           }
           configData[address].contract = address;
           configData[address].tokens = configData[address].tokens.map(item => {
