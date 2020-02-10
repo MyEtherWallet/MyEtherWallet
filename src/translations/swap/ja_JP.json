@@ -28,7 +28,10 @@
     "supply-valid-addr": "Please supply a valid {currency} address",
     "not-enough-funds": "You don't have enough funds",
     "no-swap-offline": "swap is not available offline",
-    "swap-only-mainnet": "Swap is only available on mainnet"
+    "swap-only-mainnet": "Swap is only available on mainnet",
+    "kyber-token-list-update-failed": "Failed to update Kyber Network available token list",
+    "kyber-gasLimit-list-update-failed": "Failed to update Kyber Network trade gasLimit list",
+    "kyber-list-update-failed": "Failed to update Kyber Network default information"
   },
   "notice": {
     "retrieve-changelly-rate-failed": "Failed to retrieve Changelly rate from {fromCurrency} to {toCurrency}",
