@@ -34,6 +34,9 @@ import medium from '@/assets/images/icons/medium.png';
 import twitter from '@/assets/images/icons/twitter.jpg';
 import facebook from '@/assets/images/icons/facebook.png';
 import vkontakte from '@/assets/images/icons/vkontakte.png';
+import mewtopia from '@/assets/images/icons/mewtopia.png';
+import youtube from '@/assets/images/icons/youtube.png';
+import instagram from '@/assets/images/icons/instagram.png';
 
 export default {
   data() {
@@ -68,6 +71,21 @@ export default {
           img: vkontakte,
           to: 'https://vk.com/public190491855',
           name: 'vkontakte'
+        },
+        {
+          img: youtube,
+          to: 'https://www.youtube.com/c/myetherwallet',
+          name: 'Youtube'
+        },
+        {
+          img: mewtopia,
+          to: 'https://www.mewtopia.com/',
+          name: 'MEWtopia'
+        },
+        {
+          img: instagram,
+          to: 'https://www.instagram.com/myetherwallet/',
+          name: 'Instagram'
         }
       ]
     };
