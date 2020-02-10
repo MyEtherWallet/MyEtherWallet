@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     getImgUrl(name) {
-      return `${this.nftCardUrl}tokenCard?token=${name}`
+      return `${this.nftCardUrl}tokenCard?token=${name}`;
     }
   }
 };

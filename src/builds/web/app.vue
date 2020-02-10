@@ -48,8 +48,9 @@ export default {
     }
   },
   created() {
-    const succMsg = this.$t('home.new-update');
-    const errMsg = this.$t('home.new-update-error');
+    const succMsg = this.$t('common.updates.new');
+    const errMsg = this.$t('common.updates.update-error');
+
     window.addEventListener('PWA_UPDATED', () => {
       Toast.responseHandler(succMsg, Toast.SUCCESS);
     });

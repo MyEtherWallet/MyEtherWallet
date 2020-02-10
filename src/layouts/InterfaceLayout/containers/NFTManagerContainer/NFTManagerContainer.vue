@@ -183,7 +183,7 @@ export default {
   data() {
     return {
       nftABI,
-      nftUrl: 'https://nft.mewapi.io',
+      nftUrl: 'https://nft2.mewapi.io',
       countPerPage: 9,
       currentPage: 1,
       nftConfig: {},
