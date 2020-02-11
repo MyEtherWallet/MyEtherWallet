@@ -108,7 +108,8 @@ import WalletPasswordModal from '@/components/WalletPasswordModal';
 import EnterPinNumberModal from '@/components/EnterPinNumberModal';
 import XwalletModal from '../../components/XwalletModal';
 
-import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
+import mobileApp from '@/assets/images/icons/button-cellphone.svg';
+//import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
 import hardwareImg from '@/assets/images/icons/button-hardware.svg';
 import web3Img from '@/assets/images/icons/button-web3.svg';
 import softwareImg from '@/assets/images/icons/button-software.svg';
@@ -152,11 +153,11 @@ export default {
       buttons: [
         {
           func: this.mewConnectModalOpen,
-          title: 'common.mewconnect.string',
-          desc: 'accessWallet.mewconnect.option-text',
+          title: 'accessWallet.mobile-app.option-title',
+          desc: 'accessWallet.mobile-app.examples',
           recommend: '',
           tooltip: '',
-          img: mewConnectImg,
+          img: mobileApp,
           imgDisabled: mewConnectImgDisabled,
           disabled: false,
           classname: 'button-mewconnect'

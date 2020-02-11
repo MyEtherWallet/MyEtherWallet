@@ -8,6 +8,10 @@
     },
     "warning": "MEWconnect is not compatible with iPads."
   },
+  "mobile-app": {
+    "option-title": "Mobile App",
+    "examples": "MEWconnect, WalletConnect"
+  },
   "finney": {
     "scan-info": "To connect, scan the QR code from {wallet} app on your {finney-bc}",
     "finney-wallet": "FinneyWallet",

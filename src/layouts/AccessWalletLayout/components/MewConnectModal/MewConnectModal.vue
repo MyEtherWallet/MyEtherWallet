@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="mewConnect"
-    :title="$t('accessWallet.mewconnect.modal.title')"
+    :title="$t('accessWallet.mobile-app.modal.title')"
     hide-footer
     class="bootstrap-modal nopadding modal-mew-connect"
     centered
@@ -10,13 +10,16 @@
   >
     <div class="modal-container">
       <ipad-modal ref="ipadModal" />
-      <div class="modal-icon">
-        <qrcode :value="QrCode" :options="{ size: 200 }" />
-      </div>
-      <div class="d-block content-container text-center">
-        <h3 class="modal-large-text">
-          {{ $t('accessWallet.mewconnect.modal.text1') }}
+      <div class="text-center modal-title-block">
+        <h3>
+          {{ $t('common.mewconnect.string') }}
         </h3>
+        <div>
+          {{ $t('accessWallet.mewconnect.option-text') }}
+        </div>
+      </div>
+      <div class="qr-code-img">
+        <qrcode :value="QrCode" :options="{ size: 150 }" />
       </div>
       <div class="appstore-button-container">
         <div class="links-container">
@@ -43,7 +46,22 @@
           {{ $t('accessWallet.mewconnect.modal.text2') }}
         </p>
       </div>
-      <customer-support />
+
+      <div class="seperation-bar">
+        <div class="bar" />
+        <div class="text">OR CONNECT WITH</div>
+      </div>
+
+      <div class="buttons">
+        <div>
+          <img src="@/assets/images/icons/WalletConnect.svg" /> WalletConnect
+        </div>
+        <div>
+          <img src="@/assets/images/icons/WalletLink.svg" /> Wallet Link
+        </div>
+      </div>
+
+      <customer-support v-if="false" />
     </div>
     <!-- .modal-container -->
   </b-modal>
