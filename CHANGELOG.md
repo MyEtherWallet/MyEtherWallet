@@ -5,6 +5,10 @@
 - Update greenkeeper package [#1954](https://github.com/MyEtherWallet/MyEtherWallet/pull/1954)
 - Update team page [#1952](https://github.com/MyEtherWallet/MyEtherWallet/pull/1952)
 
+### Bug
+
+- Link fixes [#1963](https://github.com/MyEtherWallet/MyEtherWallet/pull/1963)
+
 ### Release v5.3.1-hotfix.1
 
 ### Bug

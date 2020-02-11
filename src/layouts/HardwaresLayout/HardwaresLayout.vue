@@ -7,7 +7,8 @@
         </div>
         <div class="hardware-items-container">
           <div
-            v-for="item in filteredItems"
+            v-for="item in items"
+            v-show="item.price !== ''"
             :key="item.text"
             class="hardware-item"
           >
@@ -27,15 +28,12 @@
                 class="more-info"
                 target="_blank"
                 rel="noopener noreferrer"
-                >{{ $t('buyHardwareWallet.moreInfo') }} ></a
               >
-              {{ $t('buyHardwareWallet.button-more-info') }} >
+                {{ $t('buyHardwareWallet.button-more-info') }}
+              </a>
             </div>
             <div class="hardware-item-logo">
-              <img
-                :src="require(`@/assets/images/affiliates/${item.logo}.png`)"
-                alt
-              />
+              <img :src="getImg(item.logo)" alt />
             </div>
           </div>
         </div>
@@ -46,6 +44,7 @@
 
 <script>
 import affiliates from '@/containers/FooterContainer/affiliates';
+import defaultHardware from '@/assets/images/icons/button-hardware.svg';
 
 export default {
   data() {
@@ -56,6 +55,14 @@ export default {
   methods: {
     getItemDesc(desc) {
       return `${this.$t(desc)}`;
+    },
+    getImg(logo) {
+      try {
+        const foundLogo = require(`@/assets/images/affiliates/${logo}.png`);
+        return foundLogo;
+      } catch (e) {
+        return defaultHardware;
+      }
     }
   }
 };
