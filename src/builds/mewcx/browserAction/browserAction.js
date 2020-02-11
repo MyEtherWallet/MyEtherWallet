@@ -2,7 +2,8 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import BootstrapVue from 'bootstrap-vue';
-
+import * as Sentry from '@sentry/browser';
+import * as Integrations from '@sentry/integrations';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import(/* webpackPreload: true */ '@/assets/font-awesome.css');
@@ -79,10 +80,45 @@ const i18n = new VueI18n({
 Vue.$i18n = i18n;
 
 /* eslint-disable-next-line */
-new Vue({
+const vue = new Vue({
   el: '#app',
   i18n,
   router,
   store,
   render: h => h(app)
+});
+
+const integration = new Integrations.Vue({ Vue, attachProps: true });
+
+Sentry.init({
+  dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
+  integrations: [integration],
+  maxBreadcrumbs: 0,
+  environment: BUILD_TYPE,
+  requestBodies: 'small',
+  release: NODE_ENV === 'production' ? VERSION : 'develop',
+  beforeSend(event) {
+    const network =
+      !store && !store.state.main && !store.state.main.network
+        ? store.state.main.network.type.name
+        : '';
+    const service =
+      !store && !store.state.main && !store.state.main.network
+        ? store.state.main.network.service
+        : '';
+    const identifier =
+      !store && !store.state.main && !store.state.main.account
+        ? store.state.main.account.identifier
+        : '';
+    event.tags = {
+      network: network,
+      service: service,
+      walletType: identifier
+    };
+    return new Promise(resolve => {
+      vue.$eventHub.$emit('issueModal', event, resolve);
+    }).then(res => {
+      return res === true ? event : null;
+    });
+  }
 });

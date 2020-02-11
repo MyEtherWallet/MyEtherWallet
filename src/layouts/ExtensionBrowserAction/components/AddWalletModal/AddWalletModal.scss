@@ -44,6 +44,86 @@
   padding-top: 20px;
 }
 
+.mnemonic-inputs-container {
+  padding-top: 30px;
+
+  .mnemonic-inputs-header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    h3 {
+      font-weight: bold;
+      color: $dark-blue-2;
+    }
+  }
+
+  .mnemonic-count-container {
+    align-items: center;
+    display: flex;
+
+    p {
+      margin-right: 10px;
+      color: $dark-grey-2;
+    }
+
+    .mnemonic-count {
+      border-radius: 5px;
+      padding: 5px 10px;
+      background-color: $light-grey-4;
+      color: $dark-grey-11;
+      cursor: pointer;
+    }
+
+    .active {
+      background-color: $mew-green;
+      color: $white;
+    }
+
+    .left {
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0;
+    }
+    .right {
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0;
+    }
+  }
+
+  .mnemonic-inputs {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    background-color: $white;
+    border-radius: 5px;
+    margin-top: 20px;
+    padding: 10px 20px 20px;
+
+    .actual-inputs {
+      position: relative;
+
+      input {
+        border-radius: 0;
+        border: none;
+        background-color: transparent;
+        border-bottom: 1px solid $light-grey-3;
+        width: 80px;
+        color: $dark-blue-2;
+        padding: 0 0 5px 25px;
+        margin-top: 10px;
+      }
+
+      label {
+        position: absolute;
+        left: 5px;
+        color: $dark-grey-11;
+        bottom: 5px;
+      }
+    }
+  }
+}
+
 .wallet-verification-container {
   display: flex;
   padding: 20px;
@@ -93,7 +173,7 @@
   border-bottom-left-radius: 3px;
   border-top-left-radius: 5px;
   border-bottom-right-radius: 1px;
-  border: 2px solid $light-grey-14;
+  border: 1px solid $light-grey-14;
   border-right: none;
 }
 
@@ -108,7 +188,7 @@
   border-bottom-right-radius: 3px;
   border-top-right-radius: 5px;
   border-bottom-left-radius: 1px;
-  border: 2px solid $light-grey-14;
+  border: 1px solid $light-grey-14;
   border-left: 0;
 }
 
@@ -187,7 +267,7 @@
 
     .step-one {
       background-image: linear-gradient(to bottom, $light-blue-2, transparent);
-      border-top: 2px solid $light-blue-2;
+      border-top: 1px solid $light-blue-2;
       @extend %passed-class;
     }
 
@@ -233,7 +313,7 @@
   }
 
   .step-one {
-    border-top: 2px solid $light-grey-14;
+    border-top: 1px solid $light-grey-14;
     border-radius: 5px;
     &:before,
     &:after {
@@ -242,7 +322,7 @@
   }
 
   .step-three {
-    border: 2px solid $light-grey-14;
+    border: 1px solid $light-grey-14;
     border-radius: 5px;
     border-top: none;
     &:before,
@@ -251,12 +331,12 @@
     }
 
     &:before {
-      border-top: 2px solid $light-grey-14;
+      border-top: 1px solid $light-grey-14;
       border-top-left-radius: 5px;
     }
 
     &:after {
-      border-top: 2px solid $light-grey-14;
+      border-top: 1px solid $light-grey-14;
       border-top-right-radius: 5px;
     }
   }
