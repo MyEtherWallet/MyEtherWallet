@@ -126,5 +126,8 @@
   "wallet-options": "Check your transaction history, download a new keystore file, print a paper wallet, and more!",
   "xwallet-desc": "Use Pundi X Savings account by MEW to scan the QR code above",
   "xwallet-title": "Access by XWallet",
-  "get-it-now": "Get It Now"
+  "get-it-now": "Get It Now",
+  "or": "OR CONNECT WITH",
+  "wallet-connect": "WalletConnect",
+  "wallet-link": "Wallet Link"
 }

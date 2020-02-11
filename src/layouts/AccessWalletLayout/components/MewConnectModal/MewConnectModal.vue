@@ -49,15 +49,17 @@
 
       <div class="seperation-bar">
         <div class="bar" />
-        <div class="text">OR CONNECT WITH</div>
+        <div class="text">{{ $t('accessWallet.or') }}</div>
       </div>
 
       <div class="buttons">
         <div>
-          <img src="@/assets/images/icons/WalletConnect.svg" /> WalletConnect
+          <img src="@/assets/images/icons/WalletConnect.svg" />
+          {{ $t('accessWallet.wallet-connect') }}
         </div>
         <div>
-          <img src="@/assets/images/icons/WalletLink.svg" /> Wallet Link
+          <img src="@/assets/images/icons/WalletLink.svg" />
+          {{ $t('accessWallet.wallet-link') }}
         </div>
       </div>
 
