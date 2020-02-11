@@ -84,7 +84,7 @@ export default {
         },
         {
           img: instagram,
-          to: 'https://www.instagram.com/myetherwallet/',
+          to: 'https://www.instagram.com/myetherwallet',
           name: this.$t('home.social.instagram')
         }
       ]
