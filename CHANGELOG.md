@@ -1,3 +1,7 @@
+### Devop
+
+- Maintenace due to new ENS registry [#1951][https://github.com/MyEtherWallet/MyEtherWallet/pull/1951]
+
 ### Release v5.3.1
 
 ### Devop
