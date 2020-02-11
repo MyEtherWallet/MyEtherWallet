@@ -86,20 +86,30 @@
                   v-if="startIndex + 1 != endIndex"
                   class="page-link page-index-button"
                 >
-                  {{$t('nftManager.showing-range', {first: startIndex + 1, last: endIndex, count: endIndex - startIndex})}}
+                  {{
+                    $t('nftManager.showing-range', {
+                      first: startIndex + 1,
+                      last: endIndex,
+                      count: endIndex - startIndex
+                    })
+                  }}
                 </div>
                 <div
                   v-if="startIndex + 1 == endIndex"
                   class="page-link page-index-button"
                 >
-                  {{$t('nftManager.showing', {first: startIndex + 1, count: endIndex - startIndex})}}
+                  {{
+                    $t('nftManager.showing', {
+                      first: startIndex + 1,
+                      count: endIndex - startIndex
+                    })
+                  }}
                 </div>
               </li>
               <li v-show="showNextButton" class="page-item" @click="getNext()">
                 <div class="page-link next-button">Next</div>
               </li>
             </ul>
-
           </nav>
         </div>
       </div>
@@ -202,8 +212,13 @@ export default {
     ...mapState('main', ['account', 'online', 'network']),
     nftTitle() {
       if (this.nftConfig[this.selectedContract]) {
-        if(this.nftConfig[this.selectedContract].symbol === 'UNKNOWN' && !this.nftConfig[this.selectedContract].custom){
-          return `${this.$t('nftManager.unknown-token-title', {address: this.nftConfig[this.selectedContract].name})}`
+        if (
+          this.nftConfig[this.selectedContract].symbol === 'UNKNOWN' &&
+          !this.nftConfig[this.selectedContract].custom
+        ) {
+          return `${this.$t('nftManager.unknown-token-title', {
+            address: this.nftConfig[this.selectedContract].name
+          })}`;
         }
         return this.nftConfig[this.selectedContract].name;
       }
@@ -219,7 +234,7 @@ export default {
             this.nftConfig[this.selectedContract].tokens.length <
             this.currentPage * this.countPerPage
           ) {
-            return this.nftConfig[this.selectedContract].tokens.length
+            return this.nftConfig[this.selectedContract].tokens.length;
           }
           return this.currentPage * this.countPerPage;
         }
@@ -388,7 +403,7 @@ export default {
           if (configData[address].symbol === 'UNKNOWN' && customInformation) {
             configData[address].name = customInformation.title;
             configData[address].custom = true;
-          } else if(configData[address].symbol === 'UNKNOWN'){
+          } else if (configData[address].symbol === 'UNKNOWN') {
             configData[address].name = address;
           }
           configData[address].contract = address;
