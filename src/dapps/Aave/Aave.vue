@@ -70,11 +70,7 @@ import ApolloClient from './ApolloClient.vue';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
-import {
-  formatUserSummaryData,
-  formatReserves,
-  calculateHealthFactorFromBalances
-} from '@aave/protocol-js';
+import { formatUserSummaryData, formatReserves } from '@aave/protocol-js';
 
 export default {
   components: {

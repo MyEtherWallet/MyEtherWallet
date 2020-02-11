@@ -131,6 +131,9 @@ export default {
       }
     }
   },
+  mounted() {
+    this.getCompositionPercentages();
+  },
   methods: {
     getCompositionPercentages() {
       const colors = [
@@ -181,9 +184,7 @@ export default {
             percentage: percentage,
             color: colors.length > 0 ? colors.shift() : '#000'
           });
-          console.error('in here', borrowLimitEth)
         }
-        console.error('jljlk', this.compositionDeposit, this.compositionBorrow)
       });
     },
     openActionModal() {
