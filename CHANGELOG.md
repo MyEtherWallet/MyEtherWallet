@@ -1,7 +1,6 @@
-
 ### Release v5.3.2
 
-### Feature 
+### Feature
 - Update icons [#1961] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1961)
 
 ### Devop
