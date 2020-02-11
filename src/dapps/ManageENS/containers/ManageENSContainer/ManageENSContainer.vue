@@ -24,10 +24,15 @@
                 v-for="(item, idx) in Object.keys(supportedCoins)"
                 :key="item + idx"
                 @click="addCurrencyInput(item)"
-              >{{ item }}</b-dd-item>
+                >{{ item }}</b-dd-item
+              >
             </b-dd>
           </div>
-          <div v-for="(v, k) in currencyInputs" :key="k.id" class="multi-coin-input-container">
+          <div
+            v-for="(v, k) in currencyInputs"
+            :key="k.id"
+            class="multi-coin-input-container"
+          >
             <label for="updateResolver">{{ k }}:</label>
             <input
               v-model="v.value"
@@ -56,12 +61,18 @@
             <button
               :class="isValidAddresses ? '' : 'disabled'"
               @click.prevent="checkAndSendCurrency"
-            >{{ $t('common.save') }}</button>
+            >
+              {{ $t('common.save') }}
+            </button>
           </div>
         </form>
       </div>
     </b-collapse>
-    <b-btn v-b-toggle.textrecords class="collapse-open-button" variant="primary">
+    <b-btn
+      v-b-toggle.textrecords
+      class="collapse-open-button"
+      variant="primary"
+    >
       <p>{{ $t('ens.txt-record') }}</p>
     </b-btn>
     <b-collapse
@@ -79,10 +90,15 @@
                 v-for="(item, idx) in Object.keys(txtRecords)"
                 :key="item + idx"
                 @click="addTxtInput(item)"
-              >{{ item | capitalize }}</b-dd-item>
+                >{{ item | capitalize }}</b-dd-item
+              >
             </b-dd>
           </div>
-          <div v-for="(v, k) in txtRecordInputs" :key="k.id" class="multi-coin-input-container">
+          <div
+            v-for="(v, k) in txtRecordInputs"
+            :key="k.id"
+            class="multi-coin-input-container"
+          >
             <label for="updateResolver">{{ k | capitalize }}:</label>
             <input
               v-model="txtRecordInputs[k]"
@@ -114,12 +130,18 @@
             <button
               :class="validTextRecords ? 'disabled' : ''"
               @click.prevent="checkAndSendTxtRecs"
-            >{{ $t('common.save') }}</button>
+            >
+              {{ $t('common.save') }}
+            </button>
           </div>
         </form>
       </div>
     </b-collapse>
-    <b-btn v-b-toggle.transferens class="collapse-open-button" variant="primary">
+    <b-btn
+      v-b-toggle.transferens
+      class="collapse-open-button"
+      variant="primary"
+    >
       <p>{{ $t('ens.transfer-domain') }}</p>
     </b-btn>
     <b-collapse
@@ -144,7 +166,9 @@
               :class="!isAddress(transferTo) ? 'disabled' : ''"
               type="submit"
               @click.prevent="transferDomain(transferTo)"
-            >{{ $t('ens.transfer') }}</button>
+            >
+              {{ $t('ens.transfer') }}
+            </button>
           </div>
         </form>
       </div>
