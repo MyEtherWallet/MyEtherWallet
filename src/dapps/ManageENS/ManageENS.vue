@@ -241,7 +241,8 @@ export default {
         from: this.account.address,
         to,
         data,
-        value: 0
+        value: 0,
+        gas: 100000
       };
       this.web3.eth.sendTransaction(transferTx).catch(err => {
         Toast.responseHandler(err, false);
