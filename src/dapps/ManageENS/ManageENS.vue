@@ -340,7 +340,8 @@ export default {
         to: publicResolverAddress,
         data: publicResolverContract.methods.multicall(arr).encodeABI(),
         value: 0,
-        gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
+        gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed(),
+        gas: 100000
       };
       web3.eth.sendTransaction(setAddrTx).catch(err => {
         Toast.responseHandler(err, false);
