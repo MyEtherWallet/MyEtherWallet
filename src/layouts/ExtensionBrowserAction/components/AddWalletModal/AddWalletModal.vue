@@ -185,31 +185,48 @@
                 />
               </div>
             </div>
-
-            <expanding-option
-              :title="$t('createWallet.mnemonic.do-you-extra-word')"
-              :popover="
-                $t('createWallet.mnemonic.access-wallet-extra-word-popover')
-              "
-              :button-text="$t('common.no')"
-              :show-enable="true"
-              @expanded="passwordInputViewChange"
-            >
-              <div class="option-container">
-                <div class="password-input">
-                  <input
-                    v-model="password"
-                    :type="showPassword ? 'text' : 'password'"
-                    placeholder="Password"
-                    name="walletPassword"
-                  />
+            <div class="mnemonic-extra-word-container">
+              <div class="title-button-container">
+                <div class="title-popover">
+                  <h3>Extra Word</h3>
                   <img
-                    :src="showPassword ? showIcon : hide"
-                    @click.prevent="showPassword = !showPassword"
+                    v-b-popover.hover.top="'I am popover directive content!'"
+                    src="@/assets/images/icons/exclamation-grey.svg"
                   />
                 </div>
+                <div>
+                  <div class="switch sliding-switch-white">
+                    <label class="switch">
+                      <input
+                        type="checkbox"
+                        @click="
+                          () => {
+                            showExtraWord = !showExtraWord;
+                          }
+                        "
+                      />
+                      <span class="slider round" />
+                    </label>
+                  </div>
+                </div>
               </div>
-            </expanding-option>
+              <b-collapse v-model="showExtraWord">
+                <div class="input-container">
+                  <div class="password-input">
+                    <input
+                      v-model="extraWord"
+                      :type="showPassword ? 'text' : 'password'"
+                      placeholder="Extra word"
+                      name="mnemonicExtraWord"
+                    />
+                    <img
+                      :src="showPassword ? showIcon : hide"
+                      @click.prevent="showPassword = !showPassword"
+                    />
+                  </div>
+                </div>
+              </b-collapse>
+            </div>
           </div>
         </div>
         <div v-if="step === 4" class="verify-wallet-container">
@@ -387,7 +404,9 @@ export default {
       privKey: '',
       mnemonicValue: 12,
       mnemonicPhraseHolder: {},
-      mnemonicPhrase: ''
+      mnemonicPhrase: '',
+      showExtraWord: false,
+      extraWord: ''
     };
   },
   computed: {

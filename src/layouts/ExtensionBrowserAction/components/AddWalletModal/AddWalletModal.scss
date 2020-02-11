@@ -122,6 +122,30 @@
       }
     }
   }
+
+  .mnemonic-extra-word-container {
+    border-top: 1px solid #e5ecf3;
+    border-bottom: 1px solid #e5ecf3;
+    margin-top: 20px;
+
+    .title-button-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+
+      .title-popover {
+        align-items: center;
+        display: flex;
+
+        h3 {
+          font-weight: bold;
+          color: $dark-blue-6;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
 }
 
 .wallet-verification-container {
