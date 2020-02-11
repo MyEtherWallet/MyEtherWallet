@@ -73,6 +73,7 @@ import { Toast } from '@/helpers';
 import { formatUserSummaryData, formatReserves } from '@aave/protocol-js';
 import LendingPoolAbi from './abi/LendingPoolAbi.js';
 import LendingPoolAddressesProviderAbi from './abi/LendingPoolAddressesProviderAbi.js';
+import moment from 'moment';
 
 export default {
   components: {
@@ -126,6 +127,7 @@ export default {
     }
   },
   mounted() {
+    console.error('hello', Number(moment().format('X')))
     this.getLendingPoolContract();
   },
   methods: {
