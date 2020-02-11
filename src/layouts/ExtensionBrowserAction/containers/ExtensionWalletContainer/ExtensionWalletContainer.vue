@@ -17,7 +17,7 @@
         <p>No wallet found, please...</p>
       </div>
       <div class="wallet-options">
-        <button class="large-round-button-green-filled">
+        <button class="large-round-button-green-filled" @click="addWallet">
           Add My Wallet
         </button>
         <div class="button-border-container">
