@@ -26,7 +26,7 @@ export default {
   position: relative;
   height: 100%;
   width: 300px;
-  background-color: $dark-sacramento;
+  background-color: #022747;
   color: white;
 }
 </style>
