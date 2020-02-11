@@ -35,6 +35,8 @@
     "@unstoppabledomains/resolution": "1.0.24",
     "apollo-cache-inmemory": "1.6.5",
     "apollo-client": "2.6.8",
+    "apollo-link-error": "1.1.12",
+    "apollo-link-http": "1.5.16",
     "apollo-link-ws": "1.0.19",
     "core-js": "3.6.4",
     "graphql": "14.6.0",

@@ -132,7 +132,7 @@ export default {
     }
   },
   mounted() {
-    this.getCompositionPercentages();
+    this.userSummary.reservesData ? this.getCompositionPercentages() : '';
   },
   methods: {
     getCompositionPercentages() {

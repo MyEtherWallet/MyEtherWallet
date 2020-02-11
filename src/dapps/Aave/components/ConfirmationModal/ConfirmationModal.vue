@@ -190,10 +190,10 @@ export default {
     }
   },
   methods: {
-    calculateNextHealthFactor() {
-      this.userSummary.totalBorrowsETH + this.userSummary.totalFeesETH
-      calculateHealthFactorFromBalances()
-    },
+    // calculateNextHealthFactor() {
+    //   this.userSummary.totalBorrowsETH + this.userSummary.totalFeesETH
+    //   calculateHealthFactorFromBalances()
+    // },
     convertToFixed(val, int) {
       if (!val) {
         return 0;
@@ -205,9 +205,14 @@ export default {
     },
     takeAction() {
       const param = {
-        address: this.token.address,
-        amount: new BigNumber(unit.toWei(this.amount, 'ether')).toString()
+        address: this.token.id,
+        amount: unit.toWei(this.amount, 'ether').toString(),
+        referralCode: 0
       };
+
+      // new BigNumber(unit.toWei(this.amount, 'ether')).toString()
+
+      console.error('this', this.token)
 
       if (!this.activeDepositTab) {
         param['rate'] = this.selectStable ? 0 : 1;
