@@ -156,11 +156,7 @@
                     mnemonicValue === 12 ? 'active' : '',
                     'mnemonic-count left'
                   ]"
-                  @click="
-                    () => {
-                      mnemonicValue = 12;
-                    }
-                  "
+                  @click="updateMnemonicValue(12)"
                 >
                   12
                 </div>
@@ -169,11 +165,7 @@
                     mnemonicValue === 24 ? 'active' : '',
                     'mnemonic-count right'
                   ]"
-                  @click="
-                    () => {
-                      mnemonicValue = 24;
-                    }
-                  "
+                  @click="updateMnemonicValue(24)"
                 >
                   24
                 </div>
@@ -193,6 +185,31 @@
                 />
               </div>
             </div>
+
+            <expanding-option
+              :title="$t('createWallet.mnemonic.do-you-extra-word')"
+              :popover="
+                $t('createWallet.mnemonic.access-wallet-extra-word-popover')
+              "
+              :button-text="$t('common.no')"
+              :show-enable="true"
+              @expanded="passwordInputViewChange"
+            >
+              <div class="option-container">
+                <div class="password-input">
+                  <input
+                    v-model="password"
+                    :type="showPassword ? 'text' : 'password'"
+                    placeholder="Password"
+                    name="walletPassword"
+                  />
+                  <img
+                    :src="showPassword ? showIcon : hide"
+                    @click.prevent="showPassword = !showPassword"
+                  />
+                </div>
+              </div>
+            </expanding-option>
           </div>
         </div>
         <div v-if="step === 4" class="verify-wallet-container">
@@ -420,6 +437,7 @@ export default {
     mnemonicPhraseHolder: {
       handler: function(newVal) {
         if (newVal[0] && newVal[0].split(' ').length > 1) {
+          this.mnemonicValue = newVal[0].split(' ').length > 12 ? 24 : 12;
           newVal[0].split(' ').forEach((item, idx) => {
             this.mnemonicPhraseHolder[idx] = item;
           });
@@ -445,6 +463,11 @@ export default {
     });
   },
   methods: {
+    validateMnemonic() {},
+    updateMnemonicValue(val) {
+      this.mnemonicValue = val;
+      this.mnemonicPhraseHolder = {};
+    },
     updateSelected(e) {
       if (this.selected === e) {
         this.selected = '';
