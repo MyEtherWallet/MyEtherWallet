@@ -79,7 +79,7 @@ export default {
         },
         {
           img: mewtopia,
-          to: 'https://www.mewtopia.com/',
+          to: 'https://www.mewtopia.com',
           name: this.$t('home.social.mewtopia')
         },
         {
