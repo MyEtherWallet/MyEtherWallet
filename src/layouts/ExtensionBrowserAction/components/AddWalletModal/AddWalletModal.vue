@@ -144,6 +144,56 @@
             <label for="walletPassword"> Private Key </label>
             <textarea v-model="privKey" />
           </div>
+          <div v-if="selected === 'byMnem'" class="mnemonic-inputs-container">
+            <div class="mnemonic-inputs-header">
+              <h3>
+                Enter Mnemonic Phrase
+              </h3>
+              <div class="mnemonic-count-container">
+                <p>Value</p>
+                <div
+                  :class="[
+                    mnemonicValue === 12 ? 'active' : '',
+                    'mnemonic-count left'
+                  ]"
+                  @click="
+                    () => {
+                      mnemonicValue = 12;
+                    }
+                  "
+                >
+                  12
+                </div>
+                <div
+                  :class="[
+                    mnemonicValue === 24 ? 'active' : '',
+                    'mnemonic-count right'
+                  ]"
+                  @click="
+                    () => {
+                      mnemonicValue = 24;
+                    }
+                  "
+                >
+                  24
+                </div>
+              </div>
+            </div>
+            <div class="mnemonic-inputs">
+              <div
+                v-for="(_, idx) in mnemonicInputGenerator"
+                :key="'a' + idx"
+                class="actual-inputs"
+              >
+                <label :for="'menmonicInput' + idx">{{ idx + 1 }}.</label>
+                <input
+                  v-model="mnemonicPhraseHolder[idx]"
+                  placeholder=""
+                  :name="'menmonicInput' + idx"
+                />
+              </div>
+            </div>
+          </div>
         </div>
         <div v-if="step === 4" class="verify-wallet-container">
           <div class="wallet-verification-container">
@@ -317,11 +367,17 @@ export default {
       file: '',
       wallet: {},
       balance: 0,
-      privKey: ''
+      privKey: '',
+      mnemonicValue: 12,
+      mnemonicPhraseHolder: {},
+      mnemonicPhrase: ''
     };
   },
   computed: {
     ...mapState('main', ['network', 'web3']),
+    mnemonicInputGenerator() {
+      return new Array(this.mnemonicValue);
+    },
     convertedBalance() {
       const balance = new BigNumber(this.balance).times(this.usd).toNumber();
       return Misc.toDollar(balance);
@@ -358,6 +414,18 @@ export default {
       }
 
       return '';
+    }
+  },
+  watch: {
+    mnemonicPhraseHolder: {
+      handler: function(newVal) {
+        if (newVal[0] && newVal[0].split(' ').length > 1) {
+          newVal[0].split(' ').forEach((item, idx) => {
+            this.mnemonicPhraseHolder[idx] = item;
+          });
+        }
+      },
+      deep: true
     }
   },
   mounted() {

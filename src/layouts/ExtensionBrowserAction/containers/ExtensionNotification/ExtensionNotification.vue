@@ -50,6 +50,7 @@
         >
           <li
             v-for="(notification, address) in sortedNotifications"
+            v-show="notification.length > 0"
             :key="address"
           >
             <div class="address-header">
