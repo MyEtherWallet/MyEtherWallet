@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Group 8</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Finalization" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="my-wallet-12-copy-12" transform="translate(-623.000000, -453.000000)">
+            <g id="Group-8" transform="translate(521.000000, 429.000000)">
+                <text id="Extra-Word" font-family="AvenirNext-DemiBold, Avenir Next" font-size="16" font-weight="500" fill="#003945">
+                    <tspan x="16.1479714" y="39">Extra Word</tspan>
+                </text>
+                <g id="explanation" transform="translate(104.083532, 26.000000)">
+                    <g>
+                        <circle id="Oval-2" fill="#999999" cx="8" cy="8" r="8"></circle>
+                        <text id="!" font-family="AvenirNext-Bold, Avenir Next" font-size="11" font-weight="bold" fill="#FFFFFF">
+                            <tspan x="6" y="12">!</tspan>
+                        </text>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
