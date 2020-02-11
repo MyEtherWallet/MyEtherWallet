@@ -30,6 +30,7 @@
   "send-offline": "Помощник для оффлайн транзакций",
   "sotd": "State of the Dapps",
   "mew-connect": "MEWconnect",
+  "mew-wallet": "MEW wallet",
   "donation": {
     "desc": "MyEtherWallet является ПО с открытым кодом и предоставляется сообществу бесплатно. Все это возможно благодаря вашей поддержке.",
     "ether": "Поддержка в Ethereum",

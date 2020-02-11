@@ -165,5 +165,5 @@
   "manage-your-vault-description": "Внесите изменения в Vault или закройте его.",
   "create-vault-description": "Откройте Vault разнотипного залога, чтобы генерировать DAI на основе вашего залога.",
   "dai-savings-description": "Проверьте свои вклады DAI, установите допуск для обеспечения залога, и установите прокси для экономии времени и газа.",
-  "no-longer-active-notice": "Single collateral SAI (previously called DAI) is being migrated to multi-collateral DAI (new DAI). Therefore any new generation should use the new structure."
+  "no-longer-active-notice": "Однотипный SAI (ранее называемый DAI) мигрирует в разнотипный DAI (новый DAI), поэтому любое новое генерирование должно использовать новую структуру."
 }
