@@ -169,5 +169,6 @@
   "transfer-cdp-description": "Transfer your old CDP to a Multi-Collateral Vault.",
   "manage-your-vault-description": "Make changes to your Vault or close it out.",
   "create-vault-description": "Open a Multi-Collateral Vault to generate DAI based on your collateral.",
+  "deposit-dai": "Deposit DAI to earn annual interest.",
   "dai-savings-description": "Check on your DAI holdings, set an allowance for your collateral, and deploy a proxy to save on transaction time and gas."
 }
