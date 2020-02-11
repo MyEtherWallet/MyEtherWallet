@@ -8,6 +8,13 @@
     },
     "warning": "MEWconnect is not compatible with iPads."
   },
+  "mobile-app": {
+    "option-title": "Mobile App",
+    "examples": "MEWconnect, WalletConnect",
+    "modal": {
+      "title": "Access by Mobile App"
+    }
+  },
   "finney": {
     "scan-info": "To connect, scan the QR code from {wallet} app on your {finney-bc}",
     "finney-wallet": "FinneyWallet",
@@ -69,14 +76,14 @@
     }
   },
   "private-key": {
-    "string":  "Private Key",
+    "string": "Private Key",
     "modal": {
       "title": "Access by Private Key",
       "placeholder": "Enter Private Key"
     },
     "do-not-share": "Please {do-not} share your private key to anyone! You may lose your money if you share it"
   },
-  "network-addr":{
+  "network-addr": {
     "string": "Network and Address",
     "addr-to-interact": "Address to Interact With",
     "id": "ID",
