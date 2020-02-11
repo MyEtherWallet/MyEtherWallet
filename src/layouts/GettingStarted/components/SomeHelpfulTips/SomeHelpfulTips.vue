@@ -46,6 +46,9 @@ export default {
     }
   },
   data() {
+    const hardwareLink = `${window.location.origin}${
+      window.location.hash !== '' ? '/#' : ''
+    }/hardware-wallet-affiliates`;
     return {
       tips: [
         {
@@ -71,7 +74,7 @@ export default {
           title: 'gettingStarted.helpful-tips.tip4.title',
           desc: 'gettingStarted.helpful-tips.tip4.desc',
           linkText: 'gettingStarted.helpful-tips.tip4.link',
-          linkUrl: '#/hardware-wallet-affiliates'
+          linkUrl: hardwareLink
         },
         {
           title: 'gettingStarted.helpful-tips.tip5.title',
