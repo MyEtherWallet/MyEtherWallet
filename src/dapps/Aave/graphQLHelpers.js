@@ -1,139 +1,307 @@
-export const BorrowRateHistoryDataFragmentDoc = `
-  fragment BorrowRateHistoryData on ReserveParamsHistoryItem {
-    variableBorrowRate
-    stableBorrowRate
-    timestamp
+export function depositDetails(param) {
+  const query = `
+  mutation Deposit($data: TransferFromInput!) {
+    deposit(data: $data) {
+      ...EthTransaction
+      __typename
+    }
   }
-`;
-export const EthTransactionFragmentFragmentDoc = `
-  fragment EthTransactionFragment on EthereumTransactionModelExtended {
+  fragment EthTransaction on EthereumTransactionModelExtended {
     tx {
       from
       to
       gas
       data
       value
+      __typename
     }
     txType
+    __typename
   }
-`;
-export const LiquidityRateHistoryDataFragmentDoc = `
-  fragment LiquidityRateHistoryData on ReserveParamsHistoryItem {
-    liquidityRate
-    timestamp
-  }
-`;
-export const ReserveDataFragmentDoc = `
-  fragment ReserveData on Reserve {
-    id
-    name
-    symbol
-    decimals
-    isActive
-    usageAsCollateralEnabled
-    borrowingEnabled
-    stableBorrowRateEnabled
-    baseLTVasCollateral
-    liquidityIndex
-    reserveLiquidationThreshold
-    variableBorrowIndex
-    aToken {
-      id
-    }
-    availableLiquidity
-    stableBorrowRate
-    liquidityRate
-    totalBorrows
-    totalBorrowsStable
-    totalBorrowsVariable
-    totalLiquidity
-    utilizationRate
-    variableBorrowRate
-    price {
-      priceInEth
-    }
-    lastUpdateTimestamp
-  }
-`;
-export const UserReserveDataFragmentDoc = `
-  fragment UserReserveData on UserReserve {
-    principalATokenBalance
-    userBalanceIndex
-    redirectedBalance
-    interestRedirectionAddress
-    reserve {
-      id
-      name
-      symbol
-      decimals
-      liquidityRate
-      lastUpdateTimestamp
-      aToken {
-        id
+  `;
+
+  return fetchQuery(query, param);
+}
+
+export function borrowDetails(param) {
+  const query = `
+    mutation Borrow($data: BorrowInput!) {
+      borrow(data: $data) {
+        ...EthTransaction
+        __typename
       }
     }
-    usageAsCollateralEnabledOnUser
-    borrowRate
-    borrowRateMode
-    originationFee
-    principalBorrows
-    variableBorrowIndex
-    lastUpdateTimestamp
-  }
-`;
-
-function fetchQuery(args) {
-  try {
-    const someURL = 'https://api.thegraph.com/subgraphs/name/aave/protocol';
-    return fetch(someURL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json'
-      },
-      body: JSON.stringify(args)
-    }).then(r => r.json());
-    // .then(data => console.log('data returned:', data));
-  } catch (e) {
-    // eslint-disable-next-line
-    console.error(e);
-  }
-}
-
-function getEthUsdPrice() {
-  const query = `
-        query UsdPriceEth {
-          priceOracle(id: "1") {
-            usdPriceEth
-          }
-        }
-      `;
-  return fetchQuery({
-    query
-  });
-}
-
-export function useReservesQuery(userAddress) {
-  const query = `
-  query UserReserves($userAddress: String!) {
-    userReserves(where: { user: $userAddress }) {
-      ...UserReserveData
+    fragment EthTransaction on EthereumTransactionModelExtended {
+      tx {
+        from
+        to
+        gas
+        data
+        value
+        __typename
+      }
+      txType
+      __typename
     }
-  }
-  ${UserReserveDataFragmentDoc}
-`;
-  return fetchQuery({
-    query,
-    variables: { userAddress }
-  });
+    `;
+  return fetchQuery(query, param);
 }
 
-export default {
-  useReservesQuery,
-  getEthUsdPrice,
-  BorrowRateHistoryDataFragmentDoc,
-  EthTransactionFragmentFragmentDoc,
-  LiquidityRateHistoryDataFragmentDoc,
-  ReserveDataFragmentDoc,
-  UserReserveDataFragmentDoc
-};
+export function repayDetails(param) {
+  const query= `
+    mutation Repay($data: TransferFromInput!) {
+      repay(data: $data) {
+        ...EthTransaction
+        __typename
+      }
+    }
+    fragment EthTransaction on EthereumTransactionModelExtended {
+      tx {
+        from
+        to
+        gas
+        data
+        value
+        __typename
+      }
+      txType
+      __typename
+    }`;
+  return fetchQuery(query, param);
+}
+
+export function swapBorrowRateDetails(param) {
+  const query = `
+    mutation SwapBorrowRateMode($data: ApproveInput!) {
+      swapBorrowRateMode(data: $data) {
+        ...EthTransaction
+        __typename
+      }
+    }
+    
+    fragment EthTransaction on EthereumTransactionModelExtended {
+      tx {
+        from
+        to
+        gas
+        data
+        value
+        __typename
+      }
+      txType
+      __typename
+    }`;
+  return fetchQuery(query, param);
+}
+
+export function withdrawDetails(param) {
+
+}
+
+export function SetUsageAsCollateralDetails(param) {
+  const query = `
+    mutation SetUsageAsCollateralMode($data: SetUsageAsCollateralInput!) {
+      setUsageAsCollateral(data: $data) {
+        ...EthTransaction
+        __typename
+      }
+    }
+    
+    fragment EthTransaction on EthereumTransactionModelExtended {
+      tx {
+        from
+        to
+        gas
+        data
+        value
+        __typename
+      }
+      txType
+      __typename
+    }`;
+  return fetchQuery(query, param);
+}
+
+function fetchQuery(query, param) {
+  const someURL = 'https://protocol-api.aave.com/graphql';
+  return fetch(someURL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    },
+    body: JSON.stringify({
+      query,
+      variables: param
+    })
+  }).then(r => {
+    return r.json();
+  });
+}
+// ===========================================================================================================================================
+// // Borrow
+// mutation Borrow($data: BorrowInput!) {
+//   borrow(data: $data) {
+//     ...EthTransaction
+//     __typename
+//   }
+// }
+// fragment EthTransaction on EthereumTransactionModelExtended {
+//   tx {
+//     from
+//     to
+//     gas
+//     data
+//     value
+//     __typename
+//   }
+//   txType
+//   __typename
+// }
+
+// Variables:
+// {
+//   "data": {
+// 		"userAddress": "0x43689531907482BEE7e650D18411E284A7337A66",
+//     "reserve": "0xdd974d5c2e2928dea5f71b9825b8b646686bd200",
+//     "amount": "3",
+//     "interestRateMode": "Stable"
+//   }
+// }
+
+
+// ///////
+// enum InterestRate {
+//   None
+//   Stable
+//   Variable
+// }
+
+
+// ///////
+
+===========================================================================================================================================
+// Deposit
+// mutation Deposit($data: TransferFromInput!) {
+//   deposit(data: $data) {
+//     ...EthTransaction
+//     __typename
+//   }
+// }
+// fragment EthTransaction on EthereumTransactionModelExtended {
+//   tx {
+//     from
+//     to
+//     gas
+//     data
+//     value
+//     __typename
+//   }
+//   txType
+//   __typename
+// }
+
+
+// Variables:
+// {
+//   "data": {
+// 		"userAddress": "0x43689531907482BEE7e650D18411E284A7337A66",
+//     "reserve": "0xdd974d5c2e2928dea5f71b9825b8b646686bd200",
+//     "amount": "3"
+//   }
+// }
+
+===========================================================================================================================================
+// Repay
+// mutation Repay($data: TransferFromInput!) {
+//   repay(data: $data) {
+//     ...EthTransaction
+//     __typename
+//   }
+// }
+// fragment EthTransaction on EthereumTransactionModelExtended {
+//   tx {
+//     from
+//     to
+//     gas
+//     data
+//     value
+//     __typename
+//   }
+//   txType
+//   __typename
+// }
+
+// Variables:
+// {
+//   "data": {
+// 		"userAddress": "0x43689531907482BEE7e650D18411E284A7337A66",
+//     "reserve": "0x0d8775f648430679a709e98d2b0cb6250d2887ef",
+//     "amount": "3"
+//   }
+// }
+
+===========================================================================================================================================
+// swapBorrowRateMode
+// mutation SwapBorrowRateMode($data: ApproveInput!) {
+//   swapBorrowRateMode(data: $data) {
+//     ...EthTransaction
+//     __typename
+//   }
+// }
+
+// fragment EthTransaction on EthereumTransactionModelExtended {
+//   tx {
+//     from
+//     to
+//     gas
+//     data
+//     value
+//     __typename
+//   }
+//   txType
+//   __typename
+// }
+
+// Variables:
+// {
+//   "data": {
+// 		"userAddress": "0x43689531907482BEE7e650D18411E284A7337A66",
+//     "reserve": "0x0d8775f648430679a709e98d2b0cb6250d2887ef",
+//     "amount": "3"
+//   }
+// }
+
+===========================================================================================================================================
+// setUsageAsCollateral
+
+// mutation SetUsageAsCollateralMode($data: SetUsageAsCollateralInput!) {
+//   setUsageAsCollateral(data: $data) {
+//     ...EthTransaction
+//     __typename
+//   }
+// }
+
+// fragment EthTransaction on EthereumTransactionModelExtended {
+//   tx {
+//     from
+//     to
+//     gas
+//     data
+//     value
+//     __typename
+//   }
+//   txType
+//   __typename
+// }
+
+// Variables:
+// {
+//   "data": {
+// usageAsCollateral: false
+// userAddress: "0x43689531907482BEE7e650D18411E284A7337A66"
+// reserve: "0x6b175474e89094c44da98b954eedeac495271d0f"
+//   }
+// }
+
+

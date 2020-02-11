@@ -71,6 +71,8 @@ import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import { formatUserSummaryData, formatReserves } from '@aave/protocol-js';
+import LendingPoolAbi from './abi/LendingPoolAbi.js';
+import LendingPoolAddressesProviderAbi from './abi/LendingPoolAddressesProviderAbi.js';
 
 export default {
   components: {
@@ -123,7 +125,26 @@ export default {
       this.actionType = newVal;
     }
   },
+  mounted() {
+    this.getLendingPoolContract();
+  },
   methods: {
+    async getLendingPoolContract() {
+      this.lendingPoolContractAddress =
+        '0x24a42fD28C976A61Df5D00D0599C34c4f90748c8';
+      this.lendingPoolAddressesProviderContract = new this.web3.eth.Contract(
+        LendingPoolAddressesProviderAbi,
+        this.lendingPoolContractAddress
+      );
+      this.lendingPool = await this.lendingPoolAddressesProviderContract.methods
+        .getLendingPool()
+        .call();
+      this.lendingPoolContract = new this.web3.eth.Contract(
+        LendingPoolAbi,
+        this.lendingPool
+      );
+      console.error("contract", this.lendingPoolContract)
+    },
     updateReserveData(data) {
       this.rawReserveData = data;
       this.reservesData = formatReserves(data);
@@ -196,7 +217,7 @@ export default {
       console.error("param", param)
       // try {
       //   const depositInfo = await this.lendingPoolContract.methods
-      //     .deposit(param.address, param.amount, param.referral)
+      //     .deposit(param.address, param.amount, param.referralCode)
       //     .encodeABI();
 
       //   const data = {
@@ -211,6 +232,7 @@ export default {
       //       Toast.responseHandler(resp, Toast.SUCCESS);
       //     })
       //     .catch(err => {
+      //       console.error('err', err)
       //       Toast.responseHandler(err, Toast.ERROR);
       //     });
       // } catch (err) {
@@ -219,7 +241,7 @@ export default {
     },
     async borrow(param) {
       console.error('param', param)
-      this.$refs.apolloClient.borrow(param);
+      // this.$refs.apolloClient.borrow(param);
       try {
         const borrowInfo = await this.lendingPoolContract.methods
           .borrow(param.address, param.amount, param.rate, param.referral)
