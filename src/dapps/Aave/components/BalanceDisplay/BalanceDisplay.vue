@@ -108,6 +108,9 @@ export default {
       }
     };
   },
+  mounted() {
+    console.error("this", this.composition)
+  },
   // watch: {
   //   composition() {
   //     if (this.title === this.balanceTitles.aggregatedBal) {

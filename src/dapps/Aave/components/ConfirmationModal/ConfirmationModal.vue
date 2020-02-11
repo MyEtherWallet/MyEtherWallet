@@ -23,7 +23,8 @@
               }}
             </p>
             <p class="amount mt-2">
-              {{ amount }} <span class="token-name"> {{ token.name }} </span>
+              {{ convertToFixed(amount, 4)
+              }}<span class="token-name"> {{ token.name }} </span>
             </p>
             <p class="usd-amount mt-2">${{ convertToUSD(amount) }}</p>
           </div>
@@ -136,6 +137,7 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import { Toast } from '@/helpers';
 import { mapState } from 'vuex';
+import { calculateHealthFactorFromBalances } from '@aave/protocol-js';
 
 export default {
   components: {
@@ -188,6 +190,16 @@ export default {
     }
   },
   methods: {
+    calculateNextHealthFactor() {
+      this.userSummary.totalBorrowsETH + this.userSummary.totalFeesETH
+      calculateHealthFactorFromBalances()
+    },
+    convertToFixed(val, int) {
+      if (!val) {
+        return 0;
+      }
+      return val.slice(0, val.indexOf('.') + int);
+    },
     getIcon(currency) {
       return hasIcon(currency);
     },
