@@ -33,8 +33,8 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "@sentry/browser": "5.10.2",
-    "@sentry/integrations": "5.11.1",
+    "@sentry/browser": "5.12.1",
+    "@sentry/integrations": "5.12.0",
     "regenerator-runtime": "0.13.3",
     "register-service-worker": "1.6.2",
     "vue": "2.6.11",
