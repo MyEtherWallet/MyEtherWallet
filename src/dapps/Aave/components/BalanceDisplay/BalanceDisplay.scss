@@ -123,19 +123,26 @@
 }
 
 .composition-wrap {
+  cursor: pointer;
+  display: flex;
   height: 9px;
   margin-top: 10px;
-  position:relative;
   width: 100%;
   div {
-    border-radius: 6.5px;
     height: 100%;
     left: 0;
     top: 0;
-    position: absolute;
   }
   .composition-percentage-hover {
     z-index: 1;
+  }
+
+  .left-border-radius {
+    border-radius: 6.5px 0 0 6.5px;
+  }
+
+  .right-border-radius {
+    border-radius: 0 6.5px 6.5px 0;
   }
 }
 

@@ -13,7 +13,7 @@
           {{
             activeDepositTab
               ? convertToFixed(token.user.principalATokenBalance)
-              : convertToFixed(token.user.currentBorrows, 5)
+              : convertToFixed(token.user.currentBorrows)
           }}
           <span class="token-name"> {{ token.symbol }} </span>
         </p>
@@ -36,8 +36,8 @@
         <p class="token-balance">
           {{
             activeDepositTab
-              ? convertToFixed(token.tokenBalance, 5)
-              : convertToFixed(userSummary.totalCollateralETH, 5)
+              ? convertToFixed(token.tokenBalance)
+              : convertToFixed(userSummary.totalCollateralETH)
           }}
           <span class="token-name">{{
             activeDepositTab ? token.symbol : $t('common.currency.eth')
@@ -235,20 +235,11 @@ export default {
         return reserve.id ? reserve.id === id : reserve.reserve.id === id;
       });
     },
-    convertToFixed(val, int) {
-      if (!val || val == 0) {
+    convertToFixed(val) {
+      if (!val) {
         return 0;
       }
-
-      if (!int) {
-        int = 3;
-      }
-
-      val = val.toString();
-      const idx = val.indexOf('.');
-      if (idx >= 0) {
-        return val.slice(0, idx + int);
-      }
+      return new BigNumber(val).toFixed(2).toString();
     },
     takeAction() {
       this.activeBorrowTab

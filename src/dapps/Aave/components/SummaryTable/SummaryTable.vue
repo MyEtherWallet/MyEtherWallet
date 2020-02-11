@@ -75,37 +75,33 @@
           </td>
           <td v-if="activeDepositTab">
             <span
-              >{{ convertToFixed(reserve.principalATokenBalance, 3) }}
+              >{{ convertToFixed(reserve.principalATokenBalance) }}
               {{ reserve.reserve.symbol }}</span
             >
             <span class="eth-amt"
-              >{{ convertToFixed(reserve.currentUnderlyingBalanceETH, 5) }}
+              >{{ convertToFixed(reserve.currentUnderlyingBalanceETH) }}
               {{ $t('common.currency.eth') }}</span
             >
           </td>
           <td v-if="!activeDepositTab">
-            <span>${{ convertToFixed(reserve.currentBorrowsUSD, 3) }}</span>
+            <span>${{ convertToFixed(reserve.currentBorrowsUSD) }}</span>
             <span class="eth-amt"
-              >{{ convertToFixed(reserve.currentBorrowsETH, 5) }}
+              >{{ convertToFixed(reserve.currentBorrowsETH) }}
               {{ $t('common.currency.eth') }}</span
             >
           </td>
           <td>
             <!-- change this to earned column -->
             <span v-if="activeDepositTab"
-              >{{
-                convertToFixed(reserve.reserve.liquidityRate * 100, 3)
-              }}%</span
+              >{{ convertToFixed(reserve.reserve.liquidityRate * 100) }}%</span
             >
           </td>
           <td>
             <span v-if="activeDepositTab"
-              >{{
-                convertToFixed(reserve.reserve.liquidityRate * 100, 5)
-              }}%</span
+              >{{ convertToFixed(reserve.reserve.liquidityRate * 100) }}%</span
             >
             <span v-if="!activeDepositTab"
-              >{{ convertToFixed(reserve.borrowRate * 100, 3) }}%</span
+              >{{ convertToFixed(reserve.borrowRate * 100) }}%</span
             >
           </td>
           <td v-if="activeDepositTab">
@@ -192,6 +188,7 @@ import SwitchInterestModal from '@/dapps/Aave/components/SwitchInterestModal';
 import { hasIcon } from '@/partners';
 import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -243,16 +240,11 @@ export default {
       const reserve = this.getReserve(id);
       return reserve.stableBorrowRateEnabled;
     },
-    convertToFixed(val, int) {
-      if (!val || val == 0) {
+    convertToFixed(val) {
+      if (!val) {
         return 0;
       }
-
-      val = val.toString();
-      const idx = val.indexOf('.');
-      if (idx >= 0) {
-        return val.slice(0, idx + int);
-      }
+      return new BigNumber(val).toFixed(2).toString();
     },
     getIcon(currency) {
       return hasIcon(currency);

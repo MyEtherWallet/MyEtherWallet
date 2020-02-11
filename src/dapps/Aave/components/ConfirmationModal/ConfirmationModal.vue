@@ -23,7 +23,7 @@
               }}
             </p>
             <p class="amount mt-2">
-              {{ convertToFixed(amount, 4)
+              {{ convertToFixed(amount)
               }}<span class="token-name"> {{ token.name }} </span>
             </p>
             <p class="usd-amount mt-2">${{ convertToUSD(amount) }}</p>
@@ -87,9 +87,14 @@
                 ></span
                 ><span v-if="token.reserve">{{ token.reserve.name }}</span>
               </p>
-              <p class="mt-4">{{ userSummary.healthFactor || healthFactor }}</p>
+              <p class="mt-4">
+                {{
+                  convertToFixed(userSummary.healthFactor) ||
+                    convertToFixed(healthFactor)
+                }}
+              </p>
               <!-- placeholder -->
-              <p class="mt-4">22323</p>
+              <p class="mt-4">{{ calculateNextHealthFactor() }}</p>
             </div>
           </div>
           <div v-if="!activeDepositTab" class="rate-container">
@@ -190,32 +195,46 @@ export default {
     }
   },
   methods: {
-    // calculateNextHealthFactor() {
-    //   this.userSummary.totalBorrowsETH + this.userSummary.totalFeesETH
-    //   calculateHealthFactorFromBalances()
-    // },
-    convertToFixed(val, int) {
+    getEthBalance(amount) {
+      return new BigNumber(amount).times(this.token.price.priceInEth);
+    },
+    calculateNextHealthFactor() {
+      let nextHealthFactor = '';
+      if (this.token.price) {
+        const ethBalance = this.getEthBalance(this.amount);
+
+        const collateralBalanceEth = new BigNumber(
+          this.userSummary.totalCollateralETH
+        )
+          .plus(ethBalance)
+          .toFixed();
+
+        nextHealthFactor = calculateHealthFactorFromBalances(
+          collateralBalanceEth,
+          this.userSummary.totalBorrowsETH,
+          this.userSummary.totalFeesETH,
+          this.userSummary.currentLiquidationThreshold
+        ).toFixed(2);
+      }
+      return nextHealthFactor;
+    },
+    convertToFixed(val) {
       if (!val) {
         return 0;
       }
-      return val.slice(0, val.indexOf('.') + int);
+      return new BigNumber(val).toFixed(2).toString();
     },
     getIcon(currency) {
       return hasIcon(currency);
     },
     takeAction() {
       const param = {
-        address: this.token.id,
-        amount: unit.toWei(this.amount, 'ether').toString(),
-        referralCode: 0
+        reserve: this.token.id,
+        amount: this.amount
       };
 
-      // new BigNumber(unit.toWei(this.amount, 'ether')).toString()
-
-      console.error('this', this.token)
-
       if (!this.activeDepositTab) {
-        param['rate'] = this.selectStable ? 0 : 1;
+        param['interestRateMode'] = this.selectStable ? 'Stable' : 'Variable';
       }
 
       this.$emit('emitTakeAction', param);
@@ -223,9 +242,7 @@ export default {
     convertToUSD(balance) {
       let usdBalance = 0;
       if (balance) {
-        const ethBalance = new BigNumber(balance).times(
-          new BigNumber(this.token.price.priceInEth)
-        );
+        const ethBalance = this.getEthBalance(this.amount);
         usdBalance = new BigNumber(ethBalance).times(this.ethPrice).toFixed(2);
       }
       return usdBalance;

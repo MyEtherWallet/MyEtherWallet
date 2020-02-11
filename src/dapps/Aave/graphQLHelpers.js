@@ -48,7 +48,7 @@ export function borrowDetails(param) {
 }
 
 export function repayDetails(param) {
-  const query= `
+  const query = `
     mutation Repay($data: TransferFromInput!) {
       repay(data: $data) {
         ...EthTransaction
@@ -94,9 +94,9 @@ export function swapBorrowRateDetails(param) {
   return fetchQuery(query, param);
 }
 
-export function withdrawDetails(param) {
+// export function withdrawDetails(param) {
 
-}
+// }
 
 export function SetUsageAsCollateralDetails(param) {
   const query = `
@@ -132,11 +132,17 @@ function fetchQuery(query, param) {
     },
     body: JSON.stringify({
       query,
-      variables: param
+      variables: {
+        data: param
+      }
     })
-  }).then(r => {
-    return r.json();
-  });
+  })
+    .then(r => {
+      return r.json();
+    })
+    .catch(err => {
+      return err;
+    });
 }
 // ===========================================================================================================================================
 // // Borrow
@@ -180,7 +186,7 @@ function fetchQuery(query, param) {
 
 // ///////
 
-===========================================================================================================================================
+// ===========================================================================================================================================
 // Deposit
 // mutation Deposit($data: TransferFromInput!) {
 //   deposit(data: $data) {
@@ -211,7 +217,7 @@ function fetchQuery(query, param) {
 //   }
 // }
 
-===========================================================================================================================================
+// ===========================================================================================================================================
 // Repay
 // mutation Repay($data: TransferFromInput!) {
 //   repay(data: $data) {
@@ -241,7 +247,7 @@ function fetchQuery(query, param) {
 //   }
 // }
 
-===========================================================================================================================================
+// ===========================================================================================================================================
 // swapBorrowRateMode
 // mutation SwapBorrowRateMode($data: ApproveInput!) {
 //   swapBorrowRateMode(data: $data) {
@@ -272,7 +278,7 @@ function fetchQuery(query, param) {
 //   }
 // }
 
-===========================================================================================================================================
+// ===========================================================================================================================================
 // setUsageAsCollateral
 
 // mutation SetUsageAsCollateralMode($data: SetUsageAsCollateralInput!) {

@@ -15,6 +15,7 @@
     </div>
     <div class="balance-row">
       <balance-display
+        :percentage-left="percentageLeft"
         :loading-home="loadingHome"
         :balance-eth="
           activeDepositTab
@@ -34,6 +35,7 @@
         "
       />
       <balance-display
+        :percentage-left="percentageLeft"
         :loading-home="loadingHome"
         :composition="compositionDeposit"
         :balance-eth="activeDepositTab ? '0' : userSummary.totalCollateralETH"
@@ -121,7 +123,8 @@ export default {
   data() {
     return {
       compositionDeposit: [],
-      compositionBorrow: []
+      compositionBorrow: [],
+      percentageLeft: ''
     };
   },
   watch: {
@@ -136,17 +139,18 @@ export default {
   },
   methods: {
     getCompositionPercentages() {
+      let borrowLimitEth;
       const colors = [
-        '#566679',
-        '#f9d6da',
         '#f5a623',
-        '#6f0',
-        '#dadd98',
+        '#ffbb40',
+        '#f9d6da',
+        '#1d89ff',
         '#f00',
+        '#00b3db',
+        '#f9d6da',
         '#5a78f0',
         '#5c74eb',
         '#3766aa',
-        '#1d89ff',
         '#c9f2ed',
         '#aa0087',
         '#f37240',
@@ -167,16 +171,21 @@ export default {
             color: colors.length > 0 ? colors.shift() : '#000'
           });
         } else if (reserve.currentBorrowsETH > 0) {
-          const borrowLimitEth = new BigNumber(
+          borrowLimitEth = new BigNumber(this.userSummary.availableBorrowsETH)
+            .plus(this.userSummary.totalBorrowsETH)
+            .toFixed(4);
+
+          this.percentageLeft = new BigNumber(
             this.userSummary.availableBorrowsETH
           )
-            .plus(new BigNumber(this.userSummary.totalBorrowsEth))
-            .toFixed();
+            .div(borrowLimitEth)
+            .times(100)
+            .toFixed(1);
 
           const percentage = new BigNumber(reserve.currentBorrowsETH)
             .div(borrowLimitEth)
             .times(100)
-            .toFixed(2);
+            .toFixed(1);
 
           this.compositionBorrow.push({
             symbol: reserve.reserve.symbol,
@@ -186,6 +195,15 @@ export default {
           });
         }
       });
+
+      if (borrowLimitEth > 0 && this.percentageLeft > 0) {
+        this.compositionBorrow.push({
+          symbol: this.$t('dappsAave.left'),
+          amount: '',
+          percentage: this.percentageLeft,
+          color: '#c7c7c7'
+        });
+      }
     },
     openActionModal() {
       this.$refs.actionModal.$refs.actionModal.show();

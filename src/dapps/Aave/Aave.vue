@@ -43,7 +43,7 @@
         <span>{{ $t('dappsAave.health-factor') }}</span>
         <i v-show="loadingHome" class="fa fa-spinner fa-spin health-score" />
         <span v-if="!loadingHome" class="health-score">{{
-          userSummary.healthFactor
+          convertToFixed(userSummary.healthFactor)
         }}</span>
         <popover
           :popcontent="$t('dappsAmbrpay.ambrpay-popover')"
@@ -71,9 +71,11 @@ import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import { formatUserSummaryData, formatReserves } from '@aave/protocol-js';
-import LendingPoolAbi from './abi/LendingPoolAbi.js';
-import LendingPoolAddressesProviderAbi from './abi/LendingPoolAddressesProviderAbi.js';
+// import LendingPoolAbi from './abi/LendingPoolAbi.js';
+// import LendingPoolAddressesProviderAbi from './abi/LendingPoolAddressesProviderAbi.js';
 import moment from 'moment';
+import BigNumber from 'bignumber.js';
+import { depositDetails, borrowDetails } from './graphQLHelpers.js';
 
 export default {
   components: {
@@ -92,7 +94,7 @@ export default {
     return {
       activeDepositTab: true,
       activeBorrowTab: false,
-      lendingPoolContract: {},
+      // lendingPoolContract: {},
       loadingHome: true,
       loadingReserves: true,
       reservesData: [],
@@ -124,28 +126,17 @@ export default {
     },
     '$route.params.actionType'(newVal) {
       this.actionType = newVal;
+    },
+    tokensWithBalance() {
+      this.getReserveBalances();
     }
   },
-  mounted() {
-    console.error('hello', Number(moment().format('X')))
-    this.getLendingPoolContract();
-  },
   methods: {
-    async getLendingPoolContract() {
-      this.lendingPoolContractAddress =
-        '0x24a42fD28C976A61Df5D00D0599C34c4f90748c8';
-      this.lendingPoolAddressesProviderContract = new this.web3.eth.Contract(
-        LendingPoolAddressesProviderAbi,
-        this.lendingPoolContractAddress
-      );
-      this.lendingPool = await this.lendingPoolAddressesProviderContract.methods
-        .getLendingPool()
-        .call();
-      this.lendingPoolContract = new this.web3.eth.Contract(
-        LendingPoolAbi,
-        this.lendingPool
-      );
-      console.error("contract", this.lendingPoolContract)
+    convertToFixed(val) {
+      if (!val) {
+        return 0;
+      }
+      return new BigNumber(val).toFixed(2).toString();
     },
     updateReserveData(data) {
       this.rawReserveData = data;
@@ -172,9 +163,8 @@ export default {
           this.userReserveData,
           this.account.address.toLowerCase(),
           this.usdPriceEth,
-          Date.now()
+          Number(moment().format('X'))
         );
-        // this.userSummary.calculateHealthFactorFromBalances()
         console.error('user', this.userSummary);
         this.mergeTheReserves();
         this.loadingHome = false;
@@ -215,57 +205,59 @@ export default {
       this.activeDepositTab ? this.deposit(param) : this.borrow(param);
     },
     async deposit(param) {
-      this.$refs.apolloClient.deposit(param);
-      console.error("param", param)
-      // try {
-      //   const depositInfo = await this.lendingPoolContract.methods
-      //     .deposit(param.address, param.amount, param.referralCode)
-      //     .encodeABI();
-
-      //   const data = {
-      //     from: this.account.address,
-      //     to: this.lendingPoolContract._address,
-      //     data: depositInfo
-      //   };
-
-      //   this.web3.eth
-      //     .sendTransaction(data)
-      //     .then(resp => {
-      //       Toast.responseHandler(resp, Toast.SUCCESS);
-      //     })
-      //     .catch(err => {
-      //       console.error('err', err)
-      //       Toast.responseHandler(err, Toast.ERROR);
-      //     });
-      // } catch (err) {
-      //   Toast.responseHandler(err, Toast.ERROR);
-      // }
+      param.userAddress = this.account.address;
+      depositDetails(param)
+        .then(resp => {
+          const txArr = [];
+          resp.data.deposit.forEach(data => {
+            txArr.push(data.tx);
+          });
+          this.sendTransaction(txArr);
+          console.error('resp', resp);
+        })
+        .catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
+        });
     },
-    async borrow(param) {
+    async sendTransaction(param) {
       console.error('param', param)
-      // this.$refs.apolloClient.borrow(param);
-      try {
-        const borrowInfo = await this.lendingPoolContract.methods
-          .borrow(param.address, param.amount, param.rate, param.referral)
-          .encodeABI();
-
-        const data = {
-          from: this.account.address,
-          to: this.lendingPoolContract._address,
-          data: borrowInfo
-        };
-
-        this.web3.eth
-          .sendTransaction(data)
+      if (param.length > 1) {
+        this.web3.mew
+          .sendBatchTransactions(param)
           .then(resp => {
             Toast.responseHandler(resp, Toast.SUCCESS);
+            console.error('resp', resp);
           })
           .catch(err => {
             Toast.responseHandler(err, Toast.ERROR);
           });
-      } catch (err) {
-        Toast.responseHandler(err, Toast.ERROR);
+      } else {
+        this.web3.eth
+          .sendTransaction(param[0])
+          .then(resp => {
+            console.error('resp', resp)
+            Toast.responseHandler(resp, Toast.SUCCESS);
+          })
+          .catch(err => {
+            console.error('err', err)
+            Toast.responseHandler(err, Toast.ERROR);
+          });
       }
+    },
+    async borrow(param) {
+      param.userAddress = this.account.address;
+      borrowDetails(param)
+        .then(resp => {
+          const txArr = [];
+          resp.data.borrow.forEach(data => {
+            txArr.push(data.tx);
+          });
+          this.sendTransaction(txArr);
+          console.error('borrow', resp);
+        })
+        .catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
+        });
     },
     toggleTabs(action) {
       if (
