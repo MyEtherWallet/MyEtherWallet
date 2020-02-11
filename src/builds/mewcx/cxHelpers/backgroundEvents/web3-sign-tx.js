@@ -15,6 +15,7 @@ export default async ({ event, payload }, callback, next) => {
   const txParams = payload.params;
   const globChrome = chrome;
   let errored = false;
+  let funcHash = '';
 
   const listenerFunc = () => {
     if (errored) {
@@ -23,7 +24,7 @@ export default async ({ event, payload }, callback, next) => {
       });
     } else {
       chrome.tabs.create({
-        url: store.state.network.type.blockExplorerTX.replace(
+        url: store.state.main.network.type.blockExplorerTX.replace(
           '[[txHash]]',
           funcHash
         )
@@ -56,7 +57,6 @@ export default async ({ event, payload }, callback, next) => {
     };
 
     const signTransaction = async function(wallet) {
-      let funcHash = '';
       const newTx = new Transaction(txParams);
       try {
         const signedTx = await wallet.signTransaction(newTx);

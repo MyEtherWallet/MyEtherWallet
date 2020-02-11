@@ -31,6 +31,7 @@ chrome.tabs.onActivated.addListener(onActivatedCb);
 chrome.tabs.onRemoved.addListener(onRemovedCb);
 chrome.runtime.onInstalled.addListener(onInstalledCb);
 chrome.runtime.onStartup.addListener(onInstalledCb);
+chrome.runtime.onMessage.addListener(eventsListeners);
 // Set default values on init
 const networkChanger = items => {
   if (!items.hasOwnProperty('favorites')) {
@@ -188,10 +189,8 @@ function onUpdatedCb(_, __, tab) {
     Object.keys(tab).length > 0 &&
     !isChromeUrl(tab.url)
   ) {
-    chrome.runtime.onMessage.removeListener(eventsListeners);
     urls[tab.id] = extractRootDomain(tab.url);
     querycB(tab);
-    chrome.runtime.onMessage.addListener(eventsListeners);
   }
 }
 function onActivatedCb(info) {
@@ -201,10 +200,8 @@ function onActivatedCb(info) {
       Object.keys(tab).length > 0 &&
       !isChromeUrl(tab.url)
     ) {
-      chrome.runtime.onMessage.removeListener(eventsListeners);
       urls[info.tabId] = extractRootDomain(tab.url);
       querycB(tab);
-      chrome.runtime.onMessage.addListener(eventsListeners);
     }
   });
 }
