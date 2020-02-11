@@ -36,22 +36,31 @@
     >
       <div class="row">
         <span class="title">{{ $t('dappsAave.composition') }}</span>
-        <div v-if="title !== balanceTitles.aggregatedBal">
-          <!-- <span class="percentage">{{ compositionPercentage }}</span> -->
-          <span v-if="title !== balanceTitles.collateral" class="available">{{
-            $t('dappsAave.available')
-          }}</span>
+        <div
+          v-if="
+            title !== balanceTitles.aggregatedBal &&
+              title !== balanceTitles.collateral
+          "
+        >
+          <span class="percentage"
+            >{{ percentageLeft ? percentageLeft : '' }}%
+          </span>
+          <span class="available">{{ $t('dappsAave.available') }}</span>
         </div>
         <div class="composition-wrap">
           <div
             v-for="(comp, idx) in composition"
             :key="idx"
-            class="composition-percentage-hover"
+            :class="[
+              'composition-percentage-hover',
+              idx === 0 ? 'left-border-radius' : '',
+              idx === composition.length - 1 ? 'right-border-radius' : ''
+            ]"
             :style="{ width: comp.percentage + '%', background: comp.color }"
             :title="
               comp.symbol +
                 ' ' +
-                convertToFixed(comp.amount) +
+                convertToFixed(comp.amount, 'percentageLeft') +
                 ' ' +
                 comp.percentage +
                 '%'
@@ -68,8 +77,14 @@
 </template>
 
 <script>
+import BigNumber from 'bignumber.js';
+
 export default {
   props: {
+    percentageLeft: {
+      type: String,
+      default: ''
+    },
     title: {
       type: String,
       default: ''
@@ -119,11 +134,15 @@ export default {
   //   }
   // },
   methods: {
-    convertToFixed(val) {
+    convertToFixed(val, type) {
+      if (type === 'percentageLeft') {
+        return '';
+      }
+
       if (!val) {
         return 0;
       }
-      return val.slice(0, val.indexOf('.') + 5);
+      return new BigNumber(val).toFixed(2).toString();
     }
     // getCompositionStyles() {
     //   this.compositionStyle = 'linear-gradient(to right,';

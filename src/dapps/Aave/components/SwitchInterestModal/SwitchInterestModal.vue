@@ -107,6 +107,7 @@
 import { hasIcon } from '@/partners';
 import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
+import BigNumber from 'bignumber.js';
 
 export default {
   props: {
@@ -126,20 +127,11 @@ export default {
     getIcon(currency) {
       return hasIcon(currency);
     },
-    convertToFixed(val, int) {
-      if (!val || val == 0) {
+    convertToFixed(val) {
+      if (!val) {
         return 0;
       }
-
-      if (!int) {
-        int = 3;
-      }
-
-      val = val.toString();
-      const idx = val.indexOf('.');
-      if (idx >= 0) {
-        return val.slice(0, idx + int);
-      }
+      return new BigNumber(val).toFixed(2).toString();
     }
   }
 };
