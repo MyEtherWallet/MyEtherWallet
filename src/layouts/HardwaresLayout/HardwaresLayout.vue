@@ -58,6 +58,7 @@ export default {
     },
     getImg(logo) {
       try {
+        // eslint-disable-next-line
         const foundLogo = require(`@/assets/images/affiliates/${logo}.png`);
         return foundLogo;
       } catch (e) {
