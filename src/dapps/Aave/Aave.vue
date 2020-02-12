@@ -197,12 +197,15 @@ export default {
           const foundReserve = this.tokensWithBalance.find(
             elem => elem.symbol === reserve.symbol
           );
+
           if (foundReserve) {
             reserve.tokenBalance = foundReserve.balance;
           }
 
-          if (stableCoins.findIndex(coin => coin === reserve.symbol) >= 0) {
-            this.reservesStable.push(reserve);
+          if (this.reservesStable.length < 5) {
+            if (stableCoins.findIndex(coin => coin === reserve.symbol) >= 0) {
+              this.reservesStable.push(reserve);
+            }
           }
         });
       }
