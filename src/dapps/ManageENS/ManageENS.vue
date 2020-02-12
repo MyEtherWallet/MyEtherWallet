@@ -225,28 +225,33 @@ export default {
       }
     },
     async transferDomain(toAddress) {
-      let to, data;
-      if (this.registrarType === REGISTRAR_TYPES.FIFS) {
-        data = this.ensRegistryContract.methods
-          .setOwner(this.nameHash, toAddress)
-          .encodeABI();
-        to = this.network.type.ens.registry;
-      } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
-        data = this.registrarContract.methods
-          .safeTransferFrom(this.account.address, toAddress, this.labelHash)
-          .encodeABI();
-        to = this.registrarAddress;
-      }
-      const transferTx = {
+      const registryTransferTx = {
         from: this.account.address,
-        to,
-        data,
+        to: this.network.type.ens.registry,
+        data: this.ensRegistryContract.methods
+          .setOwner(this.nameHash, toAddress)
+          .encodeABI(),
         value: 0,
         gas: 100000
       };
-      this.web3.eth.sendTransaction(transferTx).catch(err => {
-        Toast.responseHandler(err, false);
-      });
+      if (this.registrarType === REGISTRAR_TYPES.FIFS) {
+        this.web3.eth.sendTransaction(registryTransferTx).catch(err => {
+          Toast.responseHandler(err, false);
+        });
+      } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
+        const safeTransferTx = {
+          from: this.account.address,
+          to: this.registrarAddress,
+          data: this.registrarContract.methods
+            .safeTransferFrom(this.account.address, toAddress, this.labelHash)
+            .encodeABI(),
+          value: 0,
+          gas: 100000
+        };
+        this.web3.mew.sendBatchTransactions(
+          [registryTransferTx, safeTransferTx].filter(Boolean)
+        );
+      }
     },
     getDecodedAddress(_coinItem) {
       let decodedAddress = '0x';
