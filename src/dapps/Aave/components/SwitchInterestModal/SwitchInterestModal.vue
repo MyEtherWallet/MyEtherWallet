@@ -96,7 +96,9 @@
         </div>
         <hr />
         <div class="btn-container mt-4 mb-4">
-          <button>{{ $t('dappsAave.confirm-switch') }}</button>
+          <button @click="confirmSwitch()">
+            {{ $t('dappsAave.confirm-switch') }}
+          </button>
         </div>
       </div>
     </b-modal>
@@ -124,6 +126,12 @@ export default {
     }
   },
   methods: {
+    confirmSwitch() {
+      this.$emit('emitTakeAction', {
+        type: 'SwitchRate',
+        data: { reserve: this.token.id }
+      });
+    },
     getIcon(currency) {
       return hasIcon(currency);
     },

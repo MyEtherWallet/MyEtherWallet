@@ -60,6 +60,7 @@
       :user-reserves="userSummary.reservesData"
       :health-factor="userSummary.healthFactor"
       :active-deposit-tab="activeDepositTab"
+      @emitTakeAction="emitTakeAction"
     />
     <action-modal
       ref="actionModal"
@@ -138,6 +139,9 @@ export default {
     this.userSummary.reservesData ? this.getCompositionPercentages() : '';
   },
   methods: {
+    emitTakeAction(param) {
+      this.$emit('emitTakeAction', param);
+    },
     getCompositionPercentages() {
       let borrowLimitEth;
       const colors = [
@@ -170,7 +174,8 @@ export default {
             percentage: percentage,
             color: colors.length > 0 ? colors.shift() : '#000'
           });
-        } else if (reserve.currentBorrowsETH > 0) {
+        }
+        if (reserve.currentBorrowsETH > 0) {
           borrowLimitEth = new BigNumber(this.userSummary.availableBorrowsETH)
             .plus(this.userSummary.totalBorrowsETH)
             .toFixed(4);

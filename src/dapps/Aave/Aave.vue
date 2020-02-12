@@ -75,7 +75,14 @@ import { formatUserSummaryData, formatReserves } from '@aave/protocol-js';
 // import LendingPoolAddressesProviderAbi from './abi/LendingPoolAddressesProviderAbi.js';
 import moment from 'moment';
 import BigNumber from 'bignumber.js';
-import { depositDetails, borrowDetails } from './graphQLHelpers.js';
+import {
+  depositDetails,
+  borrowDetails,
+  repayDetails,
+  swapBorrowRateDetails,
+  setUsageAsCollateralDetails,
+  withdrawDetails
+} from './graphQLHelpers.js';
 
 export default {
   components: {
@@ -165,7 +172,6 @@ export default {
           this.usdPriceEth,
           Number(moment().format('X'))
         );
-        console.error('user', this.userSummary);
         this.mergeTheReserves();
         this.loadingHome = false;
       }
@@ -202,10 +208,81 @@ export default {
       }
     },
     emitTakeAction(param) {
-      this.activeDepositTab ? this.deposit(param) : this.borrow(param);
+      param.data.userAddress = this.account.address;
+      switch (param.type) {
+        case 'Deposit':
+          this.deposit(param.data);
+          break;
+        case 'Borrow':
+          this.borrow(param.data);
+          break;
+        case 'Withdraw':
+          this.withdraw(param.data);
+          break;
+        case 'Repay':
+          this.repay(param.data);
+          break;
+        case 'Collateral':
+          this.switchCollateral(param.data);
+          break;
+        case 'SwitchRate':
+          this.switchRate(param.data);
+          break;
+      }
+    },
+    async repay(param) {
+      repayDetails(param)
+        .then(resp => {
+          const txArr = [];
+          resp.data.repay.forEach(data => {
+            txArr.push(data.tx);
+          });
+          this.sendTransaction(txArr);
+        })
+        .catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
+        });
+    },
+    async switchRate(param) {
+      swapBorrowRateDetails(param)
+        .then(resp => {
+          const txArr = [];
+          resp.data.swapBorrowRateMode.forEach(data => {
+            txArr.push(data.tx);
+          });
+          this.sendTransaction(txArr);
+        })
+        .catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
+        });
+    },
+    async switchCollateral(param) {
+      setUsageAsCollateralDetails(param)
+        .then(resp => {
+          const txArr = [];
+          resp.data.setUsageAsCollateral.forEach(data => {
+            txArr.push(data.tx);
+          });
+          this.sendTransaction(txArr);
+        })
+        .catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
+        });
+    },
+    async withdraw(param) {
+      withdrawDetails(param)
+        .then(resp => {
+          const txArr = [];
+          resp.data.redeem.forEach(data => {
+            txArr.push(data.tx);
+          });
+          this.sendTransaction(txArr);
+        })
+        .catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
+        });
     },
     async deposit(param) {
-      param.userAddress = this.account.address;
       depositDetails(param)
         .then(resp => {
           const txArr = [];
@@ -213,39 +290,12 @@ export default {
             txArr.push(data.tx);
           });
           this.sendTransaction(txArr);
-          console.error('resp', resp);
         })
         .catch(err => {
           Toast.responseHandler(err, Toast.ERROR);
         });
     },
-    async sendTransaction(param) {
-      console.error('param', param)
-      if (param.length > 1) {
-        this.web3.mew
-          .sendBatchTransactions(param)
-          .then(resp => {
-            Toast.responseHandler(resp, Toast.SUCCESS);
-            console.error('resp', resp);
-          })
-          .catch(err => {
-            Toast.responseHandler(err, Toast.ERROR);
-          });
-      } else {
-        this.web3.eth
-          .sendTransaction(param[0])
-          .then(resp => {
-            console.error('resp', resp)
-            Toast.responseHandler(resp, Toast.SUCCESS);
-          })
-          .catch(err => {
-            console.error('err', err)
-            Toast.responseHandler(err, Toast.ERROR);
-          });
-      }
-    },
     async borrow(param) {
-      param.userAddress = this.account.address;
       borrowDetails(param)
         .then(resp => {
           const txArr = [];
@@ -253,11 +303,37 @@ export default {
             txArr.push(data.tx);
           });
           this.sendTransaction(txArr);
-          console.error('borrow', resp);
         })
         .catch(err => {
           Toast.responseHandler(err, Toast.ERROR);
         });
+    },
+    async sendTransaction(param) {
+      if (param.length > 1) {
+        this.web3.mew
+          .sendBatchTransactions(param)
+          .then(() => {
+            Toast.responseHandler(
+              this.$t('sendTx.success.title'),
+              Toast.SUCCESS
+            );
+          })
+          .catch(err => {
+            Toast.responseHandler(err, Toast.ERROR);
+          });
+      } else {
+        this.web3.eth
+          .sendTransaction(param[0])
+          .then(() => {
+            Toast.responseHandler(
+              this.$t('sendTx.success.title'),
+              Toast.SUCCESS
+            );
+          })
+          .catch(err => {
+            Toast.responseHandler(err, Toast.ERROR);
+          });
+      }
     },
     toggleTabs(action) {
       if (

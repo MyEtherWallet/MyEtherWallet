@@ -131,7 +131,7 @@
                     :disabled="!isStableEnabled(reserve.reserve.id)"
                     :checked="reserve.borrowRateMode === 'Stable'"
                     type="checkbox"
-                    @click="changeInterestType(index)"
+                    @click="changeInterestType(index, reserve)"
                   />
                   <span class="slider borrow-slider round" />
                 </label>
@@ -177,8 +177,13 @@
       :token="token"
       :is-collateral-modal="true"
       :health-factor="healthFactor"
+      @emitTakeAction="emitTakeAction"
     />
-    <switch-interest-modal ref="switchInterest" :token="token" />
+    <switch-interest-modal
+      ref="switchInterest"
+      :token="token"
+      @emitTakeAction="emitTakeAction"
+    />
   </div>
 </template>
 
@@ -219,7 +224,9 @@ export default {
   },
   data() {
     return {
-      token: {}
+      token: {},
+      collateralModalShown: false,
+      switchInterestShown: false
     };
   },
   computed: {
@@ -236,6 +243,19 @@ export default {
     }
   },
   methods: {
+    emitTakeAction(param) {
+      if (this.collateralModalShown) {
+        this.$refs.confirmationModal.$refs.confirmationModal.hide();
+        this.collateralModalShown = false;
+      }
+      if (this.switchInterestShown) {
+        this.$refs.switchInterest.$refs.switchInterest.hide();
+        this.switchInterestShown = false;
+      }
+      console.error('param', param);
+
+      this.$emit('emitTakeAction', param);
+    },
     isStableEnabled(id) {
       const reserve = this.getReserve(id);
       return reserve.stableBorrowRateEnabled;
@@ -255,12 +275,14 @@ export default {
       });
     },
     useAsCollateral(idx) {
-      this.token = this.userReserves[idx];
+      this.token = this.getReserve(this.ownedReserves[idx].reserve.id);
       this.$refs.confirmationModal.$refs.confirmationModal.show();
+      this.collateralModalShown = true;
     },
-    changeInterestType(idx) {
+    changeInterestType(idx, reserve) {
       this.token = this.getReserve(this.userReserves[idx].reserve.id);
       this.$refs.switchInterest.$refs.switchInterest.show();
+      this.switchInterestShown = true;
     },
     goToPage(idx, actionType) {
       const params = {
