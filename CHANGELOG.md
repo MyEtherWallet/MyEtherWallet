@@ -1,9 +1,17 @@
 ### Release v5.3.2
 
+### Feature
+- Update icons [#1961] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1961)
+
 ### Devop
 
 - Update greenkeeper package [#1954](https://github.com/MyEtherWallet/MyEtherWallet/pull/1954)
 - Update team page [#1952](https://github.com/MyEtherWallet/MyEtherWallet/pull/1952)
+- Maintenace due to new ENS registry [#1951](https://github.com/MyEtherWallet/MyEtherWallet/pull/1951)
+
+### Bug
+
+- Link fixes [#1963](https://github.com/MyEtherWallet/MyEtherWallet/pull/1963)
 
 ### Release v5.3.1-hotfix.1
 

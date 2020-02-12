@@ -246,12 +246,6 @@ const toDollar = val => {
     .replace('US', '')
     .replace('$', '$ ')}`;
 };
-const dateChecker = () => {
-  const today = new Date();
-  const startDate = new Date('02/03/2020');
-  const endDate = new Date('02/10/2020');
-  return today >= startDate && today <= endDate;
-};
 
 export default {
   isJson,
@@ -275,6 +269,5 @@ export default {
   stripTags,
   isMewCx,
   toBuffer,
-  toDollar,
-  dateChecker
+  toDollar
 };
