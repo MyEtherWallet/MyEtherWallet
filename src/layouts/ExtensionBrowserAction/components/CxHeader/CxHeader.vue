@@ -300,11 +300,11 @@ export default {
     border: none !important;
     transform: translate3d(0px, 64px, 0px) !important;
   }
-}
 
-.show {
-  .btn {
-    background-color: $mew-green !important;
+  .show {
+    .btn {
+      background-color: $mew-green !important;
+    }
   }
 }
 </style>
