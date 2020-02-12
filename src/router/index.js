@@ -3,7 +3,7 @@ import store from '@/store';
 import { getMode, getRoutes } from '@/builds/configs';
 import { ExtensionHelpers } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
-import { Toast, Misc } from '@/helpers';
+import { Misc } from '@/helpers';
 import { MEW_CX } from '@/builds/configs/types';
 import langShortCodes from '@/translations/getShortCodes';
 
@@ -65,23 +65,12 @@ router.beforeResolve((to, from, next) => {
       if (store.state.main.path !== '') {
         const localPath = store.state.main.path;
         store.dispatch('main/setLastPath', '');
-        rerouter(localPath, next, { path: localPath });
+        next({ path: localPath });
       } else {
-        rerouter(to.fullPath, next);
+        next();
       }
     }
   }
 });
-
-const rerouter = (path, next, elseParam) => {
-  const reroute = Misc.dateChecker();
-
-  if (reroute && path.includes('manage-ens')) {
-    next({ path: path.replace('/manage-ens', '') });
-    Toast.responseHandler(this.$t('ens.toast.unavailable'), Toast.WARN);
-  } else {
-    elseParam ? next(elseParam) : next();
-  }
-};
 
 export default router;
