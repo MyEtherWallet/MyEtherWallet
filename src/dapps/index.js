@@ -27,7 +27,7 @@ const dapps = {
     iconDisabled: domainSaleHov,
     title: 'subDomain.title',
     desc: 'subDomain.dapp-desc',
-    supportedNetworks: [],
+    supportedNetworks: [ETH.name],
     lastUpdated: '09/20/2019',
     releaseDate: '10/08/2018'
   },
