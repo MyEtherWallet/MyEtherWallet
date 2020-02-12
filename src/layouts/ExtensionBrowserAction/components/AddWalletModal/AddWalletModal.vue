@@ -145,87 +145,97 @@
             <textarea v-model="privKey" />
           </div>
           <div v-if="selected === 'byMnem'" class="mnemonic-inputs-container">
-            <div class="mnemonic-inputs-header">
-              <h3>
-                Enter Mnemonic Phrase
-              </h3>
-              <div class="mnemonic-count-container">
-                <p>Value</p>
-                <div
-                  :class="[
-                    mnemonicValue === 12 ? 'active' : '',
-                    'mnemonic-count left'
-                  ]"
-                  @click="updateMnemonicValue(12)"
-                >
-                  12
-                </div>
-                <div
-                  :class="[
-                    mnemonicValue === 24 ? 'active' : '',
-                    'mnemonic-count right'
-                  ]"
-                  @click="updateMnemonicValue(24)"
-                >
-                  24
+            <div v-show="mnemonicStep === 'enterPhrase'">
+              <div class="mnemonic-inputs-header">
+                <h3>
+                  Enter Mnemonic Phrase
+                </h3>
+                <div class="mnemonic-count-container">
+                  <p>Value</p>
+                  <div
+                    :class="[
+                      mnemonicValue === 12 ? 'active' : '',
+                      'mnemonic-count left'
+                    ]"
+                    @click="updateMnemonicValue(12)"
+                  >
+                    12
+                  </div>
+                  <div
+                    :class="[
+                      mnemonicValue === 24 ? 'active' : '',
+                      'mnemonic-count right'
+                    ]"
+                    @click="updateMnemonicValue(24)"
+                  >
+                    24
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="mnemonic-inputs">
-              <div
-                v-for="(_, idx) in mnemonicInputGenerator"
-                :key="'a' + idx"
-                class="actual-inputs"
-              >
-                <label :for="'menmonicInput' + idx">{{ idx + 1 }}.</label>
-                <input
-                  v-model="mnemonicPhraseHolder[idx]"
-                  placeholder=""
-                  :name="'menmonicInput' + idx"
-                />
-              </div>
-            </div>
-            <div class="mnemonic-extra-word-container">
-              <div class="title-button-container">
-                <div class="title-popover">
-                  <h3>Extra Word</h3>
-                  <img
-                    v-b-popover.hover.top="'I am popover directive content!'"
-                    src="@/assets/images/icons/exclamation-grey.svg"
+              <div class="mnemonic-inputs">
+                <div
+                  v-for="(_, idx) in mnemonicInputGenerator"
+                  :key="'a' + idx"
+                  class="actual-inputs"
+                >
+                  <label :for="'menmonicInput' + idx">{{ idx + 1 }}.</label>
+                  <input
+                    v-model="mnemonicPhraseHolder[idx]"
+                    placeholder=""
+                    :name="'menmonicInput' + idx"
                   />
                 </div>
-                <div>
-                  <div class="switch sliding-switch-white">
-                    <label class="switch">
-                      <input
-                        type="checkbox"
-                        @click="
-                          () => {
-                            showExtraWord = !showExtraWord;
-                          }
-                        "
-                      />
-                      <span class="slider round" />
-                    </label>
-                  </div>
-                </div>
               </div>
-              <b-collapse v-model="showExtraWord">
-                <div class="input-container">
-                  <div class="password-input">
-                    <input
-                      v-model="extraWord"
-                      :type="showPassword ? 'text' : 'password'"
-                      placeholder="Extra word"
-                      name="mnemonicExtraWord"
-                    />
+              <div class="mnemonic-extra-word-container">
+                <div class="title-button-container">
+                  <div class="title-popover">
+                    <h3>Extra Word</h3>
                     <img
-                      :src="showPassword ? showIcon : hide"
-                      @click.prevent="showPassword = !showPassword"
+                      v-b-popover.hover.top="'I am popover directive content!'"
+                      src="@/assets/images/icons/exclamation-grey.svg"
                     />
                   </div>
+                  <div>
+                    <div class="switch sliding-switch-white">
+                      <label class="switch">
+                        <input
+                          type="checkbox"
+                          @click="
+                            () => {
+                              showExtraWord = !showExtraWord;
+                            }
+                          "
+                        />
+                        <span class="slider round" />
+                      </label>
+                    </div>
+                  </div>
                 </div>
-              </b-collapse>
+                <b-collapse v-model="showExtraWord">
+                  <div class="input-container">
+                    <div class="password-input">
+                      <input
+                        v-model="extraWord"
+                        :type="showPassword ? 'text' : 'password'"
+                        placeholder="Extra word"
+                        name="mnemonicExtraWord"
+                      />
+                      <img
+                        :src="showPassword ? showIcon : hide"
+                        @click.prevent="showPassword = !showPassword"
+                      />
+                    </div>
+                  </div>
+                </b-collapse>
+              </div>
+            </div>
+            <div v-show="mnemonicStep === 'chooseAddress'">
+              <div class="mnemonic-path-dropdown">
+                <b-dropdown>
+                  <b-dropdown-item> Some Path </b-dropdown-item>
+                  <b-dropdown-item> Sample </b-dropdown-item>
+                </b-dropdown>
+              </div>
             </div>
           </div>
         </div>
@@ -330,6 +340,7 @@ import {
 import Blockie from '@/components/Blockie';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
+import { MnemonicWallet } from '@/wallets';
 
 const TITLES = {
   0: {
@@ -406,7 +417,10 @@ export default {
       mnemonicPhraseHolder: {},
       mnemonicPhrase: '',
       showExtraWord: false,
-      extraWord: ''
+      extraWord: '',
+      mnemonicStep: 'enterPhrase',
+      selectedAddress: '',
+      selectedPath: ''
     };
   },
   computed: {
@@ -440,6 +454,26 @@ export default {
             return this.password !== '';
           case 'byPriv':
             return this.privKey !== '';
+          case 'byMnem':
+            if (this.mnemonicStep === 'enterPhrase') {
+              const validLength =
+                Object.keys(this.mnemonicPhraseHolder).length ===
+                this.mnemonicValue;
+              const hasEmpty = Object.values(this.mnemonicPhraseHolder).find(
+                item => {
+                  return item === '';
+                }
+              );
+
+              return validLength && hasEmpty === undefined;
+            } else if (this.mnemonicStep === 'chooseAddress') {
+              return true;
+              // return (
+              //   this.selectedAddress !== '' &&
+              //   this.password !== '' &&
+              //   this.validMatchingPassword
+              // );
+            }
         }
       }
       return this.generateWalletValidation;
@@ -479,10 +513,16 @@ export default {
       this.wallet = {};
       this.balance = 0;
       this.privKey = '';
+      this.mnemonicValue = 12;
+      this.mnemonicPhraseHolder = {};
+      this.mnemonicPhrase = '';
+      this.showExtraWord = false;
+      this.extraWord = '';
+      this.mnemonicStep = 'enterPhrase';
+      this.selectedAddress = '';
     });
   },
   methods: {
-    validateMnemonic() {},
     updateMnemonicValue(val) {
       this.mnemonicValue = val;
       this.mnemonicPhraseHolder = {};
@@ -573,7 +613,7 @@ export default {
         Toast.responseHandler(e, Toast.ERROR);
       }
     },
-    addKeyStore() {
+    storeWallet() {
       // Reuse function once state has wallet
       const _self = this;
       _self.loading = true;
@@ -629,6 +669,11 @@ export default {
             this.accessJson();
             break;
           case BY_MNEM:
+            if (this.mnemonicStep !== 'chooseAddress') {
+              this.getWalletFromMnemonic();
+            } else {
+              this.setAddressFromMnemonic();
+            }
             break;
           case BY_PRIV:
             this.generateWalletViaPriv();
@@ -637,16 +682,45 @@ export default {
             break;
         }
       } else if (this.step === 4) {
-        switch (this.selected) {
-          case BY_JSON:
-          case BY_PRIV:
-            this.addKeyStore();
-            break;
-          case BY_MNEM:
-            break;
-          default:
-            break;
-        }
+        this.storeWallet();
+      }
+    },
+    async setAddressFromMnemonic() {
+      this.loading = true;
+      const privateKey = await ExtensionHelpers.getPrivFromMnemonicWallet(
+        this.wallet.mnemonic,
+        this.wallet.basePath
+      );
+
+      this.loading = false;
+      this.wallet = new WalletInterface(
+        privateKey.toString('hex'),
+        false,
+        privKeyType
+      );
+      this.step += 1;
+    },
+    getWalletFromMnemonic() {
+      this.loading = true;
+      try {
+        MnemonicWallet(
+          Object.values(this.mnemonicPhraseHolder).join(' '),
+          this.extraWord
+        )
+          .then(wallet => {
+            this.extraWord = '';
+            this.loading = false;
+            this.wallet = wallet;
+            this.mnemonicPhraseHolder = {};
+            this.mnemonicStep = 'chooseAddress';
+          })
+          .catch(e => {
+            this.extraWord = '';
+            this.loading = false;
+            Toast.responseHandler(e, Toast.ERROR);
+          });
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
       }
     },
     generateWallet() {
