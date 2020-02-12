@@ -15,13 +15,9 @@
       <div class="modal-contents">
         <div v-if="!isCollateralModal" class="header-container">
           <div class="left-container">
-            <p class="title">
-              {{
-                activeDepositTab
-                  ? $t('dappsAave.amount-to-deposit')
-                  : $t('dappsAave.amount-to-borrow')
-              }}
-            </p>
+            <i18n tag="p" class="title" path="dappsAave.amount-to">
+              <span slot="action" class="title">{{ actionTitle }}</span>
+            </i18n>
             <p class="amount mt-2">
               {{ convertToFixed(amount)
               }}<span class="token-name"> {{ token.name }} </span>
@@ -37,7 +33,7 @@
               "
             />
             <span
-              v-if="token.symbol && getIcon(token.symbol)"
+              v-if="token && getIcon(token.symbol)"
               :class="[
                 'cc',
                 getIcon(token.symbol),
@@ -49,7 +45,10 @@
           </div>
         </div>
         <div class="body-container">
-          <div v-if="activeDepositTab" class="health-container">
+          <div
+            v-if="actionTitle !== actionTitles.borrow"
+            class="health-container"
+          >
             <div class="left-container">
               <p v-if="isCollateralModal">{{ $t('dappsAave.currency') }}</p>
               <p class="mt-4">
@@ -64,28 +63,23 @@
             <div class="right-container">
               <p v-if="isCollateralModal" class="currency-title">
                 <img
-                  v-if="
-                    token.reserve !== undefined &&
-                      !getIcon(token.reserve.symbol)
-                  "
-                  class="token-icon"
+                  v-if="token.symbol && !getIcon(token.symbol)"
+                  class="token-icon-col"
                   :src="
-                    require(`@/assets/images/currency/coins/AllImages/${token.reserve.symbol.toUpperCase()}.svg`)
+                    require(`@/assets/images/currency/coins/AllImages/${token.symbol.toUpperCase()}.svg`)
                   "
                 />
                 <span
-                  v-if="
-                    token.reserve !== undefined && getIcon(token.reserve.symbol)
-                  "
+                  v-if="token && getIcon(token.symbol)"
                   :class="[
                     'cc',
                     getIcon(token.reserve.symbol),
                     'cc-icon',
                     'currency-symbol',
-                    'token-icon'
+                    'token-icon-col'
                   ]"
                 ></span
-                ><span v-if="token.reserve">{{ token.reserve.name }}</span>
+                ><span v-if="token">{{ token.name }}</span>
               </p>
               <p class="mt-4">
                 {{
@@ -97,7 +91,10 @@
               <p class="mt-4">{{ calculateNextHealthFactor() }}</p>
             </div>
           </div>
-          <div v-if="!activeDepositTab" class="rate-container">
+          <div
+            v-if="actionTitle === actionTitles.borrow"
+            class="rate-container"
+          >
             <div class="left-container">
               <p>{{ $t('dappsAave.interest-apr') }}</p>
               <p class="mt-4">{{ $t('dappsAave.interest-rate-type') }}</p>
@@ -116,14 +113,10 @@
               @click="takeAction()"
             >
               <span slot="action">
-                {{
-                  activeDepositTab
-                    ? $tc('dappsAave.deposit', 1)
-                    : $t('dappsAave.borrow')
-                }}
+                {{ actionTitle }}
               </span>
             </i18n>
-            <button v-if="isCollateralModal">
+            <button v-if="isCollateralModal" @click="takeAction()">
               {{ $t('dappsAave.confirm') }}
             </button>
           </div>
@@ -136,7 +129,6 @@
 <script>
 import PopOver from '@/components/PopOver';
 import BigNumber from 'bignumber.js';
-import * as unit from 'ethjs-unit';
 import { hasIcon } from '@/partners';
 import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
@@ -149,6 +141,10 @@ export default {
     popover: PopOver
   },
   props: {
+    actionTitle: {
+      type: String,
+      default: ''
+    },
     userSummary: {
       type: Object,
       default: () => {
@@ -186,10 +182,21 @@ export default {
       default: ''
     }
   },
+  data() {
+    return {
+      actionTitles: {
+        deposit: 'Deposit',
+        withdraw: 'Withdraw',
+        repay: 'Repay',
+        borrow: 'Borrow'
+      }
+    };
+  },
   computed: {
     ...mapState('main', ['online'])
   },
   mounted() {
+    console.error('actionTYpe', this.actionTitle);
     if (this.online) {
       this.getEthPrice();
     }
@@ -199,18 +206,26 @@ export default {
       return new BigNumber(amount).times(this.token.price.priceInEth);
     },
     calculateNextHealthFactor() {
-      let nextHealthFactor = '';
+      let nextHealthFactor = '',
+        collateralBalanceETH = '';
       if (this.token.price) {
         const ethBalance = this.getEthBalance(this.amount);
-
-        const collateralBalanceEth = new BigNumber(
-          this.userSummary.totalCollateralETH
-        )
-          .plus(ethBalance)
-          .toFixed();
+        if (this.actionTitle === this.actionTitles.deposit) {
+          collateralBalanceETH = new BigNumber(
+            this.userSummary.totalCollateralETH
+          )
+            .plus(ethBalance)
+            .toFixed(2);
+        } else {
+          collateralBalanceETH = new BigNumber(
+            this.userSummary.totalCollateralETH
+          )
+            .minus(ethBalance)
+            .toFixed(2);
+        }
 
         nextHealthFactor = calculateHealthFactorFromBalances(
-          collateralBalanceEth,
+          collateralBalanceETH,
           this.userSummary.totalBorrowsETH,
           this.userSummary.totalFeesETH,
           this.userSummary.currentLiquidationThreshold
@@ -229,14 +244,26 @@ export default {
     },
     takeAction() {
       const param = {
-        reserve: this.token.id,
-        amount: this.amount
+        type: this.isCollateralModal ? 'Collateral' : this.actionTitle,
+        data: {}
       };
-
-      if (!this.activeDepositTab) {
-        param['interestRateMode'] = this.selectStable ? 'Stable' : 'Variable';
+      if (this.isCollateralModal) {
+        param.data.usageAsCollateral = !this.token.usageAsCollateralEnabled;
+      } else {
+        param.data.amount = this.amount;
       }
 
+      if (this.actionTitle === this.actionTitles.withdraw) {
+        param.data.aToken = this.token.aToken.id;
+      } else {
+        param.data.reserve = this.token.id;
+      }
+
+      if (this.actionTitle === this.actionTitles.borrow) {
+        param.data['interestRateMode'] = this.selectStable
+          ? 'Stable'
+          : 'Variable';
+      }
       this.$emit('emitTakeAction', param);
     },
     convertToUSD(balance) {

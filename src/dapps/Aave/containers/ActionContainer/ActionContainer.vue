@@ -107,12 +107,14 @@
     </div>
     <rate-modal
       ref="rateModal"
+      :action-title="actionTitle"
       :amount="amount"
       :token="token"
       @emitTakeAction="emitTakeAction"
     />
     <confirmation-modal
       ref="confirmationModal"
+      :action-title="actionTitle"
       :user-summary="userSummary"
       :active-deposit-tab="activeDepositTab"
       :amount="amount"
@@ -169,6 +171,12 @@ export default {
         fiftyPercentEnabled: false,
         seventyFivePercentEnabled: false,
         maxEnabled: false
+      },
+      actionTitles: {
+        deposit: 'Deposit',
+        widthdraw: 'Withdraw',
+        repay: 'Repay',
+        borrow: 'Borrow'
       }
     };
   },
@@ -185,15 +193,15 @@ export default {
         : this.$t('dappsAave.repay');
     },
     amountToCheck() {
-      if (this.actionTitle === 'Deposit') {
+      if (this.actionTitle === this.actionTitles.deposit) {
         return this.token.tokenBalance;
-      } else if (this.actionTitle === 'Borrow') {
+      } else if (this.actionTitle === this.actionTitles.borrow) {
         return new BigNumber(this.userSummary.availableBorrowsETH).div(
           this.token.price.priceInEth
         );
-      } else if (this.actionTitle === 'Repay') {
+      } else if (this.actionTitle === this.actionTitles.repay) {
         return this.convertToFixed(this.token.user.currentBorrows);
-      } else if (this.actionTitle === 'Withdraw') {
+      } else if (this.actionTitle === this.actionTitles.widthdraw) {
         return this.token.user.principalATokenBalance;
       }
       return false;
@@ -242,7 +250,7 @@ export default {
       return new BigNumber(val).toFixed(2).toString();
     },
     takeAction() {
-      this.activeBorrowTab
+      this.actionTitle === this.actionTitles.borrow
         ? this.$refs.rateModal.$refs.rateModal.show()
         : this.$refs.confirmationModal.$refs.confirmationModal.show();
     },

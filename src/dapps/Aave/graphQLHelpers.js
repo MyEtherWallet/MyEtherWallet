@@ -94,11 +94,30 @@ export function swapBorrowRateDetails(param) {
   return fetchQuery(query, param);
 }
 
-// export function withdrawDetails(param) {
+export function withdrawDetails(param) {
+  const query = `mutation Withdraw($data: RedeemInput!) {
+      redeem(data: $data) {
+        ...EthTransaction
+        __typename
+      }
+    }
+    
+    fragment EthTransaction on EthereumTransactionModelExtended {
+      tx {
+        from
+        to
+        gas
+        data
+        value
+        __typename
+      }
+      txType
+      __typename
+    }`;
+  return fetchQuery(query, param);
+}
 
-// }
-
-export function SetUsageAsCollateralDetails(param) {
+export function setUsageAsCollateralDetails(param) {
   const query = `
     mutation SetUsageAsCollateralMode($data: SetUsageAsCollateralInput!) {
       setUsageAsCollateral(data: $data) {
@@ -175,14 +194,12 @@ function fetchQuery(query, param) {
 //   }
 // }
 
-
 // ///////
 // enum InterestRate {
 //   None
 //   Stable
 //   Variable
 // }
-
 
 // ///////
 
@@ -206,7 +223,6 @@ function fetchQuery(query, param) {
 //   txType
 //   __typename
 // }
-
 
 // Variables:
 // {
@@ -309,5 +325,3 @@ function fetchQuery(query, param) {
 // reserve: "0x6b175474e89094c44da98b954eedeac495271d0f"
 //   }
 // }
-
-
