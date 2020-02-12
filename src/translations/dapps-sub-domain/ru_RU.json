@@ -1,6 +1,6 @@
 {
   "title": "Назовите ваш кошелек",
-  "dapp-desc": "Дайте вашему адресу читаемое название на зарегистрированном домене ENS.",
+  "dapp-desc": "Give your address a human readable subdomain on a registered ENS domain",
   "ph-enter-name": "Введите имя поддомена",
   "check": "Проверить",
   "buy": "Купить",
