@@ -487,10 +487,7 @@ export default {
         this.account.identifier === WEB3_WALLET
           ? 'sendTransaction'
           : 'sendSignedTransaction';
-      const _arr =
-        this.account.identifier === WEB3_WALLET
-          ? this.signedArray.reverse()
-          : this.signedArray;
+      const _arr = this.signedArray;
       const promises = _arr.map(tx => {
         const _tx = tx.tx;
         _tx.from = this.account.address;
