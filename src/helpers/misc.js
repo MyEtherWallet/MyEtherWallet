@@ -235,13 +235,6 @@ const isMewCx = () => {
   return BUILD_TYPE === MEW_CX;
 };
 
-const dateChecker = () => {
-  const today = new Date();
-  const startDate = new Date('02/03/2020');
-  const endDate = new Date('02/10/2020');
-  return today >= startDate && today <= endDate;
-};
-
 export default {
   isJson,
   doesExist,
@@ -263,6 +256,5 @@ export default {
   isContractArgValid,
   stripTags,
   isMewCx,
-  toBuffer,
-  dateChecker
+  toBuffer
 };
