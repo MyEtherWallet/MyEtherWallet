@@ -288,8 +288,6 @@
 </template>
 <script>
 import Blockie from '@/components/Blockie';
-import TokenBalance from '@myetherwallet/eth-token-balance';
-import sortByBalance from '@/helpers/sortByBalance.js';
 import BigNumber from 'bignumber.js';
 import EditWalletModal from '../EditWalletModal';
 import RemoveWalletModal from '../RemoveWalletModal';
@@ -345,6 +343,10 @@ export default {
     page: {
       type: String,
       default: ''
+    },
+    walletToken: {
+      type: Array,
+      default: () => {}
     }
   },
   data() {
@@ -402,7 +404,7 @@ export default {
       return `${currencyBalance} ${this.network.type.currencyName}`;
     },
     walletTokensWithBalance() {
-      const tokensWithBalance = this.tokens.filter(item => {
+      const tokensWithBalance = this.walletToken.filter(item => {
         return item.balance !== 'Load' && item.balance > 0;
       });
       let totalTokenAmt = 0;
@@ -432,13 +434,13 @@ export default {
     }
   },
   created() {
-    window.chrome.storage.onChanged.addListener(this.fetchTokens);
+    window.chrome.storage.onChanged.addListener(this.checkIfFavorited);
   },
   mounted() {
     window.chrome.storage.sync.get('favorites', this.checkIfFavorited);
   },
   destroyed() {
-    window.chrome.storage.onChanged.removeListener(this.fetchTokens);
+    window.chrome.storage.onChanged.removeListener(this.checkIfFavorited);
   },
   methods: {
     ...mapActions('main', ['decryptWallet']),
@@ -697,42 +699,6 @@ export default {
         } else {
           this.favorited = false;
         }
-      }
-    },
-    async fetchTokens(res) {
-      this.checkIfFavorited(res);
-      this.loading = true;
-      let tokens = [];
-      const tb = new TokenBalance(this.web3.currentProvider);
-      const newLogo = {
-        // eslint-disable-next-line
-        src: require(`@/assets/images/networks/eth-logo.svg`)
-      };
-      try {
-        tokens = await tb.getBalance(this.address);
-        tokens = tokens.map(token => {
-          const balance = token.balance;
-          delete token.balance;
-          token.balance = new BigNumber(balance).gt(0)
-            ? new BigNumber(balance)
-                .div(new BigNumber(10).pow(token.decimals))
-                .toFixed(3)
-            : 0;
-          token.address = token.addr;
-          token['logo'] = newLogo;
-          delete token.addr;
-          return token;
-        });
-        this.loading = false;
-        this.tokens = tokens.sort(sortByBalance);
-      } catch (e) {
-        tokens = this.network.type.tokens.map(token => {
-          token.balance = 'Load';
-          token['logo'] = newLogo;
-          return token;
-        });
-        this.loading = false;
-        this.tokens = tokens;
       }
     },
     copyAddress() {
