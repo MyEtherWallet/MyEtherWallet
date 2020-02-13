@@ -41,12 +41,11 @@
     <div class="footer-container">
       <div class="footer-header">
         <p class="title">{{ $t('dappsAave.historical-rate') }}</p>
-        <div class="key-container">
-          <div class="key"></div>
-          <p>{{ $t('dappsAave.apr') }}</p>
-        </div>
       </div>
-      <p class="info">{{ $t('dappsAave.no-data') }}</p>
+      <p v-if="rateHistory && rateHistory.labels.length === 0" class="info">
+        {{ $t('dappsAave.no-data') }}
+      </p>
+      <historical-graph class="mt-3 mr-4" :rate-history="rateHistory" />
     </div>
   </div>
 </template>
@@ -57,10 +56,14 @@ import BigNumber from 'bignumber.js';
 import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import { hasIcon } from '@/partners';
+import HistoricalRatesGraph from '@/dapps/Aave/components/HistoricalRatesGraph';
 
 export default {
+  components: {
+    'historical-graph': HistoricalRatesGraph
+  },
   computed: {
-    ...mapState('aave', ['token'])
+    ...mapState('aave', ['token', 'rateHistory'])
   },
   methods: {
     getIcon(currency) {

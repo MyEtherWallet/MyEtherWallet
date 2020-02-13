@@ -5,9 +5,8 @@
         <col width="20%" />
         <col width="20%" />
         <col width="15%" />
-        <col width="15%" />
         <col width="25%" />
-        <col width="25%" />
+        <col width="20%" />
       </colgroup>
       <thead>
         <th class="token-header">{{ $t('dappsAave.token') }}</th>
@@ -16,13 +15,6 @@
             activeDepositTab
               ? $t('dappsAave.deposited')
               : $t('dappsAave.amount-borrowed')
-          }}
-        </th>
-        <th>
-          {{
-            activeDepositTab
-              ? $t('dappsAave.earned')
-              : $t('dappsAave.acc-interest')
           }}
         </th>
         <th>{{ $t('dappsAave.apr') }}</th>
@@ -86,14 +78,8 @@
           <td v-if="!activeDepositTab">
             <span>${{ convertToFixed(reserve.currentBorrowsUSD) }}</span>
             <span class="eth-amt"
-              >{{ convertToFixed(reserve.currentBorrowsETH) }}
+              >{{ convertToFixed(reserve.currentBorrowsETH, 4) }}
               {{ $t('common.currency.eth') }}</span
-            >
-          </td>
-          <td>
-            <!-- change this to earned column -->
-            <span v-if="activeDepositTab"
-              >{{ convertToFixed(reserve.reserve.liquidityRate * 100) }}%</span
             >
           </td>
           <td>
@@ -252,19 +238,20 @@ export default {
         this.$refs.switchInterest.$refs.switchInterest.hide();
         this.switchInterestShown = false;
       }
-      console.error('param', param);
-
       this.$emit('emitTakeAction', param);
     },
     isStableEnabled(id) {
       const reserve = this.getReserve(id);
       return reserve.stableBorrowRateEnabled;
     },
-    convertToFixed(val) {
+    convertToFixed(val, num) {
       if (!val) {
         return 0;
       }
-      return new BigNumber(val).toFixed(2).toString();
+      if (!num) {
+        num = 2;
+      }
+      return new BigNumber(val).toFixed(num).toString();
     },
     getIcon(currency) {
       return hasIcon(currency);
@@ -281,6 +268,8 @@ export default {
     },
     changeInterestType(idx, reserve) {
       this.token = this.getReserve(this.userReserves[idx].reserve.id);
+      reserve.borrowRateMode =
+        reserve.borrowRateMode === 'Stable' ? 'Variable' : 'Stable';
       this.$refs.switchInterest.$refs.switchInterest.show();
       this.switchInterestShown = true;
     },

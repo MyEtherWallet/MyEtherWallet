@@ -36,6 +36,42 @@ export default {
     this.getUsdPriceEth();
   },
   methods: {
+    getLiquidityRateHistoryUpdate(param) {
+      const vm = this;
+      this.apolloClient
+        .subscribe({
+          query: gql`
+            subscription LiquidityRateHistoryUpdate($reserveAddress: String!) {
+              reserveParamsHistoryItems(
+                where: { reserve: $reserveAddress }
+                first: 10
+              ) {
+                variableBorrowRate
+                stableBorrowRate
+                liquidityRate
+                timestamp
+              }
+            }
+            fragment BorrowRateHistoryData on ReserveParamsHistoryItem {
+              variableBorrowRate
+              stableBorrowRate
+              timestamp
+              __typename
+            }
+          `,
+          variables: {
+            reserveAddress: param
+          }
+        })
+        .subscribe({
+          next(resp) {
+            vm.$emit(
+              'liquidityRateHistory',
+              resp.data.reserveParamsHistoryItems
+            );
+          }
+        });
+    },
     getUsdPriceEth() {
       const vm = this;
       this.apolloClient
@@ -51,7 +87,6 @@ export default {
         })
         .subscribe({
           next(resp) {
-            // return resp.data.priceOracle.usdPriceEth;
             vm.$emit('usdPriceEth', resp.data.priceOracle.usdPriceEth);
           }
         });

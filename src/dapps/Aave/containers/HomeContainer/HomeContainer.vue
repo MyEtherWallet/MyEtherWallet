@@ -37,7 +37,7 @@
       <balance-display
         :percentage-left="percentageLeft"
         :loading-home="loadingHome"
-        :composition="compositionDeposit"
+        :composition="compositionCollateral"
         :balance-eth="activeDepositTab ? '0' : userSummary.totalCollateralETH"
         :balance-usd="activeDepositTab ? '0' : userSummary.totalCollateralUSD"
         :title="
@@ -125,6 +125,7 @@ export default {
     return {
       compositionDeposit: [],
       compositionBorrow: [],
+      compositionCollateral: [],
       percentageLeft: ''
     };
   },
@@ -160,19 +161,36 @@ export default {
         '#f37240',
         '#00b3db',
         '#a16bff',
-        '#3a6ea7'
+        '#3a6ea7',
+        '#fece00',
+        '#4568bb'
       ];
       this.userSummary.reservesData.forEach(reserve => {
         if (reserve.currentUnderlyingBalanceETH > 0) {
           const percentage = new BigNumber(reserve.currentUnderlyingBalanceETH)
-            .div(this.userSummary.totalCollateralETH)
+            .div(this.userSummary.totalLiquidityETH)
             .times(100)
-            .toFixed(2);
+            .toFixed(4);
           this.compositionDeposit.push({
             symbol: reserve.reserve.symbol,
             amount: reserve.currentUnderlyingBalanceETH,
             percentage: percentage,
-            color: colors.length > 0 ? colors.shift() : '#000'
+            color: colors.length > 0 ? colors.shift() : '#fff'
+          });
+        }
+        if (
+          reserve.usageAsCollateralEnabledOnUser &&
+          reserve.currentUnderlyingBalanceETH > 0
+        ) {
+          const percentage = new BigNumber(reserve.currentUnderlyingBalanceETH)
+            .div(this.userSummary.totalCollateralETH)
+            .times(100)
+            .toFixed(4);
+          this.compositionCollateral.push({
+            symbol: reserve.reserve.symbol,
+            amount: reserve.currentUnderlyingBalanceETH,
+            percentage: percentage,
+            color: colors.length > 0 ? colors.shift() : '#fff'
           });
         }
         if (reserve.currentBorrowsETH > 0) {

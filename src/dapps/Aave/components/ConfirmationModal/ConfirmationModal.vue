@@ -33,7 +33,7 @@
               "
             />
             <span
-              v-if="token && getIcon(token.symbol)"
+              v-if="token.symbol && getIcon(token.symbol)"
               :class="[
                 'cc',
                 getIcon(token.symbol),
@@ -73,7 +73,7 @@
                   v-if="token && getIcon(token.symbol)"
                   :class="[
                     'cc',
-                    getIcon(token.reserve.symbol),
+                    getIcon(token.symbol),
                     'cc-icon',
                     'currency-symbol',
                     'token-icon-col'
@@ -81,14 +81,25 @@
                 ></span
                 ><span v-if="token">{{ token.name }}</span>
               </p>
-              <p class="mt-4">
+              <p class="mt-4 health-factor">
                 {{
                   convertToFixed(userSummary.healthFactor) ||
                     convertToFixed(healthFactor)
                 }}
               </p>
-              <!-- placeholder -->
-              <p class="mt-4">{{ calculateNextHealthFactor() }}</p>
+              <p class="mt-4">
+                <i
+                  v-if="isNextHealthDecrease()"
+                  class="arrow fa fa-arrow-down"
+                  aria-hidden="true"
+                ></i
+                ><i
+                  v-if="!isNextHealthDecrease()"
+                  class="arrow fa fa-arrow-up"
+                  aria-hidden="true"
+                ></i>
+                {{ calculateNextHealthFactor() }}
+              </p>
             </div>
           </div>
           <div
@@ -134,7 +145,7 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import { Toast } from '@/helpers';
 import { mapState } from 'vuex';
-import { calculateHealthFactorFromBalances } from '@aave/protocol-js';
+import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
 
 export default {
   components: {
@@ -196,18 +207,31 @@ export default {
     ...mapState('main', ['online'])
   },
   mounted() {
-    console.error('actionTYpe', this.actionTitle);
     if (this.online) {
       this.getEthPrice();
     }
   },
   methods: {
+    isNextHealthDecrease() {
+      const currentHealthFactor =
+        this.userSummary.healthFactor || this.healthFactor;
+      if (
+        new BigNumber(this.calculateNextHealthFactor()).lt(
+          new BigNumber(currentHealthFactor)
+        )
+      ) {
+        return true;
+      }
+      return false;
+    },
     getEthBalance(amount) {
       return new BigNumber(amount).times(this.token.price.priceInEth);
     },
     calculateNextHealthFactor() {
       let nextHealthFactor = '',
-        collateralBalanceETH = '';
+        collateralBalanceETH = this.userSummary.totalCollateralETH,
+        totalBorrowsETH = this.userSummary.totalBorrowsETH;
+
       if (this.token.price) {
         const ethBalance = this.getEthBalance(this.amount);
         if (this.actionTitle === this.actionTitles.deposit) {
@@ -215,18 +239,22 @@ export default {
             this.userSummary.totalCollateralETH
           )
             .plus(ethBalance)
-            .toFixed(2);
-        } else {
+            .toFixed(4);
+        } else if (this.actionTitle === this.actionTitles.withdraw) {
           collateralBalanceETH = new BigNumber(
             this.userSummary.totalCollateralETH
           )
             .minus(ethBalance)
-            .toFixed(2);
+            .toFixed(4);
+        } else if (this.actionTitle === this.actionTitles.repay) {
+          totalBorrowsETH = new BigNumber(this.userSummary.totalBorrowsETH)
+            .minus(ethBalance)
+            .toFixed(4);
         }
 
-        nextHealthFactor = calculateHealthFactorFromBalances(
+        nextHealthFactor = calculateHealthFactorFromBalancesBigUnits(
           collateralBalanceETH,
-          this.userSummary.totalBorrowsETH,
+          totalBorrowsETH,
           this.userSummary.totalFeesETH,
           this.userSummary.currentLiquidationThreshold
         ).toFixed(2);
