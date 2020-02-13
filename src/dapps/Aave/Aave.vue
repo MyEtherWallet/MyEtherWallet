@@ -159,7 +159,6 @@ export default {
 
       sortedData.forEach(item => {
         const date = moment.unix(item.timestamp).format('MMM Do');
-        // if (this.rateHistory.labels.indexOf(date) < 0) {
         this.rateHistory.labels.push(date);
         this.rateHistory.stableRates.push(
           new BigNumber(normalize(item.stableBorrowRate, rayDecimals))
@@ -204,7 +203,6 @@ export default {
         this.mergeTheReserves();
         this.loadingHome = false;
       }
-      console.error('userSummary', this.userSummary);
     },
     mergeTheReserves() {
       if (this.userSummary.reservesData.length > 0) {
