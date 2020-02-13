@@ -565,10 +565,9 @@ export default {
       }
     },
     step(newVal, oldVal) {
-      console.log(newVal, oldVal);
       this.loading = false;
       if (oldVal > newVal) {
-        switch (newVal) {
+        switch (oldVal) {
           case 1:
             this.generateWalletReset();
             break;
