@@ -91,6 +91,7 @@ export default {
   border-radius: 0;
 }
 .modal-wrapper-body {
+  overflow: scroll;
   background-color: #f2f4fa !important;
 }
 

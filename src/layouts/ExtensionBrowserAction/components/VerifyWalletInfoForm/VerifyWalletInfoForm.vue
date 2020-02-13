@@ -69,8 +69,12 @@
 <script>
 import hide from '@/assets/images/icons/hide-password.svg';
 import showIcon from '@/assets/images/icons/show-password.svg';
+import Blockie from '@/components/Blockie';
 
 export default {
+  components: {
+    blockie: Blockie
+  },
   props: {
     generateWallet: {
       type: Function,
@@ -87,6 +91,10 @@ export default {
     error: {
       type: String,
       default: ''
+    },
+    wallet: {
+      type: Object,
+      default: () => {}
     },
     walletName: {
       type: String,

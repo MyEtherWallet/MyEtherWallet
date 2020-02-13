@@ -215,7 +215,11 @@
                   </div>
                 </div>
               </div>
-              <div>
+              <div
+                v-show="selectedAddress === ''"
+                class="load-more-container"
+                @click="updatePath(selectedPath)"
+              >
                 Load More
               </div>
             </div>
@@ -258,6 +262,7 @@ import MewcxModalWrapper from '../../wrappers/MewcxModalWrapper';
 import AccessWalletButton from '../AccessWalletButton';
 import AddWalletStepHeader from '../AddWalletStepHeader';
 import GenerateWalletForm from '../GenerateWalletForm';
+import VerifyWalletInfoForm from '../VerifyWalletInfoForm';
 import hide from '@/assets/images/icons/hide-password.svg';
 import showIcon from '@/assets/images/icons/show-password.svg';
 import { Toast, ExtensionHelpers, Misc } from '@/helpers';
@@ -323,7 +328,8 @@ export default {
     'wallet-option': WalletOption,
     blockie: Blockie,
     'add-wallet-step-header': AddWalletStepHeader,
-    'generate-wallet-form': GenerateWalletForm
+    'generate-wallet-form': GenerateWalletForm,
+    'verify-wallet-info-form': VerifyWalletInfoForm
   },
   props: {
     usd: {
@@ -566,10 +572,10 @@ export default {
     updatePath(path) {
       if (this.selectedPath !== path) {
         this.currentIndex = 0;
+        this.accounts = [];
       }
       this.selectedPath = path;
       this.wallet.init(path).then(() => {
-        this.accounts = [];
         for (let i = this.currentIndex; i < this.currentIndex + 5; i++) {
           this.setAccount(i);
         }
@@ -850,6 +856,8 @@ export default {
 }
 
 .mnemonic-path-dropdown-menu {
+  max-height: 300px;
+  overflow: auto;
   width: 100%;
 }
 
