@@ -14,22 +14,22 @@
     <div v-if="!hasAccounts" class="no-wallet-found">
       <div class="text-and-img-container">
         <img src="@/assets/images/icons/alien.png" />
-        <p>No wallet found, please...</p>
+        <p>{{ $t('mewcx.no-wallet-found') }}</p>
       </div>
       <div class="wallet-options">
         <button class="large-round-button-green-filled" @click="addWallet">
-          Add My Wallet
+          {{ $t('mewcx.add-my-wallet') }}
         </button>
         <div class="button-border-container">
           <div class="button-border"></div>
-          <span> OR </span>
+          <span> {{ $t('mewcx.or') }} </span>
           <div class="button-border"></div>
         </div>
         <button
           class="large-round-button-green-filled"
           @click="openWatchOnlyModal"
         >
-          Add Watch Only Address
+          {{ $t('mewcx.add-watch-only') }}
         </button>
       </div>
     </div>
@@ -38,20 +38,21 @@
         <div class="wallet-container-header">
           <div class="add-and-wallet-count">
             <p>
-              Total of
               {{
-                showMyWallets === 0
-                  ? myWallets.length
-                  : watchOnlyAddresses.length
+                $tc(
+                  'mewcx.wallet-count',
+                  showMyWallets === 0
+                    ? myWallets.length
+                    : watchOnlyAddresses.length
+                )
               }}
-              wallets
             </p>
             <div
               class="add-wallet-button"
               @click="showMyWallets === 0 ? addWallet() : openWatchOnlyModal()"
             >
               <i class="fa fa-plus" />
-              Add
+              {{ $t('mewcx.add') }}
             </div>
           </div>
           <b-tabs
@@ -67,7 +68,9 @@
                   class="total-balance-container"
                 >
                   <div>
-                    <p class="portfolio-text">My Portfolio Balance</p>
+                    <p class="portfolio-text">
+                      {{ $t('mewcx.portfolio-balance') }}
+                    </p>
                   </div>
                   <div>
                     <p class="total-amt">{{ totalDollarAmount }}</p>
@@ -77,29 +80,29 @@
                   </div>
                 </div>
                 <div v-for="wallet in searchResult" :key="wallet.address">
-                  <!-- <wallet-info-component
+                  <wallet-info-component
                     :usd="ethPrice"
                     :address="wallet.address"
                     :balance="wallet.balance"
                     :wallet="wallet.wallet"
                     :nickname="wallet.nickname"
                     :wallet-type="wallet.type"
-                    :prices="tokenPrices"
-                  /> -->
+                    :wallet-token="wallet.tokenBalance"
+                  />
                 </div>
               </div>
               <div v-else class="wallet-display-container">
                 <div class="no-wallet-found empty-wallet">
                   <div class="text-and-img-container">
                     <img src="@/assets/images/icons/alien.png" />
-                    <p>No wallet found, please...</p>
+                    <p>{{ $t('mewcx.no-wallet-found') }}</p>
                   </div>
                   <div class="wallet-options">
                     <button
                       class="large-round-button-green-filled"
                       @click="addWallet"
                     >
-                      Add My Wallet
+                      {{ $t('mewcx.add-my-wallet') }}
                     </button>
                   </div>
                 </div>
@@ -114,29 +117,29 @@
                 class="wallet-display-container"
               >
                 <div v-for="wallet in searchResult" :key="wallet.address">
-                  <!-- <wallet-info-component
+                  <wallet-info-component
                     :usd="ethPrice"
                     :address="wallet.address"
                     :balance="wallet.balance"
                     :wallet="wallet.wallet"
                     :nickname="wallet.nickname"
                     :wallet-type="wallet.type"
-                    :prices="tokenPrices"
-                  /> -->
+                    :wallet-token="wallet.tokenBalance"
+                  />
                 </div>
               </div>
               <div v-else class="wallet-display-container">
                 <div class="no-wallet-found empty-wallet">
                   <div class="text-and-img-container">
                     <img src="@/assets/images/icons/alien.png" />
-                    <p>No wallet found, please...</p>
+                    <p>{{ $t('mewcx.no-wallet-found') }}</p>
                   </div>
                   <div class="wallet-options">
                     <button
                       class="large-round-button-green-filled"
                       @click="openWatchOnlyModal"
                     >
-                      Add Watch Only Address
+                      {{ $t('mewcx.add-watch-only') }}
                     </button>
                   </div>
                 </div>
@@ -162,6 +165,9 @@ import WalletTitleAndSearchComponent from '../../components/WalletTitleAndSearch
 import AddWalletModal from '../../components/AddWalletModal';
 import ExtensionBrowserActionWrapper from '../../wrappers/ExtensionBrowserActionWrapper';
 import { ExtensionHelpers, Misc } from '@/helpers';
+import TokenBalance from '@myetherwallet/eth-token-balance';
+import sortByBalance from '@/helpers/sortByBalance.js';
+
 export default {
   components: {
     'watch-only-modal': WatchOnlyModal,
@@ -271,19 +277,20 @@ export default {
       let balance = new BigNumber(this.totalBalance);
       const watchOnlyAddresses = [];
       const myWallets = [];
-      for (const account of accs) {
+      for await (const account of accs) {
         if (account !== undefined) {
           const address = toChecksumAddress(account.address).toLowerCase();
           delete account['address'];
           const parsedItemWallet = JSON.parse(account.wallet);
-          account['balance'] = await this.getBalance(address);
           account['type'] = parsedItemWallet.type;
           account['address'] = address;
           account['nickname'] = parsedItemWallet.nick;
+          account['tokenBalance'] = await this.setToken(address);
+          account['balance'] = await this.getBalance(address);
+          balance = balance.plus(account['balance']);
           if (parsedItemWallet.type !== 'wallet') {
             watchOnlyAddresses.push(account);
           } else {
-            balance = balance.plus(new BigNumber(account.balance));
             myWallets.push(account);
           }
         }
@@ -296,6 +303,40 @@ export default {
         this.showMyWallets = 1;
       }
       this.loading = false;
+    },
+    async setToken(address) {
+      let tokens = [];
+      const tb = new TokenBalance(this.web3.currentProvider);
+      const newLogo = {
+        // eslint-disable-next-line
+          src: require(`@/assets/images/networks/eth-logo.svg`)
+      };
+      try {
+        tokens = await tb.getBalance(address);
+        tokens = tokens.map(token => {
+          const balance = token.balance;
+          delete token.balance;
+          token.balance = new BigNumber(balance).gt(0)
+            ? new BigNumber(balance)
+                .div(new BigNumber(10).pow(token.decimals))
+                .toFixed(3)
+            : 0;
+          token.address = token.addr;
+          token['logo'] = newLogo;
+          delete token.addr;
+          return token;
+        });
+        this.loading = false;
+        return tokens.sort(sortByBalance);
+      } catch (e) {
+        tokens = this.network.type.tokens.map(token => {
+          token.balance = 'Load';
+          token['logo'] = newLogo;
+          return token;
+        });
+        this.loading = false;
+        return tokens;
+      }
     },
     async getBalance(addr) {
       const balance = await this.web3.eth.getBalance(addr);

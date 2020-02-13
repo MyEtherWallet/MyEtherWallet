@@ -49,6 +49,8 @@
   "add-watch-only": "Add Watch-Only Address",
   "enter-address": "Please enter the wallet address",
   "add-my-wallet": "Add My Wallet",
+  "or": "OR",
+  "wallet-count": "Total of {total} wallet | Total of {total} wallets",
   "how-would-you-add-wallet": "How would you like to add your wallet?",
   "dapps": "Dapps",
   "powered-by": "Powered by",
@@ -58,7 +60,7 @@
   "add-more": "Add More",
   "extra-word": "Extra Word",
   "enter-extra-word": "Enter extra word",
-  "no-wallet-found": "No Wallet found",
+  "no-wallet-found": "No Wallet found please...",
   "loading-wallets": "Loading Wallets",
   "watch-wallets-only": "Watch Only Wallets",
   "mewcx-only": "MEW CX is only available in these browsers",
@@ -105,6 +107,7 @@
   "keystore-file-description": "Add your wallet using a keystore file. A keystore file is your private key encrypted into a JSON file format.",
   "chrome-cx": "Chrome Extension",
   "access-via-mew": "Access via MEW CX",
+  "portfolio-balance": "My Portfolio Balance",
   "import-wallet": {
     "add-wallet-section": {
       "title": "Add My Wallet",
