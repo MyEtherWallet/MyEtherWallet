@@ -1,0 +1,201 @@
+@import '~@/scss/GlobalVariables';
+
+%before-class {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 51%;
+  transform: skew(0deg, 20deg);
+  border-bottom-left-radius: 3px;
+  border-top-left-radius: 5px;
+  border-bottom-right-radius: 1px;
+  border: 1px solid $light-grey-14;
+  border-right: none;
+}
+
+%after-class {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 51%;
+  transform: skew(0deg, -20deg);
+  border-bottom-right-radius: 3px;
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 1px;
+  border: 1px solid $light-grey-14;
+  border-left: 0;
+}
+
+%active-class {
+  &:before {
+    background-color: $dark-blue-2;
+    border: none;
+  }
+
+  &:after {
+    background-color: $dark-blue-2;
+    border: none;
+  }
+}
+
+%passed-class {
+  &:before {
+    background-color: $light-blue-2;
+    border: none;
+  }
+
+  &:after {
+    background-color: $light-blue-2;
+    border: none;
+  }
+}
+
+.steps-container {
+  display: flex;
+  padding: 15px 0 0 115px;
+  position: relative;
+  max-height: 180px;
+
+  .step-item {
+    position: absolute;
+    padding-right: 30px;
+    top: -60px;
+
+    .floating-border {
+      border-right: 1px solid #cecece;
+      position: absolute;
+      width: 10px;
+      height: 34px;
+      top: 83px;
+      border-bottom-right-radius: 5px;
+      border-top-right-radius: 5px;
+      right: -50px;
+    }
+
+    p {
+      color: $light-grey-14;
+      font-size: 12px;
+      position: absolute;
+      top: 88px;
+      width: 200px;
+      left: -60px;
+    }
+  }
+
+  .step-item.active {
+    p {
+      color: $white;
+    }
+
+    .floating-border {
+      border: none;
+    }
+
+    .step-one {
+      background-image: linear-gradient(to bottom, $dark-blue-2, transparent);
+      border-top: 3px solid $dark-blue-2;
+      @extend %active-class;
+    }
+
+    .step-two {
+      @extend %active-class;
+    }
+
+    .step-three {
+      background-image: linear-gradient(to top, $dark-blue-2, transparent);
+      border: none;
+      border-bottom: 3px solid $dark-blue-2;
+      border-bottom-right-radius: 5px;
+      border-bottom-left-radius: 5px;
+      @extend %active-class;
+    }
+  }
+
+  .step-item.passed {
+    p {
+      color: $white;
+    }
+
+    .step-one {
+      background-image: linear-gradient(to bottom, $light-blue-2, transparent);
+      border-top: 2px solid $light-blue-2;
+      @extend %passed-class;
+    }
+
+    .step-two {
+      @extend %passed-class;
+    }
+
+    .step-three {
+      background-image: linear-gradient(to top, $light-blue-2, transparent);
+      border: none;
+      border-bottom: 3px solid $light-blue-2;
+      @extend %passed-class;
+    }
+  }
+
+  .one {
+    left: -180px;
+  }
+
+  .two {
+    left: 25px;
+  }
+
+  .three {
+    left: 230px;
+  }
+
+  .step-one,
+  .step-two,
+  .step-three {
+    height: 200px;
+    width: 35px;
+    position: relative;
+    transform: rotate(-90deg);
+
+    &:before {
+      @extend %before-class;
+    }
+
+    &:after {
+      @extend %after-class;
+    }
+  }
+
+  .step-one {
+    border-top: 1px solid $light-grey-14;
+    border-radius: 5px;
+    &:before,
+    &:after {
+      border-top: none;
+    }
+  }
+
+  .step-three {
+    border: none;
+
+    &:before,
+    &:after {
+      border: none;
+    }
+
+    &:before {
+      border-top: 1px solid $light-grey-14;
+      border-top-left-radius: 5px;
+      border-left: 1px solid #cecece;
+      border-bottom-left-radius: 6px;
+    }
+
+    &:after {
+      border-top: 1px solid $light-grey-14;
+      border-top-right-radius: 5px;
+      border-right: 1px solid #cecece;
+      border-bottom-left-radius: 6px;
+    }
+  }
+}
