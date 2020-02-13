@@ -8,38 +8,7 @@
         </div>
       </template>
       <template v-if="step >= 2" v-slot:modalMiddleButton>
-        <div class="steps-container">
-          <div
-            :class="[
-              step === 2 ? 'active' : '',
-              step > 2 ? 'passed' : '',
-              'step-item one'
-            ]"
-          >
-            <div class="step-one" />
-            <p>STEP 1. Choose a method</p>
-          </div>
-          <div
-            :class="[
-              step === 3 ? 'active' : '',
-              step > 3 ? 'passed' : '',
-              'step-item two'
-            ]"
-          >
-            <div class="step-two" />
-            <p>STEP 2. Unlock my wallet</p>
-          </div>
-          <div
-            :class="[
-              step === 4 ? 'active' : '',
-              step > 4 ? 'passed' : '',
-              'step-item three'
-            ]"
-          >
-            <div class="step-three" />
-            <p>STEP 3. Confirm to add</p>
-          </div>
-        </div>
+        <add-wallet-step-header :step="step" />
       </template>
       <template v-slot:modalContentTitle>
         {{ titles[step].title }}
@@ -53,59 +22,16 @@
           :generate="stepChange"
           :import="stepChange"
         />
-        <div v-if="step === 1">
-          <form @submit.prevent>
-            <div class="input-container">
-              <label for="walletName"> {{ $t('mewcx.wallet-name') }} </label>
-              <input
-                v-model="walletName"
-                :placeholder="$t('mewcx.add-wallet-nickname')"
-                name="walletName"
-              />
-            </div>
-            <div class="input-container">
-              <label for="walletPassword"> Wallet Password </label>
-              <div class="password-input">
-                <input
-                  v-model="password"
-                  :type="showPassword ? 'text' : 'password'"
-                  placeholder="Password"
-                  name="walletPassword"
-                />
-                <img
-                  :src="showPassword ? showIcon : hide"
-                  @click.prevent="showPassword = !showPassword"
-                />
-              </div>
-            </div>
-            <div class="input-container">
-              <div class="password-input">
-                <input
-                  v-model="confirmPassword"
-                  :type="showConfirmPassword ? 'text' : 'password'"
-                  placeholder="Confirm password"
-                />
-                <img
-                  :src="showConfirmPassword ? showIcon : hide"
-                  @click.prevent="showConfirmPassword = !showConfirmPassword"
-                />
-              </div>
-            </div>
-            <button
-              :class="[
-                generateWalletValidation ? '' : 'disabled',
-                loading ? 'disabled' : '',
-                'submit-button large-round-button-green-filled'
-              ]"
-              type="submit"
-              @click.prevent="generateWallet"
-            >
-              <span v-show="!loading"> {{ $t('mewcx.add') }} </span>
-              <i v-show="loading" class="fa fa-spinner fa-spin" />
-            </button>
-            <p v-if="error !== ''">{{ error }}</p>
-          </form>
-        </div>
+        <generate-wallet-form
+          v-if="step === 1"
+          :error="error"
+          :loading="loading"
+          :generate-wallet="generateWallet"
+          :generate-wallet-validation="generateWalletValidation"
+          @walletName="updateWalletName"
+          @password="updatePassword"
+          @confirmPassword="updateConfirmPassword"
+        />
         <div v-if="step === 2" class="import-method-container">
           <wallet-option
             v-for="(item, idx) in items"
@@ -295,79 +221,29 @@
             </div>
           </div>
         </div>
-        <div v-if="step === 4" class="verify-wallet-container">
-          <div class="wallet-verification-container">
-            <div v-if="Object.keys(wallet).length > 0">
-              <blockie
-                width="35px"
-                height="35px"
-                :address="wallet.getAddressString()"
-              />
-            </div>
-            <div class="wallet-information">
-              <p>
-                {{ wallet.getAddressString() }}
-              </p>
-              <div class="balance-container">
-                <p class="total-text">Total Wallet Value</p>
-                <p>
-                  <span class="total-balance">{{ convertedBalance }}</span>
-                  <br />
-                  <span class="eth-balance">
-                    {{ balance }} {{ network.type.currencyName }}
-                  </span>
-                </p>
-              </div>
-            </div>
-          </div>
-          <form @submit.prevent>
-            <div class="input-container">
-              <label for="walletName"> {{ $t('mewcx.wallet-name') }} </label>
-              <input
-                v-model="walletName"
-                :placeholder="$t('mewcx.add-wallet-nickname')"
-                name="walletName"
-              />
-            </div>
-            <div class="input-container">
-              <label for="walletPassword"> Create Wallet Password </label>
-              <div class="password-input">
-                <input
-                  v-model="password"
-                  :type="showPassword ? 'text' : 'password'"
-                  placeholder="Password"
-                  name="walletPassword"
-                />
-                <img
-                  :src="showPassword ? showIcon : hide"
-                  @click.prevent="showPassword = !showPassword"
-                />
-              </div>
-            </div>
-            <div class="input-container">
-              <div class="password-input">
-                <input
-                  v-model="confirmPassword"
-                  :type="showConfirmPassword ? 'text' : 'password'"
-                  placeholder="Confirm password"
-                />
-                <img
-                  :src="showConfirmPassword ? showIcon : hide"
-                  @click.prevent="showConfirmPassword = !showConfirmPassword"
-                />
-              </div>
-            </div>
-            <p v-if="error !== ''">{{ error }}</p>
-          </form>
-        </div>
+        <verify-wallet-info-form
+          v-if="step === 4"
+          :error="error"
+          :loading="loading"
+          :generate-wallet="generateWallet"
+          :generate-wallet-validation="generateWalletValidation"
+          :network="network"
+          :wallet="wallet"
+          :converted-balance="convertedBalance"
+          :balance="balance"
+          @walletName="updateWalletName"
+          @password="updatePassword"
+          @confirmPassword="updateConfirmPassword"
+        />
         <div v-if="step >= 2" class="add-wallet-button-container">
           <standard-button
             :button-disabled="!importWalletValidation"
             :options="{
-              title: $t('common.continue'),
+              title: step < 4 ? $t('common.continue') : $t('mewcx.add'),
               buttonStyle: 'green',
               noMinWidth: true,
-              fullWidth: true
+              fullWidth: true,
+              spinner: loading
             }"
             :click-function="clickFunction"
           />
@@ -380,6 +256,8 @@
 <script>
 import MewcxModalWrapper from '../../wrappers/MewcxModalWrapper';
 import AccessWalletButton from '../AccessWalletButton';
+import AddWalletStepHeader from '../AddWalletStepHeader';
+import GenerateWalletForm from '../GenerateWalletForm';
 import hide from '@/assets/images/icons/hide-password.svg';
 import showIcon from '@/assets/images/icons/show-password.svg';
 import { Toast, ExtensionHelpers, Misc } from '@/helpers';
@@ -443,7 +321,9 @@ export default {
     'mewcx-modal-wrapper': MewcxModalWrapper,
     'access-wallet-button': AccessWalletButton,
     'wallet-option': WalletOption,
-    blockie: Blockie
+    blockie: Blockie,
+    'add-wallet-step-header': AddWalletStepHeader,
+    'generate-wallet-form': GenerateWalletForm
   },
   props: {
     usd: {
@@ -590,6 +470,8 @@ export default {
       this.walletName = '';
       this.password = '';
       this.confirmPassword = '';
+      this.hide = hide;
+      this.showIcon = showIcon;
       this.showPassword = false;
       this.showConfirmPassword = false;
       this.loading = false;
@@ -605,9 +487,24 @@ export default {
       this.extraWord = '';
       this.mnemonicStep = 'enterPhrase';
       this.selectedAddress = '';
+      this.selectedAddressPath = '';
+      this.selectedPath = '';
+      this.supportedPaths = [];
+      this.showPaths = false;
+      this.accounts = [];
+      this.currentIndex = 0;
     });
   },
   methods: {
+    updateWalletName(e) {
+      this.walletName = e;
+    },
+    updatePassword(e) {
+      this.password = e;
+    },
+    updateConfirmPassword(e) {
+      this.confirmPassword = e;
+    },
     generateWalletReset() {
       this.walletName = '';
       this.password = '';
@@ -654,6 +551,7 @@ export default {
       this.confirmPassword = '';
       this.showPassword = false;
       this.showConfirmPassword = false;
+      this.importWalletMethodReset();
     },
     selectAddress(item) {
       this.selectedAddress =

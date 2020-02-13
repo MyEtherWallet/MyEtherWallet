@@ -1,0 +1,39 @@
+@import '~@/scss/GlobalVariables';
+@import '~@/layouts/ExtensionBrowserAction/wrappers/MewcxModalWrapper/MewcxModalInputs';
+.wallet-verification-container {
+  display: flex;
+  padding: 20px;
+  background-color: $light-green-1;
+  border-radius: 5px;
+  word-break: break-all;
+
+  .wallet-information {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0 10px;
+  }
+
+  .balance-container {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 20px;
+
+    .total-text {
+      color: $light-blue-3;
+      font-weight: bold;
+      word-wrap: break-word;
+    }
+
+    .total-balance {
+      color: $dark-blue-2;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .eth-balance {
+      color: $light-blue-3;
+      font-weight: lighter;
+    }
+  }
+}
