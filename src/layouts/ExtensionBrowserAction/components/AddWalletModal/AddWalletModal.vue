@@ -4,17 +4,27 @@
       <template v-if="step !== 0" v-slot:modalTopButton>
         <div class="back-button" @click="back">
           <img src="@/assets/images/icons/back.svg" />
-          <span>Back</span>
+          <span>{{ $t('mewcx.back') }}</span>
         </div>
       </template>
       <template v-if="step >= 2" v-slot:modalMiddleButton>
         <add-wallet-step-header :step="step" />
       </template>
       <template v-slot:modalContentTitle>
-        {{ titles[step].title }}
+        {{ $t(titles[step].title) }}
       </template>
-      <template v-if="titles[step].subtext" v-slot:modalContentSubtext>
-        {{ titles[step].subtext }}
+      <template v-if="$t(titles[step].subtext)" v-slot:modalContentSubtext>
+        <i18n :path="titles[step].subtext" tag="p">
+          <template v-slot:additionalSubtext>
+            <span v-if="selected === 'byPriv'">{{ $t('mewcx.for-priv') }}</span>
+            <span v-if="selected === 'byJson'">{{
+              $t('mewcx.for-keystore')
+            }}</span>
+            <span v-if="selected === 'byMnem'">{{
+              $t('mewcx.for-mnemonic')
+            }}</span>
+          </template>
+        </i18n>
       </template>
       <div class="modal-contents">
         <access-wallet-button
@@ -52,12 +62,12 @@
         </div>
         <div v-if="step === 3" class="unlock-wallet-container">
           <div v-if="selected === 'byJson'" class="input-container">
-            <label for="walletPassword"> Password </label>
+            <label for="walletPassword"> {{ $t('mewcx.password') }} </label>
             <div class="password-input">
               <input
                 v-model="password"
                 :type="showPassword ? 'text' : 'password'"
-                placeholder="Password"
+                :placeholder="$t('mewcx.password')"
                 name="walletPassword"
               />
               <img
@@ -67,14 +77,14 @@
             </div>
           </div>
           <div v-if="selected === 'byPriv'" class="input-container">
-            <label for="walletPassword"> Private Key </label>
+            <label for="walletPassword">{{ $t('mewcx.private-key') }} </label>
             <textarea v-model="privKey" />
           </div>
           <div v-if="selected === 'byMnem'" class="mnemonic-inputs-container">
             <div v-show="mnemonicStep === 'enterPhrase'">
               <div class="mnemonic-inputs-header">
                 <h3>
-                  Enter Mnemonic Phrase
+                  {{ $t('mewcx.enter-mnemonic-phrase') }}
                 </h3>
                 <div class="mnemonic-count-container">
                   <p>Value</p>
@@ -115,7 +125,7 @@
               <div class="mnemonic-extra-word-container">
                 <div class="title-button-container">
                   <div class="title-popover">
-                    <h3>Extra Word</h3>
+                    <h3>{{ $t('mewcx.extra-word') }}</h3>
                     <img
                       v-b-popover.hover.top="'I am popover directive content!'"
                       src="@/assets/images/icons/exclamation-grey.svg"
@@ -158,7 +168,7 @@
             <div v-show="mnemonicStep === 'chooseAddress'">
               <div class="mnemonic-path-dropdown">
                 <h3>
-                  Choose HD Derivation Path
+                  {{ $t('mewcx.choose-hd-path') }}
                 </h3>
                 <b-dropdown
                   ref="mnemonicPathDropdown"
@@ -189,7 +199,7 @@
               </div>
               <div class="mnemonic-address-container">
                 <h3>
-                  Addresses
+                  {{ $t('mewcx.addresses') }}
                 </h3>
                 <div>
                   <div
@@ -220,7 +230,7 @@
                 class="load-more-container"
                 @click="updatePath(selectedPath)"
               >
-                Load More
+                {{ $t('mewcx.load-more') }}
               </div>
             </div>
           </div>
@@ -283,24 +293,24 @@ import { MnemonicWallet } from '@/wallets';
 
 const TITLES = {
   0: {
-    title: 'Add My Wallet',
-    subtext: 'How would you like to add a new wallet?'
+    title: 'mewcx.import-wallet.add-wallet-section.title',
+    subtext: 'mewcx.import-wallet.add-wallet-section.subtext'
   },
   1: {
-    title: 'Generate a New Wallet',
+    title: 'mewcx.import-wallet.generate-wallet.title',
     subtext: false
   },
   2: {
-    title: 'Step 1. Choose a method',
-    subtext: 'Please choose a method to import your existing wallet'
+    title: 'mewcx.import-wallet.step-1.title',
+    subtext: 'mewcx.import-wallet.step-1.subtext'
   },
   3: {
-    title: 'Step 2. Unlock My Wallet',
-    subtext: 'Please enter the <specific to wallet>'
+    title: 'mewcx.import-wallet.step-2.title',
+    subtext: 'mewcx.import-wallet.step-2.subtext'
   },
   4: {
-    title: 'Step 3. Confirm to Add',
-    subtext: 'Please name your wallet, and create a password for it.'
+    title: 'mewcx.import-wallet.step-3.title',
+    subtext: 'mewcx.import-wallet.step-3.subtext'
   }
 };
 

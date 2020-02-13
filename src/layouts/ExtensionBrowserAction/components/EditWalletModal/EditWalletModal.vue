@@ -1,7 +1,7 @@
 <template>
   <mewcx-modal-wrapper ref="editWalletModal">
     <template v-slot:modalContentTitle>
-      Rename Wallet
+      {{ $t('mewcx.rename-wallet') }}
     </template>
     <div class="modal-contents">
       <form>

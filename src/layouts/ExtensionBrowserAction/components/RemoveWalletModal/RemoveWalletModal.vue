@@ -7,12 +7,14 @@
       <div class="warning-text-container">
         <div v-show="walletType === 'wallet'">
           <div class="input-container">
-            <label for="walletPassword"> Wallet Password </label>
+            <label for="walletPassword">
+              {{ $t('mewcx.wallet-password') }}
+            </label>
             <div class="password-input">
               <input
                 v-model="locPassword"
                 :type="show ? 'text' : 'password'"
-                placeholder="Wallet password"
+                :placeholder="$t('mewcx.wallet-password')"
                 name="walletPassword"
               />
               <img
@@ -30,18 +32,24 @@
             :class="[locPassword !== '' ? '' : 'disabled', 'remove']"
             @click="removeWallet"
           >
-            Confirm Remove
+            {{ $t('mewcx.confirm-remove') }}
           </div>
           <div class="remove-wallet-warning">
             <div class="warning-image">
               <img src="@/assets/images/icons/exclamation.svg" />
             </div>
-            <div class="warning-text">
-              Enter your wallet password to remove it. Please make sure you have
-              save the <span>Private Key</span>, <span>Mnemonic Phrase</span>,
-              or <span>Keystore File</span> and <span>Password</span> before you
-              remove your wallet.
-            </div>
+            <i18n
+              path="mewcx.remove-wallet-verification"
+              tag="div"
+              class="warning-text"
+            >
+              <span slot="privKey"> {{ $t('mewcx.private-key') }}</span>
+              <span slot="mnemPhrase"> {{ $t('mewcx.mnemonic-phraase') }}</span>
+              <span slot="keystoreFile">
+                {{ $t('mewcx.keystore-file-text') }}</span
+              >
+              <span slot="password"> {{ $t('mewcx.password') }}</span>
+            </i18n>
           </div>
         </div>
       </div>

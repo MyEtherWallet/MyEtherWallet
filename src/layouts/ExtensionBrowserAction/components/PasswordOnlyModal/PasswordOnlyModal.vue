@@ -4,12 +4,16 @@
       {{ title }}
     </template>
     <template v-slot:modalContentSubtext>
-      Please enter the password of your wallet to {{ title }}
+      <i18n path="mewcx.please-enter-pw" tag="p" class="main-title">
+        <span slot="walletNickname"> {{ title }} </span></i18n
+      >
     </template>
     <div class="password-modal-container">
       <form>
         <div class="input-container">
-          <label for="walletPassword"> Wallet Password </label>
+          <label for="walletPassword">
+            {{ $t('mewcx.wallet-password') }}
+          </label>
           <div class="password-input">
             <input
               v-model="locPassword"

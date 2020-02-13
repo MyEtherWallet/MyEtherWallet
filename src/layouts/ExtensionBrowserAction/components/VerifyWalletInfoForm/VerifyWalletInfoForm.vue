@@ -13,7 +13,7 @@
           {{ wallet.getAddressString() }}
         </p>
         <div class="balance-container">
-          <p class="total-text">Total Wallet Value</p>
+          <p class="total-text">{{ $t('mewcx.total-wallet-value') }}</p>
           <p>
             <span class="total-balance">{{ convertedBalance }}</span>
             <br />
@@ -34,12 +34,14 @@
         />
       </div>
       <div class="input-container">
-        <label for="walletPassword"> Create Wallet Password </label>
+        <label for="walletPassword">
+          {{ $t('mewcx.create-wallet-password') }}
+        </label>
         <div class="password-input">
           <input
             v-model="locPassword"
             :type="showPassword ? 'text' : 'password'"
-            placeholder="Password"
+            :placeholder="$t('mewcx.password')"
             name="walletPassword"
           />
           <img
@@ -53,7 +55,7 @@
           <input
             v-model="locConfirmPassword"
             :type="showConfirmPassword ? 'text' : 'password'"
-            placeholder="Confirm password"
+            :placeholder="$t('mewcx.confirm-password')"
           />
           <img
             :src="showConfirmPassword ? showIcon : hide"
