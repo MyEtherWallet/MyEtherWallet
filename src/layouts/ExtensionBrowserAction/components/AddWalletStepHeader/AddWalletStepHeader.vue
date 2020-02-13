@@ -8,7 +8,7 @@
       ]"
     >
       <div class="step-one" />
-      <p>STEP 1. Choose a method</p>
+      <p>{{ $t('mewcx.import-wallet.step-1.title') }}</p>
     </div>
     <div
       :class="[
@@ -18,7 +18,7 @@
       ]"
     >
       <div class="step-two" />
-      <p>STEP 2. Unlock my wallet</p>
+      <p>{{ $t('mewcx.import-wallet.step-2.title') }}</p>
     </div>
     <div
       :class="[
@@ -29,7 +29,7 @@
     >
       <div class="step-three" />
       <div class="floating-border" />
-      <p>STEP 3. Confirm to add</p>
+      <p>{{ $t('mewcx.import-wallet.step-3.title') }}</p>
     </div>
   </div>
 </template>

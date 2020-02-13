@@ -2,7 +2,7 @@
   <div>
     <mewcx-modal-wrapper ref="viewWalletModal" direction="up">
       <template v-slot:modalContentTitle>
-        View Wallet Detail
+        {{ $t('mewcx.view-wallet-detail') }}
       </template>
       <template v-slot:modalCloserButton>
         <div></div>
