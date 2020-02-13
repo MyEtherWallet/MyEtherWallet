@@ -1,7 +1,6 @@
 import Aave from './Aave';
 import HomeContainer from './containers/HomeContainer';
 import ActionContainer from './containers/ActionContainer';
-// const Aave = () => import('./Aave');
 
 export default {
   path: 'dapps/aave',

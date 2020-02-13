@@ -75,10 +75,10 @@ const dapps = {
   aave: {
     route: '/interface/dapps/aave',
     icon: aave,
-    // iconDisabled: ambrpayDisabled,
+    // iconDisabled: aaveDisabled,
     title: 'dappsAave.title',
     desc: 'dappsAave.popover',
-    supportedNetworks: [ETH.name, ROP.name]
+    supportedNetworks: [ETH.name]
     // lastUpdated: '11/05/2019',
     // releaseDate: '11/05/2019'
   }
