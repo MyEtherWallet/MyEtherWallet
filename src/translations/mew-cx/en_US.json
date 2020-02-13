@@ -131,5 +131,5 @@
   "for-mnemonic": "your mnemonic phrase by the right number",
   "total-wallet-value": "Total Wallet Value",
   "view-wallet-detail": "View Wallet Detail",
-  "remove-wallet-verification": "Enter your wallet password to remove it. Please make sure you have save the {privKey}, {mnemPhrase}, or {keystoreFile} and {password} before you remove your wallet.",
+  "remove-wallet-verification": "Enter your wallet password to remove it. Please make sure you have save the {privKey}, {mnemPhrase}, or {keystoreFile} and {password} before you remove your wallet."
 }
