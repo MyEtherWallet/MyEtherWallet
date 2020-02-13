@@ -66,10 +66,6 @@
                 '%'
             "
           ></div>
-          <!-- <div
-            class="composition-full-bar"
-            :style="{ background: compositionStyle }"
-          ></div> -->
         </div>
       </div>
     </div>
@@ -123,16 +119,6 @@ export default {
       }
     };
   },
-  mounted() {
-    console.error('this', this.composition);
-  },
-  // watch: {
-  //   composition() {
-  //     if (this.title === this.balanceTitles.aggregatedBal) {
-
-  //     }
-  //   }
-  // },
   methods: {
     convertToFixed(val, type) {
       if (type === 'percentageLeft') {
@@ -144,18 +130,6 @@ export default {
       }
       return new BigNumber(val).toFixed(2).toString();
     }
-    // getCompositionStyles() {
-    //   this.compositionStyle = 'linear-gradient(to right,';
-
-    //   this.composition.forEach((comp, idx) => {
-    //     this.compositionStyle += ' ' + comp.color + ' ' + comp.percentage + '%';
-    //     if (idx !== this.composition.length - 1) {
-    //       this.compositionStyle += ',';
-    //     }
-    //   });
-
-    //   this.compositionStyle += ')';
-    // }
   }
 };
 </script>

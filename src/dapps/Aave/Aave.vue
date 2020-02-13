@@ -6,6 +6,7 @@
       @reserveData="updateReserveData"
       @userReserveData="updateUserReserveData"
       @usdPriceEth="updateUsdPriceEth"
+      @liquidityRateHistory="updateLiquidityRateHistory"
     />
     <div class="header-container">
       <div v-if="$route.fullPath === '/interface/dapps/aave/action'">
@@ -68,11 +69,13 @@
 <script>
 import ApolloClient from './ApolloClient.vue';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { Toast } from '@/helpers';
-import { formatUserSummaryData, formatReserves } from '@aave/protocol-js';
-// import LendingPoolAbi from './abi/LendingPoolAbi.js';
-// import LendingPoolAddressesProviderAbi from './abi/LendingPoolAddressesProviderAbi.js';
+import {
+  formatUserSummaryData,
+  formatReserves,
+  normalize
+} from '@aave/protocol-js';
 import moment from 'moment';
 import BigNumber from 'bignumber.js';
 import {
@@ -101,7 +104,6 @@ export default {
     return {
       activeDepositTab: true,
       activeBorrowTab: false,
-      // lendingPoolContract: {},
       loadingHome: true,
       loadingReserves: true,
       reservesData: [],
@@ -111,7 +113,8 @@ export default {
       userReserveData: [],
       token: {},
       usdPriceEth: '',
-      userSummary: {}
+      userSummary: {},
+      rateHistory: { labels: [], stableRates: [], variableRates: [] }
     };
   },
   computed: {
@@ -129,7 +132,10 @@ export default {
   },
   watch: {
     '$route.params.token'(newVal) {
-      this.token = newVal;
+      if (newVal) {
+        this.$refs.apolloClient.getLiquidityRateHistoryUpdate(newVal.id);
+        this.token = newVal;
+      }
     },
     '$route.params.actionType'(newVal) {
       this.actionType = newVal;
@@ -139,11 +145,34 @@ export default {
     }
   },
   methods: {
+    ...mapActions('aave', ['setRateHistory']),
     convertToFixed(val) {
       if (!val) {
         return 0;
       }
       return new BigNumber(val).toFixed(2).toString();
+    },
+    updateLiquidityRateHistory(data) {
+      this.rateHistory = { labels: [], stableRates: [], variableRates: [] };
+      const rayDecimals = 27;
+      const sortedData = data.sort((a, b) => a.timestamp - b.timestamp);
+
+      sortedData.forEach(item => {
+        const date = moment.unix(item.timestamp).format('MMM Do');
+        // if (this.rateHistory.labels.indexOf(date) < 0) {
+        this.rateHistory.labels.push(date);
+        this.rateHistory.stableRates.push(
+          new BigNumber(normalize(item.stableBorrowRate, rayDecimals))
+            .times(100)
+            .toFixed(2)
+        );
+        this.rateHistory.variableRates.push(
+          new BigNumber(normalize(item.variableBorrowRate, rayDecimals))
+            .times(100)
+            .toFixed(2)
+        );
+      });
+      this.setRateHistory(this.rateHistory);
     },
     updateReserveData(data) {
       this.rawReserveData = data;
@@ -175,6 +204,7 @@ export default {
         this.mergeTheReserves();
         this.loadingHome = false;
       }
+      console.error('userSummary', this.userSummary);
     },
     mergeTheReserves() {
       if (this.userSummary.reservesData.length > 0) {

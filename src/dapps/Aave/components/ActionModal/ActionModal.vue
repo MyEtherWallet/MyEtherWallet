@@ -231,7 +231,6 @@ export default {
       this.search = '';
     },
     reserves(newVal) {
-      console.error('reserves', newVal);
       this.getLocalReserves(newVal);
     },
     search(newVal) {
