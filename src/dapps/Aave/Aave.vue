@@ -203,7 +203,6 @@ export default {
           this.usdPriceEth,
           Number(moment().format('X'))
         );
-        console.error('userSummary', this.userSummary);
         this.mergeTheReserves();
         this.loadingHome = false;
       }
