@@ -231,10 +231,66 @@
             </div>
             <div v-show="mnemonicStep === 'chooseAddress'">
               <div class="mnemonic-path-dropdown">
-                <b-dropdown>
-                  <b-dropdown-item> Some Path </b-dropdown-item>
-                  <b-dropdown-item> Sample </b-dropdown-item>
+                <h3>
+                  Choose HD Derivation Path
+                </h3>
+                <b-dropdown
+                  ref="mnemonicPathDropdown"
+                  no-flip
+                  no-caret
+                  toggle-class="mnemonic-path-dropdown-button"
+                  menu-class="mnemonic-path-dropdown-menu"
+                >
+                  <template v-slot:button-content>
+                    <div class="mnemonic-dropdown-title">
+                      <p>{{ selectedPath }}</p>
+                      <i
+                        :class="[
+                          showPaths ? 'fa-angle-up' : 'fa-angle-down',
+                          'fa fa-lg'
+                        ]"
+                      />
+                    </div>
+                  </template>
+                  <b-dropdown-item
+                    v-for="(path, idx) in supportedPaths"
+                    :key="path.label + idx"
+                    @click="updatePath(path.path)"
+                  >
+                    {{ path.path }} - {{ path.label }}
+                  </b-dropdown-item>
                 </b-dropdown>
+              </div>
+              <div class="mnemonic-address-container">
+                <h3>
+                  Addresses
+                </h3>
+                <div>
+                  <div
+                    v-for="item in accounts"
+                    :key="item.index"
+                    :class="[
+                      selectedAddress ===
+                      item.account.getChecksumAddressString()
+                        ? 'selected'
+                        : '',
+                      'address-item'
+                    ]"
+                    @click="selectAddress(item)"
+                  >
+                    <div class="blockie-container">
+                      <blockie
+                        :address="item.account.getChecksumAddressString()"
+                        width="35px"
+                        height="35px"
+                      />
+                    </div>
+                    <p>{{ item.account.getChecksumAddressString() }}</p>
+                  </div>
+                </div>
+              </div>
+              <div>
+                Load More
               </div>
             </div>
           </div>
@@ -420,7 +476,12 @@ export default {
       extraWord: '',
       mnemonicStep: 'enterPhrase',
       selectedAddress: '',
-      selectedPath: ''
+      selectedAddressPath: '',
+      selectedPath: '',
+      supportedPaths: [],
+      showPaths: false,
+      accounts: [],
+      currentIndex: 0
     };
   },
   computed: {
@@ -467,12 +528,7 @@ export default {
 
               return validLength && hasEmpty === undefined;
             } else if (this.mnemonicStep === 'chooseAddress') {
-              return true;
-              // return (
-              //   this.selectedAddress !== '' &&
-              //   this.password !== '' &&
-              //   this.validMatchingPassword
-              // );
+              return this.selectedAddress !== '';
             }
         }
       }
@@ -497,6 +553,36 @@ export default {
         }
       },
       deep: true
+    },
+    mnemonicStep(newVal) {
+      if (newVal === 'chooseAddres') {
+        this.$refs.mnemonicPathDropdown.$on('show', () => {
+          this.showPaths = true;
+        });
+        this.$refs.mnemonicPathDropdown.$on('hide', () => {
+          this.showPaths = false;
+        });
+      }
+    },
+    step(newVal, oldVal) {
+      console.log(newVal, oldVal);
+      this.loading = false;
+      if (oldVal > newVal) {
+        switch (newVal) {
+          case 1:
+            this.generateWalletReset();
+            break;
+          case 2:
+            // import wallet reset
+            this.selected = '';
+            break;
+          case 3:
+            this.importWalletMethodReset();
+            break;
+          case 4:
+            this.saveWalletReset();
+        }
+      }
     }
   },
   mounted() {
@@ -523,6 +609,83 @@ export default {
     });
   },
   methods: {
+    generateWalletReset() {
+      this.walletName = '';
+      this.password = '';
+      this.confirmPassword = '';
+      this.showPassword = false;
+      this.showConfirmPassword = false;
+      this.loading = false;
+      this.file = '';
+      this.wallet = {};
+      this.balance = 0;
+    },
+    importWalletMethodReset() {
+      const BY_JSON = 'byJson';
+      const BY_MNEM = 'byMnem';
+      const BY_PRIV = 'byPriv';
+      switch (this.selected) {
+        case BY_JSON:
+          this.file = '';
+          this.password = '';
+          break;
+        case BY_MNEM:
+          this.mnemonicValue = 12;
+          this.mnemonicPhraseHolder = {};
+          this.mnemonicPhrase = '';
+          this.showExtraWord = false;
+          this.extraWord = '';
+          this.mnemonicStep = 'enterPhrase';
+          this.selectedAddress = '';
+          this.selectedAddressPath = '';
+          this.selectedPath = '';
+          this.supportedPaths = [];
+          this.showPaths = false;
+          this.accounts = [];
+          this.currentIndex = 0;
+          break;
+        case BY_PRIV:
+          this.privKey = '';
+      }
+    },
+    saveWalletReset() {
+      this.walletName = '';
+      this.balance = 0;
+      this.password = '';
+      this.confirmPassword = '';
+      this.showPassword = false;
+      this.showConfirmPassword = false;
+    },
+    selectAddress(item) {
+      this.selectedAddress =
+        this.selectedAddress === item.account.getChecksumAddressString()
+          ? ''
+          : item.account.getChecksumAddressString();
+      this.selectedAddressPath =
+        this.selectedAddressPath === `${this.selectedPath}/${item.index}`
+          ? ''
+          : `${this.selectedPath}/${item.index}`;
+    },
+    updatePath(path) {
+      if (this.selectedPath !== path) {
+        this.currentIndex = 0;
+      }
+      this.selectedPath = path;
+      this.wallet.init(path).then(() => {
+        this.accounts = [];
+        for (let i = this.currentIndex; i < this.currentIndex + 5; i++) {
+          this.setAccount(i);
+        }
+        this.currentIndex += 5;
+      });
+    },
+    async setAccount(idx) {
+      const account = await this.wallet.getAccount(idx);
+      this.accounts.push({
+        index: idx,
+        account: account
+      });
+    },
     updateMnemonicValue(val) {
       this.mnemonicValue = val;
       this.mnemonicPhraseHolder = {};
@@ -689,7 +852,7 @@ export default {
       this.loading = true;
       const privateKey = await ExtensionHelpers.getPrivFromMnemonicWallet(
         this.wallet.mnemonic,
-        this.wallet.basePath
+        this.selectedAddressPath
       );
 
       this.loading = false;
@@ -713,6 +876,9 @@ export default {
             this.wallet = wallet;
             this.mnemonicPhraseHolder = {};
             this.mnemonicStep = 'chooseAddress';
+            this.selectedPath = wallet.basePath;
+            this.supportedPaths = wallet.supportedPaths;
+            this.updatePath(wallet.basePath);
           })
           .catch(e => {
             this.extraWord = '';
@@ -759,6 +925,53 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+@import '~@/scss/GlobalVariables';
+
+.mnemonic-path-dropdown-button {
+  width: 100%;
+  background-color: $white !important;
+  padding: 20px 35px;
+  border: none;
+
+  &:hover {
+    background-color: $mew-green !important;
+    color: $white !important;
+  }
+
+  .mnemonic-dropdown-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    p,
+    i {
+      color: $dark-blue-2;
+    }
+  }
+}
+
+.mnemonic-path-dropdown-menu {
+  width: 100%;
+}
+
+.mnemonic-path-dropdown {
+  h3 {
+    color: $dark-blue-2;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .dropdown {
+    width: 100%;
+
+    .show {
+      color: $white;
+    }
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 @import 'AddWalletModal.scss';
