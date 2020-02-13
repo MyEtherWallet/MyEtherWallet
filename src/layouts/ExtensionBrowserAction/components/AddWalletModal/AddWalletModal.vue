@@ -573,6 +573,9 @@ export default {
       if (this.selectedPath !== path) {
         this.currentIndex = 0;
         this.accounts = [];
+      } else {
+        this.currentIndex = 0;
+        this.accounts = [];
       }
       this.selectedPath = path;
       this.wallet.init(path).then(() => {
