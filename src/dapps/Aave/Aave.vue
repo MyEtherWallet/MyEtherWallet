@@ -44,7 +44,7 @@
         <span>{{ $t('dappsAave.health-factor') }}</span>
         <i v-show="loadingHome" class="fa fa-spinner fa-spin health-score" />
         <span v-if="!loadingHome" class="health-score">{{
-          convertToFixed(userSummary.healthFactor)
+          convertToFixed(userSummary.healthFactor, 3)
         }}</span>
         <popover
           :popcontent="$t('dappsAmbrpay.ambrpay-popover')"
@@ -146,11 +146,14 @@ export default {
   },
   methods: {
     ...mapActions('aave', ['setRateHistory']),
-    convertToFixed(val) {
+    convertToFixed(val, num) {
       if (!val) {
         return 0;
       }
-      return new BigNumber(val).toFixed(2).toString();
+      if (!num) {
+        num = 2;
+      }
+      return new BigNumber(val).toFixed(num).toString();
     },
     updateLiquidityRateHistory(data) {
       this.rateHistory = { labels: [], stableRates: [], variableRates: [] };
@@ -200,6 +203,7 @@ export default {
           this.usdPriceEth,
           Number(moment().format('X'))
         );
+        console.error('userSummary', this.userSummary);
         this.mergeTheReserves();
         this.loadingHome = false;
       }
