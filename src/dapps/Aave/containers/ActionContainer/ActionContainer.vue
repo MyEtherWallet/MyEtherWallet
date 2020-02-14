@@ -175,7 +175,7 @@ export default {
       },
       actionTitles: {
         deposit: 'Deposit',
-        widthdraw: 'Withdraw',
+        withdraw: 'Withdraw',
         repay: 'Repay',
         borrow: 'Borrow'
       }
@@ -201,8 +201,8 @@ export default {
           this.token.price.priceInEth
         );
       } else if (this.actionTitle === this.actionTitles.repay) {
-        return this.convertToFixed(this.token.user.currentBorrows);
-      } else if (this.actionTitle === this.actionTitles.widthdraw) {
+        return this.token.user.currentBorrows;
+      } else if (this.actionTitle === this.actionTitles.withdraw) {
         return this.token.user.principalATokenBalance;
       }
       return false;

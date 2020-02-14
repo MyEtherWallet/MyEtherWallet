@@ -264,15 +264,35 @@ export default {
           this.borrow(param.data);
           break;
         case 'Withdraw':
+          this.pendingToken = {
+            symbol: param.symbol,
+            amount: param.amount,
+            type: 'deposit'
+          };
           this.withdraw(param.data);
           break;
         case 'Repay':
+          this.pendingToken = {
+            symbol: param.symbol,
+            amount: param.amount,
+            type: 'borrow'
+          };
           this.repay(param.data);
           break;
         case 'Collateral':
+          this.pendingToken = {
+            symbol: param.symbol,
+            amount: param.amount,
+            type: 'deposit'
+          };
           this.switchCollateral(param.data);
           break;
         case 'SwitchRate':
+          this.pendingToken = {
+            symbol: param.symbol,
+            amount: param.amount,
+            type: 'borrow'
+          };
           this.switchRate(param.data);
           break;
       }
@@ -367,18 +387,21 @@ export default {
             );
           })
           .catch(err => {
+            this.pendingToken = {};
             Toast.responseHandler(err, Toast.ERROR);
           });
       } else {
         this.web3.eth
           .sendTransaction(param[0])
           .then(() => {
+            this.pendingToken = {};
             Toast.responseHandler(
               this.$t('sendTx.success.title'),
               Toast.SUCCESS
             );
           })
           .catch(err => {
+            this.pendingToken = {};
             Toast.responseHandler(err, Toast.ERROR);
           });
       }

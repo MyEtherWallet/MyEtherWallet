@@ -34,7 +34,9 @@
             : $t('dappsAave.you-borrowed')
         "
       />
+      <!-- hiding earning display until aave sends us the correct endpoints -->
       <balance-display
+        v-if="!activeDepositTab"
         :percentage-left="percentageLeft"
         :loading-home="loadingHome"
         :composition="compositionCollateral"
