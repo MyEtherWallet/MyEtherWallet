@@ -10,21 +10,71 @@
       <div class="verify-details-container">
         <div class="wallet-info-and-code">
           <div class="blockie-and-address">
-            <div v-if="Object.keys(wallet).length > 0">
+            <div
+              v-if="Object.keys(wallet).length > 0"
+              class="blockie-container"
+            >
               <blockie
-                width="35px"
-                height="35px"
+                width="45px"
+                height="45px"
                 :address="wallet.getAddressString()"
               />
             </div>
             <div class="name-and-address">
-              <p>{{ nickname }}</p>
+              <h3>{{ nickname }}</h3>
               <p>{{ wallet.getAddressString() }}</p>
             </div>
           </div>
-          <div class="qr-code-container"></div>
+          <div class="qr-code-container">
+            <qrcode :value="address" :options="{ size: 100 }" />
+            <p>
+              Wallet QR Code
+            </p>
+          </div>
         </div>
-        <div class="balance-container"></div>
+        <div class="wallet-info-body">
+          <div class="main-wallet-content">
+            <div class="main-wallet-content-container">
+              <div class="wallet-value-with-img">
+                <div class="wallet-img-container">
+                  <img
+                    alt
+                    class="icon"
+                    src="~@/assets/images/icons/wallet-with-background.svg"
+                  />
+                </div>
+                <div class="wallet-value-container">
+                  <p class="wallet-title">Total Wallet Value</p>
+                  <p v-if="network.type.name === 'ETH'" class="dollar-amt">
+                    {{ totalValue }}
+                  </p>
+                </div>
+              </div>
+              <div class="wallet-value-container">
+                <p class="wallet-title">
+                  {{ network.type.currencyName }} Balance
+                </p>
+                <!-- <p class="dollar-amt">
+                  {{
+                    network.type.name === 'ETH'
+                      ? convertedBalance
+                      : fixedEthBalance
+                  }}
+                </p>
+                <p v-if="network.type.name === 'ETH'" class="value">
+                  {{ fixedEthBalance }}
+                </p> -->
+              </div>
+              <div class="wallet-value-container">
+                <p class="wallet-title">Value of Token</p>
+                <!-- <p class="dollar-amt">{{ walletTokensWithBalance.total }}</p>
+                <p class="value">
+                  {{ walletTokensWithBalance.tokensWDollarAmtLength }} tokens
+                </p> -->
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="button-container"></div>
       </div>
     </mewcx-modal-wrapper>
@@ -35,6 +85,7 @@
 import { mapState } from 'vuex';
 import MewcxModalWrapper from '../../wrappers/MewcxModalWrapper';
 import Blockie from '@/components/Blockie';
+import BigNumber from 'bignumber.js';
 import {
   KEYSTORE as keyStoreType,
   MNEMONIC as mnemonicType,
@@ -68,11 +119,12 @@ export default {
   },
   data() {
     return {
-      balance: '0'
+      ethBalance: '0',
+      tokenTotalValue: '0'
     };
   },
   computed: {
-    ...mapState('main', ['web3', 'wallet']),
+    ...mapState('main', ['web3', 'wallet', 'network']),
     address() {
       const hasWallet = Object.keys(this.wallet).length > 0;
       return hasWallet
@@ -83,6 +135,17 @@ export default {
     },
     actualTitle() {
       return ACTUAL_TITLES[this.title];
+    },
+    totalValue() {
+      const totalBalance = new BigNumber(this.usd).times(this.ethBalance);
+      const combinedValue = new BigNumber(this.tokenTotalValue)
+        .plus(totalBalance)
+        .toFixed(2);
+
+      return `$ ${combinedValue}`;
+    },
+    convertedEthValue() {
+      return `$ ${new BigNumber(this.ethBalance).times(this.usd).toFixed(2)}`;
     }
   },
   watch: {
@@ -98,6 +161,9 @@ export default {
           });
       }
     }
+  },
+  methods: {
+    getTokenDollarValue() {}
   }
 };
 </script>
