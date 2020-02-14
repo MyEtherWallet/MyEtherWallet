@@ -1,7 +1,14 @@
+### Release v5.3.2-hotfix.1
+
+### Hotfix
+
+- Resolver domains ens url [#1974](https://github.com/MyEtherWallet/MyEtherWallet/pull/1974)
+
+
 ### Release v5.3.2
 
 ### Feature
-- Update icons [#1961] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1961)
+- Update icons [#1961](https://github.com/MyEtherWallet/MyEtherWallet/pull/1961)
 
 ### Devop
 
