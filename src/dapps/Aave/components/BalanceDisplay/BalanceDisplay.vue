@@ -119,6 +119,15 @@ export default {
       }
     };
   },
+  watch: {
+    composition(newVal) {
+      newVal.forEach((item, idx)=> {
+        if (item.percentage < 1) {
+          newVal.splice(idx, 1);
+        }
+      });
+    }
+  },
   methods: {
     convertToFixed(val, type) {
       if (type === 'percentageLeft') {
