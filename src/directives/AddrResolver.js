@@ -7,7 +7,7 @@ import { EthereumTokens } from '@/partners';
 import MAValidator from 'multicoin-address-validator';
 import getMultiCoinAddress from '@/helpers/ENSMultiCoin.js';
 import ethMew from '@/networks/nodes/eth-mew';
-console.log(ethMew);
+
 const AddrResolver = {
   bind: function(el, binding, vnode) {
     let network = vnode.context.$store.state.main.network;
