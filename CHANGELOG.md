@@ -1,5 +1,6 @@
 ### Feature
-- Aave [#1728] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1728)
+
+- Aave [#1728](https://github.com/MyEtherWallet/MyEtherWallet/pull/1728)
 
 ### Release v5.3.2
 
