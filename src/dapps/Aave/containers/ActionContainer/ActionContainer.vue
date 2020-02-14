@@ -110,6 +110,7 @@
       :action-title="actionTitle"
       :amount="amount"
       :token="token"
+      :user-summary="userSummary"
       @emitTakeAction="emitTakeAction"
     />
     <confirmation-modal

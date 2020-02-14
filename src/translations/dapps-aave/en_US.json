@@ -46,7 +46,7 @@
   "variable-rate": "Variable rate",
   "historical-rate": "Historical Rates",
   "select-rate": "Select your interest rate",
-  "select-rate-info": "Select the type of rate for your loan. Please click on the desired rate type and read the info box for more information.",
+  "select-rate-info": "Here you can select a rate type for your loan. Variable rates change over time, while stable rates remain the same. Please choose your desired rate type. ",
   "continue": "Continue",
   "confirmation": "Confirmation",
   "amount-to": "Amount to {action}",
@@ -72,5 +72,9 @@
   "transfer-currencies": "You will need to transfer this currency to your wallet to be able to deposit",
   "no-liquidity": "This currency is not available for you to borrow.",
   "stable-rate-no-avail": "Stable rate is not enabled for this currency",
-  "left": "Left"
+  "left": "Left",
+  "ltv-popover": "This percentage represents the maximum borrowing power of your deposited collateral. For example, if ETH has a Loan to Value rate of 75%, you can deposit 1 ETH and borrow 0.75 ETH worth of your desired loan.",
+  "health-factor-popover": "The current 'health' of your deposited collateral against the amount you're borrowing. The less you borrow, the higher your health factor. Health factors of 1 or less put your collateral at risk of being liquidated.",
+  "next-health-factor-popover": "The new 'health' of your deposited collateral against the amount you're borrowing. The more you deposit, the higher your health factor. Health factors of 1 or less put your collateral at risk of being liquidated.",
+  "apr-type-popover": "You can select either a Variable or Stable interest rate. Variable rates will change over time, while stable rates will remain the same."
 }

@@ -32,7 +32,7 @@
             }}
             <popover
               v-if="!activeDepositTab"
-              :popcontent="'CHANGE THIS'"
+              :popcontent="$t('dappsAave.apr-type-popover')"
               class="ml-2"
             />
           </div>
@@ -40,6 +40,46 @@
         <th></th>
       </thead>
       <tbody>
+        <tr v-if="showPendingToken()">
+          <td class="token-name token-header">
+            <img
+              v-if="!getIcon(pendingToken.symbol)"
+              class="token-icon"
+              :src="
+                require(`@/assets/images/currency/coins/AllImages/${pendingToken.symbol.toUpperCase()}.svg`)
+              "
+            />
+            <span
+              v-if="getIcon(pendingToken.symbol)"
+              :class="[
+                'cc',
+                getIcon(pendingToken.symbol),
+                'cc-icon',
+                'currency-symbol',
+                'token-icon'
+              ]"
+            ></span
+            >{{ pendingToken.symbol }}
+          </td>
+          <td>
+            <i
+              v-show="pendingToken"
+              class="fa fa-spinner fa-spin health-score"
+            />
+          </td>
+          <td>
+            <i
+              v-show="pendingToken"
+              class="fa fa-spinner fa-spin health-score"
+            />
+          </td>
+          <td>
+            <i
+              v-show="pendingToken"
+              class="fa fa-spinner fa-spin health-score"
+            />
+          </td>
+        </tr>
         <tr
           v-for="(reserve, index) in ownedReserves"
           :key="reserve.key"
@@ -187,6 +227,12 @@ export default {
     'switch-interest-modal': SwitchInterestModal
   },
   props: {
+    pendingToken: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    },
     reserves: {
       type: Array,
       default: function() {
@@ -229,6 +275,19 @@ export default {
     }
   },
   methods: {
+    showPendingToken() {
+      if (this.pendingToken === {}) {
+        return false;
+      }
+      if (this.activeDepositTab && this.pendingToken.type === 'deposit') {
+        return true;
+      } else if (
+        !this.activeDepositTab &&
+        this.pendingToken.type === 'borrow'
+      ) {
+        return true;
+      }
+    },
     emitTakeAction(param) {
       if (this.collateralModalShown) {
         this.$refs.confirmationModal.$refs.confirmationModal.hide();

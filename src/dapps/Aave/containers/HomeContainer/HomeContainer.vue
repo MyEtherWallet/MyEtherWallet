@@ -49,7 +49,13 @@
       />
     </div>
     <div v-if="activeBorrowTab" class="loan-container">
-      <span class="loan-value">{{ $t('dappsAave.loan-value') }}</span>
+      <span class="loan-value">
+        <popover
+          :popcontent="$t('dappsAave.ltv-popover')"
+          class="dapp-popover"
+        ></popover>
+        {{ $t('dappsAave.loan-value') }}
+      </span>
       <i v-show="loadingHome" class="fa fa-spinner fa-spin" />
       <span v-if="!loadingHome" class="loan-percent"
         >{{ userSummary.currentLiquidationThreshold }}%</span
@@ -60,6 +66,7 @@
       :user-reserves="userSummary.reservesData"
       :health-factor="userSummary.healthFactor"
       :active-deposit-tab="activeDepositTab"
+      :pending-token="pendingToken"
       @emitTakeAction="emitTakeAction"
     />
     <action-modal
@@ -78,14 +85,22 @@ import SummaryTable from '@/dapps/Aave/components/SummaryTable';
 import BalanceDisplay from '@/dapps/Aave/components/BalanceDisplay';
 import ActionModal from '@/dapps/Aave/components/ActionModal';
 import BigNumber from 'bignumber.js';
+import PopOver from '@/components/PopOver';
 
 export default {
   components: {
+    popover: PopOver,
     'balance-display': BalanceDisplay,
     'action-modal': ActionModal,
     'summary-table': SummaryTable
   },
   props: {
+    pendingToken: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    },
     reservesStable: {
       type: Array,
       default: function() {

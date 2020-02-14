@@ -102,9 +102,15 @@
   width: 100%;
 
   .loan-value {
+    align-items: center;
+    display: flex;
     font-size: 16px;
     font-weight: 600;
     color: $light-grey-18;
+
+    .popover-container {
+      margin-right: 5px;
+    }
   }
 
   .loan-percent {

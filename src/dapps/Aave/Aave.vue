@@ -47,7 +47,7 @@
           convertToFixed(userSummary.healthFactor, 3)
         }}</span>
         <popover
-          :popcontent="$t('dappsAmbrpay.ambrpay-popover')"
+          :popcontent="$t('dappsAave.health-factor-popover')"
           class="dapp-popover"
         ></popover>
       </div>
@@ -61,6 +61,7 @@
       :reserves-stable="reservesStable"
       :health-factor="userSummary.healthFactor"
       :user-summary="userSummary"
+      :pending-token="pendingToken"
       @emitTakeAction="emitTakeAction"
     />
   </div>
@@ -114,7 +115,8 @@ export default {
       token: {},
       usdPriceEth: '',
       userSummary: {},
-      rateHistory: { labels: [], stableRates: [], variableRates: [] }
+      rateHistory: { labels: [], stableRates: [], variableRates: [] },
+      pendingToken: {}
     };
   },
   computed: {
@@ -243,11 +245,22 @@ export default {
     },
     emitTakeAction(param) {
       param.data.userAddress = this.account.address;
+
       switch (param.type) {
         case 'Deposit':
+          this.pendingToken = {
+            symbol: param.symbol,
+            amount: param.data.amount,
+            type: 'deposit'
+          };
           this.deposit(param.data);
           break;
         case 'Borrow':
+          this.pendingToken = {
+            symbol: param.symbol,
+            amount: param.amount,
+            type: 'borrow'
+          };
           this.borrow(param.data);
           break;
         case 'Withdraw':
@@ -347,6 +360,7 @@ export default {
         this.web3.mew
           .sendBatchTransactions(param)
           .then(() => {
+            this.pendingToken = {};
             Toast.responseHandler(
               this.$t('sendTx.success.title'),
               Toast.SUCCESS

@@ -53,11 +53,17 @@
               <p v-if="isCollateralModal">{{ $t('dappsAave.currency') }}</p>
               <p class="mt-4">
                 {{ $t('dappsAave.current-health') }}
-                <popover class="ml-1" popcontent="CHANGE THIS" />
+                <popover
+                  class="ml-1"
+                  :popcontent="$t('dappsAave.health-factor-popover')"
+                />
               </p>
               <p class="mt-4">
                 {{ $t('dappsAave.next-health') }}
-                <popover class="ml-1" popcontent="CHANGE THIS" />
+                <popover
+                  class="ml-1"
+                  :popcontent="$t('dappsAave.next-health-factor-popover')"
+                />
               </p>
             </div>
             <div class="right-container">
@@ -272,6 +278,7 @@ export default {
     },
     takeAction() {
       const param = {
+        symbol: this.token.symbol,
         type: this.isCollateralModal ? 'Collateral' : this.actionTitle,
         data: {}
       };

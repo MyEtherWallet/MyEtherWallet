@@ -42,7 +42,10 @@
       <div class="footer-header">
         <p class="title">{{ $t('dappsAave.historical-rate') }}</p>
       </div>
-      <p v-if="rateHistory && rateHistory.labels.length === 0" class="info">
+      <p
+        v-if="rateHistory.labels && rateHistory.labels.length === 0"
+        class="info"
+      >
         {{ $t('dappsAave.no-data') }}
       </p>
       <historical-graph class="mt-3 mr-4" :rate-history="rateHistory" />

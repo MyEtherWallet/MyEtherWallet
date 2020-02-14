@@ -47,7 +47,9 @@
       ref="confirmationModal"
       :active-deposit-tab="false"
       :amount="amount"
+      :user-summary="userSummary"
       :token="token"
+      :action-title="$t('dappsAave.borrow')"
       :apr="
         selectStable
           ? convertToFixed(token.stableBorrowRate * 100)
@@ -68,6 +70,12 @@ export default {
     'confirmation-modal': ConfirmationModal
   },
   props: {
+    userSummary: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    },
     token: {
       type: Object,
       default: () => {
