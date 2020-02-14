@@ -18,7 +18,12 @@ const AddrResolver = {
     const resolution = new Resolution({
       blockchain: {
         ens: {
-          url: ethMew.url
+          url: ethMew.url,
+          network: 'mainnet'
+        },
+        cns: {
+          url: ethMew.url,
+          network: 'mainnet'
         }
       }
     });
