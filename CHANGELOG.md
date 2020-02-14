@@ -1,3 +1,7 @@
+### Bug
+
+- Some bug fixes [#1978] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1978)
+
 ### Release v5.3.2
 
 ### Feature
