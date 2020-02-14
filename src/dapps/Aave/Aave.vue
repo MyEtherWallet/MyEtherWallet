@@ -245,54 +245,35 @@ export default {
     },
     emitTakeAction(param) {
       param.data.userAddress = this.account.address;
+      this.pendingToken = {
+        symbol: param.symbol,
+        amount: param.data.amount
+      };
 
       switch (param.type) {
         case 'Deposit':
-          this.pendingToken = {
-            symbol: param.symbol,
-            amount: param.data.amount,
-            type: 'deposit'
-          };
+          this.pendingToken.type = 'deposit';
           this.deposit(param.data);
           break;
         case 'Borrow':
-          this.pendingToken = {
-            symbol: param.symbol,
-            amount: param.amount,
-            type: 'borrow'
-          };
+          this.pendingToken.type = 'borrow';
+
           this.borrow(param.data);
           break;
         case 'Withdraw':
-          this.pendingToken = {
-            symbol: param.symbol,
-            amount: param.amount,
-            type: 'deposit'
-          };
+          this.pendingToken.type = 'deposit';
           this.withdraw(param.data);
           break;
         case 'Repay':
-          this.pendingToken = {
-            symbol: param.symbol,
-            amount: param.amount,
-            type: 'borrow'
-          };
+          this.pendingToken.type = 'borrow';
           this.repay(param.data);
           break;
         case 'Collateral':
-          this.pendingToken = {
-            symbol: param.symbol,
-            amount: param.amount,
-            type: 'deposit'
-          };
+          this.pendingToken.type = 'deposit';
           this.switchCollateral(param.data);
           break;
         case 'SwitchRate':
-          this.pendingToken = {
-            symbol: param.symbol,
-            amount: param.amount,
-            type: 'borrow'
-          };
+          this.pendingToken.type = 'borrow';
           this.switchRate(param.data);
           break;
       }

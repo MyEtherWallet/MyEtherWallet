@@ -28,9 +28,7 @@
             <img
               v-if="token.symbol && !getIcon(token.symbol)"
               class="large-token-icon"
-              :src="
-                require(`@/assets/images/currency/coins/AllImages/${token.symbol.toUpperCase()}.svg`)
-              "
+              :src="iconFetcher(token.symbol)"
             />
             <span
               v-if="token.symbol && getIcon(token.symbol)"
@@ -71,9 +69,7 @@
                 <img
                   v-if="token.symbol && !getIcon(token.symbol)"
                   class="token-icon-col"
-                  :src="
-                    require(`@/assets/images/currency/coins/AllImages/${token.symbol.toUpperCase()}.svg`)
-                  "
+                  :src="iconFetcher(token.symbol)"
                 />
                 <span
                   v-if="token && getIcon(token.symbol)"
@@ -88,19 +84,24 @@
                 ><span v-if="token">{{ token.name }}</span>
               </p>
               <p class="mt-4 health-factor">
-                {{
-                  convertToFixed(userSummary.healthFactor) ||
-                    convertToFixed(healthFactor)
-                }}
+                {{ convertToFixed(currentHealthFactor) }}
               </p>
               <p class="mt-4">
                 <i
-                  v-if="isNextHealthDecrease()"
+                  v-if="
+                    isNextHealthDecrease() &&
+                      convertToFixed(currentHealthFactor) !==
+                        calculateNextHealthFactor()
+                  "
                   class="arrow fa fa-arrow-down"
                   aria-hidden="true"
                 ></i
                 ><i
-                  v-if="!isNextHealthDecrease()"
+                  v-if="
+                    !isNextHealthDecrease() &&
+                      convertToFixed(currentHealthFactor) !==
+                        calculateNextHealthFactor()
+                  "
                   class="arrow fa fa-arrow-up"
                   aria-hidden="true"
                 ></i>
@@ -206,7 +207,10 @@ export default {
         withdraw: 'Withdraw',
         repay: 'Repay',
         borrow: 'Borrow'
-      }
+      },
+      currentHealthFactor: this.userSummary.healthFactor
+        ? this.userSummary.healthFactor
+        : this.healthFactor
     };
   },
   computed: {
@@ -218,12 +222,21 @@ export default {
     }
   },
   methods: {
+    iconFetcher(currency) {
+      let icon;
+      try {
+        // eslint-disable-next-line
+        icon = require(`@/assets/images/currency/coins/AllImages/${currency.toUpperCase()}.svg`);
+      } catch (e) {
+        // eslint-disable-next-line
+        return require(`@/assets/images/icons/web-solution.svg`);
+      }
+      return icon;
+    },
     isNextHealthDecrease() {
-      const currentHealthFactor =
-        this.userSummary.healthFactor || this.healthFactor;
       if (
         new BigNumber(this.calculateNextHealthFactor()).lt(
-          new BigNumber(currentHealthFactor)
+          new BigNumber(this.currentHealthFactor)
         )
       ) {
         return true;
@@ -234,12 +247,12 @@ export default {
       return new BigNumber(amount).times(this.token.price.priceInEth);
     },
     calculateNextHealthFactor() {
-      let nextHealthFactor = '',
+      let nextHealthFactor = this.convertToFixed(this.currentHealthFactor),
         collateralBalanceETH = this.userSummary.totalCollateralETH,
         totalBorrowsETH = this.userSummary.totalBorrowsETH;
 
-      if (this.token.price) {
-        const ethBalance = this.getEthBalance(this.amount);
+      if (this.token.price && this.amount) {
+        const ethBalance = this.convertToFixed(this.getEthBalance(this.amount));
         if (this.actionTitle === this.actionTitles.deposit) {
           collateralBalanceETH = new BigNumber(
             this.userSummary.totalCollateralETH
@@ -261,6 +274,7 @@ export default {
           this.userSummary.currentLiquidationThreshold
         ).toFixed(3);
       }
+
       return nextHealthFactor;
     },
     convertToFixed(val) {

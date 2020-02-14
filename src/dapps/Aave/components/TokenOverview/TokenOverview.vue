@@ -7,9 +7,7 @@
       <img
         v-if="token.symbol !== undefined && !getIcon(token.symbol)"
         class="token-icon"
-        :src="
-          require(`@/assets/images/currency/coins/AllImages/${token.symbol.toUpperCase()}.svg`)
-        "
+        :src="iconFetcher(token.symbol)"
       />
       <span
         v-if="token && getIcon(token.symbol)"
@@ -69,6 +67,17 @@ export default {
     ...mapState('aave', ['token', 'rateHistory'])
   },
   methods: {
+    iconFetcher(currency) {
+      let icon;
+      try {
+        // eslint-disable-next-line
+        icon = require(`@/assets/images/currency/coins/AllImages/${currency.toUpperCase()}.svg`);
+      } catch (e) {
+        // eslint-disable-next-line
+        return require(`@/assets/images/icons/web-solution.svg`);
+      }
+      return icon;
+    },
     getIcon(currency) {
       return hasIcon(currency);
     },
