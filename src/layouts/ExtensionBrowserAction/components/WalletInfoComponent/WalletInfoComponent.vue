@@ -515,7 +515,7 @@ export default {
           .then(() => {
             _self.loading = false;
             _self.password = '';
-            _self.$refs.viewWallet.$refs.viewWalletModal.$refs.modalWrapper.show();
+            _self.openViewWallet();
           });
       };
       worker.onerror = e => {
