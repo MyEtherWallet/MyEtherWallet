@@ -77,9 +77,7 @@
             <img
               v-if="!getIcon(token.symbol)"
               class="token-icon"
-              :src="
-                require(`@/assets/images/currency/coins/AllImages/${token.symbol.toUpperCase()}.svg`)
-              "
+              :src="iconFetcher(token.symbol)"
             />
             <span
               v-if="getIcon(token.symbol)"
@@ -126,8 +124,20 @@ export default {
     }
   },
   methods: {
+    iconFetcher(currency) {
+      let icon;
+      try {
+        // eslint-disable-next-line
+        icon = require(`@/assets/images/currency/coins/AllImages/${currency.toUpperCase()}.svg`);
+      } catch (e) {
+        // eslint-disable-next-line
+        return require(`@/assets/images/icons/web-solution.svg`);
+      }
+      return icon;
+    },
     confirmSwitch() {
       this.$emit('emitTakeAction', {
+        symbol: this.token.symbol,
         type: 'SwitchRate',
         data: { reserve: this.token.id }
       });

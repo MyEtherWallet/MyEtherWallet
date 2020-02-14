@@ -45,9 +45,7 @@
             <img
               v-if="!getIcon(pendingToken.symbol)"
               class="token-icon"
-              :src="
-                require(`@/assets/images/currency/coins/AllImages/${pendingToken.symbol.toUpperCase()}.svg`)
-              "
+              :src="iconFetcher(pendingToken.symbol)"
             />
             <span
               v-if="getIcon(pendingToken.symbol)"
@@ -87,11 +85,9 @@
         >
           <td class="token-name token-header">
             <img
-              v-if="!getIcon(reserve.reserve.symbol)"
+              v-if="reserve.reserve.symbol && !getIcon(reserve.reserve.symbol)"
               class="token-icon"
-              :src="
-                require(`@/assets/images/currency/coins/AllImages/${reserve.reserve.symbol.toUpperCase()}.svg`)
-              "
+              :src="iconFetcher(reserve.reserve.symbol)"
             />
             <span
               v-if="getIcon(reserve.reserve.symbol)"
@@ -275,6 +271,17 @@ export default {
     }
   },
   methods: {
+    iconFetcher(currency) {
+      let icon;
+      try {
+        // eslint-disable-next-line
+        icon = require(`@/assets/images/currency/coins/AllImages/${currency.toUpperCase()}.svg`);
+      } catch (e) {
+        // eslint-disable-next-line
+        return require(`@/assets/images/icons/web-solution.svg`);
+      }
+      return icon;
+    },
     showPendingToken() {
       if (this.pendingToken === {}) {
         return false;
