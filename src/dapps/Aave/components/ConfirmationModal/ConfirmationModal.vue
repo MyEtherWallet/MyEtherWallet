@@ -210,7 +210,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['online'])
+    ...mapState('main', ['online', 'account'])
   },
   mounted() {
     if (this.online) {
@@ -243,19 +243,15 @@ export default {
         if (this.actionTitle === this.actionTitles.deposit) {
           collateralBalanceETH = new BigNumber(
             this.userSummary.totalCollateralETH
-          )
-            .plus(ethBalance)
-            .toFixed(4);
+          ).plus(ethBalance);
         } else if (this.actionTitle === this.actionTitles.withdraw) {
           collateralBalanceETH = new BigNumber(
             this.userSummary.totalCollateralETH
-          )
-            .minus(ethBalance)
-            .toFixed(4);
+          ).minus(ethBalance);
         } else if (this.actionTitle === this.actionTitles.repay) {
-          totalBorrowsETH = new BigNumber(this.userSummary.totalBorrowsETH)
-            .minus(ethBalance)
-            .toFixed(4);
+          totalBorrowsETH = new BigNumber(
+            this.userSummary.totalBorrowsETH
+          ).minus(ethBalance);
         }
 
         nextHealthFactor = calculateHealthFactorFromBalancesBigUnits(
@@ -263,7 +259,7 @@ export default {
           totalBorrowsETH,
           this.userSummary.totalFeesETH,
           this.userSummary.currentLiquidationThreshold
-        ).toFixed(2);
+        ).toFixed(3);
       }
       return nextHealthFactor;
     },
@@ -276,6 +272,35 @@ export default {
     getIcon(currency) {
       return hasIcon(currency);
     },
+    checkForAmount() {
+      if (
+        this.actionTitle === this.actionTitles.withdraw &&
+        this.token.user.principalATokenBalance === this.amount
+      ) {
+        return -1;
+      } else if (
+        this.actionTitle === this.actionTitles.repay &&
+        this.amount === this.token.user.currentBorrows
+      ) {
+        const amount = new BigNumber(this.amount).plus(
+          new BigNumber(this.amount).times(0.005)
+        );
+        return amount > this.account.balance ? amount : this.amount;
+      } else if (
+        this.actionTitle === this.actionTitles.borrow &&
+        this.maxBorrowAmt() === this.amount &&
+        this.userSummary.totalBorrowsETH > 0
+      ) {
+        const margin = new BigNumber(this.amount).times(0.001);
+        return new BigNumber(this.amount).minus(margin);
+      }
+      return this.amount;
+    },
+    maxBorrowAmt() {
+      return new BigNumber(this.userSummary.availableBorrowsETH).div(
+        this.token.price.priceInEth
+      );
+    },
     takeAction() {
       const param = {
         symbol: this.token.symbol,
@@ -285,7 +310,7 @@ export default {
       if (this.isCollateralModal) {
         param.data.usageAsCollateral = !this.token.usageAsCollateralEnabled;
       } else {
-        param.data.amount = this.amount;
+        param.data.amount = this.checkForAmount();
       }
 
       if (this.actionTitle === this.actionTitles.withdraw) {
