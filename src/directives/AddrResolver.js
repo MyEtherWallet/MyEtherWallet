@@ -6,7 +6,8 @@ import utils from 'web3-utils';
 import { EthereumTokens } from '@/partners';
 import MAValidator from 'multicoin-address-validator';
 import getMultiCoinAddress from '@/helpers/ENSMultiCoin.js';
-
+import ethMew from '@/networks/nodes/eth-mew';
+console.log(ethMew);
 const AddrResolver = {
   bind: function(el, binding, vnode) {
     let network = vnode.context.$store.state.main.network;
@@ -14,7 +15,13 @@ const AddrResolver = {
       ? vnode.context.$parent.currency
       : network.type.name;
     let address = '';
-    const resolution = new Resolution({ ens: { network: network } });
+    const resolution = new Resolution({
+      blockchain: {
+        ens: {
+          url: ethMew.url
+        }
+      }
+    });
     vnode.context.$parent.$watch('$store.state.main.network', function(e) {
       network = e;
       parentCurrency = e.type.name;
