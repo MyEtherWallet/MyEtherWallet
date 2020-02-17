@@ -14,20 +14,34 @@
           <div class="text-color--mew-green">24.842 ETH</div>
         </div>
       </div>
-      <div class="ml-auto">b</div>
+      <div class="ml-auto">
+        <ButtonGroup>
+          <ul>
+            <li>1D</li>
+            <li>1W</li>
+            <li>1M</li>
+            <li>1Y</li>
+            <li>All</li>
+          </ul>
+        </ButtonGroup>
+      </div>
     </div>
 
     <ChartBalance :data="chartData" />
 
     <div class="d-flex align-center px-5 py-3">
       <div class="px-6"></div>
-      <div class="font-weight-bold">
-        ETH PRICE
-        <span class="ml-2 font-weight-regular text-color--mew-green"
-          >3.12%</span
+      <div class="d-flex align-center">
+        <div class="font-weight-bold">ETH PRICE</div>
+        <div class="ml-2 font-weight-regular text-color--mew-green">
+          3.12%
+        </div>
+        <v-icon class="text-color--mew-green body-2">mdi-arrow-up-bold</v-icon>
+        <v-icon v-if="false" class="text-color--mew-green body-2"
+          >mdi-arrow-down-bold</v-icon
         >
       </div>
-      <div class="ml-5">$321.55 / 1ETH</div>
+      <div class="ml-5">$321.55 / 1 ETH</div>
       <StdButton size="x-large" class="ml-auto">Send Transaction</StdButton>
     </div>
   </WhiteSheet>
@@ -35,11 +49,12 @@
 
 <script>
 import WhiteSheet from '@/components/Common/WhiteSheet';
+import ButtonGroup from '@/components/Buttons/ButtonGroup1';
 import StdButton from '@/components/StdButton';
 import ChartBalance from '@/components/Charts/Balance';
 
 export default {
-  components: { WhiteSheet, ChartBalance, StdButton },
+  components: { WhiteSheet, ButtonGroup, ChartBalance, StdButton },
   data() {
     return {
       chartData: [
