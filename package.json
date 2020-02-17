@@ -68,7 +68,7 @@
     "@makerdao/currency": "0.9.7",
     "@makerdao/dai": "0.24.0",
     "@makerdao/dai-plugin-config": "0.2.14-rc.1",
-    "@makerdao/dai-plugin-mcd": "1.0.6",
+    "@makerdao/dai-plugin-mcd": "1.1.1",
     "@makerdao/dai-plugin-migrations": "1.0.12",
     "@myetherwallet/eth-token-balance": "0.1.6",
     "@myetherwallet/mewconnect-web-client": "2.0.0-beta.23",
