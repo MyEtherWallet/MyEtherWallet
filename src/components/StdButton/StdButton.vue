@@ -1,6 +1,9 @@
 <template>
   <v-btn
-    x-large
+    :x-large="size === 'x-large' ? true : false"
+    :large="size === 'large' ? true : false"
+    :small="size === 'small' ? true : false"
+    :x-small="size === 'x-small' ? true : false"
     dark
     depressed
     class="std-button"
@@ -20,7 +23,8 @@ export default {
     to: { default: () => {}, type: Object },
     href: { default: '', type: String },
     disabled: { default: false, type: Boolean },
-    minwidth: { default: true, type: Boolean }
+    minwidth: { default: true, type: Boolean },
+    size: { default: 'x-large', type: String }
   },
   data: () => ({})
 };
@@ -34,7 +38,6 @@ export default {
 }
 
 .std-button {
-  height: 56px !important;
   text-transform: none;
   letter-spacing: 0px;
   font-size: 14px !important;
