@@ -48,48 +48,14 @@
     background-color: $white;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
-    padding: 10px 30px 30px;
-
-    .low-eth-warning {
-      align-items: center;
-      display: flex;
-      justify-content: space-between;
-
-      .warning-container {
-        align-items: center;
-        background-color: $light-orange-3;
-        border-radius: 5px;
-        display: flex;
-        justify-content: space-between;
-        padding: 10px;
-        width: 100%;
-
-        img {
-          cursor: pointer;
-        }
-
-        .actual-warning {
-          color: $dark-blue-2;
-        }
-      }
-      .link-container {
-        min-width: 95px;
-        padding-left: 10px;
-
-        a {
-          border: 1px solid $mew-green;
-          border-radius: 5px;
-          padding: 15px 10px;
-        }
-      }
-    }
+    padding: 10px 30px;
 
     .main-wallet-content {
       display: flex;
       justify-content: space-between;
-      height: 65px;
+      height: 150px;
       align-items: center;
-      padding-top: 20px;
+      padding: 20px 15px;
 
       .view-all-container {
         align-items: center;
@@ -155,59 +121,47 @@
       }
     }
 
-    .wallet-tokens {
-      max-height: 200px;
-      overflow: auto;
-      margin-top: 30px;
+    .button-container {
+      border-top: 1px solid #dbdbdb;
+      padding: 20px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
 
-      table {
-        width: 100%;
-      }
-
-      .name-container {
+      .img-and-title-container {
         align-items: center;
         display: flex;
 
-        .token-icon {
-          border-radius: 50%;
-          margin-right: 15px;
+        img {
+          margin-right: 30px;
+        }
 
-          img {
-            height: 50px;
-            width: 50px;
-          }
-
-          svg {
-            height: 50px;
-            width: 50px;
-          }
+        p {
+          color: $dark-blue-2;
         }
       }
 
-      .table-header {
-        background-color: $light-grey-2;
-
-        th {
-          color: $light-blue-2 !important;
-          text-align: center;
-          padding: 5px 15px;
-        }
+      .func-container {
+        color: $mew-green;
+        font-weight: bold;
+        cursor: pointer;
       }
-
-      .table-body {
-        td {
-          height: 60px;
-          text-align: center;
-        }
-      }
-    }
-
-    .green {
-      color: $mew-green;
-    }
-
-    .red {
-      color: $red-7;
     }
   }
 }
+
+.exit-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+
+  .exit-button {
+    border: 1px solid $red-5;
+    border-radius: 5px;
+    color: $red-5;
+    cursor: pointer;
+    padding: 20px 30px;
+  }
+}
+
