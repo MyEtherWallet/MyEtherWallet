@@ -8,7 +8,7 @@
 
 <script>
 import WhiteSheet from '@/components/Common/WhiteSheet';
-import Highcharts from 'highcharts';
+//import Highcharts from 'highcharts';
 import { Chart } from 'highcharts-vue';
 
 const d2 = [
@@ -63,7 +63,7 @@ export default {
         },
         chart: {
           zoomType: 'x',
-          height: '300px'
+          height: '200px'
         },
         title: {
           text: ''
@@ -89,17 +89,12 @@ export default {
                 y2: 1
               },
               stops: [
-                [0, Highcharts.getOptions().colors[0]],
-                [
-                  1,
-                  Highcharts.Color(Highcharts.getOptions().colors[0])
-                    .setOpacity(0)
-                    .get('rgba')
-                ]
+                [0, '#05c0a56b'],
+                [1, '#05c0a500']
               ]
             },
             marker: {
-              radius: 2
+              radius: 0
             },
             lineWidth: 1,
             states: {
@@ -115,7 +110,8 @@ export default {
           {
             type: 'area',
             name: 'Balance',
-            data: d2
+            data: d2,
+            color: '#05c0a5'
           }
         ]
       }
