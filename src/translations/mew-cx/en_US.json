@@ -10,7 +10,6 @@
   "confirm-password": "Confirm Password",
   "add-wallet": "Add Wallet",
   "keystore-file": "Keystore File (UTC/JSON)",
-  "keystore-file-text": "Keystore File (UTC/JSON)",
   "your-wallet-file": "Your Wallet File",
   "upload-file": "Upload File",
   "enter-pw": "Enter your password",
@@ -54,9 +53,11 @@
   "how-would-you-add-wallet": "How would you like to add your wallet?",
   "dapps": "Dapps",
   "powered-by": "Powered by",
+  "paper-wallet": "Paper Wallet",
   "view-more": "View More",
   "via-contract": "Via contract",
   "my-wallets": "My Wallets",
+  "transaction-history": "Transaction History",
   "add-more": "Add More",
   "extra-word": "Extra Word",
   "enter-extra-word": "Enter extra word",
@@ -77,6 +78,10 @@
   "change": "Change",
   "amount-to-send": "Amount To Send",
   "done": "Done",
+  "download": "Download",
+  "view": "View",
+  "view-tx-history": "View On Etherscan",
+  "print": "Print",
   "confirm-send": "Confirm & Send",
   "confirm-remove": "Confirm Remove",
   "your-tx-hash": "Your TxHash",
@@ -134,5 +139,6 @@
   "for-mnemonic": "your mnemonic phrase by the right number",
   "total-wallet-value": "Total Wallet Value",
   "view-wallet-detail": "View Wallet Detail",
-  "remove-wallet-verification": "Enter your wallet password to remove it. Please make sure you have save the {privKey}, {mnemPhrase}, or {keystoreFile} and {password} before you remove your wallet."
+  "remove-wallet-verification": "Enter your wallet password to remove it. Please make sure you have save the {privKey}, {mnemPhrase}, or {keystoreFile} and {password} before you remove your wallet.",
+  "lock-wallet": "Lock Wallet & Exit"
 }

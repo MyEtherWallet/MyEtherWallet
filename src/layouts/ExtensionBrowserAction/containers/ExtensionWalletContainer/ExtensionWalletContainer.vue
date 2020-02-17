@@ -39,12 +39,9 @@
           <div class="add-and-wallet-count">
             <p>
               {{
-                $tc(
-                  'mewcx.wallet-count',
-                  showMyWallets === 0
-                    ? myWallets.length
-                    : watchOnlyAddresses.length
-                )
+                $tc('mewcx.wallet-count', pickTranslations, {
+                  total: showLength
+                })
               }}
             </p>
             <div
@@ -81,6 +78,7 @@
                 </div>
                 <div v-for="wallet in searchResult" :key="wallet.address">
                   <wallet-info-component
+                    :prices="tokenPrices"
                     :usd="ethPrice"
                     :address="wallet.address"
                     :balance="wallet.balance"
@@ -118,6 +116,7 @@
               >
                 <div v-for="wallet in searchResult" :key="wallet.address">
                   <wallet-info-component
+                    :prices="tokenPrices"
                     :usd="ethPrice"
                     :address="wallet.address"
                     :balance="wallet.balance"
@@ -202,6 +201,17 @@ export default {
   },
   computed: {
     ...mapState('main', ['web3', 'network']),
+    showLength() {
+      return this.showMyWallets === 0
+        ? this.myWallets.length
+        : this.watchOnlyAddresses.length;
+    },
+    pickTranslations() {
+      if (this.showMyWallets === 0) {
+        return this.myWallets.length > 1 ? 2 : 1;
+      }
+      return this.watchOnlyAddresses.length > 1 ? 2 : 1;
+    },
     hasAccounts() {
       return this.wallets.length > 0;
     },
@@ -271,13 +281,13 @@ export default {
     }
   },
   methods: {
-    async processAccounts(accs) {
+    processAccounts(accs) {
       this.totalBalance = '0';
       this.loading = true;
       let balance = new BigNumber(this.totalBalance);
       const watchOnlyAddresses = [];
       const myWallets = [];
-      for await (const account of accs) {
+      for (const account of accs) {
         if (account !== undefined) {
           const address = toChecksumAddress(account.address).toLowerCase();
           delete account['address'];
@@ -285,9 +295,14 @@ export default {
           account['type'] = parsedItemWallet.type;
           account['address'] = address;
           account['nickname'] = parsedItemWallet.nick;
-          account['tokenBalance'] = await this.setToken(address);
-          account['balance'] = await this.getBalance(address);
-          balance = balance.plus(account['balance']);
+          this.setToken(address).then(res => {
+            account['tokenBalance'] = res;
+          });
+          this.getBalance(address).then(res => {
+            account['balance'] = res;
+            balance = balance.plus(res);
+            this.totalBalance = balance.toString();
+          });
           if (parsedItemWallet.type !== 'wallet') {
             watchOnlyAddresses.push(account);
           } else {
@@ -296,7 +311,6 @@ export default {
         }
       }
 
-      this.totalBalance = balance.toString();
       this.watchOnlyAddresses = watchOnlyAddresses;
       this.myWallets = myWallets;
       if (this.myWallets.length === 0 && this.watchOnlyAddresses.length > 0) {
@@ -304,39 +318,41 @@ export default {
       }
       this.loading = false;
     },
-    async setToken(address) {
-      let tokens = [];
+    setToken(address) {
+      const tokens = [];
       const tb = new TokenBalance(this.web3.currentProvider);
       const newLogo = {
         // eslint-disable-next-line
           src: require(`@/assets/images/networks/eth-logo.svg`)
       };
-      try {
-        tokens = await tb.getBalance(address);
-        tokens = tokens.map(token => {
-          const balance = token.balance;
-          delete token.balance;
-          token.balance = new BigNumber(balance).gt(0)
-            ? new BigNumber(balance)
-                .div(new BigNumber(10).pow(token.decimals))
-                .toFixed(3)
-            : 0;
-          token.address = token.addr;
-          token['logo'] = newLogo;
-          delete token.addr;
-          return token;
+      return tb
+        .getBalance(address)
+        .then(res => {
+          res.forEach(token => {
+            const balance = token.balance;
+            delete token.balance;
+            token.balance = new BigNumber(balance).gt(0)
+              ? new BigNumber(balance)
+                  .div(new BigNumber(10).pow(token.decimals))
+                  .toFixed(3)
+              : 0;
+            token.address = token.addr;
+            token['logo'] = newLogo;
+            delete token.addr;
+            tokens.push(token);
+          });
+          this.loading = false;
+          return tokens.sort(sortByBalance);
+        })
+        .catch(() => {
+          this.network.type.tokens.map(token => {
+            token.balance = 'Load';
+            token['logo'] = newLogo;
+            tokens.push(token);
+          });
+          this.loading = false;
+          return tokens;
         });
-        this.loading = false;
-        return tokens.sort(sortByBalance);
-      } catch (e) {
-        tokens = this.network.type.tokens.map(token => {
-          token.balance = 'Load';
-          token['logo'] = newLogo;
-          return token;
-        });
-        this.loading = false;
-        return tokens;
-      }
     },
     async getBalance(addr) {
       const balance = await this.web3.eth.getBalance(addr);

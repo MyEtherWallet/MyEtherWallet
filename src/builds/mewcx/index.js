@@ -2,7 +2,6 @@ import app from './app';
 import ExtensionBrowserAction from '@/layouts/ExtensionBrowserAction';
 import ExtensionWalletContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionWalletContainer';
 import ExtensionFavoritesContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionFavoritesContainer';
-import ViewWalletInfoLayout from '@/layouts/ViewWalletInfoLayout';
 import ExtensionDappsContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionDappsContainer';
 import ExtensionDappsItemContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionDappsItemContainer';
 import ExtensionDappContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionDappContainer';
@@ -40,11 +39,6 @@ const cxRoutes = [
         ]
       }
     ]
-  },
-  {
-    path: '/view-wallet-info',
-    name: 'ViewWalletInfoLayout',
-    component: ViewWalletInfoLayout
   }
 ];
 const configRoutes = routes => {

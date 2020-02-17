@@ -279,10 +279,12 @@
       @password="e => (password = e)"
     />
     <verify-details-modal
-      ref="viewWallet"
+      ref="verifyWalletModal"
       :wallet="wallet"
       :usd="usd"
       :nickname="nickname"
+      :wallet-tokens-with-balance="walletTokensWithBalance"
+      :file="file"
     />
   </div>
 </template>
@@ -405,14 +407,16 @@ export default {
     },
     walletTokensWithBalance() {
       const tokensWithBalance = this.walletToken.filter(item => {
-        return item.balance !== 'Load' && item.balance > 0;
+        return item.balance !== 'Load' && new BigNumber(item.balance).gt(0);
       });
-      let totalTokenAmt = 0;
+      let totalTokenAmt = new BigNumber(0);
       const tokensWithDollarAmt = [];
       tokensWithBalance.forEach(item => {
         if (this.prices[item.symbol]) {
-          totalTokenAmt +=
-            this.prices[item.symbol].quotes.USD.price * item.balance;
+          const convertedBalancePrice = new BigNumber(
+            this.prices[item.symbol].quotes.USD.price
+          ).times(item.balance);
+          totalTokenAmt = totalTokenAmt.plus(convertedBalancePrice);
           tokensWithDollarAmt.push({
             tokenMew: item,
             tokenData: this.prices[item.symbol]
@@ -428,7 +432,7 @@ export default {
         length: tokensWithBalance.length,
         tokensWDollarAmt: tokensWithDollarAmt,
         tokensWDollarAmtLength: tokensWithDollarAmt.length,
-        total: this.toDollar(new BigNumber(totalTokenAmt).toNumber()),
+        total: this.toDollar(totalTokenAmt.toNumber()),
         totalWalletBalance: this.toDollar(totalWalletBalance)
       };
     }
@@ -485,42 +489,37 @@ export default {
       }
     },
     viewWallet() {
-      const _self = this;
-      _self.loading = true;
+      this.loading = true;
       const nickname =
-        _self.nickname !== null && _self.nickname.length > 0
-          ? _self.nickname
-          : '';
+        this.nickname !== null && this.nickname.length > 0 ? this.nickname : '';
       const worker = new walletWorker();
       worker.postMessage({
         type: 'unlockWallet',
-        data: [_self.file, _self.password]
+        data: [this.file, this.password]
       });
       worker.onmessage = e => {
         const obj = {
-          file: _self.file,
+          file: this.file,
           name: e.data.filename
         };
 
-        _self
-          .decryptWallet([
-            new WalletInterface(
-              Buffer.from(e.data._privKey),
-              false,
-              keyStoreType,
-              nickname,
-              JSON.stringify(obj)
-            )
-          ])
-          .then(() => {
-            _self.loading = false;
-            _self.password = '';
-            _self.openViewWallet();
-          });
+        this.decryptWallet([
+          new WalletInterface(
+            Buffer.from(e.data._privKey),
+            false,
+            keyStoreType,
+            nickname,
+            JSON.stringify(obj)
+          )
+        ]).then(() => {
+          this.loading = false;
+          this.password = '';
+          this.openViewWallet();
+        });
       };
       worker.onerror = e => {
         e.preventDefault();
-        _self.loading = false;
+        this.loading = false;
         Toast.responseHandler(e, Toast.ERROR);
       };
     },
@@ -567,7 +566,8 @@ export default {
       };
     },
     openViewWallet() {
-      this.$refs.viewWallet.$refs.viewWalletModal.$refs.modalWrapper.show();
+      this.$refs.verifyWalletModal.$refs.viewWalletModal.$refs.modalWrapper.show();
+      this.$refs.passwordOnlyModal.$refs.passwordOnlyModal.$refs.modalWrapper.hide();
     },
     addToFavorites(address, nickname) {
       const dateAdded = new Date();
@@ -646,39 +646,6 @@ export default {
     toDollar: Misc.toDollar,
     edit() {
       this.$refs.editModal.$refs.editWalletModal.$refs.modalWrapper.show();
-    },
-    async fetchTokenBalance(token) {
-      const contractAbi = [
-        {
-          name: 'balanceOf',
-          type: 'function',
-          constant: true,
-          inputs: [{ name: 'address', type: 'address' }],
-          outputs: [{ name: 'out', type: 'uint256' }]
-        }
-      ];
-      const contract = new this.web3.eth.Contract(contractAbi);
-      const data = contract.methods.balanceOf(this.address).encodeABI();
-      const balance = await this.web3.eth
-        .call({
-          to: token.address,
-          data: data
-        })
-        .then(res => {
-          let tokenBalance;
-          if (Number(res) === 0 || res === '0x') {
-            tokenBalance = 0;
-          } else {
-            const denominator = new BigNumber(10).pow(token.decimals);
-            tokenBalance = new BigNumber(res).div(denominator).toString();
-          }
-          return tokenBalance;
-        })
-        .catch(e => {
-          Toast.responseHandler(e, false);
-        });
-
-      return balance;
     },
     openRemoveWallet() {
       this.$refs.removeWalletModal.$refs.removeWalletModal.$refs.modalWrapper.show();

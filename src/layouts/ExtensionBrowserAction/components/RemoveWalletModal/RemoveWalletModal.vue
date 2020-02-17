@@ -45,9 +45,7 @@
             >
               <span slot="privKey"> {{ $t('mewcx.private-key') }}</span>
               <span slot="mnemPhrase"> {{ $t('mewcx.mnemonic-phraase') }}</span>
-              <span slot="keystoreFile">
-                {{ $t('mewcx.keystore-file-text') }}</span
-              >
+              <span slot="keystoreFile"> {{ $t('mewcx.keystore-file') }}</span>
               <span slot="password"> {{ $t('mewcx.password') }}</span>
             </i18n>
           </div>
