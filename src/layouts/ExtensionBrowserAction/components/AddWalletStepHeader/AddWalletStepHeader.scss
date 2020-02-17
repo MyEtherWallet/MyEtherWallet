@@ -31,24 +31,24 @@
 }
 
 %active-class {
-  &:before {
+  &::before {
     background-color: $dark-blue-2;
     border: none;
   }
 
-  &:after {
+  &::after {
     background-color: $dark-blue-2;
     border: none;
   }
 }
 
 %passed-class {
-  &:before {
+  &::before {
     background-color: $light-blue-2;
     border: none;
   }
 
-  &:after {
+  &::after {
     background-color: $light-blue-2;
     border: none;
   }
@@ -158,11 +158,11 @@
     position: relative;
     transform: rotate(-90deg);
 
-    &:before {
+    &::before {
       @extend %before-class;
     }
 
-    &:after {
+    &::after {
       @extend %after-class;
     }
   }
@@ -170,8 +170,8 @@
   .step-one {
     border-top: 1px solid $light-grey-14;
     border-radius: 5px;
-    &:before,
-    &:after {
+    &::before,
+    &::after {
       border-top: none;
     }
   }
@@ -179,19 +179,19 @@
   .step-three {
     border: none;
 
-    &:before,
-    &:after {
+    &::before,
+    &::after {
       border: none;
     }
 
-    &:before {
+    &::before {
       border-top: 1px solid $light-grey-14;
       border-top-left-radius: 5px;
       border-left: 1px solid #cecece;
       border-bottom-left-radius: 6px;
     }
 
-    &:after {
+    &::after {
       border-top: 1px solid $light-grey-14;
       border-top-right-radius: 5px;
       border-right: 1px solid #cecece;
