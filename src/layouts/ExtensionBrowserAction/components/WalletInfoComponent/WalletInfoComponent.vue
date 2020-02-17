@@ -605,6 +605,7 @@ export default {
         );
       });
       try {
+        // eslint-disable-next-line
         const image = require(`@/assets/images/currency/coins/AllImages/${symbol}.svg`);
         return image;
       } catch (e) {
@@ -619,6 +620,7 @@ export default {
           return foundToken.icon;
         }
         try {
+          // eslint-disable-next-line
           return require(`@/assets/images/networks/${symbol.toLowerCase()}`);
         } catch (e) {
           return this.network.type.icon;
