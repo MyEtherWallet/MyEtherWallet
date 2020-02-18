@@ -35,6 +35,11 @@ export default {
         yAxis: {
           title: {
             text: 'USD $'
+          },
+          labels: {
+            formatter: function() {
+              return '$ ' + this.value;
+            }
           }
         },
         legend: {
@@ -72,7 +77,10 @@ export default {
             type: 'area',
             name: 'Balance',
             data: this.data,
-            color: '#05c0a5'
+            color: '#05c0a5',
+            animation: {
+              duration: 400
+            }
           }
         ]
       }

@@ -83,7 +83,7 @@
     "vue-worker": "1.2.1",
     "vuetify": "2.1.13",
     "vuetify-loader": "1.4.3",
-    "webpack": "4.41.5"
+    "webpack": "4.41.6"
   },
   "engines": {
     "node": ">= 8.0.0",
