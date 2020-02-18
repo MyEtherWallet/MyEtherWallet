@@ -1,5 +1,8 @@
 <template>
-  <div v-if="ownedReserves.length > 0" class="summary-table-container">
+  <div
+    v-if="ownedReserves.length > 0 || showPendingToken()"
+    class="summary-table-container"
+  >
     <table>
       <colgroup>
         <col width="20%" />
@@ -103,18 +106,18 @@
           </td>
           <td v-if="activeDepositTab">
             <span
-              >{{ convertToFixed(reserve.principalATokenBalance) }}
+              >{{ convertToFixed(reserve.principalATokenBalance, 3) }}
               {{ reserve.reserve.symbol }}</span
             >
             <span class="eth-amt"
-              >{{ convertToFixed(reserve.currentUnderlyingBalanceETH) }}
+              >{{ convertToFixed(reserve.currentUnderlyingBalanceETH, 6) }}
               {{ $t('common.currency.eth') }}</span
             >
           </td>
           <td v-if="!activeDepositTab">
             <span>${{ convertToFixed(reserve.currentBorrowsUSD) }}</span>
             <span class="eth-amt"
-              >{{ convertToFixed(reserve.currentBorrowsETH, 4) }}
+              >{{ convertToFixed(reserve.currentBorrowsETH, 6) }}
               {{ $t('common.currency.eth') }}</span
             >
           </td>
