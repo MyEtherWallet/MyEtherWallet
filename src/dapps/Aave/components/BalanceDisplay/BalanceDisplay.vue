@@ -21,7 +21,8 @@
       <span v-if="title !== balanceTitles.earnings && !loadingHome">
         <p class="balance">${{ convertToFixed(balanceUsd) }}</p>
         <p class="eth-balance">
-          {{ convertToFixed(balanceEth) }} {{ $t('common.currency.eth') }}
+          {{ convertToFixed(balanceEth, '', 6) }}
+          {{ $t('common.currency.eth') }}
         </p>
       </span>
       <div v-if="title === balanceTitles.earnings" class="earnings-container">
@@ -130,7 +131,7 @@ export default {
     }
   },
   methods: {
-    convertToFixed(val, type) {
+    convertToFixed(val, type, num) {
       if (type === 'percentageLeft') {
         return '';
       }
@@ -138,7 +139,12 @@ export default {
       if (!val) {
         return 0;
       }
-      return new BigNumber(val).toFixed(2).toString();
+
+      if (!num) {
+        num = 2;
+      }
+
+      return new BigNumber(val).toFixed(num).toString();
     }
   }
 };

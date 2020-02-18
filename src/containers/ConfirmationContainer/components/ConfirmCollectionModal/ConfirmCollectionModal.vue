@@ -117,7 +117,7 @@
               {{ $t('confirmation.waiting-for-hash') }}
               <i class="fa fa-spinner fa-spin" />
             </div>
-            <div class="tooltip-box-2">
+            <!-- <div class="tooltip-box-2">
               <b-btn id="exPopover9">
                 <img
                   alt
@@ -125,13 +125,13 @@
                   src="~@/assets/images/icons/qr-code.svg"
                 />
               </b-btn>
-            </div>
+            </div> -->
           </div>
         </div>
         <p class="learn-more">
           {{ $t('common.have-issues') }}
           <a
-            href="https:/kb.myetherwallet.com"
+            href="https://kb.myetherwallet.com/"
             target="_blank"
             rel="noopener noreferrer"
             >{{ $t('common.learn-more') }}</a

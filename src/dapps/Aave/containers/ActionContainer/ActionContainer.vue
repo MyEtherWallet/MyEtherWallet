@@ -37,7 +37,7 @@
           {{
             activeDepositTab
               ? convertToFixed(token.tokenBalance)
-              : convertToFixed(userSummary.totalCollateralETH)
+              : convertToFixed(userSummary.totalCollateralETH, 6)
           }}
           <span class="token-name">{{
             activeDepositTab ? token.symbol : $t('common.currency.eth')
@@ -244,11 +244,16 @@ export default {
         return reserve.id ? reserve.id === id : reserve.reserve.id === id;
       });
     },
-    convertToFixed(val) {
+    convertToFixed(val, num) {
       if (!val) {
         return 0;
       }
-      return new BigNumber(val).toFixed(2).toString();
+
+      if (!num) {
+        num = 2;
+      }
+
+      return new BigNumber(val).toFixed(num).toString();
     },
     takeAction() {
       this.actionTitle === this.actionTitles.borrow

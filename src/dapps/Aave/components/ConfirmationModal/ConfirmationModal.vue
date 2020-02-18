@@ -281,7 +281,7 @@ export default {
       if (!val) {
         return 0;
       }
-      return new BigNumber(val).toFixed(2).toString();
+      return new BigNumber(val).toFixed(3).toString();
     },
     getIcon(currency) {
       return hasIcon(currency);
