@@ -156,6 +156,7 @@ export default {
       if (!val) {
         return 0;
       }
+
       if (!num) {
         num = 2;
       }
