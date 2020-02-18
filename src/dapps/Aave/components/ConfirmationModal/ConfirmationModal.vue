@@ -299,7 +299,7 @@ export default {
         const amount = new BigNumber(this.amount).plus(
           new BigNumber(this.amount).times(0.005)
         );
-        return amount > this.account.balance ? amount : this.amount;
+        return amount > this.account.balance ? amount : this.account.balance;
       } else if (
         this.actionTitle === this.actionTitles.borrow &&
         this.maxBorrowAmt() === this.amount &&
