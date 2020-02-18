@@ -119,6 +119,8 @@ export default class Changelly {
         resolve({
           fromCurrency,
           toCurrency,
+          minValue: -1,
+          maxValue: -1,
           provider: this.name,
           rate: 0
         });

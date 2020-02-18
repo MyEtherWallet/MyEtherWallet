@@ -65,6 +65,9 @@
             <span class="slippage-text">{{
               otherTextDisplay(provider.additional.display)
             }}</span>
+            <span class="slippage-text">{{
+              provider.additional.source
+            }}</span>
           </div>
         </li>
       </ul>

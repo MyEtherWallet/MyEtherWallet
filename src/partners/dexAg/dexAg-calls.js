@@ -1,4 +1,4 @@
-import { post, get } from '@/helpers/httpRequests';
+import { post } from '@/helpers/httpRequests';
 import { changellyMethods } from './config';
 import { swapApiEndpoints } from '../partnersConfig';
 import { utils } from '../helpers';
@@ -10,8 +10,9 @@ function buildPath() {
 const getCurrencies = async network => {
   try {
     if (changellyMethods[network]) {
-      const results = await get(
-        "https://api-v2.dex.ag/token-list-full",
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(changellyMethods[network].currenciesFull, {})
       );
 
       if (results.error) {

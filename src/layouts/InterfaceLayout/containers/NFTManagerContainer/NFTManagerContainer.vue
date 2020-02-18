@@ -160,7 +160,7 @@ import StandardButton from '@/components/Buttons/StandardButton';
 import placeholderImage from '@/assets/images/icons/defaultToken.png';
 import utils from 'web3-utils';
 
-const URL_BASE = 'https://nft.mewapi.io/nft';
+const URL_BASE = 'https://isxmmipej5.execute-api.us-east-1.amazonaws.com/testing/nft'; //https://nft.mewapi.io/nft';
 
 export default {
   components: {
@@ -279,6 +279,7 @@ export default {
       return 0;
     },
     activeAddress() {
+      // return "0x51e723b14b160b9b420cbf7ccdb889f36213f0f3"
       return this.account.address;
     },
     hasNfts() {
