@@ -24,7 +24,6 @@ import InterfaceContainerFooter from '../../components/InterfaceContainerFooter'
 import DappButtons from '../../components/DappButtons';
 import dapps from '@/dapps';
 import { mapState } from 'vuex';
-
 export default {
   name: 'DappsContainer',
   components: {
