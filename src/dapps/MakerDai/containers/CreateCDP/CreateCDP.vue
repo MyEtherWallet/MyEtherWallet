@@ -197,7 +197,6 @@ import {
   displayFixedPercent,
   toBigNumber
 } from '../../makerHelpers';
-import { Toast } from '@/helpers';
 import BigNumber from 'bignumber.js';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
