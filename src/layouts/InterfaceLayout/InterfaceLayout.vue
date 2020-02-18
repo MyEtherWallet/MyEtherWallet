@@ -568,15 +568,6 @@ export default {
             networkTypes[net].chainID.toString() === `${id}` &&
             this.Networks[net]
           ) {
-            // Assume web3 provider is using infura node when user uses metamask
-            if (window.ethereum.isMetaMask) {
-              const useInfura = this.Networks[net].find(item => {
-                return item.url.includes('infura');
-              });
-
-              this.switchNetwor(useInfura);
-              return true;
-            }
             this.switchNetwork(this.Networks[net][0]);
             return true;
           }
