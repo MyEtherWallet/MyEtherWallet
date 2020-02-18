@@ -1,3 +1,9 @@
+### Release v6.0.0
+
+### Devop
+
+- Update my eth balance component chart [#1987](https://github.com/MyEtherWallet/MyEtherWallet/pull/1987)
+
 ### Release v5.1.8
 
 ### Bug
