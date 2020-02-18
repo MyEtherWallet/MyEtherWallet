@@ -53,24 +53,21 @@
       </div>
 
       <div class="buttons">
-        <div>
+        <div @click="openWalletConnect">
           <img src="@/assets/images/icons/WalletConnect.svg" />
           {{ $t('accessWallet.wallet-connect') }}
         </div>
-        <div>
+        <div @click="openWalletLink">
           <img src="@/assets/images/icons/WalletLink.svg" />
           {{ $t('accessWallet.wallet-link') }}
         </div>
       </div>
-
-      <customer-support v-if="false" />
     </div>
     <!-- .modal-container -->
   </b-modal>
 </template>
 
 <script>
-import CustomerSupport from '@/components/CustomerSupport';
 import { MewConnectWallet } from '@/wallets';
 import { mapState, mapActions } from 'vuex';
 import { Toast } from '@/helpers';
@@ -79,8 +76,17 @@ import IpadModal from '@/components/IpadModal';
 
 export default {
   components: {
-    'customer-support': CustomerSupport,
     'ipad-modal': IpadModal
+  },
+  props: {
+    openWalletConnect: {
+      type: Function,
+      default: () => {}
+    },
+    openWalletLink: {
+      type: Function,
+      default: () => {}
+    }
   },
   data() {
     return {
