@@ -95,7 +95,7 @@ export default {
   },
   methods: {
     convertToFixed(val) {
-      if (!val) {
+      if (!val || val == 0) {
         return '';
       }
       return new BigNumber(val).toFixed(2).toString();

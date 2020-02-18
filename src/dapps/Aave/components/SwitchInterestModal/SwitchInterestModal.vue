@@ -146,7 +146,7 @@ export default {
       return hasIcon(currency);
     },
     convertToFixed(val) {
-      if (!val) {
+      if (!val || val == 0) {
         return 0;
       }
       return new BigNumber(val).toFixed(2).toString();

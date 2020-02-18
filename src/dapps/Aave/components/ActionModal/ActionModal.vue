@@ -334,7 +334,7 @@ export default {
       this.$router.push({ name: 'Action', params: { token: token } });
     },
     convertToFixed(val) {
-      if (!val) {
+      if (!val || val == 0) {
         return 0;
       }
       return new BigNumber(val).toFixed(2).toString();

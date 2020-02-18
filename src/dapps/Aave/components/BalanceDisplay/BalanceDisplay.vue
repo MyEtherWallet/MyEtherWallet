@@ -44,7 +44,7 @@
           "
         >
           <span class="percentage"
-            >{{ percentageLeft ? percentageLeft : '' }}%
+            >{{ percentageLeft ? percentageLeft : 100 }}%
           </span>
           <span class="available">{{ $t('dappsAave.available') }}</span>
         </div>
@@ -136,7 +136,7 @@ export default {
         return '';
       }
 
-      if (!val) {
+      if (!val || val == 0) {
         return 0;
       }
 
