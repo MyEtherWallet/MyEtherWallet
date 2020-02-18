@@ -284,7 +284,7 @@ export default {
         return '-';
       }
 
-      if (!val) {
+      if (!val || val === 0) {
         return 0;
       }
       return new BigNumber(val).toFixed(3).toString();

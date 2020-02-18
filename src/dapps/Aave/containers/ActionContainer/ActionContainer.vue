@@ -245,7 +245,7 @@ export default {
       });
     },
     convertToFixed(val, num) {
-      if (!val) {
+      if (!val || val == 0) {
         return 0;
       }
 
