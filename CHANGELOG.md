@@ -1,3 +1,7 @@
+### Bug
+
+- Fix incorrect variable used to check maker setup complete [#1985](https://github.com/MyEtherWallet/MyEtherWallet/pull/1985)
+
 ### Release v5.3.2-hotfix.1
 
 ### Hotfix
