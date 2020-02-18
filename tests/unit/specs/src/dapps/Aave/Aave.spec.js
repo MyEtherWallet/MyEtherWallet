@@ -41,7 +41,11 @@ describe('Aave.vue', () => {
       mocks: {
         $route: mockRoute
       },
-      stubs: ['popover', 'router-view']
+      stubs: [
+        'popover',
+        'router-view',
+        { apolloClient: { getLiquidityRateHistoryUpdate: jest.fn() } }
+      ]
     });
   });
 
@@ -72,6 +76,12 @@ describe('Aave.vue', () => {
 
   it('should display the correct action title', () => {
     expect(wrapper.vm.actionTitle).toEqual('Deposit');
+  });
+
+  it('watches routes param token', async () => {
+    wrapper.setData({ $route: { params: { token: { symbol: 'ETH' } } } });
+    await wrapper.vm.$nextTick();
+    expect(wrapper.vm.$data.token).toBe({ symbol: 'ETH' });
   });
 
   it('watches tokensWithBalance', async () => {
