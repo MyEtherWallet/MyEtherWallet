@@ -252,7 +252,7 @@ export default {
         totalBorrowsETH = this.userSummary.totalBorrowsETH;
 
       if (this.token.price && this.amount) {
-        const ethBalance = this.convertToFixed(this.getEthBalance(this.amount));
+        const ethBalance = this.getEthBalance(this.amount);
         if (this.actionTitle === this.actionTitles.deposit) {
           collateralBalanceETH = new BigNumber(
             this.userSummary.totalCollateralETH
@@ -273,11 +273,17 @@ export default {
           this.userSummary.totalFeesETH,
           this.userSummary.currentLiquidationThreshold
         ).toFixed(3);
+
+        nextHealthFactor = nextHealthFactor < 0 ? '-' : nextHealthFactor;
       }
 
       return nextHealthFactor;
     },
     convertToFixed(val) {
+      if (val < 0) {
+        return '-';
+      }
+
       if (!val) {
         return 0;
       }
