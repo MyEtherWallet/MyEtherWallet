@@ -59,17 +59,16 @@ export default {
           return res.json();
         })
         .catch(e => {
-          // eslint-disable-next-line
-          console.error(e);
+          return 0;
         });
-
-      this.convertedBalance = `$ ${new BigNumber(
-        price.data.ETH.quotes.USD.price
-      )
+      const priceAvailable = price.hasOwnProperty('data')
+        ? price.data.ETH.quotes.USD.price
+        : price;
+      this.convertedBalance = `$ ${new BigNumber(priceAvailable)
         .times(this.totalBalance)
         .toFixed(2)}`;
 
-      this.ethPrice = price.data.ETH.quotes.USD.price;
+      this.ethPrice = priceAvailable;
     },
     getAccountsCb(res) {
       const accounts = Object.keys(res)
