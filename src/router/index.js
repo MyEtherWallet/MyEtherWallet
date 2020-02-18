@@ -3,7 +3,7 @@ import store from '@/store';
 import { getMode, getRoutes } from '@/builds/configs';
 import { ExtensionHelpers } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
-import Misc from '@/helpers/misc';
+import { Misc } from '@/helpers';
 import { MEW_CX } from '@/builds/configs/types';
 import langShortCodes from '@/translations/getShortCodes';
 

@@ -2,9 +2,47 @@
 
 - WalletConnect & WalletLink Support [#1924](https://github.com/MyEtherWallet/MyEtherWallet/pull/1924)
 
+### Release v5.3.2-hotfix.1
+
+### Hotfix
+
+- Resolver domains ens url [#1974](https://github.com/MyEtherWallet/MyEtherWallet/pull/1974)
+
+### Release v5.3.2
+
+### Feature
+
+- Update icons [#1961](https://github.com/MyEtherWallet/MyEtherWallet/pull/1961)
+
 ### Devop
 
-- add support for lang based paths /en /ru [#1915][https://github.com/MyEtherWallet/MyEtherWallet/pull/1915]
+- Update greenkeeper package [#1954](https://github.com/MyEtherWallet/MyEtherWallet/pull/1954)
+- Update team page [#1952](https://github.com/MyEtherWallet/MyEtherWallet/pull/1952)
+- Maintenace due to new ENS registry [#1951](https://github.com/MyEtherWallet/MyEtherWallet/pull/1951)
+
+### Bug
+
+- Link fixes [#1963](https://github.com/MyEtherWallet/MyEtherWallet/pull/1963)
+
+### Release v5.3.1-hotfix.1
+
+### Bug
+
+- Remove excessive web3 calls from cx [#1955](https://github.com/MyEtherWallet/MyEtherWallet/pull/1955)
+
+### Release v5.3.1
+
+### Devop
+
+- add support for lang based paths /en /ru [#1915](https://github.com/MyEtherWallet/MyEtherWallet/pull/1915)
+- Update web3 packages [#1912](https://github.com/MyEtherWallet/MyEtherWallet/pull/1912)
+- Green keeper packages [#1938](https://github.com/MyEtherWallet/MyEtherWallet/pull/1938)
+
+### Release v5.3.0-hotfix.1
+
+### Devop
+
+- Support for new ENS registry [#1923](https://github.com/MyEtherWallet/MyEtherWallet/pull/1923)
 
 ### Release v5.3.0
 
@@ -15,7 +53,7 @@
 ### Devop
 
 - Update packages from Greenkeeper [#1920](https://github.com/MyEtherWallet/MyEtherWallet/pull/1920)
-- Update help to quick help [#1899][https://github.com/MyEtherWallet/MyEtherWallet/pull/1899]
+- Update help to quick help [#1899](https://github.com/MyEtherWallet/MyEtherWallet/pull/1899)
 - Update packages from Greenkeeper [#1896](https://github.com/MyEtherWallet/MyEtherWallet/pull/1896)
 - Modularize store state [#1722](https://github.com/MyEtherWallet/MyEtherWallet/pull/1722)
 
