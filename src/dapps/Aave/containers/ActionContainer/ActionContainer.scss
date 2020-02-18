@@ -90,8 +90,9 @@
   }
 
   .cancel-btn {
-    color: $red-10;
+    background-color: transparent;
     border: none;
+    color: $red-10;
     font-size: 14px;
     font-weight: 500;
     margin-bottom: 20px;

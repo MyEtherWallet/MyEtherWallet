@@ -149,7 +149,7 @@ export default {
   methods: {
     ...mapActions('aave', ['setRateHistory']),
     convertToFixed(val, num) {
-      if (val === -1) {
+      if (val < 0) {
         return '-';
       }
 
@@ -199,7 +199,7 @@ export default {
     getFormatUserSummaryData() {
       if (
         this.reservesData.length > 0 &&
-        this.userReserveData.length > 0 &&
+        this.userReserveData &&
         this.usdPriceEth
       ) {
         this.userSummary = formatUserSummaryData(

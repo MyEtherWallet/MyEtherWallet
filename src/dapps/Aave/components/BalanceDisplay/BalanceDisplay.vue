@@ -47,7 +47,8 @@
           </span>
           <span class="available">{{ $t('dappsAave.available') }}</span>
         </div>
-        <div class="composition-wrap">
+        <div v-if="composition.length === 0" class="composition-bar"></div>
+        <div v-if="composition.length > 0" class="composition-wrap">
           <div
             v-for="(comp, idx) in composition"
             :key="idx"
