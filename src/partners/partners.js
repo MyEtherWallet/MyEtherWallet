@@ -283,6 +283,7 @@ export default class SwapProviders {
 
   calculateToValue(fromValue, bestRate, currency) {
     const decimals = this.decimalForCalculation(currency);
+    console.log(decimals); // todo remove dev item
     return checkInvalidOrMissingValue(
       new BigNumber(fromValue)
         .times(new BigNumber(bestRate))
