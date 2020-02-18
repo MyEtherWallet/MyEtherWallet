@@ -149,6 +149,10 @@ export default {
   methods: {
     ...mapActions('aave', ['setRateHistory']),
     convertToFixed(val, num) {
+      if (val === -1) {
+        return '-';
+      }
+
       if (!val) {
         return 0;
       }
