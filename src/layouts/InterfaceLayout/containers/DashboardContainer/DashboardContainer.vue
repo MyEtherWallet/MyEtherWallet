@@ -39,11 +39,19 @@
                 {{ pair.amt }} {{ pair.from }} / {{ pair.rate }} {{ pair.to }}
               </p>
               <div class="margin--left--auto flex--row--align-center">
+                <span v-if="!getIcon(pair.from)" class="currency-symbol">
+                  <img :src="iconFetcher(pair.from)" class="icon-image" />
+                </span>
                 <span
+                  v-if="getIcon(pair.from)"
                   :class="['currency-symbol', 'cc', pair.from, 'cc-icon']"
                 ></span>
                 <img src="@/assets/images/icons/swap-widget.svg" alt />
+                <span v-if="!getIcon(pair.to)" class="currency-symbol">
+                  <img :src="iconFetcher(pair.to)" class="icon-image" />
+                </span>
                 <span
+                  v-if="getIcon(pair.to)"
                   :class="['currency-symbol', 'cc', pair.to, 'cc-icon']"
                 ></span>
               </div>
@@ -90,6 +98,7 @@ import DappButtons from '../../components/DappButtons';
 import dapps from '@/dapps';
 import ButtonNftManager from './components/ButtonNftManager';
 import ButtonSendTx from './components/ButtonSendTx';
+import { hasIcon } from '@/partners';
 
 import { SwapProviders, providers } from '@/partners';
 import BigNumber from 'bignumber.js';
@@ -218,6 +227,20 @@ export default {
     }
   },
   methods: {
+    iconFetcher(currency) {
+      let icon;
+      try {
+        // eslint-disable-next-line
+        icon = require(`@/assets/images/currency/coins/AllImages/${currency}.svg`);
+      } catch (e) {
+        // eslint-disable-next-line
+        return require(`@/assets/images/icons/web-solution.svg`);
+      }
+      return icon;
+    },
+    getIcon(currency) {
+      return hasIcon(currency);
+    },
     goTo(page, disabled) {
       if (disabled) return;
       let childIndex = -1;
