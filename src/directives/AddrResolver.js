@@ -6,16 +6,28 @@ import utils from 'web3-utils';
 import { EthereumTokens } from '@/partners';
 import MAValidator from 'multicoin-address-validator';
 import getMultiCoinAddress from '@/helpers/ENSMultiCoin.js';
+import ethMew from '@/networks/nodes/eth-mew';
 
 const AddrResolver = {
   bind: function(el, binding, vnode) {
-    let network = vnode.context.$store.state.network;
+    let network = vnode.context.$store.state.main.network;
     let parentCurrency = vnode.context.$parent.currency
       ? vnode.context.$parent.currency
       : network.type.name;
     let address = '';
-    const resolution = new Resolution({ ens: { network: network } });
-    vnode.context.$parent.$watch('$store.state.network', function(e) {
+    const resolution = new Resolution({
+      blockchain: {
+        ens: {
+          url: ethMew.url,
+          network: 'mainnet'
+        },
+        cns: {
+          url: ethMew.url,
+          network: 'mainnet'
+        }
+      }
+    });
+    vnode.context.$parent.$watch('$store.state.main.network', function(e) {
       network = e;
       parentCurrency = e.type.name;
       actualProcess(address);
@@ -47,7 +59,7 @@ const AddrResolver = {
     };
     const resolveViaENS = function(domain) {
       const _this = vnode.context;
-      const ens = _this.$store.state.ens;
+      const ens = _this.$store.state.main.ens;
       const errorPar = document.createElement('p');
       errorPar.classList.add('resolver-error');
       if (
@@ -97,8 +109,7 @@ const AddrResolver = {
                   .catch(() => {
                     // eslint-disable-next-line
                     errorPar.innerText = _this.$t(
-                      'ens.ens-resolver.network-not-found',
-                      { network: network.type.name[0] }
+                      'ens.ens-resolver.domain-not-found'
                     );
 
                     _this.isValidAddress = false;
@@ -217,7 +228,7 @@ const AddrResolver = {
                   err.code != 'UnsupportedDomain'
                     ? resolution.serviceName(domain)
                     : '',
-                currencyticker: parentCurrency
+                currencyTicker: parentCurrency
               }
             );
             appendElement(messagePar);

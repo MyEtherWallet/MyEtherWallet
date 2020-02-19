@@ -43,7 +43,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(['wallet', 'online', 'web3', 'account'])
+    ...mapState('main', ['wallet', 'online', 'web3', 'account'])
   },
   watch: {},
   mounted() {},

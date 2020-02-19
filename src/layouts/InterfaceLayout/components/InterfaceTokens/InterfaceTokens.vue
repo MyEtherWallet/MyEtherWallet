@@ -152,7 +152,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['network', 'web3', 'online'])
+    ...mapState('main', ['network', 'web3', 'online'])
   },
   watch: {
     receivedTokens() {
@@ -235,38 +235,48 @@ export default {
       this.fetchTokens();
     },
     searchBySymbol(symbol) {
-      const searchNetwork = this.localTokens.find(item => {
-        return item.symbol.toLowerCase() === symbol.toLowerCase();
-      });
+      try {
+        const searchNetwork = this.localTokens.find(item => {
+          return item.symbol.toLowerCase() === symbol.toLowerCase();
+        });
 
-      const searchCustom = this.customTokens.find(item => {
-        return item.symbol.toLowerCase() === symbol.toLowerCase();
-      });
+        const searchCustom = this.customTokens.find(item => {
+          return item.symbol.toLowerCase() === symbol.toLowerCase();
+        });
 
-      if (searchNetwork !== undefined || searchCustom !== undefined) {
-        return false;
+        if (searchNetwork !== undefined || searchCustom !== undefined) {
+          return false;
+        }
+        return true;
+      } catch (e) {
+        Toast.responseHandler('Search by symbol errored', Toast.ERROR);
+        return true;
       }
-      return true;
     },
     searchByAddr(addr) {
-      const searchNetwork = this.localTokens.find(item => {
-        return (
-          utils.toChecksumAddress(item.address) ===
-          utils.toChecksumAddress(addr)
-        );
-      });
+      try {
+        const searchNetwork = this.localTokens.find(item => {
+          return (
+            utils.toChecksumAddress(item.address) ===
+            utils.toChecksumAddress(addr)
+          );
+        });
 
-      const searchCustom = this.customTokens.find(item => {
-        return (
-          utils.toChecksumAddress(item.address) ===
-          utils.toChecksumAddress(addr)
-        );
-      });
+        const searchCustom = this.customTokens.find(item => {
+          return (
+            utils.toChecksumAddress(item.address) ===
+            utils.toChecksumAddress(addr)
+          );
+        });
 
-      if (searchNetwork !== undefined || searchCustom !== undefined) {
-        return false;
+        if (searchNetwork !== undefined || searchCustom !== undefined) {
+          return false;
+        }
+        return true;
+      } catch (e) {
+        Toast.responseHandler('Search by address errored', Toast.ERROR);
+        return true;
       }
-      return true;
     },
     tokenError(address, symbol, addType) {
       const findTokenBySymbol = this.searchBySymbol(symbol);
@@ -299,6 +309,8 @@ export default {
           website: '',
           type: 'custom'
         };
+
+        token['balance'] = await this.getTokenBalance(token);
         const currentCustomToken = store.get('customTokens');
         this.customTokens =
           this.customTokens.length > 0 ? this.customTokens : [];
