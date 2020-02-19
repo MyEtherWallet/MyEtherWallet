@@ -41,5 +41,4 @@ if (BUILD_TYPE === MEW_CX) {
 
   nodeList = Object.assign({}, obj);
 }
-
 export default nodeList;

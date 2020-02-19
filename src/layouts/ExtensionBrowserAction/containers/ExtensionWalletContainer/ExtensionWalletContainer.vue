@@ -145,11 +145,7 @@ export default {
     getAccounts(changed) {
       if (changed && changed.hasOwnProperty('defNetwork')) {
         const networkProps = JSON.parse(changed['defNetwork'].newValue);
-        const network = this.$store.state.main.Networks[networkProps.key].find(
-          actualNetwork => {
-            return actualNetwork.service === networkProps.service;
-          }
-        );
+        const network = this.$store.state.main.Networks[networkProps.key][0];
         this.switchNetwork(
           !network ? this.$store.state.Networks[networkProps.key][0] : network
         ).then(() => {
@@ -224,20 +220,23 @@ export default {
       this.path = path;
       this.$refs.passwordOnlyModal.$refs.passwordOnlyModal.show();
     },
-    processAccounts(accs) {
+    async processAccounts(accs) {
       this.totalBalance = '0';
       this.loading = true;
       let balance = new BigNumber(this.totalBalance);
       const watchOnlyAddresses = [];
       const myWallets = [];
-      for (const account of accs) {
+      for await (const account of accs) {
         if (account !== undefined) {
           const address = toChecksumAddress(account.address).toLowerCase();
           delete account['address'];
           const parsedItemWallet = JSON.parse(account.wallet);
-          this.getBalance(address)
+          await this.getBalance(address)
             .then(res => {
               account['balance'] = res;
+              if (parsedItemWallet.type === 'wallet') {
+                balance = balance.plus(new BigNumber(account.balance));
+              }
             })
             .catch(() => {
               Toast.responseHandler(
@@ -252,7 +251,6 @@ export default {
           if (parsedItemWallet.type !== 'wallet') {
             watchOnlyAddresses.push(account);
           } else {
-            balance = balance.plus(new BigNumber(account.balance));
             myWallets.push(account);
           }
         }

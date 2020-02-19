@@ -58,7 +58,7 @@ export default {
         .then(res => {
           return res.json();
         })
-        .catch(e => {
+        .catch(() => {
           return 0;
         });
       const priceAvailable = price.hasOwnProperty('data')
