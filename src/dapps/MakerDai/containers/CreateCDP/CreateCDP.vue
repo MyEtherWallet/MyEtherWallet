@@ -197,7 +197,6 @@ import {
   displayFixedPercent,
   toBigNumber
 } from '../../makerHelpers';
-
 import BigNumber from 'bignumber.js';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
@@ -470,7 +469,7 @@ export default {
       this.emptyMakerCreated = true;
     },
     BuildProxy() {
-      if (this.setupComplete) {
+      if (this.emptyMakerCreated) {
         this.getValueOrFunction('getProxy')().then(proxy => {
           this.proxyAddress = proxy;
           if (!this.proxyAddress) {
