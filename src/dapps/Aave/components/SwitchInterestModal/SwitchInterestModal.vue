@@ -118,11 +118,6 @@ export default {
       }
     }
   },
-  watch: {
-    token(newVal) {
-      this.token = newVal;
-    }
-  },
   methods: {
     iconFetcher(currency) {
       let icon;
