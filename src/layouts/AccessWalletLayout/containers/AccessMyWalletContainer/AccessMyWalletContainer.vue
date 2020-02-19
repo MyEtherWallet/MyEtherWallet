@@ -16,6 +16,7 @@
       :network-and-address-open="networkAndAddressOpen"
       :open-finney="finneyModalOpen"
       :open-xwallet="xwalletModalOpen"
+      :open-bc-vault="openBcVault"
       @hardwareRequiresPassword="hardwarePasswordModalOpen"
       @hardwareWalletOpen="hardwareWalletOpen"
     />
@@ -120,6 +121,7 @@ import softwareImgDisabled from '@/assets/images/icons/button-software-disabled.
 
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
+import { BCVaultWallet } from '@/wallets';
 
 import DetectRTC from 'detectrtc';
 
@@ -211,6 +213,10 @@ export default {
       this.checkWeb3();
       this.checkIsMetamask();
     });
+
+    this.$eventHub.$on('userAddresses', (addresses, cb) => {
+      console.log(addresses, cb);
+    });
   },
   methods: {
     checkIsMetamask() {
@@ -271,6 +277,13 @@ export default {
     //   this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.hide();
     //   this.$refs.mnemonicPhrasePassword.$refs.password.show();
     // },
+    openBcVault(arr) {
+      this.$refs.hardwareModal.$refs.hardware.hide();
+      this.$eventHub.$emit('userAddresses', arr, address => {
+        const walletInstance = BCVaultWallet.getAccount(address);
+        this.decryptWallet([walletInstance]).then();
+      });
+    },
     fileUploaded(e) {
       this.file = e;
       this.passwordOpen();
@@ -287,6 +300,7 @@ export default {
     xwalletModalOpen() {
       this.$refs.xwallet.$refs.xwalletModal.show();
     },
+
     hardwareWalletOpen(wallet) {
       // if (this.$refs.mnemonicPhrasePassword.$refs.password.visible) {
       //   this.$refs.mnemonicPhrasePassword.$refs.password.hide();
