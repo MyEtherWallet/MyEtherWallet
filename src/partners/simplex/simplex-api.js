@@ -2,6 +2,19 @@ import { host } from './config';
 import { post, get } from '@/helpers/httpRequests';
 import { utils } from '../helpers';
 
+
+const getCurrencies = () =>{
+  const options = {
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    }
+  };
+  return get(`${host.url}/current-currencies`, options);
+}
+
+
 const getQuote = reqObj => {
   try {
     const options = {
@@ -46,4 +59,4 @@ const getExchangeRates = () => {
     utils.handleOrThrow(e);
   }
 };
-export { getQuote, getOrder, getStatus, getExchangeRates };
+export { getQuote, getOrder, getStatus, getExchangeRates, getCurrencies };

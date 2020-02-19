@@ -11,7 +11,13 @@ import {
   SimplexCurrencies,
   PROVIDER_NAME
 } from './config.js';
-import { getQuote, getOrder, getStatus, getExchangeRates } from './simplex-api';
+import {
+  getQuote,
+  getOrder,
+  getStatus,
+  getExchangeRates,
+  getCurrencies
+} from './simplex-api';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -99,25 +105,44 @@ export default class Simplex {
   }
 
   getCurrencyExchangeRates() {
-    getExchangeRates(BASE_CURRENCY).then(rawResult => {
-      const result = rawResult.result.rates;
-      const minFiat = {};
-      const maxFiat = {};
-      Object.keys(this.currencyDetails.fiat).forEach(item => {
-        const details = result.find(entry => entry.rate_currency === item);
-        if (details) {
-          minFiat[item] = new BigNumber(details.rate)
-            .times(this.minFiat.USD)
-            .toNumber()
-            .toFixed(2);
-          maxFiat[item] = new BigNumber(details.rate)
-            .times(this.maxFiat.USD)
-            .toNumber()
-            .toFixed(2);
+    getCurrencies().then(res => {
+      try {
+        if (Object.keys(res.result).length > 0) {
+          this.currencyDetails = {
+            fiat:
+              Object.keys(res.result.fiat).length > 0
+                ? res.result.fiat
+                : this.currencyDetails.fiat,
+            digital:
+              Object.keys(res.result.digital).length > 0
+                ? res.result.digital
+                : this.currencyDetails.digital
+          };
         }
+      } catch (e) {
+        // eslint-disable-next-line
+        console.error(e);
+      }
+      getExchangeRates(BASE_CURRENCY).then(rawResult => {
+        const result = rawResult.result.rates;
+        const minFiat = {};
+        const maxFiat = {};
+        Object.keys(this.currencyDetails.fiat).forEach(item => {
+          const details = result.find(entry => entry.rate_currency === item);
+          if (details) {
+            minFiat[item] = new BigNumber(details.rate)
+              .times(this.minFiat.USD)
+              .toNumber()
+              .toFixed(2);
+            maxFiat[item] = new BigNumber(details.rate)
+              .times(this.maxFiat.USD)
+              .toNumber()
+              .toFixed(2);
+          }
+        });
+        this.minFiat = utils.createProxy(minFiat, MIN_FIAT);
+        this.maxFiat = utils.createProxy(maxFiat, MAX_FIAT);
       });
-      this.minFiat = utils.createProxy(minFiat, MIN_FIAT);
-      this.maxFiat = utils.createProxy(maxFiat, MAX_FIAT);
     });
   }
 
