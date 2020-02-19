@@ -34,6 +34,7 @@
       :supported-coins="supportedCoins"
       :txt-records="txtRecords"
       :set-record="setRecord"
+      :usd="usd"
       @updateSecretPhrase="updateSecretPhrase"
       @domainNameChange="updateDomainName"
       @updateStep="updateStep"
@@ -102,7 +103,8 @@ export default {
       txtRecords: {},
       supportedTxt,
       recordContract: {},
-      resolverTxtSupport: false
+      resolverTxtSupport: false,
+      usd: 0
     };
   },
   computed: {
@@ -154,8 +156,16 @@ export default {
     this.$nextTick(() => {
       this.setup();
     });
+
+    this.fetchUsd();
   },
   methods: {
+    async fetchUsd() {
+      const url = 'https://cryptorates.mewapi.io/ticker?filter=ETH';
+      const fetchValues = await fetch(url);
+      const values = await fetchValues.json();
+      this.usd = values.data.ETH.quotes.USD.price;
+    },
     async setup() {
       this.isPermanentLive = true;
       this.domainName = '';
