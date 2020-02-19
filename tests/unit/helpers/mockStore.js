@@ -26,6 +26,13 @@ const state = {
   ethDonationAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
   gasPrice: 41,
   Networks: nodeList,
+  token: {
+    symbol: 'ABC',
+    utilizationRate: '.654234',
+    user: {
+      id: '123'
+    }
+  },
   network: {
     auth: false,
     password: '',
@@ -56,16 +63,33 @@ const state = {
   wallet: {
     getAddressString: jest.fn()
   },
-  web3: newWeb3
+  web3: newWeb3,
+  rateHistory: {
+    labels: []
+  }
 };
 
 const actions = {
   setToken: () => {
     return true;
   }
-}
+};
 
 const getters = {
+  token: () => {
+    return {
+      symbol: 'ABC',
+      utilizationRate: '.654234',
+      user: {
+        id: '123'
+      }
+    };
+  },
+  rateHistory: () => {
+    return {
+      labels: []
+    };
+  },
   account: () => {
     return state.account;
   },
