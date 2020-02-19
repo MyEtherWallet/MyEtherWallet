@@ -1,12 +1,10 @@
-import Aave from '@/dapps/Aave/Aave.vue';
+import HomeContainer from '@/dapps/Aave/containers/HomeContainer/HomeContainer.vue';
 import { shallowMount } from '@vue/test-utils';
 import { Tooling } from '@@/helpers';
 import VueX from 'vuex';
 import { state, getters } from '@@/helpers/mockStore';
-import PopOver from '@/components/PopOver/PopOver.vue';
-import { RouterViewStub } from '@@/helpers/setupTooling';
 
-describe('Aave.vue', () => {
+describe('HomeContainer.vue', () => {
   let localVue, wrapper, i18n, store;
 
   beforeAll(() => {
@@ -25,22 +23,7 @@ describe('Aave.vue', () => {
   });
 
   beforeEach(() => {
-    const mockRoute = {
-      fullPath: '/interface/dapps/aave/action',
-      params: {
-        token: {},
-        actionType: ''
-      }
-    };
-
-    const mockApolloClient = {
-      render: () => {},
-      methods: {
-        getLiquidityRateHistoryUpdate: () => true
-      }
-    };
-
-    wrapper = shallowMount(Aave, {
+    wrapper = shallowMount(HomeContainer, {
       localVue,
       i18n,
       store,
@@ -54,14 +37,6 @@ describe('Aave.vue', () => {
         loadingHome: true,
         loadingReserves: true,
         reserves: []
-      },
-      mocks: {
-        $route: mockRoute
-      },
-      stubs: {
-        popover: PopOver,
-        apolloClient: mockApolloClient,
-        'router-view': RouterViewStub
       }
     });
   });
@@ -75,5 +50,33 @@ describe('Aave.vue', () => {
     expect(wrapper.vm.$data.compositionBorrow).toEqual([]);
     expect(wrapper.vm.$data.compositionCollateral).toEqual([]);
     expect(wrapper.vm.$data.percentageLeft).toEqual('');
+  });
+
+  it('should call getCompositionPercentages after loadingHome', async () => {
+    wrapper.setProps({
+      userSummary: {
+        reservesData: [
+          { currentUnderlyingBalanceETH: 10, reserve: { symbol: 'ETH' } }
+        ]
+      }
+    });
+    wrapper.setProps({ loadingHome: false });
+    await wrapper.vm.$nextTick();
+    expect(wrapper.vm.$data.compositionDeposit.length).toBe(1);
+    expect(wrapper.vm.$data.compositionBorrow).toEqual([]);
+    expect(wrapper.vm.$data.compositionCollateral).toEqual([]);
+  });
+
+  it('should call getCompositionPercentages after loadingHome', async () => {
+    wrapper.setProps({
+      userSummary: {
+        reservesData: [{ currentBorrowsETH: 10, reserve: { symbol: 'ETH' } }]
+      }
+    });
+    wrapper.setProps({ loadingHome: false });
+    await wrapper.vm.$nextTick();
+    expect(wrapper.vm.$data.compositionBorrow.length).toBe(1);
+    expect(wrapper.vm.$data.compositionDeposit).toEqual([]);
+    expect(wrapper.vm.$data.compositionCollateral).toEqual([]);
   });
 });
