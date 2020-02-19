@@ -7,6 +7,7 @@
 ### Devop
 
 - Add CAD and JPY as Simplex currencies [#1887](https://github.com/MyEtherWallet/MyEtherWallet/pull/1887)
+- Update NFT manager to use new API [#1898](https://github.com/MyEtherWallet/MyEtherWallet/pull/1898)
 
 ### Release v5.3.2-hotfix.1
 
@@ -22,7 +23,6 @@
 
 ### Devop
 
-- Update NFT manager to use new API [#1898](https://github.com/MyEtherWallet/MyEtherWallet/pull/1898)
 - Update greenkeeper package [#1954](https://github.com/MyEtherWallet/MyEtherWallet/pull/1954)
 - Update team page [#1952](https://github.com/MyEtherWallet/MyEtherWallet/pull/1952)
 - Maintenace due to new ENS registry [#1951](https://github.com/MyEtherWallet/MyEtherWallet/pull/1951)
