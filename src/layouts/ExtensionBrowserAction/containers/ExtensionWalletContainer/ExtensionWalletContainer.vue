@@ -105,8 +105,11 @@ export default {
         .then(res => {
           return res.json();
         })
-        .catch(e => {
-          Toast.responseHandler('Fetching eth price error.', Toast.WARN);
+        .catch(() => {
+          Toast.responseHandler(
+            this.$t('mewcx.balance-fetch-error'),
+            Toast.WARN
+          );
           return 0;
         });
       const priceAvailable = price.hasOwnProperty('data')
@@ -238,8 +241,8 @@ export default {
             })
             .catch(() => {
               Toast.responseHandler(
-                'Having trouble fetching balance',
-                Toast.ERROR
+                this.$t('mewcx.balance-fetch-error'),
+                Toast.WARN
               );
               account['balance'] = 0;
             });

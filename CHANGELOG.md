@@ -1,6 +1,8 @@
 ### Bug
 
 - Fix mnemonic phrase for current version [#1985](https://github.com/MyEtherWallet/MyEtherWallet/pull/1985)
+- Fix DAI Icon [#1977] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1977)
+
 
 ### Release v5.3.2-hotfix.1
 
@@ -8,10 +10,10 @@
 
 - Resolver domains ens url [#1974](https://github.com/MyEtherWallet/MyEtherWallet/pull/1974)
 
-
 ### Release v5.3.2
 
 ### Feature
+
 - Update icons [#1961](https://github.com/MyEtherWallet/MyEtherWallet/pull/1961)
 
 ### Devop
