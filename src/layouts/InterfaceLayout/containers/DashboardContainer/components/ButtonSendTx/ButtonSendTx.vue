@@ -17,9 +17,11 @@
         alt
       />
       <div class="text-content">
-        <p class="title">
-          {{ parent.$t('sendTx.send') }}<br />{{ parent.$t('sendTx.tx') }}
-        </p>
+        <i18n class="title" tag="div" path="sendTx.send-tx-break">
+          <p slot="transaction" class="title">
+            {{ parent.$t('sendTx.tx') }}
+          </p>
+        </i18n>
         <p v-if="disabled" class="button-disabled">
           {{ parent.$t('interface.no-avail') }}
         </p>

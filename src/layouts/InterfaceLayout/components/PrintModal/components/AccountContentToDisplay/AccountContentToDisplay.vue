@@ -171,7 +171,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['wallet'])
+    ...mapState('main', ['wallet'])
   }
 };
 </script>

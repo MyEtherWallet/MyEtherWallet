@@ -67,6 +67,7 @@
 
 <script>
 import store from 'store';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'IssueLogModal',
@@ -85,15 +86,19 @@ export default {
   },
   data() {
     return {
-      errorDetails: JSON.stringify(this.error),
       errorCount: 0,
       showSkipper: false,
       neverShow: false
     };
   },
+  computed: {
+    errorDetails() {
+      return JSON.stringify(this.error, null, 2);
+    }
+  },
   watch: {
     neverShow() {
-      this.$store.dispatch('toggleTempHide');
+      this.toggleTempHide();
     }
   },
   mounted() {
@@ -104,6 +109,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('main', ['toggleTempHide']),
     sendError(bool) {
       this.resolver(bool);
       this.$refs.issuelog.hide();

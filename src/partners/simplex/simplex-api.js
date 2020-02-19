@@ -2,8 +2,7 @@ import { host } from './config';
 import { post, get } from '@/helpers/httpRequests';
 import { utils } from '../helpers';
 
-
-const getCurrencies = () =>{
+const getCurrencies = () => {
   const options = {
     mode: 'cors',
     headers: {
@@ -12,8 +11,7 @@ const getCurrencies = () =>{
     }
   };
   return get(`${host.url}/current-currencies`, options);
-}
-
+};
 
 const getQuote = reqObj => {
   try {

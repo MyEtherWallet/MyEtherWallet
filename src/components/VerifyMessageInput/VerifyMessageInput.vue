@@ -83,7 +83,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3'])
+    ...mapState('main', ['web3'])
   },
   watch: {
     message(newVal) {

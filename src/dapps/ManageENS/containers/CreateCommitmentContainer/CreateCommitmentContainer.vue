@@ -20,6 +20,13 @@
               : $tc('ens.commit.year', 1)
           }}
         </div>
+        <div
+          v-if="network.type.name === 'ETH'"
+          class="estimate-price-container"
+        >
+          Estimated bid price: {{ estimatedPrice.ethAmount }}
+          {{ network.type.currencyName }} (${{ estimatedPrice.usd }})
+        </div>
       </div>
       <div class="transfer-registrar-button">
         <button
@@ -49,6 +56,7 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -70,6 +78,10 @@ export default {
     tld: {
       type: String,
       default: ''
+    },
+    usd: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -78,9 +90,31 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account']),
+    ...mapState('main', ['account', 'network']),
     fullDomainName() {
       return `${this.hostName}.${this.tld}`;
+    },
+    pricingByLength() {
+      if (this.hostName.length === 3) {
+        return 640;
+      } else if (this.hostName.length === 4) {
+        return 160;
+      }
+
+      return 5;
+    },
+    estimatedPrice() {
+      const ethAmount = new BigNumber(this.pricingByLength)
+        .dividedBy(this.usd)
+        .times(this.duration)
+        .toFixed(2);
+
+      const usd = new BigNumber(this.pricingByLength).times(this.duration);
+
+      return {
+        usd: usd,
+        ethAmount: ethAmount
+      };
     },
     info() {
       const balance = this.account.balance;

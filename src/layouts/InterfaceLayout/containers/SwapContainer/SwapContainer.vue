@@ -275,8 +275,8 @@ export default {
       swap: new SwapProviders(
         providers,
         {
-          network: this.$store.state.network.type.name,
-          web3: this.$store.state.web3,
+          network: this.$store.state.main.network.type.name,
+          web3: this.$store.state.main.web3,
           getRateForUnit: false
         },
         { tokensWithBalance: this.tokensWithBalance }
@@ -321,7 +321,14 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'ens', 'gasPrice', 'web3', 'network', 'online']),
+    ...mapState('main', [
+      'account',
+      'ens',
+      'gasPrice',
+      'web3',
+      'network',
+      'online'
+    ]),
     bestRate() {
       try {
         if (this.providerData.length > 0) {
