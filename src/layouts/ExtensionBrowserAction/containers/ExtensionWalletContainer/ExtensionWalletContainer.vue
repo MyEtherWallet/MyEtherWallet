@@ -105,18 +105,21 @@ export default {
         .then(res => {
           return res.json();
         })
-        .catch(e => {
-          // eslint-disable-next-line
-          console.error(e);
+        .catch(() => {
+          Toast.responseHandler(
+            this.$t('mewcx.balance-fetch-error'),
+            Toast.WARN
+          );
+          return 0;
         });
-
-      this.convertedBalance = `$ ${new BigNumber(
-        price.data.ETH.quotes.USD.price
-      )
+      const priceAvailable = price.hasOwnProperty('data')
+        ? price.data.ETH.quotes.USD.price
+        : price;
+      this.convertedBalance = `$ ${new BigNumber(priceAvailable)
         .times(this.totalBalance)
         .toFixed(2)}`;
 
-      this.ethPrice = price.data.ETH.quotes.USD.price;
+      this.ethPrice = priceAvailable;
     },
     getAccountsCb(res) {
       const accounts = Object.keys(res)
@@ -142,11 +145,7 @@ export default {
     getAccounts(changed) {
       if (changed && changed.hasOwnProperty('defNetwork')) {
         const networkProps = JSON.parse(changed['defNetwork'].newValue);
-        const network = this.$store.state.main.Networks[networkProps.key].find(
-          actualNetwork => {
-            return actualNetwork.service === networkProps.service;
-          }
-        );
+        const network = this.$store.state.main.Networks[networkProps.key][0];
         this.switchNetwork(
           !network ? this.$store.state.Networks[networkProps.key][0] : network
         ).then(() => {
@@ -227,19 +226,31 @@ export default {
       let balance = new BigNumber(this.totalBalance);
       const watchOnlyAddresses = [];
       const myWallets = [];
-      for (const account of accs) {
+      for await (const account of accs) {
         if (account !== undefined) {
           const address = toChecksumAddress(account.address).toLowerCase();
           delete account['address'];
           const parsedItemWallet = JSON.parse(account.wallet);
-          account['balance'] = await this.getBalance(address);
+          await this.getBalance(address)
+            .then(res => {
+              account['balance'] = res;
+              if (parsedItemWallet.type === 'wallet') {
+                balance = balance.plus(new BigNumber(account.balance));
+              }
+            })
+            .catch(() => {
+              Toast.responseHandler(
+                this.$t('mewcx.balance-fetch-error'),
+                Toast.WARN
+              );
+              account['balance'] = 0;
+            });
           account['type'] = parsedItemWallet.type;
           account['address'] = address;
           account['nickname'] = parsedItemWallet.nick;
           if (parsedItemWallet.type !== 'wallet') {
             watchOnlyAddresses.push(account);
           } else {
-            balance = balance.plus(new BigNumber(account.balance));
             myWallets.push(account);
           }
         }
