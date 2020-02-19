@@ -297,7 +297,29 @@ export default {
         this.actionTitle === this.actionTitles.withdraw &&
         this.token.user.principalATokenBalance === this.amount
       ) {
-        return -1;
+        const underlyingBalance = new BigNumber(
+          this.token.user.currentUnderlyingBalance
+        );
+        const availableLiquidity = new BigNumber(this.token.availableLiquidity);
+        let maxAmountToWithdraw = BigNumber.min(
+          underlyingBalance,
+          availableLiquidity
+        );
+
+        if (
+          this.userSummary.totalBorrowsETH !== '0' ||
+          this.userSummary.totalFeesETH !== '0'
+        ) {
+          maxAmountToWithdraw = BigNumber.min(
+            maxAmountToWithdraw,
+            new BigNumber(this.userSummary.maxAmountToWithdrawInEth)
+              .dividedBy(this.token.price.priceInEth)
+              .multipliedBy(0.995)
+          );
+          if (!maxAmountToWithdraw.eq(underlyingBalance)) {
+            return new BigNumber(maxAmountToWithdraw).toFixed(6);
+          }
+        }
       } else if (
         this.actionTitle === this.actionTitles.repay &&
         this.amount === this.token.user.currentBorrows
@@ -311,7 +333,7 @@ export default {
         this.maxBorrowAmt() === this.amount &&
         this.userSummary.totalBorrowsETH > 0
       ) {
-        const margin = new BigNumber(this.amount).times(0.001);
+        const margin = new BigNumber(this.amount).times(0.005);
         return new BigNumber(this.amount).minus(margin);
       }
       return this.amount;
