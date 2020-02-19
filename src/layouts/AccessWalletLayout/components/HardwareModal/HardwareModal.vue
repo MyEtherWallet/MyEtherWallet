@@ -61,7 +61,8 @@ import {
   KeepkeyWallet,
   TrezorWallet,
   BitBoxWallet,
-  SecalotWallet
+  SecalotWallet,
+  BCVaultWallet
 } from '@/wallets';
 import {
   LEDGER as LEDGER_TYPE,
@@ -70,7 +71,8 @@ import {
   SECALOT as SECALOT_TYPE,
   KEEPKEY as KEEPKEY_TYPE,
   FINNEY as FINNEY_TYPE,
-  XWALLET as XWALLET_TYPE
+  XWALLET as XWALLET_TYPE,
+  BCVAULT as BCVAULT_TYPE
 } from '@/wallets/bip44/walletTypes';
 export default {
   components: {
@@ -80,23 +82,27 @@ export default {
   props: {
     networkAndAddressOpen: {
       type: Function,
-      default: function() {}
+      default: () => {}
     },
     hardwareWalletOpen: {
       type: Function,
-      default: function() {}
+      default: () => {}
     },
     ledgerAppOpen: {
       type: Function,
-      default: function() {}
+      default: () => {}
     },
     openFinney: {
       type: Function,
-      default: function() {}
+      default: () => {}
     },
     openXwallet: {
       type: Function,
-      default: function() {}
+      default: () => {}
+    },
+    openBcVault: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
@@ -164,6 +170,14 @@ export default {
           name: KEEPKEY_TYPE,
           imgPath: keepkey,
           text: 'KeepKey',
+          disabled: false,
+          msg: '',
+          link: 'http://lddy.no/a4im'
+        },
+        {
+          name: BCVAULT_TYPE,
+          imgPath: keepkey,
+          text: 'BC Vault',
           disabled: false,
           msg: '',
           link: 'http://lddy.no/a4im'
@@ -259,14 +273,23 @@ export default {
           this.openXwallet();
           this.$refs.hardware.hide();
           break;
+        case BCVAULT_TYPE:
+          BCVaultWallet()
+            .then(res => {
+              console.log(res);
+              this.openBcVault(res);
+            })
+            .catch(e => {
+              BCVaultWallet.errorHandler(e);
+            });
+          break;
         default:
           Toast.responseHandler(
-            new Error('No switch address for given account.'),
+            new Error('Something went wrong!'),
             Toast.ERROR
           );
           break;
       }
-      this.$refs.hardware.hide();
     },
     updateSelected(ref) {
       if (this.selected !== ref) {
