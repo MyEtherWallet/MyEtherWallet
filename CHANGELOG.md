@@ -1,6 +1,7 @@
 ### Bug
 
 - Fix mnemonic phrase for current version [#1985](https://github.com/MyEtherWallet/MyEtherWallet/pull/1985)
+- Some bug fixes [#1978] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1978)
 - Fix DAI Icon [#1977] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1977)
 
 
