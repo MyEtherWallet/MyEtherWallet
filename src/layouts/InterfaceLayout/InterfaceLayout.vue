@@ -372,7 +372,11 @@ export default {
     async fetchTokens() {
       this.receivedTokens = false;
       let tokens = [];
-      if (this.network.type.chainID === 1 || this.network.type.chainID === 3) {
+      if (
+        this.network.type.chainID === 1 ||
+        (this.network.type.chainID === 3 &&
+          !this.network.url.includes('infura'))
+      ) {
         const tb = new TokenBalance(this.web3.currentProvider);
         try {
           tokens = await tb.getBalance(
@@ -400,6 +404,7 @@ export default {
           return token;
         });
       }
+      this.receivedTokens = true;
       return tokens;
     },
     async setNonce() {
