@@ -70,7 +70,7 @@ describe('ActionModal.vue', () => {
     expect(wrapper.vm.$data.localReserves).toEqual([{ symbol: 'ETH' }]);
   });
 
-  it('computes disabledTooltip', async () => {
+  it('computes correct disabledTooltip', async () => {
     wrapper.setData({ depositModal: true });
     await wrapper.vm.$nextTick();
     expect(wrapper.vm.disabledTooltip).toBe(
