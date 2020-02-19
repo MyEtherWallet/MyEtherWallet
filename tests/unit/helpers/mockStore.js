@@ -59,6 +59,12 @@ const state = {
   web3: newWeb3
 };
 
+const actions = {
+  setToken: () => {
+    return true;
+  }
+}
+
 const getters = {
   account: () => {
     return state.account;
@@ -121,4 +127,4 @@ const getters = {
   path: () => {}
 };
 
-export { state, getters };
+export { state, getters, actions };
