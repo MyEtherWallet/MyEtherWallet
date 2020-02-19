@@ -18,6 +18,7 @@
 
 ### Devop
 
+- Update NFT manager to use new API [#1898](https://github.com/MyEtherWallet/MyEtherWallet/pull/1898)
 - Update greenkeeper package [#1954](https://github.com/MyEtherWallet/MyEtherWallet/pull/1954)
 - Update team page [#1952](https://github.com/MyEtherWallet/MyEtherWallet/pull/1952)
 - Maintenace due to new ENS registry [#1951](https://github.com/MyEtherWallet/MyEtherWallet/pull/1951)
