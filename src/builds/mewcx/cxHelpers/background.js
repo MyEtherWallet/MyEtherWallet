@@ -30,11 +30,7 @@ const networkChanger = items => {
     const networkProps = JSON.parse(items['defNetwork']);
     let network = {};
     if (networkProps.hasOwnProperty('url')) {
-      network = store.state.main.Networks[networkProps.key].find(
-        actualNetwork => {
-          return actualNetwork.url === networkProps.url;
-        }
-      );
+      network = store.state.main.Networks[networkProps.key][0];
 
       chrome.storage.sync.set({
         defNetwork: JSON.stringify({
@@ -43,11 +39,13 @@ const networkChanger = items => {
         })
       });
     } else {
-      network = store.state.main.Networks[networkProps.key].find(
-        actualNetwork => {
-          return actualNetwork.service === networkProps.service;
-        }
-      );
+      network = store.state.main.Networks[networkProps.key][0];
+      chrome.storage.sync.set({
+        defNetwork: JSON.stringify({
+          key: network.type.name,
+          service: network.service
+        })
+      });
     }
     // eslint-disable-next-line
     if (!!network) {
@@ -90,11 +88,7 @@ chrome.storage.onChanged.addListener(items => {
       const networkProps = JSON.parse(
         Misc.stripTags(items['defNetwork'].newValue)
       );
-      const network = store.state.main.Networks[networkProps.key].find(
-        actualNetwork => {
-          return actualNetwork.service === networkProps.service;
-        }
-      );
+      const network = store.state.main.Networks[networkProps.key][0];
       store
         .dispatch(
           'main/switchNetwork',

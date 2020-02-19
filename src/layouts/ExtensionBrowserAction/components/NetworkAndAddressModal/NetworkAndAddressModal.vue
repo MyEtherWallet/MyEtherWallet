@@ -174,8 +174,8 @@
 
                   <ul class="address-block table-header fours">
                     <li>{{ $t('accessWallet.id') }}</li>
-                    <li>{{ $t('common.address') }}</li>
-                    <li>{{ $t('common.balance') }}</li>
+                    <li>{{ $t('common.addr') }}</li>
+                    <li>{{ $t('common.balance.string') }}</li>
                   </ul>
 
                   <ul
