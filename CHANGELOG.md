@@ -1,13 +1,28 @@
+### Release v5.3.3
+
+### Bug
+
+- Fix mnemonic phrase for current version [#1985](https://github.com/MyEtherWallet/MyEtherWallet/pull/1985)
+- Fix incorrect variable used to check maker setup complete [#1985](https://github.com/MyEtherWallet/MyEtherWallet/pull/1985)
+- Some bug fixes [#1978](https://github.com/MyEtherWallet/MyEtherWallet/pull/1978)
+- Fix DAI Icon [#1977](https://github.com/MyEtherWallet/MyEtherWallet/pull/1977)
+
+### Devop
+
+- Add CAD and JPY as Simplex currencies [#1887](https://github.com/MyEtherWallet/MyEtherWallet/pull/1887)
+- Update NFT manager to use new API [#1898](https://github.com/MyEtherWallet/MyEtherWallet/pull/1898)
+
+
 ### Release v5.3.2-hotfix.1
 
 ### Hotfix
 
 - Resolver domains ens url [#1974](https://github.com/MyEtherWallet/MyEtherWallet/pull/1974)
 
-
 ### Release v5.3.2
 
 ### Feature
+
 - Update icons [#1961](https://github.com/MyEtherWallet/MyEtherWallet/pull/1961)
 
 ### Devop
