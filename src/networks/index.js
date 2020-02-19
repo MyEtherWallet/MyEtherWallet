@@ -27,9 +27,7 @@ if (BUILD_TYPE === MEW_CX) {
   const obj = {};
   Object.keys(nodeList).forEach(network => {
     obj[network] = nodeList[network].filter(item => {
-      return (
-        item.service.includes('-ws') && item.service.includes('myetherwallet')
-      );
+      return item.service === 'myetherwallet.com-ws';
     });
   });
 
