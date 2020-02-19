@@ -1,5 +1,6 @@
-### Bug 
+### Bug
 
+- Some bug fixes [#1978] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1978)
 - Fix DAI Icon [#1977] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1977)
 
 ### Release v5.3.2-hotfix.1
