@@ -66,8 +66,12 @@ export default {
             () => {}
           );
         } else {
-          network = _self.Networks[networkProps.key].find(actualNetwork => {
-            return actualNetwork.service === networkProps.service;
+          network = _self.Networks[networkProps.key][0];
+          window.chrome.storage.sync.set({
+            defNetwork: JSON.stringify({
+              key: network.type.name,
+              service: network.service
+            })
           });
         }
         _self.switchNetwork(network).then(() => {
