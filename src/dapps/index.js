@@ -78,9 +78,9 @@ const dapps = {
     // iconDisabled: aaveDisabled,
     title: 'dappsAave.title',
     desc: 'dappsAave.popover',
-    supportedNetworks: [ETH.name]
-    // lastUpdated: '11/05/2019',
-    // releaseDate: '11/05/2019'
+    supportedNetworks: [ETH.name],
+    lastUpdated: '2/26/2020',
+    releaseDate: '2/26/2020'
   }
 };
 

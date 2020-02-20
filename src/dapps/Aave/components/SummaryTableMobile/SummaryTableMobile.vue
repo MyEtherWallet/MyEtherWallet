@@ -240,9 +240,6 @@ export default {
       return splitReserves;
     }
   },
-  mounted() {
-    console.log(this.ownedReserves);
-  },
   methods: {
     iconFetcher(currency) {
       let icon;
