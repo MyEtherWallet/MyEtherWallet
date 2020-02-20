@@ -19,7 +19,6 @@
 - Update NFT manager to use new API [#1898](https://github.com/MyEtherWallet/MyEtherWallet/pull/1898)
 - Remove iosiro as blacklist source - Update NFT manager to use new API [#1997](https://github.com/MyEtherWallet/MyEtherWallet/pull/1997)
 
-
 ### Release v5.3.2-hotfix.1
 
 ### Hotfix

@@ -391,30 +391,40 @@ export default {
           this.customNFTs = [{}];
         }
         const configData = await this.getTokens();
-        const tokenAddresses = Object.keys(configData);
-        tokenAddresses.forEach(address => {
-          configData[address] = { ...configData[address] };
-          const customInformation = this.customNFTs.find(
-            item => item.contract === address
-          );
-          configData[address].custom = false;
-          if (configData[address].symbol === 'UNKNOWN' && customInformation) {
-            configData[address].name = customInformation.title;
-            configData[address].custom = true;
-          } else if (configData[address].symbol === 'UNKNOWN') {
-            configData[address].name = address;
-          }
-          configData[address].contract = address;
-          configData[address].tokens = configData[address].tokens.map(item => {
-            item.contract = address;
-            return item;
+        if (!configData.error) {
+          const tokenAddresses = Object.keys(configData);
+          tokenAddresses.forEach(address => {
+            configData[address] = { ...configData[address] };
+            const customInformation = this.customNFTs.find(
+              item => item.contract === address
+            );
+            if (configData[address]) {
+              configData[address].custom = false;
+              if (
+                configData[address].symbol === 'UNKNOWN' &&
+                customInformation
+              ) {
+                configData[address].name = customInformation.title;
+                configData[address].custom = true;
+              } else if (configData[address].symbol === 'UNKNOWN') {
+                configData[address].name = address;
+              }
+              configData[address].contract = address;
+              configData[address].tokens = configData[address].tokens.map(
+                item => {
+                  item.contract = address;
+                  return item;
+                }
+              );
+              configData[address].startIndex = 0;
+              configData[address].priorIndex = 0;
+              configData[address].currentIndex = 0;
+            }
           });
-          configData[address].startIndex = 0;
-          configData[address].priorIndex = 0;
-          configData[address].currentIndex = 0;
-        });
-        this.nftConfig = { ...configData };
-        this.selectedContract = Object.keys(this.nftConfig)[0];
+          this.nftConfig = { ...configData };
+          this.selectedContract = Object.keys(this.nftConfig)[0];
+        }
+        this.reLoading = false;
         this.countsRetrieved = true;
       }
     },
