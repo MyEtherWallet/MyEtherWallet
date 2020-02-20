@@ -163,7 +163,7 @@ import WalletInfoComponent from '../../components/WalletInfoComponent';
 import WalletTitleAndSearchComponent from '../../components/WalletTitleAndSearchComponent';
 import AddWalletModal from '../../components/AddWalletModal';
 import ExtensionBrowserActionWrapper from '../../wrappers/ExtensionBrowserActionWrapper';
-import { ExtensionHelpers, Misc } from '@/helpers';
+import { ExtensionHelpers, Misc, Toast } from '@/helpers';
 import TokenBalance from '@myetherwallet/eth-token-balance';
 import sortByBalance from '@/helpers/sortByBalance.js';
 
@@ -298,12 +298,20 @@ export default {
           await this.setToken(address).then(res => {
             account['tokenBalance'] = res;
           });
-          await this.getBalance(address).then(res => {
-            const locBalance = web3utils.fromWei(res);
-            account['balance'] = locBalance;
-            balance = balance.plus(locBalance);
-            this.totalBalance = balance.toString();
-          });
+          await this.getBalance(address)
+            .then(res => {
+              const locBalance = web3utils.fromWei(res);
+              account['balance'] = locBalance;
+              balance = balance.plus(locBalance);
+              this.totalBalance = balance.toString();
+            })
+            .catch(() => {
+              Toast.responseHandler(
+                this.$t('mewcx.balance-fetch-error'),
+                Toast.WARN
+              );
+              account['balance'] = 0;
+            });
           if (parsedItemWallet.type !== 'wallet') {
             watchOnlyAddresses.push(account);
           } else {
