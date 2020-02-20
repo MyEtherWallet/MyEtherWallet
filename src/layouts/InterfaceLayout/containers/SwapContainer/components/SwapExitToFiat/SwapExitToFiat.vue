@@ -80,7 +80,9 @@
                   <standard-input
                     :options="{
                       title: $t('swap.exit-to-fiat.billing-addr'),
-                      placeHolder: $t('swap.exit-to-fiat.to-fiat.addr-placeholder'),
+                      placeHolder: $t(
+                        'swap.exit-to-fiat.to-fiat.addr-placeholder'
+                      ),
                       value: ''
                     }"
                     class="address1"
