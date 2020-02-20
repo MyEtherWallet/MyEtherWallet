@@ -281,13 +281,13 @@ export default {
     }
   },
   methods: {
-    processAccounts(accs) {
+    async processAccounts(accs) {
       this.totalBalance = '0';
       this.loading = true;
       let balance = new BigNumber(this.totalBalance);
       const watchOnlyAddresses = [];
       const myWallets = [];
-      for (const account of accs) {
+      for await (const account of accs) {
         if (account !== undefined) {
           const address = toChecksumAddress(account.address).toLowerCase();
           delete account['address'];
@@ -295,12 +295,13 @@ export default {
           account['type'] = parsedItemWallet.type;
           account['address'] = address;
           account['nickname'] = parsedItemWallet.nick;
-          this.setToken(address).then(res => {
+          await this.setToken(address).then(res => {
             account['tokenBalance'] = res;
           });
-          this.getBalance(address).then(res => {
-            account['balance'] = res;
-            balance = balance.plus(res);
+          await this.getBalance(address).then(res => {
+            const locBalance = web3utils.fromWei(res);
+            account['balance'] = locBalance;
+            balance = balance.plus(locBalance);
             this.totalBalance = balance.toString();
           });
           if (parsedItemWallet.type !== 'wallet') {
@@ -354,9 +355,8 @@ export default {
           return tokens;
         });
     },
-    async getBalance(addr) {
-      const balance = await this.web3.eth.getBalance(addr);
-      return web3utils.fromWei(balance);
+    getBalance(addr) {
+      return this.web3.eth.getBalance(addr);
     },
     addWallet() {
       this.$refs.addWalletModal.$refs.addMyWallet.$refs.modalWrapper.show();
