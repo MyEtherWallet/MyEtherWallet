@@ -135,7 +135,13 @@
         <div class="mt-3">
           <div class="section-name">
             <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-            {{ $tc('dappsAave.deposit', 1) }} / {{ $t('dappsAave.withdraw') }}
+            <span v-if="activeDepositTab"
+              >{{ $tc('dappsAave.deposit', 1) }} /
+              {{ $t('dappsAave.withdraw') }}</span
+            >
+            <span v-if="!activeDepositTab"
+              >{{ $tc('dappsAave.borrow') }} / {{ $t('dappsAave.repay') }}</span
+            >
           </div>
           <button
             type="button"
