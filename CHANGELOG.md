@@ -1,3 +1,8 @@
+
+### Devop
+
+- Fix Exit to Fiat to correspond with backend changes [#2002](https://github.com/MyEtherWallet/MyEtherWallet/pull/2002)
+
 ### Release v5.3.3
 
 ### Bug
