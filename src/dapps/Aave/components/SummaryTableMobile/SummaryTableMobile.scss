@@ -5,6 +5,13 @@
   font-size: 10px;
   font-weight: 700;
   margin-bottom: 5px;
+  span {
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    margin-left: 2px;
+  }
 }
 
 .token-block-container {
