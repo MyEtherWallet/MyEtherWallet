@@ -6,6 +6,7 @@
 
   .balance-container {
     background: $light-green-1;
+    margin: 5px;
     padding: 20px 30px;
     width: 100%;
 
@@ -37,6 +38,12 @@
   }
 }
 
+@media all and (max-width: $mobile-width) {
+  .balance-wrapper {
+    flex-wrap: wrap;
+  }
+}
+
 .action-container {
   align-items: center;
   display: flex;
@@ -58,7 +65,7 @@
     font-size: 14px;
     font-weight: normal;
     margin-top: 20px;
-    width: 445px;
+    max-width: 445px;
   }
 
   input {

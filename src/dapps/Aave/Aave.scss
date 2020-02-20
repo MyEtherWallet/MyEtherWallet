@@ -53,6 +53,8 @@
   .health-container {
     align-items: center;
     display: flex;
+    flex-wrap: wrap;
+    margin-left: 10px;
     span {
       color: $light-grey-18;
       font-size: 14px;
