@@ -44,7 +44,7 @@ export default {
           }
         },
         responsive: true,
-        maintainAspectRatio: false,
+        maintainAspectRatio: true,
         scales: {
           yAxes: [
             {

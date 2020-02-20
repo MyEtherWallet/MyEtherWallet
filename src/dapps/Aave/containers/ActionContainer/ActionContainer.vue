@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="balance-wrapper">
-      <div class="balance-container mr-3">
+      <div class="balance-container">
         <p class="title">
           {{
             activeDepositTab
@@ -294,11 +294,13 @@ export default {
           )
         );
 
-        usdBalance = new BigNumber(
-          new BigNumber(ethBalance).times(new BigNumber(this.ethPrice))
-        )
-          .toFixed(2)
-          .toString();
+        if (ethBalance && this.ethPrice) {
+          usdBalance = new BigNumber(
+            new BigNumber(ethBalance).times(new BigNumber(this.ethPrice))
+          )
+            .toFixed(2)
+            .toString();
+        }
       }
       return usdBalance;
     },
