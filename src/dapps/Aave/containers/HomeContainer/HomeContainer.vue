@@ -64,6 +64,7 @@
       >
     </div>
     <summary-table
+      class="desktop"
       :reserves="reserves"
       :user-reserves="userSummary.reservesData"
       :health-factor="userSummary.healthFactor"
@@ -72,7 +73,7 @@
       @emitTakeAction="emitTakeAction"
     />
     <summary-table-mobile
-      class="mt-3"
+      class="mt-3 mobile"
       :reserves="reserves"
       :user-reserves="userSummary.reservesData"
       :health-factor="userSummary.healthFactor"

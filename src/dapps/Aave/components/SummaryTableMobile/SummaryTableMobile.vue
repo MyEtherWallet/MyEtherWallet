@@ -11,7 +11,6 @@
         class="token-block"
       >
         <div>
-          <div class="section-name">{{ $t('dappsAave.token') }}</div>
           <div class="d-flex align-items-center">
             <img
               v-if="reserve.reserve.symbol && !getIcon(reserve.reserve.symbol)"
@@ -34,7 +33,10 @@
         </div>
 
         <div v-if="activeDepositTab" class="mt-3">
-          <div class="section-name">{{ $t('dappsAave.deposited') }}</div>
+          <div class="section-name">
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+            {{ $t('dappsAave.deposited') }}
+          </div>
           <div>
             <h3>
               {{ convertToFixed(reserve.principalATokenBalance, 3) }}
@@ -47,16 +49,23 @@
           </div>
         </div>
 
-        <div v-if="!activeDepositTab">
-          <span>${{ convertToFixed(reserve.currentBorrowsUSD) }}</span>
-          <span class="eth-amt">
+        <div v-if="!activeDepositTab" class="mt-3">
+          <div class="section-name">
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+            {{ $t('dappsAave.deposited') }}
+          </div>
+          <h3>${{ convertToFixed(reserve.currentBorrowsUSD) }}</h3>
+          <h5 class="eth-amt">
             {{ convertToFixed(reserve.currentBorrowsETH, 6) }}
             {{ $t('common.currency.eth') }}
-          </span>
+          </h5>
         </div>
 
         <div class="mt-3">
-          <div class="section-name">{{ $t('dappsAave.apr') }}</div>
+          <div class="section-name">
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+            {{ $t('dappsAave.apr') }}
+          </div>
           <div>
             <span v-if="activeDepositTab">
               {{ convertToFixed(reserve.reserve.liquidityRate * 100) }}%
@@ -67,8 +76,11 @@
           </div>
         </div>
 
-        <div v-if="activeDepositTab" class="mt-3">
-          <div class="section-name">{{ $t('dappsAave.use-collateral') }}</div>
+        <div v-if="activeDepositTab" class="slider-container mt-3">
+          <div class="section-name">
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+            {{ $t('dappsAave.use-collateral') }}
+          </div>
           <div class="sliding-switch-white">
             <label class="switch">
               <input
@@ -81,7 +93,11 @@
           </div>
         </div>
 
-        <div v-if="!activeDepositTab">
+        <div v-if="!activeDepositTab" class="mt-3">
+          <div class="section-name">
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+            {{ $t('dappsAave.use-collateral') }}
+          </div>
           <div class="slider-container">
             <div class="sliding-switch-white">
               <label
@@ -118,6 +134,7 @@
 
         <div class="mt-3">
           <div class="section-name">
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
             {{ $tc('dappsAave.deposit', 1) }} / {{ $t('dappsAave.withdraw') }}
           </div>
           <button
