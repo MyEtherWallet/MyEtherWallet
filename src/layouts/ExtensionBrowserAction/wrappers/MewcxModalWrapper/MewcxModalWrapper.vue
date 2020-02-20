@@ -82,7 +82,7 @@ export default {
 
 .modal-wrapper-dialog {
   margin: 0 !important;
-  max-width: 100%;
+  max-width: 100% !important;
   border-radius: 0 !important;
 }
 .modal-wrapper-content {

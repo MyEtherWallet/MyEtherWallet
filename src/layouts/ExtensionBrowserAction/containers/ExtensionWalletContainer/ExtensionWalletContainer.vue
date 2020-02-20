@@ -77,16 +77,18 @@
                   </div>
                 </div>
                 <div v-for="wallet in searchResult" :key="wallet.address">
-                  <wallet-info-component
-                    :prices="tokenPrices"
-                    :usd="ethPrice"
-                    :address="wallet.address"
-                    :balance="wallet.balance"
-                    :wallet="wallet.wallet"
-                    :nickname="wallet.nickname"
-                    :wallet-type="wallet.type"
-                    :wallet-token="wallet.tokenBalance"
-                  />
+                  <keep-alive>
+                    <wallet-info-component
+                      :prices="tokenPrices"
+                      :usd="ethPrice"
+                      :address="wallet.address"
+                      :balance="wallet.balance"
+                      :wallet="wallet.wallet"
+                      :nickname="wallet.nickname"
+                      :wallet-type="wallet.type"
+                      :wallet-token="wallet.tokenBalance"
+                    />
+                  </keep-alive>
                 </div>
               </div>
               <div v-else class="wallet-display-container">
@@ -115,16 +117,18 @@
                 class="wallet-display-container"
               >
                 <div v-for="wallet in searchResult" :key="wallet.address">
-                  <wallet-info-component
-                    :prices="tokenPrices"
-                    :usd="ethPrice"
-                    :address="wallet.address"
-                    :balance="wallet.balance"
-                    :wallet="wallet.wallet"
-                    :nickname="wallet.nickname"
-                    :wallet-type="wallet.type"
-                    :wallet-token="wallet.tokenBalance"
-                  />
+                  <keep-alive>
+                    <wallet-info-component
+                      :prices="tokenPrices"
+                      :usd="ethPrice"
+                      :address="wallet.address"
+                      :balance="wallet.balance"
+                      :wallet="wallet.wallet"
+                      :nickname="wallet.nickname"
+                      :wallet-type="wallet.type"
+                      :wallet-token="wallet.tokenBalance"
+                    />
+                  </keep-alive>
                 </div>
               </div>
               <div v-else class="wallet-display-container">

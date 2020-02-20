@@ -47,6 +47,9 @@ import { toChecksumAddress } from '@/helpers/addressUtils';
 import WalletInfoComponent from '../../components/WalletInfoComponent';
 import WalletTitleAndSearchComponent from '../../components/WalletTitleAndSearchComponent';
 import ExtensionBrowserActionWrapper from '../../wrappers/ExtensionBrowserActionWrapper';
+import sortByBalance from '@/helpers/sortByBalance.js';
+import BigNumber from 'bignumber.js';
+import TokenBalance from '@myetherwallet/eth-token-balance';
 
 export default {
   components: {
@@ -111,10 +114,46 @@ export default {
     });
   },
   methods: {
+    setToken(address) {
+      const tokens = [];
+      const tb = new TokenBalance(this.web3.currentProvider);
+      const newLogo = {
+        // eslint-disable-next-line
+          src: require(`@/assets/images/networks/eth-logo.svg`)
+      };
+      return tb
+        .getBalance(address)
+        .then(res => {
+          res.forEach(token => {
+            const balance = token.balance;
+            delete token.balance;
+            token.balance = new BigNumber(balance).gt(0)
+              ? new BigNumber(balance)
+                  .div(new BigNumber(10).pow(token.decimals))
+                  .toFixed(3)
+              : 0;
+            token.address = token.addr;
+            token['logo'] = newLogo;
+            delete token.addr;
+            tokens.push(token);
+          });
+          this.loading = false;
+          return tokens.sort(sortByBalance);
+        })
+        .catch(() => {
+          this.network.type.tokens.map(token => {
+            token.balance = 'Load';
+            token['logo'] = newLogo;
+            tokens.push(token);
+          });
+          this.loading = false;
+          return tokens;
+        });
+    },
     async processAccounts(accs) {
       this.loading = true;
       const accounts = [];
-      for (const account of accs) {
+      for await (const account of accs) {
         if (account !== undefined) {
           const address = toChecksumAddress(account.address).toLowerCase();
           delete account['address'];
@@ -123,6 +162,9 @@ export default {
           account['type'] = parsedItemWallet.type;
           account['address'] = address;
           account['nickname'] = parsedItemWallet.nick;
+          this.setToken(address).then(res => {
+            account['tokenBalance'] = res;
+          });
           accounts.push(account);
         }
       }
@@ -142,7 +184,6 @@ export default {
               favoritedWallets.push(actualAccount);
             }
           });
-
           this.favoriteWallets = favoritedWallets;
         }
       });
