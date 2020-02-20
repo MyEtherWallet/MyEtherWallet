@@ -114,7 +114,10 @@
                       'currency-symbol'
                     ]"
                   ></span
-                  >{{ token.name }}
+                  ><span v-if="token.name !== 'USD//C'">{{ token.name }}</span
+                  ><span v-if="token.name === 'USD//C'">{{
+                    token.symbol
+                  }}</span>
                 </td>
                 <td>
                   {{
