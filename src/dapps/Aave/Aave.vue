@@ -9,19 +9,53 @@
       @liquidityRateHistory="updateLiquidityRateHistory"
     />
     <div class="header-container">
-      <div v-if="$route.fullPath === '/interface/dapps/aave/action'">
-        <div class="action-title">
-          {{ actionTitle }} {{ reservesData.length > 0 ? token.symbol : '' }}
+      <div class="row-desktop">
+        <div v-if="$route.fullPath === '/interface/dapps/aave/action'">
+          <div class="action-title">
+            {{ actionTitle }} {{ reservesData.length > 0 ? token.symbol : '' }}
+          </div>
+        </div>
+        <back-button
+          v-if="$route.fullPath !== '/interface/dapps/aave/action'"
+          :title="$t('dappsAmbrpay.exit-dapp')"
+          :hide-border="true"
+        />
+        <div
+          v-if="$route.fullPath !== '/interface/dapps/aave/action'"
+          class="tab-container desktop"
+        >
+          <div
+            :class="['action-btn', activeDepositTab ? 'active-tab' : '']"
+            @click="toggleTabs('deposit')"
+          >
+            {{ $tc('dappsAave.deposit', 2) }}
+          </div>
+          <div
+            :class="[
+              'action-btn',
+              'borrow-btn',
+              activeBorrowTab ? 'active-tab' : ''
+            ]"
+            @click="toggleTabs('borrow')"
+          >
+            {{ $t('dappsAave.borrowings') }}
+          </div>
+        </div>
+        <div class="health-container">
+          <span>{{ $t('dappsAave.health-factor') }}</span>
+          <i v-show="loadingHome" class="fa fa-spinner fa-spin health-score" />
+          <span v-if="!loadingHome" class="health-score">{{
+            convertToFixed(userSummary.healthFactor, 3)
+          }}</span>
+          <popover
+            :popcontent="$t('dappsAave.health-factor-popover')"
+            class="dapp-popover"
+          ></popover>
         </div>
       </div>
-      <back-button
-        v-if="$route.fullPath !== '/interface/dapps/aave/action'"
-        :title="$t('dappsAmbrpay.exit-dapp')"
-        :hide-border="true"
-      />
       <div
         v-if="$route.fullPath !== '/interface/dapps/aave/action'"
-        class="tab-container"
+        class="tab-container mobile"
       >
         <div
           :class="['action-btn', activeDepositTab ? 'active-tab' : '']"
@@ -39,17 +73,6 @@
         >
           {{ $t('dappsAave.borrowings') }}
         </div>
-      </div>
-      <div class="health-container">
-        <span>{{ $t('dappsAave.health-factor') }}</span>
-        <i v-show="loadingHome" class="fa fa-spinner fa-spin health-score" />
-        <span v-if="!loadingHome" class="health-score">{{
-          convertToFixed(userSummary.healthFactor, 3)
-        }}</span>
-        <popover
-          :popcontent="$t('dappsAave.health-factor-popover')"
-          class="dapp-popover"
-        ></popover>
       </div>
     </div>
     <router-view

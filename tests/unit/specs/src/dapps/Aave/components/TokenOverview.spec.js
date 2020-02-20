@@ -14,11 +14,6 @@ describe('TokenOverview.vue', () => {
 
     store = new VueX.Store({
       modules: {
-        main: {
-          namespaced: true,
-          state,
-          getters
-        },
         aave: {
           namespaced: true,
           state,
