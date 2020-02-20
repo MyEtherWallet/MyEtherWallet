@@ -1,3 +1,7 @@
+### Devop
+
+- Change translation string [#2000](https://github.com/MyEtherWallet/MyEtherWallet/pull/2000)
+
 ### Release v5.3.3
 
 ### Bug
