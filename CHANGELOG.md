@@ -1,6 +1,6 @@
-
 ### Devop
 
+- Change translation string [#2000](https://github.com/MyEtherWallet/MyEtherWallet/pull/2000)
 - Fix Exit to Fiat to correspond with backend changes [#2002](https://github.com/MyEtherWallet/MyEtherWallet/pull/2002)
 
 ### Release v5.3.3
@@ -16,6 +16,7 @@
 
 - Add CAD and JPY as Simplex currencies [#1887](https://github.com/MyEtherWallet/MyEtherWallet/pull/1887)
 - Update NFT manager to use new API [#1898](https://github.com/MyEtherWallet/MyEtherWallet/pull/1898)
+- Remove iosiro as blacklist source - Update NFT manager to use new API [#1997](https://github.com/MyEtherWallet/MyEtherWallet/pull/1997)
 
 ### Release v5.3.2-hotfix.1
 

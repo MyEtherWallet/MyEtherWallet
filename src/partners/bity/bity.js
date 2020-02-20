@@ -505,7 +505,10 @@ export default class BitySwap {
 
   static async getOrderStatusFiat(noticeDetails) {
     try {
-      const data = await orderDetails({ detailsUrl: noticeDetails.statusId, token: noticeDetails.special });
+      const data = await orderDetails({
+        detailsUrl: noticeDetails.statusId,
+        token: noticeDetails.special
+      });
       if (!utils.isJson(data)) return swapNotificationStatuses.PENDING;
 
       // Since the status cannot be relied upon, we are going to assume the order went through after 10 min, if their was no error with the eth transaction.
