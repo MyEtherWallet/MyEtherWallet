@@ -3,57 +3,72 @@
     v-if="ownedReserves.length > 0 || showPendingToken()"
     class="summary-table-container"
   >
-    <div>
+    <div class="token-block-container">
       <div
         v-for="(reserve, index) in ownedReserves"
         :key="reserve.key"
         :class="activeDepositTab ? 'deposit-table-tr' : 'borrow-table-tr'"
         class="token-block"
       >
-        <div class="d-flex">
-          <img
-            v-if="reserve.reserve.symbol && !getIcon(reserve.reserve.symbol)"
-            :src="iconFetcher(reserve.reserve.symbol)"
-            width="30"
-          />
-          <div
-            v-if="getIcon(reserve.reserve.symbol)"
-            :class="[
-              'cc',
-              getIcon(reserve.reserve.symbol),
-              'cc-icon',
-              'currency-symbol',
-              'token-icon'
-            ]"
-          />
-          <div>{{ reserve.reserve.symbol }}</div>
+        <div>
+          <div class="section-name">{{ $t('dappsAave.token') }}</div>
+          <div class="d-flex align-items-center">
+            <img
+              v-if="reserve.reserve.symbol && !getIcon(reserve.reserve.symbol)"
+              :src="iconFetcher(reserve.reserve.symbol)"
+              width="30"
+            />
+            <div
+              v-if="getIcon(reserve.reserve.symbol)"
+              class="token-symbol"
+              :class="[
+                'cc',
+                getIcon(reserve.reserve.symbol),
+                'cc-icon',
+                'currency-symbol',
+                'token-icon'
+              ]"
+            />
+            <h2 class="m-0 ml-2">{{ reserve.reserve.symbol }}</h2>
+          </div>
         </div>
-        <div v-if="activeDepositTab">
-          <span
-            >{{ convertToFixed(reserve.principalATokenBalance, 3) }}
-            {{ reserve.reserve.symbol }}</span
-          >
-          <span class="eth-amt"
-            >{{ convertToFixed(reserve.currentUnderlyingBalanceETH, 6) }}
-            {{ $t('common.currency.eth') }}</span
-          >
+
+        <div v-if="activeDepositTab" class="mt-3">
+          <div class="section-name">{{ $t('dappsAave.deposited') }}</div>
+          <div>
+            <h3>
+              {{ convertToFixed(reserve.principalATokenBalance, 3) }}
+              {{ reserve.reserve.symbol }}
+            </h3>
+            <h5 class="eth-amt">
+              {{ convertToFixed(reserve.currentUnderlyingBalanceETH, 6) }}
+              {{ $t('common.currency.eth') }}
+            </h5>
+          </div>
         </div>
+
         <div v-if="!activeDepositTab">
           <span>${{ convertToFixed(reserve.currentBorrowsUSD) }}</span>
-          <span class="eth-amt"
-            >{{ convertToFixed(reserve.currentBorrowsETH, 6) }}
-            {{ $t('common.currency.eth') }}</span
-          >
+          <span class="eth-amt">
+            {{ convertToFixed(reserve.currentBorrowsETH, 6) }}
+            {{ $t('common.currency.eth') }}
+          </span>
         </div>
-        <div>
-          <span v-if="activeDepositTab"
-            >{{ convertToFixed(reserve.reserve.liquidityRate * 100) }}%</span
-          >
-          <span v-if="!activeDepositTab"
-            >{{ convertToFixed(reserve.borrowRate * 100) }}%</span
-          >
+
+        <div class="mt-3">
+          <div class="section-name">{{ $t('dappsAave.apr') }}</div>
+          <div>
+            <span v-if="activeDepositTab">
+              {{ convertToFixed(reserve.reserve.liquidityRate * 100) }}%
+            </span>
+            <span v-if="!activeDepositTab">
+              {{ convertToFixed(reserve.borrowRate * 100) }}%
+            </span>
+          </div>
         </div>
-        <div v-if="activeDepositTab">
+
+        <div v-if="activeDepositTab" class="mt-3">
+          <div class="section-name">{{ $t('dappsAave.use-collateral') }}</div>
           <div class="sliding-switch-white">
             <label class="switch">
               <input
@@ -65,6 +80,7 @@
             </label>
           </div>
         </div>
+
         <div v-if="!activeDepositTab">
           <div class="slider-container">
             <div class="sliding-switch-white">
@@ -99,8 +115,16 @@
             >
           </div>
         </div>
-        <div class="button-container">
-          <button @click="goToPage(index)">
+
+        <div class="mt-3">
+          <div class="section-name">
+            {{ $tc('dappsAave.deposit', 1) }} / {{ $t('dappsAave.withdraw') }}
+          </div>
+          <button
+            type="button"
+            class="btn btn-dark mr-1 btn-sm"
+            @click="goToPage(index)"
+          >
             {{
               activeDepositTab
                 ? $tc('dappsAave.deposit', 1)
@@ -108,6 +132,8 @@
             }}
           </button>
           <button
+            type="button"
+            class="btn btn-dark mr-1 btn-sm"
             @click="goToPage(index, activeDepositTab ? 'Withdraw' : 'Repay')"
           >
             {{

@@ -72,6 +72,7 @@
       @emitTakeAction="emitTakeAction"
     />
     <summary-table-mobile
+      class="mt-3"
       :reserves="reserves"
       :user-reserves="userSummary.reservesData"
       :health-factor="userSummary.healthFactor"

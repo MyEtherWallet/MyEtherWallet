@@ -1,5 +1,26 @@
 @import "~@/scss/GlobalVariables";
 
+.section-name {
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.token-block-container {
+  display: flex;
+  margin: -6px;
+}
+
 .token-block {
-  border: 1px solid black;
+  border-radius: 5px;
+  border: 1px solid #e5eff4;
+  margin: 6px;
+  padding: 20px;
+  flex: 1;
+}
+
+.token-symbol {
+  font-size: 30px;
+  line-height: 1px;
 }
