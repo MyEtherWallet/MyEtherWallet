@@ -265,13 +265,8 @@ export default {
     selectedNft() {
       if (this.selectedContract) {
         return this.nftConfig[this.selectedContract];
-      } else {
-        for (const contract in this.nftConfig) {
-          this.selectedContract = contract
-          if (this.nftConfig[contract].tokens) return this.nftConfig[contract];
-        }
-        return { tokens: [] };
       }
+      return { tokens: [] };
     },
     showNextButton() {
       if (this.nftConfig[this.selectedContract]) {
@@ -419,6 +414,7 @@ export default {
           configData[address].currentIndex = 0;
         });
         this.nftConfig = { ...configData };
+        this.selectedContract = Object.keys(this.nftConfig)[0];
         this.countsRetrieved = true;
       }
     },
