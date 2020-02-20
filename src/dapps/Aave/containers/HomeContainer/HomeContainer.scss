@@ -1,4 +1,22 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
+
+.desktop {
+  display: block;
+}
+
+.mobile {
+  display: none;
+}
+
+@media all and (max-width: 700px) {
+  .desktop {
+    display: none;
+  }
+
+  .mobile {
+    display: block;
+  }
+}
 
 .aave-wrapper {
   margin: 10px;
