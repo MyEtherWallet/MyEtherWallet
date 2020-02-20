@@ -1,3 +1,7 @@
+### Bug
+
+- Partial fix to downloading keystore file in view wallet [#1997](https://github.com/MyEtherWallet/MyEtherWallet/pull/1997)
+
 ### Release v5.3.3
 
 ### Bug
