@@ -7,9 +7,12 @@
   overflow: hidden;
 
   .header-container {
+    border-bottom: 2px solid $light-grey-1;
+  }
+
+  .row-desktop {
     align-items: center;
     background-color: $white;
-    border-bottom: 2px solid $light-grey-1;
     display: flex;
     justify-content: space-between;
     margin: 10px;
@@ -50,11 +53,30 @@
     }
   }
 
+  .desktop {
+    display: flex;
+  }
+  
+  .mobile {
+    display: none;
+  }
+
+  @media all and (max-width: 700px) {
+    .desktop {
+      display: none;
+    }
+  
+    .mobile {
+      display: flex;
+      justify-content: center;;
+      margin-bottom: 20px;
+    }
+  }
+
   .health-container {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
-    margin-left: 10px;
     span {
       color: $light-grey-18;
       font-size: 14px;

@@ -3,8 +3,9 @@
 .header-container {
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  padding: 10px;
+  padding: 20px 20px 5px 20px;
 
   .search-container {
     i {
