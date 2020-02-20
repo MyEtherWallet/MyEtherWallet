@@ -10,7 +10,7 @@
     "build:hash": "ROUTER_MODE=hash npm run build",
     "build:history": "ROUTER_MODE=history npm run build",
     "build:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run build",
-    "start:mewcx": "NODE_OPTIONS=--max-old-space-size=8192 ROUTER_MODE=hash BUILD_TYPE=mewcx npm run buildwatch",
+    "start:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run buildwatch",
     "buildwatch": "npm run update && vue-cli-service build --watch",
     "test": "npm run update:lists && jest --clearCache && npm run test:unit",
     "codecov": "npm run test && codecov",
