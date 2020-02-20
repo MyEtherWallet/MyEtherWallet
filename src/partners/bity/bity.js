@@ -387,6 +387,7 @@ export default class BitySwap {
           swapDetails.dataForInitialization.payment_address;
         swapDetails.isDex = BitySwap.isDex();
         swapDetails.validFor = swapDetails.parsed.validFor;
+        swapDetails.special = swapDetails.parsed.special;
       } else {
         throw Error('abort');
       }
