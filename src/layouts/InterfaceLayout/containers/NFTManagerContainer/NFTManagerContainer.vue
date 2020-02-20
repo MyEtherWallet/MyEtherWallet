@@ -70,7 +70,7 @@
           :class="collectionLoading ? 'loading' : ''"
         >
           <nav
-            v-show="selectedNtf.tokens.length > 9"
+            v-show="selectedNft.tokens.length > 9"
             aria-label="Page navigation example"
           >
             <ul class="pagination justify-content-center">
@@ -132,9 +132,7 @@
     </div>
 
     <div v-if="!isOnlineAndEth">
-      <div v-show="!online">
-        {{ $t('nftManager.nft-are') }}
-      </div>
+      <div v-show="!online">{{ $t('nftManager.nft-are') }}</div>
       <div v-show="online" class="not-supported-txt">
         {{ $t('nftManager.not-supported', { value: network.type.name_long }) }}
       </div>
@@ -197,7 +195,7 @@ export default {
       countsRetrieved: false,
       showDetails: false,
       reLoading: false,
-      selectedContract: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
+      selectedContract: '',
       detailsFor: {},
       nftTokens: {},
       ownedTokens: [],
@@ -264,11 +262,16 @@ export default {
 
       return this.$t('nftManager.none-owned');
     },
-    selectedNtf() {
-      if (this.nftConfig[this.selectedContract]) {
+    selectedNft() {
+      if (this.selectedContract) {
         return this.nftConfig[this.selectedContract];
+      } else {
+        for (const contract in this.nftConfig) {
+          this.selectedContract = contract
+          if (this.nftConfig[contract].tokens) return this.nftConfig[contract];
+        }
+        return { tokens: [] };
       }
-      return {};
     },
     showNextButton() {
       if (this.nftConfig[this.selectedContract]) {

@@ -1,3 +1,9 @@
+### Release v5.3.3-hotfix.1
+
+### Hotfix
+
+- Fix NFT load issue [#](https://github.com/MyEtherWallet/MyEtherWallet/pull/)
+
 ### Release v5.3.3
 
 ### Bug
