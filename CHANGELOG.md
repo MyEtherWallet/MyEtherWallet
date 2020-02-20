@@ -2,7 +2,7 @@
 
 ### Hotfix
 
-- Fix NFT load issue [#](https://github.com/MyEtherWallet/MyEtherWallet/pull/)
+- Fix NFT load issue [#2001](https://github.com/MyEtherWallet/MyEtherWallet/pull/2001)
 
 ### Release v5.3.3
 
