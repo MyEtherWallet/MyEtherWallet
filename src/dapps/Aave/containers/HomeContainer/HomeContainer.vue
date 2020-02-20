@@ -71,6 +71,15 @@
       :pending-token="pendingToken"
       @emitTakeAction="emitTakeAction"
     />
+    <summary-table-mobile
+      class="mt-3"
+      :reserves="reserves"
+      :user-reserves="userSummary.reservesData"
+      :health-factor="userSummary.healthFactor"
+      :active-deposit-tab="activeDepositTab"
+      :pending-token="pendingToken"
+      @emitTakeAction="emitTakeAction"
+    />
     <action-modal
       ref="actionModal"
       :reserves="reserves"
@@ -84,6 +93,7 @@
 
 <script>
 import SummaryTable from '@/dapps/Aave/components/SummaryTable';
+import SummaryTableMobile from '@/dapps/Aave/components/SummaryTableMobile';
 import BalanceDisplay from '@/dapps/Aave/components/BalanceDisplay';
 import ActionModal from '@/dapps/Aave/components/ActionModal';
 import BigNumber from 'bignumber.js';
@@ -94,7 +104,8 @@ export default {
     popover: PopOver,
     'balance-display': BalanceDisplay,
     'action-modal': ActionModal,
-    'summary-table': SummaryTable
+    'summary-table': SummaryTable,
+    'summary-table-mobile': SummaryTableMobile
   },
   props: {
     pendingToken: {
