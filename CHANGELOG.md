@@ -12,7 +12,6 @@
 - Add CAD and JPY as Simplex currencies [#1887](https://github.com/MyEtherWallet/MyEtherWallet/pull/1887)
 - Update NFT manager to use new API [#1898](https://github.com/MyEtherWallet/MyEtherWallet/pull/1898)
 
-
 ### Release v5.3.2-hotfix.1
 
 ### Hotfix
