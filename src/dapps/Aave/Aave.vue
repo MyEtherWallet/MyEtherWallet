@@ -186,6 +186,7 @@ export default {
     updateReserveData(data) {
       this.rawReserveData = data;
       this.reservesData = formatReserves(data);
+      this.reservesData = this.reservesData.reverse();
       this.loadingReserves = false;
       this.getFormatUserSummaryData();
     },
