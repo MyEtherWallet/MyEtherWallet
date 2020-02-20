@@ -3,199 +3,123 @@
     v-if="ownedReserves.length > 0 || showPendingToken()"
     class="summary-table-container"
   >
-    <table>
-      <colgroup>
-        <col width="20%" />
-        <col width="20%" />
-        <col width="15%" />
-        <col width="25%" />
-        <col width="20%" />
-      </colgroup>
-      <thead>
-        <th class="token-header">{{ $t('dappsAave.token') }}</th>
-        <th>
-          {{
-            activeDepositTab
-              ? $t('dappsAave.deposited')
-              : $t('dappsAave.amount-borrowed')
-          }}
-        </th>
-        <th>{{ $t('dappsAave.apr') }}</th>
-        <th>
+    <div>
+      <div
+        v-for="(reserve, index) in ownedReserves"
+        :key="reserve.key"
+        :class="activeDepositTab ? 'deposit-table-tr' : 'borrow-table-tr'"
+        class="token-block"
+      >
+        <div class="d-flex">
+          <img
+            v-if="reserve.reserve.symbol && !getIcon(reserve.reserve.symbol)"
+            :src="iconFetcher(reserve.reserve.symbol)"
+            width="30"
+          />
           <div
+            v-if="getIcon(reserve.reserve.symbol)"
             :class="[
-              'th-container',
-              activeDepositTab ? '' : 'apr-borrow-header'
+              'cc',
+              getIcon(reserve.reserve.symbol),
+              'cc-icon',
+              'currency-symbol',
+              'token-icon'
             ]"
+          />
+          <div>{{ reserve.reserve.symbol }}</div>
+        </div>
+        <div v-if="activeDepositTab">
+          <span
+            >{{ convertToFixed(reserve.principalATokenBalance, 3) }}
+            {{ reserve.reserve.symbol }}</span
+          >
+          <span class="eth-amt"
+            >{{ convertToFixed(reserve.currentUnderlyingBalanceETH, 6) }}
+            {{ $t('common.currency.eth') }}</span
+          >
+        </div>
+        <div v-if="!activeDepositTab">
+          <span>${{ convertToFixed(reserve.currentBorrowsUSD) }}</span>
+          <span class="eth-amt"
+            >{{ convertToFixed(reserve.currentBorrowsETH, 6) }}
+            {{ $t('common.currency.eth') }}</span
+          >
+        </div>
+        <div>
+          <span v-if="activeDepositTab"
+            >{{ convertToFixed(reserve.reserve.liquidityRate * 100) }}%</span
+          >
+          <span v-if="!activeDepositTab"
+            >{{ convertToFixed(reserve.borrowRate * 100) }}%</span
+          >
+        </div>
+        <div v-if="activeDepositTab">
+          <div class="sliding-switch-white">
+            <label class="switch">
+              <input
+                v-model="reserve.usageAsCollateralEnabledOnUser"
+                type="checkbox"
+                @click="useAsCollateral(index)"
+              />
+              <span class="slider round" />
+            </label>
+          </div>
+        </div>
+        <div v-if="!activeDepositTab">
+          <div class="slider-container">
+            <div class="sliding-switch-white">
+              <label
+                class="switch"
+                :title="
+                  !isStableEnabled(reserve.reserve.id)
+                    ? $t('dappsAave.stable-rate-no-avail')
+                    : ''
+                "
+              >
+                <input
+                  :disabled="!isStableEnabled(reserve.reserve.id)"
+                  :checked="reserve.borrowRateMode === 'Stable'"
+                  type="checkbox"
+                  @click="changeInterestType(index, reserve)"
+                />
+                <span class="slider borrow-slider round" />
+              </label>
+            </div>
+            <span
+              :class="
+                reserve.borrowRateMode === 'Stable'
+                  ? 'stable-txt'
+                  : 'variable-txt'
+              "
+              >{{
+                reserve.borrowRateMode === 'Stable'
+                  ? $t('dappsAave.stable')
+                  : $t('dappsAave.variable')
+              }}</span
+            >
+          </div>
+        </div>
+        <div class="button-container">
+          <button @click="goToPage(index)">
+            {{
+              activeDepositTab
+                ? $tc('dappsAave.deposit', 1)
+                : $t('dappsAave.borrow')
+            }}
+          </button>
+          <button
+            @click="goToPage(index, activeDepositTab ? 'Withdraw' : 'Repay')"
           >
             {{
               activeDepositTab
-                ? $t('dappsAave.use-collateral')
-                : $t('dappsAave.apr-type')
+                ? $t('dappsAave.withdraw')
+                : $t('dappsAave.repay')
             }}
-            <popover
-              v-if="!activeDepositTab"
-              :popcontent="$t('dappsAave.apr-type-popover')"
-              class="ml-2"
-            />
-          </div>
-        </th>
-        <th></th>
-      </thead>
-      <tbody>
-        <tr v-if="showPendingToken()">
-          <td class="token-name token-header">
-            <img
-              v-if="!getIcon(pendingToken.symbol)"
-              class="token-icon"
-              :src="iconFetcher(pendingToken.symbol)"
-            />
-            <span
-              v-if="getIcon(pendingToken.symbol)"
-              :class="[
-                'cc',
-                getIcon(pendingToken.symbol),
-                'cc-icon',
-                'currency-symbol',
-                'token-icon'
-              ]"
-            ></span
-            >{{ pendingToken.symbol }}
-          </td>
-          <td>
-            <i
-              v-show="pendingToken"
-              class="fa fa-spinner fa-spin health-score"
-            />
-          </td>
-          <td>
-            <i
-              v-show="pendingToken"
-              class="fa fa-spinner fa-spin health-score"
-            />
-          </td>
-          <td>
-            <i
-              v-show="pendingToken"
-              class="fa fa-spinner fa-spin health-score"
-            />
-          </td>
-        </tr>
-        <tr
-          v-for="(reserve, index) in ownedReserves"
-          :key="reserve.key"
-          :class="activeDepositTab ? 'deposit-table-tr' : 'borrow-table-tr'"
-        >
-          <td class="token-name token-header">
-            <img
-              v-if="reserve.reserve.symbol && !getIcon(reserve.reserve.symbol)"
-              class="token-icon"
-              :src="iconFetcher(reserve.reserve.symbol)"
-            />
-            <span
-              v-if="getIcon(reserve.reserve.symbol)"
-              :class="[
-                'cc',
-                getIcon(reserve.reserve.symbol),
-                'cc-icon',
-                'currency-symbol',
-                'token-icon'
-              ]"
-            ></span
-            >{{ reserve.reserve.symbol }}
-          </td>
-          <td v-if="activeDepositTab">
-            <span
-              >{{ convertToFixed(reserve.principalATokenBalance, 3) }}
-              {{ reserve.reserve.symbol }}</span
-            >
-            <span class="eth-amt"
-              >{{ convertToFixed(reserve.currentUnderlyingBalanceETH, 6) }}
-              {{ $t('common.currency.eth') }}</span
-            >
-          </td>
-          <td v-if="!activeDepositTab">
-            <span>${{ convertToFixed(reserve.currentBorrowsUSD) }}</span>
-            <span class="eth-amt"
-              >{{ convertToFixed(reserve.currentBorrowsETH, 6) }}
-              {{ $t('common.currency.eth') }}</span
-            >
-          </td>
-          <td>
-            <span v-if="activeDepositTab"
-              >{{ convertToFixed(reserve.reserve.liquidityRate * 100) }}%</span
-            >
-            <span v-if="!activeDepositTab"
-              >{{ convertToFixed(reserve.borrowRate * 100) }}%</span
-            >
-          </td>
-          <td v-if="activeDepositTab">
-            <div class="sliding-switch-white">
-              <label class="switch">
-                <input
-                  v-model="reserve.usageAsCollateralEnabledOnUser"
-                  type="checkbox"
-                  @click="useAsCollateral(index)"
-                />
-                <span class="slider round" />
-              </label>
-            </div>
-          </td>
-          <td v-if="!activeDepositTab">
-            <div class="slider-container">
-              <div class="sliding-switch-white">
-                <label
-                  class="switch"
-                  :title="
-                    !isStableEnabled(reserve.reserve.id)
-                      ? $t('dappsAave.stable-rate-no-avail')
-                      : ''
-                  "
-                >
-                  <input
-                    :disabled="!isStableEnabled(reserve.reserve.id)"
-                    :checked="reserve.borrowRateMode === 'Stable'"
-                    type="checkbox"
-                    @click="changeInterestType(index, reserve)"
-                  />
-                  <span class="slider borrow-slider round" />
-                </label>
-              </div>
-              <span
-                :class="
-                  reserve.borrowRateMode === 'Stable'
-                    ? 'stable-txt'
-                    : 'variable-txt'
-                "
-                >{{
-                  reserve.borrowRateMode === 'Stable'
-                    ? $t('dappsAave.stable')
-                    : $t('dappsAave.variable')
-                }}</span
-              >
-            </div>
-          </td>
-          <td class="button-container">
-            <button @click="goToPage(index)">
-              {{
-                activeDepositTab
-                  ? $tc('dappsAave.deposit', 1)
-                  : $t('dappsAave.borrow')
-              }}
-            </button>
-            <button
-              @click="goToPage(index, activeDepositTab ? 'Withdraw' : 'Repay')"
-            >
-              {{
-                activeDepositTab
-                  ? $t('dappsAave.withdraw')
-                  : $t('dappsAave.repay')
-              }}
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <confirmation-modal
       ref="confirmationModal"
       :active-deposit-tab="activeDepositTab"
@@ -272,6 +196,9 @@ export default {
       });
       return splitReserves;
     }
+  },
+  mounted() {
+    console.log(this.ownedReserves);
   },
   methods: {
     iconFetcher(currency) {
