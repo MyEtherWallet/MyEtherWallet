@@ -10,7 +10,9 @@
       <div>
         <Network />
         <Spacer />
-        <swap />
+        <Swap />
+        <Spacer />
+        <MEWconnect />
       </div>
     </div>
     <Spacer />
@@ -26,9 +28,18 @@ import Dapps from './Dapps';
 
 import Network from '@/layouts/Features/components/SideInfo/Network';
 import Swap from '@/layouts/Features/components/SideInfo/Swap';
+import MEWconnect from '@/layouts/Features/components/SideInfo/MEWconnect';
 
 export default {
-  components: { Spacer, EthBalance, TokensValue, Dapps, Network, Swap }
+  components: {
+    Spacer,
+    EthBalance,
+    TokensValue,
+    Dapps,
+    Network,
+    Swap,
+    MEWconnect
+  }
 };
 </script>
 
