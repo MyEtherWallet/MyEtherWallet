@@ -199,7 +199,6 @@ function querycB(tab) {
   if (tab.url) {
     const SEARCH_STRING = ['myetherwallet'];
     const ealBlacklisted = Object.assign({}, helpers.blackListDomains['eal']),
-      iosiroBlacklisted = Object.assign({}, helpers.blackListDomains['iosiro']),
       phishfortBlacklisted = Object.assign(
         {},
         helpers.blackListDomains['phishfort']
@@ -211,7 +210,6 @@ function querycB(tab) {
     let allBlacklistedDomains = [];
     let allWhitelistedDomains = [];
     allBlacklistedDomains = ealBlacklisted.domains
-      .concat(iosiroBlacklisted.domains)
       .concat(phishfortBlacklisted.domains)
       .concat(mewBlacklisted.domains);
     allWhitelistedDomains = mewWhitelisted.domains.concat(
