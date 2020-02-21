@@ -28,7 +28,7 @@
   "are-you-sure-delete": "Are you sure you want to delete wallet",
   "your-wallet": "Your Wallet",
   "nickname": "Nickname",
-  "balance-fetch-error": "Fetching eth price error.",
+  "balance-fetch-error": "Unable to fetch ETH price.",
   "all-tokens": "All Tokens",
   "loading-tokens": "Loading Tokens",
   "custom": "Custom",
