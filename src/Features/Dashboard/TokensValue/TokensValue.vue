@@ -7,7 +7,15 @@
         text2="$3,132.25"
       />
       <div class="ml-auto">
-        <TopButtons />
+        <TopButtons>
+          <v-btn class="text-transform--initial" text small depressed>
+            <v-icon small color="grey darken-1">mdi-chevron-right</v-icon>
+            Ethplorer
+          </v-btn>
+          <v-btn class="text-transform--initial" text small depressed>
+            <v-icon small>mdi-plus</v-icon> Custom Token
+          </v-btn>
+        </TopButtons>
       </div>
     </div>
 
