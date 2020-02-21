@@ -11,7 +11,7 @@
         <SideInfo />
       </div>
     </v-container>
-    <Footer class="component-footer" />
+    <Footer v-if="false" class="component-footer" />
   </div>
 </template>
 
