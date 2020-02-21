@@ -2,7 +2,7 @@
   <WhiteSheet class="pa-3">
     <div class="d-flex pa-5">
       <BlockTitle
-        :icon="require('@/assets/images/Common/Icons/eth.svg')"
+        :icon="require('@/assets/images/Etc/Features/eth.png')"
         text1="My Eth Balance"
         text2="$4,032.35"
         text3="24.842 ETH"

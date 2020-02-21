@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex">
     <div v-if="icon" class="mr-3 pt-1">
-      <img style="opacity: 0.7;" :src="icon" width="30" />
+      <img :src="icon" width="32" />
     </div>
     <div>
       <div v-if="text1" class="text-uppercase">{{ text1 }}</div>

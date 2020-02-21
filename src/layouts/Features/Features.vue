@@ -3,28 +3,20 @@
     <SideMenu class="left-sidemenu" />
     <v-container>
       <Header />
-      <div class="d-flex">
-        <div class="feature-content">
-          <router-view />
-        </div>
-        <Spacer />
-        <SideInfo />
-      </div>
+      <router-view />
     </v-container>
     <Footer v-if="false" class="component-footer" />
   </div>
 </template>
 
 <script>
-import Spacer from '@/components/Common/Spacer';
 import SideMenu from './components/SideMenu';
-import SideInfo from './components/SideInfo';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
 export default {
   name: 'Features',
-  components: { Spacer, SideMenu, SideInfo, Header, Footer }
+  components: { SideMenu, Header, Footer }
 };
 </script>
 
@@ -41,10 +33,6 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-}
-
-.feature-content {
-  flex-grow: 1;
 }
 
 .component-footer {

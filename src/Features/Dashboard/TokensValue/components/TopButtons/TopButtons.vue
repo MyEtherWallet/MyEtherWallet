@@ -1,12 +1,17 @@
 <template>
-  <WhiteSheet sideinfo class="pa-7">Network</WhiteSheet>
+  <div>
+    TopButtons
+  </div>
 </template>
 
 <script>
-import WhiteSheet from '@/components/Common/WhiteSheet';
-
 export default {
-  components: { WhiteSheet }
+  components: {},
+  data() {
+    return {};
+  },
+  watch: {},
+  beforeMount() {}
 };
 </script>
 
