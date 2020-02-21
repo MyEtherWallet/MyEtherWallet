@@ -255,7 +255,12 @@ export default {
         this.reservesData.forEach(reserve => {
           reserve.tokenBalance = 0;
           reserve.user = !reserve.user ? {} : reserve.user;
-
+          if (reserve.symbol === 'ETH') {
+            reserve.tokenBalance = this.web3.utils.fromWei(
+              new BigNumber(this.account.balance).toFixed(),
+              'ether'
+            );
+          }
           const foundReserve = this.tokensWithBalance.find(
             elem => elem.symbol === reserve.symbol
           );
