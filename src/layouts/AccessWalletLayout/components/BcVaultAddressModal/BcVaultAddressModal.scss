@@ -1,0 +1,26 @@
+@import '~@/scss/GlobalVariables';
+
+.address {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 20px;
+  background-color: $white;
+  border: 1px solid $mew-green;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+
+  p {
+    color: $mew-green;
+  }
+
+  &:hover,
+  &.selected {
+    background-color: $mew-green;
+
+    p {
+      color: $white;
+    }
+  }
+}
