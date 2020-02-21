@@ -1,6 +1,6 @@
 <template>
   <WhiteSheet>
-    <div class="d-flex pa-8">
+    <div class="d-flex align-center pa-8">
       <BlockTitle
         :icon="require('@/assets/images/Etc/Features/tokenValue.png')"
         text1="My Tokens Value"

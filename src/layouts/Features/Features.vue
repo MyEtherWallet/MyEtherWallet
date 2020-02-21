@@ -6,10 +6,9 @@
         <v-container>
           <Header />
           <router-view />
-          <div class="py-7" />
         </v-container>
 
-        <v-container class="footer-wrapper mt-auto">
+        <v-container class="footer-wrapper">
           <Footer />
         </v-container>
       </div>
@@ -40,6 +39,7 @@ export default {
   width: 100%;
   height: 100vh;
   border-bottom: 60px solid white;
+  padding-bottom: 60px;
 }
 
 .footer-wrapper {
