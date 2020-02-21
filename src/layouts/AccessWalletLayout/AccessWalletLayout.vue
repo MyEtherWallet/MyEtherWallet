@@ -61,6 +61,7 @@
       <finney-modal ref="finney" />
       <xwallet-modal ref="xwallet" />
       <enter-pin-number-modal />
+      <bcvault-address-modal ref="bcvault" :addresses="hardwareAddresses" />
 
       <div class="wrap">
         <div class="page-container">
@@ -112,6 +113,7 @@ import LedgerAppModal from './components/LedgerAppModal';
 import WalletPasswordModal from '@/components/WalletPasswordModal';
 import EnterPinNumberModal from '@/components/EnterPinNumberModal';
 import XwalletModal from './components/XwalletModal';
+import BcVaultAddressModal from './components/BcVaultAddressModal';
 
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
 import hardwareImg from '@/assets/images/icons/button-hardware.svg';
@@ -147,7 +149,8 @@ export default {
     'enter-pin-number-modal': EnterPinNumberModal,
     'ledger-app-modal': LedgerAppModal,
     'finney-modal': FinneyModal,
-    'xwallet-modal': XwalletModal
+    'xwallet-modal': XwalletModal,
+    'bcvault-address-modal': BcVaultAddressModal
   },
   data() {
     return {
@@ -155,6 +158,7 @@ export default {
       phrase: '',
       hardwareWallet: {},
       hardwareAddresses: [],
+      modalCb: () => {},
       walletConstructor: function() {},
       hardwareBrand: '',
       buttons: [
@@ -221,7 +225,13 @@ export default {
     });
 
     this.$eventHub.$on('userAddresses', (addresses, cb) => {
-      console.log(addresses, cb);
+      this.hardwareAddresses = addresses;
+      this.modalCb = cb;
+      this.$refs.bcvault.$refs.bcvaultAddress.show();
+    });
+    this.$refs.bcvault.$refs.bcvaultAddress.$on('hidden', () => {
+      this.hardwareAddresses = [];
+      this.modalCb = () => {};
     });
   },
   methods: {
