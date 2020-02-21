@@ -1,12 +1,14 @@
 <template>
-  <v-sheet class="white-sheet">
+  <v-sheet class="white-sheet" :class="sideinfo ? 'sideinfo' : ''">
     <slot />
   </v-sheet>
 </template>
 
 <script>
 export default {
-  props: {}
+  props: {
+    sideinfo: { default: false, type: Boolean }
+  }
 };
 </script>
 
@@ -14,5 +16,9 @@ export default {
 .white-sheet {
   border-radius: 12px;
   box-shadow: 0 0 20px #0000000f;
+}
+
+.sideinfo {
+  width: 350px;
 }
 </style>

@@ -2,12 +2,12 @@
   <WhiteSheet class="pa-3">
     <div class="d-flex align-center pa-5">
       <BlockTitle
-        :icon="require('@/assets/images/Common/Icons/eth.svg')"
+        :icon="require('@/assets/images/Etc/Features/tokenValue.png')"
         text1="My Tokens Value"
         text2="$3,132.25"
       />
       <div class="ml-auto">
-        aaa
+        <TopButtons />
       </div>
     </div>
 
@@ -37,9 +37,10 @@ import WhiteSheet from '@/components/Common/WhiteSheet';
 import StdButton from '@/components/StdButton';
 import ChartBalance from '@/components/Charts/Balance';
 import BlockTitle from '@/components/BlockTitles/BlockTitle1';
+import TopButtons from './components/TopButtons';
 
 export default {
-  components: { WhiteSheet, ChartBalance, StdButton, BlockTitle },
+  components: { WhiteSheet, ChartBalance, StdButton, BlockTitle, TopButtons },
   data() {
     return {
       chartRange: '1d',
