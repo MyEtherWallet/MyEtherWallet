@@ -8,6 +8,7 @@
   padding: 20px 20px 5px 20px;
 
   .search-container {
+    margin-right: 20px;
     i {
       color: $dark-grey-12;
       margin-left: 5px;
@@ -16,6 +17,7 @@
     }
 
     input {
+      width: 100%;
       border-bottom: 1px solid $light-grey-6;
       border-left: none;
       border-right: none;
@@ -28,15 +30,18 @@
   .type-token-container {
     align-items: center;
     display: flex;
+    @media all and (max-width: 600px) {
+      display: block;
+    }
     span {
       color: $light-grey-18;
       font-size: 14px;
+      margin-right: 10px;
     }
 
     .tab-container {
       align-items: center;
       display: flex;
-      margin-left: 10px;
 
       .action-btn {
         align-items: center;
@@ -79,11 +84,12 @@
 .table-container {
   max-height: 400px;
   margin-top: 10px;
-  overflow-y: scroll;
+  overflow: auto;
   table {
     // display: table;
     // table-layout: fixed;
     width: 100%;
+    min-width: 700px;
   }
 
   .currency-symbol {
