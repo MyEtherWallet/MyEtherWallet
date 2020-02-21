@@ -1,11 +1,19 @@
 <template>
   <div class="features">
-    <SideMenu class="left-sidemenu" />
-    <v-container>
-      <Header />
-      <router-view />
-    </v-container>
-    <Footer v-if="false" class="component-footer" />
+    <div class="d-flex align-stretch">
+      <SideMenu />
+      <div class="wrapper">
+        <v-container>
+          <Header />
+          <router-view />
+          <div class="py-7" />
+        </v-container>
+
+        <v-container class="footer-wrapper">
+          <Footer />
+        </v-container>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -25,19 +33,14 @@ export default {
 
 .features {
   background-color: $primary-silver;
-  height: 100%;
-  position: relative;
 }
 
-.left-sidemenu {
-  position: absolute;
-  top: 0;
-  left: 0;
+.wrapper {
+  width: 100%;
+  border-bottom: 60px solid white;
 }
 
-.component-footer {
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
+.footer-wrapper {
+  margin-bottom: -55px;
 }
 </style>
