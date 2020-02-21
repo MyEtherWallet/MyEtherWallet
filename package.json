@@ -72,7 +72,7 @@
     "remark-preset-lint-recommended": "3.0.3",
     "sass": "1.25.0",
     "sass-loader": "8.0.2",
-    "stylelint": "13.0.0",
+    "stylelint": "13.2.0",
     "stylelint-config-prettier": "8.0.1",
     "stylelint-config-standard": "20.0.0",
     "uglify-es": "3.3.9",
