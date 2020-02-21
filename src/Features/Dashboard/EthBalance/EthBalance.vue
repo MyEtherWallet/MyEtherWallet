@@ -4,8 +4,8 @@
       <BlockTitle
         :icon="require('@/assets/images/Etc/Features/eth.png')"
         text1="My Eth Balance"
-        text2="$4,032.35"
-        text3="24.842 ETH"
+        text2="24.842 ETH"
+        text3="$4,032.35"
       />
       <div class="ml-auto">
         <v-btn-toggle
