@@ -1,19 +1,12 @@
 <template>
   <WhiteSheet class="pa-3">
     <div class="d-flex pa-5">
-      <div class="d-flex">
-        <div class="mr-3 pt-1">
-          <img
-            style="opacity: 0.7;"
-            src="@/assets/images/Common/Icons/eth.svg"
-          />
-        </div>
-        <div>
-          <div class="text-uppercase">My Eth Balance</div>
-          <div class="display-1">$4,032.35</div>
-          <div class="text-color--mew-green">24.842 ETH</div>
-        </div>
-      </div>
+      <BlockTitle
+        :icon="require('@/assets/images/Common/Icons/eth.svg')"
+        text1="My Eth Balance"
+        text2="$4,032.35"
+        text3="24.842 ETH"
+      />
       <div class="ml-auto">
         <v-btn-toggle
           v-model="chartRange"
@@ -73,12 +66,12 @@
 <script>
 import Var from '@/variables.js';
 import WhiteSheet from '@/components/Common/WhiteSheet';
-//import ButtonGroup from '@/components/Buttons/ButtonGroup1';
 import StdButton from '@/components/StdButton';
 import ChartBalance from '@/components/Charts/Balance';
+import BlockTitle from '@/components/BlockTitles/BlockTitle1';
 
 export default {
-  components: { WhiteSheet, ChartBalance, StdButton },
+  components: { WhiteSheet, ChartBalance, StdButton, BlockTitle },
   data() {
     return {
       chartRange: '1d',
