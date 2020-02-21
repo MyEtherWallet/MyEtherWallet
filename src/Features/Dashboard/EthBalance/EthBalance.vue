@@ -4098,8 +4098,6 @@ export default {
   },
   watch: {
     chartRange(newVal) {
-      //this.chartData = this.chart1w;
-
       switch (newVal) {
         case '1d':
           this.chartData = this.chart1d;

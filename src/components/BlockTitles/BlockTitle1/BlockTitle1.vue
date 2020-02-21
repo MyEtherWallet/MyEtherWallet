@@ -14,12 +14,7 @@
 <script>
 export default {
   props: {
-    icon: {
-      default: function() {
-        return {};
-      },
-      type: Object
-    },
+    icon: { default: '', type: String },
     text1: { default: '', type: String },
     text2: { default: '', type: String },
     text3: { default: '', type: String }
