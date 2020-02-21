@@ -1,45 +1,13 @@
 <template>
   <WhiteSheet class="pa-3">
-    <div class="d-flex pa-5">
+    <div class="d-flex align-center pa-5">
       <BlockTitle
         :icon="require('@/assets/images/Common/Icons/eth.svg')"
-        text1="My Eth Balance"
-        text2="$4,032.35"
-        text3="24.842 ETH"
+        text1="My Tokens Value"
+        text2="$3,132.25"
       />
       <div class="ml-auto">
-        <v-btn-toggle
-          v-model="chartRange"
-          class="chart-button-group"
-          :color="topButtonColor"
-          tile
-          group
-          dense
-          mandatory
-        >
-          <v-btn value="1d">
-            1D
-          </v-btn>
-
-          <v-btn value="1w">
-            1W
-          </v-btn>
-
-          <v-btn value="1m">
-            1M
-          </v-btn>
-
-          <v-btn value="1y">
-            1Y
-          </v-btn>
-
-          <v-btn value="all">
-            All
-          </v-btn>
-        </v-btn-toggle>
-        <v-btn text icon class="ml-4">
-          <v-icon>mdi-dots-vertical</v-icon>
-        </v-btn>
+        aaa
       </div>
     </div>
 
