@@ -37,14 +37,14 @@ class BCVault {
     await this.bcWallet.EnterGlobalPin(this.deviceNumber[0], this.bcWalletType);
     // get the wallet addresses for ethereum
     // allegedly deprecated
-    const walletAddresses = await this.bcWallet.getWalletsOfType(
-      this.deviceNumber[0],
-      bc.WalletType.ethereum
-    );
-    // const walletAddresses = await this.bcWallet.getBatchWalletDetails(
-    //   1,
+    // const walletAddresses = await this.bcWallet.getWalletsOfType(
+    //   this.deviceNumber[0],
     //   bc.WalletType.ethereum
     // );
+    const walletAddresses = await this.bcWallet.getBatchWalletDetails(
+      this.deviceNumber[0],
+      [bc.WalletType.ethereum]
+    );
 
     return walletAddresses;
   }
