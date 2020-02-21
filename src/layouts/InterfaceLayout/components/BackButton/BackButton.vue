@@ -1,5 +1,5 @@
 <template>
-  <div class="back-container">
+  <div :class="['back-container', hideBorder ? '' : 'bottom-border']">
     <div class="content-title" @click.prevent="back">
       <div class="back-icon-container">
         <i class="fa fa-arrow-left" aria-hidden="true" />
@@ -21,6 +21,10 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    hideBorder: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
