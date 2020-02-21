@@ -276,10 +276,14 @@ export default {
         case BCVAULT_TYPE:
           BCVaultWallet()
             .then(res => {
-              console.log(res);
               this.openBcVault(res);
             })
             .catch(e => {
+              console.log(
+                JSON.stringify(e),
+                new Error(e).BCHttpResponse,
+                e.toString()
+              );
               BCVaultWallet.errorHandler(e);
             });
           break;
