@@ -1,12 +1,15 @@
 <template>
-  <WhiteSheet sideinfo class="pa-7">Swap</WhiteSheet>
+  <div v-if="text">{{ text }}</div>
 </template>
 
 <script>
-import WhiteSheet from '@/components/Common/WhiteSheet';
-
 export default {
-  components: { WhiteSheet }
+  props: {
+    text: { default: '', type: String }
+  },
+  data() {
+    return {};
+  }
 };
 </script>
 

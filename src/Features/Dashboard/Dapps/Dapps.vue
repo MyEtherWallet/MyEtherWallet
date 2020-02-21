@@ -1,12 +1,17 @@
 <template>
-  <WhiteSheet sideinfo class="pa-7">Swap</WhiteSheet>
+  <WhiteSheet class="pa-3">
+    Dapps
+  </WhiteSheet>
 </template>
 
 <script>
 import WhiteSheet from '@/components/Common/WhiteSheet';
 
 export default {
-  components: { WhiteSheet }
+  components: { WhiteSheet },
+  data() {
+    return {};
+  }
 };
 </script>
 
