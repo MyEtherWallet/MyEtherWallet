@@ -53,7 +53,7 @@
           3.12%
         </div>
         <v-icon class="text-color--mew-green body-2">mdi-arrow-up-bold</v-icon>
-        <v-icon v-if="false" class="text-color--mew-green body-2"
+        <v-icon v-if="false" color="red" class="body-2"
           >mdi-arrow-down-bold</v-icon
         >
       </div>
