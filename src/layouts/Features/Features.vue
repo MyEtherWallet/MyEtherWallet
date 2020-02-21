@@ -9,7 +9,7 @@
           <div class="py-7" />
         </v-container>
 
-        <v-container class="footer-wrapper">
+        <v-container class="footer-wrapper mt-auto">
           <Footer />
         </v-container>
       </div>
@@ -36,11 +36,16 @@ export default {
 }
 
 .wrapper {
+  position: relative;
   width: 100%;
+  height: 100vh;
   border-bottom: 60px solid white;
 }
 
 .footer-wrapper {
-  margin-bottom: -55px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -55px;
 }
 </style>
