@@ -15,6 +15,11 @@ import HowItWorks from '@/layouts/LandingPages/HowItWorks';
 
 import Features from '@/layouts/Features';
 import Dashboard from '@/Features/Dashboard';
+import Send from '@/Features/Send';
+import Swap from '@/Features/Swap';
+import Dapps from '@/Features/Dapps';
+import Contract from '@/Features/Contract';
+import SignMessage from '@/Features/SignMessage';
 
 const webRoutes = [
   {
@@ -110,6 +115,46 @@ const webRoutes = [
         path: 'dashboard',
         name: 'Dashboard',
         component: Dashboard,
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'send',
+        name: 'Send',
+        component: Send,
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'swap',
+        name: 'Swap',
+        component: Swap,
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'dapps',
+        name: 'Dapps',
+        component: Dapps,
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'contract',
+        name: 'Contract',
+        component: Contract,
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'sign',
+        name: 'SignMessage',
+        component: SignMessage,
         meta: {
           requiresAuth: false
         }
