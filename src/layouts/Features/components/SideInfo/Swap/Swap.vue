@@ -1,5 +1,8 @@
 <template>
-  <WhiteSheet sideinfo class="pa-7">Swap</WhiteSheet>
+  <WhiteSheet sideinfo class="pa-7">
+    <h4 class="text-color--dark-space bold">{{ $t('common.swap') }}
+    </h4>
+  </WhiteSheet>
 </template>
 
 <script>
@@ -11,5 +14,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables.scss';
 </style>

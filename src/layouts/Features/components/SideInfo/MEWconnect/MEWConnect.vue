@@ -1,5 +1,7 @@
 <template>
-  <WhiteSheet class="pa-7">MEWconnect</WhiteSheet>
+  <WhiteSheet class="pa-7">
+    <h4 class="text-color--dark-space bold">{{ $t('common.mewconnect.string') }}</h4>
+  </WhiteSheet>
 </template>
 
 <script>
@@ -11,5 +13,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables.scss';
 </style>
