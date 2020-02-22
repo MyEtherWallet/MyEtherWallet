@@ -37,9 +37,8 @@ export default {
 .wrapper {
   position: relative;
   width: 100%;
-  height: 100vh;
   border-bottom: 60px solid white;
-  padding-bottom: 60px;
+  padding-bottom: 40px;
 }
 
 .footer-wrapper {
