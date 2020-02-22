@@ -7,7 +7,7 @@
     dark
     depressed
     class="std-button"
-    :class="[buttonclass, minwidth == true ? 'btn-min-width' : '']"
+    :class="[buttonclass, minwidth == true ? 'btn-min-width' : '', fontclass]"
     :disabled="disabled"
     :to="to"
     :href="href"
@@ -24,7 +24,8 @@ export default {
     href: { default: '', type: String },
     disabled: { default: false, type: Boolean },
     minwidth: { default: true, type: Boolean },
-    size: { default: 'x-large', type: String }
+    size: { default: 'x-large', type: String },
+    fontclass: { default: 'font-weight-medium', type: String }
   },
   data: () => ({})
 };

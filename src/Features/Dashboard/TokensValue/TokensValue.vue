@@ -58,7 +58,15 @@
               <div>27.54</div>
             </div>
           </td>
-          <td></td>
+          <td>
+            <StdButton
+              buttonclass="button--green-border"
+              size="small"
+              minwidth="false"
+              fontclass="font-weight-regular"
+              >Trade</StdButton
+            >
+          </td>
         </tr>
       </tbody>
     </table>
