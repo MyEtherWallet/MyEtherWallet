@@ -7,14 +7,28 @@
         text2="$3,132.25"
       />
       <div class="ml-auto">
-        <v-btn class="text-transform--initial" text small depressed>
-          <v-icon small color="grey" class="top-button-icon"
+        <v-btn
+          class="text-transform--initial"
+          text
+          small
+          depressed
+          :color="textGreen"
+        >
+          <v-icon small color="textGreen" class="top-button-icon"
             >mdi-chevron-right</v-icon
           >
           Ethplorer
         </v-btn>
-        <v-btn class="text-transform--initial" text small depressed>
-          <v-icon small color="grey" class="top-button-icon">mdi-plus</v-icon>
+        <v-btn
+          class="text-transform--initial"
+          text
+          small
+          depressed
+          :color="textGreen"
+        >
+          <v-icon small color="textGreen" class="top-button-icon"
+            >mdi-plus</v-icon
+          >
           Custom Token
         </v-btn>
       </div>
@@ -23,7 +37,7 @@
     <table class="tokens-table">
       <thead>
         <tr>
-          <td></td>
+          <td style="width: 45px;"></td>
           <td>Token</td>
           <td>Price</td>
           <td>Market Cap</td>
@@ -47,9 +61,9 @@
           <td>
             <div class="d-flex align-center">
               <div></div>
-              <div>
+              <div class="text-red">
                 0.23%
-                <v-icon class="text-color--mew-green body-2"
+                <v-icon v-if="false" class="text-color--mew-green body-2"
                   >mdi-arrow-up-bold</v-icon
                 >
                 <v-icon v-if="true" color="red" class="body-2"
@@ -61,14 +75,14 @@
           <td>
             <div>
               <div>$228.42</div>
-              <div>27.54</div>
+              <div class="text-color--gray1">27.54</div>
             </div>
           </td>
           <td>
             <StdButton
               buttonclass="button--green-border"
               size="small"
-              minwidth="false"
+              :minwidth="false"
               fontclass="font-weight-regular"
               >Trade</StdButton
             >
@@ -88,12 +102,12 @@
           <td>
             <div class="d-flex align-center">
               <div></div>
-              <div>
+              <div class="text-color--mew-green">
                 0.23%
                 <v-icon class="text-color--mew-green body-2"
                   >mdi-arrow-up-bold</v-icon
                 >
-                <v-icon v-if="true" color="red" class="body-2"
+                <v-icon v-if="false" color="red" class="body-2"
                   >mdi-arrow-down-bold</v-icon
                 >
               </div>
@@ -102,14 +116,14 @@
           <td>
             <div>
               <div>$228.42</div>
-              <div>27.54</div>
+              <div class="text-color--gray1">27.54</div>
             </div>
           </td>
           <td>
             <StdButton
               buttonclass="button--green-border"
               size="small"
-              minwidth="false"
+              :minwidth="false"
               fontclass="font-weight-regular"
               >Trade</StdButton
             >
@@ -119,22 +133,6 @@
     </table>
 
     <ChartBalance v-if="false" :key="chartData.key" :data="chartData.data" />
-
-    <div class="d-flex align-center px-5 py-3">
-      <div class="px-6"></div>
-      <div class="d-flex align-center">
-        <div class="font-weight-bold">ETH PRICE</div>
-        <div class="ml-2 font-weight-regular text-color--mew-green">
-          3.12%
-        </div>
-        <v-icon class="text-color--mew-green body-2">mdi-arrow-up-bold</v-icon>
-        <v-icon v-if="false" class="text-color--mew-green body-2"
-          >mdi-arrow-down-bold</v-icon
-        >
-      </div>
-      <div class="ml-5">$321.55 / 1 ETH</div>
-      <StdButton size="x-large" class="ml-auto">Send Transaction</StdButton>
-    </div>
   </WhiteSheet>
 </template>
 
@@ -149,6 +147,8 @@ export default {
   components: { WhiteSheet, ChartBalance, StdButton, BlockTitle },
   data() {
     return {
+      textGray: Var.colorSets.gray.gray1,
+      textGreen: Var.colorSets.emerald,
       chartRange: '1d',
       topButtonColor: Var.colorSets.royalBlue,
       chartData: [],
@@ -227,11 +227,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables.scss';
+@import '@/assets/styles/GlobalVariables.scss';
+
+.text-red {
+  color: red;
+}
 
 .top-button-icon {
   border-radius: 100%;
-  background-color: rgb(180, 236, 228);
+  background-color: #b4ece4;
   margin-right: 5px;
 }
 
@@ -252,6 +256,10 @@ export default {
     background-color: rgb(249, 249, 249);
     font-size: 11px;
     text-transform: uppercase;
+    td {
+      color: $gray-1;
+      font-weight: 500;
+    }
   }
 
   tbody {
