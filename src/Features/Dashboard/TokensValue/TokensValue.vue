@@ -34,13 +34,60 @@
       </thead>
       <tbody>
         <tr>
-          <td>1</td>
+          <td>
+            <img
+              class="vertical-align--middle"
+              src="@/assets/images/Etc/Features/eth.png"
+              width="25"
+            />
+          </td>
           <td>XMR</td>
           <td>$8.29</td>
           <td>$1.53B</td>
           <td>
             <div class="d-flex align-center">
-              <div>1</div>
+              <div></div>
+              <div>
+                0.23%
+                <v-icon class="text-color--mew-green body-2"
+                  >mdi-arrow-up-bold</v-icon
+                >
+                <v-icon v-if="true" color="red" class="body-2"
+                  >mdi-arrow-down-bold</v-icon
+                >
+              </div>
+            </div>
+          </td>
+          <td>
+            <div>
+              <div>$228.42</div>
+              <div>27.54</div>
+            </div>
+          </td>
+          <td>
+            <StdButton
+              buttonclass="button--green-border"
+              size="small"
+              minwidth="false"
+              fontclass="font-weight-regular"
+              >Trade</StdButton
+            >
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <img
+              class="vertical-align--middle"
+              src="@/assets/images/Etc/Features/eth.png"
+              width="25"
+            />
+          </td>
+          <td>XMR</td>
+          <td>$8.29</td>
+          <td>$1.53B</td>
+          <td>
+            <div class="d-flex align-center">
+              <div></div>
               <div>
                 0.23%
                 <v-icon class="text-color--mew-green body-2"
@@ -205,6 +252,15 @@ export default {
     background-color: rgb(249, 249, 249);
     font-size: 11px;
     text-transform: uppercase;
+  }
+
+  tbody {
+    tr {
+      padding: 0 10px;
+    }
+    td {
+      border-bottom: 1px solid #efefef;
+    }
   }
 }
 </style>
