@@ -6,7 +6,7 @@
 
 // Style reset ======================================================
 * {
-  font-family: 'Roboto';
+  font-family: "Roboto";
   color: $dark-sacramento;
 }
 
@@ -15,7 +15,7 @@ a {
 }
 
 i {
-  font-family: 'Material Icons' !important;
+  font-family: "Material Icons" !important;
 }
 
 div,
@@ -105,6 +105,14 @@ h5 {
 
 .text-color--mew-green {
   color: $emerald !important;
+}
+
+.text-color--red {
+  color: $red-1 !important;
+}
+
+.text-color--gray1 {
+  color: $gray-1 !important;
 }
 
 .text-color--dark-sacramento {

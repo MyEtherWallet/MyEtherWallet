@@ -21,6 +21,7 @@ export default {
     spruce: '#506175',
     silver: '#cecece',
     disabled1: '#d8d8d8',
-    disabled2: '#999'
+    disabled2: '#999',
+    gray: { gray1: '#96a8b6' }
   }
 };
