@@ -14,9 +14,7 @@
           depressed
           :color="textGreen"
         >
-          <v-icon small color="textGreen" class="top-button-icon"
-            >mdi-chevron-right</v-icon
-          >
+          <v-icon small class="top-button-icon">mdi-chevron-right</v-icon>
           Ethplorer
         </v-btn>
         <v-btn
@@ -26,9 +24,7 @@
           depressed
           :color="textGreen"
         >
-          <v-icon small color="textGreen" class="top-button-icon"
-            >mdi-plus</v-icon
-          >
+          <v-icon small class="top-button-icon">mdi-plus</v-icon>
           Custom Token
         </v-btn>
       </div>
@@ -147,10 +143,8 @@ export default {
   components: { WhiteSheet, ChartBalance, StdButton, BlockTitle },
   data() {
     return {
-      textGray: Var.colorSets.gray.gray1,
       textGreen: Var.colorSets.emerald,
       chartRange: '1d',
-      topButtonColor: Var.colorSets.royalBlue,
       chartData: [],
       chart1d: {
         key: '1d',
@@ -197,28 +191,6 @@ export default {
         ]
       }
     };
-  },
-  watch: {
-    chartRange(newVal) {
-      switch (newVal) {
-        case '1d':
-          this.chartData = this.chart1d;
-          break;
-        case '1w':
-          this.chartData = this.chart1w;
-          break;
-        case '1m':
-          this.chartData = this.chart1m;
-          break;
-        case '1y':
-          this.chartData = this.chart1y;
-          break;
-        case 'all':
-          this.chartData = this.chartAll;
-          break;
-        default:
-      }
-    }
   },
   beforeMount() {
     this.chartData = this.chart1d;
@@ -268,6 +240,12 @@ export default {
     }
     td {
       border-bottom: 1px solid #efefef;
+    }
+    td:first-child {
+      padding-left: 30px;
+    }
+    td:last-child {
+      padding-right: 30px;
     }
   }
 }
