@@ -4,9 +4,13 @@
       <img :src="icon" width="32" />
     </div>
     <div>
-      <div v-if="text1" class="text-uppercase">{{ text1 }}</div>
+      <div v-if="text1" class="text-uppercase font-weight-bold">
+        {{ text1 }}
+      </div>
       <div v-if="text2" class="display-1">{{ text2 }}</div>
-      <div v-if="text3" class="text-color--mew-green">{{ text3 }}</div>
+      <div v-if="text3" class="text-color--mew-green font-weight-bold">
+        {{ text3 }}
+      </div>
     </div>
   </div>
 </template>

@@ -21,7 +21,7 @@ export default {
   .v-tab {
     text-transform: initial;
     font-weight: 700;
-    color: $disabled--2;
+    color: $disabled-2;
     min-width: 120px;
   }
   .v-tab--active {

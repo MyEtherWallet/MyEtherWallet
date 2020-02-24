@@ -4,8 +4,8 @@
       <BlockTitle
         :icon="require('@/assets/images/Etc/Features/eth.png')"
         text1="My Eth Balance"
-        text2="$4,032.35"
-        text3="24.842 ETH"
+        text2="24.842 ETH"
+        text3="$4,032.35"
       />
       <div class="ml-auto">
         <v-btn-toggle
@@ -53,7 +53,7 @@
           3.12%
         </div>
         <v-icon class="text-color--mew-green body-2">mdi-arrow-up-bold</v-icon>
-        <v-icon v-if="false" class="text-color--mew-green body-2"
+        <v-icon v-if="false" color="red" class="body-2"
           >mdi-arrow-down-bold</v-icon
         >
       </div>

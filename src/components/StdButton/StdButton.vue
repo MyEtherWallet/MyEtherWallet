@@ -4,10 +4,11 @@
     :large="size === 'large' ? true : false"
     :small="size === 'small' ? true : false"
     :x-small="size === 'x-small' ? true : false"
+    text
     dark
     depressed
     class="std-button"
-    :class="[buttonclass, minwidth == true ? 'btn-min-width' : '']"
+    :class="[buttonClass, minWidth == true ? 'btn-min-width' : '', fontclass]"
     :disabled="disabled"
     :to="to"
     :href="href"
@@ -19,12 +20,13 @@
 <script>
 export default {
   props: {
-    buttonclass: { default: 'button--green', type: String },
+    buttonClass: { default: 'button--green', type: String },
     to: { default: () => {}, type: Object },
     href: { default: '', type: String },
     disabled: { default: false, type: Boolean },
-    minwidth: { default: true, type: Boolean },
-    size: { default: 'x-large', type: String }
+    minWidth: { default: true, type: Boolean },
+    size: { default: 'x-large', type: String },
+    fontclass: { default: 'font-weight-medium', type: String }
   },
   data: () => ({})
 };
@@ -47,6 +49,11 @@ export default {
 .button--green {
   background-color: $emerald !important;
   color: white !important;
+}
+
+.button--text-green {
+  background-color: transparent !important;
+  color: $emerald !important;
 }
 
 .button--green-border {

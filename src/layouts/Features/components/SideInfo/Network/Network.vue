@@ -1,7 +1,8 @@
 <template>
   <WhiteSheet sideinfo class="pa-7">
     <div class="left-container">
-      <h4 class="text-color--dark-space bold">{{ $t('common.network') }}
+      <h4 class="text-color--dark-space bold">
+        {{ $t('common.network') }}
         <v-icon class="chevon-right-icon">mdi-chevron-right</v-icon>
       </h4>
       <div class="mt-3">
@@ -11,7 +12,7 @@
       </div>
     </div>
     <div class="right-container">
-      <img src="@/assets/images/icons/ethereum.png" alt="ethereum">
+      <img src="@/assets/images/icons/ethereum.png" alt="ethereum" />
     </div>
   </WhiteSheet>
 </template>
