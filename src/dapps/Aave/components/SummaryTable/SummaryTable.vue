@@ -158,7 +158,16 @@
                     type="checkbox"
                     @click="changeInterestType(index, reserve)"
                   />
-                  <span class="slider borrow-slider round" />
+                  <span
+                    :class="[
+                      'slider',
+                      'borrow-slider',
+                      'round',
+                      !isStableEnabled(reserve.reserve.id)
+                        ? 'disabled-input'
+                        : ''
+                    ]"
+                  />
                 </label>
               </div>
               <span
@@ -264,6 +273,9 @@ export default {
     ownedReserves() {
       const splitReserves = [];
       this.userReserves.forEach(reserve => {
+        if (this.pendingToken.symbol === reserve.reserve.symbol) {
+          return;
+        }
         if (this.activeDepositTab && reserve.principalATokenBalance > 0) {
           splitReserves.push(reserve);
         } else if (!this.activeDepositTab && reserve.currentBorrowsETH > 0) {
@@ -331,14 +343,17 @@ export default {
       });
     },
     useAsCollateral(idx) {
+      event.preventDefault();
+      event.stopPropagation();
       this.token = this.getReserve(this.ownedReserves[idx].reserve.id);
       this.$refs.confirmationModal.$refs.confirmationModal.show();
       this.collateralModalShown = true;
     },
-    changeInterestType(idx, reserve) {
+    changeInterestType(idx) {
+      event.preventDefault();
+      event.stopPropagation();
+
       this.token = this.getReserve(this.userReserves[idx].reserve.id);
-      reserve.borrowRateMode =
-        reserve.borrowRateMode === 'Stable' ? 'Variable' : 'Stable';
       this.$refs.switchInterest.$refs.switchInterest.show();
       this.switchInterestShown = true;
     },
