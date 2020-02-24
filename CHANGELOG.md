@@ -2,6 +2,12 @@
 
 - Change translation string [#2000](https://github.com/MyEtherWallet/MyEtherWallet/pull/2000)
 
+### Release v5.3.3-hotfix.2
+
+### Hotfix
+
+- remove keepalive net_version calls [#2009](https://github.com/MyEtherWallet/MyEtherWallet/pull/2009)
+
 ### Release v5.3.3-hotfix.1
 
 ### Hotfix
