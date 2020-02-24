@@ -131,7 +131,7 @@
     "trezor-connect": "8.0.13",
     "u2f-api": "1.1.1",
     "uglify-es": "3.3.9",
-    "uuid": "3.4.0",
+    "uuid": "7.0.0",
     "vue-i18n": "8.15.3",
     "vue-template-compiler": "2.6.11",
     "vue-worker": "1.2.1",
