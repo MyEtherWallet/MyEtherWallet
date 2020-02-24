@@ -5,7 +5,8 @@
 ### Devop
 
 - Change translation string [#2000](https://github.com/MyEtherWallet/MyEtherWallet/pull/2000)
-
+- Update aave copy [#2011](https://github.com/MyEtherWallet/MyEtherWallet/pull/2011)
+ 
 ### Release v5.3.3
 
 ### Bug
