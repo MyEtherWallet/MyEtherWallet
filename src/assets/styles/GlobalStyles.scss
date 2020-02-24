@@ -107,6 +107,14 @@ h5 {
   color: $emerald !important;
 }
 
+.text-color--red {
+  color: $red-1 !important;
+}
+
+.text-color--gray1 {
+  color: $gray-1 !important;
+}
+
 .text-color--dark-sacramento {
   color: $dark-sacramento !important;
 }
@@ -154,4 +162,8 @@ h5 {
 
 .monospace {
   font-family: monospace !important;
+}
+
+.vertical-align--middle {
+  vertical-align: middle;
 }

@@ -2,17 +2,24 @@
   <WhiteSheet sideinfo class="pa-7">
     <div class="header-container">
       <h4 class="text-color--dark-space bold">{{ $t('common.swap') }}</h4>
-      <StdButton>{{ $t('common.more') }}...</StdButton>
+      <StdButton
+        button-class="button--text-green"
+        size="small"
+        min-width="false"
+        >{{ $t('common.more') }}...</StdButton
+      >
     </div>
+    <SwapBlock />
   </WhiteSheet>
 </template>
 
 <script>
 import WhiteSheet from '@/components/Common/WhiteSheet';
 import StdButton from '@/components/StdButton';
+import SwapBlock from './components/SwapBlock';
 
 export default {
-  components: { WhiteSheet, StdButton },
+  components: { WhiteSheet, StdButton, SwapBlock },
   data() {
     return {
       fakeData: [
@@ -23,10 +30,14 @@ export default {
           to: 'BTC'
         }
       ]
-    }
+    };
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.header-container {
+  display: flex;
+  justify-content: space-between;
+}
 </style>

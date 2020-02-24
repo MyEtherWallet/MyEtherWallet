@@ -1,6 +1,8 @@
 <template>
   <WhiteSheet class="pa-7">
-    <h4 class="text-color--dark-space bold">{{ $t('common.mewconnect.string') }}</h4>
+    <h4 class="text-color--dark-space bold">
+      {{ $t('common.mewconnect.string') }}
+    </h4>
   </WhiteSheet>
 </template>
 
@@ -12,5 +14,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

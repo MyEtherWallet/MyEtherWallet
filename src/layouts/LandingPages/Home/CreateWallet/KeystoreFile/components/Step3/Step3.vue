@@ -8,7 +8,7 @@
         order to access your new wallet. And you are done!
       </p>
       <div class="d-flex align-center">
-        <StdButton buttonclass="button--green">Access my wallet</StdButton>
+        <StdButton button-class="button--green">Access my wallet</StdButton>
       </div>
       <p class="mt-4 mb-0">
         Need help?

@@ -24,7 +24,6 @@ export default {
 
 .component--sidemenu {
   position: relative;
-  height: 100%;
   width: 300px;
   background-color: #022747;
   color: white;
