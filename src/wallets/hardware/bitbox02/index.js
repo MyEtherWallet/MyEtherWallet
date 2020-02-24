@@ -5,7 +5,7 @@ import {
   sanitizeEthTransactionData
 } from 'bitbox02-api';
 
-import { BITBOX as bitboxType } from '../../bip44/walletTypes';
+import { BITBOX02 as bitbox02Type } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import * as HDKey from 'hdkey';
@@ -24,21 +24,21 @@ const NEED_PASSWORD = false;
 
 class BitBox02Wallet {
   constructor(logout) {
-    this.identifier = bitboxType;
+    this.identifier = bitbox02Type;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
-    this.supportedPaths = bip44Paths[bitboxType];
+    this.supportedPaths = bip44Paths[bitbox02Type];
     this.logout = logout;
     this.status = undefined;
     this.pairingConfirmed = false;
   }
-  async init(basePath) {
-    this.basePath = basePath ? basePath : this.supportedPaths[0].path;
+  async connect() {
     const devicePath = await getDevicePath();
     this.BitBox02 = new BitBox02API(devicePath);
   }
 
-  async connect() {
+  async init(basePath) {
+    this.basePath = basePath ? basePath : this.supportedPaths[0].path;
     await this.BitBox02.connect(
       pairingCode => {
         this.pairingCode = pairingCode;
@@ -64,7 +64,7 @@ class BitBox02Wallet {
       throw new Error('Unsupported device');
     }
 
-    const rootPub = await this.BitBox02.ethGetRootPubKey();
+    const rootPub = await this.BitBox02.ethGetRootPubKey(this.basePath);
     this.hdKey = HDKey.fromExtendedKey(rootPub);
 
     if (!this.attestation) {
@@ -80,7 +80,7 @@ class BitBox02Wallet {
       });
       const networkId = tx.getChainId();
       const signatureData = {
-        account: idx,
+        keypath: this.basePath + '/' + idx,
         recipient: tx.to,
         tx: getHexTxObject(tx),
         data: tx.data
@@ -112,7 +112,7 @@ class BitBox02Wallet {
     };
 
     const displayAddress = async () => {
-      await this.BitBox02.ethDisplayAddress(idx);
+      await this.BitBox02.ethDisplayAddress(this.basePath + '/' + idx);
     };
 
     return new HDWalletInterface(
@@ -136,9 +136,9 @@ class BitBox02Wallet {
   }
 }
 
-const createWallet = async (basePath, logout) => {
+const createWallet = async logout => {
   const _bb02Wallet = new BitBox02Wallet(logout);
-  await _bb02Wallet.init(basePath);
+  await _bb02Wallet.connect();
   return _bb02Wallet;
 };
 createWallet.errorHandler = errorHandler;
