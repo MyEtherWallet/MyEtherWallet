@@ -1,5 +1,9 @@
 <template>
-  <div class="container"></div>
+  <div
+    class="container"
+  >
+    <!-- <p>{{ pair.amt }} {{ pair.from }} / {{ pair.rate }} {{ pair.to }}</p> -->
+  </div>
 </template>
 
 <script>
