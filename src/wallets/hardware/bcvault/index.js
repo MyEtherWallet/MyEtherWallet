@@ -1,5 +1,5 @@
 import { Transaction } from 'ethereumjs-tx';
-import { hashPersonalMessage } from 'ethereumjs-util';
+import { hashPersonalMessage, bufferToHex } from 'ethereumjs-util';
 import * as bc from 'bc-vault-js';
 import { BCVAULT as bcVault } from '../../bip44/walletTypes';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
@@ -54,7 +54,7 @@ class BCVault {
     const path = null;
     const publickey = address;
     const txSigner = async tx => {
-      console.log('do you get here?', tx);
+      delete tx['from'];
       try {
         tx = new Transaction(tx, {
           common: commonGenerator(store.state.main.network)
@@ -63,23 +63,33 @@ class BCVault {
       } catch (e) {
         console.log(e);
       }
+      console.log('how do you not gtet here?', tx);
       const newTx = {};
-      newTx['feeCount'] = new BigNumber(tx['gasLimit']).toNumber();
-      newTx['feePrice'] = new BigNumber(tx['gasPrice']).toString();
-      newTx['amount'] = new BigNumber(tx['value']).toString();
-      newTx['contractData'] = tx['data'];
-      newTx['to'] = tx['to'];
-      newTx['from'] = tx['from'];
-      if (tx.hasOwnProperty('nonce')) {
-        newTx['advanced'] = {
-          eth: {
-            nonce: new BigNumber(tx['nonce']).toNumber()
-          }
-        };
+      try {
+        newTx['feeCount'] = new BigNumber(
+          bufferToHex(tx['gasLimit'])
+        ).toNumber();
+        newTx['feePrice'] = new BigNumber(
+          bufferToHex(tx['gasPrice'])
+        ).toString();
+        newTx['amount'] =
+          new BigNumber(bufferToHex(tx['value'])).toNumber() || 0;
+        newTx['contractData'] =
+          bufferToHex(tx['data']) === '' ? '0x' : tx['data'];
+        newTx['to'] = bufferToHex(tx['to']);
+        newTx['from'] = this.selectedAddress;
+        if (tx.hasOwnProperty('nonce')) {
+          newTx['advanced'] = {
+            eth: {
+              nonce: new BigNumber(bufferToHex(tx['nonce'])).toNumber()
+            }
+          };
+        }
+      } catch (e) {
+        console.log(e);
       }
-
+      console.log(newTx);
       const networkId = tx.getChainId();
-      console.log(this.deviceNumber, this.bcWalletType, 'hello', newTx);
       const result = await this.bcWallet
         .GenerateTransaction(
           this.deviceNumber[0],
