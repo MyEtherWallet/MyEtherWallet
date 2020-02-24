@@ -37,6 +37,7 @@ import notifications from './notifications/en_US';
 import mewcx from './mew-cx/en_US';
 import dappsAmbrpay from './dapps-ambrpay/en_US';
 import phishing from './other/phishing/en_US';
+import dappsAave from './dapps-aave/en_US';
 import header from './header/en_US';
 import dappsMCDMaker from './dapps-mcd-maker/en_US';
 
@@ -79,6 +80,7 @@ const en_US = {
   mewcx: mewcx,
   dappsAmbrpay: dappsAmbrpay,
   phishing: phishing,
+  dappsAave: dappsAave,
   header: header,
   dappsMCDMaker: dappsMCDMaker
 };

@@ -1,3 +1,7 @@
+### Feature
+
+- Aave [#1728](https://github.com/MyEtherWallet/MyEtherWallet/pull/1728)
+
 ### Devop
 
 - Change translation string [#2000](https://github.com/MyEtherWallet/MyEtherWallet/pull/2000)
@@ -250,6 +254,7 @@
 
 ### Feature
 
+- Add MEWconnect footer link [#1675](https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)
 - Display label paths [#1681](https://github.com/MyEtherWallet/MyEtherWallet/pull/1681)
 - Address book [#1647](https://github.com/MyEtherWallet/MyEtherWallet/pull/1647)
 - Add MEWconnect footer link [#1675](https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)
