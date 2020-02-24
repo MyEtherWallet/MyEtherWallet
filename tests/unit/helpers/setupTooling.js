@@ -56,6 +56,11 @@ const RouterLinkStub = {
   props: ['to']
 };
 
+const RouterViewStub = {
+  name: 'router-view',
+  template: '<div class="routerView"><slot></slot></div>'
+};
+
 // likely will remove this function
 // function createShallowMountWrapper(component, suppliedOptions, baseOptions = {}){
 //   if(typeof baseOptions === 'boolean' && baseOptions){
@@ -64,7 +69,7 @@ const RouterLinkStub = {
 //
 //   return shallowMount(component, {baseOptions, ...suppliedOptions});
 // }
-export { RouterLinkStub };
+export { RouterLinkStub, RouterViewStub };
 export default {
   createLocalVueInstance
 };
