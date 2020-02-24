@@ -237,6 +237,7 @@ export default {
   },
   mounted() {
     this.setupOnlineEnvironment();
+    console.log(this.wallet);
   },
   destroyed() {
     this.clearIntervals();
