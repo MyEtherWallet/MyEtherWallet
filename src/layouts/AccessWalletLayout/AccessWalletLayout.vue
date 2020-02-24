@@ -61,7 +61,11 @@
       <finney-modal ref="finney" />
       <xwallet-modal ref="xwallet" />
       <enter-pin-number-modal />
-      <bcvault-address-modal ref="bcvault" :addresses="hardwareAddresses" />
+      <bcvault-address-modal
+        ref="bcvault"
+        :addresses="hardwareAddresses"
+        :callback-fn="modalCb"
+      />
 
       <div class="wrap">
         <div class="page-container">
@@ -125,9 +129,8 @@ import hardwareImgDisabled from '@/assets/images/icons/button-hardware-disabled.
 import web3ImgDisabled from '@/assets/images/icons/button-web3-disabled.svg';
 import softwareImgDisabled from '@/assets/images/icons/button-software-disabled.svg';
 
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { Toast } from '@/helpers';
-import { BCVaultWallet } from '@/wallets';
 
 import DetectRTC from 'detectrtc';
 
@@ -235,6 +238,7 @@ export default {
     });
   },
   methods: {
+    ...mapActions('main', ['decryptWallet']),
     checkIsMetamask() {
       this.isMetaMask = window.ethereum && window.ethereum.isMetaMask;
     },
@@ -288,17 +292,26 @@ export default {
       this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.show();
       this.$refs.softwareModal.$refs.software.hide();
     },
-    // mnemonicphrasePasswordModalOpen(phrase) {
-    //   this.phrase = phrase;
-    //   this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.hide();
-    //   this.$refs.mnemonicPhrasePassword.$refs.password.show();
-    // },
-    openBcVault(arr) {
-      this.$refs.hardwareModal.$refs.hardware.hide();
-      this.$eventHub.$emit('userAddresses', arr, address => {
-        const walletInstance = BCVaultWallet.getAccount(address);
-        this.decryptWallet([walletInstance]).then();
-      });
+    openBcVault(arr, bcVaultInstance) {
+      if (arr.length > 1) {
+        this.$refs.hardwareModal.$refs.hardware.hide();
+        this.$eventHub.$emit('userAddresses', arr, address => {
+          const walletInstance = bcVaultInstance.getAccount(address);
+          this.decryptWallet([walletInstance]).then(() => {
+            this.$router.push({
+              path: 'interface'
+            });
+          });
+        });
+      } else {
+        const address = `${arr[0].extraData}${arr[0].address}`;
+        const walletInstance = bcVaultInstance.getAccount(address);
+        this.decryptWallet([walletInstance]).then(() => {
+          this.$router.push({
+            path: 'interface'
+          });
+        });
+      }
     },
     fileUploaded(e) {
       this.file = e;
