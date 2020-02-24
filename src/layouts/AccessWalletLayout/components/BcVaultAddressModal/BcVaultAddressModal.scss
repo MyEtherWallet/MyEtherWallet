@@ -24,3 +24,18 @@
     }
   }
 }
+
+.submit-button {
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: $mew-green;
+  color: $white;
+  padding: 20px 40px;
+  text-align: center;
+  margin-top: 20px;
+
+  &.disable {
+    background-color: $dark-grey-11;
+    pointer-events: none;
+  }
+}

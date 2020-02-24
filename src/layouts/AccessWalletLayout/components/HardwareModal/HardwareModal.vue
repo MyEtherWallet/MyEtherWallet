@@ -274,16 +274,14 @@ export default {
           this.$refs.hardware.hide();
           break;
         case BCVAULT_TYPE:
-          BCVaultWallet()
+          // eslint-disable-next-line
+          const bcvaultInstance = BCVaultWallet();
+          bcvaultInstance
+            .init()
             .then(res => {
-              this.openBcVault(res);
+              this.openBcVault(res, bcvaultInstance);
             })
             .catch(e => {
-              console.log(
-                JSON.stringify(e),
-                new Error(e).BCHttpResponse,
-                e.toString()
-              );
               BCVaultWallet.errorHandler(e);
             });
           break;
