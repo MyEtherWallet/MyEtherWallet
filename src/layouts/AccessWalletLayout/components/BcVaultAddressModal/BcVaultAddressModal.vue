@@ -12,11 +12,24 @@
       <div
         v-for="item in addresses"
         :key="item.address"
-        :class="[selected === item.address ? 'selected' : '', 'address']"
-        @click="selectAddress"
+        :class="[
+          selected === item.extraData + item.address ? 'selected' : '',
+          'address'
+        ]"
+        @click="selectAddress(item.extraData + item.address)"
       >
-        <blockie :address="item.address" width="40px" height="40px" />
+        <blockie
+          :address="item.extraData + item.address"
+          width="40px"
+          height="40px"
+        />
         <p>{{ item.extraData + item.address }}</p>
+      </div>
+      <div
+        :class="[selected !== '' ? '' : 'disable', 'submit-button']"
+        @click="callbackFn(selected)"
+      >
+        Unlock Wallet
       </div>
     </b-modal>
   </div>
@@ -31,6 +44,10 @@ export default {
   props: {
     addresses: {
       type: Array,
+      default: () => {}
+    },
+    callbackFn: {
+      type: Function,
       default: () => {}
     }
   },

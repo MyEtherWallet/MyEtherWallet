@@ -52,15 +52,24 @@ class BCVault {
   getAccount(address) {
     this.selectedAddress = address;
     const path = null;
-    const publickey = null;
+    const publickey = address;
     const txSigner = async tx => {
-      tx = new Transaction(tx, {
-        common: commonGenerator(store.state.main.network)
-      });
-      const newTx = Object.assign({}, tx);
+      console.log('do you get here?', tx);
+      try {
+        tx = new Transaction(tx, {
+          common: commonGenerator(store.state.main.network)
+        });
+        console.log(tx);
+      } catch (e) {
+        console.log(e);
+      }
+      const newTx = {};
       newTx['feeCount'] = new BigNumber(tx['gasLimit']).toNumber();
       newTx['feePrice'] = new BigNumber(tx['gasPrice']).toString();
       newTx['amount'] = new BigNumber(tx['value']).toString();
+      newTx['contractData'] = tx['data'];
+      newTx['to'] = tx['to'];
+      newTx['from'] = tx['from'];
       if (tx.hasOwnProperty('nonce')) {
         newTx['advanced'] = {
           eth: {
@@ -69,18 +78,17 @@ class BCVault {
         };
       }
 
-      delete newTx['gasLimit'];
-      delete newTx['gasPrice'];
-      delete newTx['value'];
-      delete newTx['nonce'];
-      delete newTx['common'];
-
       const networkId = tx.getChainId();
-      const result = await this.bcWallet.GenerateTransaction(
-        this.deviceNumber[0],
-        this.bcWalletType,
-        newTx
-      );
+      console.log(this.deviceNumber, this.bcWalletType, 'hello', newTx);
+      const result = await this.bcWallet
+        .GenerateTransaction(
+          this.deviceNumber[0],
+          this.bcWalletType,
+          newTx,
+          false
+        )
+        .then(console.log)
+        .catch(console.error);
       tx.v = getBufferFromHex(sanitizeHex(result.v));
       tx.r = getBufferFromHex(sanitizeHex(result.r));
       tx.s = getBufferFromHex(sanitizeHex(result.s));
@@ -96,6 +104,7 @@ class BCVault {
           ),
           false
         );
+      console.log('gets here', tx);
       return getSignTransactionObject(tx);
     };
     const msgSigner = async msg => {
@@ -112,21 +121,25 @@ class BCVault {
         getBufferFromHex(sanitizeHex(result.v))
       ]);
     };
+    const displayAddress = () => {
+      return address;
+    };
     return new HDWalletInterface(
       path,
       publickey,
+      true,
+      this.identifier,
       errorHandler,
       txSigner,
       msgSigner,
-      address
+      displayAddress
     );
   }
 }
 
-const createWallet = async () => {
+const createWallet = () => {
   const _bcvault = new BCVault();
-  const addresses = await _bcvault.init();
-  return addresses;
+  return _bcvault;
 };
 
 createWallet.errorHandler = errorHandler;
