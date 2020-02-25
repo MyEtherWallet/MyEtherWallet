@@ -1,3 +1,5 @@
+### Release v5.4.0
+
 ### Feature
 
 - Aave [#1728](https://github.com/MyEtherWallet/MyEtherWallet/pull/1728)
