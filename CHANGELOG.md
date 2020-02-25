@@ -8,6 +8,18 @@
 - Update aave copy [#2011](https://github.com/MyEtherWallet/MyEtherWallet/pull/2011)
 - Change social icons display [#2003](https://github.com/MyEtherWallet/MyEtherWallet/pull/2003)
 
+### Release v5.3.3-hotfix.2
+
+### Hotfix
+
+- remove keepalive net_version calls [#2009](https://github.com/MyEtherWallet/MyEtherWallet/pull/2009)
+
+### Release v5.3.3-hotfix.1
+
+### Hotfix
+
+- Fix NFT load issue [#2001](https://github.com/MyEtherWallet/MyEtherWallet/pull/2001)
+
 ### Release v5.3.3
 
 ### Bug
