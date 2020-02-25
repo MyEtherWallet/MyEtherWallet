@@ -1,6 +1,6 @@
 <template>
-  <WhiteSheet sideinfo class="px-7 py-5">
-    <div class="left-container">
+  <WhiteSheet sideinfo class="px-7 py-5 d-flex justify-space-between">
+    <div>
       <BlockTitle :text="$t('common.network')">
         <template v-slot:object-next-to-title>
           <SoloButton>
@@ -14,9 +14,12 @@
         <div>Last Block: #5699679</div>
       </div>
     </div>
-    <div class="right-container">
-      <img src="@/assets/images/Icons/eth.png" alt="ethereum" />
-    </div>
+    <img
+      width="60"
+      height="60"
+      src="@/assets/images/Icons/eth.png"
+      alt="ethereum"
+    />
   </WhiteSheet>
 </template>
 
@@ -31,23 +34,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
-.white-sheet {
-  display: flex;
-  justify-content: space-between;
-}
-.right-container {
-  img {
-    width: 50px;
-  }
-}
-
-.chevon-right-icon {
-  background-color: $royal-blue;
-  color: white;
-  border-radius: 6px;
-  height: 25px;
-  width: 25px;
-}
+//@import '@/assets/styles/GlobalVariables.scss';
 </style>
