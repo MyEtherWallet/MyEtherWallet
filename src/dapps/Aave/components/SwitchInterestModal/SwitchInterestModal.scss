@@ -1,0 +1,95 @@
+@import '~@/scss/GlobalVariables';
+
+.switch-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  padding: 0 20px;
+
+  .current-container,
+  .next-container {
+    background: $light-green-1;
+    border-radius: 4px;
+    height: 112px;
+    padding: 20px;
+    width: 200px;
+  }
+
+  .title {
+    color: $light-grey-18;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .percent-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 5px;
+  }
+
+  .rate-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 5px;
+  }
+
+  .stable-percent {
+    color: $light-yellow-4;
+  }
+
+  .variable-percent {
+    color: $light-blue-1;
+  }
+
+  .icon-container {
+    align-items: center;
+    display: flex;
+
+    i {
+      color: $light-blue-2;
+      font-size: 25px;
+    }
+  }
+}
+
+.currency-container {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 25px;
+  margin-right: 25px;
+
+  .currency-title {
+    color: $light-grey-18;
+    font-size: 14px;
+  }
+
+  .currency-type {
+    color: $dark-blue-6;
+    font-weight: 500;
+  }
+}
+
+.btn-container {
+  text-align: center;
+
+  button {
+    background-color: $mew-green;
+    border: none;
+    border-radius: 4px;
+    color: $white;
+    height: 62px;
+    margin-bottom: 10px;
+    width: 260px;
+  }
+}
+
+hr {
+  color: $light-grey-21;
+}
+
+.token-icon {
+  font-size: 20px;
+  margin-right: 5px;
+  vertical-align: sub;
+  width: 20px;
+}
