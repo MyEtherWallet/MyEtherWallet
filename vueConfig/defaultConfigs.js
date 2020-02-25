@@ -2,18 +2,7 @@ const imageminMozjpeg = require('imagemin-mozjpeg');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const webpack = require('webpack');
 const env_vars = require('../ENV_VARS');
-const allowedConnections = [
-  'https://raw.githubusercontent.com:443',
-  'wss://nodes.mewapi.io:443',
-  'https://nodes.mewapi.io:443',
-  'https://localhost:8080',
-  'wss://localhost:8080',
-  'https://swap.mewapi.io:443',
-  'https://apiccswap.myetherwallet.com:443',
-  'https://cryptorates.mewapi.io:443',
-  'https://cloudflare-dns.com:443'
-];
-
+const allowedConnections = require('./connections');
 module.exports = {
   plugins: [
     new webpack.DefinePlugin(env_vars),
