@@ -9,7 +9,7 @@
         alt="swap-icon"
       />
       <img
-        class="swap-arrow"
+        class="swap-arrow mx-2"
         src="@/assets/images/Icons/swap-arrow.png"
         alt="swap-icon"
       />

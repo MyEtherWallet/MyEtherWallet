@@ -1,19 +1,21 @@
 <template>
-  <WhiteSheet sideinfo class="pb-7">
-    <div class="header-container pt-7 pl-7 pr-7 mb-3">
+  <WhiteSheet sideinfo>
+    <div class="header-container pt-5 pb-3 px-7">
       <BlockTitle :text="$t('common.swap')">
         <template v-slot:right-button>
           <TextButton>{{ $t('common.more') }}...</TextButton>
         </template>
       </BlockTitle>
     </div>
-    <div v-for="(data, idx) in fakeData" :key="idx" class="mt-2 pl-3 pr-3">
-      <SwapBlock
-        :to="data.to"
-        :from="data.from"
-        :rate="data.rate"
-        :amount="data.amount"
-      />
+    <div class="pb-1">
+      <div v-for="(data, idx) in fakeData" :key="idx" class="mb-2 px-3">
+        <SwapBlock
+          :to="data.to"
+          :from="data.from"
+          :rate="data.rate"
+          :amount="data.amount"
+        />
+      </div>
     </div>
   </WhiteSheet>
 </template>

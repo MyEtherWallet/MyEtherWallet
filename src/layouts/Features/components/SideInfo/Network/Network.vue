@@ -1,5 +1,5 @@
 <template>
-  <WhiteSheet sideinfo class="pa-7">
+  <WhiteSheet sideinfo class="px-7 py-5">
     <div class="left-container">
       <BlockTitle :text="$t('common.network')">
         <template v-slot:object-next-to-title>
@@ -10,8 +10,8 @@
       </BlockTitle>
       <div class="mt-3">
         <!-- placeholders -->
-        <p>ETH - myetherwallet.com</p>
-        <p>Last Block: #5699679</p>
+        <div class="mb-1">ETH - myetherwallet.com</div>
+        <div>Last Block: #5699679</div>
       </div>
     </div>
     <div class="right-container">
