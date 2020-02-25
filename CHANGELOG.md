@@ -6,6 +6,10 @@
 
 - Change translation string [#2000](https://github.com/MyEtherWallet/MyEtherWallet/pull/2000)
 
+### Bug
+
+- check if reset copy exists before replacing nft list with copy [#2013](https://github.com/MyEtherWallet/MyEtherWallet/pull/2013)
+
 ### Release v5.3.3
 
 ### Bug
