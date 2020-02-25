@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex align-center justify-space-between width--100-percent">
     <div class="d-flex align-center">
-      <div v-if="text" class="title font-weight-bold">{{ text }}</div>
+      <div v-if="text" class="title font-weight-bold mr-2">{{ text }}</div>
       <slot name="object-next-to-title" />
     </div>
     <slot name="right-button" />
