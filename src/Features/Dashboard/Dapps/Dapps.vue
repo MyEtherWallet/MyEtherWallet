@@ -1,11 +1,16 @@
 <template>
   <WhiteSheet>
-    <div class="d-flex align-center px-8 py-7">
-      <BlockTitle text="Dapps">
-        <template v-slot:right-button>
-          <TextButton>View All</TextButton>
-        </template>
-      </BlockTitle>
+    <div class="px-8 py-7">
+      <div class="d-flex align-center">
+        <BlockTitle text="Dapps">
+          <template v-slot:right-button>
+            <TextButton>View All</TextButton>
+          </template>
+        </BlockTitle>
+      </div>
+      <div>
+        <DappsBlock />
+      </div>
     </div>
   </WhiteSheet>
 </template>
@@ -14,9 +19,10 @@
 import WhiteSheet from '@/components/Common/WhiteSheet';
 import BlockTitle from '@/components/BlockTitles/BlockTitle2';
 import TextButton from '@/components/Buttons/TextButton1';
+import DappsBlock from '@/components/DappsBlock';
 
 export default {
-  components: { WhiteSheet, BlockTitle, TextButton },
+  components: { WhiteSheet, BlockTitle, TextButton, DappsBlock },
   data() {
     return {};
   }
