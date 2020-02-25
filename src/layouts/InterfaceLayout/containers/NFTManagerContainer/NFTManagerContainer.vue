@@ -70,7 +70,7 @@
           :class="collectionLoading ? 'loading' : ''"
         >
           <nav
-            v-show="selectedNtf.tokens.length > 9"
+            v-show="selectedNft.tokens.length > 9"
             aria-label="Page navigation example"
           >
             <ul class="pagination justify-content-center">
@@ -132,9 +132,7 @@
     </div>
 
     <div v-if="!isOnlineAndEth">
-      <div v-show="!online">
-        {{ $t('nftManager.nft-are') }}
-      </div>
+      <div v-show="!online">{{ $t('nftManager.nft-are') }}</div>
       <div v-show="online" class="not-supported-txt">
         {{ $t('nftManager.not-supported', { value: network.type.name_long }) }}
       </div>
@@ -197,7 +195,7 @@ export default {
       countsRetrieved: false,
       showDetails: false,
       reLoading: false,
-      selectedContract: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
+      selectedContract: '',
       detailsFor: {},
       nftTokens: {},
       ownedTokens: [],
@@ -269,11 +267,11 @@ export default {
 
       return this.$t('nftManager.none-owned');
     },
-    selectedNtf() {
-      if (this.nftConfig[this.selectedContract]) {
+    selectedNft() {
+      if (this.selectedContract) {
         return this.nftConfig[this.selectedContract];
       }
-      return {tokens: []};
+      return { tokens: [] };
     },
     showNextButton() {
       if (this.nftConfig[this.selectedContract]) {
@@ -403,29 +401,40 @@ export default {
           this.customNFTs = [{}];
         }
         const configData = await this.getTokens();
-        const tokenAddresses = Object.keys(configData);
-        tokenAddresses.forEach(address => {
-          configData[address] = { ...configData[address] };
-          const customInformation = this.customNFTs.find(
-            item => item.contract === address
-          );
-          configData[address].custom = false;
-          if (configData[address].symbol === 'UNKNOWN' && customInformation) {
-            configData[address].name = customInformation.title;
-            configData[address].custom = true;
-          } else if (configData[address].symbol === 'UNKNOWN') {
-            configData[address].name = address;
-          }
-          configData[address].contract = address;
-          configData[address].tokens = configData[address].tokens.map(item => {
-            item.contract = address;
-            return item;
+        if (!configData.error) {
+          const tokenAddresses = Object.keys(configData);
+          tokenAddresses.forEach(address => {
+            configData[address] = { ...configData[address] };
+            const customInformation = this.customNFTs.find(
+              item => item.contract === address
+            );
+            if (configData[address]) {
+              configData[address].custom = false;
+              if (
+                configData[address].symbol === 'UNKNOWN' &&
+                customInformation
+              ) {
+                configData[address].name = customInformation.title;
+                configData[address].custom = true;
+              } else if (configData[address].symbol === 'UNKNOWN') {
+                configData[address].name = address;
+              }
+              configData[address].contract = address;
+              configData[address].tokens = configData[address].tokens.map(
+                item => {
+                  item.contract = address;
+                  return item;
+                }
+              );
+              configData[address].startIndex = 0;
+              configData[address].priorIndex = 0;
+              configData[address].currentIndex = 0;
+            }
           });
-          configData[address].startIndex = 0;
-          configData[address].priorIndex = 0;
-          configData[address].currentIndex = 0;
-        });
-        this.nftConfig = { ...configData };
+          this.nftConfig = { ...configData };
+          this.selectedContract = Object.keys(this.nftConfig)[0];
+        }
+        this.reLoading = false;
         this.countsRetrieved = true;
       }
     },
