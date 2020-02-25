@@ -351,6 +351,14 @@ export default {
       this.successMessage = '';
       this.linkMessage = 'OK';
     });
+
+    if (this.$refs.hasOwnProperty('confirmModal')) {
+      this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
+        if (this.dismissed) {
+          this.$eventHub.$emit('emptyPendingToken');
+        }
+      });
+    }
   },
   methods: {
     ...mapActions('main', ['addNotification']),
@@ -487,10 +495,7 @@ export default {
         this.account.identifier === WEB3_WALLET
           ? 'sendTransaction'
           : 'sendSignedTransaction';
-      const _arr =
-        this.account.identifier === WEB3_WALLET
-          ? this.signedArray.reverse()
-          : this.signedArray;
+      const _arr = this.signedArray;
       const promises = _arr.map(tx => {
         const _tx = tx.tx;
         _tx.from = this.account.address;

@@ -1,6 +1,10 @@
 <template>
   <div
-    :class="['dapps-button', supported ? '' : 'disabled']"
+    :class="[
+      'dapps-button',
+      supported ? '' : 'disabled',
+      title === dappsTitle.aave ? 'aave-icon' : ''
+    ]"
     @click="navigateTo"
   >
     <img
@@ -11,10 +15,14 @@
     />
     <img
       :src="supported ? icon : iconDisabled"
-      :class="[title === 'Ambrpay' ? 'ambrpay-icon' : '', 'dapp-logo']"
+      :class="[
+        title === dappsTitle.ambrpay ? 'ambrpay-icon' : '',
+        'dapp-logo',
+        'dapps-icon'
+      ]"
       alt
     />
-    <div>
+    <div class="title-container">
       <h4>{{ title }}</h4>
       <p>{{ desc }}</p>
     </div>
@@ -56,6 +64,14 @@ export default {
         return [];
       }
     }
+  },
+  data() {
+    return {
+      dappsTitle: {
+        ambrpay: 'Ambrpay',
+        aave: 'Aave'
+      }
+    };
   },
   computed: {
     ...mapState('main', ['online', 'network']),
