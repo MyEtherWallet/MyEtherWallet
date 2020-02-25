@@ -12,13 +12,15 @@
         <div class="kitty-image">
           <img :src="getImage(nft)" alt />
         </div>
-        <div  class="kitty-text">
+        <div class="kitty-text">
           <div v-if="canSend" class="product-title-desktop">
             <h3>{{ $t('nftManager.send-my', { value: selectedTitle }) }}</h3>
             <p>#{{ nft.name }}</p>
           </div>
           <div v-if="!canSend" class="product-title-desktop">
-            <h3>{{ $t('nftManager.sending-disabled', { value: selectedTitle }) }}</h3>
+            <h3>
+              {{ $t('nftManager.sending-disabled', { value: selectedTitle }) }}
+            </h3>
             <p>#{{ nft.name }}</p>
           </div>
           <div v-if="canSend" class="address-input-container">
