@@ -9,14 +9,14 @@
       </p>
       <div class="d-flex align-center">
         <StdButton
-          buttonclass="button--green-border"
+          button-class="button--green-border"
           class="mr-3"
-          :minwidth="false"
+          :min-width="false"
           :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '1' } }"
           >Back</StdButton
         >
         <StdButton
-          buttonclass="button--green"
+          button-class="button--green"
           :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '3' } }"
         >
           Continue

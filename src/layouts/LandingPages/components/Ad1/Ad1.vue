@@ -11,7 +11,7 @@
       </div>
       <v-spacer />
       <StdButton
-        buttonclass="button--white-border"
+        button-class="button--white-border"
         href="https://www.mewtopia.com/"
         target="_blank"
         >Get Started</StdButton

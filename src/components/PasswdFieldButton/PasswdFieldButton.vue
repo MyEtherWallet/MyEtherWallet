@@ -11,7 +11,7 @@
       :value="passwdValue"
       @click:append="showPasswd = !showPasswd"
     ></v-text-field>
-    <StdButton buttonclass="button--green">{{ btnlabel }}</StdButton>
+    <StdButton button-class="button--green">{{ btnlabel }}</StdButton>
   </v-sheet>
 </template>
 
