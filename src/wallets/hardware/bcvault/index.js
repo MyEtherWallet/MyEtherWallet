@@ -1,16 +1,10 @@
 import { Transaction } from 'ethereumjs-tx';
-import { hashPersonalMessage, bufferToHex } from 'ethereumjs-util';
+import { bufferToHex } from 'ethereumjs-util';
 import * as bc from 'bc-vault-js';
 import { BCVAULT as bcVault } from '../../bip44/walletTypes';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import errorHandler from './errorHandler';
 import BigNumber from 'bignumber.js';
-import {
-  getBufferFromHex,
-  sanitizeHex,
-  getSignTransactionObject,
-  calculateChainIdFromV
-} from '../../utils';
 import commonGenerator from '@/helpers/commonGenerator';
 import store from '@/store';
 import { Toast, Misc } from '@/helpers';
@@ -55,84 +49,77 @@ class BCVault {
     const publickey = address;
     const txSigner = async tx => {
       delete tx['from'];
-      try {
-        tx = new Transaction(tx, {
-          common: commonGenerator(store.state.main.network)
-        });
-        console.log(tx);
-      } catch (e) {
-        console.log(e);
-      }
-      console.log('how do you not gtet here?', tx);
+      tx = new Transaction(tx, {
+        common: commonGenerator(store.state.main.network)
+      });
       const newTx = {};
-      try {
-        newTx['feeCount'] = new BigNumber(
-          bufferToHex(tx['gasLimit'])
-        ).toNumber();
-        newTx['feePrice'] = new BigNumber(
-          bufferToHex(tx['gasPrice'])
-        ).toString();
-        newTx['amount'] =
-          new BigNumber(bufferToHex(tx['value'])).toNumber() || 0;
-        newTx['contractData'] =
-          bufferToHex(tx['data']) === '' ? '0x' : tx['data'];
-        newTx['to'] = bufferToHex(tx['to']);
-        newTx['from'] = this.selectedAddress;
-        if (tx.hasOwnProperty('nonce')) {
-          newTx['advanced'] = {
-            eth: {
-              nonce: new BigNumber(bufferToHex(tx['nonce'])).toNumber()
-            }
-          };
-        }
-      } catch (e) {
-        console.log(e);
+      newTx['feeCount'] = new BigNumber(bufferToHex(tx['gasLimit'])).toNumber();
+      newTx['feePrice'] = new BigNumber(bufferToHex(tx['gasPrice'])).toString();
+      newTx['amount'] = new BigNumber(bufferToHex(tx['value'])).toNumber() || 0;
+      newTx['contractData'] = bufferToHex(tx['data']);
+      newTx['to'] = bufferToHex(tx['to']);
+      newTx['from'] = this.selectedAddress;
+      if (tx.hasOwnProperty('nonce')) {
+        newTx['advanced'] = {
+          eth: {
+            nonce:
+              bufferToHex(tx['nonce']) === '0x'
+                ? 0
+                : new BigNumber(bufferToHex(tx['nonce'])).toNumber()
+          }
+        };
       }
-      console.log(newTx);
-      const networkId = tx.getChainId();
-      const result = await this.bcWallet
-        .GenerateTransaction(
-          this.deviceNumber[0],
-          this.bcWalletType,
-          newTx,
-          false
-        )
-        .then(console.log)
-        .catch(console.error);
-      tx.v = getBufferFromHex(sanitizeHex(result.v));
-      tx.r = getBufferFromHex(sanitizeHex(result.r));
-      tx.s = getBufferFromHex(sanitizeHex(result.s));
-      const signedChainId = calculateChainIdFromV(tx.v);
-      if (signedChainId !== networkId)
-        Toast.responseHandler(
-          new Error(
-            'Invalid networkId signature returned. Expected: ' +
-              networkId +
-              ', Got: ' +
-              signedChainId,
-            'InvalidNetworkId'
-          ),
-          false
-        );
-      console.log('gets here', tx);
-      return getSignTransactionObject(tx);
+      // const networkId = tx.getChainId();
+      const result = await this.bcWallet.GenerateTransaction(
+        this.deviceNumber[0],
+        this.bcWalletType,
+        newTx,
+        false
+      );
+      // tx.v = getBufferFromHex(sanitizeHex(result.v));
+      // tx.r = getBufferFromHex(sanitizeHex(result.r));
+      // tx.s = getBufferFromHex(sanitizeHex(result.s));
+      // const signedChainId = calculateChainIdFromV(tx.v);
+      // if (signedChainId !== networkId)
+      //   Toast.responseHandler(
+      //     new Error(
+      //       'Invalid networkId signature returned. Expected: ' +
+      //         networkId +
+      //         ', Got: ' +
+      //         signedChainId,
+      //       'InvalidNetworkId'
+      //     ),
+      //     false
+      //   );
+      // return getSignTransactionObject(tx);
+      return {
+        rawTransaction: result,
+        tx: tx
+      };
     };
     const msgSigner = async msg => {
-      const hashedMsg = hashPersonalMessage(Misc.toBuffer(msg));
-      const result = await this.bcWallet(
-        this.deviceNumber,
-        this.bcWalletType,
-        this.selectedAddress,
-        hashedMsg
-      );
-      return Buffer.concat([
-        getBufferFromHex(sanitizeHex(result.r)),
-        getBufferFromHex(sanitizeHex(result.s)),
-        getBufferFromHex(sanitizeHex(result.v))
-      ]);
+      try {
+        const result = await this.bcWallet.SignData(
+          this.deviceNumber[0],
+          this.bcWalletType,
+          this.selectedAddress,
+          msg
+        );
+        return Misc.toBuffer(result);
+      } catch (e) {
+        errorHandler(e);
+      }
     };
-    const displayAddress = () => {
-      return address;
+    const displayAddress = async () => {
+      this.bcWallet
+        .DisplayAddressOnDevice(
+          this.deviceNumber[0],
+          [this.bcWalletType],
+          this.selectedAddress.replace('0x', '')
+        )
+        .then(() => {
+          Toast.responseHandler('Check device for address', Toast.SUCCESS);
+        });
     };
     return new HDWalletInterface(
       path,
