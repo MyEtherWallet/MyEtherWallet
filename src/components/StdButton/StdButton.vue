@@ -46,6 +46,12 @@ export default {
   font-weight: 500;
 }
 
+.button--dark-space-border {
+  background-color: transparent !important;
+  border: 1px solid $dark-space;
+  color: $dark-space !important;
+}
+
 .button--green {
   background-color: $emerald !important;
   color: white !important;
