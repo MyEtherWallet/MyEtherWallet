@@ -1,7 +1,12 @@
+### Feature
+
+- Aave [#1728](https://github.com/MyEtherWallet/MyEtherWallet/pull/1728)
+
 ### Devop
 
 - Change translation string [#2000](https://github.com/MyEtherWallet/MyEtherWallet/pull/2000)
 - Fix Exit to Fiat to correspond with backend changes [#2002](https://github.com/MyEtherWallet/MyEtherWallet/pull/2002)
+- Change social icons display [#2003](https://github.com/MyEtherWallet/MyEtherWallet/pull/2003)
 
 ### Release v5.3.3
 
@@ -239,6 +244,7 @@
 
 ### Feature
 
+- Add MEWconnect footer link [#1675](https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)
 - Display label paths [#1681](https://github.com/MyEtherWallet/MyEtherWallet/pull/1681)
 - Address book [#1647](https://github.com/MyEtherWallet/MyEtherWallet/pull/1647)
 - Add MEWconnect footer link [#1675](https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)
