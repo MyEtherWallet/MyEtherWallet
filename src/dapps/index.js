@@ -8,6 +8,7 @@ import makerdai from '@/assets/images/icons/dapps/makerdai.svg';
 import makerdaiDisabled from '@/assets/images/icons/dapps/makerdai-disabled.svg';
 import ambrpay from '@/assets/images/icons/dapps/ambrpay.png';
 import ambrpayDisabled from '@/assets/images/icons/dapps/ambrpay-disabled.png';
+import aave from '@/assets/images/icons/dapps/aave.svg';
 import { ETH, GOERLI, ROP, RIN, KOV } from '@/networks/types';
 
 const dapps = {
@@ -70,6 +71,16 @@ const dapps = {
     supportedNetworks: [ETH.name, KOV.name],
     lastUpdated: '11/05/2019',
     releaseDate: '11/05/2019'
+  },
+  aave: {
+    route: '/interface/dapps/aave',
+    icon: aave,
+    // iconDisabled: aaveDisabled,
+    title: 'dappsAave.title',
+    desc: 'dappsAave.popover',
+    supportedNetworks: [ETH.name],
+    lastUpdated: '2/26/2020',
+    releaseDate: '2/26/2020'
   }
 };
 
