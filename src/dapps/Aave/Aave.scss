@@ -1,0 +1,100 @@
+@import '~@/scss/GlobalVariables';
+
+.aave-container {
+  background-color: $white;
+  border-radius: 4px;
+  grid-area: main;
+  overflow: hidden;
+
+  .header-container {
+    border-bottom: 2px solid $light-grey-1;
+  }
+
+  .row-desktop {
+    align-items: center;
+    background-color: $white;
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+  }
+
+  .action-title {
+    color: $dark-blue-6;
+    font-size: 24px;
+    font-weight: 500;
+    margin: 15px;
+
+    .token {
+      font-size: 24px;
+      text-transform: uppercase;
+    }
+  }
+
+  .tab-container {
+    display: flex;
+
+    .action-btn {
+      background-color: $light-grey-17;
+      border: 1px solid $light-grey-4;
+      border-radius: 4px;
+      color: $dark-blue-1;
+      cursor: pointer;
+      padding: 10px 25px;
+    }
+
+    .borrow-btn {
+      margin-left: -12px;
+    }
+
+    .active-tab {
+      background-color: $dark-blue-2;
+      color: $white;
+      z-index: 1;
+    }
+  }
+
+  .desktop {
+    display: flex;
+  }
+  
+  .mobile {
+    display: none;
+  }
+
+  @media all and (max-width: 700px) {
+    .desktop {
+      display: none;
+    }
+  
+    .mobile {
+      display: flex;
+      justify-content: center;;
+      margin-bottom: 20px;
+    }
+  }
+
+  .health-container {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    span {
+      color: $light-grey-18;
+      font-size: 14px;
+    }
+    i {
+      font-weight: 600;
+      font-size: 14px;
+      margin-left: 8px;
+    }
+    .health-score {
+      color: $dark-green-4;
+      font-weight: 600;
+      font-size: 14px;
+      margin-left: 4px;
+    }
+    .dapp-popover {
+      margin-left: 5px;
+      margin-right: 10px;
+    }
+  }
+}

@@ -1,5 +1,4 @@
 import ealDarklist from '@/url-darklist/eal-blacklisted-domains.json';
-import iosiroDarklist from '@/url-darklist/iosiro-blacklisted-domains.json';
 import mewDarklist from '@/url-darklist/mew-blacklisted-domains.json';
 import phishfortDarklist from '@/url-darklist/phishfort-blacklisted-domains.json';
 
@@ -79,10 +78,6 @@ const blackListDomains = {
   eal: {
     domains: ealDarklist,
     identifier: 'eal'
-  },
-  iosiro: {
-    domains: iosiroDarklist,
-    identifier: 'iosiro'
   },
   phishfort: {
     domains: phishfortDarklist,
