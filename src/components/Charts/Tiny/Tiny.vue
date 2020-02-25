@@ -31,14 +31,14 @@ export default {
         },
         chart: {
           height: '60',
-          width: '100'
+          width: '80'
         },
         title: {
           text: ''
         },
         xAxis: {
           visible: false,
-          width: '100'
+          width: '80'
         },
         yAxis: {
           visible: false,

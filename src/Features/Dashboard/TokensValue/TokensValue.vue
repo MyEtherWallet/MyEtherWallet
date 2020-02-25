@@ -59,7 +59,7 @@
               <div></div>
               <div class="text-red  d-flex align-center">
                 <ChartTiny
-                  class="ml-n3 mr-2 mt-2"
+                  class="ml-n2 mr-2 mt-2"
                   :data="chart2"
                   linecolor="red"
                 />
@@ -106,7 +106,7 @@
             <div class="d-flex align-center">
               <div></div>
               <div class="text-color--mew-green d-flex align-center">
-                <ChartTiny class="ml-n3 mr-2 mt-2" :data="chart1" />
+                <ChartTiny class="ml-n2 mr-2 mt-2" :data="chart1" />
                 <div>
                   0.23%
                   <v-icon class="text-color--mew-green body-2"
@@ -150,7 +150,7 @@
             <div class="d-flex align-center">
               <div></div>
               <div class="text-color--mew-green d-flex align-center">
-                <ChartTiny class="ml-n3 mr-2 mt-2" :data="chart1" />
+                <ChartTiny class="ml-n2 mr-2 mt-2" :data="chart1" />
                 <div>
                   0.23%
                   <v-icon class="text-color--mew-green body-2"
@@ -194,7 +194,7 @@
             <div class="d-flex align-center">
               <div></div>
               <div class="text-color--mew-green d-flex align-center">
-                <ChartTiny class="ml-n3 mr-2 mt-2" :data="chart1" />
+                <ChartTiny class="ml-n2 mr-2 mt-2" :data="chart1" />
                 <div>
                   0.23%
                   <v-icon class="text-color--mew-green body-2"
