@@ -4,17 +4,17 @@
       <h4 class="text-color--dark-space bold">{{ $t('common.swap') }}</h4>
       <StdButton
         :button-class="'button--text-green'"
-        :size="small"
+        :size="'small'"
         :min-width="false"
         >{{ $t('common.more') }}...</StdButton
       >
     </div>
-    <div v-for="(data, idx) in fakeData" :key="idx">
+    <div v-for="(data, idx) in fakeData" :key="idx" class="mt-2">
       <SwapBlock
         :to="data.to"
         :from="data.from"
-        rate="data.rate"
-        amount="data.amount"
+        :rate="data.rate"
+        :amount="data.amount"
       />
     </div>
   </WhiteSheet>
@@ -31,7 +31,7 @@ export default {
     return {
       fakeData: [
         {
-          amt: '20',
+          amount: '20',
           from: 'ETH',
           rate: '0.002',
           to: 'BTC'
