@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="right-container">
-      <img src="@/assets/images/Icons/eth.png" alt="ethereum" />
+      <img src="@/assets/images/icons/eth.png" alt="ethereum" />
     </div>
   </WhiteSheet>
 </template>
