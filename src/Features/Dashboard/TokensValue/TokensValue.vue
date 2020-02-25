@@ -83,50 +83,6 @@
           </td>
           <td>
             <StdButton
-              button-class="button--green-border"
-              size="small"
-              :min-width="false"
-              fontclass="font-weight-regular"
-              >Trade</StdButton
-            >
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <img
-              class="vertical-align--middle"
-              src="@/assets/images/Etc/Features/eth.png"
-              width="25"
-            />
-          </td>
-          <td>XMR</td>
-          <td>$8.29</td>
-          <td>$1.53B</td>
-          <td>
-            <div class="d-flex align-center">
-              <div></div>
-              <div class="text-color--mew-green d-flex align-center">
-                <ChartTiny class="ml-n2 mr-2 mt-2" :data="chart1" />
-                <div>
-                  0.23%
-                  <v-icon class="text-color--mew-green body-2"
-                    >mdi-arrow-up-bold</v-icon
-                  >
-                  <v-icon v-if="false" color="red" class="body-2"
-                    >mdi-arrow-down-bold</v-icon
-                  >
-                </div>
-              </div>
-            </div>
-          </td>
-          <td>
-            <div>
-              <div>$228.42</div>
-              <div class="text-color--gray1">27.54</div>
-            </div>
-          </td>
-          <td>
-            <StdButton
               buttonclass="button--green-border"
               size="small"
               :minwidth="false"
@@ -215,9 +171,53 @@
           </td>
           <td>
             <StdButton
-              button-class="button--green-border"
+              buttonclass="button--green-border"
               size="small"
-              :min-width="false"
+              :minwidth="false"
+              fontclass="font-weight-regular"
+              >Trade</StdButton
+            >
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <img
+              class="vertical-align--middle"
+              src="@/assets/images/Etc/Features/eth.png"
+              width="25"
+            />
+          </td>
+          <td>XMR</td>
+          <td>$8.29</td>
+          <td>$1.53B</td>
+          <td>
+            <div class="d-flex align-center">
+              <div></div>
+              <div class="text-color--mew-green d-flex align-center">
+                <ChartTiny class="ml-n2 mr-2 mt-2" :data="chart1" />
+                <div>
+                  0.23%
+                  <v-icon class="text-color--mew-green body-2"
+                    >mdi-arrow-up-bold</v-icon
+                  >
+                  <v-icon v-if="false" color="red" class="body-2"
+                    >mdi-arrow-down-bold</v-icon
+                  >
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div>
+              <div>$228.42</div>
+              <div class="text-color--gray1">27.54</div>
+            </div>
+          </td>
+          <td>
+            <StdButton
+              buttonclass="button--green-border"
+              size="small"
+              :minwidth="false"
               fontclass="font-weight-regular"
               >Trade</StdButton
             >

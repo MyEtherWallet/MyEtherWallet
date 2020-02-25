@@ -9,13 +9,13 @@
       </p>
       <div class="d-flex align-center">
         <StdButton
-          button-class="button--green-border"
+          buttonclass="button--green-border"
           class="mr-3"
-          :min-width="false"
+          :minwidth="false"
           :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '2' } }"
           >Back</StdButton
         >
-        <StdButton button-class="button--green">Scan &amp; Access</StdButton>
+        <StdButton buttonclass="button--green">Scan &amp; Access</StdButton>
       </div>
       <p class="mt-4 mb-0">
         Need more help?

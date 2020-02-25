@@ -23,7 +23,7 @@
       </p>
       <div class="d-flex align-center">
         <StdButton
-          button-class="button--green"
+          buttonclass="button--green"
           :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '2' } }"
           >Continue</StdButton
         >
