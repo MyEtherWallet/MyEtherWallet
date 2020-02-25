@@ -40,7 +40,7 @@ export default {
 
 .chevon-right-icon {
   background-color: $royal-blue;
-  color: $white;
+  color: white;
   border-radius: 6px;
   height: 25px;
   width: 25px;
