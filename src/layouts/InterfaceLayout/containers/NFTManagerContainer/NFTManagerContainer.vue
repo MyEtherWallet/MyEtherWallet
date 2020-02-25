@@ -273,7 +273,7 @@ export default {
       if (this.nftConfig[this.selectedContract]) {
         return this.nftConfig[this.selectedContract];
       }
-      return {};
+      return {tokens: []};
     },
     showNextButton() {
       if (this.nftConfig[this.selectedContract]) {
@@ -287,8 +287,7 @@ export default {
       return null;
     },
     activeAddress() {
-      return '0x2ec1532ed0ca0071d7418f90e3901b349967d974';
-      // return this.account.address;
+      return this.account.address;
     },
     hasNfts() {
       return Object.values(this.nftConfig).length > 0;
