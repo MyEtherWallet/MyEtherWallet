@@ -5,7 +5,6 @@
   display: flex;
   align-items: cneter;
   background-color: $background-color-white;
-  border-bottom: 2px solid $background-color-1;
 
   .back-icon-container {
     border: 1px solid $black;
@@ -40,4 +39,8 @@
 
 .right-slot {
   margin-left: auto;
+}
+
+.bottom-border {
+  border-bottom: 2px solid $background-color-1;
 }
