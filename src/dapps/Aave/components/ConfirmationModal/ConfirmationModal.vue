@@ -327,7 +327,9 @@ export default {
         const amount = new BigNumber(this.amount).plus(
           new BigNumber(this.amount).times(0.005)
         );
-        return amount > this.account.balance ? amount : this.account.balance;
+        return amount < this.token.tokenBalance
+          ? amount
+          : this.token.tokenBalance;
       } else if (
         this.actionTitle === this.actionTitles.borrow &&
         this.maxBorrowAmt() === this.amount &&

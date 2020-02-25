@@ -353,7 +353,8 @@ export default {
       event.preventDefault();
       event.stopPropagation();
 
-      this.token = this.getReserve(this.userReserves[idx].reserve.id);
+      this.token = this.getReserve(this.ownedReserves[idx].reserve.id);
+
       this.$refs.switchInterest.$refs.switchInterest.show();
       this.switchInterestShown = true;
     },
