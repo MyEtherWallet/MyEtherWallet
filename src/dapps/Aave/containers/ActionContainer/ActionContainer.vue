@@ -96,14 +96,9 @@
       >
         {{ actionTitle }}
       </button>
-      <i18n
-        path="dappsAave.cancel-action"
-        tag="button"
-        class="cancel-btn"
-        @click="goToHome()"
-      >
-        <span slot="action">{{ actionTitle }}</span>
-      </i18n>
+      <button class="cancel-btn" @click="goToHome()">
+        {{ $t('common.cancel') }}
+      </button>
     </div>
     <rate-modal
       ref="rateModal"
