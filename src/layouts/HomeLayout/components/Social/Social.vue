@@ -2,7 +2,7 @@
   <div class="social">
     <div class="wrap">
       <div class="page-container">
-        <div class="flex-col-vertical-center content">
+        <div class="content">
           <div class="title">
             <h2>{{ $t('home.social.title') }}</h2>
           </div>
