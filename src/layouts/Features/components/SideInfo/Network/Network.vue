@@ -1,9 +1,15 @@
 <template>
   <WhiteSheet sideinfo class="pa-7">
     <div class="left-container">
+      <BlockTitle :text="$t('common.network')">
+        <template v-slot:object-next-to-title>
+          <SoloButton>
+            <v-icon>mdi-chevron-right</v-icon>
+          </SoloButton>
+        </template>
+      </BlockTitle>
       <h4 class="text-color--dark-space bold">
         {{ $t('common.network') }}
-        <v-icon class="chevon-right-icon">mdi-chevron-right</v-icon>
       </h4>
       <div class="mt-3">
         <!-- placeholders -->
@@ -19,9 +25,11 @@
 
 <script>
 import WhiteSheet from '@/components/Common/WhiteSheet';
+import BlockTitle from '@/components/BlockTitles/BlockTitle2';
+import SoloButton from '@/components/Buttons/SoloButton1';
 
 export default {
-  components: { WhiteSheet }
+  components: { WhiteSheet, BlockTitle, SoloButton }
 };
 </script>
 
