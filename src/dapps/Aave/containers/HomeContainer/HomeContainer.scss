@@ -1,0 +1,139 @@
+@import '~@/scss/GlobalVariables';
+
+.desktop {
+  display: block;
+}
+
+.mobile {
+  display: none;
+}
+
+@media all and (max-width: 700px) {
+  .desktop {
+    display: none;
+  }
+
+  .mobile {
+    display: block;
+  }
+}
+
+.aave-wrapper {
+  margin: 10px;
+  .header-container {
+    align-items: center;
+    background-color: $white;
+    border-bottom: 2px solid $light-grey-1;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .tab-container {
+    display: flex;
+
+    .action-btn {
+      background-color: $light-grey-17;
+      border: 1px solid $light-grey-4;
+      border-radius: 4px;
+      color: $dark-blue-1;
+      cursor: pointer;
+      padding: 10px 25px;
+    }
+
+    .borrow-btn {
+      margin-left: -12px;
+    }
+
+    .active-tab {
+      background-color: $dark-blue-2;
+      color: $white;
+      z-index: 1;
+    }
+  }
+
+  .health-container {
+    align-items: center;
+    display: flex;
+    span {
+      color: $light-grey-18;
+      font-size: 14px;
+    }
+    .health-score {
+      color: $dark-green-4;
+      font-weight: 600;
+      font-size: 14px;
+      margin-left: 4px;
+    }
+    .dapp-popover {
+      margin-left: 5px;
+      margin-right: 10px;
+    }
+  }
+
+  .about-aave-container {
+    background-color: $light-green-1;
+    border-radius: 4px;
+    color: $dark-blue-1;
+    margin-top: 10px;
+    padding: 30px;
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 16px;
+
+      img {
+        height: 24px;
+        width: 88px;
+      }
+
+      button {
+        background-color: $mew-green;
+        border: none;
+        border-radius: 4px;
+        color: $white;
+        height: 41px;
+        width: 141px;
+      }
+    }
+
+    p {
+      margin-top: 10px;
+    }
+  }
+
+  .balance-row {
+    display: flex;
+    margin-top: 15px;
+  }
+}
+
+.loan-container {
+  align-items: center;
+  background-color: $light-green-1;
+  border-radius: 7px;
+  display: flex;
+  height: 45px;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 0 25px;
+  width: 100%;
+
+  .loan-value {
+    align-items: center;
+    display: flex;
+    font-size: 16px;
+    font-weight: 600;
+    color: $light-grey-18;
+
+    .popover-container {
+      margin-right: 5px;
+    }
+  }
+
+  .loan-percent {
+    font-size: 14px;
+    color: $dark-blue-6;
+    font-weight: 600;
+  }
+}
