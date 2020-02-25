@@ -83,9 +83,9 @@
           </td>
           <td>
             <StdButton
-              buttonclass="button--green-border"
+              button-class="button--green-border"
               size="small"
-              :minwidth="false"
+              :min-width="false"
               fontclass="font-weight-regular"
               >Trade</StdButton
             >
@@ -215,9 +215,9 @@
           </td>
           <td>
             <StdButton
-              buttonclass="button--green-border"
+              button-class="button--green-border"
               size="small"
-              :minwidth="false"
+              :min-width="false"
               fontclass="font-weight-regular"
               >Trade</StdButton
             >

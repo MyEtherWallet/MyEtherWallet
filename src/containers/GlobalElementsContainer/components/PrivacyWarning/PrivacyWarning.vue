@@ -11,7 +11,7 @@
             </div>
             <v-spacer />
             <StdButton
-              buttonclass="button--white-border"
+              button-class="button--white-border"
               @click.native="sheet = !sheet"
             >
               I understood
