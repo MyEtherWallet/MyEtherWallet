@@ -1,14 +1,28 @@
 <template>
-  <WhiteSheet class="pa-3">
-    Dapps
+  <WhiteSheet>
+    <div class="px-8 py-7">
+      <div class="d-flex align-center">
+        <BlockTitle text="Dapps">
+          <template v-slot:right-button>
+            <TextButton>View All</TextButton>
+          </template>
+        </BlockTitle>
+      </div>
+      <div>
+        <DappsBlock />
+      </div>
+    </div>
   </WhiteSheet>
 </template>
 
 <script>
 import WhiteSheet from '@/components/Common/WhiteSheet';
+import BlockTitle from '@/components/BlockTitles/BlockTitle2';
+import TextButton from '@/components/Buttons/TextButton1';
+import DappsBlock from '@/components/DappsBlock';
 
 export default {
-  components: { WhiteSheet },
+  components: { WhiteSheet, BlockTitle, TextButton, DappsBlock },
   data() {
     return {};
   }

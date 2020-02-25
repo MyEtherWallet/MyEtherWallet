@@ -1,6 +1,6 @@
 <template>
-  <WhiteSheet class="pa-3">
-    <div class="d-flex pa-5">
+  <WhiteSheet>
+    <div class="d-flex px-6 pt-7">
       <BlockTitle
         :icon="require('@/assets/images/Etc/Features/eth.png')"
         text1="My Eth Balance"
@@ -43,10 +43,14 @@
       </div>
     </div>
 
-    <ChartBalance :key="chartData.key" :data="chartData.data" />
+    <ChartBalance
+      :key="chartData.key"
+      :data="chartData.data"
+      class="px-3 mt-5"
+    />
 
-    <div class="d-flex align-center px-5 py-3">
-      <div class="px-6"></div>
+    <div class="d-flex align-center px-6 mt-2 pb-5">
+      <div class="px-8"></div>
       <div class="d-flex align-center">
         <div class="font-weight-bold">ETH PRICE</div>
         <div class="ml-2 font-weight-regular text-color--mew-green">
