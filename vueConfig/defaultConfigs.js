@@ -2,6 +2,17 @@ const imageminMozjpeg = require('imagemin-mozjpeg');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const webpack = require('webpack');
 const env_vars = require('../ENV_VARS');
+const allowedConnections = [
+  'https://raw.githubusercontent.com:443',
+  'wss://nodes.mewapi.io:443',
+  'https://nodes.mewapi.io:443',
+  'https://localhost:8080',
+  'wss://localhost:8080',
+  'https://swap.mewapi.io:443',
+  'https://apiccswap.myetherwallet.com:443',
+  'https://cryptorates.mewapi.io:443',
+  'https://cloudflare-dns.com:443'
+];
 
 module.exports = {
   plugins: [
@@ -24,7 +35,9 @@ module.exports = {
   headers: {
     'Strict-Transport-Security': 'max-age=63072000; includeSubdomains; preload',
     'Content-Security-Policy':
-      "default-src 'self' blob:; frame-src 'self' connect.trezor.io:443; img-src 'self' https://nft2.mewapi.io https://cdn.stateofthedapps.com data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src *;",
+      "default-src 'self' blob:; frame-src 'self' connect.trezor.io:443; img-src 'self' nft2.mewapi.io:443 cdn.stateofthedapps.com:443 data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src " +
+      allowedConnections.join(' ') +
+      ';',
     'X-Content-Type-Options': 'nosniff',
     'X-Frame-Options': 'DENY',
     'X-XSS-Protection': '1; mode=block',
