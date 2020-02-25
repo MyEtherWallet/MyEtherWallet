@@ -7,7 +7,13 @@ import errorHandler from './errorHandler';
 import BigNumber from 'bignumber.js';
 import commonGenerator from '@/helpers/commonGenerator';
 import store from '@/store';
-import { Toast, Misc } from '@/helpers';
+import { Toast } from '@/helpers';
+import {
+  getBufferFromHex,
+  sanitizeHex,
+  getSignTransactionObject,
+  calculateChainIdFromV
+} from '../../utils';
 
 const NEED_PASSWORD = false;
 
@@ -49,6 +55,7 @@ class BCVault {
     const publickey = address;
     const txSigner = async tx => {
       delete tx['from'];
+      tx['from'] = address;
       tx = new Transaction(tx, {
         common: commonGenerator(store.state.main.network)
       });
@@ -69,33 +76,30 @@ class BCVault {
           }
         };
       }
-      // const networkId = tx.getChainId();
+      const networkId = tx.getChainId();
       const result = await this.bcWallet.GenerateTransaction(
         this.deviceNumber[0],
         this.bcWalletType,
         newTx,
         false
       );
-      // tx.v = getBufferFromHex(sanitizeHex(result.v));
-      // tx.r = getBufferFromHex(sanitizeHex(result.r));
-      // tx.s = getBufferFromHex(sanitizeHex(result.s));
-      // const signedChainId = calculateChainIdFromV(tx.v);
-      // if (signedChainId !== networkId)
-      //   Toast.responseHandler(
-      //     new Error(
-      //       'Invalid networkId signature returned. Expected: ' +
-      //         networkId +
-      //         ', Got: ' +
-      //         signedChainId,
-      //       'InvalidNetworkId'
-      //     ),
-      //     false
-      //   );
-      // return getSignTransactionObject(tx);
-      return {
-        rawTransaction: result,
-        tx: tx
-      };
+      const resultTx = new Transaction(result);
+      tx.v = getBufferFromHex(sanitizeHex(resultTx.v.toString('hex')));
+      tx.r = getBufferFromHex(sanitizeHex(resultTx.r.toString('hex')));
+      tx.s = getBufferFromHex(sanitizeHex(resultTx.s.toString('hex')));
+      const signedChainId = calculateChainIdFromV(tx.v);
+      if (signedChainId !== networkId)
+        Toast.responseHandler(
+          new Error(
+            'Invalid networkId signature returned. Expected: ' +
+              networkId +
+              ', Got: ' +
+              signedChainId,
+            'InvalidNetworkId'
+          ),
+          false
+        );
+      return getSignTransactionObject(tx);
     };
     const msgSigner = async msg => {
       try {
@@ -105,7 +109,15 @@ class BCVault {
           this.selectedAddress,
           msg
         );
-        return Misc.toBuffer(result);
+        const signature = result.substr(2);
+        const r = '0x' + signature.slice(0, 64);
+        const s = '0x' + signature.slice(64, 128);
+        const v = '0x' + signature.slice(128, 130);
+        return Buffer.concat([
+          getBufferFromHex(sanitizeHex(r)),
+          getBufferFromHex(sanitizeHex(s)),
+          getBufferFromHex(sanitizeHex(v))
+        ]);
       } catch (e) {
         errorHandler(e);
       }
