@@ -14,72 +14,53 @@ export default {
         return [];
       },
       type: Array
+    },
+    linecolor: {
+      default: '#05c0a5',
+      type: String
     }
   },
   data() {
     return {
       chartOptions: {
+        tooltip: {
+          enabled: false
+        },
         credits: {
           enabled: false
         },
         chart: {
-          zoomType: 'x',
-          height: '200px'
+          height: '60',
+          width: '100'
         },
         title: {
           text: ''
         },
         xAxis: {
-          type: 'datetime'
+          visible: false,
+          width: '100'
         },
         yAxis: {
-          title: {
-            text: 'USD $'
-          },
-          labels: {
-            formatter: function() {
-              return '$ ' + this.value;
-            }
-          }
+          visible: false,
+          height: '60'
         },
         legend: {
           enabled: false
         },
-        plotOptions: {
-          area: {
-            fillColor: {
-              linearGradient: {
-                x1: 0,
-                y1: 0,
-                x2: 0,
-                y2: 1
-              },
-              stops: [
-                [0, '#056ac034'],
-                [1, '#056ac000']
-              ]
-            },
-            marker: {
-              radius: 0
-            },
-            lineWidth: 1,
-            states: {
-              hover: {
-                lineWidth: 1
-              }
-            },
-            threshold: null
-          }
-        },
-
         series: [
           {
-            type: 'area',
-            name: 'Balance',
+            lineWidth: 1,
             data: this.data,
-            color: '#05c0a5',
+            //color: '#05c0a5',
+            color: this.linecolor,
             animation: {
               duration: 400
+            },
+            marker: { enabled: false },
+            states: {
+              hover: {
+                enabled: false
+              }
             }
           }
         ]
