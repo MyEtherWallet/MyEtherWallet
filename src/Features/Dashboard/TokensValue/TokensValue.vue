@@ -1,6 +1,6 @@
 <template>
   <WhiteSheet>
-    <div class="d-flex align-center pa-8">
+    <div class="d-flex align-center px-6 pt-7">
       <BlockTitle
         :icon="require('@/assets/images/Etc/Features/tokenValue.png')"
         text1="My Tokens Value"
@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <table class="tokens-table">
+    <table class="tokens-table mt-4">
       <thead>
         <tr>
           <td style="width: 45px;"></td>

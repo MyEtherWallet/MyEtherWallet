@@ -1,5 +1,11 @@
 <template>
-  <div v-if="text">{{ text }}</div>
+  <div class="d-flex align-center justify-space-between width--100-percent">
+    <div class="d-flex align-center">
+      <div v-if="text" class="title font-weight-bold">{{ text }}</div>
+      <slot name="object-next-to-title" />
+    </div>
+    <slot name="right-button" />
+  </div>
 </template>
 
 <script>
