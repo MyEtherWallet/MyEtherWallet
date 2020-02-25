@@ -122,17 +122,7 @@ class BCVault {
         errorHandler(e);
       }
     };
-    const displayAddress = async () => {
-      this.bcWallet
-        .DisplayAddressOnDevice(
-          this.deviceNumber[0],
-          [this.bcWalletType],
-          this.selectedAddress.replace('0x', '')
-        )
-        .then(() => {
-          Toast.responseHandler('Check device for address', Toast.SUCCESS);
-        });
-    };
+
     return new HDWalletInterface(
       path,
       publickey,
@@ -140,8 +130,7 @@ class BCVault {
       this.identifier,
       errorHandler,
       txSigner,
-      msgSigner,
-      displayAddress
+      msgSigner
     );
   }
 }
