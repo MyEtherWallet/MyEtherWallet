@@ -1,7 +1,8 @@
 @import '~@/scss/GlobalVariables';
 
 .wrap {
-  padding: 80px 0;
+  padding-top: 25px;
+  padding-bottom: 70px;
 
   @media all and (max-width: $tablet-width) {
     padding: 40px 0 60px;
@@ -13,7 +14,10 @@
     }
 
     .title {
+      text-align: center;
+      margin-bottom: 30px;
       h5 {
+        font-size: 32px;
         line-height: 21px;
       }
     }
@@ -22,6 +26,10 @@
       display: flex;
       margin-left: auto;
       flex-wrap: wrap;
+      flex-grow: 0;
+      flex-shrink: 0;
+      flex-basis: 50%;
+      justify-content: center;
 
       > div {
         width: 90px;
