@@ -23,7 +23,7 @@ p {
   font-size: 14px;
   line-height: 21px;
   padding: 0;
-  margin: 0 !important;
+  margin: 0;
   font-weight: 400;
 }
 
@@ -117,14 +117,6 @@ h5 {
 
 .text-color--dark-sacramento {
   color: $dark-sacramento !important;
-}
-
-.text-color--dark-space {
-  color: $dark-space !important;
-}
-
-.bold {
-  font-weight: bold;
 }
 
 .font-weight--600 {
