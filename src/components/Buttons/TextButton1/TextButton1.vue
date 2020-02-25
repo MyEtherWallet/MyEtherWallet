@@ -1,5 +1,5 @@
 <template>
-  <v-btn text small :color="mewGreen">
+  <v-btn text small :color="mewGreen" class="text-transform--initial body-2">
     <slot />
   </v-btn>
 </template>

@@ -1,13 +1,11 @@
 <template>
   <WhiteSheet sideinfo class="pb-7">
     <div class="header-container pt-7 pl-7 pr-7 mb-3">
-      <h4 class="text-color--dark-space bold">{{ $t('common.swap') }}</h4>
-      <StdButton
-        :button-class="'button--text-green'"
-        :size="'small'"
-        :min-width="false"
-        >{{ $t('common.more') }}...</StdButton
-      >
+      <BlockTitle :text="$t('common.swap')">
+        <template v-slot:right-button>
+          <TextButton>{{ $t('common.more') }}...</TextButton>
+        </template>
+      </BlockTitle>
     </div>
     <div v-for="(data, idx) in fakeData" :key="idx" class="mt-2 pl-3 pr-3">
       <SwapBlock
@@ -22,11 +20,12 @@
 
 <script>
 import WhiteSheet from '@/components/Common/WhiteSheet';
-import StdButton from '@/components/StdButton';
 import SwapBlock from './components/SwapBlock';
+import TextButton from '@/components/Buttons/TextButton1';
+import BlockTitle from '@/components/BlockTitles/BlockTitle2';
 
 export default {
-  components: { WhiteSheet, StdButton, SwapBlock },
+  components: { WhiteSheet, TextButton, SwapBlock, BlockTitle },
   data() {
     return {
       fakeData: [

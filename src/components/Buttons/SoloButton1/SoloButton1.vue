@@ -1,5 +1,5 @@
 <template>
-  <v-btn fab x-small dark depressed :color="mewGreen" class="solo-button">
+  <v-btn fab x-small dark depressed :color="buttonColor" class="solo-button">
     <slot />
   </v-btn>
 </template>
@@ -12,7 +12,7 @@ export default {
   },
   data() {
     return {
-      mewGreen: Var.colorSets.emerald
+      buttonColor: Var.colorSets.royalBlue
     };
   }
 };
@@ -21,7 +21,7 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/styles/GlobalVariables.scss';
 .solo-button {
-  border-radius: 7px;
+  border-radius: 5px;
   height: 25px;
   min-width: 25px;
 }
