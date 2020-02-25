@@ -86,8 +86,10 @@ export default {
       toAddress: '',
       tokenContract: {},
       ERC721tokenContract: {},
+      ERC721SafeTransferFrom: {},
       cryptoKittiesContract: {},
       cryptoKittiesConfig: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
+      decentralLandConfig: '0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d',
       isValidAddress: false
     };
   },
@@ -108,6 +110,31 @@ export default {
           }
         ],
         name: 'transferFrom',
+        outputs: [],
+        payable: false,
+        stateMutability: 'nonpayable',
+        type: 'function'
+      }
+    ]);
+
+    this.ERC721SafeTransferFrom = new this.web3.eth.Contract([
+      {
+        constant: false,
+        inputs: [
+          {
+            name: 'from',
+            type: 'address'
+          },
+          {
+            name: 'to',
+            type: 'address'
+          },
+          {
+            name: 'assetId',
+            type: 'uint256'
+          }
+        ],
+        name: 'safeTransferFrom',
         outputs: [],
         payable: false,
         stateMutability: 'nonpayable',
@@ -143,6 +170,13 @@ export default {
 
         return this.cryptoKittiesContract.methods
           .transfer(this.toAddress, this.nft.id)
+          .encodeABI();
+      } else if (
+        this.nft.contract.toLowerCase() ===
+        this.decentralLandConfig.toLowerCase()
+      ) {
+        return this.ERC721SafeTransferFrom.methods
+          .safeTransferFrom(this.account.address, this.toAddress, this.nft.id)
           .encodeABI();
       }
       return this.ERC721tokenContract.methods
