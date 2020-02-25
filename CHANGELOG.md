@@ -8,6 +8,9 @@
 - Update aave copy [#2011](https://github.com/MyEtherWallet/MyEtherWallet/pull/2011)
 - Change social icons display [#2003](https://github.com/MyEtherWallet/MyEtherWallet/pull/2003)
 
+### Bugs
+- Fix aave bugs [#2018] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2018)
+
 ### Release v5.3.3-hotfix.2
 
 ### Hotfix
