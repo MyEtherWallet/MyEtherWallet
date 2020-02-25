@@ -8,9 +8,6 @@
           </SoloButton>
         </template>
       </BlockTitle>
-      <h4 class="text-color--dark-space bold">
-        {{ $t('common.network') }}
-      </h4>
       <div class="mt-3">
         <!-- placeholders -->
         <p>ETH - myetherwallet.com</p>
