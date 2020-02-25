@@ -21,7 +21,7 @@
       </v-row>
     </v-sheet>
     <StdButton
-      button-class="button--green"
+      buttonclass="button--green"
       class="mx-auto display--block mb-7"
       @click.native="linkToStep(2)"
       >Acknowledge &amp; Download</StdButton

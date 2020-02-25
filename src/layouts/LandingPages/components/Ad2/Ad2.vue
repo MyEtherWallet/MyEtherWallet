@@ -17,7 +17,7 @@
         <a href="/" class="text-decoration--none">
           <StdButton
             class="standard-button"
-            button-class="button--white"
+            buttonclass="button--white"
             :to="{ name: 'HomeCreateWallet', query: {} }"
           >
             <img

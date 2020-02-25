@@ -8,7 +8,7 @@
       class="mb-5"
     />
     <BlockTitle :data="titleData" />
-    <StdButton button-class="button--green-border" class="mt-5"
+    <StdButton buttonclass="button--green-border" class="mt-5"
       >Contact Support</StdButton
     >
   </v-sheet>
