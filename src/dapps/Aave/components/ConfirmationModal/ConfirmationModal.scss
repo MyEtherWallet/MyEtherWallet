@@ -58,6 +58,8 @@
 
     .right-container {
       .currency-title {
+        align-items: center;
+        display: flex;
         color: $dark-blue-6;
         font-size: 14px;
         font-weight: 600;
