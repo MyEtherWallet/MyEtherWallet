@@ -20,7 +20,7 @@
               : $t('dappsAave.amount-borrowed')
           }}
         </th>
-        <th>{{ $t('dappsAave.apr') }}</th>
+        <th>{{ $t('dappsAave.apy') }}</th>
         <th>
           <div
             :class="[
@@ -31,11 +31,11 @@
             {{
               activeDepositTab
                 ? $t('dappsAave.use-collateral')
-                : $t('dappsAave.apr-type')
+                : $t('dappsAave.apy-type')
             }}
             <popover
               v-if="!activeDepositTab"
-              :popcontent="$t('dappsAave.apr-type-popover')"
+              :popcontent="$t('dappsAave.apy-type-popover')"
               class="ml-2"
             />
           </div>

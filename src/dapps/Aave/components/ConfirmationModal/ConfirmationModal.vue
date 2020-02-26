@@ -114,7 +114,7 @@
             class="rate-container"
           >
             <div class="left-container">
-              <p>{{ $t('dappsAave.interest-apr') }}</p>
+              <p>{{ $t('dappsAave.interest-apy') }}</p>
               <p class="mt-4">{{ $t('dappsAave.interest-rate-type') }}</p>
             </div>
             <div class="right-container">
