@@ -2,13 +2,23 @@
   <div class="drop-down-address-selector">
     <div class="dropdown--title">
       <h4>{{ title }}</h4>
-      <button
-        v-show="!hideCopy"
-        class="title-button prevent-user-select"
-        @click="copyToClipboard($refs.addressInput)"
-      >
-        {{ $t('common.copy') }}
-      </button>
+      <div class="top-button-block">
+        <button
+          v-show="!hideCopy"
+          v-if="isValidAddress"
+          :class="['save-addr-txt', !selectedAddress ? 'disabled-txt' : '']"
+          @click="openAddrModal()"
+        >
+          {{ $t('interface.address-book.save-addr') }}
+        </button>
+        <button
+          v-show="!hideCopy"
+          class="title-button prevent-user-select"
+          @click="copyToClipboard($refs.addressInput)"
+        >
+          {{ $t('common.copy') }}
+        </button>
+      </div>
     </div>
     <div class="dropdown--content">
       <div
@@ -26,12 +36,7 @@
             @input="debouncedInput"
           />
         </div>
-        <span
-          v-show="!hideCopy"
-          :class="['save-addr-txt', !selectedAddress ? 'disabled-txt' : '']"
-          @click="openAddrModal()"
-          >{{ $t('interface.address-book.save-addr') }}</span
-        >
+
         <div v-if="!isValidAddress" class="blockie-place-holder-image" />
         <div v-if="isValidAddress" class="selected-address-blockie">
           <blockie :address="hexAddress" width="30px" height="30px" />
