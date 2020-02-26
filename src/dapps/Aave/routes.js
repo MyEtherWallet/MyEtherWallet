@@ -9,7 +9,7 @@ export default {
   children: [
     {
       path: '',
-      name: 'Home',
+      name: 'AaveHome',
       component: HomeContainer,
       props: true
     },

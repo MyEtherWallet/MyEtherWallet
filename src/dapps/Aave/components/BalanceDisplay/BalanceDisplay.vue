@@ -12,7 +12,7 @@
         <p class="title">{{ title }}</p>
         <span v-if="title === balanceTitles.earnings" class="key-container">
           <div class="apr-circle"></div>
-          <span>{{ $t('dappsAave.apr') }}</span>
+          <span>{{ $t('dappsAave.apy') }}</span>
           <div class="total-circle"></div>
           <span>{{ $t('dappsAave.total') }}</span>
         </span>

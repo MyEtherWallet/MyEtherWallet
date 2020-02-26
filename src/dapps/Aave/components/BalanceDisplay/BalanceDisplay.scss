@@ -138,11 +138,13 @@
   }
 
   .left-border-radius {
-    border-radius: 6.5px 0 0 6.5px;
+    border-top-left-radius: 6.5px;
+    border-bottom-left-radius: 6.5px;
   }
 
   .right-border-radius {
-    border-radius: 0 6.5px 6.5px 0;
+    border-top-right-radius: 6.5px;
+    border-bottom-right-radius: 6.5px;
   }
 }
 
