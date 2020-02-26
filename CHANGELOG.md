@@ -13,6 +13,8 @@
 - Update aave copy [#2020] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2020)
 
 ### Bugs
+
+- Fix save ui [#1972](https://github.com/MyEtherWallet/MyEtherWallet/pull/1972)
 - Fix aave bugs [#2018] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2018)
 
 ### Release v5.3.3-hotfix.2
