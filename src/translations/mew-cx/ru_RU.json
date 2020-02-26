@@ -28,6 +28,7 @@
   "are-you-sure-delete": "Вы уверены, что хотите удалить этот кошелек",
   "your-wallet": "Ваш кошелек",
   "nickname": "Название",
+  "balance-fetch-error": "Не удалось получить цену ETH.",
   "all-tokens": "Все токены",
   "loading-tokens": "Загрузка токенов",
   "custom": "Пользовательский",

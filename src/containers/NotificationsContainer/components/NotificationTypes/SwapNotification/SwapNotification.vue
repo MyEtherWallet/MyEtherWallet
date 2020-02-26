@@ -267,6 +267,7 @@ export default {
             updateStatus(swapOnlyStatuses.CANCELLED);
             return;
           }
+
           const newStatus = await this.provider.getOrderStatus(
             this.notice.body,
             this.network.type.name
