@@ -13,6 +13,8 @@
 - Update aave copy [#2020] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2020)
 
 ### Bugs
+
+- Fix save ui [#1972](https://github.com/MyEtherWallet/MyEtherWallet/pull/1972)
 - Partial fix to downloading keystore file in view wallet [#1997](https://github.com/MyEtherWallet/MyEtherWallet/pull/1997)
 - Fix aave bugs [#2018] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2018)
 
