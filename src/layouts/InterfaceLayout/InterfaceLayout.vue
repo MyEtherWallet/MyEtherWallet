@@ -371,10 +371,11 @@ export default {
                 this.bcVaultWallets = res;
                 this.$refs.bcvault.$refs.bcvaultAddress.show();
               } else {
-                Toast.responseHandler(
-                  'You only have 1 Ethereum wallet stored in this device',
-                  Toast.WARN
-                );
+                BCVaultWallet.erroHandler({ jsError: 'mew1' });
+                // Toast.responseHandler(
+                //   'bcvaultErrors.only-one-wallet',
+                //   Toast.WARN
+                // );
               }
             })
             .catch(e => {
@@ -393,7 +394,7 @@ export default {
     bcVaultCb(address) {
       const walletInstance = BCVaultWallet().getAccount(address);
       this.decryptWallet([walletInstance]).then(() => {
-        this.$refs.bcvault.$refs.bcvaultAddress.show();
+        this.$refs.bcvault.$refs.bcvaultAddress.hide();
       });
     },
     print() {
