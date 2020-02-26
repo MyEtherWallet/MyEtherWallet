@@ -12,7 +12,7 @@
         <Spacer />
         <Swap />
         <Spacer />
-        <MEWconnect />
+        <BannerAds />
       </div>
     </div>
     <Spacer />
@@ -28,7 +28,7 @@ import Dapps from './Dapps';
 
 import Network from '@/layouts/Features/components/SideInfo/Network';
 import Swap from '@/layouts/Features/components/SideInfo/Swap';
-import MEWconnect from '@/layouts/Features/components/SideInfo/MEWconnect';
+import BannerAds from '@/layouts/Features/components/SideInfo/BannerAds';
 
 export default {
   components: {
@@ -38,7 +38,7 @@ export default {
     Dapps,
     Network,
     Swap,
-    MEWconnect
+    BannerAds
   }
 };
 </script>
