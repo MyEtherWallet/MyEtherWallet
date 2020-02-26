@@ -1,6 +1,6 @@
 // NOTE: this is a temporary solution.  This operation will be moved to runtime in the future. Currently it relies on manually updated files.
 const fs = require('fs');
-const uuid = require('uuid/v4');
+const {v4} = require('uuid');
 
 const fetch = require('node-fetch');
 const web3 = require('web3');
@@ -100,7 +100,7 @@ class CompileSwapOptions {
       jsonrpc: '2.0',
       method: method,
       params: data,
-      id: uuid()
+      id: v4()
     };
   }
 
