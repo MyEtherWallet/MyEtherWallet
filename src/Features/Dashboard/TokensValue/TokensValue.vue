@@ -56,22 +56,15 @@
           <td>$1.53B</td>
           <td>
             <div class="d-flex align-center">
-              <div></div>
-              <div class="text-red  d-flex align-center">
-                <ChartTiny
-                  class="ml-n2 mr-2 mt-2"
-                  :data="chart2"
-                  linecolor="red"
-                />
-                <div>
-                  0.23%
-                  <v-icon v-if="false" class="text-color--mew-green body-2"
-                    >mdi-arrow-up-bold</v-icon
-                  >
-                  <v-icon v-if="true" color="red" class="body-2"
-                    >mdi-arrow-down-bold</v-icon
-                  >
-                </div>
+              <ChartTiny class="ml-n2 mr-2" :data="chart2" linecolor="red" />
+              <div class="d-flex align-center">
+                <div class="text-color--red">0.23%</div>
+                <v-icon v-if="false" class="text-color--mew-green body-2"
+                  >mdi-arrow-up-bold</v-icon
+                >
+                <v-icon v-if="true" color="red" class="body-2"
+                  >mdi-arrow-down-bold</v-icon
+                >
               </div>
             </div>
           </td>
@@ -104,18 +97,15 @@
           <td>$1.53B</td>
           <td>
             <div class="d-flex align-center">
-              <div></div>
-              <div class="text-color--mew-green d-flex align-center">
-                <ChartTiny class="ml-n2 mr-2 mt-2" :data="chart1" />
-                <div>
-                  0.23%
-                  <v-icon class="text-color--mew-green body-2"
-                    >mdi-arrow-up-bold</v-icon
-                  >
-                  <v-icon v-if="false" color="red" class="body-2"
-                    >mdi-arrow-down-bold</v-icon
-                  >
-                </div>
+              <ChartTiny class="ml-n2 mr-2" :data="chart1" />
+              <div class="d-flex align-center">
+                <div class="text-color--mew-green">0.23%</div>
+                <v-icon class="text-color--mew-green body-2"
+                  >mdi-arrow-up-bold</v-icon
+                >
+                <v-icon v-if="false" color="red" class="body-2"
+                  >mdi-arrow-down-bold</v-icon
+                >
               </div>
             </div>
           </td>
@@ -148,18 +138,15 @@
           <td>$1.53B</td>
           <td>
             <div class="d-flex align-center">
-              <div></div>
-              <div class="text-color--mew-green d-flex align-center">
-                <ChartTiny class="ml-n2 mr-2 mt-2" :data="chart1" />
-                <div>
-                  0.23%
-                  <v-icon class="text-color--mew-green body-2"
-                    >mdi-arrow-up-bold</v-icon
-                  >
-                  <v-icon v-if="false" color="red" class="body-2"
-                    >mdi-arrow-down-bold</v-icon
-                  >
-                </div>
+              <ChartTiny class="ml-n2 mr-2" :data="chart1" />
+              <div class="d-flex align-center">
+                <div class="text-color--mew-green">0.23%</div>
+                <v-icon class="text-color--mew-green body-2"
+                  >mdi-arrow-up-bold</v-icon
+                >
+                <v-icon v-if="false" color="red" class="body-2"
+                  >mdi-arrow-down-bold</v-icon
+                >
               </div>
             </div>
           </td>
@@ -192,18 +179,15 @@
           <td>$1.53B</td>
           <td>
             <div class="d-flex align-center">
-              <div></div>
-              <div class="text-color--mew-green d-flex align-center">
-                <ChartTiny class="ml-n2 mr-2 mt-2" :data="chart1" />
-                <div>
-                  0.23%
-                  <v-icon class="text-color--mew-green body-2"
-                    >mdi-arrow-up-bold</v-icon
-                  >
-                  <v-icon v-if="false" color="red" class="body-2"
-                    >mdi-arrow-down-bold</v-icon
-                  >
-                </div>
+              <ChartTiny class="ml-n2 mr-2" :data="chart1" />
+              <div class="d-flex align-center">
+                <div class="text-color--mew-green">0.23%</div>
+                <v-icon class="text-color--mew-green body-2"
+                  >mdi-arrow-up-bold</v-icon
+                >
+                <v-icon v-if="false" color="red" class="body-2"
+                  >mdi-arrow-down-bold</v-icon
+                >
               </div>
             </div>
           </td>
@@ -333,10 +317,6 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/styles/GlobalVariables.scss';
 
-.text-red {
-  color: red;
-}
-
 .top-button-icon {
   border-radius: 100%;
   background-color: #b4ece4;
@@ -372,7 +352,7 @@ export default {
     }
     td {
       border-bottom: 1px solid #efefef;
-      padding: 0 10px;
+      padding: 5px 10px;
     }
     td:first-child {
       padding-left: 30px;
