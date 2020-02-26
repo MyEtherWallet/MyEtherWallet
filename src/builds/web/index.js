@@ -15,10 +15,19 @@ import HowItWorks from '@/layouts/LandingPages/HowItWorks';
 
 import Features from '@/layouts/Features';
 import Dashboard from '@/Features/Dashboard';
+
 import Send from '@/Features/Send';
+import SendTX from '@/Features/Send/SendTX';
+import SendOffline from '@/Features/Send/SendOffline';
+import NFTManager from '@/Features/Send/NFTManager';
+
 import Swap from '@/Features/Swap';
 import Dapps from '@/Features/Dapps';
+
 import Contract from '@/Features/Contract';
+import DeployContract from '@/Features/Contract/DeployContract';
+import InteractWithContract from '@/Features/Contract/InteractWithContract';
+
 import SignMessage from '@/Features/SignMessage';
 
 const webRoutes = [
@@ -125,7 +134,33 @@ const webRoutes = [
         component: Send,
         meta: {
           requiresAuth: false
-        }
+        },
+        children: [
+          {
+            path: 'sendtx',
+            name: 'SendTX',
+            component: SendTX,
+            meta: {
+              requiresAuth: false
+            }
+          },
+          {
+            path: 'send-offline',
+            name: 'SendOffline',
+            component: SendOffline,
+            meta: {
+              requiresAuth: false
+            }
+          },
+          {
+            path: 'nft-manager',
+            name: 'NFTManager',
+            component: NFTManager,
+            meta: {
+              requiresAuth: false
+            }
+          }
+        ]
       },
       {
         path: 'swap',
@@ -149,7 +184,25 @@ const webRoutes = [
         component: Contract,
         meta: {
           requiresAuth: false
-        }
+        },
+        children: [
+          {
+            path: 'deploy',
+            name: 'DeployContract',
+            component: DeployContract,
+            meta: {
+              requiresAuth: false
+            }
+          },
+          {
+            path: 'interact',
+            name: 'InteractWithContract',
+            component: InteractWithContract,
+            meta: {
+              requiresAuth: false
+            }
+          }
+        ]
       },
       {
         path: 'sign',
