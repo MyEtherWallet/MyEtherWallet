@@ -30,21 +30,16 @@ class BCVault {
 
   async init() {
     // fetch devices
-    this.deviceNumber = await this.bcWallet.getDevices();
+    this.deviceNumber = await this.bcWallet.getDevices().catch(errorHandler);
     // get wallet of first device and password
     // not sure if we want the users to pass this as a parameter or ask user
     // for which wallet to use
-    await this.bcWallet.EnterGlobalPin(this.deviceNumber[0], this.bcWalletType);
-    // get the wallet addresses for ethereum
-    // allegedly deprecated
-    // const walletAddresses = await this.bcWallet.getWalletsOfType(
-    //   this.deviceNumber[0],
-    //   bc.WalletType.ethereum
-    // );
-    const walletAddresses = await this.bcWallet.getBatchWalletDetails(
-      this.deviceNumber[0],
-      [bc.WalletType.ethereum]
-    );
+    await this.bcWallet
+      .EnterGlobalPin(this.deviceNumber[0], this.bcWalletType)
+      .catch(errorHandler);
+    const walletAddresses = await this.bcWallet
+      .getBatchWalletDetails(this.deviceNumber[0], [bc.WalletType.ethereum])
+      .catch(errorHandler);
 
     return walletAddresses;
   }
@@ -77,12 +72,14 @@ class BCVault {
         };
       }
       const networkId = tx.getChainId();
-      const result = await this.bcWallet.GenerateTransaction(
-        this.deviceNumber[0],
-        this.bcWalletType,
-        newTx,
-        false
-      );
+      const result = await this.bcWallet
+        .GenerateTransaction(
+          this.deviceNumber[0],
+          this.bcWalletType,
+          newTx,
+          false
+        )
+        .catch(errorHandler);
       const resultTx = new Transaction(result);
       tx.v = getBufferFromHex(sanitizeHex(resultTx.v.toString('hex')));
       tx.r = getBufferFromHex(sanitizeHex(resultTx.r.toString('hex')));
@@ -102,25 +99,23 @@ class BCVault {
       return getSignTransactionObject(tx);
     };
     const msgSigner = async msg => {
-      try {
-        const result = await this.bcWallet.SignData(
+      const result = await this.bcWallet
+        .SignData(
           this.deviceNumber[0],
           this.bcWalletType,
           this.selectedAddress,
           msg
-        );
-        const signature = result.substr(2);
-        const r = '0x' + signature.slice(0, 64);
-        const s = '0x' + signature.slice(64, 128);
-        const v = '0x' + signature.slice(128, 130);
-        return Buffer.concat([
-          getBufferFromHex(sanitizeHex(r)),
-          getBufferFromHex(sanitizeHex(s)),
-          getBufferFromHex(sanitizeHex(v))
-        ]);
-      } catch (e) {
-        errorHandler(e);
-      }
+        )
+        .catch(errorHandler);
+      const signature = result.substr(2);
+      const r = '0x' + signature.slice(0, 64);
+      const s = '0x' + signature.slice(64, 128);
+      const v = '0x' + signature.slice(128, 130);
+      return Buffer.concat([
+        getBufferFromHex(sanitizeHex(r)),
+        getBufferFromHex(sanitizeHex(s)),
+        getBufferFromHex(sanitizeHex(v))
+      ]);
     };
 
     return new HDWalletInterface(
