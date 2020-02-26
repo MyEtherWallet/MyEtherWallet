@@ -64,7 +64,7 @@
         <div class="mt-3">
           <div class="section-name">
             <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-            {{ $t('dappsAave.apr') }}
+            {{ $t('dappsAave.apy') }}
           </div>
           <div>
             <span v-if="activeDepositTab">

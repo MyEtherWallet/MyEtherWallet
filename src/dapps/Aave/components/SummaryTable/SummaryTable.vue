@@ -20,7 +20,7 @@
               : $t('dappsAave.amount-borrowed')
           }}
         </th>
-        <th>{{ $t('dappsAave.apr') }}</th>
+        <th>{{ $t('dappsAave.apy') }}</th>
         <th>
           <div
             :class="[
@@ -31,11 +31,11 @@
             {{
               activeDepositTab
                 ? $t('dappsAave.use-collateral')
-                : $t('dappsAave.apr-type')
+                : $t('dappsAave.apy-type')
             }}
             <popover
               v-if="!activeDepositTab"
-              :popcontent="$t('dappsAave.apr-type-popover')"
+              :popcontent="$t('dappsAave.apy-type-popover')"
               class="ml-2"
             />
           </div>
@@ -158,7 +158,16 @@
                     type="checkbox"
                     @click="changeInterestType(index, reserve)"
                   />
-                  <span class="slider borrow-slider round" />
+                  <span
+                    :class="[
+                      'slider',
+                      'borrow-slider',
+                      'round',
+                      !isStableEnabled(reserve.reserve.id)
+                        ? 'disabled-input'
+                        : ''
+                    ]"
+                  />
                 </label>
               </div>
               <span
@@ -264,6 +273,9 @@ export default {
     ownedReserves() {
       const splitReserves = [];
       this.userReserves.forEach(reserve => {
+        if (this.pendingToken.symbol === reserve.reserve.symbol) {
+          return;
+        }
         if (this.activeDepositTab && reserve.principalATokenBalance > 0) {
           splitReserves.push(reserve);
         } else if (!this.activeDepositTab && reserve.currentBorrowsETH > 0) {
@@ -331,14 +343,18 @@ export default {
       });
     },
     useAsCollateral(idx) {
+      event.preventDefault();
+      event.stopPropagation();
       this.token = this.getReserve(this.ownedReserves[idx].reserve.id);
       this.$refs.confirmationModal.$refs.confirmationModal.show();
       this.collateralModalShown = true;
     },
-    changeInterestType(idx, reserve) {
-      this.token = this.getReserve(this.userReserves[idx].reserve.id);
-      reserve.borrowRateMode =
-        reserve.borrowRateMode === 'Stable' ? 'Variable' : 'Stable';
+    changeInterestType(idx) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      this.token = this.getReserve(this.ownedReserves[idx].reserve.id);
+
       this.$refs.switchInterest.$refs.switchInterest.show();
       this.switchInterestShown = true;
     },
