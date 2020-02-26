@@ -614,21 +614,37 @@ export default class Kyber {
       fromCurrency !== kyberBaseCurrency && toCurrency !== kyberBaseCurrency
     );
   }
-
-  getTokenTradeGas(fromCurrency, toCurrency, fromValueWei) {
-    if (
-      toCurrency === DAI &&
-      toBigNumber(fromValueWei).gt(this.convertToTokenWei('ETH', 499))
-    ) {
-      return toBigNumber(1500000);
-    }
-    const fromGas = this.getTokenSwapGas(fromCurrency);
-    const toGas = this.getTokenSwapGas(toCurrency);
-    return toBigNumber(fromGas)
-      .plus(toBigNumber(toGas))
-      .toFixed(0)
-      .toString();
+  getTokenTradeGas() {
+    // if (
+    //   toCurrency === DAI &&
+    //   toBigNumber(fromValueWei).gt(this.convertToTokenWei('ETH', 499))
+    // ) {
+    //   return toBigNumber(1500000);
+    // }
+    // const fromGas = this.getTokenSwapGas(fromCurrency);
+    // const toGas = this.getTokenSwapGas(toCurrency);
+    // return toBigNumber(fromGas)
+    //   .plus(toBigNumber(toGas))
+    //   .toFixed(0)
+    //   .toString();
+    return toBigNumber(1500000);
   }
+
+  // getTokenTradeGas(fromCurrency, toCurrency, fromValueWei) {
+  //   if (
+  //     toCurrency === DAI &&
+  //     toBigNumber(fromValueWei).gt(this.convertToTokenWei('ETH', 499))
+  //   ) {
+  //     return toBigNumber(1500000);
+  //   }
+  //   const fromGas = this.getTokenSwapGas(fromCurrency);
+  //   const toGas = this.getTokenSwapGas(toCurrency);
+  //   return toBigNumber(fromGas)
+  //     .plus(toBigNumber(toGas))
+  //     .toFixed(0)
+  //     .toString();
+  //   return toBigNumber(1500000);
+  // }
 
   getTokenApprovalGas(token) {
     const gasLimits = this.getGasLimits(token);
