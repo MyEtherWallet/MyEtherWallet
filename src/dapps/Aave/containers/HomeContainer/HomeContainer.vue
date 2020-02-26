@@ -250,7 +250,7 @@ export default {
 
       if (borrowLimitEth > 0 && this.percentageLeft > 0) {
         this.compositionBorrow.push({
-          symbol: this.$t('dappsAave.left'),
+          symbol: this.$t('dappsAave.available'),
           amount: '',
           percentage: this.percentageLeft,
           color: '#c7c7c7'
