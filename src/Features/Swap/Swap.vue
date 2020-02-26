@@ -2,43 +2,31 @@
   <div>
     <div class="d-flex">
       <div class="flex-grow-1">
-        <EthBalance />
-        <Spacer />
-        <TokensValue />
+        <SendTransaction />
       </div>
       <Spacer />
       <div>
         <Network />
         <Spacer />
         <Swap />
-        <Spacer />
-        <MEWconnect />
       </div>
     </div>
-    <Spacer />
-    <Dapps />
   </div>
 </template>
 
 <script>
 import Spacer from '@/components/Common/Spacer';
-import EthBalance from './EthBalance';
-import TokensValue from './TokensValue';
-import Dapps from './Dapps';
+import SendTransaction from './SendTransaction';
 
 import Network from '@/layouts/Features/components/SideInfo/Network';
 import Swap from '@/layouts/Features/components/SideInfo/Swap';
-import MEWconnect from '@/layouts/Features/components/SideInfo/MEWconnect';
 
 export default {
   components: {
     Spacer,
-    EthBalance,
-    TokensValue,
-    Dapps,
+    SendTransaction,
     Network,
-    Swap,
-    MEWconnect
+    Swap
   }
 };
 </script>
