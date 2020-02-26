@@ -1,0 +1,184 @@
+@import '~@/scss/GlobalVariables';
+
+.header-container {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 20px 20px 5px 20px;
+
+  .search-container {
+    margin-right: 20px;
+    i {
+      color: $dark-grey-12;
+      margin-left: 5px;
+      margin-top: 4px;
+      position: absolute;
+    }
+
+    input {
+      width: 100%;
+      border-bottom: 1px solid $light-grey-6;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+      border-radius: 0;
+      padding-left: 25px;
+    }
+  }
+
+  .type-token-container {
+    align-items: center;
+    display: flex;
+    @media all and (max-width: 600px) {
+      display: block;
+    }
+    span {
+      color: $light-grey-18;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+
+    .tab-container {
+      align-items: center;
+      display: flex;
+
+      .action-btn {
+        align-items: center;
+        background-color: $light-grey-17;
+        border: 1px solid $light-grey-4;
+        border-radius: 4px;
+        color: $dark-blue-1;
+        cursor: pointer;
+        display: flex;
+        height: 33px;
+        padding: 10px 25px;
+        width: 71px;
+      }
+
+      .stable-btn {
+        margin-left: -12px;
+        width: 86px;
+      }
+
+      .active-tab {
+        background-color: $dark-blue-2;
+        color: $white;
+        z-index: 1;
+      }
+    }
+  }
+}
+
+.token-icon {
+  font-size: 20px;
+  margin-right: 5px;
+  width: 20px;
+}
+
+.disabled {
+  background-color: $light-grey-10 !important;
+  pointer-events: none;
+}
+
+.table-container {
+  max-height: 400px;
+  margin-top: 10px;
+  overflow: auto;
+  table {
+    // display: table;
+    // table-layout: fixed;
+    width: 100%;
+    min-width: 700px;
+  }
+
+  .currency-symbol {
+    font-size: 20px;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+
+  table thead {
+    width: 100%;
+
+    .number-header {
+      padding-left: 20px;
+    }
+  }
+
+  thead th,
+  tbody td {
+    padding: 10px;
+  }
+
+  table thead th,
+  table thead th div {
+    background-color: $light-blue-12;
+    color: $light-blue-2;
+    font-size: 11px;
+    font-weight: 600;
+    position: sticky;
+    text-transform: uppercase;
+    top: 0;
+  }
+
+  .sort-enabled-container {
+    align-items: center;
+    display: flex;
+
+    span {
+      flex-direction: column;
+      display: flex;
+      margin-bottom: 3px;
+      margin-left: 5px;
+    }
+
+    i {
+      color: $light-grey-18;
+      cursor: pointer;
+      font-size: 10px;
+      height: 8px;
+    }
+  }
+
+  .table-msg {
+    padding: 20px 0;
+    text-align: center;
+    width: 100%;
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid $light-grey-6;
+    }
+
+    tr td {
+      color: $dark-blue-6;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .action-btn {
+      color: $white;
+      background-color: $mew-green;
+      border-radius: 4px;
+      border: none;
+      padding: 10px 20px;
+    }
+
+    .number {
+      color: $light-grey-18;
+      font-size: 11px;
+      font-weight: 500;
+      padding-left: 20px;
+    }
+
+    .stable-apr {
+      color: $light-blue-1;
+    }
+
+    .var-apr {
+      color: $light-yellow-4;
+    }
+  }
+}
