@@ -22,5 +22,5 @@
   "select-item": "Выберите элемент, чтобы увидеть детали или добавить кастомный NFT.",
   "avail-nft": "Доступные NFT",
   "unknown-token-title": "НЕИЗВЕСТНЫЙ {address}",
-  "sending-disabled": "Send is disabled for {token}"
+  "sending-disabled": "Отправка отключена для {token}"
 }
