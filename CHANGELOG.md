@@ -26,6 +26,10 @@
 
 - Fix NFT load issue [#2001](https://github.com/MyEtherWallet/MyEtherWallet/pull/2001)
 
+### Bug
+
+- check if reset copy exists before replacing nft list with copy [#2013](https://github.com/MyEtherWallet/MyEtherWallet/pull/2013)
+
 ### Release v5.3.3
 
 ### Bug
