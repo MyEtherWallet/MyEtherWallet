@@ -1,6 +1,6 @@
 <template>
   <WhiteSheet>
-    <div class="px-8 py-7">
+    <div class="px-8 py-5">
       <div class="d-flex align-center">
         <BlockTitle text="Dapps">
           <template v-slot:right-button>
