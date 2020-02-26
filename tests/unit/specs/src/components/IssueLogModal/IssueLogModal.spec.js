@@ -6,6 +6,8 @@ import StandardButton from '@/components/Buttons/StandardButton';
 import sinon from 'sinon';
 import MenuTitle from '@/components/MenuTitle';
 import PopOver from '@/components/PopOver';
+import { actions } from '@@/helpers/mockStore';
+import VueX from 'vuex';
 
 const hideModal = sinon.stub();
 
@@ -41,7 +43,14 @@ describe('IssuesLogModal.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = store = new VueX.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          actions
+        }
+      }
+    });
     Vue.config.warnHandler = () => {};
   });
 

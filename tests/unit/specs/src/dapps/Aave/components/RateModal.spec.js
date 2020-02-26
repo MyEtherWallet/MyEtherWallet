@@ -58,7 +58,9 @@ describe('RateModal.vue', () => {
   });
 
   it('should trigger togglBtns for stable', async () => {
+    wrapper.setProps({ token: { stableBorrowRateEnabled: true } });
     wrapper.setData({ selectStable: true });
+    await wrapper.vm.$nextTick();
     wrapper.find('.selected-btn').trigger('click');
     await wrapper.vm.$nextTick();
     expect(wrapper.vm.$data.selectStable).toBe(true);
@@ -67,6 +69,7 @@ describe('RateModal.vue', () => {
 
   it('should trigger togglBtns for variable', async () => {
     wrapper.setData({ selectVariable: true });
+    await wrapper.vm.$nextTick();
     wrapper.find('.selected-btn').trigger('click');
     await wrapper.vm.$nextTick();
     expect(wrapper.vm.$data.selectStable).toBe(false);

@@ -72,6 +72,9 @@ const state = {
 const actions = {
   setToken: () => {
     return true;
+  },
+  toggleTempHide: () => {
+    return true;
   }
 };
 

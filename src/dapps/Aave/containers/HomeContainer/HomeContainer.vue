@@ -60,7 +60,7 @@
       </span>
       <i v-show="loadingHome" class="fa fa-spinner fa-spin" />
       <span v-if="!loadingHome" class="loan-percent"
-        >{{ userSummary.currentLiquidationThreshold }}%</span
+        >{{ userSummary.currentLiquidationThreshold * 100 }}%</span
       >
     </div>
     <summary-table
