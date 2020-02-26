@@ -351,6 +351,14 @@ export default {
       this.successMessage = '';
       this.linkMessage = 'OK';
     });
+
+    if (this.$refs.hasOwnProperty('confirmModal')) {
+      this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
+        if (this.dismissed) {
+          this.$eventHub.$emit('emptyPendingToken');
+        }
+      });
+    }
   },
   methods: {
     ...mapActions('main', ['addNotification']),

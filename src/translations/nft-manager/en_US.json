@@ -21,5 +21,6 @@
   "manager": "Manager",
   "select-item": "Select an item to see details or add your custom NFT.",
   "avail-nft": "Available NFT",
-  "unknown-token-title": "UNKNOWN {address}"
+  "unknown-token-title": "UNKNOWN {address}",
+  "sending-disabled": "Send is disabled for {token}"
 }
