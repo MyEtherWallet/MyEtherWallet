@@ -42,7 +42,7 @@ export default {
         },
         yAxis: {
           visible: false,
-          height: '60'
+          height: '80'
         },
         legend: {
           enabled: false
