@@ -1,12 +1,10 @@
 <template>
-  <WhiteSheet class="pa-7">MEWconnect</WhiteSheet>
+  <div>Ad3</div>
 </template>
 
 <script>
-import WhiteSheet from '@/components/Common/WhiteSheet';
-
 export default {
-  components: { WhiteSheet }
+  components: {}
 };
 </script>
 
