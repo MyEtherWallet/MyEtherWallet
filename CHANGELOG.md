@@ -1,3 +1,5 @@
+### Release v5.4.0
+
 ### Feature
 
 - Aave [#1728](https://github.com/MyEtherWallet/MyEtherWallet/pull/1728)
@@ -6,7 +8,24 @@
 
 - Change translation string [#2000](https://github.com/MyEtherWallet/MyEtherWallet/pull/2000)
 - Fix Exit to Fiat to correspond with backend changes [#2002](https://github.com/MyEtherWallet/MyEtherWallet/pull/2002)
+- Update aave copy [#2011](https://github.com/MyEtherWallet/MyEtherWallet/pull/2011)
 - Change social icons display [#2003](https://github.com/MyEtherWallet/MyEtherWallet/pull/2003)
+- Update aave copy [#2020] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2020)
+
+### Bugs
+- Fix aave bugs [#2018] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2018)
+
+### Release v5.3.3-hotfix.2
+
+### Hotfix
+
+- remove keepalive net_version calls [#2009](https://github.com/MyEtherWallet/MyEtherWallet/pull/2009)
+
+### Release v5.3.3-hotfix.1
+
+### Hotfix
+
+- Fix NFT load issue [#2001](https://github.com/MyEtherWallet/MyEtherWallet/pull/2001)
 
 ### Release v5.3.3
 
