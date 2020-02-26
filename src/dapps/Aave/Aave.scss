@@ -56,7 +56,7 @@
   .desktop {
     display: flex;
   }
-  
+
   .mobile {
     display: none;
   }
@@ -65,10 +65,10 @@
     .desktop {
       display: none;
     }
-  
+
     .mobile {
       display: flex;
-      justify-content: center;;
+      justify-content: center;
       margin-bottom: 20px;
     }
   }
