@@ -47,5 +47,10 @@ module.exports = [
   'https://rpc.solidum.network:443',
   'https://mainnet-rpc.dexon.org:443',
   'https://node.mainnet.lightstreams.io:443',
-  'https://rpc.ethercore.org:443'
+  'https://rpc.ethercore.org:443',
+  'https://sai-mainnet.makerfoundation.com/v1',
+  'wss://api.thegraph.com/subgraphs/name/aave/protocol-raw',
+  'https://ambrpay.io/api/smartContractAddresses',
+  'https://ambrpay.io/api/subscriptions/0x43689531907482bee7e650d18411e284a7337a66',
+  'https://nft2.mewapi.io/tokens'
 ];
