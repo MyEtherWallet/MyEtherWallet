@@ -53,7 +53,16 @@
     }
   },
   "social": {
-    "title": "Join MEW Community"
+    "title": "Join MEW Community",
+    "facebook": "Facebook",
+    "twitter": "Twitter",
+    "medium": "Medium",
+    "reddit": "Reddit",
+    "github": "Github",
+    "vkontakte": "Vkontakte",
+    "youtube": "YouTube",
+    "mewtopia": "MEWtopia",
+    "instagram": "Instagram"
   },
   "lost-title": "Oops! Looks like you're lost."
 }

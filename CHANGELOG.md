@@ -2,6 +2,57 @@
 
 - WalletConnect & WalletLink Support [#1924](https://github.com/MyEtherWallet/MyEtherWallet/pull/1924)
 
+### Release v5.4.0
+
+### Feature
+
+- Aave [#1728](https://github.com/MyEtherWallet/MyEtherWallet/pull/1728)
+
+### Devop
+
+- Change translation string [#2000](https://github.com/MyEtherWallet/MyEtherWallet/pull/2000)
+- Fix Exit to Fiat to correspond with backend changes [#2002](https://github.com/MyEtherWallet/MyEtherWallet/pull/2002)
+- Update aave copy [#2011](https://github.com/MyEtherWallet/MyEtherWallet/pull/2011)
+- Change social icons display [#2003](https://github.com/MyEtherWallet/MyEtherWallet/pull/2003)
+- Update aave copy [#2020] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2020)
+
+### Bugs
+
+- Fix save ui [#1972](https://github.com/MyEtherWallet/MyEtherWallet/pull/1972)
+- Partial fix to downloading keystore file in view wallet [#1997](https://github.com/MyEtherWallet/MyEtherWallet/pull/1997)
+- Fix aave bugs [#2018] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2018)
+
+### Release v5.3.3-hotfix.2
+
+### Hotfix
+
+- remove keepalive net_version calls [#2009](https://github.com/MyEtherWallet/MyEtherWallet/pull/2009)
+
+### Release v5.3.3-hotfix.1
+
+### Hotfix
+
+- Fix NFT load issue [#2001](https://github.com/MyEtherWallet/MyEtherWallet/pull/2001)
+
+### Bug
+
+- check if reset copy exists before replacing nft list with copy [#2013](https://github.com/MyEtherWallet/MyEtherWallet/pull/2013)
+
+### Release v5.3.3
+
+### Bug
+
+- Fix mnemonic phrase for current version [#1985](https://github.com/MyEtherWallet/MyEtherWallet/pull/1985)
+- Fix incorrect variable used to check maker setup complete [#1985](https://github.com/MyEtherWallet/MyEtherWallet/pull/1985)
+- Some bug fixes [#1978](https://github.com/MyEtherWallet/MyEtherWallet/pull/1978)
+- Fix DAI Icon [#1977](https://github.com/MyEtherWallet/MyEtherWallet/pull/1977)
+
+### Devop
+
+- Add CAD and JPY as Simplex currencies [#1887](https://github.com/MyEtherWallet/MyEtherWallet/pull/1887)
+- Update NFT manager to use new API [#1898](https://github.com/MyEtherWallet/MyEtherWallet/pull/1898)
+- Remove iosiro as blacklist source - Update NFT manager to use new API [#1997](https://github.com/MyEtherWallet/MyEtherWallet/pull/1997)
+
 ### Release v5.3.2-hotfix.1
 
 ### Hotfix
@@ -223,6 +274,7 @@
 
 ### Feature
 
+- Add MEWconnect footer link [#1675](https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)
 - Display label paths [#1681](https://github.com/MyEtherWallet/MyEtherWallet/pull/1681)
 - Address book [#1647](https://github.com/MyEtherWallet/MyEtherWallet/pull/1647)
 - Add MEWconnect footer link [#1675](https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)

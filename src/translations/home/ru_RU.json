@@ -53,7 +53,16 @@
     }
   },
   "social": {
-    "title": "Сообщество MEW"
+    "title": "Сообщество MEW",
+    "facebook": "Facebook",
+    "twitter": "Twitter",
+    "medium": "Medium",
+    "reddit": "Reddit",
+    "github": "GitHub",
+    "vkontakte": "Vkontakte",
+    "youtube": "YouTube",
+    "mewtopia": "MEWtopia",
+    "instagram": "Instagram"
   },
   "lost-title": "Ой! Похоже, вы потерялись."
 }
