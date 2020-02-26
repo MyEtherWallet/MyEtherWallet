@@ -13,11 +13,17 @@
           <img :src="getImage(nft)" alt />
         </div>
         <div class="kitty-text">
-          <div class="product-title-desktop">
+          <div v-if="canSend" class="product-title-desktop">
             <h3>{{ $t('nftManager.send-my', { value: selectedTitle }) }}</h3>
             <p>#{{ nft.name }}</p>
           </div>
-          <div class="address-input-container">
+          <div v-if="!canSend" class="product-title-desktop">
+            <h3>
+              {{ $t('nftManager.sending-disabled', { value: selectedTitle }) }}
+            </h3>
+            <p>#{{ nft.name }}</p>
+          </div>
+          <div v-if="canSend" class="address-input-container">
             <dropdown-address-selector
               :title="$t('sendTx.to-addr')"
               @toAddress="prepareTransfer"
@@ -86,13 +92,20 @@ export default {
       toAddress: '',
       tokenContract: {},
       ERC721tokenContract: {},
+      ERC721SafeTransferFrom: {},
       cryptoKittiesContract: {},
       cryptoKittiesConfig: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
+      cannotSend: {
+        decentralland: '0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d'
+      },
       isValidAddress: false
     };
   },
   computed: {
-    ...mapState('main', ['account', 'web3'])
+    ...mapState('main', ['account', 'web3']),
+    canSend() {
+      return !Object.values(this.cannotSend).includes(this.nft.contract);
+    }
   },
   watch: {},
   mounted() {
@@ -145,6 +158,7 @@ export default {
           .transfer(this.toAddress, this.nft.id)
           .encodeABI();
       }
+
       return this.ERC721tokenContract.methods
         .transferFrom(this.account.address, this.toAddress, this.nft.id)
         .encodeABI();
