@@ -20,7 +20,7 @@
             </i18n>
             <p class="amount mt-2">
               {{ convertToFixed(amount)
-              }}<span class="token-name"> {{ token.name }} </span>
+              }}<span class="token-name"> {{ token.symbol }} </span>
             </p>
             <p class="usd-amount mt-2">${{ convertToUSD(amount) }}</p>
           </div>
@@ -81,7 +81,7 @@
                     'token-icon-col'
                   ]"
                 ></span
-                ><span v-if="token">{{ token.name }}</span>
+                ><span v-if="token">{{ token.symbol }}</span>
               </p>
               <p class="mt-4 health-factor">
                 {{ convertToFixed(currentHealthFactor) }}
@@ -114,7 +114,7 @@
             class="rate-container"
           >
             <div class="left-container">
-              <p>{{ $t('dappsAave.interest-apr') }}</p>
+              <p>{{ $t('dappsAave.apy') }}</p>
               <p class="mt-4">{{ $t('dappsAave.interest-rate-type') }}</p>
             </div>
             <div class="right-container">
@@ -327,7 +327,9 @@ export default {
         const amount = new BigNumber(this.amount).plus(
           new BigNumber(this.amount).times(0.005)
         );
-        return amount > this.account.balance ? amount : this.account.balance;
+        return amount < this.token.tokenBalance
+          ? amount
+          : this.token.tokenBalance;
       } else if (
         this.actionTitle === this.actionTitles.borrow &&
         this.maxBorrowAmt() === this.amount &&

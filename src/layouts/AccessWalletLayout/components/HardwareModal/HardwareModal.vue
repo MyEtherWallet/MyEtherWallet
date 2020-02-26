@@ -278,7 +278,9 @@ export default {
           bcvaultInstance
             .init()
             .then(res => {
-              this.openBcVault(res, bcvaultInstance);
+              if (res.length >= 1) {
+                this.openBcVault(res, bcvaultInstance);
+              }
             })
             .catch(e => {
               BCVaultWallet.errorHandler(e);

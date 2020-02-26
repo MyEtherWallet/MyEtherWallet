@@ -6,8 +6,8 @@
   "not-supported": "NFTs are not supported on {value}",
   "send-my": "Send My {value}",
   "per-page-count": "{perPage} Per Page | {count} Items Total",
-  "showing-range": " Showing {first} - {last}",
-  "loading-range": " Loading {first} - {last}",
+  "showing-range": " {first} - {last} ({count} items)",
+  "showing": " {first} ({count} item)",
   "reloading": "reloading",
   "none-owned": "You own no NFTs",
   "custom": "Add custom NFT",
@@ -20,5 +20,6 @@
   "nft": "NFT",
   "manager": "Manager",
   "select-item": "Select an item to see details or add your custom NFT.",
-  "avail-nft": "Available NFT"
+  "avail-nft": "Available NFT",
+  "unknown-token-title": "UNKNOWN {address}"
 }

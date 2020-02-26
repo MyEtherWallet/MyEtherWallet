@@ -12,7 +12,7 @@
         <p>{{ $t('dappsAave.select-rate-info') }}</p>
         <div class="button-container">
           <div
-            v-if="!token.stableBorrowRateEnabled"
+            v-if="token.stableBorrowRateEnabled"
             :class="['mr-3', selectStable ? 'selected-btn' : '']"
             @click="toggleBtns('stable')"
           >
