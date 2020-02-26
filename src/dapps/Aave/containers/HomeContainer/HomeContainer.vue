@@ -60,7 +60,7 @@
       </span>
       <i v-show="loadingHome" class="fa fa-spinner fa-spin" />
       <span v-if="!loadingHome" class="loan-percent"
-        >{{ userSummary.currentLiquidationThreshold }}%</span
+        >{{ userSummary.currentLiquidationThreshold * 100 }}%</span
       >
     </div>
     <summary-table
@@ -250,7 +250,7 @@ export default {
 
       if (borrowLimitEth > 0 && this.percentageLeft > 0) {
         this.compositionBorrow.push({
-          symbol: this.$t('dappsAave.left'),
+          symbol: this.$t('dappsAave.available'),
           amount: '',
           percentage: this.percentageLeft,
           color: '#c7c7c7'
