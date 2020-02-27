@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import Var from '@/variables.js';
+import Var from '@/plugins/variables.js';
 import WhiteSheet from '@/components/Common/WhiteSheet';
 import StdButton from '@/components/StdButton';
 import ChartBalance from '@/components/Charts/Balance';

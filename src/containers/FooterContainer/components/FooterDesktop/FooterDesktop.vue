@@ -160,7 +160,7 @@
 </template>
 
 <script>
-import Vars from '@/variables.js';
+import Vars from '@/plugins/variables.js';
 import FootNote from './components/FootNote';
 
 export default {
