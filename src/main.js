@@ -11,7 +11,7 @@ import Vuex from 'vuex';
 
 // etc
 import languages from '@/translations';
-import './plugins/registerServiceWorker';
+import '@/plugins/registerServiceWorker';
 import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
 import vuetify from '@/plugins/vuetify';
