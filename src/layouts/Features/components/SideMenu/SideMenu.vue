@@ -2,7 +2,7 @@
   <div class="component--sidemenu px-4 py-7">
     <div class="mb-4">
       <router-link :to="{ name: 'Features' }">
-        <img width="120" src="@/assets/images/Common/logo-light.png" />
+        <img width="120" src="@/assets/images/icons/mew/logo-mew.png" />
       </router-link>
     </div>
     <WalletCard />

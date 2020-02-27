@@ -23,7 +23,7 @@
       <v-img
         class="mx-auto"
         max-width="280px"
-        src="@/assets/images/Etc/CreateWallet/DoneKeystore.png"
+        src="@/assets/images/mew/icon-keystore-mew.png"
       />
     </v-col>
   </v-sheet>

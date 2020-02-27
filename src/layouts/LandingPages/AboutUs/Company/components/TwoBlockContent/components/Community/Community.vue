@@ -1,7 +1,7 @@
 <template>
   <v-sheet max-width="400px">
     <v-img
-      src="@/assets/images/Common/Icons/Community.svg"
+      src="@/assets/images/icons/mew/icon-community-mew.svg"
       max-width="65px"
       max-height="65px"
       aspect-ratio="1"

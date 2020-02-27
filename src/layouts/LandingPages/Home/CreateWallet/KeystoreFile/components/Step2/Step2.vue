@@ -33,9 +33,9 @@
 <script>
 import StdButton from '@/components/StdButton';
 import NotRecommended from '@/components/NotRecommended';
-import PaperPlane from '@/assets/images/Etc/CreateWallet/PaperPlane.svg';
-import Stolen from '@/assets/images/Etc/CreateWallet/Stolen.svg';
-import Copy from '@/assets/images/Etc/CreateWallet/Copy.svg';
+import PaperPlane from '@/assets/images/icons/mew/icon-paper-plane-mew.svg';
+import Stolen from '@/assets/images/icons/mew/icon-money-bag-mew.svg';
+import Copy from '@/assets/images/icons/light/white/icon-copy-white.svg';
 
 export default {
   components: { StdButton, NotRecommended },

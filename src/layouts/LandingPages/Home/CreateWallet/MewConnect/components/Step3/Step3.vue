@@ -32,7 +32,7 @@
         class="mx-auto"
         max-height="360px"
         max-width="330px"
-        src="@/assets/images/Etc/CreateWallet/Done.png"
+        src="@/assets/images/snippets/mobile/mobile-scan-qr.png"
       />
     </v-col>
   </v-sheet>

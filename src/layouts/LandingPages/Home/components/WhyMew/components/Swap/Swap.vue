@@ -16,7 +16,10 @@
         Learn more<v-icon class="ml-1 title">mdi-arrow-right</v-icon>
       </v-btn>
     </div>
-    <img class="circles" src="@/assets/images/Etc/LandingPage/circles.svg" />
+    <img
+      class="circles"
+      src="@/assets/images/icons/mew/icon-half-circle-mew.svg"
+    />
   </v-card>
 </template>
 

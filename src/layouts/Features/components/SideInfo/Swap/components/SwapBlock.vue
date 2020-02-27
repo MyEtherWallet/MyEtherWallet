@@ -5,16 +5,16 @@
     </div>
     <div class="right-container">
       <img
-        :src="require('@/assets/images/icons/' + from + '.png')"
+        :src="require('@/assets/images/currencies/' + from + '.png')"
         alt="swap-icon"
       />
       <img
         class="swap-arrow mx-2"
-        src="@/assets/images/icons/swap-arrow.png"
+        src="@/assets/images/icons/light/grey/icon-swap-arrow-grey.png"
         alt="swap-icon"
       />
       <img
-        :src="require('@/assets/images/icons/' + to + '.png')"
+        :src="require('@/assets/images/currencies/' + to + '.png')"
         alt="swap-icon"
       />
     </div>
