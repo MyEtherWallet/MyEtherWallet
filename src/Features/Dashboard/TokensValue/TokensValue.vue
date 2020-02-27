@@ -47,7 +47,7 @@
           <td>
             <img
               class="vertical-align--middle"
-              src="@/assets/images/Etc/Features/eth.png"
+              src="@/assets/images/currencies/eth/eth.png"
               width="25"
             />
           </td>
@@ -88,7 +88,7 @@
           <td>
             <img
               class="vertical-align--middle"
-              src="@/assets/images/Etc/Features/eth.png"
+              src="@/assets/images/currencies/eth/eth.png"
               width="25"
             />
           </td>
@@ -129,7 +129,7 @@
           <td>
             <img
               class="vertical-align--middle"
-              src="@/assets/images/Etc/Features/eth.png"
+              src="@/assets/images/currencies/eth/eth.png"
               width="25"
             />
           </td>
@@ -170,7 +170,7 @@
           <td>
             <img
               class="vertical-align--middle"
-              src="@/assets/images/Etc/Features/eth.png"
+              src="@/assets/images/currencies/eth/eth.png"
               width="25"
             />
           </td>

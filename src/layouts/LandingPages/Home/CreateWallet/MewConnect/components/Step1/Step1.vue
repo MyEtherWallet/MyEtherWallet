@@ -42,7 +42,7 @@
         class="mx-auto"
         max-height="330px"
         max-width="290px"
-        src="@/assets/images/Etc/CreateWallet/DownloadAndInstall.png"
+        src="@/assets/images/snippets/mobile/mobile-mewconnect-no-hardware.png"
       />
     </v-col>
   </v-sheet>

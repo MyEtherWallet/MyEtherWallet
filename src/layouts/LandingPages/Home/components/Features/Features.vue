@@ -13,25 +13,25 @@
         <v-tab-item>
           <img
             class="tab-image"
-            src="@/assets/images/Banners/LandingPage/Features/Swap.svg"
+            src="@/assets/images/backgrounds/backgrounds/bg-swap-page.svg"
           />
         </v-tab-item>
         <v-tab-item>
           <img
             class="tab-image"
-            src="@/assets/images/Banners/LandingPage/Features/Swap.svg"
+            src="@/assets/images/backgrounds/backgrounds/bg-swap-page.svg"
           />
         </v-tab-item>
         <v-tab-item>
           <img
             class="tab-image"
-            src="@/assets/images/Banners/LandingPage/Features/Swap.svg"
+            src="@/assets/images/backgrounds/backgrounds/bg-swap-page.svg"
           />
         </v-tab-item>
         <v-tab-item>
           <img
             class="tab-image"
-            src="@/assets/images/Banners/LandingPage/Features/Swap.svg"
+            src="@/assets/images/backgrounds/backgrounds/bg-swap-page.svg"
           />
         </v-tab-item>
       </Tabs>
