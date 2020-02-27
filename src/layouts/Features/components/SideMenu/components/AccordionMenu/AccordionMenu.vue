@@ -2,16 +2,25 @@
   <div>
     <ul style="padding-left: 0;">
       <li
-        v-for="(i, k) in menuItems"
-        :key="k"
+        v-for="(i, key1) in menuItems"
+        :key="key1"
         class="user-select--none cursor--pointer list-style-type--none py-2"
       >
-        <div class="d-flex align-center">
-          <img width="20" height="20" :src="i.icon" class="mr-3" />
-          <div>{{ i.name }}</div>
-          <div v-if="i.url">
-            <div @click="routerPush(i.url)">{{ i.name }}</div>
+        <div v-if="!i.url">
+          <div class="d-flex align-center">
+            <div><img width="20" height="20" :src="i.icon" class="mr-3" /></div>
+            <div>{{ i.name }}</div>
           </div>
+          <div>
+            <ul>
+              <li v-for="(c, key2) in i.children" :key="key2">
+                {{ c.name }}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div v-if="i.url">
+          <div @click="routerPush(i.url)">{{ i.name }}</div>
         </div>
       </li>
     </ul>
@@ -32,6 +41,24 @@ export default {
           url: '/features/dashboard'
         },
         {
+          name: 'Send',
+          icon: IconDashboard,
+          children: [
+            {
+              name: 'Send Transaction',
+              url: '/features/dashboard'
+            },
+            {
+              name: 'Send Offline',
+              url: '/features/dashboard'
+            },
+            {
+              name: 'NFT Manager',
+              url: '/features/dashboard'
+            }
+          ]
+        },
+        {
           name: 'Swap',
           icon: IconDashboard,
           url: '/features/swap'
@@ -39,12 +66,12 @@ export default {
       ]
     };
   },
-  methouds: {
+  mounted() {},
+  methods: {
     routerPush(url) {
-      this.$router.push({ path: url });
+      this.$router.push({ path: url }, () => {});
     }
-  },
-  mounted() {}
+  }
 };
 </script>
 
