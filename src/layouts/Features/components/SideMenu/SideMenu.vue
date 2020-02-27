@@ -6,7 +6,7 @@
       </router-link>
     </div>
     <WalletCard />
-    <BuyEthButton class="mt-2" />
+    <BuyEthButton class="mt-2 mb-6" />
     <AccordionMenu />
   </div>
 </template>
