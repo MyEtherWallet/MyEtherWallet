@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .dropdown--title {
   margin-bottom: 13px;
@@ -160,20 +160,27 @@
 }
 
 .save-addr-txt {
-  color: $mew-green;
+  color: white;
   cursor: pointer;
   font-weight: 500;
-  margin-right: 65px;
-  position: absolute;
-  right: 0;
-  top: 17px;
+  padding: 0 7px;
+  margin: 0;
+  margin-right: 10px;
+  background-color: $mew-green;
+  border: 0;
+  border-radius: 5px;
 }
 
 .save-addr-txt.disabled-txt {
   color: $dark-grey-11;
   pointer-events: none;
+  display: none;
 }
 
 .hidden {
   display: none;
+}
+
+.top-button-block {
+  margin-left: auto;
 }

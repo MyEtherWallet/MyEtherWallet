@@ -5,9 +5,14 @@ import VueX from 'vuex';
 import { state, getters } from '@@/helpers/mockStore';
 import PopOver from '@/components/PopOver/PopOver.vue';
 import { RouterViewStub } from '@@/helpers/setupTooling';
+import sinon from 'sinon';
 
 describe('Aave.vue', () => {
   let localVue, wrapper, i18n, store;
+  const eventHub = {
+    $on: sinon.stub(),
+    $off: sinon.stub()
+  };
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -49,7 +54,8 @@ describe('Aave.vue', () => {
         tokensWithBalance: [{}]
       },
       mocks: {
-        $route: mockRoute
+        $route: mockRoute,
+        $eventHub: eventHub
       },
       stubs: {
         popover: PopOver,
