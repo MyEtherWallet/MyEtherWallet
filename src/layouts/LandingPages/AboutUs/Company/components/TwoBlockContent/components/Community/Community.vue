@@ -29,10 +29,10 @@
 import Vars from '@/plugins/variables.js';
 import BlockTitle from '../../../../../../components/BlockTitle';
 
-import Telegram from '@/assets/images/Common/Icons/IconSet4/Telegram.svg';
-import Slack from '@/assets/images/Common/Icons/IconSet4/Slack.svg';
-import Reddit from '@/assets/images/Common/Icons/IconSet4/Reddit.svg';
-import Github from '@/assets/images/Common/Icons/IconSet4/Github.svg';
+import Telegram from '@/assets/images/icons/dark/icon-telegram-dark.svg';
+import Slack from '@/assets/images/icons/dark/icon-slack-dark.svg';
+import Reddit from '@/assets/images/icons/dark/icon-reddit-dark.svg';
+import Github from '@/assets/images/icons/dark/icon-github-dark.svg';
 
 export default {
   components: { BlockTitle },

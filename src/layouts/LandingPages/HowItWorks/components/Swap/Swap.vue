@@ -16,7 +16,7 @@
           <BlockTitle :data="titleData" class="mb-8 pl-12" />
           <div class="mb-9 d-flex">
             <div class="mr-3">
-              <v-img src="@/assets/images/currencies/btc/icon-btc-white.svg" />
+              <v-img src="@/assets/images/currencies/icon-btc-white.svg" />
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
@@ -31,7 +31,7 @@
 
           <div class="mb-9 d-flex">
             <div class="mr-3">
-              <v-img src="@/assets/images/currencies/eth/icon-eth-white.svg" />
+              <v-img src="@/assets/images/currencies//icon-eth-white.svg" />
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">

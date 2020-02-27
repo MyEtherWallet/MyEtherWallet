@@ -18,7 +18,7 @@
           <div class="mb-9 d-flex">
             <div class="mr-3">
               <v-img
-                src="@/assets/images/icons/light/white/icon-buy-token-white.sv.svg"
+                src="@/assets/images/icons/light/white/icon-buy-token-white.svg"
               />
             </div>
             <div>
@@ -34,7 +34,7 @@
 
           <div class="d-flex">
             <div class="mr-3">
-              <v-img src="@/assets/images/currencies/eth/icon-eth-white.svg" />
+              <v-img src="@/assets/images/currencies//icon-eth-white.svg" />
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">

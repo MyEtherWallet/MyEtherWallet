@@ -26,12 +26,12 @@
 
 <script>
 import BlockTitle from '../../../components/BlockTitle';
-import Contract from '@/assets/images/icons/mew/icons-contract-mew.svg';
-import Message from '@/assets/images/icons/mew/icons-message-mew.svg';
-import ViewOnlyWallet from '@/assets/images/icons/mew/icons-view-only-mew.svg';
-import ChromeEx from '@/assets/images/icons/mew/icons-cx-mew.svg';
-import BuyEth from '@/assets/images/icons/mew/icons-buy-eth-mew.svg';
-import AdvancedTools from '@/assets/images/icons/mew/icons-advanced-tools-mew.svg';
+import Contract from '@/assets/images/icons/mew/icon-contract-mew.svg';
+import Message from '@/assets/images/icons/mew/icon-message-mew.svg';
+import ViewOnlyWallet from '@/assets/images/icons/mew/icon-view-only-mew.svg';
+import ChromeEx from '@/assets/images/icons/mew/icon-cx-mew.svg';
+import BuyEth from '@/assets/images/icons/mew/icon-buy-eth-mew.svg';
+import AdvancedTools from '@/assets/images/icons/mew/icon-advanced-tools-mew.svg';
 
 export default {
   components: { BlockTitle },

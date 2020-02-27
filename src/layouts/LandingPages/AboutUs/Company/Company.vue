@@ -10,7 +10,7 @@
     <div class="py-10" />
     <Partners />
     <div class="py-9" />
-    <Ad2 />
+    <Ad />
     <div class="py-1" />
   </div>
 </template>
@@ -18,7 +18,7 @@
 <script>
 import PageTitle from '../../components/PageTitle';
 import Partners from '../../components/Partners';
-import Ad2 from '../../components/Ad2';
+import Ad from '../../components/Ad';
 import WhatIsMew from './components/WhatIsMew';
 import OurStory from './components/OurStory';
 import TwoBlockContent from './components/TwoBlockContent';
@@ -27,7 +27,7 @@ export default {
   components: {
     PageTitle,
     Partners,
-    Ad2,
+    Ad,
     WhatIsMew,
     OurStory,
     TwoBlockContent
