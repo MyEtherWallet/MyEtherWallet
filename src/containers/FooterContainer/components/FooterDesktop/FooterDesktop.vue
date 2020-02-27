@@ -98,7 +98,7 @@
             href="https://etherscan.io/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
           >
             <img
-              src="@/assets/images/currencies/eth/icon-eth-blue.svg"
+              src="@/assets/images/currencies//icon-eth-blue.svg"
               class="mr-3"
             />
             <div>
@@ -114,7 +114,7 @@
             href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
           >
             <img
-              src="@/assets/images/currencies/btc/icon-btc-gold.svg"
+              src="@/assets/images/currencies/icon-btc-gold.svg"
               class="mr-3"
             />
             <div>

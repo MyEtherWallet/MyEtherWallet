@@ -14,7 +14,10 @@
           height="11"
           src="@/assets/images/icons/light/white/icon-visa-white.png"
         />
-        <img height="17" src="@/assets/images/icons/icon-mastercard-mew.png" />
+        <img
+          height="17"
+          src="@/assets/images/icons/mew/icon-mastercard-mew.png"
+        />
       </div>
     </v-btn>
   </div>

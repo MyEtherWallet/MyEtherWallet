@@ -23,7 +23,7 @@
       <v-img
         class="mx-auto"
         max-width="280px"
-        src="@/assets/images/mew/icon-keystore-mew.png"
+        src="@/assets/images/icons/mew/icon-keystore-mew.png"
       />
     </v-col>
   </v-sheet>

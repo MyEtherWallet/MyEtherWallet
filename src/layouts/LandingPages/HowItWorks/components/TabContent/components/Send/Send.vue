@@ -59,7 +59,8 @@
               <a
                 href="#"
                 class="mr-5 teal--text text--lighten-2 font-weight-bold"
-                >Watch tutorial</a>
+                >Watch tutorial</a
+              >
               >
             </div>
           </div>

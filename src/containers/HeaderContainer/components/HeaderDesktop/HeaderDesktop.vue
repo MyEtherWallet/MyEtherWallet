@@ -3,7 +3,7 @@
     <v-container>
       <v-app-bar color="transparent" dark flat>
         <router-link :to="{ name: 'Home', query: {} }">
-          <v-img src="@/assets/images/icons/mew/logo-mew.png" max-width="130" />
+          <v-img src="@/assets/images/icons/logo-mew.png" max-width="130" />
         </router-link>
         <v-spacer></v-spacer>
 
@@ -183,7 +183,7 @@ import MenuOpenArrow from '@/components/Common/MenuOpenArrow';
 import wallet from '@/assets/images/icons/light/grey/icon-wallet-grey.svg';
 import send from '@/assets/images/icons/light/grey/icon-send-grey.svg';
 import message from '@/assets/images/icons/light/grey/icon-message-grey.svg';
-import eth from '@/assets/images/currencies/eth/icon-eth-grey.svg';
+import eth from '@/assets/images/currencies//icon-eth-grey.svg';
 
 import grabber from '@/assets/images/icons/light/grey/icon-grabber-grey.svg';
 import privatekey from '@/assets/images/icons/light/grey/icon-private-key-grey.svg';

@@ -10,7 +10,7 @@
     <div class="py-3" />
     <MoreTools />
     <div class="py-3" />
-    <Ad2 />
+    <Ad />
   </div>
 </template>
 
@@ -21,10 +21,10 @@ import Swap from './components/Swap';
 import Dapps from './components/Dapps';
 import Tokens from './components/Tokens';
 import MoreTools from './components/MoreTools';
-import Ad2 from '../components/Ad2';
+import Ad from '../components/Ad';
 
 export default {
   name: 'HowItWorks',
-  components: { PageTitle, TabContent, Swap, Dapps, Tokens, MoreTools, Ad2 }
+  components: { PageTitle, TabContent, Swap, Dapps, Tokens, MoreTools, Ad }
 };
 </script>
