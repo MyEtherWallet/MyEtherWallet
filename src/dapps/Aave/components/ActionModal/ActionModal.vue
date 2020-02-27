@@ -67,7 +67,7 @@
                   {{
                     depositModal
                       ? $t('dappsAave.deposited')
-                      : $t('dappsAave.stable-apr')
+                      : $t('dappsAave.stable-apy')
                   }}
                   <span>
                     <i class="fa fa-caret-up" @click="sort('ascending', 1)" />
@@ -82,8 +82,8 @@
                 <div class="sort-enabled-container">
                   {{
                     depositModal
-                      ? $t('dappsAave.apr')
-                      : $t('dappsAave.variable-apr')
+                      ? $t('dappsAave.apy')
+                      : $t('dappsAave.variable-apy')
                   }}
                   <span>
                     <i class="fa fa-caret-up" @click="sort('ascending', 2)" />

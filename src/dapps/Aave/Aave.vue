@@ -169,6 +169,14 @@ export default {
       this.getReserveBalances();
     }
   },
+  mounted() {
+    this.$eventHub.$on('emptyPendingToken', () => {
+      this.pendingToken = {};
+    });
+  },
+  beforeDestroy() {
+    this.$eventHub.$off('emptyPendingToken');
+  },
   methods: {
     ...mapActions('aave', ['setRateHistory']),
     convertToFixed(val, num) {
@@ -322,6 +330,7 @@ export default {
           this.sendTransaction(txArr);
         })
         .catch(err => {
+          this.pendingToken = {};
           Toast.responseHandler(err, Toast.ERROR);
         });
     },
@@ -335,6 +344,7 @@ export default {
           this.sendTransaction(txArr);
         })
         .catch(err => {
+          this.pendingToken = {};
           Toast.responseHandler(err, Toast.ERROR);
         });
     },
@@ -348,6 +358,7 @@ export default {
           this.sendTransaction(txArr);
         })
         .catch(err => {
+          this.pendingToken = {};
           Toast.responseHandler(err, Toast.ERROR);
         });
     },
@@ -361,6 +372,7 @@ export default {
           this.sendTransaction(txArr);
         })
         .catch(err => {
+          this.pendingToken = {};
           Toast.responseHandler(err, Toast.ERROR);
         });
     },
@@ -374,6 +386,7 @@ export default {
           this.sendTransaction(txArr);
         })
         .catch(err => {
+          this.pendingToken = {};
           Toast.responseHandler(err, Toast.ERROR);
         });
     },
@@ -387,6 +400,7 @@ export default {
           this.sendTransaction(txArr);
         })
         .catch(err => {
+          this.pendingToken = {};
           Toast.responseHandler(err, Toast.ERROR);
         });
     },
