@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import Vars from '@/variables.js';
+import Vars from '@/plugins/variables.js';
 import BlockTitle from '../../../../../../components/BlockTitle';
 
 import Telegram from '@/assets/images/Common/Icons/IconSet4/Telegram.svg';

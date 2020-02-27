@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Var from '@/variables.js';
+import Var from '@/plugins/variables.js';
 export default {
   props: {
     buttonclass: { default: 'button--green', type: String }

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-//import Var from '@/variables.js';
+//import Var from '@/plugins/variables.js';
 import WhiteSheet from '@/components/Common/WhiteSheet';
 import InterfaceWrap from '@/components/InterfaceWraps/InterfaceWrap1';
 //import StdButton from '@/components/StdButton';
