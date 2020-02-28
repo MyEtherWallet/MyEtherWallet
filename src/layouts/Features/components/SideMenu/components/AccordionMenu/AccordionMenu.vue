@@ -8,19 +8,23 @@
       >
         <div v-if="!i.url">
           <div class="d-flex align-center">
-            <div><img width="20" height="20" :src="i.icon" class="mr-3" /></div>
+            <img width="20" height="20" :src="i.icon" class="mr-3" />
             <div>{{ i.name }}</div>
           </div>
           <div>
             <ul>
               <li v-for="(c, key2) in i.children" :key="key2">
-                {{ c.name }}
+                <div @click="routerPush(c.url)">{{ c.name }}</div>
               </li>
             </ul>
           </div>
         </div>
+
         <div v-if="i.url">
-          <div @click="routerPush(i.url)">{{ i.name }}</div>
+          <div class="d-flex align-center" @click="routerPush(i.url)">
+            <img width="20" height="20" :src="i.icon" class="mr-3" />
+            <div :class="currentURL == i.url ? 'active' : ''">{{ i.name }}</div>
+          </div>
         </div>
       </li>
     </ul>
@@ -34,6 +38,7 @@ export default {
   components: {},
   data() {
     return {
+      currentURL: '',
       menuItems: [
         {
           name: 'Dashboard',
@@ -46,15 +51,15 @@ export default {
           children: [
             {
               name: 'Send Transaction',
-              url: '/features/dashboard'
+              url: '/features/send/sendtx'
             },
             {
               name: 'Send Offline',
-              url: '/features/dashboard'
+              url: '/features/send/send-offline'
             },
             {
               name: 'NFT Manager',
-              url: '/features/dashboard'
+              url: '/features/send/nft-manager'
             }
           ]
         },
@@ -66,9 +71,12 @@ export default {
       ]
     };
   },
-  mounted() {},
+  created() {
+    this.currentURL = this.$route.path;
+  },
   methods: {
     routerPush(url) {
+      this.currentURL = url;
       this.$router.push({ path: url }, () => {});
     }
   }
@@ -76,12 +84,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables.scss';
+@import '@/assets/styles/GlobalVariables.scss';
+
+.active {
+  color: white;
+}
 
 ul {
   li {
     div {
-      color: white;
+      color: $independence;
     }
   }
 }
