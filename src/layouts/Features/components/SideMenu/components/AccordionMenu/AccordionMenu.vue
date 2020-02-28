@@ -1,5 +1,29 @@
 <template>
   <div>
+    <div>
+      <v-list color="transparent">
+        <v-list-group
+          v-for="item in menuItems"
+          :key="item.title"
+          v-model="item.active"
+          :prepend-icon="item.action"
+          no-action
+        >
+          <template v-slot:activator>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.title"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+
+          <v-list-item v-for="subItem in item.items" :key="subItem.title">
+            <v-list-item-content>
+              <v-list-item-title v-text="subItem.title"></v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-group>
+      </v-list>
+    </div>
+
     <ul style="padding-left: 0;">
       <li
         v-for="(i, key1) in menuItems"
@@ -9,7 +33,7 @@
         <div v-if="!i.url">
           <div class="d-flex align-center">
             <img width="20" height="20" :src="i.icon" class="mr-3" />
-            <div>{{ i.name }}</div>
+            <div :class="currentURL == i.url ? 'active' : ''">{{ i.name }}</div>
           </div>
           <div>
             <ul>
