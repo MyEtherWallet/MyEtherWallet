@@ -1,3 +1,6 @@
+### Bugs
+- Hardcode russian translation for first time welcome modal [#2041] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2041)
+
 ### Release v5.4.0
 
 ### Feature
