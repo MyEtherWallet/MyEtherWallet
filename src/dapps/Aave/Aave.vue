@@ -363,7 +363,6 @@ export default {
         });
     },
     async withdraw(param) {
-      console.error('param', param)
       withdrawDetails(param)
         .then(resp => {
           const txArr = [];

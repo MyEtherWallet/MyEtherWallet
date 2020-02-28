@@ -315,7 +315,6 @@ export default {
               .dividedBy(this.token.price.priceInEth)
               .multipliedBy(0.995)
           );
-          console.error('seond max', maxAmountToWithdraw.toFixed(6))
           if (!maxAmountToWithdraw.eq(underlyingBalance)) {
             return new BigNumber(maxAmountToWithdraw).toFixed(6);
           }
