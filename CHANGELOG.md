@@ -1,3 +1,7 @@
+### Devop
+
+- update client library for mew mobile and fix 500 DAI + kyber swap gas limit [#2029](https://github.com/MyEtherWallet/MyEtherWallet/pull/2029)
+
 ### Release v5.4.0
 
 ### Feature
