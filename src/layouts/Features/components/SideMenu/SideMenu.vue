@@ -6,16 +6,18 @@
       </router-link>
     </div>
     <WalletCard />
-    <BuyEthButton class="mt-2" />
+    <BuyEthButton class="mt-2 mb-6" />
+    <AccordionMenu />
   </div>
 </template>
 
 <script>
 import WalletCard from './components/WalletCard';
 import BuyEthButton from './components/BuyEthButton';
+import AccordionMenu from './components/AccordionMenu';
 
 export default {
-  components: { WalletCard, BuyEthButton }
+  components: { WalletCard, BuyEthButton, AccordionMenu }
 };
 </script>
 
