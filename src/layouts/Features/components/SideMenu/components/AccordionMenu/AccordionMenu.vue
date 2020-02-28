@@ -1,52 +1,34 @@
 <template>
-  <div>
-    <div>
-      <v-list color="transparent">
-        <v-list-group
-          v-for="item in menuItems"
-          :key="item.title"
-          v-model="item.active"
-          :prepend-icon="item.action"
-          no-action
-        >
-          <template v-slot:activator>
-            <v-list-item-content>
-              <v-list-item-title v-text="item.title"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-
-          <v-list-item v-for="subItem in item.items" :key="subItem.title">
-            <v-list-item-content>
-              <v-list-item-title v-text="subItem.title"></v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-group>
-      </v-list>
-    </div>
-
+  <div class="px-2">
     <ul style="padding-left: 0;">
       <li
         v-for="(i, key1) in menuItems"
         :key="key1"
-        class="user-select--none cursor--pointer list-style-type--none py-2"
+        class="user-select--none cursor--pointer list-style-type--none"
       >
         <div v-if="!i.url">
-          <div class="d-flex align-center">
-            <img width="20" height="20" :src="i.icon" class="mr-3" />
+          <div class="d-flex align-center py-3">
+            <img width="20" height="20" :src="i.iconLight" class="mr-3" />
             <div :class="currentURL == i.url ? 'active' : ''">{{ i.name }}</div>
           </div>
           <div>
             <ul>
               <li v-for="(c, key2) in i.children" :key="key2">
-                <div @click="routerPush(c.url)">{{ c.name }}</div>
+                <div
+                  :class="currentURL == c.url ? 'active' : ''"
+                  class="py-3 pl-3"
+                  @click="routerPush(c.url)"
+                >
+                  {{ c.name }}
+                </div>
               </li>
             </ul>
           </div>
         </div>
 
         <div v-if="i.url">
-          <div class="d-flex align-center" @click="routerPush(i.url)">
-            <img width="20" height="20" :src="i.icon" class="mr-3" />
+          <div class="d-flex align-center py-3" @click="routerPush(i.url)">
+            <img width="20" height="20" :src="i.iconLight" class="mr-3" />
             <div :class="currentURL == i.url ? 'active' : ''">{{ i.name }}</div>
           </div>
         </div>
@@ -56,7 +38,8 @@
 </template>
 
 <script>
-import IconDashboard from '@/assets/images/Icons/btc.png';
+import SwapDark from '@/assets/images/Common/Icons/SideMenu/swap-dark.svg';
+import SwapLight from '@/assets/images/Common/Icons/SideMenu/swap-light.svg';
 
 export default {
   components: {},
@@ -66,12 +49,14 @@ export default {
       menuItems: [
         {
           name: 'Dashboard',
-          icon: IconDashboard,
+          iconDark: SwapDark,
+          iconLight: SwapLight,
           url: '/features/dashboard'
         },
         {
           name: 'Send',
-          icon: IconDashboard,
+          iconDark: SwapDark,
+          iconLight: SwapLight,
           children: [
             {
               name: 'Send Transaction',
@@ -89,8 +74,36 @@ export default {
         },
         {
           name: 'Swap',
-          icon: IconDashboard,
+          iconDark: SwapDark,
+          iconLight: SwapLight,
           url: '/features/swap'
+        },
+        {
+          name: 'Dapps Center',
+          iconDark: SwapDark,
+          iconLight: SwapLight,
+          url: '/features/dapps'
+        },
+        {
+          name: 'Contract',
+          iconDark: SwapDark,
+          iconLight: SwapLight,
+          children: [
+            {
+              name: 'Interact with contract',
+              url: '/features/contract/interact'
+            },
+            {
+              name: 'Deploy contract',
+              url: '/features/contract/deploy'
+            }
+          ]
+        },
+        {
+          name: 'Sign Message',
+          iconDark: SwapDark,
+          iconLight: SwapLight,
+          url: '/features/sign'
         }
       ]
     };
