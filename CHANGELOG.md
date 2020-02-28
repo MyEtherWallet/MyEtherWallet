@@ -1,3 +1,6 @@
+### Devop
+- Add aave referral code [#2040] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2040/files)
+
 ### Release v5.4.0
 
 ### Feature
