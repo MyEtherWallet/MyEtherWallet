@@ -1,3 +1,7 @@
+### Devop
+
+- Update packages [#2040](https://github.com/MyEtherWallet/MyEtherWallet/pull/2040)
+
 ### Release v5.4.0
 
 ### Feature
