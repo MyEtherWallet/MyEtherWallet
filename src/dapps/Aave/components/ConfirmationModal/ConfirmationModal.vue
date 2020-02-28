@@ -305,7 +305,6 @@ export default {
           underlyingBalance,
           availableLiquidity
         );
-
         if (
           this.userSummary.totalBorrowsETH !== '0' ||
           this.userSummary.totalFeesETH !== '0'
@@ -316,10 +315,12 @@ export default {
               .dividedBy(this.token.price.priceInEth)
               .multipliedBy(0.995)
           );
+          console.error('seond max', maxAmountToWithdraw.toFixed(6))
           if (!maxAmountToWithdraw.eq(underlyingBalance)) {
             return new BigNumber(maxAmountToWithdraw).toFixed(6);
           }
         }
+        return maxAmountToWithdraw;
       } else if (
         this.actionTitle === this.actionTitles.repay &&
         this.amount === this.token.user.currentBorrows
