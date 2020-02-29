@@ -31,7 +31,7 @@
   "dependencies": {
     "@aave/protocol-js": "0.1.10",
     "@sentry/browser": "5.12.4",
-    "@sentry/integrations": "5.12.4",
+    "@sentry/integrations": "5.13.0",
     "@unstoppabledomains/resolution": "1.0.26",
     "apollo-cache-inmemory": "1.6.5",
     "apollo-client": "2.6.8",
