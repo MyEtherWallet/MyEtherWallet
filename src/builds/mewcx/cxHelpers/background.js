@@ -204,11 +204,11 @@ function onInstalledCb() {
       objKeys.forEach(item => {
         if (isAddress(item)) {
           newStore[toChecksumAddress(item)] = obj[item];
+          chrome.storage.sync.remove(item);
         } else {
           newStore[item] = obj[item];
         }
       });
-      chrome.storage.sync.clear();
       chrome.storage.sync.set(newStore);
     }
   });
