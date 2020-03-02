@@ -31,6 +31,7 @@ class BCVault {
   async init() {
     // fetch devices
     this.deviceNumber = await this.bcWallet.getDevices().catch(errorHandler);
+    console.log(this.deviceNumber);
     // get wallet of first device and password
     // not sure if we want the users to pass this as a parameter or ask user
     // for which wallet to use
