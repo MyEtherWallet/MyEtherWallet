@@ -1,6 +1,7 @@
 ### Devop
 
-- Add aave referral code [#2040] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2040/files)
+- Add aave referral code [#2040](https://github.com/MyEtherWallet/MyEtherWallet/pull/2040/files)
+- Update packages [#2040](https://github.com/MyEtherWallet/MyEtherWallet/pull/2040)
 - Sync master to develop, fix uuid issue [#2023](https://github.com/MyEtherWallet/MyEtherWallet/pull/2023)
 
 ### Release v5.4.0
@@ -21,7 +22,7 @@
 
 - Fix save ui [#1972](https://github.com/MyEtherWallet/MyEtherWallet/pull/1972)
 - Partial fix to downloading keystore file in view wallet [#1997](https://github.com/MyEtherWallet/MyEtherWallet/pull/1997)
-- Fix aave bugs [#2018] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2018)
+- Fix aave bugs [#2018](https://github.com/MyEtherWallet/MyEtherWallet/pull/2018)
 
 ### Release v5.3.3-hotfix.2
 
