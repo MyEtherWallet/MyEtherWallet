@@ -1,24 +1,20 @@
 <template>
-  <v-overlay color="white" opacity="1" :value="overlay" z-index="100">
+  <v-overlay :color="backgroundColor" opacity="1" :value="open" z-index="100">
     <slot />
-    <v-btn @click="overlay = false">Close</v-btn>
   </v-overlay>
 </template>
 
 <script>
+import Var from '@/variables.js';
+
 export default {
   props: {
     open: { default: false, type: Boolean }
   },
   data() {
     return {
-      overlay: this.open
+      backgroundColor: Var.colorSets.lightMint
     };
-  },
-  watch: {
-    open(newVal) {
-      this.overlay = newVal;
-    }
   }
 };
 </script>

@@ -1,13 +1,21 @@
 <template>
   <WhiteSheet>
-    <div>
-      <TxConfirmation :open="txConfirmation">aaaaaaaaaaaaa</TxConfirmation>
-    </div>
-
-    <v-btn @click="txConfirmation != txConfirmation">Open</v-btn>
+    <TxConfirmation :open="openTxConfirmation">
+      <template v-slot:closeButton>
+        <TextButton
+          type="close"
+          size="normal"
+          @click.native="openTxConfirmation = false"
+        >
+          <v-icon class="mr-1">mdi-close-circle-outline</v-icon>Cancel
+        </TextButton>
+      </template>
+    </TxConfirmation>
 
     <InterfaceWrap title="Send Transaction">
       Contents!!!!
+
+      <v-btn @click="openTxConfirmation = true">Open</v-btn>
     </InterfaceWrap>
   </WhiteSheet>
 </template>
@@ -17,13 +25,15 @@
 import WhiteSheet from '@/components/Common/WhiteSheet';
 import InterfaceWrap from '@/components/InterfaceWraps/InterfaceWrap1';
 import TxConfirmation from '@/components/Overlays/TxConfirmation';
+import TextButton from '@/components/Buttons/TextButton1';
+
 //import StdButton from '@/components/StdButton';
 
 export default {
-  components: { WhiteSheet, InterfaceWrap, TxConfirmation },
+  components: { WhiteSheet, InterfaceWrap, TxConfirmation, TextButton },
   data() {
     return {
-      txConfirmation: false
+      openTxConfirmation: false
     };
   }
 };
