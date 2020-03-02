@@ -1,6 +1,7 @@
 <template>
   <BaseOverlay :open="open">
-    <slot />
+    <div class="overlay-close-button"><slot name="closeButton" /></div>
+    <div>Hi.</div>
   </BaseOverlay>
 </template>
 
@@ -13,18 +14,17 @@ export default {
     open: { default: false, type: Boolean }
   },
   data() {
-    return {
-      openBaseOverlay: false
-    };
-  },
-  watch: {
-    open(newVal) {
-      this.openBaseOverlay = newVal;
-    }
+    return {};
   }
 };
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/GlobalVariables.scss';
+
+.overlay-close-button {
+  position: fixed;
+  top: 50px;
+  right: 100px;
+}
 </style>

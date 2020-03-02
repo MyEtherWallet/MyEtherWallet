@@ -1,5 +1,11 @@
 <template>
-  <v-btn text small :color="mewGreen" class="text-transform--initial body-2">
+  <v-btn
+    text
+    :small="size == 'small' && size != 'normal'"
+    :large="size == 'large'"
+    :color="textColor"
+    class="text-transform--initial body-2"
+  >
     <slot />
   </v-btn>
 </template>
@@ -8,12 +14,24 @@
 import Var from '@/variables.js';
 export default {
   props: {
-    buttonclass: { default: 'button--green', type: String }
+    type: { default: '', type: String },
+    size: { default: 'small', type: String }
   },
   data() {
     return {
-      mewGreen: Var.colorSets.emerald
+      mewGreen: Var.colorSets.emerald,
+      red: Var.colorSets.red.red1
     };
+  },
+  computed: {
+    textColor() {
+      switch (this.type) {
+        case 'close':
+          return this.red;
+        default:
+          return this.mewGreen;
+      }
+    }
   }
 };
 </script>
