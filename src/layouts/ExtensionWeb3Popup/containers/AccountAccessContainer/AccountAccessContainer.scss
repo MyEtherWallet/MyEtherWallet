@@ -70,3 +70,12 @@
   pointer-events: none;
   color: $white;
 }
+
+
+.warning {
+  padding: 20px;
+  border-radius: 5px;
+  border: 1px solid $light-orange-2;
+  background-color: $light-orange-3;
+  margin: 5px;
+}

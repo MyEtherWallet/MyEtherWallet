@@ -1,3 +1,7 @@
+### Bug
+
+- Add burner address warning, redo store so all addresses currently stored are uniform [#2049](https://github.com/MyEtherWallet/MyEtherWallet/pull/2049)
+
 ### Devop
 
 - Sync master to develop, fix uuid issue [#2023](https://github.com/MyEtherWallet/MyEtherWallet/pull/2023)
