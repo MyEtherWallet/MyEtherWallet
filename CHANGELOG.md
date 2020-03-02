@@ -1,6 +1,10 @@
+### Bugs
+- Hardcode russian translation for first time welcome modal [#2041] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2041)
+
 ### Devop
 
 - update client library for mew mobile and fix 500 DAI + kyber swap gas limit [#2029](https://github.com/MyEtherWallet/MyEtherWallet/pull/2029)
+- Add aave referral code [#2040](https://github.com/MyEtherWallet/MyEtherWallet/pull/2040/files)
 - Update packages [#2040](https://github.com/MyEtherWallet/MyEtherWallet/pull/2040)
 - Sync master to develop, fix uuid issue [#2023](https://github.com/MyEtherWallet/MyEtherWallet/pull/2023)
 
