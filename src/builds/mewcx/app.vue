@@ -8,9 +8,9 @@
 </template>
 
 <script>
-import FooterContainer from '@/containers/FooterContainer';
-import HeaderContainer from '@/containers/HeaderContainer';
-import ConfirmationContainer from '@/containers/ConfirmationContainer';
+import FooterContainer from '@/web/containers/FooterContainer';
+import HeaderContainer from '@/web/containers/HeaderContainer';
+import ConfirmationContainer from '@/web/containers/ConfirmationContainer';
 
 export default {
   name: 'App',

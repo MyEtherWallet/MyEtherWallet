@@ -6,7 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 /tests/unit/coverage/
 selenium-debug.log
-src/url-darklist/
+src/_generated
 
 # Editor directories and files
 .idea
@@ -19,7 +19,3 @@ src/url-darklist/
 /tests/unit/coverage/
 release
 
-# Generated files
-src/contracts/
-src/tokens/
-src/darklist/

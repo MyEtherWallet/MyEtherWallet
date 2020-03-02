@@ -1,39 +1,39 @@
 import app from './app';
 
-import LandingPages from '@/layouts/LandingPages';
-import Home from '@/layouts/LandingPages/Home';
-import CreateWalletDashboard from '@/layouts/LandingPages/Home/CreateWallet/CreateWalletDashboard';
-import CreateWalletMewConnect from '@/layouts/LandingPages/Home/CreateWallet/MewConnect';
-import CreateWalletKeystore from '@/layouts/LandingPages/Home/CreateWallet/KeystoreFile';
-import AccessWalletDashboard from '@/layouts/LandingPages/Home/AccessWallet/AccessWalletDashboard';
+import LandingPageView from '@/web/views/LandingPageView';
+import Home from '@/web/views/LandingPageView/Home';
+import CreateWalletDashboard from '@/web/views/CreateWalletView/CreateWalletDashboard';
+import CreateWalletMewConnect from '@/web/views/CreateWalletView/MewConnect';
+import CreateWalletKeystore from '@/web/views/CreateWalletView/KeystoreFile';
+import AccessWalletView from '@/web/views/AccessWalletView';
 
-import AboutUsCompany from '@/layouts/LandingPages/AboutUs/Company';
-import AboutUsTeam from '@/layouts/LandingPages/AboutUs/Team';
-import AboutUsWhyMEW from '@/layouts/LandingPages/AboutUs/WhyMEW';
+import AboutUsCompany from '@/web/views/AboutUsView/CompanyContainer';
+import AboutUsTeam from '@/web/views/AboutUsView/TeamContainer';
+import AboutUsWhyMEW from '@/web/views/AboutUsView/WhyMEWContainer';
 
-import HowItWorks from '@/layouts/LandingPages/HowItWorks';
+import HowItWorks from '@/web/views/LandingPageView/HowItWorks';
 
-import Features from '@/layouts/Features';
-import Dashboard from '@/Features/Dashboard';
+// import Features from '@/web/views/Features';
+// import Dashboard from '@/Features/Dashboard';
 
-import Send from '@/Features/Send';
-import SendTX from '@/Features/Send/SendTX';
-import SendOffline from '@/Features/Send/SendOffline';
-import NFTManager from '@/Features/Send/NFTManager';
+// import Send from '@/Features/Send';
+// import SendTX from '@/Features/Send/SendTX';
+// import SendOffline from '@/Features/Send/SendOffline';
+// import NFTManager from '@/Features/Send/NFTManager';
 
-import Swap from '@/Features/Swap';
-import Dapps from '@/Features/Dapps';
+// import Swap from '@/Features/Swap';
+// import Dapps from '@/Features/Dapps';
 
-import Contract from '@/Features/Contract';
-import DeployContract from '@/Features/Contract/DeployContract';
-import InteractWithContract from '@/Features/Contract/InteractWithContract';
+// import Contract from '@/web/containers/ContractContainer';
+// import DeployContract from '@/web/containers/ContractContainer/DeployContract';
+// import InteractWithContract from '@/web/containers/ContractContainer/InteractWithContract';
 
-import SignMessage from '@/Features/SignMessage';
+// import SignMessage from '@/Features/SignMessage';
 
 const webRoutes = [
   {
     path: '/',
-    component: LandingPages,
+    component: LandingPageView,
     meta: {
       requiresAuth: false
     },
@@ -105,115 +105,115 @@ const webRoutes = [
       {
         path: 'access-wallet',
         name: 'HomeAccessWallet',
-        component: AccessWalletDashboard,
-        meta: {
-          requiresAuth: false
-        }
-      }
-    ]
-  },
-  {
-    path: '/features',
-    name: 'Features',
-    component: Features,
-    meta: {
-      requiresAuth: false
-    },
-    children: [
-      {
-        path: 'dashboard',
-        name: 'Dashboard',
-        component: Dashboard,
-        meta: {
-          requiresAuth: false
-        }
-      },
-      {
-        path: 'send',
-        name: 'Send',
-        component: Send,
-        meta: {
-          requiresAuth: false
-        },
-        children: [
-          {
-            path: 'sendtx',
-            name: 'SendTX',
-            component: SendTX,
-            meta: {
-              requiresAuth: false
-            }
-          },
-          {
-            path: 'send-offline',
-            name: 'SendOffline',
-            component: SendOffline,
-            meta: {
-              requiresAuth: false
-            }
-          },
-          {
-            path: 'nft-manager',
-            name: 'NFTManager',
-            component: NFTManager,
-            meta: {
-              requiresAuth: false
-            }
-          }
-        ]
-      },
-      {
-        path: 'swap',
-        name: 'Swap',
-        component: Swap,
-        meta: {
-          requiresAuth: false
-        }
-      },
-      {
-        path: 'dapps',
-        name: 'Dapps',
-        component: Dapps,
-        meta: {
-          requiresAuth: false
-        }
-      },
-      {
-        path: 'contract',
-        name: 'Contract',
-        component: Contract,
-        meta: {
-          requiresAuth: false
-        },
-        children: [
-          {
-            path: 'deploy',
-            name: 'DeployContract',
-            component: DeployContract,
-            meta: {
-              requiresAuth: false
-            }
-          },
-          {
-            path: 'interact',
-            name: 'InteractWithContract',
-            component: InteractWithContract,
-            meta: {
-              requiresAuth: false
-            }
-          }
-        ]
-      },
-      {
-        path: 'sign',
-        name: 'SignMessage',
-        component: SignMessage,
+        component: AccessWalletView,
         meta: {
           requiresAuth: false
         }
       }
     ]
   }
+  // {
+  //   path: '/features',
+  //   name: 'Features',
+  //   component: Features,
+  //   meta: {
+  //     requiresAuth: false
+  //   },
+  //   children: [
+  //     {
+  //       path: 'dashboard',
+  //       name: 'Dashboard',
+  //       component: Dashboard,
+  //       meta: {
+  //         requiresAuth: false
+  //       }
+  //     },
+  //     {
+  //       path: 'send',
+  //       name: 'Send',
+  //       component: Send,
+  //       meta: {
+  //         requiresAuth: false
+  //       },
+  //       children: [
+  //         {
+  //           path: 'sendtx',
+  //           name: 'SendTX',
+  //           component: SendTX,
+  //           meta: {
+  //             requiresAuth: false
+  //           }
+  //         },
+  //         {
+  //           path: 'send-offline',
+  //           name: 'SendOffline',
+  //           component: SendOffline,
+  //           meta: {
+  //             requiresAuth: false
+  //           }
+  //         },
+  //         {
+  //           path: 'nft-manager',
+  //           name: 'NFTManager',
+  //           component: NFTManager,
+  //           meta: {
+  //             requiresAuth: false
+  //           }
+  //         }
+  //       ]
+  //     },
+  //     {
+  //       path: 'swap',
+  //       name: 'Swap',
+  //       component: Swap,
+  //       meta: {
+  //         requiresAuth: false
+  //       }
+  //     },
+  //     {
+  //       path: 'dapps',
+  //       name: 'Dapps',
+  //       component: Dapps,
+  //       meta: {
+  //         requiresAuth: false
+  //       }
+  //     },
+  //     {
+  //       path: 'contract',
+  //       name: 'Contract',
+  //       component: Contract,
+  //       meta: {
+  //         requiresAuth: false
+  //       },
+  //       children: [
+  //         {
+  //           path: 'deploy',
+  //           name: 'DeployContract',
+  //           component: DeployContract,
+  //           meta: {
+  //             requiresAuth: false
+  //           }
+  //         },
+  //         {
+  //           path: 'interact',
+  //           name: 'InteractWithContract',
+  //           component: InteractWithContract,
+  //           meta: {
+  //             requiresAuth: false
+  //           }
+  //         }
+  //       ]
+  //     },
+  //     {
+  //       path: 'sign',
+  //       name: 'SignMessage',
+  //       component: SignMessage,
+  //       meta: {
+  //         requiresAuth: false
+  //       }
+  //     }
+  //   ]
+  // }
 ];
 const configRoutes = routes => {
   return routes.concat(webRoutes);
