@@ -96,14 +96,9 @@
       >
         {{ actionTitle }}
       </button>
-      <i18n
-        path="dappsAave.cancel-action"
-        tag="button"
-        class="cancel-btn"
-        @click="goToHome()"
-      >
-        <span slot="action">{{ actionTitle }}</span>
-      </i18n>
+      <button class="cancel-btn" @click="goToHome()">
+        {{ $t('common.cancel') }}
+      </button>
     </div>
     <rate-modal
       ref="rateModal"
@@ -213,6 +208,13 @@ export default {
       if (this.checkAmount(this.amountToCheck)) {
         this.errorMsg =
           'Cannot exceed balance of ' + this.convertToFixed(this.amountToCheck);
+      } else if (
+        this.amount === this.token.user.currentBorrows &&
+        this.amount > this.token.tokenBalance
+      ) {
+        this.errorMsg =
+          'Cannot exceed your token balance of ' +
+          this.convertToFixed(this.token.tokenBanace);
       } else if (this.amount <= 0) {
         this.errorMsg = 'Must be higher than 0';
       } else {
