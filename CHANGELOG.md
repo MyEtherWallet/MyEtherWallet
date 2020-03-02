@@ -2,6 +2,11 @@
 
 - Fix Buy ETH Widget bug [#2046](https://github.com/MyEtherWallet/MyEtherWallet/pull/2046)
 
+### Devop
+
+- Update packages [#2040](https://github.com/MyEtherWallet/MyEtherWallet/pull/2040)
+- Sync master to develop, fix uuid issue [#2023](https://github.com/MyEtherWallet/MyEtherWallet/pull/2023)
+
 ### Release v5.4.0
 
 ### Feature
