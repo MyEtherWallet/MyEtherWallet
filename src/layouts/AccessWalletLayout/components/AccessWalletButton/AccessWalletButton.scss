@@ -11,6 +11,10 @@
   transition: all 0.3s ease;
   border: 0;
 
+  .access-wallet-or {
+    text-transform: capitalize;
+  }
+
   .button-image {
     font-size: 90px;
     margin-bottom: 5px;
@@ -71,6 +75,13 @@
     }
   }
 }
+
+.button-metamask {
+  img {
+    max-width: 78px;
+  }
+}
+
 
 .button-software {
   &:hover {
