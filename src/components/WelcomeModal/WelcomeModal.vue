@@ -28,33 +28,18 @@
               >{{ $t('welcomeMessage.link1') }}</a
             >
           </i18n>
-          <i18n
-            v-if="firstTimeRu"
-            path="welcomeMessage.first-time-ru.desc1"
-            tag="p"
-          >
-            <a
-              slot="link1"
-              href="https://vk.com/public190491855"
-              target="_blank"
-              rel="noopener noreferrer"
-              >{{ $t('welcomeMessage.first-time-ru.link1') }}</a
-            >
-            <a
-              slot="supportEmail"
-              href="mailto:support@myetherwallet.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              >{{ $t('common.support-email') }}</a
-            >
-            <a
-              slot="link2"
-              href="https://twitter.com/myetherwallet"
-              target="_blank"
-              rel="noopener noreferrer"
-              >{{ $t('welcomeMessage.first-time-ru.link2') }}</a
-            >
-          </i18n>
+          <p v-if="firstTimeRu">
+            Если Вам удобнее общаться с нами и другими пользователями MEW на
+            русском языке, присоединяйтесь к нашему сообществу в
+            <a target="_blank" href=" https://vk.com/public190491855">ВК</a>!
+            Для поддержки, пишите на
+            <a target="_blank" href="mailto:support@myetherwallet.com"
+              >support@myetherwallet.com</a
+            >. Для самых свежих новостей, подпишитесь на наш
+            <a target="_blank" href="https://twitter.com/myetherwallet"
+              >Твиттер</a
+            >."
+          </p>
         </div>
         <div class="welcome-modal-button">
           <button @click="closeModal">
