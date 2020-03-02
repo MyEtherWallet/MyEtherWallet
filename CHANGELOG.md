@@ -1,3 +1,7 @@
+### Bugs
+
+- Fix Buy ETH Widget bug [#2046](https://github.com/MyEtherWallet/MyEtherWallet/pull/2046)
+
 ### Release v5.4.0
 
 ### Feature
