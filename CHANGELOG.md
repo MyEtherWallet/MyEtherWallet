@@ -1,5 +1,7 @@
-### Devop
+### Bugs
+- Fix KB link [#2047] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2047)
 
+### Devop
 - Update packages [#2040](https://github.com/MyEtherWallet/MyEtherWallet/pull/2040)
 - Sync master to develop, fix uuid issue [#2023](https://github.com/MyEtherWallet/MyEtherWallet/pull/2023)
 
