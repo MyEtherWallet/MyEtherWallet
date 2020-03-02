@@ -1,3 +1,6 @@
+### Bugs
+- Fix KB link [#2047] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2047)
+
 ### Release v5.4.0
 
 ### Feature
