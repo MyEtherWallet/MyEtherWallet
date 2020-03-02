@@ -227,14 +227,16 @@ export default {
     },
     endIndex() {
       if (this.nftConfig[this.selectedContract]) {
-        if (this.nftConfig[this.selectedContract].tokens.length) {
-          if (
-            this.nftConfig[this.selectedContract].tokens.length <
-            this.currentPage * this.countPerPage
-          ) {
-            return this.nftConfig[this.selectedContract].tokens.length;
+        if (this.nftConfig[this.selectedContract].tokens) {
+          if (this.nftConfig[this.selectedContract].tokens.length) {
+            if (
+              this.nftConfig[this.selectedContract].tokens.length <
+              this.currentPage * this.countPerPage
+            ) {
+              return this.nftConfig[this.selectedContract].tokens.length;
+            }
+            return this.currentPage * this.countPerPage;
           }
-          return this.currentPage * this.countPerPage;
         }
       }
       return this.currentPage * this.countPerPage;
@@ -253,7 +255,10 @@ export default {
       return [];
     },
     ntfCount() {
-      if (this.nftConfig[this.selectedContract]) {
+      if (
+        this.nftConfig[this.selectedContract] &&
+        this.nftConfig[this.selectedContract].tokens
+      ) {
         return this.$t('nftManager.per-page-count', {
           perPage: this.countPerPage,
           count: this.nftConfig[this.selectedContract].tokens.length
@@ -270,6 +275,7 @@ export default {
     },
     showNextButton() {
       if (this.nftConfig[this.selectedContract]) {
+        if (!this.nftConfig[this.selectedContract].tokens) return false;
         const ids_retrieved = this.nftConfig[this.selectedContract].tokens
           .length;
         return (
@@ -353,12 +359,16 @@ export default {
         return entry.id !== nft.id;
       });
       this.$set(this.nftConfig[nft.contract], 'tokens', afterSent);
-      if (this.nftConfig[nft.contract].tokens.length === 0)
-        this.sentUpdate += 1;
+      if (this.nftConfig[nft.contract].tokens) {
+        if (this.nftConfig[nft.contract].tokens.length === 0)
+          this.sentUpdate += 1;
+      }
       this.showDetails = false;
     },
     resetNFT(nft) {
-      this.nftConfig[nft.contract] = this.nftObjectClone;
+      if (Object.keys(this.nftObjectClone).length > 0) {
+        this.nftConfig[nft.contract] = this.nftObjectClone;
+      }
     },
     changeSelectedContract(selectedContract) {
       this.selectedContract = selectedContract;
