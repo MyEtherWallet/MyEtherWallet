@@ -1,6 +1,9 @@
 ### Bugs
 - Fix KB link [#2047] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2047)
 
+### Devop
+- Sync master to develop, fix uuid issue [#2023](https://github.com/MyEtherWallet/MyEtherWallet/pull/2023)
+
 ### Release v5.4.0
 
 ### Feature
@@ -13,7 +16,7 @@
 - Fix Exit to Fiat to correspond with backend changes [#2002](https://github.com/MyEtherWallet/MyEtherWallet/pull/2002)
 - Update aave copy [#2011](https://github.com/MyEtherWallet/MyEtherWallet/pull/2011)
 - Change social icons display [#2003](https://github.com/MyEtherWallet/MyEtherWallet/pull/2003)
-- Update aave copy [#2020] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2020)
+- Update aave copy [#2020](https://github.com/MyEtherWallet/MyEtherWallet/pull/2020)
 
 ### Bugs
 
