@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-btn
-      class="ml-auto text-transform--initial"
+      class="ml-auto text-transform--initial font-weight-regular"
       min-width="100%"
       outlined
       large

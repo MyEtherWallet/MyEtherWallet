@@ -27,5 +27,13 @@ export default {
 
 .warning-content {
   background-color: $yellow-1;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+a {
+  color: $emerald !important;
+  text-decoration: none;
+  font-weight: 500;
 }
 </style>

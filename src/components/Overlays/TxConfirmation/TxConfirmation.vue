@@ -4,8 +4,17 @@
     <WhiteSheet>
       <div class="overlay-content">
         <div class="pa-8">
+          <FromToBlock />
+          <BalanceBlock />
+
+          <DividerX class="my-9" />
+
+          <ExpantionBlock />
+
+          <DividerX class="my-9" />
+
           <div class="text-center">
-            <StdButton>Confirm &amp; send</StdButton>
+            <StdButton>Confirm & send</StdButton>
           </div>
         </div>
         <ConfirmTransaction />
@@ -19,9 +28,22 @@ import BaseOverlay from '../BaseOverlay';
 import WhiteSheet from '@/components/Common/WhiteSheet';
 import ConfirmTransaction from '@/components/WarningBlocks/ConfirmTransaction';
 import StdButton from '@/components/StdButton';
+import DividerX from '@/components/DividerX';
+import FromToBlock from '@/components/FromToBlock';
+import BalanceBlock from '@/components/BalanceBlock';
+import ExpantionBlock from '@/components/ExpantionBlock';
 
 export default {
-  components: { BaseOverlay, WhiteSheet, ConfirmTransaction, StdButton },
+  components: {
+    BaseOverlay,
+    WhiteSheet,
+    ConfirmTransaction,
+    StdButton,
+    DividerX,
+    FromToBlock,
+    BalanceBlock,
+    ExpantionBlock
+  },
   props: {
     open: { default: false, type: Boolean },
     close: {
