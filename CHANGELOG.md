@@ -7,6 +7,7 @@
 - Add aave referral code [#2040](https://github.com/MyEtherWallet/MyEtherWallet/pull/2040/files)
 - Update packages [#2040](https://github.com/MyEtherWallet/MyEtherWallet/pull/2040)
 - Sync master to develop, fix uuid issue [#2023](https://github.com/MyEtherWallet/MyEtherWallet/pull/2023)
+- Harden CSP [#2016](https://github.com/MyEtherWallet/MyEtherWallet/pull/2016)
 
 ### Bugs
 
