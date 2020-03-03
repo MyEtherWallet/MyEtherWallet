@@ -31,8 +31,6 @@ class BCVault {
   async init() {
     // fetch devices
     this.deviceNumber = await this.bcWallet.getDevices().catch(errorHandler);
-    // eslint-disable-next-line
-    console.log(this.deviceNumber);
     // get wallet of first device and password
     // not sure if we want the users to pass this as a parameter or ask user
     // for which wallet to use
@@ -61,7 +59,8 @@ class BCVault {
       newTx['feeCount'] = new BigNumber(bufferToHex(tx['gasLimit'])).toNumber();
       newTx['feePrice'] = new BigNumber(bufferToHex(tx['gasPrice'])).toString();
       newTx['amount'] = new BigNumber(bufferToHex(tx['value'])).toNumber() || 0;
-      newTx['contractData'] = bufferToHex(tx['data']);
+      // This will be enabled once bcvault released daemon with contractData support
+      // newTx['contractData'] = bufferToHex(tx['data']);
       newTx['to'] = bufferToHex(tx['to']);
       newTx['from'] = this.selectedAddress;
       if (tx.hasOwnProperty('nonce')) {

@@ -1,5 +1,5 @@
 import helpers from './helpers';
-import { isAddress } from '@/helpers/addressUtils';
+import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
 import Misc from '@/helpers/misc';
 import { extractRootDomain } from './extractRootDomain';
 import MiddleWare from '@/wallets/web3-provider/middleware';
@@ -84,7 +84,7 @@ chrome.storage.onChanged.addListener(items => {
         JSON.stringify(currentNotifications)
       );
     }
-    if (item === 'defNetwork') {
+    if (item === 'defNetwork' && item.defNetwork.hasOwnProperty('newValue')) {
       const networkProps = JSON.parse(
         Misc.stripTags(items['defNetwork'].newValue)
       );
@@ -151,7 +151,7 @@ chrome.tabs.onUpdated.addListener(onUpdatedCb);
 chrome.tabs.onActivated.addListener(onActivatedCb);
 chrome.tabs.onRemoved.addListener(onRemovedCb);
 chrome.runtime.onInstalled.addListener(onInstalledCb);
-chrome.runtime.onStartup.addListener(onInstalledCb);
+chrome.runtime.onStartup.addListener(onStartupCb);
 
 function onRemovedCb(id) {
   if (urls[id]) {
@@ -193,6 +193,26 @@ function onActivatedCb(info) {
 function onInstalledCb() {
   chrome.runtime.onMessage.removeListener(eventsListeners);
   chrome.runtime.onMessage.addListener(eventsListeners);
+}
+
+function onStartupCb() {
+  onInstalledCb();
+  // redo stored addresses to checksum.
+  chrome.storage.sync.get(null, obj => {
+    const objKeys = Object.keys(obj);
+    const newStore = {};
+    if (objKeys.length > 0) {
+      objKeys.forEach(item => {
+        if (isAddress(item)) {
+          newStore[toChecksumAddress(item)] = obj[item];
+          chrome.storage.sync.remove(item);
+        } else {
+          newStore[item] = obj[item];
+        }
+      });
+      chrome.storage.sync.set(newStore);
+    }
+  });
 }
 
 function querycB(tab) {
