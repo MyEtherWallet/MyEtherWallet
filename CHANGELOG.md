@@ -1,5 +1,9 @@
+### Bugs
+- Hardcode russian translation for first time welcome modal [#2041] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2041)
+
 ### Devop
 
+- Add aave referral code [#2040](https://github.com/MyEtherWallet/MyEtherWallet/pull/2040/files)
 - Update packages [#2040](https://github.com/MyEtherWallet/MyEtherWallet/pull/2040)
 - Sync master to develop, fix uuid issue [#2023](https://github.com/MyEtherWallet/MyEtherWallet/pull/2023)
 
