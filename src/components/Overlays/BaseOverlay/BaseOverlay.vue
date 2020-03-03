@@ -39,7 +39,7 @@ export default {
 
 .overlay-close-button {
   position: fixed;
-  top: 30px;
+  top: 50px;
   right: 70px;
 }
 </style>
