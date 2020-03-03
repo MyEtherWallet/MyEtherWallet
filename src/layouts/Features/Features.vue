@@ -6,7 +6,7 @@
     }"
   >
     <div class="d-flex align-stretch">
-      <SideMenu />
+      <SideMenu class="side-menu-element" />
       <div
         class="wrapper"
         :style="{
@@ -41,6 +41,10 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/GlobalVariables.scss';
+
+.side-menu-element {
+  box-shadow: 0 0 20px #00000022;
+}
 
 .wrapper {
   position: relative;
