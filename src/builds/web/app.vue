@@ -14,8 +14,8 @@ export default {
     return {};
   },
   mounted() {
-    this.$vuetify.theme.dark = false;
-    console.log(this.$vuetify.theme);
+    //this.$vuetify.theme.dark = false;
+    //console.log(this.$vuetify.theme);
   }
 };
 </script>

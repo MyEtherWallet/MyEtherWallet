@@ -6,7 +6,20 @@
       Contents!!!!
     </InterfaceWrap>
 
-    <v-btn @click="openTxConfirmation = true">Open</v-btn>
+    <div class="pa-2">
+      <v-btn
+        depressed
+        color="success"
+        x-small
+        class="mr-1"
+        @click="openTxConfirmation = true"
+      >
+        Open TX confirmation window
+      </v-btn>
+      <v-btn depressed color="success" x-small @click="toggleTheme">
+        Toggle Theme
+      </v-btn>
+    </div>
   </WhiteSheet>
 </template>
 
@@ -28,6 +41,9 @@ export default {
   methods: {
     closeTxConfirmation() {
       this.openTxConfirmation = false;
+    },
+    toggleTheme() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
     }
   }
 };
