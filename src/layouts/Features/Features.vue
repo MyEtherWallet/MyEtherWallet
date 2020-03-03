@@ -8,21 +8,18 @@
     <div class="d-flex align-stretch">
       <SideMenu />
       <div
-        class="wrapper dark"
+        class="wrapper"
         :style="{
           borderBottomColor: $vuetify.theme.themes[theme].footerBackgroundColor
         }"
       >
-        <v-container>
+        <v-container class="position--relative">
           <Header />
           <router-view />
         </v-container>
-
-        <v-container class="footer-wrapper">
-          <Footer />
-        </v-container>
       </div>
     </div>
+    <Footer />
   </div>
 </template>
 
@@ -48,18 +45,5 @@ export default {
 .wrapper {
   position: relative;
   width: 100%;
-  border-bottom: 60px solid;
-  padding-bottom: 40px;
-
-  &.dark {
-    box-shadow: 0 10px 20px black;
-  }
-}
-
-.footer-wrapper {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -55px;
 }
 </style>
