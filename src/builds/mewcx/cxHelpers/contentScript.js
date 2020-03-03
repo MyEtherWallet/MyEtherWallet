@@ -10,7 +10,7 @@ import {
   WEB3_SEND_SIGN_MSG,
   CX_WEB3_DETECTED,
   WEB3_RPC_REQUEST,
-  WEB3_CHAIN_CHANGE,
+  // WEB3_CHAIN_CHANGE,
   WEB3_NETWORK_CHANGE,
   WEB3_SUBSCRIBE,
   CX_SUBSCRIBE,
@@ -105,26 +105,34 @@ const extensionID = chrome.runtime.id;
 let getAccountModalIsOPen = false;
 
 chrome.storage.onChanged.addListener(function(res) {
-  Object.keys(res).forEach(val => {
-    const eventName = val.includes('ChainID')
-      ? WEB3_CHAIN_CHANGE.replace('{{id}}', extensionID)
-      : val.includes('NetVersion')
-      ? WEB3_NETWORK_CHANGE.replace('{{id}}', extensionID)
-      : '';
-
-    if (eventName !== '') {
-      if (res[val].hasOwnProperty('oldValue')) {
-        if (res[val].oldValue !== res[val].newValue) {
-          const event = new CustomEvent(eventName, {
-            detail: {
-              payload: res[val].newValue
-            }
-          });
-          window.dispatchEvent(event, false);
+  if (
+    res.hasOwnProperty('defNetwork') &&
+    res.defNetwork.hasOwnProperty('oldValue') &&
+    res.defNetwork.hasOwnProperty('newValue')
+  ) {
+    const newValKey = JSON.parse(res.defNetwork.newValue).key;
+    const oldValKey = JSON.parse(res.defNetwork.oldValue).key;
+    const isNew = oldValKey !== newValKey;
+    const netVersion = {
+      ETH: 1,
+      ROP: 3,
+      RIN: 4,
+      GOERLI: 5,
+      KOV: 42
+    };
+    if (isNew) {
+      const newKey = netVersion[newValKey];
+      const event = new CustomEvent(
+        WEB3_NETWORK_CHANGE.replace('{{id}}', extensionID),
+        {
+          detail: {
+            payload: newKey
+          }
         }
-      }
+      );
+      window.dispatchEvent(event, false);
     }
-  });
+  }
 });
 
 chrome.runtime.onMessage.addListener(function(request, _, callback) {
