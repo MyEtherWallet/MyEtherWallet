@@ -22,7 +22,9 @@ export default {
     silver: '#cecece',
     disabled1: '#d8d8d8',
     disabled2: '#999',
+    warning: '#ff9800',
     gray: { gray1: '#96a8b6' },
-    red: { red1: '#ff0000' }
+    red: { red1: '#ff0000' },
+    yellow: { yellow1: '#ffe9c5' }
   }
 };

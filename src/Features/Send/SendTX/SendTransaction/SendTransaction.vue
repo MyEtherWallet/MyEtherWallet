@@ -1,9 +1,6 @@
 <template>
   <WhiteSheet>
-    <TxConfirmation :open="openTxConfirmation">
-      <template v-slot:closeButton>
-        <CloseButton text="Cancel" @click.native="openTxConfirmation = false" />
-      </template>
+    <TxConfirmation :open="openTxConfirmation" :close="closeTxConfirmation">
     </TxConfirmation>
 
     <InterfaceWrap title="Send Transaction">
@@ -18,16 +15,20 @@
 import WhiteSheet from '@/components/Common/WhiteSheet';
 import InterfaceWrap from '@/components/InterfaceWraps/InterfaceWrap1';
 import TxConfirmation from '@/components/Overlays/TxConfirmation';
-import CloseButton from '@/components/Buttons/CloseButton';
 
 //import StdButton from '@/components/StdButton';
 
 export default {
-  components: { WhiteSheet, InterfaceWrap, TxConfirmation, CloseButton },
+  components: { WhiteSheet, InterfaceWrap, TxConfirmation },
   data() {
     return {
       openTxConfirmation: false
     };
+  },
+  methods: {
+    closeTxConfirmation() {
+      this.openTxConfirmation = false;
+    }
   }
 };
 </script>
