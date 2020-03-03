@@ -2,8 +2,14 @@
   <BaseOverlay :open="open" :close="close" close-text="Cancel">
     <h2 class="text-center mb-6">Confirmation</h2>
     <WhiteSheet>
-      <div class="overlay-content pa-7"></div>
-      <ConfirmTransaction />
+      <div class="overlay-content">
+        <div class="pa-8">
+          <div class="text-center">
+            <StdButton>Confirm &amp; send</StdButton>
+          </div>
+        </div>
+        <ConfirmTransaction />
+      </div>
     </WhiteSheet>
   </BaseOverlay>
 </template>
@@ -12,9 +18,10 @@
 import BaseOverlay from '../BaseOverlay';
 import WhiteSheet from '@/components/Common/WhiteSheet';
 import ConfirmTransaction from '@/components/WarningBlocks/ConfirmTransaction';
+import StdButton from '@/components/StdButton';
 
 export default {
-  components: { BaseOverlay, WhiteSheet, ConfirmTransaction },
+  components: { BaseOverlay, WhiteSheet, ConfirmTransaction, StdButton },
   props: {
     open: { default: false, type: Boolean },
     close: {
@@ -34,6 +41,6 @@ export default {
 @import '@/assets/styles/GlobalVariables.scss';
 
 .overlay-content {
-  min-width: 500px;
+  max-width: 550px;
 }
 </style>
