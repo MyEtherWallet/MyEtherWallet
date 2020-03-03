@@ -14,6 +14,7 @@ const FINNEY = 'finney';
 const WATCH_ONLY = 'watchOnly';
 const XWALLET = 'xwallet';
 const BCVAULT = 'bc_vault';
+const COOLWALLET = 'cool_wallet';
 export {
   LEDGER,
   TREZOR,
@@ -30,5 +31,6 @@ export {
   FINNEY,
   WATCH_ONLY,
   XWALLET,
-  BCVAULT
+  BCVAULT,
+  COOLWALLET
 };
