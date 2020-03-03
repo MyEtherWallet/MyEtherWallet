@@ -1,5 +1,5 @@
 <template>
-  <div class="px-2">
+  <div>
     <ul style="padding-left: 0;">
       <li
         v-for="(i, key1) in menuItems"

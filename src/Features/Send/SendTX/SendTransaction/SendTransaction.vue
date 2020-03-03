@@ -16,9 +16,6 @@
       >
         Open TX confirmation window
       </v-btn>
-      <v-btn depressed color="success" x-small @click="toggleTheme">
-        Toggle Theme
-      </v-btn>
     </div>
   </WhiteSheet>
 </template>
@@ -41,9 +38,6 @@ export default {
   methods: {
     closeTxConfirmation() {
       this.openTxConfirmation = false;
-    },
-    toggleTheme() {
-      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
     }
   }
 };
