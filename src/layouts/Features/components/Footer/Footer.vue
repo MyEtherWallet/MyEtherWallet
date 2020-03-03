@@ -2,7 +2,7 @@
   <v-sheet
     tile
     color="white"
-    class="d-flex align-center py-4 px-12 footer-container"
+    class="d-flex align-center py-4 px-10 footer-container"
   >
     <div class="mew-copyright">
       ©2020 MyEtherWallet. All rights reserved. Pricing taken from
