@@ -303,12 +303,10 @@ export default class Simplex {
     }
   }
 
-  canOrder(fiatAmount, digitalAmount) {
+  canOrder(fiatAmount, digitalAmount, currency) {
     return (
-      new BigNumber(fiatAmount).gte(new BigNumber(this.minFiat)) &&
-      new BigNumber(new BigNumber(fiatAmount)).lte(
-        new BigNumber(this.maxFiat)
-      ) &&
+      new BigNumber(fiatAmount).gte(new BigNumber(this.minFiat[currency])) &&
+      new BigNumber(fiatAmount).lte(new BigNumber(this.maxFiat[currency])) &&
       new BigNumber(digitalAmount).gt(0)
     );
   }
@@ -345,7 +343,13 @@ export default class Simplex {
   }
 
   createSwap(swapDetails) {
-    if (this.canOrder(swapDetails.fromValue, swapDetails.toValue)) {
+    if (
+      this.canOrder(
+        swapDetails.fromValue,
+        swapDetails.toValue,
+        swapDetails.fromCurrency
+      )
+    ) {
       return getOrder({
         'g-recaptcha-response': '',
         account_details: {
