@@ -15,10 +15,12 @@ export default new Vuetify({
         secondary: '#b0bec5',
         accent: '#8c9eff',
         error: '#b71c1c',
-        success: '#ffbebe'
+        success: '#ffbebe',
+        sideMenuBackground: '#002747'
       },
       dark: {
-        success: '#ff0000'
+        success: '#ff0000',
+        sideMenuBackground: '#0d111e'
       }
     }
   }
