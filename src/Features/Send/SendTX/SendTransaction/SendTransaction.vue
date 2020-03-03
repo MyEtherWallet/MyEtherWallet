@@ -1,12 +1,12 @@
 <template>
   <WhiteSheet>
-    <TxConfirmation :open="openTxConfirmation" :close="closeTxConfirmation">
-    </TxConfirmation>
+    <TxConfirmation :open="openTxConfirmation" :close="closeTxConfirmation" />
 
     <InterfaceWrap title="Send Transaction">
       Contents!!!!
-      <v-btn @click="openTxConfirmation = true">Open</v-btn>
     </InterfaceWrap>
+
+    <v-btn @click="openTxConfirmation = true">Open</v-btn>
   </WhiteSheet>
 </template>
 
