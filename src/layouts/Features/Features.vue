@@ -1,8 +1,18 @@
 <template>
-  <div class="features">
+  <div
+    class="features"
+    :style="{
+      backgroundColor: $vuetify.theme.themes[theme].backgroundColor
+    }"
+  >
     <div class="d-flex align-stretch">
       <SideMenu />
-      <div class="wrapper">
+      <div
+        class="wrapper dark"
+        :style="{
+          borderBottomColor: $vuetify.theme.themes[theme].footerBackgroundColor
+        }"
+      >
         <v-container>
           <Header />
           <router-view />
@@ -23,22 +33,27 @@ import Footer from './components/Footer';
 
 export default {
   name: 'Features',
-  components: { SideMenu, Header, Footer }
+  components: { SideMenu, Header, Footer },
+  computed: {
+    theme() {
+      return this.$vuetify.theme.dark ? 'dark' : 'light';
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/GlobalVariables.scss';
 
-.features {
-  background-color: $primary-silver;
-}
-
 .wrapper {
   position: relative;
   width: 100%;
-  border-bottom: 60px solid white;
+  border-bottom: 60px solid;
   padding-bottom: 40px;
+
+  &.dark {
+    box-shadow: 0 10px 20px black;
+  }
 }
 
 .footer-wrapper {
