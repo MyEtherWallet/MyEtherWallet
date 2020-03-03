@@ -1,6 +1,8 @@
 ### Release v5.4.1
+
 ### Bugs
 - Hardcode russian translation for first time welcome modal [#2041] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2041)
+- Fix network changer [#2054] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2054)
 - Add burner address warning, redo store so all addresses currently stored are uniform [#2049](https://github.com/MyEtherWallet/MyEtherWallet/pull/2049)
 - Fix Buy ETH Widget bug [#2046](https://github.com/MyEtherWallet/MyEtherWallet/pull/2046)
 - Fix KB link [#2047] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2047)
