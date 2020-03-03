@@ -1,16 +1,18 @@
 <template>
-  <v-btn text small :color="mewGreen" class="text-transform--initial body-2">
-    <slot />
+  <v-btn text :color="red" class="text-transform--initial body-2">
+    <v-icon class="mr-1">mdi-close-circle-outline</v-icon>{{ text }}
   </v-btn>
 </template>
 
 <script>
 import Var from '@/variables.js';
 export default {
-  props: {},
+  props: {
+    text: { default: '', type: String }
+  },
   data() {
     return {
-      mewGreen: Var.colorSets.emerald
+      red: Var.colorSets.red.red1
     };
   }
 };
