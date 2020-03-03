@@ -1,4 +1,5 @@
 ### Release v5.4.1
+
 ### Bugs
 
 - Add burner address warning, redo store so all addresses currently stored are uniform [#2049](https://github.com/MyEtherWallet/MyEtherWallet/pull/2049)
