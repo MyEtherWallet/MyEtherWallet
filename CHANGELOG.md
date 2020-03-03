@@ -2,7 +2,7 @@
 ### Bugs
 
 - Add burner address warning, redo store so all addresses currently stored are uniform [#2049](https://github.com/MyEtherWallet/MyEtherWallet/pull/2049)
-- Revert one time check [#2052](https://github.com/MyEtherWallet/MyEtherWallet/pull/2052)
+- Revert one time check [#2053](https://github.com/MyEtherWallet/MyEtherWallet/pull/2053)
 - Fix Buy ETH Widget bug [#2046](https://github.com/MyEtherWallet/MyEtherWallet/pull/2046)
 - Fix KB link [#2047](https://github.com/MyEtherWallet/MyEtherWallet/pull/2047)
 
