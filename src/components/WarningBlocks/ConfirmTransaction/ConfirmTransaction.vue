@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex warning-content py-6 px-8">
+  <div class="d-flex align-start warning-content py-6 px-8">
     <v-icon :color="iconColor">mdi-alert</v-icon>
     <div class="ml-4">
       Please confirm the transaction on your device, and make sure all your
