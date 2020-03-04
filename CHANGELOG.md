@@ -1,4 +1,5 @@
 ### Feature
+
 - MEW Wallet UI changes [#2048](https://github.com/MyEtherWallet/MyEtherWallet/pull/2048)
 
 ### Release v5.4.1
