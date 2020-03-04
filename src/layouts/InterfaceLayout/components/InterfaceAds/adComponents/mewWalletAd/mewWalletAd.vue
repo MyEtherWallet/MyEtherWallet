@@ -9,13 +9,19 @@
       >
         <div class="inner-content">
           <div class="text-content">
-            <h3>MEW wallet <span class="new-label">NEW</span></h3>
-            <p>Officially Released</p>
+            <i18n tag="h3" path="interface.ads.mew-wallet">
+              <span slot="new" class="new-label">{{
+                $t('interface.ads.new')
+              }}</span>
+              <p slot="officially-released">
+                {{ $t('interface.ads.officially-released') }}
+              </p>
+            </i18n>
           </div>
           <div class="bottom-block">
-            <img :src="appStore" />
-            <img :src="appStore" />
-            <img :src="appStore" />
+            <a v-for="(btn, idx) in storeButtons" :key="idx" :href="btn.url">
+              <img :src="btn.src" alt="App button" />
+            </a>
           </div>
         </div>
       </a>
@@ -24,7 +30,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
 import appStore from '@/assets/images/icons/button-app-store.png';
 import googlePlay from '@/assets/images/icons/button-google-play-color.png';
 import galaxyStore from '@/assets/images/icons/button-galaxy-store-color.png';
@@ -33,38 +38,21 @@ export default {
   props: {},
   data() {
     return {
-      appStore: appStore,
-      googlePlay: googlePlay,
-      galaxyStore: galaxyStore,
-      showWidget: false,
-      suppliedFromAmount: 100,
-      suppliedTo: {
-        symbol: 'ETH',
-        name: ''
-      },
-      suppliedFrom: {
-        symbol: 'USD',
-        name: ''
-      }
+      storeButtons: [
+        {
+          src: appStore,
+          url: 'https://itunes.apple.com/app/id1464614025'
+        },
+        {
+          src: googlePlay,
+          url: ''
+        },
+        {
+          src: galaxyStore,
+          url: ''
+        }
+      ]
     };
-  },
-  computed: {
-    ...mapState('main', ['account', 'online'])
-  },
-  watch: {},
-  mounted() {},
-  methods: {
-    showSwapWidget() {
-      if (this.online) {
-        this.$eventHub.$emit(
-          'showSwapWidgetTo',
-          this.account.address,
-          'USD',
-          'ETH',
-          1
-        );
-      }
-    }
   }
 };
 </script>
