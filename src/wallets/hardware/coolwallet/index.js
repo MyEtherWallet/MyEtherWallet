@@ -1,13 +1,12 @@
 import { Transaction } from 'ethereumjs-tx';
-import { hashPersonalMessage } from 'ethereumjs-util';
 import { COOLWALLET as coolWalletType } from '../../bip44/walletTypes';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
-import { Toast, Misc } from '@/helpers';
+import { Toast } from '@/helpers';
 import errorHandler from './errorHandler';
 import cwsTransportLib from '@coolwallets/transport-web-ble';
 import cwsETH from '@coolwallets/eth';
 import cwsWallet, { generateKeyPair } from '@coolwallets/wallet';
-import locStore from 'store.js';
+import locStore from 'store';
 
 import store from '@/store';
 import {
@@ -18,7 +17,8 @@ import {
 } from '../../utils';
 import commonGenerator from '@/helpers/commonGenerator';
 
-const NEED_PASSWORD = false;
+const NEED_PASSWORD = true;
+const APP_NAME = 'MyEtherWallet V5';
 
 class CoolWallet {
   constructor() {
@@ -28,8 +28,9 @@ class CoolWallet {
     this.selectedIdx = '';
     this.appPrivateKey = '';
     this.appPublicKey = '';
+    this.deviceInstance = {};
   }
-  async init() {
+  async init(transport, password) {
     const hasKeys =
       locStore.get('appPublicKey') && locStore.get('appPrivateKey');
     const hasAppId = locStore.get('appId') || null;
@@ -49,49 +50,66 @@ class CoolWallet {
       this.appPublicKey = locStore.get('appPublicKey');
     }
 
+    const coolWalletInstance = new cwsWallet(transport, this.appPrivateKey);
+
     if (!hasAppId) {
+      // const password = '12345678';
+      // password is gonna be from the eventHub
+      coolWalletInstance
+        .register(this.appPublicKey, password, APP_NAME)
+        .then(appId => {
+          locStore.set('appId', appId);
+          this.appId = appId;
+        });
     } else {
       this.hasAppId = hasAppId;
     }
+
+    this.deviceInstance = new cwsETH(transport, this.appPrivateKey, this.appId);
   }
   getAccount(idx) {
+    this.selectedIdx = idx;
     const txSigner = async tx => {
       tx = new Transaction(tx, {
         common: commonGenerator(store.state.main.network)
       });
       const networkId = tx.getChainId();
-      const result = await this.bitbox.signTransaction(
-        this.basePath + '/' + idx,
-        tx
-      );
-      tx.v = getBufferFromHex(sanitizeHex(result.v));
-      tx.r = getBufferFromHex(sanitizeHex(result.r));
-      tx.s = getBufferFromHex(sanitizeHex(result.s));
-      const signedChainId = calculateChainIdFromV(tx.v);
-      if (signedChainId !== networkId)
-        Toast.responseHandler(
-          new Error(
-            'Invalid networkId signature returned. Expected: ' +
-              networkId +
-              ', Got: ' +
-              signedChainId,
-            'InvalidNetworkId'
-          ),
-          false
-        );
-      return getSignTransactionObject(tx);
+      const result = await cwsETH.signTransaction(tx, this.selectedIdx);
+      if (result) {
+        const resultTx = new Transaction(tx);
+        tx.v = getBufferFromHex(sanitizeHex(resultTx.v.toString('hex')));
+        tx.r = getBufferFromHex(sanitizeHex(resultTx.r.toString('hex')));
+        tx.s = getBufferFromHex(sanitizeHex(resultTx.s.toString('hex')));
+        const signedChainId = calculateChainIdFromV(tx.v);
+        if (signedChainId !== networkId)
+          Toast.responseHandler(
+            new Error(
+              'Invalid networkId signature returned. Expected: ' +
+                networkId +
+                ', Got: ' +
+                signedChainId,
+              'InvalidNetworkId'
+            ),
+            false
+          );
+        return getSignTransactionObject(tx);
+      }
+      return result;
     };
     const msgSigner = async msg => {
-      const msgHash = hashPersonalMessage(Misc.toBuffer(msg));
-      const result = await this.bitbox.signMessage(
-        this.basePath + '/' + idx,
-        msgHash
-      );
-      return Buffer.concat([
-        getBufferFromHex(sanitizeHex(result.r)),
-        getBufferFromHex(sanitizeHex(result.s)),
-        getBufferFromHex(sanitizeHex(result.v))
-      ]);
+      const result = await cwsETH.signMessage(msg, 0);
+      if (result) {
+        const signature = result.substr(2);
+        const r = '0x' + signature.slice(0, 64);
+        const s = '0x' + signature.slice(64, 128);
+        const v = '0x' + signature.slice(128, 130);
+        return Buffer.concat([
+          getBufferFromHex(sanitizeHex(r)),
+          getBufferFromHex(sanitizeHex(s)),
+          getBufferFromHex(sanitizeHex(v))
+        ]);
+      }
+      return result;
     };
     return new HDWalletInterface(
       null,
@@ -104,12 +122,26 @@ class CoolWallet {
       null
     );
   }
+
+  getCurrentPath() {
+    return "m/44'/60'/0'/0";
+  }
+  getSupportedPaths() {
+    return ["m/44'/60'/0'/0"];
+  }
 }
 
-const createWallet = async () => {
-  const _bitboxWallet = new CoolWallet();
-  await _bitboxWallet.init();
-  return _bitboxWallet;
+const createWallet = async password => {
+  const _coolWallet = new CoolWallet();
+  await cwsTransportLib.listen(async (error, device) => {
+    if (device) {
+      const transport = await cwsTransportLib.connect(device);
+      _coolWallet.init(transport, password);
+    } else {
+      errorHandler(error);
+    }
+  });
+  return _coolWallet;
 };
 createWallet.errorHandler = errorHandler;
 
