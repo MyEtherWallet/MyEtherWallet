@@ -17,7 +17,7 @@
 .footer-banner-container {
   align-items: center;
   background-color: $white;
-  box-shadow: 0px 4px 18px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.12);
   display: flex;
   justify-content: center;
   left: 0;
@@ -73,7 +73,8 @@
     margin-top: 20px;
     top: 0;
 
-    p, i {
+    p,
+    i {
       color: $dark-blue-2 !important;
     }
   }
@@ -102,7 +103,6 @@
       font-size: 12px;
       margin-left: 5px;
     }
-
   }
 }
 
@@ -145,18 +145,16 @@
     min-height: 200px;
     .detail-content {
       margin-right: 13px;
+      margin-top: 15px;
+      top: 0;
     }
-    .center-content, .center-content-expanded {
+    .center-content,
+    .center-content-expanded {
       .title-row {
         span {
           font-size: 20px;
         }
       }
-    }
-
-    .detail-content {
-      margin-top: 15px;
-      top: 0;
     }
   }
 }
@@ -165,9 +163,9 @@
   .footer-banner-expanded {
     min-height: 450px !important;
   }
-  
+
   .bottom-space {
-     margin-bottom: 15px;
+    margin-bottom: 15px;
   }
 
   .footer-banner-container {
@@ -178,6 +176,5 @@
         width: 96px;
       }
     }
-
   }
 }
