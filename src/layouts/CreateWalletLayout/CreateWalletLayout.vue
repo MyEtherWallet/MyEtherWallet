@@ -10,7 +10,7 @@
           <b-tabs class="x100">
             <div v-if="showProgressBar && false" class="progress-bar" />
             <b-tab
-              :title="this.$t('common.mewconnect.string')"
+              :title="this.$t('common.mew-wallet.string')"
               class="mew-connect-block"
               active
               @click="showProgressBar = false"
@@ -18,16 +18,26 @@
               <div class="tab-content-block">
                 <div class="title-block">
                   <div class="title-popover">
-                    <h3>{{ $t('createWallet.mewconnect.title') }}</h3>
-                    <popover :popcontent="$t('common.mewconnect.desc')" />
+                    <h3>{{ $t('createWallet.mew-wallet.title') }}</h3>
+                    <popover
+                      :popcontent="$t('createWallet.mew-wallet.tooltip')"
+                    />
                   </div>
-                  <p>{{ $t('createWallet.mewconnect.desc') }}</p>
+                  <i18n tag="p" path="createWallet.mew-wallet.desc">
+                    <a
+                      slot="learn-more"
+                      href="https://www.mewwallet.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      >{{ $t('common.learn-more') }}</a
+                    >
+                  </i18n>
                 </div>
                 <div class="appstores">
                   <div class="icons">
                     <a
                       v-if="canDownloadApple"
-                      href="https://itunes.apple.com/us/app/mewconnect/id1391097156?mt=8"
+                      href="https://itunes.apple.com/app/id1464614025"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -44,6 +54,7 @@
                         height="40"
                       />
                     </div>
+                    <!-- change url -->
                     <a
                       href="http://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
                       target="_blank"
@@ -51,20 +62,30 @@
                     >
                       <img
                         alt
-                        src="~@/assets/images/icons/google-play.svg"
+                        src="~@/assets/images/icons/button-google-play-color.png"
+                        height="40"
+                      />
+                    </a>
+                    <!-- change url -->
+                    <a
+                      href="http://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        alt
+                        src="~@/assets/images/icons/button-galaxy-store-color.png"
                         height="40"
                       />
                     </a>
                   </div>
-                  <div class="download">
-                    <p @click="scanToDownloadModalOpen">
-                      {{ $t('createWallet.mewconnect.scan') }}
-                    </p>
-                  </div>
+                  <p class="download-txt">
+                    {{ $t('createWallet.mew-wallet.download-today') }}
+                  </p>
                 </div>
               </div>
               <div class="bottom-image">
-                <img alt src="@/assets/images/etc/phones.png" />
+                <img alt src="@/assets/images/icons/snippet-mew-wallet.png" />
               </div>
             </b-tab>
             <b-tab

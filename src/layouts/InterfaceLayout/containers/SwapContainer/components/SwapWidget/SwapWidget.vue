@@ -257,7 +257,7 @@ import {
   ERC20
 } from '@/partners';
 
-const errorLogger = debug('v5:swapContainer');
+const errorLogger = debug('v5:swapContainer-widget');
 
 const toBigNumber = num => {
   return new BigNumber(num);
