@@ -1,14 +1,10 @@
-<template functional>
+<template>
   <div class="buttons-container">
-    <button class="reject" @click.prevent.stop="props.funcTwo">
-      {{ props.textTwo }}
+    <button :disabled="disabled" class="sign" @click.prevent.stop="funcOne">
+      {{ textOne }}
     </button>
-    <button
-      :disabled="props.disabled"
-      class="sign"
-      @click.prevent.stop="props.funcOne"
-    >
-      {{ props.textOne }}
+    <button class="reject" @click.prevent.stop="funcTwo">
+      {{ textTwo }}
     </button>
   </div>
 </template>

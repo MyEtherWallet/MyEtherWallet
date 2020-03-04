@@ -14,12 +14,6 @@
     <div class="accounts-container">
       <div class="account-container">
         <address-selection-component
-          :selected-account="selectedAccount"
-          :select-account="selectAccount"
-          :wallet-type="'burner'"
-          :address="null"
-        />
-        <address-selection-component
           v-for="(acc, idx) in accWithBal"
           :key="acc.address + idx"
           :address="acc.address"
@@ -29,15 +23,27 @@
           :select-account="selectAccount"
           :currency="network.type.name"
         />
-        <div v-if="accWithBal.length === 0" class=""></div>
+        <address-selection-component
+          :selected-account="selectedAccount"
+          :select-account="selectAccount"
+          :wallet-type="'burner'"
+          :address="null"
+        />
       </div>
     </div>
+    <p v-show="selectedAccount === 'burner'" class="warning">
+      {{ $t('mewcx.burner-warning') }}
+    </p>
     <accept-cancel-buttons
       :func-one="sendAccount"
       :func-two="rejectAction"
       :disabled="selectedAccount === ''"
-      text-one="Access"
-      text-two="Reject"
+      :text-one="
+        selectedAccount === 'burner'
+          ? 'mewcx.user-understand'
+          : $t('mewcx.access')
+      "
+      :text-two="$t('mewcx.reject')"
     />
   </div>
 </template>
@@ -45,15 +51,16 @@
 <script>
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { Misc, ExtensionHelpers } from '@/helpers';
+import { Misc, ExtensionHelpers, Wallet } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
 import AddressSelectionComponent from '../../components/AddressSelectionComponent';
 import AcceptCancelButtons from '../../components/AcceptCancelButtons';
+
 import {
   REJECT_MEW_CX_ACC,
   SELECTED_MEW_CX_ACC
 } from '@/builds/mewcx/cxHelpers/cxEvents.js';
-import { Wallet } from '@/helpers';
+
 export default {
   components: {
     'address-selection-component': AddressSelectionComponent,

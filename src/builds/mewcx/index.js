@@ -1,10 +1,21 @@
 import app from './app';
-import ExtensionBrowserAction from '@/layouts/ExtensionBrowserAction';
-import ExtensionWalletContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionWalletContainer';
-import ExtensionFavoritesContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionFavoritesContainer';
-import ExtensionDappsContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionDappsContainer';
-import ExtensionDappsItemContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionDappsItemContainer';
-import ExtensionDappContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionDappContainer';
+const ExtensionBrowserAction = () => import('@/layouts/ExtensionBrowserAction');
+const ExtensionWalletContainer = () =>
+  import(
+    '@/layouts/ExtensionBrowserAction/containers/ExtensionWalletContainer'
+  );
+const ExtensionFavoritesContainer = () =>
+  import(
+    '@/layouts/ExtensionBrowserAction/containers/ExtensionFavoritesContainer'
+  );
+const ExtensionDappsContainer = () =>
+  import('@/layouts/ExtensionBrowserAction/containers/ExtensionDappsContainer');
+const ExtensionDappsItemContainer = () =>
+  import(
+    '@/layouts/ExtensionBrowserAction/containers/ExtensionDappsItemContainer'
+  );
+const ExtensionDappContainer = () =>
+  import('@/layouts/ExtensionBrowserAction/containers/ExtensionDappContainer');
 
 const cxRoutes = [
   {
