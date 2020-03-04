@@ -61,7 +61,8 @@ import {
   KeepkeyWallet,
   TrezorWallet,
   BitBoxWallet,
-  SecalotWallet
+  SecalotWallet,
+  CoolWallet
 } from '@/wallets';
 import {
   LEDGER as LEDGER_TYPE,
@@ -69,7 +70,8 @@ import {
   BITBOX as BITBOX_TYPE,
   SECALOT as SECALOT_TYPE,
   KEEPKEY as KEEPKEY_TYPE,
-  XWALLET as XWALLET_TYPE
+  XWALLET as XWALLET_TYPE,
+  COOLWALLET as COOLWALLET_TYPE
 } from '@/wallets/bip44/walletTypes';
 export default {
   components: {
@@ -166,6 +168,14 @@ export default {
           disabled: false,
           msg: '',
           link: 'http://lddy.no/a4im'
+        },
+        {
+          name: COOLWALLET_TYPE,
+          imgPath: keepkey,
+          text: 'CoolWallet',
+          disabled: false,
+          msg: '',
+          link: 'http://lddy.no/a4im'
         }
       ]
     };
@@ -257,6 +267,14 @@ export default {
         case XWALLET_TYPE:
           this.openXwallet();
           this.$refs.hardware.hide();
+          break;
+        case COOLWALLET_TYPE:
+          this.$emit('hardwareRequiresPassword', {
+            walletConstructor: CoolWallet,
+            hardwareBrand: 'CoolWallet'
+          });
+          // console.log('HELLO THERE?!?!?!', CoolWallet);
+          // CoolWallet().then(console.log);
           break;
         default:
           Toast.responseHandler(
