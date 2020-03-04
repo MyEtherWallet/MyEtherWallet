@@ -3,7 +3,7 @@
     "option-text": "Use MEWconnect to access my wallet",
     "modal": {
       "title": "Access by MEWconnect",
-      "text1": "Please use MEW wallet or MEWconnect App to scan to QR code above",
+      "text1": "Please use MEW wallet or MEWconnect App to scan the QR code above",
       "text2": "Don't have the MEW wallet app? Download now."
     },
     "warning": "MEW wallet and MEWconnect apps are not compatible with iPads."
