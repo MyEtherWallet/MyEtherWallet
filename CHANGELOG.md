@@ -20,7 +20,7 @@
 
 - Fix save ui [#1972](https://github.com/MyEtherWallet/MyEtherWallet/pull/1972)
 - Partial fix to downloading keystore file in view wallet [#1997](https://github.com/MyEtherWallet/MyEtherWallet/pull/1997)
-- Fix aave bugs [#2018] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2018)
+- Fix aave bugs [#2018](https://github.com/MyEtherWallet/MyEtherWallet/pull/2018)
 
 ### Release v5.3.3-hotfix.2
 
