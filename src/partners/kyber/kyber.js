@@ -616,10 +616,10 @@ export default class Kyber {
   }
 
   getTokenTradeGas(fromCurrency, toCurrency, fromValueWei) {
-    if (
-      toCurrency === DAI &&
-      toBigNumber(fromValueWei).gt(this.convertToTokenWei('ETH', 499))
-    ) {
+    const shouldIncreaseGas = // check if value is likely in wei (should be, but checking anyway)
+      toBigNumber(fromValueWei).gt(this.convertToTokenWei('ETH', 499)) ||
+      toBigNumber(fromValueWei).gt(100000000);
+    if (toCurrency === DAI && shouldIncreaseGas) {
       return toBigNumber(1500000);
     }
     const fromGas = this.getTokenSwapGas(fromCurrency);

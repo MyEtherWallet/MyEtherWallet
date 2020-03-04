@@ -305,7 +305,6 @@ export default {
           underlyingBalance,
           availableLiquidity
         );
-
         if (
           this.userSummary.totalBorrowsETH !== '0' ||
           this.userSummary.totalFeesETH !== '0'
@@ -320,6 +319,7 @@ export default {
             return new BigNumber(maxAmountToWithdraw).toFixed(6);
           }
         }
+        return maxAmountToWithdraw;
       } else if (
         this.actionTitle === this.actionTitles.repay &&
         this.amount === this.token.user.currentBorrows
