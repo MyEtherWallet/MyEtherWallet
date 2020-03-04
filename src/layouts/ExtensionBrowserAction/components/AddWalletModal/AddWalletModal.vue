@@ -350,6 +350,7 @@ export default {
   data() {
     return {
       step: 0,
+      oldStepValue: 0,
       titles: TITLES,
       walletName: '',
       password: '',
@@ -461,6 +462,7 @@ export default {
       }
     },
     step(newVal, oldVal) {
+      this.oldStepValue = oldVal;
       this.loading = false;
       if (oldVal > newVal) {
         switch (oldVal) {
