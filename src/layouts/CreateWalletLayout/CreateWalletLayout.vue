@@ -79,7 +79,9 @@
                       />
                     </a>
                   </div>
-                  <p class="download-txt">{{ $t('createWallet.mew-wallet.download-today') }}</p>
+                  <p class="download-txt">
+                    {{ $t('createWallet.mew-wallet.download-today') }}
+                  </p>
                 </div>
               </div>
               <div class="bottom-image">

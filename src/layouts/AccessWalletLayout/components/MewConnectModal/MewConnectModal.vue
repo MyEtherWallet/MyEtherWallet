@@ -37,7 +37,11 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img alt src="~@/assets/images/icons/button-google-play-color.png" height="35" />
+            <img
+              alt
+              src="~@/assets/images/icons/button-google-play-color.png"
+              height="35"
+            />
           </a>
           <!-- need to change url -->
           <a
