@@ -31,12 +31,20 @@
           </template>
           <b-dropdown-text
             v-if="walletType !== 'watchOnly'"
-            @click.stop="openPasswordModal('access')"
+            @click.stop="
+              () => {
+                openPasswordModal('access');
+              }
+            "
             >Access</b-dropdown-text
           >
           <b-dropdown-text
             v-if="walletType !== 'watchOnly'"
-            @click.stop="openPasswordModal('view')"
+            @click.stop="
+              () => {
+                openPasswordModal('view');
+              }
+            "
             >View</b-dropdown-text
           >
           <b-dropdown-text @click="edit">Rename</b-dropdown-text>
@@ -50,7 +58,11 @@
             'fa fa-lg',
             !favorited ? 'fa-heart-o' : 'fa-heart heart-color'
           ]"
-          @click.stop="addToFavorites(address, nickname)"
+          @click.stop="
+            () => {
+              addToFavorites(address, nickname);
+            }
+          "
         />
       </div>
     </div>
@@ -180,36 +192,6 @@
           >
             <td>
               <div class="name-container">
-                <!-- <div class="token-icon">
-                  <img
-                    v-if="
-                      retrieveLogo(
-                        token.tokenMew.address,
-                        token.tokenMew.symbol
-                      ).includes('.png')
-                    "
-                    :src="
-                      retrieveLogo(
-                        token.tokenMew.address,
-                        token.tokenMew.symbol
-                      )
-                    "
-                  />
-                  <svg
-                    v-if="
-                      retrieveLogo(
-                        token.tokenMew.address,
-                        token.tokenMew.symbol
-                      ).includes('.svg')
-                    "
-                    :xmlns="
-                      retrieveLogo(
-                        token.tokenMew.address,
-                        token.tokenMew.symbol
-                      )
-                    "
-                  />
-                </div> -->
                 <p>
                   {{ token.tokenMew.name }}
                   ({{ token.tokenMew.symbol }})
@@ -272,6 +254,7 @@
       @password="e => (password = e)"
     />
     <password-only-modal
+      v-if="wallet !== 'watchOnly'"
       ref="passwordOnlyModal"
       :path="path"
       :valid-input="validInput"
@@ -279,6 +262,7 @@
       @password="e => (password = e)"
     />
     <verify-details-modal
+      v-if="wallet !== 'watchOnly'"
       ref="verifyWalletModal"
       :wallet="wallet"
       :usd="usd"
@@ -381,7 +365,10 @@ export default {
       );
     },
     file() {
-      return JSON.parse(JSON.parse(this.wallet).priv);
+      if (this.walletType !== 'watchOnly') {
+        return JSON.parse(JSON.parse(this.wallet).priv);
+      }
+      return {};
     },
     showLowBalance() {
       const lessThan = new BigNumber(this.balance).lte(0.05);

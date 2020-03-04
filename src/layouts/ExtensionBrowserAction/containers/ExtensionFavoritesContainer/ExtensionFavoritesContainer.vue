@@ -24,18 +24,19 @@
       </div>
     </div>
     <div v-else>
-      <wallet-info-component
-        v-for="wallet in searchResult"
-        :key="wallet.address"
-        :usd="ethPrice"
-        :address="wallet.address"
-        :balance="wallet.balance"
-        :wallet="wallet.wallet"
-        :nickname="wallet.nickname"
-        :wallet-type="wallet.type"
-        :prices="tokenPrices"
-        page="favorites"
-      />
+      <div v-for="wallet in searchResult" :key="wallet.address + 'favorites'">
+        <wallet-info-component
+          :prices="tokenPrices"
+          :usd="ethPrice"
+          :address="wallet.address"
+          :balance="wallet.balance"
+          :wallet="wallet.wallet"
+          :nickname="wallet.nickname"
+          :wallet-type="wallet.type"
+          :wallet-token="wallet.tokenBalance"
+          page="favorites"
+        />
+      </div>
     </div>
   </extension-browser-action-wrapper>
 </template>
