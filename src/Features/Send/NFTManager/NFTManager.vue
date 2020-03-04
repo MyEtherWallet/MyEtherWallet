@@ -17,7 +17,6 @@
 <script>
 import Spacer from '@/components/Common/Spacer';
 import SendTransaction from './SendTransaction';
-
 import Network from '@/layouts/Features/components/SideInfo/Network';
 import Swap from '@/layouts/Features/components/SideInfo/Swap';
 
@@ -30,7 +29,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables.scss';
-</style>

@@ -46,8 +46,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables';
-
 .ad2 {
   background: linear-gradient(90deg, #24a2ca 0%, #32bfa5 100%);
   padding: 80px 0;
