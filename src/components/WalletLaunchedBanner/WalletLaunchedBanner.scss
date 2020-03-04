@@ -2,11 +2,11 @@
 
 .footer-banner-expanded {
   flex-direction: row;
-  height: 200px;
+  min-height: 200px;
 }
 
 .footer-banner {
-  height: 88px;
+  min-height: 88px;
 }
 
 .bottom-space {
@@ -26,9 +26,13 @@
   position: sticky;
   text-align: center;
   width: 100%;
+  z-index: 100;
 
   .title-row {
     display: flex;
+    span {
+      height: 100%;
+    }
   }
 
   .center-content {
@@ -102,10 +106,78 @@
   }
 }
 
-@media screen and (max-width: 1160px) {
+@media screen and (max-width: 1156px) {
   .footer-banner-container {
     .center-content {
       flex-direction: column;
+
+      .title-row {
+        span {
+          margin-top: 20px;
+          margin-bottom: 10px;
+        }
+      }
     }
+
+    .btn-container {
+      margin-bottom: 20px;
+      margin-left: 0;
+    }
+  }
+}
+
+@media screen and (max-width: 1073px) {
+  .footer-banner-expanded {
+    flex-direction: column;
+    min-height: 415px !important;
+  }
+
+  .footer-banner-container {
+    .center-content-expanded {
+      align-items: center;
+      margin-right: 0;
+    }
+  }
+}
+
+@media screen and (max-width: 722px) {
+  .footer-banner-container {
+    min-height: 200px;
+    .detail-content {
+      margin-right: 13px;
+    }
+    .center-content, .center-content-expanded {
+      .title-row {
+        span {
+          font-size: 20px;
+        }
+      }
+    }
+
+    .detail-content {
+      margin-top: 15px;
+      top: 0;
+    }
+  }
+}
+
+@media screen and (max-width: 456px) {
+  .footer-banner-expanded {
+    min-height: 450px !important;
+  }
+  
+  .bottom-space {
+     margin-bottom: 15px;
+  }
+
+  .footer-banner-container {
+    .btn-container > a {
+      img {
+        height: 30px;
+        margin-right: 5px;
+        width: 96px;
+      }
+    }
+
   }
 }
