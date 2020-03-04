@@ -23,19 +23,18 @@
       <b-carousel
         v-model="slide"
         :interval="adInterval"
-        controls
         indicators
         background="#fff"
         @sliding-start="onSlideStart"
         @sliding-end="onSlideEnd"
       >
         <b-carousel-slide>
-          <mew-connect-ad />
+          <mew-wallet-ad />
         </b-carousel-slide>
 
-        <b-carousel-slide>
-          <buy-eth-ad />
-        </b-carousel-slide>
+<!--        <b-carousel-slide>-->
+<!--          <buy-eth-ad />-->
+<!--        </b-carousel-slide>-->
       </b-carousel>
     </div>
   </div>
@@ -47,7 +46,8 @@ import ads from './adComponents';
 export default {
   components: {
     'buy-eth-ad': ads.buyEthAd,
-    'mew-connect-ad': ads.mewConnectAd
+    'mew-connect-ad': ads.mewConnectAd,
+    'mew-wallet-ad': ads.mewWalletAd
   },
   props: {},
   data() {
