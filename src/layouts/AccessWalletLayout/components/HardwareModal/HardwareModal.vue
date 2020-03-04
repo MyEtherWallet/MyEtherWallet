@@ -65,7 +65,8 @@ import {
   TrezorWallet,
   BitBoxWallet,
   SecalotWallet,
-  BCVaultWallet
+  BCVaultWallet,
+  CoolWallet
 } from '@/wallets';
 import {
   LEDGER as LEDGER_TYPE,
@@ -75,7 +76,8 @@ import {
   KEEPKEY as KEEPKEY_TYPE,
   FINNEY as FINNEY_TYPE,
   XWALLET as XWALLET_TYPE,
-  BCVAULT as BCVAULT_TYPE
+  BCVAULT as BCVAULT_TYPE,
+  COOLWALLET as COOLWALLET_TYPE
 } from '@/wallets/bip44/walletTypes';
 export default {
   components: {
@@ -184,6 +186,14 @@ export default {
           disabled: false,
           msg: '',
           link: 'https://bc-vault.com/?wpam_id=53'
+        },
+        {
+          name: COOLWALLET_TYPE,
+          imgPath: keepkey,
+          text: 'CoolWallet',
+          disabled: false,
+          msg: '',
+          link: 'http://lddy.no/a4im'
         }
       ]
     };
@@ -289,6 +299,14 @@ export default {
             .catch(e => {
               BCVaultWallet.errorHandler(e);
             });
+          break;
+        case COOLWALLET_TYPE:
+          this.$emit('hardwareRequiresPassword', {
+            walletConstructor: CoolWallet,
+            hardwareBrand: 'CoolWallet'
+          });
+          // console.log('HELLO THERE?!?!?!', CoolWallet);
+          // CoolWallet().then(console.log);
           break;
         default:
           Toast.responseHandler(
