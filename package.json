@@ -141,7 +141,7 @@
     "u2f-api": "1.1.1",
     "uglify-es": "3.3.9",
     "uuid": "7.0.0",
-    "vue-i18n": "8.15.3",
+    "vue-i18n": "8.15.4",
     "vue-template-compiler": "2.6.11",
     "vue-worker": "1.2.1",
     "wallet-address-validator": "0.2.4",

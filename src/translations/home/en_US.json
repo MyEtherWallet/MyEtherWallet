@@ -69,5 +69,14 @@
     "mewtopia": "MEWtopia",
     "instagram": "Instagram"
   },
-  "lost-title": "Oops! Looks like you're lost."
+  "lost-title": "Oops! Looks like you're lost.",
+  "mew-wallet-modal": {
+    "title": "Official MEW wallet App is now available!",
+    "text": "Buy, hold and send Ether and tokens. Explore Ethereum on your mobile. {learn-more}",
+    "learn-more": "Learn more",
+    "footer-text": "Download our free app today!",
+    "new": "new",
+    "detail": "Detail",
+    "hide": "Hide"
+  }
 }

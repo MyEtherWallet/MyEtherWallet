@@ -352,12 +352,12 @@ export default {
 
 <style lang="scss">
 .action-modal {
+  .modal-body {
+    padding: 0 !important;
+  }
   .modal-dialog {
     max-width: 800px !important;
   }
 }
 
-.modal-body {
-  padding: 0 !important;
-}
 </style>
