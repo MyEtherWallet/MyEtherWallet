@@ -100,7 +100,11 @@ chrome.storage.onChanged.addListener(items => {
         JSON.stringify(currentNotifications)
       );
     }
-    if (item === 'defNetwork' && item.defNetwork.hasOwnProperty('newValue')) {
+
+    if (
+      items[item] === 'defNetwork' &&
+      items[item].defNetwork.hasOwnProperty('newValue')
+    ) {
       const networkProps = JSON.parse(
         Misc.stripTags(items['defNetwork'].newValue)
       );
