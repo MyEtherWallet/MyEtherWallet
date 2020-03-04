@@ -6,8 +6,9 @@ a {
 }
 
 .background-block {
+  background-color: $light-green-7;
   background-image: url('~@/assets/images/ads/mewwallet.png');
-  background-size: 95%;
+  background-size: 117%;
   background-clip: border-box;
   background-position-x: center;
   background-position-y: top;
@@ -15,14 +16,13 @@ a {
   position: relative;
   height: 137px;
   width: 100%;
-  //padding: 20px;
   display: flex;
   align-items: center;
   flex-direction: row;
 
   .inner-content {
     position: relative;
-    padding-left: 20px;
+    margin-left: 11px;
 
     .image-content {
       padding-left: 5px;
@@ -35,9 +35,6 @@ a {
 
     .text-content {
       position: relative;
-      padding-left: 15px;
-
-      //padding: 10px 35px 10px;
 
       h3,
       p {
@@ -45,10 +42,8 @@ a {
       }
 
       h3 {
-        //font-size: 1vw;
         font-weight: 600;
         margin-bottom: 5px;
-        //text-shadow: 1px 2px 0 $white;
 
         @media all and (min-width: 1900px) {
           font-size: 33px;
@@ -59,10 +54,10 @@ a {
       }
 
       p {
-        font-size: 1vw;
+        font-size: 20px;
         font-weight: 600;
         line-height: 1vw;
-        //text-shadow: 1px 2px 0 $white;
+        margin-top: 3px;
 
         @media all and (min-width: 1900px) {
           font-size: 19px;
@@ -74,27 +69,20 @@ a {
         }
       }
 
-      span .new-label {
-        height: 20px;
-        width: 40px;
-        background-color: indianred;
+      .new-label {
+        background-color: $red-11;
+        border-radius: 3px;
+        color: $white;
+        font-size: 10px;
+        margin-left: 5px;
+        margin-top: 4px;
+        padding: 3px;
+        position: absolute;
+        text-transform: uppercase;
+        top: 0;
       }
     }
   }
-}
-
-//.app-store {
-//  background-image: url('~@/assets/images/icons/button-app-store.png');
-//}
-
-.content-block {
-  position: relative;
-  height: 137px;
-  width: 100%;
-  //padding: 20px;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
 }
 
 .flex-vertical-center {
@@ -107,14 +95,13 @@ a {
 
   .bottom-block {
     margin-top: 15px;
-    margin-left: 5px;
     display: flex;
     align-items: center;
     flex-direction: row;
     img {
       height: 25px;
       width: initial;
-      margin-left: 10px;
+      margin-right: 5px;
     }
   }
 }
