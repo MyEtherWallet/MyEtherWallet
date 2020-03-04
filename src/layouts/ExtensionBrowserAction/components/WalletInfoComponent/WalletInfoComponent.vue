@@ -176,9 +176,6 @@
               CHANGE (24H)
             </th>
             <th>
-              CHART(24H)
-            </th>
-            <th>
               AMOUNT
             </th>
             <th>
@@ -222,7 +219,6 @@
                 />
               </p>
             </td>
-            <td>CHART WIP</td>
             <td>{{ token.tokenMew.balance }}</td>
             <td>
               {{

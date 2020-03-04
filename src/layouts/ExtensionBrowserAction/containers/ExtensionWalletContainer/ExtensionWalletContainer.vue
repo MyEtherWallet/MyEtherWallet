@@ -344,6 +344,7 @@ export default {
         // eslint-disable-next-line
           src: require(`@/assets/images/networks/eth-logo.svg`)
       };
+
       return tb
         .getBalance(address)
         .then(res => {
