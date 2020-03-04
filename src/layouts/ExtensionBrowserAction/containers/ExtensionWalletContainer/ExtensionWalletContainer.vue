@@ -305,7 +305,7 @@ export default {
           await this.getBalance(address)
             .then(res => {
               const locBalance = web3utils.fromWei(res);
-              account['balance'] = locBalance;
+              account['balance'] = new BigNumber(locBalance).toString();
               balance = balance.plus(locBalance);
               this.totalBalance = balance.toString();
             })

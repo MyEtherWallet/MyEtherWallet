@@ -234,6 +234,11 @@ export default {
 
       signPromise
         .then(_response => {
+          console.log(
+            'gets the signed transaction',
+            _response,
+            console.log(resolve)
+          );
           this.signedTxObject = _response;
           this.signedTx = this.signedTxObject.rawTransaction;
         })
