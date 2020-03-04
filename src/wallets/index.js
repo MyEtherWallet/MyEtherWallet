@@ -3,7 +3,8 @@ import {
   TrezorWallet,
   BitBoxWallet,
   SecalotWallet,
-  KeepkeyWallet
+  KeepkeyWallet,
+  CoolWallet
 } from './hardware';
 import WalletInterface from './WalletInterface';
 import { MnemonicWallet } from './software';
@@ -15,6 +16,7 @@ export {
   BitBoxWallet,
   SecalotWallet,
   KeepkeyWallet,
+  CoolWallet,
   MewConnectWallet,
   WalletInterface,
   MnemonicWallet
