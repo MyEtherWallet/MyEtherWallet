@@ -1,0 +1,125 @@
+@import '~@/scss/GlobalVariables';
+
+a {
+  text-decoration: none;
+  display: block;
+}
+
+.background-block {
+  background-image: url('~@/assets/images/ads/mewwallet.png');
+  background-size: 95%;
+  background-clip: border-box;
+  background-position-x: center;
+  background-position-y: top;
+  background-repeat: no-repeat;
+  position: relative;
+  height: 137px;
+  width: 100%;
+  //padding: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+
+  .inner-content {
+    position: relative;
+    padding-left: 20px;
+
+    .image-content {
+      padding-left: 5px;
+      img {
+        height: 25px;
+        width: initial;
+        padding-left: 10px;
+      }
+
+
+    }
+
+    .text-content {
+      position: relative;
+      padding-left: 15px;
+
+      //padding: 10px 35px 10px;
+
+      h3,
+      p {
+        color: $black;
+      }
+
+      h3 {
+        //font-size: 1vw;
+        font-weight: 600;
+        margin-bottom: 5px;
+        //text-shadow: 1px 2px 0 $white;
+
+        @media all and (min-width: 1900px) {
+          font-size: 33px;
+        }
+        @media all and (max-width: 1270px) {
+          font-size: 27px;
+        }
+      }
+
+      p {
+        font-size: 1vw;
+        font-weight: 600;
+        line-height: 1vw;
+        //text-shadow: 1px 2px 0 $white;
+
+        @media all and (min-width: 1900px) {
+          font-size: 19px;
+          line-height: 22px;
+        }
+        @media all and (max-width: 1270px) {
+          font-size: 16px;
+          line-height: 22px;
+        }
+      }
+
+      span .new-label{
+        height: 20px;
+        width: 40px;
+        background-color: indianred;
+      }
+    }
+  }
+
+
+}
+
+
+//.app-store {
+//  background-image: url('~@/assets/images/icons/button-app-store.png');
+//}
+
+.content-block {
+  position: relative;
+  height: 137px;
+  width: 100%;
+  //padding: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.flex-vertical-center {
+  margin-left: 10px;
+  .top-block {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24px;
+  }
+
+  .bottom-block {
+    margin-top: 15px;
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    img {
+      height: 25px;
+      width: initial;
+      margin-left: 10px;
+    }
+  }
+}
