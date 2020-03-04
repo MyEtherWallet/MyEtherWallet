@@ -2,6 +2,7 @@
 
 ### Bugs
 
+- Send Offline helper transaction fee [#2058](https://github.com/MyEtherWallet/MyEtherWallet/pull/2058)
 - Add burner address warning, redo store so all addresses currently stored are uniform [#2049](https://github.com/MyEtherWallet/MyEtherWallet/pull/2049)
 - Revert one time check [#2053](https://github.com/MyEtherWallet/MyEtherWallet/pull/2053)
 - Fix Buy ETH Widget bug [#2046](https://github.com/MyEtherWallet/MyEtherWallet/pull/2046)
