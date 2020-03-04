@@ -2,6 +2,10 @@
 
 - Fix network changer [#2054] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2054)
 
+### Devop
+
+- WS reconnect on disconnect [#2057](https://github.com/MyEtherWallet/MyEtherWallet/pull/2057)
+
 ### Release v5.4.1
 
 ### Bugs
