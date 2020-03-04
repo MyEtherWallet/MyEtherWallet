@@ -43,7 +43,7 @@ export default {
 @import '@/assets/styles/GlobalVariables.scss';
 
 .side-menu-element {
-  box-shadow: 0 0 20px #00000022;
+  box-shadow: 0 0 20px #0000002f;
 }
 
 .wrapper {
