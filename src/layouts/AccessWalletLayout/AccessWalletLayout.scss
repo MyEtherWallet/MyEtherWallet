@@ -28,7 +28,6 @@
   margin: 0 auto;
   position: relative;
   text-align: center;
-  overflow-y: auto;
 
   @media all and (min-width: calc(#{$tablet-width} + 1px)) {
     grid-template-columns: 1fr 1fr 1fr 1fr;
