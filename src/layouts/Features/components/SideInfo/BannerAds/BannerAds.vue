@@ -31,7 +31,3 @@ export default {
   components: { WhiteSheet, Ad1, Ad2, Ad3 }
 };
 </script>
-
-<style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables.scss';
-</style>

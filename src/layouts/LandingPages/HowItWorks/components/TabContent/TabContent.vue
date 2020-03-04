@@ -39,5 +39,3 @@ export default {
   components: { Tabs, Send, Swap, Dapps, Tokens, More }
 };
 </script>
-
-<style lang="scss" scoped></style>

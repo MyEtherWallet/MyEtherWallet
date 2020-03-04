@@ -4125,7 +4125,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables.scss';
 .v-btn-toggle--group > .v-btn.v-btn,
 .chart-button-group .v-btn:before {
   border-radius: 5px;

@@ -32,7 +32,3 @@ export default {
   components: { WhiteSheet, BlockTitle, SoloButton }
 };
 </script>
-
-<style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables.scss';
-</style>
