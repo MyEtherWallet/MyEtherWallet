@@ -76,7 +76,10 @@
                     </p>
                   </div>
                 </div>
-                <div v-for="wallet in searchResult" :key="wallet.address">
+                <div
+                  v-for="wallet in myWalletsSearchResult"
+                  :key="wallet.address"
+                >
                   <keep-alive>
                     <wallet-info-component
                       :prices="tokenPrices"
@@ -116,19 +119,20 @@
                 v-if="watchOnlyAddresses.length > 0"
                 class="wallet-display-container"
               >
-                <div v-for="wallet in searchResult" :key="wallet.address">
-                  <keep-alive>
-                    <wallet-info-component
-                      :prices="tokenPrices"
-                      :usd="ethPrice"
-                      :address="wallet.address"
-                      :balance="wallet.balance"
-                      :wallet="wallet.wallet"
-                      :nickname="wallet.nickname"
-                      :wallet-type="wallet.type"
-                      :wallet-token="wallet.tokenBalance"
-                    />
-                  </keep-alive>
+                <div
+                  v-for="wallet in watchOnlySearchResult"
+                  :key="wallet.address"
+                >
+                  <wallet-info-component
+                    :prices="tokenPrices"
+                    :usd="ethPrice"
+                    :address="wallet.address"
+                    :balance="wallet.balance"
+                    :wallet="wallet.wallet"
+                    :nickname="wallet.nickname"
+                    :wallet-type="wallet.type"
+                    :wallet-token="wallet.tokenBalance"
+                  />
                 </div>
               </div>
               <div v-else class="wallet-display-container">
@@ -225,17 +229,21 @@ export default {
       );
       return Misc.toDollar(totalDollarAmt.toNumber());
     },
-    searchResult() {
+    myWalletsSearchResult() {
       if (this.search !== '') {
-        if (this.showMyWallets === 0) {
-          const searchedArray = this.myWallets.filter(item => {
-            return (
-              item.address.toLowerCase().includes(this.search.toLowerCase()) ||
-              item.nickname.toLowerCase().includes(this.search.toLowerCase())
-            );
-          });
-          return searchedArray;
-        }
+        const searchedArray = this.myWallets.filter(item => {
+          return (
+            item.address.toLowerCase().includes(this.search.toLowerCase()) ||
+            item.nickname.toLowerCase().includes(this.search.toLowerCase())
+          );
+        });
+        return searchedArray;
+      }
+
+      return this.myWallets;
+    },
+    watchOnlySearchResult() {
+      if (this.search !== '') {
         const searchedArray = this.watchOnlyAddresses.filter(item => {
           return (
             item.address.toLowerCase().includes(this.search.toLowerCase()) ||
@@ -244,9 +252,7 @@ export default {
         });
         return searchedArray;
       }
-      return this.showMyWallets === 0
-        ? this.myWallets
-        : this.watchOnlyAddresses;
+      return this.watchOnlyAddresses;
     },
     convertedBalance() {
       return `$ ${new BigNumber(this.ethPrice)
@@ -307,7 +313,9 @@ export default {
               const locBalance = web3utils.fromWei(res);
               account['balance'] = new BigNumber(locBalance).toString();
               balance = balance.plus(locBalance);
-              this.totalBalance = balance.toString();
+              if (parsedItemWallet.type === 'wallet') {
+                this.totalBalance = balance.toString();
+              }
             })
             .catch(() => {
               Toast.responseHandler(
