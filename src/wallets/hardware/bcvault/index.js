@@ -80,23 +80,26 @@ class BCVault {
           false
         )
         .catch(errorHandler);
-      const resultTx = new Transaction(result);
-      tx.v = getBufferFromHex(sanitizeHex(resultTx.v.toString('hex')));
-      tx.r = getBufferFromHex(sanitizeHex(resultTx.r.toString('hex')));
-      tx.s = getBufferFromHex(sanitizeHex(resultTx.s.toString('hex')));
-      const signedChainId = calculateChainIdFromV(tx.v);
-      if (signedChainId !== networkId)
-        Toast.responseHandler(
-          new Error(
-            'Invalid networkId signature returned. Expected: ' +
-              networkId +
-              ', Got: ' +
-              signedChainId,
-            'InvalidNetworkId'
-          ),
-          false
-        );
-      return getSignTransactionObject(tx);
+      if (result) {
+        const resultTx = new Transaction(result);
+        tx.v = getBufferFromHex(sanitizeHex(resultTx.v.toString('hex')));
+        tx.r = getBufferFromHex(sanitizeHex(resultTx.r.toString('hex')));
+        tx.s = getBufferFromHex(sanitizeHex(resultTx.s.toString('hex')));
+        const signedChainId = calculateChainIdFromV(tx.v);
+        if (signedChainId !== networkId)
+          Toast.responseHandler(
+            new Error(
+              'Invalid networkId signature returned. Expected: ' +
+                networkId +
+                ', Got: ' +
+                signedChainId,
+              'InvalidNetworkId'
+            ),
+            false
+          );
+        return getSignTransactionObject(tx);
+      }
+      return result;
     };
     const msgSigner = async msg => {
       const result = await this.bcWallet
@@ -107,15 +110,18 @@ class BCVault {
           msg
         )
         .catch(errorHandler);
-      const signature = result.substr(2);
-      const r = '0x' + signature.slice(0, 64);
-      const s = '0x' + signature.slice(64, 128);
-      const v = '0x' + signature.slice(128, 130);
-      return Buffer.concat([
-        getBufferFromHex(sanitizeHex(r)),
-        getBufferFromHex(sanitizeHex(s)),
-        getBufferFromHex(sanitizeHex(v))
-      ]);
+      if (result) {
+        const signature = result.substr(2);
+        const r = '0x' + signature.slice(0, 64);
+        const s = '0x' + signature.slice(64, 128);
+        const v = '0x' + signature.slice(128, 130);
+        return Buffer.concat([
+          getBufferFromHex(sanitizeHex(r)),
+          getBufferFromHex(sanitizeHex(s)),
+          getBufferFromHex(sanitizeHex(v))
+        ]);
+      }
+      return result;
     };
 
     return new HDWalletInterface(

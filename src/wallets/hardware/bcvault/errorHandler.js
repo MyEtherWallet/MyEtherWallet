@@ -17,11 +17,13 @@ export default err => {
       `${Vue.$i18n.t(WARNING[`jsError${err.jsError}`])}`,
       Toast.WARN
     );
+    return;
   } else if (err.hasOwnProperty('BCHttpResponse')) {
     // request succeded but the device returned error
     Toast.responseHandler(
       `${Vue.$i18n.t(ERRORS[err.BCHttpRespomse.errorCodeHex])}`
     );
+    return;
   } else if (err.hasOwnProperty('HttpResponse')) {
     // request when the server errors
     Toast.responseHandler(err.HttpResponse, false);
@@ -29,6 +31,7 @@ export default err => {
     Toast.responseHandler(
       ERRORS[`daemonError${err.DaemonHttpResponse.daemonError}`]
     );
+    return;
   } else {
     Toast.responseHandler(err, false);
   }

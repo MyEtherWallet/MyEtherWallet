@@ -165,6 +165,7 @@ import {
   MNEMONIC as MNEMONIC_TYPE,
   BCVAULT as BC_VAULT
 } from '@/wallets/bip44/walletTypes';
+const BCVaultWalletInstance = BCVaultWallet();
 export default {
   name: 'Interface',
   components: {
@@ -364,18 +365,13 @@ export default {
             .catch(KeepkeyWallet.errorHandler);
           break;
         case BC_VAULT:
-          BCVaultWallet()
-            .init()
+          BCVaultWalletInstance.init()
             .then(res => {
               if (res.length > 1) {
                 this.bcVaultWallets = res;
                 this.$refs.bcvault.$refs.bcvaultAddress.show();
               } else {
                 BCVaultWallet.erroHandler({ jsError: 'mew1' });
-                // Toast.responseHandler(
-                //   'bcvaultErrors.only-one-wallet',
-                //   Toast.WARN
-                // );
               }
             })
             .catch(e => {
@@ -392,7 +388,7 @@ export default {
       }
     },
     bcVaultCb(address) {
-      const walletInstance = BCVaultWallet().getAccount(address);
+      const walletInstance = BCVaultWalletInstance.getAccount(address);
       this.decryptWallet([walletInstance]).then(() => {
         this.$refs.bcvault.$refs.bcvaultAddress.hide();
       });
