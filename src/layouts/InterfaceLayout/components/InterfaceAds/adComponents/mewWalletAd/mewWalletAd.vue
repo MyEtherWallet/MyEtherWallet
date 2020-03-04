@@ -1,6 +1,5 @@
 <template>
   <div class="background-block">
-
     <div class="flex-vertical-center">
       <a
         href="https://mewconnect.myetherwallet.com/#/"
@@ -19,7 +18,6 @@
             <img :src="appStore" />
           </div>
         </div>
-
       </a>
     </div>
   </div>

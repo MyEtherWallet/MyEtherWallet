@@ -97,4 +97,9 @@
   .popover-container {
     margin-left: 5px;
   }
+
+  .download-txt {
+    text-align: center;
+    font-weight: 600;
+  }
 } // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)
