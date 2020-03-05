@@ -1,9 +1,12 @@
 <template>
-  <div>
+  <div class="position--relative">
     <ChangeAddress :open="openChangeAddress" :close="closeChangeAddress" />
     <v-btn icon @click="openChangeAddress = true">
       <img src="@/assets/images/Icons/notifications.svg" />
     </v-btn>
+    <div class="notification-count d-flex align-center justify-center">
+      3
+    </div>
   </div>
 </template>
 
@@ -27,10 +30,15 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/GlobalVariables.scss';
-
-a {
-  text-decoration: none;
-  color: $emerald !important;
-  font-weight: 500;
+.notification-count {
+  position: absolute;
+  top: 0;
+  right: -10px;
+  border-radius: 100%;
+  background-color: red;
+  width: 18px;
+  height: 18px;
+  color: white;
+  font-size: 12px;
 }
 </style>

@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="ml-auto d-flex align-center">
-      <MEWconnect class="mr-3" />
+      <MEWconnect class="mr-4" />
       <Notifications />
     </div>
   </div>
