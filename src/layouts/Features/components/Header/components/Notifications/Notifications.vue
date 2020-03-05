@@ -1,7 +1,9 @@
 <template>
   <div>
     <ChangeAddress :open="openChangeAddress" :close="closeChangeAddress" />
-    <v-btn @click="openChangeAddress = true">A</v-btn>
+    <v-btn icon @click="openChangeAddress = true">
+      <img src="@/assets/images/Icons/notifications.svg" />
+    </v-btn>
   </div>
 </template>
 
