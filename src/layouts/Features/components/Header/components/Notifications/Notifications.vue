@@ -4,7 +4,10 @@
     <v-btn icon @click="openChangeAddress = true">
       <img src="@/assets/images/Icons/notifications.svg" />
     </v-btn>
-    <div class="notification-count d-flex align-center justify-center">
+    <div
+      class="notification-count cursor--pointer d-flex align-center justify-center"
+      @click="openChangeAddress = true"
+    >
       3
     </div>
   </div>
