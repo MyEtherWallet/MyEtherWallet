@@ -22,7 +22,7 @@ export default {
 @import '@/assets/styles/GlobalVariables.scss';
 
 .mew-connect-text div {
-  font-size: 10px;
+  font-size: 11px;
   line-height: 13px;
   color: $emerald;
 }
