@@ -31,9 +31,8 @@
           <div v-else @click="openIpadModal">
             <img alt src="~@/assets/images/icons/appstore.svg" height="35" />
           </div>
-          <!-- need to change url -->
           <a
-            href="http://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
+            href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -43,9 +42,8 @@
               height="35"
             />
           </a>
-          <!-- need to change url -->
           <a
-            href="http://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
+            href="https://galaxystore.samsung.com/detail/com.myetherwallet.mewwallet?session_id=W_29942474fffbd49127ee223d697f1518"
             target="_blank"
             rel="noopener noreferrer"
           >

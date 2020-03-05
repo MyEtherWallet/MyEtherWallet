@@ -56,11 +56,13 @@ export default {
         },
         {
           src: googlePlay,
-          url: ''
+          url:
+            'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet'
         },
         {
           src: galaxyStore,
-          url: ''
+          url:
+            'https://galaxystore.samsung.com/detail/com.myetherwallet.mewwallet?session_id=W_29942474fffbd49127ee223d697f1518'
         }
       ]
     };

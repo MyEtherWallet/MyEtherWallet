@@ -72,7 +72,7 @@ export default {
           content: 'home.faqs.mew-wallet.text',
           linkText: 'home.faqs.button-learn-more',
           link:
-            'https://kb.myetherwallet.com/getting-started/creating-a-new-wallet-on-myetherwallet.html'
+            'https://kb.myetherwallet.com/en/mewwallet/mewwallet-user-guide/'
         },
         faq2: {
           open: false,
