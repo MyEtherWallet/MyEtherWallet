@@ -12,14 +12,16 @@
       </div>
     </div>
     <div class="ml-auto">
-      MEWconnect
+      <Notifications />
     </div>
   </div>
 </template>
 
 <script>
+import Notifications from '@/layouts/Features/components/Header/components/Notifications';
+
 export default {
-  components: {}
+  components: { Notifications }
 };
 </script>
 
