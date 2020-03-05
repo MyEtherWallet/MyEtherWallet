@@ -11,7 +11,8 @@
         </div>
       </div>
     </div>
-    <div class="ml-auto">
+    <div class="ml-auto d-flex align-center">
+      <MEWconnect class="mr-3" />
       <Notifications />
     </div>
   </div>
@@ -19,9 +20,10 @@
 
 <script>
 import Notifications from '@/layouts/Features/components/Header/components/Notifications';
+import MEWconnect from '@/layouts/Features/components/Header/components/MEWconnect';
 
 export default {
-  components: { Notifications }
+  components: { Notifications, MEWconnect }
 };
 </script>
 
