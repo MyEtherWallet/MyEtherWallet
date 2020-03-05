@@ -26,10 +26,18 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img alt src="~@/assets/images/icons/appstore.svg" height="35" />
+            <img
+              alt
+              src="~@/assets/images/icons/button-app-store.png"
+              height="35"
+            />
           </a>
           <div v-else @click="openIpadModal">
-            <img alt src="~@/assets/images/icons/appstore.svg" height="35" />
+            <img
+              alt
+              src="~@/assets/images/icons/button-app-store.png"
+              height="35"
+            />
           </div>
           <a
             href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet"
