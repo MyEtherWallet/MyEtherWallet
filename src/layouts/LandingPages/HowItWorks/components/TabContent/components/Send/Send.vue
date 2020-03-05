@@ -12,7 +12,7 @@
         <BlockTitle :data="titleData" class="mb-8 pl-12" />
         <div class="mb-6 d-flex">
           <div class="mr-3">
-            <v-img src="@/assets/images/Common/Icons/IconSet2/Send.svg" />
+            <v-img src="@/assets/images/icons/mew/icon-send-mew.svg" />
           </div>
           <div>
             <div class="mb-1 font-weight-bold subtitle-1">
@@ -27,7 +27,7 @@
 
         <div class="mb-6 d-flex">
           <div class="mr-3">
-            <v-img src="@/assets/images/Common/Icons/IconSet2/Offline.svg" />
+            <v-img src="@/assets/images/icons/mew/icon-offline-mew.svg" />
           </div>
           <div>
             <div class="mb-1 font-weight-bold subtitle-1">
@@ -42,7 +42,7 @@
 
         <div class="d-flex">
           <div class="mr-3">
-            <v-img src="@/assets/images/Common/Icons/IconSet2/NFT.svg" />
+            <v-img src="@/assets/images/icons/mew/icon-nft-mew.svg" />
           </div>
           <div>
             <div class="mb-1 font-weight-bold subtitle-1">NFT Manager</div>
@@ -61,15 +61,13 @@
                 class="mr-5 teal--text text--lighten-2 font-weight-bold"
                 >Watch tutorial</a
               >
+              >
             </div>
           </div>
         </div>
       </v-col>
       <v-col cols="7">
-        <v-img
-          src="@/assets/images/Etc/HowItWorks/InterfaceSendTransaction.png"
-          class="mt-n6"
-        />
+        <v-img src="@/assets/images/snippets/send-tx-page.png" class="mt-n6" />
       </v-col>
     </v-row>
   </div>

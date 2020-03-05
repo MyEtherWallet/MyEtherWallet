@@ -2,7 +2,7 @@
   <WhiteSheet class="pa-3">
     <div class="d-flex align-center pa-5">
       <BlockTitle
-        :icon="require('@/assets/images/Etc/Features/tokenValue.png')"
+        :icon="require('@/assets/images/icons/light/grey/icon-token-grey.png')"
         text1="My Tokens Value"
         text2="$3,132.25"
       />
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import Var from '@/variables.js';
+import Var from '@/plugins/variables.js';
 import WhiteSheet from '@/components/Common/WhiteSheet';
 import StdButton from '@/components/StdButton';
 import ChartBalance from '@/components/Charts/Balance';

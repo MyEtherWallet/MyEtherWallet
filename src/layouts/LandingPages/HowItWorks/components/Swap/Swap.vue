@@ -1,7 +1,7 @@
 <template>
   <div class="component-container position--relative">
     <img
-      src="@/assets/images/Etc/HowItWorks/Bubbles.png"
+      src="@/assets/images/backgrounds/bg-bubbles.png"
       class="block-background-pattern"
     />
     <v-container>
@@ -9,14 +9,14 @@
         <v-col cols="6">
           <v-img
             class="my-8 block-image"
-            src="@/assets/images/Etc/HowItWorks/InterfaceSwap.png"
+            src="@/assets/images/snippets/swap-page.png"
           />
         </v-col>
         <v-col cols="6" class="text-content pl-12">
           <BlockTitle :data="titleData" class="mb-8 pl-12" />
           <div class="mb-9 d-flex">
             <div class="mr-3">
-              <v-img src="@/assets/images/Common/Icons/IconSet2/WhiteBTC.svg" />
+              <v-img src="@/assets/images/currencies/icon-btc-white.svg" />
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
@@ -31,7 +31,7 @@
 
           <div class="mb-9 d-flex">
             <div class="mr-3">
-              <v-img src="@/assets/images/Common/Icons/IconSet2/WhiteETH.svg" />
+              <v-img src="@/assets/images/currencies//icon-eth-white.svg" />
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
@@ -47,7 +47,7 @@
           <div class="d-flex">
             <div class="mr-3">
               <v-img
-                src="@/assets/images/Common/Icons/IconSet2/WhiteFIAT.svg"
+                src="@/assets/images/icons/light/white/icon-fiat-white.svg"
               />
             </div>
             <div>

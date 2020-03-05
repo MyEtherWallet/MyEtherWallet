@@ -6,6 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 /tests/unit/coverage/
 selenium-debug.log
+src/url-darklist/
 
 # Editor directories and files
 .idea

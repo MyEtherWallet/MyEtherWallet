@@ -6,11 +6,11 @@
     <div class="py-6" />
     <WhyMew />
     <div class="py-5" />
-    <Ad1 />
+    <Ad />
     <div class="py-11" />
     <Partners />
     <div class="py-9" />
-    <Ad2 />
+    <Ad />
     <div class="py-1" />
   </div>
 </template>
@@ -19,8 +19,7 @@
 import TopBanner from './components/TopBanner';
 import Features from './components/Features';
 import WhyMew from './components/WhyMew';
-import Ad1 from '../components/Ad1';
-import Ad2 from '../components/Ad2';
+import Ad from '../components/Ad';
 import Partners from '../components/Partners';
 
 export default {
@@ -29,8 +28,7 @@ export default {
     TopBanner,
     Features,
     WhyMew,
-    Ad1,
-    Ad2,
+    Ad,
     Partners
   }
 };

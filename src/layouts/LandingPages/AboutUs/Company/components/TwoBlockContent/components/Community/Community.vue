@@ -1,7 +1,7 @@
 <template>
   <v-sheet max-width="400px">
     <v-img
-      src="@/assets/images/Common/Icons/Community.svg"
+      src="@/assets/images/icons/mew/icon-community-mew.svg"
       max-width="65px"
       max-height="65px"
       aspect-ratio="1"
@@ -26,13 +26,13 @@
 </template>
 
 <script>
-import Vars from '@/variables.js';
+import Vars from '@/plugins/variables.js';
 import BlockTitle from '../../../../../../components/BlockTitle';
 
-import Telegram from '@/assets/images/Common/Icons/IconSet4/Telegram.svg';
-import Slack from '@/assets/images/Common/Icons/IconSet4/Slack.svg';
-import Reddit from '@/assets/images/Common/Icons/IconSet4/Reddit.svg';
-import Github from '@/assets/images/Common/Icons/IconSet4/Github.svg';
+import Telegram from '@/assets/images/icons/dark/icon-telegram-dark.svg';
+import Slack from '@/assets/images/icons/dark/icon-slack-dark.svg';
+import Reddit from '@/assets/images/icons/dark/icon-reddit-dark.svg';
+import Github from '@/assets/images/icons/dark/icon-github-dark.svg';
 
 export default {
   components: { BlockTitle },

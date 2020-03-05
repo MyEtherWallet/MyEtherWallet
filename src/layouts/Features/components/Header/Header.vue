@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex align-center pt-4 pb-4 px-4">
     <div class="d-flex align-center">
-      <img class="mr-3" src="@/assets/images/Common/Icons/Puppy.svg" />
+      <img class="mr-3" src="@/assets/images/icons/mew/icon-puppy-mew.svg" />
       <div>
         <div class="font-weight-bold">MEWtopia</div>
         <div>

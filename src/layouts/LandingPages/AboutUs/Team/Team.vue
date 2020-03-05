@@ -23,23 +23,23 @@
 import PageTitle from '../../components/PageTitle';
 import BlockTitle from '../../components/BlockTitle';
 
-import Kosala from '@/assets/images/Team/Kosala.jpg';
-import Brian from '@/assets/images/Team/Brian.jpg';
-import Olga from '@/assets/images/Team/Olga.jpg';
-import Alex from '@/assets/images/Team/Alex.jpg';
-import Misha from '@/assets/images/Team/Misha.jpg';
-import Yel from '@/assets/images/Team/Gamaliel.jpg';
-import Steve from '@/assets/images/Team/Steve.jpg';
-import Gage from '@/assets/images/Team/Gage.jpg';
-import Jessica from '@/assets/images/Team/Jessica.jpg';
-import David from '@/assets/images/Team/David.jpg';
-import Jack from '@/assets/images/Team/Jack.jpg';
-import Stephen from '@/assets/images/Team/Stephen.jpg';
-import Brittany from '@/assets/images/Team/Brittany.jpg';
-import Richie from '@/assets/images/Team/Richie.jpg';
-import Semaja from '@/assets/images/Team/Semaja.jpg';
-import Katya from '@/assets/images/Team/Katya.jpg';
-import Samantha from '@/assets/images/Team/Samantha.jpg';
+import Kosala from '@/assets/images/team/kosala.jpg';
+import Brian from '@/assets/images/team/brian.jpg';
+import Olga from '@/assets/images/team/olga.jpg';
+import Alex from '@/assets/images/team/alex.jpg';
+import Misha from '@/assets/images/team/misha.jpg';
+import Yel from '@/assets/images/team/gamaliel.jpg';
+import Steve from '@/assets/images/team/steve.jpg';
+import Gage from '@/assets/images/team/gage.jpg';
+import Jessica from '@/assets/images/team/jessica.jpg';
+import David from '@/assets/images/team/david.jpg';
+import Jack from '@/assets/images/team/jack.jpg';
+import Stephen from '@/assets/images/team/stephen.jpg';
+import Brittany from '@/assets/images/team/brittany.jpg';
+import Richie from '@/assets/images/team/richie.jpg';
+import Semaja from '@/assets/images/team/semaja.jpg';
+import Katya from '@/assets/images/team/katya.jpg';
+import Samantha from '@/assets/images/team/samantha.jpg';
 
 export default {
   components: { PageTitle, BlockTitle },

@@ -2,14 +2,14 @@
   <div class="component-container position--relative">
     <div class="py-12" />
     <img
-      src="@/assets/images/Etc/HowItWorks/Waves.svg"
+      src="@/assets/images/backgrounds/bg-waves.svg"
       class="block-background-pattern"
     />
     <v-container>
       <v-row class="align-center">
         <v-col cols="7">
           <v-img
-            src="@/assets/images/Etc/HowItWorks/MyTokens.png"
+            src="@/assets/images/snippets/my-tokens-table.png"
             class="mb-n7"
           />
         </v-col>
@@ -18,7 +18,7 @@
           <div class="mb-9 d-flex">
             <div class="mr-3">
               <v-img
-                src="@/assets/images/Common/Icons/IconSet2/WhiteBuyToken.svg"
+                src="@/assets/images/icons/light/white/icon-buy-token-white.svg"
               />
             </div>
             <div>
@@ -34,7 +34,7 @@
 
           <div class="d-flex">
             <div class="mr-3">
-              <v-img src="@/assets/images/Common/Icons/IconSet2/WhiteETH.svg" />
+              <v-img src="@/assets/images/currencies//icon-eth-white.svg" />
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">

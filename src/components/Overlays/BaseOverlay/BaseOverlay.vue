@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import Var from '@/variables.js';
+import Var from '@/plugins/variables.js';
 import CloseButton from '@/components/Buttons/CloseButton';
 
 export default {

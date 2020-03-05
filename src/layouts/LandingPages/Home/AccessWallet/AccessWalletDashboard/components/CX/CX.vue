@@ -2,7 +2,7 @@
   <v-sheet class="border-radius--10px py-8 px-10 position--relative">
     <img
       class="button-right-image"
-      src="@/assets/images/Etc/CreateWallet/MewBear.png"
+      src="@/assets/images/snippets/mobile/logo-mew-wallet.png"
     />
     <div class="headline font-weight-bold mb-2">Chrome Extension</div>
     <p class="mb-4 button-description-size-limit">

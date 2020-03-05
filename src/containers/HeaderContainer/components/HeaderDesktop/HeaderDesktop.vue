@@ -3,7 +3,7 @@
     <v-container>
       <v-app-bar color="transparent" dark flat>
         <router-link :to="{ name: 'Home', query: {} }">
-          <v-img src="@/assets/images/Common/logo-light.png" max-width="130" />
+          <v-img src="@/assets/images/icons/logo-mew.png" max-width="130" />
         </router-link>
         <v-spacer></v-spacer>
 
@@ -138,7 +138,7 @@
                       <v-list-item class="px-0">
                         <v-img
                           class="mr-3"
-                          :src="icons.ensdebugger"
+                          :src="icons.ensDebugger"
                           max-width="25"
                         />
                         <div>ENS debugger</div>
@@ -168,7 +168,7 @@
 
         <v-btn class="white--text" large depressed outlined>
           <v-img
-            src="@/assets/images/Common/Icons/buy-eth.svg"
+            src="@/assets/images/icons/light/white/icon-buy-eth-white.svg"
             class="mr-1 ml-n1"
           />Buy ETH
         </v-btn>
@@ -180,16 +180,16 @@
 <script>
 import MenuOpenArrow from '@/components/Common/MenuOpenArrow';
 
-import wallet from '@/assets/images/Common/Icons/IconSet1/wallet.svg';
-import send from '@/assets/images/Common/Icons/IconSet1/send.svg';
-import message from '@/assets/images/Common/Icons/IconSet1/message.svg';
-import eth from '@/assets/images/Common/Icons/IconSet1/eth.svg';
+import wallet from '@/assets/images/icons/light/grey/icon-wallet-grey.svg';
+import send from '@/assets/images/icons/light/grey/icon-send-grey.svg';
+import message from '@/assets/images/icons/light/grey/icon-message-grey.svg';
+import eth from '@/assets/images/currencies//icon-eth-grey.svg';
 
-import grabber from '@/assets/images/Common/Icons/IconSet1/grabber.svg';
-import privatekey from '@/assets/images/Common/Icons/IconSet1/privatekey.svg';
-import ensdebugger from '@/assets/images/Common/Icons/IconSet1/ensdebugger.svg';
-import sha3 from '@/assets/images/Common/Icons/IconSet1/sha3.svg';
-import convert from '@/assets/images/Common/Icons/IconSet1/convert.svg';
+import grabber from '@/assets/images/icons/light/grey/icon-grabber-grey.svg';
+import privatekey from '@/assets/images/icons/light/grey/icon-private-key-grey.svg';
+import ensDebugger from '@/assets/images/icons/light/grey/icon-ens-debugger-grey.svg';
+import sha3 from '@/assets/images/icons/light/grey/icon-sha3-grey.svg';
+import convert from '@/assets/images/icons/light/grey/icon-convert-grey.svg';
 
 export default {
   name: 'HeaderDesktop',
@@ -204,7 +204,7 @@ export default {
       eth: eth,
       grabber: grabber,
       privatekey: privatekey,
-      ensdebugger: ensdebugger,
+      ensDebugger: ensDebugger,
       sha3: sha3,
       convert: convert
     }

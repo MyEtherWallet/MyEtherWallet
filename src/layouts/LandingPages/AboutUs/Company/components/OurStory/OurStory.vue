@@ -8,7 +8,7 @@
       <div class="my-11" />
       <div class="line-height--0">
         <v-img
-          src="@/assets/images/Etc/AboutUs/mountains.png"
+          src="@/assets/images/backgrounds/bg-mountains.png"
           max-width="100%"
         />
       </div>

@@ -5,52 +5,52 @@
       <v-row class="mt-8 px-4">
         <v-col cols="3" md="3" lg="2">
           <a href="https://www.ledger.com/?r=fa4b" target="_blank">
-            <img src="@/assets/images/Etc/LandingPage/Partners/Ledger.png" />
+            <img src="@/assets/images/partners/ledger.png" />
           </a>
         </v-col>
         <v-col cols="3" md="3" lg="2">
           <a href="https://trezor.io/?offer_id=12&aff_id=2029" target="_blank">
-            <img src="@/assets/images/Etc/LandingPage/Partners/Trezor.png" />
+            <img src="@/assets/images/partners/trezor.png" />
           </a>
         </v-col>
         <v-col cols="3" md="3" lg="2">
           <a href="https://shiftcrypto.ch/?ref=mew" target="_blank">
-            <img src="@/assets/images/Etc/LandingPage/Partners/Bitbox.png" />
+            <img src="@/assets/images/partners/bitbox.png" />
           </a>
         </v-col>
         <v-col cols="3" md="3" lg="2">
           <a href="https://www.secalot.com/" target="_blank">
-            <img src="@/assets/images/Etc/LandingPage/Partners/Secalot.png" />
+            <img src="@/assets/images/partners/secalot.png" />
           </a>
         </v-col>
         <v-col cols="3" md="3" lg="2">
           <a href="https://bity.com/af/jshkb37v" target="_blank">
-            <img src="@/assets/images/Etc/LandingPage/Partners/Bity.png" />
+            <img src="@/assets/images/partners/bity.png" />
           </a>
         </v-col>
         <v-col cols="3" md="3" lg="2">
           <a href="https://sirinlabs.com/" target="_blank">
-            <img src="@/assets/images/Etc/LandingPage/Partners/Sirin.png" />
+            <img src="@/assets/images/partners/sirin.png" />
           </a>
         </v-col>
         <v-col cols="3" md="3" lg="2">
           <a href="http://lddy.no/a4im" target="_blank">
-            <img src="@/assets/images/Etc/LandingPage/Partners/Keepkey.png" />
+            <img src="@/assets/images/partners/keepkey.png" />
           </a>
         </v-col>
         <v-col cols="3" md="3" lg="2">
           <a href="https://kyber.network/" target="_blank">
-            <img src="@/assets/images/Etc/LandingPage/Partners/Kyber.png" />
+            <img src="@/assets/images/partners/kyber.png" />
           </a>
         </v-col>
         <v-col cols="3" md="3" lg="2">
           <a href="https://changelly.com/" target="_blank">
-            <img src="@/assets/images/Etc/LandingPage/Partners/Changelly.png" />
+            <img src="@/assets/images/partners/changelly.png" />
           </a>
         </v-col>
         <v-col cols="3" md="3" lg="2">
           <a href="https://www.simplex.com/" target="_blank">
-            <img src="@/assets/images/Etc/LandingPage/Partners/Simplex.png" />
+            <img src="@/assets/images/partners/simplex.png" />
           </a>
         </v-col>
       </v-row>

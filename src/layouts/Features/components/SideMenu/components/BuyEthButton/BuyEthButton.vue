@@ -12,9 +12,12 @@
         <img
           class="mr-2"
           height="11"
-          src="@/assets/images/Common/Icons/VisaCard.png"
+          src="@/assets/images/icons/light/white/icon-visa-white.png"
         />
-        <img height="17" src="@/assets/images/Common/Icons/MasterCard.png" />
+        <img
+          height="17"
+          src="@/assets/images/icons/mew/icon-mastercard-mew.png"
+        />
       </div>
     </v-btn>
   </div>

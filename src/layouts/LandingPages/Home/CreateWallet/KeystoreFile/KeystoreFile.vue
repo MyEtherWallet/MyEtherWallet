@@ -19,7 +19,7 @@
               STEP 1. Download &amp; Install
               <img
                 class="right-arrow"
-                src="@/assets/images/Etc/CreateWallet/RightArrow.svg"
+                src="@/assets/images/icons/light/white/icon-right-arrow-white.svg"
               />
             </div>
             <div
@@ -33,7 +33,7 @@
               STEP 2. Create a new wallet
               <img
                 class="right-arrow"
-                src="@/assets/images/Etc/CreateWallet/RightArrow.svg"
+                src="@/assets/images/icons/light/white/icon-right-arrow-white.svg"
               />
             </div>
             <div :class="tab == 'tab-3' ? stepActive : stepUndone">

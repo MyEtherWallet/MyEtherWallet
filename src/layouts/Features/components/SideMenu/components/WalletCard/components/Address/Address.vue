@@ -4,7 +4,7 @@
     <div class="monospace last-four">{{ getLastFour(address) }}</div>
     <Tooltip text="Copy">
       <v-btn text icon :color="iconColor">
-        <img src="@/assets/images/Common/Icons/copy.svg" width="13" />
+        <img src="@/assets/images/icons/mew/icon-copy-mew.svg" width="13" />
       </v-btn>
     </Tooltip>
   </div>
