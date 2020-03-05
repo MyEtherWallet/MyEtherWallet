@@ -1,9 +1,11 @@
 <template>
   <WhiteSheet sideinfo class="px-7 py-5 d-flex justify-space-between">
+    <NetworkOverlay :open="openNetworkOverlay" :close="closeNetworkOverlay" />
+
     <div>
       <BlockTitle :text="$t('common.network')">
         <template v-slot:object-next-to-title>
-          <SoloButton>
+          <SoloButton @click.native="openNetworkOverlay = true">
             <v-icon>mdi-chevron-right</v-icon>
           </SoloButton>
         </template>
@@ -27,8 +29,19 @@
 import WhiteSheet from '@/components/Common/WhiteSheet';
 import BlockTitle from '@/components/BlockTitles/BlockTitle2';
 import SoloButton from '@/components/Buttons/SoloButton1';
+import NetworkOverlay from '@/components/Overlays/Network';
 
 export default {
-  components: { WhiteSheet, BlockTitle, SoloButton }
+  components: { WhiteSheet, BlockTitle, SoloButton, NetworkOverlay },
+  data() {
+    return {
+      openNetworkOverlay: false
+    };
+  },
+  methods: {
+    closeNetworkOverlay() {
+      this.openNetworkOverlay = false;
+    }
+  }
 };
 </script>
