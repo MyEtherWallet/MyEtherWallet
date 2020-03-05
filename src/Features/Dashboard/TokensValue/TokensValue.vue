@@ -2,7 +2,7 @@
   <WhiteSheet>
     <div class="d-flex align-center px-6 pt-7">
       <BlockTitle
-        :icon="require('@/assets/images/Etc/Features/tokenValue.png')"
+        :icon="require('@/assets/images/icons/light/grey/icon-token-grey.png')"
         text1="My Tokens Value"
         text2="$3,132.25"
       />
@@ -47,7 +47,7 @@
           <td>
             <img
               class="vertical-align--middle"
-              src="@/assets/images/Etc/Features/eth.png"
+              src="@/assets/images/currencies//eth.png"
               width="25"
             />
           </td>
@@ -88,7 +88,7 @@
           <td>
             <img
               class="vertical-align--middle"
-              src="@/assets/images/Etc/Features/eth.png"
+              src="@/assets/images/currencies//eth.png"
               width="25"
             />
           </td>
@@ -129,7 +129,7 @@
           <td>
             <img
               class="vertical-align--middle"
-              src="@/assets/images/Etc/Features/eth.png"
+              src="@/assets/images/currencies//eth.png"
               width="25"
             />
           </td>
@@ -170,7 +170,7 @@
           <td>
             <img
               class="vertical-align--middle"
-              src="@/assets/images/Etc/Features/eth.png"
+              src="@/assets/images/currencies//eth.png"
               width="25"
             />
           </td>
@@ -213,7 +213,7 @@
 </template>
 
 <script>
-import Var from '@/variables.js';
+import Var from '@/plugins/variables.js';
 import WhiteSheet from '@/components/Common/WhiteSheet';
 import StdButton from '@/components/StdButton';
 import ChartTiny from '@/components/Charts/Tiny';

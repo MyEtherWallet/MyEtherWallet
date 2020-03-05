@@ -17,7 +17,7 @@
     <img
       width="60"
       height="60"
-      src="@/assets/images/Icons/eth.png"
+      src="@/assets/images/currencies//eth.png"
       alt="ethereum"
     />
   </WhiteSheet>

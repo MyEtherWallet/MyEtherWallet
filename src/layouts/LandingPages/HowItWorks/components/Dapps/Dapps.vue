@@ -7,7 +7,7 @@
           <BlockTitle :data="titleData" class="mb-8 pl-12" />
           <div class="mb-9 d-flex">
             <div class="mr-3">
-              <v-img src="@/assets/images/Common/Icons/IconSet2/Dapps.svg" />
+              <v-img src="@/assets/images/icons/mew/icon-dapps-mew.svg" />
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1">Dapps Center</div>
@@ -20,7 +20,7 @@
 
           <div class="d-flex">
             <div class="mr-3">
-              <v-img src="@/assets/images/Common/Icons/IconSet2/Submit.svg" />
+              <v-img src="@/assets/images/icons/mew/icon-submit-mew.svg" />
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1">Submit</div>
@@ -45,7 +45,7 @@
         <v-col cols="7">
           <v-img
             class="block-image"
-            src="@/assets/images/Etc/HowItWorks/ExploreNewDapps.png"
+            src="@/assets/images/snippets/new-dapps-page.png"
           />
         </v-col>
       </v-row>

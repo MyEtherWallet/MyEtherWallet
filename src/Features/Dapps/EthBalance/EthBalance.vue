@@ -2,7 +2,7 @@
   <WhiteSheet class="pa-3">
     <div class="d-flex pa-5">
       <BlockTitle
-        :icon="require('@/assets/images/Etc/Features/eth.png')"
+        :icon="require('@/assets/images/currencies//eth.png')"
         text1="My Eth Balance"
         text2="$4,032.35"
         text3="24.842 ETH"
@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import Var from '@/variables.js';
+import Var from '@/plugins/variables.js';
 import WhiteSheet from '@/components/Common/WhiteSheet';
 import StdButton from '@/components/StdButton';
 import ChartBalance from '@/components/Charts/Balance';

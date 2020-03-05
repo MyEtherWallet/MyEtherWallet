@@ -6,8 +6,8 @@
     }"
   >
     <div class="mb-4">
-      <router-link :to="{ name: 'Dashboard' }">
-        <img width="120" src="@/assets/images/Common/logo-light.png" />
+      <router-link :to="{ name: 'Features' }">
+        <img width="120" src="@/assets/images/icons/logo-mew.png" />
       </router-link>
     </div>
     <WalletCard />

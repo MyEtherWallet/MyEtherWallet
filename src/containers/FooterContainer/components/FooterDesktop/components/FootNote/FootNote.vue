@@ -26,12 +26,12 @@
 </template>
 
 <script>
-import uk from '@/assets/images/Common/Icons/Flags/uk.png';
-import ru from '@/assets/images/Common/Icons/Flags/russia.png';
-import kr from '@/assets/images/Common/Icons/Flags/korea.png';
-import jp from '@/assets/images/Common/Icons/Flags/japan.png';
-import ge from '@/assets/images/Common/Icons/Flags/germany.png';
-import ch from '@/assets/images/Common/Icons/Flags/china.png';
+import uk from '@/assets/images/flags/uk.png';
+import ru from '@/assets/images/flags/russia.png';
+import kr from '@/assets/images/flags/korea.png';
+import jp from '@/assets/images/flags/japan.png';
+import ge from '@/assets/images/flags/germany.png';
+import ch from '@/assets/images/flags/china.png';
 
 export default {
   data: () => ({

@@ -85,7 +85,7 @@
         <v-col>
           <div class="subtitle-1 font-weight-bold mb-5 d-flex align-center">
             Love
-            <img height="27" src="@/assets/images/Common/Icons/heart.svg" />
+            <img height="27" src="@/assets/images/icons/icon-heart-red.svg" />
             MEW? Donate!
           </div>
           <p>
@@ -97,7 +97,10 @@
             target="_blank"
             href="https://etherscan.io/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
           >
-            <img src="@/assets/images/Common/Icons/eth.svg" class="mr-3" />
+            <img
+              src="@/assets/images/currencies//icon-eth-blue.svg"
+              class="mr-3"
+            />
             <div>
               <div>ETH Donation</div>
               <div class="overline">
@@ -110,7 +113,10 @@
             target="_blank"
             href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
           >
-            <img src="@/assets/images/Common/Icons/btc.svg" class="mr-3" />
+            <img
+              src="@/assets/images/currencies/icon-btc-gold.svg"
+              class="mr-3"
+            />
             <div>
               <div>BTC Donation</div>
               <div class="overline">
@@ -160,7 +166,7 @@
 </template>
 
 <script>
-import Vars from '@/variables.js';
+import Vars from '@/plugins/variables.js';
 import FootNote from './components/FootNote';
 
 export default {

@@ -1,7 +1,7 @@
 <template>
   <div class="component--wallet-card">
     <div class="background-image">
-      <img src="@/assets/images/Etc/Features/SideMenu/WalletCard.png" />
+      <img src="@/assets/images/snippets/wallet-card.png" />
     </div>
     <div class="info-container px-4 py-5">
       <div class="d-flex">
@@ -14,7 +14,7 @@
             height="50px"
             class="blockie-image"
           />
-          <img src="@/assets/images/Common/Icons/QRcode.svg" />
+          <img src="@/assets/images/icons/mew/icon-qr-code-mew.svg" />
         </div>
         <div class="ml-4">
           <div class="mb-n2 mt-n2 font-weight-medium d-flex align-center">
@@ -32,13 +32,17 @@
       <div class="d-flex align-center">
         <Tooltip text="Print">
           <v-btn text icon :color="iconColor">
-            <img src="@/assets/images/Common/Icons/printer.svg" />
+            <img
+              src="@/assets/images/icons/light/white/icon-printer-white.svg"
+            />
           </v-btn>
         </Tooltip>
 
         <Tooltip text="Click to print out your wallet">
           <v-btn text icon :color="iconColor">
-            <img src="@/assets/images/Common/Icons/document.svg" />
+            <img
+              src="@/assets/images/icons/light/white/icon-document-white.svg"
+            />
           </v-btn>
         </Tooltip>
 

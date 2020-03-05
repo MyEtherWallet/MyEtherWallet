@@ -22,9 +22,8 @@
 
 <script>
 import StdButton from '@/components/StdButton';
-
 export default {
-  name: 'HomeAd1',
+  name: 'HomeAd',
   components: {
     StdButton
   }
@@ -35,7 +34,6 @@ export default {
 .v-card {
   border-radius: 10px !important;
 }
-
 .card-content {
   background: linear-gradient(130deg, #0b2840 0%, #3d9e91 80%, #00c4ff 100%);
   padding: 70px 90px;

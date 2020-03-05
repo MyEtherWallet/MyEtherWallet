@@ -5,7 +5,7 @@
       class="white--text align-end"
       height="130px"
       contain
-      src="@/assets/images/Etc/LandingPage/friendly.svg"
+      src="@/assets/images/icons/mew/icon-faces-mew.svg"
     />
     <v-spacer />
     <h4 class="link-box-title font-weight-bold mb-4">

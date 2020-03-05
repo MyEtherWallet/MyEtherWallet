@@ -16,13 +16,13 @@
       <div class="mr-2">Download on</div>
       <img
         class="mr-1"
-        src="@/assets/images/Etc/LandingPage/appstore-apple.svg"
+        src="@/assets/images/icons/dark/icon-appstore-apple-dark.svg"
       />
-      <img src="@/assets/images/Etc/LandingPage/appstore-android.svg" />
+      <img src="@/assets/images/icons/dark/icon-appstore-android-dark.svg" />
     </div>
     <v-spacer />
     <div class="line-height--0 text-center">
-      <img src="@/assets/images/Etc/LandingPage/mew-connect.png" />
+      <img src="@/assets/images/snippets/mobile/mobile-mew-connect.png" />
     </div>
   </v-card>
 </template>

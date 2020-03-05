@@ -38,7 +38,7 @@
         class="mx-auto"
         max-height="320px"
         max-width="240px"
-        src="@/assets/images/Etc/CreateWallet/CreateNewWallet.png"
+        src="@/assets/images/snippets/mobile/mobile-watch-again.png"
       />
     </v-col>
   </v-sheet>
