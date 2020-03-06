@@ -38,8 +38,9 @@
 </template>
 
 <script>
-// import SwapDark from '@/assets/images/Common/Icons/SideMenu/swap-dark.svg';
-// import SwapLight from '@/assets/images/Common/Icons/SideMenu/swap-light.svg';
+import SwapDark from '@/assets/images/Common/Icons/SideMenu/swap-dark.svg';
+import SwapLight from '@/assets/images/Common/Icons/SideMenu/swap-light.svg';
+
 export default {
   components: {},
   data() {
@@ -48,14 +49,14 @@ export default {
       menuItems: [
         {
           name: 'Dashboard',
-          // iconDark: SwapDark,
-          // iconLight: SwapLight,
+          iconDark: SwapDark,
+          iconLight: SwapLight,
           url: '/features/dashboard'
         },
         {
           name: 'Send',
-          // iconDark: SwapDark,
-          // iconLight: SwapLight,
+          iconDark: SwapDark,
+          iconLight: SwapLight,
           children: [
             {
               name: 'Send Transaction',
@@ -73,20 +74,20 @@ export default {
         },
         {
           name: 'Swap',
-          // iconDark: SwapDark,
-          // iconLight: SwapLight,
+          iconDark: SwapDark,
+          iconLight: SwapLight,
           url: '/features/swap'
         },
         {
           name: 'Dapps Center',
-          // iconDark: SwapDark,
-          // iconLight: SwapLight,
+          iconDark: SwapDark,
+          iconLight: SwapLight,
           url: '/features/dapps'
         },
         {
           name: 'Contract',
-          // iconDark: SwapDark,
-          // iconLight: SwapLight,
+          iconDark: SwapDark,
+          iconLight: SwapLight,
           children: [
             {
               name: 'Interact with contract',
@@ -100,8 +101,8 @@ export default {
         },
         {
           name: 'Sign Message',
-          // iconDark: SwapDark,
-          // iconLight: SwapLight,
+          iconDark: SwapDark,
+          iconLight: SwapLight,
           url: '/features/sign'
         }
       ]
@@ -121,9 +122,11 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/GlobalVariables.scss';
+
 .active {
   color: white;
 }
+
 ul {
   li {
     div {
