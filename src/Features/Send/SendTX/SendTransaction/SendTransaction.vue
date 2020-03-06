@@ -1,23 +1,22 @@
 <template>
-  <WhiteSheet>
-    <TxConfirmation :open="openTxConfirmation" :close="closeTxConfirmation" />
+  <div>
+    <v-btn
+      depressed
+      color="success"
+      x-small
+      class="mr-1"
+      @click="openTxConfirmation = true"
+    >
+      Open TX confirmation window
+    </v-btn>
 
-    <InterfaceWrap title="Send Transaction">
-      Contents!!!!
-    </InterfaceWrap>
-
-    <div class="pa-2">
-      <v-btn
-        depressed
-        color="success"
-        x-small
-        class="mr-1"
-        @click="openTxConfirmation = true"
-      >
-        Open TX confirmation window
-      </v-btn>
-    </div>
-  </WhiteSheet>
+    <WhiteSheet>
+      <TxConfirmation :open="openTxConfirmation" :close="closeTxConfirmation" />
+      <InterfaceWrap title="Send Transaction">
+        Contents!!!!
+      </InterfaceWrap>
+    </WhiteSheet>
+  </div>
 </template>
 
 <script>
