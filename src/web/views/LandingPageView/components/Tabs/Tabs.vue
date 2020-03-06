@@ -8,9 +8,7 @@
 export default {
   name: 'Tabs',
   components: {},
-  props: {
-    //title: { default: '', type: String }
-  }
+  props: {}
 };
 </script>
 

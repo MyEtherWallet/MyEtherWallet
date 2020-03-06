@@ -62,7 +62,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables';
 .tab-image {
   padding-top: 50px;
   width: 100%;

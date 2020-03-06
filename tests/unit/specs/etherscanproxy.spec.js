@@ -3,7 +3,7 @@ const SERVERURL = 'https://api.etherscan.io/api';
 const API_KEY = 'DSH5B24BQYKD1AD8KUCDY3SAQSS6ZAU175';
 
 describe('EtherScan Proxy', () => {
-  it('should respond correct json rpc', async () => {
+  xit('should respond correct json rpc', async () => {
     // eslint-disable-next-line no-undef
     if (WITH_NETWORK) {
       expect.assertions(3);

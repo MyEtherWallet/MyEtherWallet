@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-btn
-      class="ml-auto text-transform--initial"
+      class="ml-auto text-transform--initial font-weight-regular"
       min-width="100%"
       outlined
       large
@@ -28,7 +28,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables.scss';
-</style>

@@ -66,9 +66,7 @@ export default {
 @import '@/assets/styles/GlobalVariables';
 
 .new-wallet-button {
-  //transition: all 0.1s ease;
   &:hover {
-    //box-shadow: 0 0 50px rgba(0, 0, 0, 0.2);
     box-shadow: 0 0 50px $police-strobe;
   }
 }

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { Blockies } from '@/common/helpers/blockies.js';
+import { Blockies } from '@/common/helpers';
 
 export default {
   props: {
@@ -71,7 +71,6 @@ export default {
   background-repeat: no-repeat;
   background-size: cover;
   border-radius: 50%;
-  //box-shadow: inset 0 2px 2px hsla(0, 0%, 100%, 0.25),    inset 0 -1px 8px rgba(0, 0, 0, 0.6);
   height: 100%;
   width: 100%;
   border: 3px solid white;

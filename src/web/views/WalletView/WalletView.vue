@@ -1,18 +1,26 @@
 <template>
-  <div class="features">
+  <div
+    class="features"
+    :style="{
+      backgroundColor: $vuetify.theme.themes[theme].backgroundColor
+    }"
+  >
     <div class="d-flex align-stretch">
-      <SideMenu />
-      <div class="wrapper">
-        <v-container>
+      <SideMenu class="side-menu-element" />
+      <div
+        class="wrapper pb-10"
+        :style="{
+          borderBottomColor: $vuetify.theme.themes[theme].footerBackgroundColor
+        }"
+      >
+        <v-container class="position--relative">
           <Header />
           <router-view />
         </v-container>
-
-        <v-container class="footer-wrapper">
-          <Footer />
-        </v-container>
       </div>
     </div>
+
+    <Footer />
   </div>
 </template>
 
@@ -21,26 +29,24 @@ import SideMenu from './components/SideMenu';
 import Header from './components/Header';
 import Footer from './components/Footer';
 export default {
-  name: 'WalletView',
-  components: { SideMenu, Header, Footer }
+  name: 'Features',
+  components: { SideMenu, Header, Footer },
+  computed: {
+    theme() {
+      return this.$vuetify.theme.dark ? 'dark' : 'light';
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/GlobalVariables.scss';
-.features {
-  background-color: $primary-silver;
+
+.side-menu-element {
+  box-shadow: 0 0 20px #0000002f;
 }
 .wrapper {
   position: relative;
   width: 100%;
-  border-bottom: 60px solid white;
-  padding-bottom: 40px;
-}
-.footer-wrapper {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -55px;
 }
 </style>

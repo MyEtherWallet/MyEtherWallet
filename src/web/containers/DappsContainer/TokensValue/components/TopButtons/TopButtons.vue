@@ -14,8 +14,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables.scss';
-
 .v-icon {
   background-color: #e0e0e0 !important;
 }

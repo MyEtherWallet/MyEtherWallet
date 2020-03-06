@@ -1,5 +1,9 @@
 <template>
-  <v-sheet class="white-sheet" :class="sideinfo ? 'sideinfo' : ''">
+  <v-sheet
+    color="white"
+    class="white-sheet"
+    :class="sideinfo ? 'sideinfo' : ''"
+  >
     <slot />
   </v-sheet>
 </template>

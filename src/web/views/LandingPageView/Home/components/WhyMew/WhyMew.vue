@@ -48,8 +48,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables';
-
 .box-shadow {
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
 }

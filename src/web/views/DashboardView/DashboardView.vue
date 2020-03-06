@@ -15,8 +15,8 @@
         <BannerAds />
       </div>
     </div>
-    <Spacer />
-    <Dapps />
+    <Spacer v-if="false" />
+    <Dapps v-if="false" />
   </div>
 </template>
 
@@ -42,7 +42,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables.scss';
-</style>
