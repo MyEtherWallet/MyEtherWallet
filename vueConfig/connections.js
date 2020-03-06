@@ -52,5 +52,7 @@ module.exports = [
   'wss://api.thegraph.com/subgraphs/name/aave/protocol-raw',
   'https://ambrpay.io/api/smartContractAddresses',
   'https://ambrpay.io/api/subscriptions/0x43689531907482bee7e650d18411e284a7337a66',
-  'https://nft2.mewapi.io/tokens'
+  'https://nft2.mewapi.io/tokens',
+  'wss://connect.mewapi.io',
+  'wss://connect2.mewapi.io/'
 ];

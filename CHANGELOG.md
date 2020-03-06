@@ -1,3 +1,6 @@
+### Bugs
+- Fix MEWconnect disconnecting soon after connecting [#2064](https://github.com/MyEtherWallet/MyEtherWallet/pull/2064)
+
 ### Release v5.4.1
 
 ### Bugs
@@ -8,6 +11,7 @@
 - Revert one time check [#2053](https://github.com/MyEtherWallet/MyEtherWallet/pull/2053)
 - Fix Buy ETH Widget bug [#2046](https://github.com/MyEtherWallet/MyEtherWallet/pull/2046)
 - Fix KB link [#2047](https://github.com/MyEtherWallet/MyEtherWallet/pull/2047)
+
 
 ### Devop
 
