@@ -17,9 +17,7 @@
           <BlockTitle :data="titleData" class="mb-8 pl-12" />
           <div class="mb-9 d-flex">
             <div class="mr-3">
-              <v-img
-                src="@/assets/images/icons/icon-buy-token-white.svg"
-              />
+              <v-img src="@/assets/images/icons/icon-buy-token-white.svg" />
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">

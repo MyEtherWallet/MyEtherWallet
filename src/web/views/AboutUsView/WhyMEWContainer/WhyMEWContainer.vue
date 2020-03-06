@@ -7,8 +7,8 @@
 </template>
 
 <script>
-// import PageTitle from '../../components/PageTitle';
-// import BlockTitle from '../../components/BlockTitle';
+import PageTitle from '@/web/components/PageTitle';
+import BlockTitle from '@/web/components/BlockTitle';
 
 export default {
   components: { PageTitle, BlockTitle },

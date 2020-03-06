@@ -20,8 +20,8 @@
 </template>
 
 <script>
-// import PageTitle from '../../components/PageTitle';
-// import BlockTitle from '../../components/BlockTitle';
+import PageTitle from '@/web/components/PageTitle';
+import BlockTitle from '@/web/components/BlockTitle';
 
 import Kosala from '@/assets/images/team/kosala.jpg';
 import Brian from '@/assets/images/team/brian.jpg';

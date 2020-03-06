@@ -22,13 +22,13 @@
 
 <script>
 import Spacer from '@/web/components/Common/Spacer';
-import EthBalance from './EthBalance';
-import TokensValue from './TokensValue';
-import Dapps from './Dapps';
+import EthBalance from './containers/EthBalance';
+import TokensValue from './containers/TokensValue';
+import Dapps from './containers/Dapps';
 
-import Network from '@/layouts/Features/components/SideInfo/Network';
-import Swap from '@/layouts/Features/components/SideInfo/Swap';
-import BannerAds from '@/layouts/Features/components/SideInfo/BannerAds';
+import Network from '@/web/components/Network';
+import Swap from '@/web/components/Swap';
+import BannerAds from '@/web/components/BannerAds';
 
 export default {
   components: {
