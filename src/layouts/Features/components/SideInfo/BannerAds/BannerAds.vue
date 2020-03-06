@@ -8,6 +8,7 @@
       light
       interval="7000"
       :show-arrows="false"
+      delimiter-icon="mdi-circle-medium"
     >
       <v-carousel-item>
         <Ad1 />
@@ -28,3 +29,9 @@ export default {
   components: { WhiteSheet, Ad1, Ad2 }
 };
 </script>
+
+<style lang="scss" scoped>
+.v-carousel__controls__item {
+  margin: 0 !important;
+}
+</style>
