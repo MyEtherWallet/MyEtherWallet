@@ -5,7 +5,7 @@
     </div>
     <div class="right-container">
       <img
-        :src="require('@/assets/images/Icons/' + from + '.png')"
+        :src="require('@/assets/images/currencies/' + from + '.png')"
         alt="swap-icon"
       />
       <img
@@ -14,7 +14,7 @@
         alt="swap-icon"
       />
       <img
-        :src="require('@/assets/images/Icons/' + to + '.png')"
+        :src="require('@/assets/images/currencies/' + to + '.png')"
         alt="swap-icon"
       />
     </div>
