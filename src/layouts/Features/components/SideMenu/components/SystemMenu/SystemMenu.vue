@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TxConfirmation />
+    <TxConfirmation :open="openSettings" :close="closeSettings" />
     <div @click="openSettings = true">Settings</div>
     <div>Log out</div>
   </div>
@@ -15,6 +15,17 @@ export default {
     return {
       openSettings: false
     };
+  },
+  methods: {
+    closeSettings() {
+      this.openSettings = false;
+    }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+div {
+  color: white;
+}
+</style>
