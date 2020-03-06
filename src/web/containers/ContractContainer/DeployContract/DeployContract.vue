@@ -18,8 +18,8 @@
 import Spacer from '@/web/components/Common/Spacer';
 import Deploy from './Deploy';
 
-import Network from '@/layouts/Features/components/SideInfo/Network';
-import Swap from '@/layouts/Features/components/SideInfo/Swap';
+import Network from '@/web/components/Network';
+import Swap from '@/web/components/Swap';
 
 export default {
   components: {

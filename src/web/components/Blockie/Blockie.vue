@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { Blockies } from '@/helpers';
+import { Blockies } from '@/common/helpers/blockies.js';
 
 export default {
   props: {

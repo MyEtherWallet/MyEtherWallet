@@ -1,1 +1,1 @@
-export { default } from './SignMessage';
+export { default } from './SignMessageContainer';

@@ -16,11 +16,11 @@
 </template>
 
 <script>
-// import TopBanner from './components/TopBanner';
-// import Features from './components/Features';
-// import WhyMew from './components/WhyMew';
-// import Ad from '../components/Ad';
-// import Partners from '../components/Partners';
+import TopBanner from './components/TopBanner';
+import Features from './components/Features';
+import WhyMew from './components/WhyMew';
+import Ad from '@/web/components/Ad';
+import Partners from '@/web/components/Partners';
 
 export default {
   name: 'Home',

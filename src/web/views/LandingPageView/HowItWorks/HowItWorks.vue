@@ -15,13 +15,13 @@
 </template>
 
 <script>
-// import PageTitle from '../components/PageTitle';
-// import TabContent from './components/TabContent';
-// import Swap from './components/Swap';
-// import Dapps from './components/Dapps';
-// import Tokens from './components/Tokens';
-// import MoreTools from './components/MoreTools';
-// import Ad from '../components/Ad';
+import PageTitle from '@/web/components/PageTitle';
+import TabContent from './components/TabContent';
+import Swap from './components/Swap';
+import Dapps from './components/Dapps';
+import Tokens from './components/Tokens';
+import MoreTools from './components/MoreTools';
+import Ad from '@/web/components/Ad';
 
 export default {
   name: 'HowItWorks',

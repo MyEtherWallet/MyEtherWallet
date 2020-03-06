@@ -26,8 +26,8 @@ import EthBalance from './EthBalance';
 import TokensValue from './TokensValue';
 import Dapps from './Dapps';
 
-import Network from '@/layouts/Features/components/SideInfo/Network';
-import Swap from '@/layouts/Features/components/SideInfo/Swap';
+import Network from '@/web/components/Network';
+import Swap from '@/web/components/Swap';
 import BannerAds from '@/layouts/Features/components/SideInfo/BannerAds';
 
 export default {

@@ -18,8 +18,8 @@
 import Spacer from '@/web/components/Common/Spacer';
 import SendTransaction from './SendTransaction';
 
-import Network from '@/layouts/Features/components/SideInfo/Network';
-import Swap from '@/layouts/Features/components/SideInfo/Swap';
+import Network from '@/web/components/Network';
+import Swap from '@/web/components/Swap';
 
 export default {
   components: {
