@@ -38,8 +38,8 @@
 </template>
 
 <script>
-import SwapDark from '@/assets/images/Common/Icons/SideMenu/swap-dark.svg';
-import SwapLight from '@/assets/images/Common/Icons/SideMenu/swap-light.svg';
+import SwapDark from '@/assets/images/icons/icon-swap-dark.svg';
+import SwapLight from '@/assets/images/icons/icon-swap-light.svg';
 
 export default {
   components: {},
