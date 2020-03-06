@@ -52,8 +52,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables';
-
 .banner-img {
   width: 100%;
 }

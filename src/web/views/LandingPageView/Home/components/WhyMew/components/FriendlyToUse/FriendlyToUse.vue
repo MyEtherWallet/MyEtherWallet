@@ -32,8 +32,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables';
-
 h4 {
   font-size: 22px;
   letter-spacing: -0.6px;

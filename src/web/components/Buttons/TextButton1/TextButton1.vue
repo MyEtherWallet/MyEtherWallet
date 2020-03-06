@@ -7,9 +7,7 @@
 <script>
 import Var from '@/common/plugins/variables.js';
 export default {
-  props: {
-    buttonclass: { default: 'button--green', type: String }
-  },
+  props: {},
   data() {
     return {
       mewGreen: Var.colorSets.emerald
@@ -17,7 +15,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-</style>

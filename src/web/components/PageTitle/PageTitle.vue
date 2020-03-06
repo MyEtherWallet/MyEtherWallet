@@ -17,5 +17,3 @@ export default {
   props: { title: { default: '', type: String } }
 };
 </script>
-
-<style lang="scss" scoped></style>

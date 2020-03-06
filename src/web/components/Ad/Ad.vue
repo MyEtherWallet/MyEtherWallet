@@ -31,7 +31,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables';
 .v-card {
   border-radius: 10px !important;
 }
