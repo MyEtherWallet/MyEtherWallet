@@ -15,6 +15,7 @@
 import WalletCard from './components/WalletCard';
 import BuyEthButton from './components/BuyEthButton';
 import AccordionMenu from './components/AccordionMenu';
+
 export default {
   components: { WalletCard, BuyEthButton, AccordionMenu }
 };
