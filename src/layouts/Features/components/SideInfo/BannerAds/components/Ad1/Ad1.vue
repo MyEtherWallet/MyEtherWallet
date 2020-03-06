@@ -1,6 +1,6 @@
 <template>
   <div class="ad1 px-5 d-flex flex-column justify-center">
-    <div class="title font-weight-bold mb-n1">MEW wallet App</div>
+    <div class="title font-weight-bold mb-n1">MEWwallet</div>
     <div class="mb-2">Download it today!</div>
     <div class="d-flex align-center mb-1">
       <img
@@ -33,9 +33,9 @@ export default {
 <style lang="scss" scopted>
 .ad1 {
   height: 100%;
-  background: url('~@/assets/images/snippets/mobile/mobile-mewconnect-no-hardware.png');
+  background: url('~@/assets/images/snippets/mobile/phone.png');
   background-size: 130px;
-  background-position: right -10px bottom -20px;
+  background-position: right 0px bottom 0px;
   background-repeat: no-repeat;
 }
 </style>

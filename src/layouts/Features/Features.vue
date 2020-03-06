@@ -8,7 +8,7 @@
     <div class="d-flex align-stretch">
       <SideMenu class="side-menu-element" />
       <div
-        class="wrapper"
+        class="wrapper pb-10"
         :style="{
           borderBottomColor: $vuetify.theme.themes[theme].footerBackgroundColor
         }"
@@ -19,6 +19,7 @@
         </v-container>
       </div>
     </div>
+
     <Footer />
   </div>
 </template>

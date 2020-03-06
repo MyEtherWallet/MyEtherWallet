@@ -29,9 +29,3 @@ export default {
   components: { WhiteSheet, Ad1, Ad2 }
 };
 </script>
-
-<style lang="scss" scoped>
-.v-carousel__controls__item {
-  margin: 0 !important;
-}
-</style>
