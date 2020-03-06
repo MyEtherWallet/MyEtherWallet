@@ -13,7 +13,7 @@
     <WalletCard />
     <BuyEthButton class="mt-2 mb-6" />
     <AccordionMenu class="px-2" />
-
+    <SystemMenu class="px-2 py-5" />
     <ThemeSwitch class="px-3 mt-12" />
   </div>
 </template>
@@ -22,10 +22,17 @@
 import WalletCard from './components/WalletCard';
 import BuyEthButton from './components/BuyEthButton';
 import AccordionMenu from './components/AccordionMenu';
+import SystemMenu from './components/SystemMenu';
 import ThemeSwitch from './components/ThemeSwitch';
 
 export default {
-  components: { WalletCard, BuyEthButton, AccordionMenu, ThemeSwitch },
+  components: {
+    WalletCard,
+    BuyEthButton,
+    AccordionMenu,
+    SystemMenu,
+    ThemeSwitch
+  },
   computed: {
     theme() {
       return this.$vuetify.theme.dark ? 'dark' : 'light';
