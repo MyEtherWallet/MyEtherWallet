@@ -179,7 +179,7 @@ export default {
           text: 'BC Vault',
           disabled: false,
           msg: '',
-          link: 'http://lddy.no/a4im'
+          link: 'https://bc-vault.com/?wpam_id=53'
         }
       ]
     };
