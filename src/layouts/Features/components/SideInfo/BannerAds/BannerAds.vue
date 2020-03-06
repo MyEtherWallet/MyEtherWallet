@@ -1,5 +1,5 @@
 <template>
-  <WhiteSheet sideinfo>
+  <WhiteSheet sideinfo class="user-select--none">
     <v-carousel
       cycle
       height="150"
@@ -7,6 +7,7 @@
       show-arrows-on-hover
       light
       interval="7000"
+      :show-arrows="false"
     >
       <v-carousel-item>
         <Ad1 />
@@ -21,7 +22,7 @@
 <script>
 import WhiteSheet from '@/components/Common/WhiteSheet';
 import Ad1 from './components/Ad1';
-import Ad2 from './components/Ad1';
+import Ad2 from './components/Ad2';
 
 export default {
   components: { WhiteSheet, Ad1, Ad2 }
