@@ -51,7 +51,7 @@ export default {
           name: 'Dashboard',
           iconDark: SwapDark,
           iconLight: SwapLight,
-          url: '/features/dashboard'
+          url: '/wallet/dashboard'
         },
         {
           name: 'Send',
@@ -60,15 +60,15 @@ export default {
           children: [
             {
               name: 'Send Transaction',
-              url: '/features/send/sendtx'
+              url: '/wallet/send/sendtx'
             },
             {
               name: 'Send Offline',
-              url: '/features/send/send-offline'
+              url: '/wallet/send/send-offline'
             },
             {
               name: 'NFT Manager',
-              url: '/features/send/nft-manager'
+              url: '/wallet/send/nft-manager'
             }
           ]
         },
@@ -76,13 +76,13 @@ export default {
           name: 'Swap',
           iconDark: SwapDark,
           iconLight: SwapLight,
-          url: '/features/swap'
+          url: '/wallet/swap'
         },
         {
           name: 'Dapps Center',
           iconDark: SwapDark,
           iconLight: SwapLight,
-          url: '/features/dapps'
+          url: '/wallet/dapps'
         },
         {
           name: 'Contract',
@@ -91,11 +91,11 @@ export default {
           children: [
             {
               name: 'Interact with contract',
-              url: '/features/contract/interact'
+              url: '/wallet/contract/interact'
             },
             {
               name: 'Deploy contract',
-              url: '/features/contract/deploy'
+              url: '/wallet/contract/deploy'
             }
           ]
         },
@@ -103,7 +103,7 @@ export default {
           name: 'Sign Message',
           iconDark: SwapDark,
           iconLight: SwapLight,
-          url: '/features/sign'
+          url: '/wallet/sign'
         }
       ]
     };

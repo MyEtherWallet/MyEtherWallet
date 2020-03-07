@@ -1,41 +1,41 @@
 <template>
-  <v-container>
-    <v-card class="card-content d-flex align-center" flat>
-      <div>
-        <h2 class="white--text">
-          Newbie in crypto?
-        </h2>
-        <h2 class="white--text">
-          Join our journey to MEW.
-        </h2>
-      </div>
-      <v-spacer />
-      <StdButton
-        buttonclass="button--white-border"
-        href="https://www.mewtopia.com/"
-        target="_blank"
-        >Get Started</StdButton
-      >
-    </v-card>
-  </v-container>
+  <div class="ad1 px-5 d-flex flex-column justify-center">
+    <div class="title font-weight-bold mb-n1">MEWwallet</div>
+    <div class="mb-2">Download it today!</div>
+    <div class="d-flex align-center mb-1">
+      <img
+        class="mr-1"
+        height="23"
+        src="@/assets/images/icons/button-app-store.png"
+      />
+      <img
+        class="mr-1"
+        height="23"
+        src="@/assets/images/icons/button-play-store.png"
+      />
+    </div>
+    <div class="d-flex align-center">
+      <img
+        class="mr-1"
+        height="23"
+        src="@/assets/images/icons/button-samsung.png"
+      />
+    </div>
+  </div>
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
 export default {
-  name: 'HomeAd',
-  components: {
-    StdButton
-  }
+  components: {}
 };
 </script>
 
-<style lang="scss" scoped>
-.v-card {
-  border-radius: 10px !important;
-}
-.card-content {
-  background: linear-gradient(130deg, #0b2840 0%, #3d9e91 80%, #00c4ff 100%);
-  padding: 70px 90px;
+<style lang="scss" scopted>
+.ad1 {
+  height: 100%;
+  background: url('~@/assets/images/snippets/mobile/phone.png');
+  background-size: 130px;
+  background-position: right 0px bottom 0px;
+  background-repeat: no-repeat;
 }
 </style>
