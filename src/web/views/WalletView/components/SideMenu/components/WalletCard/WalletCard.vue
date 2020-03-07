@@ -1,7 +1,7 @@
 <template>
   <div class="component--wallet-card">
     <div class="background-image">
-      <!-- <img src="@/assets/images/icons/icon-wallet-mew.png" /> -->
+      <img src="@/assets/images/snippets/wallet-card.png" />
     </div>
     <div class="info-container px-4 py-5">
       <div class="d-flex">
@@ -28,7 +28,7 @@
           <div class="headline font-weight-bold monospace">$7,244.58</div>
         </div>
       </div>
-      <!-- <Address class="mt-1 mb-2" :address="address" /> -->
+      <Address class="mt-1 mb-2" :address="address" />
       <div class="d-flex align-center">
         <Tooltip text="Print">
           <v-btn text icon :color="iconColor">
@@ -56,10 +56,10 @@
 
 <script>
 import Blockie from '@/web/components/Blockie';
-// import Address from './components/Address';
+import Address from './components/Address';
 import Tooltip from '@/web/components/Tooltip';
 export default {
-  components: { Blockie, Tooltip },
+  components: { Blockie, Tooltip, Address },
   data() {
     return {
       iconColor: 'white',
