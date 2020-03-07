@@ -1,5 +1,43 @@
 <template>
   <div>
+    <div>
+      <v-list>
+        <v-list-item>
+          <v-list-item-title><v-icon>mdi-home</v-icon> Home</v-list-item-title>
+        </v-list-item>
+
+        <v-list-group>
+          <template v-slot:activator>
+            <v-list-item-title
+              ><v-icon>mdi-home</v-icon> Users</v-list-item-title
+            >
+          </template>
+
+          <v-list-item-content>
+            <v-list-item-title>Admin</v-list-item-title>
+          </v-list-item-content>
+
+          <v-list-item-content>
+            <v-list-item-title>Admin</v-list-item-title>
+          </v-list-item-content>
+        </v-list-group>
+
+        <v-list-group prepend-icon="mdi-home">
+          <template v-slot:activator>
+            <v-list-item-title>Users</v-list-item-title>
+          </template>
+
+          <v-list-item-content>
+            <v-list-item-title>Admin</v-list-item-title>
+          </v-list-item-content>
+
+          <v-list-item-content>
+            <v-list-item-title>Admin</v-list-item-title>
+          </v-list-item-content>
+        </v-list-group>
+      </v-list>
+    </div>
+
     <ul style="padding-left: 0;">
       <li
         v-for="(i, key1) in menuItems"
