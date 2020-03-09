@@ -12,6 +12,15 @@ import aave from '@/assets/images/icons/dapps/aave.svg';
 import { ETH, GOERLI, ROP, RIN, KOV } from '@/networks/types';
 
 const dapps = {
+  unstoppable: {
+    route: '/interface/dapps/unstoppable',
+    icon: manageEns,
+    title: 'unstoppable.title',
+    desc: 'unstoppable.dapp-desc',
+    supportedNetworks: [ETH.name],
+    lastUpdated: '3/08/2020',
+    releaseDate: '3/08/2020'
+  },
   manageEns: {
     route: '/interface/dapps/manage-ens',
     icon: manageEns,
