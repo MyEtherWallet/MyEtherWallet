@@ -73,10 +73,10 @@
   "mew-wallet-modal": {
     "title": "Official MEW wallet App is now available!",
     "text": "Buy, hold and send Ether and tokens. Explore Ethereum on your mobile. {learn-more}",
-    "learn-more": "Learn more",
+    "learn-more": "Подробнее",
     "footer-text": "Download our free app today!",
     "new": "new",
-    "details": "Details",
+    "details": "Подробности",
     "hide": "Hide"
   }
 }
