@@ -1,90 +1,92 @@
 {
-  "title": "Создать Новый Кошелек",
-  "sub-title": "Уже есть кошелек?",
-  "page-footer-title": "Хотите узнать больше о блокчейне или MEW? Перейдите на {faq}",
+  "title": "Get a New Wallet",
+  "sub-title": "Already have a wallet?",
+  "page-footer-title": "Want to learn more about Blockchain or MEW? Please go to {faq}",
   "welcome": {
-    "title": "Добро пожаловать в MEW",
-    "desc": "Пожалуйста, ознакомьтесь с кратким введением. Для вашей собственной безопасности, очень важно чтобы вы поняли эти предупреждения. Игнорирование этого шага значительно увеличит шансы на потерю или кражу ваших средств, и в этом случае мы не сможем вам помочь. {skip} на свой страх и риск.",
-    "button-skip": "Пропустить"
+    "title": "Welcome to MEW",
+    "desc": "Please take a moment to read through this short introduction. It’s very important for your own security that you understand these warnings. Ignoring this step will highly increase the chances of your funds being lost or stolen, in which case we won’t be able to help you. {skip} at your own risk.",
+    "button-skip": "Skip"
   },
-  "mewconnect": {
-    "title": "Рекомендованный метод",
-    "desc": "Безопасный и легкий доступ к моему кошельку в 3 шага.",
-    "scan": "Установить",
+  "mew-wallet": {
+    "title": "Recommended Method",
+    "desc": "Brings a hardware wallet style security to your iOS or Android smartphone, helping you to secure your funds as never before. {learn-more}",
+    "scan": "Scan to Download",
     "version": {
-      "ios": "iOS 10.0 или выше",
-      "android": "Android 8.0 или выше"
+      "ios": "iOS 10.0 or up",
+      "android": "Android 8.0 or up"
     },
     "android": "Android",
-    "ios": "iOS"
+    "ios": "iOS",
+    "tooltip": "This method of access is recommended for its security. Make sure to keep your recovery information safe!",
+    "download-today": "Download our App today!"
   },
   "password": {
-    "do-not-forget": "НЕ ЗАБУДЬТЕ",
-    "do-not-forget-save-pw": "{do-not-forget} сохранить пароль. Вам понадобится {key-pass} файл, чтобы разблокировать ваш кошелек.",
-    "key-pass": "пароль + файл-хранилище ключа",
-    "password-strength": "Надёжность пароля"
+    "do-not-forget": "DO NOT FORGET",
+    "do-not-forget-save-pw": "{do-not-forget} to save your password. You will need this {key-pass} File to unlock your wallet.",
+    "key-pass": "Password + Keystore",
+    "password-strength": "Password strength"
   },
   "keystore": {
-    "title-tab": "Файл-хранилище ключа",
-    "title-save": "Сохранить файл хранилища ключа",
-    "message-wait": "Пожалуйста, подождите, пока мы генерируем ваш файл хранилища ключа...",
-    "button-download": "Скачать файл-хранилище ключа",
+    "title-tab": "By Keystore File",
+    "title-save": "Save My Keystore File",
+    "message-wait": "Please wait while we generate your keystore file...",
+    "button-download": "Download Keystore File",
     "loose": {
-      "title": "Не потеряйте его",
-      "desc": "Будьте осторожны, если вы его потеряете, его нельзя будет восстановить."
+      "title": "Don't Lose It",
+      "desc": "Be careful, it can not be recovered if you lose it."
     },
     "share": {
-      "title": "Не делитесь им",
-      "desc": "Если вы используете этот файл на фишинговом сайте, то ваши деньги украдут."
+      "title": "Don't Share It",
+      "desc": "Your funds will be stolen if you use this file on a malicious phishing site."
     },
     "backup": {
-      "title": "Сделайте резервную копию",
-      "desc": "Храните его как миллион долларов (однажды он, возможно, будет столько стоить)."
+      "title": "Make a Backup",
+      "desc": "Secure it like the millions of dollars it may one day be worth."
     }
   },
   "mnemonic": {
-    "title": "Ваша мнемоническая фраза",
-    "title-tab": "Мнемоническая фраза",
-    "extra-word": "Доп. слово",
-    "value": "Слов",
-    "please-enter-9-char": "Пожалуйста, введите не менее 9 символов",
-    "invalid-mnemonic": "Ошибка: неверная мнемоническая фраза",
-    "do-you-extra-word": "У вас есть доп. слово?",
-    "access-wallet-extra-word-popover": "Некоторые мнемонические фразы генерируются с дополнительным словом, выбранным пользователем для дополнительной безопасности. Это слово действует как 13-ое или 25-ое слово вашей фразе, иногда именуемое «паролем». Если при составлении фразы вы не создавали дополнительного слова, оставьте это поле пустым.",
-    "extra-word-popover": "Вы можете добавить дополнительное слово к вашей фразе для большей безопасности. Это слово вам понадобится каждый раз когда вы используете свою фразу для доступа. Некоторые кошельки могут не поддерживать добавление дополнительного слова при использовании мнемонических фраз.",
-    "popover": "Мнемоническая фраза - это список из 12 - 24 слов, которые могут быть использованы для доступа к вашему кошельку.",
-    "random": "Поменять",
-    "button-wrote-it-down": "Я записал(а) мою мнемоническую фразу",
-    "type-in": "Введите свое дополнительное слово",
-    "do-not-forget-save-mnemonic": "{do-not-forget} сохранить вашу мнемоническую фразу. Она вам понадобится для доступа к вашему кошельку.",
+    "title": "Your Mnemonic Phrase",
+    "title-tab": "By Mnemonic Phrase",
+    "extra-word": "Extra Word",
+    "value": "Value",
+    "please-enter-9-char": "Please Enter At Least 9 Characters",
+    "invalid-mnemonic": "Error: Invalid Mnemonic",
+    "do-you-extra-word": "Do you have an Extra Word?",
+    "access-wallet-extra-word-popover": "Some mnemonic phrases are generated with an extra word chosen by the user for added security. It acts as a 13th or 25th word to your phrase, sometimes referred to as a 'password'. If you did not create an extra word when you made your phrase, you should leave this field blank.",
+    "extra-word-popover": "You can add an extra word to your phrase for added security. However, you will need this word everytime you wish to access your phrase. Some wallets may not support adding an extra word when using mnemonic phrases.",
+    "popover": "A mnemonic phrase is a list of 12 - 24 words that can be used to access your wallet.",
+    "random": "Random",
+    "button-wrote-it-down": "I Wrote Down My Mnemonic Phrase",
+    "type-in": "Type in your extra word",
+    "do-not-forget-save-mnemonic": "{do-not-forget} to save your mnemonic phrase. You will need this to access your wallet.",
     "warning": {
-      "write-down": "Запишите мнемоническую фразу",
-      "extra-word": "Если вы решите включить дополнительное слово, понимайте, что вам ВСЕГДА будет нужно использовать это дополнительное слово со своей мнемонической фразой. Вы не можете изменить его. Оно становится постоянной частью вашей фразы."
+      "write-down": "Write Down Mnemonic Phrase Key",
+      "extra-word": "If you choose to include an extra word, understand you will ALWAYS need this extra word with your mnemonic phrase. You can not change it. It becomes a permanent part of your phrase."
     },
     "verify": {
-      "title": "Верификация",
-      "text": "Пожалуйста, заполните все пустые поля ниже, чтобы проверить вашу мнемоническую фразу",
-      "button": "Подтвердить"
+      "title": "Verification",
+      "text": "Please enter and fill out the empty boxes below to verify your mnemonic phrase key",
+      "button": "Verify"
     },
     "print": {
-      "print-title": "Версия для печати"
+      "print-title": "Print Preview"
     },
     "table": {
-      "title": "Мнемоническая фраза",
-      "safe-place": "Пожалуйста, храните этот лист в очень безопасном месте. Это ваша собственность!",
-      "cannot-change-pw": "Мы {cannot} изменить вашу мнемоническую фразу или дополнительное слово. Это ваш ключ от кошелька. Пожалуйста, {do-not-forget} это сохранить. Вам понадобится эти {requirements} для доступа к вашему кошельку.",
-      "cannot": "НЕ МОЖЕМ",
-      "change-pw": "сменить ваш пароль. Пожалуйста",
-      "do-not-forget": "НЕ ЗАБУДЬТЕ",
-      "requirements": "эта ФРАЗА и ДОПОЛНИТЕЛЬНОЕ СЛОВО (если используется)"
+      "title": "Mnemonic Phrase",
+      "safe-place": "Please Keep This Sheet at a Very Safe Place. It is your property!",
+      "cannot-change-pw": "We {cannot} change your mnemonic phrase or extra word. This is your wallet key. Please {do-not-forget} to save it. You will need {requirements} to access your wallet.",
+      "cannot": "CAN NOT",
+      "change-pw": "change your password. Please",
+      "do-not-forget": "DO NOT FORGET",
+      "requirements": "this PHRASE and EXTRA WORD (if used)"
     },
-    "invalid-network-id": "Возвращена неверная подпись networkId. Ожидается: {networkId} , Получено: {signedChainId} InvalidNetworkId",
-    "fields-missing": "Некоторые поля все еще не заполнены!",
-    "does-not-match-extra-word": "Мнемоническая фраза и дополнительное слово не совпадают! Пожалуйста, проверьте ввод информации!",
-    "input-does-not-match": "Мнемоническая фраза не совпадает! Пожалуйста, введите её правильно!"
+    "invalid-network-id": "Invalid networkId signature returned. Expected: {networkId} , Got: {signedChainId} InvalidNetworkId",
+    "fields-missing": "Some fields are still missing!",
+    "does-not-match-extra-word": "Mnemonic and extra word doesn't match! Please check your input!",
+    "input-does-not-match": "Mnemonic doesn't match! Please write it down correctly!"
   },
   "created": {
-    "title": "Готово",
-    "text": "Вы успешно создали свой кошелек."
+    "title": "Success",
+    "text": "You have created your wallet successfully."
   }
 }
