@@ -145,6 +145,7 @@
     "uglify-es": "3.3.9",
     "uuid": "7.0.2",
     "vue-i18n": "8.15.5",
+    "vue-stripe-elements-plus": "0.3.2",
     "vue-template-compiler": "2.6.11",
     "vue-worker": "1.2.1",
     "wallet-address-validator": "0.2.4",

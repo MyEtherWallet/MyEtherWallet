@@ -28,6 +28,7 @@ import sendTx from './send-tx/en_US';
 import swap from './swap/en_US';
 import contract from './contract/en_US';
 import ens from './dapps-ens/en_US';
+import unstoppable from './dapps-unstoppable/en_US';
 import subDomain from './dapps-sub-domain/en_US';
 import scheduleTx from './dapps-schedule-tx/en_US';
 import nftManager from './nft-manager/en_US';
@@ -70,6 +71,7 @@ const en_US = {
   swap: swap,
   contract: contract,
   ens: ens,
+  unstoppable: unstoppable,
   subDomain: subDomain,
   scheduleTx: scheduleTx,
   nftManager: nftManager,
