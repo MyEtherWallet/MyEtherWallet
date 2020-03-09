@@ -12,7 +12,7 @@
     </div>
     <WalletCard />
     <BuyEthButton class="mt-2 mb-6" />
-    <AccordionMenu class="px-2" />
+    <AccordionMenu class="px-0" />
     <SystemMenu class="px-2 py-5" />
     <ThemeSwitch class="px-3 mt-12" />
   </div>
