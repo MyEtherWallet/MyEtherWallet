@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="66px" height="66px" viewBox="0 0 66 66" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>Crypto</title>
+    <desc>Created with Sketch.</desc>
+    <g id="3" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="myetherwallet---130" transform="translate(-710.000000, -528.000000)" stroke="#043945" stroke-width="6">
+            <g id="Group-8" transform="translate(513.000000, 466.000000)">
+                <g id="Group-14" transform="translate(0.000000, 43.000000)">
+                    <g id="Group-12" transform="translate(160.000000, 0.000000)">
+                        <g id="Group-10-Copy" transform="translate(40.000000, 22.000000)">
+                            <g id="Crypto">
+                                <rect id="Rectangle" x="0" y="0" width="60" height="60" rx="30"></rect>
+                                <rect id="Rectangle-Copy-3" fill="#20BFA5" x="20" y="20" width="20" height="20"></rect>
+                                <line x1="27" y1="30" x2="33" y2="30" id="Path-Copy-2"></line>
+                                <line x1="41" y1="24" x2="49" y2="24" id="Path-Copy"></line>
+                                <line x1="41" y1="36" x2="49" y2="36" id="Path"></line>
+                                <line x1="11" y1="24" x2="19" y2="24" id="Path-Copy-4"></line>
+                                <line x1="11" y1="36" x2="19" y2="36" id="Path-Copy-3"></line>
+                                <path d="M41,24 L49,24 M41,36 L49,36 M11,24 L19,24 M11,36 L19,36" id="Combined-Shape" transform="translate(30.000000, 30.000000) rotate(90.000000) translate(-30.000000, -30.000000) "></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

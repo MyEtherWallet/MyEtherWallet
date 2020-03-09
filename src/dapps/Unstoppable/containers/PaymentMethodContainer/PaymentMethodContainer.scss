@@ -1,0 +1,116 @@
+@import '../../Unstoppable';
+
+.payment-method-container {
+  @extend %template-container;
+}
+
+.domain-header {
+  padding: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  h4 {
+    font-weight: 600;
+  }
+
+  background-color: $container-green;
+  p {
+    margin-top: 7px;
+    color: $mew-green;
+    font-weight: 500;
+  }
+  .content-right {
+    .domain-price {
+      margin-right: 15px;
+    }
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @media all and (max-width: $mobile-width) {
+      margin-top: 30px;
+    }
+  }
+}
+
+.select-method-container {
+  padding-top: 30px;
+  padding-bottom: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  h3 {
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+}
+
+.buttons-container {
+  text-align: center;
+  text-transform: uppercase;
+
+  button {
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 20px;
+  }
+
+  .submit {
+    color: $white;
+    font-weight: 600;
+    width: 100%;
+    padding: 10px 15px;
+  }
+}
+
+.card-logo {
+  margin: 10px;
+}
+
+.crypto-logo {
+  margin: 10px;
+}
+
+.payment-method-button-container {
+  display: flex;
+  @media all and (max-width: $mobile-width) {
+    flex-direction: column;
+  }
+}
+
+.payment-method-button {
+  background: $light-green-4;
+  border: 1px solid $light-green-4;
+  border-radius: 8px;
+  color: $black;
+  cursor: pointer;
+  height: 100%;
+  padding: 10px;
+  position: relative;
+  text-align: center;
+  margin: 10px;
+
+  @media all and (max-width: $mobile-width) {
+    display: flex;
+    align-items: center;
+    text-align: left;
+  }
+
+  &:hover {
+    border: 1px solid $mew-green;
+    background-color: $light-green-6;
+  }
+
+  img {
+    @media all and (max-width: 400px) {
+      width: 23%;
+    }
+  }
+
+  h4 {
+    margin-bottom: 5px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+}
