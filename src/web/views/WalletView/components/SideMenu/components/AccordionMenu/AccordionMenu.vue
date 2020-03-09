@@ -3,15 +3,18 @@
     <v-list color="transparent">
       <div v-for="(i, key1) in menuItems" :key="key1">
         <v-list-item v-if="i.url">
-          <v-list-item-title dark class="d-flex align-center">
+          <div
+            class="cursor--pointer d-flex align-center"
+            @click="routerPush(i.url)"
+          >
             <img width="23" height="23" :src="i.iconLight" class="mr-3" />
             <div>{{ i.name }}</div>
-          </v-list-item-title>
+          </div>
         </v-list-item>
 
         <v-list-group v-else>
           <template v-slot:activator>
-            <v-list-item-title class="d-flex align-center">
+            <v-list-item-title class="cursor--pointer d-flex align-center">
               <img width="23" height="23" :src="i.iconLight" class="mr-3" />
               <div>{{ i.name }}</div>
             </v-list-item-title>
@@ -22,7 +25,12 @@
             :key="key2"
             class="py-2"
           >
-            <div class="menu-sub-item">{{ c.name }}</div>
+            <div
+              class="menu-sub-item cursor--pointer"
+              @click="routerPush(c.url)"
+            >
+              {{ c.name }}
+            </div>
           </v-list-item-content>
         </v-list-group>
       </div>
