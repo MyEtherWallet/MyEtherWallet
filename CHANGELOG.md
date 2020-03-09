@@ -1,8 +1,14 @@
+### Release v5.4.1-hotfix.1
+
+### Bugs
+
+- Fix MEWconnect disconnecting soon after connecting [#2064](https://github.com/MyEtherWallet/MyEtherWallet/pull/2064)
+
 ### Release v5.4.1
 
 ### Bugs
 
-- Fix network changer [#2054] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2054)
+- Fix network changer [#2054](https://github.com/MyEtherWallet/MyEtherWallet/pull/2054)
 - Send Offline helper transaction fee [#2058](https://github.com/MyEtherWallet/MyEtherWallet/pull/2058)
 - Add burner address warning, redo store so all addresses currently stored are uniform [#2049](https://github.com/MyEtherWallet/MyEtherWallet/pull/2049)
 - Revert one time check [#2053](https://github.com/MyEtherWallet/MyEtherWallet/pull/2053)
