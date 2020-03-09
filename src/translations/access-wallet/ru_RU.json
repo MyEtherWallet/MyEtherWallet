@@ -3,10 +3,10 @@
     "option-text": "Use MEWconnect to access my wallet",
     "modal": {
       "title": "Access by MEWconnect",
-      "text1": "Please use MEW wallet or MEWconnect App to scan the QR code above",
-      "text2": "Don't have the MEW wallet app? Download now."
+      "text1": "Используйте приложение MEW wallet или MEWconnect для сканирования указанного выше QR-кода",
+      "text2": "Нет приложения MEW wallet? Загрузите сейчас."
     },
-    "warning": "MEW wallet and MEWconnect apps are not compatible with iPads."
+    "warning": "MEW wallet и MEWconnect несовместимы с iPads."
   },
   "finney": {
     "scan-info": "To connect, scan the QR code from {wallet} app on your {finney-bc}",
