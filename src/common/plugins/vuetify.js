@@ -33,7 +33,7 @@ export default new Vuetify({
         sideMenuBackground: '#002747',
         backgroundColor: '#f2f4fa',
         footerBackgroundColor: '#ffffff',
-        gray: { gray1: '#96a8b6' },
+        gray: { gray1: '#96a8b6', gray2: '#4d687e' },
         red: { red1: '#ff0000' },
         yellow: { yellow1: '#ffe9c5' }
       },

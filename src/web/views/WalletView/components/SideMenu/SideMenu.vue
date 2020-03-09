@@ -1,6 +1,6 @@
 <template>
   <div
-    class="component--sidemenu px-4 py-7"
+    class="component--sidemenu px-4 py-7 d-flex flex-column"
     :style="{
       backgroundColor: $vuetify.theme.themes[theme].sideMenuBackground
     }"
@@ -12,9 +12,10 @@
     </div>
     <WalletCard />
     <BuyEthButton class="mt-2 mb-6" />
-    <AccordionMenu class="px-0" />
-    <SystemMenu class="px-2 py-5" />
-    <ThemeSwitch class="px-3 mt-12" />
+    <AccordionMenu class="mx-n1" />
+    <Divider class="my-4 mx-1" />
+    <SystemMenu class="mx-n1" />
+    <ThemeSwitch class="px-5 mt-8" />
   </div>
 </template>
 
@@ -24,6 +25,7 @@ import BuyEthButton from './components/BuyEthButton';
 import AccordionMenu from './components/AccordionMenu';
 import SystemMenu from './components/SystemMenu';
 import ThemeSwitch from './components/ThemeSwitch';
+import Divider from './components/Divider';
 
 export default {
   components: {
@@ -31,7 +33,8 @@ export default {
     BuyEthButton,
     AccordionMenu,
     SystemMenu,
-    ThemeSwitch
+    ThemeSwitch,
+    Divider
   },
   computed: {
     theme() {

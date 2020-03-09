@@ -122,7 +122,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables.scss';
 * {
   color: white;
 }
@@ -133,8 +132,10 @@ export default {
 </style>
 
 <style lang="scss">
+@import '@/assets/styles/GlobalVariables.scss';
+
 .accordion-menu-container .v-icon {
-  color: rgb(77, 104, 126);
+  color: $gray-2;
 }
 
 .accordion-menu-container .v-list .v-list-item--active .v-icon {
