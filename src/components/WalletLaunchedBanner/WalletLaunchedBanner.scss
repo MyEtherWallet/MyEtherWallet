@@ -67,6 +67,7 @@
     color: $dark-blue-6;
     font-size: 14px;
     font-weight: 500;
+    text-align: left;
   }
 
   .detail-content-expanded {
@@ -108,6 +109,9 @@
 
 @media screen and (max-width: 1156px) {
   .footer-banner-container {
+    .footer-text {
+      text-align: center;
+    }
     .center-content {
       flex-direction: column;
 

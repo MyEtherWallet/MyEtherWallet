@@ -269,7 +269,7 @@
               <li class="detail-container">
                 <span class="detail-name">{{ $t('common.gas.fee') }}:</span>
                 <span class="detail-text">
-                  {{ toEth(fee) }}
+                  {{ toEth(toWei(fee)) }}
                   {{ selectedNetwork.type.currencyName }}
                   ($ {{ calculateCost(fee) }})
                 </span>
@@ -589,7 +589,7 @@ export default {
         ).toFixed();
         this.fee = new BigNumber(this.toGwei(this.gasPrice))
           .times(this.gasLimit)
-          .toFixed();
+          .toString();
       }
     },
     async fetchBalanceData() {
@@ -602,7 +602,7 @@ export default {
     },
     toEth(val) {
       if (!val || isNaN(val)) return 0;
-      return web3Utils.fromWei(new BigNumber(val).toFixed(), 'ether');
+      return web3Utils.fromWei(new BigNumber(val).toString(), 'ether');
     },
     toWei(val) {
       if (!val) return 0;
@@ -617,10 +617,11 @@ export default {
     },
     calculateCost(inGwei) {
       const fromGweiToWei = this.toWei(inGwei);
-      return new BigNumber(this.ethPrice)
+      const cost = new BigNumber(this.ethPrice)
         .times(this.toEth(fromGweiToWei))
         .precision(2, BigNumber.ROUND_UP)
         .toNumber();
+      return cost < 0.01 ? 0.01 : cost;
     },
     async generateInformation(data) {
       if (data.address === '') return;

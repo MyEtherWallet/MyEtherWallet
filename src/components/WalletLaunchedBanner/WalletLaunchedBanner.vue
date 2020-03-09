@@ -14,9 +14,12 @@
           <img :src="btn.src" alt="App button" />
         </a>
       </div>
-      <p v-if="isExpanded" class="footer-text">
-        {{ $t('home.mew-wallet-modal.footer-text') }}
-      </p>
+      <div v-if="isExpanded" class="footer-text">
+        <p>{{ $t('home.mew-wallet-modal.footer-text') }}</p>
+        <a href="https://www.mewwallet.com/" target="_blank"
+          >{{ $t('home.mew-wallet-modal.learn-more') }}...
+        </a>
+      </div>
     </div>
     <img
       v-if="isExpanded"
@@ -32,7 +35,7 @@
         {{
           isExpanded
             ? $t('home.mew-wallet-modal.hide')
-            : $t('home.mew-wallet-modal.detail')
+            : $t('home.mew-wallet-modal.details')
         }}
       </p>
       <i :class="['fa', isExpanded ? 'fa-chevron-down' : 'fa-chevron-up']"></i>
