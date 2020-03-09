@@ -1,0 +1,55 @@
+@import '../../Unstoppable';
+
+.domain-available-container {
+  @extend %template-container;
+}
+
+.content-header {
+  padding: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  h4 {
+    font-weight: 600;
+  }
+  @media all and (max-width: $mobile-width) {
+    flex-direction: column;
+  }
+
+  background-color: $container-green;
+  p {
+    margin-top: 7px;
+    color: $mew-green;
+    font-weight: 500;
+  }
+  .content-right {
+    .domain-price {
+      margin-right: 15px;
+    }
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @media all and (max-width: $mobile-width) {
+      margin-top: 30px;
+    }
+  }
+}
+
+.buttons-container {
+  text-align: center;
+  text-transform: uppercase;
+
+  button {
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 20px;
+  }
+
+  .submit {
+    color: $white;
+    font-weight: 600;
+    width: 100%;
+    padding: 10px 15px;
+  }
+}
