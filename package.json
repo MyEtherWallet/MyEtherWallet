@@ -32,7 +32,7 @@
     "@aave/protocol-js": "0.1.10",
     "@sentry/browser": "5.13.2",
     "@sentry/integrations": "5.13.2",
-    "@unstoppabledomains/resolution": "1.2.0",
+    "@unstoppabledomains/resolution": "1.1.0",
     "apollo-cache-inmemory": "1.6.5",
     "apollo-client": "2.6.8",
     "apollo-link-ws": "1.0.19",
@@ -172,7 +172,8 @@
       "@xkeshi/vue-qrcode",
       "vee-validate",
       "sass-loader",
-      "@vue/test-utils"
+      "@vue/test-utils",
+      "@unstoppabledomains/resolution"
     ]
   },
   "license": "MIT",
