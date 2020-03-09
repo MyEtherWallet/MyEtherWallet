@@ -1,8 +1,37 @@
 <template>
   <div>
+    <v-list color="transparent">
+      <v-list-item>
+        <div
+          class="cursor--pointer d-flex align-center"
+          @click="openSettings = true"
+        >
+          <img
+            width="23"
+            height="23"
+            src="@/assets/images/icons/icon-swap-dark.svg"
+            class="mr-3"
+          />
+          <div>Settings</div>
+        </div>
+      </v-list-item>
+      <v-list-item>
+        <div
+          class="cursor--pointer d-flex align-center"
+          @click="openSettings = true"
+        >
+          <img
+            width="23"
+            height="23"
+            src="@/assets/images/icons/icon-swap-dark.svg"
+            class="mr-3"
+          />
+          <div>Log out</div>
+        </div>
+      </v-list-item>
+    </v-list>
+
     <TxConfirmation :open="openSettings" :close="closeSettings" />
-    <div @click="openSettings = true">Settings</div>
-    <div>Log out</div>
   </div>
 </template>
 
