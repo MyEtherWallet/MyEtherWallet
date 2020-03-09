@@ -31,10 +31,10 @@
     "subtitle": "Have not found the question that you are looking for?",
     "button-see-more": "See More...",
     "button-here": "here.",
-    "button-learn-more": "Learn more...",
+    "button-learn-more": "Узнать больше...",
     "mew-wallet": {
-      "title": "What is MEW wallet?",
-      "text": " MEW wallet is our official fully-fledged mobile app, bringing hardware wallet security to your iOS or Android phone."
+      "title": "Что такое MEW wallet?",
+      "text": "MEW wallet - это наше официальное полнофункциональное мобильное приложение, которое обеспечивает безопасность аппаратного кошелька на вашем телефоне iOS или Android."
     },
     "create-wallet": {
       "title": "How do I create a new wallet?",
@@ -71,12 +71,12 @@
   },
   "lost-title": "Oops! Looks like you're lost.",
   "mew-wallet-modal": {
-    "title": "Official MEW wallet App is now available!",
-    "text": "Buy, hold and send Ether and tokens. Explore Ethereum on your mobile. {learn-more}",
+    "title": "Официальное приложение MEW wallet теперь доступно!",
+    "text": "Покупайте, держите и отправляйте Ether и токены. Исследуйте Ethereum со своего мобильного телефона. {learn-more}",
     "learn-more": "Подробнее",
-    "footer-text": "Download our free app today!",
-    "new": "new",
+    "footer-text": "Скачайте наше бесплатное приложение сегодня!",
+    "new": "новый",
     "details": "Подробности",
-    "hide": "Hide"
+    "hide": "Скрыть"
   }
 }
