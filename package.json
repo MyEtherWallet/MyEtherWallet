@@ -87,7 +87,7 @@
     "@vue/cli-plugin-unit-jest": "4.2.3",
     "@vue/cli-service": "4.2.3",
     "@vue/eslint-config-prettier": "6.0.0",
-    "@vue/test-utils": "1.0.0-beta.32",
+    "@vue/test-utils": "1.0.0-beta.29",
     "@xkeshi/vue-qrcode": "git+https://github.com/MyEtherWallet/vue-qrcode.git",
     "axios": "0.19.2",
     "babel-core": "7.0.0-bridge.0",
