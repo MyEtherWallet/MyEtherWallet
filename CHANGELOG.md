@@ -1,3 +1,8 @@
+### Release v5.4.2
+
+### Bugs
+- Fix offline helper fee conversion [#2063] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2063)
+
 ### Release v5.4.1-hotfix.1
 
 ### Bugs
