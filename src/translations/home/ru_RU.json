@@ -38,7 +38,7 @@
     },
     "create-wallet": {
       "title": "How do I create a new wallet?",
-      "text": "MyEtherWallet (MEW) offers three ways to create a new ETH wallet. These are via MEW wallet, Keystore file, or Mnemonic phrase. For more information, click"
+      "text": "MyEtherWallet (MEW) предлагает три способа создания нового кошелька эфириума: посредством MEW wallet, файла-хранилища ключа или мнемонической фразы. Для дополнительной информации нажмите"
     },
     "mewconnect": {
       "title": "What is MEWconnect?",
