@@ -113,7 +113,7 @@ const webRoutes = [
     ]
   },
   {
-    path: '/Wallet',
+    path: '/wallet',
     name: 'Wallet',
     component: Wallet,
     meta: {
