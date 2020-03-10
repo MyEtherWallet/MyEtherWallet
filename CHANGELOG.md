@@ -5,6 +5,7 @@
 
 ### Devop
 
+- Update greenkeeper packages [#2088](https://github.com/MyEtherWallet/MyEtherWallet/pull/2088)
 - Update greenkeeper packages [#2078](https://github.com/MyEtherWallet/MyEtherWallet/pull/2078)
 
 
