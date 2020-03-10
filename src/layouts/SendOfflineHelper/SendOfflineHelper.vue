@@ -269,7 +269,7 @@
               <li class="detail-container">
                 <span class="detail-name">{{ $t('common.gas.fee') }}:</span>
                 <span class="detail-text">
-                  {{ toGwei(fee) }}
+                  {{ toEth(toWei(fee)) }}
                   {{ selectedNetwork.type.currencyName }}
                   ($ {{ calculateCost(fee) }})
                 </span>
@@ -617,10 +617,11 @@ export default {
     },
     calculateCost(inGwei) {
       const fromGweiToWei = this.toWei(inGwei);
-      return new BigNumber(this.ethPrice)
+      const cost = new BigNumber(this.ethPrice)
         .times(this.toEth(fromGweiToWei))
         .precision(2, BigNumber.ROUND_UP)
         .toNumber();
+      return cost < 0.01 ? 0.01 : cost;
     },
     async generateInformation(data) {
       if (data.address === '') return;
