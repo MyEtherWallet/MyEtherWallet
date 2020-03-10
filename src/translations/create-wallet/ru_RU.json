@@ -9,7 +9,7 @@
   },
   "mew-wallet": {
     "title": "Рекомендованный метод",
-    "desc": "Buy, hold, and send Ether and tokens. Explore Ethereum on your mobile device. {learn-more}",
+    "desc": "Покупайте, храните и отправляйте Ether и токены. Исследуйте Ethereum со своего мобильного телефона. {learn-more}",
     "scan": "Установить",
     "version": {
       "ios": "iOS 10.0 или выше",
