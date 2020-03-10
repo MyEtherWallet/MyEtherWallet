@@ -1,68 +1,82 @@
 {
   "tagline1": "Ethereum's",
   "tagline2": "Original Wallet",
-  "subheading": "MyEtherWallet (наши друзья называют нас MEW) - это бесплатный клиентский интерфейс, помогающий вам взаимодействовать с блокчейном Ethereum. Наша легкая в пользовании платформа с открытым исходным кодом позволяет вам создавать кошельки, взаимодействовать со смарт-контрактами и многое другое.",
+  "subheading": "MyEtherWallet (our friends call us MEW) is a free, client-side interface helping you interact with the Ethereum blockchain. Our easy-to-use, open-source platform allows you to generate wallets, interact with smart contracts, and so much more.",
   "create-new-wallet": {
-    "text": "Создайте свой собственный уникальный кошелек Ethereum. Получите публичный адрес (0x...) и выберите метод доступа и восстановления."
+    "text": "Generate your own unique Ethereum wallet. Receive a public address (0x...) and choose a method for access and recovery."
   },
   "access-my-wallet": {
-    "text": "Подключитесь к блокчейну используя выбранный вами кошелек.",
-    "opt-1": "Отправка и Обмен ETH и Токенов",
-    "opt-2": "Подписать/верифицировать сообщение",
-    "opt-3": "Взаимодействие с контрактами, ENS, Dapps, и многое другое!",
-    "button": "Получить доступ"
+    "text": "Connect to the blockchain using the wallet of your choice.",
+    "opt-1": "Send and Swap ETH & Tokens",
+    "opt-2": "Sign & Verify Messages",
+    "opt-3": "Interact with Contracts, ENS, Dapps, and more!",
+    "button": "Access Now"
   },
   "about-mew": {
-    "title": "О MEW",
-    "text": "MyEtherWallet - называйте нас MEW - предоставляет блокчейн Ethereum в ваше распоряжение. Мы являемся командой крипто-энтузиастов, специализирующихся на создании для вас наиболее безопасного, наиболее интуитивного и, можно смело сказать, самого приятного способа управления вашим EТH и токенами ERC20. Мы всегда готовы помочь и мы никогда не раздаем ETH. Спасибо!"
+    "title": "About MEW",
+    "text": "MyEtherWallet - please, call us MEW - puts the Ethereum blockchain at your fingertips. We are a team of crypto-enthusiasts dedicated to bring you the most secure, most intuitive, and dare we say prettiest way to manage your ETH and ERC20 tokens. We're always here to help, and we're never giving away ETH. Cheers!"
   },
   "join-mew": {
-    "title": "Присоединиться к MEW",
-    "text": "Получите доступ к первому и пользующемуся наибольшим доверием клиенту кошелька блокчейна Ethereum, теперь с множеством новых функций, которые содержатся в элегантном, простом в использовании интерфейсе."
+    "title": "Join MEW",
+    "text": "Access the Ethereum blockchain's original and most-trusted wallet client, now with a host of new features all contained in an elegant, easy-to-use interface."
   },
   "hardware-support": {
-    "title": "Поддержка аппаратных кошельков",
-    "text": "MEW предлагает поддержку для всех основных аппаратных кошельков, включая Ledger, Trezor и многие другие."
+    "title": "Hardware Wallet Support",
+    "text": "MEW offers support for all major hardware wallets including Ledger, Trezor, and many more."
   },
   "swap": {
-    "text": "MEW является партнером Bity, Kyber Network, Changelly и Simplex, чтобы позволить пользователям обменивать фиатные деньги на криптовалюту, эфириум и биткоины, эфириум и ERC20."
+    "text": "MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC20."
   },
   "faqs": {
-    "subtitle": "Не нашли вопрос, который искали?",
-    "button-see-more": "Подробнее...",
-    "button-here": "здесь.",
+    "subtitle": "Have not found the question that you are looking for?",
+    "button-see-more": "See More...",
+    "button-here": "here.",
+    "button-learn-more": "Узнать больше...",
+    "mew-wallet": {
+      "title": "Что такое MEW wallet?",
+      "text": "MEW wallet - это наше официальное полнофункциональное мобильное приложение, которое обеспечивает безопасность аппаратного кошелька на вашем телефоне iOS или Android."
+    },
     "create-wallet": {
-      "title": "Как мне создать новый кошелек?",
-      "text": "MyEtherWallet (MEW) предлагает три способа создания нового кошелька эфириума. То есть посредством MEWconnect, файла-хранилища ключа или мнемонической фразы. Для дополнительной информации нажмите"
+      "title": "How do I create a new wallet?",
+      "text": "MyEtherWallet (MEW) предлагает три способа создания нового кошелька эфириума: посредством MEW wallet, файла-хранилища ключа или мнемонической фразы. Для дополнительной информации нажмите"
     },
     "mewconnect": {
-      "title": "Что такое MEWconnect?",
-      "text": "MEWconnect является нашим партнерским мобильным приложением для MyEtherWallet. Мы называем его аппаратным кошельком без всякого аппаратного оснащения. Теперь доступно для всех устройств Android и iOS! Подробнее"
+      "title": "What is MEWconnect?",
+      "text": "MEWconnect is our companion mobile app for MyEtherWallet. We call it a hardware wallet without all the hardware. Now available for all Android and iOS smartphones! Read more"
     },
     "other-wallets": {
-      "title": "Может ли MEW работать с другими кошельками?",
-      "text": "MEW поддерживает много различных типов кошельков, включая аппаратные кошельки, такие как Ledger Nano S или Trezor, а также кошельки третьей стороны, такие как MetaMask. Также мы открыты всем для использования своих кошельков эфириума с соответствующей информацией. Подробнее"
+      "title": "Can MEW work with other wallets?",
+      "text": "MEW supports many different wallet types including hardware wallets, such as the Ledger Nano S or Trezor, and third-party wallets like MetaMask. We are also open for anyone to use their Ethereum wallets with the appropriate information. Read more"
     },
     "send-txs": {
-      "title": "Как я могу отправить транзакцию?",
-      "text": "MEW позволяет любому, у кого есть баланс ЕТЧ или токенов ERC20, отправить транзакцию без дополнительных расходов. Для использования блокчейна Ethereum требуется газ, который оплачивается ETH, поэтому мы рекомендуем иметь не менее .01 ETH для оплаты около 2 - 3 транзакций. Подробнее"
+      "title": "How can I send a transaction?",
+      "text": "MEW lets anyone with a balance of ETH or ERC20 tokens send a transaction, without additional charges. Using the Ethereum blockchain takes gas, which is paid for in ETH, so we recommend having at least .01 ETH to cover around 2 - 3 transactions. Read more"
     },
     "forgot-pwd": {
-      "title": "Я забыл(а) свой пароль/закрытый ключ! Что я могу сделать?",
-      "text": "MEW не предлагает поддержку для восстановления или смены паролей/закрытых ключей. Мы всегда рекомендуем записывать закрытые ключи и пароли на физической бумаге/в записных книжках для надежного хранения. Возможно, вы сохранили его на вашем компьютере! Чтобы узнать, чего ожидать, читать подробнее"
+      "title": "I forgot my password/private key! What can I do?",
+      "text": "MEW does not offer support to recover or reset passwords/private keys. We always suggest writing down private keys and passwords on physical paper/notebooks for safekeeping. Maybe you saved it on your computer! For ideas on what to look for, read more"
     }
   },
   "social": {
-    "title": "Сообщество MEW",
+    "title": "Join MEW Community",
     "facebook": "Facebook",
     "twitter": "Twitter",
     "medium": "Medium",
     "reddit": "Reddit",
-    "github": "GitHub",
+    "github": "Github",
     "vkontakte": "Vkontakte",
     "youtube": "YouTube",
     "mewtopia": "MEWtopia",
     "instagram": "Instagram"
   },
-  "lost-title": "Ой! Похоже, вы потерялись."
+  "lost-title": "Oops! Looks like you're lost.",
+  "mew-wallet-modal": {
+    "title": "Официальное приложение MEW wallet теперь доступно!",
+    "text": "Покупайте, держите и отправляйте Ether и токены. Исследуйте Ethereum со своего мобильного телефона. {learn-more}",
+    "learn-more": "Подробнее",
+    "footer-text": "Скачайте наше бесплатное приложение сегодня!",
+    "new": "новый",
+    "details": "Подробности",
+    "hide": "Скрыть"
+  }
 }

@@ -1,7 +1,7 @@
 {
   "banner-submit": {
     "submit-dapp": "Submit Dapp",
-    "back": "Back",
+    "back": "返回",
     "preview": "Preview"
   },
   "mew-support": {
@@ -82,5 +82,5 @@
   "congrats": "Congratulations",
   "congrats-msg": "It takes about 3-5 business days to review your Dapp. And an email will be sent to you if the the status update.",
   "strength-of": "Strength of Information",
-  "contact-support": "Contact Support"
+  "contact-support": "联系客服"
 }
