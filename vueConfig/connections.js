@@ -53,5 +53,6 @@ module.exports = [
   'https://ambrpay.io:443',
   'https://nft2.mewapi.io:443',
   'wss://connect.mewapi.io:443',
-  'wss://connect2.mewapi.io:443'
+  'wss://connect2.mewapi.io:443',
+  'https://protocol-api.aave.com:443'
 ];
