@@ -18,7 +18,7 @@ import {
 import commonGenerator from '@/helpers/commonGenerator';
 
 const NEED_PASSWORD = true;
-const APP_NAME = 'MyEtherWallet V5';
+const APP_NAME = 'MyEtherWalletV5';
 
 class CoolWallet {
   constructor() {
@@ -28,9 +28,11 @@ class CoolWallet {
     this.selectedIdx = '';
     this.appPrivateKey = '';
     this.appPublicKey = '';
-    this.deviceInstance = {};
+    this.transport = {};
+    this.someDeviceInstance = {};
   }
-  async init(transport, password) {
+  async init(transport) {
+    this.transport = transport;
     const hasKeys =
       locStore.get('appPublicKey') && locStore.get('appPrivateKey');
     const hasAppId = locStore.get('appId') || null;
@@ -53,22 +55,52 @@ class CoolWallet {
     const coolWalletInstance = new cwsWallet(transport, this.appPrivateKey);
 
     if (!hasAppId) {
-      // const password = '12345678';
-      // password is gonna be from the eventHub
+      const password = '97423920';
       coolWalletInstance
         .register(this.appPublicKey, password, APP_NAME)
         .then(appId => {
           locStore.set('appId', appId);
           this.appId = appId;
-        });
+          coolWalletInstance.setAppId(appId);
+        })
+        .catch(errorHandler);
     } else {
-      this.hasAppId = hasAppId;
+      this.appId = hasAppId;
     }
 
-    this.deviceInstance = new cwsETH(transport, this.appPrivateKey, this.appId);
+    this.someDeviceInstance = new cwsETH(
+      this.transport,
+      this.appPrivateKey,
+      this.appId
+    );
   }
+
   getAccount(idx) {
+    // const deviceInstance = new cwsETH(
+    //   this.transport,
+    //   this.appPrivateKey,
+    //   this.appId
+    // );
+    console.log(this, 'this instance');
+    console.log(this.identifier, 'this values');
+    console.log(this.isHardware, 'this values');
+    console.log(this.needPassword, 'this values');
+    console.log(this.selectedIdx, 'this values');
+    console.log(this.appPrivateKey, 'this values');
+    console.log(this.appPublicKey, 'this values');
+    console.log(this.transport, 'this values');
+    console.log(this.someDeviceInstance, 'this values');
+    // console.log(idx, this.identifier, this, deviceInstance);
+    // console.log(
+    //   this.transport,
+    //   this.appPrivateKey,
+    //   this.appId,
+    //   'these should exists'
+    // );
+    this.someDeviceInstance.getAddress(idx).then(console.log);
     this.selectedIdx = idx;
+    // console.log(deviceInstance, this.someDeviceInstance);
+    // const address = await deviceInstance.getAddress(idx);
     const txSigner = async tx => {
       tx = new Transaction(tx, {
         common: commonGenerator(store.state.main.network)
@@ -131,12 +163,12 @@ class CoolWallet {
   }
 }
 
-const createWallet = async password => {
+const createWallet = async () => {
   const _coolWallet = new CoolWallet();
   await cwsTransportLib.listen(async (error, device) => {
     if (device) {
       const transport = await cwsTransportLib.connect(device);
-      _coolWallet.init(transport, password);
+      _coolWallet.init(transport);
     } else {
       errorHandler(error);
     }

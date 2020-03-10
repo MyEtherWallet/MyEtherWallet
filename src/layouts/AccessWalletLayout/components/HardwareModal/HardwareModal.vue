@@ -269,12 +269,21 @@ export default {
           this.$refs.hardware.hide();
           break;
         case COOLWALLET_TYPE:
-          this.$emit('hardwareRequiresPassword', {
-            walletConstructor: CoolWallet,
-            hardwareBrand: 'CoolWallet'
-          });
+          // this.$emit('hardwareRequiresPassword', {
+          //   walletConstructor: CoolWallet,
+          //   hardwareBrand: 'CoolWallet'
+          // });
           // console.log('HELLO THERE?!?!?!', CoolWallet);
-          // CoolWallet().then(console.log);
+          CoolWallet()
+            .then(_newWallet => {
+              this.$emit('hardwareWalletOpen', _newWallet);
+            })
+            .catch(() => {
+              Toast.responseHandler(
+                new Error('Having issues with pairing cool wallet'),
+                Toast.ERROR
+              );
+            });
           break;
         default:
           Toast.responseHandler(
