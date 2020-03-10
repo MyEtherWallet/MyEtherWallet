@@ -1,3 +1,17 @@
+### Releaase v5.4.2
+
+### Bugs
+- Fix offline helper fee conversion [#2063] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2063)
+- Fix logout error and fix aave bug [#2082] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2082)
+
+### Devop
+
+- New etherscan api key [#2089](https://github.com/MyEtherWallet/MyEtherWallet/pull/2089)
+- ropsten ens .test set resolver [#2090](https://github.com/MyEtherWallet/MyEtherWallet/pull/2090)
+- Update greenkeeper packages [#2088](https://github.com/MyEtherWallet/MyEtherWallet/pull/2088)
+- Update greenkeeper packages [#2078](https://github.com/MyEtherWallet/MyEtherWallet/pull/2078)
+
+
 ### Release v5.4.1-hotfix.1
 
 ### Bugs

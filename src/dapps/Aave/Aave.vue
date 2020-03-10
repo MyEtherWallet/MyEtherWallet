@@ -377,7 +377,7 @@ export default {
         });
     },
     async deposit(param) {
-      param.referralCode = 14;
+      param.referralCode = '14';
       depositDetails(param)
         .then(resp => {
           const txArr = [];
@@ -392,7 +392,7 @@ export default {
         });
     },
     async borrow(param) {
-      param.referralCode = 14;
+      param.referralCode = '14';
       borrowDetails(param)
         .then(resp => {
           const txArr = [];
