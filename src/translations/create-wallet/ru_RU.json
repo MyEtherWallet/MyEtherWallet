@@ -9,7 +9,7 @@
   },
   "mew-wallet": {
     "title": "Рекомендованный метод",
-    "desc": "Обеспечивает безопасность в стиле аппаратного кошелька на вашем устройстве iOS или Android, помогая вам обеспечить беспрецедентную защиту ваших денежных средств. {learn-more}",
+    "desc": "Buy, hold, and send Ether and tokens. Explore Ethereum on your mobile device. {learn-more}",
     "scan": "Установить",
     "version": {
       "ios": "iOS 10.0 или выше",
