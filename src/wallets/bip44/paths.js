@@ -148,7 +148,7 @@ const mintmeComCoin = {
   label: 'MintMe.com Coin'
 };
 const ethercore = {
-  path: "m/44'/466'/0'",
+  path: "m/44'/466'/0'/0",
   label: 'EtherCore'
 };
 export {

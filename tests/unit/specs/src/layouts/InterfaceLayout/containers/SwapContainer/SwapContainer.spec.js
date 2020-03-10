@@ -4,6 +4,8 @@ import { Tooling } from '@@/helpers';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
 import SwapConfirmationModal from '@/layouts/InterfaceLayout/containers/SwapContainer/components/SwapConfirmationModal/SwapConfirmationModal.vue';
 import sinon from 'sinon';
+import VueX from 'vuex';
+import { state, getters } from '@@/helpers/mockStore';
 
 const showModal = sinon.spy();
 
@@ -22,7 +24,15 @@ describe('SwapContainer.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new VueX.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
   });
 
   beforeEach(() => {

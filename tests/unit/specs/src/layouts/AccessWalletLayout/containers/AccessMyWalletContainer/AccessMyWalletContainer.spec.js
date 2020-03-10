@@ -12,6 +12,8 @@ import MnemonicModal from '@/layouts/AccessWalletLayout/components/MnemonicModal
 import PasswordModal from '@/layouts/AccessWalletLayout/components/PasswordModal/PasswordModal.vue';
 import PrivateKeyModal from '@/layouts/AccessWalletLayout/components/PrivateKeyModal/PrivateKeyModal.vue';
 import { Tooling } from '@@/helpers';
+import VueX from 'vuex';
+import { state, getters } from '@@/helpers/mockStore';
 
 const BBtnStub = {
   name: 'b-btn',
@@ -26,7 +28,15 @@ describe('AccessMyWalletContainer.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new VueX.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
 
     Vue.config.warnHandler = () => {};
   });

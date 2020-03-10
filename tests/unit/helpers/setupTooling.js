@@ -52,6 +52,26 @@ function createLocalVueInstance() {
   };
 }
 
+const RouterLinkStub = {
+  name: 'router-link',
+  template: '<div class="routerlink"><slot></slot></div>',
+  props: ['to']
+};
+
+const RouterViewStub = {
+  name: 'router-view',
+  template: '<div class="routerView"><slot></slot></div>'
+};
+
+// likely will remove this function
+// function createShallowMountWrapper(component, suppliedOptions, baseOptions = {}){
+//   if(typeof baseOptions === 'boolean' && baseOptions){
+//     baseOptions = baseOptions || createLocalVueInstance();
+//   }
+//
+//   return shallowMount(component, {baseOptions, ...suppliedOptions});
+// }
+export { RouterLinkStub, RouterViewStub };
 export default {
   createLocalVueInstance
 };

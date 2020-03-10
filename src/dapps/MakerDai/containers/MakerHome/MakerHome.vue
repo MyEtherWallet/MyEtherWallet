@@ -40,7 +40,7 @@
       <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
         <card
           :title="$t('dappsMCDMaker.dai-savings')"
-          :text="$t('dappsMCDMaker.create-vault-description')"
+          :text="$t('dappsMCDMaker.deposit-dai')"
           button="Go"
           :click="goToSave"
       /></b-col>

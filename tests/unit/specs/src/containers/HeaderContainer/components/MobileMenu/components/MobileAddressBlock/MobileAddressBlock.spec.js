@@ -1,6 +1,8 @@
 import MobileAddressBlock from '@/containers/HeaderContainer/components/MobileMenu/components/MobileAddressBlock/MobileAddressBlock.vue';
 import { shallowMount } from '@vue/test-utils';
 import { Tooling } from '@@/helpers';
+import { state, getters } from '@@/helpers/mockStore';
+import Vuex from 'vuex';
 
 describe('MobileAddressBlock.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -9,7 +11,15 @@ describe('MobileAddressBlock.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new Vuex.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
   });
 
   beforeEach(() => {

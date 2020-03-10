@@ -3,6 +3,8 @@ import { shallowMount } from '@vue/test-utils';
 import { Tooling } from '@@/helpers';
 import StandardButton from '@/components/Buttons/StandardButton';
 import sinon from 'sinon';
+import { state, getters } from '@@/helpers/mockStore';
+import Vuex from 'vuex';
 
 const hideModal = sinon.stub();
 
@@ -16,7 +18,7 @@ const BModalStub = {
 };
 
 describe('LogoutModal.vue', () => {
-  let localVue, i18n, wrapper, store, dispatch;
+  let localVue, i18n, wrapper, store, dispatch, actions;
 
   const mockRouter = {
     push: sinon.stub()
@@ -26,9 +28,23 @@ describe('LogoutModal.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
     dispatch = sinon.stub();
-    store.dispatch = dispatch;
+
+    actions = {
+      clearWallet: sinon.stub()
+    };
+
+    store = new Vuex.Store({
+      modules: {
+        main: {
+          dispatch: dispatch,
+          namespaced: true,
+          state,
+          getters,
+          actions
+        }
+      }
+    });
   });
 
   beforeEach(() => {
@@ -56,7 +72,7 @@ describe('LogoutModal.vue', () => {
     it('should logout when button is clicked', () => {
       expect(dispatch.calledWith('clearWallet')).toBe(false);
       wrapper.find('.buttons .yes').trigger('click');
-      expect(dispatch.calledWith('clearWallet')).toBe(true);
+      expect(actions.clearWallet.called).toBe(true);
       expect(hideModal.called).toBe(true);
     });
   });

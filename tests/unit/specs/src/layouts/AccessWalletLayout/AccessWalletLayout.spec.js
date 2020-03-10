@@ -2,8 +2,9 @@ import Vue from 'vue';
 import { shallowMount, RouterLinkStub } from '@vue/test-utils';
 import AccessWalletLayout from '@/layouts/AccessWalletLayout/AccessWalletLayout.vue';
 import { Tooling } from '@@/helpers';
-import PriceBar from '@/layouts/AccessWalletLayout/components/PriceBar/PriceBar.vue';
 import BigNumber from 'bignumber.js';
+import VueX from 'vuex';
+import { state, getters } from '@@/helpers/mockStore';
 import { fetch } from 'whatwg-fetch';
 
 function roundPercentage(num) {
@@ -17,7 +18,15 @@ describe('AccessWalletLayout.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new VueX.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
 
     Vue.config.warnHandler = () => {};
   });
@@ -31,8 +40,7 @@ describe('AccessWalletLayout.vue', () => {
       store,
       attachToDocument: true,
       stubs: {
-        'router-link': RouterLinkStub,
-        'price-bar': PriceBar
+        'router-link': RouterLinkStub
       }
     });
   });

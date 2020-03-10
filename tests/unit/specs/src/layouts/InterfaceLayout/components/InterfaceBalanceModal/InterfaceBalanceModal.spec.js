@@ -1,5 +1,7 @@
 import { shallowMount } from '@vue/test-utils';
 import InterfaceBalanceModal from '@/layouts/InterfaceLayout/components/InterfaceBalanceModal/InterfaceBalanceModal.vue';
+import Vuex from 'vuex';
+import { state, getters } from '@@/helpers/mockStore';
 
 import { Tooling } from '@@/helpers';
 
@@ -10,7 +12,15 @@ describe('InterfaceBalanceModal.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new Vuex.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
   });
 
   beforeEach(() => {

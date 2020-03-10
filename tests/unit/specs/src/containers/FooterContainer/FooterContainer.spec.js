@@ -1,6 +1,8 @@
 import { mount, RouterLinkStub } from '@vue/test-utils';
 import FooterContainer from '@/containers/FooterContainer/FooterContainer.vue';
 import { Tooling } from '@@/helpers';
+import VueX from 'vuex';
+import { state, getters } from '@@/helpers/mockStore';
 
 describe('FooterContainer.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -9,7 +11,15 @@ describe('FooterContainer.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new VueX.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
   });
 
   beforeEach(() => {

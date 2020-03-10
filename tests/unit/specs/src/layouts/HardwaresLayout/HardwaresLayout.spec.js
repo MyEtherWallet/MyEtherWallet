@@ -23,7 +23,9 @@ describe('HardwaresLayout.vue', () => {
 
   it('should render correct items data', () => {
     let { items } = wrapper.vm.$data;
-    items = items.filter(element => element.logo != '');
+    items = items.filter(
+      element => element.logo !== '' && element.price !== ''
+    );
     const hardwareItems = wrapper.vm.$el.querySelectorAll('.hardware-item');
     for (const [i, hardwareItem] of hardwareItems.entries()) {
       const { price, href, currency } = items[i];

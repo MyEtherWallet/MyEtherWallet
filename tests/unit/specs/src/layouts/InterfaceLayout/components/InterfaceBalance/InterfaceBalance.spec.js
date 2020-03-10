@@ -3,6 +3,8 @@ import InterfaceBalance from '@/layouts/InterfaceLayout/components/InterfaceBala
 import InterfaceBalanceModal from '@/layouts/InterfaceLayout/components/InterfaceBalanceModal/InterfaceBalanceModal.vue';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
+import VueX from 'vuex';
+import { state, getters } from '@@/helpers/mockStore';
 
 const showModal = sinon.stub();
 const BModalStub = {
@@ -22,7 +24,15 @@ describe('InterfaceBalance.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new VueX.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
   });
 
   beforeEach(() => {

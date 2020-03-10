@@ -3,6 +3,8 @@ import { shallowMount } from '@vue/test-utils';
 import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal/NetworkAndAddressModal.vue';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
+import { state, getters } from '@@/helpers/mockStore';
+import Vuex from 'vuex';
 
 const showModal = sinon.stub();
 const hideModal = sinon.stub();
@@ -26,9 +28,21 @@ describe('NetworkAndAddressModal.vue', () => {
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
+    const actions = {
+      decryptWallet: jest.fn()
+    };
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new Vuex.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters,
+          actions
+        }
+      }
+    });
 
     Vue.config.warnHandler = () => {};
   });

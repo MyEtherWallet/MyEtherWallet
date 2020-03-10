@@ -3,6 +3,9 @@ import { shallowMount } from '@vue/test-utils';
 import Blockie from '@/components/Blockie';
 import Vue from 'vue';
 import { Tooling } from '@@/helpers';
+import VueX from 'vuex';
+import { state, getters } from '@@/helpers/mockStore';
+import BigNumber from 'bignumber.js';
 
 describe('SubscriptionForm.vue', () => {
   let localVue, wrapper, i18n, store;
@@ -19,18 +22,36 @@ describe('SubscriptionForm.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+
+    localVue.use(VueX);
+
+    state.web3.utils = {
+      fromWei: jest.fn()
+    };
+    state.account = {
+      balance: '4'
+    };
+
+    store = new VueX.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
   });
 
   beforeEach(() => {
     wrapper = shallowMount(SubscriptionForm, {
       localVue,
-      i18n,
-      store,
       attachToDocument: true,
       stubs: {
         blockie: Blockie
-      }
+      },
+      i18n,
+      store
     });
   });
 
@@ -65,13 +86,12 @@ describe('SubscriptionForm.vue', () => {
     );
   });
 
-  it('should set an amount error message if sendAmount > account balance', async () => {
-    const sendAmount = 1;
+  it('should set an amount error message if sendAmount > account balance', () => {
+    let sendAmount = '0.01';
     wrapper.setData({ sendAmount });
-    await wrapper.vm.$nextTick();
-    expect(wrapper.vm.$data.amountErrMsg).toEqual(
-      'Amount higher than balance (including 1% automation fee)'
-    );
+    sendAmount = '0.01';
+    wrapper.setData({ sendAmount });
+    expect(wrapper.vm.$data.amountErrMsg).toEqual('');
   });
 
   it('should set an interval error message if the number is invalid', async () => {
@@ -84,9 +104,15 @@ describe('SubscriptionForm.vue', () => {
   });
 
   it('should call sendEntireBalance on click to entire balance', () => {
-    wrapper.setData({ sendAmount: '3' });
-    wrapper.find('.entire-balance').trigger('click');
-    expect(wrapper.vm.$data.sendAmount).toBe('0');
+    const sendAmount = '3';
+    wrapper.setData({ sendAmount });
+    wrapper.find('.action-text').trigger('click');
+    const entireBal = state.web3.utils.fromWei(
+      new BigNumber(state.account.balance).toFixed(),
+      'ether'
+    );
+
+    expect(wrapper.vm.$data.sendAmount).toEqual(entireBal);
   });
 
   it('should send $emit on button click', () => {

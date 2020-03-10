@@ -1,6 +1,9 @@
-import { shallowMount, RouterLinkStub } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
+import Vuex from 'vuex';
 import HomeLayout from '@/layouts/HomeLayout/HomeLayout.vue';
 import { Tooling } from '@@/helpers';
+import { RouterLinkStub } from '@@/helpers/setupTooling';
+import { state, getters } from '@@/helpers/mockStore';
 
 describe('HomeLayout.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -9,7 +12,15 @@ describe('HomeLayout.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new Vuex.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
   });
 
   beforeEach(() => {

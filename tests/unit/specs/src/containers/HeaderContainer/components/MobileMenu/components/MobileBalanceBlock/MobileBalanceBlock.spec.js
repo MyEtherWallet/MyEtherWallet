@@ -2,6 +2,8 @@ import MobileBalanceBlock from '@/containers/HeaderContainer/components/MobileMe
 import { shallowMount } from '@vue/test-utils';
 import { Tooling } from '@@/helpers';
 import InterfaceBalanceModal from '@/layouts/InterfaceLayout/components/InterfaceBalanceModal';
+import { state, getters } from '@@/helpers/mockStore';
+import Vuex from 'vuex';
 
 import sinon from 'sinon';
 
@@ -25,7 +27,15 @@ describe('MobileBalanceBlock.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new Vuex.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
   });
 
   beforeEach(() => {

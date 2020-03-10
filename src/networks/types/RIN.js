@@ -13,7 +13,7 @@ export default {
   tokens: tokens,
   contracts: contracts,
   ens: {
-    resolver: '0xe7410170f87102DF0055eB195163A03B7F2Bff4A',
+    resolver: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
     registrarTLD: 'test',
     registrarType: 'fifs',
     supportedTld: RIN

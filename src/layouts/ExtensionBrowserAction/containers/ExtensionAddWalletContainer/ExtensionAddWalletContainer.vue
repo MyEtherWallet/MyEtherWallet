@@ -173,7 +173,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['path', 'linkQuery'])
+    ...mapState('main', ['path', 'linkQuery'])
   },
   mounted() {
     this.$refs.mnemonicPhrase.$refs.mnemonicPhrase.$on('hidden', () => {
@@ -242,15 +242,15 @@ export default {
           this.wallet = {};
         });
     },
-    async generateFromMnemonicPriv() {
+    generateFromMnemonicPriv() {
       this.loading = true;
-      const privateKey = await ExtensionHelpers.getPrivFromMnemonicWallet(
+      ExtensionHelpers.getPrivFromMnemonicWallet(
         this.internalMnem,
         this.selectedAccountPath
-      );
-
-      this.internalMnem = this.mnemonicPhrase;
-      this.generateWalletFromPriv(privateKey, 'mnem');
+      ).then(res => {
+        this.internalMnem = this.mnemonicPhrase;
+        this.generateWalletFromPriv(res.toString('hex'), 'mnem');
+      });
     },
     generateWalletFromPriv(priv, type) {
       this.loading = true;

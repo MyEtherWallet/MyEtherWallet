@@ -51,7 +51,7 @@
                   : ''
               "
               class="switch-network"
-              @click="switchNetwork(net)"
+              @click="locSwitchNetwork(net)"
             >
               {{ net.service }}
             </p>
@@ -73,7 +73,7 @@
               "
               class="switch-network custom-network-item"
             >
-              <p @click="switchNetwork(net)">
+              <p @click="locSwitchNetwork(net)">
                 {{ net.service }} {{ '(' + net.type.name + ')' }}
               </p>
               <i
@@ -280,7 +280,7 @@ import * as networkTypes from '@/networks/types';
 import nodeList from '@/networks';
 import Misc from '@/helpers/misc';
 
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   components: {
@@ -302,7 +302,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['network', 'Networks', 'web3']),
+    ...mapState('main', ['network', 'Networks', 'web3']),
     reorderedNetworks() {
       const networks = Misc.reorderNetworks();
       return networks;
@@ -346,6 +346,7 @@ export default {
     this.selectedNetworkName = this.network.type.name;
   },
   methods: {
+    ...mapActions('main', ['switchNetwork', 'setWeb3Instance']),
     networkModalOpen() {
       this.$refs.network.$refs.network.show();
     },
@@ -413,20 +414,17 @@ export default {
     expendAuth() {
       this.$refs.authForm.classList.toggle('hidden');
     },
-    switchNetwork(network) {
-      this.$store.dispatch('switchNetwork', network).then(() => {
-        this.$store.dispatch('setWeb3Instance').then(() => {
+    locSwitchNetwork(network) {
+      this.switchNetwork(network).then(() => {
+        this.setWeb3Instance().then(() => {
           this.selectedNetworkName = network.type.name;
           if (Misc.isMewCx()) {
-            this.web3.eth.net.getId().then(id => {
-              window.chrome.storage.sync.set({
-                defChainID: network.type.chainID,
-                defNetVersion: id,
-                defNetwork: JSON.stringify({
-                  service: network.service,
-                  key: network.type.name
-                })
-              });
+            window.chrome.storage.sync.set({
+              defChainID: network.type.chainID,
+              defNetwork: JSON.stringify({
+                service: network.service,
+                key: network.type.name
+              })
             });
           }
         });

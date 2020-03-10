@@ -2,7 +2,8 @@ import { shallowMount } from '@vue/test-utils';
 import InterfaceAddress from '@/layouts/InterfaceLayout/components/InterfaceAddress/InterfaceAddress.vue';
 import { Tooling } from '@@/helpers';
 import sinon from 'sinon';
-import { state } from '@@/helpers/mockStore';
+import { state, getters } from '@@/helpers/mockStore';
+import Vuex from 'vuex';
 
 describe('InterfaceAddress.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -18,7 +19,15 @@ describe('InterfaceAddress.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new Vuex.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
   });
 
   beforeEach(() => {

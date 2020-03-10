@@ -3,7 +3,8 @@ import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import InterfaceNetworkModal from '@/layouts/InterfaceLayout/components/InterfaceNetworkModal/InterfaceNetworkModal.vue';
 import InterfaceBottomText from '@/components/InterfaceBottomText/InterfaceBottomText.vue';
-
+import VueX from 'vuex';
+import { state, getters } from '@@/helpers/mockStore';
 import { Tooling } from '@@/helpers';
 
 describe('InterfaceNetworkModal.vue', () => {
@@ -13,7 +14,15 @@ describe('InterfaceNetworkModal.vue', () => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
-    store = baseSetup.store;
+    store = new VueX.Store({
+      modules: {
+        main: {
+          namespaced: true,
+          state,
+          getters
+        }
+      }
+    });
 
     Vue.config.warnHandler = () => {};
   });

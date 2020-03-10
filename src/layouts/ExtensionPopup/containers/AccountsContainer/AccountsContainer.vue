@@ -78,6 +78,7 @@
         :cancel="cancel"
         :switch-wallet="moveToQuicksend"
         :usd="usd"
+        :has-many-wallets="myWallets.length > 1"
       />
     </div>
     <b-modal
@@ -98,7 +99,13 @@
             v-for="wallet in myWallets"
             ref="fromWallet"
             :key="wallet.nick + wallet.address"
-            class="wallet-from-view"
+            :class="[
+              Object.keys(selectedWallet).length > 0 &&
+              selectedWallet.address === wallet.address
+                ? 'selected'
+                : '',
+              'wallet-from-view'
+            ]"
             @click="selectWallet(wallet, $event)"
           >
             <div>
@@ -134,7 +141,6 @@ import NetworkCompoent from '../../components/NetworkComponent';
 import QuickSendContainer from '../QuickSendContainer';
 import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
-import { toChecksumAddress } from '@/helpers/addressUtils';
 import { mapState } from 'vuex';
 import { isAddress } from '@/helpers/addressUtils';
 
@@ -173,7 +179,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network']),
+    ...mapState('main', ['web3', 'network']),
     concatBalance() {
       const balance = new BigNumber(this.totalBalance).toFixed(5);
       return this.totalBalance > 0 ? balance : this.totalBalance;
@@ -258,29 +264,8 @@ export default {
     closeFromModal() {
       this.$refs.fromModal.hide();
     },
-    selectWallet(wallet, e) {
-      if (this.selectedWallet.hasOwnProperty('nick')) {
-        if (
-          toChecksumAddress(wallet.address) ===
-          toChecksumAddress(this.selectedWallet.address)
-        ) {
-          e.target.classList.remove('selected');
-          this.selectedWallet = {};
-        } else {
-          this.$refs.fromWallet.forEach(item => {
-            item.classList.remove('selected');
-          });
-          this.selectedWallet = wallet;
-          e.target.classList.add('selected');
-        }
-      } else {
-        this.$refs.fromWallet.forEach(item => {
-          item.classList.remove('selected');
-        });
-        this.selectedWallet = wallet;
-        e.target.classList.add('selected');
-      }
-
+    selectWallet(wallet) {
+      this.selectedWallet = wallet;
       this.closeFromModal();
     },
     cancel() {
