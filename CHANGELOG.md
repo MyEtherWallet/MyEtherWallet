@@ -1,6 +1,7 @@
 ### Devop
 
 - New etherscan api key [#2089](https://github.com/MyEtherWallet/MyEtherWallet/pull/2089)
+- ropsten ens .test set resolver [#2090](https://github.com/MyEtherWallet/MyEtherWallet/pull/2090)
 
 ### Release v5.4.1
 
