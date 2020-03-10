@@ -304,7 +304,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     collateralRatioColoring() {
       if (this.values) {
         if (this.values.collateralRatio >= 2) {

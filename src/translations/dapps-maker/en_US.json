@@ -165,6 +165,8 @@
   "manage-your-vault-description": "Make changes to your Vault or close it out.",
   "create-vault-description": "Open a Multi-Collateral Vault to generate DAI based on your collateral.",
   "dai-savings-description": "Check on your DAI holdings, set an allowance for your collateral, and deploy a proxy to save on transaction time and gas.",
+  "no-longer-active-notice": "Single collateral SAI (previously called DAI) is being migrated to multi-collateral DAI (new DAI). Therefore any new generation should use the new structure.",
+  "dai-savings-description": "Check on your DAI holdings, set an allowance for your collateral, and deploy a proxy to save on transaction time and gas.",
   "what-is-dashes-vault": "A value of -- indicates this Vault has no DAI so these calculations are only meaningful if this Vault has created DAI",
   "below-min-currency": "Below {currency} minimum"
 }

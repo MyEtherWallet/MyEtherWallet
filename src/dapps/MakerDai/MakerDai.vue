@@ -93,7 +93,7 @@
             class="mr-2 mb-1"
             @click="openManage(value)"
           >
-            <b>{{ $t('dappsMaker.vault-id') }}</b>
+            <b>{{ $t('dappsMCDMaker.vault-id') }}</b>
             <b-badge variant="light" class="ml-2" style="font-size: 15px;"
               ># {{ value }}</b-badge
             >
@@ -290,7 +290,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     currentProxyAddress() {
       return this.proxyAddress;
     },

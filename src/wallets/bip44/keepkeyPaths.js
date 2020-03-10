@@ -25,7 +25,8 @@ import {
   dexon,
   lightstreamsNetwork,
   rskMainnet,
-  rskTestnet
+  rskTestnet,
+  ethercore
 } from './paths';
 export default [
   keepkeyEthereum,
@@ -54,5 +55,6 @@ export default [
   dexon,
   lightstreamsNetwork,
   rskMainnet,
-  rskTestnet
+  rskTestnet,
+  ethercore
 ];

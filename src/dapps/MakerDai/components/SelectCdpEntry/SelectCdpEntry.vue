@@ -126,7 +126,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     hasProxy() {
       if (this.aCdp) {
         return !this.aCdp.noProxy;

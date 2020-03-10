@@ -2,6 +2,7 @@ import { post } from '@/helpers/httpRequests';
 import { kyberMethods } from './config';
 import { swapApiEndpoints } from '../partnersConfig';
 import { utils } from '../helpers';
+import { Toast } from '@/helpers';
 
 function buildPath() {
   return swapApiEndpoints.base + swapApiEndpoints.kyber;
@@ -14,9 +15,8 @@ const getTokenList = async network => {
         buildPath(),
         utils.buildPayload(kyberMethods[network].currencies, [network])
       );
-
       if (results.error) {
-        throw Error(results.error.message);
+        Toast.responseHandler('kyber-token-list-update-failed', 1);
       }
 
       return results.result;
@@ -36,7 +36,7 @@ const getRates = async network => {
       );
 
       if (results.error) {
-        throw Error(results.error.message);
+        Toast.responseHandler('kyber-gasLimit-list-update-failed', 1);
       }
 
       return results.result;
@@ -56,7 +56,7 @@ const getGasLimits = async network => {
       );
 
       if (results.error) {
-        throw Error(results.error.message);
+        Toast.responseHandler('kyber-list-update-failed', 1);
       }
       return results.result;
     }

@@ -72,7 +72,7 @@
               <div class="cancel" @click="cancel">
                 {{ $t('common.cancel') }}
               </div>
-              <div class="proceed" @click="addCustomPath">
+              <div class="proceed" @click="locAddCustomPath">
                 {{ $t('accessWallet.path.add-custom') }}
               </div>
             </div>
@@ -125,7 +125,7 @@ import apps from '@/wallets/hardware/ledger/appPaths.js';
 import cust from '@/assets/images/icons/network.svg';
 import { Toast, pathHelpers } from '@/helpers';
 import { LedgerWallet } from '@/wallets';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { ethereum } from '@/wallets/bip44/paths';
 export default {
   props: {
@@ -166,7 +166,7 @@ export default {
     dropDownDefaultText() {
       return `${this.selectedPath.label} - ${this.selectedPath.path}`;
     },
-    ...mapState(['customPaths'])
+    ...mapState('main', ['customPaths'])
   },
   watch: {
     selectedApp: {
@@ -189,11 +189,12 @@ export default {
     });
   },
   methods: {
+    ...mapActions('main', ['removeCustomPath', 'addCustomPath']),
     remove(path, idx) {
       const mappedPaths = this.selectedApp.paths.filter((item, itemIdx) => {
         if (itemIdx !== idx) return item;
       });
-      this.$store.dispatch('removeCustomPath', path);
+      this.removeCustomPath(path);
       this.setupCustomPaths();
       this.selectedApp.paths = mappedPaths;
       this.selectedPath =
@@ -235,22 +236,20 @@ export default {
 
       this.apps = loc;
     },
-    addCustomPath() {
+    locAddCustomPath() {
       const customPath = pathHelpers.checkCustomPath(this.customPath);
       if (customPath) {
         this.selectedPath = {
           path: customPath,
           label: this.customLabel
         };
-        this.$store
-          .dispatch('addCustomPath', {
-            label: this.customLabel,
-            path: customPath
-          })
-          .then(() => {
-            this.setupCustomPaths();
-            this.selectedApp.paths.unshift(this.selectedPath);
-          });
+        this.addCustomPath({
+          label: this.customLabel,
+          path: customPath
+        }).then(() => {
+          this.setupCustomPaths();
+          this.selectedApp.paths.unshift(this.selectedPath);
+        });
       } else {
         Toast.responseHandler(
           this.$t('access-wallet.path.ivalid-custom'),

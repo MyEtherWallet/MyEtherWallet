@@ -37,7 +37,7 @@
                     <i v-if="neverShow" class="fa fa-check" />
                   </span>
                   <input name="terms" type="checkbox" />
-                  {{ $t('common.issue-log.never-show') }}
+                  {{ $t('common.issue-log.hide-for-now') }}
                 </label>
               </div>
             </div>
@@ -52,10 +52,7 @@
 
           <b-collapse id="collapse-error-detail" class="mt-2">
             <b-card>
-              <pre class="error-detail"
-                >{{ JSON.stringify(error) }}
-</pre
-              >
+              <textarea v-model="errorDetails" class="error-detail"></textarea>
             </b-card>
           </b-collapse>
         </div>
@@ -70,6 +67,7 @@
 
 <script>
 import store from 'store';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'IssueLogModal',
@@ -93,19 +91,25 @@ export default {
       neverShow: false
     };
   },
+  computed: {
+    errorDetails() {
+      return JSON.stringify(this.error, null, 2);
+    }
+  },
   watch: {
-    neverShow(newVal) {
-      store.set('neverReport', newVal);
+    neverShow() {
+      this.toggleTempHide();
     }
   },
   mounted() {
     const popUpCount = store.get('errorPop') || 0;
     this.errorCount = popUpCount;
-    if (this.errorCount >= 10) {
+    if (this.errorCount >= 5) {
       this.showSkipper = true;
     }
   },
   methods: {
+    ...mapActions('main', ['toggleTempHide']),
     sendError(bool) {
       this.resolver(bool);
       this.$refs.issuelog.hide();

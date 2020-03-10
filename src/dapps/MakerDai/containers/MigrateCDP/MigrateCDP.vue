@@ -2,7 +2,7 @@
   <div style="max-width: 500px;">
     <div class="d-flex align-items-center mb-5">
       <h3 class="mr-2 ">
-        {{ $t('dappsMaker.migrate-single-collateral-to-multi-collateral') }}
+        {{ $t('dappsMCDMaker.migrate-single-collateral-to-multi-collateral') }}
       </h3>
       <img :src="DaiIcon" class="icon-size" height="26" width="26" />
     </div>
@@ -17,16 +17,16 @@
           class="mb-1"
         ></b-form-input>
         <b-button variant="secondary" @click="checkMigrateContractSaiBalance">{{
-          $t('dappsMaker.check-balance')
+          $t('dappsMCDMaker.check-balance')
         }}</b-button>
       </div>
 
       <div v-show="noSaiAvailable && !needsAtLeast20">
-        {{ $t('dappsMaker.not-enough-sai') }}
+        {{ $t('dappsMCDMaker.not-enough-sai') }}
       </div>
       <div v-show="needsAtLeast20" style="padding: 10px">
         {{
-          $t('dappsMaker.needs-at-least-20', {
+          $t('dappsMCDMaker.needs-at-least-20', {
             value: migrateContractBalance
           })
         }}
@@ -35,13 +35,13 @@
 
     <div class="currency-picker-container">
       <div class="mb-2">
-        <b>{{ $t('dappsMaker.your-cdps') }}</b>
+        <b>{{ $t('dappsMCDMaker.your-cdps') }}</b>
       </div>
 
       <div v-if="!cdpDetailsLoaded" class="d-flex align-items-center">
         <b-spinner class="mr-3" variant="primary" label="Spinning"></b-spinner>
         <div>
-          {{ $t('dappsMaker.loading-your-cdps') }}
+          {{ $t('dappsMCDMaker.loading-your-cdps') }}
         </div>
       </div>
       <div v-for="cdpId in cdps" :key="cdpId">
@@ -57,12 +57,12 @@
           <p>
             <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
             {{ cdpId }}
-            <span class="subname">- {{ $t('dappsMaker.cdp') }} </span>
+            <span class="subname">- {{ $t('dappsMCDMaker.cdp') }} </span>
           </p>
         </div>
       </div>
       <div v-show="noCdpsToMigrateFound">
-        {{ $t('dappsMaker.no-cdps-to-migrate-found') }}
+        {{ $t('dappsMCDMaker.no-cdps-to-migrate-found') }}
       </div>
       <p v-show="mkrNeeded">{{ $t('dappsMCDMaker.get-maker-to-migrate') }}</p>
       <div v-show="mkrNeeded" class="buttons-container">
@@ -70,7 +70,7 @@
           :class="['submit-button large-round-button-green-filled']"
           @click="getMkr"
         >
-          {{ $t('dappsMaker.get-mkr') }}
+          {{ $t('dappsMCDMaker.get-mkr') }}
         </div>
       </div>
       <p v-show="approvalNeeded && !mkrNeeded">
@@ -81,7 +81,7 @@
           :class="['submit-button large-round-button-green-filled']"
           @click="beginMigration"
         >
-          {{ $t('dappsMaker.approve-maker') }}
+          {{ $t('dappsMCDMaker.approve-maker') }}
         </div>
       </div>
       <div class="buttons-container">
@@ -92,7 +92,7 @@
           ]"
           @click="beginMigration"
         >
-          {{ $t('dappsMaker.migrate') }}
+          {{ $t('dappsMCDMaker.migrate') }}
         </div>
       </div>
     </div>
@@ -161,7 +161,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     migrationPossible() {
       return (
         toBigNumber(this.daiGenerated).lt(

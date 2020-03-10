@@ -33,7 +33,7 @@
           <input
             v-model="tokenSymbol"
             :placeholder="$t('nftManager.name')"
-            name="Symbol"
+            name="Name"
             type="text"
             class="custom-input-text-1"
           />
@@ -88,7 +88,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3']),
+    ...mapState('main', ['web3']),
     allFieldsValid() {
       if (!this.validAddress) return false;
       if (this.tokenSymbol === '') return false;
@@ -118,63 +118,10 @@ export default {
       this.nonStandardMessage = false;
     },
     async addCustom(address, symbol) {
-      const result = await this.checkIfStandard(address);
-      if (result) this.addToken(address, symbol);
-      else {
-        this.nonStandardMessage = true;
-      }
+      this.addToken(address, symbol);
     },
     openCustomModal() {
       this.$refs.customModal.$refs.modal.show();
-    },
-    checkIfStandard(address) {
-      return new Promise(resolve => {
-        // 0x780e9d63
-        const tokenContract = new this.web3.eth.Contract([
-          {
-            constant: true,
-            inputs: [
-              { name: '_owner', type: 'address' },
-              { name: '_index', type: 'uint256' }
-            ],
-            name: 'tokenOfOwnerByIndex',
-            outputs: [{ name: '', type: 'uint256' }],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function'
-          },
-          {
-            constant: true,
-            inputs: [{ name: '_interfaceId', type: 'bytes4' }],
-            name: 'supportsInterface',
-            outputs: [{ name: '', type: 'bool' }],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function'
-          }
-        ]);
-        tokenContract.options.address = address;
-        tokenContract.methods
-          .supportsInterface('0x780e9d63')
-          .call()
-          .then(res => {
-            if (res) resolve(true);
-            else {
-              tokenContract.methods
-                .tokenOfOwnerByIndex(this.activeAddress, 0)
-                .call()
-                .then(() => {
-                  resolve(true);
-                })
-                .catch(() => {
-                  resolve(false);
-                });
-            }
-          })
-          .catch(() => {
-            resolve(false);
-          });
-      });
     }
   }
 };

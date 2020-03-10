@@ -34,6 +34,7 @@ export default class SwapProviders {
     }
     this.providerConstructors = providers;
     this.setup(providers, environmentSupplied, misc);
+    this.startTime = Date.now();
   }
 
   setup(providers, environmentSupplied, misc) {
@@ -89,7 +90,7 @@ export default class SwapProviders {
   get ratesRetrieved() {
     let result = true;
     this.providers.forEach(provider => {
-      if (!provider.ratesRetrieved) {
+      if (!provider.ratesRetrieved && Date.now() - this.startTime < 2000) {
         result = false;
       }
     });

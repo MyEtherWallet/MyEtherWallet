@@ -27,9 +27,7 @@
               <p>{{ $t('dappsMCDMaker.outstanding-dai') }}</p>
               <p>
                 <b>
-                  {{
-                  displayFixedValue(debtValue(), 3)
-                  }}
+                  {{ displayFixedValue(debtValue(), 3) }}
                 </b>
                 {{ $t('dappsMCDMaker.dai') }}
               </p>
@@ -176,7 +174,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     amountPresent() {
       return (
         (this.amount || this.amount !== '') && !toBigNumber(this.amount).lte(0)

@@ -122,7 +122,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     btnActive() {
       return Misc.isValidETHAddress(this.address) && this.checkBoxChecked;
     }

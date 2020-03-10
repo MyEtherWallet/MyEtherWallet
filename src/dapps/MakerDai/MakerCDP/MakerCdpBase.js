@@ -103,24 +103,32 @@ export default class MakerCdpBase {
     return this.cdp.collateralAvailable;
   }
 
-  get minPercent(){
+  get minPercent() {
     return this.liquidationRatio;
   }
 
-  get warnPercent(){
+  get warnPercent() {
     return this.liquidationRatio.plus(this.goodPercentMargin);
   }
 
-   get goodPercent(){
+  get goodPercent() {
     return this.liquidationRatio.plus(this.warnPercentMargin);
-   }
+  }
 
   get collateralStatus() {
-    if (this.collateralizationRatio.gte(this.liquidationRatio.plus(this.warnPercentMargin))) {
+    if (
+      this.collateralizationRatio.gte(
+        this.liquidationRatio.plus(this.warnPercentMargin)
+      )
+    ) {
       return 'green';
     } else if (
-      this.collateralizationRatio.gte(this.liquidationRatio.plus(this.goodPercentMargin)) &&
-      this.collateralizationRatio.lte(this.liquidationRatio.plus(this.warnPercentMargin))
+      this.collateralizationRatio.gte(
+        this.liquidationRatio.plus(this.goodPercentMargin)
+      ) &&
+      this.collateralizationRatio.lte(
+        this.liquidationRatio.plus(this.warnPercentMargin)
+      )
     ) {
       return 'orange';
     }

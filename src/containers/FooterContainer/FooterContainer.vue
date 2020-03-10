@@ -208,6 +208,10 @@ export default {
             //   to: '/advanced-tools'
             // },
             {
+              text: 'footer.mew-wallet',
+              href: 'https://www.mewwallet.com/'
+            },
+            {
               text: 'footer.mew-connect',
               href: 'https://mewconnect.myetherwallet.com/#/'
             },
@@ -301,12 +305,16 @@ export default {
         {
           to: 'https://www.medium.com/@myetherwallet',
           class: 'fa-medium'
+        },
+        {
+          to: 'https://vk.com/public190491855',
+          class: 'fa-vk'
         }
       ]
     };
   },
   computed: {
-    ...mapState(['ethDonationAddress'])
+    ...mapState('main', ['ethDonationAddress'])
   },
   mounted() {
     if (Misc.isMewCx()) {
@@ -354,5 +362,4 @@ export default {
 <style lang="scss" scoped>
 @import 'FooterContainer-desktop.scss';
 @import 'FooterContainer-tablet.scss';
-@import 'FooterContainer-mobile.scss';
 </style>

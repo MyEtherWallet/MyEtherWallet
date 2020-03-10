@@ -170,7 +170,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network', 'notifications', 'wallet']),
+    ...mapState('main', ['web3', 'network', 'notifications', 'wallet']),
     errorMessage() {
       return this.errorMessageString(this.notice);
     },
@@ -267,6 +267,7 @@ export default {
             updateStatus(swapOnlyStatuses.CANCELLED);
             return;
           }
+
           const newStatus = await this.provider.getOrderStatus(
             this.notice.body,
             this.network.type.name

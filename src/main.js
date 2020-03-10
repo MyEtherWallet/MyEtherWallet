@@ -48,6 +48,21 @@ import VeeValidate from 'vee-validate';
 import './registerServiceWorker';
 import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
+import langShortCodes from '@/translations/getShortCodes';
+
+const getDefaultLang = () => {
+  if (router.options.base) {
+    const shortCode = router.options.base.replace('/', '');
+    if (Object.keys(langShortCodes).includes(shortCode)) {
+      store.dispatch('main/setLocale', {
+        locale: langShortCodes[shortCode],
+        save: false
+      });
+      return langShortCodes[shortCode];
+    }
+  }
+  return 'en_US';
+};
 
 Vue.use(VueMq, {
   breakpoints: {
@@ -91,7 +106,7 @@ Vue.config.keyCodes = {
   enter: [13]
 };
 const i18n = new VueI18n({
-  locale: 'en_US',
+  locale: getDefaultLang(),
   fallbackLocale: 'en_US',
   messages: languages,
   silentTranslationWarn: true
@@ -128,16 +143,16 @@ Sentry.init({
   release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event) {
     const network =
-      !store && !store.state && !store.state.network
-        ? store.state.network.type.name
+      !store && !store.state.main && !store.state.main.network
+        ? store.state.main.network.type.name
         : '';
     const service =
-      !store && !store.state && !store.state.network
-        ? store.state.network.service
+      !store && !store.state.main && !store.state.main.network
+        ? store.state.main.network.service
         : '';
     const identifier =
-      !store && !store.state && !store.state.account
-        ? store.state.account.identifier
+      !store && !store.state.main && !store.state.main.account
+        ? store.state.main.account.identifier
         : '';
     event.tags = {
       network: network,

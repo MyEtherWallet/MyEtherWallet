@@ -203,7 +203,7 @@
                     <td class="numbered">{{ index + 1 }}.</td>
                     <td class="addr-container">
                       <blockie
-                        :address="contact.address"
+                        :address="contact.resolverAddr"
                         width="25px"
                         height="25px"
                         class="blockie-image"
@@ -224,7 +224,7 @@
                     <td>
                       <span
                         class="edit-txt"
-                        @click="openAddrBookModal('edit', index)"
+                        @click="openAddrBookModal('edit', contact)"
                       >
                         {{ $t('interface.address-book.edit') }}
                       </span>
@@ -249,6 +249,7 @@
       ref="addressBook"
       :current-idx="currentAddressIdx"
       :title="addrBookModalTitle"
+      :modal-action="modalAction"
     />
   </div>
 </template>
@@ -260,7 +261,7 @@ import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
 import store from 'store';
 import { Toast } from '@/helpers';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import Blockie from '@/components/Blockie';
 
 export default {
@@ -292,11 +293,12 @@ export default {
       importedFile: '',
       popup: false,
       currentAddressIdx: null,
-      addrBookModalTitle: ''
+      addrBookModalTitle: '',
+      modalAction: ''
     };
   },
   computed: {
-    ...mapState(['network', 'online', 'addressBook']),
+    ...mapState('main', ['network', 'online', 'addressBook']),
     sortedAddressBook() {
       return this.addressBook.slice().sort((a, b) => {
         a = a.nickname.toString().toLowerCase();
@@ -379,6 +381,7 @@ export default {
     this.getGasType();
   },
   methods: {
+    ...mapActions('main', ['setGasPrice', 'setAddressBook']),
     setDataFromImportedFile() {
       const reader = new FileReader();
       const notifObj = {};
@@ -428,13 +431,12 @@ export default {
 
       if (amt) {
         if (this.gasPriceInputs[type] !== undefined) {
-          this.$store.dispatch(
-            'setGasPrice',
+          this.setGasPrice(
             new BigNumber(this.gasPriceInputs[type].gwei).toNumber()
           );
         } else {
           this.customGas = amt;
-          this.$store.dispatch('setGasPrice', new BigNumber(amt).toNumber());
+          this.setGasPrice(new BigNumber(amt).toNumber());
         }
       }
     },
@@ -445,17 +447,13 @@ export default {
     },
     saveGasChanges() {
       if (this.gasPriceInputs[this.selectedGasType] !== undefined) {
-        this.$store.dispatch(
-          'setGasPrice',
+        this.setGasPrice(
           new BigNumber(
             this.gasPriceInputs[this.selectedGasType].gwei
           ).toNumber()
         );
       } else {
-        this.$store.dispatch(
-          'setGasPrice',
-          new BigNumber(this.customGas).toNumber()
-        );
+        this.setGasPrice(new BigNumber(this.customGas).toNumber());
       }
       if (this.$refs.gasDropdown) {
         this.$refs.gasDropdown.dropdownOpen = false;
@@ -531,12 +529,14 @@ export default {
 
       this.ethPrice = price.data.ETH.quotes.USD.price;
     },
-    openAddrBookModal(action, idx) {
+    openAddrBookModal(action, obj) {
+      const idx = this.addressBook.indexOf(obj);
       this.currentAddressIdx = action === 'edit' ? idx : null;
+      this.modalAction = action;
       this.addrBookModalTitle =
         action === 'add'
-          ? this.$t('interface.address-book.add-new')
-          : this.$t('interface.address-book.edit-addr');
+          ? 'interface.address-book.add-new'
+          : 'interface.address-book.edit-addr';
       this.$refs.addressBook.$refs.addressBookModal.show();
     }
   }

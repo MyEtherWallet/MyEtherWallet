@@ -46,9 +46,7 @@
             <div class="grid-block">
               <p>{{ $t('dappsMCDMaker.max-generate-available') }}</p>
               <p>
-                <b>{{
-                  displayFixedValue(maxDai())
-                }}</b>
+                <b>{{ displayFixedValue(maxDai()) }}</b>
                 {{ $t('dappsMCDMaker.dai') }}
               </p>
             </div>
@@ -170,7 +168,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     amountPresent() {
       return (
         (this.amount || this.amount !== '') && !toBigNumber(this.amount).lte(0)
@@ -292,7 +290,9 @@ export default {
           .calcCollatRatioDaiChg(toBigNumber(this.amount), true)
           .gte(this.currentCdp.goodPercent);
       } else if (this.currentCdp) {
-        return toBigNumber(this.currentCdp.collateralizationRatio).gte(this.currentCdp.goodPercent);
+        return toBigNumber(this.currentCdp.collateralizationRatio).gte(
+          this.currentCdp.goodPercent
+        );
       }
       return true;
     },
@@ -302,7 +302,9 @@ export default {
           .calcCollatRatioDaiChg(toBigNumber(this.amount), true)
           .lte(this.currentCdp.minPercent);
       } else if (this.currentCdp) {
-        return toBigNumber(this.currentCdp.collateralizationRatio).lte(this.currentCdp.minPercent);
+        return toBigNumber(this.currentCdp.collateralizationRatio).lte(
+          this.currentCdp.minPercent
+        );
       }
       return true;
     },

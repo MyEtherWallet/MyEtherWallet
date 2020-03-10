@@ -1,19 +1,19 @@
 <template>
   <div style="max-width: 500px;">
     <div class="d-flex align-items-center mb-3">
-      <h3 class="mr-2 ">{{ $t('dappsMaker.upgrade-sai-to-dai') }}</h3>
+      <h3 class="mr-2 ">{{ $t('dappsMCDMaker.upgrade-sai-to-dai') }}</h3>
       <img :src="DaiIcon" class="icon-size" />
     </div>
     <div style="max-width: 500px;" class="mb-5">
-      {{ $t('dappsMaker.upgrade-informational') }}
+      {{ $t('dappsMCDMaker.upgrade-informational') }}
     </div>
     <div class="top-buttons">
-      <p @click="setMax">{{ $t('dappsMaker.entire-sai-balance') }}</p>
+      <p @click="setMax">{{ $t('dappsMCDMaker.entire-sai-balance') }}</p>
     </div>
     <div class="dropdown-text-container dropdown-container no-point">
       <p>
         <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
-        {{ $t('dappsMaker.sai') }}
+        {{ $t('dappsMCDMaker.sai') }}
       </p>
     </div>
     <input
@@ -32,7 +32,7 @@
         ]"
         @click="submitTransaction"
       >
-        {{ $t('dappsMaker.upgrade') }}
+        {{ $t('dappsMCDMaker.upgrade') }}
       </div>
     </div>
   </div>
@@ -93,7 +93,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     validInputs() {
       return toBigNumber(this.daiQty).gt(0);
     }

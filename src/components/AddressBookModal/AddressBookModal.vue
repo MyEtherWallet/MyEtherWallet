@@ -2,7 +2,7 @@
   <div class="addr-book-modal">
     <b-modal
       ref="addressBookModal"
-      :title="title"
+      :title="$t(title)"
       hide-footer
       centered
       static
@@ -10,14 +10,14 @@
     >
       <div class="modal-contents">
         <div
-          v-show="title === addressBookActions.ADD"
+          v-show="modalAction === addressBookActions.ADD"
           class="add-new-container"
         >
           <p class="title-header">{{ $t('interface.address-book.address') }}</p>
           <div class="address-inputs">
             <blockie
               v-show="isValidAddress"
-              :address="contactAddress"
+              :address="hexAddress"
               width="32px"
               height="32px"
               class="blockie-image"
@@ -31,10 +31,13 @@
             />
           </div>
         </div>
-        <div v-show="title === addressBookActions.EDIT" class="edit-address">
+        <div
+          v-show="modalAction === addressBookActions.EDIT"
+          class="edit-address"
+        >
           <div class="addr-container">
             <blockie
-              :address="contactAddress"
+              :address="hexAddress"
               width="34px"
               height="34px"
               class="blockie-image mr-3"
@@ -53,7 +56,7 @@
           </p>
           <div
             :class="
-              title === addressBookActions.EDIT
+              modalAction === addressBookActions.EDIT
                 ? 'nickname-input-container'
                 : ''
             "
@@ -70,7 +73,7 @@
                 @click="updateAddrBook()"
               >
                 {{
-                  title === addressBookActions.EDIT
+                  modalAction === addressBookActions.EDIT
                     ? $t('interface.address-book.update')
                     : $t('interface.address-book.add')
                 }}
@@ -79,7 +82,7 @@
           </div>
         </div>
         <p
-          v-show="title === addressBookActions.EDIT"
+          v-show="modalAction === addressBookActions.EDIT"
           class="remove-txt"
           @click="removeContact()"
         >
@@ -92,7 +95,7 @@
 
 <script>
 import { Toast } from '@/helpers';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import Blockie from '@/components/Blockie';
 
 export default {
@@ -100,6 +103,10 @@ export default {
     blockie: Blockie
   },
   props: {
+    modalAction: {
+      type: String,
+      default: ''
+    },
     title: {
       type: String,
       default: ''
@@ -118,17 +125,18 @@ export default {
       contactNickname: '',
       contactAddress: '',
       isValidAddress: false,
+      hexAddress: '',
       addressBookActions: {
-        EDIT: 'Edit Address',
-        ADD: 'Add a New Contact'
+        EDIT: 'edit',
+        ADD: 'add'
       }
     };
   },
   computed: {
-    ...mapState(['addressBook']),
+    ...mapState('main', ['addressBook']),
     isBtnDisabled() {
       if (
-        this.title === this.addressBookActions.EDIT &&
+        this.modalAction === this.addressBookActions.EDIT &&
         this.addressBook[this.currentIdx]
       ) {
         return (
@@ -140,43 +148,35 @@ export default {
       );
     }
   },
-  watch: {
-    currentIdx() {
-      if (this.title === this.addressBookActions.EDIT) {
-        this.contactAddress = this.addressBook[this.currentIdx].address;
-        this.contactNickname = this.addressBook[this.currentIdx].nickname;
-      } else {
-        this.contactAddress = '';
-        this.contactNickname = '';
-      }
-    }
-  },
   mounted() {
     this.$refs.addressBookModal.$on('shown', () => {
       if (this.selectedAddress) {
         this.contactAddress = this.selectedAddress;
       }
+
+      if (this.modalAction === this.addressBookActions.EDIT) {
+        this.contactAddress = this.addressBook[this.currentIdx].address;
+        this.contactNickname = this.addressBook[this.currentIdx].nickname;
+        this.hexAddress = this.addressBook[this.currentIdx].resolverAddr;
+      }
     });
   },
   methods: {
+    ...mapActions('main', ['setAddressBook']),
     removeContact() {
       this.addressBook.splice(this.currentIdx, 1);
-      this.$store.dispatch('setAddressBook', this.addressBook);
+      this.setAddressBook(this.addressBook);
       this.$refs.addressBookModal.hide();
     },
-    getToAddress(obj) {
-      this.contactAddress = obj.address;
-      this.isValidAddress = obj.valid;
-    },
     updateAddrBook() {
-      this.title === this.addressBookActions.EDIT
+      this.modalAction === this.addressBookActions.EDIT
         ? this.updateContact()
         : this.addContact();
     },
     updateContact() {
       this.addressBook[this.currentIdx].nickname = this.contactNickname;
 
-      this.$store.dispatch('setAddressBook', this.addressBook);
+      this.setAddressBook(this.addressBook);
 
       Toast.responseHandler(
         this.$t('interface.address-book.success-update'),
@@ -185,6 +185,7 @@ export default {
 
       this.contactAddress = '';
       this.contactNickname = '';
+      this.hexAddress = '';
       this.$refs.addressBookModal.hide();
     },
     addContact() {
@@ -202,19 +203,22 @@ export default {
         );
         this.contactAddress = '';
         this.contactNickname = '';
+        this.hexAddress = '';
         return;
       }
 
       this.addressBook.push({
         address: this.contactAddress,
+        resolverAddr: this.hexAddress,
         currency: 'ETH',
         nickname: this.contactNickname || this.addressBook.length + 1
       });
 
-      this.$store.dispatch('setAddressBook', this.addressBook);
+      this.setAddressBook(this.addressBook);
 
       this.contactAddress = '';
       this.contactNickname = '';
+      this.hexAddress = '';
       this.$refs.addressBookModal.hide();
     }
   }
