@@ -34,7 +34,7 @@
     "button-learn-more": "Узнать больше...",
     "mew-wallet": {
       "title": "Что такое MEW wallet?",
-      "text": "MEW wallet - это наше официальное полнофункциональное мобильное приложение, которое обеспечивает безопасность аппаратного кошелька на вашем телефоне iOS или Android."
+      "text": "MEW wallet is our official fully-fledged mobile app, bringing Ethereum to your iOS or Android phone"
     },
     "create-wallet": {
       "title": "How do I create a new wallet?",
@@ -72,9 +72,9 @@
   "lost-title": "Oops! Looks like you're lost.",
   "mew-wallet-modal": {
     "title": "Официальное приложение MEW wallet теперь доступно!",
-    "text": "Покупайте, держите и отправляйте Ether и токены. Исследуйте Ethereum со своего мобильного телефона. {learn-more}",
+    "text": "Buy, hold, and send Ether and tokens. Explore Ethereum on your mobile device. {learn-more}",
     "learn-more": "Подробнее",
-    "footer-text": "Скачайте наше бесплатное приложение сегодня!",
+    "footer-text": "Скачайте наше приложение сегодня!",
     "new": "новый",
     "details": "Подробности",
     "hide": "Скрыть"
