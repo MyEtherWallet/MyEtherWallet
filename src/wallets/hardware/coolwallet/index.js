@@ -55,8 +55,8 @@ class CoolWallet {
     const coolWalletInstance = new cwsWallet(transport, this.appPrivateKey);
 
     if (!hasAppId) {
-      const password = '97423920';
-      coolWalletInstance
+      const password = '36329134';
+      await coolWalletInstance
         .register(this.appPublicKey, password, APP_NAME)
         .then(appId => {
           locStore.set('appId', appId);
@@ -168,7 +168,7 @@ const createWallet = async () => {
   await cwsTransportLib.listen(async (error, device) => {
     if (device) {
       const transport = await cwsTransportLib.connect(device);
-      _coolWallet.init(transport);
+      await _coolWallet.init(transport);
     } else {
       errorHandler(error);
     }
