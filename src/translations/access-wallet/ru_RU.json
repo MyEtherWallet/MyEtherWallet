@@ -3,10 +3,10 @@
     "option-text": "Использовать MEWconnect для получения доступа к моему кошельку",
     "modal": {
       "title": "Доступ с помощью MEWconnect",
-      "text1": "Используйте приложение MEWconnect для сканирования указанного выше QR-кода",
-      "text2": "Нет приложения? Загрузите сейчас."
+      "text1": "Используйте приложение MEW wallet или MEWconnect для сканирования указанного выше QR-кода",
+      "text2": "Нет приложения MEW wallet? Загрузите сейчас."
     },
-    "warning": "MEWconnect несовместим с iPads."
+    "warning": "MEW wallet и MEWconnect несовместимы с iPads."
   },
   "finney": {
     "scan-info": "Чтобы подключиться, отсканируйте QR-код из приложения {wallet} на вашем {finney-bc}",
@@ -56,7 +56,7 @@
   },
   "mnemonic": {
     "string": "Мнемоническая фраза",
-    "value": "Слов",
+    "value": "Сумма",
     "modal": {
       "title": "Доступ с помощью мнемонической фразы",
       "text": "Пожалуйста, введите вашу мнемоническую фразу."
@@ -106,11 +106,12 @@
   "add-custom-path": "Добавить кастомный путь",
   "interact-addr": "Адрес для взаимодействия",
   "id": "ID",
-  "network-and-address": "Сеть и адрес",
-  "please-type-in-mnemonic-phrase": "Введите вашу мнемоническую фразу.",
+  "network-and-address": "Сеть и Адрес",
+  "please-type-in-mnemonic-phrase": "Пожалуйста, введите вашу мнемоническую фразу.",
   "password": "Пароль",
-  "web3-wallet-desc": "Используйте Web3 кошелек (MEW CX, MetaMask, Dapper).",
-  "web3-wallet": "Расширение для браузера",
+  "access-wallet-or": "или",
+  "web3-wallet-desc": "MetaMask; Dapper",
+  "web3-wallet": "MEW CX",
   "refresh": "Обновить",
   "unlock-web3-wallet": "Не удается получить доступ к кошельку! Пожалуйста, разблокируйте ваш кошелек через расширение для браузера",
   "try-again": "Повторить попытку",
