@@ -1,10 +1,16 @@
+### Release v5.4.2
+
 ### Feature
 - MEW Wallet UI changes [#2048](https://github.com/MyEtherWallet/MyEtherWallet/pull/2048)
 
-### Release v5.4.2
 
 ### Bugs
 - Fix offline helper fee conversion [#2063] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2063)
+
+### Devop
+
+- Update greenkeeper packages [#2078](https://github.com/MyEtherWallet/MyEtherWallet/pull/2078)
+
 
 ### Release v5.4.1-hotfix.1
 
