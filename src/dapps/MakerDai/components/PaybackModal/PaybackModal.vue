@@ -12,6 +12,19 @@
       <div class="contents">
         <p class="top-message">{{ $t('dappsMCDMaker.payback-notice') }}</p>
         <div class="input-container">
+          <div v-if="!hasEnoughDai">
+            <div class="value-block">
+              <p>
+                <b>{{ $t('dappsMaker.dai-balance') }}</b>
+              </p>
+              <p>
+                <b>{{ daiBalance() }} {{ $t('dappsMaker.dai') }}</b>
+              </p>
+            </div>
+            <p class="get-mkr" @click="getDai()">
+              {{ $t('dappsMaker.get-dai') }}
+            </p>
+          </div>
           <div class="top-buttons">
             <p @click="currentDai">{{ $t('dappsMCDMaker.max-available') }}</p>
           </div>
@@ -64,17 +77,6 @@
                 noMinWidth: true
               }"
               :click-function="approveDai"
-            />
-          </div>
-          <div v-if="needsMkrApprove()">
-            <standard-button
-              :options="{
-                title: $t('dappsMCDMaker.approve-maker'),
-                buttonStyle: 'green-border',
-                fullWidth: true,
-                noMinWidth: true
-              }"
-              :click-function="approveMkr"
             />
           </div>
         </div>
@@ -184,6 +186,7 @@ export default {
       return this.amountPresent && this.currentCdpLoaded;
     },
     hasEnoughDai() {
+      return false;
       if (this.canCompute) {
         return toBigNumber(this.amount).lte(this.daiBalance());
       }
@@ -315,12 +318,12 @@ export default {
       });
     },
     // TODO: change to get dai
-    /*    getMkr() {
-      const mkrNeeded = this.paybackFee;
-      if (toBigNumber(this.mkrBalance).lt(mkrNeeded)) {
-        this.suppliedToAmount = toBigNumber(mkrNeeded)
-          .minus(toBigNumber(this.mkrBalance))
-          .plus(toBigNumber(mkrNeeded).times(0.01))
+    getDai() {
+      const debtValue = this.currentCdp.debtValue;
+      if (toBigNumber(this.daiBalance()).lt(debtValue)) {
+        this.suppliedToAmount = toBigNumber(debtValue)
+          .minus(toBigNumber(this.daiBalance()))
+          .plus(toBigNumber(debtValue).times(0.01))
           .toNumber();
         if (toBigNumber(this.suppliedToAmount).lt(0.000001)) {
           this.suppliedToAmount = 0.000001;
@@ -330,8 +333,8 @@ export default {
           name: 'Ethereum'
         };
         this.suppliedTo = {
-          symbol: 'MKR',
-          name: 'Maker'
+          symbol: 'DAI',
+          name: 'Maker Dai'
         };
         this.$eventHub.$emit(
           'showSwapWidgetTo',
@@ -341,7 +344,7 @@ export default {
           this.suppliedToAmount
         );
       }
-    },*/
+    },
     closeModal() {
       this.$refs.modal.hide();
     },
