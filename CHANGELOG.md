@@ -2,7 +2,7 @@
 
 ### Bugs
 - Fix offline helper fee conversion [#2063] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2063)
-- Fix logout error [#2082] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2082)
+- Fix logout error and fix aave bug [#2082] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2082)
 
 ### Devop
 
