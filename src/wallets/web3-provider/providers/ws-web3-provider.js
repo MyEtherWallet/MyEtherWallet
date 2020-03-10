@@ -74,6 +74,7 @@ const WebsocketProvider = function WebsocketProvider(url, options) {
         this.connection && this.connection.readyState === this.connection.OPEN
       );
     },
+    set: function() {},
     enumerable: true
   });
 };
