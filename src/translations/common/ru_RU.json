@@ -90,7 +90,7 @@
   },
   "mew-wallet": {
     "string": "MEW wallet",
-    "desc": "MEW's official fully-fledged app brings Ethereum to your iOS or Android smartphone. MEW wallet puts you in full control. {learn-more}"
+    "desc": "Официальное полнофункциональное приложение MEW дает доступ к Ethereum прямо с вашего смартфона iOS или Android. С MEW wallet, вы в полном контроле. {learn-more}"
   },
   "swap": "Swap",
   "token": "Token | Tokens",
