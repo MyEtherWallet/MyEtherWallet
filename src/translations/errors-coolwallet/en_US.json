@@ -1,4 +1,5 @@
 {
   "WrongPassword": "Wrong password for app registration.",
-  "CardLocked": "Card locked! Please unlock through the app"
+  "CardLocked": "Card locked! Please unlock through the app",
+  "AlreadyRegistered": "App is already registered! If you're having trouble, please reregister the app by removing it from the wallet app."
 }
