@@ -315,7 +315,8 @@ export default {
     }
   },
   watch: {
-    hardwareWallet() {
+    hardwareWallet(newVal) {
+      console.log(newVal, 'is that here????');
       this.getPaths();
       this.setHDAccounts();
     }
