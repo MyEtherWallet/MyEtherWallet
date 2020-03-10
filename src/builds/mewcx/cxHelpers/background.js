@@ -151,7 +151,7 @@ chrome.tabs.onUpdated.addListener(onUpdatedCb);
 chrome.tabs.onActivated.addListener(onActivatedCb);
 chrome.tabs.onRemoved.addListener(onRemovedCb);
 chrome.runtime.onInstalled.addListener(onInstalledCb);
-chrome.runtime.onStartup.addListener(onInstalledCb);
+chrome.runtime.onStartup.addListener(onStartupCb);
 
 function onRemovedCb(id) {
   if (urls[id]) {
@@ -193,14 +193,15 @@ function onActivatedCb(info) {
 function onInstalledCb() {
   chrome.runtime.onMessage.removeListener(eventsListeners);
   chrome.runtime.onMessage.addListener(eventsListeners);
+}
 
+function onStartupCb() {
+  onInstalledCb();
   // redo stored addresses to checksum.
   chrome.storage.sync.get(null, obj => {
     const objKeys = Object.keys(obj);
     const newStore = {};
-    newStore['alreadyRedone'] = true;
-
-    if (objKeys.length > 0 && objKeys.includes('alreadyRedone')) {
+    if (objKeys.length > 0) {
       objKeys.forEach(item => {
         if (isAddress(item)) {
           newStore[toChecksumAddress(item)] = obj[item];
