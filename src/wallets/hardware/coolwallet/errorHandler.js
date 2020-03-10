@@ -2,7 +2,8 @@ import { Toast } from '@/helpers';
 import Vue from 'vue';
 const ERRORS = {
   WrongPassword: 'coolwalletError.wrong-password',
-  CardLocked: 'coolwalletError.card-locked'
+  CardLocked: 'coolwalletError.card-locked',
+  AlreadyRegistered: 'coolwalletError.already-registered'
 };
 const WARNING = {};
 
