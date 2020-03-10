@@ -1,3 +1,7 @@
+### Devop
+
+- New etherscan api key [#2089](https://github.com/MyEtherWallet/MyEtherWallet/pull/2089)
+
 ### Release v5.4.1
 
 ### Bugs
