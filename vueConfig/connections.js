@@ -48,10 +48,12 @@ module.exports = [
   'https://mainnet-rpc.dexon.org:443',
   'https://node.mainnet.lightstreams.io:443',
   'https://rpc.ethercore.org:443',
-  'https://sai-mainnet.makerfoundation.com/v1',
-  'wss://api.thegraph.com/subgraphs/name/aave/protocol-raw',
-  'https://ambrpay.io/api/smartContractAddresses',
-  'https://ambrpay.io/api/subscriptions/0x43689531907482bee7e650d18411e284a7337a66',
-  'https://nft2.mewapi.io/tokens',
+  'https://sai-mainnet.makerfoundation.com:443',
+  'wss://api.thegraph.com:443',
+  'https://ambrpay.io:443',
+  'https://nft2.mewapi.io:443',
+  'wss://connect.mewapi.io:443',
+  'wss://connect2.mewapi.io:443',
+  'https://protocol-api.aave.com:443',
   'https://localhost:1991' // server for bcvault
 ];
