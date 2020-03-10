@@ -3,10 +3,10 @@
     "option-text": "使用 MEWconnect 访问我的钱包",
     "modal": {
       "title": "通过 MEWconnect 访问我的钱包",
-      "text1": "请使用 MEWconnect 应用来扫描上方的二维码",
-      "text2": "还没有下载此应用？立即下载。"
+      "text1": "Please use MEW wallet or MEWconnect App to scan the QR code above",
+      "text2": "Don't have the MEW wallet app? Download now."
     },
-    "warning": "MEWconnect 与 iPad 不兼容。"
+    "warning": "MEW wallet and MEWconnect apps are not compatible with iPads."
   },
   "finney": {
     "scan-info": "要进行连接，请扫描 {finney-bc} 上 {wallet} 应用中的 QR 码",
@@ -56,7 +56,7 @@
   },
   "mnemonic": {
     "string": "助记短语",
-    "value": "价值",
+    "value": "Value",
     "modal": {
       "title": "通过助记短语访问我的钱包",
       "text": "请输入您的助记短语。"
@@ -102,19 +102,20 @@
   "json-file": "密钥库文件",
   "accept-terms": "要访问我的电子钱包，我接受{terms}。",
   "hd-derivation-path": "高清衍生路径",
-  "custom-paths": "Custom Paths",
-  "add-custom-path": "Add Custom Path",
-  "interact-addr": "Address to Interact With",
-  "id": "ID",
-  "network-and-address": "Network and Address",
-  "please-type-in-mnemonic-phrase": "Please type in your mnemonic phrase.",
+  "custom-paths": "自定义路径",
+  "add-custom-path": "添加自定义路径",
+  "interact-addr": "互动地址",
+  "id": "身份码",
+  "network-and-address": "网络和地址",
+  "please-type-in-mnemonic-phrase": "请输入您的助记短语。",
   "password": "Password",
-  "web3-wallet-desc": "Use a Web3 Wallet (MEW CX, MetaMask, Dapper).",
-  "web3-wallet": "Browser Extension",
-  "refresh": "Refresh",
+  "access-wallet-or": "or",
+  "web3-wallet-desc": "MetaMask; Dapper",
+  "web3-wallet": "MEW CX",
+  "refresh": "刷新",
   "unlock-web3-wallet": "Can't access wallet! Please unlock your wallet through the Browser Extension",
   "try-again": "Try Again",
-  "invalid-path-desc": "The path: {path} is not valid for this device",
+  "invalid-path-desc": "路径: {path} 对此设备无效",
   "wallet-info": "Wallet Information",
   "wallet-options": "Check your transaction history, download a new keystore file, print a paper wallet, and more!",
   "xwallet-desc": "Use Pundi X Savings account by MEW to scan the QR code above",
