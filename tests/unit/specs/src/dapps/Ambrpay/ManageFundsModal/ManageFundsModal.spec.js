@@ -64,22 +64,21 @@ describe('ManageFundsModal.vue', () => {
     expect(wrapper.vm.$data.errMsg).toEqual('');
   });
 
-  it('should set ethAmount and errMsg to null if manageFundsText differ', () => {
+  it('should set ethAmount and errMsg to null if manageFundsText differ', async () => {
     wrapper.setData({ ethAmount: 3 });
     wrapper.setData({ errMsg: 'Amount higher than balance' });
+    await wrapper.vm.$nextTick();
     expect(wrapper.vm.errMsg).toEqual('Amount higher than balance');
     expect(wrapper.vm.ethAmount).toEqual(3);
     wrapper.setProps({ manageFundsText: 'Withdraw' });
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.vm.ethAmount).toEqual(0);
-      expect(wrapper.vm.errMsg).toEqual('');
-    });
+    await wrapper.vm.$nextTick();
+    expect(wrapper.vm.ethAmount).toEqual(0);
   });
 
-  it('should keep ethAmount and errMsg if manageFundsText the same', () => {
+  it('should keep ethAmount and errMsg if manageFundsText the same', async () => {
     wrapper.setData({ ethAmount: 3 });
     wrapper.setProps({ manageFundsText: 'Add' });
-
+    await wrapper.vm.$nextTick();
     expect(wrapper.vm.$data.ethAmount).toEqual(3);
   });
 

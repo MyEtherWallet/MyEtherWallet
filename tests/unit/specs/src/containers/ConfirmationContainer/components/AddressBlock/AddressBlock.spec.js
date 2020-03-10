@@ -73,7 +73,7 @@ describe('AddressBlock.vue', () => {
       .find('.currency-amt')
       .text()
       .trim();
-    expect(textValue).toEqual(tokenTransferVal.trim());
+    expect(textValue).toContain(tokenTransferVal.trim());
   });
 
   it('should render correct tokenSymbol props', () => {
@@ -89,7 +89,7 @@ describe('AddressBlock.vue', () => {
       .find('.currency-amt')
       .text()
       .trim();
-    expect(textValue).toEqual(String(eth));
+    expect(textValue).toContain(String(eth));
   });
 
   describe('AddressBlock.vue Methods', () => {});
