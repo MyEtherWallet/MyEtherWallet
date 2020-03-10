@@ -20,7 +20,7 @@
         />
         <div class="address-end">
           {{
-            address !== ''
+            address !== null && address !== ''
               ? address.substring(address.length - 4, address.length)
               : ''
           }}
