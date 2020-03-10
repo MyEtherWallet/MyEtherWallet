@@ -8,7 +8,7 @@ const execute = (command, callback) => {
   exec(
     command,
     {
-      maxBuffer: 2000 * 1024
+      maxBuffer: 10000 * 1024
     },
     (error, stdout, stderr) => {
       callback(stdout);
