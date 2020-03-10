@@ -2,6 +2,47 @@
 
 - WalletConnect & WalletLink Support [#1924](https://github.com/MyEtherWallet/MyEtherWallet/pull/1924)
 
+### Releaase v5.4.2
+
+### Bugs
+- Fix offline helper fee conversion [#2063] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2063)
+- Fix logout error and fix aave bug [#2082] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2082)
+
+### Devop
+
+- New etherscan api key [#2089](https://github.com/MyEtherWallet/MyEtherWallet/pull/2089)
+- ropsten ens .test set resolver [#2090](https://github.com/MyEtherWallet/MyEtherWallet/pull/2090)
+- Update greenkeeper packages [#2088](https://github.com/MyEtherWallet/MyEtherWallet/pull/2088)
+- Update greenkeeper packages [#2078](https://github.com/MyEtherWallet/MyEtherWallet/pull/2078)
+
+
+### Release v5.4.1-hotfix.1
+
+### Bugs
+
+- Fix MEWconnect disconnecting soon after connecting [#2064](https://github.com/MyEtherWallet/MyEtherWallet/pull/2064)
+
+### Release v5.4.1
+
+### Bugs
+
+- Fix network changer [#2054](https://github.com/MyEtherWallet/MyEtherWallet/pull/2054)
+- Send Offline helper transaction fee [#2058](https://github.com/MyEtherWallet/MyEtherWallet/pull/2058)
+- Add burner address warning, redo store so all addresses currently stored are uniform [#2049](https://github.com/MyEtherWallet/MyEtherWallet/pull/2049)
+- Revert one time check [#2053](https://github.com/MyEtherWallet/MyEtherWallet/pull/2053)
+- Fix Buy ETH Widget bug [#2046](https://github.com/MyEtherWallet/MyEtherWallet/pull/2046)
+- Fix KB link [#2047](https://github.com/MyEtherWallet/MyEtherWallet/pull/2047)
+
+### Devop
+
+- WS reconnect on disconnect [#2057](https://github.com/MyEtherWallet/MyEtherWallet/pull/2057)
+- Hardcode russian translation for first time welcome modal [#2041](https://github.com/MyEtherWallet/MyEtherWallet/pull/2041)
+- update client library for mew mobile and fix 500 DAI + kyber swap gas limit [#2029](https://github.com/MyEtherWallet/MyEtherWallet/pull/2029)
+- Add aave referral code [#2040](https://github.com/MyEtherWallet/MyEtherWallet/pull/2040/files)
+- Update packages [#2040](https://github.com/MyEtherWallet/MyEtherWallet/pull/2040)
+- Sync master to develop, fix uuid issue [#2023](https://github.com/MyEtherWallet/MyEtherWallet/pull/2023)
+- Harden CSP [#2016](https://github.com/MyEtherWallet/MyEtherWallet/pull/2016)
+
 ### Release v5.4.0
 
 ### Feature
@@ -14,13 +55,13 @@
 - Fix Exit to Fiat to correspond with backend changes [#2002](https://github.com/MyEtherWallet/MyEtherWallet/pull/2002)
 - Update aave copy [#2011](https://github.com/MyEtherWallet/MyEtherWallet/pull/2011)
 - Change social icons display [#2003](https://github.com/MyEtherWallet/MyEtherWallet/pull/2003)
-- Update aave copy [#2020] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2020)
+- Update aave copy [#2020](https://github.com/MyEtherWallet/MyEtherWallet/pull/2020)
 
 ### Bugs
 
 - Fix save ui [#1972](https://github.com/MyEtherWallet/MyEtherWallet/pull/1972)
 - Partial fix to downloading keystore file in view wallet [#1997](https://github.com/MyEtherWallet/MyEtherWallet/pull/1997)
-- Fix aave bugs [#2018] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2018)
+- Fix aave bugs [#2018](https://github.com/MyEtherWallet/MyEtherWallet/pull/2018)
 
 ### Release v5.3.3-hotfix.2
 

@@ -20,7 +20,9 @@
         />
         <div class="address-end">
           {{
-            address ? address.substring(address.length - 4, address.length) : ''
+            address !== null && address !== ''
+              ? address.substring(address.length - 4, address.length)
+              : ''
           }}
         </div>
         <div class="buttons-container">
