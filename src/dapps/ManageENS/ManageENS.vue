@@ -368,15 +368,27 @@ export default {
       const data = await this.registrarContract.methods
         .register(this.labelHash, address)
         .encodeABI();
-      const raw = {
+      const registerTx = {
         from: address,
         value: 0,
         to: this.registrarAddress,
         data: data
       };
-      web3.eth.sendTransaction(raw).catch(err => {
-        Toast.responseHandler(err, false);
-      });
+      const setResolverTx = {
+        from: address,
+        to: this.network.type.ens.registry,
+        data: this.ensRegistryContract.methods
+          .setResolver(this.nameHash, this.publicResolverAddress)
+          .encodeABI(),
+        value: 0,
+        gas: 100000,
+        gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
+      };
+      web3.mew
+        .sendBatchTransactions([registerTx, setResolverTx].filter(Boolean))
+        .catch(err => {
+          Toast.responseHandler(err, false);
+        });
     },
     async getRegistrarAddress(tld) {
       const registrarAddress = await this.ens.owner(tld);
@@ -390,6 +402,7 @@ export default {
       this.loading = true;
       const web3 = this.web3;
       this.labelHash = web3.utils.sha3(this.parsedHostName);
+      this.nameHash = nameHashPckg.hash(this.parsedDomainName);
       const resolver = await this.ens.resolver('resolver.eth');
       this.publicResolverAddress = await resolver.addr();
 
@@ -596,7 +609,6 @@ export default {
     },
     async getMoreInfo() {
       let owner;
-      this.nameHash = nameHashPckg.hash(this.parsedDomainName);
       try {
         if (
           this.registrarType === REGISTRAR_TYPES.PERMANENT &&
