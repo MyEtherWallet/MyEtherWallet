@@ -5,6 +5,7 @@
   "sender": "Sender",
   "receiver": "Receiver",
   "send-tx": "Send Transaction",
+  "send-tx-break": "Send {transaction}",
   "send-offline": "Send Offline",
   "to-addr": "To Address",
   "from-addr": "From Address",
@@ -45,6 +46,7 @@
     "button-check-status": "Check Status on Etherscan.io",
     "button-check-explorer": "Check Status on {explorrerName}"
   },
+  "invalid-data": "Provided data is invalid or empty!",
   "via-contract": "Via Contract",
   "import-json": "Import JSON",
   "retrieved": "Retrieved",

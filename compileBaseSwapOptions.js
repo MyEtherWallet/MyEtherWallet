@@ -1,9 +1,11 @@
 // NOTE: this is a temporary solution.  This operation will be moved to runtime in the future. Currently it relies on manually updated files.
 const fs = require('fs');
-const uuid = require('uuid/v4');
+const {v4} = require('uuid');
+const uuid = v4;
 
 const fetch = require('node-fetch');
 const web3 = require('web3');
+const defaultEthTokens = require('./src/tokens/tokens-eth.json');
 
 const swapConfigFolder = './src/partners/partnersConfig';
 const changellyConfigFolder = './src/partners/changelly/config';
@@ -27,15 +29,41 @@ class CompileSwapOptions {
   async getDecimals(address) {
     try {
       return await new this.web3.eth.Contract(
-        ERC20(),
+        [
+          {
+            constant: true,
+            inputs: [],
+            name: 'decimals',
+            outputs: [
+              {
+                name: '',
+                type: 'uint8'
+              }
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function'
+          }
+        ],
         address.contractAddress
       ).methods
         .decimals()
         .call();
     } catch (e) {
+      try {
+        const tokenFound = defaultEthTokens.find(
+          token =>
+            token.address.toLowerCase() == address.contractAddress.toLowerCase()
+        );
+        if (tokenFound) {
+          return tokenFound.decimals;
+        }
+      } catch (e) {
+        console.error(e);
+      }
       console.error(e);
-      return {};
     }
+    return {};
   }
 
   async post(url = ``, data = {}, opts = {}) {
@@ -256,38 +284,34 @@ class CompileSwapOptions {
 
     if (Object.keys(withChangelly.other).length > 0) {
       fs.writeFileSync(
-        `${swapConfigFolder}/OtherCoins.js`,
-        `export default ${JSON.stringify(withChangelly.other)} `
+        `${swapConfigFolder}/OtherCoins.json`,
+        JSON.stringify(withChangelly.other)
       );
     }
 
     if (Object.keys(withChangelly.ETH).length > 0) {
       fs.writeFileSync(
-        `${swapConfigFolder}/EthereumTokens.js`,
-        `export default ${JSON.stringify(withChangelly.ETH)} `
+        `${swapConfigFolder}/EthereumTokens.json`,
+        JSON.stringify(withChangelly.ETH)
       );
     }
     if (Object.keys(this.changellyBaseOptions).length > 0) {
       fs.writeFileSync(
-        `${changellyConfigFolder}/currencies.js`,
-        `const ChangellyCurrencies = ${JSON.stringify(
-          this.changellyBaseOptions
-        )}; \nexport { ChangellyCurrencies };\n`
+        `${changellyConfigFolder}/currencies.json`,
+        JSON.stringify(this.changellyBaseOptions)
       );
     }
 
     if (Object.keys(this.kyberBaseOptions).length > 0) {
       this.kyberBaseOptions['THISISADUMMYTOKEN'] = {
         symbol: 'THISISADUMMYTOKEN',
-          name: 'For tests',
-          decimals: 18,
-          contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+        name: 'For tests',
+        decimals: 18,
+        contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
       };
       fs.writeFileSync(
-        `${kyberConfigFolder}/currenciesETH.js`,
-        `const KyberCurrenciesETH = ${JSON.stringify(
-          this.kyberBaseOptions
-        )}; \nexport { KyberCurrenciesETH };\n`
+        `${kyberConfigFolder}/currenciesETH.json`,
+        JSON.stringify(this.kyberBaseOptions)
       );
     }
     console.log('Complete');

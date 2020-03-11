@@ -1,5 +1,4 @@
 @import '~@/scss/GlobalVariables';
-
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
   // *********************************************************************
   // CSS reset
@@ -1606,6 +1605,13 @@
     padding: 0 !important;
   }
 
+  .btn-secondary {
+    background-color: transparent !important;
+    border: none !important;
+  }
+}
+
+.aave-container {
   .btn-secondary {
     background-color: transparent !important;
     border: none !important;

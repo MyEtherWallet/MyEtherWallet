@@ -275,8 +275,8 @@ export default {
       swap: new SwapProviders(
         providers,
         {
-          network: this.$store.state.network.type.name,
-          web3: this.$store.state.web3,
+          network: this.$store.state.main.network.type.name,
+          web3: this.$store.state.main.web3,
           getRateForUnit: false
         },
         { tokensWithBalance: this.tokensWithBalance }
@@ -321,7 +321,14 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'ens', 'gasPrice', 'web3', 'network', 'online']),
+    ...mapState('main', [
+      'account',
+      'ens',
+      'gasPrice',
+      'web3',
+      'network',
+      'online'
+    ]),
     bestRate() {
       try {
         if (this.providerData.length > 0) {
@@ -629,6 +636,10 @@ export default {
           ]
         ) {
           this.debounceUpdateEstimate(this.providerNames.simplex + direction);
+          const fromCur = this.fromCurrency;
+          const toCur = this.toCurrency;
+          const fromVal = this.fromValue;
+          this.debounceReviseRateEstimate(fromCur, toCur, fromVal, direction);
         } else {
           this.debounceUpdateEstimate(direction);
           const fromCur = this.fromCurrency;
@@ -664,7 +675,13 @@ export default {
           this.simplexUpdate = true;
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
 
-          if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
+          if (
+            simplexProvider.canQuote(
+              this.fromValue,
+              this.toValue,
+              this.fromCurrency
+            )
+          ) {
             simplexRateDetails = await simplexProvider.updateDigital(
               this.fromCurrency,
               this.toCurrency,
@@ -677,7 +694,7 @@ export default {
             simplexRateDetails = await simplexProvider.updateFiat(
               this.fromCurrency,
               this.toCurrency,
-              51
+              -1
             );
 
             const rate = new BigNumber(simplexRateDetails.toValue)
@@ -695,7 +712,13 @@ export default {
         case `${this.providerNames.simplex}from`:
           this.simplexUpdate = true;
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
-          if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
+          if (
+            simplexProvider.canQuote(
+              this.fromValue,
+              this.toValue,
+              this.fromCurrency
+            )
+          ) {
             simplexRateDetails = await simplexProvider.updateFiat(
               this.fromCurrency,
               this.toCurrency,
@@ -708,7 +731,7 @@ export default {
             simplexRateDetails = await simplexProvider.updateFiat(
               this.fromCurrency,
               this.toCurrency,
-              51
+              -1
             );
 
             const rate = new BigNumber(simplexRateDetails.toValue)
@@ -767,10 +790,15 @@ export default {
                   rate: +entry.rate,
                   minValue: entry.minValue || 0,
                   maxValue: entry.maxValue || 0,
-                  computeConversion: function(_fromValue) {
+                  computeConversion: _fromValue => {
+                    const decimals = this.fiatCurrenciesArray.includes(
+                      toCurrency
+                    )
+                      ? 2
+                      : 6;
                     return new BigNumber(_fromValue)
-                      .times(this.rate)
-                      .toFixed(6)
+                      .times(entry.rate)
+                      .toFixed(decimals)
                       .toString(10);
                   },
                   additional: entry.additional || {}

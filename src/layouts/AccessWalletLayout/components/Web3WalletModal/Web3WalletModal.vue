@@ -147,7 +147,7 @@ import CustomerSupport from '@/components/CustomerSupport';
 import { Web3Wallet } from '@/wallets/software';
 import { Toast } from '@/helpers';
 import Web3 from 'web3';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import platform from 'platform';
 import brave from '@/assets/images/browser/brave.png';
 import chrome from '@/assets/images/browser/chrome.png';
@@ -220,7 +220,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['path'])
+    ...mapState('main', ['path'])
   },
   mounted() {
     this.$refs.metamask.$on('hidden', () => {
@@ -234,6 +234,7 @@ export default {
     });
   },
   methods: {
+    ...mapActions('main', ['decryptWallet']),
     reload() {
       window.location.reload();
     },
@@ -265,7 +266,7 @@ export default {
         }
         if (!acc.length) return (this.unlockWeb3Wallet = true);
         const wallet = new Web3Wallet(acc[0]);
-        this.$store.dispatch('decryptWallet', [wallet, web3.currentProvider]);
+        this.decryptWallet([wallet, web3.currentProvider]);
         this.$router.push({
           path: 'interface'
         });

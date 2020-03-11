@@ -186,6 +186,7 @@ export default class Kyber {
           ) {
             // otherwise the entry is invalid
             const symbol = tokenList[i].symbol.toUpperCase();
+            tokenList[i].contractAddress = tokenList[i].address;
             tokenDetails[symbol] = tokenList[i];
           }
         }
@@ -196,6 +197,7 @@ export default class Kyber {
     } catch (e) {
       utils.handleOrThrow(e);
       errorLogger(e);
+      return KyberCurrencies[this.network];
     }
   }
 
@@ -361,8 +363,12 @@ export default class Kyber {
         .methods[method](...parameters)
         .call();
     } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
+      if (method === 'getExpectedRate') {
+        // eslint-disable-next-line
+        console.error(e);
+      } else {
+        throw e;
+      }
     }
   }
 
@@ -610,10 +616,10 @@ export default class Kyber {
   }
 
   getTokenTradeGas(fromCurrency, toCurrency, fromValueWei) {
-    if (
-      toCurrency === DAI &&
-      toBigNumber(fromValueWei).gt(this.convertToTokenWei('ETH', 499))
-    ) {
+    const shouldIncreaseGas = // check if value is likely in wei (should be, but checking anyway)
+      toBigNumber(fromValueWei).gt(this.convertToTokenWei('ETH', 499)) ||
+      toBigNumber(fromValueWei).gt(100000000);
+    if (toCurrency === DAI && shouldIncreaseGas) {
       return toBigNumber(1500000);
     }
     const fromGas = this.getTokenSwapGas(fromCurrency);
@@ -637,9 +643,11 @@ export default class Kyber {
   getTokenAddress(token) {
     try {
       if (utils.stringEqual(networkSymbols.ETH, token)) {
-        return this.currencies[token].address;
+        return this.currencies[token].contractAddress;
       }
-      return this.web3.utils.toChecksumAddress(this.currencies[token].address);
+      return this.web3.utils.toChecksumAddress(
+        this.currencies[token].contractAddress
+      );
     } catch (e) {
       errorLogger(e);
       throw Error(

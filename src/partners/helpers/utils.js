@@ -1,4 +1,20 @@
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
+
+const createProxy = (valueObject = {}, defaultValue = 42) => {
+  const handler = function(defaultValue) {
+    return {
+      get: function(target, name) {
+        return target.hasOwnProperty(name) ? target[name] : defaultValue;
+      },
+      set: function(obj, prop, value) {
+        obj[prop] = value;
+        return true;
+      }
+    };
+  };
+
+  return new Proxy(valueObject, handler(defaultValue));
+};
 
 const mapToObject = map => {
   const obj = {};
@@ -103,5 +119,6 @@ export {
   buildPayload,
   isValidEntry,
   checkInvalidOrMissingValue,
-  handleOrThrow
+  handleOrThrow,
+  createProxy
 };

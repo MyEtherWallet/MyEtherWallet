@@ -172,28 +172,26 @@ export default {
         }
       ],
       walletJson: '',
-      filename: '',
-      build: BUILD_TYPE
+      filename: ''
     };
   },
   computed: {
-    ...mapState(['account', 'network', 'web3']),
+    ...mapState('main', ['account', 'network', 'web3']),
     hasNickname() {
-      return this.account.nickname !== '';
+      return this.account.nickname && this.account.nickname !== '';
     }
   },
   mounted() {
+    const file = JSON.parse(this.account.keystore).file;
+    const name = JSON.parse(this.account.keystore).name;
     this.fetchTokens();
     this.fetchBalance();
     if (
       !this.account.isHardware &&
       typeof this.account.keystore !== 'undefined'
     ) {
-      this.walletJson = createBlob(
-        JSON.parse(this.account.keystore).file,
-        'mime'
-      );
-      this.filename = JSON.parse(this.account.keystore).name;
+      this.walletJson = createBlob(file, 'mime');
+      this.filename = this.hasNickname ? this.account.nickname : name;
     }
   },
   destroyed() {
@@ -202,7 +200,6 @@ export default {
     this.balance = '0';
     this.walletJson = '';
     this.filename = '';
-    this.build = BUILD_TYPE;
   },
   methods: {
     disableItem(itemKey) {

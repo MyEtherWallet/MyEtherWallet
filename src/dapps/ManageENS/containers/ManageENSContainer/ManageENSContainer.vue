@@ -43,7 +43,7 @@
             <i
               :class="[
                 'validity-indication fa',
-                v.value !== '' && !v.validator.validate(v.value)
+                isInvalidAddress(v)
                   ? 'error fa-times-circle-o'
                   : 'valid fa-check-circle-o'
               ]"
@@ -69,7 +69,6 @@
       </div>
     </b-collapse>
     <b-btn
-      v-show="resolverTxtSupport"
       v-b-toggle.textrecords
       class="collapse-open-button"
       variant="primary"
@@ -259,9 +258,14 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3']),
+    ...mapState('main', ['web3']),
     isValidAddresses() {
       for (const type in this.currencyInputs) {
+        if (
+          this.currencyInputs[type].id === this.currencyInputs.ETH.id &&
+          this.currencyInputs[type].value === ''
+        )
+          return false;
         if (
           this.currencyInputs[type].value !== '' &&
           !this.currencyInputs[type].validator.validate(
@@ -300,6 +304,11 @@ export default {
     }
   },
   methods: {
+    isInvalidAddress(type) {
+      if (type.id === this.supportedCoins.ETH.id && type.value === '')
+        return true;
+      return type.value !== '' && !type.validator.validate(type.value);
+    },
     getValidation(name) {
       const foundObj = supportedTxt.find(item => {
         return item.name.toLowerCase() === name.toLowerCase();

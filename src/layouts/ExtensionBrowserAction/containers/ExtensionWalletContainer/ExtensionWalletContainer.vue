@@ -43,7 +43,7 @@ import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import { WalletInterface } from '@/wallets';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
 import InterfaceNetworkModal from '@/layouts/InterfaceLayout/components/InterfaceNetworkModal';
 export default {
@@ -68,7 +68,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network']),
+    ...mapState('main', ['web3', 'network']),
     validInput() {
       return (
         (this.password !== '' || this.password.length > 0) &&
@@ -90,6 +90,11 @@ export default {
     window.chrome.storage.onChanged.removeListener(this.getAccounts);
   },
   methods: {
+    ...mapActions('main', [
+      'switchNetwork',
+      'setWeb3Instance',
+      'decryptWallet'
+    ]),
     openNetworkModal() {
       this.$refs.network.$refs.network.show();
     },
@@ -100,18 +105,21 @@ export default {
         .then(res => {
           return res.json();
         })
-        .catch(e => {
-          // eslint-disable-next-line
-          console.error(e);
+        .catch(() => {
+          Toast.responseHandler(
+            this.$t('mewcx.balance-fetch-error'),
+            Toast.WARN
+          );
+          return 0;
         });
-
-      this.convertedBalance = `$ ${new BigNumber(
-        price.data.ETH.quotes.USD.price
-      )
+      const priceAvailable = price.hasOwnProperty('data')
+        ? price.data.ETH.quotes.USD.price
+        : price;
+      this.convertedBalance = `$ ${new BigNumber(priceAvailable)
         .times(this.totalBalance)
         .toFixed(2)}`;
 
-      this.ethPrice = price.data.ETH.quotes.USD.price;
+      this.ethPrice = priceAvailable;
     },
     getAccountsCb(res) {
       const accounts = Object.keys(res)
@@ -137,21 +145,14 @@ export default {
     getAccounts(changed) {
       if (changed && changed.hasOwnProperty('defNetwork')) {
         const networkProps = JSON.parse(changed['defNetwork'].newValue);
-        const network = this.$store.state.Networks[networkProps.key].find(
-          actualNetwork => {
-            return actualNetwork.service === networkProps.service;
-          }
-        );
-        this.$store
-          .dispatch(
-            'switchNetwork',
-            !network ? this.$store.state.Networks[networkProps.key][0] : network
-          )
-          .then(() => {
-            this.$store.dispatch('setWeb3Instance');
-          });
+        const network = this.$store.state.main.Networks[networkProps.key][0];
+        this.switchNetwork(
+          !network ? this.$store.state.Networks[networkProps.key][0] : network
+        ).then(() => {
+          this.setWeb3Instance();
+        });
       } else {
-        this.$store.dispatch('setWeb3Instance');
+        this.setWeb3Instance();
       }
       ExtensionHelpers.getAccounts(this.getAccountsCb);
     },
@@ -199,7 +200,7 @@ export default {
     },
     setWallet(wallet) {
       const navTo = this.path !== 'access' ? 'view-wallet-info' : 'interface';
-      this.$store.dispatch('decryptWallet', [wallet]);
+      this.decryptWallet([wallet]);
       this.loading = false;
       this.password = '';
       this.file = '';
@@ -225,19 +226,31 @@ export default {
       let balance = new BigNumber(this.totalBalance);
       const watchOnlyAddresses = [];
       const myWallets = [];
-      for (const account of accs) {
+      for await (const account of accs) {
         if (account !== undefined) {
           const address = toChecksumAddress(account.address).toLowerCase();
           delete account['address'];
           const parsedItemWallet = JSON.parse(account.wallet);
-          account['balance'] = await this.getBalance(address);
+          await this.getBalance(address)
+            .then(res => {
+              account['balance'] = res;
+              if (parsedItemWallet.type === 'wallet') {
+                balance = balance.plus(new BigNumber(account.balance));
+              }
+            })
+            .catch(() => {
+              Toast.responseHandler(
+                this.$t('mewcx.balance-fetch-error'),
+                Toast.WARN
+              );
+              account['balance'] = 0;
+            });
           account['type'] = parsedItemWallet.type;
           account['address'] = address;
           account['nickname'] = parsedItemWallet.nick;
           if (parsedItemWallet.type !== 'wallet') {
             watchOnlyAddresses.push(account);
           } else {
-            balance = balance.plus(new BigNumber(account.balance));
             myWallets.push(account);
           }
         }

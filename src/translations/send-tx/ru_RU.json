@@ -5,7 +5,8 @@
   "sender": "Отправитель",
   "receiver": "Получатель",
   "send-tx": "Отправить транзакцию",
-  "send-offline": "Отправить офлайн",
+  "send-tx-break": "Отправить {transaction}",
+  "send-offline": "Отправить оффлайн",
   "to-addr": "Получатель",
   "from-addr": "Отправитель",
   "raw-tx": "Транзакция в исходном виде (Raw)",
@@ -45,6 +46,7 @@
     "button-check-status": "Проверить статус на Etherscan.io",
     "button-check-explorer": "Проверить статус на {explorrerName}"
   },
+  "invalid-data": "Предоставленные данные являются недействительными или неполными!",
   "via-contract": "Через контракт",
   "import-json": "Импорт JSON",
   "retrieved": "Получено",
