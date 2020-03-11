@@ -57,9 +57,8 @@
   .btn-container {
     margin-left: 30px;
     img {
-      height: 40px;
+      height: 46px;
       margin-right: 5px;
-      width: 135px;
     }
   }
 
@@ -107,8 +106,14 @@
   }
 }
 
-@media screen and (max-width: 1156px) {
+@media screen and (max-width: 1192px) {
   .footer-banner-container {
+    .detail-content {
+      margin-right: 13px;
+      margin-top: 15px;
+      top: 0;
+    }
+
     .footer-text {
       text-align: center;
     }
@@ -147,11 +152,6 @@
 @media screen and (max-width: 722px) {
   .footer-banner-container {
     min-height: 200px;
-    .detail-content {
-      margin-right: 13px;
-      margin-top: 15px;
-      top: 0;
-    }
     .center-content,
     .center-content-expanded {
       .title-row {
