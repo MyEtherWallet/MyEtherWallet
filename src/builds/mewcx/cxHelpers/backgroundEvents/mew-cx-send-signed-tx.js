@@ -23,7 +23,6 @@ export default async ({ event, payload }, callback, next) => {
     .sendSignedTransaction(payload.signedTx)
     .once('transactionHash', hash => {
       funcHash = hash;
-      console.log(store);
       store.dispatch('main/addNotification', [
         'Hash',
         payload.raw.from,
