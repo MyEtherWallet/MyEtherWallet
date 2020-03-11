@@ -364,7 +364,7 @@ export default {
       selected: '',
       file: '',
       wallet: {},
-      balance: 0,
+      balance: '0',
       privKey: '',
       mnemonicValue: 12,
       mnemonicPhraseHolder: {},
@@ -480,6 +480,11 @@ export default {
             this.saveWalletReset();
         }
       }
+    },
+    wallet(newValue) {
+      if (Object.keys(newValue).length > 0) {
+        this.getBalance();
+      }
     }
   },
   mounted() {
@@ -496,7 +501,7 @@ export default {
       this.selected = '';
       this.file = '';
       this.wallet = {};
-      this.balance = 0;
+      this.balance = '0';
       this.privKey = '';
       this.mnemonicValue = 12;
       this.mnemonicPhraseHolder = {};
@@ -532,7 +537,7 @@ export default {
       this.loading = false;
       this.file = '';
       this.wallet = {};
-      this.balance = 0;
+      this.balance = '0';
     },
     importWalletMethodReset() {
       const BY_JSON = 'byJson';
@@ -564,7 +569,7 @@ export default {
     },
     saveWalletReset() {
       this.walletName = '';
-      this.balance = 0;
+      this.balance = '0';
       this.password = '';
       this.confirmPassword = '';
       this.showPassword = false;
@@ -679,7 +684,7 @@ export default {
       const balance = await this.web3.eth.getBalance(
         this.wallet.getAddressString()
       );
-      this.balance = balance;
+      this.balance = this.web3.utils.fromWei(balance);
     },
     generateWalletViaPriv() {
       const parsedPrivKey =

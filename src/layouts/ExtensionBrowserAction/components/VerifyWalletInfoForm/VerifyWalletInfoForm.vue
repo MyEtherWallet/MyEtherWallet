@@ -18,7 +18,8 @@
             <span class="total-balance">{{ convertedBalance }}</span>
             <br />
             <span class="eth-balance">
-              {{ balance }} {{ network.type.currencyName }}
+              {{ balance.length > 7 ? balance.substr(0, 7) + '...' : balance }}
+              {{ network.type.currencyName }}
             </span>
           </p>
         </div>
@@ -115,8 +116,8 @@ export default {
       default: '$ '
     },
     balance: {
-      type: Number,
-      default: 0
+      type: String,
+      default: '0'
     },
     network: {
       type: Object,
