@@ -212,7 +212,6 @@ function onInstalledCb() {
 
 function onStartupCb() {
   onInstalledCb();
-  console.log('did you run?');
   // redo stored addresses to checksum.
   chrome.storage.sync.get(null, obj => {
     const objKeys = Object.keys(obj);

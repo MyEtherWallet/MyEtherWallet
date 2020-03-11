@@ -37,38 +37,3 @@
     }
   }
 }
-
-
-@keyframes slideInRight {
-  0% {
-    opacity: 0;
-    transform: translateX(3000px);
-  }
-  60% {
-    opacity: 1;
-    transform: translateX(500px);
-  }
-  80% {
-    transform: translateX(10px);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-
-.slide-from-right-enter,
-.slide-from-right-leave-to {
-  opacity: 0;
-}
-
-// .slide-from-right-enter-active,
-// .slide-from-right-leave-active {
-//   opacity: 1;
-//   transition: ;
-// }
-
-.slide-from-right-enter-active {
-  opacity: 1;
-  animation-duration: 2s;
-  animation-name: slideInRight;
-}

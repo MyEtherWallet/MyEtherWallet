@@ -1,6 +1,9 @@
 @import '~@/scss/GlobalVariables';
 @import '~@/layouts/ExtensionBrowserAction/wrappers/MewcxModalWrapper/MewcxModalInputs';
 .warning-text-container {
+  max-width: 700px;
+  margin: auto;
+
   .modal-contents {
     max-width: 405px;
     margin: auto;

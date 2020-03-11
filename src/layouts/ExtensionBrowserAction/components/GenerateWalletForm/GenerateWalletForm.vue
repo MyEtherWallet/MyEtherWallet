@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="generate-wallet-container-form">
     <form @submit.prevent>
       <div class="input-container">
         <label for="walletName"> {{ $t('mewcx.wallet-name') }} </label>
