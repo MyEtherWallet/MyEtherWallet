@@ -29,7 +29,7 @@
     "update:swap": "node compileBaseSwapOptions.js"
   },
   "dependencies": {
-    "@aave/protocol-js": "0.2.3",
+    "@aave/protocol-js": "0.2.4",
     "@sentry/browser": "5.13.2",
     "@sentry/integrations": "5.13.2",
     "@unstoppabledomains/resolution": "1.2.2",
