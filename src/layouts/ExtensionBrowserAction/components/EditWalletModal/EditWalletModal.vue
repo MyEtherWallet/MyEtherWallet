@@ -14,7 +14,10 @@
           />
         </div>
         <button
-          class="submit-button large-round-button-green-filled"
+          :class="[
+            locName !== '' ? '' : 'disabled',
+            'submit-button large-round-button-green-filled'
+          ]"
           type="submit"
           @click.prevent="saveWallet"
         >
