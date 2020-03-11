@@ -23,15 +23,12 @@
                       :popcontent="$t('createWallet.mew-wallet.tooltip')"
                     />
                   </div>
-                  <i18n tag="p" path="createWallet.mew-wallet.desc">
-                    <a
-                      slot="learn-more"
-                      href="https://www.mewwallet.com/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      >{{ $t('common.learn-more') }}</a
-                    >
-                  </i18n>
+                  <h3 class="mew-wallet-desc mt-2">
+                    {{ $t('createWallet.mew-wallet.desc') }}
+                  </h3>
+                  <p class="download-txt mt-3">
+                    {{ $t('createWallet.mew-wallet.details') }}
+                  </p>
                 </div>
                 <div class="appstores">
                   <div class="icons">
@@ -43,14 +40,14 @@
                     >
                       <img
                         alt
-                        src="~@/assets/images/icons/appstore.svg"
+                        src="~@/assets/images/icons/button-app-store.png"
                         height="40"
                       />
                     </a>
                     <div v-else @click="openIpadModal">
                       <img
                         alt
-                        src="~@/assets/images/icons/appstore.svg"
+                        src="~@/assets/images/icons/button-app-store.png"
                         height="40"
                       />
                     </div>
@@ -77,9 +74,6 @@
                       />
                     </a>
                   </div>
-                  <p class="download-txt">
-                    {{ $t('createWallet.mew-wallet.download-today') }}
-                  </p>
                 </div>
               </div>
               <div class="bottom-image">
