@@ -109,7 +109,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(['account', 'blockNumber'])
+    ...mapState('main', ['account', 'blockNumber'])
   },
   watch: {},
   mounted() {},

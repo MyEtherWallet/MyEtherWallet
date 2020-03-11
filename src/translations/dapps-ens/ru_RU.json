@@ -1,6 +1,6 @@
 {
   "title": "Менеджер ENS",
-  "dapp-desc": "Регистрация домена ENS",
+  "dapp-desc": "Регистрация и управление доменом ENS",
   "search-domain-desc": "Поиск доменного имени. После регистрации, вы сможете предлагать своим друзьям отправить ETH на адрес \"_____. th\", вместо вашего публичного адреса (0x.....).",
   "error": {
     "permanent-not-available": "ENS Постоянный регистратор еще не доступен, пожалуйста, повторите попытку позже",
@@ -14,8 +14,8 @@
     "invalid-symbol": "Неверные символы в домене"
   },
   "toast": {
-    "success-transfer": "Перевод выполнен успешнo!",
-    "success-register": "Регистрация выполнена успешнo!"
+    "success-register": "Регистрация выполнена успешнo!",
+    "unavailable": "Управление ENS на данный момент не доступно"
   },
   "check-domain": "Проверить домен",
   "update": "Обновление",
@@ -68,6 +68,18 @@
     "addr-not-checksummed": "Этот адрес указан неправильно. Пожалуйста, скопируйте адрес точно так, как он показан.",
     "invalid-addr": "Неверный {coin} адрес",
     "network-not-found": "{network}НС имя недопустимо или не найдено",
+    "domain-not-found": "Доменное имя является недопустимым или не найдено",
     "no-resolver": "Нет резолвера {network} НС в этом узле"
+  },
+  "unstoppableResolution": {
+    "address-reported-error": "Этот адрес в черном списке. Пожалуйста, убедитесь, что вы отправляете средства на правильный адрес.",
+    "UnregisteredDomain": "Домен {domain} не зарегистрирован",
+    "UnspecifiedResolver": "Домен {domain} не настроен",
+    "UnsupportedDomain": "Домен {domain} не поддерживается",
+    "UnspecifiedCurrency": "K домену {domain} не привязан {currencyTicker}",
+    "NamingServiceDown": "Служба имён {method} в данный момент недоступна",
+    "UnsupportedCurrency": "{currencyTicker} не поддерживается",
+    "IncorrectResolverInterface": "Резолвер домена сконфигурирован неправильно для {method}",
+    "RecordNotFound": "Не найдено {recordName} записей для {domain}"
   }
 }

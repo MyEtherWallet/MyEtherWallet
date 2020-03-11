@@ -1,17 +1,199 @@
+### Releaase v5.4.2
+
+### Bugs
+
+- Fix offline helper fee conversion [#2063](https://github.com/MyEtherWallet/MyEtherWallet/pull/2063)
+- Fix logout error and fix aave bug [#2082](https://github.com/MyEtherWallet/MyEtherWallet/pull/2082)
+
+### Devop
+
+- New etherscan api key [#2089](https://github.com/MyEtherWallet/MyEtherWallet/pull/2089)
+- ropsten ens .test set resolver [#2090](https://github.com/MyEtherWallet/MyEtherWallet/pull/2090)
+- Update greenkeeper packages [#2088](https://github.com/MyEtherWallet/MyEtherWallet/pull/2088)
+- Update greenkeeper packages [#2078](https://github.com/MyEtherWallet/MyEtherWallet/pull/2078)
+
+### Release v5.4.1-hotfix.1
+
+### Bugs
+
+- Fix MEWconnect disconnecting soon after connecting [#2064](https://github.com/MyEtherWallet/MyEtherWallet/pull/2064)
+
+### Release v5.4.1
+
+### Bugs
+
+- Fix network changer [#2054](https://github.com/MyEtherWallet/MyEtherWallet/pull/2054)
+- Send Offline helper transaction fee [#2058](https://github.com/MyEtherWallet/MyEtherWallet/pull/2058)
+- Add burner address warning, redo store so all addresses currently stored are uniform [#2049](https://github.com/MyEtherWallet/MyEtherWallet/pull/2049)
+- Revert one time check [#2053](https://github.com/MyEtherWallet/MyEtherWallet/pull/2053)
+- Fix Buy ETH Widget bug [#2046](https://github.com/MyEtherWallet/MyEtherWallet/pull/2046)
+- Fix KB link [#2047](https://github.com/MyEtherWallet/MyEtherWallet/pull/2047)
+
+### Devop
+
+- WS reconnect on disconnect [#2057](https://github.com/MyEtherWallet/MyEtherWallet/pull/2057)
+- Hardcode russian translation for first time welcome modal [#2041](https://github.com/MyEtherWallet/MyEtherWallet/pull/2041)
+- update client library for mew mobile and fix 500 DAI + kyber swap gas limit [#2029](https://github.com/MyEtherWallet/MyEtherWallet/pull/2029)
+- Add aave referral code [#2040](https://github.com/MyEtherWallet/MyEtherWallet/pull/2040/files)
+- Update packages [#2040](https://github.com/MyEtherWallet/MyEtherWallet/pull/2040)
+- Sync master to develop, fix uuid issue [#2023](https://github.com/MyEtherWallet/MyEtherWallet/pull/2023)
+- Harden CSP [#2016](https://github.com/MyEtherWallet/MyEtherWallet/pull/2016)
+
+### Release v5.4.0
+
 ### Feature
 
-- Merge mobile interface menu into main top menu [#1873](https://github.com/MyEtherWallet/MyEtherWallet/pull/1873)
+- Aave [#1728](https://github.com/MyEtherWallet/MyEtherWallet/pull/1728)
+
+### Devop
+
+- Change translation string [#2000](https://github.com/MyEtherWallet/MyEtherWallet/pull/2000)
+- Fix Exit to Fiat to correspond with backend changes [#2002](https://github.com/MyEtherWallet/MyEtherWallet/pull/2002)
+- Update aave copy [#2011](https://github.com/MyEtherWallet/MyEtherWallet/pull/2011)
+- Change social icons display [#2003](https://github.com/MyEtherWallet/MyEtherWallet/pull/2003)
+- Update aave copy [#2020](https://github.com/MyEtherWallet/MyEtherWallet/pull/2020)
+
+### Bugs
+
+- Fix save ui [#1972](https://github.com/MyEtherWallet/MyEtherWallet/pull/1972)
+- Partial fix to downloading keystore file in view wallet [#1997](https://github.com/MyEtherWallet/MyEtherWallet/pull/1997)
+- Fix aave bugs [#2018](https://github.com/MyEtherWallet/MyEtherWallet/pull/2018)
+
+### Release v5.3.3-hotfix.2
+
+### Hotfix
+
+- remove keepalive net_version calls [#2009](https://github.com/MyEtherWallet/MyEtherWallet/pull/2009)
+
+### Release v5.3.3-hotfix.1
+
+### Hotfix
+
+- Fix NFT load issue [#2001](https://github.com/MyEtherWallet/MyEtherWallet/pull/2001)
 
 ### Bug
 
+- check if reset copy exists before replacing nft list with copy [#2013](https://github.com/MyEtherWallet/MyEtherWallet/pull/2013)
+
+### Release v5.3.3
+
+### Bug
+
+- Fix mnemonic phrase for current version [#1985](https://github.com/MyEtherWallet/MyEtherWallet/pull/1985)
+- Fix incorrect variable used to check maker setup complete [#1985](https://github.com/MyEtherWallet/MyEtherWallet/pull/1985)
+- Some bug fixes [#1978](https://github.com/MyEtherWallet/MyEtherWallet/pull/1978)
+- Fix DAI Icon [#1977](https://github.com/MyEtherWallet/MyEtherWallet/pull/1977)
+
+### Devop
+
+- Add CAD and JPY as Simplex currencies [#1887](https://github.com/MyEtherWallet/MyEtherWallet/pull/1887)
+- Update NFT manager to use new API [#1898](https://github.com/MyEtherWallet/MyEtherWallet/pull/1898)
+- Remove iosiro as blacklist source - Update NFT manager to use new API [#1997](https://github.com/MyEtherWallet/MyEtherWallet/pull/1997)
+
+### Release v5.3.2-hotfix.1
+
+### Hotfix
+
+- Resolver domains ens url [#1974](https://github.com/MyEtherWallet/MyEtherWallet/pull/1974)
+
+### Release v5.3.2
+
+### Feature
+
+- Update icons [#1961](https://github.com/MyEtherWallet/MyEtherWallet/pull/1961)
+
+### Devop
+
+- Update greenkeeper package [#1954](https://github.com/MyEtherWallet/MyEtherWallet/pull/1954)
+- Update team page [#1952](https://github.com/MyEtherWallet/MyEtherWallet/pull/1952)
+- Maintenace due to new ENS registry [#1951](https://github.com/MyEtherWallet/MyEtherWallet/pull/1951)
+
+### Bug
+
+- Link fixes [#1963](https://github.com/MyEtherWallet/MyEtherWallet/pull/1963)
+
+### Release v5.3.1-hotfix.1
+
+### Bug
+
+- Remove excessive web3 calls from cx [#1955](https://github.com/MyEtherWallet/MyEtherWallet/pull/1955)
+
+### Release v5.3.1
+
+### Devop
+
+- add support for lang based paths /en /ru [#1915](https://github.com/MyEtherWallet/MyEtherWallet/pull/1915)
+- Update web3 packages [#1912](https://github.com/MyEtherWallet/MyEtherWallet/pull/1912)
+- Green keeper packages [#1938](https://github.com/MyEtherWallet/MyEtherWallet/pull/1938)
+
+### Release v5.3.0-hotfix.1
+
+### Devop
+
+- Support for new ENS registry [#1923](https://github.com/MyEtherWallet/MyEtherWallet/pull/1923)
+
+### Release v5.3.0
+
+### Feature
+
+- ENS functionality for address book [#1888](https://github.com/MyEtherWallet/MyEtherWallet/pull/1888)
+
+### Devop
+
+- Update packages from Greenkeeper [#1920](https://github.com/MyEtherWallet/MyEtherWallet/pull/1920)
+- Update help to quick help [#1899](https://github.com/MyEtherWallet/MyEtherWallet/pull/1899)
+- Update packages from Greenkeeper [#1896](https://github.com/MyEtherWallet/MyEtherWallet/pull/1896)
+- Modularize store state [#1722](https://github.com/MyEtherWallet/MyEtherWallet/pull/1722)
+
+### Bug
+
+- Fix broken string [#1918](https://github.com/MyEtherWallet/MyEtherWallet/pull/1918)
+- Change translations placement [#1901](https://github.com/MyEtherWallet/MyEtherWallet/pull/1901)
+- Fix community icons spacing and size [#1889](https://github.com/MyEtherWallet/MyEtherWallet/pull/1889)
+- Fix background image for welcome popup [#1886](https://github.com/MyEtherWallet/MyEtherWallet/pull/1886)
+- Fix footer text wrapping issue [#1892](https://github.com/MyEtherWallet/MyEtherWallet/pull/1892)
+- Set ENS in offline helper [#1891](https://github.com/MyEtherWallet/MyEtherWallet/pull/1891)
+- Fix modularize state bugs [#1897](https://github.com/MyEtherWallet/MyEtherWallet/pull/1897)
+
+### Release v5.2.11
+
+### Feature
+
+- Add vkontakte icon to social home page and add first time russian popup [#1872](https://github.com/MyEtherWallet/MyEtherWallet/pull/1872)
+- Add unstoppable domains [#1857](https://github.com/MyEtherWallet/MyEtherWallet/pull/1857)
+
+### Devop
+
+- Update ledger packages [#1884](https://github.com/MyEtherWallet/MyEtherWallet/pull/1884)
+- Run update:swap with other update script [#1859](https://github.com/MyEtherWallet/MyEtherWallet/pull/1859)
+- Update translations [#1870](https://github.com/MyEtherWallet/MyEtherWallet/pull/1870)
+- Update Packages from greenkeeper [#1863](https://github.com/MyEtherWallet/MyEtherWallet/pull/1863)
+- Remove Price bar [#1876](https://github.com/MyEtherWallet/MyEtherWallet/pull/1876)
+
+### Bug
+
+- Fix tx hash link, switch address, and make cx connection with popup more stable [#1853](https://github.com/MyEtherWallet/MyEtherWallet/pull/1853)
+- Disable web3 detection [#1840](https://github.com/MyEtherWallet/MyEtherWallet/pull/1840)
+- Improve error messages for outdated dependencies [#1848](https://github.com/MyEtherWallet/MyEtherWallet/pull/1848)
+- Remove excess maker wording and add to translations [#1853](https://github.com/MyEtherWallet/MyEtherWallet/pull/1853)
+- Remove permanent hide on issue modal [#1856](https://github.com/MyEtherWallet/MyEtherWallet/pull/1856)
+
+### Release v5.2.10
+
+### Bug
+
+- Avoid incompatible Node 12 [#1845](https://github.com/MyEtherWallet/MyEtherWallet/pull/1845)
 - Fix error log details size [#1837](https://github.com/MyEtherWallet/MyEtherWallet/pull/1837)
 - Hide other translations on mobile [#1834](https://github.com/MyEtherWallet/MyEtherWallet/pull/1834)
 - Fix translations for address book [#1833](https://github.com/MyEtherWallet/MyEtherWallet/pull/1833)
+- Fix checks/updates for address [#1842](https://github.com/MyEtherWallet/MyEtherWallet/pull/1842)
 
 ### Devop
 
 - Add EtherCore support [#1825](https://github.com/MyEtherWallet/MyEtherWallet/pull/1825)
 - Migrate Webchain to Mintme [#1824](https://github.com/MyEtherWallet/MyEtherWallet/pull/1824)
+- Update ETC explorrer links [#1855](https://github.com/MyEtherWallet/MyEtherWallet/pull/1855)
+- Update packages [#1852](https://github.com/MyEtherWallet/MyEtherWallet/pull/1852/files#diff-b9cfc7f2cdf78a7f4b91a753d10865a2R61)
 
 ### Release v5.2.9
 
@@ -129,6 +311,7 @@
 
 ### Feature
 
+- Add MEWconnect footer link [#1675](https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)
 - Display label paths [#1681](https://github.com/MyEtherWallet/MyEtherWallet/pull/1681)
 - Address book [#1647](https://github.com/MyEtherWallet/MyEtherWallet/pull/1647)
 - Add MEWconnect footer link [#1675](https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)

@@ -2,13 +2,23 @@
   <div class="drop-down-address-selector">
     <div class="dropdown--title">
       <h4>{{ title }}</h4>
-      <button
-        v-show="!hideCopy"
-        class="title-button prevent-user-select"
-        @click="copyToClipboard($refs.addressInput)"
-      >
-        {{ $t('common.copy') }}
-      </button>
+      <div class="top-button-block">
+        <button
+          v-show="!hideCopy"
+          v-if="isValidAddress"
+          :class="['save-addr-txt', !selectedAddress ? 'disabled-txt' : '']"
+          @click="openAddrModal()"
+        >
+          {{ $t('interface.address-book.save-addr') }}
+        </button>
+        <button
+          v-show="!hideCopy"
+          class="title-button prevent-user-select"
+          @click="copyToClipboard($refs.addressInput)"
+        >
+          {{ $t('common.copy') }}
+        </button>
+      </div>
     </div>
     <div class="dropdown--content">
       <div
@@ -26,12 +36,7 @@
             @input="debouncedInput"
           />
         </div>
-        <span
-          v-show="!hideCopy"
-          :class="['save-addr-txt', !selectedAddress ? 'disabled-txt' : '']"
-          @click="openAddrModal()"
-          >{{ $t('interface.address-book.save-addr') }}</span
-        >
+
         <div v-if="!isValidAddress" class="blockie-place-holder-image" />
         <div v-if="isValidAddress" class="selected-address-blockie">
           <blockie :address="hexAddress" width="30px" height="30px" />
@@ -65,7 +70,11 @@
             @click="listedAddressClick(addr.address)"
           >
             <div class="list-blockie">
-              <blockie :address="addr.address" width="30px" height="30px" />
+              <blockie
+                :address="addr.resolverAddr"
+                width="30px"
+                height="30px"
+              />
               <img
                 :alt="$t('common.currency.ethereum')"
                 class="currency-icon"
@@ -110,7 +119,7 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Blockie from '@/components/Blockie';
 import { EthereumTokens, BASE_CURRENCY } from '@/partners';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { Toast } from '@/helpers';
 import utils from 'web3-utils';
 import AddressBookModal from '@/components/AddressBookModal';
@@ -143,14 +152,13 @@ export default {
       selectedAddress: '',
       isValidAddress: false,
       dropdownOpen: false,
-      addresses: [],
       toAddressCheckMark: false,
       hexAddress: '',
       currentAddress: ''
     };
   },
   computed: {
-    ...mapState(['addressBook', 'account']),
+    ...mapState('main', ['addressBook', 'account']),
     hasMessage() {
       return (
         (!this.isValidAddress && this.selectedAddress.length > 0) ||
@@ -166,6 +174,18 @@ export default {
 
         return a < b ? -1 : a > b ? 1 : 0;
       });
+    },
+    addresses() {
+      return this.currentAddress
+        ? [
+            {
+              address: this.currentAddress,
+              currency: BASE_CURRENCY,
+              resolverAddr: this.currentAddress
+            },
+            ...this.sortedAddressBook
+          ]
+        : [...this.sortedAddressBook];
     }
   },
   watch: {
@@ -175,42 +195,34 @@ export default {
       this.hexAddress = '';
       this.$refs.addressInput.value = '';
     },
-    currentAddress(address) {
-      if (this.addresses.findIndex(addr => addr.address === address) === -1) {
-        this.updateAddresses(address);
-      }
-    },
-    addressBook() {
-      this.updateAddresses(this.currentAddress);
-    },
     hexAddress() {
       this.validateAddress();
     },
     currency() {
       this.validateAddress(this.selectedAddress);
+    },
+    dropdownOpen(val) {
+      const resolverTxtElem =
+        document.querySelector('.resolver-error') ||
+        document.querySelector('.resolver-addr');
+      if (resolverTxtElem) {
+        val === true
+          ? resolverTxtElem.classList.add('hidden')
+          : resolverTxtElem.classList.remove('hidden');
+      }
     }
   },
   mounted() {
     this.currentAddress = this.account.address;
   },
   methods: {
+    ...mapActions('main', ['setAddressBook']),
     openAddrModal() {
       this.$refs.addressBook.$refs.addressBookModal.show();
     },
     debouncedInput: utils._.debounce(function(e) {
       this.selectedAddress = e.target.value;
     }, 300),
-    updateAddresses(address) {
-      this.addresses = address
-        ? [
-            {
-              address: address,
-              currency: BASE_CURRENCY
-            },
-            ...this.sortedAddressBook
-          ]
-        : [...this.sortedAddressBook];
-    },
     copyToClipboard(ref) {
       ref.select();
       document.execCommand('copy');

@@ -203,11 +203,11 @@ export default {
               to: '/send-offline-helper'
             },
             {
-              text: 'footer.verifyMessage',
+              text: 'verifyMessage.title',
               to: '/verify-message'
             },
             {
-              text: 'footer.viewWalletInfo',
+              text: 'footer.view-wallet-info',
               to: '/view-wallet-info'
             },
             {
@@ -285,7 +285,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['ethDonationAddress'])
+    ...mapState('main', ['ethDonationAddress'])
   },
   mounted() {
     if (Misc.isMewCx()) {

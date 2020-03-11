@@ -56,7 +56,7 @@
                         ? 'current-network'
                         : ''
                     "
-                    @click="switchNetwork(net)"
+                    @click="locSwitchNetwork(net)"
                   >
                     {{ net.service }}
                   </p>
@@ -157,7 +157,10 @@
                   >
                     {{ $t('common.cancel') }}
                   </button>
-                  <button class="submit-button submit" @click="addCustomPath">
+                  <button
+                    class="submit-button submit"
+                    @click="localAddCustomPath"
+                  >
                     {{ $t('accessWallet.add-custom-path') }}
                   </button>
                 </div>
@@ -171,8 +174,8 @@
 
                   <ul class="address-block table-header fours">
                     <li>{{ $t('accessWallet.id') }}</li>
-                    <li>{{ $t('common.address') }}</li>
-                    <li>{{ $t('common.balance') }}</li>
+                    <li>{{ $t('common.addr') }}</li>
+                    <li>{{ $t('common.balance.string') }}</li>
                   </ul>
 
                   <ul
@@ -271,7 +274,7 @@
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { Misc, Toast } from '@/helpers';
 import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
@@ -325,7 +328,7 @@ export default {
     };
   },
   computed: {
-    ...mapState([
+    ...mapState('main', [
       'network',
       'Networks',
       'customPaths',
@@ -370,9 +373,14 @@ export default {
     });
   },
   methods: {
-    switchNetwork(network) {
-      this.$store.dispatch('switchNetwork', network).then(() => {
-        this.$store.dispatch('setWeb3Instance');
+    ...mapActions('main', [
+      'switchNetwork',
+      'setWeb3Instance',
+      'removeCustomPath'
+    ]),
+    locSwitchNetwork(network) {
+      this.switchNetwork(network).then(() => {
+        this.setWeb3Instance();
         this.currentIndex = 0;
         this.setHDAccounts();
       });
@@ -405,22 +413,20 @@ export default {
       return new BigNumber(web3utils.fromWei(bal, 'ether')).toFixed(3);
     },
     removeCustomPath(path) {
-      this.$store.dispatch('removeCustomPath', path).then(() => {
+      this.removeCustomPath(path).then(() => {
         this.getPaths();
       });
     },
-    addCustomPath() {
+    localAddCustomPath() {
       const customPath = this.checkCustomPath(this.customPath.path);
       if (customPath) {
         this.customPath.path = customPath;
-        this.$store
-          .dispatch('addCustomPath', {
-            label: this.customPath.label,
-            path: customPath
-          })
-          .then(() => {
-            this.getPaths();
-          });
+        this.addCustomPath({
+          label: this.customPath.label,
+          path: customPath
+        }).then(() => {
+          this.getPaths();
+        });
         this.showCustomPathInput(); // reset the path input
       } else {
         this.invalidPath = this.customPath;
@@ -505,7 +511,7 @@ export default {
       });
     }, 1000),
     async setHDAccounts() {
-      if (!this.web3.eth) this.$store.dispatch('setWeb3Instance');
+      if (!this.web3.eth) this.setWeb3Instance();
       this.HDAccounts = [];
       for (
         let i = this.currentIndex;

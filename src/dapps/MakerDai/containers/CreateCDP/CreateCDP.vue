@@ -197,7 +197,6 @@ import {
   displayFixedPercent,
   toBigNumber
 } from '../../makerHelpers';
-
 import BigNumber from 'bignumber.js';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
@@ -309,7 +308,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     validInputs() {
       if (!this.hasProxy) return false;
       if (toBigNumber(this.ethQty).isNaN() || toBigNumber(this.daiQty).isNaN())
@@ -470,7 +469,7 @@ export default {
       this.emptyMakerCreated = true;
     },
     BuildProxy() {
-      if (this.setupComplete) {
+      if (this.emptyMakerCreated) {
         this.getValueOrFunction('getProxy')().then(proxy => {
           this.proxyAddress = proxy;
           if (!this.proxyAddress) {

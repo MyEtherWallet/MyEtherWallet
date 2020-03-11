@@ -53,7 +53,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['network', 'account', 'web3'])
+    ...mapState('main', ['network', 'account', 'web3'])
   },
   watch: {
     blockNumber(newVal) {

@@ -65,10 +65,14 @@
     "oops": "Oops",
     "error-text": "Something went wrong. You can help us fix it by submitting a report about this error.",
     "inform-error": "Do you want to inform MEW about this error?",
-    "never-show": "Never show again",
+    "hide-for-now": "Hide for now",
     "send-button": "Send error report to MEW",
     "no-thanks": "No thanks",
     "show-error-details": "Show error details"
+  },
+  "updates": {
+    "new": "New update found! Please refresh your browser to receive the most updated version",
+    "update-error": "Something went wrong with our service workers!"
   },
   "wallet": {
     "create-new": "Create A New Wallet",
@@ -112,7 +116,8 @@
   },
   "decision-tree": {
     "subcategories": "Subcategories",
-    "no-results": "Oops! No search results found."
+    "no-results": "Oops! No search results found.",
+    "quick-help": "Quick Help"
   },
   "optional": "Optional",
   "value": "Value",

@@ -38,7 +38,6 @@ import steve from '@/assets/images/team/Steve.jpg';
 import gage from '@/assets/images/team/Gage.jpg';
 import jack from '@/assets/images/team/Jack.jpg';
 import david from '@/assets/images/team/David.jpg';
-import samantha from '@/assets/images/team/Samantha.jpg';
 import alex from '@/assets/images/team/Alex.jpg';
 import misha from '@/assets/images/team/Misha.jpg';
 import katya from '@/assets/images/team/Katya.jpg';
@@ -125,11 +124,6 @@ export default {
           name: 'Katya',
           position: 'Community Advocate',
           img: katya
-        },
-        {
-          name: 'Samantha',
-          position: 'Communications and Media',
-          img: samantha
         }
       ]
     };

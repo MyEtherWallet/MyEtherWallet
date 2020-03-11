@@ -117,21 +117,12 @@
               {{ $t('confirmation.waiting-for-hash') }}
               <i class="fa fa-spinner fa-spin" />
             </div>
-            <div class="tooltip-box-2">
-              <b-btn id="exPopover9">
-                <img
-                  alt
-                  class="icon"
-                  src="~@/assets/images/icons/qr-code.svg"
-                />
-              </b-btn>
-            </div>
           </div>
         </div>
         <p class="learn-more">
           {{ $t('common.have-issues') }}
           <a
-            href="https:/kb.myetherwallet.com"
+            href="https://kb.myetherwallet.com/"
             target="_blank"
             rel="noopener noreferrer"
             >{{ $t('common.learn-more') }}</a
@@ -168,7 +159,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['web3', 'network', 'account']),
+    ...mapState('main', ['web3', 'network', 'account']),
     buttonText() {
       if (!this.allSigned && this.isHardwareWallet) {
         return 'confirmation.approve-on-device';
