@@ -9,8 +9,8 @@
   },
   "mew-wallet": {
     "title": "Рекомендованный метод",
-    "desc": "Download the MEW wallet app",
-    "details": "It’s simple, fast, and secure.",
+    "desc": "Скачайте приложение MEW wallet",
+    "details": "Это просто, быстро и безопасно.",
     "scan": "Установить",
     "version": {
       "ios": "iOS 10.0 или выше",
