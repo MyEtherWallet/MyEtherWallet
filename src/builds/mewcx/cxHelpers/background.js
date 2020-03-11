@@ -84,7 +84,8 @@ chrome.storage.onChanged.addListener(items => {
         JSON.stringify(currentNotifications)
       );
     }
-    if (item === 'defNetwork' && item.defNetwork.hasOwnProperty('newValue')) {
+    if (item === 'defNetwork' && items.defNetwork.hasOwnProperty('newValue')) {
+      console.log('it should be getting here', items['defNetwork'].newValue);
       const networkProps = JSON.parse(
         Misc.stripTags(items['defNetwork'].newValue)
       );
@@ -95,11 +96,8 @@ chrome.storage.onChanged.addListener(items => {
           network ? store.state.main.Networks[networkProps.key][0] : network
         )
         .then(() => {
-          store.dispatch('main/setWeb3Instance', network.url).then(() => {
-            chrome.storage.sync.set({
-              defChainID: store.state.main.network.type.chainID
-            });
-          });
+          store.dispatch('main/setWeb3Instance', network.url);
+          console.log('set the new web instance', network.url);
         });
     }
   });

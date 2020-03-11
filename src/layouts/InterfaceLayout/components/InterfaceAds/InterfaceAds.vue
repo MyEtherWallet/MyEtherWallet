@@ -19,7 +19,7 @@
         </div>
       </a>
     </div>
-    <div class="global__interface-block__margin-top slider-container">
+    <div class="global__interface-block__margin-top ad-slider-container">
       <b-carousel
         v-model="slide"
         :interval="adInterval"
@@ -79,6 +79,31 @@ export default {
 </style>
 
 <style lang="scss">
+@import '~@/scss/GlobalVariables';
+
+.ad-slider-container {
+  %base {
+    height: 30px;
+    top: 70px;
+  }
+  .carousel-control-prev {
+    @extend %base;
+    left: -10px;
+
+    @media all and (max-width: $mobile-width) {
+      left: -25px;
+    }
+  }
+  .carousel-control-next {
+    @extend %base;
+    right: -10px;
+
+    @media all and (max-width: $mobile-width) {
+      right: -25px;
+    }
+  }
+}
+
 .carousel-caption {
   position: relative;
   right: initial;
