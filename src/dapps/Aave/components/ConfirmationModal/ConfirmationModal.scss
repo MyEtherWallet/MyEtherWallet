@@ -1,0 +1,138 @@
+@import '~@/scss/GlobalVariables';
+
+.header-container {
+  background-color: $light-green-1;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 30px;
+
+  div > img {
+    height: 59px;
+    width: 59px;
+  }
+
+  .title {
+    color: $light-grey-18;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .amount {
+    color: $dark-blue-6;
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .token-name {
+    font-size: 24px;
+    font-weight: normal;
+  }
+
+  .usd-amount {
+    color: $light-grey-18;
+    font-size: 14px;
+  }
+}
+
+.body-container {
+  padding: 20px 30px;
+
+  .health-container,
+  .tx-container,
+  .rate-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .right-container {
+    text-align: right;
+  }
+
+  .health-container {
+    .left-container {
+      p {
+        align-items: center;
+        display: flex;
+      }
+    }
+
+    .right-container {
+      .currency-title {
+        align-items: center;
+        display: flex;
+        color: $dark-blue-6;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      p {
+        color: $dark-green-4;
+        font-size: 14px;
+        font-weight: 600;
+      }
+    }
+  }
+  .tx-container {
+    .right-container {
+      p {
+        color: $dark-blue-6;
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+
+    .usd-amt {
+      color: $light-grey-18;
+      font-weight: normal;
+    }
+  }
+}
+
+.btn-container {
+  text-align: center;
+  button {
+    background: $mew-green;
+    border: none;
+    border-radius: 4px;
+    color: $white;
+    height: 62px;
+    width: 260px;
+  }
+}
+
+.rate-container {
+  .right-container {
+    p {
+      color: $light-blue-1;
+      font-weight: 500;
+    }
+  }
+}
+
+.token-icon {
+  font-size: 20px;
+  margin-right: 5px;
+  width: 20px;
+  vertical-align: middle;
+}
+
+.token-icon-col {
+  font-size: 20px;
+  margin-right: 5px;
+  width: 20px;
+  vertical-align: top;
+}
+
+.large-token-icon {
+  font-size: 40px;
+  margin-right: 5px;
+  width: 40px;
+  vertical-align: middle;
+}
+
+.arrow {
+  margin-right: 3px;
+}
+
+.fa-arrow-down {
+  color: $red-1;
+}

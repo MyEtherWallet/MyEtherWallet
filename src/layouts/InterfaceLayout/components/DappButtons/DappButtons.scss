@@ -77,3 +77,21 @@ $dapp-button-mobile-width: 650px;
     color: $light-grey-6;
   }
 }
+
+.aave-icon {
+  .dapps-icon {
+    margin-top: 36px;
+
+    @media all and (max-width: $dapp-button-mobile-width) {
+      margin-top: 0;
+    }
+  }
+
+  .title-container {
+    margin-top: 37px;
+
+    @media all and (max-width: $dapp-button-mobile-width) {
+      margin-top: 0;
+    }
+  }
+}

@@ -14,7 +14,7 @@ import {
   DexAg,
   ChangellyCurrencies as dexAgCurrencies,
   PROVIDER_NAME as dexAg
-} from './dexAg'
+} from './dexAg';
 import {
   Simplex,
   SimplexCurrencies,

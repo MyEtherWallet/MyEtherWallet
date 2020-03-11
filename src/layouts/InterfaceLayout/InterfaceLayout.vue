@@ -95,11 +95,15 @@
           />
           <div class="tokens">
             <interface-tokens
+              v-if="$route.fullPath !== '/interface/dapps/aave/action'"
               :fetch-tokens="setTokens"
               :get-token-balance="getTokenBalance"
               :tokens="tokens"
               :received-tokens="receivedTokens"
               :reset-token-selection="setTokensWithBalance"
+            />
+            <token-overview
+              v-if="$route.fullPath === '/interface/dapps/aave/action'"
             />
           </div>
         </div>
@@ -111,6 +115,7 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import ENS from 'ethereum-ens';
+import TokenOverview from '@/dapps/Aave/components/TokenOverview';
 import WalletPasswordModal from '@/components/WalletPasswordModal';
 import EnterPinNumberModal from '@/components/EnterPinNumberModal';
 import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal';
@@ -169,7 +174,8 @@ export default {
     'enter-pin-number-modal': EnterPinNumberModal,
     'mobile-interface-address': MobileInterfaceAddress,
     'address-qrcode-modal': AddressQrcodeModal,
-    'ledger-app-modal': LedgerAppModal
+    'ledger-app-modal': LedgerAppModal,
+    'token-overview': TokenOverview
   },
   data() {
     return {
@@ -366,7 +372,11 @@ export default {
     async fetchTokens() {
       this.receivedTokens = false;
       let tokens = [];
-      if (this.network.type.chainID === 1 || this.network.type.chainID === 3) {
+      if (
+        this.network.type.chainID === 1 ||
+        (this.network.type.chainID === 3 &&
+          !this.network.url.includes('infura'))
+      ) {
         const tb = new TokenBalance(this.web3.currentProvider);
         try {
           tokens = await tb.getBalance(
@@ -394,6 +404,7 @@ export default {
           return token;
         });
       }
+      this.receivedTokens = true;
       return tokens;
     },
     async setNonce() {

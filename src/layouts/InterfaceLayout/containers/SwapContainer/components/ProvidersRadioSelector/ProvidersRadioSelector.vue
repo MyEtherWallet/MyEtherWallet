@@ -65,9 +65,7 @@
             <span class="slippage-text">{{
               otherTextDisplay(provider.additional.display)
             }}</span>
-            <span class="slippage-text">{{
-              provider.additional.source
-            }}</span>
+            <span class="slippage-text">{{ provider.additional.source }}</span>
           </div>
         </li>
       </ul>
@@ -211,7 +209,8 @@ import KyberNetwork from '@/assets/images/etc/kybernetwork.png';
 import Bity from '@/assets/images/etc/bity.png';
 import Simplex from '@/assets/images/etc/simplex.png';
 import Changelly from '@/assets/images/etc/changelly.png';
-import bityBeta from '@/assets/images/etc/bitybeta.png';
+
+import { providerNames, fiat } from '@/partners';
 
 import ProviderInfoList from './ProviderInfoList';
 import { mapState } from 'vuex';
@@ -296,9 +295,9 @@ export default {
         simplex: Simplex,
         changelly: Changelly
       },
-      betaLogos: {
-        bity: bityBeta
-      }
+      betaLogos: {},
+      providerNames: providerNames,
+      fiat: fiat.map(item => item.symbol)
     };
   },
   computed: {
@@ -428,8 +427,10 @@ export default {
     },
     minNote(details) {
       if (details.minValue > 0) {
+        const decimals =
+          details.provider === this.providerNames.simplex ? 2 : 6;
         return [
-          `${toBigNumber(details.minValue).toFixed(6)} ${
+          `${toBigNumber(details.minValue).toFixed(decimals)} ${
             details.fromCurrency
           } (${this.$t('swap.from-min')}.)`
         ];
@@ -438,20 +439,30 @@ export default {
     },
     maxNote(details) {
       if (details.maxValue > 0) {
-        return `${toBigNumber(details.maxValue).toFixed(6)} ${
+        const decimals =
+          details.provider === this.providerNames.simplex ? 2 : 6;
+        return `${toBigNumber(details.maxValue).toFixed(decimals)} ${
           details.fromCurrency
         } (${this.$t('swap.max')}.)`;
       }
       return '';
     },
     formatRateDisplay(fromValue, fromCurrency, toValue, toCurrency) {
+      const decimalsFrom = this.fiat.includes(fromCurrency) ? 2 : 6;
+      const decimalsTo = this.fiat.includes(toCurrency) ? 2 : 6;
       return `${toBigNumber(fromValue).toFixed(
-        6
-      )} ${fromCurrency} = ${toBigNumber(toValue).toFixed(6)} ${toCurrency}`;
+        decimalsFrom
+      )} ${fromCurrency} = ${toBigNumber(toValue).toFixed(
+        decimalsTo
+      )} ${toCurrency}`;
     },
     normalizedRateDisplay(source) {
+      const decimals = source.provider === this.providerNames.simplex ? 2 : 6;
+      const fromValue = toBigNumber(source.fromValue)
+        .toFixed(decimals)
+        .toString();
       const toValue = this.valueForRate(this.fromValue, source.rate);
-      return `${source.fromValue} ${source.fromCurrency} = ${toValue} ${source.toCurrency}`;
+      return `${fromValue} ${source.fromCurrency} = ${toValue} ${source.toCurrency}`;
     },
     otherTextDisplay(contentDetails) {
       if (!contentDetails) return;

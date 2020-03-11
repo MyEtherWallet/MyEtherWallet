@@ -1,8 +1,5 @@
-
-
 class InterfaceTemplate {
-  constructor (props = {}) {
-  }
+  constructor(props = {}) {}
 
   static getName() {
     return '';
@@ -14,16 +11,15 @@ class InterfaceTemplate {
 
   get currencies() {}
 
-  setNetwork(network, web3){}
+  setNetwork(network, web3) {}
 
-  getRate(fromCurrency, toCurrency, fromValue){}
+  getRate(fromCurrency, toCurrency, fromValue) {}
 
-  getInitialCurrencyEntries(collectMapFrom, collectMapTo){}
+  getInitialCurrencyEntries(collectMapFrom, collectMapTo) {}
 
+  getUpdatedFromCurrencyEntries(value, collectMap) {}
 
-  getUpdatedFromCurrencyEntries(value, collectMap){}
+  getUpdatedToCurrencyEntries(value, collectMap) {}
 
-  getUpdatedToCurrencyEntries(value, collectMap){}
-
-  async startSwap(swapDetails){}
+  async startSwap(swapDetails) {}
 }
