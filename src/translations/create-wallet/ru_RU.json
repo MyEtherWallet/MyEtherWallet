@@ -9,7 +9,8 @@
   },
   "mew-wallet": {
     "title": "Рекомендованный метод",
-    "desc": "Покупайте, храните и отправляйте Ether и токены. Исследуйте Ethereum со своего мобильного телефона. {learn-more}",
+    "desc": "Download the MEW wallet app",
+    "details": "It’s simple, fast, and secure.",
     "scan": "Установить",
     "version": {
       "ios": "iOS 10.0 или выше",
