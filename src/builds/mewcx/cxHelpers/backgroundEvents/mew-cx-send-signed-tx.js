@@ -23,7 +23,7 @@ export default async ({ event, payload }, callback, next) => {
     .sendSignedTransaction(payload.signedTx)
     .once('transactionHash', hash => {
       funcHash = hash;
-      store.dispatch('addNotification', [
+      store.dispatch('main/addNotification', [
         'Hash',
         payload.raw.from,
         payload.raw,
@@ -39,7 +39,7 @@ export default async ({ event, payload }, callback, next) => {
         title: 'Transaction confirmed!',
         message: `Transaction with hash ${res.blockHash} has been mined!`
       });
-      store.dispatch('addNotification', [
+      store.dispatch('main/addNotification', [
         'Receipt',
         payload.raw.from,
         payload.raw,
@@ -54,7 +54,7 @@ export default async ({ event, payload }, callback, next) => {
         title: 'Something went wrong!',
         message: `Your transaction with hash ${funcHash} failed with error: ${err}`
       });
-      store.dispatch('addNotification', [
+      store.dispatch('main/addNotification', [
         'Error',
         payload.raw.from,
         payload.raw,
