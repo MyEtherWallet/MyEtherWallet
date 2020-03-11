@@ -90,7 +90,7 @@
   },
   "mew-wallet": {
     "string": "MEW wallet",
-    "desc": "MEW's official fully-fledged app brings hardware-wallet security to your iOS or Android smartphone. Buy, hold, and send Ether and tokens directly from your mobile device. {learn-more}"
+    "desc": "MEW's official fully-fledged app brings Ethereum to your iOS or Android smartphone. MEW wallet puts you in full control. {learn-more}"
   },
   "swap": "Swap",
   "token": "Token | Tokens",
