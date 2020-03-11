@@ -27,228 +27,242 @@
         </i18n>
       </template>
       <div class="modal-contents">
-        <access-wallet-button
-          v-if="step === 0"
-          :generate="stepChange"
-          :import="stepChange"
-        />
-        <generate-wallet-form
-          v-if="step === 1"
-          :error="error"
-          :loading="loading"
-          :generate-wallet="generateWallet"
-          :generate-wallet-validation="generateWalletValidation"
-          @walletName="updateWalletName"
-          @password="updatePassword"
-          @confirmPassword="updateConfirmPassword"
-        />
-        <div v-if="step === 2" class="import-method-container">
-          <wallet-option
-            v-for="(item, idx) in items"
-            :key="item.name + idx"
-            :selected="selected === item.name"
-            :hover-icon="item.imgHoverPath"
-            :text="$t(item.text)"
-            :name="item.name"
-            @updateSelected="updateSelected"
+        <transition
+          :name="oldStepValue > step ? 'slide-from-right' : 'slide-from-left'"
+        >
+          <access-wallet-button
+            v-if="step === 0"
+            :generate="stepChange"
+            :import="stepChange"
           />
-          <input
-            ref="jsonInput"
-            type="file"
-            name="file"
-            style="display: none"
-            @change="uploadFile"
+        </transition>
+        <transition>
+          <generate-wallet-form
+            v-if="step === 1"
+            :error="error"
+            :loading="loading"
+            :generate-wallet="generateWallet"
+            :generate-wallet-validation="generateWalletValidation"
+            @walletName="updateWalletName"
+            @password="updatePassword"
+            @confirmPassword="updateConfirmPassword"
           />
-        </div>
-        <div v-if="step === 3" class="unlock-wallet-container">
-          <div v-if="selected === 'byJson'" class="input-container">
-            <label for="walletPassword"> {{ $t('mewcx.password') }} </label>
-            <div class="password-input">
-              <input
-                v-model="password"
-                :type="showPassword ? 'text' : 'password'"
-                :placeholder="$t('mewcx.password')"
-                name="walletPassword"
-              />
-              <img
-                :src="showPassword ? showIcon : hide"
-                @click.prevent="showPassword = !showPassword"
-              />
+        </transition>
+        <transition>
+          <div v-if="step === 2" class="import-method-container">
+            <wallet-option
+              v-for="(item, idx) in items"
+              :key="item.name + idx"
+              :selected="selected === item.name"
+              :hover-icon="item.imgHoverPath"
+              :text="$t(item.text)"
+              :name="item.name"
+              @updateSelected="updateSelected"
+            />
+            <input
+              ref="jsonInput"
+              type="file"
+              name="file"
+              style="display: none"
+              @change="uploadFile"
+            />
+          </div>
+        </transition>
+        <transition>
+          <div v-if="step === 3" class="unlock-wallet-container">
+            <div v-if="selected === 'byJson'" class="input-container">
+              <label for="walletPassword"> {{ $t('mewcx.password') }} </label>
+              <div class="password-input">
+                <input
+                  v-model="password"
+                  :type="showPassword ? 'text' : 'password'"
+                  :placeholder="$t('mewcx.password')"
+                  name="walletPassword"
+                />
+                <img
+                  :src="showPassword ? showIcon : hide"
+                  @click.prevent="showPassword = !showPassword"
+                />
+              </div>
             </div>
-          </div>
-          <div v-if="selected === 'byPriv'" class="input-container">
-            <label for="walletPassword">{{ $t('mewcx.private-key') }} </label>
-            <textarea v-model="privKey" />
-          </div>
-          <div v-if="selected === 'byMnem'" class="mnemonic-inputs-container">
-            <div v-show="mnemonicStep === 'enterPhrase'">
-              <div class="mnemonic-inputs-header">
-                <h3>
-                  {{ $t('mewcx.enter-mnemonic-phrase') }}
-                </h3>
-                <div class="mnemonic-count-container">
-                  <p>Value</p>
-                  <div
-                    :class="[
-                      mnemonicValue === 12 ? 'active' : '',
-                      'mnemonic-count left'
-                    ]"
-                    @click="updateMnemonicValue(12)"
-                  >
-                    12
-                  </div>
-                  <div
-                    :class="[
-                      mnemonicValue === 24 ? 'active' : '',
-                      'mnemonic-count right'
-                    ]"
-                    @click="updateMnemonicValue(24)"
-                  >
-                    24
+            <div v-if="selected === 'byPriv'" class="input-container">
+              <label for="walletPassword">{{ $t('mewcx.private-key') }} </label>
+              <textarea v-model="privKey" />
+            </div>
+            <div v-if="selected === 'byMnem'" class="mnemonic-inputs-container">
+              <div v-show="mnemonicStep === 'enterPhrase'">
+                <div class="mnemonic-inputs-header">
+                  <h3>
+                    {{ $t('mewcx.enter-mnemonic-phrase') }}
+                  </h3>
+                  <div class="mnemonic-count-container">
+                    <p>Value</p>
+                    <div
+                      :class="[
+                        mnemonicValue === 12 ? 'active' : '',
+                        'mnemonic-count left'
+                      ]"
+                      @click="updateMnemonicValue(12)"
+                    >
+                      12
+                    </div>
+                    <div
+                      :class="[
+                        mnemonicValue === 24 ? 'active' : '',
+                        'mnemonic-count right'
+                      ]"
+                      @click="updateMnemonicValue(24)"
+                    >
+                      24
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="mnemonic-inputs">
-                <div
-                  v-for="(_, idx) in mnemonicInputGenerator"
-                  :key="'a' + idx"
-                  class="actual-inputs"
-                >
-                  <label :for="'menmonicInput' + idx">{{ idx + 1 }}.</label>
-                  <input
-                    v-model="mnemonicPhraseHolder[idx]"
-                    placeholder=""
-                    :name="'menmonicInput' + idx"
-                  />
-                </div>
-              </div>
-              <div class="mnemonic-extra-word-container">
-                <div class="title-button-container">
-                  <div class="title-popover">
-                    <h3>{{ $t('mewcx.extra-word') }}</h3>
-                    <img
-                      v-b-popover.hover.top="'I am popover directive content!'"
-                      src="@/assets/images/icons/exclamation-grey.svg"
+                <div class="mnemonic-inputs">
+                  <div
+                    v-for="(_, idx) in mnemonicInputGenerator"
+                    :key="'a' + idx"
+                    class="actual-inputs"
+                  >
+                    <label :for="'menmonicInput' + idx">{{ idx + 1 }}.</label>
+                    <input
+                      v-model="mnemonicPhraseHolder[idx]"
+                      placeholder=""
+                      :name="'menmonicInput' + idx"
                     />
                   </div>
-                  <div>
-                    <div class="switch sliding-switch-white">
-                      <label class="switch">
-                        <input
-                          type="checkbox"
-                          @click="
-                            () => {
-                              showExtraWord = !showExtraWord;
-                            }
-                          "
-                        />
-                        <span class="slider round" />
-                      </label>
-                    </div>
-                  </div>
                 </div>
-                <b-collapse v-model="showExtraWord">
-                  <div class="input-container">
-                    <div class="password-input">
-                      <input
-                        v-model="extraWord"
-                        :type="showPassword ? 'text' : 'password'"
-                        placeholder="Extra word"
-                        name="mnemonicExtraWord"
-                      />
+                <div class="mnemonic-extra-word-container">
+                  <div class="title-button-container">
+                    <div class="title-popover">
+                      <h3>{{ $t('mewcx.extra-word') }}</h3>
                       <img
-                        :src="showPassword ? showIcon : hide"
-                        @click.prevent="showPassword = !showPassword"
+                        v-b-popover.hover.top="
+                          'I am popover directive content!'
+                        "
+                        src="@/assets/images/icons/exclamation-grey.svg"
                       />
+                    </div>
+                    <div>
+                      <div class="switch sliding-switch-white">
+                        <label class="switch">
+                          <input
+                            type="checkbox"
+                            @click="
+                              () => {
+                                showExtraWord = !showExtraWord;
+                              }
+                            "
+                          />
+                          <span class="slider round" />
+                        </label>
+                      </div>
                     </div>
                   </div>
-                </b-collapse>
-              </div>
-            </div>
-            <div v-show="mnemonicStep === 'chooseAddress'">
-              <div class="mnemonic-path-dropdown">
-                <h3>
-                  {{ $t('mewcx.choose-hd-path') }}
-                </h3>
-                <b-dropdown
-                  ref="mnemonicPathDropdown"
-                  no-flip
-                  no-caret
-                  toggle-class="mnemonic-path-dropdown-button"
-                  menu-class="mnemonic-path-dropdown-menu"
-                >
-                  <template v-slot:button-content>
-                    <div class="mnemonic-dropdown-title">
-                      <p>{{ selectedPath }}</p>
-                      <i
-                        :class="[
-                          showPaths ? 'fa-angle-up' : 'fa-angle-down',
-                          'fa fa-lg'
-                        ]"
-                      />
+                  <b-collapse v-model="showExtraWord">
+                    <div class="input-container">
+                      <div class="password-input">
+                        <input
+                          v-model="extraWord"
+                          :type="showPassword ? 'text' : 'password'"
+                          placeholder="Extra word"
+                          name="mnemonicExtraWord"
+                        />
+                        <img
+                          :src="showPassword ? showIcon : hide"
+                          @click.prevent="showPassword = !showPassword"
+                        />
+                      </div>
                     </div>
-                  </template>
-                  <b-dropdown-item
-                    v-for="(path, idx) in supportedPaths"
-                    :key="path.label + idx"
-                    @click="updatePath(path.path)"
-                  >
-                    {{ path.path }} - {{ path.label }}
-                  </b-dropdown-item>
-                </b-dropdown>
-              </div>
-              <div class="mnemonic-address-container">
-                <h3>
-                  {{ $t('mewcx.addresses') }}
-                </h3>
-                <div>
-                  <div
-                    v-for="item in accounts"
-                    :key="item.index"
-                    :class="[
-                      selectedAddress ===
-                      item.account.getChecksumAddressString()
-                        ? 'selected'
-                        : '',
-                      'address-item'
-                    ]"
-                    @click="selectAddress(item)"
-                  >
-                    <div class="blockie-container">
-                      <blockie
-                        :address="item.account.getChecksumAddressString()"
-                        width="35px"
-                        height="35px"
-                      />
-                    </div>
-                    <p>{{ item.account.getChecksumAddressString() }}</p>
-                  </div>
+                  </b-collapse>
                 </div>
               </div>
-              <div
-                v-show="selectedAddress === ''"
-                class="load-more-container"
-                @click="updatePath(selectedPath)"
-              >
-                {{ $t('mewcx.load-more') }}
+              <div v-show="mnemonicStep === 'chooseAddress'">
+                <div class="mnemonic-path-dropdown">
+                  <h3>
+                    {{ $t('mewcx.choose-hd-path') }}
+                  </h3>
+                  <b-dropdown
+                    ref="mnemonicPathDropdown"
+                    no-flip
+                    no-caret
+                    toggle-class="mnemonic-path-dropdown-button"
+                    menu-class="mnemonic-path-dropdown-menu"
+                  >
+                    <template v-slot:button-content>
+                      <div class="mnemonic-dropdown-title">
+                        <p>{{ selectedPath }}</p>
+                        <i
+                          :class="[
+                            showPaths ? 'fa-angle-up' : 'fa-angle-down',
+                            'fa fa-lg'
+                          ]"
+                        />
+                      </div>
+                    </template>
+                    <b-dropdown-item
+                      v-for="(path, idx) in supportedPaths"
+                      :key="path.label + idx"
+                      @click="updatePath(path.path)"
+                    >
+                      {{ path.path }} - {{ path.label }}
+                    </b-dropdown-item>
+                  </b-dropdown>
+                </div>
+                <div class="mnemonic-address-container">
+                  <h3>
+                    {{ $t('mewcx.addresses') }}
+                  </h3>
+                  <div>
+                    <div
+                      v-for="item in accounts"
+                      :key="item.index"
+                      :class="[
+                        selectedAddress ===
+                        item.account.getChecksumAddressString()
+                          ? 'selected'
+                          : '',
+                        'address-item'
+                      ]"
+                      @click="selectAddress(item)"
+                    >
+                      <div class="blockie-container">
+                        <blockie
+                          :address="item.account.getChecksumAddressString()"
+                          width="35px"
+                          height="35px"
+                        />
+                      </div>
+                      <p>{{ item.account.getChecksumAddressString() }}</p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  v-show="selectedAddress === ''"
+                  class="load-more-container"
+                  @click="updatePath(selectedPath)"
+                >
+                  {{ $t('mewcx.load-more') }}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <verify-wallet-info-form
-          v-if="step === 4"
-          :error="error"
-          :loading="loading"
-          :generate-wallet="generateWallet"
-          :generate-wallet-validation="generateWalletValidation"
-          :network="network"
-          :wallet="wallet"
-          :converted-balance="convertedBalance"
-          :balance="balance"
-          @walletName="updateWalletName"
-          @password="updatePassword"
-          @confirmPassword="updateConfirmPassword"
-        />
+        </transition>
+        <transition>
+          <verify-wallet-info-form
+            v-if="step === 4"
+            :error="error"
+            :loading="loading"
+            :generate-wallet="generateWallet"
+            :generate-wallet-validation="generateWalletValidation"
+            :network="network"
+            :wallet="wallet"
+            :converted-balance="convertedBalance"
+            :balance="balance"
+            @walletName="updateWalletName"
+            @password="updatePassword"
+            @confirmPassword="updateConfirmPassword"
+          />
+        </transition>
         <div v-if="step >= 2" class="add-wallet-button-container">
           <standard-button
             :button-disabled="!importWalletValidation"
@@ -519,6 +533,7 @@ export default {
     });
   },
   methods: {
+    stepAnimation(step) {},
     updateWalletName(e) {
       this.walletName = e;
     },
