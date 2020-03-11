@@ -115,13 +115,7 @@ chrome.storage.onChanged.addListener(items => {
           network ? store.state.main.Networks[networkProps.key][0] : network
         )
         .then(() => {
-          store
-            .dispatch('main/setWeb3Instance', network.url, { root: true })
-            .then(() => {
-              chrome.storage.sync.set({
-                defChainID: store.state.main.network.type.chainID
-              });
-            });
+          store.dispatch('main/setWeb3Instance', network.url);
         });
     }
   });
