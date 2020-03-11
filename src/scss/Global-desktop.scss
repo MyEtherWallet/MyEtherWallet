@@ -1611,6 +1611,13 @@
   }
 }
 
+.aave-container {
+  .btn-secondary {
+    background-color: transparent !important;
+    border: none !important;
+  }
+}
+
 .height--full {
   height: 100%;
 }

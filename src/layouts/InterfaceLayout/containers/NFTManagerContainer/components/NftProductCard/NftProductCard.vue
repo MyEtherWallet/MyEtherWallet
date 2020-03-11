@@ -2,17 +2,18 @@
   <b-card
     class="text-center"
     :class="[
-      data.count > 0 ? 'active' : 'inactive',
+      data.tokens.length > 0 ? 'active' : 'inactive',
       selected ? 'selected' : ''
     ]"
   >
     <pre v-if="false">{{ data }}</pre>
     <div class="card-image mb-2">
-      <img v-if="data.itemName" :src="getImgUrl(data.itemName)" />
-      <img v-else :src="getImgUrl(data.title)" />
+      <img :src="getImgUrl(data.contract)" />
+      <!--      <img v-if="data.itemName" :src="getImgUrl(data.itemName)" />-->
+      <!--      <img v-else :src="getImgUrl(data.title)" />-->
     </div>
-    <div class="count text-dark">{{ data.count }}</div>
-    <p class="nft-name font-weight-bold text-dark">{{ data.title }}</p>
+    <div class="count text-dark">{{ data.tokens.length }}</div>
+    <p class="nft-name font-weight-bold text-dark">{{ data.name }}</p>
   </b-card>
 </template>
 
@@ -29,6 +30,10 @@ export default {
     selected: {
       type: Boolean,
       default: false
+    },
+    nftCardUrl: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -36,20 +41,7 @@ export default {
   },
   methods: {
     getImgUrl(name) {
-      if (name == 'Kitties')
-        return require('@/assets/images/nft/products/Kitties.png');
-      if (name == 'Stamp')
-        return require('@/assets/images/nft/products/Stamp.png');
-      if (name == 'Cards')
-        return require('@/assets/images/nft/products/Cards.png');
-      if (name == 'Flowers')
-        return require('@/assets/images/nft/products/Flowers.png');
-      if (name == 'Etheremon')
-        return require('@/assets/images/nft/products/Ethermon.png');
-      if (name == 'Crabs')
-        return require('@/assets/images/nft/products/Cryptantcrab.png');
-      if (name == 'parcels')
-        return require('@/assets/images/nft/products/Decentraland.png');
+      return `${this.nftCardUrl}tokenImage?token=${name}`;
     }
   }
 };

@@ -1,15 +1,12 @@
-<template functional>
+<template>
   <div
     class="address-detail-container"
-    @click="
-      props.selectAccount(props.address ? props.address : props.walletType)
-    "
+    @click="selectAccount(address ? address : walletType)"
   >
     <div class="check-mark-container">
       <i
         :class="[
-          props.selectedAccount === props.address ||
-          props.selectedAccount === props.walletType
+          selectedAccount === address || selectedAccount === walletType
             ? 'icon-selected'
             : 'icon-not-selected',
           'fa fa-check-circle fa-lg'
@@ -18,33 +15,31 @@
     </div>
     <div
       :class="[
-        props.selectedAccount === props.address ||
-        props.selectedAccount === props.walletType
+        selectedAccount === address || selectedAccount === walletType
           ? 'selected'
           : '',
         'address-detail'
       ]"
     >
-      <component
-        :is="injections.components.Blockie"
-        v-if="props.walletType === 'wallet'"
-        :address="props.address"
+      <blockie
+        v-if="walletType === 'wallet'"
+        :address="address"
         width="30px"
         height="30px"
       />
       <div class="address-text">
-        <div v-if="props.walletType === 'wallet'">
-          <p v-f="props.nickname !== ''">
-            <b>{{ props.nickname }}</b>
+        <div v-if="walletType === 'wallet'">
+          <p v-f="nickname !== ''">
+            <b>{{ nickname }}</b>
           </p>
-          <p>{{ props.address | concatAddr }}</p>
+          <p>{{ address | concatAddr }}</p>
           <div class="balance">
-            <span>{{ parent.$t('common.balance.string') }}:</span>
-            <span>{{ props.balance.substr(0, 7) }} {{ currency }}</span>
+            <span>{{ $t('common.balance.string') }}:</span>
+            <span>{{ balance.substr(0, 7) }} {{ currency }}</span>
           </div>
         </div>
         <div v-else>
-          <p>{{ parent.$t('mewcx.use-burner') }}!</p>
+          <p>{{ $t('mewcx.use-burner') }}!</p>
         </div>
       </div>
     </div>
@@ -54,12 +49,8 @@
 <script>
 import Blockie from '@/components/Blockie';
 export default {
-  inject: {
-    components: {
-      default: {
-        Blockie
-      }
-    }
+  components: {
+    blockie: Blockie
   },
   props: {
     nickname: {

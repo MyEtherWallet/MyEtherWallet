@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 
 import { networkSymbols } from '../partnersConfig';
 import { Toast } from '@/helpers';
-import DEXAG from 'dexag-sdk'
+import DEXAG from 'dexag-sdk';
 
 import {
   notificationStatuses,
@@ -102,12 +102,16 @@ export default class DexAg {
     );
   }
 
-// could make it as a multi-provider that takes a setup param and then uses that
+  // could make it as a multi-provider that takes a setup param and then uses that
   // should change this to be able to return multiple without changing the structure too much
   async getRate(fromCurrency, toCurrency, fromValue) {
-
     return new Promise(async resolve => {
-      const vals = await this.sdk.getTrade({to: toCurrency, from: fromCurrency, fromAmount: fromValue, dex: 'ag'})
+      const vals = await this.sdk.getTrade({
+        to: toCurrency,
+        from: fromCurrency,
+        fromAmount: fromValue,
+        dex: 'ag'
+      });
       console.log(vals); // todo remove dev item
       const rate = this.calculateRate(fromValue, vals.metadata.source.price);
 
@@ -116,7 +120,7 @@ export default class DexAg {
         toCurrency,
         provider: this.name,
         rate: rate,
-        additional: {source: Object.keys(vals.metadata.source.liquidity)}
+        additional: { source: Object.keys(vals.metadata.source.liquidity) }
       });
     });
     // console.log(vals); // todo remove dev item
@@ -126,7 +130,6 @@ export default class DexAg {
   async getRateUpdate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
     return this.getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat);
   }
-
 
   calculateRate(inVal, outVal) {
     return new BigNumber(outVal).div(inVal);
