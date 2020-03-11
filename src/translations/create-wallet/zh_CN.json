@@ -9,7 +9,8 @@
   },
   "mew-wallet": {
     "title": "Recommended Method",
-    "desc": "Buy, hold, and send Ether and tokens. Explore Ethereum on your mobile device. {learn-more}",
+    "desc": "Download the MEW wallet app",
+    "details": "It’s simple, fast, and secure.",
     "scan": "Scan to Download",
     "version": {
       "ios": "iOS 10.0 or up",
