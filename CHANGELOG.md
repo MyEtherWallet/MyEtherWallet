@@ -1,7 +1,13 @@
+### Feature
+
+- CX updated ui and some optimization [#1864](https://github.com/MyEtherWallet/MyEtherWallet/pull/1864)
+
+
 ### Releaase v5.4.2
 
 ### Bugs
 
+- Fix CX issue with quicksend and network, and add more space for interface ad [#2094](https://github.com/MyEtherWallet/MyEtherWallet/pull/2094)
 - Fix offline helper fee conversion [#2063](https://github.com/MyEtherWallet/MyEtherWallet/pull/2063)
 - Fix logout error and fix aave bug [#2082](https://github.com/MyEtherWallet/MyEtherWallet/pull/2082)
 
