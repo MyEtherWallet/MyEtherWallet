@@ -16,7 +16,7 @@
           class="close pr-3 pt-2"
           @click="closeModal()"
         >
-          X
+          x
         </button>
       </div>
       <div class="modal-container">
