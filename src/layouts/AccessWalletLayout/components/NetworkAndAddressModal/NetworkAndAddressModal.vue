@@ -451,7 +451,6 @@ export default {
         });
     },
     async setHDAccounts() {
-      console.log(this.hardwareWallet);
       if (!this.web3.eth) this.setWeb3Instance();
       this.HDAccounts = [];
       for (
