@@ -1,10 +1,10 @@
 {
-  "sign-failed": "Sign failed",
-  "not-connected": "Cannot read property 'requestId' of null",
-  "update-firmware-to-v4": "Please update your Secalot firmware to version 4 or greater.",
-  "wallet-not-initialized": "Ethereum wallet on your Secalot is not initialized.",
-  "last-pin-try": "Invalid PIN-code. Be careful, after entering a wrong PIN-code three times in a row, your Secalot Ethereum wallet would be permanently wiped.",
-  "invalid-pin-code": "PIN-code not verified.",
-  "invalid-pin-code-length": "Invalid PIN-code length.",
-  "timeout": "Operation timed out."
+  "sign-failed": "Не удалось подписать",
+  "not-connected": "Невозможно прочитать свойство 'requestId', значение null",
+  "update-firmware-to-v4": "Пожалуйста, обновите прошивку Secalot до версии 4 или выше.",
+  "wallet-not-initialized": "Кошелек Ethereum на вашем Secalot не инициализирован.",
+  "last-pin-try": "Неверный PIN-код. Будьте осторожны, после ввода неверного PIN-кода трижды подряд, ваш кошелёк Secalot Ethereum будет удален навсегда.",
+  "invalid-pin-code": "PIN-код не подтвержден.",
+  "invalid-pin-code-length": "Неверная длина PIN-кода.",
+  "timeout": "Таймаут при выполнении операции."
 }
