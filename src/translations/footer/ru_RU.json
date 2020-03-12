@@ -1,16 +1,16 @@
 {
   "title": {
-    "discover": "Инструменты",
-    "affiliates": "Партнеры",
+    "discover": "Discover",
+    "affiliates": "Affiliates",
     "mew": "MEW",
-    "love": "Нравится {heart} MEW?"
+    "love": "Love {heart} MEW? Donate"
   },
-  "units": "Единицы",
-  "txStat": "Статус транзакции",
-  "debugs": "Отладки",
+  "units": "Units",
+  "txStat": "TX Status",
+  "debugs": "Debugs",
   "extension": "MEW CX",
-  "others": "Другие",
-  "affiliates": "Партнеры",
+  "others": "Others",
+  "affiliates": "Affiliates",
   "ledger": "Ledger Wallet",
   "ethCard": "Ether Card",
   "bitbox": "BitBox",
@@ -20,22 +20,22 @@
   "trezor": "Trezor",
   "secalot": "Secalot",
   "keepkey": "KeepKey",
-  "about": "О Нас",
-  "team": "Команда",
-  "feedback": "Отзывы",
-  "privacy": "Конфиденциальность",
-  "copyright": "© 2020 MyEtherWallet. Все права защищены.",
-  "pricing-p": "Расценки взяты из",
-  "advanced": "Расширенные параметры",
-  "send-offline": "Помощник для оффлайн транзакций",
+  "about": "About",
+  "team": "Team",
+  "feedback": "Feedback",
+  "privacy": "Privacy",
+  "copyright": "© 2020 MyEtherWallet. All Rights reserved.",
+  "pricing-p": "Pricing taken from",
+  "advanced": "Advanced",
+  "send-offline": "Send Offline Helper",
   "sotd": "State of the Dapps",
   "mew-connect": "MEWconnect",
   "mew-wallet": "MEW wallet",
   "donation": {
-    "desc": "MyEtherWallet является ПО с открытым кодом и предоставляется сообществу бесплатно. Все это возможно благодаря вашей поддержке.",
-    "ether": "Поддержка в Ethereum",
-    "bitcoin": "Поддержка в Bitcoin"
+    "desc": "MyEtherWallet is open-source and free to the community. Your donations go a long way towards making that possible.",
+    "ether": "Ethereum Donation",
+    "bitcoin": "Bitcoin Donation"
   },
   "coingecko": "Coingecko",
-  "view-wallet-info": "Смотреть информацию о кошельке"
+  "view-wallet-info": "View Wallet Info"
 }

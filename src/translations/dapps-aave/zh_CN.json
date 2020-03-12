@@ -46,7 +46,7 @@
   "historical-rate": "Historical Rates",
   "select-rate": "Select your interest rate",
   "select-rate-info": "Here you can select a rate type for your loan. Variable rates change over time, while stable rates remain the same. Please choose your desired rate type. ",
-  "continue": "Continue",
+  "continue": "继续",
   "confirmation": "Confirmation",
   "amount-to": "Amount to {action}",
   "current-health": "Current Health Factor",

@@ -1,85 +1,85 @@
 {
-  "title": "Менеджер ENS",
-  "dapp-desc": "Регистрация и управление доменом ENS",
-  "search-domain-desc": "Поиск доменного имени. После регистрации, вы сможете предлагать своим друзьям отправить ETH на адрес \"_____. th\", вместо вашего публичного адреса (0x.....).",
+  "title": "ENS Manager",
+  "dapp-desc": "Register and manage an ENS domain",
+  "search-domain-desc": "Search for a domain name. Once you have registered one, you can tell your friends to send ETH to \"_____.eth\", instead of your public address (0x.....).",
   "error": {
-    "permanent-not-available": "ENS Постоянный регистратор еще не доступен, пожалуйста, повторите попытку позже",
-    "domain-tld-not-supported": "Домен TLD {parsedTld} не поддерживается в этом узле!",
-    "something-went-wrong": "Что-то пошло не так. Попробуйте еще раз.",
-    "dns-sec-not-found": "DNSSEC НЕ НАЙДЕН!"
+    "permanent-not-available": "ENS Permanent registrar is not available yet, please try again later",
+    "domain-tld-not-supported": "Domain TLD {parsedTld} is not supported in this node!",
+    "something-went-wrong": "Something went wrong! Please try again.",
+    "dns-sec-not-found": "DNSSEC NOT FOUND!"
   },
   "warning": {
-    "contract-not-ready": "Контракт еще не готов, транзакция может не пройти.",
-    "not-enough-char": "Доменное имя меньше 3 символов.",
-    "invalid-symbol": "Неверные символы в домене"
+    "contract-not-ready": "Contract is not ready yet, transaction might fail.",
+    "not-enough-char": "Domain name is less than 3 characters.",
+    "invalid-symbol": "Invalid symbols on domain"
   },
   "toast": {
-    "success-register": "Регистрация выполнена успешнo!",
-    "unavailable": "Управление ENS на данный момент не доступно"
+    "success-register": "Successfully Registered!",
+    "unavailable": "Manage ENS is currently unavailable"
   },
-  "check-domain": "Проверить домен",
-  "update": "Обновление",
+  "check-domain": "Check Domain",
+  "update": "Update",
   "ph": {
-    "three-char": "Пожалуйста, введите не менее 3 символов"
+    "three-char": "Please enter at least 3 Characters"
   },
-  "is-available": "Ура! Этот домен доступен.",
-  "not-available": "{domain} еще не доступен!",
-  "manage": "Менеджер",
-  "update-resolver": "Обновить адрес разрешения",
-  "transfer-to": "Перенести домен ENS на",
-  "transfer": "Перевод",
-  "transfer-domain": "Передача домена",
-  "register": "Регистрация",
-  "hang-on": "Минуту!",
-  "finalize-registration": "Мы завершаем регистрацию для ",
-  "register-progress": "Регистрация в процессе для",
-  "domain-old": "{domain} все еще находится в старом регистраторе!",
-  "domain-owner": "Поскольку вы являетесь владельцем {domain} , вы можете перенести имя на новый регистратор с помощью кнопки передачи.",
-  "enable-dns-sec": "Пожалуйста, включите DNSSEC для домена: {domain}",
+  "is-available": "Cheers! This domain is available.",
+  "not-available": "{domain} is not available yet!",
+  "manage": "Manage",
+  "update-resolver": "Update Resolving address",
+  "transfer-to": "Transfer ENS domain to",
+  "transfer": "Transfer",
+  "transfer-domain": "Transfer Domain",
+  "register": "Register",
+  "hang-on": "Hang on tight!",
+  "finalize-registration": "We are finalizing the registration for ",
+  "register-progress": "Registration in progress for",
+  "domain-old": "{domain} is still in the old registrar!",
+  "domain-owner": "Since you are are the owner of {domain} you can transfer the name to the new registrar using transfer button.",
+  "enable-dns-sec": "Please enable DNSSEC for domain: {domain}",
   "txt": {
-    "setup-not-found": "Для {domain} не найдено TXT настроек!",
-    "add-txt-type-entry": "На вашей консоли управления DNS, пожалуйста добавьте запись DNS типа TXT \" {txtString} \" со значением, содержащим ваш Ethereum адрес в формате \"a=ВАШАДРЕСЭФИРИУМА\"",
-    "name-owned": "Это имя в настоящее время принадлежит {owner} но TXT запись больше не доступна для {domain}!",
-    "unclaim-desc": "Вы можете освободить этот {domain} ENS, нажав на следующую кнопку",
-    "unclaim": "Освободить"
+    "setup-not-found": "No TXT setup found for {domain}!",
+    "add-txt-type-entry": "On your DNS management console, please add a TXT type DNS entry \" {txtString} \" with a value containing your Ethereum address in the format of \"a=YOURETHEREUMADDRESS\"",
+    "name-owned": "This name is currently owned in ENS by {owner} but TXT record is no longer available for {domain}!",
+    "unclaim-desc": "You can unclaim this {domain} from ENS by clicking the following button",
+    "unclaim": "Unclaim"
   },
   "commit": {
-    "is-available": "Поздравляем! {domain} доступен!",
-    "register-domain": "Вы хотите зарегистрировать {domain}?",
-    "how-many-years": "Сколько лет вы хотите сохранить имя?",
-    "year": " 1 год | {duration} лет",
-    "no-balance": "У вас нет баланса для отправки Tx"
+    "is-available": "Congratulations! {domain} is available!",
+    "register-domain": "Do you want to register {domain}?",
+    "how-many-years": "How many years do you want to keep the name?",
+    "year": " 1 year | {duration} years",
+    "no-balance": "You have no balance to send a Tx"
   },
   "claim": {
-    "cheers": "Поздравляем!",
-    "domain-claimable": "{domain} готов для записи!",
-    "owner-set": "Владение будет установлено на: {owner}",
-    "string": "Записать"
+    "cheers": "Cheers!",
+    "domain-claimable": "{domain} is claimable!",
+    "owner-set": "Ownership will be set to: {owner}",
+    "string": "Claim"
   },
-  "already-owned": "{domain} уже имеет владельца.",
-  "label-hash": "Хеш имени",
-  "name-hash": "Хэш имени",
-  "owner": "Владелец",
-  "multi-coin": "Мульти-монетный",
-  "txt-record": "Текстовые записи",
+  "already-owned": "{domain} is already owned.",
+  "label-hash": "Labelhash",
+  "name-hash": "Namehash",
+  "owner": "Owner",
+  "multi-coin": "Multi-coin",
+  "txt-record": "Text Records",
   "ens-resolver": {
-    "address-reported-error": "Этот адрес в черном списке. Пожалуйста, убедитесь, что вы отправляете средства на правильный адрес.",
-    "invalid-eth-addr": "Недействительный Ethereum адрес",
-    "addr-not-checksummed": "Этот адрес указан неправильно. Пожалуйста, скопируйте адрес точно так, как он показан.",
-    "invalid-addr": "Неверный {coin} адрес",
-    "network-not-found": "{network}НС имя недопустимо или не найдено",
-    "domain-not-found": "Доменное имя является недопустимым или не найдено",
-    "no-resolver": "Нет резолвера {network} НС в этом узле"
+    "address-reported-error": "Address has been reported. Please make sure you are sending funds to the correct address.",
+    "invalid-eth-addr": "Not a valid Ethereum address",
+    "addr-not-checksummed": "This address is not checksummed properly. Please copy the address exactly as shown.",
+    "invalid-addr": "Invalid {coin} address",
+    "network-not-found": "{network}NS name is invalid or not found",
+    "domain-not-found": "Domain name is invalid or not found",
+    "no-resolver": "No {network}NS resolver in this node"
   },
   "unstoppableResolution": {
-    "address-reported-error": "Этот адрес в черном списке. Пожалуйста, убедитесь, что вы отправляете средства на правильный адрес.",
-    "UnregisteredDomain": "Домен {domain} не зарегистрирован",
-    "UnspecifiedResolver": "Домен {domain} не настроен",
-    "UnsupportedDomain": "Домен {domain} не поддерживается",
-    "UnspecifiedCurrency": "K домену {domain} не привязан {currencyTicker}",
-    "NamingServiceDown": "Служба имён {method} в данный момент недоступна",
-    "UnsupportedCurrency": "{currencyTicker} не поддерживается",
-    "IncorrectResolverInterface": "Резолвер домена сконфигурирован неправильно для {method}",
-    "RecordNotFound": "Не найдено {recordName} записей для {domain}"
+    "address-reported-error": "Address has been reported. Please make sure you are sending funds to the correct address.",
+    "UnregisteredDomain": "Domain {domain} is not registered",
+    "UnspecifiedResolver": "Domain {domain} is not configured",
+    "UnsupportedDomain": "Domain {domain} is not supported",
+    "UnspecifiedCurrency": "Domain {domain} has no {currencyTicker} attached to it",
+    "NamingServiceDown": "{method} naming service is down at the moment",
+    "UnsupportedCurrency": "{currencyTicker} is not supported",
+    "IncorrectResolverInterface": "Domain resolver is configured incorrectly for {method}",
+    "RecordNotFound": "No {recordName} record found for {domain}"
   }
 }
