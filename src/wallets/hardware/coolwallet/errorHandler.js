@@ -3,7 +3,8 @@ import Vue from 'vue';
 const ERRORS = {
   WrongPassword: 'coolWalletError.wrong-password',
   CardLocked: 'coolWalletError.card-locked',
-  AlreadyRegistered: 'coolWalletError.already-registered'
+  AlreadyRegistered: 'coolWalletError.already-registered',
+  NoWalletInstance: 'coolWalletError.no-wallet-instance'
 };
 const WARNING = {};
 
