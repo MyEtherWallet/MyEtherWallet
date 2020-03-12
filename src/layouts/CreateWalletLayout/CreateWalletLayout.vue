@@ -10,7 +10,7 @@
           <b-tabs class="x100">
             <div v-if="showProgressBar && false" class="progress-bar" />
             <b-tab
-              :title="this.$t('common.mewconnect.string')"
+              :title="this.$t('common.mew-wallet.string')"
               class="mew-connect-block"
               active
               @click="showProgressBar = false"
@@ -18,53 +18,66 @@
               <div class="tab-content-block">
                 <div class="title-block">
                   <div class="title-popover">
-                    <h3>{{ $t('createWallet.mewconnect.title') }}</h3>
-                    <popover :popcontent="$t('common.mewconnect.desc')" />
+                    <h3>{{ $t('createWallet.mew-wallet.title') }}</h3>
+                    <popover
+                      :popcontent="$t('createWallet.mew-wallet.tooltip')"
+                    />
                   </div>
-                  <p>{{ $t('createWallet.mewconnect.desc') }}</p>
+                  <h3 class="mew-wallet-desc mt-2">
+                    {{ $t('createWallet.mew-wallet.desc') }}
+                  </h3>
+                  <p class="download-txt mt-3">
+                    {{ $t('createWallet.mew-wallet.details') }}
+                  </p>
                 </div>
                 <div class="appstores">
                   <div class="icons">
                     <a
                       v-if="canDownloadApple"
-                      href="https://itunes.apple.com/us/app/mewconnect/id1391097156?mt=8"
+                      href="https://itunes.apple.com/app/id1464614025"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       <img
                         alt
-                        src="~@/assets/images/icons/appstore.svg"
+                        src="~@/assets/images/icons/button-app-store.png"
                         height="40"
                       />
                     </a>
                     <div v-else @click="openIpadModal">
                       <img
                         alt
-                        src="~@/assets/images/icons/appstore.svg"
+                        src="~@/assets/images/icons/button-app-store.png"
                         height="40"
                       />
                     </div>
                     <a
-                      href="http://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
+                      href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       <img
                         alt
-                        src="~@/assets/images/icons/google-play.svg"
+                        src="~@/assets/images/icons/button-google-play-color.png"
+                        height="40"
+                      />
+                    </a>
+                    <a
+                      href="https://galaxystore.samsung.com/detail/com.myetherwallet.mewwallet?session_id=W_29942474fffbd49127ee223d697f1518"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        alt
+                        src="~@/assets/images/icons/button-galaxy-store-color.png"
                         height="40"
                       />
                     </a>
                   </div>
-                  <div class="download">
-                    <p @click="scanToDownloadModalOpen">
-                      {{ $t('createWallet.mewconnect.scan') }}
-                    </p>
-                  </div>
                 </div>
               </div>
               <div class="bottom-image">
-                <img alt src="@/assets/images/etc/phones.png" />
+                <img alt src="@/assets/images/icons/snippet-mew-wallet.png" />
               </div>
             </b-tab>
             <b-tab

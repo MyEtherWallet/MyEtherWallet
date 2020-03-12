@@ -425,7 +425,7 @@ export default {
     },
     providerLogo(details) {
       if (details.provider) {
-        if(details.additional.source){
+        if (details.additional.source) {
           return this.logos[details.additional.source];
         }
         return this.logos[details.provider];

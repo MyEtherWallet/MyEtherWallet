@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="scantodownload"
-    :title="$t('createWallet.mewconnect.scan')"
+    :title="$t('createWallet.mew-wallet.scan')"
     hide-footer
     centered
     class="bootstrap-modal no-padding"
@@ -16,10 +16,10 @@
         <div class="store-name-container">
           <div class="store-name">
             <img alt src="@/assets/images/icons/apple.svg" />
-            <p>{{ $t('createWallet.mewconnect.ios') }}</p>
+            <p>{{ $t('createWallet.mew-wallet.ios') }}</p>
           </div>
         </div>
-        <p>{{ $t('createWallet.mewconnect.version.ios') }}</p>
+        <p>{{ $t('createWallet.mew-wallet.version.ios') }}</p>
       </div>
       <div class="android">
         <div class="qr-image">
@@ -28,10 +28,10 @@
         <div class="store-name-container">
           <div class="store-name">
             <img alt src="@/assets/images/icons/android.svg" />
-            <p>{{ $t('createWallet.mewconnect.android') }}</p>
+            <p>{{ $t('createWallet.mew-wallet.android') }}</p>
           </div>
         </div>
-        <p>{{ $t('createWallet.mewconnect.version.android') }}</p>
+        <p>{{ $t('createWallet.mew-wallet.version.android') }}</p>
       </div>
     </div>
   </b-modal>
