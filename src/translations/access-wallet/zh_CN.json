@@ -1,121 +1,121 @@
 {
   "mewconnect": {
-    "option-text": "Use MEWconnect to access my wallet",
+    "option-text": "使用 MEWconnect 访问我的钱包",
     "modal": {
-      "title": "Access by MEWconnect",
+      "title": "通过 MEWconnect 访问我的钱包",
       "text1": "Please use MEW wallet or MEWconnect App to scan the QR code above",
       "text2": "Don't have the MEW wallet app? Download now."
     },
     "warning": "MEW wallet and MEWconnect apps are not compatible with iPads."
   },
   "finney": {
-    "scan-info": "To connect, scan the QR code from {wallet} app on your {finney-bc}",
+    "scan-info": "要进行连接，请扫描 {finney-bc} 上 {wallet} 应用中的 QR 码",
     "finney-wallet": "FinneyWallet",
     "finney-bc": "FINNEY™ BLOCKCHAIN SMARTPHONE",
-    "get-finney": "Get your {finney-title} now",
+    "get-finney": "立即获取 {finney-title} ",
     "finney-title": "FINNEY™",
-    "mobile": "mobile",
+    "mobile": "移动客户端",
     "finney-connect": "FINNEY Connect"
   },
   "hardware": {
-    "option-title": "Hardware",
+    "option-title": "硬件钱包",
     "warning": {
-      "not-connected": "Please make sure your device is connected."
+      "not-connected": "请确保您的设备已连接。"
     },
     "modal": {
-      "title": "Access by Hardware",
-      "button-buy": "Buy Now",
-      "button-choose": "Continue"
+      "title": "通过硬件钱包访问我的钱包",
+      "button-buy": "立即购买",
+      "button-choose": "继续"
     },
-    "examples": "Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet"
+    "examples": "Ledger Wallet，FINNEY，Trezor，BitBox，Secalot，KeepKey，XWallet"
   },
   "software": {
-    "option-title": "Software",
-    "option-text": "Keystore file, Private key, Mnemonic phrase",
+    "option-title": "软件",
+    "option-text": "Keystore文件, 密钥，助记短语",
     "modal": {
-      "title": "Access by Software",
-      "purchase-text": "Purchase a hardware wallet for the highest security when accessing your crypto.",
-      "purchase-link": "Purchase a hardware wallet...."
+      "title": "通过软件访问我的钱包",
+      "purchase-text": "购买硬件钱包，为您访问加密货币时获得最高的安全性。",
+      "purchase-link": "购买硬件钱包...."
     }
   },
   "metamask": {
-    "option-title": "Metamask",
-    "option-text": "Use the MetaMask extension to access my wallet",
+    "option-title": "MetaMask",
+    "option-text": "使用 MetaMask 扩展来访问我的钱包",
     "warning": {
-      "safari": "MetaMask is only available in these browsers:",
-      "install-promt": "Please install the Metamask extension and refresh your page.",
-      "unlock": "Can't access wallet! Please unlock your wallet through the Metamask extension"
+      "safari": "MetaMask仅适用于以下浏览器：",
+      "install-promt": "请安装 MetaMask 插件并刷新页面。",
+      "unlock": "无法访问钱包! 请通过 MetaMask 插件访问我的钱包"
     },
     "modal": {
-      "title": "Access via MetaMask",
-      "text": "Please use MyEtherWallet on a secure (SSL/HTTPS) connection to connect.",
-      "button-install": "Install Metamask",
-      "button-refresh": "Refresh",
-      "terms": "To Access my Wallet, I accept {terms}."
+      "title": "通过 MetaMask 访问",
+      "text": "请在一个安全的 (SSL/HTTPS) 连接中使用 MyEtherWallet 来连接。",
+      "button-install": "安装 MetaMask",
+      "button-refresh": "刷新",
+      "terms": "访问我的电子钱包，表示我接受{terms}。"
     }
   },
   "mnemonic": {
-    "string": "Mnemonic Phrase",
-    "value": "Value",
+    "string": "助记短语",
+    "value": "价值",
     "modal": {
-      "title": "Access by Mnemonic Phrase",
-      "text": "Please type in your mnemonic phrase."
+      "title": "通过助记短语访问我的钱包",
+      "text": "请输入您的助记短语。"
     }
   },
   "ledger": {
     "modal": {
-      "title": "Choose the App",
-      "text": "Please choose the App you have opened in Ledger"
+      "title": "选择应用",
+      "text": "请选择您已在 Ledger 中打开的应用"
     }
   },
   "private-key": {
-    "string": "Private Key",
+    "string": "私钥",
     "modal": {
-      "title": "Access by Private Key",
-      "placeholder": "Enter Private Key"
+      "title": "通过私钥访问我的钱包",
+      "placeholder": "输入私钥"
     },
-    "do-not-share": "Please {do-not} share your private key to anyone! You may lose your money if you share it"
+    "do-not-share": "请{do-not}将您的私钥分享给任何人！如果分享，您可能会蒙受资金损失"
   },
   "network-addr": {
-    "string": "Network and Address",
-    "addr-to-interact": "Address to Interact With",
-    "id": "ID",
-    "icon": "icon"
+    "string": "网络和地址",
+    "addr-to-interact": "互动地址",
+    "id": "身份码",
+    "icon": "图标"
   },
   "path": {
-    "string": "Path",
-    "hd-derivation": "HD Derivation Path",
-    "custom": "Custom Paths",
-    "add-custom": "Add Custom Path",
-    "ivalid-custom": "Invalid Custom Path",
-    "invalid-desc": "The path: {path} is not valid for this device",
-    "alias": "Alias"
+    "string": "路径",
+    "hd-derivation": "高清衍生路径",
+    "custom": "自定义路径",
+    "add-custom": "添加自定义路径",
+    "ivalid-custom": "无效的自定义路径",
+    "invalid-desc": "路径: {path} 对此设备无效",
+    "alias": "别名"
   },
   "pin": {
-    "string": "PIN",
-    "enter": "Enter PIN for your {device}",
-    "layout": "The PIN layout is displayed on your Hardware wallet",
-    "access": "To access my wallet,",
-    "accept": "I accept the",
-    "terms": "Terms and Conditions"
+    "string": "PIN 码",
+    "enter": "输入您{device}的 PIN 码",
+    "layout": "您的硬件钱包中会显示 PIN 布局",
+    "access": "要访问我的钱包，",
+    "accept": "我接受",
+    "terms": "服务条款"
   },
-  "json-file": "Keystore File",
-  "accept-terms": "To Access my Wallet, I accept {terms}",
-  "hd-derivation-path": "HD Derivation Path",
-  "custom-paths": "自定义路径",
-  "add-custom-path": "添加自定义路径",
-  "interact-addr": "互动地址",
-  "id": "身份码",
-  "network-and-address": "网络和地址",
-  "please-type-in-mnemonic-phrase": "请输入您的助记短语。",
+  "json-file": "密钥库文件",
+  "accept-terms": "要访问我的电子钱包，我接受{terms}。",
+  "hd-derivation-path": "高清衍生路径",
+  "custom-paths": "Custom Paths",
+  "add-custom-path": "Add Custom Path",
+  "interact-addr": "Address to Interact With",
+  "id": "ID",
+  "network-and-address": "Network and Address",
+  "please-type-in-mnemonic-phrase": "Please type in your mnemonic phrase.",
   "password": "Password",
   "access-wallet-or": "or",
   "web3-wallet-desc": "MetaMask; Dapper",
   "web3-wallet": "MEW CX",
-  "refresh": "刷新",
+  "refresh": "Refresh",
   "unlock-web3-wallet": "Can't access wallet! Please unlock your wallet through the Browser Extension",
   "try-again": "Try Again",
-  "invalid-path-desc": "路径: {path} 对此设备无效",
+  "invalid-path-desc": "The path: {path} is not valid for this device",
   "wallet-info": "Wallet Information",
   "wallet-options": "Check your transaction history, download a new keystore file, print a paper wallet, and more!",
   "xwallet-desc": "Use Pundi X Savings account by MEW to scan the QR code above",

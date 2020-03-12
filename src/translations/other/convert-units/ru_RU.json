@@ -1,7 +1,7 @@
 {
   "page": {
-    "title": "Convert Units",
-    "desc": "Our helpful conversion tool and ether unit reference allow you to calculate the total cost of your transactions."
+    "title": "Конвертировать единицы",
+    "desc": "Наш полезный инструмент конвертации и справочник по единицам ether поможет вам рассчитать общую стоимость транзакций."
   },
-  "title-refference": "Ether Unit Reference Guide"
+  "title-refference": "Справочник по Единицам Ether"
 }
