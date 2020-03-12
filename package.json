@@ -50,7 +50,7 @@
     "pocket-js-web3-provider": "0.0.3",
     "print-js": "1.0.63",
     "punycode": "2.1.1",
-    "regenerator-runtime": "0.13.3",
+    "regenerator-runtime": "0.13.5",
     "register-service-worker": "1.7.0",
     "similarity": "1.2.1",
     "subscriptions-transport-ws": "0.9.16",
