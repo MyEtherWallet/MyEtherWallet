@@ -56,7 +56,7 @@ class CoolWallet {
     const coolWalletInstance = new cwsWallet(transport, this.appPrivateKey);
 
     if (!hasAppId) {
-      coolWalletInstance
+      await coolWalletInstance
         .register(this.appPublicKey, password, APP_NAME)
         .then(appId => {
           locStore.set('appId', appId);
