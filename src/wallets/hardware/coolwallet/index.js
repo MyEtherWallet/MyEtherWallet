@@ -93,7 +93,6 @@ class CoolWallet {
         chainId: store.state.main.network.type.chainID
       };
       const networkId = tx.getChainId();
-      console.log(cwTx);
       const result = await this.deviceInstance
         .signTransaction(cwTx, this.selectedIdx)
         .catch(errorHandler);
