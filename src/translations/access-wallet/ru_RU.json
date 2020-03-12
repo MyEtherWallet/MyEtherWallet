@@ -1,124 +1,124 @@
 {
   "mewconnect": {
-    "option-text": "Use MEWconnect to access my wallet",
+    "option-text": "Использовать MEWconnect для получения доступа к моему кошельку",
     "modal": {
-      "title": "Access by MEWconnect",
+      "title": "Доступ с помощью MEWconnect",
       "text1": "Используйте приложение MEW wallet или MEWconnect для сканирования указанного выше QR-кода",
       "text2": "Нет приложения MEW wallet? Загрузите сейчас."
     },
     "warning": "MEW wallet и MEWconnect несовместимы с iPads."
   },
   "finney": {
-    "scan-info": "To connect, scan the QR code from {wallet} app on your {finney-bc}",
+    "scan-info": "Чтобы подключиться, отсканируйте QR-код из приложения {wallet} на вашем {finney-bc}",
     "finney-wallet": "FinneyWallet",
     "finney-bc": "FINNEY™ BLOCKCHAIN SMARTPHONE",
-    "get-finney": "Get your {finney-title} now",
+    "get-finney": "Купите {finney-title} сейчас",
     "finney-title": "FINNEY™",
-    "mobile": "mobile",
+    "mobile": "мобильный",
     "finney-connect": "FINNEY Connect"
   },
   "hardware": {
-    "option-title": "Hardware",
+    "option-title": "Аппаратный доступ",
     "warning": {
-      "not-connected": "Please make sure your device is connected."
+      "not-connected": "Пожалуйста, убедитесь, что устройство подключено."
     },
     "modal": {
-      "title": "Access by Hardware",
-      "button-buy": "Buy Now",
-      "button-choose": "Continue"
+      "title": "Аппаратный доступ",
+      "button-buy": "Купить",
+      "button-choose": "Продолжить"
     },
     "examples": "Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet"
   },
   "software": {
-    "option-title": "Software",
-    "option-text": "Keystore file, Private key, Mnemonic phrase",
+    "option-title": "Программный доступ",
+    "option-text": "Файл хранения ключей, приватный ключ, мнемоническая фраза",
     "modal": {
-      "title": "Access by Software",
-      "purchase-text": "Purchase a hardware wallet for the highest security when accessing your crypto.",
-      "purchase-link": "Purchase a hardware wallet...."
+      "title": "Программный доступ",
+      "purchase-text": "Приобретите аппаратный кошелек для максимальной безопасности при доступе к средствам.",
+      "purchase-link": "Купить аппаратный кошелек...."
     }
   },
   "metamask": {
     "option-title": "Metamask",
-    "option-text": "Use the MetaMask extension to access my wallet",
+    "option-text": "Использовать расширение MetaMask для получения доступа к моему кошельку",
     "warning": {
-      "safari": "MetaMask is only available in these browsers:",
-      "install-promt": "Please install the Metamask extension and refresh your page.",
-      "unlock": "Can't access wallet! Please unlock your wallet through the Metamask extension"
+      "safari": "MetaMask доступен только в этих браузерах:",
+      "install-promt": "Установите расширение Metamask и обновите вашу страницу.",
+      "unlock": "Не удается получить доступ к кошельку! Разблокируйте ваш кошелек с помощью расширения Metamask"
     },
     "modal": {
-      "title": "Access via MetaMask",
-      "text": "Please use MyEtherWallet on a secure (SSL/HTTPS) connection to connect.",
-      "button-install": "Install Metamask",
-      "button-refresh": "Refresh",
-      "terms": "To Access my Wallet, I accept {terms}."
+      "title": "Доступ с помощью MetaMask",
+      "text": "Пожалуйста, используйте MyEtherWallet на безопасном (SSL/HTTPS) соединении для подключения.",
+      "button-install": "Установить MetaMask",
+      "button-refresh": "Обновить",
+      "terms": "Для получения доступа, я принимаю {terms}."
     }
   },
   "mnemonic": {
-    "string": "Mnemonic Phrase",
-    "value": "Value",
+    "string": "Мнемоническая фраза",
+    "value": "Слов",
     "modal": {
-      "title": "Access by Mnemonic Phrase",
-      "text": "Please type in your mnemonic phrase."
+      "title": "Доступ с помощью мнемонической фразы",
+      "text": "Пожалуйста, введите вашу мнемоническую фразу."
     }
   },
   "ledger": {
     "modal": {
-      "title": "Choose the App",
-      "text": "Please choose the App you have opened in Ledger"
+      "title": "Выберите приложение",
+      "text": "Пожалуйста, выберите приложение которое вы открыли в Ledger"
     }
   },
   "private-key": {
-    "string": "Private Key",
+    "string": "Закрытый Kлюч",
     "modal": {
-      "title": "Access by Private Key",
-      "placeholder": "Enter Private Key"
+      "title": "Доступ с помощью Закрытого Ключа",
+      "placeholder": "Введите Закрытый Kлюч"
     },
-    "do-not-share": "Please {do-not} share your private key to anyone! You may lose your money if you share it"
+    "do-not-share": "Пожалуйста, {do-not} делитесь своим приватным ключом с кем-либо! Вы можете потерять свои деньги, если поделитесь им"
   },
   "network-addr": {
-    "string": "Network and Address",
-    "addr-to-interact": "Address to Interact With",
+    "string": "Сеть и Адрес",
+    "addr-to-interact": "Адрес для взаимодействия",
     "id": "ID",
-    "icon": "icon"
+    "icon": "иконка"
   },
   "path": {
-    "string": "Path",
-    "hd-derivation": "HD Derivation Path",
-    "custom": "Custom Paths",
-    "add-custom": "Add Custom Path",
-    "ivalid-custom": "Invalid Custom Path",
-    "invalid-desc": "The path: {path} is not valid for this device",
-    "alias": "Alias"
+    "string": "Путь",
+    "hd-derivation": "Путь деривации HD",
+    "custom": "Кастомные пути",
+    "add-custom": "Добавить кастомный путь",
+    "ivalid-custom": "Неверный кастомный путь",
+    "invalid-desc": "Путь: {path} не подходит для этого устройства",
+    "alias": "Название"
   },
   "pin": {
-    "string": "PIN",
-    "enter": "Enter PIN for your {device}",
-    "layout": "The PIN layout is displayed on your Hardware wallet",
-    "access": "To access my wallet,",
-    "accept": "I accept the",
-    "terms": "Terms and Conditions"
+    "string": "PIN-код",
+    "enter": "Введите PIN-код для {device}",
+    "layout": "Раскладка PIN-кода отображается на вашем аппаратном кошельке",
+    "access": "Для доступа к моему кошельку,",
+    "accept": "Я принимаю",
+    "terms": "Условия и Положения"
   },
-  "json-file": "Keystore File",
-  "accept-terms": "To Access my Wallet, I accept {terms}",
-  "hd-derivation-path": "HD Derivation Path",
-  "custom-paths": "Custom Paths",
-  "add-custom-path": "Add Custom Path",
-  "interact-addr": "Address to Interact With",
+  "json-file": "Файл-хранилищe ключa",
+  "accept-terms": "Для получения доступа, я принимаю {terms}",
+  "hd-derivation-path": "Путь деривации HD",
+  "custom-paths": "Кастомные пути",
+  "add-custom-path": "Добавить кастомный путь",
+  "interact-addr": "Адрес для взаимодействия",
   "id": "ID",
-  "network-and-address": "Network and Address",
-  "please-type-in-mnemonic-phrase": "Please type in your mnemonic phrase.",
-  "password": "Password",
-  "access-wallet-or": "or",
+  "network-and-address": "Сеть и адрес",
+  "please-type-in-mnemonic-phrase": "Введите вашу мнемоническую фразу.",
+  "password": "Пароль",
+  "access-wallet-or": "или",
   "web3-wallet-desc": "MetaMask; Dapper",
   "web3-wallet": "MEW CX",
-  "refresh": "Refresh",
-  "unlock-web3-wallet": "Can't access wallet! Please unlock your wallet through the Browser Extension",
-  "try-again": "Try Again",
-  "invalid-path-desc": "The path: {path} is not valid for this device",
-  "wallet-info": "Wallet Information",
-  "wallet-options": "Check your transaction history, download a new keystore file, print a paper wallet, and more!",
-  "xwallet-desc": "Use Pundi X Savings account by MEW to scan the QR code above",
-  "xwallet-title": "Access by XWallet",
-  "get-it-now": "Get It Now"
+  "refresh": "Обновить",
+  "unlock-web3-wallet": "Не удается получить доступ к кошельку! Пожалуйста, разблокируйте ваш кошелек через расширение для браузера",
+  "try-again": "Повторить попытку",
+  "invalid-path-desc": "Путь: {path} не подходит для этого устройства",
+  "wallet-info": "Информация о кошельке",
+  "wallet-options": "Проверьте историю транзакций, скачайте новый файл-хранилищe ключa, распечатайте бумажный кошелек и многое другое!",
+  "xwallet-desc": "Используйте аккаунт Pundi X Savings от MEW для сканирования QR-кода сверху",
+  "xwallet-title": "Доступ через XWallet",
+  "get-it-now": "Загрузить сейчас"
 }
