@@ -1,7 +1,7 @@
 {
   "tx": "Transaction",
   "tx-detail": "Transaction Detail",
-  "send": "发送",
+  "send": "Send",
   "sender": "Sender",
   "receiver": "Receiver",
   "send-tx": "Send Transaction",
