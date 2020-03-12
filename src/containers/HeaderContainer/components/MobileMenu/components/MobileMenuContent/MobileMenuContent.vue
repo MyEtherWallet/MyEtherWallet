@@ -71,7 +71,7 @@
           closeMenu();
         "
       >
-        <div>{{ $t('common.logout') }}</div>
+        {{ $t('common.logout') }}
       </div>
     </div>
     <div class="space-buffer"></div>
