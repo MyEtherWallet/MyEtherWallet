@@ -123,14 +123,13 @@ const validateAddress = async (addressDetails, network) => {
 const createTransaction = async (transactionParams, network) => {
   try {
     if (changellyMethods[network]) {
-      const results = await post(
-        buildPath(),
-        utils.buildPayload(
-          changellyMethods[network].createTransaction,
-          transactionParams
-        )
-      );
+// needs the approval trasactions (see kyber)
+      const url = `https://api-v2.dex.ag/tradeAndSend?from=${transactionParams.providerDetails.fromCurrency}&to=${transactionParams.providerDetails.toCurrency}&fromAmount=${transactionParams.fromValue}&dex=${transactionParams.additional.source}&recipient=${transactionParams.toAddress}`
 
+      const results = await get(
+        url
+      );
+      console.log(results); // todo remove dev item
       if (results.error) {
         throw Error(results.error.message);
       }
