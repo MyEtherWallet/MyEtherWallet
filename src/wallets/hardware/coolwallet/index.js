@@ -82,13 +82,23 @@ class CoolWallet {
       tx = new Transaction(tx, {
         common: commonGenerator(store.state.main.network)
       });
+      const txArr = tx.toJSON();
+      const cwTx = {
+        nonce: txArr[3],
+        gasPrice: txArr[2],
+        gasLimit: txArr[1],
+        to: txArr[6],
+        value: txArr[8],
+        data: txArr[0],
+        chainId: store.state.main.network.type.chainID
+      };
       const networkId = tx.getChainId();
-      const result = await this.deviceInstance.signTransaction(
-        tx,
-        this.selectedIdx
-      );
+      console.log(cwTx);
+      const result = await this.deviceInstance
+        .signTransaction(cwTx, this.selectedIdx)
+        .catch(errorHandler);
       if (result) {
-        const resultTx = new Transaction(tx);
+        const resultTx = new Transaction(result);
         tx.v = getBufferFromHex(sanitizeHex(resultTx.v.toString('hex')));
         tx.r = getBufferFromHex(sanitizeHex(resultTx.r.toString('hex')));
         tx.s = getBufferFromHex(sanitizeHex(resultTx.s.toString('hex')));
