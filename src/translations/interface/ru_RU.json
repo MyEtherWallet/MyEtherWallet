@@ -42,7 +42,10 @@
     "buy-with-credit": "Покупка ETH при помощи кредитной карты",
     "ios": "Доступно на iOS",
     "android": "и Android",
-    "twitter": "Подписаться на Twitter"
+    "twitter": "Подписаться на Twitter",
+    "new": "новый",
+    "mew-wallet": "MEW wallet {new} {officially-released}",
+    "officially-released": "Официальный Выпуск"
   },
   "menu": {
     "string": "Меню",
@@ -69,7 +72,7 @@
   "tx-history": "История транзакций",
   "investigate": "Используйте хэш транзакции, чтобы выяснить, почему эта транзакция не удалась.",
   "contract-creation": "Создание контракта",
-  "mewconnect-disconnected": "Похоже, что вы отключены от MEWconnect, пожалуйста, переподключитесь через приложение.",
+  "mewconnect-disconnected": "Похоже, что вы отключены от MEWconnect / MEW wallet, пожалуйста, переподключитесь через приложение.",
   "config": {
     "tx-speed": "Скорость Транзакции",
     "import": "Импорт конфигурации",
