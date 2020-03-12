@@ -112,12 +112,6 @@ export default class DexAg {
         fromAmount: fromValue,
         dex: 'all'
       });
-      // const vals = await this.sdk.getTrade({
-      //   to: toCurrency,
-      //   from: fromCurrency,
-      //   fromAmount: fromValue,
-      //   dex: 'ag'
-      // });
 
       console.log(vals); // todo remove dev item
       // const rate = this.calculateRate(fromValue, vals.metadata.source.price);
@@ -187,7 +181,7 @@ export default class DexAg {
   async startSwap(swapDetails) {
     let details;
     if (+swapDetails.minValue <= +swapDetails.fromValue) {
-      // details = await this.createTransaction(swapDetails);
+      details = await this.createTransaction(swapDetails);
       // if (!details) throw Error('abort');
       // if (details.message) throw Error(details.message);
       // swapDetails.providerReceives = details.amountExpectedFrom;
@@ -202,6 +196,10 @@ export default class DexAg {
       return swapDetails;
     }
     return Error('From amount below changelly minimum for currency pair');
+  }
+
+  createTransaction(swapDetails){
+    console.log(swapDetails); // todo remove dev item
   }
 
   static parseOrder(order) {
