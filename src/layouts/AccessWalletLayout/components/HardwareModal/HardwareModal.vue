@@ -57,6 +57,7 @@ import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
 import platform from 'platform';
+import store from 'store';
 import cwsTransportLib from '@coolwallets/transport-web-ble';
 import {
   KeepkeyWallet,
@@ -270,33 +271,37 @@ export default {
           this.$refs.hardware.hide();
           break;
         case COOLWALLET_TYPE:
-          // this.$emit('hardwareRequiresPassword', {
-          //   walletConstructor: CoolWallet,
-          //   hardwareBrand: 'CoolWallet'
-          // });
-          // console.log('HELLO THERE?!?!?!', CoolWallet);
-          cwsTransportLib.listen(async (error, device) => {
-            if (device) {
-              const transport = await cwsTransportLib.connect(device);
-              CoolWallet(transport)
-                .then(_newWallet => {
-                  if (_newWallet) {
-                    this.$emit('hardwareWalletOpen', _newWallet);
-                  } else {
+          // eslint-disable-next-line
+          const hasStoredPw = store.get('cwPass') || null;
+          if (hasStoredPw) {
+            cwsTransportLib.listen(async (error, device) => {
+              if (device) {
+                const transport = await cwsTransportLib.connect(device);
+                CoolWallet(transport, hasStoredPw)
+                  .then(_newWallet => {
+                    if (_newWallet) {
+                      this.$emit('hardwareWalletOpen', _newWallet);
+                    } else {
+                      Toast.responseHandler(
+                        new Error('No wallet instance!'),
+                        Toast.ERROR
+                      );
+                    }
+                  })
+                  .catch(() => {
                     Toast.responseHandler(
-                      new Error('No wallet instance!'),
+                      new Error('Having issues with pairing cool wallet'),
                       Toast.ERROR
                     );
-                  }
-                })
-                .catch(() => {
-                  Toast.responseHandler(
-                    new Error('Having issues with pairing cool wallet'),
-                    Toast.ERROR
-                  );
-                });
-            }
-          });
+                  });
+              }
+            });
+          } else {
+            this.$emit('hardwareRequiresPassword', {
+              walletConstructor: CoolWallet,
+              hardwareBrand: 'CoolWallet'
+            });
+          }
           break;
         default:
           Toast.responseHandler(

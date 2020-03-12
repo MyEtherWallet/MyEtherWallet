@@ -6,6 +6,7 @@ import errorHandler from './errorHandler';
 import cwsETH from '@coolwallets/eth';
 import cwsWallet, { generateKeyPair } from '@coolwallets/wallet';
 import locStore from 'store';
+import bip44Paths from '../../bip44';
 
 import store from '@/store';
 import {
@@ -29,8 +30,9 @@ class CoolWallet {
     this.appPublicKey = '';
     this.transport = {};
     this.deviceInstance = {};
+    this.supportedPaths = bip44Paths[coolWalletType];
   }
-  async init(transport) {
+  async init(transport, password) {
     this.transport = transport;
     const hasKeys =
       locStore.get('appPublicKey') && locStore.get('appPrivateKey');
@@ -54,7 +56,6 @@ class CoolWallet {
     const coolWalletInstance = new cwsWallet(transport, this.appPrivateKey);
 
     if (!hasAppId) {
-      const password = '12345678';
       coolWalletInstance
         .register(this.appPublicKey, password, APP_NAME)
         .then(appId => {
@@ -77,14 +78,15 @@ class CoolWallet {
   async getAccount(idx) {
     const address = await this.deviceInstance.getAddress(idx);
     this.selectedIdx = idx;
-    // console.log(deviceInstance, this.deviceInstance);
-    // const address = await deviceInstance.getAddress(idx);
     const txSigner = async tx => {
       tx = new Transaction(tx, {
         common: commonGenerator(store.state.main.network)
       });
       const networkId = tx.getChainId();
-      const result = await cwsETH.signTransaction(tx, this.selectedIdx);
+      const result = await this.deviceInstance.signTransaction(
+        tx,
+        this.selectedIdx
+      );
       if (result) {
         const resultTx = new Transaction(tx);
         tx.v = getBufferFromHex(sanitizeHex(resultTx.v.toString('hex')));
@@ -107,7 +109,7 @@ class CoolWallet {
       return result;
     };
     const msgSigner = async msg => {
-      const result = await cwsETH.signMessage(msg, 0);
+      const result = await this.deviceInstance.signMessage(msg, 0);
       if (result) {
         const signature = result.substr(2);
         const r = '0x' + signature.slice(0, 64);
@@ -134,17 +136,16 @@ class CoolWallet {
   }
 
   getCurrentPath() {
-    return "m/44'/60'/0'/0";
+    return this.supportedPaths[0].path;
   }
   getSupportedPaths() {
-    return ["m/44'/60'/0'/0"];
+    return this.supportedPaths;
   }
 }
 
-const createWallet = async transport => {
+const createWallet = async (transport, password) => {
   const _coolWallet = new CoolWallet();
-  await _coolWallet.init(transport);
-  console.log(_coolWallet);
+  await _coolWallet.init(transport, password);
   return _coolWallet;
 };
 createWallet.errorHandler = errorHandler;
