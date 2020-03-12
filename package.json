@@ -62,7 +62,7 @@
     "vue-mq": "1.0.1",
     "vue-multiselect": "2.1.6",
     "vue-router": "3.1.6",
-    "vue-toasted": "1.1.27",
+    "vue-toasted": "1.1.28",
     "vuex": "3.1.2",
     "xss": "1.0.6"
   },
