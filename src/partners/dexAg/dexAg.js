@@ -106,23 +106,33 @@ export default class DexAg {
   // should change this to be able to return multiple without changing the structure too much
   async getRate(fromCurrency, toCurrency, fromValue) {
     return new Promise(async resolve => {
-      const vals = await this.sdk.getPrice({to: 'DAI', from: 'ETH', toAmount: 1, dex: 'all'})
+      const vals = await this.sdk.getPrice({
+        to: toCurrency,
+        from: fromCurrency,
+        fromAmount: fromValue,
+        dex: 'all'
+      });
       // const vals = await this.sdk.getTrade({
       //   to: toCurrency,
       //   from: fromCurrency,
       //   fromAmount: fromValue,
       //   dex: 'ag'
       // });
-      console.log(vals); // todo remove dev item
-      const rate = this.calculateRate(fromValue, vals.metadata.source.price);
 
-      resolve({
-        fromCurrency,
-        toCurrency,
-        provider: this.name,
-        rate: rate,
-        additional: { source: Object.keys(vals.metadata.source.liquidity) }
-      });
+      console.log(vals); // todo remove dev item
+      // const rate = this.calculateRate(fromValue, vals.metadata.source.price);
+
+      resolve(
+        vals.map(val => {
+          return {
+            fromCurrency,
+            toCurrency,
+            provider: this.name,
+            rate: this.calculateRate(fromValue, val.price),
+            additional: { source: val.dex }
+          };
+        })
+      );
     });
     // console.log(vals); // todo remove dev item
     // return vals;
