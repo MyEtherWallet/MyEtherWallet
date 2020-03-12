@@ -57,6 +57,7 @@ import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
 import platform from 'platform';
+import cwsTransportLib from '@coolwallets/transport-web-ble';
 import {
   KeepkeyWallet,
   TrezorWallet,
@@ -274,16 +275,28 @@ export default {
           //   hardwareBrand: 'CoolWallet'
           // });
           // console.log('HELLO THERE?!?!?!', CoolWallet);
-          CoolWallet()
-            .then(_newWallet => {
-              this.$emit('hardwareWalletOpen', _newWallet);
-            })
-            .catch(() => {
-              Toast.responseHandler(
-                new Error('Having issues with pairing cool wallet'),
-                Toast.ERROR
-              );
-            });
+          cwsTransportLib.listen(async (error, device) => {
+            if (device) {
+              const transport = await cwsTransportLib.connect(device);
+              CoolWallet(transport)
+                .then(_newWallet => {
+                  if (_newWallet) {
+                    this.$emit('hardwareWalletOpen', _newWallet);
+                  } else {
+                    Toast.responseHandler(
+                      new Error('No wallet instance!'),
+                      Toast.ERROR
+                    );
+                  }
+                })
+                .catch(() => {
+                  Toast.responseHandler(
+                    new Error('Having issues with pairing cool wallet'),
+                    Toast.ERROR
+                  );
+                });
+            }
+          });
           break;
         default:
           Toast.responseHandler(
