@@ -1,3 +1,7 @@
+### Devop
+
+- Update greenkeeper packages [#2106](https://github.com/MyEtherWallet/MyEtherWallet/pull/2106)
+
 ### Release v5.4.2-hotfix.1
 
 ### Bugs
