@@ -13,11 +13,14 @@
           @click.prevent="tabAction(tab)"
         >
           <p>
-            <i
+            <img
               v-if="isTabActive(tab.routes)"
-              class="fa fa-angle-right"
-              aria-hidden="true"
-            ></i>
+              :src="tab.icons.active"
+              width="40"
+              height="40"
+            />
+            <img v-else :src="tab.icons.inactive" width="40" height="40" />
+
             {{ $t(tab.titleKey) }}
           </p>
         </div>
@@ -29,11 +32,6 @@
             class="mt-3"
             @click.prevent="tabAction(child)"
           >
-            <i
-              v-if="isTabActive(child.routes)"
-              class="fa fa-angle-right"
-              aria-hidden="true"
-            ></i>
             {{ $t(child.titleKey) }}
           </div>
         </div>
@@ -63,6 +61,9 @@ export default {
   },
   computed: {
     ...mapState(['online'])
+  },
+  mounted() {
+    console.log(this.tabData);
   },
   methods: {
     isTabActive(routes) {
