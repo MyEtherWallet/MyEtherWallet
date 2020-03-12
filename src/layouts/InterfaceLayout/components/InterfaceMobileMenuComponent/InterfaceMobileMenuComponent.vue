@@ -62,9 +62,6 @@ export default {
   computed: {
     ...mapState(['online'])
   },
-  mounted() {
-    console.log(this.tabData);
-  },
   methods: {
     isTabActive(routes) {
       return routes.includes(this.$route.path);
