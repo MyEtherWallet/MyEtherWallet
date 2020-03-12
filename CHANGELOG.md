@@ -1,3 +1,7 @@
+### Feature
+
+- Cool Wallet integration [#2087](https://github.com/MyEtherWallet/MyEtherWallet/pull/2087)
+
 ### Releaase v5.4.2
 
 ### Bugs
