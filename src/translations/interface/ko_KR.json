@@ -42,7 +42,10 @@
     "buy-with-credit": "Buy ETH with Credit Card",
     "ios": "Available for iOS",
     "android": "and Android",
-    "twitter": "Follow us on Twitter"
+    "twitter": "Follow us on Twitter",
+    "new": "new",
+    "mew-wallet": "MEW wallet {new} {officially-released}",
+    "officially-released": "Officially Released"
   },
   "menu": {
     "string": "Menu",
@@ -69,7 +72,7 @@
   "tx-history": "Transaction History",
   "investigate": "Use the transaction hash to investigate why this transaction failed.",
   "contract-creation": "Contract Creation",
-  "mewconnect-disconnected": "Seems like you are disconnected from MEWconnect, please reconnect using the App.",
+  "mewconnect-disconnected": "Seems like you are disconnected from MEWconnect / MEW wallet, please reconnect using the App.",
   "config": {
     "tx-speed": "Transaction Speed",
     "import": "Import Configuration",
