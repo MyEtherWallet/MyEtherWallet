@@ -209,6 +209,7 @@ import KyberNetwork from '@/assets/images/etc/kybernetwork.png';
 import Bity from '@/assets/images/etc/bity.png';
 import Simplex from '@/assets/images/etc/simplex.png';
 import Changelly from '@/assets/images/etc/changelly.png';
+import DexAg from '@/assets/images/etc/dexag.png';
 
 import { providerNames, fiat } from '@/partners';
 
@@ -291,9 +292,12 @@ export default {
       logos: {
         mew: MEW,
         kybernetwork: KyberNetwork,
+        kyber: KyberNetwork,
         bity: Bity,
         simplex: Simplex,
-        changelly: Changelly
+        changelly: Changelly,
+        dexag: DexAg,
+        ag: DexAg
       },
       betaLogos: {},
       providerNames: providerNames,
@@ -421,6 +425,9 @@ export default {
     },
     providerLogo(details) {
       if (details.provider) {
+        if(details.additional.source){
+          return this.logos[details.additional.source];
+        }
         return this.logos[details.provider];
       }
       return this.logos[details];

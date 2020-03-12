@@ -43,7 +43,7 @@ import {
 } from './helpers';
 
 // Array of currently supported providers
-const providers = [BitySwap, KyberSwap, ChangellySwap, Simplex, DexAg];
+const providers = [BitySwap, ChangellySwap, Simplex, DexAg];
 
 const providerMap = providers.reduce(
   (accumulator, currentValue) =>

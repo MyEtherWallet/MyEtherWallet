@@ -766,12 +766,33 @@ export default {
           this.toValue
         );
         this.providersFound = providersFound;
-        const results = await Promise.all(
+        const rawResults = await Promise.all(
           callsToMake.map(func =>
             func(fromCurrency, toCurrency, fromValue, this.toValue)
           )
         );
         this.loadingData = false;
+        const results = rawResults.reduce((agg, result) => {
+          console.log(result); // todo remove dev item
+          if (Array.isArray(result)) {
+            agg = [...agg, ...result];
+          } else {
+            agg.push(result);
+          }
+          return agg;
+        }, []);
+        this.providersFound = results.reduce((agg, result) => {
+          if (result.additional) {
+            if (result.additional.source) {
+              console.log(result.additional.source); // todo remove dev item
+              agg.push(result.additional.source);
+            }
+          } else if (result.provider) {
+            agg.push(result.provider);
+          }
+          return agg;
+        }, []);
+        console.log('after: ', results); // todo remove dev item
         if (
           results.every(
             entry =>
