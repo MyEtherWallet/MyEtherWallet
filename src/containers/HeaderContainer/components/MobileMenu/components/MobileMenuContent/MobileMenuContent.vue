@@ -2,6 +2,7 @@
   <div class="mobile-menu-content">
     <div class="menu-content-header">
       <a
+        v-if="false"
         href="https://ccswap.myetherwallet.com/#/"
         target="_blank"
         rel="noopener noreferrer"
@@ -13,6 +14,10 @@
           </div>
         </div>
       </a>
+      <router-link to="/" @click.native="closeMenu">
+        <img src="@/assets/images/short-hand-logo-web.png" width="120" />
+      </router-link>
+
       <mobile-menu-button
         :ismenuopen="true"
         class="ml-auto"
@@ -22,7 +27,7 @@
     <div v-if="account.address" class="interface-menu-content-block">
       <mobile-balance-block v-if="false" class="mb-2" />
       <mobile-network-block v-if="false" :block-number="blockNumber" />
-      <interface-mobile-menu :close-menu="closeMenu" class="px-3" />
+      <interface-mobile-menu :close-menu="closeMenu" />
     </div>
 
     <div v-if="!account.address" class="no-logon-content-block">
@@ -45,17 +50,18 @@
     </div>
 
     <div class="all-menu-content-block">
-      <div class="font-reset-disabled mb-4" @click="languageMenu">
-        <i class="fa fa-language" aria-hidden="true"></i>
-        <div>{{ $t('common.language') }}</div>
+      <div class="font-reset-disabled mb-5">
+        <customer-support mobile-menu />
       </div>
       <div
         v-if="account.address"
-        class="font-reset-disabled"
+        class="font-reset-disabled mb-5"
         @click="opensettings"
       >
-        <i class="fa fa-cog" aria-hidden="true"></i>
         <div>{{ $t('common.settings') }}</div>
+      </div>
+      <div class="font-reset-disabled mb-5" @click="languageMenu">
+        <div>{{ $t('common.language') }}</div>
       </div>
       <div
         v-if="account.address"
@@ -65,7 +71,6 @@
           closeMenu();
         "
       >
-        <i class="fa fa-sign-out" aria-hidden="true"></i>
         <div>{{ $t('common.logout') }}</div>
       </div>
     </div>
@@ -79,13 +84,15 @@ import MobileMenuButton from '../MobileMenuButton';
 import InterfaceMobileMenu from '@/layouts/InterfaceLayout/components/InterfaceMobileMenuComponent';
 import MobileBalanceBlock from '../MobileBalanceBlock';
 import MobileNetworkBlock from '../MobileNetworkBlock';
+import CustomerSupport from '@/components/CustomerSupport';
 
 export default {
   components: {
     'mobile-menu-button': MobileMenuButton,
     'interface-mobile-menu': InterfaceMobileMenu,
     'mobile-balance-block': MobileBalanceBlock,
-    'mobile-network-block': MobileNetworkBlock
+    'mobile-network-block': MobileNetworkBlock,
+    'customer-support': CustomerSupport
   },
   props: {
     opensettings: {

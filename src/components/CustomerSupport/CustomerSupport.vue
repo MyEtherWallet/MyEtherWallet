@@ -1,6 +1,7 @@
 <template>
   <div class="support">
     <div
+      v-if="!mobileMenu"
       :class="['support-content', !noIcon ? 'with-icon' : 'without-icon']"
       @click="showModal"
     >
@@ -14,6 +15,9 @@
         <h5>{{ $t('common.cstm-support') }}</h5>
       </div>
       <p v-else>{{ $t('common.cstm-support') }}</p>
+    </div>
+    <div v-if="mobileMenu" class="mobile-menu" @click="showModal">
+      {{ $t('common.cstm-support') }}
     </div>
     <b-modal
       ref="emailPrefill"
@@ -53,6 +57,10 @@ import platform from 'platform';
 
 export default {
   props: {
+    mobileMenu: {
+      type: Boolean,
+      default: false
+    },
     noIcon: {
       type: Boolean,
       default: false
@@ -120,4 +128,9 @@ export default {
 
 <style lang="scss" scoped>
 @import 'CustomerSupport.scss';
+
+.mobile-menu {
+  font-size: 20px;
+  font-weight: 500;
+}
 </style>
