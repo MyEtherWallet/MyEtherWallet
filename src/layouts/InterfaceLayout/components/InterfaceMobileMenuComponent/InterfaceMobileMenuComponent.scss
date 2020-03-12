@@ -1,8 +1,12 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 * {
   font-family: sans-serif;
   user-select: none;
+}
+
+.interface-mobile-menu {
+  background-color: white;
 }
 
 .menu-group {
@@ -26,8 +30,11 @@
 
 .top-menu {
   > p {
+    img {
+      margin-right: 10px;
+    }
     color: #c1c1c1;
-    font-size: 20px;
+    font-size: 25px;
     font-weight: 600;
   }
 }
@@ -35,7 +42,8 @@
 .sub-menu {
   > div {
     color: #c1c1c1;
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 20px;
+    font-weight: 500;
+    margin-left: 45px;
   }
 }

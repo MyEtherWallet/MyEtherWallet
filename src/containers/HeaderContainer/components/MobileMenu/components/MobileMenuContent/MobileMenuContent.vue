@@ -20,8 +20,8 @@
       />
     </div>
     <div v-if="account.address" class="interface-menu-content-block">
-      <mobile-balance-block class="mb-2" />
-      <mobile-network-block :block-number="blockNumber" />
+      <mobile-balance-block v-if="false" class="mb-2" />
+      <mobile-network-block v-if="false" :block-number="blockNumber" />
       <interface-mobile-menu :close-menu="closeMenu" class="px-3" />
     </div>
 
