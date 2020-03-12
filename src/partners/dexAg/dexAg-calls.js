@@ -134,7 +134,7 @@ const createTransaction = async (transactionParams, network) => {
         throw Error(results.error.message);
       }
 
-      return results.result;
+      return [results.result];
     }
     return Promise.resolve(-1);
   } catch (e) {

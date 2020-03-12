@@ -182,15 +182,15 @@ export default class DexAg {
     let details;
     if (+swapDetails.minValue <= +swapDetails.fromValue) {
       details = await this.createTransaction(swapDetails);
-      // if (!details) throw Error('abort');
-      // if (details.message) throw Error(details.message);
+      if (!details) throw Error('abort');
+      if (details.message) throw Error(details.message);
       // swapDetails.providerReceives = details.amountExpectedFrom;
       // swapDetails.providerSends = details.amountExpectedTo;
       // swapDetails.parsed = DexAg.parseOrder(details);
       // swapDetails.providerSends = swapDetails.parsed.recValue;
       // swapDetails.orderId = swapDetails.parsed.orderId;
       // swapDetails.providerAddress = details.payinAddress;
-      // swapDetails.dataForInitialization = details;
+      swapDetails.dataForInitialization = details;
       // swapDetails.isDex = DexAg.isDex();
       // swapDetails.validFor = swapDetails.parsed.validFor;
       return swapDetails;
