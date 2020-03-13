@@ -1,4 +1,13 @@
-### Releaase v5.4.2
+### Release v5.4.2-hotfix.1
+
+### Bugs
+
+- Fix russian translations [#2105](https://github.com/MyEtherWallet/MyEtherWallet/pull/2105)
+
+### Release v5.4.2
+
+### Feature
+- MEW Wallet UI changes [#2048](https://github.com/MyEtherWallet/MyEtherWallet/pull/2048)
 
 ### Bugs
 

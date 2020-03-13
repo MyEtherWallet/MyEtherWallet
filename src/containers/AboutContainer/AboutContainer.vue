@@ -65,8 +65,16 @@
                 <img src="~@/assets/images/home/icon-mew-connect.svg" alt />
               </div>
               <div class="text">
-                <h3>{{ $t('common.mewconnect.string') }}</h3>
-                <p>{{ $t('common.mewconnect.desc') }}</p>
+                <h3>{{ $t('common.mew-wallet.string') }}</h3>
+                <i18n tag="p" path="common.mew-wallet.desc">
+                  <a
+                    slot="learn-more"
+                    target="_blank"
+                    href="https://www.mewwallet.com/"
+                  >
+                    {{ $t('common.learn-more') }}...
+                  </a>
+                </i18n>
               </div>
             </dir>
           </div>
