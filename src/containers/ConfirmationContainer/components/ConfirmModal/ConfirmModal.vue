@@ -70,7 +70,7 @@
                 <p>{{ $t('common.gas.price') }}</p>
                 <p>{{ gasPrice }} {{ $t('common.gas.gwei') }}</p>
               </div>
-              <div v-if="gasPrice >= 100" class="gas-price-warning">
+              <div v-if="showGasWarning" class="gas-price-warning">
                 {{ $t('errorsGlobal.high-gas-limit-warning') }}
               </div>
               <div class="grid-block">
@@ -111,7 +111,7 @@ import AddressBlock from '../AddressBlock';
 import { mapState } from 'vuex';
 import StandardButton from '@/components/Buttons/StandardButton';
 import parseTokensData from '@/helpers/parseTokensData.js';
-
+const GAS_LIMIT_WARNING = 100;
 export default {
   components: {
     'address-block': AddressBlock,
@@ -173,7 +173,10 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['web3', 'network'])
+    ...mapState('main', ['web3', 'network']),
+    showGasWarning() {
+      return this.gasPrice >= GAS_LIMIT_WARNING;
+    }
   },
   watch: {
     data(newVal) {
@@ -185,7 +188,7 @@ export default {
       this.parseData();
     }
     this.$refs.confirmation.$on('show', () => {
-      if (this.gasPrice >= 100) {
+      if (this.showGasWarning) {
         this.modalDetailInformation = !this.modalDetailInformation;
       }
     });
