@@ -53,6 +53,7 @@ import trezor from '@/assets/images/icons/HardwareWallet/trezor.svg';
 import keepkey from '@/assets/images/icons/HardwareWallet/keepkey.svg';
 import finney from '@/assets/images/icons/button-finney-hover.png';
 import xwallet from '@/assets/images/icons/HardwareWallet/xwallet.svg';
+import coolwallet from '@/assets/images/icons/HardwareWallet/coolwallet.svg';
 import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
@@ -173,11 +174,12 @@ export default {
         },
         {
           name: COOLWALLET_TYPE,
-          imgPath: keepkey,
+          imgPath: coolwallet,
           text: 'CoolWallet',
           disabled: false,
           msg: '',
-          link: 'http://lddy.no/a4im'
+          link:
+            'https://coolwallet.io/product/coolwallet/?ref=myetherwalletmyetherwallet'
         }
       ]
     };
