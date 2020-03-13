@@ -3,10 +3,10 @@
     "option-text": "使用 MEWconnect 访问我的钱包",
     "modal": {
       "title": "通过 MEWconnect 访问我的钱包",
-      "text1": "请使用 MEWconnect 应用来扫描上方的二维码",
-      "text2": "还没有下载此应用？立即下载。"
+      "text1": "Please use MEW wallet or MEWconnect App to scan the QR code above",
+      "text2": "Don't have the MEW wallet app? Download now."
     },
-    "warning": "MEWconnect 与 iPad 不兼容。"
+    "warning": "MEW wallet and MEWconnect apps are not compatible with iPads."
   },
   "finney": {
     "scan-info": "要进行连接，请扫描 {finney-bc} 上 {wallet} 应用中的 QR 码",
@@ -109,8 +109,9 @@
   "network-and-address": "Network and Address",
   "please-type-in-mnemonic-phrase": "Please type in your mnemonic phrase.",
   "password": "Password",
-  "web3-wallet-desc": "Use a Web3 Wallet (MEW CX, MetaMask, Dapper).",
-  "web3-wallet": "Browser Extension",
+  "access-wallet-or": "or",
+  "web3-wallet-desc": "MetaMask; Dapper",
+  "web3-wallet": "MEW CX",
   "refresh": "Refresh",
   "unlock-web3-wallet": "Can't access wallet! Please unlock your wallet through the Browser Extension",
   "try-again": "Try Again",
