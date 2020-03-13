@@ -1,12 +1,12 @@
 import { Transaction } from 'ethereumjs-tx';
 import { COOLWALLET as coolWalletType } from '../../bip44/walletTypes';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
-import { Toast } from '@/helpers';
 import errorHandler from './errorHandler';
 import cwsETH from '@coolwallets/eth';
 import cwsWallet, { generateKeyPair } from '@coolwallets/wallet';
 import locStore from 'store';
 import bip44Paths from '../../bip44';
+import Vue from 'vue';
 
 import store from '@/store';
 import {
@@ -103,15 +103,12 @@ class CoolWallet {
         tx.s = getBufferFromHex(sanitizeHex(resultTx.s.toString('hex')));
         const signedChainId = calculateChainIdFromV(tx.v);
         if (signedChainId !== networkId)
-          Toast.responseHandler(
-            new Error(
-              'Invalid networkId signature returned. Expected: ' +
-                networkId +
-                ', Got: ' +
-                signedChainId,
-              'InvalidNetworkId'
-            ),
-            false
+          throw new Error(
+            Vue.$i18n.t('errorsGlobal.invalid-network-id-sig', {
+              got: signedChainId,
+              expected: networkId
+            }),
+            'InvalidNetworkId'
           );
         return getSignTransactionObject(tx);
       }
