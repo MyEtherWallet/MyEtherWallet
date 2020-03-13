@@ -6,12 +6,16 @@
     .close {
       color: $dark-blue-2;
       font-weight: 100;
-      font-size: 30px;
-      margin-top: 5px;
+      font-size: 35px;
       line-height: 30px;
       opacity: 1;
       outline: none;
       text-shadow: none;
+      transform: scaleY(0.8);
+
+      &:hover {
+        color: $mew-green !important;
+      }
     }
   }
 
