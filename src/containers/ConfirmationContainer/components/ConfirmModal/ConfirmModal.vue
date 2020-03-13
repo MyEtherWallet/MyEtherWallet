@@ -41,7 +41,9 @@
             <div class="sliding-switch-white">
               <label class="switch">
                 <input
+                  ref="switchBox"
                   type="checkbox"
+                  :checked="modalDetailInformation"
                   @click="modalDetailInformation = !modalDetailInformation"
                 />
                 <span class="slider round" />
@@ -49,7 +51,7 @@
             </div>
           </div>
           <div
-            :class="modalDetailInformation && 'expended-info-open'"
+            :class="[modalDetailInformation ? 'expended-info-open' : '']"
             class="expended-info"
           >
             <div class="padding-container">
@@ -67,6 +69,9 @@
               <div class="grid-block">
                 <p>{{ $t('common.gas.price') }}</p>
                 <p>{{ gasPrice }} {{ $t('common.gas.gwei') }}</p>
+              </div>
+              <div v-if="gasPrice >= 100" class="gas-price-warning">
+                {{ $t('errorsGlobal.high-gas-limit-warning') }}
               </div>
               <div class="grid-block">
                 <p>{{ $t('sendTx.tx-fee') }}</p>
@@ -179,6 +184,11 @@ export default {
     if (this.data !== '0x') {
       this.parseData();
     }
+    this.$refs.confirmation.$on('show', () => {
+      if (this.gasPrice >= 100) {
+        this.modalDetailInformation = !this.modalDetailInformation;
+      }
+    });
   },
   methods: {
     sendTx() {
