@@ -1,5 +1,12 @@
 <template>
-  <v-overlay :color="backgroundColor" opacity="1" :value="open" z-index="100">
+  <v-overlay
+    color="overlayBackground"
+    opacity="1"
+    :value="open"
+    z-index="100"
+    light
+    :class="$vuetify.theme.dark ? 'dark-theme' : 'light-theme'"
+  >
     <div class="overlay-close-button">
       <CloseButton :text="closeText" @click.native="close" />
     </div>
@@ -8,7 +15,6 @@
 </template>
 
 <script>
-import Var from '@/common/plugins/variables.js';
 import CloseButton from '@/components/Buttons/CloseButton';
 
 export default {
@@ -24,14 +30,22 @@ export default {
     }
   },
   data() {
-    return {
-      backgroundColor: Var.colorSets.lightMint
-    };
+    return {};
   }
 };
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/GlobalVariables.scss';
+
+.light-theme {
+  color: $dark-space !important;
+}
+
+.dark-theme {
+  color: $blue-1 !important;
+}
+
 .v-overlay {
   border-radius: 0;
 }

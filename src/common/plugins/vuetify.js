@@ -35,7 +35,8 @@ export default new Vuetify({
         footerBackgroundColor: '#ffffff',
         gray: { gray1: '#96a8b6', gray2: '#4d687e' },
         red: { red1: '#ff0000' },
-        yellow: { yellow1: '#ffe9c5' }
+        yellow: { yellow1: '#ffe9c5' },
+        overlayBackground: '#f2fafa'
       },
       dark: {
         emerald: '#05c0a5',
@@ -62,7 +63,8 @@ export default new Vuetify({
         footerBackgroundColor: '#151a29',
         gray: { gray1: '#96a8b6' },
         red: { red1: '#ff0000' },
-        yellow: { yellow1: '#ffe9c5' }
+        yellow: { yellow1: '#ffe9c5' },
+        overlayBackground: '#151a29'
       }
     }
   }

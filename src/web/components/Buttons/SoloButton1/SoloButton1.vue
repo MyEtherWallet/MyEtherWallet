@@ -24,6 +24,6 @@ export default {
 .solo-button {
   border-radius: 5px;
   height: 25px;
-  min-width: 25px;
+  width: 25px;
 }
 </style>
