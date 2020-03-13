@@ -1,3 +1,7 @@
+### Feature
+
+- Add warning for high gwei price [#2113](https://github.com/MyEtherWallet/MyEtherWallet/pull/2113)
+
 ### Release v5.4.2-hotfix.1
 
 ### Bugs
