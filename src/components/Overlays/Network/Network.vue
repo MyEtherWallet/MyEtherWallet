@@ -8,13 +8,11 @@
         <v-tab-item>
           <h2 class="text-center mb-6">1. Connect with Ledger</h2>
           <WhiteSheet>
-            <div class="overlay-content">
-              <div class="pa-8">
-                <div class="text-center">
-                  <StdButton @click.native="activeTab = 1">
-                    Confirm & send
-                  </StdButton>
-                </div>
+            <div class="pa-8">
+              <div class="text-center">
+                <StdButton @click.native="activeTab = 1">
+                  Confirm & send
+                </StdButton>
               </div>
             </div>
           </WhiteSheet>
@@ -22,13 +20,11 @@
         <v-tab-item>
           <h2 class="text-center mb-6">2. Connect with Ledger</h2>
           <WhiteSheet>
-            <div class="overlay-content">
-              <div class="pa-8">
-                <div class="text-center">
-                  <StdButton @click.native="activeTab = 0">
-                    Confirm & send
-                  </StdButton>
-                </div>
+            <div class="pa-8">
+              <div class="text-center">
+                <StdButton @click.native="activeTab = 0">
+                  Confirm & send
+                </StdButton>
               </div>
             </div>
           </WhiteSheet>
@@ -72,9 +68,5 @@ export default {
 <style lang="scss" scoped>
 .v-tabs-bar {
   display: none;
-}
-
-.overlay-content {
-  max-width: 550px;
 }
 </style>
