@@ -9,9 +9,22 @@
           <h2 class="text-center mb-6">1. Connect with Ledger</h2>
           <WhiteSheet>
             <div class="pa-8">
+              <InputSearch
+                v-model="appSelected"
+                :items="apps"
+                title="Choose your coin"
+                placeholder="Search..."
+              />
+              <InputSearch
+                v-model="pathSelected"
+                :items="path"
+                title="HD derivation path"
+                placeholder="Search..."
+              />
+
               <div class="text-center">
                 <StdButton @click.native="activeTab = 1">
-                  Confirm & send
+                  Connect with Ledger
                 </StdButton>
               </div>
             </div>
@@ -39,13 +52,15 @@ import BaseOverlay from '../BaseOverlay';
 import OverlayTabs from '@/components/OverlayTabs';
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import StdButton from '@/web/components/StdButton';
+import InputSearch from '@/components/Inputs/InputSearch1';
 
 export default {
   components: {
     BaseOverlay,
     OverlayTabs,
     WhiteSheet,
-    StdButton
+    StdButton,
+    InputSearch
   },
   props: {
     open: { default: false, type: Boolean },
@@ -59,7 +74,18 @@ export default {
   data() {
     return {
       activeTab: 0,
-      tabs: { id: 0, title: '' }
+      tabs: { id: 0, title: '' },
+      appSelected: '',
+      apps: [
+        { name: 'Ethereum', value: 'eth' },
+        { name: 'Ethereum2', value: 'eth2' },
+        { name: 'Ethereum3', value: 'eth3' }
+      ],
+      pathSelected: '',
+      path: [
+        { name: "m/44'/60'/0'", value: '1' },
+        { name: "m/44'/60'/2'", value: '2' }
+      ]
     };
   }
 };
