@@ -72,11 +72,11 @@
   "lost-title": "Ой! Похоже, вы потерялись.",
   "mew-wallet-modal": {
     "title": "Официальное приложение MEW wallet теперь доступно!",
-    "text": "Buy, hold, and send Ether and tokens. Explore Ethereum on your mobile device. {learn-more}",
-    "learn-more": "Learn more",
-    "footer-text": "Download our App today!",
+    "text": "Покупайте, храните и отправляйте Ether и токены. Исследуйте Ethereum со своего мобильного телефона. {learn-more}",
+    "learn-more": "Подробнее",
+    "footer-text": "Скачайте наше приложение сегодня!",
     "new": "новый",
-    "details": "Details",
+    "details": "Подробности",
     "hide": "Скрыть"
   }
 }
