@@ -7,5 +7,6 @@
   "browser-non-web-usb": "Browser does not support WebUSB. Try using Chrome or Opera!",
   "no-mobile-support": "Hardware wallet not supported by mobile browser!",
   "something-went-wrong": "Something went wrong!",
-  "signer-address-different": "Signer address is different from the derived address!"
+  "signer-address-different": "Signer address is different from the derived address!",
+  "high-gas-limit-warning": "Warning: High gas prices mean higher transaction fees."
 }
