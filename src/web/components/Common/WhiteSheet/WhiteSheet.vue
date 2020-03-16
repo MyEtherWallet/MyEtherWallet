@@ -1,10 +1,10 @@
 <template>
   <v-sheet
-    color="whiteSheetBackgroundColor"
+    color="componentBackgroundColor1"
     class="white-sheet"
     :class="sideinfo ? 'sideinfo' : ''"
     :style="{
-      boxShadow: '0 0 20px' + $vuetify.theme.themes[theme].whiteSheetShadowColor
+      boxShadow: '0 0 15px' + $vuetify.theme.themes[theme].componentShadowColor1
     }"
   >
     <slot />

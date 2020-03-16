@@ -24,7 +24,8 @@ export default {
         },
         chart: {
           zoomType: 'x',
-          height: '200px'
+          height: '200px',
+          backgroundColor: this.backgroundColor
         },
         title: {
           text: ''
@@ -85,6 +86,14 @@ export default {
         ]
       }
     };
+  },
+  computed: {
+    theme() {
+      return this.$vuetify.theme.dark ? 'dark' : 'light';
+    },
+    backgroundColor() {
+      return this.$vuetify.theme.themes[this.theme].componentBackgroundColor1;
+    }
   }
 };
 </script>

@@ -31,7 +31,11 @@
     </div>
 
     <table class="tokens-table mt-4">
-      <thead>
+      <thead
+        :style="{
+          backgroundColor: $vuetify.theme.themes[theme].tableBackgroundColor1
+        }"
+      >
         <tr>
           <td style="width: 45px;"></td>
           <td>Token</td>
@@ -308,6 +312,11 @@ export default {
       ]
     };
   },
+  computed: {
+    theme() {
+      return this.$vuetify.theme.dark ? 'dark' : 'light';
+    }
+  },
   beforeMount() {
     this.chartData = this.chart1d;
   }
@@ -337,7 +346,6 @@ export default {
   }
 
   thead {
-    background-color: rgb(249, 249, 249);
     font-size: 11px;
     text-transform: uppercase;
     td {

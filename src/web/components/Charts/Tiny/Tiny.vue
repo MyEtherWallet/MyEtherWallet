@@ -31,7 +31,8 @@ export default {
         },
         chart: {
           height: '60',
-          width: '80'
+          width: '80',
+          backgroundColor: this.backgroundColor
         },
         title: {
           text: ''
@@ -51,7 +52,6 @@ export default {
           {
             lineWidth: 1,
             data: this.data,
-            //color: '#05c0a5',
             color: this.linecolor,
             animation: {
               duration: 400
@@ -66,6 +66,14 @@ export default {
         ]
       }
     };
+  },
+  computed: {
+    theme() {
+      return this.$vuetify.theme.dark ? 'dark' : 'light';
+    },
+    backgroundColor() {
+      return this.$vuetify.theme.themes[this.theme].componentBackgroundColor1;
+    }
   }
 };
 </script>
