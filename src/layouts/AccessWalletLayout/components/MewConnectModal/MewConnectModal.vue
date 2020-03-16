@@ -12,7 +12,7 @@
       <ipad-modal ref="ipadModal" />
       <div class="text-center modal-title-block">
         <h3>
-          {{ $t('common.mewconnect.string') }}
+          {{ $t('accessWallet.mewconnect.protocol') }}
         </h3>
         <div>
           {{ $t('accessWallet.mewconnect.option-text') }}

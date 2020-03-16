@@ -1,18 +1,19 @@
 {
   "mewconnect": {
-    "option-text": "Use MEWconnect to access my wallet",
+    "option-text": "Scan the QR code to access with MEWwallet or MEWconnect",
     "modal": {
-      "title": "Access by MEWconnect",
+      "title": "Mobile Access",
       "text1": "Please use MEW wallet or MEWconnect App to scan the QR code above",
       "text2": "Don't have the MEW wallet app? Download now."
     },
+    "protocol": "MEWconnect Protocol",
     "warning": "MEW wallet and MEWconnect apps are not compatible with iPads."
   },
   "mobile-app": {
     "option-title": "Mobile App",
     "examples": "WalletConnect; <br> Wallet Link",
     "modal": {
-      "title": "Access by Mobile App"
+      "title": "Mobile Access"
     },
     "mew-connect": "MEWconnect"
   },
