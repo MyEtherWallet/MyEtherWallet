@@ -111,8 +111,8 @@ import WalletPasswordModal from '@/components/WalletPasswordModal';
 import EnterPinNumberModal from '@/components/EnterPinNumberModal';
 import XwalletModal from '../../components/XwalletModal';
 
-import mobileApp from '@/assets/images/icons/button-cellphone.svg';
-//import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
+// import mobileApp from '@/assets/images/icons/button-cellphone.svg';
+import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
 import hardwareImg from '@/assets/images/icons/button-hardware.svg';
 import mewCxImg from '@/assets/images/icons/button-mew-cx.png';
 import softwareImg from '@/assets/images/icons/button-software.svg';
@@ -162,7 +162,7 @@ export default {
           showsOtherExamples: true,
           recommend: '',
           tooltip: '',
-          img: mobileApp,
+          img: mewConnectImg,
           imgDisabled: mewConnectImgDisabled,
           disabled: false,
           classname: 'button-mewconnect'
