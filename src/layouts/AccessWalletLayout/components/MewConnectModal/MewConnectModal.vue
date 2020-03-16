@@ -25,21 +25,44 @@
         <div class="links-container">
           <a
             v-if="canDownloadApple"
-            href="https://itunes.apple.com/us/app/mewconnect/id1391097156?mt=8"
+            href="https://itunes.apple.com/app/id1464614025"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img alt src="~@/assets/images/icons/appstore.svg" height="35" />
+            <img
+              alt
+              src="~@/assets/images/icons/button-app-store.png"
+              height="35"
+            />
           </a>
           <div v-else @click="openIpadModal">
-            <img alt src="~@/assets/images/icons/appstore.svg" height="35" />
+            <img
+              alt
+              src="~@/assets/images/icons/button-app-store.png"
+              height="35"
+            />
           </div>
           <a
-            href="http://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
+            href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img alt src="~@/assets/images/icons/google-play.svg" height="35" />
+            <img
+              alt
+              src="~@/assets/images/icons/button-google-play-color.png"
+              height="35"
+            />
+          </a>
+          <a
+            href="https://galaxystore.samsung.com/detail/com.myetherwallet.mewwallet?session_id=W_29942474fffbd49127ee223d697f1518"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              alt
+              src="~@/assets/images/icons/button-galaxy-store-color.png"
+              height="35"
+            />
           </a>
         </div>
         <p class="download-now">

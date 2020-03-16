@@ -2,11 +2,22 @@
 
 - WalletConnect & WalletLink Support [#1924](https://github.com/MyEtherWallet/MyEtherWallet/pull/1924)
 
-### Releaase v5.4.2
+### Release v5.4.2-hotfix.1
 
 ### Bugs
-- Fix offline helper fee conversion [#2063] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2063)
-- Fix logout error and fix aave bug [#2082] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2082)
+
+- Fix russian translations [#2105](https://github.com/MyEtherWallet/MyEtherWallet/pull/2105)
+
+### Release v5.4.2
+
+### Feature
+- MEW Wallet UI changes [#2048](https://github.com/MyEtherWallet/MyEtherWallet/pull/2048)
+
+### Bugs
+
+- Fix CX issue with quicksend and network, and add more space for interface ad [#2094](https://github.com/MyEtherWallet/MyEtherWallet/pull/2094)
+- Fix offline helper fee conversion [#2063](https://github.com/MyEtherWallet/MyEtherWallet/pull/2063)
+- Fix logout error and fix aave bug [#2082](https://github.com/MyEtherWallet/MyEtherWallet/pull/2082)
 
 ### Devop
 
@@ -14,7 +25,6 @@
 - ropsten ens .test set resolver [#2090](https://github.com/MyEtherWallet/MyEtherWallet/pull/2090)
 - Update greenkeeper packages [#2088](https://github.com/MyEtherWallet/MyEtherWallet/pull/2088)
 - Update greenkeeper packages [#2078](https://github.com/MyEtherWallet/MyEtherWallet/pull/2078)
-
 
 ### Release v5.4.1-hotfix.1
 
