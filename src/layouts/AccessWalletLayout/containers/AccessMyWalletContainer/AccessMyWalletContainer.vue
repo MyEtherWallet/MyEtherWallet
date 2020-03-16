@@ -86,6 +86,7 @@
             :tooltip="$t(button.tooltip)"
             :disabled="button.disabled"
             :classname="button.classname"
+            :has-other-examples="button.showsOtherExamples"
           />
         </div>
       </div>
@@ -113,12 +114,12 @@ import XwalletModal from '../../components/XwalletModal';
 import mobileApp from '@/assets/images/icons/button-cellphone.svg';
 //import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
 import hardwareImg from '@/assets/images/icons/button-hardware.svg';
-import web3Img from '@/assets/images/icons/button-web3.svg';
+import mewCxImg from '@/assets/images/icons/button-mew-cx.png';
 import softwareImg from '@/assets/images/icons/button-software.svg';
 
 import mewConnectImgDisabled from '@/assets/images/icons/button-mewconnect-disabled.svg';
 import hardwareImgDisabled from '@/assets/images/icons/button-hardware-disabled.svg';
-import web3ImgDisabled from '@/assets/images/icons/button-web3-disabled.svg';
+import mewCxImgDisabled from '@/assets/images/icons/button-mew-cx-disabled.png';
 import softwareImgDisabled from '@/assets/images/icons/button-software-disabled.svg';
 
 import { mapState, mapActions } from 'vuex';
@@ -180,10 +181,11 @@ export default {
           func: this.web3WalletModal,
           title: 'accessWallet.web3-wallet',
           desc: 'accessWallet.web3-wallet-desc',
+          showsOtherExamples: true,
           recommend: '',
           tooltip: '',
-          img: web3Img,
-          imgDisabled: web3ImgDisabled,
+          img: mewCxImg,
+          imgDisabled: mewCxImgDisabled,
           disabled: false,
           classname: 'button-metamask'
         },

@@ -68,11 +68,11 @@ export default {
       faqs: {
         faq1: {
           open: false,
-          title: 'home.faqs.create-wallet.title',
-          content: 'home.faqs.create-wallet.text',
-          linkText: 'home.faqs.button-here',
+          title: 'home.faqs.mew-wallet.title',
+          content: 'home.faqs.mew-wallet.text',
+          linkText: 'home.faqs.button-learn-more',
           link:
-            'https://kb.myetherwallet.com/getting-started/creating-a-new-wallet-on-myetherwallet.html'
+            'https://kb.myetherwallet.com/en/mewwallet/mewwallet-user-guide/'
         },
         faq2: {
           open: false,
@@ -104,6 +104,14 @@ export default {
           linkText: 'home.faqs.button-here',
           link:
             'https://kb.myetherwallet.com/private-keys-passwords/lost-eth-private-key.html'
+        },
+        faq6: {
+          open: false,
+          title: 'home.faqs.create-wallet.title',
+          content: 'home.faqs.create-wallet.text',
+          linkText: 'home.faqs.button-here',
+          link:
+            'https://kb.myetherwallet.com/getting-started/creating-a-new-wallet-on-myetherwallet.html'
         }
       }
     };

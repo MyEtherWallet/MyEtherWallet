@@ -3,10 +3,10 @@
     "option-text": "Use MEWconnect to access my wallet",
     "modal": {
       "title": "Access by MEWconnect",
-      "text1": "Please use MEWconnect App to scan the QR code above",
-      "text2": "Don't have the App? Download now."
+      "text1": "Please use MEW wallet or MEWconnect App to scan the QR code above",
+      "text2": "Don't have the MEW wallet app? Download now."
     },
-    "warning": "MEWconnect is not compatible with iPads."
+    "warning": "MEW wallet and MEWconnect apps are not compatible with iPads."
   },
   "mobile-app": {
     "option-title": "Mobile App",
@@ -113,8 +113,9 @@
   "network-and-address": "Network and Address",
   "please-type-in-mnemonic-phrase": "Please type in your mnemonic phrase.",
   "password": "Password",
-  "web3-wallet-desc": "Use a Web3 Wallet (MEW CX, MetaMask, Dapper).",
-  "web3-wallet": "Browser Extension",
+  "access-wallet-or": "or",
+  "web3-wallet-desc": "MetaMask; Dapper",
+  "web3-wallet": "MEW CX",
   "refresh": "Refresh",
   "unlock-web3-wallet": "Can't access wallet! Please unlock your wallet through the Browser Extension",
   "try-again": "Try Again",

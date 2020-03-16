@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.4.1-hotfix.1",
+  "version": "5.4.2-hotfix.1",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -29,9 +29,9 @@
     "update:swap": "node compileBaseSwapOptions.js"
   },
   "dependencies": {
-    "@aave/protocol-js": "0.2.3",
-    "@sentry/browser": "5.13.2",
-    "@sentry/integrations": "5.13.2",
+    "@aave/protocol-js": "0.2.4",
+    "@sentry/browser": "5.14.0",
+    "@sentry/integrations": "5.14.0",
     "@unstoppabledomains/resolution": "1.2.2",
     "apollo-cache-inmemory": "1.6.5",
     "apollo-client": "2.6.8",
