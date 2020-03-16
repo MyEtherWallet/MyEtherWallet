@@ -1,3 +1,6 @@
+### Bugs
+- MEW Wallet modal ui changes [#2112] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2112)
+
 ### Release v5.4.2-hotfix.1
 
 ### Bugs
