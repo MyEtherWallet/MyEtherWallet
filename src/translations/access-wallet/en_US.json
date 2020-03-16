@@ -10,10 +10,11 @@
   },
   "mobile-app": {
     "option-title": "Mobile App",
-    "examples": "MEWconnect, WalletConnect",
+    "examples": "WalletConnect; <br> Wallet Link",
     "modal": {
       "title": "Access by Mobile App"
-    }
+    },
+    "mew-connect": "MEWconnect"
   },
   "finney": {
     "scan-info": "To connect, scan the QR code from {wallet} app on your {finney-bc}",

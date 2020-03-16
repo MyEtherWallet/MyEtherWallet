@@ -81,7 +81,7 @@
             :img="button.img"
             :img-disabled="button.imgDisabled"
             :title="$t(button.title)"
-            :desc="$t(button.desc)"
+            :desc="button.desc"
             :recommend="$t(button.recommend)"
             :tooltip="$t(button.tooltip)"
             :disabled="button.disabled"
@@ -157,8 +157,9 @@ export default {
       buttons: [
         {
           func: this.mewConnectModalOpen,
-          title: 'accessWallet.mobile-app.option-title',
+          title: 'accessWallet.mobile-app.mew-connect',
           desc: 'accessWallet.mobile-app.examples',
+          showsOtherExamples: true,
           recommend: '',
           tooltip: '',
           img: mobileApp,
