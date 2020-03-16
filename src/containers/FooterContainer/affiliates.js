@@ -93,7 +93,7 @@ const affiliates = [
   {
     text: 'footer.cool-wallet',
     price: '99.00',
-    description: '',
+    description: 'buyHardwareWallet.desc.coolwallet',
     href: 'https://www.stateofthedapps.com/',
     currency: '$',
     logo: 'coolwallet'
