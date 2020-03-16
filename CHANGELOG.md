@@ -2,6 +2,10 @@
 
 - WalletConnect & WalletLink Support [#1924](https://github.com/MyEtherWallet/MyEtherWallet/pull/1924)
 
+### Bugs
+
+- MEW Wallet modal ui changes [#2112] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2112)
+
 ### Release v5.4.2-hotfix.1
 
 ### Bugs
