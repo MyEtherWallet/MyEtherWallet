@@ -1,12 +1,12 @@
 <template>
   <div class="position--relative">
-    <ChangeAddress :open="openChangeAddress" :close="closeChangeAddress" />
-    <v-btn icon @click="openChangeAddress = true">
+    <Notifications :open="openNotifications" :close="closeNotifications" />
+    <v-btn icon @click="openNotifications = true">
       <img src="@/assets/images/Icons/notifications.svg" />
     </v-btn>
     <div
       class="notification-count cursor--pointer d-flex align-center justify-center"
-      @click="openChangeAddress = true"
+      @click="openNotifications = true"
     >
       3
     </div>
@@ -14,18 +14,18 @@
 </template>
 
 <script>
-import ChangeAddress from '@/components/Overlays/ChangeAddress';
+import Notifications from '@/components/Overlays/Notifications';
 
 export default {
-  components: { ChangeAddress },
+  components: { Notifications },
   data() {
     return {
-      openChangeAddress: false
+      openNotifications: false
     };
   },
   methods: {
-    closeChangeAddress() {
-      this.openChangeAddress = false;
+    closeNotifications() {
+      this.openNotifications = false;
     }
   }
 };
