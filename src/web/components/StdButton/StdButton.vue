@@ -7,7 +7,12 @@
     dark
     depressed
     class="std-button"
-    :class="[buttonclass, minwidth == true ? 'btn-min-width' : '', fontclass]"
+    :class="[
+      buttonclass,
+      minwidth == true ? 'btn-min-width' : '',
+      fontclass,
+      fullwidth == true ? 'btn-full-width' : ''
+    ]"
     :disabled="disabled"
     :to="to"
     :href="href"
@@ -24,6 +29,7 @@ export default {
     href: { default: '', type: String },
     disabled: { default: false, type: Boolean },
     minwidth: { default: true, type: Boolean },
+    fullwidth: { default: true, type: Boolean },
     size: { default: 'x-large', type: String },
     fontclass: { default: 'font-weight-medium', type: String }
   },
@@ -36,6 +42,10 @@ export default {
 
 .btn-min-width {
   min-width: 180px !important;
+}
+
+.btn-full-width {
+  width: 100%;
 }
 
 .std-button {

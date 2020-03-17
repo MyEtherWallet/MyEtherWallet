@@ -5,15 +5,10 @@
 }
 
 // Themes ===========================================================
-/*
-.light-theme {
-  color: $dark-space !important;
+.theme--dark.v-sheet,
+.theme--dark.v-application {
+  color: $blue-1 !important;
 }
-
-.dark-theme {
-  color: white !important;
-}
-*/
 
 // Style reset ======================================================
 * {

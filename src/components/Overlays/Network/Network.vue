@@ -1,46 +1,59 @@
 <template>
   <BaseOverlay :open="open" :close="close" close-text="Cancel">
-    <OverlayTabs>
+    <OverlayTabs class="overlay-content">
       <v-tabs v-model="activeTab">
         <v-tab :key="1" />
         <v-tab :key="2" />
 
         <v-tab-item>
-          <h2 class="text-center mb-6">1. Connect with Ledger</h2>
-          <WhiteSheet>
-            <div class="pa-8">
-              <InputSearch
-                v-model="appSelected"
-                :items="apps"
-                title="Choose your coin"
-                placeholder="Search..."
-              />
-              <InputSearch
-                v-model="pathSelected"
-                :items="path"
-                title="HD derivation path"
-                placeholder="Search..."
-              />
+          <div class="width--100-percent">
+            <h2 class="text-center mb-8">1. Connect with Ledger</h2>
+            <WhiteSheet>
+              <div class="pa-8">
+                <div class="mt-2 mb-9 text-center">
+                  <img
+                    width="70"
+                    height="70"
+                    src="@/assets/images/currencies/icon-eth-blue.svg"
+                  />
+                </div>
+                <InputSearch
+                  v-model="appSelected"
+                  :items="apps"
+                  title="Choose your coin"
+                  placeholder="Search..."
+                  class="mb-1"
+                />
+                <InputSearch
+                  v-model="pathSelected"
+                  :items="path"
+                  title="HD derivation path"
+                  placeholder="Search..."
+                  class="mb-1"
+                />
 
-              <div class="text-center">
-                <StdButton @click.native="activeTab = 1">
-                  Connect with Ledger
-                </StdButton>
+                <div class="text-center">
+                  <StdButton fullwidth @click.native="activeTab = 1">
+                    Connect with Ledger
+                  </StdButton>
+                </div>
               </div>
-            </div>
-          </WhiteSheet>
+            </WhiteSheet>
+          </div>
         </v-tab-item>
         <v-tab-item>
-          <h2 class="text-center mb-6">2. Connect with Ledger</h2>
-          <WhiteSheet>
-            <div class="pa-8">
-              <div class="text-center">
-                <StdButton @click.native="activeTab = 0">
-                  Confirm & send
-                </StdButton>
+          <div class="width--100-percent">
+            <h2 class="text-center mb-8">2. Connect with Ledger</h2>
+            <WhiteSheet>
+              <div class="pa-8">
+                <div class="text-center">
+                  <StdButton fullwidth @click.native="activeTab = 0">
+                    Confirm & send
+                  </StdButton>
+                </div>
               </div>
-            </div>
-          </WhiteSheet>
+            </WhiteSheet>
+          </div>
         </v-tab-item>
       </v-tabs>
     </OverlayTabs>
@@ -94,5 +107,9 @@ export default {
 <style lang="scss" scoped>
 .v-tabs-bar {
   display: none;
+}
+
+.overlay-content {
+  width: 500px;
 }
 </style>

@@ -122,10 +122,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-* {
-  color: white;
-}
-
 .menu-sub-item {
   padding-left: 51px;
 }
@@ -134,11 +130,17 @@ export default {
 <style lang="scss">
 @import '@/assets/styles/GlobalVariables.scss';
 
-.accordion-menu-container .v-icon {
-  color: $gray-2;
-}
+.accordion-menu-container {
+  .theme--light.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+    color: white !important;
+  }
 
-.accordion-menu-container .v-list .v-list-item--active .v-icon {
-  color: white;
+  .theme--dark.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+    color: $blue-1 !important;
+  }
+
+  .theme--dark.v-list-item.v-list-item--active {
+    color: $emerald !important;
+  }
 }
 </style>
