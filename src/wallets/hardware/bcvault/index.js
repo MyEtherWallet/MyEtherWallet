@@ -7,7 +7,7 @@ import errorHandler from './errorHandler';
 import BigNumber from 'bignumber.js';
 import commonGenerator from '@/helpers/commonGenerator';
 import store from '@/store';
-import { Toast } from '@/helpers';
+
 import {
   getBufferFromHex,
   sanitizeHex,
@@ -89,18 +89,16 @@ class BCVault {
         tx.s = getBufferFromHex(sanitizeHex(resultTx.s.toString('hex')));
         const signedChainId = calculateChainIdFromV(tx.v);
         if (signedChainId !== networkId)
-          Toast.responseHandler(
-            new Error(
-              'Invalid networkId signature returned. Expected: ' +
-                networkId +
-                ', Got: ' +
-                signedChainId,
-              'InvalidNetworkId'
-            ),
-            false
+          throw new Error(
+            'Invalid networkId signature returned. Expected: ' +
+              networkId +
+              ', Got: ' +
+              signedChainId,
+            'InvalidNetworkId'
           );
         return getSignTransactionObject(tx);
       }
+
       return result;
     };
     const msgSigner = async msg => {
