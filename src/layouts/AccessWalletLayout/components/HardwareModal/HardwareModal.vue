@@ -279,7 +279,6 @@ export default {
             .init()
             .then(res => {
               if (res.length >= 1) {
-                console.log(res);
                 this.openBcVault(res, bcvaultInstance);
               }
             })
