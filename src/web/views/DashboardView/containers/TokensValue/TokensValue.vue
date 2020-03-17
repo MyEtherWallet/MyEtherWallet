@@ -30,15 +30,8 @@
       </div>
     </div>
 
-    <table
-      class="tokens-table mt-4"
-      :class="theme == 'light' ? 'light' : 'dark'"
-    >
-      <thead
-        :style="{
-          backgroundColor: $vuetify.theme.themes[theme].tableBackgroundColor1
-        }"
-      >
+    <table class="tokens-table mt-4" :class="theme">
+      <thead>
         <tr>
           <td style="width: 45px;"></td>
           <td>Token</td>
@@ -348,6 +341,14 @@ export default {
     padding: 10px;
   }
 
+  &.light thead {
+    background-color: $light-table-background-1;
+  }
+
+  &.dark thead {
+    background-color: $dark-table-background-1;
+  }
+
   thead {
     font-size: 11px;
     text-transform: uppercase;
@@ -376,11 +377,11 @@ export default {
   }
 
   &.light tbody td {
-    border-bottom: 1px solid $light-table-line-color-1;
+    border-bottom: 1px solid $light-table-line-1;
   }
 
   &.dark tbody td {
-    border-bottom: 1px solid $dark-table-line-color-1;
+    border-bottom: 1px solid $dark-table-line-1;
   }
 }
 </style>

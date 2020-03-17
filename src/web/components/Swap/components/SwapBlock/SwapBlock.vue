@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" :class="theme">
     <div class="left-container">
       {{ amount }} {{ from.toUpperCase() }} / {{ rate }} {{ to.toUpperCase() }}
     </div>
@@ -28,6 +28,11 @@ export default {
     from: { default: '', type: String },
     rate: { default: '', type: String },
     amount: { default: '', type: String }
+  },
+  computed: {
+    theme() {
+      return this.$vuetify.theme.dark ? 'dark' : 'light';
+    }
   }
 };
 </script>
@@ -50,12 +55,18 @@ export default {
 }
 .container {
   align-items: center;
-  background-color: $light-mint;
   border-radius: 4px;
-  color: $dark-space;
   display: flex;
   justify-content: space-between;
   padding-left: 17px;
   padding-right: 17px;
+
+  &.light {
+    background-color: $light-table-background-1;
+  }
+
+  &.dark {
+    background-color: $dark-table-background-1;
+  }
 }
 </style>
