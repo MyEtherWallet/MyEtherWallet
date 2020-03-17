@@ -32,7 +32,7 @@ export default {
         chart: {
           height: '60',
           width: '80',
-          backgroundColor: this.backgroundColor
+          backgroundColor: 'transparent'
         },
         title: {
           text: ''
@@ -66,14 +66,6 @@ export default {
         ]
       }
     };
-  },
-  computed: {
-    theme() {
-      return this.$vuetify.theme.dark ? 'dark' : 'light';
-    },
-    backgroundColor() {
-      return this.$vuetify.theme.themes[this.theme].componentBackgroundColor1;
-    }
   }
 };
 </script>
