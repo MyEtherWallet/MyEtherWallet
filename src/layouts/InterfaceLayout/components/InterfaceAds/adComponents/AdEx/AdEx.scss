@@ -1,11 +1,14 @@
 @import '~@/scss/GlobalVariables';
 
 .ad-image-container {
+  display: block;
   background-color: $background-color-white;
   border-radius: 5px;
   overflow: hidden;
-
+  margin: 0 auto;
+  text-align: center;
   img {
+    padding-left: 100px;
     width: 100%;
   }
 }
