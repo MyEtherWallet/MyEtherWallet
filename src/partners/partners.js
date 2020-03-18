@@ -13,6 +13,7 @@ import {
   OtherCoins,
   fiat
 } from './partnersConfig';
+import providerNames from './index'
 
 function comparator(arrayForSort) {
   if (!arrayForSort) arrayForSort = TOP_OPTIONS_ORDER;
@@ -283,7 +284,6 @@ export default class SwapProviders {
 
   calculateToValue(fromValue, bestRate, currency) {
     const decimals = this.decimalForCalculation(currency);
-    console.log(decimals); // todo remove dev item
     return checkInvalidOrMissingValue(
       new BigNumber(fromValue)
         .times(new BigNumber(bestRate))
@@ -341,13 +341,22 @@ export default class SwapProviders {
       toAddress: toAddress,
       fromAddress: fromAddress,
       timestamp: new Date().toISOString(),
-      refundAddress: refundAddress
+      refundAddress: refundAddress,
+      additional: providerDetails.additional
     };
     if (this.providers.has(swapDetails.provider)) {
       const provider = this.providers.get(swapDetails.provider);
       swapDetails.maybeToken = SwapProviders.isToken(swapDetails.fromCurrency);
       return provider.startSwap(swapDetails);
+    } else if(providerDetails.additional){
+      if(providerDetails.additional.source === 'dexag'){
+        console.log(swapDetails); // todo remove dev item
+        const provider = this.providers.get('dexag');
+        swapDetails.maybeToken = SwapProviders.isToken(swapDetails.fromCurrency);
+        return provider.startSwap(swapDetails);
+      }
     }
+
   }
 
   // Helper Methods

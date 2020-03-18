@@ -781,18 +781,18 @@ export default {
           }
           return agg;
         }, []);
-        this.providersFound = results.reduce((agg, result) => {
-          if (result.additional) {
-            if (result.additional.source) {
-              console.log(result.additional.source); // todo remove dev item
-              agg.push(result.additional.source);
-            }
-          } else if (result.provider) {
-            agg.push(result.provider);
-          }
-          return agg;
-        }, []);
-        console.log('after: ', results); // todo remove dev item
+        // this.providersFound = results.reduce((agg, result) => {
+        //   if (result.additional) {
+        //     if (result.additional.source) {
+        //       console.log(result.additional.source); // todo remove dev item
+        //       agg.push(result.additional.source);
+        //     }
+        //   } else if (result.provider) {
+        //     agg.push(result.provider);
+        //   }
+        //   return agg;
+        // }, []);
+        // console.log('after: ', results); // todo remove dev item
         if (
           results.every(
             entry =>
@@ -859,6 +859,7 @@ export default {
           const providerDetails = this.providerList.find(entry => {
             return entry.provider === this.selectedProvider.provider;
           });
+          console.log(providerDetails); // todo remove dev item
           const swapDetails = {
             providerDetails: providerDetails,
             fromValue: this.fromValue,
@@ -875,6 +876,7 @@ export default {
           };
           this.swapDetails = await this.swap.startSwap(swapDetails);
           this.finalizingSwap = false;
+          console.log('this.swapDetails', this.swapDetails); // todo remove dev item
 
           if (this.swapDetails.isExitToFiat) {
             this.bityExitToFiat = true;

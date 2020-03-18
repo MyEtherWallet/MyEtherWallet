@@ -23,7 +23,7 @@
             <label :for="provider.provider" />
           </div>
           <div class="provider-image">
-            <img :src="providerLogo(provider)" alt />
+            <img :src="providerLogo(provider.provider)" alt />
           </div>
           <div
             :class="[
@@ -424,12 +424,6 @@ export default {
       this.$emit('selectedProvider', provider);
     },
     providerLogo(details) {
-      if (details.provider) {
-        if (details.additional.source) {
-          return this.logos[details.additional.source];
-        }
-        return this.logos[details.provider];
-      }
       return this.logos[details];
     },
     minNote(details) {
