@@ -46,9 +46,10 @@
             <h2 class="text-center mb-8">2. Connect with Ledger</h2>
             <WhiteSheet>
               <div class="pa-8">
+                <AddressSelection />
                 <div class="text-center">
                   <StdButton fullwidth @click.native="activeTab = 0">
-                    Confirm & send
+                    Access My Wallet
                   </StdButton>
                 </div>
               </div>
@@ -61,6 +62,7 @@
 </template>
 
 <script>
+import AddressSelection from './components/AddressSelection';
 import BaseOverlay from '../BaseOverlay';
 import OverlayTabs from '@/components/OverlayTabs';
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
@@ -69,6 +71,7 @@ import InputSearch from '@/components/Inputs/InputSearch1';
 
 export default {
   components: {
+    AddressSelection,
     BaseOverlay,
     OverlayTabs,
     WhiteSheet,
