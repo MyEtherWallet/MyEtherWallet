@@ -48,7 +48,7 @@ export default class DexAg {
   }
 
   static isDex() {
-    return false;
+    return true;
   }
 
   async getSupportedCurrencies() {
@@ -121,9 +121,9 @@ export default class DexAg {
           return {
             fromCurrency,
             toCurrency,
-            provider: this.name,
+            provider: val.dex,
             rate: this.calculateRate(fromValue, val.price),
-            additional: { source: val.dex }
+            additional: { source: 'dexag' }
           };
         })
       );
@@ -178,24 +178,65 @@ export default class DexAg {
     }
   }
 
+  // async startSwap(swapDetails) {
+  //   let details;
+  //   if (+swapDetails.minValue <= +swapDetails.fromValue) {
+  //     details = await this.createTransaction(swapDetails);
+  //     if (!details) throw Error('abort');
+  //     if (details.message) throw Error(details.message);
+  //     // swapDetails.providerReceives = details.amountExpectedFrom;
+  //     // swapDetails.providerSends = details.amountExpectedTo;
+  //     // swapDetails.parsed = DexAg.parseOrder(details);
+  //     // swapDetails.providerSends = swapDetails.parsed.recValue;
+  //     // swapDetails.orderId = swapDetails.parsed.orderId;
+  //     // swapDetails.providerAddress = details.payinAddress;
+  //     swapDetails.dataForInitialization = details;
+  //     // swapDetails.isDex = DexAg.isDex();
+  //     // swapDetails.validFor = swapDetails.parsed.validFor;
+  //     return swapDetails;
+  //   }
+  //   return Error('From amount below changelly minimum for currency pair');
+  // }
+
   async startSwap(swapDetails) {
-    let details;
-    if (+swapDetails.minValue <= +swapDetails.fromValue) {
-      details = await this.createTransaction(swapDetails);
-      if (!details) throw Error('abort');
-      if (details.message) throw Error(details.message);
-      // swapDetails.providerReceives = details.amountExpectedFrom;
-      // swapDetails.providerSends = details.amountExpectedTo;
-      // swapDetails.parsed = DexAg.parseOrder(details);
-      // swapDetails.providerSends = swapDetails.parsed.recValue;
-      // swapDetails.orderId = swapDetails.parsed.orderId;
-      // swapDetails.providerAddress = details.payinAddress;
-      swapDetails.dataForInitialization = details;
-      // swapDetails.isDex = DexAg.isDex();
-      // swapDetails.validFor = swapDetails.parsed.validFor;
-      return swapDetails;
-    }
-    return Error('From amount below changelly minimum for currency pair');
+    swapDetails.maybeToken = true;
+    // swapDetails.providerAddress = this.getAddress();
+    // swapDetails.kyberMaxGas = await this.callKyberContract('maxGasPrice');
+    // const finalRateWei = await this.getRate(
+    //   swapDetails.fromCurrency,
+    //   swapDetails.toCurrency,
+    //   swapDetails.fromValue,
+    //   swapDetails.additional.source
+    // );
+    // const finalRate = this.convertToTokenBase('ETH', finalRateWei);
+    console.log(swapDetails); // todo remove dev item
+    swapDetails.dataForInitialization = await this.sdk.getTrade({
+      to: swapDetails.toCurrency,
+      from: swapDetails.fromCurrency,
+      toAmount: swapDetails.toValue,
+      dex: swapDetails.provider.provider
+    });
+    console.log(swapDetails.dataForInitialization); // todo remove dev item
+    // swapDetails.toValue = new BigNumber(finalRate).times(
+    //   new BigNumber(swapDetails.fromValue).toFixed(18).toString()
+    // );
+    //
+    // swapDetails.finalRate = this.calculateNormalizedExchangeRate(
+    //   swapDetails.toValue,
+    //   swapDetails.fromValue
+    // );
+    // swapDetails.providerReceives = swapDetails.fromValue;
+    // swapDetails.providerSends = new BigNumber(finalRate).times(
+    //   new BigNumber(swapDetails.fromValue)
+    // );
+    // swapDetails.parsed = {
+    //   sendToAddress: this.getKyberNetworkAddress(),
+    //   status: 'pending',
+    //   validFor: TIME_SWAP_VALID
+    // };
+    // swapDetails.providerAddress = this.getKyberNetworkAddress();
+    // swapDetails.isDex = Kyber.isDex();
+    return swapDetails;
   }
 
   createTransaction(swapDetails){
