@@ -1,3 +1,7 @@
+### Bug
+
+- Fix button positions [#2118](https://github.com/MyEtherWallet/MyEtherWallet/pull/2118)
+
 ### Release v5.4.3
 
 ### Devop
