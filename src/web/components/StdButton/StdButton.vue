@@ -29,7 +29,7 @@ export default {
     href: { default: '', type: String },
     disabled: { default: false, type: Boolean },
     minwidth: { default: true, type: Boolean },
-    fullwidth: { default: true, type: Boolean },
+    fullwidth: { default: false, type: Boolean },
     size: { default: 'x-large', type: String },
     fontclass: { default: 'font-weight-medium', type: String }
   },
