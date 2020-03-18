@@ -1,6 +1,6 @@
 <template>
   <v-btn text :color="red" class="text-transform--initial body-2">
-    <v-icon class="mr-1">mdi-close-circle-outline</v-icon>{{ text }}
+    <v-icon class="mr-1 display-1">mdi-close-circle-outline</v-icon>{{ text }}
   </v-btn>
 </template>
 

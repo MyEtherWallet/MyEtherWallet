@@ -7,6 +7,9 @@
     light
     :class="$vuetify.theme.dark ? 'dark-theme' : 'light-theme'"
   >
+    <div class="overlay-back-button">
+      <BackButton text="Back" />
+    </div>
     <div class="overlay-close-button">
       <CloseButton :text="closeText" @click.native="close" />
     </div>
@@ -16,9 +19,10 @@
 
 <script>
 import CloseButton from '@/components/Buttons/CloseButton';
+import BackButton from '@/components/Buttons/BackButton';
 
 export default {
-  components: { CloseButton },
+  components: { CloseButton, BackButton },
   props: {
     closeText: { default: '', type: String },
     open: { default: false, type: Boolean },
@@ -54,5 +58,11 @@ export default {
   position: fixed;
   top: 50px;
   right: 70px;
+}
+
+.overlay-back-button {
+  position: fixed;
+  top: 50px;
+  left: 70px;
 }
 </style>
