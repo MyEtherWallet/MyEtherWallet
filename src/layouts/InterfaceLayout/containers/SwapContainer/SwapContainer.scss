@@ -86,6 +86,8 @@ $swap-custom-mobile-colleps-width: 700px;
         font-size: 30px;
         padding-top: 62px;
         text-align: center;
+        cursor: pointer;
+
         @media all and (max-width: $swap-custom-mobile-colleps-width) {
           padding: 0;
           margin: 10px auto -20px auto;
