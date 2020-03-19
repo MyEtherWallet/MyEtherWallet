@@ -10,14 +10,7 @@
   >
     <div>
       <div class="close-container">
-        <button
-          type="button"
-          aria-label="Close"
-          class="close pr-3 pt-2"
-          @click="closeModal()"
-        >
-          x
-        </button>
+        <img src="@/assets/images/icons/close.png" @click="closeModal()" />
       </div>
       <div class="modal-container">
         <div class="left-container">
