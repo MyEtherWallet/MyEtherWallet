@@ -10,6 +10,10 @@
   color: $blue-1 !important;
 }
 
+.theme--light .theme--light-text--white {
+  color: white !important;
+}
+
 // Style reset ======================================================
 * {
   font-family: "Roboto";
@@ -68,8 +72,6 @@ h5 {
 .theme--light.v-application {
   background: white !important;
 }
-
-// Remove uppercase style for all buttons
 
 .v-toolbar__content {
   padding: 0;

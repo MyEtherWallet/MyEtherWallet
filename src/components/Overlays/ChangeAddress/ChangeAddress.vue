@@ -43,10 +43,10 @@
         </v-tab-item>
         <v-tab-item>
           <div class="width--100-percent">
-            <h2 class="text-center mb-8">2. Connect with Ledger</h2>
+            <h2 class="text-center mb-8">2. Confirm network & address</h2>
             <WhiteSheet>
+              <AddressSelection />
               <div class="pa-8">
-                <AddressSelection />
                 <div class="text-center">
                   <StdButton fullwidth @click.native="activeTab = 0">
                     Access My Wallet
