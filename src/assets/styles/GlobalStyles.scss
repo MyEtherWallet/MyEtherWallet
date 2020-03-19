@@ -5,13 +5,25 @@
 }
 
 // Themes ===========================================================
-.theme--dark.v-sheet,
-.theme--dark.v-application {
+#app.theme--dark .v-sheet,
+#app.theme--dark .v-application {
   color: $blue-1 !important;
 }
 
-.theme--light .theme--light-text--white {
+#app.theme--light .theme--light-text--white {
   color: white !important;
+}
+
+#app.theme--light .theme--light-text--dark-space {
+  color: $dark-space !important;
+}
+
+#app.theme--dark .theme--dark-text--white {
+  color: white !important;
+}
+
+#app.theme--dark .theme--dark-text--blue {
+  color: $blue-1 !important;
 }
 
 // Style reset ======================================================
