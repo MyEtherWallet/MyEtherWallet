@@ -1,5 +1,8 @@
 <template>
-  <v-btn text color="black" class="text-transform--initial body-2">
+  <v-btn
+    text
+    class="text-transform--initial body-2 theme--light-text--dark-space dark-text-blue"
+  >
     <v-icon class="mr-1 display-1">mdi-arrow-left-circle-outline</v-icon
     >{{ text }}
   </v-btn>
@@ -15,3 +18,11 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/styles/GlobalVariables.scss';
+
+#app.theme--dark .dark-text-blue {
+  color: #7d92b7 !important;
+}
+</style>

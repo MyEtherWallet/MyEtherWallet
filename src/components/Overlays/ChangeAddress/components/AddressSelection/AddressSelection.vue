@@ -1,21 +1,23 @@
 <template>
   <div>
     <div class="pa-3">
-      <div
-        class="d-flex align-center theme--light-text--white border-radius--5px network-block pl-5 pr-2 py-1 mb-2"
+      <v-sheet
+        class="d-flex align-center theme--light-text--white border-radius--5px network-block pl-5 pr-2 py-1 mb-3"
       >
         <div class="font-weight-medium subtitle-1">Network</div>
         <div class="ml-auto d-flex align-center">
           <div>ETH - myetherapi.com</div>
           <v-btn icon class="ml-1">
-            <v-icon class="theme--light-text--white" size="20px"
+            <v-icon
+              class="theme--light-text--white theme--dark-text--blue"
+              size="20px"
               >mdi-pencil-outline</v-icon
             >
           </v-btn>
         </div>
-      </div>
-      <div
-        class="d-flex align-center theme--light-text--white border-radius--5px address-block pl-5 pr-2 py-1"
+      </v-sheet>
+      <v-sheet
+        class="d-flex align-center theme--light-text--white theme--dark-text--white border-radius--5px address-block pl-5 pr-2 py-1"
       >
         <div class="font-weight-medium subtitle-1">
           Address to interact with
@@ -27,7 +29,7 @@
             >
           </v-btn>
         </div>
-      </div>
+      </v-sheet>
     </div>
   </div>
 </template>

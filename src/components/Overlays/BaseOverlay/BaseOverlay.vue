@@ -4,8 +4,7 @@
     opacity="1"
     :value="open"
     z-index="100"
-    light
-    :class="$vuetify.theme.dark ? 'dark-theme' : 'light-theme'"
+    class="theme--light-text--dark-space theme--dark-text--blue"
   >
     <div class="overlay-back-button">
       <BackButton text="Back" />
@@ -41,14 +40,6 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/GlobalVariables.scss';
-
-.light-theme {
-  color: $dark-space !important;
-}
-
-.dark-theme {
-  color: $blue-1 !important;
-}
 
 .v-overlay {
   border-radius: 0;
