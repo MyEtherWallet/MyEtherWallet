@@ -30,10 +30,10 @@
         @sliding-end="onSlideEnd"
       >
         <b-carousel-slide>
-          <mew-wallet-ad />
+          <adex-ad />
         </b-carousel-slide>
         <b-carousel-slide>
-          <adex-ad />
+          <mew-wallet-ad />
         </b-carousel-slide>
         <b-carousel-slide>
           <buy-eth-ad />
