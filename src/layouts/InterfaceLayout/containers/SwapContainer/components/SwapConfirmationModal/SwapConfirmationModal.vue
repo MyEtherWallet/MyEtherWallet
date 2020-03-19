@@ -142,6 +142,7 @@ export default {
   },
   watch: {
     swapDetails(newValue) {
+      console.log(newValue);
       this.fromAddress = {
         value: newValue.sendValue || newValue.fromValue,
         name: newValue.fromCurrency,
@@ -319,6 +320,7 @@ export default {
           swapDetails.maybeToken &&
           swapDetails.fromCurrency !== BASE_CURRENCY
         ) {
+          console.log('or here???');
           const tokenInfo = EthereumTokens[swapDetails.fromCurrency];
           if (!tokenInfo) throw Error('Selected Token not known to MEW Swap');
           this.preparedSwap = {
@@ -341,6 +343,7 @@ export default {
           swapDetails.maybeToken &&
           swapDetails.fromCurrency === BASE_CURRENCY
         ) {
+          console.log('here???', swapDetails);
           this.preparedSwap = {
             from: this.account.address,
             to: swapDetails.providerAddress,
@@ -350,6 +353,7 @@ export default {
           swapDetails.maybeToken &&
           this.fiatCurrenciesArray.includes(swapDetails.toCurrency)
         ) {
+          console.log('or is it here???');
           this.preparedSwap = {
             from: this.wallet.getChecksumAddressString(),
             to: swapDetails.providerAddress,
@@ -357,6 +361,7 @@ export default {
           };
         }
       } else {
+        console.log('got to else???');
         this.preparedSwap = swapDetails.dataForInitialization.map(entry => {
           entry.from = this.account.address;
           if (

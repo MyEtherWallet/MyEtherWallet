@@ -209,14 +209,14 @@ export default class DexAg {
     //   swapDetails.additional.source
     // );
     // const finalRate = this.convertToTokenBase('ETH', finalRateWei);
-    console.log(swapDetails); // todo remove dev item
+    console.log(swapDetails, 'its this right?'); // todo remove dev item
     swapDetails.dataForInitialization = await this.sdk.getTrade({
       to: swapDetails.toCurrency,
       from: swapDetails.fromCurrency,
       toAmount: swapDetails.toValue,
-      dex: swapDetails.provider.provider
+      dex: swapDetails.provider
     });
-    console.log(swapDetails.dataForInitialization); // todo remove dev item
+    console.log(swapDetails, 'gets here'); // todo remove dev item
     // swapDetails.toValue = new BigNumber(finalRate).times(
     //   new BigNumber(swapDetails.fromValue).toFixed(18).toString()
     // );
@@ -225,7 +225,7 @@ export default class DexAg {
     //   swapDetails.toValue,
     //   swapDetails.fromValue
     // );
-    // swapDetails.providerReceives = swapDetails.fromValue;
+    swapDetails.providerReceives = swapDetails.fromValue;
     // swapDetails.providerSends = new BigNumber(finalRate).times(
     //   new BigNumber(swapDetails.fromValue)
     // );
@@ -239,7 +239,7 @@ export default class DexAg {
     return swapDetails;
   }
 
-  createTransaction(swapDetails){
+  createTransaction(swapDetails) {
     console.log(swapDetails); // todo remove dev item
   }
 

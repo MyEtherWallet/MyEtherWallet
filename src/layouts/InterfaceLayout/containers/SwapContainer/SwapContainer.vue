@@ -773,7 +773,7 @@ export default {
         );
         this.loadingData = false;
         const results = rawResults.reduce((agg, result) => {
-          console.log(result); // todo remove dev item
+          console.log(result, 'hello?'); // todo remove dev item
           if (Array.isArray(result)) {
             agg = [...agg, ...result];
           } else {
@@ -903,6 +903,7 @@ export default {
       }
     },
     openConfirmModal(swapDetails) {
+      console.log(swapDetails, 'WAAAAAAAAAT');
       if (swapDetails.dataForInitialization && swapDetails.maybeToken) {
         this.$refs.swapConfirmation.$refs.swapconfirmation.show();
       } else if (swapDetails.dataForInitialization && !swapDetails.maybeToken) {
