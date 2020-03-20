@@ -50,7 +50,7 @@ describe('HardwarePasswordModal.vue', () => {
     ).toBeGreaterThan(-1);
   });
 
-  describe('HardwarePasswordModal.vue Methods', () => {
+  xdescribe('HardwarePasswordModal.vue Methods', () => {
     it('should change password data when input triggers', () => {
       const inputElement = wrapper.find('.input-container input');
       const inputText = 'testpassword';
