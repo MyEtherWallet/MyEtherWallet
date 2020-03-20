@@ -28,8 +28,10 @@
                   :options="{
                     title: $t('swap.exit-to-fiat.iban-num'),
                     popover: $t('swap.exit-to-fiat.popover-iban-num'),
-                    value: ''
+                    value: '',
+                    validCheck: true
                   }"
+                  :valid-input="isValidIBAN"
                   @changedValue="orderDetails.iban = $event"
                 />
               </li>
@@ -81,7 +83,7 @@
                     :options="{
                       title: $t('swap.exit-to-fiat.billing-addr'),
                       placeHolder: $t(
-                        'swap.exit-to-fiat.to-fiat.addr-placeholder'
+                        'swap.exit-to-fiat.addr-placeholder'
                       ),
                       value: ''
                     }"

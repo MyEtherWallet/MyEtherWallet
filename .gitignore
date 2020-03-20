@@ -26,3 +26,7 @@ src/address-darklist/
 src/url-darklist/
 src/url-lightlist/
 src/_generated
+/src/partners/changelly/config/currencies.json
+/src/partners/partnersConfig/EthereumTokens.json
+/src/partners/partnersConfig/OtherCoins.json
+/src/partners/kyber/config/currenciesETH.json
