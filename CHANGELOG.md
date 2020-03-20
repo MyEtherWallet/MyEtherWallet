@@ -2,6 +2,10 @@
 
 - Fix button positions [#2125](https://github.com/MyEtherWallet/MyEtherWallet/pull/2125)
 
+### Devop
+
+- Update greenkeeper packages [#2131](https://github.com/MyEtherWallet/MyEtherWallet/pull/2131)
+
 ### Release v5.4.3
 
 ### Devop
