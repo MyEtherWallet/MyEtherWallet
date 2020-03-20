@@ -1,12 +1,21 @@
 {
   "mewconnect": {
-    "option-text": "Use MEWconnect to access my wallet",
+    "option-text": "Scan the QR code to access with MEWwallet or MEWconnect",
     "modal": {
-      "title": "Access by MEWconnect",
-      "text1": "Please use MEWconnect App to scan the QR code above",
-      "text2": "Don't have the App? Download now."
+      "title": "Mobile Access",
+      "text1": "Please use MEW wallet or MEWconnect App to scan the QR code above",
+      "text2": "Don't have the MEW wallet app? Download now."
     },
-    "warning": "MEWconnect is not compatible with iPads."
+    "protocol": "MEWconnect Protocol",
+    "warning": "MEW wallet and MEWconnect apps are not compatible with iPads."
+  },
+  "mobile-app": {
+    "option-title": "Mobile App",
+    "examples": "WalletConnect; <br> Wallet Link",
+    "modal": {
+      "title": "Mobile Access"
+    },
+    "mew-connect": "MEWconnect"
   },
   "finney": {
     "scan-info": "To connect, scan the QR code from {wallet} app on your {finney-bc}",
@@ -69,14 +78,14 @@
     }
   },
   "private-key": {
-    "string":  "Private Key",
+    "string": "Private Key",
     "modal": {
       "title": "Access by Private Key",
       "placeholder": "Enter Private Key"
     },
     "do-not-share": "Please {do-not} share your private key to anyone! You may lose your money if you share it"
   },
-  "network-addr":{
+  "network-addr": {
     "string": "Network and Address",
     "addr-to-interact": "Address to Interact With",
     "id": "ID",
@@ -109,8 +118,9 @@
   "network-and-address": "Network and Address",
   "please-type-in-mnemonic-phrase": "Please type in your mnemonic phrase.",
   "password": "Password",
-  "web3-wallet-desc": "Use a Web3 Wallet (MEW CX, MetaMask, Dapper)",
-  "web3-wallet": "Browser Extension",
+  "access-wallet-or": "or",
+  "web3-wallet-desc": "MetaMask; Dapper",
+  "web3-wallet": "MEW CX",
   "refresh": "Refresh",
   "unlock-web3-wallet": "Can't access wallet! Please unlock your wallet through the Browser Extension",
   "try-again": "Try Again",
@@ -119,5 +129,8 @@
   "wallet-options": "Check your transaction history, download a new keystore file, print a paper wallet, and more!",
   "xwallet-desc": "Use Pundi X Savings account by MEW to scan the QR code above",
   "xwallet-title": "Access by XWallet",
-  "get-it-now": "Get It Now"
+  "get-it-now": "Get It Now",
+  "or": "OR CONNECT WITH",
+  "wallet-connect": "WalletConnect",
+  "wallet-link": "Wallet Link"
 }

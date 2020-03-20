@@ -1,8 +1,7 @@
 <template>
   <div>
-    <decision-tree />
-    <cx-header v-if="isMewCx" />
-    <div v-if="!isMewCx" class="header">
+    <div class="floating-buttons-container">
+      <decision-tree />
       <router-link
         v-show="
           $route.fullPath === '/create-wallet' ||
@@ -12,6 +11,9 @@
       >
         <user-reminder-button />
       </router-link>
+    </div>
+    <cx-header v-if="isMewCx" />
+    <div v-if="!isMewCx" class="header">
       <mobile-menu
         :opensettings="openSettings"
         :logout="logout"

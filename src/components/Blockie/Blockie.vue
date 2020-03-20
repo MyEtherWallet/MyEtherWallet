@@ -52,7 +52,7 @@ export default {
   methods: {
     setBlockie() {
       const data = Blockies({
-        seed: this.address.toLowerCase(),
+        seed: this.address ? this.address.toLowerCase() : '',
         size: this.size,
         scale: this.scale
       }).toDataURL();
