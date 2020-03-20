@@ -54,6 +54,7 @@ import keepkey from '@/assets/images/icons/HardwareWallet/keepkey.svg';
 import finney from '@/assets/images/icons/button-finney-hover.png';
 import xwallet from '@/assets/images/icons/HardwareWallet/xwallet.svg';
 import coolwallet from '@/assets/images/icons/HardwareWallet/coolwallet.svg';
+import bcvault from '@/assets/images/icons/HardwareWallet/bcvault.svg';
 import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
@@ -65,7 +66,8 @@ import {
   TrezorWallet,
   BitBoxWallet,
   SecalotWallet,
-  CoolWallet
+  CoolWallet,
+  BCVaultWallet
 } from '@/wallets';
 import {
   LEDGER as LEDGER_TYPE,
@@ -75,7 +77,8 @@ import {
   KEEPKEY as KEEPKEY_TYPE,
   XWALLET as XWALLET_TYPE,
   FINNEY as FINNEY_TYPE,
-  COOLWALLET as COOLWALLET_TYPE
+  COOLWALLET as COOLWALLET_TYPE,
+  BCVAULT as BCVAULT_TYPE
 } from '@/wallets/bip44/walletTypes';
 export default {
   components: {
@@ -85,23 +88,27 @@ export default {
   props: {
     networkAndAddressOpen: {
       type: Function,
-      default: function() {}
+      default: () => {}
     },
     hardwareWalletOpen: {
       type: Function,
-      default: function() {}
+      default: () => {}
     },
     ledgerAppOpen: {
       type: Function,
-      default: function() {}
+      default: () => {}
     },
     openFinney: {
       type: Function,
-      default: function() {}
+      default: () => {}
     },
     openXwallet: {
       type: Function,
-      default: function() {}
+      default: () => {}
+    },
+    openBcVault: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
@@ -181,6 +188,14 @@ export default {
           msg: '',
           link:
             'https://coolwallet.io/product/coolwallet/?ref=myetherwalletmyetherwallet'
+        },
+        {
+          name: BCVAULT_TYPE,
+          imgPath: bcvault,
+          text: 'BC Vault',
+          disabled: false,
+          msg: '',
+          link: 'https://bc-vault.com/?wpam_id=53'
         }
       ]
     };
@@ -306,14 +321,27 @@ export default {
             });
           }
           break;
+        case BCVAULT_TYPE:
+          // eslint-disable-next-line
+          const bcvaultInstance = BCVaultWallet();
+          bcvaultInstance
+            .init()
+            .then(res => {
+              if (res.length >= 1) {
+                this.openBcVault(res, bcvaultInstance);
+              }
+            })
+            .catch(e => {
+              BCVaultWallet.errorHandler(e);
+            });
+          break;
         default:
           Toast.responseHandler(
-            new Error('No switch address for given account.'),
+            new Error('Something went wrong!'),
             Toast.ERROR
           );
           break;
       }
-      this.$refs.hardware.hide();
     },
     updateSelected(ref) {
       if (this.selected !== ref) {
