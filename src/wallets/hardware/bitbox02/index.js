@@ -44,7 +44,7 @@ class BitBox02Wallet {
         this.attestation = attestationResult;
       },
       () => {
-        this.logout('clearWallet');
+        this.logout('main/clearWallet');
       },
       status => {
         this.status = status;
