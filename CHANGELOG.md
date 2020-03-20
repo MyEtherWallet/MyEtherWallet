@@ -1,3 +1,7 @@
+### Devop
+
+- Update BitBox Logo [#2120](https://github.com/MyEtherWallet/MyEtherWallet/pull/2120)
+
 ### Release v5.4.3
 
 ### Devop
