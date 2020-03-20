@@ -160,6 +160,9 @@
     "node": ">= 8.0.0 < 12.0.0",
     "npm": ">= 6.0.0"
   },
+  "gitHooks": {
+    "pre-commit": "npm run lint && npm run test"
+  },
   "greenkeeper": {
     "ignore": [
       "@myetherwallet/mewconnect-web-client",
