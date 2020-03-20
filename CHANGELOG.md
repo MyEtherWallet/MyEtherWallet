@@ -1,3 +1,7 @@
+### Feature
+
+- WalletConnect & WalletLink Support [#1924](https://github.com/MyEtherWallet/MyEtherWallet/pull/1924)
+
 ### Bug
 
 - Fix button positions [#2125](https://github.com/MyEtherWallet/MyEtherWallet/pull/2125)

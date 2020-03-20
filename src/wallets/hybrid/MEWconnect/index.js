@@ -1,7 +1,6 @@
 import MEWconnect from '@myetherwallet/mewconnect-web-client';
 import store from '@/store';
 import { Transaction } from 'ethereumjs-tx';
-import WalletInterface from '@/wallets/WalletInterface';
 import { MEW_CONNECT as mewConnectType } from '../../bip44/walletTypes';
 import {
   getSignTransactionObject,
@@ -13,31 +12,11 @@ import { hashPersonalMessage } from 'ethereumjs-util';
 import errorHandler from './errorHandler';
 import commonGenerator from '@/helpers/commonGenerator';
 import { Misc } from '@/helpers';
+import HybridWalletInterface from '../walletInterface';
 
 const V1_SIGNAL_URL = 'https://connect.mewapi.io';
 const V2_SIGNAL_URL = 'wss://connect2.mewapi.io/staging';
 const IS_HARDWARE = true;
-
-// TODO: add listener and ui notification on RtcConnectedEvent and RtcClosedEvent
-class MEWconnectWalletInterface extends WalletInterface {
-  constructor(pubkey, isHardware, identifier, txSigner, msgSigner, mewConnect) {
-    super(pubkey, true, identifier);
-    this.errorHandler = errorHandler;
-    this.txSigner = txSigner;
-    this.msgSigner = msgSigner;
-    this.isHardware = isHardware;
-    this.mewConnect = mewConnect;
-  }
-  getConnection() {
-    return this.mewConnect;
-  }
-  signTransaction(txParams) {
-    return super.signTransaction(txParams, this.txSigner);
-  }
-  signMessage(msg) {
-    return super.signMessage(msg, this.msgSigner);
-  }
-}
 
 class MEWconnectWallet {
   constructor() {
@@ -47,6 +26,9 @@ class MEWconnectWallet {
       v1Url: V1_SIGNAL_URL,
       v2Url: V2_SIGNAL_URL
     });
+    this.mewConnect.disconnect = () => {
+      this.mewConnect.disconnectRTC();
+    };
   }
   async init(qrcode) {
     this.mewConnect.on('codeDisplay', qrcode);
@@ -100,18 +82,16 @@ class MEWconnectWallet {
       });
     };
 
-    const mewConnect = () => {
-      return this.mewConnect;
-    };
     const address = await signalerConnect(V1_SIGNAL_URL, this.mewConnect);
 
-    return new MEWconnectWalletInterface(
+    return new HybridWalletInterface(
       sanitizeHex(address),
       this.isHardware,
       this.identifier,
       txSigner,
       msgSigner,
-      mewConnect // <- using this.mewConnect here was causing a circular reference and data clone error
+      this.mewConnect,
+      errorHandler
     );
   }
 }
@@ -125,6 +105,12 @@ const signalerConnect = (url, mewConnect) => {
   return new Promise(resolve => {
     mewConnect.initiatorStart(url);
     mewConnect.on('RtcConnectedEvent', () => {
+      mewConnect.on('RtcClosedEvent', () => {
+        if (mewConnect.getConnectonState()) {
+          store._vm.$eventHub.$emit('mewConnectDisconnected');
+          store.dispatch('main/clearWallet');
+        }
+      });
       mewConnect.sendRtcMessage('address', '');
       mewConnect.once('address', data => {
         resolve(data.address);
