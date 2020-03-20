@@ -1,5 +1,6 @@
 ### Devop
 
+- Update BitBox Logo [#2120](https://github.com/MyEtherWallet/MyEtherWallet/pull/2120)
 - Update greenkeeper packages [#2131](https://github.com/MyEtherWallet/MyEtherWallet/pull/2131)
 
 ### Release v5.4.3
