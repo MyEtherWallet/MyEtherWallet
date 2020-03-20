@@ -2,6 +2,20 @@
 
 - Cool Wallet integration [#2087](https://github.com/MyEtherWallet/MyEtherWallet/pull/2087)
 
+### Release v5.4.3
+
+### Devop
+
+- Update greenkeeper packages [#2106](https://github.com/MyEtherWallet/MyEtherWallet/pull/2106)
+
+### Feature
+
+- Add warning for high gwei price [#2113](https://github.com/MyEtherWallet/MyEtherWallet/pull/2113)
+
+### Bugs
+
+- MEW Wallet modal ui changes [#2112] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2112)
+
 ### Release v5.4.2-hotfix.1
 
 ### Bugs
