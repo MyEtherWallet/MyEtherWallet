@@ -50,6 +50,8 @@
 </template>
 
 <script>
+import cwsTransportLib from '@coolwallets/transport-web-ble';
+
 export default {
   props: {
     walletConstructor: {
@@ -78,12 +80,31 @@ export default {
       this.password == '';
       this.$refs.passwordInput.focus();
     },
-    unlockWallet() {
-      this.walletConstructor('', this.password)
-        .then(_newWallet => {
-          this.$emit('hardwareWalletOpen', _newWallet);
-        })
-        .catch(this.walletConstructor.errorHandler);
+    async unlockWallet() {
+      if (this.hardwareBrand === 'CoolWallet') {
+        await cwsTransportLib.listen(async (error, device) => {
+          if (device) {
+            const transport = await cwsTransportLib.connect(device);
+            this.walletConstructor(transport, this.password.toString())
+              .then(_newWallet => {
+                if (_newWallet) {
+                  this.$emit('hardwareWalletOpen', _newWallet);
+                } else {
+                  this.walletConstructor.errorHandler({
+                    name: 'NoWalletInstance'
+                  });
+                }
+              })
+              .catch(this.walletConstructor.errorHandler);
+          }
+        });
+      } else {
+        this.walletConstructor('', this.password)
+          .then(_newWallet => {
+            this.$emit('hardwareWalletOpen', _newWallet);
+          })
+          .catch(this.walletConstructor.errorHandler);
+      }
     },
     switchViewPassword() {
       this.show = !this.show;
