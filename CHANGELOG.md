@@ -1,3 +1,7 @@
+### Feature
+
+- Add BitBox 2 support [#1957](https://github.com/MyEtherWallet/MyEtherWallet/pull/1957)
+
 ### Release v5.4.3
 
 ### Devop
