@@ -331,9 +331,6 @@ export default {
     },
 
     hardwareWalletOpen(wallet) {
-      // if (this.$refs.mnemonicPhrasePassword.$refs.password.visible) {
-      //   this.$refs.mnemonicPhrasePassword.$refs.password.hide();
-      // }
       try {
         this.hardwareWallet = wallet;
         this.networkAndAddressOpen();
