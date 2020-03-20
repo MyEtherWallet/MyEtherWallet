@@ -2,6 +2,10 @@
 
 - Cool Wallet integration [#2087](https://github.com/MyEtherWallet/MyEtherWallet/pull/2087)
 
+### Devop
+
+- Update greenkeeper packages [#2131](https://github.com/MyEtherWallet/MyEtherWallet/pull/2131)
+
 ### Release v5.4.3
 
 ### Devop

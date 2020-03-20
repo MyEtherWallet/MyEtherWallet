@@ -274,12 +274,12 @@ export default {
           break;
         case COOLWALLET_TYPE:
           // eslint-disable-next-line
-          const hasStoredPw = store.get('cwPass') || null;
-          if (hasStoredPw) {
+          const isRegistered = store.get('appId') || null;
+          if (isRegistered) {
             cwsTransportLib.listen(async (error, device) => {
               if (device) {
                 const transport = await cwsTransportLib.connect(device);
-                CoolWallet(transport, hasStoredPw)
+                CoolWallet(transport, null)
                   .then(_newWallet => {
                     if (_newWallet) {
                       this.$emit('hardwareWalletOpen', _newWallet);
