@@ -8,7 +8,11 @@ import {
 } from './hardware';
 import WalletInterface from './WalletInterface';
 import { MnemonicWallet } from './software';
-import { MewConnectWallet } from './hybrid';
+import {
+  MewConnectWallet,
+  WalletConnectWallet,
+  WalletLinkWallet
+} from './hybrid';
 
 export {
   LedgerWallet,
@@ -18,6 +22,8 @@ export {
   KeepkeyWallet,
   CoolWallet,
   MewConnectWallet,
+  WalletConnectWallet,
+  WalletLinkWallet,
   WalletInterface,
   MnemonicWallet
 };

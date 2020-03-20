@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="mewConnect"
-    :title="$t('accessWallet.mewconnect.modal.title')"
+    :title="$t('accessWallet.mobile-app.modal.title')"
     hide-footer
     class="bootstrap-modal nopadding modal-mew-connect"
     centered
@@ -10,13 +10,16 @@
   >
     <div class="modal-container">
       <ipad-modal ref="ipadModal" />
-      <div class="modal-icon">
-        <qrcode :value="QrCode" :options="{ size: 200 }" />
-      </div>
-      <div class="d-block content-container text-center">
-        <h3 class="modal-large-text">
-          {{ $t('accessWallet.mewconnect.modal.text1') }}
+      <div class="text-center modal-title-block">
+        <h3>
+          {{ $t('accessWallet.mewconnect.protocol') }}
         </h3>
+        <div>
+          {{ $t('accessWallet.mewconnect.option-text') }}
+        </div>
+      </div>
+      <div class="qr-code-img">
+        <qrcode :value="QrCode" :options="{ size: 150 }" />
       </div>
       <div class="appstore-button-container">
         <div class="links-container">
@@ -66,14 +69,28 @@
           {{ $t('accessWallet.mewconnect.modal.text2') }}
         </p>
       </div>
-      <customer-support />
+
+      <div class="seperation-bar">
+        <div class="bar" />
+        <div class="text">{{ $t('accessWallet.or') }}</div>
+      </div>
+
+      <div class="buttons">
+        <div @click="openWalletConnect">
+          <img src="@/assets/images/icons/WalletConnect.svg" />
+          {{ $t('accessWallet.wallet-connect') }}
+        </div>
+        <div @click="openWalletLink">
+          <img src="@/assets/images/icons/WalletLink.svg" />
+          {{ $t('accessWallet.wallet-link') }}
+        </div>
+      </div>
     </div>
     <!-- .modal-container -->
   </b-modal>
 </template>
 
 <script>
-import CustomerSupport from '@/components/CustomerSupport';
 import { MewConnectWallet } from '@/wallets';
 import { mapState, mapActions } from 'vuex';
 import { Toast } from '@/helpers';
@@ -82,8 +99,17 @@ import IpadModal from '@/components/IpadModal';
 
 export default {
   components: {
-    'customer-support': CustomerSupport,
     'ipad-modal': IpadModal
+  },
+  props: {
+    openWalletConnect: {
+      type: Function,
+      default: () => {}
+    },
+    openWalletLink: {
+      type: Function,
+      default: () => {}
+    }
   },
   data() {
     return {

@@ -1,9 +1,15 @@
 ### Feature
 
 - Cool Wallet integration [#2087](https://github.com/MyEtherWallet/MyEtherWallet/pull/2087)
+- WalletConnect & WalletLink Support [#1924](https://github.com/MyEtherWallet/MyEtherWallet/pull/1924)
+
+### Bug
+
+- Fix button positions [#2125](https://github.com/MyEtherWallet/MyEtherWallet/pull/2125)
 
 ### Devop
 
+- Update BitBox Logo [#2120](https://github.com/MyEtherWallet/MyEtherWallet/pull/2120)
 - Update greenkeeper packages [#2131](https://github.com/MyEtherWallet/MyEtherWallet/pull/2131)
 
 ### Release v5.4.3

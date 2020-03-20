@@ -8,6 +8,8 @@
     <mew-connect-modal
       ref="mewconnectModal"
       :network-and-address-open="networkAndAddressOpen"
+      :open-wallet-connect="openWalletConnect"
+      :open-wallet-link="openWalletLink"
     />
 
     <hardware-modal
@@ -79,7 +81,7 @@
             :img="button.img"
             :img-disabled="button.imgDisabled"
             :title="$t(button.title)"
-            :desc="$t(button.desc)"
+            :desc="button.desc"
             :recommend="$t(button.recommend)"
             :tooltip="$t(button.tooltip)"
             :disabled="button.disabled"
@@ -109,6 +111,7 @@ import WalletPasswordModal from '@/components/WalletPasswordModal';
 import EnterPinNumberModal from '@/components/EnterPinNumberModal';
 import XwalletModal from '../../components/XwalletModal';
 
+// import mobileApp from '@/assets/images/icons/button-cellphone.svg';
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
 import hardwareImg from '@/assets/images/icons/button-hardware.svg';
 import mewCxImg from '@/assets/images/icons/button-mew-cx.png';
@@ -119,10 +122,11 @@ import hardwareImgDisabled from '@/assets/images/icons/button-hardware-disabled.
 import mewCxImgDisabled from '@/assets/images/icons/button-mew-cx-disabled.png';
 import softwareImgDisabled from '@/assets/images/icons/button-software-disabled.svg';
 
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { Toast } from '@/helpers';
 
 import DetectRTC from 'detectrtc';
+import { WalletConnectWallet, WalletLinkWallet } from '@/wallets';
 
 export default {
   components: {
@@ -153,8 +157,9 @@ export default {
       buttons: [
         {
           func: this.mewConnectModalOpen,
-          title: 'common.mewconnect.string',
-          desc: 'accessWallet.mewconnect.option-text',
+          title: 'accessWallet.mobile-app.mew-connect',
+          desc: 'accessWallet.mobile-app.examples',
+          showsOtherExamples: true,
           recommend: '',
           tooltip: '',
           img: mewConnectImg,
@@ -215,6 +220,35 @@ export default {
     });
   },
   methods: {
+    ...mapActions('main', ['decryptWallet']),
+    openWalletConnect() {
+      this.$refs.mewconnectModal.$refs.mewConnect.hide();
+      WalletConnectWallet()
+        .then(_newWallet => {
+          this.decryptWallet([_newWallet]).then(() => {
+            this.$router.push({
+              path: 'interface'
+            });
+          });
+        })
+        .catch(e => {
+          WalletConnectWallet.errorHandler(e);
+        });
+    },
+    openWalletLink() {
+      this.$refs.mewconnectModal.$refs.mewConnect.hide();
+      WalletLinkWallet()
+        .then(_newWallet => {
+          this.decryptWallet([_newWallet]).then(() => {
+            this.$router.push({
+              path: 'interface'
+            });
+          });
+        })
+        .catch(e => {
+          WalletLinkWallet.errorHandler(e);
+        });
+    },
     checkIsMetamask() {
       this.isMetaMask = window.ethereum && window.ethereum.isMetaMask;
     },

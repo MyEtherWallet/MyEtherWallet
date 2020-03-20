@@ -10,9 +10,9 @@
   >
     <div class="modal-content-container">
       <div class="d-block text-center">
-        <b-alert :show="mayNotBeAttached" fade variant="warning">{{
-          $t('accessWallet.hardware.warning.not-connected')
-        }}</b-alert>
+        <b-alert :show="mayNotBeAttached" fade variant="warning">
+          {{ $t('accessWallet.hardware.warning.not-connected') }}
+        </b-alert>
         <div class="button-options hardware-button-options">
           <wallet-option
             v-for="(item, idx) in items"
@@ -74,6 +74,7 @@ import {
   SECALOT as SECALOT_TYPE,
   KEEPKEY as KEEPKEY_TYPE,
   XWALLET as XWALLET_TYPE,
+  FINNEY as FINNEY_TYPE,
   COOLWALLET as COOLWALLET_TYPE
 } from '@/wallets/bip44/walletTypes';
 export default {
@@ -118,7 +119,7 @@ export default {
           link: 'https://www.ledger.com?r=fa4b'
         },
         {
-          name: 'finney',
+          name: FINNEY_TYPE,
           imgPath: finney,
           text: 'FINNEY',
           disabled: false,
@@ -264,7 +265,7 @@ export default {
               KeepkeyWallet.errorHandler(e);
             });
           break;
-        case 'finney':
+        case FINNEY_TYPE:
           this.openFinney();
           this.$refs.hardware.hide();
           break;
