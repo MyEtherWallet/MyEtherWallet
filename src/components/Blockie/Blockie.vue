@@ -51,14 +51,16 @@ export default {
   },
   methods: {
     setBlockie() {
-      const data = Blockies({
-        seed: this.address.toLowerCase(),
-        size: this.size,
-        scale: this.scale
-      }).toDataURL();
-      this.$refs.identicon.style.width = this.width;
-      this.$refs.identicon.style.height = this.height;
-      this.$refs.identicon.style.backgroundImage = `url('${data}')`;
+      if(this.address){
+        const data = Blockies({
+          seed: this.address.toLowerCase(),
+          size: this.size,
+          scale: this.scale
+        }).toDataURL();
+        this.$refs.identicon.style.width = this.width;
+        this.$refs.identicon.style.height = this.height;
+        this.$refs.identicon.style.backgroundImage = `url('${data}')`;
+      }
     }
   }
 };
