@@ -49,57 +49,65 @@ class BCVault {
     const path = null;
     const publickey = address;
     const txSigner = async tx => {
-      delete tx['from'];
-      tx['from'] = address;
-      tx = new Transaction(tx, {
-        common: commonGenerator(store.state.main.network)
-      });
-      const newTx = {};
-      newTx['feeCount'] = new BigNumber(bufferToHex(tx['gasLimit'])).toNumber();
-      newTx['feePrice'] = new BigNumber(bufferToHex(tx['gasPrice'])).toString();
-      newTx['amount'] = new BigNumber(bufferToHex(tx['value'])).toNumber() || 0;
-      newTx['contractData'] = bufferToHex(tx['data']);
-      newTx['to'] = bufferToHex(tx['to']);
-      newTx['from'] = this.selectedAddress;
-      if (tx.hasOwnProperty('nonce')) {
-        newTx['advanced'] = {
-          eth: {
-            nonce:
-              bufferToHex(tx['nonce']) === '0x'
-                ? 0
-                : new BigNumber(bufferToHex(tx['nonce'])).toNumber()
-          }
-        };
-      }
-      const networkId = tx.getChainId();
-      const result = await this.bcWallet
-        .GenerateTransaction(
-          this.deviceNumber[0],
-          this.bcWalletType,
-          newTx,
-          false
-        )
-        .catch(errorHandler);
-      if (result) {
-        const resultTx = new Transaction(result);
-        tx.v = getBufferFromHex(sanitizeHex(resultTx.v.toString('hex')));
-        tx.r = getBufferFromHex(sanitizeHex(resultTx.r.toString('hex')));
-        tx.s = getBufferFromHex(sanitizeHex(resultTx.s.toString('hex')));
-        const signedChainId = calculateChainIdFromV(tx.v);
-        if (signedChainId !== networkId)
-          Toast.responseHandler(
-            new Error(
+      if (store.state.main.network.type.chainID === 1) {
+        delete tx['from'];
+        tx['from'] = address;
+        tx = new Transaction(tx, {
+          common: commonGenerator(store.state.main.network)
+        });
+        const newTx = {};
+        newTx['feeCount'] = new BigNumber(
+          bufferToHex(tx['gasLimit'])
+        ).toNumber();
+        newTx['feePrice'] = new BigNumber(
+          bufferToHex(tx['gasPrice'])
+        ).toString();
+        newTx['amount'] =
+          new BigNumber(bufferToHex(tx['value'])).toNumber() || 0;
+        newTx['contractData'] = bufferToHex(tx['data']);
+        newTx['to'] = bufferToHex(tx['to']);
+        newTx['from'] = this.selectedAddress;
+        if (tx.hasOwnProperty('nonce')) {
+          newTx['advanced'] = {
+            eth: {
+              nonce:
+                bufferToHex(tx['nonce']) === '0x'
+                  ? 0
+                  : new BigNumber(bufferToHex(tx['nonce'])).toNumber()
+            }
+          };
+        }
+        const networkId = tx.getChainId();
+        const result = await this.bcWallet
+          .GenerateTransaction(
+            this.deviceNumber[0],
+            this.bcWalletType,
+            newTx,
+            false
+          )
+          .catch(errorHandler);
+        if (result) {
+          const resultTx = new Transaction(result);
+          tx.v = getBufferFromHex(sanitizeHex(resultTx.v.toString('hex')));
+          tx.r = getBufferFromHex(sanitizeHex(resultTx.r.toString('hex')));
+          tx.s = getBufferFromHex(sanitizeHex(resultTx.s.toString('hex')));
+          const signedChainId = calculateChainIdFromV(tx.v);
+          if (signedChainId !== networkId)
+            throw new Error(
               'Invalid networkId signature returned. Expected: ' +
                 networkId +
                 ', Got: ' +
                 signedChainId,
               'InvalidNetworkId'
-            ),
-            false
-          );
-        return getSignTransactionObject(tx);
+            );
+          return getSignTransactionObject(tx);
+        }
+
+        return result;
       }
-      return result;
+      errorHandler({
+        jsError: 'mew2'
+      });
     };
     const msgSigner = async msg => {
       const result = await this.bcWallet
