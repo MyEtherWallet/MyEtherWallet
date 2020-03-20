@@ -89,7 +89,7 @@
   }
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))
 
-.modal-icon {
+.qr-code-img {
   display: flex;
   justify-content: center;
 }
@@ -104,4 +104,55 @@
 
 .download-now {
   margin-top: 20px;
+}
+
+.modal-title-block {
+  margin-bottom: 30px;
+
+  h3 {
+    font-size: 25px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+}
+
+.seperation-bar {
+  position: relative;
+  text-align: center;
+  .bar {
+    top: 9px;
+    z-index: 0;
+    position: absolute;
+    border-bottom: 1px solid $mew-green;
+    width: 100%;
+  }
+  .text {
+    padding: 0 20px;
+    z-index: 1;
+    position: relative;
+    background-color: white;
+    display: inline-block;
+    color: $mew-green;
+  }
+}
+
+.buttons {
+  display: flex;
+  margin: 0 -8px;
+  margin-top: 30px;
+  user-select: none;
+
+  > div {
+    img {
+      margin-right: 5px;
+    }
+
+    cursor: pointer;
+    margin: 0 8px;
+    flex: 1;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-weight: 600;
+  }
 }
