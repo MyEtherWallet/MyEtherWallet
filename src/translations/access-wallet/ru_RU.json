@@ -1,12 +1,21 @@
 {
   "mewconnect": {
-    "option-text": "Использовать MEWconnect для получения доступа к моему кошельку",
+    "option-text": "Scan the QR code to access with MEWwallet or MEWconnect",
     "modal": {
-      "title": "Доступ с помощью MEWconnect",
+      "title": "Mobile Access",
       "text1": "Используйте приложение MEW wallet или MEWconnect для сканирования указанного выше QR-кода",
       "text2": "Нет приложения MEW wallet? Загрузите сейчас."
     },
+    "protocol": "MEWconnect Protocol",
     "warning": "MEW wallet и MEWconnect несовместимы с iPads."
+  },
+  "mobile-app": {
+    "option-title": "Mobile App",
+    "examples": "WalletConnect; <br> Wallet Link",
+    "modal": {
+      "title": "Mobile Access"
+    },
+    "mew-connect": "MEWconnect"
   },
   "finney": {
     "scan-info": "Чтобы подключиться, отсканируйте QR-код из приложения {wallet} на вашем {finney-bc}",
@@ -120,5 +129,8 @@
   "wallet-options": "Проверьте историю транзакций, скачайте новый файл-хранилищe ключa, распечатайте бумажный кошелек и многое другое!",
   "xwallet-desc": "Используйте аккаунт Pundi X Savings от MEW для сканирования QR-кода сверху",
   "xwallet-title": "Доступ через XWallet",
-  "get-it-now": "Загрузить сейчас"
+  "get-it-now": "Загрузить сейчас",
+  "or": "OR CONNECT WITH",
+  "wallet-connect": "WalletConnect",
+  "wallet-link": "Wallet Link"
 }
