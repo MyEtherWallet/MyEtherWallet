@@ -1,5 +1,6 @@
 ### Feature
 
+- Cool Wallet integration [#2087](https://github.com/MyEtherWallet/MyEtherWallet/pull/2087)
 - WalletConnect & WalletLink Support [#1924](https://github.com/MyEtherWallet/MyEtherWallet/pull/1924)
 
 ### Bug
