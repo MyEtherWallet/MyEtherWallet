@@ -2,8 +2,39 @@
 
 - CX updated ui and some optimization [#1864](https://github.com/MyEtherWallet/MyEtherWallet/pull/1864)
 
+### Bug
 
-### Releaase v5.4.2
+- Fix button positions [#2125](https://github.com/MyEtherWallet/MyEtherWallet/pull/2125)
+
+### Devop
+
+- Update BitBox Logo [#2120](https://github.com/MyEtherWallet/MyEtherWallet/pull/2120)
+- Update greenkeeper packages [#2131](https://github.com/MyEtherWallet/MyEtherWallet/pull/2131)
+
+### Release v5.4.3
+
+### Devop
+
+- Update greenkeeper packages [#2106](https://github.com/MyEtherWallet/MyEtherWallet/pull/2106)
+
+### Feature
+
+- Add warning for high gwei price [#2113](https://github.com/MyEtherWallet/MyEtherWallet/pull/2113)
+
+### Bugs
+
+- MEW Wallet modal ui changes [#2112] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2112)
+
+### Release v5.4.2-hotfix.1
+
+### Bugs
+
+- Fix russian translations [#2105](https://github.com/MyEtherWallet/MyEtherWallet/pull/2105)
+
+### Release v5.4.2
+
+### Feature
+- MEW Wallet UI changes [#2048](https://github.com/MyEtherWallet/MyEtherWallet/pull/2048)
 
 ### Bugs
 

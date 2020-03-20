@@ -8,6 +8,8 @@
     <mew-connect-modal
       ref="mewconnectModal"
       :network-and-address-open="networkAndAddressOpen"
+      :open-wallet-connect="openWalletConnect"
+      :open-wallet-link="openWalletLink"
     />
 
     <hardware-modal
@@ -79,11 +81,12 @@
             :img="button.img"
             :img-disabled="button.imgDisabled"
             :title="$t(button.title)"
-            :desc="$t(button.desc)"
+            :desc="button.desc"
             :recommend="$t(button.recommend)"
             :tooltip="$t(button.tooltip)"
             :disabled="button.disabled"
             :classname="button.classname"
+            :has-other-examples="button.showsOtherExamples"
           />
         </div>
       </div>
@@ -108,20 +111,22 @@ import WalletPasswordModal from '@/components/WalletPasswordModal';
 import EnterPinNumberModal from '@/components/EnterPinNumberModal';
 import XwalletModal from '../../components/XwalletModal';
 
+// import mobileApp from '@/assets/images/icons/button-cellphone.svg';
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
 import hardwareImg from '@/assets/images/icons/button-hardware.svg';
-import web3Img from '@/assets/images/icons/button-web3.svg';
+import mewCxImg from '@/assets/images/icons/button-mew-cx.png';
 import softwareImg from '@/assets/images/icons/button-software.svg';
 
 import mewConnectImgDisabled from '@/assets/images/icons/button-mewconnect-disabled.svg';
 import hardwareImgDisabled from '@/assets/images/icons/button-hardware-disabled.svg';
-import web3ImgDisabled from '@/assets/images/icons/button-web3-disabled.svg';
+import mewCxImgDisabled from '@/assets/images/icons/button-mew-cx-disabled.png';
 import softwareImgDisabled from '@/assets/images/icons/button-software-disabled.svg';
 
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { Toast } from '@/helpers';
 
 import DetectRTC from 'detectrtc';
+import { WalletConnectWallet, WalletLinkWallet } from '@/wallets';
 
 export default {
   components: {
@@ -152,8 +157,9 @@ export default {
       buttons: [
         {
           func: this.mewConnectModalOpen,
-          title: 'common.mewconnect.string',
-          desc: 'accessWallet.mewconnect.option-text',
+          title: 'accessWallet.mobile-app.mew-connect',
+          desc: 'accessWallet.mobile-app.examples',
+          showsOtherExamples: true,
           recommend: '',
           tooltip: '',
           img: mewConnectImg,
@@ -176,10 +182,11 @@ export default {
           func: this.web3WalletModal,
           title: 'accessWallet.web3-wallet',
           desc: 'accessWallet.web3-wallet-desc',
+          showsOtherExamples: true,
           recommend: '',
           tooltip: '',
-          img: web3Img,
-          imgDisabled: web3ImgDisabled,
+          img: mewCxImg,
+          imgDisabled: mewCxImgDisabled,
           disabled: false,
           classname: 'button-metamask'
         },
@@ -213,6 +220,35 @@ export default {
     });
   },
   methods: {
+    ...mapActions('main', ['decryptWallet']),
+    openWalletConnect() {
+      this.$refs.mewconnectModal.$refs.mewConnect.hide();
+      WalletConnectWallet()
+        .then(_newWallet => {
+          this.decryptWallet([_newWallet]).then(() => {
+            this.$router.push({
+              path: 'interface'
+            });
+          });
+        })
+        .catch(e => {
+          WalletConnectWallet.errorHandler(e);
+        });
+    },
+    openWalletLink() {
+      this.$refs.mewconnectModal.$refs.mewConnect.hide();
+      WalletLinkWallet()
+        .then(_newWallet => {
+          this.decryptWallet([_newWallet]).then(() => {
+            this.$router.push({
+              path: 'interface'
+            });
+          });
+        })
+        .catch(e => {
+          WalletLinkWallet.errorHandler(e);
+        });
+    },
     checkIsMetamask() {
       this.isMetaMask = window.ethereum && window.ethereum.isMetaMask;
     },
