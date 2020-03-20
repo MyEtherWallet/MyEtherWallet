@@ -67,32 +67,32 @@ export default {
       desserts: [
         {
           address: '0x22bF0622d4....e3C4',
-          balance: '159.32 ETH',
+          balance: '1.32 ETH',
           tokens: '12'
         },
         {
           address: '0x3dbF0622d4....e3C4',
-          balance: '159.32 ETH',
+          balance: '1.11 ETH',
           tokens: '12'
         },
         {
           address: '0x65230622d4....e3C4',
-          balance: '159.32 ETH',
+          balance: '45.4 ETH',
           tokens: '12'
         },
         {
           address: '0x7abF0622d4....e3C4',
-          balance: '159.32 ETH',
+          balance: '5 ETH',
           tokens: '12'
         },
         {
           address: '0x76320622d4....e3C4',
-          balance: '159.32 ETH',
-          tokens: '12'
+          balance: '0 ETH',
+          tokens: '3'
         },
         {
           address: '0x13h70622d4....e3C4',
-          balance: '159.32 ETH',
+          balance: '0 ETH',
           tokens: '12'
         },
         {
@@ -107,33 +107,33 @@ export default {
         },
         {
           address: '0xyyh0622d4....e3C4',
-          balance: '159.32 ETH',
-          tokens: '12'
+          balance: '34.32 ETH',
+          tokens: '1'
         },
         {
           address: '0x78340622d4....e3C4',
-          balance: '159.32 ETH',
-          tokens: '12'
+          balance: '1.32 ETH',
+          tokens: '0'
         },
         {
           address: '0x345740622d4....e3C4',
-          balance: '159.32 ETH',
-          tokens: '12'
+          balance: '1.32 ETH',
+          tokens: '0'
         },
         {
           address: '0x34690622d4....e3C4',
-          balance: '159.32 ETH',
-          tokens: '12'
+          balance: '0.32 ETH',
+          tokens: '0'
         },
         {
           address: '0xg523g0622d4....e3C4',
-          balance: '159.32 ETH',
-          tokens: '12'
+          balance: '3 ETH',
+          tokens: '0'
         },
         {
           address: '0xg5dfh4622d4....e3C4',
-          balance: '159.32 ETH',
-          tokens: '12'
+          balance: '77 ETH',
+          tokens: '0'
         }
       ]
     };
