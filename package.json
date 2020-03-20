@@ -30,6 +30,9 @@
   },
   "dependencies": {
     "@aave/protocol-js": "0.2.4",
+    "@coolwallets/eth": "0.1.13",
+    "@coolwallets/transport-web-ble": "0.1.0",
+    "@coolwallets/wallet": "0.0.14",
     "@sentry/browser": "5.15.0",
     "@sentry/integrations": "5.15.0",
     "@unstoppabledomains/resolution": "1.2.2",

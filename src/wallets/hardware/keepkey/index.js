@@ -20,6 +20,7 @@ import { Transaction } from 'ethereumjs-tx';
 import errorHandler from './errorHandler';
 import store from '@/store';
 import commonGenerator from '@/helpers/commonGenerator';
+import Vue from 'vue';
 
 const { MessageType } = Messages;
 const {
@@ -109,10 +110,10 @@ class KeepkeyWallet {
       const signedChainId = calculateChainIdFromV(tx.v);
       if (signedChainId !== networkId)
         throw new Error(
-          'Invalid networkId signature returned. Expected: ' +
-            networkId +
-            ', Got: ' +
-            signedChainId,
+          Vue.$i18n.t('errorsGlobal.invalid-network-id-sig', {
+            got: signedChainId,
+            expected: networkId
+          }),
           'InvalidNetworkId'
         );
       return getSignTransactionObject(tx);
