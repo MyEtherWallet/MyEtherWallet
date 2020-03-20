@@ -89,6 +89,14 @@ const affiliates = [
     href: 'https://www.stateofthedapps.com/',
     currency: '$',
     logo: 'coolwallet'
+  },
+  {
+    text: 'footer.bcvault',
+    price: '159.99',
+    description: 'buyHardwareWallet.desc.bcvault',
+    href: 'https://bc-vault.com/?wpam_id=53',
+    currency: '€',
+    logo: 'bcvault'
   }
 ];
 

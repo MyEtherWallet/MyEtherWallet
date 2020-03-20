@@ -35,6 +35,11 @@
       :priv-key="!wallet"
       :address="account.address"
     />
+    <bcvault-address-modal
+      ref="bcvault"
+      :addresses="bcVaultWallets"
+      :callback-fn="bcVaultCb"
+    />
     <address-qrcode-modal ref="addressQrcodeModal" :address="account.address" />
     <!-- Modals ******************************************************** -->
     <!-- Modals ******************************************************** -->
@@ -119,6 +124,7 @@ import TokenOverview from '@/dapps/Aave/components/TokenOverview';
 import WalletPasswordModal from '@/components/WalletPasswordModal';
 import EnterPinNumberModal from '@/components/EnterPinNumberModal';
 import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal';
+import BcVaultAddressModal from '@/layouts/AccessWalletLayout/components/BcVaultAddressModal';
 import HardwarePasswordModal from '@/layouts/AccessWalletLayout/components/HardwarePasswordModal';
 import MnemonicPasswordModal from '@/layouts/AccessWalletLayout/components/MnemonicPasswordModal';
 import MnemonicModal from '@/layouts/AccessWalletLayout/components/MnemonicModal';
@@ -146,7 +152,8 @@ import {
   TrezorWallet,
   BitBoxWallet,
   SecalotWallet,
-  KeepkeyWallet
+  KeepkeyWallet,
+  BCVaultWallet
 } from '@/wallets';
 import {
   WEB3_WALLET as WEB3_TYPE,
@@ -155,11 +162,13 @@ import {
   BITBOX as BITBOX_TYPE,
   SECALOT as SECALOT_TYPE,
   KEEPKEY as KEEPKEY_TYPE,
-  MNEMONIC as MNEMONIC_TYPE
+  MNEMONIC as MNEMONIC_TYPE,
+  BCVAULT as BC_VAULT
 } from '@/wallets/bip44/walletTypes';
 export default {
   name: 'Interface',
   components: {
+    'bcvault-address-modal': BcVaultAddressModal,
     'interface-side-menu': InterfaceSideMenu,
     'interface-address': InterfaceAddress,
     'interface-balance': InterfaceBalance,
@@ -209,7 +218,8 @@ export default {
       gaslimit: '21000',
       gas: 0,
       tokensymbol: '',
-      prefilled: false
+      prefilled: false,
+      bcVaultWallets: []
     };
   },
   computed: {
@@ -254,7 +264,6 @@ export default {
       'saveQueryVal',
       'updateBlockNumber',
       'setAccountBalance',
-      'switchNetwork',
       'setENS',
       'decryptWallet',
       'toggleSideMenu'
@@ -354,6 +363,22 @@ export default {
             })
             .catch(KeepkeyWallet.errorHandler);
           break;
+        case BC_VAULT:
+          // eslint-disable-next-line
+          const BCVaultWalletInstance = BCVaultWallet();
+          BCVaultWalletInstance.init()
+            .then(res => {
+              if (res.length > 1) {
+                this.bcVaultWallets = res;
+                this.$refs.bcvault.$refs.bcvaultAddress.show();
+              } else {
+                BCVaultWallet.erroHandler({ jsError: 'mew1' });
+              }
+            })
+            .catch(e => {
+              BCVaultWallet.errorHandler(e);
+            });
+          break;
         default:
           Toast.responseHandler(
             new Error(
@@ -362,6 +387,13 @@ export default {
             false
           );
       }
+    },
+    bcVaultCb(address) {
+      const BCVaultWalletInstance = BCVaultWallet();
+      const walletInstance = BCVaultWalletInstance.getAccount(address);
+      this.decryptWallet([walletInstance]).then(() => {
+        this.$refs.bcvault.$refs.bcvaultAddress.hide();
+      });
     },
     print() {
       this.$refs.printModal.$refs.print.show();
