@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-rop.json';
-import contracts from '@/contracts/contract-abi-rop.json';
+import tokens from '@/_generated/tokens/tokens-rop.json';
+import contracts from '@/_generated/contracts/contract-abi-rop.json';
 import rop from '@/assets/images/icons/network.svg';
 import { ROP } from '../tlds';
 

@@ -5,7 +5,7 @@ const uuid = v4;
 
 const fetch = require('node-fetch');
 const web3 = require('web3');
-const defaultEthTokens = require('./src/tokens/tokens-eth.json');
+const defaultEthTokens = require('./src/_generated/tokens/tokens-eth.json');
 
 const swapConfigFolder = './src/partners/partnersConfig';
 const changellyConfigFolder = './src/partners/changelly/config';
