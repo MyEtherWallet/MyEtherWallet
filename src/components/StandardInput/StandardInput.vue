@@ -74,6 +74,15 @@
       <p v-if="options.rightInputText" class="right-input-text">
         {{ options.rightInputText }}
       </p>
+      <p v-if="options.validCheck" class="right-input-text">
+        <i
+          :class="[
+                  validInput ? '' : 'not-good',
+                  'fa fa-check-circle good-button'
+                ]"
+          aria-hidden="true"
+        />
+      </p>
     </div>
 
     <div class="password-strength-indicator">
@@ -109,6 +118,10 @@ export default {
       default: ''
     },
     clearInput: {
+      type: Boolean,
+      default: false
+    },
+    validInput:{
       type: Boolean,
       default: false
     }
