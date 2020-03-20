@@ -1,6 +1,6 @@
 import { chainCurrencies, fiat } from './currencyDetails';
-import EthereumTokens from './EthereumTokens.json';
-import OtherCoins from './OtherCoins.json';
+import EthereumTokens from '@/_generated/partners/EthereumTokens.json';
+import OtherCoins from '@/_generated/partners/OtherCoins.json';
 import ERC20 from './ERC20Token.abi';
 import haveIcon from './haveIcon';
 import {
