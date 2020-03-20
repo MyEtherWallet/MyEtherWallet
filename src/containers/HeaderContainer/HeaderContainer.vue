@@ -2,16 +2,18 @@
   <div>
     <cx-header v-if="isMewCx" />
     <div v-if="!isMewCx" class="header">
-      <decision-tree />
-      <router-link
-        v-show="
-          $route.fullPath === '/create-wallet' ||
-            ($route.fullPath === '/access-my-wallet' && !isMewCx)
-        "
-        to="/getting-started"
-      >
-        <user-reminder-button />
-      </router-link>
+      <div class="floating-buttons-container">
+        <decision-tree />
+        <router-link
+          v-show="
+            $route.fullPath === '/create-wallet' ||
+              ($route.fullPath === '/access-my-wallet' && !isMewCx)
+          "
+          to="/getting-started"
+        >
+          <user-reminder-button />
+        </router-link>
+      </div>
       <mobile-menu
         :opensettings="openSettings"
         :logout="logout"
