@@ -85,6 +85,7 @@
               :func="button.func"
               :img="button.img"
               :img-disabled="button.imgDisabled"
+              :has-other-examples="button.showsOtherExamples"
               :title="$t(button.title)"
               :desc="$t(button.desc)"
               :recommend="$t(button.recommend)"
@@ -167,8 +168,9 @@ export default {
       buttons: [
         {
           func: this.mewConnectModalOpen,
-          title: 'common.mewconnect.string',
-          desc: 'accessWallet.mewconnect.option-text',
+          title: 'accessWallet.mobile-app.mew-connect',
+          desc: 'accessWallet.mobile-app.examples',
+          showsOtherExamples: true,
           recommend: '',
           tooltip: '',
           img: mewConnectImg,
@@ -191,6 +193,7 @@ export default {
           func: this.web3WalletModal,
           title: 'accessWallet.web3-wallet',
           desc: 'accessWallet.web3-wallet-desc',
+          showsOtherExamples: true,
           recommend: '',
           tooltip: '',
           img: web3Img,
