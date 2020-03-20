@@ -1,5 +1,5 @@
 import { Transaction } from 'ethereumjs-tx';
-import { bufferToHex } from 'ethereumjs-util';
+import { bufferToHex, hexToNumber } from 'ethereumjs-util';
 import * as bc from 'bc-vault-js';
 import { BCVAULT as bcVault } from '../../bip44/walletTypes';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
@@ -57,27 +57,21 @@ class BCVault {
           common: commonGenerator(store.state.main.network)
         });
         const newTx = {};
-        newTx['feeCount'] = new BigNumber(
-          bufferToHex(tx['gasLimit'])
-        ).toNumber();
+        newTx['feeCount'] = hexToNumber(tx['gasLimit']);
         newTx['feePrice'] = new BigNumber(
           bufferToHex(tx['gasPrice'])
         ).toString();
         newTx['amount'] =
-          new BigNumber(bufferToHex(tx['value'])).toNumber() || 0;
+          new BigNumber(bufferToHex(tx['value'])).toString() || 0;
         newTx['contractData'] = bufferToHex(tx['data']);
         newTx['to'] = bufferToHex(tx['to']);
-        newTx['from'] = this.selectedAddress;
-        if (tx.hasOwnProperty('nonce')) {
-          newTx['advanced'] = {
-            eth: {
-              nonce:
-                bufferToHex(tx['nonce']) === '0x'
-                  ? 0
-                  : new BigNumber(bufferToHex(tx['nonce'])).toNumber()
-            }
-          };
-        }
+        newTx['from'] = bufferToHex(tx['to']);
+        newTx['advanced'] = {
+          eth: {
+            nonce:
+              bufferToHex(tx['nonce']) === '0x' ? 0 : hexToNumber(tx['nonce'])
+          }
+        };
         const networkId = tx.getChainId();
         const result = await this.bcWallet
           .GenerateTransaction(
