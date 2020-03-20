@@ -1,19 +1,19 @@
 {
   "mewconnect": {
-    "option-text": "Scan the QR code to access with MEWwallet or MEWconnect",
+    "option-text": "Отсканируйте QR-код для доступа с помощью MEWwallet или MEWconnect",
     "modal": {
-      "title": "Mobile Access",
+      "title": "Мобильный доступ",
       "text1": "Используйте приложение MEW wallet или MEWconnect для сканирования указанного выше QR-кода",
       "text2": "Нет приложения MEW wallet? Загрузите сейчас."
     },
-    "protocol": "MEWconnect Protocol",
+    "protocol": "Протокол MEWconnect",
     "warning": "MEW wallet и MEWconnect несовместимы с iPads."
   },
   "mobile-app": {
-    "option-title": "Mobile App",
-    "examples": "WalletConnect; <br> Wallet Link",
+    "option-title": "Мобильное приложение",
+    "examples": "WalletConnect; <br> WalletLink",
     "modal": {
-      "title": "Mobile Access"
+      "title": "Мобильный доступ"
     },
     "mew-connect": "MEWconnect"
   },
@@ -130,7 +130,7 @@
   "xwallet-desc": "Используйте аккаунт Pundi X Savings от MEW для сканирования QR-кода сверху",
   "xwallet-title": "Доступ через XWallet",
   "get-it-now": "Загрузить сейчас",
-  "or": "OR CONNECT WITH",
+  "or": "ИЛИ ПОДКЛЮЧИТЬСЯ С",
   "wallet-connect": "WalletConnect",
-  "wallet-link": "Wallet Link"
+  "wallet-link": "WalletLink"
 }
