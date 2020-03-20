@@ -3,10 +3,12 @@
     ref="hardware"
     :title="$t('accessWallet.hardware.modal.title')"
     hide-footer
-    class="bootstrap-modal modal-hardware nopadding"
+    class="modal-hardware nopadding"
     centered
     static
     lazy
+    no-padding
+    dialog-class="hardware-wallet-dialog"
   >
     <div class="modal-content-container">
       <div class="d-block text-center">
@@ -311,4 +313,10 @@ export default {
 @import 'HardwareModal-desktop.scss';
 @import 'HardwareModal-tablet.scss';
 @import 'HardwareModal-mobile.scss';
+</style>
+
+<style>
+.hardware-wallet-dialog {
+  max-width: 700px !important;
+}
 </style>

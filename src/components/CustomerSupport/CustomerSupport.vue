@@ -10,10 +10,10 @@
           src="~@/assets/images/icons/help-center.svg"
         />
       </div>
-      <div v-if="!noIcon" class="support-label">
+      <!-- <div v-if="!noIcon" class="support-label">
         <h5>{{ $t('common.cstm-support') }}</h5>
       </div>
-      <p v-else>{{ $t('common.cstm-support') }}</p>
+      <p v-else>{{ $t('common.cstm-support') }}</p> -->
     </div>
     <b-modal
       ref="emailPrefill"
