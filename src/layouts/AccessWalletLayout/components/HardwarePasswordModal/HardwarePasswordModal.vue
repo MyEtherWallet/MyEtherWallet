@@ -51,7 +51,7 @@
 
 <script>
 import cwsTransportLib from '@coolwallets/transport-web-ble';
-import store from 'store';
+
 export default {
   props: {
     walletConstructor: {
