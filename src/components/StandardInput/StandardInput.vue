@@ -77,9 +77,9 @@
       <p v-if="options.validCheck" class="right-input-text">
         <i
           :class="[
-                  validInput ? '' : 'not-good',
-                  'fa fa-check-circle good-button'
-                ]"
+            validInput ? '' : 'not-good',
+            'fa fa-check-circle good-button'
+          ]"
           aria-hidden="true"
         />
       </p>
@@ -121,7 +121,7 @@ export default {
       type: Boolean,
       default: false
     },
-    validInput:{
+    validInput: {
       type: Boolean,
       default: false
     }
