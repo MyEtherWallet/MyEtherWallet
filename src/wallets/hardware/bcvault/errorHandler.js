@@ -8,7 +8,8 @@ const ERRORS = {
 };
 const WARNING = {
   jsError1: 'bcvaultError.browser-popup',
-  jsErrormew1: 'bcvaultError.only-one-wallet'
+  jsErrormew1: 'bcvaultError.only-one-wallet',
+  jsErrormew2: 'bcvaultError.can-only-sign-eth'
 };
 
 export default err => {

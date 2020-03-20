@@ -4,5 +4,6 @@
   "user-no-action": "No user action received, closing connection.",
   "browser-popup": "Could not create popup! Please enable popups in your browser!",
   "only-one-wallet": "You only have 1 Ethereum wallet stored in this device",
-  "daemon0x6901": "Daemon error: 0x6901"
+  "daemon0x6901": "Daemon error: 0x6901",
+  "can-only-sign-eth": "BCVault doesn't support other chains other than ETH main net."
 }
