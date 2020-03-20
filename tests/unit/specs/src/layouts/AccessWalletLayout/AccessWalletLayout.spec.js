@@ -85,6 +85,4 @@ xdescribe('AccessWalletLayout.vue', () => {
       );
     }
   });
-
-  describe('AccessWalletLayout.vue Methods', () => {});
 });

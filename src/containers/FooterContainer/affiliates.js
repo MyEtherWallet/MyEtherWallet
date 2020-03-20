@@ -83,6 +83,14 @@ const affiliates = [
     logo: ''
   },
   {
+    text: 'footer.cool-wallet',
+    price: '99.00',
+    description: 'buyHardwareWallet.desc.coolwallet',
+    href: 'https://www.stateofthedapps.com/',
+    currency: '$',
+    logo: 'coolwallet'
+  },
+  {
     text: 'footer.bcvault',
     price: '159.99',
     description: 'buyHardwareWallet.desc.bcvault',

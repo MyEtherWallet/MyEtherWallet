@@ -55,16 +55,20 @@ import trezor from '@/assets/images/icons/HardwareWallet/trezor.svg';
 import keepkey from '@/assets/images/icons/HardwareWallet/keepkey.svg';
 import finney from '@/assets/images/icons/button-finney-hover.png';
 import xwallet from '@/assets/images/icons/HardwareWallet/xwallet.svg';
+import coolwallet from '@/assets/images/icons/HardwareWallet/coolwallet.svg';
 import bcvault from '@/assets/images/icons/HardwareWallet/bcvault.svg';
 import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
 import platform from 'platform';
+import store from 'store';
+import cwsTransportLib from '@coolwallets/transport-web-ble';
 import {
   KeepkeyWallet,
   TrezorWallet,
   BitBoxWallet,
   SecalotWallet,
+  CoolWallet,
   BCVaultWallet
 } from '@/wallets';
 import {
@@ -75,6 +79,7 @@ import {
   KEEPKEY as KEEPKEY_TYPE,
   XWALLET as XWALLET_TYPE,
   FINNEY as FINNEY_TYPE,
+  COOLWALLET as COOLWALLET_TYPE,
   BCVAULT as BCVAULT_TYPE
 } from '@/wallets/bip44/walletTypes';
 export default {
@@ -178,6 +183,15 @@ export default {
           link: 'http://lddy.no/a4im'
         },
         {
+          name: COOLWALLET_TYPE,
+          imgPath: coolwallet,
+          text: 'CoolWallet',
+          disabled: false,
+          msg: '',
+          link:
+            'https://coolwallet.io/product/coolwallet/?ref=myetherwalletmyetherwallet'
+        },
+        {
           name: BCVAULT_TYPE,
           imgPath: bcvault,
           text: 'BC Vault',
@@ -275,6 +289,39 @@ export default {
         case XWALLET_TYPE:
           this.openXwallet();
           this.$refs.hardware.hide();
+          break;
+        case COOLWALLET_TYPE:
+          // eslint-disable-next-line
+          const isRegistered = store.get('appId') || null;
+          if (isRegistered) {
+            cwsTransportLib.listen(async (error, device) => {
+              if (device) {
+                const transport = await cwsTransportLib.connect(device);
+                CoolWallet(transport, null)
+                  .then(_newWallet => {
+                    if (_newWallet) {
+                      this.$emit('hardwareWalletOpen', _newWallet);
+                    } else {
+                      Toast.responseHandler(
+                        new Error('No wallet instance!'),
+                        Toast.ERROR
+                      );
+                    }
+                  })
+                  .catch(() => {
+                    Toast.responseHandler(
+                      new Error('Having issues with pairing cool wallet'),
+                      Toast.ERROR
+                    );
+                  });
+              }
+            });
+          } else {
+            this.$emit('hardwareRequiresPassword', {
+              walletConstructor: CoolWallet,
+              hardwareBrand: 'CoolWallet'
+            });
+          }
           break;
         case BCVAULT_TYPE:
           // eslint-disable-next-line
