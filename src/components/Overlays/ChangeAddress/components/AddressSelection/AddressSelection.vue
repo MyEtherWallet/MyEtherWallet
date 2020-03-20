@@ -30,23 +30,113 @@
           </v-btn>
         </div>
       </div>
-      <Table />
+      <v-data-table
+        v-model="selected"
+        :headers="headers"
+        :items="desserts"
+        single-select
+        item-key="address"
+        show-select
+        items-per-page="5"
+        class="mt-3"
+      >
+      </v-data-table>
     </div>
   </div>
 </template>
 
 <script>
-import Table from './components/Table';
-
 export default {
-  components: {
-    Table
-  },
+  components: {},
   props: {
     text: { default: '', type: String }
   },
   data() {
-    return {};
+    return {
+      selected: [],
+      headers: [
+        {
+          text: 'ADDRESS',
+          align: 'start',
+          sortable: true,
+          value: 'address'
+        },
+        { text: 'ETH BALANCE', value: 'balance' },
+        { text: '#TOKENS', value: 'tokens' }
+      ],
+      desserts: [
+        {
+          address: '0x22bF0622d4....e3C4',
+          balance: '159.32 ETH',
+          tokens: '12'
+        },
+        {
+          address: '0x3dbF0622d4....e3C4',
+          balance: '159.32 ETH',
+          tokens: '12'
+        },
+        {
+          address: '0x65230622d4....e3C4',
+          balance: '159.32 ETH',
+          tokens: '12'
+        },
+        {
+          address: '0x7abF0622d4....e3C4',
+          balance: '159.32 ETH',
+          tokens: '12'
+        },
+        {
+          address: '0x76320622d4....e3C4',
+          balance: '159.32 ETH',
+          tokens: '12'
+        },
+        {
+          address: '0x13h70622d4....e3C4',
+          balance: '159.32 ETH',
+          tokens: '12'
+        },
+        {
+          address: '0x1234F0622d4....e3C4',
+          balance: '159.32 ETH',
+          tokens: '12'
+        },
+        {
+          address: '0x9gr40622d4....e3C4',
+          balance: '159.32 ETH',
+          tokens: '12'
+        },
+        {
+          address: '0xyyh0622d4....e3C4',
+          balance: '159.32 ETH',
+          tokens: '12'
+        },
+        {
+          address: '0x78340622d4....e3C4',
+          balance: '159.32 ETH',
+          tokens: '12'
+        },
+        {
+          address: '0x345740622d4....e3C4',
+          balance: '159.32 ETH',
+          tokens: '12'
+        },
+        {
+          address: '0x34690622d4....e3C4',
+          balance: '159.32 ETH',
+          tokens: '12'
+        },
+        {
+          address: '0xg523g0622d4....e3C4',
+          balance: '159.32 ETH',
+          tokens: '12'
+        },
+        {
+          address: '0xg5dfh4622d4....e3C4',
+          balance: '159.32 ETH',
+          tokens: '12'
+        }
+      ]
+    };
   }
 };
 </script>
