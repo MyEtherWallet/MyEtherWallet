@@ -4,6 +4,10 @@ const configs = require('./configs');
 const tokenList = require('./lists/tokens.json');
 const contractList = require('./lists/contracts.json');
 
+if (!fs.existsSync(configs.GENERATED_FOLDER_PATH)) {
+  fs.mkdirSync(configs.GENERATED_FOLDER_PATH);
+}
+
 const fetchTokens = async () => {
   try {
     if (!fs.existsSync(configs.TOKENS_PATH)) {
