@@ -459,7 +459,6 @@ export default {
         i++
       ) {
         const account = await this.hardwareWallet.getAccount(i);
-        console.log(account);
         this.HDAccounts.push({
           index: i,
           account: account,
