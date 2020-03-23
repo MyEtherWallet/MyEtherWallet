@@ -84,19 +84,26 @@ export default {
       if (this.hardwareBrand === 'CoolWallet') {
         await cwsTransportLib.listen(async (error, device) => {
           if (device) {
-            const transport = await cwsTransportLib.connect(device);
-            store.set('cwPass', this.password.toString());
-            this.walletConstructor(transport, this.password.toString())
-              .then(_newWallet => {
-                if (_newWallet) {
-                  this.$emit('hardwareWalletOpen', _newWallet);
-                } else {
-                  this.walletConstructor.errorHandler({
-                    name: 'NoWalletInstance'
-                  });
-                }
-              })
-              .catch(this.walletConstructor.errorHandler);
+            try {
+              cwsTransportLib
+                .connect(device)
+                .then(transport => {
+                  this.walletConstructor(transport, this.password.toString())
+                    .then(_newWallet => {
+                      if (_newWallet) {
+                        this.$emit('hardwareWalletOpen', _newWallet);
+                      } else {
+                        this.walletConstructor.errorHandler({
+                          name: 'NoWalletInstance'
+                        });
+                      }
+                    })
+                    .catch(this.walletConstructor.errorHandler);
+                })
+                .catch(this.walletConstructor.errorHandler);
+            } catch (error) {
+              this.walletConstructor.errorHandler(error);
+            }
           }
         });
       } else {
