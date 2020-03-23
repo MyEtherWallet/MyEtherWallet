@@ -14,6 +14,7 @@
 - Update BitBox Logo [#2120](https://github.com/MyEtherWallet/MyEtherWallet/pull/2120)
 - Update BitBox Logo [#2141](https://github.com/MyEtherWallet/MyEtherWallet/pull/2141)
 - Update greenkeeper packages [#2131](https://github.com/MyEtherWallet/MyEtherWallet/pull/2131)
+- Add security.txt to repo [#2140](https://github.com/MyEtherWallet/MyEtherWallet/pull/2140)
 
 ### Release v5.4.3
 
