@@ -9,14 +9,18 @@
       color="white"
       background-color="gray"
     />
-    <v-switch
-      v-model="dark"
-      hide-details
-      inset
-      color="white"
-      :label="dark ? 'Dark Mode' : 'Light Mode'"
-      class="dev-only"
-    />
+    <div class="dev-only">
+      <div class="text-color--dark-sacramento font-weight--500 mb-n2">
+        For development only
+      </div>
+      <v-switch
+        v-model="dark"
+        hide-details
+        inset
+        color="white"
+        :label="dark ? 'Dark Mode' : 'Light Mode'"
+      />
+    </div>
   </div>
 </template>
 
@@ -39,11 +43,12 @@ export default {
 <style lang="scss" scoped>
 .dev-only {
   position: fixed;
-  bottom: 10px;
-  left: 10px;
+  top: 10px;
+  right: 10px;
   z-index: 99999999;
-  background-color: orange;
+  background-color: #00b9ff;
   padding: 10px;
-  border-radius: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #0000004a;
 }
 </style>
