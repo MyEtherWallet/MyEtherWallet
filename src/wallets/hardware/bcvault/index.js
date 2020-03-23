@@ -59,7 +59,6 @@ class BCVault {
       tx = new Transaction(tx, {
         common: commonGenerator(store.state.main.network)
       });
-      console.log(tx);
       const newTx = {};
       newTx['feeCount'] = web3Utils.hexToNumber(bufferToHex(tx['gasLimit']));
       newTx['feePrice'] = new BigNumber(bufferToHex(tx['gasPrice'])).toString();
@@ -87,7 +86,6 @@ class BCVault {
         )
         .catch(errorHandler);
       if (result) {
-        console.log(result);
         const resultTx = new Transaction(result);
         tx.v = getBufferFromHex(sanitizeHex(resultTx.v.toString('hex')));
         tx.r = getBufferFromHex(sanitizeHex(resultTx.r.toString('hex')));
@@ -101,10 +99,8 @@ class BCVault {
             }),
             'InvalidNetworkId'
           );
-        console.log('got here', tx);
         return getSignTransactionObject(tx);
       }
-      console.log('got here', result);
       return result;
     };
     const msgSigner = async msg => {
