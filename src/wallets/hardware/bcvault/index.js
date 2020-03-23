@@ -65,7 +65,7 @@ class BCVault {
           new BigNumber(bufferToHex(tx['value'])).toString() || 0;
         newTx['contractData'] = bufferToHex(tx['data']);
         newTx['to'] = bufferToHex(tx['to']);
-        newTx['from'] = bufferToHex(tx['to']);
+        newTx['from'] = bufferToHex(tx['from']);
         newTx['advanced'] = {
           eth: {
             nonce:
