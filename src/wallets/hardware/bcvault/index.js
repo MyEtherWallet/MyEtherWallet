@@ -62,7 +62,7 @@ class BCVault {
         ).toString();
         newTx['amount'] =
           new BigNumber(bufferToHex(tx['value'])).toString() || 0;
-        newTx['contractData'] = bufferToHex(tx['data']);
+        // newTx['contractData'] = bufferToHex(tx['data']);
         newTx['to'] = bufferToHex(tx['to']);
         newTx['from'] = bufferToHex(tx['from']);
         newTx['advanced'] = {
