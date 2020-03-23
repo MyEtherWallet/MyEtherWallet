@@ -13,7 +13,6 @@ const WARNING = {
 };
 
 export default err => {
-  console.log(err);
   // web errors
   if (err.hasOwnProperty('jsError')) {
     Toast.responseHandler(
