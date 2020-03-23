@@ -10,6 +10,7 @@
 
 - Update BitBox Logo [#2120](https://github.com/MyEtherWallet/MyEtherWallet/pull/2120)
 - Update greenkeeper packages [#2131](https://github.com/MyEtherWallet/MyEtherWallet/pull/2131)
+- Add security.txt to repo [#2140](https://github.com/MyEtherWallet/MyEtherWallet/pull/2140)
 
 ### Release v5.4.3
 
@@ -23,7 +24,7 @@
 
 ### Bugs
 
-- MEW Wallet modal ui changes [#2112] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2112)
+- MEW Wallet modal ui changes [#2112](https://github.com/MyEtherWallet/MyEtherWallet/pull/2112)
 
 ### Release v5.4.2-hotfix.1
 
