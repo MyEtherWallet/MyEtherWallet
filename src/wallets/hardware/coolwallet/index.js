@@ -6,6 +6,7 @@ import cwsETH from '@coolwallets/eth';
 import cwsWallet, { generateKeyPair } from '@coolwallets/wallet';
 import locStore from 'store';
 import bip44Paths from '../../bip44';
+import { bufferToHex } from 'ethereumjs-util';
 import Vue from 'vue';
 
 import store from '@/store';
@@ -25,7 +26,6 @@ class CoolWallet {
     this.identifier = coolWalletType;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
-    this.selectedIdx = '';
     this.appPrivateKey = '';
     this.appPublicKey = '';
     this.transport = {};
@@ -77,25 +77,25 @@ class CoolWallet {
 
   async getAccount(idx) {
     const address = await this.deviceInstance.getAddress(idx);
-    this.selectedIdx = idx;
     const txSigner = async tx => {
       tx = new Transaction(tx, {
         common: commonGenerator(store.state.main.network)
       });
-      const txArr = tx.toJSON();
       const cwTx = {
-        nonce: txArr[3],
-        gasPrice: txArr[2],
-        gasLimit: txArr[1],
-        to: txArr[6],
-        value: txArr[8],
-        data: txArr[0],
+        data: bufferToHex(tx.data),
+        gasLimit: bufferToHex(tx.gasLimit),
+        gasPrice: bufferToHex(tx.gasPrice),
+        nonce: bufferToHex(tx.nonce),
+        to: bufferToHex(tx.to),
+        value: bufferToHex(tx.value),
         chainId: store.state.main.network.type.chainID
       };
+
       const networkId = tx.getChainId();
       const result = await this.deviceInstance
-        .signTransaction(cwTx, this.selectedIdx)
+        .signTransaction(cwTx, idx)
         .catch(errorHandler);
+
       if (result) {
         const resultTx = new Transaction(result);
         tx.v = getBufferFromHex(sanitizeHex(resultTx.v.toString('hex')));
@@ -115,7 +115,7 @@ class CoolWallet {
       return result;
     };
     const msgSigner = async msg => {
-      const result = await this.deviceInstance.signMessage(msg, 0);
+      const result = await this.deviceInstance.signMessage(msg, idx);
       if (result) {
         const signature = result.substr(2);
         const r = '0x' + signature.slice(0, 64);
