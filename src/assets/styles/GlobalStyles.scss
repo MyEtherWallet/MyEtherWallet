@@ -5,6 +5,11 @@
 }
 
 // Themes ===========================================================
+#app.theme--light .v-sheet,
+#app.theme--light .v-application {
+  color: $light-text !important;
+}
+
 #app.theme--dark .v-sheet,
 #app.theme--dark .v-application {
   color: $blue-1 !important;

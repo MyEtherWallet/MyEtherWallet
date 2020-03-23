@@ -12,7 +12,7 @@
           text
           small
           depressed
-          :color="mewGreen"
+          :color="$vuetify.theme.themes.light.emerald"
         >
           <v-icon small class="top-button-icon">mdi-chevron-right</v-icon>
           Ethplorer
@@ -22,7 +22,7 @@
           text
           small
           depressed
-          :color="mewGreen"
+          :color="$vuetify.theme.themes.light.emerald"
         >
           <v-icon small class="top-button-icon">mdi-plus</v-icon>
           Custom Token
@@ -213,7 +213,6 @@
 </template>
 
 <script>
-import Var from '@/common/plugins/variables.js';
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import StdButton from '@/web/components/StdButton';
 import ChartTiny from '@/web/components/Charts/Tiny';
@@ -223,7 +222,6 @@ export default {
   components: { WhiteSheet, ChartTiny, StdButton, BlockTitle },
   data() {
     return {
-      mewGreen: Var.colorSets.emerald,
       chart1: [
         [1167609600000, 0.7137],
         [1167696000000, 0.7537],

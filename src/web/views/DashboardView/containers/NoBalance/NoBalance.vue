@@ -1,14 +1,34 @@
 <template>
   <WhiteSheet>
-    <div>No balance</div>
-    <StdButton
-      buttonclass="button--green-border"
-      size="x-large"
-      :minwidth="false"
-      fontclass="font-weight-regular"
-    >
-      Buy ETH with a credit card
-    </StdButton>
+    <div class="pa-12 content-width">
+      <div class="block-title display-1 font-weight-bold mb-6">
+        My ETH balance is empty
+      </div>
+      <StdButton
+        buttonclass="button--green"
+        size="x-large"
+        :minwidth="false"
+        fontclass="font-weight-regular"
+      >
+        Buy ETH with a credit card
+      </StdButton>
+      <div class="d-flex align-center mt-4">
+        <div>We accept credit card</div>
+        <img
+          class="ml-2"
+          height="20"
+          src="@/assets/images/icons/icon-visa-white-dark.png"
+        />
+        <img
+          class="ml-1"
+          height="18"
+          src="@/assets/images/icons/icon-mastercard-mew.png"
+        />
+      </div>
+      <div class="text-color--gray1 mt-12">
+        Tip: You can also send your ETH here from another wallet!
+      </div>
+    </div>
   </WhiteSheet>
 </template>
 
@@ -25,5 +45,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables.scss';
+.content-width {
+  max-width: 360px;
+}
+
+.block-title {
+  line-height: 36px !important;
+}
 </style>

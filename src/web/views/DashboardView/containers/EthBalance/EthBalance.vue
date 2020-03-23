@@ -11,7 +11,7 @@
         <v-btn-toggle
           v-model="chartRange"
           class="chart-button-group"
-          :color="topButtonColor"
+          :color="$vuetify.theme.themes.light.royalBlue"
           tile
           group
           dense
@@ -68,7 +68,6 @@
 </template>
 
 <script>
-import Var from '@/common/plugins/variables.js';
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import StdButton from '@/web/components/StdButton';
 import ChartBalance from '@/web/components/Charts/Balance';
@@ -79,7 +78,6 @@ export default {
   data() {
     return {
       chartRange: '1d',
-      topButtonColor: Var.colorSets.royalBlue,
       chartData: [],
       chart1d: {
         key: '1d',
