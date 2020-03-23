@@ -128,6 +128,37 @@ export default {
           link: 'https://www.ledger.com?r=fa4b'
         },
         {
+          name: TREZOR_TYPE,
+          imgPath: trezor,
+          text: 'Trezor',
+          disabled:
+            platform.name.toLowerCase() !== 'chrome' &&
+            platform.name.toLowerCase() !== 'firefox',
+          msg:
+            platform.name.toLowerCase() !== 'chrome' &&
+            platform.name.toLowerCase() !== 'firefox'
+              ? 'Browser not supported by Trezor'
+              : '',
+          link: 'https://trezor.io/?offer_id=12&aff_id=2029'
+        },
+        {
+          name: KEEPKEY_TYPE,
+          imgPath: keepkey,
+          text: 'KeepKey',
+          disabled: false,
+          msg: '',
+          link: 'http://lddy.no/a4im'
+        },
+        {
+          name: COOLWALLET_TYPE,
+          imgPath: coolwallet,
+          text: 'CoolWallet',
+          disabled: false,
+          msg: '',
+          link:
+            'https://coolwallet.io/product/coolwallet/?ref=myetherwalletmyetherwallet'
+        },
+        {
           name: FINNEY_TYPE,
           imgPath: finney,
           text: 'FINNEY',
@@ -153,43 +184,12 @@ export default {
           link: 'https://xwallet.pundix.com'
         },
         {
-          name: TREZOR_TYPE,
-          imgPath: trezor,
-          text: 'Trezor',
-          disabled:
-            platform.name.toLowerCase() !== 'chrome' &&
-            platform.name.toLowerCase() !== 'firefox',
-          msg:
-            platform.name.toLowerCase() !== 'chrome' &&
-            platform.name.toLowerCase() !== 'firefox'
-              ? 'Browser not supported by Trezor'
-              : '',
-          link: 'https://trezor.io/?offer_id=12&aff_id=2029'
-        },
-        {
           name: SECALOT_TYPE,
           imgPath: secalot,
           text: 'Secalot',
           disabled: false,
           msg: '',
           link: 'https://www.secalot.com/'
-        },
-        {
-          name: KEEPKEY_TYPE,
-          imgPath: keepkey,
-          text: 'KeepKey',
-          disabled: false,
-          msg: '',
-          link: 'http://lddy.no/a4im'
-        },
-        {
-          name: COOLWALLET_TYPE,
-          imgPath: coolwallet,
-          text: 'CoolWallet',
-          disabled: false,
-          msg: '',
-          link:
-            'https://coolwallet.io/product/coolwallet/?ref=myetherwalletmyetherwallet'
         },
         {
           name: BCVAULT_TYPE,
