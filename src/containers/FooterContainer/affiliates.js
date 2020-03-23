@@ -75,6 +75,14 @@ const affiliates = [
     logo: 'keepkey'
   },
   {
+    text: 'footer.cool-wallet',
+    price: '99.00',
+    description: 'buyHardwareWallet.desc.coolwallet',
+    href: 'https://www.stateofthedapps.com/',
+    currency: '$',
+    logo: 'coolwallet'
+  },
+  {
     text: 'footer.sotd',
     price: '',
     description: '',
@@ -86,17 +94,9 @@ const affiliates = [
     text: 'footer.bcvault',
     price: '159.99',
     description: 'buyHardwareWallet.desc.bcvault',
-    href: 'https://www.stateofthedapps.com/',
+    href: 'https://bc-vault.com/?wpam_id=53',
     currency: '€',
-    logo: ''
-  },
-  {
-    text: 'footer.cool-wallet',
-    price: '99.00',
-    description: 'buyHardwareWallet.desc.coolwallet',
-    href: 'https://www.stateofthedapps.com/',
-    currency: '$',
-    logo: 'coolwallet'
+    logo: 'bcvault'
   }
 ];
 
