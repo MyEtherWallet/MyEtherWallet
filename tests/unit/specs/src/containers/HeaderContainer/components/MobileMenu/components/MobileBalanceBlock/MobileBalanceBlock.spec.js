@@ -51,6 +51,11 @@ describe('MobileBalanceBlock.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct accountBalance data', () => {
     expect(
       wrapper.vm.$el

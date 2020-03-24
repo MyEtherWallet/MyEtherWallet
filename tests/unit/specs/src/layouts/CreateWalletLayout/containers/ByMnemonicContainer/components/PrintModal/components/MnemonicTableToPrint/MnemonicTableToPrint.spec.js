@@ -21,6 +21,11 @@ xdescribe('MnemonicTableToPrint.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct contents', () => {
     const mnemonic = [];
     mnemonic.push('values1');

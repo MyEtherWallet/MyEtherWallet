@@ -39,6 +39,11 @@ describe('MnemonicPasswordModal.vue', () => {
       });
     });
 
+    afterEach(() => {
+      wrapper.destroy();
+      wrapper = null;
+    });
+
     xit('[Failing] should supply the mnemonic password directly', done => {
       wrapper.setProps({
         hardwareWalletOpen: function(walletObject) {
