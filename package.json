@@ -5,7 +5,7 @@
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
     "build": "npm run update && vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit --logHeapUsage --ci --useStderr",
+    "test:unit": "vue-cli-service test:unit --logHeapUsage",
     "lint": "npm run lint:styles && npm run lint:code && npm run lint:md",
     "build:hash": "ROUTER_MODE=hash npm run build",
     "build:history": "ROUTER_MODE=history npm run build",
