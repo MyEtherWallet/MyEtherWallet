@@ -15,15 +15,18 @@
       <div class="d-flex align-center mt-4">
         <div>We accept credit card</div>
         <img
-          class="ml-2"
-          height="20"
-          src="@/assets/images/icons/icon-visa-white-dark.png"
+          v-if="!$vuetify.theme.dark"
+          class="ml-2 mr-1"
+          height="21"
+          src="@/assets/images/icons/icon-visa-dark.png"
         />
         <img
-          class="ml-1"
-          height="18"
-          src="@/assets/images/icons/icon-mastercard-mew.png"
+          v-if="$vuetify.theme.dark"
+          class="ml-2 mr-2"
+          height="13"
+          src="@/assets/images/icons/icon-visa-white.png"
         />
+        <img height="18" src="@/assets/images/icons/icon-mastercard-mew.png" />
       </div>
       <div class="text-color--gray1 mt-12">
         Tip: You can also send your ETH here from another wallet!
