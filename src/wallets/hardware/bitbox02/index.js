@@ -14,12 +14,11 @@ import { Misc } from '@/helpers';
 const NEED_PASSWORD = false;
 
 class BitBox02Wallet {
-  constructor(logout) {
+  constructor() {
     this.identifier = bitbox02Type;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[bitbox02Type];
-    this.logout = logout;
     this.status = undefined;
     this.pairingConfirmed = false;
   }
@@ -44,7 +43,7 @@ class BitBox02Wallet {
         this.attestation = attestationResult;
       },
       () => {
-        this.logout('main/clearWallet');
+        store.dispatch('main/clearWallet');
       },
       status => {
         this.status = status;
@@ -129,8 +128,8 @@ class BitBox02Wallet {
   }
 }
 
-const createWallet = async logout => {
-  const _bb02Wallet = new BitBox02Wallet(logout);
+const createWallet = async () => {
+  const _bb02Wallet = new BitBox02Wallet();
   await _bb02Wallet.connect();
   return _bb02Wallet;
 };
