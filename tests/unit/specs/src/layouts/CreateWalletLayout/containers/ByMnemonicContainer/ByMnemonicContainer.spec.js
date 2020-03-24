@@ -32,6 +32,11 @@ describe('ByMnemonicContainer.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   describe('ByMnemonicContainer.vue Methods', () => {
     it('should render correct mnemonicValueRefresh method', () => {
       wrapper.setData({ mnemonicValues: [] });
