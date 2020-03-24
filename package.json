@@ -128,7 +128,7 @@
     "prettier": "1.19.1",
     "raw-loader": "4.0.0",
     "remark-cli": "7.0.1",
-    "remark-preset-lint-recommended": "3.0.3",
+    "remark-preset-lint-recommended": "3.0.4",
     "rskjs-util": "1.0.3",
     "sass-loader": "8.0.2",
     "sinon": "9.0.1",
