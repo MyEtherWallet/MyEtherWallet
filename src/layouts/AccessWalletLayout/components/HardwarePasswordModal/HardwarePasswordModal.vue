@@ -81,38 +81,11 @@ export default {
       this.$refs.passwordInput.focus();
     },
     async unlockWallet() {
-      if (this.hardwareBrand === 'CoolWallet') {
-        await cwsTransportLib.listen(async (error, device) => {
-          if (device) {
-            try {
-              cwsTransportLib
-                .connect(device)
-                .then(transport => {
-                  this.walletConstructor(transport, this.password.toString())
-                    .then(_newWallet => {
-                      if (_newWallet) {
-                        this.$emit('hardwareWalletOpen', _newWallet);
-                      } else {
-                        this.walletConstructor.errorHandler({
-                          name: 'NoWalletInstance'
-                        });
-                      }
-                    })
-                    .catch(this.walletConstructor.errorHandler);
-                })
-                .catch(this.walletConstructor.errorHandler);
-            } catch (error) {
-              this.walletConstructor.errorHandler(error);
-            }
-          }
-        });
-      } else {
-        this.walletConstructor('', this.password)
-          .then(_newWallet => {
-            this.$emit('hardwareWalletOpen', _newWallet);
-          })
-          .catch(this.walletConstructor.errorHandler);
-      }
+      this.walletConstructor('', this.password)
+        .then(_newWallet => {
+          this.$emit('hardwareWalletOpen', _newWallet);
+        })
+        .catch(this.walletConstructor.errorHandler);
     },
     switchViewPassword() {
       this.show = !this.show;
