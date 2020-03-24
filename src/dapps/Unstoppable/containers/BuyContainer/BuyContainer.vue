@@ -33,12 +33,12 @@ export default {
   },
   beforeMount() {
     if (this.domainName === '' || !this.domainPrice) {
-      this.$router.replace('/interface/dapps/unstoppable');
+      this.$router.push('/interface/dapps/unstoppable');
     }
   },
   methods: {
     registerDomain() {
-      this.$router.push({ path: 'buy/stripe' });
+      this.$router.push({ path: 'buy/payment-method' });
     }
   }
 };

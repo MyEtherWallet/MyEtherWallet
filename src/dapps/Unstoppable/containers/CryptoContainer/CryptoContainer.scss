@@ -1,6 +1,6 @@
 @import '../../Unstoppable';
 
-.stripe-container {
+.crypto-container {
   @extend %template-container;
 }
 
@@ -33,7 +33,7 @@
   }
 }
 
-.stripe-form-container {
+.crypto-form-container {
   width: 100%;
   padding-left: 60px;
   padding-right: 60px;
@@ -54,24 +54,22 @@
   h5 {
     font-weight: 600;
   }
-  .secured-by-stripe {
+  .secured-by-crypto {
     color: #6772e5;
   }
-  .pay-with-crypto {
+  .pay-with-card {
     font-weight: 500;
     color: $mew-green;
     cursor: pointer;
   }
-  .stripe-form-header {
+  .crypto-form-header {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  .stripe-form-body {
-    // margin-top: 10px;
-  }
-  .email-form-field-container {
+
+  .crypto-form-field-container {
     margin-top: 20px;
     width: 100%;
   }
@@ -79,13 +77,12 @@
     background-color: $background-color-1;
     border: 0;
     border-radius: 5px 0 0 5px;
-    // margin-right: 20px;
     padding: 13px 15px;
     margin-top: 5px;
     width: 100%;
     font-weight: 500;
   }
-  .stripe-card-input {
+  .crypto-card-input {
     margin-top: 10px;
   }
   .pay-button {
@@ -94,7 +91,49 @@
   }
 }
 
-.error-message {
+.crypto-field-container {
   margin-top: 15px;
+}
+
+.crypto-field-label {
+  padding: 10px 0;
+  color: black;
+}
+
+.crypto-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 6px;
+  background-color: #f5f5f5;
+  padding: 10px;
+  h6 {
+    word-break: break-all;
+  }
+}
+
+.qr-code {
+  background-color: #f2fafa;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+.margin-bottom {
+  margin-bottom: 25px;
+}
+.payment-pending {
+  margin-bottom: 10px;
+}
+
+.hidden {
+  display: 'hidden';
+}
+.copy-button {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.error-message {
+  margin: 15px 0;
   color: $red-1;
 }
