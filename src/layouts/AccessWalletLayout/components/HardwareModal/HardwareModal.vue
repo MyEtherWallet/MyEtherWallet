@@ -61,7 +61,6 @@ import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
 import platform from 'platform';
-import store from 'store';
 import {
   KeepkeyWallet,
   TrezorWallet,
