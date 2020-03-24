@@ -1,5 +1,5 @@
 <template>
-  <BaseOverlay :open="open" :close="close" close-text="Cancel">
+  <BaseOverlay :open="open" :close="close" :back="false" close-text="Cancel">
     <h2 class="text-center mb-6">Settings</h2>
     <WhiteSheet>
       <div class="overlay-content">
