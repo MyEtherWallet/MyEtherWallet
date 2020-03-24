@@ -307,7 +307,7 @@ export default {
           break;
         default:
           Toast.responseHandler(
-            new Error('Something went wrong!'),
+            new Error(this.$t('errosGlobal.something-went-wrong')),
             Toast.ERROR
           );
           break;
