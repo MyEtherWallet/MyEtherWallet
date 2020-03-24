@@ -31,6 +31,11 @@ describe('BuySubdomain.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   xit('should render correct knownRegistrarInstances data', () => {
     wrapper.find('.subdomain-input input').setValue('adsfasdf');
     const web3C = newWeb3.eth.Contract;

@@ -61,6 +61,11 @@ describe('DappsContainer.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct localDapps data', () => {
     for (const [i, sortedObject] of wrapper.vm.sortedObject.entries()) {
       const dappsButtonTitle = wrapper.vm.$el.querySelectorAll(

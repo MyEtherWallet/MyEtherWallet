@@ -36,6 +36,11 @@ describe('InitialENSStateContainer.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct domain name', () => {
     wrapper.setProps({ domainName });
     expect(wrapper.vm.$el.querySelector('.domain-name input').value).toEqual(
