@@ -57,16 +57,10 @@ import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
 import platform from 'platform';
-import {
-  KeepkeyWallet,
-  TrezorWallet,
-  BitBoxWallet,
-  SecalotWallet
-} from '@/wallets';
+import { KeepkeyWallet, TrezorWallet, SecalotWallet } from '@/wallets';
 import {
   LEDGER as LEDGER_TYPE,
   TREZOR as TREZOR_TYPE,
-  BITBOX as BITBOX_TYPE,
   SECALOT as SECALOT_TYPE,
   KEEPKEY as KEEPKEY_TYPE,
   FINNEY as FINNEY_TYPE,
@@ -83,6 +77,10 @@ export default {
       default: function() {}
     },
     hardwareWalletOpen: {
+      type: Function,
+      default: function() {}
+    },
+    bitboxSelectOpen: {
       type: Function,
       default: function() {}
     },
@@ -123,7 +121,7 @@ export default {
             'http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
         },
         {
-          name: BITBOX_TYPE,
+          name: 'BitBox',
           imgPath: bitbox,
           text: 'BitBox',
           disabled: false,
@@ -174,7 +172,7 @@ export default {
   mounted() {
     isSupported().then(res => {
       this.items.forEach(item => {
-        const u2fhw = [SECALOT_TYPE, LEDGER_TYPE, BITBOX_TYPE];
+        const u2fhw = [SECALOT_TYPE, LEDGER_TYPE];
         const inMobile = [SECALOT_TYPE, KEEPKEY_TYPE];
         const webUsb = [KEEPKEY_TYPE, LEDGER_TYPE];
 
@@ -229,11 +227,9 @@ export default {
               TrezorWallet.errorHandler(e);
             });
           break;
-        case BITBOX_TYPE:
-          this.$emit('hardwareRequiresPassword', {
-            walletConstructor: BitBoxWallet,
-            hardwareBrand: 'BitBox'
-          });
+        case 'BitBox':
+          this.bitboxSelectOpen();
+          this.$refs.hardware.hide();
           break;
         case SECALOT_TYPE:
           this.$emit('hardwareRequiresPassword', {

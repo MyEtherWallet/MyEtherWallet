@@ -19,7 +19,7 @@ module.exports = {
   reporters: ['default', 'jest-skipped-reporter'],
   transform: {
     '^.+\\.vue$': 'vue-jest',
-    '.+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$':
+    '.+\\.(css|styl|less|sass|scss|svg|png|jpg|gif|ttf|woff|woff2)$':
       'jest-transform-stub',
     '^.+\\.jsx?$': 'babel-jest'
   },
@@ -33,7 +33,7 @@ module.exports = {
     '\\.md': '<rootDir>/tests/unit/__mocks__/mdMockup.js'
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(vue-router|bootstrap|register-service-worker|vue-tel-input|@ledgerhq/hw-transport-u2f))'
+    'node_modules/(?!(vue-router|bootstrap|register-service-worker|vue-tel-input|@ledgerhq/hw-transport-u2f|bitbox02-api/src/(?!(bitbox02-api-go*))))'
   ],
   moduleDirectories: ['node_modules'],
   snapshotSerializers: ['jest-serializer-vue'],
