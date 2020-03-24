@@ -115,7 +115,7 @@ export default {
         case BITBOX02_TYPE:
           // eslint-disable-next-line no-case-declarations
           let bb02;
-          BitBox02Wallet(this.$store.dispatch)
+          BitBox02Wallet()
             .then(_newWallet => {
               bb02 = _newWallet;
               this.$emit('bitbox02Open', bb02);
