@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-mix.json';
-import contracts from '@/contracts/contract-abi-mix.json';
+import tokens from '@/_generated/tokens/tokens-mix.json';
+import contracts from '@/_generated/contracts/contract-abi-mix.json';
 import mix from '@/assets/images/icons/network.svg';
 
 export default {

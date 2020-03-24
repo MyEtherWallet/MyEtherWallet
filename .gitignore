@@ -20,11 +20,6 @@ release
 chrome-extension
 
 # Generated files
-src/contracts/
-src/tokens/
-src/address-darklist/
-src/url-darklist/
-src/url-lightlist/
 src/_generated
 /src/partners/changelly/config/currencies.json
 /src/partners/partnersConfig/EthereumTokens.json
