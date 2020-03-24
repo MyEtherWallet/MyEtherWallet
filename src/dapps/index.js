@@ -18,8 +18,8 @@ const dapps = {
     title: 'unstoppable.title',
     desc: 'unstoppable.dapp-desc',
     supportedNetworks: [ETH.name],
-    lastUpdated: '3/08/2020',
-    releaseDate: '3/08/2020'
+    lastUpdated: '3/23/2020',
+    releaseDate: '3/23/2020'
   },
   manageEns: {
     route: '/interface/dapps/manage-ens',
