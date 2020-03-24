@@ -6,7 +6,7 @@
     z-index="100"
     class="theme--light-text--dark-space theme--dark-text--blue"
   >
-    <div class="overlay-back-button">
+    <div v-if="back" class="overlay-back-button">
       <BackButton text="Back" />
     </div>
     <div class="overlay-close-button">
@@ -23,6 +23,7 @@ import BackButton from '@/components/Buttons/BackButton';
 export default {
   components: { CloseButton, BackButton },
   props: {
+    back: { default: false, type: Boolean },
     closeText: { default: '', type: String },
     open: { default: false, type: Boolean },
     close: {

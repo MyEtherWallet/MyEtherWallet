@@ -1,5 +1,5 @@
 <template>
-  <BaseOverlay :open="open" :close="close" close-text="Cancel">
+  <BaseOverlay :open="open" :close="close" :back="true" close-text="Cancel">
     <OverlayTabs class="overlay-content">
       <v-tabs v-model="activeTab">
         <v-tab :key="1" />

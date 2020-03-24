@@ -9,9 +9,9 @@
       color="white"
       background-color="gray"
     />
-    <div class="dev-only">
-      <div class="text-color--dark-sacramento font-weight--500 mb-n2">
-        For development only
+    <div class="dev-only d-flex align-center">
+      <div class="text-color--dark-sacramento mr-5">
+        For development only --->
       </div>
       <v-switch
         v-model="dark"
@@ -19,6 +19,7 @@
         inset
         color="white"
         :label="dark ? 'Dark Mode' : 'Light Mode'"
+        class="ma-0 pa-0"
       />
     </div>
   </div>
@@ -43,12 +44,12 @@ export default {
 <style lang="scss" scoped>
 .dev-only {
   position: fixed;
-  top: 10px;
-  right: 10px;
+  top: 0px;
+  right: 0px;
   z-index: 99999999;
   background-color: #00b9ff;
-  padding: 10px;
-  border-radius: 10px;
+  padding: 0 10px;
+  border-radius: 0 0 0 10px;
   box-shadow: 0 0 10px #0000004a;
 }
 </style>
