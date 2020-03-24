@@ -21,3 +21,7 @@ chrome-extension
 
 # Generated files
 src/_generated
+/src/partners/changelly/config/currencies.json
+/src/partners/partnersConfig/EthereumTokens.json
+/src/partners/partnersConfig/OtherCoins.json
+/src/partners/kyber/config/currenciesETH.json

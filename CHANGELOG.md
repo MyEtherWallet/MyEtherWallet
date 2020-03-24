@@ -6,6 +6,7 @@
 
 ### Bug
 
+- Fix exit-to-fiat dropdown, iban indicator [#2134](https://github.com/MyEtherWallet/MyEtherWallet/pull/2134)
 - Fix button positions [#2125](https://github.com/MyEtherWallet/MyEtherWallet/pull/2125)
 
 ### Devop
@@ -25,7 +26,7 @@
 
 ### Bugs
 
-- MEW Wallet modal ui changes [#2112] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2112)
+- MEW Wallet modal ui changes [#2112](https://github.com/MyEtherWallet/MyEtherWallet/pull/2112)
 
 ### Release v5.4.2-hotfix.1
 
@@ -36,6 +37,7 @@
 ### Release v5.4.2
 
 ### Feature
+
 - MEW Wallet UI changes [#2048](https://github.com/MyEtherWallet/MyEtherWallet/pull/2048)
 
 ### Bugs
