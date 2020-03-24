@@ -62,7 +62,6 @@ import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
 import platform from 'platform';
 import store from 'store';
-import cwsTransportLib from '@coolwallets/transport-web-ble';
 import {
   KeepkeyWallet,
   TrezorWallet,
@@ -262,14 +261,12 @@ export default {
           break;
         case BITBOX_TYPE:
           this.$emit('hardwareRequiresPassword', {
-            walletConstructor: BitBoxWallet,
-            hardwareBrand: 'BitBox'
+            walletConstructor: BitBoxWallet
           });
           break;
         case SECALOT_TYPE:
           this.$emit('hardwareRequiresPassword', {
-            walletConstructor: SecalotWallet,
-            hardwareBrand: 'Secalot'
+            walletConstructor: SecalotWallet
           });
           break;
         case KEEPKEY_TYPE:
@@ -305,6 +302,7 @@ export default {
             });
           break;
         case COOLWALLET_TYPE:
+<<<<<<< HEAD
           // eslint-disable-next-line
           const hasStoredPw = store.get('cwPass') || null;
           if (hasStoredPw) {
@@ -338,6 +336,11 @@ export default {
               hardwareBrand: 'CoolWallet'
             });
           }
+=======
+          this.$emit('hardwareRequiresPassword', {
+            walletConstructor: CoolWallet
+          });
+>>>>>>> d90943b70... change coolwallet workflow
           break;
         default:
           Toast.responseHandler(
