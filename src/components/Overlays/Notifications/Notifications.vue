@@ -1,79 +1,55 @@
 <template>
   <BaseOverlay :open="open" :close="close" close-text="Cancel">
-    <OverlayTabs class="overlay-content">
-      <v-tabs v-model="activeTab">
-        <v-tab :key="1" />
-        <v-tab :key="2" />
-
-        <v-tab-item>
-          <div class="width--100-percent">
-            <h2 class="text-center mb-8">1. Connect with Ledger</h2>
-            <WhiteSheet>
-              <div class="pa-8">
-                <div class="mt-2 mb-9 text-center">
-                  <img
-                    width="70"
-                    height="70"
-                    src="@/assets/images/currencies/icon-eth-blue.svg"
-                  />
-                </div>
-                <InputSearch
-                  v-model="appSelected"
-                  :items="apps"
-                  title="Choose your coin"
-                  placeholder="Search..."
-                  class="mb-1"
-                />
-                <InputSearch
-                  v-model="pathSelected"
-                  :items="path"
-                  title="HD derivation path"
-                  placeholder="Search..."
-                  class="mb-1"
-                />
-
-                <div class="text-center">
-                  <StdButton fullwidth @click.native="activeTab = 1">
-                    Connect with Ledger
-                  </StdButton>
-                </div>
-              </div>
-            </WhiteSheet>
+    <div class="overlay-content">
+      <h2 class="text-center mb-8">Notifications</h2>
+      <WhiteSheet>
+        <div class="pa-8">
+          <div>
+            <div class="text-center font-weight-bold">1/8/2020</div>
+            <v-expansion-panels>
+              <v-expansion-panel>
+                <v-expansion-panel-header>Item</v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                  laboris nisi ut aliquip ex ea commodo consequat.
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <v-expansion-panel>
+                <v-expansion-panel-header>Item</v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                  laboris nisi ut aliquip ex ea commodo consequat.
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <v-expansion-panel>
+                <v-expansion-panel-header>Item</v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                  laboris nisi ut aliquip ex ea commodo consequat.
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
           </div>
-        </v-tab-item>
-        <v-tab-item>
-          <div class="width--100-percent">
-            <h2 class="text-center mb-8">2. Connect with Ledger</h2>
-            <WhiteSheet>
-              <div class="pa-8">
-                <div class="text-center">
-                  <StdButton fullwidth @click.native="activeTab = 0">
-                    Confirm & send
-                  </StdButton>
-                </div>
-              </div>
-            </WhiteSheet>
-          </div>
-        </v-tab-item>
-      </v-tabs>
-    </OverlayTabs>
+        </div>
+      </WhiteSheet>
+    </div>
   </BaseOverlay>
 </template>
 
 <script>
 import BaseOverlay from '../BaseOverlay';
-import OverlayTabs from '@/components/OverlayTabs';
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
-import StdButton from '@/web/components/StdButton';
-import InputSearch from '@/components/Inputs/InputSearch1';
 
 export default {
   components: {
     BaseOverlay,
-    OverlayTabs,
-    WhiteSheet,
-    StdButton,
-    InputSearch
+    WhiteSheet
   },
   props: {
     open: { default: false, type: Boolean },
@@ -85,31 +61,13 @@ export default {
     }
   },
   data() {
-    return {
-      activeTab: 0,
-      tabs: { id: 0, title: '' },
-      appSelected: '',
-      apps: [
-        { name: 'Ethereum', value: 'eth' },
-        { name: 'Ethereum2', value: 'eth2' },
-        { name: 'Ethereum3', value: 'eth3' }
-      ],
-      pathSelected: '',
-      path: [
-        { name: "m/44'/60'/0'", value: '1' },
-        { name: "m/44'/60'/2'", value: '2' }
-      ]
-    };
+    return {};
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.v-tabs-bar {
-  display: none;
-}
-
 .overlay-content {
-  width: 500px;
+  width: 700px;
 }
 </style>
