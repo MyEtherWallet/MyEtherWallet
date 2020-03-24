@@ -12,7 +12,7 @@
     "build:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run build",
     "start:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run buildwatch",
     "buildwatch": "npm run update && vue-cli-service build --watch",
-    "test": "npm run update:lists && jest --clearCache && npm run test:unit",
+    "test": "npm run update:lists && npm run update:swap && jest --clearCache && npm run test:unit",
     "codecov": "npm run test && codecov",
     "dev": "npm run update && npm run update:mainlists && vue-cli-service serve --watch",
     "lint:code": "vue-cli-service lint",
