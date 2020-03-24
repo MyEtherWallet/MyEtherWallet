@@ -1,6 +1,7 @@
 ### Feature
 
 - WalletConnect & WalletLink Support [#1924](https://github.com/MyEtherWallet/MyEtherWallet/pull/1924)
+- Add BitBox 2 support [#1957](https://github.com/MyEtherWallet/MyEtherWallet/pull/1957)
 
 ### Bug
 
