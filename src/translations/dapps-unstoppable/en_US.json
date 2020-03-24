@@ -5,7 +5,14 @@
   "search-domain-prompt": "Find your blockchain domain",
   "stripe-email-prompt": "Email",
   "stripe-card-prompt": "Card Details",
+  "pay-with-credit-card": "Pay with credit card",
+  "pay-with-crypto": "Pay with crypto",
+  "send-payment": "Send Payment",
+  "ethereum-payment-address": "Ethereum payment address",
+  "payment-amount": "Payment amount",
+  "pending-crypto-payment": "Pending Payment: {confirmations} of {confirmationsRequired} confirmations",
   "secured-by-stripe": "Secured Checkout Powered by",
+  "insufficient-balance": "Insufficient balance: Add more ETH to your wallet or pay with credit card",
   "pay": "Pay",
   "error": {
     "stripe-payment": "Payment failed. Please try again later",
@@ -25,6 +32,7 @@
     "six-char": "Please enter at least 6 characters",
     "stripe-email-placeholder": "Your email"
   },
+  "view-transfer-transaction": "You can view the transfer transaction on",
   "continue": "Continue",
   "congratulations": "Congratulations!",
   "transfer-pending": "Transfer Pending",
