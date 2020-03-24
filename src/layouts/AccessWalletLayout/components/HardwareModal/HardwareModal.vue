@@ -317,14 +317,16 @@ export default {
                       this.$emit('hardwareWalletOpen', _newWallet);
                     } else {
                       Toast.responseHandler(
-                        new Error('No wallet instance!'),
+                        new Error(
+                          this.$t('coolWalletError.no-wallet-instance')
+                        ),
                         Toast.ERROR
                       );
                     }
                   })
                   .catch(() => {
                     Toast.responseHandler(
-                      new Error('Having issues with pairing cool wallet'),
+                      new Error(this.$t('coolWalletError.pairing-issue')),
                       Toast.ERROR
                     );
                   });
@@ -339,7 +341,7 @@ export default {
           break;
         default:
           Toast.responseHandler(
-            new Error('Something went wrong!'),
+            new Error(this.$t('errosGlobal.something-went-wrong')),
             Toast.ERROR
           );
           break;
