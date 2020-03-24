@@ -7,8 +7,10 @@
       </div>
       <div class="stripe-form-container">
         <div class="stripe-form-header">
-          <h3>Pay with credit card</h3>
-          <h5 v-show="false" class="pay-with-crypto">Pay with crypto</h5>
+          <h3>{{ $t('unstoppable.pay-with-credit-card') }}</h3>
+          <h5 class="pay-with-crypto" @click="handlePayWithCryptoClick">
+            {{ $t('unstoppable.pay-with-crypto') }}
+          </h5>
         </div>
         <div class="stripe-form-body">
           <div class="stripe-form-field-container">
@@ -92,10 +94,15 @@ export default {
   },
   beforeMount() {
     if (this.domainName === '' || !this.domainPrice) {
-      this.$router.replace('/interface/dapps/unstoppable');
+      this.$router.push('/interface/dapps/unstoppable');
     }
   },
   methods: {
+    handlePayWithCryptoClick() {
+      this.$router.push(
+        '/interface/dapps/unstoppable/buy/payment-method/crypto'
+      );
+    },
     submit() {
       if (!this.account || !this.account.address) {
         return;
@@ -133,7 +140,7 @@ export default {
           })
           .then(({ order }) => {
             this.setOrderNumber(order.orderNumber);
-            this.$router.replace('/interface/dapps/unstoppable/claim-pending');
+            this.$router.push('/interface/dapps/unstoppable/claim-pending');
           })
           .catch(() => {
             this.paymentError = true;

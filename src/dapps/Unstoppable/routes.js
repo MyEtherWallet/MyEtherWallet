@@ -29,7 +29,7 @@ export default {
       props: true
     },
     {
-      path: 'buy/stripe',
+      path: 'buy/payment-method/stripe',
       name: 'Pay with Stripe',
       component: StripeContainer,
       props: true

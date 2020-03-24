@@ -8,7 +8,9 @@
       :domain-name-err="domainNameErr"
       :loading="loading"
       :account="account"
+      :web3="web3"
       :email="email"
+      :copied-to-clipboard="copiedToClipboard"
       :order-number="orderNumber"
       :set-order-number="setOrderNumber"
       @domainNameChange="updateDomainName"
@@ -50,6 +52,9 @@ export default {
       this.loading = false;
       this.domainPrice = 0;
       this.registrarTLD = 'crypto';
+    },
+    copiedToClipboard() {
+      Toast.responseHandler(this.$t('common.copied'), Toast.INFO);
     },
     parsedTld() {
       if (this.parsedHostName().length) {

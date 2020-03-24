@@ -15,10 +15,21 @@
       </h5>
       <h5>
         {{ $t('unstoppable.manage-on-one') + ' ' }}
-        <a href="https://unstoppabledomains.com" target="_blank"
+        <a
+          href="https://unstoppabledomains.com"
+          target="_blank"
+          rel="noopener noreferrer"
           >unstoppabledomains.com</a
         >
+        <br />
         {{ ' ' + $t('unstoppable.manage-on-two') }}
+      </h5>
+      <br />
+      <h5 v-show="txHash">
+        {{ $t('unstoppable.view-transfer-transaction') + ' ' }}
+        <a :href="etherscanLink" target="_blank" rel="noopener noreferrer"
+          >Etherscan</a
+        >
       </h5>
       <div class="spinner-container">
         <i class="fa fa-spinner fa-spin" />
@@ -47,14 +58,20 @@ export default {
       default: ''
     }
   },
+  data() {
+    return { txHash: '' };
+  },
   computed: {
     address() {
       return this.account.address;
+    },
+    etherscanLink() {
+      return 'https://etherscan.io/tx/' + this.txHash;
     }
   },
   beforeMount() {
     if (!this.domainName || !this.email || !this.orderNumber) {
-      this.$router.replace('/interface/dapps/unstoppable');
+      this.$router.push('/interface/dapps/unstoppable');
     }
   },
   mounted() {
@@ -70,8 +87,11 @@ export default {
         .then(({ order }) => {
           if (order && order.items) {
             for (const item of order.items) {
+              if (item.blockchain && item.blockchain.txHash) {
+                this.txHash = item.blockchain.txHash;
+              }
               if (item.blockchain && item.blockchain.status === 'MINED') {
-                this.$router.replace('/interface/dapps/unstoppable/completed');
+                this.$router.push('/interface/dapps/unstoppable/completed');
               }
             }
           }

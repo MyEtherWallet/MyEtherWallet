@@ -49,7 +49,7 @@ export default {
   },
   beforeMount() {
     if (this.domainName === '' || !this.domainPrice) {
-      this.$router.replace('/interface/dapps/unstoppable');
+      this.$router.push('/interface/dapps/unstoppable');
     }
   },
   methods: {

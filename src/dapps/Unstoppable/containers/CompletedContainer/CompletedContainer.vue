@@ -50,12 +50,12 @@ export default {
   },
   beforeMount() {
     if (!this.domainName) {
-      this.$router.replace('/interface/dapps/unstoppable');
+      this.$router.push('/interface/dapps/unstoppable');
     }
   },
   methods: {
     handleContinue() {
-      this.$router.replace('/interface/dapps/unstoppable');
+      this.$router.push('/interface/dapps/unstoppable');
     }
   }
 };
