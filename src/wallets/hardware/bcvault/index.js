@@ -31,6 +31,12 @@ class BCVault {
   async init() {
     // fetch devices
     this.deviceNumber = await this.bcWallet.getDevices().catch(errorHandler);
+    if (!this.deviceNumber) {
+      errorHandler({
+        jsError: 'mew3'
+      });
+      return;
+    }
     // get wallet of first device and password
     // not sure if we want the users to pass this as a parameter or ask user
     // for which wallet to use
@@ -84,7 +90,10 @@ class BCVault {
           newTx,
           false
         )
-        .catch(errorHandler);
+        .catch(err => {
+          errorHandler(err);
+          return;
+        });
       if (result) {
         const resultTx = new Transaction(result);
         tx.v = getBufferFromHex(sanitizeHex(resultTx.v.toString('hex')));
