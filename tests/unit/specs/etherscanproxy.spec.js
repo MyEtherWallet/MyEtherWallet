@@ -1,6 +1,6 @@
-import EtherscanProxy from '@/wallets/web3-provider/etherscan-proxy';
-const SERVERURL = 'https://api.etherscan.io/api';
-const API_KEY = 'DSH5B24BQYKD1AD8KUCDY3SAQSS6ZAU175';
+// import Ether/scanProxy from '@/wallets/web3-provider/etherscan-proxy';
+// const SERVERURL = 'https://api.etherscan.io/api';
+// const API_KEY = 'DSH5B24BQYKD1AD8KUCDY3SAQSS6ZAU175';
 
 describe('EtherScan Proxy', () => {
   xit('should respond correct json rpc', async () => {
