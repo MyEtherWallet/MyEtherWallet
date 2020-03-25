@@ -35,6 +35,11 @@ describe('GettingStarted.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct cwwCurrent data', () => {
     expect(
       wrapper

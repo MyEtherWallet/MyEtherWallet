@@ -13,5 +13,5 @@ describe('Blockie.vue', () => {
     );
   });
 
-  it('should render correct contents', () => {});
+  xit('should render correct contents', () => {});
 });

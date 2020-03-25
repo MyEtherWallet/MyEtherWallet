@@ -30,6 +30,11 @@ describe('DropDownUnitSelector.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct currentSelected props', () => {
     const currentSelected = capitalize(wrapper.props().currentSelected);
     expect(
