@@ -50,6 +50,11 @@ describe('MobileNetworkBlock.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct parsedNetwork data', () => {
     expect(wrapper.find('.fa-spinner').isVisible()).toBe(false);
     wrapper.setData({ parsedNetwork: '' });

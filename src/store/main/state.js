@@ -1,5 +1,5 @@
 import nodeList from '@/networks';
-import darklist from '@/address-darklist/address-darklist.json';
+import darklist from '@/_generated/address-darklist/address-darklist.json';
 import store from 'store';
 import { MEW_CX } from '@/builds/configs/types';
 if (store.get('notifications') === undefined) store.set('notifications', {});

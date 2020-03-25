@@ -64,6 +64,11 @@ describe('InterfaceTokens.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct search data', () => {
     const search = 'search';
     wrapper.setData({ search });

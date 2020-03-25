@@ -55,8 +55,8 @@ import trezor from '@/assets/images/icons/HardwareWallet/trezor.svg';
 import keepkey from '@/assets/images/icons/HardwareWallet/keepkey.svg';
 import finney from '@/assets/images/icons/button-finney-hover.png';
 import xwallet from '@/assets/images/icons/HardwareWallet/xwallet.svg';
-import coolwallet from '@/assets/images/icons/HardwareWallet/coolwallet.svg';
 import bcvault from '@/assets/images/icons/HardwareWallet/bcvault.svg';
+import coolwallet from '@/assets/images/icons/HardwareWallet/coolwallet.svg';
 import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
@@ -66,8 +66,8 @@ import {
   TrezorWallet,
   BitBoxWallet,
   SecalotWallet,
-  CoolWallet,
-  BCVaultWallet
+  BCVaultWallet,
+  CoolWallet
 } from '@/wallets';
 import {
   LEDGER as LEDGER_TYPE,
@@ -288,11 +288,6 @@ export default {
           this.openXwallet();
           this.$refs.hardware.hide();
           break;
-        case COOLWALLET_TYPE:
-          this.$emit('hardwareRequiresPassword', {
-            walletConstructor: CoolWallet
-          });
-          break;
         case BCVAULT_TYPE:
           // eslint-disable-next-line
           const bcvaultInstance = BCVaultWallet();
@@ -306,6 +301,11 @@ export default {
             .catch(e => {
               BCVaultWallet.errorHandler(e);
             });
+          break;
+        case COOLWALLET_TYPE:
+          this.$emit('hardwareRequiresPassword', {
+            walletConstructor: CoolWallet
+          });
           break;
         default:
           Toast.responseHandler(

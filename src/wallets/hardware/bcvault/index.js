@@ -46,10 +46,9 @@ class BCVault {
     await this.bcWallet
       .EnterGlobalPin(this.deviceNumber[0], this.bcWalletType)
       .catch(errorHandler);
-    const walletAddresses = await this.bcWallet.getBatchWalletDetails(
-      this.deviceNumber[0],
-      [bc.WalletType.ethereum]
-    );
+    const walletAddresses = await this.bcWallet
+      .getBatchWalletDetails(this.deviceNumber[0], [bc.WalletType.ethereum])
+      .catch(errorHandler);
 
     return walletAddresses;
   }

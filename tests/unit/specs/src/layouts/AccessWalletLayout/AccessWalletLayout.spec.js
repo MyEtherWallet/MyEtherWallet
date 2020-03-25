@@ -46,6 +46,11 @@ xdescribe('AccessWalletLayout.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct tokens data', () => {
     const tokens = [
       {

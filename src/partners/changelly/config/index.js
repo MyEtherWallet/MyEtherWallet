@@ -1,4 +1,4 @@
-import ChangellyCurrencies from './currencies.json';
+import ChangellyCurrencies from '@/_generated/partners/currencies.json';
 import {
   changellyMethods,
   statuses,

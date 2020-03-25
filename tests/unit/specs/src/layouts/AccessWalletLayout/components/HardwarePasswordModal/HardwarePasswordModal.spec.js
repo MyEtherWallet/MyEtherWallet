@@ -22,6 +22,11 @@ describe('HardwarePasswordModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct error data', () => {
     const error = 'error';
     wrapper.setData({ error });
