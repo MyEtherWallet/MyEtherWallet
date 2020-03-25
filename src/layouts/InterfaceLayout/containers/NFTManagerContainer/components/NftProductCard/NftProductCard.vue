@@ -6,7 +6,6 @@
       selected ? 'selected' : ''
     ]"
   >
-    <pre v-if="false">{{ data }}</pre>
     <div class="card-image mb-2">
       <img :src="getImgUrl(data.contract)" />
       <!--      <img v-if="data.itemName" :src="getImgUrl(data.itemName)" />-->
