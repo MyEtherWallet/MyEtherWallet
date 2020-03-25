@@ -61,8 +61,6 @@ import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
 import platform from 'platform';
-import store from 'store';
-import cwsTransportLib from '@coolwallets/transport-web-ble';
 import {
   KeepkeyWallet,
   TrezorWallet,
@@ -262,14 +260,12 @@ export default {
           break;
         case BITBOX_TYPE:
           this.$emit('hardwareRequiresPassword', {
-            walletConstructor: BitBoxWallet,
-            hardwareBrand: 'BitBox'
+            walletConstructor: BitBoxWallet
           });
           break;
         case SECALOT_TYPE:
           this.$emit('hardwareRequiresPassword', {
-            walletConstructor: SecalotWallet,
-            hardwareBrand: 'Secalot'
+            walletConstructor: SecalotWallet
           });
           break;
         case KEEPKEY_TYPE:
@@ -291,39 +287,9 @@ export default {
           this.$refs.hardware.hide();
           break;
         case COOLWALLET_TYPE:
-          // eslint-disable-next-line
-          const isRegistered = store.get('appId') || null;
-          if (isRegistered) {
-            cwsTransportLib.listen(async (error, device) => {
-              if (device) {
-                const transport = await cwsTransportLib.connect(device);
-                CoolWallet(transport, null)
-                  .then(_newWallet => {
-                    if (_newWallet) {
-                      this.$emit('hardwareWalletOpen', _newWallet);
-                    } else {
-                      Toast.responseHandler(
-                        new Error(
-                          this.$t('coolWalletError.no-wallet-instance')
-                        ),
-                        Toast.ERROR
-                      );
-                    }
-                  })
-                  .catch(() => {
-                    Toast.responseHandler(
-                      new Error(this.$t('coolWalletError.pairing-issue')),
-                      Toast.ERROR
-                    );
-                  });
-              }
-            });
-          } else {
-            this.$emit('hardwareRequiresPassword', {
-              walletConstructor: CoolWallet,
-              hardwareBrand: 'CoolWallet'
-            });
-          }
+          this.$emit('hardwareRequiresPassword', {
+            walletConstructor: CoolWallet
+          });
           break;
         case BCVAULT_TYPE:
           // eslint-disable-next-line
