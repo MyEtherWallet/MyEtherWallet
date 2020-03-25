@@ -299,7 +299,6 @@ export default {
               }
             })
             .catch(e => {
-              console.log(Object.keys(e));
               BCVaultWallet.errorHandler(e);
             });
           break;
