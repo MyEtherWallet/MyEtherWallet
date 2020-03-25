@@ -38,6 +38,11 @@ describe('DisconnectedModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   xit('should render correct browser data', () => {
     expect(
       wrapper.vm.$el.querySelectorAll('.the-button-box')[1].textContent.trim()

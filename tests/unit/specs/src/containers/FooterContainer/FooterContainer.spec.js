@@ -42,7 +42,10 @@ describe('FooterContainer.vue', () => {
       }
     });
   });
-
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
   it('should render correct lowerLinks', () => {
     const linkWrappers = wrapper.findAll(RouterLinkStub);
 

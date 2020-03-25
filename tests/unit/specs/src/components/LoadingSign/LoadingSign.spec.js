@@ -47,6 +47,11 @@ xdescribe('LoadingSign.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct loadingmessage1 props', () => {
     const loadingmessage1 = 'Loading...';
     expect(wrapper.find('.loading-message1').exists()).toBe(false);

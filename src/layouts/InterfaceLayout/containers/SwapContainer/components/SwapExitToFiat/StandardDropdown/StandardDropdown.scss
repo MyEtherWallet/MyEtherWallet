@@ -14,52 +14,8 @@
   .standard-dropdown {
     background-color: $white;
     position: relative;
-    //position: absolute;
     width: 100%;
     z-index: 2;
-
-    &.open {
-      @extend %open;
-
-      min-height: 200px;
-      position: relative;
-      border-radius: 4px;
-      border-top: 0;
-      border-top-left-radius: 0;
-      border-top-right-radius: 0;
-    }
-
-    .item-container {
-      max-height: 200px;
-      overflow-y: scroll;
-    }
-
-    .item {
-      border-bottom: 1px solid $light-grey-6;
-      cursor: pointer;
-      padding: 10px 15px;
-
-      p {
-        display: flex;
-        align-items: center;
-
-        i {
-          width: 40px;
-        }
-      }
-
-      &:last-child {
-        border-bottom: 0;
-      }
-
-      &:hover {
-        background-color: $light-grey-3;
-      }
-
-      &.selected {
-        background-color: $light-grey-3;
-      }
-    }
   }
 }
 
@@ -93,19 +49,14 @@
   position: absolute;
   width: 100%;
   z-index: 2;
-
+  max-height: 200px;
+  overflow-y: scroll;
+  border: 2px solid $light-grey-3;
   &.open {
     @extend %open;
 
-    border-radius: 4px;
     border-top: 0;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-  }
-
-  .item-container {
-    max-height: 200px;
-    overflow-y: scroll;
+    border-radius: 0 0 4px 4px;
   }
 
   .item {
@@ -165,7 +116,6 @@
 
 .dropdown-list {
   position: absolute;
-  //top: 63px;
   left: 0;
   z-index: 1;
   border-radius: 4px;
@@ -175,7 +125,6 @@
   background-color: $light-grey-1;
   ul {
     li {
-      padding: 10px 20px;
       cursor: pointer;
       border-bottom: 1px solid $light-grey-6;
 

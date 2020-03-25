@@ -35,6 +35,11 @@ describe('InterfaceBalanceModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct content', () => {
     expect(
       wrapper.vm.$el
