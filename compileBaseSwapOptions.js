@@ -101,7 +101,7 @@ class CompileSwapOptions {
       jsonrpc: '2.0',
       method: method,
       params: data,
-      id: uuid()
+      id: v4()
     };
   }
 

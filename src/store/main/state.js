@@ -10,13 +10,15 @@ let network = nodeList['ETH'][0];
 if (BUILD_TYPE !== MEW_CX && storedNetwork !== undefined) {
   network = storedNetwork;
   if (storedNetwork.type.name !== 'CUS') {
+    const iteratableArr = nodeList[storedNetwork.type.name];
     network = storedNetwork;
     network.type = nodeList[storedNetwork.type.name][0].type;
-    nodeList[storedNetwork.type.name].forEach(node => {
-      if (storedNetwork.service === node.service) {
-        network = node;
+    for (let index = 0; index < iteratableArr.length; index++) {
+      if (storedNetwork.service === iteratableArr[index].service) {
+        network = iteratableArr[index];
+        break;
       }
-    });
+    }
   }
 }
 
