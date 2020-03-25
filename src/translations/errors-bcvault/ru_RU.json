@@ -1,10 +1,10 @@
 {
-  "invalid-device-pin-or-password": "Can't unlock wallet. Device pin or Device global password invalid!",
-  "user-cancelled-action": "User closed BCVault modal!",
-  "user-no-action": "No user action received, closing connection.",
-  "browser-popup": "Could not create popup! Please enable popups in your browser!",
-  "only-one-wallet": "You only have 1 Ethereum wallet stored in this device",
-  "daemon0x6901": "Daemon error: 0x6901",
-  "can-only-sign-eth": "BCVault doesn't support other chains other than ETH main net.",
-  "check-daemon": "BCVault daemon might be turned off. Please see settings on BC Vault app."
+  "invalid-device-pin-or-password": "Невозможно разблокировать кошелек. Неверный PIN-код или глобальный пароль устройства!",
+  "user-cancelled-action": "Пользователь закрыл модуль BCVault!",
+  "user-no-action": "Нет действий пользователя, закрытие соединения.",
+  "browser-popup": "Не удалось создать всплывающее окно! Пожалуйста, включите всплывающие окна в вашем браузере!",
+  "only-one-wallet": "У вас есть только 1 сохраненный кошелек Ethereum на этом устройстве",
+  "daemon0x6901": "Ошибка демона: 0x6901",
+  "can-only-sign-eth": "BCVault не поддерживает другие сети кроме основной сети ETH.",
+  "check-daemon": "Демон BCVault возможно отключен. Пожалуйста, см. настройки в приложении BC Vault."
 }
