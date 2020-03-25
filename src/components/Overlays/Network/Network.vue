@@ -7,7 +7,7 @@
 
         <v-tab-item>
           <div class="width--100-percent">
-            <h2 class="text-center mb-8">1. Connect with Ledger</h2>
+            <OverlayTitle title="1. Connect with Ledger" />
             <WhiteSheet>
               <div class="pa-8">
                 <div class="mt-2 mb-9 text-center">
@@ -43,7 +43,7 @@
         </v-tab-item>
         <v-tab-item>
           <div class="width--100-percent">
-            <h2 class="text-center mb-8">2. Connect with Ledger</h2>
+            <OverlayTitle title="1. Connect with Ledger" />
             <WhiteSheet>
               <div class="pa-8">
                 <div class="text-center">
@@ -62,6 +62,7 @@
 
 <script>
 import BaseOverlay from '../BaseOverlay';
+import OverlayTitle from '@/components/OverlayTitle';
 import OverlayTabs from '@/components/OverlayTabs';
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import StdButton from '@/web/components/StdButton';
@@ -70,6 +71,7 @@ import InputSearch from '@/components/Inputs/InputSearch1';
 export default {
   components: {
     BaseOverlay,
+    OverlayTitle,
     OverlayTabs,
     WhiteSheet,
     StdButton,

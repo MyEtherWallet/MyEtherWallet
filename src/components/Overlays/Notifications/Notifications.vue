@@ -1,7 +1,7 @@
 <template>
   <BaseOverlay :open="open" :close="close" close-text="Cancel">
     <div class="overlay-content">
-      <h2 class="text-center mb-8">Notifications</h2>
+      <OverlayTitle title="Notifications" />
       <WhiteSheet>
         <div class="pa-8">
           <div>
@@ -56,11 +56,13 @@
 
 <script>
 import BaseOverlay from '../BaseOverlay';
+import OverlayTitle from '@/components/OverlayTitle';
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
 
 export default {
   components: {
     BaseOverlay,
+    OverlayTitle,
     WhiteSheet
   },
   props: {
