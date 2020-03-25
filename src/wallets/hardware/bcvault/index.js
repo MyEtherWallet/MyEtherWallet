@@ -30,7 +30,10 @@ class BCVault {
 
   async init() {
     // fetch devices
-    this.deviceNumber = await this.bcWallet.getDevices().catch(errorHandler);
+    this.deviceNumber = await this.bcWallet.getDevices().catch(err => {
+      errorHandler(err);
+      return;
+    });
     if (!this.deviceNumber) {
       errorHandler({
         jsError: 'mew3'
@@ -93,7 +96,6 @@ class BCVault {
         )
         .catch(err => {
           errorHandler(err);
-          return;
         });
       if (result) {
         const resultTx = new Transaction(result);
@@ -111,7 +113,6 @@ class BCVault {
           );
         return getSignTransactionObject(tx);
       }
-      return result;
     };
     const msgSigner = async msg => {
       const result = await this.bcWallet
