@@ -16,10 +16,7 @@
         </div>
       </v-list-item>
       <v-list-item>
-        <div
-          class="cursor--pointer d-flex align-center"
-          @click="openSettings = true"
-        >
+        <div class="cursor--pointer d-flex align-center">
           <img
             width="23"
             height="23"
@@ -31,15 +28,15 @@
       </v-list-item>
     </v-list>
 
-    <TxConfirmation :open="openSettings" :close="closeSettings" />
+    <Settings :open="openSettings" :close="closeSettings" />
   </div>
 </template>
 
 <script>
-import TxConfirmation from '@/components/Overlays/TxConfirmation';
+import Settings from '@/components/Overlays/Settings';
 
 export default {
-  components: { TxConfirmation },
+  components: { Settings },
   data() {
     return {
       openSettings: false
