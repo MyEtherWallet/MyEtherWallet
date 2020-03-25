@@ -3,6 +3,7 @@
 ### Feature
 
 - Cool Wallet integration [#2087](https://github.com/MyEtherWallet/MyEtherWallet/pull/2087)
+- BCVault integration [#1990](https://github.com/MyEtherWallet/MyEtherWallet/pull/1990)
 - WalletConnect & WalletLink Support [#1924](https://github.com/MyEtherWallet/MyEtherWallet/pull/1924)
 
 ### Bug
