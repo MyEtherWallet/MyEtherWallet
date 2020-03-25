@@ -1,5 +1,14 @@
 <template>
-  <v-overlay :color="backgroundColor" opacity="1" :value="open" z-index="100">
+  <v-overlay
+    color="overlayBackground"
+    opacity="1"
+    :value="open"
+    z-index="100"
+    class="theme--light-text--dark-space theme--dark-text--blue"
+  >
+    <div v-if="back" class="overlay-back-button">
+      <BackButton text="Back" />
+    </div>
     <div class="overlay-close-button">
       <CloseButton :text="closeText" @click.native="close" />
     </div>
@@ -8,12 +17,13 @@
 </template>
 
 <script>
-import Var from '@/common/plugins/variables.js';
 import CloseButton from '@/components/Buttons/CloseButton';
+import BackButton from '@/components/Buttons/BackButton';
 
 export default {
-  components: { CloseButton },
+  components: { CloseButton, BackButton },
   props: {
+    back: { default: false, type: Boolean },
     closeText: { default: '', type: String },
     open: { default: false, type: Boolean },
     close: {
@@ -24,14 +34,14 @@ export default {
     }
   },
   data() {
-    return {
-      backgroundColor: Var.colorSets.lightMint
-    };
+    return {};
   }
 };
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/GlobalVariables.scss';
+
 .v-overlay {
   border-radius: 0;
 }
@@ -40,5 +50,11 @@ export default {
   position: fixed;
   top: 50px;
   right: 70px;
+}
+
+.overlay-back-button {
+  position: fixed;
+  top: 50px;
+  left: 70px;
 }
 </style>

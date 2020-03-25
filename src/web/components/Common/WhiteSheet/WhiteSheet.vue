@@ -1,8 +1,11 @@
 <template>
   <v-sheet
-    color="white"
+    color="componentBackgroundColor1"
     class="white-sheet"
     :class="sideinfo ? 'sideinfo' : ''"
+    :style="{
+      boxShadow: '0 0 15px' + $vuetify.theme.themes[theme].componentShadowColor1
+    }"
   >
     <slot />
   </v-sheet>
@@ -12,6 +15,11 @@
 export default {
   props: {
     sideinfo: { default: false, type: Boolean }
+  },
+  computed: {
+    theme() {
+      return this.$vuetify.theme.dark ? 'dark' : 'light';
+    }
   }
 };
 </script>
@@ -19,7 +27,6 @@ export default {
 <style lang="scss" scoped>
 .white-sheet {
   border-radius: 12px;
-  box-shadow: 0 0 20px #0000000f;
 }
 
 .sideinfo {

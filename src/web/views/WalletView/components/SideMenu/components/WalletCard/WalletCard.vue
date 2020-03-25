@@ -48,23 +48,38 @@
           </v-btn>
         </Tooltip>
 
-        <v-btn class="ml-auto" outlined small color="white">Switch ></v-btn>
+        <v-btn
+          class="ml-auto"
+          outlined
+          small
+          color="white"
+          @click="openChangeAddress = true"
+          >Switch ></v-btn
+        >
       </div>
     </div>
+    <ChangeAddress :open="openChangeAddress" :close="closeChangeAddress" />
   </div>
 </template>
 
 <script>
+import ChangeAddress from '@/components/Overlays/ChangeAddress';
 import Blockie from '@/web/components/Blockie';
 import Address from './components/Address';
 import Tooltip from '@/web/components/Tooltip';
 export default {
-  components: { Blockie, Tooltip, Address },
+  components: { Blockie, Tooltip, Address, ChangeAddress },
   data() {
     return {
+      openChangeAddress: false,
       iconColor: 'white',
       address: '0xc2a933600c3fe776777b4000665409c61493d417'
     };
+  },
+  methods: {
+    closeChangeAddress() {
+      this.openChangeAddress = false;
+    }
   }
 };
 </script>

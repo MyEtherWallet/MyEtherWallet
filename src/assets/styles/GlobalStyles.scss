@@ -4,6 +4,33 @@
   }
 }
 
+// Themes ===========================================================
+#app.theme--light .v-sheet,
+#app.theme--light .v-application {
+  color: $light-text !important;
+}
+
+#app.theme--dark .v-sheet,
+#app.theme--dark .v-application {
+  color: $blue-1 !important;
+}
+
+#app.theme--light .theme--light-text--white {
+  color: white !important;
+}
+
+#app.theme--light .theme--light-text--dark-space {
+  color: $dark-space !important;
+}
+
+#app.theme--dark .theme--dark-text--white {
+  color: white !important;
+}
+
+#app.theme--dark .theme--dark-text--blue {
+  color: $blue-1 !important;
+}
+
 // Style reset ======================================================
 * {
   font-family: "Roboto";
@@ -62,8 +89,6 @@ h5 {
 .theme--light.v-application {
   background: white !important;
 }
-
-// Remove uppercase style for all buttons
 
 .v-toolbar__content {
   padding: 0;

@@ -1,48 +1,82 @@
 <template>
-  <BaseOverlay :open="open" :close="close" close-text="Cancel">
-    <h2 class="text-center mb-6">Confirmation</h2>
-    <WhiteSheet>
-      <div class="overlay-content">
-        <div class="pa-8">
-          <FromToBlock />
-          <BalanceBlock />
+  <BaseOverlay :open="open" :close="close" :back="true" close-text="Cancel">
+    <OverlayTabs class="overlay-content">
+      <v-tabs v-model="activeTab">
+        <v-tab :key="1" />
+        <v-tab :key="2" />
 
-          <DividerX class="my-9" />
+        <v-tab-item>
+          <div class="width--100-percent">
+            <h2 class="text-center mb-8">1. Connect with Ledger</h2>
+            <WhiteSheet>
+              <div class="pa-8">
+                <div class="mt-2 mb-9 text-center">
+                  <img
+                    width="70"
+                    height="70"
+                    src="@/assets/images/currencies/icon-eth-blue.svg"
+                  />
+                </div>
+                <InputSearch
+                  v-model="appSelected"
+                  :items="apps"
+                  title="Choose your coin"
+                  placeholder="Search..."
+                  class="mb-1"
+                />
+                <InputSearch
+                  v-model="pathSelected"
+                  :items="path"
+                  title="HD derivation path"
+                  placeholder="Search..."
+                  class="mb-1"
+                />
 
-          <ExpantionBlock />
-
-          <DividerX class="my-9" />
-
-          <div class="text-center">
-            <StdButton>Confirm & send</StdButton>
+                <div class="text-center">
+                  <StdButton fullwidth @click.native="activeTab = 1">
+                    Connect with Ledger
+                  </StdButton>
+                </div>
+              </div>
+            </WhiteSheet>
           </div>
-        </div>
-        <ConfirmTransaction />
-      </div>
-    </WhiteSheet>
+        </v-tab-item>
+        <v-tab-item>
+          <div class="width--100-percent">
+            <h2 class="text-center mb-8">2. Confirm network & address</h2>
+            <WhiteSheet>
+              <AddressSelection />
+              <div class="pa-8">
+                <div class="text-center">
+                  <StdButton fullwidth @click.native="activeTab = 0">
+                    Access My Wallet
+                  </StdButton>
+                </div>
+              </div>
+            </WhiteSheet>
+          </div>
+        </v-tab-item>
+      </v-tabs>
+    </OverlayTabs>
   </BaseOverlay>
 </template>
 
 <script>
+import AddressSelection from './components/AddressSelection';
 import BaseOverlay from '../BaseOverlay';
+import OverlayTabs from '@/components/OverlayTabs';
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
-import ConfirmTransaction from '@/components/WarningBlocks/ConfirmTransaction';
 import StdButton from '@/web/components/StdButton';
-import DividerX from '@/components/DividerX';
-import FromToBlock from '@/components/FromToBlock';
-import BalanceBlock from '@/components/BalanceBlock';
-import ExpantionBlock from '@/components/ExpantionBlock';
+import InputSearch from '@/components/Inputs/InputSearch1';
 
 export default {
   components: {
+    AddressSelection,
     BaseOverlay,
+    OverlayTabs,
     WhiteSheet,
-    ConfirmTransaction,
     StdButton,
-    DividerX,
-    FromToBlock,
-    BalanceBlock,
-    ExpantionBlock
+    InputSearch
   },
   props: {
     open: { default: false, type: Boolean },
@@ -54,15 +88,31 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      activeTab: 0,
+      tabs: { id: 0, title: '' },
+      appSelected: '',
+      apps: [
+        { name: 'Ethereum', value: 'eth' },
+        { name: 'Ethereum2', value: 'eth2' },
+        { name: 'Ethereum3', value: 'eth3' }
+      ],
+      pathSelected: '',
+      path: [
+        { name: "m/44'/60'/0'", value: '1' },
+        { name: "m/44'/60'/2'", value: '2' }
+      ]
+    };
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
+.v-tabs-bar {
+  display: none;
+}
 
 .overlay-content {
-  max-width: 550px;
+  width: 500px;
 }
 </style>

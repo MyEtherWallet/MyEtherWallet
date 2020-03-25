@@ -1,8 +1,9 @@
 <template>
-  <v-sheet
-    tile
-    color="white"
+  <div
     class="d-flex align-center py-4 px-10 footer-container"
+    :style="{
+      boxShadow: '0 0 15px' + $vuetify.theme.themes[theme].componentShadowColor1
+    }"
   >
     <div class="mew-copyright">
       ©2020 MyEtherWallet. All rights reserved. Pricing taken from
@@ -15,21 +16,22 @@
       <div class="mx-4">|</div>
       <div>English <v-icon>mdi-chevron-down</v-icon></div>
     </div>
-  </v-sheet>
+  </div>
 </template>
 
 <script>
 export default {
-  components: {}
+  components: {},
+  computed: {
+    theme() {
+      return this.$vuetify.theme.dark ? 'dark' : 'light';
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/GlobalVariables.scss';
-.footer-container {
-  box-shadow: 0 0 20px #0000000f;
-}
-
 .mew-copyright {
   color: #999999;
   a {
