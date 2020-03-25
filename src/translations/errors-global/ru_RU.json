@@ -8,6 +8,6 @@
   "no-mobile-support": "Аппаратный кошелек не поддерживается мобильным браузером!",
   "something-went-wrong": "Что-то пошло не так!",
   "signer-address-different": "Адрес подписчика отличается от полученного адреса!",
-  "invalid-network-id-sig": "Invalid networkId signature returned. Expected: {expected}, Got: {got}",
-  "high-gas-limit-warning": "Внимание: Высокая цена газa означает более высокие комиссии за транзакцию."
+  "high-gas-limit-warning": "Внимание: Высокая цена газa означает более высокие комиссии за транзакцию.",
+  "invalid-network-id-sig": "Invalid networkId signature returned. Expected: {expected}, Got: {got}"
 }
