@@ -294,11 +294,12 @@ export default {
           bcvaultInstance
             .init()
             .then(res => {
-              if (res.length >= 1) {
+              if (res && res.length >= 1) {
                 this.openBcVault(res, bcvaultInstance);
               }
             })
             .catch(e => {
+              console.log(Object.keys(e));
               BCVaultWallet.errorHandler(e);
             });
           break;
