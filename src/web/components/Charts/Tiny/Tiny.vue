@@ -31,7 +31,8 @@ export default {
         },
         chart: {
           height: '60',
-          width: '80'
+          width: '80',
+          backgroundColor: 'transparent'
         },
         title: {
           text: ''
@@ -51,7 +52,6 @@ export default {
           {
             lineWidth: 1,
             data: this.data,
-            //color: '#05c0a5',
             color: this.linecolor,
             animation: {
               duration: 400

@@ -3,8 +3,10 @@
     <div class="d-flex">
       <div class="flex-grow-1">
         <EthBalance />
+        <NoBalance />
         <Spacer />
         <TokensValue />
+        <NoTokens />
       </div>
       <Spacer />
       <div>
@@ -23,7 +25,9 @@
 <script>
 import Spacer from '@/web/components/Common/Spacer';
 import EthBalance from './containers/EthBalance';
+import NoBalance from './containers/NoBalance';
 import TokensValue from './containers/TokensValue';
+import NoTokens from './containers/NoTokens';
 import Dapps from './containers/Dapps';
 
 import Network from '@/web/components/Network';
@@ -34,7 +38,9 @@ export default {
   components: {
     Spacer,
     EthBalance,
+    NoBalance,
     TokensValue,
+    NoTokens,
     Dapps,
     Network,
     Swap,

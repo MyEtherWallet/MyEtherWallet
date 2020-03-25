@@ -12,7 +12,7 @@
           text
           small
           depressed
-          :color="mewGreen"
+          :color="$vuetify.theme.themes.light.emerald"
         >
           <v-icon small class="top-button-icon">mdi-chevron-right</v-icon>
           Ethplorer
@@ -22,7 +22,7 @@
           text
           small
           depressed
-          :color="mewGreen"
+          :color="$vuetify.theme.themes.light.emerald"
         >
           <v-icon small class="top-button-icon">mdi-plus</v-icon>
           Custom Token
@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <table class="tokens-table mt-4">
+    <table class="tokens-table mt-4" :class="theme">
       <thead>
         <tr>
           <td style="width: 45px;"></td>
@@ -213,7 +213,6 @@
 </template>
 
 <script>
-import Var from '@/common/plugins/variables.js';
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import StdButton from '@/web/components/StdButton';
 import ChartTiny from '@/web/components/Charts/Tiny';
@@ -223,7 +222,6 @@ export default {
   components: { WhiteSheet, ChartTiny, StdButton, BlockTitle },
   data() {
     return {
-      mewGreen: Var.colorSets.emerald,
       chart1: [
         [1167609600000, 0.7137],
         [1167696000000, 0.7537],
@@ -308,6 +306,11 @@ export default {
       ]
     };
   },
+  computed: {
+    theme() {
+      return this.$vuetify.theme.dark ? 'dark' : 'light';
+    }
+  },
   beforeMount() {
     this.chartData = this.chart1d;
   }
@@ -336,8 +339,15 @@ export default {
     padding: 10px;
   }
 
+  &.light thead {
+    background-color: $light-table-background-1;
+  }
+
+  &.dark thead {
+    background-color: $dark-table-background-1;
+  }
+
   thead {
-    background-color: rgb(249, 249, 249);
     font-size: 11px;
     text-transform: uppercase;
     td {
@@ -349,9 +359,11 @@ export default {
   tbody {
     tr {
       padding: 0 10px;
+      &:last-child td {
+        border-bottom: 0;
+      }
     }
     td {
-      border-bottom: 1px solid #efefef;
       padding: 5px 10px;
     }
     td:first-child {
@@ -360,6 +372,14 @@ export default {
     td:last-child {
       padding-right: 30px;
     }
+  }
+
+  &.light tbody td {
+    border-bottom: 1px solid $light-table-line-1;
+  }
+
+  &.dark tbody td {
+    border-bottom: 1px solid $dark-table-line-1;
   }
 }
 </style>
