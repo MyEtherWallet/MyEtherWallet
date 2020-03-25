@@ -26,6 +26,11 @@ describe('TeamLayout.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct team members data', () => {
     const { members } = wrapper.vm.$data;
     const memberElements = wrapper.vm.$el.getElementsByClassName('member');

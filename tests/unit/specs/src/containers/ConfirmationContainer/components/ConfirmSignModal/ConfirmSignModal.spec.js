@@ -64,6 +64,11 @@ describe('ConfirmSignModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct signedMessage props', () => {
     expect(wrapper.vm.signedMessageSignature).toEqual(signedMessage);
   });

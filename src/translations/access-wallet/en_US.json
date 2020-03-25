@@ -11,7 +11,7 @@
   },
   "mobile-app": {
     "option-title": "Mobile App",
-    "examples": "WalletConnect; <br> Wallet Link",
+    "examples": "WalletConnect; WalletLink",
     "modal": {
       "title": "Mobile Access"
     },
@@ -140,5 +140,5 @@
   "get-it-now": "Get It Now",
   "or": "OR CONNECT WITH",
   "wallet-connect": "WalletConnect",
-  "wallet-link": "Wallet Link"
+  "wallet-link": "WalletLink"
 }

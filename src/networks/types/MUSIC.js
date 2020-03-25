@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-music.json';
-import contracts from '@/contracts/contract-abi-music.json';
+import tokens from '@/_generated/tokens/tokens-music.json';
+import contracts from '@/_generated/contracts/contract-abi-music.json';
 import music from '@/assets/images/networks/music.svg';
 
 export default {

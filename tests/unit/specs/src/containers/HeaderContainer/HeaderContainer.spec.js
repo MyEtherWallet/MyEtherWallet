@@ -123,6 +123,11 @@ xdescribe('HeaderContainer.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   xit('should render correct isPageOnTop data', () => {
     expect(
       wrapper

@@ -51,6 +51,11 @@ describe('FullWidthDropdownMenu.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct title props', () => {
     const title = 'title';
     wrapper.setProps({ title });
