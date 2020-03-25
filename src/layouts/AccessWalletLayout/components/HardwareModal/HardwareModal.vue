@@ -75,10 +75,10 @@ import {
   BITBOX as BITBOX_TYPE,
   SECALOT as SECALOT_TYPE,
   KEEPKEY as KEEPKEY_TYPE,
-  FINNEY as FINNEY_TYPE,
   XWALLET as XWALLET_TYPE,
-  BCVAULT as BCVAULT_TYPE,
-  COOLWALLET as COOLWALLET_TYPE
+  FINNEY as FINNEY_TYPE,
+  COOLWALLET as COOLWALLET_TYPE,
+  BCVAULT as BCVAULT_TYPE
 } from '@/wallets/bip44/walletTypes';
 export default {
   components: {
@@ -303,45 +303,9 @@ export default {
             });
           break;
         case COOLWALLET_TYPE:
-<<<<<<< HEAD
-          // eslint-disable-next-line
-          const hasStoredPw = store.get('cwPass') || null;
-          if (hasStoredPw) {
-            cwsTransportLib.listen(async (error, device) => {
-              if (device) {
-                const transport = await cwsTransportLib.connect(device);
-                CoolWallet(transport, hasStoredPw)
-                  .then(_newWallet => {
-                    if (_newWallet) {
-                      this.$emit('hardwareWalletOpen', _newWallet);
-                    } else {
-                      Toast.responseHandler(
-                        new Error(
-                          this.$t('coolWalletError.no-wallet-instance')
-                        ),
-                        Toast.ERROR
-                      );
-                    }
-                  })
-                  .catch(() => {
-                    Toast.responseHandler(
-                      new Error(this.$t('coolWalletError.pairing-issue')),
-                      Toast.ERROR
-                    );
-                  });
-              }
-            });
-          } else {
-            this.$emit('hardwareRequiresPassword', {
-              walletConstructor: CoolWallet,
-              hardwareBrand: 'CoolWallet'
-            });
-          }
-=======
           this.$emit('hardwareRequiresPassword', {
             walletConstructor: CoolWallet
           });
->>>>>>> d90943b70... change coolwallet workflow
           break;
         default:
           Toast.responseHandler(
