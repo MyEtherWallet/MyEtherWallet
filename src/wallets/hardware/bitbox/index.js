@@ -16,6 +16,7 @@ import {
   calculateChainIdFromV
 } from '../../utils';
 import commonGenerator from '@/helpers/commonGenerator';
+import Vue from 'vue';
 
 const NEED_PASSWORD = true;
 
@@ -54,10 +55,10 @@ class BitBoxWallet {
       if (signedChainId !== networkId)
         Toast.responseHandler(
           new Error(
-            'Invalid networkId signature returned. Expected: ' +
-              networkId +
-              ', Got: ' +
-              signedChainId,
+            Vue.$i18n.t('errorsGlobal.invalid-network-id-sig', {
+              got: signedChainId,
+              expected: networkId
+            }),
             'InvalidNetworkId'
           ),
           false
