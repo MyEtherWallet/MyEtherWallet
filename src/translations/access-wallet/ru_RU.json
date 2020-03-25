@@ -11,7 +11,7 @@
   },
   "mobile-app": {
     "option-title": "Мобильное приложение",
-    "examples": "WalletConnect; <br> WalletLink",
+    "examples": "WalletConnect; WalletLink",
     "modal": {
       "title": "Мобильный доступ"
     },
