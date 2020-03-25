@@ -30,6 +30,11 @@ describe('AddressQrcodeModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct address props', () => {
     const address = '';
     wrapper.setProps({ address });

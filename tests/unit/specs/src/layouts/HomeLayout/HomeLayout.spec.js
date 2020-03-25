@@ -35,6 +35,11 @@ describe('HomeLayout.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct contents', () => {
     expect(wrapper.vm.online).toBe(true);
   });
