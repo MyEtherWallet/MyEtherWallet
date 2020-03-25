@@ -78,7 +78,7 @@ const affiliates = [
     text: 'footer.cool-wallet',
     price: '99.00',
     description: 'buyHardwareWallet.desc.coolwallet',
-    href: 'https://www.stateofthedapps.com/',
+    href: 'https://coolwallet.io/product/coolwallet/?ref=myetherwallet',
     currency: '$',
     logo: 'coolwallet'
   },

@@ -153,8 +153,7 @@ export default {
           text: 'CoolWallet',
           disabled: false,
           msg: '',
-          link:
-            'https://coolwallet.io/product/coolwallet/?ref=myetherwalletmyetherwallet'
+          link: 'https://coolwallet.io/product/coolwallet/?ref=myetherwallet'
         },
         {
           name: FINNEY_TYPE,
@@ -193,8 +192,11 @@ export default {
           name: BCVAULT_TYPE,
           imgPath: bcvault,
           text: 'BC Vault',
-          disabled: false,
-          msg: '',
+          disabled: platform.name.toLowerCase() === 'firefox',
+          msg:
+            platform.name.toLowerCase() === 'firefox'
+              ? 'Browser not supported by Trezor'
+              : '',
           link: 'https://bc-vault.com/?wpam_id=53'
         }
       ]
