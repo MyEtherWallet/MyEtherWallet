@@ -1,6 +1,6 @@
 <template>
   <BaseOverlay :open="open" :close="close" close-text="Cancel">
-    <h2 class="text-center mb-6">Confirmation</h2>
+    <OverlayTitle title="Confirmation" />
     <WhiteSheet>
       <div class="overlay-content">
         <div class="pa-8">
@@ -25,6 +25,7 @@
 
 <script>
 import BaseOverlay from '../BaseOverlay';
+import OverlayTitle from '@/components/OverlayTitle';
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import ConfirmTransaction from '@/components/WarningBlocks/ConfirmTransaction';
 import StdButton from '@/web//components/StdButton';
@@ -36,6 +37,7 @@ import ExpantionBlock from '@/components/ExpantionBlock';
 export default {
   components: {
     BaseOverlay,
+    OverlayTitle,
     WhiteSheet,
     ConfirmTransaction,
     StdButton,
