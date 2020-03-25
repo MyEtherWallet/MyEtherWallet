@@ -25,9 +25,11 @@
             height="40px"
           />
           <div>
-            <p v-show="item.userData !== '' && item.userData !== null"> {{ item.userData }}</p>
+            <p v-show="item.userData !== '' && item.userData !== null">
+              {{ item.userData }}
+            </p>
             <p>{{ item.extraData + item.address }}</p>
-          <div>
+          </div>
         </div>
         <div
           :class="[selected !== '' ? '' : 'disable', 'submit-button']"
