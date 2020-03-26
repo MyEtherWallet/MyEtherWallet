@@ -44,13 +44,13 @@ jobs:
   include:
     - stage: run on pull requests
       script:
-        - docker run --rm $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run lint && npm run codecov && npm run build:history"
+        - docker run -t --rm $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run lint && npm run codecov && npm run build:history"
     - stage: add to codecov
       script:
         - docker run --rm $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run codecov"
     - stage: add to mewbuilds develop
       before_script:
-        - docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:history"
+        - docker run -t --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:history"
         - pip install --user awscli
       script:
         - aws s3 sync dist/ s3://mewbuilds/develop/ --delete --cache-control max-age=172800,public
@@ -63,7 +63,7 @@ jobs:
           --content-type text/html --acl public-read
     - stage: add to mewbuilds
       before_script:
-        - docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
+        - docker run -t --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
         - pip install --user awscli
         - ssh-keyscan -H $IPFS_NODE >> $HOME/.ssh/known_hosts
       script:
@@ -81,7 +81,7 @@ jobs:
         - aws s3 cp s3://mewbuilds/build/$TRAVIS_COMMIT/index.html s3://mewbuilds/build/$TRAVIS_COMMIT/index.html
           --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate
           --content-type text/html --acl public-read
-        - cd dist && zip -r ../MyEtherWallet-$TRAVIS_COMMIT.zip * -x *.js.map && cd ..
+        - cd dist && zip -r ../MyEtherWallet-$TRAVIS_COMMIT.zip * && cd ..
         - VIRUS_TOTAL_URL=`curl -s -F "file=@MyEtherWallet-$TRAVIS_COMMIT.zip" -F apikey=${VIRUS_TOTAL_API_KEY} https://www.virustotal.com/vtapi/v2/file/scan | jq --raw-output '.permalink'`
       after_success:
         - |
@@ -94,7 +94,7 @@ jobs:
     - stage: create release
       script: skip
       before_deploy:
-        - docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:offline && npm run build:mewcx"
+        - docker run -t --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:offline && npm run build:mewcx"
         - openssl aes-256-cbc -K $encrypted_2bd32a0810e2_key -iv $encrypted_2bd32a0810e2_iv
           -in ssh-keys.tar.enc -out ssh-keys.tar -d
         - tar xvf ssh-keys.tar
@@ -109,7 +109,7 @@ jobs:
     - stage: deploy to production
       script: skip
       before_deploy:
-        - docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
+        - docker run -t --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
       deploy:
         provider: pages
         skip-cleanup: true
@@ -123,7 +123,7 @@ jobs:
     - stage: deploy to production history
       script: skip
       before_deploy:
-        - docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:history"
+        - docker run -t --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:history"
         - pip install --user awscli
         - aws s3 sync dist/ s3://mewbuilds/staging/ --delete --cache-control max-age=172800,public
           --acl public-read
