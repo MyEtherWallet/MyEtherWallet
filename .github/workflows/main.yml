@@ -1,6 +1,13 @@
-name: CI
+name: add to mewbuilds
 
-on: [push]
+on:
+  push:
+    branches-ignore:
+      - 'master'
+      - 'gh-pages'
+      - 'gh-pages-history'
+    tags-ignore:
+      - '*'
 
 jobs:
   build:
@@ -8,12 +15,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Run a one-line script
-        run: echo Hello, world!
-
       - name: Run a multi-line script
         run: |
           docker --version
-          ls
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          python --version
+          pip --version
+          docker build -t mew-build-container .
+          docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install"
+          docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
