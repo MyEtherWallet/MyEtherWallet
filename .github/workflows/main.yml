@@ -10,7 +10,7 @@ on:
       - '*'
 
 jobs:
-  build:
+  mewbuilds:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
