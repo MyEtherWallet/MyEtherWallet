@@ -4,7 +4,12 @@ const webpack = require('webpack');
 const env_vars = require('../ENV_VARS');
 const allowedConnections = require('./connections');
 module.exports = {
+  devtool: false,
   plugins: [
+    new webpack.SourceMapDevToolPlugin({
+      filename: 'sourcemaps/[file].map',
+      exclude: /vendors.*.*/
+    }),
     new webpack.DefinePlugin(env_vars),
     new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
     new ImageminPlugin({
@@ -43,11 +48,11 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
+      chunks: 'all',
       cacheGroups: {
         commons: {
           test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'initial'
+          name: 'vendors'
         }
       }
     }
