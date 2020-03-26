@@ -36,3 +36,4 @@ jobs:
         run: |
           ci_env=`bash <(curl -s https://codecov.io/env)`
           docker run --rm $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run codecov"
+          bash <(curl -s https://codecov.io/bash)
