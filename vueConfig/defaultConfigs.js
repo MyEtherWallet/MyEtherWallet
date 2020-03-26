@@ -48,7 +48,7 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
-      chunks: 'all',
+      chunks: 'initial',
       cacheGroups: {
         commons: {
           test: /[\\/]node_modules[\\/]/,
