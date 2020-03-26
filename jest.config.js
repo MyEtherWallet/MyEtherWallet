@@ -33,7 +33,7 @@ module.exports = {
     '\\.md': '<rootDir>/tests/unit/__mocks__/mdMockup.js'
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(vue-router|bootstrap|register-service-worker|vue-tel-input|@ledgerhq/hw-transport-u2f|bitbox02-api/src/(?!(bitbox02-api-go*))))'
+    'node_modules/(?!(vue-router|bootstrap|register-service-worker|vue-tel-input|@ledgerhq/hw-transport-u2f|@coolwallets|bitbox02-api/src/(?!(bitbox02-api-go*))))'
   ],
   moduleDirectories: ['node_modules'],
   snapshotSerializers: ['jest-serializer-vue'],
