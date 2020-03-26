@@ -4,66 +4,21 @@
 
     <div class="overlay-content">
       <v-expansion-panels flat light>
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <div class="d-flex align-center">
-              <PanelHeader title="Gas price" subtitle="1 Gwei (Economic)" />
-            </div>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-            <div class="text-center">
-              <StdButton>Confirm & send</StdButton>
-            </div>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <div class="d-flex align-center">
-              <PanelHeader title="Import configurations" />
-            </div>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-            <div class="text-center">
-              <StdButton>Confirm & send</StdButton>
-            </div>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <PanelHeader title="Export configurations" />
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-            <div class="text-center">
-              <StdButton>Confirm & send</StdButton>
-            </div>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <PanelHeader title="Contact address" />
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-            <div class="text-center">
-              <StdButton>Confirm & send</StdButton>
-            </div>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
+        <ExpansionPanelContent title="Gas price" subtitle="1 Gwei (Economic)">
+          aaaa
+        </ExpansionPanelContent>
+
+        <ExpansionPanelContent title="Import configurations">
+          aaaa
+        </ExpansionPanelContent>
+
+        <ExpansionPanelContent title="Export configurations">
+          <StdButton />
+        </ExpansionPanelContent>
+
+        <ExpansionPanelContent title="Contact address">
+          aaa
+        </ExpansionPanelContent>
       </v-expansion-panels>
     </div>
   </BaseOverlay>
@@ -72,15 +27,15 @@
 <script>
 import BaseOverlay from '../BaseOverlay';
 import OverlayTitle from '@/components/OverlayTitle';
-import PanelHeader from './components/PanelHeader';
 import StdButton from '@/web/components/StdButton';
+import ExpansionPanelContent from './components/ExpansionPanelContent';
 
 export default {
   components: {
     BaseOverlay,
     OverlayTitle,
-    PanelHeader,
-    StdButton
+    StdButton,
+    ExpansionPanelContent
   },
   props: {
     open: { default: false, type: Boolean },
