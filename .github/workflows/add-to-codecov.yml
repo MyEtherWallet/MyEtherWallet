@@ -20,7 +20,7 @@ jobs:
         env:
           cache-name: cache-node-modules
         with:
-          path: .npm
+          path: node_modules
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
@@ -35,5 +35,6 @@ jobs:
       - name: add to codecov
         run: |
           ci_env=`bash <(curl -s https://codecov.io/env)`
-          docker run --rm $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run codecov"
+          echo $ci_env
+          docker run $ci_env --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run codecov"
           bash <(curl -s https://codecov.io/bash)
