@@ -15,11 +15,28 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Run a multi-line script
+      - name: Cache node modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: print versions
         run: |
           docker --version
           python --version
           pip --version
+
+      - name: setup env
+        run: |
           docker build -t mew-build-container .
           docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install"
-          docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
+
+      - name: build
+        run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
