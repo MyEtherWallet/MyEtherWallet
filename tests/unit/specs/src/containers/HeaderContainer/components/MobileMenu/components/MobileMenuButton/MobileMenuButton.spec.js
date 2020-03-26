@@ -21,6 +21,11 @@ describe('MobileMenuButton.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct isMobileMenuOpen data', async () => {
     wrapper.setData({ isMobileMenuOpen: true });
     await wrapper.vm.$nextTick();

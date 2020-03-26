@@ -23,6 +23,11 @@ describe('StandardDropdown.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct placeholder props', () => {
     const inputPlaceholder = '';
     const placeholder = '';

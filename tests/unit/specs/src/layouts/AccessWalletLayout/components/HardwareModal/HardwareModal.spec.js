@@ -25,6 +25,11 @@ describe('HardwareModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct contents', () => {
     // const liElements = wrapper.findAll('li');
     //const liElement = liElements.at(0);

@@ -38,6 +38,11 @@ describe('InterfaceNetworkModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct types data', () => {
     const optionElements = wrapper.findAll(
       '.input-block-container select option'

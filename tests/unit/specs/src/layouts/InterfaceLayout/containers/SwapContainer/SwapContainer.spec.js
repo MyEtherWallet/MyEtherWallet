@@ -50,6 +50,11 @@ describe('SwapContainer.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   xit('[Failing] should render correct fromArray to currenPicker element', () => {
     const containerElements = wrapper.vm.$el.querySelectorAll(
       '.item-container'

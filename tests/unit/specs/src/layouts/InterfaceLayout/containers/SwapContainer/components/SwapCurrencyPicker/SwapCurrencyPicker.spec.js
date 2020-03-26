@@ -22,6 +22,11 @@ describe('SwapCurrencyPicker.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct search data', async () => {
     const search = 'search';
     wrapper.setData({ search });

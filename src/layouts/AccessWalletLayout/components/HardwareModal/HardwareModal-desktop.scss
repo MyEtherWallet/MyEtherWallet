@@ -1,14 +1,10 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
-  .modal-content-container {
-    padding: 30px 40px;
-  }
-
   .modal-hardware {
     .button-options {
       display: grid;
       grid-gap: 10px;
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr 1fr;
       margin-bottom: 40px;
 
       &.hardware-button-options {
@@ -81,6 +77,8 @@
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))
 
 .button-container {
+  margin-bottom: 20px;
+
   div {
     padding: 20px 0;
     width: 100%;

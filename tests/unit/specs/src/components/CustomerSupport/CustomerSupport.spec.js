@@ -48,6 +48,11 @@ describe('CustomerSupport.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct browser data', () => {
     expect(
       wrapper.vm.$el

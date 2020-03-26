@@ -74,8 +74,25 @@ describe('IssuesLogModal.vue', () => {
     });
   });
 
-  it('should render correctly', () => {
-    expect(wrapper).toMatchSnapshot();
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
+  // compile error
+  xit('should render correct title props', () => {
+    expect(wrapper.vm.$data.cancelButtonOptions.title).toEqual(
+      wrapper.vm.$el
+        .querySelectorAll('.standard-button')[0]
+        .querySelectorAll('.the-button-box')[1]
+        .textContent.trim()
+    );
+    expect(wrapper.vm.$data.sendButtonOptions.title).toEqual(
+      wrapper.vm.$el
+        .querySelectorAll('.standard-button')[1]
+        .querySelectorAll('.the-button-box')[1]
+        .textContent.trim()
+    );
   });
 
   it('should render correct showSkipper data', async () => {

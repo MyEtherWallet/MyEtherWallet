@@ -23,6 +23,11 @@ describe('VerifyMessageInput.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct message data', async () => {
     wrapper.setData({ message: 'message' });
     await wrapper.vm.$nextTick();

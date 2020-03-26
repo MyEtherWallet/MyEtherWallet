@@ -24,6 +24,11 @@ describe('NameForbiddenENSContainer.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct domain name', () => {
     expect(
       wrapper.vm.$el

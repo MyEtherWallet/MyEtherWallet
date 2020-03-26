@@ -5,8 +5,6 @@
       <p>{{ $t('common.decision-tree.quick-help') }}</p>
     </button>
 
-    <customer-support :no-icon="true" :show="showCustomerSupport" />
-
     <b-modal
       ref="DecisionTree"
       hide-footer
@@ -128,7 +126,6 @@
 <script>
 import Multiselect from 'vue-multiselect';
 import MdContainer from './components/MdContainer';
-import CustomerSupport from '@/components/CustomerSupport';
 import mdIndex from '@/data/DecisionTree/MDIndex.js';
 import marked from 'marked';
 
@@ -136,7 +133,6 @@ export default {
   name: 'DecisionTree',
   components: {
     'md-container': MdContainer,
-    'customer-support': CustomerSupport,
     multiselect: Multiselect
   },
   props: {

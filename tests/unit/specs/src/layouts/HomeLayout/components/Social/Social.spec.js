@@ -24,6 +24,10 @@ describe('Social.vue', () => {
   it('should have correct data', () => {
     expect(wrapper.vm.$data.links.length).toBe(5);
   });
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
 
   it('should render correct contents', () => {
     expect(wrapper).toMatchSnapshot();

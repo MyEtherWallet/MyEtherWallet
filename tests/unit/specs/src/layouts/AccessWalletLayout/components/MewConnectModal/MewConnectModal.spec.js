@@ -43,6 +43,11 @@ describe('MewConnectModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct contents', () => {
     const QrCode = 'QrCode';
     wrapper.setData({ QrCode: QrCode });

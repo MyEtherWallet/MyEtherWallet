@@ -22,6 +22,11 @@ describe('VerificationModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct contents', () => {
     const mnemonicValues = [];
     mnemonicValues.push('values1');

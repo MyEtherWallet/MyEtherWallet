@@ -50,6 +50,11 @@ xdescribe('MnemonicModal.vue', () => {
       });
     });
 
+    afterEach(() => {
+      wrapper.destroy();
+      wrapper = null;
+    });
+
     it('should check the switch to change the number of words', () => {
       const checkboxInput = wrapper.find('input[type="checkbox"]');
       expect(checkboxInput.element.checked).toEqual(false);

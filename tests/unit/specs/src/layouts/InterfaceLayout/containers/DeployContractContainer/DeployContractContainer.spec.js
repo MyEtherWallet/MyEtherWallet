@@ -54,6 +54,7 @@ describe('DeployContractContainer.vue', () => {
 
   afterEach(() => {
     wrapper.destroy();
+    wrapper = null;
   });
 
   it('should render correct bytecode', async () => {

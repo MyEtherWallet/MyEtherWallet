@@ -231,8 +231,10 @@ export default {
 
       signPromise
         .then(_response => {
-          this.signedTxObject = _response;
-          this.signedTx = this.signedTxObject.rawTransaction;
+          if (_response) {
+            this.signedTxObject = _response;
+            this.signedTx = this.signedTxObject.rawTransaction;
+          }
         })
         .catch(this.wallet.errorHandler);
       if (this.account.identifier === KEEPKEY) {
@@ -309,9 +311,14 @@ export default {
       this.responseFunction = resolve;
       this.messageToSign = data;
       this.signedMessage = '';
-      const signPromise = this.wallet.signMessage(data).then(_response => {
-        this.signedMessage = '0x' + _response.toString('hex');
-      });
+      const signPromise = this.wallet
+        .signMessage(data)
+        .then(_response => {
+          this.signedMessage = '0x' + _response.toString('hex');
+        })
+        .catch(err => {
+          this.wallet.errorHandler(err);
+        });
       if (this.account.identifier === KEEPKEY) {
         signPromise.then(() => {
           this.signConfirmationModalOpen();

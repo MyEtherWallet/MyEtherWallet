@@ -44,6 +44,11 @@ describe('PopOver.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct popcontent', () => {
     expect(
       wrapper.vm.$el.querySelector('p.popover-content').textContent

@@ -43,4 +43,9 @@ describe('HomeLayout.vue', () => {
     wrapper.destroy();
     expect(wrapper.exists()).toBe(false);
   });
+
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
 });

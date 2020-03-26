@@ -48,6 +48,11 @@ describe('CurrencyPicker.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct localCurrency data', () => {
     expect(wrapper.find('.item-container').isVisible()).toBe(true);
   });

@@ -20,7 +20,10 @@ describe('FaqsContainer.vue', () => {
       attachToDocument: true
     });
   });
-
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
   it('should render correct FAQ contents', () => {
     const linkWrappers = wrapper.findAll('.qa__contents--title');
     let linkWrapper = linkWrappers.at(0);

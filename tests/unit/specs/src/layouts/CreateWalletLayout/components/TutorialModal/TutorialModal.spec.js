@@ -21,6 +21,11 @@ describe('TutorialModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should call skip function when trigger click skip', () => {
     const skip = jest.fn();
     wrapper.setProps({ skip: skip });

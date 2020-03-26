@@ -69,6 +69,11 @@ describe('ConfirmModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct gas props', () => {
     wrapper.setData({ modalDetailInformation: true });
     expect(

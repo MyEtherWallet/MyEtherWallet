@@ -21,6 +21,11 @@ xdescribe('MobileLanguageSelector.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct menuOpen data', () => {
     wrapper.setData({ menuOpen: true });
     expect(

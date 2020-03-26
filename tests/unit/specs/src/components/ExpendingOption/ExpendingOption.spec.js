@@ -22,6 +22,11 @@ describe('ExpandingOption.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct title props', async () => {
     const title = 'title';
     wrapper.setProps({ title });

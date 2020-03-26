@@ -25,6 +25,11 @@ xdescribe('InterfaceBottomText.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct question', () => {
     const divText = wrapper.vm.$el.querySelector('div p').textContent.trim();
     expect(divText.indexOf(question)).toBeGreaterThan(-1);

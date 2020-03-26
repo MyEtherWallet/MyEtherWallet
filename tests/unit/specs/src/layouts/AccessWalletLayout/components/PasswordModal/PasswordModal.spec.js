@@ -21,6 +21,11 @@ describe('PasswordModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render password data', async () => {
     const password = 'Strength1000!!!!AAAA***BB###';
     wrapper.setData({ password });

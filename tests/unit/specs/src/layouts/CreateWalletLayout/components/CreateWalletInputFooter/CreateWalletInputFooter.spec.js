@@ -29,6 +29,11 @@ xdescribe('CreateWalletInputFooter.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct combo props', () => {
     expect(
       wrapper.vm.$el

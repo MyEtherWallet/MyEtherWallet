@@ -42,6 +42,11 @@ describe('InterfaceNetwork.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   xit('[Failing] should render correct blockNumber props', () => {
     const blockNumber = 10000000000;
     wrapper.setProps({ blockNumber });

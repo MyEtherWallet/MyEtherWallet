@@ -23,6 +23,11 @@ describe('ButtonWithQrCode.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct contents', () => {
     expect(
       wrapper.vm.$el.querySelector('div div .the-button').textContent.trim()

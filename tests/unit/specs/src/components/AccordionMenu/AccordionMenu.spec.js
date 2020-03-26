@@ -22,6 +22,11 @@ describe('AccordionMenu.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct greytitle props', async () => {
     expect(
       wrapper

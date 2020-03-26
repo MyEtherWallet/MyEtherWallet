@@ -24,6 +24,11 @@ describe('CreateWalletInput.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct value props', async () => {
     const value = '100';
     wrapper.setProps({ value });

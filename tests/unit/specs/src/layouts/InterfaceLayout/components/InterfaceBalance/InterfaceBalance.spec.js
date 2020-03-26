@@ -51,6 +51,11 @@ describe('InterfaceBalance.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct balance data', () => {
     expect(
       wrapper.vm.$el

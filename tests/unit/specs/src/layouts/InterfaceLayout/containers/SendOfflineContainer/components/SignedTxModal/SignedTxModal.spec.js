@@ -34,6 +34,11 @@ describe('SignedTxModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   xit('[Failing] should render correct content', () => {
     expect(
       wrapper.vm.$el

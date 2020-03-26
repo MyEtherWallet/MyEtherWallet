@@ -31,6 +31,11 @@ xdescribe('SignMessageContainer.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   xit('should render correct data', () => {
     const message = 'message';
     wrapper.setData({ message });

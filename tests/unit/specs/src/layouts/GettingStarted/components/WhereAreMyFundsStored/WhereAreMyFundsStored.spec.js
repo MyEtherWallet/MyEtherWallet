@@ -23,6 +23,11 @@ describe('WhereAreMyFundsStored.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct contents', () => {
     expect(
       wrapper.vm.$el

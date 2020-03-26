@@ -40,6 +40,11 @@ describe('InterfaceTokensModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct tokenAddress', () => {
     const inputElements = wrapper.vm.$el.querySelectorAll(
       '.tokens-modal-body input'

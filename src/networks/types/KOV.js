@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-kov.json';
-import contracts from '@/contracts/contract-abi-kov.json';
+import tokens from '@/_generated/tokens/tokens-kov.json';
+import contracts from '@/_generated/contracts/contract-abi-kov.json';
 import kov from '@/assets/images/icons/network.svg';
 
 export default {

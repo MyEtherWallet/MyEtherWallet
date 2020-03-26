@@ -24,6 +24,11 @@ describe('MenuTitle.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct title props', async () => {
     wrapper.setData({ title });
     await wrapper.vm.$nextTick();

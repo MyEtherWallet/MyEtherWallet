@@ -27,6 +27,11 @@ xdescribe('ByJsonBlock.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct title', () => {
     expect(wrapper.vm.$el.querySelector('.icon-block img').src.trim()).toEqual(
       img

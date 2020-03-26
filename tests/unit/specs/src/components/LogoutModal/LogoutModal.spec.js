@@ -63,6 +63,11 @@ describe('LogoutModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   describe('LogoutModal.vue Methods', () => {
     it('should cancel when button is clicked', () => {
       wrapper.find('.buttons .no').trigger('click');

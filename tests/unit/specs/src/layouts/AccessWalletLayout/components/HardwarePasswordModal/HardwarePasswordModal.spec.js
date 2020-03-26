@@ -22,6 +22,11 @@ describe('HardwarePasswordModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct error data', async () => {
     const error = 'error';
     wrapper.setData({ error });
@@ -47,7 +52,7 @@ describe('HardwarePasswordModal.vue', () => {
     ).toBeGreaterThan(-1);
   });
 
-  describe('HardwarePasswordModal.vue Methods', () => {
+  xdescribe('HardwarePasswordModal.vue Methods', () => {
     it('should change password data when input triggers', () => {
       const inputElement = wrapper.find('.input-container input');
       const inputText = 'testpassword';

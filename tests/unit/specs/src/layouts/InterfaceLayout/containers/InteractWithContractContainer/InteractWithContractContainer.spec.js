@@ -45,6 +45,11 @@ describe('InteractWithContractContainer.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct abi data', () => {
     const abi = 'abi';
     wrapper.setData({ abi });

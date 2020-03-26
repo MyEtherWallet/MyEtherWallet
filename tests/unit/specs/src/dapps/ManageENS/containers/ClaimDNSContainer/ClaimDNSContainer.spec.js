@@ -69,6 +69,11 @@ describe('ClaimDNSContainer.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct dnsOwner props data', () => {
     expect(
       wrapper.vm.$el

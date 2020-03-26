@@ -47,6 +47,11 @@ xdescribe('AccessWalletButton.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct recommend', () => {
     expect(
       wrapper.vm.$el.querySelector('.small-note').textContent.trim()

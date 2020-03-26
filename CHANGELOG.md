@@ -1,8 +1,54 @@
-### Releaase v5.4.2
+### Release v5.5.0
+
+### Feature
+
+- Cool Wallet integration [#2087](https://github.com/MyEtherWallet/MyEtherWallet/pull/2087)
+- BCVault integration [#1990](https://github.com/MyEtherWallet/MyEtherWallet/pull/1990)
+- WalletConnect & WalletLink Support [#1924](https://github.com/MyEtherWallet/MyEtherWallet/pull/1924)
+
+### Bug
+
+- Fix exit-to-fiat dropdown, iban indicator [#2134](https://github.com/MyEtherWallet/MyEtherWallet/pull/2134)
+- Fix button positions [#2125](https://github.com/MyEtherWallet/MyEtherWallet/pull/2125)
+
+### Devop
+
+- Update BitBox Logo [#2120](https://github.com/MyEtherWallet/MyEtherWallet/pull/2120)
+- Update BitBox Logo [#2141](https://github.com/MyEtherWallet/MyEtherWallet/pull/2141)
+- Update greenkeeper packages [#2131](https://github.com/MyEtherWallet/MyEtherWallet/pull/2131)
+- Add security.txt to repo [#2140](https://github.com/MyEtherWallet/MyEtherWallet/pull/2140)
+
+### Release v5.4.3
+
+### Devop
+
+- Update greenkeeper packages [#2106](https://github.com/MyEtherWallet/MyEtherWallet/pull/2106)
+
+### Feature
+
+- Add warning for high gwei price [#2113](https://github.com/MyEtherWallet/MyEtherWallet/pull/2113)
 
 ### Bugs
-- Fix offline helper fee conversion [#2063] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2063)
-- Fix logout error and fix aave bug [#2082] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2082)
+
+- MEW Wallet modal ui changes [#2112](https://github.com/MyEtherWallet/MyEtherWallet/pull/2112)
+
+### Release v5.4.2-hotfix.1
+
+### Bugs
+
+- Fix russian translations [#2105](https://github.com/MyEtherWallet/MyEtherWallet/pull/2105)
+
+### Release v5.4.2
+
+### Feature
+
+- MEW Wallet UI changes [#2048](https://github.com/MyEtherWallet/MyEtherWallet/pull/2048)
+
+### Bugs
+
+- Fix CX issue with quicksend and network, and add more space for interface ad [#2094](https://github.com/MyEtherWallet/MyEtherWallet/pull/2094)
+- Fix offline helper fee conversion [#2063](https://github.com/MyEtherWallet/MyEtherWallet/pull/2063)
+- Fix logout error and fix aave bug [#2082](https://github.com/MyEtherWallet/MyEtherWallet/pull/2082)
 
 ### Devop
 
@@ -10,7 +56,6 @@
 - ropsten ens .test set resolver [#2090](https://github.com/MyEtherWallet/MyEtherWallet/pull/2090)
 - Update greenkeeper packages [#2088](https://github.com/MyEtherWallet/MyEtherWallet/pull/2088)
 - Update greenkeeper packages [#2078](https://github.com/MyEtherWallet/MyEtherWallet/pull/2078)
-
 
 ### Release v5.4.1-hotfix.1
 

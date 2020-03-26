@@ -38,6 +38,11 @@ describe('DropDownBidCurrencySelector.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct dropdownOpen data', async () => {
     expect(wrapper.find('.fa-chevron-down').exists()).toBe(true);
     expect(wrapper.find('.fa-chevron-up').exists()).toBe(false);

@@ -23,6 +23,11 @@ describe('StandardInput.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct inputValue data', async () => {
     const options = {
       isTextarea: true,
