@@ -9,7 +9,6 @@ export default async ({ event, payload }, _, next) => {
   const q = helpers.queryBuilder(payload);
   const checksummedAddress = toChecksumAddress(payload.tx.from);
   chrome.storage.sync.get(checksummedAddress, res => {
-    console.log(checksummedAddress, res[checksummedAddress], res);
     if (res[checksummedAddress]) {
       chrome.windows.create({
         url: chrome.runtime.getURL(
