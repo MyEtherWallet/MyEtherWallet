@@ -4,6 +4,10 @@ const configs = require('./configs');
 const tokenList = require('./lists/tokens.json');
 const contractList = require('./lists/contracts.json');
 
+if (!fs.existsSync(configs.GENERATED_FOLDER_PATH)) {
+  fs.mkdirSync(configs.GENERATED_FOLDER_PATH);
+}
+
 const fetchTokens = async () => {
   try {
     if (!fs.existsSync(configs.TOKENS_PATH)) {
@@ -51,31 +55,6 @@ const fetchAddressDarkList = async () => {
     console.log('Writing address darklist');
     fs.writeFileSync(
       `${configs.ADDRESS_DARKLIST_PATH}/address-darklist.json`,
-      JSON.stringify(jsonToStore)
-    );
-  } catch (e) {
-    console.error(e); // Not captured by sentry
-  }
-};
-
-const fetchMasterFile = async () => {
-  try {
-    if (!fs.existsSync(configs.MASTER_FILE + '/master-file.json')) {
-      fs.writeFileSync(`${configs.MASTER_FILE}/master-file.json`, '');
-    }
-
-    const actualMasterfile = await fetch(
-      'https://cdn.jsdelivr.net/gh/MyEtherWallet/ethereum-lists@master/dist/master-file.json'
-    )
-      .then(res => res.json())
-      .catch(console.log);
-    const jsonToStore = {
-      data: actualMasterfile,
-      timestamp: Date.now()
-    };
-    console.log('Writing masterlist');
-    fs.writeFileSync(
-      `${configs.MASTER_FILE}/master-file.json`,
       JSON.stringify(jsonToStore)
     );
   } catch (e) {
@@ -223,8 +202,7 @@ const run = async () => {
     .then(fetchContracts)
     .then(fetchAddressDarkList)
     .then(fetchUrlDarklist)
-    .then(fetchUrlLightlist)
-    .then(fetchMasterFile);
+    .then(fetchUrlLightlist);
 };
 
 (async () => {

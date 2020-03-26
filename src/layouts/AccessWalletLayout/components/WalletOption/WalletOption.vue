@@ -99,4 +99,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import 'WalletOption.scss';
+
+.good-button {
+  font-size: 30px !important;
+  font-weight: bold !important;
+}
 </style>

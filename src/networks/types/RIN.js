@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-rin.json';
-import contracts from '@/contracts/contract-abi-rin.json';
+import tokens from '@/_generated/tokens/tokens-rin.json';
+import contracts from '@/_generated/contracts/contract-abi-rin.json';
 import rin from '@/assets/images/icons/network.svg';
 import { RIN } from '../tlds';
 

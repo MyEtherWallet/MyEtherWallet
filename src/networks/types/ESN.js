@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-esn.json';
-import contracts from '@/contracts/contract-abi-esn.json';
+import tokens from '@/_generated/tokens/tokens-esn.json';
+import contracts from '@/_generated/contracts/contract-abi-esn.json';
 import esn from '@/assets/images/networks/esn.svg';
 
 export default {
