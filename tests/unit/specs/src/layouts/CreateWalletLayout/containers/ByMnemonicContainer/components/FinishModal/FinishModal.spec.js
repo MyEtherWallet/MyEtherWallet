@@ -42,6 +42,11 @@ describe('FinishModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct contents', () => {
     wrapper.find('.close-button').trigger('click');
     expect(wrapper.find('.close-button').html()).toEqual(

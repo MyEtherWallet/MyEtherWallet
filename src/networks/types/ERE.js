@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-ere.json';
-import contracts from '@/contracts/contract-abi-ere.json';
+import tokens from '@/_generated/tokens/tokens-ere.json';
+import contracts from '@/_generated/contracts/contract-abi-ere.json';
 import ere from '@/assets/images/networks/ere.svg';
 
 export default {
