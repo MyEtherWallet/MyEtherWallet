@@ -2,8 +2,14 @@
   <v-expansion-panel>
     <v-expansion-panel-header hide-actions>
       <div class="d-flex align-center px-4 py-3">
-        <PanelHeader :title="title" :subtitle="subtitle" />
+        <div class="d-flex align-center">
+          <div v-if="title" class="headline font-weight-bold mr-3">
+            {{ title }}
+          </div>
+          <div v-if="subtitle" class="subtitle-color">{{ subtitle }}</div>
+        </div>
         <div class="ml-auto">
+          <slot name="headerButtons"></slot>
           <v-btn
             depressed
             x-small
@@ -19,20 +25,15 @@
     </v-expansion-panel-header>
     <v-expansion-panel-content>
       <div class="px-4 pt-2 pb-3">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat.
+        <slot name="content"></slot>
       </div>
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
 
 <script>
-import PanelHeader from '../PanelHeader';
-
 export default {
-  components: { PanelHeader },
+  components: {},
   props: {
     title: { default: '', type: String },
     subtitle: { default: '', type: String }
@@ -44,5 +45,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables.scss';
+@import '@/assets/styles/GlobalVariables.scss';
+
+.subtitle-color {
+  color: $gray-4;
+}
 </style>
