@@ -87,8 +87,8 @@ class WalletInterface {
   signTransaction(txParams, signer) {
     if (this.isPubOnly && typeof signer !== 'function')
       throw new Error('public key only wallets needs a signer');
-    return new Promise((resolve, reject) => {
-      if (!this.isPubOnly) {
+    if (!this.isPubOnly) {
+      return new Promise(resolve => {
         const tx = new Transaction(txParams, {
           common: commonGenerator(store.state.main.network)
         });
@@ -104,12 +104,9 @@ class WalletInterface {
             'InvalidNetworkId'
           );
         resolve(getSignTransactionObject(tx));
-      } else {
-        signer(txParams)
-          .then(resolve)
-          .catch(reject);
-      }
-    });
+      });
+    }
+    return signer(txParams);
   }
   signMessage(msg, signer) {
     if (this.isPubOnly && typeof signer !== 'function')

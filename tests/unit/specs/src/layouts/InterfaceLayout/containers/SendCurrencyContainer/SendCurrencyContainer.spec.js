@@ -26,7 +26,7 @@ describe('SendCurrencyContainer.vue', () => {
     Vue.config.warnHandler = () => {};
   });
 
-  afterAll(() => setTimeout(() => process.exit(), 1000));
+  afterEach(() => setTimeout(() => process.exit(), 1000));
 
   beforeEach(() => {
     wrapper = shallowMount(SendCurrencyContainer, {

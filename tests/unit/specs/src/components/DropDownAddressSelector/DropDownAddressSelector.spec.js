@@ -28,6 +28,11 @@ describe('DropDownAddressSelector.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   xit('render correct addresses', () => {
     const dropdownOpen = wrapper.find('.dropdown-open-button');
     dropdownOpen.trigger('click');

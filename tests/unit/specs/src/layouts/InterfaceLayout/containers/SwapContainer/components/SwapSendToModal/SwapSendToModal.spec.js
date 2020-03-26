@@ -59,6 +59,11 @@ describe('SwapSendToModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   xit('should render correct fromAddress data', () => {
     const fromAddress = {
       name: 'name',

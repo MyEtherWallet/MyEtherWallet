@@ -21,6 +21,11 @@ describe('HardwaresLayout.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct items data', () => {
     let { items } = wrapper.vm.$data;
     items = items.filter(
