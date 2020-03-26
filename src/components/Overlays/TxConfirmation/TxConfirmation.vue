@@ -65,6 +65,6 @@ export default {
 @import '@/assets/styles/GlobalVariables.scss';
 
 .overlay-content {
-  max-width: 550px;
+  width: 650px;
 }
 </style>
