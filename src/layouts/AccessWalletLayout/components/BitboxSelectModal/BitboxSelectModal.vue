@@ -3,10 +3,11 @@
     ref="bitboxSelect"
     :title="$t('accessWallet.bitbox.modal.title')"
     hide-footer
-    class="bootstrap-modal nopadding modal-hardware"
+    class="nopadding modal-hardware"
     centered
     static
     lazy
+    dialog-class="hardware-wallet-dialog"
   >
     <div class="modal-content-container">
       <div class="d-block text-center">
