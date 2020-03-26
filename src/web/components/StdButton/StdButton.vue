@@ -1,5 +1,6 @@
 <template>
   <v-btn
+    :height="height"
     :x-large="size === 'x-large' ? true : false"
     :large="size === 'large' ? true : false"
     :small="size === 'small' ? true : false"
@@ -31,6 +32,7 @@ export default {
     minwidth: { default: true, type: Boolean },
     fullwidth: { default: false, type: Boolean },
     size: { default: 'x-large', type: String },
+    height: { default: '', type: String },
     fontclass: { default: 'font-weight-medium', type: String }
   },
   data: () => ({})

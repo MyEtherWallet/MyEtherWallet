@@ -5,11 +5,31 @@
     <div class="overlay-content">
       <v-expansion-panels flat light>
         <ExpansionPanelContent title="Gas price" subtitle="1 Gwei (Economic)">
-          aaaa
+          <template v-slot:headerButtons> </template>
+          <template v-slot:content> </template>
         </ExpansionPanelContent>
 
         <ExpansionPanelContent title="Import configurations">
-          aaaa
+          <template v-slot:content>
+            <div class="mb-7">
+              Please upload the file, and click the button on the left top to
+              open and import you configuration file from your local computer.
+            </div>
+            <div class="d-flex align-start">
+              <v-file-input
+                color="emerald"
+                label="Upload file..."
+                filled
+              ></v-file-input>
+              <StdButton
+                buttonclass="button--green-border"
+                class="ml-3"
+                height="57px"
+              >
+                Import
+              </StdButton>
+            </div>
+          </template>
         </ExpansionPanelContent>
 
         <ExpansionPanelContent title="Export configurations">
