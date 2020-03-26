@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-tomo.json';
-import contracts from '@/contracts/contract-abi-tomo.json';
+import tokens from '@/_generated/tokens/tokens-tomo.json';
+import contracts from '@/_generated/contracts/contract-abi-tomo.json';
 import tomo from '@/assets/images/networks/tomo.svg';
 
 export default {

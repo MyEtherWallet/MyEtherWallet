@@ -62,6 +62,11 @@ describe('NetworkAndAddressModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   describe('NetworkAndAddressModal.vue Methods', () => {
     it('should render correct unlockWallet method', () => {
       wrapper.vm.unlockWallet();

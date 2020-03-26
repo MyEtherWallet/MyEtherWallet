@@ -234,8 +234,10 @@ export default {
 
       signPromise
         .then(_response => {
-          this.signedTxObject = _response;
-          this.signedTx = this.signedTxObject.rawTransaction;
+          if (_response) {
+            this.signedTxObject = _response;
+            this.signedTx = this.signedTxObject.rawTransaction;
+          }
         })
         .catch(this.wallet.errorHandler);
       if (this.account.identifier === KEEPKEY) {

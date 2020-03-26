@@ -15,6 +15,7 @@ const webpackConfig = {
   },
   plugins: defaultConfigs.plugins.concat([
     new CopyWebpackPlugin([
+      { from: 'security.txt', to: '.well-known/security.txt' },
       {
         from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
         transform: function(content, filePath) {

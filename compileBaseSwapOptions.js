@@ -1,15 +1,14 @@
 // NOTE: this is a temporary solution.  This operation will be moved to runtime in the future. Currently it relies on manually updated files.
 const fs = require('fs');
 const {v4} = require('uuid');
-const uuid = v4;
 
 const fetch = require('node-fetch');
 const web3 = require('web3');
-const defaultEthTokens = require('./src/tokens/tokens-eth.json');
+const defaultEthTokens = require('./src/_generated/tokens/tokens-eth.json');
 
-const swapConfigFolder = './src/partners/partnersConfig';
-const changellyConfigFolder = './src/partners/changelly/config';
-const kyberConfigFolder = './src/partners/kyber/config';
+const swapConfigFolder = './src/_generated/partners';
+const changellyConfigFolder = './src/_generated/partners';
+const kyberConfigFolder = './src/_generated/partners';
 
 const explicitStringReplacements = {
   RLC: {
@@ -101,7 +100,7 @@ class CompileSwapOptions {
       jsonrpc: '2.0',
       method: method,
       params: data,
-      id: uuid()
+      id: v4()
     };
   }
 
@@ -283,6 +282,9 @@ class CompileSwapOptions {
     }
 
     if (Object.keys(withChangelly.other).length > 0) {
+      if (!fs.existsSync(swapConfigFolder)) {
+        fs.mkdirSync(swapConfigFolder);
+      }
       fs.writeFileSync(
         `${swapConfigFolder}/OtherCoins.json`,
         JSON.stringify(withChangelly.other)
@@ -290,12 +292,18 @@ class CompileSwapOptions {
     }
 
     if (Object.keys(withChangelly.ETH).length > 0) {
+      if (!fs.existsSync(swapConfigFolder)) {
+        fs.mkdirSync(swapConfigFolder);
+      }
       fs.writeFileSync(
         `${swapConfigFolder}/EthereumTokens.json`,
         JSON.stringify(withChangelly.ETH)
       );
     }
     if (Object.keys(this.changellyBaseOptions).length > 0) {
+      if (!fs.existsSync(changellyConfigFolder)) {
+        fs.mkdirSync(changellyConfigFolder);
+      }
       fs.writeFileSync(
         `${changellyConfigFolder}/currencies.json`,
         JSON.stringify(this.changellyBaseOptions)
@@ -309,6 +317,9 @@ class CompileSwapOptions {
         decimals: 18,
         contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
       };
+      if (!fs.existsSync(kyberConfigFolder)) {
+        fs.mkdirSync(kyberConfigFolder);
+      }
       fs.writeFileSync(
         `${kyberConfigFolder}/currenciesETH.json`,
         JSON.stringify(this.kyberBaseOptions)

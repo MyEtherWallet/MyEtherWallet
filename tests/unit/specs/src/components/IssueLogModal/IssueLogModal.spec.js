@@ -74,6 +74,11 @@ describe('IssuesLogModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   // compile error
   xit('should render correct title props', () => {
     expect(wrapper.vm.$data.cancelButtonOptions.title).toEqual(

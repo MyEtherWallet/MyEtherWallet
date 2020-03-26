@@ -48,6 +48,11 @@ describe('WalletPasswordModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct passphrase data', () => {
     wrapper.setData({ passphrase: 'passphrase' });
     const passphrase = wrapper.vm.$el
