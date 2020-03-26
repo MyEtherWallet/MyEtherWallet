@@ -3,10 +3,11 @@
     ref="bitboxSelect"
     :title="$t('accessWallet.bitbox.modal.title')"
     hide-footer
-    class="bootstrap-modal nopadding modal-hardware"
+    class="nopadding modal-hardware"
     centered
     static
     lazy
+    dialog-class="hardware-wallet-dialog"
   >
     <div class="modal-content-container">
       <div class="d-block text-center">
@@ -70,17 +71,17 @@ export default {
       isU2FSupported: false,
       items: [
         {
-          name: BITBOX_TYPE,
+          name: BITBOX02_TYPE,
           imgPath: bitbox,
-          text: 'BitBox',
+          text: 'BitBox02',
           disabled: false,
           msg: '',
           link: 'https://shiftcrypto.ch/?ref=mew'
         },
         {
-          name: BITBOX02_TYPE,
+          name: BITBOX_TYPE,
           imgPath: bitbox,
-          text: 'BitBox02',
+          text: 'BitBox01',
           disabled: false,
           msg: '',
           link: 'https://shiftcrypto.ch/?ref=mew'
