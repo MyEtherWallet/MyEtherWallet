@@ -1,0 +1,38 @@
+name: add to codecov
+
+on:
+  push:
+    branches-ignore:
+      - 'master'
+      - 'gh-pages'
+      - 'gh-pages-history'
+    tags-ignore:
+      - '*'
+
+jobs:
+  codecov:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: .npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: setup env
+        run: |
+          docker build -t mew-build-container .
+          docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
+
+      - name: add to codecov
+        run: |
+          ci_env=`bash <(curl -s https://codecov.io/env)`
+          docker run --rm $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run codecov"

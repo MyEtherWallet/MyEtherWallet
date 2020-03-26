@@ -36,10 +36,7 @@ jobs:
       - name: setup env
         run: |
           docker build -t mew-build-container .
-          docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install"
+          docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
+
       - name: build
-        run: |
-          ci_env=`bash <(curl -s https://codecov.io/env)`
-          docker run --rm $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run codecov"
-    #   - name: build
-    #     run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
+        run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
