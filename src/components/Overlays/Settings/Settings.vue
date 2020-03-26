@@ -63,7 +63,6 @@ export default {
   margin-top: 20px !important;
   border-radius: 12px !important;
   box-shadow: $gray-3 0px 0px 15px;
-  padding: 12px 15px;
 
   &:first-child {
     margin-top: 0px !important;

@@ -1,7 +1,7 @@
 <template>
   <v-expansion-panel>
     <v-expansion-panel-header hide-actions>
-      <div class="d-flex align-center">
+      <div class="d-flex align-center px-4 py-3">
         <PanelHeader :title="title" :subtitle="subtitle" />
         <div class="ml-auto">
           <v-btn
@@ -18,10 +18,12 @@
       </div>
     </v-expansion-panel-header>
     <v-expansion-panel-content>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat.
+      <div class="px-4 pt-2 pb-3">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat.
+      </div>
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
