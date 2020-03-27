@@ -75,6 +75,12 @@
                     </a>
                   </div>
                 </div>
+                <div class="qr-container mt-5">
+                  <qrcode
+                    :value="'https://localhost:8080/#/qr-code'"
+                    :options="{ size: 150 }"
+                  />
+                </div>
               </div>
               <div class="bottom-image">
                 <img alt src="@/assets/images/icons/snippet-mew-wallet.png" />
