@@ -19,7 +19,7 @@
     "lint:md": "remark . -o -f",
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
-    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true",
+    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && npx npm-force-resolutions",
     "start": "npm run update:mainlists && npm run dev",
     "start:history": "npm run update:mainlists && ROUTER_MODE=history npm run dev",
     "update": "npm run update:packages && npm run update:lists && npm run update:swap",
@@ -183,6 +183,17 @@
       "@unstoppabledomains/resolution",
       "prettier"
     ]
+  },
+  "resolutions": {
+    "minimist": "^0.2.1",
+    "acorn": "^7.1.1",
+    "cryptiles": "^4.1.2",
+    "marked": "^0.7.0",
+    "jquery": "^3.4.0",
+    "braces": "^2.3.1",
+    "handlebars": "^4.5.3",
+    "hoek": "^4.2.0",
+    "mem": "^4.0.0"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
