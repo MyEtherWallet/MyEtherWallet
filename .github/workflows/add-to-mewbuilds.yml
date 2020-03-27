@@ -1,0 +1,66 @@
+name: add to mewbuilds
+
+on:
+  push:
+    branches-ignore:
+      - 'master'
+      - 'gh-pages'
+      - 'gh-pages-history'
+    tags-ignore:
+      - '*'
+
+jobs:
+  mewbuilds:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: setup env
+        run: |
+          docker build -t mew-build-container .
+          docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
+          echo ::set-env name=NODE_VERSION::$(docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "node --version")
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{env.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{env.NODE_VERSION}}-
+
+      - name: npm install
+        run: |
+          docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
+
+      - name: build
+        run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
+
+      - name: post build
+        if: github.base_ref == ''
+        env:
+          IPFS_NODE: ${{secrets.IPFS_NODE}}
+          AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
+          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          VIRUS_TOTAL_API_KEY: ${{secrets.VIRUS_TOTAL_API_KEY}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          pip install --user awscli
+          ssh-keyscan -H $IPFS_NODE >> $HOME/.ssh/known_hosts
+          openssl aes-256-cbc -K ${{secrets.FILE_DECRYPT_KEY}} -iv ${{secrets.FILE_DECRYPT_IV}} -in ssh-keys.tar.enc -out ssh-keys.tar -d
+          tar xvf ssh-keys.tar
+          chmod 400 ipfs-host.pem
+          hashOut=`tar -cjvf - -C dist/ . | ssh -i ipfs-host.pem ubuntu@$IPFS_NODE ./ipfs-publish.sh --`
+          HASH=`echo $hashOut | sed -n 's:.*<hash>\(.*\)</hash>.*:\1:p'`
+          aws s3 sync --delete --acl public-read dist/ s3://mewbuilds/build/test/$GITHUB_SHA
+          cd dist && zip -r ../MyEtherWallet-$GITHUB_SHA.zip * && cd ..
+          VIRUS_TOTAL_URL=`curl -s -F "file=@MyEtherWallet-$GITHUB_SHA.zip" -F apikey=${VIRUS_TOTAL_API_KEY} https://www.virustotal.com/vtapi/v2/file/scan | jq --raw-output '.permalink'`
+          curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
+          -d "{\"body\": \"Copy of this build can be found at <br/>https://www.mewbuilds.com/build/${GITHUB_SHA}/index.html<br/> \
+                            https://www.cloudflare-ipfs.com/ipfs/$HASH <br/> \
+                            Virus Total analysis <br/> \
+                            $VIRUS_TOTAL_URL\"}" \
+                            "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/commits/${GITHUB_SHA}/comments"
