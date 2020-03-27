@@ -9,6 +9,8 @@
       <mew-connect-modal
         ref="mewconnectModal"
         :network-and-address-open="networkAndAddressOpen"
+        :open-wallet-connect="openWalletConnect"
+        :open-wallet-link="openWalletLink"
       />
 
       <hardware-modal
@@ -135,6 +137,8 @@ import { Toast } from '@/helpers';
 
 import DetectRTC from 'detectrtc';
 
+import { WalletConnectWallet, WalletLinkWallet } from '@/wallets';
+
 export default {
   name: 'AccessWalletLayout',
   components: {
@@ -242,6 +246,34 @@ export default {
   },
   methods: {
     ...mapActions('main', ['decryptWallet']),
+    openWalletConnect() {
+      this.$refs.mewconnectModal.$refs.mewConnect.hide();
+      WalletConnectWallet()
+        .then(_newWallet => {
+          this.decryptWallet([_newWallet]).then(() => {
+            this.$router.push({
+              path: 'interface'
+            });
+          });
+        })
+        .catch(e => {
+          WalletConnectWallet.errorHandler(e);
+        });
+    },
+    openWalletLink() {
+      this.$refs.mewconnectModal.$refs.mewConnect.hide();
+      WalletLinkWallet()
+        .then(_newWallet => {
+          this.decryptWallet([_newWallet]).then(() => {
+            this.$router.push({
+              path: 'interface'
+            });
+          });
+        })
+        .catch(e => {
+          WalletLinkWallet.errorHandler(e);
+        });
+    },
     checkIsMetamask() {
       this.isMetaMask = window.ethereum && window.ethereum.isMetaMask;
     },
