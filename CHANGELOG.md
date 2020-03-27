@@ -1,3 +1,9 @@
+### Release v5.5.0-hotfix.1
+
+### Bugs
+
+- Fix walletconnet and walletlink buttons [#2169](https://github.com/MyEtherWallet/MyEtherWallet/pull/2169)
+
 ### Release v5.5.0
 
 ### Feature
