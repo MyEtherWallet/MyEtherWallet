@@ -3,16 +3,10 @@ name: add to codecov
 on:
   push:
     branches-ignore:
-      - 'master'
-      - 'develop'
       - 'gh-pages'
       - 'gh-pages-history'
     tags-ignore:
       - '*'
-  pull_request:
-    branches:
-      - 'master'
-      - 'develop'
 
 jobs:
   codecov:
