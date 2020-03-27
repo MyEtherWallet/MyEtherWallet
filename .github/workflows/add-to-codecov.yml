@@ -15,22 +15,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: setup env
+        run: |
+          docker build -t mew-build-container .
+          docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
+          echo ::set-env name=NODE_VERSION::$(docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "node --version")
+
       - name: Cache node modules
         uses: actions/cache@v1
         env:
           cache-name: cache-node-modules
         with:
           path: node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-
-      - name: setup env
-        run: |
-          docker build -t mew-build-container .
-          docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{env.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
 
       - name: add to codecov
         run: |
