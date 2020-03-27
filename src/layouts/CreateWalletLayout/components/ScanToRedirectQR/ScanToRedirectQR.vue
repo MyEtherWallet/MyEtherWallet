@@ -5,7 +5,6 @@
 <script>
 export default {
   mounted() {
-    console.error("in here????!!")
     this.getMobileOperatingSystem();
   },
   methods: {
@@ -16,7 +15,7 @@ export default {
       }
       if (navigator.userAgent.toLowerCase().indexOf('iphone') > -1) {
         window.location.href = 'https://itunes.apple.com/app/id1464614025';
-     }
+      }
     }
     // getMobileOperatingSystem() {
     //   console.error(('in here'))
