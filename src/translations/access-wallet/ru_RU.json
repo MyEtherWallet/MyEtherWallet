@@ -1,6 +1,6 @@
 {
   "mewconnect": {
-    "option-text": "Scan the QR code to access with MEW wallet or MEWconnect",
+    "option-text": "Отсканируйте QR-код для доступа с помощью MEW wallet или MEWconnect",
     "modal": {
       "title": "Мобильный доступ",
       "text1": "Используйте приложение MEW wallet или MEWconnect для сканирования указанного выше QR-кода",
