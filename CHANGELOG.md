@@ -1,3 +1,6 @@
+### Release v5.5.1
+- Add telegram social icon [#2167] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2167)
+
 ### Devop
 
 - Switch CI to Github actions [#2168](https://github.com/MyEtherWallet/MyEtherWallet/pull/2168)
