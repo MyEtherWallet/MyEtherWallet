@@ -75,7 +75,29 @@
                 :headers="adresses.headers"
                 :items="adresses.desserts"
                 :items-per-page="5"
-              ></v-data-table>
+              >
+                <template v-slot:item.actions="{ item }">
+                  <v-icon small class="mr-2" @click="editItem(item)">
+                    mdi-pencil
+                  </v-icon>
+                  <v-icon small @click="deleteItem(item)">
+                    mdi-delete
+                  </v-icon>
+                </template>
+                <template v-slot:item.number>
+                  {{ getAddressCount() }}
+                </template>
+                <template v-slot:item.blockie="{ item }">
+                  <blockie
+                    :address="item.address"
+                    :size="8"
+                    :scale="16"
+                    width="30px"
+                    height="30px"
+                    class="blockie-image"
+                  />
+                </template>
+              </v-data-table>
             </div>
             <StdButton buttonclass="button--green-border">
               + Add
@@ -92,13 +114,15 @@ import BaseOverlay from '../BaseOverlay';
 import OverlayTitle from '@/components/OverlayTitle';
 import StdButton from '@/web/components/StdButton';
 import ExpansionPanelContent from './components/ExpansionPanelContent';
+import Blockie from '@/web/components/Blockie';
 
 export default {
   components: {
     BaseOverlay,
     OverlayTitle,
     StdButton,
-    ExpansionPanelContent
+    ExpansionPanelContent,
+    Blockie
   },
   props: {
     open: { default: false, type: Boolean },
@@ -112,32 +136,46 @@ export default {
   data() {
     return {
       adresses: {
+        count: 0,
         headers: [
           {
+            text: '#',
+            value: 'number'
+          },
+          {
+            text: '',
+            value: 'blockie'
+          },
+          {
             text: 'ADDRESS',
-            align: 'start',
-            sortable: true,
             value: 'address'
           },
           { text: 'NICKNAME', value: 'nickname' },
-          { text: '', value: 'edit' }
+          { text: '', value: 'actions', sortable: false }
         ],
         desserts: [
           {
-            address: '8945792398723908729358',
-            iron: 'Moms'
+            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
+            nickname: 'Moms'
           },
           {
-            address: '8945792398723908729358',
-            iron: 'Moms'
+            address: '0xd7B9A9b2F665849C4071Ad5af77d8c76aa30fb32',
+            nickname: 'Dads'
           },
           {
-            address: '8945792398723908729358',
-            iron: 'Moms'
+            address: '0xa192E4eaCB00993ea3DBE1b59aFeb962C09493a5',
+            nickname: 'Mikes'
           }
         ]
       }
     };
+  },
+  methods: {
+    getAddressCount() {
+      this.adresses.count++;
+      return this.adresses.count;
+      //return 1;
+    }
   }
 };
 </script>
