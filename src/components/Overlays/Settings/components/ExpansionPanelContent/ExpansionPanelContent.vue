@@ -24,7 +24,7 @@
       </div>
     </v-expansion-panel-header>
     <v-expansion-panel-content>
-      <div class="px-4 pt-2 pb-3">
+      <div class="px-4 pt-0 pb-3">
         <slot name="content"></slot>
       </div>
     </v-expansion-panel-content>
