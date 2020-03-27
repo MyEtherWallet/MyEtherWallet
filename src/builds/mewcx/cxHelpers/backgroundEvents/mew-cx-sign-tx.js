@@ -1,13 +1,15 @@
 /* eslint-disable no-undef */
 import { CX_CONFIRM_SEND_TX, REJECT_MEW_TX_SIGN } from '../cxEvents';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 import helpers from '../helpers';
 import { Misc } from '@/helpers';
 
 export default async ({ event, payload }, _, next) => {
   if (event !== CX_CONFIRM_SEND_TX) return next();
   const q = helpers.queryBuilder(payload);
-  chrome.storage.sync.get(payload.tx.from, res => {
-    if (res[payload.tx.from]) {
+  const checksummedAddress = toChecksumAddress(payload.tx.from);
+  chrome.storage.sync.get(checksummedAddress, res => {
+    if (res[checksummedAddress]) {
       chrome.windows.create({
         url: chrome.runtime.getURL(
           `popupLoading.html#?navigate-to=sign-tx&url=${payload.url}&${q}`
