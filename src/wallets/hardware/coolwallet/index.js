@@ -32,12 +32,14 @@ class CoolWallet {
     this.deviceInstance = {};
     this.supportedPaths = bip44Paths[coolWalletType];
   }
-  init(password) {
+  init(_, password) {
     const _this = this;
     return new Promise((resolve, reject) => {
       cwsTransportLib.listen((error, device) => {
+        console.log(device);
         if (error) reject(error);
         if (device) {
+          console.log(this._transport, password);
           cwsTransportLib.connect(device).then(_transport => {
             _this.transport = _transport;
             const {
