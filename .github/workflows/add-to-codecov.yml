@@ -8,6 +8,10 @@ on:
       - 'gh-pages-history'
     tags-ignore:
       - '*'
+  pull_request:
+    branches:
+      - 'master'
+      - 'develop'
 
 jobs:
   codecov:

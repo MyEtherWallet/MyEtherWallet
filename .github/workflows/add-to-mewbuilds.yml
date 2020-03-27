@@ -8,6 +8,10 @@ on:
       - 'gh-pages-history'
     tags-ignore:
       - '*'
+  pull_request:
+    branches:
+      - 'master'
+      - 'develop'
 
 jobs:
   mewbuilds:
@@ -44,7 +48,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           VIRUS_TOTAL_API_KEY: ${{secrets.VIRUS_TOTAL_API_KEY}}
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.MEW_BOT_TOKEN}}
         run: |
           pip install --user awscli
           mkdir -p ~/.ssh
