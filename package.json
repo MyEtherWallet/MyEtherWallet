@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.5.0",
+  "version": "5.5.0-hotfix.1",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -30,9 +30,9 @@
   },
   "dependencies": {
     "@aave/protocol-js": "0.2.5",
-    "@coolwallets/eth": "0.1.13",
+    "@coolwallets/eth": "0.2.0-beta.1",
     "@coolwallets/transport-web-ble": "0.1.0",
-    "@coolwallets/wallet": "0.0.14",
+    "@coolwallets/wallet": "0.2.0-beta.1",
     "@sentry/browser": "5.15.2",
     "@sentry/integrations": "5.15.2",
     "@unstoppabledomains/resolution": "1.3.0",
