@@ -18,7 +18,6 @@ jobs:
       - name: setup env
         run: |
           docker build -t mew-build-container .
-          docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
           echo ::set-env name=NODE_VERSION::$(docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "node --version")
 
       - name: Cache node modules
@@ -32,8 +31,7 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-${{env.NODE_VERSION}}-
 
       - name: npm install
-        run: |
-          docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
+        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
 
       - name: add to codecov
         run: |
