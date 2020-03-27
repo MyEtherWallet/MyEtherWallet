@@ -1,3 +1,7 @@
+### Devop
+
+- Switch CI to Github actions [#2168](https://github.com/MyEtherWallet/MyEtherWallet/pull/2168)
+
 ### Release v5.5.0
 
 ### Feature
