@@ -33,7 +33,7 @@
     "@coolwallets/eth": "0.1.13",
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.0.14",
-    "@sentry/browser": "5.15.2",
+    "@sentry/browser": "5.15.3",
     "@sentry/integrations": "5.15.2",
     "@unstoppabledomains/resolution": "1.3.0",
     "apollo-cache-inmemory": "1.6.5",
