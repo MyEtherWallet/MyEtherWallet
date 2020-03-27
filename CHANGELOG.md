@@ -1,3 +1,7 @@
+### Bug
+
+- Fix bcvault and coolwallet [#2175](https://github.com/MyEtherWallet/MyEtherWallet/pull/2175)
+
 ### Devop
 
 - Switch CI to Github actions [#2168](https://github.com/MyEtherWallet/MyEtherWallet/pull/2168)
