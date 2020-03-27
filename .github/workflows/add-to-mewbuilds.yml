@@ -18,7 +18,6 @@ jobs:
       - name: setup env
         run: |
           docker build -t mew-build-container .
-          docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
           echo ::set-env name=NODE_VERSION::$(docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "node --version")
 
       - name: Cache node modules
@@ -32,8 +31,7 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-${{env.NODE_VERSION}}-
 
       - name: npm install
-        run: |
-          docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
+        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
 
       - name: build
         run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
@@ -49,6 +47,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
           pip install --user awscli
+          mkdir -p ~/.ssh
           ssh-keyscan -H $IPFS_NODE >> $HOME/.ssh/known_hosts
           openssl aes-256-cbc -K ${{secrets.FILE_DECRYPT_KEY}} -iv ${{secrets.FILE_DECRYPT_IV}} -in ssh-keys.tar.enc -out ssh-keys.tar -d
           tar xvf ssh-keys.tar
