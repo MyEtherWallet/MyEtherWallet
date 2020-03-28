@@ -1,40 +1,82 @@
 <template>
   <div>
-    <div class="descriptions mb-7">
-      You can add up to 10 contact addresses.
-    </div>
-    <div class="mb-5">
-      <v-data-table
-        :headers="adresses.headers"
-        :items="adresses.desserts"
-        :items-per-page="5"
+    <div class="d-flex align-center mb-7">
+      <div class="descriptions">
+        You can add up to 10 contact addresses.
+      </div>
+      <StdButton
+        class="ml-auto"
+        buttonclass="button--green"
+        size="small"
+        :minwidth="false"
       >
-        <template v-slot:item.actions="{ item }">
-          <v-icon small class="mr-2" @click="editItem(item)">
-            mdi-pencil
-          </v-icon>
-          <v-icon small @click="deleteItem(item)">
-            mdi-delete
-          </v-icon>
-        </template>
-        <template v-slot:item.number>
-          {{ getAddressCount() }}
-        </template>
-        <template v-slot:item.blockie="{ item }">
-          <blockie
-            :address="item.address"
-            :size="8"
-            :scale="16"
-            width="30px"
-            height="30px"
-            class="blockie-image"
-          />
-        </template>
-      </v-data-table>
+        + Add
+      </StdButton>
     </div>
-    <StdButton buttonclass="button--green-border">
-      + Add
-    </StdButton>
+
+    <v-dialog v-model="dialog" max-width="500px">
+      <template v-slot:activator="{ on }">
+        <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
+      </template>
+      <v-card>
+        <v-card-title>
+          <span class="headline">Edit</span>
+        </v-card-title>
+
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field
+                  v-model="editedItem.address"
+                  label="Address"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field
+                  v-model="editedItem.nickname"
+                  label="Nickname"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+          <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-data-table
+      :headers="addresses.headers"
+      :items="addresses.data"
+      :items-per-page="5"
+    >
+      <template v-slot:item.actions="{ item }">
+        <v-icon small class="mr-2" @click="editItem(item)">
+          mdi-pencil
+        </v-icon>
+        <v-icon small @click="deleteItem(item)">
+          mdi-delete
+        </v-icon>
+      </template>
+      <template v-slot:item.index="{ item }">
+        {{ item.index }}
+      </template>
+      <template v-slot:item.blockie="{ item }">
+        <blockie
+          :address="item.address"
+          :size="8"
+          :scale="16"
+          width="30px"
+          height="30px"
+          class="blockie-image"
+        />
+      </template>
+    </v-data-table>
   </div>
 </template>
 
@@ -47,12 +89,13 @@ export default {
   props: {},
   data() {
     return {
-      adresses: {
-        count: 0,
+      dialog: false,
+      editedItem: {},
+      addresses: {
         headers: [
           {
             text: '#',
-            value: 'number'
+            value: 'index'
           },
           {
             text: '',
@@ -65,7 +108,7 @@ export default {
           { text: 'NICKNAME', value: 'nickname' },
           { text: '', value: 'actions', sortable: false }
         ],
-        desserts: [
+        data: [
           {
             address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
             nickname: 'Moms'
@@ -82,10 +125,44 @@ export default {
       }
     };
   },
+  watch: {
+    dialog(val) {
+      val || this.close();
+    }
+  },
+  created() {
+    this.addresses.data.forEach((e, i) => {
+      e.index = i + 1;
+    });
+  },
   methods: {
-    getAddressCount() {
-      this.adresses.count++;
-      return this.adresses.count;
+    editItem(item) {
+      this.editedIndex = this.addresses.data.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialog = true;
+    },
+
+    deleteItem(item) {
+      const index = this.addresses.data.indexOf(item);
+      confirm('Are you sure you want to delete this item?') &&
+        this.addresses.data.splice(index, 1);
+    },
+
+    close() {
+      this.dialog = false;
+      setTimeout(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      }, 300);
+    },
+
+    save() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.addresses[this.editedIndex], this.editedItem);
+      } else {
+        this.addresses.push(this.editedItem);
+      }
+      this.close();
     }
   }
 };
