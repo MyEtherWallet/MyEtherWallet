@@ -1,5 +1,5 @@
 <template>
-  <WhiteSheet>
+  <WhiteSheet class="content-container">
     <div class="pa-12 content-width">
       <div class="block-title display-1 font-weight-bold mb-6">
         My token list is empty
@@ -34,6 +34,13 @@ export default {
 <style lang="scss" scoped>
 .content-width {
   max-width: 360px;
+}
+
+.content-container {
+  background-image: url(~@/assets/images/backgrounds/bg-half-circle.png),
+    url(~@/assets/images/backgrounds/bg-small-half-circle.png);
+  background-position: right -16px bottom -26px, left -18px bottom -29px;
+  background-size: 357px, 150px;
 }
 
 .block-title {

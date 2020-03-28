@@ -1,5 +1,5 @@
 <template>
-  <WhiteSheet>
+  <WhiteSheet class="content-container">
     <div class="pa-12 content-width">
       <div class="block-title display-1 font-weight-bold mb-6">
         My ETH balance is empty
@@ -50,6 +50,12 @@ export default {
 <style lang="scss" scoped>
 .content-width {
   max-width: 360px;
+}
+
+.content-container {
+  background-image: url(~@/assets/images/backgrounds/bg-circle-triangle.png);
+  background-position: right 60px bottom;
+  background-size: 245px;
 }
 
 .block-title {
