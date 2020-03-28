@@ -64,13 +64,13 @@ export default {
   props: {
     formData: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
     continueAction: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     qrcode: {
       type: String,

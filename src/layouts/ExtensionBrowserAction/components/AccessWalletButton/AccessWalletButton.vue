@@ -23,7 +23,7 @@ export default {
   props: {
     func: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     img: {
       type: String,

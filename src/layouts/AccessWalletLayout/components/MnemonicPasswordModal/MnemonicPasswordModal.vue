@@ -66,7 +66,7 @@ export default {
   props: {
     hardwareWalletOpen: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     phrase: {
       type: String,

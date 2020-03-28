@@ -58,13 +58,13 @@ export default {
   props: {
     cdps: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
     cdpsWithoutProxy: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },

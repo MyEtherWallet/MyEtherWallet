@@ -21,7 +21,7 @@ export default async ({ event, id }, res, next) => {
   const elementExists = eleId => {
     return document.getElementById(eleId) !== null;
   };
-  inject(function(chromeid) {
+  inject(function (chromeid) {
     window.extensionID = chromeid;
   });
 

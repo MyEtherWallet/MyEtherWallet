@@ -74,13 +74,13 @@ export default {
   props: {
     envDetails: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
     rawTx: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },

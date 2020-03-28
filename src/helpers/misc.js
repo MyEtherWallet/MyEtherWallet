@@ -80,7 +80,7 @@ const isValidETHAddress = address => {
 const isValidENSorEtherAddress = address => {
   return isValidETHAddress(address) || isValidENSAddress(address);
 };
-const isValidENSAddress = function(address) {
+const isValidENSAddress = function (address) {
   try {
     address = normalise(address);
   } catch (e) {
@@ -102,7 +102,7 @@ const scrollToTop = scrollDuration => {
 
   let scrollCount = 0;
   let scrollMargin;
-  const scrollInterval = setInterval(function() {
+  const scrollInterval = setInterval(function () {
     if (window.scrollY != 0) {
       scrollCount = scrollCount + 1;
       scrollMargin =

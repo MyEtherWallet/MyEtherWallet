@@ -198,15 +198,15 @@ export default {
     },
     setMultiCoin: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     setRecord: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     transferDomain: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     tld: {
       type: String,
@@ -222,11 +222,11 @@ export default {
     },
     supportedCoins: {
       type: Object,
-      default: function() {}
+      default: function () {}
     },
     txtRecords: {
       type: Object,
-      default: function() {}
+      default: function () {}
     }
   },
   data() {
@@ -286,13 +286,13 @@ export default {
   },
   watch: {
     currencyInputs: {
-      handler: function(newVal) {
+      handler: function (newVal) {
         this.currencyInputs = newVal;
       },
       deep: true
     },
     txtRecordInputs: {
-      handler: function(newVal) {
+      handler: function (newVal) {
         this.txtRecordInputs = newVal;
       },
       deep: true

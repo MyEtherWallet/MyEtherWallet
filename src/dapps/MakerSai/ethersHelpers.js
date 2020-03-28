@@ -8,7 +8,7 @@ function addSlice(array) {
     return array;
   }
 
-  array.slice = function() {
+  array.slice = function () {
     const args = Array.prototype.slice.call(arguments);
     return new Uint8Array(Array.prototype.slice.apply(array, args));
   };

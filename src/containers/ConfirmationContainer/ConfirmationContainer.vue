@@ -116,7 +116,7 @@ export default {
     },
     rawTx: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     }

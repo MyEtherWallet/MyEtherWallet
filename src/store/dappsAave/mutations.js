@@ -1,8 +1,8 @@
-const SET_TOKEN = function(state, token) {
+const SET_TOKEN = function (state, token) {
   state.token = token;
 };
 
-const SET_RATE_HISTORY = function(state, rateHistory) {
+const SET_RATE_HISTORY = function (state, rateHistory) {
   state.rateHistory = rateHistory;
 };
 

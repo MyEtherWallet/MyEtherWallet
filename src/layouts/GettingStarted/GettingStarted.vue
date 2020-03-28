@@ -146,7 +146,7 @@ export default {
       this.$router.push({ path: 'create-wallet' });
       this.gettingStartedDone();
     },
-    mouseScrollDown: function() {
+    mouseScrollDown: function () {
       if (this.cwwCurrent < this.cwwRefs.length - 1) {
         this.cwwCurrent++;
         this.$refs[this.cwwRefs[this.cwwCurrent - 1]].$el.classList.add(
@@ -157,7 +157,7 @@ export default {
         );
       }
     },
-    mouseScrollUp: function() {
+    mouseScrollUp: function () {
       if (this.cwwCurrent > 0) {
         this.cwwCurrent--;
         this.$refs[this.cwwRefs[this.cwwCurrent + 1]].$el.classList.add(

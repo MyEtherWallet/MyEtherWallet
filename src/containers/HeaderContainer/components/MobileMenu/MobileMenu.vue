@@ -148,11 +148,11 @@ export default {
   props: {
     opensettings: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     logout: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     buildType: {
       type: String,
