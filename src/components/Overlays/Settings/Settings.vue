@@ -22,7 +22,7 @@
           </template>
         </ExpansionPanelContent>
 
-        <ExpansionPanelContent title="Contact address">
+        <ExpansionPanelContent title="Contact addresses">
           <template v-slot:content>
             <Addresses />
           </template>
