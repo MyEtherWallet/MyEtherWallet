@@ -48,17 +48,11 @@ describe('DropDownUnitSelector.vue', () => {
   it('should render correct dropdown-input-box data', () => {
     wrapper.setData({ dropdownOpen: true });
     expect(
-      wrapper
-        .find('.dropdown-input-box')
-        .classes()
-        .indexOf('dropdown-open')
+      wrapper.find('.dropdown-input-box').classes().indexOf('dropdown-open')
     ).toBeGreaterThan(-1);
     wrapper.setData({ dropdownOpen: false });
     expect(
-      wrapper
-        .find('.dropdown-input-box')
-        .classes()
-        .indexOf('dropdown-open')
+      wrapper.find('.dropdown-input-box').classes().indexOf('dropdown-open')
     ).toBe(-1);
   });
 

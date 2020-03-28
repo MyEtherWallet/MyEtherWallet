@@ -189,7 +189,7 @@ export default {
   props: {
     reservesStable: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
@@ -199,7 +199,7 @@ export default {
     },
     reserves: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },

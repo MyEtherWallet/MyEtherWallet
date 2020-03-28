@@ -196,13 +196,13 @@ export default {
     },
     form: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
     socialAccts: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },

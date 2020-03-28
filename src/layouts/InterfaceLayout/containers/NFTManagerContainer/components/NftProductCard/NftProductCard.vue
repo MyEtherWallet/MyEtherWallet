@@ -22,7 +22,7 @@ export default {
   props: {
     data: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },

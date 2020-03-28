@@ -72,7 +72,7 @@ export default {
     const { address, msgToSign } = _self.linkQuery;
     _self.address = address;
     _self.message = utils.hexToAscii(msgToSign);
-    window.chrome.storage.sync.get(address, function(res) {
+    window.chrome.storage.sync.get(address, function (res) {
       _self.signingKeystore = JSON.parse(res[address]).priv;
     });
   },
@@ -92,12 +92,12 @@ export default {
         type: 'unlockWallet',
         data: [JSON.parse(this.signingKeystore), this.password]
       });
-      worker.onmessage = function(e) {
+      worker.onmessage = function (e) {
         _self.loading = false;
         _self.signMsg(e.data._privKey);
       };
 
-      worker.onerror = function(e) {
+      worker.onerror = function (e) {
         e.preventDefault();
         _self.loading = false;
         _self.error = {
@@ -116,7 +116,7 @@ export default {
       const signedMsg = await wallet.signMessage(this.message);
       window.chrome.tabs.query(
         { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
-        function(tab) {
+        function (tab) {
           const obj = {
             event: MEW_SIGNED_MSG,
             payload: '0x' + signedMsg.toString('hex')
@@ -133,7 +133,7 @@ export default {
       const _self = this;
       window.chrome.tabs.query(
         { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
-        function(tab) {
+        function (tab) {
           const obj = {
             event: REJECT_MEW_SIGN_MSG,
             payload: 'User rejected action!'

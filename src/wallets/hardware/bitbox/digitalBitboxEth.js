@@ -26,9 +26,7 @@ const hijackState = {
 class DigitalBitboxEth {
   static aes_cbc_b64_decrypt = (ciphertext, key) => {
     try {
-      const h = Crypto.createHash('sha512')
-        .update(key)
-        .digest();
+      const h = Crypto.createHash('sha512').update(key).digest();
       const encryptionKey = h.slice(0, 32);
       const authenticationKey = h.slice(32, 64);
 
@@ -56,9 +54,7 @@ class DigitalBitboxEth {
   };
   static aes_cbc_b64_encrypt = (plaintext, key) => {
     try {
-      const h = Crypto.createHash('sha512')
-        .update(key)
-        .digest();
+      const h = Crypto.createHash('sha512').update(key).digest();
       const encryptionKey = h.slice(0, 32);
       const authenticationKey = h.slice(32, 64);
 
@@ -130,9 +126,7 @@ class DigitalBitboxEth {
     this.key = Crypto.createHash('sha256')
       .update(new Buffer(this.secret, 'utf8'))
       .digest();
-    this.key = Crypto.createHash('sha256')
-      .update(this.key)
-      .digest();
+    this.key = Crypto.createHash('sha256').update(this.key).digest();
     clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
       this.secret = '';

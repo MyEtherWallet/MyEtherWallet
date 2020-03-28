@@ -42,43 +42,23 @@ describe('GettingStarted.vue', () => {
 
   it('should render correct cwwCurrent data', () => {
     expect(
-      wrapper
-        .findAll('ul li')
-        .at(0)
-        .classes()
-        .indexOf('active')
+      wrapper.findAll('ul li').at(0).classes().indexOf('active')
     ).toBeGreaterThan(-1);
     wrapper.setData({ cwwCurrent: 1 });
     expect(
-      wrapper
-        .findAll('ul li')
-        .at(1)
-        .classes()
-        .indexOf('active')
+      wrapper.findAll('ul li').at(1).classes().indexOf('active')
     ).toBeGreaterThan(-1);
     wrapper.setData({ cwwCurrent: 2 });
     expect(
-      wrapper
-        .findAll('ul li')
-        .at(2)
-        .classes()
-        .indexOf('active')
+      wrapper.findAll('ul li').at(2).classes().indexOf('active')
     ).toBeGreaterThan(-1);
     wrapper.setData({ cwwCurrent: 3 });
     expect(
-      wrapper
-        .findAll('ul li')
-        .at(3)
-        .classes()
-        .indexOf('active')
+      wrapper.findAll('ul li').at(3).classes().indexOf('active')
     ).toBeGreaterThan(-1);
     wrapper.setData({ cwwCurrent: 4 });
     expect(
-      wrapper
-        .findAll('ul li')
-        .at(4)
-        .classes()
-        .indexOf('active')
+      wrapper.findAll('ul li').at(4).classes().indexOf('active')
     ).toBeGreaterThan(-1);
   });
 
@@ -104,19 +84,11 @@ describe('GettingStarted.vue', () => {
     it('should change class when mouse wheel', () => {
       wrapper.vm.mouseScrollDown();
       expect(
-        wrapper
-          .findAll('.cww')
-          .at(0)
-          .classes()
-          .indexOf('positionTop')
+        wrapper.findAll('.cww').at(0).classes().indexOf('positionTop')
       ).toBeGreaterThan(-1);
       wrapper.vm.mouseScrollUp();
       expect(
-        wrapper
-          .findAll('.cww')
-          .at(1)
-          .classes()
-          .indexOf('positionBottom')
+        wrapper.findAll('.cww').at(1).classes().indexOf('positionBottom')
       ).toBeGreaterThan(-1);
     });
 

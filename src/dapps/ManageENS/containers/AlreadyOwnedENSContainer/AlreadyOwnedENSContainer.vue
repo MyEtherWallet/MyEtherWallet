@@ -77,7 +77,7 @@ export default {
     },
     supportedCoins: {
       type: Object,
-      default: function() {}
+      default: function () {}
     },
     resolverMultiCoinSupport: {
       type: Boolean,
@@ -85,7 +85,7 @@ export default {
     },
     txtRecords: {
       type: Object,
-      default: function() {}
+      default: function () {}
     }
   },
   computed: {

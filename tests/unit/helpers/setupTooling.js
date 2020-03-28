@@ -18,7 +18,7 @@ function createLocalVueInstance() {
   localVue.directive('click-outside', ClickOutside);
   localVue.directive('addr-resolver', AddrResolver);
   localVue.use(veeValidate);
-  localVue.filter('capitalize', function(value) {
+  localVue.filter('capitalize', function (value) {
     if (!value) return '';
     value = value.toString().toLowerCase();
     return value.charAt(0).toUpperCase() + value.slice(1);

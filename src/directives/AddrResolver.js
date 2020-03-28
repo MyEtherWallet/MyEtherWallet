@@ -9,7 +9,7 @@ import getMultiCoinAddress from '@/helpers/ENSMultiCoin.js';
 import ethMew from '@/networks/nodes/eth-mew';
 
 const AddrResolver = {
-  bind: function(el, binding, vnode) {
+  bind: function (el, binding, vnode) {
     let network = vnode.context.$store.state.main.network;
     let parentCurrency = vnode.context.$parent.currency
       ? vnode.context.$parent.currency
@@ -27,29 +27,29 @@ const AddrResolver = {
         }
       }
     });
-    vnode.context.$parent.$watch('$store.state.main.network', function(e) {
+    vnode.context.$parent.$watch('$store.state.main.network', function (e) {
       network = e;
       parentCurrency = e.type.name;
       actualProcess(address);
     });
-    vnode.context.$parent.$watch('currency', function(e) {
+    vnode.context.$parent.$watch('currency', function (e) {
       parentCurrency = e;
       actualProcess(address);
     });
-    vnode.context.$watch(binding.value, function(e) {
+    vnode.context.$watch(binding.value, function (e) {
       address = e.trim();
       actualProcess(address);
     });
-    const removeElements = function() {
+    const removeElements = function () {
       vnode.elm.parentNode.parentNode
         .querySelectorAll('.resolver-error, .resolver-addr')
         .forEach(e => e.remove());
     };
-    const appendElement = function(ele) {
+    const appendElement = function (ele) {
       removeElements();
       vnode.elm.parentNode.parentNode.appendChild(ele);
     };
-    const actualProcess = async function(e) {
+    const actualProcess = async function (e) {
       removeElements();
       const _this = vnode.context;
       if (e === '') {
@@ -57,7 +57,7 @@ const AddrResolver = {
         _this.hexAddress = '';
       } else resolveDomain(e);
     };
-    const resolveViaENS = function(domain) {
+    const resolveViaENS = function (domain) {
       const _this = vnode.context;
       const ens = _this.$store.state.main.ens;
       const errorPar = document.createElement('p');
@@ -175,7 +175,7 @@ const AddrResolver = {
       }
     };
 
-    const checkDarklist = function(addr) {
+    const checkDarklist = function (addr) {
       const _this = vnode.context;
       const messagePar = document.createElement('p');
       const isDarklisted = Misc.isDarklisted(addr);
@@ -192,7 +192,7 @@ const AddrResolver = {
       return false;
     };
 
-    const resolveDomain = async function(domain) {
+    const resolveDomain = async function (domain) {
       const messagePar = document.createElement('p');
       const _this = vnode.context;
       if (

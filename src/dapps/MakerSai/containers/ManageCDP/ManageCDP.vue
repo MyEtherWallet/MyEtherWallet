@@ -203,13 +203,13 @@ export default {
     },
     tokensWithBalance: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
     getBalance: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     makerActive: {
       type: Boolean,
@@ -217,13 +217,13 @@ export default {
     },
     cdps: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
     availableCdps: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
@@ -233,15 +233,15 @@ export default {
     },
     getCdp: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     hasCdp: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     values: {
       type: Object,
-      default: function() {
+      default: function () {
         return {
           maxPethDraw: '',
           maxEthDraw: '',
@@ -293,19 +293,19 @@ export default {
     },
     priceService: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
     cdpService: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
     proxyService: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     }
