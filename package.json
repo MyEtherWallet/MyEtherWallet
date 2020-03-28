@@ -180,12 +180,13 @@
     ]
   },
   "resolutions": {
-    "acorn": "^7.1.1",
+    "acorn": "^6.4.0",
     "cryptiles": "^4.1.2",
     "jquery": "^3.4.0",
     "handlebars": "^4.5.3",
     "hoek": "^4.2.0",
-    "mem": "^4.0.0"
+    "mem": "^4.0.0",
+    "marked": "^0.6.2"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
