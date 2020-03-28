@@ -13,19 +13,13 @@ const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
 // Lock @vue packages due to complications on updating
 // @vue/test-utils - breaking tests beginning at 5.2.5-hotfix-2 (with version 1.0.0-beta.30)
 const EXCEPTIONS = [
-  '@myetherwallet/mewconnect-web-client',
   'canvas',
   'ethereum-ens',
   'babel-jest',
   'multicoin-address-validator',
   'vee-validate',
   '@xkeshi/vue-qrcode',
-  'web3',
-  'web3-core-helpers',
-  'web3-core-method',
-  'web3-utils',
-  '@vue/test-utils',
-  'prettier'
+  '@vue/test-utils'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
@@ -48,9 +42,7 @@ const looper = () => {
       console.error(
         'Update the versions for the packages above to their current versions.'
       );
-      console.error(
-        'Then run `npm update`.'
-      );
+      console.error('Then run `npm update`.');
       console.error();
       process.exit(1);
     } else {
@@ -77,8 +69,13 @@ const looper = () => {
         new Date(latestVersionTime).getTime() < new Date().getTime() - SAFE_TIME
       ) {
         console.error(
-          'ERROR: Update ' + _name + ' from ' + ALL_PACKAGES[_name] +
-          ' to ' + latestVersion + '. Released:',
+          'ERROR: Update ' +
+            _name +
+            ' from ' +
+            ALL_PACKAGES[_name] +
+            ' to ' +
+            latestVersion +
+            '. Released:',
           latestVersionTime
         );
         updatesFound = true;
