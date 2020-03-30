@@ -23,6 +23,11 @@ describe('WalletOption.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct text props', () => {
     expect(
       wrapper.vm.$el

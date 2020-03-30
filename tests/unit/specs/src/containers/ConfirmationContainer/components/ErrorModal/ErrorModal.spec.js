@@ -56,6 +56,11 @@ describe('ErrorModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct message props', () => {
     expect(
       wrapper.vm.$el.querySelector('.d-block p').textContent.trim()
