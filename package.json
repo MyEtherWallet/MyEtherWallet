@@ -79,7 +79,7 @@
     "@ledgerhq/hw-transport-u2f": "5.12.0",
     "@ledgerhq/hw-transport-webusb": "5.12.0",
     "@makerdao/currency": "0.9.7",
-    "@makerdao/dai": "0.28.1",
+    "@makerdao/dai": "0.28.3",
     "@makerdao/dai-plugin-config": "0.2.14-rc.1",
     "@makerdao/dai-plugin-mcd": "1.3.7",
     "@makerdao/dai-plugin-migrations": "1.0.12",
