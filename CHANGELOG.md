@@ -2,6 +2,10 @@
 
 - Add AdEx ads [#2119](https://github.com/MyEtherWallet/MyEtherWallet/pull/2119)
 
+### Devop
+
+- Update access wallet page [#2188](https://github.com/MyEtherWallet/MyEtherWallet/pull/2188)
+
 ### Release v5.5.1
 
 ### Feature
