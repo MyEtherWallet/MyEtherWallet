@@ -38,3 +38,4 @@ jobs:
           ACCESS_TOKEN: ${{ secrets.MEW_BOT_TOKEN }}
           BRANCH: gh-pages
           FOLDER: dist
+          CLEAN: true

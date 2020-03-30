@@ -38,6 +38,7 @@ jobs:
           ACCESS_TOKEN: ${{ secrets.MEW_BOT_TOKEN }}
           BRANCH: gh-pages-history
           FOLDER: dist
+          CLEAN: true
 
       - name: deploy to production
         env:
