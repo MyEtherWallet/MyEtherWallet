@@ -53,7 +53,7 @@ export default {
       members: [
         {
           name: 'Kosala',
-          position: 'Chief Executive Borkficcer',
+          position: 'Head of Pawsitive Thinking',
           img: kosala
         },
         {
@@ -88,7 +88,7 @@ export default {
         },
         {
           name: 'Gage',
-          position: 'Full-Stack Retriever',
+          position: 'Full Stack Retriever',
           img: gage
         },
         {
