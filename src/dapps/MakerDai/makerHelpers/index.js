@@ -1,6 +1,6 @@
 import { locateCdps, locateOldCdps } from './locateCdps';
 import addresses from './addressesMAIN';
-// import addresses from './addressesKOV';
+
 import {
   setupPriceAndRatios,
   setupServices,
