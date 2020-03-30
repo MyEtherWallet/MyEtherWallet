@@ -21,13 +21,13 @@ const addWalletToStore = (
   addType,
   callback
 ) => {
-  const checksummedAddr = toChecksumAddress(address.toLowerCase());
+  const checksummedAddr = toChecksumAddress(address);
   const chrome = window.chrome;
 
   getAccounts(item => {
     const foundAddress = Object.keys(item).find(key => {
       if (isAddress(key)) {
-        return toChecksumAddress(key.toLowerCase()) === checksummedAddr;
+        return toChecksumAddress(key) === checksummedAddr;
       }
     });
     const foundNickname = Object.keys(item).find(key => {
@@ -70,15 +70,14 @@ const deleteWalletFromStore = (addr, callback) => {
     Object.keys(item).forEach(key => {
       if (
         isAddress(item[key]) &&
-        toChecksumAddress(item[key].toLowerCase()) ===
-          toChecksumAddress(addr.toLowerCase())
+        toChecksumAddress(item[key]) === toChecksumAddress(addr)
       ) {
         chrome.storage.sync.remove(key, () => {});
       }
     });
   });
   try {
-    chrome.storage.sync.remove(toChecksumAddress(addr).toLowerCase(), callback);
+    chrome.storage.sync.remove(toChecksumAddress(addr), callback);
     chrome.storage.sync.get('favorites', item => {
       const favorites = JSON.parse(item.favorites);
       const findIdx = favorites.findIndex(item => {

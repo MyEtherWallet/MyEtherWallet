@@ -456,8 +456,8 @@ export default {
         worker.onmessage = () => {
           this.loading = false;
           ExtensionHelpers.deleteWalletFromStore(this.address, () => {
-            Toast.responseHandler('Removed Wallet Successfully', Toast.SUCCESS);
             this.$refs.removeWalletModal.$refs.removeWalletModal.$refs.modalWrapper.hide();
+            Toast.responseHandler('Removed Wallet Successfully', Toast.SUCCESS);
           });
         };
         worker.onerror = e => {
