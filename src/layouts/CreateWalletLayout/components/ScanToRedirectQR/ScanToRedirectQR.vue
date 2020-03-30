@@ -11,7 +11,7 @@ export default {
     getMobileOperatingSystem() {
       const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
-         if (/windows phone/i.test(userAgent)) {
+      if (/windows phone/i.test(userAgent)) {
         return;
       }
 
