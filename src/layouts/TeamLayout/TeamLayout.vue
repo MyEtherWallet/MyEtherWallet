@@ -58,7 +58,7 @@ export default {
         },
         {
           name: 'Brian',
-          position: 'Bone Treasury Officer',
+          position: 'Chief Gud Boi-fficer',
           img: brian
         },
         {
