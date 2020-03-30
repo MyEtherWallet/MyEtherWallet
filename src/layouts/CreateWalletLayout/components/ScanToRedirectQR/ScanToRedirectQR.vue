@@ -11,13 +11,13 @@ export default {
     getMobileOperatingSystem() {
       const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
-      if (/windows phone/i.test(userAgent)) {
+         if (/windows phone/i.test(userAgent)) {
         return;
       }
 
       if (/android/i.test(userAgent)) {
         window.location.href =
-          'http://play.google.com/store/apps/details?id=PACKAGEURL';
+          'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet';
       }
 
       if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
