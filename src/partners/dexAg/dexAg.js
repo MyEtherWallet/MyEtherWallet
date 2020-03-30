@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-import { networkSymbols } from '../partnersConfig';
+import { ERC20, networkSymbols } from '../partnersConfig';
 import { Toast } from '@/helpers';
 import DEXAG from 'dexag-sdk';
 
@@ -11,10 +11,12 @@ import {
   TIME_SWAP_VALID,
   PROVIDER_NAME
 } from './config';
-import changellyCalls from './dexAg-calls';
+import dexAgCalls from './dexAg-calls';
 import changellyApi from './dexAg-api';
 
 import debug from 'debug';
+import { kyberBaseCurrency } from '@/partners/kyber/config';
+import { utils } from '@/partners';
 
 const errorLogger = debug('v5:partners-changelly');
 
@@ -24,6 +26,7 @@ console.log(DEXAG); // todo remove dev item
 export default class DexAg {
   constructor(props = {}) {
     this.name = DexAg.getName();
+    this.baseCurrency = 'ETH';
     console.log(DEXAG.fromProvider); // todo remove dev item
     this.sdk = DEXAG.fromProvider(props.web3.currentProvider);
     this.network = props.network || networkSymbols.ETH;
@@ -33,6 +36,7 @@ export default class DexAg {
     this.currencyDetails = props.currencies || ChangellyCurrencies;
     this.useFixed = true;
     this.tokenDetails = {};
+    this.web3 = props.web3;
     this.getSupportedCurrencies(this.network);
   }
 
@@ -44,7 +48,7 @@ export default class DexAg {
     if (type === 'api') {
       return changellyApi;
     }
-    return changellyCalls;
+    return dexAgCalls;
   }
 
   static isDex() {
@@ -102,6 +106,10 @@ export default class DexAg {
     );
   }
 
+  calculateRate(inVal, outVal) {
+    return new BigNumber(outVal).div(inVal);
+  }
+
   // could make it as a multi-provider that takes a setup param and then uses that
   // should change this to be able to return multiple without changing the structure too much
   async getRate(fromCurrency, toCurrency, fromValue) {
@@ -122,7 +130,7 @@ export default class DexAg {
             fromCurrency,
             toCurrency,
             provider: val.dex,
-            rate: this.calculateRate(fromValue, val.price),
+            rate: val.price, //this.calculateRate(fromValue, val.price),
             additional: { source: 'dexag' }
           };
         })
@@ -134,10 +142,6 @@ export default class DexAg {
 
   async getRateUpdate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
     return this.getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat);
-  }
-
-  calculateRate(inVal, outVal) {
-    return new BigNumber(outVal).div(inVal);
   }
 
   getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
@@ -198,25 +202,139 @@ export default class DexAg {
   //   return Error('From amount below changelly minimum for currency pair');
   // }
 
+  async approve(tokenAddress, fromValueWei, spender) {
+    let transferGasEst;
+    try {
+      const methodObject = new this.web3.eth.Contract(
+        ERC20,
+        tokenAddress
+      ).methods.approve(spender, fromValueWei);
+
+      return {
+        to: tokenAddress,
+        value: 0,
+        data: methodObject.encodeABI()
+      };
+    } catch (e) {
+      errorLogger(e);
+    }
+  }
+
+  async prepareApprovals(fromAddress, providerAddress, fromCurrency, metadata) {
+    let userCap = true;
+
+    const isTokenApprovalNeeded = async (
+      fromToken,
+      fromAddress
+    ) => {
+      if (fromToken === this.baseCurrency)
+        return { approve: false, reset: false };
+
+      const currentAllowance = await new this.web3.eth.Contract(
+        ERC20,
+        metadata.input.address // this.getTokenAddress(fromToken)
+      ).methods
+        .allowance(fromAddress, providerAddress)
+        .call();
+
+      if (new BigNumber(currentAllowance).gt(new BigNumber(0))) {
+        if (
+          new BigNumber(currentAllowance)
+            .minus(new BigNumber(metadata.input.amount))
+            .lt(new BigNumber(0))
+        ) {
+          return { approve: true, reset: true };
+        }
+        return { approve: false, reset: false };
+      }
+      return { approve: true, reset: false };
+    };
+
+    const { approve, reset } = await isTokenApprovalNeeded(
+      fromCurrency,
+      fromAddress
+    );
+    console.log(approve, reset); // todo remove dev item
+    if (approve && reset) {
+      /*
+      .input.spender
+      * */
+      return new Set(await Promise.all([
+        await this.approve(metadata.input.address, 0, providerAddress),
+        await this.approve(
+          metadata.input.address,
+          metadata.input.amount,
+          providerAddress
+        )
+      ]));
+    } else if (approve) {
+      return new Set([
+        await this.approve(
+          metadata.input.address,
+          providerAddress,
+          metadata.input.amount
+        )
+      ]);
+    }
+    return new Set();
+    // const reason = !userCap ? 'user cap value' : 'current token balance';
+    // const errorMessage = `User is not eligible to use kyber network. Current swap value exceeds ${reason}`;
+    // throw Error(errorMessage);
+  }
+
+  async generateDataForTransactions(providerAddress, tradeDetails, swapDetails) {
+    try {
+
+
+      const preparedTradeTxs = await this.prepareApprovals(
+        swapDetails.fromAddress,
+        providerAddress,
+        swapDetails.fromCurrency,
+        tradeDetails.metadata
+      );
+
+      preparedTradeTxs.add(tradeDetails.trade);
+      console.log(tradeDetails, 'gets here'); // todo remove dev item
+      console.log(preparedTradeTxs, 'preparedTradeTxs'); // todo remove dev item
+
+      const swapTransactions = Array.from(preparedTradeTxs);
+      console.log(swapTransactions, 'swapTransactions'); // todo remove dev item
+
+      return [...swapTransactions];
+    } catch (e) {
+      console.log(e); // todo remove dev item
+      errorLogger(e);
+      throw e;
+    }
+  }
+
   async startSwap(swapDetails) {
     swapDetails.maybeToken = true;
-    // swapDetails.providerAddress = this.getAddress();
-    // swapDetails.kyberMaxGas = await this.callKyberContract('maxGasPrice');
-    // const finalRateWei = await this.getRate(
-    //   swapDetails.fromCurrency,
-    //   swapDetails.toCurrency,
-    //   swapDetails.fromValue,
-    //   swapDetails.additional.source
-    // );
-    // const finalRate = this.convertToTokenBase('ETH', finalRateWei);
     console.log(swapDetails, 'its this right?'); // todo remove dev item
-    swapDetails.dataForInitialization = await this.sdk.getTrade({
-      to: swapDetails.toCurrency,
-      from: swapDetails.fromCurrency,
-      toAmount: swapDetails.toValue,
-      dex: swapDetails.provider
-    });
-    console.log(swapDetails, 'gets here'); // todo remove dev item
+    const supported = [
+      'uniswap',
+      'bancor',
+      'kyber',
+      'radar-relay',
+      'oasis',
+      'synthetix'
+    ];
+    const dexToUse = supported.includes(swapDetails.provider)
+      ? swapDetails.provider
+      : 'ag';
+    // console.log(await this.createTransaction(swapDetails, dexToUse)); // todo remove dev item
+    // const tradeDetails = await this.sdk.getTrade({
+    //   to: swapDetails.toCurrency,
+    //   from: swapDetails.fromCurrency,
+    //   toAmount: swapDetails.toValue,
+    //   dex: dexToUse
+    // });
+
+    const tradeDetails = await this.createTransaction(swapDetails, dexToUse);
+    console.log(tradeDetails, 'tradeDetails'); // todo remove dev item
+    const providerAddress = tradeDetails.metadata.input ? tradeDetails.metadata.input.spender : tradeDetails.trade.to;
+    swapDetails.dataForInitialization = await this.generateDataForTransactions(providerAddress, tradeDetails, {...swapDetails});
+    console.log(swapDetails, 'swapDetails.dataForInitialization'); // todo remove dev item
     // swapDetails.toValue = new BigNumber(finalRate).times(
     //   new BigNumber(swapDetails.fromValue).toFixed(18).toString()
     // );
@@ -225,22 +343,24 @@ export default class DexAg {
     //   swapDetails.toValue,
     //   swapDetails.fromValue
     // );
+    swapDetails.isExitToFiat = false;
     swapDetails.providerReceives = swapDetails.fromValue;
-    // swapDetails.providerSends = new BigNumber(finalRate).times(
-    //   new BigNumber(swapDetails.fromValue)
-    // );
-    // swapDetails.parsed = {
-    //   sendToAddress: this.getKyberNetworkAddress(),
-    //   status: 'pending',
-    //   validFor: TIME_SWAP_VALID
-    // };
-    // swapDetails.providerAddress = this.getKyberNetworkAddress();
-    // swapDetails.isDex = Kyber.isDex();
+    swapDetails.providerSends = tradeDetails.metadata.query.toAmount;
+    swapDetails.providerAddress = providerAddress;
+
+    swapDetails.parsed = {
+      sendToAddress: swapDetails.providerAddress,
+      status: 'pending',
+      validFor: TIME_SWAP_VALID
+    };
+    swapDetails.isDex = DexAg.isDex();
+    console.log(swapDetails, 'return'); // todo remove dev item
+
     return swapDetails;
   }
 
-  createTransaction(swapDetails) {
-    console.log(swapDetails); // todo remove dev item
+  async createTransaction(swapDetails, dexToUse) {
+    return dexAgCalls.createTransaction({dex: dexToUse, ...swapDetails})
   }
 
   static parseOrder(order) {
@@ -258,7 +378,7 @@ export default class DexAg {
 
   static async getOrderStatus(noticeDetails, network) {
     try {
-      const status = await changellyCalls.getStatus(
+      const status = await dexAgCalls.getStatus(
         noticeDetails.statusId,
         network
       );
@@ -290,12 +410,52 @@ export default class DexAg {
   }
 
   async validateAddress(toCurrency, address) {
-    return await changellyCalls.validateAddress(
+    return await dexAgCalls.validateAddress(
       {
         currency: toCurrency,
         address: address
       },
       this.network
     );
+  }
+
+  getTokenAddress(token) {
+    try {
+      if (utils.stringEqual(networkSymbols.ETH, token)) {
+        return this.currencies[token].contractAddress;
+      }
+      return this.web3.utils.toChecksumAddress(
+        this.currencies[token].contractAddress
+      );
+    } catch (e) {
+      errorLogger(e);
+      throw Error(`Token [${token}] not included in dex.ag list of tokens`);
+    }
+  }
+
+  getTokenDecimals(token) {
+    try {
+      return new BigNumber(this.currencies[token].decimals).toNumber();
+    } catch (e) {
+      errorLogger(e);
+      throw Error(
+        `Token [${token}] not included in dex.ag network list of tokens`
+      );
+    }
+  }
+
+  convertToTokenBase(token, value) {
+    const decimals = this.getTokenDecimals(token);
+    const denominator = new BigNumber(10).pow(decimals);
+    return new BigNumber(value).div(denominator).toString(10);
+  }
+
+  convertToTokenWei(token, value) {
+    const decimals = this.getTokenDecimals(token);
+    const denominator = new BigNumber(10).pow(decimals);
+    return new BigNumber(value)
+      .times(denominator)
+      .integerValue(BigNumber.ROUND_DOWN)
+      .toString(10);
   }
 }

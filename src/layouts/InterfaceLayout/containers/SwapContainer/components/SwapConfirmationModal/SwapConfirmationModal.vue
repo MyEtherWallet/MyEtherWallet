@@ -372,6 +372,7 @@ export default {
           }
           return entry;
         });
+        console.log( this.preparedSwap, ' this.preparedSwap'); // todo remove dev item
       }
       this.swapReady = true;
     }

@@ -30,10 +30,11 @@ const statuses = {
 const TIME_SWAP_VALID = 300;
 const PROVIDER_NAME = 'dexag';
 const FEE_RATE = 0;
-
+const PROXY_CONTRACT_ADDRESS = '0x14FE89a8F788a84ed8c289821C56374840E46bA3';
 const requireExtraId = ['XRP', 'STEEM', 'SBD', 'XLM', 'DCT', 'XEM'];
 
 export {
+  PROXY_CONTRACT_ADDRESS,
   notificationStatuses,
   changellyMethods,
   statuses,

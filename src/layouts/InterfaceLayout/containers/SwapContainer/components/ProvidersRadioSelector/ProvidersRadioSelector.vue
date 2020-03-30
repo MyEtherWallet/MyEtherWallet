@@ -19,7 +19,6 @@
               type="radio"
               name="provider"
             />
-
             <label :for="provider.provider" />
           </div>
           <div class="provider-image">
@@ -65,8 +64,9 @@
             <span class="slippage-text">{{
               otherTextDisplay(provider.additional.display)
             }}</span>
-            <span class="slippage-text">{{ provider.additional.source }}</span>
+            <span class="slippage-text"> {{ provider.additional.source }}</span>
           </div>
+----- {{provider.provider}}
         </li>
       </ul>
       <!-- list of other providers who don't support the selected currency pair -->
