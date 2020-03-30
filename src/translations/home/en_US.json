@@ -31,9 +31,14 @@
     "subtitle": "Have not found the question that you are looking for?",
     "button-see-more": "See More...",
     "button-here": "here.",
+    "button-learn-more": "Learn more...",
+    "mew-wallet": {
+      "title": "What is MEW wallet?",
+      "text": "MEW wallet is our official fully-fledged mobile app, bringing Ethereum to your iOS or Android phone"
+    },
     "create-wallet": {
       "title": "How do I create a new wallet?",
-      "text": "MyEtherWallet (MEW) offers three ways to create a new ETH wallet. These are via MEWconnect, Keystore file, or Mnemonic phrase. For more information, click"
+      "text": "MyEtherWallet (MEW) offers three ways to create a new ETH wallet. These are via MEW wallet, Keystore file, or Mnemonic phrase. For more information, click"
     },
     "mewconnect": {
       "title": "What is MEWconnect?",
@@ -62,7 +67,17 @@
     "vkontakte": "Vkontakte",
     "youtube": "YouTube",
     "mewtopia": "MEWtopia",
-    "instagram": "Instagram"
+    "instagram": "Instagram",
+    "telegram": "Telegram"
   },
-  "lost-title": "Oops! Looks like you're lost."
+  "lost-title": "Oops! Looks like you're lost.",
+  "mew-wallet-modal": {
+    "title": "Official MEW wallet App is now available!",
+    "text": "Buy, hold, and send Ether and tokens. Explore Ethereum on your mobile device. {learn-more}",
+    "learn-more": "Learn more",
+    "footer-text": "Download our App today!",
+    "new": "new",
+    "details": "Details",
+    "hide": "Hide"
+  }
 }

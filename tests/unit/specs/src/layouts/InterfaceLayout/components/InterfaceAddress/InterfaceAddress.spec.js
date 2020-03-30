@@ -44,6 +44,11 @@ describe('InterfaceAddress.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct address props', () => {
     expect(
       wrapper.vm.$el

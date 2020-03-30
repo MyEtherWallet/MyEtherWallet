@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-go.json';
-import contracts from '@/contracts/contract-abi-go.json';
+import tokens from '@/_generated/tokens/tokens-go.json';
+import contracts from '@/_generated/contracts/contract-abi-go.json';
 import go from '@/assets/images/networks/go.svg';
 
 export default {

@@ -39,6 +39,11 @@ describe('BackButton.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct content', () => {});
 
   describe('BackButton.vue Methods', () => {

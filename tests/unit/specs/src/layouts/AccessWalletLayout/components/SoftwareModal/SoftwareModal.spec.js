@@ -47,6 +47,11 @@ describe('SoftwareModal.vue', () => {
       });
     });
 
+    afterEach(() => {
+      wrapper.destroy();
+      wrapper = null;
+    });
+
     xit('should render correct contents', () => {
       const liElements = wrapper.findAll('li');
       let liElement = liElements.at(0);

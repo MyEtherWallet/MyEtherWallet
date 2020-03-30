@@ -8,8 +8,10 @@
       "
     />
     <welcome-modal ref="welcome" />
+    <wallet-launched-modal ref="walletLaunch" />
     <router-view />
     <footer-container />
+    <wallet-launched-footer-banner />
     <confirmation-container v-if="wallet !== null" />
   </div>
 </template>
@@ -23,6 +25,8 @@ import store from 'store';
 import { mapState, mapActions } from 'vuex';
 import { Toast } from '@/helpers';
 import LogoutWarningModal from '@/components/LogoutWarningModal';
+import WalletLaunchedModal from '@/components/WalletLaunchedModal';
+import WalletLaunchedBanner from '@/components/WalletLaunchedBanner';
 
 export default {
   name: 'App',
@@ -31,7 +35,9 @@ export default {
     'footer-container': FooterContainer,
     'confirmation-container': ConfirmationContainer,
     'logout-warning-modal': LogoutWarningModal,
-    'welcome-modal': WelcomeModal
+    'welcome-modal': WelcomeModal,
+    'wallet-launched-modal': WalletLaunchedModal,
+    'wallet-launched-footer-banner': WalletLaunchedBanner
   },
   computed: {
     ...mapState('main', ['wallet', 'online'])
@@ -66,6 +72,8 @@ export default {
   },
   mounted() {
     this.checkIfOnline(navigator.onLine);
+    this.$refs.walletLaunch.$refs.walletLaunch.show();
+
     if (!store.get('notFirstTimeVisit') && this.$route.fullPath === '/') {
       this.$refs.welcome.$refs.welcome.show();
     }

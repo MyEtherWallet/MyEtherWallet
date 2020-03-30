@@ -1,6 +1,17 @@
 @import '~@/scss/GlobalVariables';
 
 $tablet-width: 1270px;
+.floating-buttons-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  bottom: 150px;
+  height: 220px;
+  right: 60px;
+  z-index: 999;
+  justify-content: space-around;
+}
 
 .vintage-header {
   background-color: $mew-green;
