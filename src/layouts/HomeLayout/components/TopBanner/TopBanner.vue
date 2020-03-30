@@ -6,7 +6,11 @@
           <div class="banner-text">
             <h1>{{ $t('home.tagline1') }}</h1>
             <h1>{{ $t('home.tagline2') }}</h1>
-            <p>{{ $t('home.subheading') }}</p>
+            <i18n path="home.subheading" tag="p">
+              <router-link slot="link" to="/team">
+                {{ $t('home.meet-woof') }}
+              </router-link>
+            </i18n>
           </div>
           <div class="banner-image">
             <!-- <img alt src="~@/assets/images/home/big-spaceman.png" /> -->
