@@ -22,6 +22,11 @@ describe('Social.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct contents', () => {
     const linkElements = wrapper.vm.$el
       .querySelector('.icons')

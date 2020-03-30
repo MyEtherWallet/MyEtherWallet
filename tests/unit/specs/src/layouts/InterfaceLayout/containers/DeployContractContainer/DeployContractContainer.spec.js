@@ -54,6 +54,11 @@ describe('DeployContractContainer.vue', () => {
     });
     wrapper.find('div'); // added to suppress eslint warning
   });
+
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
   it('should render correct bytecode', () => {
     const bytecode = 'bytecode';
     wrapper.setData({ bytecode });
