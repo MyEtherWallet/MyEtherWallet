@@ -1,6 +1,7 @@
 {
   "invalid-device-pin-or-password": "Невозможно разблокировать кошелек. Неверный PIN-код или глобальный пароль устройства!",
-  "user-cancelled-action": "Пользователь закрыл модуль BCVault!",
+  "closed-modal": "User closed BCVault modal!",
+  "user-cancelled-action": "User cancelled action!",
   "user-no-action": "Нет действий пользователя, закрытие соединения.",
   "browser-popup": "Не удалось создать всплывающее окно! Пожалуйста, включите всплывающие окна в вашем браузере!",
   "only-one-wallet": "У вас есть только 1 сохраненный кошелек Ethereum на этом устройстве",
