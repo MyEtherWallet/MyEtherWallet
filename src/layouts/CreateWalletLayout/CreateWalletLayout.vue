@@ -78,7 +78,7 @@
                 <div class="qr-container mt-5">
                   <qrcode
                     :value="
-                      'https://www.mewbuilds.com/build/7924905fef21b6ad252cf5d91ecfb7b0d2a5ad81/index.html#/qr-code'
+                      'https://www.mewbuilds.com/build/09a4f06d0b4c311f8947e1830c0c26041b2da2e3/index.html#/qr-code'
                     "
                     :options="{ size: 150 }"
                   />
