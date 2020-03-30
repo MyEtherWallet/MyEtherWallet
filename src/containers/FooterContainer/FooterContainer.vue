@@ -309,6 +309,10 @@ export default {
         {
           to: 'https://vk.com/public190491855',
           class: 'fa-vk'
+        },
+        {
+          to: 'https://t.me/myetherwalletofficial',
+          class: 'fa-telegram'
         }
       ]
     };
