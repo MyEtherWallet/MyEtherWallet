@@ -1,11 +1,11 @@
 {
   "tagline1": "Ethereum's",
   "tagline2": "Doggo Wallet",
-  "subheading": "WOOF is a free, canine-side interface helping you to interact with the Ethereum bonechain. Our easy-to-use, paw-friendly platform allows you to generate treats, interact with smart pups, and so much more. {link}",
+  "subheading": "WOOF - это бесплатный интерфейс, который поможет Вам взаимодействовать с Ethereum Bonechain. Наша простая в использовании и удобная для лап платформа позволяет вам генерировать вкусняшки, взаимодействовать с умными игрушками и многое другое. {link}",
   "create-new-wallet": {
     "text": "Создайте свой собственный уникальный кошелек Ethereum. Получите публичный адрес (0x...) и выберите метод доступа и восстановления."
   },
-  "meet-woof": "Meet the #WOOFteam.",
+  "meet-woof": "Познакомьтесь с командой #WOOFteam.",
   "access-my-wallet": {
     "text": "Подключитесь к блокчейну используя выбранный вами кошелек.",
     "opt-1": "Отправка и Обмен ETH и Токенов",
@@ -15,7 +15,7 @@
   },
   "about-mew": {
     "title": "О WOOF",
-    "text": "WOOF puts the Ethereum blockchain at your paw-tips. We are a team of crypto-enthusiasts dedicated to bring you the most secure, most intuitive, and dare we say puppiest way to manage your ETH and ERC20 tokens. We're always here to help, and we're never giving away ETH. Cheers!"
+    "text": "WOOF предоставляет блокчейн Ethereum в ваше полное лапное распоряжение. Мы являемся командой крипто-энтузиастов, специализирующихся на создании для вас наиболее безопасного, наиболее интуитивного и, можно смело сказать, самого пушистого способа управления вашим EТH и токенами ERC20. Мы всегда готовы помочь и мы никогда не раздаем ETH. Спасибо!"
   },
   "join-mew": {
     "title": "Присоединиться к MEW",
