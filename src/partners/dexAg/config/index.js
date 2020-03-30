@@ -6,7 +6,8 @@ import {
   TIME_SWAP_VALID,
   requireExtraId,
   PROVIDER_NAME,
-  FEE_RATE
+  FEE_RATE,
+  PROXY_CONTRACT_ADDRESS
 } from './config';
 
 export {
@@ -17,5 +18,6 @@ export {
   TIME_SWAP_VALID,
   requireExtraId,
   PROVIDER_NAME,
-  FEE_RATE
+  FEE_RATE,
+  PROXY_CONTRACT_ADDRESS
 };

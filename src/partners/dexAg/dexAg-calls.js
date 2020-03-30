@@ -1,5 +1,5 @@
 import { post, get } from '@/helpers/httpRequests';
-import { changellyMethods } from './config';
+import { changellyMethods,PROXY_CONTRACT_ADDRESS  } from './config';
 import { swapApiEndpoints } from '../partnersConfig';
 import { utils } from '../helpers';
 
@@ -122,21 +122,33 @@ const validateAddress = async (addressDetails, network) => {
 
 const createTransaction = async (transactionParams, network) => {
   try {
-    if (changellyMethods[network]) {
-// needs the approval trasactions (see kyber)
-      const url = `https://api-v2.dex.ag/tradeAndSend?from=${transactionParams.providerDetails.fromCurrency}&to=${transactionParams.providerDetails.toCurrency}&fromAmount=${transactionParams.fromValue}&dex=${transactionParams.additional.source}&recipient=${transactionParams.toAddress}`
-
-      const results = await get(
-        url
-      );
-      console.log(results); // todo remove dev item
-      if (results.error) {
-        throw Error(results.error.message);
-      }
-
-      return [results.result];
+    const url = `https://api-v2.dex.ag/tradeAndSend?from=${transactionParams.fromCurrency}&to=${transactionParams.toCurrency}&fromAmount=${transactionParams.fromValue}&dex=${transactionParams.dex}&recipient=${transactionParams.toAddress}&proxy=${PROXY_CONTRACT_ADDRESS}`
+    console.log(url); // todo remove dev item
+    const results = await get(
+      url
+    );
+    console.log(results); // todo remove dev item
+    if (results.error) {
+      throw Error(results.error.message);
     }
-    return Promise.resolve(-1);
+
+    return results;
+
+//     if (changellyMethods[network]) {
+// // needs the approval trasactions (see kyber)
+//       const url = `https://api-v2.dex.ag/tradeAndSend?from=${transactionParams.fromCurrency}&to=${transactionParams.toCurrency}&fromAmount=${transactionParams.fromValue}&dex=${transactionParams.dex}&recipient=${transactionParams.toAddress}`
+//       console.log(url); // todo remove dev item
+//       const results = await get(
+//         url
+//       );
+//       console.log(results); // todo remove dev item
+//       if (results.error) {
+//         throw Error(results.error.message);
+//       }
+//
+//       return [results.result];
+//     }
+//     return Promise.resolve(-1);
   } catch (e) {
     utils.handleOrThrow(e);
   }

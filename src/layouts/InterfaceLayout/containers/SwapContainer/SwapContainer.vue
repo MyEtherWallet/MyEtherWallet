@@ -142,6 +142,8 @@
             />
           </div>
         </div>
+        <!-- TODO REMOVE NOTE BELOW -->
+       <b>Need to check better handle the delay in rate updates changing the value after a moment which is unexpected.</b>
 
         <div class="send-form">
           <div class="title-container">
@@ -886,10 +888,12 @@ export default {
               this.openConfirmModal(this.swapDetails);
             };
           } else {
+            console.log(this.swapDetails, 'this.swapDetails)'); // todo remove dev item
             this.openConfirmModal(this.swapDetails);
           }
         }
       } catch (e) {
+        console.log(e); // todo remove dev item
         //abort (empty response from provider or failure to finalize details)
         if (e.message === 'abort') {
           this.finalizingSwap = false;

@@ -24,7 +24,7 @@ module.exports = {
   headers: {
     'Strict-Transport-Security': 'max-age=63072000; includeSubdomains; preload',
     'Content-Security-Policy':
-      "default-src 'self' blob:; frame-src 'self' api.dex.ag:443; api-v2.dex.ag:443; www.walletlink.org:443 connect.trezor.io:443; img-src 'self' nft2.mewapi.io:443 cdn.stateofthedapps.com:443 data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src " +
+      "default-src 'self' blob:; frame-src 'self' www.walletlink.org:443 connect.trezor.io:443; img-src 'self' nft2.mewapi.io:443 cdn.stateofthedapps.com:443 data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src " +
       allowedConnections.join(' ') +
       ';',
     'X-Content-Type-Options': 'nosniff',
