@@ -1,6 +1,6 @@
 {
   "mewconnect": {
-    "option-text": "Scan the QR code to access with MEWwallet or MEWconnect",
+    "option-text": "Scan the QR code to access with MEW wallet or MEWconnect",
     "modal": {
       "title": "Mobile Access",
       "text1": "Please use MEW wallet or MEWconnect App to scan the QR code above",
@@ -11,7 +11,7 @@
   },
   "mobile-app": {
     "option-title": "Mobile App",
-    "examples": "WalletConnect; <br> Wallet Link",
+    "examples": "WalletConnect; WalletLink",
     "modal": {
       "title": "Mobile Access"
     },
@@ -132,5 +132,5 @@
   "get-it-now": "Get It Now",
   "or": "OR CONNECT WITH",
   "wallet-connect": "WalletConnect",
-  "wallet-link": "Wallet Link"
+  "wallet-link": "WalletLink"
 }

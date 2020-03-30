@@ -20,9 +20,4 @@ release
 chrome-extension
 
 # Generated files
-src/contracts/
-src/tokens/
-src/address-darklist/
-src/url-darklist/
-src/url-lightlist/
 src/_generated

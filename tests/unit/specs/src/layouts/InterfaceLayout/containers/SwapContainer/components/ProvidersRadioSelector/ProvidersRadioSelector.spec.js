@@ -30,6 +30,11 @@ xdescribe('ProvidersRadioSelector.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct loadingData data', () => {
     expect(wrapper.find('.animated-background').isVisible()).toBe(
       wrapper.vm.loadingData
