@@ -19,7 +19,7 @@ const webpackConfig = {
       { from: 'security.txt', to: '.well-known/security.txt' },
       {
         from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
-        transform: function(content, filePath) {
+        transform: function (content, filePath) {
           if (filePath.split('.').pop() === ('js' || 'JS'))
             return UglifyJS.minify(content.toString()).code;
           return content;
