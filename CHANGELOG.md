@@ -3,6 +3,18 @@
 - Add AdEx ads [#2119](https://github.com/MyEtherWallet/MyEtherWallet/pull/2119)
 
 ### Release v5.5.1
+
+### Feature
+
+- Add telegram social icon [#2167](https://github.com/MyEtherWallet/MyEtherWallet/pull/2167)
+
+### Bug
+
+- Fix mobile menu [#1873](https://github.com/MyEtherWallet/MyEtherWallet/pull/1873)
+- Fix bcvault and coolwallet [#2175](https://github.com/MyEtherWallet/MyEtherWallet/pull/2175)
+
+### Feature
+
 - Add telegram social icon [#2167] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2167)
 
 ### Devop
