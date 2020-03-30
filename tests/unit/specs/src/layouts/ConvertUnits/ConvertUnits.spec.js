@@ -21,6 +21,11 @@ describe('ConvertUnits.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct etherUnitRef', () => {
     const trElements = wrapper.vm.$el.getElementsByTagName('tr');
     for (let i = 0; i < trElements.length; i++) {

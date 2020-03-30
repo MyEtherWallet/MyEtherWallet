@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-clo.json';
-import contracts from '@/contracts/contract-abi-clo.json';
+import tokens from '@/_generated/tokens/tokens-clo.json';
+import contracts from '@/_generated/contracts/contract-abi-clo.json';
 import clo from '@/assets/images/networks/clo.svg';
 
 export default {

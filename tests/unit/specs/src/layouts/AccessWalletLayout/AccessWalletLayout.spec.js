@@ -12,7 +12,7 @@ function roundPercentage(num) {
   return new BigNumber(num).toFixed(2);
 }
 
-describe('AccessWalletLayout.vue', () => {
+xdescribe('AccessWalletLayout.vue', () => {
   let localVue, i18n, wrapper, store;
 
   beforeAll(() => {
@@ -44,6 +44,11 @@ describe('AccessWalletLayout.vue', () => {
         'router-link': RouterLinkStub
       }
     });
+  });
+
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
   });
 
   it('should render correct tokens data', () => {
@@ -85,6 +90,4 @@ describe('AccessWalletLayout.vue', () => {
       );
     }
   });
-
-  describe('AccessWalletLayout.vue Methods', () => {});
 });

@@ -3,10 +3,12 @@
     ref="hardware"
     :title="$t('accessWallet.hardware.modal.title')"
     hide-footer
-    class="bootstrap-modal modal-hardware nopadding"
+    class="modal-hardware nopadding"
     centered
     static
     lazy
+    no-padding
+    dialog-class="hardware-wallet-dialog"
   >
     <div class="modal-content-container">
       <div class="d-block text-center">
@@ -53,6 +55,8 @@ import trezor from '@/assets/images/icons/HardwareWallet/trezor.svg';
 import keepkey from '@/assets/images/icons/HardwareWallet/keepkey.svg';
 import finney from '@/assets/images/icons/button-finney-hover.png';
 import xwallet from '@/assets/images/icons/HardwareWallet/xwallet.svg';
+import bcvault from '@/assets/images/icons/HardwareWallet/bcvault.svg';
+import coolwallet from '@/assets/images/icons/HardwareWallet/coolwallet.svg';
 import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
@@ -61,7 +65,9 @@ import {
   KeepkeyWallet,
   TrezorWallet,
   BitBoxWallet,
-  SecalotWallet
+  SecalotWallet,
+  BCVaultWallet,
+  CoolWallet
 } from '@/wallets';
 import {
   LEDGER as LEDGER_TYPE,
@@ -69,8 +75,10 @@ import {
   BITBOX as BITBOX_TYPE,
   SECALOT as SECALOT_TYPE,
   KEEPKEY as KEEPKEY_TYPE,
+  XWALLET as XWALLET_TYPE,
   FINNEY as FINNEY_TYPE,
-  XWALLET as XWALLET_TYPE
+  COOLWALLET as COOLWALLET_TYPE,
+  BCVAULT as BCVAULT_TYPE
 } from '@/wallets/bip44/walletTypes';
 export default {
   components: {
@@ -80,23 +88,27 @@ export default {
   props: {
     networkAndAddressOpen: {
       type: Function,
-      default: function() {}
+      default: () => {}
     },
     hardwareWalletOpen: {
       type: Function,
-      default: function() {}
+      default: () => {}
     },
     ledgerAppOpen: {
       type: Function,
-      default: function() {}
+      default: () => {}
     },
     openFinney: {
       type: Function,
-      default: function() {}
+      default: () => {}
     },
     openXwallet: {
       type: Function,
-      default: function() {}
+      default: () => {}
+    },
+    openBcVault: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
@@ -112,6 +124,36 @@ export default {
           disabled: false,
           msg: '',
           link: 'https://www.ledger.com?r=fa4b'
+        },
+        {
+          name: TREZOR_TYPE,
+          imgPath: trezor,
+          text: 'Trezor',
+          disabled:
+            platform.name.toLowerCase() !== 'chrome' &&
+            platform.name.toLowerCase() !== 'firefox',
+          msg:
+            platform.name.toLowerCase() !== 'chrome' &&
+            platform.name.toLowerCase() !== 'firefox'
+              ? 'Browser not supported by Trezor'
+              : '',
+          link: 'https://trezor.io/?offer_id=12&aff_id=2029'
+        },
+        {
+          name: KEEPKEY_TYPE,
+          imgPath: keepkey,
+          text: 'KeepKey',
+          disabled: false,
+          msg: '',
+          link: 'http://lddy.no/a4im'
+        },
+        {
+          name: COOLWALLET_TYPE,
+          imgPath: coolwallet,
+          text: 'CoolWallet',
+          disabled: false,
+          msg: '',
+          link: 'https://coolwallet.io/product/coolwallet/?ref=myetherwallet'
         },
         {
           name: FINNEY_TYPE,
@@ -139,20 +181,6 @@ export default {
           link: 'https://xwallet.pundix.com'
         },
         {
-          name: TREZOR_TYPE,
-          imgPath: trezor,
-          text: 'Trezor',
-          disabled:
-            platform.name.toLowerCase() !== 'chrome' &&
-            platform.name.toLowerCase() !== 'firefox',
-          msg:
-            platform.name.toLowerCase() !== 'chrome' &&
-            platform.name.toLowerCase() !== 'firefox'
-              ? 'Browser not supported by Trezor'
-              : '',
-          link: 'https://trezor.io/?offer_id=12&aff_id=2029'
-        },
-        {
           name: SECALOT_TYPE,
           imgPath: secalot,
           text: 'Secalot',
@@ -161,12 +189,15 @@ export default {
           link: 'https://www.secalot.com/'
         },
         {
-          name: KEEPKEY_TYPE,
-          imgPath: keepkey,
-          text: 'KeepKey',
-          disabled: false,
-          msg: '',
-          link: 'http://lddy.no/a4im'
+          name: BCVAULT_TYPE,
+          imgPath: bcvault,
+          text: 'BC Vault',
+          disabled: platform.name.toLowerCase() === 'firefox',
+          msg:
+            platform.name.toLowerCase() === 'firefox'
+              ? 'Browser not supported by Trezor'
+              : '',
+          link: 'https://bc-vault.com/?wpam_id=53'
         }
       ]
     };
@@ -231,14 +262,12 @@ export default {
           break;
         case BITBOX_TYPE:
           this.$emit('hardwareRequiresPassword', {
-            walletConstructor: BitBoxWallet,
-            hardwareBrand: 'BitBox'
+            walletConstructor: BitBoxWallet
           });
           break;
         case SECALOT_TYPE:
           this.$emit('hardwareRequiresPassword', {
-            walletConstructor: SecalotWallet,
-            hardwareBrand: 'Secalot'
+            walletConstructor: SecalotWallet
           });
           break;
         case KEEPKEY_TYPE:
@@ -259,14 +288,32 @@ export default {
           this.openXwallet();
           this.$refs.hardware.hide();
           break;
+        case BCVAULT_TYPE:
+          // eslint-disable-next-line
+          const bcvaultInstance = BCVaultWallet();
+          bcvaultInstance
+            .init()
+            .then(res => {
+              if (res && res.length >= 1) {
+                this.openBcVault(res, bcvaultInstance);
+              }
+            })
+            .catch(e => {
+              BCVaultWallet.errorHandler(e);
+            });
+          break;
+        case COOLWALLET_TYPE:
+          this.$emit('hardwareRequiresPassword', {
+            walletConstructor: CoolWallet
+          });
+          break;
         default:
           Toast.responseHandler(
-            new Error('No switch address for given account.'),
+            new Error(this.$t('errosGlobal.something-went-wrong')),
             Toast.ERROR
           );
           break;
       }
-      this.$refs.hardware.hide();
     },
     updateSelected(ref) {
       if (this.selected !== ref) {
@@ -283,4 +330,10 @@ export default {
 @import 'HardwareModal-desktop.scss';
 @import 'HardwareModal-tablet.scss';
 @import 'HardwareModal-mobile.scss';
+</style>
+
+<style>
+.hardware-wallet-dialog {
+  max-width: 700px !important;
+}
 </style>

@@ -23,6 +23,11 @@ describe('IssuesLogModal.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct terms props', () => {
     expect(wrapper.find('.terms').exists()).toBe(false);
     wrapper.setProps({ terms: true });

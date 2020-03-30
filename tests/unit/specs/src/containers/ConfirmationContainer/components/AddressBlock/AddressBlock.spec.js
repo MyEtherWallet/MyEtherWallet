@@ -47,6 +47,11 @@ describe('AddressBlock.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct address props', () => {
     wrapper.setProps({ tokenTransferTo: '' });
     expect(

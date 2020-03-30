@@ -4,7 +4,7 @@ import { Tooling } from '@@/helpers';
 import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 describe('HardwareModal.vue', () => {
-  let localVue, i18n, store;
+  let localVue, i18n, store, wrapper;
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -17,13 +17,18 @@ describe('HardwareModal.vue', () => {
 
   beforeEach(() => {
     // eslint-disable-next-line
-    const wrapper = shallowMount(HardwareModal, {
+    wrapper = shallowMount(HardwareModal, {
       localVue,
       i18n,
       store,
       attachToDocument: true,
       stubs: { 'router-link': RouterLinkStub }
     });
+  });
+
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
   });
 
   it('should render correct contents', () => {
