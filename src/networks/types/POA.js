@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-poa.json';
-import contracts from '@/contracts/contract-abi-poa.json';
+import tokens from '@/_generated/tokens/tokens-poa.json';
+import contracts from '@/_generated/contracts/contract-abi-poa.json';
 import poa from '@/assets/images/networks/poa.svg';
 
 export default {

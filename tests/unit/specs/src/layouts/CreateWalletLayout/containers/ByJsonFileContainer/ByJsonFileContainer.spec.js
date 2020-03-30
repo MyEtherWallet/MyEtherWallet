@@ -56,6 +56,11 @@ describe('ByJsonFileContainer.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   xit('should render correct contents data', () => {
     const contentElements = wrapper.vm.$el.querySelectorAll(
       '.contents .content-block'
