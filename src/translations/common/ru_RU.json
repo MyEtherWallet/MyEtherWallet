@@ -82,7 +82,10 @@
     "unlock": "Разблокировать кошелек",
     "do-not-have": "Нет кошелька?",
     "passphrase": "Парольная фраза",
-    "own": "Кошелек {nickname}"
+    "own": "Кошелек {nickname}",
+    "no-wallet": "Don't have a wallet yet?",
+    "free-wallet": "Get your wallet for free!",
+    "login": "Login to access your wallet!"
   },
   "mewconnect": {
     "string": "MEWconnect",
@@ -123,6 +126,7 @@
   "optional": "Опция",
   "value": "Сумма",
   "network": "Сеть",
+  "current-network": "Current Network",
   "addr": "Адрес",
   "via-contract-address": "Адрес контракта",
   "lowercase-addr": "адрес",
@@ -130,7 +134,8 @@
   "enter-addr": "Пожалуйста, введите адрес",
   "balance": {
     "string": "Баланс",
-    "total": "Итоговый баланс"
+    "total": "Итоговый баланс",
+    "wallet": "Balance of your wallet"
   },
   "notifications": {
     "no-notifications": "Нет уведомлений :(",
@@ -161,6 +166,7 @@
   "to": "Кому",
   "ok": "OK",
   "buy-eth": "Купить ETH",
+  "dont-have-eth": "Don't have ETH? Buy ETH!",
   "security": "Безопасность",
   "status": "Статус",
   "time": "Время",
@@ -176,5 +182,8 @@
   "disconnected": "Отсоединено",
   "mew-icon": "Иконка MEW",
   "kitties": "kitties",
-  "mewtopia": "MEWtopia"
+  "mewtopia": "MEWtopia",
+  "language": "Язык",
+  "logout": "Logout",
+  "settings": "Настройки"
 }
