@@ -1,8 +1,13 @@
 ### Release v5.5.1
 
+### Bug
+
+- Fix bcvault and coolwallet [#2175](https://github.com/MyEtherWallet/MyEtherWallet/pull/2175)
+
 ### Feature
-- WOOF updates [#2185] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2185)
+
 - Add telegram social icon [#2167] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2167)
+- WOOF updates [#2185] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2185)
 
 ### Devop
 
