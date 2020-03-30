@@ -1,7 +1,7 @@
 {
   "tagline1": "Ethereum's",
-  "tagline2": "Original Wallet",
-  "subheading": "MyEtherWallet (наши друзья называют нас MEW) - это бесплатный клиентский интерфейс, помогающий вам взаимодействовать с блокчейном Ethereum. Наша легкая в пользовании платформа с открытым исходным кодом позволяет вам создавать кошельки, взаимодействовать со смарт-контрактами и многое другое.",
+  "tagline2": "Doggo Wallet",
+  "subheading": "MyEtherWallet (our friends call us WOOF) is a free, canine-side interface helping you to interact with the Ethereum bonechain. Our easy-to-use, paw-friendly platform allows you to generate treats, interact with smart pups, and so much more.",
   "create-new-wallet": {
     "text": "Создайте свой собственный уникальный кошелек Ethereum. Получите публичный адрес (0x...) и выберите метод доступа и восстановления."
   },
@@ -13,8 +13,8 @@
     "button": "Получить доступ"
   },
   "about-mew": {
-    "title": "О MEW",
-    "text": "MyEtherWallet - называйте нас MEW - предоставляет блокчейн Ethereum в ваше распоряжение. Мы являемся командой крипто-энтузиастов, специализирующихся на создании для вас наиболее безопасного, наиболее интуитивного и, можно смело сказать, самого приятного способа управления вашим EТH и токенами ERC20. Мы всегда готовы помочь и мы никогда не раздаем ETH. Спасибо!"
+    "title": "About WOOF",
+    "text": "WOOF - please, call us WOOF - puts the Ethereum blockchain at your fingertips. We are a team of crypto-enthusiasts dedicated to bring you the most secure, most intuitive, and dare we say prettiest way to manage your ETH and ERC20 tokens. We're always here to help, and we're never giving away ETH. Cheers!"
   },
   "join-mew": {
     "title": "Присоединиться к MEW",
@@ -67,7 +67,8 @@
     "vkontakte": "Vkontakte",
     "youtube": "YouTube",
     "mewtopia": "MEWtopia",
-    "instagram": "Instagram"
+    "instagram": "Instagram",
+    "telegram": "Telegram"
   },
   "lost-title": "Ой! Похоже, вы потерялись.",
   "mew-wallet-modal": {
