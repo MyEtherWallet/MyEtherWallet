@@ -5,6 +5,7 @@
   padding: 20px;
   background-color: $light-green-1;
   border-radius: 5px;
+  margin-top: 20px;
   word-break: break-all;
 
   .wallet-information {
@@ -12,6 +13,7 @@
     flex-direction: column;
     justify-content: space-between;
     padding: 0 10px;
+    width: 100%;
   }
 
   .balance-container {

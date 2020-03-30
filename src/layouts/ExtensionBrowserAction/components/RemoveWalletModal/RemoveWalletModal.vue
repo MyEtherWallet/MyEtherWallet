@@ -25,11 +25,13 @@
           </div>
         </div>
         <h3 v-show="walletType === 'watchOnly'">
-          {{ $t('mewcx.are-you-sure-delete') }} <b>{{ nickname }}</b>
+          {{ $t('mewcx.are-you-sure-delete') }}:
+          <br />
+          {{ nickname }}
         </h3>
         <div class="remove-modal-buttons">
           <div
-            :class="[locPassword !== '' ? '' : 'disabled', 'remove']"
+            :class="[!disable ? '' : 'disabled', 'remove']"
             @click="removeWallet"
           >
             {{ $t('mewcx.confirm-remove') }}
@@ -88,6 +90,15 @@ export default {
       show: false,
       locPassword: ''
     };
+  },
+  computed: {
+    disable() {
+      if (this.walletType === 'watchOnly') {
+        return false;
+      }
+
+      return this.locPassword !== '' ? false : true;
+    }
   },
   watch: {
     locPassword(newVal) {

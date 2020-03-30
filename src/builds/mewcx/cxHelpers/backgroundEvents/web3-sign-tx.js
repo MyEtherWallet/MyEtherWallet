@@ -10,7 +10,7 @@ import { toChecksumAddress } from '@/helpers/addressUtils';
 export default async ({ event, payload }, callback, next) => {
   if (event !== WEB3_SIGN_TX) return next();
   const worker = new walletWorker();
-  const signer = toChecksumAddress(payload.signer).toLowerCase();
+  const signer = toChecksumAddress(payload.signer);
   const password = payload.password;
   const txParams = payload.params;
   const globChrome = chrome;

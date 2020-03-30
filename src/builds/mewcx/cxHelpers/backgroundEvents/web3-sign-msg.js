@@ -3,10 +3,11 @@ import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import { WalletInterface } from '@/wallets';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { WEB3_SIGN_MSG } from '../cxEvents';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 export default async ({ event, payload }, callback, next) => {
   if (event !== WEB3_SIGN_MSG) return next();
   const worker = new walletWorker();
-  const signer = payload.signer;
+  const signer = toChecksumAddress(payload.signer);
   const password = payload.password;
   const msgToSign = payload.msg;
   const globChrome = chrome;
