@@ -1,5 +1,12 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .mew-pup-container {
+    margin-bottom: 100px;
+    margin-left: 20px;
+    img {
+      height: 120px;
+    }
+  }
   .top-section {
     background-color: $about-mew-spaceman-background-color;
     color: $text-color-1;

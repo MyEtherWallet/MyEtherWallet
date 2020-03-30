@@ -1,5 +1,12 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
+  .mew-pup-container {
+    margin-left: 80px;
+    img {
+      height: 50px;
+    }
+  }
+
   .top-section {
     background-color: $about-mew-spaceman-background-color;
     color: $text-color-1;

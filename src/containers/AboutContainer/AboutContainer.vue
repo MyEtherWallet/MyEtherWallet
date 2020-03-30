@@ -12,6 +12,9 @@
                 <h2>{{ $t('home.about-mew.title') }}</h2>
                 <p class="color-white">{{ $t('home.about-mew.text') }}</p>
               </div>
+              <div class="mew-pup-container">
+                <img alt src="~@/assets/images/home/woof/img-mew-pup.png" />
+              </div>
               <div class="image-content">
                 <img
                   :alt="$t('common.mew-icon')"

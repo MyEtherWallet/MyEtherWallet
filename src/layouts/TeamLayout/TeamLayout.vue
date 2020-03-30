@@ -27,21 +27,22 @@
 <script>
 import PageTitleComponent from '@/components/PageTitleComponent';
 
-import kosala from '@/assets/images/team/Kosala.jpg';
-import brian from '@/assets/images/team/Brian.jpg';
-import olchik from '@/assets/images/team/Olga.jpg';
-import stephen from '@/assets/images/team/Stephen.jpg';
-import richie from '@/assets/images/team/Richie.jpg';
-import brittany from '@/assets/images/team/Brittany.jpg';
-import yel from '@/assets/images/team/Gamaliel.jpg';
-import steve from '@/assets/images/team/Steve.jpg';
-import gage from '@/assets/images/team/Gage.jpg';
-import jack from '@/assets/images/team/Jack.jpg';
-import david from '@/assets/images/team/David.jpg';
-import alex from '@/assets/images/team/Alex.jpg';
-import misha from '@/assets/images/team/Misha.jpg';
-import katya from '@/assets/images/team/Katya.jpg';
-import semaja from '@/assets/images/team/Semaja.jpg';
+import kosala from '@/assets/images/puppies/Kosala.png';
+import brian from '@/assets/images/puppies/Brian.png';
+import olchik from '@/assets/images/puppies/Olga.png';
+import stephen from '@/assets/images/puppies/Stephen.png';
+import richie from '@/assets/images/puppies/Richie.png';
+import brittany from '@/assets/images/puppies/Brittany.png';
+import yel from '@/assets/images/puppies/Gamaliel.png';
+import steve from '@/assets/images/puppies/Steve.png';
+import gage from '@/assets/images/puppies/Gage.png';
+import jack from '@/assets/images/puppies/Jack.png';
+import david from '@/assets/images/puppies/David.png';
+import alex from '@/assets/images/puppies/Alex.png';
+import misha from '@/assets/images/puppies/Misha.png';
+import katya from '@/assets/images/puppies/Katya.png';
+import semaja from '@/assets/images/puppies/Semaja.png';
+import jessica from '@/assets/images/puppies/Jessica.png';
 
 export default {
   components: {
@@ -52,78 +53,83 @@ export default {
       members: [
         {
           name: 'Kosala',
-          position: 'Founder/CEO',
+          position: 'Chief Executive Borkficcer',
           img: kosala
         },
         {
           name: 'Brian',
-          position: 'COO',
+          position: 'Bone Treasury Officer',
           img: brian
         },
         {
           name: 'Olga',
-          position: 'VP',
+          position: 'Vice Prancer',
           img: olchik
         },
         {
           name: 'Alex',
-          position: 'Director of Mobile',
+          position: 'Director of Fetching',
           img: alex
         },
         {
           name: 'Misha',
-          position: 'Lead Mobile Developer',
+          position: 'Lead Chewing Developer',
           img: misha
         },
         {
           name: 'Yel',
-          position: 'Full-Stack Developer',
+          position: 'Full Stack Borker',
           img: yel
         },
         {
           name: 'Steve',
-          position: 'Full-Stack Developer',
+          position: 'Full Snack Developer',
           img: steve
         },
         {
           name: 'Gage',
-          position: 'Full-Stack Developer',
+          position: 'Full-Stack Retriever',
           img: gage
         },
         {
           name: 'David',
-          position: 'Front-End Developer',
+          position: 'Front Yard Developer',
           img: david
         },
         {
           name: 'Jack',
-          position: 'Head of UI/UX Design',
+          position: 'Head of Doghouse Design',
           img: jack
         },
         {
           name: 'Stephen',
-          position: 'Educational Project Lead',
+          position: 'Educational Digging Lead',
           img: stephen
         },
         {
           name: 'Brittany',
-          position: 'Operations Coordinator',
+          position: 'Doggy Date Coordinator',
           img: brittany
         },
         {
           name: 'Duke & Richie Wolf',
-          position: 'Blockchain Community Specialist',
+          position: 'Head of Treat Security',
           img: richie
         },
         {
           name: 'Semaja',
-          position: 'Blockchain Community Specialist',
+          position: 'Head of Whining Management',
           img: semaja
         },
         {
           name: 'Katya',
-          position: 'Community Advocate',
+          position: 'CoWOOFnity Advocate',
           img: katya
+        },
+        {
+          name: 'Jessica',
+          position: 'Full Stack Eater',
+          img: jessica
         }
       ]
     };
