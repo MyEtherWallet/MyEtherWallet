@@ -280,6 +280,10 @@ export default {
         {
           to: 'https://www.medium.com/@myetherwallet',
           class: 'fa-medium'
+        },
+        {
+          to: 'https://t.me/myetherwalletofficial',
+          class: 'fa-telegram'
         }
       ]
     };
