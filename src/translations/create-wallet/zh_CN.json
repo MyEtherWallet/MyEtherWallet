@@ -56,7 +56,7 @@
     "access-wallet-extra-word-popover": "Some mnemonic phrases are generated with an extra word chosen by the user for added security. It acts as a 13th or 25th word to your phrase, sometimes referred to as a 'password'. If you did not create an extra word when you made your phrase, you should leave this field blank.",
     "extra-word-popover": "You can add an extra word to your phrase for added security. However, you will need this word everytime you wish to access your phrase. Some wallets may not support adding an extra word when using mnemonic phrases.",
     "popover": "A mnemonic phrase is a list of 12 - 24 words that can be used to access your wallet.",
-    "random": "Random",
+    "random": "随机",
     "button-wrote-it-down": "I Wrote Down My Mnemonic Phrase",
     "type-in": "Type in your extra word",
     "do-not-forget-save-mnemonic": "{do-not-forget} to save your mnemonic phrase. You will need this to access your wallet.",
@@ -67,13 +67,13 @@
     "verify": {
       "title": "Verification",
       "text": "Please enter and fill out the empty boxes below to verify your mnemonic phrase key",
-      "button": "Verify"
+      "button": "验证"
     },
     "print": {
       "print-title": "Print Preview"
     },
     "table": {
-      "title": "Mnemonic Phrase",
+      "title": "助记短语",
       "safe-place": "Please Keep This Sheet at a Very Safe Place. It is your property!",
       "cannot-change-pw": "We {cannot} change your mnemonic phrase or extra word. This is your wallet key. Please {do-not-forget} to save it. You will need {requirements} to access your wallet.",
       "cannot": "CAN NOT",
