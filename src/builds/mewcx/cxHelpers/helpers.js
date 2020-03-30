@@ -1,9 +1,9 @@
-import ealDarklist from '@/url-darklist/eal-blacklisted-domains.json';
-import mewDarklist from '@/url-darklist/mew-blacklisted-domains.json';
-import phishfortDarklist from '@/url-darklist/phishfort-blacklisted-domains.json';
+import ealDarklist from '@/_generated/url-darklist/eal-blacklisted-domains.json';
+import mewDarklist from '@/_generated/url-darklist/mew-blacklisted-domains.json';
+import phishfortDarklist from '@/_generated/url-darklist/phishfort-blacklisted-domains.json';
 
-import mewLightlist from '@/url-lightlist/mew-whitelisted-domains.json';
-import ealLightlist from '@/url-lightlist/eal-whitelisted-domains.json';
+import mewLightlist from '@/_generated/url-lightlist/mew-whitelisted-domains.json';
+import ealLightlist from '@/_generated/url-lightlist/eal-whitelisted-domains.json';
 
 import Misc from '@/helpers/misc';
 

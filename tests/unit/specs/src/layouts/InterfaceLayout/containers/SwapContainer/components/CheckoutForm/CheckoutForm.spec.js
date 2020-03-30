@@ -22,6 +22,11 @@ describe('CheckoutForm.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct content', () => {
     expect(wrapper.find('#payment_form').exists()).toBe(true);
   });

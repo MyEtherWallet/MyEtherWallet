@@ -2,6 +2,39 @@
 
 - Add AdEx ads [#2119](https://github.com/MyEtherWallet/MyEtherWallet/pull/2119)
 
+### Release v5.5.1
+- Add telegram social icon [#2167] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2167)
+
+### Devop
+
+- Switch CI to Github actions [#2168](https://github.com/MyEtherWallet/MyEtherWallet/pull/2168)
+
+### Release v5.5.0-hotfix.1
+
+### Bugs
+
+- Fix walletconnet and walletlink buttons [#2169](https://github.com/MyEtherWallet/MyEtherWallet/pull/2169)
+
+### Release v5.5.0
+
+### Feature
+
+- Cool Wallet integration [#2087](https://github.com/MyEtherWallet/MyEtherWallet/pull/2087)
+- BCVault integration [#1990](https://github.com/MyEtherWallet/MyEtherWallet/pull/1990)
+- WalletConnect & WalletLink Support [#1924](https://github.com/MyEtherWallet/MyEtherWallet/pull/1924)
+
+### Bug
+
+- Fix exit-to-fiat dropdown, iban indicator [#2134](https://github.com/MyEtherWallet/MyEtherWallet/pull/2134)
+- Fix button positions [#2125](https://github.com/MyEtherWallet/MyEtherWallet/pull/2125)
+
+### Devop
+
+- Update BitBox Logo [#2120](https://github.com/MyEtherWallet/MyEtherWallet/pull/2120)
+- Update BitBox Logo [#2141](https://github.com/MyEtherWallet/MyEtherWallet/pull/2141)
+- Update greenkeeper packages [#2131](https://github.com/MyEtherWallet/MyEtherWallet/pull/2131)
+- Add security.txt to repo [#2140](https://github.com/MyEtherWallet/MyEtherWallet/pull/2140)
+
 ### Release v5.4.3
 
 ### Devop
@@ -14,7 +47,7 @@
 
 ### Bugs
 
-- MEW Wallet modal ui changes [#2112] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2112)
+- MEW Wallet modal ui changes [#2112](https://github.com/MyEtherWallet/MyEtherWallet/pull/2112)
 
 ### Release v5.4.2-hotfix.1
 
@@ -25,6 +58,7 @@
 ### Release v5.4.2
 
 ### Feature
+
 - MEW Wallet UI changes [#2048](https://github.com/MyEtherWallet/MyEtherWallet/pull/2048)
 
 ### Bugs
