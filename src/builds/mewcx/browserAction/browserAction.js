@@ -25,7 +25,7 @@ Router.prototype.replace = function push(path) {
 };
 Router.prototype.originalPush = originalPush; // Incase we do want to handle on resolve or on abort
 Router.prototype.originalReplace = originalReplace; // Incase we do want to handle on resolve or on abort
-// import router from '@/router';
+
 import store from '@/store';
 import Vuex from 'vuex';
 

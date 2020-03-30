@@ -1,6 +1,7 @@
 ### Feature
 
 - CX updated ui and some optimization [#1864](https://github.com/MyEtherWallet/MyEtherWallet/pull/1864)
+- Add telegram social icon [#2167] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2167)
 
 ### Devop
 
