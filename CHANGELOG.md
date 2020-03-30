@@ -1,3 +1,7 @@
+### Feature
+
+- Add in QR code for mew wallet [#2173] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2173)
+
 ### Devop
 
 - Switch CI to Github actions [#2168](https://github.com/MyEtherWallet/MyEtherWallet/pull/2168)
