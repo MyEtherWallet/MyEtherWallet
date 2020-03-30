@@ -29,7 +29,7 @@
     "update:swap": "node compileBaseSwapOptions.js"
   },
   "dependencies": {
-    "@aave/protocol-js": "0.2.7",
+    "@aave/protocol-js": "0.2.8",
     "@coolwallets/eth": "0.2.0-beta.1",
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",
