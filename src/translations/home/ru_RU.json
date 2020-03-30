@@ -1,10 +1,11 @@
 {
   "tagline1": "Ethereum's",
   "tagline2": "Doggo Wallet",
-  "subheading": "WOOF is a free, canine-side interface helping you to interact with the Ethereum bonechain. Our easy-to-use, paw-friendly platform allows you to generate treats, interact with smart pups, and so much more.",
+  "subheading": "WOOF is a free, canine-side interface helping you to interact with the Ethereum bonechain. Our easy-to-use, paw-friendly platform allows you to generate treats, interact with smart pups, and so much more. {link}",
   "create-new-wallet": {
     "text": "Создайте свой собственный уникальный кошелек Ethereum. Получите публичный адрес (0x...) и выберите метод доступа и восстановления."
   },
+  "meet-woof": "Meet the #WOOFteam.",
   "access-my-wallet": {
     "text": "Подключитесь к блокчейну используя выбранный вами кошелек.",
     "opt-1": "Отправка и Обмен ETH и Токенов",
