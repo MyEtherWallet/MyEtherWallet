@@ -1,5 +1,9 @@
 <template>
-  <div></div>
+  <div>
+    <h3 class="text-center my-4">
+      {{ $t('createWallet.mew-wallet.redirect-store') }}
+    </h3>
+  </div>
 </template>
 
 <script>
@@ -30,7 +34,7 @@ export default {
         )
       ) {
         window.location.href =
-          'https://galaxystore.samsung.com/detail/com.myetherwallet.mewwallet?session_id=W_29942474fffbd49127ee223d697f1518';
+          'https://galaxystore.samsung.com/detail/com.myetherwallet.mewwallet';
       }
     }
   }
