@@ -1,0 +1,45 @@
+@import '~@/scss/GlobalVariables';
+
+.address {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 20px;
+  background-color: $white;
+  border: 1px solid $mew-green;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+
+  p {
+    color: $mew-green;
+  }
+
+  &:hover,
+  &.selected {
+    background-color: $mew-green;
+
+    p {
+      color: $white;
+    }
+  }
+}
+
+.submit-button {
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: $mew-green;
+  color: $white;
+  padding: 20px 40px;
+  text-align: center;
+  margin-top: 20px;
+
+  &.disable {
+    background-color: $dark-grey-11;
+    pointer-events: none;
+  }
+}
+
+.bcvault-address {
+  padding: 20px 40px;
+}

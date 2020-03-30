@@ -64,6 +64,12 @@ describe('CreateWalletLayout.vue', () => {
       }
     });
   }
+
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct byMnemonic data', () => {
     expect(wrapper.find('.nav-tab-user-input-box').isVisible()).toBe(true);
   });

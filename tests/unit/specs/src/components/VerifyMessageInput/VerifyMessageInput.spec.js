@@ -23,6 +23,11 @@ describe('VerifyMessageInput.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct message data', () => {
     wrapper.setData({ message: 'message' });
     expect(wrapper.vm.$el.querySelector('.the-form textarea').value).toEqual(

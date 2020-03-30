@@ -31,6 +31,11 @@ describe('MobileAddressBlock.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct account computed data', () => {
     expect(
       wrapper.vm.$el.querySelector('.the-address').textContent.trim()

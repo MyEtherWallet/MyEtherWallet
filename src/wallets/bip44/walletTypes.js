@@ -13,6 +13,8 @@ const PRIV_KEY = 'priv_key';
 const FINNEY = 'finney';
 const WATCH_ONLY = 'watchOnly';
 const XWALLET = 'xwallet';
+const BCVAULT = 'bc_vault';
+const COOLWALLET = 'cool_wallet';
 export {
   LEDGER,
   TREZOR,
@@ -28,5 +30,7 @@ export {
   PRIV_KEY,
   FINNEY,
   WATCH_ONLY,
-  XWALLET
+  XWALLET,
+  BCVAULT,
+  COOLWALLET
 };
