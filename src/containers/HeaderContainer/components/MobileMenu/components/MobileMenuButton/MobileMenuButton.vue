@@ -2,7 +2,7 @@
   <div class="mobile-menu-button">
     <div class="wrap">
       <button
-        :class="isMobileMenuOpen ? 'menu-open' : ''"
+        :class="ismenuopen ? 'menu-open' : ''"
         aria-label="Menu button"
         class="menu-button"
         @click="isMobileMenuOpen = !isMobileMenuOpen"
