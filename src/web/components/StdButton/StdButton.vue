@@ -31,7 +31,7 @@ export default {
     disabled: { default: false, type: Boolean },
     minwidth: { default: true, type: Boolean },
     fullwidth: { default: false, type: Boolean },
-    size: { default: 'x-large', type: String },
+    size: { default: '', type: String },
     height: { default: '', type: String },
     fontclass: { default: 'font-weight-medium', type: String }
   },
