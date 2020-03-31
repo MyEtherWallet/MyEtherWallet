@@ -14,27 +14,24 @@ export default {
   methods: {
     getMobileOperatingSystem() {
       const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      const isWindows = /windows phone/i.test(userAgent);
+      const isAndroid = /android/i.test(userAgent);
+      const isApple = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+      const isSamsung = userAgent.match(
+        /SAMSUNG|Samsung|SGH-[I|N|T]|GT-[I|N]|SM-[A|N|P|T|Z]|SHV-E|SCH-[I|J|R|S]|SPH-L/i
+      );
 
-      if (/windows phone/i.test(userAgent)) {
+      if (isWindows) {
         return;
       }
 
-      if (/android/i.test(userAgent)) {
+      if (isAndroid || isSamsung) {
         window.location.href =
           'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet';
       }
 
-      if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+      if (isApple) {
         window.location.href = 'https://itunes.apple.com/app/id1464614025';
-      }
-
-      if (
-        userAgent.match(
-          /SAMSUNG|Samsung|SGH-[I|N|T]|GT-[I|N]|SM-[A|N|P|T|Z]|SHV-E|SCH-[I|J|R|S]|SPH-L/i
-        )
-      ) {
-        window.location.href =
-          'https://galaxystore.samsung.com/detail/com.myetherwallet.mewwallet';
       }
     }
   }
