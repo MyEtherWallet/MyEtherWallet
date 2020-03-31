@@ -90,8 +90,8 @@
                 <i
                   v-if="
                     isNextHealthDecrease() &&
-                      convertToFixed(currentHealthFactor) !==
-                        calculateNextHealthFactor()
+                    convertToFixed(currentHealthFactor) !==
+                      calculateNextHealthFactor()
                   "
                   class="arrow fa fa-arrow-down"
                   aria-hidden="true"
@@ -99,8 +99,8 @@
                 ><i
                   v-if="
                     !isNextHealthDecrease() &&
-                      convertToFixed(currentHealthFactor) !==
-                        calculateNextHealthFactor()
+                    convertToFixed(currentHealthFactor) !==
+                      calculateNextHealthFactor()
                   "
                   class="arrow fa fa-arrow-up"
                   aria-hidden="true"

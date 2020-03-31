@@ -46,7 +46,7 @@ export default {
     },
     click: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     loading: {
       type: Boolean,

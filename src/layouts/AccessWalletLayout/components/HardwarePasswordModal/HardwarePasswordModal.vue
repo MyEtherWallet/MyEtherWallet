@@ -54,7 +54,7 @@ export default {
   props: {
     walletConstructor: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     hardwareBrand: {
       type: String,

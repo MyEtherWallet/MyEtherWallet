@@ -51,7 +51,7 @@ export default {
     },
     closeMenu: {
       type: Function,
-      default: function() {}
+      default: function () {}
     }
   },
   data() {

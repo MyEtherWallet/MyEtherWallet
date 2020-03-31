@@ -124,10 +124,7 @@ describe('DeployContractContainer.vue', () => {
 
   describe('DeployContractContainer.vue Methods', () => {
     it('should execute `copy` command when button is clicked', () => {
-      wrapper
-        .findAll('.title-button')
-        .at(1)
-        .trigger('click');
+      wrapper.findAll('.title-button').at(1).trigger('click');
       expect(document.execCommand).toHaveBeenCalled();
     });
 

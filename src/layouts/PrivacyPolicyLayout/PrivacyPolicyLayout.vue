@@ -13,15 +13,15 @@
               <p
                 v-if="
                   item.includes('paragraph') ||
-                    item.includes('sentence') ||
-                    item.includes('footer')
+                  item.includes('sentence') ||
+                  item.includes('footer')
                 "
               >
                 {{ $t(`privacyPol.${item}`) }}
                 <a
                   v-show="
                     $t(`privacyPol.${item}`).includes('at:') ||
-                      $t(`privacyPol.${item}`).includes('to:')
+                    $t(`privacyPol.${item}`).includes('to:')
                   "
                   href="mailto:support@myetherwallet.com"
                   rel="noopener noreferrer"

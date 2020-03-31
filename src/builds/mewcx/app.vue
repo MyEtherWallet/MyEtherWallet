@@ -4,14 +4,14 @@
     <header-container
       v-show="
         $route.fullPath !== '/popup' &&
-          !$route.fullPath.includes('/extension-popups')
+        !$route.fullPath.includes('/extension-popups')
       "
     />
     <router-view />
     <footer-container
       v-show="
         $route.fullPath !== '/popup' &&
-          !$route.fullPath.includes('/extension-popups')
+        !$route.fullPath.includes('/extension-popups')
       "
     />
     <confirmation-container />

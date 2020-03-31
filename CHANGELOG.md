@@ -17,6 +17,7 @@
 - Remove galaxy links [#2190](https://github.com/MyEtherWallet/MyEtherWallet/pull/2190)
 - Update access wallet page [#2188](https://github.com/MyEtherWallet/MyEtherWallet/pull/2188)
 - Switch CI to Github actions [#2168](https://github.com/MyEtherWallet/MyEtherWallet/pull/2168)
+- Add force resolutions for vulnerable packages [#2174](https://github.com/MyEtherWallet/MyEtherWallet/pull/2174)
 
 ### Release v5.5.0-hotfix.1
 

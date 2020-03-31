@@ -104,7 +104,7 @@ export default {
   props: {
     opencdp: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     liquidationPrice: {
       type: Number,
