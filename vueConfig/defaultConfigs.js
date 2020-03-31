@@ -4,7 +4,12 @@ const webpack = require('webpack');
 const env_vars = require('../ENV_VARS');
 const allowedConnections = require('./connections');
 module.exports = {
+  devtool: false,
   plugins: [
+    new webpack.SourceMapDevToolPlugin({
+      filename: 'sourcemaps/[file].map',
+      exclude: /vendors.*.*/
+    }),
     new webpack.DefinePlugin(env_vars),
     new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
     new ImageminPlugin({
@@ -24,7 +29,7 @@ module.exports = {
   headers: {
     'Strict-Transport-Security': 'max-age=63072000; includeSubdomains; preload',
     'Content-Security-Policy':
-      "default-src 'self' blob:; frame-src 'self' www.walletlink.org:443 connect.trezor.io:443; img-src 'self' nft2.mewapi.io:443 cdn.stateofthedapps.com:443 data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src " +
+      "default-src 'self' blob:; frame-src 'self' www.walletlink.org:443 connect.trezor.io:443 viewm.moonicorn.network:443; img-src 'self' nft2.mewapi.io:443 cdn.stateofthedapps.com:443 data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src " +
       allowedConnections.join(' ') +
       ';',
     'X-Content-Type-Options': 'nosniff',
@@ -43,11 +48,11 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
+      chunks: 'all',
       cacheGroups: {
         commons: {
           test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'initial'
+          name: 'vendors'
         }
       }
     }
