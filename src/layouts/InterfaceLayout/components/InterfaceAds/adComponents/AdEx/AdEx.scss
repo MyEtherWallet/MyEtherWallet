@@ -1,0 +1,19 @@
+@import '~@/scss/GlobalVariables';
+
+.ad-image-container {
+  display: block;
+  position: relative;
+  background-color: $background-color-white;
+  border-radius: 5px;
+  overflow: hidden;
+  margin: 0 auto;
+  text-align: center;
+  @media all and (max-width: 1550px) {
+    max-width: 366px;
+  }
+  .inner-adex {
+    margin: 0 auto;
+    text-align: center;
+    padding-bottom: calc(130px - 60px);
+  }
+}

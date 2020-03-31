@@ -1,16 +1,21 @@
 {
   "mewconnect": {
-    "option-text": "Использовать MEWconnect для получения доступа к моему кошельку",
+    "option-text": "Отсканируйте QR-код для доступа с помощью MEW wallet или MEWconnect",
     "modal": {
-      "title": "Доступ с помощью MEWconnect",
+      "title": "Мобильный доступ",
       "text1": "Используйте приложение MEW wallet или MEWconnect для сканирования указанного выше QR-кода",
       "text2": "Нет приложения MEW wallet? Загрузите сейчас."
     },
+    "protocol": "Протокол MEWconnect",
     "warning": "MEW wallet и MEWconnect несовместимы с iPads."
   },
   "mobile-app": {
-    "option-title": "Mobile App",
-    "examples": "MEWconnect, WalletConnect"
+    "option-title": "Мобильное приложение",
+    "examples": "WalletConnect; WalletLink",
+    "modal": {
+      "title": "Мобильный доступ"
+    },
+    "mew-connect": "MEWconnect"
   },
   "finney": {
     "scan-info": "Чтобы подключиться, отсканируйте QR-код из приложения {wallet} на вашем {finney-bc}",
@@ -32,6 +37,14 @@
       "button-choose": "Продолжить"
     },
     "examples": "Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet"
+  },
+  "bitbox": {
+    "modal": {
+      "title": "Select BitBox wallet"
+    },
+    "bitbox02": "BitBox02",
+    "pairing": "Please confirm the encryption pairing code matches what is shown on your BitBox02.",
+    "unlock": "Enter BitBox02 password to unlock."
   },
   "software": {
     "option-title": "Программный доступ",
@@ -124,5 +137,8 @@
   "wallet-options": "Проверьте историю транзакций, скачайте новый файл-хранилищe ключa, распечатайте бумажный кошелек и многое другое!",
   "xwallet-desc": "Используйте аккаунт Pundi X Savings от MEW для сканирования QR-кода сверху",
   "xwallet-title": "Доступ через XWallet",
-  "get-it-now": "Загрузить сейчас"
+  "get-it-now": "Загрузить сейчас",
+  "or": "ИЛИ ПОДКЛЮЧИТЬСЯ С",
+  "wallet-connect": "WalletConnect",
+  "wallet-link": "WalletLink"
 }
