@@ -61,7 +61,7 @@ describe('MobileNetworkBlock.vue', () => {
     expect(wrapper.find('.fa-spinner').isVisible()).toBe(true);
   });
 
-  it('should render correct network computed data', () => {
+  xit('should render correct network computed data', () => {
     expect(wrapper.find('.bottom-block .network').exists()).toBe(true);
     const network = wrapper.vm.network;
     expect(

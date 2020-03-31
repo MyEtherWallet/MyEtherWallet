@@ -17,6 +17,7 @@
         ref="hardwareModal"
         :ledger-app-open="ledgerAppModalOpen"
         :network-and-address-open="networkAndAddressOpen"
+        :bitbox-select-open="bitboxSelectModalOpen"
         :open-finney="finneyModalOpen"
         :open-xwallet="xwalletModalOpen"
         :open-bc-vault="openBcVault"
@@ -68,6 +69,15 @@
         :addresses="hardwareAddresses"
         :callback-fn="modalCb"
       />
+
+      <bitbox-select-modal
+        ref="bitboxSelectModal"
+        @bitbox02Open="bitbox02ModalOpen"
+        @hardwareRequiresPassword="hardwarePasswordModalOpen"
+        @hardwareWalletOpen="hardwareWalletOpen"
+      />
+
+      <bitbox02-modal ref="bitbox02Modal" :device="device" />
 
       <div class="wrap">
         <div class="page-container">
@@ -121,6 +131,8 @@ import WalletPasswordModal from '@/components/WalletPasswordModal';
 import EnterPinNumberModal from '@/components/EnterPinNumberModal';
 import XwalletModal from './components/XwalletModal';
 import BcVaultAddressModal from './components/BcVaultAddressModal';
+import BitboxSelectModal from './components/BitboxSelectModal';
+import Bitbox02Modal from './components/Bitbox02Modal';
 
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
 import hardwareImg from '@/assets/images/icons/button-hardware.svg';
@@ -158,7 +170,9 @@ export default {
     'ledger-app-modal': LedgerAppModal,
     'finney-modal': FinneyModal,
     'xwallet-modal': XwalletModal,
-    'bcvault-address-modal': BcVaultAddressModal
+    'bcvault-address-modal': BcVaultAddressModal,
+    'bitbox-select-modal': BitboxSelectModal,
+    'bitbox02-modal': Bitbox02Modal
   },
   data() {
     return {
@@ -169,6 +183,7 @@ export default {
       modalCb: () => {},
       walletConstructor: function () {},
       hardwareBrand: '',
+      device: {},
       buttons: [
         {
           func: this.mewConnectModalOpen,
@@ -372,6 +387,15 @@ export default {
       } catch (e) {
         Toast.responseHandler(e, false);
       }
+    },
+
+    bitboxSelectModalOpen() {
+      this.$refs.bitboxSelectModal.$refs.bitboxSelect.show();
+    },
+
+    bitbox02ModalOpen(bb02) {
+      this.device = bb02;
+      this.$refs.bitbox02Modal.$refs.bitbox02.show();
     }
   }
 };
