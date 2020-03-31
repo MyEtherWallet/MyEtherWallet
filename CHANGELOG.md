@@ -3,6 +3,7 @@
 ### Feature
 
 - Add AdEx ads [#2119](https://github.com/MyEtherWallet/MyEtherWallet/pull/2119)
+- Add in QR code for mew wallet [#2173](https://github.com/MyEtherWallet/MyEtherWallet/pull/2173)
 - Add telegram social icon [#2167](https://github.com/MyEtherWallet/MyEtherWallet/pull/2167)
 - Add BitBox 2 support [#1957](https://github.com/MyEtherWallet/MyEtherWallet/pull/1957)
 ### Bug
