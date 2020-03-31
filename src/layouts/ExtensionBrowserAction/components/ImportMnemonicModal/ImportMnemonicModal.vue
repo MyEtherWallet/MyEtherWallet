@@ -102,7 +102,7 @@ export default {
   props: {
     openAddressOption: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     loading: {
       type: Boolean,

@@ -160,7 +160,7 @@
             ref="jsonInput"
             type="file"
             name="file"
-            style="display: none"
+            style="display: none;"
             @change="uploadFile"
           />
           <div
@@ -246,7 +246,7 @@ export default {
     },
     tokens: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
@@ -376,7 +376,7 @@ export default {
         this.clearPrefilled();
       }
     },
-    debouncedAmount: utils._.debounce(function(e) {
+    debouncedAmount: utils._.debounce(function (e) {
       const symbol = this.network.type.currencyName;
       const decimals =
         this.selectedCoinType.symbol === symbol
@@ -442,7 +442,7 @@ export default {
     uploadFile(e) {
       const self = this;
       const reader = new FileReader();
-      reader.onloadend = function(evt) {
+      reader.onloadend = function (evt) {
         try {
           const file = JSON.parse(evt.target.result);
           self.localGasPrice = unit.fromWei(file.gasPrice, 'gwei');

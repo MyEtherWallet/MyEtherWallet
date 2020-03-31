@@ -181,7 +181,7 @@ export default {
       hardwareWallet: {},
       hardwareAddresses: [],
       modalCb: () => {},
-      walletConstructor: function() {},
+      walletConstructor: function () {},
       hardwareBrand: '',
       device: {},
       buttons: [

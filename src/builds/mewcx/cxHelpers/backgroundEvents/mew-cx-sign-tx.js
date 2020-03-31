@@ -22,7 +22,7 @@ export default async ({ event, payload }, _, next) => {
     } else {
       chrome.tabs.query(
         { url: `*://*.${Misc.getService(payload.url)}/*` },
-        function(tab) {
+        function (tab) {
           const obj = {
             event: REJECT_MEW_TX_SIGN,
             payload: "Can't send txs from a burner account!"

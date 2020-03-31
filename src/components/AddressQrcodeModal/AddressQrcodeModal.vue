@@ -36,7 +36,7 @@ export default {
     return {};
   },
   methods: {
-    copyToClipboard: function() {
+    copyToClipboard: function () {
       this.$refs.addressInput.select();
       document.execCommand('copy');
     }

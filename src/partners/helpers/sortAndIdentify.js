@@ -6,7 +6,7 @@ function dynamicSort(property, convertFunc) {
     sortOrder = -1;
     property = property.substr(1);
   }
-  return function(a, b) {
+  return function (a, b) {
     if (convertFunc) {
       const result =
         convertFunc(+a[property]) < convertFunc(+b[property])
@@ -24,7 +24,7 @@ function dynamicSort(property, convertFunc) {
 
 function dynamicSortMultiple() {
   const props = arguments;
-  return function(obj1, obj2) {
+  return function (obj1, obj2) {
     let i = 0;
     let result = 0;
     const numberOfProperties = props.length;

@@ -90,7 +90,7 @@ export default {
   props: {
     currencies: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
@@ -112,13 +112,13 @@ export default {
     },
     defaultValue: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
     overrideCurrency: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     }
