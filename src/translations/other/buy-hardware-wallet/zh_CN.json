@@ -1,7 +1,7 @@
 {
   "page": {
     "title": "Buy a Hardware wallet",
-    "desc": "Purchase a hardware wallet for the highest security when accessing your crypto."
+    "desc": "购买硬件钱包，为您访问加密货币时获得最高的安全性。"
   },
   "desc": {
     "ledger": "A light, yet solid multicurrency hardware wallet for cryptocurrencies. It is easy to carry everywhere thanks to its USB format.",
@@ -9,7 +9,9 @@
     "bitbox": "Our aim is to equip you for independence, with ease, in the digital world.",
     "trezor": "The most trusted hardware wallet in the world. Get yours today!",
     "secalot": "Your all-in-one digital security companion. it is a small USB dongle that packs a wide range of features.",
-    "keepkey": "Protect your cryptocurrencies, store your private keys offline, and safeguard your assets from hackers."
+    "keepkey": "Protect your cryptocurrencies, store your private keys offline, and safeguard your assets from hackers.",
+    "bcvault": "BC Vault gives you full control of your private keys. Backup, Encrypt, Export, Delete. Your choice.",
+    "coolwallet": "Security the size of a credit card. Connect via Bluetooth to an iOS or Android app on your smartphone."
   },
   "caption-starting-from": "Starting From",
   "button-more-info": "More information"

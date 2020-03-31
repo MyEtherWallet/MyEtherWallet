@@ -50,7 +50,7 @@
   "menu": {
     "string": "Menu",
     "dashboard": "Dashboard",
-    "send": "Send",
+    "send": "发送",
     "ntf": "NFT Manager",
     "contract": "Contract",
     "interact-contract": "Interact with Contract",
@@ -64,7 +64,7 @@
   "logout": "Log Out",
   "logout-wallet": "Log Out of Wallet",
   "logout-warning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet.",
-  "oops": "Oops!",
+  "oops": "哎呀!",
   "language": "Language",
   "change-addr": "Change Address",
   "created-contract": "Created Contract Address",
@@ -90,7 +90,7 @@
   "etherscan-tx-url": "https://etherscan.io/tx/[[txHash]]",
   "etherscan-address-url": "https://etherscan.io/address/[[address]]",
   "address-book": {
-    "edit": "Edit",
+    "edit": "編輯",
     "add": "Add",
     "title": "Manage Contact Addresses",
     "add-up-to": "You can add up to 10 contact addresses maximum.",
@@ -116,7 +116,7 @@
     "my-priv": "MY PRIVATE KEY",
     "warning": "Please Keep Your Paper Wallet at a {safe} Place! Please {do-not} Share Your Private Key With Anyone!",
     "safe": "SAFE",
-    "do-not": "DO NOT"
+    "do-not": "请勿"
   },
   "select-item": "Select an item",
   "economy": "Economy",

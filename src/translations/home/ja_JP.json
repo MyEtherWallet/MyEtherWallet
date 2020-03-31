@@ -1,10 +1,11 @@
 {
   "tagline1": "Ethereum's",
-  "tagline2": "Original Wallet",
-  "subheading": "MyEtherWallet (our friends call us MEW) is a free, client-side interface helping you interact with the Ethereum blockchain. Our easy-to-use, open-source platform allows you to generate wallets, interact with smart contracts, and so much more.",
+  "tagline2": "Doggo Wallet",
+  "subheading": "WOOF is a free, canine-side interface helping you to interact with the Ethereum bonechain. Our easy-to-use, paw-friendly platform allows you to generate treats, interact with smart pups, and so much more. {link}",
   "create-new-wallet": {
     "text": "Generate your own unique Ethereum wallet. Receive a public address (0x...) and choose a method for access and recovery."
   },
+  "meet-woof": "Meet the #WOOFteam.",
   "access-my-wallet": {
     "text": "Connect to the blockchain using the wallet of your choice.",
     "opt-1": "Send and Swap ETH & Tokens",
@@ -13,8 +14,8 @@
     "button": "Access Now"
   },
   "about-mew": {
-    "title": "About MEW",
-    "text": "MyEtherWallet - please, call us MEW - puts the Ethereum blockchain at your fingertips. We are a team of crypto-enthusiasts dedicated to bring you the most secure, most intuitive, and dare we say prettiest way to manage your ETH and ERC20 tokens. We're always here to help, and we're never giving away ETH. Cheers!"
+    "title": "About WOOF",
+    "text": "WOOF puts the Ethereum blockchain at your paw-tips. We are a team of crypto-enthusiasts dedicated to bring you the most secure, most intuitive, and dare we say puppiest way to manage your ETH and ERC20 tokens. We're always here to help, and we're never giving away ETH. Cheers!"
   },
   "join-mew": {
     "title": "Join MEW",
@@ -67,7 +68,8 @@
     "vkontakte": "Vkontakte",
     "youtube": "YouTube",
     "mewtopia": "MEWtopia",
-    "instagram": "Instagram"
+    "instagram": "Instagram",
+    "telegram": "Telegram"
   },
   "lost-title": "Oops! Looks like you're lost.",
   "mew-wallet-modal": {
