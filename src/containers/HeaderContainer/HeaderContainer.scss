@@ -1,5 +1,18 @@
 @import '~@/scss/GlobalVariables';
 
+$tablet-width: 1270px;
+.floating-buttons-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  bottom: 150px;
+  height: 220px;
+  right: 60px;
+  z-index: 999;
+  justify-content: space-around;
+}
+
 .vintage-header {
   background-color: $mew-green;
   color: $white;
@@ -11,6 +24,15 @@
     text-decoration: underline;
   }
 }
+
+@media all and (max-width: 1025px) {
+  .floating-buttons-container {
+    bottom: 175px;
+    height: 168px;
+    right: 16px;
+  }
+}
+
 .wrap {
   padding-top: 85px;
 

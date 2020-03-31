@@ -28,6 +28,11 @@ describe('UnitInput.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct valueLeft data', () => {
     expect(wrapper.vm.$el.querySelector('.block-left input').value).toEqual(
       String(wrapper.vm.$data.valueLeft)

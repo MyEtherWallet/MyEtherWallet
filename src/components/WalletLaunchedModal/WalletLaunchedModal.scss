@@ -3,15 +3,15 @@
 .wallet-launch-modal {
   .close-container {
     height: 50px;
-    .close {
-      color: $dark-blue-2;
-      font-weight: 100;
-      font-size: 30px;
-      margin-top: 5px;
-      line-height: 30px;
-      opacity: 1;
-      outline: none;
-      text-shadow: none;
+    text-align: right;
+    img {
+      cursor: pointer;
+      height: 30px;
+      margin: 4px;
+      &:hover {
+        color: $mew-green !important;
+        opacity: 0.5;
+      }
     }
   }
 

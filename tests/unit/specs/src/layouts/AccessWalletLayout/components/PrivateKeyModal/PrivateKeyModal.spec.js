@@ -56,6 +56,11 @@ describe('PrivateKeyModal.vue', () => {
       });
     });
 
+    afterEach(() => {
+      wrapper.destroy();
+      wrapper = null;
+    });
+
     xit('should reset the privateKey via input element', () => {
       const newPrivateKey =
         'b7420d4287f425479375c7f6eab7338cabd8a61c7b85fd51b00dac3d7443a8ea';

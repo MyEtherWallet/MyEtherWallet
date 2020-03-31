@@ -37,6 +37,7 @@ import vkontakte from '@/assets/images/icons/vkontakte.png';
 import mewtopia from '@/assets/images/icons/mewtopia.png';
 import youtube from '@/assets/images/icons/youtube.png';
 import instagram from '@/assets/images/icons/instagram.png';
+import telegram from '@/assets/images/icons/telegram.svg';
 
 export default {
   data() {
@@ -86,6 +87,11 @@ export default {
           img: instagram,
           to: 'https://www.instagram.com/myetherwallet',
           name: this.$t('home.social.instagram')
+        },
+        {
+          img: telegram,
+          to: 'https://t.me/myetherwalletofficial',
+          name: this.$t('home.social.telegram')
         }
       ]
     };
