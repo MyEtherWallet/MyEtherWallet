@@ -83,8 +83,6 @@
     "do-not-have": "Do not have a wallet?",
     "passphrase": "Passphrase",
     "own": "{nickname}'s wallet",
-    "no-wallet": "Don't have a wallet yet?",
-    "free-wallet": "Get your wallet for free!",
     "login": "Login to access your wallet!"
   },
   "mewconnect": {
