@@ -106,23 +106,23 @@ export default {
   }),
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
+      return this.editedIndex === -1 ? 'Add an address' : 'Edit address';
     }
   },
   watch: {
     dialog(val) {
       val || this.close();
+    },
+    addresses() {
+      // Add index numbers to items
+      this.addresses.forEach((e, i) => {
+        e.index = i + 1;
+      });
     }
   },
   created() {
     this.initialize();
-
-    // Add index numbers to items
-    this.addresses.forEach((e, i) => {
-      e.index = i + 1;
-    });
   },
-
   methods: {
     initialize() {
       this.addresses = [
