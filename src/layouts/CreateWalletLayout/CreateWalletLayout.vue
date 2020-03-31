@@ -62,17 +62,6 @@
                         height="40"
                       />
                     </a>
-                    <a
-                      href="https://galaxystore.samsung.com/detail/com.myetherwallet.mewwallet"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <img
-                        alt
-                        src="~@/assets/images/icons/button-galaxy-store-color.png"
-                        height="40"
-                      />
-                    </a>
                   </div>
                 </div>
                 <div class="qr-container mt-5">
