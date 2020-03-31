@@ -76,12 +76,7 @@
                   </div>
                 </div>
                 <div class="qr-container mt-5">
-                  <qrcode
-                    :value="
-                      'https://www.mewbuilds.com/build/c957ff1995b4e3d7aca9c49370f74628810e1a30/index.html#/qr-code'
-                    "
-                    :options="{ size: 150 }"
-                  />
+                  <qrcode :value="qrRedirectLink" :options="{ size: 150 }" />
                 </div>
               </div>
               <div class="bottom-image">
@@ -178,6 +173,11 @@ export default {
       showProgressBar: false,
       canDownloadApple: true
     };
+  },
+  computed: {
+    qrRedirectLink() {
+      return location.href.replace('access-my-wallet', 'qr');
+    }
   },
   mounted() {
     this.canDownloadApple =
