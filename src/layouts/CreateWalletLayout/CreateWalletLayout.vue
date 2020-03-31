@@ -176,7 +176,7 @@ export default {
   },
   computed: {
     qrRedirectLink() {
-      return location.href.replace('access-my-wallet', 'qr');
+      return window.location.href.replace('create-wallet', 'qr-code');
     }
   },
   mounted() {
