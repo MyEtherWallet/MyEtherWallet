@@ -19,7 +19,8 @@
     "android": "Android",
     "ios": "iOS",
     "tooltip": "Этот метод доступа рекомендуется как безопасный. Убедитесь, что вы сохранили свою информацию о восстановлении!",
-    "download-today": "Скачайте наше приложение сегодня!"
+    "download-today": "Скачайте наше приложение сегодня!",
+    "redirect-store": "Sit tight, we are redirecting you to the right store..."
   },
   "password": {
     "do-not-forget": "НЕ ЗАБУДЬТЕ",
