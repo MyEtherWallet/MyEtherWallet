@@ -83,8 +83,6 @@
     "do-not-have": "Нет кошелька?",
     "passphrase": "Парольная фраза",
     "own": "Кошелек {nickname}",
-    "no-wallet": "Don't have a wallet yet?",
-    "free-wallet": "Get your wallet for free!",
     "login": "Login to access your wallet!"
   },
   "mewconnect": {
