@@ -97,19 +97,19 @@ export default {
   props: {
     opensettings: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     logout: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     closeMenu: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     languageMenu: {
       type: Function,
-      default: function() {}
+      default: function () {}
     }
   },
   data() {

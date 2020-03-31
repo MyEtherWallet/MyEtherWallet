@@ -18,7 +18,7 @@
         <div class="last-block font-reset-disabled pl-3">
           <i class="fa fa-angle-right" aria-hidden="true"></i>
           {{ $t('interface.network-modal.last-block') }}#:
-          <span class="text-monospace ">{{ blockNumber }}</span>
+          <span class="text-monospace">{{ blockNumber }}</span>
         </div>
       </div>
 
