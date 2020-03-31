@@ -5,7 +5,6 @@
 - Add AdEx ads [#2119](https://github.com/MyEtherWallet/MyEtherWallet/pull/2119)
 - Add telegram social icon [#2167](https://github.com/MyEtherWallet/MyEtherWallet/pull/2167)
 - Add BitBox 2 support [#1957](https://github.com/MyEtherWallet/MyEtherWallet/pull/1957)
-
 ### Bug
 
 - Fix mobile menu [#1873](https://github.com/MyEtherWallet/MyEtherWallet/pull/1873)
@@ -13,6 +12,7 @@
 
 ### Devop
 
+- Update access wallet page [#2188](https://github.com/MyEtherWallet/MyEtherWallet/pull/2188)
 - Switch CI to Github actions [#2168](https://github.com/MyEtherWallet/MyEtherWallet/pull/2168)
 
 ### Release v5.5.0-hotfix.1

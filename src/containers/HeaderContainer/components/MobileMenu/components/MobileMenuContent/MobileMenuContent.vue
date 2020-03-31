@@ -32,20 +32,20 @@
 
     <div v-if="!account.address" class="no-logon-content-block">
       <router-link to="/access-my-wallet" @click.native="closeMenu">
-        <b-button variant="outline-primary" class="login-button">
+        <b-button class="login-button">
           <div class="font-reset-disabled">{{ $t('common.wallet.login') }}</div>
         </b-button>
       </router-link>
 
       <div class="get-wallet font-reset-disabled">
-        {{ $t('common.wallet.no-wallet') }}
+        {{ $t('common.wallet.do-not-have') }}
         <router-link
           class="font-reset-disabled"
           to="/create-wallet"
           @click.native="closeMenu"
         >
-          {{ $t('common.wallet.free-wallet') }}</router-link
-        >
+          {{ $t('common.wallet.create-new') }}
+        </router-link>
       </div>
     </div>
 
