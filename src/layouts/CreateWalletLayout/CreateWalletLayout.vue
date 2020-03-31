@@ -62,18 +62,10 @@
                         height="40"
                       />
                     </a>
-                    <a
-                      href="https://galaxystore.samsung.com/detail/com.myetherwallet.mewwallet?session_id=W_29942474fffbd49127ee223d697f1518"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <img
-                        alt
-                        src="~@/assets/images/icons/button-galaxy-store-color.png"
-                        height="40"
-                      />
-                    </a>
                   </div>
+                </div>
+                <div class="qr-container mt-5">
+                  <qrcode :value="qrRedirectLink" :options="{ size: 150 }" />
                 </div>
               </div>
               <div class="bottom-image">
@@ -170,6 +162,11 @@ export default {
       showProgressBar: false,
       canDownloadApple: true
     };
+  },
+  computed: {
+    qrRedirectLink() {
+      return window.location.href.replace('create-wallet', 'qr-code');
+    }
   },
   mounted() {
     this.canDownloadApple =
