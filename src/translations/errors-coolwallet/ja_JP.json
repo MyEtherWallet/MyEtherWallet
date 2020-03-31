@@ -1,0 +1,7 @@
+{
+  "wrong-password": "Wrong password for app registration.",
+  "card-locked": "Card locked! Please unlock through the app",
+  "already-registered": "App is already registered! If you're having trouble, please reregister the app by removing it from the wallet app.",
+  "no-wallet-instance": "No wallet instance!",
+  "pairing-issue": "Having issues with pairing CoolWallet"
+}
