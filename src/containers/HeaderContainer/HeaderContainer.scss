@@ -24,6 +24,15 @@ $tablet-width: 1270px;
     text-decoration: underline;
   }
 }
+
+@media all and (max-width: 1025px) {
+  .floating-buttons-container {
+    bottom: 175px;
+    height: 168px;
+    right: 16px;
+  }
+}
+
 .wrap {
   padding-top: 85px;
 

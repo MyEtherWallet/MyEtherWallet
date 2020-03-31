@@ -1,4 +1,4 @@
-//@import '~@/scss/GlobalVariables';
+@import '~@/scss/GlobalVariables';
 
 .menu-content-header {
   display: flex;
@@ -56,6 +56,8 @@
   padding: 30px;
 
   .login-button {
+    background-color: $mew-green;
+    border: none;
     width: 100%;
     padding: 20px;
   }
