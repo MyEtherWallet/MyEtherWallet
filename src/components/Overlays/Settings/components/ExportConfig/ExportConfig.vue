@@ -4,7 +4,7 @@
       Please click the button on the left top to download your configuration
       file into your local computer.
     </div>
-    <StdButton buttonclass="button--green-border">
+    <StdButton buttonclass="button--green-border" size="x-large">
       Export
     </StdButton>
   </div>
