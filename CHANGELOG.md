@@ -6,6 +6,7 @@
 - Add in QR code for mew wallet [#2173](https://github.com/MyEtherWallet/MyEtherWallet/pull/2173)
 - Add telegram social icon [#2167](https://github.com/MyEtherWallet/MyEtherWallet/pull/2167)
 - Add BitBox 2 support [#1957](https://github.com/MyEtherWallet/MyEtherWallet/pull/1957)
+
 ### Bug
 
 - Fix mobile menu [#1873](https://github.com/MyEtherWallet/MyEtherWallet/pull/1873)
@@ -13,6 +14,7 @@
 
 ### Devop
 
+- Remove galaxy links [#2190](https://github.com/MyEtherWallet/MyEtherWallet/pull/2190)
 - Update access wallet page [#2188](https://github.com/MyEtherWallet/MyEtherWallet/pull/2188)
 - Switch CI to Github actions [#2168](https://github.com/MyEtherWallet/MyEtherWallet/pull/2168)
 
