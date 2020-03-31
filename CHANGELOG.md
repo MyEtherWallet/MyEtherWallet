@@ -1,16 +1,28 @@
-### Release v5.5.1
+### Release v5.5.1-hotfix.1
 
 ### Bug
 
-- Fix bcvault and coolwallet [#2175](https://github.com/MyEtherWallet/MyEtherWallet/pull/2175)
+- WOOF updates [#2185] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2185)
+
+### Release v5.5.1
 
 ### Feature
 
+- Add AdEx ads [#2119](https://github.com/MyEtherWallet/MyEtherWallet/pull/2119)
+- Add in QR code for mew wallet [#2173](https://github.com/MyEtherWallet/MyEtherWallet/pull/2173)
+- Add telegram social icon [#2167](https://github.com/MyEtherWallet/MyEtherWallet/pull/2167)
+- Add BitBox 2 support [#1957](https://github.com/MyEtherWallet/MyEtherWallet/pull/1957)
+
+### Bug
+
 - Add telegram social icon [#2167] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2167)
-- WOOF updates [#2185] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2185)
+- Fix mobile menu [#1873](https://github.com/MyEtherWallet/MyEtherWallet/pull/1873)
+- Fix bcvault and coolwallet [#2175](https://github.com/MyEtherWallet/MyEtherWallet/pull/2175)
 
 ### Devop
 
+- Remove galaxy links [#2190](https://github.com/MyEtherWallet/MyEtherWallet/pull/2190)
+- Update access wallet page [#2188](https://github.com/MyEtherWallet/MyEtherWallet/pull/2188)
 - Switch CI to Github actions [#2168](https://github.com/MyEtherWallet/MyEtherWallet/pull/2168)
 
 ### Release v5.5.0-hotfix.1
