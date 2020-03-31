@@ -4,9 +4,11 @@
       Please click the button on the left top to download your configuration
       file into your local computer.
     </div>
-    <StdButton buttonclass="button--green-border" size="x-large">
-      Export
-    </StdButton>
+    <div class="d-flex justify-center mt-5">
+      <StdButton buttonclass="button--green" size="x-large">
+        Export
+      </StdButton>
+    </div>
   </div>
 </template>
 

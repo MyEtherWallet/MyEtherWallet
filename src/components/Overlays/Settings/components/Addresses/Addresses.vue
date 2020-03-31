@@ -2,6 +2,36 @@
   <v-data-table :headers="headers" :items="addresses" sort-by="calories">
     <template v-slot:top>
       <v-toolbar flat color="white">
+        <v-dialog v-model="delDialog" max-width="550px">
+          <v-card>
+            <v-card-title>
+              <span class="headline">Do you want to delete this address?</span>
+            </v-card-title>
+            <v-card-text>
+              <div class="subtitle-2 font-weight-bold">
+                Address:
+                <span class="font-weight-regular">{{
+                  deletedItem.address
+                }}</span>
+              </div>
+              <div class="subtitle-2 font-weight-bold">
+                Nickname:
+                <span class="font-weight-regular">{{
+                  deletedItem.nickname
+                }}</span>
+              </div>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeDelDialog"
+                >Cancel</v-btn
+              >
+              <v-btn color="blue darken-1" text @click="deleteItem"
+                >Delete</v-btn
+              >
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
             <v-btn
@@ -19,22 +49,18 @@
             </v-card-title>
 
             <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.address"
-                      label="Address"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.nickname"
-                      label="Nickname"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
+              <div>
+                <v-text-field
+                  v-model="editedItem.address"
+                  label="Address"
+                ></v-text-field>
+              </div>
+              <div>
+                <v-text-field
+                  v-model="editedItem.nickname"
+                  label="Nickname"
+                ></v-text-field>
+              </div>
             </v-card-text>
 
             <v-card-actions>
@@ -50,7 +76,7 @@
       <v-icon small class="mr-2" @click="editItem(item)">
         mdi-pencil
       </v-icon>
-      <v-icon small @click="deleteItem(item)">
+      <v-icon small @click="openDelDialog(item)">
         mdi-delete
       </v-icon>
     </template>
@@ -76,6 +102,7 @@ import Blockie from '@/web/components/Blockie';
 export default {
   components: { Blockie },
   data: () => ({
+    delDialog: false,
     dialog: false,
     headers: [
       {
@@ -94,6 +121,7 @@ export default {
       { text: '', value: 'actions', sortable: false }
     ],
     addresses: [],
+    deletedItem: {},
     editedIndex: -1,
     editedItem: {
       address: '',
@@ -145,10 +173,21 @@ export default {
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
-    deleteItem(item) {
-      const index = this.addresses.indexOf(item);
-      confirm('Are you sure you want to delete this item?') &&
-        this.addresses.splice(index, 1);
+    openDelDialog(item) {
+      //const index = this.addresses.indexOf(item);
+      this.deletedItem = item;
+      this.delDialog = true;
+      //confirm('Are you sure you want to delete this item?') &&
+      //this.addresses.splice(index, 1);
+    },
+    closeDelDialog() {
+      this.deletedItem = {};
+      this.delDialog = false;
+    },
+    deleteItem() {
+      const index = this.addresses.indexOf(this.deletedItem);
+      this.addresses.splice(index, 1);
+      this.closeDelDialog();
     },
     close() {
       this.dialog = false;
