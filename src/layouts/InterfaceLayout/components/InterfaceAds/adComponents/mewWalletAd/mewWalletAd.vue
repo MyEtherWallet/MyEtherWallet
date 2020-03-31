@@ -32,7 +32,6 @@
 <script>
 import appStore from '@/assets/images/icons/button-app-store.png';
 import googlePlay from '@/assets/images/icons/button-google-play-color.png';
-// import galaxyStore from '@/assets/images/icons/button-galaxy-store-color.png';
 
 export default {
   props: {},
