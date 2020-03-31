@@ -48,6 +48,11 @@ describe('DappButtons.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should render correct title', () => {
     expect(
       wrapper.vm.$el.querySelector('.dapps-button h4').textContent.trim()

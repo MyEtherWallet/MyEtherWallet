@@ -1,12 +1,21 @@
 {
   "mewconnect": {
-    "option-text": "Use MEWconnect to access my wallet",
+    "option-text": "Scan the QR code to access with MEW wallet or MEWconnect",
     "modal": {
-      "title": "Access by MEWconnect",
+      "title": "Mobile Access",
       "text1": "Please use MEW wallet or MEWconnect App to scan the QR code above",
       "text2": "Don't have the MEW wallet app? Download now."
     },
+    "protocol": "MEWconnect Protocol",
     "warning": "MEW wallet and MEWconnect apps are not compatible with iPads."
+  },
+  "mobile-app": {
+    "option-title": "Mobile App",
+    "examples": "WalletConnect; WalletLink",
+    "modal": {
+      "title": "Mobile Access"
+    },
+    "mew-connect": "MEWconnect"
   },
   "finney": {
     "scan-info": "To connect, scan the QR code from {wallet} app on your {finney-bc}",
@@ -28,6 +37,14 @@
       "button-choose": "Continue"
     },
     "examples": "Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet"
+  },
+  "bitbox": {
+    "modal": {
+      "title": "Select BitBox wallet"
+    },
+    "bitbox02": "BitBox02",
+    "pairing": "Please confirm the encryption pairing code matches what is shown on your BitBox02.",
+    "unlock": "Enter BitBox02 password to unlock."
   },
   "software": {
     "option-title": "Software",
@@ -69,14 +86,14 @@
     }
   },
   "private-key": {
-    "string":  "Private Key",
+    "string": "Private Key",
     "modal": {
       "title": "Access by Private Key",
       "placeholder": "Enter Private Key"
     },
     "do-not-share": "Please {do-not} share your private key to anyone! You may lose your money if you share it"
   },
-  "network-addr":{
+  "network-addr": {
     "string": "Network and Address",
     "addr-to-interact": "Address to Interact With",
     "id": "ID",
@@ -120,5 +137,8 @@
   "wallet-options": "Check your transaction history, download a new keystore file, print a paper wallet, and more!",
   "xwallet-desc": "Use Pundi X Savings account by MEW to scan the QR code above",
   "xwallet-title": "Access by XWallet",
-  "get-it-now": "Get It Now"
+  "get-it-now": "Get It Now",
+  "or": "OR CONNECT WITH",
+  "wallet-connect": "WalletConnect",
+  "wallet-link": "WalletLink"
 }

@@ -36,6 +36,11 @@ xdescribe('ManageENSContainer.vue', () => {
     });
   });
 
+  afterEach(() => {
+    wrapper.destroy();
+    wrapper = null;
+  });
+
   it('should push correct route', () => {
     expect(push.calledWith('/interface/dapps/register-domain'));
   });

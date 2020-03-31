@@ -14,7 +14,9 @@
     <p v-if="props.hasOtherExamples === true" class="access-wallet-or">
       - {{ parent.$t('accessWallet.access-wallet-or') }} -
     </p>
-    <p class="desc">{{ props.desc }}</p>
+    <p class="desc">
+      {{ parent.$t(props.desc) }}
+    </p>
     <p :v-if="props.recommend !== ''" class="small-note">
       {{ props.recommend }}
     </p>

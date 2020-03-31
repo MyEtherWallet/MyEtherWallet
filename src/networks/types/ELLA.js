@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-ella.json';
-import contracts from '@/contracts/contract-abi-ella.json';
+import tokens from '@/_generated/tokens/tokens-ella.json';
+import contracts from '@/_generated/contracts/contract-abi-ella.json';
 import ella from '@/assets/images/networks/ella.svg';
 
 export default {

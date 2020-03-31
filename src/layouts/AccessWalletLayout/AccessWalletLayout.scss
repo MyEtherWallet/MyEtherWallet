@@ -1,1 +1,52 @@
 @import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .buttons-container {
+    display: grid;
+    grid-column-gap: 20px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    margin: 0 auto;
+    max-width: 900px;
+    position: relative;
+    text-align: center;
+  }
+}
+
+.wrap {
+  background-color: $background-color-1;
+  padding: 80px 0;
+}
+
+.title {
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+.buttons-container {
+  user-select: none;
+  display: grid;
+  grid-column-gap: 20px;
+  margin: 0 auto;
+  position: relative;
+  text-align: center;
+
+  @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    max-width: 900px;
+  }
+
+  @media all and (max-width: 750px) {
+    grid-template-columns: repeat(4, 200px);
+  }
+
+  @media all and (max-width: 650px) {
+    overflow: auto;
+  }
+
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    grid-template-columns: repeat(4, auto);
+  }
+
+  @media all and (max-width: $mobile-width) {
+    grid-template-columns: repeat(4, 180px);
+  }
+}
