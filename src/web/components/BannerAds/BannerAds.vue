@@ -14,7 +14,7 @@
         <Ad1 />
       </v-carousel-item>
       <v-carousel-item>
-        <Ad />
+        <Ad2 />
       </v-carousel-item>
     </v-carousel>
   </WhiteSheet>
@@ -22,10 +22,10 @@
 
 <script>
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
-import Ad from '@/web/components/Ad';
-import Ad1 from '@/web/components/Ad1';
+import Ad1 from './components/Ad1';
+import Ad2 from './components/Ad2';
 
 export default {
-  components: { WhiteSheet, Ad, Ad1 }
+  components: { WhiteSheet, Ad1, Ad2 }
 };
 </script>

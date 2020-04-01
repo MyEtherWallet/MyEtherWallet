@@ -34,7 +34,11 @@
                 />
 
                 <div class="text-center">
-                  <StdButton fullwidth @click.native="activeTab = 1">
+                  <StdButton
+                    size="x-large"
+                    fullwidth
+                    @click.native="activeTab = 1"
+                  >
                     Connect with Ledger
                   </StdButton>
                 </div>
@@ -49,7 +53,11 @@
               <AddressSelection />
               <div class="pa-8">
                 <div class="text-center">
-                  <StdButton fullwidth @click.native="activeTab = 0">
+                  <StdButton
+                    size="x-large"
+                    fullwidth
+                    @click.native="activeTab = 0"
+                  >
                     Access My Wallet
                   </StdButton>
                 </div>

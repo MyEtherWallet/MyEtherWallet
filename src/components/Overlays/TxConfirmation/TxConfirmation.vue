@@ -14,7 +14,7 @@
           <DividerX class="my-9" />
 
           <div class="text-center">
-            <StdButton>Confirm & send</StdButton>
+            <StdButton size="x-large">Confirm & send</StdButton>
           </div>
         </div>
         <ConfirmTransaction />

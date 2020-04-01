@@ -18,7 +18,7 @@
 <script>
 import PageTitle from '@/web/components/PageTitle';
 import Partners from '@/web/components/Partners';
-import Ad from '@/web/components/Ad';
+import Ad from '@/web/components/HomeAd1';
 import WhatIsMew from './components/WhatIsMew';
 import OurStory from './components/OurStory';
 import TwoBlockContent from './components/TwoBlockContent';
