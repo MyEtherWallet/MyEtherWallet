@@ -25,7 +25,7 @@ describe('VerifyMessageContainer.vue', () => {
         }
       },
       wallet: {
-        getAddressString: function() {}
+        getAddressString: function () {}
       }
     });
     wrapper = shallowMount(VerifyMessageContainer, {

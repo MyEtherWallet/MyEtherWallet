@@ -38,6 +38,10 @@
     grid-template-columns: repeat(4, 200px);
   }
 
+  @media all and (max-width: 650px) {
+    overflow: auto;
+  }
+
   @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
     grid-template-columns: repeat(4, auto);
   }

@@ -53,17 +53,6 @@
               height="35"
             />
           </a>
-          <a
-            href="https://galaxystore.samsung.com/detail/com.myetherwallet.mewwallet?session_id=W_29942474fffbd49127ee223d697f1518"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              alt
-              src="~@/assets/images/icons/button-galaxy-store-color.png"
-              height="35"
-            />
-          </a>
         </div>
         <p class="download-now">
           {{ $t('accessWallet.mewconnect.modal.text2') }}

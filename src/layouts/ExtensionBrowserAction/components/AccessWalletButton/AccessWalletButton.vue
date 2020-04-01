@@ -30,7 +30,23 @@ export default {
   props: {
     generate: {
       type: Function,
-      default: () => {}
+      default: function () {}
+    },
+    img: {
+      type: String,
+      default: ''
+    },
+    imgPadding: {
+      type: String,
+      default: 'aaaaa'
+    },
+    imgDisabled: {
+      type: String,
+      default: ''
+    },
+    title: {
+      type: String,
+      default: ''
     },
     import: {
       type: Function,

@@ -19,7 +19,7 @@ export default async ({ event, payload }, _, next) => {
     } else {
       chrome.tabs.query(
         { url: `*://*.${Misc.getService(payload.url)}/*` },
-        function(tab) {
+        function (tab) {
           const obj = {
             event: REJECT_MEW_SIGN_MSG,
             payload: "Can't sign messages from a burner account!"

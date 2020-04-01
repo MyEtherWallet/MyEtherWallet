@@ -43,7 +43,7 @@ export default async ({ event, payload }, callback, next) => {
       data: [keystore, password]
     });
 
-    worker.onmessage = function(e) {
+    worker.onmessage = function (e) {
       const wallet = new WalletInterface(
         Buffer.from(e.data._privKey),
         false,
@@ -52,11 +52,11 @@ export default async ({ event, payload }, callback, next) => {
       signTransaction(wallet);
     };
 
-    worker.onerror = function(e) {
+    worker.onerror = function (e) {
       callback({ error: e });
     };
 
-    const signTransaction = async function(wallet) {
+    const signTransaction = async function (wallet) {
       const newTx = new Transaction(txParams);
       try {
         const signedTx = await wallet.signTransaction(newTx);

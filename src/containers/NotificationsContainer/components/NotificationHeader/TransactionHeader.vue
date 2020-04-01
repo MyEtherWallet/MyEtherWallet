@@ -23,25 +23,25 @@ export default {
   props: {
     expand: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     notice: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
     processStatus: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     dateString: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     timeString: {
       type: Function,
-      default: function() {}
+      default: function () {}
     }
   },
   data() {

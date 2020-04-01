@@ -65,7 +65,7 @@ export default {
   props: {
     file: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     }
@@ -112,7 +112,7 @@ export default {
           type: 'unlockWallet',
           data: [this.file, this.password]
         });
-        worker.onmessage = function(e) {
+        worker.onmessage = function (e) {
           const obj = {
             file: this.file,
             name: e.data.filename
@@ -127,7 +127,7 @@ export default {
             )
           );
         };
-        worker.onerror = function(e) {
+        worker.onerror = function (e) {
           e.preventDefault();
           self.spinner = false;
           Toast.responseHandler(e, Toast.ERROR);

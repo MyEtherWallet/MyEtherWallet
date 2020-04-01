@@ -21,7 +21,7 @@ export default async ({ event, payload }, callback, next) => {
       data: [keystore, password]
     });
 
-    worker.onmessage = function(e) {
+    worker.onmessage = function (e) {
       const wallet = new WalletInterface(
         Buffer.from(e.data._privKey),
         false,
@@ -30,11 +30,11 @@ export default async ({ event, payload }, callback, next) => {
       signMsg(wallet);
     };
 
-    worker.onerror = function(e) {
+    worker.onerror = function (e) {
       callback({ error: e });
     };
 
-    const signMsg = async function(wallet) {
+    const signMsg = async function (wallet) {
       try {
         const signedMsg = await wallet.signMessage(msgToSign);
         callback({ data: '0x' + signedMsg.toString('hex') });

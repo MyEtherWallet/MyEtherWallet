@@ -113,7 +113,7 @@ export default {
   props: {
     token: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     }

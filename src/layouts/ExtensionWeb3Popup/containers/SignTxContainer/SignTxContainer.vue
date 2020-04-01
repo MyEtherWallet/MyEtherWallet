@@ -200,7 +200,7 @@ export default {
           if (res.hasOwnProperty('message')) {
             window.chrome.tabs.query(
               { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
-              function(tab) {
+              function (tab) {
                 const obj = {
                   event: REJECT_MEW_TX_SIGN,
                   payload: res.message
@@ -214,7 +214,7 @@ export default {
           _self.$refs.passwordModal.$refs.passwordModal.hide();
           window.chrome.tabs.query(
             { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
-            function(tab) {
+            function (tab) {
               const obj = {
                 event: MEW_TX_HASH,
                 payload: res
@@ -230,7 +230,7 @@ export default {
       const _self = this;
       window.chrome.tabs.query(
         { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
-        function(tab) {
+        function (tab) {
           const obj = {
             event: REJECT_MEW_TX_SIGN
           };

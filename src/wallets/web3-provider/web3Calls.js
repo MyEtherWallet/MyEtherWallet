@@ -49,7 +49,7 @@ class Web3Calls {
         call: 'eth_getTransactionCount',
         params: 2,
         inputFormatter: [
-          function(address) {
+          function (address) {
             if (utils.isAddress(address.toLowerCase())) {
               return address;
             }
@@ -59,7 +59,7 @@ class Web3Calls {
                 ' is not a valid address to get the "transactionCount".'
             );
           },
-          function() {
+          function () {
             return 'latest';
           }
         ]

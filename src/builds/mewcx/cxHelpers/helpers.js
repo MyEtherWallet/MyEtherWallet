@@ -100,7 +100,7 @@ const whiteListDomains = {
   }
 };
 
-const queryBuilder = function(request) {
+const queryBuilder = function (request) {
   if (request.hasOwnProperty('meta') && Object.keys(request.meta).length > 0) {
     const arr = [];
     for (const i in request.meta) {

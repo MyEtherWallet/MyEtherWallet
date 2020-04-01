@@ -39,7 +39,7 @@ export default {
   props: {
     options: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
@@ -65,7 +65,7 @@ export default {
     document.removeEventListener('click', this.clickEvent, false);
   },
   methods: {
-    clickEvent: function(event) {
+    clickEvent: function (event) {
       const path =
         event.path ||
         (event.composedPath && event.composedPath()) ||

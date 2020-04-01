@@ -38,6 +38,14 @@
     },
     "examples": "Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet"
   },
+  "bitbox": {
+    "modal": {
+      "title": "Select BitBox wallet"
+    },
+    "bitbox02": "BitBox02",
+    "pairing": "Please confirm the encryption pairing code matches what is shown on your BitBox02.",
+    "unlock": "Enter BitBox02 password to unlock."
+  },
   "software": {
     "option-title": "Software",
     "option-text": "Keystore file, Private key, Mnemonic phrase",

@@ -14,10 +14,10 @@ const newQuery = Object.keys(objParams)
   .map(k => k + '=' + objParams[k])
   .join('&');
 
-setTimeout(function() {
+setTimeout(function () {
   iframe.src = `popup.html#/${to}?${newQuery}`;
 }, 2000);
-iframe.onload = function() {
+iframe.onload = function () {
   iframe.height = '465px';
   const elem = document.querySelector('#gifbox');
   elem.parentNode.removeChild(elem);
