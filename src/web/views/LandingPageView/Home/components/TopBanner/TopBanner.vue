@@ -21,12 +21,14 @@
             </p>
             <div class="mt-7">
               <StdButton
+                size="x-large"
                 buttonclass="button--green"
                 class="mr-4"
                 :to="{ name: 'HomeCreateWallet' }"
                 >Get a new wallet</StdButton
               >
               <StdButton
+                size="x-large"
                 buttonclass="button--green-border"
                 :to="{ name: 'HomeAccessWallet' }"
                 >Access my wallet</StdButton
