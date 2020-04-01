@@ -7,8 +7,8 @@
           @click="openSettings = true"
         >
           <img
-            width="23"
-            height="23"
+            width="26"
+            height="26"
             src="@/assets/images/icons/icon-setting-disable.png"
             class="mr-3"
           />
@@ -24,8 +24,8 @@
       <v-list-item>
         <div class="cursor--pointer d-flex align-center">
           <img
-            width="23"
-            height="23"
+            width="26"
+            height="26"
             src="@/assets/images/icons/icon-logout-disable.png"
             class="mr-3"
           />

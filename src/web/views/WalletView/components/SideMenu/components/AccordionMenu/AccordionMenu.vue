@@ -7,7 +7,7 @@
             class="cursor--pointer d-flex align-center"
             @click="routerPush(i.url)"
           >
-            <img width="23" height="23" :src="i.iconDark" class="mr-3" />
+            <img width="26" height="26" :src="i.iconDark" class="mr-3" />
             <img width="23" height="23" :src="i.iconLight" class="mr-3" />
             <div>{{ i.name }}</div>
           </div>
@@ -16,7 +16,7 @@
         <v-list-group v-else>
           <template v-slot:activator>
             <v-list-item-title class="cursor--pointer d-flex align-center">
-              <img width="23" height="23" :src="i.iconDark" class="mr-3" />
+              <img width="26" height="26" :src="i.iconDark" class="mr-3" />
               <img width="23" height="23" :src="i.iconLight" class="mr-3" />
               <div>{{ i.name }}</div>
             </v-list-item-title>
@@ -47,17 +47,17 @@ import DashboardDark from '@/assets/images/icons/icon-dashboard-disable.png';
 import SendLight from '@/assets/images/icons/icon-send-enable.png';
 import SendDark from '@/assets/images/icons/icon-send-disable.png';
 
+import SwapLight from '@/assets/images/icons/icon-swap-enable.png';
 import SwapDark from '@/assets/images/icons/icon-swap-disable.png';
-import SwapLight from '@/assets/images/icons/icon-swap-disable.png';
 
-import DappCenterLight from '@/assets/images/icons/icon-dapp-center-enable.svg';
-import DappCenterDark from '@/assets/images/icons/icon-dapp-center-enable.svg';
+import DappCenterLight from '@/assets/images/icons/icon-dapp-center-enable.png';
+import DappCenterDark from '@/assets/images/icons/icon-dapp-center-disable.svg';
 
-import ContractDark from '@/assets/images/icons/icon-contract-disable.png';
 import ContractLight from '@/assets/images/icons/icon-contract-enable.png';
+import ContractDark from '@/assets/images/icons/icon-contract-disable.png';
 
-import SignMessageDark from '@/assets/images/icons/icon-message-disable.png';
 import SignMessageLight from '@/assets/images/icons/icon-message-enable.png';
+import SignMessageDark from '@/assets/images/icons/icon-message-disable.png';
 
 export default {
   components: {},
