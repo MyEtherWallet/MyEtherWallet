@@ -7,6 +7,7 @@
             class="cursor--pointer d-flex align-center"
             @click="routerPush(i.url)"
           >
+            <img width="23" height="23" :src="i.iconDark" class="mr-3" />
             <img width="23" height="23" :src="i.iconLight" class="mr-3" />
             <div>{{ i.name }}</div>
           </div>
@@ -15,6 +16,7 @@
         <v-list-group v-else>
           <template v-slot:activator>
             <v-list-item-title class="cursor--pointer d-flex align-center">
+              <img width="23" height="23" :src="i.iconDark" class="mr-3" />
               <img width="23" height="23" :src="i.iconLight" class="mr-3" />
               <div>{{ i.name }}</div>
             </v-list-item-title>
@@ -39,8 +41,23 @@
 </template>
 
 <script>
-import SwapDark from '@/assets/images/icons/icon-swap-dark.svg';
-import SwapLight from '@/assets/images/icons/icon-swap-light.svg';
+import DashboardLight from '@/assets/images/icons/icon-dashboard-enable.png';
+import DashboardDark from '@/assets/images/icons/icon-dashboard-disable.png';
+
+import SendLight from '@/assets/images/icons/icon-send-enable.png';
+import SendDark from '@/assets/images/icons/icon-send-disable.png';
+
+import SwapDark from '@/assets/images/icons/icon-swap-disable.png';
+import SwapLight from '@/assets/images/icons/icon-swap-disable.png';
+
+import DappCenterLight from '@/assets/images/icons/icon-dapp-center-enable.svg';
+import DappCenterDark from '@/assets/images/icons/icon-dapp-center-enable.svg';
+
+import ContractDark from '@/assets/images/icons/icon-contract-disable.png';
+import ContractLight from '@/assets/images/icons/icon-contract-enable.png';
+
+import SignMessageDark from '@/assets/images/icons/icon-message-disable.png';
+import SignMessageLight from '@/assets/images/icons/icon-message-enable.png';
 
 export default {
   components: {},
@@ -50,14 +67,14 @@ export default {
       menuItems: [
         {
           name: 'Dashboard',
-          iconDark: SwapDark,
-          iconLight: SwapLight,
+          iconDark: DashboardDark,
+          iconLight: DashboardLight,
           url: '/wallet/dashboard'
         },
         {
           name: 'Send',
-          iconDark: SwapDark,
-          iconLight: SwapLight,
+          iconDark: SendDark,
+          iconLight: SendLight,
           children: [
             {
               name: 'Send Transaction',
@@ -81,14 +98,14 @@ export default {
         },
         {
           name: 'Dapps Center',
-          iconDark: SwapDark,
-          iconLight: SwapLight,
+          iconDark: DappCenterDark,
+          iconLight: DappCenterLight,
           url: '/wallet/dapps'
         },
         {
           name: 'Contract',
-          iconDark: SwapDark,
-          iconLight: SwapLight,
+          iconDark: ContractDark,
+          iconLight: ContractLight,
           children: [
             {
               name: 'Interact with contract',
@@ -102,8 +119,8 @@ export default {
         },
         {
           name: 'Sign Message',
-          iconDark: SwapDark,
-          iconLight: SwapLight,
+          iconDark: SignMessageDark,
+          iconLight: SignMessageLight,
           url: '/wallet/sign'
         }
       ]
