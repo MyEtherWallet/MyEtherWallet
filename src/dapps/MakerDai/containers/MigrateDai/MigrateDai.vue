@@ -1,7 +1,7 @@
 <template>
   <div style="max-width: 500px;">
     <div class="d-flex align-items-center mb-3">
-      <h3 class="mr-2 ">{{ $t('dappsMCDMaker.upgrade-sai-to-dai') }}</h3>
+      <h3 class="mr-2">{{ $t('dappsMCDMaker.upgrade-sai-to-dai') }}</h3>
       <img :src="DaiIcon" class="icon-size" />
     </div>
     <div style="max-width: 500px;" class="mb-5">
@@ -54,13 +54,13 @@ export default {
   props: {
     tokensWithBalance: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
     ethPrice: {
       type: BigNumber,
-      default: function() {
+      default: function () {
         return new BigNumber(0);
       }
     },
@@ -70,13 +70,13 @@ export default {
     },
     cdps: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
     availableCdps: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },

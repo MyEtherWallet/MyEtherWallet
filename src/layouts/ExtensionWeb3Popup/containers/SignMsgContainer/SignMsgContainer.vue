@@ -109,7 +109,7 @@ export default {
           }
           window.chrome.tabs.query(
             { url: `*://*.${Misc.getService(url)}/*` },
-            function(tab) {
+            function (tab) {
               const obj = {
                 event: MEW_SIGNED_MSG,
                 payload: res.data
@@ -128,7 +128,7 @@ export default {
       const _self = this;
       window.chrome.tabs.query(
         { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
-        function(tab) {
+        function (tab) {
           const obj = {
             event: REJECT_MEW_SIGN_MSG,
             payload: 'User rejected action!'

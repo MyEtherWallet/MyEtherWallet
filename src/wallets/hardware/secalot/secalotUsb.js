@@ -1,21 +1,18 @@
 'use strict';
 import u2f from 'u2f-api';
 
-const SecalotUsb = function() {
+const SecalotUsb = function () {
   this.timeoutSeconds = 120;
 };
 
 SecalotUsb.webSafe64 = base64 =>
-  base64
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/, '');
+  base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 SecalotUsb.normal64 = base64 =>
   // eslint-disable-next-line
   base64.replace(/\-/g, '+').replace(/_/g, '/') +
   '=='.substring(0, (3 * base64.length) % 4);
 
-SecalotUsb.prototype.u2fCallback = function(response, callback) {
+SecalotUsb.prototype.u2fCallback = function (response, callback) {
   if (typeof response['signatureData'] !== 'undefined') {
     let data = Buffer.from(
       SecalotUsb.normal64(response['signatureData']),
@@ -52,7 +49,7 @@ SecalotUsb.prototype.u2fCallback = function(response, callback) {
   }
 };
 
-SecalotUsb.prototype.exchange = function(apduHex, callback) {
+SecalotUsb.prototype.exchange = function (apduHex, callback) {
   const apdu = Buffer.from('1122334455667788' + apduHex, 'hex');
   const challenge = Buffer.from(
     '0000000000000000000000000000000000000000000000000000000000000000',
@@ -64,7 +61,7 @@ SecalotUsb.prototype.exchange = function(apduHex, callback) {
   key['version'] = 'U2F_V2';
   key['keyHandle'] = SecalotUsb.webSafe64(apdu.toString('base64'));
   const self = this;
-  const localCallback = function(result) {
+  const localCallback = function (result) {
     self.u2fCallback(result, callback);
   };
   u2f

@@ -274,7 +274,7 @@ export default {
   props: {
     hardwareWallet: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     }
@@ -347,10 +347,10 @@ export default {
         this.setHDAccounts();
       });
     },
-    unselectAllAddresses: function(selected) {
+    unselectAllAddresses: function (selected) {
       document
         .querySelectorAll('.user-input-checkbox input')
-        .forEach(function(el) {
+        .forEach(function (el) {
           el.checked = el.id === selected;
         });
     },
@@ -416,7 +416,7 @@ export default {
         });
       this.selectedPath = this.hardwareWallet.getCurrentPath();
     },
-    setBalances: web3utils._.debounce(function() {
+    setBalances: web3utils._.debounce(function () {
       this.HDAccounts.forEach(account => {
         if (account.account) {
           this.web3.eth

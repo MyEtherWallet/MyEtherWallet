@@ -49,10 +49,7 @@ describe('StandardInput.vue', () => {
 
     wrapper.setProps({ options });
     expect(
-      wrapper
-        .find('.input-container')
-        .classes()
-        .indexOf(wrapper.vm.borderClass)
+      wrapper.find('.input-container').classes().indexOf(wrapper.vm.borderClass)
     ).toBeGreaterThan(-1);
   });
 

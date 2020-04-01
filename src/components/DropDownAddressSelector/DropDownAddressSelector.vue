@@ -87,8 +87,8 @@
                 <span
                   v-if="
                     addr.address !== currentAddress &&
-                      addr.currency !== 'ETH' &&
-                      addr.currency
+                    addr.currency !== 'ETH' &&
+                    addr.currency
                   "
                   class="address-note"
                   >{{ addr.currency }} {{ $t('interface.addr') }}</span
@@ -220,7 +220,7 @@ export default {
     openAddrModal() {
       this.$refs.addressBook.$refs.addressBookModal.show();
     },
-    debouncedInput: utils._.debounce(function(e) {
+    debouncedInput: utils._.debounce(function (e) {
       this.selectedAddress = e.target.value;
     }, 300),
     copyToClipboard(ref) {

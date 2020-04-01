@@ -1,9 +1,9 @@
-//@import '~@/scss/GlobalVariables';
+@import '~@/scss/GlobalVariables';
 
 .menu-content-header {
   display: flex;
   align-items: center;
-  padding: 20px 30px 0px 30px;
+  padding: 20px 30px 0 30px;
 }
 
 .mobile-menu-content {
@@ -56,6 +56,8 @@
   padding: 30px;
 
   .login-button {
+    background-color: $mew-green;
+    border: none;
     width: 100%;
     padding: 20px;
   }

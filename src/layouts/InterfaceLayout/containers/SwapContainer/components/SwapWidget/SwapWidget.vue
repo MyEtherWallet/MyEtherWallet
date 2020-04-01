@@ -276,13 +276,13 @@ export default {
   props: {
     tokensWithBalance: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
     suppliedFrom: {
       type: Object,
-      default: function() {
+      default: function () {
         return {
           symbol: 'ETH',
           name: 'Ethereum'
@@ -291,7 +291,7 @@ export default {
     },
     suppliedTo: {
       type: Object,
-      default: function() {
+      default: function () {
         return {
           symbol: 'BTC',
           name: 'Bitcoin'
@@ -924,7 +924,7 @@ export default {
                   rate: +entry.rate,
                   minValue: entry.minValue || 0,
                   maxValue: entry.maxValue || 0,
-                  computeConversion: function(_fromValue) {
+                  computeConversion: function (_fromValue) {
                     const rate = new BigNumber(entry.rate);
                     return new BigNumber(_fromValue)
                       .times(rate)

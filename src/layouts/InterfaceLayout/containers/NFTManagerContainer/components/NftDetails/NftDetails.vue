@@ -68,7 +68,7 @@ export default {
     },
     nft: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
@@ -78,13 +78,13 @@ export default {
     },
     nftConfig: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
     getImage: {
       type: Function,
-      default: function() {}
+      default: function () {}
     }
   },
   data() {

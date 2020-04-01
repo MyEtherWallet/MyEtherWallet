@@ -72,11 +72,11 @@ export default {
     },
     print: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     switchAddr: {
       type: Function,
-      default: function() {}
+      default: function () {}
     }
   },
   data() {

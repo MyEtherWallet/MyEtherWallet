@@ -45,7 +45,7 @@ export default {
     },
     claimFunc: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     loading: {
       type: Boolean,

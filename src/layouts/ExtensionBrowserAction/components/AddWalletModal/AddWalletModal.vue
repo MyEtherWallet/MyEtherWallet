@@ -81,7 +81,7 @@
                   ref="jsonInput"
                   type="file"
                   name="file"
-                  style="display: none"
+                  style="display: none;"
                   @change="uploadFile"
                 />
               </div>
@@ -525,7 +525,7 @@ export default {
   },
   watch: {
     mnemonicPhraseHolder: {
-      handler: function(newVal) {
+      handler: function (newVal) {
         if (newVal[0] && newVal[0].split(' ').length > 1) {
           this.mnemonicValue = newVal[0].split(' ').length > 12 ? 24 : 12;
           newVal[0].split(' ').forEach((item, idx) => {
@@ -708,7 +708,7 @@ export default {
     uploadFile(evt) {
       const _self = this;
       const reader = new FileReader();
-      reader.onloadend = function(event) {
+      reader.onloadend = function (event) {
         try {
           _self.file = JSON.parse(event.target.result);
           _self.step += 1;
@@ -741,7 +741,7 @@ export default {
         type: 'unlockWallet',
         data: [this.file, this.password]
       });
-      worker.onmessage = function(e) {
+      worker.onmessage = function (e) {
         const obj = {
           file: _self.file,
           name: e.data.filename
@@ -758,7 +758,7 @@ export default {
         _self.password = '';
         worker.terminate();
       };
-      worker.onerror = function(e) {
+      worker.onerror = function (e) {
         e.preventDefault();
         _self.loading = false;
         Toast.responseHandler(e, Toast.ERROR);
@@ -810,7 +810,7 @@ export default {
         );
         worker.terminate();
       };
-      worker.onerror = function(e) {
+      worker.onerror = function (e) {
         Toast.responseHandler(e, false);
         _self.loading = false;
         worker.terminate();
@@ -915,7 +915,7 @@ export default {
         );
         worker.terminate();
       };
-      worker.onerror = function(e) {
+      worker.onerror = function (e) {
         Toast.responseHandler(e, false);
         this.loading = false;
         worker.terminate();

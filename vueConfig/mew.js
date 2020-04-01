@@ -3,6 +3,7 @@ const UglifyJS = require('uglify-es');
 const env_vars = require('../ENV_VARS');
 const defaultConfigs = require('./defaultConfigs');
 const webpackConfig = {
+  devtool: defaultConfigs.devtool,
   node: {
     process: true
   },

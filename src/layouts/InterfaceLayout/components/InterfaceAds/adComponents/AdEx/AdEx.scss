@@ -8,6 +8,9 @@
   overflow: hidden;
   margin: 0 auto;
   text-align: center;
+  @media all and (max-width: 1550px) {
+    max-width: 366px;
+  }
   .inner-adex {
     margin: 0 auto;
     text-align: center;

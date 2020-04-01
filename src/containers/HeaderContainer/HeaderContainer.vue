@@ -5,7 +5,7 @@
       <router-link
         v-show="
           $route.fullPath === '/create-wallet' ||
-            ($route.fullPath === '/access-my-wallet' && !isMewCx)
+          ($route.fullPath === '/access-my-wallet' && !isMewCx)
         "
         to="/getting-started"
       >
@@ -156,7 +156,7 @@
                     <notification
                       v-if="
                         $route.fullPath.includes('view-wallet-info') ||
-                          $route.fullPath.includes('interface')
+                        $route.fullPath.includes('interface')
                       "
                       ref="notification"
                     />
