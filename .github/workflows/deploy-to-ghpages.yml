@@ -10,11 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: master
 
       - name: verify tag
         run: |
-          git fetch
           git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^master$'
+          git checkout $GITHUB_SHA
 
       - name: setup env
         run: |
