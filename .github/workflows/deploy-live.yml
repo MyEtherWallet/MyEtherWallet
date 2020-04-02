@@ -13,7 +13,7 @@ jobs:
 
       - name: verify tag
         run: |
-          git fetch --prune --unshallow
+          git fetch
           echo $GITHUB_SHA
           git branch --contains $GITHUB_SHA
           git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^master$'
