@@ -12,7 +12,10 @@ const webpackConfig = {
     host: 'localhost',
     hotOnly: true,
     port: 8080,
-    headers: defaultConfigs.headers
+    headers: defaultConfigs.headers,
+    watchOptions: {
+      poll: true
+    }
   },
   plugins: defaultConfigs.plugins.concat([
     new CopyWebpackPlugin([
