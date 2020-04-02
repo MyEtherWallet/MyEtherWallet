@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex align-center">
-    <img src="@/assets/images/Icons/mew-connect.svg" />
+    <img src="@/assets/images/icons/icon-mew-connect.svg" />
     <div class="mew-connect-text ml-1">
       <div>MEWconnect</div>
       <div>Connected...</div>

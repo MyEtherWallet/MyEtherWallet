@@ -2,7 +2,7 @@
   <div class="position--relative">
     <Notifications :open="openNotifications" :close="closeNotifications" />
     <v-btn icon @click="openNotifications = true">
-      <img src="@/assets/images/Icons/notifications.svg" />
+      <img src="@/assets/images/icons/icon-notifications.svg" />
     </v-btn>
     <div
       class="notification-count cursor--pointer d-flex align-center justify-center"
