@@ -10,11 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        run: |
-          git fetch --prune --unshallow
 
       - name: verify tag
         run: |
+          git fetch --prune --unshallow
           echo $GITHUB_SHA
           git branch --contains $GITHUB_SHA
           git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^master$'
