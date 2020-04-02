@@ -111,7 +111,7 @@ export default {
           img: brittany
         },
         {
-          name: 'Duke & Richie Wolf',
+          name: 'Duke & Wolf',
           position: 'Blockchain Community Specialist',
           img: richie
         },
