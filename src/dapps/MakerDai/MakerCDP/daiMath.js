@@ -16,10 +16,7 @@ export function debtCeiling(line) {
 }
 
 export function liquidationPenalty(chop) {
-  return new BigNumber(chop.toString())
-    .dividedBy(RAY)
-    .minus(1)
-    .toNumber();
+  return new BigNumber(chop.toString()).dividedBy(RAY).minus(1).toNumber();
 }
 
 export function liquidationRatio(mat) {
@@ -40,10 +37,7 @@ const secondsPerYear = 60 * 60 * 24 * 365;
 export function annualStabilityFee(duty) {
   duty = new BigNumber(duty.toString()).dividedBy(RAY);
   BigNumber.config({ POW_PRECISION: 100 });
-  return duty
-    .pow(secondsPerYear)
-    .minus(1)
-    .toNumber();
+  return duty.pow(secondsPerYear).minus(1).toNumber();
 }
 
 // cdp math

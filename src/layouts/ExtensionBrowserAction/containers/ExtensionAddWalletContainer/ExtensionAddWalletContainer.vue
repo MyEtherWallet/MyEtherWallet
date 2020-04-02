@@ -282,7 +282,7 @@ export default {
           type !== 'priv' ? mnemonicType : privateKeyType
         );
       };
-      worker.onerror = function(e) {
+      worker.onerror = function (e) {
         Toast.responseHandler(e, false);
         this.loading = false;
       };
@@ -296,7 +296,7 @@ export default {
         this.file = e.data.walletJson;
         this.unlockJson();
       };
-      worker.onerror = function(e) {
+      worker.onerror = function (e) {
         Toast.responseHandler(e, false);
         this.loading = false;
       };
@@ -352,17 +352,18 @@ export default {
           'add',
           _self.storeWalletCb
         );
-        chrome.tabs.query({ url: `*://*.${service.toLowerCase()}/*` }, function(
-          tab
-        ) {
-          const obj = {
-            event: SELECTED_MEW_CX_ACC,
-            payload: [account]
-          };
-          chrome.storage.sync.set(eventObj, function() {});
-          chrome.tabs.sendMessage(tab[0].id, obj);
-          window.close();
-        });
+        chrome.tabs.query(
+          { url: `*://*.${service.toLowerCase()}/*` },
+          function (tab) {
+            const obj = {
+              event: SELECTED_MEW_CX_ACC,
+              payload: [account]
+            };
+            chrome.storage.sync.set(eventObj, function () {});
+            chrome.tabs.sendMessage(tab[0].id, obj);
+            window.close();
+          }
+        );
       } else {
         ExtensionHelpers.addWalletToStore(
           account,

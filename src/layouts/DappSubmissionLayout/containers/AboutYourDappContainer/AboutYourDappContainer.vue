@@ -424,7 +424,7 @@ export default {
     },
     form: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     }
@@ -550,13 +550,13 @@ export default {
       } else {
         img.src = url;
 
-        img.onload = function() {
+        img.onload = function () {
           img.width > 1200 || img.height > 630
             ? vm.onMockFileChangeError('exceededSize')
             : vm.onMockFileChangeSuccess(file, url);
         };
 
-        img.onerror = function() {
+        img.onerror = function () {
           vm.onMockFileChangeError('uploadError');
         };
       }
@@ -585,7 +585,7 @@ export default {
       vm.form.dappIconFile = '';
       vm.form.dappIconUrl = '';
 
-      img.onload = function() {
+      img.onload = function () {
         if (img.height > 192 || img.width > 192) {
           vm.dappIconError =
             'The image dimensions are too big. Dimensions must be 192px by 192px.';
@@ -598,7 +598,7 @@ export default {
         }
       };
 
-      img.onerror = function() {
+      img.onerror = function () {
         vm.dappIconError = 'Upload error. Please try a different file.';
         vm.updateDappIcon(true);
       };
@@ -614,7 +614,7 @@ export default {
       vm.form.bannerUrl = '';
       img.src = url;
 
-      img.onload = function() {
+      img.onload = function () {
         if (img.width < 1200 || img.height < 206) {
           vm.bannerError =
             'The image dimensions are too small. Dimensions must be at least 1200px* 206px.';
@@ -627,7 +627,7 @@ export default {
         }
       };
 
-      img.onerror = function() {
+      img.onerror = function () {
         vm.bannerError = 'Upload error. Please try a different file.';
         vm.updateBanner(true);
       };

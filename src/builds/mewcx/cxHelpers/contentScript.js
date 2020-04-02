@@ -103,7 +103,7 @@ const chrome = window.chrome;
 const extensionID = chrome.runtime.id;
 let getAccountModalIsOPen = false;
 
-chrome.storage.onChanged.addListener(function(res) {
+chrome.storage.onChanged.addListener(function (res) {
   if (
     res.hasOwnProperty('defNetwork') &&
     res.defNetwork.hasOwnProperty('oldValue') &&
@@ -134,7 +134,7 @@ chrome.storage.onChanged.addListener(function(res) {
   }
 });
 
-chrome.runtime.onMessage.addListener(function(request, _, callback) {
+chrome.runtime.onMessage.addListener(function (request, _, callback) {
   if (
     request.event === SELECTED_MEW_CX_ACC ||
     request.event === REJECT_MEW_CX_ACC
@@ -161,7 +161,7 @@ chrome.runtime.onMessage.addListener(function(request, _, callback) {
 });
 
 const events = {};
-events[WEB3_SUBSCRIBE] = function(e) {
+events[WEB3_SUBSCRIBE] = function (e) {
   const payload = recursivePayloadStripper(e.detail);
   chrome.runtime.sendMessage(
     extensionID,
@@ -172,7 +172,7 @@ events[WEB3_SUBSCRIBE] = function(e) {
     {}
   );
 };
-events[WEB3_GET_TX_COUNT] = function(e) {
+events[WEB3_GET_TX_COUNT] = function (e) {
   const payload = recursivePayloadStripper(e.detail);
   chrome.runtime.sendMessage(
     extensionID,
@@ -190,7 +190,7 @@ events[WEB3_GET_TX_COUNT] = function(e) {
     }
   );
 };
-events[WEB3_QUERY_GASPRICE] = function() {
+events[WEB3_QUERY_GASPRICE] = function () {
   chrome.runtime.sendMessage(
     extensionID,
     {
@@ -206,7 +206,7 @@ events[WEB3_QUERY_GASPRICE] = function() {
     }
   );
 };
-events[WEB3_GET_GAS] = function(e) {
+events[WEB3_GET_GAS] = function (e) {
   const payload = recursivePayloadStripper(e.detail);
   chrome.runtime.sendMessage(
     extensionID,
@@ -224,7 +224,7 @@ events[WEB3_GET_GAS] = function(e) {
     }
   );
 };
-events[WEB3_UNSUBSCRIBE] = function(e) {
+events[WEB3_UNSUBSCRIBE] = function (e) {
   const payload = recursivePayloadStripper(e.detail);
   chrome.runtime.sendMessage(
     extensionID,
@@ -251,13 +251,13 @@ events[WEB3_UNSUBSCRIBE] = function(e) {
   );
 };
 
-events[WEB3_DETECTED] = function() {
+events[WEB3_DETECTED] = function () {
   chrome.runtime.sendMessage(extensionID, {
     event: CX_WEB3_DETECTED
   });
 };
 
-events[WEB3_RPC_REQUEST] = function(e) {
+events[WEB3_RPC_REQUEST] = function (e) {
   chrome.runtime.sendMessage(
     extensionID,
     {
@@ -283,7 +283,7 @@ events[WEB3_RPC_REQUEST] = function(e) {
   );
 };
 
-events[WEB3_GET_ACC] = function(e) {
+events[WEB3_GET_ACC] = function (e) {
   const url = extractRootDomain(e.detail.from);
   chrome.storage.sync.get(url, storedAccounts => {
     const meta = {};
@@ -324,7 +324,7 @@ events[WEB3_GET_ACC] = function(e) {
   });
 };
 
-events[WEB3_SEND_TX] = function(e) {
+events[WEB3_SEND_TX] = function (e) {
   const newPayload = {
     tx: recursivePayloadStripper(e.detail.tx),
     url: stripTags(window.location.origin)
@@ -335,7 +335,7 @@ events[WEB3_SEND_TX] = function(e) {
   });
 };
 
-events[WEB3_SEND_SIGN_MSG] = function(e) {
+events[WEB3_SEND_SIGN_MSG] = function (e) {
   const newPayload = {
     msgToSign: recursivePayloadStripper(e.detail.msgToSign),
     address: stripTags(e.detail.address),

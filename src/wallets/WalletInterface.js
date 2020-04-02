@@ -123,9 +123,7 @@ class WalletInterface {
           ])
         );
       } else {
-        signer(msg)
-          .then(resolve)
-          .catch(reject);
+        signer(msg).then(resolve).catch(reject);
       }
     });
   }

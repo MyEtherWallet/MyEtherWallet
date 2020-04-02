@@ -69,7 +69,7 @@ export default {
     },
     createCommitment: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     loading: {
       type: Boolean,

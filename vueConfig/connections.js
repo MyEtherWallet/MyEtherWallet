@@ -55,6 +55,10 @@ module.exports = [
   'wss://connect.mewapi.io:443',
   'wss://connect2.mewapi.io:443',
   'https://protocol-api.aave.com:443',
+  'wss://bridge.walletconnect.org:443',
+  'http://localhost:8178',
+  'ws://127.0.0.1:8178',
+  'https://viewm.moonicorn.network:443',
   'https://localhost:1991', // server for bcvault
   'wss://bridge.walletconnect.org:443',
   'api.dex.ag:443',

@@ -8,7 +8,7 @@
       @currentflag="flagChange"
     />
 
-    <!-- Mobile menu header ************************************ -->
+    <!-- Mobile menu header (STARTS) -->
     <div
       :class="!isOnTop && !isMenuOpen ? 'small-menu' : ''"
       class="mobile-menu-header"
@@ -43,116 +43,52 @@
             <p>{{ $t('common.buy-eth') }}</p>
           </div>
         </a>
-        <mobile-menu-button
-          :ismenuopen="isMenuOpen"
-          @click.native="isMenuOpen = !isMenuOpen"
-        />
+        <mobile-menu-button :ismenuopen="false" @click.native="openMenu" />
       </div>
     </div>
-    <!-- Mobile menu header ************************************ -->
-    <!-- Mobile menu shadow backdrop ************************************ -->
+    <!-- Mobile menu header (ENDS) -->
+
     <div
       :class="isMenuOpen ? 'menu-open' : ''"
       class="mobile-menu-shadow-backdrop"
     ></div>
-    <!-- Mobile menu shadow backdrop ************************************ -->
-    <!-- Mobile menu content ************************************ -->
+
     <div
+      class="mobile-menu-content-container"
       :class="isMenuOpen ? 'menu-open' : ''"
-      class="mobile-menu-content--container"
     >
-      <div class="mobile-menu-content">
-        <div v-if="account.address" class="block--container">
-          <mobile-balance-block />
-          <mobile-network-block :block-number="blockNumber" />
-        </div>
-        <ul>
-          <li>
-            <router-link
-              to="/"
-              @click.native="
-                scrollTop();
-                isMenuOpen = false;
-              "
-            >
-              <div class="menu-link-block">
-                <div>{{ $t('common.home') }}</div>
-                <i class="fa fa-angle-right" aria-hidden="true"></i>
-              </div>
-            </router-link>
-          </li>
-          <li v-if="isHomePage && !isMewCx">
-            <router-link to="/#about-mew" @click.native="isMenuOpen = false">
-              <div class="menu-link-block">
-                <div>{{ $t('common.about') }}</div>
-                <i class="fa fa-angle-right" aria-hidden="true"></i>
-              </div>
-            </router-link>
-          </li>
-          <li v-if="isMewCx">
-            <router-link to="/#faqs" @click.native="isMenuOpen = false">
-              <div class="menu-link-block">
-                <div>{{ $t('common.faqs') }}</div>
-                <i class="fa fa-angle-right" aria-hidden="true"></i>
-              </div>
-            </router-link>
-          </li>
-          <li>
-            <div
-              class="menu-link-block"
-              @click="langSelectorOpen = !langSelectorOpen"
-            >
-              <div>{{ $t('interface.language') }}</div>
-              <div class="selected-lang">
-                <div>{{ currentLang }}</div>
-                <img
-                  :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
-                  alt
-                />
-              </div>
-              <i class="fa fa-angle-right" aria-hidden="true"></i>
-            </div>
-          </li>
-          <li v-if="account.address">
-            <div class="menu-link-block" @click="opensettings">
-              <div>{{ $t('interface.settings') }}</div>
-              <i class="fa fa-angle-right" aria-hidden="true"></i>
-            </div>
-          </li>
-        </ul>
-        <div v-if="account.address" class="logout-button" @click="logout">
-          <button>{{ $t('interface.logout') }}</button>
-        </div>
-      </div>
+      <mobile-menu-content
+        :close-menu="closeMenu"
+        :logout="logout"
+        :opensettings="opensettings"
+        :language-menu="languageMenuOpen"
+      />
     </div>
-    <!-- Mobile menu content ************************************ -->
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import MobileMenuContent from './components/MobileMenuContent';
 import MobileMenuButton from './components/MobileMenuButton';
-import MobileBalanceBlock from './components/MobileBalanceBlock';
-import MobileNetworkBlock from './components/MobileNetworkBlock';
 import MobileLanguageSelector from './components/MobileLanguageSelector';
 import { Misc } from '@/helpers';
 import supportedLang from '../../supportedLang';
 
 export default {
   components: {
+    'mobile-menu-content': MobileMenuContent,
     'mobile-menu-button': MobileMenuButton,
-    'mobile-balance-block': MobileBalanceBlock,
-    'mobile-network-block': MobileNetworkBlock,
     'mobile-language-selector': MobileLanguageSelector
   },
   props: {
     opensettings: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     logout: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     buildType: {
       type: String,
@@ -197,6 +133,9 @@ export default {
     };
   },
   methods: {
+    languageMenuOpen() {
+      this.langSelectorOpen = !this.langSelectorOpen;
+    },
     getCurrentLang() {
       const storedLocale = this.supportedLanguages.find(item => {
         return item.langCode === this.locale;
@@ -206,6 +145,7 @@ export default {
       this.currentFlag = storedLocale.flag;
       this.currentLang = storedLocale.name;
     },
+
     langChange(data) {
       this.currentLang = data;
     },
@@ -223,6 +163,19 @@ export default {
       } else {
         this.isOnTop = true;
       }
+    },
+    openMenu() {
+      this.isMenuOpen = true;
+      const x = document.getElementsByTagName('BODY')[0];
+      x.classList.add('overflow--hidden');
+
+      const y = document.querySelector('.mobile-menu-content-container');
+      y.scrollTo(0, 0);
+    },
+    closeMenu() {
+      this.isMenuOpen = false;
+      const x = document.getElementsByTagName('BODY')[0];
+      x.classList.remove('overflow--hidden');
     }
   }
 };

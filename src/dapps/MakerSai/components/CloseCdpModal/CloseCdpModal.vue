@@ -141,7 +141,7 @@ export default {
   props: {
     tokensWithBalance: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
@@ -151,7 +151,7 @@ export default {
     },
     values: {
       type: Object,
-      default: function() {
+      default: function () {
         return {
           maxPethDraw: '',
           maxEthDraw: '',
@@ -168,7 +168,7 @@ export default {
     },
     makerManager: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     }
@@ -247,9 +247,7 @@ export default {
     enoughMkr() {
       const mkrNeeded = this.values.governanceFeeOwed;
       if (mkrNeeded) {
-        return toBigNumber(this.mkrBalance)
-          .minus(mkrNeeded)
-          .gte(0);
+        return toBigNumber(this.mkrBalance).minus(mkrNeeded).gte(0);
       }
       return false;
     },
@@ -257,9 +255,7 @@ export default {
       if (this.values.zeroDebt) return true;
       const daiNeeded = this.values.debtValue;
       if (daiNeeded) {
-        return toBigNumber(this.daiBalance)
-          .minus(daiNeeded)
-          .gte(0);
+        return toBigNumber(this.daiBalance).minus(daiNeeded).gte(0);
       }
       return false;
     },

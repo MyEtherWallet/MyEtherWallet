@@ -161,7 +161,7 @@ export default {
   props: {
     networkAndAddressOpen: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     isMetaMask: {
       type: Boolean,

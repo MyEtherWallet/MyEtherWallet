@@ -40,7 +40,7 @@
         <div
           v-if="
             title !== balanceTitles.aggregatedBal &&
-              title !== balanceTitles.collateral
+            title !== balanceTitles.collateral
           "
         >
           <span class="percentage"
@@ -61,11 +61,11 @@
             :style="{ width: comp.percentage + '%', background: comp.color }"
             :title="
               comp.symbol +
-                ' ' +
-                convertToFixed(comp.amount, 'percentageLeft') +
-                ' ' +
-                comp.percentage +
-                '%'
+              ' ' +
+              convertToFixed(comp.amount, 'percentageLeft') +
+              ' ' +
+              comp.percentage +
+              '%'
             "
           ></div>
         </div>

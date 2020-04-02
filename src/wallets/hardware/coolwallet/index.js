@@ -145,9 +145,9 @@ class CoolWallet {
   }
 }
 
-const createWallet = async (transport, password) => {
+const createWallet = async (_, password) => {
   const _coolWallet = new CoolWallet();
-  await _coolWallet.init(transport, password);
+  await _coolWallet.init(password);
   return _coolWallet;
 };
 createWallet.errorHandler = errorHandler;

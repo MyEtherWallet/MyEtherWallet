@@ -39,10 +39,7 @@ describe('CreateWalletInput.vue', () => {
     const strengthClass = 'strengthClass';
     wrapper.setData({ strengthClass });
     expect(
-      wrapper
-        .find('span')
-        .classes()
-        .indexOf(strengthClass)
+      wrapper.find('span').classes().indexOf(strengthClass)
     ).toBeGreaterThan(-1);
 
     const switcher = sinon.stub();

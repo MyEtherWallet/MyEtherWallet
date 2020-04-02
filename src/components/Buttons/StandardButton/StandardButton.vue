@@ -108,7 +108,7 @@ export default {
   props: {
     options: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
@@ -122,7 +122,7 @@ export default {
     },
     clickFunction: {
       type: Function,
-      default: function() {
+      default: function () {
         return;
       }
     }

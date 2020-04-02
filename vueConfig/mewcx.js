@@ -3,7 +3,7 @@ const env_vars = require('../ENV_VARS');
 const path = require('path');
 const defaultConfig = require('./defaultConfigs');
 const webpackConfig = {
-  devtool: 'source-map',
+  devtool: defaultConfig.devtool,
   entry: {
     app: './src/main.js',
     contentScript: './src/builds/mewcx/cxHelpers/contentScript.js',
