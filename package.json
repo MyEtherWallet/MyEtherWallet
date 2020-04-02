@@ -103,7 +103,7 @@
     "bignumber.js": "9.0.0",
     "bip39": "3.0.2",
     "bitbox02-api": "0.4.0",
-    "bootstrap-vue": "2.9.0",
+    "bootstrap-vue": "2.10.0",
     "codecov": "3.6.5",
     "copy-webpack-plugin": "5.1.1",
     "detectrtc": "1.4.0",
@@ -172,6 +172,7 @@
   },
   "greenkeeper": {
     "ignore": [
+      "graphql",
       "ethereum-ens",
       "multicoin-address-validator",
       "@xkeshi/vue-qrcode",
