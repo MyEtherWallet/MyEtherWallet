@@ -1,3 +1,9 @@
+### Release v5.5.1-hotfix.1
+
+### Devop
+
+- Remove woof version [#](https://github.com/MyEtherWallet/MyEtherWallet/pull/)
+
 ### Release v5.5.1
 
 ### Feature
