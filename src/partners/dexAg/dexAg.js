@@ -1,7 +1,8 @@
 import BigNumber from 'bignumber.js';
 
-import { ERC20, networkSymbols } from '../partnersConfig';
+import { ERC20, networkSymbols, EthereumTokens } from '../partnersConfig';
 import { Toast } from '@/helpers';
+
 import DEXAG from 'dexag-sdk';
 
 import {
@@ -30,6 +31,7 @@ export default class DexAg {
     console.log(DEXAG.fromProvider); // todo remove dev item
     this.sdk = DEXAG.fromProvider(props.web3.currentProvider);
     this.network = props.network || networkSymbols.ETH;
+    this.EthereumTokens = EthereumTokens;
     this.getRateForUnit =
       typeof props.getRateForUnit === 'boolean' ? props.getRateForUnit : false;
     this.hasRates = 0;
@@ -212,7 +214,6 @@ export default class DexAg {
       ).methods.approve(spender, fromValueWei);
       console.log('methodObject', methodObject); // todo remove dev item
       return {
-
         to: tokenAddress,
         value: 0,
         data: methodObject.encodeABI()
@@ -226,10 +227,7 @@ export default class DexAg {
   async prepareApprovals(fromAddress, providerAddress, fromCurrency, metadata) {
     let userCap = true;
     console.log(fromAddress, providerAddress, fromCurrency, metadata); // todo remove dev item
-    const isTokenApprovalNeeded = async (
-      fromToken,
-      fromAddress
-    ) => {
+    const isTokenApprovalNeeded = async (fromToken, fromAddress) => {
       if (fromToken === this.baseCurrency)
         return { approve: false, reset: false };
 
@@ -262,14 +260,16 @@ export default class DexAg {
       /*
       .input.spender
       * */
-      return new Set(await Promise.all([
-        await this.approve(metadata.input.address, 0, providerAddress),
-        await this.approve(
-          metadata.input.address,
-          metadata.input.amount,
-          providerAddress
-        )
-      ]));
+      return new Set(
+        await Promise.all([
+          await this.approve(metadata.input.address, 0, providerAddress),
+          await this.approve(
+            metadata.input.address,
+            metadata.input.amount,
+            providerAddress
+          )
+        ])
+      );
     } else if (approve) {
       return new Set([
         await this.approve(
@@ -285,10 +285,12 @@ export default class DexAg {
     // throw Error(errorMessage);
   }
 
-  async generateDataForTransactions(providerAddress, tradeDetails, swapDetails) {
+  async generateDataForTransactions(
+    providerAddress,
+    tradeDetails,
+    swapDetails
+  ) {
     try {
-
-
       // const preparedTradeTxs = await this.prepareApprovals(
       //   swapDetails.fromAddress,
       //   providerAddress,
@@ -297,7 +299,7 @@ export default class DexAg {
       // );
 
       const preparedTradeTxs = new Set();
-      preparedTradeTxs.add({gas: 1000000, ...tradeDetails.trade});
+      preparedTradeTxs.add({ gas: 1000000, ...tradeDetails.trade });
       console.log(tradeDetails, 'gets here'); // todo remove dev item
       console.log(preparedTradeTxs, 'preparedTradeTxs'); // todo remove dev item
 
@@ -333,21 +335,27 @@ export default class DexAg {
     //   toAmount: swapDetails.toValue,
     //   dex: dexToUse
     // });
-
+    // swapDetails.fromValue = this.convertToTokenWei(swapDetails.fromCurrency, swapDetails.fromValue);
     const tradeDetails = await this.createTransaction(swapDetails, dexToUse);
     console.log(tradeDetails, 'tradeDetails'); // todo remove dev item
-    const providerAddress = tradeDetails.metadata.input ? tradeDetails.metadata.input.spender ? tradeDetails.metadata.input.spender : tradeDetails.trade.to  : tradeDetails.trade.to;
-    console.log('providerAddress, tradeDetails, {...swapDetails}', providerAddress, tradeDetails, {...swapDetails}); // todo remove dev item
-    swapDetails.dataForInitialization = await this.generateDataForTransactions(providerAddress, tradeDetails, {...swapDetails});
+    const providerAddress = tradeDetails.metadata.input
+      ? tradeDetails.metadata.input.spender
+        ? tradeDetails.metadata.input.spender
+        : tradeDetails.trade.to
+      : tradeDetails.trade.to;
+    console.log(
+      'providerAddress, tradeDetails, {...swapDetails}',
+      providerAddress,
+      tradeDetails,
+      { ...swapDetails }
+    ); // todo remove dev item
+    swapDetails.dataForInitialization = await this.generateDataForTransactions(
+      providerAddress,
+      tradeDetails,
+      { ...swapDetails }
+    );
     console.log(swapDetails, 'swapDetails.dataForInitialization'); // todo remove dev item
-    // swapDetails.toValue = new BigNumber(finalRate).times(
-    //   new BigNumber(swapDetails.fromValue).toFixed(18).toString()
-    // );
-    //
-    // swapDetails.finalRate = this.calculateNormalizedExchangeRate(
-    //   swapDetails.toValue,
-    //   swapDetails.fromValue
-    // );
+
     swapDetails.isExitToFiat = false;
     swapDetails.providerReceives = swapDetails.fromValue;
     swapDetails.providerSends = tradeDetails.metadata.query.toAmount;
@@ -365,7 +373,7 @@ export default class DexAg {
   }
 
   async createTransaction(swapDetails, dexToUse) {
-    return dexAgCalls.createTransaction({dex: dexToUse, ...swapDetails})
+    return dexAgCalls.createTransaction({ dex: dexToUse, ...swapDetails });
   }
 
   static parseOrder(order) {
@@ -427,10 +435,10 @@ export default class DexAg {
   getTokenAddress(token) {
     try {
       if (utils.stringEqual(networkSymbols.ETH, token)) {
-        return this.currencies[token].contractAddress;
+        return this.EthereumTokens[token].contractAddress;
       }
       return this.web3.utils.toChecksumAddress(
-        this.currencies[token].contractAddress
+        this.EthereumTokens[token].contractAddress
       );
     } catch (e) {
       errorLogger(e);
@@ -440,7 +448,7 @@ export default class DexAg {
 
   getTokenDecimals(token) {
     try {
-      return new BigNumber(this.currencies[token].decimals).toNumber();
+      return new BigNumber(this.EthereumTokens[token].decimals).toNumber();
     } catch (e) {
       errorLogger(e);
       throw Error(
