@@ -31,7 +31,7 @@
       <Address class="mt-1 mb-2" :address="address" />
       <div class="d-flex align-center">
         <Tooltip text="Print">
-          <v-btn text icon :color="iconColor">
+          <v-btn text icon :color="iconColor" @click="openPaperWallet = true">
             <img src="@/assets/images/icons/icon-printer-white.svg" />
           </v-btn>
         </Tooltip>
@@ -59,19 +59,22 @@
       </div>
     </div>
     <ChangeAddress :open="openChangeAddress" :close="closeChangeAddress" />
+    <PaperWallet :open="openPaperWallet" :close="closePaperWallet" />
   </div>
 </template>
 
 <script>
 import ChangeAddress from '@/components/Overlays/ChangeAddress';
+import PaperWallet from '@/components/Overlays/PaperWallet';
 import Blockie from '@/web/components/Blockie';
 import Address from './components/Address';
 import Tooltip from '@/web/components/Tooltip';
 export default {
-  components: { Blockie, Tooltip, Address, ChangeAddress },
+  components: { Blockie, Tooltip, Address, ChangeAddress, PaperWallet },
   data() {
     return {
       openChangeAddress: false,
+      openPaperWallet: false,
       iconColor: 'white',
       address: '0xc2a933600c3fe776777b4000665409c61493d417'
     };
@@ -79,6 +82,9 @@ export default {
   methods: {
     closeChangeAddress() {
       this.openChangeAddress = false;
+    },
+    closePaperWallet() {
+      this.openPaperWallet = false;
     }
   }
 };
