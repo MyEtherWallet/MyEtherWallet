@@ -12,9 +12,10 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: verify tag
-        run: echo $GITHUB_SHA
-        run: git branch --contains $GITHUB_SHA
-        run: git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^master$'
+        run: |
+          echo $GITHUB_SHA
+          git branch --contains $GITHUB_SHA
+          git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^master$'
 
       - name: setup env
         run: |
