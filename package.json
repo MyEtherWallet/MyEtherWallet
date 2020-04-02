@@ -41,7 +41,7 @@
     "apollo-link-ws": "1.0.19",
     "chart.js": "2.9.3",
     "core-js": "3.6.4",
-    "graphql": "14.6.0",
+    "graphql": "15.0.0",
     "graphql-tag": "2.10.3",
     "html2canvas": "1.0.0-rc.5",
     "idna-uts46": "1.1.0",
