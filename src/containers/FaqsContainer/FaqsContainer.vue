@@ -117,7 +117,7 @@ export default {
     };
   },
   methods: {
-    openFAQ: function(faqToOpen) {
+    openFAQ: function (faqToOpen) {
       this.faqs[faqToOpen].open = !this.faqs[faqToOpen].open;
     }
   }

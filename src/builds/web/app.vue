@@ -4,7 +4,7 @@
     <header-container
       v-show="
         $route.fullPath !== '/getting-started' &&
-          !$route.fullPath.includes('/dapp-submission')
+        !$route.fullPath.includes('/dapp-submission')
       "
     />
     <welcome-modal ref="welcome" />
@@ -72,10 +72,13 @@ export default {
   },
   mounted() {
     this.checkIfOnline(navigator.onLine);
-    this.$refs.walletLaunch.$refs.walletLaunch.show();
 
     if (!store.get('notFirstTimeVisit') && this.$route.fullPath === '/') {
       this.$refs.welcome.$refs.welcome.show();
+    }
+
+    if (this.$route.fullPath !== '/qr-code') {
+      this.$refs.walletLaunch.$refs.walletLaunch.show();
     }
 
     this.$refs.welcome.$refs.welcome.$on('hidden', () => {

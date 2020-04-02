@@ -98,7 +98,7 @@
               <i
                 v-show="
                   selectedApp.network.name_long === 'Custom Paths' &&
-                    !path.hasOwnProperty('default')
+                  !path.hasOwnProperty('default')
                 "
                 class="fa fa-times remove-custom"
                 @click.stop="remove(path, idx)"
@@ -170,7 +170,7 @@ export default {
   },
   watch: {
     selectedApp: {
-      handler: function(newVal) {
+      handler: function (newVal) {
         this.selectedPath = newVal.paths[0];
       },
       deep: true

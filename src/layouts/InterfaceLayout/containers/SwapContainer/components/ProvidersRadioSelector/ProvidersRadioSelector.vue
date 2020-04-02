@@ -227,19 +227,19 @@ export default {
   props: {
     allSupportedProviders: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
     providerData: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
     noProvidersPair: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
@@ -257,13 +257,13 @@ export default {
     },
     providersFound: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
     providerSelected: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
@@ -416,7 +416,7 @@ export default {
     setSelectedProvider(provider) {
       this.providerChosen = provider;
       const providerEls = document.getElementsByClassName('providers');
-      Array.prototype.forEach.call(providerEls, function(el) {
+      Array.prototype.forEach.call(providerEls, function (el) {
         el.classList.remove('radio-selected');
       });
       const clickedEl = document.getElementsByClassName(provider)[0];
@@ -474,10 +474,7 @@ export default {
       }
     },
     valueForRate(rate, value) {
-      return toBigNumber(value)
-        .times(rate)
-        .toFixed(6)
-        .toString(10);
+      return toBigNumber(value).times(rate).toFixed(6).toString(10);
     }
   }
 };

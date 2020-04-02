@@ -83,10 +83,7 @@ xdescribe('ManageENSContainer.vue', () => {
     it('should render correct transferDomain props', () => {
       const transferDomain = sinon.stub();
       wrapper.setData({ transferDomain });
-      wrapper
-        .findAll('.submit-container button')
-        .at(1)
-        .trigger('click');
+      wrapper.findAll('.submit-container button').at(1).trigger('click');
       expect(transferDomain.called).toBe(true);
     });
   });

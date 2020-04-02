@@ -71,13 +71,13 @@ export default {
     },
     rawTx: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
     pathUpdate: {
       type: Function,
-      default: function() {}
+      default: function () {}
     }
   },
   data() {

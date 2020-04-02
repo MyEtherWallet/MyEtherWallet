@@ -14,7 +14,7 @@ describe('PrivateKeyModal.vue', () => {
     let localVue, i18n, wrapper, store;
     window.matchMedia =
       window.matchMedia ||
-      function() {
+      function () {
         return {
           matches: false,
           addListener: jest.fn(),

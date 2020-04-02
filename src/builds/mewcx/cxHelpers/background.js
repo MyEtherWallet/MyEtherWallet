@@ -114,7 +114,7 @@ const eventsListeners = (request, _, callback) => {
 
   const payload = utils._.mapObject(
     Object.assign({}, request.payload),
-    function(val) {
+    function (val) {
       return helpers.recursivePayloadStripper(val);
     }
   );
@@ -139,7 +139,7 @@ const eventsListeners = (request, _, callback) => {
   middleware.run(obj, callback);
   return true;
 };
-chrome.tabs.query({ active: true, lastFocusedWindow: true }, function(tabs) {
+chrome.tabs.query({ active: true, lastFocusedWindow: true }, function (tabs) {
   querycB(tabs);
 });
 
@@ -172,7 +172,7 @@ function onUpdatedCb(_, __, tab) {
   }
 }
 function onActivatedCb(info) {
-  chrome.tabs.get(info.tabId, function(tab) {
+  chrome.tabs.get(info.tabId, function (tab) {
     if (
       typeof tab !== 'undefined' &&
       Object.keys(tab).length > 0 &&
@@ -251,7 +251,7 @@ function querycB(tab) {
         chrome.tabs.update(null, { url: urlRedirect });
       } else {
         // Injects web3
-        chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
+        chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function () {
           chrome.tabs.sendMessage(tab.id, {
             event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
           });
@@ -259,7 +259,7 @@ function querycB(tab) {
       }
     } else {
       // Injects web3
-      chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
+      chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function () {
         chrome.tabs.sendMessage(tab.id, {
           event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
         });

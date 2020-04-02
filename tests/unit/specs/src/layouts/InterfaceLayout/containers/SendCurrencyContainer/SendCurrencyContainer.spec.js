@@ -92,11 +92,7 @@ describe('SendCurrencyContainer.vue', () => {
         currencyElement.trigger('click');
         const selectedCurrency = wrapper.vm.$data.selectedCurrency;
         expect(
-          currencyElement
-            .find('p')
-            .text()
-            .trim()
-            .indexOf(selectedCurrency.name)
+          currencyElement.find('p').text().trim().indexOf(selectedCurrency.name)
         ).toBeGreaterThan(-1);
       }
     });

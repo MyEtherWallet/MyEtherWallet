@@ -155,7 +155,7 @@ export default {
   },
   mounted() {
     const _self = this;
-    window.chrome.storage.sync.get(_self.linkQuery.from, function(res) {
+    window.chrome.storage.sync.get(_self.linkQuery.from, function (res) {
       _self.signingKeystore = JSON.parse(res[_self.linkQuery.from]).priv;
     });
   },
@@ -187,7 +187,7 @@ export default {
         type: 'unlockWallet',
         data: [JSON.parse(this.signingKeystore), this.password]
       });
-      worker.onmessage = function(e) {
+      worker.onmessage = function (e) {
         _self.loading = false;
         _self.$refs.passwordModal.$refs.passwordModal.hide();
         _self.signAndSend(
@@ -195,7 +195,7 @@ export default {
         );
       };
 
-      worker.onerror = function(e) {
+      worker.onerror = function (e) {
         e.preventDefault();
         _self.loading = false;
         _self.error = {
@@ -208,7 +208,7 @@ export default {
       const _self = this;
       window.chrome.tabs.query(
         { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
-        function(tab) {
+        function (tab) {
           const obj = {
             event: REJECT_MEW_TX_SIGN
           };
@@ -233,7 +233,7 @@ export default {
           if (res.hasOwnProperty('message')) {
             window.chrome.tabs.query(
               { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
-              function(tab) {
+              function (tab) {
                 const obj = {
                   event: REJECT_MEW_TX_SIGN,
                   payload: res.message
@@ -246,7 +246,7 @@ export default {
           }
           window.chrome.tabs.query(
             { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
-            function(tab) {
+            function (tab) {
               const obj = {
                 event: MEW_TX_HASH,
                 payload: res

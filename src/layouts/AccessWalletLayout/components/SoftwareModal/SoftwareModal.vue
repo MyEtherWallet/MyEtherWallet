@@ -36,7 +36,7 @@
           ref="jsonInput"
           type="file"
           name="file"
-          style="display: none"
+          style="display: none;"
           @change="uploadFile"
         />
       </div>
@@ -81,15 +81,15 @@ export default {
     },
     openPassword: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     openMnemonicPhraseInput: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     openPrivateKeyInput: {
       type: Function,
-      default: function() {}
+      default: function () {}
     }
   },
   data() {
@@ -147,7 +147,7 @@ export default {
     uploadFile(e) {
       const self = this;
       const reader = new FileReader();
-      reader.onloadend = function(evt) {
+      reader.onloadend = function (evt) {
         try {
           self.$emit('file', JSON.parse(evt.target.result));
           self.file = JSON.parse(evt.target.result);

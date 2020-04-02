@@ -243,13 +243,13 @@ export default {
     },
     reserves: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
     userReserves: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
