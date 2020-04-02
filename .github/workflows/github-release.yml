@@ -13,7 +13,7 @@ jobs:
 
       - name: verify tag
         run: |
-          git fetch --prune --unshallow
+          git fetch
           git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^master$'
 
       - name: setup env
