@@ -11,6 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: verify tag
+        run: git branch --contains $GITHUB_SHA | sed -e 's/^[ \t]*//' | grep '^master$'
+
       - name: setup env
         run: |
           docker build -t mew-build-container .
