@@ -101,6 +101,7 @@ import { WalletInterface } from '@/wallets';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { Transaction } from 'ethereumjs-tx';
 import { Misc } from '@/helpers';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 import {
   REJECT_MEW_TX_SIGN,
   MEW_TX_HASH,
@@ -155,8 +156,9 @@ export default {
   },
   mounted() {
     const _self = this;
-    window.chrome.storage.sync.get(_self.linkQuery.from, function (res) {
-      _self.signingKeystore = JSON.parse(res[_self.linkQuery.from]).priv;
+    const from = toChecksumAddress(_self.linkQuery.from);
+    window.chrome.storage.sync.get(from, function (res) {
+      _self.signingKeystore = JSON.parse(res[from]).priv;
     });
   },
   methods: {

@@ -2,18 +2,22 @@
 import MewCxProvider from '@/wallets/web3-provider/providers/mew-cx-web3';
 // import { WEB3_DETECTED } from './cxEvents';
 const ethereumProvider = new MewCxProvider().setMaxListeners(0); // setting to 0 to remove listener warning
+console.log(window.hasOwnProperty('web3'), window.hasOwnProperty('ethereum'));
 if (
-  (window.hasOwnProperty('web3') &&
-    !window.web3.currentProvider.hasOwnProperty('isMew')) ||
-  (window.hasOwnProperty('ethereum') &&
-    !window.ethereum.hasOwnProperty('isMew'))
+  (window.hasOwnProperty('web3') && window.web3) ||
+  (window.hasOwnProperty('ethereum') && window.ethereum)
 ) {
-  // const event = new CustomEvent(
-  //   WEB3_DETECTED.replace('{{id}}', window.extensionID)
-  // );
-  // window.dispatchEvent(event);
+  if (
+    window.web3.currentProvider.isMew ||
+    window.ethereum.currentProvider.isMew
+  ) {
+    //     const event = new CustomEvent(
+    //   WEB3_DETECTED.replace('{{id}}', window.extensionID)
+    // );
+    window.dispatchEvent(event);
+  }
 } else {
   // eslint-disable-next-line
-  console.info('MEWCX Web3 provider injected');
+    console.info('MEWCX Web3 provider injected');
   window.ethereum = ethereumProvider;
 }
