@@ -47,7 +47,7 @@ export default {
     },
     account: {
       type: Object,
-      default: function() {}
+      default: function () {}
     },
     orderNumber: {
       type: Number,

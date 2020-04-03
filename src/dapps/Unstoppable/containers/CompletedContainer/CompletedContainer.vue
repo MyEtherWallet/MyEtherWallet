@@ -40,7 +40,7 @@ export default {
     },
     account: {
       type: Object,
-      default: function() {}
+      default: function () {}
     }
   },
   computed: {
