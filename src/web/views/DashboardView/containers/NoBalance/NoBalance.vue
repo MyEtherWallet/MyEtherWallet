@@ -4,12 +4,7 @@
       <div class="block-title display-1 font-weight-bold mb-6">
         My ETH balance is empty
       </div>
-      <StdButton
-        buttonclass="button--green"
-        size="x-large"
-        :minwidth="false"
-        fontclass="font-weight-regular"
-      >
+      <StdButton buttonclass="button--green" size="x-large" :minwidth="false">
         Buy ETH with a credit card
       </StdButton>
       <div class="d-flex align-center mt-4">
