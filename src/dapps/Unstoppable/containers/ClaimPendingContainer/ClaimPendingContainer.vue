@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import { Toast } from '@/helpers';
 export default {
   props: {
     domainName: {
@@ -97,7 +98,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err);
+          Toast.responseHandler(err, Toast.ERROR);
         });
     }, 5000);
   },
