@@ -12,7 +12,9 @@
     <div class="overlay-close-button">
       <CloseButton :text="closeText" @click.native="close" />
     </div>
-    <slot />
+    <div class="overlay-content-block py-10">
+      <slot />
+    </div>
   </v-overlay>
 </template>
 
@@ -27,7 +29,7 @@ export default {
     closeText: { default: '', type: String },
     open: { default: false, type: Boolean },
     close: {
-      default: function() {
+      default: function () {
         return {};
       },
       type: Function
@@ -56,5 +58,13 @@ export default {
   position: fixed;
   top: 50px;
   left: 70px;
+}
+
+.overlay-content-block {
+  max-height: 100vh;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 </style>
