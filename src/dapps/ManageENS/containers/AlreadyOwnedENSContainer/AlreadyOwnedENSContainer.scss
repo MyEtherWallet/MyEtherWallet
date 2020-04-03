@@ -10,6 +10,28 @@
     padding: 20px 6px;
   }
 
+  .container-with-avatar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    flex-direction: column;
+
+    .img-info-container {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+
+      img {
+        width: 75px;
+      }
+
+      .profile-img {
+        margin-right: 15px;
+      }
+    }
+  }
+
   .content-container {
     background-color: $light-green-1;
     border-radius: 5px;
