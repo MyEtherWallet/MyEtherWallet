@@ -37,6 +37,17 @@ export default {
   },
   data() {
     return {};
+  },
+  watch: {
+    open(val) {
+      if (val === true) {
+        // Set html element unscrollable
+        document.getElementsByTagName('html')[0].style.overflowY = 'hidden';
+      } else {
+        // Set html element scrollable
+        document.getElementsByTagName('html')[0].style.overflowY = 'initial';
+      }
+    }
   }
 };
 </script>
