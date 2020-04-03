@@ -192,6 +192,8 @@ const AddrResolver = {
       return false;
     };
 
+    const checkAvatar = function (domain) {};
+
     const resolveDomain = async function (domain) {
       const messagePar = document.createElement('p');
       const _this = vnode.context;
