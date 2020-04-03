@@ -1,54 +1,59 @@
+// ------------------------------
+// Vuetify custom styles
+// ------------------------------
+// Set maximum size for "v-container"
 @media (min-width: 1904px) {
   .container {
     max-width: 1185px !important;
   }
 }
-
-// Themes ===========================================================
+// Remove "default background color"
+.theme--light.v-application {
+  background: white !important;
+}
+.v-toolbar__content {
+  padding: 0;
+}
 #app.theme--light .v-sheet,
 #app.theme--light .v-application {
   color: $light-text !important;
 }
-
 #app.theme--dark .v-sheet,
 #app.theme--dark .v-application {
   color: $blue-1 !important;
 }
-
 #app.theme--light .theme--light-text--white {
   color: white !important;
 }
-
 #app.theme--light .theme--light-text--dark-space {
   color: $dark-space !important;
 }
-
 #app.theme--dark .theme--dark-text--white {
   color: white !important;
 }
-
 #app.theme--dark .theme--dark-text--blue {
   color: $blue-1 !important;
 }
 
-// Style reset ======================================================
-html {
-  font-size: 14px;
-}
-
+// ------------------------------
+// Font style reset
+// ------------------------------
 * {
   font-family: "Roboto";
   box-sizing: content-box;
 }
-
+html {
+  font-size: 14px;
+}
+.monospace {
+  font-family: monospace !important;
+}
 a {
   color: inherit !important;
 }
-
 i {
   font-family: "Material Icons" !important;
 }
-
 div,
 p {
   font-size: 14px;
@@ -57,151 +62,102 @@ p {
   margin: 0;
   font-weight: 400;
 }
-
 p {
   letter-spacing: 0.3px;
 }
-
 h1 {
   font-size: 42px;
   font-weight: 500;
 }
-
 h2 {
   font-size: 30px;
   font-weight: 700;
   line-height: 36px;
 }
-
 h3 {
   font-size: 24px;
   font-weight: 400;
 }
-
 h4 {
   font-size: 20px;
   font-weight: 400;
   line-height: 27px;
 }
-
 h5 {
   font-size: 16px;
   font-weight: 400;
 }
 
-// Vuetify custom styles ============================================
-// Remove default background color
-.theme--light.v-application {
-  background: white !important;
-}
-
-.v-toolbar__content {
-  padding: 0;
-}
-
-// Common classes ===================================================
-.noscroll {
-  height: 100vh;
-  overflow-y: hidden;
-}
-
+// ------------------------------
+// Mouse
+// ------------------------------
 .pointer-event--none {
   pointer-events: none;
 }
-
-.position--relative {
-  position: relative;
-}
-
-.overflow--initial {
-  overflow: initial;
-}
-
 .user-select--none {
   user-select: none;
 }
-
-.width--initial {
-  width: initial;
-}
-
-.line-height--0 {
-  line-height: 0 !important;
-}
-
-.text-transform--initial {
-  text-transform: initial !important;
-}
-
-.text-decoration--none {
-  text-decoration: none !important;
-}
-
-.text-color--mew-green {
-  color: $emerald !important;
-}
-
-.text-color--red {
-  color: $red-1 !important;
-}
-
-.text-color--gray1 {
-  color: $gray-1 !important;
-}
-
-.text-color--dark-sacramento {
-  color: $dark-sacramento !important;
-}
-
-.font-weight--600 {
-  font-weight: 600 !important;
-}
-
-.font-weight--500 {
-  font-weight: 500 !important;
-}
-
-.border-radius--5px {
-  border-radius: 5px !important;
-}
-
-.border-radius--10px {
-  border-radius: 10px !important;
-}
-
-.border--white {
-  border-color: white !important;
-  border: 1px solid white !important;
-}
-
-.overflow--hidden {
-  overflow: hidden !important;
-}
-
-.white-space--nowrap {
-  white-space: nowrap;
-}
-
 .cursor--pointer {
   cursor: pointer;
 }
 
-.display--block {
-  display: block;
+// ------------------------------
+// Text
+// ------------------------------
+.line-height--0 {
+  line-height: 0 !important;
+}
+.text-transform--initial {
+  text-transform: initial !important;
+}
+.text-decoration--none {
+  text-decoration: none !important;
+}
+.font-weight--600 {
+  font-weight: 600 !important;
+}
+.font-weight--500 {
+  font-weight: 500 !important;
+}
+.white-space--nowrap {
+  white-space: nowrap;
 }
 
-.monospace {
-  font-family: monospace !important;
+// ------------------------------
+// Other
+// ------------------------------
+.noscroll {
+  height: 100vh;
+  overflow-y: hidden;
 }
-
-.vertical-align--middle {
-  vertical-align: middle;
+.overflow--hidden {
+  overflow: hidden !important;
 }
-
+.overflow--initial {
+  overflow: initial;
+}
+.position--relative {
+  position: relative;
+}
+.width--initial {
+  width: initial;
+}
 .width--100-percent {
   width: 100%;
 }
-
+.border-radius--5px {
+  border-radius: 5px !important;
+}
+.border-radius--10px {
+  border-radius: 10px !important;
+}
+.border--white {
+  border-color: white !important;
+  border: 1px solid white !important;
+}
+.display--block {
+  display: block;
+}
 .list-style-type--none {
   list-style-type: none;
 }
