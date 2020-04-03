@@ -133,14 +133,14 @@ export default {
     },
     account: {
       type: Object,
-      default: function() {}
+      default: function () {}
     },
     web3: {
       type: Object,
-      default: function() {}
+      default: function () {}
     },
-    copiedToClipboard: { type: Function, default: function() {} },
-    setOrderNumber: { type: Function, default: function() {} }
+    copiedToClipboard: { type: Function, default: function () {} },
+    setOrderNumber: { type: Function, default: function () {} }
   },
   data() {
     return {

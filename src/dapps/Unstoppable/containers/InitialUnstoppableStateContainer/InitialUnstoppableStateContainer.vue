@@ -58,7 +58,7 @@ export default {
   props: {
     checkDomain: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     loading: {
       type: Boolean,
