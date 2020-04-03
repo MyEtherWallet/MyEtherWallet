@@ -1,0 +1,29 @@
+@import '../../Unstoppable';
+.claim-pending-container {
+  @extend %template-container;
+
+  display: flex;
+  justify-content: center;
+}
+.copy-container {
+  padding: 15px;
+  width: 88%;
+  overflow-wrap: break-word;
+  h3 {
+    font-weight: 600;
+  }
+  h5 {
+    color: initial;
+    line-height: initial;
+  }
+  .middle-copy {
+    padding: 15px 0;
+  }
+}
+
+.spinner-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}

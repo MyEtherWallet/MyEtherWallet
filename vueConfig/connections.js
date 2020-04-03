@@ -58,6 +58,7 @@ module.exports = [
   'wss://bridge.walletconnect.org:443',
   'http://localhost:8178',
   'ws://127.0.0.1:8178',
-  'https://viewm.moonicorn.network:443',
-  'https://localhost:1991' // server for bcvault
+  'https://localhost:1991', // server for bcvault
+  'wss://bridge.walletconnect.org:443',
+  'https://unstoppabledomains.com:443'
 ];
