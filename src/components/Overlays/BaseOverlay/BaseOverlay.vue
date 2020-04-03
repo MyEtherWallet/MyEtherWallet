@@ -12,7 +12,7 @@
     <div class="overlay-close-button">
       <CloseButton :text="closeText" @click.native="close" />
     </div>
-    <div class="overlay-content-block py-10">
+    <div class="overlay-content-block d-flex flex-column align-center py-10">
       <slot />
     </div>
   </v-overlay>
@@ -74,6 +74,8 @@ export default {
 .overlay-content-block {
   max-height: 100vh;
   overflow-y: scroll;
+  width: 100vw;
+
   &::-webkit-scrollbar {
     display: none;
   }
