@@ -35,7 +35,11 @@ export default new Vuetify({
         componentBackgroundColor1: '#ffffff',
         componentShadowColor1: '#ececec',
         footerBackgroundColor: '#ffffff',
-        overlayBackground: '#f2fafa'
+        overlayBackground: '#f2fafa',
+        gray1: '#96a8b6',
+        gray2: '#4d687e',
+        gray3: '#ececec',
+        gray4: '#6d89a6'
       },
       dark: {
         emerald: '#05c0a5',
@@ -62,7 +66,11 @@ export default new Vuetify({
         componentBackgroundColor1: '#151a29',
         componentShadowColor1: '#3c3c3c',
         footerBackgroundColor: '#151a29',
-        overlayBackground: '#151a29'
+        overlayBackground: '#151a29',
+        gray1: '#96a8b6',
+        gray2: '#4d687e',
+        gray3: '#ececec',
+        gray4: '#6d89a6'
       }
     }
   }
