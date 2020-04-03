@@ -6,7 +6,7 @@
         <div class="pa-10">
           <div class="d-flex justify-space-between align-start">
             <div class="d-flex align-center">
-              <img width="100" src="@/assets/images/icons/logo-mew-dark.png" />
+              <img height="40" src="@/assets/images/icons/logo-mew-dark.png" />
               <div class="text-color--mew-green">
                 <span class="mx-3">|</span>Paper Wallet
               </div>
@@ -46,7 +46,7 @@
               />
             </v-sheet>
             <v-sheet color="transparent" max-width="400px">
-              <div class="subtitle-1 font-weight-bold text-uppercase">
+              <div class="subtitle-1 font-weight-black text-uppercase">
                 My address icon
               </div>
               <div>
@@ -58,14 +58,79 @@
               </div>
             </v-sheet>
           </div>
-          <div class="mt-4 d-flex">
-            <v-sheet color="grey">aaa</v-sheet>
-            <div>
-              <VueQrcode
-                value="Hello, World!"
-                :options="{ size: 100 }"
-              ></VueQrcode>
-            </div>
+          <div class="mt-4 d-flex align-content-stretch">
+            <v-theme-provider root>
+              <v-sheet
+                class="d-flex flex-column justify-center flex-grow-1 px-8"
+                color="gray3"
+              >
+                <div class="subtitle-1 font-weight-black text-uppercase">
+                  My Address
+                </div>
+                <div>{{ address }}</div>
+              </v-sheet>
+            </v-theme-provider>
+            <v-sheet height="130px" class="qr-image">
+              <VueQrcode :value="address" :options="{ size: 130 }"></VueQrcode>
+            </v-sheet>
+          </div>
+
+          <div
+            class="cut-line my-5 mx-n4 gray3--text overflow--hidden white-space--nowrap"
+          >
+            --------------------------------------------------------------------------------------------------------
+          </div>
+
+          <div class="font-weight-black">
+            You might LOSE your MONEY if you share this Private Key with anyone!
+          </div>
+          <div class="mt-4 d-flex align-content-stretch">
+            <v-theme-provider root>
+              <v-sheet
+                class="d-flex flex-column justify-center flex-grow-1 px-8"
+                color="gray3"
+              >
+                <div class="subtitle-1 font-weight-black text-uppercase">
+                  My Address
+                </div>
+                <div>{{ address }}</div>
+              </v-sheet>
+            </v-theme-provider>
+            <v-sheet height="130px" class="qr-image">
+              <VueQrcode :value="address" :options="{ size: 130 }"></VueQrcode>
+            </v-sheet>
+          </div>
+          <div class="mt-4 d-flex align-content-stretch">
+            <v-theme-provider root>
+              <v-sheet
+                class="d-flex flex-column justify-center flex-grow-1 px-8"
+                color="gray3"
+              >
+                <div
+                  class="subtitle-1 font-weight-black text-uppercase red--text"
+                >
+                  My Private Key
+                </div>
+                <div>{{ key }}</div>
+              </v-sheet>
+            </v-theme-provider>
+            <v-sheet height="130px" class="qr-image">
+              <VueQrcode :value="key" :options="{ size: 130 }"></VueQrcode>
+            </v-sheet>
+          </div>
+
+          <div
+            class="cut-line my-5 mx-n4 gray3--text overflow--hidden white-space--nowrap"
+          >
+            --------------------------------------------------------------------------------------------------------
+          </div>
+
+          <div class="text-center">
+            <img
+              src="@/assets/images/backgrounds/bg-paper-wallet.png"
+              alt="Spaceman"
+              height="250"
+            />
           </div>
         </div>
       </WhiteSheet>
@@ -116,6 +181,16 @@ export default {
 
 <style lang="scss" scoped>
 .overlay-content {
-  width: 700px;
+  width: 800px;
+}
+
+.qr-image {
+  margin: -6px 0;
+}
+
+.cut-line {
+  font-size: 22px;
+  letter-spacing: 5px;
+  text-align: center;
 }
 </style>
