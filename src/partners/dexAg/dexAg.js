@@ -10,7 +10,9 @@ import {
   ChangellyCurrencies,
   statuses,
   TIME_SWAP_VALID,
-  PROVIDER_NAME
+  PROVIDER_NAME,
+  DEX_AG_WALLET_PROXY,
+  PROXY_CONTRACT_ADDRESS
 } from './config';
 import dexAgCalls from './dexAg-calls';
 import changellyApi from './dexAg-api';
@@ -30,6 +32,9 @@ export default class DexAg {
     this.baseCurrency = 'ETH';
     console.log(DEXAG.fromProvider); // todo remove dev item
     this.sdk = DEXAG.fromProvider(props.web3.currentProvider);
+    this.sdk.registerStatusHandler((status, data)=>{
+      console.log(status, data)
+    });
     this.network = props.network || networkSymbols.ETH;
     this.EthereumTokens = EthereumTokens;
     this.getRateForUnit =
@@ -208,10 +213,10 @@ export default class DexAg {
     console.log('approve', tokenAddress, fromValueWei, spender); // todo remove dev item
     let transferGasEst;
     try {
-      const methodObject = new this.web3.eth.Contract(
+      const methodObject = (new this.web3.eth.Contract(
         ERC20,
         tokenAddress
-      ).methods.approve(spender, fromValueWei);
+      )).methods.approve(spender, fromValueWei);
       console.log('methodObject', methodObject); // todo remove dev item
       return {
         to: tokenAddress,
@@ -224,9 +229,29 @@ export default class DexAg {
     }
   }
 
-  async prepareApprovals(fromAddress, providerAddress, fromCurrency, metadata) {
+  async prepareApprovals(fromAddress, proxyAddress, fromCurrency, metadata) {
     let userCap = true;
-    console.log(fromAddress, providerAddress, fromCurrency, metadata); // todo remove dev item
+    console.log(fromAddress, PROXY_CONTRACT_ADDRESS, fromCurrency, metadata); // todo remove dev item
+    const contract = new this.web3.eth.Contract(
+      [  {
+        constant: true,
+        inputs: [],
+        name: 'approvalHandler',
+        outputs: [
+          {
+            name: '',
+            type: 'address'
+          }
+        ],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function'
+      }],
+      PROXY_CONTRACT_ADDRESS
+    )
+    console.log(contract.methods); // todo remove dev item
+    const providerAddress = await contract.methods.approvalHandler().call();
+    console.log('providerAddress', providerAddress); // todo remove dev item
     const isTokenApprovalNeeded = async (fromToken, fromAddress) => {
       if (fromToken === this.baseCurrency)
         return { approve: false, reset: false };
@@ -262,11 +287,11 @@ export default class DexAg {
       * */
       return new Set(
         await Promise.all([
-          await this.approve(metadata.input.address, 0, providerAddress),
+          await this.approve(metadata.input.address, providerAddress, 0),
           await this.approve(
             metadata.input.address,
-            metadata.input.amount,
-            providerAddress
+            providerAddress,
+            metadata.input.amount
           )
         ])
       );
@@ -287,23 +312,31 @@ export default class DexAg {
 
   async generateDataForTransactions(
     providerAddress,
+    swapDetails,
     tradeDetails,
-    swapDetails
+    dexAgTradeDetails
   ) {
     try {
-      // const preparedTradeTxs = await this.prepareApprovals(
-      //   swapDetails.fromAddress,
-      //   providerAddress,
-      //   swapDetails.fromCurrency,
-      //   tradeDetails.metadata
-      // );
+      const preparedTradeTxs = await this.prepareApprovals(
+        swapDetails.fromAddress,
+        providerAddress,
+        swapDetails.fromCurrency,
+        tradeDetails.metadata
+      );
 
-      const preparedTradeTxs = new Set();
-      preparedTradeTxs.add({ gas: 1000000, ...tradeDetails.trade });
+      // const preparedTradeTxs = new Set();
+
+      const tx = {
+        to: tradeDetails.trade.to,
+        data: tradeDetails.trade.data,
+        value: tradeDetails.trade.value,
+      };
+      console.log('tx', tx); // todo remove dev item
+      preparedTradeTxs.add({ gas: 1000000, ...tx });
       console.log(tradeDetails, 'gets here'); // todo remove dev item
       console.log(preparedTradeTxs, 'preparedTradeTxs'); // todo remove dev item
 
-      const swapTransactions = Array.from(preparedTradeTxs).reverse();
+      const swapTransactions = Array.from(preparedTradeTxs);
       console.log(swapTransactions, 'swapTransactions'); // todo remove dev item
 
       return [...swapTransactions];
@@ -328,14 +361,17 @@ export default class DexAg {
     const dexToUse = supported.includes(swapDetails.provider)
       ? swapDetails.provider
       : 'ag';
+    // let dexAgTradeDetails = {};
     // console.log(await this.createTransaction(swapDetails, dexToUse)); // todo remove dev item
-    // const tradeDetails = await this.sdk.getTrade({
+    // const dexAgTradeDetails = await this.sdk.getTrade({
     //   to: swapDetails.toCurrency,
     //   from: swapDetails.fromCurrency,
     //   toAmount: swapDetails.toValue,
-    //   dex: dexToUse
+    //   dex: dexToUse,
+    //   proxy: '0x05c449fb434183ef6702e3ff137c1e13cb90943e'
     // });
-    // swapDetails.fromValue = this.convertToTokenWei(swapDetails.fromCurrency, swapDetails.fromValue);
+
+
     const tradeDetails = await this.createTransaction(swapDetails, dexToUse);
     console.log(tradeDetails, 'tradeDetails'); // todo remove dev item
     const providerAddress = tradeDetails.metadata.input
@@ -351,8 +387,8 @@ export default class DexAg {
     ); // todo remove dev item
     swapDetails.dataForInitialization = await this.generateDataForTransactions(
       providerAddress,
-      tradeDetails,
-      { ...swapDetails }
+      { ...swapDetails },
+      tradeDetails
     );
     console.log(swapDetails, 'swapDetails.dataForInitialization'); // todo remove dev item
 

@@ -120,6 +120,59 @@ const validateAddress = async (addressDetails, network) => {
   }
 };
 
+const generateSend = async transactionParams => {
+  const url = `https://api-v2.dex.ag/send?token=${transactionParams.fromCurrency}&recipient=${transactionParams.toAddress}&fromAmount=${transactionParams.fromValue}&proxy=${PROXY_CONTRACT_ADDRESS}`;
+  console.log(url); // todo remove dev item
+  const results = await get(
+    url
+  );
+  console.log(results); // todo remove dev item
+  if (results.error) {
+    throw Error(results.error.message);
+  }
+
+  return results;
+}
+
+const  createTransactionTrade = async (transactionParams, network) => {
+  try {
+    console.log('createTransaction', transactionParams); // todo remove dev item
+    const url = `https://api-v2.dex.ag/trade?from=${transactionParams.fromCurrency}&to=${transactionParams.toCurrency}&fromAmount=${transactionParams.fromValue}&dex=${transactionParams.dex}&recipient=${transactionParams.toAddress}&proxy=${PROXY_CONTRACT_ADDRESS}`
+    console.log(url); // todo remove dev item
+    const results = await get(
+      url
+    );
+    console.log(results); // todo remove dev item
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+
+    return results;
+
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
+};
+
+const getSpenderAddress = async (transactionParams, network) => {
+  try {
+    const url = `https://api-v2.dex.ag/tradeAndSend?from=${transactionParams.fromCurrency}&to=${transactionParams.toCurrency}&fromAmount=${transactionParams.fromValue}&dex=${transactionParams.dex}&recipient=${transactionParams.toAddress}`//&proxy=${PROXY_CONTRACT_ADDRESS}`
+    console.log(url); // todo remove dev item
+    const results = await get(
+      url
+    );
+    console.log(results); // todo remove dev item
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+
+    return results;
+
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
+};
+
 const createTransaction = async (transactionParams, network) => {
   try {
     const url = `https://api-v2.dex.ag/tradeAndSend?from=${transactionParams.fromCurrency}&to=${transactionParams.toCurrency}&fromAmount=${transactionParams.fromValue}&dex=${transactionParams.dex}&recipient=${transactionParams.toAddress}&proxy=${PROXY_CONTRACT_ADDRESS}`
@@ -134,21 +187,6 @@ const createTransaction = async (transactionParams, network) => {
 
     return results;
 
-//     if (changellyMethods[network]) {
-// // needs the approval trasactions (see kyber)
-//       const url = `https://api-v2.dex.ag/tradeAndSend?from=${transactionParams.fromCurrency}&to=${transactionParams.toCurrency}&fromAmount=${transactionParams.fromValue}&dex=${transactionParams.dex}&recipient=${transactionParams.toAddress}`
-//       console.log(url); // todo remove dev item
-//       const results = await get(
-//         url
-//       );
-//       console.log(results); // todo remove dev item
-//       if (results.error) {
-//         throw Error(results.error.message);
-//       }
-//
-//       return [results.result];
-//     }
-//     return Promise.resolve(-1);
   } catch (e) {
     utils.handleOrThrow(e);
   }
@@ -237,5 +275,6 @@ export default {
   getStatus,
   login,
   getFixRate,
-  createFixTransaction
+  createFixTransaction,
+  generateSend
 };
