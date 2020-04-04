@@ -1,5 +1,5 @@
 <template>
-  <WhiteSheet>
+  <WhiteSheet class="mew-component--eth-balance">
     <div class="d-flex px-6 pt-7">
       <BlockTitle
         :icon="require('@/assets/images/currencies//eth.png')"
@@ -12,7 +12,6 @@
         <v-btn-toggle
           v-model="chartRange"
           class="chart-button-group"
-          :color="$vuetify.theme.themes.light.royalBlue"
           tile
           group
           dense
@@ -4128,10 +4127,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 .v-btn-toggle--group > .v-btn.v-btn,
 .chart-button-group .v-btn:before {
   border-radius: 5px;
+}
+</style>
+
+<style lang="scss">
+@import '@/assets/styles/GlobalVariables.scss';
+
+.mew-component--eth-balance {
+  .v-item--active {
+    &::before {
+      background-color: $royal-blue;
+      opacity: 1 !important;
+    }
+    .v-btn__content {
+      color: $white;
+    }
+  }
 }
 </style>
