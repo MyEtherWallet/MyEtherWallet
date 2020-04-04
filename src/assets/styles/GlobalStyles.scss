@@ -1,43 +1,38 @@
-// ------------------------------
-// Vuetify custom styles
-// ------------------------------
-// Set maximum size for "v-container"
+/*========== Vuetify Global Styles ==========*/
+/* Set maximum size for "v-container" */
 @media (min-width: 1904px) {
   .container {
     max-width: 1185px !important;
   }
 }
-// Remove "default background color"
+/* Remove "default background color" */
 .theme--light.v-application {
-  background: white !important;
+  background: $white !important;
 }
-.v-toolbar__content {
-  padding: 0;
-}
+/* Set light theme default text color */
 #app.theme--light .v-sheet,
 #app.theme--light .v-application {
-  color: $light-text !important;
+  color: $theme-light--text-color !important;
 }
+/* Set dark theme default text color */
 #app.theme--dark .v-sheet,
 #app.theme--dark .v-application {
-  color: $blue-1 !important;
+  color: $theme-dark--text-color !important;
 }
-#app.theme--light .theme--light-text--white {
-  color: white !important;
-}
+/* Force light theme default text color */
 #app.theme--light .theme--light-text--dark-space {
   color: $dark-space !important;
 }
-#app.theme--dark .theme--dark-text--white {
-  color: white !important;
-}
+/* Force dark theme default text color */
 #app.theme--dark .theme--dark-text--blue {
-  color: $blue-1 !important;
+  color: $theme-dark--text-color !important;
 }
-
-// ------------------------------
-// Font style reset
-// ------------------------------
+/* Force white text color */
+#app.theme--dark .theme--dark-text--white,
+#app.theme--light .theme--light-text--white {
+  color: $white !important;
+}
+/*========== CSS Style Reset ==========*/
 * {
   font-family: "Roboto";
   box-sizing: content-box;
@@ -87,23 +82,7 @@ h5 {
   font-size: 16px;
   font-weight: 400;
 }
-
-// ------------------------------
-// Mouse
-// ------------------------------
-.pointer-event--none {
-  pointer-events: none;
-}
-.user-select--none {
-  user-select: none;
-}
-.cursor--pointer {
-  cursor: pointer;
-}
-
-// ------------------------------
-// Text
-// ------------------------------
+/*========== Text ==========*/
 .line-height--0 {
   line-height: 0 !important;
 }
@@ -122,10 +101,17 @@ h5 {
 .white-space--nowrap {
   white-space: nowrap;
 }
-
-// ------------------------------
-// Other
-// ------------------------------
+/*========== Cursor ==========*/
+.pointer-event--none {
+  pointer-events: none;
+}
+.user-select--none {
+  user-select: none;
+}
+.cursor--pointer {
+  cursor: pointer;
+}
+/*========== Other ==========*/
 .noscroll {
   height: 100vh;
   overflow-y: hidden;
@@ -150,10 +136,6 @@ h5 {
 }
 .border-radius--10px {
   border-radius: 10px !important;
-}
-.border--white {
-  border-color: white !important;
-  border: 1px solid white !important;
 }
 .display--block {
   display: block;

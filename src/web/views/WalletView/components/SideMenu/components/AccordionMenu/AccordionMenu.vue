@@ -161,7 +161,7 @@ export default {
   }
 
   .theme--dark.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
-    color: $blue-1 !important;
+    color: theme-dark-text-color !important;
   }
 
   .theme--dark.v-list-item.v-list-item--active {
