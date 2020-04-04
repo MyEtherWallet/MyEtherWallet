@@ -1,7 +1,7 @@
 <template>
   <v-sheet
     color="bg_sidemenu"
-    class="border-radius--0px component--sidemenu px-4 py-7 d-flex flex-column"
+    class="component--sidemenu px-4 py-7 d-flex flex-column"
   >
     <div class="mb-4">
       <router-link :to="{ name: 'Dashboard' }">

@@ -14,7 +14,7 @@
         :key="key"
         text
         icon
-        :color="iconColor"
+        color="dark_space"
         :class="buttonClass"
         :href="i.link"
         target="_blank"
@@ -26,9 +26,7 @@
 </template>
 
 <script>
-import Vars from '@/common/plugins/variables.js';
 import BlockTitle from '@/web/components/BlockTitle';
-
 import Telegram from '@/assets/images/icons/icon-telegram-dark.svg';
 import Slack from '@/assets/images/icons/icon-slack-dark.svg';
 import Reddit from '@/assets/images/icons/icon-reddit-dark.svg';
@@ -64,8 +62,7 @@ export default {
       centered: false
     },
     buttonClass: 'mr-4',
-    iconSize: '27px',
-    iconColor: Vars.colors.iconColor
+    iconSize: '27px'
   })
 };
 </script>
