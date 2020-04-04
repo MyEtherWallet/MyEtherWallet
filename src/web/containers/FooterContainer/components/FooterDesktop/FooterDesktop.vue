@@ -149,9 +149,9 @@
           <v-btn
             v-for="i in icons"
             :key="i.icon"
+            color="dark_independence"
             text
             icon
-            :color="iconColor"
             class="mr-1"
             :href="i.link"
             target="_blank"
@@ -166,14 +166,11 @@
 </template>
 
 <script>
-import Vars from '@/common/plugins/variables.js';
 import FootNote from './components/FootNote';
 
 export default {
-  name: 'FooterDesktop',
   components: { FootNote },
   data: () => ({
-    iconColor: Vars.colors.footerIconColor,
     icons: [
       {
         link: 'https://www.facebook.com/MyEtherWallet',

@@ -340,11 +340,11 @@ export default {
   }
 
   &.light thead {
-    background-color: $theme-light--table-background;
+    background-color: $theme-light--table-background-color;
   }
 
   &.dark thead {
-    background-color: $theme-dark--table-background;
+    background-color: $theme-dark--table-background-color;
   }
 
   thead {

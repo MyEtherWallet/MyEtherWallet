@@ -19,6 +19,14 @@
 #app.theme--dark .v-application {
   color: $theme-dark--text-color !important;
 }
+/* Set light theme box-shadow for white sheet */
+#app.theme--light .box-shadow {
+  box-shadow: 0 0 15px $theme-light--white-sheet-shadow-color;
+}
+/* Set dark theme box-shadow for white sheet */
+#app.theme--dark .box-shadow {
+  box-shadow: 0 0 15px $theme-dark--white-sheet-shadow-color;
+}
 /* Force light theme default text color */
 #app.theme--light .theme--light-text--dark-space {
   color: $dark-space !important;
@@ -111,6 +119,24 @@ h5 {
 .cursor--pointer {
   cursor: pointer;
 }
+/*========== Border ==========*/
+.border--white {
+  border-color: $white !important;
+  border: 1px solid $white !important;
+}
+.border-radius--0px {
+  border-radius: 0px !important;
+}
+.border-radius--5px {
+  border-radius: 5px !important;
+}
+.border-radius--10px {
+  border-radius: 10px !important;
+}
+.border-radius-bottom--10px {
+  border-bottom-left-radius: 10px !important;
+  border-bottom-right-radius: 10px !important;
+}
 /*========== Other ==========*/
 .noscroll {
   height: 100vh;
@@ -130,12 +156,6 @@ h5 {
 }
 .width--100-percent {
   width: 100%;
-}
-.border-radius--5px {
-  border-radius: 5px !important;
-}
-.border-radius--10px {
-  border-radius: 10px !important;
 }
 .display--block {
   display: block;

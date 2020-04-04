@@ -1,9 +1,7 @@
 <template>
-  <div
-    class="component--sidemenu px-4 py-7 d-flex flex-column"
-    :style="{
-      backgroundColor: $vuetify.theme.themes[theme].sideMenuBackground
-    }"
+  <v-sheet
+    color="bg_sidemenu"
+    class="border-radius--0px component--sidemenu px-4 py-7 d-flex flex-column"
   >
     <div class="mb-4">
       <router-link :to="{ name: 'Dashboard' }">
@@ -16,7 +14,7 @@
     <Divider class="my-4 mx-1" />
     <SystemMenu class="mx-n1" />
     <ThemeSwitch class="px-5 mt-8" />
-  </div>
+  </v-sheet>
 </template>
 
 <script>
@@ -35,17 +33,13 @@ export default {
     SystemMenu,
     ThemeSwitch,
     Divider
-  },
-  computed: {
-    theme() {
-      return this.$vuetify.theme.dark ? 'dark' : 'light';
-    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/GlobalVariables.scss';
+
 .component--sidemenu {
   position: relative;
   width: 300px;

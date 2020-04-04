@@ -4,7 +4,6 @@
 
 <script>
 export default {
-  components: {},
   props: {
     title: { default: '', type: String }
   }
