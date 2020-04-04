@@ -35,7 +35,7 @@ export default {
   name: 'BlockTitle',
   props: {
     data: {
-      default: function() {
+      default: function () {
         return {};
       },
       type: Object
@@ -46,8 +46,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables';
-
 .top-title {
   letter-spacing: -0.3px;
   font-size: 16px;
