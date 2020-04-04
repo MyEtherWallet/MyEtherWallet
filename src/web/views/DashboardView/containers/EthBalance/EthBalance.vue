@@ -20,19 +20,15 @@
           <v-btn value="1d">
             1D
           </v-btn>
-
           <v-btn value="1w">
             1W
           </v-btn>
-
           <v-btn value="1m">
             1M
           </v-btn>
-
           <v-btn value="1y">
             1Y
           </v-btn>
-
           <v-btn value="all">
             All
           </v-btn>
@@ -42,13 +38,11 @@
         </v-btn>
       </div>
     </div>
-
     <ChartBalance
       :key="chartData.key"
       :data="chartData.data"
       class="px-3 mt-5"
     />
-
     <div class="d-flex align-center px-6 mt-2 pb-5">
       <div class="px-8"></div>
       <div class="d-flex align-center">
