@@ -1,19 +1,9 @@
 <template>
-  <div
-    class="features"
-    :style="{
-      backgroundColor: $vuetify.theme.themes[theme].backgroundColor
-    }"
-  >
+  <v-sheet class="border-radius--0px" color="bg_wallet">
     <div class="d-flex align-stretch">
-      <SideMenu class="side-menu-element" />
-      <div
-        class="wrapper pb-10"
-        :style="{
-          borderBottomColor: $vuetify.theme.themes[theme].footerBackgroundColor
-        }"
-      >
-        <v-container class="position--relative">
+      <SideMenu class="box-shadow" />
+      <div class="flex-grow-1 pb-10">
+        <v-container>
           <Header />
           <router-view />
         </v-container>
@@ -21,32 +11,15 @@
     </div>
 
     <Footer />
-  </div>
+  </v-sheet>
 </template>
 
 <script>
 import SideMenu from './components/SideMenu';
 import Header from './components/Header';
 import Footer from './components/Footer';
+
 export default {
-  name: 'Features',
-  components: { SideMenu, Header, Footer },
-  computed: {
-    theme() {
-      return this.$vuetify.theme.dark ? 'dark' : 'light';
-    }
-  }
+  components: { SideMenu, Header, Footer }
 };
 </script>
-
-<style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
-.side-menu-element {
-  box-shadow: 0 0 20px #0000002f;
-}
-.wrapper {
-  position: relative;
-  width: 100%;
-}
-</style>

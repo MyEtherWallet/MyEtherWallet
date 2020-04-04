@@ -16,23 +16,17 @@ $mint: #cdf2ee;
 $light-mint: #f2fafa;
 $spruce: #506175;
 $silver: #cecece;
-
-//$disabled-1: #d8d8d8;
-$disabled-2: #999;
-
 $gray-1: #96a8b6;
 $gray-2: #4d687e;
 $gray-3: #ececec;
 $gray-4: #6d89a6;
-
-$yellow-1: #ffe9c5;
-
-// Light Theme Colors ==========================================
-$theme-light--text-color: #0b2840;
+/*========== Light Theme ==========*/
+$theme-light--text-color: $dark-space;
 $theme-light--table-border-color: #efefef;
-$theme-light--table-background: #f9f9f9;
-
-// Dark Theme Colors ===========================================
+$theme-light--table-background-color: #f9f9f9;
+$theme-light--white-sheet-shadow-color: #ececec;
+/*========== Dark Theme ==========*/
 $theme-dark--text-color: #95aed8;
 $theme-dark--table-border-color: #383838;
-$theme-dark--table-background: #0f1320;
+$theme-dark--table-background-color: #0f1320;
+$theme-dark--white-sheet-shadow-color: #3c3c3c;

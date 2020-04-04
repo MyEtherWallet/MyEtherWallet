@@ -1,42 +1,25 @@
 <template>
   <div
-    class="d-flex align-center py-4 px-10 footer-container"
-    :style="{
-      boxShadow: '0 0 15px' + $vuetify.theme.themes[theme].componentShadowColor1
-    }"
+    class="d-flex align-center justify-space-between py-4 px-10 footer-container box-shadow"
   >
-    <div class="mew-copyright">
+    <div class="text_default--text">
       ©2020 MyEtherWallet. All rights reserved. Pricing taken from
-      <a href="/" targe="_blank">CoinMarketCap</a>
+      <a class="text-decoration--none" href="/" targe="_blank">CoinMarketCap</a>
     </div>
-    <div class="ml-auto d-flex align-center">
+    <div class="d-flex align-center text_default--text">
       <div>Feedback</div>
       <div class="mx-4">|</div>
       <div>Support</div>
       <div class="mx-4">|</div>
-      <div>English <v-icon>mdi-chevron-down</v-icon></div>
+      <div>
+        English <v-icon class="text_default--text">mdi-chevron-down</v-icon>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  components: {},
-  computed: {
-    theme() {
-      return this.$vuetify.theme.dark ? 'dark' : 'light';
-    }
-  }
+  components: {}
 };
 </script>
-
-<style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-.mew-copyright {
-  color: #999999;
-  a {
-    text-decoration: none;
-    color: $dark-sacramento !important;
-  }
-}
-</style>
