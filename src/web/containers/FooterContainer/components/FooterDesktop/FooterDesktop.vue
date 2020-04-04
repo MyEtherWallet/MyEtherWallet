@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="dark_space--text">
     <v-container class="pt-12 pb-6">
       <v-row>
         <v-col cols="2">
           <div class="subtitle-1 font-weight-bold mb-1">Tools</div>
-          <v-list>
+          <v-list class="dark_space--text">
             <v-list-item class="px-0">Verify Message</v-list-item>
             <v-list-item class="px-0">Txn Status</v-list-item>
             <v-list-item class="px-0">View Wallet Info</v-list-item>

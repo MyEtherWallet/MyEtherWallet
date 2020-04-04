@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <v-sheet light>
     <HeaderContainer />
     <router-view />
     <FooterContainer />
     <GlobalElementsContainer />
     <GlobalModalContainer />
-  </div>
+  </v-sheet>
 </template>
 
 <script>

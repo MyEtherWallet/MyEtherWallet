@@ -5,9 +5,14 @@
     max-width: 1185px !important;
   }
 }
-/* Remove "default background color" */
+/* Remove default background color */
 .theme--light.v-application {
   background: $white !important;
+}
+/* Remove default v-sheet border-radius */
+.theme--light.v-sheet,
+.theme--dark.v-sheet {
+  border-radius: 0;
 }
 /* Set light theme default text color */
 #app.theme--light .v-sheet,
@@ -123,9 +128,6 @@ h5 {
 .border--white {
   border-color: $white !important;
   border: 1px solid $white !important;
-}
-.border-radius--0px {
-  border-radius: 0px !important;
 }
 .border-radius--5px {
   border-radius: 5px !important;

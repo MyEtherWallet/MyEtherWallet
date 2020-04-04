@@ -1,19 +1,14 @@
 <template>
-  <v-btn fab x-small dark depressed :color="buttonColor" class="solo-button">
+  <v-btn fab x-small dark depressed color="royal_blue" class="solo-button">
     <slot />
   </v-btn>
 </template>
 
 <script>
-import Var from '@/common/plugins/variables.js';
 export default {
-  props: {
-    buttonclass: { default: 'button--green', type: String }
-  },
+  props: {},
   data() {
-    return {
-      buttonColor: Var.colorSets.royalBlue
-    };
+    return {};
   }
 };
 </script>
