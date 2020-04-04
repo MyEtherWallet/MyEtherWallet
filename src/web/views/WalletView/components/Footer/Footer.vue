@@ -1,6 +1,7 @@
 <template>
-  <div
-    class="d-flex align-center justify-space-between py-4 px-10 footer-container box-shadow"
+  <v-sheet
+    color="bg_white_sheet"
+    class="d-flex align-center justify-space-between py-4 px-10 box-shadow"
   >
     <div class="text_default--text">
       ©2020 MyEtherWallet. All rights reserved. Pricing taken from
@@ -15,7 +16,7 @@
         English <v-icon class="text_default--text">mdi-chevron-down</v-icon>
       </div>
     </div>
-  </div>
+  </v-sheet>
 </template>
 
 <script>

@@ -1,7 +1,6 @@
 <template>
   <WhiteSheet sideinfo class="px-7 py-5 d-flex justify-space-between">
     <NetworkOverlay :open="openNetworkOverlay" :close="closeNetworkOverlay" />
-
     <div>
       <BlockTitle :text="$t('common.network')">
         <template v-slot:object-next-to-title>
