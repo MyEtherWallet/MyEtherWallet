@@ -6,8 +6,8 @@
         <div class="pa-10">
           <div class="d-flex justify-space-between align-start">
             <div class="d-flex align-center">
-              <img height="40" src="@/assets/images/icons/logo-mew-dark.png" />
-              <div class="text-color--mew-green">
+              <img height="35" src="@/assets/images/icons/logo-mew-dark.png" />
+              <div class="emerald--text">
                 <span class="mx-3">|</span>Paper Wallet
               </div>
             </div>
@@ -45,18 +45,20 @@
                 :height="blockieSize"
               />
             </v-sheet>
-            <v-sheet color="transparent" max-width="400px">
-              <div class="subtitle-1 font-weight-black text-uppercase">
-                My address icon
-              </div>
-              <div>
-                Always look for the icon when sending to this wallet. And please
-                keep your paper wallet at a
-                <span class="text-uppercase red--text font-weight-medium"
-                  >Safe Place!</span
-                >
-              </div>
-            </v-sheet>
+            <v-theme-provider root>
+              <v-sheet color="transparent" max-width="400px">
+                <div class="subtitle-1 font-weight-black text-uppercase">
+                  My address icon
+                </div>
+                <div>
+                  Always look for the icon when sending to this wallet. And
+                  please keep your paper wallet at a
+                  <span class="text-uppercase red--text font-weight-medium"
+                    >Safe Place!</span
+                  >
+                </div>
+              </v-sheet>
+            </v-theme-provider>
           </div>
           <div class="mt-4 d-flex align-content-stretch">
             <v-theme-provider root>

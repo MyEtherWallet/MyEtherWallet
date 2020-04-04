@@ -62,11 +62,11 @@ export default {
   padding-right: 17px;
 
   &.light {
-    background-color: $light-table-background-1;
+    background-color: $theme-light--table-background;
   }
 
   &.dark {
-    background-color: $dark-table-background-1;
+    background-color: $theme-dark--table-background;
   }
 }
 </style>

@@ -27,6 +27,7 @@ export default new Vuetify({
         lightMint: '#f2fafa',
         spruce: '#506175',
         silver: '#cecece',
+        //=================================
         disabled1: '#d8d8d8',
         disabled2: '#999',
         warning: '#ff9800',
@@ -58,6 +59,7 @@ export default new Vuetify({
         lightMint: '#f2fafa',
         spruce: '#506175',
         silver: '#cecece',
+        //=================================
         disabled1: '#d8d8d8',
         disabled2: '#999',
         warning: '#ff9800',

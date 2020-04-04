@@ -340,11 +340,11 @@ export default {
   }
 
   &.light thead {
-    background-color: $light-table-background-1;
+    background-color: $theme-light--table-background;
   }
 
   &.dark thead {
-    background-color: $dark-table-background-1;
+    background-color: $theme-dark--table-background;
   }
 
   thead {
@@ -375,11 +375,11 @@ export default {
   }
 
   &.light tbody td {
-    border-bottom: 1px solid $light-table-line-1;
+    border-bottom: 1px solid $theme-light--table-border-color;
   }
 
   &.dark tbody td {
-    border-bottom: 1px solid $dark-table-line-1;
+    border-bottom: 1px solid $theme-dark--table-border-color;
   }
 }
 </style>
