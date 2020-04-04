@@ -1,80 +1,83 @@
 <template>
   <WhiteSheet sideinfo>
-    <div class="header-container pt-5 pb-3 px-7">
+    <div class="px-7 pt-5">
       <BlockTitle :text="$t('common.swap')">
         <template v-slot:right-button>
           <TextButton>{{ $t('common.more') }}...</TextButton>
         </template>
       </BlockTitle>
     </div>
-    <div class="pb-1">
-      <div v-for="(data, idx) in fakeData" :key="idx" class="mb-2 px-3">
-        <SwapBlock
-          :to="data.to"
-          :from="data.from"
-          :rate="data.rate"
-          :amount="data.amount"
-        />
-      </div>
+    <div class="pa-3">
+      <v-sheet
+        v-for="(data, key) in swapData"
+        :key="key"
+        color="bg_table"
+        class="d-flex align-center justify-space-between border-radius--5px mt-1 py-3 px-4"
+      >
+        <div class="text-uppercase">
+          {{ data.rate }} {{ data.currency }} / ETH
+        </div>
+        <div class="d-flex align-center">
+          <img
+            width="22"
+            :src="
+              require('@/assets/images/currencies/' + data.currency + '.png')
+            "
+            alt="currency-icon"
+          />
+          <img
+            width="18"
+            class="mx-2"
+            src="@/assets/images/icons/icon-swap-arrow-grey.png"
+            alt="swap-icon"
+          />
+          <img
+            width="22"
+            src="@/assets/images/currencies/eth.png"
+            alt="eth-icon"
+          />
+        </div>
+      </v-sheet>
     </div>
   </WhiteSheet>
 </template>
 
 <script>
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
-import SwapBlock from './components/SwapBlock';
 import TextButton from '@/web/components/Buttons/TextButton1';
 import BlockTitle from '@/web/components/BlockTitles/BlockTitle2';
+
 export default {
-  components: { WhiteSheet, TextButton, SwapBlock, BlockTitle },
+  components: { WhiteSheet, TextButton, BlockTitle },
   data() {
     return {
-      fakeData: [
+      swapData: [
         {
-          amount: '20',
-          from: 'eth',
           rate: '0.002',
-          to: 'btc'
+          currency: 'btc'
         },
         {
-          amount: '20',
-          from: 'eth',
           rate: '0.002',
-          to: 'btc'
+          currency: 'btc'
         },
         {
-          amount: '20',
-          from: 'eth',
           rate: '0.002',
-          to: 'btc'
+          currency: 'btc'
         },
         {
-          amount: '20',
-          from: 'eth',
           rate: '0.002',
-          to: 'btc'
+          currency: 'btc'
         },
         {
-          amount: '20',
-          from: 'eth',
           rate: '0.002',
-          to: 'btc'
+          currency: 'btc'
         },
         {
-          amount: '20',
-          from: 'eth',
           rate: '0.002',
-          to: 'btc'
+          currency: 'btc'
         }
       ]
     };
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.header-container {
-  display: flex;
-  justify-content: space-between;
-}
-</style>
