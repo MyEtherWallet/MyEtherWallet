@@ -8,12 +8,14 @@
         order to access your new wallet. And you are done!
       </p>
       <div class="d-flex align-center">
-        <StdButton buttonclass="button--green">Access my wallet</StdButton>
+        <StdButton size="x-large" buttonclass="button--green">
+          Access my wallet
+        </StdButton>
       </div>
       <p class="mt-4 mb-0">
         Need help?
         <router-link
-          class="text-decoration--none text-color--mew-green font-weight-bold"
+          class="emerald--text text-decoration--none font-weight-bold"
           to="/"
           >Get helps from MEWconnect</router-link
         >

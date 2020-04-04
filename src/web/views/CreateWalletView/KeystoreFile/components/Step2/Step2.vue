@@ -5,7 +5,7 @@
       <div class="headline font-weight-bold mb-5">Download keystore file</div>
       <v-row class="align-stretch">
         <v-col v-for="d in warningData" :key="d.key">
-          <div class="warning-box pa-6">
+          <div class="warning-box border-radius--10px pa-6 text-center">
             <v-img
               :src="d.img"
               max-width="63px"
@@ -20,13 +20,16 @@
         </v-col>
       </v-row>
     </v-sheet>
-    <StdButton
-      buttonclass="button--green"
-      class="mx-auto display--block mb-7"
-      @click.native="linkToStep(2)"
-      >Acknowledge &amp; Download</StdButton
-    >
-    <NotRecommended class="mx-n6 border-radius-bottom" />
+    <div class="d-flex justify-center mb-7">
+      <StdButton
+        size="x-large"
+        buttonclass="button--green"
+        @click.native="linkToStep(2)"
+      >
+        Acknowledge &amp; Download
+      </StdButton>
+    </div>
+    <NotRecommended class="mx-n6 border-radius-bottom--10px" />
   </v-sheet>
 </template>
 
@@ -35,7 +38,7 @@ import StdButton from '@/web/components/StdButton';
 import NotRecommended from '@/web/components/NotRecommended';
 import PaperPlane from '@/assets/images/icons/icon-paper-plane-mew.svg';
 import Stolen from '@/assets/images/icons/icon-money-bag-mew.svg';
-import Copy from '@/assets/images/icons/icon-copy-white.svg';
+import Copy from '@/assets/images/icons/icon-copy-mew.svg';
 
 export default {
   components: { StdButton, NotRecommended },
@@ -72,14 +75,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/GlobalVariables.scss';
+
 .warning-box {
   border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
   height: 100%;
-}
-
-.border-radius-bottom {
-  border-radius: 0 0 10px 10px;
 }
 </style>
