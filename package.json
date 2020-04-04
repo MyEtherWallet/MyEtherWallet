@@ -89,7 +89,7 @@
     "@vue/cli-plugin-eslint": "4.2.3",
     "@vue/cli-plugin-pwa": "4.2.3",
     "@vue/cli-plugin-unit-jest": "4.2.3",
-    "@vue/cli-service": "4.2.3",
+    "@vue/cli-service": "4.3.0",
     "@vue/eslint-config-prettier": "6.0.0",
     "@vue/test-utils": "1.0.0-beta.29",
     "@walletconnect/browser": "1.0.0-beta.47",
