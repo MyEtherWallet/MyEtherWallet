@@ -9,6 +9,7 @@
       </p>
       <div class="d-flex align-center">
         <StdButton
+          size="x-large"
           buttonclass="button--green-border"
           class="mr-3"
           :minwidth="false"
@@ -16,6 +17,7 @@
           >Back</StdButton
         >
         <StdButton
+          size="x-large"
           buttonclass="button--green"
           :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '3' } }"
         >
@@ -25,7 +27,7 @@
       <p class="mt-4 mb-0">
         Need more help?
         <a
-          class="text-decoration--none text-color--mew-green font-weight-bold"
+          class="emerald--text text-decoration--none font-weight-bold"
           href="https://www.mewtopia.com/"
           target="_blank"
         >
