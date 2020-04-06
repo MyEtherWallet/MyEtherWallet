@@ -230,8 +230,6 @@ export default class DexAg {
   }
 
   async prepareApprovals(fromAddress, proxyAddress, fromCurrency, metadata) {
-    let userCap = true;
-    console.log(fromAddress, PROXY_CONTRACT_ADDRESS, fromCurrency, metadata); // todo remove dev item
     const contract = new this.web3.eth.Contract(
       [  {
         constant: true,
@@ -249,9 +247,7 @@ export default class DexAg {
       }],
       PROXY_CONTRACT_ADDRESS
     )
-    console.log(contract.methods); // todo remove dev item
     const providerAddress = await contract.methods.approvalHandler().call();
-    console.log('providerAddress', providerAddress); // todo remove dev item
     const isTokenApprovalNeeded = async (fromToken, fromAddress) => {
       if (fromToken === this.baseCurrency)
         return { approve: false, reset: false };
@@ -280,11 +276,7 @@ export default class DexAg {
       fromCurrency,
       fromAddress
     );
-    console.log(approve, reset); // todo remove dev item
     if (approve && reset) {
-      /*
-      .input.spender
-      * */
       return new Set(
         await Promise.all([
           await this.approve(metadata.input.address, providerAddress, 0),
@@ -331,13 +323,9 @@ export default class DexAg {
         data: tradeDetails.trade.data,
         value: tradeDetails.trade.value,
       };
-      console.log('tx', tx); // todo remove dev item
       preparedTradeTxs.add({ gas: 1000000, ...tx });
-      console.log(tradeDetails, 'gets here'); // todo remove dev item
-      console.log(preparedTradeTxs, 'preparedTradeTxs'); // todo remove dev item
 
       const swapTransactions = Array.from(preparedTradeTxs);
-      console.log(swapTransactions, 'swapTransactions'); // todo remove dev item
 
       return [...swapTransactions];
     } catch (e) {
@@ -349,7 +337,6 @@ export default class DexAg {
 
   async startSwap(swapDetails) {
     swapDetails.maybeToken = true;
-    console.log(swapDetails, 'its this right?'); // todo remove dev item
     const supported = [
       'uniswap',
       'bancor',
@@ -373,18 +360,12 @@ export default class DexAg {
 
 
     const tradeDetails = await this.createTransaction(swapDetails, dexToUse);
-    console.log(tradeDetails, 'tradeDetails'); // todo remove dev item
     const providerAddress = tradeDetails.metadata.input
       ? tradeDetails.metadata.input.spender
         ? tradeDetails.metadata.input.spender
         : tradeDetails.trade.to
       : tradeDetails.trade.to;
-    console.log(
-      'providerAddress, tradeDetails, {...swapDetails}',
-      providerAddress,
-      tradeDetails,
-      { ...swapDetails }
-    ); // todo remove dev item
+
     swapDetails.dataForInitialization = await this.generateDataForTransactions(
       providerAddress,
       { ...swapDetails },
@@ -403,7 +384,6 @@ export default class DexAg {
       validFor: TIME_SWAP_VALID
     };
     swapDetails.isDex = DexAg.isDex();
-    console.log(swapDetails, 'return'); // todo remove dev item
 
     return swapDetails;
   }
