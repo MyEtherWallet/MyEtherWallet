@@ -38,7 +38,6 @@ class MewCxProvider extends EventEmitter {
       enable: function () {
         _this.setup();
         _this.setListeners();
-        console.log(_this, this);
         return this.sendPromise('eth_requestAccounts')
           .then(res => {
             return res.result;
