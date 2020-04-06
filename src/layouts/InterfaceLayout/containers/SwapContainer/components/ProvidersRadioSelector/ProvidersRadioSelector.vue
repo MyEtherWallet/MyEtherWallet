@@ -210,6 +210,9 @@ import Bity from '@/assets/images/etc/bity.png';
 import Simplex from '@/assets/images/etc/simplex.png';
 import Changelly from '@/assets/images/etc/changelly.png';
 import DexAg from '@/assets/images/etc/dexag.png';
+import Bancor from '@/assets/images/etc/bancor.png';
+import UniSwap from '@/assets/images/etc/uniswap.svg';
+import Zx from '@/assets/images/etc/0x.svg';
 
 import { providerNames, fiat } from '@/partners';
 
@@ -297,7 +300,9 @@ export default {
         simplex: Simplex,
         changelly: Changelly,
         dexag: DexAg,
-        ag: DexAg
+        ag: DexAg,
+        uniswap: Uniswap,
+        bancor: Bancor
       },
       betaLogos: {},
       providerNames: providerNames,
