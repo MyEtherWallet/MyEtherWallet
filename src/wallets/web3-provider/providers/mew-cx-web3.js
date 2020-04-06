@@ -34,6 +34,7 @@ class MewCxProvider extends EventEmitter {
     const _this = this;
     this.httpProvider = {
       setMaxListeners: this.setMaxListeners,
+      isMew: true,
       enable: function () {
         _this.setup();
         _this.setListeners();
@@ -101,7 +102,6 @@ class MewCxProvider extends EventEmitter {
             cb(e);
           });
       },
-      isMew: true,
       on: this.on,
       emit: this.emit,
       requestManager: this.requestManager,
