@@ -33,21 +33,41 @@
       <v-data-table
         v-model="selected"
         :headers="headers"
-        :items="desserts"
+        :items="addresses"
         single-select
         item-key="address"
         show-select
         items-per-page="5"
         class="mt-3"
       >
+        <template v-slot:item.blockie="{ item }">
+          <blockie
+            :address="item.address"
+            :size="8"
+            :scale="16"
+            width="30px"
+            height="30px"
+            class="blockie-image"
+          />
+        </template>
+        <template v-slot:item.address="{ item }">
+          <Tooltip :text="item.address">
+            {{ item.address.substring(0, 8) }}...{{
+              item.address.substring(item.address.length - 4)
+            }}
+          </Tooltip>
+        </template>
       </v-data-table>
     </div>
   </div>
 </template>
 
 <script>
+import Blockie from '@/web/components/Blockie';
+import Tooltip from '@/web/components/Tooltip';
+
 export default {
-  components: {},
+  components: { Blockie, Tooltip },
   props: {
     text: { default: '', type: String }
   },
@@ -55,6 +75,7 @@ export default {
     return {
       selected: [],
       headers: [
+        { text: '', value: 'blockie' },
         {
           text: 'ADDRESS',
           align: 'start',
@@ -64,49 +85,49 @@ export default {
         { text: 'ETH BALANCE', value: 'balance' },
         { text: '#TOKENS', value: 'tokens' }
       ],
-      desserts: [
+      addresses: [
         {
-          address: '0x22bF0622d4....e3C4',
+          address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
           balance: '1.32 ETH',
           tokens: '12'
         },
         {
-          address: '0x3dbF0622d4....e3C4',
+          address: '0xd7B9A9b2F665849C4071Ad5af77d8c76aa30fb32',
           balance: '1.11 ETH',
           tokens: '12'
         },
         {
-          address: '0x65230622d4....e3C4',
+          address: '0xa192E4eaCB00993ea3DBE1b59aFeb962C09493a5',
           balance: '45.4 ETH',
           tokens: '12'
         },
         {
-          address: '0x7abF0622d4....e3C4',
+          address: '0xa192E4eaCB00993ea3DBE1b59aFeb962C09493a5',
           balance: '5 ETH',
           tokens: '12'
         },
         {
-          address: '0x76320622d4....e3C4',
+          address: '0xa192E4eaCB00993ea3DBE1b59aFeb962C09493a5',
           balance: '0 ETH',
           tokens: '3'
         },
         {
-          address: '0x13h70622d4....e3C4',
+          address: '0xa192E4eaCB00993ea3DBE1b59aFeb962C09493a5',
           balance: '0 ETH',
           tokens: '12'
         },
         {
-          address: '0x1234F0622d4....e3C4',
+          address: '0xa192E4eaCB00993ea3DBE1b59aFeb962C09493a5',
           balance: '159.32 ETH',
           tokens: '12'
         },
         {
-          address: '0x9gr40622d4....e3C4',
+          address: '0xa192E4eaCB00993ea3DBE1b59aFeb962C09493a5',
           balance: '159.32 ETH',
           tokens: '12'
         },
         {
-          address: '0xyyh0622d4....e3C4',
+          address: '0xa192E4eaCB00993ea3DBE1b59aFeb962C09493a5',
           balance: '34.32 ETH',
           tokens: '1'
         },
