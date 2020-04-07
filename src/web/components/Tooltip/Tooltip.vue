@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip top>
+  <v-tooltip top open-delay="0">
     <template v-slot:activator="{ on }">
       <div v-on="on"><slot /></div>
     </template>
