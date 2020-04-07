@@ -3,11 +3,16 @@
     <div class="crypto-container">
       <div class="domain-header">
         <h4>{{ domainName }}</h4>
-        <h4 class="domain-price">${{ domainPrice }}</h4>
+        <h4 class="domain-price">
+          <span class="eth-text"
+            >{{ convertedEthPrice }} {{ $t('common.currency.eth') }}</span
+          >
+          <span class="price-text">(${{ domainPrice }})</span>
+        </h4>
       </div>
       <div class="crypto-form-container">
         <div class="crypto-form-header">
-          <h3>Pay with Crypto</h3>
+          <h3>{{ $t('unstoppable.pay-with-crypto') }}</h3>
           <h5
             v-show="!chargeId"
             class="pay-with-card"
@@ -17,63 +22,87 @@
           </h5>
         </div>
         <div v-show="!paymentAddress || !paymentAmount">
-          <h5>Your balance: {{ balance }} ETH</h5>
-          <h5 v-show="balance * 100 < domainPrice" class="error-message">
+          <div class="eth-balance-container">
+            <div class="right-container">
+              <img src="@/assets/images/currency/eth.svg" alt="eth"/>
+              <span class="balance"
+                >{{ balance }}
+                <span class="eth-text">{{
+                  $t('common.currency.eth')
+                }}</span></span
+              >
+            </div>
+            <span class="your-bal">{{ $t('unstoppable.your-balance') }}</span>
+          </div>
+          <span v-show="balance * 100 < domainPrice" class="error-message">
             {{ $t('unstoppable.insufficient-balance') }}
-          </h5>
-          <!-- TODO: Remove false && from class and disabled -->
-          <button
-            :class="[
-              false && balance * 100 < domainPrice ? 'disabled' : '',
-              'large-round-button-green-filled clickable pay-button'
-            ]"
-            :disabled="false && (loading || balance * 100 < domainPrice)"
-            @click="submit"
-          >
-            <span v-show="!loading">
-              {{ $t('unstoppable.continue') }}
-            </span>
-            <i v-show="loading" class="fa fa-spinner fa-spin" />
-          </button>
+          </span>
+          <div class="btn-container">
+            <button class="back-btn" @click="goBack()">
+              <span>
+                {{ $t('common.back') }}
+              </span>
+            </button>
+            <!-- TODO: Remove false && from class and disabled -->
+            <button
+              :class="[
+                false && balance * 100 < domainPrice ? 'disabled' : '',
+                'large-round-button-green-filled clickable pay-button'
+              ]"
+              :disabled="false && (loading || balance * 100 < domainPrice)"
+              @click="submit"
+            >
+              <span v-show="!loading">
+                {{ $t('unstoppable.continue') }}
+              </span>
+              <i v-show="loading" class="fa fa-spinner fa-spin" />
+            </button>
+          </div>
         </div>
         <div v-show="paymentAddress && paymentAmount">
           <div class="crypto-payment-field-container">
             <div class="crypto-field-container">
-              <h5 class="crypto-field-label">
-                {{ $t('unstoppable.ethereum-payment-address') }}
-              </h5>
               <div class="crypto-field">
-                <input
-                  ref="payment-address"
-                  type="hidden"
-                  :value="paymentAddress"
-                />
-                <h6>{{ paymentAddress }}</h6>
-                <img
-                  :src="copyIcon"
-                  class="copy-button"
-                  alt
-                  @click="copyPaymentAddress"
-                />
+                <div class="right">
+                  <img
+                    :src="copyIcon"
+                    class="copy-button"
+                    alt
+                    @click="copyPaymentAddress"
+                  />
+                  <input
+                    ref="payment-address"
+                    type="hidden"
+                    :value="paymentAddress"
+                  />
+                  <span>{{ paymentAddress }}</span>
+                </div>
+                <span class="crypto-field-label">
+                  {{ $t('unstoppable.address') }}
+                </span>
               </div>
             </div>
             <div :class="['crypto-field-container margin-bottom']">
-              <h5 class="crypto-field-label">
-                {{ $t('unstoppable.payment-amount') }}
-              </h5>
-              <div class="crypto-field">
-                <input
-                  ref="payment-amount"
-                  type="hidden"
-                  :value="paymentAmount"
-                />
-                <h6>{{ paymentAmount }}</h6>
-                <img
-                  :src="copyIcon"
-                  class="copy-button"
-                  alt
-                  @click="copyPaymentAmount"
-                />
+              <div class="crypto-field-container">
+                <div class="crypto-field">
+                  <div class="right">
+                    <img
+                      :src="copyIcon"
+                      class="copy-button"
+                      alt
+                      @click="copyPaymentAmount"
+                    />
+                    <input
+                      ref="payment-amount"
+                      type="hidden"
+                      :value="paymentAmount"
+                    />
+                    <span>{{ paymentAmount }}</span>
+                  </div>
+                  <span class="crypto-field-label">
+                    {{ $t('unstoppable.payment-amount') }}
+                  </span>
+                </div>
               </div>
             </div>
             <div :class="['qr-code margin-bottom']">
@@ -91,21 +120,28 @@
                 })
               }}
             </h6>
-            <button
-              :disabled="loading || pendingPayment"
-              :class="[
-                'large-round-button-green-filled clickable pay-button send-payment-button'
-              ]"
-              @click="sendPayment"
-            >
-              <span v-show="!loading && !pendingPayment">
-                {{ $t('unstoppable.send-payment') }}
-              </span>
-              <i
-                v-show="loading || pendingPayment"
-                class="fa fa-spinner fa-spin"
-              />
-            </button>
+            <div class="btn-container">
+              <button class="back-btn" @click="goBack()">
+                <span>
+                  {{ $t('common.back') }}
+                </span>
+              </button>
+              <button
+                :disabled="loading || pendingPayment"
+                :class="[
+                  'large-round-button-green-filled clickable pay-button send-payment-button'
+                ]"
+                @click="sendPayment"
+              >
+                <span v-show="!loading && !pendingPayment">
+                  {{ $t('unstoppable.send-payment') }}
+                </span>
+                <i
+                  v-show="loading || pendingPayment"
+                  class="fa fa-spinner fa-spin"
+                />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -116,6 +152,8 @@
 <script>
 import BigNumber from 'bignumber.js';
 import copyIcon from '@/assets/images/icons/copy.svg';
+import { mapState } from 'vuex';
+import { Toast } from '@/helpers';
 
 export default {
   props: {
@@ -153,10 +191,21 @@ export default {
       chargeId: '',
       confirmations: 0,
       confirmationsRequired: 0,
-      copyIcon
+      copyIcon,
+      ethPrice: 0
     };
   },
   computed: {
+    ...mapState('main', ['online']),
+    convertedEthPrice() {
+      let ethConvertPrice = 0;
+      if (this.domainPrice > 0) {
+        ethConvertPrice = new BigNumber(this.domainPrice)
+          .dividedBy(this.ethPrice)
+          .toFixed(8);
+      }
+      return ethConvertPrice;
+    },
     balance() {
       return this.account && this.account.balance
         ? new BigNumber(
@@ -175,12 +224,31 @@ export default {
       }
     }, 8000);
   },
+  mounted() {
+    if (this.online) this.getEthPrice();
+  },
   beforeDestroy() {
     if (this.interval) {
       clearInterval(this.interval);
     }
   },
   methods: {
+    goBack() {
+      this.$router.push('/interface/dapps/unstoppable');
+    },
+    async getEthPrice() {
+      const price = await fetch(
+        'https://cryptorates.mewapi.io/ticker?filter=ETH'
+      )
+        .then(res => {
+          return res.json();
+        })
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+        });
+      this.ethPrice =
+        typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
+    },
     copyPaymentAmount() {
       this.$refs['payment-amount'].setAttribute('type', 'text');
       this.$refs['payment-amount'].select();

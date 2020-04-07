@@ -1,18 +1,19 @@
 {
   "title": "Unstoppable Domains",
+  "about-unstoppable": "Replace cryptocurrency addresses with a human readable name.",
   "dapp-desc": "Buy a .crypto domain",
   "search-domain-desc": "Buy a .crypto domain",
   "search-domain-prompt": "Find your blockchain domain",
   "stripe-email-prompt": "Email",
   "stripe-card-prompt": "Card Details",
   "pay-with-credit-card": "Pay with credit card",
-  "pay-with-crypto": "Pay with crypto",
+  "pay-with-crypto": "Pay with Crypto",
   "send-payment": "Send Payment",
   "ethereum-payment-address": "Ethereum payment address",
-  "payment-amount": "Payment amount",
+  "payment-amount": "Payment Amount",
   "pending-crypto-payment": "Pending Payment: {confirmations} of {confirmationsRequired} confirmations",
   "secured-by-stripe": "Secured Checkout Powered by",
-  "insufficient-balance": "Insufficient balance: Add more ETH to your wallet or pay with credit card",
+  "insufficient-balance": "Insufficient balance: Add more ETH to your wallet or pay with Credit Card",
   "pay": "Pay",
   "error": {
     "stripe-payment": "Payment failed. Please try again later",
@@ -48,5 +49,10 @@
   "buyDomain": "Buy Domain",
   "already-owned": "{domain} is already owned.",
   "search-for-another": "Search for another domain",
-  "owner": "Owner"
+  "owner": "Owner",
+  "result": "Result",
+  "unavailable": "Unavailable",
+  "buy": "Buy",
+  "your-balance": "Your balance",
+  "address": "Address"
 }

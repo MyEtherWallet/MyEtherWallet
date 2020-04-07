@@ -71,7 +71,7 @@
     "xss": "1.0.6"
   },
   "devDependencies": {
-    "@ensdomains/address-encoder": "0.1.4",
+    "@ensdomains/address-encoder": "0.1.6",
     "@ensdomains/dnsregistrar": "0.3.9",
     "@ethereum-alarm-clock/lib": "0.3.5",
     "@keepkey/keepkey.js": "1.2.3",
@@ -103,7 +103,7 @@
     "bc-vault-js": "2.0.3",
     "bignumber.js": "9.0.0",
     "bip39": "3.0.2",
-    "bitbox02-api": "0.4.0",
+    "bitbox02-api": "0.4.1",
     "bootstrap-vue": "2.9.0",
     "codecov": "3.6.5",
     "copy-webpack-plugin": "5.1.1",

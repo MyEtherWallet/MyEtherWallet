@@ -9,12 +9,13 @@ import makerdaiDisabled from '@/assets/images/icons/dapps/makerdai-disabled.svg'
 import ambrpay from '@/assets/images/icons/dapps/ambrpay.png';
 import ambrpayDisabled from '@/assets/images/icons/dapps/ambrpay-disabled.png';
 import aave from '@/assets/images/icons/dapps/aave.svg';
+import unstoppable from '@/assets/images/icons/dapps/unstoppable.png';
 import { ETH, GOERLI, ROP, RIN, KOV } from '@/networks/types';
 
 const dapps = {
   unstoppable: {
     route: '/interface/dapps/unstoppable',
-    icon: manageEns,
+    icon: unstoppable,
     title: 'unstoppable.title',
     desc: 'unstoppable.dapp-desc',
     supportedNetworks: [ETH.name],

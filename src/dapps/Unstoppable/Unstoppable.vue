@@ -1,6 +1,21 @@
 <template>
   <div class="unstoppable-container">
-    <back-button v-show="!orderNumber" />
+    <back-button
+      v-show="!orderNumber"
+      :path="'/interface/dapps/'"
+      :title="$t('common.exit-dapp')"
+    />
+    <div class="branding-container">
+      <div class="name-container">
+        <img
+          height="33"
+          src="@/assets/images/icons/dapps/unstoppable-blue.png"
+          alt="Unstoppable"
+        />
+        <span>{{ $t('unstoppable.title') }}</span>
+      </div>
+      <div class="about-text">{{ $t('unstoppable.about-unstoppable') }}</div>
+    </div>
     <router-view
       :domain-name="domainName"
       :domain-price="domainPrice"
@@ -13,6 +28,7 @@
       :copied-to-clipboard="copiedToClipboard"
       :order-number="orderNumber"
       :set-order-number="setOrderNumber"
+      :is-domain-avail="isDomainAvail"
       @domainNameChange="updateDomainName"
     />
   </div>
@@ -36,7 +52,11 @@ export default {
       domainNameErr: false,
       loading: false,
       orderNumber: 0,
-      email: 'mew@unstoppabledomains.com'
+      email: 'mew@unstoppabledomains.com',
+      isDomainAvail: {
+        checked: false,
+        isAvailable: false
+      }
     };
   },
   computed: {
@@ -91,6 +111,11 @@ export default {
       } else {
         this.domainNameErr = false;
       }
+
+      this.isDomainAvail = {
+        checked: false,
+        isAvailable: false
+      };
     },
     setOrderNumber(orderNumber) {
       this.orderNumber = orderNumber;
@@ -103,12 +128,16 @@ export default {
         );
         if (domain.reselling && domain.reselling.price) {
           this.domainPrice = domain.reselling.price;
-          this.$router.push({ path: 'unstoppable/buy' });
+          this.isDomainAvail.isAvailable = true;
+          this.isDomainAvail.checked = true;
+          // this.$router.push({ path: 'unstoppable/buy' });
         } else {
-          const toastText = this.$t('unstoppable.toast.domain-unavailable', {
-            domain: this.domainName
-          });
-          Toast.responseHandler(toastText, Toast.WARN);
+          // const toastText = this.$t('unstoppable.toast.domain-unavailable', {
+          //   domain: this.domainName
+          // });
+          this.isDomainAvail.checked = true;
+          console.error('domain', domain);
+          // Toast.responseHandler(toastText, Toast.WARN);
         }
       } catch (e) {
         const toastText = this.$t('unstoppable.error.something-went-wrong');
