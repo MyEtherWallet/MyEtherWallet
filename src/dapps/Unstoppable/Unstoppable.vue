@@ -4,6 +4,7 @@
     <router-view
       :domain-name="domainName"
       :domain-price="domainPrice"
+      :token-id="tokenId"
       :check-domain="checkDomain"
       :domain-name-err="domainNameErr"
       :loading="loading"
@@ -12,6 +13,7 @@
       :email="email"
       :copied-to-clipboard="copiedToClipboard"
       :order-number="orderNumber"
+      :set-token-id="setTokenId"
       :set-order-number="setOrderNumber"
       @domainNameChange="updateDomainName"
     />
@@ -31,6 +33,7 @@ export default {
   data() {
     return {
       domainName: '',
+      tokenId: '',
       domainPrice: 0,
       domainNameErr: false,
       loading: false,
@@ -93,6 +96,9 @@ export default {
     },
     setOrderNumber(orderNumber) {
       this.orderNumber = orderNumber;
+    },
+    setTokenId(tokenId) {
+      this.tokenId = tokenId;
     },
     async checkDomain() {
       this.loading = true;
