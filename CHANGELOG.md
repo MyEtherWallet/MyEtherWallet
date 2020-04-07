@@ -2,6 +2,12 @@
 
 - CX updated ui and some optimization [#1864](https://github.com/MyEtherWallet/MyEtherWallet/pull/1864)
 
+### Release v5.5.1-hotfix.1
+
+### Devop
+
+- Remove woof version [#2196](https://github.com/MyEtherWallet/MyEtherWallet/pull/2196)
+
 ### Release v5.5.1
 
 ### Feature
