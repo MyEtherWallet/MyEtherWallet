@@ -1,4 +1,4 @@
-import MEWCXRequestManager from '../providers/mew-cx-request-manager';
+import MEWCXRequestManager from './mew-cx-request-manager';
 import MiddleWare from '../middleware';
 import {
   WEB3_NETWORK_CHANGE,
