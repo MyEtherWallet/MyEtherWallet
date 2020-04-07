@@ -2,6 +2,12 @@
 
 - Cx checksum address fix on sign message and tx [#2203](https://github.com/MyEtherWallet/MyEtherWallet/pull/2203)
 
+### Release v5.5.1-hotfix.1
+
+### Devop
+
+- Remove woof version [#2196](https://github.com/MyEtherWallet/MyEtherWallet/pull/2196)
+
 ### Release v5.5.1
 
 ### Feature
