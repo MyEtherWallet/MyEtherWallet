@@ -53,7 +53,6 @@ const providerMap = providers.reduce(
 
 const providerNames = {
   simplex: simplex,
-  kyber: kybernetwork,
   changelly: changelly,
   bity: bity,
   dexag: dexAg

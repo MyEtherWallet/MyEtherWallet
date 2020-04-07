@@ -64,9 +64,9 @@
             <span class="slippage-text">{{
               otherTextDisplay(provider.additional.display)
             }}</span>
-            <span class="slippage-text"> {{ provider.additional.source }}</span>
+<!--            <span class="slippage-text"> {{ provider.additional.source }}</span>-->
           </div>
------ {{provider.provider}}
+<!-- -&#45;&#45;&#45;&#45; {{provider.provider}}-->
         </li>
       </ul>
       <!-- list of other providers who don't support the selected currency pair -->
@@ -209,10 +209,12 @@ import KyberNetwork from '@/assets/images/etc/kybernetwork.png';
 import Bity from '@/assets/images/etc/bity.png';
 import Simplex from '@/assets/images/etc/simplex.png';
 import Changelly from '@/assets/images/etc/changelly.png';
-import DexAg from '@/assets/images/etc/dexag.png';
+// import DexAg from '@/assets/images/etc/dexag.png';
+import DexAg from '@/assets/images/etc/dexag.svg';
+
 import Bancor from '@/assets/images/etc/bancor.png';
 import UniSwap from '@/assets/images/etc/uniswap.svg';
-import Zx from '@/assets/images/etc/0x.svg';
+import Zx from '@/assets/images/etc/0x.png';
 
 import { providerNames, fiat } from '@/partners';
 
@@ -301,8 +303,9 @@ export default {
         changelly: Changelly,
         dexag: DexAg,
         ag: DexAg,
-        uniswap: Uniswap,
-        bancor: Bancor
+        uniswap: UniSwap,
+        bancor: Bancor,
+        zero_x: Zx
       },
       betaLogos: {},
       providerNames: providerNames,
