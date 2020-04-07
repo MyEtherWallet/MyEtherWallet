@@ -5,15 +5,15 @@
 }
 
 .domain-header {
-  padding: 15px;
   display: flex;
   flex-direction: row;
+  background-color: $light-green-1;
   justify-content: space-between;
+  padding: 25px;
   h4 {
     font-weight: 600;
   }
 
-  background-color: $container-green;
   p {
     margin-top: 7px;
     color: $mew-green;
@@ -30,6 +30,16 @@
     @media all and (max-width: $mobile-width) {
       margin-top: 30px;
     }
+  }
+
+  .eth-text {
+    font-weight: 400;
+  }
+
+  .price-text {
+    color: $dark-grey-8;
+    font-weight: 400;
+    margin-left: 3px;
   }
 }
 
