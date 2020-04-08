@@ -35,9 +35,9 @@
 
 .confirm-form-container {
   width: 100%;
-  padding-left: 60px;
-  padding-right: 60px;
-  @media all and (max-width: $mobile-width) {
+  padding-left: 100px;
+  padding-right: 100px;
+  @media all and (max-width: 600px) {
     padding-left: 15px;
     padding-right: 15px;
   }
@@ -61,15 +61,13 @@
     font-weight: 500;
     color: $mew-green;
     cursor: pointer;
+    text-align: right;
   }
   .confirm-form-header {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-  .confirm-form-body {
-    // margin-top: 10px;
   }
   .confirm-form-field-container {
     margin-top: 20px;
@@ -86,16 +84,26 @@
     font-weight: 500;
   }
   .confirm-button {
-    text-transform: uppercase;
+    height: 100%;
+    margin-left: 10px;
     width: 100%;
   }
 }
 
 .confirm-payment-text {
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .error-message {
   margin-top: 15px;
   color: $red-1;
+}
+
+
+.btn-container {
+  @extend %btn-container;
+  .back-btn {
+    @extend %back-btn;
+  }
 }
