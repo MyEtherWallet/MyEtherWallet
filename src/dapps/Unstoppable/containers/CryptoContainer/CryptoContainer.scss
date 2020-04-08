@@ -162,9 +162,17 @@
   }
 
   .right {
-    span {
-      vertical-align: middle;
+    .eth-icon {
+      height: 20px;
+    }
+
+    .amount-text {
       font-weight: 500;
+      margin-left: 5px;
+    }
+
+    .eth-text {
+      color: $dark-grey-8;
     }
   }
 }

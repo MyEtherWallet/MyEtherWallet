@@ -10,7 +10,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import(/* webpackPreload: true */ '@/assets/font-awesome.css');
 import(/* webpackPreload: true */ '@/assets/google-fonts.css');
-
+import '@stripe/stripe-js';
 import Vue from 'vue';
 import Router from 'vue-router';
 const originalPush = Router.prototype.push;

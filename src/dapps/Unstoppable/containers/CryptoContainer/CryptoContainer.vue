@@ -24,7 +24,7 @@
         <div v-show="!paymentAddress || !paymentAmount">
           <div class="eth-balance-container">
             <div class="right-container">
-              <img src="@/assets/images/currency/eth.svg" alt="eth"/>
+              <img src="@/assets/images/currency/eth.svg" alt="eth" />
               <span class="balance"
                 >{{ balance }}
                 <span class="eth-text">{{
@@ -87,17 +87,21 @@
                 <div class="crypto-field">
                   <div class="right">
                     <img
-                      :src="copyIcon"
-                      class="copy-button"
-                      alt
-                      @click="copyPaymentAmount"
+                      class="eth-icon"
+                      src="@/assets/images/currency/eth.svg"
+                      alt="eth"
                     />
                     <input
                       ref="payment-amount"
                       type="hidden"
                       :value="paymentAmount"
                     />
-                    <span>{{ paymentAmount }}</span>
+                    <span class="amount-text"
+                      >{{ paymentAmount }}
+                      <span class="eth-text">{{
+                        $t('common.currency.eth')
+                      }}</span></span
+                    >
                   </div>
                   <span class="crypto-field-label">
                     {{ $t('unstoppable.payment-amount') }}
