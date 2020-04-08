@@ -1,5 +1,11 @@
 <template>
-  <v-data-table :headers="headers" :items="addresses" sort-by="calories">
+  <v-data-table
+    :headers="headers"
+    :items="addresses"
+    :items-per-page="10"
+    item-key="id"
+    sort-by="calories"
+  >
     <template v-slot:top>
       <v-toolbar flat color="white">
         <v-dialog v-model="delDialog" max-width="550px">
@@ -159,6 +165,38 @@ export default {
           nickname: 'Moms'
         },
         {
+          address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
+          nickname: 'Moms'
+        },
+        {
+          address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
+          nickname: 'Moms'
+        },
+        {
+          address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
+          nickname: 'Moms'
+        },
+        {
+          address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
+          nickname: 'Moms'
+        },
+        {
+          address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
+          nickname: 'Moms'
+        },
+        {
+          address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
+          nickname: 'Moms'
+        },
+        {
+          address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
+          nickname: 'Moms'
+        },
+        {
+          address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
+          nickname: 'Moms'
+        },
+        {
           address: '0xd7B9A9b2F665849C4071Ad5af77d8c76aa30fb32',
           nickname: 'Dads'
         },
@@ -174,11 +212,8 @@ export default {
       this.dialog = true;
     },
     openDelDialog(item) {
-      //const index = this.addresses.indexOf(item);
       this.deletedItem = item;
       this.delDialog = true;
-      //confirm('Are you sure you want to delete this item?') &&
-      //this.addresses.splice(index, 1);
     },
     closeDelDialog() {
       this.deletedItem = {};
