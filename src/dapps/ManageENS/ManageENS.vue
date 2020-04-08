@@ -725,15 +725,19 @@ export default {
       const multicalls = [];
       for (const i in obj) {
         multicalls.push(
-          contract.methods.setText(this.nameHash, i, obj[i]).encodeABI()
+          contract.methods
+            .setText(this.nameHash, i.toLowerCase(), obj[i])
+            .encodeABI()
         );
       }
+
       const tx = {
         from: address,
         to: resolverAddr,
         data: contract.methods.multicall(multicalls).encodeABI(),
         gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed(),
-        value: 0
+        value: 0,
+        gas: 100000
       };
       this.web3.eth.sendTransaction(tx);
     },

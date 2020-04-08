@@ -370,36 +370,40 @@ export default {
       this.txtRecordInputs = newObj;
     },
     checkAndSendTxtRecs() {
-      const changed = {};
+      if (this.domainName !== '.') {
+        const changed = {};
 
-      const currencyInputsObj = Object.assign({}, this.txtRecordInputs);
-      const currentSupported = Object.assign({}, this.txtRecords);
-      Object.keys(currentSupported).forEach(item => {
-        if (
-          currencyInputsObj[item] &&
-          currentSupported[item] !== currencyInputsObj[item]
-        ) {
-          changed[item] = currencyInputsObj[item];
+        const currencyInputsObj = Object.assign({}, this.txtRecordInputs);
+        const currentSupported = Object.assign({}, this.txtRecords);
+        Object.keys(currentSupported).forEach(item => {
+          if (
+            currencyInputsObj[item] &&
+            currentSupported[item] !== currencyInputsObj[item]
+          ) {
+            changed[item] = currencyInputsObj[item];
+          }
+        });
+        if (Object.keys(changed).length > 0) {
+          this.setRecord(changed);
         }
-      });
-      if (Object.keys(changed).length > 0) {
-        this.setRecord(changed);
       }
     },
     checkAndSendCurrency() {
-      const changed = [];
-      const currencyInputsObj = Object.assign({}, this.currencyInputs);
-      const currentSupported = Object.assign({}, this.supportedCoins);
-      Object.keys(currentSupported).forEach(item => {
-        if (
-          currencyInputsObj[item] &&
-          currentSupported[item].value !== currencyInputsObj[item].value
-        ) {
-          changed.push(currencyInputsObj[item]);
+      if (this.domainName !== '.') {
+        const changed = [];
+        const currencyInputsObj = Object.assign({}, this.currencyInputs);
+        const currentSupported = Object.assign({}, this.supportedCoins);
+        Object.keys(currentSupported).forEach(item => {
+          if (
+            currencyInputsObj[item] &&
+            currentSupported[item].value !== currencyInputsObj[item].value
+          ) {
+            changed.push(currencyInputsObj[item]);
+          }
+        });
+        if (changed.length > 0) {
+          this.setMultiCoin(changed);
         }
-      });
-      if (changed.length > 0) {
-        this.setMultiCoin(changed);
       }
     }
   }
