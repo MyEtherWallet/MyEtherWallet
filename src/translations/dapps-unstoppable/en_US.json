@@ -14,6 +14,7 @@
   "secured-by-stripe": "Secured Checkout Powered by",
   "insufficient-balance": "Insufficient balance: Add more ETH to your wallet or pay with credit card",
   "pay": "Pay",
+  "confirm-payment": "You are about to pay ${amount} for {domain}",
   "error": {
     "stripe-payment": "Payment failed. Please try again later",
     "something-went-wrong": "Something went wrong! Please try again."
