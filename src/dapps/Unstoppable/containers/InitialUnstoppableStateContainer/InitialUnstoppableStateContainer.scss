@@ -1,6 +1,7 @@
 @import '../../Unstoppable';
 .initial-state-unstoppable {
   @extend %template-container;
+
   padding: 20px;
 }
 .advanced {
@@ -250,7 +251,6 @@
   }
 }
 
-
 .result-wrapper {
   color: $dark-blue-6;
   margin-bottom: 50px;
@@ -262,7 +262,7 @@
       font-weight: 600;
     }
   }
-  
+
   .unavail-container {
     background-color: $light-grey-16;
     border: 1px solid $light-orange-1;
@@ -275,7 +275,7 @@
 
   .result-container {
     align-items: center;
-    border-radius: 4px; 
+    border-radius: 4px;
     display: flex;
     justify-content: space-between;
     padding: 15px 20px;
