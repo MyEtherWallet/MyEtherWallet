@@ -100,6 +100,7 @@ export default {
   computed: {
     ...mapState('main', ['network']),
     isValidLength() {
+      if (this.localDomainName === '') return;
       return (
         this.localDomainName.replace(
           '.' + this.network.type.ens.registrarTLD,

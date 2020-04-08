@@ -7,6 +7,9 @@ import { EthereumTokens } from '@/partners';
 import MAValidator from 'multicoin-address-validator';
 import getMultiCoinAddress from '@/helpers/ENSMultiCoin.js';
 import ethMew from '@/networks/nodes/eth-mew';
+import RegistryAbi from '@/dapps/ManageENS/ABI/registryAbi.js';
+import ResolverAbi from '@/dapps/ManageENS/ABI/resolverAbi.js';
+import * as nameHashPckg from 'eth-ens-namehash';
 
 const AddrResolver = {
   bind: function (el, binding, vnode) {
@@ -81,6 +84,7 @@ const AddrResolver = {
           });
           appendElement(errorPar);
         } else {
+          checkAvatar(domain);
           getMultiCoinAddress(ens, normalise(domain), parentCurrency)
             .then(address => {
               if (!checkDarklist(address)) {
@@ -192,7 +196,30 @@ const AddrResolver = {
       return false;
     };
 
-    const checkAvatar = function (domain) {};
+    const checkAvatar = async function (domain) {
+      const domainHash = nameHashPckg.hash(domain);
+      const _this = vnode.context;
+      const web3 = _this.$store.state.main.web3;
+      const network = _this.$store.state.main.network;
+      const registryContract = new web3.eth.Contract(
+        RegistryAbi,
+        network.type.ens.registry
+      );
+      const currentResolver = await registryContract.methods
+        .resolver(domainHash)
+        .call();
+      const resolver = new web3.eth.Contract(ResolverAbi, currentResolver);
+      const supportsTxt = await resolver.methods
+        .supportsInterface('0x59d1d43c')
+        .call();
+      if (supportsTxt) {
+        const avatar = await resolver.methods.text(domainHash, 'avatar').call();
+        fetch(`https://img.mewapi.io/?image=${avatar}`).then(res => {
+          console.log(res);
+        });
+        _this.avatar = avatar ? avatar : '';
+      }
+    };
 
     const resolveDomain = async function (domain) {
       const messagePar = document.createElement('p');
