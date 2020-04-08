@@ -35,9 +35,9 @@
         :headers="headers"
         :items="addresses"
         single-select
-        item-key="address"
+        item-key="id"
         show-select
-        items-per-page="5"
+        :items-per-page="10"
         class="mt-3"
       >
         <template v-slot:item.blockie="{ item }">
@@ -132,17 +132,17 @@ export default {
           tokens: '1'
         },
         {
-          address: '0x78340622d4....e3C4',
+          address: '0xa192E4eaCB00993ea3DBE1b59aFeb962C09493a5',
           balance: '1.32 ETH',
           tokens: '0'
         },
         {
-          address: '0x345740622d4....e3C4',
+          address: '0xa192E4eaCB00993ea3DBE1b59aFeb962C09493a5',
           balance: '1.32 ETH',
           tokens: '0'
         },
         {
-          address: '0x34690622d4....e3C4',
+          address: '0xa192E4eaCB00993ea3DBE1b59aFeb962C09493a5',
           balance: '0.32 ETH',
           tokens: '0'
         },
