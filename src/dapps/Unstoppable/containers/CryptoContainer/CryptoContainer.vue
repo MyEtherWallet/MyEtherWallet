@@ -25,12 +25,10 @@
           <div class="eth-balance-container">
             <div class="right-container">
               <img src="@/assets/images/currency/eth.svg" alt="eth" />
-              <span class="balance"
-                >{{ balance }}
-                <span class="eth-text">{{
-                  $t('common.currency.eth')
-                }}</span></span
-              >
+              <div class="balance">
+                <span>{{ balance }}</span>
+                <span class="eth-text">{{ $t('common.currency.eth') }}</span>
+              </div>
             </div>
             <span class="your-bal">{{ $t('unstoppable.your-balance') }}</span>
           </div>
@@ -43,13 +41,12 @@
                 {{ $t('common.back') }}
               </span>
             </button>
-            <!-- TODO: Remove false && from class and disabled -->
             <button
               :class="[
-                false && balance * 100 < domainPrice ? 'disabled' : '',
+                balance * 100 < domainPrice ? 'disabled' : '',
                 'large-round-button-green-filled clickable pay-button'
               ]"
-              :disabled="false && (loading || balance * 100 < domainPrice)"
+              :disabled="(loading || balance * 100 < domainPrice)"
               @click="submit"
             >
               <span v-show="!loading">
@@ -75,7 +72,7 @@
                     type="hidden"
                     :value="paymentAddress"
                   />
-                  <span>{{ paymentAddress }}</span>
+                  <div class="payment-addr">{{ paymentAddress }}</div>
                 </div>
                 <span class="crypto-field-label">
                   {{ $t('unstoppable.address') }}
@@ -96,12 +93,12 @@
                       type="hidden"
                       :value="paymentAmount"
                     />
-                    <span class="amount-text"
-                      >{{ paymentAmount }}
+                    <div class="amount-container">
+                      <div class="amount-text">{{ paymentAmount }}</div>
                       <span class="eth-text">{{
                         $t('common.currency.eth')
-                      }}</span></span
-                    >
+                      }}</span>
+                    </div>
                   </div>
                   <span class="crypto-field-label">
                     {{ $t('unstoppable.payment-amount') }}
@@ -214,7 +211,7 @@ export default {
       return this.account && this.account.balance
         ? new BigNumber(
             this.web3.utils.fromWei(this.account.balance.toString())
-          ).toFixed()
+          ).toFixed(8)
         : '0';
     }
   },

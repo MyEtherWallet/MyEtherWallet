@@ -47,7 +47,7 @@
   width: 100%;
   padding-left: 100px;
   padding-right: 100px;
-  @media all and (max-width: $mobile-width) {
+  @media all and (max-width: 600px) {
     padding-left: 15px;
     padding-right: 15px;
   }
@@ -68,6 +68,11 @@
     margin-top: 30px;
     padding: 20px;
 
+    .right-container {
+      align-items: center;
+      display: flex;
+    }
+
     .your-bal {
       font-size: 12px;
     }
@@ -81,21 +86,14 @@
     .eth-text {
       color: $dark-grey-8;
       font-weight: 400;
+      margin-left: 3px;
     }
   }
 
   .btn-container {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-    text-align: center;
-
+    @extend %btn-container;
     .back-btn {
-      color: $dark-blue-2;
-      border: 1px solid $dark-blue-2;
-      border-radius: 4px;
-      padding: 21px 55px;
+      @extend %back-btn;
     }
   }
 
@@ -112,12 +110,18 @@
     font-weight: 500;
     color: $mew-green;
     cursor: pointer;
+    text-align: right;
   }
   .crypto-form-header {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 15px;
+
+    h3 {
+      margin-bottom: 0;
+    }
   }
 
   .crypto-form-field-container {
@@ -138,6 +142,8 @@
   }
   .pay-button {
     margin-left: 10px;
+    height: 100%;
+    white-space: nowrap;
     width: 100%;
   }
 }
@@ -162,17 +168,40 @@
   }
 
   .right {
+    align-items: center;
+    display: flex;
+
+    .payment-addr {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 150px;
+
+      @media all and (max-width: 600px) {
+        width: 200px;
+      }
+    }
     .eth-icon {
       height: 20px;
     }
 
-    .amount-text {
+    .amount-container {
+      align-items: center;;
+      display: flex;
       font-weight: 500;
       margin-left: 5px;
-    }
-
-    .eth-text {
-      color: $dark-grey-8;
+      
+      .amount-text {
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+  
+      .eth-text {
+        color: $dark-grey-8;
+        margin-left: 3px;
+      }
     }
   }
 }

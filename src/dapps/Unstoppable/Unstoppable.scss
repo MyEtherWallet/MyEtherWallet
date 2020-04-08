@@ -9,6 +9,27 @@ $container-green: $light-green-1;
   padding: 0;
 }
 
+%btn-container {
+  align-items: center;
+  display: flex;
+  height: 68px;
+  justify-content: center;
+  margin-top: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+%back-btn {
+  color: $dark-blue-2;
+  background-color: $white;
+  border: 1px solid $dark-blue-2;
+  border-radius: 4px;
+  height: 100%;
+  padding: 21px 55px;
+  width: 100%;
+}
+
+
 .unstoppable-container {
   background: $white;
   border-radius: 5px;
@@ -50,7 +71,8 @@ $container-green: $light-green-1;
     margin: 0 auto;
     text-align: center;
     // width: 300px;
-    @media all and (max-width: $mobile-width) {
+    @media all and (max-width: 600px) {
+      min-width: 100%;
       width: 100%;
     }
   }

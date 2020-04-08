@@ -135,14 +135,12 @@ export default {
           this.domainPrice = domain.reselling.price;
           this.isDomainAvail.isAvailable = true;
           this.isDomainAvail.checked = true;
-          // this.$router.push({ path: 'unstoppable/buy' });
         } else {
-          // const toastText = this.$t('unstoppable.toast.domain-unavailable', {
-          //   domain: this.domainName
-          // });
+          const toastText = this.$t('unstoppable.toast.domain-unavailable', {
+            domain: this.domainName
+          });
           this.isDomainAvail.checked = true;
-          console.error('domain', domain);
-          // Toast.responseHandler(toastText, Toast.WARN);
+          Toast.responseHandler(toastText, Toast.WARN);
         }
       } catch (e) {
         const toastText = this.$t('unstoppable.error.something-went-wrong');

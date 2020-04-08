@@ -15,18 +15,25 @@
               })
             }}
           </h4>
-          <button
-            :class="[
-              'large-round-button-green-filled clickable confirm-button'
-            ]"
-            :disabled="loading"
-            @click="submit"
-          >
-            <span v-show="!loading">
-              {{ $t('unstoppable.pay') }}
-            </span>
-            <i v-show="loading" class="fa fa-spinner fa-spin" />
-          </button>
+          <div class="btn-container">
+            <button class="back-btn" @click="goBack()">
+              <span>
+                {{ $t('common.back') }}
+              </span>
+            </button>
+            <button
+              :class="[
+                'large-round-button-green-filled clickable confirm-button'
+              ]"
+              :disabled="loading"
+              @click="submit"
+            >
+              <span v-show="!loading">
+                {{ $t('unstoppable.pay') }}
+              </span>
+              <i v-show="loading" class="fa fa-spinner fa-spin" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -80,6 +87,9 @@ export default {
     }
   },
   methods: {
+    goBack() {
+      this.$router.push('/interface/dapps/unstoppable');
+    },
     submit() {
       if (!this.account || !this.account.address) {
         return;
