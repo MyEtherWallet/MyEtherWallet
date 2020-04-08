@@ -61,7 +61,7 @@
     justify-content: space-between;
     position: relative;
 
-    @media all and (max-width: 600px) { 
+    @media all and (max-width: 600px) {
       flex-direction: column;
       height: 100%;
     }
@@ -83,11 +83,10 @@
       padding: 13px 15px;
       width: 100%;
 
-      @media all and (max-width: 600px) { 
+      @media all and (max-width: 600px) {
         margin-right: 0;
       }
     }
-    
 
     span {
       font-size: 14px;
@@ -116,7 +115,7 @@
     .move-right {
       margin-right: 70px;
 
-      @media all and (max-width: 600px) { 
+      @media all and (max-width: 600px) {
         margin-right: 35px;
       }
     }

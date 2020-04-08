@@ -186,18 +186,18 @@
     }
 
     .amount-container {
-      align-items: center;;
+      align-items: center;
       display: flex;
       font-weight: 500;
       margin-left: 5px;
-      
+
       .amount-text {
         max-width: 150px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
-  
+
       .eth-text {
         color: $dark-grey-8;
         margin-left: 3px;
