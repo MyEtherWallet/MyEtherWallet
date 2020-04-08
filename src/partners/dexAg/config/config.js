@@ -1,19 +1,5 @@
 import { swapNotificationStatuses as notificationStatuses } from '../../partnersConfig/config';
 
-const changellyMethods = {
-  ETH: {
-    currencies: 'getCurrencies',
-    currenciesFull: 'getCurrenciesFull',
-    rate: 'getExchangeAmount',
-    min: 'getMinAmount',
-    validate: 'validateAddress',
-    createTransaction: 'createTransaction',
-    status: 'getStatus',
-    createFixTransaction: 'createFixTransaction',
-    getFixRate: 'getFixRate'
-  }
-};
-
 const statuses = {
   new: 'new',
   waiting: 'waiting',
@@ -29,17 +15,24 @@ const statuses = {
 
 const TIME_SWAP_VALID = 300;
 const PROVIDER_NAME = 'dexag';
-const FEE_RATE = 0;
 const PROXY_CONTRACT_ADDRESS = '0x05c449fb434183ef6702e3ff137c1e13cb90943e';
-const requireExtraId = ['XRP', 'STEEM', 'SBD', 'XLM', 'DCT', 'XEM'];
+
+const SUPPORTED_DEXES = [
+  'uniswap', //ETH to Token -> OK, Token to Token ->
+  'bancor', //ETH to Token -> , Token to Token ->
+  'kyber', //ETH to Token -> , Token to Token ->
+  'zero_x', //ETH to Token -> OK , Token to Token ->  | (did have 1 eth-> token fail revert)
+  'radar-relay', //ETH to Token -> , Token to Token ->
+  'oasis', //ETH to Token -> OK, Token to Token ->  | (did have 1 eth-> token fail revert)
+  'synthetix', //ETH to Token -> , Token to Token ->
+  'curvefi' //ETH to Token -> , Token to Token ->
+];
 
 export {
   PROXY_CONTRACT_ADDRESS,
   notificationStatuses,
-  changellyMethods,
   statuses,
-  requireExtraId,
   TIME_SWAP_VALID,
   PROVIDER_NAME,
-  FEE_RATE
+  SUPPORTED_DEXES
 };

@@ -1,8 +1,8 @@
-import {ERC20} from '@/partners';
-import {WETH_ABI} from './config'
+import { ERC20 } from '@/partners';
+import { WETH_ABI } from './config';
 
-export default class DexAgHelper{
-  constructor (web3) {
+export default class DexAgHelper {
+  constructor(web3) {
     this.web3 = web3;
   }
 
@@ -12,10 +12,8 @@ export default class DexAgHelper{
   }
   async getEtherToWrap(trade, provider, signer) {
     const wethTokenAddress = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
-    const methodObject = new this.web3.eth.Contract(
-      WETH_ABI,
-      wethTokenAddress
-    ).methods;//.approve(spender, fromValueWei);
+    const methodObject = new this.web3.eth.Contract(WETH_ABI, wethTokenAddress)
+      .methods; //.approve(spender, fromValueWei);
 
     if (!trade.metadata.input) {
       return 0;
@@ -24,7 +22,11 @@ export default class DexAgHelper{
       return 0;
     }
     const wethAmount = trade.metadata.input.amount;
-    const wethContract = new ethers.Contract(wethTokenAddress, erc20Abi, signer);
+    const wethContract = new ethers.Contract(
+      wethTokenAddress,
+      erc20Abi,
+      signer
+    );
     const accountAddress = await signer.getAddress();
     const wethBalance = await wethContract.balanceOf(accountAddress);
     const balance = await signer.getBalance();

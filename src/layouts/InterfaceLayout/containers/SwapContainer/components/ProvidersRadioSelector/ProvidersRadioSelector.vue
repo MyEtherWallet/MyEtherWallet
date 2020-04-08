@@ -215,6 +215,7 @@ import DexAg from '@/assets/images/etc/dexag.svg';
 import Bancor from '@/assets/images/etc/bancor.png';
 import UniSwap from '@/assets/images/etc/uniswap.svg';
 import Zx from '@/assets/images/etc/0x.png';
+import Oasis from '@/assets/images/etc/oasis.svg';
 
 import { providerNames, fiat } from '@/partners';
 
@@ -305,7 +306,8 @@ export default {
         ag: DexAg,
         uniswap: UniSwap,
         bancor: Bancor,
-        zero_x: Zx
+        zero_x: Zx,
+        oasis: Oasis
       },
       betaLogos: {},
       providerNames: providerNames,

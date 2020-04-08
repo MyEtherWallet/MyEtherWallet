@@ -1,6 +1,5 @@
 import debugLogger from 'debug';
-import { post, get } from '@/helpers/httpRequests';
-import { requireExtraId } from './config';
+import { get } from '@/helpers/httpRequests';
 import { utils } from '../helpers';
 
 const errorLogger = debugLogger('v5-error:changelly-api');
@@ -8,6 +7,9 @@ const errorLogger = debugLogger('v5-error:changelly-api');
 const getSupportedCurrencies = async network => {
   try {
     const currencyList = await get('https://api-v2.dex.ag/token-list-full');
+
+    // const currencyList = await get(`https://swap.mewapi.io/proxy?url=https://api-v2.dex.ag/token-list-full`)
+
     const currencyDetails = {};
     const tokenDetails = {};
     if (currencyList) {
