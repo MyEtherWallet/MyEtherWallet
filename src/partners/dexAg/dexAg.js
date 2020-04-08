@@ -3,8 +3,6 @@ import BigNumber from 'bignumber.js';
 import { ERC20, networkSymbols, EthereumTokens } from '../partnersConfig';
 import { Toast } from '@/helpers';
 
-import DEXAG from 'dexag-sdk';
-
 import {
   notificationStatuses,
   ChangellyCurrencies,
@@ -12,29 +10,23 @@ import {
   TIME_SWAP_VALID,
   PROVIDER_NAME,
   DEX_AG_WALLET_PROXY,
-  PROXY_CONTRACT_ADDRESS
+  PROXY_CONTRACT_ADDRESS,
+  SUPPORTED_DEXES
 } from './config';
 import dexAgCalls from './dexAg-calls';
 import changellyApi from './dexAg-api';
 
 import debug from 'debug';
-import { kyberBaseCurrency } from '@/partners/kyber/config';
 import { utils } from '@/partners';
 
 const errorLogger = debug('v5:partners-changelly');
 
 const disabled = ['USDT'];
-console.log(DEXAG); // todo remove dev item
 
 export default class DexAg {
   constructor(props = {}) {
     this.name = DexAg.getName();
     this.baseCurrency = 'ETH';
-    console.log(DEXAG.fromProvider); // todo remove dev item
-    this.sdk = DEXAG.fromProvider(props.web3.currentProvider);
-    this.sdk.registerStatusHandler((status, data)=>{
-      console.log(status, data)
-    });
     this.network = props.network || networkSymbols.ETH;
     this.EthereumTokens = EthereumTokens;
     this.getRateForUnit =
@@ -117,34 +109,27 @@ export default class DexAg {
     return new BigNumber(outVal).div(inVal);
   }
 
-  // could make it as a multi-provider that takes a setup param and then uses that
-  // should change this to be able to return multiple without changing the structure too much
   async getRate(fromCurrency, toCurrency, fromValue) {
     return new Promise(async resolve => {
-      const vals = await this.sdk.getPrice({
-        to: toCurrency,
-        from: fromCurrency,
-        fromAmount: fromValue,
-        dex: 'all'
-      });
-
-      console.log(vals); // todo remove dev item
-      // const rate = this.calculateRate(fromValue, vals.metadata.source.price);
+      const vals = await dexAgCalls.getPrice(
+        fromCurrency,
+        toCurrency,
+        fromValue
+      );
 
       resolve(
         vals.map(val => {
+          const isKnownToWork = SUPPORTED_DEXES.includes(val.dex);
           return {
             fromCurrency,
             toCurrency,
             provider: val.dex,
-            rate: val.price, //this.calculateRate(fromValue, val.price),
+            rate: isKnownToWork ? val.price : 0,
             additional: { source: 'dexag' }
           };
         })
       );
     });
-    // console.log(vals); // todo remove dev item
-    // return vals;
   }
 
   async getRateUpdate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
@@ -189,64 +174,42 @@ export default class DexAg {
     }
   }
 
-  // async startSwap(swapDetails) {
-  //   let details;
-  //   if (+swapDetails.minValue <= +swapDetails.fromValue) {
-  //     details = await this.createTransaction(swapDetails);
-  //     if (!details) throw Error('abort');
-  //     if (details.message) throw Error(details.message);
-  //     // swapDetails.providerReceives = details.amountExpectedFrom;
-  //     // swapDetails.providerSends = details.amountExpectedTo;
-  //     // swapDetails.parsed = DexAg.parseOrder(details);
-  //     // swapDetails.providerSends = swapDetails.parsed.recValue;
-  //     // swapDetails.orderId = swapDetails.parsed.orderId;
-  //     // swapDetails.providerAddress = details.payinAddress;
-  //     swapDetails.dataForInitialization = details;
-  //     // swapDetails.isDex = DexAg.isDex();
-  //     // swapDetails.validFor = swapDetails.parsed.validFor;
-  //     return swapDetails;
-  //   }
-  //   return Error('From amount below changelly minimum for currency pair');
-  // }
-
   async approve(tokenAddress, spender, fromValueWei) {
-    console.log('approve', tokenAddress, fromValueWei, spender); // todo remove dev item
-    let transferGasEst;
     try {
-      const methodObject = (new this.web3.eth.Contract(
+      const methodObject = new this.web3.eth.Contract(
         ERC20,
         tokenAddress
-      )).methods.approve(spender, fromValueWei);
-      console.log('methodObject', methodObject); // todo remove dev item
+      ).methods.approve(spender, fromValueWei);
       return {
         to: tokenAddress,
         value: 0,
         data: methodObject.encodeABI()
       };
     } catch (e) {
-      console.log(e); // todo remove dev item
       errorLogger(e);
     }
   }
 
   async prepareApprovals(fromAddress, proxyAddress, fromCurrency, metadata) {
     const contract = new this.web3.eth.Contract(
-      [  {
-        constant: true,
-        inputs: [],
-        name: 'approvalHandler',
-        outputs: [
-          {
-            name: '',
-            type: 'address'
-          }
-        ],
-        payable: false,
-        stateMutability: 'view',
-        type: 'function'
-      }],
+      [
+        {
+          constant: true,
+          inputs: [],
+          name: 'approvalHandler',
+          outputs: [
+            {
+              name: '',
+              type: 'address'
+            }
+          ],
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
+        }
+      ],
       PROXY_CONTRACT_ADDRESS
-    )
+    );
     const providerAddress = await contract.methods.approvalHandler().call();
     const isTokenApprovalNeeded = async (fromToken, fromAddress) => {
       if (fromToken === this.baseCurrency)
@@ -297,16 +260,12 @@ export default class DexAg {
       ]);
     }
     return new Set();
-    // const reason = !userCap ? 'user cap value' : 'current token balance';
-    // const errorMessage = `User is not eligible to use kyber network. Current swap value exceeds ${reason}`;
-    // throw Error(errorMessage);
   }
 
   async generateDataForTransactions(
     providerAddress,
     swapDetails,
-    tradeDetails,
-    dexAgTradeDetails
+    tradeDetails
   ) {
     try {
       const preparedTradeTxs = await this.prepareApprovals(
@@ -316,20 +275,20 @@ export default class DexAg {
         tradeDetails.metadata
       );
 
-      // const preparedTradeTxs = new Set();
-
       const tx = {
         to: tradeDetails.trade.to,
         data: tradeDetails.trade.data,
-        value: tradeDetails.trade.value,
+        value: tradeDetails.trade.value
       };
-      preparedTradeTxs.add({ gas: 1000000, ...tx });
+      if (tradeDetails.metadata.gasPrice) {
+        tx.gasPrice = tradeDetails.metadata.gasPrice;
+      }
+      preparedTradeTxs.add(tx);
 
       const swapTransactions = Array.from(preparedTradeTxs);
 
       return [...swapTransactions];
     } catch (e) {
-      console.log(e); // todo remove dev item
       errorLogger(e);
       throw e;
     }
@@ -337,27 +296,10 @@ export default class DexAg {
 
   async startSwap(swapDetails) {
     swapDetails.maybeToken = true;
-    const supported = [
-      'uniswap',
-      'bancor',
-      'kyber',
-      'radar-relay',
-      'oasis',
-      'synthetix'
-    ];
-    const dexToUse = supported.includes(swapDetails.provider)
+
+    const dexToUse = SUPPORTED_DEXES.includes(swapDetails.provider)
       ? swapDetails.provider
       : 'ag';
-    // let dexAgTradeDetails = {};
-    // console.log(await this.createTransaction(swapDetails, dexToUse)); // todo remove dev item
-    // const dexAgTradeDetails = await this.sdk.getTrade({
-    //   to: swapDetails.toCurrency,
-    //   from: swapDetails.fromCurrency,
-    //   toAmount: swapDetails.toValue,
-    //   dex: dexToUse,
-    //   proxy: '0x05c449fb434183ef6702e3ff137c1e13cb90943e'
-    // });
-
 
     const tradeDetails = await this.createTransaction(swapDetails, dexToUse);
     const providerAddress = tradeDetails.metadata.input
@@ -371,7 +313,6 @@ export default class DexAg {
       { ...swapDetails },
       tradeDetails
     );
-    console.log(swapDetails, 'swapDetails.dataForInitialization'); // todo remove dev item
 
     swapDetails.isExitToFiat = false;
     swapDetails.providerReceives = swapDetails.fromValue;
