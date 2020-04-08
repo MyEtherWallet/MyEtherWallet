@@ -44,7 +44,7 @@
               @click="submit"
             >
               <span v-show="!loading">
-                {{ $t('unstoppable.pay') }}
+                {{ $t('unstoppable.continue') }}
               </span>
               <i v-show="loading" class="fa fa-spinner fa-spin" />
             </button>
@@ -70,22 +70,16 @@ export default {
       type: Number,
       default: 0
     },
-    account: {
-      type: Object,
-      default: function () {}
-    },
-    email: {
-      type: String,
-      default: ''
-    },
-    setOrderNumber: { type: Function, default: function () {} }
+    setTokenId: { type: Function, default: function () {} }
   },
   data() {
     return {
       complete: false,
       stripeOptions: {},
       stripeImg,
-      publishableKey: 'pk_live_HAPE6Nv5bfhCJYKe6Nfaaj4P',
+      publishableKey:
+        'pk_test_bERlHfGH5lT9rTIhKPg74H0o' ||
+        'pk_live_HAPE6Nv5bfhCJYKe6Nfaaj4P',
       token: null,
       charge: null,
       loading: false,
@@ -104,48 +98,15 @@ export default {
       );
     },
     submit() {
-      if (!this.account || !this.account.address) {
-        return;
-      }
       this.loading = true;
-      createToken().then(data => {
-        fetch(
-          `https://unstoppabledomains.com/api/v1/resellers/myetherwallet/users/${this.email}/orders`,
-          {
-            method: 'POST',
-            headers: {
-              'content-type': 'Application/JSON'
-            },
-            body: JSON.stringify({
-              order: {
-                domains: [
-                  {
-                    name: this.domainName,
-                    owner: { address: this.account.address },
-                    resolution: {
-                      crypto: { ETH: { address: this.account.address } }
-                    }
-                  }
-                ],
-                payment: { type: 'stripe', tokenId: data.token.id }
-              }
-            })
-          }
-        )
-          .then(resp => {
-            if (resp.status === 200) {
-              return resp.json();
-            }
-            throw new Error('Failed to submit payment');
-          })
-          .then(({ order }) => {
-            this.setOrderNumber(order.orderNumber);
-            this.$router.push('/interface/dapps/unstoppable/claim-pending');
-          })
-          .catch(() => {
-            this.paymentError = true;
-          });
-      });
+      createToken()
+        .then(data => {
+          this.setTokenId(data.token.id);
+          this.$router.push('/interface/dapps/unstoppable/buy/confirm');
+        })
+        .catch(() => {
+          this.paymentError = true;
+        });
     }
   }
 };

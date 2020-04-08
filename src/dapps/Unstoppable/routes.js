@@ -6,6 +6,7 @@ const InitialUnstoppableStateContainer = () =>
 //   import('./containers/PaymentMethodContainer');
 const StripeContainer = () => import('./containers/StripeContainer');
 const CryptoContainer = () => import('./containers/CryptoContainer');
+const ConfirmContainer = () => import('./containers/ConfirmContainer');
 const ClaimPendingContainer = () =>
   import('./containers/ClaimPendingContainer');
 const CompletedContainer = () => import('./containers/CompletedContainer');
@@ -41,8 +42,14 @@ export default {
       props: true
     },
     {
+      path: 'buy/confirm',
+      name: 'Confirm payment',
+      component: ConfirmContainer,
+      props: true
+    },
+    {
       path: 'claim-pending',
-      name: 'Claim Pending',
+      name: 'Claim pending',
       component: ClaimPendingContainer,
       props: true
     },
