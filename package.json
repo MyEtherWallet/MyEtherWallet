@@ -77,7 +77,7 @@
     "@keepkey/keepkey.js": "1.2.3",
     "@ledgerhq/hw-app-eth": "5.12.2",
     "@ledgerhq/hw-transport-u2f": "5.12.0",
-    "@ledgerhq/hw-transport-webusb": "5.12.0",
+    "@ledgerhq/hw-transport-webusb": "5.13.0",
     "@makerdao/currency": "0.9.7",
     "@makerdao/dai": "0.28.3",
     "@makerdao/dai-plugin-config": "0.2.14-rc.1",
