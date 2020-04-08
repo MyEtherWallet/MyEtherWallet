@@ -141,7 +141,7 @@
     "sass-loader": "8.0.2",
     "sinon": "9.0.1",
     "store": "2.0.12",
-    "string-replace-loader": "2.2.0",
+    "string-replace-loader": "2.3.0",
     "stylelint": "13.2.1",
     "stylelint-config-prettier": "8.0.1",
     "stylelint-config-standard": "20.0.0",
