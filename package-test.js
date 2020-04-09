@@ -20,7 +20,8 @@ const EXCEPTIONS = [
   'multicoin-address-validator',
   'vee-validate',
   '@xkeshi/vue-qrcode',
-  '@vue/test-utils'
+  '@vue/test-utils',
+  'graphql'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
