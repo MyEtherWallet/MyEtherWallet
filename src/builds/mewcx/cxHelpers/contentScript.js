@@ -266,6 +266,7 @@ events[WEB3_RPC_REQUEST] = function (e) {
     },
     {},
     data => {
+      console.log(data);
       if (data.error) {
         window.dispatchEvent(
           new CustomEvent(`${WEB3_RPC_REQUEST}-${e.detail.id}-err`, {

@@ -100,6 +100,7 @@ import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
 import { Misc } from '@/helpers';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 import {
   REJECT_MEW_TX_SIGN,
   MEW_TX_HASH,
@@ -176,7 +177,7 @@ export default {
       const _self = this;
       this.loading = true;
       const payload = {
-        signer: _self.txParams.from,
+        signer: toChecksumAddress(_self.txParams.from),
         params: _self.txParams,
         password: this.password
       };

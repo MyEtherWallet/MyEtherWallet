@@ -41,6 +41,7 @@ import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import PasswordModalComponent from '../../components/PasswordModalComponent';
 import AcceptCancelButtons from '../../components/AcceptCancelButtons';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 import {
   MEW_SIGNED_MSG,
   REJECT_MEW_SIGN_MSG,
@@ -85,7 +86,7 @@ export default {
       const id = window.chrome.runtime.id;
       const chrome = window.chrome;
       const payload = {
-        signer: address,
+        signer: toChecksumAddress(address),
         msg: msgToSign,
         password: this.password
       };

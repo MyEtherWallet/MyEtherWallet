@@ -26,7 +26,7 @@ const webpackConfig = {
     new CopyWebpackPlugin([
       {
         from: 'src/builds/mewcx/public',
-        transform: function(content, filePath) {
+        transform: function (content, filePath) {
           // eslint-disable-next-line no-useless-escape
           if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json') {
             const version = JSON.parse(env_vars.VERSION);
