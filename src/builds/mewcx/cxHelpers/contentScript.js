@@ -31,6 +31,20 @@ import {
 
 import xss from 'xss';
 
+import {
+  csErrors,
+  csInjectedWeb3,
+  csSelecctedAcc,
+  csSignedMsg,
+  csTxHash,
+  csWebInjectionSuccessful,
+  csWeb3SubscriptionError,
+  csWeb3SubscribeSuccess,
+  csWeb3SubscriptionSuccess
+} from './contentScriptEvents';
+import { extractRootDomain } from './extractRootDomain';
+import MiddleWare from '@/wallets/web3-provider/middleware';
+
 const varType = variable => {
   const isArray =
     variable && variable instanceof Array && typeof variable === 'object';
@@ -84,20 +98,6 @@ const recursivePayloadStripper = val => {
 
   return val;
 };
-
-import {
-  csErrors,
-  csInjectedWeb3,
-  csSelecctedAcc,
-  csSignedMsg,
-  csTxHash,
-  csWebInjectionSuccessful,
-  csWeb3SubscriptionError,
-  csWeb3SubscribeSuccess,
-  csWeb3SubscriptionSuccess
-} from './contentScriptEvents';
-import { extractRootDomain } from './extractRootDomain';
-import MiddleWare from '@/wallets/web3-provider/middleware';
 
 const chrome = window.chrome;
 const extensionID = chrome.runtime.id;
@@ -266,6 +266,7 @@ events[WEB3_RPC_REQUEST] = function (e) {
     },
     {},
     data => {
+      console.log(data);
       if (data.error) {
         window.dispatchEvent(
           new CustomEvent(`${WEB3_RPC_REQUEST}-${e.detail.id}-err`, {

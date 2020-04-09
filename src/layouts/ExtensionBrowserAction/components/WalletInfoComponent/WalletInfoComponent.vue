@@ -1,256 +1,295 @@
 <template>
   <div class="wallet-info-container">
-    <interface-tokens-modal ref="tokenModal" :add-token="addToken" />
+    <div class="wallet-info-header">
+      <div class="address-and-blockie">
+        <div class="blockie-container">
+          <blockie :address="address" width="50px" height="50px" />
+        </div>
+        <div class="address-and-nickname-container">
+          <p>
+            <b> {{ nickname }} </b>
+          </p>
+          <p>
+            {{ concattedAddr }}
+            <img
+              src="@/assets/images/icons/copy_white.png"
+              @click.stop="copyAddress"
+            />
+          </p>
+          <input ref="addressInput" v-model="address" />
+        </div>
+      </div>
+      <div class="wallet-options">
+        <b-dropdown
+          toggle-class="wallet-options-toggle"
+          no-caret
+          offset="-60"
+          menu-class="wallet-options-menu"
+        >
+          <template v-slot:button-content>
+            <i class="fa fa-ellipsis-v fa-lg" />
+          </template>
+          <b-dropdown-text
+            v-if="walletType !== 'watchOnly'"
+            @click.stop="
+              () => {
+                openPasswordModal('access');
+              }
+            "
+            >Access</b-dropdown-text
+          >
+          <b-dropdown-text
+            v-if="walletType !== 'watchOnly'"
+            @click.stop="
+              () => {
+                openPasswordModal('view');
+              }
+            "
+            >View</b-dropdown-text
+          >
+          <b-dropdown-text @click="edit">Rename</b-dropdown-text>
+          <b-dropdown-divider></b-dropdown-divider>
+          <b-dropdown-text class="remove-text" @click.stop="openRemoveWallet"
+            >Remove</b-dropdown-text
+          >
+        </b-dropdown>
+        <i
+          :class="[
+            'fa fa-lg',
+            !favorited ? 'fa-heart-o' : 'fa-heart heart-color'
+          ]"
+          @click.stop="
+            () => {
+              addToFavorites(address, nickname);
+            }
+          "
+        />
+      </div>
+    </div>
+    <div class="wallet-info-body">
+      <div
+        v-show="showBalanceReminder"
+        v-if="balanceWarnHidden"
+        class="low-eth-warning"
+      >
+        <div class="warning-container">
+          <p class="actual-warning">
+            <img src="@/assets/images/icons/exclamation.svg" />
+            The ETH balance of your wallet is running low.
+          </p>
+          <img
+            src="@/assets/images/icons/close.svg"
+            @click.stop="balanceWarnHidden = !balanceWarnHidden"
+          />
+        </div>
+        <div class="link-container">
+          <a
+            href="https://ccswap.myetherwallet.com/#/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Buy ETH
+          </a>
+        </div>
+      </div>
+      <div class="main-wallet-content">
+        <div class="main-wallet-content-container">
+          <div class="wallet-value-with-img">
+            <div class="wallet-img-container">
+              <img
+                v-if="page === ''"
+                alt
+                class="icon"
+                src="~@/assets/images/icons/wallet-with-background.svg"
+              />
+              <img
+                v-else-if="page !== '' && walletType !== 'watchOnly'"
+                v-b-popover.hover.top="'My Wallet'"
+                alt
+                class="icon"
+                src="~@/assets/images/icons/wallet_grey.svg"
+              />
+              <img
+                v-else
+                v-b-popover.hover.top="'Watch Only Wallet'"
+                alt
+                class="icon"
+                src="~@/assets/images/icons/eye_grey.svg"
+              />
+            </div>
+            <div class="wallet-value-container">
+              <p class="title">Total Wallet Value</p>
+              <p class="dollar-amt">
+                {{
+                  network.type.name === 'ETH'
+                    ? walletTokensWithBalance.totalWalletBalance
+                    : fixedEthBalance
+                }}
+              </p>
+            </div>
+          </div>
+          <div class="wallet-value-container">
+            <p class="title">{{ network.type.currencyName }} Balance</p>
+            <p class="dollar-amt">
+              {{
+                network.type.name === 'ETH' ? convertedBalance : fixedEthBalance
+              }}
+            </p>
+            <p v-if="network.type.name === 'ETH'" class="value">
+              {{ fixedEthBalance }}
+            </p>
+          </div>
+          <div class="wallet-value-container">
+            <p class="title">Value of Token</p>
+            <p class="dollar-amt">{{ walletTokensWithBalance.total }}</p>
+            <p class="value">
+              {{ walletTokensWithBalance.tokensWDollarAmtLength }} tokens
+            </p>
+          </div>
+        </div>
+        <div
+          :class="[
+            'view-all-container',
+            walletTokensWithBalance.tokensWDollarAmt.length > 0
+              ? ''
+              : 'disable-token-show'
+          ]"
+          @click.stop="showTokens = !showTokens"
+        >
+          <p>{{ showTokens ? 'Hide all tokens' : 'View all tokens' }}</p>
+          <i :class="['fa', showTokens ? 'fa-angle-up' : 'fa-angle-down']" />
+        </div>
+      </div>
+      <div v-show="showTokens" class="wallet-tokens">
+        <table v-if="walletTokensWithBalance.tokensWDollarAmt.length > 0">
+          <tr class="table-header">
+            <th>
+              TOKEN NAME
+            </th>
+            <th>
+              PRICE
+            </th>
+            <th>
+              MARKET CAP
+            </th>
+            <th>
+              CHANGE (24H)
+            </th>
+            <th>
+              AMOUNT
+            </th>
+            <th>
+              MY VALUE
+            </th>
+          </tr>
+          <tr
+            v-for="(token, idx) in walletTokensWithBalance.tokensWDollarAmt"
+            :key="token.symbol + `${idx}`"
+            class="table-body"
+          >
+            <td>
+              <div class="name-container">
+                <p>
+                  {{ token.tokenMew.name }}
+                  ({{ token.tokenMew.symbol }})
+                </p>
+              </div>
+            </td>
+            <td>$ {{ token.tokenData.quotes.USD.price }}</td>
+            <td>$ {{ moneyFormat(token.tokenData.quotes.USD.market_cap) }}</td>
+            <td>
+              <p
+                :class="
+                  isGreateThanZero(
+                    token.tokenData.quotes.USD.percent_change_24h
+                  )
+                    ? 'green'
+                    : 'red'
+                "
+              >
+                {{ toDecimal(token.tokenData.quotes.USD.percent_change_24h) }}%
+                <img
+                  :src="
+                    isGreateThanZero(
+                      token.tokenData.quotes.USD.percent_change_24h
+                    )
+                      ? require('@/assets/images/icons/arrow_up.svg')
+                      : require('@/assets/images/icons/arrow_down.svg')
+                  "
+                />
+              </p>
+            </td>
+            <td>{{ token.tokenMew.balance }}</td>
+            <td>
+              {{
+                toDollar(
+                  token.tokenMew.balance * token.tokenData.quotes.USD.price
+                )
+              }}
+            </td>
+          </tr>
+        </table>
+
+        <div v-else>
+          Can't find tokens with value.
+        </div>
+      </div>
+    </div>
     <edit-wallet-modal
       ref="editModal"
       :address="address"
       :name="parsedWallet.nick"
       :wallet="parsedWallet"
-      :remove-wallet="openRemoveWallet"
     />
     <remove-wallet-modal
       ref="removeWalletModal"
-      :cancel-remove="cancelRemove"
       :wallet-type="parsedWallet.type"
-      :nickname="parsedWallet.nick"
       :address="address"
+      :remove-wallet="removeWallet"
+      :nickname="nickname"
+      @password="e => (password = e)"
     />
-    <b-modal
-      ref="viewAllModal"
-      hide-footer
-      hide-header
-      modal-class="cx-token-modal"
-    >
-      <div class="modal-header-contaier">
-        <div>
-          <h3>
-            {{ $t('mewcx.all-tokens') }}
-            <span class="token-count"> {{ tokens.length }} </span>
-          </h3>
-          <div class="modal-nickname">
-            <p>{{ parsedWallet.nick }}</p>
-          </div>
-        </div>
-        <div class="header-buttons">
-          <div class="header-button">
-            <i class="fa fa-repeat fa-lg" @click="fetchTokens" />
-          </div>
-          <div class="header-button">
-            <i
-              class="fa fa-times fa-lg"
-              @click="
-                () => {
-                  viewAllTokens(false);
-                }
-              "
-            />
-          </div>
-        </div>
-      </div>
-      <div class="token-search-container">
-        <input v-model="search" :placeholder="$t('mewcx.search-tokens')" />
-        <i class="fa fa-search" />
-      </div>
-      <div class="modal-tokens-container">
-        <div v-show="loading" class="loading-container">
-          <i class="fa fa-spinner fa-spin" />
-          {{ $t('mewcx.loading-tokens') }}...
-        </div>
-        <div v-show="!loading" class="tokens-container">
-          <div
-            v-for="(token, idx) in localCustomTokens"
-            :key="token.address + address + idx"
-            class="modal-token-item"
-          >
-            <div class="icon-name-container">
-              <img :src="token.logo.src" />
-              <p>
-                {{ token.name }} ({{ $t('mewcx.custom') }}) <br />
-                <span>{{ token.balance }}</span>
-              </p>
-            </div>
-          </div>
-          <div
-            v-for="(token, idx) in localTokenVersion"
-            :key="token.address + address + idx"
-            class="modal-token-item"
-          >
-            <div class="icon-name-container">
-              <img :src="token.logo.src" />
-              <p>
-                {{ token.name }} <br />
-                <span>{{ token.balance }}</span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </b-modal>
-    <div class="nickname-and-buttons">
-      <p>
-        {{ parsedWallet.nick }}
-      </p>
-      <div class="button-container">
-        <div
-          v-show="walletType !== 'watchOnly'"
-          class="clickable"
-          @click="
-            () => {
-              access(wallet, 'access');
-            }
-          "
-        >
-          {{ $t('mewcx.access') }}
-        </div>
-        <div
-          v-show="walletType !== 'watchOnly'"
-          class="clickable"
-          @click="
-            () => {
-              detail(wallet, 'view', nickname);
-            }
-          "
-        >
-          {{ $t('mewcx.details') }}
-        </div>
-        <div class="clickable" @click="edit">{{ $t('mewcx.edit') }}</div>
-      </div>
-    </div>
-    <div class="wallet-content">
-      <div class="address-and-balance-container">
-        <div class="address-content-container">
-          <div class="address-info">
-            <div class="blockie-container">
-              <blockie :address="address" width="50px" height="50px" />
-            </div>
-            <div class="actual-address">
-              <p>{{ $t('common.addr') }}</p>
-              <p class="d-none d-xl-block">{{ address }}</p>
-              <p class="d-block d-xl-none">{{ address | concatAddress }}</p>
-              <input ref="addressInput" :value="address" />
-            </div>
-          </div>
-          <div class="copy-button">
-            <p @click="copyAddress">{{ $t('common.copy') }}</p>
-          </div>
-        </div>
-        <div class="balance-container">
-          <p>{{ $t('common.balance.string') }}</p>
-          <div>
-            <p class="actual-balance">
-              {{ balance }} <span>{{ network.type.name }}</span>
-            </p>
-            <p v-if="network.type.name === 'ETH'" class="dollar-balance">
-              {{ convertedBalance }}
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="tokens-container">
-        <div class="tokens-header">
-          <p>
-            {{ $t('mewcx.tokens') }}
-          </p>
-          <b-dropdown :no-caret="true" class="cx-dropdown">
-            <template slot="button-content">
-              <i class="fa fa-lg fa-ellipsis-h" />
-            </template>
-            <b-dropdown-item @click="openAddCustom">{{
-              $t('mewcx.add')
-            }}</b-dropdown-item>
-            <b-dropdown-item @click="fetchTokens">{{
-              $t('mewcx.refresh')
-            }}</b-dropdown-item>
-            <b-dropdown-item
-              @click="
-                () => {
-                  viewAllTokens(true);
-                }
-              "
-              >{{ $t('mewcx.view-all') }}</b-dropdown-item
-            >
-          </b-dropdown>
-        </div>
-        <div class="token-search-container">
-          <input v-model="search" :placeholder="$t('mewcx.search-tokens')" />
-          <i class="fa fa-search" />
-        </div>
-        <div class="actual-tokens-container">
-          <div v-show="loading" class="loading-container">
-            <i class="fa fa-spinner fa-spin" />
-            {{ $t('mewcx.loading-tokens') }}...
-          </div>
-          <div v-show="!loading">
-            <div
-              v-for="(token, idx) in localCustomTokens"
-              :key="token.address + idx"
-              class="token-item"
-            >
-              <p>
-                {{ token.name }}
-              </p>
-              <div class="balance-container">
-                <p
-                  :class="[token.balance !== 'Load' ? '' : 'manual-load']"
-                  @click="
-                    token.balance !== 'Load'
-                      ? () => {}
-                      : fetchTokenBalance(token)
-                  "
-                >
-                  {{ token.balance }}
-                </p>
-                <i class="fa fa-times" @click="removeCustomToken(token)" />
-              </div>
-            </div>
-            <div
-              v-for="(token, idx) in localTokenVersion"
-              :key="token.address + idx"
-              class="token-item"
-            >
-              <p>
-                {{ token.name }}
-              </p>
-              <p
-                :class="[token.balance !== 'Load' ? '' : 'manual-load']"
-                @click="
-                  token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)
-                "
-              >
-                {{ token.balance }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <password-only-modal
+      v-if="wallet !== 'watchOnly'"
+      ref="passwordOnlyModal"
+      :path="path"
+      :valid-input="validInput"
+      :submit="path === 'access' ? accessWallet : viewWallet"
+      @password="e => (password = e)"
+    />
+    <verify-details-modal
+      v-if="wallet !== 'watchOnly'"
+      ref="verifyWalletModal"
+      :wallet="wallet"
+      :usd="usd"
+      :nickname="nickname"
+      :wallet-tokens-with-balance="walletTokensWithBalance"
+      :file="file"
+    />
   </div>
 </template>
 <script>
 import Blockie from '@/components/Blockie';
-import TokenBalance from '@myetherwallet/eth-token-balance';
-import sortByBalance from '@/helpers/sortByBalance.js';
 import BigNumber from 'bignumber.js';
 import EditWalletModal from '../EditWalletModal';
 import RemoveWalletModal from '../RemoveWalletModal';
-import { mapState } from 'vuex';
-import { Toast } from '@/helpers';
-import store from 'store';
-import * as networkTypes from '@/networks/types';
+import { mapState, mapActions } from 'vuex';
+import { Toast, Misc, ExtensionHelpers } from '@/helpers';
 import utils from 'web3-utils';
-import InterfaceTokensModal from '@/layouts/InterfaceLayout/components/InterfaceTokensModal';
+import masterFile from '@/master-file.json';
+import PasswordOnlyModal from '../PasswordOnlyModal';
+import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
+import { WalletInterface } from '@/wallets';
+import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
+import VerifyDetailsModal from '../VerifyDetailsModal';
+
 export default {
-  filters: {
-    concatAddress(value) {
-      if (!value) return '';
-      return `${value.substr(0, 32)}...${value.substr(value.length - 7)}`;
-    }
-  },
   components: {
     blockie: Blockie,
     'edit-wallet-modal': EditWalletModal,
     'remove-wallet-modal': RemoveWalletModal,
-    'interface-tokens-modal': InterfaceTokensModal
+    'password-only-modal': PasswordOnlyModal,
+    'verify-details-modal': VerifyDetailsModal
   },
   props: {
     address: {
@@ -269,14 +308,6 @@ export default {
       type: String,
       default: 'watchOnly'
     },
-    access: {
-      type: Function,
-      default: () => {}
-    },
-    detail: {
-      type: Function,
-      default: () => {}
-    },
     balance: {
       type: String,
       default: ''
@@ -284,324 +315,385 @@ export default {
     usd: {
       type: Number,
       default: 0
+    },
+    prices: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    },
+    page: {
+      type: String,
+      default: ''
+    },
+    walletToken: {
+      type: Array,
+      default: () => {}
     }
   },
   data() {
     return {
       loading: false,
       tokens: [],
-      search: '',
       localTokenVersion: [],
       customTokens: [],
-      localCustomTokens: []
+      localCustomTokens: [],
+      showTokens: false,
+      masterFile: masterFile,
+      favorited: false,
+      balanceWarnHidden: true,
+      path: 'access',
+      password: ''
     };
   },
   computed: {
     ...mapState('main', ['network', 'web3']),
+    showBalanceReminder() {
+      if (this.network.type.name === 'ETH' && this.walletType !== 'watchOnly') {
+        return this.showLowBalance;
+      }
+      return false;
+    },
+    validInput() {
+      return (
+        (this.password !== '' || this.password.length > 0) &&
+        this.walletRequirePass(JSON.parse(this.wallet).priv)
+      );
+    },
+    file() {
+      if (this.walletType !== 'watchOnly') {
+        return JSON.parse(JSON.parse(this.wallet).priv);
+      }
+      return {};
+    },
+    showLowBalance() {
+      const lessThan = new BigNumber(this.balance).lte(0.05);
+      return lessThan;
+    },
     parsedWallet() {
       return JSON.parse(this.wallet);
     },
     convertedBalance() {
-      const balance = new BigNumber(this.balance).times(this.usd).toFixed(2);
-      return `$ ${balance}`;
-    }
-  },
-  watch: {
-    search(newVal) {
-      this.loading = true;
-      if (newVal !== '') {
-        this.localTokenVersion = this.tokens.slice().filter(token => {
-          if (token.symbol.toLowerCase().includes(newVal.toLowerCase())) {
-            return token;
-          }
-        });
+      const balance = new BigNumber(this.balance).times(this.usd).toNumber();
+      return this.toDollar(balance);
+    },
+    concattedAddr() {
+      return (
+        this.address.substr(0, 18) +
+        '...' +
+        this.address.substr(this.address.length - 6, this.address.length)
+      );
+    },
+    fixedEthBalance() {
+      const currencyBalance = new BigNumber(this.balance).toFixed(3);
+      return `${currencyBalance} ${this.network.type.currencyName}`;
+    },
+    walletTokensWithBalance() {
+      const tokensWithBalance = this.walletToken.filter(item => {
+        return item.balance !== 'Load' && new BigNumber(item.balance).gt(0);
+      });
+      let totalTokenAmt = new BigNumber(0);
+      const tokensWithDollarAmt = [];
+      tokensWithBalance.forEach(item => {
+        if (this.prices[item.symbol]) {
+          const convertedBalancePrice = new BigNumber(
+            this.prices[item.symbol].quotes.USD.price
+          ).times(item.balance);
+          totalTokenAmt = totalTokenAmt.plus(convertedBalancePrice);
+          tokensWithDollarAmt.push({
+            tokenMew: item,
+            tokenData: this.prices[item.symbol]
+          });
+        }
+      });
 
-        this.localCustomTokens = this.customTokens.slice().filter(token => {
-          if (token.symbol.toLowerCase().includes(newVal.toLowerCase())) {
-            return token;
-          }
-        });
-        this.loading = false;
-      } else {
-        this.loading = false;
-        this.localTokenVersion = this.tokens.slice();
-        this.localCustomTokens = this.customTokens.slice();
-      }
+      const currencyDollar = new BigNumber(this.balance).times(this.usd);
+      const totalWalletBalance = currencyDollar.plus(totalTokenAmt).toNumber();
+
+      return {
+        tokens: tokensWithBalance,
+        length: tokensWithBalance.length,
+        tokensWDollarAmt: tokensWithDollarAmt,
+        tokensWDollarAmtLength: tokensWithDollarAmt.length,
+        total: this.toDollar(totalTokenAmt.toNumber()),
+        totalWalletBalance: this.toDollar(totalWalletBalance)
+      };
     }
   },
   created() {
-    window.chrome.storage.onChanged.addListener(this.fetchTokens);
+    window.chrome.storage.onChanged.addListener(this.checkIfFavorited);
   },
   mounted() {
-    this.fetchTokens();
+    window.chrome.storage.sync.get('favorites', this.checkIfFavorited);
   },
   destroyed() {
-    window.chrome.storage.onChanged.removeListener(this.fetchTokens);
+    window.chrome.storage.onChanged.removeListener(this.checkIfFavorited);
   },
   methods: {
-    removeCustomToken(token) {
-      const idx = this.customTokens.findIndex(item => {
-        return item.address.toLowerCase() === token.address.toLowerCase();
-      });
-      const storedTokens = store.get('customTokens');
-      this.customTokens.splice(idx, 1);
-      this.localCustomTokens = this.customTokens.splice();
-      storedTokens[this.network.type.name] = this.customTokens;
-      store.set('customTokens', storedTokens);
-      this.fetchTokens();
-    },
-    searchBySymbol(symbol) {
-      const searchNetwork = this.localTokenVersion.find(item => {
-        return item.symbol.toLowerCase() === symbol.toLowerCase();
-      });
-
-      const searchCustom = this.customTokens.find(item => {
-        return item.symbol.toLowerCase() === symbol.toLowerCase();
-      });
-
-      if (searchNetwork !== undefined || searchCustom !== undefined) {
+    ...mapActions('main', ['decryptWallet']),
+    walletRequirePass(ethjson) {
+      if (ethjson.encseed != null) return true;
+      else if (ethjson.Crypto != null || ethjson.crypto != null) return true;
+      else if (ethjson.hash != null && ethjson.locked) return true;
+      else if (ethjson.hash != null && !ethjson.locked) return false;
+      else if (ethjson.publisher == 'MyEtherWallet' && !ethjson.encrypted)
         return false;
-      }
       return true;
     },
-    searchByAddr(addr) {
-      const searchNetwork = this.localTokenVersion.find(item => {
-        return (
-          utils.toChecksumAddress(item.address) ===
-          utils.toChecksumAddress(addr)
-        );
-      });
-
-      const searchCustom = this.customTokens.find(item => {
-        return (
-          utils.toChecksumAddress(item.address) ===
-          utils.toChecksumAddress(addr)
-        );
-      });
-
-      if (searchNetwork !== undefined || searchCustom !== undefined) {
-        return false;
-      }
-      return true;
+    openPasswordModal(action) {
+      this.path = action;
+      this.$refs.passwordOnlyModal.$refs.passwordOnlyModal.$refs.modalWrapper.show();
     },
-    tokenError(address, symbol, addType) {
-      const findTokenBySymbol = this.searchBySymbol(symbol);
-      const findTokenByAddr = this.searchByAddr(address);
-      if (!findTokenByAddr && addType !== '') {
-        this.$refs.tokenModal.$refs.tokenModal.hide();
-        Toast.responseHandler(
-          'A default or custom token with this contract address already exists!',
-          Toast.ERROR
-        );
-        return false;
-      } else if (!findTokenBySymbol && addType !== '') {
-        this.$refs.tokenModal.$refs.tokenModal.hide();
-        Toast.responseHandler(
-          `A default or custom token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!`,
-          Toast.ERROR
-        );
-        return false;
-      }
-      return findTokenByAddr || findTokenBySymbol;
-    },
-    async addToken(address, symbol, decimal) {
-      if (this.tokenError(address, symbol, 'manual')) {
-        const token = {
-          address: address,
-          decimals: decimal,
-          email: '',
-          name: symbol,
-          symbol: symbol,
-          website: '',
-          type: 'custom'
-        };
-        token['balance'] = await this.fetchTokenBalance(token);
-        const currentCustomToken = store.get('customTokens');
-        this.customTokens =
-          this.customTokens.length > 0 ? this.customTokens : [];
-        this.customTokens.push(token);
-        this.localCustomTokens = this.customTokens.splice();
-        currentCustomToken[this.network.type.name] = this.customTokens;
-        store.set('customTokens', currentCustomToken);
-        this.$refs.tokenModal.$refs.tokenModal.hide();
-        this.fetchTokenBalance(token);
-        await this.fetchTokens();
-        Toast.responseHandler(
-          this.$t('mewcx.token-added-success'),
-          Toast.SUCCESS
-        );
-      }
-    },
-    openAddCustom() {
-      this.$refs.tokenModal.$refs.tokenModal.show();
-    },
-    cancelRemove() {
-      this.edit();
-      this.$refs.removeWalletModal.$refs.removeWalletModal.hide();
-    },
-    edit() {
-      this.$refs.editModal.$refs.editModal.show();
-    },
-    async fetchTokenBalance(token) {
-      const tokenIndex = this.tokens.findIndex(element => {
-        return element.address.toLowerCase() === token.address.toLowerCase();
-      });
-      const customIdx = this.customTokens.findIndex(element => {
-        return element.address.toLowerCase() === token.address.toLowerCase();
-      });
-      const contractAbi = [
-        {
-          name: 'balanceOf',
-          type: 'function',
-          constant: true,
-          inputs: [{ name: 'address', type: 'address' }],
-          outputs: [{ name: 'out', type: 'uint256' }]
-        }
-      ];
-      const contract = new this.web3.eth.Contract(contractAbi);
-      const data = contract.methods.balanceOf(this.address).encodeABI();
-      const balance = await this.web3.eth
-        .call({
-          to: token.address,
-          data: data
-        })
-        .then(res => {
-          let tokenBalance;
-          if (Number(res) === 0 || res === '0x') {
-            tokenBalance = 0;
-          } else {
-            const denominator = new BigNumber(10).pow(token.decimals);
-            tokenBalance = new BigNumber(res).div(denominator).toString();
-          }
-          return tokenBalance;
-        })
-        .catch(e => {
-          Toast.responseHandler(e, false);
+    removeWallet() {
+      this.loading = true;
+      if (this.walletType !== 'watchOnly') {
+        const worker = new walletWorker();
+        worker.postMessage({
+          type: 'unlockWallet',
+          data: [this.file, this.password]
         });
-      this.localTokenVersion = this.localTokenVersion.map((item, idx) => {
-        if (idx === tokenIndex) {
-          item.balance = balance;
-        }
-        return item;
-      });
 
-      this.localCustomTokens = this.localCustomTokens.map((item, idx) => {
-        if (idx === customIdx) {
-          item.balance = balance;
-        }
-        return item;
+        worker.onmessage = () => {
+          this.loading = false;
+          ExtensionHelpers.deleteWalletFromStore(this.address, () => {
+            this.$refs.removeWalletModal.$refs.removeWalletModal.$refs.modalWrapper.hide();
+            Toast.responseHandler('Removed Wallet Successfully', Toast.SUCCESS);
+          });
+        };
+        worker.onerror = e => {
+          e.preventDefault();
+          this.loading = false;
+          Toast.responseHandler(e, Toast.ERROR);
+        };
+      } else {
+        ExtensionHelpers.deleteWalletFromStore(this.address, () => {
+          Toast.responseHandler('Removed Wallet Successfully', Toast.SUCCESS);
+        });
+      }
+    },
+    viewWallet() {
+      this.loading = true;
+      const nickname =
+        this.nickname !== null && this.nickname.length > 0 ? this.nickname : '';
+      const worker = new walletWorker();
+      worker.postMessage({
+        type: 'unlockWallet',
+        data: [this.file, this.password]
       });
+      worker.onmessage = e => {
+        const obj = {
+          file: this.file,
+          name: e.data.filename
+        };
 
-      return balance;
+        this.decryptWallet([
+          new WalletInterface(
+            Buffer.from(e.data._privKey),
+            false,
+            keyStoreType,
+            nickname,
+            JSON.stringify(obj)
+          )
+        ]).then(() => {
+          this.loading = false;
+          this.password = '';
+          this.openViewWallet();
+        });
+      };
+      worker.onerror = e => {
+        e.preventDefault();
+        this.loading = false;
+        Toast.responseHandler(e, Toast.ERROR);
+      };
+    },
+    accessWallet() {
+      const _self = this;
+      _self.loading = true;
+      const nickname =
+        _self.nickname !== null && _self.nickname.length > 0
+          ? _self.nickname
+          : '';
+      const worker = new walletWorker();
+      worker.postMessage({
+        type: 'unlockWallet',
+        data: [_self.file, _self.password]
+      });
+      worker.onmessage = e => {
+        const obj = {
+          file: _self.file,
+          name: e.data.filename
+        };
+
+        _self
+          .decryptWallet([
+            new WalletInterface(
+              Buffer.from(e.data._privKey),
+              false,
+              keyStoreType,
+              nickname,
+              JSON.stringify(obj)
+            )
+          ])
+          .then(() => {
+            _self.loading = false;
+            _self.password = '';
+            _self.$router.push({
+              path: 'interface'
+            });
+          });
+      };
+      worker.onerror = e => {
+        e.preventDefault();
+        _self.loading = false;
+        Toast.responseHandler(e, Toast.ERROR);
+      };
+    },
+    openViewWallet() {
+      this.$refs.verifyWalletModal.$refs.viewWalletModal.$refs.modalWrapper.show();
+      this.$refs.passwordOnlyModal.$refs.passwordOnlyModal.$refs.modalWrapper.hide();
+    },
+    addToFavorites(address, nickname) {
+      const dateAdded = new Date();
+      const toAdd = {
+        address,
+        nickname,
+        dateAdded
+      };
+
+      window.chrome.storage.sync.get('favorites', item => {
+        if (Object.keys(item).length > 0) {
+          const parsedItem = JSON.parse(item['favorites']);
+          const alreadyStored = parsedItem.find(item => {
+            return item.address === toAdd.address;
+          });
+          if (!alreadyStored) {
+            parsedItem.push(toAdd);
+          } else {
+            const idx = parsedItem.findIndex(item => {
+              return item.address === toAdd.address;
+            });
+            parsedItem.splice(idx, 1);
+          }
+          window.chrome.storage.sync.set(
+            { favorites: JSON.stringify(parsedItem) },
+            () => {}
+          );
+        }
+      });
+    },
+    retrieveLogo(address, symbol) {
+      const networkMasterFile = this.masterFile.data.filter(item => {
+        return (
+          item.network.toLowerCase() === this.network.type.name.toLowerCase()
+        );
+      });
+      try {
+        // eslint-disable-next-line
+        const image = require(`@/assets/images/currency/coins/AllImages/${symbol}.svg`);
+        return image;
+      } catch (e) {
+        const foundToken = networkMasterFile.find(item => {
+          return (
+            utils.toChecksumAddress(item.contract_address) ===
+            utils.toChecksumAddress(address)
+          );
+        });
+
+        if (foundToken) {
+          return foundToken.icon;
+        }
+        try {
+          // eslint-disable-next-line
+          return require(`@/assets/images/networks/${symbol.toLowerCase()}`);
+        } catch (e) {
+          return this.network.type.icon;
+        }
+      }
+    },
+    isGreateThanZero(val) {
+      return new BigNumber(val).gt(0);
+    },
+    moneyFormat(labelValue) {
+      // Nine Zeroes for Billions
+      return Math.abs(Number(labelValue)) >= 1.0e9
+        ? new BigNumber(Math.abs(Number(labelValue)) / 1.0e9).toFixed(2) + ' B'
+        : // Six Zeroes for Millions
+        Math.abs(Number(labelValue)) >= 1.0e6
+        ? new BigNumber(Math.abs(Number(labelValue)) / 1.0e6).toFixed(2) + ' M'
+        : // Three Zeroes for Thousands
+        Math.abs(Number(labelValue)) >= 1.0e3
+        ? new BigNumber(Math.abs(Number(labelValue)) / 1.0e3).toFixed(2) + ' K'
+        : new BigNumber(Math.abs(Number(labelValue))).toFixed(2);
+    },
+    toDecimal(val) {
+      return new BigNumber(val).toFixed(2);
+    },
+    toDollar: Misc.toDollar,
+    edit() {
+      this.$refs.editModal.$refs.editWalletModal.$refs.modalWrapper.show();
     },
     openRemoveWallet() {
-      this.$refs.editModal.$refs.editModal.hide();
-      this.$refs.removeWalletModal.$refs.removeWalletModal.show();
+      this.$refs.removeWalletModal.$refs.removeWalletModal.$refs.modalWrapper.show();
     },
-    async fetchTokens() {
-      this.loading = true;
-      let tokens = [];
-      const tb = new TokenBalance(this.web3.currentProvider);
-      const newLogo = {
-        // eslint-disable-next-line
-        src: require(`@/assets/images/networks/eth-logo.svg`)
-      };
-      try {
-        tokens = await tb.getBalance(this.address);
-        tokens = tokens.map(token => {
-          const balance = token.balance;
-          delete token.balance;
-          token.balance = new BigNumber(balance).gt(0)
-            ? new BigNumber(balance)
-                .div(new BigNumber(10).pow(token.decimals))
-                .toFixed(3)
-            : 0;
-          token.address = token.addr;
-          token['logo'] = newLogo;
-          delete token.addr;
-          return token;
+    checkIfFavorited(res) {
+      if (res && res.hasOwnProperty('favorites')) {
+        const parsedRes = res.favorites.hasOwnProperty('newValue')
+          ? JSON.parse(res.favorites.newValue)
+          : res.favorites.hasOwnProperty('oldValue')
+          ? JSON.parse(res.favorites.oldValue)
+          : JSON.parse(res.favorites);
+        const foundVal = parsedRes.find(item => {
+          return item.address === this.address;
         });
-        this.loading = false;
-        this.localTokenVersion = tokens.sort(sortByBalance);
-        this.tokens = tokens.sort(sortByBalance);
-      } catch (e) {
-        tokens = this.network.type.tokens.map(token => {
-          token.balance = 'Load';
-          token['logo'] = newLogo;
-          return token;
-        });
-        this.loading = false;
-        this.tokens = tokens;
-        this.localTokenVersion = tokens;
-      }
-      this.getCustomTokens();
-    },
-    getCustomTokens() {
-      if (store.get('localTokens') !== undefined) {
-        this.getV3Tokens();
-      }
-      const storedTokens = store.get('customTokens') || {};
-      const tokens = storedTokens.hasOwnProperty(this.network.type.name)
-        ? storedTokens[this.network.type.name]
-        : [];
 
-      this.customTokens = tokens.map(token => {
-        const newLogo = {
-          // eslint-disable-next-line
-          src: require(`@/assets/images/networks/eth-logo.svg`)
-        };
-        token['logo'] = newLogo;
-        return token;
-      });
-
-      this.localCustomTokens = this.customTokens.slice();
-    },
-    getV3Tokens() {
-      const v3Tokens = store.get('localTokens');
-      const v5CustomTokens = store.get('customTokens');
-      v3Tokens.forEach(token => {
-        const newObj = {
-          address: token.contractAddress,
-          decimals: token.decimal,
-          email: '',
-          name: token.symbol,
-          symbol: token.symbol,
-          website: '',
-          type: 'custom'
-        };
-        Object.keys(networkTypes).forEach(network => {
-          if (
-            token.network &&
-            (networkTypes[network].name.toLowerCase() ===
-              token.network.toLowerCase() ||
-              networkTypes[network].name_long.toLowerCase() ===
-                token.network.toLowerCase())
-          ) {
-            if (this.tokenError(newObj.address, newObj.symbol, '')) {
-              v5CustomTokens[networkTypes[network].name].push(newObj);
-            }
-          }
-        });
-      });
-      store.set('customTokens', v5CustomTokens);
-      store.remove('localTokens');
+        if (foundVal) {
+          this.favorited = true;
+        } else {
+          this.favorited = false;
+        }
+      }
     },
     copyAddress() {
       this.$refs.addressInput.select();
       document.execCommand('copy');
       Toast.responseHandler(this.$t('mewcx.copy-success'), Toast.SUCCESS);
-    },
-    viewAllTokens(bool) {
-      if (bool) {
-        this.$refs.viewAllModal.show();
-      } else {
-        this.$refs.viewAllModal.hide();
-      }
     }
   }
 };
 </script>
 
+<style lang="scss">
+@import '~@/scss/GlobalVariables';
+
+.show {
+  .wallet-options-toggle {
+    background: none !important;
+  }
+}
+
+.wallet-options-toggle {
+  border: none;
+  background: none !important;
+  padding: 0;
+}
+
+.wallet-options-menu {
+  padding: 10px;
+  min-width: 60px;
+
+  .b-dropdown-text {
+    text-align: center !important;
+    color: $dark-blue-2 !important;
+    font-weight: normal !important;
+    cursor: pointer;
+  }
+  .remove-text {
+    p {
+      color: $red-5 !important;
+    }
+  }
+}
+</style>
 <style lang="scss" scoped>
 @import 'WalletInfoComponent.scss';
 </style>

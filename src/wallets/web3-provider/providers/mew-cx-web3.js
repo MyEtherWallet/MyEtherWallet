@@ -1,4 +1,4 @@
-import MEWCXRequestManager from '../providers/mew-cx-request-manager';
+import MEWCXRequestManager from './mew-cx-request-manager';
 import MiddleWare from '../middleware';
 import {
   WEB3_NETWORK_CHANGE,
@@ -93,13 +93,9 @@ class MewCxProvider extends EventEmitter {
         this.clearListeners();
       },
       enable: function () {
-        return this.sendPromise('eth_requestAccounts')
-          .then(res => {
-            return res.result;
-          })
-          .catch(e => {
-            return e.message;
-          });
+        return this.sendPromise('eth_requestAccounts').then(res => {
+          return res.result;
+        });
       }
     };
 

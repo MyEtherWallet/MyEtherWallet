@@ -35,18 +35,17 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex';
 import utils from 'web3-utils';
-import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
-import { WalletInterface } from '@/wallets';
-import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
+import { mapState } from 'vuex';
 import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import PasswordModalComponent from '../../components/PasswordModalComponent';
 import AcceptCancelButtons from '../../components/AcceptCancelButtons';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 import {
   MEW_SIGNED_MSG,
-  REJECT_MEW_SIGN_MSG
+  REJECT_MEW_SIGN_MSG,
+  WEB3_SIGN_MSG
 } from '@/builds/mewcx/cxHelpers/cxEvents';
 export default {
   components: {
@@ -56,25 +55,21 @@ export default {
   },
   data() {
     return {
-      address: '',
-      message: '',
       password: '',
-      signingKeystore: {},
       loading: false,
       error: {}
     };
   },
   computed: {
-    ...mapState('main', ['linkQuery'])
-  },
-  mounted() {
-    const _self = this;
-    const { address, msgToSign } = _self.linkQuery;
-    _self.address = address;
-    _self.message = utils.hexToAscii(msgToSign);
-    window.chrome.storage.sync.get(address, function (res) {
-      _self.signingKeystore = JSON.parse(res[address]).priv;
-    });
+    ...mapState('main', ['linkQuery']),
+    message() {
+      const { msgToSign } = this.linkQuery;
+      return utils.hexToAscii(msgToSign);
+    },
+    address() {
+      const { address } = this.linkQuery;
+      return address;
+    }
   },
   methods: {
     updatePassword(e) {
@@ -86,43 +81,44 @@ export default {
     },
     unlockWallet() {
       this.loading = true;
-      const worker = new walletWorker();
       const _self = this;
-      worker.postMessage({
-        type: 'unlockWallet',
-        data: [JSON.parse(this.signingKeystore), this.password]
-      });
-      worker.onmessage = function (e) {
-        _self.loading = false;
-        _self.signMsg(e.data._privKey);
+      const { address, msgToSign, url } = _self.linkQuery;
+      const id = window.chrome.runtime.id;
+      const chrome = window.chrome;
+      const payload = {
+        signer: toChecksumAddress(address),
+        msg: msgToSign,
+        password: this.password
       };
 
-      worker.onerror = function (e) {
-        e.preventDefault();
-        _self.loading = false;
-        _self.error = {
-          msg: 'Unlock failed: Wrong password!',
-          errored: true
-        };
-      };
-    },
-    async signMsg(priv) {
-      const wallet = new WalletInterface(
-        Buffer.from(priv),
-        false,
-        keyStoreType
-      );
-      const _self = this;
-      const signedMsg = await wallet.signMessage(this.message);
-      window.chrome.tabs.query(
-        { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
-        function (tab) {
-          const obj = {
-            event: MEW_SIGNED_MSG,
-            payload: '0x' + signedMsg.toString('hex')
-          };
-          window.chrome.tabs.sendMessage(tab[0].id, obj);
-          window.close();
+      chrome.runtime.sendMessage(
+        id,
+        {
+          event: WEB3_SIGN_MSG,
+          payload: payload
+        },
+        {},
+        res => {
+          _self.loading = false;
+          if (res.hasOwnProperty('error')) {
+            _self.error = {
+              msg: res.error,
+              errored: true
+            };
+
+            return;
+          }
+          window.chrome.tabs.query(
+            { url: `*://*.${Misc.getService(url)}/*` },
+            function (tab) {
+              const obj = {
+                event: MEW_SIGNED_MSG,
+                payload: res.data
+              };
+              window.chrome.tabs.sendMessage(tab[0].id, obj);
+              window.parent.close();
+            }
+          );
         }
       );
     },
@@ -139,7 +135,7 @@ export default {
             payload: 'User rejected action!'
           };
           window.chrome.tabs.sendMessage(tab[0].id, obj);
-          window.close();
+          window.parent.close();
         }
       );
     }
