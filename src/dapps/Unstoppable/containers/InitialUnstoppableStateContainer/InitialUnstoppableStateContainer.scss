@@ -1,6 +1,8 @@
 @import '../../Unstoppable';
 .initial-state-unstoppable {
   @extend %template-container;
+
+  padding: 20px;
 }
 .advanced {
   padding-top: 10px;
@@ -32,15 +34,18 @@
     margin-bottom: 10px;
 
     .title {
-      padding: 0 8px;
+      padding: 0 15px;
+
+      span {
+        color: $dark-blue-6;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
     }
 
     p {
       max-width: 760px;
-    }
-
-    h4 {
-      margin-bottom: 10px;
     }
 
     .buttons {
@@ -50,26 +55,69 @@
   }
 
   .the-form {
-    border-radius: 5px;
-    //margin-bottom: 10px;
+    align-items: center;
+    display: flex;
+    height: 62px;
+    justify-content: space-between;
+    position: relative;
+
+    @media all and (max-width: 600px) {
+      flex-direction: column;
+      height: 100%;
+    }
   }
 
   .domain-name {
     align-items: center;
     display: flex;
+    height: 100%;
+    justify-content: space-between;
     position: relative;
+    width: 100%;
 
     input {
-      background-color: $background-color-1;
-      border: 0;
+      background-color: $light-grey-17;
+      border: none;
+      height: 100%;
       margin-right: 20px;
       padding: 13px 15px;
       width: 100%;
+
+      @media all and (max-width: 600px) {
+        margin-right: 0;
+      }
     }
 
     span {
-      font-size: 20px;
-      font-weight: 600;
+      font-size: 14px;
+      font-weight: 500;
+      margin-right: 35px;
+      position: absolute;
+      right: 0;
+
+      @media all and (max-width: 600px) {
+        margin-right: 5px;
+      }
+    }
+
+    .close {
+      cursor: pointer;
+      height: 30px;
+      margin-right: 35px;
+      position: absolute;
+      right: 0;
+
+      @media all and (max-width: 600px) {
+        margin-right: 5px;
+      }
+    }
+
+    .move-right {
+      margin-right: 70px;
+
+      @media all and (max-width: 600px) {
+        margin-right: 35px;
+      }
     }
   }
 
@@ -143,12 +191,18 @@
 
 .submit-button-container {
   display: flex;
+  height: 100%;
   justify-content: center;
-  margin-top: 60px;
 
-  // Mobile
-  @media all and (max-width: $mobile-width) {
-    margin-top: 30px;
+  button {
+    min-width: 210px;
+    white-space: nowrap;
+    width: 100%;
+  }
+  // // Mobile
+  @media all and (max-width: 600px) {
+    margin-top: 20px;
+    width: 100%;
   }
 }
 
@@ -217,6 +271,88 @@
 
     p {
       margin-right: 10px;
+    }
+  }
+}
+
+.result-wrapper {
+  color: $dark-blue-6;
+  margin-bottom: 50px;
+  .result-title {
+    margin-bottom: 10px;
+    padding: 25px 15px 0 15px;
+    span {
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+
+  .unavail-container {
+    background-color: $light-grey-16;
+    border: 1px solid $light-orange-1;
+  }
+
+  .avail-container {
+    background-color: $light-green-1;
+    border: 1px solid $mew-green;
+  }
+
+  .result-container {
+    align-items: center;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    width: 100%;
+
+    .left-container {
+      display: flex;
+      flex-direction: column;
+      .domain-name {
+        font-size: 20px;
+        font-weight: 600;
+      }
+      .domain-taken {
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .eth-text {
+        font-weight: 500;
+      }
+      .price-text {
+        color: $dark-grey-8;
+        margin-left: 3px;
+      }
+    }
+
+    .right-container {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      @media all and (max-width: 600px) {
+        flex-direction: column;
+      }
+      .buy-btn {
+        padding: 10px 20px;
+        @media all and (max-width: 600px) {
+          width: 100%;
+        }
+      }
+      .title {
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .avail-text {
+        color: $mew-green;
+        margin-right: 10px;
+        @media all and (max-width: 600px) {
+          margin-left: 5px;
+          margin-right: 0;
+        }
+      }
+      .unavail-text {
+        color: $light-orange-1;
+      }
     }
   }
 }

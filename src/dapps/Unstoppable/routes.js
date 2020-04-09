@@ -1,9 +1,9 @@
 const Unstoppable = () => import('./Unstoppable');
 const InitialUnstoppableStateContainer = () =>
   import('./containers/InitialUnstoppableStateContainer');
-const BuyContainer = () => import('./containers/BuyContainer');
-const PaymentMethodContainer = () =>
-  import('./containers/PaymentMethodContainer');
+// const BuyContainer = () => import('./containers/BuyContainer');
+// const PaymentMethodContainer = () =>
+//   import('./containers/PaymentMethodContainer');
 const StripeContainer = () => import('./containers/StripeContainer');
 const CryptoContainer = () => import('./containers/CryptoContainer');
 const ConfirmContainer = () => import('./containers/ConfirmContainer');
@@ -22,13 +22,13 @@ export default {
       component: InitialUnstoppableStateContainer,
       props: true
     },
-    { path: 'buy', name: 'Buy domain', component: BuyContainer, props: true },
-    {
-      path: 'buy/payment-method',
-      name: 'Select payment method',
-      component: PaymentMethodContainer,
-      props: true
-    },
+    // { path: 'buy', name: 'Buy domain', component: BuyContainer, props: true },
+    // {
+    //   path: 'buy/payment-method',
+    //   name: 'Select payment method',
+    //   component: PaymentMethodContainer,
+    //   props: true
+    // },
     {
       path: 'buy/payment-method/stripe',
       name: 'Pay with Stripe',
@@ -36,7 +36,7 @@ export default {
       props: true
     },
     {
-      path: 'buy/payment-method/crypto',
+      path: 'buy/payment-method',
       name: 'Pay with Crypto',
       component: CryptoContainer,
       props: true
