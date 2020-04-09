@@ -36,7 +36,7 @@ jobs:
         run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:mewcx"
 
       - name: generate zip for cx
-        if: contains(github.ref, "cx")
+        if: contains(github.ref, 'cx')
         env:
           AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
