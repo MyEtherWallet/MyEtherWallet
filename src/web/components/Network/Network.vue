@@ -1,6 +1,9 @@
 <template>
   <WhiteSheet sideinfo class="px-7 py-5 d-flex justify-space-between">
-    <NetworkOverlay :open="openNetworkOverlay" :close="closeNetworkOverlay" />
+    <ChangeNetworkOverlay
+      :open="openNetworkOverlay"
+      :close="closeNetworkOverlay"
+    />
     <div>
       <BlockTitle :text="$t('common.network')">
         <template v-slot:object-next-to-title>
@@ -28,10 +31,10 @@
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import BlockTitle from '@/web/components/BlockTitles/BlockTitle2';
 import SoloButton from '@/web/components/Buttons/SoloButton1';
-import NetworkOverlay from '@/components/Overlays/Network';
+import ChangeNetworkOverlay from '@/components/Overlays/ChangeNetwork';
 
 export default {
-  components: { WhiteSheet, BlockTitle, SoloButton, NetworkOverlay },
+  components: { WhiteSheet, BlockTitle, SoloButton, ChangeNetworkOverlay },
   data() {
     return {
       openNetworkOverlay: false
