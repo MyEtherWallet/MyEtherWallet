@@ -1,49 +1,73 @@
 <template>
   <BaseOverlay :open="open" :close="close" :back="true" close-text="Cancel">
-    <OverlayTitle title="Network" />
-    <TabButtons>
-      <v-card color="red" class="pa-5" @click="activeTab = 0"
-        >Change network</v-card
-      >
-      <v-card @click="activeTab = 1">Add network/HTTP</v-card>
-    </TabButtons>
+    <div class="overlay-content">
+      <OverlayTitle title="Network" />
 
-    <OverlayTabs class="overlay-content">
-      <v-tabs v-model="activeTab">
-        <v-tab :key="1" />
-        <v-tab :key="2" />
+      <WhiteSheet overflow-hidden>
+        <v-btn-toggle
+          v-model="activeTab"
+          class="d-flex"
+          background-color="transparent"
+          mandatory
+          tile
+          borderless
+          light
+        >
+          <v-btn
+            :value="0"
+            height="60px"
+            depressed
+            class="flex-grow-1 text-transform--initial white--text"
+            color="dark_space"
+          >
+            Change network
+          </v-btn>
 
-        <v-tab-item>
-          <div class="width--100-percent">
-            <WhiteSheet>
-              <div class="pa-8">
-                1
-                <StdButton size="x-large" fullwidth>
-                  Change
-                </StdButton>
-              </div>
-            </WhiteSheet>
-          </div>
-        </v-tab-item>
-        <v-tab-item>
-          <div class="width--100-percent">
-            <WhiteSheet>
-              <div class="pa-8">
-                2
-                <StdButton size="x-large" fullwidth>
-                  Save
-                </StdButton>
-              </div>
-            </WhiteSheet>
-          </div>
-        </v-tab-item>
-      </v-tabs>
-    </OverlayTabs>
+          <v-btn
+            :value="1"
+            height="60px"
+            depressed
+            class="flex-grow-1 text-transform--initial"
+            color="white"
+          >
+            Add network / HTTP
+          </v-btn>
+        </v-btn-toggle>
+      </WhiteSheet>
+
+      <OverlayTabs class="mt-8">
+        <v-tabs v-model="activeTab">
+          <v-tab-item>
+            <div class="width--100-percent">
+              <WhiteSheet>
+                <div class="pa-8">
+                  1
+                  <StdButton size="x-large" fullwidth>
+                    Change
+                  </StdButton>
+                </div>
+              </WhiteSheet>
+            </div>
+          </v-tab-item>
+          <v-tab-item>
+            <div class="width--100-percent">
+              <WhiteSheet>
+                <div class="pa-8">
+                  2
+                  <StdButton size="x-large" fullwidth>
+                    Save
+                  </StdButton>
+                </div>
+              </WhiteSheet>
+            </div>
+          </v-tab-item>
+        </v-tabs>
+      </OverlayTabs>
+    </div>
   </BaseOverlay>
 </template>
 
 <script>
-import TabButtons from '@/web/components/Buttons/TabButtons';
 import BaseOverlay from '../BaseOverlay';
 import OverlayTitle from '@/components/OverlayTitle';
 import OverlayTabs from '@/components/OverlayTabs';
@@ -52,7 +76,6 @@ import StdButton from '@/web/components/StdButton';
 
 export default {
   components: {
-    TabButtons,
     BaseOverlay,
     OverlayTitle,
     OverlayTabs,
@@ -82,6 +105,6 @@ export default {
 }
 
 .overlay-content {
-  width: 500px;
+  width: 600px;
 }
 </style>
