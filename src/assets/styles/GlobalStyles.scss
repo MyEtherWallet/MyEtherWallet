@@ -47,7 +47,7 @@
 }
 /*========== CSS Style Reset ==========*/
 * {
-  font-family: "Roboto";
+  font-family: 'Roboto';
   box-sizing: content-box;
 }
 html {
@@ -60,7 +60,7 @@ a {
   color: inherit !important;
 }
 i {
-  font-family: "Material Icons" !important;
+  font-family: 'Material Icons' !important;
 }
 div,
 p {
@@ -128,6 +128,9 @@ h5 {
 .border--white {
   border-color: $white !important;
   border: 1px solid $white !important;
+}
+.border-radius--0px {
+  border-radius: 0px !important;
 }
 .border-radius--5px {
   border-radius: 5px !important;
