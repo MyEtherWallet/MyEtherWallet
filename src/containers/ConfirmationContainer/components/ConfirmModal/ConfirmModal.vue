@@ -120,7 +120,7 @@ export default {
   props: {
     confirmSendTx: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     fee: {
       type: String,

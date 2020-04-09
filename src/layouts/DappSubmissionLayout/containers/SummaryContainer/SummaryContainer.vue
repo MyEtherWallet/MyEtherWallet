@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-5 ">
+  <div class="mt-5">
     <p v-if="lackOfInfo" class="error">
       {{ $t('dappsSubmission.provide-text') }}
     </p>
@@ -178,7 +178,7 @@ export default {
   props: {
     form: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
@@ -188,7 +188,7 @@ export default {
     },
     socialAccts: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     }

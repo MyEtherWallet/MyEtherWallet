@@ -291,7 +291,7 @@ export default {
   props: {
     walletInstance: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
@@ -385,10 +385,10 @@ export default {
         this.setHDAccounts();
       });
     },
-    unselectAllAddresses: function(selected) {
+    unselectAllAddresses: function (selected) {
       document
         .querySelectorAll('.user-input-checkbox input')
-        .forEach(function(el) {
+        .forEach(function (el) {
           el.checked = el.id === selected;
         });
     },
@@ -497,7 +497,7 @@ export default {
         ? this.walletInstance.getCurrentPath()
         : "m/44'/60'/0'/0";
     },
-    setBalances: web3utils._.debounce(function() {
+    setBalances: web3utils._.debounce(function () {
       this.HDAccounts.forEach(account => {
         const address = account.account.getAddressString();
         this.web3.eth

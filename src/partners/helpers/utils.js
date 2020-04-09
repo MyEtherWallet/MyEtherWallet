@@ -1,12 +1,12 @@
 import { v4 as uuid } from 'uuid';
 
 const createProxy = (valueObject = {}, defaultValue = 42) => {
-  const handler = function(defaultValue) {
+  const handler = function (defaultValue) {
     return {
-      get: function(target, name) {
+      get: function (target, name) {
         return target.hasOwnProperty(name) ? target[name] : defaultValue;
       },
-      set: function(obj, prop, value) {
+      set: function (obj, prop, value) {
         obj[prop] = value;
         return true;
       }

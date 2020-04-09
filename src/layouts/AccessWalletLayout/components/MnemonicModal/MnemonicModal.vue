@@ -111,7 +111,7 @@ export default {
   props: {
     hardwareWalletOpen: {
       type: Function,
-      default: function() {}
+      default: function () {}
     }
   },
   data() {

@@ -1,51 +1,53 @@
 <template>
-  <div>
-    <b-modal
-      ref="passwordOnlyModal"
-      :title="$t('mewcx.wallet-password')"
-      hide-footer
-      centered
-      class="bootstrap-modal"
-    >
-      <div class="modal-contents">
-        <p>{{ $t('mewcx.wallet-encrypted') }}</p>
-        <form>
-          <div class="input-container">
-            <label for="walletPassword"> {{ $t('mewcx.password') }} </label>
-            <div class="password-input">
-              <input
-                v-model="locPassword"
-                :type="show ? 'text' : 'password'"
-                :placeholder="$t('mewcx.create-pw')"
-                name="walletPassword"
-              />
-              <img
-                :src="show ? showIcon : hide"
-                @click.prevent="show = !show"
-              />
-            </div>
+  <mewcx-modal-wrapper ref="passwordOnlyModal" direction="up">
+    <template v-slot:modalContentTitle>
+      {{ title }}
+    </template>
+    <template v-slot:modalContentSubtext>
+      <i18n path="mewcx.please-enter-pw" tag="p" class="main-title">
+        <span slot="walletNickname"> {{ title }} </span></i18n
+      >
+    </template>
+    <div class="password-modal-container">
+      <form>
+        <div class="input-container">
+          <label for="walletPassword">
+            {{ $t('mewcx.wallet-password') }}
+          </label>
+          <div class="password-input">
+            <input
+              v-model="locPassword"
+              :type="show ? 'text' : 'password'"
+              :placeholder="$t('mewcx.create-pw')"
+              name="walletPassword"
+            />
+            <img :src="show ? showIcon : hide" @click.prevent="show = !show" />
           </div>
-          <button
-            :class="[
-              disabled ? '' : 'disabled',
-              'submit-button large-round-button-green-filled'
-            ]"
-            type="submite"
-            @click.prevent="submit"
-          >
-            <span v-show="!loading"> {{ title }} </span>
-            <i v-show="loading" class="fa fa-spinner fa-spin" />
-          </button>
-        </form>
-      </div>
-    </b-modal>
-  </div>
+        </div>
+        <button
+          :class="[
+            validInput ? '' : 'disabled',
+            'submit-button large-round-button-green-filled'
+          ]"
+          type="submite"
+          @click.prevent="submit"
+        >
+          <span v-show="!loading"> {{ button }} </span>
+          <i v-show="loading" class="fa fa-spinner fa-spin" />
+        </button>
+      </form>
+    </div>
+  </mewcx-modal-wrapper>
 </template>
 
 <script>
 import hide from '@/assets/images/icons/hide-password.svg';
 import showIcon from '@/assets/images/icons/show-password.svg';
+import MewcxModalWrapper from '../../wrappers/MewcxModalWrapper';
 export default {
+  components: {
+    'mewcx-modal-wrapper': MewcxModalWrapper
+  },
   props: {
     submit: {
       type: Function,
@@ -59,13 +61,9 @@ export default {
       type: String,
       default: ''
     },
-    disabled: {
+    validInput: {
       type: Boolean,
       default: false
-    },
-    password: {
-      type: String,
-      default: ''
     }
   },
   data() {
@@ -73,7 +71,7 @@ export default {
       showIcon: showIcon,
       hide: hide,
       show: false,
-      locPassword: this.password
+      locPassword: ''
     };
   },
   computed: {
@@ -83,12 +81,24 @@ export default {
       }
 
       return 'View Wallet Info';
+    },
+    button() {
+      if (this.path === 'access') {
+        return 'Access';
+      }
+
+      return 'View';
     }
   },
   watch: {
     locPassword(newVal) {
       this.$emit('password', newVal);
     }
+  },
+  mounted() {
+    this.$refs.passwordOnlyModal.$on('hidden', () => {
+      this.locPassword = '';
+    });
   }
 };
 </script>

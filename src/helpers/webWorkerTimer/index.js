@@ -40,7 +40,7 @@ const _ClearIntervalType = 4;
 let worker;
 
 let _nextId = 0;
-const nextId = function() {
+const nextId = function () {
   if (_nextId == MAX_SAFE_INTEGER) {
     _nextId = 0;
   }
@@ -90,10 +90,10 @@ class Timer {
   }
 }
 
-const workerCode = function() {
+const workerCode = function () {
   return (
     '(' +
-    function() {
+    function () {
       const _wSetTimeoutType = 0;
       const _wSetIntervalType = 1;
       const _wSetImmediateType = 2;

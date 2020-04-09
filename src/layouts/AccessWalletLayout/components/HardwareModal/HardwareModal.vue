@@ -94,7 +94,7 @@ export default {
     },
     bitboxSelectOpen: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     ledgerAppOpen: {
       type: Function,

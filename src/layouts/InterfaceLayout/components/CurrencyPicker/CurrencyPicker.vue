@@ -70,7 +70,7 @@ export default {
   props: {
     currency: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },

@@ -68,7 +68,7 @@ export default {
   props: {
     mnemonicValues: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
@@ -98,7 +98,7 @@ export default {
       const newArr = [...this.mnemonicValues.keys()];
       const ranNums = this.shuffle(newArr);
 
-      document.querySelectorAll('.phrases .word').forEach(function(el) {
+      document.querySelectorAll('.phrases .word').forEach(function (el) {
         el.classList.remove('verification');
         el.querySelector('span').classList.remove('hidden');
         el.querySelector('input').classList.add('hidden');

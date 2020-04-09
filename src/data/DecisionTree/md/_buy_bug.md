@@ -10,7 +10,7 @@
 
 #### Contact Form:
 
-- Email us at support@myetherwallet.com
+- Email us at [support@myetherwallet.com](mailto:support@myetherwallet.com)
 - <p>Include a detailed description of the issue.</p>
   <note>Please include as many details as possible, such as phone / computer model, OS number, version of the app / site you are using, browser version etc.</note>
 - Attach screenshots (optional)
@@ -21,4 +21,4 @@
 
 Please reach out toe Simplex with as much information as possible, so they can further assist you.
 
-Their email is support@simplex.com.
+Their email is [support@simplex.com](mailto:support@simplex.com).

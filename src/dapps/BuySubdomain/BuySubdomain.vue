@@ -79,8 +79,8 @@ export default {
   },
   data() {
     return {
-      subdomainContract: function() {},
-      ensContract: function() {},
+      subdomainContract: function () {},
+      ensContract: function () {},
       results: [],
       domainName: '',
       knownRegistrarInstances: {},
@@ -122,7 +122,7 @@ export default {
     });
   },
   methods: {
-    debounceInput: web3.utils._.debounce(function(e) {
+    debounceInput: web3.utils._.debounce(function (e) {
       try {
         this.domainName = normalise(e.target.value);
         this.hasError = false;

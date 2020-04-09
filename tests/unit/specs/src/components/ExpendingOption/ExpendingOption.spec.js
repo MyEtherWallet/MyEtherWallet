@@ -39,33 +39,21 @@ describe('ExpandingOption.vue', () => {
 
   it('should render correct hidebottomborder props', () => {
     expect(
-      wrapper
-        .find('.expanding-option')
-        .classes()
-        .indexOf('hide-bottom-border')
+      wrapper.find('.expanding-option').classes().indexOf('hide-bottom-border')
     ).toBe(-1);
     wrapper.setProps({ hidebottomborder: true });
     expect(
-      wrapper
-        .find('.expanding-option')
-        .classes()
-        .indexOf('hide-bottom-border')
+      wrapper.find('.expanding-option').classes().indexOf('hide-bottom-border')
     ).toBeGreaterThan(-1);
   });
 
   it('should render correct expanded data', () => {
     expect(
-      wrapper
-        .find('.contnet-container')
-        .classes()
-        .indexOf('expanded')
+      wrapper.find('.contnet-container').classes().indexOf('expanded')
     ).toBe(-1);
     wrapper.setData({ expanded: true });
     expect(
-      wrapper
-        .find('.contnet-container')
-        .classes()
-        .indexOf('expanded')
+      wrapper.find('.contnet-container').classes().indexOf('expanded')
     ).toBeGreaterThan(-1);
   });
   describe('ExpandingOption.vue Methods', () => {

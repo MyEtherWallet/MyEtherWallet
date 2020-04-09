@@ -18,7 +18,7 @@ import {
 } from '@/helpers/notificationFormatters';
 import BigNumber from 'bignumber.js';
 
-const addNotification = function({ dispatch, commit, state }, val) {
+const addNotification = function ({ dispatch, commit, state }, val) {
   let address;
 
   if (val[1] != undefined) {
@@ -43,7 +43,7 @@ const addNotification = function({ dispatch, commit, state }, val) {
   dispatch('pruneNotifications');
 };
 
-const addSwapNotification = async function({ dispatch, commit, state }, val) {
+const addSwapNotification = async function ({ dispatch, commit, state }, val) {
   const address = val[swapIndexes.address].toLowerCase();
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
@@ -106,28 +106,28 @@ const pruneNotifications = ({ commit, state }) => {
   }
 };
 
-const addCustomPath = function({ commit, state }, val) {
+const addCustomPath = function ({ commit, state }, val) {
   const newPaths = { ...state.customPaths };
   newPaths[val.label] = { label: val.label, path: val.path };
   commit('ADD_CUSTOM_PATH', newPaths);
 };
 
-const removeCustomPath = function({ commit, state }, val) {
+const removeCustomPath = function ({ commit, state }, val) {
   const newPaths = { ...state.customPaths };
   delete newPaths[val.label];
   commit('ADD_CUSTOM_PATH', newPaths);
 };
 
-const checkIfOnline = function({ commit, dispatch }, val) {
+const checkIfOnline = function ({ commit, dispatch }, val) {
   if (val) dispatch('setWeb3Instance');
   commit('CHECK_IF_ONLINE', val);
 };
 
-const gettingStartedDone = function({ commit }) {
+const gettingStartedDone = function ({ commit }) {
   commit('GETTING_STARTED_DONE');
 };
 
-const clearWallet = function({ commit, state }) {
+const clearWallet = function ({ commit, state }) {
   const linkTo = state.path !== '' ? state.path : '/';
   if (
     state.wallet &&
@@ -141,11 +141,11 @@ const clearWallet = function({ commit, state }) {
   commit('CLEAR_WALLET');
 };
 
-const createAndSignTx = function({ commit }, val) {
+const createAndSignTx = function ({ commit }, val) {
   commit('CREATE_AND_SIGN_TX', val);
 };
 
-const decryptWallet = function({ commit, dispatch }, params) {
+const decryptWallet = function ({ commit, dispatch }, params) {
   // if the wallet param (param[0]) is undefined or null then all the subsequent setup steps will also fail.
   // just explicitly stop it here.
   if (params[0] !== undefined && params[0] !== null) {
@@ -162,7 +162,7 @@ const decryptWallet = function({ commit, dispatch }, params) {
   }
 };
 
-const removeNotification = function({ commit, state }, val) {
+const removeNotification = function ({ commit, state }, val) {
   // address, index, object
   const address = val[0].toLowerCase();
   const newNotif = {};
@@ -179,27 +179,27 @@ const removeNotification = function({ commit, state }, val) {
   commit('UPDATE_NOTIFICATION', newNotif);
 };
 
-const setAccountBalance = function({ commit }, balance) {
+const setAccountBalance = function ({ commit }, balance) {
   commit('SET_ACCOUNT_BALANCE', balance);
 };
 
-const setGasPrice = function({ commit }, gasPrice) {
+const setGasPrice = function ({ commit }, gasPrice) {
   commit('SET_GAS_PRICE', gasPrice);
 };
 
-const setAddressBook = function({ commit }, addressBook) {
+const setAddressBook = function ({ commit }, addressBook) {
   commit('SET_ADDRESS_BOOK', addressBook);
 };
 
-const setState = function({ commit }, stateObj) {
+const setState = function ({ commit }, stateObj) {
   commit('INIT_STATES', stateObj);
 };
 
-const setLocale = function({ commit }, val) {
+const setLocale = function ({ commit }, val) {
   commit('SET_LOCALE', val);
 };
 
-const setWeb3Instance = function({ dispatch, commit, state }, provider) {
+const setWeb3Instance = function ({ dispatch, commit, state }, provider) {
   const hostUrl = state.network.url
     ? url.parse(state.network.url)
     : state.Networks['ETH'][0];
@@ -273,18 +273,18 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
   commit('SET_WEB3_INSTANCE', web3Instance);
 };
 
-const switchNetwork = function({ commit }, networkObj) {
+const switchNetwork = function ({ commit }, networkObj) {
   commit('SWITCH_NETWORK', networkObj);
 };
-const setENS = function({ commit }, ens) {
+const setENS = function ({ commit }, ens) {
   commit('SET_ENS', ens);
 };
 
-const toggleSideMenu = function({ commit }) {
+const toggleSideMenu = function ({ commit }) {
   commit('TOGGLE_SIDEMENU');
 };
 
-const updateNotification = function({ commit, state }, val) {
+const updateNotification = function ({ commit, state }, val) {
   // address, index, object
   const address = val[0].toLowerCase();
   const newNotif = {};
@@ -302,7 +302,7 @@ const updateNotification = function({ commit, state }, val) {
   commit('UPDATE_NOTIFICATION', newNotif);
 };
 
-const updateTransaction = function({ commit, state }, val) {
+const updateTransaction = function ({ commit, state }, val) {
   // address, index, object
   const address = val[0].toLowerCase();
   const newNotif = {};
@@ -318,19 +318,19 @@ const updateTransaction = function({ commit, state }, val) {
   commit('UPDATE_SWAP_TRANSACTION', newNotif);
 };
 
-const setLastPath = function({ commit }, val) {
+const setLastPath = function ({ commit }, val) {
   commit('SET_LAST_PATH', val);
 };
 
-const updateBlockNumber = function({ commit }, val) {
+const updateBlockNumber = function ({ commit }, val) {
   commit('UPDATE_BLOCK_NUMBER', val);
 };
 
-const saveQueryVal = function({ commit }, val) {
+const saveQueryVal = function ({ commit }, val) {
   commit('SAVE_QUERY_VAL', val);
 };
 
-const toggleTempHide = function({ commit }) {
+const toggleTempHide = function ({ commit }) {
   commit('TOGGLE_TEMP_HIDE');
 };
 

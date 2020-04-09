@@ -1,4 +1,4 @@
-import MEWCXRequestManager from '../providers/mew-cx-request-manager';
+import MEWCXRequestManager from './mew-cx-request-manager';
 import MiddleWare from '../middleware';
 import {
   WEB3_NETWORK_CHANGE,
@@ -64,7 +64,7 @@ class MewCxProvider extends EventEmitter {
           });
         });
       },
-      send: function(payload, params) {
+      send: function (payload, params) {
         return new Promise((resolve, reject) => {
           this.sendPromise(payload, params)
             .then(result => {
@@ -73,7 +73,7 @@ class MewCxProvider extends EventEmitter {
             .catch(reject);
         });
       },
-      sendAsync: function(payload, cb) {
+      sendAsync: function (payload, cb) {
         this.sendPromise(payload.method, payload.params)
           .then(result => {
             result.id = payload.id ? payload.id : result.id;
@@ -92,14 +92,10 @@ class MewCxProvider extends EventEmitter {
         this.removeListener();
         this.clearListeners();
       },
-      enable: function() {
-        return this.sendPromise('eth_requestAccounts')
-          .then(res => {
-            return res.result;
-          })
-          .catch(e => {
-            return e.message;
-          });
+      enable: function () {
+        return this.sendPromise('eth_requestAccounts').then(res => {
+          return res.result;
+        });
       }
     };
 
@@ -131,11 +127,11 @@ class MewCxProvider extends EventEmitter {
     const id = window.extensionID;
     window.removeEventListener(
       WEB3_NETWORK_CHANGE.replace('{{id}}', id),
-      function() {}
+      function () {}
     );
     window.removeEventListener(
       WEB3_CHAIN_CHANGE.replace('{{id}}', id),
-      function() {}
+      function () {}
     );
   }
   _emitClose(code, reason) {
