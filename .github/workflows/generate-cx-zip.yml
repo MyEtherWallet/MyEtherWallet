@@ -3,7 +3,7 @@ name: generate cx zip
 on:
   push:
     branches:
-      - '*cx'
+      - '**cx**'
 
 jobs:
   develop-build:
