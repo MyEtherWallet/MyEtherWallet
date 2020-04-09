@@ -8,6 +8,9 @@
         :direction="'from'"
         :address="txParams.from"
         :amount="hexToNumString(txParams.value, 'ether')"
+        :currency="
+          txParams.tokenSymbol ? txParams.tokenSymbol : network.type.name
+        "
       />
       <img src="@/assets/images/icons/arrow-down-blue.svg" />
       <amount-info-component
@@ -96,15 +99,12 @@ import AcceptCancelButtons from '../../components/AcceptCancelButtons';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
-import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
-import { WalletInterface } from '@/wallets';
-import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
-import { Transaction } from 'ethereumjs-tx';
 import { Misc } from '@/helpers';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 import {
   REJECT_MEW_TX_SIGN,
   MEW_TX_HASH,
-  CX_SEND_SIGNED_TX
+  WEB3_SIGN_TX
 } from '@/builds/mewcx/cxHelpers/cxEvents';
 export default {
   components: {
@@ -153,12 +153,6 @@ export default {
       return obj;
     }
   },
-  mounted() {
-    const _self = this;
-    window.chrome.storage.sync.get(_self.linkQuery.from, function(res) {
-      _self.signingKeystore = JSON.parse(res[_self.linkQuery.from]).priv;
-    });
-  },
   methods: {
     toggleDetails() {
       this.showDetails = !this.showDetails;
@@ -180,81 +174,69 @@ export default {
       return new BigNumber(hex).toString();
     },
     unlockWallet() {
+      const _self = this;
       this.loading = true;
-      const worker = new walletWorker();
-      const _self = this;
-      worker.postMessage({
-        type: 'unlockWallet',
-        data: [JSON.parse(this.signingKeystore), this.password]
-      });
-      worker.onmessage = function(e) {
-        _self.loading = false;
-        _self.$refs.passwordModal.$refs.passwordModal.hide();
-        _self.signAndSend(
-          new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
-        );
-      };
-
-      worker.onerror = function(e) {
-        e.preventDefault();
-        _self.loading = false;
-        _self.error = {
-          msg: 'Unlock failed: Wrong password!',
-          errored: true
-        };
-      };
-    },
-    rejectAction() {
-      const _self = this;
-      window.chrome.tabs.query(
-        { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
-        function(tab) {
-          const obj = {
-            event: REJECT_MEW_TX_SIGN
-          };
-          window.chrome.tabs.sendMessage(tab[0].id, obj);
-          window.close();
-        }
-      );
-    },
-    async signAndSend(wallet) {
-      const _self = this;
-      const newTx = new Transaction(_self.txParams);
-      const signedTx = await wallet.signTransaction(newTx);
       const payload = {
-        signedTx: signedTx.rawTransaction,
-        raw: _self.txParams
+        signer: toChecksumAddress(_self.txParams.from),
+        params: _self.txParams,
+        password: this.password
       };
       window.chrome.runtime.sendMessage(
         window.chrome.runtime.id,
-        { event: CX_SEND_SIGNED_TX, payload: payload },
+        {
+          event: WEB3_SIGN_TX,
+          payload: payload
+        },
         {},
         res => {
+          _self.loading = false;
+          if (res.hasOwnProperty('error')) {
+            _self.error = {
+              msg: res.error,
+              errored: true
+            };
+
+            return;
+          }
           if (res.hasOwnProperty('message')) {
             window.chrome.tabs.query(
               { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
-              function(tab) {
+              function (tab) {
                 const obj = {
                   event: REJECT_MEW_TX_SIGN,
                   payload: res.message
                 };
                 window.chrome.tabs.sendMessage(tab[0].id, obj);
-                window.close();
+                window.parent.close();
               }
             );
             return;
           }
+          _self.$refs.passwordModal.$refs.passwordModal.hide();
           window.chrome.tabs.query(
             { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
-            function(tab) {
+            function (tab) {
               const obj = {
                 event: MEW_TX_HASH,
                 payload: res
               };
               window.chrome.tabs.sendMessage(tab[0].id, obj);
-              window.close();
+              window.parent.close();
             }
           );
+        }
+      );
+    },
+    rejectAction() {
+      const _self = this;
+      window.chrome.tabs.query(
+        { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
+        function (tab) {
+          const obj = {
+            event: REJECT_MEW_TX_SIGN
+          };
+          window.chrome.tabs.sendMessage(tab[0].id, obj);
+          window.parent.close();
         }
       );
     }

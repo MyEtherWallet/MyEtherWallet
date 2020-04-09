@@ -48,6 +48,7 @@ export default async ({ event, payload }, callback, next) => {
     })
     .on('error', err => {
       errored = true;
+      funcHash = '';
       chrome.notifications.create('', {
         type: 'basic',
         iconUrl: chrome.runtime.getURL('img/icons/icon192.png'),

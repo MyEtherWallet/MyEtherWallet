@@ -94,7 +94,7 @@ export default {
   props: {
     swapDetails: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },

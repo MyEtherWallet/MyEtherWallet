@@ -27,13 +27,13 @@ export default {
   props: {
     allSupportedProviders: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
     unavailableProviders: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     }

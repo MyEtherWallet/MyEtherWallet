@@ -74,17 +74,11 @@ describe('FullWidthDropdownMenu.vue', () => {
 
   it('should render correct dropdownOpen data', () => {
     expect(
-      wrapper
-        .find('.contents-container')
-        .classes()
-        .indexOf('opened')
+      wrapper.find('.contents-container').classes().indexOf('opened')
     ).toBe(-1);
     wrapper.setData({ dropdownOpen: true });
     expect(
-      wrapper
-        .find('.contents-container')
-        .classes()
-        .indexOf('opened')
+      wrapper.find('.contents-container').classes().indexOf('opened')
     ).toBeGreaterThan(-1);
   });
 

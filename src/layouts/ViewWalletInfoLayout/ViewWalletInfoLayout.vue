@@ -235,8 +235,10 @@ export default {
     openTxHistory() {
       // eslint-disable-next-line
       window.open(
-        `${this.network.type.blockExplorerAddr.replace('[[address]]', '') +
-          this.account.address}`,
+        `${
+          this.network.type.blockExplorerAddr.replace('[[address]]', '') +
+          this.account.address
+        }`,
         '_blank'
       );
     },

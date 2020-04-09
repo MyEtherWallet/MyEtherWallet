@@ -24,53 +24,35 @@ describe('MobileMenuButton.vue', () => {
   xit('should render correct isMobileMenuOpen data', () => {
     wrapper.setData({ isMobileMenuOpen: true });
     expect(
-      wrapper
-        .find('.menu-button')
-        .classes()
-        .indexOf('menu-open')
+      wrapper.find('.menu-button').classes().indexOf('menu-open')
     ).toBeGreaterThan(-1);
     wrapper.setData({ isMobileMenuOpen: false });
-    expect(
-      wrapper
-        .find('.menu-button')
-        .classes()
-        .indexOf('menu-open')
-    ).toBe(-1);
+    expect(wrapper.find('.menu-button').classes().indexOf('menu-open')).toBe(
+      -1
+    );
   });
 
   xit('should render correct ismenuopen props', () => {
     wrapper.setProps({ ismenuopen: true });
     expect(
-      wrapper
-        .find('.menu-button')
-        .classes()
-        .indexOf('menu-open')
+      wrapper.find('.menu-button').classes().indexOf('menu-open')
     ).toBeGreaterThan(-1);
     wrapper.setProps({ ismenuopen: false });
-    expect(
-      wrapper
-        .find('.menu-button')
-        .classes()
-        .indexOf('menu-open')
-    ).toBe(-1);
+    expect(wrapper.find('.menu-button').classes().indexOf('menu-open')).toBe(
+      -1
+    );
   });
 
   describe('MobileMenuButton.vue Methods', () => {
     xit('should change isMobileMenuOpen data when button clicked', () => {
       wrapper.find('.menu-button').trigger('click');
       expect(
-        wrapper
-          .find('.menu-button')
-          .classes()
-          .indexOf('menu-open')
+        wrapper.find('.menu-button').classes().indexOf('menu-open')
       ).toBeGreaterThan(-1);
       wrapper.find('.menu-button').trigger('click');
-      expect(
-        wrapper
-          .find('.menu-button')
-          .classes()
-          .indexOf('menu-open')
-      ).toBe(-1);
+      expect(wrapper.find('.menu-button').classes().indexOf('menu-open')).toBe(
+        -1
+      );
     });
   });
 });

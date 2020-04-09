@@ -4,6 +4,7 @@
   .tab-container {
     padding: 15px 0 15px 15px;
     outline: none !important;
+    min-height: 314px !important;
   }
 
   .popup-button-options {
@@ -29,7 +30,7 @@
     border-radius: 5px;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 15px;
+    margin: 0 20px 15px 0;
     padding: 10px 20px;
     text-align: center;
 
@@ -50,7 +51,7 @@
   }
 
   .wallet-component-container {
-    max-height: 300px;
+    max-height: 170px;
     overflow-y: scroll;
     padding-right: 15px;
   }

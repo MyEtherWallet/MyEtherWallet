@@ -114,7 +114,7 @@ xdescribe('HeaderContainer.vue', () => {
         $root: {
           _i18n: i18n,
           $el: {
-            getBoundingClientRect: function() {
+            getBoundingClientRect: function () {
               return 100;
             }
           }
@@ -137,10 +137,7 @@ xdescribe('HeaderContainer.vue', () => {
     ).toBe(-1);
     wrapper.setData({ isPageOnTop: false });
     expect(
-      wrapper
-        .find('.scrollup-container')
-        .classes()
-        .indexOf('active')
+      wrapper.find('.scrollup-container').classes().indexOf('active')
     ).toBeGreaterThan(-1);
   });
 
@@ -177,10 +174,7 @@ xdescribe('HeaderContainer.vue', () => {
     ).toBe(-1);
     wrapper.setData({ isPageOnTop: false });
     expect(
-      wrapper
-        .find('.scrollup-container')
-        .classes()
-        .indexOf('active')
+      wrapper.find('.scrollup-container').classes().indexOf('active')
     ).toBeGreaterThan(-1);
   });
 
@@ -193,17 +187,11 @@ xdescribe('HeaderContainer.vue', () => {
   it('should render correct showGetFreeWallet data', () => {
     wrapper.setData({ isPageOnTop: false });
     expect(
-      wrapper
-        .find('.first-button')
-        .classes()
-        .indexOf('hide')
+      wrapper.find('.first-button').classes().indexOf('hide')
     ).toBeGreaterThan(-1);
     wrapper.setData({ showGetFreeWallet: true });
     expect(
-      wrapper
-        .find('.first-button')
-        .classes()
-        .indexOf('show')
+      wrapper.find('.first-button').classes().indexOf('show')
     ).toBeGreaterThan(-1);
   });
 

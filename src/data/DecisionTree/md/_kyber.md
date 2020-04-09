@@ -8,6 +8,6 @@ If you don't see your tokens in MEW, all you have to do is [add them as a custom
 
 #### I do not see my tokens in Etherscan.io.
 
-Please reach out to Kyber Network at their support email, support@kyber.network.
+Please reach out to Kyber Network at their support email, [support@kyber.network](mailto:support@kyber.network).
 
 Include as many details as possible, so they can further assist you.

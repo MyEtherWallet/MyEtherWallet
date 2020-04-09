@@ -4,11 +4,10 @@
     <header-container
       v-show="
         $route.fullPath !== '/getting-started' &&
-          !$route.fullPath.includes('/dapp-submission')
+        !$route.fullPath.includes('/dapp-submission')
       "
     />
     <welcome-modal ref="welcome" />
-    <wallet-launched-modal ref="walletLaunch" />
     <router-view />
     <footer-container />
     <wallet-launched-footer-banner />
@@ -25,7 +24,6 @@ import store from 'store';
 import { mapState, mapActions } from 'vuex';
 import { Toast } from '@/helpers';
 import LogoutWarningModal from '@/components/LogoutWarningModal';
-import WalletLaunchedModal from '@/components/WalletLaunchedModal';
 import WalletLaunchedBanner from '@/components/WalletLaunchedBanner';
 
 export default {
@@ -36,7 +34,6 @@ export default {
     'confirmation-container': ConfirmationContainer,
     'logout-warning-modal': LogoutWarningModal,
     'welcome-modal': WelcomeModal,
-    'wallet-launched-modal': WalletLaunchedModal,
     'wallet-launched-footer-banner': WalletLaunchedBanner
   },
   computed: {
@@ -75,10 +72,6 @@ export default {
 
     if (!store.get('notFirstTimeVisit') && this.$route.fullPath === '/') {
       this.$refs.welcome.$refs.welcome.show();
-    }
-
-    if (this.$route.fullPath !== '/qr-code') {
-      this.$refs.walletLaunch.$refs.walletLaunch.show();
     }
 
     this.$refs.welcome.$refs.welcome.$on('hidden', () => {

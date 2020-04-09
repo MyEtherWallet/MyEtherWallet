@@ -66,31 +66,19 @@ describe('CurrencyPicker.vue', () => {
   });
 
   it('should show elements according to token props', () => {
-    expect(
-      wrapper
-        .findAll('.dropdown-container p')
-        .at(0)
-        .isVisible()
-    ).toBe(false);
-    expect(
-      wrapper
-        .findAll('.dropdown-container p')
-        .at(1)
-        .isVisible()
-    ).toBe(true);
+    expect(wrapper.findAll('.dropdown-container p').at(0).isVisible()).toBe(
+      false
+    );
+    expect(wrapper.findAll('.dropdown-container p').at(1).isVisible()).toBe(
+      true
+    );
     wrapper.setProps({ token: false });
-    expect(
-      wrapper
-        .findAll('.dropdown-container p')
-        .at(0)
-        .isVisible()
-    ).toBe(false);
-    expect(
-      wrapper
-        .findAll('.dropdown-container p')
-        .at(1)
-        .isVisible()
-    ).toBe(false);
+    expect(wrapper.findAll('.dropdown-container p').at(0).isVisible()).toBe(
+      false
+    );
+    expect(wrapper.findAll('.dropdown-container p').at(1).isVisible()).toBe(
+      false
+    );
   });
 
   xit('should render correct search data', () => {

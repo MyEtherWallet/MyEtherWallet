@@ -43,10 +43,7 @@ describe('HardwarePasswordModal.vue', () => {
 
   it('should render correct hardwareBrand props', () => {
     expect(
-      wrapper
-        .find('.submit-button')
-        .text()
-        .indexOf(hardwareBrand)
+      wrapper.find('.submit-button').text().indexOf(hardwareBrand)
     ).toBeGreaterThan(-1);
   });
 

@@ -50,18 +50,10 @@ describe('EnterPinNumberModal.vue', () => {
   });
 
   it('should render correct acknowledgedTerms data', () => {
-    expect(
-      wrapper
-        .find('.custom-marker')
-        .classes()
-        .indexOf('enable')
-    ).toBe(-1);
+    expect(wrapper.find('.custom-marker').classes().indexOf('enable')).toBe(-1);
     wrapper.setData({ acknowledgedTerms: true });
     expect(
-      wrapper
-        .find('.custom-marker')
-        .classes()
-        .indexOf('enable')
+      wrapper.find('.custom-marker').classes().indexOf('enable')
     ).toBeGreaterThan(-1);
   });
 

@@ -33,7 +33,7 @@ export default {
   props: {
     options: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
@@ -67,9 +67,7 @@ export default {
             this.displayName(curr)
               .toLowerCase()
               .includes(newVal.toLowerCase()) ||
-            this.displayName(curr)
-              .toLowerCase()
-              .includes(newVal.toLowerCase())
+            this.displayName(curr).toLowerCase().includes(newVal.toLowerCase())
           ) {
             return curr;
           }

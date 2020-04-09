@@ -192,8 +192,8 @@
             <input
               v-if="
                 resType === 'string' ||
-                  resType === 'boolean' ||
-                  resType === 'number'
+                resType === 'boolean' ||
+                resType === 'number'
               "
               v-model="result"
               type="text"
@@ -238,9 +238,8 @@
           <div
             v-if="
               selectedMethod.hasOwnProperty('inputs') &&
-                ((selectedMethod.constant &&
-                  selectedMethod.inputs.length > 0) ||
-                  !selectedMethod.constant)
+              ((selectedMethod.constant && selectedMethod.inputs.length > 0) ||
+                !selectedMethod.constant)
             "
             :class="[
               allValid ? '' : 'disabled',
@@ -417,7 +416,7 @@ export default {
         return str;
       }
       const newArr = str.split(',');
-      return newArr.map(function(item) {
+      return newArr.map(function (item) {
         return item.replace(' ', '');
       });
     },

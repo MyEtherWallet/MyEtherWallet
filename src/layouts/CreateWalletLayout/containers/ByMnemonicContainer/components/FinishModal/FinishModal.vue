@@ -32,7 +32,7 @@ export default {
   props: {
     unlock: {
       type: Function,
-      default: function() {}
+      default: function () {}
     }
   }
 };

@@ -3,7 +3,7 @@ import { toPayload } from './jsonrpc';
 
 const toQueryString = params => {
   return Object.keys(params)
-    .map(function(k) {
+    .map(function (k) {
       return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
     })
     .join('&');

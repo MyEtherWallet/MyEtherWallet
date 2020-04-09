@@ -16,7 +16,6 @@
               alt
               height="50"
             />
-            <p>{{ $t('mewcx.chrome-cx') }}</p>
           </div>
         </b-nav-item>
         <div class="spacer"></div>
@@ -59,14 +58,14 @@
               <notification
                 v-if="
                   $route.fullPath.includes('view-wallet-info') ||
-                    $route.fullPath.includes('interface')
+                  $route.fullPath.includes('interface')
                 "
                 ref="notification"
               />
               <extension-notification
                 v-if="
                   !$route.fullPath.includes('view-wallet-info') &&
-                    !$route.fullPath.includes('interface')
+                  !$route.fullPath.includes('interface')
                 "
               />
             </b-nav-item>
@@ -97,6 +96,76 @@
             </b-nav-item-dropdown>
           </div>
         </div>
+        <b-dropdown
+          v-if="!address"
+          ref="cxNetworkDropdown"
+          class="cx-network-picker"
+          no-caret
+          right
+          menu-class="cx-dropdown-menu"
+        >
+          <template v-slot:button-content>
+            <div class="network-picker-title">
+              <i
+                class="color"
+                :style="{ backgroundColor: colors[network.type.name] }"
+              />
+              <p class="network-title">
+                {{ network.type.name + ' network' }}
+              </p>
+              <p class="network-service">{{ network.service }}</p>
+              <i
+                :class="[
+                  'fa network-caret',
+                  networkOpen ? 'fa-angle-up' : 'fa-angle-down'
+                ]"
+              />
+            </div>
+          </template>
+          <div
+            v-for="(networkName, idx) in Object.keys(Networks)"
+            :key="networkName"
+            class="network-selection-container"
+            @click="toggleList(idx + 1)"
+          >
+            <div>
+              <i
+                class="color"
+                :style="{ backgroundColor: colors[networkName] }"
+              />
+              <p class="network-title">
+                {{ networkName }}
+              </p>
+              <i
+                :class="[
+                  'fa network-caret',
+                  networkShow === idx + 1 ? 'fa-minus' : 'fa-plus'
+                ]"
+              />
+            </div>
+            <transition name="showContents">
+              <div
+                v-if="networkShow === idx + 1"
+                class="network-service-container"
+              >
+                <div
+                  v-for="netList in Networks[networkName]"
+                  :key="netList.service + networkName"
+                  :class="[
+                    'network-service',
+                    netList.service === network.service &&
+                    netList.type.name === network.type.name
+                      ? 'active'
+                      : ''
+                  ]"
+                  @click.stop="updateNetwork(netList)"
+                >
+                  {{ netList.service }}
+                </div>
+              </div>
+            </transition>
+          </div>
+        </b-dropdown>
       </b-nav>
     </div>
   </div>
@@ -108,7 +177,7 @@ import NotificationsContainer from '@/containers/NotificationsContainer';
 import SettingsModal from '@/components/SettingsModal';
 import LogoutModal from '@/components/LogoutModal';
 import { Misc, Toast } from '@/helpers';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 
@@ -122,10 +191,22 @@ export default {
   },
   data() {
     const isMewCx = Misc.isMewCx();
-    return { isMewCx: isMewCx, gasPrice: '0' };
+    return {
+      isMewCx: isMewCx,
+      gasPrice: '0',
+      networkOpen: false,
+      networkShow: 0,
+      colors: {
+        KOV: '#adc101',
+        ETH: '#0e97c0',
+        GOERLI: '#adc101',
+        ROP: '#adc101',
+        RIN: '#adc101'
+      }
+    };
   },
   computed: {
-    ...mapState('main', ['account', 'web3', 'network']),
+    ...mapState('main', ['account', 'web3', 'network', 'Networks']),
     address() {
       return this.account.address;
     },
@@ -139,7 +220,23 @@ export default {
       return Misc.getService(this.network.type.blockExplorerAddr);
     }
   },
+  mounted() {
+    this.$refs.cxNetworkDropdown.$on('show', () => {
+      this.networkOpen = true;
+    });
+    this.$refs.cxNetworkDropdown.$on('hide', () => {
+      this.networkOpen = false;
+    });
+  },
   methods: {
+    ...mapActions('main', ['switchNetwork', 'setWeb3Instance']),
+    toggleList(num) {
+      if (num === this.networkShow) {
+        this.networkShow = 0;
+      } else {
+        this.networkShow = num;
+      }
+    },
     openSettings() {
       this.$refs.settings.$refs.settings.show();
       this.$refs.settings.$refs.settings.$on('hidden', () => {
@@ -161,10 +258,56 @@ export default {
         .catch(e => {
           Toast.responseHandler(e, Toast.ERROR);
         });
+    },
+    updateNetwork(network) {
+      this.switchNetwork(network).then(() => {
+        window.chrome.storage.sync.set({
+          defNetwork: JSON.stringify({
+            service: network.service,
+            key: network.type.name
+          })
+        });
+        this.setWeb3Instance();
+        this.$refs.cxNetworkDropdown.hide();
+      });
     }
   }
 };
 </script>
+
+<style lang="scss">
+@import '~@/scss/GlobalVariables';
+
+.cx-network-picker {
+  .btn {
+    border: none;
+    border-radius: 0;
+    background-color: $light-green-1;
+  }
+}
+
+.cx-dropdown-menu {
+  margin: 0 !important;
+  width: 100% !important;
+  margin: 0 !important;
+  border: none !important;
+  transform: translate3d(0px, 64px, 0px) !important;
+
+  .show {
+    margin: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    border: none !important;
+    transform: translate3d(0px, 64px, 0px) !important;
+  }
+
+  .show {
+    .btn {
+      background-color: $mew-green !important;
+    }
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 @import 'CxHeader.scss';

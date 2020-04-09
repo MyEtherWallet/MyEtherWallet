@@ -121,11 +121,11 @@ export default {
     },
     print: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     switchAddr: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     displayAddr: {
       type: Function,
@@ -133,7 +133,7 @@ export default {
     },
     qrcode: {
       type: Function,
-      default: function() {}
+      default: function () {}
     }
   },
   data() {

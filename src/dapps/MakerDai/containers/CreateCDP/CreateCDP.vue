@@ -18,7 +18,7 @@
       :loadingmessage="$t('dappsMCDMaker.creating-message')"
     />
     <div class="manage-container">
-      <h3 class="mb-3 ">{{ $t('dappsMCDMaker.maker_title') }}</h3>
+      <h3 class="mb-3">{{ $t('dappsMCDMaker.maker_title') }}</h3>
       <div class="mb-5">{{ $t('dappsMCDMaker.create-instruct') }}</div>
 
       <div class="currency-ops-new">
@@ -201,9 +201,7 @@ import BigNumber from 'bignumber.js';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
 const bnOver = (one, two, three) => {
-  return toBigNumber(one)
-    .times(toBigNumber(two))
-    .div(toBigNumber(three));
+  return toBigNumber(one).times(toBigNumber(two)).div(toBigNumber(three));
 };
 
 export default {
@@ -215,13 +213,13 @@ export default {
   props: {
     tokensWithBalance: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
     getBalance: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     highestGas: {
       type: String,
@@ -241,33 +239,33 @@ export default {
     },
     priceService: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
     cdpService: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
     proxyService: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
     buildEmpty: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     getCollateralOptions: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     getValueOrFunction: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     makerActive: {
       type: Boolean,
@@ -275,7 +273,7 @@ export default {
     },
     values: {
       type: Object,
-      default: function() {
+      default: function () {
         return {
           maxEthDraw: '',
           maxUsdDraw: '',

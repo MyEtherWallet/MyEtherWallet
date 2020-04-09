@@ -3,7 +3,7 @@
     <!-- === MEW custom form ======================================== -->
     <div
       :class="fullWidth ? 'full-width' : ''"
-      class="mew-custom-form mew-custom-form__password "
+      class="mew-custom-form mew-custom-form__password"
     >
       <div class="user-input-field">
         <input
@@ -65,7 +65,7 @@ export default {
     },
     switcher: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     param: {
       type: String,

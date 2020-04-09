@@ -1,39 +1,38 @@
 <template>
-  <div class="dapps-container">
-    <div class="wallets-container-header">
-      <div class="header-title-container">
-        <div class="title-balance">
-          <h2>
-            {{ $t('mewcx.dapps') }}
-            <a
-              href="https://www.stateofthedapps.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {{ $t('mewcx.powered-by') }}
-              <img
-                :alt="$t('mewcx.sotd')"
-                src="@/assets/images/icons/dapps/sotd.png"
-              />
-            </a>
-          </h2>
+  <extension-browser-action-wrapper>
+    <template v-slot:header>
+      <div class="wallets-container-header">
+        <div class="header-title-container">
+          <div class="title-balance">
+            <h2>
+              {{ $t('mewcx.dapps') }}
+              <a
+                href="https://www.stateofthedapps.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {{ $t('mewcx.powered-by') }}
+                <img
+                  :alt="$t('mewcx.sotd')"
+                  src="@/assets/images/icons/dapps/sotd.png"
+                />
+              </a>
+            </h2>
+          </div>
         </div>
       </div>
-      <network-picker-component
-        :network="network"
-        :open-network-modal="openNetworkModal"
-      />
+    </template>
+    <div class="dapps-container">
+      <router-view :dapps="dapps" />
     </div>
-    <div />
-    <router-view :dapps="dapps" />
-  </div>
+  </extension-browser-action-wrapper>
 </template>
 
 <script>
-import NetworkPickerComponent from '../../components/NetworkPickerComponent';
+import ExtensionBrowserActionWrapper from '../../wrappers/ExtensionBrowserActionWrapper';
 export default {
   components: {
-    'network-picker-component': NetworkPickerComponent
+    'extension-browser-action-wrapper': ExtensionBrowserActionWrapper
   },
   props: {
     network: {
