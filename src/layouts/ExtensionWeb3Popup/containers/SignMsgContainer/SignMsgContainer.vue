@@ -44,6 +44,7 @@ import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import PasswordModalComponent from '../../components/PasswordModalComponent';
 import AcceptCancelButtons from '../../components/AcceptCancelButtons';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 import {
   MEW_SIGNED_MSG,
   REJECT_MEW_SIGN_MSG
@@ -70,10 +71,10 @@ export default {
   mounted() {
     const _self = this;
     const { address, msgToSign } = _self.linkQuery;
-    _self.address = address;
+    _self.address = toChecksumAddress(address);
     _self.message = utils.hexToAscii(msgToSign);
-    window.chrome.storage.sync.get(address, function (res) {
-      _self.signingKeystore = JSON.parse(res[address]).priv;
+    window.chrome.storage.sync.get(_self.address, function (res) {
+      _self.signingKeystore = JSON.parse(res[_self.address]).priv;
     });
   },
   methods: {
