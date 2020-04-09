@@ -1,19 +1,19 @@
 <template>
   <div>
+    <div class="floating-buttons-container">
+      <decision-tree />
+      <router-link
+        v-show="
+          $route.fullPath === '/create-wallet' ||
+          ($route.fullPath === '/access-my-wallet' && !isMewCx)
+        "
+        to="/getting-started"
+      >
+        <user-reminder-button />
+      </router-link>
+    </div>
     <cx-header v-if="isMewCx" />
     <div v-if="!isMewCx" class="header">
-      <div class="floating-buttons-container">
-        <decision-tree />
-        <router-link
-          v-show="
-            $route.fullPath === '/create-wallet' ||
-            ($route.fullPath === '/access-my-wallet' && !isMewCx)
-          "
-          to="/getting-started"
-        >
-          <user-reminder-button />
-        </router-link>
-      </div>
       <mobile-menu
         :opensettings="openSettings"
         :logout="logout"
@@ -354,9 +354,9 @@ export default {
       if (this.tempHide) {
         resolve(false);
       } else {
-        this.$refs.issuelog.$refs.issuelog.show();
         this.error = error;
         this.resolver = resolve;
+        this.$refs.issuelog.$refs.issuelog.show();
       }
     });
 

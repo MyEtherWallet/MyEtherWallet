@@ -7,7 +7,7 @@
   display: grid;
   padding: 20px 20px;
   grid-template-columns: 60px 1fr;
-  background-color: $light-grey-16;
+  background-color: $light-orange-3;
   @media all and (max-width: 330px) {
     grid-template-columns: 0 1fr;
   }
