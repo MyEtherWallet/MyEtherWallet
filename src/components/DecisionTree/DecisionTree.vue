@@ -128,6 +128,7 @@ import Multiselect from 'vue-multiselect';
 import MdContainer from './components/MdContainer';
 import mdIndex from '@/data/DecisionTree/MDIndex.js';
 import marked from 'marked';
+import { Misc } from '@/helpers';
 
 export default {
   name: 'DecisionTree',
@@ -142,7 +143,9 @@ export default {
     }
   },
   data() {
+    const isMewCx = Misc.isMewCx();
     return {
+      isMewCx: isMewCx,
       index: mdIndex,
       currentIndex: mdIndex.ROOT,
       historyStack: [],

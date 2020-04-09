@@ -1,49 +1,41 @@
 <template>
-  <div>
-    <b-modal
-      ref="editModal"
-      :title="$t('mewcx.edit-modal')"
-      hide-footer
-      class="bootstrap-modal"
-      centered
-    >
-      <div class="modal-contents">
-        <form>
-          <div class="input-container">
-            <label for="walletName"> {{ $t('mewcx.wallet-name') }} </label>
-            <input
-              v-model="locName"
-              :placeholder="$t('mewcx.add-wallet-nickname')"
-              name="walletName"
-            />
-          </div>
-          <button
-            class="submit-button large-round-button-green-filled"
-            type="submit"
-            @click.prevent="saveWallet"
-          >
-            {{ $t('mewcx.submit') }}
-          </button>
-          <button
-            class="remove-button large-round-button-white-filled"
-            @click.stop.prevent="removeWallet"
-          >
-            {{ $t('mewcx.remove-wallet') }}
-          </button>
-        </form>
-      </div>
-    </b-modal>
-  </div>
+  <mewcx-modal-wrapper ref="editWalletModal">
+    <template v-slot:modalContentTitle>
+      {{ $t('mewcx.rename-wallet') }}
+    </template>
+    <div class="modal-contents">
+      <form>
+        <div class="input-container">
+          <label for="walletName"> {{ $t('mewcx.wallet-name') }} </label>
+          <input
+            v-model="locName"
+            :placeholder="$t('mewcx.add-wallet-nickname')"
+            name="walletName"
+          />
+        </div>
+        <button
+          :class="[
+            locName !== '' ? '' : 'disabled',
+            'submit-button large-round-button-green-filled'
+          ]"
+          type="submit"
+          @click.prevent="saveWallet"
+        >
+          {{ $t('mewcx.submit') }}
+        </button>
+      </form>
+    </div>
+  </mewcx-modal-wrapper>
 </template>
 
 <script>
+import MewcxModalWrapper from '../../wrappers/MewcxModalWrapper';
 import { Toast, ExtensionHelpers } from '@/helpers';
 export default {
+  components: {
+    'mewcx-modal-wrapper': MewcxModalWrapper
+  },
   props: {
-    name: {
-      type: String,
-      default: ''
-    },
     removeWallet: {
       type: Function,
       default: () => {}
@@ -61,7 +53,7 @@ export default {
   },
   data() {
     return {
-      locName: this.name
+      locName: ''
     };
   },
   methods: {
@@ -77,11 +69,11 @@ export default {
       );
     },
     saveWalletCb() {
-      this.$refs.editModal.hide();
       Toast.responseHandler(
         this.$t('mewcx.wallet-update-success'),
         Toast.SUCCESS
       );
+      this.$refs.editModal.$refs.modalWrapper.hide();
     }
   }
 };

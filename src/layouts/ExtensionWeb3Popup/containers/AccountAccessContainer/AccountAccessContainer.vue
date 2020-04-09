@@ -136,7 +136,7 @@ export default {
             event: REJECT_MEW_CX_ACC
           };
           chrome.tabs.sendMessage(tab[0].id, obj);
-          window.close();
+          window.parent.close();
         }
       );
     },
@@ -157,7 +157,7 @@ export default {
           };
           chrome.storage.sync.set(eventObj, function () {});
           chrome.tabs.sendMessage(tab[0].id, obj);
-          window.close();
+          window.parent.close();
         }
       );
     }
