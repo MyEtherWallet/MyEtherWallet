@@ -1,6 +1,9 @@
 ### Release v5.5.2
 
+### Devop
+
 - Greenkeeper packages [#2227](https://github.com/MyEtherWallet/MyEtherWallet/pull/2227)
+- Remove mew wallet pop up [#2217](https://github.com/MyEtherWallet/MyEtherWallet/pull/2217)
 
 ### Release v5.5.1-hotfix.1
 
