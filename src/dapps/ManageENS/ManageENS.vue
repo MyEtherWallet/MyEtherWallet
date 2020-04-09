@@ -736,8 +736,7 @@ export default {
         to: resolverAddr,
         data: contract.methods.multicall(multicalls).encodeABI(),
         gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed(),
-        value: 0,
-        gas: 100000
+        value: 0
       };
       this.web3.eth.sendTransaction(tx);
     },
