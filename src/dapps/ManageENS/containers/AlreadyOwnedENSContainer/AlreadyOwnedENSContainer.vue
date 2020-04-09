@@ -185,27 +185,10 @@ export default {
     if (this.hostName === '') {
       this.$router.push('/interface/dapps/manage-ens');
     }
-    this.fetchAvatar();
   },
   methods: {
     manageEns() {
       this.$router.push('manage');
-    },
-    async fetchAvatar() {
-      if (this.hasAvatar) {
-        const avatar = await fetch(
-          `https://img.mewapi.io/?image=${this.txtRecordsWithValue.avatar}`
-        )
-          .then(res => {
-            console.log(res, 'inside');
-            return res;
-          })
-          .catch(console.log);
-        const response = await avatar.json();
-        console.log(response, 'outside');
-        this.locAvatar = avatar;
-      }
-      return '';
     }
   }
 };
