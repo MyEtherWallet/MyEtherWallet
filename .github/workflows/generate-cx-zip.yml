@@ -43,4 +43,4 @@ jobs:
           cd chrome-extension && zip -r ../MEW-CX-$GITHUB_SHA.zip * && cd ..
           aws s3 cp --acl public-read ./MEW-CX-$GITHUB_SHA.zip s3://mewbuilds/cx/MEW-CX-$GITHUB_SHA.zip
           curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
-              -d "{\"body\": \"Copy of this build can be found at <br/>https://www.mewbuilds.com/cx/MEW-CX-$GITHUB_SHA.zip
+              -d "{\"body\": \"Copy of this build can be found at <br/>https://www.mewbuilds.com/cx/MEW-CX-$GITHUB_SHA.zip \"
