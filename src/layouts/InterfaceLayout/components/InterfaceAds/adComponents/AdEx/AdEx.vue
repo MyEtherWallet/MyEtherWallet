@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="outer-adex">
     <div class="ad-image-container">
       <div class="inner-adex">
         <iframe
