@@ -66,7 +66,7 @@
         ]"
       >
         <div class="left-container">
-          <span class="domain-name">{{ localDomainName }}.crypto</span>
+          <span class="domain-name">{{ localDomainName }}.{{ tld }}</span>
           <span v-if="isDomainAvail.isAvailable">
             <span class="eth-text"
               >{{ convertedEthPrice }} {{ $t('common.currency.eth') }}</span
