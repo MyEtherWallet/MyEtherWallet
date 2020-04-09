@@ -1,3 +1,7 @@
+### Release v5.5.2
+
+- Greenkeeper packages [#2227](https://github.com/MyEtherWallet/MyEtherWallet/pull/2227)
+
 ### Release v5.5.1-hotfix.1
 
 ### Devop
