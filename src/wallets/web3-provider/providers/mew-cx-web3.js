@@ -31,27 +31,9 @@ class MewCxProvider extends EventEmitter {
     this.middleware.use(ethUnsubscribe);
     this.requestManager = new MEWCXRequestManager();
     this._id = 0;
-    const _this = this;
-    this.httpProvider = {
-      setMaxListeners: this.setMaxListeners,
-      isMew: true,
-      enable: function () {
-        _this.setup();
-        _this.setListeners();
-        return this.sendPromise('eth_requestAccounts')
-          .then(res => {
-            return res.result;
-          })
-          .catch(e => {
-            return e.message;
-          });
-      }
-    };
+    this.setListeners();
 
-    return this.httpProvider;
-  }
-  setup() {
-    const setupProvider = {
+    this.httpProvider = {
       sendPromise: (method, params = []) => {
         return new Promise((resolve, reject) => {
           if (!method || typeof method !== 'string') {
@@ -101,18 +83,29 @@ class MewCxProvider extends EventEmitter {
             cb(e);
           });
       },
+      setMaxListeners: this.setMaxListeners,
+      isMew: true,
       on: this.on,
       emit: this.emit,
       requestManager: this.requestManager,
       removeListener: () => {
         this.removeListener();
         this.clearListeners();
+      },
+      enable: function () {
+        return this.sendPromise('eth_requestAccounts')
+          .then(res => {
+            return res.result;
+          })
+          .catch(e => {
+            return e.message;
+          });
       }
     };
-    for (const prop in setupProvider) {
-      this.httpProvider[prop] = setupProvider[prop];
-    }
+
+    return this.httpProvider;
   }
+
   setListeners() {
     const id = window.extensionID;
     const _self = this;
