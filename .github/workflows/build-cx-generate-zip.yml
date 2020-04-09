@@ -2,8 +2,6 @@ name: build cx and generate zip
 
 on:
   push:
-    branches:
-      - '*'
     branches-ignore:
       - 'gh-pages'
       - 'gh-pages-history'
