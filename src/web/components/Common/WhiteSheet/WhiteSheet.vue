@@ -3,7 +3,10 @@
     <v-sheet
       color="bg_white_sheet"
       class="border-radius--10px box-shadow"
-      :class="sideinfo ? 'sideinfo' : ''"
+      :class="[
+        sideinfo ? 'sideinfo' : '',
+        overflowHidden ? 'overflow--hidden' : ''
+      ]"
     >
       <slot />
     </v-sheet>
@@ -13,7 +16,8 @@
 <script>
 export default {
   props: {
-    sideinfo: { default: false, type: Boolean }
+    sideinfo: { default: false, type: Boolean },
+    overflowHidden: { default: false, type: Boolean }
   }
 };
 </script>
