@@ -1,22 +1,15 @@
-name: create github release
+name: generate cx zip
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - '**cx**'
 
 jobs:
-  release:
+  develop-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: master
-
-      - name: verify tag
-        run: |
-          git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^master$'
-          git checkout $GITHUB_SHA
 
       - name: setup env
         run: |
@@ -37,17 +30,18 @@ jobs:
         run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
 
       - name: build
-        run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:offline && npm run build:mewcx"
+        run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:mewcx"
 
-      - name: Get release tag
-        id: get_release_tag
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-
-      - name: create release
+      - name: generate zip for cx
         env:
+          AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
+          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           GITHUB_TOKEN: ${{secrets.MEW_BOT_TOKEN}}
         run: |
-          openssl aes-256-cbc -K ${{secrets.FILE_DECRYPT_KEY}} -iv ${{secrets.FILE_DECRYPT_IV}} -in ssh-keys.tar.enc -out ssh-keys.tar -d
-          tar xvf ssh-keys.tar
-          gpg --allow-secret-key-import --import mew-sign.gpg
-          bash ./release.sh ${{ steps.get_release_tag.outputs.VERSION }} $GITHUB_TOKEN $GITHUB_REPOSITORY true
+          pip install --user awscli
+          cd chrome-extension && zip -r ../MEW-CX-$GITHUB_SHA.zip * && cd ..
+          aws s3 cp --acl public-read ./MEW-CX-$GITHUB_SHA.zip s3://mewbuilds/cx/MEW-CX-$GITHUB_SHA.zip
+          curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
+            -d "{\"body\": \"Copy of this build can be found at <br/>https://www.mewbuilds.com/cx/MEW-CX-${GITHUB_SHA}.zip<br/> \"}" \
+                            "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/comments"
