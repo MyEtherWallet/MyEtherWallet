@@ -4,7 +4,7 @@
     <div v-if="hasAvatar" class="container-with-avatar content-container">
       <div class="img-info-container">
         <div class="profile-img">
-          <img :src="fetchAvatar()" />
+          <img :src="convertedAvatar" />
         </div>
         <div class="profile-info">
           <p v-if="txtRecordsWithValue['url']">
@@ -141,6 +141,11 @@ export default {
       default: function () {}
     }
   },
+  data() {
+    return {
+      locAvatar: ''
+    };
+  },
   computed: {
     ...mapState('main', ['account']),
     fullDomainName() {
@@ -151,6 +156,12 @@ export default {
       for (const k in this.supportedCoins)
         if (this.supportedCoins[k].value) coins[k] = this.supportedCoins[k];
       return coins;
+    },
+    convertedAvatar() {
+      if (this.hasAvatar) {
+        return `https://img.mewapi.io/?image=${this.txtRecordsWithValue.avatar}&width=75&height=75&fit=scale-down`;
+      }
+      return '';
     },
     hasAvatar() {
       return this.txtRecordsWithValue.hasOwnProperty('avatar');
@@ -174,6 +185,7 @@ export default {
     if (this.hostName === '') {
       this.$router.push('/interface/dapps/manage-ens');
     }
+    this.fetchAvatar();
   },
   methods: {
     manageEns() {
@@ -183,8 +195,15 @@ export default {
       if (this.hasAvatar) {
         const avatar = await fetch(
           `https://img.mewapi.io/?image=${this.txtRecordsWithValue.avatar}`
-        );
-        return avatar;
+        )
+          .then(res => {
+            console.log(res, 'inside');
+            return res;
+          })
+          .catch(console.log);
+        const response = await avatar.json();
+        console.log(response, 'outside');
+        this.locAvatar = avatar;
       }
       return '';
     }
