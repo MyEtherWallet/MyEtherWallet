@@ -3,7 +3,12 @@
     <div class="stripe-container">
       <div class="domain-header">
         <h4>{{ domainName }}</h4>
-        <h4 class="domain-price">${{ domainPrice }}</h4>
+        <h4 class="domain-price">
+          <span class="eth-text"
+            >{{ convertedEthPrice }} {{ $t('common.currency.eth') }}</span
+          >
+          <span class="price-text">(${{ domainPrice }})</span>
+        </h4>
       </div>
       <div class="stripe-form-container">
         <div class="stripe-form-header">
@@ -14,7 +19,9 @@
         </div>
         <div class="stripe-form-body">
           <div class="stripe-form-field-container">
-            <h6>{{ $t('unstoppable.stripe-card-prompt') }}</h6>
+            <span class="form-title">{{
+              $t('unstoppable.stripe-card-prompt')
+            }}</span>
             <div class="stripe-card-input">
               <card
                 :class="{ complete }"
@@ -26,7 +33,7 @@
           </div>
           <div class="stripe-form-field-container">
             <h6 class="secured-by-stripe">
-              {{ $t('unstoppable.secured-by-stripe') }} Stripe
+              {{ $t('unstoppable.secured-by-stripe') }}
             </h6>
           </div>
           <div v-show="paymentError">
@@ -34,7 +41,12 @@
               {{ $t('unstoppable.error.stripe-payment') }}
             </h5>
           </div>
-          <div class="stripe-form-field-container">
+          <div class="stripe-form-field-container btn-container">
+            <button class="back-btn" @click="goBack()">
+              <span>
+                {{ $t('common.back') }}
+              </span>
+            </button>
             <button
               :class="[
                 !complete ? 'disabled' : '',
@@ -58,6 +70,9 @@
 <script>
 import stripeImg from '@/assets/images/icons/domain.svg';
 import { Card, createToken } from 'vue-stripe-elements-plus';
+import BigNumber from 'bignumber.js';
+import { mapState } from 'vuex';
+import { Toast } from '@/helpers';
 
 export default {
   components: { Card },
@@ -83,8 +98,24 @@ export default {
       token: null,
       charge: null,
       loading: false,
-      paymentError: false
+      paymentError: false,
+      ethPrice: 0
     };
+  },
+  computed: {
+    ...mapState('main', ['online']),
+    convertedEthPrice() {
+      let ethConvertPrice = 0;
+      if (this.domainPrice > 0) {
+        ethConvertPrice = new BigNumber(this.domainPrice)
+          .dividedBy(this.ethPrice)
+          .toFixed(8);
+      }
+      return ethConvertPrice;
+    }
+  },
+  mounted() {
+    if (this.online) this.getEthPrice();
   },
   beforeMount() {
     if (this.domainName === '' || !this.domainPrice) {
@@ -92,10 +123,24 @@ export default {
     }
   },
   methods: {
+    async getEthPrice() {
+      const price = await fetch(
+        'https://cryptorates.mewapi.io/ticker?filter=ETH'
+      )
+        .then(res => {
+          return res.json();
+        })
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+        });
+      this.ethPrice =
+        typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
+    },
+    goBack() {
+      this.$router.push('/interface/dapps/unstoppable');
+    },
     handlePayWithCryptoClick() {
-      this.$router.push(
-        '/interface/dapps/unstoppable/buy/payment-method/crypto'
-      );
+      this.$router.push('/interface/dapps/unstoppable/buy/payment-method');
     },
     submit() {
       this.loading = true;
