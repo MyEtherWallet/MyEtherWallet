@@ -1,3 +1,7 @@
+### Feature
+
+- ENS Avatar [#2238](https://github.com/MyEtherWallet/MyEtherWallet/pull/2238)
+
 ### Release v5.5.2
 
 ### Feature
