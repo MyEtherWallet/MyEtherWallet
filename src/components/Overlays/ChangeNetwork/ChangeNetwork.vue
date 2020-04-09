@@ -41,10 +41,7 @@
             <div class="width--100-percent">
               <WhiteSheet>
                 <div class="pa-8">
-                  1
-                  <StdButton size="x-large" fullwidth>
-                    Change
-                  </StdButton>
+                  <ChangeNetwork />
                 </div>
               </WhiteSheet>
             </div>
@@ -53,10 +50,7 @@
             <div class="width--100-percent">
               <WhiteSheet>
                 <div class="pa-8">
-                  2
-                  <StdButton size="x-large" fullwidth>
-                    Save
-                  </StdButton>
+                  <AddNetwork />
                 </div>
               </WhiteSheet>
             </div>
@@ -72,7 +66,8 @@ import BaseOverlay from '../BaseOverlay';
 import OverlayTitle from '@/components/OverlayTitle';
 import OverlayTabs from '@/components/OverlayTabs';
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
-import StdButton from '@/web/components/StdButton';
+import AddNetwork from './components/AddNetwork';
+import ChangeNetwork from './components/ChangeNetwork';
 
 export default {
   components: {
@@ -80,7 +75,8 @@ export default {
     OverlayTitle,
     OverlayTabs,
     WhiteSheet,
-    StdButton
+    AddNetwork,
+    ChangeNetwork
   },
   props: {
     open: { default: false, type: Boolean },
@@ -105,6 +101,6 @@ export default {
 }
 
 .overlay-content {
-  width: 600px;
+  width: 500px;
 }
 </style>
