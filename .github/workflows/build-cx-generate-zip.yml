@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - '*'
+    branches-ignore:
+      - 'gh-pages'
+      - 'gh-pages-history'
+    tags-ignore:
+      - '*'
 
 jobs:
   develop-build:
