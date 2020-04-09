@@ -4,7 +4,7 @@
     <div v-if="hasAvatar" class="container-with-avatar content-container">
       <div class="img-info-container">
         <div class="profile-img">
-          <img :src="txtRecordsWithValue.avatar" />
+          <img :src="fetchAvatar()" />
         </div>
         <div class="profile-info">
           <p v-if="txtRecordsWithValue['url']">
@@ -178,6 +178,15 @@ export default {
   methods: {
     manageEns() {
       this.$router.push('manage');
+    },
+    async fetchAvatar() {
+      if (this.hasAvatar) {
+        const avatar = await fetch(
+          `https://img.mewapi.io/?image=${this.txtRecordsWithValue.avatar}`
+        );
+        return avatar;
+      }
+      return '';
     }
   }
 };

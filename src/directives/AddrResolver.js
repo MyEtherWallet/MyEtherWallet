@@ -214,10 +214,10 @@ const AddrResolver = {
         .call();
       if (supportsTxt) {
         const avatar = await resolver.methods.text(domainHash, 'avatar').call();
-        fetch(`https://img.mewapi.io/?image=${avatar}`).then(res => {
-          console.log(res);
-        });
-        _this.avatar = avatar ? avatar : '';
+        const convertedMewAvatar = await fetch(
+          `https://img.mewapi.io/?image=${avatar}`
+        );
+        _this.avatar = convertedMewAvatar ? convertedMewAvatar : '';
       }
     };
 
