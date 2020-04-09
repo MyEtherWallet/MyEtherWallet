@@ -180,6 +180,11 @@
       "@vue/test-utils"
     ]
   },
+  "vuePlugins": {
+    "service": [
+      "./vueConfig/multiCompiler.js"
+    ]
+  },
   "resolutions": {
     "acorn": "^6.4.0",
     "cryptiles": "^4.1.2",
