@@ -21,8 +21,11 @@
             />
             <label :for="provider.provider" />
           </div>
-          <div class="provider-image">
+          <div class="provider-image" v-if="providerLogo(provider.provider)">
             <img :src="providerLogo(provider.provider)" alt />
+          </div>
+          <div class="provider-image" v-else>
+            <h4>{{provider.provider}}</h4>
           </div>
           <div
             :class="[
@@ -141,9 +144,10 @@
           <div class="mew-custom-form__radio-button">
             <input type="radio" name="provider" />
           </div>
-          <div class="provider-image">
+          <div class="provider-image" v-if="providerLogo('mew')">
             <img :src="providerLogo('mew')" alt />
           </div>
+
           <i18n tag="div" path="swap.providers.load-rate-error">
             <span slot="from-currency">{{ noProvidersPair.fromCurrency }}</span>
             <span slot="to-currency">{{ noProvidersPair.toCurrency }}</span>
@@ -209,13 +213,11 @@ import KyberNetwork from '@/assets/images/etc/kybernetwork.png';
 import Bity from '@/assets/images/etc/bity.png';
 import Simplex from '@/assets/images/etc/simplex.png';
 import Changelly from '@/assets/images/etc/changelly.png';
-// import DexAg from '@/assets/images/etc/dexag.png';
 import DexAg from '@/assets/images/etc/dexag.svg';
 
 import Bancor from '@/assets/images/etc/bancor.png';
 import UniSwap from '@/assets/images/etc/uniswap.svg';
 import Zx from '@/assets/images/etc/0x.png';
-import Oasis from '@/assets/images/etc/oasis.svg';
 
 import { providerNames, fiat } from '@/partners';
 
@@ -306,8 +308,7 @@ export default {
         ag: DexAg,
         uniswap: UniSwap,
         bancor: Bancor,
-        zero_x: Zx,
-        oasis: Oasis
+        zero_x: Zx
       },
       betaLogos: {},
       providerNames: providerNames,

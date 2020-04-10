@@ -149,7 +149,6 @@ class CompileSwapOptions {
     other: {}
   }) {
     try {
-      // https://api-v2.dex.ag/token-list-full
       const tokenList = await this.get(
         'https://api-v2.dex.ag/token-list-full'
       );
@@ -160,15 +159,6 @@ class CompileSwapOptions {
             symbol: tokenList[i].symbol.toUpperCase(),
             contractAddress: tokenList[i].address
           });
-          const symbol = tokenList[i].symbol.toUpperCase();
-          tokenDetails[symbol] = {
-            symbol: tokenList[i].symbol,
-            name: tokenList[i].name.trim(),
-            decimals: 18,
-            contractAddress: tokenList[i].address
-          };
-        } else if(!tokenDetails[tokenList[i].symbol] && !tokenList[i].address){
-          console.log(tokenList[i]); // todo remove dev item
           const symbol = tokenList[i].symbol.toUpperCase();
           tokenDetails[symbol] = {
             symbol: tokenList[i].symbol,
