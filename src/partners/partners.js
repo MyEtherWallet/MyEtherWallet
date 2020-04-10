@@ -347,7 +347,6 @@ export default class SwapProviders {
       return provider.startSwap(swapDetails);
     } else if(providerDetails.additional){
       if(providerDetails.additional.source === 'dexag'){
-        console.log(swapDetails); // todo remove dev item
         const provider = this.providers.get('dexag');
         swapDetails.maybeToken = SwapProviders.isToken(swapDetails.fromCurrency);
         return provider.startSwap(swapDetails);

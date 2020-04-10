@@ -11,15 +11,15 @@ import {
   PROVIDER_NAME,
   DEX_AG_WALLET_PROXY,
   PROXY_CONTRACT_ADDRESS,
-  SUPPORTED_DEXES
+  WETH_TOKEN_ADDRESS,
+  SUPPORTED_DEXES, WETH_ABI
 } from './config';
 import dexAgCalls from './dexAg-calls';
-import changellyApi from './dexAg-api';
 
 import debug from 'debug';
 import { utils } from '@/partners';
 
-const errorLogger = debug('v5:partners-changelly');
+const errorLogger = debug('v5:partners-dexag');
 
 const disabled = ['USDT'];
 
@@ -59,7 +59,7 @@ export default class DexAg {
       const {
         currencyDetails,
         tokenDetails
-      } = await changellyApi.getSupportedCurrencies(this.network);
+      } = await dexAgCalls.getSupportedCurrencies(this.network);
       this.currencyDetails = currencyDetails;
       this.tokenDetails = tokenDetails;
       this.hasRates =
@@ -260,6 +260,42 @@ export default class DexAg {
       ]);
     }
     return new Set();
+  }
+
+  getWethContract(trade, swapDetails) {
+    const wethTokenAddress = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
+    return new this.web3.eth.Contract(WETH_TOKEN_ADDRESS, WETH_ABI);
+  }
+  async getEtherToWrap(trade, swapDetails) {
+    const methodObject = new this.web3.eth.Contract(WETH_ABI, WETH_TOKEN_ADDRESS)
+      .methods; //.approve(spender, fromValueWei);
+
+    if (!trade.metadata.input) {
+      return 0;
+    }
+    if (trade.metadata.input.address != WETH_TOKEN_ADDRESS) {
+      return 0;
+    }
+    const wethAmount = trade.metadata.input.amount;
+    const wethContract = new this.web3.eth.Contract(
+      ERC20,
+      WETH_TOKEN_ADDRESS
+    );
+    // const accountAddress = await signer.getAddress();
+    const wethBalance = new BigNumber(await wethContract.balanceOf(swapDetails.toAddress).call());
+    const balance = new BigNumber(await this.web3.eth.getBalance(swapDetails.toAddress));
+    if (wethBalance.gte(wethAmount)) {
+      // Enough weth, no need to wrap
+      return 0;
+    }
+    const totalBalance = balance.add(wethBalance);
+    if (totalBalance.lt(wethAmount)) {
+      // Insufficient balance
+      return -1;
+    }
+    // eth to wrap = weth required for trade - weth balance
+    const ethToWrap = wethBalance.sub(wethAmount).mul(-1);
+    return ethToWrap.toString();
   }
 
   async generateDataForTransactions(

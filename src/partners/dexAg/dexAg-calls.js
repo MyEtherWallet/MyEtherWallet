@@ -1,22 +1,32 @@
 import { get } from '@/helpers/httpRequests';
 import { swapApiEndpoints } from '../partnersConfig';
+import {PROXY_CONTRACT_ADDRESS} from './config';
 import { utils } from '../helpers';
 
-const getCurrencies = async network => {
+const getSupportedCurrencies = async () => {
   try {
-    if (changellyMethods[network]) {
-      const results = await get('https://api-v2.dex.ag/token-list-full');
-      // const results = await get(`https://swap.mewapi.io/proxy?url=https://api-v2.dex.ag/token-list-full`);
+    const currencyList = await get('https://api-v2.dex.ag/token-list-full');
 
-      if (results.error) {
-        throw Error(results.error.message);
+    // const currencyList = await get(`https://swap.mewapi.io/proxy?url=https://api-v2.dex.ag/token-list-full`)
+
+    const currencyDetails = {};
+    const tokenDetails = {};
+    if (currencyList) {
+      for (let i = 0; i < currencyList.length; i++) {
+        const details = {
+          symbol: currencyList[i].symbol.toUpperCase(),
+          name: currencyList[i].name,
+          address: currencyList[i].address
+        };
+        currencyDetails[details.symbol] = details;
+        tokenDetails[details.symbol] = details;
       }
-
-      return results.result;
+      return { currencyDetails, tokenDetails };
     }
-    return Promise.resolve({});
+    throw Error('Dex.ag get supported currencies failed to return a value');
   } catch (e) {
     utils.handleOrThrow(e);
+    errorLogger(e);
   }
 };
 
@@ -25,7 +35,6 @@ const getPrice = async (fromToken, toToken, fromValue) => {
     const results = await get(
       `https://api-v2.dex.ag/price?from=${fromToken}&to=${toToken}&fromAmount=${fromValue}&dex=all`
     );
-
     if (results.error) {
       throw Error(results.error.message);
     }
@@ -54,7 +63,7 @@ const createTransaction = async transactionParams => {
 };
 
 export default {
-  getCurrencies,
+  getSupportedCurrencies,
   getPrice,
   createTransaction
 };

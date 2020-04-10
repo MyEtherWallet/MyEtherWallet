@@ -142,8 +142,6 @@
             />
           </div>
         </div>
-        <!-- TODO REMOVE NOTE BELOW -->
-       <b>Need to check better handle the delay in rate updates changing the value after a moment which is unexpected.</b>
 
         <div class="send-form">
           <div class="title-container">
@@ -775,7 +773,6 @@ export default {
         );
         this.loadingData = false;
         const results = rawResults.reduce((agg, result) => {
-          console.log(result, 'hello?'); // todo remove dev item
           if (Array.isArray(result)) {
             agg = [...agg, ...result];
           } else {
@@ -783,18 +780,7 @@ export default {
           }
           return agg;
         }, []);
-        // this.providersFound = results.reduce((agg, result) => {
-        //   if (result.additional) {
-        //     if (result.additional.source) {
-        //       console.log(result.additional.source); // todo remove dev item
-        //       agg.push(result.additional.source);
-        //     }
-        //   } else if (result.provider) {
-        //     agg.push(result.provider);
-        //   }
-        //   return agg;
-        // }, []);
-        // console.log('after: ', results); // todo remove dev item
+
         if (
           results.every(
             entry =>
@@ -861,7 +847,6 @@ export default {
           const providerDetails = this.providerList.find(entry => {
             return entry.provider === this.selectedProvider.provider;
           });
-          console.log(providerDetails); // todo remove dev item
           const swapDetails = {
             providerDetails: providerDetails,
             fromValue: this.fromValue,
@@ -878,7 +863,6 @@ export default {
           };
           this.swapDetails = await this.swap.startSwap(swapDetails);
           this.finalizingSwap = false;
-          console.log('this.swapDetails', this.swapDetails); // todo remove dev item
 
           if (this.swapDetails.isExitToFiat) {
             this.bityExitToFiat = true;
@@ -888,7 +872,6 @@ export default {
               this.openConfirmModal(this.swapDetails);
             };
           } else {
-            console.log(this.swapDetails, 'this.swapDetails)'); // todo remove dev item
             this.openConfirmModal(this.swapDetails);
           }
         }
@@ -907,7 +890,6 @@ export default {
       }
     },
     openConfirmModal(swapDetails) {
-      console.log(swapDetails, 'WAAAAAAAAAT');
       if (swapDetails.dataForInitialization && swapDetails.maybeToken) {
         this.$refs.swapConfirmation.$refs.swapconfirmation.show();
       } else if (swapDetails.dataForInitialization && !swapDetails.maybeToken) {
