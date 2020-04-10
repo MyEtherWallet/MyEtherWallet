@@ -1,5 +1,4 @@
 import { get } from '@/helpers/httpRequests';
-import { swapApiEndpoints } from '../partnersConfig';
 import {PROXY_CONTRACT_ADDRESS} from './config';
 import { utils } from '../helpers';
 
@@ -7,19 +6,19 @@ const getSupportedCurrencies = async () => {
   try {
     const currencyList = await get('https://api-v2.dex.ag/token-list-full');
 
-    // const currencyList = await get(`https://swap.mewapi.io/proxy?url=https://api-v2.dex.ag/token-list-full`)
-
     const currencyDetails = {};
     const tokenDetails = {};
     if (currencyList) {
       for (let i = 0; i < currencyList.length; i++) {
-        const details = {
-          symbol: currencyList[i].symbol.toUpperCase(),
-          name: currencyList[i].name,
-          address: currencyList[i].address
-        };
-        currencyDetails[details.symbol] = details;
-        tokenDetails[details.symbol] = details;
+        if(currencyList[i].address){
+          const details = {
+            symbol: currencyList[i].symbol.toUpperCase(),
+            name: currencyList[i].name,
+            address: currencyList[i].address
+          };
+          currencyDetails[details.symbol] = details;
+          tokenDetails[details.symbol] = details;
+        }
       }
       return { currencyDetails, tokenDetails };
     }
@@ -38,7 +37,6 @@ const getPrice = async (fromToken, toToken, fromValue) => {
     if (results.error) {
       throw Error(results.error.message);
     }
-
     return results;
   } catch (e) {
     utils.handleOrThrow(e);
@@ -49,9 +47,6 @@ const createTransaction = async transactionParams => {
   try {
     const url = `https://api-v2.dex.ag/tradeAndSend?from=${transactionParams.fromCurrency}&to=${transactionParams.toCurrency}&fromAmount=${transactionParams.fromValue}&dex=${transactionParams.dex}&recipient=${transactionParams.toAddress}&proxy=${PROXY_CONTRACT_ADDRESS}`;
     const results = await get(url);
-    // const results = await get(
-    //   `https://swap.mewapi.io/proxy?url=${url}`
-    // );
     if (results.error) {
       throw Error(results.error.message);
     }
