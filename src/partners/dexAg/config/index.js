@@ -5,7 +5,8 @@ import {
   notificationStatuses,
   TIME_SWAP_VALID,
   PROVIDER_NAME,
-  PROXY_CONTRACT_ADDRESS
+  PROXY_CONTRACT_ADDRESS,
+  WETH_TOKEN_ADDRESS
 } from './config';
 import WETH_ABI from './weth.abi';
 import DEX_AG_WALLET_PROXY from './DexTradingWithCollection.abi';
@@ -17,6 +18,7 @@ export {
   TIME_SWAP_VALID,
   PROVIDER_NAME,
   PROXY_CONTRACT_ADDRESS,
+  WETH_TOKEN_ADDRESS,
   WETH_ABI,
   DEX_AG_WALLET_PROXY
 };
