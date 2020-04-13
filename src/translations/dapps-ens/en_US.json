@@ -22,6 +22,8 @@
   "ph": {
     "three-char": "Please enter at least 3 Characters"
   },
+  "controller-text": "Looks like the address you're using is not a controller of {domain}. Do you wanna set {addr} as a controller for {domain}?",
+  "set-controller": "Update Controller",
   "is-available": "Cheers! This domain is available.",
   "not-available": "{domain} is not available yet!",
   "manage": "Manage",
