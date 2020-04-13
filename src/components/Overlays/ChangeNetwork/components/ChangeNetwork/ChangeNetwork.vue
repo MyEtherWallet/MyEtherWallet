@@ -1,31 +1,22 @@
 <template>
   <div>
     <DropdownSelect
+      v-model="network"
       label="Network"
       placeholder="Select a network"
       :items="networks"
-      @changed="onClickNetwork"
     />
-
     <TextField
+      v-model="node"
       label="ETH Node Name"
       placeholder="Type node name"
-      @changed="onChangeNode"
     />
-
-    <TextField label="URL" placeholder="Type URL" @changed="onChangeUrl" />
-
-    <TextField
-      label="Port"
-      placeholder="Type port number"
-      @changed="onChangePort"
-    />
-
+    <TextField v-model="url" label="URL" placeholder="Type URL" />
+    <TextField v-model="port" label="Port" placeholder="Type port number" />
     <ExpantionBlock title="HTTP basic access authentication" class="mb-7">
-      <TextField label="User name" placeholder=" " :items="networks" />
-      <TextField label="Password" placeholder=" " :items="networks" />
+      <TextField v-model="username" label="Username" placeholder=" " />
+      <TextField v-model="password" label="Password" placeholder=" " />
     </ExpantionBlock>
-
     <StdButton size="x-large" fullwidth>
       Save
     </StdButton>
@@ -46,29 +37,13 @@ export default {
       node: '',
       url: '',
       port: '',
+      username: '',
+      password: '',
       networks: [
         { name: 'ETH - Ethereum', value: 'eth' },
         { name: 'OTH - Other', value: 'oth' }
       ]
     };
-  },
-  methods: {
-    onChangeNetwork(val) {
-      this.network = val;
-    },
-    onChangeNode(val) {
-      this.node = val;
-    },
-    onChangeUrl(val) {
-      this.url = val;
-    },
-    onChangePort(val) {
-      this.port = val;
-    }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables.scss';
-</style>

@@ -1,9 +1,10 @@
 <template>
   <v-text-field
-    v-model="textData"
+    outlined
     :label="label"
     :placeholder="placeholder"
-    outlined
+    :value="value"
+    @input="emitValue"
   ></v-text-field>
 </template>
 
@@ -11,14 +12,12 @@
 export default {
   props: {
     label: { default: '', type: String },
-    placeholder: { default: '', type: String }
+    placeholder: { default: '', type: String },
+    value: { default: '', type: String }
   },
-  data: () => ({
-    textData: ''
-  }),
-  watch: {
-    textData(val) {
-      this.$emit('changed', val);
+  methods: {
+    emitValue(e) {
+      this.$emit('input', e);
     }
   }
 };
