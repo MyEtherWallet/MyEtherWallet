@@ -1,5 +1,5 @@
 <template>
-  <div  id="adexContainerOuter" class="outer-adex">
+  <div id="adexContainerOuter" class="outer-adex">
     <div class="ad-image-container">
       <div class="inner-adex">
         <iframe
@@ -39,11 +39,10 @@ export default {
       default: 'https://mewconnect.myetherwallet.com/#/'
     }
   },
-  mounted(){
+  mounted() {
     this.$nextTick(function () {
       this.scale();
-    })
-
+    });
   },
   data() {
     return {
@@ -51,15 +50,15 @@ export default {
       width: 468
     };
   },
-  methods:{
-    scale(){
+  methods: {
+    scale() {
       const el = document.getElementById('adexContainerOuter');
       const frame = document.getElementById('iframe');
-      frame.style.transform = `scale(${el.offsetWidth/486})`;
-      frame.style['-ms-transform'] = `scale(${el.offsetWidth/486})`;
-      frame.style['-moz-transform'] = `scale(${el.offsetWidth/486})`;
-      frame.style['-o-transform'] = `scale(${el.offsetWidth/486})`;
-      frame.style['-webkit-transform'] = `scale(${el.offsetWidth/486})`;
+      frame.style.transform = `scale(${el.offsetWidth / 486})`;
+      frame.style['-ms-transform'] = `scale(${el.offsetWidth / 486})`;
+      frame.style['-moz-transform'] = `scale(${el.offsetWidth / 486})`;
+      frame.style['-o-transform'] = `scale(${el.offsetWidth / 486})`;
+      frame.style['-webkit-transform'] = `scale(${el.offsetWidth / 486})`;
     }
   }
 };
