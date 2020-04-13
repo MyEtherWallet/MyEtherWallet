@@ -4,29 +4,27 @@
       label="Network"
       placeholder="Select a network"
       :items="networks"
-      @clicked="onClickNetwork"
+      @changed="onClickNetwork"
     />
 
     <TextField
       label="ETH Node Name"
       placeholder="Type node name"
-      :items="networks"
       @changed="onChangeNode"
     />
 
-    <TextField
-      label="URL"
-      placeholder="Type URL"
-      :items="networks"
-      @changed="onChangeUrl"
-    />
+    <TextField label="URL" placeholder="Type URL" @changed="onChangeUrl" />
 
     <TextField
       label="Port"
       placeholder="Type port number"
-      :items="networks"
       @changed="onChangePort"
     />
+
+    <ExpantionBlock title="HTTP basic access authentication" class="mb-7">
+      <TextField label="User name" placeholder=" " :items="networks" />
+      <TextField label="Password" placeholder=" " :items="networks" />
+    </ExpantionBlock>
 
     <StdButton size="x-large" fullwidth>
       Save
@@ -38,12 +36,16 @@
 import DropdownSelect from '@/components/Inputs/DropdownSelect';
 import TextField from '@/components/Inputs/TextField';
 import StdButton from '@/web/components/StdButton';
+import ExpantionBlock from '@/components/ExpantionBlock';
 
 export default {
-  components: { StdButton, DropdownSelect, TextField },
+  components: { StdButton, DropdownSelect, TextField, ExpantionBlock },
   data() {
     return {
-      networkSelect: '',
+      network: '',
+      node: '',
+      url: '',
+      port: '',
       networks: [
         { name: 'ETH - Ethereum', value: 'eth' },
         { name: 'OTH - Other', value: 'oth' }
@@ -51,22 +53,22 @@ export default {
     };
   },
   methods: {
-    onClickNetwork(val) {
-      console.log(val);
+    onChangeNetwork(val) {
+      this.network = val;
     },
     onChangeNode(val) {
-      console.log(val);
+      this.node = val;
     },
     onChangeUrl(val) {
-      console.log(val);
+      this.url = val;
     },
     onChangePort(val) {
-      console.log(val);
+      this.port = val;
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
+//@import '@/assets/styles/GlobalVariables.scss';
 </style>
