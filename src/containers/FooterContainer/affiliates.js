@@ -78,7 +78,7 @@ const affiliates = [
     text: 'footer.cool-wallet',
     price: '99.00',
     description: 'buyHardwareWallet.desc.coolwallet',
-    href: 'https://coolwallet.io/product/coolwallet/?ref=myetherwallet',
+    href: 'https://www.coolwallet.io/mew/?ref=myetherwallet1',
     currency: '$',
     logo: 'coolwallet'
   },
