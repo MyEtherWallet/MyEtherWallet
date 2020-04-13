@@ -323,7 +323,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.domainName);
     if (this.domainName === '.') {
       this.$router.push('/interface/dapps/manage-ens');
     }
