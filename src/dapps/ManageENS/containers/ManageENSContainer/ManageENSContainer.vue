@@ -1,7 +1,7 @@
 <template>
   <div class="manage-ens-container">
     <h3>{{ $t('ens.manage') }} {{ domainName }}</h3>
-    <div class="set-controller-container">
+    <div v-show="!isController" class="set-controller-container">
       <i18n path="ens.controller-text" tag="div">
         <b slot="domain">{{ domainName }}</b
         ><b slot="addr">{{ account.address }}</b>
