@@ -1,6 +1,5 @@
 <template>
   <v-select
-    v-model="selectedValue"
     :label="label"
     :placeholder="placeholder"
     outlined
@@ -9,6 +8,7 @@
     item-text="name"
     item-value="value"
     append-icon="mdi-chevron-down"
+    @input="emitValue"
   ></v-select>
 </template>
 
@@ -25,12 +25,9 @@ export default {
       type: Array
     }
   },
-  data: () => ({
-    selectedValue: ''
-  }),
-  watch: {
-    selectedValue(val) {
-      this.$emit('changed', val);
+  methods: {
+    emitValue(e) {
+      this.$emit('input', e);
     }
   }
 };
