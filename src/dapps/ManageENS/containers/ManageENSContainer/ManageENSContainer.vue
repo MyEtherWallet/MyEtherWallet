@@ -1,14 +1,14 @@
 <template>
   <div class="manage-ens-container">
     <h3>{{ $t('ens.manage') }} {{ domainName }}</h3>
-    <div v-show="isController" class="set-controller-container">
-      Looks like the address you're using is not a controller of
-      <b>{{ domainName }}</b
-      >. Do you wanna set <b>{{ account.address }}</b> as a controller for
-      <b>{{ domainName }}</b> ?
-      <br />
+    <div class="set-controller-container">
+      <i18n path="ens.controller-text" tag="div">
+        <b slot="domain">{{ domainName }}</b
+        ><b slot="addr">{{ account.address }}</b>
+        <br />
+      </i18n>
       <div class="set-controller-submit">
-        <button @click="setController">Update Controller</button>
+        <button @click="setController">{{ $t('ens.set-controller') }}</button>
       </div>
     </div>
     <b-btn
@@ -323,6 +323,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.domainName);
     if (this.domainName === '.') {
       this.$router.push('/interface/dapps/manage-ens');
     }
