@@ -8,6 +8,7 @@
     :items="items"
     item-text="name"
     item-value="value"
+    append-icon="mdi-chevron-down"
   ></v-select>
 </template>
 
@@ -29,7 +30,7 @@ export default {
   }),
   watch: {
     selectedValue(val) {
-      this.$emit('clicked', val);
+      this.$emit('changed', val);
     }
   }
 };
