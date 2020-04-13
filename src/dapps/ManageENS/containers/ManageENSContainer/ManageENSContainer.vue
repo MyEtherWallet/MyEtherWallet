@@ -1,6 +1,16 @@
 <template>
   <div class="manage-ens-container">
     <h3>{{ $t('ens.manage') }} {{ domainName }}</h3>
+    <div v-show="isController" class="set-controller-container">
+      Looks like the address you're using is not a controller of
+      <b>{{ domainName }}</b
+      >. Do you wanna set <b>{{ account.address }}</b> as a controller for
+      <b>{{ domainName }}</b> ?
+      <br />
+      <div class="set-controller-submit">
+        <button @click="setController">Update Controller</button>
+      </div>
+    </div>
     <b-btn
       v-show="resolverMultiCoinSupport"
       v-b-toggle.multicoinsec
@@ -59,7 +69,10 @@
           </div>
           <div class="multi-coin-submit-container">
             <button
-              :class="isValidAddresses ? '' : 'disabled'"
+              :class="[
+                isValidAddresses ? '' : 'disabled',
+                isController ? '' : 'disabled'
+              ]"
               @click.prevent="checkAndSendCurrency"
             >
               {{ $t('common.save') }}
@@ -128,7 +141,10 @@
           </div>
           <div class="multi-coin-submit-container">
             <button
-              :class="validTextRecords ? 'disabled' : ''"
+              :class="[
+                validTextRecords ? 'disabled' : '',
+                isController ? '' : 'disabled'
+              ]"
               @click.prevent="checkAndSendTxtRecs"
             >
               {{ $t('common.save') }}
@@ -163,7 +179,7 @@
           </div>
           <div class="submit-container">
             <button
-              :class="!isAddress(transferTo) ? 'disabled' : ''"
+              :class="[!isAddress(transferTo) ? 'disabled' : '']"
               type="submit"
               @click.prevent="transferDomain(transferTo)"
             >
@@ -224,9 +240,17 @@ export default {
       type: Object,
       default: function () {}
     },
+    setController: {
+      type: Function,
+      default: function () {}
+    },
     txtRecords: {
       type: Object,
       default: function () {}
+    },
+    isController: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -258,7 +282,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['web3']),
+    ...mapState('main', ['web3', 'account']),
     isValidAddresses() {
       for (const type in this.currencyInputs) {
         if (

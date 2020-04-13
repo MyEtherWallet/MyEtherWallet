@@ -35,6 +35,8 @@
       :txt-records="txtRecords"
       :set-record="setRecord"
       :usd="usd"
+      :is-controller="isController"
+      :set-controller="setController"
       @updateSecretPhrase="updateSecretPhrase"
       @domainNameChange="updateDomainName"
       @updateStep="updateStep"
@@ -104,7 +106,8 @@ export default {
       supportedTxt,
       recordContract: {},
       resolverTxtSupport: false,
-      usd: 0
+      usd: 0,
+      isController: false
     };
   },
   computed: {
@@ -200,6 +203,15 @@ export default {
       for (const type in this.supportedCoins)
         this.supportedCoins[type].value = '';
     },
+    async checkIfController() {
+      // checks the controller for the name
+      const owner = await this.ensRegistryContract.methods
+        .owner(this.nameHash)
+        .call();
+      this.isController =
+        this.web3.utils.toChecksumAddress(owner) ===
+        this.web3.utils.toChecksumAddress(this.account.address);
+    },
     async setRegistrar() {
       const web3 = this.web3;
       const tld = this.registrarTLD;
@@ -234,16 +246,28 @@ export default {
         }
       }
     },
-    async transferDomain(toAddress) {
-      const registryTransferTx = {
+    async setController(toAddress = '', onlyGenerate = false) {
+      const actualToAddress =
+        toAddress === '' ? this.account.address : toAddress;
+      const setControllerTx = {
         from: this.account.address,
         to: this.network.type.ens.registry,
         data: this.ensRegistryContract.methods
-          .setOwner(this.nameHash, toAddress)
+          .setOwner(this.nameHash, actualToAddress)
           .encodeABI(),
         value: 0,
         gas: 100000
       };
+
+      if (onlyGenerate) {
+        return setControllerTx;
+      }
+      this.web3.sendTransaction(setControllerTx).catch(err => {
+        Toast.responseHandler(err, false);
+      });
+    },
+    async transferDomain(toAddress) {
+      const registryTransferTx = this.setController(toAddress, true);
       if (this.registrarType === REGISTRAR_TYPES.FIFS) {
         this.web3.eth.sendTransaction(registryTransferTx).catch(err => {
           Toast.responseHandler(err, false);
@@ -686,6 +710,7 @@ export default {
       this.loading = false;
     },
     async fetchTxtRecords(resolver) {
+      this.checkIfController();
       try {
         const supportsTxt = await resolver.methods
           .supportsInterface(TEXT_RECORD_SUPPORT_INTERFACE)
