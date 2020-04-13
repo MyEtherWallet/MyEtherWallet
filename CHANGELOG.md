@@ -1,6 +1,9 @@
+### Release v5.5.3
 ### Devop
 
 - Update packages [#2241](https://github.com/MyEtherWallet/MyEtherWallet/pull/2241)
+- Update coolwallet affiliate link [#2244](https://github.com/MyEtherWallet/MyEtherWallet/pull/2244)
+
 
 ### Release v5.5.2
 
