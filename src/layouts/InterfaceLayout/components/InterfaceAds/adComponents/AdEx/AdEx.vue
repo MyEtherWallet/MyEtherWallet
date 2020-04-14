@@ -39,16 +39,16 @@ export default {
       default: 'https://mewconnect.myetherwallet.com/#/'
     }
   },
-  mounted() {
-    this.$nextTick(function () {
-      this.scale();
-    });
-  },
   data() {
     return {
       height: 60,
       width: 468
     };
+  },
+  mounted() {
+    this.$nextTick(function () {
+      this.scale();
+    });
   },
   methods: {
     scale() {
