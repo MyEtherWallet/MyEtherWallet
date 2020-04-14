@@ -14,7 +14,12 @@
             height="50px"
             class="blockie-image"
           />
-          <img src="@/assets/images/icons/icon-qr-code-mew.svg" />
+          <QRcodePopup
+            title="Address QR Code"
+            value="0x85b74f0ad686252a817c1a7fd70b600c098dc38c"
+          >
+            <img src="@/assets/images/icons/icon-qr-code-mew.svg" />
+          </QRcodePopup>
         </div>
         <div class="ml-4">
           <div class="mb-n2 mt-n2 font-weight-medium d-flex align-center">
@@ -69,8 +74,17 @@ import PaperWallet from '@/components/Overlays/PaperWallet';
 import Blockie from '@/web/components/Blockie';
 import Address from './components/Address';
 import Tooltip from '@/web/components/Tooltip';
+import QRcodePopup from '@/web/components/QRcodePopup';
+
 export default {
-  components: { Blockie, Tooltip, Address, ChangeAddress, PaperWallet },
+  components: {
+    Blockie,
+    Tooltip,
+    Address,
+    ChangeAddress,
+    PaperWallet,
+    QRcodePopup
+  },
   data() {
     return {
       openChangeAddress: false,
