@@ -6,7 +6,6 @@ yarn-debug.log*
 yarn-error.log*
 /tests/unit/coverage/
 selenium-debug.log
-src/_generated
 
 # Editor directories and files
 .idea
@@ -18,4 +17,7 @@ src/_generated
 .config
 /tests/unit/coverage/
 release
+chrome-extension
 
+# Generated files
+src/_generated
