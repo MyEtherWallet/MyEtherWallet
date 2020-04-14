@@ -2,6 +2,10 @@
 
 - ENS Avatar [#2238](https://github.com/MyEtherWallet/MyEtherWallet/pull/2238)
 
+### Devop
+
+- Update coolwallet affiliate link [#2244](https://github.com/MyEtherWallet/MyEtherWallet/pull/2244)
+
 ### Release v5.5.2
 
 ### Feature
