@@ -1,6 +1,9 @@
+### Release v5.5.3
 ### Devop
 
+- Update packages [#2241](https://github.com/MyEtherWallet/MyEtherWallet/pull/2241)
 - Update coolwallet affiliate link [#2244](https://github.com/MyEtherWallet/MyEtherWallet/pull/2244)
+
 
 ### Release v5.5.2
 
@@ -14,6 +17,7 @@
 - Remove mew wallet pop up [#2217](https://github.com/MyEtherWallet/MyEtherWallet/pull/2217)
 
 ### Bug
+
 - Fix AdEx width on smaller screens [#2232](https://github.com/MyEtherWallet/MyEtherWallet/pull/2232)
 - Cx checksum address fix on sign message and tx [#2203](https://github.com/MyEtherWallet/MyEtherWallet/pull/2203)
 
