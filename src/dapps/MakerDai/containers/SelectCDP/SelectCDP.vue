@@ -14,7 +14,7 @@ export default {
   props: {
     ethPrice: {
       type: BigNumber,
-      default: function() {
+      default: function () {
         return new BigNumber(0);
       }
     },
@@ -24,13 +24,13 @@ export default {
     },
     cdps: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
     availableCdps: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },

@@ -29,17 +29,11 @@ xdescribe('MobileLanguageSelector.vue', () => {
   it('should render correct menuOpen data', () => {
     wrapper.setData({ menuOpen: true });
     expect(
-      wrapper
-        .find('.mobile-language-selector')
-        .classes()
-        .indexOf('open')
+      wrapper.find('.mobile-language-selector').classes().indexOf('open')
     ).toBeGreaterThan(-1);
     wrapper.setData({ menuOpen: false });
     expect(
-      wrapper
-        .find('.mobile-language-selector')
-        .classes()
-        .indexOf('open')
+      wrapper.find('.mobile-language-selector').classes().indexOf('open')
     ).toBe(-1);
   });
 

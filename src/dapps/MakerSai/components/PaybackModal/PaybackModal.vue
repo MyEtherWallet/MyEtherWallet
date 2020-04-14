@@ -148,7 +148,7 @@ export default {
   props: {
     tokensWithBalance: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
@@ -158,7 +158,7 @@ export default {
     },
     values: {
       type: Object,
-      default: function() {
+      default: function () {
         return {
           maxPethDraw: '',
           maxEthDraw: '',
@@ -175,19 +175,19 @@ export default {
     },
     calcCollatRatioEthChg: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     calcLiquidationPriceEthChg: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     calcCollatRatioDaiChg: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     calcLiquidationPriceDaiChg: {
       type: Function,
-      default: function() {}
+      default: function () {}
     }
   },
   data() {

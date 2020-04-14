@@ -32,7 +32,7 @@
                       <img
                         v-if="
                           key !== 'Custom Networks' &&
-                            Networks[key][0].type.icon
+                          Networks[key][0].type.icon
                         "
                         :src="Networks[key][0].type.icon"
                         alt
@@ -40,7 +40,7 @@
                       <div
                         v-if="
                           key !== 'Custom Networks' &&
-                            !Networks[key][0].type.icon
+                          !Networks[key][0].type.icon
                         "
                         class="no-icon"
                       >
@@ -184,7 +184,7 @@
                 ref="jsonInput"
                 type="file"
                 name="file"
-                style="display: none"
+                style="display: none;"
                 @change="uploadFile"
               />
               <standard-button
@@ -657,7 +657,7 @@ export default {
     uploadFile(e) {
       const self = this;
       const reader = new FileReader();
-      reader.onloadend = function(evt) {
+      reader.onloadend = function (evt) {
         self.file = JSON.parse(evt.target.result);
         self.getTransactionDetails(self.file.rawTransaction);
       };

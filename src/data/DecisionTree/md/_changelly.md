@@ -8,6 +8,6 @@ If you don't see your tokens in MEW, all you have to do is [add them as a custom
 
 #### I do not see my tokens in Etherscan.io.
 
-Please reach out to Changelly at their support email, support@changelly.com.
+Please reach out to Changelly at their support email, [support@changelly.com](mailto:support@changelly.com).
 
 Include as many details as possible, so they can further assist you.

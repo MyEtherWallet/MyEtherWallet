@@ -215,13 +215,13 @@ export default {
     },
     tokensWithBalance: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
     getBalance: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     highestGas: {
       type: String,
@@ -389,7 +389,7 @@ export default {
     }
   },
   watch: {
-    multiWatch: utils._.debounce(function() {
+    multiWatch: utils._.debounce(function () {
       if (this.validInputs) this.estimateGas();
     }, 500),
     network(newVal) {

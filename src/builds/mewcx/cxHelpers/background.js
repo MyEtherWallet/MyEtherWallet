@@ -14,7 +14,9 @@ import {
   web3Unsubscribe,
   web3QueryGasPrice,
   web3GetTxCount,
-  web3GetGas
+  web3GetGas,
+  web3SignTx,
+  web3SignMsg
 } from './backgroundEvents';
 import store from '@/store';
 import {
@@ -24,8 +26,20 @@ import {
 } from './cxEvents';
 import utils from 'web3-utils';
 const chrome = window.chrome;
+chrome.tabs.onUpdated.addListener(onUpdatedCb);
+chrome.tabs.onActivated.addListener(onActivatedCb);
+chrome.tabs.onRemoved.addListener(onRemovedCb);
+chrome.runtime.onInstalled.addListener(onInstalledCb);
+chrome.runtime.onStartup.addListener(onStartupCb);
+chrome.runtime.onMessage.addListener(eventsListeners);
+
 // Set default values on init
 const networkChanger = items => {
+  if (!items.hasOwnProperty('favorites')) {
+    chrome.storage.sync.set({
+      favorites: JSON.stringify([])
+    });
+  }
   if (items.hasOwnProperty('defNetwork')) {
     const networkProps = JSON.parse(items['defNetwork']);
     let network = {};
@@ -49,16 +63,18 @@ const networkChanger = items => {
     }
     // eslint-disable-next-line
     if (!!network) {
-      store.dispatch('main/switchNetwork', network).then(() => {
-        store.dispatch('main/setWeb3Instance', network.url).then(() => {
-          chrome.storage.sync.set({
-            defChainID: store.state.main.network.type.chainID
+      store.dispatch('main/switchNetwork', network, { root: true }).then(() => {
+        store
+          .dispatch('main/setWeb3Instance', network.url, { root: true })
+          .then(() => {
+            chrome.storage.sync.set({
+              defChainID: store.state.main.network.type.chainID
+            });
           });
-        });
       });
     }
   } else {
-    store.dispatch('main/setWeb3Instance');
+    store.dispatch('main/setWeb3Instance', { root: true });
     chrome.storage.sync.set({
       defChainID: store.state.main.network.type.chainID,
       defNetwork: JSON.stringify({
@@ -84,7 +100,11 @@ chrome.storage.onChanged.addListener(items => {
         JSON.stringify(currentNotifications)
       );
     }
-    if (item === 'defNetwork' && items.defNetwork.hasOwnProperty('newValue')) {
+
+    if (
+      items[item] === 'defNetwork' &&
+      items[item].defNetwork.hasOwnProperty('newValue')
+    ) {
       const networkProps = JSON.parse(
         Misc.stripTags(items['defNetwork'].newValue)
       );
@@ -114,7 +134,7 @@ const eventsListeners = (request, _, callback) => {
 
   const payload = utils._.mapObject(
     Object.assign({}, request.payload),
-    function(val) {
+    function (val) {
       return helpers.recursivePayloadStripper(val);
     }
   );
@@ -136,18 +156,14 @@ const eventsListeners = (request, _, callback) => {
   middleware.use(web3QueryGasPrice);
   middleware.use(web3GetTxCount);
   middleware.use(web3GetGas);
+  middleware.use(web3SignTx);
+  middleware.use(web3SignMsg);
   middleware.run(obj, callback);
   return true;
 };
-chrome.tabs.query({ active: true, lastFocusedWindow: true }, function(tabs) {
+chrome.tabs.query({ active: true, lastFocusedWindow: true }, function (tabs) {
   querycB(tabs);
 });
-
-chrome.tabs.onUpdated.addListener(onUpdatedCb);
-chrome.tabs.onActivated.addListener(onActivatedCb);
-chrome.tabs.onRemoved.addListener(onRemovedCb);
-chrome.runtime.onInstalled.addListener(onInstalledCb);
-chrome.runtime.onStartup.addListener(onStartupCb);
 
 function onRemovedCb(id) {
   if (urls[id]) {
@@ -165,23 +181,19 @@ function onUpdatedCb(_, __, tab) {
     Object.keys(tab).length > 0 &&
     !isChromeUrl(tab.url)
   ) {
-    chrome.runtime.onMessage.removeListener(eventsListeners);
     urls[tab.id] = extractRootDomain(tab.url);
     querycB(tab);
-    chrome.runtime.onMessage.addListener(eventsListeners);
   }
 }
 function onActivatedCb(info) {
-  chrome.tabs.get(info.tabId, function(tab) {
+  chrome.tabs.get(info.tabId, function (tab) {
     if (
       typeof tab !== 'undefined' &&
       Object.keys(tab).length > 0 &&
       !isChromeUrl(tab.url)
     ) {
-      chrome.runtime.onMessage.removeListener(eventsListeners);
       urls[info.tabId] = extractRootDomain(tab.url);
       querycB(tab);
-      chrome.runtime.onMessage.addListener(eventsListeners);
     }
   });
 }
@@ -251,7 +263,7 @@ function querycB(tab) {
         chrome.tabs.update(null, { url: urlRedirect });
       } else {
         // Injects web3
-        chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
+        chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function () {
           chrome.tabs.sendMessage(tab.id, {
             event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
           });
@@ -259,7 +271,7 @@ function querycB(tab) {
       }
     } else {
       // Injects web3
-      chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
+      chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function () {
         chrome.tabs.sendMessage(tab.id, {
           event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
         });

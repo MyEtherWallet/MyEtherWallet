@@ -116,13 +116,13 @@ export default {
   props: {
     tokensWithBalance: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
     getBalance: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     highestGas: {
       type: String,

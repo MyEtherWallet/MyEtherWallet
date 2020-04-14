@@ -25,7 +25,7 @@ export default {
     },
     registerFifsName: {
       type: Function,
-      default: function() {}
+      default: function () {}
     }
   },
   mounted() {

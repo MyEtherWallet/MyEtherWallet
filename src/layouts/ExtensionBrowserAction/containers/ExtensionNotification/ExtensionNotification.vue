@@ -45,11 +45,12 @@
         <ul
           v-if="
             sortedNotifications !== undefined &&
-              Object.keys(sortedNotifications).length > 0
+            Object.keys(sortedNotifications).length > 0
           "
         >
           <li
             v-for="(notification, address) in sortedNotifications"
+            v-show="notification.length > 0"
             :key="address"
           >
             <div class="address-header">

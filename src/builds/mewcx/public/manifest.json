@@ -13,12 +13,12 @@
   "browser_action": {
     "default_icon": "img/icons/icon48.png",
     "default_title": "MEW CX",
-    "default_popup": "index.html#/popup"
+    "default_popup": "browserActionLoading.html"
   },
   "options_page": "index.html",
   "background": {
-    "scripts": ["background.js"],
-    "persistent": true
+    "persistent": true,
+    "page": "page.html"
   },
   "content_scripts": [
     {
@@ -31,9 +31,10 @@
     "cxWeb3.js",
     "img/*.svg",
     "img/*.png",
-    "img/*.jpg"
+    "img/*.jpg",
+    "/js"
   ],
   "permissions": ["<all_urls>", "storage", "tabs", "activeTab", "downloads", "notifications"],
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
-  "version": "5.2.0"
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self' ",
+  "version": "5.3.0"
 }

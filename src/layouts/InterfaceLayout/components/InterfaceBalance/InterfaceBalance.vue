@@ -78,7 +78,7 @@ export default {
     },
     getBalance: {
       type: Function,
-      default: function() {}
+      default: function () {}
     }
   },
   data() {

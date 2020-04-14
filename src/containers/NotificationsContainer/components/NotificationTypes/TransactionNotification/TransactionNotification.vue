@@ -114,49 +114,49 @@ export default {
   props: {
     expand: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     notice: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
     convertToGwei: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     convertToEth: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     getFiatValue: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     dateString: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     timeString: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     errorMessageString: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     processStatus: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     hashLink: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     addressLink: {
       type: Function,
-      default: function() {}
+      default: function () {}
     }
   },
   data() {

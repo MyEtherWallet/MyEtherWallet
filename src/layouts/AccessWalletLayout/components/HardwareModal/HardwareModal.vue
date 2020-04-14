@@ -94,7 +94,7 @@ export default {
     },
     bitboxSelectOpen: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     ledgerAppOpen: {
       type: Function,
@@ -155,7 +155,7 @@ export default {
           text: 'CoolWallet',
           disabled: false,
           msg: '',
-          link: 'https://coolwallet.io/product/coolwallet/?ref=myetherwallet'
+          link: 'https://www.coolwallet.io/mew/?ref=myetherwallet1'
         },
         {
           name: FINNEY_TYPE,

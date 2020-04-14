@@ -117,7 +117,7 @@ export default {
         this.downloadable = true;
         this.name = e.data.name.toString();
       };
-      worker.onerror = function(e) {
+      worker.onerror = function (e) {
         Toast.responseHandler(e, false);
       };
     } else {

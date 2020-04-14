@@ -70,8 +70,8 @@
                     <span
                       v-if="
                         ethPrice !== 0 &&
-                          customGasEth !== 0 &&
-                          network.type.name === 'ETH'
+                        customGasEth !== 0 &&
+                        network.type.name === 'ETH'
                       "
                       >($ {{ convert(customGasEth) }})</span
                     >

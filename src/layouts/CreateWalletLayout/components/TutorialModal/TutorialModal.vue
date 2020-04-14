@@ -36,7 +36,7 @@ export default {
   props: {
     skip: {
       type: Function,
-      default: function() {}
+      default: function () {}
     }
   }
 };

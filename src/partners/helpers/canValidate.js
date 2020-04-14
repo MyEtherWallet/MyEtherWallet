@@ -382,7 +382,7 @@ const multiCoinCurrencies = [
 
 function canValidateMulticoin(currencyNameOrSymbol) {
   const nameOrSymbol = currencyNameOrSymbol.toLowerCase();
-  return multiCoinCurrencies.find(function(currency) {
+  return multiCoinCurrencies.find(function (currency) {
     return (
       currency.name.toLowerCase() === nameOrSymbol ||
       currency.symbol.toLowerCase() === nameOrSymbol
@@ -392,7 +392,7 @@ function canValidateMulticoin(currencyNameOrSymbol) {
 
 function canValidateCoin(currencyNameOrSymbol) {
   const nameOrSymbol = currencyNameOrSymbol.toLowerCase();
-  return currencies.find(function(currency) {
+  return currencies.find(function (currency) {
     return (
       currency.name.toLowerCase() === nameOrSymbol ||
       currency.symbol.toLowerCase() === nameOrSymbol

@@ -117,7 +117,7 @@ export default {
     },
     aCdp: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     }

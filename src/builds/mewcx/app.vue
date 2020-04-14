@@ -1,19 +1,9 @@
 <template>
   <div id="app">
     <logout-warning-modal ref="logoutWarningModal" />
-    <header-container
-      v-show="
-        $route.fullPath !== '/popup' &&
-          !$route.fullPath.includes('/extension-popups')
-      "
-    />
+    <header-container />
     <router-view />
-    <footer-container
-      v-show="
-        $route.fullPath !== '/popup' &&
-          !$route.fullPath.includes('/extension-popups')
-      "
-    />
+    <footer-container />
     <confirmation-container />
   </div>
 </template>

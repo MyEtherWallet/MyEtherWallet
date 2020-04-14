@@ -96,7 +96,7 @@ const swapError = (notifArray, val, network) => {
   return notifArray;
 };
 
-const addUpdateNotification = function(newNotif, val, network) {
+const addUpdateNotification = function (newNotif, val, network) {
   switch (val[0]) {
     case type.TRANSACTION_HASH:
       return transactionHash(newNotif, val, network);
@@ -109,7 +109,7 @@ const addUpdateNotification = function(newNotif, val, network) {
   }
 };
 
-const addUpdateSwapNotification = async function(newNotif, val, network) {
+const addUpdateSwapNotification = async function (newNotif, val, network) {
   switch (val[0]) {
     case type.TRANSACTION_HASH:
     case type.SWAP_HASH:

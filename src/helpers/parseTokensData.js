@@ -45,10 +45,7 @@ function parseTokensData(data, to, _web3, networkToken, networkName) {
     const value = new BigNumber(params[1]);
     tokenData.tokenTransferTo = params[0];
     tokenData.tokenTransferVal = token
-      ? value
-          .div(new BigNumber(10).pow(token.decimals))
-          .toFixed()
-          .toString()
+      ? value.div(new BigNumber(10).pow(token.decimals)).toFixed().toString()
       : value.toString();
     tokenData.tokenSymbol = token ? token.symbol : 'Unidentified Token';
   }

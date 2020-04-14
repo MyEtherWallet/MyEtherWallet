@@ -5,9 +5,7 @@ const toBigNumber = num => {
 };
 
 const bnOver = (one, two, three) => {
-  return toBigNumber(one)
-    .times(toBigNumber(two))
-    .div(toBigNumber(three));
+  return toBigNumber(one).times(toBigNumber(two)).div(toBigNumber(three));
 };
 
 export function displayPercentValue(raw) {

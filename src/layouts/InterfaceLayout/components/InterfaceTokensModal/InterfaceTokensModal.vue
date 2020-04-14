@@ -85,7 +85,7 @@ export default {
   props: {
     addToken: {
       type: Function,
-      default: function() {}
+      default: function () {}
     }
   },
   data() {

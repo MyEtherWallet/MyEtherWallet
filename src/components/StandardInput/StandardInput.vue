@@ -109,7 +109,7 @@ export default {
   props: {
     options: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
