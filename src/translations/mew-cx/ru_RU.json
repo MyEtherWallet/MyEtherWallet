@@ -127,23 +127,23 @@
       "title": "Создать новый кошелек"
     },
     "step-1": {
-      "title": "Step 1. Choose a method",
-      "subtext": "Please choose a method to import your existing wallet"
+      "title": "Шаг 1. Выберите метод",
+      "subtext": "Пожалуйста, выберите метод импорта существующего кошелька"
     },
     "step-2": {
-      "title": "Step 2. Unlock My Wallet",
-      "subtext": "Please enter {additionalSubtext}"
+      "title": "Шаг 2. Открыть мой кошелек",
+      "subtext": "Пожалуйста, введите {additionalSubtext}"
     },
     "step-3": {
-      "title": "Step 3. Confirm to Add",
-      "subtext": "Please name your wallet, and create a password for it."
+      "title": "Шаг 3. Подтвердить добавление",
+      "subtext": "Пожалуйста, назовите ваш кошелек и создайте для него пароль."
     }
   },
-  "for-priv": "your private key here",
-  "for-keystore": "the password of your keystore file",
+  "for-priv": "ваш закрытый ключ здесь",
+  "for-keystore": "пароль вашего файла хранилища ключа",
   "for-mnemonic": "your mnemonic phrase by the right number",
-  "total-wallet-value": "Total Wallet Value",
-  "view-wallet-detail": "View Wallet Detail",
-  "remove-wallet-verification": "Enter your wallet password to remove it. Please make sure you have save the {privKey}, {mnemPhrase}, or {keystoreFile} and {password} before you remove your wallet.",
-  "lock-wallet": "Lock Wallet & Exit"
+  "total-wallet-value": "Общая ценность кошелька",
+  "view-wallet-detail": "Детали кошелька",
+  "remove-wallet-verification": "Введите пароль кошелька, чтобы удалить его. Пожалуйста, убедитесь, что вы сохранили {privKey}, {mnemPhrase}, или {keystoreFile} и {password} перед удалением вашего кошелька.",
+  "lock-wallet": "Закрыть кошелек и выйти"
 }
