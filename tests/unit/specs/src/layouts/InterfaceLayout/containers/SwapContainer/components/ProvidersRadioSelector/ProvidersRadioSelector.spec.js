@@ -5,10 +5,7 @@ import BigNumber from 'bignumber.js';
 import { Tooling } from '@@/helpers';
 
 function valueForRate(rate, value) {
-  return new BigNumber(value)
-    .times(rate)
-    .toFixed(6)
-    .toString(10);
+  return new BigNumber(value).times(rate).toFixed(6).toString(10);
 }
 
 xdescribe('ProvidersRadioSelector.vue', () => {

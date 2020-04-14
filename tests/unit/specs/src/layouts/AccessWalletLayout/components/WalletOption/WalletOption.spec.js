@@ -38,18 +38,12 @@ describe('WalletOption.vue', () => {
 
   it('should render correct selected props', () => {
     expect(
-      wrapper
-        .find('.wallet-option-container')
-        .classes()
-        .indexOf('selected')
+      wrapper.find('.wallet-option-container').classes().indexOf('selected')
     ).toBe(-1);
 
     wrapper.setProps({ selected: true });
     expect(
-      wrapper
-        .find('.wallet-option-container')
-        .classes()
-        .indexOf('selected')
+      wrapper.find('.wallet-option-container').classes().indexOf('selected')
     ).toBeGreaterThan(-1);
   });
 });

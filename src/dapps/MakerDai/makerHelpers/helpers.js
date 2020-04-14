@@ -68,9 +68,7 @@ export function CdpNum(cdpId) {
 
 // Calculations
 export function bnOver(one, two, three) {
-  return toBigNumber(one)
-    .times(toBigNumber(two))
-    .div(toBigNumber(three));
+  return toBigNumber(one).times(toBigNumber(two)).div(toBigNumber(three));
 }
 
 export function maxDai(ethPrice, ethCollateral, liquidationRatio, debtValue) {

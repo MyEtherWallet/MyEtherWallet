@@ -68,8 +68,8 @@
           <div
             v-show="
               search !== '' &&
-                localTokens.length === 0 &&
-                customTokens.length === 0
+              localTokens.length === 0 &&
+              customTokens.length === 0
             "
             class="spinner-container"
           >
@@ -113,7 +113,7 @@ export default {
   props: {
     tokens: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     },
@@ -123,15 +123,15 @@ export default {
     },
     getTokenBalance: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     fetchTokens: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     resetTokenSelection: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     ads: {
       type: Boolean,

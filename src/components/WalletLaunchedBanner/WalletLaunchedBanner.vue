@@ -46,7 +46,6 @@
 <script>
 import appStore from '@/assets/images/icons/button-app-store.png';
 import googlePlay from '@/assets/images/icons/button-google-play-color.png';
-import galaxyStore from '@/assets/images/icons/button-galaxy-store-color.png';
 
 export default {
   data() {
@@ -61,11 +60,6 @@ export default {
           src: googlePlay,
           url:
             'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet'
-        },
-        {
-          src: galaxyStore,
-          url:
-            'https://galaxystore.samsung.com/detail/com.myetherwallet.mewwallet?session_id=W_29942474fffbd49127ee223d697f1518'
         }
       ]
     };

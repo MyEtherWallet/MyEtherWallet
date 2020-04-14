@@ -1,7 +1,7 @@
 <template>
   <div style="max-width: 500px;">
     <div class="d-flex align-items-center mb-5">
-      <h3 class="mr-2 ">
+      <h3 class="mr-2">
         {{ $t('dappsMCDMaker.migrate-single-collateral-to-multi-collateral') }}
       </h3>
       <img :src="DaiIcon" class="icon-size" height="26" width="26" />
@@ -24,7 +24,7 @@
       <div v-show="noSaiAvailable && !needsAtLeast20">
         {{ $t('dappsMCDMaker.not-enough-sai') }}
       </div>
-      <div v-show="needsAtLeast20" style="padding: 10px">
+      <div v-show="needsAtLeast20" style="padding: 10px;">
         {{
           $t('dappsMCDMaker.needs-at-least-20', {
             value: migrateContractBalance
@@ -115,7 +115,7 @@ export default {
   props: {
     ethPrice: {
       type: BigNumber,
-      default: function() {
+      default: function () {
         return new BigNumber(0);
       }
     },
@@ -125,13 +125,13 @@ export default {
     },
     availableCdps: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },
     getCdp: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     valuesUpdated: {
       type: Number,
@@ -139,7 +139,7 @@ export default {
     },
     getValueOrFunction: {
       type: Function,
-      default: function() {}
+      default: function () {}
     }
   },
   data() {

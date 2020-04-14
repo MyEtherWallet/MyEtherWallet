@@ -62,7 +62,7 @@ export default {
   props: {
     supportedNftObj: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     },

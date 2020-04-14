@@ -99,7 +99,7 @@ export default {
   props: {
     subscriptions: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     }

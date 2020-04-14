@@ -37,17 +37,11 @@ describe('SwapCurrencyPicker.vue', () => {
 
   it('should render correct open data', () => {
     expect(
-      wrapper
-        .find('.dropdown-item-container')
-        .classes()
-        .indexOf('hide')
+      wrapper.find('.dropdown-item-container').classes().indexOf('hide')
     ).toBeGreaterThan(-1);
     wrapper.setData({ open: true });
     expect(
-      wrapper
-        .find('.dropdown-container')
-        .classes()
-        .indexOf('open')
+      wrapper.find('.dropdown-container').classes().indexOf('open')
     ).toBeGreaterThan(-1);
   });
 

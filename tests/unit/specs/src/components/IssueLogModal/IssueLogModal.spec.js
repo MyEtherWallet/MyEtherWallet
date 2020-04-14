@@ -102,18 +102,10 @@ describe('IssuesLogModal.vue', () => {
 
   xit('should render correct showSkipper data', () => {
     wrapper.setData({ showSkipper: true });
-    expect(
-      wrapper
-        .find('.custom-marker')
-        .classes()
-        .indexOf('enable')
-    ).toBe(-1);
+    expect(wrapper.find('.custom-marker').classes().indexOf('enable')).toBe(-1);
     wrapper.setData({ neverShow: true });
     expect(
-      wrapper
-        .find('.custom-marker')
-        .classes()
-        .indexOf('enable')
+      wrapper.find('.custom-marker').classes().indexOf('enable')
     ).toBeGreaterThan(-1);
   });
 

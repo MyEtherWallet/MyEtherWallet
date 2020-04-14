@@ -112,7 +112,7 @@ export default {
     uploadFile(e) {
       const _self = this;
       const reader = new FileReader();
-      reader.onloadend = function(evt) {
+      reader.onloadend = function (evt) {
         try {
           _self.$emit('file', JSON.parse(evt.target.result));
           _self.file = JSON.parse(evt.target.result);

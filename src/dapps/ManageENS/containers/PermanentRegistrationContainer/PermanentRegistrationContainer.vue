@@ -49,7 +49,7 @@ export default {
     },
     registerWithDuration: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     tld: {
       type: String,

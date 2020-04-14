@@ -179,10 +179,7 @@ export default class MakerCDP extends MakerCdpBase {
 
   convertToTokenWei(value, decimals) {
     const denominator = new BigNumber(10).pow(decimals);
-    return new BigNumber(value)
-      .times(denominator)
-      .toFixed(0)
-      .toString(10);
+    return new BigNumber(value).times(denominator).toFixed(0).toString(10);
   }
 
   convertToTokenBase(value, decimals) {

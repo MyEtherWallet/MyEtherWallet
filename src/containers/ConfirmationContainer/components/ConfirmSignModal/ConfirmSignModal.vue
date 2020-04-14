@@ -85,7 +85,7 @@ export default {
   props: {
     confirmSignMessage: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     signedMessage: {
       type: String,

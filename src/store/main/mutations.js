@@ -1,30 +1,30 @@
 import store from 'store';
 import { Toast } from '@/helpers';
 
-const ADD_NOTIFICATION = function(state, newNotif) {
+const ADD_NOTIFICATION = function (state, newNotif) {
   state.notifications = newNotif;
   store.set('notifications', newNotif);
 };
 
-const ADD_SWAP_TRANSACTION = function(state, newTx) {
+const ADD_SWAP_TRANSACTION = function (state, newTx) {
   state.transactions = newTx;
   store.set('transactions', newTx);
 };
 
-const ADD_CUSTOM_PATH = function(state, paths) {
+const ADD_CUSTOM_PATH = function (state, paths) {
   state.customPaths = paths;
   store.set('customPaths', paths);
 };
 
-const GETTING_STARTED_DONE = function(state) {
+const GETTING_STARTED_DONE = function (state) {
   state.gettingStartedDone = true;
 };
 
-const UPDATE_BLOCK_NUMBER = function(state, blockNumber) {
+const UPDATE_BLOCK_NUMBER = function (state, blockNumber) {
   state.blockNumber = blockNumber;
 };
 
-const CHECK_IF_ONLINE = async function(state, status) {
+const CHECK_IF_ONLINE = async function (state, status) {
   state.online = status;
   if (state.online) {
     const darkList = await fetch(
@@ -41,7 +41,7 @@ const CHECK_IF_ONLINE = async function(state, status) {
   }
 };
 
-const CLEAR_WALLET = function(state) {
+const CLEAR_WALLET = function (state) {
   state.wallet = null;
   state.account = {
     balance: 0,
@@ -51,7 +51,7 @@ const CLEAR_WALLET = function(state) {
   };
 };
 
-const DECRYPT_WALLET = function(state, wallet) {
+const DECRYPT_WALLET = function (state, wallet) {
   state.wallet = wallet;
   state.account['address'] = wallet.getAddressString();
   state.account['isHardware'] = wallet.isHardware;
@@ -62,44 +62,44 @@ const DECRYPT_WALLET = function(state, wallet) {
   }
 };
 
-const INIT_STATES = function(state, stateObj) {
+const INIT_STATES = function (state, stateObj) {
   Object.keys(state).forEach(key => {
     state[key] = stateObj[key];
   });
 };
 
-const SET_ACCOUNT_BALANCE = function(state, balance) {
+const SET_ACCOUNT_BALANCE = function (state, balance) {
   state.account.balance = balance;
 };
 
-const SET_ENS = function(state, ens) {
+const SET_ENS = function (state, ens) {
   state.ens = ens;
 };
 
-const SET_GAS_PRICE = function(state, val) {
+const SET_GAS_PRICE = function (state, val) {
   state.gasPrice = val;
   store.set('gasPrice', val);
 };
 
-const SET_ADDRESS_BOOK = function(state, val) {
+const SET_ADDRESS_BOOK = function (state, val) {
   state.addressBook = val;
   store.set('addressBook', val);
 };
 
-const SET_LAST_PATH = function(state, val) {
+const SET_LAST_PATH = function (state, val) {
   state.path = val;
 };
 
-const SET_WEB3_INSTANCE = function(state, web3) {
+const SET_WEB3_INSTANCE = function (state, web3) {
   state.web3 = web3;
 };
 
-const SET_LOCALE = function(state, { locale, save }) {
+const SET_LOCALE = function (state, { locale, save }) {
   state.locale = locale;
   if (save) store.set('locale', locale);
 };
 
-const SWITCH_NETWORK = function(state, networkObj) {
+const SWITCH_NETWORK = function (state, networkObj) {
   state.network = networkObj;
   const _netObj = Object.assign({}, networkObj);
   if (_netObj.type.name !== 'CUS') {
@@ -110,25 +110,25 @@ const SWITCH_NETWORK = function(state, networkObj) {
   store.set('network', _netObj);
 };
 
-const UPDATE_NOTIFICATION = function(state, newNotif) {
+const UPDATE_NOTIFICATION = function (state, newNotif) {
   state.notifications = newNotif;
   store.set('notifications', newNotif);
 };
 
-const UPDATE_SWAP_TRANSACTION = function(state, newTx) {
+const UPDATE_SWAP_TRANSACTION = function (state, newTx) {
   state.transactions = newTx;
   store.set('transactions', newTx);
 };
 
-const TOGGLE_SIDEMENU = function(state) {
+const TOGGLE_SIDEMENU = function (state) {
   state.sidemenuOpen = !state.sidemenuOpen;
 };
 
-const SAVE_QUERY_VAL = function(state, newQuery) {
+const SAVE_QUERY_VAL = function (state, newQuery) {
   state.linkQuery = newQuery;
 };
 
-const TOGGLE_TEMP_HIDE = function(state) {
+const TOGGLE_TEMP_HIDE = function (state) {
   state.tempHide = !state.tempHide;
 };
 

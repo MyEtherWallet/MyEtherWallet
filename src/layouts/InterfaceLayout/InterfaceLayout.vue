@@ -643,7 +643,7 @@ export default {
         this.checkAndSetNetwork(netId);
       });
     },
-    setupOnlineEnvironment: web3Utils._.debounce(function() {
+    setupOnlineEnvironment: web3Utils._.debounce(function () {
       this.clearIntervals();
       if (store.get('customTokens') === undefined) {
         store.set('customTokens', {});

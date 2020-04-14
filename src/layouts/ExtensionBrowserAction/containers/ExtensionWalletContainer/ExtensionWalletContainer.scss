@@ -6,6 +6,11 @@
   display: flex;
   justify-content: center;
   position: relative;
+  height: 100%;
+}
+
+.empty-wallet {
+  padding-top: 120px;
 }
 
 .wallet-side-menu-container {
@@ -16,44 +21,134 @@
 }
 
 .wallets-container {
-  min-height: 700px;
+  height: 100%;
   width: 100%;
   padding: 50px 20px 50px 90px;
 }
 
-.my-wallets-container,
-.dapps-container,
-.watch-only-container {
-  max-width: 1024px;
-  min-width: 800px;
+.no-wallet-found {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  margin: 0 auto;
 
-  .wallets-container-header,
-  .total-balance-container {
-    grid-column-start: 1;
+  .text-and-img-container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
   }
 
-  .wallets,
-  .wallets-info {
-    grid-column-start: 1;
+  img {
+    width: 75px;
+  }
+
+  p,
+  span {
+    color: $light-grey-11;
+    font-weight: bold;
+  }
+
+  p {
+    font-size: 20px;
+    padding-top: 10px;
+  }
+
+  .wallet-options {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding: 15px;
+
+    button {
+      width: 325px;
+
+      &:first-child {
+        margin: 15px 0 30px;
+      }
+      &:last-child {
+        margin: 30px 0 15px;
+      }
+    }
+  }
+
+  .button-border-container {
+    display: flex;
+    align-items: center;
+
+    .button-border {
+      border-top: 1px solid $light-grey-11;
+      width: 121px;
+
+      &:first-child {
+        margin-right: 30px;
+      }
+
+      &:last-child {
+        margin-left: 30px;
+      }
+    }
   }
 }
 
-.wallets-container-header {
-  margin-bottom: 20px;
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
+.wallet-container-header {
+  position: relative;
 
-  h2 {
-    margin: 0 !important;
-    font-size: 26px;
-    font-weight: 700;
+  .add-and-wallet-count {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 62px;
+    width: 250px;
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 
-  .add-button {
+  .add-wallet-button {
+    align-items: center;
+    border: 1px solid $mew-green;
     color: $mew-green;
     cursor: pointer;
-    font-weight: 600;
-    font-size: 13px;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+
+    i {
+      margin-right: 5px;
+    }
+  }
+}
+
+.total-balance-container {
+  align-items: center;
+  background-color: $light-blue-1;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 10px 20px;
+
+  p {
+    color: $white;
+    margin: 0;
+  }
+
+  .portfolio-text,
+  .total-amt {
+    font-weight: bold;
+  }
+
+  .total-amt {
+    text-align: right;
+    font-size: 20px;
+  }
+
+  .portfolio-text {
+    font-size: 16px;
   }
 }

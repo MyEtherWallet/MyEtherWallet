@@ -53,7 +53,7 @@ export default {
     },
     claimFunc: {
       type: Function,
-      default: function() {}
+      default: function () {}
     },
     dnsClaim: {
       type: Object,

@@ -6,12 +6,12 @@ const errors = require('web3-core-helpers').errors;
 let Ws = null;
 let _btoa = null;
 let parseURL = null;
-Ws = function(url, protocols) {
+Ws = function (url, protocols) {
   if (protocols) return new window.WebSocket(url, protocols);
   return new window.WebSocket(url);
 };
 _btoa = btoa;
-parseURL = function(url) {
+parseURL = function (url) {
   return new URL(url);
 };
 const WebsocketProvider = function WebsocketProvider(url, options) {
@@ -42,12 +42,12 @@ const WebsocketProvider = function WebsocketProvider(url, options) {
   );
 
   this.addDefaultEvents();
-  this.connection.onmessage = function(e) {
+  this.connection.onmessage = function (e) {
     const data = typeof e.data === 'string' ? e.data : '';
-    _this._parseResponse(data).forEach(function(result) {
+    _this._parseResponse(data).forEach(function (result) {
       let id = null;
       if (_.isArray(result)) {
-        result.forEach(function(load) {
+        result.forEach(function (load) {
           if (_this.responseCallbacks[load.id]) id = load.id;
         });
       } else {
@@ -59,7 +59,7 @@ const WebsocketProvider = function WebsocketProvider(url, options) {
         result.method &&
         result.method.indexOf('_subscription') !== -1
       ) {
-        _this.notificationCallbacks.forEach(function(callback) {
+        _this.notificationCallbacks.forEach(function (callback) {
           if (_.isFunction(callback)) callback(result);
         });
       } else if (_this.responseCallbacks[id]) {
@@ -69,28 +69,28 @@ const WebsocketProvider = function WebsocketProvider(url, options) {
     });
   };
   Object.defineProperty(this, 'connected', {
-    get: function() {
+    get: function () {
       return (
         this.connection && this.connection.readyState === this.connection.OPEN
       );
     },
-    set: function() {},
+    set: function () {},
     enumerable: true
   });
 };
-WebsocketProvider.prototype.addDefaultEvents = function() {
+WebsocketProvider.prototype.addDefaultEvents = function () {
   const _this = this;
 
-  this.connection.onerror = function() {
+  this.connection.onerror = function () {
     _this._timeout();
   };
 
-  this.connection.onclose = function() {
+  this.connection.onclose = function () {
     _this._timeout();
     _this.reset();
   };
 };
-WebsocketProvider.prototype._parseResponse = function(data) {
+WebsocketProvider.prototype._parseResponse = function (data) {
   const _this = this,
     returnValues = [];
   const dechunkedData = data
@@ -100,7 +100,7 @@ WebsocketProvider.prototype._parseResponse = function(data) {
     .replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
     .split('|--|');
 
-  dechunkedData.forEach(function(data) {
+  dechunkedData.forEach(function (data) {
     if (_this.lastChunk) data = _this.lastChunk + data;
     let result = null;
     try {
@@ -108,7 +108,7 @@ WebsocketProvider.prototype._parseResponse = function(data) {
     } catch (e) {
       _this.lastChunk = data;
       clearTimeout(_this.lastChunkTimeout);
-      _this.lastChunkTimeout = setTimeout(function() {
+      _this.lastChunkTimeout = setTimeout(function () {
         _this._timeout();
         throw errors.InvalidResponse(data);
       }, 1000 * 15);
@@ -124,7 +124,10 @@ WebsocketProvider.prototype._parseResponse = function(data) {
   return returnValues;
 };
 
-WebsocketProvider.prototype._addResponseCallback = function(payload, callback) {
+WebsocketProvider.prototype._addResponseCallback = function (
+  payload,
+  callback
+) {
   const id = payload.id || payload[0].id;
   const method = payload.method || payload[0].method;
 
@@ -133,7 +136,7 @@ WebsocketProvider.prototype._addResponseCallback = function(payload, callback) {
 
   const _this = this;
   if (this._customTimeout) {
-    setTimeout(function() {
+    setTimeout(function () {
       if (_this.responseCallbacks[id]) {
         _this.responseCallbacks[id](
           errors.ConnectionTimeout(_this._customTimeout)
@@ -143,7 +146,7 @@ WebsocketProvider.prototype._addResponseCallback = function(payload, callback) {
     }, this._customTimeout);
   }
 };
-WebsocketProvider.prototype._timeout = function() {
+WebsocketProvider.prototype._timeout = function () {
   for (const key in this.responseCallbacks) {
     if (this.responseCallbacks.hasOwnProperty(key)) {
       this.responseCallbacks[key](errors.InvalidConnection('on WS'));
@@ -151,11 +154,11 @@ WebsocketProvider.prototype._timeout = function() {
     }
   }
 };
-WebsocketProvider.prototype.send = function(payload, callback) {
+WebsocketProvider.prototype.send = function (payload, callback) {
   const _this = this;
 
   if (this.connection.readyState === this.connection.CONNECTING) {
-    setTimeout(function() {
+    setTimeout(function () {
       _this.send(payload, callback);
     }, 10);
     return;
@@ -171,7 +174,7 @@ WebsocketProvider.prototype.send = function(payload, callback) {
   this.connection.send(JSON.stringify(payload));
   this._addResponseCallback(payload, callback);
 };
-WebsocketProvider.prototype.on = function(type, callback) {
+WebsocketProvider.prototype.on = function (type, callback) {
   if (typeof callback !== 'function')
     throw new Error('The second parameter callback must be a function.');
 
@@ -193,18 +196,18 @@ WebsocketProvider.prototype.on = function(type, callback) {
       break;
   }
 };
-WebsocketProvider.prototype.removeListener = function(type, callback) {
+WebsocketProvider.prototype.removeListener = function (type, callback) {
   const _this = this;
 
   switch (type) {
     case 'data':
-      this.notificationCallbacks.forEach(function(cb, index) {
+      this.notificationCallbacks.forEach(function (cb, index) {
         if (cb === callback) _this.notificationCallbacks.splice(index, 1);
       });
       break;
   }
 };
-WebsocketProvider.prototype.removeAllListeners = function(type) {
+WebsocketProvider.prototype.removeAllListeners = function (type) {
   switch (type) {
     case 'data':
       this.notificationCallbacks = [];
@@ -226,13 +229,13 @@ WebsocketProvider.prototype.removeAllListeners = function(type) {
   }
 };
 
-WebsocketProvider.prototype.reset = function() {
+WebsocketProvider.prototype.reset = function () {
   this._timeout();
   this.notificationCallbacks = [];
   this.addDefaultEvents();
 };
 
-WebsocketProvider.prototype.disconnect = function() {
+WebsocketProvider.prototype.disconnect = function () {
   if (this.connection) {
     this.connection.close();
   }

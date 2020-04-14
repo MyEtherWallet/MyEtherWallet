@@ -52,10 +52,7 @@ describe('VerifyMessageInput.vue', () => {
     });
     expect(wrapper.vm.$data.message).toEqual(wrapper.props().signature);
 
-    wrapper
-      .findAll('.copy-buttons span')
-      .at(0)
-      .trigger('click');
+    wrapper.findAll('.copy-buttons span').at(0).trigger('click');
     expect(wrapper.vm.$data.showMessage).toBe(false);
     expect(wrapper.vm.$data.message).toBe('');
   });

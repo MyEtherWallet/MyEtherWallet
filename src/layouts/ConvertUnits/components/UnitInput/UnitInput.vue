@@ -61,7 +61,7 @@ export default {
   props: {
     options: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     }

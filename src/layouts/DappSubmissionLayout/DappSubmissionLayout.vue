@@ -347,7 +347,7 @@ export default {
           }
         })
         .then(this.$refs.successModal.$refs.success.show)
-        .catch(function() {
+        .catch(function () {
           Toast.responseHandler(
             new Error('There is an error. Please try again'),
             Toast.ERROR

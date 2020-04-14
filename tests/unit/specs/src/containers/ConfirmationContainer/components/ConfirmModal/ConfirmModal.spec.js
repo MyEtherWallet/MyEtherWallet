@@ -127,29 +127,20 @@ describe('ConfirmModal.vue', () => {
 
   it('should render correct from props', () => {
     expect(
-      wrapper
-        .findAll('.address-block')
-        .at(0)
-        .attributes('address')
+      wrapper.findAll('.address-block').at(0).attributes('address')
     ).toEqual(from);
   });
 
   it('should render correct to props', () => {
     expect(
-      wrapper
-        .findAll('.address-block')
-        .at(1)
-        .attributes('address')
+      wrapper.findAll('.address-block').at(1).attributes('address')
     ).toEqual(to);
   });
 
   it('should render correct value props', () => {
-    expect(
-      wrapper
-        .findAll('.address-block')
-        .at(0)
-        .attributes('value')
-    ).toEqual(String(value));
+    expect(wrapper.findAll('.address-block').at(0).attributes('value')).toEqual(
+      String(value)
+    );
   });
 
   // it('should render correct isHardwareWallet props', () => {
