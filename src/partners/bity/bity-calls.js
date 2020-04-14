@@ -67,6 +67,8 @@ const getEstimate = async orderInfo => {
 };
 
 const createOrder = async orderInfo => {
+  console.log('createOrder', orderInfo); // todo remove dev item
+
   try {
     const results = await post(
       buildPath(),
@@ -75,7 +77,7 @@ const createOrder = async orderInfo => {
     if (results.error) {
       throw Error(results.error.message);
     }
-
+    console.log('createOrder', results); // todo remove dev item
     return results.result;
   } catch (e) {
     utils.handleOrThrow(e);
@@ -83,10 +85,30 @@ const createOrder = async orderInfo => {
 };
 
 const openOrder = async orderInfo => {
+  // v1 create tx
+  console.log('openOrder', orderInfo); // todo remove dev item
   try {
     const results = await post(
       buildPath(),
       utils.buildPayload(bityMethods.createTransaction, orderInfo)
+    );
+    console.log('openOrder', results); // todo remove dev item
+
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+    return results.result;
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
+};
+
+const sendSignedMessage = async orderInfo => {
+  // v1 create tx
+  try {
+    const results = await post(
+      buildPath(),
+      utils.buildPayload('sendSignedMessage', orderInfo)
     );
     if (results.error) {
       throw Error(results.error.message);
@@ -133,24 +155,6 @@ const getStatus = async orderInfo => {
   }
 };
 
-const loginWithPhone = async exitData => {
-  try {
-    if (exitData.phoneNumber.length <= 10) {
-      throw Error('Invalid phone number. Check country code');
-    }
-    exitData.phoneNumber = cleanPhoneData(exitData.phoneNumber);
-    const results = await post(
-      buildPath(),
-      utils.buildPayload(bityMethods.logInWithPhoneNumber, exitData)
-    );
-    if (results.error) {
-      throw Error(results.error.message);
-    }
-    return results.result;
-  } catch (e) {
-    utils.handleOrThrow(e);
-  }
-};
 
 const sendReceivedSmsCode = async exitData => {
   try {
@@ -223,7 +227,6 @@ export {
   getExitRates,
   openOrder,
   getStatus,
-  loginWithPhone,
   sendReceivedSmsCode,
   buildCyptoToFiatOrderData,
   getCyptoToFiatOrderDetails,

@@ -373,6 +373,7 @@ export default class BitySwap {
       return swapDetails;
     } else if (this.checkIfExit(swapDetails)) {
       swapDetails.dataForInitialization = await createOrder(swapDetails);
+      console.log(swapDetails.dataForInitialization); // todo remove dev item
       if (swapDetails.dataForInitialization) {
         swapDetails.providerReceives =
           swapDetails.dataForInitialization.input.amount;
@@ -393,6 +394,7 @@ export default class BitySwap {
       }
     } else if (!this.checkIfExit(swapDetails)) {
       swapDetails.dataForInitialization = await this.buildOrder(swapDetails);
+      console.log(swapDetails.dataForInitialization); // todo remove dev item
       if (!swapDetails.dataForInitialization) throw Error('abort');
       swapDetails.providerReceives =
         swapDetails.dataForInitialization.input.amount;
@@ -417,14 +419,20 @@ export default class BitySwap {
     toCurrency,
     fromValue,
     toValue,
-    toAddress
+    toAddress,
+    fromAddress
   }) {
     if (this.maxCheck(fromCurrency, fromValue, toCurrency, toValue)) {
       const order = {
-        amount: fromValue,
-        mode: 0,
-        pair: fromCurrency + toCurrency,
-        destAddress: toAddress
+        input: {
+          amount: fromValue,
+          // crypto_address: toAddress,
+          currency: fromCurrency
+        },
+        output: {
+          crypto_address: toAddress,
+          currency: toCurrency,
+        }
       };
 
       return await openOrder(order);
