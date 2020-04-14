@@ -1,6 +1,7 @@
 ### Devop
 
 - Scale AdEx ad to fit screen [#2245](https://github.com/MyEtherWallet/MyEtherWallet/pull/2245)
+- Update coolwallet affiliate link [#2244](https://github.com/MyEtherWallet/MyEtherWallet/pull/2244)
 
 ### Release v5.5.2
 
