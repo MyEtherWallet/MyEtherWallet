@@ -1,18 +1,28 @@
 <template>
   <div>
-    <v-radio-group v-model="radioGroup">
-      <template v-for="network in networks">
-        <h3>{{ network.label }}</h3>
-        <v-radio
-          v-for="button in network.buttons"
-          :key="button.id"
-          :label="button.name"
-          :value="button.value"
-        ></v-radio>
-      </template>
+    <v-radio-group v-model="networkSelected">
+      <div v-for="(network, i) in networks" :key="i">
+        <div class="text-uppercase font-weight-bold subtitle-1 mb-1">
+          {{ network.label }}
+        </div>
+
+        <v-row no-gutters>
+          <v-col
+            v-for="button in network.buttons"
+            :key="button.value"
+            cols="6"
+            class="mt-2"
+          >
+            <v-radio :label="button.name" :value="button.value"></v-radio>
+          </v-col>
+        </v-row>
+
+        <div>{{ network.id }}</div>
+        <DividerLine v-if="networks.length != i + 1" class="my-5" />
+      </div>
     </v-radio-group>
 
-    <StdButton size="x-large" fullwidth>
+    <StdButton size="x-large" fullwidth class="mt-3">
       Change
     </StdButton>
   </div>
@@ -20,11 +30,13 @@
 
 <script>
 import StdButton from '@/web/components/StdButton';
+import DividerLine from '@/web/components/Common/DividerLine';
 
 export default {
-  components: { StdButton },
+  components: { StdButton, DividerLine },
   data() {
     return {
+      networkSelected: null,
       networks: [
         {
           label: 'eth',
@@ -38,19 +50,19 @@ export default {
         {
           label: 'rop',
           buttons: [
-            { name: 'myetherapi.com', value: 'myetherapi' },
-            { name: 'infura.io', value: 'infura' },
-            { name: 'giveth.io', value: 'giveth' },
-            { name: 'therscan.io', value: 'therscan' }
+            { name: 'myetherapi.com', value: 'myetherapi1' },
+            { name: 'infura.io', value: 'infura1' },
+            { name: 'giveth.io', value: 'giveth1' },
+            { name: 'therscan.io', value: 'therscan1' }
           ]
         },
         {
           label: 'rin',
           buttons: [
-            { name: 'myetherapi.com', value: 'myetherapi' },
-            { name: 'infura.io', value: 'infura' },
-            { name: 'giveth.io', value: 'giveth' },
-            { name: 'therscan.io', value: 'therscan' }
+            { name: 'myetherapi.com', value: 'myetherapi2' },
+            { name: 'infura.io', value: 'infura2' },
+            { name: 'giveth.io', value: 'giveth2' },
+            { name: 'therscan.io', value: 'therscan2' }
           ]
         }
       ]
@@ -58,3 +70,10 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.v-input--selection-controls {
+  padding: 0;
+  margin: 0;
+}
+</style>
