@@ -2,12 +2,29 @@
 
 - Unstoppable domain buy domain [#2229] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2229)
 
+### Release v5.5.3
+
+### Devop
+
+- Scale AdEx ad to fit screen [#2245](https://github.com/MyEtherWallet/MyEtherWallet/pull/2245)
+- Update packages [#2241](https://github.com/MyEtherWallet/MyEtherWallet/pull/2241)
+- Update coolwallet affiliate link [#2244](https://github.com/MyEtherWallet/MyEtherWallet/pull/2244)
+
 ### Release v5.5.2
+
+### Feature
+
+- CX updated ui and some optimization [#1864](https://github.com/MyEtherWallet/MyEtherWallet/pull/1864)
 
 ### Devop
 
 - Greenkeeper packages [#2227](https://github.com/MyEtherWallet/MyEtherWallet/pull/2227)
 - Remove mew wallet pop up [#2217](https://github.com/MyEtherWallet/MyEtherWallet/pull/2217)
+
+### Bug
+
+- Fix AdEx width on smaller screens [#2232](https://github.com/MyEtherWallet/MyEtherWallet/pull/2232)
+- Cx checksum address fix on sign message and tx [#2203](https://github.com/MyEtherWallet/MyEtherWallet/pull/2203)
 
 ### Release v5.5.1-hotfix.1
 
@@ -439,8 +456,7 @@
 ### Devop
 
 - Add translation guidelines to dapp_integration.md and PR guide [#1617](https://github.com/MyEtherWallet/MyEtherWallet/pull/1617)
-- reduce coin image count from 656 to 34 [#1601](https://github.com/MyEtherWallet/MyEtherWallet/pull/1601)
-- Add rel="noopener noreferrer" to links[#1618](https://github.com/MyEtherWallet/MyEtherWallet/pull/1618)
+- reduce coin image count from 656 to 34 [#1601](https://github.com/MyEtherWallet/MyEtherWallet/pull/1601)pull/1618)
 - Sort Dapps by integration/release dates [#1619](https://github.com/MyEtherWallet/MyEtherWallet/pull/1619)
 - Update web3 icons [#1614](https://github.com/MyEtherWallet/MyEtherWallet/pull/1614)
 - Update ENS length [#1636](https://github.com/MyEtherWallet/MyEtherWallet/pull/1636)

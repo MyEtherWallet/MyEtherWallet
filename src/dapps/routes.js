@@ -6,7 +6,6 @@ import makerDaiRoutes from './MakerDai/routes';
 import makerSaiRoutes from './MakerSai/routes';
 import ambrpayRoutes from './Ambrpay/routes';
 import aaveRoutes from './Aave/routes';
-// import soDapp from './SOTDapps/routes';
 
 const routes = {
   manageENS: manageENSRoutes,
@@ -17,7 +16,6 @@ const routes = {
   aaveDLP: aaveRoutes,
   makerSaiRoutes: makerSaiRoutes,
   amberpay: ambrpayRoutes
-  // soDapp: soDapp
 };
 
 export default routes;

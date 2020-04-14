@@ -235,6 +235,18 @@ const isMewCx = () => {
   return BUILD_TYPE === MEW_CX;
 };
 
+const toDollar = val => {
+  return `${val
+    .toLocaleString('en-GB', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      currencyDisplay: 'symbol'
+    })
+    .replace('US', '')
+    .replace('$', '$ ')}`;
+};
+
 export default {
   isJson,
   doesExist,
@@ -256,5 +268,6 @@ export default {
   isContractArgValid,
   stripTags,
   isMewCx,
-  toBuffer
+  toBuffer,
+  toDollar
 };
