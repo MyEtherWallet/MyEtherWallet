@@ -2,6 +2,14 @@
 
 - Cx workflow [#2237](https://github.com/MyEtherWallet/MyEtherWallet/pull/2237)
 
+### Release v5.5.3
+
+### Devop
+
+- Scale AdEx ad to fit screen [#2245](https://github.com/MyEtherWallet/MyEtherWallet/pull/2245)
+- Update packages [#2241](https://github.com/MyEtherWallet/MyEtherWallet/pull/2241)
+- Update coolwallet affiliate link [#2244](https://github.com/MyEtherWallet/MyEtherWallet/pull/2244)
+
 ### Release v5.5.2
 
 ### Feature
