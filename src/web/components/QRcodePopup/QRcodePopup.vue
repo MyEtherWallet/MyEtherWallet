@@ -6,12 +6,9 @@
     <div class="pa-5 text-center">
       <div class="subtitle-1 font-weight-bold mb-0">{{ title }}</div>
       <VueQrcode :value="value" :options="{ size: 140 }"></VueQrcode>
-      <div
-        style="max-width: 160px; word-break: break-all;"
-        class="monospace mt-1"
-      >
+      <v-card flat max-width="160px" class="monospace mt-1">
         {{ value }}
-      </div>
+      </v-card>
     </div>
   </v-tooltip>
 </template>
