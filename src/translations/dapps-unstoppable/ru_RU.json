@@ -12,21 +12,21 @@
   "ethereum-payment-address": "Адрес оплаты Ethereum",
   "payment-amount": "Сумма платежа",
   "pending-crypto-payment": "Pending Payment: {confirmations} of {confirmationsRequired} confirmations",
-  "secured-by-stripe": "Secured Checkout Powered by Stripe",
-  "insufficient-balance": "Insufficient balance: Add more ETH to your wallet or pay with Credit Card",
-  "pay": "Pay",
-  "confirm-payment": "You are about to pay ${amount} for {domain}",
+  "secured-by-stripe": "Безопасная оплата с поддержкой Stripe",
+  "insufficient-balance": "Недостаточный баланс: добавьте больше ETH в кошелек или оплатите кредитной картой",
+  "pay": "Оплатить",
+  "confirm-payment": "Вы собираетесь заплатить ${amount} за {domain}",
   "error": {
-    "stripe-payment": "Payment failed. Please try again later",
+    "stripe-payment": "Оплата не прошла, пожалуйста повторите попытку позже",
     "something-went-wrong": "Что-то пошло не так. Попробуйте еще раз."
   },
   "warning": {
-    "not-enough-char": "Domain name is less than 6 characters.",
-    "invalid-symbol": "Invalid symbols on domain. Please use alphanumerical or '-' characters"
+    "not-enough-char": "Доменное имя меньше 6 символов.",
+    "invalid-symbol": "Недопустимые символы на домене. Пожалуйста, используйте буквенно-цифровые символы или '-'"
   },
   "toast": {
     "success-register": "Регистрация выполнена успешнo!",
-    "domain-unavailable": "{domain} is unavailable"
+    "domain-unavailable": "{domain} недоступен"
   },
   "check-domain": "Проверить домен",
   "update": "Обновление",
@@ -34,17 +34,17 @@
     "six-char": "Please enter at least 6 characters",
     "stripe-email-placeholder": "Your email"
   },
-  "view-transfer-transaction": "You can view the transfer transaction on",
+  "view-transfer-transaction": "Вы можете увидеть транзакцию перевода на",
   "continue": "Продолжить",
   "congratulations": "Поздравляем!",
-  "transfer-pending": "Transfer Pending",
-  "domain-transferring-one": "Domain",
+  "transfer-pending": "Перевод в ожидании",
+  "domain-transferring-one": "Домен",
   "domain-transferring-two": "is being transferred to your wallet with address: {address}!",
   "transfer-complete": "has been successfully transferred to your wallet",
   "manage-on-one": "This process may take up to 5-10 minutes. You may stay on this page to receive a confirmation when the transaction has been completed. View and manage your domain on",
   "manage-on-two": "by creating an account and connecting your wallet!",
   "complete-manage-on-one": "View and manage your domain on",
-  "is-available": "Domain is available",
+  "is-available": "Домен доступен",
   "not-available": "{domain} еще не доступен!",
   "manage": "Менеджер",
   "buyDomain": "Buy Domain",
