@@ -99,8 +99,6 @@ export default {
   mounted() {
     this.getBalance();
     this.fetchBalanceData();
-
-    //console.log(this.equivalentValues);
   },
   methods: {
     ...mapActions('main', ['setAccountBalance']),
