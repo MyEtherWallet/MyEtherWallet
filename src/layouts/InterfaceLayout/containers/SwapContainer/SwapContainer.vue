@@ -112,7 +112,7 @@
           </div>
         </div>
 
-        <div v-if="!isExitToFiat && isBityCryptoToCrypto()" class="send-form">
+        <div v-if="!isExitToFiat && isBityCryptoToCrypto(fromCurrency)" class="send-form">
           <div class="the-form gas-amount">
             Amount will be sent to your current wallet address.
           </div>
@@ -281,6 +281,7 @@ export default {
       toValue: 1,
       invalidFrom: 'none',
       lastBestRate: 0,
+      bitySpecialCurrencies: ['BTC', 'REP'],
       selectedProvider: {},
       swapDetails: {},
       currencyDetails: {},
@@ -539,10 +540,10 @@ export default {
   },
   methods: {
     reset() {
-      this.fromCurrency = 'ETH';
-      this.toCurrency = 'BTC';
-      this.overrideFrom = { name: 'Ether', symbol: 'ETH' };
-      this.overrideTo = { name: 'Bitcoin', symbol: 'BTC' };
+      this.fromCurrency = 'BTC';
+      this.toCurrency = 'ETH';
+      this.overrideFrom =  { name: 'Bitcoin', symbol: 'BTC' };
+      this.overrideTo =  { name: 'Ether', symbol: 'ETH' };
       this.fromValue = 1;
       this.overrideAddress = !this.overrideAddress;
       this.providerSelectedName = '';
@@ -565,7 +566,7 @@ export default {
     },
     isBityCryptoToCrypto(currency = 'BTC') {
       const isTrue =
-        this.fromCurrency === currency &&
+        this.bitySpecialCurrencies.includes(currency) &&
         this.selectedProvider.provider === this.providerNames.bity;
       if (isTrue) {
         this.setToAddress(this.currentAddress);
@@ -887,14 +888,22 @@ export default {
               this.swapDetails = swapDetailsExit;
               this.openConfirmModal(this.swapDetails);
             };
-          } else if (this.isBityCryptoToCrypto()) {
-            console.log(
-              this.swapDetails.dataForInitialization.messageToSign.body
-            ); // todo remove dev item
+          } else if (this.isBityCryptoToCrypto() || this.isBityCryptoToCrypto('REP')) {
             this.stringToSign = this.swapDetails.dataForInitialization.messageToSign.body;
+            // this.web3.eth
+            //   .sign(this.swapDetails.dataForInitialization.messageToSign.body, this.account.address)
+            //   .then(async signed =>{
+            //     await this.swap.extraActions(this.providerNames.bity, 'sendSigned', {signature: signed, signature_submission_url: this.swapDetails.dataForInitialization.messageToSign.signature_submission_url});
+            //     this.openConfirmModal(this.swapDetails);
+            //     // this.sendSigned(signed);
+            //     // this.$refs.signatureModal.hide();
+            //   })
+            //   .catch(e => {
+            //     Toast.responseHandler(e, Toast.ERROR);
+            //   });
             this.$refs.signatureModal.$refs.signatureModal.show();
             this.sendSignedCallback = async signed => {
-              await this.swap.extraActions('bity', 'sendSigned', signed);
+              await this.swap.extraActions(this.providerNames.bity, 'sendSigned', {signature: signed, signature_submission_url: this.swapDetails.dataForInitialization.messageToSign.signature_submission_url});
               this.openConfirmModal(this.swapDetails);
             }
           } else {

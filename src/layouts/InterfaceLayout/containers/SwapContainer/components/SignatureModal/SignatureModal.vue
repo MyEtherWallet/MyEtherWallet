@@ -2,7 +2,7 @@
   <div>
     <b-modal
       ref="signatureModal"
-      :title="$t('common.signature')"
+      :title="$t('swap.address-verification')"
       hide-footer
       centered
       class="bootstrap-modal"
@@ -12,24 +12,15 @@
       <div class="modal-contents">
         <div>
           <div class="copy-container">
-            <h4>{{ $t('signMessage.signed') }}</h4>
-            <div class="copy-buttons">
-              <span @click="copy">{{ $t('common.copy') }}</span>
-            </div>
+            <h4>{{ $t('swap.message-to-sign') }}</h4>
           </div>
           {{signature}}
-<!--          <textarea-->
-<!--            ref="signedMess"-->
-<!--            :value="signature"-->
-<!--            name="message"-->
-<!--            class="custom-textarea-1"-->
-<!--          />-->
           <div class="button-container">
             <button
               class="submit-button large-round-button-green-filled clickable"
-              @click="copy('main')"
+              @click="sign()"
             >
-              {{ $t('common.copy') }}
+              {{ $t('swap.proceed-to-sign') }}
             </button>
           </div>
         </div>
@@ -40,7 +31,7 @@
 
 <script>
 import { Toast } from '@/helpers';
-import { mapState, mapActions } from 'vuex';
+import { mapState } from 'vuex';
 export default {
   props: {
     signature: {
@@ -57,25 +48,20 @@ export default {
   },
   methods: {
     sign(){
-      const _this = this;
       try {
         this.web3.eth
           .sign(this.signature, this.account.address)
-          .then(this.sendSigned)
+          .then(signed =>{
+            this.sendSigned(signed);
+            this.$refs.signatureModal.hide();
+          })
           .catch(e => {
             Toast.responseHandler(e, Toast.ERROR);
           });
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);
       }
-      this.$emit('signedString');
-    },
-    // copy(type) {
-    //   this.$refs.signedMess.select();
-    //   document.execCommand('copy');
-    //   Toast.responseHandler(this.$t('common.copied'), Toast.INFO);
-    //   if (type === 'main') this.$refs.signatureModal.hide();
-    // }
+    }
   }
 };
 </script>

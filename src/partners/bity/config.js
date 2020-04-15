@@ -2,13 +2,11 @@ const BityCurrencies = {
   BTC: {
     symbol: 'BTC',
     name: 'Bitcoin',
-    invalidFrom: ['REP', 'CHF', 'EUR'],
-    // invalidFrom: ['REP', 'CHF', 'EUR','ETH'],
+    invalidFrom: ['REP', 'CHF', 'EUR','ETH'],
   },
   ETH: {
     symbol: 'ETH',
-    name: 'Ether',
-    // invalidFrom: ['BTC']
+    name: 'Ether'
   },
   REP: {
     symbol: 'REP',

@@ -14,7 +14,8 @@ import {
   getExitRates,
   getCyptoToFiatOrderDetails,
   getEstimate,
-  createOrder
+  createOrder,
+  sendSignedMessage
 } from './bity-calls';
 import {
   bityStatuses,
@@ -40,7 +41,7 @@ function disabledPairing(currencyList, symbol, invalid, side) {
       return true;
     } else if (side === 'to') {
       if (currencyList[symbol].invalidTo) {
-        return currencyList[symbol].invalidTo.includes(invalid);
+        return !currencyList[symbol].invalidTo.includes(invalid);
       }
       return true;
     }
@@ -61,7 +62,7 @@ export default class BitySwap {
     this.fiatMaxValue = FIAT_MAX;
     this.fiatCurrencies = Object.keys(bityFiatCurrencies);
     this.rates = new Map();
-
+    this.disabledTo = ['BTC'];
     this.retrieveRates();
   }
 
@@ -222,6 +223,7 @@ export default class BitySwap {
 
   validSwap(fromCurrency, toCurrency) {
     if (this.isValidNetwork) {
+      if(toCurrency === 'BTC') return false;
       return this.rates.has(`${fromCurrency}/${toCurrency}`);
     }
     return false;
@@ -318,10 +320,12 @@ export default class BitySwap {
   getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
     for (const prop in this.currencies) {
       if (this.currencies[prop]) {
-        collectMapTo.set(prop, {
-          symbol: prop,
-          name: this.currencies[prop].name
-        });
+        if(!this.disabledTo.includes(prop)){
+          collectMapTo.set(prop, {
+            symbol: prop,
+            name: this.currencies[prop].name
+          });
+        }
         if (!this.fiatCurrencies.includes(prop)) {
           collectMapFrom.set(prop, {
             symbol: prop,
@@ -373,7 +377,6 @@ export default class BitySwap {
       return swapDetails;
     } else if (this.checkIfExit(swapDetails)) {
       swapDetails.dataForInitialization = await createOrder(swapDetails);
-      console.log(swapDetails.dataForInitialization); // todo remove dev item
       if (swapDetails.dataForInitialization) {
         swapDetails.providerReceives =
           swapDetails.dataForInitialization.input.amount;
@@ -394,7 +397,6 @@ export default class BitySwap {
       }
     } else if (!this.checkIfExit(swapDetails)) {
       swapDetails.dataForInitialization = await this.buildOrder(swapDetails);
-      console.log(swapDetails.dataForInitialization); // todo remove dev item
       if (!swapDetails.dataForInitialization) throw Error('abort');
       swapDetails.providerReceives =
         swapDetails.dataForInitialization.input.amount;
@@ -431,7 +433,7 @@ export default class BitySwap {
         },
         output: {
           crypto_address: toAddress,
-          currency: toCurrency,
+          currency: toCurrency
         }
       };
 
@@ -443,7 +445,9 @@ export default class BitySwap {
     return getCyptoToFiatOrderDetails(detailsUrl);
   }
 
-  async startSpecial() {}
+  async sendSigned(signedDetails) {
+    return sendSignedMessage(signedDetails);
+  }
 
   static parseOrder(order) {
     return {
