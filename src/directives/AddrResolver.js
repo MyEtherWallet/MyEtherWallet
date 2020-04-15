@@ -214,7 +214,7 @@ const AddrResolver = {
         .call();
       if (supportsTxt) {
         const avatar = await resolver.methods.text(domainHash, 'avatar').call();
-        const convertedMewAvatar = `https://img.mewapi.io/?image=${avatar}&width=50&height=50&fit=scale-down`;
+        const convertedMewAvatar = `https://img.mewapi.io/?image=${avatar}&width=30&height=30&fit=scale-down&quality=100`;
         _this.avatar = convertedMewAvatar ? convertedMewAvatar : '';
       }
     };

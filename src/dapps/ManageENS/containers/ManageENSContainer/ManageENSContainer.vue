@@ -115,7 +115,7 @@
             <label for="updateResolver">{{ k | capitalize }}:</label>
             <input
               v-model="txtRecordInputs[k]"
-              v-validate="getValidation(k)"
+              v-validate="getInputType(k)"
               :placeholder="k | capitalize"
               :name="k"
               type="text"
@@ -126,6 +126,9 @@
                 !!txtRecordInputs[k] &&
                 txtRecordInputs[k] !== '' &&
                 !errors.hasOwnProperty(`${k}`)
+                  ? 'valid fa-check-circle-o'
+                  : 'error fa-times-circle-o',
+                validateTxtValue(k)
                   ? 'valid fa-check-circle-o'
                   : 'error fa-times-circle-o'
               ]"
@@ -256,6 +259,11 @@ export default {
   data() {
     const newCoinsCopy = this.copySupported();
     const newtxtRecords = {};
+    const txtValidators = {};
+
+    supportedTxt.forEach(item => {
+      txtValidators[item.name] = item.validate;
+    });
     for (const key in newCoinsCopy) {
       if (
         newCoinsCopy[key].hasOwnProperty('value') &&
@@ -269,7 +277,6 @@ export default {
         newtxtRecords[key] = this.txtRecords[key];
       }
     }
-
     return {
       transferTo: '',
       multiCoinSupport: false,
@@ -278,7 +285,8 @@ export default {
       selectedCurrency: 'ETH',
       selectedText: 'Email',
       hasError: false,
-      txtRecordInputs: newtxtRecords
+      txtRecordInputs: newtxtRecords,
+      txtValidators: txtValidators
     };
   },
   computed: {
@@ -302,7 +310,11 @@ export default {
     },
     validTextRecords() {
       for (const type in this.txtRecordInputs) {
-        if (this.txtRecordInputs[type] && this.txtRecordInputs[type] !== '')
+        if (
+          this.txtRecordInputs[type] &&
+          this.txtRecordInputs[type] !== '' &&
+          !this.txtValidators[type](this.txtRecordInputs[type])
+        )
           return false;
       }
       return true;
@@ -333,7 +345,7 @@ export default {
         return true;
       return type.value !== '' && !type.validator.validate(type.value);
     },
-    getValidation(name) {
+    getInputType(name) {
       const foundObj = supportedTxt.find(item => {
         return item.name.toLowerCase() === name.toLowerCase();
       });
@@ -346,6 +358,9 @@ export default {
         default:
           return 'required';
       }
+    },
+    validateTxtValue(name) {
+      return this.txtValidators[name](this.txtRecordInputs[name]);
     },
     copySupported() {
       const newObj = utils._.map(this.supportedCoins, utils._.clone);
