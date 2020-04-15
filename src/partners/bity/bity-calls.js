@@ -67,7 +67,6 @@ const getEstimate = async orderInfo => {
 };
 
 const createOrder = async orderInfo => {
-  console.log('createOrder', orderInfo); // todo remove dev item
 
   try {
     const results = await post(
@@ -77,7 +76,6 @@ const createOrder = async orderInfo => {
     if (results.error) {
       throw Error(results.error.message);
     }
-    console.log('createOrder', results); // todo remove dev item
     return results.result;
   } catch (e) {
     utils.handleOrThrow(e);
@@ -86,13 +84,11 @@ const createOrder = async orderInfo => {
 
 const openOrder = async orderInfo => {
   // v1 create tx
-  console.log('openOrder', orderInfo); // todo remove dev item
   try {
     const results = await post(
       buildPath(),
       utils.buildPayload(bityMethods.createTransaction, orderInfo)
     );
-    console.log('openOrder', results); // todo remove dev item
 
     if (results.error) {
       throw Error(results.error.message);
@@ -103,12 +99,12 @@ const openOrder = async orderInfo => {
   }
 };
 
-const sendSignedMessage = async orderInfo => {
+const sendSignedMessage = async signedParts => {
   // v1 create tx
   try {
     const results = await post(
       buildPath(),
-      utils.buildPayload('sendSignedMessage', orderInfo)
+      utils.buildPayload('sendSignedMessage', signedParts)
     );
     if (results.error) {
       throw Error(results.error.message);
@@ -227,6 +223,7 @@ export {
   getExitRates,
   openOrder,
   getStatus,
+  sendSignedMessage,
   sendReceivedSmsCode,
   buildCyptoToFiatOrderData,
   getCyptoToFiatOrderDetails,
