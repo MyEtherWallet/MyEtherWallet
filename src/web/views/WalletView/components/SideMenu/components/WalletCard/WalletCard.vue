@@ -74,7 +74,7 @@ import PaperWallet from '@/components/Overlays/PaperWallet';
 import Blockie from '@/web/components/Blockie';
 import Address from './components/Address';
 import Tooltip from '@/web/components/Tooltip';
-import QRcodePopup from '@/web/components/QRcodePopup';
+import QRcodePopup from '@/web/components/Popups/QRcodePopup';
 
 export default {
   components: {
