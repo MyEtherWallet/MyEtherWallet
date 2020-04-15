@@ -107,38 +107,44 @@
               >
             </b-dd>
           </div>
-          <div
-            v-for="(v, k) in txtRecordInputs"
-            :key="k.id"
-            class="multi-coin-input-container"
-          >
-            <label for="updateResolver">{{ k | capitalize }}:</label>
-            <input
-              v-model="txtRecordInputs[k]"
-              v-validate="getInputType(k)"
-              :placeholder="k | capitalize"
-              :name="k"
-              type="text"
-            />
-            <i
-              :class="[
-                'validity-indication fa',
-                !!txtRecordInputs[k] &&
-                txtRecordInputs[k] !== '' &&
-                !errors.hasOwnProperty(`${k}`) &&
-                validateTxtValue(k)
-                  ? 'valid fa-check-circle-o'
-                  : 'error fa-times-circle-o'
-              ]"
-            />
-            <i
-              class="fa fa-lg fa-times"
-              @click="
-                () => {
-                  removeTxtInput(k);
-                }
-              "
-            />
+          <div v-for="(v, k) in txtRecordInputs" :key="k.id">
+            <div class="multi-coin-input-container">
+              <label for="updateResolver">{{ k | capitalize }}:</label>
+              <input
+                v-model="txtRecordInputs[k]"
+                v-validate="getInputType(k)"
+                :placeholder="k | capitalize"
+                :name="k"
+                type="text"
+              />
+              <i
+                :class="[
+                  'validity-indication fa',
+                  !!txtRecordInputs[k] &&
+                  txtRecordInputs[k] !== '' &&
+                  !errors.hasOwnProperty(`${k}`) &&
+                  validateTxtValue(k)
+                    ? 'valid fa-check-circle-o'
+                    : 'error fa-times-circle-o'
+                ]"
+              />
+              <i
+                class="fa fa-lg fa-times"
+                @click="
+                  () => {
+                    removeTxtInput(k);
+                  }
+                "
+              />
+            </div>
+            <p v-show="!validateTxtValue(k)" class="text-error">
+              {{
+                $t('ens.text-record-error', {
+                  value: txtRecordInputs[k],
+                  name: k
+                })
+              }}
+            </p>
           </div>
           <div class="multi-coin-submit-container">
             <button
