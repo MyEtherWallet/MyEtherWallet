@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import '@stripe/stripe-js';
 import { mapState } from 'vuex';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import { Toast } from '@/helpers';
