@@ -270,8 +270,7 @@ export default {
         .sendTransaction({
           from: this.account.address,
           to: this.paymentAddress,
-          value: '1' || this.web3.utils.toWei(this.paymentAmount.toString()),
-          gasPrice: this.web3.utils.toWei('8', 'gwei')
+          value: this.web3.utils.toWei(this.paymentAmount.toString())
         })
         .on('transactionHash', () => {
           this.pendingPayment = true;
