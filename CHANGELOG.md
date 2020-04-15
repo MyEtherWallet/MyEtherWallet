@@ -1,9 +1,13 @@
+
 ### Release v5.5.4
 
 ### Feature
 
 - Turn addresses to links in hardware modal [#2254](https://github.com/MyEtherWallet/MyEtherWallet/pull/2254)
 
+### Devop
+
+- Cx workflow [#2237](https://github.com/MyEtherWallet/MyEtherWallet/pull/2237)
 
 ### Release v5.5.3
 
