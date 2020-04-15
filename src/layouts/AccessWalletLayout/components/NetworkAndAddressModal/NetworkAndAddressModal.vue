@@ -203,7 +203,19 @@
                   />
                 </li>
                 <li class="monospace">
-                  {{ account.account.getChecksumAddressString() | concatAddr }}
+                  <a
+                    :href="
+                      getExplorrerLink(
+                        account.account.getChecksumAddressString()
+                      )
+                    "
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    {{
+                      account.account.getChecksumAddressString() | concatAddr
+                    }}
+                  </a>
                 </li>
                 <li class="monospace">{{ convertBalance(account.balance) }}</li>
                 <li class="user-input-checkbox">
@@ -340,6 +352,9 @@ export default {
       'addCustomPath',
       'decryptWallet'
     ]),
+    getExplorrerLink(addr) {
+      return this.network.type.blockExplorerAddr.replace('[[address]]', addr);
+    },
     locSwitchNetwork(network) {
       this.switchNetwork(network).then(() => {
         this.setWeb3Instance();
