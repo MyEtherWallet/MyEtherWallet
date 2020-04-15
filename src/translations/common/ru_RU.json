@@ -83,7 +83,7 @@
     "do-not-have": "Нет кошелька?",
     "passphrase": "Парольная фраза",
     "own": "Кошелек {nickname}",
-    "login": "Login to access your wallet!"
+    "login": "Войдите, чтобы получить доступ к вашему кошельку!"
   },
   "mewconnect": {
     "string": "MEWconnect",
@@ -124,7 +124,7 @@
   "optional": "Опция",
   "value": "Сумма",
   "network": "Сеть",
-  "current-network": "Current Network",
+  "current-network": "Текущая сеть",
   "addr": "Адрес",
   "via-contract-address": "Адрес контракта",
   "lowercase-addr": "адрес",
@@ -133,7 +133,7 @@
   "balance": {
     "string": "Баланс",
     "total": "Итоговый баланс",
-    "wallet": "Balance of your wallet"
+    "wallet": "Баланс вашего кошелька"
   },
   "notifications": {
     "no-notifications": "Нет уведомлений :(",
@@ -164,7 +164,7 @@
   "to": "Кому",
   "ok": "OK",
   "buy-eth": "Купить ETH",
-  "dont-have-eth": "Don't have ETH? Buy ETH!",
+  "dont-have-eth": "Нет ETH? Купите!",
   "security": "Безопасность",
   "status": "Статус",
   "time": "Время",
@@ -182,7 +182,7 @@
   "kitties": "kitties",
   "mewtopia": "MEWtopia",
   "language": "Язык",
-  "logout": "Logout",
+  "logout": "Выход",  "settings": "Настройки",
   "settings": "Настройки",
   "exit-dapp": "Выйти из Dapp"
 }
