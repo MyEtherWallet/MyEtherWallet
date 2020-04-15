@@ -41,6 +41,7 @@ const AddrResolver = {
     });
     vnode.context.$watch(binding.value, function (e) {
       address = e.trim();
+      vnode.context.avatar = '';
       actualProcess(address);
     });
     const removeElements = function () {
