@@ -223,7 +223,7 @@ export default class BitySwap {
 
   validSwap(fromCurrency, toCurrency) {
     if (this.isValidNetwork) {
-      if(toCurrency === 'BTC') return false;
+      if (toCurrency === 'BTC') return false;
       return this.rates.has(`${fromCurrency}/${toCurrency}`);
     }
     return false;
@@ -320,7 +320,7 @@ export default class BitySwap {
   getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
     for (const prop in this.currencies) {
       if (this.currencies[prop]) {
-        if(!this.disabledTo.includes(prop)){
+        if (!this.disabledTo.includes(prop)) {
           collectMapTo.set(prop, {
             symbol: prop,
             name: this.currencies[prop].name
@@ -421,8 +421,7 @@ export default class BitySwap {
     toCurrency,
     fromValue,
     toValue,
-    toAddress,
-    fromAddress
+    toAddress
   }) {
     if (this.maxCheck(fromCurrency, fromValue, toCurrency, toValue)) {
       const order = {

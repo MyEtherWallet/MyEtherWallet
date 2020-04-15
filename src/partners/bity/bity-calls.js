@@ -7,20 +7,6 @@ function buildPath() {
   return swapApiEndpoints.base + swapApiEndpoints.bity;
 }
 
-function cleanPhoneData(phoneNumber) {
-  let cleanedNumber = phoneNumber
-    .replace(')', '')
-    .replace('.', '')
-    .replace(' ', '')
-    .replace('(', '')
-    .replace(',', '')
-    .replace('-', '');
-  if (cleanedNumber.slice(0, 1) !== '+') {
-    cleanedNumber = '+' + cleanedNumber;
-  }
-  return cleanedNumber;
-}
-
 const getRates = async () => {
   try {
     const results = await post(
@@ -67,7 +53,6 @@ const getEstimate = async orderInfo => {
 };
 
 const createOrder = async orderInfo => {
-
   try {
     const results = await post(
       buildPath(),
@@ -150,7 +135,6 @@ const getStatus = async orderInfo => {
     utils.handleOrThrow(e);
   }
 };
-
 
 const sendReceivedSmsCode = async exitData => {
   try {

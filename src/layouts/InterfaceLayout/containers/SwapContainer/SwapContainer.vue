@@ -17,7 +17,11 @@
         @swapStarted="resetSwapState"
       />
 
-      <signature-modal ref="signatureModal" :signature="stringToSign" :sendSigned="sendSignedCallback" />
+      <signature-modal
+        ref="signatureModal"
+        :signature="stringToSign"
+        :send-signed="sendSignedCallback"
+      />
 
       <div class="title-block">
         <interface-container-title :title="$t('common.swap')" />
@@ -112,7 +116,10 @@
           </div>
         </div>
 
-        <div v-if="!isExitToFiat && isBityCryptoToCrypto(fromCurrency)" class="send-form">
+        <div
+          v-if="!isExitToFiat && isBityCryptoToCrypto(fromCurrency)"
+          class="send-form"
+        >
           <div class="the-form gas-amount">
             Amount will be sent to your current wallet address.
           </div>
@@ -542,8 +549,8 @@ export default {
     reset() {
       this.fromCurrency = 'BTC';
       this.toCurrency = 'ETH';
-      this.overrideFrom =  { name: 'Bitcoin', symbol: 'BTC' };
-      this.overrideTo =  { name: 'Ether', symbol: 'ETH' };
+      this.overrideFrom = { name: 'Bitcoin', symbol: 'BTC' };
+      this.overrideTo = { name: 'Ether', symbol: 'ETH' };
       this.fromValue = 1;
       this.overrideAddress = !this.overrideAddress;
       this.providerSelectedName = '';
@@ -888,7 +895,10 @@ export default {
               this.swapDetails = swapDetailsExit;
               this.openConfirmModal(this.swapDetails);
             };
-          } else if (this.isBityCryptoToCrypto() || this.isBityCryptoToCrypto('REP')) {
+          } else if (
+            this.isBityCryptoToCrypto() ||
+            this.isBityCryptoToCrypto('REP')
+          ) {
             this.stringToSign = this.swapDetails.dataForInitialization.messageToSign.body;
             // this.web3.eth
             //   .sign(this.swapDetails.dataForInitialization.messageToSign.body, this.account.address)
@@ -903,9 +913,18 @@ export default {
             //   });
             this.$refs.signatureModal.$refs.signatureModal.show();
             this.sendSignedCallback = async signed => {
-              await this.swap.extraActions(this.providerNames.bity, 'sendSigned', {signature: signed, signature_submission_url: this.swapDetails.dataForInitialization.messageToSign.signature_submission_url});
+              await this.swap.extraActions(
+                this.providerNames.bity,
+                'sendSigned',
+                {
+                  signature: signed,
+                  signature_submission_url: this.swapDetails
+                    .dataForInitialization.messageToSign
+                    .signature_submission_url
+                }
+              );
               this.openConfirmModal(this.swapDetails);
-            }
+            };
           } else {
             this.openConfirmModal(this.swapDetails);
           }
