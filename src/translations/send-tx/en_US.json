@@ -36,7 +36,7 @@
     "tx": "Signed Transaction",
     "raw": "Raw",
     "button-copy-cont": "Copy and Continue",
-    "scan":"Scan QR code",
+    "scan": "Scan QR code",
     "or": "or",
     "download": "Download JSON"
   },

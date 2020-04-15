@@ -14,7 +14,7 @@
           <div class="copy-container">
             <h4>{{ $t('swap.message-to-sign') }}</h4>
           </div>
-          {{signature}}
+          {{ signature }}
           <div class="button-container">
             <button
               class="submit-button large-round-button-green-filled clickable"
@@ -40,18 +40,18 @@ export default {
     },
     sendSigned: {
       type: Function,
-      default: function(){}
+      default: function () {}
     }
   },
   computed: {
     ...mapState('main', ['account', 'web3'])
   },
   methods: {
-    sign(){
+    sign() {
       try {
         this.web3.eth
           .sign(this.signature, this.account.address)
-          .then(signed =>{
+          .then(signed => {
             this.sendSigned(signed);
             this.$refs.signatureModal.hide();
           })
