@@ -8,7 +8,7 @@
         <br />
       </i18n>
       <div class="set-controller-submit">
-        <button @click="setController">{{ $t('ens.set-controller') }}</button>
+        <button @click="setController()">{{ $t('ens.set-controller') }}</button>
       </div>
     </div>
     <b-btn

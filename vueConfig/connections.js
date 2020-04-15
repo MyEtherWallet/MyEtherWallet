@@ -59,6 +59,5 @@ module.exports = [
   'http://localhost:8178',
   'ws://127.0.0.1:8178',
   'https://viewm.moonicorn.network:443',
-  'https://localhost:1991', // server for bcvault
-  'https://img.mewapi.io:443'
+  'https://localhost:1991' // server for bcvault
 ];
