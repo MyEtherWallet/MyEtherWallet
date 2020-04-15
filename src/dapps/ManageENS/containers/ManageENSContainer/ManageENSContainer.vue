@@ -125,9 +125,7 @@
                 'validity-indication fa',
                 !!txtRecordInputs[k] &&
                 txtRecordInputs[k] !== '' &&
-                !errors.hasOwnProperty(`${k}`)
-                  ? 'valid fa-check-circle-o'
-                  : 'error fa-times-circle-o',
+                !errors.hasOwnProperty(`${k}`) &&
                 validateTxtValue(k)
                   ? 'valid fa-check-circle-o'
                   : 'error fa-times-circle-o'
