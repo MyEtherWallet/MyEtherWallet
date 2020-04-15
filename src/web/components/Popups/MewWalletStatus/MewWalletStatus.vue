@@ -1,9 +1,9 @@
 <template>
-  <v-tooltip v-model="show" bottom open-delay="0">
+  <v-tooltip open-on-click :open-on-hover="false" bottom open-delay="0">
     <template v-slot:activator="{ on }">
-      <div v-on="on"><slot /></div>
+      <div class="user-select--none" v-on="on"><slot /></div>
     </template>
-    <v-card width="180px" class="px-1 py-3" flat>
+    <v-card color="transparent" width="180px" class="px-1 py-3" flat>
       <div class="d-flex justify-space-between mb-1">
         <div>Status:</div>
         <div class="emerald--text font-weight-bold">Connected</div>
@@ -28,9 +28,9 @@ import StdButton from '@/web/components/StdButton';
 
 export default {
   components: { StdButton },
-  props: { open: { default: false, type: Boolean } },
+  props: {},
   data() {
-    return { show: false };
+    return {};
   }
 };
 </script>

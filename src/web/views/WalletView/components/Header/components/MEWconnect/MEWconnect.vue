@@ -1,6 +1,6 @@
 <template>
   <div>
-    <MewWalletStatus :open="false">
+    <MewWalletStatus>
       <div class="d-flex align-center cursor--pointer">
         <img src="@/assets/images/icons/icon-mew-connect.svg" />
         <div class="mew-connect-text ml-1">
