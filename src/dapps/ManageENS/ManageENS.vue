@@ -246,41 +246,48 @@ export default {
         }
       }
     },
-    async setController(toAddress = '', onlyGenerate = false) {
+    setController(toAddress = '', onlyGenerate = false) {
       const actualToAddress =
         toAddress === '' ? this.account.address : toAddress;
       const setControllerTx = {
         from: this.account.address,
-        to: this.network.type.ens.registry,
-        data: this.ensRegistryContract.methods
-          .setOwner(this.nameHash, actualToAddress)
+        to: this.registrarAddress,
+        data: this.registrarContract.methods
+          .reclaim(this.labelHash, actualToAddress)
           .encodeABI(),
-        value: 0,
-        gas: 100000
+        value: 0
       };
 
       if (onlyGenerate) {
         return setControllerTx;
       }
-      this.web3.sendTransaction(setControllerTx).catch(err => {
+      this.web3.eth.sendTransaction(setControllerTx).catch(err => {
         Toast.responseHandler(err, false);
       });
     },
-    async transferDomain(toAddress) {
-      const registryTransferTx = this.setController(toAddress, true);
+    transferDomain(toAddress) {
       if (this.registrarType === REGISTRAR_TYPES.FIFS) {
-        this.web3.eth.sendTransaction(registryTransferTx).catch(err => {
-          Toast.responseHandler(err, false);
-        });
+        this.web3.eth
+          .sendTransaction({
+            from: this.account.address,
+            to: this.network.type.ens.registry,
+            data: this.ensRegistryContract.methods
+              .setOwner(this.nameHash, toAddress)
+              .encodeABI(),
+            value: 0
+          })
+          .catch(err => {
+            Toast.responseHandler(err, false);
+          });
       } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
+        const registryTransferTx = this.setController(toAddress, true);
         const safeTransferTx = {
           from: this.account.address,
           to: this.registrarAddress,
           data: this.registrarContract.methods
-            .safeTransferFrom(this.account.address, toAddress, this.labelHash)
+            .transferFrom(this.account.address, toAddress, this.labelHash)
             .encodeABI(),
-          value: 0,
-          gas: 100000
+          value: 0
         };
         this.web3.mew.sendBatchTransactions(
           [registryTransferTx, safeTransferTx].filter(Boolean)
@@ -405,7 +412,6 @@ export default {
           .setResolver(this.nameHash, this.publicResolverAddress)
           .encodeABI(),
         value: 0,
-        gas: 100000,
         gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
       };
       web3.mew
