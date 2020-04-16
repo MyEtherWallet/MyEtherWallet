@@ -11,9 +11,9 @@
     depressed
     dark
     :class="[
-      noMinWidth == true ? '' : 'btn-min-width',
-      fontclass,
-      fullwidth == true ? 'btn-full-width' : ''
+      noMinWidth ? '' : 'btn-min-width',
+      fullwidth ? 'btn-full-width' : '',
+      fontclass
     ]"
     :disabled="disabled"
     :to="to"
@@ -31,7 +31,7 @@ export default {
     to: { default: () => {}, type: Object },
     href: { default: '', type: String },
     disabled: { default: false, type: Boolean },
-    noMinWidth: { default: true, type: Boolean },
+    noMinWidth: { default: false, type: Boolean },
     fullwidth: { default: false, type: Boolean },
     size: { default: '', type: String },
     height: { default: '', type: String },
