@@ -18,6 +18,28 @@
   }
 }
 
+.set-controller-container {
+  padding: 15px;
+  border: 1px solid $light-orange-1;
+  background-color: $light-orange-3;
+  color: $light-orange-1;
+  border-radius: 5px;
+  text-align: center;
+  margin-top: 10px;
+
+  b {
+    color: $light-orange-1;
+  }
+
+  .set-controller-submit {
+    @extend .submit-container;
+
+    button {
+      width: 250px !important;
+    }
+  }
+}
+
 .inputs-container {
   display: flex;
   flex-direction: column;
@@ -84,6 +106,10 @@ label {
   .error {
     color: $red-1;
   }
+}
+
+.text-error {
+  color: $red-1;
 }
 
 .submit-container {
