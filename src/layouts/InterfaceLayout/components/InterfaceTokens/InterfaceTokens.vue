@@ -45,6 +45,9 @@
               v-for="(token, index) in localTokens"
               :key="token.symbol + index"
             >
+              <td>
+                <img :src="token.icon" />
+              </td>
               <td>{{ token.symbol }}</td>
               <td
                 v-if="token.balance === 'Load' && online"
