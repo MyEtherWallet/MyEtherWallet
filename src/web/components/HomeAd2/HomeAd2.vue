@@ -8,7 +8,11 @@
           </h2>
           <p class="white--text ma-0">
             Still don't know how to do it? Go to
-            <a href="https://kb.myetherwallet.com/" target="_blank">
+            <a
+              class="color--inherit"
+              href="https://kb.myetherwallet.com/"
+              target="_blank"
+            >
               Help center </a
             >.
           </p>
@@ -16,8 +20,8 @@
         <v-spacer />
         <a href="/" class="text-decoration--none">
           <StdButton
-            class="standard-button"
-            buttonclass="button--white"
+            class="standard-button emerald--text"
+            color="white"
             :to="{ name: 'HomeCreateWallet', query: {} }"
           >
             <img

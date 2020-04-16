@@ -56,9 +56,6 @@ html {
 .monospace {
   font-family: monospace !important;
 }
-a {
-  color: inherit !important;
-}
 i {
   font-family: 'Material Icons' !important;
 }
@@ -96,6 +93,9 @@ h5 {
   font-weight: 400;
 }
 /*========== Text ==========*/
+.color--inherit {
+  color: inherit !important;
+}
 .line-height--0 {
   line-height: 0 !important;
 }

@@ -8,8 +8,8 @@
     :large="size === 'large' ? true : false"
     :small="size === 'small' ? true : false"
     :x-small="size === 'x-small' ? true : false"
-    dark
     depressed
+    dark
     :class="[
       noMinWidth == true ? '' : 'btn-min-width',
       fontclass,
