@@ -172,7 +172,8 @@ export default {
           text: 'BitBox',
           disabled: false,
           msg: '',
-          link: 'https://shiftcrypto.ch/?ref=mew'
+          // link: 'https://shiftcrypto.ch/?ref=MEW'
+          link: ''
         },
         {
           name: XWALLET_TYPE,

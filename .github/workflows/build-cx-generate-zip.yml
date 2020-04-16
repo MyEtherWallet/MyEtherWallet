@@ -1,12 +1,15 @@
-name: generate cx zip
+name: build cx and generate zip
 
 on:
   push:
-    branches:
-      - '**cx**'
+    branches-ignore:
+      - 'gh-pages'
+      - 'gh-pages-history'
+    tags-ignore:
+      - '*'
 
 jobs:
-  develop-build:
+  cx-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -30,9 +33,10 @@ jobs:
         run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
 
       - name: build
-        run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:mewcx"
+        run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "NODE_OPTIONS=--max-old-space-size=8192 npm run build:mewcx"
 
       - name: generate zip for cx
+        if: contains(github.ref, 'cx')
         env:
           AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
