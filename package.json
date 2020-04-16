@@ -118,7 +118,7 @@
     "ethereumjs-util": "6.2.0",
     "ethereumjs-wallet": "0.6.3",
     "ethjs-unit": "0.1.6",
-    "hdkey": "1.1.1",
+    "hdkey": "1.1.2",
     "i18n-iso-countries": "5.1.0",
     "iban": "0.0.14",
     "imagemin-mozjpeg": "8.0.0",
