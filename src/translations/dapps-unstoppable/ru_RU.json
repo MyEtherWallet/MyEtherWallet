@@ -1,0 +1,59 @@
+{
+  "title": "Unstoppable Domains",
+  "about-unstoppable": "Поменять криптографический адрес на читаемое имя.",
+  "dapp-desc": "Купить домен .crypto",
+  "search-domain-desc": "Купить домен .crypto",
+  "search-domain-prompt": "Найти свой домен блокчейна",
+  "stripe-email-prompt": "Адрес электронной почты",
+  "stripe-card-prompt": "Данные карты",
+  "pay-with-credit-card": "Pay with Credit Card",
+  "pay-with-crypto": "Pay with Crypto",
+  "send-payment": "Отправить платеж",
+  "ethereum-payment-address": "Адрес оплаты Ethereum",
+  "payment-amount": "Сумма платежа",
+  "pending-crypto-payment": "Pending Payment: {confirmations} of {confirmationsRequired} confirmations",
+  "secured-by-stripe": "Безопасная оплата с поддержкой Stripe",
+  "insufficient-balance": "Недостаточный баланс: добавьте больше ETH в кошелек или оплатите кредитной картой",
+  "pay": "Оплатить",
+  "confirm-payment": "Вы собираетесь заплатить ${amount} за {domain}",
+  "error": {
+    "stripe-payment": "Оплата не прошла, пожалуйста повторите попытку позже",
+    "something-went-wrong": "Что-то пошло не так. Попробуйте еще раз."
+  },
+  "warning": {
+    "not-enough-char": "Доменное имя меньше 6 символов.",
+    "invalid-symbol": "Недопустимые символы на домене. Пожалуйста, используйте буквенно-цифровые символы или '-'"
+  },
+  "toast": {
+    "success-register": "Регистрация выполнена успешнo!",
+    "domain-unavailable": "{domain} недоступен"
+  },
+  "check-domain": "Проверить домен",
+  "update": "Обновление",
+  "ph": {
+    "six-char": "Please enter at least 6 characters",
+    "stripe-email-placeholder": "Your email"
+  },
+  "view-transfer-transaction": "Вы можете увидеть транзакцию перевода на",
+  "continue": "Продолжить",
+  "congratulations": "Поздравляем!",
+  "transfer-pending": "Перевод в ожидании",
+  "domain-transferring-one": "Домен",
+  "domain-transferring-two": "is being transferred to your wallet with address: {address}!",
+  "transfer-complete": "has been successfully transferred to your wallet",
+  "manage-on-one": "This process may take up to 5-10 minutes. You may stay on this page to receive a confirmation when the transaction has been completed. View and manage your domain on",
+  "manage-on-two": "by creating an account and connecting your wallet!",
+  "complete-manage-on-one": "View and manage your domain on",
+  "is-available": "Домен доступен",
+  "not-available": "{domain} еще не доступен!",
+  "manage": "Менеджер",
+  "buyDomain": "Buy Domain",
+  "already-owned": "{domain} уже имеет владельца.",
+  "search-for-another": "Search for another domain",
+  "owner": "Владелец",
+  "result": "Результат",
+  "unavailable": "Unavailable",
+  "buy": "Купить",
+  "your-balance": "Your balance",
+  "address": "Адрес"
+}
