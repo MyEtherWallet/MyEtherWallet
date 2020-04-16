@@ -199,7 +199,18 @@
                         height="30px"
                       />
                     </li>
-                    <li class="monospace">
+                    <li class="monospace address-icon-container">
+                      {{
+                        account.account.getChecksumAddressString() | concatAddr
+                      }}
+                      <input
+                        :ref="`addrInput${account.index}`"
+                        :value="account.account.getChecksumAddressString()"
+                      />
+                      <i
+                        class="fa fa-files-o"
+                        @click="copyAddress(`addrInput${account.index}`)"
+                      />
                       <a
                         :href="
                           getExplorrerLink(
@@ -209,10 +220,7 @@
                         rel="noopener noreferrer"
                         target="_blank"
                       >
-                        {{
-                          account.account.getChecksumAddressString()
-                            | concatAddr
-                        }}
+                        <i class="fa fa-share-square-o" />
                       </a>
                     </li>
                     <li class="monospace">
@@ -389,6 +397,11 @@ export default {
       'setWeb3Instance',
       'removeCustomPath'
     ]),
+    copyAddress(ref) {
+      this.$refs[ref][0].select();
+      document.execCommand('copy');
+      Toast.responseHandler(this.$t('common.copied'), Toast.SUCCESS);
+    },
     getExplorrerLink(addr) {
       return this.network.type.blockExplorerAddr.replace('[[address]]', addr);
     },
