@@ -42,14 +42,14 @@ const affiliates = [
     currency: '$',
     logo: 'finney'
   },
-  {
-    text: 'footer.bitbox',
-    price: '44.00',
-    description: 'buyHardwareWallet.desc.bitbox',
-    href: 'https://shiftcrypto.ch/?ref=MEW',
-    currency: '€',
-    logo: 'bitbox'
-  },
+  // {
+  //   text: 'footer.bitbox',
+  //   price: '44.00',
+  //   description: 'buyHardwareWallet.desc.bitbox',
+  //   href: 'https://shiftcrypto.ch/?ref=MEW',
+  //   currency: '€',
+  //   logo: 'bitbox'
+  // },
   {
     text: 'footer.trezor',
     price: '83.49',

@@ -1,6 +1,16 @@
 <template>
   <div class="manage-ens-container">
     <h3>{{ $t('ens.manage') }} {{ domainName }}</h3>
+    <div v-show="!isController" class="set-controller-container">
+      <i18n path="ens.controller-text" tag="div">
+        <b slot="domain">{{ domainName }}</b
+        ><b slot="addr">{{ account.address }}</b>
+        <br />
+      </i18n>
+      <div class="set-controller-submit">
+        <button @click="setController()">{{ $t('ens.set-controller') }}</button>
+      </div>
+    </div>
     <b-btn
       v-show="resolverMultiCoinSupport"
       v-b-toggle.multicoinsec
@@ -59,7 +69,10 @@
           </div>
           <div class="multi-coin-submit-container">
             <button
-              :class="isValidAddresses ? '' : 'disabled'"
+              :class="[
+                isValidAddresses ? '' : 'disabled',
+                isController ? '' : 'disabled'
+              ]"
               @click.prevent="checkAndSendCurrency"
             >
               {{ $t('common.save') }}
@@ -94,41 +107,51 @@
               >
             </b-dd>
           </div>
-          <div
-            v-for="(v, k) in txtRecordInputs"
-            :key="k.id"
-            class="multi-coin-input-container"
-          >
-            <label for="updateResolver">{{ k | capitalize }}:</label>
-            <input
-              v-model="txtRecordInputs[k]"
-              v-validate="getValidation(k)"
-              :placeholder="k | capitalize"
-              :name="k"
-              type="text"
-            />
-            <i
-              :class="[
-                'validity-indication fa',
-                !!txtRecordInputs[k] &&
-                txtRecordInputs[k] !== '' &&
-                !errors.hasOwnProperty(`${k}`)
-                  ? 'valid fa-check-circle-o'
-                  : 'error fa-times-circle-o'
-              ]"
-            />
-            <i
-              class="fa fa-lg fa-times"
-              @click="
-                () => {
-                  removeTxtInput(k);
-                }
-              "
-            />
+          <div v-for="(v, k) in txtRecordInputs" :key="k.id">
+            <div class="multi-coin-input-container">
+              <label for="updateResolver">{{ k | capitalize }}:</label>
+              <input
+                v-model="txtRecordInputs[k]"
+                v-validate="getInputType(k)"
+                :placeholder="k | capitalize"
+                :name="k"
+                type="text"
+              />
+              <i
+                :class="[
+                  'validity-indication fa',
+                  !!txtRecordInputs[k] &&
+                  txtRecordInputs[k] !== '' &&
+                  !errors.hasOwnProperty(`${k}`) &&
+                  validateTxtValue(k)
+                    ? 'valid fa-check-circle-o'
+                    : 'error fa-times-circle-o'
+                ]"
+              />
+              <i
+                class="fa fa-lg fa-times"
+                @click="
+                  () => {
+                    removeTxtInput(k);
+                  }
+                "
+              />
+            </div>
+            <p v-show="!validateTxtValue(k)" class="text-error">
+              {{
+                $t('ens.text-record-error', {
+                  value: txtRecordInputs[k],
+                  name: k
+                })
+              }}
+            </p>
           </div>
           <div class="multi-coin-submit-container">
             <button
-              :class="validTextRecords ? 'disabled' : ''"
+              :class="[
+                validTextRecords ? 'disabled' : '',
+                isController ? '' : 'disabled'
+              ]"
               @click.prevent="checkAndSendTxtRecs"
             >
               {{ $t('common.save') }}
@@ -163,7 +186,7 @@
           </div>
           <div class="submit-container">
             <button
-              :class="!isAddress(transferTo) ? 'disabled' : ''"
+              :class="[!isAddress(transferTo) ? 'disabled' : '']"
               type="submit"
               @click.prevent="transferDomain(transferTo)"
             >
@@ -224,14 +247,27 @@ export default {
       type: Object,
       default: function () {}
     },
+    setController: {
+      type: Function,
+      default: function () {}
+    },
     txtRecords: {
       type: Object,
       default: function () {}
+    },
+    isController: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     const newCoinsCopy = this.copySupported();
     const newtxtRecords = {};
+    const txtValidators = {};
+
+    supportedTxt.forEach(item => {
+      txtValidators[item.name] = item.validate;
+    });
     for (const key in newCoinsCopy) {
       if (
         newCoinsCopy[key].hasOwnProperty('value') &&
@@ -245,7 +281,6 @@ export default {
         newtxtRecords[key] = this.txtRecords[key];
       }
     }
-
     return {
       transferTo: '',
       multiCoinSupport: false,
@@ -254,11 +289,12 @@ export default {
       selectedCurrency: 'ETH',
       selectedText: 'Email',
       hasError: false,
-      txtRecordInputs: newtxtRecords
+      txtRecordInputs: newtxtRecords,
+      txtValidators: txtValidators
     };
   },
   computed: {
-    ...mapState('main', ['web3']),
+    ...mapState('main', ['web3', 'account']),
     isValidAddresses() {
       for (const type in this.currencyInputs) {
         if (
@@ -278,7 +314,11 @@ export default {
     },
     validTextRecords() {
       for (const type in this.txtRecordInputs) {
-        if (this.txtRecordInputs[type] && this.txtRecordInputs[type] !== '')
+        if (
+          this.txtRecordInputs[type] &&
+          this.txtRecordInputs[type] !== '' &&
+          !this.txtValidators[type](this.txtRecordInputs[type])
+        )
           return false;
       }
       return true;
@@ -309,7 +349,7 @@ export default {
         return true;
       return type.value !== '' && !type.validator.validate(type.value);
     },
-    getValidation(name) {
+    getInputType(name) {
       const foundObj = supportedTxt.find(item => {
         return item.name.toLowerCase() === name.toLowerCase();
       });
@@ -322,6 +362,9 @@ export default {
         default:
           return 'required';
       }
+    },
+    validateTxtValue(name) {
+      return this.txtValidators[name](this.txtRecordInputs[name]);
     },
     copySupported() {
       const newObj = utils._.map(this.supportedCoins, utils._.clone);
@@ -370,36 +413,40 @@ export default {
       this.txtRecordInputs = newObj;
     },
     checkAndSendTxtRecs() {
-      const changed = {};
+      if (this.domainName !== '.') {
+        const changed = {};
 
-      const currencyInputsObj = Object.assign({}, this.txtRecordInputs);
-      const currentSupported = Object.assign({}, this.txtRecords);
-      Object.keys(currentSupported).forEach(item => {
-        if (
-          currencyInputsObj[item] &&
-          currentSupported[item] !== currencyInputsObj[item]
-        ) {
-          changed[item] = currencyInputsObj[item];
+        const currencyInputsObj = Object.assign({}, this.txtRecordInputs);
+        const currentSupported = Object.assign({}, this.txtRecords);
+        Object.keys(currentSupported).forEach(item => {
+          if (
+            currencyInputsObj[item] &&
+            currentSupported[item] !== currencyInputsObj[item]
+          ) {
+            changed[item] = currencyInputsObj[item];
+          }
+        });
+        if (Object.keys(changed).length > 0) {
+          this.setRecord(changed);
         }
-      });
-      if (Object.keys(changed).length > 0) {
-        this.setRecord(changed);
       }
     },
     checkAndSendCurrency() {
-      const changed = [];
-      const currencyInputsObj = Object.assign({}, this.currencyInputs);
-      const currentSupported = Object.assign({}, this.supportedCoins);
-      Object.keys(currentSupported).forEach(item => {
-        if (
-          currencyInputsObj[item] &&
-          currentSupported[item].value !== currencyInputsObj[item].value
-        ) {
-          changed.push(currencyInputsObj[item]);
+      if (this.domainName !== '.') {
+        const changed = [];
+        const currencyInputsObj = Object.assign({}, this.currencyInputs);
+        const currentSupported = Object.assign({}, this.supportedCoins);
+        Object.keys(currentSupported).forEach(item => {
+          if (
+            currencyInputsObj[item] &&
+            currentSupported[item].value !== currencyInputsObj[item].value
+          ) {
+            changed.push(currencyInputsObj[item]);
+          }
+        });
+        if (changed.length > 0) {
+          this.setMultiCoin(changed);
         }
-      });
-      if (changed.length > 0) {
-        this.setMultiCoin(changed);
       }
     }
   }
