@@ -49,7 +49,7 @@ export default {
 
 .content-container {
   background-image: url(~@/assets/images/backgrounds/bg-circle-triangle.png);
-  background-position: right 60px bottom;
+  background-position: right 60px bottom -1px;
   background-size: 245px;
 }
 
