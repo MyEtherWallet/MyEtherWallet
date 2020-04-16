@@ -24,7 +24,11 @@
             <v-list-item class="px-0">Help Center</v-list-item>
             <v-list-item class="px-0">Support</v-list-item>
             <v-list-item class="px-0">
-              <a href="https://www.mewtopia.com/" target="_blank">
+              <a
+                class="color--inherit"
+                href="https://www.mewtopia.com/"
+                target="_blank"
+              >
                 MEWtopia
               </a>
             </v-list-item>
@@ -34,17 +38,26 @@
           <div class="subtitle-1 font-weight-bold mb-1">Hardware Wallets</div>
           <v-list>
             <v-list-item class="px-0">
-              <a href="https://www.ledger.com/?r=fa4b" target="_blank">
+              <a
+                class="color--inherit"
+                href="https://www.ledger.com/?r=fa4b"
+                target="_blank"
+              >
                 Ledger Wallet
               </a>
             </v-list-item>
             <v-list-item class="px-0">
-              <a href="https://shiftcrypto.ch/?ref=mew" target="_blank">
+              <a
+                class="color--inherit"
+                href="https://shiftcrypto.ch/?ref=mew"
+                target="_blank"
+              >
                 Digital Bitbox
               </a>
             </v-list-item>
             <v-list-item class="px-0">
               <a
+                class="color--inherit"
                 href="https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site"
                 target="_blank"
               >
@@ -53,6 +66,7 @@
             </v-list-item>
             <v-list-item class="px-0">
               <a
+                class="color--inherit"
                 href="https://trezor.io/?offer_id=12&aff_id=2029"
                 target="_blank"
               >
@@ -60,12 +74,17 @@
               </a>
             </v-list-item>
             <v-list-item class="px-0">
-              <a href="http://lddy.no/a4im" target="_blank">
+              <a
+                class="color--inherit"
+                href="http://lddy.no/a4im"
+                target="_blank"
+              >
                 KeepKey
               </a>
             </v-list-item>
             <v-list-item class="px-0">
               <a
+                class="color--inherit"
                 href="http://shop.sirinlabs.com/?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf"
                 target="_blank"
               >
@@ -74,6 +93,7 @@
             </v-list-item>
             <v-list-item class="px-0">
               <a
+                class="color--inherit"
                 href="https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate"
                 target="_blank"
               >
@@ -93,7 +113,7 @@
             long way towards making that possible.
           </p>
           <a
-            class="d-flex align-center mb-3"
+            class="color--inherit d-flex align-center mb-3"
             target="_blank"
             href="https://etherscan.io/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
           >
@@ -109,7 +129,7 @@
             </div>
           </a>
           <a
-            class="d-flex align-center"
+            class="color--inherit d-flex align-center"
             target="_blank"
             href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
           >
@@ -130,15 +150,26 @@
         <div class="d-flex align-center mx-n6">
           <div class="d-flex align-center line-height-small">
             <div class="px-6 border-right">
-              <a href="mailto:support@myetherwallet.com" target="_blank">
+              <a
+                class="color--inherit"
+                href="mailto:support@myetherwallet.com"
+                target="_blank"
+              >
                 Feedback
               </a>
             </div>
             <div class="px-6 border-right">
-              <a href="https://www.myetherwallet.com/privacy-policy">Privacy</a>
+              <a
+                class="color--inherit"
+                href="https://www.myetherwallet.com/privacy-policy"
+                >Privacy</a
+              >
             </div>
             <div class="px-6">
-              <a href="https://www.myetherwallet.com/terms-and-conditions">
+              <a
+                class="color--inherit"
+                href="https://www.myetherwallet.com/terms-and-conditions"
+              >
                 Terms
               </a>
             </div>

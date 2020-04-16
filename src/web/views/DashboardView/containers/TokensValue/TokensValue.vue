@@ -76,12 +76,13 @@
           </td>
           <td>
             <StdButton
-              buttonclass="button--green-border"
+              outlined
               size="small"
-              :minwidth="false"
+              no-min-width
               fontclass="font-weight-regular"
-              >Trade</StdButton
             >
+              Trade
+            </StdButton>
           </td>
         </tr>
         <tr>
@@ -117,12 +118,13 @@
           </td>
           <td>
             <StdButton
-              buttonclass="button--green-border"
+              outlined
               size="small"
-              :minwidth="false"
+              no-min-width
               fontclass="font-weight-regular"
-              >Trade</StdButton
             >
+              Trade
+            </StdButton>
           </td>
         </tr>
         <tr>
@@ -158,12 +160,13 @@
           </td>
           <td>
             <StdButton
-              buttonclass="button--green-border"
+              outlined
               size="small"
-              :minwidth="false"
+              no-min-width
               fontclass="font-weight-regular"
-              >Trade</StdButton
             >
+              Trade
+            </StdButton>
           </td>
         </tr>
         <tr>
@@ -199,12 +202,13 @@
           </td>
           <td>
             <StdButton
-              buttonclass="button--green-border"
+              outlined
               size="small"
-              :minwidth="false"
+              no-min-width
               fontclass="font-weight-regular"
-              >Trade</StdButton
             >
+              Trade
+            </StdButton>
           </td>
         </tr>
       </tbody>
