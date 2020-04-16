@@ -20,7 +20,7 @@
   "edit": "編輯",
   "cancel": "取消",
   "close": "关闭",
-  "submit": "提交",
+  "submit": "Submit",
   "more": "更多",
   "yes": "是的",
   "no": "取消",
@@ -183,5 +183,6 @@
   "mewtopia": "MEWtopia",
   "language": "Language",
   "logout": "Logout",
-  "settings": "Settings"
+  "settings": "Settings",
+  "exit-dapp": "Exit Dapp"
 }
