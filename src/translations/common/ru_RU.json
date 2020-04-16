@@ -20,7 +20,7 @@
   "edit": "Редактировать",
   "cancel": "Отменить",
   "close": "Закрыть",
-  "submit": "Отправить",
+  "submit": "Submit",
   "more": "Еще",
   "yes": "Да",
   "no": "Нет",
@@ -183,5 +183,6 @@
   "mewtopia": "MEWtopia",
   "language": "Язык",
   "logout": "Выход",
-  "settings": "Настройки"
+  "settings": "Настройки",
+  "exit-dapp": "Выйти из Dapp"
 }

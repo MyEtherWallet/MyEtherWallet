@@ -1,12 +1,19 @@
+### Feature
+
+- Turn addresses to links in hardware modal [#2254](https://github.com/MyEtherWallet/MyEtherWallet/pull/2254)
 
 ### Release v5.5.4
 
 ### Feature
 
-- Turn addresses to links in hardware modal [#2254](https://github.com/MyEtherWallet/MyEtherWallet/pull/2254)
+- ENS Avatar [#2238](https://github.com/MyEtherWallet/MyEtherWallet/pull/2238)
+- Unstoppable domain buy domain [#2229] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2229)
 
 ### Devop
 
+- Update ATH node [#2189](https://github.com/MyEtherWallet/MyEtherWallet/pull/2189)
+- Update EthCore node [#2251](https://github.com/MyEtherWallet/MyEtherWallet/pull/2251)
+- Update packages [#2254](https://github.com/MyEtherWallet/MyEtherWallet/pull/2254)
 - Cx workflow [#2237](https://github.com/MyEtherWallet/MyEtherWallet/pull/2237)
 
 ### Release v5.5.3

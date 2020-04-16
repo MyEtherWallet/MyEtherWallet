@@ -152,7 +152,7 @@
   "earn-with-dai": "Заработайте процент на вашем DAI",
   "dai-stable-coin": "DAI Stablecoin",
   "what-is-dashes-vault": "Значение -- показывает, что этот Vault не имеет DAI, поэтому эти расчеты имеют значение только тогда, когда этот Vault создал DAI",
-  "load-operations": "Загрузка: Операции Разнотипного Залога",
+  "load-operations": "Загрузка: Операции Разнотипного Залога\n",
   "load-types": "Загрузка: Варианты разнотипного залога",
   "approve-dai": "Утвердить DAI",
   "approve-maker": "Утвердить Maker",
