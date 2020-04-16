@@ -1,6 +1,6 @@
 <template>
   <div class="ambrpay-container">
-    <back-button :title="$t('dappsAmbrpay.exit-dapp')" />
+    <back-button :title="$t('common.exit-dapp')" />
     <b-container class="pl-5 pr-5">
       <div class="ambrpay-header mt-5">
         <div class="title-container">

@@ -1,5 +1,10 @@
+### Feature
+
+- Unstoppable domain buy domain [#2229] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2229)
+
 ### Devop
 
+- Update packages [#2254](https://github.com/MyEtherWallet/MyEtherWallet/pull/2254)
 - Cx workflow [#2237](https://github.com/MyEtherWallet/MyEtherWallet/pull/2237)
 
 ### Release v5.5.3
