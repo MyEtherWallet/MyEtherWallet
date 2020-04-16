@@ -167,6 +167,8 @@ import {
   MNEMONIC as MNEMONIC_TYPE,
   BCVAULT as BC_VAULT
 } from '@/wallets/bip44/walletTypes';
+
+import mewlogosmall from '@/assets/images/logo-small.png';
 export default {
   name: 'Interface',
   components: {
@@ -535,6 +537,15 @@ export default {
           return 0;
         })
         .map(token => {
+          let foundToken;
+          if (!token.hasOwnProperty('logo')) {
+            foundToken = this.network.type.tokens.find(foundItem => {
+              return (
+                toChecksumAddress(foundItem.address) ===
+                toChecksumAddress(token.address)
+              );
+            });
+          }
           const balanceCheck = new BigNumber(token.balance);
           const balance = balanceCheck.isNaN()
             ? token.balance
@@ -546,7 +557,12 @@ export default {
             email: token.email,
             name: token.name,
             symbol: token.symbol,
-            website: token.website
+            website: token.website,
+            icon: token.hasOwnProperty('logo')
+              ? token.logo.src
+              : foundToken && foundToken.hasOwnProperty('logo')
+              ? `https://img.mewapi.io/?image=${foundToken.logo.src}}&width=50&height=50&fit=scale-down`
+              : mewlogosmall
           };
           return convertedToken;
         });
