@@ -1,11 +1,10 @@
 <template>
   <div class="text-center">
-    <v-dialog v-model="dialog" width="500">
+    <v-dialog v-model="dialog" :width="width">
       <template v-slot:activator="{ on }">
-        <slot name="opener" />
-        <v-btn color="red lighten-2" dark v-on="on">
-          Click Me
-        </v-btn>
+        <div v-on="on">
+          <slot name="opener" />
+        </div>
       </template>
 
       <v-card>
@@ -17,9 +16,17 @@
 
 <script>
 export default {
-  props: {},
+  props: {
+    width: { default: '500px', type: String },
+    show: { default: true, type: Boolean }
+  },
   data() {
-    return {};
+    return { dialog: false };
+  },
+  watch: {
+    show(val) {
+      this.dialog = val;
+    }
   }
 };
 </script>

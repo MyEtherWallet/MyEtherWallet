@@ -22,21 +22,23 @@
         </div>
       </v-list-item>
       <v-list-item>
-        <div class="cursor--pointer d-flex align-center">
-          <img
-            width="26"
-            height="26"
-            src="@/assets/images/icons/icon-logout-disable.png"
-            class="mr-3"
-          />
-          <img
-            width="23"
-            height="23"
-            src="@/assets/images/icons/icon-logout-enable.png"
-            class="mr-3"
-          />
-          <div>Log out</div>
-        </div>
+        <LogoutDialog>
+          <div class="cursor--pointer d-flex align-center">
+            <img
+              width="26"
+              height="26"
+              src="@/assets/images/icons/icon-logout-disable.png"
+              class="mr-3"
+            />
+            <img
+              width="23"
+              height="23"
+              src="@/assets/images/icons/icon-logout-enable.png"
+              class="mr-3"
+            />
+            <div>Log out</div>
+          </div>
+        </LogoutDialog>
       </v-list-item>
     </v-list>
 
@@ -46,9 +48,10 @@
 
 <script>
 import Settings from '@/components/Overlays/Settings';
+import LogoutDialog from '@/components/Dialogs/LogoutDialog';
 
 export default {
-  components: { Settings },
+  components: { Settings, LogoutDialog },
   data() {
     return {
       openSettings: false
