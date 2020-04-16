@@ -73,7 +73,7 @@
   },
   "mnemonic": {
     "string": "Мнемоническая фраза",
-    "value": "Слов",
+    "value": "Сумма",
     "modal": {
       "title": "Доступ с помощью мнемонической фразы",
       "text": "Пожалуйста, введите вашу мнемоническую фразу."
@@ -123,8 +123,8 @@
   "add-custom-path": "Добавить кастомный путь",
   "interact-addr": "Адрес для взаимодействия",
   "id": "ID",
-  "network-and-address": "Сеть и адрес",
-  "please-type-in-mnemonic-phrase": "Введите вашу мнемоническую фразу.",
+  "network-and-address": "Сеть и Адрес",
+  "please-type-in-mnemonic-phrase": "Пожалуйста, введите вашу мнемоническую фразу.",
   "password": "Пароль",
   "access-wallet-or": "или",
   "web3-wallet-desc": "MetaMask; Dapper",
