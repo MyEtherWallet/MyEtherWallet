@@ -1,3 +1,7 @@
+### Bug
+
+- Bitbox sizing mismatch [#2265](https://github.com/MyEtherWallet/MyEtherWallet/pull/2265)
+
 ### Release v5.5.4
 
 ### Feature

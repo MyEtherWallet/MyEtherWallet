@@ -9,7 +9,7 @@
       :class="[
         selected ? 'selected' : '',
         'wallet-option-container',
-        link !== '' ? 'has-link' : ''
+        'has-link'
       ]"
     >
       <div class="img-title-container">
