@@ -23,7 +23,7 @@ export default async ({ event, payload }, _, next) => {
     } else {
       chrome.tabs.create({
         url: chrome.runtime.getURL(
-          `index.html#/access-my-wallet?connectionRequest=${payload.url}`
+          `index.html#/?connectionRequest=${payload.url}`
         )
       });
     }
