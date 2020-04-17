@@ -46,9 +46,9 @@
               :key="token.symbol + index"
             >
               <td>
-                <img :src="token.icon" />
+                <img width="30px" height="30px" :src="token.icon" />
+                {{ token.symbol }}
               </td>
-              <td>{{ token.symbol }}</td>
               <td
                 v-if="token.balance === 'Load' && online"
                 class="load-token"
