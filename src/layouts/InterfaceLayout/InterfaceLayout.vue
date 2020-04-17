@@ -538,6 +538,7 @@ export default {
         })
         .map(token => {
           let foundToken;
+          let actualIcon;
           if (!token.hasOwnProperty('logo')) {
             foundToken = this.network.type.tokens.find(foundItem => {
               return (
@@ -545,6 +546,17 @@ export default {
                 toChecksumAddress(token.address)
               );
             });
+          }
+          try {
+            const iconHolder = token.hasOwnProperty('logo')
+              ? token.logo.src
+              : foundToken && foundToken.hasOwnProperty('logo')
+              ? `https://img.mewapi.io/?image=${foundToken.logo.src}}&width=50&height=50&fit=scale-down`
+              : mewlogosmall;
+            // eslint-disable-next-line security/detect-non-literal-require
+            actualIcon = require(iconHolder);
+          } catch (e) {
+            actualIcon = mewlogosmall;
           }
           const balanceCheck = new BigNumber(token.balance);
           const balance = balanceCheck.isNaN()
@@ -558,11 +570,7 @@ export default {
             name: token.name,
             symbol: token.symbol,
             website: token.website,
-            icon: token.hasOwnProperty('logo')
-              ? token.logo.src
-              : foundToken && foundToken.hasOwnProperty('logo')
-              ? `https://img.mewapi.io/?image=${foundToken.logo.src}}&width=50&height=50&fit=scale-down`
-              : mewlogosmall
+            icon: actualIcon
           };
           return convertedToken;
         });
