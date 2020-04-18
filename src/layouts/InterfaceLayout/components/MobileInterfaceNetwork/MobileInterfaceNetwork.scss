@@ -1,4 +1,5 @@
 .network {
+  min-height: 90px;
   background-color: #25b0e8;
   position: relative;
   border-radius: 5px;
@@ -17,7 +18,7 @@
 }
 
 .network-type {
-  border: 3px solid white;
+  border: 2px solid white;
   border-radius: 100%;
   display: flex;
   align-items: center;

@@ -5,14 +5,10 @@
       <blockie :address="address" :size="8" :scale="16" class="blockie-image" />
       <div>
         <div class="title">{{ $t('common.addr') }}</div>
-        <div class="d-flex">
-          <div class="address flex-grow-1">{{ address }}</div>
-          <input
-            ref="copyAddress"
-            :value="address"
-            class="hidden-input"
-            autocomplete="off"
-          />
+        <div class="d-flex address">
+          <div class="address-begin">
+            <div>{{ address }}</div>
+          </div>
           <div class="address-end">
             {{
               address !== null && address !== ''
@@ -20,6 +16,12 @@
                 : ''
             }}
           </div>
+          <input
+            ref="copyAddress"
+            :value="address"
+            class="hidden-input"
+            autocomplete="off"
+          />
         </div>
       </div>
       <div class="buttons-container">
