@@ -1,12 +1,15 @@
-@import '../InformationBlock';
-
 .network {
-  background-color: $transaction-block-network;
+  background-color: #25b0e8;
   position: relative;
+  border-radius: 5px;
+  padding: 15px 20px;
+  color: white;
 }
 
-.block-content {
-  position: relative;
+.network-type {
+  img {
+    width: 18px;
+  }
 }
 
 .block-image {
@@ -14,30 +17,40 @@
 }
 
 .network-type {
-  border: 4px solid white;
+  border: 3px solid white;
   border-radius: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  $network-image-size: 60px !important;
-
+  margin-right: 15px;
+  $network-image-size: 40px !important;
   height: $network-image-size;
   width: $network-image-size;
+}
 
-  .icon-block {
-    display: flex;
-    justify-content: center;
-    .icon {
-      height: 45px !important;
-    }
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: -3px;
+}
+
+.information-container {
+  p {
+    color: white;
+    margin-bottom: -2px !important;
   }
 }
 
-.title-and-helper {
-  display: flex;
-  align-items: center;
+.change-button {
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  font-size: 12px;
+  border-radius: 5px;
+  padding: 5px 10px;
 
-  h2 {
-    margin-right: 7px;
+  &:active {
+    background-color: #0000001a;
+    color: white;
   }
 }
