@@ -1,18 +1,14 @@
 <template>
-  <div class="info-block-container">
+  <div>
     <interface-network-modal ref="network" />
-    <div class="info-block network">
-      <div class="block-image">
-        <div class="network-type">
-          <div class="icon-block">
-            <img :src="network.type.icon" alt class="icon" />
-          </div>
-        </div>
+    <div class="d-flex align-items-center network">
+      <div class="network-type">
+        <img :src="network.type.icon" alt />
       </div>
-      <div class="block-content">
+      <div class="d-flex align-items-center flex-grow-1">
         <div class="information-container">
-          <div class="title-and-helper">
-            <h2>{{ $t('common.network') }}</h2>
+          <div class="title">
+            {{ $t('common.network') }}
           </div>
           <p v-if="account.identifier !== identifier">
             {{ network.service + '(' + network.type.name + ')' }}
@@ -24,7 +20,7 @@
             <i v-show="parsedNetwork === ''" class="fa fa-spinner fa-spin" />
           </p>
         </div>
-        <div class="icon-container">
+        <div class="icon-container ml-auto">
           <button
             v-if="account.identifier !== identifier"
             id="networkModal"
