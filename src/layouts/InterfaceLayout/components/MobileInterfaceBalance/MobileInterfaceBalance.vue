@@ -1,23 +1,23 @@
 <template>
-  <div class="info-block-container">
+  <div>
     <interface-balance-modal ref="balance" :balance="balance" />
-    <div class="info-block balance">
+    <div class="info-block">
       <div class="block-image">
-        <div class="icon-border">
-          <img alt class="icon" src="~@/assets/images/icons/wallet.svg" />
-        </div>
+        <img alt class="icon" src="~@/assets/images/icons/wallet.svg" />
       </div>
       <div class="block-content">
-        <div class="information-container">
-          <h2>{{ $t('common.balance.string') }}</h2>
+        <div>
+          <div class="title-block">
+            {{ $t('common.balance.string') }}
+          </div>
           <div class="balance-text-container">
-            <div v-show="balance !== undefined" class="balance-text">
-              <p>
+            <div v-show="balance !== undefined" class="balance-data">
+              <div class="balance-value">
                 {{ balance }}
-                <span>
-                  {{ network.type.currencyName }}
-                </span>
-              </p>
+              </div>
+              <div class="currency">
+                {{ network.type.currencyName }}
+              </div>
             </div>
             <i v-show="balance === undefined" class="fa fa-spin fa-spinner" />
           </div>
@@ -25,12 +25,13 @@
         <div class="icon-container">
           <b-btn
             id="balanceCheck"
-            class="custom-tooltip"
+            class="balance-check custom-tooltip"
             @click="balanceModalOpen"
           >
             <img alt src="~@/assets/images/icons/more.svg" />
           </b-btn>
           <b-btn
+            v-if="false"
             id="refreshBalance"
             class="custom-tooltip"
             @click="fetchBalance"
@@ -110,5 +111,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'InterfaceBalance.scss';
+@import 'MobileInterfaceBalance.scss';
 </style>

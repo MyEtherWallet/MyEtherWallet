@@ -51,8 +51,13 @@
         :print="print"
         :switch-addr="switchAddress"
       />
+      <mobile-interface-balance
+        :balance="balance"
+        :get-balance="getBalance"
+        class="mt-2"
+      />
+      <mobile-interface-network :block-number="blockNumber" class="mt-2" />
     </div>
-
     <div class="wrap">
       <div class="sidemenu">
         <div
@@ -135,6 +140,8 @@ import InterfaceNetwork from './components/InterfaceNetwork';
 import InterfaceSideMenu from './components/InterfaceSideMenu';
 import InterfaceTokens from './components/InterfaceTokens';
 import MobileInterfaceAddress from './components/MobileInterfaceAddress';
+import MobileInterfaceBalance from './components/MobileInterfaceBalance';
+import MobileInterfaceNetwork from './components/MobileInterfaceNetwork';
 import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
 import { Toast } from '@/helpers';
@@ -184,6 +191,8 @@ export default {
     'mnemonic-password-modal': MnemonicPasswordModal,
     'enter-pin-number-modal': EnterPinNumberModal,
     'mobile-interface-address': MobileInterfaceAddress,
+    'mobile-interface-balance': MobileInterfaceBalance,
+    'mobile-interface-network': MobileInterfaceNetwork,
     'address-qrcode-modal': AddressQrcodeModal,
     'ledger-app-modal': LedgerAppModal,
     'token-overview': TokenOverview
