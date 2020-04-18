@@ -1,30 +1,57 @@
 @import '../InformationBlock';
 
-.icon-border {
-  padding-right: 10px;
+.info-block {
+  padding: 15px 20px;
+  background-color: $transaction-block-balance;
+  align-items: center;
+  margin-right: 0;
+}
+
+.block-content {
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.block-image {
+  padding-top: 0 !important;
+  padding-right: 0px;
   img {
-    height: 60px;
+    height: 40px;
   }
 }
 
-.balance {
-  background-color: $transaction-block-balance;
+.title-block {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: -3px;
+}
 
-  .balance-text-container {
-    display: inline-block;
-  }
+.balance-data {
+  display: flex;
+  align-items: center;
+}
 
-  .balance-text {
-    font-size: 20px;
-    font-weight: 300;
+.balance-value {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+  font-size: 18px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  word-wrap: normal;
+}
 
-    p {
-      font-size: 20px;
-      text-overflow: ellipsis;
-      word-wrap: normal;
-      span {
-        margin-left: 5px;
-      }
-    }
-  }
+.currency {
+  font-size: 13px;
+  margin-left: 5px;
+}
+
+.icon-container {
+  position: relative !important;
+}
+
+.balance-check {
+  margin-right: 0 !important;
 }

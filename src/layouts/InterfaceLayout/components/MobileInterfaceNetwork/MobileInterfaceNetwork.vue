@@ -91,5 +91,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'InterfaceNetwork.scss';
+@import 'MobileInterfaceNetwork.scss';
 </style>
