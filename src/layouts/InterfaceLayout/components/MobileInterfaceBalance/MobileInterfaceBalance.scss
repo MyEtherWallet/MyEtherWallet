@@ -1,0 +1,30 @@
+@import '../InformationBlock';
+
+.icon-border {
+  padding-right: 10px;
+  img {
+    height: 60px;
+  }
+}
+
+.balance {
+  background-color: $transaction-block-balance;
+
+  .balance-text-container {
+    display: inline-block;
+  }
+
+  .balance-text {
+    font-size: 20px;
+    font-weight: 300;
+
+    p {
+      font-size: 20px;
+      text-overflow: ellipsis;
+      word-wrap: normal;
+      span {
+        margin-left: 5px;
+      }
+    }
+  }
+}
