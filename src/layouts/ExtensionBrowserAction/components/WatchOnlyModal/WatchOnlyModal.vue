@@ -1,14 +1,12 @@
 <template>
   <div>
-    <b-modal
+    <mewcx-modal-wrapper
       ref="watchOnlyWallet"
       :title="$t('mewcx.add-watch-only')"
-      hide-footer
-      centered
-      class="bootstrap-modal"
     >
-      <div class="modal-contents">
+      <div class="form-container">
         <form>
+          <h2>{{ $t('mewcx.add-watch-only') }}</h2>
           <div class="input-container">
             <label for="walletName"> {{ $t('mewcx.wallet-name') }} </label>
             <input
@@ -19,10 +17,19 @@
           </div>
           <div class="input-container">
             <label for="walletAddr"> {{ $t('common.addr') }} </label>
+            <blockie
+              :address="address"
+              :size="8"
+              :scale="16"
+              width="30px"
+              height="30px"
+              class="floated-blockie"
+            />
             <input
               v-model="address"
               :placeholder="$t('mewcx.enter-address')"
               name="walletAddr"
+              class="input-with-blockie"
             />
           </div>
           <button
@@ -34,19 +41,24 @@
             type="submit"
             @click.prevent="submit"
           >
-            <span v-show="!loading"> {{ $t('mewcx.add-wallet') }} </span>
+            <span v-show="!loading"> {{ $t('mewcx.add') }} </span>
             <i v-show="loading" class="fa fa-spinner fa-spin" />
           </button>
         </form>
       </div>
-    </b-modal>
+    </mewcx-modal-wrapper>
   </div>
 </template>
 
 <script>
 import { isAddress } from '@/helpers/addressUtils';
-
+import Blockie from '@/components/Blockie';
+import MewcxModalWrapper from '../../wrappers/MewcxModalWrapper';
 export default {
+  components: {
+    blockie: Blockie,
+    'mewcx-modal-wrapper': MewcxModalWrapper
+  },
   props: {
     addWatchOnly: {
       type: Function,
@@ -69,7 +81,7 @@ export default {
     }
   },
   mounted() {
-    this.$refs.watchOnlyWallet.$on('hidden', () => {
+    this.$refs.watchOnlyWallet.$refs.modalWrapper.$on('hidden', () => {
       this.name = '';
       this.address = '';
     });
@@ -81,7 +93,6 @@ export default {
   }
 };
 </script>
-
 <style scoped lang="scss">
 @import 'WatchOnlyModal.scss';
 </style>

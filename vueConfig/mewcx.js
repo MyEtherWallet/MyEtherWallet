@@ -1,15 +1,24 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
 const env_vars = require('../ENV_VARS');
 const path = require('path');
 const defaultConfig = require('./defaultConfigs');
-const webpackConfig = {
+const webpackConfigCXWeb3 = {
   devtool: defaultConfig.devtool,
   entry: {
-    app: './src/main.js',
+    cxWeb3: './src/builds/mewcx/cxHelpers/cxWeb3.js',
     contentScript: './src/builds/mewcx/cxHelpers/contentScript.js',
-    background: './src/builds/mewcx/cxHelpers/background.js',
-    cxWeb3: './src/builds/mewcx/cxHelpers/cxWeb3.js'
+    background: './src/builds/mewcx/cxHelpers/background.js'
   },
+  node: {
+    process: true
+  },
+  optimization: {
+    splitChunks: false
+  }
+};
+const webpackConfig = {
+  devtool: 'source-map',
   node: {
     process: true
   },
@@ -23,18 +32,14 @@ const webpackConfig = {
             const version = JSON.parse(env_vars.VERSION);
             const json = JSON.parse(content);
             const hasExtra = version.indexOf('-');
-            const hasJSFile = [
-              'background',
-              'content_scripts',
-              'web_accessible_resources'
-            ];
+            const hasJSFile = ['content_scripts', 'web_accessible_resources'];
             if (hasExtra !== -1) {
               const newVersion = version.substring(0, hasExtra);
               json.version = newVersion;
             } else {
               json.version = version;
             }
-            json.browser_action.default_popup = `index.html#/popup`;
+            json.browser_action.default_popup = `browserActionLoading.html`;
             Object.keys(json).forEach(key => {
               if (hasJSFile.includes(key)) {
                 if (Array.isArray(json[key])) {
@@ -53,6 +58,7 @@ const webpackConfig = {
 
             return JSON.stringify(json, null, 2);
           }
+
           return content;
         }
       }
@@ -62,21 +68,35 @@ const webpackConfig = {
     splitChunks: false
   }
 };
+const pluginOptions = {
+  configureMultiCompilerWebpack: [webpackConfigCXWeb3, webpackConfig]
+};
+webpackConfig.entry = webpackConfigCXWeb3.entry;
 const exportObj = {
+  pages: {
+    index: {
+      entry: 'src/main.js',
+      template: 'public/index.html',
+      filename: 'index.html'
+    },
+    browserAction: 'src/builds/mewcx/browserAction/browserAction.js',
+    popup: 'src/builds/mewcx/popup/popup.js',
+    page: {
+      entry: 'src/builds/mewcx/public/page.js',
+      template: 'src/builds/mewcx/public/page.html',
+      filename: 'page.html',
+      jsFolder: 'js/background.js'
+    }
+  },
   publicPath: './',
   configureWebpack: webpackConfig,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
   integrity: true,
-  pwa: defaultConfig.pwa,
+  pluginOptions,
   outputDir: path.resolve(__dirname, '../', 'chrome-extension'),
   filenameHashing: false,
   productionSourceMap: false,
   chainWebpack: config => {
-    config.plugin('html').tap(args => {
-      // eslint-disable-next-line no-param-reassign
-      args[0].excludeChunks = ['background', 'contentScript', 'cxWeb3'];
-      return args;
-    });
     config.plugins.delete('pwa');
     config.plugins.delete('workbox');
   }
