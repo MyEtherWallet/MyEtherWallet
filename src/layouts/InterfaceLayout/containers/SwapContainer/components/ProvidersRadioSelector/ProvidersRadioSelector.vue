@@ -25,7 +25,7 @@
             <img :src="providerLogo(provider.provider)" alt />
           </div>
           <div class="provider-image" v-else>
-            <h4>{{provider.provider}}</h4>
+            <h4>{{ provider.provider }}</h4>
           </div>
           <div
             :class="[
@@ -67,9 +67,9 @@
             <span class="slippage-text">{{
               otherTextDisplay(provider.additional.display)
             }}</span>
-<!--            <span class="slippage-text"> {{ provider.additional.source }}</span>-->
+            <!--            <span class="slippage-text"> {{ provider.additional.source }}</span>-->
           </div>
-<!-- -&#45;&#45;&#45;&#45; {{provider.provider}}-->
+          <!-- -&#45;&#45;&#45;&#45; {{provider.provider}}-->
         </li>
       </ul>
       <!-- list of other providers who don't support the selected currency pair -->

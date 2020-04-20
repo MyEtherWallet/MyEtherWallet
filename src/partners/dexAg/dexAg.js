@@ -75,21 +75,15 @@ export default class DexAg {
   }
 
   validSwap(fromCurrency, toCurrency) {
-    if (disabled.includes(fromCurrency) || disabled.includes(toCurrency)) {
-      return false;
-    }
+    // if (disabled.includes(fromCurrency) || disabled.includes(toCurrency)) {
+    //   return false;
+    // }
     if (this.isValidNetwork) {
       return this.currencies[fromCurrency] && this.currencies[toCurrency];
     }
     return false;
   }
 
-  fixedEnabled(currency) {
-    return (
-      typeof this.currencies[currency].fixRateEnabled === 'boolean' &&
-      this.currencies[currency].fixRateEnabled
-    );
-  }
 
   calculateRate(inVal, outVal) {
     return new BigNumber(outVal).div(inVal);
