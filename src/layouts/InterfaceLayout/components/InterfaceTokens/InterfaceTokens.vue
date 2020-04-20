@@ -47,7 +47,6 @@
             >
               <td>
                 <img
-                  width="30px"
                   height="30px"
                   :src="iconFetch(token.address)"
                   @error="iconFallback"
