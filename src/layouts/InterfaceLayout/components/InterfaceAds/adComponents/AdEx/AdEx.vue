@@ -1,7 +1,7 @@
 <template>
   <div id="adexContainerOuter" class="outer-adex">
     <div class="ad-image-container">
-      <div class="inner-adex" v-if="active">
+      <div v-if="active" class="inner-adex">
         <iframe
           id="iframe"
           class="frame"
@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     scale() {
-      if(this.active){
+      if (this.active) {
         const el = document.getElementById('adexContainerOuter');
         const frame = document.getElementById('iframe');
         frame.style.transform = `scale(${el.offsetWidth / 486})`;
@@ -62,7 +62,6 @@ export default {
         frame.style['-o-transform'] = `scale(${el.offsetWidth / 486})`;
         frame.style['-webkit-transform'] = `scale(${el.offsetWidth / 486})`;
       }
-
     }
   }
 };
