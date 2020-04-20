@@ -47,7 +47,7 @@ module.exports = [
   'https://rpc.solidum.network:443',
   'https://mainnet-rpc.dexon.org:443',
   'https://node.mainnet.lightstreams.io:443',
-  'https://rpc.ethercore.org:443',
+  'https://rpc.ethercore.io:443',
   'https://sai-mainnet.makerfoundation.com:443',
   'wss://api.thegraph.com:443',
   'https://ambrpay.io:443',
@@ -60,6 +60,7 @@ module.exports = [
   'ws://127.0.0.1:8178',
   'https://viewm.moonicorn.network:443',
   'https://localhost:1991', // server for bcvault
+  'https://rpc.atheios.org:443',
   'wss://bridge.walletconnect.org:443',
   'api.dex.ag:443',
   'api-v2.dex.ag:443'

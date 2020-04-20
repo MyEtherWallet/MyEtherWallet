@@ -1,22 +1,24 @@
 <template>
   <div class="quick-send-container">
-    <div class="quick-send-header">
-      <p v-show="step === 1">{{ $t('mewcx.quick-send') }}</p>
-      <p v-show="step === 4">{{ $t('mewcx.success') }}!</p>
-      <p v-show="step > 1 && step < 4" class="clickable" @click="back">
-        <img src="@/assets/images/icons/arrow-left.svg" />
-        {{ $t('common.back') }}
-      </p>
-      <p v-show="step !== 4" class="clickable" @click="actualCancel">
-        {{ $t('common.cancel') }}
-      </p>
+    <div>
+      <div class="quick-send-header">
+        <p v-show="step === 1">{{ $t('mewcx.quick-send') }}</p>
+        <p v-show="step === 4">{{ $t('mewcx.success') }}!</p>
+        <p v-show="step > 1 && step < 4" class="clickable" @click="back">
+          <img src="@/assets/images/icons/arrow-left.svg" />
+          {{ $t('common.back') }}
+        </p>
+        <p v-show="step !== 4" class="clickable" @click="actualCancel">
+          {{ $t('common.cancel') }}
+        </p>
+      </div>
+      <b-progress
+        :value="perc"
+        :max="100"
+        class="custom-progress"
+        variant="success"
+      />
     </div>
-    <b-progress
-      :value="perc"
-      :max="100"
-      class="custom-progress"
-      variant="success"
-    />
     <div class="quick-send-step-contents">
       <h4 v-show="step < 4" class="title">
         {{ $t('mewcx.step') }} {{ step }}. {{ steps[step] }}
@@ -46,34 +48,21 @@
             <img :src="show ? showIcon : hide" @click.prevent="show = !show" />
           </div>
           <span class="error">
-            {{ error }}
+            {{ error.hasOwnProperty('msg') ? error.msg : '' }}
           </span>
         </div>
       </form>
-      <form v-show="step === 2" @submit.prevent="next">
+      <form
+        v-show="step === 2"
+        class="send-to-container"
+        @submit.prevent="next"
+      >
         <div class="to-address-container">
-          <label for="toAddress"> {{ $t('sendTx.to-addr') }} </label>
-          <div class="to-address-input">
-            <textarea
-              v-model="toAddress"
-              type="text"
-              placeholder="Enter address"
-              name="toAddress"
-            />
-            <div class="blockie-container">
-              <blockie
-                v-show="toAddress !== ''"
-                :address="toAddress"
-                width="30px"
-                height="30px"
-              />
-              <div
-                v-show="toAddress === ''"
-                :address="toAddress"
-                class="blockie-temp"
-              />
-            </div>
-          </div>
+          <dropdown-address-selector
+            :clear-address="false"
+            :title="$t('sendTx.to-addr')"
+            @toAddress="getToAddress($event)"
+          />
         </div>
         <div class="to-amount-container">
           <label for="amountToSend">
@@ -149,19 +138,17 @@ import WalletViewComponent from '../../components/WalletViewComponent';
 import hide from '@/assets/images/icons/hide-password.svg';
 import showIcon from '@/assets/images/icons/show-password.svg';
 import BigNumber from 'bignumber.js';
-import { isAddress } from '@/helpers/addressUtils';
-import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
-import { WalletInterface } from '@/wallets';
-import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
+import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import Blockie from '@/components/Blockie';
 import { Misc } from '@/helpers';
 import { mapState } from 'vuex';
 import ethUnit from 'ethjs-unit';
-import { CX_SEND_SIGNED_TX } from '@/builds/mewcx/cxHelpers/cxEvents';
+import { WEB3_SIGN_TX } from '@/builds/mewcx/cxHelpers/cxEvents';
 
 export default {
   components: {
     'wallet-view-component': WalletViewComponent,
+    'dropdown-address-selector': DropDownAddressSelector,
     blockie: Blockie
   },
   props: {
@@ -203,13 +190,12 @@ export default {
       toAddress: '',
       value: 0,
       txHash: '',
-      unlockedAccount: {},
-      error: '',
+      error: {},
       loading: false,
       rawTx: {},
       gasPrice: 0,
       gasLimit: 0,
-      signedTx: {}
+      isValidAddress: false
     };
   },
   computed: {
@@ -226,7 +212,7 @@ export default {
       } else if (this.step === 2) {
         const walletBalance = new BigNumber(this.selectedWallet.balance);
         const valToSend = new BigNumber(this.value);
-        return !valToSend.gt(walletBalance) && isAddress(this.toAddress);
+        return !valToSend.gt(walletBalance) && this.isValidAddress;
       }
       return true;
     },
@@ -238,13 +224,17 @@ export default {
     toAddress() {
       this.getGasPrice();
       this.estimateGas();
-      this.error = '';
+      this.error = {};
     },
     password() {
-      this.error = '';
+      this.error = {};
     }
   },
   methods: {
+    getToAddress(data) {
+      this.toAddress = data.address;
+      this.isValidAddress = data.valid;
+    },
     back() {
       switch (this.step) {
         case 2:
@@ -273,7 +263,6 @@ export default {
     },
     clearWallet() {
       this.loading = false;
-      this.unlockedAccount = {};
       this.password = '';
       this.show = false;
       this.step -= 1;
@@ -285,30 +274,14 @@ export default {
       this.rawTx = {};
       this.gasPrice = 0;
       this.gasLimit = 0;
-      this.signedTx = {};
       this.step -= 1;
+      this.toValue = '0';
+      this.isValidAddress = false;
     },
     unlockWallet() {
       this.loading = true;
-      const worker = new walletWorker();
-      const file = JSON.parse(this.selectedWallet.priv);
-      worker.postMessage({
-        type: 'unlockWallet',
-        data: [file, this.password]
-      });
-      worker.onmessage = e => {
-        this.unlockedAccount = new WalletInterface(
-          Buffer.from(e.data._privKey),
-          false,
-          keyStoreType
-        );
-        this.loading = false;
-        this.step += 1;
-      };
-      worker.onerror = e => {
-        this.loading = false;
-        this.error = e.message;
-      };
+      this.step += 1;
+      this.loading = false;
     },
     async getGasPrice() {
       this.web3.eth.getGasPrice().then(res => {
@@ -348,6 +321,7 @@ export default {
       this.value = walletBalance.minus(convertedLimitAndPrice).toString();
     },
     async createTransaction() {
+      this.loading = true;
       const nonce = await this.web3.eth.getTransactionCount(
         this.selectedWallet.address
       );
@@ -365,12 +339,20 @@ export default {
         data: '0x'
       };
 
-      this.signedTx = await this.unlockedAccount.signTransaction(this.raw);
       this.step += 1;
+      this.loading = false;
     },
-    async sendTransaction() {
-      this.loading = true;
+    sendTransaction() {
+      const _self = this;
+      _self.loading = true;
       const chrome = window.chrome;
+      const payload = {
+        params: _self.raw,
+        password: _self.password,
+        signer: _self.raw.from
+      };
+
+      const id = chrome.runtime.id;
       // chrome.storage.sync.get(null, res => {
       //   if (res.hasOwnProperty('knownAddresses')) {
       //     const arr = JSON.parse(res['knownAddresses']);
@@ -386,18 +368,34 @@ export default {
       //     });
       //   }
       // });
-      const payload = {
-        signedTx: this.signedTx.rawTransaction,
-        raw: this.raw
-      };
       chrome.runtime.sendMessage(
-        chrome.runtime.id,
-        { event: CX_SEND_SIGNED_TX, payload: payload },
+        id,
+        {
+          event: WEB3_SIGN_TX,
+          payload: payload
+        },
         {},
         res => {
-          this.txHash = '';
-          // eslint-disable-next-line
-          if (!!res && !res.hasOwnProperty('message')) {
+          _self.loading = false;
+          if (res.hasOwnProperty('error')) {
+            _self.error = {
+              msg: res.error,
+              errored: true
+            };
+            return;
+          }
+          if (res.hasOwnProperty('message')) {
+            _self.error = {
+              msg: res.message,
+              errored: true
+            };
+            return;
+          }
+
+          if (
+            res &&
+            (!res.hasOwnProperty('message') || !res.hasOwnProperty('error'))
+          ) {
             this.txHash = res;
             this.step += 1;
           }
@@ -412,10 +410,8 @@ export default {
       this.toAddress = '';
       this.value = 0;
       this.txHash = '';
-      this.unlockedAccount = {};
-      this.error = '';
+      this.error = {};
       this.rawTx = {};
-      this.signedTx = {};
       this.cancel();
     }
   }

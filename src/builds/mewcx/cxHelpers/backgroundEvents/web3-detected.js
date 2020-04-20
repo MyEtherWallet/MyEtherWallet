@@ -6,10 +6,10 @@ export default async ({ event }, res, next) => {
     if (Object.keys(item).length === 0) {
       chrome.windows.create({
         url: chrome.runtime.getURL(
-          `index.html#/extension-popups/web3-detected`
+          `popupLoading.html#?navigate-to=web3-detected`
         ),
         type: 'popup',
-        height: 500,
+        height: 487,
         width: 300,
         focused: true
       });

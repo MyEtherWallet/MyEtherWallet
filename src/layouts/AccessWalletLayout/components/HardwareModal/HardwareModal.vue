@@ -155,7 +155,7 @@ export default {
           text: 'CoolWallet',
           disabled: false,
           msg: '',
-          link: 'https://coolwallet.io/product/coolwallet/?ref=myetherwallet'
+          link: 'https://www.coolwallet.io/mew/?ref=myetherwallet1'
         },
         {
           name: FINNEY_TYPE,
@@ -172,7 +172,8 @@ export default {
           text: 'BitBox',
           disabled: false,
           msg: '',
-          link: 'https://shiftcrypto.ch/?ref=mew'
+          // link: 'https://shiftcrypto.ch/?ref=MEW'
+          link: ''
         },
         {
           name: XWALLET_TYPE,

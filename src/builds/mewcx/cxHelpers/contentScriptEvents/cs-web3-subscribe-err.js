@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { WEB3_SUBSCRIPTION_ERR } from '../cxEvents';
+import { WEB3_SUBSCRIPTION_ERR, WEB3_REJECT } from '../cxEvents';
 
 export default async ({ event, payload }, _, next) => {
   if (event !== WEB3_SUBSCRIPTION_ERR) return next();

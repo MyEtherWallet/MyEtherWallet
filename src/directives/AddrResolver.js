@@ -7,6 +7,9 @@ import { EthereumTokens } from '@/partners';
 import MAValidator from 'multicoin-address-validator';
 import getMultiCoinAddress from '@/helpers/ENSMultiCoin.js';
 import ethMew from '@/networks/nodes/eth-mew';
+import RegistryAbi from '@/dapps/ManageENS/ABI/registryAbi.js';
+import ResolverAbi from '@/dapps/ManageENS/ABI/resolverAbi.js';
+import * as nameHashPckg from 'eth-ens-namehash';
 
 const AddrResolver = {
   bind: function (el, binding, vnode) {
@@ -38,6 +41,7 @@ const AddrResolver = {
     });
     vnode.context.$watch(binding.value, function (e) {
       address = e.trim();
+      vnode.context.avatar = '';
       actualProcess(address);
     });
     const removeElements = function () {
@@ -55,6 +59,7 @@ const AddrResolver = {
       if (e === '') {
         _this.isValidAddress = false;
         _this.hexAddress = '';
+        _this.avatar = '';
       } else resolveDomain(e);
     };
     const resolveViaENS = function (domain) {
@@ -81,6 +86,7 @@ const AddrResolver = {
           });
           appendElement(errorPar);
         } else {
+          checkAvatar(domain);
           getMultiCoinAddress(ens, normalise(domain), parentCurrency)
             .then(address => {
               if (!checkDarklist(address)) {
@@ -114,6 +120,7 @@ const AddrResolver = {
 
                     _this.isValidAddress = false;
                     _this.hexAddress = '';
+                    _this.avatar = '';
                     appendElement(errorPar);
                   });
               } else {
@@ -124,6 +131,7 @@ const AddrResolver = {
                 );
                 _this.isValidAddress = false;
                 _this.hexAddress = '';
+                _this.avatar = '';
                 appendElement(errorPar);
               }
             });
@@ -135,6 +143,7 @@ const AddrResolver = {
           _this.hexAddress = domain;
           if (!isValid) {
             _this.hexAddress = '';
+            _this.avatar = '';
             if (domain.length > 0) {
               if (
                 parentCurrency === 'ETH' &&
@@ -182,6 +191,7 @@ const AddrResolver = {
       if (isDarklisted.error) {
         _this.isValidAddress = false;
         _this.hexAddress = '';
+        _this.avatar = '';
         messagePar.innerText =
           isDarklisted.msg.length > 0
             ? isDarklisted.msg
@@ -190,6 +200,36 @@ const AddrResolver = {
         return true;
       }
       return false;
+    };
+
+    const checkAvatar = async function (domain) {
+      try {
+        const domainHash = nameHashPckg.hash(domain);
+        const _this = vnode.context;
+        const web3 = _this.$store.state.main.web3;
+        const network = _this.$store.state.main.network;
+        const registryContract = new web3.eth.Contract(
+          RegistryAbi,
+          network.type.ens.registry
+        );
+        const currentResolver = await registryContract.methods
+          .resolver(domainHash)
+          .call();
+        const resolver = new web3.eth.Contract(ResolverAbi, currentResolver);
+        const supportsTxt = await resolver.methods
+          .supportsInterface('0x59d1d43c')
+          .call();
+        if (supportsTxt) {
+          const avatar = await resolver.methods
+            .text(domainHash, 'avatar')
+            .call();
+          if (avatar !== '') {
+            const convertedMewAvatar = `https://img.mewapi.io/?image=${avatar}&width=30&height=30&fit=scale-down&quality=100`;
+            _this.avatar = convertedMewAvatar ? convertedMewAvatar : '';
+          }
+        }
+        // eslint-disable-next-line no-empty
+      } catch (e) {}
     };
 
     const resolveDomain = async function (domain) {
@@ -218,6 +258,7 @@ const AddrResolver = {
         } catch (err) {
           _this.isValidAddress = false;
           _this.hexAddress = '';
+          _this.avatar = '';
           messagePar.classList.add('resolver-error');
           if (err instanceof ResolutionError) {
             messagePar.innerText = _this.$t(

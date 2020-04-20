@@ -1,30 +1,13 @@
 import app from './app';
-const ExtensionPopup = () => import('@/layouts/ExtensionPopup');
-const ExtensionWeb3Popup = () => import('@/layouts/ExtensionWeb3Popup');
-const Web3DetectedContainer = () =>
-  import('@/layouts/ExtensionWeb3Popup/containers/Web3DetectedContainer');
-const AccountAccessContainer = () =>
-  import('@/layouts/ExtensionWeb3Popup/containers/AccountAccessContainer');
-const SignTxContainer = () =>
-  import('@/layouts/ExtensionWeb3Popup/containers/SignTxContainer');
-const SignMsgContainer = () =>
-  import('@/layouts/ExtensionWeb3Popup/containers/SignMsgContainer');
 const ExtensionBrowserAction = () => import('@/layouts/ExtensionBrowserAction');
-const ExtensionAddWalletContainer = () =>
-  import(
-    '@/layouts/ExtensionBrowserAction/containers/ExtensionAddWalletContainer'
-  );
 const ExtensionWalletContainer = () =>
   import(
     '@/layouts/ExtensionBrowserAction/containers/ExtensionWalletContainer'
   );
-const MyWalletsContainer = () =>
-  import('@/layouts/ExtensionBrowserAction/containers/MyWalletsContainer');
-const WatchOnlyWalletsContainer = () =>
+const ExtensionFavoritesContainer = () =>
   import(
-    '@/layouts/ExtensionBrowserAction/containers/WatchOnlyWalletsContainer'
+    '@/layouts/ExtensionBrowserAction/containers/ExtensionFavoritesContainer'
   );
-
 const ExtensionDappsContainer = () =>
   import('@/layouts/ExtensionBrowserAction/containers/ExtensionDappsContainer');
 const ExtensionDappsItemContainer = () =>
@@ -36,89 +19,35 @@ const ExtensionDappContainer = () =>
 
 const cxRoutes = [
   {
-    path: '/extension-popups',
-    name: 'Web3 Detected',
-    component: ExtensionWeb3Popup,
-    meta: { requiresAuth: false },
-    children: [
-      {
-        path: 'web3-detected',
-        component: Web3DetectedContainer,
-        meta: { requiresAuth: false }
-      },
-      {
-        path: 'account-access',
-        component: AccountAccessContainer,
-        meta: { requiresAuth: false }
-      },
-      {
-        path: 'sign-tx',
-        component: SignTxContainer,
-        meta: { requiresAuth: false }
-      },
-      {
-        path: 'sign-msg',
-        component: SignMsgContainer,
-        meta: { requiresAuth: false }
-      }
-    ]
-  },
-  {
-    path: '/popup',
-    name: 'Popup',
-    component: ExtensionPopup,
-    meta: { requiresAuth: false }
-  },
-  {
     path: '/',
     component: ExtensionBrowserAction,
     children: [
       {
         path: '',
         component: ExtensionWalletContainer,
+        meta: { requiresAuth: false }
+      },
+      {
+        path: 'favorites',
+        component: ExtensionFavoritesContainer,
+        meta: { requiresAuth: false }
+      },
+      {
+        path: 'dapps',
         meta: { requiresAuth: false },
+        component: ExtensionDappsContainer,
         children: [
           {
             path: '',
             meta: { requiresAuth: false },
-            component: MyWalletsContainer
+            component: ExtensionDappsItemContainer
           },
           {
-            path: 'wallets',
-            name: 'myWallets',
+            path: '/dapps/:slug',
             meta: { requiresAuth: false },
-            component: MyWalletsContainer
-          },
-          {
-            path: 'watch-only',
-            name: '',
-            meta: { requiresAuth: false },
-            component: WatchOnlyWalletsContainer
-          },
-          {
-            path: 'dapps',
-            meta: { requiresAuth: false },
-            component: ExtensionDappsContainer,
-            children: [
-              {
-                path: '',
-                meta: { requiresAuth: false },
-                component: ExtensionDappsItemContainer
-              },
-              {
-                path: '/dapps/:slug',
-                meta: { requiresAuth: false },
-                component: ExtensionDappContainer
-              }
-            ]
+            component: ExtensionDappContainer
           }
         ]
-      },
-      {
-        path: '/access-my-wallet',
-        name: 'AccessWalletLayout',
-        component: ExtensionAddWalletContainer,
-        meta: { requiresAuth: false }
       }
     ]
   }
