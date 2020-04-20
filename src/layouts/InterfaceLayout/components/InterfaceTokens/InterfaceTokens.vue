@@ -46,7 +46,12 @@
               :key="token.symbol + index"
             >
               <td>
-                <img width="30px" height="30px" :src="token.icon" />
+                <img
+                  width="30px"
+                  height="30px"
+                  :src="iconFetch(token.address)"
+                  @error="iconFallback"
+                />
                 {{ token.symbol }}
               </td>
               <td
@@ -155,7 +160,15 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['network', 'web3', 'online'])
+    ...mapState('main', ['network', 'web3', 'online']),
+    networkTokens() {
+      const newTokenObj = {};
+      this.network.type.tokens.forEach(token => {
+        newTokenObj[toChecksumAddress(token.address)] = token;
+      });
+
+      return newTokenObj;
+    }
   },
   watch: {
     receivedTokens() {
@@ -170,6 +183,17 @@ export default {
     }
   },
   methods: {
+    iconFetch(address) {
+      const token = this.networkTokens[toChecksumAddress(address)];
+      if (token && token.logo.src !== '') {
+        return `https://img.mewapi.io/?image=${token.logo.src}&width=50&height=50&fit=scale-down`;
+      }
+
+      return this.network.type.icon;
+    },
+    iconFallback(evt) {
+      evt.target.src = this.network.type.icon;
+    },
     getV3Tokens() {
       const v3Tokens = store.get('localTokens');
       const v5CustomTokens = store.get('customTokens');

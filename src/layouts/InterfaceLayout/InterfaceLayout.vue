@@ -168,7 +168,6 @@ import {
   BCVAULT as BC_VAULT
 } from '@/wallets/bip44/walletTypes';
 
-import mewlogosmall from '@/assets/images/logo-small.png';
 export default {
   name: 'Interface',
   components: {
@@ -537,27 +536,6 @@ export default {
           return 0;
         })
         .map(token => {
-          let foundToken;
-          let actualIcon;
-          if (!token.hasOwnProperty('logo')) {
-            foundToken = this.network.type.tokens.find(foundItem => {
-              return (
-                toChecksumAddress(foundItem.address) ===
-                toChecksumAddress(token.address)
-              );
-            });
-          }
-          try {
-            const iconHolder = token.hasOwnProperty('logo')
-              ? token.logo.src
-              : foundToken && foundToken.hasOwnProperty('logo')
-              ? `https://img.mewapi.io/?image=${foundToken.logo.src}}&width=50&height=50&fit=scale-down`
-              : mewlogosmall;
-            // eslint-disable-next-line security/detect-non-literal-require
-            actualIcon = require(iconHolder);
-          } catch (e) {
-            actualIcon = mewlogosmall;
-          }
           const balanceCheck = new BigNumber(token.balance);
           const balance = balanceCheck.isNaN()
             ? token.balance
@@ -569,8 +547,7 @@ export default {
             email: token.email,
             name: token.name,
             symbol: token.symbol,
-            website: token.website,
-            icon: actualIcon
+            website: token.website
           };
           return convertedToken;
         });
