@@ -1,16 +1,24 @@
-import { get } from '@/helpers/httpRequests';
-import {PROXY_CONTRACT_ADDRESS} from './config';
+import { post } from '@/helpers/httpRequests';
 import { utils } from '../helpers';
+import {swapApiEndpoints} from '@/partners/partnersConfig';
+import {dexAgMethods} from './config';
+
+function buildPath() {
+  return swapApiEndpoints.base + swapApiEndpoints.dexag;
+}
 
 const getSupportedCurrencies = async () => {
   try {
-    const currencyList = await get('https://api-v2.dex.ag/token-list-full');
-
+    const currencyListRaw = await post(
+      buildPath(),
+      utils.buildPayload(dexAgMethods.getSupportedCurrencies, {})
+    );
+    const currencyList = currencyListRaw.result;
     const currencyDetails = {};
     const tokenDetails = {};
     if (currencyList) {
       for (let i = 0; i < currencyList.length; i++) {
-        if(currencyList[i].address){
+        if (currencyList[i].address) {
           const details = {
             symbol: currencyList[i].symbol.toUpperCase(),
             name: currencyList[i].name,
@@ -31,13 +39,14 @@ const getSupportedCurrencies = async () => {
 
 const getPrice = async (fromToken, toToken, fromValue) => {
   try {
-    const results = await get(
-      `https://api-v2.dex.ag/price?from=${fromToken}&to=${toToken}&fromAmount=${fromValue}&dex=all`
+    const results = await post(
+      buildPath(),
+      utils.buildPayload(dexAgMethods.getPrice, { fromToken, toToken, fromValue })
     );
     if (results.error) {
       throw Error(results.error.message);
     }
-    return results;
+    return results.result;
   } catch (e) {
     utils.handleOrThrow(e);
   }
@@ -45,13 +54,12 @@ const getPrice = async (fromToken, toToken, fromValue) => {
 
 const createTransaction = async transactionParams => {
   try {
-    const url = `https://api-v2.dex.ag/tradeAndSend?from=${transactionParams.fromCurrency}&to=${transactionParams.toCurrency}&fromAmount=${transactionParams.fromValue}&dex=${transactionParams.dex}&recipient=${transactionParams.toAddress}&proxy=${PROXY_CONTRACT_ADDRESS}`;
-    const results = await get(url);
+    const results = await post( buildPath(), utils.buildPayload(dexAgMethods.createTransaction, {transactionParams}));
     if (results.error) {
       throw Error(results.error.message);
     }
 
-    return results;
+    return results.result;
   } catch (e) {
     utils.handleOrThrow(e);
   }

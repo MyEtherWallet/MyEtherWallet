@@ -48,7 +48,7 @@ export default {
         bity: Bity,
         simplex: Simplex,
         changelly: Changelly,
-        dexag: DexAg,
+        dexag: DexAg
       },
       betaLogos: {}
     };

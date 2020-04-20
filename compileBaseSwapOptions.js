@@ -310,7 +310,6 @@ class CompileSwapOptions {
     const allTokens = await this.getDexAgSupported(withChangelly);
 
     for (let i = 0; i < this.needDecimalCheck.length; i++) {
-      console.log(this.needDecimalCheck[i]); // todo remove dev item
       const decimals = await this.getDecimals(this.needDecimalCheck[i]);
       if (withChangelly.ETH[this.needDecimalCheck[i].symbol] && decimals) {
         withChangelly.ETH[this.needDecimalCheck[i].symbol].decimals = +decimals;

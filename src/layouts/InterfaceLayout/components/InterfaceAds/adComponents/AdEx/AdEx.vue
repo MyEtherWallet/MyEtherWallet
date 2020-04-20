@@ -41,6 +41,7 @@ export default {
   },
   data() {
     return {
+      active: process.env.NODE_ENV === 'production',
       height: 60,
       width: 468
     };
@@ -52,13 +53,16 @@ export default {
   },
   methods: {
     scale() {
-      const el = document.getElementById('adexContainerOuter');
-      const frame = document.getElementById('iframe');
-      frame.style.transform = `scale(${el.offsetWidth / 486})`;
-      frame.style['-ms-transform'] = `scale(${el.offsetWidth / 486})`;
-      frame.style['-moz-transform'] = `scale(${el.offsetWidth / 486})`;
-      frame.style['-o-transform'] = `scale(${el.offsetWidth / 486})`;
-      frame.style['-webkit-transform'] = `scale(${el.offsetWidth / 486})`;
+      if(this.active){
+        const el = document.getElementById('adexContainerOuter');
+        const frame = document.getElementById('iframe');
+        frame.style.transform = `scale(${el.offsetWidth / 486})`;
+        frame.style['-ms-transform'] = `scale(${el.offsetWidth / 486})`;
+        frame.style['-moz-transform'] = `scale(${el.offsetWidth / 486})`;
+        frame.style['-o-transform'] = `scale(${el.offsetWidth / 486})`;
+        frame.style['-webkit-transform'] = `scale(${el.offsetWidth / 486})`;
+      }
+
     }
   }
 };

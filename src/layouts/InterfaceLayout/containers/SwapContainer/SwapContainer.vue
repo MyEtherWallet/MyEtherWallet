@@ -876,7 +876,6 @@ export default {
           }
         }
       } catch (e) {
-        console.log(e); // todo remove dev item
         //abort (empty response from provider or failure to finalize details)
         if (e.message === 'abort') {
           this.finalizingSwap = false;
