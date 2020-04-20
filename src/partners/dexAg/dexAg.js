@@ -7,7 +7,7 @@ import {
   TIME_SWAP_VALID,
   PROVIDER_NAME,
   PROXY_CONTRACT_ADDRESS,
-  SUPPORTED_DEXES,
+  SUPPORTED_DEXES
 } from './config';
 import dexAgCalls from './dexAg-calls';
 
@@ -84,31 +84,33 @@ export default class DexAg {
     return false;
   }
 
-
   calculateRate(inVal, outVal) {
     return new BigNumber(outVal).div(inVal);
   }
 
   async getRate(fromCurrency, toCurrency, fromValue) {
-    return new Promise(async resolve => {
-      const vals = await dexAgCalls.getPrice(
-        fromCurrency,
-        toCurrency,
-        fromValue
-      );
+    return new Promise(resolve => {
+      const wrapGetRate = async () => {
+        const vals = await dexAgCalls.getPrice(
+          fromCurrency,
+          toCurrency,
+          fromValue
+        );
 
-      resolve(
-        vals.map(val => {
-          const isKnownToWork = SUPPORTED_DEXES.includes(val.dex);
-          return {
-            fromCurrency,
-            toCurrency,
-            provider: val.dex,
-            rate: isKnownToWork ? val.price : 0,
-            additional: { source: 'dexag' }
-          };
-        })
-      );
+        resolve(
+          vals.map(val => {
+            const isKnownToWork = SUPPORTED_DEXES.includes(val.dex);
+            return {
+              fromCurrency,
+              toCurrency,
+              provider: val.dex,
+              rate: isKnownToWork ? val.price : 0,
+              additional: { source: 'dexag' }
+            };
+          })
+        );
+      };
+      wrapGetRate();
     });
   }
 

@@ -21,10 +21,10 @@
             />
             <label :for="provider.provider" />
           </div>
-          <div class="provider-image" v-if="providerLogo(provider.provider)">
+          <div v-if="providerLogo(provider.provider)" class="provider-image">
             <img :src="providerLogo(provider.provider)" alt />
           </div>
-          <div class="provider-image" v-else>
+          <div v-else class="provider-image">
             <h4>{{ provider.provider }}</h4>
           </div>
           <div
@@ -144,7 +144,7 @@
           <div class="mew-custom-form__radio-button">
             <input type="radio" name="provider" />
           </div>
-          <div class="provider-image" v-if="providerLogo('mew')">
+          <div v-if="providerLogo('mew')" class="provider-image">
             <img :src="providerLogo('mew')" alt />
           </div>
 

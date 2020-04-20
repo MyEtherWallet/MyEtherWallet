@@ -13,7 +13,6 @@ import {
   OtherCoins,
   fiat
 } from './partnersConfig';
-import providerNames from './index'
 
 function comparator(arrayForSort) {
   if (!arrayForSort) arrayForSort = TOP_OPTIONS_ORDER;
@@ -345,14 +344,15 @@ export default class SwapProviders {
       const provider = this.providers.get(swapDetails.provider);
       swapDetails.maybeToken = SwapProviders.isToken(swapDetails.fromCurrency);
       return provider.startSwap(swapDetails);
-    } else if(providerDetails.additional){
-      if(providerDetails.additional.source === 'dexag'){
+    } else if (providerDetails.additional) {
+      if (providerDetails.additional.source === 'dexag') {
         const provider = this.providers.get('dexag');
-        swapDetails.maybeToken = SwapProviders.isToken(swapDetails.fromCurrency);
+        swapDetails.maybeToken = SwapProviders.isToken(
+          swapDetails.fromCurrency
+        );
         return provider.startSwap(swapDetails);
       }
     }
-
   }
 
   // Helper Methods

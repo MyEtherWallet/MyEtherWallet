@@ -2,7 +2,6 @@ import { BitySwap, BityCurrencies, PROVIDER_NAME as bity } from './bity';
 import {
   KyberCurrencies,
   KyberSwap,
-  PROVIDER_NAME as kybernetwork
 } from './kyber';
 import {
   ChangellyCurrencies,
@@ -12,7 +11,6 @@ import {
 
 import {
   DexAg,
-  ChangellyCurrencies as dexAgCurrencies,
   PROVIDER_NAME as dexAg
 } from './dexAg';
 import {
