@@ -913,16 +913,18 @@ export default {
             //   });
             this.$refs.signatureModal.$refs.signatureModal.show();
             this.sendSignedCallback = async signed => {
-              await this.swap.extraActions(
+              const resultDetails = await this.swap.extraActions(
                 this.providerNames.bity,
                 'sendSigned',
                 {
                   signature: signed,
                   signature_submission_url: this.swapDetails
                     .dataForInitialization.messageToSign
-                    .signature_submission_url
+                    .signature_submission_url,
+                  statusId: this.swapDetails.dataForInitialization.id
                 }
               );
+              console.log(resultDetails); // todo remove dev item
               this.openConfirmModal(this.swapDetails);
             };
           } else {
