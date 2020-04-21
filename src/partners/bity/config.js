@@ -58,7 +58,9 @@ const bityMethods = {
   getExitOrderDetails: 'getExitOrderDetails',
   statusFiat: 'getStatusFiat',
   getFiatRates: 'getFiatRates',
-  getCryptoRates: 'getCryptoRates'
+  getCryptoRates: 'getCryptoRates',
+  sendSignedMessageV2: 'sendSignedMessageV2',
+  createTransactionV2: 'createTransactionV2',
 };
 
 const BITY_URL = 'https://bity.com';
