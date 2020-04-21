@@ -1,3 +1,7 @@
+### Feature
+
+- Add Dex.ag [#2099](https://github.com/MyEtherWallet/MyEtherWallet/pull/2099)
+
 ### Release v5.5.4
 
 ### Feature
