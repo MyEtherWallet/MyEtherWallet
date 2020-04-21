@@ -37,7 +37,6 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 150px;
   font-size: 18px;
   font-weight: 500;
   text-overflow: ellipsis;
@@ -55,4 +54,8 @@
 
 .balance-check {
   margin-right: 0 !important;
+}
+
+.balance-contents {
+  width: calc(100% - 50px);
 }

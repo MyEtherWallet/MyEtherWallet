@@ -10,11 +10,13 @@
           <div class="title">
             {{ $t('common.network') }}
           </div>
-          <p v-if="account.identifier !== identifier">
+          <p v-if="account.identifier !== identifier" class="ellipsis">
             {{ network.service + '(' + network.type.name + ')' }}
           </p>
-          <p v-else>{{ 'Web3 Provider' + '(' + network.type.name + ')' }}</p>
-          <p>
+          <p v-else class="ellipsis">
+            {{ 'Web3 Provider' + '(' + network.type.name + ')' }}
+          </p>
+          <p class="ellipsis">
             {{ $t('interface.network-modal.last-block') }}# :
             <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span>
             <i v-show="parsedNetwork === ''" class="fa fa-spinner fa-spin" />

@@ -36,6 +36,8 @@
 }
 
 .information-container {
+  width: calc(100% - 93px);
+
   p {
     color: white;
     margin-bottom: -2px !important;
@@ -54,4 +56,10 @@
     background-color: #0000001a;
     color: white;
   }
+}
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
