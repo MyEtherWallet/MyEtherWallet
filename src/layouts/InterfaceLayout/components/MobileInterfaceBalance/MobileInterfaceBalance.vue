@@ -6,7 +6,7 @@
         <img alt class="icon" src="~@/assets/images/icons/wallet.svg" />
       </div>
       <div class="block-content">
-        <div>
+        <div class="balance-contents">
           <div class="title-block">
             {{ $t('common.balance.string') }}
           </div>
