@@ -397,7 +397,6 @@ export default class BitySwap {
       }
     } else if (!this.checkIfExit(swapDetails)) {
       swapDetails.dataForInitialization = await this.buildOrder(swapDetails);
-      console.log(swapDetails.dataForInitialization); // todo remove dev item
       if (!swapDetails.dataForInitialization) throw Error('abort');
       swapDetails.providerReceives =
         swapDetails.dataForInitialization.input.amount;

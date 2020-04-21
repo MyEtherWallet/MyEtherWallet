@@ -16,7 +16,6 @@ const getRates = async () => {
     if (results.error) {
       throw Error(results.error.message);
     }
-    console.log(results); // todo remove dev item
 
     return results.result;
   } catch (e) {
@@ -33,7 +32,6 @@ const getExitRates = async () => {
     if (results.error) {
       throw Error(results.error.message);
     }
-    console.log(results); // todo remove dev item
 
     return results.result;
   } catch (e) {
@@ -50,7 +48,6 @@ const getEstimate = async orderInfo => {
     if (results.error) {
       throw Error(results.error.message);
     }
-    console.log(results); // todo remove dev item
     return results.result;
   } catch (e) {
     utils.handleOrThrow(e);
@@ -66,7 +63,6 @@ const createOrder = async orderInfo => {
     if (results.error) {
       throw Error(results.error.message);
     }
-    console.log(results); // todo remove dev item
 
     return results.result;
   } catch (e) {
@@ -85,7 +81,6 @@ const openOrder = async orderInfo => {
     if (results.error) {
       throw Error(results.error.message);
     }
-    console.log(results); // todo remove dev item
 
     return results.result;
   } catch (e) {
@@ -119,7 +114,6 @@ const orderDetails = async orderInfo => {
     if (results.error) {
       throw Error(results.error.message);
     }
-    console.log(results); // todo remove dev item
 
     return results.result;
   } catch (e) {
@@ -140,7 +134,6 @@ const getStatus = async orderInfo => {
       }
       throw Error(results.error.message);
     }
-    console.log(results); // todo remove dev item
 
     return results.result;
   } catch (e) {
