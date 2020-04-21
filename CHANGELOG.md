@@ -1,6 +1,13 @@
+### Release v5.5.5
+
 ### Feature
 
 - Add/update mobile interface Address, Balance, Network blocks [#2273](https://github.com/MyEtherWallet/MyEtherWallet/pull/2273)
+
+
+### Devop
+
+- Token Icons [#2276](https://github.com/MyEtherWallet/MyEtherWallet/pull/2276)
 
 ### Release v5.5.4
 
