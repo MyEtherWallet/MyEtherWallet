@@ -76,7 +76,6 @@ const createTransaction = async transactionParams => {
 
 const supportedDexes = async () => {
   try {
-
     const results = await post(
       buildPath(),
       utils.buildPayload(dexAgMethods.supportedDexes, {})
@@ -89,7 +88,7 @@ const supportedDexes = async () => {
   } catch (e) {
     utils.handleOrThrow(e);
   }
-}
+};
 
 export default {
   getSupportedCurrencies,
