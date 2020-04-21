@@ -60,7 +60,7 @@ const bityMethods = {
   getFiatRates: 'getFiatRates',
   getCryptoRates: 'getCryptoRates',
   sendSignedMessageV2: 'sendSignedMessageV2',
-  createTransactionV2: 'createTransactionV2',
+  createTransactionV2: 'createTransactionV2'
 };
 
 const BITY_URL = 'https://bity.com';

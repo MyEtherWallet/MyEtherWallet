@@ -900,20 +900,9 @@ export default {
             this.isBityCryptoToCrypto('REP')
           ) {
             this.stringToSign = this.swapDetails.dataForInitialization.messageToSign.body;
-            // this.web3.eth
-            //   .sign(this.swapDetails.dataForInitialization.messageToSign.body, this.account.address)
-            //   .then(async signed =>{
-            //     await this.swap.extraActions(this.providerNames.bity, 'sendSigned', {signature: signed, signature_submission_url: this.swapDetails.dataForInitialization.messageToSign.signature_submission_url});
-            //     this.openConfirmModal(this.swapDetails);
-            //     // this.sendSigned(signed);
-            //     // this.$refs.signatureModal.hide();
-            //   })
-            //   .catch(e => {
-            //     Toast.responseHandler(e, Toast.ERROR);
-            //   });
             this.$refs.signatureModal.$refs.signatureModal.show();
             this.sendSignedCallback = async signed => {
-              const resultDetails = await this.swap.extraActions(
+              await this.swap.extraActions(
                 this.providerNames.bity,
                 'sendSigned',
                 {
@@ -924,7 +913,6 @@ export default {
                   statusId: this.swapDetails.dataForInitialization.id
                 }
               );
-              console.log(resultDetails); // todo remove dev item
               this.openConfirmModal(this.swapDetails);
             };
           } else {
