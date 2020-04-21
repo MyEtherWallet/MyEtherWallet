@@ -4,6 +4,9 @@
 
 - Add/update mobile interface Address, Balance, Network blocks [#2273](https://github.com/MyEtherWallet/MyEtherWallet/pull/2273)
 
+### Bug
+
+- Bitbox sizing mismatch [#2265](https://github.com/MyEtherWallet/MyEtherWallet/pull/2265)
 
 ### Devop
 
