@@ -26,7 +26,8 @@ const SUPPORTED_DEXES = [
   'radar-relay', //ETH to Token -> , Token to Token ->
   'oasis', //ETH to Token -> OK, Token to Token ->  | (did have 1 eth-> token fail revert)
   'synthetix', //ETH to Token -> , Token to Token ->
-  'curvefi' //ETH to Token -> , Token to Token ->
+  'curvefi', //ETH to Token -> , Token to Token ->
+  'ag'
 ];
 
 const dexAgMethods = {

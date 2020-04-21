@@ -57,6 +57,9 @@ const getPrice = async (fromToken, toToken, fromValue) => {
 
 const createTransaction = async transactionParams => {
   try {
+    if (transactionParams.dex === 'dexag') {
+      transactionParams.dex = 'ag';
+    }
     const results = await post(
       buildPath(),
       utils.buildPayload(dexAgMethods.createTransaction, { transactionParams })

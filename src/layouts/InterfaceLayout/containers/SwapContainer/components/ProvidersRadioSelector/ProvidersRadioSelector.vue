@@ -217,7 +217,7 @@ import DexAg from '@/assets/images/etc/dexag.svg';
 
 import Bancor from '@/assets/images/etc/bancor.png';
 import UniSwap from '@/assets/images/etc/uniswap.svg';
-import Zx from '@/assets/images/etc/0x.png';
+import Zx from '@/assets/images/etc/0x.svg';
 
 import { providerNames, fiat } from '@/partners';
 
@@ -358,7 +358,6 @@ export default {
         });
       } else if (this.providerData.length !== 0) {
         const activeProviders = this.listActiveProviders();
-
         return this.allSupportedProviders.filter(entry => {
           return !activeProviders.includes(entry);
         });

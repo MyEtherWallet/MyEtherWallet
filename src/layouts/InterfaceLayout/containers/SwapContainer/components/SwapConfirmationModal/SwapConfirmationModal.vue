@@ -341,7 +341,6 @@ export default {
           swapDetails.maybeToken &&
           swapDetails.fromCurrency === BASE_CURRENCY
         ) {
-          console.log('here???', swapDetails);
           this.preparedSwap = {
             from: this.account.address,
             to: swapDetails.providerAddress,
@@ -360,12 +359,6 @@ export default {
       } else {
         this.preparedSwap = swapDetails.dataForInitialization.map(entry => {
           entry.from = this.account.address;
-          if (
-            +unit.toWei(this.gasPrice, 'gwei').toString() >
-            +swapDetails.kyberMaxGas
-          ) {
-            entry.gasPrice = swapDetails.kyberMaxGas;
-          }
           return entry;
         });
       }

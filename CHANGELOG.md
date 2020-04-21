@@ -3,7 +3,7 @@
 ### Feature
 
 - ENS Avatar [#2238](https://github.com/MyEtherWallet/MyEtherWallet/pull/2238)
-- Unstoppable domain buy domain [#2229] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2229)
+- Unstoppable domain buy domain [#2229](https://github.com/MyEtherWallet/MyEtherWallet/pull/2229)
 
 ### Devop
 

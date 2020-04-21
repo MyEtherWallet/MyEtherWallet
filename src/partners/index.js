@@ -1,18 +1,11 @@
 import { BitySwap, BityCurrencies, PROVIDER_NAME as bity } from './bity';
 import {
-  KyberCurrencies,
-  KyberSwap,
-} from './kyber';
-import {
   ChangellyCurrencies,
   ChangellySwap,
   PROVIDER_NAME as changelly
 } from './changelly';
 
-import {
-  DexAg,
-  PROVIDER_NAME as dexAg
-} from './dexAg';
+import { DexAg, PROVIDER_NAME as dexAg } from './dexAg';
 import {
   Simplex,
   SimplexCurrencies,
@@ -68,8 +61,6 @@ export {
   MIN_SWAP_AMOUNT,
   BitySwap,
   BityCurrencies,
-  KyberSwap,
-  KyberCurrencies,
   Simplex,
   SimplexCurrencies,
   ChangellySwap,
