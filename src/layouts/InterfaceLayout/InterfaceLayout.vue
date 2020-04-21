@@ -174,6 +174,7 @@ import {
   MNEMONIC as MNEMONIC_TYPE,
   BCVAULT as BC_VAULT
 } from '@/wallets/bip44/walletTypes';
+
 export default {
   name: 'Interface',
   components: {
