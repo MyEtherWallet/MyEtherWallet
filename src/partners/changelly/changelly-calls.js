@@ -10,7 +10,10 @@ function buildPath() {
 const getCurrencies = async network => {
   try {
     if (changellyMethods[network]) {
-      const results = await get('https://api-v2.dex.ag/token-list-full');
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(changellyMethods[network].currenciesFull, {})
+      );
 
       if (results.error) {
         throw Error(results.error.message);
