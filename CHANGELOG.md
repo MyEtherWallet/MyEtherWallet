@@ -2,8 +2,9 @@
 
 ### Feature
 
+- Add/update mobile interface Address, Balance, Network blocks [#2273](https://github.com/MyEtherWallet/MyEtherWallet/pull/2273)
 - ENS Avatar [#2238](https://github.com/MyEtherWallet/MyEtherWallet/pull/2238)
-- Unstoppable domain buy domain [#2229] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2229)
+- Unstoppable domain buy domain [#2229](https://github.com/MyEtherWallet/MyEtherWallet/pull/2229)
 
 ### Devop
 
