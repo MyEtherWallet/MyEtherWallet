@@ -103,7 +103,7 @@ export default class DexAg {
             return {
               fromCurrency,
               toCurrency,
-              provider: val.dex,
+              provider: val.dex !== 'ag' ? val.dex : 'dexag',
               rate: isKnownToWork ? val.price : 0,
               additional: { source: 'dexag' }
             };
