@@ -33,7 +33,8 @@ const SUPPORTED_DEXES = [
 const dexAgMethods = {
   getPrice: 'getPrice',
   getSupportedCurrencies: 'getSupportedCurrencies',
-  createTransaction: 'createTransaction'
+  createTransaction: 'createTransaction',
+  supportedDexes: 'supportedDexes'
 };
 
 export {

@@ -29,6 +29,7 @@ export default class DexAg {
     this.useFixed = true;
     this.tokenDetails = {};
     this.web3 = props.web3;
+    this.getSupportedDexes();
     this.getSupportedCurrencies(this.network);
   }
 
@@ -38,6 +39,18 @@ export default class DexAg {
 
   static isDex() {
     return true;
+  }
+
+  async getSupportedDexes(){
+    try {
+      this.SUPPORTED_DEXES = await dexAgCalls.supportedDexes();
+      if(!this.SUPPORTED_DEXES){
+        this.SUPPORTED_DEXES = SUPPORTED_DEXES;
+      }
+    } catch (e) {
+      this.SUPPORTED_DEXES = SUPPORTED_DEXES;
+    }
+    console.log(this.SUPPORTED_DEXES); // todo remove dev item
   }
 
   async getSupportedCurrencies() {
@@ -99,7 +112,7 @@ export default class DexAg {
 
         resolve(
           vals.map(val => {
-            const isKnownToWork = SUPPORTED_DEXES.includes(val.dex);
+            const isKnownToWork = this.SUPPORTED_DEXES.includes(val.dex);
             return {
               fromCurrency,
               toCurrency,
@@ -158,10 +171,12 @@ export default class DexAg {
 
   async approve(tokenAddress, spender, fromValueWei) {
     try {
+      console.log(tokenAddress, spender, fromValueWei); // todo remove dev item
       const methodObject = new this.web3.eth.Contract(
         ERC20,
         tokenAddress
       ).methods.approve(spender, fromValueWei);
+      console.log( methodObject.encodeABI()); // todo remove dev item
       return {
         to: tokenAddress,
         value: 0,
@@ -265,6 +280,11 @@ export default class DexAg {
       if (tradeDetails.metadata.gasPrice) {
         tx.gasPrice = tradeDetails.metadata.gasPrice;
       }
+
+      if(preparedTradeTxs.size > 0){
+        tx.gas = 1000000;
+      }
+
       preparedTradeTxs.add(tx);
 
       const swapTransactions = Array.from(preparedTradeTxs);
@@ -279,7 +299,7 @@ export default class DexAg {
   async startSwap(swapDetails) {
     swapDetails.maybeToken = true;
 
-    const dexToUse = SUPPORTED_DEXES.includes(swapDetails.provider)
+    const dexToUse = this.SUPPORTED_DEXES.includes(swapDetails.provider)
       ? swapDetails.provider
       : 'ag';
 
