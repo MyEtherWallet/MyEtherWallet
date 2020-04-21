@@ -17,7 +17,7 @@
   },
   "options_page": "index.html",
   "background": {
-    "persistent": true,
+    "persistent": false,
     "page": "page.html"
   },
   "content_scripts": [
@@ -34,7 +34,7 @@
     "img/*.jpg",
     "/js"
   ],
-  "permissions": ["<all_urls>", "storage", "tabs", "activeTab", "downloads", "notifications"],
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self' ",
+  "permissions": ["storage", "tabs", "activeTab", "downloads", "notifications"],
+  "content_security_policy": "script-src 'self'; object-src 'self' ",
   "version": "5.3.0"
 }

@@ -25,18 +25,17 @@ import {
   WEB3_INJECT_SUCCESS
 } from './cxEvents';
 import utils from 'web3-utils';
-const chrome = window.chrome;
-chrome.tabs.onUpdated.addListener(onUpdatedCb);
-chrome.tabs.onActivated.addListener(onActivatedCb);
-chrome.tabs.onRemoved.addListener(onRemovedCb);
-chrome.runtime.onInstalled.addListener(onInstalledCb);
-chrome.runtime.onStartup.addListener(onStartupCb);
-chrome.runtime.onMessage.addListener(eventsListeners);
+window.chrome.tabs.onUpdated.addListener(onUpdatedCb);
+window.chrome.tabs.onActivated.addListener(onActivatedCb);
+window.chrome.tabs.onRemoved.addListener(onRemovedCb);
+window.chrome.runtime.onInstalled.addListener(onInstalledCb);
+window.chrome.runtime.onStartup.addListener(onStartupCb);
+window.chrome.runtime.onMessage.addListener(eventsListeners);
 
 // Set default values on init
 const networkChanger = items => {
   if (!items.hasOwnProperty('favorites')) {
-    chrome.storage.sync.set({
+    window.chrome.storage.sync.set({
       favorites: JSON.stringify([])
     });
   }
@@ -46,7 +45,7 @@ const networkChanger = items => {
     if (networkProps.hasOwnProperty('url')) {
       network = store.state.main.Networks[networkProps.key][0];
 
-      chrome.storage.sync.set({
+      window.chrome.storage.sync.set({
         defNetwork: JSON.stringify({
           key: network.type.name,
           service: network.service
@@ -54,7 +53,7 @@ const networkChanger = items => {
       });
     } else {
       network = store.state.main.Networks[networkProps.key][0];
-      chrome.storage.sync.set({
+      window.chrome.storage.sync.set({
         defNetwork: JSON.stringify({
           key: network.type.name,
           service: network.service
@@ -67,7 +66,7 @@ const networkChanger = items => {
         store
           .dispatch('main/setWeb3Instance', network.url, { root: true })
           .then(() => {
-            chrome.storage.sync.set({
+            window.chrome.storage.sync.set({
               defChainID: store.state.main.network.type.chainID
             });
           });
@@ -75,7 +74,7 @@ const networkChanger = items => {
     }
   } else {
     store.dispatch('main/setWeb3Instance', { root: true });
-    chrome.storage.sync.set({
+    window.chrome.storage.sync.set({
       defChainID: store.state.main.network.type.chainID,
       defNetwork: JSON.stringify({
         service: store.state.main.network.service,
@@ -85,10 +84,10 @@ const networkChanger = items => {
   }
 };
 
-chrome.storage.sync.get(null, networkChanger);
+window.chrome.storage.sync.get(null, networkChanger);
 
 // Listens for network changes and sets background store to match client store
-chrome.storage.onChanged.addListener(items => {
+window.chrome.storage.onChanged.addListener(items => {
   Object.keys(items).forEach(item => {
     if (isAddress(item)) {
       const currentNotifications = JSON.parse(
@@ -122,14 +121,15 @@ chrome.storage.onChanged.addListener(items => {
 });
 
 const urls = {};
+function setTimeoutCb() {
+  window.chrome.storage.sync.remove('warned');
+}
 // eslint-disable-next-line
 let metamaskChecker;
 const eventsListeners = (request, _, callback) => {
   if (request.event === CX_WEB3_DETECTED) {
     clearTimeout(metamaskChecker);
-    metamaskChecker = setTimeout(() => {
-      chrome.storage.sync.remove('warned');
-    }, 180000); // Clear var in 3 minutes
+    metamaskChecker = setTimeout(setTimeoutCb, 180000); // Clear var in 3 minutes
   }
 
   const payload = utils._.mapObject(
@@ -161,13 +161,17 @@ const eventsListeners = (request, _, callback) => {
   middleware.run(obj, callback);
   return true;
 };
-chrome.tabs.query({ active: true, lastFocusedWindow: true }, function (tabs) {
+
+// Query tabs
+window.chrome.tabs.query({ active: true, lastFocusedWindow: true }, function (
+  tabs
+) {
   querycB(tabs);
 });
 
 function onRemovedCb(id) {
   if (urls[id]) {
-    chrome.storage.sync.remove(urls[id], () => {});
+    window.chrome.storage.sync.remove(urls[id], () => {});
     delete urls[id];
   }
 }
@@ -186,7 +190,7 @@ function onUpdatedCb(_, __, tab) {
   }
 }
 function onActivatedCb(info) {
-  chrome.tabs.get(info.tabId, function (tab) {
+  window.chrome.tabs.get(info.tabId, function (tab) {
     if (
       typeof tab !== 'undefined' &&
       Object.keys(tab).length > 0 &&
@@ -199,26 +203,26 @@ function onActivatedCb(info) {
 }
 
 function onInstalledCb() {
-  chrome.runtime.onMessage.removeListener(eventsListeners);
-  chrome.runtime.onMessage.addListener(eventsListeners);
+  window.chrome.runtime.onMessage.removeListener(eventsListeners);
+  window.chrome.runtime.onMessage.addListener(eventsListeners);
 }
 
 function onStartupCb() {
   onInstalledCb();
   // redo stored addresses to checksum.
-  chrome.storage.sync.get(null, obj => {
+  window.chrome.storage.sync.get(null, obj => {
     const objKeys = Object.keys(obj);
     const newStore = {};
     if (objKeys.length > 0) {
       objKeys.forEach(item => {
         if (isAddress(item)) {
           newStore[toChecksumAddress(item)] = obj[item];
-          chrome.storage.sync.remove(item);
+          window.chrome.storage.sync.remove(item);
         } else {
           newStore[item] = obj[item];
         }
       });
-      chrome.storage.sync.set(newStore);
+      window.chrome.storage.sync.set(newStore);
     }
   });
 }
@@ -260,22 +264,30 @@ function querycB(tab) {
         urlRedirect = encodeURI(
           `https://www.myetherwallet.com/phishing-catcher?phishing-address=${tab.url}`
         );
-        chrome.tabs.update(null, { url: urlRedirect });
+        window.chrome.tabs.update(null, { url: urlRedirect });
       } else {
         // Injects web3
-        chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function () {
-          chrome.tabs.sendMessage(tab.id, {
-            event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
-          });
-        });
+        window.chrome.tabs.sendMessage(
+          tab.id,
+          { event: CX_INJECT_WEB3 },
+          function () {
+            window.chrome.tabs.sendMessage(tab.id, {
+              event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
+            });
+          }
+        );
       }
     } else {
       // Injects web3
-      chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function () {
-        chrome.tabs.sendMessage(tab.id, {
-          event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
-        });
-      });
+      window.chrome.tabs.sendMessage(
+        tab.id,
+        { event: CX_INJECT_WEB3 },
+        function () {
+          window.chrome.tabs.sendMessage(tab.id, {
+            event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
+          });
+        }
+      );
     }
   }
 }
