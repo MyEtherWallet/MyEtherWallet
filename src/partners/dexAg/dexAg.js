@@ -41,16 +41,15 @@ export default class DexAg {
     return true;
   }
 
-  async getSupportedDexes(){
+  async getSupportedDexes() {
     try {
       this.SUPPORTED_DEXES = await dexAgCalls.supportedDexes();
-      if(!this.SUPPORTED_DEXES){
+      if (!this.SUPPORTED_DEXES) {
         this.SUPPORTED_DEXES = SUPPORTED_DEXES;
       }
     } catch (e) {
       this.SUPPORTED_DEXES = SUPPORTED_DEXES;
     }
-    console.log(this.SUPPORTED_DEXES); // todo remove dev item
   }
 
   async getSupportedCurrencies() {
@@ -88,9 +87,6 @@ export default class DexAg {
   }
 
   validSwap(fromCurrency, toCurrency) {
-    // if (disabled.includes(fromCurrency) || disabled.includes(toCurrency)) {
-    //   return false;
-    // }
     if (this.isValidNetwork) {
       return this.currencies[fromCurrency] && this.currencies[toCurrency];
     }
@@ -171,12 +167,11 @@ export default class DexAg {
 
   async approve(tokenAddress, spender, fromValueWei) {
     try {
-      console.log(tokenAddress, spender, fromValueWei); // todo remove dev item
       const methodObject = new this.web3.eth.Contract(
         ERC20,
         tokenAddress
       ).methods.approve(spender, fromValueWei);
-      console.log( methodObject.encodeABI()); // todo remove dev item
+
       return {
         to: tokenAddress,
         value: 0,
@@ -281,7 +276,7 @@ export default class DexAg {
         tx.gasPrice = tradeDetails.metadata.gasPrice;
       }
 
-      if(preparedTradeTxs.size > 0){
+      if (preparedTradeTxs.size > 0) {
         tx.gas = 1000000;
       }
 

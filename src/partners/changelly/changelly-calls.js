@@ -1,4 +1,4 @@
-import { post, get } from '@/helpers/httpRequests';
+import { post } from '@/helpers/httpRequests';
 import { changellyMethods } from './config';
 import { swapApiEndpoints } from '../partnersConfig';
 import { utils } from '../helpers';
