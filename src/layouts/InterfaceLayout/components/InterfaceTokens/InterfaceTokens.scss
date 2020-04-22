@@ -95,7 +95,7 @@
         }
 
         .token-icon {
-          width: 30px;
+          height: 100%;
         }
 
         td:nth-child(2) {
@@ -158,5 +158,8 @@
 
   figure {
     margin-right: 15px;
+    height: 30px;
+    width: 30px;
+    text-align: center;
   }
 }
