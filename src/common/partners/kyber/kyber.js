@@ -116,9 +116,7 @@ export default class Kyber {
   }
 
   async kyberNetworkState() {
-    return await this.getKyberContractObject()
-      .methods.enabled()
-      .call();
+    return await this.getKyberContractObject().methods.enabled().call();
   }
 
   setNetwork(network) {
@@ -564,10 +562,7 @@ export default class Kyber {
   getTokenTradeGas(fromCurrency, toCurrency) {
     const fromGas = this.getTokenSwapGas(fromCurrency);
     const toGas = this.getTokenSwapGas(toCurrency);
-    return toBigNumber(fromGas)
-      .plus(toBigNumber(toGas))
-      .toFixed(0)
-      .toString();
+    return toBigNumber(fromGas).plus(toBigNumber(toGas)).toFixed(0).toString();
   }
 
   getTokenApprovalGas(token) {

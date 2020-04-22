@@ -89,6 +89,7 @@ export default class BitySwap {
   }
 
   async retrieveRates() {
+    // eslint-disable-next-line no-useless-catch
     try {
       if (!this.isValidNetwork) return;
       const exitRates = await getExitRates();
