@@ -9,7 +9,11 @@
   >
     <img
       v-show="!isBeenTwoWeeks"
-      src="@/assets/images/new-label.png"
+      :src="
+        title === dappsTitle.unstoppableDomains
+          ? require('@/assets/images/unstoppable-promo.png')
+          : require('@/assets/images/new-label.png')
+      "
       class="new-label"
       alt
     />
@@ -69,7 +73,8 @@ export default {
     return {
       dappsTitle: {
         ambrpay: 'Ambrpay',
-        aave: 'Aave'
+        aave: 'Aave',
+        unstoppableDomains: 'Unstoppable Domains'
       }
     };
   },
