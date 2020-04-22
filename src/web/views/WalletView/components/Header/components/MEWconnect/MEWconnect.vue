@@ -1,16 +1,22 @@
 <template>
-  <div class="d-flex align-center">
-    <img src="@/assets/images/icons/icon-mew-connect.svg" />
-    <div class="mew-connect-text ml-1">
-      <div>MEWconnect</div>
-      <div>Connected...</div>
-    </div>
+  <div>
+    <MewWalletStatus>
+      <div class="d-flex align-center cursor--pointer">
+        <img src="@/assets/images/icons/icon-mew-connect.svg" />
+        <div class="mew-connect-text ml-1">
+          <div>MEWconnect</div>
+          <div>Connected...</div>
+        </div>
+      </div>
+    </MewWalletStatus>
   </div>
 </template>
 
 <script>
+import MewWalletStatus from '@/web/components/Popups/MewWalletStatus';
+
 export default {
-  components: {},
+  components: { MewWalletStatus },
   data() {
     return {};
   },

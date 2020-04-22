@@ -12,7 +12,8 @@
       <v-spacer />
       <StdButton
         size="x-large"
-        buttonclass="button--white-border"
+        outlined
+        color="white"
         href="https://www.mewtopia.com/"
         target="_blank"
         >Get Started</StdButton

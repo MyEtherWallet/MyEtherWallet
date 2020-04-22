@@ -22,17 +22,18 @@
             <div class="mt-7">
               <StdButton
                 size="x-large"
-                buttonclass="button--green"
                 class="mr-4"
                 :to="{ name: 'HomeCreateWallet' }"
-                >Get a new wallet</StdButton
               >
+                Get a new wallet
+              </StdButton>
               <StdButton
                 size="x-large"
-                buttonclass="button--green-border"
+                outlined
                 :to="{ name: 'HomeAccessWallet' }"
-                >Access my wallet</StdButton
               >
+                Access my wallet
+              </StdButton>
             </div>
           </v-card>
         </v-col>

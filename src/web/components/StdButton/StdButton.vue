@@ -1,18 +1,19 @@
 <template>
   <v-btn
+    class="std-button"
+    :color="color"
+    :outlined="outlined"
     :height="height"
     :x-large="size === 'x-large' ? true : false"
     :large="size === 'large' ? true : false"
     :small="size === 'small' ? true : false"
     :x-small="size === 'x-small' ? true : false"
-    dark
     depressed
-    class="std-button"
+    dark
     :class="[
-      buttonclass,
-      minwidth == true ? 'btn-min-width' : '',
-      fontclass,
-      fullwidth == true ? 'btn-full-width' : ''
+      noMinWidth ? '' : 'btn-min-width',
+      fullwidth ? 'btn-full-width' : '',
+      fontclass
     ]"
     :disabled="disabled"
     :to="to"
@@ -25,11 +26,12 @@
 <script>
 export default {
   props: {
-    buttonclass: { default: 'button--green', type: String },
+    color: { default: 'emerald', type: String },
+    outlined: { default: false, type: Boolean },
     to: { default: () => {}, type: Object },
     href: { default: '', type: String },
     disabled: { default: false, type: Boolean },
-    minwidth: { default: true, type: Boolean },
+    noMinWidth: { default: false, type: Boolean },
     fullwidth: { default: false, type: Boolean },
     size: { default: '', type: String },
     height: { default: '', type: String },
@@ -40,8 +42,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 .btn-min-width {
   min-width: 180px !important;
 }
@@ -52,34 +52,12 @@ export default {
 
 .std-button {
   text-transform: none;
-  letter-spacing: 0px;
+  letter-spacing: 1px;
   font-size: 14px !important;
   font-weight: 500;
 }
 
-.button--green {
-  background-color: $emerald !important;
-  color: white !important;
-}
-
-.button--green-border {
-  background-color: transparent !important;
-  border: 1px solid $emerald;
-  color: $emerald !important;
-}
-
-.button--white {
-  background-color: white !important;
-  color: $emerald !important;
-}
-
-.button--white-border {
-  background-color: transparent !important;
-  border: 1px solid white;
-  color: white !important;
-}
-
 .v-btn--disabled {
-  border: 0px;
+  //border: 0px;
 }
 </style>

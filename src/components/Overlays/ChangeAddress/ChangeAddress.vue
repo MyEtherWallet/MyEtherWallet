@@ -92,7 +92,7 @@ export default {
   props: {
     open: { default: false, type: Boolean },
     close: {
-      default: function() {
+      default: function () {
         return {};
       },
       type: Function
