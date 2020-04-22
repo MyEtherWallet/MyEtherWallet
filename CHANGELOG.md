@@ -1,9 +1,24 @@
+### Release v5.5.5
+
+### Feature
+
+- Add/update mobile interface Address, Balance, Network blocks [#2273](https://github.com/MyEtherWallet/MyEtherWallet/pull/2273)
+
+### Bug
+
+- Reimplement cx account create on account request [#2271](https://github.com/MyEtherWallet/MyEtherWallet/pull/2271)
+- Bitbox sizing mismatch [#2265](https://github.com/MyEtherWallet/MyEtherWallet/pull/2265)
+
+### Devop
+
+- Token Icons [#2276](https://github.com/MyEtherWallet/MyEtherWallet/pull/2276)
+
 ### Release v5.5.4
 
 ### Feature
 
 - ENS Avatar [#2238](https://github.com/MyEtherWallet/MyEtherWallet/pull/2238)
-- Unstoppable domain buy domain [#2229] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2229)
+- Unstoppable domain buy domain [#2229](https://github.com/MyEtherWallet/MyEtherWallet/pull/2229)
 
 ### Devop
 
