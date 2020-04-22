@@ -144,6 +144,7 @@ import { Misc } from '@/helpers';
 import { mapState } from 'vuex';
 import ethUnit from 'ethjs-unit';
 import { WEB3_SIGN_TX } from '@/builds/mewcx/cxHelpers/cxEvents';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 
 export default {
   components: {
@@ -349,7 +350,7 @@ export default {
       const payload = {
         params: _self.raw,
         password: _self.password,
-        signer: _self.raw.from
+        signer: toChecksumAddress(_self.raw.from)
       };
 
       const id = chrome.runtime.id;
