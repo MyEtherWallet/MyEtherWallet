@@ -94,6 +94,10 @@
           cursor: pointer;
         }
 
+        .token-icon {
+          height: 100%;
+        }
+
         td:nth-child(2) {
           text-align: right;
         }
@@ -145,5 +149,17 @@
   .address-container {
     padding-left: 10px;
     word-break: break-word;
+  }
+}
+
+.name-and-icon-container {
+  display: flex;
+  align-items: center;
+
+  figure {
+    margin-right: 15px;
+    height: 30px;
+    width: 30px;
+    text-align: center;
   }
 }
