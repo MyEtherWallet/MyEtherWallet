@@ -29,16 +29,6 @@ function checkAndChange(value) {
   return value;
 }
 
-function checkAndChangeBack(value) {
-  if (value === 'usdt') {
-    return 'USDT Omni';
-  }
-  if (value === 'usdt20') {
-    return 'USDT';
-  }
-  return value;
-}
-
 export default class Changelly {
   constructor(props = {}) {
     this.name = Changelly.getName();
