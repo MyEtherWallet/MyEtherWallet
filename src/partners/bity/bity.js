@@ -485,7 +485,10 @@ export default class BitySwap {
 
   static async getOrderStatusCrypto(noticeDetails) {
     try {
-      const data = await getStatus({orderId: noticeDetails.statusId, token: noticeDetails.special});
+      const data = await getStatus({
+        orderId: noticeDetails.statusId,
+        token: noticeDetails.special
+      });
       if (data.status === bityStatuses.EXEC) {
         return swapNotificationStatuses.COMPLETE;
       }
