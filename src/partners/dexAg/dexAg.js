@@ -278,7 +278,16 @@ export default class DexAg {
       }
 
       if (preparedTradeTxs.size > 0) {
-        tx.gas = 1000000;
+        switch (swapDetails.provider) {
+          case 'curvefi':
+            tx.gas = 2000000;
+            break;
+          case 'zero_x':
+            tx.gas = 1000000;
+            break;
+          default:
+            tx.gas = 750000;
+        }
       }
 
       preparedTradeTxs.add(tx);
