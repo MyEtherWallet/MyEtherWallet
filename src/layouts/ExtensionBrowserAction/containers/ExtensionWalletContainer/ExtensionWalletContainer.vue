@@ -172,7 +172,7 @@ import ExtensionBrowserActionWrapper from '../../wrappers/ExtensionBrowserAction
 import { ExtensionHelpers, Misc, Toast } from '@/helpers';
 import TokenBalance from '@myetherwallet/eth-token-balance';
 import sortByBalance from '@/helpers/sortByBalance.js';
-
+import masterFile from '@/_generated/master-file.json';
 export default {
   components: {
     'watch-only-modal': WatchOnlyModal,
@@ -206,7 +206,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['web3', 'network']),
+    ...mapState('main', ['web3', 'network', 'linkQuery']),
     showLength() {
       return this.showMyWallets === 0
         ? this.myWallets.length
@@ -256,6 +256,19 @@ export default {
       return `$ ${new BigNumber(this.ethPrice)
         .times(this.totalBalance)
         .toFixed(2)}`;
+    },
+    networkTokens() {
+      const newTokenObj = {};
+      const matchedNetwork = masterFile.filter(item => {
+        return (
+          item.network.toLowerCase() === this.network.type.name.toLowerCase()
+        );
+      });
+      matchedNetwork.forEach(item => {
+        newTokenObj[toChecksumAddress(item.contract_address)] = item;
+      });
+
+      return newTokenObj;
     }
   },
   watch: {
@@ -277,6 +290,9 @@ export default {
     }
   },
   mounted() {
+    if (this.linkQuery.hasOwnProperty('connectionRequest')) {
+      this.addWallet();
+    }
     this.$refs.watchOnlyModal.$refs.watchOnlyWallet.$refs.modalWrapper.$on(
       'hidden',
       () => {
@@ -289,6 +305,14 @@ export default {
     }
   },
   methods: {
+    iconFetch(address) {
+      const token = this.networkTokens[toChecksumAddress(address)];
+      if (token && token.icon_png !== '') {
+        return `https://img.mewapi.io/?image=${token.icon_png}&width=50&height=50&fit=scale-down`;
+      }
+
+      return this.network.type.icon;
+    },
     async processAccounts(accs) {
       this.totalBalance = '0';
       this.loading = true;
@@ -340,10 +364,6 @@ export default {
     setToken(address) {
       const tokens = [];
       const tb = new TokenBalance(this.web3.currentProvider);
-      const newLogo = {
-        // eslint-disable-next-line
-          src: require(`@/assets/images/networks/eth-logo.svg`)
-      };
 
       return tb
         .getBalance(address)
@@ -357,7 +377,7 @@ export default {
                   .toFixed(3)
               : 0;
             token.address = token.addr;
-            token['logo'] = newLogo;
+            token.logo = this.iconFetch(token.addr);
             delete token.addr;
             tokens.push(token);
           });
@@ -367,7 +387,7 @@ export default {
         .catch(() => {
           this.network.type.tokens.map(token => {
             token.balance = 'Load';
-            token['logo'] = newLogo;
+            token['logo'] = this.iconFetch(token.address);
             tokens.push(token);
           });
           this.loading = false;
