@@ -13,6 +13,23 @@ $red-filled-button-background: #ff436d;
 $red-filled-button-background--hover: #ff7795;
 $red-filled-button-background--click: #ff5a7f;
 
+.address-icon-container {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+
+  i {
+    cursor: pointer;
+    color: $text-color-6 !important;
+  }
+
+  input {
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+}
+
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
   $collapse-button-color: $dark-blue-12;
 
