@@ -17,7 +17,27 @@ import debug from 'debug';
 
 const errorLogger = debug('v5:partners-changelly');
 
-const disabled = ['USDT'];
+const disabled = [];
+
+function checkAndChange(value) {
+  if (value === 'USDT Omni') {
+    return 'usdt';
+  }
+  if (value === 'USDT') {
+    return 'usdt20';
+  }
+  return value;
+}
+
+function checkAndChangeBack(value) {
+  if (value === 'usdt') {
+    return 'USDT Omni';
+  }
+  if (value === 'usdt20') {
+    return 'USDT';
+  }
+  return value;
+}
 
 export default class Changelly {
   constructor(props = {}) {
@@ -297,8 +317,8 @@ export default class Changelly {
       fromValue
     );
     const swapParams = {
-      from: fromCurrency.toLowerCase(),
-      to: toCurrency.toLowerCase(),
+      from: checkAndChange(fromCurrency).toLowerCase(),
+      to: checkAndChange(toCurrency).toLowerCase(),
       address: toAddress,
       extraId: null,
       amount: fromValue,
@@ -318,8 +338,8 @@ export default class Changelly {
     refundAddress
   }) {
     const swapParams = {
-      from: fromCurrency.toLowerCase(),
-      to: toCurrency.toLowerCase(),
+      from: checkAndChange(fromCurrency).toLowerCase(),
+      to: checkAndChange(toCurrency).toLowerCase(),
       address: toAddress,
       extraId: null,
       amount: fromValue,

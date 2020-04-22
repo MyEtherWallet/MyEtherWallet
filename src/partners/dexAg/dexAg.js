@@ -10,6 +10,7 @@ import {
   SUPPORTED_DEXES
 } from './config';
 import dexAgCalls from './dexAg-calls';
+import { Toast } from '@/helpers';
 
 import debug from 'debug';
 import { utils } from '@/partners';
@@ -299,6 +300,10 @@ export default class DexAg {
       : 'ag';
 
     const tradeDetails = await this.createTransaction(swapDetails, dexToUse);
+    if (tradeDetails.error) {
+      Toast.responseHandler(tradeDetails.error, 1);
+      throw Error('abort');
+    }
     const providerAddress = tradeDetails.metadata.input
       ? tradeDetails.metadata.input.spender
         ? tradeDetails.metadata.input.spender
