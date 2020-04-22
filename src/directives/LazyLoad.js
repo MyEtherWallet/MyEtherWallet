@@ -9,6 +9,7 @@ export default {
         imageElement.addEventListener('load', () => {
           setTimeout(() => el.classList.add('loaded'), 100);
         });
+        // eslint-disable-next-line
         imageElement.addEventListener('error', e => console.log(e));
         imageElement.src = imageElement.dataset.url;
       }
