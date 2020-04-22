@@ -6,6 +6,7 @@
 
 ### Bug
 
+- Reimplement cx account create on account request [#2271](https://github.com/MyEtherWallet/MyEtherWallet/pull/2271)
 - Bitbox sizing mismatch [#2265](https://github.com/MyEtherWallet/MyEtherWallet/pull/2265)
 
 ### Devop

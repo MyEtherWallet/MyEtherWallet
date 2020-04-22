@@ -206,7 +206,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['web3', 'network']),
+    ...mapState('main', ['web3', 'network', 'linkQuery']),
     showLength() {
       return this.showMyWallets === 0
         ? this.myWallets.length
@@ -290,6 +290,9 @@ export default {
     }
   },
   mounted() {
+    if (this.linkQuery.hasOwnProperty('connectionRequest')) {
+      this.addWallet();
+    }
     this.$refs.watchOnlyModal.$refs.watchOnlyWallet.$refs.modalWrapper.$on(
       'hidden',
       () => {
