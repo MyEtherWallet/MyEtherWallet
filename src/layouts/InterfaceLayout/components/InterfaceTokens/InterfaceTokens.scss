@@ -151,3 +151,12 @@
     word-break: break-word;
   }
 }
+
+.name-and-icon-container {
+  display: flex;
+  align-items: center;
+
+  figure {
+    margin-right: 15px;
+  }
+}
