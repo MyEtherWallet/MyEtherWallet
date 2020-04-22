@@ -92,9 +92,7 @@ export default {
       complete: false,
       stripeOptions: {},
       stripeImg,
-      publishableKey:
-        'pk_test_bERlHfGH5lT9rTIhKPg74H0o' ||
-        'pk_live_HAPE6Nv5bfhCJYKe6Nfaaj4P',
+      publishableKey: 'pk_live_HAPE6Nv5bfhCJYKe6Nfaaj4P',
       token: null,
       charge: null,
       loading: false,
