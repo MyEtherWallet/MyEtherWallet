@@ -26,6 +26,7 @@
             :disabled="item.disabled"
             :tooltip-msg="$t(item.msg)"
             :link="item.link"
+            :has-promo="item.name === 'cool_wallet'"
             @updateSelected="updateSelected"
           />
         </div>
@@ -172,7 +173,8 @@ export default {
           text: 'BitBox',
           disabled: false,
           msg: '',
-          link: 'https://shiftcrypto.ch/?ref=mew'
+          // link: 'https://shiftcrypto.ch/?ref=MEW'
+          link: ''
         },
         {
           name: XWALLET_TYPE,

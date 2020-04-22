@@ -45,7 +45,16 @@
               v-for="(token, index) in localTokens"
               :key="token.symbol + index"
             >
-              <td>{{ token.symbol }}</td>
+              <td class="name-and-icon-container">
+                <figure v-lazy-load>
+                  <img
+                    class="token-icon"
+                    :data-url="iconFetch(token.address)"
+                    @error="iconFallback"
+                  />
+                </figure>
+                {{ token.symbol }}
+              </td>
               <td
                 v-if="token.balance === 'Load' && online"
                 class="load-token"
@@ -104,6 +113,7 @@ import InterfaceAds from '../InterfaceAds';
 import sortByBalance from '@/helpers/sortByBalance.js';
 import utils from 'web3-utils';
 import * as networkTypes from '@/networks/types';
+import masterFile from '@/_generated/master-file.json';
 
 export default {
   components: {
@@ -152,7 +162,20 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['network', 'web3', 'online'])
+    ...mapState('main', ['network', 'web3', 'online']),
+    networkTokens() {
+      const newTokenObj = {};
+      const matchedNetwork = masterFile.filter(item => {
+        return (
+          item.network.toLowerCase() === this.network.type.name.toLowerCase()
+        );
+      });
+      matchedNetwork.forEach(item => {
+        newTokenObj[toChecksumAddress(item.contract_address)] = item;
+      });
+
+      return newTokenObj;
+    }
   },
   watch: {
     receivedTokens() {
@@ -167,6 +190,23 @@ export default {
     }
   },
   methods: {
+    iconFetch(address) {
+      const token = this.networkTokens[toChecksumAddress(address)];
+      if (token) {
+        const tokenSrc =
+          token.icon_png !== ''
+            ? `https://img.mewapi.io/?image=${token.icon_png}&width=50&height=50&fit=scale-down`
+            : token.icon !== ''
+            ? `https://img.mewapi.io/?image=${token.icon}&width=50&height=50&fit=scale-down`
+            : this.network.type.icon;
+        return tokenSrc;
+      }
+
+      return this.network.type.icon;
+    },
+    iconFallback(evt) {
+      evt.target.src = this.network.type.icon;
+    },
     getV3Tokens() {
       const v3Tokens = store.get('localTokens');
       const v5CustomTokens = store.get('customTokens');

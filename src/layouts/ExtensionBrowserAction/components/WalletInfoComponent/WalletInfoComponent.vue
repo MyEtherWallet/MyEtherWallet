@@ -189,6 +189,13 @@
           >
             <td>
               <div class="name-container">
+                <figure v-lazy-load>
+                  <img
+                    :src="token.tokenMew.logo"
+                    class="token-icon"
+                    @error="iconFallback"
+                  />
+                </figure>
                 <p>
                   {{ token.tokenMew.name }}
                   ({{ token.tokenMew.symbol }})
@@ -431,6 +438,9 @@ export default {
   },
   methods: {
     ...mapActions('main', ['decryptWallet']),
+    iconFallback(evt) {
+      evt.target.src = this.network.type.icon;
+    },
     walletRequirePass(ethjson) {
       if (ethjson.encseed != null) return true;
       else if (ethjson.Crypto != null || ethjson.crypto != null) return true;

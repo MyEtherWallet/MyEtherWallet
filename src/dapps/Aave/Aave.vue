@@ -17,7 +17,7 @@
         </div>
         <back-button
           v-if="$route.fullPath !== '/interface/dapps/aave/action'"
-          :title="$t('dappsAmbrpay.exit-dapp')"
+          :title="$t('common.exit-dapp')"
           :hide-border="true"
         />
         <div
