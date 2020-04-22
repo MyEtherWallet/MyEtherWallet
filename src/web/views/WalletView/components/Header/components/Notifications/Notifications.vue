@@ -5,7 +5,7 @@
       <img src="@/assets/images/icons/icon-notifications.svg" />
     </v-btn>
     <div
-      class="notification-count cursor--pointer d-flex align-center justify-center"
+      class="notification-count cursor--pointer d-flex align-center justify-center white--text light_red"
       @click="openNotifications = true"
     >
       3
@@ -39,10 +39,8 @@ export default {
   top: 0;
   right: -10px;
   border-radius: 100%;
-  background-color: red;
   width: 18px;
   height: 18px;
-  color: white;
   font-size: 12px;
 }
 </style>

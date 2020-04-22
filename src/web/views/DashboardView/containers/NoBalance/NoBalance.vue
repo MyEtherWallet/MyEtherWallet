@@ -4,7 +4,7 @@
       <div class="block-title display-1 font-weight-bold mb-6">
         My ETH balance is empty
       </div>
-      <StdButton buttonclass="button--green" size="x-large" :minwidth="false">
+      <StdButton size="x-large" no-min-width>
         Buy ETH with a credit card
       </StdButton>
       <div class="d-flex align-center mt-4">
@@ -49,7 +49,7 @@ export default {
 
 .content-container {
   background-image: url(~@/assets/images/backgrounds/bg-circle-triangle.png);
-  background-position: right 60px bottom;
+  background-position: right 60px bottom -1px;
   background-size: 245px;
 }
 
