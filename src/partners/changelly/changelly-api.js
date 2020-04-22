@@ -28,9 +28,11 @@ const getSupportedCurrencies = async network => {
             if (currencyList[i].name === 'usdt') {
               currencyList[i].name = 'usdt Omni';
               details.symbol = 'USDT Omni';
+              details.name = 'Tether USD on Omni Link'
             }
             if (currencyList[i].name === 'usdt20') {
               details.symbol = 'USDT';
+              details.name ='Tether USD'
             }
             currencyDetails[details.symbol] = details;
             tokenDetails[details.symbol] = details;
