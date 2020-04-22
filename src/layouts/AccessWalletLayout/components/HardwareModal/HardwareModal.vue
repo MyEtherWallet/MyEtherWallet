@@ -26,6 +26,7 @@
             :disabled="item.disabled"
             :tooltip-msg="$t(item.msg)"
             :link="item.link"
+            :has-promo="item.name === 'cool_wallet'"
             @updateSelected="updateSelected"
           />
         </div>
