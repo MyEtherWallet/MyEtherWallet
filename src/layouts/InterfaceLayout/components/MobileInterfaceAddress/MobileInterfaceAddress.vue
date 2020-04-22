@@ -1,45 +1,48 @@
 <template>
-  <div class="mobile-interface-address">
+  <div>
     <address-qrcode-modal ref="qrcode" :address="account.address" />
-    <div class="wrap">
-      <div class="top-block">
-        <div class="blockie-container">
-          <blockie
-            :address="address"
-            :size="8"
-            :scale="16"
-            class="blockie-image"
+    <div class="wrap d-flex align-items-center">
+      <blockie :address="address" :size="8" :scale="16" class="blockie-image" />
+      <div class="address-contents">
+        <div class="title">{{ $t('common.addr') }}</div>
+        <div class="d-flex address">
+          <div class="address-begin">
+            {{
+              address !== null && address !== ''
+                ? address.substring(0, address.length - 4)
+                : ''
+            }}
+          </div>
+          <div class="address-end">
+            {{
+              address !== null && address !== ''
+                ? address.substring(address.length - 4, address.length)
+                : ''
+            }}
+          </div>
+          <input
+            ref="mobileCopyAddress"
+            :value="address"
+            class="mobile-hidden-input"
+            autocomplete="off"
           />
         </div>
-        <div class="address">{{ address }}</div>
-        <input
-          ref="copyAddress"
-          :value="address"
-          class="hidden-input"
-          autocomplete="off"
-        />
-        <div class="address-end">
-          {{
-            address !== null && address !== ''
-              ? address.substring(address.length - 4, address.length)
-              : ''
-          }}
-        </div>
-        <div class="buttons-container">
-          <button @click="openQrcode">
-            <img alt src="~@/assets/images/icons/qr-code-white.svg" />
-            <div class="floating-barcode">
-              <div class="barcode-image"></div>
-            </div>
-          </button>
-          <button @click="print">
-            <img alt src="~@/assets/images/icons/printer-white.svg" />
-          </button>
-          <button @click="copy">
-            <img alt src="~@/assets/images/icons/copy.svg" />
-          </button>
-        </div>
       </div>
+      <div class="buttons-container">
+        <button @click="copy">
+          <img alt src="~@/assets/images/icons/copy.svg" />
+        </button>
+        <button class="qrcode ml-2" @click="openQrcode">
+          <img alt src="~@/assets/images/icons/qr-code-white.svg" />
+          <div class="floating-barcode">
+            <div class="barcode-image"></div>
+          </div>
+        </button>
+        <button class="ml-2" @click="print">
+          <img alt src="~@/assets/images/icons/printer-white.svg" />
+        </button>
+      </div>
+
       <div v-if="hasMultipleAddr" class="bottom-block">
         <button @click="switchAddr">{{ $t('interface.change-addr') }}</button>
       </div>
@@ -103,7 +106,7 @@ export default {
   },
   methods: {
     copy() {
-      this.$refs.copyAddress.select();
+      this.$refs.mobileCopyAddress.select();
       document.execCommand('copy');
       Toast.responseHandler(this.$t('common.copied'), Toast.INFO);
     },
