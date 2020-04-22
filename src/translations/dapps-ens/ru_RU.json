@@ -22,6 +22,9 @@
   "ph": {
     "three-char": "Пожалуйста, введите не менее 3 символов"
   },
+  "controller-text": "Looks like the address you're using is not a controller of {domain}. Do you wanna set {addr} as a controller for {domain}?",
+  "text-record-error": "{value} is missing or not a valid input for {name}!",
+  "set-controller": "Update Controller",
   "is-available": "Ура! Этот домен доступен.",
   "not-available": "{domain} еще не доступен!",
   "manage": "Менеджер",

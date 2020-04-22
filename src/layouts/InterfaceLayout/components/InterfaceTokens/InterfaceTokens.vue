@@ -45,12 +45,14 @@
               v-for="(token, index) in localTokens"
               :key="token.symbol + index"
             >
-              <td>
-                <img
-                  class="token-icon"
-                  :src="iconFetch(token.address)"
-                  @error="iconFallback"
-                />
+              <td class="name-and-icon-container">
+                <figure v-lazy-load>
+                  <img
+                    class="token-icon"
+                    :data-url="iconFetch(token.address)"
+                    @error="iconFallback"
+                  />
+                </figure>
                 {{ token.symbol }}
               </td>
               <td
@@ -191,7 +193,13 @@ export default {
     iconFetch(address) {
       const token = this.networkTokens[toChecksumAddress(address)];
       if (token) {
-        return `https://img.mewapi.io/?image=${token.icon_png}&width=50&height=50&fit=scale-down`;
+        const tokenSrc =
+          token.icon_png !== ''
+            ? `https://img.mewapi.io/?image=${token.icon_png}&width=50&height=50&fit=scale-down`
+            : token.icon !== ''
+            ? `https://img.mewapi.io/?image=${token.icon}&width=50&height=50&fit=scale-down`
+            : this.network.type.icon;
+        return tokenSrc;
       }
 
       return this.network.type.icon;

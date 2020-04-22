@@ -1,10 +1,14 @@
+### Feature
+
+- Add Dex.ag [#2099](https://github.com/MyEtherWallet/MyEtherWallet/pull/2099)
 
 ### Release v5.5.5
 
 ### Feature
 
+- Turn addresses to links in hardware modal [#2254](https://github.com/MyEtherWallet/MyEtherWallet/pull/2254)
 - Add/update mobile interface Address, Balance, Network blocks [#2273](https://github.com/MyEtherWallet/MyEtherWallet/pull/2273)
-- Add Dex.ag [#2099](https://github.com/MyEtherWallet/MyEtherWallet/pull/2099)
+- Lazy load token icons [#2290](https://github.com/MyEtherWallet/MyEtherWallet/pull/2290)
 
 ### Bug
 
@@ -13,6 +17,7 @@
 
 ### Devop
 
+- Add lint to workflows [#2292](https://github.com/MyEtherWallet/MyEtherWallet/pull/2292)
 - Token Icons [#2276](https://github.com/MyEtherWallet/MyEtherWallet/pull/2276)
 
 ### Release v5.5.4
