@@ -285,7 +285,6 @@ export default {
       return null;
     },
     activeAddress() {
-      // return "0x51e723b14b160b9b420cbf7ccdb889f36213f0f3"
       return this.account.address;
     },
     hasNfts() {

@@ -149,7 +149,7 @@ class CompileSwapOptions {
   }) {
     try {
       const tokenList = await this.get(
-        'https://api-v2.dex.ag/token-list-full'
+        'https://dexag.mewapi.io/token-list-full'
       );
       const tokenDetails = priorCollected.ETH;
       for (let i = 0; i < tokenList.length; i++) {

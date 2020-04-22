@@ -67,9 +67,7 @@
             <span class="slippage-text">{{
               otherTextDisplay(provider.additional.display)
             }}</span>
-            <!--            <span class="slippage-text"> {{ provider.additional.source }}</span>-->
           </div>
-          <!-- -&#45;&#45;&#45;&#45; {{provider.provider}}-->
         </li>
       </ul>
       <!-- list of other providers who don't support the selected currency pair -->
