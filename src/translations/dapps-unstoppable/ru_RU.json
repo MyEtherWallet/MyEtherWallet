@@ -1,0 +1,58 @@
+{
+  "title": "Unstoppable Domains",
+  "about-unstoppable": "Поменять криптографический адрес на читаемое имя.",
+  "dapp-desc": "Купить домен .crypto",
+  "search-domain-prompt": "Найти свой домен блокчейна",
+  "stripe-email-prompt": "Адрес электронной почты",
+  "stripe-card-prompt": "Данные карты",
+  "pay-with-credit-card": "Оплатить кредитной картой",
+  "pay-with-crypto": "Оплатить криптовалютой",
+  "send-payment": "Отправить платеж",
+  "ethereum-payment-address": "Адрес оплаты Ethereum",
+  "payment-amount": "Сумма платежа",
+  "pending-crypto-payment": "Ожидающая оплата: {confirmations} подтверждений из {confirmationsRequired}",
+  "secured-by-stripe": "Безопасная оплата с поддержкой Stripe",
+  "insufficient-balance": "Недостаточный баланс: добавьте больше ETH в кошелек или оплатите кредитной картой",
+  "pay": "Оплатить",
+  "confirm-payment": "Вы собираетесь заплатить ${amount} за {domain}",
+  "error": {
+    "stripe-payment": "Оплата не прошла, пожалуйста повторите попытку позже",
+    "something-went-wrong": "Что-то пошло не так. Попробуйте еще раз."
+  },
+  "warning": {
+    "not-enough-char": "Доменное имя меньше 6 символов.",
+    "invalid-symbol": "Недопустимые символы на домене. Пожалуйста, используйте буквенно-цифровые символы или '-'"
+  },
+  "toast": {
+    "success-register": "Регистрация выполнена успешнo!",
+    "domain-unavailable": "{domain} недоступен"
+  },
+  "check-domain": "Проверить домен",
+  "update": "Обновление",
+  "ph": {
+    "six-char": "Пожалуйста, введите не менее 6 символов",
+    "stripe-email-placeholder": "Ваш адрес эл.почты"
+  },
+  "view-transfer-transaction": "Вы можете увидеть транзакцию перевода на",
+  "continue": "Продолжить",
+  "congratulations": "Поздравляем!",
+  "transfer-pending": "Перевод в ожидании",
+  "domain-transferring-one": "Домен",
+  "domain-transferring-two": "переводится на ваш кошелек с адресом: {address}!",
+  "transfer-complete": "успешно переведен на ваш кошелёк",
+  "manage-on-one": "Этот процесс может занять до 5-10 минут. Вы можете остаться на этой странице, чтобы получить подтверждение о завершении транзакции. Просмотр и управление доменом на",
+  "manage-on-two": "создав учетную запись и подсоединив свой кошелек!",
+  "complete-manage-on-one": "Просмотр и управление доменом на",
+  "is-available": "Домен доступен",
+  "not-available": "{domain} еще не доступен!",
+  "manage": "Менеджер",
+  "buyDomain": "Купить домен",
+  "already-owned": "{domain} уже имеет владельца.",
+  "search-for-another": "Поиск другого домена",
+  "owner": "Владелец",
+  "result": "Результат",
+  "unavailable": "Недоступен",
+  "buy": "Купить",
+  "your-balance": "Ваш баланс",
+  "address": "Адрес"
+}

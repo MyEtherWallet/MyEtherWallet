@@ -183,5 +183,6 @@
   "mewtopia": "MEWtopia",
   "language": "Язык",
   "logout": "Выход",
-  "settings": "Настройки"
+  "settings": "Настройки",
+  "exit-dapp": "Выйти из Dapp"
 }

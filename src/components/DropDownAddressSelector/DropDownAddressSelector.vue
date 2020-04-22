@@ -39,7 +39,15 @@
 
         <div v-if="!isValidAddress" class="blockie-place-holder-image" />
         <div v-if="isValidAddress" class="selected-address-blockie">
-          <blockie :address="hexAddress" width="30px" height="30px" />
+          <blockie
+            v-if="avatar === ''"
+            :address="hexAddress"
+            width="30px"
+            height="30px"
+          />
+          <div v-if="avatar !== ''" class="avatar-container">
+            <img :src="avatar" />
+          </div>
           <div v-if="isToken(currency)">
             <img
               :alt="$t('common.currency.ethereum')"
@@ -154,7 +162,8 @@ export default {
       dropdownOpen: false,
       toAddressCheckMark: false,
       hexAddress: '',
-      currentAddress: ''
+      currentAddress: '',
+      avatar: ''
     };
   },
   computed: {

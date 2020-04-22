@@ -35,6 +35,8 @@
       :txt-records="txtRecords"
       :set-record="setRecord"
       :usd="usd"
+      :is-controller="isController"
+      :set-controller="setController"
       @updateSecretPhrase="updateSecretPhrase"
       @domainNameChange="updateDomainName"
       @updateStep="updateStep"
@@ -104,7 +106,8 @@ export default {
       supportedTxt,
       recordContract: {},
       resolverTxtSupport: false,
-      usd: 0
+      usd: 0,
+      isController: false
     };
   },
   computed: {
@@ -200,6 +203,15 @@ export default {
       for (const type in this.supportedCoins)
         this.supportedCoins[type].value = '';
     },
+    async checkIfController() {
+      // checks the controller for the name
+      const owner = await this.ensRegistryContract.methods
+        .owner(this.nameHash)
+        .call();
+      this.isController =
+        this.web3.utils.toChecksumAddress(owner) ===
+        this.web3.utils.toChecksumAddress(this.account.address);
+    },
     async setRegistrar() {
       const web3 = this.web3;
       const tld = this.registrarTLD;
@@ -234,29 +246,48 @@ export default {
         }
       }
     },
-    async transferDomain(toAddress) {
-      const registryTransferTx = {
+    setController(toAddress = '', onlyGenerate = false) {
+      const actualToAddress =
+        toAddress === '' ? this.account.address : toAddress;
+      const setControllerTx = {
         from: this.account.address,
-        to: this.network.type.ens.registry,
-        data: this.ensRegistryContract.methods
-          .setOwner(this.nameHash, toAddress)
+        to: this.registrarAddress,
+        data: this.registrarContract.methods
+          .reclaim(this.labelHash, actualToAddress)
           .encodeABI(),
-        value: 0,
-        gas: 100000
+        value: 0
       };
+
+      if (onlyGenerate) {
+        return setControllerTx;
+      }
+      this.web3.eth.sendTransaction(setControllerTx).catch(err => {
+        Toast.responseHandler(err, false);
+      });
+    },
+    transferDomain(toAddress) {
       if (this.registrarType === REGISTRAR_TYPES.FIFS) {
-        this.web3.eth.sendTransaction(registryTransferTx).catch(err => {
-          Toast.responseHandler(err, false);
-        });
+        this.web3.eth
+          .sendTransaction({
+            from: this.account.address,
+            to: this.network.type.ens.registry,
+            data: this.ensRegistryContract.methods
+              .setOwner(this.nameHash, toAddress)
+              .encodeABI(),
+            value: 0
+          })
+          .catch(err => {
+            Toast.responseHandler(err, false);
+          });
       } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
+        const registryTransferTx = this.setController(toAddress, true);
         const safeTransferTx = {
           from: this.account.address,
           to: this.registrarAddress,
           data: this.registrarContract.methods
-            .safeTransferFrom(this.account.address, toAddress, this.labelHash)
+            .transferFrom(this.account.address, toAddress, this.labelHash)
             .encodeABI(),
-          value: 0,
-          gas: 100000
+          value: 0
         };
         this.web3.mew.sendBatchTransactions(
           [registryTransferTx, safeTransferTx].filter(Boolean)
@@ -381,7 +412,6 @@ export default {
           .setResolver(this.nameHash, this.publicResolverAddress)
           .encodeABI(),
         value: 0,
-        gas: 100000,
         gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
       };
       web3.mew
@@ -686,6 +716,7 @@ export default {
       this.loading = false;
     },
     async fetchTxtRecords(resolver) {
+      this.checkIfController();
       try {
         const supportsTxt = await resolver.methods
           .supportsInterface(TEXT_RECORD_SUPPORT_INTERFACE)
@@ -725,9 +756,12 @@ export default {
       const multicalls = [];
       for (const i in obj) {
         multicalls.push(
-          contract.methods.setText(this.nameHash, i, obj[i]).encodeABI()
+          contract.methods
+            .setText(this.nameHash, i.toLowerCase(), obj[i])
+            .encodeABI()
         );
       }
+
       const tx = {
         from: address,
         to: resolverAddr,

@@ -129,7 +129,8 @@ export default {
       addressBookActions: {
         EDIT: 'edit',
         ADD: 'add'
-      }
+      },
+      avatar: ''
     };
   },
   computed: {
