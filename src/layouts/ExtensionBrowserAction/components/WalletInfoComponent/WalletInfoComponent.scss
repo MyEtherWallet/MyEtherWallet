@@ -186,8 +186,11 @@
       display: flex;
 
       .token-icon {
-        margin-right: 15px;
         height: 50px;
+      }
+
+      figure {
+        margin-right: 15px;
       }
     }
 
