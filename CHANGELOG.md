@@ -2,6 +2,7 @@
 
 ### Feature
 
+- Turn addresses to links in hardware modal [#2254](https://github.com/MyEtherWallet/MyEtherWallet/pull/2254)
 - Add/update mobile interface Address, Balance, Network blocks [#2273](https://github.com/MyEtherWallet/MyEtherWallet/pull/2273)
 
 ### Bug
