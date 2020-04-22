@@ -217,11 +217,20 @@ export default class SwapProviders {
         fromValue,
         toValue
       );
-      const results = await Promise.all(
+      const rawResults = await Promise.all(
         callsToMake.map(func =>
           func(fromCurrency, toCurrency, fromValue, toValue)
         )
       );
+      const results = rawResults.reduce((agg, result) => {
+        if (Array.isArray(result)) {
+          agg = [...agg, ...result];
+        } else {
+          agg.push(result);
+        }
+        return agg;
+      }, []);
+
       if (
         results.every(
           entry =>
