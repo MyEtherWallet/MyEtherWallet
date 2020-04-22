@@ -457,7 +457,8 @@ export default class BitySwap {
       sendValue: order.payment_amount,
       status: order.status,
       timestamp: order.timestamp_created,
-      validFor: order.validFor || TIME_SWAP_VALID
+      validFor: order.validFor || TIME_SWAP_VALID,
+      special: order.token || order.special
     };
   }
 
@@ -484,7 +485,7 @@ export default class BitySwap {
 
   static async getOrderStatusCrypto(noticeDetails) {
     try {
-      const data = await getStatus(noticeDetails.statusId);
+      const data = await getStatus({orderId: noticeDetails.statusId, token: noticeDetails.special});
       if (data.status === bityStatuses.EXEC) {
         return swapNotificationStatuses.COMPLETE;
       }

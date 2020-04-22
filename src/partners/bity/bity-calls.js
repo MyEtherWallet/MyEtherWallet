@@ -123,9 +123,10 @@ const orderDetails = async orderInfo => {
 
 const getStatus = async orderInfo => {
   try {
+
     const results = await post(
       buildPath(),
-      utils.buildPayload(bityMethods.status, [orderInfo])
+      utils.buildPayload(bityMethods.getStatusV2, orderInfo)
     );
 
     if (results.error) {
