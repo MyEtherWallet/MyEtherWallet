@@ -79,7 +79,7 @@ import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 import * as moment from 'moment';
 import NotificationHeader from '../../NotificationHeader';
-import { providerMap, providerNames, offChainProviders } from '@/partners';
+import { providerMap, offChainProviders } from '@/partners';
 
 import {
   swapOnlyStatuses,
