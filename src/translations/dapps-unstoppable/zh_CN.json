@@ -2,7 +2,6 @@
   "title": "Unstoppable Domains",
   "about-unstoppable": "Replace cryptocurrency addresses with a human readable name.",
   "dapp-desc": "Buy a .crypto domain",
-  "search-domain-desc": "Buy a .crypto domain",
   "search-domain-prompt": "Find your blockchain domain",
   "stripe-email-prompt": "Email",
   "stripe-card-prompt": "Card Details",

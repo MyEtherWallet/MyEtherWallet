@@ -7,12 +7,6 @@
   color: white;
 }
 
-.network-type {
-  img {
-    width: 18px;
-  }
-}
-
 .block-image {
   padding-right: 10px;
 }
@@ -25,8 +19,13 @@
   justify-content: center;
   margin-right: 15px;
   $network-image-size: 40px !important;
+
   height: $network-image-size;
   width: $network-image-size;
+
+  img {
+    width: 18px;
+  }
 }
 
 .title {

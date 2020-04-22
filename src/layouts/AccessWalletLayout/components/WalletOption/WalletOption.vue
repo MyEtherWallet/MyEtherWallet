@@ -9,7 +9,7 @@
       :class="[
         selected ? 'selected' : '',
         'wallet-option-container',
-        'has-link'
+        link !== '' || name === 'BitBox' ? 'has-link' : ''
       ]"
     >
       <div class="img-title-container">
@@ -41,6 +41,9 @@
         class="fa fa-check-circle good-button"
         aria-hidden="true"
       />
+      <div v-if="hasPromo" class="promotion-container">
+        <img src="@/assets/images/pre-order-label.png" class="new-label" alt />
+      </div>
     </div>
   </div>
 </template>
@@ -83,6 +86,10 @@ export default {
     xwalletType: {
       type: String,
       default: XWALLET_TYPE
+    },
+    hasPromo: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

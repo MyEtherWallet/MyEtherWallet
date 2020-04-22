@@ -307,8 +307,14 @@ export default {
   methods: {
     iconFetch(address) {
       const token = this.networkTokens[toChecksumAddress(address)];
-      if (token && token.icon_png !== '') {
-        return `https://img.mewapi.io/?image=${token.icon_png}&width=50&height=50&fit=scale-down`;
+      if (token) {
+        const tokenSrc =
+          token.icon_png !== ''
+            ? `https://img.mewapi.io/?image=${token.icon_png}&width=50&height=50&fit=scale-down`
+            : token.icon !== ''
+            ? `https://img.mewapi.io/?image=${token.icon}&width=50&height=50&fit=scale-down`
+            : this.network.type.icon;
+        return tokenSrc;
       }
 
       return this.network.type.icon;
