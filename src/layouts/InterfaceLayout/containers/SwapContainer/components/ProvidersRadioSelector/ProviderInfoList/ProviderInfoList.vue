@@ -18,7 +18,6 @@
 
 <script>
 import MEW from '@/assets/images/logo.png';
-import KyberNetwork from '@/assets/images/etc/kybernetwork_gray.png';
 import Bity from '@/assets/images/etc/bity_gray.png';
 import Simplex from '@/assets/images/etc/simplex_gray.png';
 import Changelly from '@/assets/images/etc/changelly_gray.png';
@@ -44,7 +43,6 @@ export default {
       otherProviderList: [],
       logos: {
         mew: MEW,
-        kybernetwork: KyberNetwork,
         bity: Bity,
         simplex: Simplex,
         changelly: Changelly,
