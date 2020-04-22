@@ -902,7 +902,7 @@ export default {
             this.stringToSign = this.swapDetails.dataForInitialization.messageToSign.body;
             this.$refs.signatureModal.$refs.signatureModal.show();
             this.sendSignedCallback = async signed => {
-              await this.swap.extraActions(
+              const response = await this.swap.extraActions(
                 this.providerNames.bity,
                 'sendSigned',
                 {
@@ -910,9 +910,12 @@ export default {
                   signature_submission_url: this.swapDetails
                     .dataForInitialization.messageToSign
                     .signature_submission_url,
-                  statusId: this.swapDetails.dataForInitialization.id
+                  statusId: this.swapDetails.dataForInitialization.id,
+                  token: this.swapDetails.dataForInitialization.token
                 }
               );
+              this.swapDetails.providerAddress =
+                response.payment_details.crypto_address;
               this.openConfirmModal(this.swapDetails);
             };
           } else {
