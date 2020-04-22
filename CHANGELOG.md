@@ -12,6 +12,7 @@
 
 ### Devop
 
+- Add lint to workflows [#2292](https://github.com/MyEtherWallet/MyEtherWallet/pull/2292)
 - Token Icons [#2276](https://github.com/MyEtherWallet/MyEtherWallet/pull/2276)
 
 ### Release v5.5.4
