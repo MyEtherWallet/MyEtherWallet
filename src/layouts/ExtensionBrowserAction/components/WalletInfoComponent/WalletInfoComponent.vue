@@ -189,11 +189,13 @@
           >
             <td>
               <div class="name-container">
-                <img
-                  :src="token.tokenMew.logo"
-                  class="token-icon"
-                  @error="iconFallback"
-                />
+                <figure v-lazy-load>
+                  <img
+                    :src="token.tokenMew.logo"
+                    class="token-icon"
+                    @error="iconFallback"
+                  />
+                </figure>
                 <p>
                   {{ token.tokenMew.name }}
                   ({{ token.tokenMew.symbol }})
