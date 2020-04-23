@@ -1,7 +1,7 @@
 <template>
   <div class="page-container policy">
     <div>
-      <h1 class="mb-5">MyEtherWallet security policy</h1>
+      <h1 class="mb-5 text-center">MyEtherWallet security policy</h1>
       <p>
         MyEtherWallet (MEW) looks forward to working with the security community
         to identify vulnerabilities in order to keep our users and MEW safe.
