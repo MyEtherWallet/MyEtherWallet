@@ -513,7 +513,7 @@ export default class BitySwap {
         return swapNotificationStatuses.NEW;
       }
 
-      return swapNotificationStatuses.PENDING;
+      return swapNotificationStatuses.NEW;
     } catch (e) {
       if (timeSinceOrder) {
         if (timeSinceOrder < 100000) {
