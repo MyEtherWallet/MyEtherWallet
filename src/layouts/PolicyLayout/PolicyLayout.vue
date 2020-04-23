@@ -1,6 +1,7 @@
 <template>
   <div class="page-container policy">
     <div>
+      <h1 class="mb-5">MyEtherWallet security policy</h1>
       <p>
         MyEtherWallet (MEW) looks forward to working with the security community
         to identify vulnerabilities in order to keep our users and MEW safe.
@@ -305,43 +306,101 @@
         <tr>
           <td>Out of scope vulnerabilities</td>
           <td>
-            When reporting vulnerabilities, please consider (1) attack scenario
-            / exploitability, and (2) security impact of the bug. The following
-            issues are considered out of scope: MyEtherWallet.com * Clickjacking
-            on pages with no sensitive information. * Self-XSS * Logout CSRF *
-            Lack of password length restrictions * Previously known vulnerable
-            libraries without a working Proof of Concept. * Comma Separated
-            Values (CSV) injection without demonstrating a vulnerability. *
-            Content spoofing and text injection issues without showing an attack
-            vector/without being able to modify HTML/CSS * Merely showing that a
-            page can be iFramed without finding a link on the page to be
-            click-jacked. * DNS vulnerabilities * Denial of service * Spamming *
-            Vulnerabilities in third party applications which make use of the
-            MEW’s API * Vulnerabilities which involve privileged access (e.g.
-            rooting a phone) to a victim's device(s) * Reports from automated
-            tools or scans (without accompanying demonstration of
-            exploitability) * Text-only injection in error pages * Any other
-            service not directly hosted or controlled by MyEtherWallet.com. MEW
-            will determine at its discretion whether a vulnerability is eligible
-            for a reward and the amount of the award. * WebRTC protocol and
-            implementation. * Socket.io protocol
+            <div class="mb-3">
+              When reporting vulnerabilities, please consider (1) attack
+              scenario / exploitability, and (2) security impact of the bug. The
+              following issues are considered out of scope:
+            </div>
+            <div class="mb-2">
+              <strong>MyEtherWallet.com</strong>
+            </div>
+            <ul>
+              <li>Clickjacking on pages with no sensitive information.</li>
+              <li>Self-XSS</li>
+              <li>Logout CSRF</li>
+              <li>Lack of password length restrictions</li>
+              <li>
+                Previously known vulnerable libraries without a working Proof of
+                Concept.
+              </li>
+              <li>
+                Comma Separated Values (CSV) injection without demonstrating a
+                vulnerability.
+              </li>
+              <li>
+                Content spoofing and text injection issues without showing an
+                attack vector/without being able to modify HTML/CSS
+              </li>
+              <li>
+                Merely showing that a page can be iFramed without finding a link
+                on the page to be click-jacked.
+              </li>
+              <li>
+                DNS vulnerabilities
+              </li>
+              <li>Denial of service</li>
+              <li>Spamming</li>
+              <li>
+                Vulnerabilities in third party applications which make use of
+                the MEW’s API
+              </li>
+              <li>
+                Vulnerabilities which involve privileged access (e.g. rooting a
+                phone) to a victim's device(s)
+              </li>
+              <li>
+                Reports from automated tools or scans (without accompanying
+                demonstration of exploitability)
+              </li>
+              <li>
+                Text-only injection in error pages
+              </li>
+              <li>
+                Any other service not directly hosted or controlled by
+                MyEtherWallet.com. MEW will determine at its discretion whether
+                a vulnerability is eligible for a reward and the amount of the
+                award.
+              </li>
+              <li>WebRTC protocol and implementation.</li>
+              <li>Socket.io protocol</li>
+            </ul>
           </td>
         </tr>
         <tr>
           <td>MEW wallet and MEWconnect Mobile App</td>
           <td>
             <div>
-              * Software bugs that have no security impact. * Public User data,
-              such as, public address, balances, transaction information etc.
-              stored unencrypted on external storage and private directory. *
-              Runtime hacking exploits (exploits only possible in a jailbroken
-              environment) * Require physical connection to the device with
-              developer-level debugging tool. * Result in an application-level
-              crash, or simply mention the possibility of MITM without an
-              exploit. * Reports based on information taken or obtained through
-              illegal access and confidential information * Vulnerabilities on
-              sites hosted by third parties unless they lead to a vulnerability
-              on the app. * Known Bugs
+              <ul>
+                <li>
+                  Software bugs that have no security impact.
+                </li>
+                <li>
+                  Public User data, such as, public address, balances,
+                  transaction information etc. stored unencrypted on external
+                  storage and private directory.
+                </li>
+                <li>
+                  Runtime hacking exploits (exploits only possible in a
+                  jailbroken environment)
+                </li>
+                <li>
+                  Require physical connection to the device with developer-level
+                  debugging tool.
+                </li>
+                <li>
+                  Result in an application-level crash, or simply mention the
+                  possibility of MITM without an exploit.
+                </li>
+                <li>
+                  Reports based on information taken or obtained through illegal
+                  access and confidential information
+                </li>
+                <li>
+                  Vulnerabilities on sites hosted by third parties unless they
+                  lead to a vulnerability on the app.
+                </li>
+                <li>Known Bugs</li>
+              </ul>
             </div>
           </td>
         </tr>
@@ -370,6 +429,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+a {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
 .policy {
   padding-top: 30px;
   padding-bottom: 50px;
@@ -404,16 +469,11 @@ ul {
   }
 
   > tbody {
+    border: 1px solid black;
     > tr {
       border-bottom: 1px solid black;
-      &:first-child {
-        border-top: 3px solid black;
-      }
-      &:last-child {
-        border-bottom: 3px solid black;
-      }
       > td {
-        padding: 10px;
+        padding: 20px 20px;
 
         > div > div {
           padding-left: 20px;
@@ -429,6 +489,20 @@ ul {
     td {
       border-right: 1px solid black;
       padding: 5px 10px;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .main-table {
+    tbody > tr {
+      > td {
+        display: block;
+
+        &:first-child {
+          font-size: 25px;
+        }
+      }
     }
   }
 }
