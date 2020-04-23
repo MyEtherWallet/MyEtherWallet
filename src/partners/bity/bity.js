@@ -450,7 +450,7 @@ export default class BitySwap {
 
   static parseOrder(order) {
     return {
-      orderId: order.reference,
+      orderId: order.reference || order.id,
       statusId: order.id,
       sendToAddress: order.payment_address,
       recValue: order.output.amount,
@@ -484,11 +484,21 @@ export default class BitySwap {
   }
 
   static async getOrderStatusCrypto(noticeDetails) {
+    let timeSinceOrder;
     try {
       const data = await getStatus({
         orderId: noticeDetails.statusId,
         token: noticeDetails.special
       });
+
+      if (!data.timestamp_created) {
+        return swapNotificationStatuses.NEW;
+      }
+
+      timeSinceOrder =
+        (new Date().getTime() - new Date(data.timestamp_created).getTime()) /
+        1000;
+
       if (data.status === bityStatuses.EXEC) {
         return swapNotificationStatuses.COMPLETE;
       }
@@ -513,7 +523,15 @@ export default class BitySwap {
         }
       }
     } catch (e) {
-      Toast.responseHandler(e, false);
+      if (timeSinceOrder) {
+        if (timeSinceOrder < 100000) {
+          Toast.responseHandler(
+            'Failed to retrieve Bity order status',
+            1,
+            true
+          );
+        }
+      }
     }
     return swapNotificationStatuses.PENDING;
   }
