@@ -1,3 +1,9 @@
+### Release v5.5.5-hotfix.1
+
+### Devop
+
+- Migrate Bity api from V1 to V2 [#2257](https://github.com/MyEtherWallet/MyEtherWallet/pull/2257)
+
 ### Release v5.5.5
 
 ### Feature
@@ -29,7 +35,6 @@
 - Update EthCore node [#2251](https://github.com/MyEtherWallet/MyEtherWallet/pull/2251)
 - Update packages [#2254](https://github.com/MyEtherWallet/MyEtherWallet/pull/2254)
 - Cx workflow [#2237](https://github.com/MyEtherWallet/MyEtherWallet/pull/2237)
-- Migrate Bity api from V1 to V2 [#2257](https://github.com/MyEtherWallet/MyEtherWallet/pull/2257)
 
 ### Release v5.5.3
 
