@@ -93,9 +93,7 @@ class WalletInterface {
           );
         resolve(getSignTransactionObject(tx));
       } else {
-        signer(txParams)
-          .then(resolve)
-          .catch(reject);
+        signer(txParams).then(resolve).catch(reject);
       }
     });
   }
@@ -114,9 +112,7 @@ class WalletInterface {
           ])
         );
       } else {
-        signer(msg)
-          .then(resolve)
-          .catch(reject);
+        signer(msg).then(resolve).catch(reject);
       }
     });
   }

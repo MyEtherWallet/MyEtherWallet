@@ -28,7 +28,7 @@ export default {
     placeholder: { default: '', type: String },
     value: { default: '', type: String },
     items: {
-      default: function() {
+      default: function () {
         return [];
       },
       type: Array
