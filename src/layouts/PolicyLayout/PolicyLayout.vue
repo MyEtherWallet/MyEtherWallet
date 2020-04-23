@@ -1,52 +1,133 @@
 <template>
-  <div class="page-container">
+  <div class="page-container policy">
     <div>
-      MyEtherWallet (MEW) looks forward to working with the security community
-      to identify vulnerabilities in order to keep our users and MEW safe. MEW
-      is passionate about providing a seamless and secure experience to our
-      community. We are devoted to protecting our users private information and
-      providing them an opportunity to interact with the Ethereum blockchain in
-      the safest manner possible. Security is our first priority and obligation
-      and we always appreciate the valuable contributions! If you have any
-      information regarding security vulnerabilities on the MyEtherWallet
-      website, MEW wallet App, MEWconnect App and MEW CX report it to
-      bugbounty@myetherwallet.com according to our guidelines (jump to reporting
-      rules)! Any vulnerabilities submitted under this policy will be used for
-      the purposes of improving MyEtherWallet security as well as the user
-      experience. We aim to establish a positive feedback between MEW and
-      researchers that will contribute to this program - we appreciate your
-      patience as we strive to perfect this process. This program is aimed in
-      finding security vulnerabilities in MEW wallet App (Beta version Included)
-      MEWconnect App (Beta version Included) Current live version of
-      MyEtherWallet . com MEW CX Please review, understand, and agree to the
-      following terms and conditions before conducting any testing for MEW and
-      before submitting a report. Thank you.
+      <p>
+        MyEtherWallet (MEW) looks forward to working with the security community
+        to identify vulnerabilities in order to keep our users and MEW safe.
+      </p>
+      <p>
+        MEW is passionate about providing a seamless and secure experience to
+        our community. We are devoted to protecting our users private
+        information and providing them an opportunity to interact with the
+        Ethereum blockchain in the safest manner possible. Security is our first
+        priority and obligation and we always appreciate the valuable
+        contributions! If you have any information regarding security
+        vulnerabilities on the
+        <strong>
+          MyEtherWallet website, MEW wallet App, MEWconnect App and MEW CX
+        </strong>
+        report it to
+        <a href="mailto:bugbounty@myetherwallet.com">
+          bugbounty@myetherwallet.com
+        </a>
+        according to our guidelines (jump to reporting rules)!
+      </p>
+      <p>
+        Any vulnerabilities submitted under this policy will be used for the
+        purposes of improving MyEtherWallet security as well as the user
+        experience. We aim to establish a positive feedback between MEW and
+        researchers that will contribute to this program - we appreciate your
+        patience as we strive to perfect this process.
+      </p>
+      <div class="mb-3">
+        <div class="mb-2">
+          This program is aimed in finding security vulnerabilities in
+        </div>
+        <ul>
+          <li>MEW wallet App (Beta version Included)</li>
+          <li>
+            MEWconnect App (Beta version Included)
+          </li>
+          <li>Current live version of MyEtherWallet . com</li>
+          <li>MEW CX</li>
+        </ul>
+      </div>
+      <p>
+        <strong>
+          Please review, understand, and agree to the following terms and
+          conditions before conducting any testing for MEW and before submitting
+          a report.
+        </strong>
+      </p>
+      <p>Thank you.</p>
     </div>
-    <table>
+    <table class="main-table">
       <tbody>
         <tr>
           <td>Scope</td>
           <td>
-            <div>MyEtherWallet.com</div>
             <div>
-              Code base can be found:
-              https://github.com/MyEtherWallet/MyEtherWallet
+              <strong>MyEtherWallet.com</strong>
+              <div>
+                Code base can be found:
+                <a
+                  href="https://github.com/MyEtherWallet/MyEtherWallet"
+                  target="_blank"
+                >
+                  https://github.com/MyEtherWallet/MyEtherWallet
+                </a>
+              </div>
             </div>
-            <div>MEW wallet App</div>
-            <div>
-              Code base can be found: iOS:
-              https://apps.apple.com/app/id1464614025 Android:
-              https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet
+            <div class="mt-3">
+              <strong>MEW wallet App</strong>
+              <div>
+                Code base can be found:
+                <ul>
+                  <li>
+                    iOS:
+                    <a
+                      href="https://apps.apple.com/app/id1464614025"
+                      target="_blank"
+                    >
+                      https://apps.apple.com/app/id1464614025
+                    </a>
+                  </li>
+                  <li>
+                    Android:
+                    <a
+                      href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet"
+                      target="_blank"
+                      >https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet</a
+                    >
+                  </li>
+                </ul>
+              </div>
             </div>
-            <div>* MEWconnect App</div>
+            <div class="mt-3"><strong>MEWconnect App</strong></div>
             <div>
               Code base Android:
-              https://github.com/MyEtherWallet/MEWconnect-Android Code base iOS:
-              https://github.com/MyEtherWallet/MEWconnect-iOS iOS store:
-              https://apps.apple.com/us/app/mewconnect/id1391097156 Android:
-              https://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect
+              <a
+                href="https://github.com/MyEtherWallet/MEWconnect-Android"
+                target="_blank"
+              >
+                https://github.com/MyEtherWallet/MEWconnect-Android
+              </a>
+              <br />
+              Code base iOS:
+              <a
+                href="https://github.com/MyEtherWallet/MEWconnect-iOS"
+                target="_blank"
+              >
+                https://github.com/MyEtherWallet/MEWconnect-iOS
+              </a>
+              <br />
+              iOS store:
+              <a
+                href="https://apps.apple.com/us/app/mewconnect/id1391097156"
+                target="_blank"
+              >
+                https://apps.apple.com/us/app/mewconnect/id1391097156
+              </a>
+              <br />
+              Android:
+              <a
+                href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
+                target="_blank"
+              >
+                https://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect
+              </a>
             </div>
-            <div>* MEW CX Code base can be</div>
+            <div class="mt-3"><strong>MEW CX Code base can be</strong></div>
             <div>
               found:https://github.com/MyEtherWallet/MyEtherWallet Chrome Web
               Store:
@@ -210,4 +291,56 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.policy {
+  padding-top: 30px;
+  padding-bottom: 50px;
+}
+
+p {
+  //font-family: Arial;
+  font-weight: 400;
+  //font-size: 19px;
+  line-height: 25px;
+  color: black;
+  margin-bottom: 15px !important;
+}
+
+ul {
+  padding-left: 20px;
+  li {
+    &::before {
+      content: '- ';
+    }
+  }
+}
+
+.main-table {
+  margin: 50px 0;
+
+  > tbody ul {
+    padding-left: 20px;
+    li {
+    }
+  }
+
+  > tbody {
+    > tr {
+      border-bottom: 1px solid black;
+      &:first-child {
+        border-top: 3px solid black;
+      }
+      &:last-child {
+        border-bottom: 3px solid black;
+      }
+      td {
+        padding: 10px;
+
+        > div > div {
+          padding-left: 20px;
+        }
+      }
+    }
+  }
+}
+</style>
