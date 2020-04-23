@@ -79,7 +79,7 @@ import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 import * as moment from 'moment';
 import NotificationHeader from '../../NotificationHeader';
-import { providerMap, providerNames } from '@/partners';
+import { providerMap, offChainProviders } from '@/partners';
 
 import {
   swapOnlyStatuses,
@@ -208,7 +208,7 @@ export default {
       this.$emit('showDetails', ['swap', this.notice, this.index]);
     },
     startPolling() {
-      if (this.notice.body.provider === providerNames.kyber) return;
+      if (!offChainProviders.includes(this.notice.body.provider)) return;
 
       this.provider = providerMap.get(this.notice.body.provider);
       this.currentStatus = this.notice.swapStatus;

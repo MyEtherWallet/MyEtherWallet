@@ -32,7 +32,7 @@
             </div>
             <span class="your-bal">{{ $t('unstoppable.your-balance') }}</span>
           </div>
-          <span v-show="balance * 100 < domainPrice" class="error-message">
+          <span v-show="balance < convertedEthPrice" class="error-message">
             {{ $t('unstoppable.insufficient-balance') }}
           </span>
           <div class="btn-container">
@@ -43,10 +43,10 @@
             </button>
             <button
               :class="[
-                balance * 100 < domainPrice ? 'disabled' : '',
+                balance < convertedEthPrice ? 'disabled' : '',
                 'large-round-button-green-filled clickable pay-button'
               ]"
-              :disabled="(loading || balance * 100 < domainPrice)"
+              :disabled="(loading || balance  < convertedEthPrice)"
               @click="submit"
             >
               <span v-show="!loading">
