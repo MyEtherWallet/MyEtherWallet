@@ -1,51 +1,62 @@
-/*========== Vuetify Global Styles ==========*/
+/* ========== Vuetify Global Styles ========== */
+
 /* Set maximum size for "v-container" */
 @media (min-width: 1904px) {
   .container {
     max-width: 1185px !important;
   }
 }
+
 /* Remove default background color */
 .theme--light.v-application {
   background: $white !important;
 }
+
 /* Remove default v-sheet border-radius */
 .theme--light.v-sheet,
 .theme--dark.v-sheet {
   border-radius: 0;
 }
+
 /* Set light theme default text color */
 #app.theme--light .v-sheet,
 #app.theme--light .v-application {
   color: $theme-light--text-color !important;
 }
+
 /* Set dark theme default text color */
 #app.theme--dark .v-sheet,
 #app.theme--dark .v-application {
   color: $theme-dark--text-color !important;
 }
+
 /* Set light theme box-shadow for white sheet */
 #app.theme--light .box-shadow {
   box-shadow: 0 0 15px $theme-light--white-sheet-shadow-color;
 }
+
 /* Set dark theme box-shadow for white sheet */
 #app.theme--dark .box-shadow {
   box-shadow: 0 0 15px $theme-dark--white-sheet-shadow-color;
 }
+
 /* Force light theme default text color */
 #app.theme--light .theme--light-text--dark-space {
   color: $dark-space !important;
 }
+
 /* Force dark theme default text color */
 #app.theme--dark .theme--dark-text--blue {
   color: $theme-dark--text-color !important;
 }
+
 /* Force white text color */
 #app.theme--dark .theme--dark-text--white,
 #app.theme--light .theme--light-text--white {
   color: $white !important;
 }
-/*========== CSS Style Reset ==========*/
+
+/* ========== CSS Style Reset ========== */
 * {
   font-family: 'Roboto';
   box-sizing: content-box;
@@ -92,7 +103,8 @@ h5 {
   font-size: 16px;
   font-weight: 400;
 }
-/*========== Text ==========*/
+
+/* ========== Text ========== */
 .color--inherit {
   color: inherit !important;
 }
@@ -114,7 +126,8 @@ h5 {
 .font-weight--600 {
   font-weight: 600 !important;
 }
-/*========== Cursor ==========*/
+
+/* ========== Cursor ========== */
 .pointer-event--none {
   pointer-events: none;
 }
@@ -124,13 +137,14 @@ h5 {
 .cursor--pointer {
   cursor: pointer;
 }
-/*========== Border ==========*/
+
+/* ========== Border ========== */
 .border--white {
   border-color: $white !important;
   border: 1px solid $white !important;
 }
 .border-radius--0px {
-  border-radius: 0px !important;
+  border-radius: 0 !important;
 }
 .border-radius--5px {
   border-radius: 5px !important;
@@ -142,7 +156,8 @@ h5 {
   border-bottom-left-radius: 10px !important;
   border-bottom-right-radius: 10px !important;
 }
-/*========== Other ==========*/
+
+/* ========== Other ========== */
 .noscroll {
   height: 100vh;
   overflow-y: hidden;

@@ -12,7 +12,7 @@ export default {
   components: { Chart },
   props: {
     data: {
-      default: function() {
+      default: function () {
         return [];
       },
       type: Array
@@ -43,7 +43,7 @@ export default {
             text: 'USD $'
           },
           labels: {
-            formatter: function() {
+            formatter: function () {
               return '$ ' + this.value;
             }
           }
@@ -113,7 +113,7 @@ export default {
             text: 'USD $'
           },
           labels: {
-            formatter: function() {
+            formatter: function () {
               return '$ ' + this.value;
             }
           }

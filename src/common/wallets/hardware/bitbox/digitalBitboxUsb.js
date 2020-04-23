@@ -8,18 +8,15 @@
 
 import u2f from 'u2f-api';
 
-const DigitalBitboxUsb = function() {};
+const DigitalBitboxUsb = function () {};
 
 // Convert from normal to web-safe, strip trailing "="s
-DigitalBitboxUsb.webSafe64 = function(base64) {
-  return base64
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/, '');
+DigitalBitboxUsb.webSafe64 = function (base64) {
+  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 };
 
 // Convert from web-safe to normal, add trailing "="s
-DigitalBitboxUsb.normal64 = function(base64) {
+DigitalBitboxUsb.normal64 = function (base64) {
   return (
     // eslint-disable-next-line
     base64.replace(/\-/g, '+').replace(/_/g, '/') +
@@ -27,7 +24,7 @@ DigitalBitboxUsb.normal64 = function(base64) {
   );
 };
 
-DigitalBitboxUsb.prototype.u2fCallback = function(response, callback) {
+DigitalBitboxUsb.prototype.u2fCallback = function (response, callback) {
   if ('signatureData' in response) {
     const data = new Buffer(
       DigitalBitboxUsb.normal64(response.signatureData),
@@ -39,7 +36,7 @@ DigitalBitboxUsb.prototype.u2fCallback = function(response, callback) {
   }
 };
 
-DigitalBitboxUsb.prototype.exchange = function(msg, callback) {
+DigitalBitboxUsb.prototype.exchange = function (msg, callback) {
   msg = Buffer.from(msg, 'ascii');
   const kh_max_len = 128 - 2; // Subtract 2 bytes for `index` and `total` header
   // Challenge is needed for U2F but unused in the hijack procedure
@@ -49,7 +46,7 @@ DigitalBitboxUsb.prototype.exchange = function(msg, callback) {
   );
   const total = Math.ceil(msg.length / kh_max_len);
   const self = this;
-  const localCallback = function(result) {
+  const localCallback = function (result) {
     self.u2fCallback(result, callback);
   };
   for (let index = 0; index < total; index++) {

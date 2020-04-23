@@ -1,12 +1,12 @@
 'use strict';
 import { toBuffer, stripZeros, rlp } from 'ethereumjs-util';
 
-const SecalotEth = function(comm, pinCode) {
+const SecalotEth = function (comm, pinCode) {
   this.comm = comm;
   if (typeof pinCode !== 'undefined') this.pinCode = pinCode;
 };
 
-SecalotEth.splitPath = function(path) {
+SecalotEth.splitPath = function (path) {
   const result = [];
   const components = path.split('/');
 
@@ -23,7 +23,7 @@ SecalotEth.splitPath = function(path) {
   return result;
 };
 
-SecalotEth.getErrorMessage = function(sw, operation) {
+SecalotEth.getErrorMessage = function (sw, operation) {
   let errorMessage;
   if (sw === 0x6d00) {
     errorMessage = 'Ethereum wallet on your Secalot is not initialized.';
@@ -45,12 +45,12 @@ SecalotEth.getErrorMessage = function(sw, operation) {
   return errorMessage;
 };
 
-SecalotEth.prototype.getAddress = function(path, callback) {
+SecalotEth.prototype.getAddress = function (path, callback) {
   const splitPath = SecalotEth.splitPath(path);
   const apdus = [];
   let buffer;
   const self = this;
-  const localCallback = function(response, error) {
+  const localCallback = function (response, error) {
     if (typeof error !== 'undefined') {
       callback(undefined, error);
     } else {
@@ -106,7 +106,7 @@ SecalotEth.prototype.getAddress = function(path, callback) {
   apdus.push(buffer.toString('hex'));
   self.comm.exchange(apdus.shift(), localCallback);
 };
-SecalotEth.prototype.signTransactionAsync = function(path, eTx) {
+SecalotEth.prototype.signTransactionAsync = function (path, eTx) {
   return new Promise((resolve, reject) => {
     this.signTransaction(path, eTx, (result, error) => {
       if (error) return reject(error);
@@ -114,14 +114,14 @@ SecalotEth.prototype.signTransactionAsync = function(path, eTx) {
     });
   });
 };
-SecalotEth.prototype.signTransaction = function(path, eTx, callback) {
+SecalotEth.prototype.signTransaction = function (path, eTx, callback) {
   const chainID = eTx.getChainId();
   const splitPath = SecalotEth.splitPath(path);
   let offset = 0;
   let rawData = '';
   const apdus = [];
   const self = this;
-  const localCallback = function(response, error) {
+  const localCallback = function (response, error) {
     if (typeof error !== 'undefined') {
       callback(undefined, error);
     } else {
@@ -198,7 +198,7 @@ SecalotEth.prototype.signTransaction = function(path, eTx, callback) {
   apdus.push(buffer.toString('hex'));
   self.comm.exchange(apdus.shift(), localCallback);
 };
-SecalotEth.prototype.signMessageAsync = function(path, message) {
+SecalotEth.prototype.signMessageAsync = function (path, message) {
   return new Promise((resolve, reject) => {
     this.signMessage(path, message, (result, error) => {
       if (error) return reject(error);
@@ -206,13 +206,13 @@ SecalotEth.prototype.signMessageAsync = function(path, message) {
     });
   });
 };
-SecalotEth.prototype.signMessage = function(path, message, callback) {
+SecalotEth.prototype.signMessage = function (path, message, callback) {
   const splitPath = SecalotEth.splitPath(path);
   let offset = 0;
   let rawData = '';
   const apdus = [];
   const self = this;
-  const localCallback = function(response, error) {
+  const localCallback = function (response, error) {
     if (typeof error !== 'undefined') {
       callback(undefined, error);
     } else {

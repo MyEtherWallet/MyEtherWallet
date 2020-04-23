@@ -10,7 +10,7 @@ export default {
   components: { Chart },
   props: {
     data: {
-      default: function() {
+      default: function () {
         return [];
       },
       type: Array

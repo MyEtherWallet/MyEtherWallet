@@ -331,7 +331,7 @@ const CURRENCIES = [
 
 export function canValidate(currencyNameOrSymbol) {
   const nameOrSymbol = currencyNameOrSymbol.toLowerCase();
-  return CURRENCIES.find(function(currency) {
+  return CURRENCIES.find(function (currency) {
     return (
       currency.name.toLowerCase() === nameOrSymbol ||
       currency.symbol.toLowerCase() === nameOrSymbol
