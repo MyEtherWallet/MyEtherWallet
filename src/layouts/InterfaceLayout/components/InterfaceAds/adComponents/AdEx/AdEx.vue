@@ -1,7 +1,7 @@
 <template>
   <div id="adexContainerOuter" class="outer-adex">
     <div class="ad-image-container">
-      <div v-if="active" class="inner-adex">
+      <div class="inner-adex">
         <iframe
           id="iframe"
           class="frame"
@@ -41,7 +41,6 @@ export default {
   },
   data() {
     return {
-      active: process.env.NODE_ENV === 'production',
       height: 60,
       width: 468
     };
@@ -53,15 +52,13 @@ export default {
   },
   methods: {
     scale() {
-      if (this.active) {
-        const el = document.getElementById('adexContainerOuter');
-        const frame = document.getElementById('iframe');
-        frame.style.transform = `scale(${el.offsetWidth / 486})`;
-        frame.style['-ms-transform'] = `scale(${el.offsetWidth / 486})`;
-        frame.style['-moz-transform'] = `scale(${el.offsetWidth / 486})`;
-        frame.style['-o-transform'] = `scale(${el.offsetWidth / 486})`;
-        frame.style['-webkit-transform'] = `scale(${el.offsetWidth / 486})`;
-      }
+      const el = document.getElementById('adexContainerOuter');
+      const frame = document.getElementById('iframe');
+      frame.style.transform = `scale(${el.offsetWidth / 486})`;
+      frame.style['-ms-transform'] = `scale(${el.offsetWidth / 486})`;
+      frame.style['-moz-transform'] = `scale(${el.offsetWidth / 486})`;
+      frame.style['-o-transform'] = `scale(${el.offsetWidth / 486})`;
+      frame.style['-webkit-transform'] = `scale(${el.offsetWidth / 486})`;
     }
   }
 };
