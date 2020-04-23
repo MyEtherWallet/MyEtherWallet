@@ -166,18 +166,21 @@ export default class DexAg {
     }
   }
 
-  async approve(tokenAddress, spender, fromValueWei) {
+  async approve(tokenAddress, spender, fromValueWei, higherGasLimit = false) {
     try {
       const methodObject = new this.web3.eth.Contract(
         ERC20,
         tokenAddress
       ).methods.approve(spender, fromValueWei);
-
-      return {
+      const values = {
         to: tokenAddress,
         value: 0,
         data: methodObject.encodeABI()
       };
+      if (higherGasLimit) {
+        values.gas = 50000;
+      }
+      return values;
     } catch (e) {
       errorLogger(e);
     }
@@ -239,7 +242,8 @@ export default class DexAg {
           await this.approve(
             metadata.input.address,
             providerAddress,
-            metadata.input.amount
+            metadata.input.amount,
+            true
           )
         ])
       );
@@ -286,7 +290,7 @@ export default class DexAg {
             tx.gas = 1000000;
             break;
           default:
-            tx.gas = 750000;
+            tx.gas = 500000;
         }
       }
 
@@ -333,11 +337,16 @@ export default class DexAg {
     swapDetails.parsed = {
       sendToAddress: swapDetails.providerAddress,
       status: 'pending',
-      validFor: TIME_SWAP_VALID
+      validFor: TIME_SWAP_VALID,
+      timestamp: new Date(Date.now()).toISOString()
     };
     swapDetails.isDex = DexAg.isDex();
 
     return swapDetails;
+  }
+
+  static async getOrderStatus() {
+    return 'pending';
   }
 
   async createTransaction(swapDetails, dexToUse) {
