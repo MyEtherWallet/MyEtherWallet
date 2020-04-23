@@ -3,29 +3,23 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const env_vars = require('../ENV_VARS');
 const path = require('path');
 const defaultConfig = require('./defaultConfigs');
-const webpack = require('webpack');
+// const webpack = require('webpack');
 const webpackConfigCXWeb3 = {
-  devtool: 'inline-source-map',
+  devtool: 'cheap-source-map',
   entry: {
     cxWeb3: './src/builds/mewcx/cxHelpers/cxWeb3.js',
     contentScript: './src/builds/mewcx/cxHelpers/contentScript.js',
     background: './src/builds/mewcx/cxHelpers/background.js'
   },
   node: {
-    process: true,
-    global: false
+    process: true
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      global: 'window' // Placeholder for global used in any node_modules
-    })
-  ],
   optimization: {
     splitChunks: false
   }
 };
 const webpackConfig = {
-  devtool: defaultConfig.devtool,
+  devtool: 'cheap-source-map',
   node: {
     process: true
   },
