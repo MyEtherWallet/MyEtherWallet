@@ -184,7 +184,13 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
-import { providerMap, providerNames, fiat, EthereumTokens } from '@/partners';
+import {
+  providerMap,
+  providerNames,
+  offChainProviders,
+  fiat,
+  EthereumTokens
+} from '@/partners';
 
 import {
   swapOnlyStatuses,
@@ -318,7 +324,10 @@ export default {
   },
   mounted() {
     this.timeRemaining = this.notice.body.timeRemaining;
-    this.provider = providerMap.get(this.notice.body.provider);
+    const provider = offChainProviders.includes(this.notice.body.provider)
+      ? this.notice.body.provider
+      : 'dexag';
+    this.provider = providerMap.get(provider);
     this.currentStatus = this.notice.swapStatus;
     this.timeUpdater();
     this.statusUpdater();

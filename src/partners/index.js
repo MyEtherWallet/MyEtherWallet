@@ -49,6 +49,12 @@ const providerNames = {
   dexag: dexAg
 };
 
+const offChainProviders = [
+  providerNames.simplex,
+  providerNames.changelly,
+  providerNames.bity
+];
+
 const supportedProviders = Object.values(providerNames);
 
 export {
@@ -57,6 +63,7 @@ export {
   providerMap,
   supportedProviders,
   providerNames,
+  offChainProviders,
   BASE_CURRENCY,
   MIN_SWAP_AMOUNT,
   BitySwap,
