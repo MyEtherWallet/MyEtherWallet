@@ -16,7 +16,16 @@
           <ul>
             <li>
               <p class="icon from-swap-icon">
-                <i :class="['cc', details.fromCurrency, 'cc-icon']"></i>
+                <i
+                  v-if="getIcon(notice.body.fromCurrency) !== ''"
+                  :class="['cc', notice.body.fromCurrency, 'cc-icon']"
+                ></i>
+                <img
+                  v-if="getIcon(notice.body.fromCurrency) === ''"
+                  :src="iconFetcher(notice.body.fromCurrency)"
+                  class="icon-image"
+                  alt
+                />
               </p>
             </li>
             <li>
@@ -32,7 +41,16 @@
             </li>
             <li>
               <p class="icon to-swap-icon">
-                <i :class="['cc', details.toCurrency, 'cc-icon']"></i>
+                <i
+                  v-if="getIcon(notice.body.toCurrency) !== ''"
+                  :class="['cc', notice.body.toCurrency, 'cc-icon']"
+                ></i>
+                <img
+                  v-if="getIcon(notice.body.toCurrency) === ''"
+                  :src="iconFetcher(notice.body.toCurrency)"
+                  class="icon-image"
+                  alt
+                />
               </p>
             </li>
             <li>
@@ -189,7 +207,8 @@ import {
   providerNames,
   offChainProviders,
   fiat,
-  EthereumTokens
+  EthereumTokens,
+  hasIcon
 } from '@/partners';
 
 import {
@@ -333,6 +352,20 @@ export default {
     this.statusUpdater();
   },
   methods: {
+    iconFetcher(currency) {
+      let icon;
+      try {
+        // eslint-disable-next-line
+        icon = require(`@/assets/images/currency/coins/AllImages/${currency}.svg`);
+      } catch (e) {
+        // eslint-disable-next-line
+        return require(`@/assets/images/icons/web-solution.svg`);
+      }
+      return icon;
+    },
+    getIcon(currency) {
+      return hasIcon(currency);
+    },
     emitShowDetails() {
       this.$emit('showDetails', ['swap', this.notice]);
     },
