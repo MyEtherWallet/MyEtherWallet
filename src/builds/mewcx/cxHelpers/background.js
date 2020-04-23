@@ -132,12 +132,9 @@ const eventsListeners = (request, _, callback) => {
     metamaskChecker = setTimeout(setTimeoutCb, 180000); // Clear var in 3 minutes
   }
 
-  const payload = utils._.mapObject(
-    Object.assign({}, request.payload),
-    function (val) {
-      return helpers.recursivePayloadStripper(val);
-    }
-  );
+  const payload = utils._.mapObject(Object.assign({}, request.payload), val => {
+    return helpers.recursivePayloadStripper(val);
+  });
 
   const obj = {
     event: request.event,
@@ -163,9 +160,7 @@ const eventsListeners = (request, _, callback) => {
 };
 
 // Query tabs
-window.chrome.tabs.query({ active: true, lastFocusedWindow: true }, function (
-  tabs
-) {
+window.chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
   querycB(tabs);
 });
 
@@ -190,7 +185,7 @@ function onUpdatedCb(_, __, tab) {
   }
 }
 function onActivatedCb(info) {
-  window.chrome.tabs.get(info.tabId, function (tab) {
+  window.chrome.tabs.get(info.tabId, tab => {
     if (
       typeof tab !== 'undefined' &&
       Object.keys(tab).length > 0 &&
@@ -270,7 +265,7 @@ function querycB(tab) {
         window.chrome.tabs.sendMessage(
           tab.id,
           { event: CX_INJECT_WEB3 },
-          function () {
+          () => {
             window.chrome.tabs.sendMessage(tab.id, {
               event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
             });
@@ -279,15 +274,11 @@ function querycB(tab) {
       }
     } else {
       // Injects web3
-      window.chrome.tabs.sendMessage(
-        tab.id,
-        { event: CX_INJECT_WEB3 },
-        function () {
-          window.chrome.tabs.sendMessage(tab.id, {
-            event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
-          });
-        }
-      );
+      window.chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, () => {
+        window.chrome.tabs.sendMessage(tab.id, {
+          event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
+        });
+      });
     }
   }
 }

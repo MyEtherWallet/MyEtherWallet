@@ -25,10 +25,9 @@ const webpackConfigCXWeb3 = {
   }
 };
 const webpackConfig = {
-  devtool: 'inline-source-map',
+  devtool: defaultConfig.devtool,
   node: {
-    process: true,
-    global: false
+    process: true
   },
   plugins: defaultConfig.plugins.concat([
     new CopyWebpackPlugin([
@@ -70,10 +69,7 @@ const webpackConfig = {
           return content;
         }
       }
-    ]),
-    new webpack.DefinePlugin({
-      global: 'window' // Placeholder for global used in any node_modules
-    })
+    ])
   ]),
   optimization: {
     splitChunks: false
