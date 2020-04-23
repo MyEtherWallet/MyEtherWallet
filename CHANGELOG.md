@@ -4,9 +4,9 @@
 
 - Add/update mobile interface Address, Balance, Network blocks [#2273](https://github.com/MyEtherWallet/MyEtherWallet/pull/2273)
 
-
 ### Devop
 
+- Add MEW security policy page [#2294](https://github.com/MyEtherWallet/MyEtherWallet/pull/2294)
 - Token Icons [#2276](https://github.com/MyEtherWallet/MyEtherWallet/pull/2276)
 
 ### Release v5.5.4
