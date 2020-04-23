@@ -125,26 +125,45 @@ export default class Changelly {
   getFixedRate(fromCurrency, toCurrency, fromValue) {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async resolve => {
-      const timeout = setTimeout(() => {
+      try {
+        const timeout = setTimeout(() => {
+          resolve({
+            fromCurrency,
+            toCurrency,
+            minValue: -1,
+            maxValue: -1,
+            provider: this.name,
+            rate: 0
+          });
+        }, 20000);
+
+        const changellyDetails = await changellyCalls.getFixRate(
+          fromCurrency,
+          toCurrency,
+          fromValue,
+          this.network
+        );
+        clearTimeout(timeout);
+
+        if (!Array.isArray(changellyDetails)) {
+          return {
+            fromCurrency,
+            toCurrency,
+            provider: this.name,
+            rate: 0
+          };
+        }
+
         resolve({
           fromCurrency,
           toCurrency,
-          minValue: -1,
-          maxValue: -1,
           provider: this.name,
-          rate: 0
+          minValue: changellyDetails[0].min,
+          maxValue: changellyDetails[0].max,
+          rate: changellyDetails[0].result,
+          rateId: changellyDetails[0].id
         });
-      }, 20000);
-
-      const changellyDetails = await changellyCalls.getFixRate(
-        fromCurrency,
-        toCurrency,
-        fromValue,
-        this.network
-      );
-      clearTimeout(timeout);
-
-      if (!Array.isArray(changellyDetails)) {
+      } catch (e) {
         return {
           fromCurrency,
           toCurrency,
@@ -152,16 +171,6 @@ export default class Changelly {
           rate: 0
         };
       }
-
-      resolve({
-        fromCurrency,
-        toCurrency,
-        provider: this.name,
-        minValue: changellyDetails[0].min,
-        maxValue: changellyDetails[0].max,
-        rate: changellyDetails[0].result,
-        rateId: changellyDetails[0].id
-      });
     });
   }
 
