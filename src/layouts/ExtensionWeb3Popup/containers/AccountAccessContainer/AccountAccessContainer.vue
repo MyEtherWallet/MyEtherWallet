@@ -55,6 +55,7 @@ import { Misc, ExtensionHelpers, Wallet } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
 import AddressSelectionComponent from '../../components/AddressSelectionComponent';
 import AcceptCancelButtons from '../../components/AcceptCancelButtons';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 
 import {
   REJECT_MEW_CX_ACC,
@@ -143,8 +144,8 @@ export default {
     sendAccount() {
       const generatedAccount = new Wallet.generate();
       const account = isAddress(this.selectedAccount)
-        ? this.selectedAccount
-        : generatedAccount.getAddressString();
+        ? toChecksumAddress(this.selectedAccount)
+        : generatedAccount.getChecksumAddressString();
       const chrome = window.chrome;
       const eventObj = {};
       eventObj[`${this.request.connectionRequest.toLowerCase()}`] = account;
