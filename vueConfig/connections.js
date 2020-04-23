@@ -62,5 +62,6 @@ module.exports = [
   'https://localhost:1991', // server for bcvault
   'https://rpc.atheios.org:443',
   'wss://bridge.walletconnect.org:443',
-  'https://dexag.mewapi.io:443'
+  'https://dexag.mewapi.io:443',
+  'https://api.zilliqa.com:443'
 ];
