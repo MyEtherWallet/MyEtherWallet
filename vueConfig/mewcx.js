@@ -1,9 +1,8 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-// const HtmlWebpackPlugin = require('html-webpack-plugin');
 const env_vars = require('../ENV_VARS');
 const path = require('path');
 const defaultConfig = require('./defaultConfigs');
-// const webpack = require('webpack');
+const webpack = require('webpack');
 const webpackConfigCXWeb3 = {
   devtool: 'cheap-source-map',
   entry: {
@@ -12,7 +11,8 @@ const webpackConfigCXWeb3 = {
     background: './src/builds/mewcx/cxHelpers/background.js'
   },
   node: {
-    process: true
+    process: true,
+    global: false
   },
   optimization: {
     splitChunks: false
@@ -21,7 +21,8 @@ const webpackConfigCXWeb3 = {
 const webpackConfig = {
   devtool: 'cheap-source-map',
   node: {
-    process: true
+    process: true,
+    global: false
   },
   plugins: defaultConfig.plugins.concat([
     new CopyWebpackPlugin([
@@ -63,7 +64,10 @@ const webpackConfig = {
           return content;
         }
       }
-    ])
+    ]),
+    new webpack.DefinePlugin({
+      global: 'window'
+    })
   ]),
   optimization: {
     splitChunks: false
