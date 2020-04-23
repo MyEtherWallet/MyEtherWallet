@@ -492,7 +492,7 @@ export default class BitySwap {
       });
 
       if (!data.timestamp_created) {
-        return swapNotificationStatuses.NEW;
+        return swapNotificationStatuses.CANCELLED;
       }
 
       timeSinceOrder =
@@ -502,26 +502,18 @@ export default class BitySwap {
       if (data.status === bityStatuses.EXEC) {
         return swapNotificationStatuses.COMPLETE;
       }
-      if (data.input.status !== bityStatuses.FILL) {
-        switch (data.input.status) {
-          case bityStatuses.OPEN:
-            return swapNotificationStatuses.NEW;
-          case bityStatuses.RCVE:
-          case bityStatuses.CONF:
-            return swapNotificationStatuses.PENDING;
-          case bityStatuses.CANC:
-            return swapNotificationStatuses.CANCELLED;
-        }
-      } else {
-        switch (data.output.status) {
-          case bityStatuses.FILL:
-            return swapNotificationStatuses.COMPLETE;
-          case bityStatuses.CANC:
-            return swapNotificationStatuses.CANCELLED;
-          default:
-            return swapNotificationStatuses.PENDING;
-        }
+
+      if (data.timestamp_executed) {
+        return swapNotificationStatuses.COMPLETE;
+      } else if (data.timestamp_payment_received) {
+        return swapNotificationStatuses.PENDING;
+      } else if (data.timestamp_awaiting_payment_since) {
+        return swapNotificationStatuses.PENDING;
+      } else if (data.timestamp_created) {
+        return swapNotificationStatuses.NEW;
       }
+
+      return swapNotificationStatuses.PENDING;
     } catch (e) {
       if (timeSinceOrder) {
         if (timeSinceOrder < 100000) {
