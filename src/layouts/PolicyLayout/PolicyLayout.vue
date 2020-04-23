@@ -93,45 +93,61 @@
                 </ul>
               </div>
             </div>
-            <div class="mt-3"><strong>MEWconnect App</strong></div>
-            <div>
-              Code base Android:
-              <a
-                href="https://github.com/MyEtherWallet/MEWconnect-Android"
-                target="_blank"
-              >
-                https://github.com/MyEtherWallet/MEWconnect-Android
-              </a>
-              <br />
-              Code base iOS:
-              <a
-                href="https://github.com/MyEtherWallet/MEWconnect-iOS"
-                target="_blank"
-              >
-                https://github.com/MyEtherWallet/MEWconnect-iOS
-              </a>
-              <br />
-              iOS store:
-              <a
-                href="https://apps.apple.com/us/app/mewconnect/id1391097156"
-                target="_blank"
-              >
-                https://apps.apple.com/us/app/mewconnect/id1391097156
-              </a>
-              <br />
-              Android:
-              <a
-                href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
-                target="_blank"
-              >
-                https://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect
-              </a>
+            <div class="mt-3">
+              <strong>MEWconnect App</strong>
+              <div>
+                Code base Android:
+                <a
+                  href="https://github.com/MyEtherWallet/MEWconnect-Android"
+                  target="_blank"
+                >
+                  https://github.com/MyEtherWallet/MEWconnect-Android
+                </a>
+                <br />
+                Code base iOS:
+                <a
+                  href="https://github.com/MyEtherWallet/MEWconnect-iOS"
+                  target="_blank"
+                >
+                  https://github.com/MyEtherWallet/MEWconnect-iOS
+                </a>
+                <br />
+                iOS store:
+                <a
+                  href="https://apps.apple.com/us/app/mewconnect/id1391097156"
+                  target="_blank"
+                >
+                  https://apps.apple.com/us/app/mewconnect/id1391097156
+                </a>
+                <br />
+                Android:
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
+                  target="_blank"
+                >
+                  https://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect
+                </a>
+              </div>
             </div>
-            <div class="mt-3"><strong>MEW CX Code base can be</strong></div>
-            <div>
-              found:https://github.com/MyEtherWallet/MyEtherWallet Chrome Web
-              Store:
-              https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en
+            <div class="mt-3">
+              <strong>MEW CX</strong>
+              <div>
+                Code base can be found:
+                <a
+                  href="https://github.com/MyEtherWallet/MyEtherWallet"
+                  target="_blank"
+                >
+                  https://github.com/MyEtherWallet/MyEtherWallet
+                </a>
+                <br />
+                Chrome Web Store:
+                <a
+                  href="https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en"
+                  target="_blank"
+                >
+                  https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en
+                </a>
+              </div>
             </div>
           </td>
         </tr>
@@ -141,19 +157,26 @@
             <div>
               Our rewards are based on the severity per CVSS (the Common
               Vulnerability Scoring Standard
-              https://en.wikipedia.org/wiki/Common_Vulnerability_Scoring_System
+              <a
+                href="https://en.wikipedia.org/wiki/Common_Vulnerability_Scoring_System"
+                target="_blank"
+              >
+                https://en.wikipedia.org/wiki/Common_Vulnerability_Scoring_System
+              </a>
               ). Please note these are general guidelines, and that reward
-              decisions are up to the discretion of MyEtherWallet. Each bounty
-              reward will be paid in ETH with equivalent USD value, at the time
-              of transfer:
+              decisions are up to the discretion of MyEtherWallet.
+              <strong>
+                Each bounty reward will be paid in ETH with equivalent USD
+                value, at the time of transfer:
+              </strong>
             </div>
 
-            <table>
+            <table class="sub-table mt-3 mb-1">
               <tr>
-                <td>Critical (9.0 - 10.0)</td>
-                <td>High (7.0 - 8.9)</td>
-                <td>Medium (4.0 - 6.9)</td>
-                <td>Low (0.1 - 3.9)</td>
+                <td><strong>Critical (9.0 - 10.0)</strong></td>
+                <td><strong>High (7.0 - 8.9)</strong></td>
+                <td><strong>Medium (4.0 - 6.9)</strong></td>
+                <td><strong>Low (0.1 - 3.9)</strong></td>
               </tr>
               <tr>
                 <td>$2,000</td>
@@ -169,13 +192,23 @@
           <td>
             <div>
               MyEtherWallet will make a best effort to meet the following SLAs
-              for researches participating in our bug bounty program: * Time to
-              first response (from report submit) - 3 business days * Time to
-              triage (from report submit) - 5 business days * Time to bounty
-              (from triage) - 5 business days We take every report seriously and
-              very much appreciate the efforts of researchers that contribute to
-              this program. Please be patient as we’ll try to keep you informed
-              about our progress throughout the process.
+              for researches participating in our bug bounty program:
+              <br /><br />
+              <strong
+                >* Time to first response (from report submit) - 3 business
+                days</strong
+              >
+              <br />
+              <strong
+                >* Time to triage (from report submit) - 5 business days</strong
+              >
+              <br />
+              <strong>* Time to bounty (from triage) - 5 business days</strong>
+              <br /><br />
+              We take every report seriously and very much appreciate the
+              efforts of researchers that contribute to this program. Please be
+              patient as we’ll try to keep you informed about our progress
+              throughout the process.
             </div>
           </td>
         </tr>
@@ -192,36 +225,81 @@
         <tr>
           <td>Reporting Rules</td>
           <td>
-            <div>
+            <div class="mb-3">
               Report eligible vulnerability to EMAIL Please provide detailed
               reports with reproducible steps. If the report is not detailed
               enough to reproduce the issue, the issue will not be eligible for
-              a reward. Submit one vulnerability per report, unless you need to
-              chain vulnerabilities to provide impact. When duplicates occur, we
-              only award the first report that was received (provided that it
-              can be fully reproduced). Multiple vulnerabilities caused by one
-              underlying issue will be awarded one bounty. Social engineering
-              (e.g. phishing, vishing, smishing) is prohibited. Make a good
-              faith effort to avoid privacy violations, destruction of data, and
-              interruption or degradation of our service. Only interact with
-              accounts you own or with explicit permission of the account
-              holder.
+              a reward.
+            </div>
+            <div class="mb-3">
+              Submit one vulnerability per report, unless you need to chain
+              vulnerabilities to provide impact.
+            </div>
+            <div class="mb-3">
+              When duplicates occur, we only award the first report that was
+              received (provided that it can be fully reproduced).
+            </div>
+            <div class="mb-3">
+              Multiple vulnerabilities caused by one underlying issue will be
+              awarded one bounty.
+            </div>
+            <div class="mb-3">
+              Social engineering (e.g. phishing, vishing, smishing) is
+              prohibited.
+            </div>
+            <div>
+              Make a good faith effort to avoid privacy violations, destruction
+              of data, and interruption or degradation of our service.
+              <strong>
+                Only interact with accounts you own or with explicit permission
+                of the account holder.
+              </strong>
             </div>
           </td>
         </tr>
         <tr>
           <td>In Scope Vulnerabilities</td>
           <td>
-            In general, any bug that can lead to loss of finances or leak of
-            users’ personal data. These includes bugs with sufficient severity
-            and not limited to: MyEtherWallet Website: * Clickjacking * XSS *
-            Remote code execution * CSRF * Authentication bypass or privilege
-            escalation * Accessing users private keys and personal data MEW
-            wallet and MEWconnect apps: * Injection, Manipulation of account
-            balance * Authentication bypasses, Loss of privileged information
-            (passwords, private keys, etc.) * Unauthorised Transaction signing *
-            Unauthorised P2P connection * Modification of request received by
-            the Mobile application on MCBeta.myetherwallet.com
+            <div class="mb-3">
+              In general, any bug that can lead to loss of finances or leak of
+              users’ personal data.
+            </div>
+            <div class="mb-3">
+              These includes bugs with sufficient severity and not limited to:
+            </div>
+            <div class="mb-2">
+              <strong>MyEtherWallet Website:</strong>
+            </div>
+            <ul class="mb-3">
+              <li>Clickjacking</li>
+              <li>XSS</li>
+              <li>Remote code execution</li>
+              <li>CSRF</li>
+              <li>Authentication bypass or privilege escalation</li>
+              <li>Accessing users private keys and personal data</li>
+            </ul>
+            <div class="mb-2">
+              <strong>MEW wallet and MEWconnect apps:</strong>
+            </div>
+            <ul>
+              <li>
+                Injection, Manipulation of account balance
+              </li>
+              <li>
+                Authentication bypasses, Loss of privileged information
+                (passwords, private keys, etc.)
+              </li>
+              <li>
+                Unauthorised Transaction signing
+              </li>
+              <li>
+                Unauthorised P2P connection
+              </li>
+              <li>
+                Modification of request received by the Mobile application on
+                MCBeta.myetherwallet.com
+              </li>
+            </ul>
           </td>
         </tr>
         <tr>
@@ -311,6 +389,7 @@ ul {
   li {
     &::before {
       content: '- ';
+      margin-left: -10px;
     }
   }
 }
@@ -333,13 +412,23 @@ ul {
       &:last-child {
         border-bottom: 3px solid black;
       }
-      td {
+      > td {
         padding: 10px;
 
         > div > div {
           padding-left: 20px;
         }
       }
+    }
+  }
+}
+
+.sub-table {
+  tr {
+    border: 1px solid black;
+    td {
+      border-right: 1px solid black;
+      padding: 5px 10px;
     }
   }
 }
