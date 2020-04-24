@@ -168,6 +168,14 @@ h5 {
 .overflow--initial {
   overflow: initial;
 }
+.text-overflow--ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.word-break--break-all {
+  word-break: break-all;
+}
 .position--relative {
   position: relative;
 }
