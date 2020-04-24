@@ -1,7 +1,7 @@
 <template>
   <v-expansion-panel>
     <v-expansion-panel-header color="bg_color_gray">
-      <div class="d-flex align-center">
+      <v-card class="d-flex align-center" color="transparent" flat>
         <div class="mr-6">
           <blockie
             address="0xabc23787066c571a61274929746895c24fa9dbfc"
@@ -28,15 +28,22 @@
           </div>
           <div>1 min ago</div>
         </div>
-      </div>
+      </v-card>
     </v-expansion-panel-header>
     <v-expansion-panel-content color="bg_color_gray">
-      <div class="data-table d-flex align-center justify-space-between">
-        <div>Transaction hash:</div>
-        <EllipsisBlock>
-          0xc06cdcc936536224054723679ba8ff616b1a5f1cac8cfa606ee03488bfb82ef0
-        </EllipsisBlock>
-      </div>
+      <DividerLine />
+      <v-card
+        color="transparent"
+        flat
+        class="d-flex align-center justify-space-between pt-4 px-1"
+      >
+        <div color="transparent" flat>Transaction hash:</div>
+        <v-card max-width="300px" color="transparent" flat>
+          <EllipsisBlock>
+            0xc06cdcc936536224054723679ba8ff616b1a5f1cac8cfa606ee03488bfb82ef0
+          </EllipsisBlock>
+        </v-card>
+      </v-card>
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
@@ -44,23 +51,17 @@
 <script>
 import Blockie from '@/web/components/Blockie';
 import EllipsisBlock from '@/components/EllipsisBlock';
+import DividerLine from '@/web/components/Common/DividerLine';
 
 export default {
   components: {
     Blockie,
-    EllipsisBlock
+    EllipsisBlock,
+    DividerLine
   },
   data() {
-    return {};
+    return { isHovering: false };
   },
   methods: {}
 };
 </script>
-
-<style lang="scss" scoped>
-.data-table {
-  > div:nth-child(2) {
-    max-width: 300px;
-  }
-}
-</style>
