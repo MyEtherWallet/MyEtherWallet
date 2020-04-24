@@ -41,7 +41,8 @@ export default new Vuetify({
         bg_overlay: '#f2fafa',
         bg_white_sheet: '#ffffff',
         bg_wallet: '#f2f4fa',
-        bg_table: '#f9f9f9'
+        bg_table: '#f9f9f9',
+        bg_color_gray: '#f2fafa'
       },
       dark: {
         white: '#ffffff',
@@ -74,7 +75,8 @@ export default new Vuetify({
         bg_overlay: '#151a29',
         bg_white_sheet: '#151a29',
         bg_wallet: '#151a29',
-        bg_table: '#0f1320'
+        bg_table: '#0f1320',
+        bg_color_gray: '#0f1320'
       }
     }
   }
