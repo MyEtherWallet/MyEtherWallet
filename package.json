@@ -145,7 +145,7 @@
     "stylelint": "13.3.3",
     "stylelint-config-prettier": "8.0.1",
     "stylelint-config-standard": "20.0.0",
-    "trezor-connect": "8.1.1",
+    "trezor-connect": "8.1.2",
     "u2f-api": "1.1.1",
     "uglify-es": "3.3.9",
     "uuid": "7.0.3",
