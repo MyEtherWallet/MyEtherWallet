@@ -42,8 +42,12 @@ export default new Vuetify({
         bg_white_sheet: '#ffffff',
         bg_wallet: '#f2f4fa',
         bg_table: '#f9f9f9',
-        bg_notification_in: '#7895f2',
-        bg_color_gray: '#f2fafa'
+        bg_notification_in: '#f2fafa',
+        bg_notification_out: '#ffebee',
+        bg_notification_swap: '#fff6e3',
+        bg_notification_button_in: '#7895f2',
+        bg_notification_button_out: '#ffaf8f',
+        bg_notification_button_swap: '#7fdefb'
       },
       dark: {
         white: '#ffffff',
@@ -77,8 +81,12 @@ export default new Vuetify({
         bg_white_sheet: '#151a29',
         bg_wallet: '#151a29',
         bg_table: '#0f1320',
-        bg_notification_in: '#7895f2',
-        bg_color_gray: '#0f1320'
+        bg_notification_in: '#0f1320',
+        bg_notification_out: '#0f1320',
+        bg_notification_swap: '#0f1320',
+        bg_notification_button_in: '#7895f2',
+        bg_notification_button_out: '#ffaf8f',
+        bg_notification_button_swap: '#7fdefb'
       }
     }
   }
