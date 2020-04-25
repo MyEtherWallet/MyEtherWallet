@@ -1,7 +1,7 @@
 <template>
   <v-expansion-panel>
     <v-expansion-panel-header color="bg_color_gray">
-      <v-card class="d-flex align-center" color="transparent" flat>
+      <v-card class="d-flex align-center pr-3" color="transparent" flat>
         <div class="mr-6">
           <blockie
             address="0xabc23787066c571a61274929746895c24fa9dbfc"
@@ -22,34 +22,66 @@
             </span>
           </div>
         </div>
-        <div class="ml-auto">
-          <div class="text-uppercase">
+        <div class="ml-auto text-right">
+          <v-chip
+            class="text-uppercase white--text font-weight-bold"
+            x-small
+            label
+            color="bg_notification_in"
+          >
             IN
-          </div>
+          </v-chip>
           <div>1 min ago</div>
         </div>
       </v-card>
     </v-expansion-panel-header>
     <v-expansion-panel-content color="bg_color_gray">
-      <DividerLine />
-      <v-card
-        color="transparent"
-        flat
-        class="d-flex align-center justify-space-between pt-4 px-1"
-      >
-        <div color="transparent" flat>Transaction hash:</div>
-        <v-card max-width="300px" color="transparent" flat>
-          <EllipsisBlock>
-            0xc06cdcc936536224054723679ba8ff616b1a5f1cac8cfa606ee03488bfb82ef0
-          </EllipsisBlock>
-        </v-card>
-      </v-card>
+      <DividerLine class="mb-4" />
+
+      <ul class="list-style-type--none">
+        <li>
+          <div flat>Transaction hash:</div>
+          <v-card max-width="300px" color="transparent" flat>
+            <EllipsisBlock>
+              0xc06cdcc936536224054723679ba8ff616b1a5f1cac8cfa606ee03488bfb82ef0
+            </EllipsisBlock>
+          </v-card>
+        </li>
+        <li>
+          <div>Gas price:</div>
+          <div>41 Gwei</div>
+        </li>
+        <li>
+          <div>Gas limit:</div>
+          <div>400000</div>
+        </li>
+        <li>
+          <div>Max transaction fee:</div>
+          <div>0.0002342 ETH ($0.09)</div>
+        </li>
+        <li>
+          <div>Nonce:</div>
+          <div>2534</div>
+        </li>
+        <li>
+          <div>Time:</div>
+          <div>13:22:22</div>
+        </li>
+        <li>
+          <div>Status:</div>
+          <div>Succeed</div>
+        </li>
+        <li>
+          <div>Error message:</div>
+          <div>None</div>
+        </li>
+      </ul>
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
 
 <script>
-import Blockie from '@/web/components/Blockie';
+import Blockie from '@/web/components/BlockieWithCurrency';
 import EllipsisBlock from '@/components/EllipsisBlock';
 import DividerLine from '@/web/components/Common/DividerLine';
 
@@ -65,3 +97,15 @@ export default {
   methods: {}
 };
 </script>
+
+<style lang="scss" scoped>
+ul {
+  padding-left: 0 !important;
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+  }
+}
+</style>
