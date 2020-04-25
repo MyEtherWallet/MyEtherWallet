@@ -1,6 +1,6 @@
 <template>
   <v-expansion-panel>
-    <v-expansion-panel-header color="bg_notification_in">
+    <v-expansion-panel-header color="bg_notification_swap">
       <v-card class="d-flex align-center pr-3" color="transparent" flat>
         <div class="mr-6">
           <blockie
@@ -27,17 +27,17 @@
             class="text-uppercase white--text font-weight-bold"
             x-small
             label
-            color="bg_notification_button_in"
+            color="bg_notification_button_swap"
           >
-            IN
+            SWAP
           </v-chip>
           <div>1 min ago</div>
         </div>
       </v-card>
     </v-expansion-panel-header>
-    <v-expansion-panel-content color="bg_notification_in">
+    <v-expansion-panel-content color="bg_notification_swap">
       <v-divider class="mb-4" />
-      <v-card flat color="bg_notification_in">
+      <v-card flat color="bg_notification_swap">
         <ul class="list-style-type--none">
           <li>
             <div flat>Transaction hash:</div>
