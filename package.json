@@ -149,7 +149,7 @@
     "u2f-api": "1.1.1",
     "uglify-es": "3.3.9",
     "uuid": "7.0.3",
-    "vue-i18n": "8.17.3",
+    "vue-i18n": "8.17.4",
     "vue-stripe-elements-plus": "0.3.2",
     "vue-template-compiler": "2.6.11",
     "vue-worker": "1.2.1",
