@@ -7,20 +7,6 @@ function buildPath() {
   return swapApiEndpoints.base + swapApiEndpoints.bity;
 }
 
-function cleanPhoneData(phoneNumber) {
-  let cleanedNumber = phoneNumber
-    .replace(')', '')
-    .replace('.', '')
-    .replace(' ', '')
-    .replace('(', '')
-    .replace(',', '')
-    .replace('-', '');
-  if (cleanedNumber.slice(0, 1) !== '+') {
-    cleanedNumber = '+' + cleanedNumber;
-  }
-  return cleanedNumber;
-}
-
 const getRates = async () => {
   try {
     const results = await post(
@@ -30,6 +16,7 @@ const getRates = async () => {
     if (results.error) {
       throw Error(results.error.message);
     }
+
     return results.result;
   } catch (e) {
     utils.handleOrThrow(e);
@@ -45,6 +32,7 @@ const getExitRates = async () => {
     if (results.error) {
       throw Error(results.error.message);
     }
+
     return results.result;
   } catch (e) {
     utils.handleOrThrow(e);
@@ -83,10 +71,29 @@ const createOrder = async orderInfo => {
 };
 
 const openOrder = async orderInfo => {
+  // v2
   try {
     const results = await post(
       buildPath(),
-      utils.buildPayload(bityMethods.createTransaction, orderInfo)
+      utils.buildPayload(bityMethods.createTransactionV2, orderInfo)
+    );
+
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+
+    return results.result;
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
+};
+
+const sendSignedMessage = async signedParts => {
+  // v2
+  try {
+    const results = await post(
+      buildPath(),
+      utils.buildPayload(bityMethods.sendSignedMessageV2, signedParts)
     );
     if (results.error) {
       throw Error(results.error.message);
@@ -118,7 +125,7 @@ const getStatus = async orderInfo => {
   try {
     const results = await post(
       buildPath(),
-      utils.buildPayload(bityMethods.status, [orderInfo])
+      utils.buildPayload(bityMethods.getStatusV2, orderInfo)
     );
 
     if (results.error) {
@@ -127,25 +134,7 @@ const getStatus = async orderInfo => {
       }
       throw Error(results.error.message);
     }
-    return results.result;
-  } catch (e) {
-    utils.handleOrThrow(e);
-  }
-};
 
-const loginWithPhone = async exitData => {
-  try {
-    if (exitData.phoneNumber.length <= 10) {
-      throw Error('Invalid phone number. Check country code');
-    }
-    exitData.phoneNumber = cleanPhoneData(exitData.phoneNumber);
-    const results = await post(
-      buildPath(),
-      utils.buildPayload(bityMethods.logInWithPhoneNumber, exitData)
-    );
-    if (results.error) {
-      throw Error(results.error.message);
-    }
     return results.result;
   } catch (e) {
     utils.handleOrThrow(e);
@@ -223,7 +212,7 @@ export {
   getExitRates,
   openOrder,
   getStatus,
-  loginWithPhone,
+  sendSignedMessage,
   sendReceivedSmsCode,
   buildCyptoToFiatOrderData,
   getCyptoToFiatOrderDetails,

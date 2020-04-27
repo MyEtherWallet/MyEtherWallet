@@ -69,7 +69,7 @@ export default {
         })
         .catch(e => {
           // eslint-disable-next-line
-        console.error(e);
+          console.error(e);
         });
       this.dapps = dapps.items.map(item => item);
     }
