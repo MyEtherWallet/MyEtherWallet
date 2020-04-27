@@ -47,10 +47,16 @@ const providerMap = providers.reduce(
 
 const providerNames = {
   simplex: simplex,
-  kyber: kybernetwork,
+  dexag: kybernetwork,
   changelly: changelly,
   bity: bity
 };
+
+const offChainProviders = [
+  providerNames.simplex,
+  providerNames.changelly,
+  providerNames.bity
+];
 
 const supportedProviders = Object.values(providerNames);
 
@@ -60,6 +66,7 @@ export {
   providerMap,
   supportedProviders,
   providerNames,
+  offChainProviders,
   BASE_CURRENCY,
   MIN_SWAP_AMOUNT,
   BitySwap,
