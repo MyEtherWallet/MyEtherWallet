@@ -5,11 +5,16 @@
 - Update packages[#2310](https://github.com/MyEtherWallet/MyEtherWallet/pull/2310)
 - Remove unstoppable domains promo [#2308](https://github.com/MyEtherWallet/MyEtherWallet/pull/2308)
 
+### Feature
+
+- Add Dex.ag [#2099](https://github.com/MyEtherWallet/MyEtherWallet/pull/2099)
+
 ### Release v5.5.5-hotfix.1
 
 ### Devop
 
 - Migrate Bity api from V1 to V2 [#2257](https://github.com/MyEtherWallet/MyEtherWallet/pull/2257)
+
 
 ### Release v5.5.5
 
