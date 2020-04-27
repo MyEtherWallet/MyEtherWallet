@@ -17,7 +17,17 @@ import debug from 'debug';
 
 const errorLogger = debug('v5:partners-changelly');
 
-const disabled = ['USDT'];
+const disabled = [];
+
+function checkAndChange(value) {
+  if (value === 'USDT Omni') {
+    return 'usdt';
+  }
+  if (value === 'USDT') {
+    return 'usdt20';
+  }
+  return value;
+}
 
 export default class Changelly {
   constructor(props = {}) {
@@ -115,24 +125,45 @@ export default class Changelly {
   getFixedRate(fromCurrency, toCurrency, fromValue) {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async resolve => {
-      const timeout = setTimeout(() => {
+      try {
+        const timeout = setTimeout(() => {
+          resolve({
+            fromCurrency,
+            toCurrency,
+            minValue: -1,
+            maxValue: -1,
+            provider: this.name,
+            rate: 0
+          });
+        }, 20000);
+
+        const changellyDetails = await changellyCalls.getFixRate(
+          fromCurrency,
+          toCurrency,
+          fromValue,
+          this.network
+        );
+        clearTimeout(timeout);
+
+        if (!Array.isArray(changellyDetails)) {
+          return {
+            fromCurrency,
+            toCurrency,
+            provider: this.name,
+            rate: 0
+          };
+        }
+
         resolve({
           fromCurrency,
           toCurrency,
           provider: this.name,
-          rate: 0
+          minValue: changellyDetails[0].min,
+          maxValue: changellyDetails[0].max,
+          rate: changellyDetails[0].result,
+          rateId: changellyDetails[0].id
         });
-      }, 20000);
-
-      const changellyDetails = await changellyCalls.getFixRate(
-        fromCurrency,
-        toCurrency,
-        fromValue,
-        this.network
-      );
-      clearTimeout(timeout);
-
-      if (!Array.isArray(changellyDetails)) {
+      } catch (e) {
         return {
           fromCurrency,
           toCurrency,
@@ -140,16 +171,6 @@ export default class Changelly {
           rate: 0
         };
       }
-
-      resolve({
-        fromCurrency,
-        toCurrency,
-        provider: this.name,
-        minValue: changellyDetails[0].min,
-        maxValue: changellyDetails[0].max,
-        rate: changellyDetails[0].result,
-        rateId: changellyDetails[0].id
-      });
     });
   }
 
@@ -295,8 +316,8 @@ export default class Changelly {
       fromValue
     );
     const swapParams = {
-      from: fromCurrency.toLowerCase(),
-      to: toCurrency.toLowerCase(),
+      from: checkAndChange(fromCurrency).toLowerCase(),
+      to: checkAndChange(toCurrency).toLowerCase(),
       address: toAddress,
       extraId: null,
       amount: fromValue,
@@ -316,8 +337,8 @@ export default class Changelly {
     refundAddress
   }) {
     const swapParams = {
-      from: fromCurrency.toLowerCase(),
-      to: toCurrency.toLowerCase(),
+      from: checkAndChange(fromCurrency).toLowerCase(),
+      to: checkAndChange(toCurrency).toLowerCase(),
       address: toAddress,
       extraId: null,
       amount: fromValue,
