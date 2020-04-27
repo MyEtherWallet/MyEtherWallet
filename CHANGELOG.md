@@ -1,3 +1,8 @@
+### Release v5.6.0
+
+### Bug 
+- Aave: Disable withdraw/borrow with healthfactor below 1 [#2314] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2314)
+
 ### Release v5.5.5
 
 ### Feature
