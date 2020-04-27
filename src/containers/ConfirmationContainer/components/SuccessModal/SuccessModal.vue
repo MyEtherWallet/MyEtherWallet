@@ -67,7 +67,9 @@ export default {
     buttonCheckEtherscan() {
       return {
         // eslint-disable-next-line
-        title:  this.$t('sendTx.success.button-check-explorer', { explorrerName: this.explorrerName }),
+        title: this.$t('sendTx.success.button-check-explorer', {
+          explorrerName: this.explorrerName
+        }),
         buttonStyle: 'green-border',
         fullWidth: true
       };
