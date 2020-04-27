@@ -1,3 +1,9 @@
+### Release v5.6.1
+
+### Bug
+
+- Add hide feature to mew wallet banner [##2315](https://github.com/MyEtherWallet/MyEtherWallet/pull/2315)
+
 ### Release v5.6.0
 
 ### Devop
@@ -9,11 +15,6 @@
 ### Feature
 
 - Add Dex.ag [#2099](https://github.com/MyEtherWallet/MyEtherWallet/pull/2099)
-
-
-### Bug 
-
-- Add hide feature to mew wallet banner [##2315] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2315)
 
 ### Release v5.5.5-hotfix.1
 
