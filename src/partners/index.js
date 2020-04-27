@@ -55,6 +55,12 @@ const offChainProviders = [
   providerNames.bity
 ];
 
+const offChainProviders = [
+  providerNames.simplex,
+  providerNames.changelly,
+  providerNames.bity
+];
+
 const supportedProviders = Object.values(providerNames);
 
 export {
