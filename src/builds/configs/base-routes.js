@@ -1,6 +1,6 @@
 const ConvertUnits = () => import('@/layouts/ConvertUnits');
 const TeamLayout = () => import('@/layouts/TeamLayout');
-const PolicyLayout = () => import('@/layouts/PolicyLayout');
+const SecurityPolicy = () => import('@/layouts/SecurityPolicy');
 const PrivacyPolicyLayout = () => import('@/layouts/PrivacyPolicyLayout');
 const TermsOfService = () => import('@/layouts/TermsOfService');
 const InterfaceLayout = () => import('@/layouts/InterfaceLayout');
@@ -49,9 +49,9 @@ const router = [
     meta: { requiresAuth: false }
   },
   {
-    path: '/policy',
-    name: 'PolicyLayout',
-    component: PolicyLayout,
+    path: '/security-policy',
+    name: 'SecurityPolicy',
+    component: SecurityPolicy,
     meta: { requiresAuth: false }
   },
   {
