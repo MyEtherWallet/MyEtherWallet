@@ -73,7 +73,7 @@
   },
   "mnemonic": {
     "string": "助记短语",
-    "value": "价值",
+    "value": "Value",
     "modal": {
       "title": "通过助记短语访问我的钱包",
       "text": "请输入您的助记短语。"
