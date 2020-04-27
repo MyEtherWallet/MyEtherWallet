@@ -74,5 +74,8 @@
   "order-id": "{provider} order ID",
   "swap-widget": "Swap Widget",
   "from-min": "From Min",
-  "max": "Max"
+  "max": "Max",
+  "address-verification": "Address Verification",
+  "message-to-sign": "Message to sign to verify destination address ownership",
+  "proceed-to-sign": "Proceed to sign message"
 }

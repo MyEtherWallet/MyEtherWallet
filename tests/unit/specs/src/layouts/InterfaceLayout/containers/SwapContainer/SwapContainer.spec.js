@@ -111,15 +111,15 @@ describe('SwapContainer.vue', () => {
       refundAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
     });
     wrapper.find('.clear-all-btn').trigger('click');
-    expect(wrapper.vm.$data.fromCurrency).toEqual('ETH');
-    expect(wrapper.vm.$data.toCurrency).toEqual('BTC');
+    expect(wrapper.vm.$data.fromCurrency).toEqual('BTC');
+    expect(wrapper.vm.$data.toCurrency).toEqual('ETH');
     expect(wrapper.vm.$data.overrideFrom).toEqual({
-      name: 'Ether',
-      symbol: 'ETH'
-    });
-    expect(wrapper.vm.$data.overrideTo).toEqual({
       name: 'Bitcoin',
       symbol: 'BTC'
+    });
+    expect(wrapper.vm.$data.overrideTo).toEqual({
+      name: 'Ether',
+      symbol: 'ETH'
     });
     expect(wrapper.vm.$data.fromValue).toEqual(1);
     expect(wrapper.vm.$data.providerSelectedName).toEqual('');

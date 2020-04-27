@@ -11,6 +11,7 @@
   padding: 5px 20px;
   text-align: left;
   user-select: none;
+  position: relative;
 
   span {
     font-weight: 500;
@@ -74,4 +75,14 @@
 
 .has-link {
   padding: 20px 30px !important;
+}
+
+.promotion-container {
+  position: absolute;
+  right: -2px;
+  top: -2px;
+
+  img {
+    width: 50px;
+  }
 }

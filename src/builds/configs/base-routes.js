@@ -49,7 +49,7 @@ const router = [
     meta: { requiresAuth: false }
   },
   {
-    path: '/policy',
+    path: '/security-policy',
     name: 'PolicyLayout',
     component: PolicyLayout,
     meta: { requiresAuth: false }

@@ -374,6 +374,7 @@ import Blockie from '@/components/Blockie';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { MnemonicWallet } from '@/wallets';
+import { SELECTED_MEW_CX_ACC } from '@/builds/mewcx/cxHelpers/cxEvents.js';
 
 const TITLES = {
   0: {
@@ -466,7 +467,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['network', 'web3']),
+    ...mapState('main', ['network', 'web3', 'linkQuery']),
     mnemonicInputGenerator() {
       return new Array(this.mnemonicValue);
     },
@@ -603,7 +604,23 @@ export default {
     });
   },
   methods: {
-    // stepAnimation(step) {},
+    sendAddressToRequest(address) {
+      const chrome = window.chrome;
+      const eventObj = {};
+      const connectionReq = Misc.getService(
+        this.linkQuery.connectionRequest.toLowerCase()
+      );
+      eventObj[`${connectionReq}`] = address;
+      chrome.tabs.query({ url: `*://*.${connectionReq}/*` }, function (tab) {
+        const obj = {
+          event: SELECTED_MEW_CX_ACC,
+          payload: [address]
+        };
+        chrome.storage.sync.set(eventObj, function () {});
+        chrome.tabs.sendMessage(tab[0].id, obj);
+        window.parent.close();
+      });
+    },
     updateWalletName(e) {
       this.walletName = e;
     },
@@ -767,7 +784,7 @@ export default {
     },
     async getBalance() {
       const balance = await this.web3.eth.getBalance(
-        this.wallet.getAddressString()
+        this.wallet.getChecksumAddressString()
       );
       this.balance = this.web3.utils.fromWei(balance);
     },
@@ -928,6 +945,9 @@ export default {
         'Successfully added a wallet!',
         null
       );
+      if (this.linkQuery.hasOwnProperty('connectionRequest')) {
+        this.sendAddressToRequest(this.wallet.getChecksumAddressString());
+      }
       this.$refs.addMyWallet.$refs.modalWrapper.hide();
     }
   }

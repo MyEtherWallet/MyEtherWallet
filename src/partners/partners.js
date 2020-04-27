@@ -217,11 +217,20 @@ export default class SwapProviders {
         fromValue,
         toValue
       );
-      const results = await Promise.all(
+      const rawResults = await Promise.all(
         callsToMake.map(func =>
           func(fromCurrency, toCurrency, fromValue, toValue)
         )
       );
+      const results = rawResults.reduce((agg, result) => {
+        if (Array.isArray(result)) {
+          agg = [...agg, ...result];
+        } else {
+          agg.push(result);
+        }
+        return agg;
+      }, []);
+
       if (
         results.every(
           entry =>
@@ -337,13 +346,27 @@ export default class SwapProviders {
       toAddress: toAddress,
       fromAddress: fromAddress,
       timestamp: new Date().toISOString(),
-      refundAddress: refundAddress
+      refundAddress: refundAddress,
+      additional: providerDetails.additional
     };
     if (this.providers.has(swapDetails.provider)) {
       const provider = this.providers.get(swapDetails.provider);
       swapDetails.maybeToken = SwapProviders.isToken(swapDetails.fromCurrency);
       return provider.startSwap(swapDetails);
+    } else if (providerDetails.additional) {
+      if (providerDetails.additional.source === 'dexag') {
+        const provider = this.providers.get('dexag');
+        swapDetails.maybeToken = SwapProviders.isToken(
+          swapDetails.fromCurrency
+        );
+        return provider.startSwap(swapDetails);
+      }
     }
+  }
+
+  async extraActions(providerName, method, data) {
+    const provider = this.providers.get(providerName);
+    return provider[method](data);
   }
 
   // Helper Methods
