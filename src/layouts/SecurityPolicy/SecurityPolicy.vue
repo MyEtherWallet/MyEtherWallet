@@ -269,7 +269,7 @@
               These includes bugs with sufficient severity and not limited to:
             </div>
             <div class="mb-2">
-              <strong>MyEtherWallet Website:</strong>
+              <strong>MyEtherWallet Website and MEW CX:</strong>
             </div>
             <ul class="mb-3">
               <li>Clickjacking</li>
@@ -312,7 +312,7 @@
               following issues are considered out of scope:
             </div>
             <div class="mb-2">
-              <strong>MyEtherWallet.com</strong>
+              <strong>MyEtherWallet Website and MEW CX</strong>
             </div>
             <ul>
               <li>Clickjacking on pages with no sensitive information.</li>
