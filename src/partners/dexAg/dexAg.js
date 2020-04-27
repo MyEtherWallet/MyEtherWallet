@@ -147,9 +147,7 @@ export default class DexAg {
               toCurrency,
               provider: val.dex !== 'ag' ? val.dex : 'dexag',
               rate: isKnownToWork
-                ? bnPrice
-                  .minus(bnPrice.times(this.feeAmount))
-                  .toNumber()
+                ? bnPrice.minus(bnPrice.times(this.feeAmount)).toNumber()
                 : 0,
               additional: { source: 'dexag' }
             };
