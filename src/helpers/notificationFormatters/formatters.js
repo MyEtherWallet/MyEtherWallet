@@ -224,11 +224,6 @@ const formatSwapReciept = async (entry, val) => {
       ? notificationStatuses.COMPLETE
       : notificationStatuses.FAILED;
     entry.body.timeRemaining = -1;
-    if (Math.isNaN(entry.body.gasLimit)) {
-      entry.body.gasLimit = new BigNumber(
-        val[swapIndexes.response].gasUsed
-      ).toString();
-    }
   }
   return entry;
 };
