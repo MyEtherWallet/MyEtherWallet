@@ -1,39 +1,39 @@
 import app from './app';
 
-import LandingPages from '@/layouts/LandingPages';
-import Home from '@/layouts/LandingPages/Home';
-import CreateWalletDashboard from '@/layouts/LandingPages/Home/CreateWallet/CreateWalletDashboard';
-import CreateWalletMewConnect from '@/layouts/LandingPages/Home/CreateWallet/MewConnect';
-import CreateWalletKeystore from '@/layouts/LandingPages/Home/CreateWallet/KeystoreFile';
-import AccessWalletDashboard from '@/layouts/LandingPages/Home/AccessWallet/AccessWalletDashboard';
+import LandingPageView from '@/web/views/LandingPageView';
+import Home from '@/web/views/LandingPageView/Home';
+import CreateWalletDashboard from '@/web/views/CreateWalletView/CreateWalletDashboard';
+import CreateWalletMewConnect from '@/web/views/CreateWalletView/MewConnect';
+import CreateWalletKeystore from '@/web/views/CreateWalletView/KeystoreFile';
+import AccessWalletView from '@/web/views/AccessWalletView';
 
-import AboutUsCompany from '@/layouts/LandingPages/AboutUs/Company';
-import AboutUsTeam from '@/layouts/LandingPages/AboutUs/Team';
-import AboutUsWhyMEW from '@/layouts/LandingPages/AboutUs/WhyMEW';
+import AboutUsCompany from '@/web/views/AboutUsView/CompanyContainer';
+import AboutUsTeam from '@/web/views/AboutUsView/TeamContainer';
+import AboutUsWhyMEW from '@/web/views/AboutUsView/WhyMEWContainer';
 
-import HowItWorks from '@/layouts/LandingPages/HowItWorks';
+import HowItWorks from '@/web/views/LandingPageView/HowItWorks';
 
-import Features from '@/layouts/Features';
-import Dashboard from '@/Features/Dashboard';
+import Wallet from '@/web/views/WalletView';
+import Dashboard from '@/web/views/DashboardView';
 
-import Send from '@/Features/Send';
-import SendTX from '@/Features/Send/SendTX';
-import SendOffline from '@/Features/Send/SendOffline';
-import NFTManager from '@/Features/Send/NFTManager';
+import Send from '@/web/containers/SendContainer';
+import SendTX from '@/web/containers/SendContainer/SendTX';
+import SendOffline from '@/web/containers/SendContainer/SendOffline';
+import NFTManager from '@/web/containers/SendContainer/NFTManager';
 
-import Swap from '@/Features/Swap';
-import Dapps from '@/Features/Dapps';
+import Swap from '@/web/containers/SwapContainer';
+import Dapps from '@/web/containers/DappsContainer';
 
-import Contract from '@/Features/Contract';
-import DeployContract from '@/Features/Contract/DeployContract';
-import InteractWithContract from '@/Features/Contract/InteractWithContract';
+import Contract from '@/web/containers/ContractContainer';
+import DeployContract from '@/web/containers/ContractContainer/DeployContract';
+import InteractWithContract from '@/web/containers/ContractContainer/InteractWithContract';
 
-import SignMessage from '@/Features/SignMessage';
+import SignMessage from '@/web/containers/SignMessageContainer';
 
 const webRoutes = [
   {
     path: '/',
-    component: LandingPages,
+    component: LandingPageView,
     meta: {
       requiresAuth: false
     },
@@ -105,7 +105,7 @@ const webRoutes = [
       {
         path: 'access-wallet',
         name: 'HomeAccessWallet',
-        component: AccessWalletDashboard,
+        component: AccessWalletView,
         meta: {
           requiresAuth: false
         }
@@ -113,9 +113,9 @@ const webRoutes = [
     ]
   },
   {
-    path: '/features',
-    name: 'Features',
-    component: Features,
+    path: '/wallet',
+    name: 'Wallet',
+    component: Wallet,
     meta: {
       requiresAuth: false
     },

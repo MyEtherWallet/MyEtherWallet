@@ -17,8 +17,7 @@ selenium-debug.log
 .config
 /tests/unit/coverage/
 release
+chrome-extension
 
 # Generated files
-src/contracts/
-src/tokens/
-src/darklist/
+src/_generated
