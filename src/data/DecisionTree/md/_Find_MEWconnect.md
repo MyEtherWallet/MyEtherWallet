@@ -4,12 +4,12 @@
 
 1. The ‘Ethereum’ network
 
-   - Check the Ropsten network to see if that shows your familiar address. 
+   - Check the Ropsten network to see if that shows your familiar address.
    - If not, please try restoring your old wallet with your 24 word recovery phrase.
 
 2. The ‘Ropsten’ network
 
-   - Check the Ethereum network to see if that shows your familiar address. 
+   - Check the Ethereum network to see if that shows your familiar address.
    - If not, please try restoring your old wallet with the 24 word recovery phrase.
 
 3. Still doesn’t help? Reach out to us with more information.
