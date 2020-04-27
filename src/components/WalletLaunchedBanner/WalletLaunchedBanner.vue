@@ -50,6 +50,7 @@
 <script>
 import appStore from '@/assets/images/icons/button-app-store.png';
 import googlePlay from '@/assets/images/icons/button-google-play-color.png';
+import store from 'store';
 
 export default {
   data() {
@@ -69,12 +70,16 @@ export default {
       ]
     };
   },
+  mounted() {
+    this.hideBanner = store.get('hideBanner');
+  },
   methods: {
     toggleBanner() {
       this.isExpanded = !this.isExpanded;
     },
     setHideBanner() {
       this.hideBanner = true;
+      store.set('hideBanner', true);
     }
   }
 };
