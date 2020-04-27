@@ -37,6 +37,7 @@ import StandardInput from '@/components/StandardInput';
 // Import Directives
 import ClickOutside from '@/directives/ClickOutside';
 import AddrResolver from '@/directives/AddrResolver';
+import LazyLoad from '@/directives/LazyLoad';
 
 // Import Filters
 import Capitalize from '@/filters/Capitalize';
@@ -84,6 +85,7 @@ Vue.router = router;
 // Directives!!!
 Vue.directive('click-outside', ClickOutside);
 Vue.directive('addr-resolver', AddrResolver);
+Vue.directive('lazy-load', LazyLoad);
 
 // Filters!!!
 Vue.filter('capitalize', Capitalize);

@@ -346,6 +346,11 @@ export default class SwapProviders {
     }
   }
 
+  async extraActions(providerName, method, data) {
+    const provider = this.providers.get(providerName);
+    return provider[method](data);
+  }
+
   // Helper Methods
   hasEnough(fromCurrency, fromValue, baseCurrency, tokenBalances, balance) {
     if (SwapProviders.isToken(fromCurrency) && fromCurrency !== baseCurrency) {

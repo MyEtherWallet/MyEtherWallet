@@ -202,8 +202,31 @@
                     height="30px"
                   />
                 </li>
-                <li class="monospace">
+                <li class="monospace address-icon-container">
                   {{ account.account.getChecksumAddressString() | concatAddr }}
+                  <input
+                    :ref="`addrInput${account.index}`"
+                    :value="account.account.getChecksumAddressString()"
+                  />
+                  <i
+                    class="fa fa-files-o"
+                    @click="
+                      () => {
+                        copyAddress(`addrInput${account.index}`);
+                      }
+                    "
+                  />
+                  <a
+                    :href="
+                      getExplorrerLink(
+                        account.account.getChecksumAddressString()
+                      )
+                    "
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <i class="fa fa-share-square-o" />
+                  </a>
                 </li>
                 <li class="monospace">{{ convertBalance(account.balance) }}</li>
                 <li class="user-input-checkbox">
@@ -340,6 +363,14 @@ export default {
       'addCustomPath',
       'decryptWallet'
     ]),
+    copyAddress(ref) {
+      this.$refs[ref][0].select();
+      document.execCommand('copy');
+      Toast.responseHandler(this.$t('common.copied'), Toast.SUCCESS);
+    },
+    getExplorrerLink(addr) {
+      return this.network.type.blockExplorerAddr.replace('[[address]]', addr);
+    },
     locSwitchNetwork(network) {
       this.switchNetwork(network).then(() => {
         this.setWeb3Instance();

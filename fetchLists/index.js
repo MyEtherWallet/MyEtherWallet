@@ -197,12 +197,34 @@ const fetchContracts = async () => {
   }
 };
 
+const fetchMasterFile = async () => {
+  try {
+    if (!fs.existsSync(configs.MASTER_FILE_PATH)) {
+      fs.mkdirSync(configs.MASTER_FILE_PATH);
+    }
+
+    const response = await fetch(
+      'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/master-file.json'
+    )
+      .then(res => res.json())
+      .catch(console.log);
+    console.log('Writing masterfile');
+    fs.writeFileSync(
+      `${configs.MASTER_FILE_PATH}/master-file.json`,
+      JSON.stringify(response)
+    );
+  } catch (e) {
+    console.error(e); // Not captured by sentry
+  }
+};
+
 const run = async () => {
   await fetchTokens()
     .then(fetchContracts)
     .then(fetchAddressDarkList)
     .then(fetchUrlDarklist)
-    .then(fetchUrlLightlist);
+    .then(fetchUrlLightlist)
+    .then(fetchMasterFile);
 };
 
 (async () => {
