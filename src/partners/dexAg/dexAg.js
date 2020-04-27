@@ -30,6 +30,8 @@ export default class DexAg {
     this.useFixed = true;
     this.tokenDetails = {};
     this.web3 = props.web3;
+    this.approvalGasLimit = 100000;
+    this.tradeGasLimitBase = 1000000;
     this.getSupportedDexes();
     this.getSupportedCurrencies(this.network);
     this.getFee();
@@ -212,7 +214,7 @@ export default class DexAg {
         data: methodObject.encodeABI()
       };
       if (higherGasLimit) {
-        values.gas = 50000;
+        values.gas = this.approvalGasLimit;
       }
       return values;
     } catch (e) {
@@ -311,9 +313,6 @@ export default class DexAg {
         data: tradeDetails.trade.data,
         value: tradeDetails.trade.value
       };
-      if (tradeDetails.metadata.gasPrice) {
-        tx.gasPrice = tradeDetails.metadata.gasPrice;
-      }
 
       if (preparedTradeTxs.size > 0) {
         switch (swapDetails.provider) {
@@ -322,10 +321,10 @@ export default class DexAg {
             break;
           case 'zero_x':
           case 'dexag':
-            tx.gas = 1000000;
+            tx.gas = this.tradeGasLimitBase;
             break;
           default:
-            tx.gas = 1000000;
+            tx.gas = this.tradeGasLimitBase;
         }
       }
 
