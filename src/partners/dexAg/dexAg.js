@@ -321,6 +321,7 @@ export default class DexAg {
             tx.gas = 2000000;
             break;
           case 'zero_x':
+          case 'dexag':
             tx.gas = 1000000;
             break;
           default:
