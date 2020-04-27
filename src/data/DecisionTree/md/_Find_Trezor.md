@@ -4,7 +4,7 @@
 
 #### Besides that:
 
-1. Make sure you’re using a recommended browser, such as  Brave or Google Chrome.
+1. Make sure you’re using a recommended browser, such as Brave or Google Chrome.
 2. <p>Check that you’re on the correct derivation path, generally Ethereum.</p>
    <note>If you need further explanation about HD paths, feel free to <a rel="noopener noreferrer" href="https://medium.com/myetherwallet/hd-wallets-and-derivation-paths-explained-865a643c7bf2">read our Medium article</a>.</note>
 3. Check that your pop-up blocker is turned off for our site.
