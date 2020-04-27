@@ -9,11 +9,7 @@
   >
     <img
       v-show="!isBeenTwoWeeks"
-      :src="
-        title === dappsTitle.unstoppableDomains
-          ? require('@/assets/images/unstoppable-promo.png')
-          : require('@/assets/images/new-label.png')
-      "
+      :src="require('@/assets/images/new-label.png')"
       class="new-label"
       alt
     />

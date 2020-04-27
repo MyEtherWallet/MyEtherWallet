@@ -16,7 +16,16 @@
       <div class="swap-detail">
         <div class="from-address">
           <div class="icon">
-            <i :class="['cc', fromAddress.name, 'cc-icon']" />
+            <i
+              v-if="getIcon(fromAddress.name) !== ''"
+              :class="['cc', fromAddress.name, 'cc-icon']"
+            ></i>
+            <img
+              v-if="getIcon(fromAddress.name) === ''"
+              :src="iconFetcher(fromAddress.name)"
+              class="icon-image"
+              alt
+            />
           </div>
           <p class="value">
             {{ fromAddress.value }}
@@ -30,7 +39,16 @@
         </div>
         <div v-if="!toFiat" class="to-address">
           <div class="icon">
-            <i :class="['cc', toAddress.name, 'cc-icon']" />
+            <i
+              v-if="getIcon(toAddress.name) !== ''"
+              :class="['cc', toAddress.name, 'cc-icon']"
+            ></i>
+            <img
+              v-if="getIcon(toAddress.name) === ''"
+              :src="iconFetcher(toAddress.name)"
+              class="icon-image"
+              alt
+            />
           </div>
           <p class="value">
             {{ toAddress.value }}
@@ -81,7 +99,14 @@ import iconEth from '@/assets/images/currency/eth.svg';
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 
-import { EthereumTokens, BASE_CURRENCY, ERC20, fiat, utils } from '@/partners';
+import {
+  EthereumTokens,
+  BASE_CURRENCY,
+  ERC20,
+  fiat,
+  hasIcon,
+  utils
+} from '@/partners';
 import { WEB3_WALLET } from '@/wallets/bip44/walletTypes';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
 import { Toast } from '@/helpers';
@@ -160,6 +185,20 @@ export default {
   },
   methods: {
     ...mapActions('main', ['addSwapNotification']),
+    iconFetcher(currency) {
+      let icon;
+      try {
+        // eslint-disable-next-line
+        icon = require(`@/assets/images/currency/coins/AllImages/${currency}.svg`);
+      } catch (e) {
+        // eslint-disable-next-line
+        return require(`@/assets/images/icons/web-solution.svg`);
+      }
+      return icon;
+    },
+    getIcon(currency) {
+      return hasIcon(currency);
+    },
     timeUpdater(swapDetails) {
       clearInterval(this.timerInterval);
       this.timeRemaining = utils.getTimeRemainingString(
@@ -197,7 +236,7 @@ export default {
                 _result.map((entry, idx) => {
                   if (idx !== tradeIndex) {
                     entry.catch(e => {
-                      Toast.responseHandler(e, false);
+                      Toast.responseHandler(e, Toast.ERROR);
                     });
                   }
                 });
@@ -231,7 +270,7 @@ export default {
                     ]);
                   })
                   .catch(err => {
-                    Toast.responseHandler(err, false);
+                    Toast.responseHandler(err, Toast.ERROR);
                   });
               });
           } else {
@@ -359,12 +398,6 @@ export default {
       } else {
         this.preparedSwap = swapDetails.dataForInitialization.map(entry => {
           entry.from = this.account.address;
-          if (
-            +unit.toWei(this.gasPrice, 'gwei').toString() >
-            +swapDetails.kyberMaxGas
-          ) {
-            entry.gasPrice = swapDetails.kyberMaxGas;
-          }
           return entry;
         });
       }
