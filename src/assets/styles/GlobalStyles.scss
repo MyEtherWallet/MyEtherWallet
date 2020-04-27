@@ -1,23 +1,75 @@
+/* ========== Vuetify Global Styles ========== */
+
+/* Set maximum size for "v-container" */
 @media (min-width: 1904px) {
   .container {
-    max-width: 1185px;
+    max-width: 1185px !important;
   }
 }
 
-// Style reset ======================================================
+/* Remove default background color */
+.theme--light.v-application {
+  background: $white !important;
+}
+
+/* Remove default v-sheet border-radius */
+.theme--light.v-sheet,
+.theme--dark.v-sheet {
+  border-radius: 0;
+}
+
+/* Set light theme default text color */
+#app.theme--light .v-sheet,
+#app.theme--light .v-application {
+  color: $theme-light--text-color !important;
+}
+
+/* Set dark theme default text color */
+#app.theme--dark .v-sheet,
+#app.theme--dark .v-application {
+  color: $theme-dark--text-color !important;
+}
+
+/* Set light theme box-shadow for white sheet */
+#app.theme--light .box-shadow {
+  box-shadow: 0 0 15px $theme-light--white-sheet-shadow-color;
+}
+
+/* Set dark theme box-shadow for white sheet */
+#app.theme--dark .box-shadow {
+  box-shadow: 0 0 15px $theme-dark--white-sheet-shadow-color;
+}
+
+/* Force light theme default text color */
+#app.theme--light .theme--light-text--dark-space {
+  color: $dark-space !important;
+}
+
+/* Force dark theme default text color */
+#app.theme--dark .theme--dark-text--blue {
+  color: $theme-dark--text-color !important;
+}
+
+/* Force white text color */
+#app.theme--dark .theme--dark-text--white,
+#app.theme--light .theme--light-text--white {
+  color: $white !important;
+}
+
+/* ========== CSS Style Reset ========== */
 * {
   font-family: 'Roboto';
-  color: $dark-sacramento;
+  box-sizing: content-box;
 }
-
-a {
-  color: inherit !important;
+html {
+  font-size: 14px;
 }
-
+.monospace {
+  font-family: monospace !important;
+}
 i {
   font-family: 'Material Icons' !important;
 }
-
 div,
 p {
   font-size: 14px;
@@ -26,144 +78,116 @@ p {
   margin: 0;
   font-weight: 400;
 }
-
 p {
   letter-spacing: 0.3px;
 }
-
 h1 {
   font-size: 42px;
   font-weight: 500;
 }
-
 h2 {
   font-size: 30px;
   font-weight: 700;
   line-height: 36px;
 }
-
 h3 {
   font-size: 24px;
   font-weight: 400;
 }
-
 h4 {
   font-size: 20px;
   font-weight: 400;
   line-height: 27px;
 }
-
 h5 {
   font-size: 16px;
   font-weight: 400;
 }
 
-// Vuetify custom styles ============================================
-// Remove default background color
-.theme--light.v-application {
-  background: white !important;
+/* ========== Text ========== */
+.color--inherit {
+  color: inherit !important;
 }
-
-// Remove uppercase style for all buttons
-
-.v-toolbar__content {
-  padding: 0;
-}
-
-// Common classes ===================================================
-.pointer-event--none {
-  pointer-events: none;
-}
-
-.position--relative {
-  position: relative;
-}
-
-.overflow--initial {
-  overflow: initial;
-}
-
-.user-select--none {
-  user-select: none;
-}
-
-.width--initial {
-  width: initial;
-}
-
 .line-height--0 {
   line-height: 0 !important;
 }
-
 .text-transform--initial {
   text-transform: initial !important;
 }
-
 .text-decoration--none {
   text-decoration: none !important;
 }
-
-.text-color--mew-green {
-  color: $emerald !important;
+.white-space--nowrap {
+  white-space: nowrap !important;
 }
-
-.text-color--red {
-  color: $red-1 !important;
+.font-weight--500 {
+  font-weight: 500 !important;
 }
-
-.text-color--gray1 {
-  color: $gray-1 !important;
-}
-
-.text-color--dark-sacramento {
-  color: $dark-sacramento !important;
-}
-
 .font-weight--600 {
   font-weight: 600 !important;
 }
 
-.font-weight--500 {
-  font-weight: 500 !important;
+/* ========== Cursor ========== */
+.pointer-event--none {
+  pointer-events: none;
 }
-
-.border-radius--5px {
-  border-radius: 5px !important;
+.user-select--none {
+  user-select: none;
 }
-
-.border-radius--10px {
-  border-radius: 10px !important;
-}
-
-.border--white {
-  border-color: white !important;
-  border: 1px solid white !important;
-}
-
-.overflow--hidden {
-  overflow: hidden !important;
-}
-
 .cursor--pointer {
   cursor: pointer;
 }
 
-.display--block {
-  display: block;
+/* ========== Border ========== */
+.border--white {
+  border-color: $white !important;
+  border: 1px solid $white !important;
+}
+.border-radius--0px {
+  border-radius: 0 !important;
+}
+.border-radius--5px {
+  border-radius: 5px !important;
+}
+.border-radius--10px {
+  border-radius: 10px !important;
+}
+.border-radius-bottom--10px {
+  border-bottom-left-radius: 10px !important;
+  border-bottom-right-radius: 10px !important;
 }
 
-.monospace {
-  font-family: monospace !important;
+/* ========== Other ========== */
+.noscroll {
+  height: 100vh;
+  overflow-y: hidden;
 }
-
-.vertical-align--middle {
-  vertical-align: middle;
+.overflow--hidden {
+  overflow: hidden !important;
 }
-
+.overflow--initial {
+  overflow: initial;
+}
+.text-overflow--ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.word-break--break-all {
+  word-break: break-all;
+}
+.position--relative {
+  position: relative;
+}
+.width--initial {
+  width: initial;
+}
 .width--100-percent {
   width: 100%;
 }
-
+.display--block {
+  display: block;
+}
 .list-style-type--none {
   list-style-type: none;
 }
