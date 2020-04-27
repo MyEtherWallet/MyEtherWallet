@@ -42,7 +42,10 @@
     "non-exist-tx": "Non-existing transaction detected",
     "usdt-not-available": "USDT conversion no longer available. Please provide an alternative USD conversion method"
   },
-  "tx-scheduled-hash": [ "Your TX has been scheduled with the transaction hash {hash}.", "Your TX has been scheduled with the transaction hash {hash} and is waiting to be mined."],
+  "tx-scheduled-hash": [
+    "Your TX has been scheduled with the transaction hash {hash}.",
+    "Your TX has been scheduled with the transaction hash {hash} and is waiting to be mined."
+  ],
   "wait-for-mined": "Please wait for the transaction to be mined before approving...",
   "approve": {
     "string": "approve",
@@ -50,5 +53,5 @@
     "token-transfer": "Approve Token Transfer"
   },
   "approved": "Approved",
-  "scheduled":"Scheduled"
+  "scheduled": "Scheduled"
 }

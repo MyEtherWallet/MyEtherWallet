@@ -1,10 +1,45 @@
-### Feature
-
-- ENS Avatar [#2238](https://github.com/MyEtherWallet/MyEtherWallet/pull/2238)
-- Unstoppable domain buy domain [#2229] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2229)
+### Release v5.6.0
 
 ### Devop
 
+- Update packages[#2310](https://github.com/MyEtherWallet/MyEtherWallet/pull/2310)
+- Remove unstoppable domains promo [#2308](https://github.com/MyEtherWallet/MyEtherWallet/pull/2308)
+
+### Release v5.5.5-hotfix.1
+
+### Devop
+
+- Migrate Bity api from V1 to V2 [#2257](https://github.com/MyEtherWallet/MyEtherWallet/pull/2257)
+
+### Release v5.5.5
+
+### Feature
+
+- Turn addresses to links in hardware modal [#2254](https://github.com/MyEtherWallet/MyEtherWallet/pull/2254)
+- Add/update mobile interface Address, Balance, Network blocks [#2273](https://github.com/MyEtherWallet/MyEtherWallet/pull/2273)
+- Lazy load token icons [#2290](https://github.com/MyEtherWallet/MyEtherWallet/pull/2290)
+
+### Bug
+
+- Reimplement cx account create on account request [#2271](https://github.com/MyEtherWallet/MyEtherWallet/pull/2271)
+- Bitbox sizing mismatch [#2265](https://github.com/MyEtherWallet/MyEtherWallet/pull/2265)
+
+### Devop
+
+- Add lint to workflows [#2292](https://github.com/MyEtherWallet/MyEtherWallet/pull/2292)
+- Token Icons [#2276](https://github.com/MyEtherWallet/MyEtherWallet/pull/2276)
+
+### Release v5.5.4
+
+### Feature
+
+- ENS Avatar [#2238](https://github.com/MyEtherWallet/MyEtherWallet/pull/2238)
+- Unstoppable domain buy domain [#2229](https://github.com/MyEtherWallet/MyEtherWallet/pull/2229)
+
+### Devop
+
+- Update ATH node [#2189](https://github.com/MyEtherWallet/MyEtherWallet/pull/2189)
+- Update EthCore node [#2251](https://github.com/MyEtherWallet/MyEtherWallet/pull/2251)
 - Update packages [#2254](https://github.com/MyEtherWallet/MyEtherWallet/pull/2254)
 - Cx workflow [#2237](https://github.com/MyEtherWallet/MyEtherWallet/pull/2237)
 
