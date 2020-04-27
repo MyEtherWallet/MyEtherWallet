@@ -1,3 +1,9 @@
+### Release v5.5.5-hotfix.1
+
+### Devop
+
+- Migrate Bity api from V1 to V2 [#2257](https://github.com/MyEtherWallet/MyEtherWallet/pull/2257)
+
 ### Release v5.5.5
 
 ### Feature

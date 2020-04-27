@@ -14,7 +14,8 @@ import {
   getExitRates,
   getCyptoToFiatOrderDetails,
   getEstimate,
-  createOrder
+  createOrder,
+  sendSignedMessage
 } from './bity-calls';
 import {
   bityStatuses,
@@ -40,7 +41,7 @@ function disabledPairing(currencyList, symbol, invalid, side) {
       return true;
     } else if (side === 'to') {
       if (currencyList[symbol].invalidTo) {
-        return currencyList[symbol].invalidTo.includes(invalid);
+        return !currencyList[symbol].invalidTo.includes(invalid);
       }
       return true;
     }
@@ -61,7 +62,7 @@ export default class BitySwap {
     this.fiatMaxValue = FIAT_MAX;
     this.fiatCurrencies = Object.keys(bityFiatCurrencies);
     this.rates = new Map();
-
+    this.disabledTo = ['BTC'];
     this.retrieveRates();
   }
 
@@ -222,6 +223,7 @@ export default class BitySwap {
 
   validSwap(fromCurrency, toCurrency) {
     if (this.isValidNetwork) {
+      if (toCurrency === 'BTC') return false;
       return this.rates.has(`${fromCurrency}/${toCurrency}`);
     }
     return false;
@@ -318,10 +320,12 @@ export default class BitySwap {
   getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
     for (const prop in this.currencies) {
       if (this.currencies[prop]) {
-        collectMapTo.set(prop, {
-          symbol: prop,
-          name: this.currencies[prop].name
-        });
+        if (!this.disabledTo.includes(prop)) {
+          collectMapTo.set(prop, {
+            symbol: prop,
+            name: this.currencies[prop].name
+          });
+        }
         if (!this.fiatCurrencies.includes(prop)) {
           collectMapFrom.set(prop, {
             symbol: prop,
@@ -421,10 +425,15 @@ export default class BitySwap {
   }) {
     if (this.maxCheck(fromCurrency, fromValue, toCurrency, toValue)) {
       const order = {
-        amount: fromValue,
-        mode: 0,
-        pair: fromCurrency + toCurrency,
-        destAddress: toAddress
+        input: {
+          amount: fromValue,
+          // crypto_address: toAddress,
+          currency: fromCurrency
+        },
+        output: {
+          crypto_address: toAddress,
+          currency: toCurrency
+        }
       };
 
       return await openOrder(order);
@@ -435,18 +444,21 @@ export default class BitySwap {
     return getCyptoToFiatOrderDetails(detailsUrl);
   }
 
-  async startSpecial() {}
+  async sendSigned(signedDetails) {
+    return sendSignedMessage(signedDetails);
+  }
 
   static parseOrder(order) {
     return {
-      orderId: order.reference,
+      orderId: order.reference || order.id,
       statusId: order.id,
       sendToAddress: order.payment_address,
       recValue: order.output.amount,
       sendValue: order.payment_amount,
       status: order.status,
       timestamp: order.timestamp_created,
-      validFor: order.validFor || TIME_SWAP_VALID
+      validFor: order.validFor || TIME_SWAP_VALID,
+      special: order.token || order.special
     };
   }
 
@@ -472,33 +484,46 @@ export default class BitySwap {
   }
 
   static async getOrderStatusCrypto(noticeDetails) {
+    let timeSinceOrder;
     try {
-      const data = await getStatus(noticeDetails.statusId);
+      const data = await getStatus({
+        orderId: noticeDetails.statusId,
+        token: noticeDetails.special
+      });
+
+      if (!data.timestamp_created) {
+        return swapNotificationStatuses.CANCELLED;
+      }
+
+      timeSinceOrder =
+        (new Date().getTime() - new Date(data.timestamp_created).getTime()) /
+        1000;
+
       if (data.status === bityStatuses.EXEC) {
         return swapNotificationStatuses.COMPLETE;
       }
-      if (data.input.status !== bityStatuses.FILL) {
-        switch (data.input.status) {
-          case bityStatuses.OPEN:
-            return swapNotificationStatuses.NEW;
-          case bityStatuses.RCVE:
-          case bityStatuses.CONF:
-            return swapNotificationStatuses.PENDING;
-          case bityStatuses.CANC:
-            return swapNotificationStatuses.CANCELLED;
-        }
-      } else {
-        switch (data.output.status) {
-          case bityStatuses.FILL:
-            return swapNotificationStatuses.COMPLETE;
-          case bityStatuses.CANC:
-            return swapNotificationStatuses.CANCELLED;
-          default:
-            return swapNotificationStatuses.PENDING;
+
+      if (data.timestamp_executed) {
+        return swapNotificationStatuses.COMPLETE;
+      } else if (data.timestamp_payment_received) {
+        return swapNotificationStatuses.PENDING;
+      } else if (data.timestamp_awaiting_payment_since) {
+        return swapNotificationStatuses.PENDING;
+      } else if (data.timestamp_created) {
+        return swapNotificationStatuses.NEW;
+      }
+
+      return swapNotificationStatuses.NEW;
+    } catch (e) {
+      if (timeSinceOrder) {
+        if (timeSinceOrder < 100000) {
+          Toast.responseHandler(
+            'Failed to retrieve Bity order status',
+            1,
+            true
+          );
         }
       }
-    } catch (e) {
-      Toast.responseHandler(e, false);
     }
     return swapNotificationStatuses.PENDING;
   }
