@@ -325,7 +325,7 @@ export default class DexAg {
             tx.gas = 1000000;
             break;
           default:
-            tx.gas = 500000;
+            tx.gas = 1000000;
         }
       }
 
