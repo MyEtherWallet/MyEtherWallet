@@ -17,6 +17,12 @@
         @swapStarted="resetSwapState"
       />
 
+      <signature-modal
+        ref="signatureModal"
+        :signature="stringToSign"
+        :send-signed="sendSignedCallback"
+      />
+
       <div class="title-block">
         <interface-container-title :title="$t('common.swap')" />
       </div>
@@ -95,7 +101,7 @@
           <!-- form-block amount-to-address -->
         </div>
 
-        <div v-if="!isExitToFiat" class="send-form">
+        <div v-if="!isExitToFiat && !isBityCryptoToCrypto()" class="send-form">
           <div class="the-form gas-amount">
             <swap-address-selector
               :currency="toCurrency"
@@ -107,6 +113,15 @@
               @validAddress="validAddress = $event"
               @unableToValidate="unableToValidate = $event"
             />
+          </div>
+        </div>
+
+        <div
+          v-if="!isExitToFiat && isBityCryptoToCrypto(fromCurrency)"
+          class="send-form"
+        >
+          <div class="the-form gas-amount">
+            Amount will be sent to your current wallet address.
           </div>
         </div>
 
@@ -218,6 +233,7 @@ import SwapCurrencyPicker from './components/SwapCurrencyPicker';
 import SwapConfirmationModal from './components/SwapConfirmationModal';
 import SwapExitToFiat from './components/SwapExitToFiat';
 import SwapSendToModal from './components/SwapSendToModal';
+import SignatureModal from './components/SignatureModal';
 
 import {
   SwapProviders,
@@ -243,7 +259,8 @@ export default {
     'providers-radio-selector': ProvidersRadioSelector,
     'swap-confirmation-modal': SwapConfirmationModal,
     'swap-exit-to-fiat': SwapExitToFiat,
-    'swap-send-to-modal': SwapSendToModal
+    'swap-send-to-modal': SwapSendToModal,
+    'signature-modal': SignatureModal
   },
   props: {
     tokensWithBalance: {
@@ -256,6 +273,8 @@ export default {
   data() {
     return {
       baseCurrency: BASE_CURRENCY,
+      stringToSign: '',
+      signedString: '',
       providerSelectedName: '',
       toAddress: '',
       currentAddress: '',
@@ -269,6 +288,7 @@ export default {
       toValue: 1,
       invalidFrom: 'none',
       lastBestRate: 0,
+      bitySpecialCurrencies: ['BTC', 'REP'],
       selectedProvider: {},
       swapDetails: {},
       currencyDetails: {},
@@ -312,6 +332,7 @@ export default {
       switchCurrencyOrder: false,
       bityExitToFiat: false,
       exitToFiatCallback: () => {},
+      sendSignedCallback: () => {},
       debounceUpdateEstimate: {},
       debounceDoThing: {},
       unableToValidate: false,
@@ -526,10 +547,10 @@ export default {
   },
   methods: {
     reset() {
-      this.fromCurrency = 'ETH';
-      this.toCurrency = 'BTC';
-      this.overrideFrom = { name: 'Ether', symbol: 'ETH' };
-      this.overrideTo = { name: 'Bitcoin', symbol: 'BTC' };
+      this.fromCurrency = 'BTC';
+      this.toCurrency = 'ETH';
+      this.overrideFrom = { name: 'Bitcoin', symbol: 'BTC' };
+      this.overrideTo = { name: 'Ether', symbol: 'ETH' };
       this.fromValue = 1;
       this.overrideAddress = !this.overrideAddress;
       this.providerSelectedName = '';
@@ -548,6 +569,18 @@ export default {
       this.loadingError = false;
       this.switchCurrencyOrder = false;
       this.bityExitToFiat = false;
+      this.sendSignedCallback = () => {};
+    },
+    isBityCryptoToCrypto(currency = 'BTC') {
+      const isTrue =
+        this.bitySpecialCurrencies.includes(currency) &&
+        this.selectedProvider.provider === this.providerNames.bity;
+      if (isTrue) {
+        this.setToAddress(this.currentAddress);
+        this.validAddress = true;
+        this.unableToValidate = false;
+      }
+      return isTrue;
     },
     flipCurrencies() {
       this.providerSelectedName = '';
@@ -766,12 +799,21 @@ export default {
           this.toValue
         );
         this.providersFound = providersFound;
-        const results = await Promise.all(
+        const rawResults = await Promise.all(
           callsToMake.map(func =>
             func(fromCurrency, toCurrency, fromValue, this.toValue)
           )
         );
         this.loadingData = false;
+        const results = rawResults.reduce((agg, result) => {
+          if (Array.isArray(result)) {
+            agg = [...agg, ...result];
+          } else {
+            agg.push(result);
+          }
+          return agg;
+        }, []);
+
         if (
           results.every(
             entry =>
@@ -860,6 +902,29 @@ export default {
             this.exitToFiatCallback = swapDetailsExit => {
               this.bityExitToFiat = false;
               this.swapDetails = swapDetailsExit;
+              this.openConfirmModal(this.swapDetails);
+            };
+          } else if (
+            this.isBityCryptoToCrypto() ||
+            this.isBityCryptoToCrypto('REP')
+          ) {
+            this.stringToSign = this.swapDetails.dataForInitialization.messageToSign.body;
+            this.$refs.signatureModal.$refs.signatureModal.show();
+            this.sendSignedCallback = async signed => {
+              const response = await this.swap.extraActions(
+                this.providerNames.bity,
+                'sendSigned',
+                {
+                  signature: signed,
+                  signature_submission_url: this.swapDetails
+                    .dataForInitialization.messageToSign
+                    .signature_submission_url,
+                  statusId: this.swapDetails.dataForInitialization.id,
+                  token: this.swapDetails.dataForInitialization.token
+                }
+              );
+              this.swapDetails.providerAddress =
+                response.payment_details.crypto_address;
               this.openConfirmModal(this.swapDetails);
             };
           } else {
