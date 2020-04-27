@@ -236,7 +236,7 @@ export default {
         return true;
       } else if (
         this.actionTitle === this.actionTitles.borrow &&
-        new BigNumber(this.currentHealthFactor).lte(0)
+        new BigNumber(this.currentHealthFactor).lt(1)
       ) {
         this.errorMsg = this.$t('dappsAave.cannot-borrow');
         return true;
