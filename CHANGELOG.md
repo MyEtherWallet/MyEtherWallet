@@ -1,3 +1,7 @@
+### Devop
+
+- Remove unstoppable domains promo [#2308](https://github.com/MyEtherWallet/MyEtherWallet/pull/2308)
+
 ### Release v5.5.5-hotfix.1
 
 ### Devop
