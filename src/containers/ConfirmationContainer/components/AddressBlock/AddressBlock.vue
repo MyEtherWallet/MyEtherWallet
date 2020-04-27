@@ -101,7 +101,10 @@ export default {
     },
     doubleCheckLink(address) {
       // eslint-disable-next-line
-      window.open(this.network.type.blockExplorerAddr.replace('[[address]]', address), '_blank');
+      window.open(
+        this.network.type.blockExplorerAddr.replace('[[address]]', address),
+        '_blank'
+      );
     }
   }
 };
