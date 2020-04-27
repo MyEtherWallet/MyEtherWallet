@@ -236,7 +236,7 @@ export default {
                 _result.map((entry, idx) => {
                   if (idx !== tradeIndex) {
                     entry.catch(e => {
-                      Toast.responseHandler(e, false);
+                      Toast.responseHandler(e, Toast.ERROR);
                     });
                   }
                 });
@@ -270,7 +270,7 @@ export default {
                     ]);
                   })
                   .catch(err => {
-                    Toast.responseHandler(err, false);
+                    Toast.responseHandler(err, Toast.ERROR);
                   });
               });
           } else {
