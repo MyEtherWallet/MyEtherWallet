@@ -1,14 +1,11 @@
 import { BitySwap, BityCurrencies, PROVIDER_NAME as bity } from './bity';
 import {
-  KyberCurrencies,
-  KyberSwap,
-  PROVIDER_NAME as kybernetwork
-} from './kyber';
-import {
   ChangellyCurrencies,
   ChangellySwap,
   PROVIDER_NAME as changelly
 } from './changelly';
+
+import { DexAg, PROVIDER_NAME as dexAg } from './dexAg';
 import {
   Simplex,
   SimplexCurrencies,
@@ -37,7 +34,7 @@ import {
 } from './helpers';
 
 // Array of currently supported providers
-const providers = [BitySwap, KyberSwap, ChangellySwap, Simplex];
+const providers = [BitySwap, ChangellySwap, Simplex, DexAg];
 
 const providerMap = providers.reduce(
   (accumulator, currentValue) =>
@@ -47,10 +44,16 @@ const providerMap = providers.reduce(
 
 const providerNames = {
   simplex: simplex,
-  kyber: kybernetwork,
   changelly: changelly,
-  bity: bity
+  bity: bity,
+  dexag: dexAg
 };
+
+const offChainProviders = [
+  providerNames.simplex,
+  providerNames.changelly,
+  providerNames.bity
+];
 
 const supportedProviders = Object.values(providerNames);
 
@@ -60,12 +63,11 @@ export {
   providerMap,
   supportedProviders,
   providerNames,
+  offChainProviders,
   BASE_CURRENCY,
   MIN_SWAP_AMOUNT,
   BitySwap,
   BityCurrencies,
-  KyberSwap,
-  KyberCurrencies,
   Simplex,
   SimplexCurrencies,
   ChangellySwap,

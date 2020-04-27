@@ -31,19 +31,21 @@
     "swap-only-mainnet": "Swap is only available on mainnet",
     "kyber-token-list-update-failed": "Failed to update Kyber Network available token list",
     "kyber-gasLimit-list-update-failed": "Failed to update Kyber Network trade gasLimit list",
-    "kyber-list-update-failed": "Failed to update Kyber Network default information"
+    "kyber-list-update-failed": "Failed to update Kyber Network default information",
+    "dexag-cannot-complete": "Error retrieving trade, try a different dex"
   },
   "notice": {
-    "retrieve-changelly-rate-failed":"Failed to retrieve Changelly rate from {fromCurrency} to {toCurrency}",
-    "retrieve-bity-rate-failed":"Failed to retrieve Bity rate from {fromCurrency} to {toCurrency}",
-    "retrieve-kyber-rate-failed":"Failed to retrieve Kyber Network rate from {fromCurrency} to {toCurrency}",
-    "retrieve-simplex-rate-failed":"Failed to retrieve Simplex rate from {fromCurrency} to {toCurrency}"
+    "retrieve-changelly-rate-failed": "Failed to retrieve Changelly rate from {fromCurrency} to {toCurrency}",
+    "retrieve-bity-rate-failed": "Failed to retrieve Bity rate from {fromCurrency} to {toCurrency}",
+    "retrieve-kyber-rate-failed": "Failed to retrieve Kyber Network rate from {fromCurrency} to {toCurrency}",
+    "retrieve-simplex-rate-failed": "Failed to retrieve Simplex rate from {fromCurrency} to {toCurrency}"
   },
   "tag-line": {
     "bity": "Swap ETH, BTC, REP, or sell for fiat using your phone!",
     "kybernetwork": "Swap ETH and ERC20 tokens!",
     "changelly": "Swap ETH, ERC20 tokens, and more!",
-    "simplex": "Buy crypto with a credit card!"
+    "simplex": "Buy crypto with a credit card!",
+    "dexag": "Instantly compare prices across decentralized exchanges"
   },
   "exit-to-fiat": {
     "bank-info": "Bank Information",
@@ -74,5 +76,8 @@
   "order-id": "{provider} order ID",
   "swap-widget": "Swap Widget",
   "from-min": "From Min",
-  "max": "Max"
+  "max": "Max",
+  "address-verification": "Address Verification",
+  "message-to-sign": "Message to sign to verify destination address ownership",
+  "proceed-to-sign": "Proceed to sign message"
 }
