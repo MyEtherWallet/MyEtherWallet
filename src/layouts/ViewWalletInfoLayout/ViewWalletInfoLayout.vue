@@ -296,7 +296,14 @@ export default {
       this.loading = true;
       const tb = new TokenBalance(this.web3.currentProvider);
       try {
-        this.tokens = await tb.getBalance(this.account.address);
+        this.tokens = await await tb.getBalance(
+          this.account.address,
+          true,
+          true,
+          true,
+          0,
+          { gas: '0x11e1a300' }
+        );
         this.tokens = this.tokens.map(token => {
           const denominator = new BigNumber(10).pow(token.decimals);
           const balance = new BigNumber(token.balance)

@@ -1,10 +1,18 @@
-### Devop
-
-- Remove unstoppable domains promo [#2308](https://github.com/MyEtherWallet/MyEtherWallet/pull/2308)
-
 ### Bug
 
 - Aave: Disable withdraw/borrow with healthfactor below 1 [#2314](https://github.com/MyEtherWallet/MyEtherWallet/pull/2314)
+
+### Release v5.6.0
+
+### Devop
+
+- Update packages[#2310](https://github.com/MyEtherWallet/MyEtherWallet/pull/2310)
+- Remove unstoppable domains promo [#2308](https://github.com/MyEtherWallet/MyEtherWallet/pull/2308)
+- Add MEW security policy page [#2294](https://github.com/MyEtherWallet/MyEtherWallet/pull/2294)
+
+### Feature
+
+- Add Dex.ag [#2099](https://github.com/MyEtherWallet/MyEtherWallet/pull/2099)
 
 ### Release v5.5.5-hotfix.1
 
