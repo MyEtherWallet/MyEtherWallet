@@ -65,7 +65,7 @@ export default {
         })
         .catch(e => {
           // eslint-disable-next-line
-        console.error(e);
+          console.error(e);
         });
       this.dapp = Object.assign({}, dapp.item);
       this.siteKeys = Object.keys(dapp.item.sites);

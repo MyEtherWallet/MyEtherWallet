@@ -206,7 +206,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['web3', 'network']),
+    ...mapState('main', ['web3', 'network', 'linkQuery']),
     showLength() {
       return this.showMyWallets === 0
         ? this.myWallets.length
@@ -290,6 +290,9 @@ export default {
     }
   },
   mounted() {
+    if (this.linkQuery.hasOwnProperty('connectionRequest')) {
+      this.addWallet();
+    }
     this.$refs.watchOnlyModal.$refs.watchOnlyWallet.$refs.modalWrapper.$on(
       'hidden',
       () => {
@@ -304,8 +307,14 @@ export default {
   methods: {
     iconFetch(address) {
       const token = this.networkTokens[toChecksumAddress(address)];
-      if (token && token.icon_png !== '') {
-        return `https://img.mewapi.io/?image=${token.icon_png}&width=50&height=50&fit=scale-down`;
+      if (token) {
+        const tokenSrc =
+          token.icon_png !== ''
+            ? `https://img.mewapi.io/?image=${token.icon_png}&width=50&height=50&fit=scale-down`
+            : token.icon !== ''
+            ? `https://img.mewapi.io/?image=${token.icon}&width=50&height=50&fit=scale-down`
+            : this.network.type.icon;
+        return tokenSrc;
       }
 
       return this.network.type.icon;
