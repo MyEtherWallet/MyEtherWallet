@@ -32,6 +32,7 @@ export default class DexAg {
     this.web3 = props.web3;
     this.getSupportedDexes();
     this.getSupportedCurrencies(this.network);
+    this.getFee();
   }
 
   static getName() {
@@ -40,6 +41,36 @@ export default class DexAg {
 
   static isDex() {
     return true;
+  }
+
+  async getFee() {
+    try {
+      const contract = new this.web3.eth.Contract(
+        [
+          {
+            constant: true,
+            inputs: [],
+            name: 'basisPoints',
+            outputs: [
+              {
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256'
+              }
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function'
+          }
+        ],
+        '0xB76c291871b92A7c9e020b2511a3402A3bf0499d'
+      );
+
+      const feeAmount = await contract.methods.basisPoints().call();
+      this.feeAmount = feeAmount / 10000;
+    } catch (e) {
+      this.feeAmount = 0.02;
+    }
   }
 
   async getSupportedDexes() {
@@ -110,11 +141,16 @@ export default class DexAg {
         resolve(
           vals.map(val => {
             const isKnownToWork = this.SUPPORTED_DEXES.includes(val.dex);
+            const bnPrice = new BigNumber(val.price);
             return {
               fromCurrency,
               toCurrency,
               provider: val.dex !== 'ag' ? val.dex : 'dexag',
-              rate: isKnownToWork ? val.price : 0,
+              rate: isKnownToWork
+                ? bnPrice
+                  .minus(bnPrice.times(this.feeAmount))
+                  .toNumber()
+                : 0,
               additional: { source: 'dexag' }
             };
           })
