@@ -192,9 +192,11 @@ const formatSwap = (val, network) => {
       toCurrency: val[swapIndexes.details].toCurrency,
       orderId: val[swapIndexes.details].parsed.orderId,
       statusId: val[swapIndexes.details].parsed.statusId,
-      timeRemaining: val[swapIndexes.details].parsed.validFor,
-      validFor: val[swapIndexes.details].parsed.validFor,
-      createdAt: val[swapIndexes.details].parsed.timestamp,
+      timeRemaining: val[swapIndexes.details].parsed.validFor || 600,
+      validFor: val[swapIndexes.details].parsed.validFor || 600,
+      createdAt:
+        val[swapIndexes.details].parsed.timestamp ||
+        new Date(Date.now()).toISOString(),
       rate: val[swapIndexes.details].rate,
       provider: val[swapIndexes.details].provider,
       special: val[swapIndexes.details].special,
@@ -222,6 +224,11 @@ const formatSwapReciept = async (entry, val) => {
       ? notificationStatuses.COMPLETE
       : notificationStatuses.FAILED;
     entry.body.timeRemaining = -1;
+    if (Number.isNaN(entry.body.gasLimit)) {
+      entry.body.gasLimit = new BigNumber(
+        val[swapIndexes.response].gasUsed
+      ).toString();
+    }
   }
   return entry;
 };
