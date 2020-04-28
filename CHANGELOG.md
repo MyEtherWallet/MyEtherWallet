@@ -1,3 +1,7 @@
+### Devop
+
+- Implement small refinements to dex.ag[#2323](https://github.com/MyEtherWallet/MyEtherWallet/pull/2323)
+
 ### Release v5.6.0
 
 ### Devop
