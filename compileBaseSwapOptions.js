@@ -154,7 +154,7 @@ class CompileSwapOptions {
           jsonrpc: '2.0',
           method: 'getSupportedCurrencies',
           params: {},
-          id: uuid()
+          id: v4()
         }
       );
       const tokenDetails = priorCollected.ETH;
