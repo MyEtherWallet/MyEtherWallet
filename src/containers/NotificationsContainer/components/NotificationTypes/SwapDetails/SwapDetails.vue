@@ -16,7 +16,16 @@
           <ul>
             <li>
               <p class="icon from-swap-icon">
-                <i :class="['cc', details.fromCurrency, 'cc-icon']"></i>
+                <i
+                  v-if="getIcon(notice.body.fromCurrency) !== ''"
+                  :class="['cc', notice.body.fromCurrency, 'cc-icon']"
+                ></i>
+                <img
+                  v-if="getIcon(notice.body.fromCurrency) === ''"
+                  :src="iconFetcher(notice.body.fromCurrency)"
+                  class="icon-image"
+                  alt
+                />
               </p>
             </li>
             <li>
@@ -32,7 +41,16 @@
             </li>
             <li>
               <p class="icon to-swap-icon">
-                <i :class="['cc', details.toCurrency, 'cc-icon']"></i>
+                <i
+                  v-if="getIcon(notice.body.toCurrency) !== ''"
+                  :class="['cc', notice.body.toCurrency, 'cc-icon']"
+                ></i>
+                <img
+                  v-if="getIcon(notice.body.toCurrency) === ''"
+                  :src="iconFetcher(notice.body.toCurrency)"
+                  class="icon-image"
+                  alt
+                />
               </p>
             </li>
             <li>
@@ -184,7 +202,14 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
-import { providerMap, providerNames, fiat, EthereumTokens } from '@/partners';
+import {
+  providerMap,
+  providerNames,
+  offChainProviders,
+  fiat,
+  EthereumTokens,
+  hasIcon
+} from '@/partners';
 
 import {
   swapOnlyStatuses,
@@ -318,12 +343,29 @@ export default {
   },
   mounted() {
     this.timeRemaining = this.notice.body.timeRemaining;
-    this.provider = providerMap.get(this.notice.body.provider);
+    const provider = offChainProviders.includes(this.notice.body.provider)
+      ? this.notice.body.provider
+      : 'dexag';
+    this.provider = providerMap.get(provider);
     this.currentStatus = this.notice.swapStatus;
     this.timeUpdater();
     this.statusUpdater();
   },
   methods: {
+    iconFetcher(currency) {
+      let icon;
+      try {
+        // eslint-disable-next-line
+        icon = require(`@/assets/images/currency/coins/AllImages/${currency}.svg`);
+      } catch (e) {
+        // eslint-disable-next-line
+        return require(`@/assets/images/icons/web-solution.svg`);
+      }
+      return icon;
+    },
+    getIcon(currency) {
+      return hasIcon(currency);
+    },
     emitShowDetails() {
       this.$emit('showDetails', ['swap', this.notice]);
     },

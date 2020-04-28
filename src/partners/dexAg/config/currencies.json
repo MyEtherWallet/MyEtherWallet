@@ -83,6 +83,12 @@
     "decimals": 18,
     "contractAddress": "0x1a7a8bd9106f2b8d977e08582dc7d24c723ab0db"
   },
+  "ENG": {
+    "symbol": "ENG",
+    "name": "Enigma",
+    "decimals": 8,
+    "contractAddress": "0xf0ee6b27b759c9893ce4f094b49ad28fd15a23e4"
+  },
   "BQX": {
     "symbol": "BQX",
     "name": "ETHOS",
@@ -466,42 +472,6 @@
     "name": "Metronome",
     "decimals": 18,
     "contractAddress": "0xa3d58c4e56fedcae3a7c43a725aee9a71f0ece4e"
-  },
-  "MFG": {
-    "symbol": "MFG",
-    "name": "SyncFab Smart Manufacturing Blockchain",
-    "decimals": 18,
-    "contractAddress": "0x6710c63432a2de02954fc0f851db07146a6c0312"
-  },
-  "FXC": {
-    "symbol": "FXC",
-    "name": "Flexacoin",
-    "decimals": 18,
-    "contractAddress": "0x4a57e687b9126435a9b19e4a802113e266adebde"
-  },
-  "UBT": {
-    "symbol": "UBT",
-    "name": "UniBright",
-    "decimals": 8,
-    "contractAddress": "0x8400d94a5cb0fa0d041a3788e395285d61c9ee5e"
-  },
-  "LOOM": {
-    "symbol": "LOOM",
-    "name": "Loom",
-    "decimals": 18,
-    "contractAddress": "0xa4e8c3ec456107ea67d3075bf9e3df3a75823db0"
-  },
-  "PBTC": {
-    "symbol": "PBTC",
-    "name": "Provable BTC",
-    "decimals": 18,
-    "contractAddress": "0x5228a22e72ccc52d415ecfd199f99d0665e7733b"
-  },
-  "OGN": {
-    "symbol": "OGN",
-    "name": "Origin Protocol",
-    "decimals": 18,
-    "contractAddress": "0x8207c1ffc5b6804f6024322ccf34f29c3541ae26"
   },
   "THISISADUMMYTOKEN": {
     "symbol": "THISISADUMMYTOKEN",
