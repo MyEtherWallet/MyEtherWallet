@@ -1,5 +1,6 @@
 const ConvertUnits = () => import('@/layouts/ConvertUnits');
 const TeamLayout = () => import('@/layouts/TeamLayout');
+const SecurityPolicy = () => import('@/layouts/SecurityPolicy');
 const PrivacyPolicyLayout = () => import('@/layouts/PrivacyPolicyLayout');
 const TermsOfService = () => import('@/layouts/TermsOfService');
 const InterfaceLayout = () => import('@/layouts/InterfaceLayout');
@@ -45,6 +46,12 @@ const router = [
     path: '/team',
     name: 'TeamLayout',
     component: TeamLayout,
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/security-policy',
+    name: 'SecurityPolicy',
+    component: SecurityPolicy,
     meta: { requiresAuth: false }
   },
   {

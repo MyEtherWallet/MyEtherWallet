@@ -8,6 +8,7 @@
 
 - Update packages[#2310](https://github.com/MyEtherWallet/MyEtherWallet/pull/2310)
 - Remove unstoppable domains promo [#2308](https://github.com/MyEtherWallet/MyEtherWallet/pull/2308)
+- Add MEW security policy page [#2294](https://github.com/MyEtherWallet/MyEtherWallet/pull/2294)
 
 ### Feature
 
