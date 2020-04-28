@@ -17,6 +17,7 @@ import MIX from './MIX.js';
 import MUSIC from './MUSIC.js';
 import PIRL from './PIRL.js';
 import POA from './POA.js';
+import PRKL from './PRKL.js';
 import REOSC from './REOSC.js';
 import RIN from './RIN.js';
 import ROP from './ROP.js';
@@ -51,6 +52,7 @@ export {
   MUSIC,
   POA,
   PIRL,
+  PRKL,
   REOSC,
   RIN,
   ROP,

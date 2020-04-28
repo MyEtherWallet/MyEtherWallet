@@ -25,6 +25,7 @@ import music from './music';
 import pirl from './pirl';
 import poa from './poa';
 import poapocket from './poa-pocket';
+import prkl from './prkl';
 import rinmew from './rin-mew';
 import rinmewws from './rin-mew-ws';
 import rinethscan from './rin-ethscan';
@@ -88,6 +89,7 @@ export {
   pirl,
   poa,
   poapocket,
+  prkl,
   reosc,
   rinethscan,
   rininfura,
