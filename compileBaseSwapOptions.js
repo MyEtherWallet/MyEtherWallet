@@ -148,8 +148,14 @@ class CompileSwapOptions {
     other: {}
   }) {
     try {
-      const tokenList = await this.get(
-        'https://dexag.mewapi.io/token-list-full'
+      const tokenList = await this.post(
+        'https://swap.mewapi.io/dexag',
+        {
+          jsonrpc: '2.0',
+          method: 'getSupportedCurrencies',
+          params: {},
+          id: uuid()
+        }
       );
       const tokenDetails = priorCollected.ETH;
       for (let i = 0; i < tokenList.length; i++) {
