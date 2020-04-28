@@ -35,6 +35,7 @@ export default class DexAg {
     this.getSupportedDexes();
     this.getSupportedCurrencies(this.network);
     this.getFee();
+    this.platformGasPrice = props.gasPrice || -1;
   }
 
   static getName() {
@@ -313,6 +314,19 @@ export default class DexAg {
         data: tradeDetails.trade.data,
         value: tradeDetails.trade.value
       };
+      if (
+        tradeDetails.metadata.gasPrice &&
+        swapDetails.provider === 'bancor' &&
+        this.platformGasPrice > 0
+      ) {
+        const gasPrice = new BigNumber(tradeDetails.metadata.gasPrice);
+        const platformGasPrice = new BigNumber(this.platformGasPrice);
+        if (gasPrice.lte(platformGasPrice)) {
+          tx.gas = tradeDetails.metadata.gasPrice;
+        }
+        // if(tradeDetails.metadata.gasPrice)
+        // tx.gasPrice = tradeDetails.metadata.gasPrice;
+      }
 
       if (preparedTradeTxs.size > 0) {
         switch (swapDetails.provider) {
