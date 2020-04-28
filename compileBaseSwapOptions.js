@@ -1,4 +1,3 @@
-// NOTE: this is a temporary solution.  This operation will be moved to runtime in the future. Currently it relies on manually updated files.
 const fs = require('fs');
 const {v4} = require('uuid');
 
@@ -144,6 +143,40 @@ class CompileSwapOptions {
     }
   }
 
+  async getDexAgSupported(    priorCollected = {
+    ETH: {},
+    other: {}
+  }) {
+    try {
+      const tokenList = await this.get(
+        'https://dexag.mewapi.io/token-list-full'
+      );
+      const tokenDetails = priorCollected.ETH;
+      for (let i = 0; i < tokenList.length; i++) {
+        if(!tokenDetails[tokenList[i].symbol] && tokenList[i].address){
+          this.needDecimalCheck.push({
+            symbol: tokenList[i].symbol.toUpperCase(),
+            contractAddress: tokenList[i].address
+          });
+          const symbol = tokenList[i].symbol.toUpperCase();
+          tokenDetails[symbol] = {
+            symbol: tokenList[i].symbol,
+            name: tokenList[i].name.trim(),
+            decimals: 18,
+            contractAddress: tokenList[i].address
+          };
+        }
+      }
+
+      return {
+        ETH: tokenDetails,
+        other: priorCollected.other
+      };
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   async getChangellyCurrencies() {
     const results = await this.post(
       'https://swap.mewapi.io/changelly',
@@ -273,11 +306,17 @@ class CompileSwapOptions {
   async run() {
     const kyberTokens = await this.getKyberSupported();
     const withChangelly = await this.supplyChangellySupported(kyberTokens);
+    const allTokens = await this.getDexAgSupported(withChangelly);
 
     for (let i = 0; i < this.needDecimalCheck.length; i++) {
       const decimals = await this.getDecimals(this.needDecimalCheck[i]);
       if (withChangelly.ETH[this.needDecimalCheck[i].symbol] && decimals) {
         withChangelly.ETH[this.needDecimalCheck[i].symbol].decimals = +decimals;
+        if(allTokens.ETH[this.needDecimalCheck[i].symbol]){
+          allTokens.ETH[this.needDecimalCheck[i].symbol].decimals = +decimals;
+        }
+      } else if (allTokens.ETH[this.needDecimalCheck[i].symbol] && decimals) {
+        allTokens.ETH[this.needDecimalCheck[i].symbol].decimals = +decimals;
       }
     }
 
@@ -297,7 +336,7 @@ class CompileSwapOptions {
       }
       fs.writeFileSync(
         `${swapConfigFolder}/EthereumTokens.json`,
-        JSON.stringify(withChangelly.ETH)
+        JSON.stringify(allTokens.ETH)
       );
     }
     if (Object.keys(this.changellyBaseOptions).length > 0) {
