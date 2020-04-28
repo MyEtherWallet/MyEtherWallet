@@ -4,7 +4,7 @@
 
 1. ‘Invalid Address’
 
-   - MEW only supports Ethereum-related crypto transactions. 
+   - MEW only supports Ethereum-related crypto transactions.
    - If you’re trying to send a token that has launched mainnet, you will likely need to send this crypto to an Ethereum address at an exchange like Binance to make the swap to mainnet.
 
 2. ‘Not Checksummed’
@@ -17,11 +17,11 @@
 
    - <p>All transactions on the Ethereum blockchain require ETH for the fuel to make transactions happen.</p>
      <strong>We recommend having at least .01 ETH to cover this cost.</strong>
-   - None of this fee comes to us, but goes to the remote miners working to keep the blockchain secure and progressing. 
+   - None of this fee comes to us, but goes to the remote miners working to keep the blockchain secure and progressing.
 
 4. Unintelligible Error / Other
 
-   - Please reach out to us with as much information as possible. 
+   - Please reach out to us with as much information as possible.
    - Refer to the contact form listed below.
 
 * * *

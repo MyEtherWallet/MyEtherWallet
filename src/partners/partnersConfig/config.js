@@ -13,7 +13,7 @@ const swapApiEndpoints = {
   base: 'https://swap.mewapi.io',
   changelly: '/changelly',
   bity: '/bity',
-  kyber: '/kyber'
+  dexag: '/dexag'
 };
 
 const mewSimplex = 'https://apiccswap.myetherwallet.com';
