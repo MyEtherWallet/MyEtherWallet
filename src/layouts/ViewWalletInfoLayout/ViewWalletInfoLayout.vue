@@ -296,7 +296,7 @@ export default {
       this.loading = true;
       const tb = new TokenBalance(this.web3.currentProvider);
       try {
-        this.tokens = await await tb.getBalance(
+        this.tokens = await tb.getBalance(
           this.account.address,
           true,
           true,
