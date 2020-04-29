@@ -1,3 +1,8 @@
+### Bug
+
+- Token sizing [#2327](https://github.com/MyEtherWallet/MyEtherWallet/pull/2327)
+
+
 ### Release v5.6.0
 
 ### Devop
