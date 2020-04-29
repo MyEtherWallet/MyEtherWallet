@@ -9,7 +9,7 @@
       static
       lazy
     >
-      <div v-if="!online" class="content-block">
+      <div v-if="isLocal" class="content-block">
         <div class="flex-container">
           <h4 class="modal-title">{{ $t('common.advanced') }}</h4>
           <div class="margin-left-auto add-custom-network">
@@ -303,6 +303,12 @@ export default {
   },
   computed: {
     ...mapState('main', ['network', 'Networks', 'web3', 'online']),
+    isLocal() {
+      return (
+        window.location.host.includes('localhost') ||
+        window.location.host.includes('file://')
+      );
+    },
     reorderedNetworks() {
       const networks = Misc.reorderNetworks();
       return networks;
@@ -319,7 +325,7 @@ export default {
     }
   },
   mounted() {
-    if (!this.online && store.get('customNetworks') !== undefined) {
+    if (this.isLocal && store.get('customNetworks') !== undefined) {
       this.customNetworks = store.get('customNetworks');
       if (this.customNetworks.length) {
         this.customNetworks.forEach(network => {
