@@ -53,6 +53,7 @@ import sum from './sum';
 import dexon from './dexon';
 import pht from './pht';
 import ere from './ere';
+import prkl from './prkl';
 
 export {
   akaremote,
@@ -109,5 +110,6 @@ export {
   sum,
   dexon,
   pht,
-  ere
+  ere,
+  prkl
 };
