@@ -324,8 +324,6 @@ export default class DexAg {
         if (gasPrice.lte(platformGasPrice)) {
           tx.gas = tradeDetails.metadata.gasPrice;
         }
-        // if(tradeDetails.metadata.gasPrice)
-        // tx.gasPrice = tradeDetails.metadata.gasPrice;
       }
 
       if (preparedTradeTxs.size > 0) {
