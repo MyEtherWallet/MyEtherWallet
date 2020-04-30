@@ -1,5 +1,5 @@
 const fs = require('fs');
-const {v4} = require('uuid');
+const { v4: v4 } = require('uuid');
 
 const fetch = require('node-fetch');
 const web3 = require('web3');
