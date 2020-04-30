@@ -60,5 +60,6 @@ module.exports = [
   'ws://127.0.0.1:8178',
   'https://viewm.moonicorn.network:443',
   'https://localhost:1991', // server for bcvault
-  'https://rpc.atheios.org:443'
+  'https://rpc.atheios.org:443',
+  'https://unstoppabledomains.com:443'
 ];
