@@ -1,8 +1,12 @@
+### Devop
+
+- Remove etc classic [#2331](https://github.com/MyEtherWallet/MyEtherWallet/pull/2331)
+
 ### Release v5.6.0
 
 ### Devop
 
-- Update packages[#2310](https://github.com/MyEtherWallet/MyEtherWallet/pull/2310)
+- Update packages [#2310](https://github.com/MyEtherWallet/MyEtherWallet/pull/2310)
 - Remove unstoppable domains promo [#2308](https://github.com/MyEtherWallet/MyEtherWallet/pull/2308)
 - Add MEW security policy page [#2294](https://github.com/MyEtherWallet/MyEtherWallet/pull/2294)
 
