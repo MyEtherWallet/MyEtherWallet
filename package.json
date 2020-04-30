@@ -116,7 +116,7 @@
     "ethereum-ens": "0.7.7",
     "ethereumjs-common": "1.5.0",
     "ethereumjs-tx": "2.1.2",
-    "ethereumjs-util": "6.2.0",
+    "ethereumjs-util": "7.0.0",
     "ethereumjs-wallet": "0.6.3",
     "ethjs-unit": "0.1.6",
     "hdkey": "1.1.2",
