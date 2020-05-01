@@ -74,5 +74,8 @@
   "order-id": "ID заказа {provider}",
   "swap-widget": "Виджет Обмена",
   "from-min": "От Mин.",
-  "max": "Макс."
+  "max": "Макс.",
+  "address-verification": "Address Verification",
+  "message-to-sign": "Message to sign to verify destination address ownership",
+  "proceed-to-sign": "Proceed to sign message"
 }

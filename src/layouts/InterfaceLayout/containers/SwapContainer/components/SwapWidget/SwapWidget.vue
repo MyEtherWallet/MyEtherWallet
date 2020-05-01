@@ -900,12 +900,21 @@ export default {
           this.toValue
         );
         this.providersFound = providersFound;
-        const results = await Promise.all(
+        const rawResults = await Promise.all(
           callsToMake.map(func =>
             func(fromCurrency, toCurrency, fromValue, this.toValue)
           )
         );
         this.loadingData = false;
+        const results = rawResults.reduce((agg, result) => {
+          if (Array.isArray(result)) {
+            agg = [...agg, ...result];
+          } else {
+            agg.push(result);
+          }
+          return agg;
+        }, []);
+
         if (
           results.every(
             entry =>
