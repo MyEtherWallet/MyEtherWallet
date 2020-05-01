@@ -3,6 +3,7 @@
 ### Bug
 
 - Add hide feature to mew wallet banner [##2315](https://github.com/MyEtherWallet/MyEtherWallet/pull/2315)
+- Aave: Disable withdraw/borrow with healthfactor below 1 [#2314](https://github.com/MyEtherWallet/MyEtherWallet/pull/2314)
 - Token sizing [#2327](https://github.com/MyEtherWallet/MyEtherWallet/pull/2327)
 
 ### Release v5.6.0
