@@ -19,11 +19,13 @@
               type="radio"
               name="provider"
             />
-
             <label :for="provider.provider" />
           </div>
-          <div class="provider-image">
-            <img :src="providerLogo(provider)" alt />
+          <div v-if="providerLogo(provider.provider)" class="provider-image">
+            <img :src="providerLogo(provider.provider)" alt />
+          </div>
+          <div v-else class="provider-image">
+            <h4>{{ provider.provider }}</h4>
           </div>
           <div
             :class="[
@@ -140,9 +142,10 @@
           <div class="mew-custom-form__radio-button">
             <input type="radio" name="provider" />
           </div>
-          <div class="provider-image">
+          <div v-if="providerLogo('mew')" class="provider-image">
             <img :src="providerLogo('mew')" alt />
           </div>
+
           <i18n tag="div" path="swap.providers.load-rate-error">
             <span slot="from-currency">{{ noProvidersPair.fromCurrency }}</span>
             <span slot="to-currency">{{ noProvidersPair.toCurrency }}</span>
@@ -208,6 +211,11 @@ import KyberNetwork from '@/assets/images/etc/kybernetwork.png';
 import Bity from '@/assets/images/etc/bity.png';
 import Simplex from '@/assets/images/etc/simplex.png';
 import Changelly from '@/assets/images/etc/changelly.png';
+import DexAg from '@/assets/images/etc/dexag.svg';
+
+import Bancor from '@/assets/images/etc/bancor.png';
+import UniSwap from '@/assets/images/etc/uniswap.svg';
+import Zx from '@/assets/images/etc/0x.svg';
 
 import { providerNames, fiat } from '@/partners';
 
@@ -290,9 +298,15 @@ export default {
       logos: {
         mew: MEW,
         kybernetwork: KyberNetwork,
+        kyber: KyberNetwork,
         bity: Bity,
         simplex: Simplex,
-        changelly: Changelly
+        changelly: Changelly,
+        dexag: DexAg,
+        ag: DexAg,
+        uniswap: UniSwap,
+        bancor: Bancor,
+        zero_x: Zx
       },
       betaLogos: {},
       providerNames: providerNames,
@@ -342,7 +356,6 @@ export default {
         });
       } else if (this.providerData.length !== 0) {
         const activeProviders = this.listActiveProviders();
-
         return this.allSupportedProviders.filter(entry => {
           return !activeProviders.includes(entry);
         });
@@ -419,9 +432,6 @@ export default {
       this.$emit('selectedProvider', provider);
     },
     providerLogo(details) {
-      if (details.provider) {
-        return this.logos[details.provider];
-      }
       return this.logos[details];
     },
     minNote(details) {

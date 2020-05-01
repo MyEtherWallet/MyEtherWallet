@@ -20,11 +20,11 @@
   },
   "addr": {
     "button-switch": "Switch",
-    "copied-private-key":  "Successfully copied Private Key!"
+    "copied-private-key": "Successfully copied Private Key!"
   },
   "tokens": {
     "custom": "Custom Tokens",
-    "warning-offline":   "Can't load balances in offline mode",
+    "warning-offline": "Can't load balances in offline mode",
     "no-tokens": "No tokens found :(",
     "modal": {
       "title": "Add Custom Tokens",
@@ -123,4 +123,3 @@
   "regular": "Regular",
   "fast": "Fast"
 }
-
