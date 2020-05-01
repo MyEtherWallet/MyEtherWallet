@@ -31,6 +31,7 @@ import SUM from './SUM.js';
 import DXN from './DXN.js';
 import PHT from './PHT.js';
 import ERE from './ERE.js';
+import PRKL from './ERE.js';
 
 export {
   AKA,
@@ -65,5 +66,6 @@ export {
   SUM,
   DXN,
   PHT,
-  ERE
+  ERE,
+  PRKL
 };
