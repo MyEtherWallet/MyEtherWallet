@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <!-- Generator: Sketch 49.2 (51160) - http://www.bohemiancoding.com/sketch -->
-  <title>contract 1</title>
-  <desc>Created with Sketch.</desc>
-  <defs></defs>
-  <g id="Desktop" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-      <g id="Interact-with-contract-1" transform="translate(-21.000000, -319.000000)">
-          <rect id="Rectangle-2" fill="#FFFFFF" x="0" y="0" width="266" height="1011"></rect>
-          <g id="Group-19" transform="translate(24.000000, 136.000000)" fill="#003945" fill-rule="nonzero">
-              <g id="Group-10" transform="translate(1.000000, 185.000000)">
-                  <g id="Code" transform="translate(0.000000, 5.000000)">
-                      <path d="M5.18753846,0 L0,6.5 L5.18753846,12.9988914 L6.41415385,10.921286 L2.91846154,6.49889135 L6.41415385,2.07649667 L5.18753846,0 Z M7.45769231,12.8436807 L9.73430769,12.8436807 L13.3538462,0.119733925 L11.0761538,0.119733925 L7.45769231,12.8436807 Z M15.8124615,1.77635684e-15 L14.5858462,2.07760532 L18.0815385,6.5 L14.5858462,10.9223947 L15.8124615,13 L21,6.50110865 L15.8124615,1.77635684e-15 Z" id="Shape"></path>
-                  </g>
-              </g>
-          </g>
-      </g>
-  </g>
+<svg width="35px" height="35px" viewBox="0 0 35 35" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 57.1 (83088) - https://sketch.com -->
+    <title>dashboard</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Dashboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="dashboard" transform="translate(-18.000000, -385.000000)" fill="#003945" fill-rule="nonzero">
+            <g id="Group-10" transform="translate(18.000000, 385.000000)">
+                <g id="Code">
+                    <path d="M12.5737,11.4653 L7.275,17.9146 L12.5737,24.3628 L13.8266,22.3014 L10.256,17.9135 L13.8266,13.5256 L12.5737,11.4653 Z M14.8925,24.2088 L17.2179,24.2088 L20.915,11.5841 L18.5885,11.5841 L14.8925,24.2088 Z M23.4263,11.4653 L22.1734,13.5267 L25.744,17.9146 L22.1734,22.3025 L23.4263,24.3639 L28.725,17.9157 L23.4263,11.4653 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
 </svg>
