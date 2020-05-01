@@ -1,3 +1,9 @@
+### Release v5.6.1
+
+### Bug
+
+- Add hide feature to mew wallet banner [##2315](https://github.com/MyEtherWallet/MyEtherWallet/pull/2315)
+
 ### Devop
 
 - Remove etc classic [#2331](https://github.com/MyEtherWallet/MyEtherWallet/pull/2331)
