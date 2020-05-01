@@ -1,5 +1,14 @@
 @import '~@/scss/GlobalVariables';
 
+.close-container {
+  color: $dark-blue-2;
+  cursor: pointer;
+  font-weight: 500;
+  position: absolute;
+  right: 20px;
+  top: 15px;
+}
+
 .footer-banner-expanded {
   flex-direction: row;
   min-height: 200px;
@@ -70,8 +79,7 @@
   }
 
   .detail-content-expanded {
-    margin-top: 20px;
-    top: 0;
+    top: 15px;
 
     p,
     i {
@@ -88,9 +96,9 @@
     align-items: center;
     cursor: pointer;
     display: flex;
-    margin-right: 40px;
+    left: 20px;
     position: absolute;
-    right: 0;
+    top: 15px;
 
     p {
       color: $mew-green;
@@ -109,9 +117,7 @@
 @media screen and (max-width: 1192px) {
   .footer-banner-container {
     .detail-content {
-      margin-right: 13px;
-      margin-top: 15px;
-      top: 0;
+      top: 15px;
     }
 
     .footer-text {
