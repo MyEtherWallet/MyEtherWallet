@@ -4,6 +4,10 @@
 
 - Add hide feature to mew wallet banner [##2315](https://github.com/MyEtherWallet/MyEtherWallet/pull/2315)
 
+### Devop
+
+- Fix mobile menu icons [#2305](https://github.com/MyEtherWallet/MyEtherWallet/pull/2305)
+
 ### Release v5.6.0
 
 ### Devop
