@@ -2,6 +2,7 @@
 
 ### Bug
 
+- Hide custom networks when not local [#2328](https://github.com/MyEtherWallet/MyEtherWallet/pull/2328)
 - Add hide feature to mew wallet banner [##2315](https://github.com/MyEtherWallet/MyEtherWallet/pull/2315)
 
 ### Devop
@@ -12,7 +13,7 @@
 
 ### Devop
 
-- Update packages[#2310](https://github.com/MyEtherWallet/MyEtherWallet/pull/2310)
+- Update packages [#2310](https://github.com/MyEtherWallet/MyEtherWallet/pull/2310)
 - Remove unstoppable domains promo [#2308](https://github.com/MyEtherWallet/MyEtherWallet/pull/2308)
 - Add MEW security policy page [#2294](https://github.com/MyEtherWallet/MyEtherWallet/pull/2294)
 
