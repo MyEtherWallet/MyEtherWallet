@@ -13,6 +13,8 @@ import ethpocket from './eth-pocket';
 import ethmew from './eth-mew';
 import ethmewws from './eth-mew-ws';
 import etho from './etho';
+import ftm from './ftm';
+import ftmscan from './ftmscan';
 import go from './go';
 import kovethscan from './kov-ethscan';
 import kovinfura from './kov-infura';
@@ -70,6 +72,8 @@ export {
   ethmewws,
   etho,
   exp,
+  ftm,
+  ftmscan,
   goerlimew,
   goerlimewws,
   goerlipocket,

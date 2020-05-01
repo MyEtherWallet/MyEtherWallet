@@ -8,6 +8,7 @@ import ETC from './ETC.js';
 import ETH from './ETH.js';
 import ETHO from './ETHO.js';
 import EXP from './EXP.js';
+import FTM from './FTM.js';
 import GOERLI from './GOERLI.js';
 import GO from './GO.js';
 import IOLITE from './IOLITE.js';
@@ -42,6 +43,7 @@ export {
   ETH,
   ETHO,
   EXP,
+  FTM,
   GOERLI,
   GO,
   IOLITE,
