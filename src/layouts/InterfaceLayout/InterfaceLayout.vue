@@ -443,9 +443,16 @@ export default {
       ) {
         const tb = new TokenBalance(this.web3.currentProvider);
         try {
-          tokens = await tb.getBalance(this.account.address, true, true, true, {
-            gas: '0x11e1a300'
-          });
+          tokens = await tb.getBalance(
+            this.account.address,
+            true,
+            true,
+            true,
+            0,
+            {
+              gas: '0x11e1a300'
+            }
+          );
           tokens = tokens.map(token => {
             token.address = token.addr;
             delete token.addr;
