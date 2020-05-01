@@ -1,6 +1,11 @@
+### Release v5.6.1
 ### Devop
 
 - Implement small refinements to dex.ag[#2323](https://github.com/MyEtherWallet/MyEtherWallet/pull/2323)
+
+### Bug
+
+- Add hide feature to mew wallet banner [##2315](https://github.com/MyEtherWallet/MyEtherWallet/pull/2315)
 
 ### Release v5.6.0
 

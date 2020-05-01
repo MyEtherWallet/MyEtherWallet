@@ -1,10 +1,24 @@
 <template>
   <div
+    v-if="!hideBanner"
     :class="[
       'footer-banner-container',
       isExpanded ? 'footer-banner-expanded' : 'footer-banner'
     ]"
   >
+    <div
+      :class="['detail-content', isExpanded ? 'detail-content-expanded' : '']"
+      @click="toggleBanner()"
+    >
+      <p>
+        {{
+          isExpanded
+            ? $t('home.mew-wallet-modal.less')
+            : $t('home.mew-wallet-modal.more')
+        }}
+      </p>
+      <i :class="['fa', isExpanded ? 'fa-chevron-down' : 'fa-chevron-up']"></i>
+    </div>
     <div :class="[isExpanded ? 'center-content-expanded' : 'center-content']">
       <div :class="['title-row', isExpanded ? 'bottom-space' : '']">
         <span>{{ $t('home.mew-wallet-modal.title') }}</span>
@@ -25,20 +39,10 @@
       v-if="isExpanded"
       class="mew-connect-image"
       src="@/assets/images/icons/snippet-mew-wallet.png"
-      alt="MEW wallet screenshot"
+      :alt="$t('home.mew-wallet-modal.img-desc')"
     />
-    <div
-      :class="['detail-content', isExpanded ? 'detail-content-expanded' : '']"
-      @click="toggleBanner()"
-    >
-      <p>
-        {{
-          isExpanded
-            ? $t('home.mew-wallet-modal.hide')
-            : $t('home.mew-wallet-modal.details')
-        }}
-      </p>
-      <i :class="['fa', isExpanded ? 'fa-chevron-down' : 'fa-chevron-up']"></i>
+    <div v-if="!isExpanded" class="close-container" @click="setHideBanner()">
+      <p>{{ $t('home.mew-wallet-modal.hide') }}</p>
     </div>
   </div>
 </template>
@@ -46,10 +50,12 @@
 <script>
 import appStore from '@/assets/images/icons/button-app-store.png';
 import googlePlay from '@/assets/images/icons/button-google-play-color.png';
+import store from 'store';
 
 export default {
   data() {
     return {
+      hideBanner: false,
       isExpanded: false,
       storeButtons: [
         {
@@ -64,9 +70,16 @@ export default {
       ]
     };
   },
+  mounted() {
+    this.hideBanner = store.get('hideBanner');
+  },
   methods: {
     toggleBanner() {
       this.isExpanded = !this.isExpanded;
+    },
+    setHideBanner() {
+      this.hideBanner = true;
+      store.set('hideBanner', true);
     }
   }
 };
@@ -74,13 +87,4 @@ export default {
 
 <style lang="scss">
 @import 'WalletLaunchedBanner.scss';
-
-.wallet-launch-modal {
-  .modal-body {
-    padding: 0;
-  }
-  .modal-dialog {
-    max-width: 820px;
-  }
-}
 </style>
