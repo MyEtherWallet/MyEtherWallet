@@ -436,29 +436,30 @@ export default {
     async fetchTokens() {
       this.receivedTokens = false;
       let tokens = [];
+      console.log('do you get here?');
       if (
-        this.network.type.chainID === 1 ||
-        (this.network.type.chainID === 3 &&
-          !this.network.url.includes('infura'))
+        (this.network.type.chainID === 1 || this.network.type.chainID === 3) &&
+        !this.network.url.includes('infura')
       ) {
+        console.log('how about here?');
         const tb = new TokenBalance(this.web3.currentProvider);
         try {
-          tokens = await tb.getBalance(
-            this.account.address,
-            true,
-            true,
-            true,
-            0,
-            {
+          console.log('calling tokens');
+          tokens = await tb
+            .getBalance(this.account.address, false, true, true, {
               gas: '0x11e1a300'
-            }
-          );
+            })
+            .then(response => {
+              console.log(response);
+              return response;
+            });
           tokens = tokens.map(token => {
             token.address = token.addr;
             delete token.addr;
             return token;
           });
         } catch (e) {
+          console.log('tokens errored', e);
           tokens = this.network.type.tokens.map(token => {
             token.balance = 'Load';
             return token;
