@@ -63,5 +63,7 @@ module.exports = [
   'https://rpc.atheios.org:443',
   'wss://bridge.walletconnect.org:443',
   'https://dexag.mewapi.io:443',
-  'https://api.zilliqa.com:443'
+  'https://api.zilliqa.com:443',
+  'https://rpc.fantom.network:443',
+  'https://fantomscan.io:443'
 ];
