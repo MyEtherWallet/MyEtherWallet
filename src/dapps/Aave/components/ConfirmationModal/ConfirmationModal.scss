@@ -136,3 +136,14 @@
 .fa-arrow-down {
   color: $red-1;
 }
+
+.disabled {
+  background-color: $light-grey-10 !important;
+  pointer-events: none;
+}
+
+.error-msg {
+  color: $red-1;
+  font-size: 12px;
+  padding-bottom: 5px;
+}
