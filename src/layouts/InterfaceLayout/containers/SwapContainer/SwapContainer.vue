@@ -297,6 +297,7 @@ export default {
         {
           network: this.$store.state.main.network.type.name,
           web3: this.$store.state.main.web3,
+          gasPrice: this.$store.state.main.gasPrice,
           getRateForUnit: false
         },
         { tokensWithBalance: this.tokensWithBalance }
