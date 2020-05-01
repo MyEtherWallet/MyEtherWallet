@@ -7,6 +7,7 @@
 
 ### Devop
 
+- Remove etc classic [#2331](https://github.com/MyEtherWallet/MyEtherWallet/pull/2331)
 - Fix mobile menu icons [#2305](https://github.com/MyEtherWallet/MyEtherWallet/pull/2305)
 
 ### Release v5.6.0
