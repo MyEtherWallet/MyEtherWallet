@@ -124,8 +124,12 @@
           </div>
           <hr class="mt-4 mb-4" />
           <div class="btn-container">
+            <p v-if="isDisabled() && errorMsg" class="error-msg">
+              {{ errorMsg }}
+            </p>
             <i18n
               v-if="!isCollateralModal"
+              :class="isDisabled() ? 'disabled' : ''"
               tag="button"
               path="dappsAave.confirm-to"
               @click="takeAction()"
@@ -210,7 +214,8 @@ export default {
       },
       currentHealthFactor: this.userSummary.healthFactor
         ? this.userSummary.healthFactor
-        : this.healthFactor
+        : this.healthFactor,
+      errorMsg: false
     };
   },
   computed: {
@@ -222,6 +227,22 @@ export default {
     }
   },
   methods: {
+    isDisabled() {
+      if (
+        this.actionTitle === this.actionTitles.withdraw &&
+        new BigNumber(this.calculateNextHealthFactor()).lte(0)
+      ) {
+        this.errorMsg = this.$t('dappsAave.cannot-withdraw');
+        return true;
+      } else if (
+        this.actionTitle === this.actionTitles.borrow &&
+        new BigNumber(this.currentHealthFactor).lt(1)
+      ) {
+        this.errorMsg = this.$t('dappsAave.cannot-borrow');
+        return true;
+      }
+      return false;
+    },
     iconFetcher(currency) {
       let icon;
       try {
