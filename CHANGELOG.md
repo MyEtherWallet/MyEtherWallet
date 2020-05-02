@@ -9,6 +9,8 @@
 
 - Remove etc classic [#2331](https://github.com/MyEtherWallet/MyEtherWallet/pull/2331)
 - Fix mobile menu icons [#2305](https://github.com/MyEtherWallet/MyEtherWallet/pull/2305)
+- Cleanup token with the new package update [#2338](https://github.com/MyEtherWallet/MyEtherWallet/pull/2338)
+
 
 ### Release v5.6.0
 
