@@ -294,35 +294,49 @@ export default {
     },
     async fetchTokens() {
       this.loading = true;
-      const tb = new TokenBalance(this.web3.currentProvider);
-      try {
-        this.tokens = await tb.getBalance(
-          this.account.address,
-          true,
-          true,
-          true,
-          { gas: '0x11e1a300' }
-        );
-        this.tokens = this.tokens.map(token => {
-          const denominator = new BigNumber(10).pow(token.decimals);
-          const balance = new BigNumber(token.balance)
-            .div(denominator)
-            .toString();
-          token.address = token.addr;
-          token.balance = balance;
-          delete token.addr;
+      this.receivedTokens = false;
+      let tokens = [];
+      if (
+        (this.network.type.chainID === 1 || this.network.type.chainID === 3) &&
+        !this.network.url.includes('infura')
+      ) {
+        const tb = new TokenBalance(this.web3.currentProvider);
+        try {
+          tokens = await tb.getBalance(this.account.address, true, true, true, {
+            gas: '0x11e1a300'
+          });
+          tokens = tokens.map(token => {
+            token.address = token.addr;
+            delete token.addr;
+            return token;
+          });
+
+          const filteredNetwork = this.network.type.tokens.filter(token => {
+            const found = tokens.find(item => {
+              return (
+                this.web3.utils.toChecksumAddress(item.address) ===
+                this.web3.utils.toChecksumAddress(token.address)
+              );
+            });
+
+            if (!found) return token;
+          });
+
+          tokens = tokens.concat(filteredNetwork);
+        } catch (e) {
+          tokens = this.network.type.tokens.map(token => {
+            token.balance = 0;
+            return token;
+          });
+        }
+      } else {
+        tokens = this.network.type.tokens.map(token => {
+          token.balance = 0;
           return token;
         });
-        this.tokens = this.tokens.sort(sortByBalance);
-        this.loading = false;
-      } catch (e) {
-        this.tokens = this.network.type.tokens.map(token => {
-          token.balance = 'Load';
-          return token;
-        });
-        this.tokens = this.tokens.sort(sortByBalance);
-        this.loading = false;
       }
+      this.receivedTokens = true;
+      this.tokens = this.tokens.sort(sortByBalance);
     },
     setTokensWithBalance() {
       const customStore = store.get('customTokens');
