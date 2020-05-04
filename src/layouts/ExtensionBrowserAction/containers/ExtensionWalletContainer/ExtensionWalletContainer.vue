@@ -372,7 +372,9 @@ export default {
       const tb = new TokenBalance(this.web3.currentProvider);
 
       return tb
-        .getBalance(address)
+        .getBalance(address, true, true, true, 0, {
+          gas: '0x11e1a300'
+        })
         .then(res => {
           res.forEach(token => {
             const balance = token.balance;

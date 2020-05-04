@@ -297,6 +297,7 @@ export default {
         {
           network: this.$store.state.main.network.type.name,
           web3: this.$store.state.main.web3,
+          gasPrice: this.$store.state.main.gasPrice,
           getRateForUnit: false
         },
         { tokensWithBalance: this.tokensWithBalance }
@@ -799,12 +800,21 @@ export default {
           this.toValue
         );
         this.providersFound = providersFound;
-        const results = await Promise.all(
+        const rawResults = await Promise.all(
           callsToMake.map(func =>
             func(fromCurrency, toCurrency, fromValue, this.toValue)
           )
         );
         this.loadingData = false;
+        const results = rawResults.reduce((agg, result) => {
+          if (Array.isArray(result)) {
+            agg = [...agg, ...result];
+          } else {
+            agg.push(result);
+          }
+          return agg;
+        }, []);
+
         if (
           results.every(
             entry =>
