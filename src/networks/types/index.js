@@ -8,6 +8,7 @@ import ETC from './ETC.js';
 import ETH from './ETH.js';
 import ETHO from './ETHO.js';
 import EXP from './EXP.js';
+import FTM from './FTM.js';
 import GOERLI from './GOERLI.js';
 import GO from './GO.js';
 import IOLITE from './IOLITE.js';
@@ -30,6 +31,7 @@ import SUM from './SUM.js';
 import DXN from './DXN.js';
 import PHT from './PHT.js';
 import ERE from './ERE.js';
+import PRKL from './ERE.js';
 
 export {
   AKA,
@@ -42,6 +44,7 @@ export {
   ETH,
   ETHO,
   EXP,
+  FTM,
   GOERLI,
   GO,
   IOLITE,
@@ -63,5 +66,6 @@ export {
   SUM,
   DXN,
   PHT,
-  ERE
+  ERE,
+  PRKL
 };

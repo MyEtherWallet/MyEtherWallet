@@ -1,144 +1,149 @@
 {
-  "mewconnect": {
-    "option-text": "Scan the QR code to access with MEW wallet or MEWconnect",
-    "modal": {
-      "title": "Mobile Access",
-      "text1": "Please use MEW wallet or MEWconnect App to scan the QR code above",
-      "text2": "Don't have the MEW wallet app? Download now."
-    },
-    "protocol": "MEWconnect Protocol",
-    "warning": "MEW wallet and MEWconnect apps are not compatible with iPads."
-  },
-  "mobile-app": {
-    "option-title": "Mobile App",
-    "examples": "WalletConnect; WalletLink",
-    "modal": {
-      "title": "Mobile Access"
-    },
-    "mew-connect": "MEWconnect"
-  },
-  "finney": {
-    "scan-info": "To connect, scan the QR code from {wallet} app on your {finney-bc}",
-    "finney-wallet": "FinneyWallet",
-    "finney-bc": "FINNEY™ BLOCKCHAIN SMARTPHONE",
-    "get-finney": "Get your {finney-title} now",
-    "finney-title": "FINNEY™",
-    "mobile": "mobile",
-    "finney-connect": "FINNEY Connect"
-  },
-  "hardware": {
-    "option-title": "Hardware",
-    "warning": {
-      "not-connected": "Please make sure your device is connected."
-    },
-    "modal": {
-      "title": "Access by Hardware",
-      "button-buy": "Buy Now",
-      "button-choose": "Continue"
-    },
-    "examples": "Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet"
-  },
-  "bitbox": {
-    "modal": {
-      "title": "Select BitBox wallet"
-    },
-    "bitbox02": "BitBox02",
-    "pairing": "Please confirm the encryption pairing code matches what is shown on your BitBox02.",
-    "unlock": "Enter BitBox02 password to unlock."
-  },
-  "software": {
-    "option-title": "Software",
-    "option-text": "Keystore file, Private key, Mnemonic phrase",
-    "modal": {
-      "title": "Access by Software",
-      "purchase-text": "Purchase a hardware wallet for the highest security when accessing your crypto.",
-      "purchase-link": "Purchase a hardware wallet...."
-    }
-  },
-  "metamask": {
-    "option-title": "Metamask",
-    "option-text": "Use the MetaMask extension to access my wallet",
-    "warning": {
-      "safari": "MetaMask is only available in these browsers:",
-      "install-promt": "Please install the Metamask extension and refresh your page.",
-      "unlock": "Can't access wallet! Please unlock your wallet through the Metamask extension"
-    },
-    "modal": {
-      "title": "Access via MetaMask",
-      "text": "Please use MyEtherWallet on a secure (SSL/HTTPS) connection to connect.",
-      "button-install": "Install Metamask",
-      "button-refresh": "Refresh",
-      "terms": "To Access my Wallet, I accept {terms}."
-    }
-  },
-  "mnemonic": {
-    "string": "Mnemonic Phrase",
-    "value": "Value",
-    "modal": {
-      "title": "Access by Mnemonic Phrase",
-      "text": "Please type in your mnemonic phrase."
-    }
-  },
-  "ledger": {
-    "modal": {
-      "title": "Choose the App",
-      "text": "Please choose the App you have opened in Ledger"
-    }
-  },
-  "private-key": {
-    "string": "Private Key",
-    "modal": {
-      "title": "Access by Private Key",
-      "placeholder": "Enter Private Key"
-    },
-    "do-not-share": "Please {do-not} share your private key to anyone! You may lose your money if you share it"
-  },
-  "network-addr": {
-    "string": "Network and Address",
-    "addr-to-interact": "Address to Interact With",
-    "id": "ID",
-    "icon": "icon"
-  },
-  "path": {
-    "string": "Path",
-    "hd-derivation": "HD Derivation Path",
-    "custom": "Custom Paths",
-    "add-custom": "Add Custom Path",
-    "ivalid-custom": "Invalid Custom Path",
-    "invalid-desc": "The path: {path} is not valid for this device",
-    "alias": "Alias"
-  },
-  "pin": {
-    "string": "PIN",
-    "enter": "Enter PIN for your {device}",
-    "layout": "The PIN layout is displayed on your Hardware wallet",
-    "access": "To access my wallet,",
-    "accept": "I accept the",
-    "terms": "Terms and Conditions"
-  },
-  "json-file": "Keystore File",
-  "accept-terms": "To Access my Wallet, I accept {terms}",
-  "hd-derivation-path": "HD Derivation Path",
-  "custom-paths": "Custom Paths",
-  "add-custom-path": "Add Custom Path",
-  "interact-addr": "Address to Interact With",
-  "id": "ID",
-  "network-and-address": "Network and Address",
-  "please-type-in-mnemonic-phrase": "Please type in your mnemonic phrase.",
+  "edit-modal": "Edit Modal",
+  "edit": "Edit",
+  "wallet-name": "Wallet Name",
+  "submit": "Submit",
+  "remove-wallet": "Remove Wallet",
+  "add-wallet-nickname": "Please add a wallet nickname",
+  "generate-wallet": "Generate a New Wallet",
   "password": "Password",
-  "access-wallet-or": "or",
-  "web3-wallet-desc": "MetaMask; Dapper",
-  "web3-wallet": "MEW CX",
+  "confirm-password": "Confirm Password",
+  "add-wallet": "Add Wallet",
+  "keystore-file": "Keystore File (UTC/JSON)",
+  "your-wallet-file": "Your Wallet File",
+  "upload-file": "Upload File",
+  "enter-pw": "Enter your password",
+  "enter-mnemonic-phrase": "Enter Mnemonic Phrase",
+  "create-pw": "Create your password here",
+  "create-wallet-pw": "Create wallet password",
+  "value": "Value",
+  "addresses": "Addresses",
+  "load-more": "Load More",
+  "private-key": "Private Key",
+  "your-private-key": "Your Private Key",
+  "enter-pw-hash": "Enter password for hashing",
+  "enter-private-key": "Enter private key",
+  "alias": "Alias",
+  "rename-wallet": "Rename Wallet",
+  "path": "Path",
+  "custom-path": "my custom path",
+  "network": "NETWORK",
+  "please-enter-pw": "Please enter the password of your wallet to {walletNickname}",
+  "wallet-encrypted": "Your wallet is encrypted. Please enter the password",
+  "remove-wallet-desc": "Be sure you have saved the private key and/or Keystore File and the password before you remove it. If you want to use this wallet with your MyEtherWallet CX in the future, you will need to manually re-add it using the private key/JSON and password..",
+  "remove": "Remove",
+  "are-you-sure-delete": "Are you sure you want to delete wallet",
+  "your-wallet": "Your Wallet",
+  "nickname": "Nickname",
+  "balance-fetch-error": "Unable to fetch ETH price.",
+  "all-tokens": "All Tokens",
+  "loading-tokens": "Loading Tokens",
+  "custom": "Custom",
+  "search-tokens": "Search Tokens",
+  "details": "Details",
+  "view-tokens": "View Tokens",
+  "tokens": "Tokens",
+  "create-wallet-password": "Create wallet password",
+  "add": "Add",
   "refresh": "Refresh",
-  "unlock-web3-wallet": "Can't access wallet! Please unlock your wallet through the Browser Extension",
-  "try-again": "Try Again",
-  "invalid-path-desc": "The path: {path} is not valid for this device",
-  "wallet-info": "Wallet Information",
-  "wallet-options": "Check your transaction history, download a new keystore file, print a paper wallet, and more!",
-  "xwallet-desc": "Use Pundi X Savings account by MEW to scan the QR code above",
-  "xwallet-title": "Access by XWallet",
-  "get-it-now": "Get It Now",
-  "or": "OR CONNECT WITH",
-  "wallet-connect": "WalletConnect",
-  "wallet-link": "WalletLink"
+  "view-all": "View All",
+  "add-watch-only": "Add Watch-Only Address",
+  "enter-address": "Please enter the wallet address",
+  "add-my-wallet": "Add My Wallet",
+  "or": "OR",
+  "wallet-count": "Total of {total} wallet | Total of {total} wallets",
+  "how-would-you-add-wallet": "How would you like to add your wallet?",
+  "dapps": "Dapps",
+  "powered-by": "Powered by",
+  "paper-wallet": "Paper Wallet",
+  "view-more": "View More",
+  "via-contract": "Via contract",
+  "my-wallets": "My Wallets",
+  "transaction-history": "Transaction History",
+  "add-more": "Add More",
+  "extra-word": "Extra Word",
+  "enter-extra-word": "Enter extra word",
+  "no-wallet-found": "No Wallet found please...",
+  "loading-wallets": "Loading Wallets",
+  "watch-wallets-only": "Watch Only Wallets",
+  "mewcx-only": "MEW CX is only available in these browsers",
+  "install-mewcx": "Install MEW CX",
+  "install-prompt": "Please install the  MEW CX extension and refresh your page.",
+  "wallet-password": "Wallet Password",
+  "no-wallets-found": "No wallets found 😢",
+  "my-wallet": "My Wallet",
+  "quick-send": "Quick Send",
+  "from": "From",
+  "success": "Success",
+  "user-understand": "I understand",
+  "burner-warning": "Burner accounts are temporary. Do not send any funds to this account, it will disappear once your session is over.",
+  "access": "Access",
+  "reject": "Reject",
+  "step": "STEP",
+  "change": "Change",
+  "amount-to-send": "Amount To Send",
+  "done": "Done",
+  "download": "Download",
+  "view": "View",
+  "view-tx-history": "View On Etherscan",
+  "print": "Print",
+  "confirm-send": "Confirm & Send",
+  "confirm-remove": "Confirm Remove",
+  "your-tx-hash": "Your TxHash",
+  "mewcx": "MEW CX",
+  "back": "Back",
+  "choose-hd-path": "Choose HD Derivation Path",
+  "welcome-header": "MyEtherWallet Chrome Extension",
+  "mew-cx-official": "MyEtherWallet's Official Chrome Extension",
+  "no-wallet-add": "You don't have any wallet saved. Click and add Wallet to get started",
+  "use-burner": "Use a burner account",
+  "by-entering-pw": "By entering your password, you accept our",
+  "trying-to-access-mew": "is trying to access MEW CX. Please choose a wallet that you want to connect.",
+  "web3-detected": "We've detected other Web3 applications (a wallet browser extension, i.e. MetaMask) running in the background. In order for MEW CX to function properly, please make sure all other Web3 instances are closed.",
+  "nickname-found": "Nickname found!",
+  "address-already-stored": "Address already stored!",
+  "something-went-wrong": "Something went wrong!",
+  "wallet-update-success": "Wallet successfully updated!",
+  "wallet-remove-success": "Wallet successfully removed!",
+  "token-added-success": "Successfully added token!",
+  "copy-success": "Successfully Copied",
+  "invalid-mnemonic": "Invalid Mnemonic",
+  "coingecko": "CoinGecko",
+  "buy-eth": "Buy ETH",
+  "generate-wallet-description": "Generate your own unique Ethereum wallet. Receive a public address (0x...) and set a password for wallet encryption.",
+  "mnemonic-phrase": "Mnemonic Phrase",
+  "mnemonic-phrase-description": "Add your wallet using a mnemonic phrase. Mnemonic phrases are 12-24 words in length, but sometimes they contain an extra word for added security.",
+  "private-key-description": "Add your wallet using a private key. Private keys are 64 hexadecimal characters.",
+  "keystore-file-description": "Add your wallet using a keystore file. A keystore file is your private key encrypted into a JSON file format.",
+  "chrome-cx": "Chrome Extension",
+  "access-via-mew": "Access via MEW CX",
+  "portfolio-balance": "My Portfolio Balance",
+  "import-wallet": {
+    "add-wallet-section": {
+      "title": "Add My Wallet",
+      "subtext": "How would you like to add a new wallet?"
+    },
+    "generate-wallet": {
+      "title": "Generate a New Wallet"
+    },
+    "step-1": {
+      "title": "Step 1. Choose a method",
+      "subtext": "Please choose a method to import your existing wallet"
+    },
+    "step-2": {
+      "title": "Step 2. Unlock My Wallet",
+      "subtext": "Please enter {additionalSubtext}"
+    },
+    "step-3": {
+      "title": "Step 3. Confirm to Add",
+      "subtext": "Please name your wallet, and create a password for it."
+    }
+  },
+  "for-priv": "your private key here",
+  "for-keystore": "the password of your keystore file",
+  "for-mnemonic": "your mnemonic phrase by the right number",
+  "total-wallet-value": "Total Wallet Value",
+  "view-wallet-detail": "View Wallet Detail",
+  "remove-wallet-verification": "Enter your wallet password to remove it. Please make sure you have save the {privKey}, {mnemPhrase}, or {keystoreFile} and {password} before you remove your wallet.",
+  "lock-wallet": "Lock Wallet & Exit"
 }

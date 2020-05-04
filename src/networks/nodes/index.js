@@ -4,7 +4,6 @@ import clo from './clo';
 import egem from './egem';
 import ella from './ella';
 import esn from './esn';
-import etcethereumclassiccooperativeparityclassic from './etc-ethereumclassiccooperative-parity-classic';
 import etcethereumclassiccooperativeparity from './etc-ethereumclassiccooperative-parity';
 import etcethereumclassiccooperativeparityws from './etc-ethereumclassiccooperative-parity-ws';
 import ethethscan from './eth-ethscan';
@@ -14,6 +13,8 @@ import ethpocket from './eth-pocket';
 import ethmew from './eth-mew';
 import ethmewws from './eth-mew-ws';
 import etho from './etho';
+import ftm from './ftm';
+import ftmscan from './ftmscan';
 import go from './go';
 import kovethscan from './kov-ethscan';
 import kovinfura from './kov-infura';
@@ -53,6 +54,7 @@ import sum from './sum';
 import dexon from './dexon';
 import pht from './pht';
 import ere from './ere';
+import prkl from './prkl';
 
 export {
   akaremote,
@@ -61,7 +63,6 @@ export {
   egem,
   ella,
   esn,
-  etcethereumclassiccooperativeparityclassic,
   etcethereumclassiccooperativeparity,
   etcethereumclassiccooperativeparityws,
   ethethscan,
@@ -72,6 +73,8 @@ export {
   ethmewws,
   etho,
   exp,
+  ftm,
+  ftmscan,
   goerlimew,
   goerlimewws,
   goerlipocket,
@@ -109,5 +112,6 @@ export {
   sum,
   dexon,
   pht,
-  ere
+  ere,
+  prkl
 };
