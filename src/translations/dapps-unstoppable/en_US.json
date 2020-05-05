@@ -1,7 +1,9 @@
 {
   "title": "Unstoppable Domains",
+  "title-manage": "Unstoppable Manage",
   "about-unstoppable": "Replace cryptocurrency addresses with a human readable name.",
   "dapp-desc": "Buy a .crypto domain",
+  "dapp-manage-desc": "Manage your .crypto domains",
   "search-domain-prompt": "Find your blockchain domain",
   "stripe-email-prompt": "Email",
   "stripe-card-prompt": "Card Details",
@@ -53,6 +55,12 @@
   "result": "Result",
   "unavailable": "Unavailable",
   "buy": "Buy",
+  "more-currencies": "More currencies",
+  "save-changes": "Save Changes",
+  "your-address": "Your address",
   "your-balance": "Your balance",
+  "no-crypto-domains-one": "Looks like you don't own any .crypto domains yet! Get your .crypto domain",
+  "no-crypto-domains-two": "here",
+  "your-crypto-domains": "Your .crypto domains",
   "address": "Address"
 }
