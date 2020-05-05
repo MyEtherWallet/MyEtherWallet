@@ -2,15 +2,15 @@
   <v-sheet color="bg_wallet">
     <div class="d-flex align-stretch">
       <SideMenu class="box-shadow" />
-      <div class="flex-grow-1 pb-10">
+      <div class="flex-grow-1 d-flex flex-column justify-space-between">
         <v-container>
           <Header />
           <router-view />
         </v-container>
+
+        <Footer class="mt-10" />
       </div>
     </div>
-
-    <Footer />
   </v-sheet>
 </template>
 
