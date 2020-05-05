@@ -15,7 +15,6 @@ module.exports = [
   'https://lb.rpc.egem.io:443',
   'https://jsonrpc.ellaism.io:443',
   'https://api.esn.gonspool.com:443',
-  'https://www.ethereumclassic.network:443',
   'https://www.ethercluster.com:443',
   'wss://www.ethercluster.com:443',
   'https://api.etherscan.io:443',
