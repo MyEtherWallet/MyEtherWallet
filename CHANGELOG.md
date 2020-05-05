@@ -1,3 +1,7 @@
+### Bug 
+
+- Fix ambrpay subscription status' [#2350](https://github.com/MyEtherWallet/MyEtherWallet/pull/2350)
+
 ### Release v5.6.1
 
 ### Devop
