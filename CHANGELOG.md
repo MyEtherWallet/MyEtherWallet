@@ -1,7 +1,7 @@
 ### Release v6.0.0
 
 ### Devop
-
+- Update side menu and footer [#2349](https://github.com/MyEtherWallet/MyEtherWallet/pull/2349)
 - Add MY TOKENS VALUE component for Dashboard [#2015](https://github.com/MyEtherWallet/MyEtherWallet/pull/2015)
 - Update my eth balance component chart [#1987](https://github.com/MyEtherWallet/MyEtherWallet/pull/1987)
 
