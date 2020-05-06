@@ -19,21 +19,38 @@
     padding: 15px;
   }
 
-  .header-txt {
+  .inactive-txt {
+    color: $red-1;
+  }
+
+  .active-txt {
     color: $mew-green;
+  }
+
+  .header-txt {
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
 
-    .active-txt {
+    .header-container {
+      display: flex;  
+    }
+
+    .status-txt {
       font-size: 15px;
       font-weight: 500;
     }
 
+    .times-icon {
+      color: $red-1;
+      font-size: 20px;
+      margin-right: 3px;
+    }
+
     .check-icon {
       background-color: $mew-green;
-      border: 3px solid $border-green;
-      border-radius: 200px;
+      border: 4px solid $border-green;
+      border-radius: 50%;
       color: $white;
       font-size: 12px;
       margin-right: 3px;
@@ -43,6 +60,7 @@
     .next-pay-txt {
       color: $dark-grey-11;
       font-size: 15px;
+      margin-left: 5px;
     }
 
     .fa-angle-down,

@@ -206,17 +206,18 @@ export default {
   watch: {
     amount() {
       if (this.checkAmount(this.amountToCheck)) {
-        this.errorMsg =
-          'Cannot exceed balance of ' + this.convertToFixed(this.amountToCheck);
+        this.errorMsg = this.$t('dappsAave.cannot-exceed-bal', {
+          amount: this.convertToFixed(this.amountToCheck)
+        });
       } else if (
         this.amount === this.token.user.currentBorrows &&
         this.amount > this.token.tokenBalance
       ) {
-        this.errorMsg =
-          'Cannot exceed your token balance of ' +
-          this.convertToFixed(this.token.tokenBanace);
+        this.errorMsg = this.$t('dappsAave.cannot-exceed-tkn-bal', {
+          amount: this.convertToFixed(this.token.tokenBalance)
+        });
       } else if (this.amount <= 0) {
-        this.errorMsg = 'Must be higher than 0';
+        this.errorMsg = this.$t('dappsAave.greater-than');
       } else {
         this.errorMsg = '';
       }

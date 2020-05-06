@@ -35,6 +35,7 @@ export default class DexAg {
     this.getSupportedDexes();
     this.getSupportedCurrencies(this.network);
     this.getFee();
+    this.platformGasPrice = props.gasPrice || -1;
   }
 
   static getName() {
@@ -43,6 +44,10 @@ export default class DexAg {
 
   static isDex() {
     return true;
+  }
+
+  updateGasPrice(price) {
+    this.platformGasPrice = price;
   }
 
   async getFee() {
@@ -313,6 +318,21 @@ export default class DexAg {
         data: tradeDetails.trade.data,
         value: tradeDetails.trade.value
       };
+      if (
+        tradeDetails.metadata.gasPrice &&
+        swapDetails.provider === 'bancor' &&
+        this.platformGasPrice > 0
+      ) {
+        const gasPrice = new BigNumber(tradeDetails.metadata.gasPrice);
+        const platformGasPrice = this.web3.utils.toWei(
+          this.platformGasPrice.toString(),
+          'gwei'
+        );
+        if (gasPrice.lte(platformGasPrice)) {
+          Toast.responseHandler(`gas-too-high`, 1, true);
+          throw Error('abort');
+        }
+      }
 
       if (preparedTradeTxs.size > 0) {
         switch (swapDetails.provider) {
