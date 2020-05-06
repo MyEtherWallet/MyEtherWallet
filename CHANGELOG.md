@@ -1,11 +1,8 @@
-### Devop
-
-- Remove Maker SAI and replace with info and links regarding its shutdown [#2355](https://github.com/MyEtherWallet/MyEtherWallet/pull/2355)
-
 ### Release v5.6.1
 
 ### Devop
 
+- Remove Maker SAI and replace with info and links regarding its shutdown [#2355](https://github.com/MyEtherWallet/MyEtherWallet/pull/2355)
 - Implement small refinements to dex.ag[#2323](https://github.com/MyEtherWallet/MyEtherWallet/pull/2323)
 - Remove etc classic [#2331](https://github.com/MyEtherWallet/MyEtherWallet/pull/2331)
 - Fix mobile menu icons [#2305](https://github.com/MyEtherWallet/MyEtherWallet/pull/2305)
