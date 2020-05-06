@@ -2,35 +2,33 @@
   <div class="container-maker">
     <back-button :path="'/interface/dapps/'"> </back-button>
     <div class="maker-announcement">
-      {{$t('dappsMaker.shutdown')}}
+      {{ $t('dappsMaker.shutdown') }}
 
       <div class="maker-info">
-        <b> {{$t('dappsMaker.what-does-shutdown-mean')}}</b>
+        <b> {{ $t('dappsMaker.what-does-shutdown-mean') }}</b>
         <br />
-        {{$t('dappsMaker.what-does-shutdown-mean-reason')}}
+        {{ $t('dappsMaker.what-does-shutdown-mean-reason') }}
       </div>
 
       <br />
-      {{$t('dappsMaker.shutdown-learn-more')}}
+      {{ $t('dappsMaker.shutdown-learn-more') }}
       <br />
       <a
         class="maker-link"
         href="https://blog.makerdao.com/a-guide-to-single-collateral-dai-sai-shutdown/"
         target="_blank"
-        ><b>{{$t('dappsMaker.guide-to-shutdown')}} </b>
+        ><b>{{ $t('dappsMaker.guide-to-shutdown') }} </b>
       </a>
       <br />
-      {{$t('dappsMaker.or')}}
+      {{ $t('dappsMaker.or') }}
       <br />
       <a
         class="maker-link"
         href="https://forum.makerdao.com/t/sequential-process-for-scd-shutdown/1823"
         target="_blank"
-        ><b>{{$t('dappsMaker.shutdown-process')}}</b></a
+        ><b>{{ $t('dappsMaker.shutdown-process') }}</b></a
       >
     </div>
-
-    <div class="buttons-container"></div>
 
     <router-view> </router-view>
   </div>
