@@ -141,7 +141,7 @@
   },
   "for-priv": "ваш закрытый ключ здесь",
   "for-keystore": "пароль вашего файла хранилища ключа",
-  "for-mnemonic": "your mnemonic phrase by the right number",
+  "for-mnemonic": "ваша мнемоническая фраза рядом с правильным номером",
   "total-wallet-value": "Общая ценность кошелька",
   "view-wallet-detail": "Детали кошелька",
   "remove-wallet-verification": "Введите пароль кошелька, чтобы удалить его. Пожалуйста, убедитесь, что вы сохранили {privKey}, {mnemPhrase}, или {keystoreFile} и {password} перед удалением вашего кошелька.",
