@@ -1,4 +1,6 @@
+### Devop
 
+- Remove Maker SAI and replace with info and links regarding its shutdown [#2355](https://github.com/MyEtherWallet/MyEtherWallet/pull/2355)
 
 ### Release v5.6.1
 
