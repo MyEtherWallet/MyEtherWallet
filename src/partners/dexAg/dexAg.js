@@ -46,6 +46,10 @@ export default class DexAg {
     return true;
   }
 
+  updateGasPrice(price) {
+    this.platformGasPrice = price;
+  }
+
   async getFee() {
     try {
       const contract = new this.web3.eth.Contract(
@@ -320,9 +324,16 @@ export default class DexAg {
         this.platformGasPrice > 0
       ) {
         const gasPrice = new BigNumber(tradeDetails.metadata.gasPrice);
-        const platformGasPrice = new BigNumber(this.platformGasPrice);
+        const platformGasPrice = new BigNumber(this.platformGasPrice).times(
+          new BigNumber(10).pow(9)
+        );
         if (gasPrice.lte(platformGasPrice)) {
-          tx.gas = tradeDetails.metadata.gasPrice;
+          Toast.responseHandler(
+            `Gas price is too high. Please lower your gas price and try again.`,
+            1,
+            true
+          );
+          throw Error('abort');
         }
       }
 

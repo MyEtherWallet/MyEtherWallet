@@ -498,6 +498,9 @@ export default {
     }
   },
   watch: {
+    ['gasPrice'](value) {
+      this.swap.updateGasPrice(this.selectedProvider.provider, value);
+    },
     ['this.network.type.name']() {
       this.swap.updateNetwork(this.network.type.name, this.web3);
     },
@@ -526,10 +529,16 @@ export default {
       this.providerData = [];
       this.haveProviderRates = false;
       this.loadingData = false;
-      this.swap = new SwapProviders(providers, {
-        network: newVal.type.name,
-        web3: this.web3
-      });
+      this.swap = new SwapProviders(
+        providers,
+        {
+          network: newVal.type.name,
+          web3: this.web3,
+          gasPrice: this.gasPrice,
+          getRateForUnit: false
+        },
+        { tokensWithBalance: this.tokensWithBalance }
+      );
     }
   },
   mounted() {
