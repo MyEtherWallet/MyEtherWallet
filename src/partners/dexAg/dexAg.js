@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 
 import { ERC20, networkSymbols, EthereumTokens } from '../partnersConfig';
+import { toWei } from 'web3-utils';
 
 import {
   ChangellyCurrencies,
@@ -324,8 +325,9 @@ export default class DexAg {
         this.platformGasPrice > 0
       ) {
         const gasPrice = new BigNumber(tradeDetails.metadata.gasPrice);
-        const platformGasPrice = new BigNumber(this.platformGasPrice).times(
-          new BigNumber(10).pow(9)
+        const platformGasPrice = this.web3.utils.toWei(
+          this.platformGasPrice.toString(),
+          'gwei'
         );
         if (gasPrice.lte(platformGasPrice)) {
           Toast.responseHandler(`gas-too-high`, 1, true);
