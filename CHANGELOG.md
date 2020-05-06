@@ -7,6 +7,7 @@
 - Implement small refinements to dex.ag[#2323](https://github.com/MyEtherWallet/MyEtherWallet/pull/2323)
 - Remove etc classic [#2331](https://github.com/MyEtherWallet/MyEtherWallet/pull/2331)
 - Fix mobile menu icons [#2305](https://github.com/MyEtherWallet/MyEtherWallet/pull/2305)
+- Add warning for gas too high [#2363](https://github.com/MyEtherWallet/MyEtherWallet/pull/2363)
 
 ### Bug
 

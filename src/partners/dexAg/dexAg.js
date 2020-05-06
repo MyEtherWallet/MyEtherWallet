@@ -328,11 +328,7 @@ export default class DexAg {
           new BigNumber(10).pow(9)
         );
         if (gasPrice.lte(platformGasPrice)) {
-          Toast.responseHandler(
-            `Gas price is too high. Please lower your gas price and try again.`,
-            1,
-            true
-          );
+          Toast.responseHandler(`gas-too-high`, 1, true);
           throw Error('abort');
         }
       }
