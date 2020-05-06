@@ -165,13 +165,19 @@
         </div>
 
         <v-spacer></v-spacer>
-
-        <v-btn class="white--text" large depressed outlined>
+        <mew-button
+          title="Buy ETH"
+          :icon="icons.buyEth"
+          icon-align="left"
+          btn-style="outline"
+          color-theme="white"
+        />
+        <!-- <v-btn class="white--text" large depressed outlined>
           <v-img
             src="@/assets/images/icons/icon-buy-eth-white.svg"
             class="mr-1 ml-n1"
           />Buy ETH
-        </v-btn>
+        </v-btn> -->
       </v-app-bar>
     </v-container>
   </div>
@@ -184,6 +190,7 @@ import wallet from '@/assets/images/icons/icon-wallet-grey.svg';
 import send from '@/assets/images/icons/icon-send-grey.svg';
 import message from '@/assets/images/icons/icon-message-grey.svg';
 import eth from '@/assets/images/currencies//icon-eth-grey.svg';
+import buyEth from '@/assets/images/icons/icon-buy-eth-white.svg';
 
 import grabber from '@/assets/images/icons/icon-grabber-grey.svg';
 import privatekey from '@/assets/images/icons/icon-private-key-grey.svg';
@@ -191,10 +198,13 @@ import ensDebugger from '@/assets/images/icons/icon-ens-debugger-grey.svg';
 import sha3 from '@/assets/images/icons/icon-sha3-grey.svg';
 import convert from '@/assets/images/icons/icon-convert-grey.svg';
 
+import { MewButton } from '@myetherwallet/mew-components';
+
 export default {
   name: 'HeaderDesktop',
   components: {
-    MenuOpenArrow
+    MenuOpenArrow,
+    'mew-button': MewButton
   },
   data: () => ({
     icons: {
@@ -206,7 +216,8 @@ export default {
       privatekey: privatekey,
       ensDebugger: ensDebugger,
       sha3: sha3,
-      convert: convert
+      convert: convert,
+      buyEth: buyEth
     }
   })
 };
