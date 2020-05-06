@@ -19,7 +19,7 @@
   "manage-subscriptions": {
     "title": "Управление подписками",
     "no-active": "У вас нет активных подписок!",
-    "active": "Активная",
+    "active": "Active",
     "next-payment": "Следующий платёж",
     "receiver-wallet": "Кошелек получателя",
     "current-cycle": "Текущий цикл",
