@@ -114,7 +114,7 @@
     "eslint-plugin-vue": "6.2.2",
     "eth-ens-namehash": "2.0.8",
     "ethereum-ens": "0.7.7",
-    "ethereumjs-common": "1.5.0",
+    "ethereumjs-common": "1.5.1",
     "ethereumjs-tx": "2.1.2",
     "ethereumjs-util": "6.2.0",
     "ethereumjs-wallet": "0.6.3",
