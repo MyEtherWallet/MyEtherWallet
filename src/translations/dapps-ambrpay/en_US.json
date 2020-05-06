@@ -19,7 +19,6 @@
   "manage-subscriptions": {
     "title": "Manage Subscriptions",
     "no-active": "You have no active subscriptions!",
-    "active": "Active",
     "next-payment": "Next payment",
     "receiver-wallet": "Receiver wallet",
     "current-cycle": "Current cycle",
