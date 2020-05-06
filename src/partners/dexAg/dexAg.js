@@ -1,7 +1,6 @@
 import BigNumber from 'bignumber.js';
 
 import { ERC20, networkSymbols, EthereumTokens } from '../partnersConfig';
-import { toWei } from 'web3-utils';
 
 import {
   ChangellyCurrencies,
