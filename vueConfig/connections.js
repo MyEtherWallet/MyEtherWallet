@@ -15,7 +15,6 @@ module.exports = [
   'https://lb.rpc.egem.io:443',
   'https://jsonrpc.ellaism.io:443',
   'https://api.esn.gonspool.com:443',
-  'https://www.ethereumclassic.network:443',
   'https://www.ethercluster.com:443',
   'wss://www.ethercluster.com:443',
   'https://api.etherscan.io:443',
@@ -63,5 +62,7 @@ module.exports = [
   'https://rpc.atheios.org:443',
   'wss://bridge.walletconnect.org:443',
   'https://dexag.mewapi.io:443',
-  'https://api.zilliqa.com:443'
+  'https://api.zilliqa.com:443',
+  'https://rpc.fantom.network:443',
+  'https://fantomscan.io:443'
 ];

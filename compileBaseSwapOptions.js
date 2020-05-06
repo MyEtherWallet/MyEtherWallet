@@ -1,5 +1,5 @@
 const fs = require('fs');
-const {v4} = require('uuid');
+const { v4: v4 } = require('uuid');
 
 const fetch = require('node-fetch');
 const web3 = require('web3');
@@ -148,8 +148,14 @@ class CompileSwapOptions {
     other: {}
   }) {
     try {
-      const tokenList = await this.get(
-        'https://dexag.mewapi.io/token-list-full'
+      const tokenList = await this.post(
+        'https://swap.mewapi.io/dexag',
+        {
+          jsonrpc: '2.0',
+          method: 'getSupportedCurrencies',
+          params: {},
+          id: v4()
+        }
       );
       const tokenDetails = priorCollected.ETH;
       for (let i = 0; i < tokenList.length; i++) {
