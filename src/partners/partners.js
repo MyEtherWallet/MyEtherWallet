@@ -97,6 +97,15 @@ export default class SwapProviders {
     return result;
   }
 
+  updateGasPrice(provider, value) {
+    if (provider === 'bancor') {
+      const providerInstance = this.providers.get('dexag');
+      if (providerInstance.updateGasPrice) {
+        providerInstance.updateGasPrice(value);
+      }
+    }
+  }
+
   ownedTokens(tokens) {
     this.ownedTokenList = tokens;
   }
