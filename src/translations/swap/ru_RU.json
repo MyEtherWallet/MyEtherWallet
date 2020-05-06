@@ -77,7 +77,7 @@
   "swap-widget": "Виджет Обмена",
   "from-min": "От Mин.",
   "max": "Макс.",
-  "address-verification": "Address Verification",
-  "message-to-sign": "Message to sign to verify destination address ownership",
-  "proceed-to-sign": "Proceed to sign message"
+  "address-verification": "Подтверждение адреса",
+  "message-to-sign": "Подпись сообщения для проверки владельца адреса назначения",
+  "proceed-to-sign": "Перейти к подписанию сообщения"
 }
