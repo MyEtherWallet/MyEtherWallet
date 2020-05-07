@@ -166,6 +166,7 @@
 
         <v-spacer></v-spacer>
         <mew-button
+          button-size="large"
           title="Buy ETH"
           :icon="icons.buyEth"
           icon-align="left"
