@@ -1,3 +1,5 @@
+- List Dex.ag first is same rate as another dex [#2364](https://github.com/MyEtherWallet/MyEtherWallet/pull/2364)
+
 ### Release v5.6.1
 
 ### Devop

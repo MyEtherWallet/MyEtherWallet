@@ -831,7 +831,7 @@ export default {
               entry.toCurrency === this.toCurrency
           )
         ) {
-          this.providerData = bestProviderForQuantity(
+          const providerData = bestProviderForQuantity(
             results.map(entry => {
               if (+entry.rate > 0) {
                 return {
@@ -879,6 +879,16 @@ export default {
             }),
             fromValue
           );
+          if (providerData.length > 2) {
+            const rate1 = new BigNumber(providerData[0].rate).toFixed(6);
+            const rate2 = new BigNumber(providerData[1].rate).toFixed(6);
+            if (rate1 === rate2 && providerData[1].provider === 'dexag') {
+              const hold = providerData[0];
+              providerData[0] = providerData[1];
+              providerData[1] = hold;
+            }
+          }
+          this.providerData = providerData;
           this.updateEstimate(to);
         }
       }
