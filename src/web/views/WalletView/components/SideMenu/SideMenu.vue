@@ -10,10 +10,12 @@
     </div>
     <WalletCard />
     <BuyEthButton class="mt-2 mb-6" />
-    <AccordionMenu class="mx-n1" />
-    <Divider class="my-4 mx-1" />
-    <SystemMenu class="mx-n1" />
-    <ThemeSwitch class="px-5 mt-8" />
+    <AccordionMenu class="mt-4" />
+    <Divider class="my-5 mx-1" />
+    <SystemMenu />
+    <Divider class="my-5 mx-1" />
+    <ThemeSwitch class="px-5" />
+    <Version class="px-5" />
   </v-sheet>
 </template>
 
@@ -23,6 +25,7 @@ import BuyEthButton from './components/BuyEthButton';
 import AccordionMenu from './components/AccordionMenu';
 import SystemMenu from './components/SystemMenu';
 import ThemeSwitch from './components/ThemeSwitch';
+import Version from './components/Version';
 import Divider from './components/Divider';
 
 export default {
@@ -32,6 +35,7 @@ export default {
     AccordionMenu,
     SystemMenu,
     ThemeSwitch,
+    Version,
     Divider
   }
 };
@@ -45,5 +49,8 @@ export default {
   width: 300px;
   min-height: 100vh;
   color: white;
+}
+
+.v-input--selection-controls__ripple:before {
 }
 </style>

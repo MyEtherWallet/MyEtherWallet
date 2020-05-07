@@ -23,6 +23,5 @@ export default {
 <style lang="scss">
 @import '@/assets/styles/GlobalVariables.scss';
 @import '@/assets/styles/GlobalStyles.scss';
-// this global stylesheet messes with the current v6 designs. so will figure it out and add it back later.
-// @import '@myetherwallet/mew-components/src/assets/styles/global.scss';
+@import '@myetherwallet/mew-components/src/assets/styles/global.scss';
 </style>

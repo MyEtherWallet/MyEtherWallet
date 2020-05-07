@@ -1,49 +1,49 @@
 <template>
-  <div class="accordion-menu-container user-select--none">
-    <v-list color="transparent">
-      <v-list-item-group v-model="activeMenu" mandatory>
-        <template v-for="(i, key1) in menuItems">
-          <v-list-item v-if="i.url" :key="key1">
-            <div
-              class="cursor--pointer d-flex align-center"
-              @click="routerPush(i.url)"
-            >
-              <img class="dark mr-3" width="26" height="26" :src="i.iconDark" />
-              <img
-                class="light mr-3"
-                width="23"
-                height="23"
-                :src="i.iconLight"
-              />
-              <div>{{ i.name }}</div>
-            </div>
-          </v-list-item>
+  <div
+    ref="menu"
+    class="mew-component--accordion-menu-container user-select--none"
+  >
+    <div v-for="(mainItems, mainKey) in menuItems" :key="mainKey">
+      <!-- Main menus ======================================== -->
+      <div
+        :ref="getMenuRef('main' + mainItems.url)"
+        class="main-menu cursor--pointer d-flex align-center px-3 py-2"
+        @click="routerPush(mainItems.url)"
+      >
+        <img
+          class="dark mr-3"
+          width="26"
+          height="26"
+          :src="mainItems.iconDark"
+        />
+        <img
+          class="light mr-3"
+          width="26"
+          height="26"
+          :src="mainItems.iconLight"
+        />
+        <div>{{ mainItems.name }}</div>
+        <v-icon v-if="mainItems.children" class="ml-auto dark">
+          mdi-chevron-down
+        </v-icon>
+        <v-icon v-if="mainItems.children" class="ml-auto light">
+          mdi-chevron-up
+        </v-icon>
+      </div>
 
-          <v-list-group v-else :key="key1">
-            <template v-slot:activator>
-              <v-list-item-title class="cursor--pointer d-flex align-center">
-                <img width="26" height="26" :src="i.iconDark" class="mr-3" />
-                <img width="23" height="23" :src="i.iconLight" class="mr-3" />
-                <div>{{ i.name }}</div>
-              </v-list-item-title>
-            </template>
-
-            <v-list-item-content
-              v-for="(c, key2) in i.children"
-              :key="key2"
-              class="py-2"
-            >
-              <div
-                class="menu-sub-item cursor--pointer"
-                @click="routerPush(c.url)"
-              >
-                {{ c.name }}
-              </div>
-            </v-list-item-content>
-          </v-list-group>
-        </template>
-      </v-list-item-group>
-    </v-list>
+      <!-- Sub menus ======================================== -->
+      <div v-if="mainItems.children" class="sub-menu">
+        <div
+          v-for="(subItems, subKey) in mainItems.children"
+          :key="subKey"
+          :ref="getMenuRef(subItems.url)"
+          class="cursor--pointer pl-12 pr-3 py-1"
+          @click="routerPush(subItems.url)"
+        >
+          <span class="pl-2">{{ subItems.name }}</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -67,11 +67,8 @@ import SignMessageLight from '@/assets/images/icons/icon-message-enable.png';
 import SignMessageDark from '@/assets/images/icons/icon-message-disable.png';
 
 export default {
-  components: {},
   data() {
     return {
-      activeMenu: 3,
-      currentURL: '',
       menuItems: [
         {
           name: 'Dashboard',
@@ -83,6 +80,7 @@ export default {
           name: 'Send',
           iconDark: SendDark,
           iconLight: SendLight,
+          url: '/wallet/send/sendtx',
           children: [
             {
               name: 'Send Transaction',
@@ -114,6 +112,7 @@ export default {
           name: 'Contract',
           iconDark: ContractDark,
           iconLight: ContractLight,
+          url: '/wallet/contract/interact',
           children: [
             {
               name: 'Interact with contract',
@@ -134,12 +133,39 @@ export default {
       ]
     };
   },
-  created() {
-    this.currentURL = this.$route.path;
+  watch: {
+    $route() {
+      this.markActiveMenu();
+    }
+  },
+  mounted() {
+    this.markActiveMenu();
   },
   methods: {
+    removeActiveClasses() {
+      const allActiveClasses = this.$refs['menu'].querySelectorAll('.active');
+      for (let i = 0; i < allActiveClasses.length; i++) {
+        allActiveClasses[i].classList.remove('active');
+      }
+    },
+    markActiveMenu() {
+      this.removeActiveClasses();
+
+      const menuItemRef = this.getMenuRef(this.$route.path);
+
+      if (this.$refs[menuItemRef]) {
+        this.$refs[menuItemRef][0].classList.add('active');
+        this.$refs[menuItemRef][0].parentNode.parentNode.classList.add(
+          'active'
+        );
+      } else {
+        this.$refs['main' + menuItemRef][0].parentNode.classList.add('active');
+      }
+    },
+    getMenuRef(url) {
+      return url.replace(/[^\w\s]/gi, '_');
+    },
     routerPush(url) {
-      this.currentURL = url;
       this.$router.push({ path: url }, () => {});
     }
   }
@@ -147,41 +173,46 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.menu-sub-item {
-  padding-left: 51px;
-}
-</style>
-
-<style lang="scss">
 @import '@/assets/styles/GlobalVariables.scss';
+.main-menu:hover,
+.sub-menu > *:hover {
+  background-color: #0000001f;
+}
 
-.accordion-menu-container {
-  .theme--light.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
-    color: white !important;
+.main-menu,
+.sub-menu {
+  * {
+    color: $gray-1;
   }
-
-  .theme--dark.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
-    color: theme-dark-text-color !important;
-  }
-
-  .theme--dark.v-list-item.v-list-item--active {
-    color: $emerald !important;
+}
+.active {
+  .main-menu * {
+    color: white;
   }
 }
 
-.v-list-item:not(.v-list-item--active) {
-  .light {
-    display: none;
-  }
-  .dark {
-    display: block;
+.sub-menu {
+  max-height: 0px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  .active * {
+    color: white;
   }
 }
 
-.v-list-item.v-list-item--active {
+.active .sub-menu {
+  max-height: 150px;
+}
+
+.light {
+  display: none;
+}
+
+.active {
   .light {
     display: block;
   }
+
   .dark {
     display: none;
   }
