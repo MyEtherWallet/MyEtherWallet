@@ -1,46 +1,40 @@
 <template>
   <div>
-    <v-list color="transparent">
-      <v-list-item>
-        <div
-          class="cursor--pointer d-flex align-center"
-          @click="openSettings = true"
-        >
-          <img
-            width="26"
-            height="26"
-            src="@/assets/images/icons/icon-setting-disable.png"
-            class="mr-3"
-          />
-          <img
-            width="23"
-            height="23"
-            src="@/assets/images/icons/icon-setting-enable.png"
-            class="mr-3"
-          />
-          <div>Settings</div>
-        </div>
-      </v-list-item>
-      <v-list-item>
-        <LogoutDialog>
-          <div class="cursor--pointer d-flex align-center">
-            <img
-              width="26"
-              height="26"
-              src="@/assets/images/icons/icon-logout-disable.png"
-              class="mr-3"
-            />
-            <img
-              width="23"
-              height="23"
-              src="@/assets/images/icons/icon-logout-enable.png"
-              class="mr-3"
-            />
-            <div>Log out</div>
-          </div>
-        </LogoutDialog>
-      </v-list-item>
-    </v-list>
+    <div
+      class="menu-item cursor--pointer d-flex align-center px-3 py-2"
+      @click="openSettings = true"
+    >
+      <img
+        width="26"
+        height="26"
+        src="@/assets/images/icons/icon-setting-disable.png"
+        class="mr-3 dark"
+      />
+      <img
+        width="26"
+        height="26"
+        src="@/assets/images/icons/icon-setting-enable.png"
+        class="mr-3 light"
+      />
+      <div>Settings</div>
+    </div>
+    <LogoutDialog>
+      <div class="menu-item cursor--pointer d-flex align-center px-3 py-2">
+        <img
+          width="26"
+          height="26"
+          src="@/assets/images/icons/icon-logout-disable.png"
+          class="mr-3 dark"
+        />
+        <img
+          width="26"
+          height="26"
+          src="@/assets/images/icons/icon-logout-enable.png"
+          class="mr-3 light"
+        />
+        <div>Log out</div>
+      </div>
+    </LogoutDialog>
 
     <Settings :open="openSettings" :close="closeSettings" />
   </div>
@@ -66,7 +60,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-div {
+@import '@/assets/styles/GlobalVariables.scss';
+
+.menu-item {
+  color: $gray-1;
+}
+
+.light {
+  display: none;
+}
+
+.menu-item:hover {
   color: white;
+  background-color: #0000001f;
+  .light {
+    display: block;
+  }
+  .dark {
+    display: none;
+  }
 }
 </style>
