@@ -11,7 +11,6 @@
       :name-hash="nameHash"
       :label-hash="labelHash"
       :owner="owner"
-      :deed-owner="deedOwner"
       :raw="raw"
       :step="step"
       :domain-name-err="domainNameErr"
@@ -37,6 +36,8 @@
       :usd="usd"
       :is-controller="isController"
       :set-controller="setController"
+      :has-deed="hasDeed"
+      :is-deed-owner="isDeedOwner"
       @updateSecretPhrase="updateSecretPhrase"
       @domainNameChange="updateDomainName"
       @updateStep="updateStep"
@@ -52,6 +53,8 @@ import baseRegistrarAbi from './ABI/baseRegistrarAbi';
 import RegistryAbi from './ABI/registryAbi.js';
 import FifsRegistrarAbi from './ABI/fifsRegistrarAbi.js';
 import ResolverAbi from './ABI/resolverAbi.js';
+import OldEnsAbi from './ABI/oldEnsAbi.js';
+import OldDeedAbi from './ABI/oldDeedAbi.js';
 import * as unit from 'ethjs-unit';
 import * as nameHashPckg from 'eth-ens-namehash';
 import normalise from '@/helpers/normalise';
@@ -68,6 +71,8 @@ const permanentRegistrar = {
   INTERFACE_CONTROLLER: '0x018fac06',
   INTERFACE_LEGACY_REGISTRAR: '0x7ba18ba1'
 };
+
+const OLD_ENS_ADDRESS = '0x6090a6e47849629b7245dfa1ca21d94cd15878ef';
 const MULTICOIN_SUPPORT_INTERFACE = '0xf1cb7e06';
 const TEXT_RECORD_SUPPORT_INTERFACE = '0x59d1d43c';
 const REGISTRAR_TYPES = {
@@ -85,7 +90,6 @@ export default {
       nameHash: '',
       labelHash: '',
       owner: '',
-      deedOwner: '',
       secretPhrase: '',
       registrarAddress: '',
       raw: {},
@@ -107,7 +111,9 @@ export default {
       recordContract: {},
       resolverTxtSupport: false,
       usd: 0,
-      isController: false
+      isController: false,
+      hasDeed: false,
+      isDeedOwner: false
     };
   },
   computed: {
@@ -176,7 +182,6 @@ export default {
       this.nameHash = '';
       this.labelHash = '';
       this.owner = '';
-      this.deedOwner = '';
       this.secretPhrase = '';
       this.registrarAddress = '';
       this.raw = {};
@@ -196,6 +201,8 @@ export default {
       this.supportedCoins = supportedCoins;
       this.txtRecords = {};
       this.recordContract = {};
+      this.hasDeed = false;
+      this.isDeedOwner = false;
 
       if (this.ens) {
         this.setRegistrar();
@@ -208,9 +215,43 @@ export default {
       const owner = await this.ensRegistryContract.methods
         .owner(this.nameHash)
         .call();
+      this.controllerAddress = owner;
       this.isController =
         this.web3.utils.toChecksumAddress(owner) ===
         this.web3.utils.toChecksumAddress(this.account.address);
+    },
+    async checkDeed() {
+      const contract = new this.web3.eth.Contract(OldEnsAbi, OLD_ENS_ADDRESS);
+      const entries = await contract.methods.entries(this.labelHash).call();
+      if (entries[1] !== '0x0000000000000000000000000000000000000000') {
+        this.hasDeed = true;
+        const deedContract = new this.web3.eth.Contract(OldDeedAbi, entries[1]);
+        const owner = await deedContract.methods.owner().call();
+        this.isDeedOwner =
+          this.web3.utils.toChecksumAddress(owner) ===
+          this.web3.utils.toChecksumAddress(this.account.address);
+      } else {
+        this.hasDeed = false;
+        this.isDeedOwner = false;
+      }
+    },
+    async releaseDeed() {
+      if (this.hasDeed && this.isDeedOwner) {
+        const contract = new this.web3.eth.Contract(OldEnsAbi, OLD_ENS_ADDRESS);
+        const obj = {
+          from: this.account.address,
+          to: OLD_ENS_ADDRESS,
+          data: contract.methods.releaseDeed(this.labelHash).encodeABI(),
+          gasLimit: '300000',
+          value: 0
+        };
+
+        this.web3.eth.sendTransaction(obj).catch(err => {
+          Toast.responseHandler(err, false);
+        });
+      } else {
+        Toast.responseHandler('You are not the owner!!!', Toast.ERROR);
+      }
     },
     async setRegistrar() {
       const web3 = this.web3;
@@ -645,9 +686,18 @@ export default {
           this.parsedTld === this.registrarTLD &&
           !this.isSubDomain
         ) {
-          owner = await this.registrarContract.methods
-            .ownerOf(this.labelHash)
-            .call();
+          // const expiration = await this.registrarContract.methods
+          //   .nameExpires(this.labelHash)
+          //   .call();
+          try {
+            owner = await this.registrarContract.methods
+              .ownerOf(this.labelHash)
+              .call();
+          } catch (e) {
+            owner = await this.ens.owner(this.parsedDomainName);
+            console.log(this.ens);
+          }
+          this.checkDeed();
         } else {
           owner = await this.ens.owner(this.parsedDomainName);
         }
