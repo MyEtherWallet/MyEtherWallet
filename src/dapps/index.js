@@ -76,7 +76,7 @@ const dapps = {
     icon: makerdai,
     iconDisabled: makerdaiDisabled,
     title: 'dappsMaker.maker_title_old',
-    desc: 'dappsMaker.maker_desc_sai',
+    desc: 'dappsMaker.maker-shutdown',
     supportedNetworks: [ETH.name, KOV.name],
     lastUpdated: '08/14/2019',
     releaseDate: '06/14/2019'
