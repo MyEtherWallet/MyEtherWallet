@@ -173,7 +173,7 @@
           color-theme="white"
         />
         <!-- <v-btn class="white--text" large depressed outlined> -->
-          <!-- <v-img
+        <!-- <v-img
             src="@/assets/images/icons/icon-buy-eth-white.svg"
             class="mr-1 ml-n1"
           />Buy ETH
@@ -197,7 +197,6 @@ import privatekey from '@/assets/images/icons/icon-private-key-grey.svg';
 import ensDebugger from '@/assets/images/icons/icon-ens-debugger-grey.svg';
 import sha3 from '@/assets/images/icons/icon-sha3-grey.svg';
 import convert from '@/assets/images/icons/icon-convert-grey.svg';
-
 
 export default {
   name: 'HeaderDesktop',
