@@ -79,6 +79,12 @@ export default {
       props: true
     },
     {
+      path: 'renew',
+      name: 'Create Commitment',
+      component: CreateCommitmentContainer,
+      props: true
+    },
+    {
       path: 'permanent-registration',
       name: 'Register ENS By Duration',
       component: PermanentRegistrationContainer,
