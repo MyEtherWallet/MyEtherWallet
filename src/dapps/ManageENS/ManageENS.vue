@@ -41,6 +41,7 @@
       :is-expired="isExpired"
       :renew-name="renewName"
       :navigate-to-renew="navigateToRenew"
+      :deed-value="deedValue"
       @updateSecretPhrase="updateSecretPhrase"
       @domainNameChange="updateDomainName"
       @updateStep="updateStep"
@@ -118,7 +119,8 @@ export default {
       isController: false,
       hasDeed: false,
       isDeedOwner: false,
-      isExpired: false
+      isExpired: false,
+      deedValue: 0
     };
   },
   computed: {
@@ -209,6 +211,7 @@ export default {
       this.hasDeed = false;
       this.isDeedOwner = false;
       this.isExpired = false;
+      this.deedValue = 0;
 
       if (this.ens) {
         this.setRegistrar();
@@ -236,13 +239,14 @@ export default {
         this.isDeedOwner =
           this.web3.utils.toChecksumAddress(owner) ===
           this.web3.utils.toChecksumAddress(this.account.address);
+        const value = await deedContract.methods.value().call();
+        this.deedValue = this.web3.utils.toWei(value);
       } else {
         this.hasDeed = false;
         this.isDeedOwner = false;
       }
     },
     navigateToRenew() {
-      console.log('was this called??');
       this.$router.push({ path: 'renew' });
     },
     async renewName() {
@@ -273,25 +277,7 @@ export default {
             Toast.responseHandler(err, false);
           });
         }
-        // this.registrarControllerContract.methods
-        //   .registerWithConfig(
-        //     this.parsedHostName,
-        //     this.account.address,
-        //     duration,
-        //     utils.sha3(this.secretPhrase),
-        //     this.publicResolverAddress,
-        //     this.account.address
-        //   )
-        //   .send({ from: this.account.address, value: rentPrice })
-        //   .once('transactionHash', () => {
-        //     this.$router.push({ path: 'registration-in-progress' });
-        //   })
-        //   .once('receipt', () => {
-        //     this.getMoreInfo();
-        //     Toast.responseHandler(toastRecieptText, Toast.SUCCESS);
-        //   });
       } catch (e) {
-        console.log(e);
         this.loading = false;
         const toastText = this.$t('ens.error.something-went-wrong');
         Toast.responseHandler(toastText, Toast.ERROR);

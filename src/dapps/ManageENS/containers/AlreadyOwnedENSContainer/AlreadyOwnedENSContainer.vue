@@ -66,6 +66,10 @@
       <p class="label">{{ $t('ens.owner') }}:</p>
       <p class="content">{{ owner }}</p>
     </div>
+    <div v-if="hasDeed && isDeedOwner" class="content-container">
+      <p class="label">Deed Value:</p>
+      <p class="content">{{ deedValue }} {{ network.type.name }}</p>
+    </div>
     <div v-show="resolverMultiCoinSupport" class="content-container">
       <h4>{{ $t('ens.multi-coin') }}:</h4>
       <div v-for="(v, k) in supportedCoinsWithValue" :key="k.id">
@@ -152,6 +156,18 @@ export default {
     navigateToRenew: {
       type: Function,
       default: () => {}
+    },
+    deedValue: {
+      type: Number,
+      default: 0
+    },
+    hasDeed: {
+      type: Boolean,
+      default: false
+    },
+    isDeedOwner: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -160,7 +176,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['account']),
+    ...mapState('main', ['account', 'network']),
     fullDomainName() {
       return `${this.hostName}.${this.tld}`;
     },
