@@ -1,4 +1,4 @@
-name: add to codecov
+name: add to sentry
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - '*'
 
 jobs:
-  codecov:
+  sentry:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
