@@ -197,7 +197,7 @@
       </div>
     </b-collapse>
     <b-btn v-b-toggle.redeemdeed class="collapse-open-button" variant="primary">
-      <p>Redeem Deed</p>
+      <p>Release Deed</p>
     </b-btn>
     <b-collapse
       v-if="isDeedOwner && hasDeed"
@@ -207,7 +207,9 @@
     >
       <div v-if="isDeedOwner && hasDeed" class="form-container">
         <form>
-          <h4>Do you want to redeem {{ deedValue }} {{ network.type.name }}</h4>
+          <h4>
+            Do you want to release {{ deedValue }} {{ network.type.name }}
+          </h4>
           <div class="submit-container">
             <button type="submit" @click.prevent="releaseDeed(transferTo)">
               {{ $t('ens.transfer') }}
