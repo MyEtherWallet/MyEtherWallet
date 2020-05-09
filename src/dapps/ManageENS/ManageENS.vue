@@ -38,6 +38,9 @@
       :set-controller="setController"
       :has-deed="hasDeed"
       :is-deed-owner="isDeedOwner"
+      :is-expired="isExpired"
+      :renew-name="renewName"
+      :navigate-to-renew="navigateToRenew"
       @updateSecretPhrase="updateSecretPhrase"
       @domainNameChange="updateDomainName"
       @updateStep="updateStep"
@@ -73,6 +76,7 @@ const permanentRegistrar = {
 };
 
 const OLD_ENS_ADDRESS = '0x6090a6e47849629b7245dfa1ca21d94cd15878ef';
+const ENS_CURRENT_ADDRESS = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
 const MULTICOIN_SUPPORT_INTERFACE = '0xf1cb7e06';
 const TEXT_RECORD_SUPPORT_INTERFACE = '0x59d1d43c';
 const REGISTRAR_TYPES = {
@@ -113,7 +117,8 @@ export default {
       usd: 0,
       isController: false,
       hasDeed: false,
-      isDeedOwner: false
+      isDeedOwner: false,
+      isExpired: false
     };
   },
   computed: {
@@ -203,6 +208,7 @@ export default {
       this.recordContract = {};
       this.hasDeed = false;
       this.isDeedOwner = false;
+      this.isExpired = false;
 
       if (this.ens) {
         this.setRegistrar();
@@ -233,6 +239,62 @@ export default {
       } else {
         this.hasDeed = false;
         this.isDeedOwner = false;
+      }
+    },
+    navigateToRenew() {
+      console.log('was this called??');
+      this.$router.push({ path: 'renew' });
+    },
+    async renewName() {
+      const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
+      const duration = Math.ceil(SECONDS_YEAR * this.duration);
+      try {
+        // const toastRecieptText = this.$t('ens.toast.success-register');
+        const rentPrice = await this.registrarControllerContract.methods
+          .rentPrice(this.parsedHostName, duration)
+          .call();
+        if (
+          this.web3.utils.toWei(rentPrice) >=
+          this.web3.utils.toWei(this.account.balance)
+        ) {
+          Toast.responseHandler('Balance too low!', Toast.WARN);
+        } else {
+          const data = this.ensRegistryContract.methods
+            .renew(this.parsedHostName, duration)
+            .encodeABI();
+          const txObj = {
+            to: this.network.type.ens.registry,
+            from: this.account.address,
+            data: data,
+            value: rentPrice
+          };
+
+          this.web3.eth.sendTransaction(txObj).catch(err => {
+            Toast.responseHandler(err, false);
+          });
+        }
+        // this.registrarControllerContract.methods
+        //   .registerWithConfig(
+        //     this.parsedHostName,
+        //     this.account.address,
+        //     duration,
+        //     utils.sha3(this.secretPhrase),
+        //     this.publicResolverAddress,
+        //     this.account.address
+        //   )
+        //   .send({ from: this.account.address, value: rentPrice })
+        //   .once('transactionHash', () => {
+        //     this.$router.push({ path: 'registration-in-progress' });
+        //   })
+        //   .once('receipt', () => {
+        //     this.getMoreInfo();
+        //     Toast.responseHandler(toastRecieptText, Toast.SUCCESS);
+        //   });
+      } catch (e) {
+        console.log(e);
+        this.loading = false;
+        const toastText = this.$t('ens.error.something-went-wrong');
+        Toast.responseHandler(toastText, Toast.ERROR);
       }
     },
     async releaseDeed() {
@@ -686,16 +748,30 @@ export default {
           this.parsedTld === this.registrarTLD &&
           !this.isSubDomain
         ) {
-          // const expiration = await this.registrarContract.methods
-          //   .nameExpires(this.labelHash)
-          //   .call();
+          const expiryTime = await this.registrarContract.methods
+            .nameExpires(this.nameHash)
+            .call();
+          this.isExpired = expiryTime * 1000 < new Date().getTime();
           try {
             owner = await this.registrarContract.methods
               .ownerOf(this.labelHash)
               .call();
           } catch (e) {
-            owner = await this.ens.owner(this.parsedDomainName);
-            console.log(this.ens);
+            const response = await fetch(
+              `https://nft2.mewapi.io/tokens?owner=${this.account.address}&chain=mainnet`
+            ).then(res => {
+              return res.json();
+            });
+            const tokens = response[ENS_CURRENT_ADDRESS].tokens;
+            const nameMatched = tokens.find(item => {
+              if (item.name === this.parsedHostName) return item;
+            });
+
+            if (nameMatched) {
+              owner = this.account.address;
+            } else {
+              owner = '0x';
+            }
           }
           this.checkDeed();
         } else {

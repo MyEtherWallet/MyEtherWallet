@@ -84,11 +84,16 @@
     </div>
     <div class="owner-options">
       <button
-        v-if="owner.toLowerCase() === account.address.toLowerCase()"
+        v-if="
+          owner.toLowerCase() === account.address.toLowerCase() && !isExpired
+        "
         class="manage-button"
         @click="manageEns"
       >
         {{ $t('ens.manage') }}
+      </button>
+      <button v-if="isExpired" class="manage-button" @click="navigateToRenew">
+        Renew
       </button>
     </div>
     <interface-bottom-text
@@ -130,7 +135,7 @@ export default {
     },
     supportedCoins: {
       type: Object,
-      default: function () {}
+      default: () => {}
     },
     resolverMultiCoinSupport: {
       type: Boolean,
@@ -138,7 +143,15 @@ export default {
     },
     txtRecords: {
       type: Object,
-      default: function () {}
+      default: () => {}
+    },
+    isExpired: {
+      type: Boolean,
+      default: false
+    },
+    navigateToRenew: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
