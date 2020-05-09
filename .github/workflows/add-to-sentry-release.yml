@@ -1,0 +1,29 @@
+name: add to codecov
+
+on:
+  push:
+    branches-ignore:
+      - 'gh-pages'
+      - 'gh-pages-history'
+    tags-ignore:
+      - '*'
+
+jobs:
+  codecov:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: install sentry cli
+        run: curl -sL https://sentry.io/get-cli/ | bash
+
+      - name: create sentry release
+        env:
+          SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_TOKEN}}
+          SENTRY_ORG: myetherwallet-inc
+        run: |
+          VERSION=$GITHUB_SHA
+          sentry-cli releases new -p myetherwallet $VERSION
+          sentry-cli releases set-commits --commit "myetherwallet@v5.6.0..v5.6.1" $VERSION
+          sentry-cli releases finalize $VERSION
