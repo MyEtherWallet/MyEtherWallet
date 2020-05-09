@@ -1,8 +1,10 @@
 import Vue from 'vue';
-import Vuetify, { VBtn } from 'vuetify/lib';
+import Vuetify, { VApp, VBtn } from 'vuetify/lib';
+import 'vuetify/dist/vuetify.min.css' 
 
 Vue.use(Vuetify, {
   components: {
+    VApp,
     VBtn
   }
 });
