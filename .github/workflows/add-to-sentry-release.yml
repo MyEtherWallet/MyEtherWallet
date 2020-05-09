@@ -24,6 +24,8 @@ jobs:
           SENTRY_ORG: myetherwallet-inc
         run: |
           VERSION=$GITHUB_SHA
+          START_SHA=`git rev-list -n 1 v5.6.0`
+          END_SHA=`git rev-list -n 1 v5.6.1`
           sentry-cli releases new -p myetherwallet $VERSION
-          sentry-cli releases set-commits --commit "MyEtherWallet/MyEtherWallet@v5.6.0..v5.6.1" $VERSION
+          sentry-cli releases set-commits --commit "MyEtherWallet/MyEtherWallet@$START_SHA..$END_SHA" $VERSION
           sentry-cli releases finalize $VERSION
