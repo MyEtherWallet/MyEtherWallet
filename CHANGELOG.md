@@ -1,3 +1,8 @@
+### Devop
+
+- Cleanup token with the new package update [#2338](https://github.com/MyEtherWallet/MyEtherWallet/pull/2338)
+- Mingrate sentry/fix contracts [#2366](https://github.com/MyEtherWallet/MyEtherWallet/pull/2366)
+
 ### Release v5.6.1
 
 ### Devop
