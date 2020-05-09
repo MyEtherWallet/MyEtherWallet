@@ -200,13 +200,14 @@
       <p>Redeem Deed</p>
     </b-btn>
     <b-collapse
+      v-if="isDeedOwner && hasDeed"
       id="redeemdeed"
       class="collapse-content"
       accordion="manage-ens-accordion"
     >
-      <div class="form-container">
-        <form class="manage-form">
-          <h3>Do you want to redeem {{ deedValue }} {{ network.type.name }}</h3>
+      <div v-if="isDeedOwner && hasDeed" class="form-container">
+        <form>
+          <h4>Do you want to redeem {{ deedValue }} {{ network.type.name }}</h4>
           <div class="submit-container">
             <button type="submit" @click.prevent="releaseDeed(transferTo)">
               {{ $t('ens.transfer') }}
