@@ -8486,9 +8486,9 @@
     },
     {
       "network": "eth",
-      "contract_address": "0x85e076361cc813a908ff672f9bad1541474402b2",
-      "icon": "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/TEL-0x85e076361cc813a908ff672f9bad1541474402b2.svg",
-      "link": "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/tokens/eth/0x85e076361cc813a908ff672f9bad1541474402b2.json",
+      "contract_address": "0x467Bccd9d29f223BcE8043b84E8C8B282827790F",
+      "icon": "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/TEL-0x467Bccd9d29f223BcE8043b84E8C8B282827790F.svg",
+      "link": "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/tokens/eth/0x467Bccd9d29f223BcE8043b84E8C8B282827790F.json",
       "website": "https://www.telco.in"
     },
     {
