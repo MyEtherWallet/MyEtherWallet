@@ -1,6 +1,6 @@
 // NOTE: this is a temporary solution.  This operation will be moved to runtime in the future. Currently it relies on manually updated files.
 const fs = require('fs');
-const {v4} = require('uuid');
+const { v4: v4 } = require('uuid');
 
 const fetch = require('node-fetch');
 const web3 = require('web3');

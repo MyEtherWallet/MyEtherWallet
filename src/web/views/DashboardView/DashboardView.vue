@@ -3,9 +3,11 @@
     <div class="d-flex">
       <div class="flex-grow-1">
         <EthBalance />
+        <Spacer />
         <NoBalance />
         <Spacer />
         <TokensValue />
+        <Spacer />
         <NoTokens />
       </div>
       <Spacer />
