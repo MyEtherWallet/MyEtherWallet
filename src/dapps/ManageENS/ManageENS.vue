@@ -120,7 +120,8 @@ export default {
       hasDeed: false,
       isDeedOwner: false,
       isExpired: false,
-      deedValue: 0
+      deedValue: 0,
+      controllerAddress: ''
     };
   },
   computed: {
@@ -212,6 +213,7 @@ export default {
       this.isDeedOwner = false;
       this.isExpired = false;
       this.deedValue = 0;
+      this.controllerAddress = '';
 
       if (this.ens) {
         this.setRegistrar();
@@ -255,27 +257,32 @@ export default {
       try {
         // const toastRecieptText = this.$t('ens.toast.success-register');
         const rentPrice = await this.registrarControllerContract.methods
-          .rentPrice(this.parsedHostName, duration)
+          .rentPrice(this.parsedDomainName, duration)
           .call();
-        if (
-          this.web3.utils.toWei(rentPrice) >=
-          this.web3.utils.toWei(this.account.balance)
-        ) {
+        const checkBalance = new BigNumber(
+          this.web3.utils.toWei(rentPrice)
+        ).gte(this.web3.utils.toWei(this.account.balance));
+        if (checkBalance) {
           Toast.responseHandler('Balance too low!', Toast.WARN);
         } else {
-          const data = this.ensRegistryContract.methods
-            .renew(this.parsedHostName, duration)
+          const data = this.registrarControllerContract.methods
+            .renew(this.parsedDomainName, duration)
             .encodeABI();
           const txObj = {
-            to: this.network.type.ens.registry,
+            to: this.controllerAddress,
             from: this.account.address,
             data: data,
             value: rentPrice
           };
 
-          this.web3.eth.sendTransaction(txObj).catch(err => {
-            Toast.responseHandler(err, false);
-          });
+          this.web3.eth
+            .sendTransaction(txObj)
+            .then(() => {
+              Toast.responseHandler('Success!', Toast.SUCCESS);
+            })
+            .catch(err => {
+              Toast.responseHandler(err, false);
+            });
         }
       } catch (e) {
         this.loading = false;
@@ -316,13 +323,13 @@ export default {
         );
       } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
         try {
-          const controllerAddress = await this.ens
+          this.controllerAddress = await this.ens
             .resolver(this.registrarTLD, ResolverAbi)
             .interfaceImplementer(permanentRegistrar.INTERFACE_CONTROLLER);
 
           this.registrarControllerContract = new this.web3.eth.Contract(
             PermanentRegistrarControllerAbi,
-            controllerAddress
+            this.controllerAddress
           );
           this.registrarContract = new this.web3.eth.Contract(
             baseRegistrarAbi,
