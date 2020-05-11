@@ -3,53 +3,36 @@
     <v-container>
       <BlockTitle :data="titleData" />
     </v-container>
-    <div class="pt-7">
-      <Tabs>
-        <v-tab>Send</v-tab>
-        <v-tab>Swap</v-tab>
-        <v-tab>Dapps</v-tab>
-        <v-tab>Tokens</v-tab>
-
-        <v-tab-item>
-          <img
-            class="tab-image"
-            src="@/assets/images/backgrounds/bg-swap-page.svg"
-          />
-        </v-tab-item>
-        <v-tab-item>
-          <img
-            class="tab-image"
-            src="@/assets/images/backgrounds/bg-swap-page.svg"
-          />
-        </v-tab-item>
-        <v-tab-item>
-          <img
-            class="tab-image"
-            src="@/assets/images/backgrounds/bg-swap-page.svg"
-          />
-        </v-tab-item>
-        <v-tab-item>
-          <img
-            class="tab-image"
-            src="@/assets/images/backgrounds/bg-swap-page.svg"
-          />
-        </v-tab-item>
-      </Tabs>
+    <div class="tab-container pt-7 text-center">
+      <mew-tabs :items="tabNames" is-block="true">
+        <template v-slot:tabContent0>
+          <div>
+            <img
+              class="tab-image"
+              src="@/assets/images/backgrounds/bg-swap-page.svg"
+            />
+          </div>
+        </template>
+      </mew-tabs>
     </div>
   </div>
 </template>
 
 <script>
-import Tabs from '../../../components/Tabs';
 import BlockTitle from '@/web/components/BlockTitle';
 
 export default {
   name: 'HomeFeatures',
   components: {
-    Tabs,
     BlockTitle
   },
   data: () => ({
+    tabNames: [
+      { name: 'Send' },
+      { name: 'Swap' },
+      { name: 'Dapps' },
+      { name: 'Tokens' }
+    ],
     titleData: {
       textProps: '',
       toptitle: 'Features',
@@ -62,6 +45,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.tab-container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 450px;
+  width: 100%;
+}
 .tab-image {
   padding-top: 50px;
   width: 100%;

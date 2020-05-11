@@ -1,3 +1,4 @@
+  
 <template>
   <div class="light-blue darken-4">
     <v-container>
@@ -6,26 +7,16 @@
           <v-img src="@/assets/images/icons/logo-mew.png" max-width="130" />
         </router-link>
         <v-spacer></v-spacer>
-        <div class="d-flex justify-center align-center">
-          <mew-button
-            class="mr-4"
-            :has-full-width="false"
-            title="How It Works"
-            btn-style="transparent"
-            color-theme="white"
-            to="/how-it-works"
-          />
-          <mew-menu
-            :list-obj="companyDropdown"
-            style-classes="mr-10"
-            text-color="white--text"
-          />
-          <mew-menu :list-obj="toolsDropdown" text-color="white--text mr-4" />
+        <div class="menu-container d-flex align-center">
+          <a href="#/how-it-works" class="white--text no-decoration">
+            How It Works
+          </a>
+          <mew-menu :list-obj="companyDropdown" text-color="white--text" />
+          <mew-menu :list-obj="toolsDropdown" text-color="white--text" />
         </div>
 
         <v-spacer></v-spacer>
         <mew-button
-          href="https://ccswap.myetherwallet.com/#/"
           :has-full-width="false"
           title="Buy ETH"
           :icon="icons.buyEth"
@@ -44,13 +35,11 @@ import send from '@/assets/images/icons/icon-send-grey.svg';
 import message from '@/assets/images/icons/icon-message-grey.svg';
 import eth from '@/assets/images/currencies//icon-eth-grey.svg';
 import buyEth from '@/assets/images/icons/icon-buy-eth-white.svg';
-
 import grabber from '@/assets/images/icons/icon-grabber-grey.svg';
 import privatekey from '@/assets/images/icons/icon-private-key-grey.svg';
 import ensDebugger from '@/assets/images/icons/icon-ens-debugger-grey.svg';
 import sha3 from '@/assets/images/icons/icon-sha3-grey.svg';
 import convert from '@/assets/images/icons/icon-convert-grey.svg';
-
 export default {
   name: 'HeaderDesktop',
   data: () => ({
@@ -89,6 +78,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.menu-container {
+  justify-content: space-evenly;
+  width: 50%;
+}
 .theme--dark.v-btn:hover::before,
 .theme--dark.v-btn::before {
   opacity: 0;
