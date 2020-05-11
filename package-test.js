@@ -22,7 +22,8 @@ const EXCEPTIONS = [
   '@xkeshi/vue-qrcode',
   '@vue/test-utils',
   'graphql',
-  'ethereumjs-util'
+  'ethereumjs-util',
+  '@myetherwallet/eth-token-balance'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
