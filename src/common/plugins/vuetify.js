@@ -1,11 +1,96 @@
 import Vue from 'vue';
-import Vuetify, { VApp, VBtn } from 'vuetify/lib';
+import Vuetify, {
+  VApp,
+  VBtn,
+  VCard,
+  VCardTitle,
+  VCardSubtitle,
+  VCardText,
+  VCardActions,
+  VCol,
+  VContainer,
+  VContent,
+  VDialog,
+  VDivider,
+  VIcon,
+  VList,
+  VListItem,
+  VListItemContent,
+  VListItemIcon,
+  VListItemTitle,
+  VNavigationDrawer,
+  VRow,
+  VSheet,
+  VBottomSheet,
+  VToolbar,
+  VTextField,
+  VLayout,
+  VSelect,
+  VCombobox,
+  VTooltip,
+  VStepper,
+  VStepperHeader,
+  VStepperStep,
+  VExpansionPanels,
+  VExpansionPanel,
+  VExpansionPanelContent,
+  VExpansionPanelHeader,
+  VSwitch,
+  VCheckbox,
+  VTab,
+  VTabs,
+  VTabsItems,
+  VTabItem,
+  VMenu,
+  VSpacer
+} from 'vuetify/lib';
 import 'vuetify/dist/vuetify.min.css';
 
 Vue.use(Vuetify, {
   components: {
     VApp,
-    VBtn
+    VBtn,
+    VCard,
+    VCardTitle,
+    VCardSubtitle,
+    VCardText,
+    VCardActions,
+    VCol,
+    VContainer,
+    VContent,
+    VDialog,
+    VDivider,
+    VIcon,
+    VList,
+    VListItem,
+    VListItemContent,
+    VListItemIcon,
+    VListItemTitle,
+    VNavigationDrawer,
+    VRow,
+    VSheet,
+    VBottomSheet,
+    VToolbar,
+    VTextField,
+    VLayout,
+    VSelect,
+    VCombobox,
+    VTooltip,
+    VStepper,
+    VStepperHeader,
+    VStepperStep,
+    VExpansionPanels,
+    VExpansionPanel,
+    VExpansionPanelContent,
+    VExpansionPanelHeader,
+    VSwitch,
+    VCheckbox,
+    VTab,
+    VTabs,
+    VTabsItems,
+    VTabItem,
+    VMenu,
+    VSpacer
   }
 });
 
@@ -14,6 +99,9 @@ export default new Vuetify({
     iconfont: 'mdi'
   },
   theme: {
+    options: {
+      customProperties: true
+    },
     dark: false,
     themes: {
       light: {
