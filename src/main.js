@@ -10,6 +10,7 @@ import store from '@/common/store';
 import Vuex from 'vuex';
 
 // etc
+import mewComponents from '@myetherwallet/mew-components';
 import languages from '@/common/translations';
 import '@/common/plugins/registerServiceWorker';
 import { Promise } from 'q';
@@ -25,6 +26,10 @@ Vue.router = router;
 Vue.config.productionTip = false;
 
 Vue.use(Vuex);
+
+Object.keys(mewComponents).forEach(name => {
+  Vue.component(name, mewComponents[name]);
+});
 
 // // Define vue-i18n
 Vue.use(VueI18n);

@@ -19,21 +19,19 @@
               Generate the free Ethereum wallet, and interact with the Ethereum
               blockchain easily and securely.
             </p>
-            <div class="mt-7">
-              <StdButton
-                size="x-large"
-                class="mr-4"
+            <div class="mt-7 btn-container">
+              <mew-button
+                class="mr-5"
+                :has-full-width="false"
+                title="Get a new wallet"
                 :to="{ name: 'HomeCreateWallet' }"
-              >
-                Get a new wallet
-              </StdButton>
-              <StdButton
-                size="x-large"
-                outlined
+              />
+              <mew-button
+                :has-full-width="false"
+                btn-style="outline"
+                title="Access my wallet"
                 :to="{ name: 'HomeAccessWallet' }"
-              >
-                Access my wallet
-              </StdButton>
+              />
             </div>
           </v-card>
         </v-col>
@@ -43,18 +41,17 @@
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
-
 export default {
   name: 'HomeContainer',
-  components: {
-    StdButton
-  },
   methods: {}
 };
 </script>
 
 <style lang="scss" scoped>
+.btn-container {
+  height: 60px;
+}
+
 .banner-img {
   width: 100%;
 }
