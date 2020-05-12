@@ -1,4 +1,3 @@
-  
 <template>
   <div class="light-blue darken-4">
     <v-container>

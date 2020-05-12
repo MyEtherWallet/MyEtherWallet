@@ -32,7 +32,7 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "@myetherwallet/mew-components": "0.2.40-beta",
+    "@myetherwallet/mew-components": "0.2.42-beta",
     "@aave/protocol-js": "0.3.1",
     "@coolwallets/eth": "0.2.0-beta.1",
     "@coolwallets/transport-web-ble": "0.1.0",
@@ -89,7 +89,7 @@
     "@makerdao/dai-plugin-mcd": "1.4.1",
     "@makerdao/dai-plugin-migrations": "1.1.0",
     "@myetherwallet/eth-token-balance": "0.2.2",
-    "@myetherwallet/mewconnect-web-client": "2.1.0-RC.2",
+    "@myetherwallet/mewconnect-web-client": "2.1.0-RC.3",
     "@stripe/stripe-js": "1.5.0",
     "@vue/cli-plugin-babel": "4.3.1",
     "@vue/cli-plugin-eslint": "4.3.1",
@@ -159,7 +159,7 @@
     "vue-stripe-elements-plus": "0.3.2",
     "vue-template-compiler": "2.6.11",
     "vue-worker": "1.2.1",
-    "vuetify": "2.2.15",
+    "vuetify": "2.2.27",
     "vuetify-loader": "1.4.3",
     "wallet-address-validator": "0.2.4",
     "web3": "1.2.7",

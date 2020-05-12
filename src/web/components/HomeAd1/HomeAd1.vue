@@ -10,26 +10,21 @@
         </h2>
       </div>
       <v-spacer />
-      <StdButton
-        size="x-large"
-        outlined
-        color="white"
-        href="https://www.mewtopia.com/"
-        target="_blank"
-        >Get Started</StdButton
-      >
+      <mew-button
+        btn-link="https://www.mewtopia.com/"
+        :has-full-width="false"
+        title="Get Started"
+        btn-style="outline"
+        color-theme="white"
+      />
     </v-card>
   </v-container>
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
 
 export default {
-  name: 'HomeAd1',
-  components: {
-    StdButton
-  }
+  name: 'HomeAd1'
 };
 </script>
 
