@@ -24,13 +24,13 @@
                 class="mr-5"
                 :has-full-width="false"
                 title="Get a new wallet"
-                :to="{ name: 'HomeCreateWallet' }"
+                @click.native="goTo('HomeCreateWallet')"
               />
               <mew-button
                 :has-full-width="false"
                 btn-style="outline"
                 title="Access my wallet"
-                :to="{ name: 'HomeAccessWallet' }"
+                @click.native="goTo('HomeAccessWallet')"
               />
             </div>
           </v-card>
@@ -43,7 +43,13 @@
 <script>
 export default {
   name: 'HomeContainer',
-  methods: {}
+  methods: {
+    goTo(param) {
+      this.$router.push({
+        name: param
+      });
+    }
+  }
 };
 </script>
 
