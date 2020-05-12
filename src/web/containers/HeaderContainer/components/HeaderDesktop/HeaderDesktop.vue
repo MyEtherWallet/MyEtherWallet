@@ -17,6 +17,7 @@
 
         <v-spacer></v-spacer>
         <mew-button
+          btn-link="https://ccswap.myetherwallet.com"
           :has-full-width="false"
           title="Buy ETH"
           :icon="icons.buyEth"
