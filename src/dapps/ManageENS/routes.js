@@ -80,7 +80,7 @@ export default {
     },
     {
       path: 'renew',
-      name: 'Create Commitment',
+      name: 'Renew Name',
       component: CreateCommitmentContainer,
       props: true
     },

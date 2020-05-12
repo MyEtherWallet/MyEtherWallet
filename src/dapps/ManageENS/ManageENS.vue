@@ -121,7 +121,8 @@ export default {
       isDeedOwner: false,
       isExpired: false,
       deedValue: 0,
-      controllerAddress: ''
+      controllerAddress: '',
+      contractControllerAddress: ''
     };
   },
   computed: {
@@ -214,6 +215,7 @@ export default {
       this.isExpired = false;
       this.deedValue = 0;
       this.controllerAddress = '';
+      this.contractControllerAddress = '';
 
       if (this.ens) {
         this.setRegistrar();
@@ -266,10 +268,10 @@ export default {
           Toast.responseHandler('Balance too low!', Toast.WARN);
         } else {
           const data = this.registrarControllerContract.methods
-            .renew(this.parsedDomainName, duration)
+            .renew(this.parsedHostName, duration)
             .encodeABI();
           const txObj = {
-            to: this.controllerAddress,
+            to: this.contractControllerAddress,
             from: this.account.address,
             data: data,
             value: rentPrice
@@ -323,13 +325,12 @@ export default {
         );
       } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
         try {
-          this.controllerAddress = await this.ens
+          this.contractControllerAddress = await this.ens
             .resolver(this.registrarTLD, ResolverAbi)
             .interfaceImplementer(permanentRegistrar.INTERFACE_CONTROLLER);
-
           this.registrarControllerContract = new this.web3.eth.Contract(
             PermanentRegistrarControllerAbi,
-            this.controllerAddress
+            this.contractControllerAddress
           );
           this.registrarContract = new this.web3.eth.Contract(
             baseRegistrarAbi,
