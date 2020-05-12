@@ -64,5 +64,6 @@ module.exports = [
   'https://dexag.mewapi.io:443',
   'https://api.zilliqa.com:443',
   'https://rpc.fantom.network:443',
-  'https://fantomscan.io:443'
+  'https://fantomscan.io:443',
+  'https://rpc.fuse.io:443'
 ];
