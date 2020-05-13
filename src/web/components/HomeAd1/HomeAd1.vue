@@ -22,7 +22,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'HomeAd1'
 };
