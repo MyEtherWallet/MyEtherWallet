@@ -196,6 +196,28 @@
         </form>
       </div>
     </b-collapse>
+    <b-btn v-b-toggle.redeemdeed class="collapse-open-button" variant="primary">
+      <p>Release Deed</p>
+    </b-btn>
+    <b-collapse
+      v-if="isDeedOwner && hasDeed"
+      id="redeemdeed"
+      class="collapse-content"
+      accordion="manage-ens-accordion"
+    >
+      <div v-if="isDeedOwner && hasDeed" class="form-container">
+        <form>
+          <h4>
+            Do you want to release {{ deedValue }} {{ network.type.name }}
+          </h4>
+          <div class="submit-container">
+            <button type="submit" @click.prevent="releaseDeed(transferTo)">
+              {{ $t('ens.transfer') }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </b-collapse>
     <interface-bottom-text
       :link-text="$t('common.help-center')"
       :question="$t('common.have-issues')"
@@ -258,6 +280,22 @@ export default {
     isController: {
       type: Boolean,
       default: false
+    },
+    hasDeed: {
+      type: Boolean,
+      default: false
+    },
+    isDeedOwner: {
+      type: Boolean,
+      default: false
+    },
+    deedValue: {
+      type: Number,
+      default: 0
+    },
+    releaseDeed: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
@@ -294,7 +332,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['web3', 'account']),
+    ...mapState('main', ['web3', 'account', 'network']),
     isValidAddresses() {
       for (const type in this.currencyInputs) {
         if (

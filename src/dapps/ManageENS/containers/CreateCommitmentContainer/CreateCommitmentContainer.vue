@@ -1,8 +1,20 @@
 <template lang="html">
   <div class="transfer-registrar-container">
     <div class="transfer-registrar-content">
-      <h3>{{ $t('ens.commit.is-available', { domain: fullDomainName }) }}</h3>
-      <p>{{ $t('ens.commit.register-domain', { domain: fullDomainName }) }}</p>
+      <h3>
+        {{
+          isCommitment
+            ? $t('ens.commit.is-available', { domain: fullDomainName })
+            : 'Domain is expired!'
+        }}
+      </h3>
+      <p>
+        {{
+          isCommitment
+            ? $t('ens.commit.register-domain', { domain: fullDomainName })
+            : 'Do you wanna renew domain?'
+        }}
+      </p>
       <div class="secret-phrase-container">
         <label for="range-slider">{{ $t('ens.commit.how-many-years') }}</label>
         <b-form-input
@@ -35,10 +47,10 @@
             loading ? 'disabled' : '',
             info.disable ? 'disabled' : ''
           ]"
-          @click="createCommitment"
+          @click="funcCall"
         >
           <span v-show="!loading">
-            {{ $t('ens.register') }}
+            {{ isCommitment ? $t('ens.register') : 'Renew' }}
           </span>
           <i v-show="loading" class="fa fa-spinner fa-spin" />
         </button>
@@ -82,6 +94,10 @@ export default {
     usd: {
       type: Number,
       default: 0
+    },
+    renewName: {
+      type: Function,
+      default: function () {}
     }
   },
   data() {
@@ -128,6 +144,9 @@ export default {
         disable: false,
         msg: ''
       };
+    },
+    isCommitment() {
+      return this.$router.currentRoute.path.includes('create-commitment');
     }
   },
   watch: {
@@ -138,6 +157,15 @@ export default {
   mounted() {
     if (this.hostName === '') {
       this.$router.push('/interface/dapps/manage-ens');
+    }
+  },
+  methods: {
+    funcCall() {
+      if (this.isCommitment) {
+        this.createCommitment();
+      } else {
+        this.renewName();
+      }
     }
   }
 };
