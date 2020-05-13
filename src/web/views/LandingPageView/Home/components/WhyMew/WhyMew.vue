@@ -8,7 +8,7 @@
         toptitle="Why Mew"
         title="Make Ethereum Blockchain easy and secure"
       />
-      <div class="pt-10 d-flex align-center justify-center">
+      <div class="pt-10 d-flex">
         <!-- change placeholder for all the urls -->
         <info-card
           max-width="350"
