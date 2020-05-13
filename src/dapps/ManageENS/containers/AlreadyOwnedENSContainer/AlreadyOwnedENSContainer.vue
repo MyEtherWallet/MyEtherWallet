@@ -66,6 +66,10 @@
       <p class="label">{{ $t('ens.owner') }}:</p>
       <p class="content">{{ owner }}</p>
     </div>
+    <div v-if="hasDeed && isDeedOwner" class="content-container">
+      <p class="label">Deed Value:</p>
+      <p class="content">{{ deedValue }} {{ network.type.name }}</p>
+    </div>
     <div v-show="resolverMultiCoinSupport" class="content-container">
       <h4>{{ $t('ens.multi-coin') }}:</h4>
       <div v-for="(v, k) in supportedCoinsWithValue" :key="k.id">
@@ -84,11 +88,16 @@
     </div>
     <div class="owner-options">
       <button
-        v-if="owner.toLowerCase() === account.address.toLowerCase()"
+        v-if="
+          owner.toLowerCase() === account.address.toLowerCase() && !isExpired
+        "
         class="manage-button"
         @click="manageEns"
       >
         {{ $t('ens.manage') }}
+      </button>
+      <button v-if="isExpired" class="manage-button" @click="navigateToRenew">
+        Renew
       </button>
     </div>
     <interface-bottom-text
@@ -130,7 +139,7 @@ export default {
     },
     supportedCoins: {
       type: Object,
-      default: function () {}
+      default: () => {}
     },
     resolverMultiCoinSupport: {
       type: Boolean,
@@ -138,7 +147,27 @@ export default {
     },
     txtRecords: {
       type: Object,
-      default: function () {}
+      default: () => {}
+    },
+    isExpired: {
+      type: Boolean,
+      default: false
+    },
+    navigateToRenew: {
+      type: Function,
+      default: () => {}
+    },
+    deedValue: {
+      type: Number,
+      default: 0
+    },
+    hasDeed: {
+      type: Boolean,
+      default: false
+    },
+    isDeedOwner: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -147,7 +176,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['account']),
+    ...mapState('main', ['account', 'network']),
     fullDomainName() {
       return `${this.hostName}.${this.tld}`;
     },
