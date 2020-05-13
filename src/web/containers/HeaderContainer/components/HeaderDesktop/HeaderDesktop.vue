@@ -10,8 +10,16 @@
           <a href="#/how-it-works" class="white--text no-decoration">
             How It Works
           </a>
-          <mew-menu :list-obj="companyDropdown" text-color="white--text" />
-          <mew-menu :list-obj="toolsDropdown" text-color="white--text" />
+          <mew-menu
+            :list-obj="companyDropdown"
+            text-color="white--text"
+            @goToPage="goToPage"
+          />
+          <mew-menu
+            :list-obj="toolsDropdown"
+            text-color="white--text"
+            @goToPage="goToPage"
+          />
         </div>
 
         <v-spacer></v-spacer>
@@ -73,7 +81,14 @@ export default {
       convert: convert,
       buyEth: buyEth
     }
-  })
+  }),
+  methods: {
+    goToPage(route) {
+      this.$router.push({
+        name: route
+      });
+    }
+  }
 };
 </script>
 
