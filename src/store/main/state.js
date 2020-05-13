@@ -36,7 +36,8 @@ const state = {
     address: null,
     isHardware: false,
     identifier: '',
-    nickname: ''
+    nickname: '',
+    ensNames: []
   },
   customPaths: customPaths,
   ens: null,
