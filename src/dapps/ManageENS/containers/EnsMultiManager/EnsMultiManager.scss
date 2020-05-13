@@ -53,6 +53,11 @@
       justify-content: space-between;
       align-items: center;
 
+      .item-info {
+        display: flex;
+        align-items: center;
+      }
+
       &:last-child {
         border: none;
       }
@@ -74,4 +79,15 @@
       }
     }
   }
+}
+
+
+.action-button {
+  border-radius: 4px;
+  cursor: pointer;
+  height: 40px;
+  width: 115px;
+  border-color: $mew-green;
+  background-color: $white;
+  color: $mew-green;
 }

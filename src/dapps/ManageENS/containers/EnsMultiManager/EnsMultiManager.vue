@@ -4,30 +4,79 @@
       <h3>ENS Manager</h3>
       <p>Manage your ENS names or transfer it to someone else</p>
     </div>
-    <div class="name-container">
-      <div v-for="name in names" :key="name.name">
+    <div v-if="account.ensNames.length === 0">
+      No ENS name found for account {{ account.address }}!
+    </div>
+    <div v-else class="name-container">
+      <div v-for="name in account.ensNames" :key="name['name']">
         <b-btn
-          v-b-toggle="`${name.name}`"
+          v-b-toggle="`${name['name']}`"
           class="collapse-open-button"
           variant="primary"
         >
-          <p>{{ name.name }}</p>
+          <p>
+            {{ name['name'].substr(0, 2) === '0x' ? '[hex]' : name['name'] }}.{{
+              network.type.ens ? network.type.ens.registrarTLD : ''
+            }}
+          </p>
         </b-btn>
         <b-collapse
-          :id="name.name"
+          :id="name['name']"
           class="collapse-content ens-multi-manager-content"
           accordion="ens-multi-manager-accordion"
         >
           <div class="items">
+            <div class="item-content">
+              <div class="item-info">
+                <p class="key-name">TLD</p>
+                <p class="value">
+                  {{
+                    network.type.ens
+                      ? network.type.ens.registrarTLD
+                      : 'ENS not supported'
+                  }}
+                </p>
+              </div>
+            </div>
+            <div class="item-content">
+              <div class="item-info">
+                <p class="key-name">Registrant</p>
+                <a
+                  class="value"
+                  :href="
+                    network.type.blockExplorerAddr.replace(
+                      '[[address]',
+                      account.address
+                    )
+                  "
+                  rel="noopener noreferrer"
+                >
+                  <blockie
+                    :address="account.address"
+                    width="30px"
+                    height="30px"
+                    class="blockies"
+                  />
+                  {{ account.address | concatAddr }}
+                </a>
+              </div>
+            </div>
             <div
               v-for="(val, key) in name"
-              v-show="key !== 'name'"
+              v-show="shouldHide(key, name)"
               :key="`${key}-${val}`"
               class="item-content"
             >
-              <div>
+              <div class="item-info">
                 <p class="key-name">{{ key | capitalize }}</p>
-                <p class="value">
+                <a
+                  v-if="isAddress(val)"
+                  class="value"
+                  :href="
+                    network.type.blockExplorerAddr.replace('[[address]', val)
+                  "
+                  rel="noopener noreferrer"
+                >
                   <blockie
                     v-if="showBlockie(key)"
                     :address="val"
@@ -35,11 +84,27 @@
                     height="30px"
                     class="blockies"
                   />
+                  {{ val | concatAddr }}
+                </a>
+                <p v-else class="value">
                   {{ val }}
                 </p>
               </div>
               <div>
-                button
+                <button
+                  v-if="name['name'].substr(0, 2) !== '0x'"
+                  v-show="key === 'expiration' && name['expired']"
+                  class="action-button"
+                  @click="callRenew(name['name'])"
+                >
+                  Renew
+                </button>
+                <p v-else>
+                  Currently in Grace Period
+                </p>
+                <button v-show="key === 'controller'" class="action-button">
+                  Set
+                </button>
               </div>
             </div>
           </div>
@@ -51,48 +116,66 @@
 
 <script>
 import Blockie from '@/components/Blockie';
+import { isAddress } from '@/helpers/addressUtils';
+import { mapState, mapActions } from 'vuex';
+
 export default {
   components: {
     blockie: Blockie
   },
+  props: {
+    getController: {
+      type: Function,
+      default: () => {}
+    },
+    renewName: {
+      type: Function,
+      default: () => {}
+    }
+  },
   data: () => {
-    return {
-      names: [
-        {
-          tld: 'ETH',
-          registrant: '0x00000000',
-          controller: '0x00000000',
-          expiration: '01/01/69',
-          name: 'nameyboi1.eth',
-          resolver: '0x00000000'
-        },
-        {
-          tld: 'ETH',
-          registrant: '0x00000000',
-          controller: '0x00000000',
-          expiration: '01/01/69',
-          name: 'nameyboi2.eth',
-          resolver: '0x00000000'
-        },
-        {
-          tld: 'ETH',
-          registrant: '0x00000000',
-          controller: '0x00000000',
-          expiration: '01/01/69',
-          name: 'nameyboi3.eth',
-          resolver: '0x00000000'
-        }
-      ]
-    };
+    return {};
+  },
+  computed: {
+    ...mapState('main', ['account', 'network'])
+  },
+  mounted() {
+    if (this.account.ensNames.length > 0) {
+      this.setController();
+    }
   },
   methods: {
+    ...mapActions('main', ['storeEnsNames']),
+    callRenew(name) {
+      this.renewName(`${name}.${this.network.type.ens.registrarTLD}`);
+    },
+    async setController() {
+      const names = this.account.ensNames.map(item => {
+        return item;
+      });
+      for (let i = 0; i < names.length; i++) {
+        names[i]['controller'] = await this.getController(names[i].name);
+      }
+
+      this.storeEnsNames(names);
+    },
     showBlockie(name) {
       return !(
         name !== 'controller' &&
         name !== 'registrant' &&
         name !== 'resolver'
       );
-    }
+    },
+    shouldHide(key, name) {
+      const exclusion = ['name', 'id', 'description', 'image', 'expired'];
+      if (exclusion.includes(key)) {
+        return false;
+      } else if (key === 'controller' && name['expired']) {
+        return false;
+      }
+      return true;
+    },
+    isAddress: isAddress
   }
 };
 </script>

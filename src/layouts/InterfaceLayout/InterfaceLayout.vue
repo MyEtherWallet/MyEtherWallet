@@ -175,6 +175,11 @@ import {
   BCVAULT as BC_VAULT
 } from '@/wallets/bip44/walletTypes';
 
+import ExpiryAbi from './expiryAbi.js';
+
+const ENS_ADDRESS = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
+const EXPIRY_ADDRESS = '0x78e21d038fcbb6d56f825dc1e8d8acd965744adb';
+
 export default {
   name: 'Interface',
   components: {
@@ -278,7 +283,8 @@ export default {
       'setAccountBalance',
       'setENS',
       'decryptWallet',
-      'toggleSideMenu'
+      'toggleSideMenu',
+      'storeEnsNames'
     ]),
     checkPrefilled() {
       const _self = this;
@@ -432,6 +438,50 @@ export default {
     },
     startToggleSideMenu() {
       this.toggleSideMenu();
+    },
+    fetchNames() {
+      const fetchName = fetch(
+        `https://nft2.mewapi.io/tokens?owner=${this.account.address}&chain=mainnet`
+      )
+        .then(response => {
+          return response.json();
+        })
+        .catch(() => {
+          Toast.responseHandler('Something went wrong!', Toast.ERROR);
+        });
+      fetchName.then(response => {
+        this.setExpiry(response);
+      });
+    },
+    async setExpiry(param) {
+      const names = param[ENS_ADDRESS].tokens;
+      const hashes = names.map(item => {
+        return item.id;
+      });
+      const contract = new this.web3.eth.Contract(ExpiryAbi, EXPIRY_ADDRESS);
+      const expiry = contract.methods
+        .getExpirationDates(ENS_ADDRESS, hashes)
+        .call()
+        .then(response => {
+          return response;
+        })
+        .catch(() => {
+          Toast.responseHandler('Something went wrong!', Toast.ERROR);
+        });
+      expiry.then(response => {
+        response.forEach((item, idx) => {
+          const expiryDate = item * 1000;
+          const isExpired = expiryDate < new Date().getTime();
+          const expiryDateFormat = new Date(expiryDate);
+          names[idx].expired = isExpired;
+          names[
+            idx
+          ].expiration = `${expiryDateFormat.toLocaleDateString()} ${expiryDateFormat.toLocaleTimeString()}`;
+          names['registrant'] = this.account.address;
+        });
+
+        this.storeEnsNames(names);
+      });
     },
     async fetchTokens() {
       this.receivedTokens = false;
@@ -673,6 +723,7 @@ export default {
             }
           }
           this.callSetENS();
+          this.fetchNames();
           this.getBlock();
           this.getBalance();
           this.setTokens();

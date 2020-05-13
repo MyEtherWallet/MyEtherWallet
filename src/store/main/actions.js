@@ -284,6 +284,10 @@ const toggleSideMenu = function ({ commit }) {
   commit('TOGGLE_SIDEMENU');
 };
 
+const storeEnsNames = function ({ commit }, names) {
+  commit('STORE_ENS_NAMES', names);
+};
+
 const updateNotification = function ({ commit, state }, val) {
   // address, index, object
   const address = val[0].toLowerCase();
@@ -360,5 +364,6 @@ export default {
   setAddressBook,
   toggleSideMenu,
   setLocale,
-  toggleTempHide
+  toggleTempHide,
+  storeEnsNames
 };

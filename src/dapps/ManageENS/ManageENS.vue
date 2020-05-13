@@ -75,6 +75,7 @@
       :renew-name="renewName"
       :navigate-to-renew="navigateToRenew"
       :deed-value="deedValue"
+      :get-controller="getController"
       @updateSecretPhrase="updateSecretPhrase"
       @domainNameChange="updateDomainName"
       @updateStep="updateStep"
@@ -273,6 +274,13 @@ export default {
         this.web3.utils.toChecksumAddress(owner) ===
         this.web3.utils.toChecksumAddress(this.account.address);
     },
+    async getController(name) {
+      const nameHash = nameHashPckg.hash(`${name}.eth`);
+      const owner = await this.ensRegistryContract.methods
+        .owner(nameHash)
+        .call();
+      return owner;
+    },
     async checkDeed() {
       const contract = new this.web3.eth.Contract(OldEnsAbi, OLD_ENS_ADDRESS);
       const entries = await contract.methods.entries(this.labelHash).call();
@@ -298,7 +306,9 @@ export default {
     navigateToRenew() {
       this.$router.push({ path: 'renew' });
     },
-    async renewName() {
+    async renewName(name) {
+      console.log('gets here', name);
+      const hostName = name ? name : this.parsedHostName;
       const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
       const duration = Math.ceil(SECONDS_YEAR * this.duration);
       try {
@@ -313,7 +323,7 @@ export default {
           Toast.responseHandler('Balance too low!', Toast.WARN);
         } else {
           const data = this.registrarControllerContract.methods
-            .renew(this.parsedHostName, duration)
+            .renew(hostName, duration)
             .encodeABI();
           const txObj = {
             to: this.contractControllerAddress,
@@ -788,7 +798,7 @@ export default {
           !this.isSubDomain
         ) {
           const expiryTime = await this.registrarContract.methods
-            .nameExpires(this.nameHash)
+            .nameExpires(this.labelHash)
             .call();
           this.isExpired = expiryTime * 1000 < new Date().getTime();
           try {
