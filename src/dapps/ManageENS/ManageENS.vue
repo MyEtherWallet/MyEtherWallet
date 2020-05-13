@@ -307,14 +307,15 @@ export default {
       this.$router.push({ path: 'renew' });
     },
     async renewName(name) {
-      console.log('gets here', name);
-      const hostName = name ? name : this.parsedHostName;
+      const domainName = name ? name : this.parsedDomainName;
+      const hostName = name
+        ? name.replace(this.network.type.ens.registrarTLD, '')
+        : this.parsedHostName;
       const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
       const duration = Math.ceil(SECONDS_YEAR * this.duration);
       try {
-        // const toastRecieptText = this.$t('ens.toast.success-register');
         const rentPrice = await this.registrarControllerContract.methods
-          .rentPrice(this.parsedDomainName, duration)
+          .rentPrice(hostName, duration)
           .call();
         const checkBalance = new BigNumber(
           this.web3.utils.toWei(rentPrice)
@@ -323,15 +324,16 @@ export default {
           Toast.responseHandler('Balance too low!', Toast.WARN);
         } else {
           const data = this.registrarControllerContract.methods
-            .renew(hostName, duration)
+            .renew(domainName, duration)
             .encodeABI();
+          const withFivePercent = new BigNumber(rentPrice);
+          withFivePercent.add(rentPrice * 0.05).toNumber();
           const txObj = {
             to: this.contractControllerAddress,
             from: this.account.address,
             data: data,
-            value: rentPrice
+            value: withFivePercent
           };
-
           this.web3.eth
             .sendTransaction(txObj)
             .then(() => {
@@ -718,6 +720,9 @@ export default {
         const rentPrice = await this.registrarControllerContract.methods
           .rentPrice(this.parsedHostName, duration)
           .call();
+        const withFivePercent = new BigNumber(rentPrice);
+        withFivePercent.add(rentPrice * 0.05).toNumber();
+
         this.registrarControllerContract.methods
           .registerWithConfig(
             this.parsedHostName,
@@ -727,7 +732,7 @@ export default {
             this.publicResolverAddress,
             this.account.address
           )
-          .send({ from: this.account.address, value: rentPrice })
+          .send({ from: this.account.address, value: withFivePercent })
           .once('transactionHash', () => {
             this.$router.push({ path: 'registration-in-progress' });
           })
