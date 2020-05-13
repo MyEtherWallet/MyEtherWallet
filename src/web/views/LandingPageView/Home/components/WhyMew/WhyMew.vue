@@ -60,7 +60,12 @@
             />
           </template>
           <template v-slot:cardImg>
-            <img src="@/assets/images/snippets/mobile/mobile-mew-connect.png" />
+            <div class="text-center">
+              <img
+                class="mew-wallet-img"
+                src="@/assets/images/snippets/mobile/mobile-mew-connect.png"
+              />
+            </div>
           </template>
         </info-card>
       </div>
@@ -96,5 +101,9 @@ export default {
   position: absolute;
   right: -17px;
   // top: 119px;
+}
+
+.mew-wallet-img {
+  margin-bottom: -7px;
 }
 </style>
