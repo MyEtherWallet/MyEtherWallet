@@ -50,8 +50,8 @@
         <div class="ml-2 font-weight-regular text-color--mew-green">
           3.12%
         </div>
-        <v-icon class="text-color--mew-green body-2">mdi-arrow-up-bold</v-icon>
-        <v-icon v-if="false" color="red" class="body-2"
+        <v-icon class="emerald--text body-2">mdi-arrow-up-bold</v-icon>
+        <v-icon v-if="false" class="light_red--text body-2"
           >mdi-arrow-down-bold</v-icon
         >
       </div>

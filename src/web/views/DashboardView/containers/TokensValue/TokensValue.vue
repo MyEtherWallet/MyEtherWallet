@@ -116,8 +116,8 @@ export default {
           price: '$8.29',
           marketCap: '$1.53B',
           changes: 0.23,
-          tokenAmount: 27.54,
-          tokenValue: '$228.42'
+          tokenAmount: 17.34,
+          tokenValue: '$18.32'
         },
         {
           name: 'AMIS',
@@ -244,15 +244,8 @@ export default {
     padding: 10px;
   }
 
-  &.light thead {
-    background-color: $theme-light--table-background-color;
-  }
-
-  &.dark thead {
-    background-color: $theme-dark--table-background-color;
-  }
-
   thead {
+    background-color: var(--v-bg_table-base);
     font-size: 11px;
     text-transform: uppercase;
     td {
