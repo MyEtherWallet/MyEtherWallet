@@ -42,9 +42,9 @@ import Vuetify, {
   VTabsItems,
   VTabItem,
   VMenu,
-  VSpacer
+  VSpacer,
+  VSlideXReverseTransition
 } from 'vuetify/lib';
-import 'vuetify/dist/vuetify.min.css';
 
 Vue.use(Vuetify, {
   components: {
@@ -90,7 +90,8 @@ Vue.use(Vuetify, {
     VTabsItems,
     VTabItem,
     VMenu,
-    VSpacer
+    VSpacer,
+    VSlideXReverseTransition
   }
 });
 
