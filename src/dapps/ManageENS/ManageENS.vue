@@ -73,6 +73,7 @@
       :is-deed-owner="isDeedOwner"
       :is-expired="isExpired"
       :renew-name="renewName"
+      :release-deed="releaseDeed"
       :navigate-to-renew="navigateToRenew"
       :deed-value="deedValue"
       :get-controller="getController"
@@ -153,7 +154,7 @@ export default {
       hasDeed: false,
       isDeedOwner: false,
       isExpired: false,
-      deedValue: 0,
+      deedValue: '0',
       controllerAddress: '',
       contractControllerAddress: ''
     };
@@ -256,7 +257,7 @@ export default {
       this.hasDeed = false;
       this.isDeedOwner = false;
       this.isExpired = false;
-      this.deedValue = 0;
+      this.deedValue = '0';
       this.controllerAddress = '';
       this.contractControllerAddress = '';
 
@@ -293,8 +294,7 @@ export default {
         this.isDeedOwner =
           this.web3.utils.toChecksumAddress(owner) ===
           this.web3.utils.toChecksumAddress(this.account.address);
-        const value = await deedContract.methods.value().call();
-        this.deedValue = this.web3.utils.toWei(value);
+        this.deedValue = await deedContract.methods.value().call();
       } else {
         this.hasDeed = false;
         this.isDeedOwner = false;
@@ -347,7 +347,6 @@ export default {
             });
         }
       } catch (e) {
-        console.log(e);
         this.loading = false;
         const toastText = this.$t('ens.error.something-went-wrong');
         Toast.responseHandler(toastText, Toast.ERROR);
@@ -360,10 +359,8 @@ export default {
           from: this.account.address,
           to: OLD_ENS_ADDRESS,
           data: contract.methods.releaseDeed(this.labelHash).encodeABI(),
-          gasLimit: '300000',
           value: 0
         };
-
         this.web3.eth.sendTransaction(obj).catch(err => {
           Toast.responseHandler(err, false);
         });
