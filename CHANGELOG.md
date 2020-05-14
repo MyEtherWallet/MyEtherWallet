@@ -1,16 +1,24 @@
+### Devop
+
+- Cleanup token with the new package update [#2338](https://github.com/MyEtherWallet/MyEtherWallet/pull/2338)
+
 ### Release v5.6.1
+
+### Devop
+
+- Remove Maker SAI and replace with info and links regarding its shutdown [#2355](https://github.com/MyEtherWallet/MyEtherWallet/pull/2355)
+- Implement small refinements to dex.ag[#2323](https://github.com/MyEtherWallet/MyEtherWallet/pull/2323)
+- Remove etc classic [#2331](https://github.com/MyEtherWallet/MyEtherWallet/pull/2331)
+- Fix mobile menu icons [#2305](https://github.com/MyEtherWallet/MyEtherWallet/pull/2305)
+- Add warning for gas too high [#2363](https://github.com/MyEtherWallet/MyEtherWallet/pull/2363)
 
 ### Bug
 
 - Hide custom networks when not local [#2328](https://github.com/MyEtherWallet/MyEtherWallet/pull/2328)
 - Add hide feature to mew wallet banner [##2315](https://github.com/MyEtherWallet/MyEtherWallet/pull/2315)
-
-### Devop
-
-- Remove etc classic [#2331](https://github.com/MyEtherWallet/MyEtherWallet/pull/2331)
-- Fix mobile menu icons [#2305](https://github.com/MyEtherWallet/MyEtherWallet/pull/2305)
-- Cleanup token with the new package update [#2338](https://github.com/MyEtherWallet/MyEtherWallet/pull/2338)
-
+- Aave: Disable withdraw/borrow with healthfactor below 1 [#2314](https://github.com/MyEtherWallet/MyEtherWallet/pull/2314)
+- Token sizing [#2327](https://github.com/MyEtherWallet/MyEtherWallet/pull/2327)
+- Fix ambrpay subscription status' [#2350](https://github.com/MyEtherWallet/MyEtherWallet/pull/2350)
 
 ### Release v5.6.0
 

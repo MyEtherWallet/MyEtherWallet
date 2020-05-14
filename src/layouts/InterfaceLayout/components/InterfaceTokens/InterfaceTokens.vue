@@ -46,9 +46,8 @@
               :key="token.symbol + index"
             >
               <td class="name-and-icon-container">
-                <figure v-lazy-load>
+                <figure v-lazy-load class="token-icon">
                   <img
-                    class="token-icon"
                     :data-url="iconFetch(token.address)"
                     @error="iconFallback"
                   />

@@ -99,7 +99,7 @@ describe('ActionContainer.vue', () => {
   it('should error if amount is less than 0', async () => {
     wrapper.setData({ amount: '-1' });
     await wrapper.vm.$nextTick();
-    expect(wrapper.vm.$data.errorMsg).toEqual('Must be higher than 0');
+    expect(wrapper.vm.$data.errorMsg).toEqual('Must be greater than 0');
   });
 
   it('should error if the amount exceeds the balance', async () => {
