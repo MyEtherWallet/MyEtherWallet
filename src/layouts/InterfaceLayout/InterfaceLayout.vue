@@ -286,8 +286,7 @@ export default {
       'setAccountBalance',
       'setENS',
       'decryptWallet',
-      'toggleSideMenu',
-      'storeEnsNames'
+      'toggleSideMenu'
     ]),
     checkPrefilled() {
       const _self = this;
@@ -488,7 +487,6 @@ export default {
         });
 
         if (found) this.notifyExpiredNames();
-        this.storeEnsNames(names);
       });
     },
     notifyExpiredNames() {

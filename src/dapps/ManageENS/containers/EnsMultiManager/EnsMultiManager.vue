@@ -4,146 +4,59 @@
       <h3>ENS Manager</h3>
       <p>Manage your ENS names or transfer it to someone else</p>
     </div>
-    <div v-if="account.ensNames.length === 0">
+    <div v-if="loading">
+      <i clas="fa fa-spinner fa-spin" /> Fetching names...
+    </div>
+    <div v-else-if="names.length === 0 && !loading" class="no-ens-container">
       No ENS name found for account {{ account.address }}!
     </div>
     <div v-else class="name-container">
-      <div v-for="name in account.ensNames" :key="name['name']">
-        <b-btn
-          v-b-toggle="`${name['name']}`"
-          class="collapse-open-button"
-          variant="primary"
+      <div
+        v-for="name in names"
+        :key="name['name']"
+        class="information-container"
+      >
+        <p class="name-container">
+          {{ name.name }}.{{ network.type.ens.registrarTLD }}
+        </p>
+        <p>{{ name.expiration }}</p>
+        <button
+          :class="[
+            'action-button',
+            name.gracePeriod && !name.expired
+              ? 'renew-class'
+              : name.expired && !name.gracePeriod
+              ? 'expired-class'
+              : ''
+          ]"
+          @click="
+            methodCall(`${name.name}.${network.type.ens.registrarTLD}`, name)
+          "
         >
-          <p>
-            {{ name['name'].substr(0, 2) === '0x' ? '[hex]' : name['name'] }}.{{
-              network.type.ens ? network.type.ens.registrarTLD : ''
-            }}
-          </p>
-        </b-btn>
-        <b-collapse
-          :id="name['name']"
-          class="collapse-content ens-multi-manager-content"
-          accordion="ens-multi-manager-accordion"
-        >
-          <div class="items">
-            <div class="item-content">
-              <div class="item-info">
-                <p class="key-name">TLD</p>
-                <p class="value">
-                  {{
-                    network.type.ens
-                      ? network.type.ens.registrarTLD
-                      : 'ENS not supported'
-                  }}
-                </p>
-              </div>
-            </div>
-            <div class="item-content">
-              <div class="item-info">
-                <p class="key-name">Registrant</p>
-                <a
-                  class="value"
-                  :href="
-                    network.type.blockExplorerAddr.replace(
-                      '[[address]',
-                      account.address
-                    )
-                  "
-                  rel="noopener noreferrer"
-                >
-                  <blockie
-                    :address="account.address"
-                    width="30px"
-                    height="30px"
-                    class="blockies"
-                  />
-                  {{ account.address | concatAddr }}
-                </a>
-              </div>
-            </div>
-            <div
-              v-for="(val, key) in name"
-              v-show="shouldHide(key, name)"
-              :key="`${key}-${val}`"
-              class="item-content"
-            >
-              <div class="item-info">
-                <p class="key-name">{{ key | capitalize }}</p>
-                <a
-                  v-if="isAddress(val)"
-                  class="value"
-                  :href="
-                    network.type.blockExplorerAddr.replace('[[address]', val)
-                  "
-                  rel="noopener noreferrer"
-                >
-                  <blockie
-                    v-if="showBlockie(key)"
-                    :address="val"
-                    width="30px"
-                    height="30px"
-                    class="blockies"
-                  />
-                  {{ val | concatAddr }}
-                </a>
-                <p v-else class="value">
-                  {{ val }}
-                </p>
-              </div>
-              <div>
-                <button
-                  v-if="name['name'].substr(0, 2) !== '0x'"
-                  v-show="key === 'expiration' && name['expired']"
-                  class="action-button"
-                  @click="callRenew(name['name'])"
-                >
-                  Renew
-                </button>
-                <p v-else>
-                  Currently in Grace Period
-                </p>
-                <button
-                  v-show="key === 'controller'"
-                  class="action-button"
-                  @click="
-                    checkDomain(`${name.name}.${network.type.ens.registrarTLD}`)
-                  "
-                >
-                  Set
-                </button>
-              </div>
-            </div>
-            <div
-              class="view-button-container"
-              @click="
-                checkDomain(`${name.name}.${network.type.ens.registrarTLD}`)
-              "
-            >
-              <button class="view-button">
-                View
-              </button>
-            </div>
-          </div>
-        </b-collapse>
+          {{
+            name.gracePeriod && !name.expired
+              ? 'Renew'
+              : name.expired && !name.gracePeriod
+              ? 'Expired'
+              : 'Manage'
+          }}
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Blockie from '@/components/Blockie';
 import { isAddress } from '@/helpers/addressUtils';
-import { mapState, mapActions } from 'vuex';
+import { mapState } from 'vuex';
+import { Toast } from '@/helpers';
+import ExpiryAbi from '@/layouts/InterfaceLayout/expiryAbi.js';
+
+const ENS_CURRENT_ADDRESS = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
+const EXPIRY_ADDRESS = '0x78e21d038fcbb6d56f825dc1e8d8acd965744adb';
 
 export default {
-  components: {
-    blockie: Blockie
-  },
   props: {
-    getController: {
-      type: Function,
-      default: () => {}
-    },
     renewName: {
       type: Function,
       default: () => {}
@@ -154,20 +67,73 @@ export default {
     }
   },
   data: () => {
-    return {};
+    return {
+      names: [],
+      loading: true
+    };
   },
   computed: {
-    ...mapState('main', ['account', 'network'])
+    ...mapState('main', ['account', 'network', 'web3'])
   },
   mounted() {
-    if (this.account.ensNames.length > 0) {
-      this.setController();
-    }
+    this.loading = true;
+    const nameFetch = fetch(
+      `https://nft2.mewapi.io/tokens?owner=${this.account.address}&chain=mainnet`
+    ).then(res => {
+      return res.json();
+    });
+
+    nameFetch.then(this.setExpiry);
   },
   methods: {
-    ...mapActions('main', ['storeEnsNames']),
-    callRenew(name) {
-      this.renewName(`${name}.${this.network.type.ens.registrarTLD}`);
+    setExpiry(param) {
+      const names = param[ENS_CURRENT_ADDRESS].tokens;
+      if (names.length > 0) {
+        const hashes = names.map(item => {
+          return item.id;
+        });
+        const contract = new this.web3.eth.Contract(ExpiryAbi, EXPIRY_ADDRESS);
+        const expiry = contract.methods
+          .getExpirationDates(ENS_CURRENT_ADDRESS, hashes)
+          .call()
+          .then(response => {
+            return response;
+          })
+          .catch(() => {
+            Toast.responseHandler('Something went wrong!', Toast.ERROR);
+          });
+        expiry.then(response => {
+          response.forEach((item, idx) => {
+            const expiryDate = item * 1000;
+            const gracePeriod = new Date(expiryDate);
+            gracePeriod.setDate(gracePeriod.getDate() + 90);
+            const isInGracePeriod = expiryDate < new Date().getTime();
+            const isExpired = gracePeriod.getTime() < new Date().getTime();
+            const expiryDateFormat = new Date(expiryDate);
+            names[idx].gracePeriod = isInGracePeriod;
+            names[idx].expired = isExpired;
+            names[idx].expireDateValue = expiryDateFormat;
+            names[
+              idx
+            ].expiration = `${expiryDateFormat.toLocaleDateString()} ${expiryDateFormat.toLocaleTimeString()}`;
+          });
+          const sortedNames = names.slice().sort((a, b) => {
+            return a.expireDateValue - b.expireDateValue;
+          });
+
+          this.names = sortedNames;
+          this.loading = false;
+        });
+      } else {
+        this.loading = false;
+      }
+    },
+    methodCall(nameString, nameObj) {
+      if (nameObj.gracePeriod && !nameObj.expired) {
+        this.checkDomain(nameString, true);
+      } else {
+        this.checkDomain(nameString, false);
+      }
     },
     showBlockie(name) {
       return !(
