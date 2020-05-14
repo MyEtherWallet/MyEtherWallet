@@ -156,6 +156,7 @@ import sortByBalance from '@/helpers/sortByBalance.js';
 import AddressQrcodeModal from '@/components/AddressQrcodeModal';
 import web3Utils from 'web3-utils';
 import { isAddress } from '@/helpers/addressUtils';
+import { ETH } from '@/networks/types';
 import {
   LedgerWallet,
   TrezorWallet,
@@ -179,8 +180,8 @@ import {
 
 import ExpiryAbi from './expiryAbi.js';
 
-const ENS_ADDRESS = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
-const EXPIRY_ADDRESS = '0x78e21d038fcbb6d56f825dc1e8d8acd965744adb';
+const ENS_TOKEN_ADDRESS = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
+const EXPIRY_CHECK_CONTRACT = '0x78e21d038fcbb6d56f825dc1e8d8acd965744adb';
 
 export default {
   name: 'Interface',
@@ -457,13 +458,16 @@ export default {
       });
     },
     async setExpiry(param) {
-      const names = param[ENS_ADDRESS].tokens;
+      const names = param[ENS_TOKEN_ADDRESS].tokens;
       const hashes = names.map(item => {
         return item.id;
       });
-      const contract = new this.web3.eth.Contract(ExpiryAbi, EXPIRY_ADDRESS);
+      const contract = new this.web3.eth.Contract(
+        ExpiryAbi,
+        EXPIRY_CHECK_CONTRACT
+      );
       const expiry = contract.methods
-        .getExpirationDates(ENS_ADDRESS, hashes)
+        .getExpirationDates(ENS_TOKEN_ADDRESS, hashes)
         .call()
         .then(response => {
           return response;
@@ -734,7 +738,7 @@ export default {
             }
           }
           this.callSetENS();
-          this.fetchNames();
+          if (this.network.type.name === ETH.name) this.fetchNames();
           this.getBlock();
           this.getBalance();
           this.setTokens();

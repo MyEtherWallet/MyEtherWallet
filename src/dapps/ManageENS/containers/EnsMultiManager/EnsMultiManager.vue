@@ -15,9 +15,11 @@
           variant="primary"
         >
           <p>
-            {{ name['name'].substr(0, 2) === '0x' ? '[hex]' : name['name'] }}.{{
-              network.type.ens ? network.type.ens.registrarTLD : ''
-            }}
+            {{
+              name['name'].substr(0, 2) === '0x'
+                ? `[${name['name']}]`
+                : name['name']
+            }}.{{ network.type.ens ? network.type.ens.registrarTLD : '' }}
           </p>
         </b-btn>
         <b-collapse
@@ -158,11 +160,6 @@ export default {
   },
   computed: {
     ...mapState('main', ['account', 'network'])
-  },
-  mounted() {
-    if (this.account.ensNames.length > 0) {
-      this.setController();
-    }
   },
   methods: {
     ...mapActions('main', ['storeEnsNames']),

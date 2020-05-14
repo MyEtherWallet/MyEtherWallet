@@ -111,7 +111,6 @@ const permanentRegistrar = {
 };
 
 const OLD_ENS_ADDRESS = '0x6090a6e47849629b7245dfa1ca21d94cd15878ef';
-const ENS_CURRENT_ADDRESS = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
 const MULTICOIN_SUPPORT_INTERFACE = '0xf1cb7e06';
 const TEXT_RECORD_SUPPORT_INTERFACE = '0x59d1d43c';
 const REGISTRAR_TYPES = {
@@ -321,18 +320,17 @@ export default {
         const rentPrice = await this.registrarControllerContract.methods
           .rentPrice(domainName, duration)
           .call();
-        const checkBalance = new BigNumber(
-          this.web3.utils.toWei(rentPrice)
-        ).gte(this.web3.utils.toWei(this.account.balance));
+        const checkBalance = new BigNumber(rentPrice).gte(this.account.balance);
         if (checkBalance) {
           Toast.responseHandler('Balance too low!', Toast.WARN);
         } else {
           const data = this.registrarControllerContract.methods
             .renew(hostName, duration)
             .encodeABI();
-          const withFivePercent = new BigNumber(rentPrice)
-            .plus(rentPrice * 0.05)
-            .toNumber();
+          const withFivePercent = BigNumber(rentPrice)
+            .times(1.05)
+            .integerValue()
+            .toFixed();
           const txObj = {
             to: this.contractControllerAddress,
             from: this.account.address,
@@ -349,6 +347,7 @@ export default {
             });
         }
       } catch (e) {
+        console.log(e);
         this.loading = false;
         const toastText = this.$t('ens.error.something-went-wrong');
         Toast.responseHandler(toastText, Toast.ERROR);
@@ -727,9 +726,10 @@ export default {
         const rentPrice = await this.registrarControllerContract.methods
           .rentPrice(this.parsedHostName, duration)
           .call();
-        const withFivePercent = new BigNumber(rentPrice)
-          .plus(rentPrice * 0.05)
-          .toNumber();
+        const withFivePercent = BigNumber(rentPrice)
+          .times(1.05)
+          .integerValue()
+          .toFixed();
 
         this.registrarControllerContract.methods
           .registerWithConfig(
@@ -824,7 +824,7 @@ export default {
             ).then(res => {
               return res.json();
             });
-            const tokens = response[ENS_CURRENT_ADDRESS].tokens;
+            const tokens = response[this.registrarAddress.toLowerCase()].tokens;
             const nameMatched = tokens.find(item => {
               if (
                 item.name === this.parsedHostName ||
