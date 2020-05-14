@@ -35,6 +35,7 @@
       :priv-key="!wallet"
       :address="account.address"
     />
+    <expired-names-modal ref="expiredNames" />
     <bcvault-address-modal
       ref="bcvault"
       :addresses="bcVaultWallets"
@@ -142,6 +143,7 @@ import InterfaceTokens from './components/InterfaceTokens';
 import MobileInterfaceAddress from './components/MobileInterfaceAddress';
 import MobileInterfaceBalance from './components/MobileInterfaceBalance';
 import MobileInterfaceNetwork from './components/MobileInterfaceNetwork';
+import ExpiredNamesModal from './components/ExpiredNamesModal';
 import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
 import { Toast } from '@/helpers';
@@ -201,7 +203,8 @@ export default {
     'mobile-interface-network': MobileInterfaceNetwork,
     'address-qrcode-modal': AddressQrcodeModal,
     'ledger-app-modal': LedgerAppModal,
-    'token-overview': TokenOverview
+    'token-overview': TokenOverview,
+    'expired-names-modal': ExpiredNamesModal
   },
   data() {
     return {
@@ -480,8 +483,16 @@ export default {
           names['registrant'] = this.account.address;
         });
 
+        const found = names.find(item => {
+          if (item.expired) return item;
+        });
+
+        if (found) this.notifyExpiredNames();
         this.storeEnsNames(names);
       });
+    },
+    notifyExpiredNames() {
+      this.$refs.expiredNames.$refs.expiredNames.show();
     },
     async fetchTokens() {
       this.receivedTokens = false;
