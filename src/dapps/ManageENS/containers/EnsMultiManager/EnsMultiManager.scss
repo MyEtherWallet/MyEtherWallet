@@ -91,3 +91,15 @@
   background-color: $white;
   color: $mew-green;
 }
+
+.view-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+
+  .view-button {
+    @extend .action-button;
+    width: 260px;
+  }
+}

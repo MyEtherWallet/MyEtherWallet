@@ -190,12 +190,15 @@ export default {
       return '';
     },
     parsedHostName() {
-      return this.domainName.substr(
-        0,
-        this.domainName.lastIndexOf('.') > -1
-          ? this.domainName.lastIndexOf('.')
-          : this.domainName.length
-      );
+      if (this.domainName.length) {
+        return this.domainName.substr(
+          0,
+          this.domainName.lastIndexOf('.') > -1
+            ? this.domainName.lastIndexOf('.')
+            : this.domainName.length
+        );
+      }
+      return '';
     },
     parsedDomainName() {
       return this.parsedHostName + '.' + this.parsedTld;
@@ -580,7 +583,9 @@ export default {
       const registrarAddress = await this.ens.owner(tld);
       return registrarAddress;
     },
-    async checkDomain() {
+    async checkDomain(domainName) {
+      if (domainName !== '' && domainName && typeof domainName === 'string')
+        this.domainName = domainName;
       const supportedTlds = this.network.type.ens.supportedTld;
       const isSupported = supportedTlds.find(item => {
         return item === this.parsedTld;
@@ -821,7 +826,11 @@ export default {
             });
             const tokens = response[ENS_CURRENT_ADDRESS].tokens;
             const nameMatched = tokens.find(item => {
-              if (item.name === this.parsedHostName) return item;
+              if (
+                item.name === this.parsedHostName ||
+                item.id === this.labelHash
+              )
+                return item;
             });
 
             if (nameMatched) {
