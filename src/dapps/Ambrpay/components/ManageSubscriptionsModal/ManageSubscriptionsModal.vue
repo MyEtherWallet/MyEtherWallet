@@ -22,11 +22,24 @@
         >
           <div class="info-container">
             <div class="header-txt">
-              <span>
-                <i class="check-icon fa fa-check" aria-hidden="true" /><span
-                  class="active-txt"
+              <span class="header-container">
+                <i
+                  :class="
+                    sub.subscriptionStatus === 'Active'
+                      ? 'check-icon fa fa-check'
+                      : 'times-icon fa fa-times'
+                  "
+                  aria-hidden="true"
+                />
+                <span
+                  :class="[
+                    'status-txt',
+                    sub.subscriptionStatus === 'Active'
+                      ? 'active-txt'
+                      : 'inactive-txt'
+                  ]"
                 >
-                  {{ $t('dappsAmbrpay.manage-subscriptions.active') }}
+                  {{ sub.subscriptionStatus }}
                 </span>
                 <span class="next-pay-txt"
                   >({{ $t('dappsAmbrpay.manage-subscriptions.next-payment') }}
