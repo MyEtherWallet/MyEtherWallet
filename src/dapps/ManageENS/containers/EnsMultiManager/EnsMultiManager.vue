@@ -107,6 +107,16 @@
                 </button>
               </div>
             </div>
+            <div
+              class="view-button-container"
+              @click="
+                checkDomain(`${name.name}.${network.type.ens.registrarTLD}`)
+              "
+            >
+              <button class="view-button">
+                View
+              </button>
+            </div>
           </div>
         </b-collapse>
       </div>
@@ -129,6 +139,10 @@ export default {
       default: () => {}
     },
     renewName: {
+      type: Function,
+      default: () => {}
+    },
+    checkDomain: {
       type: Function,
       default: () => {}
     }
