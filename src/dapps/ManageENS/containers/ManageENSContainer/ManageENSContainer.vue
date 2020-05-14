@@ -213,7 +213,7 @@
       <div v-if="isDeedOwner && hasDeed" class="form-container">
         <form>
           <h4>
-            Do you want to release {{ deedValue }} {{ network.type.name }}
+            Do you want to release {{ deedValueEth }} {{ network.type.name }}
           </h4>
           <div class="submit-container">
             <button type="submit" @click.prevent="releaseDeed()">
@@ -295,8 +295,8 @@ export default {
       default: false
     },
     deedValue: {
-      type: Number,
-      default: 0
+      type: String,
+      default: '0'
     },
     releaseDeed: {
       type: Function,
@@ -338,6 +338,9 @@ export default {
   },
   computed: {
     ...mapState('main', ['web3', 'account', 'network']),
+    deedValueEth() {
+      return utils.fromWei(this.deedValue, 'ether');
+    },
     isValidAddresses() {
       for (const type in this.currencyInputs) {
         if (
