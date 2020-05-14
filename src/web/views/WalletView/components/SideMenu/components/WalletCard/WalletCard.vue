@@ -53,14 +53,14 @@
           </v-btn>
         </Tooltip>
 
-        <v-btn
+        <mew-button
           class="ml-auto"
-          outlined
-          small
-          color="white"
+          :has-full-width="false"
+          btn-style="outline"
+          title="Switch >"
+          color-theme="white"
           @click="openChangeAddress = true"
-          >Switch ></v-btn
-        >
+        />
       </div>
     </div>
     <ChangeAddress :open="openChangeAddress" :close="closeChangeAddress" />
