@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     navigateToEnsManager() {
-      this.$router.push({ name: 'ENS initial state' });
+      this.$router.push({ name: 'ENS multi Manager' });
       this.$refs.expiredNames.hide();
     }
   }

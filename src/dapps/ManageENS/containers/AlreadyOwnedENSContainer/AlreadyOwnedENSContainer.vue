@@ -66,11 +66,17 @@
       <p class="label">{{ $t('ens.owner') }}:</p>
       <p class="content">{{ owner }}</p>
     </div>
-    <div v-if="hasDeed && isDeedOwner" class="content-container">
-      <p class="label">Deed Value:</p>
-      <p class="content">{{ deedValueEth }} {{ network.type.name }}</p>
+    <div v-if="hasDeed && isDeedOwner" class="content-container deed-container">
+      <div>
+        <p class="label">Deed Value:</p>
+        <p class="content">{{ deedValueEth }} {{ network.type.name }}</p>
+      </div>
       <div class="submit-container">
-        <button type="submit" @click.prevent="releaseDeed()">
+        <button
+          type="submit"
+          class="redeem-button"
+          @click.prevent="releaseDeed()"
+        >
           {{ $t('ens.release-deed') }}
         </button>
       </div>
