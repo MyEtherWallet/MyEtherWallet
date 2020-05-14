@@ -68,7 +68,12 @@
     </div>
     <div v-if="hasDeed && isDeedOwner" class="content-container">
       <p class="label">Deed Value:</p>
-      <p class="content">{{ deedValue }} {{ network.type.name }}</p>
+      <p class="content">{{ deedValueEth }} {{ network.type.name }}</p>
+      <div class="submit-container">
+        <button type="submit" @click.prevent="releaseDeed()">
+          {{ $t('ens.release-deed') }}
+        </button>
+      </div>
     </div>
     <div v-show="resolverMultiCoinSupport" class="content-container">
       <h4>{{ $t('ens.multi-coin') }}:</h4>
@@ -110,7 +115,7 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-
+import { fromWei } from 'web3-utils';
 import { mapState } from 'vuex';
 export default {
   components: {
@@ -158,8 +163,8 @@ export default {
       default: () => {}
     },
     deedValue: {
-      type: Number,
-      default: 0
+      type: String,
+      default: '0'
     },
     hasDeed: {
       type: Boolean,
@@ -168,6 +173,10 @@ export default {
     isDeedOwner: {
       type: Boolean,
       default: false
+    },
+    releaseDeed: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
@@ -177,6 +186,9 @@ export default {
   },
   computed: {
     ...mapState('main', ['account', 'network']),
+    deedValueEth() {
+      return fromWei(this.deedValue, 'ether');
+    },
     fullDomainName() {
       return `${this.hostName}.${this.tld}`;
     },

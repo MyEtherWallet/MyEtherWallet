@@ -216,8 +216,8 @@
             Do you want to release {{ deedValue }} {{ network.type.name }}
           </h4>
           <div class="submit-container">
-            <button type="submit" @click.prevent="releaseDeed(transferTo)">
-              {{ $t('ens.transfer') }}
+            <button type="submit" @click.prevent="releaseDeed()">
+              {{ $t('ens.release-deed') }}
             </button>
           </div>
         </form>
