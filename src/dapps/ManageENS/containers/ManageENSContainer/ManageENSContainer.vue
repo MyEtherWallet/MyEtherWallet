@@ -196,7 +196,12 @@
         </form>
       </div>
     </b-collapse>
-    <b-btn v-b-toggle.redeemdeed class="collapse-open-button" variant="primary">
+    <b-btn
+      v-if="isDeedOwner && hasDeed"
+      v-b-toggle.redeemdeed
+      class="collapse-open-button"
+      variant="primary"
+    >
       <p>Release Deed</p>
     </b-btn>
     <b-collapse

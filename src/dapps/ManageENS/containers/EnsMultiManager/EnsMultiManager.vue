@@ -102,7 +102,13 @@
                 <p v-else>
                   Currently in Grace Period
                 </p>
-                <button v-show="key === 'controller'" class="action-button">
+                <button
+                  v-show="key === 'controller'"
+                  class="action-button"
+                  @click="
+                    checkDomain(`${name.name}.${network.type.ens.registrarTLD}`)
+                  "
+                >
                   Set
                 </button>
               </div>
@@ -162,16 +168,6 @@ export default {
     ...mapActions('main', ['storeEnsNames']),
     callRenew(name) {
       this.renewName(`${name}.${this.network.type.ens.registrarTLD}`);
-    },
-    async setController() {
-      const names = this.account.ensNames.map(item => {
-        return item;
-      });
-      for (let i = 0; i < names.length; i++) {
-        names[i]['controller'] = await this.getController(names[i].name);
-      }
-
-      this.storeEnsNames(names);
     },
     showBlockie(name) {
       return !(
