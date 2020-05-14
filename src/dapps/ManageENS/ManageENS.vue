@@ -342,12 +342,10 @@ export default {
               Toast.responseHandler('Success!', Toast.SUCCESS);
             })
             .catch(err => {
-              console.log(err, 'error is here');
               Toast.responseHandler(err, false);
             });
         }
       } catch (e) {
-        console.log(e);
         this.loading = false;
         const toastText = this.$t('ens.error.something-went-wrong');
         Toast.responseHandler(toastText, Toast.ERROR);
