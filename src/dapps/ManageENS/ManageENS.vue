@@ -73,6 +73,7 @@
       :is-deed-owner="isDeedOwner"
       :is-expired="isExpired"
       :renew-name="renewName"
+      :release-deed="releaseDeed"
       :navigate-to-renew="navigateToRenew"
       :deed-value="deedValue"
       :get-controller="getController"
@@ -111,7 +112,6 @@ const permanentRegistrar = {
 };
 
 const OLD_ENS_ADDRESS = '0x6090a6e47849629b7245dfa1ca21d94cd15878ef';
-const ENS_CURRENT_ADDRESS = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
 const MULTICOIN_SUPPORT_INTERFACE = '0xf1cb7e06';
 const TEXT_RECORD_SUPPORT_INTERFACE = '0x59d1d43c';
 const REGISTRAR_TYPES = {
@@ -154,7 +154,7 @@ export default {
       hasDeed: false,
       isDeedOwner: false,
       isExpired: false,
-      deedValue: 0,
+      deedValue: '0',
       controllerAddress: '',
       contractControllerAddress: ''
     };
@@ -257,7 +257,7 @@ export default {
       this.hasDeed = false;
       this.isDeedOwner = false;
       this.isExpired = false;
-      this.deedValue = 0;
+      this.deedValue = '0';
       this.controllerAddress = '';
       this.contractControllerAddress = '';
 
@@ -294,8 +294,7 @@ export default {
         this.isDeedOwner =
           this.web3.utils.toChecksumAddress(owner) ===
           this.web3.utils.toChecksumAddress(this.account.address);
-        const value = await deedContract.methods.value().call();
-        this.deedValue = this.web3.utils.toWei(value);
+        this.deedValue = await deedContract.methods.value().call();
       } else {
         this.hasDeed = false;
         this.isDeedOwner = false;
@@ -321,18 +320,17 @@ export default {
         const rentPrice = await this.registrarControllerContract.methods
           .rentPrice(domainName, duration)
           .call();
-        const checkBalance = new BigNumber(
-          this.web3.utils.toWei(rentPrice)
-        ).gte(this.web3.utils.toWei(this.account.balance));
+        const checkBalance = new BigNumber(rentPrice).gte(this.account.balance);
         if (checkBalance) {
           Toast.responseHandler('Balance too low!', Toast.WARN);
         } else {
           const data = this.registrarControllerContract.methods
             .renew(hostName, duration)
             .encodeABI();
-          const withFivePercent = new BigNumber(rentPrice)
-            .plus(rentPrice * 0.05)
-            .toNumber();
+          const withFivePercent = BigNumber(rentPrice)
+            .times(1.05)
+            .integerValue()
+            .toFixed();
           const txObj = {
             to: this.contractControllerAddress,
             from: this.account.address,
@@ -361,10 +359,8 @@ export default {
           from: this.account.address,
           to: OLD_ENS_ADDRESS,
           data: contract.methods.releaseDeed(this.labelHash).encodeABI(),
-          gasLimit: '300000',
           value: 0
         };
-
         this.web3.eth.sendTransaction(obj).catch(err => {
           Toast.responseHandler(err, false);
         });
@@ -728,9 +724,10 @@ export default {
         const rentPrice = await this.registrarControllerContract.methods
           .rentPrice(this.parsedHostName, duration)
           .call();
-        const withFivePercent = new BigNumber(rentPrice)
-          .plus(rentPrice * 0.05)
-          .toNumber();
+        const withFivePercent = BigNumber(rentPrice)
+          .times(1.05)
+          .integerValue()
+          .toFixed();
 
         this.registrarControllerContract.methods
           .registerWithConfig(
@@ -825,7 +822,7 @@ export default {
             ).then(res => {
               return res.json();
             });
-            const tokens = response[ENS_CURRENT_ADDRESS].tokens;
+            const tokens = response[this.registrarAddress.toLowerCase()].tokens;
             const nameMatched = tokens.find(item => {
               if (
                 item.name === this.parsedHostName ||
