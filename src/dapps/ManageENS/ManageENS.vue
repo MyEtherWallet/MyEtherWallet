@@ -309,13 +309,14 @@ export default {
     async renewName(name) {
       const domainName = name ? name : this.parsedDomainName;
       const hostName = name
-        ? name.replace(this.network.type.ens.registrarTLD, '')
+        ? name.replace(`.${this.network.type.ens.registrarTLD}`, '')
         : this.parsedHostName;
+
       const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
       const duration = Math.ceil(SECONDS_YEAR * this.duration);
       try {
         const rentPrice = await this.registrarControllerContract.methods
-          .rentPrice(hostName, duration)
+          .rentPrice(domainName, duration)
           .call();
         const checkBalance = new BigNumber(
           this.web3.utils.toWei(rentPrice)
@@ -324,10 +325,11 @@ export default {
           Toast.responseHandler('Balance too low!', Toast.WARN);
         } else {
           const data = this.registrarControllerContract.methods
-            .renew(domainName, duration)
+            .renew(hostName, duration)
             .encodeABI();
-          const withFivePercent = new BigNumber(rentPrice);
-          withFivePercent.add(rentPrice * 0.05).toNumber();
+          const withFivePercent = new BigNumber(rentPrice)
+            .plus(rentPrice * 0.05)
+            .toNumber();
           const txObj = {
             to: this.contractControllerAddress,
             from: this.account.address,
@@ -340,10 +342,12 @@ export default {
               Toast.responseHandler('Success!', Toast.SUCCESS);
             })
             .catch(err => {
+              console.log(err, 'error is here');
               Toast.responseHandler(err, false);
             });
         }
       } catch (e) {
+        console.log(e);
         this.loading = false;
         const toastText = this.$t('ens.error.something-went-wrong');
         Toast.responseHandler(toastText, Toast.ERROR);
@@ -720,8 +724,9 @@ export default {
         const rentPrice = await this.registrarControllerContract.methods
           .rentPrice(this.parsedHostName, duration)
           .call();
-        const withFivePercent = new BigNumber(rentPrice);
-        withFivePercent.add(rentPrice * 0.05).toNumber();
+        const withFivePercent = new BigNumber(rentPrice)
+          .plus(rentPrice * 0.05)
+          .toNumber();
 
         this.registrarControllerContract.methods
           .registerWithConfig(
