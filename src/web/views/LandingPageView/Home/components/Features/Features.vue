@@ -19,7 +19,7 @@
           <p>THIS NEEDS DAPP IMG</p>
         </template>
         <template v-slot:tabContent3>
-          <p>THIS NEEDS TOKENS IMG</p>
+          <p>THIS NEEDS TOKEN IMG</p>
         </template>
       </mew-tabs>
     </div>
