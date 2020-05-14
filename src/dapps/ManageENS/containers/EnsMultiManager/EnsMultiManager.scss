@@ -20,10 +20,6 @@
     }
   }
 
-  .name-container {
-    padding-top: 20px;
-  }
-
   .collapse-open-button {
     width: 100%;
     background-color: $dark-blue-12 !important;
@@ -41,6 +37,34 @@
     border: 1px solid $light-grey-3;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
+  }
+
+  .information-container {
+    display: flex;
+    padding: 30px;
+    justify-content: space-around;
+    align-items: center;
+    background-color: $light-green-1;
+    border: 1px solid $mew-green;
+    margin-top: 10px;
+    border-radius: 5px;
+
+    .name-container {
+      min-width: 200px;
+      max-width: 250px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+
+  .no-ens-container {
+    border: 1px solid $light-orange-1;
+    padding: 30px;
+    text-align: center;
+    background-color: $light-orange-3;
+    margin-top: 20px;
+    border-radius: 5px;
   }
 
   .items {
@@ -90,6 +114,21 @@
   border-color: $mew-green;
   background-color: $white;
   color: $mew-green;
+}
+
+.renew-class {
+  @extend .action-button;
+  border-color: $red-6;
+  background-color: $red-7;
+  color: $white;
+}
+
+.expired-class {
+  @extend .action-button;
+  color: $white;
+  pointer-events: none;
+  background-color: $dark-grey-7;
+  border-color: $dark-grey-7;
 }
 
 .view-button-container {

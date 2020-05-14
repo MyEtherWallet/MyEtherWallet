@@ -583,7 +583,7 @@ export default {
       const registrarAddress = await this.ens.owner(tld);
       return registrarAddress;
     },
-    async checkDomain(domainName) {
+    async checkDomain(domainName, bool) {
       if (domainName !== '' && domainName && typeof domainName === 'string')
         this.domainName = domainName;
       const supportedTlds = this.network.type.ens.supportedTld;
@@ -632,8 +632,9 @@ export default {
             const isAvailable = await this.registrarControllerContract.methods
               .available(this.parsedHostName)
               .call();
-            if (!isAvailable) this.getMoreInfo();
-            else {
+            if (!isAvailable) {
+              this.getMoreInfo(bool);
+            } else {
               this.generateKeyPhrase();
               this.$router.push({ path: 'manage-ens/create-commitment' });
               this.loading = false;
@@ -802,7 +803,7 @@ export default {
         this.domainNameErr = false;
       }
     },
-    async getMoreInfo() {
+    async getMoreInfo(renew) {
       let owner;
       try {
         if (
@@ -900,10 +901,10 @@ export default {
         this.supportedCoins.ETH.value = '0x';
       }
       this.owner = owner;
-      if (this.$route.fullPath === '/interface/dapps/manage-ens') {
-        this.$router.push({ path: 'manage-ens/owned' });
+      if (renew) {
+        this.$router.push({ name: 'Renew Name' });
       } else {
-        this.$router.push({ path: 'owned' });
+        this.$router.push({ name: 'ENS owned' });
       }
       this.loading = false;
     },

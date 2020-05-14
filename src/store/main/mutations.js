@@ -24,10 +24,6 @@ const UPDATE_BLOCK_NUMBER = function (state, blockNumber) {
   state.blockNumber = blockNumber;
 };
 
-const STORE_ENS_NAMES = function (state, names) {
-  state.account.ensNames = names;
-};
-
 const CHECK_IF_ONLINE = async function (state, status) {
   state.online = status;
   if (state.online) {
@@ -158,6 +154,5 @@ export default {
   SAVE_QUERY_VAL,
   SET_ADDRESS_BOOK,
   SET_LOCALE,
-  TOGGLE_TEMP_HIDE,
-  STORE_ENS_NAMES
+  TOGGLE_TEMP_HIDE
 };

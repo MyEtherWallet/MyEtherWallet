@@ -5,14 +5,14 @@
         {{
           isCommitment
             ? $t('ens.commit.is-available', { domain: fullDomainName })
-            : 'Domain is expired!'
+            : `${fullDomainName} is expired!`
         }}
       </h3>
       <p>
         {{
           isCommitment
             ? $t('ens.commit.register-domain', { domain: fullDomainName })
-            : 'Do you wanna renew domain?'
+            : `Do you wanna renew ${fullDomainName} ?`
         }}
       </p>
       <div class="secret-phrase-container">
