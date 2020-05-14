@@ -4,9 +4,11 @@
       <div class="block-title display-1 font-weight-bold mb-6">
         My ETH balance is empty
       </div>
-      <StdButton size="x-large" no-min-width>
-        Buy ETH with a credit card
-      </StdButton>
+      <mew-button
+        class="ml-auto"
+        :has-full-width="false"
+        title="Buy ETH with a credit card"
+      />
       <div class="d-flex align-center mt-4">
         <div>We accept credit card</div>
         <img
@@ -32,10 +34,9 @@
 
 <script>
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
-import StdButton from '@/web/components/StdButton';
 
 export default {
-  components: { WhiteSheet, StdButton },
+  components: { WhiteSheet },
   data() {
     return {};
   }

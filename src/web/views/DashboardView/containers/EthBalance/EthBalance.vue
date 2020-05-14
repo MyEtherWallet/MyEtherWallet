@@ -56,19 +56,22 @@
         >
       </div>
       <div class="ml-5">$321.55 / 1 ETH</div>
-      <StdButton size="x-large" class="ml-auto">Send Transaction</StdButton>
+      <mew-button
+        class="ml-auto"
+        :has-full-width="false"
+        title="Send Transaction"
+      />
     </div>
   </WhiteSheet>
 </template>
 
 <script>
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
-import StdButton from '@/web/components/StdButton';
 import ChartBalance from '@/web/components/Charts/Balance';
 import BlockTitle from '@/web/components/BlockTitles/BlockTitle1';
 
 export default {
-  components: { WhiteSheet, ChartBalance, StdButton, BlockTitle },
+  components: { WhiteSheet, ChartBalance, BlockTitle },
   data() {
     return {
       chartRange: '1d',
