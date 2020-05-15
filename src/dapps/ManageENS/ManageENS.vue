@@ -7,7 +7,7 @@
             <b-button
               :class="[
                 'action-btn',
-                $route.name === 'ENS initial state' ? 'active-btn' : ''
+                $route.name === 'ensInitialState' ? 'active-btn' : ''
               ]"
               @click="
                 () => {
@@ -302,11 +302,11 @@ export default {
     },
     navigateHeaderButtons(to) {
       this.$router.push({
-        name: to === 'register' ? 'ENS initial state' : 'ENS multi Manager'
+        name: to === 'register' ? 'ensInitialState' : 'ENS multi Manager'
       });
     },
     navigateToRenew() {
-      this.$router.push({ path: 'renew' });
+      this.$router.push({ name: 'ensRenewName' });
     },
     async renewName(name) {
       const domainName = name ? name : this.parsedDomainName;
@@ -610,7 +610,7 @@ export default {
               .call();
             const isAvailable = expiryTime * 1000 < new Date().getTime();
             if (isAvailable) {
-              this.$router.push({ path: 'manage-ens/fifs' });
+              this.$router.push({ name: 'fifsReserve' });
               this.loading = false;
             } else {
               this.getMoreInfo();
@@ -632,7 +632,7 @@ export default {
               this.getMoreInfo(bool);
             } else {
               this.generateKeyPhrase();
-              this.$router.push({ path: 'manage-ens/create-commitment' });
+              this.$router.push({ name: 'ensCreateCommitment' });
               this.loading = false;
             }
           } else if (this.isSubDomain) {
@@ -703,7 +703,7 @@ export default {
           .commit(commitment)
           .send({ from: this.account.address })
           .once('transactionHash', () => {
-            this.$router.push({ path: 'permanent-registration' });
+            this.$router.push({ name: 'ensPermRegistration' });
           })
           .on('receipt', () => {
             this.loading = false;
@@ -740,7 +740,7 @@ export default {
           )
           .send({ from: this.account.address, value: withFivePercent })
           .once('transactionHash', () => {
-            this.$router.push({ path: 'registration-in-progress' });
+            this.$router.push({ name: 'ensPermRegistrationOngoing' });
           })
           .once('receipt', () => {
             this.getMoreInfo();
@@ -771,17 +771,14 @@ export default {
     processDNSresult(type) {
       this.loading = false;
       switch (type) {
-        case 'dnsOwned':
-          this.$router.push({ path: 'manage-ens/dns-owned' });
-          break;
         case 'dnsClaimable':
-          this.$router.push({ path: 'manage-ens/claim' });
+          this.$router.push({ name: 'dnsClaim' });
           break;
         case 'dnsNotSetup':
-          this.$router.push({ path: 'manage-ens/dns-error' });
+          this.$router.push({ name: 'dnsError' });
           break;
         case 'dnsMissingTXT':
-          this.$router.push({ path: 'manage-ens/no-txt-setup' });
+          this.$router.push({ name: 'dnsNoTxt' });
           break;
       }
     },
@@ -901,7 +898,7 @@ export default {
       if (renew) {
         this.$router.push({ name: 'Renew Name' });
       } else {
-        this.$router.push({ name: 'ENS owned' });
+        this.$router.push({ name: 'ensNameOwned' });
       }
       this.loading = false;
     },
