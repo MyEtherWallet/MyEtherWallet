@@ -35,6 +35,7 @@
       :priv-key="!wallet"
       :address="account.address"
     />
+    <expired-names-modal ref="expiredNames" />
     <bcvault-address-modal
       ref="bcvault"
       :addresses="bcVaultWallets"
@@ -142,6 +143,7 @@ import InterfaceTokens from './components/InterfaceTokens';
 import MobileInterfaceAddress from './components/MobileInterfaceAddress';
 import MobileInterfaceBalance from './components/MobileInterfaceBalance';
 import MobileInterfaceNetwork from './components/MobileInterfaceNetwork';
+import ExpiredNamesModal from './components/ExpiredNamesModal';
 import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
 import { Toast } from '@/helpers';
@@ -154,6 +156,7 @@ import sortByBalance from '@/helpers/sortByBalance.js';
 import AddressQrcodeModal from '@/components/AddressQrcodeModal';
 import web3Utils from 'web3-utils';
 import { isAddress } from '@/helpers/addressUtils';
+import { ETH } from '@/networks/types';
 import {
   LedgerWallet,
   TrezorWallet,
@@ -174,6 +177,11 @@ import {
   MNEMONIC as MNEMONIC_TYPE,
   BCVAULT as BC_VAULT
 } from '@/wallets/bip44/walletTypes';
+
+import ExpiryAbi from './expiryAbi.js';
+
+const ENS_TOKEN_ADDRESS = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
+const EXPIRY_CHECK_CONTRACT = '0x78e21d038fcbb6d56f825dc1e8d8acd965744adb';
 
 export default {
   name: 'Interface',
@@ -196,7 +204,8 @@ export default {
     'mobile-interface-network': MobileInterfaceNetwork,
     'address-qrcode-modal': AddressQrcodeModal,
     'ledger-app-modal': LedgerAppModal,
-    'token-overview': TokenOverview
+    'token-overview': TokenOverview,
+    'expired-names-modal': ExpiredNamesModal
   },
   data() {
     return {
@@ -432,6 +441,60 @@ export default {
     },
     startToggleSideMenu() {
       this.toggleSideMenu();
+    },
+    fetchNames() {
+      const fetchName = fetch(
+        `https://nft2.mewapi.io/tokens?owner=${this.account.address}&chain=mainnet`
+      )
+        .then(response => {
+          return response.json();
+        })
+        .catch(() => {
+          Toast.responseHandler('Something went wrong!', Toast.ERROR);
+        });
+      fetchName.then(response => {
+        this.setExpiry(response);
+      });
+    },
+    async setExpiry(param) {
+      const names = param[ENS_TOKEN_ADDRESS].tokens;
+      const hashes = names.map(item => {
+        return item.id;
+      });
+      const contract = new this.web3.eth.Contract(
+        ExpiryAbi,
+        EXPIRY_CHECK_CONTRACT
+      );
+      const expiry = contract.methods
+        .getExpirationDates(ENS_TOKEN_ADDRESS, hashes)
+        .call()
+        .then(response => {
+          return response;
+        })
+        .catch(() => {
+          Toast.responseHandler('Something went wrong!', Toast.ERROR);
+        });
+      expiry.then(response => {
+        response.forEach((item, idx) => {
+          const expiryDate = item * 1000;
+          const isExpired = expiryDate < new Date().getTime();
+          const expiryDateFormat = new Date(expiryDate);
+          names[idx].expired = isExpired;
+          names[
+            idx
+          ].expiration = `${expiryDateFormat.toLocaleDateString()} ${expiryDateFormat.toLocaleTimeString()}`;
+          names['registrant'] = this.account.address;
+        });
+
+        const found = names.find(item => {
+          if (item.expired) return item;
+        });
+
+        if (found) this.notifyExpiredNames();
+      });
+    },
+    notifyExpiredNames() {
+      this.$refs.expiredNames.$refs.expiredNames.show();
     },
     async fetchTokens() {
       this.receivedTokens = false;
@@ -673,6 +736,7 @@ export default {
             }
           }
           this.callSetENS();
+          if (this.network.type.name === ETH.name) this.fetchNames();
           this.getBlock();
           this.getBalance();
           this.setTokens();

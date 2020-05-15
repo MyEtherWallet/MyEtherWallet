@@ -1,6 +1,6 @@
 const exec = require('child_process').exec;
 
-const AUDIT_EXCEPTIONS = ['decompress'];
+const AUDIT_EXCEPTIONS = ['decompress', 'http-proxy'];
 
 const execute = (command, callback) => {
   exec(
