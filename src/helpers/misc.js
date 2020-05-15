@@ -5,7 +5,7 @@ import url from 'url';
 import utils from 'web3-utils';
 import store from '@/store';
 import { isHexString, toBuffer as utilsToBuffer } from 'ethereumjs-util';
-import { uint, address, string, bytes, bool } from './solidityTypes';
+import { uint, address, string, bytes, bool, int } from './solidityTypes';
 import xss from 'xss';
 import { MEW_CX } from '@/builds/configs/types';
 
@@ -48,7 +48,12 @@ const padLeftEven = hex => {
 };
 
 const isInt = num => {
-  return num % 1 === 0;
+  try {
+    utils.toBN(num);
+    return true;
+  } catch (e) {
+    return false;
+  }
 };
 
 const formatDate = date => {
@@ -143,18 +148,8 @@ const reorderNetworks = () => {
 
 const solidityType = inputType => {
   if (!inputType) inputType = '';
-  if (inputType.includes('[') && inputType.includes(']')) {
-    if (inputType.includes(uint))
-      return { type: 'string', solidityType: `${uint}[]` };
-    if (inputType.includes(address))
-      return { type: 'text', solidityType: `${address}[]` };
-    if (inputType.includes(string))
-      return { type: 'text', solidityType: `${string}[]` };
-    if (inputType.includes(bytes))
-      return { type: 'text', solidityType: `${bytes}[]` };
-    if (inputType.includes(bool))
-      return { type: 'string', solidityType: `${bool}[]` };
-    return { type: 'text', solidityType: `${string}[]` };
+  if (inputType.includes('[]')) {
+    return { type: 'string', solidityType: `${inputType}` };
   }
   if (inputType.includes(uint)) return { type: 'number', solidityType: uint };
   if (inputType.includes(address))
@@ -191,32 +186,22 @@ const stringToArray = str => {
 
 const isContractArgValid = (value, solidityType) => {
   if (!value) value = '';
-  if (solidityType.includes('[') && solidityType.includes(']')) {
+  if (solidityType.includes('[]')) {
     const parsedValue = Array.isArray(value) ? value : stringToArray(value);
-    const values = [];
-    parsedValue.forEach(item => {
-      if (solidityType.includes(uint)) {
-        values.push(item !== '' && !isNaN(item) && isInt(item));
-      } else if (solidityType.includes(address)) {
-        values.push(isAddress(item));
-      } else if (solidityType.includes(string)) {
-        values.push(item !== '');
-      } else if (solidityType.includes(bool)) {
-        values.push(typeof item === typeof true || item === '');
-      } else if (solidityType.includes(bytes)) {
-        values.push(validateHexString(item));
-      }
-    });
-    return !values.includes(false);
+    const type = solidityType.replace('[]', '');
+    for (const parsedItem of parsedValue) {
+      if (!isContractArgValid(parsedItem, type)) return false;
+    }
+    return true;
   }
-  if (solidityType === 'uint')
+  if (solidityType.includes(uint) || solidityType.includes(int))
     return value !== '' && !isNaN(value) && isInt(value);
-  if (solidityType === 'address') return isAddress(value);
-  if (solidityType === 'string') return true;
-  if (solidityType === 'bytes')
+  if (solidityType === address) return isAddress(value);
+  if (solidityType === string) return true;
+  if (solidityType.includes(bytes))
     return value.substr(0, 2) === '0x' && validateHexString(value);
-  if (solidityType === 'bool')
-    return typeof value === typeof true || value === '';
+  if (solidityType === bool)
+    return typeof value === typeof true || typeof value === typeof false;
   return false;
 };
 
