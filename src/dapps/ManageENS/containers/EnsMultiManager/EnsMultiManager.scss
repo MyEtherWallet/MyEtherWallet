@@ -68,7 +68,7 @@
   }
 
   .items {
-    padding: 0px 20px;
+    padding: 0 20px;
 
     .item-content {
       border-bottom: 1px solid $light-grey-21;
@@ -105,7 +105,6 @@
   }
 }
 
-
 .action-button {
   border-radius: 4px;
   cursor: pointer;
@@ -118,6 +117,7 @@
 
 .renew-class {
   @extend .action-button;
+
   border-color: $red-6;
   background-color: $red-7;
   color: $white;
@@ -125,6 +125,7 @@
 
 .expired-class {
   @extend .action-button;
+
   color: $white;
   pointer-events: none;
   background-color: $dark-grey-7;
@@ -139,6 +140,7 @@
 
   .view-button {
     @extend .action-button;
+
     width: 260px;
   }
 }
