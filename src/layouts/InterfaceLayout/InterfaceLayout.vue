@@ -530,8 +530,6 @@ export default {
             }
             return item;
           });
-
-          console.log(tokens);
         } catch (e) {
           tokens = this.network.type.tokens.map(token => {
             token.balance = 0;
