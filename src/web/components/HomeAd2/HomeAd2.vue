@@ -18,7 +18,16 @@
           </p>
         </div>
         <v-spacer />
-        <a href="/" class="text-decoration--none">
+        <mew-button
+          btn-link="/"
+          :has-full-width="false"
+          title="Get a new wallet"
+          color-theme="white"
+          height-size="large"
+          :icon="icon"
+          icon-align="left"
+        />
+        <a v-if="false" href="/" class="text-decoration--none">
           <StdButton
             class="standard-button emerald--text"
             color="white"
@@ -40,11 +49,17 @@
 
 <script>
 import StdButton from '@/web/components/StdButton';
+import walletIcon from '@/assets/images/icons/icon-wallet-mew.svg';
 
 export default {
   name: 'HomeAd2',
   components: {
     StdButton
+  },
+  data() {
+    return {
+      icon: walletIcon
+    };
   }
 };
 </script>
