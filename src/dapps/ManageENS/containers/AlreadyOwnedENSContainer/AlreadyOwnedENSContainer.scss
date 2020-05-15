@@ -87,6 +87,7 @@
 
   .redeem-button {
     @extend %button-template;
+
     border-color: $mew-green;
     background-color: $mew-green;
     color: $white;
