@@ -21,7 +21,11 @@ const EXCEPTIONS = [
   'vee-validate',
   '@xkeshi/vue-qrcode',
   '@vue/test-utils',
-  'graphql'
+  'graphql',
+  "@makerdao/dai",
+  "@makerdao/dai-plugin-config",
+  "@makerdao/dai-plugin-mcd",
+  "@makerdao/dai-plugin-migrations"
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
