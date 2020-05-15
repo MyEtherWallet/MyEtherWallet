@@ -7,7 +7,8 @@
       <p v-if="!title">{{ $t('common.back') }}</p>
       <p v-if="title">{{ title }}</p>
     </div>
-    <div class="right-slot"><slot /></div>
+    <div class="center-slot"><slot name="center" /></div>
+    <div class="right-slot"><slot name="right" /></div>
   </div>
 </template>
 
