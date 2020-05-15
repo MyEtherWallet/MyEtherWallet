@@ -31,6 +31,7 @@
           icon-align="left"
           btn-style="outline"
           color-theme="white"
+          height-size="medium"
         />
       </v-app-bar>
     </v-container>
