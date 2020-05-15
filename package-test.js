@@ -22,10 +22,8 @@ const EXCEPTIONS = [
   '@xkeshi/vue-qrcode',
   '@vue/test-utils',
   'graphql',
-  "@makerdao/dai",
-  "@makerdao/dai-plugin-config",
-  "@makerdao/dai-plugin-mcd",
-  "@makerdao/dai-plugin-migrations"
+  '@myetherwallet/eth-token-balance',
+  '@makerdao/dai'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
