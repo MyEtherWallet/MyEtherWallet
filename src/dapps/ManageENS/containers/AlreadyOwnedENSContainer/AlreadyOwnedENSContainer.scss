@@ -80,3 +80,17 @@
     color: $mew-green;
   }
 }
+.deed-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+
+  .redeem-button {
+    @extend %button-template;
+
+    border-color: $mew-green;
+    background-color: $mew-green;
+    color: $white;
+    width: 150px;
+  }
+}

@@ -21,7 +21,9 @@ const EXCEPTIONS = [
   'vee-validate',
   '@xkeshi/vue-qrcode',
   '@vue/test-utils',
-  'graphql'
+  'graphql',
+  '@myetherwallet/eth-token-balance',
+  '@makerdao/dai'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
