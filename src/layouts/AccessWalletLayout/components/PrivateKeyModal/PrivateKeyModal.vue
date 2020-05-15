@@ -83,7 +83,6 @@ export default {
       this.decryptWallet([
         new WalletInterface(this.actualPrivKey, false, privKeyType)
       ]).then(() => {
-        this.actualPrivKey = '';
         this.spinner = false;
         this.$router.push({
           path: 'interface'
