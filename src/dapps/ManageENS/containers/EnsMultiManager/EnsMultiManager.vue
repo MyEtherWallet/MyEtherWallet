@@ -21,6 +21,7 @@
         </p>
         <p>{{ name.expiration }}</p>
         <button
+          v-show="name.name.indexOf('0x') !== 0"
           :class="[
             'action-button',
             name.gracePeriod && !name.expired
