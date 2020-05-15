@@ -1,3 +1,5 @@
+### Release v5.6.2
+
 ### Feature
 
 - Multimanage ens [#2376](https://github.com/MyEtherWallet/MyEtherWallet/pull/2376)
