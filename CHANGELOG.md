@@ -1,3 +1,7 @@
+### Devop
+
+- Remove CW promo [#2377](https://github.com/MyEtherWallet/MyEtherWallet/pull/2377)
+
 ### Release v5.6.1
 
 ### Devop

@@ -66,6 +66,21 @@
       <p class="label">{{ $t('ens.owner') }}:</p>
       <p class="content">{{ owner }}</p>
     </div>
+    <div v-if="hasDeed && isDeedOwner" class="content-container deed-container">
+      <div>
+        <p class="label">Deed Value:</p>
+        <p class="content">{{ deedValueEth }} {{ network.type.name }}</p>
+      </div>
+      <div class="submit-container">
+        <button
+          type="submit"
+          class="redeem-button"
+          @click.prevent="releaseDeed()"
+        >
+          {{ $t('ens.release-deed') }}
+        </button>
+      </div>
+    </div>
     <div v-show="resolverMultiCoinSupport" class="content-container">
       <h4>{{ $t('ens.multi-coin') }}:</h4>
       <div v-for="(v, k) in supportedCoinsWithValue" :key="k.id">
@@ -84,11 +99,16 @@
     </div>
     <div class="owner-options">
       <button
-        v-if="owner.toLowerCase() === account.address.toLowerCase()"
+        v-if="
+          owner.toLowerCase() === account.address.toLowerCase() && !isExpired
+        "
         class="manage-button"
         @click="manageEns"
       >
         {{ $t('ens.manage') }}
+      </button>
+      <button v-if="isExpired" class="manage-button" @click="navigateToRenew">
+        Renew
       </button>
     </div>
     <interface-bottom-text
@@ -101,7 +121,7 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-
+import { fromWei } from 'web3-utils';
 import { mapState } from 'vuex';
 export default {
   components: {
@@ -130,7 +150,7 @@ export default {
     },
     supportedCoins: {
       type: Object,
-      default: function () {}
+      default: () => {}
     },
     resolverMultiCoinSupport: {
       type: Boolean,
@@ -138,7 +158,31 @@ export default {
     },
     txtRecords: {
       type: Object,
-      default: function () {}
+      default: () => {}
+    },
+    isExpired: {
+      type: Boolean,
+      default: false
+    },
+    navigateToRenew: {
+      type: Function,
+      default: () => {}
+    },
+    deedValue: {
+      type: String,
+      default: '0'
+    },
+    hasDeed: {
+      type: Boolean,
+      default: false
+    },
+    isDeedOwner: {
+      type: Boolean,
+      default: false
+    },
+    releaseDeed: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
@@ -147,7 +191,10 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['account']),
+    ...mapState('main', ['account', 'network']),
+    deedValueEth() {
+      return fromWei(this.deedValue, 'ether');
+    },
     fullDomainName() {
       return `${this.hostName}.${this.tld}`;
     },
