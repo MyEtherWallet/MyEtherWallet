@@ -123,7 +123,13 @@ export default {
     },
     setDomain(domainName) {
       this.domainName = domainName;
-      this.$router.push({ name: `manageCrypto` });
+      if (domainName !== '') {
+        this.$router.push({ name: `manageCrypto` });
+      } else {
+        this.$router.push({
+          name: `manageInitialState`
+        });
+      }
     },
     setup() {
       this.domainNameErr = false;
