@@ -114,11 +114,6 @@ export default {
   computed: {
     ...mapState('main', ['online'])
   },
-  beforeMount() {
-    if (!this.domainName) {
-      this.$router.push('/interface/dapps/manage-unstoppable');
-    }
-  },
   mounted() {
     this.getRecords();
   },

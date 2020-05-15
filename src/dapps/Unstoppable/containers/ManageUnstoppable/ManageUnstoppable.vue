@@ -1,16 +1,6 @@
 <template>
   <div class="unstoppable-container">
-    <back-button
-      v-show="!domainName"
-      :path="'/interface/dapps/'"
-      :title="$t('common.exit-dapp')"
-    />
-    <back-button
-      v-show="domainName"
-      :path="'/interface/dapps/manage-unstoppable'"
-      :title="$t('common.back')"
-    />
-    <div class="branding-container">
+    <!-- <div class="branding-container">
       <div class="name-container">
         <img
           height="33"
@@ -20,7 +10,7 @@
         <span>{{ $t('unstoppable.title-manage') }}</span>
       </div>
       <div class="about-text">{{ $t('unstoppable.about-unstoppable') }}</div>
-    </div>
+    </div> -->
     <router-view
       :account="account"
       :web3="web3"
@@ -33,14 +23,17 @@
 <script>
 import '@stripe/stripe-js';
 import { mapState } from 'vuex';
-import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 
 export default {
-  components: {
-    'back-button': BackButton
-  },
-  data() {
-    return { domainName: '' };
+  props: {
+    setDomain: {
+      type: Function,
+      default: () => {}
+    },
+    domainName: {
+      type: String,
+      default: ''
+    }
   },
   computed: {
     ...mapState('main', ['web3', 'network', 'account']),
@@ -61,18 +54,6 @@ export default {
       return tldPosition !== -1
         ? this.domainName.substr(tldPosition + 1, this.domainName.length)
         : '';
-    }
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.setup();
-    });
-  },
-  methods: {
-    setup() {},
-    setDomain(domainName) {
-      this.domainName = domainName;
-      this.$router.push({ path: `manage-unstoppable/${this.tld}` });
     }
   }
 };
