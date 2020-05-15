@@ -4,7 +4,38 @@
       v-show="!orderNumber"
       :path="'/interface/dapps/'"
       :title="$t('common.exit-dapp')"
-    />
+    >
+      <template v-slot:center>
+        <div class="button-container">
+          <b-button
+            :class="[
+              'action-btn',
+              $route.name === 'unstoppableInitialState' ? 'active-btn' : ''
+            ]"
+            @click="
+              () => {
+                navigateHeaderButtons('register');
+              }
+            "
+          >
+            Register Domain
+          </b-button>
+          <b-button
+            :class="[
+              'action-btn',
+              $route.name === 'manageInitialState' ? 'active-btn' : ''
+            ]"
+            @click="
+              () => {
+                navigateHeaderButtons('manager');
+              }
+            "
+          >
+            Manage Domain
+          </b-button>
+        </div>
+      </template>
+    </back-button>
     <div class="branding-container">
       <div class="name-container">
         <img
@@ -31,6 +62,7 @@
       :set-token-id="setTokenId"
       :set-order-number="setOrderNumber"
       :is-domain-avail="isDomainAvail"
+      :set-domain="setDomain"
       @domainNameChange="updateDomainName"
     />
   </div>
@@ -63,7 +95,16 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['web3', 'network', 'account'])
+    ...mapState('main', ['web3', 'network', 'account']),
+    tld() {
+      if (!this.domainName) {
+        return '';
+      }
+      const tldPosition = this.domainName.lastIndexOf('.');
+      return tldPosition !== -1
+        ? this.domainName.substr(tldPosition + 1, this.domainName.length)
+        : '';
+    }
   },
   mounted() {
     this.$nextTick(() => {
@@ -71,6 +112,19 @@ export default {
     });
   },
   methods: {
+    navigateHeaderButtons(path) {
+      if (path === 'register') {
+        this.$router.push({ name: `unstoppableInitialState` });
+      } else {
+        this.$router.push({
+          name: `manageInitialState`
+        });
+      }
+    },
+    setDomain(domainName) {
+      this.domainName = domainName;
+      this.$router.push({ name: `manageCrypto` });
+    },
     setup() {
       this.domainNameErr = false;
       this.loading = false;

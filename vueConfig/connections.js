@@ -65,5 +65,7 @@ module.exports = [
   'https://api.zilliqa.com:443',
   'https://rpc.fantom.network:443',
   'https://fantomscan.io:443',
-  'https://unstoppabledomains.com:443'
+  'https://unstoppabledomains.com:443',
+  'https://perkle-pub.esprezzo.io:443',
+  'https://o382951.ingest.sentry.io:443'
 ];

@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.6.1",
+  "version": "5.6.2",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -83,7 +83,7 @@
     "@makerdao/dai-plugin-config": "0.2.14-rc.1",
     "@makerdao/dai-plugin-mcd": "1.4.1",
     "@makerdao/dai-plugin-migrations": "1.1.0",
-    "@myetherwallet/eth-token-balance": "0.1.6",
+    "@myetherwallet/eth-token-balance": "0.2.2",
     "@myetherwallet/mewconnect-web-client": "2.1.0-RC.3",
     "@stripe/stripe-js": "1.5.0",
     "@vue/cli-plugin-babel": "4.3.1",
@@ -170,17 +170,6 @@
   },
   "gitHooks": {
     "pre-commit": "npm run lint && npm run test"
-  },
-  "greenkeeper": {
-    "ignore": [
-      "graphql",
-      "ethereum-ens",
-      "multicoin-address-validator",
-      "@xkeshi/vue-qrcode",
-      "vee-validate",
-      "sass-loader",
-      "@vue/test-utils"
-    ]
   },
   "vuePlugins": {
     "service": [
