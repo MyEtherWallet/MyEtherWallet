@@ -1,6 +1,7 @@
 ### Devop
 
 - Cleanup token with the new package update [#2338](https://github.com/MyEtherWallet/MyEtherWallet/pull/2338)
+- Remove CW promo [#2377](https://github.com/MyEtherWallet/MyEtherWallet/pull/2377)
 
 ### Release v5.6.1
 

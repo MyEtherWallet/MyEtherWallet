@@ -3,8 +3,9 @@
 .back-container {
   cursor: pointer;
   display: flex;
-  align-items: cneter;
+  align-items: center;
   background-color: $background-color-white;
+  justify-content: space-between;
 
   .back-icon-container {
     border: 1px solid $black;
@@ -37,8 +38,9 @@
   }
 }
 
+.center-slot,
 .right-slot {
-  margin-left: auto;
+  min-width: 150px;
 }
 
 .bottom-border {
