@@ -524,8 +524,14 @@ export default {
 
             if (!found) return token;
           });
+          tokens = tokens.concat(filteredNetwork).map(item => {
+            if (!item.hasOwnProperty('balance')) {
+              item.balance = 0;
+            }
+            return item;
+          });
 
-          tokens = tokens.concat(filteredNetwork);
+          console.log(tokens);
         } catch (e) {
           tokens = this.network.type.tokens.map(token => {
             token.balance = 0;
