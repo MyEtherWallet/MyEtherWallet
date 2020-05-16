@@ -2,6 +2,10 @@
 
 - Remove CW promo [#2377](https://github.com/MyEtherWallet/MyEtherWallet/pull/2377)
 
+### Bug
+
+- Supply buffers to ethereum-utils generateAddress when deploying a contract[#2380](https://github.com/MyEtherWallet/MyEtherWallet/pull/2380)
+
 ### Release v5.6.1
 
 ### Devop
