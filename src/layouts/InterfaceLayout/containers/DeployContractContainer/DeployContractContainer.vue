@@ -322,7 +322,9 @@ export default {
         this.web3.eth.sendTransaction(json).catch(err => {
           Toast.responseHandler(err, Toast.WARN);
         });
-        const contractAddr = bufferToHex(generateAddress(coinbase, nonce));
+        const contractAddr = bufferToHex(
+          generateAddress(Buffer.from(coinbase), Buffer.from(nonce.toString()))
+        );
         this.pushContractToStore(contractAddr);
         this.clear();
       } catch (e) {

@@ -648,11 +648,13 @@ export default {
               }
             ],
             MewMakerPlugin,
-            MigrationPlugin
+            // MigrationPlugin
           ],
-          log: false,
+          log: true,
+          autoAuthenticate: true,
           web3: {
-            pollingInterval: null
+            pollingInterval: null,
+            inject: web3.currentProvider
           },
           accounts: {
             myLedger1: { type: 'mew' }
@@ -665,12 +667,12 @@ export default {
 
       this.setupMCD();
       try {
-        await this.maker.authenticate();
+        // await this.maker.authenticate();
         this.currentlyLoading = 'dappsMCDMaker.loading-system';
 
         await setupServices(this, this.maker);
 
-        await setupPriceAndRatios(this, this._priceService, this._cdpService);
+        await setupPriceAndRatios(this, this._priceService, this._typeService);
 
         this.proxyAddress = await this._proxyService.currentProxy();
 

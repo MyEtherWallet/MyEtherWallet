@@ -25,11 +25,12 @@ const ServiceRoles = {
 export async function setupServices(self, maker) {
   self._priceService = maker.service(ServiceRoles.PRICE);
   const result = await Promise.all([
-    maker.service(ServiceRoles.CDP),
+    maker.service(ServiceRoles.SYSTEM_DATA),
     maker.service(ServiceRoles.PROXY),
     maker.service(ServiceRoles.TOKEN)
   ]);
-  self._cdpService = result[0];
+  // self._cdpService = result[0];
+  self._systemData = result[0];
   self._proxyService = result[1];
   self._tokenService = result[2];
   self._mcdManager = maker.service(ServiceRoles.CDP_MANAGER);
@@ -38,25 +39,32 @@ export async function setupServices(self, maker) {
   return self;
 }
 
-export async function setupPriceAndRatios(self, _priceService, _cdpService) {
+export async function setupPriceAndRatios(
+  self,
+  _priceService,
+  _typeService,
+  _systemData
+) {
   self.pethMin = toBigNumber(0.005);
 
   const result = await Promise.all([
     _priceService.getEthPrice(),
     _priceService.getPethPrice(),
     _priceService.getPethPrice(),
-    _cdpService.getLiquidationRatio(),
-    _cdpService.getLiquidationPenalty(),
-    _cdpService.getAnnualGovernanceFee(),
-    _priceService.getWethToPethRatio()
+    _priceService.getWethToPethRatio(),
+    _systemData.getAnnualBaseRate()
   ]);
+
   self.ethPrice = toBigNumber(result[0].toNumber());
   self.pethPrice = toBigNumber(result[1].toNumber());
   self._targetPrice = toBigNumber(result[2].toNumber());
-  self.liquidationRatio = toBigNumber(result[3]);
-  self.liquidationPenalty = toBigNumber(result[4]);
-  self.stabilityFee = toBigNumber(result[5]);
-  self.wethToPethRatio = toBigNumber(result[6]);
+  self.liquidationRatio = toBigNumber(_typeService.getLiquidationRatio());
+  self.liquidationPenalty = toBigNumber(_typeService.getLiquidationPenalty());
+  self.stabilityFee = toBigNumber(_typeService.getCdpType(null, 'ETH-A').getAnnualGovernanceFee()).plus(
+    result[3].toNumber()
+  );
+  self.baseStabilityFee = toBigNumber(result[3].toNumber());
+  self.wethToPethRatio = toBigNumber(result[4]);
   return self;
 }
 
