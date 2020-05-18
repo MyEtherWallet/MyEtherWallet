@@ -1,6 +1,39 @@
 <template>
   <div class="manage-ens-container">
-    <back-button />
+    <div class="ens-header">
+      <back-button>
+        <template v-if="headerContext" v-slot:center>
+          <div class="button-container">
+            <b-button
+              :class="[
+                'action-btn',
+                $route.name === 'ensInitialState' ? 'active-btn' : ''
+              ]"
+              @click="
+                () => {
+                  navigateHeaderButtons('register');
+                }
+              "
+            >
+              Register Domain
+            </b-button>
+            <b-button
+              :class="[
+                'action-btn',
+                $route.name === 'ENS multi Manager' ? 'active-btn' : ''
+              ]"
+              @click="
+                () => {
+                  navigateHeaderButtons('manager');
+                }
+              "
+            >
+              Manage Domain
+            </b-button>
+          </div>
+        </template>
+      </back-button>
+    </div>
     <router-view
       :contract-initiated="contractInitiated"
       :check-domain="checkDomain"
@@ -11,7 +44,6 @@
       :name-hash="nameHash"
       :label-hash="labelHash"
       :owner="owner"
-      :deed-owner="deedOwner"
       :raw="raw"
       :step="step"
       :domain-name-err="domainNameErr"
@@ -37,6 +69,14 @@
       :usd="usd"
       :is-controller="isController"
       :set-controller="setController"
+      :has-deed="hasDeed"
+      :is-deed-owner="isDeedOwner"
+      :is-expired="isExpired"
+      :renew-name="renewName"
+      :release-deed="releaseDeed"
+      :navigate-to-renew="navigateToRenew"
+      :deed-value="deedValue"
+      :get-controller="getController"
       @updateSecretPhrase="updateSecretPhrase"
       @domainNameChange="updateDomainName"
       @updateStep="updateStep"
@@ -52,6 +92,8 @@ import baseRegistrarAbi from './ABI/baseRegistrarAbi';
 import RegistryAbi from './ABI/registryAbi.js';
 import FifsRegistrarAbi from './ABI/fifsRegistrarAbi.js';
 import ResolverAbi from './ABI/resolverAbi.js';
+import OldEnsAbi from './ABI/oldEnsAbi.js';
+import OldDeedAbi from './ABI/oldDeedAbi.js';
 import * as unit from 'ethjs-unit';
 import * as nameHashPckg from 'eth-ens-namehash';
 import normalise from '@/helpers/normalise';
@@ -68,6 +110,8 @@ const permanentRegistrar = {
   INTERFACE_CONTROLLER: '0x018fac06',
   INTERFACE_LEGACY_REGISTRAR: '0x7ba18ba1'
 };
+
+const OLD_ENS_ADDRESS = '0x6090a6e47849629b7245dfa1ca21d94cd15878ef';
 const MULTICOIN_SUPPORT_INTERFACE = '0xf1cb7e06';
 const TEXT_RECORD_SUPPORT_INTERFACE = '0x59d1d43c';
 const REGISTRAR_TYPES = {
@@ -85,7 +129,6 @@ export default {
       nameHash: '',
       labelHash: '',
       owner: '',
-      deedOwner: '',
       secretPhrase: '',
       registrarAddress: '',
       raw: {},
@@ -107,13 +150,26 @@ export default {
       recordContract: {},
       resolverTxtSupport: false,
       usd: 0,
-      isController: false
+      isController: false,
+      hasDeed: false,
+      isDeedOwner: false,
+      isExpired: false,
+      deedValue: '0',
+      controllerAddress: '',
+      contractControllerAddress: ''
     };
   },
   computed: {
     ...mapState('main', ['web3', 'network', 'account', 'gasPrice', 'ens']),
     registrarTLD() {
       return this.network.type.ens.registrarTLD;
+    },
+    headerContext() {
+      return (
+        this.$route.fullPath === '/interface/dapps/manage-ens' ||
+        this.$route.fullPath === '/interface/dapps/manage-ens/' ||
+        this.$route.fullPath === '/interface/dapps/manage-ens/manager'
+      );
     },
     registrarType() {
       return this.network.type.ens.registrarType;
@@ -134,12 +190,15 @@ export default {
       return '';
     },
     parsedHostName() {
-      return this.domainName.substr(
-        0,
-        this.domainName.lastIndexOf('.') > -1
-          ? this.domainName.lastIndexOf('.')
-          : this.domainName.length
-      );
+      if (this.domainName.length) {
+        return this.domainName.substr(
+          0,
+          this.domainName.lastIndexOf('.') > -1
+            ? this.domainName.lastIndexOf('.')
+            : this.domainName.length
+        );
+      }
+      return '';
     },
     parsedDomainName() {
       return this.parsedHostName + '.' + this.parsedTld;
@@ -176,7 +235,6 @@ export default {
       this.nameHash = '';
       this.labelHash = '';
       this.owner = '';
-      this.deedOwner = '';
       this.secretPhrase = '';
       this.registrarAddress = '';
       this.raw = {};
@@ -196,6 +254,12 @@ export default {
       this.supportedCoins = supportedCoins;
       this.txtRecords = {};
       this.recordContract = {};
+      this.hasDeed = false;
+      this.isDeedOwner = false;
+      this.isExpired = false;
+      this.deedValue = '0';
+      this.controllerAddress = '';
+      this.contractControllerAddress = '';
 
       if (this.ens) {
         this.setRegistrar();
@@ -208,9 +272,108 @@ export default {
       const owner = await this.ensRegistryContract.methods
         .owner(this.nameHash)
         .call();
+      this.controllerAddress = owner;
       this.isController =
         this.web3.utils.toChecksumAddress(owner) ===
         this.web3.utils.toChecksumAddress(this.account.address);
+    },
+    async getController(name) {
+      const nameHash = nameHashPckg.hash(`${name}.eth`);
+      const owner = await this.ensRegistryContract.methods
+        .owner(nameHash)
+        .call();
+      return owner;
+    },
+    async checkDeed() {
+      const contract = new this.web3.eth.Contract(OldEnsAbi, OLD_ENS_ADDRESS);
+      const entries = await contract.methods.entries(this.labelHash).call();
+      if (entries[1] !== '0x0000000000000000000000000000000000000000') {
+        this.hasDeed = true;
+        const deedContract = new this.web3.eth.Contract(OldDeedAbi, entries[1]);
+        const owner = await deedContract.methods.owner().call();
+        this.isDeedOwner =
+          this.web3.utils.toChecksumAddress(owner) ===
+          this.web3.utils.toChecksumAddress(this.account.address);
+        this.deedValue = await deedContract.methods.value().call();
+      } else {
+        this.hasDeed = false;
+        this.isDeedOwner = false;
+      }
+    },
+    navigateHeaderButtons(to) {
+      this.$router.push({
+        name: to === 'register' ? 'ensInitialState' : 'ENS multi Manager'
+      });
+    },
+    navigateToRenew() {
+      this.$router.push({ name: 'ensRenewName' });
+    },
+    async renewName(name) {
+      const domainName = name ? name : this.parsedDomainName;
+      const hostName = name
+        ? name.replace(`.${this.network.type.ens.registrarTLD}`, '')
+        : this.parsedHostName;
+
+      const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
+      const duration = Math.ceil(SECONDS_YEAR * this.duration);
+      try {
+        const rentPrice = await this.registrarControllerContract.methods
+          .rentPrice(domainName, duration)
+          .call();
+        const checkBalance = new BigNumber(rentPrice).gte(this.account.balance);
+        if (checkBalance) {
+          Toast.responseHandler(
+            this.$t('ens.error.balance-too-low'),
+            Toast.WARN
+          );
+        } else {
+          const data = this.registrarControllerContract.methods
+            .renew(hostName, duration)
+            .encodeABI();
+          const withFivePercent = BigNumber(rentPrice)
+            .times(1.05)
+            .integerValue()
+            .toFixed();
+          const txObj = {
+            to: this.contractControllerAddress,
+            from: this.account.address,
+            data: data,
+            value: withFivePercent
+          };
+          this.web3.eth
+            .sendTransaction(txObj)
+            .then(() => {
+              Toast.responseHandler(
+                this.$t('ens.toast.success'),
+                Toast.SUCCESS
+              );
+              this.$router({ name: '' });
+            })
+            .catch(err => {
+              Toast.responseHandler(err, false);
+            });
+        }
+      } catch (e) {
+        this.loading = false;
+        const toastText = this.$t('ens.error.something-went-wrong');
+        Toast.responseHandler(toastText, Toast.ERROR);
+      }
+    },
+    async releaseDeed() {
+      if (this.hasDeed && this.isDeedOwner) {
+        const contract = new this.web3.eth.Contract(OldEnsAbi, OLD_ENS_ADDRESS);
+        const obj = {
+          from: this.account.address,
+          to: OLD_ENS_ADDRESS,
+          data: contract.methods.releaseDeed(this.labelHash).encodeABI(),
+          value: 0
+        };
+        this.web3.eth.sendTransaction(obj).catch(err => {
+          Toast.responseHandler(err, false);
+        });
+      } else {
+        Toast.responseHandler(this.$t('ens.error.not-the-owner'), Toast.ERROR);
+      }
     },
     async setRegistrar() {
       const web3 = this.web3;
@@ -227,13 +390,12 @@ export default {
         );
       } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
         try {
-          const controllerAddress = await this.ens
+          this.contractControllerAddress = await this.ens
             .resolver(this.registrarTLD, ResolverAbi)
             .interfaceImplementer(permanentRegistrar.INTERFACE_CONTROLLER);
-
           this.registrarControllerContract = new this.web3.eth.Contract(
             PermanentRegistrarControllerAbi,
-            controllerAddress
+            this.contractControllerAddress
           );
           this.registrarContract = new this.web3.eth.Contract(
             baseRegistrarAbi,
@@ -424,7 +586,9 @@ export default {
       const registrarAddress = await this.ens.owner(tld);
       return registrarAddress;
     },
-    async checkDomain() {
+    async checkDomain(domainName, bool) {
+      if (domainName !== '' && domainName && typeof domainName === 'string')
+        this.domainName = domainName;
       const supportedTlds = this.network.type.ens.supportedTld;
       const isSupported = supportedTlds.find(item => {
         return item === this.parsedTld;
@@ -453,7 +617,7 @@ export default {
               .call();
             const isAvailable = expiryTime * 1000 < new Date().getTime();
             if (isAvailable) {
-              this.$router.push({ path: 'manage-ens/fifs' });
+              this.$router.push({ name: 'fifsReserve' });
               this.loading = false;
             } else {
               this.getMoreInfo();
@@ -471,16 +635,20 @@ export default {
             const isAvailable = await this.registrarControllerContract.methods
               .available(this.parsedHostName)
               .call();
-            if (!isAvailable) this.getMoreInfo();
-            else {
+            if (!isAvailable) {
+              this.getMoreInfo(bool);
+            } else {
               this.generateKeyPhrase();
-              this.$router.push({ path: 'manage-ens/create-commitment' });
+              this.$router.push({ name: 'ensCreateCommitment' });
               this.loading = false;
             }
           } else if (this.isSubDomain) {
             const owner = await this.ens.owner(this.parsedDomainName);
             if (owner === '0x0000000000000000000000000000000000000000') {
-              Toast.responseHandler('This subdomain is not owned', Toast.WARN);
+              Toast.responseHandler(
+                this.$t('ens.warning.subdomain-is-not-owned'),
+                Toast.WARN
+              );
             } else {
               this.getMoreInfo();
             }
@@ -545,7 +713,7 @@ export default {
           .commit(commitment)
           .send({ from: this.account.address })
           .once('transactionHash', () => {
-            this.$router.push({ path: 'permanent-registration' });
+            this.$router.push({ name: 'ensPermRegistration' });
           })
           .on('receipt', () => {
             this.loading = false;
@@ -566,6 +734,11 @@ export default {
         const rentPrice = await this.registrarControllerContract.methods
           .rentPrice(this.parsedHostName, duration)
           .call();
+        const withFivePercent = BigNumber(rentPrice)
+          .times(1.05)
+          .integerValue()
+          .toFixed();
+
         this.registrarControllerContract.methods
           .registerWithConfig(
             this.parsedHostName,
@@ -575,9 +748,9 @@ export default {
             this.publicResolverAddress,
             this.account.address
           )
-          .send({ from: this.account.address, value: rentPrice })
+          .send({ from: this.account.address, value: withFivePercent })
           .once('transactionHash', () => {
-            this.$router.push({ path: 'registration-in-progress' });
+            this.$router.push({ name: 'ensPermRegistrationOngoing' });
           })
           .once('receipt', () => {
             this.getMoreInfo();
@@ -608,17 +781,14 @@ export default {
     processDNSresult(type) {
       this.loading = false;
       switch (type) {
-        case 'dnsOwned':
-          this.$router.push({ path: 'manage-ens/dns-owned' });
-          break;
         case 'dnsClaimable':
-          this.$router.push({ path: 'manage-ens/claim' });
+          this.$router.push({ name: 'dnsClaim' });
           break;
         case 'dnsNotSetup':
-          this.$router.push({ path: 'manage-ens/dns-error' });
+          this.$router.push({ name: 'dnsError' });
           break;
         case 'dnsMissingTXT':
-          this.$router.push({ path: 'manage-ens/no-txt-setup' });
+          this.$router.push({ name: 'dnsNoTxt' });
           break;
       }
     },
@@ -637,7 +807,7 @@ export default {
         this.domainNameErr = false;
       }
     },
-    async getMoreInfo() {
+    async getMoreInfo(renew) {
       let owner;
       try {
         if (
@@ -645,9 +815,40 @@ export default {
           this.parsedTld === this.registrarTLD &&
           !this.isSubDomain
         ) {
-          owner = await this.registrarContract.methods
-            .ownerOf(this.labelHash)
+          const expiryTime = await this.registrarContract.methods
+            .nameExpires(this.labelHash)
             .call();
+          this.isExpired = expiryTime * 1000 < new Date().getTime();
+          try {
+            owner = await this.registrarContract.methods
+              .ownerOf(this.labelHash)
+              .call();
+          } catch (e) {
+            const response = await fetch(
+              `https://nft2.mewapi.io/tokens?owner=${this.account.address}&chain=mainnet`
+            ).then(res => {
+              return res.json();
+            });
+            const tokens = response.hasOwnProperty(
+              this.registrarAddress.toLowerCase()
+            )
+              ? response[this.registrarAddress.toLowerCase()].tokens
+              : [];
+            const nameMatched = tokens.find(item => {
+              if (
+                item.name === this.parsedHostName ||
+                item.id === this.labelHash
+              )
+                return item;
+            });
+
+            if (nameMatched) {
+              owner = this.account.address;
+            } else {
+              owner = '0x';
+            }
+          }
+          this.checkDeed();
         } else {
           owner = await this.ens.owner(this.parsedDomainName);
         }
@@ -708,10 +909,10 @@ export default {
         this.supportedCoins.ETH.value = '0x';
       }
       this.owner = owner;
-      if (this.$route.fullPath === '/interface/dapps/manage-ens') {
-        this.$router.push({ path: 'manage-ens/owned' });
+      if (renew) {
+        this.$router.push({ name: 'ensRenewName' });
       } else {
-        this.$router.push({ path: 'owned' });
+        this.$router.push({ name: 'ensNameOwned' });
       }
       this.loading = false;
     },
@@ -736,7 +937,7 @@ export default {
             });
           });
         } else {
-          throw new Error('not supported');
+          throw new Error(this.$t('ens.error.txt-not-supported'));
         }
       } catch (e) {
         this.recordContract = {};
