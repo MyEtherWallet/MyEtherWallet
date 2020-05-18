@@ -347,6 +347,7 @@ export default {
                 this.$t('ens.toast.success'),
                 Toast.SUCCESS
               );
+              this.$router({ name: '' });
             })
             .catch(err => {
               Toast.responseHandler(err, false);
