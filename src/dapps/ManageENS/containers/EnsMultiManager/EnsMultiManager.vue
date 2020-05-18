@@ -1,14 +1,14 @@
 <template>
   <div class="multi-manager-container">
     <div class="title-container">
-      <h3>ENS Manager</h3>
-      <p>Manage your ENS names or transfer it to someone else</p>
+      <h3>{{ $t('ens.ens-manager.title') }}</h3>
+      <p>{{ $t('ens.ens-manager.description') }}</p>
     </div>
     <div v-if="loading">
-      <i clas="fa fa-spinner fa-spin" /> Fetching names...
+      <i clas="fa fa-spinner fa-spin" /> {{ $t('ens.fetching') }}
     </div>
     <div v-else-if="names.length === 0 && !loading" class="no-ens-container">
-      No ENS name found for account {{ account.address }}!
+      {{ $t('ens.no-name-found', { address: account.address }) }}
     </div>
     <div v-else class="name-container">
       <div
@@ -36,10 +36,10 @@
         >
           {{
             name.gracePeriod && !name.expired
-              ? 'Renew'
+              ? $t('ens.renew')
               : name.expired && !name.gracePeriod
-              ? 'Expired'
-              : 'Manage'
+              ? $t('ens.expired')
+              : $t('ens.manage')
           }}
         </button>
       </div>
@@ -101,7 +101,10 @@ export default {
             return response;
           })
           .catch(() => {
-            Toast.responseHandler('Something went wrong!', Toast.ERROR);
+            Toast.responseHandler(
+              this.$t('ens.error.something-went-wrong'),
+              Toast.ERROR
+            );
           });
         expiry.then(response => {
           response.forEach((item, idx) => {
