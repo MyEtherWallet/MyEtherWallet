@@ -275,6 +275,7 @@ export default {
         case KEEPKEY_TYPE:
           KeepkeyWallet(false, this.$eventHub)
             .then(_newWallet => {
+              console.error('in ehre???', _newWallet)
               this.$emit('hardwareWalletOpen', _newWallet);
             })
             .catch(e => {

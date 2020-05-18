@@ -35,6 +35,8 @@
     "@coolwallets/wallet": "0.2.0-beta.1",
     "@sentry/browser": "5.15.5",
     "@sentry/integrations": "5.15.5",
+    "@shapeshiftoss/hdwallet-core": "0.18.11",
+    "@shapeshiftoss/hdwallet-keepkey-webusb": "0.18.11",
     "@unstoppabledomains/resolution": "1.3.6",
     "apollo-cache-inmemory": "1.6.6",
     "apollo-client": "2.6.9",

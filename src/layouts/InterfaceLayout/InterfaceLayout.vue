@@ -400,6 +400,7 @@ export default {
         case KEEPKEY_TYPE:
           KeepkeyWallet(false, this.$eventHub)
             .then(_newWallet => {
+              console.error('in here', _newWallet)
               this.toggleNetworkAddrModal(_newWallet);
             })
             .catch(KeepkeyWallet.errorHandler);
