@@ -137,7 +137,8 @@ const vue = new Vue({
 const integration = new Integrations.Vue({ Vue, attachProps: true });
 
 Sentry.init({
-  dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
+  dsn:
+    'https://8c29b655fc4e433494fbba7bcac35ae3@o382951.ingest.sentry.io/5230441',
   integrations: [integration],
   maxBreadcrumbs: 0,
   environment: BUILD_TYPE,

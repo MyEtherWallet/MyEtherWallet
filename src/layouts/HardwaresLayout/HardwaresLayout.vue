@@ -31,16 +31,6 @@
               <div class="hardware-item-logo">
                 <img :src="getImg(item.logo)" alt />
               </div>
-              <div
-                v-if="item.logo === 'coolwallet'"
-                class="promotion-container"
-              >
-                <img
-                  src="@/assets/images/pre-order-label.png"
-                  class="new-label"
-                  alt
-                />
-              </div>
             </div>
           </div>
         </div>
