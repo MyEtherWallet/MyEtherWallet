@@ -335,7 +335,7 @@ export default {
       const _contractArgs = [];
       if (this.selectedMethod) {
         this.selectedMethod.inputs.forEach(item => {
-          if (item.type === 'bytes32[]') {
+          if (item.type.includes('[]')) {
             const parsedItem = this.formatInput(this.inputs[item.name]);
             _contractArgs.push(parsedItem);
           } else if (item.type === 'address') {
@@ -412,13 +412,17 @@ export default {
       });
     },
     formatInput(str) {
-      if (str[0] === '[') {
-        return str;
+      try {
+        if (str[0] === '[') {
+          return JSON.parse(str);
+        }
+        const newArr = str.split(',');
+        return newArr.map(item => {
+          return item.replace(' ', '');
+        });
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
       }
-      const newArr = str.split(',');
-      return newArr.map(function (item) {
-        return item.replace(' ', '');
-      });
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();
@@ -456,6 +460,8 @@ export default {
           .call({ from: this.account.address.toLowerCase() })
           .then(res => {
             this.result = res;
+            if (Array.isArray(res)) this.result = JSON.stringify(res);
+            else this.result = res;
             this.loading = false;
           })
           .catch(e => {

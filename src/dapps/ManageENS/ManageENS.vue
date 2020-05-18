@@ -322,7 +322,10 @@ export default {
           .call();
         const checkBalance = new BigNumber(rentPrice).gte(this.account.balance);
         if (checkBalance) {
-          Toast.responseHandler('Balance too low!', Toast.WARN);
+          Toast.responseHandler(
+            this.$t('ens.error.balance-too-low'),
+            Toast.WARN
+          );
         } else {
           const data = this.registrarControllerContract.methods
             .renew(hostName, duration)
@@ -340,7 +343,11 @@ export default {
           this.web3.eth
             .sendTransaction(txObj)
             .then(() => {
-              Toast.responseHandler('Success!', Toast.SUCCESS);
+              Toast.responseHandler(
+                this.$t('ens.toast.success'),
+                Toast.SUCCESS
+              );
+              this.$router({ name: '' });
             })
             .catch(err => {
               Toast.responseHandler(err, false);
@@ -365,7 +372,7 @@ export default {
           Toast.responseHandler(err, false);
         });
       } else {
-        Toast.responseHandler('You are not the owner!!!', Toast.ERROR);
+        Toast.responseHandler(this.$t('ens.error.not-the-owner'), Toast.ERROR);
       }
     },
     async setRegistrar() {
@@ -638,7 +645,10 @@ export default {
           } else if (this.isSubDomain) {
             const owner = await this.ens.owner(this.parsedDomainName);
             if (owner === '0x0000000000000000000000000000000000000000') {
-              Toast.responseHandler('This subdomain is not owned', Toast.WARN);
+              Toast.responseHandler(
+                this.$t('ens.warning.subdomain-is-not-owned'),
+                Toast.WARN
+              );
             } else {
               this.getMoreInfo();
             }
@@ -900,7 +910,7 @@ export default {
       }
       this.owner = owner;
       if (renew) {
-        this.$router.push({ name: 'Renew Name' });
+        this.$router.push({ name: 'ensRenewName' });
       } else {
         this.$router.push({ name: 'ensNameOwned' });
       }
@@ -927,7 +937,7 @@ export default {
             });
           });
         } else {
-          throw new Error('not supported');
+          throw new Error(this.$t('ens.error.txt-not-supported'));
         }
       } catch (e) {
         this.recordContract = {};
