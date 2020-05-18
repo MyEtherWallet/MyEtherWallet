@@ -22,7 +22,7 @@
               }
             "
           >
-            Register Domain
+            {{ $t('unstoppable.register-domain') }}
           </b-button>
           <b-button
             :class="[
@@ -38,7 +38,7 @@
               }
             "
           >
-            Manage Domain
+            {{ $t('unstoppable.manage-domain') }}
           </b-button>
         </div>
       </template>
