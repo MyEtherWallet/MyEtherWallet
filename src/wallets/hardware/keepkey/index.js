@@ -4,9 +4,9 @@
 //   KeepKey,
 //   bip32ToAddressNList
 // } from '@keepkey/keepkey.js';
-import { HDWallet, Keyring } from "@shapeshiftoss/hdwallet-core";
-import { WebUSBKeepKeyAdapter } from "@shapeshiftoss/hdwallet-keepkey-webusb";
-import { isKeepKey, KeepKeyHDWallet } from "@shapeshiftoss/hdwallet-keepkey";
+import { HDWallet, Keyring } from '@shapeshiftoss/hdwallet-core';
+import { WebUSBKeepKeyAdapter } from '@shapeshiftoss/hdwallet-keepkey-webusb';
+import { isKeepKey, KeepKeyHDWallet } from '@shapeshiftoss/hdwallet-keepkey';
 import { KEEPKEY as keepkeyType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
@@ -41,20 +41,23 @@ class KeepkeyWallet {
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.eventHub = eventHub;
-    console.log('eventhub', eventHub)
+    // console.log('eventhub', eventHub)
     this.supportedPaths = bip44Paths[keepkeyType];
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
     this.isHardened = this.basePath.split('/').length - 1 === 2;
-    console.error('keepkeyAdapter', keepkeyAdapter);
+    // console.error('keepkeyAdapter', keyring, keepkeyAdapter);
     const usbDevice = await keepkeyAdapter.pairDevice();
-    usbDevice.getLabel().then((result) => {
-      console.error('result', result)
-    }).catch((error) => {
-      console.error('error', error)
-    })
-    console.error('usbDevice', usbDevice)
+    usbDevice
+      .getLabel()
+      .then(result => {
+        console.log('result', result);
+      })
+      .catch(error => {
+        console.log('error', error);
+      });
+    console.error('usbDevice', usbDevice);
     // const device = new WebUSBDevice({ usbDevice });
     // this.keepkey = KeepKey.withWebUSB(device);
     // this.keepkey.device.events.on(String(MESSAGETYPE_PINMATRIXREQUEST), () => {
@@ -77,7 +80,7 @@ class KeepkeyWallet {
     //     }
     //   );
     // });
-    // await this.keepkey.initialize();
+    await usbDevice.initialize();
     if (!this.isHardened) {
       const rootPub = await getRootPubKey(this.keepkey, this.basePath);
       this.hdKey = new HDKey();
@@ -89,7 +92,7 @@ class KeepkeyWallet {
   }
   async getAccount(idx) {
     let derivedKey, accountPath;
-    console.error('in here???')
+    console.error('in here???');
     if (this.isHardened) {
       const rootPub = await getRootPubKey(
         this.keepkey,
@@ -168,7 +171,7 @@ class KeepkeyWallet {
 }
 const createWallet = async (basePath, eventHub) => {
   const _keepkeyWallet = new KeepkeyWallet(eventHub);
-  console.error('in here?????', _keepkeyWallet, basePath)
+  console.error('in here?????', _keepkeyWallet, basePath);
   await _keepkeyWallet.init(basePath);
   return _keepkeyWallet;
 };
