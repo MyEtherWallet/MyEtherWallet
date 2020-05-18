@@ -347,6 +347,7 @@ export default {
                 this.$t('ens.toast.success'),
                 Toast.SUCCESS
               );
+              this.$router({ name: '' });
             })
             .catch(err => {
               Toast.responseHandler(err, false);
@@ -828,7 +829,11 @@ export default {
             ).then(res => {
               return res.json();
             });
-            const tokens = response[this.registrarAddress.toLowerCase()].tokens;
+            const tokens = response.hasOwnProperty(
+              this.registrarAddress.toLowerCase()
+            )
+              ? response[this.registrarAddress.toLowerCase()].tokens
+              : [];
             const nameMatched = tokens.find(item => {
               if (
                 item.name === this.parsedHostName ||

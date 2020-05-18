@@ -11,6 +11,10 @@
 - Mingrate sentry/fix contracts [#2366](https://github.com/MyEtherWallet/MyEtherWallet/pull/2366)
 - Remove CW promo [#2377](https://github.com/MyEtherWallet/MyEtherWallet/pull/2377)
 
+### Bug
+
+- Fix error when user has no ens name [#2384](https://github.com/MyEtherWallet/MyEtherWallet/pull/2384)
+
 ### Release v5.6.1
 
 ### Devop
