@@ -31,7 +31,6 @@
   "fetching": "Fetching names...",
   "no-names-found": "No ENS name found for account {address}!",
   "renew": "Renew",
-  "manage": "Manage",
   "expired": "Expired",
   "controller-text": "Looks like the address you're using is not a controller of {domain}. Do you wanna set {addr} as a controller for {domain}?",
   "text-record-error": "{value} is missing or not a valid input for {name}!",
