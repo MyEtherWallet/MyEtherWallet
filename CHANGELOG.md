@@ -3,6 +3,7 @@
 ### Feature
 
 - Multimanage ens [#2376](https://github.com/MyEtherWallet/MyEtherWallet/pull/2376)
+- Unstoppable domains combined [#2353](https://github.com/MyEtherWallet/MyEtherWallet/pull/2353)
 
 ### Devop
 
