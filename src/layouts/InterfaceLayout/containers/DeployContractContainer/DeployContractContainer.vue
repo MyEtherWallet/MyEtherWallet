@@ -182,7 +182,7 @@ import ethUnit from 'ethjs-unit';
 import { Transaction } from 'ethereumjs-tx';
 import BigNumber from 'bignumber.js';
 import store from 'store';
-import { generateAddress, bufferToHex } from 'ethereumjs-util';
+import { generateAddress, bufferToHex, toBuffer } from 'ethereumjs-util';
 import { mapState } from 'vuex';
 
 export default {
@@ -322,7 +322,9 @@ export default {
         this.web3.eth.sendTransaction(json).catch(err => {
           Toast.responseHandler(err, Toast.WARN);
         });
-        const contractAddr = bufferToHex(generateAddress(coinbase, nonce));
+        const contractAddr = bufferToHex(
+          generateAddress(toBuffer(coinbase), toBuffer(nonce))
+        );
         this.pushContractToStore(contractAddr);
         this.clear();
       } catch (e) {
