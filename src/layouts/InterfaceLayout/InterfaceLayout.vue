@@ -457,41 +457,45 @@ export default {
       });
     },
     async setExpiry(param) {
-      const names = param[ENS_TOKEN_ADDRESS].tokens;
-      const hashes = names.map(item => {
-        return item.id;
-      });
-      const contract = new this.web3.eth.Contract(
-        ExpiryAbi,
-        EXPIRY_CHECK_CONTRACT
-      );
-      const expiry = contract.methods
-        .getExpirationDates(ENS_TOKEN_ADDRESS, hashes)
-        .call()
-        .then(response => {
-          return response;
-        })
-        .catch(() => {
-          Toast.responseHandler('Something went wrong!', Toast.ERROR);
+      const names = param.hasOwnProperty(ENS_TOKEN_ADDRESS)
+        ? param[ENS_TOKEN_ADDRESS].tokens
+        : [];
+      if (names.length > 0) {
+        const hashes = names.map(item => {
+          return item.id;
         });
-      expiry.then(response => {
-        response.forEach((item, idx) => {
-          const expiryDate = item * 1000;
-          const isExpired = expiryDate < new Date().getTime();
-          const expiryDateFormat = new Date(expiryDate);
-          names[idx].expired = isExpired;
-          names[
-            idx
-          ].expiration = `${expiryDateFormat.toLocaleDateString()} ${expiryDateFormat.toLocaleTimeString()}`;
-          names['registrant'] = this.account.address;
-        });
+        const contract = new this.web3.eth.Contract(
+          ExpiryAbi,
+          EXPIRY_CHECK_CONTRACT
+        );
+        const expiry = contract.methods
+          .getExpirationDates(ENS_TOKEN_ADDRESS, hashes)
+          .call()
+          .then(response => {
+            return response;
+          })
+          .catch(() => {
+            Toast.responseHandler('Something went wrong!', Toast.ERROR);
+          });
+        expiry.then(response => {
+          response.forEach((item, idx) => {
+            const expiryDate = item * 1000;
+            const isExpired = expiryDate < new Date().getTime();
+            const expiryDateFormat = new Date(expiryDate);
+            names[idx].expired = isExpired;
+            names[
+              idx
+            ].expiration = `${expiryDateFormat.toLocaleDateString()} ${expiryDateFormat.toLocaleTimeString()}`;
+            names['registrant'] = this.account.address;
+          });
 
-        const found = names.find(item => {
-          if (item.expired) return item;
-        });
+          const found = names.find(item => {
+            if (item.expired) return item;
+          });
 
-        if (found) this.notifyExpiredNames();
-      });
+          if (found) this.notifyExpiredNames();
+        });
+      }
     },
     notifyExpiredNames() {
       this.$refs.expiredNames.$refs.expiredNames.show();

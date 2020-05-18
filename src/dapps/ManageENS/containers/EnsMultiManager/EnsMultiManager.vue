@@ -88,7 +88,9 @@ export default {
   },
   methods: {
     setExpiry(param) {
-      const names = param[ENS_CURRENT_ADDRESS].tokens;
+      const names = param.hasOwnProperty(ENS_CURRENT_ADDRESS)
+        ? param[ENS_CURRENT_ADDRESS].tokens
+        : [];
       if (names.length > 0) {
         const hashes = names.map(item => {
           return item.id;
