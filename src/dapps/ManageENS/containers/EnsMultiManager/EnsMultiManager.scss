@@ -110,9 +110,19 @@
   cursor: pointer;
   height: 40px;
   width: 115px;
+  border: 1px solid;
   border-color: $mew-green;
   background-color: $white;
   color: $mew-green;
+
+  &:hover {
+    border-color: #55f0d6;
+  }
+
+  &:active {
+    background-color: #3ed7bc;
+    border-color: #56b7a9;
+  }
 }
 
 .renew-class {
@@ -121,6 +131,16 @@
   border-color: $red-6;
   background-color: $red-7;
   color: $white;
+
+  &:hover {
+    background-color: #ff5a7f;
+    background-color: #ff7795;
+  }
+
+  &:active {
+    background-color: #ff5a7f;
+    border-color: #ff7795;
+  }
 }
 
 .expired-class {
