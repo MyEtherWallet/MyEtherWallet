@@ -64,7 +64,6 @@ export default {
     };
   },
   computed: { ...mapState('main', ['online']) },
-  watch: {},
   mounted() {
     this.setDomain('');
     if (this.online) {
