@@ -2,7 +2,11 @@
   <div class="unstoppable-container">
     <back-button
       v-show="!orderNumber"
-      :path="'/interface/dapps/'"
+      :path="
+        $route.name === 'manageCrypto'
+          ? '/interface/dapps/unstoppable/manage'
+          : '/interface/dapps/'
+      "
       :title="$t('common.exit-dapp')"
     >
       <template v-slot:center>
@@ -23,7 +27,10 @@
           <b-button
             :class="[
               'action-btn',
-              $route.name === 'manageInitialState' ? 'active-btn' : ''
+              $route.name === 'manageInitialState' ||
+              $route.name === 'manageCrypto'
+                ? 'active-btn'
+                : ''
             ]"
             @click="
               () => {

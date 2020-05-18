@@ -65,7 +65,7 @@ export default {
           props: true
         },
         {
-          path: 'manage/crypto',
+          path: 'crypto',
           name: 'manageCrypto',
           component: ManageCryptoContainer,
           props: true
