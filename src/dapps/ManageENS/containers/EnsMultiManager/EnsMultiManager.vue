@@ -8,7 +8,7 @@
       <i clas="fa fa-spinner fa-spin" /> {{ $t('ens.fetching') }}
     </div>
     <div v-else-if="names.length === 0 && !loading" class="no-ens-container">
-      {{ $t('ens.no-name-found', { address: account.address }) }}
+      {{ $t('ens.no-names-found', { address: account.address }) }}
     </div>
     <div v-else class="name-container">
       <div
@@ -88,7 +88,9 @@ export default {
   },
   methods: {
     setExpiry(param) {
-      const names = param[ENS_CURRENT_ADDRESS].tokens;
+      const names = param.hasOwnProperty(ENS_CURRENT_ADDRESS)
+        ? param[ENS_CURRENT_ADDRESS].tokens
+        : [];
       if (names.length > 0) {
         const hashes = names.map(item => {
           return item.id;
