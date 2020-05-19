@@ -103,7 +103,7 @@
     "bc-vault-js": "2.0.3",
     "bignumber.js": "9.0.0",
     "bip39": "3.0.2",
-    "bitbox02-api": "0.4.1",
+    "bitbox02-api": "0.5.0",
     "bootstrap-vue": "2.14.0",
     "codecov": "3.6.5",
     "copy-webpack-plugin": "5.1.1",
