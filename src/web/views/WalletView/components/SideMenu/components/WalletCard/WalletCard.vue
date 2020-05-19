@@ -59,6 +59,7 @@
           btn-style="outline"
           title="Switch >"
           color-theme="white"
+          height-size="small"
           @click="openChangeAddress = true"
         />
       </div>

@@ -32,7 +32,7 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "@myetherwallet/mew-components": "0.2.47-beta",
+    "@myetherwallet/mew-components": "0.2.51-beta",
     "@aave/protocol-js": "0.3.1",
     "@coolwallets/eth": "0.2.0-beta.1",
     "@coolwallets/transport-web-ble": "0.1.0",

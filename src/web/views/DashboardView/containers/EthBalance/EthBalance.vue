@@ -60,6 +60,7 @@
         class="ml-auto"
         :has-full-width="false"
         title="Send Transaction"
+        height-size="large"
       />
     </div>
   </WhiteSheet>
