@@ -4,7 +4,12 @@
 
 <script>
 export default {
-  props: {},
+  props: {
+    dot: {
+      type: Boolean,
+      default: false
+    }
+  },
   data: () => ({})
 };
 </script>
