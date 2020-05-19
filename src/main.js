@@ -145,7 +145,6 @@ Sentry.init({
   requestBodies: 'small',
   release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event) {
-    console.log(store);
     const network =
       store && store.state.main && store.state.main.network
         ? store.state.main.network.type.name
