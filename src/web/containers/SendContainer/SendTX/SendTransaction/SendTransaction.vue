@@ -20,7 +20,7 @@
           :items="addresses"
           placeholder="Please enter an address"
           success-toast="Success"
-          :is-valid-address="true"
+          :is-valid-address="false"
           @emitSelectedValue="getSelectedValue"
         />
       </div>
@@ -37,6 +37,10 @@
       <Divider class="mt-7 mb-12" />
       <div>
         <mew-input label="Gas Limit" placeholder=" " value="21000" />
+      </div>
+      <div class="text-center">
+        <mew-button title="Send" :has-full-width="false" />
+        <div class="mt-6 emerald--text">Clean all</div>
       </div>
     </InterfaceWrap>
   </WhiteSheet>
