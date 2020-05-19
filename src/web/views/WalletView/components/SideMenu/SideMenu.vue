@@ -1,7 +1,7 @@
 <template>
   <v-sheet
     color="bg_sidemenu"
-    class="component--sidemenu px-4 py-7 d-flex flex-column"
+    class="mew-component--sidemenu px-4 pb-7 pt-10 d-flex flex-column"
   >
     <div class="mb-4">
       <router-link :to="{ name: 'Dashboard' }">
@@ -44,13 +44,12 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/styles/GlobalVariables.scss';
 
-.component--sidemenu {
+.mew-component--sidemenu {
+  background-image: url('~@/assets/images/backgrounds/bg-light.png');
+  background-position: -294px 0px;
+  background-size: 611px;
   position: relative;
   width: 300px;
   min-height: 100vh;
-  color: white;
-}
-
-.v-input--selection-controls__ripple:before {
 }
 </style>
