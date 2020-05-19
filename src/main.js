@@ -145,16 +145,17 @@ Sentry.init({
   requestBodies: 'small',
   release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event) {
+    console.log(store);
     const network =
-      !store && !store.state.main && !store.state.main.network
+      store && store.state.main && store.state.main.network
         ? store.state.main.network.type.name
         : '';
     const service =
-      !store && !store.state.main && !store.state.main.network
+      store && store.state.main && store.state.main.network
         ? store.state.main.network.service
         : '';
     const identifier =
-      !store && !store.state.main && !store.state.main.account
+      store && store.state.main && store.state.main.account
         ? store.state.main.account.identifier
         : '';
     event.tags = {
