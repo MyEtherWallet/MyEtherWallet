@@ -36,7 +36,10 @@ export default {
 }
 
 .card-content {
-  background: linear-gradient(130deg, #0b2840 0%, #3d9e91 80%, #00c4ff 100%);
+  //background: linear-gradient(130deg, #0b2840 0%, #3d9e91 80%, #00c4ff 100%);
   padding: 70px 90px;
+  background-image: url('~@/assets/images/backgrounds/bg-light.png');
+  background-position: 0px 0px;
+  background-size: 100%;
 }
 </style>
