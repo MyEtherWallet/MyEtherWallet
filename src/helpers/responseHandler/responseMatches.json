@@ -6,5 +6,6 @@
   "kyber-gasLimit-list-update-failed": "swap.warning.kyber-gasLimit-list-update-failed",
   "kyber-list-update-failed": "swap.warning.kyber-list-update-failed",
   "Error retrieving trade, try a different dex": "swap.warning.dexag-cannot-complete",
-  "gas-too-high": "swap.warning.gas-too-high"
+  "gas-too-high": "swap.warning.gas-too-high",
+  "error-generating-swap": "swap.warning.error-generating-swap"
 }
