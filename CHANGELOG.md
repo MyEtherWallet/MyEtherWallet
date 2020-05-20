@@ -1,6 +1,6 @@
 ### Bug
 
-- Fix ens manager txt record [#2391] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2391)
+- Fix ens manager txt record [#2391](https://github.com/MyEtherWallet/MyEtherWallet/pull/2391)
 
 ### Release v5.6.2
 
