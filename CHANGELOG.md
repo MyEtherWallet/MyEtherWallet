@@ -1,3 +1,7 @@
+### Devop
+
+- Better estimate gas limit requirements [#2387](https://github.com/MyEtherWallet/MyEtherWallet/pull/2387)
+
 ### Release v5.6.2
 
 ### Feature
