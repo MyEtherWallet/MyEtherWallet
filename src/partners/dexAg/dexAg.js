@@ -365,13 +365,15 @@ export default class DexAg {
           case 'dexag':
             tx.gas = this.getTokenTradeGas(
               swapDetails.fromCurrency,
-              swapDetails.toCurrency
+              swapDetails.toCurrency,
+              500000
             );
             break;
           default:
             tx.gas = this.getTokenTradeGas(
               swapDetails.fromCurrency,
-              swapDetails.toCurrency
+              swapDetails.toCurrency,
+              500000
             );
         }
       }
