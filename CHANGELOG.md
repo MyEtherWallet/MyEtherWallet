@@ -1,3 +1,7 @@
+### Bug
+
+- Fix aave bugs [#2392] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2392)
+
 ### Release v5.6.2
 
 ### Feature
