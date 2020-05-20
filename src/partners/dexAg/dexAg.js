@@ -7,7 +7,9 @@ import {
   TIME_SWAP_VALID,
   PROVIDER_NAME,
   PROXY_CONTRACT_ADDRESS,
-  SUPPORTED_DEXES
+  SUPPORTED_DEXES,
+  GAS_LIMITS,
+  DAI
 } from './config';
 import dexAgCalls from './dexAg-calls';
 import { Toast } from '@/helpers';
@@ -16,6 +18,10 @@ import debug from 'debug';
 import { utils } from '@/partners';
 
 const errorLogger = debug('v5:partners-dexag');
+
+const toBigNumber = num => {
+  return new BigNumber(num);
+};
 
 export default class DexAg {
   constructor(props = {}) {
@@ -35,6 +41,7 @@ export default class DexAg {
     this.getSupportedDexes();
     this.getSupportedCurrencies(this.network);
     this.getFee();
+    this.getKyberGasLimitList();
     this.platformGasPrice = props.gasPrice || -1;
   }
 
@@ -88,6 +95,17 @@ export default class DexAg {
       }
     } catch (e) {
       this.SUPPORTED_DEXES = SUPPORTED_DEXES;
+    }
+  }
+
+  async getKyberGasLimitList() {
+    try {
+      this.GAS_LIMITS = await dexAgCalls.kyberGasLimits();
+      if (!this.GAS_LIMITS) {
+        this.GAS_LIMITS = GAS_LIMITS;
+      }
+    } catch (e) {
+      this.GAS_LIMITS = GAS_LIMITS;
     }
   }
 
@@ -337,14 +355,24 @@ export default class DexAg {
       if (preparedTradeTxs.size > 0) {
         switch (swapDetails.provider) {
           case 'curvefi':
-            tx.gas = 2000000;
+            tx.gas = this.getTokenTradeGas(
+              swapDetails.fromCurrency,
+              swapDetails.toCurrency,
+              1000000
+            );
             break;
           case 'zero_x':
           case 'dexag':
-            tx.gas = this.tradeGasLimitBase;
+            tx.gas = this.getTokenTradeGas(
+              swapDetails.fromCurrency,
+              swapDetails.toCurrency
+            );
             break;
           default:
-            tx.gas = this.tradeGasLimitBase;
+            tx.gas = this.getTokenTradeGas(
+              swapDetails.fromCurrency,
+              swapDetails.toCurrency
+            );
         }
       }
 
@@ -405,6 +433,41 @@ export default class DexAg {
 
   async createTransaction(swapDetails, dexToUse) {
     return dexAgCalls.createTransaction({ dex: dexToUse, ...swapDetails });
+  }
+
+  getTokenTradeGas(fromCurrency, toCurrency, extra = 0) {
+    const fromGas = this.getTokenSwapGas(fromCurrency);
+    const toGas = this.getTokenSwapGas(toCurrency);
+    return toBigNumber(fromGas).plus(toBigNumber(toGas)).plus(toBigNumber(extra)).toFixed(0).toString();
+  }
+
+  getTokenSwapGas(token) {
+    const gasLimits = this.getGasLimits(token);
+    return gasLimits.swapGasLimit;
+  }
+
+  getGasLimits(token) {
+    try {
+      const address = this.getTokenAddress(token);
+      const gasLimit = this.GAS_LIMITS.find(entry => {
+        return (
+          entry.address.toLowerCase() === address.toLowerCase() ||
+          entry.symbol === token
+        );
+      });
+      if (gasLimit !== null && gasLimit !== undefined) {
+        return gasLimit;
+      }
+      return {
+        swapGasLimit: this.tradeGasLimitBase,
+        approveGasLimit: this.approvalGasLimit
+      };
+    } catch (e) {
+      return {
+        swapGasLimit: this.tradeGasLimitBase,
+        approveGasLimit: this.approvalGasLimit
+      };
+    }
   }
 
   getTokenAddress(token) {

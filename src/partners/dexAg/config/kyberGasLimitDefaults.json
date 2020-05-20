@@ -1,0 +1,536 @@
+[
+  {
+    "symbol": "ETH",
+    "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "swapGasLimit": 0,
+    "approveGasLimit": 0
+  },
+  {
+    "symbol": "WETH",
+    "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "KNC",
+    "address": "0xdd974d5c2e2928dea5f71b9825b8b646686bd200",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "SAI",
+    "address": "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359",
+    "swapGasLimit": 650000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "DAI",
+    "address": "0x6b175474e89094c44da98b954eedeac495271d0f",
+    "swapGasLimit": 650000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "OMG",
+    "address": "0xd26114cd6ee289accf82350c8d8487fedb8a0c07",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "SNT",
+    "address": "0x744d70fdbe2ba4cf95131626614a1763df805b9e",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "ELF",
+    "address": "0xbf2179859fc6d5bee9bf9158632dc51678a4100e",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "POWR",
+    "address": "0x595832f8fc6bf59c85c527fec3740a1b7a361269",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "MANA",
+    "address": "0x0f5d2fb29fb7d3cfee444a200298f468908cc942",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "BAT",
+    "address": "0x0d8775f648430679a709e98d2b0cb6250d2887ef",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "REQ",
+    "address": "0x8f8221afbb33998d8584a2b05749ba73c37a938a",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "RDN",
+    "address": "0x255aa6df07540cb5d3d297f0d0d4d84cb52bc8e6",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "APPC",
+    "address": "0x1a7a8bd9106f2b8d977e08582dc7d24c723ab0db",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "BQX",
+    "address": "0x5af2be193a6abca9c8817001f45744777db30756",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "AST",
+    "address": "0x27054b13b1b798b345b591a4d22e6562d47ea75a",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "LINK",
+    "address": "0x514910771af9ca656af840dff83e8264ecf986ca",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "DGX",
+    "address": "0x4f3afec4e5a3f2a6a1a411def7d7dfe50ee057bf",
+    "swapGasLimit": 975000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "STORM",
+    "address": "0xd0a4b8946cb52f0661273bfbc6fd0e0c75fc6433",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "IOST",
+    "address": "0xfa1a856cfa3409cfa145fa4e20eb270df3eb21ab",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "ABT",
+    "address": "0xb98d4c97425d9908e66e53a6fdf673acca0be986",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "ENJ",
+    "address": "0xf629cbd94d3791c9250152bd8dfbdf380e2a3b9c",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "BLZ",
+    "address": "0x5732046a883704404f284ce41ffadd5b007fd668",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "POLY",
+    "address": "0x9992ec3cf6a55b00978cddf2b27bc6882d88d1ec",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "CVC",
+    "address": "0x41e5560054824ea6b0732e656e3ad64e20e94e45",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "PAY",
+    "address": "0xb97048628db6b661d4c2aa833e95dbe1a905b280",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "DTA",
+    "address": "0x69b148395ce0015c13e36bffbad63f49ef874e03",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "BNT",
+    "address": "0x1f573d6fb3f13d689ff844b4ce37794d79a7ff1c",
+    "swapGasLimit": 650000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "TUSD",
+    "address": "0x8dd5fbce2f6a956c3022ba3663759011dd51e73e",
+    "swapGasLimit": 780000,
+    "approveGasLimit": 156000,
+    "custom_proxy": true,
+    "original_token": "0x0000000000085d4780B73119b644AE5ecd22b376"
+  },
+  {
+    "symbol": "LEND",
+    "address": "0x80fb784b7ed66730e8b1dbd9820afd29931aab03",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "MTL",
+    "address": "0xf433089366899d83a9f26a773d59ec7ecf30355e",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "REP",
+    "address": "0x1985365e9f78359a9b6ad760e32412f4a445e862",
+    "swapGasLimit": 650000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "ZRX",
+    "address": "0xe41d2489571d322189246dafa5ebde1f4699f498",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "DAT",
+    "address": "0x81c9151de0c8bafcd325a57e3db5a5df1cebf79c",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "REN",
+    "address": "0x408e41876cccdc0f92210600ef50372656052a38",
+    "swapGasLimit": 650000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "QKC",
+    "address": "0xea26c4ac16d4a5a106820bc8aee85fd0b7b2b664",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "MKR",
+    "address": "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
+    "swapGasLimit": 650000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "OST",
+    "address": "0x2c4e8f2d746113d0696ce89b35f0d8bf88e0aeca",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "PT",
+    "address": "0x094c875704c14783049ddf8136e298b3a099c446",
+    "swapGasLimit": 650000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "ABYSS",
+    "address": "0x0e8d6b471e332f140e7d9dbb99e5e3822f728da6",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "WBTC",
+    "address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "swapGasLimit": 650000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "MLN",
+    "address": "0xec67005c4e498ec7f55e092bd1d35cbc47c91892",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "USDC",
+    "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    "swapGasLimit": 715000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "EURS",
+    "address": "0xdb25f211ab05b1c97d595516f45794528a807ad8",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "CDT",
+    "address": "0x177d39ac676ed1c67a2b268ad7f1e58826e5b0af",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "MCO",
+    "address": "0xb63b606ac810a52cca15e44bb630fd42d8d1d83d",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "PAX",
+    "address": "0x8e870d67f660d95d5be530380d0ec0bd388289e1",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "GEN",
+    "address": "0x543ff227f64aa17ea132bf9886cab5db55dcaddf",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "LRC",
+    "address": "0xbbbbca6a901c926f240b89eacb641d8aec7aeafd",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "RLC",
+    "address": "0x607f4c5bb672230e8672085532f7e901544a7375",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "NPXS",
+    "address": "0xa15c7ebe1f07caf6bff097d8a589fb8ac49ae5b3",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "GNO",
+    "address": "0x6810e776880c02933d47db1b9fc05908e5386b96",
+    "swapGasLimit": 780000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "MYB",
+    "address": "0x5d60d8d7ef6d37e16ebabc324de3be57f135e0bc",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "BAM",
+    "address": "0x22b3faaa8df978f6bafe18aade18dc2e3dfa0e0c",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "SPN",
+    "address": "0x20f7a3ddf244dc9299975b4da1c39f8d5d75f05a",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "EQUAD",
+    "address": "0xc28e931814725bbeb9e670676fabbcb694fe7df2",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "UPP",
+    "address": "0xc86d054809623432210c107af2e3f619dcfbf652",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "USDT",
+    "address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+    "swapGasLimit": 650000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "SNX",
+    "address": "0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f",
+    "swapGasLimit": 975000,
+    "approveGasLimit": 156000,
+    "custom_proxy": true,
+    "original_token": "0xc011a72400e58ecd99ee497cf89e3775d4bd732f"
+  },
+  {
+    "symbol": "BTU",
+    "address": "0xb683d83a532e2cb7dfa5275eed3698436371cc9f",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "TKN",
+    "address": "0xaaaf91d9b90df800df4f55c205fd6989c977e73a",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "RAE",
+    "address": "0xe5a3229ccb22b6484594973a03a3851dcd948756",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "EDO",
+    "address": "0xced4e93198734ddaff8492d525bd258d49eb388e",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "SUSD",
+    "address": "0x57ab1ec28d129707052df4df418d58a2d46d5f51",
+    "swapGasLimit": 650000,
+    "approveGasLimit": 156000,
+    "custom_proxy": true,
+    "original_token": "0xd8b325e9a95abc44cedc90aab64ec1f231f2cc8f"
+  },
+  {
+    "symbol": "SPIKE",
+    "address": "0xa7fc5d2453e3f68af0cc1b78bcfee94a1b293650",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "SAN",
+    "address": "0x7c5a0ce9267ed19b22f8cae653f198e3e8daf098",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "USDS",
+    "address": "0xa4bdb11dc0a2bec88d24a3aa1e6bb17201112ebe",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "NEXXO",
+    "address": "0x278a83b64c3e3e1139f8e8a52d96360ca3c69a3d",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "EKG",
+    "address": "0x6a9b3e36436b7abde8c4e2e2a98ea40455e615cf",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "ANT",
+    "address": "0x960b236a07cf122663c4303350609a66a7b288c0",
+    "swapGasLimit": 520000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "GDC",
+    "address": "0x301c755ba0fca00b1923768fffb3df7f4e63af31",
+    "swapGasLimit": 598000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "AMPL",
+    "address": "0xd46ba6d942050d489dbd938a2c909a5d5039a161",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "TKX",
+    "address": "0x667102bd3413bfeaa3dffb48fa8288819e480a88",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "MET",
+    "address": "0xa3d58c4e56fedcae3a7c43a725aee9a71f0ece4e",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "MFG",
+    "address": "0x6710c63432a2de02954fc0f851db07146a6c0312",
+    "swapGasLimit": 585000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "FXC",
+    "address": "0x4a57e687b9126435a9b19e4a802113e266adebde",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "UBT",
+    "address": "0x8400d94a5cb0fa0d041a3788e395285d61c9ee5e",
+    "swapGasLimit": 650000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "LOOM",
+    "address": "0xa4e8c3ec456107ea67d3075bf9e3df3a75823db0",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "PBTC",
+    "address": "0x5228a22e72ccc52d415ecfd199f99d0665e7733b",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "OGN",
+    "address": "0x8207c1ffc5b6804f6024322ccf34f29c3541ae26",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "BAND",
+    "address": "0xba11d00c5f74255f56a5e366f4f77f5a186d7f55",
+    "swapGasLimit": 650000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "RSV",
+    "address": "0x1c5857e110cd8411054660f60b5de6a6958cfae2",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "RSR",
+    "address": "0x8762db106b2c2a0bccb3a80d1ed41273552616e8",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "KEY",
+    "address": "0x4cc19356f2d37338b9802aa8e8fc58b0373296e7",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "PNK",
+    "address": "0x93ed3fbe21207ec2e8f2d3c3de6e058cb73bc04d",
+    "swapGasLimit": 585000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "GHT",
+    "address": "0xbe30f684d62c9f7883a75a29c162c332c0d98f23",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "TRYB",
+    "address": "0x2c537e5624e4af88a7ae4060c022609376c8d0eb",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  },
+  {
+    "symbol": "2KEY",
+    "address": "0xe48972fcd82a274411c01834e2f031d4377fa2c0",
+    "swapGasLimit": 494000,
+    "approveGasLimit": 156000
+  }
+]

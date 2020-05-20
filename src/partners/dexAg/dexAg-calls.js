@@ -90,9 +90,26 @@ const supportedDexes = async () => {
   }
 };
 
+const kyberGasLimits = async () => {
+  try {
+    const results = await post(
+      swapApiEndpoints.base + '/kyber',
+      utils.buildPayload('getGasLimits', {})
+    );
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+
+    return results.result;
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
+};
+
 export default {
   getSupportedCurrencies,
   getPrice,
   createTransaction,
-  supportedDexes
+  supportedDexes,
+  kyberGasLimits
 };
