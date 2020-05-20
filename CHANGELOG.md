@@ -1,3 +1,8 @@
+### Bug
+
+- Fix perkle network connection [#2389](https://github.com/MyEtherWallet/MyEtherWallet/pull/2389)
+
+
 ### Release v5.6.2
 
 ### Feature
