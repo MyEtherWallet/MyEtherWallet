@@ -6,7 +6,7 @@ const allowedConnections = require('./connections');
 const sourceMapsConfig = {
   filename: 'sourcemaps/[file].map'
 };
-if (env_vars.FULL_SOURCEMAPS === 'false')
+if (JSON.parse(env_vars.FULL_SOURCEMAPS) === 'false')
   sourceMapsConfig.exclude = /vendors.*.*/;
 module.exports = {
   devtool: false,
