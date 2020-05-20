@@ -23,7 +23,8 @@ const EXCEPTIONS = [
   '@vue/test-utils',
   'graphql',
   '@myetherwallet/eth-token-balance',
-  '@makerdao/dai'
+  '@makerdao/dai',
+  'bootstrap-vue'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
