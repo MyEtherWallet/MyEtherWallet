@@ -5,7 +5,8 @@ const ERRORS = {
     'errorsGlobal.browser-not-supported'
 };
 const WARNING = {
-  'Network Error': 'errorsGlobal.network-error'
+  'Network Error': 'errorsGlobal.network-error',
+  'Failed to fetch': 'errorsGlobal.network-error'
 };
 export default event => {
   const errorValues = Object.keys(ERRORS);
