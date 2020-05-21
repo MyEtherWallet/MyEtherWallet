@@ -224,7 +224,7 @@ export default class MakerCdpBase {
       .get('mcd:cdpType')
       .getCdpType(null, this.cdpType);
 
-    return toBigNumber(rawType.liquidationPenalty._amount);
+    return toBigNumber(rawType.liquidationPenalty);
   }
 
   get liquidationRatio() {
@@ -378,7 +378,9 @@ export default class MakerCdpBase {
 
   get stabilityFee() {
     if (this.cdp) {
-      return toBigNumber(this.cdp.type.annualStabilityFee);
+      return toBigNumber(this.sysVars.baseStabilityFee)
+        .plus(this.cdpTypeObject.annualStabilityFee)
+        .toString();
     }
     return toBigNumber(0);
   }

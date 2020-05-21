@@ -274,14 +274,14 @@ export default {
       type: BigNumber,
       default: toBigNumber(0)
     },
-    liquidationPenalty: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
-    stabilityFee: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
+    // liquidationPenalty: {
+    //   type: BigNumber,
+    //   default: toBigNumber(0)
+    // },
+    // stabilityFee: {
+    //   type: BigNumber,
+    //   default: toBigNumber(0)
+    // },
     liquidationRatio: {
       type: BigNumber,
       default: toBigNumber(0)
@@ -517,6 +517,17 @@ export default {
         this.vaultType = this.currentCdp.cdpType;
       }
       this.getTotalDebt();
+    },
+    stabilityFee() {
+      console.log(this.emptyMakerCreated); // todo remove dev item
+      if (this.emptyMakerCreated) {
+        return this.makerCDP.stabilityFee;
+      }
+    },
+    liquidationPenalty() {
+      if (this.emptyMakerCreated) {
+        return this.makerCDP.liquidationPenalty;
+      }
     },
     async getTotalDebt() {
       if (this.currentCdp) this.currentCdpLoaded = true;
