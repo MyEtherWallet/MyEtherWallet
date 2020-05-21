@@ -6,7 +6,8 @@ const ERRORS = {
 };
 const WARNING = {
   'Network Error': 'errorsGlobal.network-error',
-  'Failed to fetch': 'errorsGlobal.network-error'
+  'Failed to fetch': 'errorsGlobal.network-error',
+  'ResizeObserver loop limit exceeded': ''
 };
 export default event => {
   const errorValues = Object.keys(ERRORS);
@@ -20,10 +21,12 @@ export default event => {
   });
 
   if (foundError) {
-    Toast.responseHandler(Vue.$i18n.t(ERRORS[foundError]), Toast.ERROR);
+    if (ERRORS[foundError] !== '')
+      Toast.responseHandler(Vue.$i18n.t(ERRORS[foundError]), Toast.ERROR);
     return true;
   } else if (foundWarning) {
-    Toast.responseHandler(Vue.$i18n.t(WARNING[foundWarning]), Toast.WARN);
+    if (WARNING[foundWarning] !== '')
+      Toast.responseHandler(Vue.$i18n.t(WARNING[foundWarning]), Toast.WARN);
     return true;
   }
   return false;
