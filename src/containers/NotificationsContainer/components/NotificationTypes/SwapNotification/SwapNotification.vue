@@ -295,6 +295,7 @@ export default {
           );
           const currentTime = moment();
           const timeSince = currentTime.diff(createdAt, 'days');
+
           if (timeSince >= 5) {
             updateStatus(swapOnlyStatuses.CANCELLED);
             return;

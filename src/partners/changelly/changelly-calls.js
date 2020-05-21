@@ -240,3 +240,6 @@ export default {
   getFixRate,
   createFixTransaction
 };
+
+
+

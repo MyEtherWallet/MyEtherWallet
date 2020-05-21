@@ -120,7 +120,7 @@
           </li>
           <li>
             <p>{{ $t('dappsMCDMaker.liquidation-penalty') }}</p>
-            <p>{{ displayPercentValue(liquidationPenalty) }}%</p>
+            <p>{{ displayPercentValue(liquidationPenalty()) }}%</p>
           </li>
           <li>
             <p>{{ $t('dappsMCDMaker.collateral-ratio') }}</p>
@@ -145,7 +145,7 @@
             <p>
               {{
                 $t('dappsMCDMaker.stability-fee-in-mkr', {
-                  value: displayFixedPercent(stabilityFee).toString()
+                  value: displayFixedPercent(stabilityFee()).toString()
                 })
               }}
             </p>
@@ -229,14 +229,14 @@ export default {
       type: BigNumber,
       default: toBigNumber(0)
     },
-    liquidationPenalty: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
-    stabilityFee: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
+    // liquidationPenalty: {
+    //   type: BigNumber,
+    //   default: toBigNumber(0)
+    // },
+    // stabilityFee: {
+    //   type: BigNumber,
+    //   default: toBigNumber(0)
+    // },
     priceService: {
       type: Object,
       default: function () {
@@ -347,6 +347,12 @@ export default {
       }
       return true;
     },
+    // stabilityFee() {
+    //   console.log(this.emptyMakerCreated); // todo remove dev item
+    //   if (this.emptyMakerCreated) {
+    //     return this.makerCDP.stabilityFee;
+    //   }
+    // },
     minInSelectedCurrency() {
       return this.minDeposit;
     },
@@ -419,6 +425,9 @@ export default {
       return null;
     },
     minCreate() {
+      if (this.emptyMakerCreated) {
+        return this.makerCDP.minDai;
+      }
       return 20;
     }
   },
@@ -476,6 +485,7 @@ export default {
     async buildEmptyInstance() {
       this.makerCDP = await this.buildEmpty();
       this.$forceUpdate();
+      console.log('buildEmpty'); // todo remove dev item
       this.emptyMakerCreated = true;
     },
     BuildProxy() {
@@ -493,6 +503,17 @@ export default {
               });
           }
         });
+      }
+    },
+    stabilityFee() {
+      console.log(this.emptyMakerCreated); // todo remove dev item
+      if (this.emptyMakerCreated) {
+        return this.makerCDP.stabilityFee;
+      }
+    },
+    liquidationPenalty() {
+      if (this.emptyMakerCreated) {
+        return this.makerCDP.liquidationPenalty;
       }
     },
     displayPercentValue,

@@ -23,7 +23,7 @@ const ServiceRoles = {
 };
 
 export async function setupServices(self, maker) {
-  self._priceService = maker.service(ServiceRoles.PRICE);
+  // self._priceService = maker.service(ServiceRoles.PRICE);
   const result = await Promise.all([
     maker.service(ServiceRoles.SYSTEM_DATA),
     maker.service(ServiceRoles.PROXY),
@@ -42,44 +42,28 @@ export async function setupServices(self, maker) {
 export async function setupPriceAndRatios(
   self,
   _priceService,
-  _typeService,
-  _systemData
+  _typeService
 ) {
   self.pethMin = toBigNumber(0.005);
 
   const result = await Promise.all([
-    _priceService.getEthPrice(),
-    _priceService.getPethPrice(),
-    _priceService.getPethPrice(),
-    _priceService.getWethToPethRatio(),
-    _systemData.getAnnualBaseRate()
+    self._systemData.getAnnualBaseRate()
   ]);
-
-  self.ethPrice = toBigNumber(result[0].toNumber());
-  self.pethPrice = toBigNumber(result[1].toNumber());
-  self._targetPrice = toBigNumber(result[2].toNumber());
-  self.liquidationRatio = toBigNumber(_typeService.getLiquidationRatio());
-  self.liquidationPenalty = toBigNumber(_typeService.getLiquidationPenalty());
-  self.stabilityFee = toBigNumber(_typeService.getCdpType(null, 'ETH-A').getAnnualGovernanceFee()).plus(
-    result[3].toNumber()
+  self.ethPrice = toBigNumber(_typeService.getCdpType(null, 'ETH-A'));
+  self.liquidationRatio = toBigNumber(
+    _typeService.getCdpType(null, 'ETH-A').liquidationRatio
   );
-  self.baseStabilityFee = toBigNumber(result[3].toNumber());
-  self.wethToPethRatio = toBigNumber(result[4]);
+  self.liquidationPenalty = toBigNumber(_typeService.liquidationPenalty);
+  self.stabilityFee = toBigNumber(
+    _typeService.getCdpType(null, 'ETH-A').annualStabilityFee
+  ).plus(result[0]);
+  self.baseStabilityFee = toBigNumber(result[0]);
   return self;
 }
 
 export async function getDetailsForTokens(self, collateralTokens) {
   self.balances = {};
   self.tokens = {};
-  self.daiToken = self._tokenService.getToken(DAI);
-  self.daiToken.balance().then(res => {
-    self.daiBalance = res.toBigNumber();
-  });
-
-  self.mkrToken = self._tokenService.getToken(MKR);
-  self.mkrToken.balance().then(res => {
-    self.mkrBalance = res.toBigNumber();
-  });
 
   for (let i = 0; i < collateralTokens.length; i++) {
     const token = self._tokenService.getToken(collateralTokens[i].currency);
@@ -92,10 +76,9 @@ export async function getDetailsForTokens(self, collateralTokens) {
   self.tokens[token.symbol] = token;
   self.balances[token.symbol] = (await token.balance()).toBigNumber();
 
-  self.tokens['MKR'] = self.mkrToken;
-  self.tokens['DAI'] = self.daiToken;
-  self.balances['DAI'] = self.daiBalance;
-  self.balances['MKR'] = self.mkrBalance;
+  self.tokens['DAI'] = self.tokens['MDAI'];
+  self.balances['DAI'] = self.balances['MDAI'];
+
   await getDustValues(self, collateralTokens);
 }
 
@@ -203,7 +186,9 @@ export async function getValuesForManage(cdpId) {
     governanceFeeOwed: currentCdp.governanceFeeOwed,
     ethCollateralNum: currentCdp.ethCollateral,
     zeroDebt: currentCdp.zeroDebt,
-    cdpsWithType: this.cdpsWithType
+    cdpsWithType: this.cdpsWithType,
+    _systemData: this._systemData,
+    baseStabilityFee: this.baseStabilityFee
   };
 }
 
@@ -311,7 +296,8 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
     _mkrToken: this._mkrToken,
     mkrBalance: this.mkrBalance,
     minEth: this.minEth,
-    cdpsWithType: this.cdpsWithType
+    cdpsWithType: this.cdpsWithType,
+    baseStabilityFee: this.baseStabilityFee
   };
 
   const services = {
@@ -343,7 +329,8 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
     balances: this.balances,
     proxyAllowances: this.proxyAllowances,
     mcdCurrencies: this.mcdCurrencies,
-    dustValues: this.dustValues
+    dustValues: this.dustValues,
+    _systemData: this._systemData
   };
   let makerCDP;
   try {
