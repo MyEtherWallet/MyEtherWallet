@@ -35,6 +35,7 @@
   "get-started": "Get Started",
   "tutorial": "Tutorial",
   "what-is-that": "What is that?",
+  "invalid-private-key": "Invalid private key verify the length of the key",
   "confirm-logout": "Are you sure you want to logout of your wallet?",
   "feedback": {
     "send-us-feedback": "If you want to send us your feedback, please use",
