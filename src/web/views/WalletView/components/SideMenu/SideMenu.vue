@@ -46,8 +46,8 @@ export default {
 
 .mew-component--sidemenu {
   background-image: url('~@/assets/images/backgrounds/bg-light.png');
-  background-position: -294px 0px;
-  background-size: 611px;
+  background-position: -336px 0px;
+  background-size: 663px;
   position: relative;
   width: 300px;
   min-height: 100vh;
