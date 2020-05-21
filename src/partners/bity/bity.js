@@ -92,7 +92,7 @@ export default class BitySwap {
   async retrieveRates() {
     if (!this.isValidNetwork) return;
     const exitRates = await getExitRates();
-    const exitData = exitRates.pairs;
+    const exitData = exitRates ? exitRates.pairs : [];
     const rates = await getRates();
     const data = rates.objects;
 
