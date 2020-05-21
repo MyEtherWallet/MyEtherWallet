@@ -1,6 +1,5 @@
 import { v4 as uuid } from 'uuid';
 import { Toast } from '@/helpers';
-import {utils} from '@/partners';
 
 const createProxy = (valueObject = {}, defaultValue = 42) => {
   const handler = function (defaultValue) {
@@ -105,7 +104,6 @@ const checkErrorJson = results =>{
 }
 
 const handleOrThrow = (e, source) => {
-  console.log(e); // todo remove dev item
   if (source === 'suppress') {
     return;
   } else if (source === 'handle') {
