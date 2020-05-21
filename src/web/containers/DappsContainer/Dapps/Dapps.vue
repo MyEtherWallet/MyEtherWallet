@@ -57,7 +57,16 @@ export default {
           icon: IconBrowser
         }
       },
-      mewDapps: [this.dapps.MakerDAO]
+      mewDapps: [
+        {
+          title: 'MakerDAO',
+          subtitle: 'Collateralize & Generate DAI',
+          tag: '#Exchanges',
+          isNew: true,
+          icon: IconMakerDAO,
+          thumbsup: IconThumbsUp
+        }
+      ]
     };
   }
 };
