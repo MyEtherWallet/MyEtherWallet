@@ -424,7 +424,7 @@ export default {
     },
     validSwap() {
       // initial chack.  will provide an alert on the next screen if no address is provided
-      console.log(this.recalculating); // todo remove dev item
+      // console.log(this.recalculating); // todo remove dev item
       // if (this.recalculating) return false;
       const canExit =
         this.isExitToFiat && this.fromCurrency !== this.baseCurrency
