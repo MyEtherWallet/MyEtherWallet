@@ -537,7 +537,6 @@ export default {
             return item;
           });
         } catch (e) {
-          console.log(e);
           tokens = this.network.type.tokens.map(token => {
             token.balance = 'Load';
             return token;
