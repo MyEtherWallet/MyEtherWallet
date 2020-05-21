@@ -479,6 +479,7 @@ export default {
             Toast.responseHandler('Something went wrong!', Toast.ERROR);
           });
         expiry.then(response => {
+          if (!response) return;
           response.forEach((item, idx) => {
             const expiryDate = item * 1000;
             const isExpired = expiryDate < new Date().getTime();
