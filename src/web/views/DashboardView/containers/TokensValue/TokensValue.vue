@@ -93,6 +93,7 @@
               :has-full-width="false"
               btn-style="outline"
               title="Trade"
+              button-size="small"
             />
           </td>
         </tr>
