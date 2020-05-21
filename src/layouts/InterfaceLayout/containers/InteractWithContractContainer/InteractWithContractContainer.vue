@@ -434,8 +434,9 @@ export default {
     switchView(direction) {
       switch (direction) {
         case 'forward':
-          if (this.abi !== '' && JSON.parse(this.abi)) {
-            JSON.parse(this.abi).forEach(item => {
+          if (this.abi !== '') {
+            const jsonAbi = JSON.parse(this.abi) ? JSON.parse(this.abi) : [];
+            jsonAbi.forEach(item => {
               if (item.type !== 'constructor' && item.constant !== undefined) {
                 this.contractMethods.push(item);
               }
