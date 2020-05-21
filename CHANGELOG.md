@@ -1,6 +1,10 @@
 ### Bug
 
-- Fix aave bugs, ens manager txt record 
+- Fix aave bugs, ens manager txt record [#2396](https://github.com/MyEtherWallet/MyEtherWallet/pull/2396)
+
+### Devop
+
+- Fix sentry releases [#2395](https://github.com/MyEtherWallet/MyEtherWallet/pull/2395)
 
 ### Release v5.6.2
 
