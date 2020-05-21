@@ -148,6 +148,7 @@
                   )
                 }}
               </p>
+              <br />
               <p>
                 {{
                   parent.$t(
@@ -183,7 +184,7 @@
               <i18n path="termsOfService.privacy-title-p" tag="p">
                 <template v-slot:link>
                   <a
-                    href="https://kb.myetherwallet.com/en/getting-started/myetherwallet-an-introduction/"
+                    href="https://myetherwallet.com/privacy-policy"
                     target="_blank"
                     rel="noopener noreferrer"
                     >"{{ parent.$t('termsOfService.link') }}"</a
