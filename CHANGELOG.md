@@ -1,6 +1,6 @@
 ### Devop
 
-- Update terms of service []()
+- Update terms of service [#2394](https://github.com/MyEtherWallet/MyEtherWallet/pull/2394)
 
 ### Release v5.6.2
 
