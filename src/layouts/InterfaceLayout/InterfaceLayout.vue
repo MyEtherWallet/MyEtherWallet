@@ -538,7 +538,7 @@ export default {
           });
         } catch (e) {
           tokens = this.network.type.tokens.map(token => {
-            token.balance = 0;
+            token.balance = 'Load';
             return token;
           });
         }
