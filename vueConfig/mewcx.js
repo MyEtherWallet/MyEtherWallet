@@ -1,5 +1,4 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-// const HtmlWebpackPlugin = require('html-webpack-plugin');
 const env_vars = require('../ENV_VARS');
 const path = require('path');
 const defaultConfig = require('./defaultConfigs');
@@ -63,15 +62,11 @@ const webpackConfig = {
         }
       }
     ])
-  ]),
-  optimization: {
-    splitChunks: false
-  }
+  ])
 };
 const pluginOptions = {
   configureMultiCompilerWebpack: [webpackConfigCXWeb3, webpackConfig]
 };
-webpackConfig.entry = webpackConfigCXWeb3.entry;
 const exportObj = {
   pages: {
     index: {
