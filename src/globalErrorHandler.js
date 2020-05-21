@@ -7,7 +7,8 @@ const ERRORS = {
 const WARNING = {
   'Network Error': 'errorsGlobal.network-error',
   'Failed to fetch': 'errorsGlobal.network-error',
-  'Error: connection not open': 'errorsGlobal.network-error',
+  'connection not open': 'errorsGlobal.network-error',
+  'timeout of 15000ms exceeded': 'errorsGlobal.network-error',
   'ResizeObserver loop limit exceeded': ''
 };
 export default event => {
