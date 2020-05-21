@@ -56,6 +56,7 @@ export default {
   components: { WhiteSheet, InterfaceWrap, Divider },
   data() {
     return {
+      addressValue: '',
       addresses: [
         {
           address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
@@ -82,7 +83,8 @@ export default {
   },
   methods: {
     getSelectedValue(value) {
-      console.log('selected value:', value);
+      //console.log('selected value:', value);
+      this.addressValue = value;
     }
   }
 };
