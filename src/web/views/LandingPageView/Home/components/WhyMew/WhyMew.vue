@@ -43,7 +43,7 @@
           />
         </div>
         <info-card
-          class="ml-10"
+          class="ml-10 d-flex flex-column justify-space-between"
           max-width="320"
           :link="{ title: 'Get the App', url: 'www.google.com' }"
           title="MEWwallet"
