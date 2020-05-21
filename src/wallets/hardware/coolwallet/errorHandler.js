@@ -1,10 +1,12 @@
 import { Toast } from '@/helpers';
 import Vue from 'vue';
 const ERRORS = {
-  WrongPassword: 'coolWalletError.wrong-password',
-  CardLocked: 'coolWalletError.card-locked',
-  AlreadyRegistered: 'coolWalletError.already-registered',
-  NoWalletInstance: 'coolWalletError.no-wallet-instance'
+  'Wrong password for app registration.': 'coolWalletError.wrong-password',
+  'Card locked! Please unlock through the app': 'coolWalletError.card-locked',
+  "App is already registered! If you're having trouble, please reregister the app by removing it from the wallet app.":
+    'coolWalletError.already-registered',
+  'Having issues with pairing CoolWallet': 'coolWalletError.no-wallet-instance',
+  'navigator.bluetooth is undefined': 'coolWalletError.no-bluetooth'
 };
 const WARNING = {};
 
@@ -12,10 +14,10 @@ export default err => {
   const errorValues = Object.keys(ERRORS);
   const warningValues = Object.keys(WARNING);
   const foundError = errorValues.find(item => {
-    return err.name ? err.name.includes(item) : err.includes(item);
+    return item.includes(err.message) || item.includes(err);
   });
   const foundWarning = warningValues.find(item => {
-    return err.name ? err.name.includes(item) : err.includes(item);
+    return item.includes(err.message) || item.includes(err);
   });
 
   if (foundError) {
