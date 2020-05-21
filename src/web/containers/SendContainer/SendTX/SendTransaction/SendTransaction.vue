@@ -39,7 +39,7 @@
         <mew-input label="Gas Limit" placeholder=" " value="21000" />
       </div>
       <div class="text-center">
-        <mew-button title="Send" :has-full-width="false" />
+        <mew-button title="Send" :has-full-width="false" button-size="xlarge" />
         <div class="mt-6 emerald--text">Clean all</div>
       </div>
     </InterfaceWrap>

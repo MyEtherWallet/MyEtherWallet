@@ -60,7 +60,7 @@
         class="ml-auto"
         :has-full-width="false"
         title="Send Transaction"
-        height-size="large"
+        button-size="xlarge"
       />
     </div>
   </WhiteSheet>
