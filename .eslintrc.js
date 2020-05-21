@@ -3,7 +3,8 @@ module.exports = {
     VERSION: 'readonly',
     ROUTER_MODE: 'readonly',
     BUILD_TYPE: 'readonly',
-    NODE_ENV: 'readonly'
+    NODE_ENV: 'readonly',
+    FULL_SOURCEMAPS: 'readonly'
   },
   root: true,
   env: {
