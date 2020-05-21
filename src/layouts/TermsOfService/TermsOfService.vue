@@ -80,8 +80,14 @@
                 }}
               </p>
               <br />
+              <p>
+                {{
+                  parent.$t('termsOfService.services-eligibility-title-2-p-3')
+                }}
+              </p>
+              <br />
               <i18n
-                path="termsOfService.services-eligibility-title-2-p-3"
+                path="termsOfService.services-eligibility-title-2-p-4"
                 tag="p"
               >
                 <template v-slot:article1>
