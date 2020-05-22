@@ -44,18 +44,16 @@
       class="px-3 mt-5"
     />
     <v-row class="px-6 align-center">
-      <v-col>
-        <div class="d-flex align-center justify-center">
-          <div class="font-weight-bold">ETH PRICE</div>
-          <div class="ml-2 font-weight-regular text-color--mew-green">
-            3.12%
-          </div>
-          <v-icon class="emerald--text body-2">mdi-arrow-up-bold</v-icon>
-          <v-icon v-if="false" class="light_red--text body-2"
-            >mdi-arrow-down-bold</v-icon
-          >
-          <div class="ml-5">$321.55 / 1 ETH</div>
+      <v-col class="d-flex align-center justify-center">
+        <div class="font-weight-bold">ETH PRICE</div>
+        <div class="ml-2 font-weight-regular text-color--mew-green">
+          3.12%
         </div>
+        <v-icon class="emerald--text body-2">mdi-arrow-up-bold</v-icon>
+        <v-icon v-if="false" class="light_red--text body-2"
+          >mdi-arrow-down-bold</v-icon
+        >
+        <div class="ml-5">$321.55 / 1 ETH</div>
       </v-col>
       <v-col class="text-right">
         <mew-button
