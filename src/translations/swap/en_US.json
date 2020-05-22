@@ -6,6 +6,7 @@
   "deposit-addr": "Deposit Address",
   "recieve-amount": "Received Amount",
   "review": "Review swap",
+  "recalculating": "Recalculating",,
   "sent-my-coins": "I sent my {currency}",
   "send-value-curr": "Send {value} {currency} to ",
   "value-below-min": "Value is below the minimum for selected provider",
@@ -33,7 +34,8 @@
     "kyber-gasLimit-list-update-failed": "Failed to update Kyber Network trade gasLimit list",
     "kyber-list-update-failed": "Failed to update Kyber Network default information",
     "dexag-cannot-complete": "Error retrieving trade, try a different dex",
-    "gas-too-high": "Gas price is too high. Please lower your gas price and try again."
+    "gas-too-high": "Gas price is too high. Please lower your gas price and try again.",
+    "error-generating-swap": "An error occurred while finalizing the swap details"
   },
   "notice": {
     "retrieve-changelly-rate-failed": "Failed to retrieve Changelly rate from {fromCurrency} to {toCurrency}",
