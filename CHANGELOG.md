@@ -4,7 +4,8 @@
 
 ### Bug
 
-- Fix address not getting returned for unable to validate addresses and disable swap when recalculating rates[]()
+- Fix address not getting returned for unable to validate addresses and disable swap when recalculating rates[#2397](https://github.com/MyEtherWallet/MyEtherWallet/pull/2397)
+
 ### Release v5.6.2
 
 ### Feature
