@@ -3,7 +3,22 @@
     <div class="pa-8">
       <div class="mew-heading-1 px-4">MEW Dapps</div>
       <v-row>
-        <v-col v-for="(dapp, key) in dapps" :key="key" cols="4" sm="4">
+        <v-col v-for="(dapp, key) in mewDapps" :key="key" cols="4" sm="4">
+          <mew-super-button
+            :title="dapp.title"
+            :subtitle="dapp.subtitle"
+            :tag="dapp.tag"
+            :is-new="dapp.isNew"
+            :right-icon="dapp.icon"
+            :title-icon="dapp.thumbsup"
+          />
+        </v-col>
+      </v-row>
+    </div>
+    <div class="pa-8">
+      <div class="mew-heading-1 px-4">Recent</div>
+      <v-row>
+        <v-col v-for="(dapp, key) in recent" :key="key" cols="4" sm="4">
           <mew-super-button
             :title="dapp.title"
             :subtitle="dapp.subtitle"
@@ -27,7 +42,7 @@ import IconThumbsUp from '@/assets/images/icons/icon-thumbs-up.svg';
 
 export default {
   components: { WhiteSheet },
-  data: () => {
+  data() {
     return {
       dapps: {
         MakerDAO: {
@@ -56,18 +71,32 @@ export default {
           tag: '#Exchange',
           icon: IconBrowser
         }
-      },
-      mewDapps: [
-        {
-          title: 'MakerDAO',
-          subtitle: 'Collateralize & Generate DAI',
-          tag: '#Exchanges',
-          isNew: true,
-          icon: IconMakerDAO,
-          thumbsup: IconThumbsUp
-        }
-      ]
+      }
     };
+  },
+  computed: {
+    mewDapps() {
+      return [
+        this.dapps.MakerDAO,
+        this.dapps.ENSManager,
+        this.dapps.ENSManager,
+        this.dapps.SafeSendTX,
+        this.dapps.ScheduleTX,
+        this.dapps.ENSManager
+      ];
+    },
+    recent() {
+      return [
+        this.dapps.MakerDAO,
+        this.dapps.ENSManager,
+        this.dapps.ENSManager
+      ];
+    }
+  },
+  methods: {
+    adapps() {
+      console.log('aaa');
+    }
   }
 };
 </script>
