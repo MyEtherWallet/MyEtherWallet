@@ -6,7 +6,7 @@
   "deposit-addr": "Deposit Address",
   "recieve-amount": "Received Amount",
   "review": "Review swap",
-  "recalculating": "Recalculating",,
+  "recalculating": "Recalculating",
   "sent-my-coins": "I sent my {currency}",
   "send-value-curr": "Send {value} {currency} to ",
   "value-below-min": "Value is below the minimum for selected provider",
