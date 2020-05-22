@@ -16,7 +16,7 @@
         title="Get Started"
         btn-style="outline"
         color-theme="white"
-        height-size="xlarge"
+        button-size="xlarge"
       />
     </v-card>
   </v-container>
