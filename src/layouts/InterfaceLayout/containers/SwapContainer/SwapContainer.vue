@@ -197,7 +197,7 @@
             ]"
             @click="swapConfirmationModalOpen"
           >
-            <span v-if="recalculating">{{$t('swap.recalculating')}}</span>
+            <span v-if="recalculating">{{ $t('swap.recalculating') }}</span>
             <span v-else>{{ $t('common.continue') }}</span>
             <i class="fa fa-long-arrow-right" aria-hidden="true" />
           </div>
