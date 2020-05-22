@@ -1,3 +1,10 @@
+### Devop
+
+- Fix sentry releases [#2395](https://github.com/MyEtherWallet/MyEtherWallet/pull/2395)
+
+### Bug
+
+- Fix address not getting returned for unable to validate addresses[]()
 ### Release v5.6.2
 
 ### Feature
