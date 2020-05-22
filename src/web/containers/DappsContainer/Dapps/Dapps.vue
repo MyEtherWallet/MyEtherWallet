@@ -3,7 +3,7 @@
     <div class="pa-8">
       <div class="mew-heading-1 px-4">MEW Dapps</div>
       <v-row>
-        <v-col v-for="(dapp, key) in mewDapps" :key="key" cols="4" sm="4">
+        <v-col v-for="(dapp, key) in dapps" :key="key" cols="4" sm="4">
           <mew-super-button
             :title="dapp.title"
             :subtitle="dapp.subtitle"

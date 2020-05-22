@@ -8,6 +8,7 @@
         class="ml-auto"
         :has-full-width="false"
         title="Buy ETH with a credit card"
+        button-size="xlarge"
       />
       <div class="d-flex align-center mt-4">
         <div>We accept credit card</div>

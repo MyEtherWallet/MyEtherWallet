@@ -23,7 +23,7 @@
           :has-full-width="false"
           title="Get a new wallet"
           color-theme="white"
-          button-size="large"
+          button-size="xlarge"
           :icon="icon"
           icon-align="left"
         />
