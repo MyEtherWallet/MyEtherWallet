@@ -43,9 +43,8 @@
       :data="chartData.data"
       class="px-3 mt-5"
     />
-    <div class="d-flex align-center px-6 mt-2 pb-5">
-      <div class="px-8"></div>
-      <div class="d-flex align-center">
+    <v-row class="px-6 align-center">
+      <v-col class="d-flex align-center justify-center">
         <div class="font-weight-bold">ETH PRICE</div>
         <div class="ml-2 font-weight-regular text-color--mew-green">
           3.12%
@@ -54,15 +53,17 @@
         <v-icon v-if="false" class="light_red--text body-2"
           >mdi-arrow-down-bold</v-icon
         >
-      </div>
-      <div class="ml-5">$321.55 / 1 ETH</div>
-      <mew-button
-        class="ml-auto"
-        :has-full-width="false"
-        title="Send Transaction"
-        button-size="xlarge"
-      />
-    </div>
+        <div class="ml-5">$321.55 / 1 ETH</div>
+      </v-col>
+      <v-col class="text-right">
+        <mew-button
+          class="ml-auto"
+          :has-full-width="false"
+          title="Send Transaction"
+          button-size="xlarge"
+        />
+      </v-col>
+    </v-row>
   </WhiteSheet>
 </template>
 
