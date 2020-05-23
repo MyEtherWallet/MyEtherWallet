@@ -2,7 +2,7 @@
   <div>
     <div class="d-flex">
       <div class="flex-grow-1">
-        <SendTransaction />
+        <SwapContent />
       </div>
       <Spacer />
       <div>
@@ -16,7 +16,7 @@
 
 <script>
 import Spacer from '@/web/components/Common/Spacer';
-import SendTransaction from './SendTransaction';
+import SwapContent from './SwapContent';
 
 import Network from '@/web/components/Network';
 import Swap from '@/web/components/Swap';
@@ -24,7 +24,7 @@ import Swap from '@/web/components/Swap';
 export default {
   components: {
     Spacer,
-    SendTransaction,
+    SwapContent,
     Network,
     Swap
   }
