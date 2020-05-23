@@ -96,12 +96,12 @@ const isJson = str => {
   }
 };
 
-const checkErrorJson = results =>{
+const checkErrorJson = results => {
   if (isJson(results.error.message)) {
     throw Error(JSON.stringify(results.error.message));
   }
   throw Error(results.error.message);
-}
+};
 
 const handleOrThrow = (e, source) => {
   if (source === 'suppress') {
