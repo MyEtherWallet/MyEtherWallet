@@ -1,3 +1,7 @@
+### Bug
+
+- Fix errors from sentry [#2388](https://github.com/MyEtherWallet/MyEtherWallet/pull/2388)
+
 ### Devop
 
 - Update terms of service [#2394](https://github.com/MyEtherWallet/MyEtherWallet/pull/2394)
