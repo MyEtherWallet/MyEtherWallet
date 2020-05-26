@@ -15,6 +15,7 @@
     "test": "npm run update:lists && npm run update:swap && jest --clearCache && npm run test:unit",
     "codecov": "npm run test && codecov",
     "dev": "npm run update && npm run update:mainlists && vue-cli-service serve --watch",
+    "dev6": "vue-cli-service serve",
     "lint:code": "vue-cli-service lint",
     "lint:md": "remark . -o -f",
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
