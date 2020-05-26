@@ -131,7 +131,7 @@ export default class BitySwap {
       });
       this.hasRates = data.length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {
-      Toast.responseHandler('Failed to retrieve Bity rates', 1, true);
+      Toast.responseHandler('bity-rate-failed', 1, true);
     }
   }
 
