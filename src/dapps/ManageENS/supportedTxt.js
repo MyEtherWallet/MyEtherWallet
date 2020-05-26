@@ -23,6 +23,7 @@ const isEmail = function (input) {
 };
 
 const isString = function (input) {
+  if (!input) return false;
   const parsedInput = normalise(input);
   return typeof parsedInput === 'string';
 };
