@@ -3,13 +3,15 @@ const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const webpack = require('webpack');
 const env_vars = require('../ENV_VARS');
 const allowedConnections = require('./connections');
+const sourceMapsConfig = {
+  filename: 'sourcemaps/[file].map'
+};
+if (JSON.parse(env_vars.FULL_SOURCEMAPS) === 'false')
+  sourceMapsConfig.exclude = /vendors.*.*/;
 module.exports = {
   devtool: false,
   plugins: [
-    new webpack.SourceMapDevToolPlugin({
-      filename: 'sourcemaps/[file].map',
-      exclude: /vendors.*.*/
-    }),
+    new webpack.SourceMapDevToolPlugin(sourceMapsConfig),
     new webpack.DefinePlugin(env_vars),
     new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
     new ImageminPlugin({
