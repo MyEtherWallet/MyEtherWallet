@@ -22,15 +22,6 @@ const dapps = {
     lastUpdated: '4/15/2020',
     releaseDate: '4/15/2020'
   },
-  // manageUnstoppable: {
-  //   route: '/interface/dapps/manage-unstoppable',
-  //   icon: unstoppable,
-  //   title: 'unstoppable.title-manage',
-  //   desc: 'unstoppable.dapp-manage-desc',
-  //   supportedNetworks: [ETH.name],
-  //   lastUpdated: '4/27/2020',
-  //   releaseDate: '4/27/2020'
-  // },
   manageEns: {
     route: '/interface/dapps/manage-ens',
     icon: manageEns,
