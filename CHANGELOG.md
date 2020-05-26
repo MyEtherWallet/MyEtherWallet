@@ -1,9 +1,11 @@
 ### Bug
 
 - Sentry fixes j [#2396](https://github.com/MyEtherWallet/MyEtherWallet/pull/2396)
+- Fix errors from sentry [#2388](https://github.com/MyEtherWallet/MyEtherWallet/pull/2388)
 
 ### Devop
 
+- Update terms of service [#2394](https://github.com/MyEtherWallet/MyEtherWallet/pull/2394)
 - Fix sentry releases [#2395](https://github.com/MyEtherWallet/MyEtherWallet/pull/2395)
 
 ### Release v5.6.2
