@@ -273,6 +273,7 @@ import { Misc, Toast } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
 import * as unit from 'ethjs-unit';
 import store from 'store';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
