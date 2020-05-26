@@ -1,6 +1,7 @@
 ### Devop
 
 - Better estimate gas limit requirements [#2387](https://github.com/MyEtherWallet/MyEtherWallet/pull/2387)
+- Fix sentry releases [#2395](https://github.com/MyEtherWallet/MyEtherWallet/pull/2395)
 
 ### Release v5.6.2
 
