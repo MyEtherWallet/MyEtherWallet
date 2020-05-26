@@ -181,7 +181,7 @@ export default {
       );
     },
     parsedTld() {
-      if (this.parsedHostName.length) {
+      if (this.parsedHostName && this.parsedHostName.length) {
         const hasTld = this.domainName.lastIndexOf('.');
         return hasTld > -1
           ? this.domainName.substr(hasTld + 1, this.domainName.length)
@@ -190,7 +190,7 @@ export default {
       return '';
     },
     parsedHostName() {
-      if (this.domainName.length) {
+      if (this.domainName && this.domainName.length) {
         return this.domainName.substr(
           0,
           this.domainName.lastIndexOf('.') > -1
