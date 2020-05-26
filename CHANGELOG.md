@@ -1,3 +1,7 @@
+### Feature
+
+- Unstoppable domains combined [#2353](https://github.com/MyEtherWallet/MyEtherWallet/pull/2353)
+
 ### Devop
 
 - Fix sentry releases [#2395](https://github.com/MyEtherWallet/MyEtherWallet/pull/2395)
@@ -7,7 +11,6 @@
 ### Feature
 
 - Multimanage ens [#2376](https://github.com/MyEtherWallet/MyEtherWallet/pull/2376)
-- Unstoppable domains combined [#2353](https://github.com/MyEtherWallet/MyEtherWallet/pull/2353)
 
 ### Devop
 
