@@ -457,9 +457,10 @@ export default {
       });
     },
     async setExpiry(param) {
-      const names = param.hasOwnProperty(ENS_TOKEN_ADDRESS)
-        ? param[ENS_TOKEN_ADDRESS].tokens
-        : [];
+      const names =
+        param && param.hasOwnProperty(ENS_TOKEN_ADDRESS)
+          ? param[ENS_TOKEN_ADDRESS].tokens
+          : [];
       if (names.length > 0) {
         const hashes = names.map(item => {
           return item.id;
@@ -537,7 +538,7 @@ export default {
           });
         } catch (e) {
           tokens = this.network.type.tokens.map(token => {
-            token.balance = 0;
+            token.balance = 'Load';
             return token;
           });
         }
