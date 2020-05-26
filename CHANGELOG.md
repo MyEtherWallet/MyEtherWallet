@@ -1,6 +1,6 @@
 ### Bug
 
-- Fix aave bugs, ens manager txt record [#2396](https://github.com/MyEtherWallet/MyEtherWallet/pull/2396)
+- Sentry fixes j [#2396](https://github.com/MyEtherWallet/MyEtherWallet/pull/2396)
 
 ### Devop
 
