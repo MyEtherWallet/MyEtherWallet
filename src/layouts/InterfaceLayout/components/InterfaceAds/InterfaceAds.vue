@@ -30,9 +30,6 @@
         @sliding-end="onSlideEnd"
       >
         <b-carousel-slide>
-          <adex-ad />
-        </b-carousel-slide>
-        <b-carousel-slide>
           <mew-wallet-ad />
         </b-carousel-slide>
         <b-carousel-slide>
@@ -49,8 +46,7 @@ import ads from './adComponents';
 export default {
   components: {
     'buy-eth-ad': ads.buyEthAd,
-    'mew-wallet-ad': ads.mewWalletAd,
-    'adex-ad': ads.AdEx
+    'mew-wallet-ad': ads.mewWalletAd
   },
   props: {},
   data() {
@@ -91,16 +87,16 @@ export default {
   }
   .carousel-control-prev {
     @extend %base;
-    left: -10px;
 
+    left: -10px;
     @media all and (max-width: $mobile-width) {
       left: -25px;
     }
   }
   .carousel-control-next {
     @extend %base;
-    right: -10px;
 
+    right: -10px;
     @media all and (max-width: $mobile-width) {
       right: -25px;
     }

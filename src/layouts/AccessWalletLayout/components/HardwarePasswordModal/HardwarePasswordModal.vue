@@ -14,6 +14,7 @@
         <input
           ref="passwordInput"
           v-model="password"
+          type="password"
           :placeholder="$t('common.password.enter')"
           name="Password"
           autocomplete="off"
