@@ -35,6 +35,8 @@
     "six-char": "Please enter at least 6 characters",
     "stripe-email-placeholder": "Your email"
   },
+  "register-domain": "Register Domain",
+  "manage-domain": "Manage Domain",
   "view-transfer-transaction": "You can view the transfer transaction on",
   "continue": "Continue",
   "congratulations": "Congratulations!",
