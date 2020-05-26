@@ -1,3 +1,7 @@
+### Bug
+
+- Sentry fixes y [#2400](https://github.com/MyEtherWallet/MyEtherWallet/pull/2400)
+
 ### Devop
 
 - Fix sentry releases [#2395](https://github.com/MyEtherWallet/MyEtherWallet/pull/2395)
