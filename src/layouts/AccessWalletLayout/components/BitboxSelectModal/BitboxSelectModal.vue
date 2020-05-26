@@ -90,16 +90,20 @@ export default {
     };
   },
   mounted() {
-    isSupported().then(res => {
-      this.items.forEach(item => {
-        const u2fhw = [BITBOX_TYPE];
+    isSupported()
+      .then(res => {
+        this.items.forEach(item => {
+          const u2fhw = [BITBOX_TYPE];
 
-        if (u2fhw.includes(item.name)) {
-          item.disabled = !res;
-          item.msg = !res ? 'errorsGlobal.browser-non-u2f' : '';
-        }
+          if (u2fhw.includes(item.name)) {
+            item.disabled = !res;
+            item.msg = !res ? 'errorsGlobal.browser-non-u2f' : '';
+          }
+        });
+      })
+      .catch(e => {
+        BitBox02Wallet.errorHandler(e);
       });
-    });
     this.$refs.bitboxSelect.$on('hidden', () => {
       this.selected = '';
     });
