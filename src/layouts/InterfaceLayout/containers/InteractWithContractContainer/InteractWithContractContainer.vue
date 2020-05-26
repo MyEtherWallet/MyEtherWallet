@@ -340,6 +340,9 @@ export default {
             _contractArgs.push(parsedItem);
           } else if (item.type === 'address') {
             _contractArgs.push(this.inputs[item.name].toLowerCase().trim());
+          } else if (item.includes === 'uint') {
+            const number = new BigNumber(this.inputs[item.name].trim());
+            _contractArgs.push(number.toFixed());
           } else {
             _contractArgs.push(this.inputs[item.name]);
           }
