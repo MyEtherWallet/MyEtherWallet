@@ -391,6 +391,7 @@ export default {
   },
   methods: {
     isInvalidAddress(type) {
+      console.log(type);
       if (type.id === this.supportedCoins.ETH.id && type.value === '')
         return true;
       return type.value !== '' && !type.validator.validate(type.value);
