@@ -302,7 +302,7 @@ export default {
     },
     navigateHeaderButtons(to) {
       this.$router.push({
-        name: to === 'register' ? 'ensInitialState' : 'ENS multi Manager'
+        name: to === 'register' ? 'ensInitialState' : 'ensMultiManager'
       });
     },
     navigateToRenew() {
