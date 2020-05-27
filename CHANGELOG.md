@@ -1,9 +1,8 @@
-### Devop
-
-- Fix MEW CX build [#2403](https://github.com/MyEtherWallet/MyEtherWallet/pull/2403)
+### Release v5.6.3
 
 ### Bug
 
+- Sentry fixes y [#2400](https://github.com/MyEtherWallet/MyEtherWallet/pull/2400)
 - Sentry fixes j [#2396](https://github.com/MyEtherWallet/MyEtherWallet/pull/2396)
 - Fix address not getting returned for unable to validate addresses and disable swap when recalculating rates[#2397](https://github.com/MyEtherWallet/MyEtherWallet/pull/2397)
 - Fix errors from sentry [#2393](https://github.com/MyEtherWallet/MyEtherWallet/pull/2393)
@@ -12,6 +11,7 @@
 
 ### Devop
 
+- Fix MEW CX build [#2403](https://github.com/MyEtherWallet/MyEtherWallet/pull/2403)
 - Update terms of service [#2394](https://github.com/MyEtherWallet/MyEtherWallet/pull/2394)
 - Fix sentry releases [#2395](https://github.com/MyEtherWallet/MyEtherWallet/pull/2395)
 
