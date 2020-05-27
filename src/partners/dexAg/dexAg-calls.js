@@ -47,7 +47,7 @@ const getPrice = async (fromToken, toToken, fromValue) => {
       })
     );
     if (results.error) {
-      throw Error(results.error.message);
+      utils.checkErrorJson(results);
     }
     return results.result;
   } catch (e) {
@@ -65,7 +65,7 @@ const createTransaction = async transactionParams => {
       utils.buildPayload(dexAgMethods.createTransaction, { transactionParams })
     );
     if (results.error) {
-      throw Error(results.error.message);
+      utils.checkErrorJson(results);
     }
 
     return results.result;
@@ -81,7 +81,7 @@ const supportedDexes = async () => {
       utils.buildPayload(dexAgMethods.supportedDexes, {})
     );
     if (results.error) {
-      throw Error(results.error.message);
+      utils.checkErrorJson(results);
     }
 
     return results.result;

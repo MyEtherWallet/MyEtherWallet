@@ -78,6 +78,7 @@ export default {
       this.selectedAddress = data.address;
       this.isValidAddress = data.valid;
       this.$emit('toAddress', data.address);
+      this.$emit('validAddress', data.valid);
     }
   }
 };
