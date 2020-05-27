@@ -24,7 +24,7 @@ The best way to start an integration is by creating a fork ofXinFin Wallet., and
 
 Example directory structure:
 
-XinFin Wallet\\
+XDC Wallet\\
 │\\
 ├ src\\
     └ dapps\\
