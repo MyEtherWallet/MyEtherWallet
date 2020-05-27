@@ -1,7 +1,7 @@
 {
   "name": "wallet",
-  "version": "1.0.0",
-  "description": "Client side XinFin Wallet",
+  "version": "1.1.0",
+  "description": "Client side XDC Wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
     "build:hash": "ROUTER_MODE=hash npm run build",
