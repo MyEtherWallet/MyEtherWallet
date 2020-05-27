@@ -1,6 +1,7 @@
 ### Bug
 
 - Sentry fixes j [#2396](https://github.com/MyEtherWallet/MyEtherWallet/pull/2396)
+- Fix perkle network connection [#2389](https://github.com/MyEtherWallet/MyEtherWallet/pull/2389)
 - Fix errors from sentry [#2388](https://github.com/MyEtherWallet/MyEtherWallet/pull/2388)
 
 ### Devop
