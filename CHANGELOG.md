@@ -1,5 +1,8 @@
 ### Bug
 
+
+- Fix address not getting returned for unable to validate addresses and disable swap when recalculating rates[#2397](https://github.com/MyEtherWallet/MyEtherWallet/pull/2397)
+- Fix errors from sentry [#2393](https://github.com/MyEtherWallet/MyEtherWallet/pull/2393)
 - Fix perkle network connection [#2389](https://github.com/MyEtherWallet/MyEtherWallet/pull/2389)
 - Fix errors from sentry [#2388](https://github.com/MyEtherWallet/MyEtherWallet/pull/2388)
 
@@ -7,10 +10,6 @@
 
 - Update terms of service [#2394](https://github.com/MyEtherWallet/MyEtherWallet/pull/2394)
 - Fix sentry releases [#2395](https://github.com/MyEtherWallet/MyEtherWallet/pull/2395)
-
-### Bug
-
-- Fix errors from sentry [#2393](https://github.com/MyEtherWallet/MyEtherWallet/pull/2393)
 
 ### Release v5.6.2
 
