@@ -80,8 +80,14 @@
                 }}
               </p>
               <br />
+              <p>
+                {{
+                  parent.$t('termsOfService.services-eligibility-title-2-p-3')
+                }}
+              </p>
+              <br />
               <i18n
-                path="termsOfService.services-eligibility-title-2-p-3"
+                path="termsOfService.services-eligibility-title-2-p-4"
                 tag="p"
               >
                 <template v-slot:article1>
@@ -148,6 +154,7 @@
                   )
                 }}
               </p>
+              <br />
               <p>
                 {{
                   parent.$t(
@@ -183,7 +190,7 @@
               <i18n path="termsOfService.privacy-title-p" tag="p">
                 <template v-slot:link>
                   <a
-                    href="https://kb.myetherwallet.com/en/getting-started/myetherwallet-an-introduction/"
+                    href="https://myetherwallet.com/privacy-policy"
                     target="_blank"
                     rel="noopener noreferrer"
                     >"{{ parent.$t('termsOfService.link') }}"</a

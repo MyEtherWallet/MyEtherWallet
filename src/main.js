@@ -50,6 +50,7 @@ import './registerServiceWorker';
 import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
 import langShortCodes from '@/translations/getShortCodes';
+import globalErrorHandler from '@/globalErrorHandler';
 
 const getDefaultLang = () => {
   if (router.options.base) {
@@ -145,16 +146,22 @@ Sentry.init({
   requestBodies: 'small',
   release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event) {
+    for (const exceptionIdx in event.exception.values) {
+      if (globalErrorHandler(event.exception.values[exceptionIdx])) {
+        event.exception.values.splice(exceptionIdx, 1);
+      }
+    }
+    if (!event.exception.values.length) return Promise.resolve(null);
     const network =
-      !store && !store.state.main && !store.state.main.network
+      store && store.state.main && store.state.main.network
         ? store.state.main.network.type.name
         : '';
     const service =
-      !store && !store.state.main && !store.state.main.network
+      store && store.state.main && store.state.main.network
         ? store.state.main.network.service
         : '';
     const identifier =
-      !store && !store.state.main && !store.state.main.account
+      store && store.state.main && store.state.main.account
         ? store.state.main.account.identifier
         : '';
     event.tags = {
