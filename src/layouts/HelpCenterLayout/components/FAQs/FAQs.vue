@@ -5,7 +5,7 @@
         <ul class="qa__contents">
           <li>
             <div class="qa__contents--title" @click="openFAQ('faq1')">
-              <h3>Balances not loading or showing on XinFin Wallet.</h3>
+              <h3>Balances not loading or showing on XDC Wallet.</h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq1 == false" class="show-more">+</span>
                 <span v-if="showFAQs.faq1 == true" class="show-less">-</span>
@@ -88,7 +88,7 @@
           </li>
           <li>
             <div class="qa__contents--title" @click="openFAQ('faq8')">
-              <h3>What happens if XinFin Walletgoes down?</h3>
+              <h3>What happens if  XDC Wallet goes down?</h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq8 == false" class="show-more">+</span>
                 <span v-if="showFAQs.faq8 == true" class="show-less">-</span>
@@ -112,7 +112,7 @@
           </li>
           <li>
             <div class="qa__contents--title" @click="openFAQ('faq10')">
-              <h3>Check the current block number on XinFin Wallet.</h3>
+              <h3>Check the current block number on XDC Wallet.</h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq10 == false" class="show-more">+</span>
                 <span v-if="showFAQs.faq10 == true" class="show-less">-</span>

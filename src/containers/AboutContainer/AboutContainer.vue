@@ -24,30 +24,7 @@
           </div>
         </div>
       </div>
-      <div class="bottom-section">
-        <div class="page-container">
-          <div class="grid-col-2 mew-features">
-            <dir class="content">
-              <div class="image">
-                <img src="~@/assets/images/home/icon-wallet.svg" />
-              </div>
-              <div class="text">
-                <h3>{{ $t('home.aboutMewWallet') }}</h3>
-                <p>{{ $t('home.aboutMewWalletDesc') }}</p>
-              </div>
-            </dir>
-            <dir class="content">
-              <div class="image">
-                <img src="~@/assets/images/home/icon-hardware.svg" />
-              </div>
-              <div class="text">
-                <h3>{{ $t('home.aboutHardwareWallet') }}</h3>
-                <p>{{ $t('home.aboutHardwareWalletDesc') }}</p>
-              </div>
-            </dir>
-          </div>
-        </div>
-      </div>
+
     </div>
   </div>
 </template>

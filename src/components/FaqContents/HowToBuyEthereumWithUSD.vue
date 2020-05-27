@@ -143,7 +143,7 @@
             ...While you are waiting for your verification and transfer,
             download and install
             <a href="https://github.com/ethereum/mist/releases"
-              >Mist / XinFin Wallet</a
+              >Mist / XDC Wallet</a
             >. Run it so it can sync the blockchain.
           </p>
         </li>
@@ -168,12 +168,12 @@
 
       <p>
         The private key is like a password, but way more intense. Plus, it's a
-        password that is protected by another password. In XinFin Wallet, this
+        password that is protected by another password. In XDC Wallet, this
         private key is in the form of a <abbr>keystore file</abbr>. You need to
         make a backup of this in case anything happens to your computer.
       </p>
       <p>
-        In XinFin Wallet, go to the top bar and find <abbr>ACCOUNTS</abbr>
+        In XDC Wallet, go to the top bar and find <abbr>ACCOUNTS</abbr>
         <i class="fa fa-long-arrow-right" aria-hidden="true" />
         <abbr>BACKUP</abbr>
         <i class="fa fa-long-arrow-right" aria-hidden="true" />
@@ -193,7 +193,7 @@
         the need for Shapeshift.)
       </p>
       <p>
-        Then create a XinFin Wallet account and back it up. In Circle or
+        Then create a XDC Wallet account and back it up. In Circle or
         Coinbase, send all the BTC to that address. The XDC will appear in your
         XDC wallet in ~20 minutes.
       </p>
@@ -203,7 +203,7 @@
         syncing it. If for some reason you cannot get it to run, here is a list
         of easily accessible wallets. Follow the instructions provided by each
         of these wallets to back up your information. In Jaxx, that is a
-        mnemonic. InXinFin Wallet.,
+        mnemonic. In XDC Wallet .,
         <a
           href="https://xinfin.network/how-do-i-move-from-coinbase-to-myetherwallet-exchange-slash-hosted-wallet-mew"
         >
@@ -215,7 +215,7 @@
 
       <ul>
         <li>
-          <a href="http://www.xinfin.network/">XinFin Wallet.com</a> or
+          <a href="http://www.xinfin.network/">XDC Wallet.com</a> or
           <a
             href="https://www.reddit.com/r/ethereum/comments/44vbef/myetherwallet_chrome_extension_the_beta_has/"
           >
