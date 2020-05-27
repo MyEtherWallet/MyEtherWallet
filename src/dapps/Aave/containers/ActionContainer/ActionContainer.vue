@@ -12,16 +12,16 @@
         <p class="token-balance">
           {{
             activeDepositTab
-              ? convertToFixed(token.user.principalATokenBalance)
-              : convertToFixed(token.user.currentBorrows)
+              ? convertToFixed(userToken.principalATokenBalance)
+              : convertToFixed(userToken.currentBorrows)
           }}
           <span class="token-name"> {{ token.symbol }} </span>
         </p>
         <p class="usd-amt">
           ${{
             activeDepositTab
-              ? convertToFixed(token.user.currentUnderlyingBalanceUSD)
-              : convertToFixed(token.user.currentBorrowsUSD)
+              ? convertToFixed(userToken.currentUnderlyingBalanceUSD)
+              : convertToFixed(userToken.currentBorrowsUSD)
           }}
         </p>
       </div>
@@ -160,6 +160,7 @@ export default {
       amount: null,
       ethPrice: 0,
       disableBtn: false,
+      userToken: {},
       token: { user: {}, price: {} },
       actionType: null,
       percentBtns: {
@@ -196,9 +197,9 @@ export default {
           this.token.price.priceInEth
         );
       } else if (this.actionTitle === this.actionTitles.repay) {
-        return this.token.user.currentBorrows;
+        return this.userToken.currentBorrows;
       } else if (this.actionTitle === this.actionTitles.withdraw) {
-        return this.token.user.principalATokenBalance;
+        return this.userToken.principalATokenBalance;
       }
       return false;
     }
@@ -210,7 +211,7 @@ export default {
           amount: this.convertToFixed(this.amountToCheck)
         });
       } else if (
-        this.amount === this.token.user.currentBorrows &&
+        this.amount === this.userToken.currentBorrows &&
         this.amount > this.token.tokenBalance
       ) {
         this.errorMsg = this.$t('dappsAave.cannot-exceed-tkn-bal', {
@@ -231,6 +232,8 @@ export default {
     if (this.online) {
       this.getEthPrice();
     }
+
+    this.userToken = this.token.user ? this.token.user : {};
   },
   methods: {
     ...mapActions('aave', ['setToken']),
