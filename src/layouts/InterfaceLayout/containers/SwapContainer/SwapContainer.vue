@@ -857,22 +857,34 @@ export default {
                 };
               } else if (entry.provider === this.providerNames.changelly) {
                 Toast.responseHandler(
-                  `Failed to retrieve Changelly rate from ${fromCurrency} to ${toCurrency}`,
+                  this.$t('swap.notice.retrieve-changelly-rate-failed', {
+                    fromCurrency,
+                    toCurrency
+                  }),
                   3
                 );
               } else if (entry.provider === this.providerNames.bity) {
                 Toast.responseHandler(
-                  `Failed to retrieve Bity rate from ${fromCurrency} to ${toCurrency}`,
+                  this.$t('swap.notice.retrieve-bity-rate-failed', {
+                    fromCurrency,
+                    toCurrency
+                  }),
                   3
                 );
               } else if (entry.provider === this.providerNames.kyber) {
                 Toast.responseHandler(
-                  `Failed to retrieve Kyber Network rate from ${fromCurrency} to ${toCurrency}`,
+                  this.$t('swap.notice.retrieve-kyber-rate-failed', {
+                    fromCurrency,
+                    toCurrency
+                  }),
                   3
                 );
               } else if (entry.provider === this.providerNames.simplex) {
                 Toast.responseHandler(
-                  `Failed to retrieve Simplex rate from ${fromCurrency} to ${toCurrency}`,
+                  this.$t('swap.notice.retrieve-simplex-rate-failed', {
+                    fromCurrency,
+                    toCurrency
+                  }),
                   3
                 );
               }
@@ -945,6 +957,7 @@ export default {
         //abort (empty response from provider or failure to finalize details)
         if (e.message === 'abort') {
           this.finalizingSwap = false;
+          Toast.responseHandler('error-generating-swap', 1, true);
           return;
         }
         this.$refs.swapConfirmation.$refs.swapconfirmation.hide();
@@ -960,7 +973,7 @@ export default {
       } else if (swapDetails.dataForInitialization && !swapDetails.maybeToken) {
         this.$refs.swapSendTo.$refs.swapconfirmation.show();
       } else {
-        throw Error('Error while requesting finalized details from provider');
+        throw Error(this.$t('swap.notice.error-finalizing'));
       }
     },
     exitToFiatAbort() {
