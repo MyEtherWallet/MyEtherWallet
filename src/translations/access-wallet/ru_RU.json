@@ -19,7 +19,7 @@
   "installMetaMaskModalDesc": "Установите расширение Metamask и обновите вашу страницу.",
   "refresh": "Обновить",
   "unlockMetamaskWallet": "Не удается получить доступ к кошельку! Разблокируйте ваш кошелек с помощью расширения Metamask",
-  "metaMaskModalDesc": "Пожалуйста, используйтеXinFin Walletс безопасным подключением (SSL/HTTPS) для соединения.",
+  "metaMaskModalDesc": "Пожалуйста, используйте XDC Wallet с безопасным подключением (SSL/HTTPS) для соединения.",
   "software": "Программа",
   "softwareDesc": "Keystore file, Private key, Mnemonic phrase",
   "notRecommended": "Не рекомендуется",

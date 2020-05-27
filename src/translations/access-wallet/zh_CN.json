@@ -19,7 +19,7 @@
   "installMetaMaskModalDesc": "请安装 Metamask 插件并刷新页面。",
   "refresh": "Refresh",
   "unlockMetamaskWallet": "无法访问钱包!请通过 Metamask 插件访问我的钱包",
-  "metaMaskModalDesc": "请在一个安全的 (SSL/HTTPS) 连接中使用XinFin Wallet来连接。",
+  "metaMaskModalDesc": "请在一个安全的 (SSL/HTTPS) 连接中使用 XDC Wallet 来连接。",
   "software": "软件",
   "softwareDesc": "Keystore file, Private key, Mnemonic phrase",
   "notRecommended": "不推荐",
