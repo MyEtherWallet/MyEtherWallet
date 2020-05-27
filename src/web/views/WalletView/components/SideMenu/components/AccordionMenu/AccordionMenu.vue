@@ -103,10 +103,36 @@ export default {
           url: '/wallet/swap'
         },
         {
-          name: 'Dapps Center',
+          name: 'Dapps',
           iconDark: DappCenterDark,
           iconLight: DappCenterLight,
-          url: '/wallet/dapps'
+          url: '/wallet/dapps/dapps-center',
+          children: [
+            {
+              name: 'Dapps Center',
+              url: '/wallet/dapps/dapps-center'
+            },
+            {
+              name: 'ENS manager',
+              url: '/wallet/dapps/ens-manager'
+            },
+            {
+              name: 'MakerDAO',
+              url: '/wallet/dapps/maker-dao'
+            },
+            {
+              name: 'Aave',
+              url: '/wallet/dapps/Aave'
+            },
+            {
+              name: 'Ambrpay',
+              url: '/wallet/dapps/Ambrpay'
+            },
+            {
+              name: 'Unstoppable Domain',
+              url: '/wallet/dapps/UnstoppableDomain'
+            }
+          ]
         },
         {
           name: 'Contract',
