@@ -22,7 +22,14 @@ import SendOffline from '@/web/containers/SendContainer/SendOffline';
 import NFTManager from '@/web/containers/SendContainer/NFTManager';
 
 import Swap from '@/web/containers/SwapContainer';
+
 import Dapps from '@/web/containers/DappsContainer';
+import DappsCenter from '@/web/containers/DappsContainer/DappsCenter';
+import ENSManager from '@/web/containers/DappsContainer/ENSManager';
+import MakerDAO from '@/web/containers/DappsContainer/MakerDAO';
+import Aave from '@/web/containers/DappsContainer/Aave';
+import Ambrpay from '@/web/containers/DappsContainer/Ambrpay';
+import UnstoppableDomain from '@/web/containers/DappsContainer/UnstoppableDomain';
 
 import Contract from '@/web/containers/ContractContainer';
 import DeployContract from '@/web/containers/ContractContainer/DeployContract';
@@ -176,7 +183,57 @@ const webRoutes = [
         component: Dapps,
         meta: {
           requiresAuth: false
-        }
+        },
+        children: [
+          {
+            path: 'dapps-center',
+            name: 'DappsCenter',
+            component: DappsCenter,
+            meta: {
+              requiresAuth: false
+            }
+          },
+          {
+            path: 'ens-manager',
+            name: 'ENSManager',
+            component: ENSManager,
+            meta: {
+              requiresAuth: false
+            }
+          },
+          {
+            path: 'maker-dao',
+            name: 'MakerDAO',
+            component: MakerDAO,
+            meta: {
+              requiresAuth: false
+            }
+          },
+          {
+            path: 'aave',
+            name: 'Aave',
+            component: Aave,
+            meta: {
+              requiresAuth: false
+            }
+          },
+          {
+            path: 'ambrpay',
+            name: 'Ambrpay',
+            component: Ambrpay,
+            meta: {
+              requiresAuth: false
+            }
+          },
+          {
+            path: 'unstoppable-domain',
+            name: 'UnstoppableDomain',
+            component: UnstoppableDomain,
+            meta: {
+              requiresAuth: false
+            }
+          }
+        ]
       },
       {
         path: 'contract',
