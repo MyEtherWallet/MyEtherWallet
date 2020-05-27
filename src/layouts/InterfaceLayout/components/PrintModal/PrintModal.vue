@@ -147,7 +147,7 @@ export default {
     return {
       header: 'MY XinFin ADDRESS ICON',
       subheader: 'Always look for this icon when sending to this wallet',
-      mew: 'XinFin Wallet',
+      mew: 'XDC Wallet',
       paper: 'Paper Wallet',
       link1: 'support@xinfin.org',
       link2: 'https://XinFin.Network/#webWallet',

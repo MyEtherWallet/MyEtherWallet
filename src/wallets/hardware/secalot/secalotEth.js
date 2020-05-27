@@ -25,11 +25,11 @@ SecalotEth.splitPath = function(path) {
 SecalotEth.getErrorMessage = function(sw, operation) {
   let errorMessage;
   if (sw === 0x6d00) {
-    errorMessage = 'XinFin wallet on your Secalot is not initialized.';
+    errorMessage = 'XDC Wallet on your Secalot is not initialized.';
   } else if (sw === 0x6982) {
     if (operation === 'getPublicKey') {
       errorMessage =
-        'Invalid PIN-code. Be careful, after entering a wrong PIN-code three times in a row, your Secalot XinFin wallet would be permanently wiped.';
+        'Invalid PIN-code. Be careful, after entering a wrong PIN-code three times in a row, your Secalot XDC Wallet would be permanently wiped.';
     } else {
       errorMessage = 'PIN-code not verified.';
     }

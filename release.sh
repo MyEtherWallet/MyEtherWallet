@@ -10,7 +10,7 @@ if [ -n "$4" ]; then
         gpg --output $f.sig --detach-sig $f
     done
 fi
-cd release && sha256sum * >XinFin Wallet.-$RELEASE-CHECKSUM-SHA256 && cd ..
+cd release && sha256sum * >XDC Wallet.-$RELEASE-CHECKSUM-SHA256 && cd ..
 GH_API="https://api.github.com"
 GH_REPO="$GH_API/repos/$REPO"
 AUTH="Authorization: token ${GITHUB_TOKEN}"

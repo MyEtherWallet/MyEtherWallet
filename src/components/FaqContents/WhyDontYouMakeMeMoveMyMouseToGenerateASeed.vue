@@ -4,7 +4,7 @@
       Some sites generate entropy ("seed") the private key via mouse movements.
     </h5>
     <h5>
-      Since XinFin Wallet doesn't do this, does it mean my private key isn't
+      Since XDC Wallet doesn't do this, does it mean my private key isn't
       really random? Is this safe?
     </h5>
     <p>

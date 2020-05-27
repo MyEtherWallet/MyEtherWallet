@@ -1,7 +1,7 @@
 <template>
   <div>
     <h5>
-      "Can I send Bitcoin or other coins (LTC STEEM ZEC) toXinFin Wallet.?"*
+      "Can I send Bitcoin or other coins (LTC STEEM ZEC) to XDC Wallet .?"*
     </h5>
     <p>
       We support <abbr>ETH</abbr>, <abbr>ETC</abbr>, <abbr>Testnet ETH</abbr>,

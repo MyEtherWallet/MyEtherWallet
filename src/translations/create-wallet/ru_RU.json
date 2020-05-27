@@ -1,5 +1,5 @@
 {
-  "title": "Добро пожаловать в XinFin Wallet",
+  "title": "Добро пожаловать в XDC Wallet",
   "yourPw": "Ваш пароль",
   "doNotForget": "НЕ ЗАБУДЬТЕ",
   "doNotForgetDesc": "чтобы сохранить ваш пароль. Вам понадобится это",
@@ -24,13 +24,13 @@
   "byJsonFileMakeBackupDesc": "Храните его как миллион долларов (однажды он, возможно, будет столько стоить).",
   "byJsonFileDownloadKeyFile": "Скачать файл-хранилище ключа",
   "pageTitleAlreadyHave": "Уже есть кошелек?",
-  "pageFooterTitle": "Хотите узнать больше о блокчейне или XinFin Wallet? Перейдите на",
+  "pageFooterTitle": "Хотите узнать больше о блокчейне или XDC Wallet? Перейдите на",
   "titleMEWConnect": "Рекомендованный метод",
   "mewConnectDesc": "Safe and easy access to your wallet in 3 steps.",
   "scanToDownload": "Сканировать, чтобы загрузить",
   "iosVersions": "iOS 9.0 или выше",
   "androidVersions": "Android 8.0 или выше",
-  "tutorialModalHeader": "Добро пожаловать в XinFin Wallet",
+  "tutorialModalHeader": "Добро пожаловать в XDC Wallet",
   "tutorialModalDesc": "Please take a moment to read through this short introduction. It’s very important for your own security that you understand these warnings. Ignoring this step will highly increase the chances of your funds being lost or stolen, in which case we won’t be able to help you. {0} at your own risk.",
   "tutorialModalSkip": "Пропустить",
   "notARecommendedWay": "Это НЕ рекомендуемый способ создания кошелька. Эта информация является конфиденциальной и эти опции следует использовать только опытным пользователям криптовалюты при автономных настройках."

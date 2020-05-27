@@ -19,7 +19,7 @@
   "installMetaMaskModalDesc": "Please install the Metamask extension and refresh your page.",
   "refresh": "Refresh",
   "unlockMetamaskWallet": "Can't access wallet! Please unlock your wallet through the Metamask extension",
-  "metaMaskModalDesc": "연결을 위해서 보안성이 높은 연결(SSL/HTTPS)에서XinFin Wallet을 이용해 주세요.",
+  "metaMaskModalDesc": "연결을 위해서 보안성이 높은 연결(SSL/HTTPS)에서 XDC Wallet 을 이용해 주세요.",
   "software": "소프트웨어",
   "softwareDesc": "Keystore file, Private key, Mnemonic phrase",
   "notRecommended": "추천하지 않음 ",

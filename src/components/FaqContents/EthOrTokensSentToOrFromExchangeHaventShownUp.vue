@@ -27,7 +27,7 @@
       successful transaction on the blockchain.
     </p>
     <p>
-      XinFin Walletis not a "web-wallet" and we do not store your funds and you
+       XDC Wallet is not a "web-wallet" and we do not store your funds and you
       do not have an account with us. We do not have the ability to process
       withdrawals nor deposits, nor can we send or cancel transactions. If your
       funds aren't showing up where you sent them, you likely need to reach out
