@@ -115,7 +115,6 @@ export default {
     ...mapState('main', ['online'])
   },
   mounted() {
-    console.log('gets here?');
     this.getRecords();
   },
   methods: {
