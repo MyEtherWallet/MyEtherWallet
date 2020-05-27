@@ -17,6 +17,7 @@
         </div>
         <back-button
           v-if="$route.fullPath !== '/interface/dapps/aave/action'"
+          class="back-btn"
           :title="$t('common.exit-dapp')"
           :hide-border="true"
         />

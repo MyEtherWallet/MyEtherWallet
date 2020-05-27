@@ -122,7 +122,7 @@
               <p class="mt-4">{{ rateType }}</p>
             </div>
           </div>
-          <hr class="mt-4 mb-4" />
+          <hr class="mt-4 divider" />
           <div class="btn-container">
             <p v-if="isDisabled() && errorMsg" class="error-msg">
               {{ errorMsg }}
