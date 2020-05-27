@@ -123,7 +123,7 @@
                       <span>
                         <i
                           class="fa fa-times-circle"
-                          @click.prevent="removeCustomPath(val)"
+                          @click.prevent="removeCustomPathLocal(val)"
                         />
                       </span>
                     </div>
@@ -401,7 +401,7 @@ export default {
       if (bal === 'loading') return bal;
       return new BigNumber(web3utils.fromWei(bal, 'ether')).toFixed(3);
     },
-    removeCustomPath(path) {
+    removeCustomPathLocal(path) {
       this.removeCustomPath(path).then(() => {
         this.getPaths();
       });
