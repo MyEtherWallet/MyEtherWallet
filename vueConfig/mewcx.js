@@ -66,9 +66,7 @@ const webpackConfig = {
     })
   ]),
   optimization: {
-    splitChunks: {
-      chunks: 'async'
-    }
+    splitChunks: false
   }
 };
 const pluginOptions = {
