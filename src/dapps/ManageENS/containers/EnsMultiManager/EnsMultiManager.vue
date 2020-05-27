@@ -109,6 +109,7 @@ export default {
             );
           });
         expiry.then(response => {
+          if (!response) return;
           response.forEach((item, idx) => {
             const expiryDate = item * 1000;
             const gracePeriod = new Date(expiryDate);

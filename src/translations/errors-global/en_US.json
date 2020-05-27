@@ -10,5 +10,10 @@
   "signer-address-different": "Signer address is different from the derived address!",
   "high-gas-limit-warning": "Warning: High gas prices mean higher transaction fees.",
   "invalid-network-id-sig": "Invalid networkId signature returned. Expected: {expected}, Got: {got}",
+<<<<<<< HEAD
   "print-support-error": "Print isn't supported or browser does not support print"
+=======
+  "network-error": "No network connection please make sure you are connected",
+  "browser-not-supported": "Browser not compliant. Try using Chrome or Opera!"
+>>>>>>> 11f3e4f21043eed09ef3e8cbcd9f5b5a094e83b4
 }
