@@ -51,11 +51,12 @@ jobs:
           SENTRY_ORG: myetherwallet-inc
         run: |
           curl -sL https://sentry.io/get-cli/ | bash
-          VERSION=${{ steps.get_release_tag.outputs.VERSION }}
-          sentry-cli releases new -p myetherwallet $VERSION
-          sentry-cli releases files $VERSION upload-sourcemaps ./dist/sourcemaps
-          sentry-cli releases set-commits $VERSION --auto
-          sentry-cli releases finalize $VERSION
+          TAG=${{ steps.get_release_tag.outputs.VERSION }}
+          RELEASE=${TAG//v/}
+          sentry-cli releases new -p myetherwallet $RELEASE
+          sentry-cli releases files $RELEASE upload-sourcemaps ./dist/sourcemaps
+          sentry-cli releases set-commits $RELEASE --auto
+          sentry-cli releases finalize $RELEASE
 
       - name: deploy to production
         env:
