@@ -42,6 +42,7 @@ import printJS from 'print-js';
 import html2canvas from 'html2canvas';
 import MnemonicTableToPrint from './components/MnemonicTableToPrint';
 import MnemonicTableToDisplay from './components/MnemonicTableToDisplay';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
@@ -72,20 +73,25 @@ export default {
   },
   methods: {
     async print() {
-      const element = this.$refs.printContainer;
-      const screen = await html2canvas(element, {
-        async: true,
-        logging: false,
-        height: 800,
-        width: 800,
-        scrollY: 0
-      }).then(canvas => {
-        return canvas;
-      });
-      printJS({
-        printable: screen.toDataURL('image/png'),
-        type: 'image'
-      });
+      try {
+        const element = this.$refs.printContainer;
+        const screen = await html2canvas(element, {
+          async: true,
+          logging: false,
+          height: 800,
+          width: 800,
+          scrollY: 0
+        });
+        printJS({
+          printable: screen.toDataURL('image/png'),
+          type: 'image'
+        });
+      } catch (e) {
+        Toast.responseHandler(
+          this.$t('errorsGlobal.print-support-error'),
+          Toast.ERROR
+        );
+      }
     }
   }
 };

@@ -14,7 +14,7 @@ const getRates = async () => {
       utils.buildPayload(bityMethods.getCryptoRates)
     );
     if (results.error) {
-      throw Error(results.error.message);
+      utils.checkErrorJson(results);
     }
 
     return results.result;
@@ -30,7 +30,7 @@ const getExitRates = async () => {
       utils.buildPayload(bityMethods.getFiatRates)
     );
     if (results.error) {
-      throw Error(results.error.message);
+      utils.checkErrorJson(results);
     }
 
     return results.result;
@@ -46,7 +46,7 @@ const getEstimate = async orderInfo => {
       utils.buildPayload(bityMethods.getEstimate, orderInfo)
     );
     if (results.error) {
-      throw Error(results.error.message);
+      utils.checkErrorJson(results);
     }
     return results.result;
   } catch (e) {
@@ -61,7 +61,7 @@ const createOrder = async orderInfo => {
       utils.buildPayload(bityMethods.createOrder, orderInfo)
     );
     if (results.error) {
-      throw Error(results.error.message);
+      utils.checkErrorJson(results);
     }
 
     return results.result;
@@ -79,7 +79,7 @@ const openOrder = async orderInfo => {
     );
 
     if (results.error) {
-      throw Error(results.error.message);
+      utils.checkErrorJson(results);
     }
 
     return results.result;
@@ -96,7 +96,7 @@ const sendSignedMessage = async signedParts => {
       utils.buildPayload(bityMethods.sendSignedMessageV2, signedParts)
     );
     if (results.error) {
-      throw Error(results.error.message);
+      utils.checkErrorJson(results);
     }
 
     return results.result;
@@ -112,7 +112,7 @@ const orderDetails = async orderInfo => {
       utils.buildPayload(bityMethods.orderDetails, orderInfo)
     );
     if (results.error) {
-      throw Error(results.error.message);
+      utils.checkErrorJson(results);
     }
 
     return results.result;
@@ -132,7 +132,7 @@ const getStatus = async orderInfo => {
       if (Object.keys(results.error.message).length === 0) {
         return;
       }
-      throw Error(results.error.message);
+      utils.checkErrorJson(results);
     }
 
     return results.result;
@@ -148,7 +148,7 @@ const sendReceivedSmsCode = async exitData => {
       utils.buildPayload(bityMethods.sendReceivedSmsCode, exitData)
     );
     if (results.error) {
-      throw Error(results.error.message);
+      utils.checkErrorJson(results);
     }
     return results.result;
   } catch (e) {
@@ -163,7 +163,7 @@ const buildCyptoToFiatOrderData = async orderData => {
       utils.buildPayload(bityMethods.buildCyptoToFiatOrderData, orderData)
     );
     if (results.error) {
-      throw Error(results.error.message);
+      utils.checkErrorJson(results);
     }
     return results.result;
   } catch (e) {
@@ -178,7 +178,7 @@ const getCyptoToFiatOrderDetails = async detailsData => {
       utils.buildPayload(bityMethods.getExitOrderDetails, detailsData)
     );
     if (results.error) {
-      throw Error(results.error.message);
+      utils.checkErrorJson(results);
     }
     return results.result;
   } catch (e) {
@@ -196,7 +196,7 @@ const getStatusFiat = async orderInfo => {
       })
     );
     if (results.error) {
-      throw Error(results.error.message);
+      utils.checkErrorJson(results);
     }
     return results.result;
   } catch (e) {

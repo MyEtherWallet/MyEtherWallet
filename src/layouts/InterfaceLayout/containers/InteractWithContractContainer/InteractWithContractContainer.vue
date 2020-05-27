@@ -273,6 +273,7 @@ import { Misc, Toast } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
 import * as unit from 'ethjs-unit';
 import store from 'store';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -340,6 +341,9 @@ export default {
             _contractArgs.push(parsedItem);
           } else if (item.type === 'address') {
             _contractArgs.push(this.inputs[item.name].toLowerCase().trim());
+          } else if (item.includes === 'uint') {
+            const number = new BigNumber(this.inputs[item.name].trim());
+            _contractArgs.push(number.toFixed());
           } else {
             _contractArgs.push(this.inputs[item.name]);
           }
@@ -435,7 +439,8 @@ export default {
       switch (direction) {
         case 'forward':
           if (this.abi !== '') {
-            JSON.parse(this.abi).forEach(item => {
+            const jsonAbi = JSON.parse(this.abi) ? JSON.parse(this.abi) : [];
+            jsonAbi.forEach(item => {
               if (item.type !== 'constructor' && item.constant !== undefined) {
                 this.contractMethods.push(item);
               }
