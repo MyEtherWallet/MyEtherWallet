@@ -1,6 +1,8 @@
 import { Toast } from '@/helpers';
 import Vue from 'vue';
 const ERRORS = {
+  'No WebUSB interface found for your Ledger device. Please upgrade firmware or contact techsupport.':
+    'ledgerError.no-interface-found',
   'Failed to sign with Ledger device: U2F TIMEOUT':
     'ledgerError.failed-to-sign',
   'Failed to sign with Ledger device: U2F DEVICE_INELIGIBLE':
