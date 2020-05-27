@@ -11,7 +11,7 @@ const isUrl = function (input) {
 };
 
 const isEmail = function (input) {
-  if (!input) return;
+  if (!input) return false;
   const atIndex = input.indexOf('@');
   const parsedEmailName = normalise(input.substr(0, atIndex));
   const parsedEmailHost = normalise(input.substr(atIndex + 1, input.length));
@@ -23,12 +23,13 @@ const isEmail = function (input) {
 };
 
 const isString = function (input) {
+  if (!input) return false;
   const parsedInput = normalise(input);
   return typeof parsedInput === 'string';
 };
 
 const isHandle = function (input) {
-  if (!input) return;
+  if (!input) return false;
   const atIndex = input.indexOf('@');
   const parsedInput = normalise(input.substr(atIndex + 1, input.length));
   if (!isString(parsedInput)) return false;

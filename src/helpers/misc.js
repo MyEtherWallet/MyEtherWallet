@@ -18,7 +18,7 @@ const toBuffer = v => {
 const capitalize = value => {
   if (!value) return '';
   value = value.toString();
-  return value.charAt(0).toUpperCase() + value.slice(1);
+  return value.charAt(0).toUpperCase() + value.substr(1, value.length);
 };
 /* Accepts string, returns boolean */
 const isJson = str => {
