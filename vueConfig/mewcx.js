@@ -3,7 +3,7 @@ const env_vars = require('../ENV_VARS');
 const path = require('path');
 const defaultConfig = require('./defaultConfigs');
 const webpackConfigCXWeb3 = {
-  devtool: 'eval',
+  devtool: false,
   entry: {
     cxWeb3: './src/builds/mewcx/cxHelpers/cxWeb3.js',
     contentScript: './src/builds/mewcx/cxHelpers/contentScript.js',
@@ -17,7 +17,7 @@ const webpackConfigCXWeb3 = {
   }
 };
 const webpackConfig = {
-  devtool: 'eval',
+  devtool: false,
   node: {
     process: true
   },
