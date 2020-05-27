@@ -1,4 +1,5 @@
 import { v4 as uuid } from 'uuid';
+import { Toast } from '@/helpers';
 
 const createProxy = (valueObject = {}, defaultValue = 42) => {
   const handler = function (defaultValue) {
@@ -95,8 +96,19 @@ const isJson = str => {
   }
 };
 
+const checkErrorJson = results => {
+  if (isJson(results.error.message)) {
+    throw Error(JSON.stringify(results.error.message));
+  }
+  throw Error(results.error.message);
+};
+
 const handleOrThrow = (e, source) => {
-  if (source) {
+  if (source === 'suppress') {
+    return;
+  } else if (source === 'handle') {
+    Toast.responseHandler('Swap Error', 1, true);
+  } else if (source) {
     throw Error('abort');
   }
   // typeErrors
@@ -120,5 +132,6 @@ export {
   isValidEntry,
   checkInvalidOrMissingValue,
   handleOrThrow,
+  checkErrorJson,
   createProxy
 };
