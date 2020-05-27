@@ -1,3 +1,7 @@
+### Devop
+
+- Fix MEW CX build [#2403](https://github.com/MyEtherWallet/MyEtherWallet/pull/2403)
+
 ### Bug
 
 
