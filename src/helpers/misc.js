@@ -151,7 +151,7 @@ const solidityType = inputType => {
   if (inputType.includes('[]')) {
     return { type: 'string', solidityType: `${inputType}` };
   }
-  if (inputType.includes(uint)) return { type: 'string', solidityType: string };
+  if (inputType.includes(uint)) return { type: 'number', solidityType: uint };
   if (inputType.includes(address))
     return { type: 'text', solidityType: address };
   if (inputType.includes(string)) return { type: 'text', solidityType: string };
