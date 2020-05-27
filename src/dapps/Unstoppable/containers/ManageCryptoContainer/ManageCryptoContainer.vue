@@ -17,7 +17,7 @@
             <span class="info-title">{{ key }}</span>
             <input
               v-model="edit[key]"
-              :class="[errors[key] ? 'errored' : '']"
+              :class="[error[key] ? 'errored' : '']"
               :placeholder="$t('unstoppable.your-address')"
               type="text"
               :name="key"
@@ -105,7 +105,7 @@ export default {
       loading: true,
       records: {},
       edit: {},
-      errors: {},
+      error: {},
       dropdownOpen: false,
       additionalRecords: [],
       canSave: false
@@ -115,22 +115,32 @@ export default {
     ...mapState('main', ['online'])
   },
   mounted() {
+    console.log('gets here?');
     this.getRecords();
   },
   methods: {
     async getRecords() {
-      const node = hash(this.domainName);
-      const cryptoRegistry = new this.web3.eth.Contract(
-        registryAbi,
-        '0xd1e5b0ff1287aa9f9a268759062e4ab08b9dacbe'
-      );
-      const resolverAddress = await cryptoRegistry.methods
-        .resolverOf(node)
-        .call();
-      const resolver = new this.web3.eth.Contract(resolverAbi, resolverAddress);
-      const result = await resolver.methods
-        .getMany(Object.values(keyToCryptoKey), node)
-        .call();
+      let result = [];
+      try {
+        const node = hash(this.domainName);
+        const cryptoRegistry = new this.web3.eth.Contract(
+          registryAbi,
+          '0xd1e5b0ff1287aa9f9a268759062e4ab08b9dacbe'
+        );
+        const resolverAddress = await cryptoRegistry.methods
+          .resolverOf(node)
+          .call();
+        const resolver = new this.web3.eth.Contract(
+          resolverAbi,
+          resolverAddress
+        );
+        result = await resolver.methods
+          .getMany(Object.values(keyToCryptoKey), node)
+          .call();
+      } catch (e) {
+        result = new Array(65).fill('');
+        this.loading = false;
+      }
       this.additionalRecords = [];
       this.edit = {};
       this.records = {};
@@ -164,13 +174,13 @@ export default {
       const key = e.target.name;
       const value = e.target.value;
       if (value && !isValidRecordKeyValue(key, value)) {
-        this.errors[key] = true;
+        this.error[key] = true;
       } else {
-        this.errors[key] = false;
+        this.error[key] = false;
       }
       this.canSave = false;
       for (const key of Object.keys(this.edit)) {
-        if (this.errors[key]) {
+        if (this.error[key]) {
           this.canSave = false;
           return;
         }
