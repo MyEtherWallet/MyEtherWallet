@@ -64,7 +64,10 @@ const webpackConfig = {
         }
       ]
     })
-  ])
+  ]),
+  optimization: {
+    splitChunks: false
+  }
 };
 const pluginOptions = {
   configureMultiCompilerWebpack: [webpackConfigCXWeb3, webpackConfig]
