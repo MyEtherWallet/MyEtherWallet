@@ -3,7 +3,7 @@ const env_vars = require('../ENV_VARS');
 const path = require('path');
 const defaultConfig = require('./defaultConfigs');
 const webpackConfigCXWeb3 = {
-  devtool: defaultConfig.devtool,
+  devtool: false,
   entry: {
     cxWeb3: './src/builds/mewcx/cxHelpers/cxWeb3.js',
     contentScript: './src/builds/mewcx/cxHelpers/contentScript.js',
@@ -14,6 +14,12 @@ const webpackConfigCXWeb3 = {
   },
   optimization: {
     splitChunks: false
+  }
+};
+const webpackConfig = {
+  devtool: false,
+  node: {
+    process: true
   },
   plugins: defaultConfig.plugins.concat([
     new CopyWebpackPlugin({
@@ -58,7 +64,10 @@ const webpackConfigCXWeb3 = {
         }
       ]
     })
-  ])
+  ]),
+  optimization: {
+    splitChunks: false
+  }
 };
 const pluginOptions = {
   configureMultiCompilerWebpack: [webpackConfigCXWeb3]
@@ -80,7 +89,7 @@ const exportObj = {
     }
   },
   publicPath: './',
-  configureWebpack: webpackConfigCXWeb3,
+  configureWebpack: webpackConfig,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
   integrity: true,
   pluginOptions,
