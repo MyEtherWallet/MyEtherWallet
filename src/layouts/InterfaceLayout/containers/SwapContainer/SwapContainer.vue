@@ -197,7 +197,8 @@
             ]"
             @click="swapConfirmationModalOpen"
           >
-            {{ $t('common.continue') }}
+            <span v-if="recalculating">{{ $t('swap.recalculating') }}</span>
+            <span v-else>{{ $t('common.continue') }}</span>
             <i class="fa fa-long-arrow-right" aria-hidden="true" />
           </div>
           <div class="clear-all-btn" @click="reset()">
@@ -332,6 +333,7 @@ export default {
       loadingError: false,
       switchCurrencyOrder: false,
       bityExitToFiat: false,
+      recalculating: true,
       exitToFiatCallback: () => {},
       sendSignedCallback: () => {},
       debounceUpdateEstimate: {},
@@ -422,6 +424,7 @@ export default {
     },
     validSwap() {
       // initial chack.  will provide an alert on the next screen if no address is provided
+      if (this.recalculating) return false;
       const canExit =
         this.isExitToFiat && this.fromCurrency !== this.baseCurrency
           ? this.exitFromAddress !== ''
@@ -673,6 +676,7 @@ export default {
         (isValidEntry(this.fromValue) && direction === 'from') ||
         (isValidEntry(this.toValue) && direction === 'to')
       ) {
+        this.recalculating = true;
         if (
           this.swap.getProvider(this.providerNames.simplex).currencies.fiat[
             this.fromCurrency
@@ -796,6 +800,7 @@ export default {
     async updateRateEstimate(fromCurrency, toCurrency, fromValue, to) {
       if (this.haveProviderRates) {
         this.loadingData = true;
+        this.recalculating = true;
         this.noProvidersPair = { fromCurrency, toCurrency };
         this.selectedProvider = {}; // Reset the selected provider when new rate pair is choosen
         this.providerData = [];
@@ -815,6 +820,7 @@ export default {
           )
         );
         this.loadingData = false;
+        this.recalculating = false;
         const results = rawResults.reduce((agg, result) => {
           if (Array.isArray(result)) {
             agg = [...agg, ...result];
