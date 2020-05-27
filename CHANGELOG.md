@@ -4,7 +4,7 @@
 
 ### Bug
 
-
+- Sentry fixes j [#2396](https://github.com/MyEtherWallet/MyEtherWallet/pull/2396)
 - Fix address not getting returned for unable to validate addresses and disable swap when recalculating rates[#2397](https://github.com/MyEtherWallet/MyEtherWallet/pull/2397)
 - Fix errors from sentry [#2393](https://github.com/MyEtherWallet/MyEtherWallet/pull/2393)
 - Fix perkle network connection [#2389](https://github.com/MyEtherWallet/MyEtherWallet/pull/2389)
