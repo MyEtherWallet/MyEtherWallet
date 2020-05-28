@@ -1,5 +1,5 @@
 <template>
-  <div class="px-3 mb-10">
+  <div class="mb-3">
     <div class="font-weight-bold">{{ title }}</div>
   </div>
 </template>
