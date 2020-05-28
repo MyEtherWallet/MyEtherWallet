@@ -77,6 +77,7 @@
       :navigate-to-renew="navigateToRenew"
       :deed-value="deedValue"
       :get-controller="getController"
+      :content-hash="contentHash"
       @updateSecretPhrase="updateSecretPhrase"
       @domainNameChange="updateDomainName"
       @updateStep="updateStep"
@@ -156,7 +157,8 @@ export default {
       isExpired: false,
       deedValue: '0',
       controllerAddress: '',
-      contractControllerAddress: ''
+      contractControllerAddress: '',
+      contentHash: ''
     };
   },
   computed: {
@@ -260,6 +262,7 @@ export default {
       this.deedValue = '0';
       this.controllerAddress = '';
       this.contractControllerAddress = '';
+      this.contentHash = '';
 
       if (this.ens) {
         this.setRegistrar();
@@ -875,6 +878,7 @@ export default {
           ResolverAbi,
           currentResolverAddress
         );
+        this.checkContentHash(resolverContract);
         this.fetchTxtRecords(resolverContract);
         const supportMultiCoin = await resolverContract.methods
           .supportsInterface(MULTICOIN_SUPPORT_INTERFACE)
@@ -915,6 +919,17 @@ export default {
         this.$router.push({ name: 'ensNameOwned' });
       }
       this.loading = false;
+    },
+    async checkContentHash(resolverContract) {
+      try {
+        const hash = await resolverContract.methods
+          .contenthash(this.labelHash)
+          .call();
+        console.log(hash);
+        this.contentHash = hash;
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
+      }
     },
     async fetchTxtRecords(resolver) {
       this.checkIfController();
