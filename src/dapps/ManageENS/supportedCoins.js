@@ -11,6 +11,7 @@ class MValidator {
     this.type = type;
   }
   validate(address) {
+    if (!address) return false;
     return MultiCoinValidator.validate(address, this.type);
   }
 }

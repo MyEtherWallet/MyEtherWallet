@@ -50,6 +50,7 @@ import './registerServiceWorker';
 import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
 import langShortCodes from '@/translations/getShortCodes';
+import globalErrorHandler from '@/globalErrorHandler';
 
 const getDefaultLang = () => {
   if (router.options.base) {
@@ -137,23 +138,30 @@ const vue = new Vue({
 const integration = new Integrations.Vue({ Vue, attachProps: true });
 
 Sentry.init({
-  dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
+  dsn:
+    'https://8c29b655fc4e433494fbba7bcac35ae3@o382951.ingest.sentry.io/5230441',
   integrations: [integration],
   maxBreadcrumbs: 0,
   environment: BUILD_TYPE,
   requestBodies: 'small',
   release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event) {
+    for (const exceptionIdx in event.exception.values) {
+      if (globalErrorHandler(event.exception.values[exceptionIdx])) {
+        event.exception.values.splice(exceptionIdx, 1);
+      }
+    }
+    if (!event.exception.values.length) return Promise.resolve(null);
     const network =
-      !store && !store.state.main && !store.state.main.network
+      store && store.state.main && store.state.main.network
         ? store.state.main.network.type.name
         : '';
     const service =
-      !store && !store.state.main && !store.state.main.network
+      store && store.state.main && store.state.main.network
         ? store.state.main.network.service
         : '';
     const identifier =
-      !store && !store.state.main && !store.state.main.account
+      store && store.state.main && store.state.main.account
         ? store.state.main.account.identifier
         : '';
     event.tags = {

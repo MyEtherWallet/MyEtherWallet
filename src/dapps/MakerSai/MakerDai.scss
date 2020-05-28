@@ -4,22 +4,21 @@ $dapp-button-mobile-width: 650px;
 $dapps-container-mobile-width: 650px;
 $confirmation-modal-mobile-width: 500px;
 
-
-.maker-announcement{
+.maker-announcement {
   font-size: 20px;
   text-align: center;
   padding: 20px 40px 40px 40px;
 }
 
-.maker-info{
+.maker-info {
   padding-top: 20px;
   font-size: 14px;
   text-align: justify;
 }
 
-.maker-link{
+.maker-link {
   text-decoration: none;
-  &:hover{
+  &:hover {
     color: gray;
   }
 }

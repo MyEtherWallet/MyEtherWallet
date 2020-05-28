@@ -1,8 +1,6 @@
 const ManageENS = () => import('./ManageENS');
 const InitialENSStateContainer = () =>
   import('./containers/InitialENSStateContainer');
-const NameForbiddenENSContainer = () =>
-  import('./containers/NameForbiddenENSContainer');
 const AlreadyOwnedENSContainer = () =>
   import('./containers/AlreadyOwnedENSContainer');
 const ManageENSContainer = () => import('./containers/ManageENSContainer');
@@ -18,6 +16,7 @@ const PermanentRegistrationContainer = () =>
   import('./containers/PermanentRegistrationContainer');
 const RegistrationInProgressContainer = () =>
   import('./containers/RegistrationInProgressContainer');
+const EnsMultiManager = () => import('./containers/EnsMultiManager');
 
 export default {
   path: 'dapps/manage-ens',
@@ -26,20 +25,14 @@ export default {
   children: [
     {
       path: '',
-      name: 'ENS initial state',
+      name: 'ensInitialState',
       component: InitialENSStateContainer,
       props: true
     },
     {
       path: 'owned',
-      name: 'ENS owned',
+      name: 'ensNameOwned',
       component: AlreadyOwnedENSContainer,
-      props: true
-    },
-    {
-      path: 'forbidden',
-      name: 'ENS forbidden',
-      component: NameForbiddenENSContainer,
       props: true
     },
     {
@@ -50,44 +43,56 @@ export default {
     },
     {
       path: 'fifs',
-      name: 'Reserve on FIFS',
+      name: 'fifsReserve',
       component: FifsBuyContainer,
       props: true
     },
     {
       path: 'claim',
-      name: 'Claim DNS',
+      name: 'dnsClaim',
       component: ClaimDNSContainer,
       props: true
     },
     {
       path: 'dns-error',
-      name: 'DNS Process error',
+      name: 'dnsError',
       component: DNSProcessErrorContainer,
       props: true
     },
     {
       path: 'no-txt-setup',
-      name: 'No TXT setup for DNS',
+      name: 'dnsNoTxt',
       component: DNSMissingTXTContainer,
       props: true
     },
     {
       path: 'create-commitment',
-      name: 'Create Commitment',
+      name: 'ensCreateCommitment',
+      component: CreateCommitmentContainer,
+      props: true
+    },
+    {
+      path: 'renew',
+      name: 'ensRenewName',
       component: CreateCommitmentContainer,
       props: true
     },
     {
       path: 'permanent-registration',
-      name: 'Register ENS By Duration',
+      name: 'ensPermRegistration',
       component: PermanentRegistrationContainer,
       props: true
     },
     {
       path: 'registration-in-progress',
-      name: 'ENS Registration in progress',
+      name: 'ensPermRegistrationOngoing',
       component: RegistrationInProgressContainer,
+      props: true
+    },
+    {
+      path: 'manager',
+      name: 'ENS multi Manager',
+      component: EnsMultiManager,
       props: true
     }
   ]

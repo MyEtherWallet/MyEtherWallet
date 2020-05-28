@@ -1,5 +1,4 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-// const HtmlWebpackPlugin = require('html-webpack-plugin');
 const env_vars = require('../ENV_VARS');
 const path = require('path');
 const defaultConfig = require('./defaultConfigs');
@@ -15,63 +14,55 @@ const webpackConfigCXWeb3 = {
   },
   optimization: {
     splitChunks: false
-  }
-};
-const webpackConfig = {
-  devtool: 'source-map',
-  node: {
-    process: true
   },
   plugins: defaultConfig.plugins.concat([
-    new CopyWebpackPlugin([
-      {
-        from: 'src/builds/mewcx/public',
-        transform: function (content, filePath) {
-          // eslint-disable-next-line no-useless-escape
-          if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json') {
-            const version = JSON.parse(env_vars.VERSION);
-            const json = JSON.parse(content);
-            const hasExtra = version.indexOf('-');
-            const hasJSFile = ['content_scripts', 'web_accessible_resources'];
-            if (hasExtra !== -1) {
-              const newVersion = version.substring(0, hasExtra);
-              json.version = newVersion;
-            } else {
-              json.version = version;
-            }
-            json.browser_action.default_popup = `browserActionLoading.html`;
-            Object.keys(json).forEach(key => {
-              if (hasJSFile.includes(key)) {
-                if (Array.isArray(json[key])) {
-                  if (typeof json[key][0] === 'object') {
-                    json[key][0].js = json[key][0].js.map(item => {
-                      return `/js/${item}`;
-                    });
-                  } else {
-                    json[key][0] = `/js/${json[key][0]}`;
-                  }
-                } else {
-                  json[key].scripts[0] = `/js/${json[key].scripts[0]}`;
-                }
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/builds/mewcx/public',
+          transform: function (content, filePath) {
+            // eslint-disable-next-line no-useless-escape
+            if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json') {
+              const version = JSON.parse(env_vars.VERSION);
+              const json = JSON.parse(content);
+              const hasExtra = version.indexOf('-');
+              const hasJSFile = ['content_scripts', 'web_accessible_resources'];
+              if (hasExtra !== -1) {
+                const newVersion = version.substring(0, hasExtra);
+                json.version = newVersion;
+              } else {
+                json.version = version;
               }
-            });
+              json.browser_action.default_popup = `browserActionLoading.html`;
+              Object.keys(json).forEach(key => {
+                if (hasJSFile.includes(key)) {
+                  if (Array.isArray(json[key])) {
+                    if (typeof json[key][0] === 'object') {
+                      json[key][0].js = json[key][0].js.map(item => {
+                        return `/js/${item}`;
+                      });
+                    } else {
+                      json[key][0] = `/js/${json[key][0]}`;
+                    }
+                  } else {
+                    json[key].scripts[0] = `/js/${json[key].scripts[0]}`;
+                  }
+                }
+              });
 
-            return JSON.stringify(json, null, 2);
+              return JSON.stringify(json, null, 2);
+            }
+
+            return content;
           }
-
-          return content;
         }
-      }
-    ])
-  ]),
-  optimization: {
-    splitChunks: false
-  }
+      ]
+    })
+  ])
 };
 const pluginOptions = {
-  configureMultiCompilerWebpack: [webpackConfigCXWeb3, webpackConfig]
+  // configureMultiCompilerWebpack: [webpackConfigCXWeb3]
 };
-webpackConfig.entry = webpackConfigCXWeb3.entry;
 const exportObj = {
   pages: {
     index: {
@@ -89,7 +80,7 @@ const exportObj = {
     }
   },
   publicPath: './',
-  configureWebpack: webpackConfig,
+  configureWebpack: webpackConfigCXWeb3,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
   integrity: true,
   pluginOptions,
