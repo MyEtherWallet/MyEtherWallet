@@ -925,7 +925,6 @@ export default {
         const hash = await resolverContract.methods
           .contenthash(this.labelHash)
           .call();
-        console.log(hash);
         this.contentHash = hash;
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);

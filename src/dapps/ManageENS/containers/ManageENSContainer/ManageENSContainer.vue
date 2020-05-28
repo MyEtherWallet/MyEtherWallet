@@ -223,6 +223,21 @@
         </form>
       </div>
     </b-collapse>
+    <b-btn
+      v-if="isDeedOwner && hasDeed"
+      v-b-toggle.ipfs
+      class="collapse-open-button"
+      variant="primary"
+    >
+      <p>Content Hash</p>
+    </b-btn>
+    <b-collapse
+      id="ipfs"
+      class="collapse-content"
+      accordion="manage-ens-accordion"
+    >
+      <div class="form-container"></div>
+    </b-collapse>
     <interface-bottom-text
       :link-text="$t('common.help-center')"
       :question="$t('common.have-issues')"
@@ -301,6 +316,10 @@ export default {
     releaseDeed: {
       type: Function,
       default: () => {}
+    },
+    contentHash: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -333,7 +352,8 @@ export default {
       selectedText: 'Email',
       hasError: false,
       txtRecordInputs: newtxtRecords,
-      txtValidators: txtValidators
+      txtValidators: txtValidators,
+      localContentHash: this.contentHash
     };
   },
   computed: {
