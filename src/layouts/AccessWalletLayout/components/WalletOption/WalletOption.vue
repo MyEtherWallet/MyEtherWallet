@@ -41,9 +41,6 @@
         class="fa fa-check-circle good-button"
         aria-hidden="true"
       />
-      <div v-if="hasPromo" class="promotion-container">
-        <img src="@/assets/images/pre-order-label.png" class="new-label" alt />
-      </div>
     </div>
   </div>
 </template>

@@ -3,6 +3,7 @@ import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
 import Misc from '@/helpers/misc';
 import { extractRootDomain } from './extractRootDomain';
 import MiddleWare from '@/wallets/web3-provider/middleware';
+import localStorage from 'store';
 import {
   mewCxFetchAccounts,
   mewCxSignTx,

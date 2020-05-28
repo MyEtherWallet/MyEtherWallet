@@ -1,0 +1,22 @@
+@import '~@/scss/GlobalVariables';
+
+.ens-notification-container {
+  text-align: center;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+  min-height: 200px;
+  padding: 40px 20px;
+
+  .navigate-btn {
+    border-radius: 4px;
+    cursor: pointer;
+    height: 62px;
+    width: 260px;
+    border-color: $mew-green;
+    background-color: $white;
+    margin-top: 20px;
+    color: $mew-green;
+  }
+}

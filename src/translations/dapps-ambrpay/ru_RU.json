@@ -3,7 +3,7 @@
   "title": "Ambrpay",
   "withdraw-funds": "Вывод средств",
   "add-funds": "Пополнить счёт",
-  "add": "Add",
+  "add": "Добавить",
   "withdraw": "Вывести",
   "balance": "Баланс подписок",
   "my-subscriptions": "Мои подписки",
@@ -19,7 +19,6 @@
   "manage-subscriptions": {
     "title": "Управление подписками",
     "no-active": "У вас нет активных подписок!",
-    "active": "Активная",
     "next-payment": "Следующий платёж",
     "receiver-wallet": "Кошелек получателя",
     "current-cycle": "Текущий цикл",
