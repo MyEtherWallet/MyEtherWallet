@@ -122,15 +122,15 @@ export default {
             },
             {
               name: 'Aave',
-              url: '/wallet/dapps/Aave'
+              url: '/wallet/dapps/aave'
             },
             {
               name: 'Ambrpay',
-              url: '/wallet/dapps/Ambrpay'
+              url: '/wallet/dapps/ambrpay'
             },
             {
               name: 'Unstoppable Domain',
-              url: '/wallet/dapps/UnstoppableDomain'
+              url: '/wallet/dapps/unstoppable-domain'
             }
           ]
         },
@@ -227,7 +227,7 @@ export default {
 }
 
 .active .sub-menu {
-  max-height: 150px;
+  max-height: 200px;
 }
 
 .light {
