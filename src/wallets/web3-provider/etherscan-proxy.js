@@ -15,6 +15,9 @@ class EtherscanProxy {
   }
   etherscanXHR(isGET, params) {
     return new Promise((resolve, reject) => {
+      Object.keys(params).forEach(
+        key => params[key] === undefined && delete params[key]
+      );
       const qString = isGET
         ? '?' + toQueryString(Object.assign(params, { apikey: this.apikey }))
         : '';

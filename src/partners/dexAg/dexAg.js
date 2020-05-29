@@ -90,7 +90,7 @@ export default class DexAg {
   async getSupportedDexes() {
     try {
       this.SUPPORTED_DEXES = await dexAgCalls.supportedDexes();
-      if (!this.SUPPORTED_DEXES) {
+      if (!this.SUPPORTED_DEXES || !Array.isArray(this.SUPPORTED_DEXES)) {
         this.SUPPORTED_DEXES = SUPPORTED_DEXES;
       }
     } catch (e) {
@@ -157,27 +157,36 @@ export default class DexAg {
   async getRate(fromCurrency, toCurrency, fromValue) {
     return new Promise(resolve => {
       const wrapGetRate = async () => {
-        const vals = await dexAgCalls.getPrice(
-          fromCurrency,
-          toCurrency,
-          fromValue
-        );
+        try {
+          const vals = await dexAgCalls.getPrice(
+            fromCurrency,
+            toCurrency,
+            fromValue
+          );
 
-        resolve(
-          vals.map(val => {
-            const isKnownToWork = this.SUPPORTED_DEXES.includes(val.dex);
-            const bnPrice = new BigNumber(val.price);
-            return {
-              fromCurrency,
-              toCurrency,
-              provider: val.dex !== 'ag' ? val.dex : 'dexag',
-              rate: isKnownToWork
-                ? bnPrice.minus(bnPrice.times(this.feeAmount)).toNumber()
-                : 0,
-              additional: { source: 'dexag' }
-            };
-          })
-        );
+          resolve(
+            vals.map(val => {
+              const isKnownToWork = this.SUPPORTED_DEXES.includes(val.dex);
+              const bnPrice = new BigNumber(val.price);
+              return {
+                fromCurrency,
+                toCurrency,
+                provider: val.dex !== 'ag' ? val.dex : 'dexag',
+                rate: isKnownToWork
+                  ? bnPrice.minus(bnPrice.times(this.feeAmount)).toNumber()
+                  : 0,
+                additional: { source: 'dexag' }
+              };
+            })
+          );
+        } catch (e) {
+          resolve({
+            fromCurrency,
+            toCurrency,
+            provider: this.name,
+            rate: -1
+          });
+        }
       };
       wrapGetRate();
     });
