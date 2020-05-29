@@ -810,6 +810,66 @@ export default {
         this.domainNameErr = false;
       }
     },
+    async uploadFile(file) {
+      const content = await fetch('urls', {
+        method: 'POST',
+        body: {
+          method: 'getUploadUrl'
+        }
+      });
+
+      try {
+        fetch(content.signedUrl, {
+          method: 'PUT',
+          body: {
+            file
+          }
+        }).then(response => {
+          if (!response.ok) {
+            Toast.responseHandler('Uploading file errored', Toast.ERROR);
+            return;
+          }
+          this.getHashFromFile(content.hashResponse);
+        });
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
+      }
+    },
+    async getHashFromFile(hash) {
+      try {
+        const ipfsHash = await fetch('urls', {
+          method: 'POST',
+          body: {
+            method: 'uploadComplete',
+            hash: hash
+          }
+        });
+
+        this.saveContentHash(ipfsHash);
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
+      }
+    },
+    async saveContentHash(ipfsHash) {
+      const publicResolverContract = new this.web3.eth.Contract(
+        ResolverAbi,
+        this.publicResolverAddress
+      );
+
+      try {
+        const txObj = {
+          to: this.publicResolverAddress,
+          data: publicResolverContract.methods
+            .setContentHash(this.labelHash, ipfsHash)
+            .encodeABI(),
+          value: 0
+        };
+
+        this.web3.eth.sendTransaction(txObj);
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
+      }
+    },
     async getMoreInfo(renew) {
       let owner;
       try {
