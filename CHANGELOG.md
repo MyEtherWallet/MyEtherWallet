@@ -1,3 +1,7 @@
+### Bug
+
+- Sentry fixes s [#2406](https://github.com/MyEtherWallet/MyEtherWallet/pull/2406)
+
 ### Release v5.6.3
 
 ### Bug
