@@ -1,6 +1,6 @@
 <template>
   <div class="mb-3">
-    <div class="font-weight-bold">{{ title }}</div>
+    <div class="mew-heading-3 font-weight-bold">{{ title }}</div>
   </div>
 </template>
 

@@ -33,6 +33,26 @@
               <div>
                 <BlockTitle title="Results" />
                 <v-card flat color="bg_datablock" class="pa-10">
+                  <div class="d-flex justify-space-between align-center">
+                    <div>
+                      <div class="mew-heading-1 mb-2">
+                        mewwallet.crypto
+                      </div>
+                      <div>
+                        <span class="font-weight-medium">0.0823234234</span> ETH
+                        ($40.00)
+                      </div>
+                    </div>
+                    <div class="d-flex align-center">
+                      <div class="mew-heading-3 primary--text mr-6">
+                        Available
+                      </div>
+                      <mew-button title="Buy"></mew-button>
+                    </div>
+                  </div>
+                </v-card>
+                <div class="py-2"></div>
+                <v-card flat color="bg_datablock" class="pa-10">
                   <div class="d-flex align-center justify-space-between mb-8">
                     <div class="mew-heading-1">myetherwallet.crypto</div>
                     <div class="mew-heading-3 orange--text">Unavailable</div>
