@@ -78,6 +78,8 @@
       :deed-value="deedValue"
       :get-controller="getController"
       :content-hash="contentHash"
+      :upload-file="uploadFile"
+      :save-content-hash="saveContentHash"
       @updateSecretPhrase="updateSecretPhrase"
       @domainNameChange="updateDomainName"
       @updateStep="updateStep"

@@ -223,12 +223,7 @@
         </form>
       </div>
     </b-collapse>
-    <b-btn
-      v-if="isDeedOwner && hasDeed"
-      v-b-toggle.ipfs
-      class="collapse-open-button"
-      variant="primary"
-    >
+    <b-btn v-b-toggle.ipfs class="collapse-open-button" variant="primary">
       <p>Content Hash</p>
     </b-btn>
     <b-collapse
@@ -236,7 +231,49 @@
       class="collapse-content"
       accordion="manage-ens-accordion"
     >
-      <div class="form-container"></div>
+      <div v-if="processingIpfs" class="ipfs-loading">
+        <i class="fa fa-lg fa-spinner fa-spin" />Processing File... Please wait
+        for a transaction popup before you leave to make sure your request is
+        processed.
+      </div>
+      <div v-else>
+        <div class="file-upload-container">
+          <input
+            ref="zipInput"
+            type="file"
+            name="file"
+            placeholder="IPFS Hash"
+            @change="fileChange"
+          />
+          <div class="submit-container">
+            <button @click.prevent="ipfsClick">
+              Upload your own website
+            </button>
+          </div>
+        </div>
+        <div class="form-container">
+          <form class="manage-form">
+            <div class="input-container">
+              <label for="transferEns">IPFS Hash:</label>
+              <input
+                v-model="localContentHash"
+                type="text"
+                name="transferEns"
+                placeholder="IPFS Hash"
+              />
+            </div>
+            <div class="submit-container">
+              <button
+                :class="[!isAddress(transferTo) ? 'disabled' : '']"
+                type="submit"
+                @click.prevent="transferDomain(transferTo)"
+              >
+                Set IPFS Hash
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </b-collapse>
     <interface-bottom-text
       :link-text="$t('common.help-center')"
@@ -320,6 +357,14 @@ export default {
     contentHash: {
       type: String,
       default: ''
+    },
+    uploadFile: {
+      type: Function,
+      default: () => {}
+    },
+    saveContentHash: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
@@ -353,7 +398,8 @@ export default {
       hasError: false,
       txtRecordInputs: newtxtRecords,
       txtValidators: txtValidators,
-      localContentHash: this.contentHash
+      localContentHash: this.contentHash,
+      processingIpfs: false
     };
   },
   computed: {
@@ -410,6 +456,19 @@ export default {
     }
   },
   methods: {
+    fileChange(e) {
+      if (e.target.files[0].type !== 'application/zip') {
+        this.$refs.zipInput.value = '';
+        Toast.responseHandler('Please Upload a zip file!', Toast.WARN);
+        return;
+      }
+      this.processingIpfs = true;
+    },
+    ipfsClick() {
+      const input = this.$refs.zipInput;
+      input.value = '';
+      input.click();
+    },
     isInvalidAddress(type) {
       if (type.id === this.supportedCoins.ETH.id && type.value === '')
         return true;
