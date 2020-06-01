@@ -36,7 +36,7 @@
   }
 
   .set-controller-submit {
-    @extend .submit-container;
+    @extend %extendable-container;
 
     button {
       width: 250px !important;
@@ -116,7 +116,7 @@ label {
   color: $red-1;
 }
 
-.submit-container {
+%extendable-container {
   text-align: center;
   button {
     background-color: $mew-green;
@@ -138,8 +138,12 @@ label {
   }
 }
 
+.submit-container {
+  @extend %extendable-container;
+}
+
 .multi-coin-submit-container {
-  @extend .submit-container;
+  @extend %extendable-container;
 
   align-items: center;
   display: flex;
@@ -169,4 +173,22 @@ label {
   p {
     color: $white !important;
   }
+}
+
+.file-upload-container {
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+
+  input {
+    opacity: 0;
+    position: absolute;
+    top: -10000px;
+  }
+}
+
+.ipfs-loading {
+  padding: 30px;
+  height: 150px;
+  text-align: center;
 }
