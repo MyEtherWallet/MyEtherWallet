@@ -13,7 +13,7 @@ if (
     window.dispatchEvent(event);
   }
 } else {
-  // eslint-disable-next-lineg
+  // eslint-disable-next-line
   console.info('MEWCX Web3 provider injected');
   window.ethereum = ethereumProvider;
 }
