@@ -37,7 +37,11 @@ const ERRORS = {
     'ledgerError.app-and-network-mismatch',
   'DisconnectedDeviceDuringOperation: The device was disconnected':
     'ledgerError.device-disconnected',
-  'AbortError: The transfer was cancelled': 'ledgerError.denied-by-user'
+  'AbortError: The transfer was cancelled': 'ledgerError.denied-by-user',
+  'TransportInterfaceNotAvailable: Unable to claim interface.':
+    'ledgerError.unable-to-claim',
+  'TransportInterfaceNotAvailable: No WebUSB interface found for your Ledger device. Please upgrade firmware or contact techsupport.':
+    'ledgerError.no-web-usb'
 };
 const WARNING = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':
