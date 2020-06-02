@@ -237,20 +237,6 @@
         processed.
       </div>
       <div v-else>
-        <div class="file-upload-container">
-          <input
-            ref="zipInput"
-            type="file"
-            name="file"
-            placeholder="IPFS Hash"
-            @change="fileChange"
-          />
-          <div class="submit-container">
-            <button @click.prevent="ipfsClick">
-              Upload your own website
-            </button>
-          </div>
-        </div>
         <div class="form-container">
           <form class="manage-form">
             <div class="input-container">
@@ -269,6 +255,22 @@
                 @click.prevent="transferDomain(transferTo)"
               >
                 Set IPFS Hash
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="file-upload-container">
+          <form enctype="multipart/form-data" novalidate>
+            <input
+              ref="zipInput"
+              type="file"
+              name="file"
+              accept=".zip"
+              @change="fileChange"
+            />
+            <div class="submit-container">
+              <button @click.prevent="ipfsClick">
+                Upload your own website
               </button>
             </div>
           </form>
@@ -457,12 +459,32 @@ export default {
   },
   methods: {
     fileChange(e) {
+      this.processingIpfs = true;
+      // const formData = new FormData();
+      // const reader = new FileReader();
+      // const _self = this;
       if (e.target.files[0].type !== 'application/zip') {
         this.$refs.zipInput.value = '';
+        this.processingIpfs = false;
         Toast.responseHandler('Please Upload a zip file!', Toast.WARN);
         return;
       }
-      this.processingIpfs = true;
+
+      // formData.append('file', e.target.files[0]);
+      // this.uploadFile(formData);
+      // console.log(e.target.files[0]);
+      this.uploadFile(e.target.files[0]);
+      // reader.onloadend = function (evt) {
+      //   try {
+      //     const binary = evt.target.result;
+      //     const base64 = btoa(binary);
+      //     _self.uploadFile(base64);
+      //   } catch (e) {
+      //     this.processingIpfs = false;
+      //     Toast.responseHandler('Something went wrong', Toast.responseHandler);
+      //   }
+      // };
+      // reader.readAsBinaryString(e.target.files[0]);
     },
     ipfsClick() {
       const input = this.$refs.zipInput;

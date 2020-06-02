@@ -813,25 +813,30 @@ export default {
       }
     },
     async uploadFile(file) {
-      const content = await fetch('urls', {
-        method: 'POST',
-        body: {
-          method: 'getUploadUrl'
-        }
-      });
-
       try {
-        fetch(content.signedUrl, {
-          method: 'PUT',
-          body: {
-            file
+        const content = await fetch(
+          'https://6szankrze5.execute-api.us-east-1.amazonaws.com/testing/ipfs',
+          {
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify({
+              method: 'getUploadUrl'
+            })
           }
+        ).then(response => {
+          return response.json();
+        });
+        fetch(content.body.signedUrl, {
+          method: 'POST',
+          body: file
         }).then(response => {
           if (!response.ok) {
             Toast.responseHandler('Uploading file errored', Toast.ERROR);
             return;
           }
-          this.getHashFromFile(content.hashResponse);
+          this.getHashFromFile(content.body.hashResponse);
         });
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);
@@ -839,12 +844,20 @@ export default {
     },
     async getHashFromFile(hash) {
       try {
-        const ipfsHash = await fetch('urls', {
-          method: 'POST',
-          body: {
-            method: 'uploadComplete',
-            hash: hash
+        const ipfsHash = await fetch(
+          'https://6szankrze5.execute-api.us-east-1.amazonaws.com/testing/ipfs',
+          {
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify({
+              method: 'uploadComplete',
+              hash: hash
+            })
           }
+        ).then(response => {
+          return response.json();
         });
 
         this.saveContentHash(ipfsHash);
