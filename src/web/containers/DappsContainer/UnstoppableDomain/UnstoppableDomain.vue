@@ -1,12 +1,12 @@
 <template>
   <WhiteSheet>
-    <mew-banner
-      :banner-img="bannerImg"
-      :text-obj="topBanner"
-      @closeBanner="closeBanner"
-    />
+    <mew-banner :text-obj="topBanner" @closeBanner="closeBanner" />
+
+    <WooCommerceDialog :show="openWooCommerce" />
     <Confirmation :open="openConfirmation" :close="closeConfirmation" />
     <v-btn color="orange" @click="openConfirmation = true">Confirmation</v-btn>
+    <v-btn color="orange" @click="openWooCommerce = true">WooCommerce</v-btn>
+
     <div>
       <v-tabs v-model="tab" background-color="transparent" class="px-10 py-6">
         <v-tab class="text-transform--initial mew-heading-2">
@@ -100,9 +100,10 @@
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import BlockTitle from '@/components/Titles/BlockTitle';
 import Confirmation from '@/components/Overlays/Confirmation';
+import WooCommerceDialog from '@/components/Dialogs/WooCommerceDialog';
 
 export default {
-  components: { WhiteSheet, BlockTitle, Confirmation },
+  components: { WhiteSheet, BlockTitle, Confirmation, WooCommerceDialog },
   data() {
     return {
       topBanner: {
@@ -110,6 +111,7 @@ export default {
         subtext: 'Replace cryptocurrency addresses with a human readable name.',
         exit: 'Exit Dapp'
       },
+      openWooCommerce: false,
       openConfirmation: false,
       tab: null,
       results: [
@@ -139,7 +141,8 @@ export default {
   methods: {
     closeConfirmation() {
       this.openConfirmation = false;
-    }
+    },
+    closeBanner() {}
   }
 };
 </script>
