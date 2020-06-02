@@ -20,6 +20,5 @@
   "device-disconnected": "Ledger device disconnected during operation.",
   "denied-by-user": "User denied action.",
   "no-interface-found": "Please upgrade firmware or contact support.",
-  "unable-to-claim": "Unable to connect to Ledger, make sure it is not used in another site",
-  "no-web-usb": "No WebUSB interface found for your Ledger device. Please upgrade firmware or contact techsupport."
+  "unable-to-claim": "Unable to connect to Ledger, make sure it is not used in another site"
 }
