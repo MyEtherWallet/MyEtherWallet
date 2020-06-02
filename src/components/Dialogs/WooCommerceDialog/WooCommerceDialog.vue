@@ -1,7 +1,7 @@
 <template>
   <div class="text-center">
     <v-dialog v-model="dialog" width="400px">
-      <v-sheet color="gray">
+      <v-sheet color="bg_wallet">
         aaa
       </v-sheet>
     </v-dialog>
