@@ -24,7 +24,7 @@ const ERRORS = {
   'UNKNOWN_ERROR (0x6801)': 'ledgerError.unknown-0x6801',
   'UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown-0x6804',
   'Invalid networkId signature returned.': 'ledgerError.invalid-network-id',
-  'EthAppPleaseEnableContractData: Please enable Contract data on the Ethereum app Settings':
+  'Please enable Contract data on the Ethereum app Settings':
     'ledgerError.enable-contract-data',
   'TransportInterfaceNotAvailable: The interface number provided is not supported by the device in its current configuration.':
     'ledgerError.transport-interface',
