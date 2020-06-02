@@ -124,18 +124,15 @@
           </div>
         </div>
       </DataBlock>
-      <div class="my-5">
-        <v-expansion-panels flat>
-          <v-expansion-panel>
-            <v-expansion-panel-header class="mew-heading-3">
-              Details
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-              Addtional forms
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </div>
+      <mew-expand-panel
+        :is-toggle="true"
+        :panel-items="[{ name: 'Details', tooltip: '', subtext: '' }]"
+      >
+        <template v-slot:panelBody0>
+          contents
+        </template>
+      </mew-expand-panel>
+
       <div class="text-center">
         <mew-button
           button-size="xlarge"
@@ -143,6 +140,10 @@
           :has-full-width="false"
         ></mew-button>
       </div>
+      <warning-sheet
+        description="Make sure all your transaction details are CORRECT. Canceling or replacing transactions can not be guaranteed to work. You still be charged gas fee even transaction failing. Learn more"
+        :link-obj="link"
+      />
     </WhiteSheet>
   </BaseOverlay>
 </template>
@@ -170,7 +171,12 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      link: {
+        title: 'here...',
+        url: 'https://www.myetherwallet.com/'
+      }
+    };
   }
 };
 </script>

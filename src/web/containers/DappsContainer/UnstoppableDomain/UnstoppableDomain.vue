@@ -1,5 +1,10 @@
 <template>
   <WhiteSheet>
+    <mew-banner
+      :banner-img="bannerImg"
+      :text-obj="topBanner"
+      @closeBanner="closeBanner"
+    />
     <Confirmation :open="openConfirmation" :close="closeConfirmation" />
     <v-btn color="orange" @click="openConfirmation = true">Confirmation</v-btn>
     <div>
@@ -100,6 +105,11 @@ export default {
   components: { WhiteSheet, BlockTitle, Confirmation },
   data() {
     return {
+      topBanner: {
+        title: 'Unstoppable Domain',
+        subtext: 'Replace cryptocurrency addresses with a human readable name.',
+        exit: 'Exit Dapp'
+      },
       openConfirmation: false,
       tab: null,
       results: [
