@@ -1,8 +1,6 @@
 import { Toast } from '@/helpers';
 import Vue from 'vue';
 const ERRORS = {
-  'No WebUSB interface found for your Ledger device. Please upgrade firmware or contact techsupport.':
-    'ledgerError.no-interface-found',
   'Failed to sign with Ledger device: U2F TIMEOUT':
     'ledgerError.failed-to-sign',
   'Failed to sign with Ledger device: U2F DEVICE_INELIGIBLE':
@@ -23,10 +21,8 @@ const ERRORS = {
     'ledgerError.device-busy-1',
   'TransportError: Failed to sign with Ledger device: U2F OTHER_ERROR':
     'ledgerError.failed-to-sign-other',
-  'TransportStatusError: Ledger device: UNKNOWN_ERROR (0x6801)':
-    'ledgerError.unknown-0x6801',
-  'TransportStatusError: Ledger device: UNKNOWN_ERROR (0x6804)':
-    'ledgerError.unknown-0x6804',
+  'UNKNOWN_ERROR (0x6801)': 'ledgerError.unknown-0x6801',
+  'UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown-0x6804',
   'Invalid networkId signature returned.': 'ledgerError.invalid-network-id',
   'EthAppPleaseEnableContractData: Please enable Contract data on the Ethereum app Settings':
     'ledgerError.enable-contract-data',
@@ -38,10 +34,9 @@ const ERRORS = {
   'DisconnectedDeviceDuringOperation: The device was disconnected':
     'ledgerError.device-disconnected',
   'AbortError: The transfer was cancelled': 'ledgerError.denied-by-user',
-  'TransportInterfaceNotAvailable: Unable to claim interface.':
-    'ledgerError.unable-to-claim',
-  'TransportInterfaceNotAvailable: No WebUSB interface found for your Ledger device. Please upgrade firmware or contact techsupport.':
-    'ledgerError.no-web-usb'
+  'Unable to claim interface.': 'ledgerError.unable-to-claim',
+  'No WebUSB interface found for your Ledger device. Please upgrade firmware or contact techsupport.':
+    'ledgerError.no-interface-found'
 };
 const WARNING = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':
