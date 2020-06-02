@@ -13,5 +13,6 @@
   "print-support-error": "Print isn't supported or browser does not support print",
   "network-error": "No network connection please make sure you are connected",
   "browser-not-supported": "Browser not compliant. Try using Chrome or Opera!",
-  "access-denied": "You dont have necessary permission to perform this task, make sure you are logged in as admin"
+  "access-denied": "You dont have necessary permission to perform this task, make sure you are logged in as admin",
+  "unable-to-reset-device": "Unable to reset device, try unplugging and replugging"
 }

@@ -9,7 +9,8 @@ const WARNING = {
   'Failed to fetch': 'errorsGlobal.network-error',
   'connection not open': 'errorsGlobal.network-error',
   'timeout of 15000ms exceeded': 'errorsGlobal.network-error',
-  'ResizeObserver loop limit exceeded': ''
+  'ResizeObserver loop limit exceeded': '',
+  'Unable to reset the device.': 'errorsGlobal.unable-to-reset-device'
 };
 export default event => {
   const errorValues = Object.keys(ERRORS);
