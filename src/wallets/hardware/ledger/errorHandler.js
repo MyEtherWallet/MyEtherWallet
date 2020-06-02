@@ -31,9 +31,8 @@ const ERRORS = {
   'No device selected.': 'ledgerError.no-device-selected',
   'Incompatible EIP155-based V 10 and chain id 1. See the second parameter of the Transaction constructor to set the chain id.':
     'ledgerError.app-and-network-mismatch',
-  'DisconnectedDeviceDuringOperation: The device was disconnected':
-    'ledgerError.device-disconnected',
-  'AbortError: The transfer was cancelled': 'ledgerError.denied-by-user',
+  'The device was disconnected': 'ledgerError.device-disconnected',
+  'The transfer was cancelled': 'ledgerError.denied-by-user',
   'Unable to claim interface.': 'ledgerError.unable-to-claim',
   'No WebUSB interface found for your Ledger device. Please upgrade firmware or contact techsupport.':
     'ledgerError.no-interface-found'
