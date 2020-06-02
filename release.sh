@@ -13,7 +13,8 @@ if [ -n "$4" ]; then
     done
 fi
 
-sha256sum * > ../release/MyEtherWallet-$RELEASE-CHECKSUM-SHA256; sha256sum * >  ../release/MEW-CX-$RELEASE-CHECKSUM-SHA256;
+sha256sum ./release/MyEtherWallet-$RELEASE.zip > ./release/MyEtherWallet-$RELEASE-CHECKSUM-SHA256
+sha256sum ./release/MEW-CX-$RELEASE.zip > ./release/MEW-CX-$RELEASE-CHECKSUM-SHA256
 
 GH_API="https://api.github.com"
 GH_REPO="$GH_API/repos/$REPO"
