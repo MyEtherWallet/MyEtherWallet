@@ -24,11 +24,11 @@ export default err => {
   const errorValues = Object.keys(ERRORS);
   const warningValues = Object.keys(WARNING);
   const foundError = errorValues.find(item => {
-    return item.includes(err.message) || item.includes(err);
+    return err.message.includes(item) || item.includes(err);
   });
 
   const foundWarning = warningValues.find(item => {
-    return item.includes(err.message) || item.includes(err);
+    return err.message.includes(item) || item.includes(err);
   });
 
   if (foundError) {
