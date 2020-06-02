@@ -1,8 +1,8 @@
 import { Toast } from '@/helpers';
 import Vue from 'vue';
 const ERRORS = {
-  'SecurityError: The operation is insecure.':
-    'errorsGlobal.browser-not-supported'
+  'The operation is insecure.': 'errorsGlobal.browser-not-supported',
+  'Access denied.': 'errorsGlobal.access-denied'
 };
 const WARNING = {
   'Network Error': 'errorsGlobal.network-error',
@@ -15,11 +15,11 @@ export default event => {
   const errorValues = Object.keys(ERRORS);
   const warningValues = Object.keys(WARNING);
   const foundError = errorValues.find(item => {
-    return item.includes(event.value);
+    return event.value.includes(item);
   });
 
   const foundWarning = warningValues.find(item => {
-    return item.includes(event.value);
+    return event.value.includes(item);
   });
 
   if (foundError) {
