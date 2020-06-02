@@ -1,5 +1,5 @@
 <template>
-  <v-sheet color="superPrimary" class="data-block">
+  <v-sheet color="bg_datablock" class="data-block">
     <slot />
   </v-sheet>
 </template>
