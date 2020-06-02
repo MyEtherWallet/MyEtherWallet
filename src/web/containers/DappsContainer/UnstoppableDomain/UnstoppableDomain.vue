@@ -1,5 +1,7 @@
 <template>
   <WhiteSheet>
+    <Confirmation :open="openConfirmation" :close="closeConfirmation" />
+    <v-btn color="orange" @click="openConfirmation = true">Confirmation</v-btn>
     <div>
       <v-tabs v-model="tab" background-color="transparent" class="px-10 py-6">
         <v-tab class="text-transform--initial mew-heading-2">
@@ -92,11 +94,13 @@
 <script>
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import BlockTitle from '@/components/Titles/BlockTitle';
+import Confirmation from '@/components/Overlays/Confirmation';
 
 export default {
-  components: { WhiteSheet, BlockTitle },
+  components: { WhiteSheet, BlockTitle, Confirmation },
   data() {
     return {
+      openConfirmation: false,
       tab: null,
       results: [
         {
@@ -121,6 +125,11 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    closeConfirmation() {
+      this.openConfirmation = false;
+    }
   }
 };
 </script>
