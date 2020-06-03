@@ -358,7 +358,8 @@ export default class DexAg {
       }
 
       preparedTradeTxs.add(tx);
-
+      const result = await dexAgCalls.estimateGas(Array.from(preparedTradeTxs), swapDetails.fromAddress);
+      console.log(result); // todo remove dev item
       const swapTransactions = Array.from(preparedTradeTxs);
 
       return [...swapTransactions];
