@@ -7,12 +7,9 @@ if (
   (window.hasOwnProperty('ethereum') && window.ethereum)
 ) {
   if (
-    window.web3.currentProvider.isMew ||
-    window.ethereum.currentProvider.isMew
+    (window.web3 && window.web3.currentProvider.isMew) ||
+    (window.ethereum && window.ethereum.isMew)
   ) {
-    //     const event = new CustomEvent(
-    //   WEB3_DETECTED.replace('{{id}}', window.extensionID)
-    // );
     window.dispatchEvent(event);
   }
 } else {

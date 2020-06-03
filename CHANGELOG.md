@@ -2,6 +2,10 @@
 
 - Modify Simplex order flow [#2409](https://github.com/MyEtherWallet/MyEtherWallet/pull/2409)
 
+### Bug
+
+- Sentry fixes k [#2411](https://github.com/MyEtherWallet/MyEtherWallet/pull/2411)
+
 ### Release v5.6.3
 
 ### Bug
