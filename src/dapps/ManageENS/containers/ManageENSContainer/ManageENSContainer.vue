@@ -224,19 +224,31 @@
       </div>
     </b-collapse>
     <b-btn v-b-toggle.ipfs class="collapse-open-button" variant="primary">
-      <p>Content Hash</p>
+      <p>IPFS</p>
     </b-btn>
     <b-collapse
       id="ipfs"
       class="collapse-content"
       accordion="manage-ens-accordion"
     >
-      <div v-if="processingIpfs" class="ipfs-loading">
+      <div v-if="ipfsProcessing" class="ipfs-loading">
         <i class="fa fa-lg fa-spinner fa-spin" />Processing File... Please wait
         for a transaction popup before you leave to make sure your request is
         processed.
       </div>
       <div v-else>
+        <div v-if="localContentHash !== ''" class="link-to-name">
+          <p>
+            Check your website for {{ `${domainName}` }} here:
+            <a
+              :href="`https://${domainName}.link`"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {{ `${domainName}.link` }}
+            </a>
+          </p>
+        </div>
         <div class="form-container">
           <form class="manage-form">
             <div class="input-container">
@@ -245,14 +257,15 @@
                 v-model="localContentHash"
                 type="text"
                 name="transferEns"
-                placeholder="IPFS Hash"
+                class="with-static"
               />
+              <span class="static-label"> ipfs:// </span>
             </div>
             <div class="submit-container">
               <button
-                :class="[!isAddress(transferTo) ? 'disabled' : '']"
+                :class="[localContentHash.length === 0 ? 'disabled' : '']"
                 type="submit"
-                @click.prevent="transferDomain(transferTo)"
+                @click.prevent="saveContentHash(localContentHash)"
               >
                 Set IPFS Hash
               </button>
@@ -367,6 +380,10 @@ export default {
     saveContentHash: {
       type: Function,
       default: () => {}
+    },
+    ipfsProcessing: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -400,8 +417,7 @@ export default {
       hasError: false,
       txtRecordInputs: newtxtRecords,
       txtValidators: txtValidators,
-      localContentHash: this.contentHash,
-      processingIpfs: false
+      localContentHash: this.contentHash || ''
     };
   },
   computed: {
@@ -459,20 +475,35 @@ export default {
   },
   methods: {
     fileChange(e) {
-      this.processingIpfs = true;
+      // this.processingIpfs = true;
       // const formData = new FormData();
       // const reader = new FileReader();
       // const _self = this;
       if (e.target.files[0].type !== 'application/zip') {
         this.$refs.zipInput.value = '';
-        this.processingIpfs = false;
         Toast.responseHandler('Please Upload a zip file!', Toast.WARN);
+        return;
+      }
+      if (e.target.files[0].size < 500) {
+        this.$refs.zipInput.value = '';
+        Toast.responseHandler(
+          'File is too small! Size has to be more than 500kb.',
+          Toast.WARN
+        );
+        return;
+      }
+
+      if (e.target.files[0].size > 50000) {
+        this.$refs.zipInput.value = '';
+        Toast.responseHandler(
+          'File is too big! Size has to be less than 50mb.',
+          Toast.WARN
+        );
         return;
       }
 
       // formData.append('file', e.target.files[0]);
       // this.uploadFile(formData);
-      // console.log(e.target.files[0]);
       this.uploadFile(e.target.files[0]);
       // reader.onloadend = function (evt) {
       //   try {

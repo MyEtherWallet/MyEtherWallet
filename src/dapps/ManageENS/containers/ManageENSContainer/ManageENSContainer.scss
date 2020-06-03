@@ -53,9 +53,21 @@
 .manage-form {
   display: flex;
   padding-top: 20px;
+  position: relative;
 
   .input-container {
     flex: auto;
+  }
+
+  .with-static {
+    padding-left: 52px;
+  }
+
+  .static-label {
+    position: absolute;
+    left: 10px;
+    top: 63px;
+    font-weight: bold;
   }
 }
 
