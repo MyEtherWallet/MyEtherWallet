@@ -118,6 +118,12 @@ export default {
     this.getRecords();
   },
   methods: {
+    async getResolverAddress(cryptoRegistry, node) {
+      return cryptoRegistry.methods
+        .resolverOf(node)
+        .call()
+        .catch(() => null);
+    },
     async getRecords() {
       let result = [];
       try {
@@ -126,9 +132,13 @@ export default {
           registryAbi,
           '0xd1e5b0ff1287aa9f9a268759062e4ab08b9dacbe'
         );
-        const resolverAddress = await cryptoRegistry.methods
-          .resolverOf(node)
-          .call();
+        const resolverAddress = await this.getResolverAddress(
+          cryptoRegistry,
+          node
+        );
+        if (!resolverAddress) {
+          throw new Error('No resolver address set');
+        }
         const resolver = new this.web3.eth.Contract(
           resolverAbi,
           resolverAddress
@@ -191,15 +201,14 @@ export default {
     async handleSave() {
       this.loading = true;
       const node = hash(this.domainName);
-
       const cryptoRegistry = new this.web3.eth.Contract(
         registryAbi,
         '0xd1e5b0ff1287aa9f9a268759062e4ab08b9dacbe'
       );
-      const resolverAddress = await cryptoRegistry.methods
-        .resolverOf(node)
-        .call();
-
+      const resolverAddress = await this.getResolverAddress(
+        cryptoRegistry,
+        node
+      );
       const keys = [];
       const values = [];
       for (const key of Object.keys(this.edit)) {
@@ -212,11 +221,14 @@ export default {
         resolverAbi,
         resolverAddress || '0xEf31d4Eb54A743a6d665D067A374cD64CBD71ee3'
       );
-
       if (!resolverAddress) {
         await cryptoRegistry.methods
-          .resolveTo(resolverContract.address, node)
-          .send({ from: this.account.address });
+          .resolveTo(resolverContract.options.address, node)
+          .send({ from: this.account.address })
+          .on('error', () => {
+            this.loading = false;
+            this.getRecords();
+          });
       }
       await resolverContract.methods
         .setMany(keys, values, node)
