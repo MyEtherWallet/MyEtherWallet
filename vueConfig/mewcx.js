@@ -14,12 +14,6 @@ const webpackConfigCXWeb3 = {
   },
   optimization: {
     splitChunks: false
-  }
-};
-const webpackConfig = {
-  devtool: 'source-map',
-  node: {
-    process: true
   },
   plugins: defaultConfig.plugins.concat([
     new CopyWebpackPlugin({
@@ -67,7 +61,7 @@ const webpackConfig = {
   ])
 };
 const pluginOptions = {
-  configureMultiCompilerWebpack: [webpackConfigCXWeb3, webpackConfig]
+  // configureMultiCompilerWebpack: [webpackConfigCXWeb3]
 };
 const exportObj = {
   pages: {
@@ -86,7 +80,7 @@ const exportObj = {
     }
   },
   publicPath: './',
-  configureWebpack: webpackConfig,
+  configureWebpack: webpackConfigCXWeb3,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
   integrity: true,
   pluginOptions,

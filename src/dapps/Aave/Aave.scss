@@ -6,6 +6,10 @@
   grid-area: main;
   overflow: hidden;
 
+  .back-btn {
+    display: block;
+  }
+
   .header-container {
     border-bottom: 2px solid $light-grey-1;
   }

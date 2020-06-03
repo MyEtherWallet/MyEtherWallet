@@ -365,9 +365,9 @@ export default {
           this.txtRecordInputs[type] !== '' &&
           !this.txtValidators[type](this.txtRecordInputs[type])
         )
-          return false;
+          return true;
       }
-      return true;
+      return false;
     }
   },
   watch: {
