@@ -80,6 +80,7 @@
       :content-hash="contentHash"
       :upload-file="uploadFile"
       :save-content-hash="saveContentHash"
+      :ipfs-processing="ipfsProcessing"
       @updateSecretPhrase="updateSecretPhrase"
       @domainNameChange="updateDomainName"
       @updateStep="updateStep"
@@ -106,6 +107,7 @@ import DNSRegistrar from '@ensdomains/dnsregistrar';
 import BigNumber from 'bignumber.js';
 import supportedCoins from './supportedCoins';
 import supportedTxt from './supportedTxt';
+import contentHash from 'content-hash';
 
 const bip39 = require('bip39');
 
@@ -160,7 +162,8 @@ export default {
       deedValue: '0',
       controllerAddress: '',
       contractControllerAddress: '',
-      contentHash: ''
+      contentHash: '',
+      ipfsProcessing: false
     };
   },
   computed: {
@@ -265,6 +268,7 @@ export default {
       this.controllerAddress = '';
       this.contractControllerAddress = '';
       this.contentHash = '';
+      this.ipfsProcessing = false;
 
       if (this.ens) {
         this.setRegistrar();
@@ -813,6 +817,7 @@ export default {
       }
     },
     async uploadFile(file) {
+      this.ipfsProcessing = true;
       try {
         const content = await fetch(
           'https://6szankrze5.execute-api.us-east-1.amazonaws.com/testing/ipfs',
@@ -829,16 +834,21 @@ export default {
           return response.json();
         });
         fetch(content.body.signedUrl, {
-          method: 'POST',
+          headers: {
+            'Content-Type': 'application/zip'
+          },
+          method: 'PUT',
           body: file
         }).then(response => {
           if (!response.ok) {
+            this.ipfsProcessing = false;
             Toast.responseHandler('Uploading file errored', Toast.ERROR);
             return;
           }
           this.getHashFromFile(content.body.hashResponse);
         });
       } catch (e) {
+        this.ipfsProcessing = false;
         Toast.responseHandler(e, Toast.ERROR);
       }
     },
@@ -856,32 +866,51 @@ export default {
               hash: hash
             })
           }
-        ).then(response => {
-          return response.json();
-        });
-
-        this.saveContentHash(ipfsHash);
+        )
+          .then(response => {
+            return response.json();
+          })
+          .catch(e => {
+            this.ipfsProcessing = false;
+            Toast.responseHandler(e, Toast.ERROR);
+          });
+        if (ipfsHash.error) {
+          Toast.responseHandler('Error getting ipfs hash!', Toast.ERROR);
+        } else {
+          this.saveContentHash(ipfsHash);
+        }
       } catch (e) {
+        this.ipfsProcessing = false;
         Toast.responseHandler(e, Toast.ERROR);
       }
     },
     async saveContentHash(ipfsHash) {
-      const publicResolverContract = new this.web3.eth.Contract(
+      const ipfsToHash = `0x${contentHash.fromIpfs(ipfsHash)}`;
+      const currentResolverAddress = await this.ensRegistryContract.methods
+        .resolver(this.nameHash)
+        .call();
+      const resolverContract = new this.web3.eth.Contract(
         ResolverAbi,
-        this.publicResolverAddress
+        currentResolverAddress
       );
 
       try {
         const txObj = {
-          to: this.publicResolverAddress,
-          data: publicResolverContract.methods
-            .setContentHash(this.labelHash, ipfsHash)
+          from: this.account.address,
+          to: currentResolverAddress,
+          data: resolverContract.methods
+            .setContenthash(this.nameHash, ipfsToHash)
             .encodeABI(),
           value: 0
         };
 
-        this.web3.eth.sendTransaction(txObj);
+        this.web3.eth.sendTransaction(txObj).on('receipt', () => {
+          this.ipfsProcessing = true;
+          this.ipfsLinkTo = `${this.parsedDomainName}.link`;
+          this.contentHash = ipfsHash;
+        });
       } catch (e) {
+        this.ipfsProcessing = false;
         Toast.responseHandler(e, Toast.ERROR);
       }
     },
@@ -998,9 +1027,9 @@ export default {
     async checkContentHash(resolverContract) {
       try {
         const hash = await resolverContract.methods
-          .contenthash(this.labelHash)
+          .contenthash(this.nameHash)
           .call();
-        this.contentHash = hash;
+        this.contentHash = hash && hash !== '' ? contentHash.decode(hash) : '';
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);
       }
