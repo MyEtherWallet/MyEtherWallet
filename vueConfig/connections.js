@@ -67,5 +67,6 @@ module.exports = [
   'https://perkle-pub.esprezzo.io:8501',
   'https://o382951.ingest.sentry.io:443',
   'https://dispatch.pokt.network:443',
-  'https://service.gcp.pokt.network:443'
+  'https://service.gcp.pokt.network:443',
+  'https://estimategas.mewapi.io:443'
 ];
