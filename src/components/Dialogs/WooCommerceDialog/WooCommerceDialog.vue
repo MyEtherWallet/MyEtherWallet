@@ -1,8 +1,11 @@
 <template>
   <div class="text-center">
-    <v-dialog v-model="dialog" width="400px">
-      <v-sheet color="bg_wallet">
-        aaa
+    <v-dialog v-model="dialog" width="350px">
+      <v-sheet color="bg_wallet" class="mew-logo">
+        <div class="text-center pt-10 pb-10">
+          <div class="mew-heading-3">WooCommerce Videos</div>
+          <div>videos@woocommerce.com</div>
+        </div>
       </v-sheet>
     </v-dialog>
   </div>
@@ -14,7 +17,7 @@ export default {
     show: { default: false, type: Boolean }
   },
   data() {
-    return { dialog: false };
+    return { dialog: true };
   },
   watch: {
     show(val) {
@@ -24,4 +27,10 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.mew-logo {
+  background-image: url('~@/assets/images/icons/logo-mew-small.png');
+  background-position: 10px 10px;
+  background-size: 70px;
+}
+</style>

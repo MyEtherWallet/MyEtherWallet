@@ -62,12 +62,14 @@
             </div>
           </div>
           <v-progress-linear
+            v-if="false"
             color="basic"
             height="12"
             value="10"
             class="mt-2"
             rounded
           ></v-progress-linear>
+          <mew-progress-bar :balance-obj="barData" />
           <div class="mt-3">
             <table style="width: 100%;" class="text-right">
               <tbody>
@@ -172,6 +174,7 @@ export default {
   },
   data() {
     return {
+      barData: { send: '5', fee: '1', total: '10' },
       link: {
         title: 'here...',
         url: 'https://www.myetherwallet.com/'
