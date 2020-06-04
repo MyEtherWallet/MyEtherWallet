@@ -14,6 +14,7 @@
         :selected-provider="selectedProvider"
         :swap-details="swapDetails"
         :current-address="currentAddress"
+        :swap="swap"
         @swapStarted="resetSwapState"
       />
 
@@ -615,6 +616,9 @@ export default {
       this.selectedProvider = this.providerList.find(entry => {
         return entry.provider === provider;
       });
+      if (!this.selectedProvider) {
+        this.selectedProvider = {};
+      }
       this.providerSelectedName = this.selectedProvider.provider;
       this.updateEstimate('from');
     },

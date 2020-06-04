@@ -324,14 +324,29 @@ export default class Simplex {
       validFor: TIME_SWAP_VALID
     };
   }
-
-  async startSwap(swapDetails) {
+  async createOrder(swapDetails) {
     await this.updateFiat(
       swapDetails.fromCurrency,
       swapDetails.toCurrency,
       swapDetails.fromValue
     );
     swapDetails.dataForInitialization = await this.createSwap(swapDetails);
+    if (!swapDetails.dataForInitialization) throw Error('abort');
+    swapDetails.timestamp = new Date().toISOString();
+    swapDetails.providerReceives = this.currentOrder.fiat_money.total_amount;
+    swapDetails.providerSends = this.currentOrder.digital_money.amount;
+    swapDetails.parsed = Simplex.parseOrder(swapDetails.dataForInitialization);
+    swapDetails.providerAddress = undefined;
+    swapDetails.isDex = Simplex.isDex();
+    return swapDetails;
+  }
+
+  async startSwap(swapDetails) {
+    swapDetails.dataForInitialization = await this.updateFiat(
+      swapDetails.fromCurrency,
+      swapDetails.toCurrency,
+      swapDetails.fromValue
+    );
     if (!swapDetails.dataForInitialization) throw Error('abort');
     swapDetails.timestamp = new Date().toISOString();
     swapDetails.providerReceives = this.currentOrder.fiat_money.total_amount;
