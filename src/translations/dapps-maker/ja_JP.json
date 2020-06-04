@@ -1,4 +1,12 @@
 {
+  "maker-shutdown": "NOTICE: Single Collateral DAI (SAI) system is shutting down on May 12th",
+  "what-does-shutdown-mean": "What does shutdown mean?",
+  "what-does-shutdown-mean-reason": "Once Single-Collateral Dai is shut down, every SAI in circulation will be redeemable for 1 USD worth of ETH. SAI can be redeemed for ETH at migrate.makerdao.com. Note that SAI will only be worth an equivalent USD amount of ETH at the exact time of shutdown, where the redeemable amounts of ETH per SAI are calculated. Since ETH is a volatile asset, your claim can vary in value after shut down, and SAI will thus become an asset pegged to ETH. Therefore, if you want to avoid exposure to price swings of ETH, you should redeem your Sai for ETH as soon as possible after shutdown, and trade that ETH for Dai.",
+  "shutdown-learn-more": "      To learn more, including steps available to redeem or convert any existing SAI or CDP, please see",
+  "guide-to-shutdown": "A Guide to Single-Collateral Dai (Sai) Shutdown",
+  "shutdown": "On April 24th the Maker community voted to shutdown the Single Collateral DAI (SAI) system on May 12th.",
+  "shutdown-process": "Sequential Process for SCD Shutdown",
+  "or": "or",
   "maker_title": "MakerDAO",
   "maker_title_old": "Single Collateral MakerDAO",
   "maker_desc": "Collateralize ETH for DAI",
