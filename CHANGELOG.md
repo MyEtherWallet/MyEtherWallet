@@ -2,6 +2,10 @@
 
 - Unstoppable domains combined [#2353](https://github.com/MyEtherWallet/MyEtherWallet/pull/2353)
 
+### Bug
+
+- Sentry fixes k [#2411](https://github.com/MyEtherWallet/MyEtherWallet/pull/2411)
+
 ### Release v5.6.3
 
 ### Bug
