@@ -1,3 +1,7 @@
+### Feature
+
+- Ipfs implementation for ENS manager [#2412](https://github.com/MyEtherWallet/MyEtherWallet/pull/2412)
+
 ### Release v5.6.4
 
 ### Feature
