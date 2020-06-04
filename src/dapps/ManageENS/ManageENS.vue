@@ -15,12 +15,12 @@
                 }
               "
             >
-              Register Domain
+              {{ $t('ens.manage-domain') }}
             </b-button>
             <b-button
               :class="[
                 'action-btn',
-                $route.name === 'ENS multi Manager' ? 'active-btn' : ''
+                $route.name === 'ensMultiManager' ? 'active-btn' : ''
               ]"
               @click="
                 () => {
@@ -28,7 +28,7 @@
                 }
               "
             >
-              Manage Domain
+              {{ $t('ens.register-domain') }}
             </b-button>
           </div>
         </template>
@@ -302,7 +302,7 @@ export default {
     },
     navigateHeaderButtons(to) {
       this.$router.push({
-        name: to === 'register' ? 'ensInitialState' : 'ENS multi Manager'
+        name: to === 'register' ? 'ensInitialState' : 'ensMultiManager'
       });
     },
     navigateToRenew() {

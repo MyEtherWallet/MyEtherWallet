@@ -1,0 +1,81 @@
+@import '../ManageUnstoppable/ManageUnstoppable.scss';
+.initial-state-unstoppable {
+  @extend %template-container;
+
+  padding: 20px;
+}
+
+.content-container {
+  .title-container {
+    align-items: flex-end;
+    display: flex;
+    margin-bottom: 10px;
+
+    .title {
+      padding: 0 15px;
+
+      span {
+        color: $dark-blue-6;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+    }
+
+    p {
+      max-width: 760px;
+    }
+
+    .buttons {
+      margin-bottom: 3px;
+      margin-left: auto;
+    }
+  }
+
+  .content {
+    align-items: center;
+
+    @media all and (max-width: 600px) {
+      flex-direction: column;
+      height: 100%;
+    }
+  }
+  .domain-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    margin: 10px;
+    background: $light-green-1;
+
+    .button {
+      background-color: $button--background-color-1;
+      border: 1px solid $button--border-color-1;
+      border-radius: 6px;
+      color: $button--text-color-1;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      user-select: none;
+      display: inline-block;
+      text-align: center;
+      padding: 10px 25px;
+    }
+  }
+}
+.no-domains {
+  padding: 15px;
+}
+
+.loading-container {
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.link {
+  color: $dark-green-4;
+  cursor: pointer;
+}
