@@ -70,6 +70,5 @@ module.exports = [
   'https://dispatch.pokt.network:443',
   'https://service.gcp.pokt.network:443',
   'https://6szankrze5.execute-api.us-east-1.amazonaws.com:443',
-  'https://mew-ipfs-bucket.s3.us-west-2.amazonaws.com:443',
   'https://s3.us-west-2.amazonaws.com:443'
 ];

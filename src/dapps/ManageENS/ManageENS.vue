@@ -817,6 +817,8 @@ export default {
       }
     },
     async uploadFile(file) {
+      const formData = new FormData();
+
       this.ipfsProcessing = true;
       try {
         const content = await fetch(
@@ -833,12 +835,16 @@ export default {
         ).then(response => {
           return response.json();
         });
+        for (const key in content.body.fields) {
+          formData.append(key, content.body.fields[key]);
+        }
+        formData.append('file', file);
         fetch(content.body.signedUrl, {
+          method: 'POST',
           headers: {
-            'Content-Type': 'application/zip'
+            'Content-Length': file.size
           },
-          method: 'PUT',
-          body: file
+          body: formData
         }).then(response => {
           if (!response.ok) {
             this.ipfsProcessing = false;

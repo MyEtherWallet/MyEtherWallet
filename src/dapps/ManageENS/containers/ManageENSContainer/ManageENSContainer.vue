@@ -241,7 +241,7 @@
           <p>
             Check your website for {{ `${domainName}` }} here:
             <a
-              :href="`https://${domainName}.link`"
+              :href="`http://${domainName}.link`"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -475,10 +475,6 @@ export default {
   },
   methods: {
     fileChange(e) {
-      // this.processingIpfs = true;
-      // const formData = new FormData();
-      // const reader = new FileReader();
-      // const _self = this;
       if (e.target.files[0].type !== 'application/zip') {
         this.$refs.zipInput.value = '';
         Toast.responseHandler('Please Upload a zip file!', Toast.WARN);
@@ -502,20 +498,7 @@ export default {
         return;
       }
 
-      // formData.append('file', e.target.files[0]);
-      // this.uploadFile(formData);
       this.uploadFile(e.target.files[0]);
-      // reader.onloadend = function (evt) {
-      //   try {
-      //     const binary = evt.target.result;
-      //     const base64 = btoa(binary);
-      //     _self.uploadFile(base64);
-      //   } catch (e) {
-      //     this.processingIpfs = false;
-      //     Toast.responseHandler('Something went wrong', Toast.responseHandler);
-      //   }
-      // };
-      // reader.readAsBinaryString(e.target.files[0]);
     },
     ipfsClick() {
       const input = this.$refs.zipInput;
