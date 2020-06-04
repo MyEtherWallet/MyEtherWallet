@@ -675,7 +675,7 @@ export default {
         await setupPriceAndRatios(this, this._priceService, this._typeService);
 
         this.proxyAddress = await this._proxyService.currentProxy();
-
+        console.log('getDetailsForTokens', this._typeService.cdpTypes); // todo remove dev item
         await getDetailsForTokens(this, this._typeService.cdpTypes);
 
         await checkAllowances(this, this.account.address, this.proxyAddress);
@@ -744,7 +744,8 @@ export default {
     },
     async setupCdpManageFunc(cdpId) {
       cdpId = CdpNum(cdpId);
-      await setupCdpManage(this, cdpId);
+      const _self = this;
+      await setupCdpManage(_self, cdpId);
       this.setActiveCdpId(cdpId);
     },
 

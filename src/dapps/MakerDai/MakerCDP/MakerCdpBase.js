@@ -335,11 +335,15 @@ export default class MakerCdpBase {
     const rawType = this.mcdManager
       .get('mcd:cdpType')
       .getCdpType(null, this.cdpType);
+    console.log('minSafeCollateralAmount', rawType); // todo remove dev item
+    console.log('minSafeCollateralAmount', rawType.liquidationRatio._amount.toString()); // todo remove dev item
+    console.log('minSafeCollateralAmount', rawType.price._amount.toString()); // todo remove dev item
+
     return daiMath
       .minSafeCollateralAmount(
         this._debtValue,
-        rawType.liquidationRatio,
-        rawType.price
+        rawType.liquidationRatio._amount,
+        rawType.price._amount
       )
       .toBigNumber();
   }
