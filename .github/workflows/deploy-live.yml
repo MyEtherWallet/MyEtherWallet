@@ -54,7 +54,7 @@ jobs:
           TAG=${{ steps.get_release_tag.outputs.VERSION }}
           RELEASE=${TAG//v/}
           sentry-cli releases new -p myetherwallet $RELEASE
-          sentry-cli releases -p myetherwallet files $RELEASE upload-sourcemaps ./dist/sourcemaps
+          sentry-cli releases -p myetherwallet files $RELEASE upload-sourcemaps ./dist/sourcemaps --url-prefix 'https://www.myetherwallet.com/sourcemaps' --rewrite --validate
           sentry-cli releases set-commits $RELEASE --auto
           sentry-cli releases finalize $RELEASE
 
