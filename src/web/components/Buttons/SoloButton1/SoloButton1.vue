@@ -14,8 +14,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 .solo-button {
   border-radius: 5px;
   height: 25px;

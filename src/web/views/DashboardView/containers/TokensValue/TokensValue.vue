@@ -224,8 +224,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 .top-button-icon {
   border-radius: 100%;
   background-color: #b4ece4;
@@ -250,7 +248,7 @@ export default {
     font-size: 11px;
     text-transform: uppercase;
     td {
-      color: $gray-1;
+      color: var(--v-textgray-base);
       font-weight: 500;
     }
   }
@@ -271,14 +269,6 @@ export default {
     td:last-child {
       padding-right: 30px;
     }
-  }
-
-  &.light tbody td {
-    border-bottom: 1px solid $theme-light--table-border-color;
-  }
-
-  &.dark tbody td {
-    border-bottom: 1px solid $theme-dark--table-border-color;
   }
 }
 </style>

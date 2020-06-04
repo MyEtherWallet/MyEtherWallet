@@ -199,7 +199,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
 .main-menu:hover,
 .sub-menu > *:hover {
   background-color: #0000001f;
@@ -208,7 +207,7 @@ export default {
 .main-menu,
 .sub-menu {
   * {
-    color: $gray-1;
+    color: var(--v-gray_text-base);
   }
 }
 .active {

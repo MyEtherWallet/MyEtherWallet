@@ -21,8 +21,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 #app.theme--dark .dark-text-blue {
   color: #7d92b7 !important;
 }

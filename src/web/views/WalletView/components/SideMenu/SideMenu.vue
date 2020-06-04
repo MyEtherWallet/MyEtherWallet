@@ -42,8 +42,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 .mew-component--sidemenu {
   background-image: url('~@/assets/images/backgrounds/bg-light.png');
   background-position: -336px 0px;
