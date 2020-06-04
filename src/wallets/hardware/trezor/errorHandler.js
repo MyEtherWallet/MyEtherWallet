@@ -14,7 +14,8 @@ const ERRORS = {
   Cancelled: 'trezorError.cancelled',
   'Iframe timeout': 'trezor.iframe-timeout',
   'Browser not supported': 'trezor.unsupported-browser',
-  'popup failed to open': 'trezor.popup-failed-to-open'
+  'popup failed to open': 'trezor.popup-failed-to-open',
+  'Safety check failed': 'trezor.safety-check-failed'
 };
 
 const WARNING = {};
@@ -23,11 +24,11 @@ export default err => {
   const errorValues = Object.keys(ERRORS);
   const warningValues = Object.keys(WARNING);
   const foundError = errorValues.find(item => {
-    return item.includes(err.message) || item.includes(err);
+    return err.message.includes(item) || item.includes(err);
   });
 
   const foundWarning = warningValues.find(item => {
-    return item.includes(err.message) || item.includes(err);
+    return err.message.includes(item) || item.includes(err);
   });
 
   if (foundError) {
