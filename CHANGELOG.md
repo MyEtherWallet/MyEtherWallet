@@ -1,3 +1,7 @@
+### Devop
+
+- Use Batch EstimateGas [#2417](https://github.com/MyEtherWallet/MyEtherWallet/pull/2417)
+
 ### Bug
 
 - Sentry fixes k [#2411](https://github.com/MyEtherWallet/MyEtherWallet/pull/2411)
