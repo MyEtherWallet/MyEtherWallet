@@ -84,7 +84,7 @@
     "@makerdao/dai": "0.29.0",
     "@makerdao/dai-plugin-config": "0.2.14-rc.1",
     "@makerdao/dai-plugin-mcd": "1.4.1",
-    "@makerdao/dai-plugin-migrations": "1.3.0",
+    "@makerdao/dai-plugin-migrations": "1.1.0",
     "@myetherwallet/eth-token-balance": "0.2.2",
     "@myetherwallet/mewconnect-web-client": "2.1.0-RC.5",
     "@stripe/stripe-js": "1.5.0",
