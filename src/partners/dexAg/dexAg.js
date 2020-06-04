@@ -344,22 +344,20 @@ export default class DexAg {
       }
 
       if (preparedTradeTxs.size > 0) {
-        switch (swapDetails.provider) {
-          case 'curvefi':
-            tx.gas = 2000000;
-            break;
-          case 'zero_x':
-          case 'dexag':
-            tx.gas = this.tradeGasLimitBase;
-            break;
-          default:
-            tx.gas = this.tradeGasLimitBase;
-        }
+        preparedTradeTxs.add(tx);
+        const preparedAry = Array.from(preparedTradeTxs);
+        const result = await dexAgCalls.estimateGas(
+          preparedAry,
+          swapDetails.fromAddress
+        );
+        const swapTransactions = preparedAry.map((entry, index) => {
+          entry.gas = result[index];
+          return entry;
+        });
+
+        return [...swapTransactions];
       }
 
-      preparedTradeTxs.add(tx);
-      const result = await dexAgCalls.estimateGas(Array.from(preparedTradeTxs), swapDetails.fromAddress);
-      console.log(result); // todo remove dev item
       const swapTransactions = Array.from(preparedTradeTxs);
 
       return [...swapTransactions];
