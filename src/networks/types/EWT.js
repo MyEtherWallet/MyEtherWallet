@@ -1,4 +1,4 @@
-import tokens from '@/_generated/tokens/tokens-eth.json';
+import ewt from '@/assets/images/networks/ewt.svg';
 
 export default {
   name: ‘ewt’,
