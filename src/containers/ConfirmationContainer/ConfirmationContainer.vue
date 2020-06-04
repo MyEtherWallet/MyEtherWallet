@@ -298,8 +298,12 @@ export default {
         this.confirmationCollectionModalOpen();
         if (this.account.identifier !== WEB3_WALLET) {
           for (let i = 0; i < tx.length; i++) {
-            const _signedTx = await this.wallet.signTransaction(tx[i]);
-            signed.push(_signedTx);
+            try {
+              const _signedTx = await this.wallet.signTransaction(tx[i]);
+              signed.push(_signedTx);
+            } catch (err) {
+              this.wallet.errorHandler(err);
+            }
           }
           this.signedArray = signed;
         } else {
