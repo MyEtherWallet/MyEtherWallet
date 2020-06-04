@@ -1,3 +1,7 @@
+### Bug
+
+- Fix text mixup []()
+
 ### Release v5.6.4
 
 ### Feature

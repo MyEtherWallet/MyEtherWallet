@@ -15,7 +15,7 @@
                 }
               "
             >
-              {{ $t('ens.manage-domain') }}
+              {{ $t('ens.register-domain') }}
             </b-button>
             <b-button
               :class="[
@@ -28,7 +28,7 @@
                 }
               "
             >
-              {{ $t('ens.register-domain') }}
+              {{ $t('ens.manage-domain') }}
             </b-button>
           </div>
         </template>
