@@ -1,8 +1,6 @@
 import { Toast } from '@/helpers';
 import Vue from 'vue';
 const ERRORS = {
-  'No WebUSB interface found for your Ledger device. Please upgrade firmware or contact techsupport.':
-    'ledgerError.no-interface-found',
   'Failed to sign with Ledger device: U2F TIMEOUT':
     'ledgerError.failed-to-sign',
   'Failed to sign with Ledger device: U2F DEVICE_INELIGIBLE':
@@ -23,21 +21,21 @@ const ERRORS = {
     'ledgerError.device-busy-1',
   'TransportError: Failed to sign with Ledger device: U2F OTHER_ERROR':
     'ledgerError.failed-to-sign-other',
-  'TransportStatusError: Ledger device: UNKNOWN_ERROR (0x6801)':
-    'ledgerError.unknown-0x6801',
-  'TransportStatusError: Ledger device: UNKNOWN_ERROR (0x6804)':
-    'ledgerError.unknown-0x6804',
+  'UNKNOWN_ERROR (0x6801)': 'ledgerError.unknown-0x6801',
+  'UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown-0x6804',
   'Invalid networkId signature returned.': 'ledgerError.invalid-network-id',
-  'EthAppPleaseEnableContractData: Please enable Contract data on the Ethereum app Settings':
+  'Please enable Contract data on the Ethereum app Settings':
     'ledgerError.enable-contract-data',
   'TransportInterfaceNotAvailable: The interface number provided is not supported by the device in its current configuration.':
     'ledgerError.transport-interface',
   'No device selected.': 'ledgerError.no-device-selected',
   'Incompatible EIP155-based V 10 and chain id 1. See the second parameter of the Transaction constructor to set the chain id.':
     'ledgerError.app-and-network-mismatch',
-  'DisconnectedDeviceDuringOperation: The device was disconnected':
-    'ledgerError.device-disconnected',
-  'AbortError: The transfer was cancelled': 'ledgerError.denied-by-user'
+  'The device was disconnected': 'ledgerError.device-disconnected',
+  'The transfer was cancelled': 'ledgerError.denied-by-user',
+  'Unable to claim interface.': 'ledgerError.unable-to-claim',
+  'No WebUSB interface found for your Ledger device. Please upgrade firmware or contact techsupport.':
+    'ledgerError.no-interface-found'
 };
 const WARNING = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':
