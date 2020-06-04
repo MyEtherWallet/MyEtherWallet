@@ -240,12 +240,11 @@ const AddrResolver = {
         domain.indexOf('.') > 0 &&
         /^[^-]*[^-]*\.(zil|crypto)$/.test(domain)
       ) {
-        const maincur =
-          parentCurrency === network.type.name || EthereumTokens[parentCurrency]
-            ? network.type.name
-            : parentCurrency;
         try {
-          const address = await resolution.addressOrThrow(domain, maincur);
+          const address = await resolution.addressOrThrow(
+            domain,
+            parentCurrency
+          );
           if (!checkDarklist(address)) {
             _this.isValidAddress = true;
             _this.hexAddress =

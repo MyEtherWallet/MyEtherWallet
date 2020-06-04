@@ -91,7 +91,7 @@ export default {
     },
     {
       path: 'manager',
-      name: 'ENS multi Manager',
+      name: 'ensMultiManager',
       component: EnsMultiManager,
       props: true
     }
