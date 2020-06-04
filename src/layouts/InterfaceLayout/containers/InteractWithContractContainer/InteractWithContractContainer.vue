@@ -273,6 +273,7 @@ import { Misc, Toast } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
 import * as unit from 'ethjs-unit';
 import store from 'store';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -335,11 +336,14 @@ export default {
       const _contractArgs = [];
       if (this.selectedMethod) {
         this.selectedMethod.inputs.forEach(item => {
-          if (item.type === 'bytes32[]') {
+          if (item.type.includes('[]')) {
             const parsedItem = this.formatInput(this.inputs[item.name]);
             _contractArgs.push(parsedItem);
           } else if (item.type === 'address') {
             _contractArgs.push(this.inputs[item.name].toLowerCase().trim());
+          } else if (item.includes === 'uint') {
+            const number = new BigNumber(this.inputs[item.name].trim());
+            _contractArgs.push(number.toFixed());
           } else {
             _contractArgs.push(this.inputs[item.name]);
           }
@@ -412,13 +416,17 @@ export default {
       });
     },
     formatInput(str) {
-      if (str[0] === '[') {
-        return str;
+      try {
+        if (str[0] === '[') {
+          return JSON.parse(str);
+        }
+        const newArr = str.split(',');
+        return newArr.map(item => {
+          return item.replace(' ', '');
+        });
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
       }
-      const newArr = str.split(',');
-      return newArr.map(function (item) {
-        return item.replace(' ', '');
-      });
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();
@@ -431,7 +439,8 @@ export default {
       switch (direction) {
         case 'forward':
           if (this.abi !== '') {
-            JSON.parse(this.abi).forEach(item => {
+            const jsonAbi = JSON.parse(this.abi) ? JSON.parse(this.abi) : [];
+            jsonAbi.forEach(item => {
               if (item.type !== 'constructor' && item.constant !== undefined) {
                 this.contractMethods.push(item);
               }
@@ -456,6 +465,8 @@ export default {
           .call({ from: this.account.address.toLowerCase() })
           .then(res => {
             this.result = res;
+            if (Array.isArray(res)) this.result = JSON.stringify(res);
+            else this.result = res;
             this.loading = false;
           })
           .catch(e => {

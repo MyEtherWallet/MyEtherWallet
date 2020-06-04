@@ -52,6 +52,8 @@ import { isHexString } from 'ethereumjs-util';
 import WarningMessage from '@/components/WarningMessage';
 import CustomerSupport from '@/components/CustomerSupport';
 import StandardButton from '@/components/Buttons/StandardButton';
+import { Toast } from '@/helpers';
+
 export default {
   components: {
     'customer-support': CustomerSupport,
@@ -79,16 +81,25 @@ export default {
   methods: {
     ...mapActions('main', ['decryptWallet']),
     unlockWallet() {
-      this.spinner = true;
-      this.decryptWallet([
-        new WalletInterface(this.actualPrivKey, false, privKeyType)
-      ]).then(() => {
-        this.actualPrivKey = '';
-        this.spinner = false;
-        this.$router.push({
-          path: 'interface'
+      try {
+        const walletInstance = new WalletInterface(
+          this.actualPrivKey,
+          false,
+          privKeyType
+        );
+        this.spinner = true;
+        this.decryptWallet([walletInstance]).then(() => {
+          this.spinner = false;
+          this.$router.push({
+            path: 'interface'
+          });
         });
-      });
+      } catch (e) {
+        Toast.responseHandler(
+          `${this.$i18n.t('common.invalid-private-key')}`,
+          Toast.WARN
+        );
+      }
     },
     focusInput() {
       this.$refs.privateKeyInput.focus();

@@ -439,6 +439,7 @@ export default class MakerCDP extends MakerCdpBase {
       this.needsUpdate = true;
       this.closing = true; // for the purpose of displaying to the user closing and moving are the same
       await this.cdp.giveToProxy(address);
+      // eslint-disable-next-line
     } else if (!this.noProxy && proxy) {
       this.needsUpdate = true;
       this.closing = true;

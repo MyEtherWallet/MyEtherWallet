@@ -1,3 +1,40 @@
+### Bug
+
+- Sentry fixes k [#2411](https://github.com/MyEtherWallet/MyEtherWallet/pull/2411)
+
+### Release v5.6.3
+
+### Bug
+
+- Sentry fixes y [#2400](https://github.com/MyEtherWallet/MyEtherWallet/pull/2400)
+- Sentry fixes j [#2396](https://github.com/MyEtherWallet/MyEtherWallet/pull/2396)
+- Fix address not getting returned for unable to validate addresses and disable swap when recalculating rates[#2397](https://github.com/MyEtherWallet/MyEtherWallet/pull/2397)
+- Fix errors from sentry [#2393](https://github.com/MyEtherWallet/MyEtherWallet/pull/2393)
+- Fix perkle network connection [#2389](https://github.com/MyEtherWallet/MyEtherWallet/pull/2389)
+- Fix errors from sentry [#2388](https://github.com/MyEtherWallet/MyEtherWallet/pull/2388)
+
+### Devop
+
+- Fix MEW CX build [#2403](https://github.com/MyEtherWallet/MyEtherWallet/pull/2403)
+- Update terms of service [#2394](https://github.com/MyEtherWallet/MyEtherWallet/pull/2394)
+- Fix sentry releases [#2395](https://github.com/MyEtherWallet/MyEtherWallet/pull/2395)
+
+### Release v5.6.2
+
+### Feature
+
+- Multimanage ens [#2376](https://github.com/MyEtherWallet/MyEtherWallet/pull/2376)
+
+### Devop
+
+- Cleanup token with the new package update [#2338](https://github.com/MyEtherWallet/MyEtherWallet/pull/2338)
+- Mingrate sentry/fix contracts [#2366](https://github.com/MyEtherWallet/MyEtherWallet/pull/2366)
+- Remove CW promo [#2377](https://github.com/MyEtherWallet/MyEtherWallet/pull/2377)
+
+### Bug
+
+- Fix error when user has no ens name [#2384](https://github.com/MyEtherWallet/MyEtherWallet/pull/2384)
+
 ### Release v5.6.1
 
 ### Devop
