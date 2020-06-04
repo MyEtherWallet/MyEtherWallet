@@ -1,5 +1,9 @@
 ### Release v5.6.4
 
+### Devop
+
+- Modify Simplex order flow [#2409](https://github.com/MyEtherWallet/MyEtherWallet/pull/2409)
+
 ### Bug
 
 - Also display token icon if submitted and is not found in the masterfile [#2404](https://github.com/MyEtherWallet/MyEtherWallet/pull/2404)
