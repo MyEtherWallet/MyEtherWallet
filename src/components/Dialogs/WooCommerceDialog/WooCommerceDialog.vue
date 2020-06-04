@@ -8,22 +8,51 @@
           </div>
           <div class="py-2 top-email">videos@woocommerce.com</div>
         </div>
-        <div>
-          <v-btn-toggle v-model="toggle_exclusive" mandatory>
-            <v-btn>
-              <v-icon>mdi-format-align-left</v-icon>
-            </v-btn>
-            <v-btn>
-              <v-icon>mdi-format-align-center</v-icon>
-            </v-btn>
-            <v-btn>
-              <v-icon>mdi-format-align-right</v-icon>
-            </v-btn>
-            <v-btn>
-              <v-icon>mdi-format-align-justify</v-icon>
-            </v-btn>
-          </v-btn-toggle>
-        </div>
+        <v-sheet width="300px" color="transparent" class="mx-auto">
+          <div
+            class="d-flex align-center justify-center pt-7 pb-4 mew-component--woo-commerce"
+          >
+            <v-btn-toggle v-model="toggle_exclusive" mandatory>
+              <v-btn small class="btn text-transform--initial">
+                Card
+              </v-btn>
+              <v-btn small class="btn text-transform--initial">
+                Bitcoin
+              </v-btn>
+            </v-btn-toggle>
+          </div>
+          <div>
+            <v-text-field
+              label="Card number"
+              height="20px"
+              outlined
+              prepend-inner-icon="mdi-credit-card-outline"
+              hide-details
+            ></v-text-field>
+          </div>
+          <div class="d-flex">
+            <v-text-field
+              label="MM/YY"
+              height="20px"
+              outlined
+              prepend-inner-icon="mdi-calendar-blank"
+              hide-details
+            ></v-text-field>
+            <v-text-field
+              label="CVC"
+              height="20px"
+              outlined
+              prepend-inner-icon="mdi-lock-outline"
+              hide-details
+            ></v-text-field>
+          </div>
+          <div class="remember px-3 mt-5">
+            <v-checkbox v-model="checkbox1" label="Remember me"></v-checkbox>
+          </div>
+          <div class="py-8 d-flex align-center justify-center">
+            <mew-button title="Pay $12.22" />
+          </div>
+        </v-sheet>
       </v-sheet>
     </v-dialog>
   </div>
@@ -59,5 +88,14 @@ export default {
 
 .top-email {
   border-top: 1px solid white;
+}
+
+.mew-component--woo-commerce .btn {
+  min-width: 100px !important;
+}
+
+.remember {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
 }
 </style>
