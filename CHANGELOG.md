@@ -1,5 +1,8 @@
+### Release v5.6.4
+
 ### Bug
 
+- Also display token icon if submitted and is not found in the masterfile [#2404](https://github.com/MyEtherWallet/MyEtherWallet/pull/2404)
 - Sentry fixes k [#2411](https://github.com/MyEtherWallet/MyEtherWallet/pull/2411)
 
 ### Release v5.6.3
