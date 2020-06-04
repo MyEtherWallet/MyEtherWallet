@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.6.3",
+  "version": "5.6.4",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -149,7 +149,7 @@
     "u2f-api": "1.1.1",
     "uglify-es": "3.3.9",
     "uuid": "8.1.0",
-    "vue-i18n": "8.17.7",
+    "vue-i18n": "8.18.1",
     "vue-stripe-elements-plus": "0.3.2",
     "vue-template-compiler": "2.6.11",
     "vue-worker": "1.2.1",
