@@ -3,7 +3,7 @@
     <OverlayTitle title="Settings" />
 
     <div class="overlay-content">
-      <v-expansion-panels flat light>
+      <v-expansion-panels flat>
         <ExpansionPanelContent title="Gas price" subtitle="1 Gwei (Economic)">
           <template v-slot:content>
             <GasPrice />
@@ -67,8 +67,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 .overlay-content {
   width: 750px;
 }
@@ -76,7 +74,7 @@ export default {
 .v-expansion-panel {
   margin-top: 20px !important;
   border-radius: 12px !important;
-  box-shadow: $gray-3 0px 0px 15px;
+  box-shadow: 0px 0px 15px var(--v-box_shadow-base);
 
   &:first-child {
     margin-top: 0px !important;

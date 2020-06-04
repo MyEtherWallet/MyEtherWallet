@@ -1,5 +1,3 @@
-/* ========== Vuetify Global Styles ========== */
-
 /* Set maximum size for "v-container" */
 @media (min-width: 1904px) {
   .container {
@@ -9,7 +7,7 @@
 
 /* Remove default background color */
 .theme--light.v-application {
-  background: $white !important;
+  background: white !important;
 }
 
 /* Remove default v-sheet border-radius */
@@ -18,47 +16,31 @@
   border-radius: 0;
 }
 
-/* Set light theme default text color */
-#app.theme--light .v-sheet,
-#app.theme--light .v-application {
-  color: $theme-light--text-color !important;
+/* Set default text color */
+#app .v-sheet,
+#app .v-application {
+  color: var(--v-text_default-base) !important;
 }
 
-/* Set dark theme default text color */
-#app.theme--dark .v-sheet,
-#app.theme--dark .v-application {
-  color: $theme-dark--text-color !important;
-}
-
-/* Set light theme box-shadow for white sheet */
-#app.theme--light .box-shadow {
-  box-shadow: 0 0 15px $theme-light--white-sheet-shadow-color;
-}
-
-/* Set dark theme box-shadow for white sheet */
-#app.theme--dark .box-shadow {
-  box-shadow: 0 0 15px $theme-dark--white-sheet-shadow-color;
-}
-
-/* Force light theme default text color */
+/* (Force) (light theme) default text color */
 #app.theme--light .theme--light-text--dark-space {
-  color: $dark-space !important;
+  color: var(--v-dark_sacramento-base) !important;
 }
 
-/* Force dark theme default text color */
+/* (Force) (dark theme) default text color */
 #app.theme--dark .theme--dark-text--blue {
-  color: $theme-dark--text-color !important;
+  color: var(--v-text_default-base) !important;
 }
 
-/* Force white text color */
+/* (Force) white text color */
 #app.theme--dark .theme--dark-text--white,
 #app.theme--light .theme--light-text--white {
-  color: $white !important;
+  color: white !important;
 }
 
 /* ========== CSS Style Reset ========== */
 * {
-  font-family: 'Roboto';
+  font-family: "Roboto";
   box-sizing: content-box;
 }
 html {
@@ -68,7 +50,7 @@ html {
   font-family: monospace !important;
 }
 i {
-  font-family: 'Material Icons' !important;
+  font-family: "Material Icons" !important;
 }
 div,
 p {
@@ -140,8 +122,8 @@ h5 {
 
 /* ========== Border ========== */
 .border--white {
-  border-color: $white !important;
-  border: 1px solid $white !important;
+  border-color: white !important;
+  border: 1px solid white !important;
 }
 .border-radius--0px {
   border-radius: 0 !important;

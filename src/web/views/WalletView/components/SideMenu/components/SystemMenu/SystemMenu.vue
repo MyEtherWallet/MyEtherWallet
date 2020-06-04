@@ -60,10 +60,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 .menu-item {
-  color: $gray-1;
+  color: var(--v-gray_text-base);
 }
 
 .light {

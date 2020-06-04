@@ -143,7 +143,9 @@ export default new Vuetify({
           darken1: '#f5a623'
         },
         disabled: '#cecece',
+        //=======================================================
         // end of colors from mew components
+        //=======================================================
         black: '#000000',
         emerald: '#05c0a5',
         royal_blue: '#5a78f0',
@@ -162,10 +164,8 @@ export default new Vuetify({
         light_red: '#e96071',
         spruce: '#506175',
         silver: '#cecece',
-        gray1: '#96a8b6',
-        gray2: '#4d687e',
-        gray3: '#ececec',
-        gray4: '#6d89a6',
+        gray_text: '#96a8b6',
+        box_shadow: '#ececec',
         text_default: '#0b2840',
         text_warning: '#ff9800',
         bg_warning: '#fffde7',
@@ -225,7 +225,9 @@ export default new Vuetify({
           darken1: '#f5a623'
         },
         disabled: '#1f2b42',
+        //=======================================================
         // end of colors from mew components
+        //=======================================================
         black: '#000000',
         emerald: '#05c0a5',
         royal_blue: '#5a78f0',
@@ -244,10 +246,8 @@ export default new Vuetify({
         light_red: '#e96071',
         spruce: '#506175',
         silver: '#cecece',
-        gray1: '#96a8b6',
-        gray2: '#4d687e',
-        gray3: '#ececec',
-        gray4: '#6d89a6',
+        gray_text: '#96a8b6',
+        box_shadow: '#ececec',
         text_default: '#95aed8',
         text_warning: '#ff9800',
         bg_warning: '#fffde7',

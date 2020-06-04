@@ -63,11 +63,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables';
-
 .new-wallet-button {
   &:hover {
-    box-shadow: 0 0 50px $police-strobe;
+    box-shadow: 0 0 50px var(--v-police_strobe-base);
   }
 }
 </style>

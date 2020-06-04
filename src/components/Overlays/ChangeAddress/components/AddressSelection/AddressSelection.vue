@@ -163,10 +163,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 .network-block {
-  background-color: $dark-space;
+  background-color: var(--v-dark_space-base);
 }
 
 .address-block {

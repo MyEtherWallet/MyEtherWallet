@@ -25,11 +25,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 .mew-connect-text div {
   font-size: 11px;
   line-height: 13px;
-  color: $emerald;
+  color: var(--v-emerald-base);
 }
 </style>

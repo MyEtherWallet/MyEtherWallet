@@ -36,8 +36,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 .theme--light .v-tooltip__content {
   color: #383838;
   background: white;

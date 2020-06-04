@@ -4133,16 +4133,14 @@ export default {
 </style>
 
 <style lang="scss">
-@import '@/assets/styles/GlobalVariables.scss';
-
 .mew-component--eth-balance {
   .v-item--active {
     &::before {
-      background-color: $royal-blue;
+      background-color: var(--v-royal_blue-base);
       opacity: 1 !important;
     }
     .v-btn__content {
-      color: $white;
+      color: white;
     }
   }
 }

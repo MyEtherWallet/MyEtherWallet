@@ -9,9 +9,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 .mew-component--divider-line {
-  border-bottom: 1px solid $gray-3;
+  border-bottom: 1px solid #ececec;
 }
 </style>
