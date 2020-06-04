@@ -1,6 +1,10 @@
 <template>
   <WhiteSheet>
-    <mew-banner :text-obj="topBanner" @closeBanner="closeBanner" />
+    <mew-banner
+      :text-obj="topBanner"
+      :banner-img="BG"
+      @closeBanner="closeBanner"
+    />
 
     <WooCommerceDialog :show="openWooCommerce" />
     <Confirmation :open="openConfirmation" :close="closeConfirmation" />
@@ -101,11 +105,13 @@ import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import BlockTitle from '@/components/Titles/BlockTitle';
 import Confirmation from '@/components/Overlays/Confirmation';
 import WooCommerceDialog from '@/components/Dialogs/WooCommerceDialog';
+import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 
 export default {
   components: { WhiteSheet, BlockTitle, Confirmation, WooCommerceDialog },
   data() {
     return {
+      BG: BG,
       topBanner: {
         title: 'Unstoppable Domain',
         subtext: 'Replace cryptocurrency addresses with a human readable name.',

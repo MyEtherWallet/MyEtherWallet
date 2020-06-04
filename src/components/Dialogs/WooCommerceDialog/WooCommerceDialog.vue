@@ -64,7 +64,7 @@ export default {
     show: { default: false, type: Boolean }
   },
   data() {
-    return { dialog: true };
+    return { dialog: false };
   },
   watch: {
     show(val) {
