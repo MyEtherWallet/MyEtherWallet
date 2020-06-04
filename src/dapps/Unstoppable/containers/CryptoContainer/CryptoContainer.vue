@@ -217,7 +217,7 @@ export default {
   },
   beforeMount() {
     if (this.domainName === '' || !this.domainPrice) {
-      this.$router.push('/interface/dapps/unstoppable');
+      this.$router.push({ name: 'unstoppableInitialState' });
     }
     this.interval = setInterval(() => {
       if (this.chargeId) {
@@ -306,16 +306,14 @@ export default {
               this.confirmations = payment.block.confirmations;
               this.confirmationsRequired = payment.block.confirmations_required;
               if (payment.status === 'CONFIRMED') {
-                this.$router.push('/interface/dapps/unstoppable/claim-pending');
+                this.$router.push({ name: 'claimPending' });
               }
             }
           }
         });
     },
     handlePayWithCardClick() {
-      this.$router.push(
-        '/interface/dapps/unstoppable/buy/payment-method/stripe'
-      );
+      this.$router.push({ name: 'payWithStripe' });
     },
     submit() {
       if (!this.account || !this.account.address) {

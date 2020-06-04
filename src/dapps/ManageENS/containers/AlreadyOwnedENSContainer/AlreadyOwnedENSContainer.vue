@@ -111,7 +111,7 @@
         {{ $t('ens.manage') }}
       </button>
       <button v-if="isExpired" class="manage-button" @click="navigateToRenew">
-        Renew
+        {{ $t('ens.renew') }}
       </button>
     </div>
     <interface-bottom-text

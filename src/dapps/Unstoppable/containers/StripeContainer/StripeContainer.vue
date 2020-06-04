@@ -117,7 +117,7 @@ export default {
   },
   beforeMount() {
     if (this.domainName === '' || !this.domainPrice) {
-      this.$router.push('/interface/dapps/unstoppable');
+      this.$router.push({ name: 'unstoppableInitialState' });
     }
   },
   methods: {
@@ -135,17 +135,17 @@ export default {
         typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
     },
     goBack() {
-      this.$router.push('/interface/dapps/unstoppable');
+      this.$router.push({ name: 'unstoppableInitialState' });
     },
     handlePayWithCryptoClick() {
-      this.$router.push('/interface/dapps/unstoppable/buy/payment-method');
+      this.$router.push({ name: 'payWithCrypto' });
     },
     submit() {
       this.loading = true;
       createToken()
         .then(data => {
           this.setTokenId(data.token.id);
-          this.$router.push('/interface/dapps/unstoppable/buy/confirm');
+          this.$router.push({ name: 'confirmPayment' });
         })
         .catch(() => {
           this.paymentError = true;

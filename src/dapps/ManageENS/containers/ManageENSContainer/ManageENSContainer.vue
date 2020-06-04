@@ -202,7 +202,7 @@
       class="collapse-open-button"
       variant="primary"
     >
-      <p>Release Deed</p>
+      <p>{{ $t('ens.release-deed') }}</p>
     </b-btn>
     <b-collapse
       v-if="isDeedOwner && hasDeed"
