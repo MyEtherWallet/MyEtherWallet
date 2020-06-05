@@ -114,7 +114,10 @@ export default new Vuetify({
         basicOutlineActive: '#c5ccd3',
         selectActive: '#dcfff9',
         selectHover: '#f0f0f0',
-        superPrimary: '#f2fafa',
+        superPrimary: {
+          base: '#f2fafa',
+          darken1: '#e3f2f2'
+        },
         superPrimaryHover: '#f5fdfb',
         inputBorder: '#e0e0e0',
         inputDisabled: '#cecece',
@@ -196,7 +199,10 @@ export default new Vuetify({
         basicOutlineActive: '#3d4e6b',
         selectActive: '#2e3c75',
         selectHover: '#2c3448',
-        superPrimary: '#f2fafa',
+        superPrimary: {
+          base: '#f2fafa',
+          darken1: '#e3f2f2'
+        },
         superPrimaryHover: '#f5fdfb',
         inputBorder: '#667f9b',
         inputDisabled: '#3A465D',

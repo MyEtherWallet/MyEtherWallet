@@ -19,7 +19,7 @@
               Generate the free Ethereum wallet, and interact with the Ethereum
               blockchain easily and securely.
             </p>
-            <div class="mt-7 btn-container">
+            <div class="mt-7 d-flex">
               <mew-button
                 class="mr-5"
                 :has-full-width="false"
@@ -56,10 +56,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.btn-container {
-  height: 60px;
-}
-
 .banner-img {
   width: 100%;
 }
