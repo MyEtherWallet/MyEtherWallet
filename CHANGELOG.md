@@ -1,6 +1,6 @@
 ### Bug
 
-- Fix text mixup []()
+- Fix text mixup [#2420](https://github.com/MyEtherWallet/MyEtherWallet/pull/2420)
 
 ### Release v5.6.4
 
