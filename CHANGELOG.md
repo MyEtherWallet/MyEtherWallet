@@ -1,3 +1,7 @@
+### Bug
+
+- Fix email validation [#2421](https://github.com/MyEtherWallet/MyEtherWallet/pull/2421)
+
 ### Release v5.6.4
 
 ### Feature
