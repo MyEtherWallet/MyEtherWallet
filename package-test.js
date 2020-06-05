@@ -31,7 +31,8 @@ const EXCEPTIONS = [
   'web3-core-requestmanager',
   'web3-utils',
   '@makerdao/dai-plugin-migrations',
-  'i18n-iso-countries'
+  'i18n-iso-countries',
+  '@makerdao/dai-plugin-config'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

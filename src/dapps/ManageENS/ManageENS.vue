@@ -910,7 +910,7 @@ export default {
           value: 0
         };
 
-        this.web3.eth.sendTransaction(txObj).on('receipt', () => {
+        this.web3.eth.sendTransaction(txObj).then(() => {
           this.ipfsProcessing = true;
           this.ipfsLinkTo = `${this.parsedDomainName}.link`;
           this.contentHash = ipfsHash;
