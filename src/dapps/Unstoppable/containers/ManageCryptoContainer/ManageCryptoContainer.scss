@@ -179,3 +179,35 @@
     background-color: $disabled;
   }
 }
+
+.ipfs-container {
+  border-top: 1px solid $black;
+  margin-top: 20px;
+  padding: 20px 10px 10px;
+
+  .info-row {
+    position: relative;
+
+    input {
+      padding-left: 60px;
+    }
+  }
+
+  .file-upload-container {
+    position: absolute;
+    top: 100000px;
+  }
+
+  .static-span {
+    position: absolute;
+    left: 135px;
+    font-weight: bold;
+  }
+
+  .upload-zip {
+    background-color: $white;
+    border: 1px solid $button--background-color-1;
+    color: $button--background-color-1;
+    margin-right: 10px;
+  }
+}

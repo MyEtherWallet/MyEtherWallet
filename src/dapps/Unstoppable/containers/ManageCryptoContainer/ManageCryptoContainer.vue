@@ -64,6 +64,53 @@
         </div>
       </div>
     </div>
+    <div v-show="!loading" class="ipfs-container">
+      <div v-show="ipfsProcessing">
+        <i class="fa fa-lg fa-spinner fa-spin" />Processing File... Please wait
+        for a transaction popup before you leave to make sure your request is
+        processed. After this, you don't have to save your new hash as it has
+        already been saved..
+      </div>
+      <div v-show="!ipfsProcessing">
+        <p v-show="ipfsHash !== ''">
+          To see your site, please visit {{ domainName }} on Unstoppable Chrome
+          Extension or Unstoppable's Browser. You can also open the link on
+          Opera browser!
+        </p>
+        <div class="info-row">
+          <label class="info-title">IPFS Hash</label>
+          <span class="static-span">ipfs://</span>
+          <input
+            v-model="ipfsHash"
+            :class="[ipfsHash === '' ? 'errored' : '']"
+            placeholder="QmWXdjNC362aPDtwHPUE9o2VMqPeNeCQuTBTv1NsKtwypg"
+            type="text"
+          />
+        </div>
+        <div class="save-button-container">
+          <div class="file-upload-container">
+            <form enctype="multipart/form-data" novalidate>
+              <input
+                ref="zipInput"
+                type="file"
+                name="file"
+                accept=".zip"
+                @change="fileChange"
+              />
+            </form>
+          </div>
+          <button class="upload-zip" @click="ipfsClick()">
+            Upload your own site
+          </button>
+          <button
+            :class="[ipfsHash === '' ? 'disabled' : '']"
+            @click="saveIpfsHash()"
+          >
+            {{ $t('unstoppable.save-changes') }}
+          </button>
+        </div>
+      </div>
+    </div>
 
     <interface-bottom-text
       :link-text="$t('common.help-center')"
@@ -80,6 +127,8 @@ import registryAbi from '../../ABI/registryAbi';
 import resolverAbi from '../../ABI/resolverAbi';
 import { hash } from 'eth-ens-namehash';
 import { keyToCryptoKey, isValidRecordKeyValue } from './helpers';
+import { Toast } from '@/helpers';
+import contentHash from 'content-hash';
 
 export default {
   components: {
@@ -108,7 +157,9 @@ export default {
       error: {},
       dropdownOpen: false,
       additionalRecords: [],
-      canSave: false
+      canSave: false,
+      ipfsHash: '',
+      ipfsProcessing: false
     };
   },
   computed: {
@@ -118,6 +169,150 @@ export default {
     this.getRecords();
   },
   methods: {
+    fileChange(e) {
+      this.ipfsProcessing = true;
+      if (e.target.files[0].type !== 'application/zip') {
+        this.ipfsProcessing = false;
+        this.$refs.zipInput.value = '';
+        Toast.responseHandler('Please Upload a zip file!', Toast.WARN);
+        return;
+      }
+      if (e.target.files[0].size < 500) {
+        this.ipfsProcessing = false;
+        this.$refs.zipInput.value = '';
+        Toast.responseHandler(
+          'File is too small! Size has to be more than 500kb.',
+          Toast.WARN
+        );
+        return;
+      }
+
+      if (e.target.files[0].size > 50000) {
+        this.ipfsProcessing = false;
+        this.$refs.zipInput.value = '';
+        Toast.responseHandler(
+          'File is too big! Size has to be less than 50mb.',
+          Toast.WARN
+        );
+        return;
+      }
+      this.uploadZip(e.target.files[0]);
+    },
+    async uploadZip(file) {
+      const formData = new FormData();
+      try {
+        const content = await fetch(
+          'https://6szankrze5.execute-api.us-east-1.amazonaws.com/testing/ipfs',
+          {
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify({
+              method: 'getUploadUrl'
+            })
+          }
+        ).then(response => {
+          return response.json();
+        });
+        for (const key in content.body.fields) {
+          formData.append(key, content.body.fields[key]);
+        }
+        formData.append('file', file);
+        fetch(content.body.signedUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Length': file.size
+          },
+          body: formData
+        }).then(response => {
+          if (!response.ok) {
+            this.ipfsProcessing = false;
+            Toast.responseHandler('Uploading file errored', Toast.ERROR);
+            return;
+          }
+          this.getHashFromFile(content.body.hashResponse);
+        });
+      } catch (e) {
+        this.ipfsProcessing = false;
+        Toast.responseHandler(e, Toast.ERROR);
+      }
+    },
+    async getHashFromFile(hash) {
+      try {
+        const ipfsHash = await fetch(
+          'https://6szankrze5.execute-api.us-east-1.amazonaws.com/testing/ipfs',
+          {
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify({
+              method: 'uploadComplete',
+              hash: hash
+            })
+          }
+        )
+          .then(response => {
+            return response.json();
+          })
+          .catch(e => {
+            this.ipfsProcessing = false;
+            Toast.responseHandler(e, Toast.ERROR);
+          });
+        if (ipfsHash.error) {
+          Toast.responseHandler('Error getting ipfs hash!', Toast.ERROR);
+        } else {
+          this.saveIpfsHash(ipfsHash);
+        }
+      } catch (e) {
+        this.ipfsProcessing = false;
+        Toast.responseHandler(e, Toast.ERROR);
+      }
+    },
+    async saveIpfsHash(recHash) {
+      const node = hash(this.domainName);
+      const cryptoRegistry = new this.web3.eth.Contract(
+        registryAbi,
+        '0xd1e5b0ff1287aa9f9a268759062e4ab08b9dacbe'
+      );
+      const currentResolverAddress = await this.getResolverAddress(
+        cryptoRegistry,
+        node
+      );
+      if (!currentResolverAddress) {
+        throw new Error('No resolver address set');
+      }
+      const ipfsToHash = `0x${contentHash.fromIpfs(recHash)}`;
+      const resolverContract = new this.web3.eth.Contract(
+        resolverAbi,
+        currentResolverAddress
+      );
+
+      try {
+        const txObj = {
+          from: this.account.address,
+          to: currentResolverAddress,
+          data: resolverContract.methods
+            .set('ipfs.html.value', ipfsToHash, node)
+            .encodeABI(),
+          value: 0
+        };
+        this.web3.eth.sendTransaction(txObj).then(() => {
+          this.ipfsProcessing = true;
+          this.ipfsLinkTo = `${this.parsedDomainName}.link`;
+          this.contentHash = recHash;
+        });
+      } catch (e) {
+        this.ipfsProcessing = false;
+        Toast.responseHandler(e, Toast.ERROR);
+      }
+    },
+    ipfsClick() {
+      const input = this.$refs.zipInput;
+      input.value = '';
+      input.click();
+    },
     async getResolverAddress(cryptoRegistry, node) {
       return cryptoRegistry.methods
         .resolverOf(node)
@@ -146,8 +341,14 @@ export default {
         result = await resolver.methods
           .getMany(Object.values(keyToCryptoKey), node)
           .call();
+        const ipfsHash = await resolver.methods
+          .get('ipfs.html.value', node)
+          .call();
+        this.ipfsHash =
+          ipfsHash && ipfsHash !== '' ? contentHash.decode(ipfsHash) : '';
       } catch (e) {
         result = new Array(65).fill('');
+        this.ipfsHash = '';
         this.loading = false;
       }
       this.additionalRecords = [];
