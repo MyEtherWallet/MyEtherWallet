@@ -53,7 +53,6 @@
 <script>
 export default {
   name: 'Menu',
-  components: {},
   props: { menus: { default: () => [], type: Array } },
   data: () => ({ menuResetKey: 1 })
 };
@@ -63,9 +62,11 @@ export default {
 .text-color--white {
   color: white;
 }
-
 .menu-block {
   position: relative;
+  .closed {
+    display: block;
+  }
   .opened {
     display: none;
   }
@@ -82,7 +83,6 @@ export default {
     }
   }
 }
-
 .sub-menu {
   pointer-events: none;
   transition: all 0.2s ease;
@@ -91,7 +91,6 @@ export default {
   padding-top: 50px;
   top: 0;
   left: 0;
-
   ul {
     position: relative;
     background-color: white;
@@ -110,12 +109,10 @@ export default {
       border-bottom: 7px solid white;
     }
   }
-
   li {
     padding: 0;
     display: block;
   }
-
   a {
     display: block;
     color: var(--v-text_default-base);
