@@ -122,7 +122,7 @@ export default {
     padding: 10px 20px;
     cursor: pointer;
     &:hover {
-      background-color: rgba(0, 0, 0, 0.07);
+      background-color: rgba(0, 0, 0, 0.03);
     }
   }
 }
