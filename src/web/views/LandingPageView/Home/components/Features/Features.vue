@@ -3,26 +3,7 @@
     <v-container>
       <BlockTitle :data="titleData" />
     </v-container>
-    <div class="tab-lp-container pt-6 text-center">
-      <mew-tabs :items="tabs" :is-block="true">
-        <template v-slot:tabContent0>
-          <p>THIS NEEDS SEND IMG</p>
-        </template>
-        <template v-slot:tabContent1>
-          <img
-            class="tab-image"
-            height="500"
-            src="@/assets/images/backgrounds/bg-swap-page.svg"
-          />
-        </template>
-        <template v-slot:tabContent2>
-          <p>THIS NEEDS DAPP IMG</p>
-        </template>
-        <template v-slot:tabContent3>
-          <p>THIS NEEDS TOKENS IMG</p>
-        </template>
-      </mew-tabs>
-    </div>
+    <div class="tab-lp-container pt-6 text-center"></div>
   </div>
 </template>
 
