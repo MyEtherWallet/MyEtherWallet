@@ -342,7 +342,6 @@ export default {
         const ipfsHash = await resolver.methods
           .get('ipfs.html.value', node)
           .call();
-        console.log(ipfsHash);
         this.ipfsHash = ipfsHash && ipfsHash !== '' ? ipfsHash : '';
       } catch (e) {
         result = new Array(65).fill('');
