@@ -6,100 +6,47 @@
           <v-img src="@/assets/images/icons/logo-mew.png" max-width="130" />
         </router-link>
         <v-spacer></v-spacer>
-        <div class="menu-container d-flex align-center">
-          <a href="#/how-it-works" class="white--text no-decoration">
-            How It Works
-          </a>
-          <mew-menu
-            :list-obj="companyDropdown"
-            text-color="white--text"
-            @goToPage="goToPage"
-          />
-          <mew-menu
-            :list-obj="toolsDropdown"
-            text-color="white--text"
-            @goToPage="goToPage"
-          />
-        </div>
-
+        <Menu :menus="menus" />
         <v-spacer></v-spacer>
-        <mew-button
-          btn-link="https://ccswap.myetherwallet.com"
-          :has-full-width="false"
-          title="Buy ETH"
-          :icon="icons.buyEth"
-          icon-align="left"
-          btn-style="outline"
-          color-theme="white"
-          button-size="large"
-        />
+        <v-btn class="white--text" large depressed outlined>
+          <v-img
+            src="@/assets/images/icons/icon-buy-eth-white.svg"
+            class="mr-1 ml-n1"
+          />Buy ETH
+        </v-btn>
       </v-app-bar>
     </v-container>
   </div>
 </template>
 
 <script>
-import wallet from '@/assets/images/icons/icon-wallet-grey.svg';
-import send from '@/assets/images/icons/icon-send-grey.svg';
-import message from '@/assets/images/icons/icon-message-grey.svg';
-import eth from '@/assets/images/currencies//icon-eth-grey.svg';
-import buyEth from '@/assets/images/icons/icon-buy-eth-white.svg';
-import grabber from '@/assets/images/icons/icon-grabber-grey.svg';
-import privatekey from '@/assets/images/icons/icon-private-key-grey.svg';
-import ensDebugger from '@/assets/images/icons/icon-ens-debugger-grey.svg';
-import sha3 from '@/assets/images/icons/icon-sha3-grey.svg';
-import convert from '@/assets/images/icons/icon-convert-grey.svg';
+import Menu from './components/Menu';
+
 export default {
   name: 'HeaderDesktop',
+  components: { Menu },
   data: () => ({
-    companyDropdown: {
-      name: 'Company',
-      items: [
-        { title: 'About us', to: '' },
-        { title: 'Team', to: '' },
-        { title: 'Support', to: '' },
-        { title: 'Blog', to: '' }
-      ]
-    },
-    toolsDropdown: {
-      name: 'Tools',
-      items: [
-        { title: 'Watch only address', to: '' },
-        { title: 'Send offline helper', to: '' },
-        { title: 'Verify message', to: '' },
-        { title: 'Convert units', to: '' }
-      ]
-    },
-    icons: {
-      wallet: wallet,
-      send: send,
-      message: message,
-      eth: eth,
-      grabber: grabber,
-      privatekey: privatekey,
-      ensDebugger: ensDebugger,
-      sha3: sha3,
-      convert: convert,
-      buyEth: buyEth
-    }
-  }),
-  methods: {
-    goToPage(route) {
-      this.$router.push({
-        name: route
-      });
-    }
-  }
+    menus: [
+      { label: 'How it works', to: '/how-it-works' },
+      {
+        label: 'Company',
+        submenus: [
+          { label: 'About us', to: '/about-us/company' },
+          { label: 'Team', to: '/about-us/team' },
+          { label: 'Support', href: 'https://kb.myetherwallet.com/' },
+          { label: 'Blog', href: 'https://www.mewtopia.com/' }
+        ]
+      },
+      {
+        label: 'Tools',
+        submenus: [
+          { label: 'Watch only address', to: '/about-us/company' },
+          { label: 'Send offline helper', to: '/about-us/team' },
+          { label: 'Verify message', href: 'https://kb.myetherwallet.com/' },
+          { label: 'Convert units', href: 'https://www.mewtopia.com/' }
+        ]
+      }
+    ]
+  })
 };
 </script>
-
-<style lang="scss" scoped>
-.menu-container {
-  justify-content: space-evenly;
-  width: 50%;
-}
-.theme--dark.v-btn:hover::before,
-.theme--dark.v-btn::before {
-  opacity: 0;
-}
-</style>

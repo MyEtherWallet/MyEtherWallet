@@ -1,5 +1,5 @@
 <template>
-  <div class="light-blue darken-4 position--relative">
+  <div class="light-blue darken-4">
     <div class="pointer-event--none user-select--none line-height--0">
       <img
         class="banner-img"
@@ -19,22 +19,7 @@
               Generate the free Ethereum wallet, and interact with the Ethereum
               blockchain easily and securely.
             </p>
-            <div class="mt-7 btn-container">
-              <mew-button
-                class="mr-5"
-                :has-full-width="false"
-                title="Get a new wallet"
-                button-size="xlarge"
-                @click.native="goTo('HomeCreateWallet')"
-              />
-              <mew-button
-                :has-full-width="false"
-                btn-style="outline"
-                title="Access my wallet"
-                button-size="xlarge"
-                @click.native="goTo('HomeAccessWallet')"
-              />
-            </div>
+            <div class="mt-7 btn-container"></div>
           </v-card>
         </v-col>
       </v-row>
