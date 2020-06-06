@@ -104,7 +104,7 @@
           </button>
           <button
             :class="[ipfsHash === '' ? 'disabled' : '']"
-            @click="saveIpfsHash()"
+            @click="saveIpfsHash(ipfsHash)"
           >
             {{ $t('unstoppable.save-changes') }}
           </button>
@@ -128,7 +128,6 @@ import resolverAbi from '../../ABI/resolverAbi';
 import { hash } from 'eth-ens-namehash';
 import { keyToCryptoKey, isValidRecordKeyValue } from './helpers';
 import { Toast } from '@/helpers';
-import contentHash from 'content-hash';
 
 export default {
   components: {
@@ -271,6 +270,7 @@ export default {
       }
     },
     async saveIpfsHash(recHash) {
+      this.ipfsProcessing = true;
       const node = hash(this.domainName);
       const cryptoRegistry = new this.web3.eth.Contract(
         registryAbi,
@@ -283,7 +283,6 @@ export default {
       if (!currentResolverAddress) {
         throw new Error('No resolver address set');
       }
-      const ipfsToHash = `0x${contentHash.fromIpfs(recHash)}`;
       const resolverContract = new this.web3.eth.Contract(
         resolverAbi,
         currentResolverAddress
@@ -294,13 +293,12 @@ export default {
           from: this.account.address,
           to: currentResolverAddress,
           data: resolverContract.methods
-            .set('ipfs.html.value', ipfsToHash, node)
+            .set('ipfs.html.value', recHash, node)
             .encodeABI(),
           value: 0
         };
         this.web3.eth.sendTransaction(txObj).then(() => {
-          this.ipfsProcessing = true;
-          this.ipfsLinkTo = `${this.parsedDomainName}.link`;
+          this.ipfsProcessing = false;
           this.contentHash = recHash;
         });
       } catch (e) {
@@ -344,8 +342,8 @@ export default {
         const ipfsHash = await resolver.methods
           .get('ipfs.html.value', node)
           .call();
-        this.ipfsHash =
-          ipfsHash && ipfsHash !== '' ? contentHash.decode(ipfsHash) : '';
+        console.log(ipfsHash);
+        this.ipfsHash = ipfsHash && ipfsHash !== '' ? ipfsHash : '';
       } catch (e) {
         result = new Array(65).fill('');
         this.ipfsHash = '';
