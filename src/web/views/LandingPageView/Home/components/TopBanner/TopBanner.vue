@@ -21,7 +21,7 @@
             </p>
             <div class="mt-7 d-flex">
               <mew-button
-                class="mr-5"
+                class="mr-3"
                 :has-full-width="false"
                 title="Get a new wallet"
                 button-size="xlarge"

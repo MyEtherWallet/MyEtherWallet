@@ -11,6 +11,7 @@
       </div>
       <v-spacer />
       <mew-button
+        v-if="false"
         btn-link="https://www.mewtopia.com/"
         :has-full-width="false"
         title="Get Started"
@@ -18,19 +19,28 @@
         color-theme="white"
         button-size="xlarge"
       />
+      <StdButton
+        depressed
+        outlined
+        color="white"
+        href="https://www.mewtopia.com/"
+      >
+        Get started
+      </StdButton>
     </v-card>
   </v-container>
 </template>
 
 <script>
+import StdButton from '@/web/components/StdButton';
+
 export default {
-  name: 'HomeAd1'
+  name: 'HomeAd1',
+  components: { StdButton }
 };
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables';
-
 .v-card {
   border-radius: 10px !important;
 }
