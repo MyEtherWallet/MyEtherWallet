@@ -8,12 +8,21 @@
         <v-spacer></v-spacer>
         <Menu :menus="menus" />
         <v-spacer></v-spacer>
-        <v-btn class="white--text" large depressed outlined>
-          <v-img
+        <StdButton
+          depressed
+          min-width="0"
+          height="48px"
+          outlined
+          color="white"
+          :to="{ name: 'HomeCreateWallet', params: {} }"
+          custom-style="padding: 20px;"
+        >
+          <img
+            height="30"
             src="@/assets/images/icons/icon-buy-eth-white.svg"
             class="mr-1 ml-n1"
           />Buy ETH
-        </v-btn>
+        </StdButton>
       </v-app-bar>
     </v-container>
   </div>
@@ -21,10 +30,11 @@
 
 <script>
 import Menu from './components/Menu';
+import StdButton from '@/web/components/StdButton';
 
 export default {
   name: 'HeaderDesktop',
-  components: { Menu },
+  components: { Menu, StdButton },
   data: () => ({
     menus: [
       { label: 'How it works', to: '/how-it-works' },

@@ -1,9 +1,9 @@
 <template>
   <v-btn
-    class="mew-component--std-button"
     :class="[
+      'mew-component--std-button',
       bold ? 'font-weight-bold' : '',
-      shadow ? 'button-shadow' : '',
+      text ? 'no-padding' : '',
       textColor
     ]"
     :color="color"
@@ -20,6 +20,8 @@
     :to="to"
     :href="href"
     :target="href ? '_blank' : ''"
+    :style="customStyle"
+    :text="text"
   >
     <slot class="d-flex align-center" />
   </v-btn>
@@ -34,24 +36,31 @@ export default {
     to: { default: () => {}, type: Object },
     href: { default: '', type: String },
     disabled: { default: false, type: Boolean },
-    minWidth: { default: false, type: Boolean },
+    minWidth: { default: '', type: String },
     size: { default: 'x-large', type: String },
     height: { default: '', type: String },
     bold: { default: false, type: Boolean },
-    depressed: { default: false, type: Boolean }
+    depressed: { default: false, type: Boolean },
+    text: { default: false, type: Boolean },
+    customStyle: { default: '', type: String }
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .mew-component--std-button {
+  border-radius: 5px;
   text-transform: none;
   letter-spacing: 1px;
   font-size: 14px !important;
   font-weight: 500;
-  padding: 0 35px !important;
 }
 .v-btn:not(.v-btn--round).v-size--x-large {
   height: 62px;
+  padding: 0 33px;
+}
+.no-padding {
+  padding: 0 !important;
+  min-width: 0 !important;
 }
 </style>

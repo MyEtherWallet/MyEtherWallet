@@ -9,6 +9,13 @@
         title="Make Ethereum Blockchain easy and secure"
       />
       <div class="pt-10 d-flex">
+        <FriendlyToUse />
+        <Spacer />
+        <div><Swap /><Spacer /><HardwareWallet /></div>
+        <Spacer />
+        <MEWwallet />
+      </div>
+      <div v-if="false" class="pt-10 d-flex">
         <!-- change placeholder for all the urls -->
         <info-card
           max-width="350"
@@ -75,12 +82,22 @@
 
 <script>
 import BlockTitle from '@/web/components/BlockTitle';
+import Spacer from '@/web/components/Common/Spacer';
 import iconFacesMew from '@/assets/images/icons/icon-faces-mew.svg';
+import FriendlyToUse from './components/FriendlyToUse';
+import Swap from './components/Swap';
+import HardwareWallet from './components/HardwareWallet';
+import MEWwallet from './components/MEWwallet';
 
 export default {
   name: 'HomeWhyMew',
   components: {
-    BlockTitle
+    Spacer,
+    BlockTitle,
+    FriendlyToUse,
+    Swap,
+    HardwareWallet,
+    MEWwallet
   },
   data: () => ({
     iconFacesMew: iconFacesMew,
