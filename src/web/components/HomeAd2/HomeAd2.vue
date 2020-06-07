@@ -19,6 +19,7 @@
         </div>
         <v-spacer />
         <mew-button
+          v-if="false"
           btn-link="/"
           :has-full-width="false"
           title="Get a new wallet"
@@ -27,21 +28,20 @@
           :icon="icon"
           icon-align="left"
         />
-        <a v-if="false" href="/" class="text-decoration--none">
-          <StdButton
-            class="standard-button emerald--text"
-            color="white"
-            :to="{ name: 'HomeCreateWallet', query: {} }"
-          >
-            <img
-              width="60"
-              height="60"
-              src="@/assets/images/icons/icon-wallet-mew.svg"
-              class="mr-2 mt-2 ml-n3"
-            />
-            Get a new wallet
-          </StdButton>
-        </a>
+        <StdButton
+          height="70px"
+          text-color="emerald--text"
+          color="white"
+          :to="{ name: 'HomeCreateWallet', query: {} }"
+        >
+          <img
+            width="60"
+            height="60"
+            src="@/assets/images/icons/icon-wallet-mew.svg"
+            class="mr-2 mt-2 ml-n3"
+          />
+          Get a new wallet
+        </StdButton>
       </div>
     </v-container>
   </div>
@@ -65,8 +65,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables';
-
 .ad2 {
   background: linear-gradient(90deg, #24a2ca 0%, #32bfa5 100%);
   padding: 80px 0;
