@@ -1,41 +1,31 @@
 <template>
   <div class="light-blue darken-4">
     <div class="py-8" />
-    <v-container>
-      <BlockTitle :data="titleData" class="mb-10">
-        <p class="white--text ma-0">
-          Please select a method to create a new wallet.
-        </p>
-        <p class="white--text ma-0">
-          Already have a wallet?
-          <router-link
-            :to="{ name: 'HomeAccessWallet', query: {} }"
-            class="text-color--mew-green"
-          >
-            Access my wallet
-          </router-link>
-        </p>
-      </BlockTitle>
-      <v-sheet color="transparent" max-width="600px" class="mx-auto">
+    <BlockTitle :data="titleData" class="mb-10">
+      <h5 class="white--text ma-0">
+        Please select a method to create a new wallet.
+      </h5>
+      <h5 class="white--text ma-0">
+        Already have a wallet?
         <router-link
-          :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '1' } }"
-          class="text-decoration--none"
+          :to="{ name: 'HomeAccessWallet', query: {} }"
+          class="text-decoration--underline"
         >
-          <MEWconnect
-            class="cursor--pointer user-select--none new-wallet-button"
-          />
+          Access my wallet
         </router-link>
-        <div class="my-4" />
-        <router-link
-          :to="{ name: 'HomeCreateWalletKeystore', query: { step: '1' } }"
-          class="text-decoration--none"
-        >
-          <Software
-            class="cursor--pointer user-select--none new-wallet-button"
-          />
-        </router-link>
-      </v-sheet>
-    </v-container>
+      </h5>
+    </BlockTitle>
+
+    <v-sheet color="transparent" max-width="600px" class="mx-auto">
+      <MEWconnect />
+      <div class="my-4" />
+      <router-link
+        v-if="false"
+        :to="{ name: 'HomeCreateWalletKeystore', query: { step: '1' } }"
+      >
+        <Software />
+      </router-link>
+    </v-sheet>
     <div class="py-12" />
     <div class="py-8" />
   </div>
@@ -62,10 +52,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.new-wallet-button {
-  &:hover {
-    box-shadow: 0 0 50px var(--v-police_strobe-base);
-  }
-}
-</style>
+<style lang="scss" scoped></style>

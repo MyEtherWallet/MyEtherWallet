@@ -59,6 +59,10 @@ export default {
   height: 62px;
   padding: 0 33px;
 }
+.theme--light.v-btn--active::before,
+.theme--dark.v-btn--active::before {
+  opacity: 0;
+}
 .no-padding {
   padding: 0 !important;
   min-width: 0 !important;
