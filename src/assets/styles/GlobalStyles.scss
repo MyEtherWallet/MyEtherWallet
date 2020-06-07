@@ -78,6 +78,7 @@ h4 {
 h5 {
   font-size: 16px;
   font-weight: 400;
+  line-height: 23px;
 }
 
 /* ========== Text ========== */
@@ -92,6 +93,9 @@ h5 {
 }
 .text-decoration--none {
   text-decoration: none !important;
+}
+.text-decoration--underline {
+  text-decoration: underline;
 }
 .white-space--nowrap {
   white-space: nowrap !important;
