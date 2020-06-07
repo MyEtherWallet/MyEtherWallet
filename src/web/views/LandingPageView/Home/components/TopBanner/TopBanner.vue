@@ -21,6 +21,7 @@
             </p>
             <div class="mt-7 d-flex">
               <mew-button
+                v-if="false"
                 class="mr-3"
                 :has-full-width="false"
                 title="Get a new wallet"
@@ -28,12 +29,27 @@
                 @click.native="goTo('HomeCreateWallet')"
               />
               <mew-button
+                v-if="false"
                 :has-full-width="false"
                 btn-style="outline"
                 title="Access my wallet"
                 button-size="xlarge"
                 @click.native="goTo('HomeAccessWallet')"
               />
+              <StdButton
+                depressed
+                :to="{ name: 'HomeCreateWallet', params: {} }"
+                class="mr-3"
+              >
+                Create a new wallet
+              </StdButton>
+              <StdButton
+                depressed
+                outlined
+                :to="{ name: 'HomeAccessWallet', params: {} }"
+              >
+                Access my wallet
+              </StdButton>
             </div>
           </v-card>
         </v-col>
@@ -43,8 +59,13 @@
 </template>
 
 <script>
+import StdButton from '@/web/components/StdButton';
+
 export default {
   name: 'HomeContainer',
+  components: {
+    StdButton
+  },
   methods: {
     goTo(param) {
       this.$router.push({

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-8 d-flex flex-column" outlined max-width="300">
+  <ComponentContainer side>
     <v-spacer />
     <v-img
       class="white--text align-end"
@@ -17,27 +17,21 @@
       friendly interface.
     </p>
 
-    <div class="action-block mt-2 ml-n4">
-      <v-btn color="teal lighten-3" class="font-weight-bold" text>
+    <div class="action-block mt-0 ml-n4">
+      <v-btn
+        color="teal lighten-3"
+        class="font-weight-bold text-transform--initial"
+        text
+      >
         Learn more<v-icon class="ml-1 title">mdi-arrow-right</v-icon>
       </v-btn>
     </div>
-  </v-card>
+  </ComponentContainer>
 </template>
 
 <script>
+import ComponentContainer from '../ComponentContainer';
 export default {
-  components: {}
+  components: { ComponentContainer }
 };
 </script>
-
-<style lang="scss" scoped>
-h4 {
-  font-size: 22px;
-  letter-spacing: -0.6px;
-}
-
-.v-card {
-  border-radius: 10px !important;
-}
-</style>

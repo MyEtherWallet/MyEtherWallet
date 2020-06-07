@@ -29,7 +29,7 @@
           icon-align="left"
         />
         <StdButton
-          height="70px"
+          height="72px"
           text-color="emerald--text"
           color="white"
           :to="{ name: 'HomeCreateWallet', query: {} }"
