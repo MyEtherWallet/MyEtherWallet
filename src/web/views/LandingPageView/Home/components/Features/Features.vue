@@ -3,51 +3,46 @@
     <v-container>
       <BlockTitle :data="titleData" />
     </v-container>
-    <div class="tab-lp-container pt-6 text-center"></div>
+    <Tabs :tabs="tabs" class="pt-7" />
   </div>
 </template>
 
 <script>
+import Tabs from '../../../components/Tabs';
 import BlockTitle from '@/web/components/BlockTitle';
 
 export default {
   name: 'HomeFeatures',
   components: {
+    Tabs,
     BlockTitle
   },
   data: () => ({
-    tabs: [
-      { name: 'Send' },
-      { name: 'Swap' },
-      { name: 'Dapps' },
-      { name: 'Tokens' }
-    ],
     titleData: {
       textProps: '',
       toptitle: 'Features',
       title: 'All-in-one gateway to your Ethereum Blockchain service',
       description: '',
       centered: true
-    }
+    },
+    tabs: [
+      {
+        label: 'Send',
+        background: require('@/assets/images/backgrounds/bg-swap-page.svg')
+      },
+      {
+        label: 'Swap',
+        background: require('@/assets/images/backgrounds/bg-swap-page.svg')
+      },
+      {
+        label: 'Dapps',
+        background: require('@/assets/images/backgrounds/bg-swap-page.svg')
+      },
+      {
+        label: 'Tokens',
+        background: require('@/assets/images/backgrounds/bg-swap-page.svg')
+      }
+    ]
   })
 };
 </script>
-
-<style lang="scss">
-.tab-lp-container {
-  margin-left: auto;
-  margin-right: auto;
-
-  .mew-tabs-block {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 450px !important;
-    width: 100%;
-  }
-
-  .tab-image {
-    padding-top: 50px;
-    width: 100%;
-  }
-}
-</style>
