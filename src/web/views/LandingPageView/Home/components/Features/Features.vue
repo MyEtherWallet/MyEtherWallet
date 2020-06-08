@@ -3,12 +3,12 @@
     <v-container>
       <BlockTitle :data="titleData" />
     </v-container>
-    <Tabs :tabs="tabs" class="pt-7" />
+    <Tabs :tabs="tabs" />
   </div>
 </template>
 
 <script>
-import Tabs from '../../../components/Tabs';
+import Tabs from '@/web/components/Tabs';
 import BlockTitle from '@/web/components/BlockTitle';
 
 export default {
