@@ -7,14 +7,14 @@
             Ready? Get your wallet today.
           </h2>
           <p class="white--text ma-0">
-            Still don't know how to do it? Go to
+            Still don't know what MEW is?
             <a
-              class="color--inherit"
+              class="color--inherit text-decoration--underline"
               href="https://kb.myetherwallet.com/"
               target="_blank"
             >
-              Help center </a
-            >.
+              Learn more
+            </a>
           </p>
         </div>
         <v-spacer />

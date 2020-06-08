@@ -9,17 +9,17 @@
     <v-container class="banner-content-container">
       <v-row no-gutters>
         <v-col>
-          <v-card color="transparent" flat tile max-width="510">
-            <div
-              class="white--text display-2 font-weight-bold banner-line-height"
-            >
-              The most popular free Ethereum wallet
+          <v-card color="transparent" flat tile max-width="430px">
+            <div class="white--text font-weight-bold banner-top-title">
+              Ethereum's Original Wallet
             </div>
             <p class="white--text mt-3">
-              Generate the free Ethereum wallet, and interact with the Ethereum
-              blockchain easily and securely.
+              MEW (MyEtherWallet) is a free, client-side interface helping you
+              interact with the Ethereum blockchain. Our easy-to-use,
+              open-source platform allows you to generate wallets, interact with
+              smart contracts, and so much more.
             </p>
-            <div class="mt-7 d-flex">
+            <div class="mt-9 d-flex">
               <mew-button
                 v-if="false"
                 class="mr-3"
@@ -79,12 +79,13 @@ export default {
 .banner-content-container {
   height: 400px;
   position: absolute;
-  top: 14vw;
+  top: 300px;
   left: 0;
   right: 0;
   margin: 0 auto;
 }
-.banner-line-height {
+.banner-top-title {
   line-height: 55px !important;
+  font-size: 50px;
 }
 </style>
