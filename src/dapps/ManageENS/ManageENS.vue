@@ -821,18 +821,15 @@ export default {
 
       this.ipfsProcessing = true;
       try {
-        const content = await fetch(
-          'https://6szankrze5.execute-api.us-east-1.amazonaws.com/testing/ipfs',
-          {
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            method: 'POST',
-            body: JSON.stringify({
-              method: 'getUploadUrl'
-            })
-          }
-        ).then(response => {
+        const content = await fetch('https://swap.mewapi.io/ipfs', {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            method: 'getUploadUrl'
+          })
+        }).then(response => {
           return response.json();
         });
         for (const key in content.body.fields) {
@@ -860,19 +857,16 @@ export default {
     },
     async getHashFromFile(hash) {
       try {
-        const ipfsHash = await fetch(
-          'https://6szankrze5.execute-api.us-east-1.amazonaws.com/testing/ipfs',
-          {
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            method: 'POST',
-            body: JSON.stringify({
-              method: 'uploadComplete',
-              hash: hash
-            })
-          }
-        )
+        const ipfsHash = await fetch('https://swap.mewapi.io/ipfs', {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            method: 'uploadComplete',
+            hash: hash
+          })
+        })
           .then(response => {
             return response.json();
           })
