@@ -28,7 +28,7 @@
           :icon="icon"
           icon-align="left"
         />
-        <StdButton
+        <mew6-std-btn
           height="72px"
           text-color="emerald--text"
           color="white"
@@ -41,21 +41,18 @@
             class="mr-2 mt-2 ml-n3"
           />
           Get a new wallet
-        </StdButton>
+        </mew6-std-btn>
       </div>
     </v-container>
   </div>
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
 import walletIcon from '@/assets/images/icons/icon-wallet-mew.svg';
 
 export default {
   name: 'HomeAd2',
-  components: {
-    StdButton
-  },
+  components: {},
   data() {
     return {
       icon: walletIcon

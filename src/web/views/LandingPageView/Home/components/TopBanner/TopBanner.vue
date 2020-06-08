@@ -36,20 +36,20 @@
                 button-size="xlarge"
                 @click.native="goTo('HomeAccessWallet')"
               />
-              <StdButton
+              <mew6-std-btn
                 depressed
                 :to="{ name: 'HomeCreateWallet', params: {} }"
                 class="mr-3"
               >
                 Create a new wallet
-              </StdButton>
-              <StdButton
+              </mew6-std-btn>
+              <mew6-std-btn
                 depressed
                 outlined
                 :to="{ name: 'HomeAccessWallet', params: {} }"
               >
                 Access my wallet
-              </StdButton>
+              </mew6-std-btn>
             </div>
           </v-card>
         </v-col>
@@ -59,13 +59,9 @@
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
-
 export default {
   name: 'HomeContainer',
-  components: {
-    StdButton
-  },
+  components: {},
   methods: {
     goTo(param) {
       this.$router.push({

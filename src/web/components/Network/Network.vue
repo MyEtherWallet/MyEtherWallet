@@ -1,5 +1,5 @@
 <template>
-  <WhiteSheet sideinfo class="px-7 py-5 d-flex justify-space-between">
+  <mew6-white-sheet sideinfo class="px-7 py-5 d-flex justify-space-between">
     <ChangeNetworkOverlay
       :open="openNetworkOverlay"
       :close="closeNetworkOverlay"
@@ -24,17 +24,16 @@
       src="@/assets/images/currencies/eth.png"
       alt="ethereum"
     />
-  </WhiteSheet>
+  </mew6-white-sheet>
 </template>
 
 <script>
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import BlockTitle from '@/web/components/BlockTitles/BlockTitle2';
 import SoloButton from '@/web/components/Buttons/SoloButton1';
 import ChangeNetworkOverlay from '@/components/Overlays/ChangeNetwork';
 
 export default {
-  components: { WhiteSheet, BlockTitle, SoloButton, ChangeNetworkOverlay },
+  components: { BlockTitle, SoloButton, ChangeNetworkOverlay },
   data() {
     return {
       openNetworkOverlay: false

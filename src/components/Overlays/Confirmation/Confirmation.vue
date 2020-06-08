@@ -1,7 +1,7 @@
 <template>
   <BaseOverlay :open="open" :close="close" :back="true" close-text="Cancel">
     <OverlayTitle title="Confirmation" />
-    <WhiteSheet class="overlay-content pa-7">
+    <mew6-white-sheet class="overlay-content pa-7">
       <DataBlock class="mb-3">
         <v-row class="align-center ma-0">
           <v-col class="text-center pa-0">
@@ -146,21 +146,19 @@
         description="Make sure all your transaction details are CORRECT. Canceling or replacing transactions can not be guaranteed to work. You still be charged gas fee even transaction failing. Learn more"
         :link-obj="link"
       />
-    </WhiteSheet>
+    </mew6-white-sheet>
   </BaseOverlay>
 </template>
 
 <script>
 import BaseOverlay from '../BaseOverlay';
 import OverlayTitle from '@/components/OverlayTitle';
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import DataBlock from '@/web/components/Common/DataBlock';
 
 export default {
   components: {
     BaseOverlay,
     OverlayTitle,
-    WhiteSheet,
     DataBlock
   },
   props: {

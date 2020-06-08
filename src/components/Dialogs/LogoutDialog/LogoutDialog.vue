@@ -9,15 +9,15 @@
           Are you sure you want to log out?
         </div>
         <div class="d-flex align-center justify-center">
-          <StdButton
+          <mew6-std-btn
             color="dark_sacramento"
             outlined
             size="x-large"
             class="mr-2"
             @click.native="show = false"
-            >Cancel</StdButton
+            >Cancel</mew6-std-btn
           >
-          <StdButton color="light_red" size="x-large">Logout</StdButton>
+          <mew6-std-btn color="light_red" size="x-large">Logout</mew6-std-btn>
         </div>
       </div>
     </template>
@@ -26,10 +26,9 @@
 
 <script>
 import BaseDialog from '@/components/Dialogs/BaseDialog';
-import StdButton from '@/web/components/StdButton';
 
 export default {
-  components: { BaseDialog, StdButton },
+  components: { BaseDialog },
   props: {},
   data() {
     return { show: true };
@@ -37,6 +36,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables.scss';
-</style>
+<style lang="scss" scoped></style>

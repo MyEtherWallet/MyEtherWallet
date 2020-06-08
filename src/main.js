@@ -17,6 +17,11 @@ import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
 import vuetify from '@/common/plugins/vuetify';
 
+import StdButton from '@/web/components/StdButton';
+import WhiteSheet from '@/web/components/Common/WhiteSheet';
+Vue.component('mew6-std-btn', StdButton);
+Vue.component('mew6-white-sheet', WhiteSheet);
+
 Vue.prototype.$eventHub = new Vue();
 
 //Router

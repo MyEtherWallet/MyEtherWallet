@@ -16,18 +16,16 @@
         <div>Duration:</div>
         <div>04:23:31</div>
       </div>
-      <StdButton fullwidth no-min-width size="x-large" color="light_red">
+      <mew6-std-btn fullwidth no-min-width size="x-large" color="light_red">
         Disconnect
-      </StdButton>
+      </mew6-std-btn>
     </v-card>
   </v-tooltip>
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
-
 export default {
-  components: { StdButton },
+  components: {},
   props: {},
   data() {
     return {};

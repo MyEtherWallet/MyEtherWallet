@@ -1,5 +1,5 @@
 <template>
-  <WhiteSheet>
+  <mew6-white-sheet>
     <mew-banner
       :text-obj="topBanner"
       :banner-img="BG"
@@ -97,18 +97,17 @@
         </v-tab-item>
       </v-tabs-items>
     </div>
-  </WhiteSheet>
+  </mew6-white-sheet>
 </template>
 
 <script>
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import BlockTitle from '@/components/Titles/BlockTitle';
 import Confirmation from '@/components/Overlays/Confirmation';
 import WooCommerceDialog from '@/components/Dialogs/WooCommerceDialog';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 
 export default {
-  components: { WhiteSheet, BlockTitle, Confirmation, WooCommerceDialog },
+  components: { BlockTitle, Confirmation, WooCommerceDialog },
   data() {
     return {
       BG: BG,

@@ -10,18 +10,20 @@
         label="Upload file..."
         filled
       ></v-file-input>
-      <StdButton buttonclass="button--green-border" class="ml-3" height="57px">
+      <mew6-std-btn
+        buttonclass="button--green-border"
+        class="ml-3"
+        height="57px"
+      >
         Import
-      </StdButton>
+      </mew6-std-btn>
     </div>
   </div>
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
-
 export default {
-  components: { StdButton },
+  components: {},
   props: {},
   data() {
     return {};

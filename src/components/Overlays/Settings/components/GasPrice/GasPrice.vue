@@ -28,19 +28,18 @@
       </v-col>
     </v-row>
     <div class="d-flex justify-center mt-5">
-      <StdButton buttonclass="button--green" size="x-large">
+      <mew6-std-btn buttonclass="button--green" size="x-large">
         Update
-      </StdButton>
+      </mew6-std-btn>
     </div>
   </v-item-group>
 </template>
 
 <script>
 import economic from '@/assets/images/icons/icon-money-bag-mew.svg';
-import StdButton from '@/web/components/StdButton';
 
 export default {
-  components: { StdButton },
+  components: {},
   props: {},
   data() {
     return {

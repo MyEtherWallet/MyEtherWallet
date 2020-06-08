@@ -1,14 +1,12 @@
 <template>
-  <WhiteSheet>
+  <mew6-white-sheet>
     aaa
-  </WhiteSheet>
+  </mew6-white-sheet>
 </template>
 
 <script>
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
-
 export default {
-  components: { WhiteSheet },
+  components: {},
   data() {
     return {};
   },

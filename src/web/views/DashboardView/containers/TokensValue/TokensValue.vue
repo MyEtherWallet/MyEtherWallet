@@ -1,5 +1,5 @@
 <template>
-  <WhiteSheet>
+  <mew6-white-sheet>
     <div class="d-flex align-center px-6 pt-7">
       <BlockTitle
         :icon="require('@/assets/images/icons/icon-token-grey.png')"
@@ -99,16 +99,15 @@
         </tr>
       </tbody>
     </table>
-  </WhiteSheet>
+  </mew6-white-sheet>
 </template>
 
 <script>
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import ChartTiny from '@/web/components/Charts/Tiny';
 import BlockTitle from '@/web/components/BlockTitles/BlockTitle1';
 
 export default {
-  components: { WhiteSheet, ChartTiny, BlockTitle },
+  components: { ChartTiny, BlockTitle },
   data() {
     return {
       tableData: [

@@ -1,5 +1,5 @@
 <template>
-  <WhiteSheet class="content-container">
+  <mew6-white-sheet class="content-container">
     <div class="pa-12 content-width">
       <div class="block-title display-1 font-weight-bold mb-6">
         My token list is empty
@@ -17,14 +17,12 @@
     </div>
     <div class="py-12" />
     <div class="py-5" />
-  </WhiteSheet>
+  </mew6-white-sheet>
 </template>
 
 <script>
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
-
 export default {
-  components: { WhiteSheet },
+  components: {},
   data() {
     return {};
   }

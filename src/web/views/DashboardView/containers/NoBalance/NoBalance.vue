@@ -1,5 +1,5 @@
 <template>
-  <WhiteSheet class="content-container">
+  <mew6-white-sheet class="content-container">
     <div class="pa-12 content-width">
       <div class="block-title display-1 font-weight-bold mb-6">
         My ETH balance is empty
@@ -30,14 +30,12 @@
         Tip: You can also send your ETH here from another wallet!
       </div>
     </div>
-  </WhiteSheet>
+  </mew6-white-sheet>
 </template>
 
 <script>
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
-
 export default {
-  components: { WhiteSheet },
+  components: {},
   data() {
     return {};
   }

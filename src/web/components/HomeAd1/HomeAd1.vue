@@ -19,24 +19,22 @@
         color-theme="white"
         button-size="xlarge"
       />
-      <StdButton
+      <mew6-std-btn
         depressed
         outlined
         color="white"
         href="https://www.mewtopia.com/"
       >
         Get started
-      </StdButton>
+      </mew6-std-btn>
     </v-card>
   </v-container>
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
-
 export default {
   name: 'HomeAd1',
-  components: { StdButton }
+  components: {}
 };
 </script>
 

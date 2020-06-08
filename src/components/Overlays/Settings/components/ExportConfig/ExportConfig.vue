@@ -5,18 +5,16 @@
       file into your local computer.
     </div>
     <div class="d-flex justify-center mt-5">
-      <StdButton buttonclass="button--green" size="x-large">
+      <mew6-std-btn buttonclass="button--green" size="x-large">
         Export
-      </StdButton>
+      </mew6-std-btn>
     </div>
   </div>
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
-
 export default {
-  components: { StdButton },
+  components: {},
   props: {},
   data() {
     return {};

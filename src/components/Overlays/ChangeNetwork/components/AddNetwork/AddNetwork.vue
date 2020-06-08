@@ -17,20 +17,19 @@
       <TextField v-model="username" label="Username" placeholder=" " />
       <TextField v-model="password" label="Password" placeholder=" " />
     </ExpantionBlock>
-    <StdButton size="x-large" fullwidth>
+    <mew6-std-btn size="x-large" fullwidth>
       Save
-    </StdButton>
+    </mew6-std-btn>
   </div>
 </template>
 
 <script>
 import DropdownSelect from '@/components/Inputs/DropdownSelect';
 import TextField from '@/components/Inputs/TextField';
-import StdButton from '@/web/components/StdButton';
 import ExpantionBlock from '@/components/ExpantionBlock';
 
 export default {
-  components: { StdButton, DropdownSelect, TextField, ExpantionBlock },
+  components: { DropdownSelect, TextField, ExpantionBlock },
   data() {
     return {
       network: '',

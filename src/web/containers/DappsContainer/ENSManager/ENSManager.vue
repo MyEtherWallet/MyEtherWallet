@@ -1,5 +1,5 @@
 <template>
-  <WhiteSheet>
+  <mew6-white-sheet>
     <mew-banner
       :text-obj="topBanner"
       :banner-img="BG"
@@ -70,16 +70,15 @@
         </v-tab-item>
       </v-tabs-items>
     </div>
-  </WhiteSheet>
+  </mew6-white-sheet>
 </template>
 
 <script>
 import BG from '@/assets/images/backgrounds/bg-ens.png';
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import BlockTitle from '@/components/Titles/BlockTitle';
 
 export default {
-  components: { WhiteSheet, BlockTitle },
+  components: { BlockTitle },
   data() {
     return {
       BG: BG,

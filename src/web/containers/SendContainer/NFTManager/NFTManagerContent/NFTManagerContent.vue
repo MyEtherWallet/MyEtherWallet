@@ -10,7 +10,7 @@
       Open TX confirmation window
     </v-btn>
 
-    <WhiteSheet>
+    <mew6-white-sheet>
       <TxConfirmation :open="openTxConfirmation" :close="closeTxConfirmation" />
       <InterfaceWrap title="NFT Manager">
         <v-tabs vertical>
@@ -132,12 +132,11 @@
           </v-tab-item>
         </v-tabs>
       </InterfaceWrap>
-    </WhiteSheet>
+    </mew6-white-sheet>
   </div>
 </template>
 
 <script>
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import InterfaceWrap from '@/web/components/InterfaceWraps/InterfaceWrap1';
 import TxConfirmation from '@/components/Overlays/TxConfirmation';
 import Kitty1 from '@/assets/images/temp/cryptokitties1.svg';
@@ -145,7 +144,7 @@ import Kitty2 from '@/assets/images/temp/cryptokitties2.svg';
 import Kitty3 from '@/assets/images/temp/cryptokitties3.svg';
 
 export default {
-  components: { WhiteSheet, InterfaceWrap, TxConfirmation },
+  components: { InterfaceWrap, TxConfirmation },
   data() {
     return {
       openTxConfirmation: false,

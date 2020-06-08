@@ -1,5 +1,5 @@
 <template>
-  <WhiteSheet>
+  <mew6-white-sheet>
     <div class="pa-8">
       <div class="mew-heading-1 px-4">MEW Dapps</div>
       <v-row>
@@ -30,18 +30,17 @@
         </v-col>
       </v-row>
     </div>
-  </WhiteSheet>
+  </mew6-white-sheet>
 </template>
 
 <script>
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import IconMakerDAO from '@/assets/images/icons/icon-dapp-makerdao.png';
 import IconLock from '@/assets/images/icons/icon-dapp-lock.png';
 import IconBrowser from '@/assets/images/icons/icon-dapp-browser.png';
 import IconThumbsUp from '@/assets/images/icons/icon-thumbs-up.svg';
 
 export default {
-  components: { WhiteSheet },
+  components: {},
   data() {
     return {
       dapps: {

@@ -1,5 +1,5 @@
 <template>
-  <WhiteSheet class="mew-component--eth-balance">
+  <mew6-white-sheet class="mew-component--eth-balance">
     <div class="d-flex px-6 pt-7">
       <BlockTitle
         :icon="require('@/assets/images/currencies//eth.png')"
@@ -64,16 +64,15 @@
         />
       </v-col>
     </v-row>
-  </WhiteSheet>
+  </mew6-white-sheet>
 </template>
 
 <script>
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import ChartBalance from '@/web/components/Charts/Balance';
 import BlockTitle from '@/web/components/BlockTitles/BlockTitle1';
 
 export default {
-  components: { WhiteSheet, ChartBalance, BlockTitle },
+  components: { ChartBalance, BlockTitle },
   data() {
     return {
       chartRange: '1d',
