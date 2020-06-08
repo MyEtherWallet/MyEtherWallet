@@ -2,7 +2,7 @@
   <BaseOverlay :open="open" :close="close" close-text="Cancel">
     <div class="overlay-content">
       <OverlayTitle title="My paper wallet" />
-      <WhiteSheet>
+      <mew6-white-sheet>
         <div class="pa-10">
           <div class="d-flex justify-space-between align-start">
             <div class="d-flex align-center">
@@ -135,12 +135,12 @@
             />
           </div>
         </div>
-      </WhiteSheet>
+      </mew6-white-sheet>
     </div>
     <div class="d-flex justify-center mt-12">
-      <StdButton size="x-large" buttonclass="button--green">
+      <mew6-std-btn size="x-large" buttonclass="button--green">
         Print
-      </StdButton>
+      </mew6-std-btn>
     </div>
   </BaseOverlay>
 </template>
@@ -148,8 +148,6 @@
 <script>
 import BaseOverlay from '../BaseOverlay';
 import OverlayTitle from '@/components/OverlayTitle';
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
-import StdButton from '@/web/components/StdButton';
 import Blockie from '@/web/components/Blockie';
 import VueQrcode from '@xkeshi/vue-qrcode';
 
@@ -157,8 +155,6 @@ export default {
   components: {
     BaseOverlay,
     OverlayTitle,
-    WhiteSheet,
-    StdButton,
     Blockie,
     VueQrcode
   },

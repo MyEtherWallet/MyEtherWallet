@@ -8,9 +8,9 @@
         order to access your new wallet. And you are done!
       </p>
       <div class="d-flex align-center">
-        <StdButton size="x-large" buttonclass="button--green">
+        <mew6-std-btn size="x-large" buttonclass="button--green">
           Access my wallet
-        </StdButton>
+        </mew6-std-btn>
       </div>
       <p class="mt-4 mb-0">
         Need help?
@@ -32,10 +32,8 @@
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
-
 export default {
-  components: { StdButton },
+  components: {},
   data: () => ({}),
   methods: {}
 };

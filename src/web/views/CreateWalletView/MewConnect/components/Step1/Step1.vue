@@ -22,12 +22,13 @@
         >. Continue if you have already installed the App.
       </p>
       <div class="d-flex align-center">
-        <StdButton
+        <mew6-white-sheet
           size="x-large"
           buttonclass="button--green"
           :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '2' } }"
-          >Continue</StdButton
         >
+          Continue
+        </mew6-white-sheet>
       </div>
       <p class="mt-4 mb-0">
         Already knew how to do it?
@@ -50,10 +51,8 @@
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
-
 export default {
-  components: { StdButton },
+  components: {},
   data: () => ({}),
   methods: {}
 };

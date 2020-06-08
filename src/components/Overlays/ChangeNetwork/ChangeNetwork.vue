@@ -3,7 +3,7 @@
     <div class="overlay-content">
       <OverlayTitle title="Network" />
 
-      <WhiteSheet overflow-hidden>
+      <mew6-white-sheet overflow-hidden>
         <v-btn-toggle
           v-model="activeTab"
           class="d-flex"
@@ -33,26 +33,26 @@
             Add network / HTTP
           </v-btn>
         </v-btn-toggle>
-      </WhiteSheet>
+      </mew6-white-sheet>
 
       <OverlayTabs class="mt-8">
         <v-tabs v-model="activeTab">
           <v-tab-item>
             <div class="width--100-percent">
-              <WhiteSheet>
+              <mew6-white-sheet>
                 <div class="pa-8">
                   <ChangeNetwork />
                 </div>
-              </WhiteSheet>
+              </mew6-white-sheet>
             </div>
           </v-tab-item>
           <v-tab-item>
             <div class="width--100-percent">
-              <WhiteSheet>
+              <mew6-white-sheet>
                 <div class="pa-8">
                   <AddNetwork />
                 </div>
-              </WhiteSheet>
+              </mew6-white-sheet>
             </div>
           </v-tab-item>
         </v-tabs>
@@ -65,7 +65,6 @@
 import BaseOverlay from '../BaseOverlay';
 import OverlayTitle from '@/components/OverlayTitle';
 import OverlayTabs from '@/components/OverlayTabs';
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import AddNetwork from './components/AddNetwork';
 import ChangeNetwork from './components/ChangeNetwork';
 
@@ -74,7 +73,6 @@ export default {
     BaseOverlay,
     OverlayTitle,
     OverlayTabs,
-    WhiteSheet,
     AddNetwork,
     ChangeNetwork
   },

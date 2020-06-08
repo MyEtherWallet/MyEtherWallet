@@ -1,5 +1,5 @@
 <template>
-  <WhiteSheet>
+  <mew6-white-sheet>
     <InterfaceWrap title="Swap">
       <div class="d-flex">
         <div>
@@ -89,11 +89,10 @@
         <mew-button title="Swap" :has-full-width="false" button-size="xlarge" />
       </div>
     </InterfaceWrap>
-  </WhiteSheet>
+  </mew6-white-sheet>
 </template>
 
 <script>
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import InterfaceWrap from '@/web/components/InterfaceWraps/InterfaceWrap1';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
@@ -103,7 +102,7 @@ import Simplex from '@/assets/images/icons/icon-simplex.png';
 import Bity from '@/assets/images/icons/icon-bity.png';
 
 export default {
-  components: { WhiteSheet, InterfaceWrap },
+  components: { InterfaceWrap },
   data() {
     return {
       swap: SwapIcon,

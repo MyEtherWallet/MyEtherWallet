@@ -11,17 +11,15 @@
       :value="passwdValue"
       @click:append="showPasswd = !showPasswd"
     ></v-text-field>
-    <StdButton height="56px" size="x-large" button-class="button--green">{{
+    <mew6-std-btn height="56px" size="x-large" button-class="button--green">{{
       btnlabel
-    }}</StdButton>
+    }}</mew6-std-btn>
   </v-sheet>
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
-
 export default {
-  components: { StdButton },
+  components: {},
   props: {
     btnlabel: { default: '', type: String },
     fldlabel: { default: '', type: String },

@@ -10,12 +10,12 @@
               <a class="teal--text text--lighten-2" href="/">Privacy Policy.</a>
             </div>
             <v-spacer />
-            <StdButton
+            <mew6-std-btn
               button-class="button--white-border"
               @click.native="sheet = !sheet"
             >
               I understood
-            </StdButton>
+            </mew6-std-btn>
           </div>
         </v-container>
       </v-sheet>
@@ -24,13 +24,9 @@
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
-
 export default {
   name: 'PrivacyWarning',
-  components: {
-    StdButton
-  },
+  components: {},
   data: () => ({
     sheet: false
   }),

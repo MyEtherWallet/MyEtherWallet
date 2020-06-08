@@ -21,27 +21,26 @@
       </v-row>
     </v-sheet>
     <div class="d-flex justify-center mb-7">
-      <StdButton
+      <mew6-std-btn
         size="x-large"
         buttonclass="button--green"
         @click.native="linkToStep(2)"
       >
         Acknowledge &amp; Download
-      </StdButton>
+      </mew6-std-btn>
     </div>
     <NotRecommended class="mx-n6 border-radius-bottom--10px" />
   </v-sheet>
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
 import NotRecommended from '@/web/components/NotRecommended';
 import PaperPlane from '@/assets/images/icons/icon-paper-plane-mew.svg';
 import Stolen from '@/assets/images/icons/icon-money-bag-mew.svg';
 import Copy from '@/assets/images/icons/icon-copy-mew.svg';
 
 export default {
-  components: { StdButton, NotRecommended },
+  components: { NotRecommended },
   data: () => ({
     warningData: [
       {

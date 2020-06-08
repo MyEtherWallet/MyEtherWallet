@@ -1,5 +1,5 @@
 <template>
-  <WhiteSheet>
+  <mew6-white-sheet>
     <InterfaceWrap title="Send Transaction">
       <div>
         <div class="d-flex">
@@ -43,17 +43,16 @@
         <div class="mt-6 emerald--text">Clean all</div>
       </div>
     </InterfaceWrap>
-  </WhiteSheet>
+  </mew6-white-sheet>
 </template>
 
 <script>
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import InterfaceWrap from '@/web/components/InterfaceWraps/InterfaceWrap1';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';
 import Divider from '@/components/DividerX';
 
 export default {
-  components: { WhiteSheet, InterfaceWrap, Divider },
+  components: { InterfaceWrap, Divider },
   data() {
     return {
       addressValue: '',

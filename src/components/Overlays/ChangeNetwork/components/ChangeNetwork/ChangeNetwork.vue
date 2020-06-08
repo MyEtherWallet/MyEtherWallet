@@ -22,18 +22,17 @@
       </div>
     </v-radio-group>
 
-    <StdButton size="x-large" fullwidth class="mt-3">
+    <mew6-std-btn size="x-large" fullwidth class="mt-3">
       Change
-    </StdButton>
+    </mew6-std-btn>
   </div>
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
 import DividerLine from '@/web/components/Common/DividerLine';
 
 export default {
-  components: { StdButton, DividerLine },
+  components: { DividerLine },
   data() {
     return {
       networkSelected: null,

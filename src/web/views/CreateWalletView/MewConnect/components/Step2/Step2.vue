@@ -8,21 +8,22 @@
         Continue if you have already created a new wallet in the App.
       </p>
       <div class="d-flex align-center">
-        <StdButton
+        <mew6-white-sheet
           size="x-large"
           buttonclass="button--green-border"
           class="mr-3"
           :minwidth="false"
           :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '1' } }"
-          >Back</StdButton
         >
-        <StdButton
+          Back
+        </mew6-white-sheet>
+        <mew6-white-sheet
           size="x-large"
           buttonclass="button--green"
           :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '3' } }"
         >
           Continue
-        </StdButton>
+        </mew6-white-sheet>
       </div>
       <p class="mt-4 mb-0">
         Need more help?
@@ -47,10 +48,8 @@
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
-
 export default {
-  components: { StdButton },
+  components: {},
   data: () => ({}),
   methods: {}
 };

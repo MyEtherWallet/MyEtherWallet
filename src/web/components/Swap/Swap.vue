@@ -1,5 +1,5 @@
 <template>
-  <WhiteSheet sideinfo>
+  <mew6-white-sheet sideinfo>
     <div class="px-7 pt-5">
       <BlockTitle :text="$t('common.swap')">
         <template v-slot:right-button>
@@ -39,16 +39,15 @@
         </div>
       </v-sheet>
     </div>
-  </WhiteSheet>
+  </mew6-white-sheet>
 </template>
 
 <script>
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import TextButton from '@/web/components/Buttons/TextButton1';
 import BlockTitle from '@/web/components/BlockTitles/BlockTitle2';
 
 export default {
-  components: { WhiteSheet, TextButton, BlockTitle },
+  components: { TextButton, BlockTitle },
   data() {
     return {
       swapData: [

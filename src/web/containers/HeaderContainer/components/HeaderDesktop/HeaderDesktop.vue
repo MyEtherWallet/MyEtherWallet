@@ -8,7 +8,7 @@
         <v-spacer></v-spacer>
         <Menu :menus="menus" />
         <v-spacer></v-spacer>
-        <StdButton
+        <mew6-std-btn
           depressed
           min-width="0"
           height="48px"
@@ -22,7 +22,7 @@
             src="@/assets/images/icons/icon-buy-eth-white.svg"
             class="mr-1 ml-n1"
           />Buy ETH
-        </StdButton>
+        </mew6-std-btn>
       </v-app-bar>
     </v-container>
   </div>
@@ -30,11 +30,10 @@
 
 <script>
 import Menu from './components/Menu';
-import StdButton from '@/web/components/StdButton';
 
 export default {
   name: 'HeaderDesktop',
-  components: { Menu, StdButton },
+  components: { Menu },
   data: () => ({
     menus: [
       { label: 'How it works', to: '/how-it-works' },

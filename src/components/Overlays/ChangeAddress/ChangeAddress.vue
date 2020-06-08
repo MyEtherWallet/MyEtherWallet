@@ -9,7 +9,7 @@
           <div class="width--100-percent">
             <OverlayTitle title="1. Connect with Ledger" />
 
-            <WhiteSheet>
+            <mew6-white-sheet>
               <div class="pa-8">
                 <div class="mt-2 mb-9 text-center">
                   <img
@@ -43,26 +43,26 @@
                   </StdButton>
                 </div>
               </div>
-            </WhiteSheet>
+            </mew6-white-sheet>
           </div>
         </v-tab-item>
         <v-tab-item>
           <div class="width--100-percent">
             <OverlayTitle title="2. Confirm network & address" />
-            <WhiteSheet>
+            <mew6-white-sheet>
               <AddressSelection />
               <div class="pa-8">
                 <div class="text-center">
-                  <StdButton
+                  <mew6-std-btn
                     size="x-large"
                     fullwidth
                     @click.native="activeTab = 0"
                   >
                     Access My Wallet
-                  </StdButton>
+                  </mew6-std-btn>
                 </div>
               </div>
-            </WhiteSheet>
+            </mew6-white-sheet>
           </div>
         </v-tab-item>
       </v-tabs>
@@ -75,8 +75,6 @@ import AddressSelection from './components/AddressSelection';
 import BaseOverlay from '../BaseOverlay';
 import OverlayTitle from '@/components/OverlayTitle';
 import OverlayTabs from '@/components/OverlayTabs';
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
-import StdButton from '@/web/components/StdButton';
 import InputSearch from '@/components/Inputs/InputSearch1';
 
 export default {
@@ -85,8 +83,6 @@ export default {
     BaseOverlay,
     OverlayTitle,
     OverlayTabs,
-    WhiteSheet,
-    StdButton,
     InputSearch
   },
   props: {

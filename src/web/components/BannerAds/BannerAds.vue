@@ -1,5 +1,5 @@
 <template>
-  <WhiteSheet sideinfo class="user-select--none">
+  <mew6-white-sheet eet sideinfo class="user-select--none">
     <v-carousel
       cycle
       height="150"
@@ -17,15 +17,14 @@
         <Ad2 />
       </v-carousel-item>
     </v-carousel>
-  </WhiteSheet>
+  </mew6-white-sheet>
 </template>
 
 <script>
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import Ad1 from './components/Ad1';
 import Ad2 from './components/Ad2';
 
 export default {
-  components: { WhiteSheet, Ad1, Ad2 }
+  components: { Ad1, Ad2 }
 };
 </script>

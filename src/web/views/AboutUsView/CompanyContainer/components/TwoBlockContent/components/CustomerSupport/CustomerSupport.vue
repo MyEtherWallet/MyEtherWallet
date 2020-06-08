@@ -8,18 +8,21 @@
       class="mb-5"
     />
     <BlockTitle :data="titleData" />
-    <StdButton size="x-large" buttonclass="button--green-border" class="mt-5"
-      >Contact Support</StdButton
+    <mew6-std-btn
+      size="x-large"
+      buttonclass="button--green-border"
+      class="mt-5"
     >
+      Contact Support
+    </mew6-std-btn>
   </v-sheet>
 </template>
 
 <script>
 import BlockTitle from '@/web/components/BlockTitle';
-import StdButton from '@/web/components/StdButton';
 
 export default {
-  components: { BlockTitle, StdButton },
+  components: { BlockTitle },
   data: () => ({
     titleData: {
       textProps: '',

@@ -2,7 +2,7 @@
   <BaseOverlay :open="open" :close="close" close-text="Cancel">
     <div class="overlay-content">
       <OverlayTitle title="Notifications" />
-      <WhiteSheet>
+      <mew6-white-sheet>
         <div class="pa-4">
           <div>
             <div class="text-center font-weight-regular title">
@@ -15,7 +15,7 @@
             </v-expansion-panels>
           </div>
         </div>
-      </WhiteSheet>
+      </mew6-white-sheet>
     </div>
   </BaseOverlay>
 </template>
@@ -26,7 +26,6 @@ import In from './components/In';
 import Out from './components/Out';
 import Swap from './components/Swap';
 import OverlayTitle from '@/components/OverlayTitle';
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
 
 export default {
   components: {
@@ -34,8 +33,7 @@ export default {
     In,
     Out,
     Swap,
-    OverlayTitle,
-    WhiteSheet
+    OverlayTitle
   },
   props: {
     open: { default: false, type: Boolean },
