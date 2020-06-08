@@ -1,6 +1,6 @@
 <template>
   <v-tabs height="100px" hide-slider centered>
-    <div class="tabs-labels d-flex align-center">
+    <div class="tab-labels d-flex align-center">
       <v-tab v-for="(t, key) in tabs" :key="key">{{ t.label }}</v-tab>
     </div>
     <v-tab-item v-for="(t, key) in tabs" :key="key">
@@ -17,7 +17,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tabs-labels {
+.tab-labels {
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   height: 60px;
   margin: 10px 0;
