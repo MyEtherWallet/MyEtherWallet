@@ -1,7 +1,7 @@
 <template>
   <v-sheet
     tile
-    class="page-title-container pb-11 pt-5"
+    class="page-title-container pb-12 pt-2"
     color="light-blue darken-4"
   >
     <v-container class="text-center">

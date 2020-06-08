@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import Tabs from '../../../components/Tabs';
+import Tabs from '@/web/components/Tabs';
 import Send from './components/Send';
 import Swap from './components/Swap';
 import Dapps from './components/Dapps';
