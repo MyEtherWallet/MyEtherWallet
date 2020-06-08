@@ -14,8 +14,8 @@
           />
         </v-col>
         <v-col cols="5" class="text-content pl-12">
-          <BlockTitle :data="titleData" class="mb-8 pl-12" />
-          <div class="mb-9 d-flex">
+          <BlockTitle :data="titleData" class="mb-12 pl-12" />
+          <div class="mb-4 d-flex">
             <div class="mr-3">
               <v-img src="@/assets/images/icons/icon-buy-token-white.svg" />
             </div>
@@ -42,11 +42,10 @@
                 Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor
                 sed stet takimata ipsum invidunt, est ea no dolor.
               </p>
-              <div class="d-flex align-center mt-7">
-                <a href="#" class="mr-5 white--text font-weight-bold"
-                  >Try free demo</a
-                >
-                <a href="#" class="white--text font-weight-bold"
+              <div class="d-flex align-center mt-10">
+                <a
+                  href="#"
+                  class="white--text font-weight-medium text-decoration--underline"
                   >Watch tutorial</a
                 >
               </div>

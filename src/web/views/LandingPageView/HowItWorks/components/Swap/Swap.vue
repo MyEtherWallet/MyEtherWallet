@@ -13,8 +13,8 @@
           />
         </v-col>
         <v-col cols="6" class="text-content pl-12">
-          <BlockTitle :data="titleData" class="mb-8 pl-12" />
-          <div class="mb-9 d-flex">
+          <BlockTitle :data="titleData" class="mb-12 pl-12" />
+          <div class="mb-4 d-flex">
             <div class="mr-3">
               <v-img src="@/assets/images/currencies/icon-btc-white.svg" />
             </div>
@@ -29,7 +29,7 @@
             </div>
           </div>
 
-          <div class="mb-9 d-flex">
+          <div class="mb-4 d-flex">
             <div class="mr-3">
               <v-img src="@/assets/images/currencies//icon-eth-white.svg" />
             </div>
@@ -50,17 +50,16 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
-                Fiats
+                Fiat
               </div>
               <p class="white--text">
                 Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor
                 sed stet takimata ipsum invidunt, est ea no dolor.
               </p>
-              <div class="d-flex align-center mt-7">
-                <a href="#" class="mr-5 white--text font-weight-bold"
-                  >Try free demo</a
-                >
-                <a href="#" class="white--text font-weight-bold"
+              <div class="d-flex align-center mt-10">
+                <a
+                  href="#"
+                  class="text-decoration--underline white--text font-weight-medium"
                   >Watch tutorial</a
                 >
               </div>
@@ -83,7 +82,7 @@ export default {
       toptitle: '',
       title: 'Swap',
       description:
-        'MEW has partnered with Bity, Kyber Network, and Simplex to allow users to swap fiat to crypto, ETH and BTC.',
+        'MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to offer competitive rates for for swaps including fiat to crypto, BTC, ETH, and ERC20 tokens.',
       centered: false
     }
   })
