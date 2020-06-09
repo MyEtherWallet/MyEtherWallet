@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <v-container>
     <div class="py-7" />
-    <v-sheet max-width="600px" class="mx-auto">
+    <v-sheet max-width="500px" class="mx-auto">
       <div class="display-1 font-weight-bold text-center">
         All-in-one gateway to your Ethereum Blockchain service
       </div>
@@ -9,8 +9,8 @@
     <div class="py-10" />
     <v-row>
       <v-col cols="5" class="text-content pr-12">
-        <BlockTitle :data="titleData" class="mb-8 pl-12" />
-        <div class="mb-6 d-flex">
+        <BlockTitle :data="titleData" class="mb-12 pl-12" />
+        <div class="mb-4 d-flex">
           <div class="mr-3">
             <v-img src="@/assets/images/icons/icon-send-mew.svg" />
           </div>
@@ -25,7 +25,7 @@
           </div>
         </div>
 
-        <div class="mb-6 d-flex">
+        <div class="mb-4 d-flex">
           <div class="mr-3">
             <v-img src="@/assets/images/icons/icon-offline-mew.svg" />
           </div>
@@ -50,18 +50,13 @@
               Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor sed
               stet takimata ipsum invidunt, est ea no dolor.
             </p>
-            <div class="d-flex align-center mt-4">
+            <div class="d-flex align-center mt-10">
               <a
                 href="#"
-                class="mr-5 teal--text text--lighten-2 font-weight-bold"
-                >Try free demo</a
+                class="mr-5 teal--text text-decoration--underline text--lighten-2 font-weight-medium"
               >
-              <a
-                href="#"
-                class="mr-5 teal--text text--lighten-2 font-weight-bold"
-                >Watch tutorial</a
-              >
-              >
+                Watch tutorial
+              </a>
             </div>
           </div>
         </div>
@@ -70,7 +65,7 @@
         <v-img src="@/assets/images/snippets/send-tx-page.png" class="mt-n6" />
       </v-col>
     </v-row>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -90,9 +85,3 @@ export default {
   })
 };
 </script>
-
-<style lang="scss" scoped>
-a {
-  text-decoration: underline;
-}
-</style>

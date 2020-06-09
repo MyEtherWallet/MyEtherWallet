@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import Tabs from '@/web/components/Tabs';
+import Tabs from '@/web/components/Tabs/TabsTypeA';
 import BlockTitle from '@/web/components/BlockTitle';
 
 export default {
