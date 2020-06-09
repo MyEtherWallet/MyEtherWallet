@@ -213,7 +213,12 @@
       <div v-if="isDeedOwner && hasDeed" class="form-container">
         <form>
           <h4>
-            Do you want to release {{ deedValueEth }} {{ network.type.name }}
+            {{
+              $t('ens.release-deed-confirmation', {
+                deedValueEth: deedValueEth,
+                network: network.type.name
+              })
+            }}
           </h4>
           <div class="submit-container">
             <button type="submit" @click.prevent="releaseDeed()">
@@ -232,14 +237,16 @@
       accordion="manage-ens-accordion"
     >
       <div v-if="ipfsProcessing" class="ipfs-loading">
-        <i class="fa fa-lg fa-spinner fa-spin" />Processing File... Please wait
-        for a transaction popup before you leave to make sure your request is
-        processed.
+        <i class="fa fa-lg fa-spinner fa-spin" />{{ $t('ens.ipfs-processing') }}
       </div>
       <div v-else>
         <div v-if="localContentHash !== ''" class="link-to-name">
           <p>
-            Check your website for {{ `${domainName}` }} here:
+            {{
+              $t('ens.check-website', {
+                domainName: domainName
+              })
+            }}
             <a
               :href="`http://${domainName}.link`"
               target="_blank"
@@ -477,24 +484,18 @@ export default {
     fileChange(e) {
       if (e.target.files[0].type !== 'application/zip') {
         this.$refs.zipInput.value = '';
-        Toast.responseHandler('Please Upload a zip file!', Toast.WARN);
+        Toast.responseHandler(this.$t('ens.warning.upload-zip'), Toast.WARN);
         return;
       }
       if (e.target.files[0].size < 500) {
         this.$refs.zipInput.value = '';
-        Toast.responseHandler(
-          'File is too small! Size has to be more than 500kb.',
-          Toast.WARN
-        );
+        Toast.responseHandler(this.$t('ens.warning.too-small'), Toast.WARN);
         return;
       }
 
       if (e.target.files[0].size > 50000) {
         this.$refs.zipInput.value = '';
-        Toast.responseHandler(
-          'File is too big! Size has to be less than 50mb.',
-          Toast.WARN
-        );
+        Toast.responseHandler(this.$t('ens.warning.too-big'), Toast.WARN);
         return;
       }
 
@@ -545,7 +546,10 @@ export default {
         this.currencyInputs = newObj;
       } else {
         Toast.responseHandler(
-          `Currency ${item} is already added for ${this.domainName}`,
+          this.$t('ens.currency-already-exists', {
+            currency: item,
+            domainName: this.domainName
+          }),
           Toast.WARN
         );
       }
@@ -558,7 +562,10 @@ export default {
         this.txtRecordInputs = newObj;
       } else {
         Toast.responseHandler(
-          `Text Record ${item} input is already added for ${this.domainName}`,
+          this.$t('ens.currency-already-exists', {
+            txtRecord: item,
+            domainName: this.domainName
+          }),
           Toast.WARN
         );
       }

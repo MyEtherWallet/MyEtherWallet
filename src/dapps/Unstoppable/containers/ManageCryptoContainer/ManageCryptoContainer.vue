@@ -66,19 +66,20 @@
     </div>
     <div v-show="!loading" class="ipfs-container">
       <div v-show="ipfsProcessing">
-        <i class="fa fa-lg fa-spinner fa-spin" />Processing File... Please wait
-        for a transaction popup before you leave to make sure your request is
-        processed. After this, you don't have to save your new hash as it has
-        already been saved..
+        <i class="fa fa-lg fa-spinner fa-spin" />{{
+          $t('unstoppable.ipfs.processing')
+        }}
       </div>
       <div v-show="!ipfsProcessing">
         <p v-show="ipfsHash !== ''">
-          To see your site, please visit {{ domainName }} on Unstoppable Chrome
-          Extension or Unstoppable's Browser. You can also open the link on
-          Opera browser!
+          {{
+            $t('unstoppable.ipfs.see-website', {
+              domainName: domainName
+            })
+          }}
         </p>
         <div class="info-row">
-          <label class="info-title">IPFS Hash</label>
+          <label class="info-title">{{ $t('unstoppable.ipfs.hash') }}</label>
           <span class="static-span">ipfs://</span>
           <input
             v-model="ipfsHash"
@@ -100,7 +101,7 @@
             </form>
           </div>
           <button class="upload-zip" @click="ipfsClick()">
-            Upload your own site
+            {{ $t('unstoppable.ipfs.upload') }}
           </button>
           <button
             :class="[ipfsHash === '' ? 'disabled' : '']"
@@ -173,14 +174,17 @@ export default {
       if (e.target.files[0].type !== 'application/zip') {
         this.ipfsProcessing = false;
         this.$refs.zipInput.value = '';
-        Toast.responseHandler('Please Upload a zip file!', Toast.WARN);
+        Toast.responseHandler(
+          this.$t('unstoppable.warn.upload-zip'),
+          Toast.WARN
+        );
         return;
       }
       if (e.target.files[0].size < 500) {
         this.ipfsProcessing = false;
         this.$refs.zipInput.value = '';
         Toast.responseHandler(
-          'File is too small! Size has to be more than 500kb.',
+          this.$t('unstoppable.warn.too-small'),
           Toast.WARN
         );
         return;
@@ -189,10 +193,7 @@ export default {
       if (e.target.files[0].size > 50000) {
         this.ipfsProcessing = false;
         this.$refs.zipInput.value = '';
-        Toast.responseHandler(
-          'File is too big! Size has to be less than 50mb.',
-          Toast.WARN
-        );
+        Toast.responseHandler(this.$t('unstoppable.warn.too-big'), Toast.WARN);
         return;
       }
       this.uploadZip(e.target.files[0]);
@@ -224,7 +225,10 @@ export default {
         }).then(response => {
           if (!response.ok) {
             this.ipfsProcessing = false;
-            Toast.responseHandler('Uploading file errored', Toast.ERROR);
+            Toast.responseHandler(
+              this.$t('unstoppable.error.upload-error'),
+              Toast.ERROR
+            );
             return;
           }
           this.getHashFromFile(content.body.hashResponse);
@@ -254,7 +258,10 @@ export default {
             Toast.responseHandler(e, Toast.ERROR);
           });
         if (ipfsHash.error) {
-          Toast.responseHandler('Error getting ipfs hash!', Toast.ERROR);
+          Toast.responseHandler(
+            this.$t('unstoppable.ipfs.error-fetching-hash'),
+            Toast.ERROR
+          );
         } else {
           this.saveIpfsHash(ipfsHash);
         }
@@ -275,7 +282,7 @@ export default {
         node
       );
       if (!currentResolverAddress) {
-        throw new Error('No resolver address set');
+        throw new Error(this.$t('unstoppable.error.no-resolver-set'));
       }
       const resolverContract = new this.web3.eth.Contract(
         resolverAbi,
@@ -324,7 +331,7 @@ export default {
           node
         );
         if (!resolverAddress) {
-          throw new Error('No resolver address set');
+          throw new Error(this.$t('unstoppable.error.no-resolver-set'));
         }
         const resolver = new this.web3.eth.Contract(
           resolverAbi,
