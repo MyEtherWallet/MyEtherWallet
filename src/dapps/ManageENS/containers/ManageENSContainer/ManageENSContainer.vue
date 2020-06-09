@@ -18,6 +18,8 @@
       variant="primary"
     >
       <p>{{ $t('ens.multi-coin') }}</p>
+      <i class="when-open fa fa-angle-up fa-lg" />
+      <i class="when-closed fa fa-angle-down fa-lg" />
     </b-btn>
     <b-collapse
       id="multicoinsec"
@@ -87,6 +89,8 @@
       variant="primary"
     >
       <p>{{ $t('ens.txt-record') }}</p>
+      <i class="when-open fa fa-angle-up fa-lg" />
+      <i class="when-closed fa fa-angle-down fa-lg" />
     </b-btn>
     <b-collapse
       id="textrecords"
@@ -166,6 +170,8 @@
       variant="primary"
     >
       <p>{{ $t('ens.transfer-domain') }}</p>
+      <i class="when-open fa fa-angle-up fa-lg" />
+      <i class="when-closed fa fa-angle-down fa-lg" />
     </b-btn>
     <b-collapse
       id="transferens"
@@ -203,6 +209,8 @@
       variant="primary"
     >
       <p>{{ $t('ens.release-deed') }}</p>
+      <i class="when-open fa fa-angle-up fa-lg" />
+      <i class="when-closed fa fa-angle-down fa-lg" />
     </b-btn>
     <b-collapse
       v-if="isDeedOwner && hasDeed"
@@ -230,6 +238,8 @@
     </b-collapse>
     <b-btn v-b-toggle.ipfs class="collapse-open-button" variant="primary">
       <p>IPFS</p>
+      <i class="when-open fa fa-angle-up fa-lg" />
+      <i class="when-closed fa fa-angle-down fa-lg" />
     </b-btn>
     <b-collapse
       id="ipfs"

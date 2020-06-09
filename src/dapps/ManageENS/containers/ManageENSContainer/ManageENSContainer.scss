@@ -104,6 +104,10 @@ label {
     padding-left: 10px;
   }
 
+  input {
+    padding: 13px 25px 13px 15px;
+  }
+
   .disabled-icon {
     color: $dark-grey-11 !important;
     pointer-events: none;
@@ -179,6 +183,7 @@ label {
   background-color: $dark-blue-12 !important;
   border-color: $dark-blue-12 !important;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   margin: 5px 0;
 
@@ -203,4 +208,10 @@ label {
   padding: 30px;
   height: 150px;
   text-align: center;
+}
+
+
+.collapsed > .when-open,
+.not-collapsed > .when-closed {
+  display: none;
 }
