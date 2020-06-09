@@ -15,7 +15,12 @@
     "contract-not-ready": "Contract is not ready yet, transaction might fail.",
     "not-enough-char": "Domain name is less than 3 characters.",
     "invalid-symbol": "Invalid symbols on domain",
-    "subdomain-is-not-owned": "This subdomain is not owned"
+    "subdomain-is-not-owned": "This subdomain is not owned",
+    "upload-zip": "Please upload a zip file!",
+    "too-small": "File is too small! Size has to be more than 500kb.",
+    "too-big": "File is too big! Size has to be less than 50mb.",
+    "currency-already-exists": "Currency {currency} is already added for {domainName}",
+    "text-record-already-exists": "Text Record {txtRecord} input is already added for {domainName}"
   },
   "toast": {
     "success-register": "Successfully Registered!",
@@ -34,6 +39,9 @@
   "manage": "Manage",
   "manage-domain": "Manage Domain",
   "register-domain": "Register Domain",
+  "release-deed-confirmation": "Do you want to release {deedValueEth} {network}",
+  "ipfs-processing": "Processing File... Please wait for a transaction popup before you leave to make sure your request is processed.",
+  "ipfs-check-website": "Check your website for {domainName} here:",
   "expired": "Expired",
   "controller-text": "Looks like the address you're using is not a controller of {domain}. Do you wanna set {addr} as a controller for {domain}?",
   "text-record-error": "{value} is missing or not a valid input for {name}!",
