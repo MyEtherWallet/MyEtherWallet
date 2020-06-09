@@ -2,7 +2,7 @@ import zyn from '@/assets/images/networks/zyn.svg';
 
 export default {
   name: 'ZYN',
-  name_long: 'Zyncoin',
+  name_long: 'Zynecoin',
   homePage: 'https://mainnet.wethio.io/',
   blockExplorerTX: 'https://explorer.wethio.io/txs/[[txHash]]',
   blockExplorerAddr: 'https://explorer.wethio.io/address/[[address]]',
