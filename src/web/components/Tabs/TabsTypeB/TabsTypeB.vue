@@ -1,5 +1,5 @@
 <template>
-  <v-tabs height="100px" hide-slider centered>
+  <v-tabs height="75px" centered class="mew6-component--tabs-type-b">
     <div class="tab-labels d-flex align-center">
       <v-tab v-for="(t, key) in tabs" :key="key">{{ t.label }}</v-tab>
     </div>
@@ -18,24 +18,28 @@ export default {
 
 <style lang="scss" scoped>
 .tab-labels {
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  height: 60px;
-  margin: 10px 0;
-  border-radius: 10px;
-  overflow: hidden;
+  height: 100%;
 }
 .v-tab {
   text-transform: initial;
-  font-weight: 500;
-  min-width: 120px;
+  font-weight: 400;
+  min-width: 100px;
   height: 100%;
   color: var(--v-dark_independence-base) !important;
 }
 .v-tab--active {
-  background-color: var(--v-basic-base);
-  color: white !important;
+  color: var(--v-basic-base) !important;
+  font-weight: 500;
 }
-.tab-image {
-  width: 100%;
+</style>
+
+<style lang="scss">
+.mew6-component--tabs-type-b {
+  .v-tabs-slider-wrapper {
+    height: 4px !important;
+  }
+  .v-slide-group__content {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
 }
 </style>

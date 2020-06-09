@@ -1,7 +1,6 @@
 <template>
   <div>
     <PageTitle title="How it works" />
-    <div class="py-3" />
     <TabContent />
     <div class="py-8" />
     <Swap />
