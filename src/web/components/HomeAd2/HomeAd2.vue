@@ -32,6 +32,7 @@
           height="72px"
           text-color="emerald--text"
           color="white"
+          elevated
           :to="{ name: 'HomeCreateWallet', query: {} }"
         >
           <img
