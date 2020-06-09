@@ -16,7 +16,7 @@
       </h5>
     </BlockTitle>
 
-    <v-sheet color="transparent" max-width="600px" class="mx-auto">
+    <v-sheet color="transparent" max-width="650px" class="mx-auto">
       <MEWconnect class="mb-5" />
       <MEWconnect />
       <div class="my-4" />
