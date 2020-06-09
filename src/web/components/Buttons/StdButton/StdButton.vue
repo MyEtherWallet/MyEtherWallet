@@ -6,6 +6,7 @@
       text ? 'no-padding' : '',
       textColor
     ]"
+    :elevation="elevated ? 7 : 0"
     :color="color"
     :outlined="outlined"
     :height="height"
@@ -39,6 +40,7 @@ export default {
     minWidth: { default: '', type: String },
     size: { default: 'x-large', type: String },
     height: { default: '', type: String },
+    elevated: { default: false, type: Boolean },
     bold: { default: false, type: Boolean },
     depressed: { default: false, type: Boolean },
     text: { default: false, type: Boolean },
@@ -66,5 +68,9 @@ export default {
 .no-padding {
   padding: 0 !important;
   min-width: 0 !important;
+}
+.v-application .elevation-7 {
+  box-shadow: 0 4px 5px -2px rgba(0, 0, 0, 0.07),
+    0 7px 10px 1px rgba(0, 0, 0, 0.07), 0 2px 16px 1px rgba(0, 0, 0, 0.07) !important;
 }
 </style>

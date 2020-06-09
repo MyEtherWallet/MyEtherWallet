@@ -17,6 +17,7 @@
     </BlockTitle>
 
     <v-sheet color="transparent" max-width="600px" class="mx-auto">
+      <MEWconnect class="mb-5" />
       <MEWconnect />
       <div class="my-4" />
       <router-link
