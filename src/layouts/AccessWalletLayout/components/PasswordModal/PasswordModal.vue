@@ -81,6 +81,7 @@ export default {
     ...mapState('main', ['path', 'online']),
     inputValid() {
       return (
+        this.file &&
         this.walletRequirePass(this.file) &&
         (this.password === '' || this.password.length === 0)
       );
