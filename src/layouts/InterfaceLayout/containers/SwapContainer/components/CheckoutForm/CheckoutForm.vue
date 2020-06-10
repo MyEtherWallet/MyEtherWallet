@@ -65,6 +65,7 @@
 <script>
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import { providerNames } from '@/partners';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
@@ -101,18 +102,25 @@ export default {
   methods: {
     async submit() {
       if (!this.submitted) {
-        this.submitted = true;
-        const swapDetails = await this.swap.extraActions(
-          providerNames.simplex,
-          'createOrder',
-          this.swapDetails
-        );
-        this.formData = this.swapDetails.dataForInitialization;
-        this.continueAction(swapDetails);
-        this.$nextTick(() => {
-          document.querySelector('#payment_form').submit();
-          this.submitted = false;
-        });
+        try {
+          this.submitted = true;
+          const swapDetails = await this.swap.extraActions(
+            providerNames.simplex,
+            'createOrder',
+            this.swapDetails
+          );
+          this.formData = this.swapDetails.dataForInitialization;
+          this.continueAction(swapDetails);
+          this.$nextTick(() => {
+            document.querySelector('#payment_form').submit();
+            this.submitted = false;
+          });
+        } catch (e) {
+          Toast.responseHandler(
+            this.$t('swap.warning.error-generating-swap'),
+            1
+          );
+        }
       }
     }
   }
