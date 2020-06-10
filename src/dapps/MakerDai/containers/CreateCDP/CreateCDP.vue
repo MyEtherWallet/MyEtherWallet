@@ -309,33 +309,23 @@ export default {
     ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     validInputs() {
       if (!this.hasProxy) return false;
-      console.log('1'); // todo remove dev item
       if (toBigNumber(this.ethQty).isNaN() || toBigNumber(this.daiQty).isNaN())
         return false;
       if (toBigNumber(this.ethQty).gt(0)) {
-        console.log('2'); // todo remove dev item
 
         if (toBigNumber(this.ethQty).lte(this.values.minEth)) return false;
         if (this.emptyMakerCreated) {
-          console.log('3'); // todo remove dev item
-          console.log(this.makerCDP.minDai, this.daiQty); // todo remove dev item
           if (toBigNumber(this.makerCDP.minDai).gt(this.daiQty)) return false;
-          console.log('7'); // todo remove dev item
         } else if (toBigNumber(20).gt(this.daiQty)) return false;
         if (toBigNumber(this.maxDaiDraw).lte(toBigNumber(this.daiQty)))
           return false;
         if (this.emptyMakerCreated) {
-          console.log('4'); // todo remove dev item
-
           if (toBigNumber(this.collatRatio).lte(this.makerCDP.liquidationRatio))
             return false;
         } else if (toBigNumber(this.collatRatio).lte(1.501)) return false;
-        console.log('5'); // todo remove dev item
 
         return this.hasEnoughEth;
       }
-      console.log('6'); // todo remove dev item
-
       return false;
     },
     hasProxy() {
@@ -347,12 +337,6 @@ export default {
       }
       return true;
     },
-    // stabilityFee() {
-    //   console.log(this.emptyMakerCreated); // todo remove dev item
-    //   if (this.emptyMakerCreated) {
-    //     return this.makerCDP.stabilityFee;
-    //   }
-    // },
     minInSelectedCurrency() {
       return this.minDeposit;
     },
@@ -485,7 +469,6 @@ export default {
     async buildEmptyInstance() {
       this.makerCDP = await this.buildEmpty();
       this.$forceUpdate();
-      console.log('buildEmpty'); // todo remove dev item
       this.emptyMakerCreated = true;
     },
     BuildProxy() {
@@ -506,7 +489,6 @@ export default {
       }
     },
     stabilityFee() {
-      console.log(this.emptyMakerCreated); // todo remove dev item
       if (this.emptyMakerCreated) {
         return this.makerCDP.stabilityFee;
       }
