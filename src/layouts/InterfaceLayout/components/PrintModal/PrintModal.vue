@@ -33,6 +33,7 @@ import printJS from 'print-js';
 import html2canvas from 'html2canvas';
 import AccountContentToDisplay from './components/AccountContentToDisplay';
 import AccountContentToPrint from './components/AccountContentToPrint';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
@@ -50,18 +51,21 @@ export default {
   },
   methods: {
     async print() {
-      const element = this.$refs.printContainer;
-      const screen = await html2canvas(element, {
-        async: true,
-        logging: false
-      }).then(canvas => {
-        return canvas;
-      });
-
-      printJS({
-        printable: screen.toDataURL('image/png'),
-        type: 'image'
-      });
+      try {
+        const element = this.$refs.printContainer;
+        const screen = await html2canvas(element, {
+          async: true,
+          logging: false
+        }).then(canvas => {
+          return canvas;
+        });
+        printJS({
+          printable: screen.toDataURL('image/png'),
+          type: 'image'
+        });
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
+      }
     }
   }
 };
