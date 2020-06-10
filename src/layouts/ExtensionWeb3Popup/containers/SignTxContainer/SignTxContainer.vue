@@ -192,7 +192,10 @@ export default {
           _self.loading = false;
           if (res.hasOwnProperty('error')) {
             _self.error = {
-              msg: res.error,
+              msg:
+                res.error.message && res.error.message !== ''
+                  ? res.error.message
+                  : 'Something went wrong!',
               errored: true
             };
 

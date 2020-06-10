@@ -1,7 +1,11 @@
 <template>
   <div
     class="address-detail-container"
-    @click="selectAccount(address ? address : walletType)"
+    @click="
+      () => {
+        selectAccount(address ? address : walletType);
+      }
+    "
   >
     <div class="check-mark-container">
       <i
@@ -29,7 +33,7 @@
       />
       <div class="address-text">
         <div v-if="walletType === 'wallet'">
-          <p v-f="nickname !== ''">
+          <p v-if="nickname !== ''">
             <b>{{ nickname }}</b>
           </p>
           <p>{{ address | concatAddr }}</p>
