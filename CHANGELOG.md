@@ -2,6 +2,7 @@
 
 - Fix text mixup [#2420](https://github.com/MyEtherWallet/MyEtherWallet/pull/2420)
 - Fix email validation [#2421](https://github.com/MyEtherWallet/MyEtherWallet/pull/2421)
+- Fix some cx bugs [#2429](https://github.com/MyEtherWallet/MyEtherWallet/pull/2429)
 - Sentry fixes y [#2431](https://github.com/MyEtherWallet/MyEtherWallet/pull/2431)
 - Sentry fixes k [#2430](https://github.com/MyEtherWallet/MyEtherWallet/pull/2430)
 
