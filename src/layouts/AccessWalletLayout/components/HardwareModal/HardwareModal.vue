@@ -206,35 +206,40 @@ export default {
     };
   },
   mounted() {
-    isSupported().then(res => {
-      this.items.forEach(item => {
-        const u2fhw = [SECALOT_TYPE, LEDGER_TYPE];
-        const inMobile = [SECALOT_TYPE, KEEPKEY_TYPE];
-        const webUsb = [KEEPKEY_TYPE, LEDGER_TYPE];
+    try {
+      const _self = this;
+      isSupported().then(res => {
+        _self.items.forEach(item => {
+          const u2fhw = [SECALOT_TYPE, LEDGER_TYPE];
+          const inMobile = [SECALOT_TYPE, KEEPKEY_TYPE];
+          const webUsb = [KEEPKEY_TYPE, LEDGER_TYPE];
 
-        if (webUsb.includes(item.name)) {
-          const disable =
-            window.location.protocol !== 'https:' ||
-            !window ||
-            !window.navigator ||
-            !window.navigator.usb;
-          item.disabled = disable;
-          item.msg = disable ? 'errorsGlobal.browser-non-web-usb' : '';
-        }
-        if (u2fhw.includes(item.name)) {
-          item.disabled = !res;
-          item.msg = !res ? 'errorsGlobal.browser-non-u2f' : '';
-        }
-        if (this.isMobile()) {
-          const disable = !inMobile.includes(item.name);
-          item.disabled = disable;
-          item.msg = disable ? 'errorsGlobal.no-mobile-support' : '';
-        }
+          if (webUsb.includes(item.name)) {
+            const disable =
+              window.location.protocol !== 'https:' ||
+              !window ||
+              !window.navigator ||
+              !window.navigator.usb;
+            item.disabled = disable;
+            item.msg = disable ? 'errorsGlobal.browser-non-web-usb' : '';
+          }
+          if (u2fhw.includes(item.name)) {
+            item.disabled = !res;
+            item.msg = !res ? 'errorsGlobal.browser-non-u2f' : '';
+          }
+          if (_self.isMobile()) {
+            const disable = !inMobile.includes(item.name);
+            item.disabled = disable;
+            item.msg = disable ? 'errorsGlobal.no-mobile-support' : '';
+          }
+        });
       });
-    });
-    this.$refs.hardware.$on('hidden', () => {
-      this.selected = '';
-    });
+      _self.$refs.hardware.$on('hidden', () => {
+        _self.selected = '';
+      });
+    } catch (e) {
+      Toast.responseHandler(e, Toast.ERROR);
+    }
   },
   methods: {
     isMobile() {
