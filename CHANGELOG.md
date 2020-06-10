@@ -1,3 +1,7 @@
+## Devop
+
+- Update Maker Libraries for Maker Dai Dapp [#2437](https://github.com/MyEtherWallet/MyEtherWallet/pull/2437)
+
 ### Bug
 
 - Sentry fixes y [#2431](https://github.com/MyEtherWallet/MyEtherWallet/pull/2431)
