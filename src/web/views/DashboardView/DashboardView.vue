@@ -34,7 +34,7 @@ import Dapps from './containers/Dapps';
 
 import Network from '@/web/components/Network';
 import Swap from '@/web/components/Swap';
-import BannerAds from '@/web/components/BannerAds';
+import BannerAds from '@/components/BannerAds';
 
 export default {
   components: {
