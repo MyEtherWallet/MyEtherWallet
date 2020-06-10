@@ -31,6 +31,7 @@ const EXCEPTIONS = [
   'web3-core-requestmanager',
   'web3-utils',
   '@makerdao/dai-plugin-migrations',
+  '@makerdao/dai-plugin-config',
   'i18n-iso-countries'
 ];
 const CUSTOM_DIST = {
