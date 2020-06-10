@@ -1,5 +1,16 @@
 <template>
   <div class="light-blue darken-4">
+    <mew6-bottom-alert :show="true" hide-overlay>
+      <div class="d-flex align-center justify-center">
+        <h5 class="font-weight-medium mr-4">
+          Did you know? Hardware wallets offer the highest security for
+          accessing your crypto.
+        </h5>
+        <mew6-std-btn size="large" outlined color="blue"
+          >Buy a hardware wallet</mew6-std-btn
+        >
+      </div>
+    </mew6-bottom-alert>
     <div class="py-8" />
     <BlockTitle :data="titleData" class="mb-10">
       <h5 class="white--text ma-0">

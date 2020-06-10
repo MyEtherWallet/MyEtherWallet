@@ -61,6 +61,10 @@ export default {
   height: 62px;
   padding: 0 30px;
 }
+.v-btn:not(.v-btn--round).v-size--large {
+  height: 52px;
+  padding: 0 30px;
+}
 .theme--light.v-btn--active::before,
 .theme--dark.v-btn--active::before {
   opacity: 0;

@@ -1,26 +1,25 @@
 <template>
-  <div class="text-center">
-    <v-bottom-sheet v-model="show" persistent>
-      <template v-slot:activator="{ on }">
-        <v-btn color="green" dark v-on="on">
-          Open Persistent
-        </v-btn>
-      </template>
-      <v-sheet class="text-center" height="200px">
-        <v-btn class="mt-6" flat color="error" @click="sheet = !sheet"
-          >close</v-btn
-        >
-        <div class="py-3">This is a bottom sheet using the persistent prop</div>
-      </v-sheet>
-    </v-bottom-sheet>
-  </div>
+  <v-bottom-sheet v-model="show" :hide-overlay="hideOverlay">
+    <v-sheet class="text-center py-7 position--relative">
+      <slot />
+      <v-btn
+        icon
+        color="text_default"
+        class="close-button"
+        @click="show = !show"
+      >
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+    </v-sheet>
+  </v-bottom-sheet>
 </template>
 
 <script>
 export default {
   components: {},
   props: {
-    show: { default: false, type: Boolean }
+    show: { default: false, type: Boolean },
+    hideOverlay: { default: false, type: Boolean }
   },
   data() {
     return {};
@@ -28,6 +27,12 @@ export default {
 };
 </script>
 
-<style lang="scss">
-//@import '@/assets/styles/GlobalVariables.scss';
+<style lang="scss" scoped>
+.close-button {
+  position: absolute;
+  right: 30px;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+}
 </style>
