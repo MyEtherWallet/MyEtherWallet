@@ -24,6 +24,7 @@
             :selected-provider="selectedProvider"
             :swap-details="swapDetails"
             :current-address="currentAddress"
+            :swap="swap"
             @swapStarted="resetSwapState"
           />
 
