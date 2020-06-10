@@ -2,6 +2,7 @@
 
 ### Bug
 
+- cx guard [#2422](https://github.com/MyEtherWallet/MyEtherWallet/pull/2422)
 - Fix text mixup [#2420](https://github.com/MyEtherWallet/MyEtherWallet/pull/2420)
 - Fix email validation [#2421](https://github.com/MyEtherWallet/MyEtherWallet/pull/2421)
 - Fix some cx bugs [#2429](https://github.com/MyEtherWallet/MyEtherWallet/pull/2429)
