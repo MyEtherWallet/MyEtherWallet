@@ -1,3 +1,5 @@
+### Release v5.6.5
+
 ### Bug
 
 - Fix text mixup [#2420](https://github.com/MyEtherWallet/MyEtherWallet/pull/2420)
