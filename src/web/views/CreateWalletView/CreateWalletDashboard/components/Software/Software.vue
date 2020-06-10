@@ -1,8 +1,8 @@
 <template>
-  <SuperButton
+  <mew6-flexible-btn
+    :to="{ name: 'HomeCreateWalletKeystore', query: { step: '1' } }"
     class="position--relative"
     outlined
-    :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '1' } }"
   >
     <h6 class="orange--text corner-text font-weight-bold">NOT RECOMMANDED</h6>
     <div class="pr-9">
@@ -15,13 +15,12 @@
         they should only be used in offline settings by experienced users.
       </div>
     </div>
-  </SuperButton>
+  </mew6-flexible-btn>
 </template>
 
 <script>
-import SuperButton from '@/web/components/Buttons/SuperButton';
 export default {
-  components: { SuperButton },
+  components: {},
   data: () => ({})
 };
 </script>

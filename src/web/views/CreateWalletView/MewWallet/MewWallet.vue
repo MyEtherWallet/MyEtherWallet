@@ -78,7 +78,7 @@ export default {
     titleData: {
       textProps: 'white--text',
       toptitle: '',
-      title: 'MEWconnect',
+      title: 'MEWwallet',
       titleMaxWidth: '',
       description:
         'An official, free companion App for MyEtherWallet that helps you secure your funds as never before.',

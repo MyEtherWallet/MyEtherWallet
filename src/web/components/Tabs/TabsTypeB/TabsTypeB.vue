@@ -12,7 +12,7 @@
 <script>
 export default {
   components: {},
-  props: { tabs: { default: () => {}, type: Object } }
+  props: { tabs: { default: () => [], type: Array } }
 };
 </script>
 
