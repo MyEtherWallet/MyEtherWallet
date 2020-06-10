@@ -503,6 +503,9 @@ export default {
   },
   watch: {
     ['gasPrice'](value) {
+      if (!this.selectedProvider) {
+        this.selectedProvider = {};
+      }
       this.swap.updateGasPrice(this.selectedProvider.provider, value);
     },
     ['this.network.type.name']() {

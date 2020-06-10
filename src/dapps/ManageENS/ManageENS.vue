@@ -15,7 +15,7 @@
                 }
               "
             >
-              {{ $t('ens.manage-domain') }}
+              {{ $t('ens.register-domain') }}
             </b-button>
             <b-button
               :class="[
@@ -28,7 +28,7 @@
                 }
               "
             >
-              {{ $t('ens.register-domain') }}
+              {{ $t('ens.manage-domain') }}
             </b-button>
           </div>
         </template>
@@ -50,7 +50,7 @@
       :generate-key-phrase="generateKeyPhrase"
       :set-multi-coin="setMultiCoin"
       :transfer-domain="transferDomain"
-      :tld="parsedTld === '' ? network.type.ens.registrarTLD : parsedTld"
+      :tld="parsedTld === '' ? registrarTLD : parsedTld"
       :network-name="network.type.name"
       :register-fifs-name="registerFifsName"
       :multi-tld="multiTld"
@@ -156,12 +156,16 @@ export default {
       isExpired: false,
       deedValue: '0',
       controllerAddress: '',
-      contractControllerAddress: ''
+      contractControllerAddress: '',
+      registrarControllerContract: {}
     };
   },
   computed: {
     ...mapState('main', ['web3', 'network', 'account', 'gasPrice', 'ens']),
     registrarTLD() {
+      if (!this.network.type || !this.network.type.ens) {
+        return '';
+      }
       return this.network.type.ens.registrarTLD;
     },
     headerContext() {
