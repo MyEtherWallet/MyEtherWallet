@@ -178,6 +178,8 @@ import {
   BCVAULT as BC_VAULT
 } from '@/wallets/bip44/walletTypes';
 
+import tokenWorker from 'worker-loader!@/workers/token.worker.js';
+
 import ExpiryAbi from './expiryAbi.js';
 
 const ENS_TOKEN_ADDRESS = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
@@ -761,6 +763,18 @@ export default {
           this.getHighestGas();
           this.getBlockUpdater().then(_sub => {
             this.pollBlock = _sub;
+          });
+
+          // const objToPass = {
+          //   url: this.network.url,
+          //   chainID: this.network.type.chainID,
+          //   address: this.address
+          // };
+
+          const worker = new tokenWorker();
+          worker.postMessage({
+            type: 'getTokens',
+            data: [this.network, this.address]
           });
         }
       }
