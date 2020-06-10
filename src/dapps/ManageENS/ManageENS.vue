@@ -15,7 +15,7 @@
                 }
               "
             >
-              {{ $t('ens.manage-domain') }}
+              {{ $t('ens.register-domain') }}
             </b-button>
             <b-button
               :class="[
@@ -28,7 +28,7 @@
                 }
               "
             >
-              {{ $t('ens.register-domain') }}
+              {{ $t('ens.manage-domain') }}
             </b-button>
           </div>
         </template>
@@ -50,7 +50,7 @@
       :generate-key-phrase="generateKeyPhrase"
       :set-multi-coin="setMultiCoin"
       :transfer-domain="transferDomain"
-      :tld="parsedTld === '' ? network.type.ens.registrarTLD : parsedTld"
+      :tld="parsedTld === '' ? registrarTLD : parsedTld"
       :network-name="network.type.name"
       :register-fifs-name="registerFifsName"
       :multi-tld="multiTld"
@@ -163,12 +163,16 @@ export default {
       controllerAddress: '',
       contractControllerAddress: '',
       contentHash: '',
-      ipfsProcessing: false
+      ipfsProcessing: false,
+      registrarControllerContract: {}
     };
   },
   computed: {
     ...mapState('main', ['web3', 'network', 'account', 'gasPrice', 'ens']),
     registrarTLD() {
+      if (!this.network.type || !this.network.type.ens) {
+        return '';
+      }
       return this.network.type.ens.registrarTLD;
     },
     headerContext() {
@@ -377,7 +381,7 @@ export default {
           value: 0
         };
         this.web3.eth.sendTransaction(obj).catch(err => {
-          Toast.responseHandler(err, false);
+          Toast.responseHandler(err, Toast.ERROR);
         });
       } else {
         Toast.responseHandler(this.$t('ens.error.not-the-owner'), Toast.ERROR);
@@ -432,7 +436,7 @@ export default {
         return setControllerTx;
       }
       this.web3.eth.sendTransaction(setControllerTx).catch(err => {
-        Toast.responseHandler(err, false);
+        Toast.responseHandler(err, Toast.ERROR);
       });
     },
     transferDomain(toAddress) {
@@ -560,7 +564,7 @@ export default {
         gas: 100000
       };
       web3.eth.sendTransaction(setAddrTx).catch(err => {
-        Toast.responseHandler(err, false);
+        Toast.responseHandler(err, Toast.ERROR);
       });
     },
     async registerFifsName() {
@@ -1087,7 +1091,9 @@ export default {
         gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed(),
         value: 0
       };
-      this.web3.eth.sendTransaction(tx);
+      this.web3.eth.sendTransaction(tx).catch(err => {
+        Toast.responseHandler(err, Toast.ERROR);
+      });
     },
     updateSecretPhrase(e) {
       this.secretPhrase = e;
