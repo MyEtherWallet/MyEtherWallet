@@ -8,23 +8,21 @@
         order to access your new wallet. And you are done!
       </p>
       <div class="d-flex align-center">
-        <mew6-white-sheet
-          size="x-large"
-          buttonclass="button--green-border"
+        <mew6-std-btn
           class="mr-3"
-          :minwidth="false"
-          :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '2' } }"
+          min-width="0"
+          :to="{ name: 'HomeCreateWalletMewWallet', query: { step: '2' } }"
         >
           Back
-        </mew6-white-sheet>
-        <mew6-white-sheet size="x-large" buttonclass="button--green">
+        </mew6-std-btn>
+        <mew6-std-btn min-width="0">
           Scan &amp; Access
-        </mew6-white-sheet>
+        </mew6-std-btn>
       </div>
       <p class="mt-4 mb-0">
         Need more help?
         <a
-          class="emerald--text text-decoration--none font-weight-bold"
+          class="emerald--text text-decoration--none font-weight-medium"
           href="https://www.mewtopia.com/"
           target="_blank"
           >Watch tutorial</a

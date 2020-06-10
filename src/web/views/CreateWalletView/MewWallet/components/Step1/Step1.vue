@@ -22,21 +22,20 @@
         >. Continue if you have already installed the App.
       </p>
       <div class="d-flex align-center">
-        <mew6-white-sheet
-          size="x-large"
-          buttonclass="button--green"
-          :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '2' } }"
+        <mew6-std-btn
+          :to="{ name: 'HomeCreateWalletMewWallet', query: { step: '2' } }"
         >
           Continue
-        </mew6-white-sheet>
+        </mew6-std-btn>
       </div>
       <p class="mt-4 mb-0">
         Already knew how to do it?
         <router-link
-          class="text-decoration--none orange--text font-weight-bold"
+          class="text-decoration--none orange--text font-weight-medium"
           :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '3' } }"
-          >Skip</router-link
         >
+          Skip
+        </router-link>
       </p>
     </v-col>
     <v-col cols="6" class="pb-0">

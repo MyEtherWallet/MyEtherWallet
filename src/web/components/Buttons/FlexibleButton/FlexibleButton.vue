@@ -1,10 +1,10 @@
 <template>
-  <div class="mew6-component--super-button">
+  <div class="mew6-component--flexible-button">
     <v-sheet
       :color="outlined ? 'transparent' : 'white'"
       class="text-transform--initial pa-10"
       :class="outlined ? 'outlined' : ''"
-      :to="to"
+      @click="changeRoute"
     >
       <slot />
     </v-sheet>
@@ -17,19 +17,24 @@ export default {
     to: { default: () => {}, type: Object },
     outlined: { default: false, type: Boolean }
   },
-  data() {
-    return {};
+  data: () => ({}),
+  methods: {
+    changeRoute() {
+      if (this.to) {
+        this.$router.push(this.to);
+      }
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.mew6-component--super-button {
+.mew6-component--flexible-button {
   .v-sheet {
     border-radius: 10px;
   }
 }
-.mew6-component--super-button .outlined {
+.mew6-component--flexible-button .outlined {
   border-left-color: white !important;
   border-right-color: white !important;
   border-top-color: white !important;

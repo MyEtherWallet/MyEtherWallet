@@ -1,6 +1,6 @@
 <template>
-  <SuperButton
-    :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '1' } }"
+  <mew6-flexible-btn
+    :to="{ name: 'HomeCreateWalletMewWallet', query: { step: '1' } }"
   >
     <div class="d-flex align-center">
       <div class="pr-9">
@@ -21,13 +21,12 @@
         />
       </div>
     </div>
-  </SuperButton>
+  </mew6-flexible-btn>
 </template>
 
 <script>
-import SuperButton from '@/web/components/Buttons/SuperButton';
 export default {
-  components: { SuperButton },
+  components: {},
   data: () => ({})
 };
 </script>

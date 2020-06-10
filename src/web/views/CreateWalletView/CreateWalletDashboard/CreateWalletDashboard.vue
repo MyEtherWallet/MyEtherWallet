@@ -17,18 +17,11 @@
     </BlockTitle>
 
     <v-sheet color="transparent" max-width="650px" class="mx-auto">
-      <MEWwallet class="mb-5" />
-      <MEWcx class="mb-5" />
-      <Software />
-      <div class="my-4" />
-      <router-link
-        v-if="false"
-        :to="{ name: 'HomeCreateWalletKeystore', query: { step: '1' } }"
-      >
-      </router-link>
+      <MEWwallet class="cursor--pointer user-select--none mb-5" />
+      <MEWcx class="cursor--pointer user-select--none mb-5" />
+      <Software class="cursor--pointer user-select--none" />
     </v-sheet>
     <div class="py-12" />
-    <div class="py-8" />
   </div>
 </template>
 
