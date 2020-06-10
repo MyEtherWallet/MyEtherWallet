@@ -286,24 +286,24 @@ export default {
       type: BigNumber,
       default: toBigNumber(0)
     },
-    priceService: {
-      type: Object,
-      default: function () {
-        return {};
-      }
-    },
-    cdpService: {
-      type: Object,
-      default: function () {
-        return {};
-      }
-    },
-    proxyService: {
-      type: Object,
-      default: function () {
-        return {};
-      }
-    },
+    // priceService: {
+    //   type: Object,
+    //   default: function () {
+    //     return {};
+    //   }
+    // },
+    // cdpService: {
+    //   type: Object,
+    //   default: function () {
+    //     return {};
+    //   }
+    // },
+    // proxyService: {
+    //   type: Object,
+    //   default: function () {
+    //     return {};
+    //   }
+    // },
     updated: {
       type: Number,
       default: 0
@@ -312,7 +312,7 @@ export default {
   data() {
     return {
       currentCdpLoaded: false,
-      activeCdp: {},
+      // activeCdp: {},
       loaded: false,
       ethQty: 0,
       daiQty: 0,
@@ -519,7 +519,6 @@ export default {
       this.getTotalDebt();
     },
     stabilityFee() {
-      console.log(this.emptyMakerCreated); // todo remove dev item
       if (this.emptyMakerCreated) {
         return this.makerCDP.stabilityFee;
       }

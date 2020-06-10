@@ -99,11 +99,11 @@ export default class MakerCdpBase {
   }
 
   get collateralStatus() {
-    if (this.collateralizationRatio.gte(this.liquidationRatio.plus(0.5))) {
+    if (this._collateralizationRatio.gte(this.liquidationRatio.plus(0.5))) {
       return 'green';
     } else if (
-      this.collateralizationRatio.gte(this.liquidationRatio.plus(0.25)) &&
-      this.collateralizationRatio.lte(this.liquidationRatio.plus(0.5))
+      this._collateralizationRatio.gte(this.liquidationRatio.plus(0.25)) &&
+      this._collateralizationRatio.lte(this.liquidationRatio.plus(0.5))
     ) {
       return 'orange';
     }
@@ -127,6 +127,9 @@ export default class MakerCdpBase {
 
   get collateralizationRatio() {
     try {
+      if (this._collateralizationRatio._amount) {
+        return this._collateralizationRatio._amount;
+      }
       return this._collateralizationRatio.toBigNumber();
     } catch (e) {
       return '--';
@@ -134,10 +137,11 @@ export default class MakerCdpBase {
   }
 
   get _collateralizationRatio() {
-    return daiMath.collateralizationRatio(
+    const value = daiMath.collateralizationRatio(
       this._collateralValue,
       this._debtValue
     );
+    return value;
   }
 
   get cdpService() {
@@ -335,9 +339,6 @@ export default class MakerCdpBase {
     const rawType = this.mcdManager
       .get('mcd:cdpType')
       .getCdpType(null, this.cdpType);
-    console.log('minSafeCollateralAmount', rawType); // todo remove dev item
-    console.log('minSafeCollateralAmount', rawType.liquidationRatio._amount.toString()); // todo remove dev item
-    console.log('minSafeCollateralAmount', rawType.price._amount.toString()); // todo remove dev item
 
     return daiMath
       .minSafeCollateralAmount(

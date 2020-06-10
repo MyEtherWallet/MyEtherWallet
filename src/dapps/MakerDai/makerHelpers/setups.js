@@ -170,7 +170,6 @@ export async function getValuesForManage(cdpId) {
   const currentCdp = this.activeCdps[cdpId];
   this.currentCdp = currentCdp;
   const systemValues = this.systemValues;
-  console.log('getValuesForManage', currentCdp, systemValues); // todo remove dev item
   return {
     ...systemValues,
     cdpId: cdpId,
@@ -188,7 +187,7 @@ export async function getValuesForManage(cdpId) {
     ethCollateralNum: currentCdp.ethCollateral,
     zeroDebt: currentCdp.zeroDebt,
     cdpsWithType: this.cdpsWithType,
-    _systemData: this._systemData,
+    // _systemData: this._systemData,
     baseStabilityFee: this.baseStabilityFee
   };
 }
