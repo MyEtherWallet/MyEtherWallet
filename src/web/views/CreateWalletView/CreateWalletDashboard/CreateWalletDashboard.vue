@@ -17,14 +17,14 @@
     </BlockTitle>
 
     <v-sheet color="transparent" max-width="650px" class="mx-auto">
-      <MEWconnect class="mb-5" />
-      <MEWconnect />
+      <MEWwallet class="mb-5" />
+      <MEWcx class="mb-5" />
+      <Software />
       <div class="my-4" />
       <router-link
         v-if="false"
         :to="{ name: 'HomeCreateWalletKeystore', query: { step: '1' } }"
       >
-        <Software />
       </router-link>
     </v-sheet>
     <div class="py-12" />
@@ -34,12 +34,13 @@
 
 <script>
 import BlockTitle from '@/web/components/BlockTitle';
-import MEWconnect from './components/MEWconnect';
+import MEWwallet from './components/MEWwallet';
+import MEWcx from './components/MEWcx';
 import Software from './components/Software';
 
 export default {
   name: 'CreateNewWallet',
-  components: { BlockTitle, MEWconnect, Software },
+  components: { BlockTitle, MEWwallet, MEWcx, Software },
   data: () => ({
     titleData: {
       textProps: 'white--text',

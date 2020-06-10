@@ -1,6 +1,6 @@
 <template>
   <div class="mew6-component--icon-secure position--relative">
-    <v-icon color="orange">mdi-alert</v-icon>
+    <v-icon color="orange" class="icon-outer1">mdi-alert</v-icon>
   </div>
 </template>
 
@@ -11,10 +11,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.icon-check {
-  position: absolute;
-  top: 5px;
-  left: 7px;
-  font-size: 14px;
+.icon-outer {
+  font-size: 20px;
 }
 </style>

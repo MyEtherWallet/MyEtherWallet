@@ -1,21 +1,18 @@
 <template>
-  <SuperButton>
-    <div class="border--white border-radius--10px py-8 px-10">
-      <div class="d-flex align-center">
-        <div class="white--text headline font-weight-bold mb-2 mr-2">
-          Software
-        </div>
-        <p class="mb-1 orange--text font-italic">
-          (Keystore files / Mnemonic phrase)
-        </p>
+  <SuperButton
+    class="position--relative"
+    outlined
+    :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '1' } }"
+  >
+    <h6 class="orange--text corner-text font-weight-bold">NOT RECOMMANDED</h6>
+    <div class="pr-9">
+      <div class="d-flex align-center mb-2">
+        <h4 class="mr-2 font-weight-bold white--text">Software</h4>
+        <mew6-icon-warning />
       </div>
-      <p class="white--text mb-4">
-        Ipsum consetetur sit dolores ipsum consetetur diam et. Elitr magna ipsum
-        aliquyam magna at. Consetetur sit dolor eos eirmod amet.
-      </p>
-      <div class="d-flex align-center">
-        <v-icon color="orange" class="mr-1">mdi-alert</v-icon>
-        <p class="ma-0 orange--text font-weight-bold">Not recommanded</p>
+      <div class="white--text">
+        Keystore files / Mnemonic phrase is highly sensitive information, and
+        they should only be used in offline settings by experienced users.
       </div>
     </div>
   </SuperButton>
@@ -28,3 +25,11 @@ export default {
   data: () => ({})
 };
 </script>
+
+<style lang="scss" scoped>
+.corner-text {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+}
+</style>
