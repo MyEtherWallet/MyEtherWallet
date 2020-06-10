@@ -368,7 +368,7 @@ export default {
           value: 0
         };
         this.web3.eth.sendTransaction(obj).catch(err => {
-          Toast.responseHandler(err, false);
+          Toast.responseHandler(err, Toast.ERROR);
         });
       } else {
         Toast.responseHandler(this.$t('ens.error.not-the-owner'), Toast.ERROR);
@@ -423,7 +423,7 @@ export default {
         return setControllerTx;
       }
       this.web3.eth.sendTransaction(setControllerTx).catch(err => {
-        Toast.responseHandler(err, false);
+        Toast.responseHandler(err, Toast.ERROR);
       });
     },
     transferDomain(toAddress) {
@@ -551,7 +551,7 @@ export default {
         gas: 100000
       };
       web3.eth.sendTransaction(setAddrTx).catch(err => {
-        Toast.responseHandler(err, false);
+        Toast.responseHandler(err, Toast.ERROR);
       });
     },
     async registerFifsName() {
@@ -969,7 +969,9 @@ export default {
         gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed(),
         value: 0
       };
-      this.web3.eth.sendTransaction(tx);
+      this.web3.eth.sendTransaction(tx).catch(err => {
+        Toast.responseHandler(err, Toast.ERROR);
+      });
     },
     updateSecretPhrase(e) {
       this.secretPhrase = e;
