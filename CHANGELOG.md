@@ -2,6 +2,19 @@
 
 - Ipfs implementation for ENS manager [#2412](https://github.com/MyEtherWallet/MyEtherWallet/pull/2412)
 
+### Release v5.6.5
+
+### Bug
+
+- cx guard [#2422](https://github.com/MyEtherWallet/MyEtherWallet/pull/2422)
+- Fix text mixup [#2420](https://github.com/MyEtherWallet/MyEtherWallet/pull/2420)
+- Fix email validation [#2421](https://github.com/MyEtherWallet/MyEtherWallet/pull/2421)
+- Fix some cx bugs [#2429](https://github.com/MyEtherWallet/MyEtherWallet/pull/2429)
+- Sentry fixes s [#2433](https://github.com/MyEtherWallet/MyEtherWallet/pull/2433)
+- Sentry fixes y [#2431](https://github.com/MyEtherWallet/MyEtherWallet/pull/2431)
+- Sentry fixes k [#2430](https://github.com/MyEtherWallet/MyEtherWallet/pull/2430)
+- Sentry fixes j [#2432](https://github.com/MyEtherWallet/MyEtherWallet/pull/2432)
+
 ### Release v5.6.4
 
 ### Feature

@@ -221,6 +221,7 @@ import { providerNames, fiat } from '@/partners';
 
 import ProviderInfoList from './ProviderInfoList';
 import { mapState } from 'vuex';
+import { Toast } from '@/helpers';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -369,13 +370,21 @@ export default {
     loadingData(val) {
       if (this.providerSelectedName !== '' && !val) {
         this.$nextTick(() => {
-          this.$emit('selectedProvider', this.providerSelectedName);
-          const clickedEl = document.getElementsByClassName(
-            this.providerSelectedName
-          )[0];
-          clickedEl.classList.add('radio-selected');
-          const inputEl = document.getElementById(this.providerSelectedName);
-          inputEl.checked = true;
+          try {
+            const clickedEl = document.getElementsByClassName(
+              this.providerSelectedName
+            )[0];
+            clickedEl.classList.add('radio-selected');
+            const inputEl = document.getElementById(this.providerSelectedName);
+            inputEl.checked = true;
+            this.$emit('selectedProvider', this.providerSelectedName);
+          } catch (e) {
+            this.$emit('selectedProvider', '');
+            Toast.responseHandler(
+              this.$t('swap.notice.selected-provider-cleared'),
+              1
+            );
+          }
         });
       }
     }
