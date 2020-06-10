@@ -8,10 +8,10 @@
           <h4 class="mr-2 font-weight-bold">Get MEWwallet</h4>
           <mew6-icon-secure />
         </div>
-        <p>
+        <div>
           MEW Brings a hardware wallet style security to your iOS or Android
           smartphone, helping you to secure your funds as never before.
-        </p>
+        </div>
         <div class="mt-6">
           <img
             height="30"
@@ -34,9 +34,9 @@
       </div>
       <div class="side-image">
         <img
-          height="170"
-          src="@/assets/images/snippets/mobile/mobile-mewconnect-no-hardware.png"
-          alt="MEW wallet"
+          height="200"
+          src="@/assets/images/snippets/bg-mew-wallet.png"
+          alt="MEWwallet"
         />
       </div>
     </div>
@@ -54,5 +54,6 @@ export default {
 <style lang="scss" scoped>
 .side-image {
   margin-bottom: -46px;
+  width: 300px;
 }
 </style>
