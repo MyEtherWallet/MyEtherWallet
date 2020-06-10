@@ -16,15 +16,11 @@ export default event => {
   const errorValues = Object.keys(ERRORS);
   const warningValues = Object.keys(WARNING);
   const foundError = errorValues.find(item => {
-    if (event.value) {
-      return event.value.includes(item);
-    }
+    return event.value && event.value.includes(item);
   });
 
   const foundWarning = warningValues.find(item => {
-    if (event.value) {
-      return event.value.includes(item);
-    }
+    return event.value && event.value.includes(item);
   });
 
   if (foundError) {
