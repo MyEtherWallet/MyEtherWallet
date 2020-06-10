@@ -186,7 +186,7 @@ export default {
         value: item.price
       };
       this.web3.eth.sendTransaction(raw).catch(err => {
-        Toast.responseHandler(err, false);
+        Toast.responseHandler(err, Toast.ERROR);
       });
     }
   }
