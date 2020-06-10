@@ -1,6 +1,8 @@
 ### Bug
 
 - Fix email validation [#2421](https://github.com/MyEtherWallet/MyEtherWallet/pull/2421)
+- Sentry fixes y [#2431](https://github.com/MyEtherWallet/MyEtherWallet/pull/2431)
+- Sentry fixes k [#2430](https://github.com/MyEtherWallet/MyEtherWallet/pull/2430)
 
 ### Release v5.6.4
 
