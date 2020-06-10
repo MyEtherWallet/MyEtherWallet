@@ -776,6 +776,10 @@ export default {
             type: 'getTokens',
             data: [this.network, this.address]
           });
+
+          worker.onmessage = e => {
+            console.log(e);
+          };
         }
       }
     }),
