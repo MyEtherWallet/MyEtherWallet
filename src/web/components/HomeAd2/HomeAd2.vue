@@ -9,7 +9,7 @@
           <p class="white--text ma-0">
             Still don't know what MEW is?
             <a
-              class="color--inherit text-decoration--underline"
+              class="color--inherit font-weight-medium text-decoration--underline"
               href="https://kb.myetherwallet.com/"
               target="_blank"
             >
