@@ -185,7 +185,7 @@ export default {
   },
   methods: {
     registerDomain() {
-      this.$router.push({ path: 'unstoppable/buy/payment-method' });
+      this.$router.push({ name: 'payWithCrypto' });
     },
     clearInput() {
       this.localDomainName = '';

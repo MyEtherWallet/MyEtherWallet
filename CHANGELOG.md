@@ -1,5 +1,22 @@
 ### Bug
 
+- Sentry fixes y [#2431](https://github.com/MyEtherWallet/MyEtherWallet/pull/2431)
+- Sentry fixes k [#2430](https://github.com/MyEtherWallet/MyEtherWallet/pull/2430)
+
+### Release v5.6.4
+
+### Feature
+
+- Unstoppable domains combined [#2353](https://github.com/MyEtherWallet/MyEtherWallet/pull/2353)
+
+### Devop
+
+- Modify Simplex order flow [#2409](https://github.com/MyEtherWallet/MyEtherWallet/pull/2409)
+
+### Bug
+
+- Also display token icon if submitted and is not found in the masterfile [#2404](https://github.com/MyEtherWallet/MyEtherWallet/pull/2404)
+- Sentry fixes s [#2406](https://github.com/MyEtherWallet/MyEtherWallet/pull/2406)
 - Sentry fixes k [#2411](https://github.com/MyEtherWallet/MyEtherWallet/pull/2411)
 
 ### Release v5.6.3
