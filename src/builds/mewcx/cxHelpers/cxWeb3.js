@@ -7,7 +7,9 @@ if (
   (window.hasOwnProperty('ethereum') && window.ethereum)
 ) {
   if (
-    (window.web3 && window.web3.currentProvider && window.web3.currentProvider.isMew) ||
+    (window.web3 &&
+      window.web3.currentProvider &&
+      window.web3.currentProvider.isMew) ||
     (window.ethereum && window.ethereum.isMew)
   ) {
     window.dispatchEvent(event);
