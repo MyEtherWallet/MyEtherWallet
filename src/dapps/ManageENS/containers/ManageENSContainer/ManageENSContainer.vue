@@ -1,6 +1,9 @@
 <template>
   <div class="manage-ens-container">
-    <h3>{{ $t('ens.manage') }} {{ domainName }}</h3>
+    <div class="title-container">
+      <h3>{{ $t('ens.manage-domain') }}</h3>
+      <h3>{{ domainName }}</h3>
+    </div>
     <div v-show="!isController" class="set-controller-container">
       <i18n path="ens.controller-text" tag="div">
         <b slot="domain">{{ domainName }}</b
@@ -237,7 +240,7 @@
       </div>
     </b-collapse>
     <b-btn v-b-toggle.ipfs class="collapse-open-button" variant="primary">
-      <p>IPFS</p>
+      <p>{{ $t('ens.content-hash') }}</p>
       <i class="when-open fa fa-angle-up fa-lg" />
       <i class="when-closed fa fa-angle-down fa-lg" />
     </b-btn>
@@ -247,9 +250,11 @@
       accordion="manage-ens-accordion"
     >
       <div v-if="ipfsProcessing" class="ipfs-loading">
-        <i class="fa fa-lg fa-spinner fa-spin" />{{ $t('ens.ipfs-processing') }}
+        <i class="fa fa-lg fa-spinner fa-spin" />
+        <h3>{{ $t('ens.ipfs-processing') }}</h3>
+        <p>{{ $t('ens.ipfs-processing-description') }}</p>
       </div>
-      <div v-else>
+      <div v-else class="ipfs-content-container">
         <div v-if="localContentHash !== ''" class="link-to-name">
           <p>
             {{
@@ -266,17 +271,30 @@
             </a>
           </p>
         </div>
+        <form enctype="multipart/form-data" novalidate class="file-upload-form">
+          <input
+            ref="zipInput"
+            type="file"
+            name="file"
+            accept=".zip"
+            @change="fileChange"
+          />
+        </form>
         <div class="form-container">
           <form class="manage-form">
             <div class="input-container">
-              <label for="transferEns">IPFS Hash:</label>
+              <label for="transferEns">
+                <span>{{ $t('ens.content-hash') }}:</span>
+                <p class="file-upload-text" @click.prevent="ipfsClick">
+                  {{ $t('ens.upload-my-website') }}
+                </p>
+              </label>
               <input
                 v-model="localContentHash"
                 type="text"
                 name="transferEns"
-                class="with-static"
+                placeholder="QmVHxRocoWgUChLEvfEyDuuD6qJ4PhdDL2dTLcpUy3dSC2"
               />
-              <span class="static-label"> ipfs:// </span>
             </div>
             <div class="submit-container">
               <button
@@ -284,23 +302,7 @@
                 type="submit"
                 @click.prevent="saveContentHash(localContentHash)"
               >
-                Set IPFS Hash
-              </button>
-            </div>
-          </form>
-        </div>
-        <div class="file-upload-container">
-          <form enctype="multipart/form-data" novalidate>
-            <input
-              ref="zipInput"
-              type="file"
-              name="file"
-              accept=".zip"
-              @change="fileChange"
-            />
-            <div class="submit-container">
-              <button @click.prevent="ipfsClick">
-                Upload your own website
+                {{ $t('ens.set-hash') }}
               </button>
             </div>
           </form>

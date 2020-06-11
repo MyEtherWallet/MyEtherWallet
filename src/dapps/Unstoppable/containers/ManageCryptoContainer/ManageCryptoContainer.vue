@@ -65,12 +65,12 @@
       </div>
     </div>
     <div v-show="!loading" class="ipfs-container">
-      <div v-show="ipfsProcessing">
-        <i class="fa fa-lg fa-spinner fa-spin" />{{
-          $t('unstoppable.ipfs.processing')
-        }}
+      <div v-if="ipfsProcessing" class="ipfs-loading-container">
+        <i class="fa fa-lg fa-spinner fa-spin" />
+        <h3>{{ $t('unstoppable.ipfs.processing') }}</h3>
+        <p>{{ $t('unstoppable.ipfs.processing-description') }}</p>
       </div>
-      <div v-show="!ipfsProcessing">
+      <div v-else>
         <p v-show="ipfsHash !== ''">
           {{
             $t('unstoppable.ipfs.see-website', {
@@ -78,19 +78,13 @@
             })
           }}
         </p>
-        <div class="info-row">
-          <label class="info-title">{{ $t('unstoppable.ipfs.hash') }}</label>
-          <span class="static-span">ipfs://</span>
-          <input
-            v-model="ipfsHash"
-            :class="[ipfsHash === '' ? 'errored' : '']"
-            placeholder="QmWXdjNC362aPDtwHPUE9o2VMqPeNeCQuTBTv1NsKtwypg"
-            type="text"
-          />
-        </div>
-        <div class="save-button-container">
-          <div class="file-upload-container">
-            <form enctype="multipart/form-data" novalidate>
+        <div>
+          <div class="label-container">
+            <form
+              enctype="multipart/form-data"
+              novalidate
+              class="file-upload-container"
+            >
               <input
                 ref="zipInput"
                 type="file"
@@ -99,15 +93,23 @@
                 @change="fileChange"
               />
             </form>
+            <label class="info-title">{{ $t('unstoppable.ipfs.hash') }}</label>
+            <p class="upload-zip" @click="ipfsClick">
+              {{ $t('unstoppable.ipfs.upload') }}
+            </p>
           </div>
-          <button class="upload-zip" @click="ipfsClick()">
-            {{ $t('unstoppable.ipfs.upload') }}
-          </button>
+          <input
+            v-model="ipfsHash"
+            placeholder="QmWXdjNC362aPDtwHPUE9o2VMqPeNeCQuTBTv1NsKtwypg"
+            type="text"
+          />
+        </div>
+        <div class="save-button-container save-ipfs-hash">
           <button
             :class="[ipfsHash === '' ? 'disabled' : '']"
             @click="saveIpfsHash(ipfsHash)"
           >
-            {{ $t('unstoppable.save-changes') }}
+            {{ $t('unstoppable.ipfs.set-hash') }}
           </button>
         </div>
       </div>

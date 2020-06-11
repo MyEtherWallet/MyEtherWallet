@@ -41,11 +41,13 @@
     "stripe-email-placeholder": "Your email"
   },
   "ipfs": {
-    "processing": "Processing File... Please wait for a transaction popup before you leave to make sure your request is processed. After this, you don't have to save your new hash as it has already been saved..",
+    "processing": "Processing File...",
+    "processing-description": "Please wait for a transaction popup before you leave to make sure your request is processed. After this, you don't have to save your new hash as it has already been saved..",
     "see-website": "To see your site, please visit {domainName} on Unstoppable Chrome Extension or Unstoppable's Browser. You can also open the link on Opera browser!",
     "hash": "IPFS Hash",
-    "upload": "Upload your own site",
-    "error-fetching-hash": "Error getting ipfs hash!"
+    "upload": "Upload my website",
+    "error-fetching-hash": "Error getting ipfs hash!",
+    "set-hash": "Set IPFS Hash"
   },
   "register-domain": "Register Domain",
   "manage-domain": "Manage Domain",
