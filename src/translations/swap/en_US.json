@@ -43,7 +43,8 @@
     "retrieve-kyber-rate-failed": "Failed to retrieve Kyber Network rate from {fromCurrency} to {toCurrency}",
     "retrieve-simplex-rate-failed": "Failed to retrieve Simplex rate from {fromCurrency} to {toCurrency}",
     "error-finalizing": "Error while requesting finalized details from provider",
-    "bity-rate-failed": "Failed to retrieve Bity rates"
+    "bity-rate-failed": "Failed to retrieve Bity rates",
+    "selected-provider-cleared": "Selected provider cleared"
   },
   "tag-line": {
     "bity": "Swap ETH, BTC, REP, or sell for fiat using your phone!",

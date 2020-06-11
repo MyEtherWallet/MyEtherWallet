@@ -320,7 +320,7 @@ export default {
         delete json.to;
         json.from = coinbase;
         this.web3.eth.sendTransaction(json).catch(err => {
-          Toast.responseHandler(err, Toast.WARN);
+          Toast.responseHandler(err, Toast.ERROR);
         });
         const contractAddr = bufferToHex(
           generateAddress(toBuffer(coinbase), toBuffer(nonce))

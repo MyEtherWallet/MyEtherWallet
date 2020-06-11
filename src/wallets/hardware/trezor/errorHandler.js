@@ -11,6 +11,8 @@ const ERRORS = {
   'Transport is missing': 'trezorError.transport-missing',
   'EthAppPleaseEnableContractData: Please enable Contract data on the Ethereum app Settings':
     'trezorError.turn-on-contract-data',
+  'Initialize failed: Response of unexpected type: Address. Should be Features':
+    'trezor.initializing-failed',
   Cancelled: 'trezorError.cancelled',
   'Iframe timeout': 'trezor.iframe-timeout',
   'Browser not supported': 'trezor.unsupported-browser',
