@@ -55,6 +55,7 @@ import dexon from './dexon';
 import pht from './pht';
 import ere from './ere';
 import prkl from './prkl';
+import fuse from './fuse';
 
 export {
   akaremote,
@@ -113,5 +114,6 @@ export {
   dexon,
   pht,
   ere,
-  prkl
+  prkl,
+  fuse
 };
