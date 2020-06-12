@@ -12,7 +12,7 @@
           text
           small
           depressed
-          :color="$vuetify.theme.themes.light.emerald"
+          color="emerald"
         >
           <v-icon small class="top-button-icon">mdi-chevron-right</v-icon>
           Ethplorer
@@ -22,7 +22,7 @@
           text
           small
           depressed
-          :color="$vuetify.theme.themes.light.emerald"
+          color="emerald"
         >
           <v-icon small class="top-button-icon">mdi-plus</v-icon>
           Custom Token
@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <table class="tokens-table mt-4" :class="theme">
+    <table class="tokens-table mt-4">
       <thead>
         <tr>
           <td style="width: 45px;"></td>
@@ -89,12 +89,9 @@
             </div>
           </td>
           <td>
-            <mew-button
-              :has-full-width="false"
-              btn-style="outline"
-              title="Trade"
-              button-size="small"
-            />
+            <mew6-std-btn outlined size="small" min-width="0">
+              Trade
+            </mew6-std-btn>
           </td>
         </tr>
       </tbody>

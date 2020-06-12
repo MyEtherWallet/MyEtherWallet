@@ -1,12 +1,13 @@
 <template>
-  <v-sheet>
-    <v-sheet class="px-5 mt-8 mb-4" width="100%">
+  <div>
+    <v-sheet max-width="800px" class="mx-auto border-radius--10px pa-12">
       <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
       <div class="headline font-weight-bold mb-5">Create password</div>
       <PasswdField btnlabel="Create" fldlabel="Password" />
+      <mew6-std-btn @click.native="linkToStep(2)">Next</mew6-std-btn>
     </v-sheet>
-    <NotRecommended class="mx-n6 border-radius-bottom" />
-  </v-sheet>
+    <NotRecommended class="mt-6 border-radius--10px" />
+  </div>
 </template>
 
 <script>
@@ -19,16 +20,10 @@ export default {
   methods: {
     linkToStep(step) {
       this.$router.push({
-        path: '/create-wallet/mewconnect',
+        path: '/create-wallet/keystore',
         query: { step: step }
       });
     }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.border-radius-bottom {
-  border-radius: 0 0 10px 10px;
-}
-</style>
