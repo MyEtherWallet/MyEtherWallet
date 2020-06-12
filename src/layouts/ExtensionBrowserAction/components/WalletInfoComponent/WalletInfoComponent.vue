@@ -122,7 +122,7 @@
               <p class="dollar-amt">
                 {{
                   network.type.name === 'ETH'
-                    ? walletTokensWithBalance.totalWalletBalance
+                    ? totalWalletBalance
                     : fixedEthBalance
                 }}
               </p>
@@ -141,18 +141,16 @@
           </div>
           <div class="wallet-value-container">
             <p class="title">Value of Token</p>
-            <p class="dollar-amt">{{ walletTokensWithBalance.total }}</p>
-            <p class="value">
-              {{ walletTokensWithBalance.tokensWDollarAmtLength }} tokens
+            <p class="dollar-amt">
+              {{ totalTokenAmt }}
             </p>
+            <p class="value">{{ tokensWithDollorAmt.length }} tokens</p>
           </div>
         </div>
         <div
           :class="[
             'view-all-container',
-            walletTokensWithBalance.tokensWDollarAmt.length > 0
-              ? ''
-              : 'disable-token-show'
+            tokensWithDollorAmt.length > 0 ? '' : 'disable-token-show'
           ]"
           @click.stop="showTokens = !showTokens"
         >
@@ -161,7 +159,7 @@
         </div>
       </div>
       <div v-show="showTokens" class="wallet-tokens">
-        <table v-if="walletTokensWithBalance.tokensWDollarAmt.length > 0">
+        <table v-if="tokensWithDollorAmt.length > 0">
           <tr class="table-header">
             <th>
               TOKEN NAME
@@ -183,14 +181,17 @@
             </th>
           </tr>
           <tr
-            v-for="(token, idx) in walletTokensWithBalance.tokensWDollarAmt"
-            :key="token.symbol + `${idx}`"
+            v-for="(token, idx) in tokensWithDollorAmt"
+            :key="token.tokenMew.symbol + `${idx}`"
             class="table-body"
           >
             <td>
               <div class="name-container">
                 <figure v-lazy-load class="token-icon">
-                  <img :src="token.tokenMew.logo" @error="iconFallback" />
+                  <img
+                    :data-url="token.tokenMew.logo.src"
+                    @error="iconFallback"
+                  />
                 </figure>
                 <p>
                   {{ token.tokenMew.name }}
@@ -266,8 +267,10 @@
       :wallet="wallet"
       :usd="usd"
       :nickname="nickname"
-      :wallet-tokens-with-balance="walletTokensWithBalance"
       :file="file"
+      :total-wallet-balance="totalWalletBalance"
+      :total-token-amt="totalTokenAmt"
+      :tokens-w-dollar-amt-length="tokensWithDollorAmt.length"
     />
   </div>
 </template>
@@ -278,20 +281,20 @@ import EditWalletModal from '../EditWalletModal';
 import RemoveWalletModal from '../RemoveWalletModal';
 import { mapState, mapActions } from 'vuex';
 import { Toast, Misc, ExtensionHelpers } from '@/helpers';
-import utils from 'web3-utils';
-import masterFile from '@/master-file.json';
+// import utils from 'web3-utils'
 import PasswordOnlyModal from '../PasswordOnlyModal';
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import { WalletInterface } from '@/wallets';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import VerifyDetailsModal from '../VerifyDetailsModal';
-
+import tokenWorker from 'worker-loader!@/workers/token.worker.js';
 export default {
   components: {
     blockie: Blockie,
     'edit-wallet-modal': EditWalletModal,
     'remove-wallet-modal': RemoveWalletModal,
     'password-only-modal': PasswordOnlyModal,
+
     'verify-details-modal': VerifyDetailsModal
   },
   props: {
@@ -328,25 +331,21 @@ export default {
     page: {
       type: String,
       default: ''
-    },
-    walletToken: {
-      type: Array,
-      default: () => {}
     }
   },
   data() {
     return {
       loading: false,
       tokens: [],
-      localTokenVersion: [],
-      customTokens: [],
-      localCustomTokens: [],
       showTokens: false,
-      masterFile: masterFile,
       favorited: false,
       balanceWarnHidden: true,
       path: 'access',
-      password: ''
+      password: '',
+      tokensWithBalance: [],
+      tokensWithDollorAmt: [],
+      totalTokenAmt: '0',
+      totalWalletBalance: '$ 0.00'
     };
   },
   computed: {
@@ -390,41 +389,52 @@ export default {
     fixedEthBalance() {
       const currencyBalance = new BigNumber(this.balance).toFixed(3);
       return `${currencyBalance} ${this.network.type.currencyName}`;
+    }
+  },
+  watch: {
+    network() {
+      this.getTokens();
     },
-    walletTokensWithBalance() {
-      const tokensWithBalance = this.walletToken.filter(item => {
-        return item.balance !== 'Load' && new BigNumber(item.balance).gt(0);
-      });
-      let totalTokenAmt = new BigNumber(0);
-      const tokensWithDollarAmt = [];
-      tokensWithBalance.forEach(item => {
-        if (this.prices[item.symbol]) {
-          const convertedBalancePrice = new BigNumber(
-            this.prices[item.symbol].quotes.USD.price
-          ).times(item.balance);
-          totalTokenAmt = totalTokenAmt.plus(convertedBalancePrice);
-          tokensWithDollarAmt.push({
-            tokenMew: item,
-            tokenData: this.prices[item.symbol]
-          });
-        }
-      });
+    tokens: {
+      handler: function (newVal) {
+        let totalTokenAmt = new BigNumber(0);
+        this.tokensWithBalance = newVal.filter(item => {
+          return item.balance !== 'Load' && new BigNumber(item.balance).gt(0);
+        });
 
-      const currencyDollar = new BigNumber(this.balance).times(this.usd);
-      const totalWalletBalance = currencyDollar.plus(totalTokenAmt).toNumber();
+        this.tokensWithDollorAmt = this.tokensWithBalance.filter(item => {
+          if (this.prices[item.symbol]) {
+            return {
+              tokenMew: item,
+              tokenData: this.prices[item.symbol]
+            };
+          }
+        });
 
-      return {
-        tokens: tokensWithBalance,
-        length: tokensWithBalance.length,
-        tokensWDollarAmt: tokensWithDollarAmt,
-        tokensWDollarAmtLength: tokensWithDollarAmt.length,
-        total: this.toDollar(totalTokenAmt.toNumber()),
-        totalWalletBalance: this.toDollar(totalWalletBalance)
-      };
+        this.tokensWithBalance.forEach(item => {
+          if (this.prices[item.symbol]) {
+            const convertedBalancePrice = new BigNumber(
+              this.prices[item.symbol].quotes.USD.price
+            ).times(item.balance);
+            totalTokenAmt = totalTokenAmt.plus(convertedBalancePrice);
+          }
+        });
+
+        this.totalTokenAmt = totalTokenAmt.toString();
+        const currencyDollar = new BigNumber(this.balance).times(this.usd);
+        const totalWalletBalance = currencyDollar
+          .plus(this.totalTokenAmt)
+          .toNumber();
+        this.totalWalletBalance = this.toDollar(totalWalletBalance);
+        console.log('you got here right?');
+        this.$forceUpdate();
+      },
+      deep: true
     }
   },
   created() {
     window.chrome.storage.onChanged.addListener(this.checkIfFavorited);
+    this.getTokens();
   },
   mounted() {
     window.chrome.storage.sync.get('favorites', this.checkIfFavorited);
@@ -587,34 +597,19 @@ export default {
         }
       });
     },
-    retrieveLogo(address, symbol) {
-      const networkMasterFile = this.masterFile.data.filter(item => {
-        return (
-          item.network.toLowerCase() === this.network.type.name.toLowerCase()
-        );
+    getTokens() {
+      const _self = this;
+      _self.tokens = [];
+      const worker = new tokenWorker();
+      worker.postMessage({
+        type: 'getTokens',
+        data: [_self.network, _self.address]
       });
-      try {
-        // eslint-disable-next-line
-        const image = require(`@/assets/images/currency/coins/AllImages/${symbol}.svg`);
-        return image;
-      } catch (e) {
-        const foundToken = networkMasterFile.find(item => {
-          return (
-            utils.toChecksumAddress(item.contract_address) ===
-            utils.toChecksumAddress(address)
-          );
-        });
 
-        if (foundToken) {
-          return foundToken.icon;
-        }
-        try {
-          // eslint-disable-next-line
-          return require(`@/assets/images/networks/${symbol.toLowerCase()}`);
-        } catch (e) {
-          return this.network.type.icon;
-        }
-      }
+      worker.onmessage = e => {
+        console.log('got tokens bro', e.data);
+        _self.tokens = e.data;
+      };
     },
     isGreateThanZero(val) {
       return new BigNumber(val).gt(0);

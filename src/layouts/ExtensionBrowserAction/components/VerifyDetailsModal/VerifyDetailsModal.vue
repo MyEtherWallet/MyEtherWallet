@@ -42,7 +42,7 @@
               <div class="wallet-value-container">
                 <p class="wallet-title">Total Wallet Value</p>
                 <p v-if="network.type.name === 'ETH'" class="dollar-amt">
-                  {{ walletTokensWithBalance.totalWalletBalance }}
+                  {{ totalWalletBalance }}
                 </p>
               </div>
             </div>
@@ -56,10 +56,8 @@
             </div>
             <div class="wallet-value-container">
               <p class="wallet-title">Value of Token</p>
-              <p class="dollar-amt">{{ walletTokensWithBalance.total }}</p>
-              <p class="value">
-                {{ walletTokensWithBalance.tokensWDollarAmtLength }} tokens
-              </p>
+              <p class="dollar-amt">{{ totalTokenAmt }}</p>
+              <p class="value">{{ tokensWDollarAmtLength }} tokens</p>
             </div>
           </div>
         </div>
@@ -123,9 +121,17 @@ export default {
       type: String,
       default: ''
     },
-    walletTokensWithBalance: {
-      type: Object,
-      default: () => {}
+    totalWalletBalance: {
+      type: String,
+      default: '$ 0.00'
+    },
+    totalTokenAmt: {
+      type: String,
+      default: '$ 0.00'
+    },
+    tokensWDollarAmtLength: {
+      type: Number,
+      default: 0
     },
     file: {
       type: Object,

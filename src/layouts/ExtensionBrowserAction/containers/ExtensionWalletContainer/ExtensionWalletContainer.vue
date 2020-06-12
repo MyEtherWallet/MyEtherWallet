@@ -88,7 +88,6 @@
                     :wallet="wallet.wallet"
                     :nickname="wallet.nickname"
                     :wallet-type="wallet.type"
-                    :wallet-token="wallet.tokenBalance"
                   />
                 </div>
               </div>
@@ -129,7 +128,6 @@
                     :wallet="wallet.wallet"
                     :nickname="wallet.nickname"
                     :wallet-type="wallet.type"
-                    :wallet-token="wallet.tokenBalance"
                   />
                 </div>
               </div>
@@ -170,9 +168,7 @@ import WalletTitleAndSearchComponent from '../../components/WalletTitleAndSearch
 import AddWalletModal from '../../components/AddWalletModal';
 import ExtensionBrowserActionWrapper from '../../wrappers/ExtensionBrowserActionWrapper';
 import { ExtensionHelpers, Misc, Toast } from '@/helpers';
-import TokenBalance from '@myetherwallet/eth-token-balance';
-import sortByBalance from '@/helpers/sortByBalance.js';
-import masterFile from '@/_generated/master-file.json';
+
 export default {
   components: {
     'watch-only-modal': WatchOnlyModal,
@@ -256,19 +252,6 @@ export default {
       return `$ ${new BigNumber(this.ethPrice)
         .times(this.totalBalance)
         .toFixed(2)}`;
-    },
-    networkTokens() {
-      const newTokenObj = {};
-      const matchedNetwork = masterFile.filter(item => {
-        return (
-          item.network.toLowerCase() === this.network.type.name.toLowerCase()
-        );
-      });
-      matchedNetwork.forEach(item => {
-        newTokenObj[toChecksumAddress(item.contract_address)] = item;
-      });
-
-      return newTokenObj;
     }
   },
   watch: {
@@ -305,20 +288,6 @@ export default {
     }
   },
   methods: {
-    iconFetch(address) {
-      const token = this.networkTokens[toChecksumAddress(address)];
-      if (token) {
-        const tokenSrc =
-          token.icon_png !== ''
-            ? `https://img.mewapi.io/?image=${token.icon_png}&width=50&height=50&fit=scale-down`
-            : token.icon !== ''
-            ? `https://img.mewapi.io/?image=${token.icon}&width=50&height=50&fit=scale-down`
-            : this.network.type.icon;
-        return tokenSrc;
-      }
-
-      return this.network.type.icon;
-    },
     async processAccounts(accs) {
       this.totalBalance = '0';
       this.loading = true;
@@ -333,9 +302,6 @@ export default {
           account['type'] = parsedItemWallet.type;
           account['address'] = address;
           account['nickname'] = parsedItemWallet.nick;
-          await this.setToken(address).then(res => {
-            account['tokenBalance'] = res;
-          });
           await this.getBalance(address)
             .then(res => {
               const locBalance = web3utils.fromWei(res);
@@ -366,41 +332,6 @@ export default {
         this.showMyWallets = 1;
       }
       this.loading = false;
-    },
-    setToken(address) {
-      const tokens = [];
-      const tb = new TokenBalance(this.web3.currentProvider);
-
-      return tb
-        .getBalance(address, true, true, true, 0, {
-          gas: '0x11e1a300'
-        })
-        .then(res => {
-          res.forEach(token => {
-            const balance = token.balance;
-            delete token.balance;
-            token.balance = new BigNumber(balance).gt(0)
-              ? new BigNumber(balance)
-                  .div(new BigNumber(10).pow(token.decimals))
-                  .toFixed(3)
-              : 0;
-            token.address = token.addr;
-            token.logo = this.iconFetch(token.addr);
-            delete token.addr;
-            tokens.push(token);
-          });
-          this.loading = false;
-          return tokens.sort(sortByBalance);
-        })
-        .catch(() => {
-          this.network.type.tokens.map(token => {
-            token.balance = 'Load';
-            token['logo'] = this.iconFetch(token.address);
-            tokens.push(token);
-          });
-          this.loading = false;
-          return tokens;
-        });
     },
     getBalance(addr) {
       return this.web3.eth.getBalance(addr);
