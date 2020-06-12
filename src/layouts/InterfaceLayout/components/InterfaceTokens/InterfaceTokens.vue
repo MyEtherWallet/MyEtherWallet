@@ -47,7 +47,7 @@
             >
               <td class="name-and-icon-container">
                 <figure v-lazy-load class="token-icon">
-                  <img :data-url="iconFetch(token)" @error="iconFallback" />
+                  <img :data-url="token.logo.src" @error="iconFallback" />
                 </figure>
                 {{ token.symbol }}
               </td>
@@ -186,22 +186,6 @@ export default {
     }
   },
   methods: {
-    iconFetch(tok) {
-      const token = this.networkTokens[toChecksumAddress(tok.address)];
-      if (token) {
-        const tokenSrc =
-          token.icon_png !== ''
-            ? `https://img.mewapi.io/?image=${token.icon_png}&width=50&height=50&fit=scale-down`
-            : token.icon !== ''
-            ? `https://img.mewapi.io/?image=${token.icon}&width=50&height=50&fit=scale-down`
-            : this.network.type.icon;
-        return tokenSrc;
-      } else if (tok.logo && tok.logo.src && tok.logo.src !== '') {
-        return `https://img.mewapi.io/?image=${token.logo.src}&width=50&height=50&fit=scale-down`;
-      }
-
-      return this.network.type.icon;
-    },
     iconFallback(evt) {
       evt.target.src = this.network.type.icon;
     },

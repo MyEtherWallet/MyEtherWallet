@@ -3,6 +3,7 @@ import TokenBalance from '@myetherwallet/eth-token-balance';
 import masterFile from '@/_generated/master-file.json';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
+import sortByBalance from '@/helpers/sortByBalance.js';
 
 const tokenContractSupports = [1, 3];
 
@@ -81,7 +82,16 @@ const getTokens = async (network, address) => {
     const combinedIcons = combineTokens(tokens, network);
     const addIcons = addIconsToTokens(combinedIcons, network);
     const formatBalance = formatTokenBalance(addIcons);
-    return formatBalance;
+    const sortByName = formatBalance.sort((a, b) => {
+      if (a.name.toUpperCase() < b.name.toUpperCase()) {
+        return -1;
+      } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
+        return 1;
+      }
+      return 0;
+    });
+    const sortedBalance = sortByName.sort(sortByBalance);
+    return sortedBalance;
   }
 };
 

@@ -151,8 +151,6 @@ import { toChecksumAddress } from '@/helpers/addressUtils';
 import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
 import store from 'store';
-import TokenBalance from '@myetherwallet/eth-token-balance';
-import sortByBalance from '@/helpers/sortByBalance.js';
 import AddressQrcodeModal from '@/components/AddressQrcodeModal';
 import web3Utils from 'web3-utils';
 import { isAddress } from '@/helpers/addressUtils';
@@ -504,55 +502,6 @@ export default {
     notifyExpiredNames() {
       this.$refs.expiredNames.$refs.expiredNames.show();
     },
-    async fetchTokens() {
-      this.receivedTokens = false;
-      let tokens = [];
-      if (
-        (this.network.type.chainID === 1 || this.network.type.chainID === 3) &&
-        !this.network.url.includes('infura')
-      ) {
-        const tb = new TokenBalance(this.web3.currentProvider);
-        try {
-          tokens = await tb.getBalance(this.account.address, true, true, true, {
-            gas: '0x11e1a300'
-          });
-          tokens = tokens.map(token => {
-            token.address = token.addr;
-            delete token.addr;
-            return token;
-          });
-
-          const filteredNetwork = this.network.type.tokens.filter(token => {
-            const found = tokens.find(item => {
-              return (
-                this.web3.utils.toChecksumAddress(item.address) ===
-                this.web3.utils.toChecksumAddress(token.address)
-              );
-            });
-
-            if (!found) return token;
-          });
-          tokens = tokens.concat(filteredNetwork).map(item => {
-            if (!item.hasOwnProperty('balance')) {
-              item.balance = 0;
-            }
-            return item;
-          });
-        } catch (e) {
-          tokens = this.network.type.tokens.map(token => {
-            token.balance = 'Load';
-            return token;
-          });
-        }
-      } else {
-        tokens = this.network.type.tokens.map(token => {
-          token.balance = 'Load';
-          return token;
-        });
-      }
-      this.receivedTokens = true;
-      return tokens;
-    },
     async setNonce() {
       store.set(this.web3.utils.sha3(this.account.address), {
         nonce: '0x00',
@@ -615,36 +564,18 @@ export default {
       store.set('customTokens', customTokenStore);
     },
     async setTokens() {
+      const _self = this;
       this.tokens = [];
-      let tokens = await this.fetchTokens();
-      tokens = tokens
-        .sort((a, b) => {
-          if (a.name.toUpperCase() < b.name.toUpperCase()) {
-            return -1;
-          } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
-            return 1;
-          }
-          return 0;
-        })
-        .map(token => {
-          const balanceCheck = new BigNumber(token.balance);
-          const balance = balanceCheck.isNaN()
-            ? token.balance
-            : balanceCheck.div(new BigNumber(10).pow(token.decimals)).toFixed();
-          const convertedToken = {
-            address: token.address,
-            balance: balance,
-            decimals: token.decimals,
-            email: token.email,
-            name: token.name,
-            symbol: token.symbol,
-            website: token.website
-          };
-          return convertedToken;
-        });
+      const worker = new tokenWorker();
+      worker.postMessage({
+        type: 'getTokens',
+        data: [this.network, this.address]
+      });
 
-      this.tokens = tokens.sort(sortByBalance);
-      this.setTokensWithBalance();
+      worker.onmessage = e => {
+        _self.tokens = e.data;
+        _self.setTokensWithBalance();
+      };
     },
     setTokensWithBalance() {
       const customStore = store.get('customTokens');
@@ -764,22 +695,6 @@ export default {
           this.getBlockUpdater().then(_sub => {
             this.pollBlock = _sub;
           });
-
-          // const objToPass = {
-          //   url: this.network.url,
-          //   chainID: this.network.type.chainID,
-          //   address: this.address
-          // };
-
-          const worker = new tokenWorker();
-          worker.postMessage({
-            type: 'getTokens',
-            data: [this.network, this.address]
-          });
-
-          worker.onmessage = e => {
-            console.log(e);
-          };
         }
       }
     }),
