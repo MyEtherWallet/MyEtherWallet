@@ -1,12 +1,12 @@
 <template>
-  <v-bottom-sheet v-model="show" :hide-overlay="hideOverlay">
+  <v-bottom-sheet v-model="bottomSheetShow" :hide-overlay="hideOverlay">
     <v-sheet class="text-center py-7 position--relative">
       <slot />
       <v-btn
         icon
         color="text_default"
         class="close-button"
-        @click="show = !show"
+        @click="bottomSheetShow = !bottomSheetShow"
       >
         <v-icon>mdi-close</v-icon>
       </v-btn>
@@ -22,7 +22,10 @@ export default {
     hideOverlay: { default: false, type: Boolean }
   },
   data() {
-    return {};
+    return { bottomSheetShow: false };
+  },
+  mounted() {
+    this.bottomSheetShow = this.show;
   }
 };
 </script>
