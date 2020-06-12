@@ -4,7 +4,7 @@
       <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
       <div class="headline font-weight-bold mb-5">Create password</div>
       <PasswdField btnlabel="Create" fldlabel="Password" />
-      <mew6-std-btn @click.native="linkToStep(2)">Next</mew6-std-btn>
+      <div @click.native="linkToStep(2)">Next</div>
     </v-sheet>
     <NotRecommended class="mt-6 border-radius--10px" />
   </div>
