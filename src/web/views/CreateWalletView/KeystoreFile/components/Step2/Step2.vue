@@ -1,6 +1,6 @@
 <template>
-  <v-sheet>
-    <v-sheet class="px-5 mt-8 mb-4" width="100%">
+  <div>
+    <v-sheet max-width="800px" class="mx-auto border-radius--10px pa-12">
       <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
       <div class="headline font-weight-bold mb-5">Download keystore file</div>
       <v-row class="align-stretch">
@@ -19,43 +19,40 @@
           </div>
         </v-col>
       </v-row>
+      <div class="d-flex justify-center mt-6">
+        <mew6-std-btn
+          size="x-large"
+          buttonclass="button--green"
+          @click.native="linkToStep(3)"
+        >
+          Acknowledge &amp; Download
+        </mew6-std-btn>
+      </div>
     </v-sheet>
-    <div class="d-flex justify-center mb-7">
-      <mew6-std-btn
-        size="x-large"
-        buttonclass="button--green"
-        @click.native="linkToStep(2)"
-      >
-        Acknowledge &amp; Download
-      </mew6-std-btn>
-    </div>
-    <NotRecommended class="mx-n6 border-radius-bottom--10px" />
-  </v-sheet>
+    <NotRecommended class="mt-6 border-radius--10px" />
+  </div>
 </template>
 
 <script>
 import NotRecommended from '@/web/components/NotRecommended';
-import PaperPlane from '@/assets/images/icons/icon-paper-plane-mew.svg';
-import Stolen from '@/assets/images/icons/icon-money-bag-mew.svg';
-import Copy from '@/assets/images/icons/icon-copy-mew.svg';
 
 export default {
   components: { NotRecommended },
   data: () => ({
     warningData: [
       {
-        img: PaperPlane,
+        img: require('@/assets/images/icons/icon-paper-plane-mew.svg'),
         title: "Don't lose it",
         description: 'Be careful, it can not be recovered if you lose it.'
       },
       {
-        img: Stolen,
+        img: require('@/assets/images/icons/icon-money-bag-mew.svg'),
         title: "Don't share it",
         description:
           'Your funds will be stolen if you use this file on a malicious phishing site.'
       },
       {
-        img: Copy,
+        img: require('@/assets/images/icons/icon-copy-mew.svg'),
         title: 'Make a backup',
         description:
           'Secure it like the millions of dollars it may one day be worth.'
@@ -65,7 +62,7 @@ export default {
   methods: {
     linkToStep(step) {
       this.$router.push({
-        path: '/create-wallet/mewconnect',
+        path: '/create-wallet/keystore',
         query: { step: step }
       });
     }

@@ -1,6 +1,9 @@
 <template>
-  <v-sheet class="d-flex px-3 py-8">
-    <v-col cols="6" class="pt-0">
+  <v-sheet
+    max-width="800px"
+    class="d-flex align-center mx-auto border-radius--10px pa-12"
+  >
+    <div class="mr-8">
       <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
       <div class="headline font-weight-bold mb-3">You are done!</div>
       <p class="mb-6">
@@ -20,14 +23,11 @@
           >Get helps from MEWconnect</router-link
         >
       </p>
-    </v-col>
-    <v-col cols="6" class="pt-10">
-      <v-img
-        class="mx-auto"
-        max-width="280px"
-        src="@/assets/images/icons/icon-keystore-mew.png"
-      />
-    </v-col>
+    </div>
+    <v-img
+      max-width="280px"
+      src="@/assets/images/icons/icon-keystore-mew.png"
+    />
   </v-sheet>
 </template>
 

@@ -56,12 +56,7 @@
         <div class="ml-5">$321.55 / 1 ETH</div>
       </v-col>
       <v-col class="text-right">
-        <mew-button
-          class="ml-auto"
-          :has-full-width="false"
-          title="Send Transaction"
-          button-size="xlarge"
-        />
+        <mew6-std-btn>Send Transaction</mew6-std-btn>
       </v-col>
     </v-row>
   </mew6-white-sheet>
