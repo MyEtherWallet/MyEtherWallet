@@ -255,7 +255,7 @@
         <p>{{ $t('ens.ipfs-processing-description') }}</p>
       </div>
       <div v-else class="ipfs-content-container">
-        <div v-if="localContentHash !== ''" class="link-to-name">
+        <div v-if="validIpfs" class="link-to-name">
           <p>
             {{
               $t('ens.check-website', {
@@ -297,8 +297,12 @@
               />
             </div>
             <div class="submit-container">
+              <span v-if="!validIpfs" class="text-error"
+                >Empty or Invalid IPFS Hash</span
+              >
+              <br />
               <button
-                :class="[localContentHash.length === 0 ? 'disabled' : '']"
+                :class="[!validIpfs ? 'disabled' : '']"
                 type="submit"
                 @click.prevent="saveContentHash(localContentHash)"
               >
@@ -323,6 +327,7 @@ import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import utils from 'web3-utils';
 import supportedTxt from '../../supportedTxt';
+import isIpfs from 'is-ipfs';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText
@@ -441,6 +446,9 @@ export default {
   },
   computed: {
     ...mapState('main', ['web3', 'account', 'network']),
+    validIpfs() {
+      return isIpfs.multihash(this.localContentHash);
+    },
     deedValueEth() {
       return utils.fromWei(this.deedValue, 'ether');
     },

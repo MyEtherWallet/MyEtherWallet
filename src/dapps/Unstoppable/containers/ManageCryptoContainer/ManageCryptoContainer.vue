@@ -71,7 +71,7 @@
         <p>{{ $t('unstoppable.ipfs.processing-description') }}</p>
       </div>
       <div v-else>
-        <p v-show="ipfsHash !== ''">
+        <p v-show="validIpfs">
           {{
             $t('unstoppable.ipfs.see-website', {
               domainName: domainName
@@ -105,8 +105,12 @@
           />
         </div>
         <div class="save-button-container save-ipfs-hash">
+          <span v-if="!validIpfs" class="text-error"
+            >Empty or Invalid IPFS Hash!</span
+          >
+          <br />
           <button
-            :class="[ipfsHash === '' ? 'disabled' : '']"
+            :class="[!validIpfs ? 'disabled' : '']"
             @click="saveIpfsHash(ipfsHash)"
           >
             {{ $t('unstoppable.ipfs.set-hash') }}
@@ -131,6 +135,7 @@ import resolverAbi from '../../ABI/resolverAbi';
 import { hash } from 'eth-ens-namehash';
 import { keyToCryptoKey, isValidRecordKeyValue } from './helpers';
 import { Toast } from '@/helpers';
+import isIpfs from 'is-ipfs';
 
 export default {
   components: {
@@ -165,7 +170,10 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['online'])
+    ...mapState('main', ['online']),
+    validIpfs() {
+      return isIpfs.multihash(this.ipfsHash);
+    }
   },
   mounted() {
     this.getRecords();
@@ -177,7 +185,7 @@ export default {
         this.ipfsProcessing = false;
         this.$refs.zipInput.value = '';
         Toast.responseHandler(
-          this.$t('unstoppable.warn.upload-zip'),
+          this.$t('unstoppable.warning.upload-zip'),
           Toast.WARN
         );
         return;
@@ -186,7 +194,7 @@ export default {
         this.ipfsProcessing = false;
         this.$refs.zipInput.value = '';
         Toast.responseHandler(
-          this.$t('unstoppable.warn.too-small'),
+          this.$t('unstoppable.warning.too-small'),
           Toast.WARN
         );
         return;
@@ -195,7 +203,10 @@ export default {
       if (e.target.files[0].size > 50000) {
         this.ipfsProcessing = false;
         this.$refs.zipInput.value = '';
-        Toast.responseHandler(this.$t('unstoppable.warn.too-big'), Toast.WARN);
+        Toast.responseHandler(
+          this.$t('unstoppable.warning.too-big'),
+          Toast.WARN
+        );
         return;
       }
       this.uploadZip(e.target.files[0]);
