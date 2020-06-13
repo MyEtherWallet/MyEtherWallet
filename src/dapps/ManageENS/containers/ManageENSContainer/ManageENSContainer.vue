@@ -258,7 +258,7 @@
         <div v-if="validIpfs" class="link-to-name">
           <p>
             {{
-              $t('ens.check-website', {
+              $t('ens.ipfs-check-website', {
                 domainName: domainName
               })
             }}
