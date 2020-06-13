@@ -32,6 +32,7 @@ const EXCEPTIONS = [
   'web3-utils',
   '@makerdao/dai-plugin-migrations',
   '@makerdao/dai-plugin-config',
+  '@makerdao/currency',
   'i18n-iso-countries'
 ];
 const CUSTOM_DIST = {
