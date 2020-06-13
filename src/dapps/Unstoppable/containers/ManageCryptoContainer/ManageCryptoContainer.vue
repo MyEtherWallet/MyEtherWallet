@@ -181,15 +181,6 @@ export default {
   methods: {
     fileChange(e) {
       this.ipfsProcessing = true;
-      if (e.target.files[0].type !== 'application/zip') {
-        this.ipfsProcessing = false;
-        this.$refs.zipInput.value = '';
-        Toast.responseHandler(
-          this.$t('unstoppable.warning.upload-zip'),
-          Toast.WARN
-        );
-        return;
-      }
       if (e.target.files[0].size < 500) {
         this.ipfsProcessing = false;
         this.$refs.zipInput.value = '';
