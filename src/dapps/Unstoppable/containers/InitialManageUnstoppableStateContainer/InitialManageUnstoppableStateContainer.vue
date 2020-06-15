@@ -9,7 +9,10 @@
         </div>
       </div>
       <div class="content">
-        <div v-show="!loading && !domains.length" class="no-domains">
+        <div
+          v-show="!loading && (!domains || !domains.length)"
+          class="no-domains"
+        >
           {{ $t('unstoppable.no-crypto-domains-one') }}
           <span class="link" @click="handleBuyClick()">
             {{ $t('unstoppable.no-crypto-domains-two') }}</span
