@@ -1,20 +1,16 @@
+import tokens from '@/_generated/tokens/tokens-ewt.json';
+import contracts from '@/_generated/contracts/contract-abi-ewt.json';
 import ewt from '@/assets/images/networks/ewt.svg';
 
 export default {
-  name: ‘ewt’,
-  name_long: ‘Energy Web Chain’,
-  homePage: ‘
-https://www.energyweb.org/'
-,
-  blockExplorerTX: ‘
-https://explorer.energyweb.org/txs/[[txHash]]'
-,
-  blockExplorerAddr: ‘
-https://explorer.energyweb.org//accounts/[[address]]'
-,
+  name: 'EWT',
+  name_long: 'EnergyWeb Token',
+  homePage: 'https://www.energyweb.org/',
+  blockExplorerTX: 'https://explorer.energyweb.org/tx/[[txHash]]',
+  blockExplorerAddr: 'https://explorer.energyweb.org/account/[[address]]',
   chainID: 246,
   tokens: tokens,
   contracts: contracts,
   icon: ewt,
-  currencyName: ‘ewt’
+  currencyName: 'EWT'
 };
