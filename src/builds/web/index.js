@@ -3,6 +3,7 @@ import app from './app';
 import LandingPageView from '@/web/views/LandingPageView';
 import Home from '@/web/views/LandingPageView/Home';
 import CreateWalletDashboard from '@/web/views/CreateWalletView/CreateWalletDashboard';
+import CreateWalletSoftware from '@/web/views/CreateWalletView/Software';
 import CreateWalletMewWallet from '@/web/views/CreateWalletView/MewWallet';
 import CreateWalletKeystore from '@/web/views/CreateWalletView/KeystoreFile';
 import AccessWalletView from '@/web/views/AccessWalletView';
@@ -89,6 +90,22 @@ const webRoutes = [
         path: 'create-wallet',
         name: 'HomeCreateWallet',
         component: CreateWalletDashboard,
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'create-wallet/software',
+        name: 'HomeCreateWalletSoftware',
+        component: CreateWalletSoftware,
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'create-wallet/software',
+        name: 'HomeCreateWalletMewWallet',
+        component: CreateWalletMewWallet,
         meta: {
           requiresAuth: false
         }

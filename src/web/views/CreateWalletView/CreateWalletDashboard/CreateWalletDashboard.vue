@@ -1,17 +1,6 @@
 <template>
-  <div class="light-blue darken-4">
-    <mew6-bottom-alert :show="true" hide-overlay>
-      <div class="d-flex align-center justify-center">
-        <h5 class="font-weight-medium mr-4">
-          Did you know? Hardware wallets offer the highest security for
-          accessing your crypto.
-        </h5>
-        <mew6-std-btn size="large" outlined color="blue"
-          >Buy a hardware wallet</mew6-std-btn
-        >
-      </div>
-    </mew6-bottom-alert>
-    <div class="py-8" />
+  <div class="light-blue darken-4 py-12">
+    <mew6-bottom-alert-buy-hardware-wallet :show="true" hide-overlay />
     <BlockTitle :data="titleData" class="mb-10">
       <h5 class="white--text ma-0">
         Please select a method to create a new wallet.
@@ -32,7 +21,7 @@
       <MEWcx class="cursor--pointer user-select--none mb-5" />
       <Software class="cursor--pointer user-select--none" />
     </v-sheet>
-    <div class="py-12" />
+    <div class="py-6" />
   </div>
 </template>
 
