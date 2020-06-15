@@ -376,7 +376,7 @@ export default class DexAg {
       : 'ag';
 
     const tradeDetails = await this.createTransaction(swapDetails, dexToUse);
-    if (tradeDetails.error) {
+    if (tradeDetails && tradeDetails.error) {
       Toast.responseHandler(tradeDetails.error, 1);
       throw Error('abort');
     }
