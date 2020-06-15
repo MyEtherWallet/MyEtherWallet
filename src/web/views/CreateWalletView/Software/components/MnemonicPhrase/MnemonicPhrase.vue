@@ -1,6 +1,6 @@
 <template>
   <mew6-flexible-btn
-    :to="{ name: 'HomeCreateWalletMewWallet', query: { step: '1' } }"
+    :to="{ name: 'HomeCreateWalletMnemonic', query: { step: '1' } }"
   >
     <div class="d-flex align-center">
       <div class="pr-9">

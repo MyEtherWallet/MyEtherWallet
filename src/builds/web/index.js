@@ -2,10 +2,13 @@ import app from './app';
 
 import LandingPageView from '@/web/views/LandingPageView';
 import Home from '@/web/views/LandingPageView/Home';
+
 import CreateWalletDashboard from '@/web/views/CreateWalletView/CreateWalletDashboard';
 import CreateWalletSoftware from '@/web/views/CreateWalletView/Software';
 import CreateWalletMewWallet from '@/web/views/CreateWalletView/MewWallet';
 import CreateWalletKeystore from '@/web/views/CreateWalletView/KeystoreFile';
+import CreateWalletMnemonic from '@/web/views/CreateWalletView/MnemonicPhrase';
+
 import AccessWalletView from '@/web/views/AccessWalletView';
 
 import AboutUsCompany from '@/web/views/AboutUsView/CompanyContainer';
@@ -122,6 +125,14 @@ const webRoutes = [
         path: 'create-wallet/keystore',
         name: 'HomeCreateWalletKeystore',
         component: CreateWalletKeystore,
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'create-wallet/mnemonic',
+        name: 'HomeCreateWalletMnemonic',
+        component: CreateWalletMnemonic,
         meta: {
           requiresAuth: false
         }
