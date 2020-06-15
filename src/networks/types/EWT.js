@@ -1,6 +1,6 @@
 import tokens from '@/_generated/tokens/tokens-ewt.json';
 import contracts from '@/_generated/contracts/contract-abi-ewt.json';
-import clo from '@/assets/images/networks/ewt.svg';
+import ewt from '@/assets/images/networks/ewt.svg';
 
 export default {
   name: ‘EWT’,
