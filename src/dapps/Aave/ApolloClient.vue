@@ -18,7 +18,7 @@ export default {
   },
   mounted() {
     const GRAPHQL_ENDPOINT =
-      'wss://api.thegraph.com/subgraphs/name/aave/protocol-raw';
+      'wss://api.thegraph.com/subgraphs/name/aave/protocol-multy-raw';
 
     const client = new SubscriptionClient(GRAPHQL_ENDPOINT, {
       reconnect: true
