@@ -77,6 +77,9 @@
               </i18n>
             </div>
           </div>
+          <div v-if="showGasWarning" class="gas-price-warning">
+            {{ $t('errorsGlobal.high-gas-limit-warning') }}
+          </div>
         </div>
       </div>
     </div>
@@ -169,7 +172,7 @@ import ethUnit from 'ethjs-unit';
 import utils from 'web3-utils';
 import fetch from 'node-fetch';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
-
+const GAS_PRICE_WARNING = 100;
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
@@ -250,8 +253,12 @@ export default {
       'web3',
       'network',
       'linkQuery',
-      'online'
+      'online',
+      'gasLimitWarning'
     ]),
+    showGasWarning() {
+      return this.gasPrice >= this.gasLimitWarning;
+    },
     txFee() {
       return new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
         this.gasLimit || 0

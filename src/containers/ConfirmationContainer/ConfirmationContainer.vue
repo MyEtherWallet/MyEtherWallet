@@ -14,6 +14,7 @@
       :gas="gasLimit"
       :data="data"
       :nonce="nonce"
+      :show-gas-warning="showGasWarning"
     />
     <confirm-collection-modal
       v-if="fromAddress !== null"
@@ -166,11 +167,18 @@ export default {
         },
         fromValue: undefined,
         toValue: undefined
-      }
+      },
+      showGasWarning: false
     };
   },
   computed: {
-    ...mapState('main', ['wallet', 'web3', 'account', 'network']),
+    ...mapState('main', [
+      'wallet',
+      'web3',
+      'account',
+      'network',
+      'gasLimitWarning'
+    ]),
     fromAddress() {
       if (this.account) {
         return this.account.address;
@@ -179,6 +187,9 @@ export default {
     }
   },
   watch: {
+    gasPrice(newVal) {
+      this.showGasWarning = newVal >= this.gasLimitWarning;
+    },
     wallet(newVal) {
       if (newVal !== null) {
         if (this.$refs.hasOwnProperty('confirmModal')) {

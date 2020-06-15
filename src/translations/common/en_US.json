@@ -152,7 +152,7 @@
   "gas": {
     "current-gas": "Current Gas Price",
     "limit": "Gas Limit",
-    "price": "Gas Price",
+    "price": "Gas Price (in Gwei)",
     "gwei": "Gwei",
     "wei": "Wei",
     "fee": "Fee",
