@@ -1,3 +1,7 @@
+### Devop
+
+- dont overrwrite master file on error [#2443](https://github.com/MyEtherWallet/MyEtherWallet/pull/2443)
+
 ### Release v5.6.5
 
 ### Bug
