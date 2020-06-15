@@ -33,6 +33,7 @@ import PHT from './PHT.js';
 import ERE from './ERE.js';
 import PRKL from './PRKL.js';
 import FUSE from './FUSE.js';
+import EWT from './EWT.js';
 
 export {
   AKA,
@@ -69,5 +70,6 @@ export {
   PHT,
   ERE,
   PRKL,
-  FUSE
+  FUSE,
+  EWT
 };
