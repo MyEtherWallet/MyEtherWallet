@@ -11,7 +11,7 @@
     <router-view />
     <footer-container />
     <wallet-launched-footer-banner />
-    <confirmation-container v-if="wallet !== null" />
+    <confirmation-container />
   </div>
 </template>
 

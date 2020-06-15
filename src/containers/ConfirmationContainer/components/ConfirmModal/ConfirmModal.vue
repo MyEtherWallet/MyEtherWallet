@@ -64,7 +64,7 @@
               </div>
               <div class="grid-block">
                 <p>{{ $t('common.gas.limit') }}</p>
-                <p>{{ gas }} {{ $t('common.gas.wei') }}</p>
+                <p>{{ gas }}</p>
               </div>
               <div class="grid-block">
                 <p>{{ $t('common.gas.price') }}</p>
@@ -111,7 +111,7 @@ import AddressBlock from '../AddressBlock';
 import { mapState } from 'vuex';
 import StandardButton from '@/components/Buttons/StandardButton';
 import parseTokensData from '@/helpers/parseTokensData.js';
-const GAS_LIMIT_WARNING = 100;
+
 export default {
   components: {
     'address-block': AddressBlock,
@@ -161,11 +161,15 @@ export default {
     isHardwareWallet: {
       type: Boolean,
       default: false
+    },
+    showGasWarning: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
-      modalDetailInformation: false,
+      modalDetailInformation: this.showGasWarning || false,
       transactionSigned: false,
       tokenTransferTo: '',
       tokenTransferVal: '',
@@ -173,25 +177,20 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['web3', 'network']),
-    showGasWarning() {
-      return this.gasPrice >= GAS_LIMIT_WARNING;
-    }
+    ...mapState('main', ['web3', 'network'])
   },
   watch: {
     data(newVal) {
       this.parseData(newVal);
+    },
+    showGasWarning(newVal) {
+      this.modalDetailInformation = newVal;
     }
   },
   mounted() {
     if (this.data !== '0x') {
       this.parseData();
     }
-    this.$refs.confirmation.$on('show', () => {
-      if (this.showGasWarning) {
-        this.modalDetailInformation = !this.modalDetailInformation;
-      }
-    });
   },
   methods: {
     sendTx() {
