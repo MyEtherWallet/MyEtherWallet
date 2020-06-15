@@ -69,4 +69,5 @@ module.exports = [
   'https://o382951.ingest.sentry.io:443',
   'https://dispatch.pokt.network:443',
   'https://service.gcp.pokt.network:443'
+  'https://rpc.energyweb.org/:443'
 ];
