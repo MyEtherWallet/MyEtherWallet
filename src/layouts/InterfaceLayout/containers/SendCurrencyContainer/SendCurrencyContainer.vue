@@ -172,7 +172,7 @@ import ethUnit from 'ethjs-unit';
 import utils from 'web3-utils';
 import fetch from 'node-fetch';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
-const GAS_PRICE_WARNING = 100;
+
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,

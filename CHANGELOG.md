@@ -1,3 +1,7 @@
+### Feature
+
+- Add gas price warning to send offline helper [#2449](https://github.com/MyEtherWallet/MyEtherWallet/pull/2449)
+
 ### Release v5.6.5
 
 ### Bug
