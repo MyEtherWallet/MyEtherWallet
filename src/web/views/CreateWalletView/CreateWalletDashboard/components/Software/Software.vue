@@ -1,6 +1,6 @@
 <template>
   <mew6-flexible-btn
-    :to="{ name: 'HomeCreateWalletKeystore', query: { step: '1' } }"
+    :to="{ name: 'HomeCreateWalletSoftware', query: {} }"
     class="position--relative"
     outlined
   >

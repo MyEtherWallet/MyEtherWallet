@@ -10,7 +10,7 @@ import store from '@/common/store';
 import Vuex from 'vuex';
 
 // etc
-import mewComponents from '@myetherwallet/mew-components';
+//import mewComponents from '@myetherwallet/mew-components';
 import languages from '@/common/translations';
 import '@/common/plugins/registerServiceWorker';
 import { Promise } from 'q';
@@ -22,13 +22,13 @@ import FlexibleButton from '@/web/components/Buttons/FlexibleButton';
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import IconSecure from '@/web/components/Common/IconSecure';
 import IconWarning from '@/web/components/Common/IconWarning';
-import BottomAlert from '@/components/BottomAlert';
+import BuyHardwareWallet from '@/components/BottomAlerts/BuyHardwareWallet';
 Vue.component('mew6-std-btn', StdButton);
 Vue.component('mew6-flexible-btn', FlexibleButton);
 Vue.component('mew6-white-sheet', WhiteSheet);
 Vue.component('mew6-icon-secure', IconSecure);
 Vue.component('mew6-icon-warning', IconWarning);
-Vue.component('mew6-bottom-alert', BottomAlert);
+Vue.component('mew6-bottom-alert-buy-hardware-wallet', BuyHardwareWallet);
 
 Vue.prototype.$eventHub = new Vue();
 
@@ -40,9 +40,11 @@ Vue.config.productionTip = false;
 
 Vue.use(Vuex);
 
+/*
 Object.keys(mewComponents).forEach(name => {
   Vue.component(name, mewComponents[name]);
 });
+*/
 
 // // Define vue-i18n
 Vue.use(VueI18n);
