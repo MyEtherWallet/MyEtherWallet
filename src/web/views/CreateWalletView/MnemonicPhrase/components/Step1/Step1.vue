@@ -1,28 +1,31 @@
 <template>
   <div>
-    <v-sheet max-width="800px" class="mx-auto border-radius--10px pa-12">
+    <mew6-flexible-btn>
       <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
-      <div class="headline font-weight-bold mb-5">Create password</div>
-      <PasswdField btnlabel="Create" fldlabel="Password" />
+      <div class="headline font-weight-bold mb-5">Write down the words</div>
+      <PhraseBlock>
+        <div>aaaa</div>
+        <div></div>
+      </PhraseBlock>
       <mew6-std-btn size="x-small" min-width="0" @click.native="linkToStep(2)">
         Next page -->
       </mew6-std-btn>
-    </v-sheet>
-    <NotRecommended class="mt-6 border-radius--10px" />
+    </mew6-flexible-btn>
+    <Caution class="mt-6" />
   </div>
 </template>
 
 <script>
-import PasswdField from '@/web/components/PasswdField';
-import NotRecommended from '@/web/components/NotRecommended';
+import Caution from '@/components/WarningBlocks/MnemonicCaution';
+import PhraseBlock from '../PhraseBlock';
 
 export default {
-  components: { PasswdField, NotRecommended },
+  components: { Caution, PhraseBlock },
   data: () => ({}),
   methods: {
     linkToStep(step) {
       this.$router.push({
-        path: '/create-wallet/keystore',
+        path: '/create-wallet/mnemonic',
         query: { step: step }
       });
     }

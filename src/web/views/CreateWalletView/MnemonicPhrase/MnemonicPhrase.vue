@@ -21,7 +21,7 @@ export default {
     titleData: {
       textProps: 'white--text',
       toptitle: '',
-      title: 'Keystore file',
+      title: 'Mnemonic phrase',
       titleMaxWidth: '',
       description:
         'An official, free companion App for MyEtherWallet that helps you secure your funds as never before.',
@@ -29,8 +29,8 @@ export default {
       centered: true
     },
     tabs: [
-      { label: 'STEP 1. Download & Install', content: Step1 },
-      { label: 'STEP 2. Create a new wallet', content: Step2 },
+      { label: 'STEP 1. Write down the words', content: Step1 },
+      { label: 'STEP 2. Verification', content: Step2 },
       { label: 'STEP 3. Well done', content: Step3 }
     ]
   })

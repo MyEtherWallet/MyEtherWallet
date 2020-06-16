@@ -22,12 +22,14 @@ import FlexibleButton from '@/web/components/Buttons/FlexibleButton';
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import IconSecure from '@/web/components/Common/IconSecure';
 import IconWarning from '@/web/components/Common/IconWarning';
+import WarningNotRecommended from '@/components/WarningBlocks/NotRecommended';
 import BuyHardwareWallet from '@/components/BottomAlerts/BuyHardwareWallet';
 Vue.component('mew6-std-btn', StdButton);
 Vue.component('mew6-flexible-btn', FlexibleButton);
 Vue.component('mew6-white-sheet', WhiteSheet);
 Vue.component('mew6-icon-secure', IconSecure);
 Vue.component('mew6-icon-warning', IconWarning);
+Vue.component('mew6-warning-not-recommended', WarningNotRecommended);
 Vue.component('mew6-bottom-alert-buy-hardware-wallet', BuyHardwareWallet);
 
 Vue.prototype.$eventHub = new Vue();
