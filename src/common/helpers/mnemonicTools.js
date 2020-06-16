@@ -1,12 +1,14 @@
-function phrase128() {
-  return ['11111112222222'];
+const bip39 = require('bip39');
+
+function phrase12() {
+  return bip39.generateMnemonic(128).split(' ');
 }
 
-function phrase256() {
-  return ['11111112222222'];
+function phrase24() {
+  return bip39.generateMnemonic(256).split(' ');
 }
 
 export default {
-  phrase128,
-  phrase256
+  phrase12,
+  phrase24
 };
