@@ -1,8 +1,8 @@
 <template>
-  <v-sheet color="yellow lighten-5" class="py-7 px-11">
+  <v-sheet color="yellow lighten-5" class="py-7 px-11 border-radius--10px">
     <div class="d-flex align-center mb-1">
       <mew6-icon-warning class="mr-2" />
-      <div class="text-uppercase font-weight-medium subtitle-1">
+      <div class="text-uppercase font-weight-bold subtitle-1">
         Not recommended
       </div>
     </div>

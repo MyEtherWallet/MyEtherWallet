@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-sheet max-width="800px" class="mx-auto border-radius--10px pa-12">
+    <mew6-flexible-btn>
       <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
-      <div class="headline font-weight-bold mb-5">Download keystore file</div>
+      <div class="headline font-weight-bold mb-5">Verification</div>
       <v-row class="align-stretch">
         <v-col v-for="d in warningData" :key="d.key">
           <div class="warning-box border-radius--10px pa-6 text-center">
@@ -28,16 +28,14 @@
           Acknowledge &amp; Download
         </mew6-std-btn>
       </div>
-    </v-sheet>
-    <NotRecommended class="mt-6 border-radius--10px" />
+    </mew6-flexible-btn>
+    <mew6-warning-not-recommended class="mt-6" />
   </div>
 </template>
 
 <script>
-import NotRecommended from '@/web/components/NotRecommended';
-
 export default {
-  components: { NotRecommended },
+  components: {},
   data: () => ({
     warningData: [
       {
@@ -62,7 +60,7 @@ export default {
   methods: {
     linkToStep(step) {
       this.$router.push({
-        path: '/create-wallet/keystore',
+        path: '/create-wallet/mnemonic',
         query: { step: step }
       });
     }

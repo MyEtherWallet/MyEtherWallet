@@ -4,7 +4,7 @@
     <v-sheet color="transparent" max-width="650px" class="mx-auto">
       <KeystoreFile class="cursor--pointer user-select--none mb-5" />
       <MnemonicPhrase class="cursor--pointer user-select--none mb-5" />
-      <NotRecommended class="border-radius--10px" />
+      <mew6-warning-not-recommended />
     </v-sheet>
 
     <div class="py-6" />
@@ -15,11 +15,10 @@
 import BlockTitle from '@/web/components/BlockTitle';
 import KeystoreFile from './components/KeystoreFile';
 import MnemonicPhrase from './components/MnemonicPhrase';
-import NotRecommended from '@/web/components/NotRecommended';
 
 export default {
   name: 'Software',
-  components: { BlockTitle, KeystoreFile, MnemonicPhrase, NotRecommended },
+  components: { BlockTitle, KeystoreFile, MnemonicPhrase },
   data: () => ({
     titleData: {
       textProps: 'white--text',
