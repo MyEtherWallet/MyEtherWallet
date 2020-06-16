@@ -23,12 +23,20 @@ import MnemonicTools from '@/common/helpers/mnemonicTools';
 export default {
   components: { Caution, PhraseBlock, MnemonicPhraseTable },
   data: () => ({
-    phrases: ['duty', 'aaa', 'bbbb']
+    mnemonic24: false,
+    phrases: []
   }),
   mounted() {
-    console.log(MnemonicTools);
+    this.setPhrases();
   },
   methods: {
+    setPhrases() {
+      if (!this.mnemonic24) {
+        this.phrases = MnemonicTools.phrase12();
+      } else {
+        this.phrases = MnemonicTools.phrase24();
+      }
+    },
     linkToStep(step) {
       this.$router.push({
         path: '/create-wallet/mnemonic',
