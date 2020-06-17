@@ -6,7 +6,6 @@
   display: flex;
   flex-direction: column;
 
-
   .title-container {
     display: flex;
     border-bottom: 1px solid $dark-blue-6;
@@ -213,7 +212,6 @@ label {
     margin-bottom: 10px;
   }
 }
-
 
 .collapsed > .when-open,
 .not-collapsed > .when-closed {
