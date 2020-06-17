@@ -9,7 +9,9 @@
     "dns-sec-not-found": "DNSSEC NOT FOUND!",
     "balance-too-low": "Balance too low!",
     "txt-not-supported": "Not text record support!",
-    "not-the-owner": "You are not the owner!"
+    "not-the-owner": "You are not the owner!",
+    "error-getting-ipfs-hash": "Error getting IPFS Hash!",
+    "file-upload-error": "Uploading file errored"
   },
   "warning": {
     "contract-not-ready": "Contract is not ready yet, transaction might fail.",

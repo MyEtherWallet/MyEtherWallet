@@ -848,7 +848,10 @@ export default {
         }).then(response => {
           if (!response.ok) {
             this.ipfsProcessing = false;
-            Toast.responseHandler('Uploading file errored', Toast.ERROR);
+            Toast.responseHandler(
+              this.$t('ens.error.file-upload-error'),
+              Toast.ERROR
+            );
             return;
           }
           this.getHashFromFile(content.body.hashResponse);
@@ -878,7 +881,10 @@ export default {
             Toast.responseHandler(e, Toast.ERROR);
           });
         if (ipfsHash.error) {
-          Toast.responseHandler('Error getting ipfs hash!', Toast.ERROR);
+          Toast.responseHandler(
+            this.$t('ens.error.error-getting-ipfs-hash'),
+            Toast.ERROR
+          );
         } else {
           this.saveContentHash(ipfsHash);
         }
