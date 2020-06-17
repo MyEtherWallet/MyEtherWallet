@@ -1,3 +1,6 @@
+### Devop
+- Update aave protocol lib to 1.0.0(https://github.com/MyEtherWallet/MyEtherWallet/pull/2452)
+
 ### Release v5.6.5
 
 ### Bug
