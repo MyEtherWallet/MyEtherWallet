@@ -1,5 +1,5 @@
 <template>
-  <div class="phrase-block border-radius--5px pa-6">
+  <div class="phrase-block border-radius--5px px-7 py-4">
     <slot />
   </div>
 </template>
