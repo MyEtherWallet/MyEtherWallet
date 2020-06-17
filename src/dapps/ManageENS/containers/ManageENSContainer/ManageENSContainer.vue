@@ -503,7 +503,7 @@ export default {
   methods: {
     fileChange(e) {
       // eslint-disable-next-line
-      console.log(e);
+      console.log(e.target.files[0].type);
       const TYPES = [
         'application/zip',
         'application/x-zip',
@@ -514,7 +514,7 @@ export default {
         return e.target.files[0].type === item;
       });
       if (!supportedFile) {
-        this.$refs.zipInput.value = '';
+        // this.$refs.zipInput.value = '';
         Toast.responseHandler(this.$t('ens.warning.upload-zip'), Toast.WARN);
         return;
       }
