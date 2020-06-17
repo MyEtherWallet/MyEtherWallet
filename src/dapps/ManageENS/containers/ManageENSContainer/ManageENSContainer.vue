@@ -502,7 +502,22 @@ export default {
   },
   methods: {
     fileChange(e) {
+      // eslint-disable-next-line
       console.log(e);
+      const TYPES = [
+        'application/zip',
+        'application/x-zip',
+        'application/octet-stream',
+        'application/x-zip-compressed'
+      ];
+      const supportedFile = TYPES.find(item => {
+        return e.target.files[0].type === item;
+      });
+      if (!supportedFile) {
+        this.$refs.zipInput.value = '';
+        Toast.responseHandler(this.$t('ens.warning.upload-zip'), Toast.WARN);
+        return;
+      }
       if (e.target.files[0].size < 500000) {
         this.$refs.zipInput.value = '';
         Toast.responseHandler(this.$t('ens.warning.too-small'), Toast.WARN);
