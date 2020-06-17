@@ -4,7 +4,10 @@
     <v-expansion-panels flat>
       <v-expansion-panel>
         <v-expansion-panel-header class="px-4 py-0">
-          <div class="font-weight-bold subtitle-1">{{ title }}</div>
+          <div class="d-flex align-center justify-space-between pr-4">
+            <div class="font-weight-bold subtitle-1">{{ title }}</div>
+            <div>{{ rightText }}</div>
+          </div>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <slot />
@@ -22,7 +25,8 @@ export default {
     DividerLine
   },
   props: {
-    title: { default: '', type: String }
+    title: { default: '', type: String },
+    rightText: { default: '', type: String }
   },
   data() {
     return {};

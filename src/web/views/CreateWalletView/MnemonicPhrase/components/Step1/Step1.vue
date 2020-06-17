@@ -23,12 +23,17 @@
           ></v-select>
         </div>
       </div>
-      <PhraseBlock>
+      <PhraseBlock class="mb-8">
         <MnemonicPhraseTable :data="phrases" />
       </PhraseBlock>
-      <mew6-std-btn size="x-small" min-width="0" @click.native="linkToStep(2)">
-        Next page -->
-      </mew6-std-btn>
+      <ExpantionBlock class="mb-8" title="Add extra words" right-text="Optional"
+        >aaaaa</ExpantionBlock
+      >
+      <div class="d-flex justify-center">
+        <mew6-std-btn @click.native="linkToStep(2)">
+          I wrote them down
+        </mew6-std-btn>
+      </div>
     </mew6-flexible-btn>
     <Caution class="mt-6" />
   </div>
@@ -39,9 +44,10 @@ import Caution from '@/components/WarningBlocks/MnemonicCaution';
 import PhraseBlock from '../PhraseBlock';
 import MnemonicPhraseTable from '@/components/MnemonicPhrase/MnemonicPhraseTable';
 import MnemonicTools from '@/common/helpers/mnemonicTools';
+import ExpantionBlock from '@/components/ExpantionBlock';
 
 export default {
-  components: { Caution, PhraseBlock, MnemonicPhraseTable },
+  components: { Caution, PhraseBlock, MnemonicPhraseTable, ExpantionBlock },
   data: () => ({
     items: ['12 words', '24 words'],
     phraseSize: '12 words',
