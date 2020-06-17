@@ -134,7 +134,7 @@ export default {
       this.$emit('emitTakeAction', {
         symbol: this.token.symbol,
         type: 'SwitchRate',
-        data: { reserve: this.token.id }
+        data: { reserve: this.token.underlyingAsset }
       });
     },
     getIcon(currency) {

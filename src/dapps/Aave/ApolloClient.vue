@@ -14,6 +14,10 @@ export default {
     address: {
       type: String,
       default: ''
+    },
+    poolId: {
+      type: String,
+      default: ''
     }
   },
   mounted() {
@@ -52,9 +56,11 @@ export default {
                 timestamp
               }
             }
-            fragment BorrowRateHistoryData on ReserveParamsHistoryItem {
+            fragment ReserveRatesHistoryData on ReserveParamsHistoryItem {
               variableBorrowRate
               stableBorrowRate
+              liquidityRate
+              utilizationRate
               timestamp
               __typename
             }
@@ -96,8 +102,11 @@ export default {
       this.apolloClient
         .subscribe({
           query: gql`
-            subscription UserPositionUpdateSubscription($userAddress: String!) {
-              userReserves(where: { user: $userAddress }) {
+            subscription UserPositionUpdateSubscription(
+              $userAddress: String!
+              $poolId: String!
+            ) {
+              userReserves(where: { user: $userAddress, pool: $poolId }) {
                 ...UserReserveData
                 __typename
               }
@@ -110,10 +119,12 @@ export default {
               interestRedirectionAddress
               reserve {
                 id
+                underlyingAsset
                 name
                 symbol
                 decimals
                 liquidityRate
+                reserveLiquidationBonus
                 lastUpdateTimestamp
                 aToken {
                   id
@@ -130,7 +141,8 @@ export default {
             }
           `,
           variables: {
-            userAddress: this.address
+            userAddress: this.address,
+            poolId: this.poolId
           }
         })
         .subscribe({
@@ -144,8 +156,8 @@ export default {
       this.apolloClient
         .subscribe({
           query: gql`
-            subscription ReserveUpdateSubscription {
-              reserves {
+            subscription ReserveUpdateSubscription($poolId: String!) {
+              reserves(where: { pool: $poolId }) {
                 ...ReserveData
                 __typename
               }
@@ -153,6 +165,7 @@ export default {
 
             fragment ReserveData on Reserve {
               id
+              underlyingAsset
               name
               symbol
               decimals
@@ -161,12 +174,18 @@ export default {
               borrowingEnabled
               stableBorrowRateEnabled
               baseLTVasCollateral
+              optimalUtilisationRate
+              averageStableBorrowRate
+              stableRateSlope1
+              stableRateSlope2
+              baseVariableBorrowRate
+              variableRateSlope1
+              variableRateSlope2
               liquidityIndex
               reserveLiquidationThreshold
               variableBorrowIndex
               aToken {
                 id
-                __typename
               }
               availableLiquidity
               stableBorrowRate
@@ -176,16 +195,17 @@ export default {
               totalBorrowsVariable
               totalLiquidity
               utilizationRate
+              reserveLiquidationBonus
               variableBorrowRate
               price {
                 priceInEth
-                __typename
               }
               lastUpdateTimestamp
-              __typename
             }
           `,
-          variables: {}
+          variables: {
+            poolId: this.poolId
+          }
         })
         .subscribe({
           next(resp) {
