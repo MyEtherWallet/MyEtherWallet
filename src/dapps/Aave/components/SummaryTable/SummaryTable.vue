@@ -147,13 +147,15 @@
                 <label
                   class="switch"
                   :title="
-                    !isStableEnabled(reserve.reserve.id)
+                    !isStableEnabled(reserve.reserve.underlyingAsset)
                       ? $t('dappsAave.stable-rate-no-avail')
                       : ''
                   "
                 >
                   <input
-                    :disabled="!isStableEnabled(reserve.reserve.id)"
+                    :disabled="
+                      !isStableEnabled(reserve.reserve.underlyingAsset)
+                    "
                     :checked="reserve.borrowRateMode === 'Stable'"
                     type="checkbox"
                     @click="changeInterestType(index, reserve)"
@@ -163,7 +165,7 @@
                       'slider',
                       'borrow-slider',
                       'round',
-                      !isStableEnabled(reserve.reserve.id)
+                      !isStableEnabled(reserve.reserve.underlyingAsset)
                         ? 'disabled-input'
                         : ''
                     ]"
@@ -339,13 +341,15 @@ export default {
     },
     getReserve(id) {
       return this.reserves.find(reserve => {
-        return reserve.id === id;
+        return reserve.underlyingAsset === id;
       });
     },
     useAsCollateral(idx) {
       event.preventDefault();
       event.stopPropagation();
-      this.token = this.getReserve(this.ownedReserves[idx].reserve.id);
+      this.token = this.getReserve(
+        this.ownedReserves[idx].reserve.underlyingAsset
+      );
       this.$refs.confirmationModal.$refs.confirmationModal.show();
       this.collateralModalShown = true;
     },
@@ -353,14 +357,16 @@ export default {
       event.preventDefault();
       event.stopPropagation();
 
-      this.token = this.getReserve(this.ownedReserves[idx].reserve.id);
+      this.token = this.getReserve(
+        this.ownedReserves[idx].reserve.underlyingAsset
+      );
 
       this.$refs.switchInterest.$refs.switchInterest.show();
       this.switchInterestShown = true;
     },
     goToPage(idx, actionType) {
       const params = {
-        token: this.getReserve(this.ownedReserves[idx].reserve.id)
+        token: this.getReserve(this.ownedReserves[idx].reserve.underlyingAsset)
       };
 
       if (actionType) {
