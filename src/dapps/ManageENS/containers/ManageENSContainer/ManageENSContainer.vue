@@ -297,9 +297,9 @@
               />
             </div>
             <div class="submit-container">
-              <span v-if="!validIpfs" class="text-error"
-                >Empty or Invalid IPFS Hash</span
-              >
+              <span v-if="!validIpfs" class="text-error">{{
+                $t('ens.error.empty-invalid-ipfs')
+              }}</span>
               <br />
               <button
                 :class="[!validIpfs ? 'disabled' : '']"
