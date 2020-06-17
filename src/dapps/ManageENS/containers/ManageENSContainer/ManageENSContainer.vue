@@ -502,7 +502,6 @@ export default {
   },
   methods: {
     fileChange(e) {
-      // eslint-disable-next-line
       const TYPES = [
         'application/zip',
         'application/x-zip',
