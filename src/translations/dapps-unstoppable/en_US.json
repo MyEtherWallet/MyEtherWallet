@@ -21,7 +21,8 @@
     "stripe-payment": "Payment failed. Please try again later",
     "something-went-wrong": "Something went wrong! Please try again.",
     "no-resolver-set": "No resolver address set",
-    "upload-error": "Error on upload!"
+    "upload-error": "Error on upload!",
+    "empty-invalid-ipfs": "Empty or Invalid IPFS Hash!"
   },
   "warning": {
     "not-enough-char": "Domain name is less than 6 characters.",

@@ -105,9 +105,9 @@
           />
         </div>
         <div class="save-button-container save-ipfs-hash">
-          <span v-if="!validIpfs" class="text-error"
-            >Empty or Invalid IPFS Hash!</span
-          >
+          <span v-if="!validIpfs" class="text-error">{{
+            $t('unstoppable.error.empty-invalid-ipfs')
+          }}</span>
           <br />
           <button
             :class="[!validIpfs ? 'disabled' : '']"

@@ -11,7 +11,8 @@
     "txt-not-supported": "Not text record support!",
     "not-the-owner": "You are not the owner!",
     "error-getting-ipfs-hash": "Error getting IPFS Hash!",
-    "file-upload-error": "Uploading file errored"
+    "file-upload-error": "Uploading file errored",
+    "empty-invalid-ipfs": "Empty or Invalid IPFS Hash"
   },
   "warning": {
     "contract-not-ready": "Contract is not ready yet, transaction might fail.",
