@@ -913,7 +913,7 @@ export default {
           value: 0
         };
 
-        this.web3.eth.sendTransaction(txObj).then(() => {
+        this.web3.eth.sendTransaction(txObj).on('receipt', () => {
           this.ipfsProcessing = true;
           this.contentHash = ipfsHash;
         });
