@@ -2,30 +2,69 @@
   <div>
     <mew6-flexible-btn>
       <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
-      <div class="headline font-weight-bold mb-5">Verification</div>
-      <v-row class="align-stretch">
-        <v-col v-for="d in warningData" :key="d.key">
-          <div class="warning-box border-radius--10px pa-6 text-center">
-            <v-img
-              :src="d.img"
-              max-width="63px"
-              max-height="76px"
-              class="mx-auto mb-4"
-            />
-            <div class="subtitle-1 font-weight-medium mb-1">
-              {{ d.title }}
-            </div>
-            <div>{{ d.description }}</div>
-          </div>
-        </v-col>
-      </v-row>
+      <div class="mb-10">
+        <div class="headline font-weight-bold">Verification</div>
+        <div>
+          Please select the correct words based on their numbers, and enter the
+          extra word if you have one.
+        </div>
+      </div>
+
+      <v-sheet max-width="600px" class="mx-auto">
+        <PhraseBlock class="mb-2 d-flex align-center">
+          <div style="min-width: 60px;">5.</div>
+          <v-radio-group
+            v-model="radioGroup"
+            hide-details
+            class="width--100-percent"
+          >
+            <v-row>
+              <v-col v-for="n in 3" :key="n" lg="4">
+                <v-radio :label="`Radio ${n}`" :value="n"></v-radio>
+              </v-col>
+            </v-row>
+          </v-radio-group>
+        </PhraseBlock>
+        <PhraseBlock class="mb-2 d-flex align-center">
+          <div style="min-width: 60px;">5.</div>
+          <v-radio-group
+            v-model="radioGroup"
+            hide-details
+            class="width--100-percent"
+          >
+            <v-row>
+              <v-col v-for="n in 3" :key="n" lg="4">
+                <v-radio :label="`Radiaaaao ${n}`" :value="n"></v-radio>
+              </v-col>
+            </v-row>
+          </v-radio-group>
+        </PhraseBlock>
+        <PhraseBlock class="mb-2 d-flex align-center">
+          <div style="min-width: 60px;">5.</div>
+          <v-radio-group
+            v-model="radioGroup"
+            hide-details
+            class="width--100-percent"
+          >
+            <v-row>
+              <v-col v-for="n in 3" :key="n" lg="4">
+                <v-radio :label="`Radiaaaao ${n}`" :value="n"></v-radio>
+              </v-col>
+            </v-row>
+          </v-radio-group>
+        </PhraseBlock>
+        <v-text-field
+          class="mt-10"
+          value=""
+          placeholder="Please confirm your extra word"
+          label="Extra word"
+          outlined
+        ></v-text-field>
+      </v-sheet>
+
       <div class="d-flex justify-center mt-6">
-        <mew6-std-btn
-          size="x-large"
-          buttonclass="button--green"
-          @click.native="linkToStep(3)"
-        >
-          Acknowledge &amp; Download
+        <mew6-std-btn @click.native="linkToStep(3)">
+          Verify
         </mew6-std-btn>
       </div>
     </mew6-flexible-btn>
@@ -34,8 +73,10 @@
 </template>
 
 <script>
+import PhraseBlock from '../PhraseBlock';
+
 export default {
-  components: {},
+  components: { PhraseBlock },
   data: () => ({
     warningData: [
       {
@@ -69,9 +110,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.warning-box {
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
-  height: 100%;
+.v-input--radio-group--column .v-radio:not(:last-child):not(:only-child) {
+  margin-bottom: 0;
+}
+.v-input--selection-controls {
+  margin: 0;
+  padding: 0;
 }
 </style>
