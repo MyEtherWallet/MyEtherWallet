@@ -34,8 +34,8 @@
     "@coolwallets/eth": "0.2.0-beta.1",
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",
-    "@sentry/browser": "5.16.0",
-    "@sentry/integrations": "5.16.0",
+    "@sentry/browser": "5.17.0",
+    "@sentry/integrations": "5.17.0",
     "@unstoppabledomains/resolution": "1.4.0",
     "apollo-cache-inmemory": "1.6.6",
     "apollo-client": "2.6.10",
@@ -71,7 +71,7 @@
     "vue-toasted": "1.1.28",
     "vuex": "3.4.0",
     "walletlink": "2.0.2",
-    "xss": "1.0.6"
+    "xss": "1.0.7"
   },
   "devDependencies": {
     "@ensdomains/address-encoder": "0.1.7",
@@ -151,7 +151,7 @@
     "u2f-api": "1.1.1",
     "uglify-es": "3.3.9",
     "uuid": "8.1.0",
-    "vue-i18n": "8.18.1",
+    "vue-i18n": "8.18.2",
     "vue-stripe-elements-plus": "0.3.2",
     "vue-template-compiler": "2.6.11",
     "vue-worker": "1.2.1",
