@@ -520,7 +520,7 @@ export default {
         Toast.responseHandler(this.$t('ens.warning.upload-zip'), Toast.WARN);
         return;
       }
-      if (e.target.files[0].size < 500000) {
+      if (e.target.files[0].size < 500) {
         this.$refs.zipInput.value = '';
         Toast.responseHandler(this.$t('ens.warning.too-small'), Toast.WARN);
         return;
