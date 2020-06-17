@@ -349,7 +349,6 @@ export default {
       loadingError: false,
       switchCurrencyOrder: false,
       bityExitToFiat: false,
-      enoughForGas: true,
       gasNotice: false,
       moreEthNeeded: false,
       recalculating: true,
@@ -582,6 +581,8 @@ export default {
   },
   methods: {
     reset() {
+      this.lastFeeEstimate = new BigNumber(0);
+      this.gasNotice = false;
       this.fromCurrency = 'BTC';
       this.toCurrency = 'ETH';
       this.overrideFrom = { name: 'Bitcoin', symbol: 'BTC' };
@@ -1053,13 +1054,13 @@ export default {
         if (e.message === 'notEnoughWithGas') {
           this.finalizingSwap = false;
           this.gasNotice = true;
-          Toast.responseHandler('swap.warning.error-generating-swap', 1, true);
+          Toast.responseHandler('error-generating-swap', 1, true);
           return;
         }
         //abort (empty response from provider or failure to finalize details)
         if (e.message === 'abort') {
           this.finalizingSwap = false;
-          Toast.responseHandler('swap.warningerror-generating-swap', 1, true);
+          Toast.responseHandler('error-generating-swap', 1, true);
           return;
         }
         this.$refs.swapConfirmation.$refs.swapconfirmation.hide();
