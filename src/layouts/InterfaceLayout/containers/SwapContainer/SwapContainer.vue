@@ -65,6 +65,12 @@
                 <p v-if="!hasEnough && !fromBelowMinAllowed">
                   {{ $t('swap.warning.not-enough-funds') }}
                 </p>
+                <p v-if="gasNotice && fromCurrency === 'ETH'">
+                  {{ $t('swap.warning.not-enough-eth-gas') }}
+                </p>
+                <p v-if="gasNotice && fromCurrency !== 'ETH'">
+                  {{ $t('swap.warning.not-enough-tx-fee') }}
+                </p>
                 <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
               </div>
             </div>
@@ -181,7 +187,14 @@
             @selectedProvider="setSelectedProvider"
           />
         </div>
-
+        <div class="fee-notice">
+          <span v-if="gasNotice && fromCurrency === 'ETH'">
+            {{ $t('swap.warning.not-enough-eth-gas') }}</span
+          >
+          <span v-if="gasNotice && fromCurrency !== 'ETH'">
+            {{ $t('swap.warning.not-enough-tx-fee') }}</span
+          >
+        </div>
         <div class="submit-button-container">
           <div
             v-show="finalizingSwap"
@@ -250,6 +263,7 @@ import {
   MIN_SWAP_AMOUNT,
   ERC20
 } from '@/partners';
+import ethUnit from 'ethjs-unit';
 
 const errorLogger = debug('v5:swapContainer');
 
@@ -290,6 +304,7 @@ export default {
       toValue: 1,
       invalidFrom: 'none',
       lastBestRate: 0,
+      lastFeeEstimate: new BigNumber(0),
       bitySpecialCurrencies: ['BTC', 'REP'],
       selectedProvider: {},
       swapDetails: {},
@@ -334,6 +349,9 @@ export default {
       loadingError: false,
       switchCurrencyOrder: false,
       bityExitToFiat: false,
+      enoughForGas: true,
+      gasNotice: false,
+      moreEthNeeded: false,
       recalculating: true,
       exitToFiatCallback: () => {},
       sendSignedCallback: () => {},
@@ -717,6 +735,7 @@ export default {
             this.bestRate,
             this.fromCurrency
           );
+          this.intermediateGasCheck();
           break;
         case 'from':
           this.toValue = this.swap.calculateToValue(
@@ -724,6 +743,7 @@ export default {
             this.bestRate,
             this.toCurrency
           );
+          this.intermediateGasCheck();
           break;
         case `${this.providerNames.simplex}to`:
           this.simplexUpdate = true;
@@ -801,6 +821,7 @@ export default {
           fromValue = this.swap.calculateFromValue(this.toValue, this.bestRate);
           this.toValue = toValue;
           this.fromValue = fromValue;
+          this.intermediateGasCheck();
           break;
       }
     },
@@ -908,6 +929,64 @@ export default {
         }
       }
     },
+    async checkForEnoughGas(swapDetails) {
+      let ethNeeded = new BigNumber(0);
+      this.lastFeeEstimate = new BigNumber(0);
+      const gasPrice = new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei'));
+      if (
+        SwapProviders.isToken(swapDetails.fromCurrency) &&
+        SwapProviders.isToken(swapDetails.toCurrency)
+      ) {
+        if (Array.isArray(swapDetails.dataForInitialization)) {
+          for (let i = 0; i < swapDetails.dataForInitialization.length; i++) {
+            if (swapDetails.dataForInitialization[i].gas) {
+              this.lastFeeEstimate = this.lastFeeEstimate.plus(
+                gasPrice.times(swapDetails.dataForInitialization[i].gas)
+              );
+              ethNeeded = ethNeeded.plus(
+                new BigNumber(swapDetails.dataForInitialization[i].value)
+              );
+            } else {
+              const gas = await this.web3.eth.estimateGas(
+                swapDetails.dataForInitialization[i]
+              );
+              this.lastFeeEstimate = this.lastFeeEstimate.plus(
+                gasPrice.times(gas)
+              );
+              ethNeeded = ethNeeded.plus(
+                swapDetails.dataForInitialization[i].value
+              );
+            }
+          }
+        }
+        const enoughToContinue = new BigNumber(this.account.balance)
+          .minus(ethNeeded.plus(this.lastFeeEstimate))
+          .gt(0);
+
+        this.moreEthNeeded = new BigNumber(this.account.balance).lt(
+          this.lastFeeEstimate
+        );
+
+        if (!ethNeeded.gt(0)) {
+          this.lastFeeEstimate = new BigNumber(0);
+        }
+
+        return enoughToContinue;
+      }
+    },
+    intermediateGasCheck() {
+      if (this.fromCurrency === 'ETH' && this.lastFeeEstimate.gt(0)) {
+        this.gasNotice = new BigNumber(this.account.balance)
+          .minus(
+            new BigNumber(
+              new BigNumber(ethUnit.toWei(this.fromValue, 'ether'))
+            ).plus(this.lastFeeEstimate)
+          )
+          .lte(0);
+      } else {
+        this.gasNotice = false;
+      }
+    },
     async swapConfirmationModalOpen() {
       try {
         if (this.validSwap) {
@@ -930,6 +1009,10 @@ export default {
                 : this.exitFromAddress
           };
           this.swapDetails = await this.swap.startSwap(swapDetails);
+          const enoughForGas = await this.checkForEnoughGas(this.swapDetails);
+          if (!enoughForGas) {
+            throw Error('notEnoughWithGas');
+          }
           this.finalizingSwap = false;
 
           if (this.swapDetails.isExitToFiat) {
@@ -967,10 +1050,16 @@ export default {
           }
         }
       } catch (e) {
+        if (e.message === 'notEnoughWithGas') {
+          this.finalizingSwap = false;
+          this.gasNotice = true;
+          Toast.responseHandler('swap.warning.error-generating-swap', 1, true);
+          return;
+        }
         //abort (empty response from provider or failure to finalize details)
         if (e.message === 'abort') {
           this.finalizingSwap = false;
-          Toast.responseHandler('error-generating-swap', 1, true);
+          Toast.responseHandler('swap.warningerror-generating-swap', 1, true);
           return;
         }
         this.$refs.swapConfirmation.$refs.swapconfirmation.hide();
