@@ -502,13 +502,14 @@ export default {
   },
   methods: {
     fileChange(e) {
-      if (e.target.files[0].size < 500) {
+      console.log(e);
+      if (e.target.files[0].size < 500000) {
         this.$refs.zipInput.value = '';
         Toast.responseHandler(this.$t('ens.warning.too-small'), Toast.WARN);
         return;
       }
 
-      if (e.target.files[0].size > 50000) {
+      if (e.target.files[0].size > 50000000) {
         this.$refs.zipInput.value = '';
         Toast.responseHandler(this.$t('ens.warning.too-big'), Toast.WARN);
         return;
