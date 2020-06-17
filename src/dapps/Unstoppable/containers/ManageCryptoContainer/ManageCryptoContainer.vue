@@ -181,6 +181,27 @@ export default {
   methods: {
     fileChange(e) {
       this.ipfsProcessing = true;
+      const TYPES = [
+        'application/zip',
+        'application/x-zip',
+        'application/octet-stream',
+        'application/x-zip-compressed'
+      ];
+      const supportedFile = TYPES.find(item => {
+        return (
+          e.target.files[0].type === item ||
+          e.target.files[0].name.includes('.zip')
+        );
+      });
+      if (!supportedFile) {
+        this.$refs.zipInput.value = '';
+        Toast.responseHandler(
+          this.$t('unstoppable.warning.upload-zip'),
+          Toast.WARN
+        );
+        return;
+      }
+
       if (e.target.files[0].size < 500) {
         this.ipfsProcessing = false;
         this.$refs.zipInput.value = '';
