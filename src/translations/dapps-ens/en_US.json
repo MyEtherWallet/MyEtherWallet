@@ -20,8 +20,8 @@
     "invalid-symbol": "Invalid symbols on domain",
     "subdomain-is-not-owned": "This subdomain is not owned",
     "upload-zip": "Please upload a zip file!",
-    "too-small": "File is too small! Size has to be more than 500kb.",
-    "too-big": "File is too big! Size has to be less than 50mb.",
+    "too-small": "File is too small! Size has to be more than 500 bytes.",
+    "too-big": "File is too big! Size has to be less than 50 megabytes.",
     "currency-already-exists": "Currency {currency} is already added for {domainName}",
     "text-record-already-exists": "Text Record {txtRecord} input is already added for {domainName}"
   },
