@@ -246,7 +246,10 @@ export default {
           await window.ethereum.enable();
         } catch (e) {
           Toast.responseHandler(e, Toast.WARN);
-          if (e.stack.includes('Error: User denied account authorization')) {
+          if (
+            e.stack &&
+            e.stack.includes('Error: User denied account authorization')
+          ) {
             return (this.unlockWeb3Wallet = true);
           }
 
@@ -270,7 +273,10 @@ export default {
           path: 'interface'
         });
       } catch (e) {
-        if (e.stack.includes('Error: User denied account authorization')) {
+        if (
+          e.stack &&
+          e.stack.includes('Error: User denied account authorization')
+        ) {
           Toast.responseHandler(e.stack, Toast.ERROR);
           return (this.unlockWeb3Wallet = true);
         }

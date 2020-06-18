@@ -295,7 +295,7 @@ export default {
     getUSDBalance(token) {
       let usdBalance = 0;
 
-      if (token) {
+      if (token && token.price) {
         const ethBalance = new BigNumber(
           new BigNumber(token.tokenBalance).times(
             new BigNumber(token.price.priceInEth)
