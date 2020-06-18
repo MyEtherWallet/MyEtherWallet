@@ -1,3 +1,7 @@
+### Feature
+
+- support unstoppable domains with dashes [#2456](https://github.com/MyEtherWallet/MyEtherWallet/pull/2456)
+
 ### Release v5.6.5
 
 ### Bug
