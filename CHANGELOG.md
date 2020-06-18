@@ -2,6 +2,34 @@
 
 - Update Maker Libraries for Maker Dai Dapp [#2437](https://github.com/MyEtherWallet/MyEtherWallet/pull/2437)
 
+### Release v5.6.6-hotfix.1
+
+### Devop
+
+- Update aave protocol lib to 1.0.0 [#2452](https://github.com/MyEtherWallet/MyEtherWallet/pull/2452)
+- Add EWT and FUSE support [#2438](https://github.com/MyEtherWallet/MyEtherWallet/pull/2438)
+- dont overrwrite master file on error [#2443](https://github.com/MyEtherWallet/MyEtherWallet/pull/2443)
+
+### Feature
+
+- Add gas price warning to send offline helper [#2449](https://github.com/MyEtherWallet/MyEtherWallet/pull/2449)
+- support unstoppable domains with dashes [#2456](https://github.com/MyEtherWallet/MyEtherWallet/pull/2456)
+
+### Release v5.6.6
+
+### Feature
+
+- Ipfs implementation for ENS manager [#2412](https://github.com/MyEtherWallet/MyEtherWallet/pull/2412)
+
+### Bug
+
+- Remove view wallet layout [#2454](https://github.com/MyEtherWallet/MyEtherWallet/pull/2454)
+- Remove private keys when irrelevant on print wallets [#2453](https://github.com/MyEtherWallet/MyEtherWallet/pull/2453)
+
+### Devop
+
+- Replace icons and font color on side menu [#2455](https://github.com/MyEtherWallet/MyEtherWallet/pull/2455)
+
 ### Release v5.6.5
 
 ### Bug

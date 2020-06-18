@@ -247,7 +247,9 @@ export default {
     },
     findReserve(id, reserves) {
       return reserves.find(reserve => {
-        return reserve.id ? reserve.id === id : reserve.reserve.id === id;
+        return reserve.underlyingAsset
+          ? reserve.underlyingAsset === id
+          : reserve.reserve.underlyingAsset === id;
       });
     },
     convertToFixed(val, num) {
@@ -293,7 +295,7 @@ export default {
     getUSDBalance(token) {
       let usdBalance = 0;
 
-      if (token) {
+      if (token && token.price) {
         const ethBalance = new BigNumber(
           new BigNumber(token.tokenBalance).times(
             new BigNumber(token.price.priceInEth)

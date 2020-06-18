@@ -6,11 +6,17 @@
   display: flex;
   flex-direction: column;
 
-  h3 {
+  .title-container {
+    display: flex;
     border-bottom: 1px solid $dark-blue-6;
-    color: $dark-blue-6;
     margin-bottom: 15px !important;
     padding-bottom: 15px !important;
+    justify-content: space-between;
+    align-items: center;
+
+    h3 {
+      color: $dark-blue-6;
+    }
   }
 
   .form-container {
@@ -36,7 +42,7 @@
   }
 
   .set-controller-submit {
-    @extend .submit-container;
+    @extend %extendable-container;
 
     button {
       width: 250px !important;
@@ -51,11 +57,16 @@
 }
 
 .manage-form {
-  display: flex;
   padding-top: 20px;
 
-  .input-container {
-    flex: auto;
+  label {
+    font-weight: normal !important;
+    margin-bottom: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: $dark-blue-12;
   }
 }
 
@@ -92,6 +103,10 @@ label {
     padding-left: 10px;
   }
 
+  input {
+    padding: 13px 25px 13px 15px;
+  }
+
   .disabled-icon {
     color: $dark-grey-11 !important;
     pointer-events: none;
@@ -116,7 +131,7 @@ label {
   color: $red-1;
 }
 
-.submit-container {
+%extendable-container {
   text-align: center;
   button {
     background-color: $mew-green;
@@ -138,8 +153,12 @@ label {
   }
 }
 
+.submit-container {
+  @extend %extendable-container;
+}
+
 .multi-coin-submit-container {
-  @extend .submit-container;
+  @extend %extendable-container;
 
   align-items: center;
   display: flex;
@@ -163,10 +182,43 @@ label {
   background-color: $dark-blue-12 !important;
   border-color: $dark-blue-12 !important;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   margin: 5px 0;
 
   p {
     color: $white !important;
   }
+}
+
+.ipfs-content-container {
+  position: relative;
+}
+
+.file-upload-form {
+  opacity: 0;
+  position: absolute;
+  top: -10000px;
+}
+
+.ipfs-loading {
+  padding: 40px 30px;
+  height: 200px;
+  text-align: center;
+  color: $dark-blue-12;
+
+  i {
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+}
+
+.collapsed > .when-open,
+.not-collapsed > .when-closed {
+  display: none;
+}
+
+.file-upload-text {
+  color: $mew-green;
+  cursor: pointer;
 }

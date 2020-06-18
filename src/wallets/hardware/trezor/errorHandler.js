@@ -17,7 +17,8 @@ const ERRORS = {
   'Iframe timeout': 'trezor.iframe-timeout',
   'Browser not supported': 'trezor.unsupported-browser',
   'popup failed to open': 'trezor.popup-failed-to-open',
-  'Safety check failed': 'trezor.safety-check-failed'
+  'Safety check failed': 'trezor.safety-check-failed',
+  'TrezorConnect not yet initialized': 'trezor.trezor-connect-not-initialized'
 };
 
 const WARNING = {};
