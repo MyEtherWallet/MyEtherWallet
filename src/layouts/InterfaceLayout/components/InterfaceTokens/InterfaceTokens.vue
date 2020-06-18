@@ -33,6 +33,7 @@
                 <a
                   :href="`https://etherscan.io/token/${token.address}`"
                   rel="noopener noreferrer"
+                  target="_blank"
                   >{{ token.symbol }}</a
                 >
               </td>
