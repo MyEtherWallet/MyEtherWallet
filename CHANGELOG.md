@@ -4,6 +4,10 @@
 
 - Add EWT and FUSE support [#2438](https://github.com/MyEtherWallet/MyEtherWallet/pull/2438)
 
+### Feature
+
+- support unstoppable domains with dashes [#2456](https://github.com/MyEtherWallet/MyEtherWallet/pull/2456)
+
 ### Release v5.6.6
 
 ### Feature
