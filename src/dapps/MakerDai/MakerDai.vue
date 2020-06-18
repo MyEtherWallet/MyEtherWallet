@@ -559,12 +559,6 @@ export default {
       this.openMoveModal = false;
     },
 
-    // async migrateCdp(cdpId) {
-    //   const currentProxy = await this.getProxy();
-    //   if (currentProxy) {
-    //     await this._cdpService.give(cdpId, currentProxy);
-    //   }
-    // },
     removeCdp(vals) {
       try {
         delete this.availableCdps[vals.id];
