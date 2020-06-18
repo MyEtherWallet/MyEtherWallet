@@ -81,7 +81,7 @@ describe('ConfirmModal.vue', () => {
         .querySelectorAll('.grid-block')[1]
         .querySelectorAll('p')[1]
         .textContent.trim()
-    ).toEqual(wrapper.props().gas);
+    ).toEqual(`${wrapper.props().gas}`);
   });
 
   it('should render correct gasPrice props', () => {
