@@ -58,7 +58,6 @@ const updateStatusBasedOnReciept = status => {
 };
 
 const formatTransactionHash = (val, network) => {
-  val[txIndexes.txDetails] = undefined;
   try {
     return {
       id: uuid(),
