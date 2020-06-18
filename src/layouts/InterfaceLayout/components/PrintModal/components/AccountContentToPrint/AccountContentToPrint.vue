@@ -23,8 +23,10 @@
             class="left-text"
           >
             <span slot="safe">{{ $t('interface.account-content.safe') }}</span>
-            <span slot="do-not">{{
-              $t('interface.account-content.do-not')
+            <span v-if="!!wallet && !wallet.isPubOnly" slot="extend">{{
+              $t('interface.account-content.dont-share-priv-key', {
+                doNot: $t('interface.account-content.do-not')
+              })
             }}</span>
           </i18n>
         </div>
@@ -102,8 +104,10 @@
       <div class="body-container">
         <i18n tag="h3" path="interface.account-content.warning">
           <span slot="safe">{{ $t('interface.account-content.safe') }}</span>
-          <span slot="do-not">{{
-            $t('interface.account-content.do-not')
+          <span v-if="!!wallet && !wallet.isPubOnly" slot="extend">{{
+            $t('interface.account-content.dont-share-priv-key', {
+              doNot: $t('interface.account-content.do-not')
+            })
           }}</span>
         </i18n>
       </div>
