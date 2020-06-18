@@ -109,6 +109,9 @@
                     {{ $t('common.gas.gwei') }}
                   </span>
                 </li>
+                <div v-if="showGenInfoGasWarning" class="gas-price-warning">
+                  {{ $t('errorsGlobal.high-gas-limit-warning') }}
+                </div>
                 <li class="detail-container">
                   <span class="detail-name">{{ $t('sendTx.retrieved') }}:</span>
                   <span class="detail-text">{{
@@ -266,6 +269,9 @@
                   >{{ toGwei(gasPrice) }} {{ $t('common.gas.gwei') }}</span
                 >
               </li>
+              <div v-if="showGasWarning" class="gas-price-warning">
+                {{ $t('errorsGlobal.high-gas-limit-warning') }}
+              </div>
               <li class="detail-container">
                 <span class="detail-name">{{ $t('common.gas.fee') }}:</span>
                 <span class="detail-text">
@@ -371,7 +377,6 @@ import StandardButton from '@/components/Buttons/StandardButton';
 import ExpandingOption from '@/components/ExpandingOption';
 import ConfirmationModal from './components/ConfirmationModal';
 import ENS from 'ethereum-ens';
-
 export default {
   components: {
     'page-title': PageTitleComponent,
@@ -432,8 +437,18 @@ export default {
       'path',
       'web3',
       'wallet',
-      'online'
+      'online',
+      'gasLimitWarning'
     ]),
+    showGasWarning() {
+      return this.gasPrice >= this.gasLimitWarning;
+    },
+    showGenInfoGasWarning() {
+      const num = new BigNumber(this.toGwei(this.genInfo.gasPrice)).gte(
+        this.gasLimitWarning
+      );
+      return num;
+    },
     reorderNetworkList() {
       const customNetworks =
         store.get('customNetworks') !== undefined
