@@ -24,7 +24,9 @@
           {{ $t('interface.tokens.warning-offline') }}
         </div>
         <div ref="tokenTableContainer" class="token-table-container">
-          <table v-show="customTokens.length > 0 && receivedTokens">
+          <table
+            v-show="customTokens && customTokens.length > 0 && receivedTokens"
+          >
             <tr
               v-for="(token, index) in customTokens"
               :key="token.symbol + index"
