@@ -2,6 +2,7 @@
 
 - Remove view wallet layout [#2454](https://github.com/MyEtherWallet/MyEtherWallet/pull/2454)
 - Remove private keys when irrelevant on print wallets [#2453](https://github.com/MyEtherWallet/MyEtherWallet/pull/2453)
+- Sentry fixes s [#2451](https://github.com/MyEtherWallet/MyEtherWallet/pull/2451)
 
 ### Devop
 

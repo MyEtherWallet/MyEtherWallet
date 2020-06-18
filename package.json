@@ -85,7 +85,7 @@
     "@makerdao/dai-plugin-mcd": "1.4.1",
     "@makerdao/dai-plugin-migrations": "1.1.0",
     "@myetherwallet/eth-token-balance": "0.2.2",
-    "@myetherwallet/mewconnect-web-client": "2.1.0-RC.5",
+    "@myetherwallet/mewconnect-web-client": "2.1.0-RC.5.3",
     "@stripe/stripe-js": "1.7.0",
     "@vue/cli-plugin-babel": "4.4.1",
     "@vue/cli-plugin-eslint": "4.4.1",
