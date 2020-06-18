@@ -247,7 +247,9 @@ export default {
     },
     findReserve(id, reserves) {
       return reserves.find(reserve => {
-        return reserve.id ? reserve.id === id : reserve.reserve.id === id;
+        return reserve.underlyingAsset
+          ? reserve.underlyingAsset === id
+          : reserve.reserve.underlyingAsset === id;
       });
     },
     convertToFixed(val, num) {

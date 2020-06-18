@@ -2,6 +2,7 @@
   <div class="aave-container">
     <apollo-client
       ref="apolloClient"
+      :pool-id="poolId"
       :address="account.address"
       @reserveData="updateReserveData"
       @userReserveData="updateUserReserveData"
@@ -127,6 +128,7 @@ export default {
   },
   data() {
     return {
+      poolId: '0x24a42fd28c976a61df5d00d0599c34c4f90748c8',
       activeDepositTab: true,
       activeBorrowTab: false,
       loadingHome: true,
@@ -288,6 +290,7 @@ export default {
     },
     emitTakeAction(param) {
       param.data.userAddress = this.account.address;
+      param.data.aavePool = 'proto';
       this.pendingToken = {
         symbol: param.symbol,
         amount: param.data.amount
