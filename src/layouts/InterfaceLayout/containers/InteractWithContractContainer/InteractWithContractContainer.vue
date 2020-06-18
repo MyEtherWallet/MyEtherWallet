@@ -440,14 +440,21 @@ export default {
         case 'forward':
           if (this.abi !== '') {
             const jsonAbi = JSON.parse(this.abi) ? JSON.parse(this.abi) : [];
-            jsonAbi.forEach(item => {
-              if (item.type !== 'constructor' && item.constant !== undefined) {
-                this.contractMethods.push(item);
-              }
-            });
+            if (Array.isArray(jsonAbi)) {
+              this.contractMethods = jsonAbi.filter(item => {
+                if (
+                  item.type !== 'constructor' &&
+                  item.constant !== undefined
+                ) {
+                  return item;
+                }
+              });
+              this.interact = true;
+              this.loading = false;
+            } else {
+              this.resetDefaults();
+            }
           }
-          this.interact = true;
-          this.loading = false;
           break;
         default:
           this.resetDefaults();
