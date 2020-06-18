@@ -913,9 +913,9 @@ export default {
           value: 0
         };
 
-        this.web3.eth.sendTransaction(txObj).on('receipt', () => {
-          this.ipfsProcessing = true;
+        this.web3.eth.sendTransaction(txObj).then(() => {
           this.contentHash = ipfsHash;
+          this.ipfsProcessing = false;
         });
       } catch (e) {
         this.ipfsProcessing = false;

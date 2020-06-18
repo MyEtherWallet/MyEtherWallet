@@ -323,9 +323,9 @@ export default {
             .encodeABI(),
           value: 0
         };
-        this.web3.eth.sendTransaction(txObj).on('receipt', () => {
+        this.web3.eth.sendTransaction(txObj).then(() => {
           this.ipfsHash = recHash;
-          this.loading = false;
+          this.ipfsProcessing = false;
         });
       } catch (e) {
         this.ipfsProcessing = false;
