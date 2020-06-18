@@ -235,6 +235,7 @@ const AddrResolver = {
       const _this = vnode.context;
       if (
         domain.indexOf('.') > 0 &&
+        // eslint-disable-next-line
         /^[a-zA-Z\-\.0-9]*\.(zil|crypto)$/.test(domain)
       ) {
         try {
