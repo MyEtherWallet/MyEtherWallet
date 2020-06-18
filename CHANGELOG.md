@@ -1,3 +1,8 @@
+### Bug
+
+- Remove view wallet layout [#2454](https://github.com/MyEtherWallet/MyEtherWallet/pull/2454)
+
+
 ### Release v5.6.5
 
 ### Bug
