@@ -1,3 +1,8 @@
+
+### Feature
+
+- Ipfs implementation for ENS manager [#2412](https://github.com/MyEtherWallet/MyEtherWallet/pull/2412)
+
 ### Bug
 
 - Remove view wallet layout [#2454](https://github.com/MyEtherWallet/MyEtherWallet/pull/2454)
