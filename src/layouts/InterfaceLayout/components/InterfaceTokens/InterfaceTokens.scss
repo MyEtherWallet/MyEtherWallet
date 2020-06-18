@@ -167,6 +167,11 @@
 .name-and-icon-container {
   display: flex;
   align-items: center;
+  color: $dark-blue-12;
+
+  a {
+    color: $dark-blue-12 !important;
+  }
 
   figure {
     margin-right: 15px;

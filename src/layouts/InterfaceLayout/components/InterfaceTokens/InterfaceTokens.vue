@@ -31,7 +31,12 @@
             >
               <td>
                 <a
-                  :href="`https://etherscan.io/token/${token.address}`"
+                  :href="
+                    network.type.blockExplorerAddr.replace(
+                      '[[address]]',
+                      token.address
+                    )
+                  "
                   rel="noopener noreferrer"
                   target="_blank"
                   >{{ token.symbol }}</a
@@ -56,7 +61,17 @@
                 <figure v-lazy-load class="token-icon">
                   <img :data-url="iconFetch(token)" @error="iconFallback" />
                 </figure>
-                {{ token.symbol }}
+                <a
+                  :href="
+                    network.type.blockExplorerAddr.replace(
+                      '[[address]]',
+                      token.address
+                    )
+                  "
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  >{{ token.symbol }}</a
+                >
               </td>
               <td
                 v-if="token.balance === 'Load' && online"
