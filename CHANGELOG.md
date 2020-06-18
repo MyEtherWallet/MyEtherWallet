@@ -4,6 +4,7 @@
 
 - Update aave protocol lib to 1.0.0 [#2452](https://github.com/MyEtherWallet/MyEtherWallet/pull/2452)
 - Add EWT and FUSE support [#2438](https://github.com/MyEtherWallet/MyEtherWallet/pull/2438)
+- dont overrwrite master file on error [#2443](https://github.com/MyEtherWallet/MyEtherWallet/pull/2443)
 
 ### Feature
 
