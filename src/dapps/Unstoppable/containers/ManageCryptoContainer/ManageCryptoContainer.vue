@@ -64,6 +64,60 @@
         </div>
       </div>
     </div>
+    <div v-show="!loading" class="ipfs-container">
+      <div v-if="ipfsProcessing" class="ipfs-loading-container">
+        <i class="fa fa-lg fa-spinner fa-spin" />
+        <h3>{{ $t('unstoppable.ipfs.processing') }}</h3>
+        <p>{{ $t('unstoppable.ipfs.processing-description') }}</p>
+      </div>
+      <div v-else>
+        <p v-show="validIpfs">
+          {{
+            $t('unstoppable.ipfs.see-website', {
+              domainName: domainName
+            })
+          }}
+        </p>
+        <div>
+          <div class="label-container">
+            <form
+              enctype="multipart/form-data"
+              novalidate
+              class="file-upload-container"
+            >
+              <input
+                ref="zipInput"
+                type="file"
+                name="file"
+                accept=".zip"
+                @change="fileChange"
+              />
+            </form>
+            <label class="info-title">{{ $t('unstoppable.ipfs.hash') }}</label>
+            <p class="upload-zip" @click="ipfsClick">
+              {{ $t('unstoppable.ipfs.upload') }}
+            </p>
+          </div>
+          <input
+            v-model="ipfsHash"
+            placeholder="QmWXdjNC362aPDtwHPUE9o2VMqPeNeCQuTBTv1NsKtwypg"
+            type="text"
+          />
+        </div>
+        <div class="save-button-container save-ipfs-hash">
+          <span v-if="!validIpfs" class="text-error">{{
+            $t('unstoppable.error.empty-invalid-ipfs')
+          }}</span>
+          <br />
+          <button
+            :class="[!validIpfs ? 'disabled' : '']"
+            @click="saveIpfsHash(ipfsHash)"
+          >
+            {{ $t('unstoppable.ipfs.set-hash') }}
+          </button>
+        </div>
+      </div>
+    </div>
 
     <interface-bottom-text
       :link-text="$t('common.help-center')"
@@ -80,6 +134,8 @@ import registryAbi from '../../ABI/registryAbi';
 import resolverAbi from '../../ABI/resolverAbi';
 import { hash } from 'eth-ens-namehash';
 import { keyToCryptoKey, isValidRecordKeyValue } from './helpers';
+import { Toast } from '@/helpers';
+import isIpfs from 'is-ipfs';
 
 export default {
   components: {
@@ -108,16 +164,179 @@ export default {
       error: {},
       dropdownOpen: false,
       additionalRecords: [],
-      canSave: false
+      canSave: false,
+      ipfsHash: '',
+      ipfsProcessing: false
     };
   },
   computed: {
-    ...mapState('main', ['online'])
+    ...mapState('main', ['online']),
+    validIpfs() {
+      return isIpfs.multihash(this.ipfsHash);
+    }
   },
   mounted() {
     this.getRecords();
   },
   methods: {
+    fileChange(e) {
+      this.ipfsProcessing = true;
+      const TYPES = [
+        'application/zip',
+        'application/x-zip',
+        'application/octet-stream',
+        'application/x-zip-compressed'
+      ];
+      const supportedFile = TYPES.find(item => {
+        return (
+          e.target.files[0].type === item ||
+          e.target.files[0].name.includes('.zip')
+        );
+      });
+      if (!supportedFile) {
+        this.$refs.zipInput.value = '';
+        Toast.responseHandler(
+          this.$t('unstoppable.warning.upload-zip'),
+          Toast.WARN
+        );
+        return;
+      }
+
+      if (e.target.files[0].size < 500) {
+        this.ipfsProcessing = false;
+        this.$refs.zipInput.value = '';
+        Toast.responseHandler(
+          this.$t('unstoppable.warning.too-small'),
+          Toast.WARN
+        );
+        return;
+      }
+
+      if (e.target.files[0].size > 50000) {
+        this.ipfsProcessing = false;
+        this.$refs.zipInput.value = '';
+        Toast.responseHandler(
+          this.$t('unstoppable.warning.too-big'),
+          Toast.WARN
+        );
+        return;
+      }
+      this.uploadZip(e.target.files[0]);
+    },
+    async uploadZip(file) {
+      const formData = new FormData();
+      try {
+        const content = await fetch('https://swap.mewapi.io/ipfs', {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            method: 'getUploadUrl'
+          })
+        }).then(response => {
+          return response.json();
+        });
+        for (const key in content.body.fields) {
+          formData.append(key, content.body.fields[key]);
+        }
+        formData.append('file', file);
+        fetch(content.body.signedUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Length': file.size
+          },
+          body: formData
+        }).then(response => {
+          if (!response.ok) {
+            this.ipfsProcessing = false;
+            Toast.responseHandler(
+              this.$t('unstoppable.error.upload-error'),
+              Toast.ERROR
+            );
+            return;
+          }
+          this.getHashFromFile(content.body.hashResponse);
+        });
+      } catch (e) {
+        this.ipfsProcessing = false;
+        Toast.responseHandler(e, Toast.ERROR);
+      }
+    },
+    async getHashFromFile(hash) {
+      try {
+        const ipfsHash = await fetch('https://swap.mewapi.io/ipfs', {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            method: 'uploadComplete',
+            hash: hash
+          })
+        })
+          .then(response => {
+            return response.json();
+          })
+          .catch(e => {
+            this.ipfsProcessing = false;
+            Toast.responseHandler(e, Toast.ERROR);
+          });
+        if (ipfsHash.error) {
+          Toast.responseHandler(
+            this.$t('unstoppable.ipfs.error-fetching-hash'),
+            Toast.ERROR
+          );
+        } else {
+          this.saveIpfsHash(ipfsHash);
+        }
+      } catch (e) {
+        this.ipfsProcessing = false;
+        Toast.responseHandler(e, Toast.ERROR);
+      }
+    },
+    async saveIpfsHash(recHash) {
+      this.ipfsProcessing = true;
+      const node = hash(this.domainName);
+      const cryptoRegistry = new this.web3.eth.Contract(
+        registryAbi,
+        '0xd1e5b0ff1287aa9f9a268759062e4ab08b9dacbe'
+      );
+      const currentResolverAddress = await this.getResolverAddress(
+        cryptoRegistry,
+        node
+      );
+      if (!currentResolverAddress) {
+        throw new Error(this.$t('unstoppable.error.no-resolver-set'));
+      }
+      const resolverContract = new this.web3.eth.Contract(
+        resolverAbi,
+        currentResolverAddress
+      );
+
+      try {
+        const txObj = {
+          from: this.account.address,
+          to: currentResolverAddress,
+          data: resolverContract.methods
+            .set('ipfs.html.value', recHash, node)
+            .encodeABI(),
+          value: 0
+        };
+        this.web3.eth.sendTransaction(txObj).then(() => {
+          this.ipfsHash = recHash;
+          this.ipfsProcessing = false;
+        });
+      } catch (e) {
+        this.ipfsProcessing = false;
+        Toast.responseHandler(e, Toast.ERROR);
+      }
+    },
+    ipfsClick() {
+      const input = this.$refs.zipInput;
+      input.value = '';
+      input.click();
+    },
     async getResolverAddress(cryptoRegistry, node) {
       return cryptoRegistry.methods
         .resolverOf(node)
@@ -137,7 +356,7 @@ export default {
           node
         );
         if (!resolverAddress) {
-          throw new Error('No resolver address set');
+          throw new Error(this.$t('unstoppable.error.no-resolver-set'));
         }
         const resolver = new this.web3.eth.Contract(
           resolverAbi,
@@ -146,8 +365,13 @@ export default {
         result = await resolver.methods
           .getMany(Object.values(keyToCryptoKey), node)
           .call();
+        const ipfsHash = await resolver.methods
+          .get('ipfs.html.value', node)
+          .call();
+        this.ipfsHash = ipfsHash && ipfsHash !== '' ? ipfsHash : '';
       } catch (e) {
         result = new Array(65).fill('');
+        this.ipfsHash = '';
         this.loading = false;
       }
       this.additionalRecords = [];
