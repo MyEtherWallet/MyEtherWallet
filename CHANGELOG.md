@@ -1,6 +1,11 @@
 ### Bug
 
+- Remove view wallet layout [#2454](https://github.com/MyEtherWallet/MyEtherWallet/pull/2454)
 - Remove private keys when irrelevant on print wallets [#2453](https://github.com/MyEtherWallet/MyEtherWallet/pull/2453)
+
+### Devop
+
+- Replace icons and font color on side menu [#2455](https://github.com/MyEtherWallet/MyEtherWallet/pull/2455)
 
 ### Release v5.6.5
 
