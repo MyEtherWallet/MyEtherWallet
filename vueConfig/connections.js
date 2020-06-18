@@ -68,5 +68,6 @@ module.exports = [
   'https://perkle-pub.esprezzo.io:443',
   'https://o382951.ingest.sentry.io:443',
   'https://dispatch.pokt.network:443',
-  'https://service.gcp.pokt.network:443'
+  'https://service.gcp.pokt.network:443',
+  'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket'
 ];
