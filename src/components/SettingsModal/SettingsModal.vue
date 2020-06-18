@@ -60,6 +60,7 @@
                       ref="customInput"
                       v-model="customGas"
                       type="number"
+                      :placeholder="$t('common.gas.price-range')"
                       @focus="selectedGasType = 'other'"
                     />
                     <p class="gwei">{{ $t('common.gas.gwei') }}</p>

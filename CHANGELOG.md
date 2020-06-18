@@ -1,4 +1,4 @@
-### Release v5.6.6-hotfix
+### Release v5.6.6-hotfix.1
 
 ### Devop
 
@@ -7,6 +7,7 @@
 
 ### Feature
 
+- Add gas price warning to send offline helper [#2449](https://github.com/MyEtherWallet/MyEtherWallet/pull/2449)
 - support unstoppable domains with dashes [#2456](https://github.com/MyEtherWallet/MyEtherWallet/pull/2456)
 
 ### Release v5.6.6

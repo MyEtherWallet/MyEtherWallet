@@ -118,13 +118,7 @@ $confirmation-modal-mobile-width: 500px;
           padding-top: 10px;
         }
         .gas-price-warning {
-          background-color: $red-8;
-          border: 1px solid $red-1;
-          padding: 20px;
-          text-align: center;
-          font-weight: bold;
-          color: $red-3;
-          border-radius: 5px;
+          margin-top: 0 !important;
         }
 
         .grid-block {
