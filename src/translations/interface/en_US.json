@@ -114,7 +114,8 @@
     "paper": "Paper Wallet",
     "link2": "https://www.myetherwallet.com",
     "my-priv": "MY PRIVATE KEY",
-    "warning": "Please Keep Your Paper Wallet at a {safe} Place! Please {do-not} Share Your Private Key With Anyone!",
+    "warning": "Please Keep Your Paper Wallet at a {safe} Place! {extend}",
+    "dont-share-priv-key": "Please {doNot} Share Your Private Key With Anyone!",
     "safe": "SAFE",
     "do-not": "DO NOT"
   },
