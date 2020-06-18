@@ -1,3 +1,7 @@
+### Devop
+
+- Replace icons and font color on side menu [#2455](https://github.com/MyEtherWallet/MyEtherWallet/pull/2455)
+
 ### Release v5.6.5
 
 ### Bug
