@@ -1,3 +1,7 @@
+### Bug
+
+- Remove private keys when irrelevant on print wallets [#2453](https://github.com/MyEtherWallet/MyEtherWallet/pull/2453)
+
 ### Release v5.6.5
 
 ### Bug
