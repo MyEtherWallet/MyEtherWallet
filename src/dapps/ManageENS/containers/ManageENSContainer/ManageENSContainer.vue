@@ -447,7 +447,6 @@ export default {
   computed: {
     ...mapState('main', ['web3', 'account', 'network']),
     validIpfs() {
-      console.log(this.localContentHash, this.contentHash);
       return isIpfs.multihash(this.localContentHash);
     },
     deedValueEth() {
