@@ -205,14 +205,14 @@ const fetchMasterFile = async () => {
 
     const response = await fetch(
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/master-file.json'
-    )
-      .then(res => res.json())
-      .catch(console.log);
+    ).then(res => res.json());
     console.log('Writing masterfile');
-    fs.writeFileSync(
-      `${configs.MASTER_FILE_PATH}/master-file.json`,
-      JSON.stringify(response)
-    );
+    if (response !== undefined) {
+      fs.writeFileSync(
+        `${configs.MASTER_FILE_PATH}/master-file.json`,
+        JSON.stringify(response)
+      );
+    }
   } catch (e) {
     console.error(e); // Not captured by sentry
   }
