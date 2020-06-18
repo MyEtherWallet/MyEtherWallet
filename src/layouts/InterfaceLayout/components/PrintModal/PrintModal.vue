@@ -62,6 +62,11 @@ export default {
         printJS({
           printable: screen.toDataURL('image/png'),
           type: 'image'
+        }).onError(() => {
+          Toast.responseHandler(
+            this.$t('errorsGlobal.print-support-error'),
+            Toast.ERROR
+          );
         });
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);
