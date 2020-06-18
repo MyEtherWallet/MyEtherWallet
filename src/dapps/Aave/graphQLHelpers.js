@@ -142,8 +142,8 @@ export function setUsageAsCollateralDetails(param) {
 }
 
 function fetchQuery(query, param) {
-  const someURL = 'https://protocol-api.aave.com/graphql';
-  return fetch(someURL, {
+  const url = 'https://protocol-api.aave.com/graphql';
+  return fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
