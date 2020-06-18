@@ -23,14 +23,14 @@
         }
 
         p {
-          color: $text-side-menu-inactive-color;
+          color: $dark-grey-11;
           font-size: 16px;
           font-weight: 500;
           position: relative;
         }
 
         i {
-          color: $text-side-menu-inactive-color;
+          color: $dark-grey-11;
           font-size: 16px;
           margin-left: auto;
         }
@@ -38,7 +38,7 @@
 
       ul {
         li {
-          color: $text-side-menu-inactive-color;
+          color: $dark-grey-11;
           font-size: 14px;
           font-weight: 400;
           margin: 10px 0 0 40px;
@@ -48,14 +48,14 @@
   }
 
   .active {
-    color: $text-black;
+    color: $dark-blue-12;
 
     p {
-      color: $text-black !important;
+      color: $dark-blue-12 !important;
     }
 
     i {
-      color: $text-black !important;
+      color: $dark-blue-12 !important;
     }
   }
 }

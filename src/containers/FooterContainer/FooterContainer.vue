@@ -229,10 +229,6 @@ export default {
               to: '/verify-message'
             },
             {
-              text: 'footer.view-wallet-info',
-              to: '/view-wallet-info'
-            },
-            {
               text: 'dappsSubmission.banner-submit.submit-dapp',
               to: '/dapp-submission'
             }
