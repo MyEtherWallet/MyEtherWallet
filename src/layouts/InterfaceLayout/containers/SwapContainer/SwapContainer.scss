@@ -2,6 +2,12 @@
 
 $swap-custom-mobile-colleps-width: 700px;
 
+.fee-notice {
+  text-align: center;
+  color: $text-color-red;
+  margin: 60px 0 0 15px;
+}
+
 .swap-container {
   @extend %interface-container;
 
@@ -234,7 +240,6 @@ $swap-custom-mobile-colleps-width: 700px;
   } // .advanced
 
   .submit-button-container {
-    margin-top: 60px;
     text-align: center;
     // Mobile
     @media all and (max-width: $mobile-width) {
