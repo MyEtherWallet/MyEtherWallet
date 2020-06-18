@@ -6,11 +6,19 @@ $tablet-width: 1270px;
   flex-direction: column;
   align-items: center;
   position: fixed;
-  bottom: 150px;
-  height: 220px;
+  bottom: 60px;
   right: 60px;
   z-index: 9999;
   justify-content: space-around;
+
+  a {
+    height: 50px;
+    margin-top: 30px;
+  }
+
+  .decision-tree-container {
+    height: 50px;
+  }
 }
 
 .vintage-header {

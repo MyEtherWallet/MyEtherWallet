@@ -179,3 +179,75 @@
     background-color: $disabled;
   }
 }
+
+.ipfs-container {
+  border-top: 1px solid $black;
+  margin-top: 20px;
+  padding: 20px 10px 10px;
+
+  .label-container {
+    display: flex;
+    color: $dark-blue-12;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 15px;
+    position: relative;
+  }
+
+  input {
+    background-color: $light-grey-1;
+    border: 0;
+    border-radius: 4px;
+    padding: 13px 15px;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .file-upload-container {
+    position: absolute;
+    top: -100000px;
+  }
+
+  .upload-zip {
+    color: $mew-green;
+    cursor: pointer;
+  }
+
+  .save-ipfs-hash {
+    text-align: center;
+    button {
+      background-color: $mew-green;
+      border: 1px solid $mew-green;
+      border: 0;
+      border-radius: 4px;
+      color: $white;
+      cursor: pointer;
+      margin: 30px 0 0 10px;
+      padding: 13px 15px;
+      width: 150px;
+    }
+
+    .disabled {
+      background-color: $dark-grey-11 !important;
+      border: 1px solid $dark-grey-11 !important;
+      color: $white !important;
+      pointer-events: none;
+    }
+  }
+}
+
+.ipfs-loading-container {
+  padding: 40px 30px;
+  height: 200px;
+  text-align: center;
+  color: $dark-blue-12;
+
+  i {
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+}
+
+.text-error {
+  color: $red-1;
+}
