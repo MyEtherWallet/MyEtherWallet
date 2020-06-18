@@ -642,7 +642,6 @@ export default {
               }
             ],
             MewMakerPlugin,
-            // MigrationPlugin
           ],
           log: true,
           autoAuthenticate: true,
@@ -661,7 +660,6 @@ export default {
 
       this.setupMCD();
       try {
-        // await this.maker.authenticate();
         this.currentlyLoading = 'dappsMCDMaker.loading-system';
 
         await setupServices(this, this.maker);
