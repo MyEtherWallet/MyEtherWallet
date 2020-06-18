@@ -1,6 +1,14 @@
 ### Bug
 
+- Remove view wallet layout [#2454](https://github.com/MyEtherWallet/MyEtherWallet/pull/2454)
+- Remove private keys when irrelevant on print wallets [#2453](https://github.com/MyEtherWallet/MyEtherWallet/pull/2453)
+- Sentry fixes s [#2451](https://github.com/MyEtherWallet/MyEtherWallet/pull/2451)
 - Sentry fixes y [#2450](https://github.com/MyEtherWallet/MyEtherWallet/pull/2450)
+
+### Devop
+
+- Update aave protocol lib to 1.0.0(https://github.com/MyEtherWallet/MyEtherWallet/pull/2452)
+- Replace icons and font color on side menu [#2455](https://github.com/MyEtherWallet/MyEtherWallet/pull/2455)
 
 ### Release v5.6.5
 
