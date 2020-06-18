@@ -29,7 +29,13 @@
               v-for="(token, index) in customTokens"
               :key="token.symbol + index"
             >
-              <td>{{ token.symbol }}</td>
+              <td>
+                <a
+                  :href="`https://etherscan.io/token/${token.address}`"
+                  rel="noopener noreferrer"
+                  >{{ token.symbol }}</a
+                >
+              </td>
               <td>
                 {{ token.balance }}
                 <i
