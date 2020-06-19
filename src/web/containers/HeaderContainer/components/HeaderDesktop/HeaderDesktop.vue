@@ -1,5 +1,5 @@
 <template>
-  <div class="light-blue darken-4">
+  <div class="bg_blue">
     <v-container>
       <v-app-bar color="transparent" dark flat>
         <router-link :to="{ name: 'Home', query: {} }">

@@ -14,7 +14,7 @@
       </div>
       <div>
         <img
-          height="90"
+          height="80"
           src="@/assets/images/icons/icon-keystore-file.svg"
           alt="MEWcx"
         />

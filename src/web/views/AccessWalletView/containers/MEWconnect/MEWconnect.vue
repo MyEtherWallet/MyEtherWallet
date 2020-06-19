@@ -14,12 +14,9 @@
         </router-link>
       </h5>
     </BlockTitle>
-    <v-sheet color="transparent" max-width="650px" class="mx-auto">
-      <MEWconnect class="mb-5" />
-      <Hardware class="mb-5" />
-      <CX class="mb-5" />
-      <MobileApps class="mb-5" />
-      <Software />
+    <v-sheet color="transparent" max-width="550px" class="mx-auto">
+      <ScanToConnect class="mb-5" />
+      <MEWwallet />
     </v-sheet>
     <div class="spacer-y-medium" />
   </div>
@@ -27,20 +24,17 @@
 
 <script>
 import BlockTitle from '@/web/components/BlockTitle';
-import MEWconnect from './components/MEWconnect';
-import Hardware from './components/Hardware';
-import CX from './components/CX';
-import MobileApps from './components/MobileApps';
-import Software from './components/Software';
+import ScanToConnect from './components/ScanToConnect';
+import MEWwallet from './components/MEWwallet';
 
 export default {
   name: 'CreateNewWallet',
-  components: { BlockTitle, MEWconnect, Hardware, CX, MobileApps, Software },
+  components: { BlockTitle, ScanToConnect, MEWwallet },
   data: () => ({
     titleData: {
       textProps: 'white--text',
       toptitle: '',
-      title: 'Access My Wallet',
+      title: 'MEWconnect',
       description: '',
       centered: true
     }

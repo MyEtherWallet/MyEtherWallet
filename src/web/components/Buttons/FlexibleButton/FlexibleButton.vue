@@ -6,7 +6,8 @@
       :class="[
         outlined ? 'outlined' : '',
         small ? 'px-10 py-4' : 'pa-10',
-        medium ? 'px-10 py-7' : 'pa-10'
+        medium ? 'px-10 py-7' : 'pa-10',
+        nopadding ? 'nopadding' : ''
       ]"
       @click="changeRoute"
     >
@@ -21,7 +22,8 @@ export default {
     to: { default: () => {}, type: Object },
     small: { default: false, type: Boolean },
     medium: { default: false, type: Boolean },
-    outlined: { default: false, type: Boolean }
+    outlined: { default: false, type: Boolean },
+    nopadding: { default: false, type: Boolean }
   },
   data: () => ({}),
   methods: {
@@ -46,5 +48,8 @@ export default {
   border-top-color: white !important;
   border-bottom-color: white !important;
   border: 1px solid white;
+}
+.nopadding {
+  padding: 0 !important;
 }
 </style>

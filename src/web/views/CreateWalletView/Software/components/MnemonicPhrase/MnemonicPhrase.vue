@@ -14,7 +14,7 @@
       </div>
       <div>
         <img
-          height="90"
+          height="80"
           src="@/assets/images/icons/icon-mnemonic.svg"
           alt="MEWcx"
         />

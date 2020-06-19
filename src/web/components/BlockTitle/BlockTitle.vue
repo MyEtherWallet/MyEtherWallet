@@ -1,5 +1,6 @@
 <template>
   <div class="block-title" :class="data.centered ? 'text-center' : ''">
+    <div class="py-10"></div>
     <div
       v-if="data.toptitle"
       class="top-title text-uppercase font-weight-bold grey--text text--lighten-1 mb-2"
@@ -22,11 +23,12 @@
       color="transparent"
       :class="data.centered ? 'mx-auto' : ''"
     >
-      <p v-if="data.description" :class="data.textProps" class="ma-0">
+      <h5 v-if="data.description" :class="data.textProps" class="ma-0">
         {{ data.description }}
-      </p>
+      </h5>
       <div><slot /></div>
     </v-sheet>
+    <div class="py-6"></div>
   </div>
 </template>
 
