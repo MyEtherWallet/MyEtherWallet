@@ -228,15 +228,13 @@ export default {
   },
   methods: {
     isDisabled() {
+      const tokenAmtInEth = new BigNumber(this.amount)
+        .times(this.token && this.token.price ? this.token.price.priceInEth : 0)
+        .toFixed();
+
       if (
-        this.actionTitle === this.actionTitles.withdraw &&
-        new BigNumber(this.calculateNextHealthFactor()).lte(0)
-      ) {
-        this.errorMsg = this.$t('dappsAave.cannot-withdraw');
-        return true;
-      } else if (
         this.actionTitle === this.actionTitles.borrow &&
-        new BigNumber(this.currentHealthFactor).lt(1)
+        new BigNumber(this.userSummary.availableBorrowsETH).lt(tokenAmtInEth)
       ) {
         this.errorMsg = this.$t('dappsAave.cannot-borrow');
         return true;
