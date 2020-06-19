@@ -2,8 +2,12 @@
   <div class="mew6-component--flexible-button">
     <v-sheet
       :color="outlined ? 'transparent' : 'white'"
-      class="text-transform--initial pa-10"
-      :class="outlined ? 'outlined' : ''"
+      class="text-transform--initial user-select--none cursor--pointer"
+      :class="[
+        outlined ? 'outlined' : '',
+        small ? 'px-10 py-4' : 'pa-10',
+        medium ? 'px-10 py-7' : 'pa-10'
+      ]"
       @click="changeRoute"
     >
       <slot />
@@ -15,6 +19,8 @@
 export default {
   props: {
     to: { default: () => {}, type: Object },
+    small: { default: false, type: Boolean },
+    medium: { default: false, type: Boolean },
     outlined: { default: false, type: Boolean }
   },
   data: () => ({}),

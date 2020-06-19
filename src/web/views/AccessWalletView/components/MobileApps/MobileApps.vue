@@ -1,6 +1,6 @@
 <template>
   <a
-    href="https://mewconnect.myetherwallet.com/"
+    href="https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en"
     target="_blank"
     class="display--block text-decoration--none"
   >
@@ -8,18 +8,24 @@
       <div class="d-flex align-center justify-space-between">
         <div class="pr-9">
           <div class="d-flex align-center mb-2">
-            <h4 class="mr-2 font-weight-bold">MEWconnect</h4>
+            <h4 class="mr-2 font-weight-bold">Mobile Apps</h4>
             <mew6-icon-secure />
           </div>
           <div>
-            Use MEWconnect to access my wallet
+            WalletConnect, Wallet Link
           </div>
         </div>
-        <div>
+        <div class="d-flex align-center my-4">
           <img
-            height="80"
-            src="@/assets/images/icons/icon-mew-connect.png"
-            alt="MEWcx"
+            height="55"
+            src="@/assets/images/icons/icon-wallet-connect.svg"
+            alt="Wallet Connect"
+            class="mr-3"
+          />
+          <img
+            height="45"
+            src="@/assets/images/icons/icon-wallet-link.png"
+            alt="Wallet Link"
           />
         </div>
       </div>

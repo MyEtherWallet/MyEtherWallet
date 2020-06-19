@@ -1,46 +1,50 @@
 <template>
-  <mew6-flexible-btn
-    :to="{ name: 'HomeCreateWalletMewWallet', query: { step: '1' } }"
+  <a
+    href="https://www.mewwallet.com/"
+    target="_blank"
+    class="display--block text-decoration--none"
   >
-    <div class="d-flex">
-      <div class="pr-9">
-        <div class="d-flex align-center mb-2">
-          <h4 class="mr-2 font-weight-bold">Get MEWwallet</h4>
-          <mew6-icon-secure />
+    <mew6-flexible-btn>
+      <div class="d-flex">
+        <div class="pr-9">
+          <div class="d-flex align-center mb-2">
+            <h4 class="mr-2 font-weight-bold">Get MEWwallet</h4>
+            <mew6-icon-secure />
+          </div>
+          <div>
+            MEW Brings a hardware wallet style security to your iOS or Android
+            smartphone, helping you to secure your funds as never before.
+          </div>
+          <div class="mt-6">
+            <img
+              height="30"
+              src="@/assets/images/icons/button-app-store.png"
+              alt="Apple store"
+              class="mr-1"
+            />
+            <img
+              height="30"
+              src="@/assets/images/icons/button-play-store.png"
+              alt="Apple store"
+              class="mr-1"
+            />
+            <img
+              height="30"
+              src="@/assets/images/icons/button-samsung.png"
+              alt="Apple store"
+            />
+          </div>
         </div>
-        <div>
-          MEW Brings a hardware wallet style security to your iOS or Android
-          smartphone, helping you to secure your funds as never before.
-        </div>
-        <div class="mt-6">
+        <div class="side-image">
           <img
-            height="30"
-            src="@/assets/images/icons/button-app-store.png"
-            alt="Apple store"
-            class="mr-1"
-          />
-          <img
-            height="30"
-            src="@/assets/images/icons/button-play-store.png"
-            alt="Apple store"
-            class="mr-1"
-          />
-          <img
-            height="30"
-            src="@/assets/images/icons/button-samsung.png"
-            alt="Apple store"
+            height="200"
+            src="@/assets/images/snippets/bg-mew-wallet.png"
+            alt="MEWwallet"
           />
         </div>
       </div>
-      <div class="side-image">
-        <img
-          height="200"
-          src="@/assets/images/snippets/bg-mew-wallet.png"
-          alt="MEWwallet"
-        />
-      </div>
-    </div>
-  </mew6-flexible-btn>
+    </mew6-flexible-btn>
+  </a>
 </template>
 
 <script>

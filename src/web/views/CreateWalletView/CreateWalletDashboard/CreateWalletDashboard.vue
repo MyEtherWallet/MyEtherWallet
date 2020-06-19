@@ -1,5 +1,6 @@
 <template>
-  <div class="light-blue darken-4 py-12">
+  <div class="light-blue darken-4">
+    <div class="py-8" />
     <mew6-bottom-alert-buy-hardware-wallet :show="true" hide-overlay />
     <BlockTitle :data="titleData" class="mb-10">
       <h5 class="white--text ma-0">
@@ -17,11 +18,11 @@
     </BlockTitle>
 
     <v-sheet color="transparent" max-width="650px" class="mx-auto">
-      <MEWwallet class="cursor--pointer user-select--none mb-5" />
-      <MEWcx class="cursor--pointer user-select--none mb-5" />
-      <Software class="cursor--pointer user-select--none" />
+      <MEWwallet class="mb-5" />
+      <MEWcx class="mb-5" />
+      <Software />
     </v-sheet>
-    <div class="py-6" />
+    <div class="py-10" />
   </div>
 </template>
 
