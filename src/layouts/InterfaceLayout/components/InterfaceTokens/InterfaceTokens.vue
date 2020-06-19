@@ -24,12 +24,26 @@
           {{ $t('interface.tokens.warning-offline') }}
         </div>
         <div ref="tokenTableContainer" class="token-table-container">
-          <table v-show="customTokens.length > 0 && receivedTokens">
+          <table
+            v-show="customTokens && customTokens.length > 0 && receivedTokens"
+          >
             <tr
               v-for="(token, index) in customTokens"
               :key="token.symbol + index"
             >
-              <td>{{ token.symbol }}</td>
+              <td>
+                <a
+                  :href="
+                    network.type.blockExplorerAddr.replace(
+                      '[[address]]',
+                      token.address
+                    )
+                  "
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  >{{ token.symbol }}</a
+                >
+              </td>
               <td>
                 {{ token.balance }}
                 <i
@@ -49,7 +63,17 @@
                 <figure v-lazy-load class="token-icon">
                   <img :data-url="iconFetch(token)" @error="iconFallback" />
                 </figure>
-                {{ token.symbol }}
+                <a
+                  :href="
+                    network.type.blockExplorerAddr.replace(
+                      '[[address]]',
+                      token.address
+                    )
+                  "
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  >{{ token.symbol }}</a
+                >
               </td>
               <td
                 v-if="token.balance === 'Load' && online"

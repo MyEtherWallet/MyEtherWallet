@@ -704,12 +704,16 @@ export default {
     },
     checkWeb3WalletAddrChange() {
       const web3 = this.web3;
-      window.ethereum.on('accountsChanged', account => {
-        if (account.length > 1) {
-          const wallet = new Web3Wallet(account[0]);
-          this.decryptWallet([wallet, web3]);
-        }
-      });
+      try {
+        window.ethereum.on('accountsChanged', account => {
+          if (account.length > 1) {
+            const wallet = new Web3Wallet(account[0]);
+            this.decryptWallet([wallet, web3]);
+          }
+        });
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
+      }
     },
     checkAndSetNetwork(id) {
       if (this.network.type.chainID.toString() !== `${id}`) {

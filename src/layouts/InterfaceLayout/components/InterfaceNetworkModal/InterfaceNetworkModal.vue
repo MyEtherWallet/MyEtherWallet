@@ -319,7 +319,7 @@ export default {
   },
   watch: {
     selectedNetworkName(val) {
-      if (val !== 'CUS') {
+      if (val !== 'CUS' && this.selectedNetwork) {
         this.chainID = this.selectedNetwork.chainID;
       }
     }

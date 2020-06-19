@@ -1,3 +1,16 @@
+### Release v5.6.6-hotfix.1
+
+### Devop
+
+- Update aave protocol lib to 1.0.0 [#2452](https://github.com/MyEtherWallet/MyEtherWallet/pull/2452)
+- Add EWT and FUSE support [#2438](https://github.com/MyEtherWallet/MyEtherWallet/pull/2438)
+- dont overrwrite master file on error [#2443](https://github.com/MyEtherWallet/MyEtherWallet/pull/2443)
+
+### Feature
+
+- Add gas price warning to send offline helper [#2449](https://github.com/MyEtherWallet/MyEtherWallet/pull/2449)
+- support unstoppable domains with dashes [#2456](https://github.com/MyEtherWallet/MyEtherWallet/pull/2456)
+
 ### Release v5.6.6
 
 ### Feature

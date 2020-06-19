@@ -381,7 +381,7 @@ export default {
       if (this.actionTitle === this.actionTitles.withdraw) {
         param.data.aToken = this.token.aToken.id;
       } else {
-        param.data.reserve = this.token.id;
+        param.data.reserve = this.token.underlyingAsset;
       }
 
       if (this.actionTitle === this.actionTitles.borrow) {
