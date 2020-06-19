@@ -69,7 +69,7 @@ export default {
   }
 }
 .tab-active {
-  background-color: #184f90;
+  background-color: var(--v-bg_dark_blue-base);
   color: white;
 }
 .tab-undone {

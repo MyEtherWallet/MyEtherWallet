@@ -1,5 +1,5 @@
 <template>
-  <div class="light-blue darken-4">
+  <div class="bg_blue">
     <div class="pointer-event--none user-select--none line-height--0">
       <img
         class="banner-img"

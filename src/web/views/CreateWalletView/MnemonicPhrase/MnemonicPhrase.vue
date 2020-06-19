@@ -1,9 +1,10 @@
 <template>
-  <div class="light-blue darken-4 py-12">
+  <div class="bg_blue">
     <v-sheet color="transparent" max-width="800px" class="mx-auto">
-      <BlockTitle :data="titleData" class="mb-10" />
+      <BlockTitle :data="titleData" />
       <SteppersHeaderContent :tabs="tabs" />
     </v-sheet>
+    <div class="spacer-y-medium" />
   </div>
 </template>
 

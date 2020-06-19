@@ -1,8 +1,7 @@
 <template>
-  <div class="light-blue darken-4">
-    <div class="py-8" />
+  <div class="bg_blue">
     <mew6-bottom-alert-buy-hardware-wallet :show="true" hide-overlay />
-    <BlockTitle :data="titleData" class="mb-10">
+    <BlockTitle :data="titleData">
       <h5 class="white--text ma-0">
         Please select a method to create a new wallet.
       </h5>
@@ -22,7 +21,7 @@
       <MEWcx class="mb-5" />
       <Software />
     </v-sheet>
-    <div class="py-10" />
+    <div class="spacer-y-medium" />
   </div>
 </template>
 
