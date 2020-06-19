@@ -1,21 +1,30 @@
 <template>
-  <v-sheet class="border-radius--10px py-8 px-10 position--relative">
-    <img
-      class="button-right-image"
-      src="@/assets/images/snippets/mobile/logo-mew-wallet.png"
-    />
-    <div class="headline font-weight-bold mb-2">Chrome Extension</div>
-    <p class="mb-4 button-description-size-limit">
-      Ipsum consetetur sit dolores ipsum consetetur diam et. Ipsum consetetur
-      sit dolores ipsum consetetur diam et.
-    </p>
-    <div class="d-flex align-center">
-      <v-icon color="teal lighten-1" class="mr-1">mdi-shield</v-icon>
-      <p class="ma-0 teal--text text--lighten-1 font-weight-bold">
-        Recommanded
-      </p>
-    </div>
-  </v-sheet>
+  <a
+    href="https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en"
+    target="_blank"
+    class="display--block text-decoration--none"
+  >
+    <mew6-flexible-btn small>
+      <div class="d-flex align-center justify-space-between">
+        <div class="pr-9">
+          <div class="d-flex align-center mb-2">
+            <h4 class="mr-2 font-weight-bold">MEW CX</h4>
+            <mew6-icon-secure />
+          </div>
+          <div>
+            Use MEW CX to access my wallet
+          </div>
+        </div>
+        <div>
+          <img
+            height="80"
+            src="@/assets/images/icons/icon-mew-cx.png"
+            alt="MEWcx"
+          />
+        </div>
+      </div>
+    </mew6-flexible-btn>
+  </a>
 </template>
 
 <script>
@@ -25,6 +34,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-@import '../common.scss';
-</style>
+<style lang="scss" scoped></style>
