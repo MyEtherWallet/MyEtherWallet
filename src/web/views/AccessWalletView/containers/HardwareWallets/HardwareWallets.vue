@@ -1,0 +1,86 @@
+<template>
+  <div class="bg_blue">
+    <v-sheet color="transparent" max-width="450px" class="mx-auto">
+      <BlockTitle :data="titleData">
+        <h5 class="white--text ma-0">
+          Select a hardware to access your wallet. Make sure your device is
+          connected and unlocked.
+        </h5>
+      </BlockTitle>
+    </v-sheet>
+    <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
+      <v-row>
+        <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="6">
+          <HardwareWalletBtn :data="btn" />
+        </v-col>
+      </v-row>
+    </v-sheet>
+    <div class="spacer-y-medium" />
+  </div>
+</template>
+
+<script>
+import BlockTitle from '@/web/components/BlockTitle';
+import HardwareWalletBtn from './components/HardwareWalletBtn';
+
+export default {
+  name: 'CreateNewWallet',
+  components: { BlockTitle, HardwareWalletBtn },
+  data: () => ({
+    titleData: {
+      textProps: 'white--text',
+      toptitle: '',
+      title: 'Hardware Wallets',
+      description: '',
+      centered: true
+    },
+    buttons: [
+      {
+        label: 'Ledger',
+        icon: require('@/assets/images/icons/hardware-wallets/icon-ledger.svg')
+      },
+      {
+        label: 'Bitbox',
+        icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')
+      },
+      {
+        label: 'FINNEY',
+        icon: require('@/assets/images/icons/hardware-wallets/icon-finney.svg')
+      },
+      {
+        label: 'Secalot',
+        icon: require('@/assets/images/icons/hardware-wallets/icon-secalot.svg')
+      },
+      {
+        label: 'KeepKey',
+        icon: require('@/assets/images/icons/hardware-wallets/icon-keepkey.svg')
+      },
+      {
+        label: 'Trezor',
+        icon: require('@/assets/images/icons/hardware-wallets/icon-trezor.svg')
+      },
+      {
+        label: 'CoolWallet',
+        icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg')
+      },
+      {
+        label: 'BC Vault',
+        icon: require('@/assets/images/icons/hardware-wallets/icon-bcvault.svg')
+      },
+      {
+        label: 'XWallet',
+        icon: require('@/assets/images/icons/hardware-wallets/icon-xwallet.svg')
+      }
+    ]
+  }),
+  methods: {}
+};
+</script>
+
+<style lang="scss" scoped>
+.new-wallet-button {
+  &:hover {
+    box-shadow: 0 0 50px var(--v-police_strobe-base);
+  }
+}
+</style>
