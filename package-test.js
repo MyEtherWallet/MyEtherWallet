@@ -33,7 +33,11 @@ const EXCEPTIONS = [
   '@makerdao/dai-plugin-migrations',
   '@makerdao/dai-plugin-config',
   '@makerdao/currency',
-  'i18n-iso-countries'
+  'i18n-iso-countries',
+  '@myetherwallet/mewconnect-web-client',
+  'vue-router',
+  '@wallet-connect/browser',
+  'eslint-plugin-prettier'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
