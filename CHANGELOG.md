@@ -1,3 +1,7 @@
+### Bug
+
+- check gas if only one side of the swap is on ethereum [#2473](https://github.com/MyEtherWallet/MyEtherWallet/pull/2473)
+
 ### Release v5.6.6-hotfix.1
 
 ### Devop
