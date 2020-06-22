@@ -24,7 +24,7 @@
         <div class="qr-code-container">
           <qrcode :value="address" :options="{ size: 100 }" />
           <p>
-            Wallet QR Code
+            {{ $t('mewcx.wallet-qr-code') }}
           </p>
         </div>
       </div>
@@ -40,7 +40,9 @@
                 />
               </div>
               <div class="wallet-value-container">
-                <p class="wallet-title">Total Wallet Value</p>
+                <p class="wallet-title">
+                  {{ $t('mewcx.value-of-tokens', { plural: 's' }) }}
+                </p>
                 <p v-if="network.type.name === 'ETH'" class="dollar-amt">
                   {{ walletTokensWithBalance.totalWalletBalance }}
                 </p>
@@ -48,17 +50,18 @@
             </div>
             <div class="wallet-value-container">
               <p class="wallet-title">
-                {{ network.type.currencyName }} Balance
+                {{ network.type.currencyName }} {{ $t('mewcx.balance') }}
               </p>
               <p class="dollar-amt">
                 {{ ethBalance }}
               </p>
             </div>
             <div class="wallet-value-container">
-              <p class="wallet-title">Value of Token</p>
+              <p class="wallet-title">{{ $t('mewcx.value-of-tokens') }}</p>
               <p class="dollar-amt">{{ walletTokensWithBalance.total }}</p>
               <p class="value">
-                {{ walletTokensWithBalance.tokensWDollarAmtLength }} tokens
+                {{ walletTokensWithBalance.tokensWDollarAmtLength }}
+                {{ $t('mewcx.tokens') }}
               </p>
             </div>
           </div>
