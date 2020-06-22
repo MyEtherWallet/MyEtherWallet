@@ -36,7 +36,7 @@ const EXCEPTIONS = [
   'i18n-iso-countries',
   '@myetherwallet/mewconnect-web-client',
   'vue-router',
-  '@wallet-connect/browser',
+  '@walletconnect/browser',
   'eslint-plugin-prettier'
 ];
 const CUSTOM_DIST = {
