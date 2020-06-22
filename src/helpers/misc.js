@@ -207,8 +207,11 @@ const isContractArgValid = (value, solidityType) => {
 
 const stripTags = content => {
   const insertToDom = new DOMParser().parseFromString(content, 'text/html');
-  insertToDom.body.textContent.replace(/(<([^>]+)>)/gi, '') || '';
-  const string = xss(insertToDom.body.textContent, {
+  const textContent =
+    insertToDom && insertToDom.body
+      ? insertToDom.body.textContent.replace(/(<([^>]+)>)/gi, '')
+      : '';
+  const string = xss(textContent, {
     whitelist: [],
     stripIgnoreTag: true,
     stripIgnoreTagBody: '*'
