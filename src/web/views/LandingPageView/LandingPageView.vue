@@ -5,6 +5,7 @@
     <FooterContainer />
     <GlobalElementsContainer />
     <GlobalModalContainer />
+    <GlobalOverlayContainer />
   </v-sheet>
 </template>
 
@@ -13,6 +14,7 @@ import HeaderContainer from '@/web/containers/HeaderContainer';
 import FooterContainer from '@/web/containers/FooterContainer';
 import GlobalElementsContainer from '@/web/containers/GlobalElementsContainer';
 import GlobalModalContainer from '@/web/containers/GlobalModalContainer';
+import GlobalOverlayContainer from '@/web/containers/GlobalOverlayContainer';
 
 export default {
   name: 'LandingPageView',
@@ -20,7 +22,8 @@ export default {
     HeaderContainer,
     FooterContainer,
     GlobalElementsContainer,
-    GlobalModalContainer
+    GlobalModalContainer,
+    GlobalOverlayContainer
   }
 };
 </script>
