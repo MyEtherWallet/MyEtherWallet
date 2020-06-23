@@ -1,29 +1,17 @@
 <template>
   <div>
-    <AccessWalletLedger
-      :open="openAccessWalletLedger"
-      :close="closeAccessWalletLedger"
-    />
+    <AccessWalletOverlays />
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import AccessWalletLedger from './components/AccessWallet/HardwareWallets/Ledger';
+import AccessWalletOverlays from './components/AccessWallet';
 
 export default {
   name: 'GlobalOverlayContainer',
-  components: { AccessWalletLedger },
+  components: { AccessWalletOverlays },
   data() {
     return {};
-  },
-  computed: mapState({
-    openAccessWalletLedger: state => state.overlays.accessWalletLedger.isOpen
-  }),
-  methods: {
-    closeAccessWalletLedger() {
-      this.$store.commit('closeOverlay', 'accessWalletLedger');
-    }
   }
 };
 </script>
