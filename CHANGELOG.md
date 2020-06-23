@@ -1,4 +1,7 @@
 
+### Bug
+- Update Aave withdraw and healthfactor [#2460] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2460)
+
 ### Release v5.6.6-hotfix.2
 
 ### Hotfix
