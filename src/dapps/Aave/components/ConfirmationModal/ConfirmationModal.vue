@@ -312,10 +312,7 @@ export default {
       return hasIcon(currency);
     },
     checkForAmount() {
-      if (
-        this.actionTitle === this.actionTitles.withdraw &&
-        this.token.user.principalATokenBalance === this.amount
-      ) {
+      if (this.actionTitle === this.actionTitles.withdraw) {
         const underlyingBalance = new BigNumber(
           this.token.user.currentUnderlyingBalance
         );
