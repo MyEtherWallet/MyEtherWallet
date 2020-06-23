@@ -7,7 +7,7 @@ export default {
   name_long: 'EnergyWeb Token',
   homePage: 'https://www.energyweb.org/',
   blockExplorerTX: 'https://explorer.energyweb.org/tx/[[txHash]]',
-  blockExplorerAddr: 'https://explorer.energyweb.org/account/[[address]]',
+  blockExplorerAddr: 'https://explorer.energyweb.org/address/[[address]]',
   chainID: 246,
   tokens: tokens,
   contracts: contracts,
