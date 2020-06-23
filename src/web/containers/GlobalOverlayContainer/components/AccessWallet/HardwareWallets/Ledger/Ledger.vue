@@ -40,9 +40,17 @@
         <v-tab-item>
           <OverlayTitle title="2. Confirm network & address" />
           <mew6-white-sheet>
-            <div class="overlay-content pa-8">
-              <div>aaaaa</div>
-              <mew6-std-btn @click.native="activeTab = 0">
+            <div class="overlay-content">
+              <mew6-expantion-block-large
+                title="Gas price"
+                subtitle="1 Gwei (Economic)"
+              >
+                <template v-slot:content>
+                  aaaaaaaaa tyj tyj
+                </template>
+              </mew6-expantion-block-large>
+
+              <mew6-std-btn min-width="100%" @click.native="activeTab = 0">
                 Connect with Ledger
               </mew6-std-btn>
             </div>
