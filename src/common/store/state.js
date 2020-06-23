@@ -1,6 +1,6 @@
 const state = {
   overlays: {
-    accessWalletLedger: { isOpen: true }
+    accessWalletLedger: { isOpen: false }
   }
 };
 
