@@ -1,3 +1,6 @@
+### Devop
+
+- add check for market impact when finalizing swap details [#2484](https://github.com/MyEtherWallet/MyEtherWallet/pull/2484)
 
 ### Release v5.6.6-hotfix.2
 
