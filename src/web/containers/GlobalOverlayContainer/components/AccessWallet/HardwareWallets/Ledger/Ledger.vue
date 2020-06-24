@@ -50,11 +50,16 @@
             <mew6-expantion-block-large title="Address to interact with">
               <AddressTable />
             </mew6-expantion-block-large>
-            <mew6-std-btn
-              min-width="100%"
-              class="mt-8"
-              @click.native="activeTab = 0"
-            >
+            <mew6-confirm-btn>
+              To access my wallet, I accept&nbsp;
+              <a
+                target="_blank"
+                href="https://www.myetherwallet.com/terms-of-service"
+              >
+                Terms.
+              </a>
+            </mew6-confirm-btn>
+            <mew6-std-btn min-width="100%" @click.native="activeTab = 0">
               Access my wallet
             </mew6-std-btn>
           </div>

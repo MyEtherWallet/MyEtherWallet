@@ -27,6 +27,7 @@ import BuyHardwareWallet from '@/components/BottomAlerts/BuyHardwareWallet';
 import ExpantionBlock from '@/components/ExpantionBlock';
 import ExpantionBlockLarge from '@/components/ExpantionBlockLarge';
 import DividerLine from '@/web/components/Common/DividerLine';
+import ConfirmButton from '@/web/components/Buttons/ConfirmButton';
 Vue.component('mew6-std-btn', StdButton);
 Vue.component('mew6-flexible-btn', FlexibleButton);
 Vue.component('mew6-white-sheet', WhiteSheet);
@@ -37,6 +38,8 @@ Vue.component('mew6-bottom-alert-buy-hardware-wallet', BuyHardwareWallet);
 Vue.component('mew6-expantion-block', ExpantionBlock);
 Vue.component('mew6-expantion-block-large', ExpantionBlockLarge);
 Vue.component('mew6-divider-line', DividerLine);
+Vue.component('mew6-divider-line', DividerLine);
+Vue.component('mew6-confirm-btn', ConfirmButton);
 
 Vue.prototype.$eventHub = new Vue();
 

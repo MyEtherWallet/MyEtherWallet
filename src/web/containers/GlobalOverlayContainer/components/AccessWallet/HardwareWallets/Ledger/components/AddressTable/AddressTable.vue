@@ -1,27 +1,29 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="addresses"
-    :items-per-page="10"
-    item-key="address"
-    sort-by="address"
-    single-select
-    show-select
-  >
-    <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize">Reset</v-btn>
-    </template>
-    <template v-slot:item.blockie="{ item }">
-      <blockie
-        :address="item.address"
-        :size="8"
-        :scale="16"
-        width="30px"
-        height="30px"
-        class="blockie-image"
-      />
-    </template>
-  </v-data-table>
+  <div class="ledger-address-table">
+    <v-data-table
+      :headers="headers"
+      :items="addresses"
+      :items-per-page="10"
+      item-key="address"
+      sort-by="address"
+      single-select
+      show-select
+    >
+      <template v-slot:no-data>
+        <v-btn color="primary" @click="initialize">Reset</v-btn>
+      </template>
+      <template v-slot:item.blockie="{ item }">
+        <blockie
+          :address="item.address"
+          :size="8"
+          :scale="16"
+          width="30px"
+          height="30px"
+          class="blockie-image"
+        />
+      </template>
+    </v-data-table>
+  </div>
 </template>
 
 <script>
@@ -41,7 +43,7 @@ export default {
         text: 'ADDRESS',
         value: 'address'
       },
-      { text: 'ETH BALANCE', value: 'balance' },
+      { text: 'BALANCE', value: 'balance' },
       { text: '#TOKEN', value: 'token' }
     ],
     addresses: []
@@ -53,42 +55,42 @@ export default {
     initialize() {
       this.addresses = [
         {
-          address: '0x4b0959AE0b7F0a5642345235239649F4FD3A599',
+          address: '0x4b0953A599',
           balance: 19.112,
           token: 6
         },
         {
-          address: '0x4b0959AE0b7F0a56445645D3A599',
+          address: '0x4b095F09',
           balance: 19.112,
           token: 6
         },
         {
-          address: '0x4b0959AE0b7F0a56407eD056756757D3A599',
+          address: '0x4b0959F0a569',
           balance: 19.112,
           token: 6
         },
         {
-          address: '0x4b0959AE0b7F0a56407eD0a47533456345599',
+          address: '0x4b09535599',
           balance: 19.112,
           token: 6
         },
         {
-          address: '0x4b0959AE0b7F0a56407e575376649F4FD3A599',
+          address: '0x4b7Fe5799',
           balance: 19.112,
           token: 6
         },
         {
-          address: '0x4b0959AE0b7F0a56407eD0a4753346363D3A599',
+          address: '0x56407eD099',
           balance: 19.112,
           token: 6
         },
         {
-          address: '0x4b0959AE0b7F0a56407eD0a4755675675673A599',
+          address: '0x4b095A599',
           balance: 19.112,
           token: 6
         },
         {
-          address: '0x4b0959AE0b7F34634634607eD0a47539649F4FD3A599',
+          address: '0x444FD3A599',
           balance: 19.112,
           token: 6
         }
@@ -102,5 +104,13 @@ export default {
 .v-data-table td {
   max-width: 100px;
   overflow: hidden;
+}
+</style>
+<style lang="scss">
+.ledger-address-table {
+  .v-data-table td,
+  .v-data-table th {
+    padding: 0px 5px !important;
+  }
 }
 </style>
