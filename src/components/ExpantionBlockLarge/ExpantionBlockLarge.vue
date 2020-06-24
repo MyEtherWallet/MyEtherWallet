@@ -1,23 +1,22 @@
 <template>
-  <v-expansion-panels flat>
-    <v-expansion-panel>
+  <v-expansion-panels flat class="border-radius--10px">
+    <v-expansion-panel class="border-radius--10px">
       <v-expansion-panel-header hide-actions>
-        <div class="d-flex align-center px-4 py-3">
+        <div class="d-flex align-center px-2 py-3">
           <div class="d-flex align-center">
             <div v-if="title" class="headline font-weight-bold mr-3">
               {{ title }}
             </div>
-            <div v-if="subtitle" class="subtitle-color">{{ subtitle }}</div>
+            <div v-if="subtitle" class="grey--text">{{ subtitle }}</div>
           </div>
           <div class="ml-auto">
-            <slot name="headerButtons"></slot>
             <v-btn
               depressed
               x-small
               fab
               dark
               :retain-focus-on-click="true"
-              color="emerald"
+              color="#cdf4ef"
             >
               <v-icon dark>mdi-pencil-outline</v-icon>
             </v-btn>
@@ -26,7 +25,7 @@
       </v-expansion-panel-header>
       <v-expansion-panel-content>
         <div class="px-4 pt-0 pb-3">
-          <slot name="content"></slot>
+          <slot></slot>
         </div>
       </v-expansion-panel-content>
     </v-expansion-panel>
@@ -46,8 +45,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.subtitle-color {
-  color: var(--v-gray_text-base);
-}
-</style>
+<style lang="scss" scoped></style>

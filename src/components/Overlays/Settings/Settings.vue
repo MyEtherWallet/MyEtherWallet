@@ -3,7 +3,7 @@
     <OverlayTitle title="Settings" />
 
     <div class="overlay-content">
-      <v-expansion-panels flat>
+      <v-expansion-panels flat :light="!$vuetify.theme.dark">
         <ExpansionPanelContent title="Gas price" subtitle="1 Gwei (Economic)">
           <template v-slot:content>
             <GasPrice />
