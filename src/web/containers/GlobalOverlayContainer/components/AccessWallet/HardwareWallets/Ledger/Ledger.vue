@@ -18,7 +18,7 @@
                   v-model="appSelect"
                   :items="apps"
                   item-text="label"
-                  item-value="abbr"
+                  item-value="value"
                   label="App opened in Ledger"
                   outlined
                 ></v-select>
@@ -26,7 +26,7 @@
                   v-model="derivationPathSelect"
                   :items="derivationPath"
                   item-text="label"
-                  item-value="abbr"
+                  item-value="value"
                   label="HD derivation path"
                   outlined
                 ></v-select>
@@ -39,22 +39,25 @@
         </v-tab-item>
         <v-tab-item>
           <OverlayTitle title="2. Confirm network & address" />
-          <mew6-white-sheet>
-            <div class="overlay-content">
-              <mew6-expantion-block-large
-                title="Gas price"
-                subtitle="1 Gwei (Economic)"
-              >
-                <template v-slot:content>
-                  aaaaaaaaa tyj tyj
-                </template>
-              </mew6-expantion-block-large>
-
-              <mew6-std-btn min-width="100%" @click.native="activeTab = 0">
-                Connect with Ledger
-              </mew6-std-btn>
-            </div>
-          </mew6-white-sheet>
+          <div class="overlay-content">
+            <mew6-expantion-block-large
+              title="Network"
+              subtitle="ETH - myetherapi.com"
+              class="mb-3"
+            >
+              <GroupRadioButtons :buttons="networkButtons" />
+            </mew6-expantion-block-large>
+            <mew6-expantion-block-large title="Address to interact with">
+              <AddressTable />
+            </mew6-expantion-block-large>
+            <mew6-std-btn
+              min-width="100%"
+              class="mt-8"
+              @click.native="activeTab = 0"
+            >
+              Connect with Ledger
+            </mew6-std-btn>
+          </div>
         </v-tab-item>
       </v-tabs>
     </OverlayTabs>
@@ -62,15 +65,19 @@
 </template>
 
 <script>
+import GroupRadioButtons from '@/components/Buttons/GroupRadioButtons';
 import BaseOverlay from '@/components/Overlays/BaseOverlay';
 import OverlayTitle from '@/components/OverlayTitle';
 import OverlayTabs from '@/components/OverlayTabs';
+import AddressTable from './components/AddressTable';
 
 export default {
   components: {
+    GroupRadioButtons,
     BaseOverlay,
     OverlayTitle,
-    OverlayTabs
+    OverlayTabs,
+    AddressTable
   },
   props: {
     open: { default: false, type: Boolean },
@@ -83,16 +90,104 @@ export default {
   },
   data() {
     return {
+      addressTable: {
+        headers: [
+          {
+            text: 'ADDRESS',
+            align: 'start',
+            sortable: false,
+            value: 'address'
+          },
+          { text: 'ETH BALANCE', value: 'balance' },
+          { text: '#TOKEN', value: 'token' }
+        ],
+        addresses: [
+          {
+            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
+            balance: 19.112,
+            token: 6
+          },
+          {
+            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
+            balance: 19.112,
+            token: 6
+          },
+          {
+            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
+            balance: 19.112,
+            token: 6
+          },
+          {
+            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
+            balance: 19.112,
+            token: 6
+          },
+          {
+            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
+            balance: 19.112,
+            token: 6
+          },
+          {
+            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
+            balance: 19.112,
+            token: 6
+          },
+          {
+            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
+            balance: 19.112,
+            token: 6
+          },
+          {
+            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
+            balance: 19.112,
+            token: 6
+          },
+          {
+            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
+            balance: 19.112,
+            token: 6
+          }
+        ]
+      },
+      networkButtons: [
+        {
+          groupName: 'ETH',
+          btns: [
+            { label: 'myetherapi.com', value: 'eth-myetherapi' },
+            { label: 'infura.io', value: 'eth-infura' },
+            { label: 'giveth.io', value: 'eth-giveth' },
+            { label: 'therscan.io', value: 'eth-therscan' }
+          ]
+        },
+        {
+          groupName: 'ROP',
+          btns: [
+            { label: 'etherscan.io', value: 'rop-etherscan' },
+            { label: 'infura.io', value: 'rop-infura' },
+            { label: 'giveth.io', value: 'rop-giveth' },
+            { label: 'therscan.io', value: 'rop-therscan' }
+          ]
+        },
+        {
+          groupName: 'RIN',
+          btns: [
+            { label: 'etherscan.io', value: 'rin-etherscan' },
+            { label: 'infura.io', value: 'rin-infura' },
+            { label: 'giveth.io', value: 'rin-giveth' },
+            { label: 'therscan.io', value: 'rin-therscan' }
+          ]
+        }
+      ],
       appSelect: 'eth',
       derivationPathSelect: '1',
       activeTab: 0,
       apps: [
-        { label: 'Ethereum', abbr: 'eth' },
-        { label: 'SometingElse', abbr: 'smt' }
+        { label: 'Ethereum', value: 'eth' },
+        { label: 'SometingElse', value: 'smt' }
       ],
       derivationPath: [
-        { label: `m/44'/60'/0'`, abbr: '1' },
-        { label: `m/44'/60'/0'`, abbr: '2' }
+        { label: `m/44'/60'/0'`, value: '1' },
+        { label: `m/44'/60'/0'`, value: '2' }
       ]
     };
   }
@@ -101,6 +196,6 @@ export default {
 
 <style lang="scss" scoped>
 .overlay-content {
-  width: 450px;
+  width: 500px;
 }
 </style>
