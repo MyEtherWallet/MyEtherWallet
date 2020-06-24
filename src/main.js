@@ -27,6 +27,7 @@ import router from '@/router';
 import store from '@/store';
 import Vuex from 'vuex';
 import VueQrcode from '@xkeshi/vue-qrcode';
+import VueQr from 'vue-qr';
 import Toasted from 'vue-toasted';
 import * as toastConfig from './toast.config';
 
@@ -78,6 +79,7 @@ Vue.prototype.$eventHub = new Vue();
 
 // Regular Components
 Vue.component(VueQrcode.name, VueQrcode);
+Vue.component(VueQr.name, VueQr);
 Vue.component('popover', PopOver);
 
 //Router
