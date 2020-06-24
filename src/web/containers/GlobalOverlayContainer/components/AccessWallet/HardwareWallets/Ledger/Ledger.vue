@@ -55,7 +55,7 @@
               class="mt-8"
               @click.native="activeTab = 0"
             >
-              Connect with Ledger
+              Access my wallet
             </mew6-std-btn>
           </div>
         </v-tab-item>
@@ -90,65 +90,6 @@ export default {
   },
   data() {
     return {
-      addressTable: {
-        headers: [
-          {
-            text: 'ADDRESS',
-            align: 'start',
-            sortable: false,
-            value: 'address'
-          },
-          { text: 'ETH BALANCE', value: 'balance' },
-          { text: '#TOKEN', value: 'token' }
-        ],
-        addresses: [
-          {
-            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
-            balance: 19.112,
-            token: 6
-          },
-          {
-            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
-            balance: 19.112,
-            token: 6
-          },
-          {
-            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
-            balance: 19.112,
-            token: 6
-          },
-          {
-            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
-            balance: 19.112,
-            token: 6
-          },
-          {
-            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
-            balance: 19.112,
-            token: 6
-          },
-          {
-            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
-            balance: 19.112,
-            token: 6
-          },
-          {
-            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
-            balance: 19.112,
-            token: 6
-          },
-          {
-            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
-            balance: 19.112,
-            token: 6
-          },
-          {
-            address: '0x4b0959AE0b7F0a56407eD0a47539649F4FD3A599',
-            balance: 19.112,
-            token: 6
-          }
-        ]
-      },
       networkButtons: [
         {
           groupName: 'ETH',
