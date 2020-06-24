@@ -817,7 +817,7 @@ export default {
     web3WalletPollNetwork() {
       if (!window.web3.eth) {
         Toast.responseHandler(
-          new Error('Web3 Instance not found!'),
+          new Error(this.$t('interface.web3-not-found')),
           Toast.ERROR
         );
       }
@@ -849,7 +849,7 @@ export default {
       this.pollAddress = setInterval(() => {
         if (!window.web3.eth) {
           Toast.responseHandler(
-            new Error('Web3 Instance not found!'),
+            new Error(this.$t('interface.web3-not-found')),
             Toast.ERROR
           );
           clearInterval(this.pollAddress);
