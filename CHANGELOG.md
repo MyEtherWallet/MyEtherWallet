@@ -1,6 +1,16 @@
 ### Bug
 - Sentry fixes j [#2474] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2474)
 
+### Release v5.6.6-hotfix.2
+
+### Hotfix
+
+- Revert mewconnect library [#2472](https://github.com/MyEtherWallet/MyEtherWallet/pull/2472)
+
+### Bug
+
+- check gas if only one side of the swap is on ethereum [#2473](https://github.com/MyEtherWallet/MyEtherWallet/pull/2473)
+
 ### Release v5.6.6-hotfix.1
 
 ### Devop

@@ -935,7 +935,7 @@ export default {
       this.lastFeeEstimate = new BigNumber(0);
       const gasPrice = new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei'));
       if (
-        SwapProviders.isToken(swapDetails.fromCurrency) &&
+        SwapProviders.isToken(swapDetails.fromCurrency) ||
         SwapProviders.isToken(swapDetails.toCurrency)
       ) {
         if (Array.isArray(swapDetails.dataForInitialization)) {
