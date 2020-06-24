@@ -359,8 +359,7 @@ export default {
       unableToValidate: false,
       unableToValidateExit: false,
       unableToValidateRefund: false,
-      overrideAddress: false,
-      devOverride: true
+      overrideAddress: false
     };
   },
   computed: {
@@ -442,21 +441,20 @@ export default {
       return this.fiatCurrenciesArray.includes(this.toCurrency);
     },
     validSwap() {
-      if (this.devOverride) return true;
       // initial chack.  will provide an alert on the next screen if no address is provided
-      // if (this.recalculating) return false;
-      // const canExit =
-      //   this.isExitToFiat && this.fromCurrency !== this.baseCurrency
-      //     ? this.exitFromAddress !== ''
-      //     : true;
-      // return (
-      //   this.hasEnough &&
-      //   (this.toAddress !== '' || canExit) &&
-      //   this.allAddressesValid &&
-      //   this.selectedProvider.minValue <= +this.fromValue &&
-      //   (+this.fromValue <= this.selectedProvider.maxValue ||
-      //     this.selectedProvider.maxValue === 0)
-      // );
+      if (this.recalculating) return false;
+      const canExit =
+        this.isExitToFiat && this.fromCurrency !== this.baseCurrency
+          ? this.exitFromAddress !== ''
+          : true;
+      return (
+        this.hasEnough &&
+        (this.toAddress !== '' || canExit) &&
+        this.allAddressesValid &&
+        this.selectedProvider.minValue <= +this.fromValue &&
+        (+this.fromValue <= this.selectedProvider.maxValue ||
+          this.selectedProvider.maxValue === 0)
+      );
     },
     checkBityMax() {
       if (this.swap.isProvider(this.providerNames.bity)) {
