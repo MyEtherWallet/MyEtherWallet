@@ -359,7 +359,8 @@ export default {
       unableToValidate: false,
       unableToValidateExit: false,
       unableToValidateRefund: false,
-      overrideAddress: false
+      overrideAddress: false,
+      devOverride: true
     };
   },
   computed: {
@@ -441,20 +442,21 @@ export default {
       return this.fiatCurrenciesArray.includes(this.toCurrency);
     },
     validSwap() {
+      if (this.devOverride) return true;
       // initial chack.  will provide an alert on the next screen if no address is provided
-      if (this.recalculating) return false;
-      const canExit =
-        this.isExitToFiat && this.fromCurrency !== this.baseCurrency
-          ? this.exitFromAddress !== ''
-          : true;
-      return (
-        this.hasEnough &&
-        (this.toAddress !== '' || canExit) &&
-        this.allAddressesValid &&
-        this.selectedProvider.minValue <= +this.fromValue &&
-        (+this.fromValue <= this.selectedProvider.maxValue ||
-          this.selectedProvider.maxValue === 0)
-      );
+      // if (this.recalculating) return false;
+      // const canExit =
+      //   this.isExitToFiat && this.fromCurrency !== this.baseCurrency
+      //     ? this.exitFromAddress !== ''
+      //     : true;
+      // return (
+      //   this.hasEnough &&
+      //   (this.toAddress !== '' || canExit) &&
+      //   this.allAddressesValid &&
+      //   this.selectedProvider.minValue <= +this.fromValue &&
+      //   (+this.fromValue <= this.selectedProvider.maxValue ||
+      //     this.selectedProvider.maxValue === 0)
+      // );
     },
     checkBityMax() {
       if (this.swap.isProvider(this.providerNames.bity)) {
@@ -1010,6 +1012,9 @@ export default {
                 : this.exitFromAddress
           };
           this.swapDetails = await this.swap.startSwap(swapDetails);
+          if (this.swapDetails.marketImpact) {
+            throw Error('marketImpactAbort');
+          }
           const enoughForGas = await this.checkForEnoughGas(this.swapDetails);
           if (!enoughForGas) {
             throw Error('notEnoughWithGas');
@@ -1051,14 +1056,18 @@ export default {
           }
         }
       } catch (e) {
-        if (e.message === 'notEnoughWithGas') {
+        if (e.message === 'marketImpactAbort') {
+          this.finalizingSwap = false;
+          Toast.responseHandler('liquidity-too-low', 1, true);
+          return;
+        } else if (e.message === 'notEnoughWithGas') {
           this.finalizingSwap = false;
           this.gasNotice = true;
           Toast.responseHandler('error-generating-swap', 1, true);
           return;
         }
         //abort (empty response from provider or failure to finalize details)
-        if (e.message === 'abort') {
+        else if (e.message === 'abort') {
           this.finalizingSwap = false;
           Toast.responseHandler('error-generating-swap', 1, true);
           return;

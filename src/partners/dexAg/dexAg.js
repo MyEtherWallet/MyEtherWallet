@@ -376,6 +376,11 @@ export default class DexAg {
       : 'ag';
 
     const tradeDetails = await this.createTransaction(swapDetails, dexToUse);
+    if (tradeDetails.metadata.marketImpact) {
+      swapDetails.dataForInitialization = [];
+      swapDetails.marketImpact = true;
+      return swapDetails;
+    }
     if (!tradeDetails) {
       throw Error('abort');
     } else if (tradeDetails.error) {
