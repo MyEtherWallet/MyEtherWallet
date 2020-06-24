@@ -1,3 +1,6 @@
+### Bug
+
+- Revert walletconnect library [#2486](https://github.com/MyEtherWallet/MyEtherWallet/pull/2486)
 
 ### Release v5.6.6-hotfix.2
 
