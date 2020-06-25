@@ -376,6 +376,7 @@ export default {
           gas: '0x11e1a300'
         })
         .then(res => {
+          console.log(res, 'got here?');
           res.forEach(token => {
             const balance = token.balance;
             delete token.balance;
