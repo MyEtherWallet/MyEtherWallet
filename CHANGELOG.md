@@ -2,7 +2,6 @@
 
 - Update Maker Libraries for Maker Dai Dapp [#2437](https://github.com/MyEtherWallet/MyEtherWallet/pull/2437)
 
-
 ### Release v5.6.6-hotfix.2
 
 ### Hotfix
