@@ -10,6 +10,7 @@ const MDAI = createCurrency('MDAI');
 // e.g. the fourth argument of `price`
 
 // ilk math
+const BnZero = new BigNumber(0);
 
 export function debtCeiling(line) {
   return MDAI.rad(line);
@@ -56,11 +57,11 @@ export function debtValue(art, rate) {
 }
 
 export function collateralizationRatio(collateralValue, debtValue) {
-  if (debtValue.eq(0)) {
+  if (debtValue.eq(BnZero)) {
     const ratio = createCurrencyRatio(USD, MDAI);
     return ratio(Infinity);
   }
-  return collateralValue.div(debtValue);
+  return collateralValue.div(debtValue._amount);
 }
 
 export function liquidationPrice(
@@ -68,11 +69,13 @@ export function liquidationPrice(
   debtValue,
   liquidationRatio
 ) {
-  if (collateralAmount.eq(0)) {
+  if (collateralAmount.eq(BnZero)) {
     const ratio = createCurrencyRatio(USD, collateralAmount.type);
     return ratio(Infinity);
   }
-  return debtValue.times(liquidationRatio).div(collateralAmount);
+  return debtValue
+    .times(liquidationRatio._amount)
+    .div(collateralAmount._amount);
 }
 
 export function minSafeCollateralAmount(debtValue, liquidationRatio, price) {

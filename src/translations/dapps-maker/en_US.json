@@ -33,7 +33,7 @@
   "collateral": "Collateral",
   "current-price-info": "Current price information",
   "min-eth-req": "Min ETH required",
-  "stability-fee-in-mkr": "Stability fee @{value}%/year in MKR",
+  "stability-fee-in-mkr": "Stability fee @{value}%/year",
   "projected-liquidation": "Projected liquidation price (ETH/USD)",
   "projected-collat-ratio": "Projected collateralization ratio",
   "create-instruct": "Please set a value of currency for collateral, to determine how much DAI you would like to generate.",

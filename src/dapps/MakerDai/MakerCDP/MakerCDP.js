@@ -19,7 +19,7 @@ const { DAI } = Maker;
 export default class MakerCDP extends MakerCdpBase {
   constructor(cdpId, web3, services, sysVars) {
     super(cdpId, web3, services, sysVars);
-    this.minDai = 20.5;
+    this.minDai = 20.0;
     this.DAI_NAME = 'MDAI';
   }
 
@@ -281,7 +281,7 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   minDepositFor(symbol) {
-    return this.minDeposit(this.minDai, this.getCurrentPriceFor(symbol));
+    return this.minDeposit(this.minDai * 1.04, this.getCurrentPriceFor(symbol));
   }
 
   minInSelectedCurrency(symbol) {
