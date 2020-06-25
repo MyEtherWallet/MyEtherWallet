@@ -164,7 +164,7 @@ import {
 import LoadingSign from '@/components/LoadingSign';
 import DaiIcon from '@/assets/images/currency/coins/AllImages/DAI.svg';
 
-import { MDAI } from '@makerdao/dai-plugin-mcd';
+import { DAI } from '@makerdao/dai-plugin-mcd';
 
 export default {
   components: {
@@ -319,12 +319,12 @@ export default {
     },
     async deposit() {
       if (this.setupComplete) {
-        await this.makerSaver.join(MDAI(this.daiQty));
+        await this.makerSaver.join(DAI(this.daiQty));
       }
     },
     async withdraw() {
       if (this.setupComplete) {
-        await this.makerSaver.exit(MDAI(this.daiQty));
+        await this.makerSaver.exit(DAI(this.daiQty));
       }
     },
     async depositBalance() {
@@ -340,7 +340,7 @@ export default {
       if (this.setupComplete) {
         const balance = this.getValueOrFunction('balances');
         if (balance) {
-          const daiBalance = balance['MDAI'];
+          const daiBalance = balance['DAI'];
           if (!daiBalance) return toBigNumber(0);
           this.daiBalance = daiBalance.toString();
           if (this.proxyAddress) {
@@ -388,7 +388,7 @@ export default {
       if (this.proxyAddress) {
         if (this.setupComplete && this.getValueOrFunction('tokens')) {
           const val = await this.getValueOrFunction('tokens')[
-            'MDAI'
+            'DAI'
           ]._contract.allowance(
             this.getValueOrFunction('account').address,
             this.proxyAddress
@@ -412,7 +412,7 @@ export default {
     },
     async setAllowance() {
       if (this.setupComplete && this.getValueOrFunction('tokens')) {
-        this.getValueOrFunction('tokens')['MDAI'].approveUnlimited(
+        this.getValueOrFunction('tokens')['DAI'].approveUnlimited(
           this.proxyAddress
         );
       }

@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { MDAI } from '@makerdao/dai-plugin-mcd';
+import { DAI } from '@makerdao/dai-plugin-mcd';
 import { locateCdps } from './locateCdps';
 import MakerCDP from '../MakerCDP';
 import { getDustValue } from '@/dapps/MakerDai/MakerCDP/chainCalls';
@@ -62,12 +62,12 @@ export async function getDetailsForTokens(self, collateralTokens) {
       self.balances[collateralTokens[i].currency.symbol] = res.toBigNumber();
     });
   }
-  const token = self._tokenService.getToken(MDAI);
+  const token = self._tokenService.getToken(DAI);
   self.tokens[token.symbol] = token;
   self.balances[token.symbol] = (await token.balance()).toBigNumber();
 
-  self.tokens['DAI'] = self.tokens['MDAI'];
-  self.balances['DAI'] = self.balances['MDAI'];
+  self.tokens['DAI'] = self.tokens['DAI'];
+  self.balances['DAI'] = self.balances['DAI'];
 
   await getDustValues(self, collateralTokens);
 }
@@ -87,7 +87,6 @@ export async function checkAllowances(self, address, proxyAddress) {
     const keys = Object.keys(self.tokens);
     keys.push('MKR');
     keys.push('DAI');
-    keys.push('MDAI');
     for (let i = 0; i < keys.length; i++) {
       try {
         if (
