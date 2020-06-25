@@ -288,6 +288,7 @@ export default {
   },
   data() {
     return {
+      MARKET_IMPACT_CUTOFF: 10,
       baseCurrency: BASE_CURRENCY,
       stringToSign: '',
       signedString: '',
