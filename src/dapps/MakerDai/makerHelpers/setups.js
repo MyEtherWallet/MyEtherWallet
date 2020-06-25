@@ -21,13 +21,11 @@ const ServiceRoles = {
 };
 
 export async function setupServices(self, maker) {
-  // self._priceService = maker.service(ServiceRoles.PRICE);
   const result = await Promise.all([
     maker.service(ServiceRoles.SYSTEM_DATA),
     maker.service(ServiceRoles.PROXY),
     maker.service(ServiceRoles.TOKEN)
   ]);
-  // self._cdpService = result[0];
   self._systemData = result[0];
   self._proxyService = result[1];
   self._tokenService = result[2];
