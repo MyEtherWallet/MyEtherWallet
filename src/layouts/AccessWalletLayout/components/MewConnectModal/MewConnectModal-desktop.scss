@@ -106,26 +106,6 @@
 
 .instructions-container {
   margin-top: 30px;
-
-  .third-container-img {
-    position: absolute;
-    transform: rotate(-11deg);
-
-
-    @media only screen and (min-width: 1024px) {
-      right: 95px;
-      top: 201px;    
-    }
-
-    @media only screen and (max-width: 1023px) {
-      right: 77px;
-      top: 181px;
-    }
-
-    @media only screen and (max-width: 500px) {
-      display: none
-    }
-  }
   p, div {
     color: $light-blue-1;
     font-weight: 600;
