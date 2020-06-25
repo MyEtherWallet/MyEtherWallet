@@ -1,10 +1,8 @@
 import BigNumber from 'bignumber.js';
-import { MDAI, MKR } from '@makerdao/dai-plugin-mcd';
-import Maker from '@makerdao/dai';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { locateCdps } from './locateCdps';
 import MakerCDP from '../MakerCDP';
 import { getDustValue } from '@/dapps/MakerDai/MakerCDP/chainCalls';
-const { DAI } = Maker;
 const toBigNumber = num => {
   return new BigNumber(num);
 };
@@ -39,16 +37,10 @@ export async function setupServices(self, maker) {
   return self;
 }
 
-export async function setupPriceAndRatios(
-  self,
-  _priceService,
-  _typeService
-) {
+export async function setupPriceAndRatios(self, _priceService, _typeService) {
   self.pethMin = toBigNumber(0.005);
 
-  const result = await Promise.all([
-    self._systemData.getAnnualBaseRate()
-  ]);
+  const result = await Promise.all([self._systemData.getAnnualBaseRate()]);
   self.ethPrice = toBigNumber(_typeService.getCdpType(null, 'ETH-A'));
   self.liquidationRatio = toBigNumber(
     _typeService.getCdpType(null, 'ETH-A').liquidationRatio

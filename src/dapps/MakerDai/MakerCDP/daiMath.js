@@ -1,8 +1,5 @@
 import BigNumber from 'bignumber.js';
-import {
-  createCurrency,
-  createCurrencyRatio
-} from '@makerdao/currency';
+import { createCurrency, createCurrencyRatio } from '@makerdao/currency';
 import { RAY } from './constants';
 const USD = createCurrency('USD');
 const MDAI = createCurrency('MDAI');
@@ -76,7 +73,9 @@ export function liquidationPrice(
     const ratio = createCurrencyRatio(USD, collateralAmount.type);
     return ratio(Infinity);
   }
-  return debtValue.times(liquidationRatio._amount).div(collateralAmount._amount);
+  return debtValue
+    .times(liquidationRatio._amount)
+    .div(collateralAmount._amount);
 }
 
 export function minSafeCollateralAmount(debtValue, liquidationRatio, price) {

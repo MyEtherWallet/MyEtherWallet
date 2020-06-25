@@ -312,7 +312,6 @@ export default {
       if (toBigNumber(this.ethQty).isNaN() || toBigNumber(this.daiQty).isNaN())
         return false;
       if (toBigNumber(this.ethQty).gt(0)) {
-
         if (toBigNumber(this.ethQty).lte(this.values.minEth)) return false;
         if (this.emptyMakerCreated) {
           if (toBigNumber(this.makerCDP.minDai).gt(this.daiQty)) return false;
