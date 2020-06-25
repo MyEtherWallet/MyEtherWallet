@@ -13,6 +13,7 @@ const statuses = {
   hold: 'hold'
 };
 
+const MARKET_IMPACT_CUTOFF = 10;
 const TIME_SWAP_VALID = 300;
 const PROVIDER_NAME = 'dexag';
 const PROXY_CONTRACT_ADDRESS = '0xB76c291871b92A7c9e020b2511a3402A3bf0499d';
@@ -38,6 +39,7 @@ const dexAgMethods = {
 };
 
 export {
+  MARKET_IMPACT_CUTOFF,
   PROXY_CONTRACT_ADDRESS,
   WETH_TOKEN_ADDRESS,
   notificationStatuses,

@@ -66,6 +66,13 @@
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   padding: 10px 30px 30px;
+  position: relative;
+
+  .link-to-download {
+    position: absolute;
+    opacity: 0;
+    top: -10000px;
+  }
 
   .low-eth-warning {
     align-items: center;
