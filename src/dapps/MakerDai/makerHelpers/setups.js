@@ -66,9 +66,6 @@ export async function getDetailsForTokens(self, collateralTokens) {
   self.tokens[token.symbol] = token;
   self.balances[token.symbol] = (await token.balance()).toBigNumber();
 
-  self.tokens['DAI'] = self.tokens['DAI'];
-  self.balances['DAI'] = self.balances['DAI'];
-
   await getDustValues(self, collateralTokens);
 }
 
