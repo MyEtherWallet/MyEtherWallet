@@ -274,35 +274,9 @@ export default {
       type: BigNumber,
       default: toBigNumber(0)
     },
-    liquidationPenalty: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
-    stabilityFee: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
     liquidationRatio: {
       type: BigNumber,
       default: toBigNumber(0)
-    },
-    priceService: {
-      type: Object,
-      default: function () {
-        return {};
-      }
-    },
-    cdpService: {
-      type: Object,
-      default: function () {
-        return {};
-      }
-    },
-    proxyService: {
-      type: Object,
-      default: function () {
-        return {};
-      }
     },
     updated: {
       type: Number,
@@ -312,7 +286,6 @@ export default {
   data() {
     return {
       currentCdpLoaded: false,
-      activeCdp: {},
       loaded: false,
       ethQty: 0,
       daiQty: 0,
@@ -517,6 +490,16 @@ export default {
         this.vaultType = this.currentCdp.cdpType;
       }
       this.getTotalDebt();
+    },
+    stabilityFee() {
+      if (this.emptyMakerCreated) {
+        return this.makerCDP.stabilityFee;
+      }
+    },
+    liquidationPenalty() {
+      if (this.emptyMakerCreated) {
+        return this.makerCDP.liquidationPenalty;
+      }
     },
     async getTotalDebt() {
       if (this.currentCdp) this.currentCdpLoaded = true;
