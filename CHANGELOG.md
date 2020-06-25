@@ -8,7 +8,13 @@
 - Merge node changes #2470, #2469, #2468, and #2467 [#2481](https://github.com/MyEtherWallet/MyEtherWallet/pull/2481)
 
 ### Feature
+
 - Update MEW Wallet modal [#2483](https://github.com/MyEtherWallet/MyEtherWallet/pull/2483)
+
+### Bug
+
+- Update Aave withdraw and healthfactor [#2460] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2460)
+
 ### Release v5.6.6-hotfix.2
 
 ### Hotfix
