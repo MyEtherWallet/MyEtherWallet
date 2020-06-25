@@ -14,7 +14,6 @@ import MakerCdpBase from './MakerCdpBase';
 import { getUrns } from './chainCalls';
 import * as daiMath from './daiMath';
 import BigNumber from 'bignumber.js';
-const { DAI } = Maker;
 
 export default class MakerCDP extends MakerCdpBase {
   constructor(cdpId, web3, services, sysVars) {
