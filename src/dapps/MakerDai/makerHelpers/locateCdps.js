@@ -72,4 +72,4 @@ async function locateCdpsProxy(self, _cdpService) {
   return await _cdpService.getCdpIds(self.proxyAddress);
 }
 
-export { locateCdps,  locateCdpsWithoutProxy, locateCdpsProxy };
+export { locateCdps, locateCdpsWithoutProxy, locateCdpsProxy };
