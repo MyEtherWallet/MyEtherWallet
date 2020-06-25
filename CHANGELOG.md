@@ -2,7 +2,7 @@
 
 - Remove sai [#2462](https://github.com/MyEtherWallet/MyEtherWallet/pull/2462)
 - Remove normalize on string check [#2463](https://github.com/MyEtherWallet/MyEtherWallet/pull/2463)
-- Update Aave withdraw and healthfactor [#2460] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2460)
+- Update Aave withdraw and healthfactor [#2460](https://github.com/MyEtherWallet/MyEtherWallet/pull/2460)
 - Revert walletconnect library [#2486](https://github.com/MyEtherWallet/MyEtherWallet/pull/2486)
 
 ### Devop
@@ -12,7 +12,6 @@
 ### Feature
 
 - Update MEW Wallet modal [#2483](https://github.com/MyEtherWallet/MyEtherWallet/pull/2483)
-
 
 ### Release v5.6.6-hotfix.2
 

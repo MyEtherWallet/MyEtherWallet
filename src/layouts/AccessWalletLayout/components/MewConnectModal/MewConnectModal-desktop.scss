@@ -106,13 +106,14 @@
 
 .instructions-container {
   margin-top: 30px;
-  p, div {
+  p,
+  div {
     color: $light-blue-1;
     font-weight: 600;
 
     span {
       color: $dark-blue-2;
-      font-weight: 400; 
+      font-weight: 400;
     }
   }
 }
@@ -124,7 +125,7 @@
 }
 
 .modal-title-block {
-  color: $dark-blue-2; 
+  color: $dark-blue-2;
   margin-bottom: 30px;
 
   h3 {
