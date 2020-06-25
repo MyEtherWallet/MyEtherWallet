@@ -1,4 +1,3 @@
-import Maker from '@makerdao/dai';
 import {
   calcLiquidationPrice,
   calcCollatRatio,
