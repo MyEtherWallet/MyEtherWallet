@@ -368,17 +368,14 @@ export default {
   data() {
     return {
       loading: false,
-      tokens: [],
-      localTokenVersion: [],
-      customTokens: [],
-      localCustomTokens: [],
       showTokens: false,
       masterFile: masterFile,
       favorited: false,
       balanceWarnHidden: true,
       path: 'access',
       password: '',
-      downloadFile: ''
+      downloadFile: '',
+      tokens: []
     };
   },
   computed: {
@@ -424,9 +421,7 @@ export default {
       return `${currencyBalance} ${this.network.type.currencyName}`;
     },
     walletTokensWithBalance() {
-      const tokensWithBalance = this.walletToken.filter(item => {
-        return item.balance !== 'Load' && new BigNumber(item.balance).gt(0);
-      });
+      const tokensWithBalance = this.tokens;
       let totalTokenAmt = new BigNumber(0);
       const tokensWithDollarAmt = [];
       tokensWithBalance.forEach(item => {
@@ -455,6 +450,14 @@ export default {
       };
     }
   },
+  watch: {
+    tokens: {
+      handler: function (newValue) {
+        console.log(newValue);
+      },
+      deep: true
+    }
+  },
   created() {
     window.chrome.storage.onChanged.addListener(this.checkIfFavorited);
   },
@@ -463,12 +466,22 @@ export default {
     if (this.wallet !== '') {
       this.generateBlob();
     }
+    if (this.walletToken.length > 0) {
+    }
+    this.processTokens();
   },
   destroyed() {
     window.chrome.storage.onChanged.removeListener(this.checkIfFavorited);
   },
   methods: {
     ...mapActions('main', ['decryptWallet']),
+    processTokens() {
+      const tokens = this.walletToken.filter(item => {
+        return item.balance !== 'Load' && new BigNumber(item.balance).gt(0);
+      });
+      this.tokens.concat(tokens);
+      console.log(tokens, this.walletToken, this.tokens);
+    },
     iconFallback(evt) {
       evt.target.src = this.network.type.icon;
     },
