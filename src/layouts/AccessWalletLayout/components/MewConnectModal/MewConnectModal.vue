@@ -12,53 +12,52 @@
       <ipad-modal ref="ipadModal" />
       <div class="text-center modal-title-block">
         <h3>
-          {{ $t('accessWallet.mewconnect.protocol') }}
+          {{ $t('accessWallet.mewconnect.scan') }}
         </h3>
         <div>
-          {{ $t('accessWallet.mewconnect.option-text') }}
+          <p>{{ $t('accessWallet.mewconnect.option-text') }}</p>
+          <i18n path="accessWallet.mewconnect.modal.text2" tag="p">
+            <a
+              slot="action"
+              class="download-now"
+              @click="downloadMEWWalletApp()"
+              >{{ $t('accessWallet.mewconnect.modal.download-now') }}</a
+            >
+          </i18n>
         </div>
       </div>
-      <div class="qr-code-img">
+      <div class="qr-code-container">
         <qrcode :value="QrCode" :options="{ size: 150 }" />
-      </div>
-      <div class="appstore-button-container">
-        <div class="links-container">
-          <a
-            v-if="canDownloadApple"
-            href="https://itunes.apple.com/app/id1464614025"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              alt
-              src="~@/assets/images/icons/button-app-store.png"
-              height="35"
-            />
-          </a>
-          <div v-else @click="openIpadModal">
-            <img
-              alt
-              src="~@/assets/images/icons/button-app-store.png"
-              height="35"
-            />
-          </div>
-          <a
-            href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              alt
-              src="~@/assets/images/icons/button-google-play-color.png"
-              height="35"
-            />
-          </a>
+        <div class="instructions-container">
+          <i18n path="accessWallet.mewconnect.instructions.step1" tag="p">
+            <span
+              slot="first"
+              >{{($t('accessWallet.mewconnect.instructions.first'))}}</span
+            >
+          </i18n>
+          <i18n path="accessWallet.mewconnect.instructions.step2" tag="p">
+            <i18n
+              slot="second"
+              path="accessWallet.mewconnect.instructions.second"
+              tag="span"
+            >
+              <span slot="icon-pos">
+                <img
+                  height="20"
+                  src="@/assets/images/icons/scan.svg"
+                  alt="camera"
+                />
+                {{ $t('accessWallet.mewconnect.instructions.icon-pos') }}</span
+              >
+            </i18n>
+          </i18n>
+          <i18n path="accessWallet.mewconnect.instructions.step3" tag="p">
+            <span slot="third"
+              >{{($t('accessWallet.mewconnect.instructions.third'))}}
+            </span>
+          </i18n>
         </div>
-        <p class="download-now">
-          {{ $t('accessWallet.mewconnect.modal.text2') }}
-        </p>
       </div>
-
       <div class="seperation-bar">
         <div class="bar" />
         <div class="text">{{ $t('accessWallet.or') }}</div>
@@ -75,7 +74,6 @@
         </div>
       </div>
     </div>
-    <!-- .modal-container -->
   </b-modal>
 </template>
 
@@ -83,8 +81,9 @@
 import { MewConnectWallet } from '@/wallets';
 import { mapState, mapActions } from 'vuex';
 import { Toast } from '@/helpers';
-import platform from 'platform';
 import IpadModal from '@/components/IpadModal';
+import { Misc } from '@/helpers';
+import mewWalletIcon from '@/assets/images/icons/mew-wallet-icon.png';
 
 export default {
   components: {
@@ -101,19 +100,17 @@ export default {
     }
   },
   data() {
+    const downloadMEWWalletApp = Misc.downloadMEWWalletApp;
     return {
       QrCode: '',
-      canDownloadApple: true
+      downloadMEWWalletApp: downloadMEWWalletApp,
+      mewWalletIcon: mewWalletIcon
     };
   },
   computed: {
     ...mapState('main', ['path', 'web3'])
   },
   mounted() {
-    this.canDownloadApple =
-      platform.product !== null
-        ? platform.product.toLowerCase() !== 'ipad'
-        : true;
     this.$refs.mewConnect.$on('show', () => {
       new MewConnectWallet(this.codeDisplay)
         .then(wallet => {
