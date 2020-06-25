@@ -42,23 +42,20 @@
               tag="span"
             >
               <span slot="icon-pos">
-                <i class="fa fa-camera fa-lg" />
+                <img
+                  height="20"
+                  src="@/assets/images/icons/scan.svg"
+                  alt="camera"
+                />
                 {{ $t('accessWallet.mewconnect.instructions.icon-pos') }}</span
               >
             </i18n>
           </i18n>
-          <div class="third-container">
-            <i18n path="accessWallet.mewconnect.instructions.step3" tag="p">
-              <span slot="third"
-                >{{($t('accessWallet.mewconnect.instructions.third'))}}
-              </span>
-            </i18n>
-            <img
-              class="third-container-img"
-              src="@/assets/images/icons/arrow.svg"
-              alt="arrow"
-            />
-          </div>
+          <i18n path="accessWallet.mewconnect.instructions.step3" tag="p">
+            <span slot="third"
+              >{{($t('accessWallet.mewconnect.instructions.third'))}}
+            </span>
+          </i18n>
         </div>
       </div>
       <div class="seperation-bar">
