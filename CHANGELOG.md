@@ -3,6 +3,10 @@
 - Remove sai [#2462](https://github.com/MyEtherWallet/MyEtherWallet/pull/2462)
 - Remove normalize on string check [#2463](https://github.com/MyEtherWallet/MyEtherWallet/pull/2463)
 
+### Devop
+
+- Merge node changes #2470, #2469, #2468, and #2467 [#2481](https://github.com/MyEtherWallet/MyEtherWallet/pull/2481)
+
 ### Release v5.6.6-hotfix.2
 
 ### Hotfix
