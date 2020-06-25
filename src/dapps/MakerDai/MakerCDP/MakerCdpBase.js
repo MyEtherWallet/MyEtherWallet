@@ -99,11 +99,11 @@ export default class MakerCdpBase {
   }
 
   get collateralStatus() {
-    if (this.collateralizationRatio.gte(this.liquidationRatio.plus(0.5))) {
+    if (this._collateralizationRatio.gte(this.liquidationRatio.plus(0.5))) {
       return 'green';
     } else if (
-      this.collateralizationRatio.gte(this.liquidationRatio.plus(0.25)) &&
-      this.collateralizationRatio.lte(this.liquidationRatio.plus(0.5))
+      this._collateralizationRatio.gte(this.liquidationRatio.plus(0.25)) &&
+      this._collateralizationRatio.lte(this.liquidationRatio.plus(0.5))
     ) {
       return 'orange';
     }
@@ -127,6 +127,9 @@ export default class MakerCdpBase {
 
   get collateralizationRatio() {
     try {
+      if (this._collateralizationRatio._amount) {
+        return this._collateralizationRatio._amount;
+      }
       return this._collateralizationRatio.toBigNumber();
     } catch (e) {
       return '--';
@@ -134,10 +137,11 @@ export default class MakerCdpBase {
   }
 
   get _collateralizationRatio() {
-    return daiMath.collateralizationRatio(
+    const value = daiMath.collateralizationRatio(
       this._collateralValue,
       this._debtValue
     );
+    return value;
   }
 
   get cdpService() {
@@ -224,7 +228,7 @@ export default class MakerCdpBase {
       .get('mcd:cdpType')
       .getCdpType(null, this.cdpType);
 
-    return toBigNumber(rawType.liquidationPenalty._amount);
+    return toBigNumber(rawType.liquidationPenalty);
   }
 
   get liquidationRatio() {
@@ -335,11 +339,12 @@ export default class MakerCdpBase {
     const rawType = this.mcdManager
       .get('mcd:cdpType')
       .getCdpType(null, this.cdpType);
+
     return daiMath
       .minSafeCollateralAmount(
         this._debtValue,
-        rawType.liquidationRatio,
-        rawType.price
+        rawType.liquidationRatio._amount,
+        rawType.price._amount
       )
       .toBigNumber();
   }
@@ -378,7 +383,9 @@ export default class MakerCdpBase {
 
   get stabilityFee() {
     if (this.cdp) {
-      return toBigNumber(this.cdp.type.annualStabilityFee);
+      return toBigNumber(this.sysVars.baseStabilityFee)
+        .plus(this.cdpTypeObject.annualStabilityFee)
+        .toString();
     }
     return toBigNumber(0);
   }
