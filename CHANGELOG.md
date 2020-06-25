@@ -1,3 +1,28 @@
+### Bug
+
+- Remove sai [#2462](https://github.com/MyEtherWallet/MyEtherWallet/pull/2462)
+- Remove normalize on string check [#2463](https://github.com/MyEtherWallet/MyEtherWallet/pull/2463)
+- Update Aave withdraw and healthfactor [#2460](https://github.com/MyEtherWallet/MyEtherWallet/pull/2460)
+- Revert walletconnect library [#2486](https://github.com/MyEtherWallet/MyEtherWallet/pull/2486)
+
+### Devop
+
+- Merge node changes #2470, #2469, #2468, and #2467 [#2481](https://github.com/MyEtherWallet/MyEtherWallet/pull/2481)
+
+### Feature
+
+- Update MEW Wallet modal [#2483](https://github.com/MyEtherWallet/MyEtherWallet/pull/2483)
+
+### Release v5.6.6-hotfix.2
+
+### Hotfix
+
+- Revert mewconnect library [#2472](https://github.com/MyEtherWallet/MyEtherWallet/pull/2472)
+
+### Bug
+
+- check gas if only one side of the swap is on ethereum [#2473](https://github.com/MyEtherWallet/MyEtherWallet/pull/2473)
+
 ### Release v5.6.6-hotfix.1
 
 ### Devop
