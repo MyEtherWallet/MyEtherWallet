@@ -47,42 +47,42 @@ export default {
         {
           label: 'Bitbox',
           icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg'),
-          overlayName: 'accessWalletLedger'
+          overlayName: 'accessWalletBitbox'
         },
         {
           label: 'FINNEY',
           icon: require('@/assets/images/icons/hardware-wallets/icon-finney.svg'),
-          overlayName: 'accessWalletLedger'
+          overlayName: 'accessWalletFinney'
         },
         {
           label: 'Secalot',
           icon: require('@/assets/images/icons/hardware-wallets/icon-secalot.svg'),
-          overlayName: 'accessWalletLedger'
+          overlayName: 'accessWalletSecalot'
         },
         {
           label: 'KeepKey',
           icon: require('@/assets/images/icons/hardware-wallets/icon-keepkey.svg'),
-          overlayName: 'accessWalletLedger'
+          overlayName: 'accessWalletKeepKey'
         },
         {
           label: 'Trezor',
           icon: require('@/assets/images/icons/hardware-wallets/icon-trezor.svg'),
-          overlayName: 'accessWalletLedger'
+          overlayName: 'accessWalletTrezor'
         },
         {
           label: 'CoolWallet',
           icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
-          overlayName: 'accessWalletLedger'
+          overlayName: 'accessWalletCoolWallet'
         },
         {
           label: 'BC Vault',
           icon: require('@/assets/images/icons/hardware-wallets/icon-bcvault.svg'),
-          overlayName: 'accessWalletLedger'
+          overlayName: 'accessWalletBCVault'
         },
         {
           label: 'XWallet',
           icon: require('@/assets/images/icons/hardware-wallets/icon-xwallet.svg'),
-          overlayName: 'accessWalletLedger'
+          overlayName: 'accessWalletXWallet'
         }
       ]
     };
