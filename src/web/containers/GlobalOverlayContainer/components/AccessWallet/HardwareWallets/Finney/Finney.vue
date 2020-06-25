@@ -3,7 +3,7 @@
     <OverlayTabs>
       <v-tabs v-model="activeTab" color="transparent">
         <v-tab-item>
-          <OverlayTitle title="1. Connect with Ledger" />
+          <OverlayTitle title="Finney" />
           <mew6-white-sheet>
             <div class="overlay-content pa-8">
               <div class="text-center mb-8">
