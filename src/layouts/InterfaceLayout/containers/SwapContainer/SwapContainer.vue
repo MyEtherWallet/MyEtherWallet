@@ -288,6 +288,7 @@ export default {
   },
   data() {
     return {
+      MARKET_IMPACT_CUTOFF: 10,
       baseCurrency: BASE_CURRENCY,
       stringToSign: '',
       signedString: '',
@@ -1010,6 +1011,9 @@ export default {
                 : this.exitFromAddress
           };
           this.swapDetails = await this.swap.startSwap(swapDetails);
+          if (this.swapDetails.marketImpact) {
+            throw Error('marketImpactAbort');
+          }
           const enoughForGas = await this.checkForEnoughGas(this.swapDetails);
           if (!enoughForGas) {
             throw Error('notEnoughWithGas');
@@ -1051,14 +1055,18 @@ export default {
           }
         }
       } catch (e) {
-        if (e.message === 'notEnoughWithGas') {
+        if (e.message === 'marketImpactAbort') {
+          this.finalizingSwap = false;
+          Toast.responseHandler('liquidity-too-low', 1, true);
+          return;
+        } else if (e.message === 'notEnoughWithGas') {
           this.finalizingSwap = false;
           this.gasNotice = true;
           Toast.responseHandler('error-generating-swap', 1, true);
           return;
         }
         //abort (empty response from provider or failure to finalize details)
-        if (e.message === 'abort') {
+        else if (e.message === 'abort') {
           this.finalizingSwap = false;
           Toast.responseHandler('error-generating-swap', 1, true);
           return;
