@@ -189,7 +189,6 @@ export default {
     return {
       nftABI,
       nftUrl: 'https://nft2.mewapi.io/',
-      openSeaLambdaUrl: 'https://localhost:3000/local/',
       countPerPage: 9,
       currentPage: 1,
       nftConfig: {},
@@ -380,21 +379,6 @@ export default {
     },
 
     async getTokens() {
-      const newData = await fetch(`${this.openSeaLambdaUrl}getOwned`, {
-        mode: 'cors',
-        cache: 'no-cache',
-        method: 'POST',
-        'Cache-Control': 'no-cache',
-        body: JSON.stringify({
-          jsonrpc: '2.0',
-          method: '',
-          params: {
-            address: this.activeAddress
-          },
-          id: 83
-        })
-      }).then(data => data.json());
-      console.log(newData); // todo remove dev item
       const data = await fetch(
         `${this.nftUrl}tokens?owner=${this.activeAddress}&chain=mainnet`,
         {
