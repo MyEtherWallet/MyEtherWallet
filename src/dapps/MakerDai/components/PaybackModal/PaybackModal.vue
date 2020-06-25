@@ -260,7 +260,7 @@ export default {
     },
     hasEnoughDai() {
       if (this.canCompute) {
-        return this.currentCdp.hasEnough(this.amount, 'MDAI');
+        return this.currentCdp.hasEnough(this.amount, 'DAI');
       }
       return true;
     },
@@ -382,14 +382,14 @@ export default {
     },
     daiBalance() {
       if (this.currentCdp) {
-        return this.currentCdp.getBalanceOf('MDAI');
+        return this.currentCdp.getBalanceOf('DAI');
       }
       return 0;
     },
     needsDaiApprove() {
       if (this.currentCdp) {
         if (toBigNumber(this.amount).gt(0)) {
-          return !this.currentCdp.hasEnoughAllowance(this.amount, 'MDAI');
+          return !this.currentCdp.hasEnoughAllowance(this.amount, 'DAI');
         }
       }
       return false;
@@ -423,10 +423,10 @@ export default {
       this.max = true;
     },
     currentDai() {
-      if (this.currentCdp.hasEnough(this.currentCdp.debtValue, 'MDAI')) {
+      if (this.currentCdp.hasEnough(this.currentCdp.debtValue, 'DAI')) {
         this.amount = this.currentCdp.debtValue;
       } else {
-        this.amount = this.currentCdp.getBalanceOf('MDAI');
+        this.amount = this.currentCdp.getBalanceOf('DAI');
       }
       this.max = true;
     },
@@ -481,7 +481,7 @@ export default {
     },
     async approveDai() {
       if (this.currentCdp) {
-        this.currentCdp.approveProxyFor('MDAI');
+        this.currentCdp.approveProxyFor('DAI');
         this.closeModal();
       }
     },
