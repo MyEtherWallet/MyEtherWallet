@@ -1,3 +1,5 @@
+### Release v5.7.0
+
 ### Bug
 
 - Remove sai [#2462](https://github.com/MyEtherWallet/MyEtherWallet/pull/2462)
@@ -9,6 +11,7 @@
 
 - Merge node changes #2470, #2469, #2468, and #2467 [#2481](https://github.com/MyEtherWallet/MyEtherWallet/pull/2481)
 - Update Maker Libraries for Maker Dai Dapp [#2437](https://github.com/MyEtherWallet/MyEtherWallet/pull/2437)
+- add check for market impact when finalizing swap details [#2484](https://github.com/MyEtherWallet/MyEtherWallet/pull/2484)
 
 ### Feature
 
