@@ -31,9 +31,13 @@ const EXCEPTIONS = [
   'web3-core-requestmanager',
   'web3-utils',
   '@makerdao/dai-plugin-migrations',
+  '@makerdao/dai-plugin-mcd',
   '@makerdao/dai-plugin-config',
+  '@makerdao/dai-plugin-mcd',
   '@makerdao/currency',
-  'i18n-iso-countries'
+  'i18n-iso-countries',
+  '@myetherwallet/mewconnect-web-client',
+  '@walletconnect/browser'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

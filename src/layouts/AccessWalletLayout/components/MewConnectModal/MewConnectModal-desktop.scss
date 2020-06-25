@@ -89,8 +89,10 @@
   }
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))
 
-.qr-code-img {
+.qr-code-container {
+  align-items: center;
   display: flex;
+  flex-direction: column;
   justify-content: center;
 }
 
@@ -102,28 +104,46 @@
   }
 }
 
+.instructions-container {
+  margin-top: 30px;
+  p,
+  div {
+    color: $light-blue-1;
+    font-weight: 600;
+
+    span {
+      color: $dark-blue-2;
+      font-weight: 400;
+    }
+  }
+}
+
 .download-now {
-  margin-top: 20px;
+  color: $mew-green;
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .modal-title-block {
+  color: $dark-blue-2;
   margin-bottom: 30px;
 
   h3 {
-    font-size: 25px;
+    font-size: 23px;
     font-weight: 600;
     margin-bottom: 5px;
   }
 }
 
 .seperation-bar {
+  margin-top: 30px;
   position: relative;
   text-align: center;
   .bar {
     top: 9px;
     z-index: 0;
     position: absolute;
-    border-bottom: 1px solid $mew-green;
+    border-bottom: 1px solid $light-grey-21;
     width: 100%;
   }
   .text {
@@ -132,7 +152,7 @@
     position: relative;
     background-color: white;
     display: inline-block;
-    color: $mew-green;
+    color: $light-grey-21;
   }
 }
 

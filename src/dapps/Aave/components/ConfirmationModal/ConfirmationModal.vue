@@ -228,15 +228,13 @@ export default {
   },
   methods: {
     isDisabled() {
+      const tokenAmtInEth = new BigNumber(this.amount)
+        .times(this.token && this.token.price ? this.token.price.priceInEth : 0)
+        .toFixed();
+
       if (
-        this.actionTitle === this.actionTitles.withdraw &&
-        new BigNumber(this.calculateNextHealthFactor()).lte(0)
-      ) {
-        this.errorMsg = this.$t('dappsAave.cannot-withdraw');
-        return true;
-      } else if (
         this.actionTitle === this.actionTitles.borrow &&
-        new BigNumber(this.currentHealthFactor).lt(1)
+        new BigNumber(this.userSummary.availableBorrowsETH).lt(tokenAmtInEth)
       ) {
         this.errorMsg = this.$t('dappsAave.cannot-borrow');
         return true;
@@ -314,10 +312,7 @@ export default {
       return hasIcon(currency);
     },
     checkForAmount() {
-      if (
-        this.actionTitle === this.actionTitles.withdraw &&
-        this.token.user.principalATokenBalance === this.amount
-      ) {
+      if (this.actionTitle === this.actionTitles.withdraw) {
         const underlyingBalance = new BigNumber(
           this.token.user.currentUnderlyingBalance
         );
@@ -327,20 +322,42 @@ export default {
           availableLiquidity
         );
         if (
-          this.userSummary.totalBorrowsETH !== '0' ||
-          this.userSummary.totalFeesETH !== '0'
+          // if this asset enabled as collateral on the pool
+          this.token.usageAsCollateralEnabled &&
+          // and user choose to use it as collateral
+          this.token.user.usageAsCollateralEnabled &&
+          // and user borrowing something
+          (this.userSummary.totalBorrowsETH !== '0' ||
+            this.userSummary.totalFeesETH !== '0')
         ) {
+          // if we have any borrowings we should check how much we can withdraw without liquidation
+          // with 0.5% gap to avoid reverting of tx
+          let totalCollateralToWithdrawInETH = new BigNumber('0');
+          const excessHF = new BigNumber(this.userSummary.healthFactor).minus(
+            '1'
+          );
+          if (excessHF.gt('0')) {
+            totalCollateralToWithdrawInETH = excessHF
+              .multipliedBy(this.userSummary.totalBorrowsWithFeesETH)
+              .div(this.token.reserveLiquidationThreshold)
+              .multipliedBy('0.995');
+          }
+
           maxAmountToWithdraw = BigNumber.min(
             maxAmountToWithdraw,
-            new BigNumber(this.userSummary.maxAmountToWithdrawInEth)
-              .dividedBy(this.token.price.priceInEth)
-              .multipliedBy(0.995)
+            totalCollateralToWithdrawInETH.dividedBy(
+              this.token.price.priceInEth
+            )
           );
-          if (!maxAmountToWithdraw.eq(underlyingBalance)) {
-            return new BigNumber(maxAmountToWithdraw).toFixed(6);
-          }
         }
-        return maxAmountToWithdraw;
+
+        maxAmountToWithdraw = BigNumber.max(maxAmountToWithdraw, 0);
+
+        if (!maxAmountToWithdraw.eq(underlyingBalance)) {
+          return new BigNumber(maxAmountToWithdraw).toFixed(6);
+        }
+
+        return maxAmountToWithdraw.toFixed(6);
       } else if (
         this.actionTitle === this.actionTitles.repay &&
         this.amount === this.token.user.currentBorrows
