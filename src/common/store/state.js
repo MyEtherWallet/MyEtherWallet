@@ -8,7 +8,9 @@ const state = {
     accessWalletTrezor: { isOpen: false },
     accessWalletCoolWallet: { isOpen: false },
     accessWalletBCVault: { isOpen: false },
-    accessWalletXWallet: { isOpen: false }
+    accessWalletXWallet: { isOpen: false },
+    accessWalletBrowserExtensions: { isOpen: false },
+    accessWalletMobileApps: { isOpen: false }
   }
 };
 

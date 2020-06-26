@@ -12,6 +12,8 @@ import CreateWalletMnemonic from '@/web/views/CreateWalletView/MnemonicPhrase';
 import AccessWalletView from '@/web/views/AccessWalletView';
 import AccessWalletMEWconnect from '@/web/views/AccessWalletView/containers/MEWconnect';
 import AccessWalletHardwareWallets from '@/web/views/AccessWalletView/containers/HardwareWallets';
+import AccessWalletMEWcx from '@/web/views/AccessWalletView/containers/MEWcx';
+import AccessWalletMobileApps from '@/web/views/AccessWalletView/containers/MobileApps';
 
 import AboutUsCompany from '@/web/views/AboutUsView/CompanyContainer';
 import AboutUsTeam from '@/web/views/AboutUsView/TeamContainer';
@@ -159,6 +161,22 @@ const webRoutes = [
         path: 'access-wallet/hardware',
         name: 'AccessWalletHardwareWallets',
         component: AccessWalletHardwareWallets,
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'access-wallet/mewcx',
+        name: 'AccessWalletMEWcx',
+        component: AccessWalletMEWcx,
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'access-wallet/mobile-apps',
+        name: 'AccessWalletMobileApps',
+        component: AccessWalletMobileApps,
         meta: {
           requiresAuth: false
         }
