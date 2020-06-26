@@ -2,12 +2,13 @@
   <div class="mew6-component--flexible-button">
     <v-sheet
       :color="outlined ? 'transparent' : 'white'"
-      class="text-transform--initial user-select--none cursor--pointer"
+      class="text-transform--initial user-select--none"
       :class="[
         outlined ? 'outlined' : '',
         small ? 'px-10 py-4' : 'pa-10',
         medium ? 'px-10 py-7' : 'pa-10',
-        nopadding ? 'nopadding' : ''
+        nopadding ? 'nopadding' : '',
+        noclick ? '' : 'cursor--pointer'
       ]"
       @click="changeRoute"
     >
@@ -23,7 +24,8 @@ export default {
     small: { default: false, type: Boolean },
     medium: { default: false, type: Boolean },
     outlined: { default: false, type: Boolean },
-    nopadding: { default: false, type: Boolean }
+    nopadding: { default: false, type: Boolean },
+    noclick: { default: false, type: Boolean }
   },
   data: () => ({}),
   methods: {

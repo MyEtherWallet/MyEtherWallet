@@ -48,6 +48,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.block-title {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
 .top-title {
   letter-spacing: -0.3px;
   font-size: 16px;

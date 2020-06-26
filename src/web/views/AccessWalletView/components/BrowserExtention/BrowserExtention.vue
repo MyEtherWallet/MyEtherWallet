@@ -1,13 +1,16 @@
 <template>
-  <mew6-flexible-btn small :to="{ name: 'AccessWalletMEWcx', query: {} }">
+  <mew6-flexible-btn
+    small
+    :to="{ name: 'AccessWalletBrowserExtention', query: {} }"
+  >
     <div class="d-flex align-center justify-space-between">
       <div class="pr-9">
         <div class="d-flex align-center mb-2">
-          <h4 class="mr-2 font-weight-bold">MEW CX</h4>
+          <h4 class="mr-2 font-weight-bold">Browser Extention</h4>
           <mew6-icon-secure />
         </div>
         <div>
-          Use MEW CX to access my wallet
+          Use Browser Extention to access my wallet
         </div>
       </div>
       <div>
