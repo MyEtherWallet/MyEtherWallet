@@ -148,7 +148,7 @@
     "sinon": "9.0.2",
     "store": "2.0.12",
     "stylelint": "13.6.1",
-    "stylelint-config-prettier": "8.0.1",
+    "stylelint-config-prettier": "8.0.2",
     "stylelint-config-standard": "20.0.0",
     "trezor-connect": "8.1.7",
     "u2f-api": "1.1.1",

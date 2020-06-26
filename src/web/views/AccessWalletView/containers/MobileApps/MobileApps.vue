@@ -2,21 +2,20 @@
   <div class="bg_blue">
     <BlockTitle :data="titleData">
       <h5 class="white--text ma-0">
-        Please select a method to access your wallet.
-      </h5>
-      <h5 class="white--text ma-0">
-        Don't have a wallet?
-        <router-link
-          :to="{ name: 'HomeCreateWallet', query: {} }"
-          class="text-color--mew-green"
-        >
-          Get a new wallet
-        </router-link>
+        Select a app that you want to use to connect MEW.
       </h5>
     </BlockTitle>
-    <v-sheet color="transparent" max-width="550px" class="mx-auto">
-      <ScanToConnect class="mb-5" />
-      <MEWwallet />
+    <v-sheet color="transparent" max-width="450px" class="mx-auto px-5">
+      <v-row>
+        <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
+          <TextIconButton
+            :label="btn.label"
+            :description="btn.description"
+            :icon="btn.icon"
+            :to="btn.to"
+          />
+        </v-col>
+      </v-row>
     </v-sheet>
     <div class="spacer-y-medium" />
   </div>
@@ -24,22 +23,36 @@
 
 <script>
 import BlockTitle from '@/web/components/BlockTitle';
-import ScanToConnect from './components/ScanToConnect';
-import MEWwallet from './components/MEWwallet';
+import TextIconButton from '@/web/components/Buttons/TextIconButton';
 
 export default {
   name: 'CreateNewWallet',
-  components: { BlockTitle, ScanToConnect, MEWwallet },
-  data: () => ({
-    titleData: {
-      textProps: 'white--text',
-      toptitle: '',
-      title: 'MEWconnect',
-      description: '',
-      centered: true
-    }
-  }),
-  methods: {}
+  components: { BlockTitle, TextIconButton },
+  data() {
+    return {
+      titleData: {
+        textProps: 'white--text',
+        toptitle: '',
+        title: 'Mobile apps',
+        description: '',
+        centered: true
+      },
+      buttons: [
+        {
+          label: 'WalletConnet',
+          description: 'Connect wallet with Walletconnet',
+          icon: require('@/assets/images/icons/icon-wallet-connect.svg'),
+          to: { name: 'AccessWalletBrowserExtentionInstall', query: {} }
+        },
+        {
+          label: 'Wallet Link',
+          description: 'Connect wallet with Wallet Link ',
+          icon: require('@/assets/images/icons/icon-wallet-link.png'),
+          to: { name: 'AccessWalletBrowserExtentionInstall', query: {} }
+        }
+      ]
+    };
+  }
 };
 </script>
 
