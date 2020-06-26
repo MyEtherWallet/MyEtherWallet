@@ -439,8 +439,7 @@ export default {
 
       const currencyDollar = new BigNumber(this.balance).times(this.usd);
       const totalWalletBalance = currencyDollar.plus(totalTokenAmt).toNumber();
-
-      return {
+      const obj = {
         tokens: tokensWithBalance,
         length: tokensWithBalance.length,
         tokensWDollarAmt: tokensWithDollarAmt,
@@ -448,12 +447,13 @@ export default {
         total: this.toDollar(totalTokenAmt.toNumber()),
         totalWalletBalance: this.toDollar(totalWalletBalance)
       };
+      return obj;
     }
   },
   watch: {
     tokens: {
       handler: function (newValue) {
-        console.log(newValue);
+        this.tokens = newValue;
       },
       deep: true
     }
@@ -467,8 +467,8 @@ export default {
       this.generateBlob();
     }
     if (this.walletToken.length > 0) {
+      this.processTokens();
     }
-    this.processTokens();
   },
   destroyed() {
     window.chrome.storage.onChanged.removeListener(this.checkIfFavorited);
@@ -479,8 +479,7 @@ export default {
       const tokens = this.walletToken.filter(item => {
         return item.balance !== 'Load' && new BigNumber(item.balance).gt(0);
       });
-      this.tokens.concat(tokens);
-      console.log(tokens, this.walletToken, this.tokens);
+      this.tokens = this.tokens.concat(tokens);
     },
     iconFallback(evt) {
       evt.target.src = this.network.type.icon;
@@ -648,35 +647,6 @@ export default {
           );
         }
       });
-    },
-    retrieveLogo(address, symbol) {
-      const networkMasterFile = this.masterFile.data.filter(item => {
-        return (
-          item.network.toLowerCase() === this.network.type.name.toLowerCase()
-        );
-      });
-      try {
-        // eslint-disable-next-line
-        const image = require(`@/assets/images/currency/coins/AllImages/${symbol}.svg`);
-        return image;
-      } catch (e) {
-        const foundToken = networkMasterFile.find(item => {
-          return (
-            utils.toChecksumAddress(item.contract_address) ===
-            utils.toChecksumAddress(address)
-          );
-        });
-
-        if (foundToken) {
-          return foundToken.icon;
-        }
-        try {
-          // eslint-disable-next-line
-          return require(`@/assets/images/networks/${symbol.toLowerCase()}`);
-        } catch (e) {
-          return this.network.type.icon;
-        }
-      }
     },
     isGreateThanZero(val) {
       return new BigNumber(val).gt(0);
