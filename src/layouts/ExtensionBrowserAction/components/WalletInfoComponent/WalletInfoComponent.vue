@@ -220,7 +220,7 @@
             <td>
               <div class="name-container">
                 <figure v-lazy-load class="token-icon">
-                  <img :src="token.tokenMew.logo" @error="iconFallback" />
+                  <img :data-url="token.tokenMew.logo" @error="iconFallback" />
                 </figure>
                 <p>
                   {{ token.tokenMew.name }}
