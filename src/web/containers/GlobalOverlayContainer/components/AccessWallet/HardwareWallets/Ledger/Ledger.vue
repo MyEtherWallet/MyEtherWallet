@@ -51,13 +51,13 @@
               <AddressTable />
             </mew6-expantion-block-large>
             <mew6-confirm-btn center>
-              To access my wallet, I accept&nbsp;
+              To access my wallet, I accept
               <a
                 target="_blank"
                 href="https://www.myetherwallet.com/terms-of-service"
               >
-                Terms.
-              </a>
+                Terms</a
+              >.
             </mew6-confirm-btn>
             <mew6-std-btn min-width="100%" @click.native="activeTab = 0">
               Access my wallet

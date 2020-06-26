@@ -43,10 +43,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.new-wallet-button {
-  &:hover {
-    box-shadow: 0 0 50px var(--v-police_strobe-base);
-  }
-}
-</style>
+<style lang="scss" scoped></style>

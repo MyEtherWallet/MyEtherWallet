@@ -17,7 +17,7 @@
         <img
           height="80"
           src="@/assets/images/icons/icon-mew-cx.png"
-          alt="MEWcx"
+          alt="MEW extention"
         />
       </div>
     </div>

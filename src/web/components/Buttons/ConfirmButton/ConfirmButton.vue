@@ -1,14 +1,12 @@
 <template>
   <div :class="center ? 'd-flex justify-center' : ''">
-    <v-sheet color="transparent">
-      <v-checkbox v-model="checkbox" hide-details class="my-6">
-        <template v-slot:label>
-          <div>
-            <slot />
-          </div>
-        </template>
-      </v-checkbox>
-    </v-sheet>
+    <v-checkbox v-model="checkbox" hide-details class="my-6 py-0">
+      <template v-slot:label v-slot:activator="{ on }">
+        <div>
+          <slot @click.stop v-on="on" />
+        </div>
+      </template>
+    </v-checkbox>
   </div>
 </template>
 

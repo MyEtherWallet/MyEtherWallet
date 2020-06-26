@@ -1,19 +1,14 @@
 <template>
   <div class="bg_blue">
-    <v-sheet color="transparent" max-width="450px" class="mx-auto">
-      <BlockTitle :data="titleData">
-        <h5 class="white--text ma-0">
-          Please select a browser from below.
-        </h5>
-      </BlockTitle>
-    </v-sheet>
+    <BlockTitle :data="titleData">
+      <h5 class="white--text ma-0">
+        Please select a browser from below.
+      </h5>
+    </BlockTitle>
     <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
       <v-row>
         <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="6">
-          <TextIconButton
-            :data="btn"
-            @click.native="openOverlay(btn.overlayName)"
-          />
+          <TextIconButton :label="btn.label" :icon="btn.icon" :to="btn.to" />
         </v-col>
       </v-row>
     </v-sheet>
@@ -41,38 +36,27 @@ export default {
         {
           label: 'Chrome',
           icon: require('@/assets/images/icons/icon-chrome.svg'),
-          overlayName: 'accessWalletLedger'
+          to: { name: 'AccessWalletBrowserExtentionInstall', query: {} }
         },
         {
           label: 'Firefox',
           icon: require('@/assets/images/icons/icon-firefox.svg'),
-          overlayName: 'accessWalletBitbox'
+          to: { name: 'AccessWalletBrowserExtentionInstall', query: {} }
         },
         {
           label: 'Opera',
           icon: require('@/assets/images/icons/icon-opera.svg'),
-          overlayName: 'accessWalletFinney'
+          to: { name: 'AccessWalletBrowserExtentionInstall', query: {} }
         },
         {
           label: 'Brave',
           icon: require('@/assets/images/icons/icon-brave.png'),
-          overlayName: 'accessWalletSecalot'
+          to: { name: 'AccessWalletBrowserExtentionInstall', query: {} }
         }
       ]
     };
-  },
-  methods: {
-    openOverlay(name) {
-      this.$store.commit('openOverlay', name);
-    }
   }
 };
 </script>
 
-<style lang="scss" scoped>
-.new-wallet-button {
-  &:hover {
-    box-shadow: 0 0 50px var(--v-police_strobe-base);
-  }
-}
-</style>
+<style lang="scss" scoped></style>
