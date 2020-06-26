@@ -1,36 +1,35 @@
 <template>
-  <a
-    href="https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en"
-    target="_blank"
-    class="display--block text-decoration--none"
-  >
-    <mew6-flexible-btn small>
-      <div class="d-flex align-center justify-space-between">
-        <div class="pr-9">
-          <div class="d-flex align-center mb-2">
-            <h4 class="mr-2 font-weight-bold">MEW CX</h4>
-            <mew6-icon-secure />
-          </div>
-          <div>
-            Use MEW CX to access my wallet
-          </div>
+  <mew6-flexible-btn small :to="{ name: 'AccessWalletMEWcx', query: {} }">
+    <div class="d-flex align-center justify-space-between">
+      <div class="pr-9">
+        <div class="d-flex align-center mb-2">
+          <h4 class="mr-2 font-weight-bold">MEW CX</h4>
+          <mew6-icon-secure />
         </div>
         <div>
-          <img
-            height="80"
-            src="@/assets/images/icons/icon-mew-cx.png"
-            alt="MEWcx"
-          />
+          Use MEW CX to access my wallet
         </div>
       </div>
-    </mew6-flexible-btn>
-  </a>
+      <div>
+        <img
+          height="80"
+          src="@/assets/images/icons/icon-mew-cx.png"
+          alt="MEWcx"
+        />
+      </div>
+    </div>
+  </mew6-flexible-btn>
 </template>
 
 <script>
 export default {
   components: {},
-  data: () => ({})
+  data: () => ({}),
+  methods: {
+    openOverlay(name) {
+      this.$store.commit('openOverlay', name);
+    }
+  }
 };
 </script>
 
