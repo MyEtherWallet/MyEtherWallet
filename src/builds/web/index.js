@@ -12,7 +12,11 @@ import CreateWalletMnemonic from '@/web/views/CreateWalletView/MnemonicPhrase';
 import AccessWalletView from '@/web/views/AccessWalletView';
 import AccessWalletMEWconnect from '@/web/views/AccessWalletView/containers/MEWconnect';
 import AccessWalletHardwareWallets from '@/web/views/AccessWalletView/containers/HardwareWallets';
+
 import AccessWalletBrowserExtention from '@/web/views/AccessWalletView/containers/BrowserExtention';
+import AccessWalletBrowserExtentionInstall from '@/web/views/AccessWalletView/containers/BrowserExtention/container/InstallExtention';
+import AccessWalletBrowserExtentionAccess from '@/web/views/AccessWalletView/containers/BrowserExtention/container/AccessExtention';
+
 import AccessWalletMobileApps from '@/web/views/AccessWalletView/containers/MobileApps';
 
 import AboutUsCompany from '@/web/views/AboutUsView/CompanyContainer';
@@ -169,6 +173,22 @@ const webRoutes = [
         path: 'access-wallet/browser-extention',
         name: 'AccessWalletBrowserExtention',
         component: AccessWalletBrowserExtention,
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'access-wallet/browser-extention/install',
+        name: 'AccessWalletBrowserExtentionInstall',
+        component: AccessWalletBrowserExtentionInstall,
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'access-wallet/browser-extention/access',
+        name: 'AccessWalletBrowserExtentionAccess',
+        component: AccessWalletBrowserExtentionAccess,
         meta: {
           requiresAuth: false
         }

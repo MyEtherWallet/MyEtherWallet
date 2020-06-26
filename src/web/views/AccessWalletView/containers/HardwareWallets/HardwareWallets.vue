@@ -1,18 +1,18 @@
 <template>
   <div class="bg_blue">
-    <v-sheet color="transparent" max-width="450px" class="mx-auto">
-      <BlockTitle :data="titleData">
-        <h5 class="white--text ma-0">
-          Select a hardware to access your wallet. Make sure your device is
-          connected and unlocked.
-        </h5>
-      </BlockTitle>
-    </v-sheet>
+    <BlockTitle :data="titleData">
+      <h5 class="white--text ma-0">
+        Select a hardware to access your wallet. Make sure your device is
+        connected and unlocked.
+      </h5>
+    </BlockTitle>
+
     <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
       <v-row>
         <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="6">
           <TextIconButton
-            :data="btn"
+            :label="btn.label"
+            :icon="btn.icon"
             @click.native="openOverlay(btn.overlayName)"
           />
         </v-col>
@@ -95,10 +95,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.new-wallet-button {
-  &:hover {
-    box-shadow: 0 0 50px var(--v-police_strobe-base);
-  }
-}
-</style>
+<style lang="scss" scoped></style>
