@@ -3,8 +3,7 @@
     <v-sheet color="transparent" max-width="450px" class="mx-auto">
       <BlockTitle :data="titleData">
         <h5 class="white--text ma-0">
-          Select a hardware to access your wallet. Make sure your device is
-          connected and unlocked.
+          Please select a browser from below.
         </h5>
       </BlockTitle>
     </v-sheet>
@@ -34,55 +33,30 @@ export default {
       titleData: {
         textProps: 'white--text',
         toptitle: '',
-        title: 'Hardware Wallets',
+        title: 'Browser extention',
         description: '',
         centered: true
       },
       buttons: [
         {
-          label: 'Ledger',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-ledger.svg'),
+          label: 'Chrome',
+          icon: require('@/assets/images/icons/icon-chrome.svg'),
           overlayName: 'accessWalletLedger'
         },
         {
-          label: 'Bitbox',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg'),
+          label: 'Firefox',
+          icon: require('@/assets/images/icons/icon-firefox.svg'),
           overlayName: 'accessWalletBitbox'
         },
         {
-          label: 'FINNEY',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-finney.svg'),
+          label: 'Opera',
+          icon: require('@/assets/images/icons/icon-opera.svg'),
           overlayName: 'accessWalletFinney'
         },
         {
-          label: 'Secalot',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-secalot.svg'),
+          label: 'Brave',
+          icon: require('@/assets/images/icons/icon-brave.png'),
           overlayName: 'accessWalletSecalot'
-        },
-        {
-          label: 'KeepKey',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-keepkey.svg'),
-          overlayName: 'accessWalletKeepKey'
-        },
-        {
-          label: 'Trezor',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-trezor.svg'),
-          overlayName: 'accessWalletTrezor'
-        },
-        {
-          label: 'CoolWallet',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
-          overlayName: 'accessWalletCoolWallet'
-        },
-        {
-          label: 'BC Vault',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-bcvault.svg'),
-          overlayName: 'accessWalletBCVault'
-        },
-        {
-          label: 'XWallet',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-xwallet.svg'),
-          overlayName: 'accessWalletXWallet'
         }
       ]
     };

@@ -2,7 +2,7 @@
   <mew6-flexible-btn small>
     <div class="d-flex align-center justify-space-between py-2">
       <h4 class="mr-2 font-weight-bold">{{ data.label }}</h4>
-      <img :src="data.icon" :alt="data.label" />
+      <img :src="data.icon" :alt="data.label" height="50" />
     </div>
   </mew6-flexible-btn>
 </template>

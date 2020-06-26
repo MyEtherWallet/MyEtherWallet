@@ -17,7 +17,7 @@
     <v-sheet color="transparent" max-width="650px" class="mx-auto">
       <MEWconnect class="mb-5" />
       <Hardware class="mb-5" />
-      <CX class="mb-5" />
+      <BrowserExtention class="mb-5" />
       <MobileApps class="mb-5" />
       <Software />
     </v-sheet>
@@ -29,13 +29,20 @@
 import BlockTitle from '@/web/components/BlockTitle';
 import MEWconnect from './components/MEWconnect';
 import Hardware from './components/Hardware';
-import CX from './components/CX';
+import BrowserExtention from './components/BrowserExtention';
 import MobileApps from './components/MobileApps';
 import Software from './components/Software';
 
 export default {
   name: 'CreateNewWallet',
-  components: { BlockTitle, MEWconnect, Hardware, CX, MobileApps, Software },
+  components: {
+    BlockTitle,
+    MEWconnect,
+    Hardware,
+    BrowserExtention,
+    MobileApps,
+    Software
+  },
   data: () => ({
     titleData: {
       textProps: 'white--text',
