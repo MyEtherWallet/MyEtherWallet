@@ -3,35 +3,34 @@
     <OverlayTabs>
       <v-tabs v-model="activeTab" color="transparent">
         <v-tab-item>
-          <OverlayTitle title="Bitbox" />
-          <mew6-white-sheet>
-            <div class="overlay-content pa-8">
-              <div class="text-center mb-8">
-                <img
-                  src="@/assets/images/currencies/icon-eth-blue.svg"
-                  alt="Eth icon"
-                  height="60"
+          <OverlayTitle title="Select BitBox wallet" />
+          <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
+            <v-row>
+              <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
+                <TextIconButton
+                  :label="btn.label"
+                  :icon="btn.icon"
+                  @click.native="activeTab = 1"
                 />
+              </v-col>
+            </v-row>
+          </v-sheet>
+        </v-tab-item>
+        <v-tab-item>
+          <OverlayTitle title="1. Enter your password" />
+          <mew6-white-sheet>
+            <div class="overlay-content pa-8 text-center">
+              <div class="font-weight-bold mb-8">
+                Please enter the passwordof your BitBox device.
               </div>
-              <div>
-                <v-select
-                  v-model="appSelect"
-                  :items="apps"
-                  item-text="label"
-                  item-value="value"
-                  label="App opened in Ledger"
-                  outlined
-                ></v-select>
-                <v-select
-                  v-model="derivationPathSelect"
-                  :items="derivationPath"
-                  item-text="label"
-                  item-value="value"
-                  label="HD derivation path"
-                  outlined
-                ></v-select>
+              <div class="password-field mx-auto">
+                <mew6-password-field />
               </div>
-              <mew6-std-btn min-width="100%" @click.native="activeTab = 1">
+              <mew6-confirm-btn center class="mt-2">
+                I agree MEW browser extention user
+                <a target="_blank" href="https://myetherwallet.com"> Terms</a>.
+              </mew6-confirm-btn>
+              <mew6-std-btn min-width="100%" @click.native="activeTab = 2">
                 Connect with Ledger
               </mew6-std-btn>
             </div>
@@ -70,6 +69,7 @@
 </template>
 
 <script>
+import TextIconButton from '@/web/components/Buttons/TextIconButton';
 import GroupRadioButtons from '@/components/Buttons/GroupRadioButtons';
 import BaseOverlay from '@/components/Overlays/BaseOverlay';
 import OverlayTitle from '@/components/OverlayTitle';
@@ -78,6 +78,7 @@ import AddressTable from './components/AddressTable';
 
 export default {
   components: {
+    TextIconButton,
     GroupRadioButtons,
     BaseOverlay,
     OverlayTitle,
@@ -95,6 +96,16 @@ export default {
   },
   data() {
     return {
+      buttons: [
+        {
+          label: 'Bitbox 01',
+          icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')
+        },
+        {
+          label: 'Bitbox 02',
+          icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')
+        }
+      ],
       networkButtons: [
         {
           groupName: 'ETH',
@@ -143,5 +154,9 @@ export default {
 <style lang="scss" scoped>
 .overlay-content {
   width: 500px;
+}
+
+.password-field {
+  max-width: 350px;
 }
 </style>
