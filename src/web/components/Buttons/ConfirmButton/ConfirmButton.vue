@@ -1,6 +1,6 @@
 <template>
-  <div :class="center ? 'd-flex justify-center' : ''">
-    <v-checkbox v-model="checkbox" hide-details class="my-6 py-0">
+  <div :class="center ? 'd-flex justify-center' : ''" class="my-6">
+    <v-checkbox v-model="checkbox" hide-details class="my-0 py-0">
       <template v-slot:label v-slot:activator="{ on }">
         <div>
           <slot @click.stop v-on="on" />
