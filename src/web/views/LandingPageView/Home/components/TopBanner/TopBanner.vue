@@ -21,35 +21,19 @@
             </p>
             <div class="mt-9 d-flex">
               <mew-button
-                v-if="false"
                 class="mr-3"
                 :has-full-width="false"
-                title="Get a new wallet"
+                title="Create a new wallet"
                 button-size="xlarge"
                 @click.native="goTo('HomeCreateWallet')"
               />
               <mew-button
-                v-if="false"
                 :has-full-width="false"
                 btn-style="outline"
                 title="Access my wallet"
                 button-size="xlarge"
                 @click.native="goTo('HomeAccessWallet')"
               />
-              <mew6-std-btn
-                depressed
-                :to="{ name: 'HomeCreateWallet', params: {} }"
-                class="mr-3"
-              >
-                Create a new wallet
-              </mew6-std-btn>
-              <mew6-std-btn
-                depressed
-                outlined
-                :to="{ name: 'HomeAccessWallet', params: {} }"
-              >
-                Access my wallet
-              </mew6-std-btn>
             </div>
           </v-card>
         </v-col>

@@ -19,7 +19,6 @@
         </div>
         <v-spacer />
         <mew-button
-          v-if="false"
           btn-link="/"
           :has-full-width="false"
           title="Get a new wallet"
@@ -28,28 +27,13 @@
           :icon="icon"
           icon-align="left"
         />
-        <mew6-std-btn
-          height="72px"
-          text-color="emerald--text"
-          color="white"
-          elevated
-          :to="{ name: 'HomeCreateWallet', query: {} }"
-        >
-          <img
-            width="60"
-            height="60"
-            src="@/assets/images/icons/icon-wallet-mew.svg"
-            class="mr-2 mt-2 ml-n3"
-          />
-          Get a new wallet
-        </mew6-std-btn>
       </div>
     </v-container>
   </div>
 </template>
 
 <script>
-import walletIcon from '@/assets/images/icons/icon-wallet-mew.svg';
+import walletIcon from '@/assets/images/icons/icon-wallet-mew.png';
 
 export default {
   name: 'HomeAd2',

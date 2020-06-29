@@ -11,7 +11,6 @@
       </div>
       <v-spacer />
       <mew-button
-        v-if="false"
         btn-link="https://www.mewtopia.com/"
         :has-full-width="false"
         title="Get Started"
@@ -19,14 +18,6 @@
         color-theme="white"
         button-size="xlarge"
       />
-      <mew6-std-btn
-        depressed
-        outlined
-        color="white"
-        href="https://www.mewtopia.com/"
-      >
-        Get started
-      </mew6-std-btn>
     </v-card>
   </v-container>
 </template>
