@@ -80,9 +80,7 @@ export default {
     };
   },
   methods: {
-    getSelectedValue(value) {
-      console.log('selected value:', value);
-    }
+    getSelectedValue() {}
   }
 };
 </script>

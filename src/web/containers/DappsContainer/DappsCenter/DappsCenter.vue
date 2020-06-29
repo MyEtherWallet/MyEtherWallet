@@ -93,9 +93,7 @@ export default {
     }
   },
   methods: {
-    adapps() {
-      console.log('aaa');
-    }
+    adapps() {}
   }
 };
 </script>
