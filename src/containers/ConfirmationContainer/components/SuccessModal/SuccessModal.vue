@@ -20,9 +20,10 @@
 
       <div class="buttons">
         <standard-button
-          v-show="txHashExlporrer"
-          :options="buttonCheckEtherscan"
-          :click-function="goToLink"
+          v-for="item in explorers"
+          :key="item.link"
+          :options="item.options"
+          :click-function="item.onClick"
         />
         <standard-button
           v-show="network.type.name === 'ETH' && txHashExlporrer"
@@ -79,6 +80,19 @@ export default {
         fullWidth: true
       };
     },
+    explorers() {
+      if (!this.txHashExlporrer) {
+        return [];
+      }
+
+      if (Array.isArray(this.network.type.blockExplorers)) {
+        return this.network.type.blockExplorers.map(item =>
+          this.explorerOptions(item.tx)
+        );
+      }
+
+      return [this.explorerOptions(this.network.type.blockExplorerTX)];
+    },
     buttonCheckEthVm() {
       return {
         // eslint-disable-next-line
@@ -96,15 +110,12 @@ export default {
         buttonStyle: 'green',
         fullWidth: true
       };
-    },
-    explorrerName() {
-      return Misc.getService(this.network.type.blockExplorerTX);
     }
   },
   methods: {
-    goToLink() {
+    goToLink(link) {
       // eslint-disable-next-line
-      window.open(this.txHashExlporrer, '_blank');
+      window.open(link, '_blank');
     },
     goToEthVm() {
       const ethVmLink = this.txHashExlporrer.replace(
@@ -124,6 +135,20 @@ export default {
         this.$router.push({ path: '/' });
       }
       this.$refs.success.hide();
+    },
+    explorerOptions(txLinkTmpl) {
+      const link = txLinkTmpl.replace('[[txHash]]', this.txHashExlporrer);
+      return {
+        link,
+        options: {
+          title: this.$t('sendTx.success.button-check-explorer', {
+            explorrerName: Misc.getService(txLinkTmpl)
+          }),
+          buttonStyle: 'green-border',
+          fullWidth: true
+        },
+        onClick: () => this.goToLink(link)
+      };
     }
   }
 };

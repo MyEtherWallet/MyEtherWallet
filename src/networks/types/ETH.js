@@ -9,6 +9,16 @@ export default {
   homePage: 'https://ethereum.org',
   blockExplorerTX: 'https://etherscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://etherscan.io/address/[[address]]',
+  blockExplorers: [
+    {
+      tx: 'https://etherscan.io/tx/[[txHash]]',
+      addr: 'https://etherscan.io/address/[[address]]'
+    },
+    {
+      tx: 'https://ethplorer.io/tx/[[txHash]]',
+      addr: 'https://ethplorer.io/address/[[address]]'
+    }
+  ],
   chainID: 1,
   tokens: tokens,
   contracts: contracts,

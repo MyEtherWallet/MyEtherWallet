@@ -85,21 +85,37 @@ describe('SuccessModal.vue', () => {
     expect(wrapper.vm.buttonOk.title).toEqual(linkMessage);
   });
 
-  it('should render correct buttonCheckEtherscan computed data', () => {
-    wrapper.setData({ etherscanLink: 'etherscanLink' });
+  it('should not render ethplorers buttons without tx', () => {
     expect(
-      wrapper.vm.$el
-        .querySelectorAll('.standard-button .the-button-box')[1]
-        .textContent.trim()
-    ).toEqual(wrapper.vm.buttonCheckEtherscan.title);
+      wrapper.findAll(StandardButton).length
+    ).toBe(1);
+
+    expect(
+      wrapper.find(StandardButton).props('options')
+    ).toEqual(wrapper.vm.buttonOk);
   });
 
-  it('should render correct buttonOk computed data', () => {
+  it('should render ethplorers buttons with tx', () => {
+    wrapper.setProps({ txHashExlporrer: 'txHashTest' });
+    wrapper.vm.explorers.forEach((item, index) => {
+      expect(
+        wrapper.findAll(StandardButton).at(index).props('options')
+      ).toEqual(item.options);
+    });
+
     expect(
-      wrapper.vm.$el
-        .querySelectorAll('.standard-button .the-button-box')[2]
-        .textContent.trim()
-    ).toEqual('');
+      wrapper.findAll(StandardButton).at(wrapper.vm.explorers.length).props('options')
+    ).toEqual(wrapper.vm.buttonOk);
+  });
+
+  it('should render ethplorers buttons by data from blockExplorers', () => {
+    const tx = 'txHashTest';
+    wrapper.setProps({ txHashExlporrer: tx });
+    expect(
+      wrapper.vm.explorers.map(item => item.link)
+    ).toEqual(
+      wrapper.vm.network.type.blockExplorers.map(item => item.tx.replace('[[txHash]]', tx))
+    );
   });
 
   describe('SuccessModal.vue Methods', () => {

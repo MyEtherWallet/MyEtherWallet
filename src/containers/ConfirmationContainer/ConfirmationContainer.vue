@@ -578,8 +578,8 @@ export default {
         promiEvent.once('transactionHash', hash => {
           this.showSuccessModal(
             `${this.$t('sendTx.success.sub-title')}`,
-            'Okay',
-            this.network.type.blockExplorerTX.replace('[[txHash]]', hash)
+            `${this.$t('common.okay')}`,
+            hash
           );
           this.addNotification([
             noticeTypes.TRANSACTION_HASH,
@@ -627,10 +627,7 @@ export default {
       this.showSuccessModal(
         `${this.$t('sendTx.success.sub-title')}`,
         `${this.$t('common.okay')}`,
-        this.network.type.blockExplorerTX.replace(
-          '[[txHash]]',
-          this.signedTxObject.tx.hash
-        )
+        this.signedTxObject.tx.hash
       );
     },
     reset() {

@@ -8,6 +8,16 @@ export default {
   homePage: 'https://kovan-testnet.github.io/website/',
   blockExplorerTX: 'https://kovan.etherscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://kovan.etherscan.io/address/[[address]]',
+  blockExplorers: [
+    {
+      tx: 'https://kovan.etherscan.io/tx/[[txHash]]',
+      addr: 'https://kovan.etherscan.io/address/[[address]]'
+    },
+    {
+      tx: 'https://kovan.ethplorer.io/tx/[[txHash]]',
+      addr: 'https://kovan.ethplorer.io/address/[[address]]'
+    }
+  ],
   chainID: 42,
   tokens: tokens,
   contracts: contracts,

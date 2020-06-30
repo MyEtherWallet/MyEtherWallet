@@ -41,6 +41,16 @@ const state = {
     type: {
       blockExplorerAddr: 'https://etherscan.io/address/[[address]]',
       blockExplorerTX: 'https://etherscan.io/tx/[[txHash]]',
+      blockExplorers: [
+        {
+          tx: 'https://etherscan.io/tx/[[txHash]]',
+          addr: 'https://etherscan.io/address/[[address]]'
+        },
+        {
+          tx: 'https://ethplorer.io/tx/[[txHash]]',
+          addr: 'https://ethplorer.io/address/[[address]]'
+        }
+      ],
       chainID: 1,
       contracts: [],
       ensResolver: '0x314159265dd8dbb310642f98f50c066173c1259b',
@@ -113,6 +123,16 @@ const getters = {
       type: {
         blockExplorerAddr: 'https://etherscan.io/address/[[address]]',
         blockExplorerTX: 'https://etherscan.io/tx/[[txHash]]',
+        blockExplorers: [
+          {
+            tx: 'https://etherscan.io/tx/[[txHash]]',
+            addr: 'https://etherscan.io/address/[[address]]'
+          },
+          {
+            tx: 'https://ethplorer.io/tx/[[txHash]]',
+            addr: 'https://ethplorer.io/address/[[address]]'
+          }
+        ],
         chainID: 1,
         contracts: [],
         ensResolver: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
