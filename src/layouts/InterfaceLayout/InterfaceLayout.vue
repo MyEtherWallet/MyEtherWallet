@@ -638,9 +638,12 @@ export default {
             symbol: token.symbol,
             website: token.website
           };
+
+          if (token.hasOwnProperty('logo')) {
+            convertedToken['logo'] = token.logo;
+          }
           return convertedToken;
         });
-
       this.tokens = tokens.sort(sortByBalance);
       this.setTokensWithBalance();
     },
