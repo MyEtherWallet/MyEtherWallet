@@ -6,28 +6,14 @@
         text1="My Tokens Value"
         text2="$3,132.25"
       />
-      <div class="ml-auto">
-        <v-btn
-          class="text-transform--initial"
-          text
-          small
-          depressed
-          color="emerald"
-        >
-          <v-icon small class="top-button-icon">mdi-chevron-right</v-icon>
-          Ethplorer
-        </v-btn>
-        <v-btn
-          class="text-transform--initial"
-          text
-          small
-          depressed
-          color="emerald"
-        >
-          <v-icon small class="top-button-icon">mdi-plus</v-icon>
-          Custom Token
-        </v-btn>
-      </div>
+      <mew-button
+        class="ml-auto"
+        :has-full-width="false"
+        title="Show all tokens"
+        button-size="xsmall"
+        btn-style="transparent"
+        @click.native="goTo('HomeAccessWallet')"
+      />
     </div>
 
     <table class="tokens-table mt-4">

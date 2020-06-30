@@ -4,16 +4,14 @@
       <div class="block-title display-1 font-weight-bold mb-6">
         My token list is empty
       </div>
-      <v-btn
-        class="text-transform--initial ml-n3"
-        text
-        small
-        depressed
-        :color="$vuetify.theme.themes.light.emerald"
-      >
-        <v-icon small class="top-button-icon">mdi-plus</v-icon>
-        Custom Token
-      </v-btn>
+      <mew-button
+        class="ml-auto ml-n3"
+        :has-full-width="false"
+        :title="'+ ' + 'Add custom tokens'"
+        button-size="xsmall"
+        btn-style="transparent"
+        @click.native="goTo('HomeAccessWallet')"
+      />
     </div>
     <div class="py-12" />
     <div class="py-5" />
