@@ -43,6 +43,10 @@ Vue.component('mew6-divider-line', DividerLine);
 Vue.component('mew6-confirm-btn', ConfirmButton);
 Vue.component('mew6-password-field', PasswordField);
 
+// Local copy of MEW6 components. (development only)
+import mewButton from '@/mewComponents/MewButton/MewButton';
+Vue.component('mew-button', mewButton);
+
 Vue.prototype.$eventHub = new Vue();
 
 //Router

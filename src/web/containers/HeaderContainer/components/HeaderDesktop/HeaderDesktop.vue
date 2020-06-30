@@ -8,6 +8,16 @@
         <v-spacer></v-spacer>
         <Menu :menus="menus" />
         <v-spacer></v-spacer>
+        <mew-button
+          class="pr-2 pl-4"
+          title="Buy ETH"
+          color-theme="white"
+          :has-full-width="false"
+          button-size="large"
+          btn-style="outline"
+          left-md-icon="mdi-view-grid"
+          right-md-icon="mdi-chevron-down"
+        />
         <mew6-std-btn
           v-if="false"
           depressed
@@ -31,6 +41,7 @@
 
 <script>
 import Menu from './components/Menu';
+//import BuyEthIcon from '@/assets/images/icons/icon-buy-eth-white.svg';
 
 export default {
   name: 'HeaderDesktop',

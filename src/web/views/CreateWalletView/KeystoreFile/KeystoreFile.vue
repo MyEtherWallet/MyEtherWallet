@@ -2,17 +2,21 @@
   <div class="bg_blue">
     <v-sheet color="transparent" max-width="800px" class="mx-auto">
       <BlockTitle :data="titleData" />
-      <!--mew-stepper :items="items" :on-step="onStep">
+
+      <CoolMewStepper :items="items" :on-step="onStep">
         <template v-slot:stepperContent1>
-          1111
+          111111
+          <Step1 />
         </template>
         <template v-slot:stepperContent2>
-          2222
+          222222
+          <Step2 />
         </template>
         <template v-slot:stepperContent3>
-          3333
+          333333
+          <Step3 />
         </template>
-      </mew-stepper-->
+      </CoolMewStepper>
 
       <div class="py-12"></div>
       <SteppersHeaderContent :tabs="tabs" />
@@ -22,6 +26,7 @@
 </template>
 
 <script>
+import CoolMewStepper from '@/mewComponents/MewStepper/MewStepper';
 import BlockTitle from '@/web/components/BlockTitle';
 import SteppersHeaderContent from '@/components/Steppers/SteppersHeaderContent';
 import Step1 from './components/Step1';
@@ -30,7 +35,14 @@ import Step3 from './components/Step3';
 
 export default {
   name: 'MewConnect',
-  components: { BlockTitle, SteppersHeaderContent },
+  components: {
+    BlockTitle,
+    SteppersHeaderContent,
+    Step1,
+    Step2,
+    Step3,
+    CoolMewStepper
+  },
   data: () => ({
     items: [
       {
@@ -79,6 +91,7 @@ export default {
       } else {
         this.onStep = 1;
       }
+      console.log(this.onStep);
     }
   }
 };
