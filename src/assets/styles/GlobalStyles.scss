@@ -38,6 +38,11 @@
   color: white !important;
 }
 
+/* Reset text transform for Vuetify button */
+.v-btn__content {
+  text-transform: initial;
+}
+
 /* ========== CSS Style Reset ========== */
 * {
   font-family: "Roboto";

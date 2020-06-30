@@ -9,33 +9,41 @@
         currency="ETH"
       />
       <div class="ml-auto">
-        <v-btn-toggle
-          v-model="chartRange"
-          class="chart-button-group"
-          tile
-          group
-          dense
-          mandatory
-        >
-          <v-btn value="1d">
-            1D
+        <!--div>
+          <mew-toggle-button :button-group="chartButtons" />
+          <v-btn text icon class="ml-4">
+            <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
-          <v-btn value="1w">
-            1W
+        </div-->
+        <div>
+          <v-btn-toggle
+            v-model="chartRange"
+            class="chart-button-group"
+            tile
+            group
+            dense
+            mandatory
+          >
+            <v-btn value="1d">
+              1D
+            </v-btn>
+            <v-btn value="1w">
+              1W
+            </v-btn>
+            <v-btn value="1m">
+              1M
+            </v-btn>
+            <v-btn value="1y">
+              1Y
+            </v-btn>
+            <v-btn value="all">
+              All
+            </v-btn>
+          </v-btn-toggle>
+          <v-btn text icon class="ml-4">
+            <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
-          <v-btn value="1m">
-            1M
-          </v-btn>
-          <v-btn value="1y">
-            1Y
-          </v-btn>
-          <v-btn value="all">
-            All
-          </v-btn>
-        </v-btn-toggle>
-        <v-btn text icon class="ml-4">
-          <v-icon>mdi-dots-vertical</v-icon>
-        </v-btn>
+        </div>
       </div>
     </div>
     <ChartBalance :key="chartData.key" :data="chartData.data" />
@@ -71,6 +79,7 @@ export default {
   components: { ChartBalance, BlockTitle },
   data() {
     return {
+      chartButtons: ['1D', '1W', '1M', '1Y', 'All'],
       chartRange: '1d',
       chartData: [],
       chart1d: {

@@ -2,6 +2,19 @@
   <div class="bg_blue">
     <v-sheet color="transparent" max-width="800px" class="mx-auto">
       <BlockTitle :data="titleData" />
+      <!--mew-stepper :items="items" :on-step="onStep">
+        <template v-slot:stepperContent1>
+          1111
+        </template>
+        <template v-slot:stepperContent2>
+          2222
+        </template>
+        <template v-slot:stepperContent3>
+          3333
+        </template>
+      </mew-stepper-->
+
+      <div class="py-12"></div>
       <SteppersHeaderContent :tabs="tabs" />
     </v-sheet>
     <div class="spacer-y-medium" />
@@ -19,6 +32,21 @@ export default {
   name: 'MewConnect',
   components: { BlockTitle, SteppersHeaderContent },
   data: () => ({
+    items: [
+      {
+        step: 1,
+        name: 'STEP 1. Create password'
+      },
+      {
+        step: 2,
+        name: 'STEP 2. Download keystore file'
+      },
+      {
+        step: 3,
+        name: 'STEP 3. Well done'
+      }
+    ],
+    onStep: 2,
     titleData: {
       textProps: 'white--text',
       toptitle: '',
@@ -34,6 +62,24 @@ export default {
       { label: 'STEP 2. Create a new wallet', content: Step2 },
       { label: 'STEP 3. Well done', content: Step3 }
     ]
-  })
+  }),
+  watch: {
+    $route() {
+      this.checkQueryStep();
+    }
+  },
+  mounted() {
+    this.checkQueryStep();
+  },
+  methods: {
+    checkQueryStep() {
+      const currentStep = this.$route.query.step;
+      if (currentStep) {
+        this.onStep = parseInt(currentStep);
+      } else {
+        this.onStep = 1;
+      }
+    }
+  }
 };
 </script>
