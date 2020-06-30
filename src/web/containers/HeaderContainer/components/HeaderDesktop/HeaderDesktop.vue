@@ -9,6 +9,7 @@
         <Menu :menus="menus" />
         <v-spacer></v-spacer>
         <mew6-std-btn
+          v-if="false"
           depressed
           min-width="0"
           height="48px"

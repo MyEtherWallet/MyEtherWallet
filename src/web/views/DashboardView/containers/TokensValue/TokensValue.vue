@@ -1,6 +1,6 @@
 <template>
   <mew6-white-sheet>
-    <div class="d-flex align-center px-6 pt-7">
+    <div class="d-flex align-center px-7 pt-7">
       <BlockTitle
         :icon="require('@/assets/images/icons/icon-token-grey.png')"
         text1="My Tokens Value"
@@ -89,9 +89,13 @@
             </div>
           </td>
           <td>
-            <mew6-std-btn outlined size="small" min-width="0">
-              Trade
-            </mew6-std-btn>
+            <mew-button
+              :has-full-width="false"
+              btn-style="outline"
+              title="Trade"
+              button-size="xsmall"
+              @click.native="goTo('HomeAccessWallet')"
+            />
           </td>
         </tr>
       </tbody>

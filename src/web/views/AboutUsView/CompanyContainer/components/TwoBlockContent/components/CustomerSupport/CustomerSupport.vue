@@ -7,14 +7,14 @@
       aspect-ratio="1"
       class="mb-5"
     />
-    <BlockTitle :data="titleData" />
-    <mew6-std-btn
-      size="x-large"
-      buttonclass="button--green-border"
+    <BlockTitle no-page-title :data="titleData" />
+    <mew-button
       class="mt-5"
-    >
-      Contact Support
-    </mew6-std-btn>
+      btn-link="https://www.mewtopia.com/"
+      :has-full-width="false"
+      title="Contact Support"
+      button-size="xlarge"
+    />
   </v-sheet>
 </template>
 

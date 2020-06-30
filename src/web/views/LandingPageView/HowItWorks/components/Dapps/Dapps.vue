@@ -4,7 +4,7 @@
     <v-container>
       <v-row class="align-center">
         <v-col cols="5" class="text-content pr-12">
-          <BlockTitle :data="titleData" class="mb-12 pl-12" />
+          <BlockTitle no-page-title :data="titleData" class="mb-12 pl-12" />
           <div class="mb-4 d-flex">
             <div class="mr-3">
               <v-img src="@/assets/images/icons/icon-dapps-mew.svg" />

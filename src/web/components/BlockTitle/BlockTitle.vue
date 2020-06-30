@@ -1,6 +1,11 @@
 <template>
-  <div class="block-title" :class="data.centered ? 'text-center' : ''">
-    <div class="py-10"></div>
+  <div
+    :class="[
+      data.centered ? 'text-center' : '',
+      !noPageTitle ? 'page-title' : ''
+    ]"
+  >
+    <div v-if="!noPageTitle" class="py-10"></div>
     <div
       v-if="data.toptitle"
       class="top-title text-uppercase font-weight-bold grey--text text--lighten-1 mb-2"
@@ -28,7 +33,7 @@
       </h5>
       <div><slot /></div>
     </v-sheet>
-    <div class="py-6"></div>
+    <div v-if="!noPageTitle" class="py-6"></div>
   </div>
 </template>
 
@@ -36,6 +41,7 @@
 export default {
   name: 'BlockTitle',
   props: {
+    noPageTitle: { default: false, type: Boolean },
     data: {
       default: function () {
         return {};
@@ -48,7 +54,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.block-title {
+.page-title {
   max-width: 500px;
   margin: 0 auto;
 }

@@ -3,7 +3,7 @@
     <div class="py-9" />
     <v-container>
       <v-sheet max-width="600px" class="mb-12">
-        <BlockTitle :data="titleData" class="mb-8" />
+        <BlockTitle no-page-title :data="titleData" class="mb-8" />
       </v-sheet>
       <v-row>
         <v-col

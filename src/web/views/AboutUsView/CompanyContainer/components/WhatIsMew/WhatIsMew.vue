@@ -3,7 +3,7 @@
     <v-container>
       <v-row align="center">
         <v-col cols="5">
-          <BlockTitle :data="titleData" class="pr-8" />
+          <BlockTitle no-page-title :data="titleData" class="pr-8" />
         </v-col>
         <v-col cols="7">
           <v-img
