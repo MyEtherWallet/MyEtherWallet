@@ -1,6 +1,6 @@
 <template>
-  <mew6-white-sheet class="mew-component--eth-balance">
-    <div class="d-flex px-6 pt-7">
+  <mew6-white-sheet class="mew-component--eth-balance pa-7 pb-4">
+    <div class="d-flex">
       <BlockTitle
         :icon="require('@/assets/images/currencies//eth.png')"
         text1="My Eth Balance"
@@ -38,12 +38,8 @@
         </v-btn>
       </div>
     </div>
-    <ChartBalance
-      :key="chartData.key"
-      :data="chartData.data"
-      class="px-3 mt-5"
-    />
-    <v-row class="px-6 align-center">
+    <ChartBalance :key="chartData.key" :data="chartData.data" />
+    <v-row class="align-center">
       <v-col class="d-flex align-center justify-center">
         <div class="font-weight-bold">ETH PRICE</div>
         <div class="ml-2 font-weight-regular text-color--mew-green">
@@ -56,7 +52,12 @@
         <div class="ml-5">$321.55 / 1 ETH</div>
       </v-col>
       <v-col class="text-right">
-        <mew6-std-btn>Send Transaction</mew6-std-btn>
+        <mew-button
+          :has-full-width="false"
+          title="Send Transaction"
+          button-size="xlarge"
+          @click.native="goTo('HomeAccessWallet')"
+        />
       </v-col>
     </v-row>
   </mew6-white-sheet>

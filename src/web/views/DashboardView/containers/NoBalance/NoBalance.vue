@@ -5,7 +5,6 @@
         My ETH balance is empty
       </div>
       <mew-button
-        class="ml-auto"
         :has-full-width="false"
         title="Buy ETH with a credit card"
         button-size="xlarge"
