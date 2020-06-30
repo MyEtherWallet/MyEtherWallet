@@ -1,3 +1,7 @@
+### Bug
+
+- Remove disabled message and button on firefox for bcvault, add error when no account received [#2499](https://github.com/MyEtherWallet/MyEtherWallet/pull/2499)
+
 ### Release v5.7.0
 
 ### Bug
