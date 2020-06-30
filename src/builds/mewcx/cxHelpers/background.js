@@ -93,13 +93,10 @@ chrome.storage.onChanged.addListener(items => {
   Object.keys(items).forEach(item => {
     if (isAddress(item)) {
       const currentNotifications = JSON.parse(
-        localStorage.getItem('notifications')
+        localStorage.get('notifications')
       );
       currentNotifications[item] = [];
-      localStorage.setItem(
-        'notifications',
-        JSON.stringify(currentNotifications)
-      );
+      localStorage.set('notifications', JSON.stringify(currentNotifications));
     }
 
     if (
