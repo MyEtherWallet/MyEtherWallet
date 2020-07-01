@@ -1,8 +1,24 @@
 <template>
   <BaseOverlay :open="open" :close="close" :back="false" close-text="Cancel">
     <OverlayTitle title="Settings" />
-
     <div class="overlay-content">
+      <mew-expand-panel :panel-items="panelItems">
+        <template v-slot:panelBody0>
+          <GasPrice />
+        </template>
+        <template v-slot:panelBody1>
+          <ImportConfig />
+        </template>
+        <template v-slot:panelBody2>
+          <ExportConfig />
+        </template>
+        <template v-slot:panelBody3>
+          <Addresses />
+        </template>
+      </mew-expand-panel>
+    </div>
+
+    <div class="overlay-content mt-12">
       <v-expansion-panels flat :light="!$vuetify.theme.dark">
         <ExpansionPanelContent title="Gas price" subtitle="1 Gwei (Economic)">
           <template v-slot:content>
@@ -61,7 +77,23 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      panelItems: [
+        {
+          name: 'Gas price',
+          subtext: '1 Gwei (Economic)'
+        },
+        {
+          name: 'Import configurations'
+        },
+        {
+          name: 'Export configurations'
+        },
+        {
+          name: 'Contact addresses'
+        }
+      ]
+    };
   }
 };
 </script>

@@ -4,6 +4,16 @@
     target="_blank"
     class="display--block text-decoration--none"
   >
+    <mew-super-button
+      class="mb-1"
+      color-theme="basic"
+      title="MEW CX"
+      subtitle="MEWcx is a secure and convinient way to create and manage your
+            wallet. Click here to download today."
+      :right-icon="require('@/assets/images/icons/icon-mew-cx.png')"
+      :title-icon="require('@/assets/images/icons/icon-mew-cx.png')"
+    />
+
     <mew6-flexible-btn>
       <div class="d-flex align-center justify-space-between">
         <div class="pr-9">

@@ -91,7 +91,6 @@ export default {
       } else {
         this.onStep = 1;
       }
-      console.log(this.onStep);
     }
   }
 };

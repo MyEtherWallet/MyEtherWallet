@@ -9,13 +9,16 @@
         currency="ETH"
       />
       <div class="ml-auto">
-        <!--div>
-          <mew-toggle-button :button-group="chartButtons" />
+        <div class="d-flex align-center">
+          <mew-toggle-button
+            :button-group="chartButtons"
+            @onBtnClick="onBtnClick"
+          />
           <v-btn text icon class="ml-4">
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
-        </div-->
-        <div>
+        </div>
+        <div v-if="false">
           <v-btn-toggle
             v-model="chartRange"
             class="chart-button-group"
@@ -46,7 +49,7 @@
         </div>
       </div>
     </div>
-    <ChartBalance :key="chartData.key" :data="chartData.data" />
+    <ChartBalance :key="chartData.key" :data="chartData.data" class="mt-5" />
     <v-row class="align-center">
       <v-col class="d-flex align-center justify-center">
         <div class="font-weight-bold">ETH PRICE</div>
@@ -4125,6 +4128,12 @@ export default {
   },
   beforeMount() {
     this.chartData = this.chart1d;
+  },
+  methods: {
+    onBtnClick(newVal) {
+      console.log('btn click:', newVal);
+      this.chartRange = newVal.toLowerCase();
+    }
   }
 };
 </script>
