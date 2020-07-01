@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuetify, {
   VApp,
   VBtn,
+  VBtnToggle,
   VCard,
   VCardTitle,
   VCardSubtitle,
@@ -52,6 +53,7 @@ Vue.use(Vuetify, {
   components: {
     VApp,
     VBtn,
+    VBtnToggle,
     VCard,
     VCardTitle,
     VCardSubtitle,

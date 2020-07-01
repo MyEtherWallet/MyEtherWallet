@@ -60,7 +60,7 @@
           title="Switch >"
           color-theme="white"
           button-size="small"
-          @click="openChangeAddress = true"
+          @click.native="openChangeAddress = true"
         />
       </div>
     </div>

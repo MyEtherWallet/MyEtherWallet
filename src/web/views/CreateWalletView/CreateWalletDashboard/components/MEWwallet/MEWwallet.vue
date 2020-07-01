@@ -4,6 +4,14 @@
     target="_blank"
     class="display--block text-decoration--none"
   >
+    <mew-super-button
+      class="mb-1"
+      color-theme="basic"
+      title="Get MEWwallet"
+      subtitle="MEW Brings a hardware wallet style security to your iOS or Android
+            smartphone, helping you to secure your funds as never before."
+      :right-icon="require('@/assets/images/snippets/bg-mew-wallet.png')"
+    />
     <mew6-flexible-btn>
       <div class="d-flex">
         <div class="pr-9">
