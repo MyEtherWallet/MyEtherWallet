@@ -3,7 +3,7 @@
     <v-sheet color="transparent" max-width="800px" class="mx-auto">
       <BlockTitle :data="titleData" />
 
-      <CoolMewStepper :items="items" :on-step="onStep">
+      <mew-stepper :items="items" :on-step="onStep">
         <template v-slot:stepperContent1>
           111111
           <Step1 />
@@ -16,7 +16,7 @@
           333333
           <Step3 />
         </template>
-      </CoolMewStepper>
+      </mew-stepper>
 
       <div class="py-12"></div>
       <SteppersHeaderContent :tabs="tabs" />
@@ -26,7 +26,6 @@
 </template>
 
 <script>
-import CoolMewStepper from '@/mewComponents/MewStepper/MewStepper';
 import BlockTitle from '@/web/components/BlockTitle';
 import SteppersHeaderContent from '@/components/Steppers/SteppersHeaderContent';
 import Step1 from './components/Step1';
@@ -40,8 +39,7 @@ export default {
     SteppersHeaderContent,
     Step1,
     Step2,
-    Step3,
-    CoolMewStepper
+    Step3
   },
   data: () => ({
     items: [

@@ -3,6 +3,7 @@
     <!-- need to translate -->
     <v-container>
       <BlockTitle
+        no-page-title
         :data="titleData"
         :centered="false"
         toptitle="Why Mew"
