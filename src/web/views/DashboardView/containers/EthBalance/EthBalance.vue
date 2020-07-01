@@ -4131,7 +4131,6 @@ export default {
   },
   methods: {
     onBtnClick(newVal) {
-      console.log('btn click:', newVal);
       this.chartRange = newVal.toLowerCase();
     }
   }

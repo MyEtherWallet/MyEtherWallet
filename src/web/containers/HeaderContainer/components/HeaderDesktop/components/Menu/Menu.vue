@@ -1,11 +1,7 @@
 <template>
   <div class="d-flex align-center">
-    <mew-menu
-      :list-obj="mewMenuCompany"
-      text-color="white"
-      @goToPage="goToPage"
-    />
-    <mew-menu :list-obj="mewMenuTools" @goToPage="goToPage" />
+    <mew-menu :list-obj="mewMenuCompany" text-color="white" />
+    <mew-menu :list-obj="mewMenuTools" />
 
     <ul :key="menuResetKey" class="pl-0 d-flex">
       <li
@@ -100,11 +96,7 @@ export default {
       ]
     }
   }),
-  methods: {
-    goToPage(link) {
-      console.log('go to:', link);
-    }
-  }
+  methods: {}
 };
 </script>
 
