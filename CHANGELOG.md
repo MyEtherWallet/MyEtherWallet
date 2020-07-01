@@ -1,3 +1,7 @@
+### Bug
+
+- Whitelist prkl correctly [#2501](https://github.com/MyEtherWallet/MyEtherWallet/pull/2501)
+
 ### Release v5.7.0
 
 ### Bug

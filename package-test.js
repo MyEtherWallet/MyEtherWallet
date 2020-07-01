@@ -32,7 +32,8 @@ const EXCEPTIONS = [
   'web3-utils',
   'i18n-iso-countries',
   '@myetherwallet/mewconnect-web-client',
-  '@walletconnect/browser'
+  '@walletconnect/browser',
+  'ethereumjs-wallet'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
