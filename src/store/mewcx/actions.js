@@ -1,25 +1,59 @@
+import { toChecksumAddress } from '@/helpers/addressUtils';
 const setState = function ({ commit }, obj) {
   commit('SET_STATE', obj);
 };
 
-const addAccount = function ({ commit }, obj) {
-  commit('ADD_ACCOUNT', obj);
+const addAccount = function ({ state, commit }, obj) {
+  const accounts = state.accounts.splice();
+  accounts.push(obj);
+  commit('ADD_ACCOUNT', accounts);
 };
 
-const deleteAccount = function ({ commit }, obj) {
-  commit('DELETE_ACCOUNT', obj);
+const deleteAccount = function ({ state, commit }, obj) {
+  const accounts = state.accounts.splice();
+  const foundIdx = accounts.findIndex(item => {
+    const stateAccountKey = Object.keys(item);
+    const passedAccountKey = Object.keys(obj);
+    return (
+      toChecksumAddress(stateAccountKey[0]) ===
+      toChecksumAddress(passedAccountKey[0])
+    );
+  });
+  accounts.splice(foundIdx, 0);
+  commit('DELETE_ACCOUNT', accounts);
 };
 
-const updateAccount = function ({ commit }, obj) {
-  commit('UPDATE_ACCOUNT', obj);
+const updateAccount = function ({ state, commit }, obj) {
+  const accounts = state.accounts.splice();
+  const foundIdx = accounts.findIndex(item => {
+    const stateAccountKey = Object.keys(item);
+    const passedAccountKey = Object.keys(obj);
+    return (
+      toChecksumAddress(stateAccountKey[0]) ===
+      toChecksumAddress(passedAccountKey[0])
+    );
+  });
+  accounts.splice(foundIdx, 0, obj);
+  commit('UPDATE_ACCOUNT', accounts);
 };
 
-const addFavoriteWallet = function ({ commit }, obj) {
-  commit('ADD_FAVORITE_WALLET', obj);
+const addFavoriteWallet = function ({ state, commit }, obj) {
+  const favorites = state.favorites.splice();
+  favorites.push(obj);
+  commit('ADD_FAVORITE_WALLET', favorites);
 };
 
-const deleteFavoriteWallet = function ({ commit }, obj) {
-  commit('DELETE_FAVORITE_WALLET', obj);
+const deleteFavoriteWallet = function ({ state, commit }, obj) {
+  const favorites = state.favorites.splice();
+  const foundIdx = favorites.findIndex(item => {
+    const stateAccountKey = item.address;
+    const passedAccountKey = obj.address;
+    return (
+      toChecksumAddress(stateAccountKey) === stateAccountKey(passedAccountKey)
+    );
+  });
+  favorites.splice(foundIdx, 0);
+  commit('DELETE_FAVORITE_WALLET', favorites);
 };
 
 const setDefaultNetwork = function ({ commit }, obj) {
@@ -30,11 +64,20 @@ const setDefaultChainId = function ({ commit }, obj) {
   commit('SET_DEF_CHAIN_ID', obj);
 };
 
-const addSite = function ({ commit }, obj) {
-  commit('ADD_SITE', obj);
+const addSite = function ({ state, commit }, obj) {
+  const sites = state.sites.splice();
+  sites.push(obj);
+  commit('ADD_SITE', sites);
 };
 
-const deleteSite = function ({ commit }, obj) {
+const deleteSite = function ({ state, commit }, obj) {
+  const sites = state.sites.splice();
+  const foundIdx = sites.findIndex(item => {
+    const stateSite = Object.keys(item);
+    const passedSite = Object.keys(obj);
+    return toChecksumAddress(stateSite[0]) === toChecksumAddress(passedSite[0]);
+  });
+  sites.splice(foundIdx, 0);
   commit('DELETE_SITE', obj);
 };
 
