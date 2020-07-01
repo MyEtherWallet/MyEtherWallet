@@ -5,11 +5,7 @@
       text-color="white"
       @goToPage="goToPage"
     />
-    <mew-menu
-      :list-obj="mewMenuTools"
-      text-color="white"
-      @goToPage="goToPage"
-    />
+    <mew-menu :list-obj="mewMenuTools" @goToPage="goToPage" />
 
     <ul :key="menuResetKey" class="pl-0 d-flex">
       <li
