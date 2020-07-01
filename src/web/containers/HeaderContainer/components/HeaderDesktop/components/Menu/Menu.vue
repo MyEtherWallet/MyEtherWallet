@@ -1,60 +1,114 @@
 <template>
-  <ul :key="menuResetKey" class="pl-0 d-flex">
-    <li
-      v-for="(m, key) in menus"
-      :key="key"
-      class="list-style-type--none ml-10 d-flex align-center"
-    >
-      <div v-if="!m.submenus" class="menu-block">
-        <router-link
-          class="pa-3 text-color--white text-decoration--none"
-          :to="m.to"
-        >
-          {{ m.label }}
-        </router-link>
-      </div>
-      <div v-if="m.submenus" class="menu-block">
-        <div class="pa-3 text-color--white d-flex align-center">
-          <div>{{ m.label }}</div>
-          <v-icon class="closed title">mdi-chevron-down</v-icon>
-          <v-icon class="opened title">mdi-chevron-up</v-icon>
+  <div class="d-flex align-center">
+    <mew-menu
+      :list-obj="mewMenuCompany"
+      text-color="white"
+      @goToPage="goToPage"
+    />
+    <mew-menu
+      :list-obj="mewMenuTools"
+      text-color="white"
+      @goToPage="goToPage"
+    />
+
+    <ul :key="menuResetKey" class="pl-0 d-flex">
+      <li
+        v-for="(m, key) in menus"
+        :key="key"
+        class="list-style-type--none ml-10 d-flex align-center"
+      >
+        <div v-if="!m.submenus" class="menu-block">
+          <router-link
+            class="pa-3 text-color--white text-decoration--none"
+            :to="m.to"
+          >
+            {{ m.label }}
+          </router-link>
         </div>
-        <div class="sub-menu">
-          <ul class="px-0 py-4">
-            <li
-              v-for="(sm, skey) in m.submenus"
-              :key="skey"
-              class="list-style-type--none"
-              @click="menuResetKey++"
-            >
-              <router-link
-                v-if="sm.to"
-                class="text-decoration--none"
-                :to="sm.to"
+        <div v-if="m.submenus" class="menu-block">
+          <div class="pa-3 text-color--white d-flex align-center">
+            <div>{{ m.label }}</div>
+            <v-icon class="closed title">mdi-chevron-down</v-icon>
+            <v-icon class="opened title">mdi-chevron-up</v-icon>
+          </div>
+          <div class="sub-menu">
+            <ul class="px-0 py-4">
+              <li
+                v-for="(sm, skey) in m.submenus"
+                :key="skey"
+                class="list-style-type--none"
+                @click="menuResetKey++"
               >
-                {{ sm.label }}
-              </router-link>
-              <a
-                v-if="sm.href"
-                class="text-decoration--none"
-                target="_blank"
-                :href="sm.href"
-              >
-                {{ sm.label }}
-              </a>
-            </li>
-          </ul>
+                <router-link
+                  v-if="sm.to"
+                  class="text-decoration--none"
+                  :to="sm.to"
+                >
+                  {{ sm.label }}
+                </router-link>
+                <a
+                  v-if="sm.href"
+                  class="text-decoration--none"
+                  target="_blank"
+                  :href="sm.href"
+                >
+                  {{ sm.label }}
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-    </li>
-  </ul>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'Menu',
   props: { menus: { default: () => [], type: Array } },
-  data: () => ({ menuResetKey: 1 })
+  data: () => ({
+    menuResetKey: 1,
+    mewMenuCompany: {
+      name: 'Company',
+      items: [
+        {
+          title: 'About us'
+        },
+        {
+          title: 'Team'
+        },
+        {
+          title: 'Support'
+        },
+        {
+          title: 'Blog'
+        }
+      ]
+    },
+    mewMenuTools: {
+      name: 'Tools',
+      items: [
+        {
+          title: 'Watch only address'
+        },
+        {
+          title: 'Send offline helper'
+        },
+        {
+          title: 'Verify message'
+        },
+        {
+          title: 'Convert units'
+        }
+      ]
+    }
+  }),
+  methods: {
+    goToPage(link) {
+      console.log('go to:', link);
+    }
+  }
 };
 </script>
 

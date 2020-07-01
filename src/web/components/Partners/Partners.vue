@@ -1,6 +1,11 @@
 <template>
   <div class="home-partners">
     <v-container>
+      <mew-module
+        title-size="mew-heading-1"
+        title="Connect with the powerful crypto communities"
+        subtitle="PARTNERS"
+      />
       <BlockTitle no-page-title :data="titleData" />
       <v-row class="mt-8 px-4">
         <v-col v-for="(p, key) in partners" :key="key" cols="3" md="3" lg="2">
