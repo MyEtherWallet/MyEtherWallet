@@ -1,7 +1,12 @@
 <template>
   <div>
     <v-container>
-      <BlockTitle :data="titleData" />
+      <mew-module
+        title-size="mew-heading-1"
+        title="All-in-one gateway to your Ethereum Blockchain service"
+        subtitle="FEATURES"
+      />
+      <BlockTitle no-page-title :data="titleData" />
     </v-container>
     <Tabs :tabs="tabs" />
   </div>

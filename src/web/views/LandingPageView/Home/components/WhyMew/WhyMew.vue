@@ -2,13 +2,12 @@
   <div>
     <!-- need to translate -->
     <v-container>
-      <BlockTitle
-        no-page-title
-        :data="titleData"
-        :centered="false"
-        toptitle="Why Mew"
+      <mew-module
+        title-size="mew-heading-1"
         title="Make Ethereum Blockchain easy and secure"
+        subtitle="Why Mew"
       />
+      <BlockTitle no-page-title :data="titleData" :centered="false" />
       <div class="pt-10 d-flex">
         <FriendlyToUse />
         <Spacer />
