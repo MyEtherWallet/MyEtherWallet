@@ -1,6 +1,13 @@
 <template>
   <div class="bg_blue">
     <mew6-bottom-alert-buy-hardware-wallet :show="true" hide-overlay />
+    <toast
+      ref="toast"
+      can-close
+      :link-obj="toastLink"
+      text="Did you know? Hardware wallets offer the highest security for accessing your crypto."
+      toast-type="info"
+    />
     <BlockTitle :data="titleData">
       <h5 class="white--text ma-0">
         Please select a method to create a new wallet.
@@ -35,6 +42,10 @@ export default {
   name: 'CreateNewWallet',
   components: { BlockTitle, MEWwallet, MEWcx, Software },
   data: () => ({
+    toastLink: {
+      title: 'Buy a hardware wallet',
+      url: '/'
+    },
     titleData: {
       textProps: 'white--text',
       toptitle: '',
@@ -43,6 +54,9 @@ export default {
       centered: true
     }
   }),
+  mounted() {
+    this.$refs.toast.showToast();
+  },
   methods: {}
 };
 </script>
