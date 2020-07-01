@@ -122,7 +122,7 @@
     "ethereumjs-common": "1.5.1",
     "ethereumjs-tx": "2.1.2",
     "ethereumjs-util": "7.0.0",
-    "ethereumjs-wallet": "0.6.3",
+    "ethereumjs-wallet": "1.0.0",
     "ethjs-unit": "0.1.6",
     "hdkey": "2.0.1",
     "i18n-iso-countries": "6.0.0",
