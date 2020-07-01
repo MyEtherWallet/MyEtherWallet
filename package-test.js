@@ -33,7 +33,7 @@ const EXCEPTIONS = [
   'i18n-iso-countries',
   '@myetherwallet/mewconnect-web-client',
   '@walletconnect/browser',
-  'vuex-webextensions'
+  'ethereumjs-wallet'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
