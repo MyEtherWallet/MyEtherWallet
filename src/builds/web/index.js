@@ -114,14 +114,6 @@ const webRoutes = [
         }
       },
       {
-        path: 'create-wallet/software',
-        name: 'HomeCreateWalletMewWallet',
-        component: CreateWalletMewWallet,
-        meta: {
-          requiresAuth: false
-        }
-      },
-      {
         path: 'create-wallet/mewwallet',
         name: 'HomeCreateWalletMewWallet',
         component: CreateWalletMewWallet,
