@@ -24,6 +24,7 @@ import AboutUsTeam from '@/web/views/AboutUsView/TeamContainer';
 import AboutUsWhyMEW from '@/web/views/AboutUsView/WhyMEWContainer';
 
 import HowItWorks from '@/web/views/LandingPageView/HowItWorks';
+import BuyHardwareWallet from '@/web/views/LandingPageView/BuyHardwareWallet';
 
 import Wallet from '@/web/views/WalletView';
 import Dashboard from '@/web/views/DashboardView';
@@ -69,6 +70,14 @@ const webRoutes = [
         path: 'how-it-works',
         name: 'HowItWorks',
         component: HowItWorks,
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'buy-hardware-wallet',
+        name: 'BuyHardwareWallet',
+        component: BuyHardwareWallet,
         meta: {
           requiresAuth: false
         }
