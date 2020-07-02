@@ -84,7 +84,7 @@ export default {
       {
         logoImg: require('@/assets/images/hardware-wallets/logo-keepkey.png'),
         walletImg: require('@/assets/images/hardware-wallets/keepkey.png'),
-        priceNote: ' ',
+        priceNote: 'Starting from',
         currency: '$',
         price: '83.26',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
@@ -101,8 +101,8 @@ export default {
         link: 'https://trezor.io/'
       },
       {
-        logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
-        walletImg: require('@/assets/images/hardware-wallets/trezor.png'),
+        logoImg: require('@/assets/images/hardware-wallets/logo-secalot.png'),
+        walletImg: require('@/assets/images/hardware-wallets/secalot.png'),
         priceNote: 'Starting from',
         currency: '€',
         price: '83.26',
@@ -110,8 +110,9 @@ export default {
         link: 'https://trezor.io/'
       },
       {
-        logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
-        walletImg: require('@/assets/images/hardware-wallets/trezor.png'),
+        logoText: 'ETHER.CARDS',
+        //logoImg: require('@/assets/images/hardware-wallets/logo-ethercards.png'),
+        walletImg: require('@/assets/images/hardware-wallets/bitmap.png'),
         priceNote: 'Starting from',
         currency: '€',
         price: '83.26',
@@ -119,8 +120,9 @@ export default {
         link: 'https://trezor.io/'
       },
       {
-        logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
-        walletImg: require('@/assets/images/hardware-wallets/trezor.png'),
+        logoText: 'FINNEY',
+        //logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
+        walletImg: require('@/assets/images/hardware-wallets/finney.png'),
         priceNote: 'Starting from',
         currency: '€',
         price: '83.26',
@@ -128,12 +130,12 @@ export default {
         link: 'https://trezor.io/'
       },
       {
-        logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
-        walletImg: require('@/assets/images/hardware-wallets/trezor.png'),
+        logoImg: require('@/assets/images/hardware-wallets/logo-billfodl.png'),
+        walletImg: require('@/assets/images/hardware-wallets/billfodl.png'),
         priceNote: 'Starting from',
         currency: '€',
         price: '83.26',
-        note: 'The most trusted hardware wallet in the world. Get yours today!',
+        note: 'Unmatched physical security for your private keys.',
         link: 'https://trezor.io/'
       }
     ],
@@ -151,10 +153,10 @@ export default {
 
 <style lang="scss" scoped>
 .logo-text {
-  height: 32px;
+  height: 38px;
   div {
     font-size: 32px;
-    font-weight: 600;
+    font-weight: 500;
   }
 }
 </style>
