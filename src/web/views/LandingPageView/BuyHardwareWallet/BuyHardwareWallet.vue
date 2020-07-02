@@ -1,0 +1,160 @@
+<template>
+  <div>
+    <PageTitle title="Buy hardware wallet" />
+    <BlockTitle :data="titleData" class="mb-12 pl-12" />
+
+    <v-sheet color="transparent" max-width="1000px" class="mx-auto">
+      <v-row>
+        <v-col v-for="(b, key) in buttons" :key="key" cols="6">
+          <a :href="b.link" target="_blank">
+            <mew6-flexible-btn color="primary_silver">
+              <div class="d-flex align-center justify-space-between">
+                <div class="pr-9">
+                  <img
+                    v-if="b.logoImg"
+                    height="32"
+                    :src="b.logoImg"
+                    alt="Logo"
+                    class="mb-3"
+                  />
+                  <div
+                    v-if="b.logoText"
+                    class="d-flex align-center logo-text mb-3"
+                  >
+                    <div>{{ b.logoText }}</div>
+                  </div>
+                  <h6
+                    class="text-uppercase font-weight-bold emerald--text text--lighten-1"
+                  >
+                    {{ b.priceNote }}
+                  </h6>
+
+                  <div class="d-flex">
+                    <h5 class="mr-1 font-weight-black">{{ b.currency }}</h5>
+                    <h3 class="text-uppercase font-weight-bold">
+                      {{ b.price }}
+                    </h3>
+                  </div>
+                  <div>
+                    {{ b.note }}
+                  </div>
+                  <div class="mt-3 emerald--text font-weight-medium">
+                    Learn more >
+                  </div>
+                </div>
+                <div>
+                  <img height="140" :src="b.walletImg" alt="Hardware Wallet" />
+                </div>
+              </div>
+            </mew6-flexible-btn>
+          </a>
+        </v-col>
+      </v-row>
+    </v-sheet>
+  </div>
+</template>
+
+<script>
+import PageTitle from '@/web/components/PageTitle';
+import BlockTitle from '@/web/components/BlockTitle';
+
+export default {
+  name: 'HowItWorks',
+  components: { PageTitle, BlockTitle },
+  data: () => ({
+    buttons: [
+      {
+        logoImg: require('@/assets/images/hardware-wallets/logo-ledger.svg'),
+        walletImg: require('@/assets/images/hardware-wallets/ledger.png'),
+        priceNote: 'Starting from',
+        currency: '$',
+        price: '59.00',
+        note: 'Easy to carry everywhere thanks to its USB format.',
+        link: 'https://www.ledger.com/'
+      },
+      {
+        logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
+        walletImg: require('@/assets/images/hardware-wallets/trezor.png'),
+        priceNote: 'Starting from',
+        currency: '€',
+        price: '83.26',
+        note: 'The most trusted hardware wallet in the world. Get yours today!',
+        link: 'https://trezor.io/'
+      },
+      {
+        logoImg: require('@/assets/images/hardware-wallets/logo-keepkey.png'),
+        walletImg: require('@/assets/images/hardware-wallets/keepkey.png'),
+        priceNote: ' ',
+        currency: '$',
+        price: '83.26',
+        note: 'The most trusted hardware wallet in the world. Get yours today!',
+        link: 'https://trezor.io/'
+      },
+      {
+        logoText: 'BitBox',
+        //logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
+        walletImg: require('@/assets/images/hardware-wallets/bitbox.png'),
+        priceNote: 'Starting from',
+        currency: '$',
+        price: '83.26',
+        note: 'The most trusted hardware wallet in the world. Get yours today!',
+        link: 'https://trezor.io/'
+      },
+      {
+        logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
+        walletImg: require('@/assets/images/hardware-wallets/trezor.png'),
+        priceNote: 'Starting from',
+        currency: '€',
+        price: '83.26',
+        note: 'The most trusted hardware wallet in the world. Get yours today!',
+        link: 'https://trezor.io/'
+      },
+      {
+        logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
+        walletImg: require('@/assets/images/hardware-wallets/trezor.png'),
+        priceNote: 'Starting from',
+        currency: '€',
+        price: '83.26',
+        note: 'The most trusted hardware wallet in the world. Get yours today!',
+        link: 'https://trezor.io/'
+      },
+      {
+        logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
+        walletImg: require('@/assets/images/hardware-wallets/trezor.png'),
+        priceNote: 'Starting from',
+        currency: '€',
+        price: '83.26',
+        note: 'The most trusted hardware wallet in the world. Get yours today!',
+        link: 'https://trezor.io/'
+      },
+      {
+        logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
+        walletImg: require('@/assets/images/hardware-wallets/trezor.png'),
+        priceNote: 'Starting from',
+        currency: '€',
+        price: '83.26',
+        note: 'The most trusted hardware wallet in the world. Get yours today!',
+        link: 'https://trezor.io/'
+      }
+    ],
+    titleData: {
+      textProps: '',
+      toptitle: '',
+      title: 'Get a hardware wallet today!',
+      description:
+        'The Hardware wallet offer the highest security for accessing your crypto.',
+      centered: true
+    }
+  })
+};
+</script>
+
+<style lang="scss" scoped>
+.logo-text {
+  height: 32px;
+  div {
+    font-size: 32px;
+    font-weight: 600;
+  }
+}
+</style>

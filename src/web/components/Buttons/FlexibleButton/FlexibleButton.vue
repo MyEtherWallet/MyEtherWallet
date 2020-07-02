@@ -1,7 +1,7 @@
 <template>
   <div class="mew6-component--flexible-button">
     <v-sheet
-      :color="outlined ? 'transparent' : 'white'"
+      :color="outlined ? 'transparent' : color"
       class="text-transform--initial user-select--none"
       :class="[
         outlined ? 'outlined' : '',
@@ -24,6 +24,7 @@ export default {
     small: { default: false, type: Boolean },
     medium: { default: false, type: Boolean },
     outlined: { default: false, type: Boolean },
+    color: { default: 'white', type: String },
     nopadding: { default: false, type: Boolean },
     noclick: { default: false, type: Boolean }
   },
