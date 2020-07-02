@@ -4,6 +4,7 @@ import Misc from '@/helpers/misc';
 import { extractRootDomain } from './extractRootDomain';
 import MiddleWare from '@/wallets/web3-provider/middleware';
 import localStorage from 'store';
+import Networks from '@/networks';
 import {
   mewCxFetchAccounts,
   mewCxSignTx,
@@ -35,89 +36,111 @@ chrome.runtime.onStartup.addListener(onStartupCb);
 chrome.runtime.onMessage.addListener(eventsListeners);
 
 // Set default values on init
-const networkChanger = items => {
-  if (!items.hasOwnProperty('favorites')) {
-    chrome.storage.sync.set({
-      favorites: JSON.stringify([])
-    });
-  }
-  if (items.hasOwnProperty('defNetwork')) {
-    const networkProps = JSON.parse(items['defNetwork']);
-    let network = {};
-    if (networkProps.hasOwnProperty('url')) {
-      network = store.state.main.Networks[networkProps.key][0];
+// const networkChanger = items => {
+//   if (!items.hasOwnProperty('favorites')) {
+//     chrome.storage.sync.set({
+//       favorites: JSON.stringify([])
+//     });
+//   }
+//   if (items.hasOwnProperty('defNetwork')) {
+//     const networkProps = JSON.parse(items['defNetwork']);
+//     let network = {};
+//     if (networkProps.hasOwnProperty('url')) {
+//       network = store.state.main.Networks[networkProps.key][0];
 
-      chrome.storage.sync.set({
-        defNetwork: JSON.stringify({
-          key: network.type.name,
-          service: network.service
-        })
-      });
-    } else {
-      network = store.state.main.Networks[networkProps.key][0];
-      chrome.storage.sync.set({
-        defNetwork: JSON.stringify({
-          key: network.type.name,
-          service: network.service
-        })
-      });
-    }
-    // eslint-disable-next-line
-    if (!!network) {
-      store.dispatch('main/switchNetwork', network, { root: true }).then(() => {
-        store
-          .dispatch('main/setWeb3Instance', network.url, { root: true })
-          .then(() => {
-            chrome.storage.sync.set({
-              defChainID: store.state.main.network.type.chainID
-            });
-          });
-      });
-    }
-  } else {
-    store.dispatch('main/setWeb3Instance', { root: true });
-    chrome.storage.sync.set({
-      defChainID: store.state.main.network.type.chainID,
-      defNetwork: JSON.stringify({
-        service: store.state.main.network.service,
-        key: store.state.main.network.type.name
-      })
-    });
-  }
-};
+//       chrome.storage.sync.set({
+//         defNetwork: JSON.stringify({
+//           key: network.type.name,
+//           service: network.service
+//         })
+//       });
+//     } else {
+//       network = store.state.main.Networks[networkProps.key][0];
+//       chrome.storage.sync.set({
+//         defNetwork: JSON.stringify({
+//           key: network.type.name,
+//           service: network.service
+//         })
+//       });
+//     }
+//     // eslint-disable-next-line
+//     if (!!network) {
+//       store.dispatch('main/switchNetwork', network, { root: true }).then(() => {
+//         store
+//           .dispatch('main/setWeb3Instance', network.url, { root: true })
+//           .then(() => {
+//             chrome.storage.sync.set({
+//               defChainID: store.state.main.network.type.chainID
+//             });
+//           });
+//       });
+//     }
+//   } else {
+//     store.dispatch('main/setWeb3Instance', { root: true });
+//     chrome.storage.sync.set({
+//       defChainID: store.state.main.network.type.chainID,
+//       defNetwork: JSON.stringify({
+//         service: store.state.main.network.service,
+//         key: store.state.main.network.type.name
+//       })
+//     });
+//   }
+// };
 
-chrome.storage.sync.get(null, networkChanger);
-
-// Listens for network changes and sets background store to match client store
-chrome.storage.onChanged.addListener(items => {
-  Object.keys(items).forEach(item => {
-    if (isAddress(item)) {
-      const currentNotifications = JSON.parse(
-        localStorage.get('notifications')
-      );
-      currentNotifications[item] = [];
-      localStorage.set('notifications', JSON.stringify(currentNotifications));
-    }
-
-    if (
-      items[item] === 'defNetwork' &&
-      items[item].defNetwork.hasOwnProperty('newValue')
-    ) {
-      const networkProps = JSON.parse(
-        Misc.stripTags(items['defNetwork'].newValue)
-      );
-      const network = store.state.main.Networks[networkProps.key][0];
-      store
-        .dispatch(
-          'main/switchNetwork',
-          network ? store.state.main.Networks[networkProps.key][0] : network
-        )
-        .then(() => {
-          store.dispatch('main/setWeb3Instance', network.url);
-        });
+const setupState = obj => {
+  console.log(store);
+  const stateVal = [
+    'accounts',
+    'defChainId',
+    'defNetwork',
+    'favorites',
+    'sites'
+  ];
+  const newState = {};
+  stateVal.forEach(item => {
+    if (obj[item]) {
+      newState[item] = obj[item];
     }
   });
-});
+  store.dispatch('mewcx/setState', newState).then(() => {
+    const defNetwork = newState['defNetwork']
+      ? Networks[JSON.parse(newState['defNetwork']).key][0]
+      : Networks['ETH'][0];
+    store.dispatch('main/switchNetwork', defNetwork);
+  });
+};
+
+chrome.storage.sync.get(null, setupState);
+// Listens for network changes and sets background store to match client store
+// chrome.storage.onChanged.addListener(items => {
+//   Object.keys(items).forEach(item => {
+//     if (isAddress(item)) {
+//       const currentNotifications = JSON.parse(
+//         localStorage.get('notifications')
+//       );
+//       currentNotifications[item] = [];
+//       localStorage.set('notifications', JSON.stringify(currentNotifications));
+//     }
+
+//     if (
+//       items[item] === 'defNetwork' &&
+//       items[item].defNetwork.hasOwnProperty('newValue')
+//     ) {
+//       const networkProps = JSON.parse(
+//         Misc.stripTags(items['defNetwork'].newValue)
+//       );
+//       const network = store.state.main.Networks[networkProps.key][0];
+//       store
+//         .dispatch(
+//           'main/switchNetwork',
+//           network ? store.state.main.Networks[networkProps.key][0] : network
+//         )
+//         .then(() => {
+//           store.dispatch('main/setWeb3Instance', network.url);
+//         });
+//     }
+//   });
+// });
 
 const urls = {};
 // eslint-disable-next-line
@@ -201,24 +224,48 @@ function onInstalledCb() {
   chrome.runtime.onMessage.addListener(eventsListeners);
 }
 
+function migrateAddresses() {
+  chrome.storage.sync.get(null, obj => {
+    if (!obj['version'] || obj['version'] !== '5.7.1') {
+      const foundAccounts = Object.keys(obj).filter(item => {
+        if (isAddress(item)) {
+          return item;
+        }
+      });
+
+      if (foundAccounts.length > 0) {
+        foundAccounts.forEach(item => {
+          const newObj = {};
+          const value = JSON.parse(obj[item]);
+          newObj['address'] = item;
+          newObj['priv'] = value['priv'];
+          newObj['nick'] = value['nick'];
+          newObj['type'] = value['type'];
+          store.dispatch('mewcx/addAccount', newObj);
+        });
+      }
+    }
+  });
+}
+
 function onStartupCb() {
   onInstalledCb();
   // redo stored addresses to checksum.
-  chrome.storage.sync.get(null, obj => {
-    const objKeys = Object.keys(obj);
-    const newStore = {};
-    if (objKeys.length > 0) {
-      objKeys.forEach(item => {
-        if (isAddress(item)) {
-          newStore[toChecksumAddress(item)] = obj[item];
-          chrome.storage.sync.remove(item);
-        } else {
-          newStore[item] = obj[item];
-        }
-      });
-      chrome.storage.sync.set(newStore);
-    }
-  });
+  // chrome.storage.sync.get(null, obj => {
+  //   const objKeys = Object.keys(obj);
+  //   const newStore = {};
+  //   if (objKeys.length > 0) {
+  //     objKeys.forEach(item => {
+  //       if (isAddress(item)) {
+  //         newStore[toChecksumAddress(item)] = obj[item];
+  //         chrome.storage.sync.remove(item);
+  //       } else {
+  //         newStore[item] = obj[item];
+  //       }
+  //     });
+  //     chrome.storage.sync.set(newStore);
+  //   }
+  // });
 }
 
 function querycB(tab) {

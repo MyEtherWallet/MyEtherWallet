@@ -21,7 +21,7 @@
           :balance="acc.balance"
           :selected-account="selectedAccount"
           :select-account="selectAccount"
-          :currency="network.type.name"
+          :currency="defNetwork.key"
         />
         <address-selection-component
           :selected-account="selectedAccount"
@@ -40,7 +40,7 @@
       :disabled="selectedAccount === ''"
       :text-one="
         selectedAccount === 'burner'
-          ? 'mewcx.user-understand'
+          ? $t('mewcx.user-understand')
           : $t('mewcx.access')
       "
       :text-two="$t('mewcx.reject')"
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Misc, ExtensionHelpers, Wallet } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
@@ -70,12 +70,12 @@ export default {
   data() {
     return {
       selectedAccount: '',
-      accounts: [],
       accWithBal: []
     };
   },
   computed: {
-    ...mapState('main', ['linkQuery', 'web3', 'network']),
+    ...mapState('main', ['linkQuery', 'web3']),
+    ...mapState('mewcx', ['accounts', 'defNetwork']),
     request() {
       const { connectionRequest, favicon } = this.linkQuery;
       const obj = {};
@@ -83,9 +83,6 @@ export default {
       obj['connectionRequest'] = Misc.getService(connectionRequest);
       return obj;
     }
-  },
-  mounted() {
-    ExtensionHelpers.getAccounts(this.getAccounts);
   },
   methods: {
     getAccounts(acc) {

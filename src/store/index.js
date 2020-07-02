@@ -21,9 +21,9 @@ if (BUILD_TYPE === 'mewcx') {
           'mewcx.defChainId',
           'mewcx.defNetwork',
           'mewcx.favorites',
-          'mewcx.sites',
-          'main.web3'
-        ]
+          'mewcx.sites'
+        ],
+        ignoredMutations: ['main/SET_WEB3_INSTANCE']
       })
     ]
   };

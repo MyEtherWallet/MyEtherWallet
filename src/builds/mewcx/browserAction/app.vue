@@ -5,15 +5,8 @@
 </template>
 
 <script>
-import { ExtensionHelpers } from '@/helpers';
 export default {
-  name: 'App',
-  created() {
-    const _self = this;
-    window.chrome.storage.sync.get(null, item => {
-      ExtensionHelpers.networkSwitch(item, _self);
-    });
-  }
+  name: 'App'
 };
 </script>
 
