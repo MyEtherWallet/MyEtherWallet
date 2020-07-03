@@ -3,6 +3,7 @@
     <mew6-flexible-btn>
       <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
       <div class="headline font-weight-bold mb-5">Write down the words</div>
+
       <div class="d-flex align-center justify-end pb-4">
         <mew6-std-btn
           size="small"
@@ -29,6 +30,14 @@
       <ExpantionBlock class="mb-8" title="Add extra words" right-text="Optional"
         >aaaaa</ExpantionBlock
       >
+      <div class="d-flex justify-center mb-3">
+        <mew-button
+          title="I wrote them down"
+          button-size="xlarge"
+          :has-full-width="false"
+          @click.native="linkToStep(2)"
+        />
+      </div>
       <div class="d-flex justify-center">
         <mew6-std-btn @click.native="linkToStep(2)">
           I wrote them down

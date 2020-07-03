@@ -7,8 +7,9 @@
         <span
           class="emerald--text cursor--pointer"
           @click="$router.push({ name: 'BuyHardwareWallet', params: {} })"
-          >Buy hardware wallet</span
         >
+          Buy hardware wallet
+        </span>
       </h5>
     </BlockTitle>
 
