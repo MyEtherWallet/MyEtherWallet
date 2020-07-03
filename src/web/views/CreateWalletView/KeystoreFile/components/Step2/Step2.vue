@@ -20,6 +20,13 @@
         </v-col>
       </v-row>
       <div class="d-flex justify-center mt-6">
+        <mew-button
+          title="Acknowledge & Download"
+          button-size="xlarge"
+          :has-full-width="false"
+        />
+      </div>
+      <div class="d-flex justify-center mt-6">
         <mew6-std-btn
           size="x-large"
           buttonclass="button--green"

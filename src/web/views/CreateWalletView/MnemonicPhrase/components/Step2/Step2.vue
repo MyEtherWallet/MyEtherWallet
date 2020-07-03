@@ -53,15 +53,20 @@
             </v-row>
           </v-radio-group>
         </PhraseBlock>
-        <v-text-field
-          class="mt-10"
-          value=""
-          placeholder="Please confirm your extra word"
+        <mew-input
           label="Extra word"
-          outlined
-        ></v-text-field>
+          placeholder="Please confirm your extra word"
+          class="mt-10 mb-3"
+        />
       </v-sheet>
-
+      <div class="d-flex justify-center mb-3">
+        <mew-button
+          title="Verify"
+          button-size="xlarge"
+          :has-full-width="false"
+          @click.native="linkToStep(3)"
+        />
+      </div>
       <div class="d-flex justify-center mt-6">
         <mew6-std-btn @click.native="linkToStep(3)">
           Verify

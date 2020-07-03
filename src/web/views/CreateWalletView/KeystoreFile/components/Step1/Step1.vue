@@ -3,6 +3,20 @@
     <mew6-flexible-btn>
       <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
       <div class="headline font-weight-bold mb-5">Create password</div>
+      <div class="d-flex align-start">
+        <mew-input
+          hint="Password must be 8 or more charactors"
+          label="Password"
+          placeholder=""
+          class="password-input mr-3"
+        />
+        <mew-button
+          title="Create"
+          button-size="xlarge"
+          :has-full-width="false"
+          class="password-btn"
+        />
+      </div>
       <PasswdField btnlabel="Create" fldlabel="Password" />
       <mew6-std-btn size="x-small" min-width="0" @click.native="linkToStep(2)">
         Next page -->
@@ -32,3 +46,12 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.password-input {
+  width: 100%;
+}
+.password-btn {
+  width: 150px;
+}
+</style>

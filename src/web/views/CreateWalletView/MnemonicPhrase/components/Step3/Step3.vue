@@ -8,11 +8,17 @@
           Congratulation! Please use the MEWconnect App to scan this QR code in
           order to access your new wallet. And you are done!
         </p>
-        <div class="d-flex align-center">
-          <mew6-std-btn size="x-large" buttonclass="button--green">
-            Access my wallet
-          </mew6-std-btn>
-        </div>
+
+        <mew-button
+          title="Access my wallet"
+          button-size="xlarge"
+          :has-full-width="false"
+          @click.native="linkToStep(3)"
+        />
+        <mew6-std-btn size="x-large" buttonclass="button--green">
+          Access my wallet
+        </mew6-std-btn>
+
         <p class="mt-4 mb-0">
           Need help?
           <router-link
