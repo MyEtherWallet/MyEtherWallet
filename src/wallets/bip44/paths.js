@@ -151,6 +151,14 @@ const ethercore = {
   path: "m/44'/466'/0'/0",
   label: 'EtherCore'
 };
+const dcentEthereum = {
+  path: "m/44'/60'",
+  label: 'Ethereum'
+};
+const dcentRskMainnet = {
+  path: "m/44'/137'",
+  label: 'RSK Mainnet'
+};
 export {
   ethereum,
   ethereumClassic,
@@ -189,5 +197,7 @@ export {
   dexon,
   lightstreamsNetwork,
   mintmeComCoin,
-  ethercore
+  ethercore,
+  dcentEthereum,
+  dcentRskMainnet
 };

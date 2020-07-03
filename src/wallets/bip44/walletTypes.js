@@ -16,6 +16,7 @@ const WATCH_ONLY = 'watchOnly';
 const XWALLET = 'xwallet';
 const BCVAULT = 'bc_vault';
 const COOLWALLET = 'cool_wallet';
+const DCENTWALLET = 'dcent_wallet';
 export {
   LEDGER,
   TREZOR,
@@ -34,5 +35,6 @@ export {
   WATCH_ONLY,
   XWALLET,
   BCVAULT,
-  COOLWALLET
+  COOLWALLET,
+  DCENTWALLET
 };

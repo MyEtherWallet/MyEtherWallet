@@ -57,6 +57,7 @@ import finney from '@/assets/images/icons/button-finney-hover.png';
 import xwallet from '@/assets/images/icons/HardwareWallet/xwallet.svg';
 import bcvault from '@/assets/images/icons/HardwareWallet/bcvault.svg';
 import coolwallet from '@/assets/images/icons/HardwareWallet/coolwallet.svg';
+import dcentwallet from '@/assets/images/icons/HardwareWallet/dcent.png';
 import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
 import { isSupported, ensureSupport } from 'u2f-api';
@@ -66,7 +67,8 @@ import {
   TrezorWallet,
   SecalotWallet,
   BCVaultWallet,
-  CoolWallet
+  CoolWallet,
+  DcentWallet
 } from '@/wallets';
 import {
   LEDGER as LEDGER_TYPE,
@@ -76,7 +78,8 @@ import {
   XWALLET as XWALLET_TYPE,
   FINNEY as FINNEY_TYPE,
   COOLWALLET as COOLWALLET_TYPE,
-  BCVAULT as BCVAULT_TYPE
+  BCVAULT as BCVAULT_TYPE,
+  DCENTWALLET as DCENTWALLET_TYPE
 } from '@/wallets/bip44/walletTypes';
 export default {
   components: {
@@ -201,6 +204,15 @@ export default {
               ? 'Browser not supported by Trezor'
               : '',
           link: 'https://bc-vault.com/?wpam_id=53'
+        },
+        {
+          name: DCENTWALLET_TYPE,
+          imgPath: dcentwallet,
+          text: "D'Cent Wallet",
+          disabled: false,
+          msg: '',
+          link:
+            'https://dcentwallet.com/Shop/detail/b15125cd52814be19a3f0edf54c8bc17'
         }
       ]
     };
@@ -325,6 +337,16 @@ export default {
           this.$emit('hardwareRequiresPassword', {
             walletConstructor: CoolWallet
           });
+          break;
+        case DCENTWALLET_TYPE:
+          DcentWallet()
+            .then(_newWallet => {
+              this.$emit('hardwareWalletOpen', _newWallet);
+            })
+            .catch(e => {
+              this.mayNotBeAttached = true;
+              DcentWallet.errorHandler(e);
+            });
           break;
         default:
           Toast.responseHandler(

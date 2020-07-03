@@ -6,7 +6,8 @@ import {
   SecalotWallet,
   KeepkeyWallet,
   BCVaultWallet,
-  CoolWallet
+  CoolWallet,
+  DcentWallet
 } from './hardware';
 import WalletInterface from './WalletInterface';
 import { MnemonicWallet } from './software';
@@ -29,5 +30,6 @@ export {
   WalletLinkWallet,
   WalletInterface,
   MnemonicWallet,
-  BCVaultWallet
+  BCVaultWallet,
+  DcentWallet
 };
