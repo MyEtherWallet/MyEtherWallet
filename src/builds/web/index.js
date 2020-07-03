@@ -24,6 +24,7 @@ import AboutUsTeam from '@/web/views/AboutUsView/TeamContainer';
 import AboutUsWhyMEW from '@/web/views/AboutUsView/WhyMEWContainer';
 
 import HowItWorks from '@/web/views/LandingPageView/HowItWorks';
+import MoreActions from '@/web/views/LandingPageView/MoreActions';
 import BuyHardwareWallet from '@/web/views/LandingPageView/BuyHardwareWallet';
 
 import Wallet from '@/web/views/WalletView';
@@ -70,6 +71,14 @@ const webRoutes = [
         path: 'how-it-works',
         name: 'HowItWorks',
         component: HowItWorks,
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'more-actions',
+        name: 'MoreActions',
+        component: MoreActions,
         meta: {
           requiresAuth: false
         }
