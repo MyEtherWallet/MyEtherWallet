@@ -3,7 +3,6 @@
     :class="[
       'mew-component--std-button',
       bold ? 'font-weight-bold' : '',
-      text ? 'no-padding' : '',
       textColor
     ]"
     :elevation="elevated ? 7 : 0"

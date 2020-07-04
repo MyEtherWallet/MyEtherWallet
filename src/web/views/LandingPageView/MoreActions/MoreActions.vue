@@ -1,7 +1,7 @@
 <template>
   <div>
     <PageTitle title="More actions" />
-    <v-container>
+    <v-container class="mt-8">
       <mew6-vertical-tabs :tabs="tabs" />
     </v-container>
     <div class="py-3" />
