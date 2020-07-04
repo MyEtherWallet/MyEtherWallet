@@ -108,9 +108,11 @@ export default {
   position: relative;
   .closed {
     display: block;
+    color: white;
   }
   .opened {
     display: none;
+    color: white;
   }
   &:hover {
     .sub-menu {
