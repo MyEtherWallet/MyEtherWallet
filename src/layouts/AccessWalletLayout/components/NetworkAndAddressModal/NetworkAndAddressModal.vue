@@ -315,7 +315,8 @@ export default {
       customPath: { label: '', dpath: '' },
       showCollapse: false,
       ledgerType: LEDGER_TYPE,
-      acceptTerms: false
+      acceptTerms: false,
+      getAccountQueue: []
     };
   },
   computed: {
@@ -484,12 +485,15 @@ export default {
     async setHDAccounts() {
       if (!this.web3.eth) this.setWeb3Instance();
       this.HDAccounts = [];
-      for (
-        let i = this.currentIndex;
-        i < this.currentIndex + MAX_ADDRESSES;
-        i++
-      ) {
-        const account = await this.hardwareWallet.getAccount(i);
+      this.getAccountQueue = [];
+      const curIndex = this.currentIndex;
+      const maxIndex = this.currentIndex + MAX_ADDRESSES;
+      this.currentIndex += MAX_ADDRESSES;
+      for (let i = curIndex; i < maxIndex; i++) {
+        const promise = this.hardwareWallet.getAccount(i);
+        this.getAccountQueue.push(promise);
+        const account = await promise;
+        if (!this.getAccountQueue.includes(promise)) break;
         this.HDAccounts.push({
           index: i,
           account: account,
@@ -497,7 +501,6 @@ export default {
         });
         this.setBalances();
       }
-      this.currentIndex += MAX_ADDRESSES;
     },
     nextAddressSet() {
       this.setHDAccounts();
