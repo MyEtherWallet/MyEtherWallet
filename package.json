@@ -43,6 +43,7 @@
     "chart.js": "2.9.3",
     "content-hash": "2.5.2",
     "core-js": "3.6.5",
+    "form-data": "3.0.0",
     "graphql": "14.6.0",
     "graphql-tag": "2.10.3",
     "html2canvas": "1.0.0-rc.5",
