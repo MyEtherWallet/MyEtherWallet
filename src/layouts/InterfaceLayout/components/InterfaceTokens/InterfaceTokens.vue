@@ -88,7 +88,10 @@
 
           <div
             v-show="
-              search === '' && localTokens.length === 0 && !receivedTokens
+              search === '' &&
+              localTokens &&
+              localTokens.length === 0 &&
+              !receivedTokens
             "
             class="spinner-container"
           >
@@ -97,7 +100,9 @@
           <div
             v-show="
               search !== '' &&
+              localTokens &&
               localTokens.length === 0 &&
+              customTokens &&
               customTokens.length === 0
             "
             class="spinner-container"
@@ -106,7 +111,7 @@
           </div>
         </div>
         <div
-          v-if="customTokens.length + localTokens.length > 15"
+          v-if="customTokens && customTokens.length + localTokens.length > 15"
           class="expend-bar"
           @click="tokenListExpend"
         >
