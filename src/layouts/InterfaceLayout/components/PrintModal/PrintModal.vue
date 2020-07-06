@@ -59,15 +59,22 @@ export default {
         }).then(canvas => {
           return canvas;
         });
-        printJS({
-          printable: screen.toDataURL('image/png'),
-          type: 'image'
-        }).onError(() => {
+        if (screen && screen.toDataURL !== '') {
+          printJS({
+            printable: screen.toDataURL('image/png'),
+            type: 'image'
+          }).onError(() => {
+            Toast.responseHandler(
+              this.$t('errorsGlobal.print-support-error'),
+              Toast.ERROR
+            );
+          });
+        } else {
           Toast.responseHandler(
             this.$t('errorsGlobal.print-support-error'),
             Toast.ERROR
           );
-        });
+        }
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);
       }
