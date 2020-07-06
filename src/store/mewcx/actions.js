@@ -4,13 +4,13 @@ const setState = function ({ commit }, obj) {
 };
 
 const addAccount = function ({ state, commit }, obj) {
-  const accounts = state.accounts.splice();
+  const accounts = JSON.parse(JSON.stringify(state.accounts));
   accounts.push(obj);
   commit('ADD_ACCOUNT', accounts);
 };
 
 const deleteAccount = function ({ state, commit }, obj) {
-  const accounts = state.accounts.splice();
+  const accounts = JSON.parse(JSON.stringify(state.accounts));
   const foundIdx = accounts.findIndex(item => {
     const stateAccountKey = Object.keys(item);
     const passedAccountKey = Object.keys(obj);
@@ -24,7 +24,7 @@ const deleteAccount = function ({ state, commit }, obj) {
 };
 
 const updateAccount = function ({ state, commit }, obj) {
-  const accounts = state.accounts.splice();
+  const accounts = JSON.parse(JSON.stringify(state.accounts));
   const foundIdx = accounts.findIndex(item => {
     const stateAccountKey = Object.keys(item);
     const passedAccountKey = Object.keys(obj);
@@ -38,13 +38,13 @@ const updateAccount = function ({ state, commit }, obj) {
 };
 
 const addFavoriteWallet = function ({ state, commit }, obj) {
-  const favorites = state.favorites.splice();
+  const favorites = JSON.parse(JSON.stringify(state.favorites));
   favorites.push(obj);
   commit('ADD_FAVORITE_WALLET', favorites);
 };
 
 const deleteFavoriteWallet = function ({ state, commit }, obj) {
-  const favorites = state.favorites.splice();
+  const favorites = JSON.parse(JSON.stringify(state.favorites));
   const foundIdx = favorites.findIndex(item => {
     const stateAccountKey = item.address;
     const passedAccountKey = obj.address;
@@ -65,13 +65,13 @@ const setDefaultChainId = function ({ commit }, obj) {
 };
 
 const addSite = function ({ state, commit }, obj) {
-  const sites = state.sites.splice();
+  const sites = JSON.parse(JSON.stringify(state.sites));
   sites.push(obj);
   commit('ADD_SITE', sites);
 };
 
 const deleteSite = function ({ state, commit }, obj) {
-  const sites = state.sites.splice();
+  const sites = JSON.parse(JSON.stringify(state.sites));
   const foundIdx = sites.findIndex(item => {
     const stateSite = Object.keys(item);
     const passedSite = Object.keys(obj);

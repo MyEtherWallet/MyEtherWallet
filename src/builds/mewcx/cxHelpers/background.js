@@ -1,6 +1,5 @@
 import helpers from './helpers';
 import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
-import Misc from '@/helpers/misc';
 import { extractRootDomain } from './extractRootDomain';
 import MiddleWare from '@/wallets/web3-provider/middleware';
 import localStorage from 'store';
@@ -35,63 +34,10 @@ chrome.runtime.onInstalled.addListener(onInstalledCb);
 chrome.runtime.onStartup.addListener(onStartupCb);
 chrome.runtime.onMessage.addListener(eventsListeners);
 
-// Set default values on init
-// const networkChanger = items => {
-//   if (!items.hasOwnProperty('favorites')) {
-//     chrome.storage.sync.set({
-//       favorites: JSON.stringify([])
-//     });
-//   }
-//   if (items.hasOwnProperty('defNetwork')) {
-//     const networkProps = JSON.parse(items['defNetwork']);
-//     let network = {};
-//     if (networkProps.hasOwnProperty('url')) {
-//       network = store.state.main.Networks[networkProps.key][0];
-
-//       chrome.storage.sync.set({
-//         defNetwork: JSON.stringify({
-//           key: network.type.name,
-//           service: network.service
-//         })
-//       });
-//     } else {
-//       network = store.state.main.Networks[networkProps.key][0];
-//       chrome.storage.sync.set({
-//         defNetwork: JSON.stringify({
-//           key: network.type.name,
-//           service: network.service
-//         })
-//       });
-//     }
-//     // eslint-disable-next-line
-//     if (!!network) {
-//       store.dispatch('main/switchNetwork', network, { root: true }).then(() => {
-//         store
-//           .dispatch('main/setWeb3Instance', network.url, { root: true })
-//           .then(() => {
-//             chrome.storage.sync.set({
-//               defChainID: store.state.main.network.type.chainID
-//             });
-//           });
-//       });
-//     }
-//   } else {
-//     store.dispatch('main/setWeb3Instance', { root: true });
-//     chrome.storage.sync.set({
-//       defChainID: store.state.main.network.type.chainID,
-//       defNetwork: JSON.stringify({
-//         service: store.state.main.network.service,
-//         key: store.state.main.network.type.name
-//       })
-//     });
-//   }
-// };
-
 const setupState = obj => {
-  console.log(store);
   const stateVal = [
     'accounts',
-    'defChainId',
+    'defChainID',
     'defNetwork',
     'favorites',
     'sites'
@@ -99,48 +45,35 @@ const setupState = obj => {
   const newState = {};
   stateVal.forEach(item => {
     if (obj[item]) {
-      newState[item] = obj[item];
+      newState[item] =
+        item !== 'defChainID' ? JSON.parse(obj[item]) : obj[item];
     }
   });
+
   store.dispatch('mewcx/setState', newState).then(() => {
     const defNetwork = newState['defNetwork']
-      ? Networks[JSON.parse(newState['defNetwork']).key][0]
+      ? Networks[newState['defNetwork'].key][0]
       : Networks['ETH'][0];
-    store.dispatch('main/switchNetwork', defNetwork);
+    store.dispatch('main/switchNetwork', defNetwork).then(() => {
+      store.dispatch('main/setWeb3Instance', defNetwork);
+    });
   });
+  const notifications = localStorage.get('notifications');
+  console.log(obj);
+  const accounts = JSON.parse(obj['acccounts']);
+  accounts.forEach(itm => {
+    if (!notifications[itm.address]) {
+      notifications[itm.address] = [];
+    }
+  });
+
+  localStorage.set('notifications', JSON.stringify(notifications));
 };
-
 chrome.storage.sync.get(null, setupState);
-// Listens for network changes and sets background store to match client store
-// chrome.storage.onChanged.addListener(items => {
-//   Object.keys(items).forEach(item => {
-//     if (isAddress(item)) {
-//       const currentNotifications = JSON.parse(
-//         localStorage.get('notifications')
-//       );
-//       currentNotifications[item] = [];
-//       localStorage.set('notifications', JSON.stringify(currentNotifications));
-//     }
 
-//     if (
-//       items[item] === 'defNetwork' &&
-//       items[item].defNetwork.hasOwnProperty('newValue')
-//     ) {
-//       const networkProps = JSON.parse(
-//         Misc.stripTags(items['defNetwork'].newValue)
-//       );
-//       const network = store.state.main.Networks[networkProps.key][0];
-//       store
-//         .dispatch(
-//           'main/switchNetwork',
-//           network ? store.state.main.Networks[networkProps.key][0] : network
-//         )
-//         .then(() => {
-//           store.dispatch('main/setWeb3Instance', network.url);
-//         });
-//     }
-//   });
-// });
+chrome.storage.onChanged.addListener(() => {
+  chrome.storage.sync.get(null, setupState);
+});
 
 const urls = {};
 // eslint-disable-next-line
@@ -222,6 +155,7 @@ function onActivatedCb(info) {
 function onInstalledCb() {
   chrome.runtime.onMessage.removeListener(eventsListeners);
   chrome.runtime.onMessage.addListener(eventsListeners);
+  migrateAddresses();
 }
 
 function migrateAddresses() {
@@ -237,35 +171,20 @@ function migrateAddresses() {
         foundAccounts.forEach(item => {
           const newObj = {};
           const value = JSON.parse(obj[item]);
-          newObj['address'] = item;
+          newObj['address'] = toChecksumAddress(item);
           newObj['priv'] = value['priv'];
           newObj['nick'] = value['nick'];
           newObj['type'] = value['type'];
           store.dispatch('mewcx/addAccount', newObj);
         });
       }
+      chrome.storage.sync.set({ version: '5.7.1', sites: '[]' }, () => {});
     }
   });
 }
 
 function onStartupCb() {
   onInstalledCb();
-  // redo stored addresses to checksum.
-  // chrome.storage.sync.get(null, obj => {
-  //   const objKeys = Object.keys(obj);
-  //   const newStore = {};
-  //   if (objKeys.length > 0) {
-  //     objKeys.forEach(item => {
-  //       if (isAddress(item)) {
-  //         newStore[toChecksumAddress(item)] = obj[item];
-  //         chrome.storage.sync.remove(item);
-  //       } else {
-  //         newStore[item] = obj[item];
-  //       }
-  //     });
-  //     chrome.storage.sync.set(newStore);
-  //   }
-  // });
 }
 
 function querycB(tab) {
