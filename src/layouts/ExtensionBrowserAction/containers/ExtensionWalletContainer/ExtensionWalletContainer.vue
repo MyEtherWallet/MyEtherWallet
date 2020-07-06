@@ -370,9 +370,8 @@ export default {
     setToken(address) {
       const tokens = [];
       const tb = new TokenBalance(this.web3.currentProvider);
-
       return tb
-        .getBalance(address, true, true, true, 0, {
+        .getBalance(address, true, true, true, {
           gas: '0x11e1a300'
         })
         .then(res => {
