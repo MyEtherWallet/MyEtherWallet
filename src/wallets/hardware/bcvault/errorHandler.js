@@ -11,7 +11,8 @@ const WARNING = {
   jsError1: 'bcvaultError.browser-popup',
   jsErrormew1: 'bcvaultError.only-one-wallet',
   jsErrormew2: 'bcvaultError.can-only-sign-eth',
-  jsErrormew3: 'bcvaultError.check-daemon'
+  jsErrormew3: 'bcvaultError.check-daemon',
+  jsErrormew4: 'bcvaultError.no-account-found'
 };
 
 export default err => {
