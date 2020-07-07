@@ -26,13 +26,14 @@ class DcentWallet {
     this.supportedPaths = bip44Paths[dcentType];
   }
   async init(basePath) {
-    this.basePath = basePath ? basePath : this.supportedPaths[0].path;
-    if (!isHardenedPath(this.basePath)) {
-      const result = await DcentWebConnector.getXPUB(this.basePath);
+    basePath = basePath ? basePath : this.supportedPaths[0].path;
+    if (!isHardenedPath(basePath)) {
+      const result = await DcentWebConnector.getXPUB(basePath);
       const xpub = result.body.parameter.public_key;
       /** @type {HDKey} */
       this.hdkey = HDKey.fromExtendedKey(xpub);
     }
+    this.basePath = basePath;
   }
   /**
    * Get the idx th account through path.
