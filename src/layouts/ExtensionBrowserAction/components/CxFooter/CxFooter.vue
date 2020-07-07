@@ -107,7 +107,7 @@ export default {
           class: 'fa-medium'
         },
         {
-          to: 'https://t.me/myetherwalletofficial',
+          to: 'https://t.me/myetherwallet',
           class: 'fa-telegram'
         }
       ]
