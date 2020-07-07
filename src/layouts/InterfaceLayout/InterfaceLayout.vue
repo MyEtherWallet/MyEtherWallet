@@ -164,7 +164,8 @@ import {
   BitBox02Wallet,
   SecalotWallet,
   KeepkeyWallet,
-  BCVaultWallet
+  BCVaultWallet,
+  DcentWallet
 } from '@/wallets';
 import {
   WEB3_WALLET as WEB3_TYPE,
@@ -175,7 +176,8 @@ import {
   SECALOT as SECALOT_TYPE,
   KEEPKEY as KEEPKEY_TYPE,
   MNEMONIC as MNEMONIC_TYPE,
-  BCVAULT as BC_VAULT
+  BCVAULT as BC_VAULT,
+  DCENTWALLET as DCENT_TYPE
 } from '@/wallets/bip44/walletTypes';
 
 import ExpiryAbi from './expiryAbi.js';
@@ -418,6 +420,15 @@ export default {
             })
             .catch(e => {
               BCVaultWallet.errorHandler(e);
+            });
+          break;
+        case DCENT_TYPE:
+          DcentWallet()
+            .then(_newWallet => {
+              this.toggleNetworkAddrModal(_newWallet);
+            })
+            .catch(e => {
+              DcentWallet.errorHandler(e);
             });
           break;
         default:
