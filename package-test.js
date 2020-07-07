@@ -33,7 +33,8 @@ const EXCEPTIONS = [
   'i18n-iso-countries',
   '@myetherwallet/mewconnect-web-client',
   '@walletconnect/browser',
-  'ethereumjs-wallet'
+  'ethereumjs-wallet',
+  '@makerdao/dai-plugin-mcd'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
