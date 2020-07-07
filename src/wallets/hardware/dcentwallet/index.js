@@ -14,22 +14,10 @@ import errorHandler from './errorHandler';
 import store from '@/store';
 import commonGenerator from '@/helpers/commonGenerator';
 import Vue from 'vue';
+import { getCoinType, getFullPath, isHardenedPath } from './util';
+import HDKey from 'hdkey';
 
 const NEED_PASSWORD = false;
-
-const getCoinType = path => {
-  let type;
-  switch (/m\/44'\/(\d+)'/g.exec(path)[1]) {
-    case '60':
-      type = DcentWebConnector.coinType.ETHEREUM;
-      break;
-    case '137':
-      type = DcentWebConnector.coinType.RSK;
-      break;
-  }
-  return type;
-};
-
 class DcentWallet {
   constructor() {
     this.identifier = dcentType;
@@ -39,12 +27,19 @@ class DcentWallet {
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
+    if (!isHardenedPath(this.basePath)) {
+      const result = await DcentWebConnector.getXPUB(this.basePath);
+      const xpub = result.body.parameter.public_key;
+      /** @type {HDKey} */
+      this.hdkey = HDKey.fromExtendedKey(xpub);
+    }
   }
   /**
    * Get the idx th account through path.
    * @param {*} idx
    */
   async getAccount(idx) {
+    const fullPath = getFullPath(this.basePath, idx);
     /** @param {Transaction} tx */
     const txSigner = async tx => {
       tx = new Transaction(tx, {
@@ -52,7 +47,7 @@ class DcentWallet {
       });
       const networkId = tx.getChainId();
       const options = {
-        path: this.basePath + `/${idx}'/0/0`,
+        path: fullPath,
         transaction: getHexTxObject(tx)
       };
       //dcent-web-connector throws an error when nonce is an empty string.
@@ -86,7 +81,7 @@ class DcentWallet {
     const msgSigner = async msg => {
       const result = await DcentWebConnector.getSignedMessage(
         getCoinType(this.basePath),
-        this.basePath + `/${idx}'/0/0`,
+        fullPath,
         msg
       );
       return getBufferFromHex(result.body.parameter.sign);
@@ -98,18 +93,23 @@ class DcentWallet {
       );
     };
     let pubkey;
-    try {
-      pubkey = (
-        await DcentWebConnector.getAddress(
-          getCoinType(this.basePath),
-          this.basePath + `/${idx}'/0/0`
-        )
-      ).body.parameter.address;
-    } catch (err) {
-      throw new Error(err.body.error.message);
+    if (!isHardenedPath(this.basePath)) {
+      const derivedKey = this.hdkey.derive(`m/${idx}`);
+      pubkey = derivedKey.publicKey;
+    } else {
+      try {
+        pubkey = (
+          await DcentWebConnector.getAddress(
+            getCoinType(this.basePath),
+            fullPath
+          )
+        ).body.parameter.address;
+      } catch (err) {
+        throw new Error(err.body.error.message);
+      }
     }
     return new HDWalletInterface(
-      this.basePath + `/${idx}'/0/0`,
+      fullPath,
       pubkey,
       this.isHardware,
       this.identifier,
