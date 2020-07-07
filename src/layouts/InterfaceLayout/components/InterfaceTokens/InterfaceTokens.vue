@@ -88,7 +88,10 @@
 
           <div
             v-show="
-              search === '' && localTokens.length === 0 && !receivedTokens
+              search === '' &&
+              localTokens &&
+              localTokens.length === 0 &&
+              !receivedTokens
             "
             class="spinner-container"
           >
@@ -97,7 +100,9 @@
           <div
             v-show="
               search !== '' &&
+              localTokens &&
               localTokens.length === 0 &&
+              customTokens &&
               customTokens.length === 0
             "
             class="spinner-container"
@@ -106,7 +111,7 @@
           </div>
         </div>
         <div
-          v-if="customTokens.length + localTokens.length > 15"
+          v-if="customTokens && customTokens.length + localTokens.length > 15"
           class="expend-bar"
           @click="tokenListExpend"
         >
@@ -221,7 +226,7 @@ export default {
             : this.network.type.icon;
         return tokenSrc;
       } else if (tok.logo && tok.logo.src && tok.logo.src !== '') {
-        return `https://img.mewapi.io/?image=${token.logo.src}&width=50&height=50&fit=scale-down`;
+        return `https://img.mewapi.io/?image=${tok.logo.src}&width=50&height=50&fit=scale-down`;
       }
 
       return this.network.type.icon;

@@ -86,26 +86,58 @@ export default {
       this.wallets = accounts.slice();
     },
     getEthPrice() {
-      fetch('https://cryptorates.mewapi.io/ticker?filter=ETH')
-        .then(res => {
-          res.json().then(response => {
-            this.ethPrice = response.data.ETH.quotes.USD.price;
+      try {
+        fetch('https://cryptorates.mewapi.io/ticker?filter=ETH')
+          .then(res => {
+            res
+              .json()
+              .then(response => {
+                if (response.error) {
+                  this.ethPrice = 0;
+                } else {
+                  this.ethPrice = response.data.ETH.quotes.USD.price;
+                }
+              })
+              .catch(() => {
+                Toast.responseHandler(
+                  this.$t('mewcx.trouble-fetching-eth'),
+                  Toast.ERROR
+                );
+              });
+          })
+          .catch(e => {
+            Toast.responseHandler(e, Toast.ERROR);
           });
-        })
-        .catch(e => {
-          Toast.responseHandler(e, Toast.ERROR);
-        });
+      } catch (e) {
+        Toast.responseHandler(this.$t('mewcx.trouble-fetching'), Toast.ERROR);
+      }
     },
     getTokenPrices() {
-      fetch('https://cryptorates.mewapi.io/ticker')
-        .then(res => {
-          res.json().then(response => {
-            this.tokenPrices = Object.assign({}, response.data);
+      try {
+        fetch('https://cryptorates.mewapi.io/ticker')
+          .then(res => {
+            res
+              .json()
+              .then(response => {
+                if (response.error) {
+                  this.tokenPrices = {};
+                } else {
+                  this.tokenPrices = Object.assign({}, response.data);
+                }
+              })
+              .catch(() => {
+                Toast.responseHandler(
+                  this.$t('mewcx.trouble-fetching'),
+                  Toast.ERROR
+                );
+              });
+          })
+          .catch(e => {
+            Toast.responseHandler(e, Toast.ERROR);
           });
-        })
-        .catch(e => {
-          Toast.responseHandler(e, Toast.ERROR);
-        });
+      } catch (e) {
+        Toast.responseHandler(this.$t('mewcx.trouble-fetching'), Toast.ERROR);
+      }
     }
   }
 };

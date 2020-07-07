@@ -638,9 +638,12 @@ export default {
             symbol: token.symbol,
             website: token.website
           };
+
+          if (token.hasOwnProperty('logo')) {
+            convertedToken['logo'] = token.logo;
+          }
           return convertedToken;
         });
-
       this.tokens = tokens.sort(sortByBalance);
       this.setTokensWithBalance();
     },
@@ -692,15 +695,17 @@ export default {
     },
     getBalance() {
       const web3 = this.web3;
-      web3.eth
-        .getBalance(this.address.toLowerCase())
-        .then(res => {
-          this.balance = web3.utils.fromWei(res, 'ether');
-          this.setAccountBalance(res);
-        })
-        .catch(e => {
-          Toast.responseHandler(e, Toast.ERROR);
-        });
+      if (this.address) {
+        web3.eth
+          .getBalance(this.address.toLowerCase())
+          .then(res => {
+            this.balance = web3.utils.fromWei(res, 'ether');
+            this.setAccountBalance(res);
+          })
+          .catch(e => {
+            Toast.responseHandler(e, Toast.ERROR);
+          });
+      }
     },
     checkWeb3WalletAddrChange() {
       const web3 = this.web3;
@@ -813,6 +818,12 @@ export default {
       clearInterval(this.pollAddress);
     },
     web3WalletPollNetwork() {
+      if (!window.web3.eth) {
+        Toast.responseHandler(
+          new Error(this.$t('interface.web3-not-found')),
+          Toast.ERROR
+        );
+      }
       if (
         !window.web3.eth.net ||
         typeof window.web3.eth.net.getId !== 'function'
@@ -841,7 +852,7 @@ export default {
       this.pollAddress = setInterval(() => {
         if (!window.web3.eth) {
           Toast.responseHandler(
-            new Error('Web3 Instance not found!'),
+            new Error(this.$t('interface.web3-not-found')),
             Toast.ERROR
           );
           clearInterval(this.pollAddress);
