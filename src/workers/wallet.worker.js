@@ -15,6 +15,7 @@ const fromMyEtherWalletV2 = json => {
 const getWalletFromPrivKeyFile = (jsonfile, password) => {
   // filename hack for getting the file name once unlocked
   let wallet;
+  if (!jsonfile) throw new Error('Invalid Wallet file');
   if (jsonfile.encseed != null) {
     wallet = Wallet.fromEthSale(jsonfile, password);
     wallet.filename = wallet.getV3Filename();

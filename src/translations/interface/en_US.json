@@ -107,6 +107,7 @@
     "success-update": "Successfully updated",
     "save-addr": "Save Address"
   },
+  "web3-not-found": "Web3 Instance not found!",
   "import-error": "Something went wrong while importing file, please make sure it is a valid file",
   "account-content": {
     "header": "MY ADDRESS ICON",
