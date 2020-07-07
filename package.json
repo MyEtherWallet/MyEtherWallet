@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.7.0",
+  "version": "5.7.1",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -96,7 +96,7 @@
     "@vue/cli-service": "4.4.6",
     "@vue/eslint-config-prettier": "6.0.0",
     "@vue/test-utils": "1.0.0-beta.29",
-    "@walletconnect/browser": "1.0.0",
+    "@walletconnect/browser": "1.0.0-beta.47",
     "@walletconnect/qrcode-modal": "1.0.0-beta.47",
     "@xkeshi/vue-qrcode": "git+https://github.com/MyEtherWallet/vue-qrcode.git",
     "axios": "0.19.2",

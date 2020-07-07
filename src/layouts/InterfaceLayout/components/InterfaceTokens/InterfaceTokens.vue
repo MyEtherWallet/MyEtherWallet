@@ -226,7 +226,7 @@ export default {
             : this.network.type.icon;
         return tokenSrc;
       } else if (tok.logo && tok.logo.src && tok.logo.src !== '') {
-        return `https://img.mewapi.io/?image=${token.logo.src}&width=50&height=50&fit=scale-down`;
+        return `https://img.mewapi.io/?image=${tok.logo.src}&width=50&height=50&fit=scale-down`;
       }
 
       return this.network.type.icon;
