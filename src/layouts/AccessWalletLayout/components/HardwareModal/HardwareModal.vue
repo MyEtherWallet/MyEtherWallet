@@ -212,7 +212,7 @@ export default {
           disabled: false,
           msg: '',
           link:
-            'https://dcentwallet.com/Shop/detail/b15125cd52814be19a3f0edf54c8bc17'
+            'https://dcentwallet.com/Shop?utm_source=MEW&utm_medium=affiliate&utm_campaign=202007-MEW-promotion'
         }
       ]
     };
