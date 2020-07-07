@@ -70,7 +70,7 @@
     "vue-multiselect": "2.1.6",
     "vue-router": "3.3.4",
     "vue-toasted": "1.1.28",
-    "vuex": "3.4.0",
+    "vuex": "3.5.1",
     "walletlink": "2.0.2",
     "xss": "1.0.7"
   },
