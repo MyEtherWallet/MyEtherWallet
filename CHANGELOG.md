@@ -1,6 +1,10 @@
 ### Bug
 
 - Fix logos for tokens with src not from masterfile [#2500](https://github.com/MyEtherWallet/MyEtherWallet/pull/2500)
+- Sentry fixes y [#2479](https://github.com/MyEtherWallet/MyEtherWallet/pull/2479)
+- Sentry fixes j [#2474](https://github.com/MyEtherWallet/MyEtherWallet/pull/2474)
+- Whitelist prkl correctly [#2502](https://github.com/MyEtherWallet/MyEtherWallet/pull/2502)
+- Cx tokens not showing [#2492](https://github.com/MyEtherWallet/MyEtherWallet/pull/2492)
 
 ### Release v5.7.0
 
