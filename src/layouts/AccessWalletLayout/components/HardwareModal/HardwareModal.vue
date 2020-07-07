@@ -310,12 +310,12 @@ export default {
           bcvaultInstance
             .init()
             .then(res => {
-              // eslint-disable-next-line
-              console.log(res)
               if (res && res.length >= 1) {
                 this.openBcVault(res, bcvaultInstance);
-              } else {
+              } else if (res && res.length === 0) {
                 BCVaultWallet.errorHandler({ jsError: 'mew4' }, Toast.ERROR);
+              } else {
+                BCVaultWallet.errorHandler({ jsError: 'mew5' }, Toast.ERROR);
               }
             })
             .catch(e => {
