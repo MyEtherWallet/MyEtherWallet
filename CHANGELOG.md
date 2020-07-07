@@ -1,3 +1,5 @@
+### Release v5.7.1
+
 ### Bug
 
 - Fix logos for tokens with src not from masterfile [#2500](https://github.com/MyEtherWallet/MyEtherWallet/pull/2500)
