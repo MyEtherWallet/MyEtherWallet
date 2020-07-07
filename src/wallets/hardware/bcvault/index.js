@@ -30,10 +30,7 @@ class BCVault {
 
   async init() {
     // fetch devices
-    this.deviceNumber = await this.bcWallet.getDevices().catch(err => {
-      errorHandler(err);
-      return;
-    });
+    this.deviceNumber = await this.bcWallet.getDevices().catch(errorHandler);
     if (!this.deviceNumber) {
       errorHandler({
         jsError: 'mew3'
