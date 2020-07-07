@@ -484,6 +484,7 @@ export default {
       evt.target.src = this.network.type.icon;
     },
     walletRequirePass(ethjson) {
+      if (!ethjson) return false;
       if (ethjson.encseed != null) return true;
       else if (ethjson.Crypto != null || ethjson.crypto != null) return true;
       else if (ethjson.hash != null && ethjson.locked) return true;
