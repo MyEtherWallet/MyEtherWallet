@@ -120,7 +120,7 @@
           </li>
           <li>
             <p>{{ $t('dappsMCDMaker.liquidation-penalty') }}</p>
-            <p>{{ displayPercentValue(liquidationPenalty) }}%</p>
+            <p>{{ displayPercentValue(liquidationPenalty()) }}%</p>
           </li>
           <li>
             <p>{{ $t('dappsMCDMaker.collateral-ratio') }}</p>
@@ -145,7 +145,7 @@
             <p>
               {{
                 $t('dappsMCDMaker.stability-fee-in-mkr', {
-                  value: displayFixedPercent(stabilityFee).toString()
+                  value: displayFixedPercent(stabilityFee()).toString()
                 })
               }}
             </p>
@@ -229,14 +229,14 @@ export default {
       type: BigNumber,
       default: toBigNumber(0)
     },
-    liquidationPenalty: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
-    stabilityFee: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
+    // liquidationPenalty: {
+    //   type: BigNumber,
+    //   default: toBigNumber(0)
+    // },
+    // stabilityFee: {
+    //   type: BigNumber,
+    //   default: toBigNumber(0)
+    // },
     priceService: {
       type: Object,
       default: function () {
@@ -322,6 +322,7 @@ export default {
           if (toBigNumber(this.collatRatio).lte(this.makerCDP.liquidationRatio))
             return false;
         } else if (toBigNumber(this.collatRatio).lte(1.501)) return false;
+
         return this.hasEnoughEth;
       }
       return false;
@@ -407,6 +408,9 @@ export default {
       return null;
     },
     minCreate() {
+      if (this.emptyMakerCreated) {
+        return this.makerCDP.minDai;
+      }
       return 20;
     }
   },
@@ -481,6 +485,16 @@ export default {
               });
           }
         });
+      }
+    },
+    stabilityFee() {
+      if (this.emptyMakerCreated) {
+        return this.makerCDP.stabilityFee;
+      }
+    },
+    liquidationPenalty() {
+      if (this.emptyMakerCreated) {
+        return this.makerCDP.liquidationPenalty;
       }
     },
     displayPercentValue,

@@ -160,7 +160,6 @@ import WithdrawModal from './components/WithdrawModal';
 import PaybackModal from './components/PaybackModal';
 import Maker from '@makerdao/dai';
 import McdPlugin, { MKR } from '@makerdao/dai-plugin-mcd';
-import MigrationPlugin from '@makerdao/dai-plugin-migrations';
 import { Toast } from '@/helpers';
 import {
   CdpNum,
@@ -559,12 +558,6 @@ export default {
       this.openMoveModal = false;
     },
 
-    async migrateCdp(cdpId) {
-      const currentProxy = await this.getProxy();
-      if (currentProxy) {
-        await this._cdpService.give(cdpId, currentProxy);
-      }
-    },
     removeCdp(vals) {
       try {
         delete this.availableCdps[vals.id];
@@ -647,12 +640,13 @@ export default {
                 prefetch: true
               }
             ],
-            MewMakerPlugin,
-            MigrationPlugin
+            MewMakerPlugin
           ],
-          log: false,
+          log: true,
+          autoAuthenticate: true,
           web3: {
-            pollingInterval: null
+            pollingInterval: null,
+            inject: web3.currentProvider
           },
           accounts: {
             myLedger1: { type: 'mew' }
@@ -665,15 +659,13 @@ export default {
 
       this.setupMCD();
       try {
-        await this.maker.authenticate();
         this.currentlyLoading = 'dappsMCDMaker.loading-system';
 
         await setupServices(this, this.maker);
 
-        await setupPriceAndRatios(this, this._priceService, this._cdpService);
+        await setupPriceAndRatios(this, this._priceService, this._typeService);
 
         this.proxyAddress = await this._proxyService.currentProxy();
-
         await getDetailsForTokens(this, this._typeService.cdpTypes);
 
         await checkAllowances(this, this.account.address, this.proxyAddress);
@@ -742,7 +734,8 @@ export default {
     },
     async setupCdpManageFunc(cdpId) {
       cdpId = CdpNum(cdpId);
-      await setupCdpManage(this, cdpId);
+      const _self = this;
+      await setupCdpManage(_self, cdpId);
       this.setActiveCdpId(cdpId);
     },
 

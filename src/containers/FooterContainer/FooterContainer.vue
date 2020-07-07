@@ -304,7 +304,7 @@ export default {
           class: 'fa-vk'
         },
         {
-          to: 'https://t.me/myetherwalletofficial',
+          to: 'https://t.me/myetherwallet',
           class: 'fa-telegram'
         }
       ]

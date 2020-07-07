@@ -45,13 +45,24 @@
                 openPasswordModal('view');
               }
             "
-            >View</b-dropdown-text
+            >{{ $t('mewcx.view') }}</b-dropdown-text
           >
-          <b-dropdown-text @click="edit">Rename</b-dropdown-text>
+          <b-dropdown-text
+            v-if="walletType !== 'watchOnly'"
+            @click.stop="
+              () => {
+                backupWallet();
+              }
+            "
+            >{{ $t('mewcx.backup') }}</b-dropdown-text
+          >
+          <b-dropdown-text @click="edit">{{
+            $t('mewcx.rename')
+          }}</b-dropdown-text>
           <b-dropdown-divider></b-dropdown-divider>
-          <b-dropdown-text class="remove-text" @click.stop="openRemoveWallet"
-            >Remove</b-dropdown-text
-          >
+          <b-dropdown-text class="remove-text" @click.stop="openRemoveWallet">{{
+            $t('mewcx.remove')
+          }}</b-dropdown-text>
         </b-dropdown>
         <i
           :class="[
@@ -67,6 +78,14 @@
       </div>
     </div>
     <div class="wallet-info-body">
+      <div class="link-to-download">
+        <a
+          ref="downloadLink"
+          :href="downloadFile"
+          :download="nickname"
+          rel="noopener noreferrer"
+        ></a>
+      </div>
       <div
         v-show="showBalanceReminder"
         v-if="balanceWarnHidden"
@@ -88,7 +107,7 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            Buy ETH
+            {{ $t('mewcx.buy-eth') }}
           </a>
         </div>
       </div>
@@ -118,7 +137,7 @@
               />
             </div>
             <div class="wallet-value-container">
-              <p class="title">Total Wallet Value</p>
+              <p class="title">{{ $t('mewcx.total-wallet-value') }}</p>
               <p class="dollar-amt">
                 {{
                   network.type.name === 'ETH'
@@ -129,7 +148,9 @@
             </div>
           </div>
           <div class="wallet-value-container">
-            <p class="title">{{ network.type.currencyName }} Balance</p>
+            <p class="title">
+              {{ network.type.currencyName }} {{ $t('mewcx.balance') }}
+            </p>
             <p class="dollar-amt">
               {{
                 network.type.name === 'ETH' ? convertedBalance : fixedEthBalance
@@ -140,10 +161,13 @@
             </p>
           </div>
           <div class="wallet-value-container">
-            <p class="title">Value of Token</p>
+            <p class="title">
+              {{ ($t('mewcx.value-of-tokens', { plural: '' })) }}
+            </p>
             <p class="dollar-amt">{{ walletTokensWithBalance.total }}</p>
             <p class="value">
-              {{ walletTokensWithBalance.tokensWDollarAmtLength }} tokens
+              {{ walletTokensWithBalance.tokensWDollarAmtLength }}
+              {{ $t('mewcx.tokens') }}
             </p>
           </div>
         </div>
@@ -156,7 +180,13 @@
           ]"
           @click.stop="showTokens = !showTokens"
         >
-          <p>{{ showTokens ? 'Hide all tokens' : 'View all tokens' }}</p>
+          <p>
+            {{
+              showTokens
+                ? $t('mewcx.hide-all-tokens')
+                : $t('mewcx.view-all-tokens')
+            }}
+          </p>
           <i :class="['fa', showTokens ? 'fa-angle-up' : 'fa-angle-down']" />
         </div>
       </div>
@@ -164,22 +194,22 @@
         <table v-if="walletTokensWithBalance.tokensWDollarAmt.length > 0">
           <tr class="table-header">
             <th>
-              TOKEN NAME
+              {{ $t('mewcx.token.name') }}
             </th>
             <th>
-              PRICE
+              {{ $t('mewcx.token.price') }}
             </th>
             <th>
-              MARKET CAP
+              {{ $t('mewcx.token.market-cap') }}
             </th>
             <th>
-              CHANGE (24H)
+              {{ $t('mewcx.token.change') }}
             </th>
             <th>
-              AMOUNT
+              {{ $t('mewcx.token.amount') }}
             </th>
             <th>
-              MY VALUE
+              {{ $t('mewcx.token.value') }}
             </th>
           </tr>
           <tr
@@ -190,7 +220,7 @@
             <td>
               <div class="name-container">
                 <figure v-lazy-load class="token-icon">
-                  <img :src="token.tokenMew.logo" @error="iconFallback" />
+                  <img :data-url="token.tokenMew.logo" @error="iconFallback" />
                 </figure>
                 <p>
                   {{ token.tokenMew.name }}
@@ -234,7 +264,7 @@
         </table>
 
         <div v-else>
-          Can't find tokens with value.
+          {{ $t('mewcx.cant-find-tokens') }}
         </div>
       </div>
     </div>
@@ -278,13 +308,13 @@ import EditWalletModal from '../EditWalletModal';
 import RemoveWalletModal from '../RemoveWalletModal';
 import { mapState, mapActions } from 'vuex';
 import { Toast, Misc, ExtensionHelpers } from '@/helpers';
-import utils from 'web3-utils';
 import masterFile from '@/master-file.json';
 import PasswordOnlyModal from '../PasswordOnlyModal';
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import { WalletInterface } from '@/wallets';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import VerifyDetailsModal from '../VerifyDetailsModal';
+import createBlob from '@/helpers/createBlob.js';
 
 export default {
   components: {
@@ -337,16 +367,14 @@ export default {
   data() {
     return {
       loading: false,
-      tokens: [],
-      localTokenVersion: [],
-      customTokens: [],
-      localCustomTokens: [],
       showTokens: false,
       masterFile: masterFile,
       favorited: false,
       balanceWarnHidden: true,
       path: 'access',
-      password: ''
+      password: '',
+      downloadFile: '',
+      tokens: []
     };
   },
   computed: {
@@ -392,9 +420,7 @@ export default {
       return `${currencyBalance} ${this.network.type.currencyName}`;
     },
     walletTokensWithBalance() {
-      const tokensWithBalance = this.walletToken.filter(item => {
-        return item.balance !== 'Load' && new BigNumber(item.balance).gt(0);
-      });
+      const tokensWithBalance = this.tokens;
       let totalTokenAmt = new BigNumber(0);
       const tokensWithDollarAmt = [];
       tokensWithBalance.forEach(item => {
@@ -412,8 +438,7 @@ export default {
 
       const currencyDollar = new BigNumber(this.balance).times(this.usd);
       const totalWalletBalance = currencyDollar.plus(totalTokenAmt).toNumber();
-
-      return {
+      const obj = {
         tokens: tokensWithBalance,
         length: tokensWithBalance.length,
         tokensWDollarAmt: tokensWithDollarAmt,
@@ -421,6 +446,15 @@ export default {
         total: this.toDollar(totalTokenAmt.toNumber()),
         totalWalletBalance: this.toDollar(totalWalletBalance)
       };
+      return obj;
+    }
+  },
+  watch: {
+    tokens: {
+      handler: function (newValue) {
+        this.tokens = newValue;
+      },
+      deep: true
     }
   },
   created() {
@@ -428,16 +462,29 @@ export default {
   },
   mounted() {
     window.chrome.storage.sync.get('favorites', this.checkIfFavorited);
+    if (this.wallet !== '') {
+      this.generateBlob();
+    }
+    if (this.walletToken.length > 0) {
+      this.processTokens();
+    }
   },
   destroyed() {
     window.chrome.storage.onChanged.removeListener(this.checkIfFavorited);
   },
   methods: {
     ...mapActions('main', ['decryptWallet']),
+    processTokens() {
+      const tokens = this.walletToken.filter(item => {
+        return item.balance !== 'Load' && new BigNumber(item.balance).gt(0);
+      });
+      this.tokens = this.tokens.concat(tokens);
+    },
     iconFallback(evt) {
       evt.target.src = this.network.type.icon;
     },
     walletRequirePass(ethjson) {
+      if (!ethjson) return false;
       if (ethjson.encseed != null) return true;
       else if (ethjson.Crypto != null || ethjson.crypto != null) return true;
       else if (ethjson.hash != null && ethjson.locked) return true;
@@ -463,7 +510,10 @@ export default {
           this.loading = false;
           ExtensionHelpers.deleteWalletFromStore(this.address, () => {
             this.$refs.removeWalletModal.$refs.removeWalletModal.$refs.modalWrapper.hide();
-            Toast.responseHandler('Removed Wallet Successfully', Toast.SUCCESS);
+            Toast.responseHandler(
+              this.$t('mewcx.remove-wallet-successfully'),
+              Toast.SUCCESS
+            );
           });
         };
         worker.onerror = e => {
@@ -473,9 +523,20 @@ export default {
         };
       } else {
         ExtensionHelpers.deleteWalletFromStore(this.address, () => {
-          Toast.responseHandler('Removed Wallet Successfully', Toast.SUCCESS);
+          Toast.responseHandler(
+            this.$t('mewcx.remove-wallet-successfully'),
+            Toast.SUCCESS
+          );
         });
       }
+    },
+    backupWallet() {
+      this.$refs.downloadLink.click();
+    },
+    generateBlob() {
+      const wallet = JSON.parse(this.wallet).priv;
+      const blob = createBlob(wallet, 'mime');
+      this.downloadFile = blob;
     },
     viewWallet() {
       this.loading = true;
@@ -586,35 +647,6 @@ export default {
           );
         }
       });
-    },
-    retrieveLogo(address, symbol) {
-      const networkMasterFile = this.masterFile.data.filter(item => {
-        return (
-          item.network.toLowerCase() === this.network.type.name.toLowerCase()
-        );
-      });
-      try {
-        // eslint-disable-next-line
-        const image = require(`@/assets/images/currency/coins/AllImages/${symbol}.svg`);
-        return image;
-      } catch (e) {
-        const foundToken = networkMasterFile.find(item => {
-          return (
-            utils.toChecksumAddress(item.contract_address) ===
-            utils.toChecksumAddress(address)
-          );
-        });
-
-        if (foundToken) {
-          return foundToken.icon;
-        }
-        try {
-          // eslint-disable-next-line
-          return require(`@/assets/images/networks/${symbol.toLowerCase()}`);
-        } catch (e) {
-          return this.network.type.icon;
-        }
-      }
     },
     isGreateThanZero(val) {
       return new BigNumber(val).gt(0);

@@ -1,3 +1,31 @@
+### Release v5.7.1
+
+### Bug
+
+- Fix logos for tokens with src not from masterfile [#2500](https://github.com/MyEtherWallet/MyEtherWallet/pull/2500)
+- Sentry fixes y [#2479](https://github.com/MyEtherWallet/MyEtherWallet/pull/2479)
+- Sentry fixes j [#2474](https://github.com/MyEtherWallet/MyEtherWallet/pull/2474)
+- Whitelist prkl correctly [#2502](https://github.com/MyEtherWallet/MyEtherWallet/pull/2502)
+- Cx tokens not showing [#2492](https://github.com/MyEtherWallet/MyEtherWallet/pull/2492)
+
+### Release v5.7.0
+
+### Bug
+
+- Remove sai [#2462](https://github.com/MyEtherWallet/MyEtherWallet/pull/2462)
+- Remove normalize on string check [#2463](https://github.com/MyEtherWallet/MyEtherWallet/pull/2463)
+- Update Aave withdraw and healthfactor [#2460](https://github.com/MyEtherWallet/MyEtherWallet/pull/2460)
+- Revert walletconnect library [#2486](https://github.com/MyEtherWallet/MyEtherWallet/pull/2486)
+
+### Devop
+
+- Merge node changes #2470, #2469, #2468, and #2467 [#2481](https://github.com/MyEtherWallet/MyEtherWallet/pull/2481)
+- Update Maker Libraries for Maker Dai Dapp [#2437](https://github.com/MyEtherWallet/MyEtherWallet/pull/2437)
+- add check for market impact when finalizing swap details [#2484](https://github.com/MyEtherWallet/MyEtherWallet/pull/2484)
+
+### Feature
+
+- Update MEW Wallet modal [#2483](https://github.com/MyEtherWallet/MyEtherWallet/pull/2483)
 
 ### Release v5.6.6-hotfix.2
 
