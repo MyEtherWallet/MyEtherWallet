@@ -350,7 +350,7 @@
           <a
             ref="downloadLink"
             :href="downloadFile"
-            :download="nickname"
+            :download="walletName"
             rel="noopener noreferrer"
           ></a>
         </div>
