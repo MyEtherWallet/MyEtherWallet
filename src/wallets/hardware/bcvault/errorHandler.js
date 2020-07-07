@@ -12,7 +12,8 @@ const WARNING = {
   jsErrormew1: 'bcvaultError.only-one-wallet',
   jsErrormew2: 'bcvaultError.can-only-sign-eth',
   jsErrormew3: 'bcvaultError.check-daemon',
-  jsErrormew4: 'bcvaultError.no-account-found'
+  jsErrormew4: 'bcvaultError.no-account-found',
+  jsErrormew5: 'bcvaultError.no-response'
 };
 
 export default err => {
