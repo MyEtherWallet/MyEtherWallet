@@ -49,9 +49,9 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { Misc, ExtensionHelpers, Wallet } from '@/helpers';
+import { Misc, Wallet } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
 import AddressSelectionComponent from '../../components/AddressSelectionComponent';
 import AcceptCancelButtons from '../../components/AcceptCancelButtons';
