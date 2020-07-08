@@ -30,19 +30,23 @@
           <mew-input label="Gas Price" placeholder=" " value="40" />
           <mew-input label="Gas Limit" placeholder=" " value="21000" />
         </div>
+
         <div class="d-flex justify-space-between px-5">
           <div class="mew-body font-weight-medium d-flex align-center">
             Transaction Fee <info-tooltip class="ml-1" text="Tx fees" />
           </div>
           <div>$0.177</div>
         </div>
+        <Divider dot class="mt-5" />
+        <mew-input
+          label="Add Data"
+          placeholder=" "
+          value=""
+          class="mt-10 mb-n5"
+        />
       </mew6-expantion-block>
 
-      <Divider v-if="false" class="mt-7 mb-12" />
-      <div class="mt-12">
-        <mew-input label="Add Data" placeholder=" " value="" />
-      </div>
-      <div class="text-center">
+      <div class="text-center mt-12">
         <mew-button title="Send" :has-full-width="false" button-size="xlarge" />
         <div class="mt-6 emerald--text">Clean all</div>
       </div>

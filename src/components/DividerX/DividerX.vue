@@ -1,5 +1,8 @@
 <template>
-  <div class="divider-x"></div>
+  <div class="divider-x">
+    <div v-if="!dot" class="line" />
+    <div v-if="dot" class="dot" />
+  </div>
 </template>
 
 <script>
@@ -15,8 +18,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.divider-x {
+.line {
   border-bottom: 2px solid #f5f5f5;
-  width: 100%;
+}
+.dot {
+  border-bottom: 2px dotted #f5f5f5;
 }
 </style>
