@@ -1,10 +1,9 @@
 <template>
   <div>
     <PageTitle title="More actions" />
-    <v-container class="mt-8">
+    <v-container class="mt-8 mb-12">
       <mew6-vertical-tabs :tabs="tabs" />
     </v-container>
-    <div class="py-3" />
     <Ad />
   </div>
 </template>
