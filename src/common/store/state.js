@@ -10,8 +10,19 @@ const state = {
     accessWalletBCVault: { isOpen: false },
     accessWalletXWallet: { isOpen: false },
     accessWalletBrowserExtensions: { isOpen: false },
-    accessWalletMobileApps: { isOpen: false }
+    accessWalletMobileApps: { isOpen: false },
+    transactionTxConfirmation: { isOpen: false }
   }
 };
 
 export default state;
+
+/*
+
+methods: {
+  openOverlay(name) {
+    this.$store.commit('openOverlay', name);
+  }
+}
+
+*/
