@@ -87,7 +87,7 @@ import Table from '../Table';
 
 export default {
   components: { CopyButton, Table },
-  data: () => ({ panel: [] }),
+  data: () => ({ panel: [0] }),
   methods: {
     openPanel() {
       this.panel = this.panel.length == 0 ? [0] : [];

@@ -1,16 +1,21 @@
 <template>
   <div class="mew-component--expantion-block">
     <DividerLine class="mb-2" />
-    <v-expansion-panels flat>
+    <v-expansion-panels v-model="isOpen" flat>
       <v-expansion-panel>
-        <v-expansion-panel-header class="px-4 py-0">
+        <v-expansion-panel-header class="pl-2 pr-0 py-0">
           <div class="d-flex align-center justify-space-between pr-4">
             <div class="font-weight-bold subtitle-1">{{ title }}</div>
             <div>{{ rightText }}</div>
           </div>
+          <template v-slot:actions>
+            <v-switch v-model="switch1" inset></v-switch>
+          </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-          <slot />
+          <div class="py-4">
+            <slot />
+          </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -29,7 +34,15 @@ export default {
     rightText: { default: '', type: String }
   },
   data() {
-    return {};
+    return { isOpen: undefined, switch1: false };
+  },
+  watch: {
+    isOpen(val) {
+      this.switch1 = val == 0 ? true : false;
+    }
+  },
+  mounted() {
+    this.switch1 = this.isOpen == 0 ? true : false;
   }
 };
 </script>

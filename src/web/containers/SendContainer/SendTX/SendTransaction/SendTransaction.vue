@@ -16,27 +16,31 @@
           copy-tooltip="Copy"
           save-tooltip="Save"
           :enable-save-address="true"
-          label="label"
+          label="To Address"
           :items="addresses"
           placeholder="Please enter an address"
           success-toast="Success"
-          :is-valid-address="false"
+          :is-valid-address="true"
           @emitSelectedValue="getSelectedValue"
         />
       </div>
-      <div>
-        <mew-input label="Gas Price" placeholder=" " value="40" />
-        <mew-input label="Gas Limit" placeholder=" " value="21000" />
-      </div>
-      <div class="d-flex justify-space-between px-5">
-        <div class="mew-body font-weight-medium d-flex align-center">
-          Transaction Fee <info-tooltip class="ml-1" text="Tx fees" />
+
+      <mew6-expantion-block title="Advanced" right-text="Gas & Data">
+        <div>
+          <mew-input label="Gas Price" placeholder=" " value="40" />
+          <mew-input label="Gas Limit" placeholder=" " value="21000" />
         </div>
-        <div>$0.177</div>
-      </div>
-      <Divider class="mt-7 mb-12" />
-      <div>
-        <mew-input label="Gas Limit" placeholder=" " value="21000" />
+        <div class="d-flex justify-space-between px-5">
+          <div class="mew-body font-weight-medium d-flex align-center">
+            Transaction Fee <info-tooltip class="ml-1" text="Tx fees" />
+          </div>
+          <div>$0.177</div>
+        </div>
+      </mew6-expantion-block>
+
+      <Divider v-if="false" class="mt-7 mb-12" />
+      <div class="mt-12">
+        <mew-input label="Add Data" placeholder=" " value="" />
       </div>
       <div class="text-center">
         <mew-button title="Send" :has-full-width="false" button-size="xlarge" />

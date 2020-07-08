@@ -1,5 +1,5 @@
 <template>
-  <div class="more-actions--table pb-2">
+  <div class="more-actions--table pb-5">
     <v-data-table
       :headers="headers"
       :items="addresses"
