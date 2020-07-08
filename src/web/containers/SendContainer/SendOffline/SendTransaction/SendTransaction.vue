@@ -16,29 +16,37 @@
           copy-tooltip="Copy"
           save-tooltip="Save"
           :enable-save-address="true"
-          label="label"
+          label="To Address"
           :items="addresses"
           placeholder="Please enter an address"
           success-toast="Success"
-          :is-valid-address="false"
+          :is-valid-address="true"
           @emitSelectedValue="getSelectedValue"
         />
       </div>
-      <div>
-        <mew-input label="Gas Price" placeholder=" " value="40" />
-        <mew-input label="Gas Limit" placeholder=" " value="21000" />
-      </div>
-      <div class="d-flex justify-space-between px-5">
-        <div class="mew-body font-weight-medium d-flex align-center">
-          Transaction Fee <info-tooltip class="ml-1" text="Tx fees" />
+
+      <mew6-expantion-block title="Advanced" right-text="Gas & Data">
+        <div>
+          <mew-input label="Gas Price" placeholder=" " value="40" />
+          <mew-input label="Gas Limit" placeholder=" " value="21000" />
         </div>
-        <div>$0.177</div>
-      </div>
-      <Divider class="mt-7 mb-12" />
-      <div>
-        <mew-input label="Gas Limit" placeholder=" " value="21000" />
-      </div>
-      <div class="text-center">
+
+        <div class="d-flex justify-space-between px-5">
+          <div class="mew-body font-weight-medium d-flex align-center">
+            Transaction Fee <info-tooltip class="ml-1" text="Tx fees" />
+          </div>
+          <div>$0.177</div>
+        </div>
+        <Divider dot class="mt-5" />
+        <mew-input
+          label="Add Data"
+          placeholder=" "
+          value=""
+          class="mt-10 mb-n5"
+        />
+      </mew6-expantion-block>
+
+      <div class="text-center mt-12">
         <mew-button title="Send" :has-full-width="false" button-size="xlarge" />
         <div class="mt-6 emerald--text">Clean all</div>
       </div>
@@ -55,6 +63,7 @@ export default {
   components: { InterfaceWrap, Divider },
   data() {
     return {
+      addressValue: '',
       addresses: [
         {
           address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
@@ -80,7 +89,9 @@ export default {
     };
   },
   methods: {
-    getSelectedValue() {}
+    getSelectedValue(value) {
+      this.addressValue = value;
+    }
   }
 };
 </script>

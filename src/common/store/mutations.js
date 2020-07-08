@@ -3,6 +3,7 @@ export default {
     state.overlays[name].isOpen = false;
   },
   openOverlay(state, name) {
+    console.log(name);
     state.overlays[name].isOpen = true;
   }
 };

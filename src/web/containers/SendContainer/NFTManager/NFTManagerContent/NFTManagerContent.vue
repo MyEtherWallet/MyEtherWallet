@@ -5,13 +5,12 @@
       color="success"
       x-small
       class="mr-1"
-      @click="openTxConfirmation = true"
+      @click.native="openOverlay('transactionTxConfirmation')"
     >
-      Open TX confirmation window
+      Dev only: Open TX confirmation window
     </v-btn>
 
     <mew6-white-sheet>
-      <TxConfirmation :open="openTxConfirmation" :close="closeTxConfirmation" />
       <InterfaceWrap title="NFT Manager">
         <v-tabs vertical>
           <v-tab>
@@ -138,13 +137,12 @@
 
 <script>
 import InterfaceWrap from '@/web/components/InterfaceWraps/InterfaceWrap1';
-import TxConfirmation from '@/components/Overlays/TxConfirmation';
 import Kitty1 from '@/assets/images/temp/cryptokitties1.svg';
 import Kitty2 from '@/assets/images/temp/cryptokitties2.svg';
 import Kitty3 from '@/assets/images/temp/cryptokitties3.svg';
 
 export default {
-  components: { InterfaceWrap, TxConfirmation },
+  components: { InterfaceWrap },
   data() {
     return {
       openTxConfirmation: false,
@@ -156,8 +154,8 @@ export default {
     };
   },
   methods: {
-    closeTxConfirmation() {
-      this.openTxConfirmation = false;
+    openOverlay(name) {
+      this.$store.commit('openOverlay', name);
     }
   }
 };

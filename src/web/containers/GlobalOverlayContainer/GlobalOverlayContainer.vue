@@ -1,15 +1,17 @@
 <template>
   <div>
     <AccessWalletOverlays />
+    <TransactionOverlays />
   </div>
 </template>
 
 <script>
 import AccessWalletOverlays from './components/AccessWallet';
+import TransactionOverlays from './components/Transaction';
 
 export default {
   name: 'GlobalOverlayContainer',
-  components: { AccessWalletOverlays },
+  components: { AccessWalletOverlays, TransactionOverlays },
   data() {
     return {};
   }
