@@ -64,18 +64,16 @@ const networkChanger = items => {
     }
     // eslint-disable-next-line
     if (!!network) {
-      store.dispatch('main/switchNetwork', network, { root: true }).then(() => {
-        store
-          .dispatch('main/setWeb3Instance', network.url, { root: true })
-          .then(() => {
-            chrome.storage.sync.set({
-              defChainID: store.state.main.network.type.chainID
-            });
+      store.dispatch('main/switchNetwork', network).then(() => {
+        store.dispatch('main/setWeb3Instance', network.url).then(() => {
+          chrome.storage.sync.set({
+            defChainID: store.state.main.network.type.chainID
           });
+        });
       });
     }
   } else {
-    store.dispatch('main/setWeb3Instance', { root: true });
+    store.dispatch('main/setWeb3Instance');
     chrome.storage.sync.set({
       defChainID: store.state.main.network.type.chainID,
       defNetwork: JSON.stringify({
