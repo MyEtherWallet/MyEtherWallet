@@ -34,7 +34,7 @@ class WSProvider {
     )}`;
     this.keepAliveTimer = workerTimer.setInterval(keepAlive, 5000);
     delete this.wsProvider['send'];
-    this.wsProvider.send = (payload, callback) => {
+    const sendFunc = (payload, callback) => {
       this.lastMessage = new Date().getTime();
       if (
         this.wsProvider.connection.readyState ===
@@ -101,6 +101,8 @@ class WSProvider {
         this.wsProvider._addResponseCallback(payload, callback);
       });
     };
+    this.wsProvider.send = sendFunc;
+    this.wsProvider.sendAsync = sendFunc;
     return this.wsProvider;
   }
 }

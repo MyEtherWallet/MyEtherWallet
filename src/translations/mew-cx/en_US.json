@@ -48,8 +48,11 @@
   "hide-all-tokens": "Hide My Tokens",
   "trouble-fetching": "Having trouble fetching prices. Tokens will be temporarily disabled",
   "trouble-fetching-eth": "Having trouble ETH Price. Price conversion will be temporarily unavailable",
+  "success-wallet-add": "Successfully added a wallet!",
+  "no-favorite-wallets": "Looks like you don't have any favorite wallets yet. Click the heart next to your favorite wallet to save it here!",
   "tokens": "Tokens",
   "create-wallet-password": "Create wallet password",
+  "go-to-my-wallets": "Go to My Wallets",
   "token": {
     "name":"TOKEN NAME",
     "price":"PRICE",

@@ -59,15 +59,15 @@ const setupState = obj => {
     });
   });
   const notifications = localStorage.get('notifications');
-  console.log(obj);
-  const accounts = JSON.parse(obj['acccounts']);
+
+  const accounts = obj['accounts'] ? JSON.parse(obj['accounts']) : [];
   accounts.forEach(itm => {
     if (!notifications[itm.address]) {
       notifications[itm.address] = [];
     }
   });
 
-  localStorage.set('notifications', JSON.stringify(notifications));
+  localStorage.set('notifications', notifications);
 };
 chrome.storage.sync.get(null, setupState);
 
@@ -167,10 +167,21 @@ function migrateAddresses() {
         }
       });
 
+      const favorites = JSON.parse(obj['favorites']);
+
       if (foundAccounts.length > 0) {
         foundAccounts.forEach(item => {
           const newObj = {};
           const value = JSON.parse(obj[item]);
+          if (favorites.length > 0) {
+            const isFavorited = favorites.find(fav => {
+              return toChecksumAddress(fav.address) === toChecksumAddress(item);
+            });
+
+            newObj['favorited'] = isFavorited ? true : false;
+          } else {
+            newObj['favorited'] = false;
+          }
           newObj['address'] = toChecksumAddress(item);
           newObj['priv'] = value['priv'];
           newObj['nick'] = value['nick'];

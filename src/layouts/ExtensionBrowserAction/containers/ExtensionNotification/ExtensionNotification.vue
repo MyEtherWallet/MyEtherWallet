@@ -93,7 +93,7 @@
                     :process-status="processStatus"
                     :error-message-string="errorMessageString"
                     :index="idx"
-                    :child-update-notification="childUpdateNotification(idx)"
+                    :child-update-notification="childUpNot(idx)"
                     @showDetails="showDetails"
                   >
                   </component>
@@ -123,9 +123,7 @@
           :address-link="addressLink"
           :process-status="processStatus"
           :error-message-string="errorMessageString"
-          :child-update-notification="
-            childUpdateNotification(notificationDetails.index)
-          "
+          :child-update-notification="childUpNot(notificationDetails.index)"
         >
         </component>
       </div>
@@ -183,25 +181,25 @@ export default {
     sortedNotifications() {
       const notificationCopy = {};
 
-      Object.keys(this.notifications).forEach(addr => {
-        if (!this.notifications[addr]) {
-          notificationCopy[addr] = [];
-        } else {
-          const newArr = [];
-          notificationCopy[addr] = this.notifications[addr];
-          notificationCopy[addr].sort((a, b) => {
-            a = a.timestamp;
-            b = b.timestamp;
-            return a > b ? -1 : a < b ? 1 : 0;
-          });
-          notificationCopy[addr].forEach(entry => {
-            if (entry.network === this.network.type.name) {
-              newArr.push(entry);
-            }
-          });
-          notificationCopy[addr] = newArr;
-        }
-      });
+      // Object.keys(this.notifications).forEach(addr => {
+      //   if (!this.notifications[addr]) {
+      //     notificationCopy[addr] = [];
+      //   } else {
+      //     const newArr = [];
+      //     notificationCopy[addr] = this.notifications[addr];
+      //     notificationCopy[addr].sort((a, b) => {
+      //       a = a.timestamp;
+      //       b = b.timestamp;
+      //       return a > b ? -1 : a < b ? 1 : 0;
+      //     });
+      //     notificationCopy[addr].forEach(entry => {
+      //       if (entry.network === this.network.type.name) {
+      //         newArr.push(entry);
+      //       }
+      //     });
+      //     notificationCopy[addr] = newArr;
+      //   }
+      // });
 
       return notificationCopy;
     }
@@ -212,14 +210,14 @@ export default {
     }
   },
   created() {
-    window.chrome.storage.onChanged.addListener(this.notificationsSetup);
+    // window.chrome.storage.onChanged.addListener(this.notificationsSetup);
   },
   mounted() {
-    this.notificationsSetup();
+    // this.notificationsSetup();
   },
   destroyed() {
     clearInterval(this.checkLoop);
-    window.chrome.storage.onChanged.removeListener(this.notificationsSetup);
+    // window.chrome.storage.onChanged.removeListener(this.notificationsSetup);
   },
   methods: {
     ...mapActions('main', ['updateNotification']),
@@ -378,7 +376,7 @@ export default {
         this.updateNotification([address, idx, updatedNotif]);
       });
     },
-    childUpdateNotification(idx) {
+    childUpNot(idx) {
       if (typeof idx === 'undefined') return () => {};
       return updatedNotif => {
         this.updateNotification([this.account.address, idx, updatedNotif]);

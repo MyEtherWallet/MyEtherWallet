@@ -3,11 +3,7 @@
     <wallet-side-menu class="side-menu" />
     <div class="max-width-limit">
       <keep-alive>
-        <router-view
-          :eth-price="ethPrice"
-          :token-prices="tokenPrices"
-          :wallets="wallets"
-        />
+        <router-view :eth-price="ethPrice" :token-prices="tokenPrices" />
       </keep-alive>
     </div>
   </div>
@@ -15,9 +11,8 @@
 
 <script>
 import WalletSideMenu from './components/WalletSideMenu';
-import { Toast, ExtensionHelpers } from '@/helpers';
+import { Toast } from '@/helpers';
 import { mapState, mapActions } from 'vuex';
-import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
 
 export default {
   components: {
@@ -26,64 +21,44 @@ export default {
   data() {
     return {
       ethPrice: 0,
-      tokenPrices: {},
-      wallets: []
+      tokenPrices: {}
     };
   },
   computed: {
     ...mapState('main', ['web3', 'network', 'Networks'])
   },
-  created() {
-    window.chrome.storage.onChanged.addListener(this.storageListener);
-  },
   mounted() {
+    window.chrome.storage.sync.get(null, this.setupState);
     this.getEthPrice();
     this.getTokenPrices();
-    this.fetchAccountFromStore();
-  },
-  destroyed() {
-    window.chrome.storage.onChanged.addListener(this.storageListener);
   },
   methods: {
     ...mapActions('main', ['switchNetwork', 'setWeb3Instance']),
-    fetchAccountFromStore() {
-      ExtensionHelpers.getAccounts(this.getAccountsCb);
-    },
-    storageListener(changed) {
-      if (changed && changed.hasOwnProperty('defNetwork')) {
-        const networkProps = JSON.parse(changed['defNetwork'].newValue);
-        const network = this.Networks[networkProps.key].find(actualNetwork => {
-          return actualNetwork.service === networkProps.service;
-        });
-        this.switchNetwork(
-          !network ? this.Networks[networkProps.key][0] : network
-        ).then(() => {
-          this.setWeb3Instance();
-        });
-      } else {
-        this.setWeb3Instance();
-      }
+    ...mapActions('mewcx', ['setState']),
+    setupState(obj) {
+      const stateVal = [
+        'accounts',
+        'defChainID',
+        'defNetwork',
+        'favorites',
+        'sites'
+      ];
+      const newState = {};
+      stateVal.forEach(item => {
+        if (obj[item]) {
+          newState[item] =
+            item !== 'defChainID' ? JSON.parse(obj[item]) : obj[item];
+        }
+      });
 
-      if (isAddress(Object.keys(changed)[0])) {
-        this.fetchAccountFromStore();
-      }
-    },
-    getAccountsCb(res) {
-      const accounts = Object.keys(res)
-        .filter(item => {
-          if (isAddress(item)) {
-            return item;
-          }
-        })
-        .map(item => {
-          const newObj = Object.assign(
-            {},
-            { address: toChecksumAddress(item), wallet: res[item] }
-          );
-
-          return newObj;
+      this.setState(newState).then(() => {
+        const defNetwork = newState['defNetwork']
+          ? this.Networks[newState['defNetwork'].key][0]
+          : this.Networks['ETH'][0];
+        this.switchNetwork(defNetwork).then(() => {
+          this.setWeb3Instance(defNetwork);
         });
-      this.wallets = accounts.slice();
+      });
     },
     getEthPrice() {
       try {

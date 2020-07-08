@@ -161,7 +161,6 @@
 <script>
 import WatchOnlyModal from '../../components/WatchOnlyModal';
 import { WATCH_ONLY } from '@/wallets/bip44/walletTypes';
-import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import { mapState } from 'vuex';
 import { toChecksumAddress } from '@/helpers/addressUtils';
@@ -189,10 +188,6 @@ export default {
     ethPrice: {
       type: Number,
       default: 0
-    },
-    wallets: {
-      type: Array,
-      default: () => {}
     }
   },
   data() {
@@ -207,6 +202,7 @@ export default {
   },
   computed: {
     ...mapState('main', ['web3', 'network', 'linkQuery']),
+    ...mapState('mewcx', ['accounts']),
     showLength() {
       return this.showMyWallets === 0
         ? this.myWallets.length
@@ -219,7 +215,7 @@ export default {
       return this.watchOnlyAddresses.length > 1 ? 2 : 1;
     },
     hasAccounts() {
-      return this.wallets.length > 0;
+      return this.accounts.length > 0;
     },
     totalDollarAmount() {
       const totalDollarAmt = new BigNumber(this.totalBalance).times(
@@ -282,11 +278,11 @@ export default {
         this.showMyWallets = 1;
       }
     },
-    wallets(newVal) {
+    accounts(newVal) {
       this.processAccounts(newVal);
     },
     network() {
-      this.processAccounts(this.wallets);
+      this.processAccounts(this.accounts);
     }
   },
   mounted() {
@@ -300,8 +296,8 @@ export default {
       }
     );
 
-    if (this.wallets.length > 0) {
-      this.processAccounts(this.wallets);
+    if (this.accounts.length > 0) {
+      this.processAccounts(this.accounts);
     }
   },
   methods: {
@@ -322,26 +318,25 @@ export default {
     async processAccounts(accs) {
       this.totalBalance = '0';
       this.loading = true;
-      let balance = new BigNumber(this.totalBalance);
+      const balance = new BigNumber(this.totalBalance);
       const watchOnlyAddresses = [];
       const myWallets = [];
       for await (const account of accs) {
         if (account !== undefined) {
-          const address = toChecksumAddress(account.address).toLowerCase();
-          delete account['address'];
-          const parsedItemWallet = JSON.parse(account.wallet);
-          account['type'] = parsedItemWallet.type;
-          account['address'] = address;
-          account['nickname'] = parsedItemWallet.nick;
-          await this.setToken(address).then(res => {
+          const obj = {};
+          obj['type'] = account.type;
+          obj['address'] = toChecksumAddress(account.address);
+          obj['nickname'] = account.nick;
+          await this.setToken(account.address).then(res => {
             account['tokenBalance'] = res;
           });
-          await this.getBalance(address)
+
+          await this.getBalance(account.address)
             .then(res => {
-              const locBalance = web3utils.fromWei(res);
+              const locBalance = this.web3.utils.fromWei(res);
               account['balance'] = new BigNumber(locBalance).toString();
-              balance = balance.plus(locBalance);
-              if (parsedItemWallet.type === 'wallet') {
+              balance.plus(locBalance);
+              if (account.type === 'wallet') {
                 this.totalBalance = balance.toString();
               }
             })
@@ -352,7 +347,7 @@ export default {
               );
               account['balance'] = 0;
             });
-          if (parsedItemWallet.type !== 'wallet') {
+          if (account.type !== 'wallet') {
             watchOnlyAddresses.push(account);
           } else {
             myWallets.push(account);
@@ -402,6 +397,7 @@ export default {
         });
     },
     getBalance(addr) {
+      console.log(this.web3);
       return this.web3.eth.getBalance(addr);
     },
     addWallet() {

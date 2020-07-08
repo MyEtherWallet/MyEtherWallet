@@ -9,8 +9,7 @@
     <div v-if="!hasAccounts" class="no-wallet-container">
       <img src="@/assets/images/icons/alien.png" />
       <h3>
-        Looks like you don't have any favorite wallets yet. Click the heart next
-        to your favorite wallet to save it here!
+        {{ $t('mewcx.no-favorite-wallets') }}
       </h3>
 
       <div class="wallet-options">
@@ -19,7 +18,7 @@
           router-tag="button"
           to="/"
         >
-          Go to My Wallets
+          {{ $t('mewcx.go-to-my-wallets') }}
         </b-button>
       </div>
     </div>
@@ -66,10 +65,6 @@ export default {
     ethPrice: {
       type: Number,
       default: 0
-    },
-    wallets: {
-      type: Array,
-      default: () => {}
     }
   },
   data() {
@@ -82,6 +77,7 @@ export default {
   },
   computed: {
     ...mapState('main', ['web3', 'network']),
+    ...mapState('mewcx', ['accounts']),
     hasAccounts() {
       return this.favoriteWallets.length > 0;
     },
@@ -99,20 +95,16 @@ export default {
     }
   },
   watch: {
-    wallets(newVal) {
+    accounts(newVal) {
       this.processAccounts(newVal);
     },
     network() {
-      this.processAccounts(this.wallets);
+      this.processAccounts(this.accounts);
     }
   },
   mounted() {
-    this.processAccounts(this.wallets);
-    window.chrome.storage.onChanged.addListener(changed => {
-      if (changed && changed.hasOwnProperty('favorites')) {
-        this.processAccounts(this.wallets);
-      }
-    });
+    console.log(this.$store.state);
+    this.processAccounts(this.accounts);
   },
   methods: {
     setToken(address) {
@@ -155,7 +147,7 @@ export default {
       this.loading = true;
       const accounts = [];
       for await (const account of accs) {
-        if (account !== undefined) {
+        if (account !== undefined && account.favorited) {
           const address = toChecksumAddress(account.address).toLowerCase();
           delete account['address'];
           const parsedItemWallet = JSON.parse(account.wallet);
@@ -169,25 +161,8 @@ export default {
           accounts.push(account);
         }
       }
-      window.chrome.storage.sync.get('favorites', item => {
-        if (Object.keys(item).length > 0) {
-          const storedFaves = JSON.parse(item.favorites);
-          const favoritedWallets = [];
-          storedFaves.forEach(storedAcc => {
-            const actualAccount = accounts.find(wallet => {
-              return (
-                toChecksumAddress(wallet.address).toLowerCase() ===
-                toChecksumAddress(storedAcc.address).toLowerCase()
-              );
-            });
 
-            if (actualAccount) {
-              favoritedWallets.push(actualAccount);
-            }
-          });
-          this.favoriteWallets = favoritedWallets;
-        }
-      });
+      this.favoriteWallets = accounts;
       this.loading = false;
     },
     async getBalance(addr) {

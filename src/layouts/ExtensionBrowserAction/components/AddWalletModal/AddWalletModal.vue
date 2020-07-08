@@ -262,7 +262,7 @@
                       </h3>
                       <div>
                         <div
-                          v-for="item in accounts"
+                          v-for="item in locAccounts"
                           :key="item.index"
                           :class="[
                             selectedAddress ===
@@ -379,11 +379,12 @@ import {
   PRIV_KEY as privKeyType
 } from '@/wallets/bip44/walletTypes';
 import Blockie from '@/components/Blockie';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { MnemonicWallet } from '@/wallets';
 import { SELECTED_MEW_CX_ACC } from '@/builds/mewcx/cxHelpers/cxEvents.js';
 import createBlob from '@/helpers/createBlob.js';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 
 const TITLES = {
   0: {
@@ -471,13 +472,14 @@ export default {
       selectedPath: '',
       supportedPaths: [],
       showPaths: false,
-      accounts: [],
+      locAccounts: [],
       currentIndex: 0,
       downloadFile: ''
     };
   },
   computed: {
     ...mapState('main', ['network', 'web3', 'linkQuery']),
+    ...mapState('mewcx', ['accounts']),
     mnemonicInputGenerator() {
       return new Array(this.mnemonicValue);
     },
@@ -609,11 +611,12 @@ export default {
       this.selectedPath = '';
       this.supportedPaths = [];
       this.showPaths = false;
-      this.accounts = [];
+      this.locAccounts = [];
       this.currentIndex = 0;
     });
   },
   methods: {
+    ...mapActions('mewcx', ['addAccount']),
     sendAddressToRequest(address) {
       const chrome = window.chrome;
       const eventObj = {};
@@ -672,7 +675,7 @@ export default {
           this.selectedPath = '';
           this.supportedPaths = [];
           this.showPaths = false;
-          this.accounts = [];
+          this.locAccounts = [];
           this.currentIndex = 0;
           break;
         case BY_PRIV:
@@ -701,10 +704,10 @@ export default {
     updatePath(path) {
       if (this.selectedPath !== path) {
         this.currentIndex = 0;
-        this.accounts = [];
+        this.locAccounts = [];
       } else {
         this.currentIndex = 0;
-        this.accounts = [];
+        this.locAccounts = [];
       }
       this.selectedPath = path;
       this.wallet.init(path).then(() => {
@@ -716,7 +719,7 @@ export default {
     },
     async setAccount(idx) {
       const account = await this.wallet.getAccount(idx);
-      this.accounts.push({
+      this.locAccounts.push({
         index: idx,
         account: account
       });
@@ -827,13 +830,12 @@ export default {
         Object.keys(e.data.walletJson).forEach(key => {
           newJson[key.toLowerCase()] = e.data.walletJson[key];
         });
-        ExtensionHelpers.addWalletToStore(
+        this.addWalletToStore(
           `0x${e.data.walletJson.address}`,
           JSON.stringify(e.data.walletJson),
           this.walletName,
           'wallet',
-          'add',
-          _self.storeWalletCb
+          'add'
         );
         worker.terminate();
       };
@@ -842,6 +844,39 @@ export default {
         _self.loading = false;
         worker.terminate();
       };
+    },
+    addWalletToStore(address, encStr, nickname, type, addType) {
+      const checksummedAddr = toChecksumAddress(address);
+      const foundAddress = this.accounts.find(item => {
+        return toChecksumAddress(item.address) === toChecksumAddress(address);
+      });
+
+      const foundNickname = this.accounts.find(item => {
+        return item.nick === nickname;
+      });
+
+      if (addType === 'edit') {
+        if (foundNickname) {
+          Toast.responseHandler('mewcx.nickname-found', Toast.WARN);
+          return;
+        }
+      } else {
+        if (foundAddress) {
+          Toast.responseHandler('mewcx.address-already-stored', Toast.ERROR);
+          return;
+        }
+      }
+      nickname = Misc.stripTags(nickname.replace(/(<([^>]+)>)/gi, ''));
+      const value = {
+        address: checksummedAddr,
+        nick: nickname,
+        priv: encStr,
+        type: type
+      };
+
+      if (!encStr) delete value['priv'];
+
+      this.addAccount(value).then(this.storeWalletCb);
     },
     clickFunction() {
       const BY_JSON = 'byJson';
@@ -930,7 +965,6 @@ export default {
     generateWallet() {
       this.loading = true;
       this.generateOnly = true;
-      const _self = this;
       const worker = new walletWorker();
       worker.postMessage({ type: 'createWallet', data: [this.password] });
       worker.onmessage = e => {
@@ -938,13 +972,12 @@ export default {
         this.downloadFile = blob;
         this.file = e.data.walletJson;
         this.backupWallet();
-        ExtensionHelpers.addWalletToStore(
+        this.addWalletToStore(
           `0x${e.data.walletJson.address}`,
           JSON.stringify(e.data.walletJson),
           this.walletName,
           'wallet',
-          'add',
-          _self.storeWalletCb
+          'add'
         );
         worker.terminate();
       };
@@ -958,7 +991,7 @@ export default {
       this.loading = false;
       this.$eventHub.$emit(
         'showSuccessModal',
-        'Successfully added a wallet!',
+        this.$t('mewcx.success-wallet-add'),
         null
       );
       if (this.linkQuery.hasOwnProperty('connectionRequest')) {
