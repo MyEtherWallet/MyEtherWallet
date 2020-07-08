@@ -70,7 +70,7 @@
           :class="collectionLoading ? 'loading' : ''"
         >
           <nav
-            v-show="selectedNft.tokens.length > 9"
+            v-show="selectedNft.count > 9"
             aria-label="Page navigation example"
           >
             <ul class="pagination justify-content-center">
@@ -188,7 +188,7 @@ export default {
   data() {
     return {
       nftABI,
-      nftUrl: 'https://nft2.mewapi.io/',
+      nftUrl: 'https://localhost:3000/local/getImage',
       openSeaLambdaUrl: 'https://localhost:3000/local/',
       countPerPage: 9,
       currentPage: 1,
@@ -395,59 +395,45 @@ export default {
         })
       }).then(data => data.json());
       console.log(newData); // todo remove dev item
-      const data = await fetch(
-        `${this.nftUrl}tokens?owner=${this.activeAddress}&chain=mainnet`,
-        {
-          mode: 'cors',
-          cache: 'no-cache',
-          method: 'GET',
-          'Cache-Control': 'no-cache'
-        }
-      );
-      return await data.json();
+      // const data = await fetch(
+      //   `${this.nftUrl}tokens?owner=${this.activeAddress}&chain=mainnet`,
+      //   {
+      //     mode: 'cors',
+      //     cache: 'no-cache',
+      //     method: 'GET',
+      //     'Cache-Control': 'no-cache'
+      //   }
+      // );
+      return newData.result;
     },
 
     async setup() {
+      const nftData = {};
       if (this.network.type.name === 'ETH') {
-        const customNFTs = store.get('customNFTs');
-
-        if (customNFTs !== undefined && customNFTs !== null) {
-          this.customNFTs = customNFTs;
-        } else {
-          this.customNFTs = [{}];
-        }
         const configData = await this.getTokens();
+        console.log(configData); // todo remove dev item
         if (!configData.error) {
-          const tokenAddresses = Object.keys(configData);
-          tokenAddresses.forEach(address => {
-            configData[address] = { ...configData[address] };
-            const customInformation = this.customNFTs.find(
-              item => item.contract === address
-            );
-            if (configData[address]) {
-              configData[address].custom = false;
-              if (
-                configData[address].symbol === 'UNKNOWN' &&
-                customInformation
-              ) {
-                configData[address].name = customInformation.title;
-                configData[address].custom = true;
-              } else if (configData[address].symbol === 'UNKNOWN') {
-                configData[address].name = address;
-              }
-              configData[address].contract = address;
-              configData[address].tokens = configData[address].tokens.map(
-                item => {
-                  item.contract = address;
-                  return item;
-                }
-              );
-              configData[address].startIndex = 0;
-              configData[address].priorIndex = 0;
-              configData[address].currentIndex = 0;
+          // const tokenAddresses = Object.keys(configData);
+          configData.tokenContracts.forEach(data => {
+            nftData[data.contractIdAddress] = data;
+
+            if (nftData[data.contractIdAddress]) {
+
+              nftData[data.contractIdAddress].contract = data.contractIdAddress;
+              nftData[data.contractIdAddress].count = data.owned_asset_count;
+              // configData[address].tokens = configData[address].tokens.map(
+              //   item => {
+              //     item.contract = address;
+              //     return item;
+              //   }
+              // );
+              nftData[data.contractIdAddress].startIndex = 0;
+              nftData[data.contractIdAddress].priorIndex = 0;
+              nftData[data.contractIdAddress].currentIndex = 0;
             }
           });
-          this.nftConfig = { ...configData };
+
+          this.nftConfig = { ...nftData };
           this.selectedContract = Object.keys(this.nftConfig)[0];
         }
         this.reLoading = false;

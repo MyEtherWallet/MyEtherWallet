@@ -25,6 +25,7 @@
           lg="3"
           class="mb-4"
         >
+          <br/>
           <NftProductCard
             :data="v"
             :selected="v.contract === selected ? true : false"
@@ -47,11 +48,13 @@
           :key="v.key"
           @click.native="selectNft(v)"
         >
-          {{ v.name }} ({{ v.tokens.length }})
+          {{ v.name }} ({{ v.count }})
         </b-dropdown-item>
       </b-dropdown>
     </div>
+<!--    {{supportedNftObj}}-->
   </div>
+
 </template>
 
 <script>
@@ -93,10 +96,10 @@ export default {
   computed: {
     sortByCount() {
       return Object.values(this.supportedNftObj).sort((a, b) => {
-        if (a.tokens.length < b.tokens.length) {
+        if (a.count < b.count) {
           return 1;
         }
-        if (a.tokens.length > b.tokens.length) {
+        if (a.count > b.count) {
           return -1;
         }
         return 0;
@@ -123,9 +126,9 @@ export default {
       this.$emit('selected', this.selected);
     },
     selectNft(nft) {
-      this.currentProduct = nft.name + ' (' + nft.tokens.length + ')';
+      this.currentProduct = nft.name + ' (' + nft.count + ')';
       this.searchResults = [];
-      if (nft.tokens.length > 0) {
+      if (nft.count > 0) {
         this.selected = nft.contract;
         this.$emit('selected', nft.contract);
       }

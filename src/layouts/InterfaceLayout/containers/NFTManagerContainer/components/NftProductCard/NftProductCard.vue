@@ -2,7 +2,7 @@
   <b-card
     class="text-center"
     :class="[
-      data.tokens.length > 0 ? 'active' : 'inactive',
+      data.count > 0 ? 'active' : 'inactive',
       selected ? 'selected' : ''
     ]"
   >
@@ -11,7 +11,7 @@
       <!--      <img v-if="data.itemName" :src="getImgUrl(data.itemName)" />-->
       <!--      <img v-else :src="getImgUrl(data.title)" />-->
     </div>
-    <div class="count text-dark">{{ data.tokens.length }}</div>
+    <div class="count text-dark">{{ data.count }}</div>
     <p class="nft-name font-weight-bold text-dark">{{ data.name }}</p>
   </b-card>
 </template>
@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     getImgUrl(name) {
-      return `${this.nftCardUrl}tokenImage?token=${name}`;
+      return `${this.nftCardUrl}?contract=${name}&tokenId=cardImage`;
     }
   }
 };
