@@ -3,13 +3,27 @@
     <OverlayTabs>
       <v-tabs v-model="activeTab" color="transparent">
         <v-tab-item>
-          <OverlayTitle title="Mobile Apps" />
+          <OverlayTitle title="Confirmation" />
           <mew6-white-sheet>
             <div class="overlay-content pa-8">
-              aaaa
-              <mew6-std-btn min-width="100%" @click.native="activeTab = 1">
-                to 1
-              </mew6-std-btn>
+              <FromToBlock
+                from="0x300be4b1183dca9046349e9e01b1e0c08e362964"
+                to="0x02fb7f333fd493b39b79ba57b6d510c64eaa3dc0"
+                class="mb-2"
+              />
+
+              <BalanceBlock />
+
+              <mew6-expantion-block title="Details" class="my-8">
+                aaaaaa
+              </mew6-expantion-block>
+
+              <div class="d-flex justify-center">
+                <mew6-std-btn @click.native="activeTab = 1">
+                  Continue on your device
+                </mew6-std-btn>
+              </div>
+              <mew6-warning-not-recommended class="mt-8 mb-n4 ml-n4 mr-n4" />
             </div>
           </mew6-white-sheet>
         </v-tab-item>
@@ -31,12 +45,16 @@
 import BaseOverlay from '@/components/Overlays/BaseOverlay';
 import OverlayTitle from '@/components/OverlayTitle';
 import OverlayTabs from '@/components/OverlayTabs';
+import FromToBlock from '@/components/FromToBlock';
+import BalanceBlock from '@/components/BalanceBlock';
 
 export default {
   components: {
     BaseOverlay,
     OverlayTitle,
-    OverlayTabs
+    OverlayTabs,
+    FromToBlock,
+    BalanceBlock
   },
   props: {
     open: { default: false, type: Boolean },
@@ -57,6 +75,6 @@ export default {
 
 <style lang="scss" scoped>
 .overlay-content {
-  width: 500px;
+  width: 600px;
 }
 </style>
