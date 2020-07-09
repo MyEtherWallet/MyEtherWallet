@@ -15,7 +15,28 @@
               <BalanceBlock />
 
               <mew6-expantion-block title="Details" class="my-8">
-                aaaaaa
+                <div class="px-3">
+                  <div class="d-flex justify-space-between mb-2">
+                    <div>Network</div>
+                    <div>ETH by myetherwallet.com</div>
+                  </div>
+                  <div class="d-flex justify-space-between mb-2">
+                    <div>Gas Price</div>
+                    <div>40 <span class="emerald--text">GWEI</span></div>
+                  </div>
+                  <div class="d-flex justify-space-between mb-2">
+                    <div>Gas Limit</div>
+                    <div>21000 <span class="emerald--text">WEI</span></div>
+                  </div>
+                  <div class="d-flex justify-space-between mb-2">
+                    <div>Nonce</div>
+                    <div>17</div>
+                  </div>
+                  <div class="d-flex justify-space-between">
+                    <div>Data</div>
+                    <div>0x</div>
+                  </div>
+                </div>
               </mew6-expantion-block>
 
               <div class="d-flex justify-center">
