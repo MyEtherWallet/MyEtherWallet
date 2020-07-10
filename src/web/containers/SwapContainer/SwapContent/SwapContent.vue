@@ -7,7 +7,7 @@
           <mew-input label="Amount" placeholder=" " />
         </div>
         <div class="px-6 mb-8 d-flex align-center">
-          <img :src="swap" height="40" />
+          <img :src="swap" height="35" />
         </div>
         <div>
           <mew-select :items="coins" label="To" />
@@ -81,10 +81,15 @@
           </v-col>
         </v-row>
       </div>
-      <div class="mt-5">
+      <mew6-expantion-block
+        title="Transaction Fee"
+        right-text="$0.077"
+        help-text="Transaction fee is automatically caculated. If you want to customize the Transaction fee, you can do it from here."
+        class="mt-3 mb-12"
+      >
         <mew-input label="Gas Price" placeholder=" " right-label="Gwei" />
         <mew-input label="Gas Limit" placeholder=" " right-label="Wei" />
-      </div>
+      </mew6-expantion-block>
       <div class="text-center">
         <mew-button title="Swap" :has-full-width="false" button-size="xlarge" />
       </div>
