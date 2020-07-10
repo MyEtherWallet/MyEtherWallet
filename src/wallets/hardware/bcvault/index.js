@@ -43,7 +43,7 @@ class BCVault {
           }
 
           _self.bcWallet
-            .EnterGlobaalPin(res[0], _self.bcWalletType)
+            .EnterGlobalPin(res[0], _self.bcWalletType)
             .then(() => {
               _self.bcWallet
                 .getBatchWalletDetails(res[0], [_self.bcWalletType])
