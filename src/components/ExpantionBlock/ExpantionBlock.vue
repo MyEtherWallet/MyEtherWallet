@@ -5,7 +5,10 @@
       <v-expansion-panel>
         <v-expansion-panel-header class="pl-2 pr-0 py-0">
           <div class="d-flex align-center justify-space-between pr-4">
-            <div class="font-weight-bold subtitle-1">{{ title }}</div>
+            <div class="d-flex align-center">
+              <div class="font-weight-bold subtitle-1 mr-2">{{ title }}</div>
+              <info-tooltip v-if="helpText" :text="helpText" />
+            </div>
             <div>{{ rightText }}</div>
           </div>
           <template v-slot:actions>
@@ -31,7 +34,8 @@ export default {
   },
   props: {
     title: { default: '', type: String },
-    rightText: { default: '', type: String }
+    rightText: { default: '', type: String },
+    helpText: { default: '', type: String }
   },
   data() {
     return { isOpen: undefined, switch1: false };
