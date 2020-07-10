@@ -29,25 +29,52 @@ class BCVault {
   }
 
   async init() {
-    // fetch devices
-    this.deviceNumber = await this.bcWallet.getDevices().catch(errorHandler);
-    if (!this.deviceNumber) {
-      errorHandler({
-        jsError: 'mew3'
-      });
-      return;
-    }
-    // get wallet of first device and password
-    // not sure if we want the users to pass this as a parameter or ask user
-    // for which wallet to use
-    await this.bcWallet
-      .EnterGlobalPin(this.deviceNumber[0], this.bcWalletType)
-      .catch(errorHandler);
-    const walletAddresses = await this.bcWallet
-      .getBatchWalletDetails(this.deviceNumber[0], [bc.WalletType.ethereum])
-      .catch(errorHandler);
+    const _self = this;
+    return new Promise((resolve, reject) => {
+      _self.bcWallet
+        .getDevices()
+        .then(res => {
+          if (!res) {
+            reject(
+              new Error({
+                jsError: 'mew3'
+              })
+            );
+          }
 
-    return walletAddresses;
+          _self.bcWallet
+            .EnterGlobaalPin(res[0], _self.bcWalletType)
+            .then(() => {
+              _self.bcWallet
+                .getBatchWalletDetails(res[0], [_self.bcWalletType])
+                .then(res => {
+                  resolve(res);
+                })
+                .catch(reject);
+            })
+            .catch(reject);
+        })
+        .catch(reject);
+    });
+    // // fetch devices
+    // this.deviceNumber = await this.bcWallet.getDevices().catch(errorHandler);
+    // if (!this.deviceNumber) {
+    //   errorHandler({
+    //     jsError: 'mew3'
+    //   });
+    //   return;
+    // }
+    // // get wallet of first device and password
+    // // not sure if we want the users to pass this as a parameter or ask user
+    // // for which wallet to use
+    // await this.bcWallet
+    //   .EnterGlobalPin(this.deviceNumber[0], this.bcWalletType)
+    //   .catch(errorHandler);
+    // const walletAddresses = await this.bcWallet
+    //   .getBatchWalletDetails(this.deviceNumber[0], [bc.WalletType.ethereum])
+    //   .catch(errorHandler);
+
+    // return walletAddresses;
   }
 
   getAccount(address) {
