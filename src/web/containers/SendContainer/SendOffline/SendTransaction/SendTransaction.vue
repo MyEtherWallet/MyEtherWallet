@@ -48,7 +48,14 @@
 
       <div class="text-center mt-12">
         <mew-button title="Send" :has-full-width="false" button-size="xlarge" />
-        <div class="mt-6 emerald--text">Clean all</div>
+      </div>
+      <div class="text-center mt-2">
+        <mew-button
+          title="Clear all"
+          :has-full-width="false"
+          button-size="xlarge"
+          btn-style="transparent"
+        />
       </div>
     </InterfaceWrap>
   </mew6-white-sheet>
