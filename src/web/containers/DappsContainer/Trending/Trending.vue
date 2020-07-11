@@ -2,14 +2,14 @@
   <div id="id-fd64f5f38819c16ce3dd44f51dd7d0ef">
     <mew6-white-sheet>
       <InterfaceWrap title="Trending">
-        <div class="d-flex align-center justify-space-between">
+        <div class="d-flex align-center justify-space-between mb-6">
           <Breadcrumbs :items="breadcrumbs" />
           <div class="emerald--text">
             Filter out
             <span class="font-weight-bold text_default--text">21</span> DApps
           </div>
         </div>
-        <div class="d-flex mt-6">
+        <div class="d-flex">
           <div class="mr-10">
             <v-text-field
               placeholder="Search for Dapp name"
@@ -197,9 +197,6 @@ export default {
   }
   .v-text-field.v-text-field--enclosed .v-text-field__details {
     margin-bottom: 0;
-  }
-  .v-breadcrumbs__item--disabled {
-    color: var(--v-text_default-base);
   }
   .v-input--selection-controls {
     padding: 5px 0;
