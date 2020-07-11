@@ -39,7 +39,8 @@ import Swap from '@/web/containers/SwapContainer';
 
 import Dapps from '@/web/containers/DappsContainer';
 import DappsCenter from '@/web/containers/DappsContainer/DappsCenter';
-import DappsTrending from '@/web/containers/DappsContainer/DappsTrending';
+import Trending from '@/web/containers/DappsContainer/Trending';
+import NewDapps from '@/web/containers/DappsContainer/NewDapps';
 import ENSManager from '@/web/containers/DappsContainer/ENSManager';
 import MakerDAO from '@/web/containers/DappsContainer/MakerDAO';
 import Aave from '@/web/containers/DappsContainer/Aave';
@@ -289,9 +290,17 @@ const webRoutes = [
             }
           },
           {
-            path: 'dapps-trending',
-            name: 'DappsTrending',
-            component: DappsTrending,
+            path: 'trending',
+            name: 'Trending',
+            component: Trending,
+            meta: {
+              requiresAuth: false
+            }
+          },
+          {
+            path: 'new-dapps',
+            name: 'NewDapps',
+            component: NewDapps,
             meta: {
               requiresAuth: false
             }

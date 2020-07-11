@@ -30,6 +30,9 @@ export default {
   .v-breadcrumbs__divider {
     padding: 0 5px;
   }
+  .v-breadcrumbs__item--disabled {
+    color: var(--v-text_default-base);
+  }
 }
 </style>
 
