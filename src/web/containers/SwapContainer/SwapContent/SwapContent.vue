@@ -110,6 +110,8 @@ export default {
   components: { InterfaceWrap },
   data() {
     return {
+      check1: false,
+      check2: false,
       swap: SwapIcon,
       kyber: KyberNetwork,
       changelly: Changelly,
@@ -141,7 +143,6 @@ export default {
   },
   methods: {
     getSelectedValue(value) {
-      //console.log('selected value:', value);
       this.addressValue = value;
     }
   }

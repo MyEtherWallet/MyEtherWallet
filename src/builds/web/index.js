@@ -39,6 +39,7 @@ import Swap from '@/web/containers/SwapContainer';
 
 import Dapps from '@/web/containers/DappsContainer';
 import DappsCenter from '@/web/containers/DappsContainer/DappsCenter';
+import DappsTrending from '@/web/containers/DappsContainer/DappsTrending';
 import ENSManager from '@/web/containers/DappsContainer/ENSManager';
 import MakerDAO from '@/web/containers/DappsContainer/MakerDAO';
 import Aave from '@/web/containers/DappsContainer/Aave';
@@ -283,6 +284,14 @@ const webRoutes = [
             path: 'dapps-center',
             name: 'DappsCenter',
             component: DappsCenter,
+            meta: {
+              requiresAuth: false
+            }
+          },
+          {
+            path: 'dapps-trending',
+            name: 'DappsTrending',
+            component: DappsTrending,
             meta: {
               requiresAuth: false
             }
