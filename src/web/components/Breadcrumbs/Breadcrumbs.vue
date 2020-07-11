@@ -1,5 +1,8 @@
 <template>
-  <div id="id-1ce09f2641edde7fee0d8ec392015a45" class="d-flex align-center">
+  <div
+    id="id-1ce09f2641edde7fee0d8ec392015a45"
+    class="d-flex align-center pb-7"
+  >
     <v-icon class="icon-home mr-2" color="emerald lighten-1"
       >mdi-home-outline</v-icon
     >
