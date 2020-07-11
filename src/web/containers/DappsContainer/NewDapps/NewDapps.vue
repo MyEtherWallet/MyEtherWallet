@@ -2,12 +2,8 @@
   <div>
     <mew6-white-sheet>
       <InterfaceWrap title="Explore New Dapps">
-        <div class="d-flex align-center justify-space-between mb-6">
+        <div class="d-flex justify-space-between">
           <Breadcrumbs :items="breadcrumbs" />
-          <div class="emerald--text">
-            Filter out
-            <span class="font-weight-bold text_default--text">21</span> DApps
-          </div>
         </div>
         <div>
           <mew6-flexible-btn

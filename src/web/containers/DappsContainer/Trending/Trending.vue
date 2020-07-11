@@ -2,7 +2,7 @@
   <div id="id-fd64f5f38819c16ce3dd44f51dd7d0ef">
     <mew6-white-sheet>
       <InterfaceWrap title="Trending">
-        <div class="d-flex align-center justify-space-between mb-6">
+        <div class="d-flex justify-space-between">
           <Breadcrumbs :items="breadcrumbs" />
           <div class="emerald--text">
             Filter out
