@@ -1,5 +1,6 @@
 <template>
   <mew6-white-sheet>
+    <mew-banner :text-obj="title" />
     <div class="pa-8">
       <div class="mew-heading-1 px-4">MEW Dapps</div>
       <v-row>
@@ -43,6 +44,9 @@ export default {
   components: {},
   data() {
     return {
+      title: {
+        title: 'Explore MEW Dapps'
+      },
       dapps: {
         MakerDAO: {
           title: 'MakerDAO',
