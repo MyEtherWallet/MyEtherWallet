@@ -11,7 +11,8 @@ const state = {
     accessWalletXWallet: { isOpen: false },
     accessWalletBrowserExtensions: { isOpen: false },
     accessWalletMobileApps: { isOpen: false },
-    transactionTxConfirmation: { isOpen: false }
+    transactionTxConfirmation: { isOpen: false },
+    SignMessageConfirmation: { isOpen: false }
   }
 };
 
