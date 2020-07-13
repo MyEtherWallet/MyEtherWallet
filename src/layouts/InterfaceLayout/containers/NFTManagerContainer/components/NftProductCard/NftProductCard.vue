@@ -6,8 +6,13 @@
       selected ? 'selected' : ''
     ]"
   >
-    <div class="card-image mb-2">
-      <img :src="getImgUrl(data.contract)" />
+    <div v-if="!imgError" class="card-image mb-2">
+      <img :src="getImgUrl(data.contract)" @error="imageError"/>
+      <!--      <img v-if="data.itemName" :src="getImgUrl(data.itemName)" />-->
+      <!--      <img v-else :src="getImgUrl(data.title)" />-->
+    </div>
+    <div v-if="imgError" class="card-image mb-2">
+      <img :src="placeholderImage" @error="imageError"/>
       <!--      <img v-if="data.itemName" :src="getImgUrl(data.itemName)" />-->
       <!--      <img v-else :src="getImgUrl(data.title)" />-->
     </div>
@@ -17,6 +22,7 @@
 </template>
 
 <script>
+import placeholderImage from '@/assets/images/icons/defaultToken.png';
 export default {
   components: {},
   props: {
@@ -36,12 +42,19 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      imgError: false,
+      placeholderImage
+    };
   },
   methods: {
     getImgUrl(name) {
       return `${this.nftCardUrl}?contract=${name}&tokenId=cardImage`;
-    }
+    },
+    imageError(error){
+      console.log(error); // todo remove dev item
+      this.imgError = true;
+      }
   }
 };
 </script>
