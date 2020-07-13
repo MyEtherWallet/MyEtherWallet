@@ -1,4 +1,3 @@
-import Maker from '@makerdao/dai';
 import {
   calcLiquidationPrice,
   calcCollatRatio,
@@ -8,19 +7,18 @@ import {
   toBigNumber,
   bnOver
 } from '../makerHelpers';
-import { MDAI } from '@makerdao/dai-plugin-mcd';
+import { DAI } from '@makerdao/dai-plugin-mcd';
 import ethUnit from 'ethjs-unit';
 import MakerCdpBase from './MakerCdpBase';
 import { getUrns } from './chainCalls';
 import * as daiMath from './daiMath';
 import BigNumber from 'bignumber.js';
-const { DAI } = Maker;
 
 export default class MakerCDP extends MakerCdpBase {
   constructor(cdpId, web3, services, sysVars) {
     super(cdpId, web3, services, sysVars);
-    this.minDai = 20.5;
-    this.DAI_NAME = 'MDAI';
+    this.minDai = 20.0;
+    this.DAI_NAME = 'DAI';
   }
 
   // Getters
@@ -281,7 +279,7 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   minDepositFor(symbol) {
-    return this.minDeposit(this.minDai, this.getCurrentPriceFor(symbol));
+    return this.minDeposit(this.minDai * 1.04, this.getCurrentPriceFor(symbol));
   }
 
   minInSelectedCurrency(symbol) {
@@ -326,7 +324,7 @@ export default class MakerCDP extends MakerCdpBase {
     const newCdp = await this.mcdManager.openLockAndDraw(
       type.ilk,
       getMakerCurrencies()[type.currency.symbol](ethQty),
-      MDAI(daiQty)
+      DAI(daiQty)
     );
     return newCdp.id;
   }
@@ -363,7 +361,7 @@ export default class MakerCDP extends MakerCdpBase {
           return;
         }
         this.needsUpdate = true;
-        await this.cdp.drawDai(MDAI(amount));
+        await this.cdp.drawDai(DAI(amount));
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);

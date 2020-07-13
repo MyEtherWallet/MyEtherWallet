@@ -20,10 +20,7 @@ const AddrResolver = {
     let address = '';
     const resolution = new Resolution({
       blockchain: {
-        ens: {
-          url: ethMew.url,
-          network: 'mainnet'
-        },
+        ens: false,
         cns: {
           url: ethMew.url,
           network: 'mainnet'
@@ -238,14 +235,14 @@ const AddrResolver = {
       const _this = vnode.context;
       if (
         domain.indexOf('.') > 0 &&
-        /^[^-]*[^-]*\.(zil|crypto)$/.test(domain)
+        // eslint-disable-next-line
+        /^[a-zA-Z\-\.0-9]*\.(zil|crypto)$/.test(domain)
       ) {
-        const maincur =
-          parentCurrency === network.type.name || EthereumTokens[parentCurrency]
-            ? network.type.name
-            : parentCurrency;
         try {
-          const address = await resolution.addressOrThrow(domain, maincur);
+          const address = await resolution.addressOrThrow(
+            domain,
+            parentCurrency
+          );
           if (!checkDarklist(address)) {
             _this.isValidAddress = true;
             _this.hexAddress =

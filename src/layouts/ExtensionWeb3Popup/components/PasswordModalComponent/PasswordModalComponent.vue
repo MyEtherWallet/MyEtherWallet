@@ -15,7 +15,6 @@
         <form class="password-form">
           <div class="input-container">
             <input
-              ref="mnemonicPasswordInput"
               v-model="password"
               :type="show ? 'text' : 'password'"
               name="Password"

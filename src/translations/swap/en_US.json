@@ -35,15 +35,20 @@
     "kyber-list-update-failed": "Failed to update Kyber Network default information",
     "dexag-cannot-complete": "Error retrieving trade, try a different dex",
     "gas-too-high": "Gas price is too high. Please lower your gas price and try again.",
-    "error-generating-swap": "An error occurred while finalizing the swap details"
+    "error-generating-swap": "An error occurred while finalizing the swap details",
+    "not-enough-eth-gas": "Insufficient balance for Amount + Transaction Fee.",
+    "not-enough-tx-fee": "Insufficient balance for Transaction Fee.",
+    "liquidity-too-low": "The amount requested is greater than the amount available at this time"
   },
   "notice": {
     "retrieve-changelly-rate-failed": "Failed to retrieve Changelly rate from {fromCurrency} to {toCurrency}",
     "retrieve-bity-rate-failed": "Failed to retrieve Bity rate from {fromCurrency} to {toCurrency}",
     "retrieve-kyber-rate-failed": "Failed to retrieve Kyber Network rate from {fromCurrency} to {toCurrency}",
+    "retrieve-rate-failed": "Failed to retrieve a provider rate from {fromCurrency} to {toCurrency}",
     "retrieve-simplex-rate-failed": "Failed to retrieve Simplex rate from {fromCurrency} to {toCurrency}",
     "error-finalizing": "Error while requesting finalized details from provider",
-    "bity-rate-failed": "Failed to retrieve Bity rates"
+    "bity-rate-failed": "Failed to retrieve Bity rates",
+    "selected-provider-cleared": "Selected provider cleared"
   },
   "tag-line": {
     "bity": "Swap ETH, BTC, REP, or sell for fiat using your phone!",

@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { v4 as uuid } from 'uuid';
+import { Toast } from '@/helpers';
 
 import {
   INVESTIGATE_FAILURE_KEY,
@@ -57,34 +58,52 @@ const updateStatusBasedOnReciept = status => {
 };
 
 const formatTransactionHash = (val, network) => {
-  return {
-    id: uuid(),
-    title: 'Transaction',
-    read: false,
-    timestamp: Date.now(),
-    type: notificationType.TRANSACTION,
-    status: val[txIndexes.response]
-      ? notificationStatuses.PENDING
-      : notificationStatuses.FAILED,
-    hash: val[txIndexes.response].hasOwnProperty('transactionHash')
-      ? val[txIndexes.response].transactionHash
-      : val[txIndexes.response],
-    network: network,
-    body: {
-      error: false,
-      errorMessage: '',
-      hash: val[txIndexes.response],
-      to: val[txIndexes.txDetails].to,
-      amount: new BigNumber(val[txIndexes.txDetails].value).toString(),
-      nonce: new BigNumber(val[txIndexes.txDetails].nonce).toString(),
-      gasPrice: new BigNumber(val[txIndexes.txDetails].gasPrice).toString(),
-      gasLimit: new BigNumber(val[txIndexes.txDetails].gas).toString(),
-      tokenTransferTo: val[txIndexes.txDetails].tokenTransferTo,
-      tokenTransferVal: val[txIndexes.txDetails].tokenTransferVal,
-      tokenSymbol: val[txIndexes.txDetails].tokenSymbol
-    },
-    expanded: false
-  };
+  try {
+    return {
+      id: uuid(),
+      title: 'Transaction',
+      read: false,
+      timestamp: Date.now(),
+      type: notificationType.TRANSACTION,
+      status: val[txIndexes.response]
+        ? notificationStatuses.PENDING
+        : notificationStatuses.FAILED,
+      hash: val[txIndexes.response].hasOwnProperty('transactionHash')
+        ? val[txIndexes.response].transactionHash
+        : val[txIndexes.response],
+      network: network,
+      body: {
+        error: false,
+        errorMessage: '',
+        hash: val[txIndexes.response],
+        to: val[txIndexes.txDetails] ? val[txIndexes.txDetails].to : '',
+        amount: val[txIndexes.txDetails]
+          ? new BigNumber(val[txIndexes.txDetails].value).toString()
+          : '0',
+        nonce: val[txIndexes.txDetails]
+          ? new BigNumber(val[txIndexes.txDetails].nonce).toString()
+          : '0',
+        gasPrice: val[txIndexes.txDetails]
+          ? new BigNumber(val[txIndexes.txDetails].gasPrice).toString()
+          : '0',
+        gasLimit: val[txIndexes.txDetails]
+          ? new BigNumber(val[txIndexes.txDetails].gas).toString()
+          : '0',
+        tokenTransferTo: val[txIndexes.txDetails]
+          ? val[txIndexes.txDetails].tokenTransferTo
+          : '',
+        tokenTransferVal: val[txIndexes.txDetails]
+          ? val[txIndexes.txDetails].tokenTransferVal
+          : '0',
+        tokenSymbol: val[txIndexes.txDetails]
+          ? val[txIndexes.txDetails].tokenSymbol
+          : ''
+      },
+      expanded: false
+    };
+  } catch (e) {
+    Toast.responseHandler('error-parsing-tx-details', 3);
+  }
 };
 
 const formatTransactionReciept = (entry, val) => {

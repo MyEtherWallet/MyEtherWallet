@@ -117,6 +117,14 @@ const handleOrThrow = (e, source) => {
       return;
     }
     throw e;
+  } else if (e.message) {
+    if (
+      e.message.includes('This order can not be placed') &&
+      e.message.includes('bity.com')
+    ) {
+      Toast.responseHandler(e.message, 3);
+      return;
+    }
   }
   throw e;
 };

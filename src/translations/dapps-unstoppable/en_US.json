@@ -1,7 +1,9 @@
 {
   "title": "Unstoppable Domains",
+  "title-manage": "Unstoppable Manage",
   "about-unstoppable": "Replace cryptocurrency addresses with a human readable name.",
-  "dapp-desc": "Buy a .crypto domain",
+  "dapp-desc": "Buy a .crypto domain or manage your .crypto domains",
+  "dapp-manage-desc": "Manage your .crypto domains",
   "search-domain-prompt": "Find your blockchain domain",
   "stripe-email-prompt": "Email",
   "stripe-card-prompt": "Card Details",
@@ -17,11 +19,17 @@
   "confirm-payment": "You are about to pay ${amount} for {domain}",
   "error": {
     "stripe-payment": "Payment failed. Please try again later",
-    "something-went-wrong": "Something went wrong! Please try again."
+    "something-went-wrong": "Something went wrong! Please try again.",
+    "no-resolver-set": "No resolver address set",
+    "upload-error": "Error on upload!",
+    "empty-invalid-ipfs": "Empty or Invalid IPFS Hash!"
   },
   "warning": {
     "not-enough-char": "Domain name is less than 6 characters.",
-    "invalid-symbol": "Invalid symbols on domain. Please use alphanumerical or '-' characters"
+    "invalid-symbol": "Invalid symbols on domain. Please use alphanumerical or '-' characters",
+    "too-small": "File is too small! Size has to be more than 500kb.",
+    "too-big": "File is too big! Size has to be less than 50mb.",
+    "upload-zip": "Please upload a zip file!"
   },
   "toast": {
     "success-register": "Successfully Registered!",
@@ -33,6 +41,17 @@
     "six-char": "Please enter at least 6 characters",
     "stripe-email-placeholder": "Your email"
   },
+  "ipfs": {
+    "processing": "Processing File...",
+    "processing-description": "Please wait for a transaction popup before you leave to make sure your request is processed. After this, you don't have to save your new hash as it has already been saved..",
+    "see-website": "To see your site, please visit {domainName} on Unstoppable Chrome Extension or Unstoppable's Browser. You can also open the link on Opera browser!",
+    "hash": "IPFS Hash",
+    "upload": "Upload my website",
+    "error-fetching-hash": "Error getting ipfs hash!",
+    "set-hash": "Set IPFS Hash"
+  },
+  "register-domain": "Register Domain",
+  "manage-domain": "Manage Domain",
   "view-transfer-transaction": "You can view the transfer transaction on",
   "continue": "Continue",
   "congratulations": "Congratulations!",
@@ -53,6 +72,12 @@
   "result": "Result",
   "unavailable": "Unavailable",
   "buy": "Buy",
+  "more-currencies": "More currencies",
+  "save-changes": "Save Changes",
+  "your-address": "Your address",
   "your-balance": "Your balance",
+  "no-crypto-domains-one": "Looks like you don't own any .crypto domains yet! Get your .crypto domain",
+  "no-crypto-domains-two": "here",
+  "your-crypto-domains": "Your .crypto domains",
   "address": "Address"
 }

@@ -7,7 +7,8 @@ import {
   TIME_SWAP_VALID,
   PROVIDER_NAME,
   PROXY_CONTRACT_ADDRESS,
-  SUPPORTED_DEXES
+  SUPPORTED_DEXES,
+  MARKET_IMPACT_CUTOFF
 } from './config';
 import dexAgCalls from './dexAg-calls';
 import { Toast } from '@/helpers';
@@ -375,7 +376,20 @@ export default class DexAg {
       : 'ag';
 
     const tradeDetails = await this.createTransaction(swapDetails, dexToUse);
-    if (tradeDetails.error) {
+
+    const marketImpact = tradeDetails.metadata.marketImpact
+      ? tradeDetails.metadata.marketImpact
+      : 0;
+
+    if (new BigNumber(marketImpact).gte(MARKET_IMPACT_CUTOFF)) {
+      swapDetails.dataForInitialization = [];
+      swapDetails.marketImpact = true;
+      return swapDetails;
+    }
+
+    if (!tradeDetails) {
+      throw Error('abort');
+    } else if (tradeDetails.error) {
       Toast.responseHandler(tradeDetails.error, 1);
       throw Error('abort');
     }

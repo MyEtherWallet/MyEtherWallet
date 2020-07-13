@@ -1,0 +1,253 @@
+@import '../ManageUnstoppable/ManageUnstoppable.scss';
+
+.initial-state-unstoppable {
+  @extend %template-container;
+
+  padding: 20px;
+}
+
+.content-container {
+  .title-container {
+    align-items: flex-end;
+    display: flex;
+    margin-bottom: 10px;
+
+    .title {
+      padding: 0 15px;
+
+      span {
+        color: $dark-blue-6;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+    }
+
+    p {
+      max-width: 760px;
+    }
+
+    .buttons {
+      margin-bottom: 3px;
+      margin-left: auto;
+    }
+  }
+
+  .content {
+    align-items: center;
+    padding: 10px;
+    @media all and (max-width: 600px) {
+      flex-direction: column;
+      height: 100%;
+    }
+  }
+  .domain-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background: $light-green-1;
+
+    .button {
+      background-color: $button--background-color-1;
+      border: 1px solid $button--border-color-1;
+      border-radius: 6px;
+      color: $button--text-color-1;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      user-select: none;
+      display: inline-block;
+      text-align: center;
+      padding: 10px 25px;
+    }
+  }
+}
+.no-domains {
+  padding: 15px;
+}
+
+.loading-container {
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dropdown-container {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  width: fit-content;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dropdown-open-button {
+  user-select: none;
+
+  i {
+    font-size: 9px;
+    padding: 10px 10px;
+    color: #3766aa;
+  }
+}
+
+.dropdown-list-box {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  width: 22%;
+  position: absolute;
+  user-select: none;
+  background-color: $background-color-1;
+  border: 1px solid $grey-1;
+  border-radius: 0 0 4px 4px;
+  z-index: 10;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 230px;
+  margin-top: 133px;
+  ul {
+    li {
+      cursor: pointer;
+      padding: 10px 15px;
+      position: relative;
+      display: grid;
+      grid-template-columns: 40px 1fr 70px 25px;
+      align-items: center;
+
+      &:nth-child(odd) {
+        background-color: $white;
+      }
+
+      &:hover {
+        background-color: $light-grey-3;
+      }
+    }
+  }
+}
+
+.dropdown-title {
+  margin-right: 10px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  input {
+    background-color: $light-grey-17;
+    border: none;
+    height: 100%;
+    margin-right: 20px;
+    padding: 13px 15px;
+    width: 100%;
+
+    @media all and (max-width: 600px) {
+      margin-right: 0;
+    }
+  }
+}
+
+.info-title {
+  color: $dark-blue-12;
+  width: 25%;
+}
+
+.info-txt {
+  color: $dark-blue-12;
+  text-align: right;
+  width: 100%;
+}
+
+.save-button-container {
+  display: flex;
+  justify-content: center;
+  button {
+    background-color: $button--background-color-1;
+    border: 1px solid $button--border-color-1;
+    border-radius: 6px;
+    color: $button--text-color-1;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    user-select: none;
+    display: inline-block;
+    text-align: center;
+    padding: 10px 25px;
+  }
+  .disabled {
+    background-color: $disabled;
+  }
+}
+
+.ipfs-container {
+  border-top: 1px solid $black;
+  margin-top: 20px;
+  padding: 20px 10px 10px;
+
+  .label-container {
+    display: flex;
+    color: $dark-blue-12;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 15px;
+    position: relative;
+  }
+
+  input {
+    background-color: $light-grey-1;
+    border: 0;
+    border-radius: 4px;
+    padding: 13px 15px;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .file-upload-container {
+    position: absolute;
+    top: -100000px;
+  }
+
+  .upload-zip {
+    color: $mew-green;
+    cursor: pointer;
+  }
+
+  .save-ipfs-hash {
+    text-align: center;
+    button {
+      background-color: $mew-green;
+      border: 1px solid $mew-green;
+      border: 0;
+      border-radius: 4px;
+      color: $white;
+      cursor: pointer;
+      margin: 30px 0 0 10px;
+      padding: 13px 15px;
+      width: 150px;
+    }
+
+    .disabled {
+      background-color: $dark-grey-11 !important;
+      border: 1px solid $dark-grey-11 !important;
+      color: $white !important;
+      pointer-events: none;
+    }
+  }
+}
+
+.ipfs-loading-container {
+  padding: 40px 30px;
+  height: 200px;
+  text-align: center;
+  color: $dark-blue-12;
+
+  i {
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+}
+
+.text-error {
+  color: $red-1;
+}

@@ -2,8 +2,100 @@
 
 - Use Batch EstimateGas [#2417](https://github.com/MyEtherWallet/MyEtherWallet/pull/2417)
 
+### Release v5.7.1
+
 ### Bug
 
+- Fix logos for tokens with src not from masterfile [#2500](https://github.com/MyEtherWallet/MyEtherWallet/pull/2500)
+- Sentry fixes y [#2479](https://github.com/MyEtherWallet/MyEtherWallet/pull/2479)
+- Sentry fixes j [#2474](https://github.com/MyEtherWallet/MyEtherWallet/pull/2474)
+- Whitelist prkl correctly [#2502](https://github.com/MyEtherWallet/MyEtherWallet/pull/2502)
+- Cx tokens not showing [#2492](https://github.com/MyEtherWallet/MyEtherWallet/pull/2492)
+- Revert walletconnect library [#2503](https://github.com/MyEtherWallet/MyEtherWallet/pull/2503)
+
+### Release v5.7.0
+
+### Bug
+
+- Remove sai [#2462](https://github.com/MyEtherWallet/MyEtherWallet/pull/2462)
+- Remove normalize on string check [#2463](https://github.com/MyEtherWallet/MyEtherWallet/pull/2463)
+- Update Aave withdraw and healthfactor [#2460](https://github.com/MyEtherWallet/MyEtherWallet/pull/2460)
+
+### Devop
+
+- Merge node changes #2470, #2469, #2468, and #2467 [#2481](https://github.com/MyEtherWallet/MyEtherWallet/pull/2481)
+- Update Maker Libraries for Maker Dai Dapp [#2437](https://github.com/MyEtherWallet/MyEtherWallet/pull/2437)
+- add check for market impact when finalizing swap details [#2484](https://github.com/MyEtherWallet/MyEtherWallet/pull/2484)
+
+### Feature
+
+- Update MEW Wallet modal [#2483](https://github.com/MyEtherWallet/MyEtherWallet/pull/2483)
+
+### Release v5.6.6-hotfix.2
+
+### Hotfix
+
+- Revert mewconnect library [#2472](https://github.com/MyEtherWallet/MyEtherWallet/pull/2472)
+
+### Bug
+
+- check gas if only one side of the swap is on ethereum [#2473](https://github.com/MyEtherWallet/MyEtherWallet/pull/2473)
+
+### Release v5.6.6-hotfix.1
+
+### Devop
+
+- Update aave protocol lib to 1.0.0 [#2452](https://github.com/MyEtherWallet/MyEtherWallet/pull/2452)
+- Add EWT and FUSE support [#2438](https://github.com/MyEtherWallet/MyEtherWallet/pull/2438)
+- dont overrwrite master file on error [#2443](https://github.com/MyEtherWallet/MyEtherWallet/pull/2443)
+
+### Feature
+
+- Add gas price warning to send offline helper [#2449](https://github.com/MyEtherWallet/MyEtherWallet/pull/2449)
+- support unstoppable domains with dashes [#2456](https://github.com/MyEtherWallet/MyEtherWallet/pull/2456)
+
+### Release v5.6.6
+
+### Feature
+
+- Ipfs implementation for ENS manager [#2412](https://github.com/MyEtherWallet/MyEtherWallet/pull/2412)
+
+### Bug
+
+- Remove view wallet layout [#2454](https://github.com/MyEtherWallet/MyEtherWallet/pull/2454)
+- Remove private keys when irrelevant on print wallets [#2453](https://github.com/MyEtherWallet/MyEtherWallet/pull/2453)
+
+### Devop
+
+- Replace icons and font color on side menu [#2455](https://github.com/MyEtherWallet/MyEtherWallet/pull/2455)
+
+### Release v5.6.5
+
+### Bug
+
+- cx guard [#2422](https://github.com/MyEtherWallet/MyEtherWallet/pull/2422)
+- Fix text mixup [#2420](https://github.com/MyEtherWallet/MyEtherWallet/pull/2420)
+- Fix email validation [#2421](https://github.com/MyEtherWallet/MyEtherWallet/pull/2421)
+- Fix some cx bugs [#2429](https://github.com/MyEtherWallet/MyEtherWallet/pull/2429)
+- Sentry fixes s [#2433](https://github.com/MyEtherWallet/MyEtherWallet/pull/2433)
+- Sentry fixes y [#2431](https://github.com/MyEtherWallet/MyEtherWallet/pull/2431)
+- Sentry fixes k [#2430](https://github.com/MyEtherWallet/MyEtherWallet/pull/2430)
+- Sentry fixes j [#2432](https://github.com/MyEtherWallet/MyEtherWallet/pull/2432)
+
+### Release v5.6.4
+
+### Feature
+
+- Unstoppable domains combined [#2353](https://github.com/MyEtherWallet/MyEtherWallet/pull/2353)
+
+### Devop
+
+- Modify Simplex order flow [#2409](https://github.com/MyEtherWallet/MyEtherWallet/pull/2409)
+
+### Bug
+
+- Also display token icon if submitted and is not found in the masterfile [#2404](https://github.com/MyEtherWallet/MyEtherWallet/pull/2404)
+- Sentry fixes s [#2406](https://github.com/MyEtherWallet/MyEtherWallet/pull/2406)
 - Sentry fixes k [#2411](https://github.com/MyEtherWallet/MyEtherWallet/pull/2411)
 
 ### Release v5.6.3

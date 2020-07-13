@@ -46,23 +46,39 @@
         name="digital_total_amount[currency]"
       />
     </form>
-    <div class="confirm-send-button" @click="submit()">
+    <div v-if="!submitted" class="confirm-send-button" @click="submit()">
       <button-with-qrcode
         :qrcode="qrcode"
         :buttonname="$t('sendTx.confirmation.button')"
       />
     </div>
+    <div v-if="submitted" class="submit-button-container">
+      <div
+        class="disabled submit-button large-round-button-green-filled clickable"
+      >
+        <i class="fa fa-spinner fa-spin" />
+        {{ $t('swap.button-loading') }}
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
+import { providerNames } from '@/partners';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
     'button-with-qrcode': ButtonWithQrCode
   },
   props: {
-    formData: {
+    swapDetails: {
+      type: Object,
+      default: function () {
+        return {};
+      }
+    },
+    swap: {
       type: Object,
       default: function () {
         return {};
@@ -78,12 +94,34 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      formData: {},
+      submitted: false
+    };
   },
   methods: {
-    submit() {
-      this.continueAction();
-      document.querySelector('#payment_form').submit();
+    async submit() {
+      if (!this.submitted) {
+        try {
+          this.submitted = true;
+          const swapDetails = await this.swap.extraActions(
+            providerNames.simplex,
+            'createOrder',
+            this.swapDetails
+          );
+          this.formData = this.swapDetails.dataForInitialization;
+          this.continueAction(swapDetails);
+          this.$nextTick(() => {
+            document.querySelector('#payment_form').submit();
+            this.submitted = false;
+          });
+        } catch (e) {
+          Toast.responseHandler(
+            this.$t('swap.warning.error-generating-swap'),
+            1
+          );
+        }
+      }
     }
   }
 };

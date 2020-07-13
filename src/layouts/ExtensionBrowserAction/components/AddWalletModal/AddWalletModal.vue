@@ -142,7 +142,7 @@
                         {{ $t('mewcx.enter-mnemonic-phrase') }}
                       </h3>
                       <div class="mnemonic-count-container">
-                        <p>Value</p>
+                        <p>{{ $t('common.value') }}</p>
                         <div
                           :class="[
                             mnemonicValue === 12 ? 'active' : '',
@@ -185,7 +185,7 @@
                           <h3>{{ $t('mewcx.extra-word') }}</h3>
                           <img
                             v-b-popover.hover.top="
-                              'I am popover directive content!'
+                              $t('mewcx.access-wallet-extra-word-popover')
                             "
                             src="@/assets/images/icons/exclamation-grey.svg"
                           />
@@ -346,6 +346,14 @@
             </div>
           </transition>
         </div>
+        <div class="keystore-download-link">
+          <a
+            ref="downloadLink"
+            :href="downloadFile"
+            :download="walletName"
+            rel="noopener noreferrer"
+          ></a>
+        </div>
       </div>
     </mewcx-modal-wrapper>
   </div>
@@ -375,6 +383,7 @@ import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { MnemonicWallet } from '@/wallets';
 import { SELECTED_MEW_CX_ACC } from '@/builds/mewcx/cxHelpers/cxEvents.js';
+import createBlob from '@/helpers/createBlob.js';
 
 const TITLES = {
   0: {
@@ -463,7 +472,8 @@ export default {
       supportedPaths: [],
       showPaths: false,
       accounts: [],
-      currentIndex: 0
+      currentIndex: 0,
+      downloadFile: ''
     };
   },
   computed: {
@@ -914,6 +924,9 @@ export default {
         Toast.responseHandler(e, Toast.ERROR);
       }
     },
+    backupWallet() {
+      this.$refs.downloadLink.click();
+    },
     generateWallet() {
       this.loading = true;
       this.generateOnly = true;
@@ -921,7 +934,10 @@ export default {
       const worker = new walletWorker();
       worker.postMessage({ type: 'createWallet', data: [this.password] });
       worker.onmessage = e => {
+        const blob = createBlob(e.data.walletJson, 'mime');
+        this.downloadFile = blob;
         this.file = e.data.walletJson;
+        this.backupWallet();
         ExtensionHelpers.addWalletToStore(
           `0x${e.data.walletJson.address}`,
           JSON.stringify(e.data.walletJson),

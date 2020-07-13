@@ -6,7 +6,10 @@ import { Transaction } from 'ethereumjs-tx';
 import { WEB3_SIGN_TX } from '../cxEvents';
 import store from '@/store';
 import { toChecksumAddress } from '@/helpers/addressUtils';
-
+const KNOWN_ERRORS = {
+  'Uncaught Error: Key derivation failed - possibly wrong passphrase':
+    'Password incorrect! Please provide correct password!'
+};
 export default async ({ event, payload }, callback, next) => {
   if (event !== WEB3_SIGN_TX) return next();
   const worker = new walletWorker();
@@ -53,7 +56,25 @@ export default async ({ event, payload }, callback, next) => {
     };
 
     worker.onerror = function (e) {
-      callback({ error: e });
+      const actualError = JSON.stringify(e, ['message']);
+      const parsedError = JSON.parse(actualError);
+      if (parsedError.message && parsedError.message !== '') {
+        const errObj = {
+          message:
+            KNOWN_ERRORS[parsedError.message] &&
+            KNOWN_ERRORS[parsedError.message] !== ''
+              ? KNOWN_ERRORS[parsedError.message]
+              : parsedError.message
+        };
+        callback({ error: errObj });
+      } else {
+        callback({
+          error: {
+            message:
+              'Something went wrong! Please try again or contact our support at support@myetherwallet.com'
+          }
+        });
+      }
     };
 
     const signTransaction = async function (wallet) {

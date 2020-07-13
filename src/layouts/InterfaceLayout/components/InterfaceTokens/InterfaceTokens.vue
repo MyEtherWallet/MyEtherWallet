@@ -24,12 +24,26 @@
           {{ $t('interface.tokens.warning-offline') }}
         </div>
         <div ref="tokenTableContainer" class="token-table-container">
-          <table v-show="customTokens.length > 0 && receivedTokens">
+          <table
+            v-show="customTokens && customTokens.length > 0 && receivedTokens"
+          >
             <tr
               v-for="(token, index) in customTokens"
               :key="token.symbol + index"
             >
-              <td>{{ token.symbol }}</td>
+              <td>
+                <a
+                  :href="
+                    network.type.blockExplorerAddr.replace(
+                      '[[address]]',
+                      token.address
+                    )
+                  "
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  >{{ token.symbol }}</a
+                >
+              </td>
               <td>
                 {{ token.balance }}
                 <i
@@ -47,12 +61,19 @@
             >
               <td class="name-and-icon-container">
                 <figure v-lazy-load class="token-icon">
-                  <img
-                    :data-url="iconFetch(token.address)"
-                    @error="iconFallback"
-                  />
+                  <img :data-url="iconFetch(token)" @error="iconFallback" />
                 </figure>
-                {{ token.symbol }}
+                <a
+                  :href="
+                    network.type.blockExplorerAddr.replace(
+                      '[[address]]',
+                      token.address
+                    )
+                  "
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  >{{ token.symbol }}</a
+                >
               </td>
               <td
                 v-if="token.balance === 'Load' && online"
@@ -67,7 +88,10 @@
 
           <div
             v-show="
-              search === '' && localTokens.length === 0 && !receivedTokens
+              search === '' &&
+              localTokens &&
+              localTokens.length === 0 &&
+              !receivedTokens
             "
             class="spinner-container"
           >
@@ -76,7 +100,9 @@
           <div
             v-show="
               search !== '' &&
+              localTokens &&
               localTokens.length === 0 &&
+              customTokens &&
               customTokens.length === 0
             "
             class="spinner-container"
@@ -85,7 +111,7 @@
           </div>
         </div>
         <div
-          v-if="customTokens.length + localTokens.length > 15"
+          v-if="customTokens && customTokens.length + localTokens.length > 15"
           class="expend-bar"
           @click="tokenListExpend"
         >
@@ -189,8 +215,8 @@ export default {
     }
   },
   methods: {
-    iconFetch(address) {
-      const token = this.networkTokens[toChecksumAddress(address)];
+    iconFetch(tok) {
+      const token = this.networkTokens[toChecksumAddress(tok.address)];
       if (token) {
         const tokenSrc =
           token.icon_png !== ''
@@ -199,6 +225,8 @@ export default {
             ? `https://img.mewapi.io/?image=${token.icon}&width=50&height=50&fit=scale-down`
             : this.network.type.icon;
         return tokenSrc;
+      } else if (tok.logo && tok.logo.src && tok.logo.src !== '') {
+        return `https://img.mewapi.io/?image=${tok.logo.src}&width=50&height=50&fit=scale-down`;
       }
 
       return this.network.type.icon;
