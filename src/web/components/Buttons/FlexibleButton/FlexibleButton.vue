@@ -64,4 +64,7 @@ export default {
   font-weight: 600;
   transform: rotate(45deg);
 }
+.outlined {
+  border: 1px solid white !important;
+}
 </style>
