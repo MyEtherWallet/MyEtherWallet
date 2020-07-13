@@ -1,111 +1,129 @@
 <template>
-  <mew6-white-sheet>
-    <mew-button
-      title="Confirmation"
-      :has-full-width="false"
-      button-size="xsmall"
-      @click.native="openOverlay('transactionTxConfirmation')"
-    />
-    <mew-button
-      title="WooCommerce"
-      :has-full-width="false"
-      button-size="xsmall"
-      @click.native="openModal('walletWooCommerce')"
-    />
+  <div id="id-d256132e858aceefe32b23b4d545384f">
+    <mew6-white-sheet>
+      <mew-button
+        title="Confirmation"
+        :has-full-width="false"
+        button-size="xsmall"
+        @click.native="openOverlay('transactionTxConfirmation')"
+      />
+      <mew-button
+        title="WooCommerce"
+        :has-full-width="false"
+        button-size="xsmall"
+        @click.native="openModal('walletWooCommerce')"
+      />
 
-    <mew-banner
-      :text-obj="topBanner"
-      :banner-img="BG"
-      @closeBanner="closeBanner"
-    />
+      <mew-banner
+        :text-obj="topBanner"
+        :banner-img="BG"
+        @closeBanner="closeBanner"
+      />
 
-    <div>
-      <v-tabs v-model="tab" background-color="transparent" class="px-10 py-6">
-        <v-tab class="text-transform--initial mew-heading-2">
-          Buy domain
-        </v-tab>
-        <v-tab class="text-transform--initial mew-heading-2">
-          Manage domain
-        </v-tab>
-      </v-tabs>
+      <div>
+        <v-tabs v-model="tab" background-color="transparent" class="px-10">
+          <v-tab class="text-transform--initial mew-heading-2">
+            Buy domain
+          </v-tab>
+          <v-tab class="text-transform--initial mew-heading-2">
+            Manage domain
+          </v-tab>
+        </v-tabs>
 
-      <v-tabs-items v-model="tab">
-        <v-tab-item>
-          <v-sheet color="bg_white_sheet" class="py-12">
-            <div class="tab-width">
-              <div class="mb-5">
-                <BlockTitle title="Find your blockchain domain" />
-                <div class="d-flex align-start">
-                  <mew-input
-                    :has-clear-btn="true"
-                    right-label=".ctypto"
-                    placeholder="Domain name"
-                    class="mr-2"
-                  />
-                  <mew-button
-                    :has-full-width="false"
-                    button-size="xlarge"
-                    title="Check availability"
-                  />
+        <v-tabs-items v-model="tab">
+          <v-tab-item>
+            <v-sheet color="bg_white_sheet" class="py-12">
+              <div class="tab-width">
+                <div class="mb-5">
+                  <BlockTitle title="Find your blockchain domain" />
+                  <div class="d-flex align-start">
+                    <mew-input
+                      :has-clear-btn="true"
+                      right-label=".ctypto"
+                      placeholder="Domain name"
+                      class="mr-2 flex-grow-1"
+                    />
+                    <mew-button
+                      :has-full-width="false"
+                      button-size="xlarge"
+                      title="Check availability"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <BlockTitle title="Results" />
+                  <v-card flat color="bg_datablock" class="pa-10">
+                    <div class="d-flex justify-space-between align-center">
+                      <div>
+                        <div class="mew-heading-1 mb-2">
+                          mewwallet.crypto
+                        </div>
+                        <div>
+                          <span class="font-weight-medium">0.0823234234</span>
+                          ETH ($40.00)
+                        </div>
+                      </div>
+                      <div class="d-flex align-center">
+                        <div class="mew-heading-3 primary--text mr-6">
+                          Available
+                        </div>
+                        <mew-button title="Buy"></mew-button>
+                      </div>
+                    </div>
+                  </v-card>
+                  <div class="py-2"></div>
+                  <v-card flat color="bg_datablock" class="pa-10">
+                    <div class="d-flex align-center justify-space-between mb-8">
+                      <div class="mew-heading-1">myetherwallet.crypto</div>
+                      <div class="mew-heading-3 orange--text">Unavailable</div>
+                    </div>
+                    <v-list-item
+                      v-for="(r, key) in results"
+                      :key="key"
+                      two-line
+                      class="px-0"
+                    >
+                      <v-list-item-content>
+                        <div
+                          class="mew-body font-weight-medium titlePrimary--text mb-2"
+                        >
+                          {{ r.label }}:
+                        </div>
+                        <div class="mew-body titlePrimary--text">
+                          {{ r.value }}
+                        </div>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-card>
                 </div>
               </div>
+            </v-sheet>
+          </v-tab-item>
+          <v-tab-item>
+            <div class="pa-12">
+              <div class="d-flex align-center justify-space-between mb-7">
+                <h4 class="font-weight-bold">
+                  My domains <span class="font-weight-regular">(1)</span>
+                </h4>
+                <mew-button
+                  btn-style="transparent"
+                  title="+ Add domain you own"
+                  button-size="large"
+                ></mew-button>
+              </div>
               <div>
-                <BlockTitle title="Results" />
-                <v-card flat color="bg_datablock" class="pa-10">
-                  <div class="d-flex justify-space-between align-center">
-                    <div>
-                      <div class="mew-heading-1 mb-2">
-                        mewwallet.crypto
-                      </div>
-                      <div>
-                        <span class="font-weight-medium">0.0823234234</span> ETH
-                        ($40.00)
-                      </div>
-                    </div>
-                    <div class="d-flex align-center">
-                      <div class="mew-heading-3 primary--text mr-6">
-                        Available
-                      </div>
-                      <mew-button title="Buy"></mew-button>
-                    </div>
-                  </div>
-                </v-card>
-                <div class="py-2"></div>
-                <v-card flat color="bg_datablock" class="pa-10">
-                  <div class="d-flex align-center justify-space-between mb-8">
-                    <div class="mew-heading-1">myetherwallet.crypto</div>
-                    <div class="mew-heading-3 orange--text">Unavailable</div>
-                  </div>
-                  <v-list-item
-                    v-for="(r, key) in results"
-                    :key="key"
-                    two-line
-                    class="px-0"
-                  >
-                    <v-list-item-content>
-                      <div
-                        class="mew-body font-weight-medium titlePrimary--text mb-2"
-                      >
-                        {{ r.label }}:
-                      </div>
-                      <div class="mew-body titlePrimary--text">
-                        {{ r.value }}
-                      </div>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-card>
+                <mew-expand-panel
+                  color-theme="orange"
+                  :panel-items="myDomains"
+                  :warning-badge="warning"
+                />
               </div>
             </div>
-          </v-sheet>
-        </v-tab-item>
-        <v-tab-item>
-          <div class="py-12 tab-width">
-            aaa
-          </div>
-        </v-tab-item>
-      </v-tabs-items>
-    </div>
-  </mew6-white-sheet>
+          </v-tab-item>
+        </v-tabs-items>
+      </div>
+    </mew6-white-sheet>
+  </div>
 </template>
 
 <script>
@@ -116,13 +134,28 @@ export default {
   components: { BlockTitle },
   data() {
     return {
+      myDomains: [
+        {
+          name: 'Network',
+          subtext: 'ETH - myetherapi.com'
+        },
+        {
+          name: 'Address to interact with',
+          subtext: '',
+          tooltip: 'Tooltip'
+        }
+      ],
+      warning: {
+        color: 'red',
+        text: 'Expire soon'
+      },
       BG: BG,
       topBanner: {
         title: 'Unstoppable Domain',
         subtext: 'Replace cryptocurrency addresses with a human readable name.',
         exit: 'Exit Dapp'
       },
-      tab: null,
+      tab: 1,
       results: [
         {
           label: 'Labelhash (mewwallet)',
@@ -147,22 +180,63 @@ export default {
       ]
     };
   },
+  watch: {
+    $route() {
+      this.checkQueryTab();
+    },
+    tab(val) {
+      if (val == 0) {
+        this.$router.push({ name: 'UnstoppableDomain', query: { tab: 'buy' } });
+      } else if (val == 1) {
+        this.$router.push({
+          name: 'UnstoppableDomain',
+          query: { tab: 'manage' }
+        });
+      } else {
+        this.$router.push({ name: 'UnstoppableDomain', query: { tab: 'buy' } });
+      }
+    }
+  },
+  mounted() {
+    this.checkQueryTab();
+  },
   methods: {
     openOverlay(name) {
       this.$store.commit('openOverlay', name);
     },
     openModal(name) {
-      //console.log('clicked');
       this.$store.commit('openModal', name);
     },
-    closeBanner() {}
+    closeBanner() {},
+    checkQueryTab() {
+      const currentTab = this.$route.query.tab;
+
+      if (currentTab == 'buy') {
+        this.tab = 0;
+      } else if (currentTab == 'manage') {
+        this.tab = 1;
+      } else {
+        this.tab = 0;
+      }
+    }
   }
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 .tab-width {
   max-width: 800px;
   margin: 0 auto;
+}
+.v-tabs {
+  border-bottom: 2px solid var(--v-bg_wallet-base);
+}
+</style>
+
+<style lang="scss">
+#id-d256132e858aceefe32b23b4d545384f {
+  .v-tabs-bar {
+    height: 70px;
+  }
 }
 </style>
