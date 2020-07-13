@@ -13,6 +13,9 @@ const state = {
     accessWalletMobileApps: { isOpen: false },
     transactionTxConfirmation: { isOpen: false },
     SignMessageConfirmation: { isOpen: false }
+  },
+  modals: {
+    walletWooCommerce: { isOpen: false }
   }
 };
 

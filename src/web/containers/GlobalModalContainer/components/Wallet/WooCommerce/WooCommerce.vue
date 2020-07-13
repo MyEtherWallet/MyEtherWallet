@@ -61,14 +61,27 @@
 <script>
 export default {
   props: {
-    show: { default: false, type: Boolean }
+    open: { default: false, type: Boolean },
+    close: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    }
   },
   data() {
-    return { dialog: false };
+    return { dialog: false, toggle_exclusive: false, checkbox1: false };
   },
   watch: {
-    show(val) {
-      this.dialog = val;
+    open(val) {
+      if (val == true) {
+        this.dialog = val;
+      }
+    },
+    dialog(val) {
+      if (val == false) {
+        this.$store.commit('closeModal', 'walletWooCommerce');
+      }
     }
   }
 };
