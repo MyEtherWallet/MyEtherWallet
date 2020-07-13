@@ -82,10 +82,22 @@ export default {
           width: 800,
           scrollY: 0
         });
-        printJS({
-          printable: screen.toDataURL('image/png'),
-          type: 'image'
-        });
+        if (screen && screen.toDataURL !== '') {
+          printJS({
+            printable: screen.toDataURL('image/png'),
+            type: 'image'
+          }).onError(() => {
+            Toast.responseHandler(
+              this.$t('errorsGlobal.print-support-error'),
+              Toast.ERROR
+            );
+          });
+        } else {
+          Toast.responseHandler(
+            this.$t('errorsGlobal.print-support-error'),
+            Toast.ERROR
+          );
+        }
       } catch (e) {
         Toast.responseHandler(
           this.$t('errorsGlobal.print-support-error'),

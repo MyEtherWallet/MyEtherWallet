@@ -68,7 +68,6 @@
             <p class="address">{{ fiatDest }}</p>
           </div>
         </div>
-
         <ul v-show="!isFromFiat" class="confirm-send-button">
           <li>
             <div class="provider-address-details">
@@ -102,7 +101,8 @@
         </ul>
         <simplex-checkout-form
           v-if="isFromFiat && swapProvider === 'simplex'"
-          :form-data="swapDetails.dataForInitialization"
+          :swap-details="swapDetails"
+          :swap="swap"
           :continue-action="redirectToPartner"
         />
       </div>
@@ -128,6 +128,12 @@ export default {
   },
   props: {
     swapDetails: {
+      type: Object,
+      default: function () {
+        return {};
+      }
+    },
+    swap: {
       type: Object,
       default: function () {
         return {};
@@ -230,11 +236,11 @@ export default {
         }
       }, 1000);
     },
-    redirectToPartner() {
+    redirectToPartner(swapDetails) {
       this.addSwapNotification([
         `Swap_Order`,
         this.currentAddress,
-        this.swapDetails
+        swapDetails
       ]).then(() => {
         this.$refs.swapconfirmation.hide();
       });

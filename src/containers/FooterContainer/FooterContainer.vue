@@ -229,10 +229,6 @@ export default {
               to: '/verify-message'
             },
             {
-              text: 'footer.view-wallet-info',
-              to: '/view-wallet-info'
-            },
-            {
               text: 'dappsSubmission.banner-submit.submit-dapp',
               to: '/dapp-submission'
             }
@@ -308,7 +304,7 @@ export default {
           class: 'fa-vk'
         },
         {
-          to: 'https://t.me/myetherwalletofficial',
+          to: 'https://t.me/myetherwallet',
           class: 'fa-telegram'
         }
       ]

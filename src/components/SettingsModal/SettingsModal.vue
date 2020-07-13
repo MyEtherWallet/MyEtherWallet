@@ -60,6 +60,7 @@
                       ref="customInput"
                       v-model="customGas"
                       type="number"
+                      :placeholder="$t('common.gas.price-range')"
                       @focus="selectedGasType = 'other'"
                     />
                     <p class="gwei">{{ $t('common.gas.gwei') }}</p>
@@ -527,7 +528,7 @@ export default {
           Toast.responseHandler(e, Toast.ERROR);
         });
 
-      this.ethPrice = price.data.ETH.quotes.USD.price;
+      this.ethPrice = price && price.data ? price.data.ETH.quotes.USD.price : 0;
     },
     openAddrBookModal(action, obj) {
       const idx = this.addressBook.indexOf(obj);

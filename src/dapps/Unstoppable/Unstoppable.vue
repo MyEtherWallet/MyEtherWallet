@@ -2,9 +2,47 @@
   <div class="unstoppable-container">
     <back-button
       v-show="!orderNumber"
-      :path="'/interface/dapps/'"
+      :path="
+        $route.name === 'manageCrypto'
+          ? '/interface/dapps/unstoppable/manage'
+          : '/interface/dapps/'
+      "
       :title="$t('common.exit-dapp')"
-    />
+    >
+      <template v-slot:center>
+        <div class="button-container">
+          <b-button
+            :class="[
+              'action-btn',
+              $route.name === 'unstoppableInitialState' ? 'active-btn' : ''
+            ]"
+            @click="
+              () => {
+                navigateHeaderButtons('register');
+              }
+            "
+          >
+            {{ $t('unstoppable.register-domain') }}
+          </b-button>
+          <b-button
+            :class="[
+              'action-btn',
+              $route.name === 'manageInitialState' ||
+              $route.name === 'manageCrypto'
+                ? 'active-btn'
+                : ''
+            ]"
+            @click="
+              () => {
+                navigateHeaderButtons('manager');
+              }
+            "
+          >
+            {{ $t('unstoppable.manage-domain') }}
+          </b-button>
+        </div>
+      </template>
+    </back-button>
     <div class="branding-container">
       <div class="name-container">
         <img
@@ -31,6 +69,7 @@
       :set-token-id="setTokenId"
       :set-order-number="setOrderNumber"
       :is-domain-avail="isDomainAvail"
+      :set-domain="setDomain"
       @domainNameChange="updateDomainName"
     />
   </div>
@@ -63,7 +102,16 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['web3', 'network', 'account'])
+    ...mapState('main', ['web3', 'network', 'account']),
+    tld() {
+      if (!this.domainName) {
+        return '';
+      }
+      const tldPosition = this.domainName.lastIndexOf('.');
+      return tldPosition !== -1
+        ? this.domainName.substr(tldPosition + 1, this.domainName.length)
+        : '';
+    }
   },
   mounted() {
     this.$nextTick(() => {
@@ -71,6 +119,25 @@ export default {
     });
   },
   methods: {
+    navigateHeaderButtons(path) {
+      if (path === 'register') {
+        this.$router.push({ name: `unstoppableInitialState` });
+      } else {
+        this.$router.push({
+          name: `manageInitialState`
+        });
+      }
+    },
+    setDomain(domainName) {
+      this.domainName = domainName;
+      if (domainName !== '') {
+        this.$router.push({ name: `manageCrypto` });
+      } else {
+        this.$router.push({
+          name: `manageInitialState`
+        });
+      }
+    },
     setup() {
       this.domainNameErr = false;
       this.loading = false;

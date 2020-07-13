@@ -81,6 +81,7 @@ export default {
     ...mapState('main', ['path', 'online']),
     inputValid() {
       return (
+        this.file &&
         this.walletRequirePass(this.file) &&
         (this.password === '' || this.password.length === 0)
       );
@@ -94,6 +95,7 @@ export default {
   methods: {
     ...mapActions('main', ['decryptWallet']),
     walletRequirePass(ethjson) {
+      if (!ethjson) return false;
       if (ethjson.encseed != null) return true;
       else if (ethjson.Crypto != null || ethjson.crypto != null) return true;
       else if (ethjson.hash != null && ethjson.locked) return true;

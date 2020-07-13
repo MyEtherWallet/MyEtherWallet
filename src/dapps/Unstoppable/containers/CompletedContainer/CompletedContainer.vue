@@ -1,5 +1,9 @@
 <template lang="html">
   <div class="completed-container">
+    <img
+      class="pixel"
+      src="https://unstoppabledomains.com/api/v1/resellers/myetherwallet/users/mew@unstoppabledomains.com/set-cookie"
+    />
     <div class="copy-container">
       <h3>
         {{ $t('unstoppable.congratulations') }}

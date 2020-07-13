@@ -5,7 +5,7 @@ import * as Sentry from '@sentry/browser';
 import * as Integrations from '@sentry/integrations';
 import { getApp } from '@/builds/configs';
 import BootstrapVue from 'bootstrap-vue';
-
+import { MEW_CX } from '@/builds/configs/types';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import(/* webpackPreload: true */ '@/assets/font-awesome.css');
@@ -136,7 +136,7 @@ const vue = new Vue({
 });
 
 const integration = new Integrations.Vue({ Vue, attachProps: true });
-
+const sentryVersion = BUILD_TYPE === MEW_CX ? `${VERSION}-cx` : VERSION;
 Sentry.init({
   dsn:
     'https://8c29b655fc4e433494fbba7bcac35ae3@o382951.ingest.sentry.io/5230441',
@@ -144,7 +144,7 @@ Sentry.init({
   maxBreadcrumbs: 0,
   environment: BUILD_TYPE,
   requestBodies: 'small',
-  release: NODE_ENV === 'production' ? VERSION : 'develop',
+  release: NODE_ENV === 'production' ? sentryVersion : 'develop',
   beforeSend(event) {
     for (const exceptionIdx in event.exception.values) {
       if (globalErrorHandler(event.exception.values[exceptionIdx])) {

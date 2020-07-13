@@ -3,24 +3,6 @@
     <b-row align-content="stretch">
       <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
         <card
-          :title="$t('dappsMCDMaker.migrate-old-dai-to-new-dai')"
-          :text="$t('dappsMCDMaker.migrate-description')"
-          button="Go"
-          :click="migrateDai"
-        />
-      </b-col>
-      <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
-        <card
-          :title="
-            $t('dappsMCDMaker.migrate-single-collateral-to-multi-collateral')
-          "
-          :text="$t('dappsMCDMaker.transfer-cdp-description')"
-          button="Go"
-          :click="migrateCDP"
-        />
-      </b-col>
-      <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
-        <card
           :title="$t('dappsMCDMaker.manage-your-vault')"
           :text="$t('dappsMCDMaker.transfer-cdp-description')"
           button="Go"
@@ -112,20 +94,6 @@ export default {
             name: 'makerLoading'
           });
         }
-      }
-    },
-    migrateDai() {
-      if (this.$route.path.includes('maker-dai')) {
-        this.$router.push({
-          name: 'migrateDAI'
-        });
-      }
-    },
-    migrateCDP() {
-      if (this.$route.path.includes('maker-dai')) {
-        this.$router.push({
-          name: 'migrateCDP'
-        });
       }
     },
     gotoLoading() {

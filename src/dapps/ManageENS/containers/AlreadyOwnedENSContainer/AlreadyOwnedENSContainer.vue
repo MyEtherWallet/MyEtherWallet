@@ -52,7 +52,6 @@
           </p>
         </div>
       </div>
-      <div class="ens-status-and-description"></div>
     </div>
     <div class="content-container">
       <p class="label">{{ $t('ens.label-hash') }}({{ hostName }}):</p>
@@ -61,6 +60,10 @@
     <div class="content-container">
       <p class="label">{{ $t('ens.name-hash') }}({{ fullDomainName }}):</p>
       <p class="content">{{ nameHash }}</p>
+    </div>
+    <div v-if="contentHash && contentHash !== ''" class="content-container">
+      <p class="label">Content Hash({{ hostName }}):</p>
+      <p class="content">{{ contentHash }}</p>
     </div>
     <div class="content-container">
       <p class="label">{{ $t('ens.owner') }}:</p>
@@ -108,7 +111,7 @@
         {{ $t('ens.manage') }}
       </button>
       <button v-if="isExpired" class="manage-button" @click="navigateToRenew">
-        Renew
+        {{ $t('ens.renew') }}
       </button>
     </div>
     <interface-bottom-text
@@ -183,6 +186,10 @@ export default {
     releaseDeed: {
       type: Function,
       default: () => {}
+    },
+    contentHash: {
+      type: String,
+      default: ''
     }
   },
   data() {

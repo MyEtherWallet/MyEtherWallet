@@ -59,7 +59,7 @@ import bcvault from '@/assets/images/icons/HardwareWallet/bcvault.svg';
 import coolwallet from '@/assets/images/icons/HardwareWallet/coolwallet.svg';
 import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
-import { isSupported } from 'u2f-api';
+import { isSupported, ensureSupport } from 'u2f-api';
 import platform from 'platform';
 import {
   KeepkeyWallet,
@@ -206,35 +206,16 @@ export default {
     };
   },
   mounted() {
-    isSupported().then(res => {
-      this.items.forEach(item => {
-        const u2fhw = [SECALOT_TYPE, LEDGER_TYPE];
-        const inMobile = [SECALOT_TYPE, KEEPKEY_TYPE];
-        const webUsb = [KEEPKEY_TYPE, LEDGER_TYPE];
-
-        if (webUsb.includes(item.name)) {
-          const disable =
-            window.location.protocol !== 'https:' ||
-            !window ||
-            !window.navigator ||
-            !window.navigator.usb;
-          item.disabled = disable;
-          item.msg = disable ? 'errorsGlobal.browser-non-web-usb' : '';
-        }
-        if (u2fhw.includes(item.name)) {
-          item.disabled = !res;
-          item.msg = !res ? 'errorsGlobal.browser-non-u2f' : '';
-        }
-        if (this.isMobile()) {
-          const disable = !inMobile.includes(item.name);
-          item.disabled = disable;
-          item.msg = disable ? 'errorsGlobal.no-mobile-support' : '';
-        }
+    ensureSupport()
+      .then(() => {
+        this.checkIfSupported();
+      })
+      .catch(() => {
+        Toast.responseHandler(
+          this.$t('errorsGlobal.u2f-not-supported'),
+          Toast.ERROR
+        );
       });
-    });
-    this.$refs.hardware.$on('hidden', () => {
-      this.selected = '';
-    });
   },
   methods: {
     isMobile() {
@@ -242,6 +223,42 @@ export default {
         typeof window.orientation !== 'undefined' ||
         navigator.userAgent.indexOf('IEMobile') !== -1
       );
+    },
+    checkIfSupported() {
+      try {
+        const _self = this;
+        isSupported().then(res => {
+          _self.items.forEach(item => {
+            const u2fhw = [SECALOT_TYPE, LEDGER_TYPE];
+            const inMobile = [SECALOT_TYPE, KEEPKEY_TYPE];
+            const webUsb = [KEEPKEY_TYPE, LEDGER_TYPE];
+
+            if (webUsb.includes(item.name)) {
+              const disable =
+                window.location.protocol !== 'https:' ||
+                !window ||
+                !window.navigator ||
+                !window.navigator.usb;
+              item.disabled = disable;
+              item.msg = disable ? 'errorsGlobal.browser-non-web-usb' : '';
+            }
+            if (u2fhw.includes(item.name)) {
+              item.disabled = !res;
+              item.msg = !res ? 'errorsGlobal.browser-non-u2f' : '';
+            }
+            if (_self.isMobile()) {
+              const disable = !inMobile.includes(item.name);
+              item.disabled = disable;
+              item.msg = disable ? 'errorsGlobal.no-mobile-support' : '';
+            }
+          });
+        });
+        _self.$refs.hardware.$on('hidden', () => {
+          _self.selected = '';
+        });
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
+      }
     },
     continueAccess() {
       const showPluggedInReminder = setTimeout(() => {

@@ -1,6 +1,9 @@
 <template>
   <div class="manage-ens-container">
-    <h3>{{ $t('ens.manage') }} {{ domainName }}</h3>
+    <div class="title-container">
+      <h3>{{ $t('ens.manage-domain') }}</h3>
+      <h3>{{ domainName }}</h3>
+    </div>
     <div v-show="!isController" class="set-controller-container">
       <i18n path="ens.controller-text" tag="div">
         <b slot="domain">{{ domainName }}</b
@@ -18,6 +21,8 @@
       variant="primary"
     >
       <p>{{ $t('ens.multi-coin') }}</p>
+      <i class="when-open fa fa-angle-up fa-lg" />
+      <i class="when-closed fa fa-angle-down fa-lg" />
     </b-btn>
     <b-collapse
       id="multicoinsec"
@@ -87,6 +92,8 @@
       variant="primary"
     >
       <p>{{ $t('ens.txt-record') }}</p>
+      <i class="when-open fa fa-angle-up fa-lg" />
+      <i class="when-closed fa fa-angle-down fa-lg" />
     </b-btn>
     <b-collapse
       id="textrecords"
@@ -166,6 +173,8 @@
       variant="primary"
     >
       <p>{{ $t('ens.transfer-domain') }}</p>
+      <i class="when-open fa fa-angle-up fa-lg" />
+      <i class="when-closed fa fa-angle-down fa-lg" />
     </b-btn>
     <b-collapse
       id="transferens"
@@ -202,7 +211,9 @@
       class="collapse-open-button"
       variant="primary"
     >
-      <p>Release Deed</p>
+      <p>{{ $t('ens.release-deed') }}</p>
+      <i class="when-open fa fa-angle-up fa-lg" />
+      <i class="when-closed fa fa-angle-down fa-lg" />
     </b-btn>
     <b-collapse
       v-if="isDeedOwner && hasDeed"
@@ -213,7 +224,12 @@
       <div v-if="isDeedOwner && hasDeed" class="form-container">
         <form>
           <h4>
-            Do you want to release {{ deedValueEth }} {{ network.type.name }}
+            {{
+              $t('ens.release-deed-confirmation', {
+                deedValueEth: deedValueEth,
+                network: network.type.name
+              })
+            }}
           </h4>
           <div class="submit-container">
             <button type="submit" @click.prevent="releaseDeed()">
@@ -221,6 +237,80 @@
             </button>
           </div>
         </form>
+      </div>
+    </b-collapse>
+    <b-btn v-b-toggle.ipfs class="collapse-open-button" variant="primary">
+      <p>{{ $t('ens.content-hash') }}</p>
+      <i class="when-open fa fa-angle-up fa-lg" />
+      <i class="when-closed fa fa-angle-down fa-lg" />
+    </b-btn>
+    <b-collapse
+      id="ipfs"
+      class="collapse-content"
+      accordion="manage-ens-accordion"
+    >
+      <div v-if="ipfsProcessing" class="ipfs-loading">
+        <i class="fa fa-lg fa-spinner fa-spin" />
+        <h3>{{ $t('ens.ipfs-processing') }}</h3>
+        <p>{{ $t('ens.ipfs-processing-description') }}</p>
+      </div>
+      <div v-else class="ipfs-content-container">
+        <div v-if="validIpfs" class="link-to-name">
+          <p>
+            {{
+              $t('ens.ipfs-check-website', {
+                domainName: domainName
+              })
+            }}
+            <a
+              :href="`http://${domainName}.link`"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {{ `${domainName}.link` }}
+            </a>
+          </p>
+        </div>
+        <form enctype="multipart/form-data" novalidate class="file-upload-form">
+          <input
+            ref="zipInput"
+            type="file"
+            name="file"
+            accept=".zip"
+            @change="fileChange"
+          />
+        </form>
+        <div class="form-container">
+          <form class="manage-form">
+            <div class="input-container">
+              <label for="transferEns">
+                <span>{{ $t('ens.content-hash') }}:</span>
+                <p class="file-upload-text" @click.prevent="ipfsClick">
+                  {{ $t('ens.upload-my-website') }}
+                </p>
+              </label>
+              <input
+                v-model="localContentHash"
+                type="text"
+                name="transferEns"
+                placeholder="QmVHxRocoWgUChLEvfEyDuuD6qJ4PhdDL2dTLcpUy3dSC2"
+              />
+            </div>
+            <div class="submit-container">
+              <span v-if="!validIpfs" class="text-error">{{
+                $t('ens.error.empty-invalid-ipfs')
+              }}</span>
+              <br />
+              <button
+                :class="[!validIpfs ? 'disabled' : '']"
+                type="submit"
+                @click.prevent="saveContentHash(localContentHash)"
+              >
+                {{ $t('ens.set-hash') }}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </b-collapse>
     <interface-bottom-text
@@ -237,6 +327,7 @@ import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import utils from 'web3-utils';
 import supportedTxt from '../../supportedTxt';
+import isIpfs from 'is-ipfs';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText
@@ -301,6 +392,22 @@ export default {
     releaseDeed: {
       type: Function,
       default: () => {}
+    },
+    contentHash: {
+      type: String,
+      default: ''
+    },
+    uploadFile: {
+      type: Function,
+      default: () => {}
+    },
+    saveContentHash: {
+      type: Function,
+      default: () => {}
+    },
+    ipfsProcessing: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -333,11 +440,15 @@ export default {
       selectedText: 'Email',
       hasError: false,
       txtRecordInputs: newtxtRecords,
-      txtValidators: txtValidators
+      txtValidators: txtValidators,
+      localContentHash: this.contentHash || ''
     };
   },
   computed: {
     ...mapState('main', ['web3', 'account', 'network']),
+    validIpfs() {
+      return isIpfs.multihash(this.localContentHash);
+    },
     deedValueEth() {
       return utils.fromWei(this.deedValue, 'ether');
     },
@@ -390,6 +501,43 @@ export default {
     }
   },
   methods: {
+    fileChange(e) {
+      const TYPES = [
+        'application/zip',
+        'application/x-zip',
+        'application/octet-stream',
+        'application/x-zip-compressed'
+      ];
+      const supportedFile = TYPES.find(item => {
+        return (
+          e.target.files[0].type === item ||
+          e.target.files[0].name.includes('.zip')
+        );
+      });
+      if (!supportedFile) {
+        this.$refs.zipInput.value = '';
+        Toast.responseHandler(this.$t('ens.warning.upload-zip'), Toast.WARN);
+        return;
+      }
+      if (e.target.files[0].size < 500) {
+        this.$refs.zipInput.value = '';
+        Toast.responseHandler(this.$t('ens.warning.too-small'), Toast.WARN);
+        return;
+      }
+
+      if (e.target.files[0].size > 50000000) {
+        this.$refs.zipInput.value = '';
+        Toast.responseHandler(this.$t('ens.warning.too-big'), Toast.WARN);
+        return;
+      }
+
+      this.uploadFile(e.target.files[0]);
+    },
+    ipfsClick() {
+      const input = this.$refs.zipInput;
+      input.value = '';
+      input.click();
+    },
     isInvalidAddress(type) {
       if (type.id === this.supportedCoins.ETH.id && type.value === '')
         return true;
@@ -430,7 +578,10 @@ export default {
         this.currencyInputs = newObj;
       } else {
         Toast.responseHandler(
-          `Currency ${item} is already added for ${this.domainName}`,
+          this.$t('ens.currency-already-exists', {
+            currency: item,
+            domainName: this.domainName
+          }),
           Toast.WARN
         );
       }
@@ -443,7 +594,10 @@ export default {
         this.txtRecordInputs = newObj;
       } else {
         Toast.responseHandler(
-          `Text Record ${item} input is already added for ${this.domainName}`,
+          this.$t('ens.currency-already-exists', {
+            txtRecord: item,
+            domainName: this.domainName
+          }),
           Toast.WARN
         );
       }

@@ -15,12 +15,12 @@
                 }
               "
             >
-              Register Domain
+              {{ $t('ens.register-domain') }}
             </b-button>
             <b-button
               :class="[
                 'action-btn',
-                $route.name === 'ENS multi Manager' ? 'active-btn' : ''
+                $route.name === 'ensMultiManager' ? 'active-btn' : ''
               ]"
               @click="
                 () => {
@@ -28,7 +28,7 @@
                 }
               "
             >
-              Manage Domain
+              {{ $t('ens.manage-domain') }}
             </b-button>
           </div>
         </template>
@@ -50,7 +50,7 @@
       :generate-key-phrase="generateKeyPhrase"
       :set-multi-coin="setMultiCoin"
       :transfer-domain="transferDomain"
-      :tld="parsedTld === '' ? network.type.ens.registrarTLD : parsedTld"
+      :tld="parsedTld === '' ? registrarTLD : parsedTld"
       :network-name="network.type.name"
       :register-fifs-name="registerFifsName"
       :multi-tld="multiTld"
@@ -77,6 +77,10 @@
       :navigate-to-renew="navigateToRenew"
       :deed-value="deedValue"
       :get-controller="getController"
+      :content-hash="contentHash"
+      :upload-file="uploadFile"
+      :save-content-hash="saveContentHash"
+      :ipfs-processing="ipfsProcessing"
       @updateSecretPhrase="updateSecretPhrase"
       @domainNameChange="updateDomainName"
       @updateStep="updateStep"
@@ -103,6 +107,7 @@ import DNSRegistrar from '@ensdomains/dnsregistrar';
 import BigNumber from 'bignumber.js';
 import supportedCoins from './supportedCoins';
 import supportedTxt from './supportedTxt';
+import contentHash from 'content-hash';
 
 const bip39 = require('bip39');
 
@@ -156,12 +161,18 @@ export default {
       isExpired: false,
       deedValue: '0',
       controllerAddress: '',
-      contractControllerAddress: ''
+      contractControllerAddress: '',
+      contentHash: '',
+      ipfsProcessing: false,
+      registrarControllerContract: {}
     };
   },
   computed: {
     ...mapState('main', ['web3', 'network', 'account', 'gasPrice', 'ens']),
     registrarTLD() {
+      if (!this.network.type || !this.network.type.ens) {
+        return '';
+      }
       return this.network.type.ens.registrarTLD;
     },
     headerContext() {
@@ -260,6 +271,8 @@ export default {
       this.deedValue = '0';
       this.controllerAddress = '';
       this.contractControllerAddress = '';
+      this.contentHash = '';
+      this.ipfsProcessing = false;
 
       if (this.ens) {
         this.setRegistrar();
@@ -302,7 +315,7 @@ export default {
     },
     navigateHeaderButtons(to) {
       this.$router.push({
-        name: to === 'register' ? 'ensInitialState' : 'ENS multi Manager'
+        name: to === 'register' ? 'ensInitialState' : 'ensMultiManager'
       });
     },
     navigateToRenew() {
@@ -347,7 +360,6 @@ export default {
                 this.$t('ens.toast.success'),
                 Toast.SUCCESS
               );
-              this.$router({ name: '' });
             })
             .catch(err => {
               Toast.responseHandler(err, false);
@@ -369,7 +381,7 @@ export default {
           value: 0
         };
         this.web3.eth.sendTransaction(obj).catch(err => {
-          Toast.responseHandler(err, false);
+          Toast.responseHandler(err, Toast.ERROR);
         });
       } else {
         Toast.responseHandler(this.$t('ens.error.not-the-owner'), Toast.ERROR);
@@ -424,7 +436,7 @@ export default {
         return setControllerTx;
       }
       this.web3.eth.sendTransaction(setControllerTx).catch(err => {
-        Toast.responseHandler(err, false);
+        Toast.responseHandler(err, Toast.ERROR);
       });
     },
     transferDomain(toAddress) {
@@ -552,7 +564,7 @@ export default {
         gas: 100000
       };
       web3.eth.sendTransaction(setAddrTx).catch(err => {
-        Toast.responseHandler(err, false);
+        Toast.responseHandler(err, Toast.ERROR);
       });
     },
     async registerFifsName() {
@@ -807,6 +819,109 @@ export default {
         this.domainNameErr = false;
       }
     },
+    async uploadFile(file) {
+      const formData = new FormData();
+
+      this.ipfsProcessing = true;
+      try {
+        const content = await fetch('https://swap.mewapi.io/ipfs', {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            method: 'getUploadUrl'
+          })
+        }).then(response => {
+          return response.json();
+        });
+        for (const key in content.body.fields) {
+          formData.append(key, content.body.fields[key]);
+        }
+        formData.append('file', file);
+        fetch(content.body.signedUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Length': file.size
+          },
+          body: formData
+        }).then(response => {
+          if (!response.ok) {
+            this.ipfsProcessing = false;
+            Toast.responseHandler(
+              this.$t('ens.error.file-upload-error'),
+              Toast.ERROR
+            );
+            return;
+          }
+          this.getHashFromFile(content.body.hashResponse);
+        });
+      } catch (e) {
+        this.ipfsProcessing = false;
+        Toast.responseHandler(e, Toast.ERROR);
+      }
+    },
+    async getHashFromFile(hash) {
+      try {
+        const ipfsHash = await fetch('https://swap.mewapi.io/ipfs', {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            method: 'uploadComplete',
+            hash: hash
+          })
+        })
+          .then(response => {
+            return response.json();
+          })
+          .catch(e => {
+            this.ipfsProcessing = false;
+            Toast.responseHandler(e, Toast.ERROR);
+          });
+        if (ipfsHash.error) {
+          Toast.responseHandler(
+            this.$t('ens.error.error-getting-ipfs-hash'),
+            Toast.ERROR
+          );
+        } else {
+          this.saveContentHash(ipfsHash);
+        }
+      } catch (e) {
+        this.ipfsProcessing = false;
+        Toast.responseHandler(e, Toast.ERROR);
+      }
+    },
+    async saveContentHash(ipfsHash) {
+      const ipfsToHash = `0x${contentHash.fromIpfs(ipfsHash)}`;
+      const currentResolverAddress = await this.ensRegistryContract.methods
+        .resolver(this.nameHash)
+        .call();
+      const resolverContract = new this.web3.eth.Contract(
+        ResolverAbi,
+        currentResolverAddress
+      );
+
+      try {
+        const txObj = {
+          from: this.account.address,
+          to: currentResolverAddress,
+          data: resolverContract.methods
+            .setContenthash(this.nameHash, ipfsToHash)
+            .encodeABI(),
+          value: 0
+        };
+
+        this.web3.eth.sendTransaction(txObj).then(() => {
+          this.contentHash = ipfsHash;
+          this.ipfsProcessing = false;
+        });
+      } catch (e) {
+        this.ipfsProcessing = false;
+        Toast.responseHandler(e, Toast.ERROR);
+      }
+    },
     async getMoreInfo(renew) {
       let owner;
       try {
@@ -875,6 +990,7 @@ export default {
           ResolverAbi,
           currentResolverAddress
         );
+        this.checkContentHash(resolverContract);
         this.fetchTxtRecords(resolverContract);
         const supportMultiCoin = await resolverContract.methods
           .supportsInterface(MULTICOIN_SUPPORT_INTERFACE)
@@ -915,6 +1031,16 @@ export default {
         this.$router.push({ name: 'ensNameOwned' });
       }
       this.loading = false;
+    },
+    async checkContentHash(resolverContract) {
+      try {
+        const hash = await resolverContract.methods
+          .contenthash(this.nameHash)
+          .call();
+        this.contentHash = hash && hash !== '' ? contentHash.decode(hash) : '';
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
+      }
     },
     async fetchTxtRecords(resolver) {
       this.checkIfController();
@@ -970,7 +1096,9 @@ export default {
         gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed(),
         value: 0
       };
-      this.web3.eth.sendTransaction(tx);
+      this.web3.eth.sendTransaction(tx).catch(err => {
+        Toast.responseHandler(err, Toast.ERROR);
+      });
     },
     updateSecretPhrase(e) {
       this.secretPhrase = e;

@@ -29,7 +29,12 @@ const EXCEPTIONS = [
   'web3-core-helpers',
   'web3-core-method',
   'web3-core-requestmanager',
-  'web3-utils'
+  'web3-utils',
+  'i18n-iso-countries',
+  '@myetherwallet/mewconnect-web-client',
+  '@walletconnect/browser',
+  'ethereumjs-wallet',
+  '@makerdao/dai-plugin-mcd'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

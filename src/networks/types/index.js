@@ -32,6 +32,8 @@ import DXN from './DXN.js';
 import PHT from './PHT.js';
 import ERE from './ERE.js';
 import PRKL from './PRKL.js';
+import FUSE from './FUSE.js';
+import EWT from './EWT.js';
 
 export {
   AKA,
@@ -67,5 +69,7 @@ export {
   DXN,
   PHT,
   ERE,
-  PRKL
+  PRKL,
+  FUSE,
+  EWT
 };
