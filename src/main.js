@@ -40,7 +40,6 @@ Vue.component('mew6-bottom-alert-buy-hardware-wallet', BuyHardwareWallet);
 Vue.component('mew6-expantion-block', ExpantionBlock);
 Vue.component('mew6-expantion-block-large', ExpantionBlockLarge);
 Vue.component('mew6-divider-line', DividerLine);
-Vue.component('mew6-divider-line', DividerLine);
 Vue.component('mew6-confirm-btn', ConfirmButton);
 Vue.component('mew6-password-field', PasswordField);
 Vue.component('mew6-vertical-tabs', VerticalTabs);

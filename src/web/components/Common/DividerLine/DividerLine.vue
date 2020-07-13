@@ -10,6 +10,6 @@ export default {
 
 <style lang="scss" scoped>
 .mew-component--divider-line {
-  border-bottom: 1px solid #ececec;
+  border-bottom: 1px solid #e6e6e6;
 }
 </style>
