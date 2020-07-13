@@ -113,7 +113,7 @@
               </div>
               <div>
                 <mew-expand-panel
-                  color-theme="orange"
+                  color-theme="#f1eeeb"
                   :panel-items="myDomains"
                   :warning-badge="warning"
                 />
