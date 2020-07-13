@@ -56,7 +56,7 @@ export default {
         name: 'STEP 3. Well done'
       }
     ],
-    onStep: 2,
+    onStep: 1,
     titleData: {
       textProps: 'white--text',
       toptitle: '',
