@@ -319,6 +319,8 @@ export default {
               }
             })
             .catch(e => {
+              // eslint-disable-next-line
+              console.log(JSON.stringify(e));
               BCVaultWallet.errorHandler(e);
             });
           break;
