@@ -9,5 +9,7 @@
   "can-only-sign-eth": "BCVault doesn't support other chains other than ETH main net.",
   "check-daemon": "BCVault daemon might be turned off. Please see settings on BC Vault app.",
   "no-account-found": "No account returned! Please make sure to create an account on the BCVault app!",
-  "no-response": "No response receive, please make sure that the BCVault Daemon is running!"
+  "no-response": "No response receive, please make sure that the BCVault Daemon is running!",
+  "session-error": "No device detected or no account found!",
+  "https-issue": "BC Vault server issue! Please make sure the Daemon is running on the BCVault app!"
 }
