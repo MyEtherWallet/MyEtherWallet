@@ -55,14 +55,20 @@ class BCVault {
                   resolve(walletRes);
                 })
                 .catch(e => {
+                  // eslint-disable-next-line
+                  console.log(e);
                   reject(e);
                 });
             })
             .catch(e => {
+              // eslint-disable-next-line
+              console.log(e);
               reject(e);
             });
         })
         .catch(e => {
+          // eslint-disable-next-line
+          console.log(e);
           reject(e);
         });
     });
