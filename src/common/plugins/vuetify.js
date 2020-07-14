@@ -45,7 +45,8 @@ import Vuetify, {
   VTabsItems,
   VTabItem,
   VMenu,
-  VSpacer
+  VSpacer,
+  VSlide
 } from 'vuetify/lib';
 import 'vuetify/dist/vuetify.min.css';
 
@@ -96,7 +97,8 @@ Vue.use(Vuetify, {
     VTabsItems,
     VTabItem,
     VMenu,
-    VSpacer
+    VSpacer,
+    VSlide
   }
 });
 
