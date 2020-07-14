@@ -6,7 +6,6 @@
         title="Connect with the powerful crypto communities"
         subtitle="PARTNERS"
       />
-      <BlockTitle no-page-title :data="titleData" />
       <v-row class="mt-8 px-4">
         <v-col v-for="(p, key) in partners" :key="key" cols="3" md="3" lg="2">
           <a :href="p.link" target="_blank">
@@ -19,21 +18,10 @@
 </template>
 
 <script>
-import BlockTitle from '../BlockTitle';
-
 export default {
   name: 'HomePartners',
-  components: {
-    BlockTitle
-  },
+  components: {},
   data: () => ({
-    titleData: {
-      textProps: '',
-      toptitle: 'Partners',
-      title: 'Connect with the powerful crypto communities',
-      description: '',
-      centered: false
-    },
     partners: [
       {
         img: require('@/assets/images/partners/ledger.png'),

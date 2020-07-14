@@ -14,32 +14,14 @@
         :has-full-width="false"
         button-size="large"
         btn-style="outline"
-        left-md-icon="mdi-view-grid"
-        right-md-icon="mdi-chevron-down"
+        left-md-icon="mdi-credit-card-outline"
       />
-      <mew6-std-btn
-        v-if="false"
-        depressed
-        min-width="0"
-        height="48px"
-        outlined
-        color="white"
-        :to="{ name: 'HomeCreateWallet', params: {} }"
-        custom-style="padding: 20px;"
-      >
-        <img
-          height="30"
-          src="@/assets/images/icons/icon-buy-eth-white.svg"
-          class="mr-1 ml-n1"
-        />Buy ETH
-      </mew6-std-btn>
     </v-container>
   </div>
 </template>
 
 <script>
 import Menu from './components/Menu';
-//import BuyEthIcon from '@/assets/images/icons/icon-buy-eth-white.svg';
 
 export default {
   name: 'HeaderDesktop',

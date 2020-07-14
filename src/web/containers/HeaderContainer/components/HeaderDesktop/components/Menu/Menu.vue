@@ -1,57 +1,13 @@
 <template>
   <div class="d-flex align-center">
-    <mew-menu :list-obj="mewMenuCompany" text-color="white" />
+    <router-link
+      class="mr-5 pa-3 text-color--white text-decoration--none"
+      :to="{ name: 'HowItWorks', params: {} }"
+    >
+      How it works
+    </router-link>
+    <mew-menu :list-obj="mewMenuCompany" class="mr-5" />
     <mew-menu :list-obj="mewMenuTools" />
-
-    <ul :key="menuResetKey" class="pl-0 d-flex">
-      <li
-        v-for="(m, key) in menus"
-        :key="key"
-        class="list-style-type--none ml-10 d-flex align-center"
-      >
-        <div v-if="!m.submenus" class="menu-block">
-          <router-link
-            class="pa-3 text-color--white text-decoration--none"
-            :to="m.to"
-          >
-            {{ m.label }}
-          </router-link>
-        </div>
-        <div v-if="m.submenus" class="menu-block">
-          <div class="pa-3 text-color--white d-flex align-center">
-            <div>{{ m.label }}</div>
-            <v-icon class="closed title">mdi-chevron-down</v-icon>
-            <v-icon class="opened title">mdi-chevron-up</v-icon>
-          </div>
-          <div class="sub-menu">
-            <ul class="px-0 py-4">
-              <li
-                v-for="(sm, skey) in m.submenus"
-                :key="skey"
-                class="list-style-type--none"
-                @click="menuResetKey++"
-              >
-                <router-link
-                  v-if="sm.to"
-                  class="text-decoration--none"
-                  :to="sm.to"
-                >
-                  {{ sm.label }}
-                </router-link>
-                <a
-                  v-if="sm.href"
-                  class="text-decoration--none"
-                  target="_blank"
-                  :href="sm.href"
-                >
-                  {{ sm.label }}
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </li>
-    </ul>
   </div>
 </template>
 
