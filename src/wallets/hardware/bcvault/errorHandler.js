@@ -6,6 +6,7 @@ const ERRORS = {
   '25601': 'bcvaultError.user-no-action',
   '40449': 'bcvaultError.user-cancelled-action',
   daemonError0x6901: 'bcvaultError.daemon0x6901'
+  // daemonError2: 'bcvaultError.daemon2'
 };
 const WARNING = {
   jsError1: 'bcvaultError.browser-popup',

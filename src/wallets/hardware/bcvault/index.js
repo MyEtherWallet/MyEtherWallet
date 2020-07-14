@@ -35,11 +35,13 @@ class BCVault {
         .getDevices()
         .then(res => {
           if (!res) {
-            reject(
-              new Error({
-                jsError: 'mew3'
-              })
-            );
+            reject({
+              jsError: 'mew3'
+            });
+          } else if (res && res.length === 0) {
+            reject({
+              jsError: 'mew4'
+            });
           }
           _self.deviceNumber = res;
           _self.bcWallet
@@ -52,11 +54,17 @@ class BCVault {
                 .then(walletRes => {
                   resolve(walletRes);
                 })
-                .catch(reject);
+                .catch(e => {
+                  reject(e);
+                });
             })
-            .catch(reject);
+            .catch(e => {
+              reject(e);
+            });
         })
-        .catch(reject);
+        .catch(e => {
+          reject(e);
+        });
     });
   }
 
