@@ -66,7 +66,7 @@ const estimateGas = async (txs, from) => {
     });
     const results = await post(
       'https://estimategas.mewapi.io',
-      utils.buildPayload('eth_estimateGasList', [txs]),
+      utils.buildPayload('eth_estimateGasList', [txs])
     );
     if (results.error) {
       utils.checkErrorJson(results, 'eth_estimateGasList');
