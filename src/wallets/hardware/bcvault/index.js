@@ -56,19 +56,19 @@ class BCVault {
                 })
                 .catch(e => {
                   // eslint-disable-next-line
-                  console.log(e);
+                  console.log(JSON.stringify(e));
                   reject(e);
                 });
             })
             .catch(e => {
               // eslint-disable-next-line
-              console.log(e);
+              console.log(JSON.stringify(e));
               reject(e);
             });
         })
         .catch(e => {
           // eslint-disable-next-line
-          console.log(e);
+          console.log(JSON.stringify(e));
           reject(e);
         });
     });
