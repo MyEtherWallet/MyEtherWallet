@@ -351,6 +351,10 @@ export default class DexAg {
           preparedAry,
           swapDetails.fromAddress
         );
+
+        if (!result) {
+          throw Error('abort');
+        }
         const swapTransactions = preparedAry.map((entry, index) => {
           entry.gas = result[index];
           return entry;
@@ -377,8 +381,10 @@ export default class DexAg {
 
     const tradeDetails = await this.createTransaction(swapDetails, dexToUse);
 
-    const marketImpact = tradeDetails.metadata.marketImpact
+    const marketImpact = tradeDetails.metadata
       ? tradeDetails.metadata.marketImpact
+        ? tradeDetails.metadata.marketImpact
+        : 0
       : 0;
 
     if (new BigNumber(marketImpact).gte(MARKET_IMPACT_CUTOFF)) {
