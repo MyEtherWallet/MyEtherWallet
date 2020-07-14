@@ -56,11 +56,6 @@ const getPrice = async (fromToken, toToken, fromValue) => {
   }
 };
 
-/*
-{"jsonrpc":"2.0","id":127,"method":"eth_estimateGas","params":[[{"from":"0x43689531907482BEE7e650D18411E284A7337A66","to":"0x6b175474e89094c44da98b954eedeac495271d0f","value":"0x0","data":"0x095ea7b3000000000000000000000000ccaf8533b6822a6c17b1059dda13c168e75544a4000000000000000000000000000000000000000000000000002386f26fc10000"},{"from":"0x43689531907482BEE7e650D18411E284A7337A66","to":"0x6b175474e89094c44da98b954eedeac495271d0f","value":"0x0","data":"0x095ea7b3000000000000000000000000ccaf8533b6822a6c17b1059dda13c168e75544a4000000000000000000000000000000000000000000000000002586f26fc10000"}]]}
-
-
- */
 const estimateGas = async (txs, from) => {
   try {
     txs = txs.map(entry => {
@@ -69,18 +64,12 @@ const estimateGas = async (txs, from) => {
       if (entry.gas) delete entry.gas;
       return entry;
     });
-
     const results = await post(
       'https://estimategas.mewapi.io',
-      utils.buildPayload('eth_estimateGas', [txs]),
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
+      utils.buildPayload('eth_estimateGasList', [txs]),
     );
     if (results.error) {
-      utils.checkErrorJson(results);
+      utils.checkErrorJson(results, 'eth_estimateGasList');
     }
     return results.result;
   } catch (e) {
