@@ -34,7 +34,8 @@ const EXCEPTIONS = [
   '@myetherwallet/mewconnect-web-client',
   '@walletconnect/browser',
   'ethereumjs-wallet',
-  '@makerdao/dai-plugin-mcd'
+  '@makerdao/dai-plugin-mcd',
+  'sass-loader'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
