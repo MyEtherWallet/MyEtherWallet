@@ -313,9 +313,15 @@ export default {
               if (res && res.length >= 1) {
                 this.openBcVault(res, bcvaultInstance);
               } else if (res && res.length === 0) {
-                BCVaultWallet.errorHandler({ jsError: 'mew4' }, Toast.ERROR);
+                return BCVaultWallet.errorHandler(
+                  { jsError: 'mew4' },
+                  Toast.ERROR
+                );
               } else {
-                BCVaultWallet.errorHandler({ jsError: 'mew5' }, Toast.ERROR);
+                return BCVaultWallet.errorHandler(
+                  { jsError: 'mew5' },
+                  Toast.ERROR
+                );
               }
             })
             .catch(BCVaultWallet.errorHandler);
