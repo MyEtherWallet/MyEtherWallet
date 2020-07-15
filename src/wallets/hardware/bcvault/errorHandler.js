@@ -8,7 +8,6 @@ const ERRORS = {
   '25601': 'bcvaultError.user-no-action',
   '40449': 'bcvaultError.user-cancelled-action',
   daemonError0x6901: 'bcvaultError.daemon0x6901'
-  // daemonError2: 'bcvaultError.daemon2'
 };
 const WARNING = {
   jsError1: 'bcvaultError.browser-popup',
@@ -20,6 +19,12 @@ const WARNING = {
 };
 
 export default err => {
+  // eslint-disable-next-line
+  console.log(
+    JSON.stringify(err),
+    err,
+    'it should be getting here if anything'
+  );
   // web errors
   if (err.hasOwnProperty('jsError')) {
     Toast.responseHandler(
