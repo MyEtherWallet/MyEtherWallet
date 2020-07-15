@@ -318,11 +318,7 @@ export default {
                 BCVaultWallet.errorHandler({ jsError: 'mew5' }, Toast.ERROR);
               }
             })
-            .catch(e => {
-              // eslint-disable-next-line
-              console.log(JSON.stringify(e));
-              BCVaultWallet.errorHandler(e);
-            });
+            .catch(BCVaultWallet.errorHandler);
           break;
         case COOLWALLET_TYPE:
           this.$emit('hardwareRequiresPassword', {
