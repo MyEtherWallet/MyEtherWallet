@@ -54,29 +54,11 @@ class BCVault {
                 .then(walletRes => {
                   resolve(walletRes);
                 })
-                .catch(e => {
-                  // eslint-disable-next-line
-                  console.log(JSON.stringify(e), 'got here');
-                  // eslint-disable-next-line
-                  console.log(JSON.parse(e));
-                  return reject(e);
-                });
+                .catch(reject);
             })
-            .catch(e => {
-              // eslint-disable-next-line
-              console.log(JSON.stringify(e), 'got here');
-              // eslint-disable-next-line
-              console.log(JSON.parse(e));
-              return reject(e);
-            });
+            .catch(reject);
         })
-        .catch(e => {
-          // eslint-disable-next-line
-          console.log(JSON.stringify(e), 'got here');
-          // eslint-disable-next-line
-          console.log(JSON.parse(e));
-          return reject(e);
-        });
+        .catch(reject);
     });
   }
 
