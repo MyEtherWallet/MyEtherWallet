@@ -33,10 +33,12 @@
 
       <div v-if="!showDetails">
         <content-block-title :button-text="ntfCount" :title="nftTitle" />
-        <b-row v-show="!fetchingOwnedTokens">
-<!--        <b-row >-->
+        {{fetchingOwnedTokens}}
+        <b-row>
+          <!--        <b-row >-->
           <b-col
             v-for="nft in nftToShow"
+            v-show="!fetchingOwnedTokens"
             :key="nft.key"
             cols="6"
             lg="4"
@@ -50,8 +52,29 @@
               @showNftDetails="showNftDetails"
             ></nft-token-card>
           </b-col>
+          <b-col
+            v-for="nft in loadingPlaceholders"
+            v-show="fetchingOwnedTokens"
+            :key="nft.key"
+            cols="6"
+            lg="4"
+            md="4"
+            class="mb-4"
+          >
+            <div class="text-center cursor-pointer">
+              {{nft}}
+              <div
+                class="spinner-box d-flex justify-content-center align-items-center"
+              >
+                <b-spinner
+                  label="Large Spinner"
+                  variant="secondary"
+                  style="width: 50px; height: 50px;"
+                ></b-spinner>
+              </div>
+            </div>
+          </b-col>
         </b-row>
-
 
         <div
           class="pagination-container"
@@ -267,13 +290,16 @@ export default {
       if (this.fetchingOwnedTokens) return [];
       return selectNftsToShow();
     },
-    loadingPlaceholders(){
-
+    loadingPlaceholders() {
+      if (this.fetchingOwnedTokens) {
         const count = this.endIndex - this.startIndex;
-
-        for(let i = 0; i< count; i++){
-
-        }
+        const empty = new Array(count);
+        return empty.fill(0);
+        // for(let i = 0; i< count; i++){
+        //
+        // }
+      }
+      return [];
     },
     ntfCount() {
       if (
