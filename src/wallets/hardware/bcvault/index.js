@@ -35,11 +35,11 @@ class BCVault {
         .getDevices()
         .then(res => {
           if (!res) {
-            reject({
+            return reject({
               jsError: 'mew3'
             });
           } else if (res && res.length === 0) {
-            reject({
+            return reject({
               jsError: 'mew4'
             });
           }
@@ -59,7 +59,7 @@ class BCVault {
                   console.log(JSON.stringify(e), 'got here');
                   // eslint-disable-next-line
                   console.log(JSON.parse(e));
-                  reject(e);
+                  return reject(e);
                 });
             })
             .catch(e => {
@@ -67,7 +67,7 @@ class BCVault {
               console.log(JSON.stringify(e), 'got here');
               // eslint-disable-next-line
               console.log(JSON.parse(e));
-              reject(e);
+              return reject(e);
             });
         })
         .catch(e => {
@@ -75,7 +75,7 @@ class BCVault {
           console.log(JSON.stringify(e), 'got here');
           // eslint-disable-next-line
           console.log(JSON.parse(e));
-          reject(e);
+          return reject(e);
         });
     });
   }
