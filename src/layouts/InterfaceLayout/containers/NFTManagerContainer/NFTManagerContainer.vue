@@ -245,7 +245,7 @@ export default {
             // const allRetreived =
             //   this.nftConfig[this.selectedContract].tokens.length ===
             //   this.nftConfig[this.selectedContract].count;
-            return this.nftConfig[this.selectedContract].tokens.length >
+            return this.nftConfig[this.selectedContract].tokens.length  >
               this.countPerPage
               ? this.nftConfig[this.selectedContract].tokens.slice(
                   this.startIndex,
@@ -290,8 +290,7 @@ export default {
       }
       if (this.nftConfig[this.selectedContract]) {
         if (!this.nftConfig[this.selectedContract].tokens) return false;
-        const ids_retrieved = this.nftConfig[this.selectedContract].tokens
-          .length;
+        const ids_retrieved = this.nftConfig[this.selectedContract].count;
         return (
           this.endIndex !== ids_retrieved && this.endIndex <= ids_retrieved
         );
@@ -299,8 +298,8 @@ export default {
       return null;
     },
     activeAddress() {
-      // return '0xf4b0e07b1010b9dc23d369069ab4f2192651d474';
-      return this.account.address;
+      return '0xf4b0e07b1010b9dc23d369069ab4f2192651d474';
+      // return this.account.address;
     },
     hasNfts() {
       return Object.values(this.nftConfig).length > 0;
@@ -314,8 +313,11 @@ export default {
   },
   watch: {
     async selectedContract(newer, old) {
-
-      if (!this.nftConfig[newer].tokens) {
+      console.log(this.nftConfig[newer]); // todo remove dev item
+      if (
+        !this.nftConfig[newer].tokens ||
+        this.nftConfig[newer].tokens.length === 0
+      ) {
         console.log('UPDATING'); // todo remove dev item
         this.fetchingOwnedTokens = true;
         await this.getNftDetails(this.selectedContract).then(results => {
@@ -463,18 +465,24 @@ export default {
               nftData[data.contractIdAddress].currentIndex = 0;
             }
           });
-          // console.log('setup', nftData); // todo remove dev item
+          console.log('setup', nftData); // todo remove dev item
           this.nftConfig = { ...nftData };
           this.selectedContract = Object.keys(this.nftConfig)[0];
         }
         this.reLoading = false;
         this.countsRetrieved = true;
         this.getNftDetails(this.selectedContract).then(result => {
+          console.log(result); // todo remove dev item
           this.nftConfig[this.selectedContract].tokens = result;
+          this.getNftDetails(this.selectedContract, 9, 18).then(result => {
+            console.log(result); // todo remove dev item
+            this.nftConfig[this.selectedContract].tokens = result;
+          });
         });
       }
     },
     async getNftDetails(contract, startIndex, endIndex) {
+      console.log(contract, startIndex, endIndex); // todo remove dev item
       this.fetchingOwnedTokens = true;
       let params;
       if (startIndex && endIndex) {
@@ -504,25 +512,34 @@ export default {
       })
         .then(data => data.json())
         .then(data => {
-          // console.log('1', data.result.tokenContracts); // todo remove dev item
+          console.log('1', data); // todo remove dev item
           return data.result.tokenContracts.find(item => {
             return item.contractIdAddress === contract;
           });
         })
         .then(data => {
-          // console.log('1', data.tokens); // todo remove dev item
+          console.log('1', data.tokens); // todo remove dev item
           let allTokens = [];
-          for (const prop in data.tokens) {
-            const processedTokens = data.tokens[prop].map(item => {
-              return {
-                description: item.description,
-                name: item.name,
-                tokenId: item.token_id,
-                contract: prop
-              };
-            });
-            allTokens = [...allTokens, ...processedTokens];
-          }
+          allTokens = data.tokens.map(item => {
+            return {
+              description: item.description,
+              name: item.name,
+              tokenId: item.token_id,
+              contract: item.contract
+            };
+          });
+          // for (const prop in data.tokens) {
+          //   const processedTokens = data.tokens[prop].map(item => {
+          //     return {
+          //       description: item.description,
+          //       name: item.name,
+          //       tokenId: item.token_id,
+          //       contract: prop
+          //     };
+          //   });
+          //   allTokens = [...allTokens, ...processedTokens];
+          // }
+          console.log('allTokens', allTokens); // todo remove dev item
           this.fetchingOwnedTokens = false;
           this.nftConfig[contract].tokens = allTokens;
           return allTokens;
@@ -557,13 +574,16 @@ export default {
     // },
     async getNftsToShow() {
       const selectNftsToShow = () => {
-        console.log('this.nftConfig', this.nftConfig); // todo remove dev item
+        console.log(
+          'this.nftConfig',
+          this.nftConfig[this.selectedContract].tokens
+        ); // todo remove dev item
         try {
           if (this.nftConfig[this.selectedContract]) {
-            if (!this.nftConfig[this.selectedContract].tokens) return {}; // [];
-            const allRetreived =
-              this.nftConfig[this.selectedContract].tokens.length ===
-              this.nftConfig[this.selectedContract].count;
+            if (!this.nftConfig[this.selectedContract].tokens) return []; // [];
+            // const allRetreived =
+            //   this.nftConfig[this.selectedContract].tokens.length ===
+            //   this.nftConfig[this.selectedContract].count;
             return this.nftConfig[this.selectedContract].tokens.length >
               this.countPerPage
               ? this.nftConfig[this.selectedContract].tokens.slice(
@@ -579,21 +599,36 @@ export default {
           return [];
         }
       };
-      if (this.fetchingOwnedTokens) {
-        this.nftToShowList = [];
-      } else {
-        this.nftToShowList = selectNftsToShow();
-      }
+      // if (this.fetchingOwnedTokens) {
+      //   this.nftToShowList = [];
+      // } else {
+      //   this.nftToShowList = selectNftsToShow();
+      // }
+      this.nftToShowList = selectNftsToShow();
+      console.log(this.nftToShowList); // todo remove dev item
       //
       // console.log('this.nftToShowList', this.nftToShowList); // todo remove dev item
       // this.fetchingOwnedTokens = false;
     },
+    incrementTokenList() {
+      const startIndex =
+        this.currentPage * this.countPerPage - this.countPerPage;
+      const endIndex = this.currentPage * this.countPerPage;
+      this.getNftDetails(this.selectedContract, startIndex, endIndex).then(
+        result => {
+          console.log(result); // todo remove dev item
+          this.nftConfig[this.selectedContract].tokens = result;
+        }
+      );
+    },
     getNext() {
       this.currentPage++;
+      this.incrementTokenList();
     },
     getPrevious() {
       if (this.currentPage >= 1) {
         this.currentPage--;
+        this.incrementTokenList();
       }
     },
     showNftDetails(nft) {
