@@ -344,8 +344,9 @@ export default class DexAg {
         }
       }
 
+      preparedTradeTxs.add(tx);
+
       if (preparedTradeTxs.size > 0) {
-        preparedTradeTxs.add(tx);
         const preparedAry = Array.from(preparedTradeTxs);
         const result = await dexAgCalls.estimateGas(
           preparedAry,
@@ -364,7 +365,6 @@ export default class DexAg {
       }
 
       const swapTransactions = Array.from(preparedTradeTxs);
-
       return [...swapTransactions];
     } catch (e) {
       errorLogger(e);
@@ -423,7 +423,6 @@ export default class DexAg {
       timestamp: new Date(Date.now()).toISOString()
     };
     swapDetails.isDex = DexAg.isDex();
-
     return swapDetails;
   }
 

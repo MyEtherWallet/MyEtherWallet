@@ -59,7 +59,7 @@ const getPrice = async (fromToken, toToken, fromValue) => {
 const estimateGas = async (txs, from) => {
   try {
     txs = txs.map(entry => {
-      entry.from = from;
+      if (!entry.from) entry.from = from;
       entry.value = web3.utils.toHex(entry.value);
       if (entry.gas) delete entry.gas;
       return entry;
