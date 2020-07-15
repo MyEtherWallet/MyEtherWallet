@@ -35,7 +35,8 @@ const EXCEPTIONS = [
   '@walletconnect/browser',
   'ethereumjs-wallet',
   '@makerdao/dai-plugin-mcd',
-  'sass-loader'
+  'sass-loader',
+  'ethereumjs-util'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
