@@ -12,6 +12,7 @@
             :is-new="dapp.isNew"
             :right-icon="dapp.icon"
             :title-icon="dapp.thumbsup"
+            icon-type="mew"
           />
         </v-col>
       </v-row>
@@ -35,11 +36,6 @@
 </template>
 
 <script>
-import IconMakerDAO from '@/assets/images/icons/icon-dapp-makerdao.png';
-import IconLock from '@/assets/images/icons/icon-dapp-lock.png';
-import IconBrowser from '@/assets/images/icons/icon-dapp-browser.png';
-import IconThumbsUp from '@/assets/images/icons/icon-thumbs-up.svg';
-
 export default {
   components: {},
   data() {
@@ -53,26 +49,26 @@ export default {
           subtitle: 'Collateralize & Generate DAI',
           tag: '#Exchanges',
           isNew: true,
-          icon: IconMakerDAO,
-          thumbsup: IconThumbsUp
+          icon: 'MAKERDAO',
+          thumbsup: 'mdi-thumb-up'
         },
         ENSManager: {
           title: 'ENS manager',
           subtitle: 'Migrate or register ENS domain / subdomain',
           tag: '#Property',
-          icon: IconBrowser
+          icon: 'ENSMANAGER'
         },
         SafeSendTX: {
           title: 'SafeSend transaction',
           subtitle: 'Migrate or register ENS domain / subdomain',
           tag: '#Security',
-          icon: IconLock
+          icon: 'LOCK'
         },
         ScheduleTX: {
           title: 'Schedule a transaction',
           subtitle: 'Using the decentralized ETH alarm clock prototype',
           tag: '#Exchange',
-          icon: IconBrowser
+          icon: 'CALENDAR'
         }
       }
     };
