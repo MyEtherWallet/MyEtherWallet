@@ -1,12 +1,12 @@
 <template>
   <mew6-white-sheet class="mew-component--eth-balance pa-7 pb-4">
     <div class="d-flex">
-      <BlockTitle
-        :icon="require('@/assets/images/currencies//eth.png')"
-        text1="My Eth Balance"
-        text2="24.842"
-        text3="$4,032.35"
-        currency="ETH"
+      <mew-module
+        subtitle="My Eth Balance"
+        title="24.842 ETH"
+        caption="$4,032.35"
+        :icon="require('@/assets/images/currencies/eth.png')"
+        icon-align="left"
       />
       <div class="ml-auto">
         <div class="d-flex align-center">
@@ -14,9 +14,12 @@
             :button-group="chartButtons"
             @onBtnClick="onBtnClick"
           />
-          <v-btn text icon class="ml-4">
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
+          <mew-button
+            button-size="medium"
+            class="ml-4"
+            icon-type="mdi"
+            icon="mdi-dots-vertical"
+          />
         </div>
         <div v-if="false">
           <v-btn-toggle
@@ -76,10 +79,9 @@
 
 <script>
 import ChartBalance from '@/web/components/Charts/Balance';
-import BlockTitle from '@/web/components/BlockTitles/BlockTitle1';
 
 export default {
-  components: { ChartBalance, BlockTitle },
+  components: { ChartBalance },
   data() {
     return {
       chartButtons: ['1D', '1W', '1M', '1Y', 'All'],

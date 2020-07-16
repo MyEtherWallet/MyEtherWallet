@@ -1,11 +1,13 @@
 <template>
   <mew6-white-sheet sideinfo>
     <div class="px-7 pt-5">
-      <BlockTitle :text="$t('common.swap')">
-        <template v-slot:right-button>
-          <TextButton>{{ $t('common.more') }}...</TextButton>
-        </template>
-      </BlockTitle>
+      <div class="d-flex align-center justify-space-between">
+        <mew-module :title="$t('common.swap')" />
+        <mew-button
+          btn-style="transparent"
+          :title="$t('common.more') + '...'"
+        />
+      </div>
     </div>
     <div class="pa-3">
       <v-sheet
@@ -43,11 +45,8 @@
 </template>
 
 <script>
-import TextButton from '@/web/components/Buttons/TextButton1';
-import BlockTitle from '@/web/components/BlockTitles/BlockTitle2';
-
 export default {
-  components: { TextButton, BlockTitle },
+  components: {},
   data() {
     return {
       swapData: [

@@ -46,7 +46,9 @@ import Vuetify, {
   VTabItem,
   VMenu,
   VSpacer,
-  VSlide
+  VSlider,
+  VDataTable,
+  VCarousel
 } from 'vuetify/lib';
 import 'vuetify/dist/vuetify.min.css';
 
@@ -98,7 +100,9 @@ Vue.use(Vuetify, {
     VTabItem,
     VMenu,
     VSpacer,
-    VSlide
+    VSlider,
+    VDataTable,
+    VCarousel
   }
 });
 

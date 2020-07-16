@@ -1,6 +1,6 @@
 <template>
   <mew6-white-sheet>
-    <InterfaceWrap title="Send Transaction">
+    <InterfaceWrap title="Send Offline">
       <div>
         <div class="d-flex">
           <mew-select :items="coins" label="Type" class="mr-2" />
@@ -25,26 +25,28 @@
         />
       </div>
 
-      <mew6-expantion-block title="Advanced" right-text="Gas & Data">
-        <div>
-          <mew-input label="Gas Price" placeholder=" " value="40" />
-          <mew-input label="Gas Limit" placeholder=" " value="21000" />
-        </div>
-
-        <div class="d-flex justify-space-between px-5">
-          <div class="mew-body font-weight-medium d-flex align-center">
-            Transaction Fee <info-tooltip class="ml-1" text="Tx fees" />
+      <mew-expand-panel is-toggle has-dividers :panel-items="exPannel">
+        <template v-slot:panelBody0>
+          <div>
+            <mew-input label="Gas Price" placeholder=" " value="40" />
+            <mew-input label="Gas Limit" placeholder=" " value="21000" />
           </div>
-          <div>$0.177</div>
-        </div>
-        <Divider dot class="mt-5" />
-        <mew-input
-          label="Add Data"
-          placeholder=" "
-          value=""
-          class="mt-10 mb-n5"
-        />
-      </mew6-expantion-block>
+
+          <div class="d-flex justify-space-between px-5">
+            <div class="mew-body font-weight-medium d-flex align-center">
+              Transaction Fee <info-tooltip class="ml-1" text="Tx fees" />
+            </div>
+            <div>$0.177</div>
+          </div>
+          <Divider dot class="mt-5" />
+          <mew-input
+            label="Add Data"
+            placeholder=" "
+            value=""
+            class="mt-10 mb-n5"
+          />
+        </template>
+      </mew-expand-panel>
 
       <div class="text-center mt-12">
         <mew-button title="Send" :has-full-width="false" button-size="xlarge" />
@@ -70,6 +72,12 @@ export default {
   components: { InterfaceWrap, Divider },
   data() {
     return {
+      exPannel: [
+        {
+          name: 'Advanced',
+          subtext: 'Gas & Data'
+        }
+      ],
       addressValue: '',
       addresses: [
         {
@@ -97,6 +105,7 @@ export default {
   },
   methods: {
     getSelectedValue(value) {
+      //console.log('selected value:', value);
       this.addressValue = value;
     }
   }
