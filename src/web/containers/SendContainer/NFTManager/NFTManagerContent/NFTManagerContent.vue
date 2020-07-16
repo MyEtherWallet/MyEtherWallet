@@ -1,21 +1,14 @@
 <template>
-  <div>
-    <v-btn
-      depressed
-      color="success"
-      x-small
-      class="mr-1"
-      @click.native="openOverlay('transactionTxConfirmation')"
-    >
-      Dev only: Open TX confirmation window
-    </v-btn>
-
-    <mew6-white-sheet>
-      <InterfaceWrap title="NFT Manager">
-        <mew6-vertical-tabs :tabs="tabs" />
-      </InterfaceWrap>
-    </mew6-white-sheet>
-  </div>
+  <mew6-white-sheet>
+    <InterfaceWrap title="Swap">
+      <mew-tabs :items="items">
+        <template v-slot:tabContent0><CryptoFlowers /></template>
+        <template v-slot:tabContent1><CryptoKitties /></template>
+        <template v-slot:tabContent2><GodsUnchained /></template>
+        <template v-slot:tabContent3><MyCryptoHeros /></template>
+      </mew-tabs>
+    </InterfaceWrap>
+  </mew6-white-sheet>
 </template>
 
 <script>
@@ -26,14 +19,20 @@ import GodsUnchained from './components/GodsUnchained';
 import MyCryptoHeros from './components/MyCryptoHeros';
 
 export default {
-  components: { InterfaceWrap },
+  components: {
+    InterfaceWrap,
+    CryptoFlowers,
+    CryptoKitties,
+    GodsUnchained,
+    MyCryptoHeros
+  },
   data() {
     return {
-      tabs: [
-        { label: 'CryptoKitties (3)', content: CryptoKitties },
-        { label: 'Gods Unchained (2)', content: GodsUnchained },
-        { label: 'CryptoFlowers (1)', content: CryptoFlowers },
-        { label: 'MyCryptoHeros (1)', content: MyCryptoHeros }
+      items: [
+        { name: 'CryptoKitties (3)' },
+        { name: 'Gods Unchained (2)' },
+        { name: 'CryptoFlowers (1)' },
+        { name: 'MyCryptoHeros (1)' }
       ]
     };
   },

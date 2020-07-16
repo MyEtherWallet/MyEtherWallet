@@ -7,7 +7,7 @@
         subtitle="FEATURES"
       />
     </v-container>
-    <mew-tabs :items="mewTabs">
+    <mew-tabs :items="mewTabs" is-block>
       <template v-slot:tabContent0>
         <img
           :src="require('@/assets/images/backgrounds/bg-swap-page.svg')"

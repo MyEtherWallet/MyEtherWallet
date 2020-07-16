@@ -19,8 +19,6 @@
         <BannerAds />
       </div>
     </div>
-    <Spacer v-if="false" />
-    <Dapps v-if="false" />
   </div>
 </template>
 
@@ -30,8 +28,6 @@ import EthBalance from './containers/EthBalance';
 import NoBalance from './containers/NoBalance';
 import TokensValue from './containers/TokensValue';
 import NoTokens from './containers/NoTokens';
-import Dapps from './containers/Dapps';
-
 import Network from '@/web/components/Network';
 import Swap from '@/web/components/Swap';
 import BannerAds from '@/components/BannerAds';
@@ -43,7 +39,6 @@ export default {
     NoBalance,
     TokensValue,
     NoTokens,
-    Dapps,
     Network,
     Swap,
     BannerAds
