@@ -6,38 +6,41 @@
       placeholder="Select a network"
       :items="networks"
     />
-    <TextField
-      v-model="node"
-      label="ETH Node Name"
-      placeholder="Type node name"
-    />
-    <TextField v-model="url" label="URL" placeholder="Type URL" />
-    <TextField v-model="port" label="Port" placeholder="Type port number" />
-    <ExpantionBlock title="HTTP basic access authentication" class="mb-7">
-      <TextField v-model="username" label="Username" placeholder=" " />
-      <TextField v-model="password" label="Password" placeholder=" " />
-    </ExpantionBlock>
-    <mew6-std-btn size="x-large" fullwidth>
-      Save
-    </mew6-std-btn>
+    <mew-input label="ETH Node Name" placeholder="Type node name" />
+    <mew-input label="URL" placeholder="Type URL" />
+    <mew-input label="Port" placeholder="Type port number" />
+
+    <mew-expand-panel
+      class="mb-7"
+      is-toggle
+      has-dividers
+      :panel-items="exPannel"
+    >
+      <template v-slot:panelBody0>
+        <mew-input label="Username" placeholder=" " />
+        <mew-input label="Password" placeholder=" " />
+      </template>
+    </mew-expand-panel>
+
+    <div class="d-flex justify-center">
+      <mew-button button-size="xlarge" title="Save" />
+    </div>
   </div>
 </template>
 
 <script>
 import DropdownSelect from '@/components/Inputs/DropdownSelect';
-import TextField from '@/components/Inputs/TextField';
-import ExpantionBlock from '@/components/ExpantionBlock';
 
 export default {
-  components: { DropdownSelect, TextField, ExpantionBlock },
+  components: { DropdownSelect },
   data() {
     return {
+      exPannel: [
+        {
+          name: 'HTTP basic access authentication'
+        }
+      ],
       network: '',
-      node: '',
-      url: '',
-      port: '',
-      username: '',
-      password: '',
       networks: [
         { name: 'ETH - Ethereum', value: 'eth' },
         { name: 'OTH - Other', value: 'oth' }

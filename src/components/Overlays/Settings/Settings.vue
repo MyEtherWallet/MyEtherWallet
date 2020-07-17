@@ -1,80 +1,46 @@
 <template>
-  <BaseOverlay :open="open" :close="close" :back="false" close-text="Cancel">
-    <OverlayTitle title="Settings" />
-    <div class="overlay-content">
-      <mew-expand-panel :panel-items="panelItems">
-        <template v-slot:panelBody0>
-          <GasPrice />
-        </template>
-        <template v-slot:panelBody1>
-          <ImportConfig />
-        </template>
-        <template v-slot:panelBody2>
-          <ExportConfig />
-        </template>
-        <template v-slot:panelBody3>
-          <Addresses />
-        </template>
-      </mew-expand-panel>
-    </div>
-
-    <div class="overlay-content mt-12">
-      <v-expansion-panels flat :light="!$vuetify.theme.dark">
-        <ExpansionPanelContent title="Gas price" subtitle="1 Gwei (Economic)">
-          <template v-slot:content>
+  <mew-overlay
+    :show-overlay="open"
+    title="Settings"
+    right-btn-text="Close"
+    left-btn-text="Back"
+  >
+    <template v-slot:mewComponent>
+      <v-sheet max-width="750px">
+        <mew-expand-panel :panel-items="panelItems">
+          <template v-slot:panelBody0>
             <GasPrice />
           </template>
-        </ExpansionPanelContent>
-
-        <ExpansionPanelContent title="Import configurations">
-          <template v-slot:content>
+          <template v-slot:panelBody1>
             <ImportConfig />
           </template>
-        </ExpansionPanelContent>
-
-        <ExpansionPanelContent title="Export configurations">
-          <template v-slot:content>
+          <template v-slot:panelBody2>
             <ExportConfig />
           </template>
-        </ExpansionPanelContent>
-
-        <ExpansionPanelContent title="Contact addresses">
-          <template v-slot:content>
-            <Addresses />
+          <template v-slot:panelBody3>
+            <Notifications />
           </template>
-        </ExpansionPanelContent>
-      </v-expansion-panels>
-    </div>
-  </BaseOverlay>
+        </mew-expand-panel>
+      </v-sheet>
+    </template>
+  </mew-overlay>
 </template>
 
 <script>
-import BaseOverlay from '../BaseOverlay';
-import OverlayTitle from '@/components/OverlayTitle';
-import ExpansionPanelContent from './components/ExpansionPanelContent';
 import ImportConfig from './components/ImportConfig';
 import ExportConfig from './components/ExportConfig';
-import Addresses from './components/Addresses';
+import Notifications from './components/Notifications';
 import GasPrice from './components/GasPrice';
 
 export default {
   components: {
-    BaseOverlay,
-    OverlayTitle,
-    ExpansionPanelContent,
     ImportConfig,
     ExportConfig,
-    Addresses,
+    Notifications,
     GasPrice
   },
   props: {
-    open: { default: false, type: Boolean },
-    close: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    }
+    open: { default: false, type: Boolean }
   },
   data() {
     return {
@@ -90,26 +56,10 @@ export default {
           name: 'Export configurations'
         },
         {
-          name: 'Contact addresses'
+          name: 'Notifications'
         }
       ]
     };
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.overlay-content {
-  width: 750px;
-}
-
-.v-expansion-panel {
-  margin-top: 20px !important;
-  border-radius: 12px !important;
-  box-shadow: 0px 0px 15px var(--v-box_shadow-base);
-
-  &:first-child {
-    margin-top: 0px !important;
-  }
-}
-</style>
