@@ -21,10 +21,9 @@
         <DividerLine v-if="networks.length != i + 1" class="my-5" />
       </div>
     </v-radio-group>
-
-    <mew6-std-btn size="x-large" fullwidth class="mt-3">
-      Change
-    </mew6-std-btn>
+    <div class="d-flex justify-center">
+      <mew-button button-size="xlarge" title="Change" class="mt-3" />
+    </div>
   </div>
 </template>
 

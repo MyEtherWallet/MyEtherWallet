@@ -1,89 +1,55 @@
 <template>
-  <BaseOverlay :open="open" :close="close" :back="true" close-text="Cancel">
-    <OverlayTabs class="overlay-content">
-      <v-tabs v-model="activeTab">
-        <v-tab :key="1" />
-        <v-tab :key="2" />
-
-        <v-tab-item>
-          <div class="width--100-percent">
-            <OverlayTitle title="1. Connect with Ledger" />
-
-            <mew6-white-sheet>
-              <div class="pa-8">
-                <div class="mt-2 mb-9 text-center">
-                  <img
-                    width="70"
-                    height="70"
-                    src="@/assets/images/currencies/icon-eth-blue.svg"
-                  />
-                </div>
-                <InputSearch
-                  v-model="appSelected"
-                  :items="apps"
-                  title="Choose your coin"
-                  placeholder="Search..."
-                  class="mb-1"
-                />
-                <InputSearch
-                  v-model="pathSelected"
-                  :items="path"
-                  title="HD derivation path"
-                  placeholder="Search..."
-                  class="mb-1"
-                />
-
-                <div class="text-center">
-                  <StdButton
-                    size="x-large"
-                    fullwidth
-                    @click.native="activeTab = 1"
-                  >
-                    Connect with Ledger
-                  </StdButton>
-                </div>
+  <mew-overlay
+    :show-overlay="open"
+    title="1. Connect with Ledger"
+    right-btn-text="Close"
+  >
+    <template v-slot:mewComponent>
+      <mew-tabs :items="tabs" is-block>
+        <template v-slot:tabContent0>
+          <mew6-white-sheet>
+            <div class="pa-8">
+              <div class="mt-2 mb-9 text-center">
+                <mew-icon icon-name="ETH" img-height="100"></mew-icon>
               </div>
-            </mew6-white-sheet>
-          </div>
-        </v-tab-item>
-        <v-tab-item>
-          <div class="width--100-percent">
-            <OverlayTitle title="2. Confirm network & address" />
-            <mew6-white-sheet>
-              <AddressSelection />
-              <div class="pa-8">
-                <div class="text-center">
-                  <mew6-std-btn
-                    size="x-large"
-                    fullwidth
-                    @click.native="activeTab = 0"
-                  >
-                    Access My Wallet
-                  </mew6-std-btn>
-                </div>
+              <mew-select
+                :items="apps"
+                select-label="Choose your coin"
+                placeholder="Search..."
+                class="mb-1"
+              />
+              <mew-select
+                :items="path"
+                select-label="HD derivation path"
+                placeholder="Search..."
+                class="mb-1"
+              />
+
+              <div class="text-center">
+                <mew-button title="Connect with Ledger" button-size="xlarge" />
               </div>
-            </mew6-white-sheet>
+            </div>
+          </mew6-white-sheet>
+        </template>
+        <template v-slot:tabContent1>
+          <AddressSelection />
+          <div class="pa-8">
+            <div class="text-center">
+              <mew-button title="Access My Wallet" button-size="xlarge" />
+            </div>
           </div>
-        </v-tab-item>
-      </v-tabs>
-    </OverlayTabs>
-  </BaseOverlay>
+        </template>
+      </mew-tabs>
+    </template>
+  </mew-overlay>
 </template>
 
 <script>
 import AddressSelection from './components/AddressSelection';
-import BaseOverlay from '../BaseOverlay';
-import OverlayTitle from '@/components/OverlayTitle';
-import OverlayTabs from '@/components/OverlayTabs';
-import InputSearch from '@/components/Inputs/InputSearch1';
 
 export default {
   components: {
-    AddressSelection,
-    BaseOverlay,
-    OverlayTitle,
-    OverlayTabs,
-    InputSearch
+    AddressSelection
   },
   props: {
     open: { default: false, type: Boolean },
@@ -96,8 +62,14 @@ export default {
   },
   data() {
     return {
-      activeTab: 0,
-      tabs: { id: 0, title: '' },
+      tabs: [
+        {
+          name: ''
+        },
+        {
+          name: ''
+        }
+      ],
       appSelected: '',
       apps: [
         { name: 'Ethereum', value: 'eth' },
@@ -113,13 +85,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.v-tabs-bar {
-  display: none;
-}
-
-.overlay-content {
-  width: 500px;
-}
-</style>

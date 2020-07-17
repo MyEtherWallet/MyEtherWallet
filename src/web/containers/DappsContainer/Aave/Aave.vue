@@ -20,137 +20,140 @@
         @closeBanner="closeBanner"
       />
 
-      <v-tabs v-model="tab" background-color="transparent" class="px-10">
-        <v-tab class="text-transform--initial mew-heading-2">
-          Deposits
-        </v-tab>
-        <v-tab class="text-transform--initial mew-heading-2">
-          Borrowings
-        </v-tab>
-      </v-tabs>
-
-      <v-tabs-items v-model="tab">
-        <v-tab-item>
-          <div class="py-12">
-            <div class="d-flex align-center justify-end mr-12 mb-5">
-              <div class="mr-3">Health factor</div>
-              <div class="emerald--text font-weight-bold mr-3">2.45345</div>
-              <info-tooltip text="Health factor" />
-            </div>
-            <div class="tab-width">
-              <v-row>
-                <v-col cols="6">
-                  <div class="bg_datablock pa-5 border-radius--5px">
-                    <h5 class="mb-2 font-weight-bold">
-                      Aggregated Balance
-                    </h5>
-                    <h3 class="font-weight-bold">
-                      $40.00
-                    </h3>
-                    <div class="mt-2">0 ETH</div>
-                    <mew6-divider-line class="my-2" />
-                    <div class="d-flex justify-space-between">
-                      <div class="font-weight-medium">Composition</div>
-                      <div class="d-flex align-center">
-                        <div class="blue--text font-weight-bold mr-2">100%</div>
-                        <div>Available</div>
+      <mew-tabs :items="tabs">
+        <template v-slot:tabContent0>
+          <v-sheet max-width="800px" class="mx-auto">
+            <div class="py-12">
+              <div class="d-flex align-center justify-end mr-12 mb-5">
+                <div class="mr-3">Health factor</div>
+                <div class="emerald--text font-weight-bold mr-3">2.45345</div>
+                <info-tooltip text="Health factor" />
+              </div>
+              <div class="tab-width">
+                <v-row>
+                  <v-col cols="6">
+                    <div class="bg_datablock pa-5 border-radius--5px">
+                      <h5 class="mb-2 font-weight-bold">
+                        Aggregated Balance
+                      </h5>
+                      <h3 class="font-weight-bold">
+                        $40.00
+                      </h3>
+                      <div class="mt-2">0 ETH</div>
+                      <mew6-divider-line class="my-2" />
+                      <div class="d-flex justify-space-between">
+                        <div class="font-weight-medium">Composition</div>
+                        <div class="d-flex align-center">
+                          <div class="blue--text font-weight-bold mr-2">
+                            100%
+                          </div>
+                          <div>Available</div>
+                        </div>
                       </div>
+                      <mew-progress-bar class="mt-2" :balance-obj="balance" />
                     </div>
-                    <mew-progress-bar class="mt-2" :balance-obj="balance" />
-                  </div>
-                </v-col>
-                <v-col cols="6">
-                  <div class="bg_datablock pa-5 border-radius--5px">
-                    <h5 class="mb-2 font-weight-bold">
-                      Aggregated Balance
-                    </h5>
-                    <h3 class="font-weight-bold">
-                      $40.00
-                    </h3>
-                    <div class="mt-2">0 ETH</div>
-                    <mew6-divider-line class="my-2" />
-                    <div class="d-flex justify-space-between">
-                      <div class="font-weight-medium">Composition</div>
-                      <div class="d-flex align-center">
-                        <div class="blue--text font-weight-bold mr-2">100%</div>
-                        <div>Available</div>
+                  </v-col>
+                  <v-col cols="6">
+                    <div class="bg_datablock pa-5 border-radius--5px">
+                      <h5 class="mb-2 font-weight-bold">
+                        Aggregated Balance
+                      </h5>
+                      <h3 class="font-weight-bold">
+                        $40.00
+                      </h3>
+                      <div class="mt-2">0 ETH</div>
+                      <mew6-divider-line class="my-2" />
+                      <div class="d-flex justify-space-between">
+                        <div class="font-weight-medium">Composition</div>
+                        <div class="d-flex align-center">
+                          <div class="blue--text font-weight-bold mr-2">
+                            100%
+                          </div>
+                          <div>Available</div>
+                        </div>
                       </div>
+                      <mew-progress-bar class="mt-2" :balance-obj="balance" />
                     </div>
-                    <mew-progress-bar class="mt-2" :balance-obj="balance" />
-                  </div>
-                </v-col>
-              </v-row>
+                  </v-col>
+                </v-row>
+              </div>
+              <div class="d-flex justify-center mt-9">
+                <mew-button title="Deposit" button-size="xlarge"></mew-button>
+              </div>
             </div>
-            <div class="d-flex justify-center mt-9">
-              <mew-button title="Deposit" button-size="xlarge"></mew-button>
-            </div>
-          </div>
-        </v-tab-item>
-        <v-tab-item>
-          <div class="py-12">
-            <div class="d-flex align-center justify-end mr-12 mb-5">
-              <div class="mr-3">Health factor</div>
-              <div class="emerald--text font-weight-bold mr-3">2.45345</div>
-              <info-tooltip text="Health factor" />
-            </div>
-            <div class="tab-width">
-              <v-row>
-                <v-col cols="6">
-                  <div class="bg_datablock pa-5 border-radius--5px">
-                    <h5 class="mb-2 font-weight-bold">
-                      Aggregated Balance
-                    </h5>
-                    <h3 class="font-weight-bold">
-                      $40.00
-                    </h3>
-                    <div class="mt-2">0 ETH</div>
-                    <mew6-divider-line class="my-2" />
-                    <div class="d-flex justify-space-between">
-                      <div class="font-weight-medium">Composition</div>
-                      <div class="d-flex align-center">
-                        <div class="blue--text font-weight-bold mr-2">100%</div>
-                        <div>Available</div>
+          </v-sheet>
+        </template>
+        <template v-slot:tabContent1>
+          <v-sheet max-width="800px" class="mx-auto">
+            <div class="py-12">
+              <div class="d-flex align-center justify-end mr-12 mb-5">
+                <div class="mr-3">Health factor</div>
+                <div class="emerald--text font-weight-bold mr-3">2.45345</div>
+                <info-tooltip text="Health factor" />
+              </div>
+              <div class="tab-width">
+                <v-row>
+                  <v-col cols="6">
+                    <div class="bg_datablock pa-5 border-radius--5px">
+                      <h5 class="mb-2 font-weight-bold">
+                        Aggregated Balance
+                      </h5>
+                      <h3 class="font-weight-bold">
+                        $40.00
+                      </h3>
+                      <div class="mt-2">0 ETH</div>
+                      <mew6-divider-line class="my-2" />
+                      <div class="d-flex justify-space-between">
+                        <div class="font-weight-medium">Composition</div>
+                        <div class="d-flex align-center">
+                          <div class="blue--text font-weight-bold mr-2">
+                            100%
+                          </div>
+                          <div>Available</div>
+                        </div>
                       </div>
+                      <mew-progress-bar class="mt-2" :balance-obj="balance" />
                     </div>
-                    <mew-progress-bar class="mt-2" :balance-obj="balance" />
-                  </div>
-                </v-col>
-                <v-col cols="6">
-                  <div class="bg_datablock pa-5 border-radius--5px">
-                    <h5 class="mb-2 font-weight-bold">
-                      Aggregated Balance
-                    </h5>
-                    <h3 class="font-weight-bold">
-                      $40.00
-                    </h3>
-                    <div class="mt-2">0 ETH</div>
-                    <mew6-divider-line class="my-2" />
-                    <div class="d-flex justify-space-between">
-                      <div class="font-weight-medium">Composition</div>
-                      <div class="d-flex align-center">
-                        <div class="blue--text font-weight-bold mr-2">100%</div>
-                        <div>Available</div>
+                  </v-col>
+                  <v-col cols="6">
+                    <div class="bg_datablock pa-5 border-radius--5px">
+                      <h5 class="mb-2 font-weight-bold">
+                        Aggregated Balance
+                      </h5>
+                      <h3 class="font-weight-bold">
+                        $40.00
+                      </h3>
+                      <div class="mt-2">0 ETH</div>
+                      <mew6-divider-line class="my-2" />
+                      <div class="d-flex justify-space-between">
+                        <div class="font-weight-medium">Composition</div>
+                        <div class="d-flex align-center">
+                          <div class="blue--text font-weight-bold mr-2">
+                            100%
+                          </div>
+                          <div>Available</div>
+                        </div>
                       </div>
+                      <mew-progress-bar class="mt-2" :balance-obj="balance" />
                     </div>
-                    <mew-progress-bar class="mt-2" :balance-obj="balance" />
-                  </div>
-                </v-col>
-                <v-col cols="12">
-                  <div
-                    class="bg_datablock pa-5 border-radius--5px d-flex align-center justify-space-between"
-                  >
-                    <div class="font-weight-bold">Loan to value</div>
-                    <div class="font-weight-bold">65.04%</div>
-                  </div>
-                </v-col>
-              </v-row>
+                  </v-col>
+                  <v-col cols="12">
+                    <div
+                      class="bg_datablock pa-5 border-radius--5px d-flex align-center justify-space-between"
+                    >
+                      <div class="font-weight-bold">Loan to value</div>
+                      <div class="font-weight-bold">65.04%</div>
+                    </div>
+                  </v-col>
+                </v-row>
+              </div>
+              <div class="d-flex justify-center mt-9">
+                <mew-button title="Deposit" button-size="xlarge"></mew-button>
+              </div>
             </div>
-            <div class="d-flex justify-center mt-9">
-              <mew-button title="Deposit" button-size="xlarge"></mew-button>
-            </div>
-          </div>
-        </v-tab-item>
-      </v-tabs-items>
+          </v-sheet>
+        </template>
+      </mew-tabs>
     </mew6-white-sheet>
   </div>
 </template>
@@ -162,6 +165,7 @@ export default {
   components: {},
   data() {
     return {
+      tabs: [{ name: 'Save' }, { name: 'Borrow' }],
       BG: BG,
       balance: {
         total: 20.32,
@@ -186,35 +190,8 @@ export default {
         title: 'Unstoppable Domain',
         subtext: 'Replace cryptocurrency addresses with a human readable name.',
         exit: 'Exit Dapp'
-      },
-      tab: 1
-    };
-  },
-  watch: {
-    $route() {
-      this.checkQueryTab();
-    },
-    tab(val) {
-      if (val == 0) {
-        this.$router.replace({
-          name: 'Aave',
-          query: { tab: 'deposits' }
-        });
-      } else if (val == 1) {
-        this.$router.replace({
-          name: 'Aave',
-          query: { tab: 'borrowings' }
-        });
-      } else {
-        this.$router.replace({
-          name: 'Aave',
-          query: { tab: 'deposits' }
-        });
       }
-    }
-  },
-  mounted() {
-    this.checkQueryTab();
+    };
   },
   methods: {
     openOverlay(name) {
@@ -223,36 +200,7 @@ export default {
     openModal(name) {
       this.$store.commit('openModal', name);
     },
-    closeBanner() {},
-    checkQueryTab() {
-      const currentTab = this.$route.query.tab;
-
-      if (currentTab == 'deposits') {
-        this.tab = 0;
-      } else if (currentTab == 'borrowings') {
-        this.tab = 1;
-      } else {
-        this.tab = 0;
-      }
-    }
+    closeBanner() {}
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.tab-width {
-  max-width: 800px;
-  margin: 0 auto;
-}
-.v-tabs {
-  border-bottom: 2px solid var(--v-bg_wallet-base);
-}
-</style>
-
-<style lang="scss">
-#id-5823206fb29f9c5c12e44d0ec3e5738f {
-  .v-tabs-bar {
-    height: 70px;
-  }
-}
-</style>

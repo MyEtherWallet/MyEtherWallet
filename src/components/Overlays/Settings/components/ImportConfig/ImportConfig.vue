@@ -5,18 +5,8 @@
       import you configuration file from your local computer.
     </div>
     <div class="d-flex align-start">
-      <v-file-input
-        color="emerald"
-        label="Upload file..."
-        filled
-      ></v-file-input>
-      <mew6-std-btn
-        buttonclass="button--green-border"
-        class="ml-3"
-        height="57px"
-      >
-        Import
-      </mew6-std-btn>
+      <v-file-input color="emerald" label="Upload file..." filled />
+      <mew-button class="ml-3" title="Confirm & Import" button-size="xlarge" />
     </div>
   </div>
 </template>

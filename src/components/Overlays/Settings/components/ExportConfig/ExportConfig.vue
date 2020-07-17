@@ -1,13 +1,11 @@
 <template>
   <div>
-    <div class="descriptions mb-7">
+    <v-sheet color="transparent" max-width="550px" class="mb-7">
       Please click the button on the left top to download your configuration
       file into your local computer.
-    </div>
+    </v-sheet>
     <div class="d-flex justify-center mt-5">
-      <mew6-std-btn buttonclass="button--green" size="x-large">
-        Export
-      </mew6-std-btn>
+      <mew-button title="Export" button-size="xlarge" />
     </div>
   </div>
 </template>
@@ -21,9 +19,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.descriptions {
-  max-width: 450px;
-}
-</style>
