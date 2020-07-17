@@ -310,21 +310,11 @@ export default {
           bcvaultInstance
             .init()
             .then(res => {
-              if (res && res.length >= 1) {
-                this.openBcVault(res, bcvaultInstance);
-              } else if (res && res.length === 0) {
-                return BCVaultWallet.errorHandler(
-                  { jsError: 'mew4' },
-                  Toast.ERROR
-                );
-              } else {
-                return BCVaultWallet.errorHandler(
-                  { jsError: 'mew5' },
-                  Toast.ERROR
-                );
-              }
+              this.openBcVault(res, bcvaultInstance);
             })
-            .catch(BCVaultWallet.errorHandler);
+            .catch(e => {
+              BCVaultWallet.errorHandler(e);
+            });
           break;
         case COOLWALLET_TYPE:
           this.$emit('hardwareRequiresPassword', {
