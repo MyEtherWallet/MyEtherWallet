@@ -5,32 +5,32 @@
       <div class="headline font-weight-bold mb-5">Write down the words</div>
 
       <div class="d-flex align-center justify-end pb-4">
-        <mew6-std-btn
-          size="small"
-          min-width="0"
-          text
+        <mew-button
+          button-size="medium"
+          icon="mdi-sync"
+          icon-type="mdi"
+          icon-align="left"
+          title="Random"
+          btn-style="transparent"
+          color-theme="basic"
           @click.native="setPhrases"
-        >
-          <v-icon style="font-size: 18px;">mdi-sync</v-icon> Random
-        </mew6-std-btn>
+        />
+
         <div class="selector ml-3">
-          <v-select
-            v-model="phraseSize"
-            hide-details
-            :items="items"
-            outlined
-            dense
-            width="200px"
-          ></v-select>
+          <mew-select :items="items" />
         </div>
       </div>
       <PhraseBlock class="mb-8">
         <MnemonicPhraseTable :data="phrases" />
       </PhraseBlock>
-      <ExpantionBlock class="mb-8" title="Add extra words" right-text="Optional"
-        >aaaaa</ExpantionBlock
-      >
-      <div class="d-flex justify-center mb-3">
+
+      <mew-expand-panel is-toggle has-dividers :panel-items="exPanel">
+        <template v-slot:panelBody0>
+          Input needs to be added
+        </template>
+      </mew-expand-panel>
+
+      <div class="d-flex justify-center mt-6">
         <mew-button
           title="I wrote them down"
           button-size="xlarge"
@@ -38,28 +38,43 @@
           @click.native="linkToStep(2)"
         />
       </div>
-      <div class="d-flex justify-center">
-        <mew6-std-btn @click.native="linkToStep(2)">
-          I wrote them down
-        </mew6-std-btn>
-      </div>
     </mew6-flexible-btn>
-    <Caution class="mt-6" />
+    <warning-sheet
+      class="mt-5"
+      title="Caution"
+      description="DO NOT take a screenshot or
+    share this phrase with anyone. This phrase acts as the PRIVATE KEY to access
+    your wallet."
+      :link-obj="link"
+    />
   </div>
 </template>
 
 <script>
-import Caution from '@/components/WarningBlocks/MnemonicCaution';
 import PhraseBlock from '../PhraseBlock';
 import MnemonicPhraseTable from '@/components/MnemonicPhrase/MnemonicPhraseTable';
 import MnemonicTools from '@/common/helpers/mnemonicTools';
-import ExpantionBlock from '@/components/ExpantionBlock';
 
 export default {
-  components: { Caution, PhraseBlock, MnemonicPhraseTable, ExpantionBlock },
+  components: { PhraseBlock, MnemonicPhraseTable },
   data: () => ({
-    items: ['12 words', '24 words'],
-    phraseSize: '12 words',
+    link: { title: 'Learn more', url: 'https://www.myetherwallet.com/' },
+    exPanel: [
+      {
+        name: 'Add extra words'
+      }
+    ],
+    items: [
+      {
+        name: '12 words',
+        value: '12 words'
+      },
+      {
+        name: '24 words',
+        value: '12 words'
+      }
+    ],
+    phraseSize: '24 words',
     phrases: []
   }),
   watch: {
@@ -87,9 +102,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.mnemonic-step1 .selector {
-  max-width: 120px;
-}
-</style>

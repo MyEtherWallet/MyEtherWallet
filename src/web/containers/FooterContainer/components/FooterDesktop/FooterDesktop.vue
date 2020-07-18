@@ -105,7 +105,7 @@
         <v-col>
           <div class="subtitle-1 font-weight-bold mb-5 d-flex align-center">
             Love
-            <mew-icon icon-name="love" icon-type="mew" img-height="30" />
+            <mew-icon icon-name="love" icon-type="mew" :img-height="30" />
             MEW? Donate!
           </div>
           <p>
@@ -120,7 +120,7 @@
             <mew-icon
               icon-name="eth"
               icon-type="mew"
-              img-height="35"
+              :img-height="35"
               class="mr-2"
             />
 
@@ -139,7 +139,7 @@
             <mew-icon
               icon-name="btc"
               icon-type="mew"
-              img-height="35"
+              :img-height="35"
               class="mr-2"
             />
             <div>
@@ -188,7 +188,13 @@
             :href="i.link"
             target="_blank"
           >
-            <mew-button icon="facebook" icon-type="mew" btn-style="outline" />
+            <mew-button
+              icon-align="left"
+              :icon="i.icon"
+              icon-type="mew"
+              btn-style="transparent"
+              button-size="small"
+            />
           </a>
         </div>
       </div>
@@ -206,35 +212,35 @@ export default {
     icons: [
       {
         link: 'https://www.facebook.com/MyEtherWallet',
-        icon: 'mdi-facebook'
+        icon: 'facebook'
       },
       {
         link: 'https://twitter.com/myetherwallet',
-        icon: 'mdi-twitter'
+        icon: 'twitter'
       },
       {
         link: 'https://www.instagram.com/myetherwallet/',
-        icon: 'mdi-instagram'
+        icon: 'instagram'
       },
       {
         link: 'https://www.linkedin.com/company/myetherwallet',
-        icon: 'mdi-linkedin'
+        icon: 'linkedin'
       },
       {
         link: 'https://github.com/myetherwallet',
-        icon: 'mdi-github-circle'
+        icon: 'github'
       },
       {
         link: 'https://www.reddit.com/r/MyEtherWallet/',
-        icon: 'mdi-reddit'
+        icon: 'reddit'
       },
       {
         link: 'https://www.youtube.com/channel/UCQU5QbObwmaHNEMsuX3uQKA',
-        icon: 'mdi-youtube'
+        icon: 'youtube'
       },
       {
         link: 'https://medium.com/@myetherwallet',
-        icon: 'mdi-medium'
+        icon: 'medium'
       }
     ]
   })

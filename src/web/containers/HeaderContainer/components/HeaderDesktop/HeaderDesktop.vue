@@ -9,13 +9,14 @@
       <v-spacer></v-spacer>
       <mew-button
         class="pr-2 pl-4"
-        title="Buy ETH"
+        title="MEW tools"
         color-theme="white"
         :has-full-width="false"
         button-size="large"
         btn-style="outline"
-        icon="mdi-credit-card-outline"
+        icon="mdi-view-module"
         icon-type="mdi"
+        icon-align="left"
       />
     </v-container>
   </div>

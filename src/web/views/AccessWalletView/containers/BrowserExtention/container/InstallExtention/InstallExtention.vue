@@ -6,23 +6,24 @@
       </h5>
     </BlockTitle>
 
-    <v-sheet color="transparent" max-width="450px" class="mx-auto px-5">
-      <mew6-flexible-btn>
-        <div class="d-flex align-center justify-center flex-column">
-          <img
-            src="@/assets/images/icons/icon-mew-cx.png"
-            alt="MEW Extention"
-            height="80"
-          />
-          <h5 class="mt-7 font-weight-bold">Install MEW chrome extention</h5>
-          <mew6-std-btn
-            class="mt-7"
-            :to="{ name: 'AccessWalletBrowserExtentionAccess', query: {} }"
-          >
-            Install
-          </mew6-std-btn>
-        </div>
-      </mew6-flexible-btn>
+    <v-sheet
+      color="white"
+      max-width="450px"
+      class="mx-auto pa-12 border-radius--10px"
+    >
+      <div class="d-flex align-center justify-center flex-column">
+        <img
+          src="@/assets/images/icons/icon-mew-cx.png"
+          alt="MEW Extention"
+          height="80"
+        />
+        <h5 class="mt-7 font-weight-bold">Install MEW chrome extention</h5>
+        <router-link
+          :to="{ name: 'AccessWalletBrowserExtentionAccess', query: {} }"
+        >
+          <mew-button button-size="xlarge" title="Install" class="mt-7" />
+        </router-link>
+      </div>
     </v-sheet>
     <div class="spacer-y-medium" />
   </div>

@@ -14,7 +14,7 @@
         <PhraseBlock class="mb-2 d-flex align-center">
           <div style="min-width: 60px;">5.</div>
           <v-radio-group
-            v-model="radioGroup"
+            v-model="radioGroup1"
             hide-details
             class="width--100-percent"
           >
@@ -28,7 +28,7 @@
         <PhraseBlock class="mb-2 d-flex align-center">
           <div style="min-width: 60px;">5.</div>
           <v-radio-group
-            v-model="radioGroup"
+            v-model="radioGroup2"
             hide-details
             class="width--100-percent"
           >
@@ -42,7 +42,7 @@
         <PhraseBlock class="mb-2 d-flex align-center">
           <div style="min-width: 60px;">5.</div>
           <v-radio-group
-            v-model="radioGroup"
+            v-model="radioGroup3"
             hide-details
             class="width--100-percent"
           >
@@ -67,11 +67,6 @@
           @click.native="linkToStep(3)"
         />
       </div>
-      <div class="d-flex justify-center mt-6">
-        <mew6-std-btn @click.native="linkToStep(3)">
-          Verify
-        </mew6-std-btn>
-      </div>
     </mew6-flexible-btn>
     <mew6-warning-not-recommended class="mt-6" />
   </div>
@@ -83,6 +78,9 @@ import PhraseBlock from '../PhraseBlock';
 export default {
   components: { PhraseBlock },
   data: () => ({
+    radioGroup1: '',
+    radioGroup2: '',
+    radioGroup3: '',
     warningData: [
       {
         img: require('@/assets/images/icons/icon-paper-plane-mew.svg'),
