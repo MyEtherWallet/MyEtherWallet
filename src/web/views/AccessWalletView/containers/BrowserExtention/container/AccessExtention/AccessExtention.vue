@@ -6,36 +6,38 @@
       </h5>
     </BlockTitle>
 
-    <v-sheet color="transparent" max-width="450px" class="mx-auto px-5">
-      <mew6-flexible-btn>
-        <div class="d-flex align-center justify-center flex-column">
-          <div class="d-flex align-center">
-            <img
-              src="@/assets/images/icons/icon-mew-cx.png"
-              alt="MEW Extention"
-              height="79"
-            />
-            <v-icon class="clip mx-4">mdi-attachment</v-icon>
-            <img
-              src="@/assets/images/icons/logo-mew-small.png"
-              alt="MEW Logo"
-              height="80"
-            />
-          </div>
-          <h5 class="font-weight-bold text-center mb-0 mt-7">
-            Please use MEW on a secure (SSL/HTTPS) connection to connect.
-          </h5>
-          <mew6-confirm-btn>
-            I agree MEW browser extention user
-            <a target="_blank" href="https://myetherwallet.com"> Terms</a>.
-          </mew6-confirm-btn>
-          <mew6-std-btn
-            :to="{ name: 'AccessWalletBrowserExtentionAccess', query: {} }"
-          >
-            Access my wallet
-          </mew6-std-btn>
+    <v-sheet
+      color="white"
+      max-width="450px"
+      class="mx-auto pa-12 border-radius--10px"
+    >
+      <div class="d-flex align-center justify-center flex-column">
+        <div class="d-flex align-center">
+          <img
+            src="@/assets/images/icons/icon-mew-cx.png"
+            alt="MEW Extention"
+            height="79"
+          />
+          <v-icon class="clip mx-4">mdi-attachment</v-icon>
+          <img
+            src="@/assets/images/icons/logo-mew-small.png"
+            alt="MEW Logo"
+            height="80"
+          />
         </div>
-      </mew6-flexible-btn>
+        <h5 class="font-weight-bold text-center mb-0 mt-7">
+          Please use MEW on a secure (SSL/HTTPS) connection to connect.
+        </h5>
+
+        <mew-checkbox label="I agree MEW browser extention user Terms." />
+
+        <router-link
+          :to="{ name: 'AccessWalletBrowserExtentionAccess', query: {} }"
+          class="display--block"
+        >
+          <mew-button title="Access my wallet" button-size="xlarge" />
+        </router-link>
+      </div>
     </v-sheet>
     <div class="spacer-y-medium" />
   </div>

@@ -2,24 +2,17 @@
   <div class="bg_blue">
     <v-sheet color="transparent" max-width="800px" class="mx-auto">
       <BlockTitle :data="titleData" />
-
       <mew-stepper :items="items" :on-step="onStep">
-        <template v-slot:stepperContent1>
-          111111
+        <template v-slot:outsideStepContent0>
           <Step1 />
         </template>
-        <template v-slot:stepperContent2>
-          222222
+        <template v-slot:outsideStepContent1>
           <Step2 />
         </template>
-        <template v-slot:stepperContent3>
-          333333
+        <template v-slot:outsideStepContent2>
           <Step3 />
         </template>
       </mew-stepper>
-
-      <div class="py-12"></div>
-      <SteppersHeaderContent :tabs="tabs" />
     </v-sheet>
     <div class="spacer-y-medium" />
   </div>
@@ -27,7 +20,6 @@
 
 <script>
 import BlockTitle from '@/web/components/BlockTitle';
-import SteppersHeaderContent from '@/components/Steppers/SteppersHeaderContent';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
@@ -36,7 +28,6 @@ export default {
   name: 'MewConnect',
   components: {
     BlockTitle,
-    SteppersHeaderContent,
     Step1,
     Step2,
     Step3
@@ -66,12 +57,7 @@ export default {
         'An official, free companion App for MyEtherWallet that helps you secure your funds as never before.',
       descriptionMaxWidth: '400px',
       centered: true
-    },
-    tabs: [
-      { label: 'STEP 1. Download & Install', content: Step1 },
-      { label: 'STEP 2. Create a new wallet', content: Step2 },
-      { label: 'STEP 3. Well done', content: Step3 }
-    ]
+    }
   }),
   watch: {
     $route() {

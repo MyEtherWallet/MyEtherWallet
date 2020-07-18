@@ -8,7 +8,13 @@
     <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
       <v-row>
         <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="6">
-          <TextIconButton :label="btn.label" :icon="btn.icon" :to="btn.to" />
+          <router-link :to="btn.to" class="display--block">
+            <mew-super-button
+              :title="btn.label"
+              :right-icon="btn.icon"
+              icon-type="img"
+            />
+          </router-link>
         </v-col>
       </v-row>
     </v-sheet>
@@ -18,11 +24,10 @@
 
 <script>
 import BlockTitle from '@/web/components/BlockTitle';
-import TextIconButton from '@/web/components/Buttons/TextIconButton';
 
 export default {
   name: 'CreateNewWallet',
-  components: { BlockTitle, TextIconButton },
+  components: { BlockTitle },
   data() {
     return {
       titleData: {

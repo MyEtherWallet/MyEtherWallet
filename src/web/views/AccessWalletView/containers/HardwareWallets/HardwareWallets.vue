@@ -16,9 +16,10 @@
     <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
       <v-row>
         <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="6">
-          <TextIconButton
-            :label="btn.label"
-            :icon="btn.icon"
+          <mew-super-button
+            :title="btn.label"
+            :right-icon="btn.icon"
+            icon-type="img"
             @click.native="openOverlay(btn.overlayName)"
           />
         </v-col>
@@ -30,11 +31,10 @@
 
 <script>
 import BlockTitle from '@/web/components/BlockTitle';
-import TextIconButton from '@/web/components/Buttons/TextIconButton';
 
 export default {
   name: 'CreateNewWallet',
-  components: { BlockTitle, TextIconButton },
+  components: { BlockTitle },
   data() {
     return {
       titleData: {

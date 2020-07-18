@@ -15,9 +15,6 @@
           :has-full-width="false"
           @click.native="linkToStep(3)"
         />
-        <mew6-std-btn size="x-large" buttonclass="button--green">
-          Access my wallet
-        </mew6-std-btn>
 
         <p class="mt-4 mb-0">
           Need help?
