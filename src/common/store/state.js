@@ -9,7 +9,6 @@ const state = {
     accessWalletCoolWallet: { isOpen: false },
     accessWalletBCVault: { isOpen: false },
     accessWalletXWallet: { isOpen: false },
-    accessWalletBrowserExtensions: { isOpen: false },
     accessWalletMobileApps: { isOpen: false },
     transactionTxConfirmation: { isOpen: false },
     SignMessageConfirmation: { isOpen: false }
