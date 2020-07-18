@@ -1,6 +1,5 @@
 <template>
   <div class="bg_blue">
-    <mew6-bottom-alert-buy-hardware-wallet :show="true" hide-overlay />
     <toast
       ref="toast"
       can-close

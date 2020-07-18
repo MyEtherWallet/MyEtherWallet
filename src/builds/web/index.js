@@ -21,7 +21,6 @@ import AccessWalletMobileApps from '@/web/views/AccessWalletView/containers/Mobi
 
 import AboutUsCompany from '@/web/views/AboutUsView/CompanyContainer';
 import AboutUsTeam from '@/web/views/AboutUsView/TeamContainer';
-import AboutUsWhyMEW from '@/web/views/AboutUsView/WhyMEWContainer';
 
 import HowItWorks from '@/web/views/LandingPageView/HowItWorks';
 import MoreActions from '@/web/views/LandingPageView/MoreActions';
@@ -105,14 +104,6 @@ const webRoutes = [
         path: 'about-us/team',
         name: 'AboutUsTeam',
         component: AboutUsTeam,
-        meta: {
-          requiresAuth: false
-        }
-      },
-      {
-        path: 'about-us/why-mew',
-        name: 'AboutUsWhyMEW',
-        component: AboutUsWhyMEW,
         meta: {
           requiresAuth: false
         }

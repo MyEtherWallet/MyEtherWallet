@@ -7,46 +7,13 @@
       <v-row>
         <v-col v-for="(b, key) in buttons" :key="key" cols="6">
           <a :href="b.link" target="_blank">
-            <mew6-flexible-btn color="primary_silver">
-              <div class="d-flex align-center justify-space-between">
-                <div class="pr-9">
-                  <img
-                    v-if="b.logoImg"
-                    height="32"
-                    :src="b.logoImg"
-                    alt="Logo"
-                    class="mb-3"
-                  />
-                  <div
-                    v-if="b.logoText"
-                    class="d-flex align-center logo-text mb-3"
-                  >
-                    <div>{{ b.logoText }}</div>
-                  </div>
-                  <h6
-                    class="text-uppercase font-weight-bold emerald--text text--lighten-1"
-                  >
-                    {{ b.priceNote }}
-                  </h6>
-
-                  <div class="d-flex">
-                    <h5 class="mr-1 font-weight-black">{{ b.currency }}</h5>
-                    <h3 class="text-uppercase font-weight-bold">
-                      {{ b.price }}
-                    </h3>
-                  </div>
-                  <div>
-                    {{ b.note }}
-                  </div>
-                  <div class="mt-3 emerald--text font-weight-medium">
-                    Learn more >
-                  </div>
-                </div>
-                <div>
-                  <img height="140" :src="b.walletImg" alt="Hardware Wallet" />
-                </div>
-              </div>
-            </mew6-flexible-btn>
+            <mew-super-button
+              :title="b.currency + b.price"
+              :subtitle="b.note"
+              tag="Learn more"
+              :right-icon="b.walletImg"
+              icon-type="img"
+            />
           </a>
         </v-col>
       </v-row>

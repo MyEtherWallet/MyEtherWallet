@@ -18,36 +18,54 @@
       />
       <div>Settings</div>
     </div>
-    <LogoutDialog>
-      <div class="menu-item cursor--pointer d-flex align-center px-3 py-2">
-        <img
-          width="26"
-          height="26"
-          src="@/assets/images/icons/icon-logout-disable.png"
-          class="mr-3 dark"
-        />
-        <img
-          width="26"
-          height="26"
-          src="@/assets/images/icons/icon-logout-enable.png"
-          class="mr-3 light"
-        />
-        <div>Log out</div>
-      </div>
-    </LogoutDialog>
 
+    <div
+      class="menu-item cursor--pointer d-flex align-center px-3 py-2"
+      @click="logoutOpen = true"
+    >
+      <img
+        width="26"
+        height="26"
+        src="@/assets/images/icons/icon-logout-disable.png"
+        class="mr-3 dark"
+      />
+      <img
+        width="26"
+        height="26"
+        src="@/assets/images/icons/icon-logout-enable.png"
+        class="mr-3 light"
+      />
+      <div>Log out</div>
+    </div>
+
+    <mew-popup
+      :is-open="logoutOpen"
+      title="Are you sure you want to log out?"
+      :button-left="logout.btnLeft"
+      :button-right="logout.btnRight"
+    ></mew-popup>
     <Settings :open="openSettings" :close="closeSettings" />
   </div>
 </template>
 
 <script>
 import Settings from '@/components/Overlays/Settings';
-import LogoutDialog from '@/components/Dialogs/LogoutDialog';
 
 export default {
-  components: { Settings, LogoutDialog },
+  components: { Settings },
   data() {
     return {
+      logoutOpen: false,
+      logout: {
+        btnLeft: {
+          name: 'Cancel',
+          colorTheme: 'basic'
+        },
+        btnRight: {
+          name: 'Log out',
+          colorTheme: 'error'
+        }
+      },
       openSettings: false
     };
   },

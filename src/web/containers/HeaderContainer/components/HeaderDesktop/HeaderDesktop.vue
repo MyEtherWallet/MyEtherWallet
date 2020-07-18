@@ -14,7 +14,8 @@
         :has-full-width="false"
         button-size="large"
         btn-style="outline"
-        left-md-icon="mdi-credit-card-outline"
+        icon="mdi-credit-card-outline"
+        icon-type="mdi"
       />
     </v-container>
   </div>
