@@ -1,10 +1,14 @@
 <template>
   <MewCarousel :total-slides="2">
     <template v-slot:slide1>
-      <Ad1 />
+      <mew6-white-sheet class="banner">
+        <Ad1 />
+      </mew6-white-sheet>
     </template>
     <template v-slot:slide2>
-      <Ad2 />
+      <mew6-white-sheet class="banner">
+        <Ad2 />
+      </mew6-white-sheet>
     </template>
   </MewCarousel>
 </template>
@@ -17,3 +21,9 @@ export default {
   components: { Ad1, Ad2 }
 };
 </script>
+
+<style lang="scss" scoped>
+.banner {
+  height: 145px;
+}
+</style>

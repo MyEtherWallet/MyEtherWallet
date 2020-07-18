@@ -1,55 +1,23 @@
 <template>
-  <div>
+  <router-link
+    :to="{ name: 'AccessWalletMobileApps', query: {} }"
+    class="display--block"
+  >
     <mew-super-button
-      class="mb-1"
       color-theme="basic"
       title="Mobile Apps"
       subtitle="WalletConnect, Wallet Link"
+      icon-type="img"
       :right-icon="require('@/assets/images/icons/icon-wallet-connect.svg')"
-      :title-icon="require('@/assets/images/icons/icon-mew-cx.png')"
+      :right-icon2="require('@/assets/images/icons/icon-wallet-link.png')"
+      title-icon="mdi-shield-check"
     />
-    <mew6-flexible-btn
-      small
-      :to="{ name: 'AccessWalletMobileApps', query: {} }"
-    >
-      <div class="d-flex align-center justify-space-between">
-        <div class="pr-9">
-          <div class="d-flex align-center mb-2">
-            <h4 class="mr-2 font-weight-bold">Mobile Apps</h4>
-            <mew6-icon-secure />
-          </div>
-          <div>
-            WalletConnect, Wallet Link
-          </div>
-        </div>
-        <div class="d-flex align-center my-4">
-          <img
-            height="55"
-            src="@/assets/images/icons/icon-wallet-connect.svg"
-            alt="Wallet Connect"
-            class="mr-3"
-          />
-          <img
-            height="45"
-            src="@/assets/images/icons/icon-wallet-link.png"
-            alt="Wallet Link"
-          />
-        </div>
-      </div>
-    </mew6-flexible-btn>
-  </div>
+  </router-link>
 </template>
 
 <script>
 export default {
   components: {},
-  data: () => ({}),
-  methods: {
-    openOverlay(name) {
-      this.$store.commit('openOverlay', name);
-    }
-  }
+  data: () => ({})
 };
 </script>
-
-<style lang="scss" scoped></style>

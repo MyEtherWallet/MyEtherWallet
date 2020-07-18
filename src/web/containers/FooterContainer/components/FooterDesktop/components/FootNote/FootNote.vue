@@ -1,27 +1,29 @@
 <template>
-  <div class="foot-note py-3">
-    <v-container>
-      <div class="d-flex align-center">
-        <p class="cyan--text text--lighten-3 ma-0">V6.0.0-beta.3</p>
-        <v-spacer />
-        <p class="teal--text text--lighten-1 ma-0">
-          ©2019 MyEtherWallet. All rights reserved. Pricing taken from
-          <a class="cyan--text text--lighten-3" href="/">CoinMarketCap</a>.
-        </p>
-        <v-spacer />
-        <v-sheet width="150" color="transparent">
-          <v-select
-            v-model="select"
-            :items="languages"
-            item-text="name"
-            item-value="value"
-            return-object
-            single-line
-            dark
-          ></v-select>
-        </v-sheet>
-      </div>
-    </v-container>
+  <div id="id-dab581eb596e6225d97b24f9856e3d70">
+    <v-sheet color="dark_space" class="py-3">
+      <v-container>
+        <div class="d-flex align-center">
+          <p class="cyan--text text--lighten-3 ma-0">V6.0.0-beta.3</p>
+          <v-spacer />
+          <p class="teal--text text--lighten-1 ma-0">
+            ©2019 MyEtherWallet. All rights reserved. Pricing taken from
+            <a class="cyan--text text--lighten-3" href="/">CoinMarketCap</a>.
+          </p>
+          <v-spacer />
+          <v-sheet width="150" color="transparent">
+            <v-select
+              v-model="select"
+              :items="languages"
+              item-text="name"
+              item-value="value"
+              return-object
+              single-line
+              dark
+            ></v-select>
+          </v-sheet>
+        </div>
+      </v-container>
+    </v-sheet>
   </div>
 </template>
 
@@ -49,17 +51,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.foot-note {
-  background-color: var(--v-dark_space-base);
-}
-
 .v-avatar img {
   border-radius: 0;
 }
 </style>
 
 <style lang="scss">
-.foot-note {
+#id-dab581eb596e6225d97b24f9856e3d70 {
   .v-select__selection {
     color: #80deea !important;
     width: 100%;
@@ -81,6 +79,9 @@ export default {
   .v-input__slot {
     margin: 0;
     padding: 0;
+  }
+  .v-select .v-icon {
+    color: #80deea !important;
   }
 }
 </style>

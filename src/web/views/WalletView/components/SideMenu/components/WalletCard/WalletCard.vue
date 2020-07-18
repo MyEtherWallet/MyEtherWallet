@@ -47,12 +47,6 @@
           </v-btn>
         </Tooltip>
 
-        <Tooltip text="Click to print out your wallet">
-          <v-btn text icon :color="iconColor">
-            <v-icon class="color--white">mdi-dots-vertical</v-icon>
-          </v-btn>
-        </Tooltip>
-
         <mew-button
           class="ml-auto"
           :has-full-width="false"

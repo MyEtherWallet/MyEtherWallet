@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog :show="show" width="450px">
+  <mew-popup>
     <template v-slot:opener>
       <slot />
     </template>
@@ -21,14 +21,12 @@
         </div>
       </div>
     </template>
-  </BaseDialog>
+  </mew-popup>
 </template>
 
 <script>
-import BaseDialog from '@/components/Dialogs/BaseDialog';
-
 export default {
-  components: { BaseDialog },
+  components: {},
   props: {},
   data() {
     return { show: true };

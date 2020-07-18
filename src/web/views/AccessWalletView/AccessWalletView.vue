@@ -15,7 +15,6 @@
       </h5>
     </BlockTitle>
     <v-sheet color="transparent" max-width="650px" class="mx-auto">
-      <MEWconnect class="mb-5" />
       <Hardware class="mb-5" />
       <BrowserExtention class="mb-5" />
       <MobileApps class="mb-5" />
@@ -27,7 +26,6 @@
 
 <script>
 import BlockTitle from '@/web/components/BlockTitle';
-import MEWconnect from './components/MEWconnect';
 import Hardware from './components/Hardware';
 import BrowserExtention from './components/BrowserExtention';
 import MobileApps from './components/MobileApps';
@@ -37,7 +35,6 @@ export default {
   name: 'CreateNewWallet',
   components: {
     BlockTitle,
-    MEWconnect,
     Hardware,
     BrowserExtention,
     MobileApps,

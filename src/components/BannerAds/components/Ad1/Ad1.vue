@@ -14,13 +14,6 @@
         src="@/assets/images/icons/button-play-store.png"
       />
     </div>
-    <div class="d-flex align-center">
-      <img
-        class="mr-1"
-        height="23"
-        src="@/assets/images/icons/button-samsung.png"
-      />
-    </div>
   </div>
 </template>
 
