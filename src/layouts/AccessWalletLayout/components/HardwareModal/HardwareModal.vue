@@ -310,6 +310,7 @@ export default {
           bcvaultInstance
             .init()
             .then(res => {
+              console.log('it got here??');
               this.openBcVault(res, bcvaultInstance);
             })
             .catch(e => {

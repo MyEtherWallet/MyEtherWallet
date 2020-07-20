@@ -41,7 +41,7 @@ class BCVault {
             return;
           } else if (res && res.length === 0) {
             reject({
-              jsError: 'mew4'
+              jsError: 'mew5'
             });
             return;
           }
@@ -54,11 +54,14 @@ class BCVault {
                   _self.bcWalletType
                 ])
                 .then(walletRes => {
+                  if (!walletRes || walletRes.length === 0) {
+                    return reject({
+                      jsError: 'mew4'
+                    });
+                  }
                   resolve(walletRes);
                 })
-                .catch(e => {
-                  reject(e);
-                });
+                .catch(reject);
             })
             .catch(reject);
         })
