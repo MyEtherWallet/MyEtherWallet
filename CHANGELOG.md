@@ -1,8 +1,13 @@
-### Release v5.7.1
+### Release v5.7.2
 
 ### Bug
 
 - Remove disabled message and button on firefox for bcvault, add error when no account received [#2499](https://github.com/MyEtherWallet/MyEtherWallet/pull/2499)
+
+### Release v5.7.1
+
+### Bug
+
 - Fix logos for tokens with src not from masterfile [#2500](https://github.com/MyEtherWallet/MyEtherWallet/pull/2500)
 - Sentry fixes y [#2479](https://github.com/MyEtherWallet/MyEtherWallet/pull/2479)
 - Sentry fixes j [#2474](https://github.com/MyEtherWallet/MyEtherWallet/pull/2474)
