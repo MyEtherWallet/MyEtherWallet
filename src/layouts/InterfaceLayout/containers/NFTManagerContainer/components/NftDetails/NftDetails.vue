@@ -10,7 +10,7 @@
         </div>
 
         <div class="kitty-image">
-          <img :src="getImage(nft)" alt />
+          <img :src="imageUrl" alt />
         </div>
         <div class="kitty-text">
           <div v-if="canSend" class="product-title-desktop">
@@ -76,15 +76,15 @@ export default {
       type: String,
       default: 'Error'
     },
+    nftCardUrl: {
+      type: String,
+      default: 'Error'
+    },
     nftConfig: {
       type: Object,
       default: function () {
         return {};
       }
-    },
-    getImage: {
-      type: Function,
-      default: function () {}
     }
   },
   data() {
@@ -105,6 +105,12 @@ export default {
     ...mapState('main', ['account', 'web3']),
     canSend() {
       return !Object.values(this.cannotSend).includes(this.nft.contract);
+    },
+    imageUrl() {
+      console.log(
+        `${this.nftCardUrl}?contract=${this.nft.contract}&tokenId=${this.nft.token_id}`
+      ); // todo remove dev item
+      return `${this.nftCardUrl}?contract=${this.nft.contract}&tokenId=${this.nft.token_id}`;
     }
   },
   watch: {},

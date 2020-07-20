@@ -1,10 +1,7 @@
 <template>
-  <div
-    class="text-center cursor-pointer"
-    @click="showNftDetails(nft)"
-  >
+  <div class="text-center cursor-pointer" @click="showNftDetails(nft)">
     <div
-      v-if="!hasImage(nft)"
+      v-if="!nft.contract && !nft.token_id"
       class="spinner-box d-flex justify-content-center align-items-center"
     >
       <b-spinner
@@ -14,17 +11,12 @@
       ></b-spinner>
     </div>
     <div v-if="!imgError" class="product-img">
-      <img
-        :src="getImgUrl(nft)"
-        alt
-        @load="hasLoaded(nft)"
-        @error="imageError"
-      />
+      <img :src="imageUrl" alt @load="hasLoaded(nft)" @error="imageError" />
     </div>
     <div v-if="imgError && imgLoaded" class="product-img">
       <img :src="placeholderImage" alt />
     </div>
-    <p class="text-monospace">#{{ nft.name | ConcatToken }}</p>
+    <p class="text-monospace">#{{ nft.token_id | ConcatToken }}</p>
   </div>
 </template>
 
@@ -57,6 +49,7 @@ export default {
   },
   data() {
     return {
+      loadingImage: true,
       imgError: false,
       imgLoaded: false,
       awaitingData: true,
@@ -65,54 +58,41 @@ export default {
       imageSrc: placeholderImage
     };
   },
-  watch: {
-    async nft(newer, old) {
-      this.reset();
-      this.imageSrc = `${this.nftCardUrl}?contract=${newer.contract}&tokenId=${newer.tokenId}`
-      console.log(old, newer); // todo remove dev item
+  computed: {
+    imageUrl() {
+      return `${this.nftCardUrl}?contract=${this.nft.contract}&tokenId=${
+        this.nft.token_id || this.nft.token_id
+      }`;
     }
   },
-  // async mounted() {
-  //   console.log('MOUNTED'); // todo remove dev item
-  // },
+  watch: {
+    async nft(newer) {
+      this.reset();
+      this.imageSrc = `${this.nftCardUrl}?contract=${newer.contract}&tokenId=${newer.token_id}`;
+      this.loadingImage = !(newer.contract && newer.token_id);
+    }
+  },
   methods: {
-    hasLoaded(nft) {
-      this.$set(nft, 'loaded', true);
+    hasLoaded() {
       this.imgLoaded = true;
-    },
-    hasImage(nft) {
-      if (nft.customNft || nft.image === '') {
-        return true;
-      }
-      if (nft.loaded) {
-        return true;
-      }
-      if (this.imgLoaded) {
-        return true;
-      }
+      this.imgError = false;
     },
     getImgUrl(nft) {
-      if (!nft.tokenId) {
+      if (!nft.token_id) {
         this.imgLoaded = false;
         return placeholderImage;
       }
       this.awaitingData = false;
-      console.log(
-        `${this.nftCardUrl}?contract=${nft.contract}&tokenId=${nft.tokenId}`
-      ); // todo remove dev item
-      return `${this.nftCardUrl}?contract=${nft.contract}&tokenId=${nft.tokenId}`;
+      return `${this.nftCardUrl}?contract=${nft.contract}&tokenId=${nft.token_id}`;
     },
     imageError(error) {
-      console.log(error); // todo remove dev item
-      if (!this.awaitingData) {
-        this.imgError = true;
-        this.imgLoaded = true;
-      }
+      this.imgError = true;
+      this.imgLoaded = true;
     },
-    showNftDetails(){
+    showNftDetails() {
       this.$emit('showNftDetails', this.nft);
     },
-    reset(){
+    reset() {
       this.imgError = false;
       this.imgLoaded = false;
       this.awaitingData = true;
@@ -122,5 +102,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import 'NftTokenCard.scss';
+@import 'NftTokenCard.scss';
 </style>

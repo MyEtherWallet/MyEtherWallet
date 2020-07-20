@@ -24,6 +24,7 @@
         <nft-details
           :nft="detailsFor"
           :selected-title="nftTitle"
+          :nft-card-url="nftUrl"
           :get-image="getImage"
           @nftTransferred="removeSentNft"
           @resetNFT="resetNFT"
@@ -33,8 +34,13 @@
 
       <div v-if="!showDetails">
         <content-block-title :button-text="ntfCount" :title="nftTitle" />
-        <b-row v-show="!fetchingOwnedTokens">
-<!--        <b-row >-->
+
+        <div v-if="nftToShow.length === 0">
+          <loading-sign :loadingmessage1="$t('common.loading')" />
+        </div>
+
+        <b-row v-show="!fetchingOwnedTokens || collectionLoading">
+          <!--        <b-row >-->
           <b-col
             v-for="nft in nftToShow"
             :key="nft.key"
@@ -43,7 +49,6 @@
             md="4"
             class="mb-4"
           >
-            {{ startIndex }} {{ endIndex }}
             <nft-token-card
               :nft="nft"
               :nft-card-url="nftUrl"
@@ -51,7 +56,6 @@
             ></nft-token-card>
           </b-col>
         </b-row>
-
 
         <div
           class="pagination-container"
@@ -152,9 +156,9 @@ import NftCustomConfirmRemove from './components/NftCustomConfirmRemove';
 import { mapState } from 'vuex';
 import { nftABI } from './abis';
 import StandardButton from '@/components/Buttons/StandardButton';
-import placeholderImage from '@/assets/images/icons/defaultToken.png';
+// import placeholderImage from '@/assets/images/icons/defaultToken.png';
 import utils from 'web3-utils';
-
+const endPointUrl = '';
 export default {
   components: {
     'nft-custom-add-modal': NftCustomAddModal,
@@ -178,8 +182,8 @@ export default {
   data() {
     return {
       nftABI,
-      nftUrl: 'https://localhost:3000/local/getImage',
-      openSeaLambdaUrl: 'https://localhost:3000/local/',
+      nftUrl: `${endPointUrl}getImage`,
+      openSeaLambdaUrl: endPointUrl,
       countPerPage: 9,
       currentPage: 1,
       nftConfig: {},
@@ -217,11 +221,17 @@ export default {
       return `${this.$t('common.loading')}`;
     },
     startIndex() {
+      if (this.collectionLoading) {
+        return (this.currentPage - 1) * this.countPerPage - this.countPerPage;
+      }
       return this.currentPage * this.countPerPage - this.countPerPage;
     },
     endIndex() {
+      if (this.collectionLoading) {
+        return (this.currentPage - 1) * this.countPerPage;
+      }
       if (this.fetchingOwnedTokens || this.nftToShowList.length === 0) {
-        return this.currentPage * this.countPerPage;
+        return (this.currentPage - 1) * this.countPerPage;
       }
       if (this.nftConfig[this.selectedContract]) {
         if (this.nftConfig[this.selectedContract].tokens) {
@@ -242,38 +252,17 @@ export default {
       return this.currentPage * this.countPerPage;
     },
     nftToShow() {
-      const selectNftsToShow = () => {
-        try {
-          if (this.nftConfig[this.selectedContract]) {
-            if (!this.nftConfig[this.selectedContract].tokens) return [];
-            // const allRetreived =
-            //   this.nftConfig[this.selectedContract].tokens.length ===
-            //   this.nftConfig[this.selectedContract].count;
-            return this.nftConfig[this.selectedContract].tokens.length >
-              this.countPerPage
-              ? this.nftConfig[this.selectedContract].tokens.slice(
-                  this.startIndex,
-                  this.endIndex
-                )
-              : this.nftConfig[this.selectedContract].tokens;
-          }
-          return [];
-        } catch (e) {
-          // eslint-disable-next-line
-          console.error(e);
-          return [];
-        }
-      };
+      if (this.collectionLoading) {
+        return this.nftToShowList;
+      }
       if (this.fetchingOwnedTokens) return [];
-      return selectNftsToShow();
+
+      return this.selectNftsToShow();
     },
-    loadingPlaceholders(){
+    loadingPlaceholders() {
+      const count = this.endIndex - this.startIndex;
 
-        const count = this.endIndex - this.startIndex;
-
-        for(let i = 0; i< count; i++){
-
-        }
+      for (let i = 0; i < count; i++) {}
     },
     ntfCount() {
       if (
@@ -324,24 +313,19 @@ export default {
     }
   },
   watch: {
-    async selectedContract(newer, old) {
-      // console.log(this.nftConfig[newer]); // todo remove dev item
+    async selectedContract(newer) {
+      this.currentPage = 1;
       if (
         !this.nftConfig[newer].tokens ||
         this.nftConfig[newer].tokens.length === 0
       ) {
-        console.log('UPDATING'); // todo remove dev item
-        this.fetchingOwnedTokens = true;
         await this.getNftDetails(this.selectedContract).then(results => {
           this.nftConfig[this.selectedContract].tokens = results;
-          this.fetchingOwnedTokens = false;
           this.getNftsToShow();
         });
       } else {
-        // this.fetchingOwnedTokens = false;
         this.getNftsToShow();
       }
-      console.log(old, newer); // todo remove dev item
     }
   },
   async mounted() {
@@ -349,6 +333,25 @@ export default {
   },
   //======================================================================
   methods: {
+    selectNftsToShow() {
+      try {
+        if (this.nftConfig[this.selectedContract]) {
+          if (!this.nftConfig[this.selectedContract].tokens) return [];
+          return this.nftConfig[this.selectedContract].tokens.length >
+            this.countPerPage
+            ? this.nftConfig[this.selectedContract].tokens.slice(
+                this.startIndex,
+                this.endIndex
+              )
+            : this.nftConfig[this.selectedContract].tokens;
+        }
+        return [];
+      } catch (e) {
+        // eslint-disable-next-line
+      console.error(e);
+        return [];
+      }
+    },
     addCustom(address, symbol) {
       this.reLoading = true;
       this.customNFTs.push({
@@ -394,10 +397,10 @@ export default {
       }
     },
     getImage(nft) {
-      if (nft.customNft || nft.image === '') {
-        return placeholderImage;
-      }
-      return `${this.nftUrl}tokenImage?path=${nft.image}`;
+      // if (nft.customNft || nft.image === '') {
+      //   return placeholderImage;
+      // }
+      return `${this.nftCardUrl}?contract=${nft.contract}&tokenId=${nft.token_id}`;
     },
     removeSentNft(nft) {
       this.nftObjectClone = utils._.clone(this.nftConfig[nft.contract]);
@@ -456,13 +459,12 @@ export default {
               reject(error);
             }
           });
-
-        // return newData.result;
       });
     },
 
     async setup() {
       const nftData = {};
+      let selectedContract;
       if (this.network.type.name === 'ETH') {
         const configData = await this.getTokens();
         if (!configData.error) {
@@ -475,27 +477,31 @@ export default {
               nftData[data.contractIdAddress].startIndex = 0;
               nftData[data.contractIdAddress].priorIndex = 0;
               nftData[data.contractIdAddress].currentIndex = 0;
+              nftData[data.contractIdAddress].loadedTo = 0;
             }
           });
-          console.log('setup', nftData); // todo remove dev item
           this.nftConfig = { ...nftData };
+          selectedContract = Object.keys(this.nftConfig)[0];
           this.selectedContract = Object.keys(this.nftConfig)[0];
-        }
-        this.reLoading = false;
-        this.countsRetrieved = true;
-        this.getNftDetails(this.selectedContract).then(result => {
-          // console.log(result); // todo remove dev item
-          this.nftConfig[this.selectedContract].tokens = result;
-          this.getNftDetails(this.selectedContract, 9, 18).then(result => {
-            // console.log(result); // todo remove dev item
+
+          this.reLoading = false;
+          this.countsRetrieved = true;
+          this.getNftDetails(selectedContract).then(result => {
             this.nftConfig[this.selectedContract].tokens = result;
+            this.getNftDetails(selectedContract, 9, 18, true).then(result => {
+              this.nftConfig[selectedContract].tokens = result;
+            });
           });
-        });
+        }
       }
     },
-    async getNftDetails(contract, startIndex = -1, endIndex = -1) {
-      console.log(contract, startIndex, endIndex); // todo remove dev item
-      this.fetchingOwnedTokens = true;
+    async getNftDetails(
+      contract,
+      startIndex = -1,
+      endIndex = -1,
+      preFetch = false
+    ) {
+      if (!preFetch) this.fetchingOwnedTokens = true;
       let params;
       if (startIndex >= 0 && endIndex >= 0) {
         params = {
@@ -524,122 +530,50 @@ export default {
       })
         .then(data => data.json())
         .then(data => {
-          // console.log('1', data); // todo remove dev item
           return data.result.tokenContracts.find(item => {
             return item.contractIdAddress === contract;
           });
         })
         .then(data => {
-          // console.log('1', data.tokens); // todo remove dev item
           let allTokens = [];
           allTokens = data.tokens.map(item => {
             return {
               description: item.description,
               name: item.name,
-              tokenId: item.token_id,
+              token_id: item.token_id,
               contract: item.contract
             };
           });
-          // for (const prop in data.tokens) {
-          //   const processedTokens = data.tokens[prop].map(item => {
-          //     return {
-          //       description: item.description,
-          //       name: item.name,
-          //       tokenId: item.token_id,
-          //       contract: prop
-          //     };
-          //   });
-          //   allTokens = [...allTokens, ...processedTokens];
-          // }
-          // console.log('allTokens', allTokens); // todo remove dev item
-          this.fetchingOwnedTokens = false;
+
+          if (!preFetch) this.fetchingOwnedTokens = false;
           this.nftConfig[contract].tokens = allTokens;
           return allTokens;
         });
     },
-    // async requestAdditionalNfts() {
-    //   const selectNftsToShow = () => {
-    //     try {
-    //       if (this.nftConfig[this.selectedContract]) {
-    //         if (!this.nftConfig[this.selectedContract].tokens) return [];
-    //         const allRetreived =
-    //           this.nftConfig[this.selectedContract].tokens.length ===
-    //           this.nftConfig[this.selectedContract].count;
-    //         return this.nftConfig[this.selectedContract].tokens.length >
-    //           this.countPerPage
-    //           ? this.nftConfig[this.selectedContract].tokens.slice(
-    //               this.startIndex,
-    //               this.endIndex
-    //             )
-    //           : this.nftConfig[this.selectedContract].tokens;
-    //       }
-    //       return [];
-    //     } catch (e) {
-    //       // eslint-disable-next-line
-    //       console.error(e);
-    //       return [];
-    //     }
-    //   };
-    //   if (this.fetchingOwnedTokens) return [];
-    //   this.nftToShowList = selectNftsToShow();
-    //   // this.fetchingOwnedTokens = false;
-    // },
+
     async getNftsToShow() {
-      const selectNftsToShow = () => {
-        console.log(
-          'this.nftConfig',
-          this.nftConfig[this.selectedContract].tokens
-        ); // todo remove dev item
-        try {
-          if (this.nftConfig[this.selectedContract]) {
-            if (!this.nftConfig[this.selectedContract].tokens) return []; // [];
-            // const allRetreived =
-            //   this.nftConfig[this.selectedContract].tokens.length ===
-            //   this.nftConfig[this.selectedContract].count;
-            return this.nftConfig[this.selectedContract].tokens.length >
-              this.countPerPage
-              ? this.nftConfig[this.selectedContract].tokens.slice(
-                  this.startIndex,
-                  this.endIndex
-                )
-              : this.nftConfig[this.selectedContract].tokens;
-          }
-          return {}; // [];
-        } catch (e) {
-          // eslint-disable-next-line
-            console.error(e);
-          return [];
-        }
-      };
-      // if (this.fetchingOwnedTokens) {
-      //   this.nftToShowList = [];
-      // } else {
-      //   this.nftToShowList = selectNftsToShow();
-      // }
-      this.nftToShowList = selectNftsToShow();
-      console.log(this.nftToShowList); // todo remove dev item
-      //
-      // console.log('this.nftToShowList', this.nftToShowList); // todo remove dev item
-      // this.fetchingOwnedTokens = false;
+      this.nftToShowList = this.selectNftsToShow();
     },
     incrementTokenList() {
       const startIndex =
         this.currentPage * this.countPerPage - this.countPerPage;
       const endIndex = this.currentPage * this.countPerPage;
-      console.log('startIndex, endIndex', startIndex, endIndex); // todo remove dev item
-      this.getNftDetails(this.selectedContract, startIndex, endIndex).then(
+      const selectedContract = this.selectedContract;
+      this.getNftDetails(selectedContract, startIndex, endIndex).then(
         result => {
-          console.log(result); // todo remove dev item
-          this.nftConfig[this.selectedContract].tokens = result;
+          this.nftConfig[selectedContract].tokens = result;
+          this.collectionLoading = false;
         }
       );
     },
     getNext() {
+      this.getNftsToShow();
       this.currentPage++;
       if (
         this.nftConfig[this.selectedContract].tokens.length <
         this.currentPage * this.countPerPage
       ) {
+        this.collectionLoading = true;
         this.incrementTokenList();
       }
     },

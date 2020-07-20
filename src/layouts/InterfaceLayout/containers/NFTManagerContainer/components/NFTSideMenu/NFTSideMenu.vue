@@ -52,7 +52,6 @@
         </b-dropdown-item>
       </b-dropdown>
     </div>
-<!--    {{supportedNftObj}}-->
   </div>
 
 </template>
