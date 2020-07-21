@@ -48,7 +48,8 @@ import Vuetify, {
   VSpacer,
   VSlider,
   VDataTable,
-  VCarousel
+  VCarousel,
+  VSlideXReverseTransition
 } from 'vuetify/lib';
 import 'vuetify/dist/vuetify.min.css';
 
@@ -102,7 +103,8 @@ Vue.use(Vuetify, {
     VSpacer,
     VSlider,
     VDataTable,
-    VCarousel
+    VCarousel,
+    VSlideXReverseTransition
   }
 });
 

@@ -2,12 +2,10 @@
   <div>
     <!-- need to translate -->
     <v-container>
-      <mew-module
-        title-size="mew-heading-1"
-        title="Make Ethereum Blockchain easy and secure"
-        subtitle="Why Mew"
-        class="mb-10"
-      />
+      <div class="flex-column d-flex">
+        <span class="mew-heading-3 text-uppercase textPrimary--text pb-3">Why Mew</span>
+        <span class="mew-subtitle pb-7 ">Make Ethereum Blockchain easy and secure</span>
+      </div>
 
       <div class="d-flex">
         <info-card
@@ -21,8 +19,9 @@
         />
         <Spacer />
 
-        <div class="flex-grow-1">
+        <div class="d-flex flex-column">
           <info-card
+            class="full-height"
             max-width="600"
             title="Swap easily"
             desc="Partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20."
@@ -33,6 +32,7 @@
           />
           <Spacer />
           <info-card
+            class="full-height"
             max-width="600"
             title="Hardware wallets support"
             desc="MEW offers support for all major hardware wallets including Ledger, Trezor, and many more."
@@ -65,6 +65,7 @@
           </template>
           <template v-slot:cardImg>
             <img
+              class="card-img"
               width="200"
               src="@/assets/images/snippets/bg-mew-wallet.png"
               alt="MEW wallet"
@@ -88,4 +89,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.card-img {
+  margin-bottom: -7px;
+}
+</style>
