@@ -1,10 +1,18 @@
 <template>
   <div class="features-container">
     <div class="flex-column d-flex align-center">
-      <span class="mew-heading-3 text-uppercase textPrimary--text pb-3">Features</span>
-      <span class="mew-subtitle pb-7 ">All-in-one gateway to your Ethereum Blockchain service</span>
+      <span class="mew-heading-3 text-uppercase textPrimary--text pb-3">
+        Features
+      </span>
+      <span class="mew-subtitle pb-7">
+        All-in-one gateway to your Ethereum Blockchain service
+      </span>
     </div>
-    <mew-tabs class="mew-tabs-container d-flex align-center flex-column" :items="mewTabs" is-block>
+    <mew-tabs
+      class="mew-tabs-container d-flex align-center flex-column"
+      :items="mewTabs"
+      is-block
+    >
       <template v-slot:tabContent0>
         <img
           class="pt-8"
