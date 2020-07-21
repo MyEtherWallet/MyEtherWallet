@@ -8,15 +8,12 @@ const tldSupported = (network, name) => {
     return isSupported ? true : false;
   }
   return false;
-}
+};
 
-const getTld = (name) => {
+const getTld = name => {
   const splitName = name.split('.');
 
   return splitName[splitName.length - 1];
-}
+};
 
-export {
-  tldSupported,
-  getTld
-}
+export { tldSupported, getTld };
