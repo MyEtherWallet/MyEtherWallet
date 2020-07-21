@@ -381,7 +381,14 @@ export default class DexAg {
 
     const tradeDetails = await this.createTransaction(swapDetails, dexToUse);
 
-    const marketImpact = tradeDetails.metadata
+    if (!tradeDetails) {
+      throw Error('abort');
+    } else if (tradeDetails.error) {
+      Toast.responseHandler(tradeDetails.error, 1);
+      throw Error('abort');
+    }
+
+    const marketImpact = tradeDetails.metadata.marketImpact
       ? tradeDetails.metadata.marketImpact
         ? tradeDetails.metadata.marketImpact
         : 0
@@ -393,12 +400,6 @@ export default class DexAg {
       return swapDetails;
     }
 
-    if (!tradeDetails) {
-      throw Error('abort');
-    } else if (tradeDetails.error) {
-      Toast.responseHandler(tradeDetails.error, 1);
-      throw Error('abort');
-    }
     const providerAddress = tradeDetails.metadata.input
       ? tradeDetails.metadata.input.spender
         ? tradeDetails.metadata.input.spender
