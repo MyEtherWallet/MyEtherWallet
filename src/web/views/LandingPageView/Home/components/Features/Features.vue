@@ -1,33 +1,34 @@
 <template>
-  <div id="id-6430f8d188c5d2f27112340e0c988fd2">
-    <v-container>
-      <mew-module
-        title-size="mew-heading-1"
-        title="All-in-one gateway to your Ethereum Blockchain service"
-        subtitle="FEATURES"
-      />
-    </v-container>
-    <mew-tabs :items="mewTabs" is-block>
+  <div class="features-container">
+    <div class="flex-column d-flex align-center">
+      <span class="mew-heading-3 text-uppercase textPrimary--text pb-3">Features</span>
+      <span class="mew-subtitle pb-7 ">All-in-one gateway to your Ethereum Blockchain service</span>
+    </div>
+    <mew-tabs class="mew-tabs-container d-flex align-center flex-column" :items="mewTabs" is-block>
       <template v-slot:tabContent0>
         <img
+          class="pt-8"
           :src="require('@/assets/images/backgrounds/bg-swap-page.svg')"
           alt="Swap"
         />
       </template>
       <template v-slot:tabContent1>
         <img
+          class="pt-8"
           :src="require('@/assets/images/backgrounds/bg-swap-page.svg')"
           alt="Swap"
         />
       </template>
       <template v-slot:tabContent2>
         <img
+          class="pt-8"
           :src="require('@/assets/images/backgrounds/bg-swap-page.svg')"
           alt="Swap"
         />
       </template>
       <template v-slot:tabContent3>
         <img
+          class="pt-8"
           :src="require('@/assets/images/backgrounds/bg-swap-page.svg')"
           alt="Swap"
         />
@@ -60,9 +61,14 @@ export default {
 </script>
 
 <style lang="scss">
-#id-6430f8d188c5d2f27112340e0c988fd2 {
-  img {
-    width: 100%;
+.features-container {
+  .mew-tabs-container {
+    .v-tabs {
+      width: 50%;
+    }
+    img {
+      width: 100%;
+    }
   }
 }
 </style>

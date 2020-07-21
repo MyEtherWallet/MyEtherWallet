@@ -5,10 +5,10 @@
         <v-img src="@/assets/images/icons/logo-mew.png" max-width="130" />
       </router-link>
       <v-spacer></v-spacer>
-      <Menu :menus="menus" />
+      <Menu />
       <v-spacer></v-spacer>
       <mew-button
-        class="pr-2 pl-4"
+        class="px-2"
         title="MEW tools"
         color-theme="white"
         :has-full-width="false"
