@@ -8,16 +8,13 @@
         order to access your new wallet. And you are done!
       </p>
       <div class="d-flex align-center">
-        <mew6-std-btn
+        <mew-button
           class="mr-3"
-          min-width="0"
+          button-size="xlarge"
+          title="Back"
           :to="{ name: 'HomeCreateWalletMewWallet', query: { step: '2' } }"
-        >
-          Back
-        </mew6-std-btn>
-        <mew6-std-btn min-width="0">
-          Scan &amp; Access
-        </mew6-std-btn>
+        />
+        <mew-button button-size="xlarge" title="Scan & Access" />
       </div>
       <p class="mt-4 mb-0">
         Need more help?
