@@ -1,7 +1,6 @@
 <template>
-  <div>
-    <PageTitle title="Buy hardware wallet" />
-    <BlockTitle :data="titleData" class="mb-12 pl-12" />
+  <div class="bg_blue">
+    <BlockTitle :data="titleData" />
 
     <v-sheet color="transparent" max-width="1000px" class="mx-auto">
       <v-row>
@@ -18,16 +17,16 @@
         </v-col>
       </v-row>
     </v-sheet>
+    <div class="spacer-y-medium" />
   </div>
 </template>
 
 <script>
-import PageTitle from '@/web/components/PageTitle';
 import BlockTitle from '@/web/components/BlockTitle';
 
 export default {
   name: 'HowItWorks',
-  components: { PageTitle, BlockTitle },
+  components: { BlockTitle },
   data: () => ({
     buttons: [
       {
@@ -107,7 +106,7 @@ export default {
       }
     ],
     titleData: {
-      textProps: '',
+      textProps: 'white--text',
       toptitle: '',
       title: 'Get a hardware wallet today!',
       description:
