@@ -40,9 +40,11 @@
               </mew6-expantion-block>
 
               <div class="d-flex justify-center">
-                <mew6-std-btn @click.native="activeTab = 1">
-                  Continue on your device
-                </mew6-std-btn>
+                <mew-button
+                  button-size="xlarge"
+                  title="Continue on your device"
+                  @click.native="activeTab = 1"
+                />
               </div>
               <mew6-warning-not-recommended class="mt-8 mb-n4 ml-n4 mr-n4" />
             </div>
@@ -52,9 +54,11 @@
           <OverlayTitle title="2. Confirm network & address" />
           <div class="overlay-content">
             bbbbb
-            <mew6-std-btn min-width="100%" @click.native="activeTab = 0">
-              to 0
-            </mew6-std-btn>
+            <mew-button
+              button-size="xlarge"
+              title="  to 0"
+              @click.native="activeTab = 0"
+            />
           </div>
         </v-tab-item>
       </v-tabs>
