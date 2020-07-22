@@ -1,9 +1,12 @@
 <template>
-  <BaseOverlay :open="open" :close="close" close-text="Cancel">
-    <OverlayTabs>
-      <v-tabs v-model="activeTab" color="transparent">
-        <v-tab-item>
-          <OverlayTitle title="1. Connect with Ledger" />
+  <mew-overlay
+    :show-overlay="open"
+    title="1. Connect with Ledger"
+    right-btn-text="Cancel"
+  >
+    <template v-slot:mewComponent>
+      <mew-tabs :items="tabs" is-block>
+        <template v-slot:tabContent0>
           <mew6-white-sheet>
             <div class="overlay-content pa-8">
               <div class="text-center mb-8">
@@ -14,74 +17,37 @@
                 />
               </div>
               <div>
-                <v-select
-                  v-model="appSelect"
-                  :items="apps"
-                  item-text="label"
-                  item-value="value"
-                  label="App opened in Ledger"
-                  outlined
-                ></v-select>
-                <v-select
-                  v-model="derivationPathSelect"
-                  :items="derivationPath"
-                  item-text="label"
-                  item-value="value"
-                  label="HD derivation path"
-                  outlined
-                ></v-select>
+                <mew-select label="App opened in Ledger" />
+                <mew-select label="HD derivation path" />
               </div>
-              <mew6-std-btn min-width="100%" @click.native="activeTab = 1">
-                Connect with Ledger
-              </mew6-std-btn>
+              <mew-button
+                button-size="xlarge"
+                title="Connect with Ledger"
+                has-full-width
+                @click.native="activeTab = 1"
+              />
             </div>
           </mew6-white-sheet>
-        </v-tab-item>
-        <v-tab-item>
-          <OverlayTitle title="2. Confirm network & address" />
-          <div class="overlay-content">
-            <mew6-expantion-block-large
-              title="Network"
-              subtitle="ETH - myetherapi.com"
-              class="mb-3"
-            >
-              <GroupRadioButtons :buttons="networkButtons" />
-            </mew6-expantion-block-large>
-            <mew6-expantion-block-large title="Address to interact with">
-              <AddressTable />
-            </mew6-expantion-block-large>
-            <mew6-confirm-btn center>
-              To access my wallet, I accept
-              <a
-                target="_blank"
-                href="https://www.myetherwallet.com/terms-of-service"
-              >
-                Terms</a
-              >.
-            </mew6-confirm-btn>
-            <mew6-std-btn min-width="100%" @click.native="activeTab = 0">
-              Access my wallet
-            </mew6-std-btn>
-          </div>
-        </v-tab-item>
-      </v-tabs>
-    </OverlayTabs>
-  </BaseOverlay>
+        </template>
+        <template v-slot:tabContent1>
+          <mew6-white-sheet>
+            <GroupRadioButtons :buttons="networkButtons" />
+            <AddressTable />
+          </mew6-white-sheet>
+        </template>
+      </mew-tabs>
+    </template>
+  </mew-overlay>
 </template>
 
 <script>
 import GroupRadioButtons from '@/components/Buttons/GroupRadioButtons';
-import BaseOverlay from '@/components/Overlays/BaseOverlay';
-import OverlayTitle from '@/components/OverlayTitle';
-import OverlayTabs from '@/components/OverlayTabs';
 import AddressTable from './components/AddressTable';
 
 export default {
   components: {
     GroupRadioButtons,
-    BaseOverlay,
-    OverlayTitle,
-    OverlayTabs,
+
     AddressTable
   },
   props: {
@@ -95,6 +61,14 @@ export default {
   },
   data() {
     return {
+      tabs: [
+        {
+          name: ''
+        },
+        {
+          name: ''
+        }
+      ],
       networkButtons: [
         {
           groupName: 'ETH',
