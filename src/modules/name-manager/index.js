@@ -1,4 +1,5 @@
 import { tldSupported, getTld } from './helpers';
+
 import ENS from 'ethereum-ens';
 const ADDRESS_URL =
   'https://nft2.mewapi.io/tokens?owner={{address}}&chain=mainnet';
