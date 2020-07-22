@@ -96,7 +96,7 @@ export default class NameManager {
         const ensResponse = response[ETH_REGISTRAR];
         resolve(
           ensResponse.map(item => {
-            return new ensNameModule(item.name); // something like this. Still needs polish
+            return new EthNameModule(item.name); // something like this. Still needs polish
           })
         );
       });
