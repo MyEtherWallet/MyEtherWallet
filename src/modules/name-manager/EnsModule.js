@@ -1,4 +1,4 @@
-import { getTld, getHostName } from './helpers';
+import { getTld, getHostName, decodeCoinAddress } from './helpers';
 import RegistryAbi from './ABI/registryAbi.js';
 import RegistrarControllerAbi from './ABI/registrarControllerAbi.js';
 import BaseRegistrarAbi from './ABI/baseRegistrarAbi.js';
@@ -11,6 +11,7 @@ import textrecords from './configs/textrecords';
 import { uploadFileToIpfs, getHashFromFile } from './services';
 import contentHash from 'content-hash';
 import BigNumber from 'bignumber.js';
+import * as unit from 'ethjs-unit';
 
 const OLD_ENS_ADDRESS = '0x6090a6e47849629b7245dfa1ca21d94cd15878ef';
 const BURNER_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -200,18 +201,109 @@ export default class EnsModule {
     if (this.owner === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
+
+    return new Promise((resolve, reject) => {
+      if (this.publicResolverAddress === this.resolverAddress) {
+        return resolve({ success: 'Name migrated succesfully!' });
+      }
+      const setResolverTx = {
+        from: this.address,
+        to: this.network.type.ens.registry,
+        data: this.registryContract.methods
+          .setResolver(this.nameHash, this.publicResolverAddress)
+          .encodeABI(),
+        value: 0
+      };
+
+      this.web3
+        .sendTransaction(setResolverTx)
+        .then(() => {
+          this._migrateCoinsAndRecords()
+            .then(() => {
+              return resolve({
+                success: 'Name migrated successfully!'
+              });
+            })
+            .catch(reject);
+        })
+        .catch(reject);
+    });
   }
 
-  setMulticoin() {
+  setMulticoin(coin) {
     if (this.owner === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
+
+    return new Promise((resolve, reject) => {
+      this.migrate().then(res => {
+        if (res.hasOwProperty('success')) return true;
+
+        const arr = coin.map(item => {
+          return this.publicResolverContract.methods.setAddr(
+            this.nameHash,
+            item.id,
+            decodeCoinAddress(item)
+          );
+        });
+
+        const setAddrTx = {
+          from: this.address,
+          to: this.publicResolverAddress,
+          data: this.publicResolverContract.methods.multicall(arr).encodeABI(),
+          value: 0,
+          gas: 100000
+        };
+        this.web3.eth
+          .sendTransaction(setAddrTx)
+          .then(() => {
+            this.setModuleData();
+            return resolve({
+              success: 'Succesfully set multicoin!'
+            });
+          })
+          .catch(reject);
+      });
+    });
   }
 
-  setTxtRecord() {
+  setTxtRecord(obj) {
     if (this.address === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
+
+    return new Promise((resolve, reject) => {
+      for (const _record in obj) {
+        this.txtRecords[_record] = obj[_record];
+      }
+      this.resolverMigrateAndSet().then(res => {
+        if (res.hasOwProperty('success')) return;
+        const multicalls = [];
+        for (const i in obj) {
+          multicalls.push(
+            this.resolverContract.methods
+              .setText(this.nameHash, i.toLowerCase(), obj[i])
+              .encodeABI()
+          );
+        }
+        const tx = {
+          from: this.address,
+          to: this.publicResolverAddress,
+          data: this.resolverContract.methods.multicall(multicalls).encodeABI(),
+          gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed(),
+          value: 0
+        };
+        this.web3.eth
+          .sendTransaction(tx)
+          .then(() => {
+            this.setModuleData();
+            return resolve({
+              success: 'Succesfully set text records!'
+            });
+          })
+          .catch(reject);
+      });
+    });
   }
 
   setIPFS(file) {
@@ -235,6 +327,7 @@ export default class EnsModule {
             };
 
             this.web3.eth.sendTransaction(tx).then(() => {
+              this.setModuleData();
               return resolve({
                 success:
                   'Transaction sent! Please wait a couple minutes to confirm changes'
@@ -270,29 +363,33 @@ export default class EnsModule {
         .then(this._setExpiry)
         .then(this._setContentHash)
         .then(this._setMulticoins)
-        .then(this._setRecords);
-      this.moduleData = {
-        name: this.name,
-        txtRecords: this.txtRecords,
-        multiCoin: this.multiCoin,
-        labelHash: this.labelHash,
-        nameHash: this.nameHash,
-        owner: this.owner,
-        registrarAddress: this.registrarAddress,
-        contractControllerAddress: this.contractControllerAddress,
-        resolverAddress: this.resolverAddress,
-        publicResolverAddress: this.publicResolverAddress,
-        deedOwner: this.deedOwner,
-        deedValue: this.deedValue,
-        expiration: this.expiration,
-        expired: this.expired,
-        redeemable: this.redeemable,
-        textRecordSupport: this.textRecordSupport,
-        multicoinSupport: this.multicoinSupport
-      };
+        .then(this._setRecords)
+        .then(this.setModuleData);
     } catch (e) {
       throw new Error(e);
     }
+  }
+
+  setModuleData() {
+    this.moduleData = {
+      name: this.name,
+      txtRecords: this.txtRecords,
+      multiCoin: this.multiCoin,
+      labelHash: this.labelHash,
+      nameHash: this.nameHash,
+      owner: this.owner,
+      registrarAddress: this.registrarAddress,
+      contractControllerAddress: this.contractControllerAddress,
+      resolverAddress: this.resolverAddress,
+      publicResolverAddress: this.publicResolverAddress,
+      deedOwner: this.deedOwner,
+      deedValue: this.deedValue,
+      expiration: this.expiration,
+      expired: this.expired,
+      redeemable: this.redeemable,
+      textRecordSupport: this.textRecordSupport,
+      multicoinSupport: this.multicoinSupport
+    };
   }
 
   async _setExpiry() {
@@ -411,6 +508,48 @@ export default class EnsModule {
     } else {
       this.textRecordSupport = supportsTxt;
       this.txtRecords = null;
+    }
+  }
+
+  async _migrateCoinsAndRecords() {
+    const multicallRecords = [];
+    try {
+      for (const coin in multicoins) {
+        if (multicoins[coin].value) {
+          multicallRecords.push(
+            this.publicResolverContract.methods
+              .setAddr(
+                this.nameHash,
+                multicoins[coin].id,
+                decodeCoinAddress(multicoins[coin])
+              )
+              .encodeABI()
+          );
+        }
+      }
+
+      for (const txt in this.txtRecords) {
+        if (this.txtRecords[txt]) {
+          multicallRecords.push(
+            this.resolverContract.methods
+              .setText(this.nameHash, txt, this.txtRecords[txt])
+              .encodeABI()
+          );
+        }
+      }
+
+      const txObj = {
+        from: this.address,
+        to: this.publicResolverAddress,
+        data: this.publicResolverContract.methods
+          .multicall(multicallRecords)
+          .encodeABI(),
+        value: 0
+      };
+
+      return this.web3.sendTransaction(txObj);
+    } catch (e) {
+      throw new Error(e);
     }
   }
 
