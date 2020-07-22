@@ -8,6 +8,9 @@ import OldDeedAbi from './ABI/oldDeedAbi.js';
 import * as nameHashPckg from 'eth-ens-namehash';
 import multicoins from './configs/multicoins';
 import textrecords from './configs/textrecords';
+import { uploadFileToIpfs, getHashFromFile } from './services';
+import contentHash from 'content-hash';
+import BigNumber from 'bignumber.js';
 
 const OLD_ENS_ADDRESS = '0x6090a6e47849629b7245dfa1ca21d94cd15878ef';
 const BURNER_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -37,14 +40,17 @@ export default class EnsModule {
     this.contractControllerAddress = '0x';
     this.resolverAddress = '0x';
     this.deedOwner = '0x';
-    this.deedValue = 0;
+    this.publicResolverAddress = '0x';
+    this.contentHash = this.deedValue = 0;
     this.expiration = null;
     this.expired = false;
     this.redeemable = false;
     this.textRecordSupport = false;
     this.multicoinSupport = false;
+    this.moduleData = {};
 
     // Contracts
+    this.publicResolverContract = null;
     this.registrarContract = null;
     this.registryContract = null;
     this.registrarControllerContract = null;
@@ -55,41 +61,190 @@ export default class EnsModule {
     this._initializeNameModule();
   }
 
-  transfer() {
-    if (this.owner === '0x') {
-      throw new Error('Owner not set! Please initialize module properly!');
-    }
-  }
-
-  setController() {
-    if (this.owner === '0x') {
-      throw new Error('Owner not set! Please initialize module properly!');
-    }
-  }
-  migrate() {
-    if (this.owner === '0x') {
-      throw new Error('Owner not set! Please initialize module properly!');
-    }
-  }
-  setMulticoin() {
-    if (this.owner === '0x') {
-      throw new Error('Owner not set! Please initialize module properly!');
-    }
-  }
-  setTxtRecord() {
-    if (this.address === '0x') {
-      throw new Error('Owner not set! Please initialize module properly!');
-    }
-  }
   register() {
     if (this.owner === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
   }
-  setIPFS() {
+
+  transfer(toAddress) {
     if (this.owner === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
+    return new Promise((resolver, reject) => {
+      this.setController(toAddress)
+        .then(() => {
+          this.web3.eth
+            .sendTransaction({
+              from: this.address,
+              to: this.network.type.ens.registry,
+              data: this.registryContract.methods
+                .setOwner(this.nameHash, toAddress)
+                .encodeABI(),
+              value: 0
+            })
+            .then(() => {
+              resolver({ success: 'Domain transferred successfully' });
+            })
+            .catch(reject);
+        })
+        .catch(reject);
+    });
+  }
+
+  renew(duration) {
+    if (this.owner === '0x') {
+      throw new Error('Owner not set! Please initialize module properly!');
+    }
+
+    if (duration <= 0) {
+      throw new Error('Invalid or missing parameter: Duration');
+    }
+
+    const hostName = this.name.replace(
+      `.${this.network.type.ens.registrarTLD}`,
+      ''
+    );
+
+    const ACTUAL_DURATION = Math.ceil(60 * 60 * 24 * 365.25 * duration);
+    // Not sure where to place balance checker that's currently present
+    return new Promise((resolve, reject) => {
+      this.registrarControllerContract.methods
+        .rentPrice(this.name, ACTUAL_DURATION)
+        .call()
+        .then(res => {
+          const data = this.registrarControllerContract.methods
+            .renew(hostName)
+            .encodeABI();
+          const withFivePercent = BigNumber(res)
+            .times(1.05)
+            .integerValue()
+            .toFixed();
+
+          const txObj = {
+            to: this.contractControllerAddress,
+            from: this.address,
+            data: data,
+            value: withFivePercent
+          };
+
+          this.web3
+            .sendTransaction(txObj)
+            .then(() => {
+              resolve({ success: 'Name renewed successfully!' });
+            })
+            .catch(reject);
+        })
+        .catch(reject);
+    });
+  }
+
+  setController(address = '') {
+    if (this.owner === '0x') {
+      throw new Error('Owner not set! Please initialize module properly!');
+    }
+    return new Promise((resolve, reject) => {
+      const actualToAddress = address === '' ? this.account : address;
+      const setControllerTx = {
+        from: this.account,
+        to: this.registrarAddress,
+        data: this.registrarContract.methods
+          .reclaim(this.labelHash, actualToAddress)
+          .encodeABI(),
+        value: 0
+      };
+      return this.web3.eth
+        .sendTransaction(setControllerTx)
+        .then(() => {
+          resolve({ success: 'Domain Controller set successfully' });
+        })
+        .catch(reject);
+    });
+  }
+
+  releaseDeed() {
+    if (this.owner === '0x') {
+      throw new Error('Owner not set! Please initialize module properly!');
+    }
+
+    if (!this.redeemable) {
+      throw new Error('Name has no releasable deed!');
+    }
+
+    return new Promise((resolve, reject) => {
+      if (this.deedOwner !== this.address) {
+        return reject({
+          error: 'Redeeming address provided is not the owner!'
+        });
+      }
+      const data = this.oldDeedContract.methods
+        .releaseDeed(this.labelHash)
+        .encodeABI();
+      const obj = {
+        from: this.address,
+        to: OLD_ENS_ADDRESS,
+        data: data,
+        value: 0
+      };
+
+      this.web3.eth
+        .sendTransaction(obj)
+        .then(() => {
+          resolve({ success: 'Deed released succesfully!' });
+        })
+        .catch(reject);
+    });
+  }
+
+  migrate() {
+    if (this.owner === '0x') {
+      throw new Error('Owner not set! Please initialize module properly!');
+    }
+  }
+
+  setMulticoin() {
+    if (this.owner === '0x') {
+      throw new Error('Owner not set! Please initialize module properly!');
+    }
+  }
+
+  setTxtRecord() {
+    if (this.address === '0x') {
+      throw new Error('Owner not set! Please initialize module properly!');
+    }
+  }
+
+  setIPFS(file) {
+    if (this.owner === '0x') {
+      throw new Error('Owner not set! Please initialize module properly!');
+    }
+
+    return new Promise((resolve, reject) => {
+      try {
+        uploadFileToIpfs(file)
+          .then(getHashFromFile)
+          .then(hash => {
+            const ipfsToHash = `0x${contentHash.fromIpfs(hash)}`;
+            const tx = {
+              from: this.address,
+              to: this.resolverAddress,
+              data: this.resolverContract.methods
+                .setContentHash(this.nameHash, ipfsToHash)
+                .encodeABI(),
+              value: 0
+            };
+
+            this.web3.eth.sendTransaction(tx).then(() => {
+              return resolve({
+                success:
+                  'Transaction sent! Please wait a couple minutes to confirm changes'
+              });
+            });
+          });
+      } catch (e) {
+        reject(e);
+      }
+    });
   }
 
   async _initializeNameModule() {
@@ -105,15 +260,18 @@ export default class EnsModule {
     if (!this.web3) {
       throw new Error('Owner not set! Please initialize module properly!');
     }
+
     try {
       await this._setRegisrar()
+        .then(this._setPublicResolverAddress)
         .then(this._setContracts)
         .then(this._setOwner)
         .then(this._setDeeds)
         .then(this._setExpiry)
+        .then(this._setContentHash)
         .then(this._setMulticoins)
         .then(this._setRecords);
-      return {
+      this.moduleData = {
         name: this.name,
         txtRecords: this.txtRecords,
         multiCoin: this.multiCoin,
@@ -123,6 +281,7 @@ export default class EnsModule {
         registrarAddress: this.registrarAddress,
         contractControllerAddress: this.contractControllerAddress,
         resolverAddress: this.resolverAddress,
+        publicResolverAddress: this.publicResolverAddress,
         deedOwner: this.deedOwner,
         deedValue: this.deedValue,
         expiration: this.expiration,
@@ -167,6 +326,26 @@ export default class EnsModule {
     }
   }
 
+  async _setContentHash() {
+    try {
+      const hash = await this.resolverContract.methods
+        .contenthash(this.nameHash)
+        .call();
+      this.contentHash = hash && hash !== '' ? contentHash.decode(hash) : '';
+    } catch (e) {
+      this.contentHash = '';
+    }
+  }
+
+  async _setPublicResolverAddress() {
+    try {
+      const resolver = await this.ens.resolver('resolver.eth');
+      this.publicResolverAddress = await resolver.addr();
+    } catch (e) {
+      this.publicResolverAddress = '0x';
+    }
+  }
+
   async _setContracts() {
     const web3 = this.web3;
     const tld = getTld(this.name);
@@ -188,6 +367,10 @@ export default class EnsModule {
     this.resolverContract = new web3.eth.Contract(
       ResolverAbi,
       this.resolverAddress
+    );
+    this.publicResolverContract = new web3.eth.Contract(
+      ResolverAbi,
+      this.publicResolverAddress
     );
     this.oldEnsContract = new web3.eth.Contract(OldEnsAbi, OLD_ENS_ADDRESS);
   }
