@@ -2,12 +2,18 @@
   <div>
     <div class="stripe-container">
       <div class="domain-header">
-        <h4>{{ domainName }}</h4>
+        <div class="items-container">
+          <h4 v-for="cartItem of cart">
+            {{ cartItem.label + '.' + cartItem.extension }} - ${{
+              cartItem.price
+            }}
+          </h4>
+        </div>
         <h4 class="domain-price">
           <span class="eth-text"
             >{{ convertedEthPrice }} {{ $t('common.currency.eth') }}</span
           >
-          <span class="price-text">(${{ domainPrice }})</span>
+          <span class="price-text">(${{ cartTotal }})</span>
         </h4>
       </div>
       <div class="stripe-form-container">
@@ -77,13 +83,9 @@ import { Toast } from '@/helpers';
 export default {
   components: { Card },
   props: {
-    domainName: {
-      type: String,
-      default: ''
-    },
-    domainPrice: {
-      type: Number,
-      default: 0
+    cart: {
+      type: Array,
+      default: []
     },
     setTokenId: { type: Function, default: function () {} }
   },
@@ -102,10 +104,15 @@ export default {
   },
   computed: {
     ...mapState('main', ['online']),
+    cartTotal() {
+      return this.cart.reduce((a, b) => {
+        return a + b.price;
+      }, 0);
+    },
     convertedEthPrice() {
       let ethConvertPrice = 0;
-      if (this.domainPrice > 0) {
-        ethConvertPrice = new BigNumber(this.domainPrice)
+      if (this.cartTotal > 0) {
+        ethConvertPrice = new BigNumber(this.cartTotal)
           .dividedBy(this.ethPrice)
           .toFixed(8);
       }
@@ -116,7 +123,7 @@ export default {
     if (this.online) this.getEthPrice();
   },
   beforeMount() {
-    if (this.domainName === '' || !this.domainPrice) {
+    if (!this.cart.length || !this.cartTotal) {
       this.$router.push({ name: 'unstoppableInitialState' });
     }
   },
