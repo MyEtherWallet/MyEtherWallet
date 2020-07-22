@@ -16,9 +16,7 @@
         <div>Duration:</div>
         <div>04:23:31</div>
       </div>
-      <mew6-std-btn fullwidth no-min-width size="x-large" color="light_red">
-        Disconnect
-      </mew6-std-btn>
+      <mew-button button-size="xlarge" color-theme="error" title="Disconnect" />
     </v-card>
   </v-tooltip>
 </template>
