@@ -15,13 +15,22 @@
 
     <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
       <v-row>
-        <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="6">
+        <v-col
+          v-for="(btn, key) in buttons"
+          :key="key"
+          class="btn-container"
+          cols="12"
+          sm="6"
+        >
           <mew-super-button
+            font-class="mew-heading-2"
             :title="btn.label"
-            :right-icon="btn.icon"
-            icon-type="img"
             @click.native="openOverlay(btn.overlayName)"
-          />
+          >
+            <template v-slot:rightSlot>
+              <img :src="btn.icon" :alt="btn.label" />
+            </template>
+          </mew-super-button>
         </v-col>
       </v-row>
     </v-sheet>
@@ -101,4 +110,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.btn-container {
+  max-height: 100px;
+}
+</style>
