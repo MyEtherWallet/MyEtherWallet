@@ -16,4 +16,11 @@ const getTld = name => {
   return splitName[splitName.length - 1];
 };
 
-export { tldSupported, getTld };
+const getHostName = name => {
+  return name.substr(
+    0,
+    name.lastIndexOf('.') > -1 ? name.lastIndexOf('.') : name.length
+  );
+};
+
+export { tldSupported, getTld, getHostName };

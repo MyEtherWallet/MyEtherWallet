@@ -1,4 +1,5 @@
 import { tldSupported, getTld } from './helpers';
+import ENS from 'ethereum-ens';
 const ADDRESS_URL =
   'https://nft2.mewapi.io/tokens?owner={{address}}&chain=mainnet';
 const ETH_REGISTRAR = '0x00000000'; // place holder, trying to figure out when I should fetch the registrar
@@ -8,6 +9,13 @@ export default class NameManager {
     this.network = network;
     this.address = address;
     this.web3 = web3;
+    if (
+      !network.type.hasOwnProperty('ens') &&
+      !network.type.ens.hasOwnProperty('registry')
+    ) {
+      throw new Error('Network does not support ENS!');
+    }
+    this.ens = new ENS(web3.currentProvider, network.type.ens.registry);
   }
 
   searchName(name) {
@@ -15,16 +23,48 @@ export default class NameManager {
       if (tldSupported(name)) {
         switch (this.network.type.name) {
           case 'ETH':
-            resolve(new EthNameModule());
+            resolve(
+              new EthNameModule(
+                name,
+                this.address,
+                this.network,
+                this.web3,
+                this.ens
+              )
+            );
             break;
           case 'ROP':
-            resolve(new RopNameModule());
+            resolve(
+              new RopNameModule(
+                name,
+                this.address,
+                this.network,
+                this.web3,
+                this.ens
+              )
+            );
             break;
           case 'GOERLI':
-            resolve(new GoerliNameModule());
+            resolve(
+              new GoerliNameModule(
+                name,
+                this.address,
+                this.network,
+                this.web3,
+                this.ens
+              )
+            );
             break;
           case 'RIN':
-            resolve(new RinNameModule());
+            resolve(
+              new RinNameModule(
+                name,
+                this.address,
+                this.network,
+                this.web3,
+                this.ens
+              )
+            );
             break;
           default:
             reject(
