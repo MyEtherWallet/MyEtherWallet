@@ -2,16 +2,22 @@
   <div>
     <div class="confirm-container">
       <div class="domain-header">
-        <h4>{{ domainName }}</h4>
-        <h4 class="domain-price">${{ domainPrice }}</h4>
+        <div class="items-container">
+          <h4 v-for="cartItem of cart">
+            {{ cartItem.label + '.' + cartItem.extension }} - ${{
+              cartItem.price
+            }}
+          </h4>
+        </div>
+        <h4 class="domain-price">${{ cartTotal }}</h4>
       </div>
       <div class="confirm-form-container">
         <div class="confirm-form-field-container">
           <h4 class="confirm-payment-text">
             {{
               $t('unstoppable.confirm-payment', {
-                amount: domainPrice,
-                domain: domainName
+                amount: cartTotal,
+                numberDomains: cart.length
               })
             }}
           </h4>
@@ -42,16 +48,13 @@
 
 <script>
 import confirmImg from '@/assets/images/icons/domain.svg';
+import { mapState } from 'vuex';
 
 export default {
   props: {
-    domainName: {
-      type: String,
-      default: ''
-    },
-    domainPrice: {
-      type: Number,
-      default: 0
+    cart: {
+      type: Array,
+      default: []
     },
     account: {
       type: Object,
@@ -81,8 +84,16 @@ export default {
       paymentError: false
     };
   },
+  computed: {
+    ...mapState('main', ['online']),
+    cartTotal() {
+      return this.cart.reduce((a, b) => {
+        return a + b.price;
+      }, 0);
+    }
+  },
   beforeMount() {
-    if (this.domainName === '' || !this.domainPrice || !this.tokenId) {
+    if (!this.cart.length === '' || !this.cartTotal) {
       this.$router.push('/interface/dapps/unstoppable');
     }
   },
@@ -104,21 +115,13 @@ export default {
           },
           body: JSON.stringify({
             order: {
-              domains: [
-                {
-                  name: this.domainName,
-                  owner: {
-                    address: this.account.address
-                  },
-                  resolution: {
-                    crypto: {
-                      ETH: {
-                        address: this.account.address
-                      }
-                    }
-                  }
+              domains: this.cart.map(cartItem => ({
+                name: cartItem.label + '.' + cartItem.extension,
+                owner: { address: this.account.address },
+                resolution: {
+                  crypto: { ETH: { address: this.account.address } }
                 }
-              ],
+              })),
               payment: {
                 type: 'stripe',
                 tokenId: this.tokenId
