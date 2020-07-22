@@ -58,16 +58,6 @@
           btn-style="transparent"
           @click.native="openPanel"
         />
-        <mew6-std-btn
-          size="small"
-          min-width="0px"
-          text
-          @click.native="openPanel"
-        >
-          {{ panel.length == 0 ? 'Show tokens' : 'Hide tokens' }}
-          <v-icon v-if="panel.length == 0"> mdi-chevron-down </v-icon>
-          <v-icon v-else> mdi-chevron-up </v-icon>
-        </mew6-std-btn>
       </div>
     </div>
 

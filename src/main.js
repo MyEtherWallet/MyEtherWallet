@@ -17,7 +17,6 @@ import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
 import vuetify from '@/common/plugins/vuetify';
 
-import StdButton from '@/web/components/Buttons/StdButton';
 import FlexibleButton from '@/web/components/Buttons/FlexibleButton';
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import IconSecure from '@/web/components/Common/IconSecure';
@@ -30,7 +29,6 @@ import DividerLine from '@/web/components/Common/DividerLine';
 import ConfirmButton from '@/web/components/Buttons/ConfirmButton';
 import PasswordField from '@/components/Inputs/PasswordField';
 import VerticalTabs from '@/web/components/Tabs/VerticalTabs';
-Vue.component('mew6-std-btn', StdButton);
 Vue.component('mew6-flexible-btn', FlexibleButton);
 Vue.component('mew6-white-sheet', WhiteSheet);
 Vue.component('mew6-icon-secure', IconSecure);
