@@ -1,6 +1,6 @@
 ### Bug
 
-- CW error catch, Gaslimit warning for collection, more bcvault fixes []()
+- CW error catch, Gaslimit warning for collection, more bcvault fixes [#2521](https://github.com/MyEtherWallet/MyEtherWallet/pull/2521)
 
 ### Release v5.7.2
 
