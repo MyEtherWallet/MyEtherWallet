@@ -6,7 +6,7 @@
     >
       How it works
     </router-link>
-    <mew-menu text-color="white--text" :list-obj="mewMenuCompany"/>
+    <mew-menu text-color="white--text" :list-obj="mewMenuCompany" />
     <mew-menu text-color="white--text" :list-obj="mewMenuTools" />
   </div>
 </template>

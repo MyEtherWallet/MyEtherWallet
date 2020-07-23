@@ -5,9 +5,11 @@
         Did you know? Hardware wallets offer the highest security for accessing
         your crypto.
       </h5>
-      <mew6-std-btn size="large" outlined color="blue"
-        >Buy a hardware wallet</mew6-std-btn
-      >
+      <mew-button
+        title="Buy a hardware wallet"
+        button-size="xlarge"
+        btn-style="outline"
+      />
     </div>
   </AlertContainer>
 </template>
