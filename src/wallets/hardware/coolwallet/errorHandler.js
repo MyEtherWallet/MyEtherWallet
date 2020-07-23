@@ -5,11 +5,13 @@ const ERRORS = {
   CardLocked: 'coolWalletError.card-locked',
   AlreadyRegistered: 'coolWalletError.already-registered',
   NoWalletInstance: 'coolWalletError.no-wallet-instance',
-  'navigator.bluetooth is undefined': 'coolWalletError.no-bluetooth'
+  'navigator.bluetooth is undefined': 'coolWalletError.no-bluetooth',
+  MaxAppRegistered: 'coolWalletError.max-app-instance'
 };
 const WARNING = {};
 
 export default err => {
+  console.log(JSON.stringify(err), err);
   const errorValues = Object.keys(ERRORS);
   const warningValues = Object.keys(WARNING);
   const foundError = errorValues.find(item => {
