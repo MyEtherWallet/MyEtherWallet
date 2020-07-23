@@ -14,30 +14,32 @@
 
               <BalanceBlock />
 
-              <mew6-expantion-block title="Details" class="my-8">
-                <div class="px-3">
-                  <div class="d-flex justify-space-between mb-2">
-                    <div>Network</div>
-                    <div>ETH by myetherwallet.com</div>
+              <mew-expand-panel>
+                <template v-slot:panelBody0 :panel-items="panelItems">
+                  <div class="px-3">
+                    <div class="d-flex justify-space-between mb-2">
+                      <div>Network</div>
+                      <div>ETH by myetherwallet.com</div>
+                    </div>
+                    <div class="d-flex justify-space-between mb-2">
+                      <div>Gas Price</div>
+                      <div>40 <span class="emerald--text">GWEI</span></div>
+                    </div>
+                    <div class="d-flex justify-space-between mb-2">
+                      <div>Gas Limit</div>
+                      <div>21000 <span class="emerald--text">WEI</span></div>
+                    </div>
+                    <div class="d-flex justify-space-between mb-2">
+                      <div>Nonce</div>
+                      <div>17</div>
+                    </div>
+                    <div class="d-flex justify-space-between">
+                      <div>Data</div>
+                      <div>0x</div>
+                    </div>
                   </div>
-                  <div class="d-flex justify-space-between mb-2">
-                    <div>Gas Price</div>
-                    <div>40 <span class="emerald--text">GWEI</span></div>
-                  </div>
-                  <div class="d-flex justify-space-between mb-2">
-                    <div>Gas Limit</div>
-                    <div>21000 <span class="emerald--text">WEI</span></div>
-                  </div>
-                  <div class="d-flex justify-space-between mb-2">
-                    <div>Nonce</div>
-                    <div>17</div>
-                  </div>
-                  <div class="d-flex justify-space-between">
-                    <div>Data</div>
-                    <div>0x</div>
-                  </div>
-                </div>
-              </mew6-expantion-block>
+                </template>
+              </mew-expand-panel>
 
               <div class="d-flex justify-center">
                 <mew-button
@@ -46,7 +48,11 @@
                   @click.native="activeTab = 1"
                 />
               </div>
-              <mew6-warning-not-recommended class="mt-8 mb-n4 ml-n4 mr-n4" />
+
+              <warning-sheet
+                title="NOT RECOMMENDED"
+                description="Not recommanded"
+              />
             </div>
           </mew6-white-sheet>
         </v-tab-item>
@@ -92,6 +98,12 @@ export default {
   },
   data() {
     return {
+      panelItems: [
+        {
+          name: 'Network',
+          subtext: 'ETH - myetherapi.com'
+        }
+      ],
       activeTab: 0
     };
   }

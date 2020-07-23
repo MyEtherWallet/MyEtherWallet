@@ -17,10 +17,10 @@
                   cols="12"
                   sm="12"
                 >
-                  <TextIconButton
-                    :label="btn.label"
-                    :icon="btn.icon"
-                    @click.native="activeTab = 1"
+                  <mew-super-button
+                    right-icon-type="img"
+                    :right-icon="btn.icon"
+                    :title="btn.label"
                   />
                 </v-col>
               </v-row>
@@ -57,16 +57,17 @@
           <div>
             <OverlayTitle title="2. Confirm network & address" />
             <div class="overlay-content">
-              <mew6-expantion-block-large
-                title="Network"
-                subtitle="ETH - myetherapi.com"
-                class="mb-3"
-              >
-                <GroupRadioButtons :buttons="networkButtons" />
-              </mew6-expantion-block-large>
-              <mew6-expantion-block-large title="Address to interact with">
-                <AddressTable />
-              </mew6-expantion-block-large>
+              <mew-expand-panel :panel-items="panelItems">
+                <template v-slot:panelBody0>
+                  <GroupRadioButtons :buttons="networkButtons" />
+                </template>
+              </mew-expand-panel>
+
+              <mew-expand-panel :panel-items="panelItems">
+                <template v-slot:panelBody1>
+                  <AddressTable />
+                </template>
+              </mew-expand-panel>
               <mew6-confirm-btn center>
                 To access my wallet, I accept&nbsp;
                 <a
@@ -91,14 +92,12 @@
 </template>
 
 <script>
-import TextIconButton from '@/web/components/Buttons/TextIconButton';
 import GroupRadioButtons from '@/components/Buttons/GroupRadioButtons';
 import OverlayTitle from '@/components/OverlayTitle';
 import AddressTable from './components/AddressTable';
 
 export default {
   components: {
-    TextIconButton,
     GroupRadioButtons,
     OverlayTitle,
     AddressTable
@@ -114,6 +113,17 @@ export default {
   },
   data() {
     return {
+      panelItems: [
+        {
+          name: 'Network',
+          subtext: 'ETH - myetherapi.com'
+        },
+        {
+          name: 'Address to interact with',
+          subtext: '',
+          tooltip: 'Tooltip'
+        }
+      ],
       tabs: [
         {
           name: ''
