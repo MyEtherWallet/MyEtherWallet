@@ -13,7 +13,6 @@
             <v-radio :label="btn.label" :value="btn.value" />
           </v-col>
         </v-row>
-        <mew6-divider-line v-if="buttons.length - 1 != key" class="my-4" />
       </div>
     </v-radio-group>
   </div>

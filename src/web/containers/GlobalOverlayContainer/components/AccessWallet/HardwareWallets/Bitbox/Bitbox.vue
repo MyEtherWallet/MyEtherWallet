@@ -35,14 +35,13 @@
                 <div class="font-weight-bold mb-8">
                   Please enter the passwordof your BitBox device.
                 </div>
-                <div class="password-field mx-auto">
-                  <mew6-password-field />
-                </div>
-                <mew6-confirm-btn center class="mt-2">
-                  I agree MEW browser extention user
-                  <a target="_blank" href="https://myetherwallet.com"> Terms</a
-                  >.
-                </mew6-confirm-btn>
+
+                <mew-input />
+
+                <mew-checkbox
+                  label="To access my wallet, I accept Terms."
+                  :link="link"
+                />
                 <mew-button
                   button-size="xlarge"
                   has-full-width
@@ -68,15 +67,12 @@
                   <AddressTable />
                 </template>
               </mew-expand-panel>
-              <mew6-confirm-btn center>
-                To access my wallet, I accept&nbsp;
-                <a
-                  target="_blank"
-                  href="https://www.myetherwallet.com/terms-of-service"
-                >
-                  Terms.
-                </a>
-              </mew6-confirm-btn>
+
+              <mew-checkbox
+                label="To access my wallet, I accept Terms."
+                :link="link"
+              />
+
               <mew-button
                 button-size="xlarge"
                 has-full-width
@@ -113,6 +109,10 @@ export default {
   },
   data() {
     return {
+      link: {
+        title: 'Terms',
+        url: 'https://www.myetherwallet.com/terms-of-service'
+      },
       panelItems: [
         {
           name: 'Network',
@@ -193,9 +193,5 @@ export default {
 <style lang="scss" scoped>
 .overlay-content {
   width: 500px;
-}
-
-.password-field {
-  max-width: 350px;
 }
 </style>

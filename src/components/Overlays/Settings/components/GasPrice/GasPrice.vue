@@ -35,8 +35,6 @@
         </template>
       </mew-toggle-btn>
 
-      <mew6-divider-line text="OR" class="mt-5" />
-
       <div class="mt-9 d-flex">
         <mew-input
           label="Customize"

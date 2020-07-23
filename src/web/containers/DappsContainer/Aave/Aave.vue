@@ -40,7 +40,6 @@
                         $40.00
                       </h3>
                       <div class="mt-2">0 ETH</div>
-                      <mew6-divider-line class="my-2" />
                       <div class="d-flex justify-space-between">
                         <div class="font-weight-medium">Composition</div>
                         <div class="d-flex align-center">
@@ -62,7 +61,7 @@
                         $40.00
                       </h3>
                       <div class="mt-2">0 ETH</div>
-                      <mew6-divider-line class="my-2" />
+
                       <div class="d-flex justify-space-between">
                         <div class="font-weight-medium">Composition</div>
                         <div class="d-flex align-center">
@@ -102,7 +101,7 @@
                         $40.00
                       </h3>
                       <div class="mt-2">0 ETH</div>
-                      <mew6-divider-line class="my-2" />
+
                       <div class="d-flex justify-space-between">
                         <div class="font-weight-medium">Composition</div>
                         <div class="d-flex align-center">
@@ -124,7 +123,7 @@
                         $40.00
                       </h3>
                       <div class="mt-2">0 ETH</div>
-                      <mew6-divider-line class="my-2" />
+
                       <div class="d-flex justify-space-between">
                         <div class="font-weight-medium">Composition</div>
                         <div class="d-flex align-center">
