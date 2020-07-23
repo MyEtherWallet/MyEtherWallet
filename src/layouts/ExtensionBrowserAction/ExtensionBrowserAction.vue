@@ -34,39 +34,31 @@ export default {
     ...mapState('main', ['web3', 'network', 'Networks'])
   },
   created() {
-    window.chrome.storage.onChanged.addListener(this.storageListener);
+    window.chrome.storage.onChanged.addListener(this.fetchNewStore);
   },
   mounted() {
     this.getEthPrice();
     this.getTokenPrices();
-    this.fetchAccountFromStore();
+    this.fetchNewStore();
   },
   destroyed() {
-    window.chrome.storage.onChanged.addListener(this.storageListener);
+    window.chrome.storage.onChanged.addListener(this.fetchNewStore);
   },
   methods: {
     ...mapActions('main', ['switchNetwork', 'setWeb3Instance']),
     fetchAccountFromStore() {
       ExtensionHelpers.getAccounts(this.getAccountsCb);
     },
-    storageListener(changed) {
-      if (changed && changed.hasOwnProperty('defNetwork')) {
-        const networkProps = JSON.parse(changed['defNetwork'].newValue);
-        const network = this.Networks[networkProps.key].find(actualNetwork => {
-          return actualNetwork.service === networkProps.service;
-        });
-        this.switchNetwork(
-          !network ? this.Networks[networkProps.key][0] : network
-        ).then(() => {
+    fetchNewStore() {
+      window.chrome.storage.sync.get(null, obj => {
+        const defaultNetwork = obj.hasOwnProperty('defNetwork')
+          ? this.Networks[JSON.parse(obj['defNetwork']).key][0]
+          : this.Networks['ETH'][0];
+        this.switchNetwork(defaultNetwork).then(() => {
           this.setWeb3Instance();
         });
-      } else {
-        this.setWeb3Instance();
-      }
-
-      if (isAddress(Object.keys(changed)[0])) {
         this.fetchAccountFromStore();
-      }
+      });
     },
     getAccountsCb(res) {
       const accounts = Object.keys(res)
