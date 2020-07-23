@@ -2,8 +2,12 @@
   <div class="home-partners">
     <v-container>
       <div class="flex-column d-flex">
-        <span class="mew-heading-3 text-uppercase textPrimary--text pb-3">Partners</span>
-        <span class="mew-subtitle pb-7 ">Connect with the powerful crypto communities</span>
+        <span class="mew-heading-3 text-uppercase textPrimary--text pb-3">
+          Partners
+        </span>
+        <span class="mew-subtitle pb-7">
+          Connect with the powerful crypto communities
+        </span>
       </div>
       <v-row class="mt-8 px-4">
         <v-col v-for="(p, key) in partners" :key="key" cols="3" md="3" lg="2">

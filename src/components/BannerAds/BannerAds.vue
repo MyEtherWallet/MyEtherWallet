@@ -1,5 +1,5 @@
 <template>
-  <MewCarousel :total-slides="2">
+  <mew-carousel :carousel-height="145" :total-slides="2">
     <template v-slot:slide1>
       <mew6-white-sheet class="banner">
         <Ad1 />
@@ -10,7 +10,7 @@
         <Ad2 />
       </mew6-white-sheet>
     </template>
-  </MewCarousel>
+  </mew-carousel>
 </template>
 
 <script>

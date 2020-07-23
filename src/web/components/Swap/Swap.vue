@@ -2,7 +2,7 @@
   <mew6-white-sheet sideinfo>
     <div class="px-7 pt-5">
       <div class="d-flex align-center justify-space-between">
-        <mew-module :title="$t('common.swap')" />
+        <span class="mew-heading-2">{{ $t('common.swap') }}</span>
         <mew-button
           btn-style="transparent"
           :title="$t('common.more') + '...'"

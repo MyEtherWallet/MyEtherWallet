@@ -3,8 +3,12 @@
     <!-- need to translate -->
     <v-container>
       <div class="flex-column d-flex">
-        <span class="mew-heading-3 text-uppercase textPrimary--text pb-3">Why Mew</span>
-        <span class="mew-subtitle pb-7 ">Make Ethereum Blockchain easy and secure</span>
+        <span class="mew-heading-3 text-uppercase textPrimary--text pb-3">
+          Why Mew
+        </span>
+        <span class="mew-subtitle pb-7">
+          Make Ethereum Blockchain easy and secure
+        </span>
       </div>
 
       <div class="d-flex">

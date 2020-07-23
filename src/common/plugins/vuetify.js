@@ -49,7 +49,8 @@ import Vuetify, {
   VSlider,
   VDataTable,
   VCarousel,
-  VSlideXReverseTransition
+  VSlideXReverseTransition,
+  VCarouselItem
 } from 'vuetify/lib';
 import 'vuetify/dist/vuetify.min.css';
 
@@ -104,7 +105,8 @@ Vue.use(Vuetify, {
     VSlider,
     VDataTable,
     VCarousel,
-    VSlideXReverseTransition
+    VSlideXReverseTransition,
+    VCarouselItem
   }
 });
 
@@ -160,6 +162,7 @@ export default new Vuetify({
           darken1: '#f5a623'
         },
         disabled: '#cecece',
+        tableHeader: '#f9f9f9',
         //=======================================================
         // end of colors from mew components
         //=======================================================
