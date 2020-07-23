@@ -28,10 +28,10 @@
             {{ network.type.currencyName }}
           </p>
         </div>
+        <div v-if="showGasWarning" class="gas-price-warning">
+          {{ $t('errorsGlobal.high-gas-limit-warning') }}
+        </div>
         <div class="modal-content-body">
-          <div v-if="showGasWarning" class="gas-price-warning">
-            {{ $t('errorsGlobal.high-gas-limit-warning') }}
-          </div>
           <div
             v-for="(item, idx) in unSignedArray"
             :key="item.to + idx + item.value"
