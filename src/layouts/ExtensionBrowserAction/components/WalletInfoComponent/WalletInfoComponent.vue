@@ -308,7 +308,7 @@ import EditWalletModal from '../EditWalletModal';
 import RemoveWalletModal from '../RemoveWalletModal';
 import { mapState, mapActions } from 'vuex';
 import { Toast, Misc, ExtensionHelpers } from '@/helpers';
-import masterFile from '@/master-file.json';
+import masterFile from '@/_generated/master-file.json';
 import PasswordOnlyModal from '../PasswordOnlyModal';
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import { WalletInterface } from '@/wallets';

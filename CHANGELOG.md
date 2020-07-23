@@ -1,3 +1,13 @@
+### Release v5.7.2
+
+### Bug
+
+- Remove disabled message and button on firefox for bcvault, add error when no account received [#2499](https://github.com/MyEtherWallet/MyEtherWallet/pull/2499)
+- CX hang possible fix [#2507](https://github.com/MyEtherWallet/MyEtherWallet/pull/2507)
+### Devop
+
+- Use Batch EstimateGas [#2417](https://github.com/MyEtherWallet/MyEtherWallet/pull/2417)
+
 ### Release v5.7.1
 
 ### Bug
