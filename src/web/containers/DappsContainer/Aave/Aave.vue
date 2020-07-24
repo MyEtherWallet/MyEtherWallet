@@ -21,7 +21,7 @@
       />
 
       <mew-tabs :items="tabs">
-        <template v-slot:tabContent0>
+        <template v-slot:tabContent1>
           <v-sheet max-width="800px" class="mx-auto">
             <div class="py-12">
               <div class="d-flex align-center justify-end mr-12 mb-5">
@@ -82,7 +82,7 @@
             </div>
           </v-sheet>
         </template>
-        <template v-slot:tabContent1>
+        <template v-slot:tabContent2>
           <v-sheet max-width="800px" class="mx-auto">
             <div class="py-12">
               <div class="d-flex align-center justify-end mr-12 mb-5">
