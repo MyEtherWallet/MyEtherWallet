@@ -13,7 +13,7 @@ export default {
         sortable: true,
         filterable: false,
         containsLink: false,
-        width: '100%'
+        width: '100px'
       },
       {
         text: 'Date',
@@ -21,28 +21,28 @@ export default {
         sortable: true,
         filterable: false,
         containsLink: false,
-        width: '100%'
+        width: '100px'
       },
       {
         text: 'TX Hash',
-        value: 'hash',
+        value: 'txHash',
         sortable: true,
         filterable: false,
         containsLink: true,
-        width: '100%'
+        width: '150px'
       }
     ],
     tableData: [
       {
         activity: 'Deposited 12.00000 DAI',
         date: '01/02/2020, 2:16:32 PM',
-        hash:
+        txHash:
           '0x68f6ce1e607d6a6ec6fb1aaa6f43bb8210658f49065ae5a7325c5771ea1100e8'
       },
       {
         activity: 'Deposited 12.00000 DAI',
         date: '01/02/2020, 2:16:32 PM',
-        hash:
+        txHash:
           '0x68f6ce1e607d6a6ec6fb1aaa6f43bb8210658f49065ae5a7325c5771ea1100e8'
       }
     ]

@@ -17,32 +17,8 @@ import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
 import vuetify from '@/common/plugins/vuetify';
 
-import StdButton from '@/web/components/Buttons/StdButton';
-import FlexibleButton from '@/web/components/Buttons/FlexibleButton';
 import WhiteSheet from '@/web/components/Common/WhiteSheet';
-import IconSecure from '@/web/components/Common/IconSecure';
-import IconWarning from '@/web/components/Common/IconWarning';
-import WarningNotRecommended from '@/components/WarningBlocks/NotRecommended';
-import BuyHardwareWallet from '@/components/BottomAlerts/BuyHardwareWallet';
-import ExpantionBlock from '@/components/ExpantionBlock';
-import ExpantionBlockLarge from '@/components/ExpantionBlockLarge';
-import DividerLine from '@/web/components/Common/DividerLine';
-import ConfirmButton from '@/web/components/Buttons/ConfirmButton';
-import PasswordField from '@/components/Inputs/PasswordField';
-import VerticalTabs from '@/web/components/Tabs/VerticalTabs';
-Vue.component('mew6-std-btn', StdButton);
-Vue.component('mew6-flexible-btn', FlexibleButton);
 Vue.component('mew6-white-sheet', WhiteSheet);
-Vue.component('mew6-icon-secure', IconSecure);
-Vue.component('mew6-icon-warning', IconWarning);
-Vue.component('mew6-warning-not-recommended', WarningNotRecommended);
-Vue.component('mew6-bottom-alert-buy-hardware-wallet', BuyHardwareWallet);
-Vue.component('mew6-expantion-block', ExpantionBlock);
-Vue.component('mew6-expantion-block-large', ExpantionBlockLarge);
-Vue.component('mew6-divider-line', DividerLine);
-Vue.component('mew6-confirm-btn', ConfirmButton);
-Vue.component('mew6-password-field', PasswordField);
-Vue.component('mew6-vertical-tabs', VerticalTabs);
 
 // Local copy of MEW6 components. (development only)
 //import mewButton from '@/mewComponents/MewButton/MewButton';

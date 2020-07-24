@@ -13,13 +13,7 @@
       @click.native="openModal('walletWooCommerce')"
     />
 
-    <mew-banner
-      :text-obj="topBanner"
-      :banner-img="BG"
-      @closeBanner="closeBanner"
-    />
-
-    <mew-tabs :items="tabs">
+    <mew-tabs :items="tabs" class="pt-5 ml-5">
       <template v-slot:tabContent0>
         <v-sheet max-width="700px" color="bg_white_sheet" class="py-12 mx-auto">
           <div class="tab-width">
@@ -105,7 +99,11 @@
               color-theme="#f1eeeb"
               :panel-items="myDomains"
               :warning-badge="warning"
-            />
+            >
+              <template v-slot:panelBody1>
+                <span>Panel slot example</span>
+              </template>
+            </mew-expand-panel>
           </div>
         </div>
       </template>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <mew6-flexible-btn>
+    <v-sheet>
       <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
       <div class="mb-10">
         <div class="headline font-weight-bold">Verification</div>
@@ -67,8 +67,9 @@
           @click.native="linkToStep(3)"
         />
       </div>
-    </mew6-flexible-btn>
-    <mew6-warning-not-recommended class="mt-6" />
+    </v-sheet>
+
+    <warning-sheet title="NOT RECOMMENDED" description="Not recommanded" />
   </div>
 </template>
 

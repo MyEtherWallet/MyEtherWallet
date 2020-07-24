@@ -6,13 +6,11 @@
           <Breadcrumbs :items="breadcrumbs" />
         </div>
         <div>
-          <mew6-flexible-btn
+          <v-sheet
             v-for="(b, key) in buttons"
             :key="key"
-            nopadding
             color="black"
-            class="mb-3 dapps-button"
-            noclick
+            class="mb-3 border-radius--10px"
           >
             <div class="pa-12">
               <h3 class="mb-2 font-weight-medium white--text">{{ b.title }}</h3>
@@ -30,7 +28,7 @@
                 ></mew-button>
               </div>
             </div>
-          </mew6-flexible-btn>
+          </v-sheet>
         </div>
       </InterfaceWrap>
     </mew6-white-sheet>

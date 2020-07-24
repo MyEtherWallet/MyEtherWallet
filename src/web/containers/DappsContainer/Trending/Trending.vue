@@ -11,13 +11,8 @@
         </div>
         <div class="d-flex">
           <div class="mr-10">
-            <v-text-field
-              placeholder="Search for Dapp name"
-              filled
-              outlined
-              dense
-              prepend-inner-icon="mdi-magnify"
-            ></v-text-field>
+            <mew-input is-search placeholder="Search for Dapp name" />
+
             <div class="pl-3">
               <div class="d-flex align-center justify-space-between">
                 <h5 class="font-weight-bold">Categories</h5>
@@ -39,51 +34,13 @@
             </div>
           </div>
           <div class="flex-grow-1">
-            <mew6-flexible-btn
+            <mew-super-button
               v-for="(b, key) in buttons"
               :key="key"
-              nopadding
-              color="bg_wallet"
-              class="mb-3"
-              :new-tag="b.new"
-              noclick
-            >
-              <div class="d-flex align-center px-8 py-7">
-                <mew-icon class="mr-6" :icon-name="b.icon" img-height="65" />
-                <div>
-                  <div class="d-flex align-center">
-                    <h5 class="font-weight-bold">{{ b.title }}</h5>
-                    <img
-                      v-if="b.up"
-                      src="@/assets/images/icons/icon-thumbs-up.svg"
-                      alt="up"
-                      class="ml-2"
-                    />
-                  </div>
-                  <div class="mt-1 text-overflow--ellipsis">
-                    {{ b.subtitle }}
-                  </div>
-                  <div class="d-flex align-center mt-3">
-                    <div
-                      v-for="(t, tagkey) in b.tags"
-                      :key="tagkey"
-                      class="mr-2 emerald--text font-weight-medium"
-                    >
-                      #{{ t }}
-                    </div>
-                  </div>
-                </div>
-                <div class="d-flex align-center ml-auto">
-                  <mew-button
-                    class="mr-1"
-                    button-size="medium"
-                    btn-style="transparent"
-                    title="Learn More"
-                  ></mew-button>
-                  <mew-button btn-style="outline" title="Enter"></mew-button>
-                </div>
-              </div>
-            </mew6-flexible-btn>
+              :title="b.title"
+              :subtitle="b.subtitle"
+              :right-icon="b.icon"
+            />
           </div>
         </div>
       </InterfaceWrap>
