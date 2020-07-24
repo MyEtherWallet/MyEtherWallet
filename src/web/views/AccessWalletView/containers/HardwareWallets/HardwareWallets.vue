@@ -27,7 +27,7 @@
             :title="btn.label"
             @click.native="openOverlay(btn.overlayName)"
           >
-            <template v-slot:rightSlot>
+            <template v-slot:contentSlot>
               <img :src="btn.icon" :alt="btn.label" />
             </template>
           </mew-super-button>

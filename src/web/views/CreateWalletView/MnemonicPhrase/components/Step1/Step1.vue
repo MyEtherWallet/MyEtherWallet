@@ -1,6 +1,6 @@
 <template>
   <div class="mnemonic-step1">
-    <mew6-flexible-btn>
+    <v-sheet>
       <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
       <div class="headline font-weight-bold mb-5">Write down the words</div>
 
@@ -38,7 +38,7 @@
           @click.native="linkToStep(2)"
         />
       </div>
-    </mew6-flexible-btn>
+    </v-sheet>
     <warning-sheet
       class="mt-5"
       title="Caution"

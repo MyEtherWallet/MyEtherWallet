@@ -8,19 +8,18 @@
         Continue if you have already created a new wallet in the App.
       </p>
       <div class="d-flex align-center">
-        <mew6-std-btn
+        <mew-button
           class="mr-3"
-          min-width="0"
+          button-size="xlarge"
+          title="Back"
           :to="{ name: 'HomeCreateWalletMewWallet', query: { step: '1' } }"
-        >
-          Back
-        </mew6-std-btn>
-        <mew6-std-btn
-          min-width="0"
+        />
+        <mew-button
+          class="mr-3"
+          button-size="xlarge"
+          title="Continue"
           :to="{ name: 'HomeCreateWalletMewWallet', query: { step: '3' } }"
-        >
-          Continue
-        </mew6-std-btn>
+        />
       </div>
       <p class="mt-4 mb-0">
         Need more help?

@@ -14,7 +14,7 @@
           <DividerX class="my-9" />
 
           <div class="text-center">
-            <mew6-std-btn size="x-large">Confirm & send</mew6-std-btn>
+            <mew-button title="Confirm & send" button-size="xlarge" />
           </div>
         </div>
         <ConfirmTransaction />

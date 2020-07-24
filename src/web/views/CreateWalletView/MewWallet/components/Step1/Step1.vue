@@ -22,11 +22,12 @@
         >. Continue if you have already installed the App.
       </p>
       <div class="d-flex align-center">
-        <mew6-std-btn
+        <mew-button
+          class="mr-3"
+          button-size="xlarge"
+          title="Continue"
           :to="{ name: 'HomeCreateWalletMewWallet', query: { step: '2' } }"
-        >
-          Continue
-        </mew6-std-btn>
+        />
       </div>
       <p class="mt-4 mb-0">
         Already knew how to do it?

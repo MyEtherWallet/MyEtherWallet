@@ -10,12 +10,7 @@
               <a class="teal--text text--lighten-2" href="/">Privacy Policy.</a>
             </div>
             <v-spacer />
-            <mew6-std-btn
-              button-class="button--white-border"
-              @click.native="sheet = !sheet"
-            >
-              I understood
-            </mew6-std-btn>
+            <mew-button title="I understood" @click.native="sheet = !sheet" />
           </div>
         </v-container>
       </v-sheet>

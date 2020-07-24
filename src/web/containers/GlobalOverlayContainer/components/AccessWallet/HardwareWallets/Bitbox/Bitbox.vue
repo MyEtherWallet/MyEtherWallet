@@ -1,88 +1,101 @@
 <template>
-  <BaseOverlay :open="open" :close="close" close-text="Cancel">
-    <OverlayTabs>
-      <v-tabs v-model="activeTab" color="transparent">
-        <v-tab-item>
-          <OverlayTitle title="Select BitBox wallet" />
-          <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
-            <v-row>
-              <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
-                <TextIconButton
-                  :label="btn.label"
-                  :icon="btn.icon"
-                  @click.native="activeTab = 1"
-                />
-              </v-col>
-            </v-row>
-          </v-sheet>
-        </v-tab-item>
-        <v-tab-item>
-          <OverlayTitle title="1. Enter your password" />
-          <mew6-white-sheet>
-            <div class="overlay-content pa-8 text-center">
-              <div class="font-weight-bold mb-8">
-                Please enter the passwordof your BitBox device.
-              </div>
-              <div class="password-field mx-auto">
-                <mew6-password-field />
-              </div>
-              <mew6-confirm-btn center class="mt-2">
-                I agree MEW browser extention user
-                <a target="_blank" href="https://myetherwallet.com"> Terms</a>.
-              </mew6-confirm-btn>
-              <mew6-std-btn min-width="100%" @click.native="activeTab = 2">
-                Connect with Ledger
-              </mew6-std-btn>
-            </div>
-          </mew6-white-sheet>
-        </v-tab-item>
-        <v-tab-item>
-          <OverlayTitle title="2. Confirm network & address" />
-          <div class="overlay-content">
-            <mew6-expantion-block-large
-              title="Network"
-              subtitle="ETH - myetherapi.com"
-              class="mb-3"
-            >
-              <GroupRadioButtons :buttons="networkButtons" />
-            </mew6-expantion-block-large>
-            <mew6-expantion-block-large title="Address to interact with">
-              <AddressTable />
-            </mew6-expantion-block-large>
-            <mew6-confirm-btn center>
-              To access my wallet, I accept&nbsp;
-              <a
-                target="_blank"
-                href="https://www.myetherwallet.com/terms-of-service"
-              >
-                Terms.
-              </a>
-            </mew6-confirm-btn>
-            <mew6-std-btn min-width="100%" @click.native="activeTab = 0">
-              Access my wallet
-            </mew6-std-btn>
+  <mew-overlay
+    :show-overlay="open"
+    title="1. Connect with Finney"
+    right-btn-text="Cancel"
+  >
+    <template v-slot:mewComponent>
+      <mew-tabs :items="tabs">
+        <template v-slot:tabContent0>
+          <div>
+            <OverlayTitle title="Select BitBox wallet" />
+            <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
+              <v-row>
+                <v-col
+                  v-for="(btn, key) in buttons"
+                  :key="key"
+                  cols="12"
+                  sm="12"
+                >
+                  <mew-super-button
+                    right-icon-type="img"
+                    :right-icon="btn.icon"
+                    :title="btn.label"
+                  />
+                </v-col>
+              </v-row>
+            </v-sheet>
           </div>
-        </v-tab-item>
-      </v-tabs>
-    </OverlayTabs>
-  </BaseOverlay>
+        </template>
+        <template v-slot:tabContent1>
+          <div>
+            <OverlayTitle title="1. Enter your password" />
+            <mew6-white-sheet>
+              <div class="overlay-content pa-8 text-center">
+                <div class="font-weight-bold mb-8">
+                  Please enter the passwordof your BitBox device.
+                </div>
+
+                <mew-input />
+
+                <mew-checkbox
+                  label="To access my wallet, I accept Terms."
+                  :link="link"
+                />
+                <mew-button
+                  button-size="xlarge"
+                  has-full-width
+                  title="Connect with Ledger"
+                  @click.native="activeTab = 2"
+                />
+              </div>
+            </mew6-white-sheet>
+          </div>
+        </template>
+        <template v-slot:tabContent2>
+          <div>
+            <OverlayTitle title="2. Confirm network & address" />
+            <div class="overlay-content">
+              <mew-expand-panel :panel-items="panelItems">
+                <template v-slot:panelBody0>
+                  <GroupRadioButtons :buttons="networkButtons" />
+                </template>
+              </mew-expand-panel>
+
+              <mew-expand-panel :panel-items="panelItems">
+                <template v-slot:panelBody1>
+                  <AddressTable />
+                </template>
+              </mew-expand-panel>
+
+              <mew-checkbox
+                label="To access my wallet, I accept Terms."
+                :link="link"
+              />
+
+              <mew-button
+                button-size="xlarge"
+                has-full-width
+                title="Access my wallet"
+                @click.native="activeTab = 0"
+              />
+            </div>
+          </div>
+        </template>
+      </mew-tabs>
+    </template>
+  </mew-overlay>
 </template>
 
 <script>
-import TextIconButton from '@/web/components/Buttons/TextIconButton';
 import GroupRadioButtons from '@/components/Buttons/GroupRadioButtons';
-import BaseOverlay from '@/components/Overlays/BaseOverlay';
 import OverlayTitle from '@/components/OverlayTitle';
-import OverlayTabs from '@/components/OverlayTabs';
 import AddressTable from './components/AddressTable';
 
 export default {
   components: {
-    TextIconButton,
     GroupRadioButtons,
-    BaseOverlay,
     OverlayTitle,
-    OverlayTabs,
     AddressTable
   },
   props: {
@@ -96,6 +109,32 @@ export default {
   },
   data() {
     return {
+      link: {
+        title: 'Terms',
+        url: 'https://www.myetherwallet.com/terms-of-service'
+      },
+      panelItems: [
+        {
+          name: 'Network',
+          subtext: 'ETH - myetherapi.com'
+        },
+        {
+          name: 'Address to interact with',
+          subtext: '',
+          tooltip: 'Tooltip'
+        }
+      ],
+      tabs: [
+        {
+          name: ''
+        },
+        {
+          name: ''
+        },
+        {
+          name: ''
+        }
+      ],
       buttons: [
         {
           label: 'Bitbox 01',
@@ -154,9 +193,5 @@ export default {
 <style lang="scss" scoped>
 .overlay-content {
   width: 500px;
-}
-
-.password-field {
-  max-width: 350px;
 }
 </style>

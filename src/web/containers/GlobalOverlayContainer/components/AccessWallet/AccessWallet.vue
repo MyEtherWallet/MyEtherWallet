@@ -9,7 +9,6 @@
     <CoolWallet :open="openCoolWallet" :close="closeCoolWallet" />
     <BCVault :open="openBCVault" :close="closeBCVault" />
     <XWallet :open="openXWallet" :close="closeXWallet" />
-    <MobileApps :open="openMobileApps" :close="closeMobileApps" />
   </div>
 </template>
 
@@ -24,7 +23,6 @@ import Trezor from './HardwareWallets/Trezor';
 import CoolWallet from './HardwareWallets/CoolWallet';
 import BCVault from './HardwareWallets/BCVault';
 import XWallet from './HardwareWallets/XWallet';
-import MobileApps from './MobileApps';
 
 export default {
   components: {
@@ -36,8 +34,7 @@ export default {
     Trezor,
     CoolWallet,
     BCVault,
-    XWallet,
-    MobileApps
+    XWallet
   },
   computed: mapState({
     openLedger: state => state.overlays.accessWalletLedger.isOpen,
@@ -48,8 +45,7 @@ export default {
     openTrezor: state => state.overlays.accessWalletTrezor.isOpen,
     openCoolWallet: state => state.overlays.accessWalletCoolWallet.isOpen,
     openBCVault: state => state.overlays.accessWalletBCVault.isOpen,
-    openXWallet: state => state.overlays.accessWalletXWallet.isOpen,
-    openMobileApps: state => state.overlays.accessWalletMobileApps.isOpen
+    openXWallet: state => state.overlays.accessWalletXWallet.isOpen
   }),
   methods: {
     closeLedger() {
@@ -78,9 +74,6 @@ export default {
     },
     closeXWallet() {
       this.$store.commit('closeOverlay', 'accessWalletXWallet');
-    },
-    closeMobileApps() {
-      this.$store.commit('closeOverlay', 'accessWalletMobileApps');
     }
   }
 };

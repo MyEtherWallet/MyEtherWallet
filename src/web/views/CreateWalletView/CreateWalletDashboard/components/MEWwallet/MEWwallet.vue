@@ -15,7 +15,7 @@
       right-icon-type="img"
       title-icon-class="primary--text"
     >
-      <template v-slot:rightSlot>
+      <template v-slot:contentSlot>
         <img
           class="mew-wallet-img"
           :src="require('@/assets/images/snippets/bg-mew-wallet.png')"

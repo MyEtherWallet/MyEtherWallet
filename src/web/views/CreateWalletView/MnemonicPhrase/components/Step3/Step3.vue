@@ -1,5 +1,5 @@
 <template>
-  <mew6-flexible-btn>
+  <v-sheet>
     <div class="d-flex align-center">
       <div class="mr-8">
         <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
@@ -30,7 +30,7 @@
         src="@/assets/images/icons/icon-keystore-mew.png"
       />
     </div>
-  </mew6-flexible-btn>
+  </v-sheet>
 </template>
 
 <script>
