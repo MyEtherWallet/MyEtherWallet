@@ -2,14 +2,14 @@
   <mew-overlay :show-overlay="open" title="Network" right-btn-text="Close">
     <template v-slot:mewComponent>
       <mew-tabs :items="tabs" is-block>
-        <template v-slot:tabContent0>
+        <template v-slot:tabContent1>
           <mew6-white-sheet>
             <div class="pa-8">
               <ChangeNetwork />
             </div>
           </mew6-white-sheet>
         </template>
-        <template v-slot:tabContent1>
+        <template v-slot:tabContent2>
           <mew6-white-sheet>
             <div class="pa-8">
               <AddNetwork />
