@@ -4,7 +4,7 @@
     title="1. Connect with Ledger"
     right-btn-text="Close"
   >
-    <template v-slot:mewComponent>
+    <template v-slot:mewOverlayBody>
       <mew-tabs :items="tabs" is-block>
         <template v-slot:tabContent0>
           <mew6-white-sheet>
@@ -31,7 +31,7 @@
             </div>
           </mew6-white-sheet>
         </template>
-        <template v-slot:tabContent1>
+        <template v-slot:tabContent2>
           <AddressSelection />
           <div class="pa-8">
             <div class="text-center">
@@ -64,10 +64,10 @@ export default {
     return {
       tabs: [
         {
-          name: ''
+          name: 'Tab 1'
         },
         {
-          name: ''
+          name: 'Tab 2'
         }
       ],
       appSelected: '',

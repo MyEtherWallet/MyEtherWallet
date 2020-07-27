@@ -7,7 +7,8 @@
       color-theme="basic"
       title="Hardware wallets"
       subtitle="Ledge, Trezor, Keep key, FINNEY, BitBox, Secalot"
-      icon-type="img"
+      right-icon-type="img"
+      title-icon-type="mdi"
       :right-icon="require('@/assets/images/icons/icon-hardware-wallet.png')"
       title-icon="mdi-shield-check"
     />

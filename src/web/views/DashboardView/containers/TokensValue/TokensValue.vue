@@ -1,23 +1,26 @@
 <template>
   <mew6-white-sheet>
-    <div class="d-flex align-center px-7 py-7">
+    <div class="d-flex align-center">
       <mew-module
         subtitle="My Tokens Value"
         title="$3,132.25"
         :icon="require('@/assets/images/icons/icon-token-grey.png')"
         icon-align="left"
-      />
-      <mew-button
-        class="ml-auto"
-        :has-full-width="false"
-        title="All tokens"
-        button-size="xsmall"
-        btn-style="transparent"
-        @click.native="goTo('HomeAccessWallet')"
-      />
+      >
+        <template v-slot:rightHeaderContainer>
+          <mew-button
+            class="ml-auto"
+            :has-full-width="false"
+            title="All tokens"
+            button-size="xsmall"
+            btn-style="transparent"
+            @click.native="goTo('HomeAccessWallet')"
+          />
+        </template>
+      </mew-module>
     </div>
     <mew-table
-      has-color
+      :has-color="false"
       :table-headers="tableHeaders"
       :table-data="tableData"
     />
@@ -33,50 +36,50 @@ export default {
         {
           text: 'Token',
           value: 'token',
-          sortable: true,
+          sortable: false,
           filterable: false,
           containsLink: false,
-          width: '100%'
+          width: '100px'
         },
         {
           text: 'Price',
           value: 'price',
-          sortable: true,
+          sortable: false,
           filterable: false,
           containsLink: false,
-          width: '100%'
+          width: '100px'
         },
         {
           text: 'Market Cap',
           value: 'cap',
-          sortable: true,
+          sortable: false,
           filterable: false,
           containsLink: false,
-          width: '100%'
+          width: '120px'
         },
         {
           text: '24H Changes',
-          value: 'changes',
-          sortable: true,
+          value: 'change',
+          sortable: false,
           filterable: false,
           containsLink: false,
-          width: '100%'
+          width: '120px'
         },
         {
           text: 'Token Value',
           value: 'value',
-          sortable: true,
-          filterable: false,
-          containsLink: false,
-          width: '100%'
-        },
-        {
-          text: '',
-          value: 'btn',
           sortable: false,
           filterable: false,
           containsLink: false,
-          width: '100%'
+          width: '100px'
+        },
+        {
+          text: '',
+          value: 'callToAction',
+          sortable: false,
+          filterable: false,
+          containsLink: false,
+          width: '140px'
         }
       ],
       tableData: [
@@ -84,33 +87,53 @@ export default {
           token: 'XMR',
           price: '$8.23',
           cap: '$1.23B',
-          changes: '2.23%',
+          change: '2.23%',
+          status: '+',
+          changeData: {
+            x: [1, 4, 10, 4],
+            y: [0, 1, 34, 43]
+          },
           value: '$27.54',
-          btn: 'Trade'
+          callToAction: 'Trade'
         },
         {
           token: 'AMIS',
           price: '$23.11',
           cap: '$5.22B',
-          changes: '0.43%',
+          change: '0.43%',
+          status: '-',
+          changeData: {
+            x: [1, 4, 10, 4],
+            y: [0, 1, 34, 43]
+          },
           value: '$27.54',
-          btn: 'Trade'
+          callToAction: 'Trade'
         },
         {
           token: 'JCK',
           price: '$3.65',
           cap: '$0.43B',
-          changes: '10.23%',
+          change: '10.23%',
+          status: '+',
+          changeData: {
+            x: [1, 4, 10, 4],
+            y: [0, 1, 34, 43]
+          },
           value: '$27.54',
-          btn: 'Trade'
+          callToAction: 'Trade'
         },
         {
           token: 'AMN',
           price: '$10.72',
           cap: '0.11B',
-          changes: '8.88%',
+          change: '8.88%',
           value: '$27.54',
-          btn: 'Trade'
+          status: '-',
+          changeData: {
+            x: [1, 4, 10, 4],
+            y: [0, 1, 34, 43]
+          },
+          callToAction: 'Trade'
         }
       ]
     };

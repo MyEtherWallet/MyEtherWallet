@@ -49,7 +49,10 @@ import Vuetify, {
   VSlider,
   VDataTable,
   VCarousel,
-  VSlideXReverseTransition
+  VSlideXReverseTransition,
+  VCarouselItem,
+  VListGroup,
+  VListItemGroup
 } from 'vuetify/lib';
 import 'vuetify/dist/vuetify.min.css';
 
@@ -104,7 +107,10 @@ Vue.use(Vuetify, {
     VSlider,
     VDataTable,
     VCarousel,
-    VSlideXReverseTransition
+    VSlideXReverseTransition,
+    VCarouselItem,
+    VListGroup,
+    VListItemGroup
   }
 });
 
@@ -133,6 +139,7 @@ export default new Vuetify({
           darken1: '#e3f2f2'
         },
         superPrimaryHover: '#f5fdfb',
+        overlayBg: '#f2fafa',
         inputBorder: '#e0e0e0',
         inputDisabled: '#cecece',
         dropdownBorder: '#05c0a5',
@@ -143,23 +150,33 @@ export default new Vuetify({
         swapDisable: '#f8f8f8',
         captionPrimary: '#a9bcd2',
         textSecondary: '#999999',
+        textSecondaryModule: '#999999',
+        tagLabel: '#6d89a6',
         inputLabel: '#6d89a6',
         searchInput: '#f2f4fa',
         searchText: '#96a8b6',
         titlePrimary: '#0b2840',
         textPrimary: '#667f9b',
-        white: '#ffffff',
+        textPrimaryModule: '#667f9b',
+        white: '#fff',
+        mewBg: '#fff',
+        boxShadow: '#ececec',
         expandHeader: '#184f90',
         primary: '#05c0a5',
         secondary: '#5a78f0',
         basic: '#0b1a40',
         success: '#2cc479',
-        error: '#ff445b',
+        error: {
+          base: '#ff445b',
+          lighten1: '#ffd7dc'
+        },
         warning: {
           base: '#FFF2DC',
-          darken1: '#f5a623'
+          darken1: '#f5a623',
+          darken2: '#ff7700'
         },
         disabled: '#cecece',
+        tableHeader: '#f9f9f9',
         //=======================================================
         // end of colors from mew components
         //=======================================================
@@ -217,10 +234,11 @@ export default new Vuetify({
         selectActive: '#2e3c75',
         selectHover: '#2c3448',
         superPrimary: {
-          base: '#f2fafa',
+          base: '#242c48',
           darken1: '#e3f2f2'
         },
         superPrimaryHover: '#f5fdfb',
+        overlayBg: '#151a29',
         inputBorder: '#667f9b',
         inputDisabled: '#3A465D',
         dropdownBorder: '#7e90a7',
@@ -232,22 +250,31 @@ export default new Vuetify({
         captionPrimary: '#a9bcd2',
         textSecondary: '#999999',
         inputLabel: '#4e5a6e',
+        tagLabel: '#95aed8',
         searchInput: '#f2f4fa',
         searchText: '#96a8b6',
         white: '#fff',
+        mewBg: '#151a29',
+        boxShadow: '#3c3c3c',
         expandHeader: '#184f90',
         titlePrimary: '#95aed8',
         textPrimary: '#4e5a6e',
+        textPrimaryModule: '#95aed8',
+        textSecondaryModule: '#95aed8',
         primary: '#05c0a5',
         secondary: '#5c79f0',
-        basic: '#151A29',
-        success: '#2cc479',
-        error: '#ff445b',
+        basic:'#151A29',
+        success:'#2cc479',
+        error: {
+          base: '#ff445b',
+          lighten1: '#ffd7dc'
+        },
         warning: {
           base: '#FFF2DC',
           darken1: '#f5a623'
         },
         disabled: '#1f2b42',
+        tableHeader: '#0f1320',
         //=======================================================
         // end of colors from mew components
         //=======================================================

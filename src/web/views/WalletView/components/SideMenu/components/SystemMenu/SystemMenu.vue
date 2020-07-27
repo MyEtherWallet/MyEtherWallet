@@ -43,6 +43,7 @@
       title="Are you sure you want to log out?"
       :button-left="logout.btnLeft"
       :button-right="logout.btnRight"
+      popup-type="confirm"
     ></mew-popup>
     <Settings :open="openSettings" :close="closeSettings" />
   </div>

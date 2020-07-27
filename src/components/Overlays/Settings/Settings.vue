@@ -5,7 +5,7 @@
     right-btn-text="Close"
     left-btn-text="Back"
   >
-    <template v-slot:mewComponent>
+    <template v-slot:mewOverlayBody>
       <v-sheet max-width="750px">
         <mew-expand-panel :panel-items="panelItems">
           <template v-slot:panelBody0>
