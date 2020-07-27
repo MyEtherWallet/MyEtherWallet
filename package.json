@@ -35,6 +35,7 @@
     "@myetherwallet/mew-components": "0.4.8-beta",
     "@sentry/browser": "5.17.0",
     "@sentry/integrations": "5.17.0",
+    "highcharts": "8.1.2",
     "highcharts-vue": "1.3.5",
     "platform": "1.3.6",
     "pocket-js-web3-provider": "0.0.3",
