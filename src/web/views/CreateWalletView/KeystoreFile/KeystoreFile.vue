@@ -75,7 +75,7 @@ export default {
       } else {
         this.onStep = 1;
       }
-      console.error('this', this.onStep)
+      console.error('this', this.onStep);
     }
   }
 };

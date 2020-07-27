@@ -3,7 +3,6 @@
 </template>
 
 <script>
-//import Highcharts from 'highcharts';
 import { Chart } from 'highcharts-vue';
 
 export default {
