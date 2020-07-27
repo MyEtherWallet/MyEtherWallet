@@ -3,7 +3,7 @@
     <div class="py-10" />
     <v-container class="pb-0">
       <v-sheet max-width="600px" color="transparent" class="mx-auto">
-        <BlockTitle :data="titleData" />
+        <BlockTitle no-page-title :data="titleData" />
       </v-sheet>
       <div class="my-11" />
       <div class="line-height--0">

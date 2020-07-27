@@ -1,64 +1,20 @@
 <template>
-  <div class="light-blue darken-4">
-    <div class="py-8" />
-    <v-container>
-      <BlockTitle :data="titleData" class="mb-10" />
-      <v-sheet
-        max-width="800px"
-        class="mx-auto border-radius--10px"
-        color="white"
-      >
-        <div class="pt-6 pr-6 pl-6">
-          <div
-            class="step-progress-bar d-flex align-center text-center border-radius--5px overflow--hidden user-select--none"
-          >
-            <div
-              :class="tab == 'tab-1' ? stepActive : stepDone"
-              class="position--relative"
-            >
-              STEP 1. Download &amp; Install
-              <img
-                class="right-arrow"
-                src="@/assets/images/icons/icon-right-arrow-white.svg"
-              />
-            </div>
-            <div
-              :class="[
-                tab == 'tab-1' ? stepUndone : '',
-                tab == 'tab-2' ? stepActive : '',
-                tab == 'tab-3' ? stepDone : ''
-              ]"
-              class="position--relative"
-            >
-              STEP 2. Create a new wallet
-              <img
-                class="right-arrow"
-                src="@/assets/images/icons/icon-right-arrow-white.svg"
-              />
-            </div>
-            <div :class="tab == 'tab-3' ? stepActive : stepUndone">
-              STEP 3. Well done
-            </div>
-          </div>
-
-          <div>
-            <v-tabs-items v-model="tab">
-              <v-tab-item :value="'tab-1'">
-                <Step1 />
-              </v-tab-item>
-              <v-tab-item :value="'tab-2'">
-                <Step2 />
-              </v-tab-item>
-              <v-tab-item :value="'tab-3'">
-                <Step3 />
-              </v-tab-item>
-            </v-tabs-items>
-          </div>
-        </div>
-      </v-sheet>
-    </v-container>
-    <div class="py-12" />
-    <div class="py-3" />
+  <div class="bg_blue">
+    <v-sheet color="transparent" max-width="800px" class="mx-auto">
+      <BlockTitle :data="titleData" />
+      <mew-stepper :items="items" :on-step="onStep">
+        <template v-slot:outsideStepContent0>
+          <Step1 />
+        </template>
+        <template v-slot:outsideStepContent1>
+          <Step2 />
+        </template>
+        <template v-slot:outsideStepContent2>
+          <Step3 />
+        </template>
+      </mew-stepper>
+    </v-sheet>
+    <div class="spacer-y-medium" />
   </div>
 </template>
 
@@ -70,11 +26,28 @@ import Step3 from './components/Step3';
 
 export default {
   name: 'MewConnect',
-  components: { BlockTitle, Step1, Step2, Step3 },
+  components: {
+    BlockTitle,
+    Step1,
+    Step2,
+    Step3
+  },
   data: () => ({
-    stepActive: 'light-blue darken-4 white--text pa-3 caption',
-    stepDone: 'grey white--text pa-3 caption',
-    stepUndone: 'grey lighten-3 grey--text text--lighten-1 pa-3 caption',
+    items: [
+      {
+        step: 1,
+        name: 'STEP 1. Create password'
+      },
+      {
+        step: 2,
+        name: 'STEP 2. Download keystore file'
+      },
+      {
+        step: 3,
+        name: 'STEP 3. Well done'
+      }
+    ],
+    onStep: 1,
     titleData: {
       textProps: 'white--text',
       toptitle: '',
@@ -84,8 +57,7 @@ export default {
         'An official, free companion App for MyEtherWallet that helps you secure your funds as never before.',
       descriptionMaxWidth: '400px',
       centered: true
-    },
-    tab: 'tab-1'
+    }
   }),
   watch: {
     $route() {
@@ -99,27 +71,11 @@ export default {
     checkQueryStep() {
       const currentStep = this.$route.query.step;
       if (currentStep) {
-        this.tab = 'tab-' + currentStep;
+        this.onStep = parseInt(currentStep);
       } else {
-        this.tab = 'tab-1';
+        this.onStep = 1;
       }
     }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.step-progress-bar {
-  > div {
-    width: 100%;
-  }
-}
-
-.right-arrow {
-  position: absolute;
-  top: -36px;
-  right: -8px;
-  height: 117px;
-  z-index: 1;
-}
-</style>

@@ -1,55 +1,51 @@
 <template>
-  <div class="light-blue darken-4">
-    <div class="py-8" />
-    <v-container>
-      <BlockTitle :data="titleData" class="mb-10">
-        <p class="white--text ma-0">
-          Please select a method to create a new wallet.
-        </p>
-        <p class="white--text ma-0">
-          Already have a wallet?
-          <router-link
-            :to="{ name: 'HomeAccessWallet', query: {} }"
-            class="text-color--mew-green"
-          >
-            Access my wallet
-          </router-link>
-        </p>
-      </BlockTitle>
-      <v-sheet color="transparent" max-width="600px" class="mx-auto">
+  <div class="bg_blue">
+    <toast
+      ref="toast"
+      can-close
+      :link-obj="toastLink"
+      text="Did you know? Hardware wallets offer the highest security for accessing your crypto."
+      toast-type="info"
+      @onClick="onClick"
+    />
+    <BlockTitle :data="titleData">
+      <h5 class="white--text ma-0">
+        Please select a method to create a new wallet.
+      </h5>
+      <h5 class="white--text ma-0">
+        Already have a wallet?
         <router-link
-          :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '1' } }"
-          class="text-decoration--none"
+          :to="{ name: 'HomeAccessWallet', query: {} }"
+          class="text-decoration--underline"
         >
-          <MEWconnect
-            class="cursor--pointer user-select--none new-wallet-button"
-          />
+          Access my wallet
         </router-link>
-        <div class="my-4" />
-        <router-link
-          :to="{ name: 'HomeCreateWalletKeystore', query: { step: '1' } }"
-          class="text-decoration--none"
-        >
-          <Software
-            class="cursor--pointer user-select--none new-wallet-button"
-          />
-        </router-link>
-      </v-sheet>
-    </v-container>
-    <div class="py-12" />
-    <div class="py-8" />
+      </h5>
+    </BlockTitle>
+
+    <v-sheet color="transparent" max-width="650px" class="mx-auto">
+      <MEWwallet class="mb-5" />
+      <MEWcx class="mb-5" />
+      <Software />
+    </v-sheet>
+    <div class="spacer-y-medium" />
   </div>
 </template>
 
 <script>
 import BlockTitle from '@/web/components/BlockTitle';
-import MEWconnect from './components/MEWconnect';
+import MEWwallet from './components/MEWwallet';
+import MEWcx from './components/MEWcx';
 import Software from './components/Software';
 
 export default {
   name: 'CreateNewWallet',
-  components: { BlockTitle, MEWconnect, Software },
+  components: { BlockTitle, MEWwallet, MEWcx, Software },
   data: () => ({
+    toastLink: {
+      title: 'Buy a hardware wallet',
+      url: ''
+    },
     titleData: {
       textProps: 'white--text',
       toptitle: '',
@@ -58,16 +54,13 @@ export default {
       centered: true
     }
   }),
-  methods: {}
+  mounted() {
+    this.$refs.toast.showToast();
+  },
+  methods: {
+    onClick() {}
+  }
 };
 </script>
 
-<style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables';
-
-.new-wallet-button {
-  &:hover {
-    box-shadow: 0 0 50px $police-strobe;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

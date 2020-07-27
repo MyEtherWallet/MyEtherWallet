@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <v-content>
+    <v-main>
       <router-view />
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
@@ -12,16 +12,11 @@ export default {
   components: {},
   data() {
     return {};
-  },
-  mounted() {
-    //this.$vuetify.theme.dark = false;
-    //console.log(this.$vuetify.theme);
   }
 };
 </script>
 
 <style lang="scss">
-@import '@/assets/styles/GlobalVariables.scss';
 @import '@/assets/styles/GlobalStyles.scss';
 @import '@myetherwallet/mew-components/src/assets/styles/global.scss';
 </style>

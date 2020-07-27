@@ -47,20 +47,15 @@
           </v-btn>
         </Tooltip>
 
-        <Tooltip text="Click to print out your wallet">
-          <v-btn text icon :color="iconColor">
-            <v-icon class="color--white">mdi-dots-vertical</v-icon>
-          </v-btn>
-        </Tooltip>
-
-        <v-btn
+        <mew-button
           class="ml-auto"
-          outlined
-          small
-          color="white"
-          @click="openChangeAddress = true"
-          >Switch ></v-btn
-        >
+          :has-full-width="false"
+          btn-style="outline"
+          title="Switch >"
+          color-theme="white"
+          button-size="small"
+          @click.native="openChangeAddress = true"
+        />
       </div>
     </div>
     <ChangeAddress :open="openChangeAddress" :close="closeChangeAddress" />
@@ -105,7 +100,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
 .component--wallet-card {
   position: relative;
   width: 100%;

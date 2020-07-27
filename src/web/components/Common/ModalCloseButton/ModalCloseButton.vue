@@ -29,8 +29,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 .line1,
 .line2 {
   position: absolute;
@@ -39,7 +37,7 @@ export default {
   right: 0px;
   top: 0px;
   margin: 0 auto;
-  border-bottom: 1px solid $dark-sacramento;
+  border-bottom: 1px solid var(--v-dark_sacramento-base);
 }
 
 .line1 {

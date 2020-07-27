@@ -45,9 +45,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 .subtitle-color {
-  color: $gray-4;
+  color: var(--v-gray_text-base);
 }
 </style>

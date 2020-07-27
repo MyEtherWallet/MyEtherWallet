@@ -14,9 +14,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 .left-border {
-  border-left: 5px solid $emerald;
+  border-left: 5px solid var(--v-emerald-base);
 }
 </style>

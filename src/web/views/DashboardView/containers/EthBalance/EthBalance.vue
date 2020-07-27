@@ -1,76 +1,90 @@
 <template>
-  <WhiteSheet class="mew-component--eth-balance">
-    <div class="d-flex px-6 pt-7">
-      <BlockTitle
-        :icon="require('@/assets/images/currencies//eth.png')"
-        text1="My Eth Balance"
-        text2="24.842"
-        text3="$4,032.35"
-        currency="ETH"
+  <mew6-white-sheet class="mew-component--eth-balance pa-7 pb-4">
+    <div class="d-flex">
+      <mew-module
+        subtitle="My Eth Balance"
+        title="24.842 ETH"
+        caption="$4,032.35"
+        :icon="require('@/assets/images/currencies/eth.png')"
+        icon-align="left"
       />
       <div class="ml-auto">
-        <v-btn-toggle
-          v-model="chartRange"
-          class="chart-button-group"
-          tile
-          group
-          dense
-          mandatory
-        >
-          <v-btn value="1d">
-            1D
+        <div class="d-flex align-center">
+          <mew-toggle-button
+            :button-group="chartButtons"
+            @onBtnClick="onBtnClick"
+          />
+          <mew-button
+            button-size="medium"
+            class="ml-4"
+            icon-type="mdi"
+            icon="mdi-dots-vertical"
+          />
+        </div>
+        <div v-if="false">
+          <v-btn-toggle
+            v-model="chartRange"
+            class="chart-button-group"
+            tile
+            group
+            dense
+            mandatory
+          >
+            <v-btn value="1d">
+              1D
+            </v-btn>
+            <v-btn value="1w">
+              1W
+            </v-btn>
+            <v-btn value="1m">
+              1M
+            </v-btn>
+            <v-btn value="1y">
+              1Y
+            </v-btn>
+            <v-btn value="all">
+              All
+            </v-btn>
+          </v-btn-toggle>
+          <v-btn text icon class="ml-4">
+            <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
-          <v-btn value="1w">
-            1W
-          </v-btn>
-          <v-btn value="1m">
-            1M
-          </v-btn>
-          <v-btn value="1y">
-            1Y
-          </v-btn>
-          <v-btn value="all">
-            All
-          </v-btn>
-        </v-btn-toggle>
-        <v-btn text icon class="ml-4">
-          <v-icon>mdi-dots-vertical</v-icon>
-        </v-btn>
+        </div>
       </div>
     </div>
-    <ChartBalance
-      :key="chartData.key"
-      :data="chartData.data"
-      class="px-3 mt-5"
-    />
-    <div class="d-flex align-center px-6 mt-2 pb-5">
-      <div class="px-8"></div>
-      <div class="d-flex align-center">
+    <ChartBalance :key="chartData.key" :data="chartData.data" class="mt-5" />
+    <v-row class="align-center">
+      <v-col class="d-flex align-center justify-center">
         <div class="font-weight-bold">ETH PRICE</div>
         <div class="ml-2 font-weight-regular text-color--mew-green">
           3.12%
         </div>
-        <v-icon class="text-color--mew-green body-2">mdi-arrow-up-bold</v-icon>
-        <v-icon v-if="false" color="red" class="body-2"
+        <v-icon class="emerald--text body-2">mdi-arrow-up-bold</v-icon>
+        <v-icon v-if="false" class="light_red--text body-2"
           >mdi-arrow-down-bold</v-icon
         >
-      </div>
-      <div class="ml-5">$321.55 / 1 ETH</div>
-      <StdButton size="x-large" class="ml-auto">Send Transaction</StdButton>
-    </div>
-  </WhiteSheet>
+        <div class="ml-5">$321.55 / 1 ETH</div>
+      </v-col>
+      <v-col class="text-right">
+        <mew-button
+          :has-full-width="false"
+          title="Send Transaction"
+          button-size="xlarge"
+          @click.native="goTo('HomeAccessWallet')"
+        />
+      </v-col>
+    </v-row>
+  </mew6-white-sheet>
 </template>
 
 <script>
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
-import StdButton from '@/web/components/StdButton';
 import ChartBalance from '@/web/components/Charts/Balance';
-import BlockTitle from '@/web/components/BlockTitles/BlockTitle1';
 
 export default {
-  components: { WhiteSheet, ChartBalance, StdButton, BlockTitle },
+  components: { ChartBalance },
   data() {
     return {
+      chartButtons: ['1D', '1W', '1M', '1Y', 'All'],
       chartRange: '1d',
       chartData: [],
       chart1d: {
@@ -4116,6 +4130,11 @@ export default {
   },
   beforeMount() {
     this.chartData = this.chart1d;
+  },
+  methods: {
+    onBtnClick(newVal) {
+      this.chartRange = newVal.toLowerCase();
+    }
   }
 };
 </script>
@@ -4128,16 +4147,14 @@ export default {
 </style>
 
 <style lang="scss">
-@import '@/assets/styles/GlobalVariables.scss';
-
 .mew-component--eth-balance {
   .v-item--active {
     &::before {
-      background-color: $royal-blue;
+      background-color: var(--v-royal_blue-base);
       opacity: 1 !important;
     }
     .v-btn__content {
-      color: $white;
+      color: white;
     }
   }
 }

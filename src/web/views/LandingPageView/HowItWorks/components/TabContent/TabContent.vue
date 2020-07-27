@@ -1,33 +1,24 @@
 <template>
-  <v-container>
-    <Tabs>
-      <v-tab>Send</v-tab>
-      <v-tab>Swap</v-tab>
-      <v-tab>Dapps</v-tab>
-      <v-tab>Tokens</v-tab>
-      <v-tab>More</v-tab>
-
-      <v-tab-item>
-        <Send />
-      </v-tab-item>
-      <v-tab-item>
-        <Swap />
-      </v-tab-item>
-      <v-tab-item>
-        <Dapps />
-      </v-tab-item>
-      <v-tab-item>
-        <Tokens />
-      </v-tab-item>
-      <v-tab-item>
-        <More />
-      </v-tab-item>
-    </Tabs>
-  </v-container>
+  <mew-tabs :items="mewTabs">
+    <template v-slot:tabContent1>
+      <Send />
+    </template>
+    <template v-slot:tabContent2>
+      <Swap />
+    </template>
+    <template v-slot:tabContent2>
+      <Dapps />
+    </template>
+    <template v-slot:tabContent3>
+      <Tokens />
+    </template>
+    <template v-slot:tabContent4>
+      <More />
+    </template>
+  </mew-tabs>
 </template>
 
 <script>
-import Tabs from '../../../components/Tabs';
 import Send from './components/Send';
 import Swap from './components/Swap';
 import Dapps from './components/Dapps';
@@ -36,6 +27,27 @@ import More from './components/More';
 
 export default {
   name: 'TabContent',
-  components: { Tabs, Send, Swap, Dapps, Tokens, More }
+  components: { Send, Swap, Dapps, Tokens, More },
+  data: () => {
+    return {
+      mewTabs: [
+        {
+          name: 'Send'
+        },
+        {
+          name: 'Swap'
+        },
+        {
+          name: 'Dapps'
+        },
+        {
+          name: 'Tokens'
+        },
+        {
+          name: 'More'
+        }
+      ]
+    };
+  }
 };
 </script>

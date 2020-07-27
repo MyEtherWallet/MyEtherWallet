@@ -12,9 +12,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 .divider {
-  border-bottom: 1px solid $gray-2;
+  border-bottom: 1px solid #4d687e;
 }
 </style>
