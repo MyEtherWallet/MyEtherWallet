@@ -13,14 +13,14 @@
       :items="mewTabs"
       is-block
     >
-      <template v-slot:tabContent0>
+      <template v-slot:tabContent1>
         <img
           class="pt-8"
           :src="require('@/assets/images/backgrounds/bg-swap-page.svg')"
           alt="Swap"
         />
       </template>
-      <template v-slot:tabContent1>
+      <template v-slot:tabContent2>
         <img
           class="pt-8"
           :src="require('@/assets/images/backgrounds/bg-swap-page.svg')"

@@ -1,5 +1,6 @@
 <template>
   <mew-button
+    class="buy-eth-button"
     color-theme="white"
     btn-style="outline"
     title="Buy ETH here"
@@ -18,3 +19,10 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+.buy-eth-button {
+  img {
+    height: 20px !important;
+  }
+}
+</style>

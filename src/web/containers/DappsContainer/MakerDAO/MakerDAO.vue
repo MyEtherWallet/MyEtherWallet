@@ -20,7 +20,7 @@
     />
 
     <mew-tabs :items="tabs">
-      <template v-slot:tabContent0>
+      <template v-slot:tabContent1>
         <v-sheet color="transparent" max-width="700px" class="mx-auto">
           <div class="py-12">
             <v-row>
@@ -72,7 +72,7 @@
           </div>
         </v-sheet>
       </template>
-      <template v-slot:tabContent1>
+      <template v-slot:tabContent2>
         <v-sheet color="transparent" max-width="700px" class="mx-auto">
           <div class="mt-10 text-right">
             <mew-button

@@ -1,9 +1,9 @@
 <template>
   <mew-tabs :items="mewTabs">
-    <template v-slot:tabContent0>
+    <template v-slot:tabContent1>
       <Send />
     </template>
-    <template v-slot:tabContent1>
+    <template v-slot:tabContent2>
       <Swap />
     </template>
     <template v-slot:tabContent2>

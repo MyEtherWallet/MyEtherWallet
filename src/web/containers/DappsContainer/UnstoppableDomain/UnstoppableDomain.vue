@@ -20,7 +20,7 @@
     />
 
     <mew-tabs :items="tabs">
-      <template v-slot:tabContent0>
+      <template v-slot:tabContent1>
         <v-sheet max-width="800px" color="bg_white_sheet" class="py-12 mx-auto">
           <div class="tab-width">
             <div class="mb-5">
@@ -88,7 +88,7 @@
           </div>
         </v-sheet>
       </template>
-      <template v-slot:tabContent1>
+      <template v-slot:tabContent2>
         <v-sheet max-width="800px" color="bg_white_sheet" class="py-12 mx-auto">
           <div class="d-flex align-center justify-space-between mb-7">
             <h4 class="font-weight-bold">
