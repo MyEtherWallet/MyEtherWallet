@@ -5,25 +5,8 @@
 const package = require('./package.json');
 const packageJson = require('package-json');
 const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
-// babel-jest 24.0.0 is breaking all the tests [2-1-19]
-//@xkeshi/vue-qrcode no longer maintained, forked out to mew
-//multicoin-address-validator not enough downloads
-// waiting for vee-validate 3.0 to be more stable (https://github.com/baianat/vee-validate/issues/2248)
-// Matching exceptions with package.json
-// Lock @vue packages due to complications on updating
-// @vue/test-utils - breaking tests beginning at 5.2.5-hotfix-2 (with version 1.0.0-beta.30)
 const EXCEPTIONS = [
-  'graphql',
-  'canvas',
-  'ethereum-ens',
-  'babel-jest',
-  'multicoin-address-validator',
-  'vee-validate',
-  '@xkeshi/vue-qrcode',
-  '@vue/test-utils',
-  'graphql',
-  'ethereumjs-util',
-  '@myetherwallet/eth-token-balance'
+  '@xkeshi/vue-qrcode'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

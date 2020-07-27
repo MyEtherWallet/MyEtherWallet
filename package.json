@@ -20,7 +20,6 @@
     "lint:md": "remark . -o -f",
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
-    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && npx npm-force-resolutions",
     "start": "npm run update:mainlists && npm run dev",
     "start:history": "npm run update:mainlists && ROUTER_MODE=history npm run dev",
     "update": "npm run update:packages && npm run update:lists && npm run update:swap",
@@ -105,7 +104,7 @@
     "axios": "0.19.2",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.1.0",
-    "babel-jest": "25.2.3",
+    "babel-jest": "26.1.0",
     "bc-vault-js": "2.0.4",
     "bignumber.js": "9.0.0",
     "bip39": "3.0.2",
@@ -118,10 +117,10 @@
     "eslint-plugin-security": "1.4.0",
     "eslint-plugin-vue": "6.2.2",
     "eth-ens-namehash": "2.0.8",
-    "ethereum-ens": "0.7.7",
+    "ethereum-ens": "0.8.0",
     "ethereumjs-common": "1.5.1",
     "ethereumjs-tx": "2.1.2",
-    "ethereumjs-util": "7.0.0",
+    "ethereumjs-util": "7.0.3",
     "ethereumjs-wallet": "1.0.0",
     "ethjs-unit": "0.1.6",
     "hdkey": "2.0.1",
@@ -190,7 +189,7 @@
   },
   "vuePlugins": {
     "service": [
-      "./vueConfig/multiCompiler.js"
+      "./config/multiCompiler.js"
     ]
   },
   "resolutions": {
