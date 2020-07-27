@@ -1,7 +1,7 @@
 <template>
   <BaseOverlay :open="open" :close="close" close-text="Cancel">
     <OverlayTitle title="Confirmation" />
-    <WhiteSheet>
+    <mew6-white-sheet>
       <div class="overlay-content">
         <div class="pa-8">
           <FromToBlock />
@@ -14,21 +14,19 @@
           <DividerX class="my-9" />
 
           <div class="text-center">
-            <StdButton size="x-large">Confirm & send</StdButton>
+            <mew-button title="Confirm & send" button-size="xlarge" />
           </div>
         </div>
         <ConfirmTransaction />
       </div>
-    </WhiteSheet>
+    </mew6-white-sheet>
   </BaseOverlay>
 </template>
 
 <script>
 import BaseOverlay from '../BaseOverlay';
 import OverlayTitle from '@/components/OverlayTitle';
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import ConfirmTransaction from '@/components/WarningBlocks/ConfirmTransaction';
-import StdButton from '@/web//components/StdButton';
 import DividerX from '@/components/DividerX';
 import FromToBlock from '@/components/FromToBlock';
 import BalanceBlock from '@/components/BalanceBlock';
@@ -38,9 +36,7 @@ export default {
   components: {
     BaseOverlay,
     OverlayTitle,
-    WhiteSheet,
     ConfirmTransaction,
-    StdButton,
     DividerX,
     FromToBlock,
     BalanceBlock,
@@ -62,8 +58,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 .overlay-content {
   width: 650px;
 }

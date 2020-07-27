@@ -1,5 +1,5 @@
 <template>
-  <div class="light-blue darken-4 position--relative">
+  <div class="bg_blue">
     <div class="pointer-event--none user-select--none line-height--0">
       <img
         class="banner-img"
@@ -9,28 +9,30 @@
     <v-container class="banner-content-container">
       <v-row no-gutters>
         <v-col>
-          <v-card color="transparent" flat tile max-width="510">
-            <div
-              class="white--text display-2 font-weight-bold banner-line-height"
-            >
-              The most popular free Ethereum wallet
+          <v-card color="transparent" flat tile max-width="430px">
+            <div class="white--text font-weight-bold banner-top-title">
+              Ethereum's Original Wallet
             </div>
             <p class="white--text mt-3">
-              Generate the free Ethereum wallet, and interact with the Ethereum
-              blockchain easily and securely.
+              MEW (MyEtherWallet) is a free, client-side interface helping you
+              interact with the Ethereum blockchain. Our easy-to-use,
+              open-source platform allows you to generate wallets, interact with
+              smart contracts, and so much more.
             </p>
-            <div class="mt-7 btn-container">
+            <div class="mt-9 d-flex">
               <mew-button
-                class="mr-5"
+                class="mr-3"
                 :has-full-width="false"
-                title="Get a new wallet"
-                :to="{ name: 'HomeCreateWallet' }"
+                title="Create a new wallet"
+                button-size="xlarge"
+                @click.native="goTo('HomeCreateWallet')"
               />
               <mew-button
                 :has-full-width="false"
                 btn-style="outline"
                 title="Access my wallet"
-                :to="{ name: 'HomeAccessWallet' }"
+                button-size="xlarge"
+                @click.native="goTo('HomeAccessWallet')"
               />
             </div>
           </v-card>
@@ -43,27 +45,31 @@
 <script>
 export default {
   name: 'HomeContainer',
-  methods: {}
+  components: {},
+  methods: {
+    goTo(param) {
+      this.$router.push({
+        name: param
+      });
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-.btn-container {
-  height: 60px;
-}
-
 .banner-img {
   width: 100%;
 }
 .banner-content-container {
   height: 400px;
   position: absolute;
-  top: 14vw;
+  top: 300px;
   left: 0;
   right: 0;
   margin: 0 auto;
 }
-.banner-line-height {
+.banner-top-title {
   line-height: 55px !important;
+  font-size: 50px;
 }
 </style>

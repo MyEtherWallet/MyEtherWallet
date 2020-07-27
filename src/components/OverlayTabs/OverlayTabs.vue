@@ -15,8 +15,11 @@ export default {
 .overlay-tabs .v-tabs-bar {
   display: none;
 }
-
 .overlay-tabs .v-tabs-items {
   background-color: transparent;
+}
+.theme--light.v-tabs-items,
+.theme--dark.v-tabs-items {
+  background-color: transparent !important;
 }
 </style>

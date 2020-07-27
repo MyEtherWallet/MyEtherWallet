@@ -16,18 +16,14 @@
         <div>Duration:</div>
         <div>04:23:31</div>
       </div>
-      <StdButton fullwidth no-min-width size="x-large" color="light_red">
-        Disconnect
-      </StdButton>
+      <mew-button button-size="xlarge" color-theme="error" title="Disconnect" />
     </v-card>
   </v-tooltip>
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
-
 export default {
-  components: { StdButton },
+  components: {},
   props: {},
   data() {
     return {};
@@ -36,8 +32,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 .theme--light .v-tooltip__content {
   color: #383838;
   background: white;

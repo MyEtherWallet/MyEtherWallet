@@ -10,38 +10,35 @@
         </h2>
       </div>
       <v-spacer />
-      <StdButton
-        size="x-large"
-        outlined
-        color="white"
-        href="https://www.mewtopia.com/"
-        target="_blank"
-        >Get Started</StdButton
-      >
+      <mew-button
+        btn-link="https://www.mewtopia.com/"
+        :has-full-width="false"
+        title="Get Started"
+        btn-style="outline"
+        color-theme="white"
+        button-size="xlarge"
+      />
     </v-card>
   </v-container>
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
-
 export default {
   name: 'HomeAd1',
-  components: {
-    StdButton
-  }
+  components: {}
 };
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables';
-
 .v-card {
   border-radius: 10px !important;
 }
 
 .card-content {
-  background: linear-gradient(130deg, #0b2840 0%, #3d9e91 80%, #00c4ff 100%);
+  //background: linear-gradient(130deg, #0b2840 0%, #3d9e91 80%, #00c4ff 100%);
   padding: 70px 90px;
+  background-image: url('~@/assets/images/backgrounds/bg-light.png');
+  background-position: 0px 0px;
+  background-size: 100%;
 }
 </style>

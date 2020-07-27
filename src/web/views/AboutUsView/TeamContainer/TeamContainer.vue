@@ -3,7 +3,7 @@
     <PageTitle title="About us - Team" />
     <div class="py-7" />
     <v-sheet max-width="700px" class="mx-auto">
-      <BlockTitle :data="titleData" />
+      <BlockTitle no-page-title :data="titleData" />
     </v-sheet>
     <div class="py-5" />
     <v-container>

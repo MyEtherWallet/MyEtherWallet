@@ -1,5 +1,5 @@
 <template>
-  <WhiteSheet>
+  <mew6-white-sheet>
     <div class="px-8 py-5">
       <div class="d-flex align-center">
         <BlockTitle text="Dapps">
@@ -12,17 +12,16 @@
         <DappsBlock />
       </div>
     </div>
-  </WhiteSheet>
+  </mew6-white-sheet>
 </template>
 
 <script>
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import BlockTitle from '@/web/components/BlockTitles/BlockTitle2';
 import TextButton from '@/web/components/Buttons/TextButton1';
 import DappsBlock from '@/web/components/DappsBlock';
 
 export default {
-  components: { WhiteSheet, BlockTitle, TextButton, DappsBlock },
+  components: { BlockTitle, TextButton, DappsBlock },
   data() {
     return {};
   }

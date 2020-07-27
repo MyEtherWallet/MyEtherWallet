@@ -7,7 +7,7 @@
       aspect-ratio="1"
       class="mb-5"
     />
-    <BlockTitle :data="titleData" />
+    <BlockTitle no-page-title :data="titleData" />
     <div class="d-flex align-center mt-5">
       <v-btn
         v-for="(i, key) in icons"
