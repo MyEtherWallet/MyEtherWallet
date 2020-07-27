@@ -4,8 +4,9 @@ const AUDIT_EXCEPTIONS = [];
 
 const execute = (command, callback) => {
   exec(
-    command, {
-      maxBuffer: 2000 * 1024
+    command,
+    {
+      maxBuffer: 8000 * 1024
     },
     (error, stdout, stderr) => {
       callback(stdout);

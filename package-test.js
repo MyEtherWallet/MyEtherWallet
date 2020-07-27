@@ -5,9 +5,8 @@
 const package = require('./package.json');
 const packageJson = require('package-json');
 const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
-const EXCEPTIONS = [
-  '@xkeshi/vue-qrcode'
-];
+//@xkeshi/vue-qrcode no longer maintained, forked out to mew
+const EXCEPTIONS = ['@xkeshi/vue-qrcode'];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
 };
