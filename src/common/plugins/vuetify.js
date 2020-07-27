@@ -263,8 +263,8 @@ export default new Vuetify({
         textSecondaryModule: '#95aed8',
         primary: '#05c0a5',
         secondary: '#5c79f0',
-        basic:'#151A29',
-        success:'#2cc479',
+        basic: '#151A29',
+        success: '#2cc479',
         error: {
           base: '#ff445b',
           lighten1: '#ffd7dc'
