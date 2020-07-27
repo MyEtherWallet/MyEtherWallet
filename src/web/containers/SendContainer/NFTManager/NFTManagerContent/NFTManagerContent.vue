@@ -2,8 +2,8 @@
   <mew6-white-sheet>
     <InterfaceWrap title="Swap">
       <mew-tabs :items="items">
-        <template v-slot:tabContent0><CryptoFlowers /></template>
-        <template v-slot:tabContent1><CryptoKitties /></template>
+        <template v-slot:tabContent1><CryptoFlowers /></template>
+        <template v-slot:tabContent2><CryptoKitties /></template>
         <template v-slot:tabContent2><GodsUnchained /></template>
         <template v-slot:tabContent3><MyCryptoHeros /></template>
       </mew-tabs>

@@ -1,10 +1,11 @@
 <template>
   <mew-overlay
+    color-type="bg_white_sheet"
     :show-overlay="open"
     title="My paper wallet"
     right-btn-text="Close"
   >
-    <template v-slot:mewComponent>
+    <template v-slot:mewOverlayBody>
       <v-sheet max-width="800px">
         <mew6-white-sheet>
           <div class="pa-10">
