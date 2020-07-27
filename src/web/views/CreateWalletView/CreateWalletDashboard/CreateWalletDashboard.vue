@@ -58,9 +58,7 @@ export default {
     this.$refs.toast.showToast();
   },
   methods: {
-    onClick() {
-      console.log('on toast click');
-    }
+    onClick() {}
   }
 };
 </script>
