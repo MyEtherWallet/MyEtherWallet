@@ -105,7 +105,6 @@ export default {
   },
   methods: {
     getSelectedValue(value) {
-      //console.log('selected value:', value);
       this.addressValue = value;
     }
   }
