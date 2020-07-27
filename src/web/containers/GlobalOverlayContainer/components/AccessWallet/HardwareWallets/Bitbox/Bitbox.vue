@@ -6,7 +6,7 @@
   >
     <template v-slot:mewComponent>
       <mew-tabs :items="tabs">
-        <template v-slot:tabContent0>
+        <template v-slot:tabContent1>
           <div>
             <OverlayTitle title="Select BitBox wallet" />
             <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
@@ -27,7 +27,7 @@
             </v-sheet>
           </div>
         </template>
-        <template v-slot:tabContent1>
+        <template v-slot:tabContent2>
           <div>
             <OverlayTitle title="1. Enter your password" />
             <mew6-white-sheet>

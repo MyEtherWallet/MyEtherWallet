@@ -6,6 +6,7 @@
       :link-obj="toastLink"
       text="Did you know? Hardware wallets offer the highest security for accessing your crypto."
       toast-type="info"
+      @onClick="onClick"
     />
     <BlockTitle :data="titleData">
       <h5 class="white--text ma-0">
@@ -43,7 +44,7 @@ export default {
   data: () => ({
     toastLink: {
       title: 'Buy a hardware wallet',
-      url: '/'
+      url: ''
     },
     titleData: {
       textProps: 'white--text',
@@ -56,7 +57,11 @@ export default {
   mounted() {
     this.$refs.toast.showToast();
   },
-  methods: {}
+  methods: {
+    onClick() {
+      console.log('on toast click');
+    }
+  }
 };
 </script>
 

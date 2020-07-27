@@ -6,7 +6,7 @@
     />
     <div>
       <div class="d-flex align-center">
-        <mew-module :title="$t('common.network')" />
+        <span class="mew-heading-2">{{ $t('common.network') }}</span>
         <mew-button
           button-size="small"
           color-theme="secondary"
