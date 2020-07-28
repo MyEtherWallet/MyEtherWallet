@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import Blockie from '@/web/components/BlockieWithCurrency';
+import Blockie from '@/components/BlockieWithCurrency';
 import EllipsisBlock from '@/components/EllipsisBlock';
 
 export default {

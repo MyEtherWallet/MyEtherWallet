@@ -5,7 +5,7 @@ import { getApp } from '@/builds/configs';
 
 import Vue from 'vue';
 import Router from 'vue-router';
-import router from '@/web/router';
+import router from '@/router';
 import store from '@/common/store';
 import Vuex from 'vuex';
 
@@ -17,7 +17,7 @@ import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
 import vuetify from '@/common/plugins/vuetify';
 
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
+import WhiteSheet from '@/components/Common/WhiteSheet';
 Vue.component('mew6-white-sheet', WhiteSheet);
 
 // Local copy of MEW6 components. (development only)

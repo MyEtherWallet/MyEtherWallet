@@ -1,55 +1,55 @@
 import app from './app';
 
-import LandingPageView from '@/web/views/LandingPageView';
-import Home from '@/web/views/LandingPageView/Home';
+import LandingPageView from '@/views/LandingPageView';
+import Home from '@/views/LandingPageView/Home';
 
-import CreateWalletDashboard from '@/web/views/CreateWalletView/CreateWalletDashboard';
-import CreateWalletSoftware from '@/web/views/CreateWalletView/Software';
-import CreateWalletMewWallet from '@/web/views/CreateWalletView/MewWallet';
-import CreateWalletKeystore from '@/web/views/CreateWalletView/KeystoreFile';
-import CreateWalletMnemonic from '@/web/views/CreateWalletView/MnemonicPhrase';
+import CreateWalletDashboard from '@/views/CreateWalletView/CreateWalletDashboard';
+import CreateWalletSoftware from '@/views/CreateWalletView/Software';
+import CreateWalletMewWallet from '@/views/CreateWalletView/MewWallet';
+import CreateWalletKeystore from '@/views/CreateWalletView/KeystoreFile';
+import CreateWalletMnemonic from '@/views/CreateWalletView/MnemonicPhrase';
 
-import AccessWalletView from '@/web/views/AccessWalletView';
-import AccessWalletHardwareWallets from '@/web/views/AccessWalletView/containers/HardwareWallets';
+import AccessWalletView from '@/views/AccessWalletView';
+import AccessWalletHardwareWallets from '@/views/AccessWalletView/containers/HardwareWallets';
 
-import AccessWalletBrowserExtention from '@/web/views/AccessWalletView/containers/BrowserExtention';
-import AccessWalletBrowserExtentionInstall from '@/web/views/AccessWalletView/containers/BrowserExtention/container/InstallExtention';
-import AccessWalletBrowserExtentionAccess from '@/web/views/AccessWalletView/containers/BrowserExtention/container/AccessExtention';
+import AccessWalletBrowserExtention from '@/views/AccessWalletView/containers/BrowserExtention';
+import AccessWalletBrowserExtentionInstall from '@/views/AccessWalletView/containers/BrowserExtention/container/InstallExtention';
+import AccessWalletBrowserExtentionAccess from '@/views/AccessWalletView/containers/BrowserExtention/container/AccessExtention';
 
-import AccessWalletMobileApps from '@/web/views/AccessWalletView/containers/MobileApps';
+import AccessWalletMobileApps from '@/views/AccessWalletView/containers/MobileApps';
 
-import AboutUsCompany from '@/web/views/AboutUsView/CompanyContainer';
-import AboutUsTeam from '@/web/views/AboutUsView/TeamContainer';
+import AboutUsCompany from '@/views/AboutUsView/CompanyContainer';
+import AboutUsTeam from '@/views/AboutUsView/TeamContainer';
 
-import HowItWorks from '@/web/views/LandingPageView/HowItWorks';
-import MoreActions from '@/web/views/LandingPageView/MoreActions';
-import BuyHardwareWallet from '@/web/views/LandingPageView/BuyHardwareWallet';
+import HowItWorks from '@/views/LandingPageView/HowItWorks';
+import MoreActions from '@/views/LandingPageView/MoreActions';
+import BuyHardwareWallet from '@/views/LandingPageView/BuyHardwareWallet';
 
-import Wallet from '@/web/views/WalletView';
-import Dashboard from '@/web/views/DashboardView';
+import Wallet from '@/views/WalletView';
+import Dashboard from '@/views/DashboardView';
 
-import Send from '@/web/containers/SendContainer';
-import SendTX from '@/web/containers/SendContainer/SendTX';
-import SendOffline from '@/web/containers/SendContainer/SendOffline';
-import NFTManager from '@/web/containers/SendContainer/NFTManager';
+import Send from '@/containers/SendContainer';
+import SendTX from '@/containers/SendContainer/SendTX';
+import SendOffline from '@/containers/SendContainer/SendOffline';
+import NFTManager from '@/containers/SendContainer/NFTManager';
 
-import Swap from '@/web/containers/SwapContainer';
+import Swap from '@/containers/SwapContainer';
 
-import Dapps from '@/web/containers/DappsContainer';
-import DappsCenter from '@/web/containers/DappsContainer/DappsCenter';
-import Trending from '@/web/containers/DappsContainer/Trending';
-import NewDapps from '@/web/containers/DappsContainer/NewDapps';
-import ENSManager from '@/web/containers/DappsContainer/ENSManager';
-import MakerDAO from '@/web/containers/DappsContainer/MakerDAO';
-import Aave from '@/web/containers/DappsContainer/Aave';
-import Ambrpay from '@/web/containers/DappsContainer/Ambrpay';
-import UnstoppableDomain from '@/web/containers/DappsContainer/UnstoppableDomain';
+import Dapps from '@/containers/DappsContainer';
+import DappsCenter from '@/containers/DappsContainer/DappsCenter';
+import Trending from '@/containers/DappsContainer/Trending';
+import NewDapps from '@/containers/DappsContainer/NewDapps';
+import ENSManager from '@/containers/DappsContainer/ENSManager';
+import MakerDAO from '@/containers/DappsContainer/MakerDAO';
+import Aave from '@/containers/DappsContainer/Aave';
+import Ambrpay from '@/containers/DappsContainer/Ambrpay';
+import UnstoppableDomain from '@/containers/DappsContainer/UnstoppableDomain';
 
-import Contract from '@/web/containers/ContractContainer';
-import DeployContract from '@/web/containers/ContractContainer/DeployContract';
-import InteractWithContract from '@/web/containers/ContractContainer/InteractWithContract';
+import Contract from '@/containers/ContractContainer';
+import DeployContract from '@/containers/ContractContainer/DeployContract';
+import InteractWithContract from '@/containers/ContractContainer/InteractWithContract';
 
-import SignMessage from '@/web/containers/SignMessageContainer';
+import SignMessage from '@/containers/SignMessageContainer';
 
 const webRoutes = [
   {

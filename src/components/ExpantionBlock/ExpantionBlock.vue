@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import DividerLine from '@/web/components/Common/DividerLine';
+import DividerLine from '@/components/Common/DividerLine';
 export default {
   components: {
     DividerLine
