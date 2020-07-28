@@ -67,7 +67,7 @@ Sentry.init({
   dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
   integrations: [integration],
   maxBreadcrumbs: 0,
-  environment: BUILD_TYPE,
+  environment: 'web',
   requestBodies: 'small',
   release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event) {

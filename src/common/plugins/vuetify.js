@@ -14,6 +14,7 @@ import Vuetify, {
   VDialog,
   VDivider,
   VIcon,
+  VImg,
   VList,
   VListItem,
   VListItemContent,
@@ -45,6 +46,7 @@ import Vuetify, {
   VTabsItems,
   VTabItem,
   VMenu,
+  VMain,
   VSpacer,
   VSlider,
   VDataTable,
@@ -52,7 +54,9 @@ import Vuetify, {
   VSlideXReverseTransition,
   VCarouselItem,
   VListGroup,
-  VListItemGroup
+  VListItemGroup,
+  VOverlay,
+  VThemeProvider
 } from 'vuetify/lib';
 import 'vuetify/dist/vuetify.min.css';
 
@@ -72,6 +76,7 @@ Vue.use(Vuetify, {
     VDialog,
     VDivider,
     VIcon,
+    VImg,
     VList,
     VListItem,
     VListItemContent,
@@ -103,6 +108,7 @@ Vue.use(Vuetify, {
     VTabsItems,
     VTabItem,
     VMenu,
+    VMain,
     VSpacer,
     VSlider,
     VDataTable,
@@ -110,7 +116,9 @@ Vue.use(Vuetify, {
     VSlideXReverseTransition,
     VCarouselItem,
     VListGroup,
-    VListItemGroup
+    VListItemGroup,
+    VOverlay,
+    VThemeProvider
   }
 });
 

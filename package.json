@@ -9,9 +9,6 @@
     "lint": "npm run lint:styles && npm run lint:code && npm run lint:md",
     "build:hash": "ROUTER_MODE=hash npm run build",
     "build:history": "ROUTER_MODE=history npm run build",
-    "build:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run build",
-    "start:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run buildwatch",
-    "buildwatch": "npm run update && vue-cli-service build --watch",
     "test": "npm run update:lists && npm run update:swap && jest --clearCache && npm run test:unit",
     "codecov": "npm run test && codecov",
     "dev": "npm run update && npm run update:mainlists && vue-cli-service serve --watch",
@@ -46,7 +43,7 @@
   },
   "devDependencies": {
     "@keepkey/keepkey.js": "1.2.3",
-    "@ledgerhq/hw-app-eth": "5.19.1",
+    "@ledgerhq/hw-app-eth": "5.20.0",
     "@ledgerhq/hw-transport-u2f": "5.19.1",
     "@ledgerhq/hw-transport-webusb": "5.19.1",
     "@myetherwallet/mewconnect-web-client": "2.1.0-RC.5.3",
@@ -130,11 +127,6 @@
       "vee-validate",
       "sass-loader",
       "@vue/test-utils"
-    ]
-  },
-  "vuePlugins": {
-    "service": [
-      "./config/multiCompiler.js"
     ]
   },
   "resolutions": {
