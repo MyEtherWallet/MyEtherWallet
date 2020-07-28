@@ -161,7 +161,7 @@
 </template>
 
 <script>
-import Blockie from '@/web/components/Blockie';
+import Blockie from '@/components/Blockie';
 import VueQrcode from '@xkeshi/vue-qrcode';
 
 export default {

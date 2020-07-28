@@ -1,0 +1,32 @@
+<template>
+  <div>
+    <div class="d-flex">
+      <div class="flex-grow-1">
+        <SwapContent />
+      </div>
+      <Spacer />
+      <div>
+        <Network />
+        <Spacer />
+        <Swap />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import Spacer from '@/components/Common/Spacer';
+import SwapContent from './SwapContent';
+
+import Network from '@/components/Network';
+import Swap from '@/components/Swap';
+
+export default {
+  components: {
+    Spacer,
+    SwapContent,
+    Network,
+    Swap
+  }
+};
+</script>
