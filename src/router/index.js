@@ -1,10 +1,10 @@
 import Router from 'vue-router';
 import store from '@/common/store';
-import { getMode, getRoutes } from '@/builds/configs';
+import routes from './routes';
 
 const router = new Router({
-  mode: getMode(),
-  routes: getRoutes(),
+  mode: ROUTER_MODE || 'hash',
+  routes: routes,
   scrollBehavior(to) {
     if (to.hash) {
       return {
@@ -26,10 +26,6 @@ router.beforeResolve((to, ___, next) => {
     const queryKeys = Object.keys(to.query);
     if (queryKeys.length > 0) {
       const blankObj = {};
-      // for (const key in to.query) {
-      //   blankObj[key] = Misc.stripTags(to.query[key]);
-      // }
-
       store.dispatch('saveQueryVal', blankObj);
     }
     if (store.state.wallet === null) {
