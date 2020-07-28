@@ -1,3 +1,7 @@
+### Bug
+
+- Change token so even if contract succeeds some can still be loaded, show renew ens []()
+
 ### Release v5.7.2
 
 ### Bug
