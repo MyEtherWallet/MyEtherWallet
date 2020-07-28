@@ -1,5 +1,3 @@
-import app from './app';
-
 import LandingPageView from '@/views/LandingPageView';
 import Home from '@/views/LandingPageView/Home';
 
@@ -51,7 +49,7 @@ import InteractWithContract from '@/containers/ContractContainer/InteractWithCon
 
 import SignMessage from '@/containers/SignMessageContainer';
 
-const webRoutes = [
+const routes = [
   {
     path: '/',
     component: LandingPageView,
@@ -366,7 +364,5 @@ const webRoutes = [
     ]
   }
 ];
-const configRoutes = routes => {
-  return routes.concat(webRoutes);
-};
-export { app, configRoutes };
+
+export default routes;

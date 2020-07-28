@@ -1,7 +1,7 @@
 /* eslint camelcase: 0 */
 import * as Sentry from '@sentry/browser';
 import * as Integrations from '@sentry/integrations';
-import { getApp } from '@/builds/configs';
+import app from './app';
 
 import Vue from 'vue';
 import Router from 'vue-router';
@@ -55,7 +55,7 @@ const vue = new Vue({
   router,
   store,
   vuetify,
-  render: h => h(getApp())
+  render: h => h(app)
 });
 
 const integration = new Integrations.Vue({
