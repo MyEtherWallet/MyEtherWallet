@@ -52,7 +52,7 @@ const webpackConfig = {
       patterns: [
         { from: 'security.txt', to: '.well-known/security.txt' },
         {
-          from: 'src/builds/web/public',
+          from: 'public',
           transform: function (content, filePath) {
             if (filePath.split('.').pop() === ('js' || 'JS'))
               return UglifyJS.minify(content.toString()).code;
