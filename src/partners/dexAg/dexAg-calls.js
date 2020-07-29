@@ -2,6 +2,7 @@ import { post } from '@/helpers/httpRequests';
 import { utils } from '../helpers';
 import { swapApiEndpoints } from '@/partners/partnersConfig';
 import { dexAgMethods } from './config';
+import web3 from 'web3';
 
 function buildPath() {
   return swapApiEndpoints.base + swapApiEndpoints.dexag;
@@ -55,6 +56,27 @@ const getPrice = async (fromToken, toToken, fromValue) => {
   }
 };
 
+const estimateGas = async (txs, from) => {
+  try {
+    txs = txs.map(entry => {
+      if (!entry.from) entry.from = from;
+      entry.value = web3.utils.toHex(entry.value);
+      if (entry.gas) delete entry.gas;
+      return entry;
+    });
+    const results = await post(
+      'https://estimategas.mewapi.io',
+      utils.buildPayload('eth_estimateGasList', [txs])
+    );
+    if (results.error) {
+      utils.checkErrorJson(results, 'eth_estimateGasList');
+    }
+    return results.result;
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
+};
+
 const createTransaction = async transactionParams => {
   try {
     if (transactionParams.dex === 'dexag') {
@@ -94,5 +116,6 @@ export default {
   getSupportedCurrencies,
   getPrice,
   createTransaction,
-  supportedDexes
+  supportedDexes,
+  estimateGas
 };
