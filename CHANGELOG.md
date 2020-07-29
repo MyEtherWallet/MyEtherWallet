@@ -1,3 +1,13 @@
+### Release v5.7.2
+
+### Bug
+
+- Remove disabled message and button on firefox for bcvault, add error when no account received [#2499](https://github.com/MyEtherWallet/MyEtherWallet/pull/2499)
+- CX hang possible fix [#2507](https://github.com/MyEtherWallet/MyEtherWallet/pull/2507)
+### Devop
+
+- Use Batch EstimateGas [#2417](https://github.com/MyEtherWallet/MyEtherWallet/pull/2417)
+
 ### Release v5.7.1
 
 ### Bug
@@ -7,6 +17,7 @@
 - Sentry fixes j [#2474](https://github.com/MyEtherWallet/MyEtherWallet/pull/2474)
 - Whitelist prkl correctly [#2502](https://github.com/MyEtherWallet/MyEtherWallet/pull/2502)
 - Cx tokens not showing [#2492](https://github.com/MyEtherWallet/MyEtherWallet/pull/2492)
+- Revert walletconnect library [#2503](https://github.com/MyEtherWallet/MyEtherWallet/pull/2503)
 
 ### Release v5.7.0
 
@@ -15,7 +26,6 @@
 - Remove sai [#2462](https://github.com/MyEtherWallet/MyEtherWallet/pull/2462)
 - Remove normalize on string check [#2463](https://github.com/MyEtherWallet/MyEtherWallet/pull/2463)
 - Update Aave withdraw and healthfactor [#2460](https://github.com/MyEtherWallet/MyEtherWallet/pull/2460)
-- Revert walletconnect library [#2486](https://github.com/MyEtherWallet/MyEtherWallet/pull/2486)
 
 ### Devop
 

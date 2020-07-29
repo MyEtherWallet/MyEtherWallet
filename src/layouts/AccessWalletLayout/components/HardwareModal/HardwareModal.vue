@@ -198,11 +198,8 @@ export default {
           name: BCVAULT_TYPE,
           imgPath: bcvault,
           text: 'BC Vault',
-          disabled: platform.name.toLowerCase() === 'firefox',
-          msg:
-            platform.name.toLowerCase() === 'firefox'
-              ? 'Browser not supported by Trezor'
-              : '',
+          disabled: false,
+          msg: '',
           link: 'https://bc-vault.com/?wpam_id=53'
         },
         {
@@ -325,9 +322,7 @@ export default {
           bcvaultInstance
             .init()
             .then(res => {
-              if (res && res.length >= 1) {
-                this.openBcVault(res, bcvaultInstance);
-              }
+              this.openBcVault(res, bcvaultInstance);
             })
             .catch(e => {
               BCVaultWallet.errorHandler(e);
