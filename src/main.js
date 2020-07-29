@@ -6,16 +6,16 @@ import app from './app';
 import Vue from 'vue';
 import Router from 'vue-router';
 import router from '@/router';
-import store from '@/common/store';
+import store from '@/store';
 import Vuex from 'vuex';
 
 // etc
 import mewComponents from '@myetherwallet/mew-components';
-import languages from '@/common/translations';
-import '@/common/plugins/registerServiceWorker';
+import languages from '@/translations';
+import '@/plugins/registerServiceWorker';
 import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
-import vuetify from '@/common/plugins/vuetify';
+import vuetify from '@/plugins/vuetify';
 
 import WhiteSheet from '@/components/Common/WhiteSheet';
 Vue.component('mew6-white-sheet', WhiteSheet);

@@ -53,7 +53,7 @@
 <script>
 import PhraseBlock from '../PhraseBlock';
 import MnemonicPhraseTable from '@/components/MnemonicPhrase/MnemonicPhraseTable';
-import MnemonicTools from '@/common/helpers/mnemonicTools';
+import MnemonicTools from '@/helpers/mnemonicTools';
 
 export default {
   components: { PhraseBlock, MnemonicPhraseTable },
