@@ -1,3 +1,8 @@
+### Devop
+
+- Add gas check for kyber swaps [#2524](https://github.com/MyEtherWallet/MyEtherWallet/pull/2524)
+
+
 ### Release v5.7.2
 
 ### Bug
