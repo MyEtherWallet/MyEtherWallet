@@ -2,6 +2,9 @@
 
 - Add gas check for kyber swaps [#2524](https://github.com/MyEtherWallet/MyEtherWallet/pull/2524)
 
+### Bug
+
+- Change token so even if contract succeeds some can still be loaded, show renew ens [#2523](https://github.com/MyEtherWallet/MyEtherWallet/pull/2523)
 
 ### Release v5.7.2
 
