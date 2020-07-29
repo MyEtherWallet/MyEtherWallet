@@ -255,7 +255,6 @@ export default {
       this.detailsShown = true;
       this.detailType = details[0];
       this.notificationDetails = details[1];
-      console.log(details[1]);
       if (details.length === 3) {
         this.notificationDetails.index = details[2];
       }
