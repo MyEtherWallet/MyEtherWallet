@@ -31,7 +31,6 @@ export default {
     WhatIsMew,
     OurStory,
     TwoBlockContent
-  },
-  data: () => ({})
+  }
 };
 </script>

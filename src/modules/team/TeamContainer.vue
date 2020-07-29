@@ -39,7 +39,6 @@ import Brittany from '@/assets/images/team/brittany.jpg';
 import Richie from '@/assets/images/team/richie.jpg';
 import Semaja from '@/assets/images/team/semaja.jpg';
 import Katya from '@/assets/images/team/katya.jpg';
-import Samantha from '@/assets/images/team/samantha.jpg';
 
 export default {
   components: { PageTitle, BlockTitle },
@@ -72,17 +71,8 @@ export default {
         title: 'Blockchain Community Specialist'
       },
       { img: Semaja, name: 'Semaja', title: 'Blockchain Community Specialist' },
-      { img: Katya, name: 'Katya', title: 'Community Advocate' },
-      { img: Samantha, name: 'Samantha', title: 'Communications and Media' }
+      { img: Katya, name: 'Katya', title: 'Community Advocate' }
     ]
   })
 };
 </script>
-
-<style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables';
-
-a {
-  text-decoration: underline;
-}
-</style>
