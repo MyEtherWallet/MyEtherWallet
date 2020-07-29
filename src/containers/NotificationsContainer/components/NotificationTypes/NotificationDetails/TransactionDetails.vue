@@ -165,7 +165,8 @@ export default {
     isTokenTransfer() {
       return (
         this.notice.body.tokenTransferTo !== undefined &&
-        this.notice.body.tokenTransferTo !== null
+        this.notice.body.tokenTransferTo !== null &&
+        this.notice.body.tokenTransferTo !== ''
       );
     },
     details() {
@@ -173,11 +174,6 @@ export default {
     },
     txStatus() {
       return this.processStatus(this.notice.status);
-    }
-  },
-  methods: {
-    emitShowDetails() {
-      this.$emit('showDetails');
     }
   }
 };
