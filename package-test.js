@@ -34,6 +34,7 @@ const EXCEPTIONS = [
   '@walletconnect/browser',
   'ethereumjs-wallet',
   '@makerdao/dai-plugin-mcd',
+  '@makerdao/dai-plugin-migrations',
   'sass-loader',
   'ethereumjs-util',
   '@makerdao/dai-plugin-migrations'
