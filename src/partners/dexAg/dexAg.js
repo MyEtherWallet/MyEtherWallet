@@ -328,16 +328,24 @@ export default class DexAg {
         data: tradeDetails.trade.data,
         value: tradeDetails.trade.value
       };
-      if (
+
+      const bancorGas =
         tradeDetails.metadata.gasPrice &&
         swapDetails.provider === 'bancor' &&
-        this.platformGasPrice > 0
-      ) {
+        this.platformGasPrice > 0;
+
+      const kyberGas =
+        tradeDetails.metadata.gasPrice &&
+        swapDetails.provider === 'kyber' &&
+        this.platformGasPrice > 0;
+
+      if (bancorGas || kyberGas) {
         const gasPrice = new BigNumber(tradeDetails.metadata.gasPrice);
         const platformGasPrice = this.web3.utils.toWei(
           this.platformGasPrice.toString(),
           'gwei'
         );
+
         if (gasPrice.lte(platformGasPrice)) {
           Toast.responseHandler(`gas-too-high`, 1, true);
           throw Error('abort');

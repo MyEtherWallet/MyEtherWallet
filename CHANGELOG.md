@@ -1,9 +1,22 @@
+### Release v5.7.3
+
+### Devop
+
+- Add gas check for kyber swaps [#2524](https://github.com/MyEtherWallet/MyEtherWallet/pull/2524)
+
+### Bug
+
+- Change token so even if contract succeeds some can still be loaded, show renew ens [#2523](https://github.com/MyEtherWallet/MyEtherWallet/pull/2523)
+- CW error catch, Gaslimit warning for collection, more bcvault fixes [#2521](https://github.com/MyEtherWallet/MyEtherWallet/pull/2521)
+- Remove contract when not sending tokens [#2525](https://github.com/MyEtherWallet/MyEtherWallet/pull/2525)
+
 ### Release v5.7.2
 
 ### Bug
 
 - Remove disabled message and button on firefox for bcvault, add error when no account received [#2499](https://github.com/MyEtherWallet/MyEtherWallet/pull/2499)
 - CX hang possible fix [#2507](https://github.com/MyEtherWallet/MyEtherWallet/pull/2507)
+
 ### Devop
 
 - Use Batch EstimateGas [#2417](https://github.com/MyEtherWallet/MyEtherWallet/pull/2417)
