@@ -1,5 +1,9 @@
+import HomePage from '@/modules/home';
+import CompanyPage from '@/modules/company';
+import TeamPage from '@/modules/team';
+import ToolsPage from '@/modules/tools';
+
 import LandingPageView from '@/views/LandingPageView';
-import Home from '@/views/LandingPageView/Home';
 
 import CreateWalletDashboard from '@/views/CreateWalletView/CreateWalletDashboard';
 import CreateWalletSoftware from '@/views/CreateWalletView/Software';
@@ -16,11 +20,7 @@ import AccessWalletBrowserExtentionAccess from '@/views/AccessWalletView/contain
 
 import AccessWalletMobileApps from '@/views/AccessWalletView/containers/MobileApps';
 
-import AboutUsCompany from '@/views/AboutUsView/CompanyContainer';
-import AboutUsTeam from '@/views/AboutUsView/TeamContainer';
-
 import HowItWorks from '@/views/LandingPageView/HowItWorks';
-import MoreActions from '@/views/LandingPageView/MoreActions';
 import BuyHardwareWallet from '@/views/LandingPageView/BuyHardwareWallet';
 
 import Wallet from '@/views/WalletView';
@@ -60,7 +60,7 @@ const routes = [
       {
         path: '',
         name: 'Home',
-        component: Home,
+        component: HomePage,
         meta: {
           requiresAuth: false
         }
@@ -74,9 +74,9 @@ const routes = [
         }
       },
       {
-        path: 'more-actions',
-        name: 'MoreActions',
-        component: MoreActions,
+        path: 'tools',
+        name: 'tools',
+        component: ToolsPage,
         meta: {
           requiresAuth: false
         }
@@ -91,16 +91,16 @@ const routes = [
       },
       {
         path: 'about-us/company',
-        name: 'AboutUsCompany',
-        component: AboutUsCompany,
+        name: 'CompanyPage',
+        component: CompanyPage,
         meta: {
           requiresAuth: false
         }
       },
       {
         path: 'about-us/team',
-        name: 'AboutUsTeam',
-        component: AboutUsTeam,
+        name: 'TeamPage',
+        component: TeamPage,
         meta: {
           requiresAuth: false
         }

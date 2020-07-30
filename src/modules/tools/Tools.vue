@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageTitle title="More actions" />
+    <PageTitle title="Tools" />
     <v-container class="mt-8 mb-12">
       <mew-tabs :items="items">
         <template v-slot:tabItemContent0>
