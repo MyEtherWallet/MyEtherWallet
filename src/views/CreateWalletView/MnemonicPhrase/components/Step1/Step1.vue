@@ -25,7 +25,7 @@
       </PhraseBlock>
 
       <mew-expand-panel is-toggle has-dividers :panel-items="exPanel">
-        <template v-slot:panelBody0>
+        <template v-slot:panelBody1>
           Input needs to be added
         </template>
       </mew-expand-panel>

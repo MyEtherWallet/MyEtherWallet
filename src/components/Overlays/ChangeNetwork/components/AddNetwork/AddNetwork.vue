@@ -16,7 +16,7 @@
       has-dividers
       :panel-items="exPannel"
     >
-      <template v-slot:panelBody0>
+      <template v-slot:panelBody1>
         <mew-input label="Username" placeholder=" " />
         <mew-input label="Password" placeholder=" " />
       </template>

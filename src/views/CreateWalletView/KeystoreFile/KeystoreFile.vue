@@ -3,13 +3,13 @@
     <v-sheet color="transparent" max-width="800px" class="mx-auto">
       <BlockTitle :data="titleData" />
       <mew-stepper :items="items" :on-step="onStep">
-        <template v-slot:outsideStepContent0>
+        <template v-if="onStep === 1" v-slot:outsideStepContent1>
           <Step1 />
         </template>
-        <template v-slot:outsideStepContent1>
+        <template v-if="onStep === 2" v-slot:outsideStepContent2>
           <Step2 />
         </template>
-        <template v-slot:outsideStepContent2>
+        <template v-if="onStep === 3" v-slot:outsideStepContent3>
           <Step3 />
         </template>
       </mew-stepper>
