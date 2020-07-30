@@ -532,7 +532,7 @@ export default {
           });
           tokens = tokens.concat(filteredNetwork).map(item => {
             if (!item.hasOwnProperty('balance')) {
-              item.balance = 0;
+              item.balance = 'Load';
             }
             return item;
           });
@@ -587,7 +587,7 @@ export default {
           .then(res => {
             let tokenBalance;
             if (Number(res) === 0 || res === '0x') {
-              tokenBalance = 0;
+              tokenBalance = '0';
             } else {
               const denominator = new BigNumber(10).pow(token.decimals);
               tokenBalance = new BigNumber(res).div(denominator).toString();
@@ -644,7 +644,22 @@ export default {
           }
           return convertedToken;
         });
-      this.tokens = tokens.sort(sortByBalance);
+      this.tokens = tokens
+        .sort((a, b) => {
+          const a1 = typeof a.balance,
+            b1 = typeof b.balance;
+          return a1 > b1
+            ? -1
+            : a1 < b1
+            ? 1
+            : a.balance < b.balance
+            ? -1
+            : a.balance > b.balance
+            ? 1
+            : 0;
+        })
+        .sort(sortByBalance);
+      // this.tokens = tokens.sort(sortByBalance)
       this.setTokensWithBalance();
     },
     setTokensWithBalance() {
