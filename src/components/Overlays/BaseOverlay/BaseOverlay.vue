@@ -9,7 +9,7 @@
     <div v-if="back" class="overlay-back-button">
       <BackButton text="Back" />
     </div>
-    <div class="overlay-close-button">
+    <div v-if="canClose" class="overlay-close-button">
       <CloseButton :text="closeText" @click.native="close" />
     </div>
     <div class="overlay-content-block d-flex flex-column align-center py-10">
@@ -26,8 +26,9 @@ export default {
   components: { CloseButton, BackButton },
   props: {
     back: { default: false, type: Boolean },
-    closeText: { default: '', type: String },
+    closeText: { default: 'Close', type: String },
     open: { default: false, type: Boolean },
+    canClose: { default: true, type: Boolean },
     close: {
       default: function () {
         return {};
