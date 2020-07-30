@@ -1,3 +1,7 @@
+### Bug
+
+- Fix sign message for bcvault [#2527](https://github.com/MyEtherWallet/MyEtherWallet/pull/2527)
+
 ### Release v5.7.3
 
 ### Devop
