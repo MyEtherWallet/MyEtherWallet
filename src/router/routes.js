@@ -5,11 +5,7 @@ import ToolsPage from '@/modules/tools';
 
 import LandingPageView from '@/views/LandingPageView';
 
-import CreateWalletDashboard from '@/views/CreateWalletView/CreateWalletDashboard';
-import CreateWalletSoftware from '@/views/CreateWalletView/Software';
-import CreateWalletMewWallet from '@/views/CreateWalletView/MewWallet';
-import CreateWalletKeystore from '@/views/CreateWalletView/KeystoreFile';
-import CreateWalletMnemonic from '@/views/CreateWalletView/MnemonicPhrase';
+import CreateWallet from '@/modules/wallets/components/create';
 
 import AccessWalletView from '@/views/AccessWalletView';
 import AccessWalletHardwareWallets from '@/views/AccessWalletView/containers/HardwareWallets';
@@ -108,39 +104,7 @@ const routes = [
       {
         path: 'create-wallet',
         name: 'HomeCreateWallet',
-        component: CreateWalletDashboard,
-        meta: {
-          requiresAuth: false
-        }
-      },
-      {
-        path: 'create-wallet/software',
-        name: 'HomeCreateWalletSoftware',
-        component: CreateWalletSoftware,
-        meta: {
-          requiresAuth: false
-        }
-      },
-      {
-        path: 'create-wallet/mewwallet',
-        name: 'HomeCreateWalletMewWallet',
-        component: CreateWalletMewWallet,
-        meta: {
-          requiresAuth: false
-        }
-      },
-      {
-        path: 'create-wallet/keystore',
-        name: 'HomeCreateWalletKeystore',
-        component: CreateWalletKeystore,
-        meta: {
-          requiresAuth: false
-        }
-      },
-      {
-        path: 'create-wallet/mnemonic',
-        name: 'HomeCreateWalletMnemonic',
-        component: CreateWalletMnemonic,
+        component: CreateWallet,
         meta: {
           requiresAuth: false
         }
