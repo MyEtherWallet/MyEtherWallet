@@ -1,5 +1,5 @@
 <template>
-  <v-sheet light>
+  <v-sheet>
     <HeaderContainer />
     <router-view />
     <FooterContainer />

@@ -1,1 +1,1 @@
-export { default } from './CompanyContainer';
+export { default } from './Company';
