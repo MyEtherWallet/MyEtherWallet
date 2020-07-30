@@ -57,7 +57,7 @@
             <OverlayTitle title="2. Confirm network & address" />
             <div class="overlay-content">
               <mew-expand-panel :panel-items="panelItems">
-                <template v-slot:panelBody0>
+                <template v-slot:panelBody1>
                   <GroupRadioButtons :buttons="networkButtons" />
                 </template>
               </mew-expand-panel>

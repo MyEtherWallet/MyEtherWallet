@@ -6,22 +6,20 @@
     left-btn-text="Back"
   >
     <template v-slot:mewOverlayBody>
-      <v-sheet max-width="750px">
-        <mew-expand-panel :panel-items="panelItems">
-          <template v-slot:panelBody0>
-            <GasPrice />
-          </template>
-          <template v-slot:panelBody1>
-            <ImportConfig />
-          </template>
-          <template v-slot:panelBody2>
-            <ExportConfig />
-          </template>
-          <template v-slot:panelBody3>
-            <Notifications />
-          </template>
-        </mew-expand-panel>
-      </v-sheet>
+      <mew-expand-panel :panel-items="panelItems">
+        <template v-slot:panelBody1>
+          <GasPrice />
+        </template>
+        <template v-slot:panelBody2>
+          <ImportConfig />
+        </template>
+        <template v-slot:panelBody3>
+          <ExportConfig />
+        </template>
+        <template v-slot:panelBody4>
+          <Notifications />
+        </template>
+      </mew-expand-panel>
     </template>
   </mew-overlay>
 </template>

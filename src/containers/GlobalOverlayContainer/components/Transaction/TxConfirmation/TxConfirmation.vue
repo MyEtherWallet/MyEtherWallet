@@ -15,7 +15,7 @@
               <BalanceBlock />
 
               <mew-expand-panel>
-                <template v-slot:panelBody0 :panel-items="panelItems">
+                <template v-slot:panelBody1 :panel-items="panelItems">
                   <div class="px-3">
                     <div class="d-flex justify-space-between mb-2">
                       <div>Network</div>

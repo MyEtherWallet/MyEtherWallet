@@ -1,8 +1,8 @@
 <template>
   <v-sheet max-width="750px">
     <mew-expand-panel :panel-items="panelItems">
-      <template v-slot:panelBody0> </template>
-      <template v-slot:panelBody1>
+      <template v-slot:panelBody1> </template>
+      <template v-slot:panelBody2>
         <mew-table
           has-select
           has-color
