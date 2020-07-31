@@ -1,6 +1,6 @@
 ### Bug
 
-- Fix sign message for bcvault [#2527](https://github.com/MyEtherWallet/MyEtherWallet/pull/2527)
+- Fix cx networks import [#2529](https://github.com/MyEtherWallet/MyEtherWallet/pull/2529)
 
 ### Release v5.7.3
 
@@ -13,6 +13,7 @@
 - Change token so even if contract succeeds some can still be loaded, show renew ens [#2523](https://github.com/MyEtherWallet/MyEtherWallet/pull/2523)
 - CW error catch, Gaslimit warning for collection, more bcvault fixes [#2521](https://github.com/MyEtherWallet/MyEtherWallet/pull/2521)
 - Remove contract when not sending tokens [#2525](https://github.com/MyEtherWallet/MyEtherWallet/pull/2525)
+- Fix sign message for bcvault [#2527](https://github.com/MyEtherWallet/MyEtherWallet/pull/2527)
 
 ### Release v5.7.2
 
