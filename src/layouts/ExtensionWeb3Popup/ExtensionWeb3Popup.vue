@@ -9,7 +9,7 @@ import { mapState, mapActions } from 'vuex';
 
 export default {
   computed: {
-    ...mapState('main', ['network', 'web3'])
+    ...mapState('main', ['network', 'web3', 'Networks'])
   },
   mounted() {
     this.fetchNewStore();
