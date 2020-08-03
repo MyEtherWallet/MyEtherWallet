@@ -40,10 +40,11 @@ const EXCEPTIONS = [
   'ethereumjs-util',
   '@makerdao/dai-plugin-migrations',
   // remove these after release
-  "@aave/protocol-js",
-  "@sentry/browser",
-  "@sentry/integrations",
-  "xss"
+  '@aave/protocol-js',
+  '@sentry/browser',
+  '@sentry/integrations',
+  'xss',
+  'uuid'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
