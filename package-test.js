@@ -38,12 +38,7 @@ const EXCEPTIONS = [
   '@makerdao/dai-plugin-migrations',
   'sass-loader',
   'ethereumjs-util',
-  '@makerdao/dai-plugin-migrations',
-  // remove these after release
-  "@aave/protocol-js",
-  "@sentry/browser",
-  "@sentry/integrations",
-  "xss"
+  '@makerdao/dai-plugin-migrations'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

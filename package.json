@@ -30,12 +30,12 @@
     "update:swap": "node compileBaseSwapOptions.js"
   },
   "dependencies": {
-    "@aave/protocol-js": "1.0.0",
+    "@aave/protocol-js": "1.0.1",
     "@coolwallets/eth": "0.2.0-beta.1",
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",
-    "@sentry/browser": "5.18.0",
-    "@sentry/integrations": "5.18.0",
+    "@sentry/browser": "5.20.1",
+    "@sentry/integrations": "5.20.1",
     "@unstoppabledomains/resolution": "1.6.0-beta.0",
     "apollo-cache-inmemory": "1.6.6",
     "apollo-client": "2.6.10",
@@ -71,7 +71,7 @@
     "vue-toasted": "1.1.28",
     "vuex": "3.5.1",
     "walletlink": "2.0.2",
-    "xss": "1.0.7"
+    "xss": "1.0.8"
   },
   "devDependencies": {
     "@ensdomains/address-encoder": "0.1.7",
@@ -150,7 +150,7 @@
     "trezor-connect": "8.1.8",
     "u2f-api": "1.1.1",
     "uglify-es": "3.3.9",
-    "uuid": "8.2.0",
+    "uuid": "8.3.0",
     "vue-i18n": "8.18.2",
     "vue-stripe-elements-plus": "0.3.2",
     "vue-template-compiler": "2.6.11",
