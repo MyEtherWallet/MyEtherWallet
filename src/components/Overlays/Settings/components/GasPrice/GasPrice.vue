@@ -2,7 +2,7 @@
   <div>
     <div>Please select a default gas price for your transaction fee</div>
     <v-sheet color="transparent" max-width="500px" class="mx-auto">
-      <mew-toggle-button button-group="3" button-type="custom">
+      <mew-toggle-button :button-group="3" button-type="custom">
         <template v-slot:btn1>
           <mew-super-button
             title="Economic"
@@ -34,7 +34,7 @@
           />
         </template>
       </mew-toggle-button>
-
+<!-- 
       <div class="mt-9 d-flex">
         <mew-input
           label="Customize"
@@ -44,7 +44,7 @@
           class="flex-grow-1 mr-3"
         />
         <mew-button title="Confirm" button-size="xlarge" />
-      </div>
+      </div> -->
     </v-sheet>
   </div>
 </template>
