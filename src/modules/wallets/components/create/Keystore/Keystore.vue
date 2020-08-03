@@ -20,41 +20,43 @@
               />
             </div>
           </v-sheet>
-          <!-- <warning-sheet
-              title="NOT RECOMMENDED"
-              description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
-            /> -->
+          <warning-sheet
+            title="NOT RECOMMENDED"
+            description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
+          />
         </div>
       </template>
       <template v-if="step === 2" v-slot:outsideStepContent2>
-        <v-sheet color="white" class="border-radius--10px pa-12">
-          <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
-          <div class="headline font-weight-bold mb-5">
-            Download keystore file
-          </div>
-          <v-row class="align-stretch">
-            <v-col v-for="(d, key) in warningData" :key="key">
-              <mew-super-button
-                :title="d.title"
-                :subtitle="d.description"
-                is-column
-                icon-type="img"
-                :right-icon="d.img"
+        <div>
+          <v-sheet color="white" class="border-radius--10px pa-12">
+            <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
+            <div class="headline font-weight-bold mb-5">
+              Download keystore file
+            </div>
+            <v-row class="align-stretch">
+              <v-col v-for="(d, key) in warningData" :key="key">
+                <mew-super-button
+                  :title="d.title"
+                  :subtitle="d.description"
+                  is-column
+                  icon-type="img"
+                  :right-icon="d.img"
+                />
+              </v-col>
+            </v-row>
+            <div class="d-flex justify-center mt-6">
+              <mew-button
+                title="Acknowledge & Download"
+                button-size="xlarge"
+                :has-full-width="false"
               />
-            </v-col>
-          </v-row>
-          <div class="d-flex justify-center mt-6">
-            <mew-button
-              title="Acknowledge & Download"
-              button-size="xlarge"
-              :has-full-width="false"
-            />
-          </div>
-        </v-sheet>
-        <!-- <warning-sheet
+            </div>
+          </v-sheet>
+          <warning-sheet
             title="NOT RECOMMENDED"
             description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
-          /> -->
+          />
+        </div>
       </template>
       <template v-if="step === 3" v-slot:outsideStepContent3>
         <v-sheet color="white" class="border-radius--10px pa-12">
@@ -123,6 +125,11 @@ export default {
         name: 'STEP 3. Well done'
       }
     ]
-  })
+  }),
+  watch: {
+    step(newva) {
+      console.log(newva);
+    }
+  }
 };
 </script>

@@ -56,7 +56,9 @@ import Vuetify, {
   VListGroup,
   VListItemGroup,
   VOverlay,
-  VThemeProvider
+  VThemeProvider,
+  VRadio,
+  VRadioGroup
 } from 'vuetify/lib';
 import 'vuetify/dist/vuetify.min.css';
 
@@ -118,7 +120,9 @@ Vue.use(Vuetify, {
     VListGroup,
     VListItemGroup,
     VOverlay,
-    VThemeProvider
+    VThemeProvider,
+    VRadio,
+    VRadioGroup
   }
 });
 
