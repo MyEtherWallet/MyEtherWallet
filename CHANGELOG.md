@@ -2,7 +2,7 @@
 
 ### Devop
 
-- Twitter popup [#2531](https://github.com/MyEtherWallet/MyEtherWallet/pull/2531)
+- Twitter popup [#2533](https://github.com/MyEtherWallet/MyEtherWallet/pull/2533)
 
 
 
