@@ -32,12 +32,18 @@ const EXCEPTIONS = [
   'i18n-iso-countries',
   '@myetherwallet/mewconnect-web-client',
   '@walletconnect/browser',
+  '@walletconnect/qrcode-modal',
   'ethereumjs-wallet',
   '@makerdao/dai-plugin-mcd',
   '@makerdao/dai-plugin-migrations',
   'sass-loader',
   'ethereumjs-util',
-  '@makerdao/dai-plugin-migrations'
+  '@makerdao/dai-plugin-migrations',
+  // remove these after release
+  "@aave/protocol-js",
+  "@sentry/browser",
+  "@sentry/integrations",
+  "xss"
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
