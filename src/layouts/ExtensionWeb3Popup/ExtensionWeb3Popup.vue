@@ -15,7 +15,7 @@ export default {
     this.fetchNewStore();
   },
   methods: {
-    ...mapActions('main', ['switchNetwork', 'setWeb3Instance']),
+    ...mapActions('main', ['switchNetwork', 'setWeb3Instance', 'setENS']),
     fetchNewStore() {
       window.chrome.storage.sync.get(null, obj => {
         const defaultNetwork = obj.hasOwnProperty('defNetwork')
