@@ -4,7 +4,7 @@
     opacity="1"
     :value="open"
     z-index="100"
-    class="theme--light-text--dark-space theme--dark-text--blue"
+    class="theme--light-text--dark-space"
   >
     <div v-if="back" class="overlay-back-button">
       <BackButton text="Back" />
