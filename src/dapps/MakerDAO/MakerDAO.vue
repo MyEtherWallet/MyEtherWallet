@@ -33,13 +33,13 @@
               </v-col>
               <v-col cols="6">
                 <div class="d-flex">
-                  <div class="bg_datablock pa-5 mr-3 flex-grow-1">
+                  <div class="walletBg pa-5 mr-3 flex-grow-1">
                     <div>Savings to Date</div>
-                    <div class="emerald--text font-weight-bold">0.0157</div>
+                    <div class="primary--text font-weight-bold">0.0157</div>
                   </div>
-                  <div class="bg_datablock pa-5 flex-grow-1">
+                  <div class="walletBg pa-5 flex-grow-1">
                     <div>Dai Savings rate</div>
-                    <div class="emerald--text font-weight-bold">2.00%</div>
+                    <div class="primary--text font-weight-bold">2.00%</div>
                   </div>
                 </div>
               </v-col>
@@ -92,7 +92,7 @@
             <div class="tab-width">
               <v-row>
                 <v-col cols="6">
-                  <div class="bg_datablock pa-5 border-radius--5px">
+                  <div class="walletBg pa-5 border-radius--5px">
                     <h5 class="mb-2 font-weight-bold">
                       Total Collateral Locked
                     </h5>
@@ -102,7 +102,7 @@
                   </div>
                 </v-col>
                 <v-col cols="6">
-                  <div class="bg_datablock pa-5 border-radius--5px">
+                  <div class="walletBg pa-5 border-radius--5px">
                     <h5 class="mb-2 font-weight-bold">
                       Total DAI Debt
                     </h5>

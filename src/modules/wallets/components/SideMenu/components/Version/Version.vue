@@ -1,5 +1,5 @@
 <template>
-  <div class="gray_text--text">V 6.0.0</div>
+  <div class="searchText--text">V 6.0.0</div>
 </template>
 
 <script>

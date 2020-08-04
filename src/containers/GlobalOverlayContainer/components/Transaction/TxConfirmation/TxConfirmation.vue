@@ -23,11 +23,11 @@
                     </div>
                     <div class="d-flex justify-space-between mb-2">
                       <div>Gas Price</div>
-                      <div>40 <span class="emerald--text">GWEI</span></div>
+                      <div>40 <span class="primary--text">GWEI</span></div>
                     </div>
                     <div class="d-flex justify-space-between mb-2">
                       <div>Gas Limit</div>
-                      <div>21000 <span class="emerald--text">WEI</span></div>
+                      <div>21000 <span class="primary--text">WEI</span></div>
                     </div>
                     <div class="d-flex justify-space-between mb-2">
                       <div>Nonce</div>

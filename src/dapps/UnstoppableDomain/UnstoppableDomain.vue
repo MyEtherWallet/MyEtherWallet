@@ -21,7 +21,7 @@
 
     <mew-tabs :items="tabs">
       <template v-slot:tabContent1>
-        <v-sheet max-width="800px" color="bg_white_sheet" class="py-12 mx-auto">
+        <v-sheet max-width="800px" color="mewBg" class="py-12 mx-auto">
           <div class="tab-width">
             <div class="mb-5">
               <BlockTitle title="Find your blockchain domain" />
@@ -41,7 +41,7 @@
             </div>
             <div>
               <BlockTitle title="Results" />
-              <v-card flat color="bg_datablock" class="pa-10">
+              <v-card flat color="walletBg" class="pa-10">
                 <div class="d-flex justify-space-between align-center">
                   <div>
                     <div class="mew-heading-1 mb-2">
@@ -61,7 +61,7 @@
                 </div>
               </v-card>
               <div class="py-2"></div>
-              <v-card flat color="bg_datablock" class="pa-10">
+              <v-card flat color="walletBg" class="pa-10">
                 <div class="d-flex align-center justify-space-between mb-8">
                   <div class="mew-heading-1">myetherwallet.crypto</div>
                   <div class="mew-heading-3 orange--text">Unavailable</div>
@@ -89,7 +89,7 @@
         </v-sheet>
       </template>
       <template v-slot:tabContent2>
-        <v-sheet max-width="800px" color="bg_white_sheet" class="py-12 mx-auto">
+        <v-sheet max-width="800px" color="mewBg" class="py-12 mx-auto">
           <div class="d-flex align-center justify-space-between mb-7">
             <h4 class="font-weight-bold">
               My domains <span class="font-weight-regular">(1)</span>

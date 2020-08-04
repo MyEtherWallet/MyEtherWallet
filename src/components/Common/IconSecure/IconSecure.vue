@@ -1,6 +1,6 @@
 <template>
   <div class="mew6-component--icon-secure position--relative">
-    <v-icon :color="color ? color : 'emerald'" class="icon-outer">
+    <v-icon :color="color ? color : 'primary'" class="icon-outer">
       mdi-shield-check
     </v-icon>
   </div>

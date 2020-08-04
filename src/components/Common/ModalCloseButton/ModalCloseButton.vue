@@ -37,7 +37,7 @@ export default {
   right: 0px;
   top: 0px;
   margin: 0 auto;
-  border-bottom: 1px solid var(--v-dark_sacramento-base);
+  border-bottom: 1px solid var(--v-title-primary-base);
 }
 
 .line1 {

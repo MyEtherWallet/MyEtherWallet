@@ -137,7 +137,6 @@ export default new Vuetify({
     dark: false,
     themes: {
       light: {
-        // colors from mew components
         primaryHover: '#1eb19b',
         primaryActive: '#56c5b4',
         primaryOutlineActive: '#baede6',
@@ -171,7 +170,9 @@ export default new Vuetify({
         textPrimary: '#667f9b',
         textPrimaryModule: '#667f9b',
         white: '#fff',
+        black: '#000',
         mewBg: '#fff',
+        walletBg: '#f2f4fa',
         boxShadow: '#ececec',
         expandHeader: '#184f90',
         primary: '#05c0a5',
@@ -180,7 +181,8 @@ export default new Vuetify({
         success: '#2cc479',
         error: {
           base: '#ff445b',
-          lighten1: '#ffd7dc'
+          lighten1: '#ffd7dc',
+          lighten2: '#e96071'
         },
         warning: {
           base: '#FFF2DC',
@@ -188,51 +190,9 @@ export default new Vuetify({
           darken2: '#ff7700'
         },
         disabled: '#cecece',
-        tableHeader: '#f9f9f9',
-        //=======================================================
-        // end of colors from mew components
-        //=======================================================
-        black: '#000000',
-        emerald: '#05c0a5',
-        royal_blue: '#5a78f0',
-        dark_sacramento: '#003945',
-        dark_space: '#0b2840',
-        violet: '#7070e3',
-        police_strobe: '#25b0e8',
-        independence: '#536d8b',
-        dark_independence: '#334758',
-        cerise: '#e96071',
-        cardinal: '#a70015',
-        naples_yellow: '#fcb755',
-        primary_silver: '#f2f4fa',
-        mint: '#cdf2ee',
-        light_mint: '#f2fafa',
-        light_red: '#e96071',
-        spruce: '#506175',
-        silver: '#cecece',
-        gray_text: '#96a8b6',
-        box_shadow: '#ececec',
-        text_light_blue: '#6d89a6',
-        text_default: '#0b2840',
-        text_warning: '#ff9800',
-        bg_blue: '#184f90',
-        bg_dark_blue: '#00316b',
-        bg_warning: '#fffde7',
-        bg_sidemenu: '#002747',
-        bg_overlay: '#f2fafa',
-        bg_white_sheet: '#ffffff',
-        bg_datablock: '#f2f4fa',
-        bg_wallet: '#f2f4fa',
-        bg_table: '#f9f9f9',
-        bg_notification_in: '#f2fafa',
-        bg_notification_out: '#ffebee',
-        bg_notification_swap: '#fff6e3',
-        bg_notification_button_in: '#7895f2',
-        bg_notification_button_out: '#ffaf8f',
-        bg_notification_button_swap: '#7fdefb'
+        tableHeader: '#f9f9f9'
       },
       dark: {
-        // colors from mew components
         primaryHover: '#1eb19b',
         primaryActive: '#56c5b4',
         primaryOutlineHover: '#03292c',
@@ -267,6 +227,8 @@ export default new Vuetify({
         searchText: '#96a8b6',
         white: '#fff',
         mewBg: '#151a29',
+        walletBg: '#151a29',
+        black: '#000',
         boxShadow: '#3c3c3c',
         expandHeader: '#184f90',
         titlePrimary: '#95aed8',
@@ -279,54 +241,15 @@ export default new Vuetify({
         success: '#2cc479',
         error: {
           base: '#ff445b',
-          lighten1: '#ffd7dc'
+          lighten1: '#ffd7dc',
+          lighten2: '#e96071'
         },
         warning: {
           base: '#FFF2DC',
           darken1: '#f5a623'
         },
         disabled: '#1f2b42',
-        tableHeader: '#0f1320',
-        //=======================================================
-        // end of colors from mew components
-        //=======================================================
-        black: '#000000',
-        emerald: '#05c0a5',
-        royal_blue: '#5a78f0',
-        dark_sacramento: '#003945',
-        dark_space: '#0b2840',
-        violet: '#7070e3',
-        police_strobe: '#25b0e8',
-        independence: '#536d8b',
-        dark_independence: '#334758',
-        cerise: '#e96071',
-        cardinal: '#a70015',
-        naples_yellow: '#fcb755',
-        primary_silver: '#f2f4fa',
-        mint: '#cdf2ee',
-        light_mint: '#f2fafa',
-        light_red: '#e96071',
-        spruce: '#506175',
-        silver: '#cecece',
-        gray_text: '#96a8b6',
-        box_shadow: '#ececec',
-        text_light_blue: '#6d89a6',
-        text_default: '#95aed8',
-        text_warning: '#ff9800',
-        bg_blue: '#184f90',
-        bg_warning: '#fffde7',
-        bg_sidemenu: '#0d111e',
-        bg_overlay: '#151a29',
-        bg_white_sheet: '#151a29',
-        bg_datablock: '#1e2336',
-        bg_wallet: '#151a29',
-        bg_table: '#0f1320',
-        bg_notification_in: '#0f1320',
-        bg_notification_out: '#0f1320',
-        bg_notification_swap: '#0f1320',
-        bg_notification_button_in: '#7895f2',
-        bg_notification_button_out: '#ffaf8f',
-        bg_notification_button_swap: '#7fdefb'
+        tableHeader: '#0f1320'
       }
     }
   }

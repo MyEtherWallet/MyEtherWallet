@@ -1,5 +1,5 @@
 <template>
-  <div class="bg_blue">
+  <div class="expandHeader">
     <BlockTitle :data="titleData">
       <h5 class="white--text ma-0">
         Select a app that you want to use to connect MEW.

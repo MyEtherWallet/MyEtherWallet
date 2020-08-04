@@ -1,5 +1,5 @@
 <template>
-  <div class="bg_blue">
+  <div class="expandHeader">
     <BlockTitle :data="titleData">
       <h5 class="white--text ma-0">
         Please select a browser from below.

@@ -1,5 +1,5 @@
 <template>
-  <v-sheet color="bg_wallet">
+  <v-sheet color="walletBg">
     <div class="d-flex align-stretch">
       <side-menu class="box-shadow" />
       <div class="flex-grow-1 d-flex flex-column justify-space-between">

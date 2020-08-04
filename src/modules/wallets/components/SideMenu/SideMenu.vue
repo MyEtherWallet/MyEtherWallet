@@ -1,6 +1,6 @@
 <template>
   <v-sheet
-    color="bg_sidemenu"
+    color="basic"
     class="mew-component--sidemenu px-4 pb-7 pt-10 d-flex flex-column"
   >
     <div class="mb-4">

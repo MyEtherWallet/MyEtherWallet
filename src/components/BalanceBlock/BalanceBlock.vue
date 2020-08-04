@@ -1,5 +1,5 @@
 <template>
-  <div class="bg_overlay border-radius--5px pa-5">
+  <div class="superPrimary border-radius--5px pa-5">
     <v-row>
       <v-col class="pt-0">
         <h5 class="font-weight-bold">Balance Remaining</h5>
@@ -18,7 +18,7 @@
           <v-icon color="titlePrimary">
             mdi-circle-medium
           </v-icon>
-          <h6 class="gray_text--text font-weight-medium">Send</h6>
+          <h6 class="searchText--text font-weight-medium">Send</h6>
           <img
             class="ml-1"
             src="@/assets/images/currencies/icon-eth-blue.svg"
@@ -27,7 +27,7 @@
         </v-col>
         <v-col class="py-0 my-0 text-right" cols="4"
           >-0.02314
-          <span class="gray_text--text font-weight-medium">ETH</span></v-col
+          <span class="searchText--text font-weight-medium">ETH</span></v-col
         >
         <v-col class="py-0 my-0 text-right" cols="4">-$53.32</v-col>
       </v-row>
@@ -37,11 +37,11 @@
           <v-icon color="#f5a623">
             mdi-circle-medium
           </v-icon>
-          <h6 class="gray_text--text font-weight-medium">Transaction Fee</h6>
+          <h6 class="searchText--text font-weight-medium">Transaction Fee</h6>
         </v-col>
         <v-col class="py-0 my-0 text-right" cols="4"
           >-0.02314
-          <span class="gray_text--text font-weight-medium">ETH</span></v-col
+          <span class="searchText--text font-weight-medium">ETH</span></v-col
         >
         <v-col class="py-0 my-0 text-right" cols="4">-$53.32</v-col>
       </v-row>
@@ -51,11 +51,11 @@
           <v-icon color="transparent">
             mdi-circle-medium
           </v-icon>
-          <h6 class="gray_text--text font-weight-medium">Total Pay</h6>
+          <h6 class="searchText--text font-weight-medium">Total Pay</h6>
         </v-col>
         <v-col class="py-0 my-0 text-right font-weight-medium" cols="4"
           >8435094
-          <span class="gray_text--text font-weight-medium">ETH</span></v-col
+          <span class="searchText--text font-weight-medium">ETH</span></v-col
         >
         <v-col class="py-0 my-0 text-right font-weight-medium" cols="4">
           $564.32

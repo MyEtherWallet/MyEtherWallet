@@ -1,7 +1,7 @@
 <template>
   <div class="text-center">
     <v-dialog v-model="dialog" width="350px">
-      <v-sheet color="bg_wallet" class="">
+      <v-sheet color="walletBg" class="">
         <div class="text-center title-background">
           <div class="mew-heading-2 pt-12 pb-5 top-title">
             WooCommerce Videos

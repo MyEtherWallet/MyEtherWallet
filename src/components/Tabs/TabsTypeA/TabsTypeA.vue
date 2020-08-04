@@ -29,7 +29,7 @@ export default {
   font-weight: 500;
   min-width: 120px;
   height: 100%;
-  color: var(--v-dark_independence-base) !important;
+  color: var(--v-title-primary-base) !important;
 }
 .v-tab--active {
   background-color: var(--v-basic-base);

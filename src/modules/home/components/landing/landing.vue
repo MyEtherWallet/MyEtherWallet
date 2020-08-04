@@ -1,5 +1,5 @@
 <template>
-  <div class="bg_blue">
+  <div class="expandHeader">
     <div class="pointer-event--none user-select--none line-height--0">
       <img
         class="banner-img"

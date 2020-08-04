@@ -1,6 +1,6 @@
 <template>
   <mew-overlay
-    color-type="bg_white_sheet"
+    color-type="mewBg"
     :show-overlay="open"
     title="My paper wallet"
     right-btn-text="Close"
@@ -15,7 +15,7 @@
                   height="35"
                   src="@/assets/images/icons/logo-mew-dark.png"
                 />
-                <div class="emerald--text">
+                <div class="primary--text">
                   <span class="mx-3">|</span>Paper Wallet
                 </div>
               </div>

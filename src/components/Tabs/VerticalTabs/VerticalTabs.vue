@@ -32,10 +32,10 @@ export default {
     padding: 11px 0px;
   }
   .v-tab--active {
-    color: var(--v-text_default-base) !important;
+    color: var(--v-title-primary-base) !important;
   }
   .v-tabs--vertical > .v-tabs-bar .v-tabs-bar__content {
-    border-right: 2px solid var(--v-primary_silver-base);
+    border-right: 2px solid var(--v-search-input-base);
     padding-right: 40px;
     margin-right: 40px;
   }

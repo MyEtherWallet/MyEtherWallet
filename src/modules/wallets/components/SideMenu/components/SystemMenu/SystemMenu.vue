@@ -80,7 +80,7 @@ export default {
 
 <style lang="scss" scoped>
 .menu-item {
-  color: var(--v-gray_text-base);
+  color: var(--v-searchText-base);
 }
 
 .light {
