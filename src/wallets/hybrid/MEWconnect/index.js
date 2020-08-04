@@ -47,7 +47,7 @@ class MEWconnectWallet {
         }
       }
       const networkId = tx.chainId;
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
         if (!tx.gasLimit) {
           tx.gasLimit = tx.gas;
         }
@@ -66,6 +66,12 @@ class MEWconnectWallet {
               'InvalidNetworkId'
             );
           resolve(getSignTransactionObject(tx));
+        });
+
+        this.mewConnect.once('reject', info => {
+          // eslint-disable-next-line
+          console.log(info); // todo remove dev item
+          reject();
         });
       });
     };
