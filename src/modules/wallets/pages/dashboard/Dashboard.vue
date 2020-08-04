@@ -196,7 +196,7 @@ import Spacer from '@/components/Common/Spacer';
 import Network from '@/components/Network';
 import Swap from '@/components/Swap';
 import BannerAds from '@/components/BannerAds';
-import staticData from './static';
+// import staticData from './static';
 
 export default {
   components: {
@@ -206,7 +206,7 @@ export default {
     'banner-ads': BannerAds
   },
   data() {
-    return staticData;
+    // return staticData;
   }
 };
 </script>

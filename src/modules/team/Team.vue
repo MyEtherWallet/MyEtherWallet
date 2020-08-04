@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageTitle title="About us - Team" />
+    <home-header title="About us - Team" />
     <div class="py-7" />
     <v-sheet max-width="700px" class="mx-auto">
       <BlockTitle no-page-title :data="titleData" />
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import PageTitle from '@/components/PageTitle';
+import homeHeader from '@/components/home-header';
 import BlockTitle from '@/components/BlockTitle';
 
 import Kosala from '@/assets/images/team/kosala.jpg';
@@ -41,7 +41,7 @@ import Semaja from '@/assets/images/team/semaja.jpg';
 import Katya from '@/assets/images/team/katya.jpg';
 
 export default {
-  components: { PageTitle, BlockTitle },
+  components: { homeHeader, BlockTitle },
   data: () => ({
     titleData: {
       textProps: '',
