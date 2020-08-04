@@ -10,9 +10,9 @@ import CreateWallet from '@/modules/wallets/components/create';
 import AccessWalletView from '@/views/AccessWalletView';
 import AccessWalletHardwareWallets from '@/views/AccessWalletView/containers/HardwareWallets';
 
-import AccessWalletBrowserExtention from '@/views/AccessWalletView/containers/BrowserExtention';
-import AccessWalletBrowserExtentionInstall from '@/views/AccessWalletView/containers/BrowserExtention/container/InstallExtention';
-import AccessWalletBrowserExtentionAccess from '@/views/AccessWalletView/containers/BrowserExtention/container/AccessExtention';
+import AccessWalletBrowserExtension from '@/views/AccessWalletView/containers/BrowserExtension';
+import AccessWalletBrowserExtensionInstall from '@/views/AccessWalletView/containers/BrowserExtension/container/InstallExtension';
+import AccessWalletBrowserExtensionAccess from '@/views/AccessWalletView/containers/BrowserExtension/container/AccessExtension';
 
 import AccessWalletMobileApps from '@/views/AccessWalletView/containers/MobileApps';
 
@@ -126,25 +126,25 @@ const routes = [
         }
       },
       {
-        path: 'access-wallet/browser-extention',
-        name: 'AccessWalletBrowserExtention',
-        component: AccessWalletBrowserExtention,
+        path: 'access-wallet/browser-Extension',
+        name: 'AccessWalletBrowserExtension',
+        component: AccessWalletBrowserExtension,
         meta: {
           requiresAuth: false
         }
       },
       {
-        path: 'access-wallet/browser-extention/install',
-        name: 'AccessWalletBrowserExtentionInstall',
-        component: AccessWalletBrowserExtentionInstall,
+        path: 'access-wallet/browser-Extension/install',
+        name: 'AccessWalletBrowserExtensionInstall',
+        component: AccessWalletBrowserExtensionInstall,
         meta: {
           requiresAuth: false
         }
       },
       {
-        path: 'access-wallet/browser-extention/access',
-        name: 'AccessWalletBrowserExtentionAccess',
-        component: AccessWalletBrowserExtentionAccess,
+        path: 'access-wallet/browser-Extension/access',
+        name: 'AccessWalletBrowserExtensionAccess',
+        component: AccessWalletBrowserExtensionAccess,
         meta: {
           requiresAuth: false
         }
