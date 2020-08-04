@@ -25,10 +25,10 @@
 import PageTitle from '@/components/PageTitle';
 import Ad from '@/components/HomeAd2';
 
-import WatchOnlyAddress from './components/WatchOnlyAddress';
-import ConvertUnits from './components/ConvertUnits';
-import SendOfflineHelper from './components/SendOfflineHelper';
-import VerifyMessage from './components/VerifyMessage';
+import WatchOnlyAddress from './pages/WatchOnlyAddress';
+import ConvertUnits from './pages/ConvertUnits';
+import SendOfflineHelper from './pages/SendOfflineHelper';
+import VerifyMessage from './pages/VerifyMessage';
 
 export default {
   name: 'MoreActions',
