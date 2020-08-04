@@ -199,15 +199,15 @@
         </div>
       </div>
     </v-container>
-    <FootNote />
+    <footnote />
   </div>
 </template>
 
 <script>
-import FootNote from './components/FootNote';
+import footnote from './components/footnote';
 
 export default {
-  components: { FootNote },
+  components: { footnote },
   data: () => ({
     icons: [
       {

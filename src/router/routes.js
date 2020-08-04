@@ -3,7 +3,7 @@ import CompanyPage from '@/modules/company';
 import TeamPage from '@/modules/team';
 import ToolsPage from '@/modules/tools';
 
-import LandingPageView from '@/views/LandingPageView';
+import Navigation from '@/modules/home/pages/navigation';
 
 import CreateWallet from '@/modules/wallets/pages/create';
 
@@ -48,7 +48,7 @@ import WalletRoutes from '@/modules/wallets/routes.js';
 const routes = [
   {
     path: '/',
-    component: LandingPageView,
+    component: Navigation,
     meta: {
       requiresAuth: false
     },
