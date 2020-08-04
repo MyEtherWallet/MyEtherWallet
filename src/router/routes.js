@@ -31,106 +31,67 @@ const routes = [
       {
         path: '',
         name: 'Home',
-        component: HomePage,
-        meta: {
-          requiresAuth: false
-        }
+        component: HomePage
       },
       {
         path: 'how-it-works',
         name: 'HowItWorks',
-        component: HowItWorks,
-        meta: {
-          requiresAuth: false
-        }
+        component: HowItWorks
       },
       {
         path: 'tools',
         name: 'tools',
-        component: ToolsPage,
-        meta: {
-          requiresAuth: false
-        }
+        component: ToolsPage
       },
       {
         path: 'buy-hardware-wallet',
         name: 'BuyHardwareWallet',
-        component: BuyHardwareWallet,
-        meta: {
-          requiresAuth: false
-        }
+        component: BuyHardwareWallet
       },
       {
         path: 'about-us/company',
         name: 'CompanyPage',
-        component: CompanyPage,
-        meta: {
-          requiresAuth: false
-        }
+        component: CompanyPage
       },
       {
         path: 'about-us/team',
         name: 'TeamPage',
-        component: TeamPage,
-        meta: {
-          requiresAuth: false
-        }
+        component: TeamPage
       },
       {
         path: 'create-wallet',
         name: 'HomeCreateWallet',
-        component: CreateWallet,
-        meta: {
-          requiresAuth: false
-        }
+        component: CreateWallet
       },
       {
         path: 'access-wallet',
         name: 'HomeAccessWallet',
-        component: AccessWalletView,
-        meta: {
-          requiresAuth: false
-        }
+        component: AccessWalletView
       },
       {
         path: 'access-wallet/hardware',
         name: 'AccessWalletHardwareWallets',
-        component: AccessWalletHardwareWallets,
-        meta: {
-          requiresAuth: false
-        }
+        component: AccessWalletHardwareWallets
       },
       {
         path: 'access-wallet/browser-Extension',
         name: 'AccessWalletBrowserExtension',
-        component: AccessWalletBrowserExtension,
-        meta: {
-          requiresAuth: false
-        }
+        component: AccessWalletBrowserExtension
       },
       {
         path: 'access-wallet/browser-Extension/install',
         name: 'AccessWalletBrowserExtensionInstall',
-        component: AccessWalletBrowserExtensionInstall,
-        meta: {
-          requiresAuth: false
-        }
+        component: AccessWalletBrowserExtensionInstall
       },
       {
         path: 'access-wallet/browser-Extension/access',
         name: 'AccessWalletBrowserExtensionAccess',
-        component: AccessWalletBrowserExtensionAccess,
-        meta: {
-          requiresAuth: false
-        }
+        component: AccessWalletBrowserExtensionAccess
       },
       {
         path: 'access-wallet/mobile-apps',
         name: 'AccessWalletMobileApps',
-        component: AccessWalletMobileApps,
-        meta: {
-          requiresAuth: false
-        }
+        component: AccessWalletMobileApps
       }
     ]
   },
