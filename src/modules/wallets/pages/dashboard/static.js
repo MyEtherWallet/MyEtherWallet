@@ -1,90 +1,5 @@
-<template>
-  <mew6-white-sheet class="mew-component--eth-balance pa-7 pb-4">
-    <div class="d-flex">
-      <mew-module
-        subtitle="My Eth Balance"
-        title="24.842 ETH"
-        caption="$4,032.35"
-        :icon="require('@/assets/images/currencies/eth.png')"
-        icon-align="left"
-      />
-      <div class="ml-auto">
-        <div class="d-flex align-center">
-          <mew-toggle-button
-            :button-group="chartButtons"
-            @onBtnClick="onBtnClick"
-          />
-          <mew-button
-            button-size="medium"
-            class="ml-4"
-            icon-type="mdi"
-            icon="mdi-dots-vertical"
-          />
-        </div>
-        <div v-if="false">
-          <v-btn-toggle
-            v-model="chartRange"
-            class="chart-button-group"
-            tile
-            group
-            dense
-            mandatory
-          >
-            <v-btn value="1d">
-              1D
-            </v-btn>
-            <v-btn value="1w">
-              1W
-            </v-btn>
-            <v-btn value="1m">
-              1M
-            </v-btn>
-            <v-btn value="1y">
-              1Y
-            </v-btn>
-            <v-btn value="all">
-              All
-            </v-btn>
-          </v-btn-toggle>
-          <v-btn text icon class="ml-4">
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
-        </div>
-      </div>
-    </div>
-    <ChartBalance :key="chartData.key" :data="chartData.data" class="mt-5" />
-    <v-row class="align-center">
-      <v-col class="d-flex align-center justify-center">
-        <div class="font-weight-bold">ETH PRICE</div>
-        <div class="ml-2 font-weight-regular text-color--mew-green">
-          3.12%
-        </div>
-        <v-icon class="emerald--text body-2">mdi-arrow-up-bold</v-icon>
-        <v-icon v-if="false" class="light_red--text body-2"
-          >mdi-arrow-down-bold</v-icon
-        >
-        <div class="ml-5">$321.55 / 1 ETH</div>
-      </v-col>
-      <v-col class="text-right">
-        <mew-button
-          :has-full-width="false"
-          title="Send Transaction"
-          button-size="xlarge"
-          @click.native="goTo('HomeAccessWallet')"
-        />
-      </v-col>
-    </v-row>
-  </mew6-white-sheet>
-</template>
-
-<script>
-import ChartBalance from '@/components/Charts/Balance';
-
 export default {
-  components: { ChartBalance },
-  data() {
-    return {
-      chartButtons: ['1D', '1W', '1M', '1Y', 'All'],
+  chartButtons: ['1D', '1W', '1M', '1Y', 'All'],
       chartRange: '1d',
       chartData: [],
       chart1d: {
@@ -4103,59 +4018,110 @@ export default {
           [1514419200000, 0.838],
           [1514505600000, 0.8339]
         ]
-      }
+      },
+      tableHeaders: [
+        {
+          text: 'Token',
+          value: 'token',
+          sortable: false,
+          filterable: false,
+          containsLink: false,
+          width: '100px'
+        },
+        {
+          text: 'Price',
+          value: 'price',
+          sortable: false,
+          filterable: false,
+          containsLink: false,
+          width: '100px'
+        },
+        {
+          text: 'Market Cap',
+          value: 'cap',
+          sortable: false,
+          filterable: false,
+          containsLink: false,
+          width: '120px'
+        },
+        {
+          text: '24H Changes',
+          value: 'change',
+          sortable: false,
+          filterable: false,
+          containsLink: false,
+          width: '120px'
+        },
+        {
+          text: 'Token Value',
+          value: 'value',
+          sortable: false,
+          filterable: false,
+          containsLink: false,
+          width: '100px'
+        },
+        {
+          text: '',
+          value: 'callToAction',
+          sortable: false,
+          filterable: false,
+          containsLink: false,
+          width: '140px'
+        }
+      ],
+      tableData: [
+        {
+          token: 'XMR',
+          price: '$8.23',
+          cap: '$1.23B',
+          change: '2.23%',
+          status: '+',
+          changeData: {
+            x: [1, 4, 10, 4],
+            y: [0, 1, 34, 43]
+          },
+          value: '$27.54',
+          callToAction: 'Trade'
+        },
+        {
+          token: 'AMIS',
+          price: '$23.11',
+          cap: '$5.22B',
+          change: '0.43%',
+          status: '-',
+          changeData: {
+            x: [1, 4, 10, 4],
+            y: [0, 1, 34, 43]
+          },
+          value: '$27.54',
+          callToAction: 'Trade'
+        },
+        {
+          token: 'JCK',
+          price: '$3.65',
+          cap: '$0.43B',
+          change: '10.23%',
+          status: '+',
+          changeData: {
+            x: [1, 4, 10, 4],
+            y: [0, 1, 34, 43]
+          },
+          value: '$27.54',
+          callToAction: 'Trade'
+        },
+        {
+          token: 'AMN',
+          price: '$10.72',
+          cap: '0.11B',
+          change: '8.88%',
+          value: '$27.54',
+          status: '-',
+          changeData: {
+            x: [1, 4, 10, 4],
+            y: [0, 1, 34, 43]
+          },
+          callToAction: 'Trade'
+        }
+      ]
     };
-  },
-  watch: {
-    chartRange(newVal) {
-      switch (newVal) {
-        case '1d':
-          this.chartData = this.chart1d;
-          break;
-        case '1w':
-          this.chartData = this.chart1w;
-          break;
-        case '1m':
-          this.chartData = this.chart1m;
-          break;
-        case '1y':
-          this.chartData = this.chart1y;
-          break;
-        case 'all':
-          this.chartData = this.chartAll;
-          break;
-        default:
-      }
-    }
-  },
-  beforeMount() {
-    this.chartData = this.chart1d;
-  },
-  methods: {
-    onBtnClick(newVal) {
-      this.chartRange = newVal.toLowerCase();
-    }
-  }
-};
-</script>
-
-<style lang="scss" scoped>
-.v-btn-toggle--group > .v-btn.v-btn,
-.chart-button-group .v-btn:before {
-  border-radius: 5px;
 }
-</style>
-
-<style lang="scss">
-.mew-component--eth-balance {
-  .v-item--active {
-    &::before {
-      background-color: var(--v-royal_blue-base);
-      opacity: 1 !important;
-    }
-    .v-btn__content {
-      color: white;
-    }
-  }
-}
-</style>
