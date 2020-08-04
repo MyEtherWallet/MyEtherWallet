@@ -1,14 +1,28 @@
 <template>
   <v-app>
     <v-main>
-      <router-view />
+      <v-sheet>
+        <router-view />
+        <GlobalElementsContainer />
+        <GlobalModalContainer />
+        <GlobalOverlayContainer />
+      </v-sheet>
     </v-main>
   </v-app>
 </template>
 
 <script>
+import GlobalElementsContainer from '@/containers/GlobalElementsContainer';
+import GlobalModalContainer from '@/containers/GlobalModalContainer';
+import GlobalOverlayContainer from '@/containers/GlobalOverlayContainer';
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    GlobalElementsContainer,
+    GlobalModalContainer,
+    GlobalOverlayContainer
+  }
 };
 </script>
 

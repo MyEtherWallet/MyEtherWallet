@@ -5,7 +5,7 @@
         <v-img src="@/assets/images/icons/logo-mew.png" max-width="130" />
       </router-link>
       <v-spacer></v-spacer>
-      <Menu />
+      <home-menu />
       <v-spacer></v-spacer>
       <mew-button
         class="px-2"
@@ -23,11 +23,11 @@
 </template>
 
 <script>
-import Menu from './components/Menu';
+import homeMenu from './components/menu';
 
 export default {
-  name: 'HeaderDesktop',
-  components: { Menu },
+  name: 'Header',
+  components: { homeMenu },
   data: () => ({
     menus: [
       { label: 'How it works', to: '/how-it-works' },
