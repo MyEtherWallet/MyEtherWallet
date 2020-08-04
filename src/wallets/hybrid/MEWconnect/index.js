@@ -13,6 +13,8 @@ import errorHandler from './errorHandler';
 import commonGenerator from '@/helpers/commonGenerator';
 import { Misc } from '@/helpers';
 import HybridWalletInterface from '../walletInterface';
+import uuid from 'uuid/v4';
+
 
 const V1_SIGNAL_URL = 'https://connect.mewapi.io';
 const V2_SIGNAL_URL = 'wss://connect2.mewapi.io/staging';
@@ -51,6 +53,8 @@ class MEWconnectWallet {
         if (!tx.gasLimit) {
           tx.gasLimit = tx.gas;
         }
+        tx.id = uuid();
+        this.txIds.push(tx.id);
         this.mewConnect.sendRtcMessage('signTx', JSON.stringify(tx));
         this.mewConnect.once('signTx', result => {
           tx = new Transaction(sanitizeHex(result), {
@@ -68,22 +72,42 @@ class MEWconnectWallet {
           resolve(getSignTransactionObject(tx));
         });
 
-        this.mewConnect.once('reject', info => {
+        this.mewConnect.once('reject', id => {
+          this.mewConnect.removeAllListeners('signTx');
           // eslint-disable-next-line
-          console.log(info); // todo remove dev item
-          reject();
+          console.log('signTx reject id:', id); // todo remove dev item
+          reject(Error('reject'));
+          // if (this.txIds.includes(id)) {
+          //   const idx = this.txIds.findIndex(item => item === id);
+          //   this.txIds.splice(idx, 1);
+          //   reject();
+          // }
         });
       });
     };
     const msgSigner = async msg => {
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
         const msgHash = hashPersonalMessage(Misc.toBuffer(msg));
+        const id = uuid();
+        this.txIds.push(id);
         this.mewConnect.sendRtcMessage('signMessage', {
           hash: msgHash.toString('hex'),
-          text: msg
+          text: msg,
+          id: id
         });
         this.mewConnect.once('signMessage', data => {
           resolve(getBufferFromHex(sanitizeHex(data.sig)));
+        });
+        this.mewConnect.once('reject', id => {
+          this.mewConnect.removeAllListeners('signMessage');
+          // eslint-disable-next-line
+          console.log('signMessage reject id:', id); // todo remove dev item
+          reject(Error('reject'));
+          // if (this.txIds.includes(id)) {
+          //   const idx = this.txIds.findIndex(item => item === id);
+          //   this.txIds.splice(idx, 1);
+          //   reject();
+          // }
         });
       });
     };

@@ -1,5 +1,7 @@
 import { Toast } from '@/helpers';
-const ERRORS = {};
+const ERRORS = {
+  reject: 'user declined on mobile'
+};
 const WARNING = {};
 
 export default err => {
