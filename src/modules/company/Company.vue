@@ -8,17 +8,17 @@
     <div class="py-10" />
     <TwoBlockContent />
     <div class="py-10" />
-    <Partners />
+    <partners />
     <div class="py-9" />
-    <Ad />
+    <join />
     <div class="py-1" />
   </div>
 </template>
 
 <script>
 import PageTitle from '@/components/PageTitle';
-import Partners from '@/components/Partners';
-import Ad from '@/components/HomeAd1';
+import partners from '@/components/partners';
+import join from '@/components/join';
 import WhatIsMew from './components/WhatIsMew';
 import OurStory from './components/OurStory';
 import TwoBlockContent from './components/TwoBlockContent';
@@ -26,8 +26,8 @@ import TwoBlockContent from './components/TwoBlockContent';
 export default {
   components: {
     PageTitle,
-    Partners,
-    Ad,
+    partners,
+    join,
     WhatIsMew,
     OurStory,
     TwoBlockContent

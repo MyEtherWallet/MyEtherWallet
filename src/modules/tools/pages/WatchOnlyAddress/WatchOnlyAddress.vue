@@ -7,10 +7,10 @@
 
 <script>
 import BlockTitle from '@/components/BlockTitle';
-import TableContainer from '../components/TableContainer';
+// import TableContainer from '../components/TableContainer';
 
 export default {
-  components: { BlockTitle, TableContainer },
+  components: { BlockTitle },
   data: () => ({
     title: {
       title: 'Watch only address',

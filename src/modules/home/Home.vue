@@ -1,37 +1,31 @@
 <template>
   <div>
-    <TopBanner />
-    <div class="py-6" />
-    <Features />
-    <div class="py-6" />
-    <WhyMew />
-    <div class="py-5" />
-    <Ad1 />
-    <div class="py-11" />
-    <Partners />
-    <div class="py-9" />
-    <Ad2 />
-    <div class="py-1" />
+    <landing />
+    <features class="pt-12 pb-6" />
+    <why-mew class="py-6" />
+    <join class="py-5" />
+    <partners class="py-11" />
+    <get-started class="py-9" />
   </div>
 </template>
 
 <script>
-import TopBanner from './components/TopBanner';
-import Features from './components/Features';
-import WhyMew from './components/WhyMew';
-import Ad1 from '@/components/HomeAd1';
-import Ad2 from '@/components/HomeAd2';
-import Partners from '@/components/Partners';
+import landing from './components/landing';
+import features from './components/features';
+import whyMew from './components/why-mew';
+import join from '@/components/join';
+import getStarted from '@/components/get-started';
+import partners from '@/components/partners';
 
 export default {
   name: 'Home',
   components: {
-    TopBanner,
-    Features,
-    WhyMew,
-    Ad1,
-    Ad2,
-    Partners
+    landing,
+    features,
+    whyMew,
+    join,
+    getStarted,
+    partners
   }
 };
 </script>

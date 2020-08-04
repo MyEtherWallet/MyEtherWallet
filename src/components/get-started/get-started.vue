@@ -36,7 +36,7 @@
 import walletIcon from '@/assets/images/icons/icon-wallet-mew.png';
 
 export default {
-  name: 'HomeAd2',
+  name: 'GetStarted',
   components: {},
   data() {
     return {

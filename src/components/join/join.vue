@@ -24,7 +24,7 @@
 
 <script>
 export default {
-  name: 'HomeAd1',
+  name: 'Join',
   components: {}
 };
 </script>
