@@ -58,8 +58,8 @@
 </template>
 
 <script>
-import Keystore from '../../components/Keystore';
-import MnemonicPhrase from '../../components/MnemonicPhrase';
+import Keystore from '@/modules/wallets/components/Keystore';
+import MnemonicPhrase from '@/modules/wallets/components/MnemonicPhrase';
 
 export default {
   name: 'Software',
