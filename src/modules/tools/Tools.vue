@@ -17,13 +17,13 @@
         </template>
       </mew-tabs>
     </v-container>
-    <Ad />
+    <get-started />
   </div>
 </template>
 
 <script>
 import PageTitle from '@/components/PageTitle';
-import Ad from '@/components/HomeAd2';
+import getStarted from '@/components/get-started';
 
 import WatchOnlyAddress from './pages/WatchOnlyAddress';
 import ConvertUnits from './pages/ConvertUnits';
@@ -34,7 +34,7 @@ export default {
   name: 'MoreActions',
   components: {
     PageTitle,
-    Ad,
+    getStarted,
     WatchOnlyAddress,
     ConvertUnits,
     SendOfflineHelper,

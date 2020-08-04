@@ -22,7 +22,7 @@
 
 <script>
 export default {
-  name: 'HomePartners',
+  name: 'Partners',
   components: {},
   data: () => ({
     partners: [
