@@ -4,7 +4,7 @@
       <slot />
       <v-btn
         icon
-        color="text_default"
+        color="titlePrimary"
         class="close-button"
         @click="bottomSheetShow = !bottomSheetShow"
       >

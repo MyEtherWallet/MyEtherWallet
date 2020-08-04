@@ -1,7 +1,7 @@
 <template>
   <div>
     <mew-switch label="Receive the notifications from MEW" />
-    <div class="bg_table pa-8 border-radius--5px">
+    <div class="tableHeader pa-8 border-radius--5px">
       <div class="mew-heading-3">
         What’s kind of notification do you want to receive from MEW?
       </div>
@@ -9,7 +9,7 @@
       <mew-checkbox label="Transaction" />
       <mew-checkbox label="Swap" />
     </div>
-    <div class="mt-5 bg_table pa-8 border-radius--5px">
+    <div class="mt-5 tableHeader pa-8 border-radius--5px">
       <div class="mew-heading-3">
         What’s the maximum number of the notification do you want to store
         within?

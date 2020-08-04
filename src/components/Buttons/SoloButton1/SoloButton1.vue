@@ -1,5 +1,5 @@
 <template>
-  <v-btn fab x-small dark depressed color="royal_blue" class="solo-button">
+  <v-btn fab x-small dark depressed color="secondary" class="solo-button">
     <slot />
   </v-btn>
 </template>

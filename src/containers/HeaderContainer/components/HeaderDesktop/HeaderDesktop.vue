@@ -1,5 +1,5 @@
 <template>
-  <div class="bg_blue py-5">
+  <div class="expandHeader py-5">
     <v-container class="d-flex align-center">
       <router-link :to="{ name: 'Home', query: {} }">
         <v-img src="@/assets/images/icons/logo-mew.png" max-width="130" />

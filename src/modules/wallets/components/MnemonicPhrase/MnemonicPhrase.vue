@@ -1,5 +1,5 @@
 <template>
-  <div class="bg_blue">
+  <div class="expandHeader">
     <v-sheet color="transparent" max-width="800px" class="mx-auto">
       <mew-stepper :items="steppers" :on-step="1">
         <template v-slot:outsideStepContent0>
@@ -157,7 +157,7 @@
                 <p class="mt-4 mb-0">
                   Need help?
                   <router-link
-                    class="emerald--text text-decoration--none font-weight-bold"
+                    class="primary--text text-decoration--none font-weight-bold"
                     to="/"
                     >Get helps from MEWconnect</router-link
                   >

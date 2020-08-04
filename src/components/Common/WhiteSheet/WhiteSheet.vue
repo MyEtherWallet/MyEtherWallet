@@ -30,7 +30,7 @@ export default {
 <style lang="scss">
 /* Set light theme box-shadow for white sheet */
 #app.theme--light .box-shadow {
-  box-shadow: 0 0 15px var(--v-box_shadow-base);
+  box-shadow: 0 0 15px var(--v-box-shadow-base);
 }
 
 /* Set dark theme box-shadow for white sheet */

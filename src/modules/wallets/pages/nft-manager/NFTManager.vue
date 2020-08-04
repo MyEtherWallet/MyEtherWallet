@@ -15,7 +15,7 @@
                     <div
                       v-for="(kitty, key) in CryptoKitties"
                       :key="key"
-                      class="bg_overlay border-radius--5px pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
+                      class="superPrimary border-radius--5px pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
                     >
                       <div class="d-flex align-center">
                         <img
@@ -44,7 +44,7 @@
                     <div
                       v-for="(kitty, key) in CryptoKitties"
                       :key="key"
-                      class="bg_overlay border-radius--5px pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
+                      class="superPrimary border-radius--5px pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
                     >
                       <div class="d-flex align-center">
                         <img
@@ -73,7 +73,7 @@
                     <div
                       v-for="(kitty, key) in CryptoKitties"
                       :key="key"
-                      class="bg_overlay border-radius--5px pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
+                      class="superPrimary border-radius--5px pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
                     >
                       <div class="d-flex align-center">
                         <img
@@ -102,7 +102,7 @@
                     <div
                       v-for="(kitty, key) in CryptoKitties"
                       :key="key"
-                      class="bg_overlay border-radius--5px pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
+                      class="superPrimary border-radius--5px pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
                     >
                       <div class="d-flex align-center">
                         <img

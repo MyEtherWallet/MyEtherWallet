@@ -1,11 +1,11 @@
 <template>
-  <div class="bg_blue">
+  <div class="expandHeader">
     <BlockTitle :data="titleData">
       <h5 class="white--text ma-0">
         Select a hardware to access your wallet. Make sure your device is
         connected and unlocked.
         <span
-          class="emerald--text cursor--pointer"
+          class="primary--text cursor--pointer"
           @click="$router.push({ name: 'BuyHardwareWallet', params: {} })"
         >
           Buy hardware wallet

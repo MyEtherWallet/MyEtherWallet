@@ -19,7 +19,7 @@
       <p class="mt-4 mb-0">
         Need more help?
         <a
-          class="emerald--text text-decoration--none font-weight-medium"
+          class="primary--text text-decoration--none font-weight-medium"
           href="https://www.mewtopia.com/"
           target="_blank"
           >Watch tutorial</a

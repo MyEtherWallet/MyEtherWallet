@@ -13,7 +13,7 @@
       <v-sheet
         v-for="(data, key) in swapData"
         :key="key"
-        color="bg_table"
+        color="tableHeader"
         class="d-flex align-center justify-space-between border-radius--5px mt-1 py-3 px-4"
       >
         <div class="text-uppercase">

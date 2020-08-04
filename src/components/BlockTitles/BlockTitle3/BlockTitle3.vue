@@ -15,6 +15,6 @@ export default {
 
 <style lang="scss" scoped>
 .left-border {
-  border-left: 5px solid var(--v-emerald-base);
+  border-left: 5px solid var(--v-primary-base);
 }
 </style>

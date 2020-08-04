@@ -207,7 +207,7 @@ export default {
 .main-menu,
 .sub-menu {
   * {
-    color: var(--v-gray_text-base);
+    color: var(--v-searchText-base);
   }
 }
 .active {

@@ -26,13 +26,13 @@
             <div class="py-12">
               <div class="d-flex align-center justify-end mr-12 mb-5">
                 <div class="mr-3">Health factor</div>
-                <div class="emerald--text font-weight-bold mr-3">2.45345</div>
+                <div class="primary--text font-weight-bold mr-3">2.45345</div>
                 <info-tooltip text="Health factor" />
               </div>
               <div class="tab-width">
                 <v-row>
                   <v-col cols="6">
-                    <div class="bg_datablock pa-5 border-radius--5px">
+                    <div class="walletBg pa-5 border-radius--5px">
                       <h5 class="mb-2 font-weight-bold">
                         Aggregated Balance
                       </h5>
@@ -53,7 +53,7 @@
                     </div>
                   </v-col>
                   <v-col cols="6">
-                    <div class="bg_datablock pa-5 border-radius--5px">
+                    <div class="walletBg pa-5 border-radius--5px">
                       <h5 class="mb-2 font-weight-bold">
                         Aggregated Balance
                       </h5>
@@ -87,13 +87,13 @@
             <div class="py-12">
               <div class="d-flex align-center justify-end mr-12 mb-5">
                 <div class="mr-3">Health factor</div>
-                <div class="emerald--text font-weight-bold mr-3">2.45345</div>
+                <div class="primary--text font-weight-bold mr-3">2.45345</div>
                 <info-tooltip text="Health factor" />
               </div>
               <div class="tab-width">
                 <v-row>
                   <v-col cols="6">
-                    <div class="bg_datablock pa-5 border-radius--5px">
+                    <div class="walletBg pa-5 border-radius--5px">
                       <h5 class="mb-2 font-weight-bold">
                         Aggregated Balance
                       </h5>
@@ -115,7 +115,7 @@
                     </div>
                   </v-col>
                   <v-col cols="6">
-                    <div class="bg_datablock pa-5 border-radius--5px">
+                    <div class="walletBg pa-5 border-radius--5px">
                       <h5 class="mb-2 font-weight-bold">
                         Aggregated Balance
                       </h5>
@@ -138,7 +138,7 @@
                   </v-col>
                   <v-col cols="12">
                     <div
-                      class="bg_datablock pa-5 border-radius--5px d-flex align-center justify-space-between"
+                      class="walletBg pa-5 border-radius--5px d-flex align-center justify-space-between"
                     >
                       <div class="font-weight-bold">Loan to value</div>
                       <div class="font-weight-bold">65.04%</div>

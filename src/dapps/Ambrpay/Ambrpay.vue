@@ -19,7 +19,7 @@
       @closeBanner="closeBanner"
     />
     <div class="content-width py-12">
-      <div class="pa-10 bg_datablock">
+      <div class="pa-10 walletBg">
         <div class="d-flex justify-space-between align-center">
           <div>
             <div class="mb-1 font-weight-bold">
@@ -28,7 +28,7 @@
             <div class="mew-heading-1 mb-2">
               $2,545.12
             </div>
-            <div class="emerald--text font-weight-bold">
+            <div class="primary--text font-weight-bold">
               9.231234 ETH
             </div>
           </div>

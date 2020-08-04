@@ -1,5 +1,5 @@
 <template>
-  <div class="bg_blue">
+  <div class="expandHeader">
     <block-title :data="titleData">
       <h5 class="white--text ma-0">
         Please select a method to create a new wallet.

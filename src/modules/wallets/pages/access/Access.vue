@@ -1,5 +1,5 @@
 <template>
-  <div class="bg_blue">
+  <div class="expandHeader">
     <BlockTitle :data="titleData">
       <h5 class="white--text ma-0">
         Please select a method to access your wallet.
@@ -106,11 +106,3 @@ export default {
   methods: {}
 };
 </script>
-
-<style lang="scss" scoped>
-.new-wallet-button {
-  &:hover {
-    box-shadow: 0 0 50px var(--v-police_strobe-base);
-  }
-}
-</style>

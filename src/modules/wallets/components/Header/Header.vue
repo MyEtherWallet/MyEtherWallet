@@ -32,7 +32,7 @@
           <img src="@/assets/images/icons/icon-notifications.svg" />
         </v-btn>
         <div
-          class="notification-count cursor--pointer d-flex align-center justify-center white--text light_red"
+          class="notification-count cursor--pointer d-flex align-center justify-center white--text error lighten2"
           @click="openNotifications = true"
         >
           3
@@ -65,7 +65,7 @@ export default {
 <style lang="scss" scoped>
 a {
   text-decoration: none;
-  color: var(--v-emerald-base) !important;
+  color: var(--v-primary-base) !important;
   font-weight: 500;
 }
 

@@ -2,7 +2,7 @@
   <v-btn
     text
     small
-    color="emerald"
+    color="primary"
     class="text-transform--initial body-2 font-weight-medium"
   >
     <slot />

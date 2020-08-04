@@ -4,9 +4,9 @@
       <InterfaceWrap title="Trending">
         <div class="d-flex justify-space-between">
           <Breadcrumbs :items="breadcrumbs" />
-          <div class="emerald--text">
+          <div class="primary--text">
             Filter out
-            <span class="font-weight-bold text_default--text">21</span> DApps
+            <span class="font-weight-bold titlePrimary--text">21</span> DApps
           </div>
         </div>
         <div class="d-flex">
@@ -27,7 +27,7 @@
                   v-for="(c, key) in categories"
                   :key="key"
                   v-model="c.status"
-                  color="emerald"
+                  color="primary"
                   :label="c.label"
                 ></v-switch>
               </div>
@@ -139,7 +139,7 @@ export default {
   }
   .v-input--is-label-active {
     label {
-      color: var(--v-text_default-base);
+      color: var(--v-title-primary-base);
       font-weight: 500;
     }
   }
@@ -150,7 +150,7 @@ export default {
     border: 0;
   }
   .v-text-field .v-input__slot {
-    background-color: var(--v-bg_wallet-base);
+    background-color: var(--v-wallet-bg-base);
   }
   .v-text-field.v-text-field--enclosed .v-text-field__details {
     margin-bottom: 0;

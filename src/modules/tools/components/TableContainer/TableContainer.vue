@@ -33,7 +33,7 @@
           class="mr-4 mt-1"
         />
         <div>
-          <div class="font-weight-medium text_light_blue--text">
+          <div class="font-weight-medium input-label--text">
             Total Value
           </div>
           <h5 class="font-weight-bold">$2,231.31</h5>
@@ -41,12 +41,12 @@
         </div>
       </div>
       <div>
-        <div class="font-weight-medium text_light_blue--text">ETH Balance</div>
+        <div class="font-weight-medium input-label--text">ETH Balance</div>
         <h5 class="font-weight-bold">$2,000.00</h5>
         <div class="textSecondary--text">8.00431 ETH</div>
       </div>
       <div>
-        <div class="font-weight-medium text_light_blue--text">
+        <div class="font-weight-medium input-label--text">
           Value of Tokens
         </div>
         <h5 class="font-weight-bold">$231.31</h5>
@@ -88,7 +88,7 @@ export default {
 
 <style lang="scss" scoped>
 .block-header {
-  background-color: var(--v-bg_blue-base);
+  background-color: var(--v-expand-header-base);
   color: white;
   padding: 15px 20px;
   border-radius: 10px 10px 0 0;

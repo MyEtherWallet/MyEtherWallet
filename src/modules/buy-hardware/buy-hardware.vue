@@ -1,5 +1,5 @@
 <template>
-  <div class="bg_blue">
+  <div class="expandHeader">
     <BlockTitle :data="titleData" />
 
     <v-sheet color="transparent" max-width="1000px" class="mx-auto">

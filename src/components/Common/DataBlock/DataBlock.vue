@@ -1,5 +1,5 @@
 <template>
-  <v-sheet color="bg_datablock" class="data-block">
+  <v-sheet color="walletBg" class="data-block">
     <slot />
   </v-sheet>
 </template>

@@ -79,7 +79,7 @@
               <p class="mt-4 mb-0">
                 Need help?
                 <router-link
-                  class="emerald--text text-decoration--none font-weight-bold"
+                  class="primary--text text-decoration--none font-weight-bold"
                   to="/"
                   >Get helps from MEWconnect</router-link
                 >

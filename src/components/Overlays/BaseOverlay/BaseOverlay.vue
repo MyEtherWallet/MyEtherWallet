@@ -1,6 +1,6 @@
 <template>
   <v-overlay
-    color="bg_overlay"
+    color="superPrimary"
     opacity="1"
     :value="open"
     z-index="100"

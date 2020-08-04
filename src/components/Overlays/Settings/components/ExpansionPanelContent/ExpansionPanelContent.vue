@@ -16,7 +16,7 @@
             fab
             dark
             :retain-focus-on-click="true"
-            color="emerald"
+            color="primary"
           >
             <v-icon dark>mdi-pencil-outline</v-icon>
           </v-btn>
@@ -46,6 +46,6 @@ export default {
 
 <style lang="scss" scoped>
 .subtitle-color {
-  color: var(--v-gray_text-base);
+  color: var(--v-searchText-base);
 }
 </style>

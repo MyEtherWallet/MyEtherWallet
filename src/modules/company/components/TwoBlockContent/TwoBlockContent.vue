@@ -37,7 +37,7 @@
                 :key="key"
                 text
                 icon
-                color="dark_space"
+                color="titlePrimary"
                 class="mr-4"
                 :href="i.link"
                 target="_blank"

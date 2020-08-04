@@ -19,8 +19,8 @@
           :data="item.chart"
           :linecolor="
             item.change > 0
-              ? 'var(--v-emerald-base)'
-              : 'var(--v-light_red-base)'
+              ? 'var(--v-primary-base)'
+              : 'var(--v-error-lighten2)'
           "
         />
       </template>
@@ -267,13 +267,13 @@ export default {
 <style lang="scss">
 .more-actions--table {
   .v-data-table-header {
-    background-color: var(--v-bg_table-base);
+    background-color: var(--v-table-header-base);
   }
   .v-data-table thead tr th {
     text-transform: uppercase;
     font-weight: 500;
     &:not(:hover) {
-      color: var(--v-gray_text-base) !important;
+      color: var(--v-searchText-base) !important;
     }
   }
 }
