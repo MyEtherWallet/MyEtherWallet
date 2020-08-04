@@ -63,11 +63,17 @@
             </v-row>
             <div class="mt-12">
               <div class="mew-heading-3 mb-3">Wallet Balance</div>
-              <WalletBalance />
+              <mew-table
+                :table-headers="walletBalanceTableHeaders"
+                :table-data="walletTableData"
+              />
             </div>
             <div class="mt-8">
               <div class="mew-heading-3 mb-3">History</div>
-              <History />
+              <mew-table
+                :table-headers="historyTableHeaders"
+                :table-data="historyTableData"
+              />
             </div>
           </div>
         </v-sheet>
@@ -115,7 +121,10 @@
                       btn-style="transparent"
                     />
                   </div>
-                  <MyVaults />
+                  <mew-table
+                    :table-headers="myVaultsTableHeaders"
+                    :table-data="myVaultsTableData"
+                  />
                 </v-col>
               </v-row>
             </div>
@@ -131,43 +140,10 @@
 
 <script>
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
-import WalletBalance from './components/WalletBalance';
-import History from './components/History';
-import MyVaults from './components/MyVaults';
-
+import staticData from './staticData.js';
 export default {
-  components: { WalletBalance, History, MyVaults },
   data() {
-    return {
-      tabs: [{ name: 'Save' }, { name: 'Borrow' }],
-      BG: BG,
-      balance: {
-        total: 20.32,
-        data: [
-          {
-            title: 'sendBal',
-            color: 'titlePrimary',
-            amount: 5.3,
-            tooltip: 'Send: 5.3',
-            percentage: '26.08'
-          },
-          {
-            title: 'feeBal',
-            color: 'warning darken-1',
-            amount: 3.2,
-            tooltip: 'Fee: 3.2',
-            percentage: '15.75'
-          }
-        ]
-      },
-      topBanner: {
-        title: 'MakerDAO',
-        subtext:
-          'DAI is a stable, decentralized currency that does not discriminate. Any business or individual can realize the advantages of digital money.',
-        exit: 'Exit Dapp'
-      },
-      tab: 1
-    };
+    return staticData;
   },
   methods: {
     openOverlay(name) {
