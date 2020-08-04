@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageTitle title="Tools" />
+    <home-header title="Tools" />
     <v-container class="mt-8 mb-12">
       <mew-tabs :items="items">
         <template v-slot:tabItemContent0>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import PageTitle from '@/components/PageTitle';
+import homeHeader from '@/components/home-header';
 import getStarted from '@/components/get-started';
 
 import WatchOnlyAddress from './pages/WatchOnlyAddress';
@@ -33,7 +33,7 @@ import VerifyMessage from './pages/VerifyMessage';
 export default {
   name: 'MoreActions',
   components: {
-    PageTitle,
+    homeHeader,
     getStarted,
     WatchOnlyAddress,
     ConvertUnits,

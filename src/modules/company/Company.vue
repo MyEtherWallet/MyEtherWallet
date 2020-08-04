@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageTitle title="About us - Company" />
+    <home-header title="About us - Company" />
     <div class="py-9" />
     <WhatIsMew />
     <div class="py-7" />
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import PageTitle from '@/components/PageTitle';
+import homeHeader from '@/components/home-header';
 import partners from '@/components/partners';
 import join from '@/components/join';
 import WhatIsMew from './components/WhatIsMew';
@@ -25,7 +25,7 @@ import TwoBlockContent from './components/TwoBlockContent';
 
 export default {
   components: {
-    PageTitle,
+    homeHeader,
     partners,
     join,
     WhatIsMew,

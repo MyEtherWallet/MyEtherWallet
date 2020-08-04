@@ -16,7 +16,7 @@ import LandingPageView from '@/views/LandingPageView';
 
 // import AccessWalletMobileApps from '@/views/AccessWalletView/containers/MobileApps';
 
-import HowItWorks from '@/views/LandingPageView/HowItWorks';
+import HowItWorks from '@/modules/how-it-works';
 import BuyHardwareWallet from '@/views/LandingPageView/BuyHardwareWallet';
 
 // import Wallet from '@/views/WalletView';
@@ -27,7 +27,7 @@ import BuyHardwareWallet from '@/views/LandingPageView/BuyHardwareWallet';
 // import SendOffline from '@/containers/SendContainer/SendOffline';
 // import NFTManager from '@/containers/SendContainer/NFTManager';
 
-import Swap from '@/containers/SwapContainer';
+// import Swap from '@/containers/SwapContainer';
 
 // import Dapps from '@/containers/DappsContainer';
 // import DappsCenter from '@/containers/DappsContainer/DappsCenter';
@@ -39,11 +39,12 @@ import Swap from '@/containers/SwapContainer';
 // import Ambrpay from '@/containers/DappsContainer/Ambrpay';
 // import UnstoppableDomain from '@/containers/DappsContainer/UnstoppableDomain';
 
-import Contract from '@/containers/ContractContainer';
-import DeployContract from '@/containers/ContractContainer/DeployContract';
-import InteractWithContract from '@/containers/ContractContainer/InteractWithContract';
+// import Contract from '@/containers/ContractContainer';
+// import DeployContract from '@/containers/ContractContainer/DeployContract';
+// import InteractWithContract from '@/containers/ContractContainer/InteractWithContract';
 
-import SignMessage from '@/containers/SignMessageContainer';
+// import SignMessage from '@/containers/SignMessageContainer';
+import WalletRoutes from '@/modules/wallets/routes.js';
 
 const routes = [
   {
@@ -159,174 +160,7 @@ const routes = [
       // }
     ]
   },
-  // {
-  //   path: '/wallet',
-  //   name: 'Wallet',
-  //   component: Wallet,
-  //   meta: {
-  //     requiresAuth: false
-  //   },
-  //   children: [
-  //     {
-  //       path: 'dashboard',
-  //       name: 'Dashboard',
-  //       component: Dashboard,
-  //       meta: {
-  //         requiresAuth: false
-  //       }
-  //     },
-      // {
-      //   path: 'send',
-      //   name: 'Send',
-      //   component: Send,
-      //   meta: {
-      //     requiresAuth: false
-      //   },
-      //   children: [
-      //     {
-      //       path: 'sendtx',
-      //       name: 'SendTX',
-      //       component: SendTX,
-      //       meta: {
-      //         requiresAuth: false
-      //       }
-      //     },
-      //     {
-      //       path: 'send-offline',
-      //       name: 'SendOffline',
-      //       component: SendOffline,
-      //       meta: {
-      //         requiresAuth: false
-      //       }
-      //     },
-      //     {
-      //       path: 'nft-manager',
-      //       name: 'NFTManager',
-      //       component: NFTManager,
-      //       meta: {
-      //         requiresAuth: false
-      //       }
-      //     }
-      //   ]
-      // }
-      // {
-      //   path: 'swap',
-      //   name: 'Swap',
-      //   component: Swap,
-      //   meta: {
-      //     requiresAuth: false
-      //   }
-      // },
-      // {
-      //   path: 'dapps',
-      //   name: 'Dapps',
-      //   component: Dapps,
-      //   meta: {
-      //     requiresAuth: false
-      //   },
-      //   children: [
-      //     {
-      //       path: 'dapps-center',
-      //       name: 'DappsCenter',
-      //       component: DappsCenter,
-      //       meta: {
-      //         requiresAuth: false
-      //       }
-      //     },
-      //     {
-      //       path: 'trending',
-      //       name: 'Trending',
-      //       component: Trending,
-      //       meta: {
-      //         requiresAuth: false
-      //       }
-      //     },
-      //     {
-      //       path: 'new-dapps',
-      //       name: 'NewDapps',
-      //       component: NewDapps,
-      //       meta: {
-      //         requiresAuth: false
-      //       }
-      //     },
-      //     {
-      //       path: 'ens-manager',
-      //       name: 'ENSManager',
-      //       component: ENSManager,
-      //       meta: {
-      //         requiresAuth: false
-      //       }
-      //     },
-      //     {
-      //       path: 'maker-dao',
-      //       name: 'MakerDAO',
-      //       component: MakerDAO,
-      //       meta: {
-      //         requiresAuth: false
-      //       }
-      //     },
-      //     {
-      //       path: 'aave',
-      //       name: 'Aave',
-      //       component: Aave,
-      //       meta: {
-      //         requiresAuth: false
-      //       }
-      //     },
-      //     {
-      //       path: 'ambrpay',
-      //       name: 'Ambrpay',
-      //       component: Ambrpay,
-      //       meta: {
-      //         requiresAuth: false
-      //       }
-      //     },
-      //     {
-      //       path: 'unstoppable-domain',
-      //       name: 'UnstoppableDomain',
-      //       component: UnstoppableDomain,
-      //       meta: {
-      //         requiresAuth: false
-      //       }
-      //     }
-      //   ]
-      // },
-  //     {
-  //       path: 'contract',
-  //       name: 'Contract',
-  //       component: Contract,
-  //       meta: {
-  //         requiresAuth: false
-  //       },
-  //       children: [
-  //         {
-  //           path: 'deploy',
-  //           name: 'DeployContract',
-  //           component: DeployContract,
-  //           meta: {
-  //             requiresAuth: false
-  //           }
-  //         },
-  //         {
-  //           path: 'interact',
-  //           name: 'InteractWithContract',
-  //           component: InteractWithContract,
-  //           meta: {
-  //             requiresAuth: false
-  //           }
-  //         }
-  //       ]
-  //     },
-  //     {
-  //       path: 'sign',
-  //       name: 'SignMessage',
-  //       component: SignMessage,
-  //       meta: {
-  //         requiresAuth: false
-  //       }
-  //     }
-  //   ]
-  // }
+  WalletRoutes
 ];
 
 export default routes;
