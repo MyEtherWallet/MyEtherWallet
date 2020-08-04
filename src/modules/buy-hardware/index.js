@@ -1,1 +1,1 @@
-export { default } from './BuyHardwareWallet';
+export { default } from './buy-hardware';
