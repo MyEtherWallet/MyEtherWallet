@@ -1,6 +1,6 @@
 <template>
   <div class="bg_blue">
-    <BlockTitle :data="titleData">
+    <block-title :data="titleData">
       <h5 class="white--text ma-0">
         Please select a method to create a new wallet.
       </h5>
@@ -13,7 +13,7 @@
           Access my wallet
         </router-link>
       </h5>
-    </BlockTitle>
+    </block-title>
 
     <v-sheet color="transparent" max-width="650px" class="mx-auto">
       <div class="mb-5">
@@ -73,7 +73,7 @@
       toast-type="info"
     />
 
-    <Software :open="showSoftware" />
+    <software :open="showSoftware" />
   </div>
 </template>
 
@@ -83,7 +83,7 @@ import Software from './Software';
 
 export default {
   name: 'CreateNewWallet',
-  components: { BlockTitle, Software },
+  components: { 'block-title': BlockTitle, software: Software },
   data: () => ({
     toastLink: {
       title: 'Buy a hardware wallet',

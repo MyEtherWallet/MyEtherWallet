@@ -5,16 +5,15 @@ import ToolsPage from '@/modules/tools';
 
 import LandingPageView from '@/views/LandingPageView';
 
-import CreateWallet from '@/modules/wallets/components/create';
+import CreateWallet from '@/modules/wallets/pages/create';
 
-import AccessWalletView from '@/views/AccessWalletView';
-import AccessWalletHardwareWallets from '@/views/AccessWalletView/containers/HardwareWallets';
+import AccessWalletView from '@/modules/wallets/pages/access';
+import AccessWalletHardwareWallets from '@/modules/wallets/pages/access/HardwareWallets';
+import AccessWalletMobileApps from '@/modules/wallets/pages/access/MobileApps';
+import AccessWalletBrowserExtension from '@/modules/wallets/pages/access/BrowserExtension';
 
-import AccessWalletBrowserExtension from '@/views/AccessWalletView/containers/BrowserExtension';
-import AccessWalletBrowserExtensionInstall from '@/views/AccessWalletView/containers/BrowserExtension/container/InstallExtension';
-import AccessWalletBrowserExtensionAccess from '@/views/AccessWalletView/containers/BrowserExtension/container/AccessExtension';
-
-import AccessWalletMobileApps from '@/views/AccessWalletView/containers/MobileApps';
+import AccessWalletBrowserExtensionInstall from '@/modules/wallets/components/InstallExtension';
+import AccessWalletBrowserExtensionAccess from '@/modules/wallets/components/AccessExtension';
 
 import HowItWorks from '@/views/LandingPageView/HowItWorks';
 import BuyHardwareWallet from '@/views/LandingPageView/BuyHardwareWallet';
