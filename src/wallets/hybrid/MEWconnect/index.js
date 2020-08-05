@@ -13,7 +13,6 @@ import errorHandler from './errorHandler';
 import commonGenerator from '@/helpers/commonGenerator';
 import { Misc } from '@/helpers';
 import HybridWalletInterface from '../walletInterface';
-import uuid from 'uuid/v4';
 
 
 const V1_SIGNAL_URL = 'https://connect.mewapi.io';
