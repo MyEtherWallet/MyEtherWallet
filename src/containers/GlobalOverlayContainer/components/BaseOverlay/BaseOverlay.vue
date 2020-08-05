@@ -19,12 +19,7 @@
 </template>
 
 <script>
-// TODO: use buttons from mew components
-// import CloseButton from '@/components/Buttons/CloseButton';
-// import BackButton from '@/components/Buttons/BackButton';
-
 export default {
-  // components: { CloseButton, BackButton },
   props: {
     back: { default: false, type: Boolean },
     closeText: { default: 'Close', type: String },

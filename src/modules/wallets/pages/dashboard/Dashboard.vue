@@ -78,7 +78,7 @@
             </v-col>
           </v-row>
         </mew6-white-sheet>
-        <spacer />
+        <div class="pa-4"></div>
         <div id="id-4e910eeead37ba158dafdbd93bb1d543">
           <mew6-white-sheet class="position--relative">
             <div
@@ -121,7 +121,7 @@
             </v-sheet>
           </mew6-white-sheet>
         </div>
-        <spacer />
+        <div class="pa-4"></div>
         <mew6-white-sheet>
           <div class="d-flex align-center">
             <mew-module
@@ -148,7 +148,7 @@
             :table-data="tableData"
           />
         </mew6-white-sheet>
-        <spacer />
+        <div class="pa-4"></div>
         <div id="id-3c6d3124fa862b83b5d03c21da68c074">
           <mew6-white-sheet class="position--relative">
             <div
@@ -175,12 +175,12 @@
           </mew6-white-sheet>
         </div>
       </div>
-      <spacer />
+      <div class="pa-4"></div>
       <div>
         <network />
-        <spacer />
+        <div class="pa-4"></div>
         <swap />
-        <spacer />
+        <div class="pa-4"></div>
         <banner-ads />
       </div>
     </div>
@@ -188,7 +188,6 @@
 </template>
 
 <script>
-import spacer from '@/components/spacer';
 import network from '@/modules/wallets/components/network';
 import swap from '@/modules/wallets/components/swap';
 import bannerAds from '@/modules/wallets/components/banner-ads';
@@ -199,7 +198,6 @@ export default {
   components: {
     chart,
     swap,
-    spacer,
     network,
     bannerAds
   },

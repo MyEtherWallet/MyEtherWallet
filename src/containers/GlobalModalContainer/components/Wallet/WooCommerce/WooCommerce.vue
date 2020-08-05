@@ -80,7 +80,7 @@ export default {
     },
     dialog(val) {
       if (val == false) {
-        this.$store.commit('closeModal', 'walletWooCommerce');
+        return;
       }
     }
   }

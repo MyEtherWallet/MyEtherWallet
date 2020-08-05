@@ -31,7 +31,7 @@
           </interface-wrap>
         </mew6-white-sheet>
       </div>
-      <spacer />
+      <div class="pa-4"></div>
       <div>
         <tips />
       </div>
@@ -40,13 +40,11 @@
 </template>
 
 <script>
-import Spacer from '@/components/spacer';
 import tips from '@/modules/wallets/components/tips';
 import InterfaceWrap from '@/components/interface-wrap';
 
 export default {
   components: {
-    spacer: Spacer,
     tips,
     'interface-wrap': InterfaceWrap
   },
