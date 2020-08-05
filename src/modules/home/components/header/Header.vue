@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import homeMenu from './components/menu';
+import homeMenu from '../menu';
 
 export default {
   name: 'Header',

@@ -64,7 +64,7 @@
     <v-expansion-panels v-model="panel" multiple flat>
       <v-expansion-panel>
         <v-expansion-panel-content>
-          <table />
+          <tool-table />
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -72,12 +72,10 @@
 </template>
 
 <script>
-// TO DO: add mew component
-// import CopyButton from '@/components/Buttons/CopyButton';
-import table from '../table';
+import toolTable from '../table';
 
 export default {
-  components: { table },
+  components: { toolTable },
   data: () => ({ panel: [0] }),
   methods: {
     openPanel() {

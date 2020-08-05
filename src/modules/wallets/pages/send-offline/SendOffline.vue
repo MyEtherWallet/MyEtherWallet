@@ -80,7 +80,6 @@
 </template>
 
 <script>
-
 import network from '@/modules/wallets/components/network';
 import swap from '@/modules/wallets/components/swap';
 import interfaceWrap from '@/components/interface-wrap';

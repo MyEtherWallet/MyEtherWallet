@@ -18,31 +18,6 @@ import AccessWalletBrowserExtensionAccess from '@/modules/wallets/components/acc
 import HowItWorks from '@/modules/how-it-works';
 import BuyHardwareWallet from '@/modules/hardware';
 
-// import Wallet from '@/views/WalletView';
-// import Dashboard from '@/views/DashboardView';
-
-// import Send from '@/containers/SendContainer';
-// import SendTX from '@/containers/SendContainer/SendTx';
-// import SendOffline from '@/containers/SendContainer/SendOffline';
-// import NFTManager from '@/containers/SendContainer/NFTManager';
-
-// import Swap from '@/containers/SwapContainer';
-
-// import Dapps from '@/containers/DappsContainer';
-// import DappsCenter from '@/containers/DappsContainer/DappsCenter';
-// import Trending from '@/containers/DappsContainer/Trending';
-// import NewDapps from '@/containers/DappsContainer/NewDapps';
-// import ENSManager from '@/containers/DappsContainer/ENSManager';
-// import MakerDAO from '@/containers/DappsContainer/MakerDAO';
-// import Aave from '@/containers/DappsContainer/Aave';
-// import Ambrpay from '@/containers/DappsContainer/Ambrpay';
-// import UnstoppableDomain from '@/containers/DappsContainer/UnstoppableDomain';
-
-// import Contract from '@/containers/ContractContainer';
-// import DeployContract from '@/containers/ContractContainer/DeployContract';
-// import InteractWithContract from '@/containers/ContractContainer/InteractWithContract';
-
-// import SignMessage from '@/containers/SignMessageContainer';
 import WalletRoutes from '@/modules/wallets/routes.js';
 
 const routes = [

@@ -20,10 +20,7 @@
 </template>
 
 <script>
-import BlockTitle from './components/BlockTitle2';
-
 export default {
-  components: { BlockTitle },
   data() {
     return {};
   }

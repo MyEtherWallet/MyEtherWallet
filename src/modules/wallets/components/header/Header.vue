@@ -13,7 +13,7 @@
     </div>
     <div class="ml-auto d-flex align-center">
       <div class="mr-4">
-        <mew-wallet-status>
+        <mew-wallet-status-popup>
           <div class="d-flex align-center cursor--pointer">
             <img src="@/assets/images/icons/icon-mew-connect.svg" />
             <div class="mew-connect-text ml-1">
@@ -21,7 +21,7 @@
               <div>Connected...</div>
             </div>
           </div>
-        </mew-wallet-status>
+        </mew-wallet-status-popup>
       </div>
       <div class="position--relative">
         <notification-overlay
@@ -43,13 +43,13 @@
 </template>
 
 <script>
-import mewWalletStatus from '@/modules/wallets/components/popups/mew-wallet-status';
-import notificationOverlay from './components/notifications';
+import mewWalletStatusPopup from '../mew-wallet-status-popup';
+import notificationOverlay from '../notifications';
 
 export default {
   components: {
     notificationOverlay,
-    mewWalletStatus
+    mewWalletStatusPopup
   },
   data: () => {
     return { openNotifications: false };

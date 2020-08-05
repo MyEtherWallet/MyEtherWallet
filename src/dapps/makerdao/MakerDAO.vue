@@ -139,7 +139,6 @@
 </template>
 
 <script>
-import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import staticData from './staticData.js';
 export default {
   data() {

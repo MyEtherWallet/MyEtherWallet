@@ -21,11 +21,7 @@
     <div>
       <mew-tabs :items="tabs" class="pt-5 ml-5">
         <template v-slot:tabContent1>
-          <v-sheet
-            max-width="700px"
-            color="mewBg"
-            class="py-12 mx-auto"
-          >
+          <v-sheet max-width="700px" color="mewBg" class="py-12 mx-auto">
             <div class="tab-width">
               <div class="mb-5">
                 <div class="mew-heading-2 mb-8">
