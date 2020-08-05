@@ -192,10 +192,10 @@
 </template>
 
 <script>
-import Spacer from '@/components/Common/Spacer';
+import Spacer from '@/components/spacer';
 import Network from '@/components/Network';
 import Swap from '@/components/Swap';
-import BannerAds from '@/components/BannerAds';
+import bannerAds from '@/modules/wallets/components/banner-ads';
 import staticData from './staticData.js';
 
 export default {
@@ -203,10 +203,10 @@ export default {
     spacer: Spacer,
     network: Network,
     swap: Swap,
-    'banner-ads': BannerAds
+    bannerAds
   },
   data() {
-    // return staticData;
+    return staticData;
   }
 };
 </script>

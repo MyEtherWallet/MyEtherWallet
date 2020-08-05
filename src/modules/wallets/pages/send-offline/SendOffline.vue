@@ -80,13 +80,13 @@
 </template>
 
 <script>
-import Spacer from '@/components/Common/Spacer';
+import Spacer from '@/components/spacer';
 
 import Network from '@/components/Network';
 import Swap from '@/components/Swap';
-import InterfaceWrap from '@/components/InterfaceWraps/InterfaceWrap1';
+import InterfaceWrap from '@/components/interface-wrap';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';
-import Divider from '@/components/DividerX';
+import Divider from '@/components/dividerx';
 
 export default {
   components: {

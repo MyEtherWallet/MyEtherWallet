@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import BlockTitle from '@/components/BlockTitle';
+import BlockTitle from '@/components/block-title';
 
 export default {
   components: { BlockTitle },

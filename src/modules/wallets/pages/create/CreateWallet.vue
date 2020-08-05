@@ -78,8 +78,8 @@
 </template>
 
 <script>
-import BlockTitle from '@/components/BlockTitle';
-import Software from './Software';
+import BlockTitle from '@/components/block-title';
+import Software from './software';
 
 export default {
   name: 'CreateNewWallet',

@@ -1,11 +1,11 @@
 <template>
   <div>
-    <DropdownSelect
+    <!-- <DropdownSelect
       v-model="network"
       label="Network"
       placeholder="Select a network"
       :items="networks"
-    />
+    /> -->
     <mew-input label="ETH Node Name" placeholder="Type node name" />
     <mew-input label="URL" placeholder="Type URL" />
     <mew-input label="Port" placeholder="Type port number" />
@@ -29,10 +29,11 @@
 </template>
 
 <script>
-import DropdownSelect from '@/components/Inputs/DropdownSelect';
+// TODO: add mew select
+// import DropdownSelect from '@/components/Inputs/DropdownSelect';
 
 export default {
-  components: { DropdownSelect },
+  // components: { DropdownSelect },
   data() {
     return {
       exPannel: [

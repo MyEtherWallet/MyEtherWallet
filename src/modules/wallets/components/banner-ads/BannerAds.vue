@@ -2,23 +2,22 @@
   <mew-carousel carousel-height="145" :total-slides="2">
     <template v-slot:slide1>
       <mew6-white-sheet class="banner">
-        <Ad1 />
+        <ad title="MEWwallet" />
       </mew6-white-sheet>
     </template>
     <template v-slot:slide2>
       <mew6-white-sheet class="banner">
-        <Ad2 />
+        <ad title="MEWconnect" />
       </mew6-white-sheet>
     </template>
   </mew-carousel>
 </template>
 
 <script>
-import Ad1 from './components/Ad1';
-import Ad2 from './components/Ad2';
+import ad from './components/ad';
 
 export default {
-  components: { Ad1, Ad2 }
+  components: { ad }
 };
 </script>
 

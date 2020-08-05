@@ -161,12 +161,10 @@
 </template>
 
 <script>
-import Blockie from '@/components/Blockie';
 import VueQrcode from '@xkeshi/vue-qrcode';
 
 export default {
   components: {
-    Blockie,
     VueQrcode
   },
   props: {

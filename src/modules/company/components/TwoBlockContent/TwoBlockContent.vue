@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import BlockTitle from '@/components/BlockTitle';
+import BlockTitle from '@/components/block-title';
 import Telegram from '@/assets/images/icons/icon-telegram-dark.svg';
 import Slack from '@/assets/images/icons/icon-slack-dark.svg';
 import Reddit from '@/assets/images/icons/icon-reddit-dark.svg';

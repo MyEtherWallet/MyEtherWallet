@@ -1,1 +1,1 @@
-export { default } from './get-started';
+export { default } from './GetStarted';

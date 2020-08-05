@@ -26,7 +26,7 @@ import AccordionMenu from './components/AccordionMenu';
 import SystemMenu from './components/SystemMenu';
 import ThemeSwitch from './components/ThemeSwitch';
 import Version from './components/Version';
-import Divider from './components/Divider';
+import Divider from './components/divider';
 
 export default {
   components: {

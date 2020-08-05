@@ -14,7 +14,7 @@
       </template>
       <template v-slot:item.change="{ item }"> {{ item.change }}% </template>
       <template v-slot:item.chart="{ item }">
-        <ChartTiny
+        <charts
           class="ml-n2 mr-2"
           :data="item.chart"
           :linecolor="
@@ -29,9 +29,9 @@
 </template>
 
 <script>
-import ChartTiny from '@/components/Charts/Tiny';
+import charts from '../charts';
 export default {
-  components: { ChartTiny },
+  components: { charts },
   data: () => ({
     headers: [
       {

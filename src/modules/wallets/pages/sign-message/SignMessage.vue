@@ -40,9 +40,9 @@
 </template>
 
 <script>
-import Spacer from '@/components/Common/Spacer';
+import Spacer from '@/components/spacer';
 import Tips from '@/components/Tips';
-import InterfaceWrap from '@/components/InterfaceWraps/InterfaceWrap1';
+import InterfaceWrap from '@/components/interface-wrap';
 
 export default {
   components: {

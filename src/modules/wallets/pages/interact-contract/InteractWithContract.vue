@@ -49,8 +49,8 @@
 </template>
 
 <script>
-import Spacer from '@/components/Common/Spacer';
-import InterfaceWrap from '@/components/InterfaceWraps/InterfaceWrap1';
+import Spacer from '@/components/spacer';
+import InterfaceWrap from '@/components/interface-wrap';
 
 import Network from '@/components/Network';
 import Swap from '@/components/Swap';

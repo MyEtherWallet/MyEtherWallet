@@ -1,1 +1,1 @@
-export { default } from './send';
+export { default } from './Send';

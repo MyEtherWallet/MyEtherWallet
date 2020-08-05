@@ -11,10 +11,10 @@
         <div class="font-weight-medium">Elmo's wallet 04</div>
         <div class="d-flex align-center">
           <div class="monospace">0x98d9964e1764654d…7</div>
-          <CopyButton
+          <!-- <CopyButton
             color="white"
             text="0x98d9964e1764654dtrhtrggfrv3049t04i"
-          />
+          /> -->
         </div>
       </div>
       <div class="ml-auto">
@@ -64,7 +64,7 @@
     <v-expansion-panels v-model="panel" multiple flat>
       <v-expansion-panel>
         <v-expansion-panel-content>
-          <Table />
+          <table />
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -72,11 +72,12 @@
 </template>
 
 <script>
-import CopyButton from '@/components/Buttons/CopyButton';
-import Table from '../Table';
+// TO DO: add mew component
+// import CopyButton from '@/components/Buttons/CopyButton';
+import table from '../table';
 
 export default {
-  components: { CopyButton, Table },
+  components: { table },
   data: () => ({ panel: [0] }),
   methods: {
     openPanel() {

@@ -17,8 +17,8 @@ import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
 import vuetify from '@/plugins/vuetify';
 
-import WhiteSheet from '@/components/Common/WhiteSheet';
-Vue.component('mew6-white-sheet', WhiteSheet);
+import whiteSheet from '@/components/white-sheet';
+Vue.component('mew6-white-sheet', whiteSheet);
 
 // Local copy of MEW6 components. (development only)
 //import mewButton from '@/mewComponents/MewButton/MewButton';
