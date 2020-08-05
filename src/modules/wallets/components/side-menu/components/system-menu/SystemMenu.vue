@@ -45,15 +45,15 @@
       :button-right="logout.btnRight"
       popup-type="confirm"
     ></mew-popup>
-    <Settings :open="openSettings" :close="closeSettings" />
+    <settings :open="openSettings" :close="closeSettings" />
   </div>
 </template>
 
 <script>
-import Settings from './Settings';
+import settings from '../settings';
 
 export default {
-  components: { Settings },
+  components: { settings },
   data() {
     return {
       logoutOpen: false,

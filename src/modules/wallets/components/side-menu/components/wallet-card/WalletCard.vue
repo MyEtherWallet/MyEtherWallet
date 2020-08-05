@@ -14,26 +14,26 @@
             height="50px"
             class="blockie-image"
           />
-          <QRcodePopup
+          <qr-code-popup
             title="Address QR Code"
             value="0x85b74f0ad686252a817c1a7fd70b600c098dc38c"
           >
             <img src="@/assets/images/icons/icon-qr-code-mew.svg" />
-          </QRcodePopup>
+          </qr-code-popup>
         </div>
         <div class="ml-4">
           <div class="mb-n2 mt-n2 font-weight-medium d-flex align-center">
             <div>Dennis wallet</div>
-            <Tooltip text="Change your wallet information">
+            <!-- <Tooltip text="Change your wallet information">
               <v-btn class="ml-n1" text icon :color="iconColor"
                 ><v-icon class="color--white body-1">mdi-pencil</v-icon></v-btn
               >
-            </Tooltip>
+            </Tooltip> -->
           </div>
           <div class="headline font-weight-bold monospace">$7,244.58</div>
         </div>
       </div>
-      <Address class="mt-1 mb-2" :address="address" />
+      <my-address class="mt-1 mb-2" :address="address" />
       <div class="d-flex align-center">
         <!-- <Tooltip text="Print">
           <v-btn text icon :color="iconColor" @click="openPaperWallet = true">
@@ -58,25 +58,25 @@
         />
       </div>
     </div>
-    <ChangeAddress :open="openChangeAddress" :close="closeChangeAddress" />
-    <PaperWallet :open="openPaperWallet" :close="closePaperWallet" />
+    <change-address :open="openChangeAddress" :close="closeChangeAddress" />
+    <paper-wallet :open="openPaperWallet" :close="closePaperWallet" />
   </div>
 </template>
 
 <script>
-import ChangeAddress from './ChangeAddress';
-import PaperWallet from './PaperWallet';
-import Address from './components/Address';
+import changeAddress from '../change-address';
+import paperWallet from '../paper-wallet';
+import myAddress from './components/address';
 // import Tooltip from '@/components/Tooltip';
-import QRcodePopup from '@/modules/wallets/components/popups/QRcodePopup';
+import qrCodePopup from '@/modules/wallets/components/popups/qr-code-popup';
 
 export default {
   components: {
     // Tooltip,
-    Address,
-    ChangeAddress,
-    PaperWallet,
-    QRcodePopup
+    myAddress,
+    changeAddress,
+    paperWallet,
+    qrCodePopup
   },
   data() {
     return {

@@ -1,7 +1,13 @@
 <template>
   <mew6-white-sheet sideinfo class="px-7 py-5">
     <div>
-      <BlockTitle text="Tips" />
+      <div class="d-flex align-center justify-space-between width--100-percent">
+        <div class="d-flex align-center">
+          <div v-if="text" class="title font-weight-bold mr-2">Tips</div>
+          <slot name="object-next-to-title" />
+        </div>
+        <slot name="right-button" />
+      </div>
       <div class="mt-3">
         <div>
           Include your nickname and where you use the nickname so someone else

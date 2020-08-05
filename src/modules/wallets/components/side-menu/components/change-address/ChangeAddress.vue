@@ -32,7 +32,7 @@
           </mew6-white-sheet>
         </template>
         <template v-slot:tabContent2>
-          <AddressSelection />
+          <address-select />
           <div class="pa-8">
             <div class="text-center">
               <mew-button title="Access My Wallet" button-size="xlarge" />
@@ -45,11 +45,11 @@
 </template>
 
 <script>
-import AddressSelection from './components/AddressSelection';
+import addressSelect from './components/address-select';
 
 export default {
   components: {
-    AddressSelection
+    addressSelect
   },
   props: {
     open: { default: false, type: Boolean },

@@ -8,11 +8,11 @@ import Navigation from '@/modules/home/pages/navigation';
 import CreateWallet from '@/modules/wallets/pages/create';
 
 import AccessWalletView from '@/modules/wallets/pages/access';
-import AccessWalletHardwareWallets from '@/modules/wallets/pages/access/HardwareWallets';
-import AccessWalletMobileApps from '@/modules/wallets/pages/access/MobileApps';
-import AccessWalletBrowserExtension from '@/modules/wallets/pages/access/BrowserExtension';
+import AccessWalletHardwareWallets from '@/modules/wallets/pages/access/hardware-wallets';
+import AccessWalletMobileApps from '@/modules/wallets/pages/access/mobile-apps';
+import AccessWalletBrowserExtension from '@/modules/wallets/pages/access/browser-extension';
 
-import AccessWalletBrowserExtensionInstall from '@/modules/wallets/components/InstallExtension';
+import AccessWalletBrowserExtensionInstall from '@/modules/wallets/components/install-extension';
 import AccessWalletBrowserExtensionAccess from '@/modules/wallets/components/access-extension';
 
 import HowItWorks from '@/modules/how-it-works';
@@ -22,7 +22,7 @@ import BuyHardwareWallet from '@/modules/hardware';
 // import Dashboard from '@/views/DashboardView';
 
 // import Send from '@/containers/SendContainer';
-// import SendTX from '@/containers/SendContainer/SendTX';
+// import SendTX from '@/containers/SendContainer/SendTx';
 // import SendOffline from '@/containers/SendContainer/SendOffline';
 // import NFTManager from '@/containers/SendContainer/NFTManager';
 

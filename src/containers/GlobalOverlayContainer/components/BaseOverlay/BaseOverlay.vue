@@ -7,10 +7,10 @@
     class="theme--light-text--dark-space"
   >
     <div v-if="back" class="overlay-back-button">
-      <BackButton text="Back" />
+      <!-- <BackButton text="Back" /> -->
     </div>
     <div v-if="canClose" class="overlay-close-button">
-      <CloseButton :text="closeText" @click.native="close" />
+      <!-- <CloseButton :text="closeText" @click.native="close" /> -->
     </div>
     <div class="overlay-content-block d-flex flex-column align-center py-10">
       <slot />
@@ -19,11 +19,12 @@
 </template>
 
 <script>
-import CloseButton from '@/components/Buttons/CloseButton';
-import BackButton from '@/components/Buttons/BackButton';
+// TODO: use buttons from mew components
+// import CloseButton from '@/components/Buttons/CloseButton';
+// import BackButton from '@/components/Buttons/BackButton';
 
 export default {
-  components: { CloseButton, BackButton },
+  // components: { CloseButton, BackButton },
   props: {
     back: { default: false, type: Boolean },
     closeText: { default: 'Close', type: String },

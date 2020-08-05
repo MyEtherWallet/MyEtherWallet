@@ -136,7 +136,7 @@
 <script>
 import Spacer from '@/components/spacer';
 
-import Network from '.@/modules/wallets/components/network';
+import Network from '@/modules/wallets/components/network';
 import Swap from '@/modules/wallets/components/swap';
 
 import InterfaceWrap from '@/components/interface-wrap';
