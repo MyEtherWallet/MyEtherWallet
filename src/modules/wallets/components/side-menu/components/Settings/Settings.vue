@@ -8,16 +8,16 @@
     <template v-slot:mewOverlayBody>
       <mew-expand-panel :panel-items="panelItems">
         <template v-slot:panelBody1>
-          <GasPrice />
+          <gas-price />
         </template>
         <template v-slot:panelBody2>
-          <ImportConfig />
+          <import-config />
         </template>
         <template v-slot:panelBody3>
-          <ExportConfig />
+          <export-config />
         </template>
         <template v-slot:panelBody4>
-          <Notifications />
+          <notifications />
         </template>
       </mew-expand-panel>
     </template>
@@ -25,17 +25,17 @@
 </template>
 
 <script>
-import ImportConfig from './components/ImportConfig';
-import ExportConfig from './components/ExportConfig';
-import Notifications from './components/Notifications';
-import GasPrice from './components/GasPrice';
+import importConfig from './components/import-config';
+import exportConfig from './components/export-config';
+import notifications from './components/notifications';
+import gasPrice from './components/gas-price';
 
 export default {
   components: {
-    ImportConfig,
-    ExportConfig,
-    Notifications,
-    GasPrice
+    importConfig,
+    exportConfig,
+    notifications,
+    gasPrice
   },
   props: {
     open: { default: false, type: Boolean }

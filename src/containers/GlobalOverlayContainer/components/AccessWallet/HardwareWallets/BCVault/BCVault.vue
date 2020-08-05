@@ -41,12 +41,13 @@
 </template>
 
 <script>
-import GroupRadioButtons from '@/components/Buttons/GroupRadioButtons';
+// TODO: add component in mew components
+// import GroupRadioButtons from '@/components/Buttons/GroupRadioButtons';
 import AddressTable from './components/AddressTable';
 
 export default {
   components: {
-    GroupRadioButtons,
+    // GroupRadioButtons,
 
     AddressTable
   },

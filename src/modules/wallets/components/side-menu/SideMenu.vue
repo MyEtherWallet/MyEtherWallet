@@ -8,34 +8,34 @@
         <img width="120" src="@/assets/images/icons/logo-mew.png" />
       </router-link>
     </div>
-    <WalletCard />
-    <BuyEthButton class="mt-2 mb-6" />
-    <AccordionMenu class="mt-4" />
+    <wallet-card />
+    <buy-eth-btn class="mt-2 mb-6" />
+    <accordion-menu class="mt-4" />
     <Divider class="my-5 mx-1" />
-    <SystemMenu />
+    <system-menu />
     <Divider class="my-5 mx-1" />
-    <ThemeSwitch class="px-5" />
-    <Version class="px-5" />
+    <theme-switch class="px-5" />
+    <version class="px-5" />
   </v-sheet>
 </template>
 
 <script>
-import WalletCard from './components/WalletCard';
-import BuyEthButton from './components/BuyEthButton';
-import AccordionMenu from './components/AccordionMenu';
-import SystemMenu from './components/SystemMenu';
-import ThemeSwitch from './components/ThemeSwitch';
-import Version from './components/Version';
+import walletCard from './components/wallet-card';
+import buyEthBtn from './components/buy-eth-btn';
+import accordionMenu from './components/menu';
+import systemMenu from './components/system-menu';
+import themeSwitch from './components/theme-switch';
+import version from './components/version';
 import Divider from './components/divider';
 
 export default {
   components: {
-    WalletCard,
-    BuyEthButton,
-    AccordionMenu,
-    SystemMenu,
-    ThemeSwitch,
-    Version,
+    walletCard,
+    buyEthBtn,
+    accordionMenu,
+    systemMenu,
+    themeSwitch,
+    version,
     Divider
   }
 };

@@ -1,1 +1,1 @@
-export { default } from './ChangeNetwork';
+export { default } from './Change';

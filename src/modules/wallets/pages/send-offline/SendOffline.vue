@@ -80,21 +80,21 @@
 </template>
 
 <script>
-import Spacer from '@/components/spacer';
+import spacer from '@/components/spacer';
 
-import Network from '.@/modules/wallets/components/network';
-import Swap from '@/modules/wallets/components/swap';
-import InterfaceWrap from '@/components/interface-wrap';
+import network from '@/modules/wallets/components/network';
+import swap from '@/modules/wallets/components/swap';
+import interfaceWrap from '@/components/interface-wrap';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';
-import Divider from '@/components/dividerx';
+import divider from '@/components/dividerx';
 
 export default {
   components: {
-    spacer: Spacer,
-    network: Network,
-    swap: Swap,
-    'interface-wrap': InterfaceWrap,
-    divider: Divider
+    spacer,
+    network,
+    swap,
+    interfaceWrap,
+    divider
   },
   data() {
     return {

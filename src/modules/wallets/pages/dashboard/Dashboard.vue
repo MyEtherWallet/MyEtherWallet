@@ -193,7 +193,7 @@
 
 <script>
 import Spacer from '@/components/spacer';
-import Network from '.@/modules/wallets/components/network';
+import Network from '@/modules/wallets/components/network';
 import swap from '@/modules/wallets/components/swap';
 import bannerAds from '@/modules/wallets/components/banner-ads';
 import staticData from './staticData.js';

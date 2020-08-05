@@ -1,6 +1,6 @@
 <template>
   <mew6-white-sheet sideinfo class="px-7 py-5 d-flex justify-space-between">
-    <ChangeNetworkOverlay
+    <change-network-overlay
       :open="openNetworkOverlay"
       :close="closeNetworkOverlay"
     />
@@ -27,10 +27,10 @@
 </template>
 
 <script>
-import ChangeNetworkOverlay from './change-network';
+import changeNetworkOverlay from '../change-network';
 
 export default {
-  components: { ChangeNetworkOverlay },
+  components: { changeNetworkOverlay },
   data() {
     return {
       openNetworkOverlay: false

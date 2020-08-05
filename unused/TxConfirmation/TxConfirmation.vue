@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import BaseOverlay from '../BaseOverlay';
+import BaseOverlay from '@/containers/GlobalOverlayContainer/components/BaseOverlay';
 import ConfirmTransaction from '@/components/WarningBlocks/ConfirmTransaction';
 import DividerX from '@/components/divider';
 import fromToBlock from '@/components/from-to-block';

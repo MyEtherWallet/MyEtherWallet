@@ -62,8 +62,8 @@
 </template>
 
 <script>
-import BaseOverlay from './BaseOverlay';
-import OverlayTabs from './OverlayTabs';
+import BaseOverlay from '@/containers/GlobalOverlayContainer/components/BaseOverlay';
+import OverlayTabs from '@/containers/GlobalOverlayContainer/components/OverlayTabs';
 
 export default {
   components: {

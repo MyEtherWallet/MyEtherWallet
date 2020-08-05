@@ -1,1 +1,1 @@
-export { default } from './TwoBlockContent';
+export { default } from './Community';
