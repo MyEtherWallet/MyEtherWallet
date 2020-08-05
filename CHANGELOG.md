@@ -4,7 +4,9 @@
 
 - Twitter popup [#2533](https://github.com/MyEtherWallet/MyEtherWallet/pull/2533)
 
+### Bug
 
+- FAQ bug fix [#2535](https://github.com/MyEtherWallet/MyEtherWallet/pull/2535)
 
 ### Release v5.7.3
 
