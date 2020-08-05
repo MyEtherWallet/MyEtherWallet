@@ -233,6 +233,15 @@ export default {
       position: fixed;
       right: 50px;
     }
+
+    .modal-contents {
+      display: block !important;
+      padding: 0 !important;
+      text-align: initial !important;
+      a {
+        margin-top: 0;
+      }
+    }
   }
 
   .modal-content {
@@ -240,7 +249,7 @@ export default {
   }
 
   .modal-body {
-    background-color: transparent;
+    background-color: white !important;
   }
 
   .decision-tree-search {
