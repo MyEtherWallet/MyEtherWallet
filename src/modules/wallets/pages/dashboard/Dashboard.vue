@@ -55,11 +55,7 @@
               </div>
             </div>
           </div>
-          <ChartBalance
-            :key="chartData.key"
-            :data="chartData.data"
-            class="mt-5"
-          />
+          <chart :key="chartData.key" :data="chartData.data" class="mt-5" />
           <v-row class="align-center">
             <v-col class="d-flex align-center justify-center">
               <div class="font-weight-bold">ETH PRICE</div>
@@ -192,17 +188,19 @@
 </template>
 
 <script>
-import Spacer from '@/components/spacer';
-import Network from '@/modules/wallets/components/network';
+import spacer from '@/components/spacer';
+import network from '@/modules/wallets/components/network';
 import swap from '@/modules/wallets/components/swap';
 import bannerAds from '@/modules/wallets/components/banner-ads';
 import staticData from './staticData.js';
+import chart from '@/modules/wallets/components/chart';
 
 export default {
   components: {
+    chart,
     swap,
-    spacer: Spacer,
-    network: Network,
+    spacer,
+    network,
     bannerAds
   },
   data() {
