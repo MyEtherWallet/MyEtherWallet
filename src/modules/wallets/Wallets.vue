@@ -19,21 +19,21 @@
 </template>
 
 <script>
-import SideMenu from './components/SideMenu';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import GlobalElementsContainer from '@/containers/GlobalElementsContainer';
-import GlobalModalContainer from '@/containers/GlobalModalContainer';
-import GlobalOverlayContainer from '@/containers/GlobalOverlayContainer';
+import sideMenu from './components/side-menu';
+import walletHeader from './components/header';
+import walletFooter from './components/footer';
+import globalElementsContainer from '@/containers/GlobalElementsContainer';
+import globalModalContainer from '@/containers/GlobalModalContainer';
+import globalOverlayContainer from '@/containers/GlobalOverlayContainer';
 
 export default {
   components: {
-    'wallet-header': Header,
-    'wallet-footer': Footer,
-    'side-menu': SideMenu,
-    'global-elements-container': GlobalElementsContainer,
-    'global-modal-container': GlobalModalContainer,
-    'global-overlay-container': GlobalOverlayContainer
+    walletFooter,
+    sideMenu,
+    walletHeader,
+    globalElementsContainer,
+    globalModalContainer,
+    globalOverlayContainer
   }
 };
 </script>

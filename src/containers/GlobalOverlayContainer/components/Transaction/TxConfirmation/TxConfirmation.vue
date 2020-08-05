@@ -3,7 +3,7 @@
     <OverlayTabs>
       <v-tabs v-model="activeTab" color="transparent">
         <v-tab-item>
-          <OverlayTitle title="Confirmation" />
+          <h2 class="text-center pb-8">Confirmation</h2>
           <mew6-white-sheet>
             <div class="overlay-content pa-8">
               <from-to-block
@@ -57,7 +57,7 @@
           </mew6-white-sheet>
         </v-tab-item>
         <v-tab-item>
-          <OverlayTitle title="2. Confirm network & address" />
+          <h2 class="text-center pb-8">2. Confirm network & address</h2>
           <div class="overlay-content">
             bbbbb
             <mew-button
@@ -73,16 +73,14 @@
 </template>
 
 <script>
-import BaseOverlay from '@/components/Overlays/BaseOverlay';
-import OverlayTitle from '@/components/OverlayTitle';
-import OverlayTabs from '@/components/OverlayTabs';
+import BaseOverlay from './BaseOverlay';
+import OverlayTabs from './OverlayTabs';
 import fromToBlock from '@/components/from-to-block';
 import balanceBlock from '@/components/balance-block';
 
 export default {
   components: {
     BaseOverlay,
-    OverlayTitle,
     OverlayTabs,
     fromToBlock,
     balanceBlock

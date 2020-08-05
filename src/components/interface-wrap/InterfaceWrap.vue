@@ -1,6 +1,8 @@
 <template>
   <div class="pt-8">
-    <BlockTitle class="mb-1" :text="title" />
+    <div class="left-border pl-7 headline font-weight-bold mb-1">
+      {{ title }}
+    </div>
     <div class="pa-10">
       <slot />
     </div>
@@ -8,9 +10,7 @@
 </template>
 
 <script>
-import BlockTitle from '@/components/BlockTitles/BlockTitle3';
 export default {
-  components: { BlockTitle },
   props: {
     title: { default: '', type: String }
   },
