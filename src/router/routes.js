@@ -13,7 +13,7 @@ import AccessWalletMobileApps from '@/modules/wallets/pages/access/MobileApps';
 import AccessWalletBrowserExtension from '@/modules/wallets/pages/access/BrowserExtension';
 
 import AccessWalletBrowserExtensionInstall from '@/modules/wallets/components/InstallExtension';
-import AccessWalletBrowserExtensionAccess from '@/modules/wallets/components/AccessExtension';
+import AccessWalletBrowserExtensionAccess from '@/modules/wallets/components/access-extension';
 
 import HowItWorks from '@/modules/how-it-works';
 import BuyHardwareWallet from '@/modules/hardware';

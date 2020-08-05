@@ -8,7 +8,7 @@
       <mew-tabs :items="tabs">
         <template v-slot:tabContent1>
           <div>
-            <OverlayTitle title="Select BitBox wallet" />
+            <h2 class="text-center pb-8">Select BitBox wallet</h2>
             <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
               <v-row>
                 <v-col
@@ -29,7 +29,7 @@
         </template>
         <template v-slot:tabContent2>
           <div>
-            <OverlayTitle title="1. Enter your password" />
+            <h2 class="text-center pb-8">1. Enter your password</h2>
             <mew6-white-sheet>
               <div class="overlay-content pa-8 text-center">
                 <div class="font-weight-bold mb-8">
@@ -54,7 +54,7 @@
         </template>
         <template v-slot:tabContent2>
           <div>
-            <OverlayTitle title="2. Confirm network & address" />
+            <h2 class="text-center pb-8">2. Confirm network & address</h2>
             <div class="overlay-content">
               <mew-expand-panel :panel-items="panelItems">
                 <template v-slot:panelBody1>
@@ -89,13 +89,11 @@
 
 <script>
 import GroupRadioButtons from '@/components/Buttons/GroupRadioButtons';
-import OverlayTitle from '@/components/OverlayTitle';
 import AddressTable from './components/AddressTable';
 
 export default {
   components: {
     GroupRadioButtons,
-    OverlayTitle,
     AddressTable
   },
   props: {

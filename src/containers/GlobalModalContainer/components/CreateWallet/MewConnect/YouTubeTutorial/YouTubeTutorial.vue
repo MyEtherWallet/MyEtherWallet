@@ -5,12 +5,12 @@
       width="650px"
       content-class="position--relative line-height--0 overflow--initial"
     >
-      <ModalCloseButton
+      <!-- <ModalCloseButton
         color="white"
         size="large"
         class="close-button"
         @click.native="dialog = false"
-      />
+      /> -->
 
       <iframe
         width="650"
@@ -25,10 +25,11 @@
 </template>
 
 <script>
-import ModalCloseButton from '@/components/Common/ModalCloseButton';
+// TODO: will make in mew components
+// import ModalCloseButton from '@/components/Common/ModalCloseButton';
 
 export default {
-  components: { ModalCloseButton },
+  // components: { ModalCloseButton },
   props: {
     active: { default: false, type: Boolean }
   },

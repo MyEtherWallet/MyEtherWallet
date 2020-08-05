@@ -4,16 +4,16 @@
     <v-container class="mt-8 mb-12">
       <mew-tabs :items="items">
         <template v-slot:tabItemContent0>
-          <WatchOnlyAddress />
+          <watch-only />
         </template>
         <template v-slot:tabItemContent1>
-          <ConvertUnits />
+          <convert />
         </template>
         <template v-slot:tabItemContent2>
-          <SendOfflineHelper />
+          <offline-helper />
         </template>
         <template v-slot:tabItemContent3>
-          <VerifyMessage />
+          <verify />
         </template>
       </mew-tabs>
     </v-container>
@@ -25,20 +25,20 @@
 import homeHeader from '@/components/home-header';
 import getStarted from '@/components/get-started';
 
-import WatchOnlyAddress from './pages/WatchOnlyAddress';
-import ConvertUnits from './pages/ConvertUnits';
-import SendOfflineHelper from './pages/SendOfflineHelper';
-import VerifyMessage from './pages/VerifyMessage';
+import watchOnly from './pages/watch-only';
+import convert from './pages/convert';
+import offlineHelper from './pages/offline-helper';
+import verify from './pages/verify';
 
 export default {
   name: 'MoreActions',
   components: {
     homeHeader,
     getStarted,
-    WatchOnlyAddress,
-    ConvertUnits,
-    SendOfflineHelper,
-    VerifyMessage
+    watchOnly,
+    convert,
+    offlineHelper,
+    verify
   },
   data: () => ({
     items: [

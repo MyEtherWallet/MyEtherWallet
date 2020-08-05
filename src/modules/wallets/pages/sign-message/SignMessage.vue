@@ -41,13 +41,13 @@
 
 <script>
 import Spacer from '@/components/spacer';
-import Tips from '@/components/Tips';
+import tips from '@/modules/wallets/components/tips';
 import InterfaceWrap from '@/components/interface-wrap';
 
 export default {
   components: {
     spacer: Spacer,
-    tips: Tips,
+    tips,
     'interface-wrap': InterfaceWrap
   },
   data() {

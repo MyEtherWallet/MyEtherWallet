@@ -2,11 +2,11 @@
   <div>
     <home-header title="About us - Company" />
     <div class="py-9" />
-    <WhatIsMew />
+    <what-is-mew />
     <div class="py-7" />
-    <OurStory />
+    <our-story />
     <div class="py-10" />
-    <TwoBlockContent />
+    <community />
     <div class="py-10" />
     <partners />
     <div class="py-9" />
@@ -19,18 +19,18 @@
 import homeHeader from '@/components/home-header';
 import partners from '@/components/partners';
 import join from '@/components/join';
-import WhatIsMew from './components/WhatIsMew';
-import OurStory from './components/OurStory';
-import TwoBlockContent from './components/TwoBlockContent';
+import whatIsMew from './components/what-is-mew';
+import ourStory from './components/our-story';
+import community from './components/community';
 
 export default {
   components: {
     homeHeader,
     partners,
     join,
-    WhatIsMew,
-    OurStory,
-    TwoBlockContent
+    whatIsMew,
+    ourStory,
+    community
   }
 };
 </script>

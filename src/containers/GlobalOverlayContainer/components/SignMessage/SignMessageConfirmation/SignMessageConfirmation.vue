@@ -3,7 +3,7 @@
     <OverlayTabs>
       <v-tabs v-model="activeTab" color="transparent">
         <v-tab-item>
-          <OverlayTitle title="Confirmation" />
+          <h2 class="text-center pb-8">Confirmation</h2>
           <mew6-white-sheet>
             <div class="overlay-content pa-8">
               <address-select
@@ -36,7 +36,7 @@
           </mew6-white-sheet>
         </v-tab-item>
         <v-tab-item>
-          <OverlayTitle title="Signed message" />
+          <h2 class="text-center pb-8">Signed message</h2>
           <div class="overlay-content">
             <v-textarea
               solo
@@ -62,14 +62,12 @@
 </template>
 
 <script>
-import BaseOverlay from '@/components/Overlays/BaseOverlay';
-import OverlayTitle from '@/components/OverlayTitle';
-import OverlayTabs from '@/components/OverlayTabs';
+import BaseOverlay from './BaseOverlay';
+import OverlayTabs from './OverlayTabs';
 
 export default {
   components: {
     BaseOverlay,
-    OverlayTitle,
     OverlayTabs
   },
   props: {

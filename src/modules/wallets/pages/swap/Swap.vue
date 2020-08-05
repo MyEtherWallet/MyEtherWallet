@@ -136,8 +136,8 @@
 <script>
 import Spacer from '@/components/spacer';
 
-import Network from '@/components/Network';
-import Swap from '@/components/Swap';
+import Network from '.@/modules/wallets/components/network';
+import Swap from '@/modules/wallets/components/swap';
 
 import InterfaceWrap from '@/components/interface-wrap';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';

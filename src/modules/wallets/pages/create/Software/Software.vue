@@ -58,12 +58,12 @@
 </template>
 
 <script>
-import Keystore from '@/modules/wallets/components/Keystore';
-import MnemonicPhrase from '@/modules/wallets/components/MnemonicPhrase';
+import keystore from '@/modules/wallets/components/keystore';
+import mnemonicPhrase from '@/modules/wallets/components/mnemonic-phrase';
 
 export default {
   name: 'Software',
-  components: { keystore: Keystore, 'mnemonic-phrase': MnemonicPhrase },
+  components: { keystore, mnemonicPhrase },
   props: {
     open: {
       type: Boolean,
