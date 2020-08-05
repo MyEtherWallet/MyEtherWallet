@@ -73,17 +73,20 @@
       toast-type="info"
     />
 
-    <software :open="showSoftware" />
+    <software-overlay :open="showSoftware" />
   </div>
 </template>
 
 <script>
 import BlockTitle from '@/components/block-title';
-import Software from './software';
+import SoftwareOverlay from '@/modules/wallets/components/software-overlay';
 
 export default {
   name: 'CreateNewWallet',
-  components: { 'block-title': BlockTitle, software: Software },
+  components: {
+    'block-title': BlockTitle,
+    'software-overlay': SoftwareOverlay
+  },
   data: () => ({
     toastLink: {
       title: 'Buy a hardware wallet',

@@ -10,6 +10,6 @@ import TxConfirmation from './TxConfirmation';
 export default {
   components: {
     TxConfirmation
-  },
+  }
 };
 </script>

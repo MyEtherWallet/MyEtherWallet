@@ -67,12 +67,10 @@
 import changeAddress from '../change-address';
 import paperWallet from '../paper-wallet';
 import myAddress from './components/address';
-// import Tooltip from '@/components/Tooltip';
-import qrCodePopup from '@/modules/wallets/components/popups/qr-code-popup';
+import qrCodePopup from '@/modules/wallets/components/qr-code-popup';
 
 export default {
   components: {
-    // Tooltip,
     myAddress,
     changeAddress,
     paperWallet,

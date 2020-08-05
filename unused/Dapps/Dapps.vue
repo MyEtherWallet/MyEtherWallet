@@ -2,26 +2,30 @@
   <mew6-white-sheet>
     <div class="px-8 py-5">
       <div class="d-flex align-center">
-        <BlockTitle text="Dapps">
+        <block-title text="Dapps">
           <template v-slot:right-button>
-            <TextButton>View All</TextButton>
+            <text-button>View All</text-button>
           </template>
-        </BlockTitle>
+        </block-title>
       </div>
       <div>
-        <DappsBlock />
+        <dapps-block />
       </div>
     </div>
   </mew6-white-sheet>
 </template>
 
 <script>
-import BlockTitle from '@/components/BlockTitles/BlockTitle2';
+import BlockTitle from '@/components/BlockTitles/BlockTitle';
 import TextButton from '@/components/Buttons/TextButton1';
 import DappsBlock from '@/components/DappsBlock';
 
 export default {
-  components: { BlockTitle, TextButton, DappsBlock },
+  components: {
+    'block-title': BlockTitle,
+    'text-button': TextButton,
+    'dapps-block': DappsBlock
+  },
   data() {
     return {};
   }

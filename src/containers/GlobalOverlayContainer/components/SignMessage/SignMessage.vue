@@ -14,7 +14,6 @@ export default {
   components: {
     SignMessageConfirmation
   },
-  methods: {
-  }
+  methods: {}
 };
 </script>
