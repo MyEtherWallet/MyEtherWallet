@@ -53,8 +53,6 @@ class MEWconnectWallet {
         if (!tx.gasLimit) {
           tx.gasLimit = tx.gas;
         }
-        tx.id = uuid();
-        this.txIds.push(tx.id);
         this.mewConnect.sendRtcMessage('signTx', JSON.stringify(tx));
         this.mewConnect.once('signTx', result => {
           tx = new Transaction(sanitizeHex(result), {
@@ -77,23 +75,15 @@ class MEWconnectWallet {
           // eslint-disable-next-line
           console.log('signTx reject id:', id); // todo remove dev item
           reject(Error('reject'));
-          // if (this.txIds.includes(id)) {
-          //   const idx = this.txIds.findIndex(item => item === id);
-          //   this.txIds.splice(idx, 1);
-          //   reject();
-          // }
         });
       });
     };
     const msgSigner = async msg => {
       return new Promise((resolve, reject) => {
         const msgHash = hashPersonalMessage(Misc.toBuffer(msg));
-        const id = uuid();
-        this.txIds.push(id);
         this.mewConnect.sendRtcMessage('signMessage', {
           hash: msgHash.toString('hex'),
-          text: msg,
-          id: id
+          text: msg
         });
         this.mewConnect.once('signMessage', data => {
           resolve(getBufferFromHex(sanitizeHex(data.sig)));
@@ -103,11 +93,6 @@ class MEWconnectWallet {
           // eslint-disable-next-line
           console.log('signMessage reject id:', id); // todo remove dev item
           reject(Error('reject'));
-          // if (this.txIds.includes(id)) {
-          //   const idx = this.txIds.findIndex(item => item === id);
-          //   this.txIds.splice(idx, 1);
-          //   reject();
-          // }
         });
       });
     };
