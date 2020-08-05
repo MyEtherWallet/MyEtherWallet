@@ -27,10 +27,10 @@
           </interface-wrap>
         </mew6-white-sheet>
       </div>
-      <spacer />
+      <div class="pa-4"></div>
       <div>
         <network />
-        <spacer />
+        <div class="pa-4"></div>
         <swap />
       </div>
     </div>
@@ -38,7 +38,6 @@
 </template>
 
 <script>
-import Spacer from '@/components/spacer';
 import InterfaceWrap from '@/components/interface-wrap';
 
 import Network from '@/modules/wallets/components/network';
@@ -46,7 +45,6 @@ import Swap from '@/modules/wallets/components/swap';
 
 export default {
   components: {
-    spacer: Spacer,
     'interface-wrap': InterfaceWrap,
     network: Network,
     swap: Swap

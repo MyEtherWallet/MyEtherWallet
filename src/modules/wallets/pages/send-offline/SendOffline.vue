@@ -69,10 +69,10 @@
           </interface-wrap>
         </mew6-white-sheet>
       </div>
-      <Spacer />
+      <div class="pa-4"></div>
       <div>
         <network />
-        <spacer />
+        <div class="pa-4"></div>
         <swap />
       </div>
     </div>
@@ -80,7 +80,6 @@
 </template>
 
 <script>
-import spacer from '@/components/spacer';
 
 import network from '@/modules/wallets/components/network';
 import swap from '@/modules/wallets/components/swap';
@@ -90,7 +89,6 @@ import divider from '@/components/dividerx';
 
 export default {
   components: {
-    spacer,
     network,
     swap,
     interfaceWrap,

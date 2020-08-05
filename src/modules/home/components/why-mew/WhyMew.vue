@@ -21,7 +21,7 @@
           }"
           :icon="require('@/assets/images/icons/icon-faces-mew.svg')"
         />
-        <Spacer />
+        <div class="pa-4"></div>
 
         <div class="d-flex flex-column">
           <info-card
@@ -34,7 +34,7 @@
               url: 'www.myetherwallet.com'
             }"
           />
-          <Spacer />
+          <div class="pa-4"></div>
           <info-card
             class="full-height"
             max-width="600"
@@ -47,7 +47,7 @@
           />
         </div>
 
-        <Spacer />
+        <div class="pa-4"></div>
         <info-card
           title="MEWwallet"
           desc="MEW brings a hardware wallet style security to your iOS or Android smart phone, helping you to secure your funds as never before."
@@ -82,13 +82,8 @@
 </template>
 
 <script>
-import Spacer from '@/components/spacer';
-
 export default {
   name: 'HomeWhyMew',
-  components: {
-    Spacer
-  },
   data: () => ({})
 };
 </script>
