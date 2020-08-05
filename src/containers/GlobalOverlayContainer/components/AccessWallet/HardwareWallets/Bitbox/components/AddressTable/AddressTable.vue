@@ -27,10 +27,7 @@
 </template>
 
 <script>
-import Blockie from '@/components/Blockie';
-
 export default {
-  components: { Blockie },
   data: () => ({
     delDialog: false,
     dialog: false,

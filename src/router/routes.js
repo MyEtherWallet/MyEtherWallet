@@ -16,7 +16,7 @@ import AccessWalletBrowserExtensionInstall from '@/modules/wallets/components/In
 import AccessWalletBrowserExtensionAccess from '@/modules/wallets/components/AccessExtension';
 
 import HowItWorks from '@/modules/how-it-works';
-import BuyHardwareWallet from '@/modules/buy-hardware';
+import BuyHardwareWallet from '@/modules/hardware';
 
 // import Wallet from '@/views/WalletView';
 // import Dashboard from '@/views/DashboardView';

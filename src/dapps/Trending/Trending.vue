@@ -1,9 +1,9 @@
 <template>
   <div id="id-fd64f5f38819c16ce3dd44f51dd7d0ef">
     <mew6-white-sheet>
-      <InterfaceWrap title="Trending">
+      <interface-wrap title="Trending">
         <div class="d-flex justify-space-between">
-          <Breadcrumbs :items="breadcrumbs" />
+          <bread-crumbs :items="breadcrumbs" />
           <div class="primary--text">
             Filter out
             <span class="font-weight-bold titlePrimary--text">21</span> DApps
@@ -43,17 +43,17 @@
             />
           </div>
         </div>
-      </InterfaceWrap>
+      </interface-wrap>
     </mew6-white-sheet>
   </div>
 </template>
 
 <script>
-import InterfaceWrap from '@/components/InterfaceWraps/InterfaceWrap1';
-import Breadcrumbs from '@/components/Breadcrumbs';
+import interfaceWrap from '@/components/interface-wrap';
+import breadCrumbs from '@/components/breadcrumbs';
 
 export default {
-  components: { InterfaceWrap, Breadcrumbs },
+  components: { interfaceWrap, breadCrumbs },
   data() {
     return {
       buttons: [

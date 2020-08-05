@@ -1,16 +1,16 @@
 <template>
   <div>
     <BlockTitle no-page-title :data="title" class="mb-7" />
-    <TableContainer />
+    <table-container />
   </div>
 </template>
 
 <script>
-import BlockTitle from '@/components/BlockTitle';
-import TableContainer from '../../components/TableContainer';
+import BlockTitle from '@/components/block-title';
+import tableContainer from '../../components/table-container';
 
 export default {
-  components: { BlockTitle },
+  components: { BlockTitle, tableContainer },
   data: () => ({
     title: {
       title: 'Watch only address',

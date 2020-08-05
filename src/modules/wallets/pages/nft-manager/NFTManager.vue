@@ -136,10 +136,10 @@
 </template>
 
 <script>
-import Spacer from '@/components/Common/Spacer';
+import Spacer from '@/components/spacer';
 import Network from '@/components/Network';
 import Swap from '@/components/Swap';
-import InterfaceWrap from '@/components/InterfaceWraps/InterfaceWrap1';
+import InterfaceWrap from '@/components/interface-wrap';
 import Kitty1 from '@/assets/images/temp/cryptokitties1.svg';
 import Kitty2 from '@/assets/images/temp/cryptokitties2.svg';
 import Kitty3 from '@/assets/images/temp/cryptokitties3.svg';

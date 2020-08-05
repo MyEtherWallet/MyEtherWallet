@@ -18,7 +18,7 @@
         </v-row>
 
         <div>{{ network.id }}</div>
-        <DividerLine v-if="networks.length != i + 1" class="my-5" />
+        <divider-line v-if="networks.length != i + 1" class="my-5" />
       </div>
     </v-radio-group>
     <div class="d-flex justify-center">
@@ -28,10 +28,10 @@
 </template>
 
 <script>
-import DividerLine from '@/components/Common/DividerLine';
+import dividerLine from '@/components/divider-line';
 
 export default {
-  components: { DividerLine },
+  components: { dividerLine },
   data() {
     return {
       networkSelected: null,

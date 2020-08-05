@@ -1,7 +1,7 @@
 <template>
   <v-select
     :label="label"
-    :placeholder="placeholder"
+    placeholder="HELL:OO"
     outlined
     :clearable="false"
     :items="items"

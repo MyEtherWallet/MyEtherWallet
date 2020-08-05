@@ -21,7 +21,7 @@
 
 <script>
 import homeHeader from '@/components/home-header';
-import BlockTitle from '@/components/BlockTitle';
+import BlockTitle from '@/components/block-title';
 
 import Kosala from '@/assets/images/team/kosala.jpg';
 import Brian from '@/assets/images/team/brian.jpg';

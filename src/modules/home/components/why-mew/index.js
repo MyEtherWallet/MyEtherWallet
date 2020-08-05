@@ -1,1 +1,1 @@
-export { default } from './why-mew';
+export { default } from './WhyMew';

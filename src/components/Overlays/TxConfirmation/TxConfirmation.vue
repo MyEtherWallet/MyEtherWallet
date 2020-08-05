@@ -4,8 +4,8 @@
     <mew6-white-sheet>
       <div class="overlay-content">
         <div class="pa-8">
-          <FromToBlock />
-          <BalanceBlock />
+          <from-to-block />
+          <balance-block />
 
           <DividerX class="my-9" />
 
@@ -27,9 +27,9 @@
 import BaseOverlay from '../BaseOverlay';
 import OverlayTitle from '@/components/OverlayTitle';
 import ConfirmTransaction from '@/components/WarningBlocks/ConfirmTransaction';
-import DividerX from '@/components/DividerX';
-import FromToBlock from '@/components/FromToBlock';
-import BalanceBlock from '@/components/BalanceBlock';
+import DividerX from '@/components/divider';
+import fromToBlock from '@/components/from-to-block';
+import balanceBlock from '@/components/balance-block';
 import ExpantionBlock from '@/components/ExpantionBlock';
 
 export default {
@@ -38,8 +38,8 @@ export default {
     OverlayTitle,
     ConfirmTransaction,
     DividerX,
-    FromToBlock,
-    BalanceBlock,
+    fromToBlock,
+    balanceBlock,
     ExpantionBlock
   },
   props: {

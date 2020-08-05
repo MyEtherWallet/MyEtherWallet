@@ -6,13 +6,13 @@
           <OverlayTitle title="Confirmation" />
           <mew6-white-sheet>
             <div class="overlay-content pa-8">
-              <FromToBlock
+              <from-to-block
                 from="0x300be4b1183dca9046349e9e01b1e0c08e362964"
                 to="0x02fb7f333fd493b39b79ba57b6d510c64eaa3dc0"
                 class="mb-2"
               />
 
-              <BalanceBlock />
+              <balance-block />
 
               <mew-expand-panel>
                 <template v-slot:panelBody1 :panel-items="panelItems">
@@ -76,16 +76,16 @@
 import BaseOverlay from '@/components/Overlays/BaseOverlay';
 import OverlayTitle from '@/components/OverlayTitle';
 import OverlayTabs from '@/components/OverlayTabs';
-import FromToBlock from '@/components/FromToBlock';
-import BalanceBlock from '@/components/BalanceBlock';
+import fromToBlock from '@/components/from-to-block';
+import balanceBlock from '@/components/balance-block';
 
 export default {
   components: {
     BaseOverlay,
     OverlayTitle,
     OverlayTabs,
-    FromToBlock,
-    BalanceBlock
+    fromToBlock,
+    balanceBlock
   },
   props: {
     open: { default: false, type: Boolean },

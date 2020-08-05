@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import BlockTitle from '@/components/BlockTitle';
+import BlockTitle from '@/components/block-title';
 import Contract from '@/assets/images/icons/icon-contract-mew.svg';
 import Message from '@/assets/images/icons/icon-message-mew.svg';
 import ViewOnlyWallet from '@/assets/images/icons/icon-view-only-mew.svg';

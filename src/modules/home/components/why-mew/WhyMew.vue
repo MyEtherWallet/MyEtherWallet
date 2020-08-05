@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import Spacer from '@/components/Common/Spacer';
+import Spacer from '@/components/spacer';
 
 export default {
   name: 'HomeWhyMew',

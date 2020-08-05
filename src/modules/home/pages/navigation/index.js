@@ -1,1 +1,1 @@
-export { default } from './navigation';
+export { default } from './Navigation';

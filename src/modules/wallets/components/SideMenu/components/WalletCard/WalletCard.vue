@@ -66,14 +66,12 @@
 <script>
 import ChangeAddress from '@/components/Overlays/ChangeAddress';
 import PaperWallet from '@/components/Overlays/PaperWallet';
-import Blockie from '@/components/Blockie';
 import Address from './components/Address';
 import Tooltip from '@/components/Tooltip';
 import QRcodePopup from '@/components/Popups/QRcodePopup';
 
 export default {
   components: {
-    Blockie,
     Tooltip,
     Address,
     ChangeAddress,

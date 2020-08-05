@@ -1,1 +1,1 @@
-export { default } from './tab-content';
+export { default } from './TabContent';
