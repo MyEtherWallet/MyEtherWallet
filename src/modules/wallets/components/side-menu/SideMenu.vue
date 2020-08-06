@@ -30,7 +30,6 @@
 
 <script>
 import walletCard from './components/wallet-card/WalletCard';
-import buyEthBtn from './components/buy-eth-btn/BuyEthButton';
 import accordionMenu from './components/menu/Menu';
 import systemMenu from './components/system-menu/SystemMenu';
 import themeSwitch from './components/theme-switch/ThemeSwitch';
@@ -40,7 +39,6 @@ import divider from './components/divider/Divider';
 export default {
   components: {
     walletCard,
-    buyEthBtn,
     accordionMenu,
     systemMenu,
     themeSwitch,
