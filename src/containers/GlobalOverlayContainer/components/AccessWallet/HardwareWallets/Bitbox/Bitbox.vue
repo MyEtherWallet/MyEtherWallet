@@ -64,7 +64,7 @@
 
               <mew-expand-panel :panel-items="panelItems">
                 <template v-slot:panelBody1>
-                  <AddressTable />
+                  <address-table />
                 </template>
               </mew-expand-panel>
 
@@ -90,12 +90,12 @@
 <script>
 // TODO: add component in mew components
 // import GroupRadioButtons from '@/components/Buttons/GroupRadioButtons';
-import AddressTable from './components/AddressTable';
+import addressTable from './components/AddressTable/AddressTable';
 
 export default {
   components: {
     // GroupRadioButtons,
-    AddressTable
+    addressTable
   },
   props: {
     open: { default: false, type: Boolean },

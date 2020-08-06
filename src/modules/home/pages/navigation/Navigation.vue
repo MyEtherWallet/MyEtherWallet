@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import headerHome from '../../components/header';
-import footerHome from '../../components/footer';
+import headerHome from '../../components/header/Header';
+import footerHome from '../../components/footer/Footer';
 
 export default {
   name: 'Navigation',

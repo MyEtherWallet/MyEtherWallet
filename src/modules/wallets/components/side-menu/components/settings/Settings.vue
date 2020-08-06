@@ -25,10 +25,10 @@
 </template>
 
 <script>
-import importConfig from './components/import-config';
-import exportConfig from './components/export-config';
-import notifications from './components/notifications';
-import gasPrice from './components/gas-price';
+import importConfig from './components/import-config/ImportConfig';
+import exportConfig from './components/export-config/ExportConfig';
+import notifications from './components/notifications/Notifications';
+import gasPrice from './components/gas-price/GasPrice';
 
 export default {
   components: {

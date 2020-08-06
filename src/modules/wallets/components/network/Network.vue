@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import changeNetworkOverlay from '../change-network';
+import changeNetworkOverlay from '../change-network/ChangeNetwork';
 
 export default {
   components: { changeNetworkOverlay },

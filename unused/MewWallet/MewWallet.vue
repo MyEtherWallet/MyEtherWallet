@@ -2,7 +2,7 @@
   <div class="light-blue darken-4">
     <div class="py-8" />
     <v-container>
-      <BlockTitle :data="titleData" class="mb-10" />
+      <block-title :data="titleData" class="mb-10" />
       <v-sheet
         max-width="800px"
         class="mx-auto border-radius--10px"
@@ -63,14 +63,14 @@
 </template>
 
 <script>
-import BlockTitle from '@/components/block-title';
+import blockTitle from '@/components/block-title/BlockTitle';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
 
 export default {
   name: 'MewConnect',
-  components: { BlockTitle, Step1, Step2, Step3 },
+  components: { blockTitle, Step1, Step2, Step3 },
   data: () => ({
     stepActive: 'light-blue darken-4 white--text pa-3 caption',
     stepDone: 'grey white--text pa-3 caption',

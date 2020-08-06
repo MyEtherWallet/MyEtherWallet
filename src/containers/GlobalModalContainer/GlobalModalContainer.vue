@@ -1,18 +1,18 @@
 <template>
   <div>
-    <MewConnectQRcode />
-    <MewConnectYouTubeTutorial />
-    <Wallet />
+    <mew-connect-qrcode />
+    <mew-connect-youtube-tutorial />
+    <wallet />
   </div>
 </template>
 
 <script>
-import MewConnectQRcode from './components/CreateWallet/MewConnect/QRcode';
-import MewConnectYouTubeTutorial from './components/CreateWallet/MewConnect/YouTubeTutorial';
-import Wallet from './components/Wallet';
+import mewConnectQrcode from './components/CreateWallet/MewConnect/QRcode/QRcode';
+import mewConnectYoutubeTutorial from './components/CreateWallet/MewConnect/YouTubeTutorial/YouTubeTutorial';
+import wallet from './components/Wallet/Wallet';
 
 export default {
   name: 'ModalContainer',
-  components: { MewConnectQRcode, MewConnectYouTubeTutorial, Wallet }
+  components: { mewConnectQrcode, mewConnectYoutubeTutorial, wallet }
 };
 </script>

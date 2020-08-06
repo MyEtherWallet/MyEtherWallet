@@ -1,6 +1,6 @@
 <template>
   <div class="expandHeader">
-    <BlockTitle :data="titleData">
+    <block-title :data="titleData">
       <h5 class="white--text ma-0">
         Please select a method to access your wallet.
       </h5>
@@ -13,7 +13,7 @@
           Get a new wallet
         </router-link>
       </h5>
-    </BlockTitle>
+    </block-title>
     <v-sheet color="transparent" max-width="650px" class="mx-auto">
       <div class="mb-5">
         <router-link
@@ -87,12 +87,12 @@
 </template>
 
 <script>
-import BlockTitle from '@/components/block-title';
+import blockTitle from '@/components/block-title/BlockTitle';
 
 export default {
   name: 'CreateNewWallet',
   components: {
-    BlockTitle
+    blockTitle
   },
   data: () => ({
     titleData: {
@@ -102,7 +102,6 @@ export default {
       description: '',
       centered: true
     }
-  }),
-  methods: {}
+  })
 };
 </script>

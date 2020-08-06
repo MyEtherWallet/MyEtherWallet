@@ -22,15 +22,15 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-    <DividerLine class="mt-2" />
+    <divider-line class="mt-2" />
   </div>
 </template>
 
 <script>
-import DividerLine from '@/components/divider-line';
+import dividerLine from '@/components/divider-line/DividerLine';
 export default {
   components: {
-    DividerLine
+    dividerLine
   },
   props: {
     title: { default: '', type: String },

@@ -1,5 +1,5 @@
 <template>
-  <ModalWithTitle width="350px" title="Scan to Download" :active="active">
+  <modal-with-title width="350px" title="Scan to Download" :active="active">
     <div>
       <v-img
         max-width="150px"
@@ -23,14 +23,14 @@
         </v-btn>
       </v-btn-toggle>
     </div>
-  </ModalWithTitle>
+  </modal-with-title>
 </template>
 
 <script>
-import ModalWithTitle from '@/containers/GlobalModalContainer/components/ModalWithTitle';
+import modalWithTitle from '@/containers/GlobalModalContainer/components/ModalWithTitle/ModalWithTitle';
 
 export default {
-  components: { ModalWithTitle },
+  components: { modalWithTitle },
   props: {
     active: { default: false, type: Boolean }
   },

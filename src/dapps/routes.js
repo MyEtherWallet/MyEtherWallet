@@ -1,11 +1,11 @@
-import DappsCenter from './dapps-center';
-import Trending from './trending';
-import NewDapps from './new-dapps';
-import NameManager from './name-manager';
-import MakerDAO from './makerdao';
-import Aave from './aave';
-import Ambrpay from './ambrpay';
-import UnstoppableDomain from './unstoppable-domains';
+import DappsCenter from './dapps-center/DappsCenter';
+import Trending from './trending/Trending';
+import NewDapps from './new-dapps/NewDapps';
+import NameManager from './name-manager/NameManager';
+import MakerDAO from './makerdao/MakerDAO';
+import Aave from './aave/Aave';
+import Ambrpay from './ambrpay/Ambrpay';
+import UnstoppableDomain from './unstoppable-domains/UnstoppableDomain';
 
 export default [
   {
