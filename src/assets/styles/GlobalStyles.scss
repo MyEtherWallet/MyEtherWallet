@@ -144,29 +144,12 @@ h6 {
 }
 
 /* ========== Border ========== */
-.border--white {
-  border-color: white !important;
-  border: 1px solid white !important;
-}
-.border-radius--0px {
-  border-radius: 0 !important;
-}
-.border-radius--5px {
-  border-radius: 5px !important;
-}
 .border-radius--10px {
   border-radius: 10px !important;
 }
-.border-radius-bottom--10px {
-  border-bottom-left-radius: 10px !important;
-  border-bottom-right-radius: 10px !important;
-}
 
 /* ========== Other ========== */
-.noscroll {
-  height: 100vh;
-  overflow-y: hidden;
-}
+
 .overflow--hidden {
   overflow: hidden !important;
 }
