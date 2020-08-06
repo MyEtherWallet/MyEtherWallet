@@ -3,20 +3,14 @@
     <v-main>
       <v-sheet>
         <router-view />
-        <global-modal-container />
       </v-sheet>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import globalModalContainer from '@/containers/GlobalModalContainer/GlobalModalContainer';
-
 export default {
-  name: 'App',
-  components: {
-    globalModalContainer
-  }
+  name: 'App'
 };
 </script>
 
