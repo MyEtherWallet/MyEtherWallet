@@ -1,4 +1,4 @@
-wimport HomePage from '@/modules/home/Home';
+import HomePage from '@/modules/home/Home';
 import CompanyPage from '@/modules/company/Company';
 import TeamPage from '@/modules/team/Team';
 import BuyHardwareWallet from '@/modules/hardware/Hardware';
