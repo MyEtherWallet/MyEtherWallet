@@ -188,11 +188,11 @@
 </template>
 
 <script>
-import network from '@/modules/wallets/components/network';
-import swap from '@/modules/wallets/components/swap';
-import bannerAds from '@/modules/wallets/components/banner-ads';
+import network from '@/modules/wallets/components/network/Network';
+import swap from '@/modules/wallets/components/swap/Swap';
+import bannerAds from '@/modules/wallets/components/banner-ads/BannerAds';
 import staticData from './staticData.js';
-import chart from '@/modules/wallets/components/chart';
+import chart from '@/modules/wallets/components/chart/Chart';
 
 export default {
   components: {

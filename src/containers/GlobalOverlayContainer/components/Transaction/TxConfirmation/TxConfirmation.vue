@@ -73,8 +73,8 @@
 </template>
 
 <script>
-import BaseOverlay from '@/containers/GlobalOverlayContainer/components/BaseOverlay';
-import OverlayTabs from '@/containers/GlobalOverlayContainer/components/OverlayTabs';
+import BaseOverlay from '@/containers/GlobalOverlayContainer/components/BaseOverlay/BaseOverlay';
+import OverlayTabs from '@/containers/GlobalOverlayContainer/components/OverlayTabs/OverlayTabs';
 import fromToBlock from '@/components/from-to-block/FromToBlock';
 import balanceBlock from '@/components/balance-block/BalanceBlock';
 

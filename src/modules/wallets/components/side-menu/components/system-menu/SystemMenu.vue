@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import settings from '../settings';
+import settings from '../settings/Settings';
 
 export default {
   components: { settings },

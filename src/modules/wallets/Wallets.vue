@@ -19,12 +19,12 @@
 </template>
 
 <script>
-import sideMenu from './components/side-menu';
-import walletHeader from './components/header';
-import walletFooter from './components/footer';
+import sideMenu from './components/side-menu/SideMenu';
+import walletHeader from './components/header/Header';
+import walletFooter from './components/footer/Footer';
 import globalElementsContainer from '@/containers/GlobalElementsContainer/GlobalElementsContainer';
 import globalModalContainer from '@/containers/GlobalModalContainer/GlobalModalContainer';
-import globalOverlayContainer from '@/containers/GlobalOverlayContainer';
+import globalOverlayContainer from '@/containers/GlobalOverlayContainer/GlobalOverlayContainer';
 
 export default {
   components: {

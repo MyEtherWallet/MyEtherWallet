@@ -79,7 +79,7 @@
 
 <script>
 import blockTitle from '@/components/block-title/BlockTitle';
-import SoftwareOverlay from '@/modules/wallets/components/software-overlay';
+import SoftwareOverlay from '@/modules/wallets/components/software-overlay/SoftwareOverlay';
 
 export default {
   name: 'CreateNewWallet',

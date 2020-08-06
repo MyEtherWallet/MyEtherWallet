@@ -136,8 +136,8 @@
 </template>
 
 <script>
-import Network from '@/modules/wallets/components/network';
-import Swap from '@/modules/wallets/components/swap';
+import Network from '@/modules/wallets/components/network/Network';
+import Swap from '@/modules/wallets/components/swap/Swap';
 import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import Kitty1 from '@/assets/images/temp/cryptokitties1.svg';
 import Kitty2 from '@/assets/images/temp/cryptokitties2.svg';

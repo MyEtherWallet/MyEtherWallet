@@ -102,7 +102,6 @@ export default {
       description: '',
       centered: true
     }
-  }),
-  methods: {}
+  })
 };
 </script>

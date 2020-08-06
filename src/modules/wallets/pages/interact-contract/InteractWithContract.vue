@@ -51,8 +51,8 @@
 <script>
 import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 
-import Network from '@/modules/wallets/components/network';
-import Swap from '@/modules/wallets/components/swap';
+import Network from '@/modules/wallets/components/network/Network';
+import Swap from '@/modules/wallets/components/swap/Swap';
 
 export default {
   components: {
