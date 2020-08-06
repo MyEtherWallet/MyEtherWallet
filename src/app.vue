@@ -4,7 +4,6 @@
       <v-sheet>
         <router-view />
         <global-modal-container />
-        <global-overlay-container />
       </v-sheet>
     </v-main>
   </v-app>
@@ -12,13 +11,11 @@
 
 <script>
 import globalModalContainer from '@/containers/GlobalModalContainer/GlobalModalContainer';
-import globalOverlayContainer from '@/containers/GlobalOverlayContainer/GlobalOverlayContainer';
 
 export default {
   name: 'App',
   components: {
-    globalModalContainer,
-    globalOverlayContainer
+    globalModalContainer
   }
 };
 </script>
