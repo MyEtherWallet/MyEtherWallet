@@ -5,7 +5,6 @@ module.exports = {
     VERSION: 'test',
     NODE_ENV: 'test',
     ROUTER_MODE: 'hash',
-    BUILD_TYPE: 'web'
   },
   collectCoverageFrom: ['src/**/*.{js,vue}'],
   coveragePathIgnorePatterns: [
