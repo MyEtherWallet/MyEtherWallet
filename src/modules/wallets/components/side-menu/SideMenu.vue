@@ -29,12 +29,12 @@
 </template>
 
 <script>
-import walletCard from './components/wallet-card/WalletCard';
-import accordionMenu from './components/menu/Menu';
-import systemMenu from './components/system-menu/SystemMenu';
-import themeSwitch from './components/theme-switch/ThemeSwitch';
-import version from './components/version/Version';
-import divider from './components/divider/Divider';
+import walletCard from '@/modules/wallets/components/wallet-card/WalletCard';
+import accordionMenu from '@/modules/wallets/components/menu/Menu';
+import systemMenu from '@/modules/wallets/components/system-menu/SystemMenu';
+import themeSwitch from '@/modules/wallets/components/theme-switch/ThemeSwitch';
+import version from '@/modules/wallets/components/version/Version';
+import divider from '@/modules/wallets/components/divider/Divider';
 
 export default {
   components: {
