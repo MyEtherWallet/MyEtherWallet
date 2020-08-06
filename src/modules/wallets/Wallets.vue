@@ -12,7 +12,6 @@
       </div>
     </div>
     <global-modal-container />
-    <global-overlay-container />
   </v-sheet>
 </template>
 
@@ -21,15 +20,13 @@ import sideMenu from './components/side-menu/SideMenu';
 import walletHeader from './components/header/Header';
 import walletFooter from './components/footer/Footer';
 import globalModalContainer from '@/containers/GlobalModalContainer/GlobalModalContainer';
-import globalOverlayContainer from '@/containers/GlobalOverlayContainer/GlobalOverlayContainer';
 
 export default {
   components: {
     walletFooter,
     sideMenu,
     walletHeader,
-    globalModalContainer,
-    globalOverlayContainer
+    globalModalContainer
   }
 };
 </script>
