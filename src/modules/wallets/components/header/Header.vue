@@ -43,8 +43,8 @@
 </template>
 
 <script>
-import mewWalletStatusPopup from '../mew-wallet-status-popup';
-import notificationOverlay from '../notifications';
+import mewWalletStatusPopup from '../mew-wallet-status-popup/MewWalletStatusPopup';
+import notificationOverlay from '../notifications/Notifications';
 
 export default {
   components: {

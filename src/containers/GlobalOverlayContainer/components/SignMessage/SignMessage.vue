@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SignMessageConfirmation
+    <sign-message-confirmation
       :open="openSignMessageConfirmation"
       :close="closeSignMessageConfirmation"
     />
@@ -8,11 +8,11 @@
 </template>
 
 <script>
-import SignMessageConfirmation from './SignMessageConfirmation';
+import signMessageConfirmation from './SignMessageConfirmation/SignMessageConfirmation';
 
 export default {
   components: {
-    SignMessageConfirmation
+    signMessageConfirmation
   },
   methods: {}
 };

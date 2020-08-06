@@ -49,8 +49,8 @@
 </template>
 
 <script>
-import interfaceWrap from '@/components/interface-wrap';
-import breadCrumbs from '@/components/breadcrumbs';
+import interfaceWrap from '@/components/interface-wrap/InterfaceWrap';
+import breadCrumbs from '@/components/breadcrumbs/Breadcrumbs';
 
 export default {
   components: { interfaceWrap, breadCrumbs },

@@ -10,12 +10,12 @@
 </template>
 
 <script>
-import landing from './components/landing';
-import features from './components/features';
-import whyMew from './components/why-mew';
-import join from '@/components/join';
-import getStarted from '@/components/get-started';
-import partners from '@/components/partners';
+import landing from './components/landing/Landing';
+import features from './components/features/Features';
+import whyMew from './components/why-mew/WhyMew';
+import join from '@/components/join/Join';
+import getStarted from '@/components/get-started/GetStarted';
+import partners from '@/components/partners/Partners';
 
 export default {
   name: 'Home',

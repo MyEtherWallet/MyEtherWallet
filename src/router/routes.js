@@ -1,22 +1,22 @@
-import HomePage from '@/modules/home';
-import CompanyPage from '@/modules/company';
-import TeamPage from '@/modules/team';
-import ToolsPage from '@/modules/tools';
+import HomePage from '@/modules/home/Home';
+import CompanyPage from '@/modules/company/Company';
+import TeamPage from '@/modules/team/Team';
+import BuyHardwareWallet from '@/modules/hardware/Hardware';
+import ToolsPage from '@/modules/tools/Tools';
 
-import Navigation from '@/modules/home/pages/navigation';
+import Navigation from '@/modules/home/pages/navigation/Navigation';
 
-import CreateWallet from '@/modules/wallets/pages/create';
+import CreateWallet from '@/modules/wallets/pages/create/CreateWallet';
 
-import AccessWalletView from '@/modules/wallets/pages/access';
-import AccessWalletHardwareWallets from '@/modules/wallets/pages/access/hardware-wallets';
-import AccessWalletMobileApps from '@/modules/wallets/pages/access/mobile-apps';
-import AccessWalletBrowserExtension from '@/modules/wallets/pages/access/browser-extension';
+import AccessWalletView from '@/modules/wallets/pages/access/Access';
+import AccessWalletHardwareWallets from '@/modules/wallets/pages/access/hardware-wallets/HardwareWallets';
+import AccessWalletMobileApps from '@/modules/wallets/pages/access/mobile-apps/MobileApps';
+import AccessWalletBrowserExtension from '@/modules/wallets/pages/access/browser-extension/BrowserExtension';
 
-import AccessWalletBrowserExtensionInstall from '@/modules/wallets/components/install-extension';
-import AccessWalletBrowserExtensionAccess from '@/modules/wallets/components/access-extension';
+import AccessWalletBrowserExtensionInstall from '@/modules/wallets/components/install-extension/InstallExtension';
+import AccessWalletBrowserExtensionAccess from '@/modules/wallets/components/access-extension/AccessExtension';
 
-import HowItWorks from '@/modules/how-it-works';
-import BuyHardwareWallet from '@/modules/hardware';
+import HowItWorks from '@/modules/how-it-works/HowItWorks';
 
 import WalletRoutes from '@/modules/wallets/routes.js';
 

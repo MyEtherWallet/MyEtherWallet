@@ -11,7 +11,7 @@
               aspect-ratio="1"
               class="mb-5"
             />
-            <BlockTitle no-page-title :data="titleData" />
+            <block-title no-page-title :data="titleData" />
             <mew-button
               class="mt-5"
               btn-link="https://www.mewtopia.com/"
@@ -30,7 +30,7 @@
               aspect-ratio="1"
               class="mb-5"
             />
-            <BlockTitle no-page-title :data="titleData" />
+            <block-title no-page-title :data="titleData" />
             <div class="d-flex align-center mt-5">
               <v-btn
                 v-for="(i, key) in icons"
@@ -53,13 +53,13 @@
 </template>
 
 <script>
-import BlockTitle from '@/components/block-title';
+import blockTitle from '@/components/block-title/BlockTitle';
 import Telegram from '@/assets/images/icons/icon-telegram-dark.svg';
 import Slack from '@/assets/images/icons/icon-slack-dark.svg';
 import Reddit from '@/assets/images/icons/icon-reddit-dark.svg';
 import Github from '@/assets/images/icons/icon-github-dark.svg';
 export default {
-  components: { BlockTitle },
+  components: { blockTitle },
   data: () => ({
     descriptionText:
       'Et voluptua takimata sit clita amet, takimata dolor stet sit accusam tempor at est labore, lorem nonumy lorem vero sadipscing aliquyam invidunt amet, amet lorem sea dolor voluptua diam. Dolor labore ipsum gubergren ea, et sea tempor tempor et est et stet no. Ea accusam ipsum et amet invidunt ea, erat at dolor at no invidunt accusam sadipscing stet. Et amet elitr sea et ipsum ea sea sea. Et sea et et lorem et ut est, et vero no diam sit, et elitr gubergren ea erat, ut amet et no vero et nonumy dolor ipsum magna. Voluptua est duo ipsum rebum, takimata elitr est sadipscing voluptua, sea labore et duo lorem rebum, consetetur sed sadipscing et dolore duo dolor. Amet.',

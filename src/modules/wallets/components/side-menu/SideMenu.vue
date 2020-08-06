@@ -20,22 +20,22 @@
       icon-align="right"
     />
     <accordion-menu class="mt-4" />
-    <Divider class="my-5 mx-1" />
+    <divider class="my-5 mx-1" />
     <system-menu />
-    <Divider class="my-5 mx-1" />
+    <divider class="my-5 mx-1" />
     <theme-switch class="px-5" />
     <version class="px-5" />
   </v-sheet>
 </template>
 
 <script>
-import walletCard from './components/wallet-card';
-import buyEthBtn from './components/buy-eth-btn';
-import accordionMenu from './components/menu';
-import systemMenu from './components/system-menu';
-import themeSwitch from './components/theme-switch';
-import version from './components/version';
-import Divider from './components/divider';
+import walletCard from './components/wallet-card/WalletCard';
+import buyEthBtn from './components/buy-eth-btn/BuyEthButton';
+import accordionMenu from './components/menu/Menu';
+import systemMenu from './components/system-menu/SystemMenu';
+import themeSwitch from './components/theme-switch/ThemeSwitch';
+import version from './components/version/Version';
+import divider from './components/divider/Divider';
 
 export default {
   components: {
@@ -45,7 +45,7 @@ export default {
     systemMenu,
     themeSwitch,
     version,
-    Divider
+    divider
   }
 };
 </script>

@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import toolTable from '../table';
+import toolTable from '../table/Table';
 
 export default {
   components: { toolTable },

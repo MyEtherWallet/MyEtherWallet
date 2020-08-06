@@ -78,13 +78,13 @@
 </template>
 
 <script>
-import BlockTitle from '@/components/block-title';
-import SoftwareOverlay from '@/modules/wallets/components/software-overlay';
+import blockTitle from '@/components/block-title/BlockTitle';
+import SoftwareOverlay from '@/modules/wallets/components/software-overlay/SoftwareOverlay';
 
 export default {
   name: 'CreateNewWallet',
   components: {
-    'block-title': BlockTitle,
+    blockTitle,
     'software-overlay': SoftwareOverlay
   },
   data: () => ({

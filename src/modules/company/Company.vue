@@ -16,12 +16,12 @@
 </template>
 
 <script>
-import homeHeader from '@/components/home-header';
-import partners from '@/components/partners';
-import join from '@/components/join';
-import whatIsMew from './components/what-is-mew';
-import ourStory from './components/our-story';
-import community from './components/community';
+import homeHeader from '@/components/home-header/HomeHeader';
+import partners from '@/components/partners/Partners';
+import join from '@/components/join/Join';
+import whatIsMew from './components/what-is-mew/WhatIsMew';
+import ourStory from './components/our-story/OurStory';
+import community from './components/community/Community';
 
 export default {
   components: {

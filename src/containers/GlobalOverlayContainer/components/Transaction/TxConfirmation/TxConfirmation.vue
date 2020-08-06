@@ -73,10 +73,10 @@
 </template>
 
 <script>
-import BaseOverlay from '@/containers/GlobalOverlayContainer/components/BaseOverlay';
-import OverlayTabs from '@/containers/GlobalOverlayContainer/components/OverlayTabs';
-import fromToBlock from '@/components/from-to-block';
-import balanceBlock from '@/components/balance-block';
+import BaseOverlay from '@/containers/GlobalOverlayContainer/components/BaseOverlay/BaseOverlay';
+import OverlayTabs from '@/containers/GlobalOverlayContainer/components/OverlayTabs/OverlayTabs';
+import fromToBlock from '@/components/from-to-block/FromToBlock';
+import balanceBlock from '@/components/balance-block/BalanceBlock';
 
 export default {
   components: {

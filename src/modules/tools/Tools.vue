@@ -22,13 +22,13 @@
 </template>
 
 <script>
-import homeHeader from '@/components/home-header';
-import getStarted from '@/components/get-started';
+import homeHeader from '@/components/home-header/HomeHeader';
+import getStarted from '@/components/get-started/GetStarted';
 
-import watchOnly from './pages/watch-only';
-import convert from './pages/convert';
-import offlineHelper from './pages/offline-helper';
-import verify from './pages/verify';
+import watchOnly from './pages/watch-only/WatchOnly';
+import convert from './pages/convert/Convert';
+import offlineHelper from './pages/offline-helper/OfflineHelper';
+import verify from './pages/verify/Verify';
 
 export default {
   name: 'MoreActions',

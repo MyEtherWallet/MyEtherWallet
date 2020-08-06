@@ -1,7 +1,7 @@
 <template>
   <div>
     <mew6-white-sheet>
-      <InterfaceWrap title="Explore New Dapps">
+      <interface-wrap title="Explore New Dapps">
         <div class="d-flex justify-space-between">
           <breadcrumbs :items="breadcrumbs" />
         </div>
@@ -30,17 +30,17 @@
             </div>
           </v-sheet>
         </div>
-      </InterfaceWrap>
+      </interface-wrap>
     </mew6-white-sheet>
   </div>
 </template>
 
 <script>
-import InterfaceWrap from '@/components/interface-wrap';
-import breadcrumbs from '@/components/breadcrumbs';
+import interfaceWrap from '@/components/interface-wrap/InterfaceWrap';
+import breadcrumbs from '@/components/breadcrumbs/Breadcrumbs';
 
 export default {
-  components: { InterfaceWrap, breadcrumbs },
+  components: { interfaceWrap, breadcrumbs },
   data() {
     return {
       buttons: [

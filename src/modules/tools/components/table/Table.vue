@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import charts from '../charts';
+import charts from '../charts/Charts';
 export default {
   components: { charts },
   data: () => ({
