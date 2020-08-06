@@ -11,7 +11,6 @@
         <wallet-footer class="mt-10" />
       </div>
     </div>
-    <global-modal-container />
   </v-sheet>
 </template>
 
@@ -19,14 +18,12 @@
 import sideMenu from './components/side-menu/SideMenu';
 import walletHeader from './components/header/Header';
 import walletFooter from './components/footer/Footer';
-import globalModalContainer from '@/containers/GlobalModalContainer/GlobalModalContainer';
 
 export default {
   components: {
     walletFooter,
     sideMenu,
-    walletHeader,
-    globalModalContainer
+    walletHeader
   }
 };
 </script>
