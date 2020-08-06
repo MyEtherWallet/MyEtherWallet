@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.7.3",
+  "version": "5.7.4",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -30,12 +30,12 @@
     "update:swap": "node compileBaseSwapOptions.js"
   },
   "dependencies": {
-    "@aave/protocol-js": "1.0.0",
+    "@aave/protocol-js": "1.0.1",
     "@coolwallets/eth": "0.2.0-beta.1",
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",
-    "@sentry/browser": "5.18.0",
-    "@sentry/integrations": "5.18.0",
+    "@sentry/browser": "5.20.1",
+    "@sentry/integrations": "5.20.1",
     "@unstoppabledomains/resolution": "1.6.0-beta.0",
     "apollo-cache-inmemory": "1.6.6",
     "apollo-client": "2.6.10",
@@ -44,7 +44,7 @@
     "content-hash": "2.5.2",
     "core-js": "3.6.5",
     "graphql": "14.6.0",
-    "graphql-tag": "2.10.4",
+    "graphql-tag": "2.11.0",
     "html2canvas": "1.0.0-rc.5",
     "idna-uts46": "1.1.0",
     "is-ipfs": "1.0.3",
@@ -71,7 +71,7 @@
     "vue-toasted": "1.1.28",
     "vuex": "3.5.1",
     "walletlink": "2.0.2",
-    "xss": "1.0.7"
+    "xss": "1.0.8"
   },
   "devDependencies": {
     "@ensdomains/address-encoder": "0.1.7",
@@ -97,7 +97,7 @@
     "@vue/eslint-config-prettier": "6.0.0",
     "@vue/test-utils": "1.0.0-beta.29",
     "@walletconnect/browser": "1.0.0-beta.47",
-    "@walletconnect/qrcode-modal": "1.0.0-beta.47",
+    "@walletconnect/qrcode-modal": "1.1.0",
     "@xkeshi/vue-qrcode": "git+https://github.com/MyEtherWallet/vue-qrcode.git",
     "axios": "0.19.2",
     "babel-core": "7.0.0-bridge.0",
@@ -117,7 +117,7 @@
     "eslint-plugin-vue": "6.2.2",
     "eth-ens-namehash": "2.0.8",
     "ethereum-ens": "0.7.7",
-    "ethereumjs-common": "1.5.1",
+    "ethereumjs-common": "1.5.2",
     "ethereumjs-tx": "2.1.2",
     "ethereumjs-util": "7.0.3",
     "ethereumjs-wallet": "0.6.3",
@@ -150,8 +150,8 @@
     "trezor-connect": "8.1.8",
     "u2f-api": "1.1.1",
     "uglify-es": "3.3.9",
-    "uuid": "8.2.0",
-    "vue-i18n": "8.18.2",
+    "uuid": "8.3.0",
+    "vue-i18n": "8.20.0",
     "vue-stripe-elements-plus": "0.3.2",
     "vue-template-compiler": "2.6.11",
     "vue-worker": "1.2.1",
@@ -161,7 +161,7 @@
     "web3-core-method": "1.2.7",
     "web3-core-requestmanager": "1.2.7",
     "web3-utils": "1.2.7",
-    "webpack": "4.43.0",
+    "webpack": "4.44.1",
     "weekstart": "1.0.1",
     "worker-loader": "2.0.0",
     "zxcvbn": "4.4.2"
