@@ -11,8 +11,6 @@
         <wallet-footer class="mt-10" />
       </div>
     </div>
-
-    <global-elements-container />
     <global-modal-container />
     <global-overlay-container />
   </v-sheet>
