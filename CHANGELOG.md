@@ -6,6 +6,8 @@
 
 ### Bug
 
+- Fix modal UI bug [#2537](https://github.com/MyEtherWallet/MyEtherWallet/pull/2537)
+
 ### Release v5.7.3-hotfix.1
 
 ### Devop
