@@ -74,7 +74,7 @@
                   <v-radio-group
                     v-model="radioGroup1"
                     hide-details
-                    class="width--100-percent"
+                    class="full-width-percent"
                   >
                     <v-row>
                       <v-col v-for="n in 3" :key="n" lg="4">
@@ -88,7 +88,7 @@
                   <v-radio-group
                     v-model="radioGroup2"
                     hide-details
-                    class="width--100-percent"
+                    class="full-width-percent"
                   >
                     <v-row>
                       <v-col v-for="n in 3" :key="n" lg="4">
@@ -102,7 +102,7 @@
                   <v-radio-group
                     v-model="radioGroup3"
                     hide-details
-                    class="width--100-percent"
+                    class="full-width-percent"
                   >
                     <v-row>
                       <v-col v-for="n in 3" :key="n" lg="4">

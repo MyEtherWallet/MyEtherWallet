@@ -1,7 +1,7 @@
 <template>
   <mew6-white-sheet sideinfo class="px-7 py-5">
     <div>
-      <div class="d-flex align-center justify-space-between width--100-percent">
+      <div class="d-flex align-center justify-space-between full-width-percent">
         <div class="d-flex align-center">
           <div v-if="text" class="title font-weight-bold mr-2">Tips</div>
           <slot name="object-next-to-title" />
