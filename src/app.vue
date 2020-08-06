@@ -3,7 +3,6 @@
     <v-main>
       <v-sheet>
         <router-view />
-        <global-elements-container />
         <global-modal-container />
         <global-overlay-container />
       </v-sheet>
