@@ -24,29 +24,15 @@
         <div class="ml-4">
           <div class="mb-n2 mt-n2 font-weight-medium d-flex align-center">
             <div>Dennis wallet</div>
-            <!-- <Tooltip text="Change your wallet information">
-              <v-btn class="ml-n1" text icon :color="iconColor"
-                ><v-icon class="color--white body-1">mdi-pencil</v-icon></v-btn
-              >
-            </Tooltip> -->
           </div>
           <div class="headline font-weight-bold monospace">$7,244.58</div>
         </div>
       </div>
-      <my-address class="mt-1 mb-2" :address="address" />
+      <div class="component--address d-flex align-center mt-1 mb-2">
+        <div class="monospace full-address">{{ address }}</div>
+        <div class="monospace last-four">{{ lastFour }}</div>
+      </div>
       <div class="d-flex align-center">
-        <!-- <Tooltip text="Print">
-          <v-btn text icon :color="iconColor" @click="openPaperWallet = true">
-            <img src="@/assets/images/icons/icon-printer-white.svg" />
-          </v-btn>
-        </Tooltip> -->
-
-        <!-- <Tooltip text="Click to print out your wallet">
-          <v-btn text icon :color="iconColor">
-            <img src="@/assets/images/icons/icon-document-white.svg" />
-          </v-btn>
-        </Tooltip> -->
-
         <mew-button
           class="ml-auto"
           :has-full-width="false"
@@ -66,12 +52,10 @@
 <script>
 import changeAddress from '../change-address';
 import paperWallet from '../paper-wallet';
-import myAddress from './components/address';
 import qrCodePopup from '@/modules/wallets/components/qr-code-popup';
 
 export default {
   components: {
-    myAddress,
     changeAddress,
     paperWallet,
     qrCodePopup
@@ -80,9 +64,16 @@ export default {
     return {
       openChangeAddress: false,
       openPaperWallet: false,
-      iconColor: 'white',
       address: '0xc2a933600c3fe776777b4000665409c61493d417'
     };
+  },
+  computed: {
+    lastFour() {
+      return this.address.substring(
+        this.address.length - 4,
+        this.address.length
+      );
+    }
   },
   methods: {
     closeChangeAddress() {
@@ -130,5 +121,20 @@ export default {
 }
 .color--white {
   color: white !important;
+}
+
+.component--address * {
+  @extend .color--white;
+}
+
+.full-address {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 165px;
+}
+
+.last-four {
+  margin-left: -4px;
 }
 </style>
