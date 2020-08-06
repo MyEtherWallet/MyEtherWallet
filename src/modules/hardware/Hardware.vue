@@ -1,6 +1,6 @@
 <template>
   <div class="expandHeader">
-    <BlockTitle :data="titleData" />
+    <block-title :data="titleData" />
 
     <v-sheet color="transparent" max-width="1000px" class="mx-auto">
       <v-row>
@@ -22,11 +22,11 @@
 </template>
 
 <script>
-import BlockTitle from '@/components/block-title';
+import blockTitle from '@/components/block-title/BlockTitle';
 
 export default {
   name: 'Hardware',
-  components: { BlockTitle },
+  components: { blockTitle },
   data: () => ({
     buttons: [
       {

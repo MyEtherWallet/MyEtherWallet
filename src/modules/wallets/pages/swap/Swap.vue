@@ -137,7 +137,7 @@
 import Network from '@/modules/wallets/components/network';
 import Swap from '@/modules/wallets/components/swap';
 
-import InterfaceWrap from '@/components/interface-wrap';
+import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import KyberNetwork from '@/assets/images/icons/icon-kyber-network.svg';

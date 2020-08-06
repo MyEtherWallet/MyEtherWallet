@@ -41,7 +41,7 @@
 
 <script>
 import tips from '@/modules/wallets/components/tips';
-import InterfaceWrap from '@/components/interface-wrap';
+import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 
 export default {
   components: {

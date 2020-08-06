@@ -1,9 +1,10 @@
-import HomePage from '@/modules/home';
-import CompanyPage from '@/modules/company';
-import TeamPage from '@/modules/team';
-import ToolsPage from '@/modules/tools';
+import HomePage from '@/modules/home/Home';
+import CompanyPage from '@/modules/company/Company';
+import TeamPage from '@/modules/team/Team';
+import BuyHardwareWallet from '@/modules/hardware/Hardware';
+import ToolsPage from '@/modules/tools/Tools';
 
-import Navigation from '@/modules/home/pages/navigation';
+import Navigation from '@/modules/home/pages/navigation/Navigation';
 
 import CreateWallet from '@/modules/wallets/pages/create';
 
@@ -15,8 +16,7 @@ import AccessWalletBrowserExtension from '@/modules/wallets/pages/access/browser
 import AccessWalletBrowserExtensionInstall from '@/modules/wallets/components/install-extension';
 import AccessWalletBrowserExtensionAccess from '@/modules/wallets/components/access-extension';
 
-import HowItWorks from '@/modules/how-it-works';
-import BuyHardwareWallet from '@/modules/hardware';
+import HowItWorks from '@/modules/how-it-works/HowItWorks';
 
 import WalletRoutes from '@/modules/wallets/routes.js';
 

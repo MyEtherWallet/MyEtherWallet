@@ -80,9 +80,9 @@
 </template>
 
 <script>
-import interfaceWrap from '@/components/interface-wrap';
+import interfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';
-import divider from '@/components/dividerx';
+import divider from '@/components/dividerx/DividerX';
 import network from '@/modules/wallets/components/network';
 import swap from '@/modules/wallets/components/swap';
 

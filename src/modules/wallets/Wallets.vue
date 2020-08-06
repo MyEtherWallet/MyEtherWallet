@@ -22,8 +22,8 @@
 import sideMenu from './components/side-menu';
 import walletHeader from './components/header';
 import walletFooter from './components/footer';
-import globalElementsContainer from '@/containers/GlobalElementsContainer';
-import globalModalContainer from '@/containers/GlobalModalContainer';
+import globalElementsContainer from '@/containers/GlobalElementsContainer/GlobalElementsContainer';
+import globalModalContainer from '@/containers/GlobalModalContainer/GlobalModalContainer';
 import globalOverlayContainer from '@/containers/GlobalOverlayContainer';
 
 export default {

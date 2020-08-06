@@ -19,11 +19,11 @@
 </template>
 
 <script>
-import send from './components/send';
-import swap from './components/swap';
-import dapps from './components/dapps';
-import tokens from './components/tokens';
-import more from './components/more';
+import send from './components/send/Send';
+import swap from './components/swap/Swap';
+import dapps from './components/dapps/Dapps';
+import tokens from './components/tokens/Tokens';
+import more from './components/more/More';
 
 export default {
   name: 'TabContent',

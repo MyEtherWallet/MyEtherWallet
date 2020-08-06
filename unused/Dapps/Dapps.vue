@@ -16,13 +16,13 @@
 </template>
 
 <script>
-import BlockTitle from '@/components/BlockTitles/BlockTitle';
+import blockTitle from '@/components/BlockTitles/BlockTitle';
 import TextButton from '@/components/Buttons/TextButton1';
 import DappsBlock from '@/components/DappsBlock';
 
 export default {
   components: {
-    'block-title': BlockTitle,
+    blockTitle,
     'text-button': TextButton,
     'dapps-block': DappsBlock
   },

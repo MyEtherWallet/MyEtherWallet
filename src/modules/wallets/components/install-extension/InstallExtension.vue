@@ -1,10 +1,10 @@
 <template>
   <div class="expandHeader">
-    <BlockTitle :data="titleData">
+    <block-title :data="titleData">
       <h5 class="white--text ma-0">
         Please select a browser from below.
       </h5>
-    </BlockTitle>
+    </block-title>
 
     <v-sheet
       color="white"
@@ -30,11 +30,11 @@
 </template>
 
 <script>
-import BlockTitle from '@/components/block-title';
+import blockTitle from '@/components/block-title/BlockTitle';
 
 export default {
   name: 'CreateNewWallet',
-  components: { BlockTitle },
+  components: { blockTitle },
   data() {
     return {
       titleData: {

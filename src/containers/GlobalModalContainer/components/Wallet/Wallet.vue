@@ -1,6 +1,6 @@
 <template>
   <div>
-    <WooCommerce
+    <woo-commerce
       :open="openWalletWooCommerce"
       :close="closeWalletWooCommerce"
     />
@@ -8,11 +8,11 @@
 </template>
 
 <script>
-import WooCommerce from './WooCommerce';
+import wooCommerce from './WooCommerce/WooCommerce';
 
 export default {
   components: {
-    WooCommerce
+    wooCommerce
   }
 };
 </script>
