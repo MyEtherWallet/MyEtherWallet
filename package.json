@@ -111,7 +111,7 @@
     "web3-core-method": "1.2.11",
     "web3-core-requestmanager": "1.2.11",
     "web3-utils": "1.2.11",
-    "webpack": "4.43.0",
+    "webpack": "4.44.1",
     "weekstart": "1.0.1"
   },
   "engines": {

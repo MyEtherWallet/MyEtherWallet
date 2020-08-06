@@ -50,10 +50,11 @@
 
 <script>
 import interfaceWrap from '@/components/interface-wrap/InterfaceWrap';
-import breadCrumbs from '@/components/breadcrumbs/Breadcrumbs';
+// TODO: Make into mew component
+// import breadCrumbs from '@/components/breadcrumbs';
 
 export default {
-  components: { interfaceWrap, breadCrumbs },
+  components: { interfaceWrap },
   data() {
     return {
       buttons: [
