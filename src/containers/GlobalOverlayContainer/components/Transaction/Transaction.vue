@@ -1,15 +1,15 @@
 <template>
   <div>
-    <TxConfirmation />
+    <tx-confirmation />
   </div>
 </template>
 
 <script>
-import TxConfirmation from './TxConfirmation';
+import txConfirmation from './TxConfirmation/TxConfirmation';
 
 export default {
   components: {
-    TxConfirmation
+    txConfirmation
   }
 };
 </script>

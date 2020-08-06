@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import tips from '@/modules/wallets/components/tips';
+import tips from '@/modules/wallets/components/tips/Tips';
 import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 
 export default {

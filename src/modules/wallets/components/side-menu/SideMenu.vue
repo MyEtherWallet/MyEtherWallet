@@ -20,12 +20,12 @@
 </template>
 
 <script>
-import walletCard from './components/wallet-card';
-import buyEthBtn from './components/buy-eth-btn';
-import accordionMenu from './components/menu';
-import systemMenu from './components/system-menu';
-import themeSwitch from './components/theme-switch';
-import version from './components/version';
+import walletCard from './components/wallet-card/WalletCard';
+import buyEthBtn from './components/buy-eth-btn/BuyEthButton';
+import accordionMenu from './components/menu/Menu';
+import systemMenu from './components/system-menu/SystemMenu';
+import themeSwitch from './components/theme-switch/ThemeSwitch';
+import version from './components/version/Version';
 import divider from './components/divider/Divider';
 
 export default {

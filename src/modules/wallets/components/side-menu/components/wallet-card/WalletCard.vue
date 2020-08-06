@@ -50,9 +50,9 @@
 </template>
 
 <script>
-import changeAddress from '../change-address';
-import paperWallet from '../paper-wallet';
-import qrCodePopup from '@/modules/wallets/components/qr-code-popup';
+import changeAddress from '../change-address/ChangeAddress';
+import paperWallet from '../paper-wallet/PaperWallet';
+import qrCodePopup from '@/modules/wallets/components/qr-code-popup/QRcodePopup';
 
 export default {
   components: {

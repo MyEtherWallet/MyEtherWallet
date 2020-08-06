@@ -177,8 +177,8 @@
 </template>
 
 <script>
-import phraseBlock from '../phrase-block';
-import mnemonicPhraseTable from '../mnemonic-phrase-table';
+import phraseBlock from '../phrase-block/PhraseBlock';
+import mnemonicPhraseTable from '../mnemonic-phrase-table/MnemonicPhraseTable';
 import MnemonicTools from '@/helpers/mnemonicTools';
 export default {
   name: 'MewConnect',

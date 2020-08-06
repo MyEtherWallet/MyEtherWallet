@@ -32,7 +32,7 @@
         <template v-slot:tabContent2>
           <mew6-white-sheet>
             <GroupRadioButtons :buttons="networkButtons" />
-            <AddressTable />
+            <address-table />
           </mew6-white-sheet>
         </template>
       </mew-tabs>
@@ -43,13 +43,13 @@
 <script>
 // TODO: add component in mew components
 // import GroupRadioButtons from '@/components/Buttons/GroupRadioButtons';
-import AddressTable from './components/AddressTable';
+import addressTable from './components/AddressTable/AddressTable';
 
 export default {
   components: {
     // GroupRadioButtons,
 
-    AddressTable
+    addressTable
   },
   props: {
     open: { default: false, type: Boolean },
