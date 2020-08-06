@@ -20,10 +20,6 @@ import vuetify from '@/plugins/vuetify';
 import whiteSheet from '@/components/white-sheet/WhiteSheet.vue';
 Vue.component('mew6-white-sheet', whiteSheet);
 
-// Local copy of MEW6 components. (development only)
-//import mewButton from '@/mewComponents/MewButton/MewButton';
-//Vue.component('mew-button', mewButton);
-
 Vue.prototype.$eventHub = new Vue();
 
 //Router

@@ -11,14 +11,12 @@
 </template>
 
 <script>
-import globalElementsContainer from '@/containers/GlobalElementsContainer/GlobalElementsContainer';
 import globalModalContainer from '@/containers/GlobalModalContainer/GlobalModalContainer';
 import globalOverlayContainer from '@/containers/GlobalOverlayContainer/GlobalOverlayContainer';
 
 export default {
   name: 'App',
   components: {
-    globalElementsContainer,
     globalModalContainer,
     globalOverlayContainer
   }
