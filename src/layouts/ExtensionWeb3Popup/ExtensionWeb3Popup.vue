@@ -9,13 +9,13 @@ import { mapState, mapActions } from 'vuex';
 
 export default {
   computed: {
-    ...mapState('main', ['network', 'web3'])
+    ...mapState('main', ['network', 'web3', 'Networks'])
   },
   mounted() {
     this.fetchNewStore();
   },
   methods: {
-    ...mapActions('main', ['switchNetwork', 'setWeb3Instance']),
+    ...mapActions('main', ['switchNetwork', 'setWeb3Instance', 'setENS']),
     fetchNewStore() {
       window.chrome.storage.sync.get(null, obj => {
         const defaultNetwork = obj.hasOwnProperty('defNetwork')
