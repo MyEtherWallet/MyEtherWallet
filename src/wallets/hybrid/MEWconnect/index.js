@@ -69,10 +69,8 @@ class MEWconnectWallet {
           resolve(getSignTransactionObject(tx));
         });
 
-        this.mewConnect.once('reject', id => {
+        this.mewConnect.once('reject', () => {
           this.mewConnect.removeAllListeners('signTx');
-          // eslint-disable-next-line
-          console.log('signTx reject id:', id); // todo remove dev item
           reject(Error('reject'));
         });
       });
@@ -87,10 +85,8 @@ class MEWconnectWallet {
         this.mewConnect.once('signMessage', data => {
           resolve(getBufferFromHex(sanitizeHex(data.sig)));
         });
-        this.mewConnect.once('reject', id => {
+        this.mewConnect.once('reject', () => {
           this.mewConnect.removeAllListeners('signMessage');
-          // eslint-disable-next-line
-          console.log('signMessage reject id:', id); // todo remove dev item
           reject(Error('reject'));
         });
       });
