@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <logout-warning-modal ref="logoutWarningModal" />
+    <twitter-warning-modal ref="twitterWarningModal" />
     <header-container
       v-show="
         $route.fullPath !== '/getting-started' &&
@@ -25,6 +26,7 @@ import { mapState, mapActions } from 'vuex';
 import { Toast } from '@/helpers';
 import LogoutWarningModal from '@/components/LogoutWarningModal';
 import WalletLaunchedBanner from '@/components/WalletLaunchedBanner';
+import TwitterWarningModal from '@/components/TwitterWarningModal';
 
 export default {
   name: 'App',
@@ -34,7 +36,8 @@ export default {
     'confirmation-container': ConfirmationContainer,
     'logout-warning-modal': LogoutWarningModal,
     'welcome-modal': WelcomeModal,
-    'wallet-launched-footer-banner': WalletLaunchedBanner
+    'wallet-launched-footer-banner': WalletLaunchedBanner,
+    'twitter-warning-modal': TwitterWarningModal
   },
   computed: {
     ...mapState('main', ['wallet', 'online'])
@@ -69,10 +72,10 @@ export default {
   },
   mounted() {
     this.checkIfOnline(navigator.onLine);
-
-    if (!store.get('notFirstTimeVisit') && this.$route.fullPath === '/') {
-      this.$refs.welcome.$refs.welcome.show();
-    }
+    this.$refs.twitterWarningModal.$refs.twitterWarning.show();
+    // if (!store.get('notFirstTimeVisit') && this.$route.fullPath === '/') {
+    //   this.$refs.welcome.$refs.welcome.show();
+    // }
 
     this.$refs.welcome.$refs.welcome.$on('hidden', () => {
       store.set('notFirstTimeVisit', true);
