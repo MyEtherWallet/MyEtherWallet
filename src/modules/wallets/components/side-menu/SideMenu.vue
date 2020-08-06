@@ -9,7 +9,16 @@
       </router-link>
     </div>
     <wallet-card />
-    <buy-eth-btn class="mt-2 mb-6" />
+    <mew-button
+      class="buy-eth-button mt-2 mb-6"
+      color-theme="white"
+      btn-style="outline"
+      title="Buy ETH here"
+      button-size="large"
+      :icon="require('@/assets/images/icons/icon-mastercard-mew.png')"
+      icon-type="img"
+      icon-align="right"
+    />
     <accordion-menu class="mt-4" />
     <divider class="my-5 mx-1" />
     <system-menu />
@@ -21,7 +30,6 @@
 
 <script>
 import walletCard from './components/wallet-card/WalletCard';
-import buyEthBtn from './components/buy-eth-btn/BuyEthButton';
 import accordionMenu from './components/menu/Menu';
 import systemMenu from './components/system-menu/SystemMenu';
 import themeSwitch from './components/theme-switch/ThemeSwitch';
@@ -31,7 +39,6 @@ import divider from './components/divider/Divider';
 export default {
   components: {
     walletCard,
-    buyEthBtn,
     accordionMenu,
     systemMenu,
     themeSwitch,
