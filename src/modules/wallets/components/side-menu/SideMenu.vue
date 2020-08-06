@@ -9,7 +9,16 @@
       </router-link>
     </div>
     <wallet-card />
-    <buy-eth-btn class="mt-2 mb-6" />
+    <mew-button
+      class="buy-eth-button mt-2 mb-6"
+      color-theme="white"
+      btn-style="outline"
+      title="Buy ETH here"
+      button-size="large"
+      :icon="require('@/assets/images/icons/icon-mastercard-mew.png')"
+      icon-type="img"
+      icon-align="right"
+    />
     <accordion-menu class="mt-4" />
     <Divider class="my-5 mx-1" />
     <system-menu />
