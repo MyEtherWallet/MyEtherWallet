@@ -3,7 +3,7 @@
     <home-header title="About us - Team" />
     <div class="py-7" />
     <v-sheet max-width="700px" class="mx-auto">
-      <BlockTitle no-page-title :data="titleData" />
+      <block-title no-page-title :data="titleData" />
     </v-sheet>
     <div class="py-5" />
     <v-container>
@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import homeHeader from '@/components/home-header';
-import BlockTitle from '@/components/block-title';
+import homeHeader from '@/components/home-header/HomeHeader';
+import blockTitle from '@/components/block-title/BlockTitle';
 
 import Kosala from '@/assets/images/team/kosala.jpg';
 import Brian from '@/assets/images/team/brian.jpg';
@@ -41,7 +41,7 @@ import Semaja from '@/assets/images/team/semaja.jpg';
 import Katya from '@/assets/images/team/katya.jpg';
 
 export default {
-  components: { homeHeader, BlockTitle },
+  components: { homeHeader, blockTitle },
   data: () => ({
     titleData: {
       textProps: '',

@@ -1,16 +1,16 @@
 <template>
   <div>
-    <PrivacyWarning />
+    <privacy-warning />
   </div>
 </template>
 
 <script>
-import PrivacyWarning from './components/PrivacyWarning';
+import privacyWarning from './components/PrivacyWarning/PrivacyWarning';
 
 export default {
   name: 'GlobalElementsContainer',
   components: {
-    PrivacyWarning
+    privacyWarning
   }
 };
 </script>

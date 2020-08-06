@@ -11,9 +11,9 @@
     <wallet-card />
     <buy-eth-btn class="mt-2 mb-6" />
     <accordion-menu class="mt-4" />
-    <Divider class="my-5 mx-1" />
+    <divider class="my-5 mx-1" />
     <system-menu />
-    <Divider class="my-5 mx-1" />
+    <divider class="my-5 mx-1" />
     <theme-switch class="px-5" />
     <version class="px-5" />
   </v-sheet>
@@ -26,7 +26,7 @@ import accordionMenu from './components/menu';
 import systemMenu from './components/system-menu';
 import themeSwitch from './components/theme-switch';
 import version from './components/version';
-import Divider from './components/divider';
+import divider from './components/divider/Divider';
 
 export default {
   components: {
@@ -36,7 +36,7 @@ export default {
     systemMenu,
     themeSwitch,
     version,
-    Divider
+    divider
   }
 };
 </script>

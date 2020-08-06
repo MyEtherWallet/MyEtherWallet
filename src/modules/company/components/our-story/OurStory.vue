@@ -3,7 +3,7 @@
     <div class="py-10" />
     <v-container class="pb-0">
       <v-sheet max-width="600px" color="transparent" class="mx-auto">
-        <BlockTitle no-page-title :data="titleData" />
+        <block-title no-page-title :data="titleData" />
       </v-sheet>
       <div class="my-11" />
       <div class="line-height--0">
@@ -17,10 +17,10 @@
 </template>
 
 <script>
-import BlockTitle from '@/components/block-title';
+import blockTitle from '@/components/block-title/BlockTitle';
 
 export default {
-  components: { BlockTitle },
+  components: { blockTitle },
   data: () => ({
     titleData: {
       textProps: '',

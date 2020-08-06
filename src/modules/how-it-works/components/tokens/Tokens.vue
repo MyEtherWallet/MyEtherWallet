@@ -14,7 +14,7 @@
           />
         </v-col>
         <v-col cols="5" class="text-content pl-12">
-          <BlockTitle no-page-title :data="titleData" class="mb-12 pl-12" />
+          <block-title no-page-title :data="titleData" class="mb-12 pl-12" />
           <div class="mb-4 d-flex">
             <div class="mr-3">
               <v-img src="@/assets/images/icons/icon-buy-token-white.svg" />
@@ -59,10 +59,10 @@
 </template>
 
 <script>
-import BlockTitle from '@/components/block-title';
+import blockTitle from '@/components/block-title/BlockTitle';
 
 export default {
-  components: { BlockTitle },
+  components: { blockTitle },
   data: () => ({
     titleData: {
       textProps: 'white--text',
