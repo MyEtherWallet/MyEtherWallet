@@ -1,12 +1,12 @@
 import { tldSupported, getTld } from './helpers';
 
-import ENS from 'ethereum-ens';
 const ADDRESS_URL =
   'https://nft2.mewapi.io/tokens?owner={{address}}&chain=mainnet';
 const ETH_REGISTRAR = '0x00000000'; // place holder, trying to figure out when I should fetch the registrar
+import EthNameModule from './EthNameModule';
 
 export default class NameManager {
-  constructor(network, address, web3) {
+  constructor(network, address, web3, ens) {
     this.network = network;
     this.address = address;
     this.web3 = web3;
@@ -16,7 +16,7 @@ export default class NameManager {
     ) {
       throw new Error('Network does not support ENS!');
     }
-    this.ens = new ENS(web3.currentProvider, network.type.ens.registry);
+    this.ens = ens;
   }
 
   searchName(name) {
