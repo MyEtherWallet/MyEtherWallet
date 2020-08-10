@@ -1,5 +1,5 @@
 <template>
-  <div class="features-container">
+  <div class="mew-component--features">
     <v-sheet color="transparent" max-width="400px" class="mx-auto text-center">
       <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
         Features
@@ -8,40 +8,44 @@
         All-in-one gateway to your Ethereum Blockchain service
       </h2>
     </v-sheet>
-    <mew-tabs
-      class="mew-tabs-container d-flex align-center flex-column"
-      :items="mewTabs"
-      is-block
-    >
-      <template v-slot:tabContent1>
-        <img
-          class="pt-8"
-          :src="require('@/assets/images/backgrounds/bg-swap-page.svg')"
-          alt="Swap"
-        />
-      </template>
-      <template v-slot:tabContent2>
-        <img
-          class="pt-8"
-          :src="require('@/assets/images/backgrounds/bg-swap-page.svg')"
-          alt="Swap"
-        />
-      </template>
-      <template v-slot:tabContent2>
-        <img
-          class="pt-8"
-          :src="require('@/assets/images/backgrounds/bg-swap-page.svg')"
-          alt="Swap"
-        />
-      </template>
-      <template v-slot:tabContent3>
-        <img
-          class="pt-8"
-          :src="require('@/assets/images/backgrounds/bg-swap-page.svg')"
-          alt="Swap"
-        />
-      </template>
-    </mew-tabs>
+    <div class="features-tabs-container">
+      <v-container>
+        <mew-tabs
+          class="mew-tabs-container d-flex align-center flex-column"
+          :items="mewTabs"
+          is-block
+        >
+          <template v-slot:tabContent1>
+            <img
+              class="pt-8 tab-image-content"
+              :src="require('@/assets/images/backgrounds/bg-send-page.png')"
+              alt="Send"
+            />
+          </template>
+          <template v-slot:tabContent2>
+            <img
+              class="pt-8 tab-image-content"
+              :src="require('@/assets/images/backgrounds/bg-swap-page.png')"
+              alt="Swap"
+            />
+          </template>
+          <template v-slot:tabContent2>
+            <img
+              class="pt-8 tab-image-content"
+              :src="require('@/assets/images/backgrounds/bg-dapps-page.png')"
+              alt="Dapps"
+            />
+          </template>
+          <template v-slot:tabContent3>
+            <img
+              class="pt-8 tab-image-content"
+              :src="require('@/assets/images/backgrounds/bg-tokens-page.png')"
+              alt="tokens"
+            />
+          </template>
+        </mew-tabs>
+      </v-container>
+    </div>
   </div>
 </template>
 
@@ -69,14 +73,16 @@ export default {
 </script>
 
 <style lang="scss">
-.features-container {
-  .mew-tabs-container {
-    .v-tabs {
-      width: 50%;
-    }
-    img {
-      width: 100%;
-    }
+.mew-component--features {
+  .features-tabs-container {
+    background-image: url(../../../../assets/images/backgrounds/bg-waves-color.png);
+    background-size: cover;
+  }
+
+  .tab-image-content {
+    max-width: 70%;
+    margin: 0 auto;
+    display: block;
   }
 }
 </style>
