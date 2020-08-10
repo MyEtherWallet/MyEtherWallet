@@ -18,40 +18,13 @@
                   @onBtnClick="onBtnClick"
                 />
                 <mew-button
-                  button-size="medium"
+                  button-size="small"
                   class="ml-4"
                   icon-type="mdi"
                   icon="mdi-dots-vertical"
+                  btn-style="transparent"
+                  color-theme="secondary"
                 />
-              </div>
-              <div v-if="false">
-                <v-btn-toggle
-                  v-model="chartRange"
-                  class="chart-button-group"
-                  tile
-                  group
-                  dense
-                  mandatory
-                >
-                  <v-btn value="1d">
-                    1D
-                  </v-btn>
-                  <v-btn value="1w">
-                    1W
-                  </v-btn>
-                  <v-btn value="1m">
-                    1M
-                  </v-btn>
-                  <v-btn value="1y">
-                    1Y
-                  </v-btn>
-                  <v-btn value="all">
-                    All
-                  </v-btn>
-                </v-btn-toggle>
-                <v-btn text icon class="ml-4">
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
               </div>
             </div>
           </div>
