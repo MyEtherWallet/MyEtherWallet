@@ -1,6 +1,8 @@
 <template>
   <v-container>
-    <v-card class="card-content d-flex align-center" flat>
+    <v-sheet
+      class="border-radius--10px card-content d-flex align-center justify-space-between"
+    >
       <div>
         <h2 class="white--text">
           Newbie in crypto?
@@ -9,7 +11,6 @@
           Join our journey to MEW.
         </h2>
       </div>
-      <v-spacer />
       <mew-button
         btn-link="https://www.mewtopia.com/"
         :has-full-width="false"
@@ -18,7 +19,7 @@
         color-theme="white"
         button-size="xlarge"
       />
-    </v-card>
+    </v-sheet>
   </v-container>
 </template>
 
@@ -30,13 +31,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.v-card {
-  border-radius: 10px !important;
-}
-
 .card-content {
-  //background: linear-gradient(130deg, #0b2840 0%, #3d9e91 80%, #00c4ff 100%);
-  padding: 70px 90px;
+  padding: 80px 90px;
   background-image: url('~@/assets/images/backgrounds/bg-light.png');
   background-position: 0px 0px;
   background-size: 100%;
