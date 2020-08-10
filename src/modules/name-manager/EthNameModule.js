@@ -23,7 +23,7 @@ const REGISTRAR_INTERFACE = {
   TEXT_RECORD: '0x59d1d43c'
 };
 
-export default class EnsModule {
+export default class EthNameModule {
   constructor(name, address, network, web3, ens) {
     this.address = address ? address : '0x';
     this.network = network ? network : null;
@@ -42,13 +42,17 @@ export default class EnsModule {
     this.resolverAddress = '0x';
     this.deedOwner = '0x';
     this.publicResolverAddress = '0x';
-    this.contentHash = this.deedValue = 0;
+    this.contentHash = '';
+    this.deedValue = 0;
     this.expiration = null;
     this.expired = false;
     this.redeemable = false;
     this.textRecordSupport = false;
     this.multicoinSupport = false;
     this.moduleData = {};
+
+    // not sure if needs to return
+    this.secretPhrase = '';
 
     // Contracts
     this.publicResolverContract = null;
@@ -63,9 +67,24 @@ export default class EnsModule {
   }
 
   register() {
+    const _self = this;
     if (this.owner === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
+    return new Promise((resolve, reject) => {
+      try {
+        _self
+          ._createCommitment()
+          .then(_self._registerWithDuration)
+          .then(() => {
+            this._initializeNameModule();
+            this._setModuleData();
+            resolve(this.moduleData);
+          });
+      } catch (e) {
+        reject(e);
+      }
+    });
   }
 
   transfer(toAddress) {
@@ -508,6 +527,61 @@ export default class EnsModule {
     } else {
       this.textRecordSupport = supportsTxt;
       this.txtRecords = null;
+    }
+  }
+
+  async _registerWithDuration() {
+    const utils = this.web3.utils;
+    this.loading = true;
+    const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
+    const duration = Math.ceil(SECONDS_YEAR * this.duration);
+    try {
+      const rentPrice = await this.registrarControllerContract.methods
+        .rentPrice(this.parsedHostName, duration)
+        .call();
+      const withFivePercent = BigNumber(rentPrice)
+        .times(1.05)
+        .integerValue()
+        .toFixed();
+      return this.registrarControllerContract.methods
+        .registerWithConfig(
+          this.parsedHostName,
+          this.address,
+          duration,
+          utils.sha3(this.secretPhrase),
+          this.publicResolverAddress,
+          this.address
+        )
+        .send({ from: this.account.address, value: withFivePercent });
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  async _createCommitment() {
+    const utils = this.web3.utils;
+    try {
+      const commitment = await this.registrarControllerContract.methods
+        .makeCommitmentWithConfig(
+          this.parsedHostName,
+          this.address,
+          utils.sha3(this.secretPhrase),
+          this.publicResolverAddress,
+          this.address
+        )
+        .call();
+      return await this.registrarControllerContract.methods
+        .commit(commitment)
+        .send({ from: this.address });
+      // .once('transactionHash', () => {
+      //   this.$router.push({ name: 'ensPermRegistration' });
+      // })
+      // .on('receipt', () => {
+      //   this.loading = false;
+      //   this.commitmentCreated = true;
+      // });
+    } catch (e) {
+      throw new Error(e);
     }
   }
 
