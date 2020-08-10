@@ -19,7 +19,7 @@
                 />
                 <mew-button
                   button-size="small"
-                  class="ml-4"
+                  class="ml-1"
                   icon-type="mdi"
                   icon="mdi-dots-vertical"
                   btn-style="transparent"
