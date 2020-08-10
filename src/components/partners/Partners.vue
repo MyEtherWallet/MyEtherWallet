@@ -1,23 +1,21 @@
 <template>
-  <div class="home-partners">
-    <v-container>
-      <v-sheet color="transparent" max-width="400px">
-        <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
-          Partners
-        </div>
-        <h2 class="mew-subtitle mb-9">
-          Connect with the powerful crypto communities
-        </h2>
-      </v-sheet>
-      <v-row class="mt-8 px-4">
-        <v-col v-for="(p, key) in partners" :key="key" cols="3" md="3" lg="2">
-          <a :href="p.link" target="_blank">
-            <img :src="p.img" />
-          </a>
-        </v-col>
-      </v-row>
-    </v-container>
-  </div>
+  <v-container>
+    <v-sheet color="transparent" max-width="400px">
+      <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
+        Partners
+      </div>
+      <h2 class="mew-subtitle mb-9">
+        Connect with the powerful crypto communities
+      </h2>
+    </v-sheet>
+    <v-row class="mt-8 px-4">
+      <v-col v-for="(p, key) in partners" :key="key" cols="3" md="3" lg="2">
+        <a :href="p.link" target="_blank">
+          <img :src="p.img" />
+        </a>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
