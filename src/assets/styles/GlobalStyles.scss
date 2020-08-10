@@ -44,38 +44,37 @@
 }
 
 /* ========== CSS Style Reset ========== */
-* {
-  font-family: 'Roboto';
-  box-sizing: content-box;
-}
+
 html {
-  font-size: 14px;
+  font-size: 16px !important;
 }
 .monospace {
   font-family: monospace !important;
 }
 i {
-  font-family: 'Material Icons' !important;
+  font-family: "Material Icons" !important;
 }
-div,
-p {
-  font-size: 14px;
-  line-height: 21px;
+div {
+  font-size: 0.875rem;
+  line-height: 1.3125rem;
   padding: 0;
   margin: 0;
-  font-weight: 400;
 }
 p {
-  letter-spacing: 0.3px;
+  font-size: 0.875rem;
+  line-height: 1.3125rem;
+  letter-spacing: 0.01875rem;
 }
 h1 {
   font-size: 42px;
   font-weight: 500;
 }
 h2 {
-  font-size: 30px;
+  font-size: 1.875rem;
+  line-height: 2.3rem;
   font-weight: 700;
-  line-height: 36px;
+  padding: 0;
+  margin: 0;
 }
 h3 {
   font-size: 24px;

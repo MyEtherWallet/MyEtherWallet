@@ -60,9 +60,9 @@
             />
             <v-sheet color="transparent" max-width="360px">
               <div class="pa-12">
-                <div class="mew-subtitle mb-6">
+                <h2 class="mb-6">
                   My ETH balance is empty
-                </div>
+                </h2>
                 <mew-button
                   :has-full-width="false"
                   title="Buy ETH with a credit card"
@@ -130,9 +130,9 @@
             />
             <v-sheet color="transparent" max-width="360px">
               <div class="pa-12">
-                <div class="mew-subtitle mb-6">
+                <h2 class="mb-6">
                   My token list is empty
-                </div>
+                </h2>
                 <mew-button
                   class="ml-auto ml-n3"
                   :has-full-width="false"
