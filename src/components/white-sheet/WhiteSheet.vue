@@ -1,6 +1,7 @@
 <template>
   <v-theme-provider root>
     <v-sheet
+      color="mewBg"
       class="border-radius--10px box-shadow"
       :class="[
         sideinfo ? 'sideinfo' : '',
