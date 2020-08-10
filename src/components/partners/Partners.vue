@@ -1,14 +1,14 @@
 <template>
   <div class="home-partners">
     <v-container>
-      <div class="flex-column d-flex">
-        <span class="mew-heading-3 text-uppercase textPrimary--text pb-3">
+      <v-sheet color="transparent" max-width="400px">
+        <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
           Partners
-        </span>
-        <span class="mew-subtitle pb-7">
+        </div>
+        <h2 class="mew-subtitle mb-9">
           Connect with the powerful crypto communities
-        </span>
-      </div>
+        </h2>
+      </v-sheet>
       <v-row class="mt-8 px-4">
         <v-col v-for="(p, key) in partners" :key="key" cols="3" md="3" lg="2">
           <a :href="p.link" target="_blank">

@@ -2,14 +2,14 @@
   <div>
     <!-- need to translate -->
     <v-container>
-      <div class="flex-column d-flex">
-        <span class="mew-heading-3 text-uppercase textPrimary--text pb-3">
+      <v-sheet color="transparent" max-width="400px">
+        <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
           Why Mew
-        </span>
-        <span class="mew-subtitle pb-7">
+        </div>
+        <h2 class="mew-subtitle mb-9">
           Make Ethereum Blockchain easy and secure
-        </span>
-      </div>
+        </h2>
+      </v-sheet>
 
       <div class="d-flex">
         <info-card
