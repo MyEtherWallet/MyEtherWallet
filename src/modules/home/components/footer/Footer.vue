@@ -194,13 +194,13 @@
             target="_blank"
             class="ml-4"
           >
-            <mew-icon img-height="20px" :icon-name="i.icon" />
+            <mew-icon :img-height="20" :icon-name="i.icon" />
           </a>
         </div>
       </div>
     </v-container>
     <div id="id-dab581eb596e6225d97b24f9856e3d70">
-      <v-sheet color="titlePrimary" class="py-3">
+      <v-sheet color="titlePrimary" class="py-2">
         <v-container>
           <div class="d-flex align-center">
             <p class="cyan--text text--lighten-3 ma-0">V6.0.0-beta.3</p>
