@@ -77,7 +77,8 @@ export default class EthNameModule {
           ._createCommitment()
           .then(_self._registerWithDuration)
           .then(() => {
-            this._initializeNameModule();
+            this._initializeNameModule(); // might need something more effecient than this
+            // returns new values
             this._setModuleData();
             resolve(this.moduleData);
           });
