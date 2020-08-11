@@ -10,7 +10,7 @@
 
 #### Contact Form:
 
-- Email us at support@myetherwallet.com
+- Email us at [support@myetherwallet.com](mailto:support@myetherwallet.com)
 - <p>Include a detailed description of the issue.</p>
   <note>Please include as many details as possible, such as phone / computer model, OS number, version of the app / site you are using, browser version etc.</note>
 - Attach screenshots (optional)
@@ -21,6 +21,6 @@
 
 Please reach out to Simplex / Wyre with as much information as possible, so they can further assist you.
 
-Simplex can be reached at support@simplex.com
+Simplex can be reached at [support@simplex.com](mailto:support@simplex.com)
 
-Wyre can be reached at support@sendwyre.com
+Wyre can be reached at [support@sendwyre.com](mailto:support@sendwyre.com)
