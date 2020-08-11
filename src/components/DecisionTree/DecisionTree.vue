@@ -126,7 +126,7 @@
 <script>
 import Multiselect from 'vue-multiselect';
 import MdContainer from './components/MdContainer';
-import mdIndex from '@/data/DecisionTree/MDIndex.js';
+import mdIndex from './data/MDIndex.js';
 import marked from 'marked';
 import { Misc } from '@/helpers';
 
