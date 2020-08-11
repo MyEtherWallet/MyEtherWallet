@@ -105,7 +105,12 @@
         <v-col>
           <div class="subtitle-1 font-weight-bold mb-5 d-flex align-center">
             Love
-            <mew-icon icon-name="love" icon-type="mew" :img-height="30" />
+            <mew-icon
+              class="mx-1"
+              icon-name="love"
+              icon-type="mew"
+              :img-height="30"
+            />
             MEW? Donate!
           </div>
           <p>
@@ -125,7 +130,7 @@
             />
 
             <div>
-              <div>ETH Donation</div>
+              <div class="mb-n2">ETH Donation</div>
               <div class="overline">
                 Address: 0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D
               </div>
@@ -143,7 +148,7 @@
               class="mr-2"
             />
             <div>
-              <div>BTC Donation</div>
+              <div class="mb-n2">BTC Donation</div>
               <div class="overline">
                 Address: 1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9
               </div>
@@ -181,20 +186,15 @@
           </div>
         </div>
         <v-spacer />
-        <div class="social-icons">
+        <div class="social-icons d-flex align-center">
           <a
             v-for="(i, key) in icons"
             :key="key"
             :href="i.link"
             target="_blank"
+            class="ml-4"
           >
-            <mew-button
-              icon-align="left"
-              :icon="i.icon"
-              icon-type="mew"
-              btn-style="transparent"
-              button-size="small"
-            />
+            <mew-icon img-height="20px" :icon-name="i.icon" />
           </a>
         </div>
       </div>
