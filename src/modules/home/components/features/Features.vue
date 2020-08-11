@@ -17,7 +17,7 @@
         >
           <template v-slot:tabContent1>
             <img
-              class="pt-7 tab-image-content"
+              class="pt-7 pb-3 tab-image-content"
               :src="require('@/assets/images/backgrounds/bg-send-page.png')"
               alt="Send"
             />
@@ -81,9 +81,14 @@ export default {
   }
 
   .tab-image-content {
-    max-width: 70%;
+    max-width: 800px;
     margin: 0 auto;
     display: block;
   }
+  .mew-tabs-block {
+    max-width: 550px;
+  }
 }
 </style>
+
+<style lang="scss" scoped></style>

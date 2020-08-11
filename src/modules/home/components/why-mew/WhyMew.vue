@@ -1,6 +1,6 @@
 <template>
   <!-- need to translate -->
-  <v-container>
+  <v-container class="mew-component--why-mew">
     <v-sheet color="transparent" max-width="400px">
       <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
         Why Mew
@@ -12,6 +12,7 @@
 
     <div class="d-flex">
       <info-card
+        class="d-flex align-end block-box-shadow"
         title="Friendly to use"
         desc="Access the Ethereum blockchains original and most-trusted wallet client, now with a host of new features all contained in an elegant, easy and friendly interface."
         :link="{
