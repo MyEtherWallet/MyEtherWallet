@@ -17,28 +17,28 @@
         >
           <template v-slot:tabContent1>
             <img
-              class="pt-8 tab-image-content"
+              class="pt-7 tab-image-content"
               :src="require('@/assets/images/backgrounds/bg-send-page.png')"
               alt="Send"
             />
           </template>
           <template v-slot:tabContent2>
             <img
-              class="pt-8 tab-image-content"
+              class="pt-7 tab-image-content"
               :src="require('@/assets/images/backgrounds/bg-swap-page.png')"
               alt="Swap"
             />
           </template>
           <template v-slot:tabContent2>
             <img
-              class="pt-8 tab-image-content"
+              class="pt-7 tab-image-content"
               :src="require('@/assets/images/backgrounds/bg-dapps-page.png')"
               alt="Dapps"
             />
           </template>
           <template v-slot:tabContent3>
             <img
-              class="pt-8 tab-image-content"
+              class="pt-7 tab-image-content"
               :src="require('@/assets/images/backgrounds/bg-tokens-page.png')"
               alt="tokens"
             />
