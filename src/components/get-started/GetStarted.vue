@@ -1,5 +1,5 @@
 <template>
-  <div class="ad2">
+  <div class="mew-component--get-started">
     <v-container>
       <div class="d-flex align-center px-6">
         <div>
@@ -43,14 +43,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.ad2 {
+.mew-component--get-started {
   background: linear-gradient(90deg, #24a2ca 0%, #32bfa5 100%);
   padding: 80px 0;
 }
+</style>
 
-.standard-button {
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1) !important;
-  height: 76px !important;
-  min-width: 253px !important;
+<style lang="scss">
+.mew-component--get-started {
+  .v-btn {
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1) !important;
+    height: 70px !important;
+    .icon img {
+      height: 50px;
+      margin-right: 5px;
+    }
+  }
 }
 </style>
