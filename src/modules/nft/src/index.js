@@ -1,10 +1,10 @@
 import utils from 'web3-utils';
-
+import fetch from 'node-fetch';
 const endPointUrl = '';
 
 export default class Nft {
   constructor(environment = {}) {
-    this.network = environment.network || 'ETH';
+    this.network = environment.network || { type: { name: 'ETH' } };
     this.activeAddress = environment.address;
     this.nftUrl = `${endPointUrl}getImage`;
     this.openSeaLambdaUrl = endPointUrl;
@@ -28,6 +28,12 @@ export default class Nft {
     this.retryCount = 0;
     this.startIndex = 0;
     this.endIndex = 9;
+  }
+
+  static async init(environment) {
+    const create = new Nft(environment);
+    await create.setup();
+    return create;
   }
 
   //======================================================================
