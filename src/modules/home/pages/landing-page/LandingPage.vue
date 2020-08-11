@@ -1,11 +1,22 @@
 <template>
   <div>
     <landing />
-    <features class="pt-12 pb-6" />
-    <why-mew class="py-6" />
-    <join class="py-5" />
-    <partners class="py-11" />
-    <get-started class="py-9" />
+    <div class="py-10" />
+
+    <features />
+    <div class="py-12" />
+    <div class="py-6" />
+
+    <why-mew />
+    <div class="py-12" />
+
+    <join />
+    <div class="py-12" />
+
+    <partners />
+    <div class="py-12" />
+
+    <get-started />
   </div>
 </template>
 
