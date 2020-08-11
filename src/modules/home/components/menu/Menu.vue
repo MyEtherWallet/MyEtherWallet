@@ -7,7 +7,13 @@
       How it works
     </router-link>
     <mew-menu text-color="white--text" :list-obj="mewMenuCompany" />
-    <mew-menu text-color="white--text" :list-obj="mewMenuTools" />
+    <a
+      href="https://ccswap.myetherwallet.com/#/"
+      target="_blank"
+      class="white--text text-decoration--none"
+    >
+      Buy ETH
+    </a>
   </div>
 </template>
 
@@ -17,36 +23,39 @@ export default {
   data: () => ({
     menuResetKey: 1,
     mewMenuCompany: {
-      name: 'Company',
+      name: 'Wallet actions',
       items: [
         {
-          title: 'About us'
+          title: 'Send transction',
+          to: '/wallet/dashboard'
         },
         {
-          title: 'Team'
+          title: 'Explore Dapps',
+          to: '/wallet/dashboard'
         },
         {
-          title: 'Support'
+          title: 'Swap Tokens',
+          to: '/wallet/dashboard'
         },
         {
-          title: 'Blog'
-        }
-      ]
-    },
-    mewMenuTools: {
-      name: 'Tools',
-      items: [
-        {
-          title: 'Watch only address'
+          title: 'Sign message',
+          to: '/wallet/dashboard'
         },
         {
-          title: 'Send offline helper'
+          title: 'Watch only address',
+          to: '/tools'
         },
         {
-          title: 'Verify message'
+          title: 'Send offline helper',
+          to: '/tools'
         },
         {
-          title: 'Convert units'
+          title: 'Verify message',
+          to: '/tools'
+        },
+        {
+          title: 'Convert units',
+          to: '/tools'
         }
       ]
     }
