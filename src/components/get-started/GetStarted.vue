@@ -19,13 +19,13 @@
         </div>
         <v-spacer />
         <mew-button
-          btn-link="/"
-          :has-full-width="false"
+          btn-link="/create-wallet"
           title="Get a new wallet"
           color-theme="white"
           button-size="xlarge"
-          :icon="icon"
+          icon="newWallet"
           icon-align="left"
+          icon-type="mew"
         />
       </div>
     </v-container>
@@ -33,15 +33,11 @@
 </template>
 
 <script>
-import walletIcon from '@/assets/images/icons/icon-wallet-mew.png';
-
 export default {
   name: 'GetStarted',
   components: {},
   data() {
-    return {
-      icon: walletIcon
-    };
+    return {};
   }
 };
 </script>
