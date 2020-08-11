@@ -76,7 +76,8 @@ export default {
 .mew-component--features {
   .features-tabs-container {
     background-image: url(../../../../assets/images/backgrounds/bg-waves-color.png);
-    background-size: cover;
+    background-size: contain;
+    background-position: bottom center;
   }
 
   .tab-image-content {
