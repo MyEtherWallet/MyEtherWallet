@@ -139,7 +139,7 @@ export default {
   */
 
   Using_MEWconnect_access: {
-    title: "I'm using MEW wallet / MEWconnect",
+    title: "I'm using MEWconnect",
     subtitle: '',
     breadcrumb: 'mewconnect',
     sub: ['Cant_scan_access', 'Forgot_pass_access']
@@ -147,7 +147,7 @@ export default {
 
   Cant_scan_access: {
     title: "I can't scan the QR code with my phone camera",
-    subtitle: 'Using MEW wallet / MEWconnect',
+    subtitle: 'Using MEWconnect',
     breadcrumb: 'scan qr code',
     md: _Cant_scan_access
   },
@@ -281,7 +281,7 @@ export default {
   */
 
   Find_MEWconnect: {
-    title: "I'm using MEW wallet / MEWconnect",
+    title: "I'm using MEWconnect",
     subtitle: '',
     breadcrumb: 'mewconnect',
     md: _Find_MEWconnect

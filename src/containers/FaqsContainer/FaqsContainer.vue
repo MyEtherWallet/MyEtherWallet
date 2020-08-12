@@ -74,7 +74,7 @@ export default {
           link:
             'https://kb.myetherwallet.com/en/mewwallet/mewwallet-user-guide/'
         },
-        faq3: {
+        faq2: {
           open: false,
           title: 'home.faqs.other-wallets.title',
           content: 'home.faqs.other-wallets.text',
@@ -82,7 +82,7 @@ export default {
           link:
             'https://kb.myetherwallet.com/en/getting-started/how-to-access-your-wallet/'
         },
-        faq4: {
+        faq3: {
           open: false,
           title: 'home.faqs.send-txs.title',
           content: 'home.faqs.send-txs.text',
@@ -90,7 +90,7 @@ export default {
           link:
             'https://kb.myetherwallet.com/en/transactions/how-to-send-a-transaction/'
         },
-        faq5: {
+        faq4: {
           open: false,
           title: 'home.faqs.forgot-pwd.title',
           content: 'home.faqs.forgot-pwd.text',
@@ -98,7 +98,7 @@ export default {
           link:
             'https://kb.myetherwallet.com/en/security-and-privacy/lost-private-key/'
         },
-        faq6: {
+        faq5: {
           open: false,
           title: 'home.faqs.create-wallet.title',
           content: 'home.faqs.create-wallet.text',
