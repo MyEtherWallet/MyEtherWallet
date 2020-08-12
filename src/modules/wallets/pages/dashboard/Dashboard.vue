@@ -28,7 +28,7 @@
             </div>
           </div>
         </div>
-        <chart :key="chartData.key" :data="chartData.data" class="mt-5" />
+        <chart :key="chart1d.key" :data="chart1d.data" class="mt-5" />
         <v-row class="align-center">
           <v-col class="d-flex align-center justify-center">
             <div class="font-weight-bold">ETH PRICE</div>
@@ -180,12 +180,19 @@ export default {
   },
   data() {
     return staticData;
+  },
+  methods: {
+    onBtnClick() {}
   }
 };
 </script>
 
 <style lang="scss">
 .mew-component--eth-balance {
+  .theme--dark.v-sheet {
+    background-color: var(--v-mewBg-base);
+    border-color: var(--v-mewBg-base);
+  }
   .block-title {
     margin-left: 10px;
     .header-wrapper {
@@ -217,6 +224,10 @@ export default {
 }
 
 .mew-component--my-token-value {
+  .theme--dark.v-sheet {
+    background-color: var(--v-mewBg-base);
+    border-color: var(--v-mewBg-base);
+  }
   .block-title {
     margin-left: 10px;
     .header-wrapper {

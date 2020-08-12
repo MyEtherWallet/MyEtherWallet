@@ -58,3 +58,20 @@ export default {
   min-height: 100vh;
 }
 </style>
+
+<style lang="scss">
+.mew-component--sidemenu {
+  .buy-eth-button {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    padding: 0 25px !important;
+    .v-btn__content {
+      display: flex;
+      justify-content: space-between;
+    }
+    img {
+      height: 20px !important;
+    }
+  }
+}
+</style>
