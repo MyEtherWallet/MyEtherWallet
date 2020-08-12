@@ -70,7 +70,7 @@ module.exports = [
   'https://dispatch.pokt.network:443',
   'https://service.gcp.pokt.network:443',
   'https://rpc.fuse.io:443',
-  'https://rpc.energyweb.org/:443',
+  'https://rpc.energyweb.org:443',
   'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket',
   'wss://www.walletlink.org:443',
   'https://estimategas.mewapi.io:443'
