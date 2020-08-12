@@ -1,3 +1,8 @@
+### Release v5.7.5
+### Devop
+
+- Update MEW wallet from MEWconnect [#2542](https://github.com/MyEtherWallet/MyEtherWallet/pull/2542)
+
 ### Release v5.7.4
 
 ### Devop

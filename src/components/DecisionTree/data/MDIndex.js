@@ -1,44 +1,46 @@
-import _Access_Ledger from 'raw-loader!@/data/DecisionTree/md/_Access_Ledger.md';
-import _Access_Trezor from 'raw-loader!@/data/DecisionTree/md/_Access_Trezor.md';
-import _Access_other from 'raw-loader!@/data/DecisionTree/md/_Access_other.md';
-import _Access_phrase from 'raw-loader!@/data/DecisionTree/md/_Access_phrase.md';
-import _Access_file from 'raw-loader!@/data/DecisionTree/md/_Access_file.md';
-import _Access_key from 'raw-loader!@/data/DecisionTree/md/_Access_key.md';
-import _Cant_scan_access from 'raw-loader!@/data/DecisionTree/md/_Cant_scan_access.md';
-import _Forgot_pass_access from 'raw-loader!@/data/DecisionTree/md/_Forgot_pass_access.md';
-import _Using_CX_access from 'raw-loader!@/data/DecisionTree/md/_Using_CX_access.md';
-import _Using_MM_access from 'raw-loader!@/data/DecisionTree/md/_Using_MM_access.md';
-import _created_on_MEW from 'raw-loader!@/data/DecisionTree/md/_created_on_MEW.md';
-import _created_other from 'raw-loader!@/data/DecisionTree/md/_created_other.md';
-import _Find_CX from 'raw-loader!@/data/DecisionTree/md/_Find_CX.md';
-import _Find_file from 'raw-loader!@/data/DecisionTree/md/_Find_file.md';
-import _Find_key from 'raw-loader!@/data/DecisionTree/md/_Find_key.md';
-import _Find_Ledger from 'raw-loader!@/data/DecisionTree/md/_Find_Ledger.md';
-import _Find_Trezor from 'raw-loader!@/data/DecisionTree/md/_Find_Trezor.md';
-import _Find_MEWconnect from 'raw-loader!@/data/DecisionTree/md/_Find_MEWconnect.md';
-import _Find_other from 'raw-loader!@/data/DecisionTree/md/_Find_other.md';
-import _Find_MM from 'raw-loader!@/data/DecisionTree/md/_Find_MM.md';
-import _Different_address from 'raw-loader!@/data/DecisionTree/md/_Different_address.md';
-import _Given_hash from 'raw-loader!@/data/DecisionTree/md/_Given_hash.md';
-import _No_hash from 'raw-loader!@/data/DecisionTree/md/_No_hash.md';
-import _Notgiven_hash from 'raw-loader!@/data/DecisionTree/md/_Notgiven_hash.md';
-import _Recognize_address from 'raw-loader!@/data/DecisionTree/md/_Recognize_address.md';
-import _Saved_hash from 'raw-loader!@/data/DecisionTree/md/_Saved_hash.md';
-import _Tokens_custom from 'raw-loader!@/data/DecisionTree/md/_Tokens_custom.md';
-import _tx_bug from 'raw-loader!@/data/DecisionTree/md/_tx_bug.md';
-import _tx_error from 'raw-loader!@/data/DecisionTree/md/_tx_error.md';
-import _tx_other from 'raw-loader!@/data/DecisionTree/md/_tx_other.md';
-import _kyber from 'raw-loader!@/data/DecisionTree/md/_kyber.md';
-import _bity from 'raw-loader!@/data/DecisionTree/md/_bity.md';
-import _changelly from 'raw-loader!@/data/DecisionTree/md/_changelly.md';
-import _simplex from 'raw-loader!@/data/DecisionTree/md/_simplex.md';
-import _Funds_network from 'raw-loader!@/data/DecisionTree/md/_Funds_network.md';
-import _swap_error from 'raw-loader!@/data/DecisionTree/md/_swap_error.md';
-import _dapp_MakerDAO from 'raw-loader!@/data/DecisionTree/md/_dapp_MakerDAO.md';
-import _dapp_other from 'raw-loader!@/data/DecisionTree/md/_dapp_other.md';
-import _buy_bug from 'raw-loader!@/data/DecisionTree/md/_buy_bug.md';
-import _suggestions from 'raw-loader!@/data/DecisionTree/md/_suggestions.md';
-import _not_listed from 'raw-loader!@/data/DecisionTree/md/_not_listed.md';
+import _Access_Ledger from 'raw-loader!@/components/DecisionTree/data/md/_Access_Ledger.md';
+import _Access_Trezor from 'raw-loader!@/components/DecisionTree/data/md/_Access_Trezor.md';
+import _Access_other from 'raw-loader!@/components/DecisionTree/data/md/_Access_other.md';
+import _Access_phrase from 'raw-loader!@/components/DecisionTree/data/md/_Access_phrase.md';
+import _Access_file from 'raw-loader!@/components/DecisionTree/data/md/_Access_file.md';
+import _Access_key from 'raw-loader!@/components/DecisionTree/data/md/_Access_key.md';
+import _Cant_scan_access from 'raw-loader!@/components/DecisionTree/data/md/_Cant_scan_access.md';
+import _Forgot_pass_access from 'raw-loader!@/components/DecisionTree/data/md/_Forgot_pass_access.md';
+import _Using_CX_access from 'raw-loader!@/components/DecisionTree/data/md/_Using_CX_access.md';
+import _Using_MM_access from 'raw-loader!@/components/DecisionTree/data/md/_Using_MM_access.md';
+import _created_on_MEW from 'raw-loader!@/components/DecisionTree/data/md/_created_on_MEW.md';
+import _created_other from 'raw-loader!@/components/DecisionTree/data/md/_created_other.md';
+import _Find_CX from 'raw-loader!@/components/DecisionTree/data/md/_Find_CX.md';
+import _Find_file from 'raw-loader!@/components/DecisionTree/data/md/_Find_file.md';
+import _Find_key from 'raw-loader!@/components/DecisionTree/data/md/_Find_key.md';
+import _Find_Ledger from 'raw-loader!@/components/DecisionTree/data/md/_Find_Ledger.md';
+import _Find_Trezor from 'raw-loader!@/components/DecisionTree/data/md/_Find_Trezor.md';
+import _Find_MEWconnect from 'raw-loader!@/components/DecisionTree/data/md/_Find_MEWconnect.md';
+import _Find_other from 'raw-loader!@/components/DecisionTree/data/md/_Find_other.md';
+import _Find_MM from 'raw-loader!@/components/DecisionTree/data/md/_Find_MM.md';
+import _Different_address from 'raw-loader!@/components/DecisionTree/data/md/_Different_address.md';
+import _Given_hash from 'raw-loader!@/components/DecisionTree/data/md/_Given_hash.md';
+import _No_hash from 'raw-loader!@/components/DecisionTree/data/md/_No_hash.md';
+import _Notgiven_hash from 'raw-loader!@/components/DecisionTree/data/md/_Notgiven_hash.md';
+import _Recognize_address from 'raw-loader!@/components/DecisionTree/data/md/_Recognize_address.md';
+import _Saved_hash from 'raw-loader!@/components/DecisionTree/data/md/_Saved_hash.md';
+import _Tokens_custom from 'raw-loader!@/components/DecisionTree/data/md/_Tokens_custom.md';
+import _tx_bug from 'raw-loader!@/components/DecisionTree/data/md/_tx_bug.md';
+import _tx_error from 'raw-loader!@/components/DecisionTree/data/md/_tx_error.md';
+import _tx_other from 'raw-loader!@/components/DecisionTree/data/md/_tx_other.md';
+import _kyber from 'raw-loader!@/components/DecisionTree/data/md/_kyber.md';
+import _bity from 'raw-loader!@/components/DecisionTree/data/md/_bity.md';
+import _changelly from 'raw-loader!@/components/DecisionTree/data/md/_changelly.md';
+import _simplex from 'raw-loader!@/components/DecisionTree/data/md/_simplex.md';
+import _Funds_network from 'raw-loader!@/components/DecisionTree/data/md/_Funds_network.md';
+import _swap_error from 'raw-loader!@/components/DecisionTree/data/md/_swap_error.md';
+import _dapp_MakerDAO from 'raw-loader!@/components/DecisionTree/data/md/_dapp_MakerDAO.md';
+import _dapp_other from 'raw-loader!@/components/DecisionTree/data/md/_dapp_other.md';
+import _buy_bug from 'raw-loader!@/components/DecisionTree/data/md/_buy_bug.md';
+import _suggestions from 'raw-loader!@/components/DecisionTree/data/md/_suggestions.md';
+import _not_listed from 'raw-loader!@/components/DecisionTree/data/md/_not_listed.md';
+import _Forgot_pin_access from 'raw-loader!@/components/DecisionTree/data/md/_Forgot_pin_access.md';
+import _Find_MEWwallet from 'raw-loader!@/components/DecisionTree/data/md/_Find_MEWwallet.md';
 
 export default {
   /*
@@ -74,15 +76,16 @@ export default {
     breadcrumb: 'access wallet',
     sub: [
       'Access_hardware_wallet',
-      'Access_software_wallet',
+      'Using_MEWwallet_access',
       'Using_MEWconnect_access',
       'Using_CX_access',
+      'Access_software_wallet',
       'Using_MM_access'
     ]
   },
 
   /*
-  Accessing via Hardware 
+  Accessing via Hardware
   */
 
   Access_hardware_wallet: {
@@ -114,7 +117,61 @@ export default {
   },
 
   /*
-  Accessing via Software 
+  Accessing via MEW wallet
+  */
+
+  Using_MEWwallet_access: {
+    title: "I'm using the MEW wallet mobile app",
+    subtitle: '',
+    breadcrumb: 'mew wallet',
+    sub: ['Cant_scan_access', 'Forgot_pin_access']
+  },
+
+  Forgot_pin_access: {
+    title: 'I forgot my pin',
+    subtitle: '',
+    breadcrumb: 'forgot pin',
+    md: _Forgot_pin_access
+  },
+
+  /*
+  Accessing via MEWconnect
+  */
+
+  Using_MEWconnect_access: {
+    title: "I'm using MEWconnect",
+    subtitle: '',
+    breadcrumb: 'mewconnect',
+    sub: ['Cant_scan_access', 'Forgot_pass_access']
+  },
+
+  Cant_scan_access: {
+    title: "I can't scan the QR code with my phone camera",
+    subtitle: 'Using MEWconnect',
+    breadcrumb: 'scan qr code',
+    md: _Cant_scan_access
+  },
+
+  Forgot_pass_access: {
+    title: 'I forgot my password',
+    subtitle: '',
+    breadcrumb: 'forgot password',
+    md: _Forgot_pass_access
+  },
+
+  /*
+  Accessing via MEW CX
+  */
+
+  Using_CX_access: {
+    title: "I'm using MEW CX",
+    subtitle: '',
+    breadcrumb: 'mew cx',
+    md: _Using_CX_access
+  },
+
+  /*
+  Accessing via Software
   */
 
   Access_software_wallet: {
@@ -146,42 +203,6 @@ export default {
   },
 
   /*
-  Accessing via MEWconnect
-  */
-
-  Using_MEWconnect_access: {
-    title: "I'm using MEWconnect",
-    subtitle: '',
-    breadcrumb: 'mewconnect',
-    sub: ['Cant_scan_access', 'Forgot_pass_access']
-  },
-
-  Cant_scan_access: {
-    title: "I can't scan the QR code with my phone camera",
-    subtitle: '',
-    breadcrumb: 'scan qr code',
-    md: _Cant_scan_access
-  },
-
-  Forgot_pass_access: {
-    title: 'I forgot my password',
-    subtitle: '',
-    breadcrumb: 'forgot password',
-    md: _Forgot_pass_access
-  },
-
-  /*
-  Accessing via MEW CX 
-  */
-
-  Using_CX_access: {
-    title: "I'm using MEW CX",
-    subtitle: '',
-    breadcrumb: 'mew cx',
-    md: _Using_CX_access
-  },
-
-  /*
   Accessing via MetaMask
   */
 
@@ -204,9 +225,10 @@ export default {
     breadcrumb: 'find address',
     sub: [
       'Find_hardware',
-      'Find_software',
+      'Find_MEWwallet',
       'Find_MEWconnect',
       'Find_CX',
+      'Find_software',
       'Find_MM'
     ]
   },
@@ -244,6 +266,39 @@ export default {
   },
 
   /*
+  Finding MEW wallet address
+  */
+
+  Find_MEWwallet: {
+    title: "I'm using MEW wallet",
+    subtitle: '',
+    breadcrumb: 'mew wallet',
+    md: _Find_MEWwallet
+  },
+
+  /*
+  Finding MEWconnect address
+  */
+
+  Find_MEWconnect: {
+    title: "I'm using MEWconnect",
+    subtitle: '',
+    breadcrumb: 'mewconnect',
+    md: _Find_MEWconnect
+  },
+
+  /*
+  Finding MEW CX address
+  */
+
+  Find_CX: {
+    title: "I'm using MEW CX",
+    subtitle: '',
+    breadcrumb: 'mew cx',
+    md: _Find_CX
+  },
+
+  /*
   Finding Software address
   */
 
@@ -270,7 +325,7 @@ export default {
 
   created_other: {
     title: 'I created the phrase somewhere else',
-    subtitle: '(MEWconnect, Another wallet, etc.)',
+    subtitle: '(MEW wallet, MEWconnect, Another wallet, etc.)',
     breadcrumb: 'created elsewhere',
     md: _created_other
   },
@@ -287,28 +342,6 @@ export default {
     subtitle: '',
     breadcrumb: 'private key',
     md: _Find_key
-  },
-
-  /*
-  Finding MEWconnect address
-  */
-
-  Find_MEWconnect: {
-    title: "I'm using MEWconnect",
-    subtitle: '',
-    breadcrumb: 'mewconnect',
-    md: _Find_MEWconnect
-  },
-
-  /*
-  Finding MEW CX address
-  */
-
-  Find_CX: {
-    title: "I'm using MEW CX",
-    subtitle: '',
-    breadcrumb: 'mew cx',
-    md: _Find_CX
   },
 
   /*
@@ -386,7 +419,8 @@ export default {
   },
 
   Tokens_custom: {
-    title: 'My tokens show in my wallet on EthVM, but I cannot see them on MEW',
+    title:
+      'My tokens show in my wallet on Etherscan, but I cannot see them on MEW',
     subtitle: '',
     breadcrumb: 'custom tokens',
     md: _Tokens_custom
@@ -560,7 +594,7 @@ export default {
 
   dapp_other: {
     title: 'Other',
-    subtitle: '(ENS, SafeSend, etc.)',
+    subtitle: '(ENS, Aave, etc.)',
     breadcrumb: 'other',
     md: _dapp_other
   },

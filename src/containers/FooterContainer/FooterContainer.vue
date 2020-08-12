@@ -209,7 +209,7 @@ export default {
               href: 'https://www.mewwallet.com/'
             },
             {
-              text: 'footer.mew-connect',
+              text: 'footer.mew-connect-protocol',
               href: 'https://mewconnect.myetherwallet.com/#/'
             },
             {
