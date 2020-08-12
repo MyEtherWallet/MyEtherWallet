@@ -3,7 +3,11 @@
     ref="menu"
     class="mew-component--accordion-menu-container user-select--none"
   >
-    <div v-for="(mainItems, mainKey) in menuItems" :key="mainKey">
+    <div
+      v-for="(mainItems, mainKey) in menuItems"
+      :key="mainKey"
+      class="inactive mb-1"
+    >
       <!-- Main menus ======================================== -->
       <div
         :ref="getMenuRef('main' + mainItems.url)"
@@ -204,36 +208,36 @@ export default {
   background-color: #0000001f;
 }
 
-.main-menu,
-.sub-menu {
-  * {
-    color: var(--v-searchText-base);
+.inactive {
+  .main-menu,
+  .sub-menu {
+    * {
+      color: var(--v-searchText-base);
+    }
+  }
+
+  .sub-menu {
+    max-height: 0px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    .active * {
+      color: white;
+    }
+  }
+
+  .light {
+    display: none;
   }
 }
+
 .active {
   .main-menu * {
     color: white;
   }
-}
-
-.sub-menu {
-  max-height: 0px;
-  overflow: hidden;
-  transition: all 0.2s ease;
-  .active * {
-    color: white;
+  .sub-menu {
+    max-height: 200px;
   }
-}
 
-.active .sub-menu {
-  max-height: 200px;
-}
-
-.light {
-  display: none;
-}
-
-.active {
   .light {
     display: block;
   }
