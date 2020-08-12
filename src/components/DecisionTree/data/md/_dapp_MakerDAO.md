@@ -1,16 +1,16 @@
 ## Using MakerDAO
 
-#### Closing a CDP
+#### Closing a Vault
 
-Double-check that you have both the right amounts of DAI and MKR to close your CDP.
+Double-check that you have the right amount of DAI to pay back your Vault's balance.
 
-These are two separate verification steps, each counting as a transaction that must be verified on your device (if you're using one).
+You'll have to approve the DAI as a separate verification step, which will count as a transaction that must be verified on your device (if you're using one).
 
 * * *
 
 #### Still need help?
 
-Please reach out to us with as much information as possible, referencing the contact form below.
+Please reach out to us with as much information as possible, referencing the contact form below. 
 
 * * *
 

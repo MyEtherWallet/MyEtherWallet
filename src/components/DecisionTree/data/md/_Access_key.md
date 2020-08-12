@@ -6,6 +6,8 @@
 2. Make sure all your private key characters are in hexadecimal format, which means they fall between letters ‘a - f’ and numbers ‘0 - 9’.
 3. If that doesn’t solve your issue, reach out to us with as much info as possible about your situation. **But do not send us your private key!**
 
+Please keep in mind that we do not recommend accessing with your Private Key directly. Instead, it's suggested you download our MEW wallet mobile app and make a new wallet, for the security of your funds.
+
 * * *
 
 #### Contact Form:
