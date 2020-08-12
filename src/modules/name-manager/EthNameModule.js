@@ -296,7 +296,7 @@ export default class EthNameModule {
       for (const _record in obj) {
         this.txtRecords[_record] = obj[_record];
       }
-      this.resolverMigrateAndSet().then(res => {
+      this.migrate().then(res => {
         if (res.hasOwProperty('success')) return;
         const multicalls = [];
         for (const i in obj) {
@@ -622,35 +622,41 @@ export default class EthNameModule {
   }
 
   async _setRecords() {
-    const supportsMulticoin = await this.resolverAddress.methods
-      .supportsInterface(REGISTRAR_INTERFACE.MULTICOIN)
-      .call();
+    try {
+      const supportsMulticoin = await this.resolverAddress.methods
+        .supportsInterface(REGISTRAR_INTERFACE.MULTICOIN)
+        .call();
 
-    for (const type in multicoins) {
-      multicoins[type].value = '';
-    }
+      for (const type in multicoins) {
+        multicoins[type].value = '';
+      }
 
-    if (supportsMulticoin) {
-      const types = Object.keys(multicoins);
-      const promises = types.map(type => {
-        return this.ens
-          .resolver(this.name, ResolverAbi)
-          .addr(multicoins[type].id);
-      });
-      this.multicoinSupport = supportsMulticoin;
-      this.multiCoin = {};
-      await Promise.all(promises).then(vals => {
-        vals.forEach((address, idx) => {
-          if (address) {
-            multicoins[types[idx]].value = multicoins[types[idx]].encode(
-              new Buffer(address.replace('0x', ''), 'hex')
-            );
-          }
+      if (supportsMulticoin) {
+        const types = Object.keys(multicoins);
+        const promises = types.map(type => {
+          return this.ens
+            .resolver(this.name, ResolverAbi)
+            .addr(multicoins[type].id);
         });
-      });
-      this.multiCoin = multicoins;
-    } else {
-      this.multicoinSupport = supportsMulticoin;
+        this.multicoinSupport = supportsMulticoin;
+        this.multiCoin = {};
+        await Promise.all(promises).then(vals => {
+          vals.forEach((address, idx) => {
+            if (address) {
+              multicoins[types[idx]].value = multicoins[types[idx]].encode(
+                new Buffer(address.replace('0x', ''), 'hex')
+              );
+            }
+          });
+        });
+        this.multiCoin = multicoins;
+      } else {
+        this.multicoinSupport = supportsMulticoin;
+        this.multiCoin = multicoins;
+        this.multiCoin.ETH.value = await this.ens.resolver(this.name).addr();
+      }
+    } catch (e) {
+      this.multicoinSupport = false;
       this.multiCoin = multicoins;
       this.multiCoin.ETH.value = await this.ens.resolver(this.name).addr();
     }
