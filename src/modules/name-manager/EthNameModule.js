@@ -574,13 +574,6 @@ export default class EthNameModule {
       return await this.registrarControllerContract.methods
         .commit(commitment)
         .send({ from: this.address });
-      // .once('transactionHash', () => {
-      //   this.$router.push({ name: 'ensPermRegistration' });
-      // })
-      // .on('receipt', () => {
-      //   this.loading = false;
-      //   this.commitmentCreated = true;
-      // });
     } catch (e) {
       throw new Error(e);
     }
