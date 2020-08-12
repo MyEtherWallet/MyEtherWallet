@@ -19,17 +19,17 @@
 /* Set default text color */
 #app .v-sheet,
 #app .v-application {
-  color: var(--v-title-primary-base) !important;
+  color: var(--v-titlePrimary-base) !important;
 }
 
 /* (Force) (light theme) default text color */
 #app.theme--light .theme--light-text--dark-space {
-  color: var(--v-title-primary-base) !important;
+  color: var(--v-titlePrimary-base) !important;
 }
 
 /* (Force) (dark theme) default text color */
 #app.theme--dark .theme--dark-text--blue {
-  color: var(--v-title-primary-base) !important;
+  color: var(--v-titlePrimary-base) !important;
 }
 
 /* (Force) white text color */
@@ -58,7 +58,7 @@ html {
   font-family: monospace !important;
 }
 i {
-  font-family: 'Material Icons' !important;
+  font-family: "Material Icons" !important;
 }
 div {
   font-size: 0.875rem;

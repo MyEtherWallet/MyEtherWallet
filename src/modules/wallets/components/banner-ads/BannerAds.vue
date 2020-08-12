@@ -1,9 +1,11 @@
 <template>
-  <mew-carousel carousel-height="145" :total-slides="2">
+  <mew-carousel class="box-shadow" carousel-height="145" :total-slides="2">
     <template v-slot:slide1>
       <mew6-white-sheet class="banner">
         <div class="ad1 px-5 d-flex flex-column justify-center">
-          <div class="title font-weight-bold mb-n1">MEWwallet</div>
+          <div class="titlePrimary--text title font-weight-bold mb-n1">
+            MEWwallet
+          </div>
           <div class="mb-2">Download it today!</div>
           <div class="d-flex align-center mb-1">
             <img
@@ -22,7 +24,7 @@
     </template>
     <template v-slot:slide2>
       <mew6-white-sheet class="banner">
-        <ad title="MEWconnect" />
+        aaaa
       </mew6-white-sheet>
     </template>
   </mew-carousel>

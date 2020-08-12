@@ -167,7 +167,7 @@ export default new Vuetify({
         searchInput: '#f2f4fa',
         searchText: '#96a8b6',
         titlePrimary: '#0b2840',
-        textPrimary: '#667f9b',
+        textPrimary: '#a3b7cf',
         textPrimaryModule: '#667f9b',
         white: '#fff',
         black: '#000',
