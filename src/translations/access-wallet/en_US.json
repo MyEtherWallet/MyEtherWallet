@@ -25,7 +25,7 @@
     "modal": {
       "title": "Access by Mobile App"
     },
-    "mew-wallet": "MEW Wallet"
+    "mew-wallet": "MEW wallet"
   },
   "finney": {
     "scan-info": "To connect, scan the QR code from {wallet} app on your {finney-bc}",
