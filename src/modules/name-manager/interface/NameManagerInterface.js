@@ -220,6 +220,49 @@ export default class NameManagerInterface {
       throw new Error('Owner not set! Please initialize module properly!');
     }
 
+    const formValues = {
+      address: this.address,
+      network: this.network,
+      web3: this.web3,
+      ens: this.ens,
+      name: this.name,
+      txtRecords: this.txtRecords,
+      multiCoin: this.multiCoin,
+      labelHash: this.labelHash,
+      nameHash: this.nameHash,
+      owner: this.owner,
+      registrarAddress: this.registrarAddress,
+      contractControllerAddress: this.contractControllerAddress,
+      resolverAddress: this.resolverAddress,
+      deedOwner: this.deedOwner,
+      publicResolverAddress: this.publicResolverAddress,
+      contentHash: this.contentHash,
+      deedValue: this.deedValue,
+      expiration: this.expiration,
+      expired: this.expired,
+      redeemable: this.redeemable,
+      textRecordSupport: this.textRecordSupport,
+      multicoinSupport: this.multicoinSupport,
+      secretPhrase: this.secretPhrase,
+      publicResolverContract: this.publicResolverContract,
+      registrarContract: this.registrarContract,
+      registryContract: this.registryContract,
+      registrarControllerContract: this.registrarControllerContract,
+      resolverContract: this.resolverContract
+    };
+    // create a setter and getter methods for all the variables
+    Object.keys(formValues).forEach(propName => {
+      Object.defineProperties(this, propName, {
+        enumerable: true,
+        get: () => {
+          return this[propName];
+        },
+        set: value => {
+          this[propName] = value;
+        }
+      });
+    });
+
     try {
       await this._setRegisrar()
         .then(this._setPublicResolverAddress)

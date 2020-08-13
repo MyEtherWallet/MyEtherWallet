@@ -181,19 +181,6 @@ export default class EthNameModule extends NameManagerInterface {
   }
 
   async _initModule() {
-    if (super.name === '0x') {
-      throw new Error('Owner not set! Please initialize module properly!');
-    }
-    if (super.address === '0x') {
-      throw new Error('Address not set! Please initialize module properly!');
-    }
-    if (!super.network) {
-      throw new Error('Network not set! Please initialize module properly!');
-    }
-    if (!super.web3) {
-      throw new Error('Owner not set! Please initialize module properly!');
-    }
-
     try {
       await super._initializeNameModule
         .then(this._setDeeds)
