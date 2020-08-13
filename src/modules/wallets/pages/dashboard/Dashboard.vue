@@ -125,7 +125,6 @@
           :table-headers="tableHeaders"
           :table-data="tableData"
         />
-        <div>{{ tableData }}</div>
       </mew6-white-sheet>
       <div class="pa-4"></div>
       <div class="mew-component--empty-token-list">
