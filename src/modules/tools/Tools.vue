@@ -1,18 +1,18 @@
 <template>
-  <div>
+  <div class="mew-component--tools">
     <home-header title="Tools" />
     <v-container class="mt-8 mb-12">
-      <mew-tabs :items="items">
-        <template v-slot:tabItemContent0>
+      <mew-tabs :is-vertical="true" :items="items">
+        <template v-slot:tabItemContent1>
           <watch-only />
         </template>
-        <template v-slot:tabItemContent1>
+        <template v-slot:tabItemContent2>
           <convert />
         </template>
-        <template v-slot:tabItemContent2>
+        <template v-slot:tabItemContent3>
           <offline-helper />
         </template>
-        <template v-slot:tabItemContent3>
+        <template v-slot:tabItemContent4>
           <verify />
         </template>
       </mew-tabs>
@@ -58,3 +58,23 @@ export default {
   })
 };
 </script>
+<style lang="scss">
+.mew-component--tools {
+  .v-tabs {
+    .v-slide-group {
+      border-right: 1px solid var(--v-inputBorder-base) !important;
+      margin-right: 30px;
+      padding-right: 30px;
+    }
+    .v-tab {
+      text-align: left;
+      //display: block;
+      font-size: 14px !important;
+      justify-content: flex-start;
+    }
+    .v-tab--active {
+      border-left: 4px solid var(--v-primary-base) !important;
+    }
+  }
+}
+</style>
