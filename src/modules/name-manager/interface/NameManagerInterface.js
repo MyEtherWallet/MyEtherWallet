@@ -1,9 +1,8 @@
 import { getTld, getHostName, decodeCoinAddress } from '../helpers';
 import RegistryAbi from '../ABI/registryAbi.js';
-import RegistrarControllerAbi from '../ABI/registrarControllerAbi.js';
 import BaseRegistrarAbi from '../ABI/baseRegistrarAbi.js';
 import ResolverAbi from '../ABI/resolverAbi.js';
-import * as nameHashPckg from 'eth-ens-namehash';
+import RegistrarControllerAbi from '../ABI/registrarControllerAbi.js';
 import multicoins from '../configs/multicoins';
 import textrecords from '../configs/textrecords';
 import contentHash from 'content-hash';
@@ -13,60 +12,50 @@ import registrarInterface from './registrarInterface';
 
 export default class NameManagerInterface {
   constructor(name, address, network, web3, ens) {
-    this.address = address ? address : '0x';
-    this.network = network ? network : null;
-    this.web3 = web3 ? web3 : null;
-    this.ens = ens ? ens : null;
+    this.addressVal = address ? address : '0x';
+    this.networkVal = network ? network : null;
+    this.web3Val = web3 ? web3 : null;
+    this.ensVal = ens ? ens : null;
 
     // Returned value
-    this.name = name ? name : '';
-    this.txtRecords = null;
-    this.multiCoin = null;
-    this.labelHash = web3.utils.sha3(getHostName(name));
-    this.nameHash = nameHashPckg.hash(name);
-    this.owner = '0x';
-    this.registrarAddress = '0x';
-    this.contractControllerAddress = '0x';
-    this.resolverAddress = '0x';
-    this.deedOwner = '0x';
-    this.publicResolverAddress = '0x';
-    this.contentHash = '';
-    this.deedValue = 0;
-    this.expiration = null;
-    this.expired = false;
-    this.redeemable = false;
-    this.textRecordSupport = false;
-    this.multicoinSupport = false;
-    this.moduleData = {};
-
-    // not sure if needs to return
-    this.secretPhrase = '';
+    this.nameVal = name ? name : '';
+    this.txtRecordsVal = null;
+    this.multiCoinVal = null;
+    this.labelHashVal = web3.utils.sha3(getHostName(name));
+    this.ownerVal = '0x';
+    this.registrarAddressVal = '0x';
+    this.contractControllerAddressVal = '0x';
+    this.resolverAddressVal = '0x';
+    this.publicResolverAddressVal = '0x';
+    this.contentHashVal = '';
+    this.textRecordSupportVal = false;
+    this.multicoinSupportVal = false;
 
     // Contracts
-    this.publicResolverContract = null;
-    this.registrarContract = null;
-    this.registryContract = null;
-    this.registrarControllerContract = null;
-    this.resolverContract = null;
+    this.publicResolverContractVal = null;
+    this.registrarContractVal = null;
+    this.registryContractVal = null;
+    this.registrarControllerContractVal = null;
+    this.resolverContractVal = null;
 
     this._initializeNameModule();
   }
 
   setController(address = '') {
-    if (this.owner === '0x') {
+    if (this.ownerVal === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
     return new Promise((resolve, reject) => {
       const actualToAddress = address === '' ? this.account : address;
       const setControllerTx = {
         from: this.account,
-        to: this.registrarAddress,
-        data: this.registrarContract.methods
-          .reclaim(this.labelHash, actualToAddress)
+        to: this.registrarAddressVal,
+        data: this.registrarContractVal.methods
+          .reclaim(this.labelHashVal, actualToAddress)
           .encodeABI(),
         value: 0
       };
-      return this.web3.eth
+      return this.web3Val.eth
         .sendTransaction(setControllerTx)
         .then(() => {
           resolve({ success: 'Domain Controller set successfully' });
@@ -76,24 +65,24 @@ export default class NameManagerInterface {
   }
 
   migrate() {
-    if (this.owner === '0x') {
+    if (this.ownerVal === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
 
     return new Promise((resolve, reject) => {
-      if (this.publicResolverAddress === this.resolverAddress) {
+      if (this.publicResolverAddressVal === this.resolverAddressVal) {
         return resolve({ success: 'Name migrated succesfully!' });
       }
       const setResolverTx = {
-        from: this.address,
-        to: this.network.type.ens.registry,
-        data: this.registryContract.methods
-          .setResolver(this.nameHash, this.publicResolverAddress)
+        from: this.addressVal,
+        to: this.networkVal.type.ens.registry,
+        data: this.registryContractVal.methods
+          .setResolver(this.nameHashVal, this.publicResolverAddressVal)
           .encodeABI(),
         value: 0
       };
 
-      this.web3
+      this.web3Val
         .sendTransaction(setResolverTx)
         .then(() => {
           this._migrateCoinsAndRecords()
@@ -109,7 +98,7 @@ export default class NameManagerInterface {
   }
 
   setMulticoin(coin) {
-    if (this.owner === '0x') {
+    if (this.ownerVal === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
 
@@ -118,24 +107,25 @@ export default class NameManagerInterface {
         if (res.hasOwProperty('success')) return true;
 
         const arr = coin.map(item => {
-          return this.publicResolverContract.methods.setAddr(
-            this.nameHash,
+          return this.publicResolverContractVal.methods.setAddr(
+            this.nameHashVal,
             item.id,
             decodeCoinAddress(item)
           );
         });
 
         const setAddrTx = {
-          from: this.address,
-          to: this.publicResolverAddress,
-          data: this.publicResolverContract.methods.multicall(arr).encodeABI(),
+          from: this.addressVal,
+          to: this.publicResolverAddressVal,
+          data: this.publicResolverContractVal.methods
+            .multicall(arr)
+            .encodeABI(),
           value: 0,
           gas: 100000
         };
-        this.web3.eth
+        this.web3Val.eth
           .sendTransaction(setAddrTx)
           .then(() => {
-            this.setModuleData();
             return resolve({
               success: 'Succesfully set multicoin!'
             });
@@ -146,13 +136,13 @@ export default class NameManagerInterface {
   }
 
   setTxtRecord(obj) {
-    if (this.address === '0x') {
+    if (this.addressVal === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
 
     return new Promise((resolve, reject) => {
       for (const _record in obj) {
-        this.txtRecords[_record] = obj[_record];
+        this.txtRecordsVal[_record] = obj[_record];
       }
       this.migrate().then(res => {
         if (res.hasOwProperty('success')) return;
@@ -160,21 +150,20 @@ export default class NameManagerInterface {
         for (const i in obj) {
           multicalls.push(
             this.resolverContract.methods
-              .setText(this.nameHash, i.toLowerCase(), obj[i])
+              .setText(this.nameHashVal, i.toLowerCase(), obj[i])
               .encodeABI()
           );
         }
         const tx = {
-          from: this.address,
-          to: this.publicResolverAddress,
+          from: this.addressVal,
+          to: this.publicResolverAddressVal,
           data: this.resolverContract.methods.multicall(multicalls).encodeABI(),
           gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed(),
           value: 0
         };
-        this.web3.eth
+        this.web3Val.eth
           .sendTransaction(tx)
           .then(() => {
-            this.setModuleData();
             return resolve({
               success: 'Succesfully set text records!'
             });
@@ -184,81 +173,52 @@ export default class NameManagerInterface {
     });
   }
 
-  setModuleData() {
-    this.moduleData = {
-      name: this.name,
-      txtRecords: this.txtRecords,
-      multiCoin: this.multiCoin,
-      labelHash: this.labelHash,
-      nameHash: this.nameHash,
-      owner: this.owner,
-      registrarAddress: this.registrarAddress,
-      contractControllerAddress: this.contractControllerAddress,
-      resolverAddress: this.resolverAddress,
-      publicResolverAddress: this.publicResolverAddress,
-      deedOwner: this.deedOwner,
-      deedValue: this.deedValue,
-      expiration: this.expiration,
-      expired: this.expired,
-      redeemable: this.redeemable,
-      textRecordSupport: this.textRecordSupport,
-      multicoinSupport: this.multicoinSupport
-    };
-  }
-
   async _initializeNameModule() {
-    if (this.name === '0x') {
+    if (this.nameVal === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
-    if (this.address === '0x') {
+    if (this.addressVal === '0x') {
       throw new Error('Address not set! Please initialize module properly!');
     }
-    if (!this.network) {
+    if (!this.networkVal) {
       throw new Error('Network not set! Please initialize module properly!');
     }
-    if (!this.web3) {
+    if (!this.web3Val) {
       throw new Error('Owner not set! Please initialize module properly!');
     }
 
     const formValues = {
-      address: this.address,
-      network: this.network,
-      web3: this.web3,
-      ens: this.ens,
-      name: this.name,
-      txtRecords: this.txtRecords,
-      multiCoin: this.multiCoin,
-      labelHash: this.labelHash,
-      nameHash: this.nameHash,
-      owner: this.owner,
-      registrarAddress: this.registrarAddress,
-      contractControllerAddress: this.contractControllerAddress,
-      resolverAddress: this.resolverAddress,
-      deedOwner: this.deedOwner,
-      publicResolverAddress: this.publicResolverAddress,
-      contentHash: this.contentHash,
-      deedValue: this.deedValue,
-      expiration: this.expiration,
-      expired: this.expired,
-      redeemable: this.redeemable,
-      textRecordSupport: this.textRecordSupport,
-      multicoinSupport: this.multicoinSupport,
-      secretPhrase: this.secretPhrase,
-      publicResolverContract: this.publicResolverContract,
-      registrarContract: this.registrarContract,
-      registryContract: this.registryContract,
-      registrarControllerContract: this.registrarControllerContract,
-      resolverContract: this.resolverContract
+      address: 'addressVal',
+      network: 'networkVal',
+      web3: 'web3Val',
+      ens: 'ensVal',
+      name: 'nameVal',
+      txtRecords: 'txtRecordsVal',
+      multiCoin: 'multiCoinVal',
+      labelHash: 'labelHashVal',
+      owner: 'ownerVal',
+      registrarAddress: 'registrarAddressVal',
+      contractControllerAddress: 'contractControllerAddressVal',
+      resolverAddress: 'resolverAddressVal',
+      publicResolverAddress: 'publicResolverAddressVal',
+      contentHash: 'contentHashVal',
+      textRecordSupport: 'textRecordSupportVal',
+      multicoinValSupport: 'multicoinSupportVal',
+      publicResolverContract: 'publicResolverContractVal',
+      registrarContract: 'registrarContractVal',
+      registryContract: 'registryContractVal',
+      registrarControllerContract: 'registrarControllerContractVal',
+      resolverContract: 'resolverContractVal'
     };
     // create a setter and getter methods for all the variables
     Object.keys(formValues).forEach(propName => {
       Object.defineProperties(this, propName, {
         enumerable: true,
         get: () => {
-          return this[propName];
+          return this[formValues[propName]];
         },
         set: value => {
-          this[propName] = value;
+          this[formValues[propName]] = value;
         }
       });
     });
@@ -270,106 +230,108 @@ export default class NameManagerInterface {
         .then(this._setOwner)
         .then(this._setContentHash)
         .then(this._setMulticoins)
-        .then(this._setRecords)
-        .then(this.setModuleData);
+        .then(this._setRecords);
     } catch (e) {
       throw new Error(e);
     }
   }
 
   async _setRegisrar() {
-    const web3 = this.web3;
-    const tld = getTld(this.name);
-    const registrarTLD = tld ? tld : this.network.type.ens.registrarTLD;
-    const registryAddress = this.network.type.ens.registry;
-    this.registrarAddress = await this.ens.owner(registrarTLD);
-    this.registryContract = new web3.eth.Contract(RegistryAbi, registryAddress);
+    const web3 = this.web3Val;
+    const tld = getTld(this.nameVal);
+    const registrarTLD = tld ? tld : this.networkVal.type.ens.registrarTLD;
+    const registryAddress = this.networkVal.type.ens.registry;
+    this.registrarAddressVal = await this.ensVal.owner(registrarTLD);
+    this.registryContractVal = new web3.eth.Contract(
+      RegistryAbi,
+      registryAddress
+    );
   }
 
   async _setOwner() {
-    const isSubDomain = this.name.split('.').length > 2;
+    const isSubDomain = this.nameVal.split('.').length > 2;
     try {
       if (!isSubDomain) {
-        this.owner = await this.registrarContract.methods
-          .ownerOf(this.labelHash)
+        this.ownerVal = await this.registrarContractVal.methods
+          .ownerOf(this.labelHashVal)
           .call();
       } else {
-        this.owner = await this.ens.owner(this.name);
+        this.ownerVal = await this.ensVal.owner(this.nameVal);
       }
     } catch (e) {
-      this.owner = '0x';
+      this.ownerVal = '0x';
     }
   }
 
   async _setContentHash() {
     try {
       const hash = await this.resolverContract.methods
-        .contenthash(this.nameHash)
+        .contenthash(this.nameHashVal)
         .call();
-      this.contentHash = hash && hash !== '' ? contentHash.decode(hash) : '';
+      this.contentHashVal = hash && hash !== '' ? contentHash.decode(hash) : '';
     } catch (e) {
-      this.contentHash = '';
+      this.contentHashVal = '';
     }
   }
 
   async _setPublicResolverAddress() {
     try {
-      const resolver = await this.ens.resolver('resolver.eth');
-      this.publicResolverAddress = await resolver.addr();
+      const resolver = await this.ensVal.resolver('resolver.eth');
+      this.publicResolverAddressVal = await resolver.addr();
     } catch (e) {
-      this.publicResolverAddress = '0x';
+      this.publicResolverAddressVal = '0x';
     }
   }
 
   async _setContracts() {
-    const web3 = this.web3;
-    const tld = getTld(this.name);
-    const registrarTLD = tld ? tld : this.network.type.ens.registrarTLD;
-    this.contractControllerAddress = await this.ens
+    const web3 = this.web3Val;
+    const tld = getTld(this.nameVal);
+    const registrarTLD = tld ? tld : this.networkVal.type.ens.registrarTLD;
+    this.contractControllerAddressVal = await this.ensVal
       .resolver(registrarTLD)
       .interfaceImplementer(registrarInterface.CONTROLLER);
-    this.registrarControllerContract = new web3.eth.Contract(
+    this.registrarControllerContractVal = new web3.eth.Contract(
       RegistrarControllerAbi,
       this.controllerContractAddress
     );
-    this.registrarContract = new web3.eth.Contract(
+    this.registrarContractVal = new web3.eth.Contract(
       BaseRegistrarAbi,
-      this.registrarAddress
+      this.registrarAddressVal
     );
-    this.resolverAddress = await this.registrarContract.methods
-      .resolver(this.nameHash)
+    this.resolverAddressVal = await this.registrarContractVal.methods
+      .resolver(this.nameHashVal)
       .call();
     this.resolverContract = new web3.eth.Contract(
       ResolverAbi,
-      this.resolverAddress
+      this.resolverAddressVal
     );
-    this.publicResolverContract = new web3.eth.Contract(
+    this.publicResolverContractVal = new web3.eth.Contract(
       ResolverAbi,
-      this.publicResolverAddress
+      this.publicResolverAddressVal
     );
   }
 
   async _setMulticoins() {
-    const supportsTxt = await this.resolverAddress.methods
+    const supportsTxt = await this.resolverAddressVal.methods
       .supportsInterface(registrarInterface.TEXT_RECORD)
       .call();
     if (supportsTxt) {
-      this.textRecordSupport = supportsTxt;
-      this.txtRecords = {};
+      this.textRecordSupportVal = supportsTxt;
+      this.txtRecordsVal = {};
       const promises = [];
       textrecords.forEach(txt => {
         promises.push(
-          this.resolverContract.methods.text(this.nameHash, txt.name).call()
+          this.resolverContract.methods.text(this.nameHashVal, txt.name).call()
         );
       });
       Promise.all(promises).then(vals => {
         vals.forEach((val, idx) => {
-          this.txtRecords[textrecords[idx].name] = val;
+          this.txtRecordsVal[textrecords[idx].name] = val;
         });
       });
     } else {
-      this.textRecordSupport = supportsTxt;
-      this.txtRecords = null;
+      this.textRecordSupportVal = supportsTxt;
+      this.txtRecordsVal = null;
     }
   }
 
@@ -379,9 +341,9 @@ export default class NameManagerInterface {
       for (const coin in multicoins) {
         if (multicoins[coin].value) {
           multicallRecords.push(
-            this.publicResolverContract.methods
+            this.publicResolverContractVal.methods
               .setAddr(
-                this.nameHash,
+                this.nameHashVal,
                 multicoins[coin].id,
                 decodeCoinAddress(multicoins[coin])
               )
@@ -390,26 +352,26 @@ export default class NameManagerInterface {
         }
       }
 
-      for (const txt in this.txtRecords) {
-        if (this.txtRecords[txt]) {
+      for (const txt in this.txtRecordsVal) {
+        if (this.txtRecordsVal[txt]) {
           multicallRecords.push(
             this.resolverContract.methods
-              .setText(this.nameHash, txt, this.txtRecords[txt])
+              .setText(this.nameHashVal, txt, this.txtRecordsVal[txt])
               .encodeABI()
           );
         }
       }
 
       const txObj = {
-        from: this.address,
-        to: this.publicResolverAddress,
-        data: this.publicResolverContract.methods
+        from: this.addressVal,
+        to: this.publicResolverAddressVal,
+        data: this.publicResolverContractVal.methods
           .multicall(multicallRecords)
           .encodeABI(),
         value: 0
       };
 
-      return this.web3.sendTransaction(txObj);
+      return this.web3Val.sendTransaction(txObj);
     } catch (e) {
       throw new Error(e);
     }
@@ -417,7 +379,7 @@ export default class NameManagerInterface {
 
   async _setRecords() {
     try {
-      const supportsMulticoin = await this.resolverAddress.methods
+      const supportsMulticoin = await this.resolverAddressVal.methods
         .supportsInterface(registrarInterface.MULTICOIN)
         .call();
 
@@ -428,12 +390,12 @@ export default class NameManagerInterface {
       if (supportsMulticoin) {
         const types = Object.keys(multicoins);
         const promises = types.map(type => {
-          return this.ens
-            .resolver(this.name, ResolverAbi)
+          return this.ensVal
+            .resolver(this.nameVal, ResolverAbi)
             .addr(multicoins[type].id);
         });
-        this.multicoinSupport = supportsMulticoin;
-        this.multiCoin = {};
+        this.multicoinSupportVal = supportsMulticoin;
+        this.multiCoinVal = {};
         await Promise.all(promises).then(vals => {
           vals.forEach((address, idx) => {
             if (address) {
@@ -443,16 +405,20 @@ export default class NameManagerInterface {
             }
           });
         });
-        this.multiCoin = multicoins;
+        this.multiCoinVal = multicoins;
       } else {
-        this.multicoinSupport = supportsMulticoin;
-        this.multiCoin = multicoins;
-        this.multiCoin.ETH.value = await this.ens.resolver(this.name).addr();
+        this.multicoinSupportVal = supportsMulticoin;
+        this.multiCoinVal = multicoins;
+        this.multiCoinVal.ETH.value = await this.ensVal
+          .resolver(this.nameVal)
+          .addr();
       }
     } catch (e) {
-      this.multicoinSupport = false;
-      this.multiCoin = multicoins;
-      this.multiCoin.ETH.value = await this.ens.resolver(this.name).addr();
+      this.multicoinSupportVal = false;
+      this.multiCoinVal = multicoins;
+      this.multiCoinVal.ETH.value = await this.ensVal
+        .resolver(this.nameVal)
+        .addr();
     }
   }
 }

@@ -4,23 +4,34 @@ import { uploadFileToIpfs, getHashFromFile } from './services';
 import contentHash from 'content-hash';
 import BigNumber from 'bignumber.js';
 import NameManagerInterface from './interface/NameManagerInterface';
+import * as nameHashPckg from 'eth-ens-namehash';
 
 const OLD_ENS_ADDRESS = '0x6090a6e47849629b7245dfa1ca21d94cd15878ef';
 const BURNER_ADDRESS = '0x0000000000000000000000000000000000000000';
 
-export default class EthNameModule extends NameManagerInterface {
+export default class PermanentNameModule extends NameManagerInterface {
   constructor(name, address, network, web3, ens) {
-    super(name, address, network, web3, ens);
+    super(nameVal, address, network, web3, ens);
+    this.nameHash = nameHashPckg.hash(super.nameVal);
+    this.deedValue = 0;
+    this.deedOwner = '0x';
+    this.secretPhraseVal = '';
+    this.expirationVal = null;
+    this.expiredVal = false;
+    this.redeemableVal = false;
     // Contracts
-    this.oldEnsContract = null;
-    this.oldDeedContract = null;
+    this.oldEnsContractVal = null;
+    this.oldDeedContractVal = null;
+    this.dnsRegistrarContractVal = null;
+    this.dnsClaimVal = null;
+    this.dnsStatusVal = '';
 
     this._initModule();
   }
 
   register(duration) {
     const _self = this;
-    if (super.owner === '0x') {
+    if (super.ownerVal === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
     return new Promise((resolve, reject) => {
@@ -41,19 +52,19 @@ export default class EthNameModule extends NameManagerInterface {
   }
 
   transfer(toAddress) {
-    if (super.owner === '0x') {
+    if (super.ownerVal === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
     return new Promise((resolver, reject) => {
       super
         .setController(toAddress)
         .then(() => {
-          super.web3.eth
+          super.web3Val.eth
             .sendTransaction({
-              from: super.address,
-              to: super.network.type.ens.registry,
-              data: super.registryContract.methods
-                .setOwner(super.nameHash, toAddress)
+              from: super.addressVal,
+              to: super.networkVal.type.ens.registry,
+              data: super.registryContractVal.methods
+                .setOwner(super.nameHashVal, toAddress)
                 .encodeABI(),
               value: 0
             })
@@ -67,7 +78,7 @@ export default class EthNameModule extends NameManagerInterface {
   }
 
   renew(duration) {
-    if (super.owner === '0x') {
+    if (super.ownerVal === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
 
@@ -75,19 +86,19 @@ export default class EthNameModule extends NameManagerInterface {
       throw new Error('Invalid or missing parameter: Duration');
     }
 
-    const hostName = super.name.replace(
-      `.${super.network.type.ens.registrarTLD}`,
+    const hostName = super.nameVal.replace(
+      `.${super.networkVal.type.ens.registrarTLD}`,
       ''
     );
 
     const ACTUAL_DURATION = Math.ceil(60 * 60 * 24 * 365.25 * duration);
     // Not sure where to place balance checker that's currently present
     return new Promise((resolve, reject) => {
-      super.registrarControllerContract.methods
-        .rentPrice(super.name, ACTUAL_DURATION)
+      super.registrarControllerContractVal.methods
+        .rentPrice(super.nameVal, ACTUAL_DURATION)
         .call()
         .then(res => {
-          const data = super.registrarControllerContract.methods
+          const data = super.registrarControllerContractVal.methods
             .renew(hostName)
             .encodeABI();
           const withFivePercent = BigNumber(res)
@@ -96,13 +107,13 @@ export default class EthNameModule extends NameManagerInterface {
             .toFixed();
 
           const txObj = {
-            to: super.contractControllerAddress,
-            from: super.address,
+            to: super.contractControllerAddressVal,
+            from: super.addressVal,
             data: data,
             value: withFivePercent
           };
 
-          super.web3
+          super.web3Val
             .sendTransaction(txObj)
             .then(() => {
               resolve({ success: 'Name renewed successfully!' });
@@ -114,7 +125,7 @@ export default class EthNameModule extends NameManagerInterface {
   }
 
   releaseDeed() {
-    if (super.owner === '0x') {
+    if (super.ownerVal === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
 
@@ -123,22 +134,22 @@ export default class EthNameModule extends NameManagerInterface {
     }
 
     return new Promise((resolve, reject) => {
-      if (this.deedOwner !== super.address) {
+      if (this.deedOwner !== super.addressVal) {
         return reject({
           error: 'Redeeming address provided is not the owner!'
         });
       }
       const data = this.oldDeedContract.methods
-        .releaseDeed(super.labelHash)
+        .releaseDeed(super.labelHashVal)
         .encodeABI();
       const obj = {
-        from: super.address,
+        from: super.addressVal,
         to: OLD_ENS_ADDRESS,
         data: data,
         value: 0
       };
 
-      super.web3.eth
+      super.web3Val.eth
         .sendTransaction(obj)
         .then(() => {
           resolve({ success: 'Deed released succesfully!' });
@@ -148,7 +159,7 @@ export default class EthNameModule extends NameManagerInterface {
   }
 
   setIPFS(file) {
-    if (super.owner === '0x') {
+    if (super.ownerVal === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
 
@@ -159,15 +170,15 @@ export default class EthNameModule extends NameManagerInterface {
           .then(hash => {
             const ipfsToHash = `0x${contentHash.fromIpfs(hash)}`;
             const tx = {
-              from: super.address,
-              to: super.resolverAddress,
-              data: super.resolverContract.methods
-                .setContentHash(super.nameHash, ipfsToHash)
+              from: super.addressVal,
+              to: super.resolverAddressVal,
+              data: super.resolverContractVal.methods
+                .setContentHash(super.nameHashVal, ipfsToHash)
                 .encodeABI(),
               value: 0
             };
 
-            super.web3.eth.sendTransaction(tx).then(() => {
+            super.web3Val.eth.sendTransaction(tx).then(() => {
               return resolve({
                 success:
                   'Transaction sent! Please wait a couple minutes to confirm changes'
@@ -180,46 +191,63 @@ export default class EthNameModule extends NameManagerInterface {
     });
   }
 
+  // DNS claim name method
+  claim() {
+    return new Promise((resolve, reject) => {
+      try {
+        this.dnsClaim
+          .submit({
+            from: this.account.address
+          })
+          .then(resolve);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
   async _initModule() {
     // initial valaue for the variables
     const formValues = {
-      oldEnsContract: this.oldEnsContract,
-      oldDeedContract: this.oldDeedContract
+      oldEnsContract: 'oldEnsContractVal',
+      oldDeedContract: 'oldDeedContractVal',
+      dnsRegistrar: 'dnsRegistrarVal'
     };
 
     Object.keys(formValues).forEach(propName => {
       Object.defineProperties(this, propName, {
         enumerable: true,
         get: () => {
-          return this[propName];
+          return this[formValues[propName]];
         },
         set: value => {
-          this[propName] = value;
+          this[formValues[propName]] = value;
         }
       });
     });
     try {
-      await super._initializeNameModule
+      await super._initializeNameModuleVal
         .then(this._setDeeds)
         .then(this._setExpiry)
         .then(this._setContentHash)
-        .then(this._setEnsContracts);
+        .then(this._setEnsContracts)
+        .then(this._setDnsContract);
     } catch (e) {
       throw new Error(e);
     }
   }
 
   async _setExpiry() {
-    const expiryTime = await super.registrarContract.methods
-      .nameExpires(super.labelHash)
+    const expiryTime = await super.registrarContractVal.methods
+      .nameExpires(super.labelHashVal)
       .call();
     this.expired = expiryTime * 1000 < new Date().getTime();
   }
 
   async _setContentHash() {
     try {
-      const hash = await super.resolverContract.methods
-        .contenthash(super.nameHash)
+      const hash = await super.resolverContractVal.methods
+        .contenthash(super.nameHashVal)
         .call();
       this.contentHash = hash && hash !== '' ? contentHash.decode(hash) : '';
     } catch (e) {
@@ -228,15 +256,51 @@ export default class EthNameModule extends NameManagerInterface {
   }
 
   async _setEnsContracts() {
-    const web3 = super.web3;
-    super._setContracts();
+    const web3 = super.web3Val;
+    super._setContractsVal();
     this.oldEnsContract = new web3.eth.Contract(OldEnsAbi, OLD_ENS_ADDRESS);
   }
 
+  async _setDnsContract() {
+    if (!super.name.includes(super.network.ens.registrarTLD)) {
+      this.dnsRegistrarContractVal = new DNSRegistrar(
+        super.web3Val.currentProvider,
+        super.registrarAddressVal
+      );
+      this.dnsClaimVal = await this.dnsRegistrar.claim(
+        super.parsedDomainNameVal
+      );
+      this._setDnsInfo();
+    }
+
+    return;
+  }
+
+  async _setDnsInfo() {
+    const _owner = await super.ens.owner(super.parsedDomainNameVal);
+    const isInNewRegistry = await super.registryContractVal.methods
+      .recordExists(nameHashPckg.hash(super.parsedDomainNameVal))
+      .call();
+    if (this.dnsClaim.result.found && !isInNewRegistry) {
+      this.dnsStatusVal = 'claimable';
+    } else if (
+      this.dnsClaim.result.found &&
+      this.dnsClaim.getOwner().toLowerCase() === _owner.toLowerCase()
+    ) {
+      this.dnsStatusVal = 'owned';
+    } else if (this.dnsClaim.result.found) {
+      this.dnsStatusVal = 'claimable';
+    } else if (this.dnsClaim.result.nsec) {
+      this.dnsStatusVal = 'unclaimable';
+    } else {
+      this.dnsStatusVal = 'dnsecerror';
+    }
+  }
+
   async _setDeeds() {
-    const web3 = super.web3;
+    const web3 = super.web3Val;
     const entries = await this.oldEnsContract.methods
-      .entries(super.labelHash)
+      .entries(super.labelHashVal)
       .call();
     if (entries[1] !== BURNER_ADDRESS) {
       this.redeemable = true;
@@ -249,47 +313,47 @@ export default class EthNameModule extends NameManagerInterface {
   }
 
   async _registerWithDuration(duration) {
-    const utils = super.web3.utils;
+    const utils = super.web3Val.utils;
     const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
     const actualDuration = Math.ceil(SECONDS_YEAR * duration);
     try {
-      const rentPrice = await super.registrarControllerContract.methods
-        .rentPrice(super.parsedHostName, actualDuration)
+      const rentPrice = await super.registrarControllerContractVal.methods
+        .rentPrice(super.parsedHostNameVal, actualDuration)
         .call();
       const withFivePercent = BigNumber(rentPrice)
         .times(1.05)
         .integerValue()
         .toFixed();
-      return super.registrarControllerContract.methods
+      return super.registrarControllerContractVal.methods
         .registerWithConfig(
-          super.parsedHostName,
-          super.address,
+          super.parsedHostNameVal,
+          super.addressVal,
           actualDuration,
-          utils.sha3(super.secretPhrase),
-          super.publicResolverAddress,
-          super.address
+          utils.sha3(super.secretPhraseVal),
+          super.publicResolverAddressVal,
+          super.addressVal
         )
-        .send({ from: super.address, value: withFivePercent });
+        .send({ from: super.addressVal, value: withFivePercent });
     } catch (e) {
       throw new Error(e);
     }
   }
 
   async _createCommitment() {
-    const utils = super.web3.utils;
+    const utils = super.web3Val.utils;
     try {
-      const commitment = await super.registrarControllerContract.methods
+      const commitment = await super.registrarControllerContractVal.methods
         .makeCommitmentWithConfig(
-          super.parsedHostName,
-          super.address,
-          utils.sha3(super.secretPhrase),
-          super.publicResolverAddress,
-          super.address
+          super.parsedHostNameVal,
+          super.addressVal,
+          utils.sha3(super.secretPhraseVal),
+          super.publicResolverAddressVal,
+          super.addressVal
         )
         .call();
-      return await super.registrarControllerContract.methods
+      return await super.registrarControllerContractVal.methods
         .commit(commitment)
-        .send({ from: super.address });
+        .send({ from: super.addressVal });
     } catch (e) {
       throw new Error(e);
     }
