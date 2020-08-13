@@ -1,5 +1,6 @@
 <template>
-  <mew6-white-sheet class="watch-only-address-table">
+  <white-sheet class="watch-only-address-table">
+    aaaaaaaaa
     <div class="block-header d-flex align-center">
       <blockie
         height="35px"
@@ -68,14 +69,15 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-  </mew6-white-sheet>
+  </white-sheet>
 </template>
 
 <script>
 import toolTable from '../table/Table';
+import WhiteSheet from '@/components/white-sheet/WhiteSheet';
 
 export default {
-  components: { toolTable },
+  components: { toolTable, WhiteSheet },
   data: () => ({ panel: [0] }),
   methods: {
     openPanel() {

@@ -68,11 +68,12 @@ export default {
     }
     .v-tab {
       text-align: left;
-      //display: block;
+      font-weight: 400 !important;
       font-size: 14px !important;
       justify-content: flex-start;
     }
     .v-tab--active {
+      font-weight: 600 !important;
       border-left: 4px solid var(--v-primary-base) !important;
     }
   }
