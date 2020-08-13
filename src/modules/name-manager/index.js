@@ -2,8 +2,8 @@ import { tldSupported, getTld } from './helpers';
 
 const ADDRESS_URL =
   'https://nft2.mewapi.io/tokens?owner={{address}}&chain=mainnet';
-const ETH_REGISTRAR = '0x00000000'; // place holder, trying to figure out when I should fetch the registrar
-import EthNameModule from './EthNameModule';
+const ETH_REGISTRAR = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
+import PermanentNameModule from './PermanentNameModule';
 
 export default class NameManager {
   constructor(network, address, web3, ens) {
@@ -21,11 +21,11 @@ export default class NameManager {
 
   searchName(name) {
     return new Promise((resolve, reject) => {
-      if (tldSupported(name)) {
-        switch (this.network.type.name) {
-          case 'ETH':
+      if (tldSupported(this.network, name)) {
+        switch (this.network.ens.registrarType) {
+          case 'permanent':
             resolve(
-              new EthNameModule(
+              new PermanentNameModule(
                 name,
                 this.address,
                 this.network,
