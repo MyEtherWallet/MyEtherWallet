@@ -1,6 +1,5 @@
 <template>
   <white-sheet class="watch-only-address-table">
-    aaaaaaaaa
     <div class="block-header d-flex align-center">
       <blockie
         height="35px"
@@ -89,7 +88,7 @@ export default {
 
 <style lang="scss" scoped>
 .block-header {
-  background-color: var(--v-expand-header-base);
+  background-color: var(--v-expandHeader-base) !important;
   color: white;
   padding: 15px 20px;
   border-radius: 10px 10px 0 0;
