@@ -63,7 +63,7 @@ export default {
   .v-tabs {
     .v-slide-group {
       border-right: 1px solid var(--v-inputBorder-base) !important;
-      margin-right: 30px;
+      margin-right: 50px;
       padding-right: 30px;
     }
     .v-tab {
