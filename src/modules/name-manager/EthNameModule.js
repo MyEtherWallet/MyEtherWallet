@@ -181,6 +181,23 @@ export default class EthNameModule extends NameManagerInterface {
   }
 
   async _initModule() {
+    // initial valaue for the variables
+    const formValues = {
+      oldEnsContract: this.oldEnsContract,
+      oldDeedContract: this.oldDeedContract
+    };
+
+    Object.keys(formValues).forEach(propName => {
+      Object.defineProperties(this, propName, {
+        enumerable: true,
+        get: () => {
+          return this[propName];
+        },
+        set: value => {
+          this[propName] = value;
+        }
+      });
+    });
     try {
       await super._initializeNameModule
         .then(this._setDeeds)
