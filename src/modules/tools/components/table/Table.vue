@@ -1,38 +1,120 @@
 <template>
-  <div class="more-actions--table pb-5">
-    <v-data-table
-      :headers="headers"
-      :items="addresses"
-      :items-per-page="10"
-      item-key="id"
-      sort-by="calories"
-    >
-      <template v-slot:item.icon="{ item }">
-        <div class="d-flex align-center justify-center">
-          <img :src="item.icon" :alt="item.token" height="24" class="pl-4" />
-        </div>
-      </template>
-      <template v-slot:item.change="{ item }"> {{ item.change }}% </template>
-      <template v-slot:item.chart="{ item }">
-        <charts
-          class="ml-n2 mr-2"
-          :data="item.chart"
-          :linecolor="
-            item.change > 0
-              ? 'var(--v-primary-base)'
-              : 'var(--v-error-lighten2)'
-          "
-        />
-      </template>
-    </v-data-table>
+  <div class="more-actions--table">
+    <mew-table :table-headers="mewTableHeader" :table-data="mewTableData">
+    </mew-table>
   </div>
 </template>
 
 <script>
-import charts from '../charts/Charts';
 export default {
-  components: { charts },
+  components: {},
   data: () => ({
+    mewTableHeader: [
+      {
+        text: 'Token name',
+        value: 'token',
+        sortable: true,
+        width: '100%'
+      },
+      {
+        text: 'Price',
+        value: 'price',
+        sortable: true,
+        width: '100%'
+      },
+      {
+        text: 'Market cap',
+        value: 'cap',
+        sortable: true,
+        width: '100%'
+      },
+      {
+        text: 'Change(24H)',
+        value: 'change',
+        sortable: true,
+        width: '100%'
+      },
+      {
+        text: 'Amount',
+        value: 'amount',
+        sortable: true,
+        width: '100%'
+      },
+      {
+        text: 'My value',
+        value: 'myValue',
+        sortable: true,
+        width: '100%'
+      }
+    ],
+
+    mewTableData: [
+      {
+        token: 'Monero(XMR)',
+        price: '$8.23',
+        cap: '$1.23B',
+        change: '2.23%',
+        status: '+',
+        changeData: {
+          x: [1, 4, 10, 4],
+          y: [0, 1, 34, 43]
+        },
+        amount: '27.54',
+        myValue: '$227.54'
+      },
+      {
+        token: 'Monero(XMR)',
+        price: '$8.23',
+        cap: '$1.23B',
+        change: '2.23%',
+        status: '+',
+        changeData: {
+          x: [1, 4, 10, 4],
+          y: [0, 1, 34, 43]
+        },
+        amount: '27.54',
+        myValue: '$227.54'
+      },
+      {
+        token: 'Monero(XMR)',
+        price: '$8.23',
+        cap: '$1.23B',
+        change: '2.23%',
+        status: '+',
+        changeData: {
+          x: [1, 4, 10, 4],
+          y: [0, 1, 34, 43]
+        },
+        amount: '27.54',
+        myValue: '$227.54'
+      },
+      {
+        token: 'Monero(XMR)',
+        price: '$8.23',
+        cap: '$1.23B',
+        change: '2.23%',
+        status: '+',
+        changeData: {
+          x: [1, 4, 10, 4],
+          y: [0, 1, 34, 43]
+        },
+        amount: '27.54',
+        myValue: '$227.54'
+      },
+      {
+        token: 'Monero(XMR)',
+        price: '$8.23',
+        cap: '$1.23B',
+        change: '2.23%',
+        status: '+',
+        changeData: {
+          x: [1, 4, 10, 4],
+          y: [0, 1, 34, 43]
+        },
+        amount: '27.54',
+        myValue: '$227.54'
+      }
+    ],
     headers: [
       {
         text: '',
