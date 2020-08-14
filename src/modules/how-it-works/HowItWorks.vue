@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="mew-component--how-it-works">
     <home-header title="How it works" />
-    <mew-tabs :items="mewTabs">
+    <mew-tabs :items="mewTabs" has-underline>
       <template v-slot:tabContent1>
         <send />
       </template>
@@ -65,3 +65,29 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.mew-component--how-it-works {
+  .v-slide-group__content {
+    display: flex !important;
+    justify-content: center !important;
+  }
+  .v-tab {
+    margin-left: 0 !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+  }
+  .v-tab--active {
+    font-weight: 600 !important;
+  }
+  .v-tabs-bar {
+    height: 70px !important;
+  }
+  .v-tabs-slider-wrapper {
+    height: 4px !important;
+    .v-tabs-slider {
+      background-color: var(--v-primary-base);
+    }
+  }
+}
+</style>
