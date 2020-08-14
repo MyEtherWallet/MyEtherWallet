@@ -4,6 +4,7 @@ const ADDRESS_URL =
   'https://nft2.mewapi.io/tokens?owner={{address}}&chain=mainnet';
 const ETH_REGISTRAR = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
 import PermanentNameModule from './PermanentNameModule';
+import FifsNameModule from './FifsNameModule';
 
 export default class NameManager {
   constructor(network, address, web3, ens) {
@@ -34,31 +35,9 @@ export default class NameManager {
               )
             );
             break;
-          case 'ROP':
+          case 'fifs':
             resolve(
-              new RopNameModule(
-                name,
-                this.address,
-                this.network,
-                this.web3,
-                this.ens
-              )
-            );
-            break;
-          case 'GOERLI':
-            resolve(
-              new GoerliNameModule(
-                name,
-                this.address,
-                this.network,
-                this.web3,
-                this.ens
-              )
-            );
-            break;
-          case 'RIN':
-            resolve(
-              new RinNameModule(
+              new FifsNameModule(
                 name,
                 this.address,
                 this.network,

@@ -11,10 +11,9 @@ const BURNER_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export default class PermanentNameModule extends NameManagerInterface {
   constructor(name, address, network, web3, ens) {
-    super(nameVal, address, network, web3, ens);
-    this.nameHash = nameHashPckg.hash(super.nameVal);
-    this.deedValue = 0;
-    this.deedOwner = '0x';
+    super(name, address, network, web3, ens);
+    this.deedValueVal = 0;
+    this.deedOwnerVal = '0x';
     this.secretPhraseVal = '';
     this.expirationVal = null;
     this.expiredVal = false;
@@ -134,7 +133,7 @@ export default class PermanentNameModule extends NameManagerInterface {
     }
 
     return new Promise((resolve, reject) => {
-      if (this.deedOwner !== super.addressVal) {
+      if (this.deedOwnerVal !== super.addressVal) {
         return reject({
           error: 'Redeeming address provided is not the owner!'
         });
@@ -161,6 +160,10 @@ export default class PermanentNameModule extends NameManagerInterface {
   setIPFS(file) {
     if (super.ownerVal === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
+    }
+
+    if (super.networkVal.type.name !== 'ETH') {
+      throw new Error('Ipfs not supported in this network!');
     }
 
     return new Promise((resolve, reject) => {
@@ -195,7 +198,7 @@ export default class PermanentNameModule extends NameManagerInterface {
   claim() {
     return new Promise((resolve, reject) => {
       try {
-        this.dnsClaim
+        this.dnsClaimVal
           .submit({
             from: this.account.address
           })
@@ -209,9 +212,18 @@ export default class PermanentNameModule extends NameManagerInterface {
   async _initModule() {
     // initial valaue for the variables
     const formValues = {
+      deedValue: 'deedValueVal',
+      deedOwner: 'deedOwnerVal',
+      secretPhrase: 'secretPhraseVal',
+      expiration: 'expirationVal',
+      expired: 'expiredVal',
+      redeemable: 'redeemableVal',
+      // Contracts
       oldEnsContract: 'oldEnsContractVal',
       oldDeedContract: 'oldDeedContractVal',
-      dnsRegistrar: 'dnsRegistrarVal'
+      dnsRegistrarContract: 'dnsRegistrarContractVal',
+      dnsClaim: 'dnsClaimVal',
+      dnsStatus: 'dnsStatusVal'
     };
 
     Object.keys(formValues).forEach(propName => {
@@ -281,16 +293,16 @@ export default class PermanentNameModule extends NameManagerInterface {
     const isInNewRegistry = await super.registryContractVal.methods
       .recordExists(nameHashPckg.hash(super.parsedDomainNameVal))
       .call();
-    if (this.dnsClaim.result.found && !isInNewRegistry) {
+    if (this.dnsClaimVal.result.found && !isInNewRegistry) {
       this.dnsStatusVal = 'claimable';
     } else if (
-      this.dnsClaim.result.found &&
-      this.dnsClaim.getOwner().toLowerCase() === _owner.toLowerCase()
+      this.dnsClaimVal.result.found &&
+      this.dnsClaimVal.getOwner().toLowerCase() === _owner.toLowerCase()
     ) {
       this.dnsStatusVal = 'owned';
-    } else if (this.dnsClaim.result.found) {
+    } else if (this.dnsClaimVal.result.found) {
       this.dnsStatusVal = 'claimable';
-    } else if (this.dnsClaim.result.nsec) {
+    } else if (this.dnsClaimVal.result.nsec) {
       this.dnsStatusVal = 'unclaimable';
     } else {
       this.dnsStatusVal = 'dnsecerror';
@@ -298,18 +310,21 @@ export default class PermanentNameModule extends NameManagerInterface {
   }
 
   async _setDeeds() {
-    const web3 = super.web3Val;
-    const entries = await this.oldEnsContract.methods
-      .entries(super.labelHashVal)
-      .call();
-    if (entries[1] !== BURNER_ADDRESS) {
-      this.redeemable = true;
-      this.oldDeedContract = new web3.eth.Contract(OldDeedAbi, entries[1]);
-      this.deedOwner = await this.oldDeedContract.methods.owner().call();
-      this.deedValue = await this.oldDeedContract.methods.value().call();
-    } else {
-      this.redeemable = false;
+    if (super.network.type.name === 'ETH') {
+      const web3 = super.web3Val;
+      const entries = await this.oldEnsContract.methods
+        .entries(super.labelHashVal)
+        .call();
+      if (entries[1] !== BURNER_ADDRESS) {
+        this.redeemable = true;
+        this.oldDeedContract = new web3.eth.Contract(OldDeedAbi, entries[1]);
+        this.deedOwnerVal = await this.oldDeedContract.methods.owner().call();
+        this.deedValue = await this.oldDeedContract.methods.value().call();
+      } else {
+        this.redeemable = false;
+      }
     }
+    return;
   }
 
   async _registerWithDuration(duration) {
