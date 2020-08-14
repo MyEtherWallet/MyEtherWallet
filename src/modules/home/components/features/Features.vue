@@ -29,14 +29,14 @@
               alt="Swap"
             />
           </template>
-          <template v-slot:tabContent2>
+          <template v-slot:tabContent3>
             <img
               class="pt-7 tab-image-content"
               :src="require('@/assets/images/backgrounds/bg-dapps-page.png')"
               alt="Dapps"
             />
           </template>
-          <template v-slot:tabContent3>
+          <template v-slot:tabContent4>
             <img
               class="pt-7 tab-image-content"
               :src="require('@/assets/images/backgrounds/bg-tokens-page.png')"
