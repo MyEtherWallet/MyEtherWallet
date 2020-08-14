@@ -1,6 +1,6 @@
 <template>
   <div>
-    <block-title no-page-title :data="title" class="mb-7" />
+    <block-title max-width="600px" no-page-title :data="title" class="mb-7" />
 
     <div class="d-flex">
       <div>
@@ -39,7 +39,7 @@
 
 <script>
 import blockTitle from '@/components/block-title/BlockTitle';
-import SwapIcon from '@/assets/images/icons/icon-swap.svg';
+import swapIcon from '@/assets/images/icons/icon-swap.svg';
 
 export default {
   components: { blockTitle },
@@ -56,7 +56,7 @@ export default {
         value: 'Ethereum'
       }
     ],
-    swap: SwapIcon,
+    swap: swapIcon,
     etherUnitRef: [
       {
         name: 'Wei',

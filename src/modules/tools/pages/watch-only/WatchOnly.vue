@@ -1,6 +1,6 @@
 <template>
   <div>
-    <block-title no-page-title :data="title" class="mb-7" />
+    <block-title max-width="600px" no-page-title :data="title" class="mb-7" />
     <table-container />
     <div class="py-3">
       <address-select label="To address" :items="addresses"></address-select>
