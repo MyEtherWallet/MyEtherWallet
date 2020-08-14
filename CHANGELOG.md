@@ -1,4 +1,9 @@
+### Bug
+
+- Better token load on offline [#2545](https://github.com/MyEtherWallet/MyEtherWallet/pull/2545)
+
 ### Release v5.7.5
+
 ### Devop
 
 - Update MEW wallet from MEWconnect [#2542](https://github.com/MyEtherWallet/MyEtherWallet/pull/2542)
