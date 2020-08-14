@@ -1,6 +1,6 @@
 ### Bug
 
-- Fix missed cases for gas price too high [#](<>)
+- Fix missed cases for gas price too high [#2544](https://github.com/MyEtherWallet/MyEtherWallet/pull/2544)
 
 ### Release v5.7.5
 
