@@ -1,5 +1,7 @@
 <template>
-  <div
+  <v-sheet
+    color="transparent"
+    :max-width="maxWidth"
     :class="[
       data.centered ? 'text-center' : '',
       !noPageTitle ? 'page-title' : ''
@@ -34,13 +36,14 @@
       <div><slot /></div>
     </v-sheet>
     <div v-if="!noPageTitle" class="py-6"></div>
-  </div>
+  </v-sheet>
 </template>
 
 <script>
 export default {
   name: 'BlockTitle',
   props: {
+    maxWidth: { default: '', type: String },
     noPageTitle: { default: false, type: Boolean },
     data: {
       default: function () {

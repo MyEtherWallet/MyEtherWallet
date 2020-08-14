@@ -1,6 +1,6 @@
 <template>
   <div>
-    <block-title no-page-title :data="title" class="mb-7" />
+    <block-title max-width="600px" no-page-title :data="title" class="mb-7" />
     <v-textarea outlined label="Signature" value="Value"></v-textarea>
     <mew-button
       title="Verify"
