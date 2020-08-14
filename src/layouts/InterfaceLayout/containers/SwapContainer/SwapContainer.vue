@@ -27,7 +27,9 @@
       <div class="title-block">
         <interface-container-title :title="$t('common.swap')" />
       </div>
-
+      <div v-if="showWarning" class="swap-warning-message">
+        {{ $t('swap.warning.currency-warning', { currency: toCurrency }) }}
+      </div>
       <div class="form-content-container">
         <div class="send-form">
           <div class="form-block amount-to-address">
@@ -307,6 +309,7 @@ export default {
       lastBestRate: 0,
       lastFeeEstimate: new BigNumber(0),
       bitySpecialCurrencies: ['BTC', 'REP'],
+      warningCurrencies: ['VET'],
       selectedProvider: {},
       swapDetails: {},
       currencyDetails: {},
@@ -353,6 +356,7 @@ export default {
       gasNotice: false,
       moreEthNeeded: false,
       recalculating: true,
+      showWarning: false,
       exitToFiatCallback: () => {},
       sendSignedCallback: () => {},
       debounceUpdateEstimate: {},
@@ -829,6 +833,7 @@ export default {
     },
     async updateRateEstimate(fromCurrency, toCurrency, fromValue, to) {
       if (this.haveProviderRates) {
+        this.showWarning = this.warningCurrencies.includes(toCurrency);
         this.loadingData = true;
         this.recalculating = true;
         this.noProvidersPair = { fromCurrency, toCurrency };

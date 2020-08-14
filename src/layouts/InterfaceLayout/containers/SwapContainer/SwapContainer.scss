@@ -2,6 +2,27 @@
 
 $swap-custom-mobile-colleps-width: 700px;
 
+
+.swap-warning-message{
+  margin: 0 auto;
+  text-align: center;
+  //width: 300px;
+  background-color: $light-orange-1;
+  position: relative;
+  //color: $light-orange-1;
+  border-radius: 5px;
+  border: 1px solid $light-green-1;
+  @media all and (max-width: $mobile-width) {
+    width: 100%;
+  }
+
+  i {
+    position: absolute;
+    right: 20px;
+    top: 16px;
+    font-size: 30px;
+  }
+}
 .fee-notice {
   text-align: center;
   color: $text-color-red;
