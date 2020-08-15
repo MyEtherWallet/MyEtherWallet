@@ -8,7 +8,7 @@
       <home-menu class="menu-items" />
       <v-spacer></v-spacer>
       <mew-button
-        class="px-2"
+        class="mew-component--mew-tools-button px-2"
         title="MEW tools"
         color-theme="white"
         :has-full-width="false"
@@ -35,5 +35,13 @@ export default {
 <style lang="scss" scoped>
 .menu-items {
   max-width: 500px;
+}
+</style>
+
+<style lang="scss">
+.mew-component--mew-tools-button {
+  //padding: 20px !important;
+  height: 50px !important;
+  width: 140px !important;
 }
 </style>

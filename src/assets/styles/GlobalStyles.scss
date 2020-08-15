@@ -43,11 +43,14 @@
   text-transform: initial;
 }
 
-/* ========== MEW component ========== */
+/* ========== Fix MEW components ========== */
 .theme--dark.v-expansion-panels .v-expansion-panel {
   background-color: transparent !important;
 }
-
+.v-application .v-btn.mew-button .v-btn__content {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
 /* ========== CSS Style Reset ========== */
 
 html {
@@ -57,7 +60,7 @@ html {
   font-family: monospace !important;
 }
 i {
-  font-family: 'Material Icons' !important;
+  font-family: "Material Icons" !important;
 }
 div {
   font-size: 14px;
