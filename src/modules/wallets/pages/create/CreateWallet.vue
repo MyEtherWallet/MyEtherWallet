@@ -7,7 +7,7 @@
       <h5 class="white--text ma-0">
         Already have a wallet?
         <router-link
-          :to="{ name: 'HomeAccessWallet', query: {} }"
+          :to="{ name: 'AccessWallet', query: {} }"
           class="text-decoration--underline"
         >
           Access my wallet
@@ -16,50 +16,56 @@
     </block-title>
 
     <v-sheet color="transparent" max-width="650px" class="mx-auto">
-      <mew-super-button
-        class="mew-wallet-btn mb-5"
-        color-theme="basic"
-        title="Get MEWwallet"
-        subtitle="MEW Brings a hardware wallet style security to your iOS or Android
+      <a href="https://www.mewwallet.com/" target="_blank">
+        <mew-super-button
+          class="mew-wallet-btn mb-5"
+          color-theme="basic"
+          title="Get MEWwallet"
+          subtitle="MEW Brings a hardware wallet style security to your iOS or Android
               smartphone, helping you to secure your funds as never before."
-        title-icon="mdi-shield-check"
-        title-icon-type="mdi"
-        right-icon-type="img"
-        title-icon-class="primary--text"
-        btn-link="https://www.mewwallet.com/"
-      >
-        <template v-slot:contentSlot>
-          <img
-            class="mew-wallet-img"
-            :src="require('@/assets/images/snippets/bg-mew-wallet.png')"
-          />
-          <div class="app-stores">
+          title-icon="mdi-shield-check"
+          title-icon-type="mdi"
+          right-icon-type="img"
+          title-icon-class="primary--text"
+        >
+          <template v-slot:contentSlot>
             <img
-              src="@/assets/images/icons/button-app-store.png"
-              alt="Apple app store"
+              class="mew-wallet-img"
+              :src="require('@/assets/images/snippets/bg-mew-wallet.png')"
             />
-            <img
-              src="@/assets/images/icons/button-play-store.png"
-              alt="Google play store"
-            />
-          </div>
-        </template>
-      </mew-super-button>
+            <div class="app-stores">
+              <img
+                src="@/assets/images/icons/button-app-store.png"
+                alt="Apple app store"
+              />
+              <img
+                src="@/assets/images/icons/button-play-store.png"
+                alt="Google play store"
+              />
+            </div>
+          </template>
+        </mew-super-button>
+      </a>
 
-      <mew-super-button
-        class="mew-cx-btn mb-5"
-        color-theme="basic"
-        title="MEW CX"
-        subtitle="MEWcx is a secure and convinient way to create and manage your
-                wallet. Click here to download today."
-        title-icon="mdi-shield-check"
-        title-icon-type="mdi"
-        right-icon-type="img"
-        title-icon-class="primary--text"
-        :right-icon="require('@/assets/images/icons/icon-mew-cx.png')"
-        btn-link="https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en"
+      <a
+        href="https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?utm_source=chrome-ntp-icon"
+        target="_blank"
       >
-      </mew-super-button>
+        <mew-super-button
+          class="mew-cx-btn mb-5"
+          color-theme="basic"
+          title="MEW CX"
+          subtitle="MEWcx is a secure and convinient way to create and manage your
+                wallet. Click here to download today."
+          title-icon="mdi-shield-check"
+          title-icon-type="mdi"
+          right-icon-type="img"
+          title-icon-class="primary--text"
+          :right-icon="require('@/assets/images/icons/icon-mew-cx.png')"
+          btn-link="https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en"
+        >
+        </mew-super-button>
+      </a>
 
       <mew-super-button
         class="mb-5"
@@ -106,7 +112,7 @@ export default {
     titleData: {
       textProps: 'white--text',
       toptitle: '',
-      title: 'Get a New Wallet',
+      title: 'Create a new wallet',
       description: '',
       centered: true
     },
@@ -127,11 +133,14 @@ export default {
 .mew-component--create-wallet {
   .mew-button {
     padding: 5px 30px !important;
+    div {
+      letter-spacing: 0;
+    }
     .title-wrapper {
       margin-bottom: 10px;
+
       > div:first-child {
         font-size: 22px !important;
-        letter-spacing: -0.4px;
         margin-right: 3px;
       }
       .title-icon {
