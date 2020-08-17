@@ -113,7 +113,9 @@ export default {
   top: 0;
   left: 0;
   z-index: 0;
+  height: 100%;
   img {
+    height: 100%;
     width: 100%;
   }
 }
