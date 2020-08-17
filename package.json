@@ -43,9 +43,9 @@
   },
   "devDependencies": {
     "@keepkey/keepkey.js": "1.2.3",
-    "@ledgerhq/hw-app-eth": "5.21.0",
-    "@ledgerhq/hw-transport-u2f": "5.21.0",
-    "@ledgerhq/hw-transport-webusb": "5.21.0",
+    "@ledgerhq/hw-app-eth": "5.22.0",
+    "@ledgerhq/hw-transport-u2f": "5.22.0",
+    "@ledgerhq/hw-transport-webusb": "5.22.0",
     "@myetherwallet/mewconnect-web-client": "2.1.0-RC.5.3",
     "@vue/cli-plugin-babel": "4.4.6",
     "@vue/cli-plugin-eslint": "4.4.6",
