@@ -110,31 +110,31 @@ export default {
           name: 'Dapps',
           iconDark: DappCenterDark,
           iconLight: DappCenterLight,
-          routeName: 'Dapps',
+          routeName: 'DappsCenter',
           children: [
             {
               name: 'Dapps Center',
-              routeName: 'Dapps'
+              routeName: 'DappsCenter'
             },
             {
               name: 'ENS manager',
-              routeName: 'Dapps'
+              routeName: 'NameManager'
             },
             {
               name: 'MakerDAO',
-              routeName: 'Dapps'
+              routeName: 'MakerDAO'
             },
             {
               name: 'Aave',
-              routeName: 'Dapps'
+              routeName: 'Aave'
             },
             {
               name: 'Ambrpay',
-              routeName: 'Dapps'
+              routeName: 'Ambrpay'
             },
             {
               name: 'Unstoppable Domain',
-              routeName: 'Dapps'
+              routeName: 'UnstoppableDomain'
             }
           ]
         },
