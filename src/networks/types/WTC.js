@@ -1,5 +1,4 @@
 import tokens from '@/_generated/tokens/wtc/0x668df218d073f413Ed2FCEa0D48CfbFd59C030Ae.json';
-import contracts from '@/_generated/contracts/wtc/0x668df218d073f413Ed2FCEa0D48CfbFd59C030Ae.json';
 import wtc from '@/assets/images/networks/wtc.svg';
 
 export default {
