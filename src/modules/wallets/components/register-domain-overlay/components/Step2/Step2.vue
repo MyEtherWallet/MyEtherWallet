@@ -1,14 +1,14 @@
 <template>
   <div>
-    <CompleteRegistration />
+    <transaction-confirmation />
   </div>
 </template>
 
 <script>
-import CompleteRegistration from '../CompleteRegistration';
+import TransactionConfirmation from '@/modules/wallets/components/transaction-confirmation/TransactionConfirmation';
 
 export default {
-  components: { CompleteRegistration },
+  components: { TransactionConfirmation },
   props: {},
   data() {
     return {};

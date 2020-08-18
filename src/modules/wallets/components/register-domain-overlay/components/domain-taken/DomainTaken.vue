@@ -1,5 +1,10 @@
 <template>
-  <v-sheet width="100%" max-width="600px" class="mx-auto pa-8">
+  <v-sheet
+    color="transparent"
+    width="100%"
+    max-width="600px"
+    class="mx-auto pa-8"
+  >
     <mew6-white-sheet class="pa-7">
       <div class="d-flex align-center bg_datablock pa-6 border-radius--10px">
         <v-icon class="check-icon error--text mr-3">

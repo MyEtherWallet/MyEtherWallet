@@ -38,7 +38,7 @@
     "pocket-js-web3-provider": "0.0.3",
     "register-service-worker": "1.7.1",
     "vue": "2.6.11",
-    "vue-router": "3.3.4",
+    "vue-router": "3.4.3",
     "vuex": "3.5.1"
   },
   "devDependencies": {
@@ -92,7 +92,7 @@
     "rskjs-util": "1.0.3",
     "sass": "1.26.10",
     "sass-loader": "9.0.3",
-    "sinon": "9.0.2",
+    "sinon": "9.0.3",
     "store": "2.0.12",
     "stylelint": "13.6.1",
     "stylelint-config-prettier": "8.0.2",
