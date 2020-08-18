@@ -1,3 +1,5 @@
+### Release v5.7.6
+
 ### Bug
 
 - Better token load on offline [#2545](https://github.com/MyEtherWallet/MyEtherWallet/pull/2545)
