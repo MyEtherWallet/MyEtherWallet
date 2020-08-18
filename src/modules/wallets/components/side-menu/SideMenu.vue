@@ -10,7 +10,7 @@
     </div>
     <wallet-card />
     <mew-button
-      class="buy-eth-button mt-2 mb-6"
+      class="buy-eth-button mt-4 mb-6"
       color-theme="white"
       btn-style="outline"
       title="Buy ETH here"

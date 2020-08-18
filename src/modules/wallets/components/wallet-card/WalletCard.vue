@@ -3,7 +3,7 @@
     <div class="background-image">
       <img src="@/assets/images/snippets/wallet-card.png" />
     </div>
-    <div class="info-container px-4 py-5">
+    <div class="info-container px-4 pt-5 pb-3">
       <div class="d-flex">
         <div class="blockie-img">
           <blockie
@@ -51,7 +51,7 @@
           ></mew-button>
         </div>
         <mew-button
-          class="ml-auto"
+          class="ml-auto switch-button"
           :has-full-width="false"
           btn-style="outline"
           title="SWITCH >"
@@ -164,6 +164,14 @@ export default {
     .v-btn {
       padding: 0 !important;
       min-width: 36px !important;
+    }
+  }
+  .switch-button {
+    min-height: 30px !important;
+    height: 30px !important;
+
+    .v-btn__content span {
+      font-size: 12px !important;
     }
   }
 }

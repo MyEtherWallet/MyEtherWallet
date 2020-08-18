@@ -125,8 +125,9 @@ export default {
       font-size: 36px !important;
     }
   }
+
   .v-btn__content {
-    height: 150px !important;
+    height: 146px !important;
     display: block !important;
   }
 
@@ -154,12 +155,14 @@ export default {
       max-height: 45px;
       overflow: hidden;
       margin-bottom: 10px;
+      line-height: 19px;
     }
   }
 
   .right-icon {
     img {
       height: 70px;
+      filter: drop-shadow(0px 4px 3px rgba(0, 0, 0, 0.2));
     }
   }
 
