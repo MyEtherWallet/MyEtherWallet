@@ -29,7 +29,7 @@ export default {
       component: Send,
       children: [
         {
-          path: '',
+          path: 'send-tx',
           name: 'SendTX',
           component: Send
         },

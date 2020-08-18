@@ -19,7 +19,7 @@
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
-import DomainTaken from './components/DomainTaken';
+import DomainTaken from './components/domain-taken/DomainTaken';
 
 export default {
   components: { Step1, Step2, Step3, DomainTaken },
