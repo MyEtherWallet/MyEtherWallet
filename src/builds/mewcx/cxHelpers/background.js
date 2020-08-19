@@ -26,6 +26,7 @@ import {
   WEB3_INJECT_SUCCESS
 } from './cxEvents';
 import utils from 'web3-utils';
+import BigNumber from 'bignumber.js';
 const chrome = window.chrome;
 chrome.tabs.onUpdated.addListener(onUpdatedCb);
 chrome.tabs.onActivated.addListener(onActivatedCb);
@@ -65,11 +66,18 @@ const networkChanger = items => {
     // eslint-disable-next-line
     if (!!network) {
       store.dispatch('main/switchNetwork', network).then(() => {
-        store.dispatch('main/setWeb3Instance', network.url).then(() => {
-          chrome.storage.sync.set({
-            defChainID: store.state.main.network.type.chainID
+        store
+          .dispatch('main/setWeb3Instance', network.url)
+          .then(() => {
+            chrome.storage.sync.set({
+              defChainID: store.state.main.network.type.chainID
+            });
+          })
+          .then(() => {
+            store.state.main.web3.eth.getGasPrice().then(res => {
+              store.dispatch('main/setGasPrice', new BigNumber(res).toNumber());
+            });
           });
-        });
       });
     }
   } else {
