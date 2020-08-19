@@ -14,6 +14,7 @@ import HeaderContainer from '@/containers/HeaderContainer';
 import ConfirmationContainer from '@/containers/ConfirmationContainer';
 import LogoutWarningModal from '@/components/LogoutWarningModal';
 import BigNumber from 'bignumber.js';
+import utils from 'web3-utils';
 
 import { mapState, mapActions } from 'vuex';
 
@@ -68,14 +69,18 @@ export default {
         _self.switchNetwork(network).then(() => {
           _self.setWeb3Instance().then(() => {
             this.web3.eth.getGasPrice().then(res => {
-              this.setGasPrice(new BigNumber(res));
+              this.setGasPrice(
+                utils.fromWei(new BigNumber(res).toNumber(), 'gwei')
+              );
             });
           });
         });
       } else {
         _self.setWeb3Instance().then(() => {
           this.web3.eth.getGasPrice().then(res => {
-            this.setGasPrice(new BigNumber(res));
+            this.setGasPrice(
+              utils.fromWei(new BigNumber(res).toNumber(), 'gwei')
+            );
           });
         });
       }

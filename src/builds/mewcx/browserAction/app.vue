@@ -7,6 +7,8 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import BigNumber from 'bignumber.js';
+import utils from 'web3-utils';
+
 export default {
   name: 'App',
   computed: {
@@ -41,14 +43,18 @@ export default {
         _self.switchNetwork(network).then(() => {
           _self.setWeb3Instance().then(() => {
             this.web3.eth.getGasPrice().then(res => {
-              this.setGasPrice(new BigNumber(res));
+              this.setGasPrice(
+                utils.fromWei(new BigNumber(res).toNumber(), 'gwei')
+              );
             });
           });
         });
       } else {
         _self.setWeb3Instance().then(() => {
           this.web3.eth.getGasPrice().then(res => {
-            this.setGasPrice(new BigNumber(res));
+            this.setGasPrice(
+              utils.fromWei(new BigNumber(res).toNumber(), 'gwei')
+            );
           });
         });
       }

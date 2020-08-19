@@ -59,7 +59,7 @@ export default async ({ payload }, res, next) => {
     rejectName
   );
 
-  tx.gasPrice = gasPrice;
+  tx.gasPrice = tx.gasPrice ? tx.gasPrice : gasPrice;
   try {
     tx.nonce = !tx.nonce ? await nonce : tx.nonce;
     tx.gas = !tx.gas ? gas : tx.gas;
