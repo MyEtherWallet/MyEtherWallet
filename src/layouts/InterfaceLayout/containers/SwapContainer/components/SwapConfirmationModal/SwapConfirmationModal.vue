@@ -461,7 +461,7 @@ export default {
         if (!values && !values.data && !values.data['ETH']) return 0;
         this.ethPrice = new BigNumber(values.data['ETH'].quotes.USD.price);
       } catch (e) {
-        this.ethPrice = new BigNumber(200);
+        this.ethPrice = new BigNumber(0);
       }
     }
   }
