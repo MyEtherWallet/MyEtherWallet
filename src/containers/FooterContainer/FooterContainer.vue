@@ -231,6 +231,10 @@ export default {
             {
               text: 'dappsSubmission.banner-submit.submit-dapp',
               to: '/dapp-submission'
+            },
+            {
+              text: 'Press Kit',
+              to: '/press-kit'
             }
           ]
         },
