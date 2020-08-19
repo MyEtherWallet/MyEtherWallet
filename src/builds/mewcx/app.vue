@@ -25,7 +25,7 @@ export default {
     'logout-warning-modal': LogoutWarningModal
   },
   computed: {
-    ...mapState('main', ['wallet', 'Networks'])
+    ...mapState('main', ['wallet', 'Networks', 'web3'])
   },
   watch: {
     $route(to, from) {
@@ -65,10 +65,18 @@ export default {
           });
         }
         _self.switchNetwork(network).then(() => {
-          _self.setWeb3Instance();
+          _self.setWeb3Instance().then(() => {
+            this.web3.eth.getGasPrice().then(res => {
+              this.setGasPrice(new BigNumber(res));
+            });
+          });
         });
       } else {
-        _self.setWeb3Instance();
+        _self.setWeb3Instance().then(() => {
+          this.web3.eth.getGasPrice().then(res => {
+            this.setGasPrice(new BigNumber(res));
+          });
+        });
       }
     });
   },
@@ -78,7 +86,7 @@ export default {
     });
   },
   methods: {
-    ...mapActions('main', ['setWeb3Instance', 'switchNetwork'])
+    ...mapActions('main', ['setWeb3Instance', 'switchNetwork', 'setGasPrice'])
   }
 };
 </script>
