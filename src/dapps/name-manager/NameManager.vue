@@ -1,23 +1,20 @@
 <template>
-  <div>
+  <div class="mew-component--name-manager">
     <register-domain-overlay
       :open="registerOverlay"
       :close="closeRegisterOverlay"
     />
-
     <mew-button
-      title="Confirmation"
+      title="Register Domain Overlay"
       :has-full-width="false"
       button-size="xsmall"
       @click.native="registerOverlay = true"
     />
-
-    <mew6-white-sheet class="mew-component--name-manager">
+    <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
-
       <mew-tabs :items="tabs" has-underline>
         <template v-slot:tabContent1>
-          <v-sheet max-width="700px" color="mewBg" class="py-12 mx-auto">
+          <v-sheet max-width="700px" color="transparent" class="py-12 mx-auto">
             <div class="tab-width">
               <div class="mb-5">
                 <div class="mew-heading-2 mb-8">
@@ -247,6 +244,7 @@ export default {
 </script>
 
 <style lang="scss">
+// Fix mew-components
 .mew-component--name-manager {
   .mew-banner {
     min-height: 180px !important;

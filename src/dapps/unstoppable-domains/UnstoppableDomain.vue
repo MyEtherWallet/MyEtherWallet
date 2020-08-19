@@ -1,28 +1,15 @@
 <template>
-  <mew6-white-sheet>
-    <mew-button
-      title="Confirmation"
-      :has-full-width="false"
-      button-size="xsmall"
-      @click.native="openOverlay('transactionTxConfirmation')"
-    />
-    <mew-button
-      title="WooCommerce"
-      :has-full-width="false"
-      button-size="xsmall"
-      @click.native="openModal('walletWooCommerce')"
-    />
+  <div class="mew-component--unstoppable-domain">
+    <mew6-white-sheet>
+      <mew-banner
+        :text-obj="topBanner"
+        :banner-img="BG"
+        @closeBanner="closeBanner"
+      />
 
-    <mew-banner
-      :text-obj="topBanner"
-      :banner-img="BG"
-      @closeBanner="closeBanner"
-    />
-
-    <mew-tabs :items="tabs">
-      <template v-slot:tabContent1>
-        <v-sheet max-width="800px" color="mewBg" class="py-12 mx-auto">
-          <div class="tab-width">
+      <mew-tabs :items="tabs" has-underline>
+        <template v-slot:tabContent1>
+          <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
             <div class="mb-5">
               <div class="mb-3">
                 <div class="mew-heading-3 font-weight-bold">
@@ -93,32 +80,32 @@
                 </v-list-item>
               </v-card>
             </div>
-          </div>
-        </v-sheet>
-      </template>
-      <template v-slot:tabContent2>
-        <v-sheet max-width="800px" color="mewBg" class="py-12 mx-auto">
-          <div class="d-flex align-center justify-space-between mb-7">
-            <h4 class="font-weight-bold">
-              My domains <span class="font-weight-regular">(1)</span>
-            </h4>
-            <mew-button
-              btn-style="transparent"
-              title="+ Add domain you own"
-              button-size="large"
-            ></mew-button>
-          </div>
-          <div>
-            <mew-expand-panel
-              color-theme="#f1eeeb"
-              :panel-items="myDomains"
-              :warning-badge="warning"
-            />
-          </div>
-        </v-sheet>
-      </template>
-    </mew-tabs>
-  </mew6-white-sheet>
+          </v-sheet>
+        </template>
+        <template v-slot:tabContent2>
+          <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
+            <div class="d-flex align-center justify-space-between mb-7">
+              <h4 class="font-weight-bold">
+                My domains <span class="font-weight-regular">(1)</span>
+              </h4>
+              <mew-button
+                btn-style="transparent"
+                title="+ Add domain you own"
+                button-size="large"
+              ></mew-button>
+            </div>
+            <div>
+              <mew-expand-panel
+                color-theme="#f1eeeb"
+                :panel-items="myDomains"
+                :warning-badge="warning"
+              />
+            </div>
+          </v-sheet>
+        </template>
+      </mew-tabs>
+    </mew6-white-sheet>
+  </div>
 </template>
 
 <script>
@@ -173,15 +160,39 @@ export default {
         }
       ]
     };
-  },
-  methods: {
-    openOverlay(name) {
-      this.$store.commit('openOverlay', name);
-    },
-    openModal(name) {
-      this.$store.commit('openModal', name);
-    },
-    closeBanner() {}
   }
 };
 </script>
+
+<style lang="scss">
+// Fix mew-components
+.mew-component--unstoppable-domain {
+  .mew-banner {
+    min-height: 180px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    .exit-container {
+      display: none;
+    }
+
+    .banner-content {
+      > div:nth-child(2) {
+        margin-top: 9px;
+      }
+    }
+
+    .mew-subtitle {
+      font-size: 36px !important;
+    }
+  }
+
+  .v-tab {
+    letter-spacing: -0.1px;
+  }
+  .v-tabs-bar {
+    height: 70px;
+  }
+}
+</style>
