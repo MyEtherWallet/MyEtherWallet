@@ -75,7 +75,10 @@ const networkChanger = items => {
           })
           .then(() => {
             store.state.main.web3.eth.getGasPrice().then(res => {
-              store.dispatch('main/setGasPrice', new BigNumber(res).toNumber());
+              store.dispatch(
+                'main/setGasPrice',
+                utils.fromWei(new BigNumber(res).toNumber(), 'gwei')
+              );
             });
           });
       });
