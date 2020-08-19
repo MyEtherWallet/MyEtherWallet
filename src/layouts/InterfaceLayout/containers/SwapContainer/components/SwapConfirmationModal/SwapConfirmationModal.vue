@@ -75,8 +75,8 @@
       </div>
       <div v-if="showGasWarning" class="gas-price-warning">
         {{ $t('errorsGlobal.high-gas-limit-warning') }}
-        <p>Current gas price: {{ this.gasPrice }} Gwei</p>
-        <p class="notice">*based on gas price from settings</p>
+        <p>{{ $t('swap.current-gas-price', { value: this.gasPrice }) }}</p>
+        <p class="notice">{{ $t('swap.gas-price-source-notice') }}</p>
       </div>
       <!--<p> Exchange Rate: 0.000</p>-->
       <div

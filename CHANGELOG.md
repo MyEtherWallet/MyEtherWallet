@@ -1,4 +1,9 @@
+### Devop
+
+- Add transaction fee estimate and high gas warning to swap [#2549](https://github.com/MyEtherWallet/MyEtherWallet/pull/2549)
+
 ### Release v5.7.5
+
 ### Devop
 
 - Update MEW wallet from MEWconnect [#2542](https://github.com/MyEtherWallet/MyEtherWallet/pull/2542)
