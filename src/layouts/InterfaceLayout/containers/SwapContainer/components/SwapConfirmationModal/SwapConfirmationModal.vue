@@ -445,12 +445,8 @@ export default {
       this.swapReady = true;
     },
     async estimateGas(params) {
-      try {
-        const gasLimit = await this.web3.eth.estimateGas(params);
-        this.incrementFee(gasLimit);
-      } catch (e) {
-        this.incrementFee(500000);
-      }
+      const gasLimit = await this.web3.eth.estimateGas(params);
+      this.incrementFee(gasLimit);
     },
     async fetchEthData() {
       try {
