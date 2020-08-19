@@ -329,17 +329,10 @@ export default class DexAg {
         value: tradeDetails.trade.value
       };
 
-      const bancorGas =
-        tradeDetails.metadata.gasPrice &&
-        swapDetails.provider === 'bancor' &&
-        this.platformGasPrice > 0;
+      const checkGas =
+        tradeDetails.metadata.gasPrice && this.platformGasPrice > 0;
 
-      const kyberGas =
-        tradeDetails.metadata.gasPrice &&
-        swapDetails.provider === 'kyber' &&
-        this.platformGasPrice > 0;
-
-      if (bancorGas || kyberGas) {
+      if (checkGas) {
         const gasPrice = new BigNumber(tradeDetails.metadata.gasPrice);
         const platformGasPrice = this.web3.utils.toWei(
           this.platformGasPrice.toString(),
