@@ -1,5 +1,5 @@
 <template>
-  <div class="mew-component--ambrpay">
+  <div class="mew-component-fix--ambrpay">
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
@@ -33,7 +33,6 @@
             <mew-input label="Amount" placeholder=" " class="flex-grow-1" />
           </div>
         </div>
-
         <div class="d-flex justify-center">
           <mew-button
             class="display--block"
@@ -58,55 +57,15 @@
 
 <script>
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
-
 export default {
   components: {},
   data() {
     return {
-      myDomains: [
-        {
-          name: 'Network',
-          subtext: 'ETH - myetherapi.com'
-        },
-        {
-          name: 'Address to interact with',
-          subtext: '',
-          tooltip: 'Tooltip'
-        }
-      ],
-      warning: {
-        color: 'red',
-        text: 'Expire soon'
-      },
       BG: BG,
       topBanner: {
         title: 'Ambrpay',
-        subtext: 'Replace cryptocurrency addresses with a human readable name.',
-        exit: 'Exit Dapp'
-      },
-      tab: 1,
-      results: [
-        {
-          label: 'Labelhash (mewwallet)',
-          value: '0x527b9715d99aCfB7E1b01C6C864DC8402fC6C864DC8402f2a3C3b'
-        },
-        {
-          label: 'Namehash (mewwallet.eth)',
-          value: '0x527b9715d99aCfB7E1b01C6C864DC8402fC6C864DC8402f2a3C3b'
-        },
-        {
-          label: 'Owner',
-          value: '0x527b9715d99aCfB7E1b01C6C864DC8402f2a3C3b'
-        },
-        {
-          label: 'Multi-coin',
-          value: 'None'
-        },
-        {
-          label: 'ETH address',
-          value: '0x502e119bbf7b476a449a67fdabfa35f486194c9a'
-        }
-      ]
+        subtext: 'Replace cryptocurrency addresses with a human readable name.'
+      }
     };
   }
 };
@@ -114,28 +73,24 @@ export default {
 
 <style lang="scss">
 // Fix mew-components
-.mew-component--ambrpay {
+.mew-component-fix--ambrpay {
   .mew-banner {
     min-height: 180px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-
     .exit-container {
       display: none;
     }
-
     .banner-content {
       > div:nth-child(2) {
         margin-top: 9px;
       }
     }
-
     .mew-subtitle {
       font-size: 36px !important;
     }
   }
-
   .v-tab {
     letter-spacing: -0.1px;
   }

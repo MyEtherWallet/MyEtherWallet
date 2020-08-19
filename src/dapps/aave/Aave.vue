@@ -1,12 +1,7 @@
 <template>
-  <div class="mew-component--aave">
+  <div class="mew-component-fix--aave">
     <mew6-white-sheet>
-      <mew-banner
-        :text-obj="topBanner"
-        :banner-img="BG"
-        @closeBanner="closeBanner"
-      />
-
+      <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
         <template v-slot:tabContent1>
           <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
@@ -47,7 +42,6 @@
                       $40.00
                     </h3>
                     <div class="mt-2">0 ETH</div>
-
                     <div class="d-flex justify-space-between">
                       <div class="font-weight-medium">Composition</div>
                       <div class="d-flex align-center">
@@ -85,7 +79,6 @@
                       $40.00
                     </h3>
                     <div class="mt-2">0 ETH</div>
-
                     <div class="d-flex justify-space-between">
                       <div class="font-weight-medium">Composition</div>
                       <div class="d-flex align-center">
@@ -107,7 +100,6 @@
                       $40.00
                     </h3>
                     <div class="mt-2">0 ETH</div>
-
                     <div class="d-flex justify-space-between">
                       <div class="font-weight-medium">Composition</div>
                       <div class="d-flex align-center">
@@ -142,7 +134,6 @@
 
 <script>
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
-
 export default {
   components: {},
   data() {
@@ -153,14 +144,12 @@ export default {
         total: 20.32,
         data: [
           {
-            title: 'sendBal',
             color: 'titlePrimary',
             amount: 5.3,
             tooltip: 'Send: 5.3',
             percentage: '26.08'
           },
           {
-            title: 'feeBal',
             color: 'warning darken-1',
             amount: 3.2,
             tooltip: 'Fee: 3.2',
@@ -170,8 +159,7 @@ export default {
       },
       topBanner: {
         title: 'Unstoppable Domain',
-        subtext: 'Replace cryptocurrency addresses with a human readable name.',
-        exit: 'Exit Dapp'
+        subtext: 'Replace cryptocurrency addresses with a human readable name.'
       }
     };
   }
@@ -180,28 +168,24 @@ export default {
 
 <style lang="scss">
 // Fix mew-components
-.mew-component--aave {
+.mew-component-fix--aave {
   .mew-banner {
     min-height: 180px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-
     .exit-container {
       display: none;
     }
-
     .banner-content {
       > div:nth-child(2) {
         margin-top: 9px;
       }
     }
-
     .mew-subtitle {
       font-size: 36px !important;
     }
   }
-
   .v-tab {
     letter-spacing: -0.1px;
   }

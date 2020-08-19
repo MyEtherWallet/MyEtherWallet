@@ -1,15 +1,15 @@
 <template>
-  <div class="mew-component--name-manager">
+  <div class="mew-component-fix--name-manager">
     <register-domain-overlay
       :open="registerOverlay"
       :close="closeRegisterOverlay"
     />
-    <mew-button
-      title="Register Domain Overlay"
-      :has-full-width="false"
-      button-size="xsmall"
-      @click.native="registerOverlay = true"
-    />
+    <div
+      class="cursor--pointer font-weight-bold"
+      @click="registerOverlay = true"
+    >
+      Register Domain Overlay
+    </div>
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
@@ -93,7 +93,7 @@
                 My domains <span class="font-weight-regular">(1)</span>
               </h4>
               <mew-button
-                btn-style="transparent"
+                btn-style="outline"
                 title="+ Add domain you own"
                 button-size="large"
               ></mew-button>
@@ -102,7 +102,7 @@
               <mew-expand-panel :panel-items="myDomains">
                 <template v-slot:panelBody1>
                   <div>
-                    <div class="bg_datablock py-2 px-0">
+                    <div class="header-block bg_datablock">
                       <v-row>
                         <v-col cols="6">
                           <div class="d-flex align-center">
@@ -124,7 +124,6 @@
                         </v-col>
                       </v-row>
                     </div>
-
                     <div>
                       <div
                         class="d-flex align-center justify-space-between border-bottom py-5 px-0"
@@ -134,9 +133,61 @@
                         </div>
                         <div>Parent - ETH</div>
                       </div>
-
                       <v-divider></v-divider>
-
+                      <div class="pa-5">
+                        <v-row>
+                          <v-col
+                            v-for="(f, key) in domainFunctions"
+                            :key="key"
+                            cols="2"
+                            class="text-center"
+                          >
+                            <mew-icon icon-name="ensManager" :img-height="75" />
+                            <div>{{ f.label }}</div>
+                            <div v-if="f.expire" class="orange--text">
+                              <div>Expire at</div>
+                              <div>{{ f.expire }}</div>
+                            </div>
+                          </v-col>
+                        </v-row>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+                <template v-slot:panelBody2>
+                  <div>
+                    <div class="header-block bg_datablock">
+                      <v-row>
+                        <v-col cols="6">
+                          <div class="d-flex align-center">
+                            <div>Registrant</div>
+                            <blockie width="25px" height="25px" class="mx-3" />
+                            <div class="monospace text-overflow--ellipsis">
+                              0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
+                            </div>
+                          </div>
+                        </v-col>
+                        <v-col cols="6">
+                          <div class="d-flex align-center">
+                            <div>Controller</div>
+                            <blockie width="25px" height="25px" class="mx-3" />
+                            <div class="monospace text-overflow--ellipsis">
+                              0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
+                            </div>
+                          </div>
+                        </v-col>
+                      </v-row>
+                    </div>
+                    <div>
+                      <div
+                        class="d-flex align-center justify-space-between border-bottom py-5 px-0"
+                      >
+                        <div class="mew-heading-3">
+                          What do you want to do with the domain?
+                        </div>
+                        <div>Parent - ETH</div>
+                      </div>
+                      <v-divider></v-divider>
                       <div class="pa-5">
                         <v-row>
                           <v-col
@@ -158,6 +209,8 @@
                   </div>
                 </template>
               </mew-expand-panel>
+              <domain-btn domain="iamexpired.eth" badge="expired" />
+              <domain-btn domain="almostexpired.eth" badge="expired" />
             </div>
           </div>
         </template>
@@ -169,9 +222,10 @@
 <script>
 import BG from '@/assets/images/backgrounds/bg-ens.png';
 import registerDomainOverlay from '@/modules/wallets/components/register-domain-overlay/RegisterDomainOverlay';
+import domainBtn from './components/domain-btn/DomainBtn';
 
 export default {
-  components: { registerDomainOverlay },
+  components: { registerDomainOverlay, domainBtn },
   data() {
     return {
       registerOverlay: false,
@@ -197,11 +251,11 @@ export default {
         },
         {
           name: 'mewdev008.eth',
-          subtext: 'Buy domain',
-          colorTheme: 'errorOutlineActive',
+          subtext: '',
+          colorTheme: 'superPrimary',
           warningBadge: {
             color: 'warning darken-2',
-            text: 'Expired'
+            text: 'Expire soon'
           }
         }
       ],
@@ -245,37 +299,39 @@ export default {
 
 <style lang="scss">
 // Fix mew-components
-.mew-component--name-manager {
+.mew-component-fix--name-manager {
   .mew-banner {
     min-height: 180px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-
     .exit-container {
       display: none;
     }
-
     .banner-content {
       > div:nth-child(2) {
         margin-top: 9px;
       }
     }
-
     .mew-subtitle {
       font-size: 36px !important;
     }
   }
-
   .v-tab {
     letter-spacing: -0.1px;
   }
   .v-tabs-bar {
     height: 70px;
   }
-
   .mew-expand-panel .v-expansion-panel-content {
     background-color: var(--v-mewBg-base) !important;
+  }
+  .header-block {
+    margin: 0 -24px;
+    margin-top: 0px;
+    padding: 5px 28px !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    background-color: var(--v-superPrimary-base) !important;
   }
 }
 </style>
