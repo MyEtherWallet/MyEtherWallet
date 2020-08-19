@@ -233,7 +233,7 @@ export default {
               to: '/dapp-submission'
             },
             {
-              text: 'Press Kit',
+              text: 'footer.press-kit.header',
               to: '/press-kit'
             }
           ]

@@ -39,5 +39,10 @@
     "bitcoin": "Bitcoin Donation"
   },
   "coingecko": "Coingecko",
-  "view-wallet-info": "View Wallet Info"
+  "view-wallet-info": "View Wallet Info",
+  "press-kit": {
+    "header": "Press Kit",
+    "subtext": "Announcements can be found on our {mediumlink}. For press and media inquiries, please contact Questions? Please contact our cusotmer service: {hyperlink}",
+    "medium": "Medium blog"
+  }
 }

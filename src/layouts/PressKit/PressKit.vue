@@ -4,14 +4,26 @@
       <div class="page-container">
         <div class="page-title">
           <page-title :options="pageTitle" />
-          <div class="subtitle text-center">
-            Announcements can be found in
-            <a href="https://www.mewtopia.com/" target="_blank">MEWtopia</a>.
-            Questions? Please contact our cusotmer service:
-            <a href="mailto:support@myetherwallet.com">
-              support@myetherwallet.com
+          <i18n
+            path="footer.press-kit.subtext"
+            tag="div"
+            class="subtitle text-center"
+            ><a
+              slot="mediumlink"
+              href="https://medium.com/myetherwallet"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Medium blog</a
+            >
+            <a
+              slot="hyperlink"
+              href="mailto:mew@dittopr.co"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              mew@dittopr.co
             </a>
-          </div>
+          </i18n>
         </div>
 
         <div class="row" style="margin-top: 70px;">
@@ -62,7 +74,7 @@ export default {
   data() {
     return {
       pageTitle: {
-        title: 'Press',
+        title: 'footer.press-kit.header',
         boldSubTitle: '',
         textContent: []
       },
