@@ -39,7 +39,8 @@ const EXCEPTIONS = [
   'sass-loader',
   'ethereumjs-util',
   '@makerdao/dai-plugin-migrations',
-  'worker-loader'
+  'worker-loader',
+  'is-ipfs'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
