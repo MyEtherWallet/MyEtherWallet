@@ -110,7 +110,7 @@
     "bootstrap-vue": "2.15.0",
     "codecov": "3.7.2",
     "copy-webpack-plugin": "6.0.3",
-    "detectrtc": "1.4.0",
+    "detectrtc": "1.4.1",
     "eslint": "7.6.0",
     "eslint-plugin-prettier": "3.1.4",
     "eslint-plugin-security": "1.4.0",
