@@ -1,5 +1,13 @@
+### Release v5.7.6
+
+### Bug
+
+- Better token load on offline and cx gas price [#2545](https://github.com/MyEtherWallet/MyEtherWallet/pull/2545)
+- Fix missed cases for gas price too high, add warning for VET [#2544](https://github.com/MyEtherWallet/MyEtherWallet/pull/2544)
+
 ### Devop
 
+- Add Press kit page [#2547](https://github.com/MyEtherWallet/MyEtherWallet/pull/2547)
 - Add transaction fee estimate and high gas warning to swap [#2549](https://github.com/MyEtherWallet/MyEtherWallet/pull/2549)
 
 ### Release v5.7.5

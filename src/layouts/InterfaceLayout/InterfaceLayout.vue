@@ -659,7 +659,6 @@ export default {
             : 0;
         })
         .sort(sortByBalance);
-      // this.tokens = tokens.sort(sortByBalance)
       this.setTokensWithBalance();
     },
     setTokensWithBalance() {
@@ -787,6 +786,9 @@ export default {
             this.pollBlock = _sub;
           });
         }
+      } else {
+        this.receivedTokens = true;
+        this.tokens = this.network.type.tokens;
       }
     }),
     async getBlockUpdater() {

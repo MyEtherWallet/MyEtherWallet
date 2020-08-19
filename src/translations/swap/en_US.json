@@ -39,7 +39,8 @@
     "error-generating-swap": "An error occurred while finalizing the swap details",
     "not-enough-eth-gas": "Insufficient balance for Amount + Transaction Fee.",
     "not-enough-tx-fee": "Insufficient balance for Transaction Fee.",
-    "liquidity-too-low": "The amount requested is greater than the amount available at this time"
+    "liquidity-too-low": "The amount requested is greater than the amount available at this time",
+    "currency-warning": "Make sure you have a compatible {currency} wallet for this swap, MEW does not support {currency}."
   },
   "notice": {
     "retrieve-changelly-rate-failed": "Failed to retrieve Changelly rate from {fromCurrency} to {toCurrency}",
