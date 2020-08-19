@@ -1,28 +1,10 @@
 <template>
-  <mew6-white-sheet>
-    <mew-button
-      title="Confirmation"
-      :has-full-width="false"
-      button-size="xsmall"
-      @click.native="openOverlay('transactionTxConfirmation')"
-    />
-    <mew-button
-      title="WooCommerce"
-      :has-full-width="false"
-      button-size="xsmall"
-      @click.native="openModal('walletWooCommerce')"
-    />
-
-    <mew-banner
-      :text-obj="topBanner"
-      :banner-img="BG"
-      @closeBanner="closeBanner"
-    />
-
-    <mew-tabs :items="tabs">
-      <template v-slot:tabContent1>
-        <v-sheet color="transparent" max-width="700px" class="mx-auto">
-          <div class="py-12">
+  <div class="mew-component--maker-dao">
+    <mew6-white-sheet>
+      <mew-banner :text-obj="topBanner" :banner-img="BG" />
+      <mew-tabs :items="tabs" has-underline>
+        <template v-slot:tabContent1>
+          <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
             <v-row>
               <v-col cols="6">
                 <div class="mew-heading-3 mb-2">DAI Balance</div>
@@ -75,67 +57,67 @@
                 :table-data="historyTableData"
               />
             </div>
-          </div>
-        </v-sheet>
-      </template>
-      <template v-slot:tabContent2>
-        <v-sheet color="transparent" max-width="700px" class="mx-auto">
-          <div class="mt-10 text-right">
-            <mew-button
-              :has-full-width="false"
-              title="Collateralize DAI"
-              button-size="medium"
-              btn-style="outline"
-            />
-          </div>
-          <div class="py-4">
-            <div class="tab-width">
-              <v-row>
-                <v-col cols="6">
-                  <div class="walletBg pa-5 border-radius--5px">
-                    <h5 class="mb-2 font-weight-bold">
-                      Total Collateral Locked
-                    </h5>
-                    <h3 class="font-weight-bold">
-                      $42.03
-                    </h3>
-                  </div>
-                </v-col>
-                <v-col cols="6">
-                  <div class="walletBg pa-5 border-radius--5px">
-                    <h5 class="mb-2 font-weight-bold">
-                      Total DAI Debt
-                    </h5>
-                    <h3 class="font-weight-bold">
-                      30.20<span class="mew-body"> DAI</span>
-                    </h3>
-                  </div>
-                </v-col>
-                <v-col cols="12" class="mt-6">
-                  <div class="d-flex align-center justify-space-between mb-2">
-                    <div class="mew-heading-3">My Vaults</div>
-                    <mew-button
-                      :has-full-width="false"
-                      title="+ Add Vault"
-                      button-size="medium"
-                      btn-style="transparent"
+          </v-sheet>
+        </template>
+        <template v-slot:tabContent2>
+          <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
+            <div class="text-right">
+              <mew-button
+                :has-full-width="false"
+                title="Collateralize DAI"
+                button-size="medium"
+                btn-style="outline"
+              />
+            </div>
+            <div class="py-4">
+              <div class="tab-width">
+                <v-row>
+                  <v-col cols="6">
+                    <div class="walletBg pa-5 border-radius--5px">
+                      <h5 class="mb-2 font-weight-bold">
+                        Total Collateral Locked
+                      </h5>
+                      <h3 class="font-weight-bold">
+                        $42.03
+                      </h3>
+                    </div>
+                  </v-col>
+                  <v-col cols="6">
+                    <div class="walletBg pa-5 border-radius--5px">
+                      <h5 class="mb-2 font-weight-bold">
+                        Total DAI Debt
+                      </h5>
+                      <h3 class="font-weight-bold">
+                        30.20<span class="mew-body"> DAI</span>
+                      </h3>
+                    </div>
+                  </v-col>
+                  <v-col cols="12" class="mt-6">
+                    <div class="d-flex align-center justify-space-between mb-2">
+                      <div class="mew-heading-3">My Vaults</div>
+                      <mew-button
+                        :has-full-width="false"
+                        title="+ Add Vault"
+                        button-size="medium"
+                        btn-style="transparent"
+                      />
+                    </div>
+                    <mew-table
+                      :table-headers="myVaultsTableHeaders"
+                      :table-data="myVaultsTableData"
                     />
-                  </div>
-                  <mew-table
-                    :table-headers="myVaultsTableHeaders"
-                    :table-data="myVaultsTableData"
-                  />
-                </v-col>
-              </v-row>
+                  </v-col>
+                </v-row>
+              </div>
+              <div class="d-flex justify-center mt-5">
+                <mew-button title="Deposit" button-size="xlarge"></mew-button>
+              </div>
             </div>
-            <div class="d-flex justify-center mt-5">
-              <mew-button title="Deposit" button-size="xlarge"></mew-button>
-            </div>
-          </div>
-        </v-sheet>
-      </template>
-    </mew-tabs>
-  </mew6-white-sheet>
+          </v-sheet>
+        </template>
+      </mew-tabs>
+    </mew6-white-sheet>
+  </div>
 </template>
 
 <script>
@@ -143,15 +125,39 @@ import staticData from './staticData.js';
 export default {
   data() {
     return staticData;
-  },
-  methods: {
-    openOverlay(name) {
-      this.$store.commit('openOverlay', name);
-    },
-    openModal(name) {
-      this.$store.commit('openModal', name);
-    },
-    closeBanner() {}
   }
 };
 </script>
+
+<style lang="scss">
+// Fix mew-components
+.mew-component--maker-dao {
+  .mew-banner {
+    min-height: 180px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    .exit-container {
+      display: none;
+    }
+
+    .banner-content {
+      > div:nth-child(2) {
+        margin-top: 9px;
+      }
+    }
+
+    .mew-subtitle {
+      font-size: 36px !important;
+    }
+  }
+
+  .v-tab {
+    letter-spacing: -0.1px;
+  }
+  .v-tabs-bar {
+    height: 70px;
+  }
+}
+</style>
