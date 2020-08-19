@@ -154,7 +154,7 @@ export default {
       toAddress: {},
       fiatCurrenciesArray: fiat.map(entry => entry.symbol),
       totalFee: new BigNumber(21000),
-      ethPrice: new BigNumber(100)
+      ethPrice: new BigNumber(0)
     };
   },
   computed: {
@@ -445,8 +445,12 @@ export default {
       this.swapReady = true;
     },
     async estimateGas(params) {
-      const gasLimit = await this.web3.eth.estimateGas(params);
-      this.incrementFee(gasLimit);
+      try {
+        const gasLimit = await this.web3.eth.estimateGas(params);
+        this.incrementFee(gasLimit);
+      } catch (e) {
+        Toast.responseHandler(e, 3);
+      }
     },
     async fetchEthData() {
       try {
@@ -457,7 +461,7 @@ export default {
         if (!values && !values.data && !values.data['ETH']) return 0;
         this.ethPrice = new BigNumber(values.data['ETH'].quotes.USD.price);
       } catch (e) {
-        this.ethPrice = new BigNumber(0);
+        Toast.responseHandler(e, 3);
       }
     }
   }
