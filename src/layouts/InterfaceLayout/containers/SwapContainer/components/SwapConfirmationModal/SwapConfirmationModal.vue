@@ -69,6 +69,15 @@
           <p class="address">{{ fiatDest }}</p>
         </div>
       </div>
+      <div class="fee-container">
+        <span class="fee-estimate">{{ $t('swap.estimated-fee') }}</span>
+        {{ calculatedFee }} ETH (${{ calculatedFeeUsd }})
+      </div>
+      <div v-if="showGasWarning" class="gas-price-warning">
+        {{ $t('errorsGlobal.high-gas-limit-warning') }}
+        <p>Current gas price: {{ this.gasPrice }} Gwei</p>
+        <p class="notice">*based on gas price from settings</p>
+      </div>
       <!--<p> Exchange Rate: 0.000</p>-->
       <div
         :class="[swapReady ? '' : 'disable', 'confirm-send-button']"
@@ -143,7 +152,9 @@ export default {
       arrowImage: Arrow,
       fromAddress: {},
       toAddress: {},
-      fiatCurrenciesArray: fiat.map(entry => entry.symbol)
+      fiatCurrenciesArray: fiat.map(entry => entry.symbol),
+      totalFee: new BigNumber(21000),
+      ethPrice: new BigNumber(100)
     };
   },
   computed: {
@@ -153,7 +164,8 @@ export default {
       'web3',
       'account',
       'wallet',
-      'network'
+      'network',
+      'gasLimitWarning'
     ]),
     toFiat() {
       return this.fiatCurrenciesArray.includes(this.toAddress.name);
@@ -163,6 +175,20 @@ export default {
         return this.swapDetails.orderDetails.name;
       }
       return '';
+    },
+    calculatedFee() {
+      const feeTotal = this.totalFee.times(this.gasPrice);
+      const feeInEth = unit.fromWei(unit.toWei(feeTotal, 'gwei'), 'ether');
+      return new BigNumber(feeInEth).toFormat(6).toString();
+    },
+    calculatedFeeUsd() {
+      return new BigNumber(this.calculatedFee)
+        .times(new BigNumber(this.ethPrice))
+        .toFormat(2)
+        .toString();
+    },
+    showGasWarning() {
+      return this.gasPrice >= this.gasLimitWarning;
     }
   },
   watch: {
@@ -198,6 +224,9 @@ export default {
     },
     getIcon(currency) {
       return hasIcon(currency);
+    },
+    incrementFee(newValue) {
+      this.totalFee = this.totalFee.plus(new BigNumber(newValue));
     },
     timeUpdater(swapDetails) {
       clearInterval(this.timerInterval);
@@ -348,6 +377,12 @@ export default {
     async swapStarted(swapDetails) {
       if (swapDetails.isExitToFiat && !swapDetails.bypass) return;
       this.timeUpdater(swapDetails);
+      try {
+        await this.fetchEthData();
+      } catch (e) {
+        // eslint-disable-next-line
+            console.error(e);
+      }
       this.swapReady = false;
       this.preparedSwap = {};
       if (
@@ -376,6 +411,7 @@ export default {
               )
               .encodeABI()
           };
+          await this.estimateGas(this.preparedSwap);
         } else if (
           swapDetails.maybeToken &&
           swapDetails.fromCurrency === BASE_CURRENCY
@@ -385,6 +421,7 @@ export default {
             to: swapDetails.providerAddress,
             value: unit.toWei(swapDetails.providerReceives, 'ether')
           };
+          await this.estimateGas(this.preparedSwap);
         } else if (
           swapDetails.maybeToken &&
           this.fiatCurrenciesArray.includes(swapDetails.toCurrency)
@@ -394,14 +431,38 @@ export default {
             to: swapDetails.providerAddress,
             value: unit.toWei(swapDetails.providerReceives, 'ether')
           };
+          await this.estimateGas(this.preparedSwap);
         }
       } else {
         this.preparedSwap = swapDetails.dataForInitialization.map(entry => {
+          if (entry.gas) {
+            this.incrementFee(entry.gas);
+          }
           entry.from = this.account.address;
           return entry;
         });
       }
       this.swapReady = true;
+    },
+    async estimateGas(params) {
+      try {
+        const gasLimit = await this.web3.eth.estimateGas(params);
+        this.incrementFee(gasLimit);
+      } catch (e) {
+        this.incrementFee(500000);
+      }
+    },
+    async fetchEthData() {
+      try {
+        const url = 'https://cryptorates.mewapi.io/ticker';
+        const fetchValues = await fetch(url);
+        const values = await fetchValues.json();
+        if (!values) return 0;
+        if (!values && !values.data && !values.data['ETH']) return 0;
+        this.ethPrice = new BigNumber(values.data['ETH'].quotes.USD.price);
+      } catch (e) {
+        this.ethPrice = new BigNumber(200);
+      }
     }
   }
 };

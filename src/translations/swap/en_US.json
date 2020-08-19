@@ -16,6 +16,7 @@
   "time-remain": "Time Remaining",
   "refund": "{currency} address for refund (if needed) from Changelly",
   "button-loading": "Finalizing Swap Details",
+  "estimated-fee": "Transaction Fee Estimate:",
   "providers": {
     "string": "Provider | Providers",
     "no-provider-found": "No providers found :(",
