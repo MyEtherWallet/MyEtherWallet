@@ -123,6 +123,7 @@ export default async ({ event, payload }, callback, next) => {
               txParams,
               err
             ]);
+            callback(err);
           });
         chrome.notifications.onClicked.addListener(listenerFunc);
       } catch (error) {
