@@ -42,7 +42,7 @@
   "view-wallet-info": "View Wallet Info",
   "press-kit": {
     "header": "Press Kit",
-    "subtext": "Announcements can be found on our {mediumlink}. For press and media inquiries, please contact Questions? Please contact our cusotmer service: {hyperlink}",
+    "subtext": "Announcements can be found on our {mediumlink}. For press and media inquiries, please contact: {hyperlink}",
     "medium": "Medium blog"
   }
 }
