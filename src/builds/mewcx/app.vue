@@ -68,18 +68,18 @@ export default {
         }
         _self.switchNetwork(network).then(() => {
           _self.setWeb3Instance().then(() => {
-            this.web3.eth.getGasPrice().then(res => {
-              this.setGasPrice(
-                utils.fromWei(new BigNumber(res).toNumber(), 'gwei')
+            _self.web3.eth.getGasPrice().then(res => {
+              _self.setGasPrice(
+                utils.fromWei(new BigNumber(res).toString(), 'gwei')
               );
             });
           });
         });
       } else {
         _self.setWeb3Instance().then(() => {
-          this.web3.eth.getGasPrice().then(res => {
-            this.setGasPrice(
-              utils.fromWei(new BigNumber(res).toNumber(), 'gwei')
+          _self.web3.eth.getGasPrice().then(res => {
+            _self.setGasPrice(
+              utils.fromWei(new BigNumber(res).toString(), 'gwei')
             );
           });
         });
