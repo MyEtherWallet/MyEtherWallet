@@ -2,7 +2,8 @@
 
 ### Bug
 
-- Better token load on offline [#2545](https://github.com/MyEtherWallet/MyEtherWallet/pull/2545)
+- Better token load on offline and cx gas price [#2545](https://github.com/MyEtherWallet/MyEtherWallet/pull/2545)
+- Fix missed cases for gas price too high, add warning for VET [#2544](https://github.com/MyEtherWallet/MyEtherWallet/pull/2544)
 
 ### Release v5.7.5
 
