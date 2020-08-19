@@ -13,6 +13,7 @@ import FooterContainer from '@/containers/FooterContainer';
 import HeaderContainer from '@/containers/HeaderContainer';
 import ConfirmationContainer from '@/containers/ConfirmationContainer';
 import LogoutWarningModal from '@/components/LogoutWarningModal';
+import BigNumber from 'bignumber.js';
 
 import { mapState, mapActions } from 'vuex';
 
