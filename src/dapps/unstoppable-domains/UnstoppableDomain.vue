@@ -1,12 +1,7 @@
 <template>
-  <div class="mew-component--unstoppable-domain">
+  <div class="mew-component-fix--unstoppable-domain">
     <mew6-white-sheet>
-      <mew-banner
-        :text-obj="topBanner"
-        :banner-img="BG"
-        @closeBanner="closeBanner"
-      />
-
+      <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
         <template v-slot:tabContent1>
           <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
@@ -110,7 +105,6 @@
 
 <script>
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
-
 export default {
   data() {
     return {
@@ -133,10 +127,8 @@ export default {
       BG: BG,
       topBanner: {
         title: 'Unstoppable Domain',
-        subtext: 'Replace cryptocurrency addresses with a human readable name.',
-        exit: 'Exit Dapp'
+        subtext: 'Replace cryptocurrency addresses with a human readable name.'
       },
-      tab: 1,
       results: [
         {
           label: 'Labelhash (mewwallet)',
@@ -166,28 +158,24 @@ export default {
 
 <style lang="scss">
 // Fix mew-components
-.mew-component--unstoppable-domain {
+.mew-component-fix--unstoppable-domain {
   .mew-banner {
     min-height: 180px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-
     .exit-container {
       display: none;
     }
-
     .banner-content {
       > div:nth-child(2) {
         margin-top: 9px;
       }
     }
-
     .mew-subtitle {
       font-size: 36px !important;
     }
   }
-
   .v-tab {
     letter-spacing: -0.1px;
   }
