@@ -1,5 +1,32 @@
 <template>
   <div class="mew-component-fix--ambrpay">
+    <div class="d-flex align-center">
+      <ambrpay-add-funds-overlay :open="openAmbrpayAddFundsOverlay" />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="openAmbrpayAddFundsOverlay = true"
+      >
+        Add Funds Overlay
+      </div>
+
+      <ambrpay-withdraw-funds-overlay :open="openAmbrpayWithdrawFundsOverlay" />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="openAmbrpayWithdrawFundsOverlay = true"
+      >
+        Withdraw Funds Overlay
+      </div>
+
+      <ambrpay-my-subscription-overlay
+        :open="openAmbrpayMySubscriptionOverlay"
+      />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="openAmbrpayMySubscriptionOverlay = true"
+      >
+        My Subscription Overlay
+      </div>
+    </div>
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
@@ -33,21 +60,19 @@
             <mew-input label="Amount" placeholder=" " class="flex-grow-1" />
           </div>
         </div>
-        <div class="d-flex justify-center">
+        <div class="d-flex justify-center mt-5">
           <mew-button
-            class="display--block"
             :has-full-width="false"
             title="Start Recurring"
             button-size="xlarge"
           />
         </div>
-        <div class="d-flex justify-center mt-2">
+        <div class="d-flex justify-center mt-4">
           <mew-button
-            class="display--block"
             :has-full-width="false"
             btn-style="transparent"
             title="My Subscription (2)"
-            button-size="xlarge"
+            button-size="small"
           />
         </div>
       </v-sheet>
@@ -57,10 +82,21 @@
 
 <script>
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
+import ambrpayAddFundsOverlay from '@/modules/wallets/components/ambrpay-add-funds-overlay/AmbrpayAddFundsOverlay';
+import ambrpayWithdrawFundsOverlay from '@/modules/wallets/components/ambrpay-withdraw-funds-overlay/AmbrpayWithdrawFundsOverlay';
+import ambrpayMySubscriptionOverlay from '@/modules/wallets/components/ambrpay-my-subscription-overlay/AmbrpayMySubscriptionOverlay';
+
 export default {
-  components: {},
+  components: {
+    ambrpayAddFundsOverlay,
+    ambrpayWithdrawFundsOverlay,
+    ambrpayMySubscriptionOverlay
+  },
   data() {
     return {
+      openAmbrpayAddFundsOverlay: false,
+      openAmbrpayWithdrawFundsOverlay: false,
+      openAmbrpayMySubscriptionOverlay: false,
       BG: BG,
       topBanner: {
         title: 'Ambrpay',
