@@ -18,6 +18,7 @@ import WalletSideMenu from './components/WalletSideMenu';
 import { Toast, ExtensionHelpers } from '@/helpers';
 import { mapState, mapActions } from 'vuex';
 import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -45,7 +46,7 @@ export default {
     window.chrome.storage.onChanged.addListener(this.fetchNewStore);
   },
   methods: {
-    ...mapActions('main', ['switchNetwork', 'setWeb3Instance']),
+    ...mapActions('main', ['switchNetwork', 'setWeb3Instance', 'setGasPrice']),
     fetchAccountFromStore() {
       ExtensionHelpers.getAccounts(this.getAccountsCb);
     },
@@ -55,7 +56,13 @@ export default {
           ? this.Networks[JSON.parse(obj['defNetwork']).key][0]
           : this.Networks['ETH'][0];
         this.switchNetwork(defaultNetwork).then(() => {
-          this.setWeb3Instance();
+          this.setWeb3Instance().then(() => {
+            this.web3.eth.getGasPrice().then(res => {
+              this.setGasPrice(
+                this.web3.utils.fromWei(new BigNumber(res).toString(), 'gwei')
+              );
+            });
+          });
         });
         this.fetchAccountFromStore();
       });
