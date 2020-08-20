@@ -1,14 +1,16 @@
 <template>
   <div class="mew-component-fix--name-manager">
-    <register-domain-overlay
-      :open="registerOverlay"
-      :close="closeRegisterOverlay"
-    />
-    <div
-      class="cursor--pointer font-weight-bold"
-      @click="registerOverlay = true"
-    >
-      Register Domain Overlay
+    <div>
+      <register-domain-overlay
+        :open="registerOverlay"
+        :close="closeRegisterOverlay"
+      />
+      <div
+        class="cursor--pointer font-weight-bold"
+        @click="registerOverlay = true"
+      >
+        Register Domain Overlay
+      </div>
     </div>
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
@@ -96,7 +98,7 @@
                 btn-style="outline"
                 title="+ Add domain you own"
                 button-size="large"
-              ></mew-button>
+              />
             </div>
             <div>
               <mew-expand-panel :panel-items="myDomains">
@@ -311,6 +313,8 @@ export default {
     .banner-content {
       > div:nth-child(2) {
         margin-top: 9px;
+        max-width: 700px;
+        padding: 0 20px !important;
       }
     }
     .mew-subtitle {

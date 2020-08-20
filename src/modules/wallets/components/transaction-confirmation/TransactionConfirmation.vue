@@ -1,13 +1,11 @@
 <template>
-  <div class="overlay-content pa-8">
+  <v-sheet color="transparent" max-width="600px" class="pa-8">
     <from-to-block
       from="0x300be4b1183dca9046349e9e01b1e0c08e362964"
       to="0x02fb7f333fd493b39b79ba57b6d510c64eaa3dc0"
       class="mb-2"
     />
-
     <balance-block />
-
     <mew-expand-panel>
       <template v-slot:panelBody1 :panel-items="panelItems">
         <div class="px-3">
@@ -34,17 +32,15 @@
         </div>
       </template>
     </mew-expand-panel>
-
-    <div class="d-flex justify-center">
+    <div class="d-flex justify-center my-8">
       <mew-button
         button-size="xlarge"
         title="Continue on your device"
         @click.native="activeTab = 1"
       />
     </div>
-
-    <warning-sheet title="NOT RECOMMENDED" description="Not recommanded" />
-  </div>
+    <warning-sheet :description="warningDescription" />
+  </v-sheet>
 </template>
 
 <script>
@@ -58,6 +54,8 @@ export default {
   },
   data: function () {
     return {
+      warningDescription:
+        'Make sure all your transaction details are CORRECT. Canceling or replacing transactions can not be guaranteed to work. You still be charged gas fee even transaction failing. Learn more here…',
       open: false,
       panelItems: [
         {
@@ -74,8 +72,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.overlay-content {
-  width: 600px;
+<style lang="scss">
+.v-application .warning {
+  border-radius: 10px;
 }
 </style>
