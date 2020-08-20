@@ -158,8 +158,9 @@ export default {
         ]
       },
       topBanner: {
-        title: 'Unstoppable Domain',
-        subtext: 'Replace cryptocurrency addresses with a human readable name.'
+        title: 'AAVE',
+        subtext:
+          'Aave is an Open Source Money Market Protocol, allowing you to earn daily interest on your stablecoins. Borrow against various assets and switch interest between variable and stable rates'
       }
     };
   }
@@ -180,6 +181,8 @@ export default {
     .banner-content {
       > div:nth-child(2) {
         margin-top: 9px;
+        max-width: 700px;
+        padding: 0 20px !important;
       }
     }
     .mew-subtitle {

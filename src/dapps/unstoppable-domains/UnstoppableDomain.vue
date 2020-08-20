@@ -170,6 +170,8 @@ export default {
     .banner-content {
       > div:nth-child(2) {
         margin-top: 9px;
+        max-width: 700px;
+        padding: 0 20px !important;
       }
     }
     .mew-subtitle {

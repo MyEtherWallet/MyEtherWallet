@@ -1,13 +1,55 @@
 <template>
   <div class="mew-component-fix--maker-dao">
+    <div class="d-flex align-center">
+      <transactionConfirmationOverlay :open="openTXConfirmationOverlay" />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="openTXConfirmationOverlay = true"
+      >
+        Confirmation Overlay
+      </div>
+
+      <collateralizeDaiOverlay :open="openCollateralizeDaiOverlay" />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="openCollateralizeDaiOverlay = true"
+      >
+        Collateralize Dai Overlay
+      </div>
+
+      <depositDaiOverlay :open="openDepositDaiOverlay" />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="openDepositDaiOverlay = true"
+      >
+        Deposit Overlay
+      </div>
+
+      <withdrawDaiOverlay :open="openWithdrawDaiOverlay" />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="openWithdrawDaiOverlay = true"
+      >
+        Withdraw Overlay
+      </div>
+    </div>
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
         <template v-slot:tabContent1>
           <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
+            <div class="d-flex align-center justify-space-between">
+              <div class="mew-heading-3">DAI Balance</div>
+              <mew-button
+                btn-style="outline"
+                title="Collateralize DAI"
+                button-size="small"
+                class="display--block"
+              />
+            </div>
+
             <v-row>
               <v-col cols="6">
-                <div class="mew-heading-3 mb-2">DAI Balance</div>
                 <h3 class="font-weight-bold">
                   30.1234 <span class="mew-body">DAI</span>
                 </h3>
@@ -15,18 +57,18 @@
               </v-col>
               <v-col cols="6">
                 <div class="d-flex">
-                  <div class="walletBg pa-5 mr-3 flex-grow-1">
+                  <div class="walletBg px-6 py-3 mr-3 flex-grow-1">
                     <div>Savings to Date</div>
                     <div class="primary--text font-weight-bold">0.0157</div>
                   </div>
-                  <div class="walletBg pa-5 flex-grow-1">
+                  <div class="walletBg px-6 py-3 flex-grow-1">
                     <div>Dai Savings rate</div>
                     <div class="primary--text font-weight-bold">2.00%</div>
                   </div>
                 </div>
               </v-col>
             </v-row>
-            <v-row class="mt-5">
+            <v-row class="mt-4">
               <v-col cols="6" class="text-right">
                 <mew-button
                   :has-full-width="true"
@@ -65,53 +107,50 @@
               <mew-button
                 :has-full-width="false"
                 title="Collateralize DAI"
-                button-size="medium"
+                button-size="small"
                 btn-style="outline"
               />
             </div>
-            <div class="py-4">
-              <div class="tab-width">
-                <v-row>
-                  <v-col cols="6">
-                    <div class="walletBg pa-5 border-radius--5px">
-                      <h5 class="mb-2 font-weight-bold">
-                        Total Collateral Locked
-                      </h5>
-                      <h3 class="font-weight-bold">
-                        $42.03
-                      </h3>
-                    </div>
-                  </v-col>
-                  <v-col cols="6">
-                    <div class="walletBg pa-5 border-radius--5px">
-                      <h5 class="mb-2 font-weight-bold">
-                        Total DAI Debt
-                      </h5>
-                      <h3 class="font-weight-bold">
-                        30.20<span class="mew-body"> DAI</span>
-                      </h3>
-                    </div>
-                  </v-col>
-                  <v-col cols="12" class="mt-6">
-                    <div class="d-flex align-center justify-space-between mb-2">
-                      <div class="mew-heading-3">My Vaults</div>
-                      <mew-button
-                        :has-full-width="false"
-                        title="+ Add Vault"
-                        button-size="medium"
-                        btn-style="transparent"
-                      />
-                    </div>
-                    <mew-table
-                      :table-headers="myVaultsTableHeaders"
-                      :table-data="myVaultsTableData"
-                    />
-                  </v-col>
-                </v-row>
-              </div>
-              <div class="d-flex justify-center mt-5">
-                <mew-button title="Deposit" button-size="xlarge"></mew-button>
-              </div>
+
+            <v-row>
+              <v-col cols="6">
+                <div class="walletBg pa-5 border-radius--5px">
+                  <h5 class="mb-2 font-weight-bold">
+                    Total Collateral Locked
+                  </h5>
+                  <h3 class="font-weight-bold">
+                    $42.03
+                  </h3>
+                </div>
+              </v-col>
+              <v-col cols="6">
+                <div class="walletBg pa-5 border-radius--5px">
+                  <h5 class="mb-2 font-weight-bold">
+                    Total DAI Debt
+                  </h5>
+                  <h3 class="font-weight-bold">
+                    30.20<span class="mew-body"> DAI</span>
+                  </h3>
+                </div>
+              </v-col>
+              <v-col cols="12" class="mt-6">
+                <div class="d-flex align-center justify-space-between mb-2">
+                  <div class="mew-heading-3">My Vaults</div>
+                  <mew-button
+                    :has-full-width="false"
+                    title="+ Add Vault"
+                    button-size="medium"
+                    btn-style="transparent"
+                  />
+                </div>
+                <mew-table
+                  :table-headers="myVaultsTableHeaders"
+                  :table-data="myVaultsTableData"
+                />
+              </v-col>
+            </v-row>
+            <div class="d-flex justify-center mt-5">
+              <mew-button title="Deposit" button-size="xlarge"></mew-button>
             </div>
           </v-sheet>
         </template>
@@ -122,9 +161,24 @@
 
 <script>
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
+import transactionConfirmationOverlay from '@/modules/wallets/components/transaction-confirmation-overlay/TransactionConfirmationOverlay';
+import collateralizeDaiOverlay from '@/modules/wallets/components/collateralize-dai-overlay/CollateralizeDaiOverlay';
+import depositDaiOverlay from '@/modules/wallets/components/deposit-dai-overlay/DepositDaiOverlay';
+import withdrawDaiOverlay from '@/modules/wallets/components/withdraw-dai-overlay/WithdrawDaiOverlay';
+
 export default {
+  components: {
+    transactionConfirmationOverlay,
+    collateralizeDaiOverlay,
+    depositDaiOverlay,
+    withdrawDaiOverlay
+  },
   data() {
     return {
+      openTXConfirmationOverlay: false,
+      openCollateralizeDaiOverlay: false,
+      openDepositDaiOverlay: false,
+      openWithdrawDaiOverlay: false,
       walletBalanceTableHeaders: [
         {
           text: 'Asset',
@@ -321,6 +375,8 @@ export default {
     .banner-content {
       > div:nth-child(2) {
         margin-top: 9px;
+        max-width: 700px;
+        padding: 0 20px !important;
       }
     }
     .mew-subtitle {
