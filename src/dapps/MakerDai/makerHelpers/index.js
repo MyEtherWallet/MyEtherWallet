@@ -1,4 +1,4 @@
-import { locateCdps, locateOldCdps } from './locateCdps';
+import { locateCdps } from './locateCdps';
 import addresses from './addressesMAIN';
 
 import {
@@ -46,7 +46,6 @@ import {
 export {
   loadCdpDetail,
   locateCdps,
-  locateOldCdps,
   setupPriceAndRatios,
   setupServices,
   getDetailsForTokens,
