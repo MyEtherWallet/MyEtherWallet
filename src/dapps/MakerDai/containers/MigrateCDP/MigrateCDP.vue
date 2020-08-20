@@ -102,7 +102,7 @@
 <script>
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { addresses, ERC20, locateOldCdps } from '../../makerHelpers';
+import { addresses, ERC20 } from '../../makerHelpers';
 import ethUnit from 'ethjs-unit';
 import { Toast } from '@/helpers';
 import DaiIcon from '@/assets/images/currency/coins/AllImages/DAI.svg';
@@ -213,14 +213,7 @@ export default {
         this.getMkrBalance();
       }
     },
-    async findCdps() {
-      const { withProxy, withoutProxy } = await locateOldCdps(
-        this,
-        this.getValueOrFunction('_cdpService')
-      );
-      this.cdpDetailsLoaded = true;
-      this.cdps = withProxy.concat(withoutProxy);
-    },
+    async findCdps() {},
     async beginMigration() {
       if (this.selectedCdp !== 0) {
         this.proxyAddress = this.getValueOrFunction('proxyAddress');
