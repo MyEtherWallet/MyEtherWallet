@@ -16,6 +16,7 @@
   "time-remain": "Time Remaining",
   "refund": "{currency} address for refund (if needed) from Changelly",
   "button-loading": "Finalizing Swap Details",
+  "estimated-fee": "Transaction Fee Estimate:",
   "providers": {
     "string": "Provider | Providers",
     "no-provider-found": "No providers found :(",
@@ -90,5 +91,7 @@
   "max": "Max",
   "address-verification": "Address Verification",
   "message-to-sign": "Message to sign to verify destination address ownership",
-  "proceed-to-sign": "Proceed to sign message"
+  "proceed-to-sign": "Proceed to sign message",
+  "gas-price-source-notice": "*based on gas price from settings",
+  "current-gas-price": "Current gas price: {value} Gwei"
 }

@@ -8,6 +8,7 @@
 ### Devop
 
 - Add Press kit page [#2547](https://github.com/MyEtherWallet/MyEtherWallet/pull/2547)
+- Add transaction fee estimate and high gas warning to swap [#2549](https://github.com/MyEtherWallet/MyEtherWallet/pull/2549)
 
 ### Release v5.7.5
 
