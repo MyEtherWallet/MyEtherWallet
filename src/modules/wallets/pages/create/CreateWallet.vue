@@ -117,15 +117,7 @@ export default {
       centered: true
     },
     showSoftware: false
-  }),
-  watch: {
-    showSoftware(newVal) {
-      console.log(newVal);
-    }
-  },
-  mounted() {
-    //this.$refs.toast.showToast();
-  }
+  })
 };
 </script>
 

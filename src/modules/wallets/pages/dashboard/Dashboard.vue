@@ -181,9 +181,6 @@ export default {
   data() {
     return staticData;
   },
-  mounted() {
-    console.log(this.tableData);
-  },
   methods: {
     onBtnClick() {}
   }

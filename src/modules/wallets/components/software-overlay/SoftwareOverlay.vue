@@ -96,9 +96,6 @@ export default {
       } else {
         this.step = 1;
       }
-    },
-    step(newVal) {
-      console.log(newVal);
     }
   },
   methods: {
