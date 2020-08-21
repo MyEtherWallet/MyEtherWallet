@@ -24,6 +24,21 @@ export default {
     walletFooter,
     sideMenu,
     walletHeader
+  },
+  watch: {
+    $route() {
+      this.redirectToDashboard();
+    }
+  },
+  mounted() {
+    this.redirectToDashboard();
+  },
+  methods: {
+    redirectToDashboard() {
+      if (this.$route.name === 'Wallet') {
+        this.$router.push({ name: 'Dashboard', params: {} });
+      }
+    }
   }
 };
 </script>
