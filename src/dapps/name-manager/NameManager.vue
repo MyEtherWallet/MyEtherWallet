@@ -224,7 +224,7 @@
 <script>
 import BG from '@/assets/images/backgrounds/bg-ens.png';
 import registerDomainOverlay from '@/modules/wallets/components/register-domain-overlay/RegisterDomainOverlay';
-import domainBtn from './components/domain-btn/DomainBtn';
+import domainBtn from '@/modules/wallets/components/domain-btn/DomainBtn';
 
 export default {
   components: { registerDomainOverlay, domainBtn },
