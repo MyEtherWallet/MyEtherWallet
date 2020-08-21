@@ -1,6 +1,6 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA512
-
+MC-5168745012136377
 Contact: mailto:security@myetherwallet.com
 Encryption: https://raw.githubusercontent.com/MyEtherWallet/MyEtherWallet/master/MEW-PUP-KEY-GPG
 Acknowledgments: https://www.myetherwallet.com/security-policy
@@ -8,7 +8,7 @@ Preferred-Languages: en,ru
 Canonical: https://www.myetherwallet.com/.well-known/security.txt
 Policy: https://www.myetherwallet.com/security-policy
 -----BEGIN PGP SIGNATURE-----
-
+MC-5168745012136377
 iQJOBAEBCgA4FiEEL8pKHjr0J49607djfwWcD3uaEvAFAl6nTD4aHHN1cHBvcnRA
 bXlldGhlcndhbGxldC5jb20ACgkQfwWcD3uaEvDKIxAAsSLc8sJMCxb/AqPzfyPw
 kIJj8611OIt6bEOrzLxOxE1sm66GDbpGZWwVDwoZtPNPq7WZKX7lrqmeQV/bEJH/
@@ -24,3 +24,4 @@ FgI8OQE3QZx9EsCTOggj9HQRoTxVGOpAn/mlveqXPaplg6ss81wFXT1Svm110SOu
 JJqDJueX9KkbwhzZByasIPk=
 =33bS
 -----END PGP SIGNATURE-----
+MC-5168745012136377
