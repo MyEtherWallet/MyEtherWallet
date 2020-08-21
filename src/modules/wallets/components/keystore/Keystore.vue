@@ -125,11 +125,6 @@ export default {
         name: 'STEP 3. Well done'
       }
     ]
-  }),
-  watch: {
-    step(newva) {
-      console.log(newva);
-    }
-  }
+  })
 };
 </script>
