@@ -6,7 +6,7 @@
           <interface-wrap title="Send Transaction">
             <div>
               <div class="d-flex">
-                <mew-select :items="coins" label="Type" class="mr-2" />
+                <mew-select :items="coins" label="Type" class="mr-3" />
                 <div class="position--relative flex-grow-1">
                   <div class="corner-btn">Entire balance</div>
                   <mew-input
@@ -40,7 +40,8 @@
 
                 <div class="d-flex justify-space-between px-5">
                   <div class="mew-body font-weight-medium d-flex align-center">
-                    Transaction Fee <info-tooltip class="ml-1" text="Tx fees" />
+                    Transaction Fee
+                    <info-tooltip class="ml-1" text="Tx fees" />
                   </div>
                   <div>$0.177</div>
                 </div>
@@ -48,7 +49,7 @@
                 <mew-input
                   label="Add Data"
                   placeholder=" "
-                  value=""
+                  value
                   class="mt-10 mb-n5"
                 />
               </template>
