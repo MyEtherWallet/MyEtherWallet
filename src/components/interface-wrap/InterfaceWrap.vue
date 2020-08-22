@@ -19,3 +19,8 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.left-border {
+  border-left: 5px solid var(--v-primary-base);
+}
+</style>

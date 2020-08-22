@@ -51,17 +51,25 @@
   font-size: 14px !important;
   font-weight: 500 !important;
 }
+.corner-btn {
+  color: var(--v-primary-base);
+  font-weight: 500;
+  position: absolute;
+  top: -25px;
+  right: 10px;
+  cursor: pointer;
+
+  &:hover {
+    filter: contrast(0.1);
+  }
+}
 
 /* ========== CSS Style Reset ========== */
-
-html {
-  font-size: 16px !important;
-}
 .monospace {
   font-family: monospace !important;
 }
 i {
-  font-family: 'Material Icons' !important;
+  font-family: "Material Icons" !important;
 }
 div {
   font-size: 14px;
