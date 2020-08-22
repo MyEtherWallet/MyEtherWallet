@@ -127,8 +127,8 @@ export default {
   transition: all 0.2s ease;
   opacity: 0;
   position: absolute;
-  padding-top: 50px;
-  top: 0;
+  padding-top: 20px;
+  top: 21px;
   left: 0;
   z-index: 9;
   > ul {
