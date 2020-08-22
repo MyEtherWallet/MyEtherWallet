@@ -13,7 +13,7 @@
     />
     <div class="mx-8" />
     <temporary-menu />
-    <div class="mx-9" />
+    <div class="mx-8" />
     <a
       href="https://ccswap.myetherwallet.com/#/"
       target="_blank"
