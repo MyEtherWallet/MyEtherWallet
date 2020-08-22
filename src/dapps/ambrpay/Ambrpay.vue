@@ -30,7 +30,7 @@
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
-        <div class="pa-10 walletBg">
+        <div class="pa-10 tableHeader">
           <div class="d-flex justify-space-between align-center">
             <div>
               <div class="mb-1 font-weight-bold">

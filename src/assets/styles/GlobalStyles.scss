@@ -58,9 +58,10 @@
   top: -25px;
   right: 10px;
   cursor: pointer;
+  filter: brightness(1);
 
   &:hover {
-    filter: contrast(0.1);
+    filter: brightness(1.15);
   }
 }
 
@@ -181,11 +182,9 @@ h6 {
 .width--initial {
   width: initial;
 }
-
 .display--block {
   display: block !important;
 }
-
 .spacer-y-medium {
   height: 80px;
 }

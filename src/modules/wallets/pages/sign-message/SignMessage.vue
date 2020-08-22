@@ -20,11 +20,11 @@
                 @click.native="openOverlay('SignMessageConfirmation')"
               />
             </div>
-            <div class="text-center mt-2">
+            <div class="text-center mt-4">
               <mew-button
                 title="Clear all"
                 :has-full-width="false"
-                button-size="xlarge"
+                button-size="small"
                 btn-style="transparent"
               />
             </div>
@@ -50,11 +50,6 @@ export default {
   },
   data() {
     return {};
-  },
-  methods: {
-    openOverlay(name) {
-      this.$store.commit('openOverlay', name);
-    }
   }
 };
 </script>
