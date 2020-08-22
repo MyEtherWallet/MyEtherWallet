@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex">
+  <div class="d-flex mew-component--dashboard">
     <div class="flex-grow-1">
       <mew6-white-sheet class="mew-component--eth-balance pa-7 pb-4">
         <div class="d-flex">
@@ -18,8 +18,9 @@
                 @onBtnClick="onBtnClick"
               />
               <mew-button
+                style="border-radius: 100% !important;"
+                class="options-btn ml-2"
                 button-size="small"
-                class="ml-1"
                 icon-type="mdi"
                 icon="mdi-dots-vertical"
                 btn-style="transparent"
@@ -113,7 +114,7 @@
                 class="ml-auto"
                 :has-full-width="false"
                 title="All tokens"
-                button-size="xsmall"
+                button-size="small"
                 btn-style="transparent"
                 @click.native="goTo('HomeAccessWallet')"
               />
@@ -188,7 +189,49 @@ export default {
 </script>
 
 <style lang="scss">
+.mew-component--dashboard {
+  .mew-toggle-btn {
+    .v-btn {
+      padding: 8px !important;
+      height: initial !important;
+      margin-right: 4px !important;
+    }
+    .v-btn--active:before {
+      opacity: 0 !important;
+    }
+  }
+  .block-title > div > div > div {
+    align-items: flex-start !important;
+  }
+  .left-wrapper {
+    > div:nth-child(2) {
+      > span:nth-child(1) {
+        margin-bottom: 5px;
+      }
+      > span:nth-child(2) {
+        margin-bottom: 5px;
+      }
+    }
+    .left-icon {
+      padding-right: 5px !important;
+      img {
+        height: 45px;
+      }
+    }
+  }
+}
 .mew-component--eth-balance {
+  .options-btn.v-btn {
+    padding: 0 !important;
+    width: 35px !important;
+    height: 35px !important;
+    min-width: 35px !important;
+
+    .icon {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  }
   .theme--dark.v-sheet {
     background-color: var(--v-mewBg-base);
     border-color: var(--v-mewBg-base);

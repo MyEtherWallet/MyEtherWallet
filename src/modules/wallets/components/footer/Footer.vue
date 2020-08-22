@@ -1,5 +1,5 @@
 <template>
-  <v-sheet color="mewBg" class="py-6 px-10 box-shadow">
+  <v-sheet color="mewBg" class="py-6 px-10">
     <v-container class="d-flex align-center justify-space-between py-0">
       <div class="titlePrimary--text">
         ©2020 MyEtherWallet. All rights reserved. Pricing taken from

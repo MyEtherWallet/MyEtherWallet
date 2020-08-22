@@ -41,7 +41,7 @@
                 <div class="mb-3">
                   <div class="mew-heading-3 font-weight-bold">Results</div>
                 </div>
-                <v-card flat color="walletBg" class="pa-10">
+                <v-card flat color="tableHeader" class="pa-10">
                   <div class="d-flex justify-space-between align-center">
                     <div>
                       <div class="mew-heading-1 mb-2">
@@ -61,7 +61,7 @@
                   </div>
                 </v-card>
                 <div class="py-2"></div>
-                <v-card flat color="walletBg" class="pa-10">
+                <v-card flat color="tableHeader" class="pa-10">
                   <div class="d-flex align-center justify-space-between mb-8">
                     <div class="mew-heading-1">myetherwallet.crypto</div>
                     <div class="mew-heading-3 orange--text">Unavailable</div>
