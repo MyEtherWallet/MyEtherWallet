@@ -1,12 +1,19 @@
 <template>
-  <div class="full-width menu-container d-flex align-center">
+  <div class="d-flex align-center">
     <router-link
       class="white--text text-decoration--none"
       :to="{ name: 'HowItWorks', params: {} }"
     >
       How it works
     </router-link>
-    <mew-menu text-color="white--text" :list-obj="mewMenuCompany" />
+    <mew-menu
+      v-if="false"
+      text-color="white--text"
+      :list-obj="mewMenuCompany"
+    />
+    <div class="mx-8" />
+    <temporary-menu />
+    <div class="mx-9" />
     <a
       href="https://ccswap.myetherwallet.com/#/"
       target="_blank"
@@ -18,8 +25,10 @@
 </template>
 
 <script>
+import temporaryMenu from './TemporaryMenu';
 export default {
   name: 'Menu',
+  components: { temporaryMenu },
   data: () => ({
     menuResetKey: 1,
     mewMenuCompany: {
@@ -63,9 +72,3 @@ export default {
   methods: {}
 };
 </script>
-
-<style lang="scss" scoped>
-.menu-container {
-  justify-content: space-evenly;
-}
-</style>
