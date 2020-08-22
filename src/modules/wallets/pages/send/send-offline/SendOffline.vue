@@ -7,14 +7,17 @@
             <div>
               <div class="d-flex">
                 <mew-select :items="coins" label="Type" class="mr-2" />
-                <mew-input
-                  label="Amount"
-                  placeholder=" "
-                  right-label="$23,232.93"
-                  value="10.23472384"
-                  class="flex-grow-1"
-                />
+                <div class="position--relative flex-grow-1">
+                  <div class="corner-btn">Entire balance</div>
+                  <mew-input
+                    label="Amount"
+                    placeholder=" "
+                    right-label="$23,232.93"
+                    value="10.23472384"
+                  />
+                </div>
               </div>
+
               <address-select
                 copy-tooltip="Copy"
                 save-tooltip="Save"
