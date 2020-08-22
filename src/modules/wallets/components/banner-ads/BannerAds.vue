@@ -1,8 +1,8 @@
 <template>
   <div class="mew-component--banner-ads cursor--pointer">
-    <mew-carousel class="box-shadow" carousel-height="145" :total-slides="2">
-      <template v-slot:slide1>
-        <mew6-white-sheet class="banner">
+    <mew6-white-sheet>
+      <mew-carousel class="box-shadow" carousel-height="145" :total-slides="2">
+        <template v-slot:slide1>
           <a href="https://www.mewwallet.com/" target="_blank">
             <div class="ad1 px-5 d-flex flex-column justify-center">
               <div class="title font-weight-bold mb-n1">MEW wallet App</div>
@@ -21,10 +21,8 @@
               </div>
             </div>
           </a>
-        </mew6-white-sheet>
-      </template>
-      <template v-slot:slide2>
-        <mew6-white-sheet class="banner">
+        </template>
+        <template v-slot:slide2>
           <div
             class="ad2 px-5 d-flex flex-column justify-center"
             @click="$router.push({ name: 'BuyHardwareWallet', params: {} })"
@@ -59,9 +57,9 @@
               />
             </div>
           </div>
-        </mew6-white-sheet>
-      </template>
-    </mew-carousel>
+        </template>
+      </mew-carousel>
+    </mew6-white-sheet>
   </div>
 </template>
 
@@ -71,13 +69,10 @@ export default {};
 
 <style lang="scss" scoped>
 .mew-component--banner-ads {
-  a {
+  * {
     user-select: none;
     color: var(--v-titlePrimary-base) !important;
   }
-}
-.banner {
-  height: 145px;
 }
 .ad1 {
   height: 100%;
