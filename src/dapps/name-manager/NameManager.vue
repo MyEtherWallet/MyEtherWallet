@@ -28,7 +28,7 @@
                     right-label=".ctypto"
                     label="Domain name"
                     placeholder=" "
-                    class="mr-2 flex-grow-1"
+                    class="mr-3 flex-grow-1"
                   />
                   <mew-button
                     :has-full-width="false"
