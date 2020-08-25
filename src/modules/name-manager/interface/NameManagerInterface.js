@@ -45,23 +45,16 @@ export default class NameManagerInterface {
     if (this.ownerVal === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
-    return new Promise((resolve, reject) => {
-      const actualToAddress = address === '' ? this.account : address;
-      const setControllerTx = {
-        from: this.account,
-        to: this.registrarAddressVal,
-        data: this.registrarContractVal.methods
-          .reclaim(this.labelHashVal, actualToAddress)
-          .encodeABI(),
-        value: 0
-      };
-      return this.web3Val.eth
-        .sendTransaction(setControllerTx)
-        .then(() => {
-          resolve({ success: 'Domain Controller set successfully' });
-        })
-        .catch(reject);
-    });
+    const actualToAddress = address === '' ? this.account : address;
+    const setControllerTx = {
+      from: this.account,
+      to: this.registrarAddressVal,
+      data: this.registrarContractVal.methods
+        .reclaim(this.labelHashVal, actualToAddress)
+        .encodeABI(),
+      value: 0
+    };
+    return this.web3Val.eth.sendTransaction(setControllerTx);
   }
 
   migrate() {
@@ -69,31 +62,20 @@ export default class NameManagerInterface {
       throw new Error('Owner not set! Please initialize module properly!');
     }
 
-    return new Promise((resolve, reject) => {
-      if (this.publicResolverAddressVal === this.resolverAddressVal) {
-        return resolve({ success: 'Name migrated succesfully!' });
-      }
-      const setResolverTx = {
-        from: this.addressVal,
-        to: this.networkVal.type.ens.registry,
-        data: this.registryContractVal.methods
-          .setResolver(this.nameHashVal, this.publicResolverAddressVal)
-          .encodeABI(),
-        value: 0
-      };
+    if (this.publicResolverAddressVal === this.resolverAddressVal) {
+      throw new 'Name migrated succesfully!'();
+    }
+    const setResolverTx = {
+      from: this.addressVal,
+      to: this.networkVal.type.ens.registry,
+      data: this.registryContractVal.methods
+        .setResolver(this.nameHashVal, this.publicResolverAddressVal)
+        .encodeABI(),
+      value: 0
+    };
 
-      this.web3Val
-        .sendTransaction(setResolverTx)
-        .then(() => {
-          this._migrateCoinsAndRecords()
-            .then(() => {
-              return resolve({
-                success: 'Name migrated successfully!'
-              });
-            })
-            .catch(reject);
-        })
-        .catch(reject);
+    return this.web3Val.sendTransaction(setResolverTx).then(() => {
+      return this._migrateCoinsAndRecords();
     });
   }
 
@@ -102,36 +84,25 @@ export default class NameManagerInterface {
       throw new Error('Owner not set! Please initialize module properly!');
     }
 
-    return new Promise((resolve, reject) => {
-      this.migrate().then(res => {
-        if (res.hasOwProperty('success')) return true;
+    this.migrate().then(res => {
+      if (res.hasOwProperty('success')) return true;
 
-        const arr = coin.map(item => {
-          return this.publicResolverContractVal.methods.setAddr(
-            this.nameHashVal,
-            item.id,
-            decodeCoinAddress(item)
-          );
-        });
-
-        const setAddrTx = {
-          from: this.addressVal,
-          to: this.publicResolverAddressVal,
-          data: this.publicResolverContractVal.methods
-            .multicall(arr)
-            .encodeABI(),
-          value: 0,
-          gas: 100000
-        };
-        this.web3Val.eth
-          .sendTransaction(setAddrTx)
-          .then(() => {
-            return resolve({
-              success: 'Succesfully set multicoin!'
-            });
-          })
-          .catch(reject);
+      const arr = coin.map(item => {
+        return this.publicResolverContractVal.methods.setAddr(
+          this.nameHashVal,
+          item.id,
+          decodeCoinAddress(item)
+        );
       });
+
+      const setAddrTx = {
+        from: this.addressVal,
+        to: this.publicResolverAddressVal,
+        data: this.publicResolverContractVal.methods.multicall(arr).encodeABI(),
+        value: 0,
+        gas: 100000
+      };
+      return this.web3Val.eth.sendTransaction(setAddrTx);
     });
   }
 
@@ -140,36 +111,27 @@ export default class NameManagerInterface {
       throw new Error('Owner not set! Please initialize module properly!');
     }
 
-    return new Promise((resolve, reject) => {
-      for (const _record in obj) {
-        this.txtRecordsVal[_record] = obj[_record];
+    for (const _record in obj) {
+      this.txtRecordsVal[_record] = obj[_record];
+    }
+    return this.migrate().then(res => {
+      if (res.hasOwProperty('success')) return;
+      const multicalls = [];
+      for (const i in obj) {
+        multicalls.push(
+          this.resolverContract.methods
+            .setText(this.nameHashVal, i.toLowerCase(), obj[i])
+            .encodeABI()
+        );
       }
-      this.migrate().then(res => {
-        if (res.hasOwProperty('success')) return;
-        const multicalls = [];
-        for (const i in obj) {
-          multicalls.push(
-            this.resolverContract.methods
-              .setText(this.nameHashVal, i.toLowerCase(), obj[i])
-              .encodeABI()
-          );
-        }
-        const tx = {
-          from: this.addressVal,
-          to: this.publicResolverAddressVal,
-          data: this.resolverContract.methods.multicall(multicalls).encodeABI(),
-          gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed(),
-          value: 0
-        };
-        this.web3Val.eth
-          .sendTransaction(tx)
-          .then(() => {
-            return resolve({
-              success: 'Succesfully set text records!'
-            });
-          })
-          .catch(reject);
-      });
+      const tx = {
+        from: this.addressVal,
+        to: this.publicResolverAddressVal,
+        data: this.resolverContract.methods.multicall(multicalls).encodeABI(),
+        gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed(),
+        value: 0
+      };
+      return this.web3Val.eth.sendTransaction(tx);
     });
   }
 
