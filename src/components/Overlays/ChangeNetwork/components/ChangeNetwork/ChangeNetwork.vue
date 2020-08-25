@@ -21,19 +21,17 @@
         <DividerLine v-if="networks.length != i + 1" class="my-5" />
       </div>
     </v-radio-group>
-
-    <StdButton size="x-large" fullwidth class="mt-3">
-      Change
-    </StdButton>
+    <div class="d-flex justify-center">
+      <mew-button button-size="xlarge" title="Change" class="mt-3" />
+    </div>
   </div>
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
 import DividerLine from '@/web/components/Common/DividerLine';
 
 export default {
-  components: { StdButton, DividerLine },
+  components: { DividerLine },
   data() {
     return {
       networkSelected: null,

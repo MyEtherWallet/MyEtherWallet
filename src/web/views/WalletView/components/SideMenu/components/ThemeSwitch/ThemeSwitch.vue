@@ -67,7 +67,7 @@ export default {
   }
 }
 
-.theme--light.v-input--switch__thumb::after {
+.mew-component--theme-switch .theme--light.v-input--switch__thumb::after {
   content: '☀';
   font-size: 20px;
   position: absolute;
@@ -78,7 +78,7 @@ export default {
   text-align: center;
 }
 
-.theme--dark.v-input--switch__thumb::after {
+.mew-component--theme-switch .theme--dark.v-input--switch__thumb::after {
   content: '☾';
   font-size: 20px;
   position: absolute;

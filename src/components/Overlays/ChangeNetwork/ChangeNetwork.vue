@@ -1,106 +1,49 @@
 <template>
-  <BaseOverlay :open="open" :close="close" :back="true" close-text="Cancel">
-    <div class="overlay-content">
-      <OverlayTitle title="Network" />
-
-      <WhiteSheet overflow-hidden>
-        <v-btn-toggle
-          v-model="activeTab"
-          class="d-flex"
-          background-color="transparent"
-          mandatory
-          tile
-          borderless
-          light
-        >
-          <v-btn
-            :value="0"
-            height="60px"
-            depressed
-            class="flex-grow-1 text-transform--initial white--text"
-            color="dark_space"
-          >
-            Change network
-          </v-btn>
-
-          <v-btn
-            :value="1"
-            height="60px"
-            depressed
-            class="flex-grow-1 text-transform--initial"
-            color="white"
-          >
-            Add network / HTTP
-          </v-btn>
-        </v-btn-toggle>
-      </WhiteSheet>
-
-      <OverlayTabs class="mt-8">
-        <v-tabs v-model="activeTab">
-          <v-tab-item>
-            <div class="width--100-percent">
-              <WhiteSheet>
-                <div class="pa-8">
-                  <ChangeNetwork />
-                </div>
-              </WhiteSheet>
+  <mew-overlay :show-overlay="open" title="Network" right-btn-text="Close">
+    <template v-slot:mewComponent>
+      <mew-tabs :items="tabs" is-block>
+        <template v-slot:tabContent1>
+          <mew6-white-sheet>
+            <div class="pa-8">
+              <ChangeNetwork />
             </div>
-          </v-tab-item>
-          <v-tab-item>
-            <div class="width--100-percent">
-              <WhiteSheet>
-                <div class="pa-8">
-                  <AddNetwork />
-                </div>
-              </WhiteSheet>
+          </mew6-white-sheet>
+        </template>
+        <template v-slot:tabContent2>
+          <mew6-white-sheet>
+            <div class="pa-8">
+              <AddNetwork />
             </div>
-          </v-tab-item>
-        </v-tabs>
-      </OverlayTabs>
-    </div>
-  </BaseOverlay>
+          </mew6-white-sheet>
+        </template>
+      </mew-tabs>
+    </template>
+  </mew-overlay>
 </template>
 
 <script>
-import BaseOverlay from '../BaseOverlay';
-import OverlayTitle from '@/components/OverlayTitle';
-import OverlayTabs from '@/components/OverlayTabs';
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
 import AddNetwork from './components/AddNetwork';
 import ChangeNetwork from './components/ChangeNetwork';
 
 export default {
   components: {
-    BaseOverlay,
-    OverlayTitle,
-    OverlayTabs,
-    WhiteSheet,
     AddNetwork,
     ChangeNetwork
   },
   props: {
-    open: { default: false, type: Boolean },
-    close: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    }
+    open: { default: false, type: Boolean }
   },
   data() {
     return {
-      activeTab: 0
+      tabs: [
+        {
+          name: 'Change network'
+        },
+        {
+          name: 'Add network / HTTP'
+        }
+      ]
     };
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.v-tabs-bar {
-  //display: none;
-}
-
-.overlay-content {
-  width: 500px;
-}
-</style>

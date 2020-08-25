@@ -28,11 +28,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
-
 a {
   text-decoration: none;
-  color: $emerald !important;
+  color: var(--v-emerald-base) !important;
   font-weight: 500;
 }
 </style>

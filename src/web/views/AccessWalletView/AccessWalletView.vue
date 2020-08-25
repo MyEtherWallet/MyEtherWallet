@@ -1,72 +1,45 @@
 <template>
-  <div class="light-blue darken-4">
-    <div class="py-8" />
-    <v-container>
-      <BlockTitle :data="titleData" class="mb-10">
-        <p class="white--text ma-0">
-          Please select a method to access your wallet.
-        </p>
-        <p class="white--text ma-0">
-          Don't have a wallet?
-          <router-link
-            :to="{ name: 'HomeCreateWallet', query: {} }"
-            class="text-color--mew-green"
-          >
-            Get a new wallet
-          </router-link>
-        </p>
-      </BlockTitle>
-      <v-sheet color="transparent" max-width="600px" class="mx-auto">
+  <div class="bg_blue">
+    <BlockTitle :data="titleData">
+      <h5 class="white--text ma-0">
+        Please select a method to access your wallet.
+      </h5>
+      <h5 class="white--text ma-0">
+        Don't have a wallet?
         <router-link
-          :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '1' } }"
-          class="text-decoration--none"
+          :to="{ name: 'HomeCreateWallet', query: {} }"
+          class="text-color--mew-green"
         >
-          <MEWconnect
-            class="cursor--pointer user-select--none new-wallet-button"
-          />
+          Get a new wallet
         </router-link>
-        <div class="my-4" />
-        <router-link
-          :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '1' } }"
-          class="text-decoration--none"
-        >
-          <Hardware
-            class="cursor--pointer user-select--none new-wallet-button"
-          />
-        </router-link>
-        <div class="my-4" />
-        <router-link
-          :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '1' } }"
-          class="text-decoration--none"
-        >
-          <CX class="cursor--pointer user-select--none new-wallet-button" />
-        </router-link>
-        <div class="my-4" />
-        <router-link
-          :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '1' } }"
-          class="text-decoration--none"
-        >
-          <Software
-            class="cursor--pointer user-select--none new-wallet-button"
-          />
-        </router-link>
-      </v-sheet>
-    </v-container>
-    <div class="py-12" />
-    <div class="py-8" />
+      </h5>
+    </BlockTitle>
+    <v-sheet color="transparent" max-width="650px" class="mx-auto">
+      <Hardware class="mb-5" />
+      <BrowserExtention class="mb-5" />
+      <MobileApps class="mb-5" />
+      <Software />
+    </v-sheet>
+    <div class="spacer-y-medium" />
   </div>
 </template>
 
 <script>
 import BlockTitle from '@/web/components/BlockTitle';
-import MEWconnect from './components/MEWconnect';
 import Hardware from './components/Hardware';
-import CX from './components/CX';
+import BrowserExtention from './components/BrowserExtention';
+import MobileApps from './components/MobileApps';
 import Software from './components/Software';
 
 export default {
   name: 'CreateNewWallet',
-  components: { BlockTitle, MEWconnect, Hardware, CX, Software },
+  components: {
+    BlockTitle,
+    Hardware,
+    BrowserExtention,
+    MobileApps,
+    Software
+  },
   data: () => ({
     titleData: {
       textProps: 'white--text',
@@ -81,11 +54,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables';
-
 .new-wallet-button {
   &:hover {
-    box-shadow: 0 0 50px $police-strobe;
+    box-shadow: 0 0 50px var(--v-police_strobe-base);
   }
 }
 </style>

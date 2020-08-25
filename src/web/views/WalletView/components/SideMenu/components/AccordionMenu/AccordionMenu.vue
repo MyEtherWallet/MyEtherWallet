@@ -103,10 +103,36 @@ export default {
           url: '/wallet/swap'
         },
         {
-          name: 'Dapps Center',
+          name: 'Dapps',
           iconDark: DappCenterDark,
           iconLight: DappCenterLight,
-          url: '/wallet/dapps'
+          url: '/wallet/dapps/dapps-center',
+          children: [
+            {
+              name: 'Dapps Center',
+              url: '/wallet/dapps/dapps-center'
+            },
+            {
+              name: 'ENS manager',
+              url: '/wallet/dapps/ens-manager'
+            },
+            {
+              name: 'MakerDAO',
+              url: '/wallet/dapps/maker-dao'
+            },
+            {
+              name: 'Aave',
+              url: '/wallet/dapps/aave'
+            },
+            {
+              name: 'Ambrpay',
+              url: '/wallet/dapps/ambrpay'
+            },
+            {
+              name: 'Unstoppable Domain',
+              url: '/wallet/dapps/unstoppable-domain'
+            }
+          ]
         },
         {
           name: 'Contract',
@@ -173,7 +199,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables.scss';
 .main-menu:hover,
 .sub-menu > *:hover {
   background-color: #0000001f;
@@ -182,7 +207,7 @@ export default {
 .main-menu,
 .sub-menu {
   * {
-    color: $gray-1;
+    color: var(--v-gray_text-base);
   }
 }
 .active {
@@ -201,7 +226,7 @@ export default {
 }
 
 .active .sub-menu {
-  max-height: 150px;
+  max-height: 200px;
 }
 
 .light {

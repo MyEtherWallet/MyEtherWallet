@@ -105,7 +105,7 @@
         <v-col>
           <div class="subtitle-1 font-weight-bold mb-5 d-flex align-center">
             Love
-            <img height="27" src="@/assets/images/icons/icon-heart-red.svg" />
+            <mew-icon icon-name="love" icon-type="mew" :img-height="30" />
             MEW? Donate!
           </div>
           <p>
@@ -117,10 +117,13 @@
             target="_blank"
             href="https://etherscan.io/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
           >
-            <img
-              src="@/assets/images/currencies//icon-eth-blue.svg"
-              class="mr-3"
+            <mew-icon
+              icon-name="eth"
+              icon-type="mew"
+              :img-height="35"
+              class="mr-2"
             />
+
             <div>
               <div>ETH Donation</div>
               <div class="overline">
@@ -133,9 +136,11 @@
             target="_blank"
             href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
           >
-            <img
-              src="@/assets/images/currencies/icon-btc-gold.svg"
-              class="mr-3"
+            <mew-icon
+              icon-name="btc"
+              icon-type="mew"
+              :img-height="35"
+              class="mr-2"
             />
             <div>
               <div>BTC Donation</div>
@@ -177,18 +182,20 @@
         </div>
         <v-spacer />
         <div class="social-icons">
-          <v-btn
-            v-for="i in icons"
-            :key="i.icon"
-            color="dark_independence"
-            text
-            icon
-            class="mr-1"
+          <a
+            v-for="(i, key) in icons"
+            :key="key"
             :href="i.link"
             target="_blank"
           >
-            <v-icon class="title">{{ i.icon }}</v-icon>
-          </v-btn>
+            <mew-button
+              icon-align="left"
+              :icon="i.icon"
+              icon-type="mew"
+              btn-style="transparent"
+              button-size="small"
+            />
+          </a>
         </div>
       </div>
     </v-container>
@@ -205,35 +212,35 @@ export default {
     icons: [
       {
         link: 'https://www.facebook.com/MyEtherWallet',
-        icon: 'mdi-facebook'
+        icon: 'facebook'
       },
       {
         link: 'https://twitter.com/myetherwallet',
-        icon: 'mdi-twitter'
+        icon: 'twitter'
       },
       {
         link: 'https://www.instagram.com/myetherwallet/',
-        icon: 'mdi-instagram'
+        icon: 'instagram'
       },
       {
         link: 'https://www.linkedin.com/company/myetherwallet',
-        icon: 'mdi-linkedin'
+        icon: 'linkedin'
       },
       {
         link: 'https://github.com/myetherwallet',
-        icon: 'mdi-github-circle'
+        icon: 'github'
       },
       {
         link: 'https://www.reddit.com/r/MyEtherWallet/',
-        icon: 'mdi-reddit'
+        icon: 'reddit'
       },
       {
         link: 'https://www.youtube.com/channel/UCQU5QbObwmaHNEMsuX3uQKA',
-        icon: 'mdi-youtube'
+        icon: 'youtube'
       },
       {
         link: 'https://medium.com/@myetherwallet',
-        icon: 'mdi-medium'
+        icon: 'medium'
       }
     ]
   })
@@ -241,8 +248,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables';
-
 a {
   text-decoration: none;
 }

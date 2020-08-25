@@ -7,51 +7,46 @@
             Ready? Get your wallet today.
           </h2>
           <p class="white--text ma-0">
-            Still don't know how to do it? Go to
+            Still don't know what MEW is?
             <a
-              class="color--inherit"
+              class="color--inherit font-weight-medium text-decoration--underline"
               href="https://kb.myetherwallet.com/"
               target="_blank"
             >
-              Help center </a
-            >.
+              Learn more
+            </a>
           </p>
         </div>
         <v-spacer />
-        <a href="/" class="text-decoration--none">
-          <StdButton
-            class="standard-button emerald--text"
-            color="white"
-            :to="{ name: 'HomeCreateWallet', query: {} }"
-          >
-            <img
-              width="60"
-              height="60"
-              src="@/assets/images/icons/icon-wallet-mew.svg"
-              class="mr-2 mt-2 ml-n3"
-            />
-            Get a new wallet
-          </StdButton>
-        </a>
+        <mew-button
+          btn-link="/"
+          :has-full-width="false"
+          title="Get a new wallet"
+          color-theme="white"
+          button-size="xlarge"
+          :icon="icon"
+          icon-align="left"
+        />
       </div>
     </v-container>
   </div>
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
+import walletIcon from '@/assets/images/icons/icon-wallet-mew.png';
 
 export default {
   name: 'HomeAd2',
-  components: {
-    StdButton
+  components: {},
+  data() {
+    return {
+      icon: walletIcon
+    };
   }
 };
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables';
-
 .ad2 {
   background: linear-gradient(90deg, #24a2ca 0%, #32bfa5 100%);
   padding: 80px 0;
