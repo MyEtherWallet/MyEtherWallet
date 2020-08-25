@@ -2,11 +2,11 @@
   <mew6-white-sheet>
     <v-sheet width="100%" max-width="600px" class="mx-auto pa-8">
       <div class="d-flex align-center bg_datablock pa-6 border-radius--10px">
-        <v-icon class="check-icon emerald--text mr-3">
+        <v-icon class="check-icon primary--text mr-3">
           mdi-check-circle-outline
         </v-icon>
         <div>
-          <div class="mew-heading-2 emerald--text mb-1">Available</div>
+          <div class="mew-heading-2 primary--text mb-2">Available</div>
           <div class="mew-heading-2">mewdev009.eth</div>
         </div>
       </div>
