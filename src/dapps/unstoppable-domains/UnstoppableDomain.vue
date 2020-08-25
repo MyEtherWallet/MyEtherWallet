@@ -1,5 +1,14 @@
 <template>
   <div class="mew-component-fix--unstoppable-domain">
+    <div>
+      <unstoppable-domain-buy-overlay
+        :open="buyOverlay"
+        :close="closeBuyOverlay"
+      />
+      <div class="cursor--pointer font-weight-bold" @click="buyOverlay = true">
+        Buy Domain Overlay
+      </div>
+    </div>
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
@@ -300,11 +309,13 @@
 <script>
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import domainBtn from '@/modules/wallets/components/domain-btn/DomainBtn';
+import unstoppableDomainBuyOverlay from '@/modules/wallets/components/unstoppable-domain-buy-overlay/UnstoppableDomainBuyOverlay';
 
 export default {
-  components: { domainBtn },
+  components: { domainBtn, unstoppableDomainBuyOverlay },
   data() {
     return {
+      buyOverlay: false,
       tabs: [{ name: 'Buy domain' }, { name: 'Manage domain' }],
       domainFunctions: [
         { label: 'Transfer Domain' },
@@ -367,6 +378,11 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    closeBuyOverlay() {
+      this.buyOverlay = false;
+    }
   }
 };
 </script>
