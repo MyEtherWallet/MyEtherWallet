@@ -1,41 +1,49 @@
 <template>
-  <div class="expandHeader">
-    <block-title :data="titleData">
-      <h5 class="white--text ma-0">
-        Select a hardware to access your wallet. Make sure your device is
-        connected and unlocked.
-        <span
-          class="primary--text cursor--pointer"
-          @click="$router.push({ name: 'BuyHardwareWallet', params: {} })"
-        >
-          Buy hardware wallet
-        </span>
-      </h5>
-    </block-title>
+  <mew-overlay
+    :show-overlay="open"
+    title="1. Connect with BCVault"
+    right-btn-text="Cancel"
+  >
+    <template v-slot:mewComponent>
+      <div class="expandHeader">
+        <block-title :data="titleData">
+          <h5 class="white--text ma-0">
+            Select a hardware to access your wallet. Make sure your device is
+            connected and unlocked.
+            <span
+              class="primary--text cursor--pointer"
+              @click="$router.push({ name: 'BuyHardwareWallet', params: {} })"
+            >
+              Buy hardware wallet
+            </span>
+          </h5>
+        </block-title>
 
-    <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
-      <v-row>
-        <v-col
-          v-for="(btn, key) in buttons"
-          :key="key"
-          class="btn-container"
-          cols="12"
-          sm="6"
-        >
-          <mew-super-button
-            font-class="mew-heading-2"
-            :title="btn.label"
-            @click.native="openOverlay(btn.overlayName)"
-          >
-            <template v-slot:contentSlot>
-              <img :src="btn.icon" :alt="btn.label" />
-            </template>
-          </mew-super-button>
-        </v-col>
-      </v-row>
-    </v-sheet>
-    <div class="spacer-y-medium" />
-  </div>
+        <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
+          <v-row>
+            <v-col
+              v-for="(btn, key) in buttons"
+              :key="key"
+              class="btn-container"
+              cols="12"
+              sm="6"
+            >
+              <mew-super-button
+                font-class="mew-heading-2"
+                :title="btn.label"
+                @click.native="openOverlay(btn.overlayName)"
+              >
+                <template v-slot:contentSlot>
+                  <img :src="btn.icon" :alt="btn.label" />
+                </template>
+              </mew-super-button>
+            </v-col>
+          </v-row>
+        </v-sheet>
+        <div class="spacer-y-medium" />
+      </div>
+    </template>
+  </mew-overlay>
 </template>
 
 <script>
@@ -44,6 +52,12 @@ import blockTitle from '@/components/block-title/BlockTitle';
 export default {
   name: 'CreateNewWallet',
   components: { blockTitle },
+  props: {
+    open: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       titleData: {

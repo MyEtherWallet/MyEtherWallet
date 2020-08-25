@@ -26,14 +26,14 @@
           class="mr-3"
           button-size="xlarge"
           title="Continue"
-          :to="{ name: 'HomeCreateWalletMewWallet', query: { step: '2' } }"
+          :to="{ name: 'CreateWalletMewWallet', query: { step: '2' } }"
         />
       </div>
       <p class="mt-4 mb-0">
         Already knew how to do it?
         <router-link
           class="text-decoration--none orange--text font-weight-medium"
-          :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '3' } }"
+          :to="{ name: 'CreateWalletMewConnect', query: { step: '3' } }"
         >
           Skip
         </router-link>

@@ -12,13 +12,13 @@
           class="mr-3"
           button-size="xlarge"
           title="Back"
-          :to="{ name: 'HomeCreateWalletMewWallet', query: { step: '1' } }"
+          :to="{ name: 'CreateWalletMewWallet', query: { step: '1' } }"
         />
         <mew-button
           class="mr-3"
           button-size="xlarge"
           title="Continue"
-          :to="{ name: 'HomeCreateWalletMewWallet', query: { step: '3' } }"
+          :to="{ name: 'CreateWalletMewWallet', query: { step: '3' } }"
         />
       </div>
       <p class="mt-4 mb-0">
