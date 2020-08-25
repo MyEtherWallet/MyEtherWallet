@@ -20,6 +20,10 @@ export default class NftCollection {
     this.tokens = details.tokens;
   }
 
+  getRetrievedCount(){
+    this.tokens.length
+  }
+
   selectNftsToShow() {
     try {
       if (!this.tokens) return [];
@@ -69,6 +73,7 @@ export default class NftCollection {
       allTokens = data.tokens.map(tokenParse);
 
       if (!preFetch) this.fetchingOwnedTokens = false;
+      console.log('current count:', this.tokens.length); // todo remove dev item
       this.tokens = allTokens;
       return allTokens;
     });

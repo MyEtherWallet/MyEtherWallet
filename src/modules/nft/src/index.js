@@ -51,6 +51,12 @@ export default class Nft {
     this.selectedContract = selectedContract;
   }
 
+  getActiveTokenSet(selectedContract){
+    return this.nftConfig[selectedContract]
+  }
+
+
+
   selectNftsToShow() {
     try {
       if (this.nftConfig[this.selectedContract]) {

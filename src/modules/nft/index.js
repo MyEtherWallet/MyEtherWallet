@@ -8,6 +8,7 @@ export default class NFT {
       address: this.address,
       tokenSetUpdateHook: this.updateActiveTokenSet.bind(this)
     });
+    this.selectedContract = {};
     this.activeTokenSet = [];
   }
   async init(selectedContractOverride) {
@@ -19,6 +20,10 @@ export default class NFT {
   }
   selectNftsToShow() {
     return this.nft.selectNftsToShow();
+  }
+
+  getActiveContract(contractAddress) {
+    return this.nft.getActiveTokenSet(contractAddress);
   }
 
   setSelectedContract(contractAddress) {

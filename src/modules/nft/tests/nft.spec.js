@@ -52,5 +52,25 @@ describe('NFT Module', () => {
         done();
       });
     }, 10000);
+    test('it should report the number of tokens returned', done => {
+     const tokenSet =  nft.getActiveContract(contractAddress);
+      console.log('tokenSet.getRetrievedCount()', tokenSet.getRetrievedCount()); // todo remove dev item
+      tokenSet.incrementPage().then(res => {
+        console.log('tokenSet.getRetrievedCount()', tokenSet.getRetrievedCount()); // todo remove dev item
+        expect(res).toEqual(expect.anything());
+        done();
+      });
+    }, 10000);
+    test('it should get next set of nfts to show', done => {
+      nft.incrementPage().then(res => {
+        console.log(res); // todo remove dev item
+        expect(res).toEqual(expect.anything());
+        done();
+      });
+    }, 10000);
+
+
+
+    getActiveTokenSet
   });
 });
