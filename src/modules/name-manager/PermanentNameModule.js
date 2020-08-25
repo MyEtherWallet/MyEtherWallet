@@ -35,36 +35,23 @@ export default class PermanentNameModule extends NameManagerInterface {
     }
     return _self
       ._createCommitment()
-      .then(() => {
-        _self._registerWithDuration(duration);
-      })
-      .then(() => {
-        this._initModule(); // might need something more effecient than this
-      });
+      .then(() => _self._registerWithDuration(duration))
+      .then(() => this._initModule()); // might need something more effecient than this
   }
 
   transfer(toAddress) {
     if (this.ownerVal === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
-    return new Promise((resolve, reject) => {
-      this.setController(toAddress)
-        .then(() => {
-          this.web3Val.eth
-            .sendTransaction({
-              from: this.addressVal,
-              to: this.networkVal.type.ens.registry,
-              data: this.registryContractVal.methods
-                .setOwner(this.nameHashVal, toAddress)
-                .encodeABI(),
-              value: 0
-            })
-            .then(() => {
-              resolve({ success: 'Domain transferred successfully' });
-            })
-            .catch(reject);
-        })
-        .catch(reject);
+    return this.setController(toAddress).then(() => {
+      return this.web3Val.eth.sendTransaction({
+        from: this.addressVal,
+        to: this.networkVal.type.ens.registry,
+        data: this.registryContractVal.methods
+          .setOwner(this.nameHashVal, toAddress)
+          .encodeABI(),
+        value: 0
+      });
     });
   }
 
@@ -84,35 +71,27 @@ export default class PermanentNameModule extends NameManagerInterface {
 
     const ACTUAL_DURATION = Math.ceil(60 * 60 * 24 * 365.25 * duration);
     // Not sure where to place balance checker that's currently present
-    return new Promise((resolve, reject) => {
-      this.registrarControllerContractVal.methods
-        .rentPrice(this.nameVal, ACTUAL_DURATION)
-        .call()
-        .then(res => {
-          const data = this.registrarControllerContractVal.methods
-            .renew(hostName)
-            .encodeABI();
-          const withFivePercent = BigNumber(res)
-            .times(1.05)
-            .integerValue()
-            .toFixed();
+    return this.registrarControllerContractVal.methods
+      .rentPrice(this.nameVal, ACTUAL_DURATION)
+      .call()
+      .then(res => {
+        const data = this.registrarControllerContractVal.methods
+          .renew(hostName)
+          .encodeABI();
+        const withFivePercent = BigNumber(res)
+          .times(1.05)
+          .integerValue()
+          .toFixed();
 
-          const txObj = {
-            to: this.contractControllerAddressVal,
-            from: this.addressVal,
-            data: data,
-            value: withFivePercent
-          };
+        const txObj = {
+          to: this.contractControllerAddressVal,
+          from: this.addressVal,
+          data: data,
+          value: withFivePercent
+        };
 
-          this.web3Val
-            .sendTransaction(txObj)
-            .then(() => {
-              resolve({ success: 'Name renewed successfully!' });
-            })
-            .catch(reject);
-        })
-        .catch(reject);
-    });
+        return this.web3Val.sendTransaction(txObj);
+      });
   }
 
   releaseDeed() {
@@ -124,29 +103,20 @@ export default class PermanentNameModule extends NameManagerInterface {
       throw new Error('Name has no releasable deed!');
     }
 
-    return new Promise((resolve, reject) => {
-      if (this.deedOwnerVal !== this.addressVal) {
-        return reject({
-          error: 'Redeeming address provided is not the owner!'
-        });
-      }
-      const data = this.oldDeedContract.methods
-        .releaseDeed(this.labelHashVal)
-        .encodeABI();
-      const obj = {
-        from: this.addressVal,
-        to: OLD_ENS_ADDRESS,
-        data: data,
-        value: 0
-      };
+    if (this.deedOwnerVal !== this.addressVal) {
+      throw new Error('Redeeming address provided is not the owner!');
+    }
+    const data = this.oldDeedContract.methods
+      .releaseDeed(this.labelHashVal)
+      .encodeABI();
+    const obj = {
+      from: this.addressVal,
+      to: OLD_ENS_ADDRESS,
+      data: data,
+      value: 0
+    };
 
-      this.web3Val.eth
-        .sendTransaction(obj)
-        .then(() => {
-          resolve({ success: 'Deed released succesfully!' });
-        })
-        .catch(reject);
-    });
+    return this.web3Val.eth.sendTransaction(obj);
   }
 
   setIPFS(file) {
@@ -158,46 +128,27 @@ export default class PermanentNameModule extends NameManagerInterface {
       throw new Error('Ipfs not supported in this network!');
     }
 
-    return new Promise((resolve, reject) => {
-      try {
-        uploadFileToIpfs(file)
-          .then(getHashFromFile)
-          .then(hash => {
-            const ipfsToHash = `0x${contentHash.fromIpfs(hash)}`;
-            const tx = {
-              from: this.addressVal,
-              to: this.resolverAddressVal,
-              data: this.resolverContractVal.methods
-                .setContentHash(this.nameHashVal, ipfsToHash)
-                .encodeABI(),
-              value: 0
-            };
+    return uploadFileToIpfs(file)
+      .then(getHashFromFile)
+      .then(hash => {
+        const ipfsToHash = `0x${contentHash.fromIpfs(hash)}`;
+        const tx = {
+          from: this.addressVal,
+          to: this.resolverAddressVal,
+          data: this.resolverContractVal.methods
+            .setContentHash(this.nameHashVal, ipfsToHash)
+            .encodeABI(),
+          value: 0
+        };
 
-            this.web3Val.eth.sendTransaction(tx).then(() => {
-              return resolve({
-                success:
-                  'Transaction sent! Please wait a couple minutes to confirm changes'
-              });
-            });
-          });
-      } catch (e) {
-        reject(e);
-      }
-    });
+        return this.web3Val.eth.sendTransaction(tx);
+      });
   }
 
   // DNS claim name method
   claim() {
-    return new Promise((resolve, reject) => {
-      try {
-        this.dnsClaimVal
-          .submit({
-            from: this.account.address
-          })
-          .then(resolve);
-      } catch (e) {
-        reject(e);
-      }
+    return this.dnsClaimVal.submit({
+      from: this.addressVal
     });
   }
 
@@ -361,7 +312,7 @@ export default class PermanentNameModule extends NameManagerInterface {
           this.addressVal
         )
         .call();
-      return await this.registrarControllerContractVal.methods
+      return this.registrarControllerContractVal.methods
         .commit(commitment)
         .send({ from: this.addressVal });
     } catch (e) {
