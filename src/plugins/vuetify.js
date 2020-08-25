@@ -194,7 +194,8 @@ export default new Vuetify({
           darken2: '#ff7700'
         },
         disabled: '#cecece',
-        tableHeader: '#f9f9f9'
+        tableHeader: '#f9f9f9',
+        informationBlock: '#f9f9f9'
       },
       dark: {
         primaryHover: '#1eb19b',
@@ -253,7 +254,8 @@ export default new Vuetify({
           darken1: '#f5a623'
         },
         disabled: '#1f2b42',
-        tableHeader: '#0f1320'
+        tableHeader: '#0f1320',
+        informationBlock: '#0f1320'
       }
     }
   }
