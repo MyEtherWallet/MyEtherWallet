@@ -1,41 +1,39 @@
 <template>
-  <v-sheet class="d-flex px-3 py-8">
-    <v-col cols="6" class="pt-0">
-      <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
-      <div class="headline font-weight-bold mb-3">You are done!</div>
-      <p class="mb-6">
-        Congratulation! Please use the MEWconnect App to scan this QR code in
-        order to access your new wallet. And you are done!
-      </p>
-      <div class="d-flex align-center">
-        <StdButton size="x-large" buttonclass="button--green">
-          Access my wallet
-        </StdButton>
+  <v-sheet color="white" class="border-radius--10px pa-12">
+    <div class="d-flex align-center">
+      <div class="mr-8">
+        <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
+        <div class="headline font-weight-bold mb-3">You are done!</div>
+        <p class="mb-6">
+          Congratulation! Please use the MEWconnect App to scan this QR code in
+          order to access your new wallet. And you are done!
+        </p>
+        <mew-button
+          title="Access my wallet"
+          button-size="xlarge"
+          :has-full-width="false"
+          class="mb-5"
+        />
+        <p class="mt-4 mb-0">
+          Need help?
+          <router-link
+            class="emerald--text text-decoration--none font-weight-bold"
+            to="/"
+            >Get helps from MEWconnect</router-link
+          >
+        </p>
       </div>
-      <p class="mt-4 mb-0">
-        Need help?
-        <router-link
-          class="emerald--text text-decoration--none font-weight-bold"
-          to="/"
-          >Get helps from MEWconnect</router-link
-        >
-      </p>
-    </v-col>
-    <v-col cols="6" class="pt-10">
       <v-img
-        class="mx-auto"
-        max-width="280px"
+        max-width="250px"
         src="@/assets/images/icons/icon-keystore-mew.png"
       />
-    </v-col>
+    </div>
   </v-sheet>
 </template>
 
 <script>
-import StdButton from '@/web/components/StdButton';
-
 export default {
-  components: { StdButton },
+  components: {},
   data: () => ({}),
   methods: {}
 };

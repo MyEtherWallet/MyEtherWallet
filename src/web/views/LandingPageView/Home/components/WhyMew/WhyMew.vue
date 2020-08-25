@@ -1,54 +1,100 @@
 <template>
   <div>
+    <!-- need to translate -->
     <v-container>
-      <BlockTitle
-        :data="titleData"
-        :centered="false"
-        toptitle="Why Mew"
-        title="Make Ethereum Blockchain easy and secure"
-      />
-      <div class="pt-10 d-flex">
-        <FriendlyToUse class="box-shadow mr-10" />
-        <div>
-          <Swap class="box-shadow mb-10" />
-          <HardwareWallet class="box-shadow" />
+      <div class="flex-column d-flex">
+        <span class="mew-heading-3 text-uppercase textPrimary--text pb-3">
+          Why Mew
+        </span>
+        <span class="mew-subtitle pb-7">
+          Make Ethereum Blockchain easy and secure
+        </span>
+      </div>
+
+      <div class="d-flex">
+        <info-card
+          title="Friendly user interface"
+          desc="Access the Ethereum blockchains original and most-trusted wallet client, now with a host of new features all contained in an elegant, easy and friendly interface."
+          :link="{
+            title: 'Learn more',
+            url: 'www.myetherwallet.com'
+          }"
+          :icon="require('@/assets/images/icons/icon-faces-mew.svg')"
+        />
+        <Spacer />
+
+        <div class="d-flex flex-column">
+          <info-card
+            class="full-height"
+            max-width="600"
+            title="Swap easily"
+            desc="Partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20."
+            :link="{
+              title: 'Learn more',
+              url: 'www.myetherwallet.com'
+            }"
+          />
+          <Spacer />
+          <info-card
+            class="full-height"
+            max-width="600"
+            title="Hardware wallets support"
+            desc="MEW offers support for all major hardware wallets including Ledger, Trezor, and many more."
+            :link="{
+              title: 'Learn more',
+              url: 'www.myetherwallet.com'
+            }"
+          />
         </div>
-        <SecureMyFunds class="box-shadow ml-10" />
+
+        <Spacer />
+        <info-card
+          title="MEWwallet"
+          desc="MEW brings a hardware wallet style security to your iOS or Android smart phone, helping you to secure your funds as never before."
+          :link="{
+            title: 'Get the App',
+            url: 'www.myetherwallet.com'
+          }"
+        >
+          <template v-slot:titleIconContainer>
+            <img
+              src="@/assets/images/icons/icon-appstore-apple-dark.svg"
+              alt="Apple app store"
+              class="ml-2 mr-1"
+            />
+            <img
+              src="@/assets/images/icons/icon-appstore-android-dark.svg"
+              alt="Android store"
+            />
+          </template>
+          <template v-slot:cardImg>
+            <img
+              class="card-img"
+              width="200"
+              src="@/assets/images/snippets/bg-mew-wallet.png"
+              alt="MEW wallet"
+            />
+          </template>
+        </info-card>
       </div>
     </v-container>
   </div>
 </template>
 
 <script>
-import BlockTitle from '@/web/components/BlockTitle';
-import FriendlyToUse from './components/FriendlyToUse';
-import Swap from './components/Swap';
-import HardwareWallet from './components/HardwareWallet';
-import SecureMyFunds from './components/SecureMyFunds';
+import Spacer from '@/web/components/Common/Spacer';
 
 export default {
   name: 'HomeWhyMew',
   components: {
-    BlockTitle,
-    FriendlyToUse,
-    Swap,
-    HardwareWallet,
-    SecureMyFunds
+    Spacer
   },
-  data: () => ({
-    titleData: {
-      textProps: '',
-      toptitle: 'Why Mew',
-      title: 'Make Ethereum Blockchain easy and secure',
-      description: '',
-      centered: false
-    }
-  })
+  data: () => ({})
 };
 </script>
 
 <style lang="scss" scoped>
-.box-shadow {
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
+.card-img {
+  margin-bottom: -7px;
 }
 </style>

@@ -11,6 +11,10 @@
         <Footer class="mt-10" />
       </div>
     </div>
+
+    <GlobalElementsContainer />
+    <GlobalModalContainer />
+    <GlobalOverlayContainer />
   </v-sheet>
 </template>
 
@@ -18,8 +22,18 @@
 import SideMenu from './components/SideMenu';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import GlobalElementsContainer from '@/web/containers/GlobalElementsContainer';
+import GlobalModalContainer from '@/web/containers/GlobalModalContainer';
+import GlobalOverlayContainer from '@/web/containers/GlobalOverlayContainer';
 
 export default {
-  components: { SideMenu, Header, Footer }
+  components: {
+    SideMenu,
+    Header,
+    Footer,
+    GlobalElementsContainer,
+    GlobalModalContainer,
+    GlobalOverlayContainer
+  }
 };
 </script>

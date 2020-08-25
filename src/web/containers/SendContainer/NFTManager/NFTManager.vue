@@ -2,7 +2,7 @@
   <div>
     <div class="d-flex">
       <div class="flex-grow-1">
-        <SendTransaction />
+        <NFTManagerContent />
       </div>
       <Spacer />
       <div>
@@ -16,15 +16,14 @@
 
 <script>
 import Spacer from '@/web/components/Common/Spacer';
-import SendTransaction from './SendTransaction';
-
+import NFTManagerContent from './NFTManagerContent';
 import Network from '@/web/components/Network';
 import Swap from '@/web/components/Swap';
 
 export default {
   components: {
     Spacer,
-    SendTransaction,
+    NFTManagerContent,
     Network,
     Swap
   }

@@ -1,40 +1,36 @@
 <template>
-  <WhiteSheet sideinfo class="px-7 py-5 d-flex justify-space-between">
+  <mew6-white-sheet sideinfo class="px-7 py-5 d-flex justify-space-between">
     <ChangeNetworkOverlay
       :open="openNetworkOverlay"
       :close="closeNetworkOverlay"
     />
     <div>
-      <BlockTitle :text="$t('common.network')">
-        <template v-slot:object-next-to-title>
-          <SoloButton @click.native="openNetworkOverlay = true">
-            <v-icon>mdi-chevron-right</v-icon>
-          </SoloButton>
-        </template>
-      </BlockTitle>
+      <div class="d-flex align-center">
+        <span class="mew-heading-2">{{ $t('common.network') }}</span>
+        <mew-button
+          button-size="small"
+          color-theme="secondary"
+          icon-type="mdi"
+          icon="mdi-chevron-right"
+          @click.native="openNetworkOverlay = true"
+        />
+      </div>
+
       <div class="mt-3">
         <!-- placeholders -->
         <div class="mb-1">ETH - myetherwallet.com</div>
         <div>Last Block: #5699679</div>
       </div>
     </div>
-    <img
-      width="60"
-      height="60"
-      src="@/assets/images/currencies/eth.png"
-      alt="ethereum"
-    />
-  </WhiteSheet>
+    <mew-icon icon-name="ETH" :img-height="65" />
+  </mew6-white-sheet>
 </template>
 
 <script>
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
-import BlockTitle from '@/web/components/BlockTitles/BlockTitle2';
-import SoloButton from '@/web/components/Buttons/SoloButton1';
 import ChangeNetworkOverlay from '@/components/Overlays/ChangeNetwork';
 
 export default {
-  components: { WhiteSheet, BlockTitle, SoloButton, ChangeNetworkOverlay },
+  components: { ChangeNetworkOverlay },
   data() {
     return {
       openNetworkOverlay: false

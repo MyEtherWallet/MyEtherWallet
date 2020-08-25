@@ -1,164 +1,171 @@
 <template>
-  <BaseOverlay :open="open" :close="close" close-text="Cancel">
-    <div class="overlay-content">
-      <OverlayTitle title="My paper wallet" />
-      <WhiteSheet>
-        <div class="pa-10">
-          <div class="d-flex justify-space-between align-start">
-            <div class="d-flex align-center">
-              <img height="35" src="@/assets/images/icons/logo-mew-dark.png" />
-              <div class="emerald--text">
-                <span class="mx-3">|</span>Paper Wallet
+  <mew-overlay
+    color-type="bg_white_sheet"
+    :show-overlay="open"
+    title="My paper wallet"
+    right-btn-text="Close"
+  >
+    <template v-slot:mewOverlayBody>
+      <v-sheet max-width="800px">
+        <mew6-white-sheet>
+          <div class="pa-10">
+            <div class="d-flex justify-space-between align-start">
+              <div class="d-flex align-center">
+                <img
+                  height="35"
+                  src="@/assets/images/icons/logo-mew-dark.png"
+                />
+                <div class="emerald--text">
+                  <span class="mx-3">|</span>Paper Wallet
+                </div>
+              </div>
+              <div>
+                <div class="d-flex align-center mr-3 mb-2">
+                  <img
+                    class="mr-2"
+                    height="20"
+                    src="@/assets/images/icons/icon-support.svg"
+                  />
+                  <div>support@myetherwallet.com</div>
+                </div>
+                <div class="d-flex align-center mr-3">
+                  <img
+                    class="mr-2"
+                    height="20"
+                    src="@/assets/images/icons/icon-support.svg"
+                  />
+                  <div>https://www.myetherwallet.com</div>
+                </div>
               </div>
             </div>
-            <div>
-              <div class="d-flex align-center mr-3 mb-2">
-                <img
-                  class="mr-2"
-                  height="20"
-                  src="@/assets/images/icons/icon-support.svg"
-                />
-                <div>support@myetherwallet.com</div>
-              </div>
-              <div class="d-flex align-center mr-3">
-                <img
-                  class="mr-2"
-                  height="20"
-                  src="@/assets/images/icons/icon-support.svg"
-                />
-                <div>https://www.myetherwallet.com</div>
-              </div>
-            </div>
-          </div>
-          <div class="mt-5 d-flex align-center">
-            <v-sheet
-              :width="blockieSize"
-              :height="blockieSize"
-              color="transparent"
-              class="mr-4"
-            >
-              <blockie
-                :address="address"
-                :size="8"
-                :scale="16"
+            <div class="mt-5 d-flex align-center">
+              <v-sheet
                 :width="blockieSize"
                 :height="blockieSize"
-              />
-            </v-sheet>
-            <v-theme-provider root>
-              <v-sheet color="transparent" max-width="400px">
-                <div class="subtitle-1 font-weight-black text-uppercase">
-                  My address icon
-                </div>
-                <div>
-                  Always look for the icon when sending to this wallet. And
-                  please keep your paper wallet at a
-                  <span class="text-uppercase red--text font-weight-medium"
-                    >Safe Place!</span
-                  >
-                </div>
-              </v-sheet>
-            </v-theme-provider>
-          </div>
-          <div class="mt-4 d-flex align-content-stretch">
-            <v-theme-provider root>
-              <v-sheet
-                class="d-flex flex-column justify-center flex-grow-1 px-8"
-                color="gray3"
+                color="transparent"
+                class="mr-4"
               >
-                <div class="subtitle-1 font-weight-black text-uppercase">
-                  My Address
-                </div>
-                <div>{{ address }}</div>
+                <blockie
+                  :address="address"
+                  :size="8"
+                  :scale="16"
+                  :width="blockieSize"
+                  :height="blockieSize"
+                />
               </v-sheet>
-            </v-theme-provider>
-            <v-sheet height="130px" class="qr-image">
-              <VueQrcode :value="address" :options="{ size: 130 }"></VueQrcode>
-            </v-sheet>
-          </div>
-
-          <div
-            class="cut-line my-5 mx-n4 gray3--text overflow--hidden white-space--nowrap"
-          >
-            --------------------------------------------------------------------------------------------------------
-          </div>
-
-          <div class="font-weight-black">
-            You might LOSE your MONEY if you share this Private Key with anyone!
-          </div>
-          <div class="mt-4 d-flex align-content-stretch">
-            <v-theme-provider root>
-              <v-sheet
-                class="d-flex flex-column justify-center flex-grow-1 px-8"
-                color="gray3"
-              >
-                <div class="subtitle-1 font-weight-black text-uppercase">
-                  My Address
-                </div>
-                <div>{{ address }}</div>
-              </v-sheet>
-            </v-theme-provider>
-            <v-sheet height="130px" class="qr-image">
-              <VueQrcode :value="address" :options="{ size: 130 }"></VueQrcode>
-            </v-sheet>
-          </div>
-          <div class="mt-4 d-flex align-content-stretch">
-            <v-theme-provider root>
-              <v-sheet
-                class="d-flex flex-column justify-center flex-grow-1 px-8"
-                color="gray3"
-              >
-                <div
-                  class="subtitle-1 font-weight-black text-uppercase red--text"
+              <v-theme-provider root>
+                <v-sheet color="transparent" max-width="400px">
+                  <div class="subtitle-1 font-weight-black text-uppercase">
+                    My address icon
+                  </div>
+                  <div>
+                    Always look for the icon when sending to this wallet. And
+                    please keep your paper wallet at a
+                    <span class="text-uppercase red--text font-weight-medium"
+                      >Safe Place!</span
+                    >
+                  </div>
+                </v-sheet>
+              </v-theme-provider>
+            </div>
+            <div class="mt-4 d-flex align-content-stretch">
+              <v-theme-provider root>
+                <v-sheet
+                  class="d-flex flex-column justify-center flex-grow-1 px-8"
+                  color="gray3"
                 >
-                  My Private Key
-                </div>
-                <div>{{ key }}</div>
+                  <div class="subtitle-1 font-weight-black text-uppercase">
+                    My Address
+                  </div>
+                  <div>{{ address }}</div>
+                </v-sheet>
+              </v-theme-provider>
+              <v-sheet height="130px" class="qr-image">
+                <VueQrcode
+                  :value="address"
+                  :options="{ size: 130 }"
+                ></VueQrcode>
               </v-sheet>
-            </v-theme-provider>
-            <v-sheet height="130px" class="qr-image">
-              <VueQrcode :value="key" :options="{ size: 130 }"></VueQrcode>
-            </v-sheet>
-          </div>
+            </div>
 
-          <div
-            class="cut-line my-5 mx-n4 gray3--text overflow--hidden white-space--nowrap"
-          >
-            --------------------------------------------------------------------------------------------------------
-          </div>
+            <div
+              class="cut-line my-5 mx-n4 gray3--text overflow--hidden white-space--nowrap"
+            >
+              --------------------------------------------------------------------------------------------------------
+            </div>
 
-          <div class="text-center">
-            <img
-              src="@/assets/images/backgrounds/bg-paper-wallet.png"
-              alt="Spaceman"
-              height="250"
-            />
+            <div class="font-weight-black">
+              You might LOSE your MONEY if you share this Private Key with
+              anyone!
+            </div>
+            <div class="mt-4 d-flex align-content-stretch">
+              <v-theme-provider root>
+                <v-sheet
+                  class="d-flex flex-column justify-center flex-grow-1 px-8"
+                  color="gray3"
+                >
+                  <div class="subtitle-1 font-weight-black text-uppercase">
+                    My Address
+                  </div>
+                  <div>{{ address }}</div>
+                </v-sheet>
+              </v-theme-provider>
+              <v-sheet height="130px" class="qr-image">
+                <VueQrcode
+                  :value="address"
+                  :options="{ size: 130 }"
+                ></VueQrcode>
+              </v-sheet>
+            </div>
+            <div class="mt-4 d-flex align-content-stretch">
+              <v-theme-provider root>
+                <v-sheet
+                  class="d-flex flex-column justify-center flex-grow-1 px-8"
+                  color="gray3"
+                >
+                  <div
+                    class="subtitle-1 font-weight-black text-uppercase red--text"
+                  >
+                    My Private Key
+                  </div>
+                  <div>{{ key }}</div>
+                </v-sheet>
+              </v-theme-provider>
+              <v-sheet height="130px" class="qr-image">
+                <VueQrcode :value="key" :options="{ size: 130 }"></VueQrcode>
+              </v-sheet>
+            </div>
+
+            <div
+              class="cut-line my-5 mx-n4 gray3--text overflow--hidden white-space--nowrap"
+            >
+              --------------------------------------------------------------------------------------------------------
+            </div>
+
+            <div class="text-center">
+              <img
+                src="@/assets/images/backgrounds/bg-paper-wallet.png"
+                alt="Spaceman"
+                height="250"
+              />
+            </div>
           </div>
+        </mew6-white-sheet>
+
+        <div class="d-flex justify-center mt-12">
+          <mew-button title="Print" button-size="xlarge" />
         </div>
-      </WhiteSheet>
-    </div>
-    <div class="d-flex justify-center mt-12">
-      <StdButton size="x-large" buttonclass="button--green">
-        Print
-      </StdButton>
-    </div>
-  </BaseOverlay>
+      </v-sheet>
+    </template>
+  </mew-overlay>
 </template>
 
 <script>
-import BaseOverlay from '../BaseOverlay';
-import OverlayTitle from '@/components/OverlayTitle';
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
-import StdButton from '@/web/components/StdButton';
 import Blockie from '@/web/components/Blockie';
 import VueQrcode from '@xkeshi/vue-qrcode';
 
 export default {
   components: {
-    BaseOverlay,
-    OverlayTitle,
-    WhiteSheet,
-    StdButton,
     Blockie,
     VueQrcode
   },

@@ -7,19 +7,22 @@
       aspect-ratio="1"
       class="mb-5"
     />
-    <BlockTitle :data="titleData" />
-    <StdButton size="x-large" buttonclass="button--green-border" class="mt-5"
-      >Contact Support</StdButton
-    >
+    <BlockTitle no-page-title :data="titleData" />
+    <mew-button
+      class="mt-5"
+      btn-link="https://www.mewtopia.com/"
+      :has-full-width="false"
+      title="Contact Support"
+      button-size="xlarge"
+    />
   </v-sheet>
 </template>
 
 <script>
 import BlockTitle from '@/web/components/BlockTitle';
-import StdButton from '@/web/components/StdButton';
 
 export default {
-  components: { BlockTitle, StdButton },
+  components: { BlockTitle },
   data: () => ({
     titleData: {
       textProps: '',
