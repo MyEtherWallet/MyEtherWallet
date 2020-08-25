@@ -19,7 +19,7 @@
         </div>
         <v-spacer />
         <mew-button
-          btn-link="/create-wallet"
+          :btn-link="link()"
           title="Get a new wallet"
           color-theme="white"
           button-size="xlarge"
@@ -38,6 +38,11 @@ export default {
   components: {},
   data() {
     return {};
+  },
+  methods: {
+    link() {
+      return `${window.location.origin}/wallet/create`;
+    }
   }
 };
 </script>

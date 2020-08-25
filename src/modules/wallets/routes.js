@@ -16,9 +16,6 @@ export default {
   path: '/wallet',
   name: 'Wallet',
   component: Wallets,
-  meta: {
-    requiresAuth: false
-  },
   children: [
     {
       path: 'dashboard',

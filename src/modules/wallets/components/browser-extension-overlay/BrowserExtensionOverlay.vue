@@ -1,25 +1,31 @@
 <template>
-  <div class="expandHeader">
-    <block-title :data="titleData">
-      <h5 class="white--text ma-0">
-        Please select a browser from below.
-      </h5>
-    </block-title>
-    <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
-      <v-row>
-        <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="6">
-          <router-link :to="btn.to" class="display--block">
-            <mew-super-button
-              :title="btn.label"
-              :right-icon="btn.icon"
-              icon-type="img"
-            />
-          </router-link>
-        </v-col>
-      </v-row>
-    </v-sheet>
-    <div class="spacer-y-medium" />
-  </div>
+  <mew-overlay
+    :show-overlay="open"
+    title="1. Connect with BCVault"
+    right-btn-text="Cancel"
+  >
+    <div class="expandHeader">
+      <block-title :data="titleData">
+        <h5 class="white--text ma-0">
+          Please select a browser from below.
+        </h5>
+      </block-title>
+      <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
+        <v-row>
+          <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="6">
+            <router-link :to="btn.to" class="display--block">
+              <mew-super-button
+                :title="btn.label"
+                :right-icon="btn.icon"
+                icon-type="img"
+              />
+            </router-link>
+          </v-col>
+        </v-row>
+      </v-sheet>
+      <div class="spacer-y-medium" />
+    </div>
+  </mew-overlay>
 </template>
 
 <script>
@@ -28,6 +34,12 @@ import blockTitle from '@/components/block-title/BlockTitle';
 export default {
   name: 'CreateNewWallet',
   components: { blockTitle },
+  props: {
+    open: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       titleData: {

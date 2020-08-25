@@ -29,12 +29,12 @@ router.beforeResolve((to, ___, next) => {
       store.dispatch('saveQueryVal', blankObj);
     }
     if (store.state.wallet === null) {
-      // store.dispatch('setLastPath', to.path);
-      next({ name: 'AccessWalletLayout' });
+      store.dispatch('setLastPath', to.path);
+      next({ name: 'AccessWallet' });
     } else {
       if (store.state.path !== '') {
         const localPath = store.state.path;
-        // store.dispatch('setLastPath', '');
+        store.dispatch('setLastPath', '');
         next({ path: localPath });
       } else {
         next();

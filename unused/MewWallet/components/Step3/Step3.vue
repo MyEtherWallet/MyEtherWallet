@@ -12,7 +12,7 @@
           class="mr-3"
           button-size="xlarge"
           title="Back"
-          :to="{ name: 'HomeCreateWalletMewWallet', query: { step: '2' } }"
+          :to="{ name: 'CreateWalletMewWallet', query: { step: '2' } }"
         />
         <mew-button button-size="xlarge" title="Scan & Access" />
       </div>
