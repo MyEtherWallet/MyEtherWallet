@@ -1,12 +1,19 @@
 <template>
   <div class="mew-component-fix--unstoppable-domain">
-    <div>
-      <unstoppable-domain-buy-overlay
-        :open="buyOverlay"
-        :close="closeBuyOverlay"
-      />
-      <div class="cursor--pointer font-weight-bold" @click="buyOverlay = true">
+    <div class="d-flex align-center">
+      <buy-overlay :open="buyOverlay" :close="closeBuyOverlay" />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="buyOverlay = true"
+      >
         Buy Domain Overlay
+      </div>
+      <add-owned-domain-overlay :open="addOverlay" :close="closeAddOverlay" />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="addOverlay = true"
+      >
+        Add Owned Domain
       </div>
     </div>
     <mew6-white-sheet>
@@ -309,13 +316,15 @@
 <script>
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import domainBtn from '@/modules/wallets/components/domain-btn/DomainBtn';
-import unstoppableDomainBuyOverlay from '@/modules/wallets/components/unstoppable-domain-buy-overlay/UnstoppableDomainBuyOverlay';
+import buyOverlay from '@/modules/wallets/components/unstoppable-domain-buy-overlay/UnstoppableDomainBuyOverlay';
+import addOwnedDomainOverlay from '@/modules/wallets/components/unstoppable-add-owned-domain-overlay/UnstoppableAddOwnedDomainOverlay';
 
 export default {
-  components: { domainBtn, unstoppableDomainBuyOverlay },
+  components: { domainBtn, buyOverlay, addOwnedDomainOverlay },
   data() {
     return {
       buyOverlay: false,
+      addOverlay: false,
       tabs: [{ name: 'Buy domain' }, { name: 'Manage domain' }],
       domainFunctions: [
         { label: 'Transfer Domain' },
@@ -382,6 +391,9 @@ export default {
   methods: {
     closeBuyOverlay() {
       this.buyOverlay = false;
+    },
+    closeAddOverlay() {
+      this.addOverlay = false;
     }
   }
 };
