@@ -1,26 +1,56 @@
 import NFT from '../index';
+import API from '../src/api';
+import configs from '../src/config';
+const address = '0x43689531907482bee7e650d18411e284a7337a66';
+const contractAddress = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
 const nft = new NFT({
-  address: '0x7676E10eefc7311970A12387518442136ea14D81'
+  address
 });
-describe('Ethereum Name Resolver', () => {
-  beforeAll(done => {
-    nft.init().then(() => {
+describe('NFT Module', () => {
+  describe('NFT API Module', () => {
+    let api;
+    beforeAll(() => {
+      api = new API({ address: address, url: configs.url });
+    });
+    test('it should get owned contract tokens and counts', done => {
+      api.getTokens().then(res => {
+        console.log(res); // todo remove dev item
+        expect(res).toEqual(expect.anything());
+        done();
+      });
+    });
+    test('it should get tokens ids owned by contract', done => {
+      const params = {
+        address: address,
+        contractAddresses: [contractAddress]
+      };
+      api.getNftDetailsApi(contractAddress, params).then(res => {
+        console.log(res); // todo remove dev item
+        expect(res).toEqual(expect.anything());
+        done();
+      });
+    }, 10000);
+  });
+  describe('NFT Core Module', () => {
+    beforeAll(done => {
+      nft.init(contractAddress).then(() => {
+        done();
+      });
+    });
+    test('it should get nfts to show', done => {
+      console.log(nft); // todo remove dev item
+      nft.setSelectedContract(contractAddress);
+      const res = nft.selectNftsToShow();
+      console.log(res); // todo remove dev item
+      expect(res).toEqual(expect.anything());
       done();
     });
+    test('it should get next set of nfts to show', done => {
+      nft.incrementPage().then(res => {
+        console.log(res); // todo remove dev item
+        expect(res).toEqual(expect.anything());
+        done();
+      });
+    }, 10000);
   });
-  test('it should ens name: myetherwallet.eth', () => {
-    const res = nft.selectNftsToShow();
-    console.log(res); // todo remove dev item
-    expect(res).toEqual(expect.anything());
-  });
-  // test('it should cns name: myetherwallet.crypto', () => {
-  //   return nameResolver.resolveName('myetherwallet.crypto').then(addr => {
-  //     expect(addr).toBe('0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D');
-  //   });
-  // });
-  // test('it should cns name: cofounding.zil', () => {
-  //   return nameResolver.resolveName('cofounding.zil').then(addr => {
-  //     expect(addr).toBe('0xaA91734f90795e80751C96e682A321bB3C1A4186');
-  //   });
-  // });
 });
