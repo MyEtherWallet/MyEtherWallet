@@ -40,6 +40,35 @@
               btn-style="outline"
             />
           </div>
+          <div class="pa-5">
+            <table>
+              <tbody>
+                <tr>
+                  <td>Parent</td>
+                  <td>ETH</td>
+                </tr>
+                <tr>
+                  <td>Registrant</td>
+                  <td>0xf55914186a692a3335fF44ae107FA724b1074dDC</td>
+                </tr>
+                <tr>
+                  <td>Controller</td>
+                  <td>0x0fF6ffcFDa92c53F615a4A75D982f399C989366b</td>
+                </tr>
+                <tr>
+                  <td>Expiration date</td>
+                  <td class="d-flex align-center">
+                    03/12/2020 @ 20:30:12
+                    <badge
+                      class="ml-2"
+                      badge-title="Expired"
+                      badge-type="error"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </mew6-white-sheet>
       </div>
     </template>
@@ -67,5 +96,18 @@ export default {
 <style lang="scss" scoped>
 .check-icon {
   font-size: 65px !important;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--v-inputBorder-base);
+      td {
+        padding: 20px;
+      }
+    }
+  }
 }
 </style>
