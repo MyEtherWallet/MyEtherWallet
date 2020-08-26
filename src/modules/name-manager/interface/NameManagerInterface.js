@@ -186,13 +186,17 @@ export default class NameManagerInterface {
     });
 
     try {
-      await this._setRegisrar()
-        .then(this._setPublicResolverAddress)
-        .then(this._setContracts)
-        .then(this._setOwner)
-        .then(this._setContentHash)
-        .then(this._setMulticoins)
-        .then(this._setRecords);
+      const promises = await Promise.all([
+        this._setRegisrar,
+        this._setPublicResolverAddress,
+        this._setContracts,
+        this._setOwner,
+        this._setContentHash,
+        this._setMulticoins,
+        this._setRecords
+      ]);
+
+      return promises;
     } catch (e) {
       throw new Error(e);
     }
