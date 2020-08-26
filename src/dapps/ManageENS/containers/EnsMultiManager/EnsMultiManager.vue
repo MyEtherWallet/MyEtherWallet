@@ -22,25 +22,12 @@
         <p>{{ name.expiration }}</p>
         <button
           v-show="name.name.indexOf('0x') !== 0"
-          :class="[
-            'action-button',
-            name.gracePeriod && !name.expired
-              ? 'renew-class'
-              : name.expired && !name.gracePeriod
-              ? 'expired-class'
-              : ''
-          ]"
+          :class="['action-button', nameTextAndClassValue(name).class]"
           @click="
             methodCall(`${name.name}.${network.type.ens.registrarTLD}`, name)
           "
         >
-          {{
-            name.gracePeriod && !name.expired
-              ? $t('ens.renew')
-              : name.expired && !name.gracePeriod
-              ? $t('ens.expired')
-              : $t('ens.manage')
-          }}
+          {{ nameTextAndClassValue(name).text }}
         </button>
       </div>
     </div>
@@ -87,6 +74,23 @@ export default {
     nameFetch.then(this.setExpiry);
   },
   methods: {
+    nameTextAndClassValue(obj) {
+      if (obj.gracePeriod && !obj.expired) {
+        return {
+          text: this.$t('ens.renew'),
+          class: 'renew-class'
+        };
+      } else if (obj.expired && !obj.gracePeriod) {
+        return {
+          text: this.$t('ens.register'),
+          class: 'expired-class'
+        };
+      }
+      return {
+        text: this.$t('ens.manage'),
+        class: ''
+      };
+    },
     setExpiry(param) {
       const names = param.hasOwnProperty(ENS_CURRENT_ADDRESS)
         ? param[ENS_CURRENT_ADDRESS].tokens
@@ -114,15 +118,17 @@ export default {
             const expiryDate = item * 1000;
             const gracePeriod = new Date(expiryDate);
             gracePeriod.setDate(gracePeriod.getDate() + 90);
-            const isInGracePeriod = expiryDate < new Date().getTime();
+            const isInGracePeriod = gracePeriod > new Date().getTime();
             const isExpired = gracePeriod.getTime() < new Date().getTime();
             const expiryDateFormat = new Date(expiryDate);
-            names[idx].gracePeriod = isInGracePeriod;
+            names[idx].gracePeriod = isExpired ? isInGracePeriod : isExpired;
             names[idx].expired = isExpired;
             names[idx].expireDateValue = expiryDateFormat;
             names[
               idx
             ].expiration = `${expiryDateFormat.toLocaleDateString()} ${expiryDateFormat.toLocaleTimeString()}`;
+
+            console.log(names[idx]);
           });
           const sortedNames = names.slice().sort((a, b) => {
             return a.expireDateValue - b.expireDateValue;
