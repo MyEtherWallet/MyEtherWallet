@@ -20,7 +20,7 @@
             />
           </div>
         </v-sheet>
-        <mew6-white-sheet class="pa-2">
+        <mew6-white-sheet class="pa-3">
           <div
             class="d-flex align-center justify-space-between informationBlock pa-6 border-radius--10px"
           >
@@ -35,7 +35,7 @@
             </div>
             <mew-button
               :has-full-width="false"
-              button-size="xlarge"
+              button-size="large"
               title="Add to list"
               btn-style="outline"
             />
@@ -49,11 +49,27 @@
                 </tr>
                 <tr>
                   <td>Registrant</td>
-                  <td>0xf55914186a692a3335fF44ae107FA724b1074dDC</td>
+                  <td class="d-flex align-center">
+                    <Blockie height="30px" width="30px" class="mr-2" />
+                    <div class="mr-2">
+                      0xf55914186a692a3335fF44ae107FA724b1074dDC
+                    </div>
+                    <copy-btn
+                      text="0xf55914186a692a3335fF44ae107FA724b1074dDC"
+                    />
+                  </td>
                 </tr>
                 <tr>
                   <td>Controller</td>
-                  <td>0x0fF6ffcFDa92c53F615a4A75D982f399C989366b</td>
+                  <td class="d-flex align-center">
+                    <Blockie height="30px" width="30px" class="mr-2" />
+                    <div class="mr-2">
+                      0xf55914186a692a3335fF44ae107FA724b1074dDC
+                    </div>
+                    <copy-btn
+                      text="0xf55914186a692a3335fF44ae107FA724b1074dDC"
+                    />
+                  </td>
                 </tr>
                 <tr>
                   <td>Expiration date</td>
@@ -76,8 +92,10 @@
 </template>
 
 <script>
+import copyBtn from '@/components/copy-btn/CopyBtn';
+
 export default {
-  components: {},
+  components: { copyBtn },
   props: {
     open: { default: false, type: Boolean },
     close: {
