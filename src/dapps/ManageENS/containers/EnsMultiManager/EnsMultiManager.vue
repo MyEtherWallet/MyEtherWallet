@@ -127,8 +127,6 @@ export default {
             names[
               idx
             ].expiration = `${expiryDateFormat.toLocaleDateString()} ${expiryDateFormat.toLocaleTimeString()}`;
-
-            console.log(names[idx]);
           });
           const sortedNames = names.slice().sort((a, b) => {
             return a.expireDateValue - b.expireDateValue;
