@@ -1,3 +1,9 @@
+### Release v5.7.7
+
+### Bug
+
+- Allow users to renew expired ENS names [#2552](https://github.com/MyEtherWallet/MyEtherWallet/pull/2552)
+
 ### Release v5.7.6
 
 ### Bug
