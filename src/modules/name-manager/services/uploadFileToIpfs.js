@@ -1,39 +1,33 @@
 export default file => {
-  return new Promise((resolve, reject) => {
-    const formData = new FormData();
-    try {
-      const content = fetch('https://swap.mewapi.io/ipfs', {
-        headers: {
-          'Content-Type': 'application/json'
-        },
+  const formData = new FormData();
+  return fetch('https://swap.mewapi.io/ipfs', {
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    body: JSON.stringify({
+      method: 'getUploadUrl'
+    })
+  })
+    .then(response => {
+      return response.json();
+    })
+    .then(res => {
+      for (const key in res.body.fields) {
+        formData.append(key, res.body.fields[key]);
+      }
+      formData.append('file', file);
+      fetch(res.body.signedUrl, {
         method: 'POST',
-        body: JSON.stringify({
-          method: 'getUploadUrl'
-        })
-      }).then(response => {
-        return response.json();
-      });
-
-      content.then(response => {
-        for (const key in response.body.fields) {
-          formData.append(key, response.body.fields[key]);
+        headers: {
+          'Content-Length': file.size
+        },
+        body: formData
+      }).then(res => {
+        if (!res.ok) {
+          return new Error('File upload Error');
         }
-        formData.append('file', file);
-        fetch(content.body.signedUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Length': file.size
-          },
-          body: formData
-        }).then(response => {
-          if (!response.ok) {
-            return reject(new Error('File upload Error'));
-          }
-          return resolve(response.body.hashResponse);
-        });
+        return res.body.hashResponse;
       });
-    } catch (e) {
-      reject(e);
-    }
-  });
+    });
 };
