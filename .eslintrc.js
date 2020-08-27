@@ -2,7 +2,6 @@ module.exports = {
   globals: {
     VERSION: 'readonly',
     ROUTER_MODE: 'readonly',
-    BUILD_TYPE: 'readonly',
     NODE_ENV: 'readonly'
   },
   root: true,
