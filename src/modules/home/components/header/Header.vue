@@ -1,7 +1,7 @@
 <template>
   <div class="expandHeader py-5">
     <v-container class="d-flex align-center">
-      <router-link :to="{ name: 'Home', query: {} }">
+      <router-link :to="{ name: 'Home' }">
         <v-img src="@/assets/images/icons/logo-mew.png" max-width="130" />
       </router-link>
       <v-spacer></v-spacer>
