@@ -2,12 +2,15 @@ import configs from './config';
 
 export default class NftCollection {
   constructor(props) {
+    this.tokenSetUpdateHook = props.tokenSetUpdateHook;
     const details = props.details;
     this.address = props.address;
+    this.name = details.name;
+    this.symbol = details.symbol;
     this.api = props.api;
     this.contracts = details.contracts;
     this.contract = details.contractIdAddress;
-    this.currentPage = 0;
+    this.currentPage = 1;
     this.countPerPage = configs.countPerPage;
     this.selectedContract = details.contractIdAddress;
     this.nftConfig = props.details;
@@ -19,11 +22,26 @@ export default class NftCollection {
     this.loadedTo = 0;
     this.initialSetRetrieved = false;
     this.tokens = details.tokens;
+    this.nftToShowList = [];
     // this.getNftDetails();
   }
 
   getRetrievedCount() {
     return this.tokens.length;
+  }
+
+  getTokens() {
+    return this.tokens;
+  }
+
+  getPageState() {
+    console.log(this.tokens.length); // todo remove dev item
+    return {
+      name: this.name,
+      currentPage: this.currentPage,
+      totalTokens: this.count,
+      tokens: this.selectNftsToShow()
+    };
   }
 
   selectNftsToShow() {
@@ -71,7 +89,6 @@ export default class NftCollection {
     };
 
     return await this.api.getNftDetailsApi(contract, params).then(data => {
-      console.log('DATA', data); // todo remove dev item
       let allTokens = [];
       if (!this.initialSetRetrieved) {
         this.initialSetRetrieved = true;
@@ -82,7 +99,6 @@ export default class NftCollection {
       allTokens = data.tokens.map(tokenParse);
 
       if (!preFetch) this.fetchingOwnedTokens = false;
-      console.log('current count:', this.tokens.length); // todo remove dev item
       this.tokens = allTokens;
 
       return allTokens;
@@ -92,6 +108,7 @@ export default class NftCollection {
   async getNftsToShow() {
     this.nftToShowList = this.selectNftsToShow();
   }
+
   incrementTokenList() {
     if (this.tokens.length >= this.count) {
       return this.selectNftsToShow();
@@ -105,9 +122,11 @@ export default class NftCollection {
     const selectedContract = this.selectedContract;
     return this.getNftDetails(selectedContract, startIndex, endIndex).then(
       result => {
+        this.startIndex = startIndex;
+        this.endIndex = endIndex;
         this.tokens = result;
         this.collectionLoading = false;
-        return this.selectNftsToShow();
+        return this.getPageState();
       }
     );
   }
@@ -116,17 +135,18 @@ export default class NftCollection {
     return new Promise(resolve => {
       this.getNftsToShow();
       this.currentPage++;
-      if (this.tokens.length < this.currentPage * this.countPerPage) {
+      if (this.tokens.length <= this.currentPage * this.countPerPage) {
         this.collectionLoading = true;
         return resolve(this.incrementTokenList());
       }
-      return resolve(this.nftToShowList);
+      return resolve(this.getPageState());
     });
   }
 
   getPrevious() {
     if (this.currentPage >= 1) {
       this.currentPage--;
+      return this.getPageState();
     }
   }
 }
