@@ -7,7 +7,7 @@
       <h5 class="white--text ma-0">
         Already have a wallet?
         <router-link
-          :to="{ name: 'AccessWallet', query: {} }"
+          :to="{ name: 'AccessWallet' }"
           class="text-decoration--underline"
         >
           Access my wallet

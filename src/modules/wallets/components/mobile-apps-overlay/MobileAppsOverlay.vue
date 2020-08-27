@@ -55,13 +55,13 @@ export default {
           label: 'WalletConnet',
           description: 'Connect wallet with Walletconnet',
           icon: require('@/assets/images/icons/icon-wallet-connect.svg'),
-          to: { name: 'AccessWalletBrowserExtensionInstall', query: {} }
+          to: { name: 'AccessWalletBrowserExtensionInstall' }
         },
         {
           label: 'Wallet Link',
           description: 'Connect wallet with Wallet Link ',
           icon: require('@/assets/images/icons/icon-wallet-link.png'),
-          to: { name: 'AccessWalletBrowserExtensionInstall', query: {} }
+          to: { name: 'AccessWalletBrowserExtensionInstall' }
         }
       ]
     };

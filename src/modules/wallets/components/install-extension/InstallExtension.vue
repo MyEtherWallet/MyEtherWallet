@@ -19,7 +19,7 @@
         />
         <h5 class="mt-7 font-weight-bold">Install MEW chrome Extension</h5>
         <router-link
-          :to="{ name: 'AccessWalletBrowserExtensionAccess', query: {} }"
+          :to="{ name: 'AccessWalletBrowserExtensionAccess' }"
         >
           <mew-button button-size="xlarge" title="Install" class="mt-7" />
         </router-link>

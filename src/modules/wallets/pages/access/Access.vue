@@ -7,7 +7,7 @@
       <h5 class="white--text ma-0">
         Don't have a wallet?
         <router-link
-          :to="{ name: 'CreateWallet', query: {} }"
+          :to="{ name: 'CreateWallet' }"
           class="text-color--mew-green"
         >
           Get a new wallet

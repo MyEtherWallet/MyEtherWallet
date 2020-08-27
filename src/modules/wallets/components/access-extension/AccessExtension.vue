@@ -32,7 +32,7 @@
         <mew-checkbox label="I agree MEW browser Extension user Terms." />
 
         <router-link
-          :to="{ name: 'AccessWalletBrowserExtensionAccess', query: {} }"
+          :to="{ name: 'AccessWalletBrowserExtensionAccess' }"
           class="display--block"
         >
           <mew-button title="Access my wallet" button-size="xlarge" />
