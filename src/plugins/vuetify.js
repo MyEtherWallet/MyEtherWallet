@@ -26,6 +26,7 @@ import Vuetify, {
   VBottomSheet,
   VToolbar,
   VTextField,
+  VTextarea,
   VLayout,
   VSelect,
   VCombobox,
@@ -58,7 +59,8 @@ import Vuetify, {
   VOverlay,
   VThemeProvider,
   VRadio,
-  VRadioGroup
+  VRadioGroup,
+  VProgressLinear
 } from 'vuetify/lib';
 import 'vuetify/dist/vuetify.min.css';
 
@@ -90,6 +92,7 @@ Vue.use(Vuetify, {
     VBottomSheet,
     VToolbar,
     VTextField,
+    VTextarea,
     VLayout,
     VSelect,
     VCombobox,
@@ -122,7 +125,8 @@ Vue.use(Vuetify, {
     VOverlay,
     VThemeProvider,
     VRadio,
-    VRadioGroup
+    VRadioGroup,
+    VProgressLinear
   }
 });
 
@@ -167,7 +171,7 @@ export default new Vuetify({
         searchInput: '#f2f4fa',
         searchText: '#96a8b6',
         titlePrimary: '#0b2840',
-        textPrimary: '#667f9b',
+        textPrimary: '#a3b7cf',
         textPrimaryModule: '#667f9b',
         white: '#fff',
         black: '#000',
@@ -190,7 +194,8 @@ export default new Vuetify({
           darken2: '#ff7700'
         },
         disabled: '#cecece',
-        tableHeader: '#f9f9f9'
+        tableHeader: '#f9f9f9',
+        informationBlock: '#f9f9f9'
       },
       dark: {
         primaryHover: '#1eb19b',
@@ -249,7 +254,8 @@ export default new Vuetify({
           darken1: '#f5a623'
         },
         disabled: '#1f2b42',
-        tableHeader: '#0f1320'
+        tableHeader: '#0f1320',
+        informationBlock: '#0f1320'
       }
     }
   }

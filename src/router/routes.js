@@ -1,10 +1,9 @@
-import HomePage from '@/modules/home/Home';
+import Home from '@/modules/home/Home';
 import CompanyPage from '@/modules/company/Company';
 import TeamPage from '@/modules/team/Team';
 import BuyHardwareWallet from '@/modules/hardware/Hardware';
 import ToolsPage from '@/modules/tools/Tools';
-
-import Navigation from '@/modules/home/pages/navigation/Navigation';
+import LandingPage from '@/modules/home/pages/landing-page/LandingPage';
 
 import CreateWallet from '@/modules/wallets/pages/create/CreateWallet';
 
@@ -23,7 +22,7 @@ import WalletRoutes from '@/modules/wallets/routes.js';
 const routes = [
   {
     path: '/',
-    component: Navigation,
+    component: Home,
     meta: {
       requiresAuth: false
     },
@@ -31,7 +30,7 @@ const routes = [
       {
         path: '',
         name: 'Home',
-        component: HomePage
+        component: LandingPage
       },
       {
         path: 'how-it-works',
@@ -40,7 +39,7 @@ const routes = [
       },
       {
         path: 'tools',
-        name: 'tools',
+        name: 'Tools',
         component: ToolsPage
       },
       {
@@ -49,23 +48,23 @@ const routes = [
         component: BuyHardwareWallet
       },
       {
-        path: 'about-us/company',
+        path: 'company',
         name: 'CompanyPage',
         component: CompanyPage
       },
       {
-        path: 'about-us/team',
+        path: 'team',
         name: 'TeamPage',
         component: TeamPage
       },
       {
         path: 'create-wallet',
-        name: 'HomeCreateWallet',
+        name: 'CreateWallet',
         component: CreateWallet
       },
       {
         path: 'access-wallet',
-        name: 'HomeAccessWallet',
+        name: 'AccessWallet',
         component: AccessWalletView
       },
       {
@@ -74,17 +73,17 @@ const routes = [
         component: AccessWalletHardwareWallets
       },
       {
-        path: 'access-wallet/browser-Extension',
+        path: 'access-wallet/browser-extension',
         name: 'AccessWalletBrowserExtension',
         component: AccessWalletBrowserExtension
       },
       {
-        path: 'access-wallet/browser-Extension/install',
+        path: 'access-wallet/browser-extension/install',
         name: 'AccessWalletBrowserExtensionInstall',
         component: AccessWalletBrowserExtensionInstall
       },
       {
-        path: 'access-wallet/browser-Extension/access',
+        path: 'access-wallet/browser-extension/access',
         name: 'AccessWalletBrowserExtensionAccess',
         component: AccessWalletBrowserExtensionAccess
       },

@@ -25,14 +25,18 @@
                 :has-full-width="false"
                 title="Create a new wallet"
                 button-size="xlarge"
-                @click.native="goTo('HomeCreateWallet')"
+                @click.native="
+                  $router.push({ name: 'CreateWallet', params: {} })
+                "
               />
               <mew-button
                 :has-full-width="false"
                 btn-style="outline"
                 title="Access my wallet"
                 button-size="xlarge"
-                @click.native="goTo('HomeAccessWallet')"
+                @click.native="
+                  $router.push({ name: 'AccessWallet', params: {} })
+                "
               />
             </div>
           </v-card>
@@ -46,13 +50,7 @@
 export default {
   name: 'HomeContainer',
   components: {},
-  methods: {
-    goTo(param) {
-      this.$router.push({
-        name: param
-      });
-    }
-  }
+  methods: {}
 };
 </script>
 
@@ -67,6 +65,7 @@ export default {
   left: 0;
   right: 0;
   margin: 0 auto;
+  z-index: 1;
 }
 .banner-top-title {
   line-height: 55px !important;

@@ -3,12 +3,16 @@
     ref="menu"
     class="mew-component--accordion-menu-container user-select--none"
   >
-    <div v-for="(mainItems, mainKey) in menuItems" :key="mainKey">
+    <div
+      v-for="(mainItems, mainKey) in menuItems"
+      :key="mainKey"
+      class="inactive mb-1"
+    >
       <!-- Main menus ======================================== -->
       <div
-        :ref="getMenuRef('main' + mainItems.url)"
+        :ref="'main' + mainItems.routeName"
         class="main-menu cursor--pointer d-flex align-center px-3 py-2"
-        @click="routerPush(mainItems.url)"
+        @click="routerPush(mainItems.routeName)"
       >
         <img
           class="dark mr-3"
@@ -36,9 +40,9 @@
         <div
           v-for="(subItems, subKey) in mainItems.children"
           :key="subKey"
-          :ref="getMenuRef(subItems.url)"
+          :ref="subItems.routeName"
           class="cursor--pointer pl-12 pr-3 py-1"
-          @click="routerPush(subItems.url)"
+          @click="routerPush(subItems.routeName)"
         >
           <span class="pl-2">{{ subItems.name }}</span>
         </div>
@@ -74,25 +78,25 @@ export default {
           name: 'Dashboard',
           iconDark: DashboardDark,
           iconLight: DashboardLight,
-          url: '/wallet/dashboard'
+          routeName: 'Dashboard'
         },
         {
           name: 'Send',
           iconDark: SendDark,
           iconLight: SendLight,
-          url: '/wallet/send/sendtx',
+          routeName: 'SendTX',
           children: [
             {
               name: 'Send Transaction',
-              url: '/wallet/send/sendtx'
+              routeName: 'SendTX'
             },
             {
               name: 'Send Offline',
-              url: '/wallet/send/send-offline'
+              routeName: 'SendOffline'
             },
             {
               name: 'NFT Manager',
-              url: '/wallet/send/nft-manager'
+              routeName: 'NFTManager'
             }
           ]
         },
@@ -100,37 +104,37 @@ export default {
           name: 'Swap',
           iconDark: SwapDark,
           iconLight: SwapLight,
-          url: '/wallet/swap'
+          routeName: 'Swap'
         },
         {
           name: 'Dapps',
           iconDark: DappCenterDark,
           iconLight: DappCenterLight,
-          url: '/wallet/dapps/dapps-center',
+          routeName: 'DappsCenter',
           children: [
             {
               name: 'Dapps Center',
-              url: '/wallet/dapps/dapps-center'
+              routeName: 'DappsCenter'
             },
             {
               name: 'ENS manager',
-              url: '/wallet/dapps/ens-manager'
+              routeName: 'NameManager'
             },
             {
               name: 'MakerDAO',
-              url: '/wallet/dapps/maker-dao'
+              routeName: 'MakerDAO'
             },
             {
               name: 'Aave',
-              url: '/wallet/dapps/aave'
+              routeName: 'Aave'
             },
             {
               name: 'Ambrpay',
-              url: '/wallet/dapps/ambrpay'
+              routeName: 'Ambrpay'
             },
             {
               name: 'Unstoppable Domain',
-              url: '/wallet/dapps/unstoppable-domain'
+              routeName: 'UnstoppableDomain'
             }
           ]
         },
@@ -138,15 +142,15 @@ export default {
           name: 'Contract',
           iconDark: ContractDark,
           iconLight: ContractLight,
-          url: '/wallet/contract/interact',
+          routeName: 'InteractWithContract',
           children: [
             {
               name: 'Interact with contract',
-              url: '/wallet/contract/interact'
+              routeName: 'InteractWithContract'
             },
             {
               name: 'Deploy contract',
-              url: '/wallet/contract/deploy'
+              routeName: 'DeployContract'
             }
           ]
         },
@@ -154,7 +158,7 @@ export default {
           name: 'Sign Message',
           iconDark: SignMessageDark,
           iconLight: SignMessageLight,
-          url: '/wallet/sign'
+          routeName: 'SignMessage'
         }
       ]
     };
@@ -177,22 +181,21 @@ export default {
     markActiveMenu() {
       this.removeActiveClasses();
 
-      const menuItemRef = this.getMenuRef(this.$route.path);
+      const menuItemRef = this.$route.name;
 
       if (this.$refs[menuItemRef]) {
+        // Mark active main menu and submenu
         this.$refs[menuItemRef][0].classList.add('active');
         this.$refs[menuItemRef][0].parentNode.parentNode.classList.add(
           'active'
         );
       } else {
+        // If there is no matching submenu, make main menu
         this.$refs['main' + menuItemRef][0].parentNode.classList.add('active');
       }
     },
-    getMenuRef(url) {
-      return url.replace(/[^\w\s]/gi, '_');
-    },
-    routerPush(url) {
-      this.$router.push({ path: url }, () => {});
+    routerPush(routeName) {
+      this.$router.push({ name: routeName, params: {} });
     }
   }
 };
@@ -204,36 +207,36 @@ export default {
   background-color: #0000001f;
 }
 
-.main-menu,
-.sub-menu {
-  * {
-    color: var(--v-searchText-base);
+.inactive {
+  .main-menu,
+  .sub-menu {
+    * {
+      color: var(--v-searchText-base);
+    }
+  }
+
+  .sub-menu {
+    max-height: 0px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    .active * {
+      color: white;
+    }
+  }
+
+  .light {
+    display: none;
   }
 }
+
 .active {
   .main-menu * {
     color: white;
   }
-}
-
-.sub-menu {
-  max-height: 0px;
-  overflow: hidden;
-  transition: all 0.2s ease;
-  .active * {
-    color: white;
+  .sub-menu {
+    max-height: 200px;
   }
-}
 
-.active .sub-menu {
-  max-height: 200px;
-}
-
-.light {
-  display: none;
-}
-
-.active {
   .light {
     display: block;
   }

@@ -5,10 +5,10 @@
         <v-img src="@/assets/images/icons/logo-mew.png" max-width="130" />
       </router-link>
       <v-spacer></v-spacer>
-      <home-menu />
+      <home-menu class="menu-items" />
       <v-spacer></v-spacer>
       <mew-button
-        class="px-2"
+        class="mew-component--mew-tools-button px-2"
         title="MEW tools"
         color-theme="white"
         :has-full-width="false"
@@ -28,28 +28,20 @@ import homeMenu from '../menu/Menu';
 export default {
   name: 'Header',
   components: { homeMenu },
-  data: () => ({
-    menus: [
-      { label: 'How it works', to: '/how-it-works' },
-      {
-        label: 'Company',
-        submenus: [
-          { label: 'About us', to: '/about-us/company' },
-          { label: 'Team', to: '/about-us/team' },
-          { label: 'Support', href: 'https://kb.myetherwallet.com/' },
-          { label: 'Blog', href: 'https://www.mewtopia.com/' }
-        ]
-      },
-      {
-        label: 'Tools',
-        submenus: [
-          { label: 'Watch only address', to: '/about-us/company' },
-          { label: 'Send offline helper', to: '/about-us/team' },
-          { label: 'Verify message', href: 'https://kb.myetherwallet.com/' },
-          { label: 'Convert units', href: 'https://www.mewtopia.com/' }
-        ]
-      }
-    ]
-  })
+  data: () => ({})
 };
 </script>
+
+<style lang="scss" scoped>
+.menu-items {
+  max-width: 500px;
+}
+</style>
+
+<style lang="scss">
+.mew-component--mew-tools-button {
+  //padding: 20px !important;
+  height: 50px !important;
+  width: 140px !important;
+}
+</style>

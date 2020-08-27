@@ -1,52 +1,70 @@
 <template>
-  <div class="full-width menu-container d-flex align-center">
+  <div class="d-flex align-center">
     <router-link
       class="white--text text-decoration--none"
       :to="{ name: 'HowItWorks', params: {} }"
     >
       How it works
     </router-link>
-    <mew-menu text-color="white--text" :list-obj="mewMenuCompany" />
-    <mew-menu text-color="white--text" :list-obj="mewMenuTools" />
+    <mew-menu
+      v-if="false"
+      text-color="white--text"
+      :list-obj="mewMenuCompany"
+    />
+    <div class="mx-8" />
+    <temporary-menu />
+    <div class="mx-8" />
+    <a
+      href="https://ccswap.myetherwallet.com/#/"
+      target="_blank"
+      class="white--text text-decoration--none"
+    >
+      Buy ETH
+    </a>
   </div>
 </template>
 
 <script>
+import temporaryMenu from './TemporaryMenu';
 export default {
   name: 'Menu',
+  components: { temporaryMenu },
   data: () => ({
     menuResetKey: 1,
     mewMenuCompany: {
-      name: 'Company',
+      name: 'Wallet actions',
       items: [
         {
-          title: 'About us'
+          title: 'Send transction',
+          to: '/wallet/dashboard'
         },
         {
-          title: 'Team'
+          title: 'Explore Dapps',
+          to: '/wallet/dashboard'
         },
         {
-          title: 'Support'
+          title: 'Swap Tokens',
+          to: '/wallet/dashboard'
         },
         {
-          title: 'Blog'
-        }
-      ]
-    },
-    mewMenuTools: {
-      name: 'Tools',
-      items: [
-        {
-          title: 'Watch only address'
+          title: 'Sign message',
+          to: '/wallet/dashboard'
         },
         {
-          title: 'Send offline helper'
+          title: 'Watch only address',
+          to: '/tools'
         },
         {
-          title: 'Verify message'
+          title: 'Send offline helper',
+          to: '/tools'
         },
         {
-          title: 'Convert units'
+          title: 'Verify message',
+          to: '/tools'
+        },
+        {
+          title: 'Convert units',
+          to: '/tools'
         }
       ]
     }
@@ -54,9 +72,3 @@ export default {
   methods: {}
 };
 </script>
-
-<style lang="scss" scoped>
-.menu-container {
-  justify-content: space-evenly;
-}
-</style>

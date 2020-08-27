@@ -1,15 +1,15 @@
 <template>
-  <v-theme-provider root>
-    <v-sheet
-      class="border-radius--10px box-shadow"
-      :class="[
-        sideinfo ? 'sideinfo' : '',
-        overflowHidden ? 'overflow--hidden' : ''
-      ]"
-    >
-      <slot />
-    </v-sheet>
-  </v-theme-provider>
+  <v-sheet
+    color="mewBg"
+    class="mew-component--white-sheet border-radius--10px"
+    :class="[
+      sideinfo ? 'sideinfo' : '',
+      overflowHidden ? 'overflow--hidden' : '',
+      $vuetify.theme.dark ? 'box-shadow-dark' : 'box-shadow-light'
+    ]"
+  >
+    <slot />
+  </v-sheet>
 </template>
 
 <script>
@@ -28,13 +28,10 @@ export default {
 </style>
 
 <style lang="scss">
-/* Set light theme box-shadow for white sheet */
-#app.theme--light .box-shadow {
-  box-shadow: 0 0 15px var(--v-box-shadow-base);
+.mew-component--white-sheet.box-shadow-light {
+  box-shadow: 0 0 15px var(--v-boxShadow-base) !important;
 }
-
-/* Set dark theme box-shadow for white sheet */
-#app.theme--dark .box-shadow {
-  box-shadow: 0 0 15px #3c3c3c;
+.mew-component--white-sheet.box-shadow-dark {
+  box-shadow: 0 0 15px #3c3c3c !important;
 }
 </style>

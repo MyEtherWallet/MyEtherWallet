@@ -1,6 +1,6 @@
 <template>
   <mew-overlay :show-overlay="open" title="Network" right-btn-text="Close">
-    <template v-slot:mewComponent>
+    <template v-slot:mewOverlayBody>
       <mew-tabs :items="tabs" is-block>
         <template v-slot:tabContent1>
           <mew6-white-sheet>

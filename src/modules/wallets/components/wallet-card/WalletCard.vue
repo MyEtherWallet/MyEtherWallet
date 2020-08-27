@@ -3,7 +3,7 @@
     <div class="background-image">
       <img src="@/assets/images/snippets/wallet-card.png" />
     </div>
-    <div class="info-container px-4 py-5">
+    <div class="info-container px-4 pt-5 pb-3">
       <div class="d-flex">
         <div class="blockie-img">
           <blockie
@@ -22,22 +22,39 @@
           </qr-code-popup>
         </div>
         <div class="ml-4">
-          <div class="mb-n2 mt-n2 font-weight-medium d-flex align-center">
-            <div>Dennis wallet</div>
+          <div class="font-weight-medium d-flex align-center">
+            <div>MY ACCOUNT VALUE</div>
           </div>
           <div class="headline font-weight-bold monospace">$7,244.58</div>
         </div>
       </div>
-      <div class="component--address d-flex align-center mt-1 mb-2">
+      <div class="component--address d-flex align-center mt-1">
         <div class="monospace full-address">{{ address }}</div>
         <div class="monospace last-four">{{ lastFour }}</div>
       </div>
+      <div class="mb-2">OWNED 3 DOMAINS ></div>
       <div class="d-flex align-center">
+        <div class="bottom-buttons">
+          <mew-button
+            button-size="small"
+            color-theme="white"
+            btn-style="transparent"
+            icon="mdi-printer"
+            icon-type="mdi"
+          ></mew-button>
+          <mew-button
+            button-size="small"
+            color-theme="white"
+            btn-style="transparent"
+            icon="mdi-file-document-outline"
+            icon-type="mdi"
+          ></mew-button>
+        </div>
         <mew-button
-          class="ml-auto"
+          class="ml-auto switch-button"
           :has-full-width="false"
           btn-style="outline"
-          title="Switch >"
+          title="SWITCH >"
           color-theme="white"
           button-size="small"
           @click.native="openChangeAddress = true"
@@ -96,7 +113,9 @@ export default {
   top: 0;
   left: 0;
   z-index: 0;
+  height: 100%;
   img {
+    height: 100%;
     width: 100%;
   }
 }
@@ -136,5 +155,24 @@ export default {
 
 .last-four {
   margin-left: -4px;
+}
+</style>
+
+<style lang="scss">
+.component--wallet-card {
+  .bottom-buttons {
+    .v-btn {
+      padding: 0 !important;
+      min-width: 36px !important;
+    }
+  }
+  .switch-button {
+    min-height: 30px !important;
+    height: 30px !important;
+
+    .v-btn__content span {
+      font-size: 12px !important;
+    }
+  }
 }
 </style>

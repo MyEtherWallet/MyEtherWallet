@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mew-component--swap">
     <div class="d-flex">
       <div class="flex-grow-1">
         <mew6-white-sheet>
@@ -97,7 +97,7 @@
               is-toggle
               has-dividers
               :panel-items="exPannel"
-              class="mt-4 mb-10"
+              class="mt-4 mb-10 swap-expend"
             >
               <template v-slot:panelBody1>
                 <mew-input
@@ -206,5 +206,15 @@ export default {
 
 .invert {
   filter: invert(100%);
+}
+</style>
+
+<style lang="scss">
+.mew-component--swap {
+  .swap-expend {
+    .v-application .white {
+      background-color: transparent !important;
+    }
+  }
 }
 </style>

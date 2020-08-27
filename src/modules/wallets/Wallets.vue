@@ -7,8 +7,7 @@
           <wallet-header />
           <router-view />
         </v-container>
-
-        <wallet-footer class="mt-10" />
+        <wallet-footer class="mt-10 box-shadow" />
       </div>
     </div>
   </v-sheet>
@@ -24,6 +23,27 @@ export default {
     walletFooter,
     sideMenu,
     walletHeader
+  },
+  watch: {
+    $route() {
+      this.redirectToDashboard();
+    }
+  },
+  mounted() {
+    this.redirectToDashboard();
+  },
+  methods: {
+    redirectToDashboard() {
+      if (this.$route.name === 'Wallet') {
+        this.$router.push({ name: 'Dashboard', params: {} });
+      }
+    }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.box-shadow {
+  box-shadow: 0 0 15px var(--v-boxShadow-base) !important;
+}
+</style>

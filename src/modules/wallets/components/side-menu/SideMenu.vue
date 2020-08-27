@@ -10,7 +10,7 @@
     </div>
     <wallet-card />
     <mew-button
-      class="buy-eth-button mt-2 mb-6"
+      class="buy-eth-button mt-4 mb-6"
       color-theme="white"
       btn-style="outline"
       title="Buy ETH here"
@@ -56,5 +56,22 @@ export default {
   position: relative;
   width: 300px;
   min-height: 100vh;
+}
+</style>
+
+<style lang="scss">
+.mew-component--sidemenu {
+  .buy-eth-button {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    padding: 0 25px !important;
+    .v-btn__content {
+      display: flex;
+      justify-content: space-between;
+    }
+    img {
+      height: 20px !important;
+    }
+  }
 }
 </style>

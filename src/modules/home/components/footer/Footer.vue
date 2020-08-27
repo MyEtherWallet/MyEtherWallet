@@ -1,5 +1,5 @@
 <template>
-  <div class="titlePrimary--text">
+  <div class="mew-component--home-footer titlePrimary--text">
     <v-container class="pt-12 pb-6">
       <v-row>
         <v-col cols="2">
@@ -105,7 +105,12 @@
         <v-col>
           <div class="subtitle-1 font-weight-bold mb-5 d-flex align-center">
             Love
-            <mew-icon icon-name="love" icon-type="mew" :img-height="30" />
+            <mew-icon
+              class="mx-1"
+              icon-name="love"
+              icon-type="mew"
+              :img-height="30"
+            />
             MEW? Donate!
           </div>
           <p>
@@ -125,7 +130,7 @@
             />
 
             <div>
-              <div>ETH Donation</div>
+              <div class="mb-n2">ETH Donation</div>
               <div class="overline">
                 Address: 0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D
               </div>
@@ -143,7 +148,7 @@
               class="mr-2"
             />
             <div>
-              <div>BTC Donation</div>
+              <div class="mb-n2">BTC Donation</div>
               <div class="overline">
                 Address: 1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9
               </div>
@@ -181,71 +186,83 @@
           </div>
         </div>
         <v-spacer />
-        <div class="social-icons">
+        <div class="social-icons d-flex align-center">
           <a
             v-for="(i, key) in icons"
             :key="key"
             :href="i.link"
             target="_blank"
+            class="ml-4"
           >
-            <mew-button
-              icon-align="left"
-              :icon="i.icon"
-              icon-type="mew"
-              btn-style="transparent"
-              button-size="small"
-            />
+            <mew-icon :img-height="20" :icon-name="i.icon" />
           </a>
         </div>
       </div>
     </v-container>
-    <div id="id-dab581eb596e6225d97b24f9856e3d70">
-      <v-sheet color="titlePrimary" class="py-3">
-        <v-container>
-          <div class="d-flex align-center">
-            <p class="cyan--text text--lighten-3 ma-0">V6.0.0-beta.3</p>
-            <v-spacer />
-            <p class="teal--text text--lighten-1 ma-0">
-              ©2019 MyEtherWallet. All rights reserved. Pricing taken from
-              <a class="cyan--text text--lighten-3" href="/">CoinMarketCap</a>.
-            </p>
-            <v-spacer />
-            <v-sheet width="150" color="transparent">
-              <v-select
-                v-model="select"
-                :items="languages"
-                item-text="name"
-                item-value="value"
-                return-object
-                single-line
-                dark
-              ></v-select>
-            </v-sheet>
-          </div>
-        </v-container>
-      </v-sheet>
-    </div>
+
+    <v-sheet color="titlePrimary" class="py-2">
+      <v-container>
+        <div class="d-flex align-center">
+          <p class="cyan--text text--lighten-3 ma-0">V6.0.0-beta.3</p>
+          <v-spacer />
+          <p class="teal--text text--lighten-1 ma-0">
+            ©2019 MyEtherWallet. All rights reserved. Pricing taken from
+            <a class="cyan--text text--lighten-3" href="/">CoinMarketCap</a>.
+          </p>
+          <v-spacer />
+          <v-sheet width="150" color="transparent">
+            <v-select
+              v-model="select"
+              append-icon="mdi-chevron-down"
+              :items="languages"
+              item-text="name"
+              item-value="value"
+              return-object
+              single-line
+              dark
+            ></v-select>
+          </v-sheet>
+        </div>
+      </v-container>
+    </v-sheet>
   </div>
 </template>
 
 <script>
-import uk from '@/assets/images/flags/uk.png';
-import ru from '@/assets/images/flags/russia.png';
-import kr from '@/assets/images/flags/korea.png';
-import jp from '@/assets/images/flags/japan.png';
-import ge from '@/assets/images/flags/germany.png';
-import ch from '@/assets/images/flags/china.png';
-
 export default {
   data: () => ({
     select: 'en',
     languages: [
-      { name: 'English', value: 'en', flag: uk },
-      { name: 'Russian', value: 'ru', flag: ru },
-      { name: 'Germany', value: 'jp', flag: ge },
-      { name: 'China', value: 'ch', flag: ch },
-      { name: 'Korean', value: 'kr', flag: kr },
-      { name: 'Japanese', value: 'jp', flag: jp }
+      {
+        name: 'English',
+        value: 'en',
+        flag: require('@/assets/images/flags/uk.png')
+      },
+      {
+        name: 'Russian',
+        value: 'ru',
+        flag: require('@/assets/images/flags/russia.png')
+      },
+      {
+        name: 'Germany',
+        value: 'ge',
+        flag: require('@/assets/images/flags/germany.png')
+      },
+      {
+        name: 'China',
+        value: 'ch',
+        flag: require('@/assets/images/flags/china.png')
+      },
+      {
+        name: 'Korean',
+        value: 'kr',
+        flag: require('@/assets/images/flags/korea.png')
+      },
+      {
+        name: 'Japanese',
+        value: 'jp',
+        flag: require('@/assets/images/flags/japan.png')
+      }
     ],
     icons: [
       {
@@ -300,14 +317,10 @@ a {
     line-height: 11px;
   }
 }
-
-.v-avatar img {
-  border-radius: 0;
-}
 </style>
 
 <style lang="scss">
-#id-dab581eb596e6225d97b24f9856e3d70 {
+.mew-component--home-footer {
   .v-select__selection {
     color: #80deea !important;
     width: 100%;
