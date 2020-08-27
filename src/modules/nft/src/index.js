@@ -34,6 +34,7 @@ export default class Nft {
     this.retryCount = 0;
     this.startIndex = 0;
     this.endIndex = 9;
+    this.ownedTokenBasicDetails = [];
 
     this.api = new API({
       url: this.openSeaLambdaUrl,
@@ -50,6 +51,10 @@ export default class Nft {
   //======================================================================
   setSelectedContract(selectedContract) {
     this.selectedContract = selectedContract;
+  }
+
+  getOwnedTokenBasicDetails(){
+  return this.ownedTokenBasicDetails;
   }
 
   async getActiveTokenSet(selectedContract) {
@@ -128,6 +133,11 @@ export default class Nft {
       const configData = await this.api.getTokens();
       if (!configData.error) {
         configData.tokenContracts.forEach(data => {
+          this.ownedTokenBasicDetails.push({
+            name: data.name,
+            count: data.owned_asset_count,
+            contract: data.contractIdAddress
+          });
           nftData[data.contractIdAddress] = new NftCollection({
             details: data,
             api: this.api,

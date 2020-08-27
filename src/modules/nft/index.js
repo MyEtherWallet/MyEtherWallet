@@ -31,14 +31,8 @@ export default class NFT {
     this.loading = false;
   }
 
-  // isReady() {
-  //   return new Promise(resolve => {
-  //     this.readyPromise = resolve;
-  //   });
-  // }
-
   getAvailableContracts() {
-    return this.availableContracts;
+    return this.nft.getOwnedTokenBasicDetails();
   }
 
   async setActiveContract(contractAddress) {
