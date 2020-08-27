@@ -26,6 +26,35 @@
             </div>
           </v-sheet>
         </mew6-white-sheet>
+        <mew6-white-sheet>
+          <v-sheet color="transparent" width="500px" class="pa-8">
+            <div class="d-flex align-center justify-space-between">
+              <div class="font-weight-bold">Available Balance</div>
+              <div class="text-right">
+                <div class="mb-2">
+                  <span class="font-weight-bold">9.11234</span> ETH
+                </div>
+                <div>$2,564.12</div>
+              </div>
+            </div>
+            <v-divider class="mt-4 mb-12" />
+
+            <div class="mb-3 font-weight-medium text-center">
+              <v-icon style="font-size: 10rem;" class="mb-10 primary--text">
+                mdi-check-circle-outline
+              </v-icon>
+              <v-sheet color="transparent" max-width="300px" class="mx-auto">
+                Your subscription fund
+                <span class="primary--text">(1 ETH)</span> will be updated
+                within few minutes.
+              </v-sheet>
+            </div>
+
+            <div class="d-flex justify-center mt-8">
+              <mew-button title="Ok" button-size="xlarge" />
+            </div>
+          </v-sheet>
+        </mew6-white-sheet>
       </div>
     </template>
   </mew-overlay>
