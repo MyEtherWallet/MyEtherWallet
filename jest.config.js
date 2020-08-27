@@ -37,9 +37,11 @@ module.exports = {
   moduleDirectories: ['node_modules'],
   snapshotSerializers: ['jest-serializer-vue'],
   testMatch: [
-    '**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)'
+    '**/tests/unit/**/*.spec.(js|jsx|ts|tsx)',
+    '**/__tests__/*.(js | jsx | ts | tsx)',
+    '**/tests/*.spec.js'
   ],
   testEnvironmentOptions: {},
   testURL: 'http://localhost/',
-  setupTestFrameworkScriptFile: '<rootDir>/tests/unit/__mocks__/mocks.js'
+  setupFilesAfterEnv: ['<rootDir>/tests/unit/__mocks__/mocks.js']
 };

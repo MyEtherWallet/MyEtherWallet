@@ -1,5 +1,31 @@
 <template>
   <div class="mew-component-fix--unstoppable-domain">
+    <div class="d-flex align-center">
+      <buy-overlay :open="buyOverlay" :close="closeBuyOverlay" />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="buyOverlay = true"
+      >
+        Buy Domain Overlay
+      </div>
+      <add-owned-domain-overlay :open="addOverlay" :close="closeAddOverlay" />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="addOverlay = true"
+      >
+        Add Owned Domain
+      </div>
+      <transfer-domain-overlay
+        :open="transferOverlay"
+        :close="closeTransferOverlay"
+      />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="transferOverlay = true"
+      >
+        Transfer Domain
+      </div>
+    </div>
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
@@ -300,11 +326,22 @@
 <script>
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import domainBtn from '@/modules/wallets/components/domain-btn/DomainBtn';
+import buyOverlay from '@/modules/wallets/components/unstoppable-domain-buy-overlay/UnstoppableDomainBuyOverlay';
+import addOwnedDomainOverlay from '@/modules/wallets/components/unstoppable-add-owned-domain-overlay/UnstoppableAddOwnedDomainOverlay';
+import transferDomainOverlay from '@/modules/wallets/components/unstoppable-transfer-domain-overlay/UnstoppableTransferDomainOverlay';
 
 export default {
-  components: { domainBtn },
+  components: {
+    domainBtn,
+    buyOverlay,
+    addOwnedDomainOverlay,
+    transferDomainOverlay
+  },
   data() {
     return {
+      buyOverlay: false,
+      addOverlay: false,
+      transferOverlay: false,
       tabs: [{ name: 'Buy domain' }, { name: 'Manage domain' }],
       domainFunctions: [
         { label: 'Transfer Domain' },
@@ -367,6 +404,17 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    closeBuyOverlay() {
+      this.buyOverlay = false;
+    },
+    closeAddOverlay() {
+      this.addOverlay = false;
+    },
+    closeTransferOverlay() {
+      this.transferOverlay = false;
+    }
   }
 };
 </script>
