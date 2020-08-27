@@ -51,11 +51,19 @@ export default class Nft {
     this.selectedContract = selectedContract;
   }
 
-  getActiveTokenSet(selectedContract){
-    return this.nftConfig[selectedContract]
+  async getActiveTokenSet(selectedContract) {
+    if (!this.nftConfig[selectedContract].initialSetRetrieved) {
+      await this.nftConfig[selectedContract].getNftDetails();
+    }
+    return this.nftConfig[selectedContract];
   }
 
-
+  getActiveTokenSetSync(selectedContract) {
+    if (!this.nftConfig[selectedContract].initialSetRetrieved) {
+      this.nftConfig[selectedContract].getNftDetails();
+    }
+    return this.nftConfig[selectedContract];
+  }
 
   selectNftsToShow() {
     try {
@@ -87,7 +95,12 @@ export default class Nft {
     preFetch = false
   ) {
     if (!preFetch) this.fetchingOwnedTokens = true;
-    return this.nftConfig[contract].getNftDetails(contract, startIndex, endIndex, preFetch);
+    return this.nftConfig[contract].getNftDetails(
+      contract,
+      startIndex,
+      endIndex,
+      preFetch
+    );
     //
     // let params;
     // if (startIndex >= 0 && endIndex >= 0) {

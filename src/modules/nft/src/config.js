@@ -1,5 +1,5 @@
 const configs = {
-  url: 'https://72oj41m8eb.execute-api.us-west-2.amazonaws.com/dev',
+  url: 'https://9bcq984094.execute-api.us-west-2.amazonaws.com/dev',
   countPerPage: 9
 }
 

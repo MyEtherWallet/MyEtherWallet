@@ -23,6 +23,7 @@ export default class NFT {
   }
 
   getActiveContract(contractAddress) {
+    this.selectedContract = this.nft.getActiveTokenSet(contractAddress);
     return this.nft.getActiveTokenSet(contractAddress);
   }
 

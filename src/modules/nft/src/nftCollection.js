@@ -17,11 +17,13 @@ export default class NftCollection {
     this.priorIndex = 0;
     this.currentIndex = 0;
     this.loadedTo = 0;
+    this.initialSetRetrieved = false;
     this.tokens = details.tokens;
+    // this.getNftDetails();
   }
 
-  getRetrievedCount(){
-    this.tokens.length
+  getRetrievedCount() {
+    return this.tokens.length;
   }
 
   selectNftsToShow() {
@@ -69,12 +71,20 @@ export default class NftCollection {
     };
 
     return await this.api.getNftDetailsApi(contract, params).then(data => {
+      console.log('DATA', data); // todo remove dev item
       let allTokens = [];
+      if (!this.initialSetRetrieved) {
+        this.initialSetRetrieved = true;
+      }
+      if (!data) {
+        return this.tokens;
+      }
       allTokens = data.tokens.map(tokenParse);
 
       if (!preFetch) this.fetchingOwnedTokens = false;
       console.log('current count:', this.tokens.length); // todo remove dev item
       this.tokens = allTokens;
+
       return allTokens;
     });
   }
@@ -83,26 +93,35 @@ export default class NftCollection {
     this.nftToShowList = this.selectNftsToShow();
   }
   incrementTokenList() {
-    const startIndex = this.currentPage * this.countPerPage - this.countPerPage;
-    const endIndex = this.currentPage * this.countPerPage;
+    if (this.tokens.length >= this.count) {
+      return this.selectNftsToShow();
+    }
+    let startIndex = this.currentPage * this.countPerPage - this.countPerPage;
+    let endIndex = this.currentPage * this.countPerPage;
+    if (startIndex < 0) {
+      startIndex = 0;
+      endIndex = 9;
+    }
     const selectedContract = this.selectedContract;
     return this.getNftDetails(selectedContract, startIndex, endIndex).then(
       result => {
         this.tokens = result;
         this.collectionLoading = false;
-        // this.tokenSetUpdateHook(this.selectNftsToShow());
         return this.selectNftsToShow();
       }
     );
   }
 
   getNext() {
-    this.getNftsToShow();
-    this.currentPage++;
-    if (this.tokens.length < this.currentPage * this.countPerPage) {
-      this.collectionLoading = true;
-      return this.incrementTokenList();
-    }
+    return new Promise(resolve => {
+      this.getNftsToShow();
+      this.currentPage++;
+      if (this.tokens.length < this.currentPage * this.countPerPage) {
+        this.collectionLoading = true;
+        return resolve(this.incrementTokenList());
+      }
+      return resolve(this.nftToShowList);
+    });
   }
 
   getPrevious() {

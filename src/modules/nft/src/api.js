@@ -38,6 +38,7 @@ export default class API {
   }
 
   async getNftDetailsApi(contract, params) {
+    console.log(params); // todo remove dev item
     return await fetch(`${this.openSeaLambdaUrl}/nft`, {
       mode: 'cors',
       cache: 'no-cache',
@@ -52,7 +53,7 @@ export default class API {
     })
       .then(data => data.json())
       .then(data => {
-        console.log('data', data); // todo remove dev item
+        // console.log('data', data); // todo remove dev item
         return data.result.tokenContracts.find(item => {
           return item.contractIdAddress === contract;
         });

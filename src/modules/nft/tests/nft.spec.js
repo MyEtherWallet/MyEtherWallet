@@ -54,23 +54,30 @@ describe('NFT Module', () => {
     }, 10000);
     test('it should report the number of tokens returned', done => {
      const tokenSet =  nft.getActiveContract(contractAddress);
+      console.log(tokenSet.count); // todo remove dev item
       console.log('tokenSet.getRetrievedCount()', tokenSet.getRetrievedCount()); // todo remove dev item
-      tokenSet.incrementPage().then(res => {
+      tokenSet.getNext().then(res => {
         console.log('tokenSet.getRetrievedCount()', tokenSet.getRetrievedCount()); // todo remove dev item
         expect(res).toEqual(expect.anything());
         done();
       });
     }, 10000);
-    test('it should get next set of nfts to show', done => {
-      nft.incrementPage().then(res => {
-        console.log(res); // todo remove dev item
-        expect(res).toEqual(expect.anything());
-        done();
+    test('it should retrieve the next set of tokens', done => {
+      const tokenSet =  nft.getActiveContract(contractAddress);
+      console.log(tokenSet.currentPage); // todo remove dev item
+      tokenSet.getNext().then(() => {
+        console.log(tokenSet.currentPage); // todo remove dev item
+        tokenSet.getNext().then(res => {
+          console.log(tokenSet.currentPage); // todo remove dev item
+          // console.log(res); // todo remove dev item
+          expect(res).toEqual(expect.anything());
+          done();
+        });
       });
     }, 10000);
 
 
 
-    getActiveTokenSet
+    // getActiveTokenSet
   });
 });
