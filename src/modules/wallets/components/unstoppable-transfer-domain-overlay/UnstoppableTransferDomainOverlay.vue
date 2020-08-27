@@ -1,0 +1,75 @@
+<template>
+  <mew-overlay :show-overlay="open">
+    <template v-slot:mewOverlayBody>
+      <div>
+        <h2 class="text-center mb-10">Transfer domain</h2>
+        <mew6-white-sheet>
+          <v-sheet color="transparent" width="600px" class="pa-8">
+            <address-select />
+            <div class="d-flex justify-center mt-2">
+              <mew-button title="Pay" button-size="xlarge" />
+            </div>
+          </v-sheet>
+        </mew6-white-sheet>
+      </div>
+      <div>
+        <h2 class="text-center mb-10">Confirmation</h2>
+        <mew6-white-sheet>
+          <transaction-confirmation />
+        </mew6-white-sheet>
+        <mew6-white-sheet>
+          <div class="pa-8">
+            <v-sheet
+              color="transparent"
+              class="mx-auto mb-10 border-radius--10px informationBlock py-5 px-7"
+            >
+              <div class="d-flex align-center justify-space-between">
+                <div>Domain name:</div>
+                <div class="font-weight-medium">mewwallet.crypto</div>
+              </div>
+            </v-sheet>
+            <v-progress-linear
+              style="margin: 130px auto 40px auto; max-width: 200px;"
+              indeterminate
+              color="primary"
+            ></v-progress-linear>
+            <h4 class="font-weight-bold text-center">
+              Processing the registration
+            </h4>
+            <v-sheet
+              color="transparent"
+              max-width="300px"
+              class="text-center mx-auto mt-3"
+            >
+              Please do not exit the Dapp or close your browser, it takes a
+              short while for registration…
+            </v-sheet>
+          </div>
+          <div class="py-10"></div>
+        </mew6-white-sheet>
+      </div>
+    </template>
+  </mew-overlay>
+</template>
+
+<script>
+import transactionConfirmation from '@/modules/wallets/components/transaction-confirmation/TransactionConfirmation';
+
+export default {
+  components: { transactionConfirmation },
+  props: {
+    open: { default: false, type: Boolean },
+    close: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    }
+  },
+  data() {
+    return {};
+  }
+};
+</script>
+
+<style lang="scss" scoped></style>

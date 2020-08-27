@@ -1,28 +1,24 @@
 /* eslint camelcase: 0 */
 import * as Sentry from '@sentry/browser';
 import * as Integrations from '@sentry/integrations';
-import { getApp } from '@/builds/configs';
+import app from './app';
 
 import Vue from 'vue';
 import Router from 'vue-router';
-import router from '@/web/router';
-import store from '@/common/store';
+import router from '@/router';
+import store from '@/store';
 import Vuex from 'vuex';
 
 // etc
 import mewComponents from '@myetherwallet/mew-components';
-import languages from '@/common/translations';
-import '@/common/plugins/registerServiceWorker';
+import languages from '@/translations';
+import '@/plugins/registerServiceWorker';
 import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
-import vuetify from '@/common/plugins/vuetify';
+import vuetify from '@/plugins/vuetify';
 
-import WhiteSheet from '@/web/components/Common/WhiteSheet';
-Vue.component('mew6-white-sheet', WhiteSheet);
-
-// Local copy of MEW6 components. (development only)
-//import mewButton from '@/mewComponents/MewButton/MewButton';
-//Vue.component('mew-button', mewButton);
+import whiteSheet from '@/components/white-sheet/WhiteSheet.vue';
+Vue.component('mew6-white-sheet', whiteSheet);
 
 Vue.prototype.$eventHub = new Vue();
 
@@ -55,7 +51,7 @@ const vue = new Vue({
   router,
   store,
   vuetify,
-  render: h => h(getApp())
+  render: h => h(app)
 });
 
 const integration = new Integrations.Vue({
@@ -67,7 +63,7 @@ Sentry.init({
   dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
   integrations: [integration],
   maxBreadcrumbs: 0,
-  environment: BUILD_TYPE,
+  environment: 'web',
   requestBodies: 'small',
   release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event) {

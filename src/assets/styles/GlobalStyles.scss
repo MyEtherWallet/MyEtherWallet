@@ -19,17 +19,17 @@
 /* Set default text color */
 #app .v-sheet,
 #app .v-application {
-  color: var(--v-text_default-base) !important;
+  color: var(--v-titlePrimary-base) !important;
 }
 
 /* (Force) (light theme) default text color */
 #app.theme--light .theme--light-text--dark-space {
-  color: var(--v-dark_sacramento-base) !important;
+  color: var(--v-titlePrimary-base) !important;
 }
 
 /* (Force) (dark theme) default text color */
 #app.theme--dark .theme--dark-text--blue {
-  color: var(--v-text_default-base) !important;
+  color: var(--v-titlePrimary-base) !important;
 }
 
 /* (Force) white text color */
@@ -43,39 +43,59 @@
   text-transform: initial;
 }
 
+/* ========== Fix MEW components ========== */
+.theme--dark.v-expansion-panels .v-expansion-panel {
+  background-color: transparent !important;
+}
+.v-application .v-btn.mew-button .v-btn__content {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+.corner-btn {
+  color: var(--v-primary-base);
+  font-weight: 500;
+  position: absolute;
+  top: -25px;
+  right: 10px;
+  cursor: pointer;
+  filter: brightness(1);
+
+  &:hover {
+    filter: brightness(1.15);
+  }
+}
+
 /* ========== CSS Style Reset ========== */
-* {
-  font-family: 'Roboto';
-  box-sizing: content-box;
-}
-html {
-  font-size: 14px;
-}
 .monospace {
   font-family: monospace !important;
 }
 i {
   font-family: 'Material Icons' !important;
 }
-div,
-p {
+div {
   font-size: 14px;
   line-height: 21px;
   padding: 0;
   margin: 0;
-  font-weight: 400;
 }
 p {
+  font-size: 14px;
+  line-height: 21px;
   letter-spacing: 0.3px;
 }
 h1 {
-  font-size: 42px;
-  font-weight: 500;
+  font-size: 40px;
+  line-height: 50px;
+  font-weight: 900;
+  padding: 0;
+  margin: 0;
 }
 h2 {
   font-size: 30px;
+  line-height: 37px;
   font-weight: 700;
-  line-height: 36px;
+  padding: 0;
+  margin: 0;
 }
 h3 {
   font-size: 24px;
@@ -144,29 +164,12 @@ h6 {
 }
 
 /* ========== Border ========== */
-.border--white {
-  border-color: white !important;
-  border: 1px solid white !important;
-}
-.border-radius--0px {
-  border-radius: 0 !important;
-}
-.border-radius--5px {
-  border-radius: 5px !important;
-}
 .border-radius--10px {
   border-radius: 10px !important;
 }
-.border-radius-bottom--10px {
-  border-bottom-left-radius: 10px !important;
-  border-bottom-right-radius: 10px !important;
-}
 
 /* ========== Other ========== */
-.noscroll {
-  height: 100vh;
-  overflow-y: hidden;
-}
+
 .overflow--hidden {
   overflow: hidden !important;
 }
@@ -179,20 +182,8 @@ h6 {
 .width--initial {
   width: initial;
 }
-.width--100-percent {
-  width: 100%;
-}
 .display--block {
-  display: block;
-}
-.list-style-type--none {
-  list-style-type: none;
-}
-.vertical-align--middle {
-  vertical-align: middle;
-}
-.background-color--transparent {
-  background-color: transparent;
+  display: block !important;
 }
 .spacer-y-medium {
   height: 80px;

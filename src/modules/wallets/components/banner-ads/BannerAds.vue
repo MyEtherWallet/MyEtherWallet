@@ -1,0 +1,108 @@
+<template>
+  <div class="mew-component--banner-ads cursor--pointer">
+    <mew6-white-sheet>
+      <mew-carousel class="box-shadow" carousel-height="145" :total-slides="2">
+        <template v-slot:slide1>
+          <a href="https://www.mewwallet.com/" target="_blank">
+            <div class="ad1 px-5 d-flex flex-column justify-center">
+              <div class="title font-weight-bold mb-n1">MEW wallet App</div>
+              <div class="mb-2">Download it today!</div>
+              <div class="d-flex align-center pb-3">
+                <img
+                  class="mr-1"
+                  height="23"
+                  src="@/assets/images/icons/button-app-store.png"
+                />
+                <img
+                  class="mr-1"
+                  height="23"
+                  src="@/assets/images/icons/button-play-store.png"
+                />
+              </div>
+            </div>
+          </a>
+        </template>
+        <template v-slot:slide2>
+          <div
+            class="ad2 px-5 d-flex flex-column justify-center"
+            @click="$router.push({ name: 'BuyHardwareWallet', params: {} })"
+          >
+            <div class="title font-weight-bold mb-n1">Hardware wallets</div>
+            <div class="mb-2">Take a look at our hardware wallets!</div>
+            <div class="d-flex align-center">
+              <img
+                class="mr-2"
+                height="38"
+                src="@/assets/images/hardware-wallets/bitmap.png"
+              />
+              <img
+                class="mr-2"
+                height="38"
+                src="@/assets/images/hardware-wallets/bitbox.png"
+              />
+              <img
+                class="mr-2"
+                height="38"
+                src="@/assets/images/hardware-wallets/billfodl.png"
+              />
+              <img
+                class="mr-2"
+                height="38"
+                src="@/assets/images/hardware-wallets/finney.png"
+              />
+              <img
+                class="mr-2"
+                height="38"
+                src="@/assets/images/hardware-wallets/keepkey.png"
+              />
+            </div>
+          </div>
+        </template>
+      </mew-carousel>
+    </mew6-white-sheet>
+  </div>
+</template>
+
+<script>
+export default {};
+</script>
+
+<style lang="scss" scoped>
+.mew-component--banner-ads {
+  * {
+    user-select: none;
+    color: var(--v-titlePrimary-base) !important;
+  }
+}
+.ad1 {
+  height: 100%;
+  background: url('~@/assets/images/snippets/bg-mew-wallet.png');
+  background-size: 130px;
+  background-position: right -10px bottom -10px;
+  background-repeat: no-repeat;
+}
+.ad2 {
+  height: 100%;
+  background: url('~@/assets/images/hardware-wallets/ledger.png');
+  background-size: 110px;
+  background-position: right 0px bottom 0px;
+  background-repeat: no-repeat;
+}
+</style>
+
+<style lang="scss">
+.mew-component--banner-ads {
+  .v-btn--active:before {
+    opacity: 0 !important;
+  }
+  .v-icon {
+    font-size: 10px !important;
+  }
+  .v-btn--icon {
+    margin: 0 !important;
+  }
+  .v-item-group {
+    margin-bottom: -15px;
+  }
+}
+</style>
