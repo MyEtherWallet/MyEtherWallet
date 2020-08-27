@@ -46,17 +46,15 @@ export default class NFT {
     this.loading = true;
     this.currentActive = await this.nft.getActiveTokenSet(contractAddress);
     this.loading = false;
-    console.log('setActiveContract', this.currentActive.name, this.activeTokenSet.length); // todo remove dev item
+    console.log('setActiveContract', this.currentActive.name/*, this.activeTokenSet.length*/); // todo remove dev item
     this.selectedContract = contractAddress;
     return this.selectedContract;
   }
 
-  getPageValues() {
-    if (!this.loading) {
-      this.currentPageState = this.currentActive.getPageState();
-      this.activeTokenSet = this.currentPageState.tokens;
-    }
-    console.log('getPageValues', this.currentActive.name, this.activeTokenSet.length); // todo remove dev item
+  async getPageValues() {
+    this.currentPageState = await this.currentActive.getPageState();
+    // this.activeTokenSet = this.currentPageState.tokens;
+    console.log('getPageValues', this.currentActive.name, this.currentPageState.tokens.length); // todo remove dev item
     return this.currentPageState;
   }
 

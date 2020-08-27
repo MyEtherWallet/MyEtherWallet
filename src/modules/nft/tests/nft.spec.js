@@ -63,17 +63,18 @@ describe('NFT Module', () => {
       }, 10000);
       let tokensShown = [];
       test('it should get display values for active nft contract', done => {
-        const values = nft.getPageValues();
-        expect(values.name).toEqual(expect.anything());
-        expect(values.currentPage).toEqual(1);
-        expect(values.totalTokens).toBeGreaterThan(0);
-        expect(values.tokens.length).toEqual(9);
+        nft.getPageValues().then(values => {
+          expect(values.name).toEqual(expect.anything());
+          expect(values.currentPage).toEqual(1);
+          expect(values.totalTokens).toBeGreaterThan(0);
+          expect(values.tokens.length).toEqual(9);
 
-        tokensShown = values.tokens.reduce((acc, val) => {
-          acc.push(val.token_id);
-          return acc;
-        }, []);
-        done();
+          tokensShown = values.tokens.reduce((acc, val) => {
+            acc.push(val.token_id);
+            return acc;
+          }, []);
+          done();
+        });
       }, 10000);
       test('it should get display values for next page', done => {
         nft.nextPage().then(values => {
@@ -115,17 +116,18 @@ describe('NFT Module', () => {
       }, 10000);
       let tokensShown = [];
       test('it should get display values for active nft contract', done => {
-        const values = nft.getPageValues();
-        expect(values.name).toEqual(expect.anything());
-        expect(values.currentPage).toEqual(1);
-        expect(values.totalTokens).toBeGreaterThan(0);
-        expect(values.tokens.length).toEqual(9);
+        nft.getPageValues().then(values => {
+          expect(values.name).toEqual(expect.anything());
+          expect(values.currentPage).toEqual(1);
+          expect(values.totalTokens).toBeGreaterThan(0);
+          expect(values.tokens.length).toEqual(9);
 
-        tokensShown = values.tokens.reduce((acc, val) => {
-          acc.push(val.token_id);
-          return acc;
-        }, []);
-        done();
+          tokensShown = values.tokens.reduce((acc, val) => {
+            acc.push(val.token_id);
+            return acc;
+          }, []);
+          done();
+        });
       }, 10000);
       test('it should get display values for next page', done => {
         nft.nextPage().then(values => {
