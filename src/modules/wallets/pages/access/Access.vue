@@ -65,10 +65,10 @@
       </div>
     </v-sheet>
     <div class="spacer-y-medium" />
-    <browserExtensionOverlay :open="showBrowser" />
-    <hardwareWalletsOverlay :open="showHardware" />
-    <mobileAppsOverlay :open="showMobile" />
-    <softwareAccessOverlay :open="showSoftware" />
+    <browser-extension-overlay :open="showBrowser" />
+    <hardware-wallets-overlay :open="showHardware" />
+    <mobile-apps-overlay :open="showMobile" />
+    <software-access-overlay :open="showSoftware" />
   </div>
 </template>
 
