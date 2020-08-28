@@ -11,6 +11,7 @@
                 :right-icon="btn.icon"
                 icon-type="img"
                 color-theme="basic"
+                @click.native="btn.fn"
               />
             </v-col>
           </v-row>
@@ -46,17 +47,20 @@ export default {
         {
           label: 'Keystore',
           description: 'Access via Keystore',
-          icon: require('@/assets/images/icons/icon-keystore-file.svg')
+          icon: require('@/assets/images/icons/icon-keystore-file.svg'),
+          fn: this.btnCall('', 1)
         },
         {
           label: 'Mnemonic Phrase',
           description: 'Access via Mnemonic PHrase',
-          icon: require('@/assets/images/icons/icon-mnemonic.svg')
+          icon: require('@/assets/images/icons/icon-mnemonic.svg'),
+          fn: this.btnCall('', 1)
         },
         {
           label: 'Private Key',
           description: 'Access via Private Key',
-          icon: require('@/assets/images/icons/icon-private-key-grey.svg')
+          icon: require('@/assets/images/icons/icon-private-key-grey.svg'),
+          fn: this.btnCall('', 1)
         }
       ],
       type: '',
