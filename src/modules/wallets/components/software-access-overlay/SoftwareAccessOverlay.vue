@@ -24,10 +24,9 @@
 
 <script>
 const TITLES = {
-  0: 'Software',
-  1: 'Keystore',
-  2: 'Mnemonic Phrase',
-  3: 'Private Key'
+  keystore: 'Keystore',
+  mnemonic: 'Mnemonic Phrase',
+  privateKey: 'Private Key'
 };
 
 const TYPES = ['keystore', 'mnemonic', 'privateKey'];
@@ -48,19 +47,25 @@ export default {
           label: 'Keystore',
           description: 'Access via Keystore',
           icon: require('@/assets/images/icons/icon-keystore-file.svg'),
-          fn: this.btnCall('', 1)
+          fn: () => {
+            this.btnCall('keystore');
+          }
         },
         {
           label: 'Mnemonic Phrase',
           description: 'Access via Mnemonic PHrase',
           icon: require('@/assets/images/icons/icon-mnemonic.svg'),
-          fn: this.btnCall('', 1)
+          fn: () => {
+            this.btnCall('mnemonic');
+          }
         },
         {
           label: 'Private Key',
           description: 'Access via Private Key',
           icon: require('@/assets/images/icons/icon-private-key-grey.svg'),
-          fn: this.btnCall('', 1)
+          fn: () => {
+            this.btnCall('privateKey');
+          }
         }
       ],
       type: '',
@@ -69,17 +74,17 @@ export default {
   },
   computed: {
     title() {
-      return this.titles[this.step];
+      return !this.step ? 'Software' : this.titles[this.type];
     }
   },
   methods: {
-    btnCall(str, num) {
-      if (TYPES.includes(this.types)) {
+    btnCall(str) {
+      if (TYPES.includes(str)) {
         this.type = str;
       } else {
         throw new Error('Not a valid type!');
       }
-      this.step = num;
+      this.step = 1;
     }
   }
 };
