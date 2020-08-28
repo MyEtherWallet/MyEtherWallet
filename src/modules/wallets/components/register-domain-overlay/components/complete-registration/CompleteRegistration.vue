@@ -22,7 +22,12 @@
         <mew-icon icon-name="clock" :img-height="120" />
         <div class="mew-subtitle textSecondary--text mt-3">00:00</div>
         <div class="mew-heading-2 mt-6">Complete registration...</div>
-        <v-sheet width="100%" max-width="300px" class="mx-auto mt-3">
+        <v-sheet
+          color="transparent"
+          width="100%"
+          max-width="300px"
+          class="mx-auto mt-3"
+        >
           Please click 'Register' and follow the prompts to complete a final
           transaction and complete your domain registration.
         </v-sheet>
@@ -32,17 +37,17 @@
       </div>
     </div>
     <div class="text-center mt-10">
-      <v-sheet width="100%" max-width="200px" class="mx-auto">
-        <v-progress-linear
-          color="red lighten-2"
-          buffer-value="0"
-          stream
-        ></v-progress-linear>
+      <v-sheet width="100%" max-width="200px" class="mx-auto mb-8">
+        <v-progress-linear indeterminate color="primary"></v-progress-linear>
       </v-sheet>
-      <div class="mew-heading-2 mt-6">
+      <h4 class="font-weight-bold text-center">
         Processing the registration request
-      </div>
-      <v-sheet width="100%" max-width="300px" class="mx-auto mt-3">
+      </h4>
+      <v-sheet
+        color="transparent"
+        max-width="300px"
+        class="text-center mx-auto mt-3"
+      >
         Please do not exit the Dapp or close your browser, it takes a short
         while for registration…
       </v-sheet>

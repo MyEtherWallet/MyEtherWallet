@@ -161,6 +161,59 @@
           </v-sheet>
         </mew6-white-sheet>
       </div>
+
+      <div>
+        <h2 class="text-center mb-10">
+          Confirmation
+        </h2>
+        <mew6-white-sheet>
+          <v-sheet color="transparent" width="500px" class="pa-10">
+            <div class="text-center">
+              <mew-icon icon-name="clock" :img-height="120" />
+              <div class="mew-subtitle textSecondary--text mt-3">00:00</div>
+              <div class="mew-heading-2 mt-6">Hang on tight!</div>
+              <v-sheet
+                color="transparent"
+                width="100%"
+                max-width="300px"
+                class="mx-auto mt-3"
+              >
+                Please do not close your browser or exit this Dapp, We are
+                working on your request.
+              </v-sheet>
+            </div>
+          </v-sheet>
+        </mew6-white-sheet>
+      </div>
+
+      <div>
+        <h2 class="text-center mb-10">
+          Processing
+        </h2>
+        <mew6-white-sheet>
+          <v-sheet color="transparent" width="500px" class="pa-10">
+            <div class="text-center">
+              <v-sheet width="100%" max-width="200px" class="mx-auto mb-8">
+                <v-progress-linear
+                  indeterminate
+                  color="primary"
+                ></v-progress-linear>
+              </v-sheet>
+              <h4 class="font-weight-bold text-center">
+                Processing the deposit
+              </h4>
+              <v-sheet
+                color="transparent"
+                max-width="300px"
+                class="text-center mx-auto mt-3"
+              >
+                Please do not exit the Dapp or close your browser, it takes a
+                short while for registration…
+              </v-sheet>
+            </div>
+          </v-sheet>
+        </mew6-white-sheet>
+      </div>
     </template>
   </mew-overlay>
 </template>

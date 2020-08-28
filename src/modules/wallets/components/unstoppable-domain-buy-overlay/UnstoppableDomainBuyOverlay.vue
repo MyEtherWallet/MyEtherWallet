@@ -118,6 +118,35 @@
           <div class="py-10"></div>
         </mew6-white-sheet>
       </div>
+
+      <div>
+        <h2 class="text-center mb-10">Confirmation</h2>
+        <mew6-white-sheet>
+          <transaction-confirmation />
+        </mew6-white-sheet>
+        <mew6-white-sheet>
+          <div class="text-center mt-10">
+            <div>
+              <mew-icon icon-name="clock" :img-height="120" />
+              <div class="mew-subtitle textSecondary--text mt-3">00:00</div>
+              <div class="mew-heading-2 mt-6">Complete registration...</div>
+              <v-sheet
+                color="transparent"
+                width="100%"
+                max-width="300px"
+                class="mx-auto mt-3"
+              >
+                Please click 'Register' and follow the prompts to complete a
+                final transaction and complete your domain registration.
+              </v-sheet>
+            </div>
+            <div class="d-flex justify-center mt-9">
+              <mew-button title="Register" button-size="xlarge" />
+            </div>
+          </div>
+          <div class="py-10"></div>
+        </mew6-white-sheet>
+      </div>
     </template>
   </mew-overlay>
 </template>
