@@ -1,3 +1,9 @@
+### Release v5.7.6-hotfix.1
+
+### Devop
+
+- Remove twitter popup [#2551](https://github.com/MyEtherWallet/MyEtherWallet/pull/2551)
+
 ### Release v5.7.6
 
 ### Bug
