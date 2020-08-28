@@ -70,7 +70,7 @@
   font-family: monospace !important;
 }
 i {
-  font-family: 'Material Icons' !important;
+  font-family: "Material Icons" !important;
 }
 div {
   font-size: 14px;
@@ -166,6 +166,9 @@ h6 {
 /* ========== Border ========== */
 .border-radius--10px {
   border-radius: 10px !important;
+}
+.border-radius--5px {
+  border-radius: 5px !important;
 }
 
 /* ========== Other ========== */
