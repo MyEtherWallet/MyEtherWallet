@@ -125,7 +125,8 @@
           <transaction-confirmation />
         </mew6-white-sheet>
         <mew6-white-sheet>
-          <div class="text-center mt-10">
+          <div class="py-5"></div>
+          <div class="text-center">
             <div>
               <mew-icon icon-name="clock" :img-height="120" />
               <div class="mew-subtitle textSecondary--text mt-3">00:00</div>
@@ -144,7 +145,7 @@
               <mew-button title="Register" button-size="xlarge" />
             </div>
           </div>
-          <div class="py-10"></div>
+          <div class="py-5"></div>
         </mew6-white-sheet>
       </div>
     </template>

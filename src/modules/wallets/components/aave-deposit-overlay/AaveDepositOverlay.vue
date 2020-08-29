@@ -164,6 +164,94 @@
 
       <div>
         <h2 class="text-center mb-10">
+          Borrow
+        </h2>
+        <mew6-white-sheet>
+          <v-sheet color="transparent" width="600px" class="pa-8">
+            <div class="d-flex">
+              <v-card
+                flat
+                color="informationBlock"
+                class="pa-6 mx-2 flex-grow-1"
+              >
+                <div class="font-weight-bold mb-2">Amount to Deposit</div>
+                <div class="mew-heading-1 mb-1">
+                  12.256 <span class="font-weight-medium">DAI</span>
+                </div>
+                <div>$ 13.64</div>
+              </v-card>
+              <v-card
+                flat
+                color="informationBlock"
+                class="pa-6 mx-2 flex-grow-1"
+              >
+                <div class="font-weight-bold mb-2">Amount to Deposit</div>
+                <div class="mew-heading-1 mb-1">
+                  12.256 <span class="font-weight-medium">DAI</span>
+                </div>
+                <div>$ 13.64</div>
+              </v-card>
+            </div>
+
+            <div class="mx-12 my-10">
+              <div class="font-weight-bold mb-2">
+                How much would you like to borrow?
+              </div>
+              <div>
+                Set the amount you want to borrow. You can manually enter a
+                specific amount or use the percentage buttons below.
+              </div>
+            </div>
+
+            <v-sheet max-width="300px" class="mx-auto" color="transparent">
+              <mew-input placeholder=" " label="Amount" />
+            </v-sheet>
+
+            <v-sheet
+              max-width="250px"
+              class="mx-auto mt-n2"
+              color="transparent"
+            >
+              <v-btn-toggle
+                v-model="amount"
+                tile
+                color="deep-purple accent-3"
+                group
+              >
+                <v-btn value="25">
+                  25%
+                </v-btn>
+
+                <v-btn value="50">
+                  50%
+                </v-btn>
+
+                <v-btn value="75">
+                  75%
+                </v-btn>
+
+                <v-btn value="100">
+                  Max
+                </v-btn>
+              </v-btn-toggle>
+            </v-sheet>
+
+            <div class="d-flex justify-center mt-12">
+              <mew-button title="Borrow" button-size="xlarge" />
+            </div>
+            <div class="d-flex justify-center mt-4">
+              <mew-button
+                title="Cancel"
+                btn-style="transparent"
+                color-theme="error"
+                button-size="small"
+              />
+            </div>
+          </v-sheet>
+        </mew6-white-sheet>
+      </div>
+      <div>
+        <h2 class="text-center mb-10">
           Confirmation
         </h2>
         <mew6-white-sheet>

@@ -191,3 +191,6 @@ h6 {
 .spacer-y-medium {
   height: 80px;
 }
+.box-shadow--sm {
+  box-shadow: 0 2px 7px var(--v-boxShadow-base) !important;
+}
