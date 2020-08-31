@@ -52,7 +52,7 @@ export default class API {
     })
       .then(data => data.json())
       .then(data => {
-        // console.log(data.result.tokenContracts); // todo remove dev item
+        console.log('getNftDetailsApi'); // todo remove dev item
         return data.result.tokenContracts.find(item => {
           return item.contractIdAddress === contract;
         });
