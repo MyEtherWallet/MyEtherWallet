@@ -36,7 +36,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['network', 'web3'])
+    ...mapState('main', ['network', 'web3', 'Networks'])
   },
   created() {
     window.chrome.storage.onChanged.addListener(this.fetchNewStore);

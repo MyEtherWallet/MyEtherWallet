@@ -76,42 +76,35 @@ export default {
         },
         faq2: {
           open: false,
-          title: 'home.faqs.mewconnect.title',
-          content: 'home.faqs.mewconnect.text',
-          linkText: 'home.faqs.button-here',
-          link: 'https://mewconnect.myetherwallet.com/'
-        },
-        faq3: {
-          open: false,
           title: 'home.faqs.other-wallets.title',
           content: 'home.faqs.other-wallets.text',
           linkText: 'home.faqs.button-here',
           link:
-            'https://kb.myetherwallet.com/getting-started/accessing-your-new-eth-wallet.html'
+            'https://kb.myetherwallet.com/en/getting-started/how-to-access-your-wallet/'
         },
-        faq4: {
+        faq3: {
           open: false,
           title: 'home.faqs.send-txs.title',
           content: 'home.faqs.send-txs.text',
           linkText: 'home.faqs.button-here',
           link:
-            'https://kb.myetherwallet.com/transactions/how-to-send-transaction.html'
+            'https://kb.myetherwallet.com/en/transactions/how-to-send-a-transaction/'
         },
-        faq5: {
+        faq4: {
           open: false,
           title: 'home.faqs.forgot-pwd.title',
           content: 'home.faqs.forgot-pwd.text',
           linkText: 'home.faqs.button-here',
           link:
-            'https://kb.myetherwallet.com/private-keys-passwords/lost-eth-private-key.html'
+            'https://kb.myetherwallet.com/en/security-and-privacy/lost-private-key/'
         },
-        faq6: {
+        faq5: {
           open: false,
           title: 'home.faqs.create-wallet.title',
           content: 'home.faqs.create-wallet.text',
           linkText: 'home.faqs.button-here',
           link:
-            'https://kb.myetherwallet.com/getting-started/creating-a-new-wallet-on-myetherwallet.html'
+            'https://kb.myetherwallet.com/en/getting-started/how-to-create-a-wallet/'
         }
       }
     };

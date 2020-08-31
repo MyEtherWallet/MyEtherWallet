@@ -16,6 +16,7 @@
   "time-remain": "Time Remaining",
   "refund": "{currency} address for refund (if needed) from Changelly",
   "button-loading": "Finalizing Swap Details",
+  "estimated-fee": "Transaction Fee Estimate:",
   "providers": {
     "string": "Provider | Providers",
     "no-provider-found": "No providers found :(",
@@ -38,7 +39,8 @@
     "error-generating-swap": "An error occurred while finalizing the swap details",
     "not-enough-eth-gas": "Insufficient balance for Amount + Transaction Fee.",
     "not-enough-tx-fee": "Insufficient balance for Transaction Fee.",
-    "liquidity-too-low": "The amount requested is greater than the amount available at this time"
+    "liquidity-too-low": "The amount requested is greater than the amount available at this time",
+    "currency-warning": "Make sure you have a compatible {currency} wallet for this swap, MEW does not support {currency}."
   },
   "notice": {
     "retrieve-changelly-rate-failed": "Failed to retrieve Changelly rate from {fromCurrency} to {toCurrency}",
@@ -89,5 +91,7 @@
   "max": "Max",
   "address-verification": "Address Verification",
   "message-to-sign": "Message to sign to verify destination address ownership",
-  "proceed-to-sign": "Proceed to sign message"
+  "proceed-to-sign": "Proceed to sign message",
+  "gas-price-source-notice": "*based on gas price from settings",
+  "current-gas-price": "Current gas price: {value} Gwei"
 }
