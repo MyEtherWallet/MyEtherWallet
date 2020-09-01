@@ -33,12 +33,20 @@
         Withdraw Overlay
       </div>
 
-      <manageMyVault :open="openManageMyVault" />
+      <manageMyVaultOverlay :open="openManageMyVaultOverlay" />
       <div
         class="cursor--pointer font-weight-bold mr-4"
-        @click="openManageMyVault = true"
+        @click="openManageMyVaultOverlay = true"
       >
         Manage MyVault Overlay
+      </div>
+
+      <migrateOverlay :open="openMigrateOverlay" />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="openMigrateOverlay = true"
+      >
+        Migrate Overlay
       </div>
     </div>
     <mew6-white-sheet>
@@ -173,7 +181,8 @@ import transactionConfirmationOverlay from '@/modules/wallets/components/transac
 import collateralizeDaiOverlay from '@/modules/wallets/components/maker-dao-collateralize-dai-overlay/CollateralizeDaiOverlay';
 import depositDaiOverlay from '@/modules/wallets/components/maker-dao-deposit-dai-overlay/DepositDaiOverlay';
 import withdrawDaiOverlay from '@/modules/wallets/components/maker-dao-withdraw-dai-overlay/WithdrawDaiOverlay';
-import manageMyVault from '@/modules/wallets/components/maker-dao-manage-my-vault/ManageMyVault';
+import manageMyVaultOverlay from '@/modules/wallets/components/maker-dao-manage-my-vault-overlay/ManageMyVaultOverlay';
+import migrateOverlay from '@/modules/wallets/components/maker-dao-migrate-overlay/MigrateOverlay';
 
 export default {
   components: {
@@ -181,7 +190,8 @@ export default {
     collateralizeDaiOverlay,
     depositDaiOverlay,
     withdrawDaiOverlay,
-    manageMyVault
+    manageMyVaultOverlay,
+    migrateOverlay
   },
   data() {
     return {
@@ -189,7 +199,8 @@ export default {
       openCollateralizeDaiOverlay: false,
       openDepositDaiOverlay: false,
       openWithdrawDaiOverlay: false,
-      openManageMyVault: false,
+      openManageMyVaultOverlay: false,
+      openMigrateOverlay: false,
       walletBalanceTableHeaders: [
         {
           text: 'Asset',

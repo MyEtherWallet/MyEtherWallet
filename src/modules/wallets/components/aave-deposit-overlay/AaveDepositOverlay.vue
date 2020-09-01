@@ -102,12 +102,12 @@
             <v-card
               flat
               color="informationBlock"
-              class="pa-8 d-flex align-center justify-space-between"
+              class="px-8 py-3 d-flex align-center justify-space-between"
             >
               <div>
                 <div class="font-weight-bold mb-2">Amount to Deposit</div>
                 <div class="mew-heading-1 mb-1">
-                  12.256 <span class="font-weight-medium">DAI</span>
+                  12.256 <span class="mew-body font-weight-regular">DAI</span>
                 </div>
                 <div>$ 13.64</div>
               </div>
@@ -119,7 +119,7 @@
                 />
               </div>
             </v-card>
-            <div>
+            <div class="mt-5">
               <div class="d-flex align-center justify-space-between py-2">
                 <div class="d-flex align-center">
                   Current Health Factor
@@ -164,7 +164,7 @@
 
       <div>
         <h2 class="text-center mb-10">
-          Borrow
+          Deposite
         </h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="600px" class="pa-8">
@@ -174,9 +174,9 @@
                 color="informationBlock"
                 class="pa-6 mx-2 flex-grow-1"
               >
-                <div class="font-weight-bold mb-2">Amount to Deposit</div>
+                <div class="font-weight-bold mb-2">Aave Deposit Balance</div>
                 <div class="mew-heading-1 mb-1">
-                  12.256 <span class="font-weight-medium">DAI</span>
+                  12.256 <span class="mew-body font-weight-regular">DAI</span>
                 </div>
                 <div>$ 13.64</div>
               </v-card>
@@ -185,17 +185,17 @@
                 color="informationBlock"
                 class="pa-6 mx-2 flex-grow-1"
               >
-                <div class="font-weight-bold mb-2">Amount to Deposit</div>
+                <div class="font-weight-bold mb-2">Aave Wallet balance</div>
                 <div class="mew-heading-1 mb-1">
-                  12.256 <span class="font-weight-medium">DAI</span>
+                  12.256 <span class="mew-body font-weight-regular">SAI</span>
                 </div>
                 <div>$ 13.64</div>
               </v-card>
             </div>
 
-            <div class="mx-12 my-10">
-              <div class="font-weight-bold mb-2">
-                How much would you like to borrow?
+            <div class="mx-12 my-8">
+              <div class="mew-heading-3 mb-2">
+                How much would you like to deposit?
               </div>
               <div>
                 Set the amount you want to borrow. You can manually enter a
@@ -236,8 +236,8 @@
               </v-btn-toggle>
             </v-sheet>
 
-            <div class="d-flex justify-center mt-12">
-              <mew-button title="Borrow" button-size="xlarge" />
+            <div class="d-flex justify-center mt-6">
+              <mew-button title="Deposit" button-size="xlarge" />
             </div>
             <div class="d-flex justify-center mt-4">
               <mew-button

@@ -102,7 +102,7 @@
               >
                 <div class="font-weight-bold mb-2">Amount to Borrow</div>
                 <div class="mew-heading-1 mb-1">
-                  12.256 <span class="font-weight-medium">DAI</span>
+                  12.256 <span class="mew-body font-weight-regular">DAI</span>
                 </div>
                 <div>$ 13.64</div>
               </v-card>
@@ -113,14 +113,14 @@
               >
                 <div class="font-weight-bold mb-2">Amount to Borrow</div>
                 <div class="mew-heading-1 mb-1">
-                  12.256 <span class="font-weight-medium">DAI</span>
+                  12.256 <span class="mew-body font-weight-regular">DAI</span>
                 </div>
                 <div>$ 13.64</div>
               </v-card>
             </div>
 
-            <div class="mx-12 my-10">
-              <div class="font-weight-bold mb-2">
+            <div class="mx-12 my-8">
+              <div class="mew-heading-3 mb-2">
                 How much would you like to borrow?
               </div>
               <div>
@@ -162,7 +162,7 @@
               </v-btn-toggle>
             </v-sheet>
 
-            <div class="d-flex justify-center mt-12">
+            <div class="d-flex justify-center mt-6">
               <mew-button title="Borrow" button-size="xlarge" />
             </div>
             <div class="d-flex justify-center mt-4">
@@ -185,12 +185,12 @@
             <v-card
               flat
               color="informationBlock"
-              class="pa-8 d-flex align-center justify-space-between"
+              class="px-8 py-3 d-flex align-center justify-space-between"
             >
               <div>
                 <div class="font-weight-bold mb-2">Amount to Deposit</div>
                 <div class="mew-heading-1 mb-1">
-                  12.256 <span class="font-weight-medium">DAI</span>
+                  12.256 <span class="mew-body font-weight-regular">DAI</span>
                 </div>
                 <div>$ 13.64</div>
               </div>
@@ -202,23 +202,20 @@
                 />
               </div>
             </v-card>
-            <div>
+            <div class="mt-5">
               <div class="d-flex align-center justify-space-between py-2">
                 <div class="d-flex align-center">
                   Current Health Factor
                   <info-tooltip class="ml-2" text="Health" />
                 </div>
-                <div class="font-weight-bold primary--text">2.4725</div>
+                <div class="font-weight-bold secondary--text">2.4725%</div>
               </div>
               <div class="d-flex align-center justify-space-between py-2">
                 <div class="d-flex align-center">
                   Next Health Factor <info-tooltip class="ml-2" text="Health" />
                 </div>
-                <div class="font-weight-bold primary--text">
-                  2.123
-                  <v-icon class="red--text mew-heading-3"
-                    >mdi-arrow-down-bold</v-icon
-                  >
+                <div class="font-weight-bold secondary--text">
+                  Stable
                 </div>
               </div>
             </div>

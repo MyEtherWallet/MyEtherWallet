@@ -3,33 +3,41 @@
     <template v-slot:mewOverlayBody>
       <div>
         <h2 class="text-center mb-10">
-          Deposit
+          Migrate
         </h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="600px" class="pa-8">
-            <v-card flat color="informationBlock" class="pa-6 mx-2">
-              <div class="d-flex justify-space-between align-center">
-                <div>
-                  <div class="mew-heading-3 mb-1">DAI Balance</div>
-                  <div>
-                    Dai savings rate: <span class="primary--text">2.00%</span>
-                  </div>
+            <div class="d-flex">
+              <v-card
+                flat
+                color="informationBlock"
+                class="pa-6 mx-2 flex-grow-1"
+              >
+                <div class="font-weight-bold mb-2">My DAI Balance</div>
+                <div class="mew-heading-1 mb-1">
+                  12.256 <span class="mew-body font-weight-regular">DAI</span>
                 </div>
-                <div class="text-right">
-                  <div class="mew-heading-1 mb-1">
-                    12.256 <span class="mew-body font-weight-regular">DAI</span>
-                  </div>
-                  <div>$ 30.12</div>
+                <div>$ 13.64</div>
+              </v-card>
+              <v-card
+                flat
+                color="informationBlock"
+                class="pa-6 mx-2 flex-grow-1"
+              >
+                <div class="font-weight-bold mb-2">My CDPs</div>
+                <div class="mew-heading-1 mb-1">
+                  12.256 <span class="mew-body font-weight-regular">CDP</span>
                 </div>
-              </div>
-            </v-card>
+                <div>$ 13.64</div>
+              </v-card>
+            </div>
 
             <div class="mx-12 my-8">
               <div class="mew-heading-3 mb-2">
-                How many DAI do you want to deposit?
+                Migrate Single Collateral CDP to Multi-Collateral Vault
               </div>
               <div>
-                Here you can set the amount you want to deposit. You can
+                Here you can set the amount you want to migrate. You can
                 manually enter a specific amount or use the percentage buttons
                 below.
               </div>
@@ -69,7 +77,7 @@
             </v-sheet>
 
             <div class="d-flex justify-center mt-6">
-              <mew-button title="Deposit" button-size="xlarge" />
+              <mew-button title="Migrate" button-size="xlarge" />
             </div>
           </v-sheet>
         </mew6-white-sheet>
