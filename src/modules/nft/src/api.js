@@ -52,7 +52,6 @@ export default class API {
     })
       .then(data => data.json())
       .then(data => {
-        console.log('getNftDetailsApi'); // todo remove dev item
         return data.result.tokenContracts.find(item => {
           return item.contractIdAddress === contract;
         });
@@ -60,9 +59,6 @@ export default class API {
   }
 
   getImage(nft) {
-    // if (nft.customNft || nft.image === '') {
-    //   return placeholderImage;
-    // }
     return `${this.openSeaLambdaUrl}/getImage?contract=${nft.contract}&tokenId=${nft.token_id}`;
   }
 }

@@ -2,8 +2,6 @@ import configs from './config';
 import API from './api';
 import NftCollection from './nftCollection';
 
-// const endPointUrl = 'https://localhost:3000/local'
-
 export default class Nft {
   constructor(environment = {}) {
     this.active = true;
@@ -11,6 +9,7 @@ export default class Nft {
     this.activeAddress = environment.address;
     this.tokenSetUpdateHook = environment.tokenSetUpdateHook;
     this.setAvailableContracts = environment.setAvailableContracts;
+    this.errorHandler = environment.errorHandler || console.error;
     this.web3 = environment.web3;
     this.nftUrl = `${configs.url}getImage`;
     this.openSeaLambdaUrl = configs.url;
@@ -21,7 +20,8 @@ export default class Nft {
 
     this.api = new API({
       url: this.openSeaLambdaUrl,
-      address: this.activeAddress
+      address: this.activeAddress,
+      errorHandler: this.errorHandler
     });
   }
 
@@ -55,25 +55,29 @@ export default class Nft {
     if (this.network.type.name === 'ETH') {
       const configData = await this.api.getTokens();
       if (!configData.error) {
-        configData.tokenContracts.forEach(data => {
-          this.ownedTokenBasicDetails.push({
-            name: data.name,
-            count: data.owned_asset_count,
-            contract: data.contractIdAddress
+        try {
+          configData.tokenContracts.forEach(data => {
+            this.ownedTokenBasicDetails.push({
+              name: data.name,
+              count: data.owned_asset_count,
+              contract: data.contractIdAddress
+            });
+            nftData[data.contractIdAddress] = new NftCollection({
+              details: data,
+              api: this.api,
+              address: this.activeAddress,
+              tokenSetUpdateHook: this.tokenSetUpdateHook,
+              web3: this.web3
+            });
           });
-          nftData[data.contractIdAddress] = new NftCollection({
-            details: data,
-            api: this.api,
-            address: this.activeAddress,
-            tokenSetUpdateHook: this.tokenSetUpdateHook,
-            web3: this.web3
-          });
-        });
-        this.nftConfig = { ...nftData };
-        selectedContract = Object.keys(this.nftConfig)[0];
-        this.selectedContract = Object.keys(this.nftConfig)[0];
-        this.setAvailableContracts(Object.keys(this.nftConfig));
-        return selectedContract;
+          this.nftConfig = { ...nftData };
+          selectedContract = Object.keys(this.nftConfig)[0];
+          this.selectedContract = Object.keys(this.nftConfig)[0];
+          this.setAvailableContracts(Object.keys(this.nftConfig));
+          return selectedContract;
+        } catch (e) {
+          this.errorHandler(e);
+        }
       }
     }
   }
