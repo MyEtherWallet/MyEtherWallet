@@ -13,7 +13,7 @@ import {
 } from './partners';
 import BigNumber from 'bignumber.js';
 
-export default class Swap {
+export default class prep {
   constructor(environment) {
     this.swap = new SwapProviders(providers, environment);
   }
