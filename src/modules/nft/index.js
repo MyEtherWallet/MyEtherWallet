@@ -82,7 +82,6 @@ export default class NFT {
   }
 
   hasNextPage() {
-    // if (!this.currentActive) return false;
     try {
       return this.currentActive.hasNextPage();
     } catch (e) {
