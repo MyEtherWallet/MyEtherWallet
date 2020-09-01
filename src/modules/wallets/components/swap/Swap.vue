@@ -1,0 +1,82 @@
+<template>
+  <mew6-white-sheet sideinfo>
+    <div class="px-7 pt-5">
+      <div class="d-flex align-center justify-space-between">
+        <span class="mew-heading-2">{{ $t('common.swap') }}</span>
+        <mew-button
+          btn-style="transparent"
+          button-size="small"
+          :title="$t('common.more') + '...'"
+        />
+      </div>
+    </div>
+    <div class="pa-3">
+      <v-sheet
+        v-for="(data, key) in swapData"
+        :key="key"
+        color="tableHeader"
+        class="d-flex align-center justify-space-between border-radius--5px mt-1 py-3 px-4"
+      >
+        <div class="text-uppercase">
+          {{ data.rate }} {{ data.currency }} / ETH
+        </div>
+        <div class="d-flex align-center">
+          <img
+            width="22"
+            :src="
+              require('@/assets/images/currencies/' + data.currency + '.png')
+            "
+            alt="currency-icon"
+          />
+          <img
+            width="18"
+            class="mx-2"
+            src="@/assets/images/icons/icon-swap-arrow-grey.png"
+            alt="swap-icon"
+          />
+          <img
+            width="22"
+            src="@/assets/images/currencies/eth.png"
+            alt="eth-icon"
+          />
+        </div>
+      </v-sheet>
+    </div>
+  </mew6-white-sheet>
+</template>
+
+<script>
+export default {
+  components: {},
+  data() {
+    return {
+      swapData: [
+        {
+          rate: '0.002',
+          currency: 'btc'
+        },
+        {
+          rate: '0.002',
+          currency: 'btc'
+        },
+        {
+          rate: '0.002',
+          currency: 'btc'
+        },
+        {
+          rate: '0.002',
+          currency: 'btc'
+        },
+        {
+          rate: '0.002',
+          currency: 'btc'
+        },
+        {
+          rate: '0.002',
+          currency: 'btc'
+        }
+      ]
+    };
+  }
+};
+</script>

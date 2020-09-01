@@ -5,7 +5,6 @@ module.exports = {
     VERSION: 'test',
     NODE_ENV: 'test',
     ROUTER_MODE: 'hash',
-    BUILD_TYPE: 'web'
   },
   collectCoverageFrom: ['src/**/*.{js,vue}'],
   coveragePathIgnorePatterns: [
@@ -44,5 +43,5 @@ module.exports = {
   ],
   testEnvironmentOptions: {},
   testURL: 'http://localhost/',
-  setupTestFrameworkScriptFile: '<rootDir>/tests/unit/__mocks__/mocks.js'
+  setupFilesAfterEnv: ['<rootDir>/tests/unit/__mocks__/mocks.js']
 };
