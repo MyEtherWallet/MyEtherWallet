@@ -35,6 +35,8 @@ const defaultErrorHandler = (...e) => {
 export default class Changelly {
   constructor(props = {}) {
     this.errorHandler = props.errorHandler || defaultErrorHandler;
+    this.setUpUpdater = props.setUpUpdater || function () {};
+    this.rateRetrievedUpdater = props.rateRetrievedUpdater || function () {};
     this.changellyCalls = new ChangellyCalls(this.errorHandler);
     this.name = Changelly.getName();
     this.network = props.network || networkSymbols.ETH;

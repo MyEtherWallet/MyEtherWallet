@@ -1,6 +1,5 @@
 import { host } from './config';
-import { post, get } from '@/helpers/httpRequests';
-import { utils } from '../helpers';
+import { utils, post, get } from '../helpers';
 
 export default class SimplexApi {
   constructor(errorHandler) {

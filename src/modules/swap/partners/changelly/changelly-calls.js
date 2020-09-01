@@ -1,8 +1,7 @@
 import debugLogger from 'debug';
-import { post } from '@/helpers/httpRequests';
 import { changellyMethods, requireExtraId } from './config';
 import { swapApiEndpoints } from '../partnersConfig';
-import { utils } from '../helpers';
+import { utils, post } from '../helpers';
 
 const errorLogger = debugLogger('v5-error:changelly-api');
 

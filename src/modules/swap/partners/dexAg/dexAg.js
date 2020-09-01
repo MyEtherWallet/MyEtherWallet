@@ -13,7 +13,7 @@ import {
 import dexAgCalls from './dexAg-calls';
 
 import debug from 'debug';
-import { utils } from '@/partners';
+import { utils } from '../helpers';
 
 const errorLogger = debug('v5:partners-dexag');
 
@@ -21,10 +21,11 @@ const defaultErrorHandler = (...e) => {
   throw e;
 };
 
-
 export default class DexAg {
   constructor(props = {}) {
     this.errorHandler = props.errorHandler || defaultErrorHandler;
+    this.setUpUpdater = props.setUpUpdater || function () {};
+    this.rateRetrievedUpdater = props.rateRetrievedUpdater || function () {};
     this.name = DexAg.getName();
     this.baseCurrency = 'ETH';
     this.network = props.network || networkSymbols.ETH;
@@ -105,8 +106,12 @@ export default class DexAg {
       } = await dexAgCalls.getSupportedCurrencies(this.network);
       this.currencyDetails = currencyDetails;
       this.tokenDetails = tokenDetails;
-      this.hasRates =
-        Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
+
+      if (Object.keys(this.tokenDetails).length > 0) {
+        this.setUpUpdater(this.name);
+      }
+      // this.hasRates =
+      //   Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {
       errorLogger(e);
     }

@@ -23,6 +23,8 @@ const defaultErrorHandler = (...e) => {
 export default class Simplex {
   constructor(props = {}) {
     this.errorHandler = props.errorHandler || defaultErrorHandler;
+    this.setUpUpdater = props.setUpUpdater || function(){};
+    this.rateRetrievedUpdater = props.rateRetrievedUpdater || function(){};
     this.simplexApi = new SimplexApi(this.errorHandler);
     this.name = Simplex.getName();
     this.network = props.network || networkSymbols.ETH;

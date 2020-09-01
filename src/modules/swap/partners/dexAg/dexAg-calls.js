@@ -1,6 +1,5 @@
-import { post } from '@/helpers/httpRequests';
-import { utils } from '../helpers';
-import { swapApiEndpoints } from '@/partners/partnersConfig';
+import { utils, post } from '../helpers';
+import { swapApiEndpoints } from '../partnersConfig';
 import { dexAgMethods } from './config';
 
 function buildPath() {
