@@ -32,6 +32,14 @@
       >
         Withdraw Overlay
       </div>
+
+      <manageMyVault :open="openManageMyVault" />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="openManageMyVault = true"
+      >
+        Manage MyVault Overlay
+      </div>
     </div>
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
@@ -162,16 +170,18 @@
 <script>
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import transactionConfirmationOverlay from '@/modules/wallets/components/transaction-confirmation-overlay/TransactionConfirmationOverlay';
-import collateralizeDaiOverlay from '@/modules/wallets/components/collateralize-dai-overlay/CollateralizeDaiOverlay';
-import depositDaiOverlay from '@/modules/wallets/components/deposit-dai-overlay/DepositDaiOverlay';
-import withdrawDaiOverlay from '@/modules/wallets/components/withdraw-dai-overlay/WithdrawDaiOverlay';
+import collateralizeDaiOverlay from '@/modules/wallets/components/maker-dao-collateralize-dai-overlay/CollateralizeDaiOverlay';
+import depositDaiOverlay from '@/modules/wallets/components/maker-dao-deposit-dai-overlay/DepositDaiOverlay';
+import withdrawDaiOverlay from '@/modules/wallets/components/maker-dao-withdraw-dai-overlay/WithdrawDaiOverlay';
+import manageMyVault from '@/modules/wallets/components/maker-dao-manage-my-vault/ManageMyVault';
 
 export default {
   components: {
     transactionConfirmationOverlay,
     collateralizeDaiOverlay,
     depositDaiOverlay,
-    withdrawDaiOverlay
+    withdrawDaiOverlay,
+    manageMyVault
   },
   data() {
     return {
@@ -179,6 +189,7 @@ export default {
       openCollateralizeDaiOverlay: false,
       openDepositDaiOverlay: false,
       openWithdrawDaiOverlay: false,
+      openManageMyVault: false,
       walletBalanceTableHeaders: [
         {
           text: 'Asset',
