@@ -2,7 +2,7 @@
 
 ### Bug
 
-- Add a max check to Aave withdraw [#2540] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2540)
+- Add a max check to Aave withdraw [#2540](https://github.com/MyEtherWallet/MyEtherWallet/pull/2540)
 
 ### Devop
 
