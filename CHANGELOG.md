@@ -1,3 +1,83 @@
+### Release v5.7.6-hotfix.1
+
+### Devop
+
+- Remove twitter popup [#2551](https://github.com/MyEtherWallet/MyEtherWallet/pull/2551)
+
+### Release v5.7.6
+
+### Bug
+
+- Better token load on offline and cx gas price [#2545](https://github.com/MyEtherWallet/MyEtherWallet/pull/2545)
+- Fix missed cases for gas price too high, add warning for VET [#2544](https://github.com/MyEtherWallet/MyEtherWallet/pull/2544)
+
+### Devop
+
+- Add Press kit page [#2547](https://github.com/MyEtherWallet/MyEtherWallet/pull/2547)
+- Add transaction fee estimate and high gas warning to swap [#2549](https://github.com/MyEtherWallet/MyEtherWallet/pull/2549)
+
+### Release v5.7.5
+
+### Devop
+
+- Update MEW wallet from MEWconnect [#2542](https://github.com/MyEtherWallet/MyEtherWallet/pull/2542)
+
+### Release v5.7.4
+
+### Devop
+
+- Update empty decision tree md files [#2538](https://github.com/MyEtherWallet/MyEtherWallet/pull/2538)
+
+### Bug
+
+- Fix modal UI bug [#2537](https://github.com/MyEtherWallet/MyEtherWallet/pull/2537)
+- Fix cx networks import [#2529](https://github.com/MyEtherWallet/MyEtherWallet/pull/2529)
+
+### Release v5.7.3-hotfix.1
+
+### Devop
+
+- Twitter popup [#2533](https://github.com/MyEtherWallet/MyEtherWallet/pull/2533)
+
+### Bug
+
+- Fix sign message for bcvault [#2527](https://github.com/MyEtherWallet/MyEtherWallet/pull/2527)
+
+### Release v5.7.3
+
+### Devop
+
+- Add gas check for kyber swaps [#2524](https://github.com/MyEtherWallet/MyEtherWallet/pull/2524)
+
+### Bug
+
+- Change token so even if contract succeeds some can still be loaded, show renew ens [#2523](https://github.com/MyEtherWallet/MyEtherWallet/pull/2523)
+- CW error catch, Gaslimit warning for collection, more bcvault fixes [#2521](https://github.com/MyEtherWallet/MyEtherWallet/pull/2521)
+- Remove contract when not sending tokens [#2525](https://github.com/MyEtherWallet/MyEtherWallet/pull/2525)
+- Fix sign message for bcvault [#2527](https://github.com/MyEtherWallet/MyEtherWallet/pull/2527)
+
+### Release v5.7.2
+
+### Bug
+
+- Remove disabled message and button on firefox for bcvault, add error when no account received [#2499](https://github.com/MyEtherWallet/MyEtherWallet/pull/2499)
+- CX hang possible fix [#2507](https://github.com/MyEtherWallet/MyEtherWallet/pull/2507)
+
+### Devop
+
+- Use Batch EstimateGas [#2417](https://github.com/MyEtherWallet/MyEtherWallet/pull/2417)
+
+### Release v5.7.1
+
+### Bug
+
+- Fix logos for tokens with src not from masterfile [#2500](https://github.com/MyEtherWallet/MyEtherWallet/pull/2500)
+- Sentry fixes y [#2479](https://github.com/MyEtherWallet/MyEtherWallet/pull/2479)
+- Sentry fixes j [#2474](https://github.com/MyEtherWallet/MyEtherWallet/pull/2474)
+- Whitelist prkl correctly [#2502](https://github.com/MyEtherWallet/MyEtherWallet/pull/2502)
+- Cx tokens not showing [#2492](https://github.com/MyEtherWallet/MyEtherWallet/pull/2492)
+- Revert walletconnect library [#2503](https://github.com/MyEtherWallet/MyEtherWallet/pull/2503)
+
 ### Release v5.7.0
 
 ### Bug
@@ -5,7 +85,6 @@
 - Remove sai [#2462](https://github.com/MyEtherWallet/MyEtherWallet/pull/2462)
 - Remove normalize on string check [#2463](https://github.com/MyEtherWallet/MyEtherWallet/pull/2463)
 - Update Aave withdraw and healthfactor [#2460](https://github.com/MyEtherWallet/MyEtherWallet/pull/2460)
-- Revert walletconnect library [#2486](https://github.com/MyEtherWallet/MyEtherWallet/pull/2486)
 
 ### Devop
 

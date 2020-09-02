@@ -24,6 +24,7 @@
       :signed-array="signedArray"
       :un-signed-array="unSignedArray"
       :sending="sending"
+      :show-gas-warning="showCollectionGasWarning"
     />
     <confirm-modal
       v-if="fromAddress !== null"
@@ -167,8 +168,7 @@ export default {
         },
         fromValue: undefined,
         toValue: undefined
-      },
-      showGasWarning: false
+      }
     };
   },
   computed: {
@@ -184,12 +184,18 @@ export default {
         return this.account.address;
       }
       return null;
+    },
+    showCollectionGasWarning() {
+      const foundGasAboveLimit = this.unSignedArray.find(item => {
+        return BigNumber(item.gasPrice).gte(this.gasLimitWarning);
+      });
+      return foundGasAboveLimit ? true : false;
+    },
+    showGasWarning() {
+      return this.gasPrice >= this.gasLimitWarning;
     }
   },
   watch: {
-    gasPrice(newVal) {
-      this.showGasWarning = newVal >= this.gasLimitWarning;
-    },
     wallet(newVal) {
       if (newVal !== null) {
         if (this.$refs.hasOwnProperty('confirmModal')) {

@@ -29,28 +29,44 @@ class BCVault {
   }
 
   async init() {
-    // fetch devices
-    this.deviceNumber = await this.bcWallet.getDevices().catch(err => {
-      errorHandler(err);
-      return;
+    const _self = this;
+    return new Promise((resolve, reject) => {
+      _self.bcWallet
+        .getDevices()
+        .then(res => {
+          if (!res) {
+            reject({
+              jsError: 'mew3'
+            });
+            return;
+          } else if (res && res.length === 0) {
+            reject({
+              jsError: 'mew5'
+            });
+            return;
+          }
+          _self.deviceNumber = res;
+          _self.bcWallet
+            .EnterGlobalPin(_self.deviceNumber[0], _self.bcWalletType)
+            .then(() => {
+              _self.bcWallet
+                .getBatchWalletDetails(_self.deviceNumber[0], [
+                  _self.bcWalletType
+                ])
+                .then(walletRes => {
+                  if (!walletRes || walletRes.length === 0) {
+                    return reject({
+                      jsError: 'mew4'
+                    });
+                  }
+                  resolve(walletRes);
+                })
+                .catch(reject);
+            })
+            .catch(reject);
+        })
+        .catch(reject);
     });
-    if (!this.deviceNumber) {
-      errorHandler({
-        jsError: 'mew3'
-      });
-      return;
-    }
-    // get wallet of first device and password
-    // not sure if we want the users to pass this as a parameter or ask user
-    // for which wallet to use
-    await this.bcWallet
-      .EnterGlobalPin(this.deviceNumber[0], this.bcWalletType)
-      .catch(errorHandler);
-    const walletAddresses = await this.bcWallet
-      .getBatchWalletDetails(this.deviceNumber[0], [bc.WalletType.ethereum])
-      .catch(errorHandler);
-
-    return walletAddresses;
   }
 
   getAccount(address) {
@@ -115,12 +131,7 @@ class BCVault {
     };
     const msgSigner = async msg => {
       const result = await this.bcWallet
-        .SignData(
-          this.deviceNumber[0],
-          this.bcWalletType,
-          this.selectedAddress,
-          msg
-        )
+        .SignData(this.deviceNumber[0], this.bcWalletType, address, msg)
         .catch(errorHandler);
       if (result) {
         const signature = result.substr(2);

@@ -36,25 +36,16 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['network', 'web3'])
+    ...mapState('main', ['network', 'web3', 'Networks'])
   },
   created() {
-    window.chrome.storage.onChanged.addListener(() => {
-      ExtensionHelpers.getAccounts(this.getAccountsCb);
-    });
+    window.chrome.storage.onChanged.addListener(this.fetchNewStore);
   },
   mounted() {
-    ExtensionHelpers.getAccounts(this.getAccountsCb);
-    if (this.network.type.ens) {
-      this.setENS(
-        new ENS(this.web3.currentProvider, this.network.type.ens.registry)
-      );
-    } else {
-      this.setENS(null);
-    }
+    this.fetchNewStore();
   },
   methods: {
-    ...mapActions('main', ['setENS']),
+    ...mapActions('main', ['setENS', 'setWeb3Instance', 'switchNetwork']),
     addWallet() {
       const chrome = window.chrome;
       if (chrome.runtime.openOptionsPage) {
@@ -63,6 +54,21 @@ export default {
         // eslint-disable-next-line
         window.open(chrome.runtime.getURL('index.html'));
       }
+    },
+    fetchNewStore() {
+      window.chrome.storage.sync.get(null, obj => {
+        const defaultNetwork = obj.hasOwnProperty('defNetwork')
+          ? this.Networks[JSON.parse(obj['defNetwork']).key][0]
+          : this.Networks['ETH'][0];
+        this.switchNetwork(defaultNetwork).then(() => {
+          this.setWeb3Instance().then(() => {
+            this.setENS(
+              new ENS(this.web3.currentProvider, this.network.type.ens.registry)
+            );
+          });
+        });
+        ExtensionHelpers.getAccounts(this.getAccountsCb);
+      });
     },
     async fetchEthBalance() {
       const price = await fetch(

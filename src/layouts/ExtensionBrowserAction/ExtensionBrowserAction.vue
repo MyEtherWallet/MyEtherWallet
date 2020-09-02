@@ -18,6 +18,7 @@ import WalletSideMenu from './components/WalletSideMenu';
 import { Toast, ExtensionHelpers } from '@/helpers';
 import { mapState, mapActions } from 'vuex';
 import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -34,39 +35,37 @@ export default {
     ...mapState('main', ['web3', 'network', 'Networks'])
   },
   created() {
-    window.chrome.storage.onChanged.addListener(this.storageListener);
+    window.chrome.storage.onChanged.addListener(this.fetchNewStore);
   },
   mounted() {
     this.getEthPrice();
     this.getTokenPrices();
-    this.fetchAccountFromStore();
+    this.fetchNewStore();
   },
   destroyed() {
-    window.chrome.storage.onChanged.addListener(this.storageListener);
+    window.chrome.storage.onChanged.addListener(this.fetchNewStore);
   },
   methods: {
-    ...mapActions('main', ['switchNetwork', 'setWeb3Instance']),
+    ...mapActions('main', ['switchNetwork', 'setWeb3Instance', 'setGasPrice']),
     fetchAccountFromStore() {
       ExtensionHelpers.getAccounts(this.getAccountsCb);
     },
-    storageListener(changed) {
-      if (changed && changed.hasOwnProperty('defNetwork')) {
-        const networkProps = JSON.parse(changed['defNetwork'].newValue);
-        const network = this.Networks[networkProps.key].find(actualNetwork => {
-          return actualNetwork.service === networkProps.service;
+    fetchNewStore() {
+      window.chrome.storage.sync.get(null, obj => {
+        const defaultNetwork = obj.hasOwnProperty('defNetwork')
+          ? this.Networks[JSON.parse(obj['defNetwork']).key][0]
+          : this.Networks['ETH'][0];
+        this.switchNetwork(defaultNetwork).then(() => {
+          this.setWeb3Instance().then(() => {
+            this.web3.eth.getGasPrice().then(res => {
+              this.setGasPrice(
+                this.web3.utils.fromWei(new BigNumber(res).toString(), 'gwei')
+              );
+            });
+          });
         });
-        this.switchNetwork(
-          !network ? this.Networks[networkProps.key][0] : network
-        ).then(() => {
-          this.setWeb3Instance();
-        });
-      } else {
-        this.setWeb3Instance();
-      }
-
-      if (isAddress(Object.keys(changed)[0])) {
         this.fetchAccountFromStore();
-      }
+      });
     },
     getAccountsCb(res) {
       const accounts = Object.keys(res)
@@ -86,26 +85,58 @@ export default {
       this.wallets = accounts.slice();
     },
     getEthPrice() {
-      fetch('https://cryptorates.mewapi.io/ticker?filter=ETH')
-        .then(res => {
-          res.json().then(response => {
-            this.ethPrice = response.data.ETH.quotes.USD.price;
+      try {
+        fetch('https://cryptorates.mewapi.io/ticker?filter=ETH')
+          .then(res => {
+            res
+              .json()
+              .then(response => {
+                if (response.error) {
+                  this.ethPrice = 0;
+                } else {
+                  this.ethPrice = response.data.ETH.quotes.USD.price;
+                }
+              })
+              .catch(() => {
+                Toast.responseHandler(
+                  this.$t('mewcx.trouble-fetching-eth'),
+                  Toast.ERROR
+                );
+              });
+          })
+          .catch(e => {
+            Toast.responseHandler(e, Toast.ERROR);
           });
-        })
-        .catch(e => {
-          Toast.responseHandler(e, Toast.ERROR);
-        });
+      } catch (e) {
+        Toast.responseHandler(this.$t('mewcx.trouble-fetching'), Toast.ERROR);
+      }
     },
     getTokenPrices() {
-      fetch('https://cryptorates.mewapi.io/ticker')
-        .then(res => {
-          res.json().then(response => {
-            this.tokenPrices = Object.assign({}, response.data);
+      try {
+        fetch('https://cryptorates.mewapi.io/ticker')
+          .then(res => {
+            res
+              .json()
+              .then(response => {
+                if (response.error) {
+                  this.tokenPrices = {};
+                } else {
+                  this.tokenPrices = Object.assign({}, response.data);
+                }
+              })
+              .catch(() => {
+                Toast.responseHandler(
+                  this.$t('mewcx.trouble-fetching'),
+                  Toast.ERROR
+                );
+              });
+          })
+          .catch(e => {
+            Toast.responseHandler(e, Toast.ERROR);
           });
-        })
-        .catch(e => {
-          Toast.responseHandler(e, Toast.ERROR);
-        });
+      } catch (e) {
+        Toast.responseHandler(this.$t('mewcx.trouble-fetching'), Toast.ERROR);
+      }
     }
   }
 };
