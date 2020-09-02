@@ -100,7 +100,9 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      amount: 25
+    };
   }
 };
 </script>

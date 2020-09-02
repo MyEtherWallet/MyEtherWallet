@@ -277,7 +277,7 @@ export default {
             '0x68f6ce1e607d6a6ec6fb1aaa6f43bb8210658f49065ae5a7325c5771ea1100e8'
         },
         {
-          activity: 'Deposited 12.00000 DAI',
+          activity: 'Deposited 32.00000 DAI',
           date: '01/02/2020, 2:16:32 PM',
           txHash:
             '0x68f6ce1e607d6a6ec6fb1aaa6f43bb8210658f49065ae5a7325c5771ea1100e8'
