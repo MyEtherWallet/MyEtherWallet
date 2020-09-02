@@ -1,10 +1,10 @@
 <template>
-  <div style="max-width: 500px;">
+  <div style="max-width: 500px">
     <div class="d-flex align-items-center mb-3">
       <h3 class="mr-2">{{ $t('dappsMCDMaker.upgrade-sai-to-dai') }}</h3>
       <img :src="DaiIcon" class="icon-size" />
     </div>
-    <div style="max-width: 500px;" class="mb-5">
+    <div style="max-width: 500px" class="mb-5">
       {{ $t('dappsMCDMaker.upgrade-informational') }}
     </div>
     <div class="top-buttons">
