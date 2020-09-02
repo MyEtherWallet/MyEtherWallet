@@ -21,13 +21,15 @@
             width="700px"
             class="pa-8 mew-component--aave-borrow-overlay"
           >
-            <mew-table
-              has-select
-              :table-select-headers="tableHeader"
-              :table-select-data="tableData"
+            <mew-table :table-headers="tableHeader" :table-data="tableData" />
+
+            <mew-expand-panel
+              class="mt-10"
+              :panel-items="panelItems"
+              has-dividers
             />
 
-            <div class="d-flex justify-center my-8">
+            <div class="d-flex justify-center mt-8">
               <mew-button
                 button-size="xlarge"
                 title="Continue"
@@ -37,6 +39,154 @@
           </v-sheet>
         </mew6-white-sheet>
       </div>
+
+      <div>
+        <h2 class="text-center mb-10">
+          2. Deposit ETH and Generate DAI
+        </h2>
+        <mew6-white-sheet>
+          <v-sheet color="transparent" width="600px" class="pa-8">
+            <v-row class="mb-5">
+              <v-col cols="6" md="6">
+                <div class="mew-heading-3 mb-2">My Collateralization Ratio</div>
+                <div>65.34% (Min 150%)</div>
+              </v-col>
+              <v-col cols="6" md="6">
+                <div class="mew-heading-3 mb-2">My Liquidation Price</div>
+                <div>$420.53</div>
+              </v-col>
+              <v-col cols="6" md="6">
+                <div class="mew-heading-3 mb-2">Current ETH Price</div>
+                <div>$120.53</div>
+              </v-col>
+              <v-col cols="6" md="6">
+                <div class="mew-heading-3 mb-2">Stability Fee</div>
+                <div>4.00%</div>
+              </v-col>
+            </v-row>
+            <div class="d-flex mx-n2">
+              <v-card
+                flat
+                color="informationBlock"
+                class="pa-6 mx-2 flex-grow-1"
+              >
+                <div class="font-weight-bold mb-2">My ETH Balance</div>
+                <div class="mew-heading-1 mb-1">
+                  12.256 <span class="mew-body font-weight-regular">ETH</span>
+                </div>
+                <div>$ 13.64</div>
+              </v-card>
+              <v-card
+                flat
+                color="informationBlock"
+                class="pa-6 mx-2 flex-grow-1"
+              >
+                <div class="font-weight-bold mb-2">
+                  Max Available to Generate
+                </div>
+                <div class="mew-heading-1 mb-1">
+                  12.256 <span class="mew-body font-weight-regular">DAI</span>
+                </div>
+                <div>$ 13.64</div>
+              </v-card>
+            </div>
+
+            <div class="mx-12 my-8">
+              <div class="mew-heading-3 mb-2">
+                How much ETH would you like to lock in your Vault?
+              </div>
+              <div>
+                The amount of ETH you lock up determines how much Dai you can
+                generate.
+              </div>
+            </div>
+
+            <v-sheet max-width="300px" class="mx-auto" color="transparent">
+              <mew-input placeholder=" " label="Amount" />
+            </v-sheet>
+
+            <v-sheet
+              max-width="250px"
+              class="mx-auto mt-n2"
+              color="transparent"
+            >
+              <v-btn-toggle
+                v-model="vaultAmount"
+                tile
+                color="deep-purple accent-3"
+                group
+              >
+                <v-btn value="25">
+                  25%
+                </v-btn>
+
+                <v-btn value="50">
+                  50%
+                </v-btn>
+
+                <v-btn value="75">
+                  75%
+                </v-btn>
+
+                <v-btn value="100">
+                  Max
+                </v-btn>
+              </v-btn-toggle>
+            </v-sheet>
+
+            <div class="mx-12 my-8">
+              <div class="mew-heading-3 mb-2">
+                How much DAI would you like to generate?
+              </div>
+              <div>
+                Generate an amount that is safely above the liquidation ratio.
+              </div>
+            </div>
+
+            <v-sheet max-width="300px" class="mx-auto" color="transparent">
+              <mew-input placeholder=" " label="Amount" />
+            </v-sheet>
+
+            <v-sheet
+              max-width="250px"
+              class="mx-auto mt-n2"
+              color="transparent"
+            >
+              <v-btn-toggle
+                v-model="daiAmount"
+                tile
+                color="deep-purple accent-3"
+                group
+              >
+                <v-btn value="25">
+                  25%
+                </v-btn>
+
+                <v-btn value="50">
+                  50%
+                </v-btn>
+
+                <v-btn value="75">
+                  75%
+                </v-btn>
+
+                <v-btn value="100">
+                  Max
+                </v-btn>
+              </v-btn-toggle>
+            </v-sheet>
+
+            <div class="error--text py-3 text-center">
+              A Vault requires a minimum of 20 DAI to be generated
+            </div>
+
+            <div class="d-flex justify-center mt-6">
+              <mew-button title="Continue" button-size="xlarge" />
+            </div>
+          </v-sheet>
+        </mew6-white-sheet>
+      </div>
+
       <div>
         <h2 class="text-center mb-10">
           Collateralize DAI
@@ -96,61 +246,79 @@ export default {
   },
   data() {
     return {
+      vaultAmount: 25,
+      daiAmount: 25,
       tableHeader: [
         {
-          text: 'Address',
-          value: 'address',
-          sortable: false,
+          text: 'COLLATERAL TYPE',
+          value: 'collateralType',
+          sortable: true,
           filterable: false,
           width: '100%'
         },
         {
-          text: '#Token',
-          value: 'token',
+          text: 'STABILITY FEE',
+          value: 'stabilityFee',
+          sortable: true,
+          filterable: false,
+          width: '60%'
+        },
+        {
+          text: 'LIQ RATIO',
+          value: 'liqRatio',
+          sortable: true,
+          filterable: false,
+          containsLink: false,
+          width: '100%'
+        },
+        {
+          text: 'LIQ fee',
+          value: 'liqFee',
+          sortable: true,
+          filterable: false,
+          containsLink: false,
+          width: '100%'
+        },
+        {
+          text: 'My BALANCE',
+          value: 'balance',
           sortable: false,
           filterable: false,
           containsLink: true,
-          width: '30%'
-        },
-        {
-          text: '24H Changes',
-          value: 'change',
-          sortable: false,
-          filterable: false,
-          width: '30%'
-        },
-        {
-          text: '',
-          value: 'callToAction',
-          sortable: false,
-          filterable: false,
-          width: '20%'
+          width: '100%'
         }
       ],
       tableData: [
         {
-          ethBalance: '0.0001 ETH',
-          token: '21',
-          tokenImg:
-            'https://cdn4.iconfinder.com/data/icons/cryptocoins/227/ETH-512.png',
-          address: '0xAECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+          collateralType: 'ETH-A',
+          stabilityFee: '4.00%',
+          liqRatio: '150%',
+          liqFee: '13.00%',
+          balance: '0.038 ETH'
         },
         {
-          ethBalance: '2.23 ETH',
-          token: '10',
-          address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
-          change: '0.23%',
-          status: '+',
-          changeData: {
-            x: [1, 4, 10, 4],
-            y: [5, 1, 34, 43]
-          }
+          collateralType: 'ETH-B',
+          stabilityFee: '4.00%',
+          liqRatio: '150%',
+          liqFee: '13.00%',
+          balance: '0.038 ETH'
+        }
+      ],
+      panelItems: [
+        {
+          name: 'What is stability fee?',
+          subtext: '',
+          colorTheme: 'transparent'
         },
         {
-          ethBalance: '0.23 ETH',
-          token: '8',
-          address: '0xAECFF9CD2367cdbb726E904cD6397eDFcAe6068D',
-          callToAction: 'Edit'
+          name: 'What is liquidation ratio?',
+          subtext: '',
+          colorTheme: 'transparent'
+        },
+        {
+          name: 'What is liquidation fee?',
+          subtext: '',
+          colorTheme: 'transparent'
         }
       ]
     };
