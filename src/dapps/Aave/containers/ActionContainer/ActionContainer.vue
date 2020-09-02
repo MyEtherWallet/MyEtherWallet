@@ -110,6 +110,7 @@
     />
     <confirmation-modal
       ref="confirmationModal"
+      :is-max="isMax"
       :action-title="actionTitle"
       :user-summary="userSummary"
       :active-deposit-tab="activeDepositTab"
@@ -156,6 +157,7 @@ export default {
   },
   data() {
     return {
+      isMax: false,
       errorMsg: '',
       amount: null,
       ethPrice: 0,
@@ -273,6 +275,9 @@ export default {
       this.$emit('emitTakeAction', param);
     },
     setPercentAmount(selectedBtn, percentage) {
+      if (percentage === 1) {
+        this.isMax = true;
+      }
       this.amount = new BigNumber(this.amountToCheck)
         .times(percentage)
         .toFixed();
