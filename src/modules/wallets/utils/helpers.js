@@ -1,5 +1,16 @@
 import { bufferToInt } from 'ethereumjs-util';
 
+const walletRequirePass = ethjson => {
+  if (!ethjson) return false;
+  if (ethjson.encseed != null) return true;
+  else if (ethjson.Crypto != null || ethjson.crypto != null) return true;
+  else if (ethjson.hash != null && ethjson.locked) return true;
+  else if (ethjson.hash != null && !ethjson.locked) return false;
+  else if (ethjson.publisher == 'MyEtherWallet' && !ethjson.encrypted)
+    return false;
+  return true;
+};
+
 const getBufferFromHex = hex => {
   hex = sanitizeHex(hex);
   const _hex = hex.toLowerCase().replace('0x', '');
@@ -58,5 +69,6 @@ export {
   sanitizeHex,
   padLeftEven,
   getHexTxObject,
-  calculateChainIdFromV
+  calculateChainIdFromV,
+  walletRequirePass
 };
