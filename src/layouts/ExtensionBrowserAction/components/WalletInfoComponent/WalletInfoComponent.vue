@@ -162,7 +162,7 @@
           </div>
           <div class="wallet-value-container">
             <p class="title">
-              {{ ($t('mewcx.value-of-tokens', { plural: '' })) }}
+              {{ $t('mewcx.value-of-tokens', { plural: '' }) }}
             </p>
             <p class="dollar-amt">{{ walletTokensWithBalance.total }}</p>
             <p class="value">

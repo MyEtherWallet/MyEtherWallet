@@ -1,12 +1,12 @@
 import { Toast } from '@/helpers';
 import Vue from 'vue';
 const ERRORS = {
-  '27010': 'bcvaultError.invalid-device-pin-or-password',
+  27010: 'bcvaultError.invalid-device-pin-or-password',
   daemonError2: 'bcvaultError.closed-modal',
   daemonError1: 'bcvaultError.session-error',
   daemonError3: 'bcvaultError.https-issue',
-  '25601': 'bcvaultError.user-no-action',
-  '40449': 'bcvaultError.user-cancelled-action',
+  25601: 'bcvaultError.user-no-action',
+  40449: 'bcvaultError.user-cancelled-action',
   daemonError0x6901: 'bcvaultError.daemon0x6901'
 };
 const WARNING = {
