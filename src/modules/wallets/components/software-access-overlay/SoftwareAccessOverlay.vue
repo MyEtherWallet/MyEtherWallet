@@ -1,7 +1,14 @@
 <template>
-  <mew-overlay :show-overlay="open" :title="title" right-btn-text="Cancel">
+  <mew-overlay
+    :show-overlay="open"
+    :title="title"
+    right-btn-text="Cancel"
+    :back="accessBack"
+    :close="overlayClose"
+    @closeOverlay="close"
+  >
     <template v-slot:mewOverlayBody>
-      <div>
+      <div v-if="!step">
         <v-sheet color="transparent" max-width="650px" class="mx-auto px-5">
           <v-row>
             <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
@@ -14,41 +21,66 @@
                 @click.native="btn.fn"
               />
             </v-col>
+            <v-col cols="12" sm="12">
+              <warning-sheet
+                title="Not Recommended"
+                description="This information is sensetive, and these options should only be used in offline settings by experienced crypto users."
+                :link-obj="warningSheetObj"
+              />
+            </v-col>
           </v-row>
         </v-sheet>
         <div class="spacer-y-medium" />
       </div>
+      <access-keystore-overlay
+        v-else-if="step === 1"
+        :btn-call="btnCall"
+        @keystore="handleKeystoreUpload"
+      />
     </template>
   </mew-overlay>
 </template>
 
 <script>
+import accessKeystoreOverlay from '../access-keystore-overlay/AccessKeystoreOverlay';
+
 const TITLES = {
-  keystore: 'Keystore',
+  keystoreFile: 'Keystore File',
   mnemonic: 'Mnemonic Phrase',
-  privateKey: 'Private Key'
+  privateKey: 'Private Key',
+  keystorePasasword: 'Keystore File Password'
 };
 
-const TYPES = ['keystore', 'mnemonic', 'privateKey'];
-
+const TYPES = ['keystoreFile', 'mnemonic', 'privateKey', 'keystorePasasword'];
 export default {
   name: 'AccessWalletSoftware',
+  components: {
+    accessKeystoreOverlay
+  },
   props: {
     open: {
       type: Boolean,
       default: false
+    },
+    close: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
     return {
       titles: TITLES,
+      warningSheetObj: {
+        title: 'Learn More',
+        url: 'https://kb.myetherwallet.com/en/offline/using-mew-offline'
+      },
       buttons: [
         {
           label: 'Keystore',
           description: 'Access via Keystore',
           icon: require('@/assets/images/icons/icon-keystore-file.svg'),
           fn: () => {
-            this.btnCall('keystore');
+            this.btnCall('keystoreFile');
           }
         },
         {
@@ -69,7 +101,9 @@ export default {
         }
       ],
       type: '',
-      step: 0
+      step: 0,
+      file: {},
+      keystoreModule: {}
     };
   },
   computed: {
@@ -77,6 +111,7 @@ export default {
       return !this.step ? 'Software' : this.titles[this.type];
     }
   },
+  mounted() {},
   methods: {
     btnCall(str) {
       if (TYPES.includes(str)) {
@@ -85,6 +120,21 @@ export default {
         throw new Error('Not a valid type!');
       }
       this.step = 1;
+    },
+    handleKeystoreUpload(e) {
+      this.file = e;
+    },
+    unlockKeystoreWallet() {},
+    accessBack() {
+      if (!this.step) {
+        this.close('showSoftware');
+        return;
+      }
+      this.step -= 1;
+    },
+    overlayClose() {
+      console.log('got here?? 12345');
+      this.close('showSoftware');
     }
   }
 };

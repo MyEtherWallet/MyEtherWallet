@@ -65,10 +65,10 @@
       </div>
     </v-sheet>
     <div class="spacer-y-medium" />
-    <browser-extension-overlay :open="showBrowser" />
-    <hardware-wallets-overlay :open="showHardware" />
-    <mobile-apps-overlay :open="showMobile" />
-    <software-access-overlay :open="showSoftware" />
+    <browser-extension-overlay :open="showBrowser" :close="close" />
+    <hardware-wallets-overlay :open="showHardware" :close="close" />
+    <mobile-apps-overlay :open="showMobile" :close="close" />
+    <software-access-overlay :open="showSoftware" :close="close" />
   </div>
 </template>
 
@@ -88,18 +88,26 @@ export default {
     mobileAppsOverlay,
     softwareAccessOverlay
   },
-  data: () => ({
-    titleData: {
-      textProps: 'white--text',
-      toptitle: '',
-      title: 'Access My Wallet',
-      description: '',
-      centered: true
-    },
-    showBrowser: false,
-    showHardware: false,
-    showMobile: false,
-    showSoftware: false
-  })
+  data() {
+    return {
+      titleData: {
+        textProps: 'white--text',
+        toptitle: '',
+        title: 'Access My Wallet',
+        description: '',
+        centered: true
+      },
+      showBrowser: false,
+      showHardware: false,
+      showMobile: false,
+      showSoftware: false
+    };
+  },
+  methods: {
+    close(type) {
+      console.log('got here??');
+      this[type] = false;
+    }
+  }
 };
 </script>
