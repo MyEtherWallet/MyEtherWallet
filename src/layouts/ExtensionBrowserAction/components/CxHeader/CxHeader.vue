@@ -220,6 +220,11 @@ export default {
       return Misc.getService(this.network.type.blockExplorerAddr);
     }
   },
+  watch: {
+    web3() {
+      this.setHighGasPrice();
+    }
+  },
   mounted() {
     this.$refs.cxNetworkDropdown.$on('show', () => {
       this.networkOpen = true;

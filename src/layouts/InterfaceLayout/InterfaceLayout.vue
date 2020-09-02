@@ -532,7 +532,7 @@ export default {
           });
           tokens = tokens.concat(filteredNetwork).map(item => {
             if (!item.hasOwnProperty('balance')) {
-              item.balance = 0;
+              item.balance = 'Load';
             }
             return item;
           });
@@ -587,7 +587,7 @@ export default {
           .then(res => {
             let tokenBalance;
             if (Number(res) === 0 || res === '0x') {
-              tokenBalance = 0;
+              tokenBalance = '0';
             } else {
               const denominator = new BigNumber(10).pow(token.decimals);
               tokenBalance = new BigNumber(res).div(denominator).toString();
@@ -638,10 +638,27 @@ export default {
             symbol: token.symbol,
             website: token.website
           };
+
+          if (token.hasOwnProperty('logo')) {
+            convertedToken['logo'] = token.logo;
+          }
           return convertedToken;
         });
-
-      this.tokens = tokens.sort(sortByBalance);
+      this.tokens = tokens
+        .sort((a, b) => {
+          const a1 = typeof a.balance,
+            b1 = typeof b.balance;
+          return a1 > b1
+            ? -1
+            : a1 < b1
+            ? 1
+            : a.balance < b.balance
+            ? -1
+            : a.balance > b.balance
+            ? 1
+            : 0;
+        })
+        .sort(sortByBalance);
       this.setTokensWithBalance();
     },
     setTokensWithBalance() {
@@ -692,15 +709,17 @@ export default {
     },
     getBalance() {
       const web3 = this.web3;
-      web3.eth
-        .getBalance(this.address.toLowerCase())
-        .then(res => {
-          this.balance = web3.utils.fromWei(res, 'ether');
-          this.setAccountBalance(res);
-        })
-        .catch(e => {
-          Toast.responseHandler(e, Toast.ERROR);
-        });
+      if (this.address) {
+        web3.eth
+          .getBalance(this.address.toLowerCase())
+          .then(res => {
+            this.balance = web3.utils.fromWei(res, 'ether');
+            this.setAccountBalance(res);
+          })
+          .catch(e => {
+            Toast.responseHandler(e, Toast.ERROR);
+          });
+      }
     },
     checkWeb3WalletAddrChange() {
       const web3 = this.web3;
@@ -767,6 +786,9 @@ export default {
             this.pollBlock = _sub;
           });
         }
+      } else {
+        this.receivedTokens = true;
+        this.tokens = this.network.type.tokens;
       }
     }),
     async getBlockUpdater() {
@@ -813,6 +835,12 @@ export default {
       clearInterval(this.pollAddress);
     },
     web3WalletPollNetwork() {
+      if (!window.web3.eth) {
+        Toast.responseHandler(
+          new Error(this.$t('interface.web3-not-found')),
+          Toast.ERROR
+        );
+      }
       if (
         !window.web3.eth.net ||
         typeof window.web3.eth.net.getId !== 'function'
@@ -841,7 +869,7 @@ export default {
       this.pollAddress = setInterval(() => {
         if (!window.web3.eth) {
           Toast.responseHandler(
-            new Error('Web3 Instance not found!'),
+            new Error(this.$t('interface.web3-not-found')),
             Toast.ERROR
           );
           clearInterval(this.pollAddress);

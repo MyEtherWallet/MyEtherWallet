@@ -328,40 +328,44 @@ export default class DexAg {
         data: tradeDetails.trade.data,
         value: tradeDetails.trade.value
       };
-      if (
-        tradeDetails.metadata.gasPrice &&
-        swapDetails.provider === 'bancor' &&
-        this.platformGasPrice > 0
-      ) {
+
+      const checkGas =
+        tradeDetails.metadata.gasPrice && this.platformGasPrice > 0;
+
+      if (checkGas) {
         const gasPrice = new BigNumber(tradeDetails.metadata.gasPrice);
         const platformGasPrice = this.web3.utils.toWei(
           this.platformGasPrice.toString(),
           'gwei'
         );
+
         if (gasPrice.lte(platformGasPrice)) {
           Toast.responseHandler(`gas-too-high`, 1, true);
           throw Error('abort');
         }
       }
 
-      if (preparedTradeTxs.size > 0) {
-        switch (swapDetails.provider) {
-          case 'curvefi':
-            tx.gas = 2000000;
-            break;
-          case 'zero_x':
-          case 'dexag':
-            tx.gas = this.tradeGasLimitBase;
-            break;
-          default:
-            tx.gas = this.tradeGasLimitBase;
-        }
-      }
-
       preparedTradeTxs.add(tx);
 
-      const swapTransactions = Array.from(preparedTradeTxs);
+      if (preparedTradeTxs.size > 0) {
+        const preparedAry = Array.from(preparedTradeTxs);
+        const result = await dexAgCalls.estimateGas(
+          preparedAry,
+          swapDetails.fromAddress
+        );
 
+        if (!result) {
+          throw Error('abort');
+        }
+        const swapTransactions = preparedAry.map((entry, index) => {
+          entry.gas = result[index];
+          return entry;
+        });
+
+        return [...swapTransactions];
+      }
+
+      const swapTransactions = Array.from(preparedTradeTxs);
       return [...swapTransactions];
     } catch (e) {
       errorLogger(e);
@@ -378,8 +382,17 @@ export default class DexAg {
 
     const tradeDetails = await this.createTransaction(swapDetails, dexToUse);
 
+    if (!tradeDetails) {
+      throw Error('abort');
+    } else if (tradeDetails.error) {
+      Toast.responseHandler(tradeDetails.error, 1);
+      throw Error('abort');
+    }
+
     const marketImpact = tradeDetails.metadata.marketImpact
       ? tradeDetails.metadata.marketImpact
+        ? tradeDetails.metadata.marketImpact
+        : 0
       : 0;
 
     if (new BigNumber(marketImpact).gte(MARKET_IMPACT_CUTOFF)) {
@@ -388,12 +401,6 @@ export default class DexAg {
       return swapDetails;
     }
 
-    if (!tradeDetails) {
-      throw Error('abort');
-    } else if (tradeDetails.error) {
-      Toast.responseHandler(tradeDetails.error, 1);
-      throw Error('abort');
-    }
     const providerAddress = tradeDetails.metadata.input
       ? tradeDetails.metadata.input.spender
         ? tradeDetails.metadata.input.spender
@@ -418,7 +425,6 @@ export default class DexAg {
       timestamp: new Date(Date.now()).toISOString()
     };
     swapDetails.isDex = DexAg.isDex();
-
     return swapDetails;
   }
 

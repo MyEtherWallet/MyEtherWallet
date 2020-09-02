@@ -220,7 +220,7 @@
             <td>
               <div class="name-container">
                 <figure v-lazy-load class="token-icon">
-                  <img :src="token.tokenMew.logo" @error="iconFallback" />
+                  <img :data-url="token.tokenMew.logo" @error="iconFallback" />
                 </figure>
                 <p>
                   {{ token.tokenMew.name }}
@@ -308,8 +308,7 @@ import EditWalletModal from '../EditWalletModal';
 import RemoveWalletModal from '../RemoveWalletModal';
 import { mapState, mapActions } from 'vuex';
 import { Toast, Misc, ExtensionHelpers } from '@/helpers';
-import utils from 'web3-utils';
-import masterFile from '@/master-file.json';
+import masterFile from '@/_generated/master-file.json';
 import PasswordOnlyModal from '../PasswordOnlyModal';
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import { WalletInterface } from '@/wallets';
@@ -368,17 +367,14 @@ export default {
   data() {
     return {
       loading: false,
-      tokens: [],
-      localTokenVersion: [],
-      customTokens: [],
-      localCustomTokens: [],
       showTokens: false,
       masterFile: masterFile,
       favorited: false,
       balanceWarnHidden: true,
       path: 'access',
       password: '',
-      downloadFile: ''
+      downloadFile: '',
+      tokens: []
     };
   },
   computed: {
@@ -424,9 +420,7 @@ export default {
       return `${currencyBalance} ${this.network.type.currencyName}`;
     },
     walletTokensWithBalance() {
-      const tokensWithBalance = this.walletToken.filter(item => {
-        return item.balance !== 'Load' && new BigNumber(item.balance).gt(0);
-      });
+      const tokensWithBalance = this.tokens;
       let totalTokenAmt = new BigNumber(0);
       const tokensWithDollarAmt = [];
       tokensWithBalance.forEach(item => {
@@ -444,8 +438,7 @@ export default {
 
       const currencyDollar = new BigNumber(this.balance).times(this.usd);
       const totalWalletBalance = currencyDollar.plus(totalTokenAmt).toNumber();
-
-      return {
+      const obj = {
         tokens: tokensWithBalance,
         length: tokensWithBalance.length,
         tokensWDollarAmt: tokensWithDollarAmt,
@@ -453,6 +446,15 @@ export default {
         total: this.toDollar(totalTokenAmt.toNumber()),
         totalWalletBalance: this.toDollar(totalWalletBalance)
       };
+      return obj;
+    }
+  },
+  watch: {
+    tokens: {
+      handler: function (newValue) {
+        this.tokens = newValue;
+      },
+      deep: true
     }
   },
   created() {
@@ -463,16 +465,26 @@ export default {
     if (this.wallet !== '') {
       this.generateBlob();
     }
+    if (this.walletToken.length > 0) {
+      this.processTokens();
+    }
   },
   destroyed() {
     window.chrome.storage.onChanged.removeListener(this.checkIfFavorited);
   },
   methods: {
     ...mapActions('main', ['decryptWallet']),
+    processTokens() {
+      const tokens = this.walletToken.filter(item => {
+        return item.balance !== 'Load' && new BigNumber(item.balance).gt(0);
+      });
+      this.tokens = this.tokens.concat(tokens);
+    },
     iconFallback(evt) {
       evt.target.src = this.network.type.icon;
     },
     walletRequirePass(ethjson) {
+      if (!ethjson) return false;
       if (ethjson.encseed != null) return true;
       else if (ethjson.Crypto != null || ethjson.crypto != null) return true;
       else if (ethjson.hash != null && ethjson.locked) return true;
@@ -635,35 +647,6 @@ export default {
           );
         }
       });
-    },
-    retrieveLogo(address, symbol) {
-      const networkMasterFile = this.masterFile.data.filter(item => {
-        return (
-          item.network.toLowerCase() === this.network.type.name.toLowerCase()
-        );
-      });
-      try {
-        // eslint-disable-next-line
-        const image = require(`@/assets/images/currency/coins/AllImages/${symbol}.svg`);
-        return image;
-      } catch (e) {
-        const foundToken = networkMasterFile.find(item => {
-          return (
-            utils.toChecksumAddress(item.contract_address) ===
-            utils.toChecksumAddress(address)
-          );
-        });
-
-        if (foundToken) {
-          return foundToken.icon;
-        }
-        try {
-          // eslint-disable-next-line
-          return require(`@/assets/images/networks/${symbol.toLowerCase()}`);
-        } catch (e) {
-          return this.network.type.icon;
-        }
-      }
     },
     isGreateThanZero(val) {
       return new BigNumber(val).gt(0);
