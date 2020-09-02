@@ -320,6 +320,7 @@ export default {
   },
   data() {
     return {
+      amount: 25,
       tokenType: 'all',
       tableHeaders: [
         {
@@ -369,35 +370,21 @@ export default {
           balance: '15.2342 DAI',
           deposit: '2.35343 DAI',
           apr: '9.74%',
-          callToAction: 'Deposit'
+          callToAction: 'Borrow'
         },
         {
-          token: 'XMR',
+          token: 'ADR',
           balance: '15.2342 DAI',
           deposit: '2.35343 DAI',
           apr: '9.74%',
-          callToAction: 'Deposit'
+          callToAction: 'Borrow'
         },
         {
-          token: 'XMR',
+          token: 'XDA',
           balance: '15.2342 DAI',
           deposit: '2.35343 DAI',
           apr: '9.74%',
-          callToAction: 'Deposit'
-        },
-        {
-          token: 'XMR',
-          balance: '15.2342 DAI',
-          deposit: '2.35343 DAI',
-          apr: '9.74%',
-          callToAction: 'Deposit'
-        },
-        {
-          token: 'XMR',
-          balance: '15.2342 DAI',
-          deposit: '2.35343 DAI',
-          apr: '9.74%',
-          callToAction: 'Deposit'
+          callToAction: 'Borrow'
         }
       ]
     };

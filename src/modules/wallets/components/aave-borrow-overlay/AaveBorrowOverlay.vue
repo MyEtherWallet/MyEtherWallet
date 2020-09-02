@@ -365,28 +365,14 @@ export default {
           callToAction: 'Borrow'
         },
         {
-          token: 'XMR',
+          token: 'ADR',
           balance: '15.2342 DAI',
           deposit: '2.35343 DAI',
           apr: '9.74%',
           callToAction: 'Borrow'
         },
         {
-          token: 'XMR',
-          balance: '15.2342 DAI',
-          deposit: '2.35343 DAI',
-          apr: '9.74%',
-          callToAction: 'Borrow'
-        },
-        {
-          token: 'XMR',
-          balance: '15.2342 DAI',
-          deposit: '2.35343 DAI',
-          apr: '9.74%',
-          callToAction: 'Borrow'
-        },
-        {
-          token: 'XMR',
+          token: 'XDA',
           balance: '15.2342 DAI',
           deposit: '2.35343 DAI',
           apr: '9.74%',
