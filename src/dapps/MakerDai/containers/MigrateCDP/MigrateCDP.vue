@@ -1,5 +1,5 @@
 <template>
-  <div style="max-width: 500px;">
+  <div style="max-width: 500px">
     <div class="d-flex align-items-center mb-5">
       <h3 class="mr-2">
         {{ $t('dappsMCDMaker.migrate-single-collateral-to-multi-collateral') }}
@@ -24,7 +24,7 @@
       <div v-show="noSaiAvailable && !needsAtLeast20">
         {{ $t('dappsMCDMaker.not-enough-sai') }}
       </div>
-      <div v-show="needsAtLeast20" style="padding: 10px;">
+      <div v-show="needsAtLeast20" style="padding: 10px">
         {{
           $t('dappsMCDMaker.needs-at-least-20', {
             value: migrateContractBalance

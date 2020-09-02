@@ -26,7 +26,7 @@
           </i18n>
         </div>
 
-        <div class="row" style="margin-top: 70px;">
+        <div class="row" style="margin-top: 70px">
           <div
             v-for="(p, key) in pressAssets"
             :key="key"

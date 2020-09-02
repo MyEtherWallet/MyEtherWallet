@@ -67,7 +67,7 @@
           </div>
           <div class="fee-value">
             <div class="gwei">
-              {{ gasPrice }} {{ $t('common.gas.gwei') }}
+              {{ displayedGasPrice(gasPrice) }} {{ $t('common.gas.gwei') }}
               <!--(Economic)-->
             </div>
             <div v-show="network.type.name === 'ETH'" class="usd">
@@ -411,6 +411,12 @@ export default {
     if (this.online && this.network.type.name === 'ETH') this.getEthPrice();
   },
   methods: {
+    displayedGasPrice(val) {
+      const newVal = val.toString();
+      return newVal.toString().includes('.')
+        ? `~ ${new BigNumber(newVal).toFixed(2).toString()}`
+        : newVal;
+    },
     clear() {
       this.toData = '';
       this.toValue = '0';
