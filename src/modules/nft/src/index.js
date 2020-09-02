@@ -83,15 +83,22 @@ export default class Nft {
   }
 
   async getFirstTokenSet(selectedContract) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
+      if (!this.nftConfig[selectedContract]) {
+        reject(`NFT contract [${selectedContract}] not found for address`);
+      }
       this.nftConfig[selectedContract]
         .getNftDetails(selectedContract)
         .then(() => {
-          this.nftConfig[selectedContract]
-            .getNftDetails(selectedContract, 9, 18, true)
-            .then(() => {
-              resolve(this.nftConfig[selectedContract]);
-            });
+          if (this.nftConfig[selectedContract].count > 9) {
+            this.nftConfig[selectedContract]
+              .getNftDetails(selectedContract, 9, 18, true)
+              .then(() => {
+                resolve(this.nftConfig[selectedContract]);
+              });
+          } else {
+            resolve(this.nftConfig[selectedContract]);
+          }
         });
     });
   }

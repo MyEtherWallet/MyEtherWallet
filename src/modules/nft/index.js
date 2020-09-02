@@ -22,19 +22,29 @@ export default class NFT {
     this.ready = false;
   }
 
-  async init(selectedContractOverride) {
-    try {
-      let selectedContract = await this.nft.setup();
-      if (selectedContractOverride) {
-        selectedContract = selectedContractOverride;
+  init(selectedContractOverride) {
+    return new Promise((resolve, reject) => {
+      try {
+        this.nft
+          .setup()
+          .then(selectedContract => {
+            if (selectedContractOverride) {
+              selectedContract = selectedContractOverride;
+            }
+            this.selectedContract = selectedContract;
+            return this.nft.getFirstTokenSet(selectedContract);
+          })
+          .then(currentActive => {
+            this.currentActive = currentActive;
+            this.currentPageState = this.currentActive.getPageState();
+            this.ready = true;
+            resolve(this.currentPageState);
+          });
+      } catch (e) {
+        reject(e);
+        // this.errorHandler(e);
       }
-      this.selectedContract = selectedContract;
-      this.currentActive = await this.nft.getFirstTokenSet(selectedContract);
-      this.currentPageState = this.currentActive.getPageState();
-      this.ready = true;
-    } catch (e) {
-      this.errorHandler(e);
-    }
+    });
   }
 
   get currentActiveContract() {
@@ -60,9 +70,9 @@ export default class NFT {
         this.errorHandler('No NFTs found for contract address');
         resolve();
       }
-      this.activateResolver = resolve;
+      // this.activateResolver = resolve;
       this.currentActive = this.nft.nftConfig[contractAddress];
-      this.nft.nftConfig[contractAddress].activate();
+      resolve(this.nft.nftConfig[contractAddress].activate());
     });
   }
 
@@ -122,8 +132,6 @@ export default class NFT {
     } catch (e) {
       this.errorHandler(e);
     }
-
-
   }
 
   setAvailableContracts(contracts) {

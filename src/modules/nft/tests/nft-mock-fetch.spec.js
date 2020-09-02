@@ -1,46 +1,83 @@
+import fetch from 'jest-fetch-mock';
 import NFT from '../index';
-import API from '../src/api';
-import configs from '../src/config';
+// import API from '../src/api';
+// import configs from '../src/config';
+import mockDataa66 from './mockData-0x43689531907482bee7e650d18411e284a7337a66';
+import mockDatad67 from './mockData-0xab95286ca61b7c94659d853f1fba629508ab4d67';
 import Web3 from 'web3';
+import API from '@/modules/nft/src/api';
+import configs from '@/modules/nft/src/config';
 
+jest.setMock('node-fetch', fetch);
 const web3 = new Web3(
   'https://mainnet.infura.io/v3/7d06294ad2bd432887eada360c5e1986'
 );
 describe('NFT Module', () => {
-  describe.each([
-    '0x43689531907482bee7e650d18411e284a7337a66',
-    '0xab95286ca61b7c94659d853f1fba629508ab4d67'
-  ])('NFT API Module', address => {
-    let pairsToTest = [];
-    let api;
-    beforeAll(() => {
-      api = new API({ address: address, url: configs.url });
-    });
-    test('it should get owned contract tokens and counts', done => {
-      api.getTokens().then(res => {
-        const pairs = res.tokenContracts.reduce((acc, cur) => {
-          acc.push([address, cur.contractIdAddress]);
-          return acc;
-        }, []);
-        pairsToTest = [...pairsToTest, ...pairs];
-        expect(res).toEqual(expect.anything());
-        done();
-      });
-    });
-    test('it should get tokens ids owned by contract', done => {
-      const hasContract = pairsToTest.find(item => {
-        return item[0] === address;
-      });
-      const params = {
-        address: address,
-        contractAddresses: [hasContract[1]]
-      };
-      api.getNftDetailsApi(hasContract[1], params).then(res => {
-        expect(res).toEqual(expect.anything());
-        done();
-      });
-    }, 10000);
+  beforeAll(() => {
+    fetch.enableMocks();
   });
+  afterAll(() => {
+    fetch.disableMocks();
+  });
+  describe('NFT API MOCKED', () => {
+    describe.each([
+      '0x43689531907482bee7e650d18411e284a7337a66',
+      '0xab95286ca61b7c94659d853f1fba629508ab4d67'
+    ])('NFT API Module', address => {
+      let pairsToTest = [];
+      let api;
+      beforeAll(() => {
+        if (address === '0xab95286ca61b7c94659d853f1fba629508ab4d67') {
+          fetch.mockResponse(req => {
+            if (req.method === 'POST') {
+              return Promise.resolve(JSON.stringify({ result: mockDatad67 }));
+            }
+            console.log(req.url, req.method); // todo remove dev item
+            return Promise.resolve(JSON.stringify(mockDatad67));
+          });
+        } else {
+          fetch.mockResponse(req => {
+            if (req.method === 'POST') {
+              return Promise.resolve(JSON.stringify({ result: mockDataa66 }));
+            }
+            console.log(req.url, req.method); // todo remove dev item
+            return Promise.resolve(JSON.stringify(mockDataa66));
+          });
+        }
+        api = new API({ address: address, url: configs.url });
+      });
+      afterAll(() => {
+        fetch.resetMocks();
+      });
+      test('it should get owned contract tokens and counts', done => {
+        api.getTokens().then(res => {
+          const pairs = res.tokenContracts.reduce((acc, cur) => {
+            console.log(cur.name); // todo remove dev item
+            acc.push([address, cur.contractIdAddress]);
+            return acc;
+          }, []);
+          pairsToTest = [...pairsToTest, ...pairs];
+          expect(res).toEqual(expect.anything());
+          console.log(fetch.mock.calls.length); // todo remove dev item
+          done();
+        });
+      });
+      test('it should get tokens ids owned by contract', done => {
+        const hasContract = pairsToTest.find(item => {
+          return item[0] === address;
+        });
+        const params = {
+          address: address,
+          contractAddresses: [hasContract[1]]
+        };
+        api.getNftDetailsApi(hasContract[1], params).then(res => {
+          expect(res).toEqual(expect.anything());
+          done();
+        });
+      }, 10000);
+    });
+  });
+
   describe('NFT Module Core', () => {
     const pairsToTest = [
       [
@@ -106,6 +143,24 @@ describe('NFT Module', () => {
       (address, contractAddress) => {
         let nft;
         beforeAll(done => {
+          if (address === '0xab95286ca61b7c94659d853f1fba629508ab4d67') {
+            fetch.mockResponse(req => {
+              if (req.method === 'POST') {
+                return Promise.resolve(JSON.stringify({ result: mockDatad67 }));
+              }
+              console.log(req.url, req.method); // todo remove dev item
+              return Promise.resolve(JSON.stringify(mockDatad67));
+            });
+          } else {
+            fetch.mockResponse(req => {
+              if (req.method === 'POST') {
+                return Promise.resolve(JSON.stringify({ result: mockDataa66 }));
+              }
+              console.log(req.url, req.method); // todo remove dev item
+              return Promise.resolve(JSON.stringify(mockDataa66));
+            });
+          }
+
           nft = new NFT({
             address,
             web3
@@ -114,6 +169,10 @@ describe('NFT Module', () => {
             done();
           });
         });
+        afterAll(() => {
+          fetch.resetMocks();
+        });
+
         test('it should activate a contract', done => {
           nft.setActiveContract(contractAddress).then(() => {
             done();
@@ -126,6 +185,7 @@ describe('NFT Module', () => {
         test('it should get display values for active nft contract', done => {
           nft.getPageValues().then(values => {
             let expected = 9;
+            console.log(values.name); // todo remove dev item
             expect(values.name).toEqual(expect.anything());
             expect(values.currentPage).toEqual(1);
             expect(values.count).toBeGreaterThan(0);
@@ -193,7 +253,7 @@ describe('NFT Module', () => {
     );
   });
 
-  describe('NFT Core Module Check with a nft not owned by address', () => {
+  xdescribe('NFT Core Module Check with a nft not owned by address', () => {
     let tokensShown = [];
     const address = '0x43689531907482bee7e650d18411e284a7337a66';
     // const contractAddress = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
@@ -269,7 +329,7 @@ describe('NFT Module', () => {
     }, 1000000);
   });
 
-  describe('NFT Core Module (Manual check)', () => {
+  xdescribe('NFT Core Module (Manual check)', () => {
     let tokensShown = [];
     const address = '0x43689531907482bee7e650d18411e284a7337a66';
     const contractAddress = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';

@@ -1,3 +1,5 @@
+import ABI from './ABI';
+
 export default class Sender {
   constructor({ address, web3, tokens, contractAddresses = [] }) {
     this.web3 = web3;
@@ -5,7 +7,10 @@ export default class Sender {
     this.tokens = tokens;
     this.address = address;
     this.isCryptoKitties = false;
-
+    if (!this.web3) {
+      throw Error('NFT Module requires Web3');
+    }
+    this.contract = new this.web3.eth.Contract(ABI);
     if (
       this.contractAddresses.includes(
         '0x06012c8cf97bead5deae237070f9587f8e7a266d'
@@ -32,86 +37,30 @@ export default class Sender {
   }
 
   safeTransferFrom(to, tokenId, details) {
-    const ABI = [
-      {
-        constant: false,
-        inputs: [
-          {
-            name: 'from',
-            type: 'address'
-          },
-          {
-            name: 'to',
-            type: 'address'
-          },
-          {
-            name: 'tokenId',
-            type: 'uint256'
-          }
-        ],
-        name: 'safeTransferFrom',
-        outputs: [],
-        payable: false,
-        stateMutability: 'nonpayable',
-        type: 'function'
-      }
-    ];
-
-    const contract = new this.web3.eth.Contract(ABI, details.contract);
+    this.contract.options.address = details.contract;
     return {
       to: details.contract,
-      data: contract.methods
+      data: this.contract.methods
         .safeTransferFrom(this.address, to, tokenId)
         .encodeABI()
     };
   }
 
   transferFrom(to, tokenId, details) {
-    const ABI = [
-      {
-        constant: false,
-        inputs: [
-          { name: '_from', type: 'address' },
-          { name: '_to', type: 'address' },
-          {
-            name: '_tokenId',
-            type: 'uint256'
-          }
-        ],
-        name: 'transferFrom',
-        outputs: [],
-        payable: false,
-        stateMutability: 'nonpayable',
-        type: 'function'
-      }
-    ];
-
-    const contract = new this.web3.eth.Contract(ABI, details.contract);
+    this.contract.options.address = details.contract;
     return {
       to: details.contract,
-      data: contract.methods.transferFrom(this.address, to, tokenId).encodeABI()
+      data: this.contract.methods
+        .transferFrom(this.address, to, tokenId)
+        .encodeABI()
     };
   }
 
   cryptoKittiesTransfer(to, tokenId, details) {
-    const cryptoKittiesContract = new this.web3.eth.Contract([
-      {
-        constant: false,
-        inputs: [
-          { name: '_to', type: 'address' },
-          { name: '_tokenId', type: 'uint256' }
-        ],
-        name: 'transfer',
-        outputs: [],
-        payable: false,
-        stateMutability: 'nonpayable',
-        type: 'function'
-      }
-    ]);
-
+    this.contract.options.address = details.contract;
     return {
       to: details.contract,
-      data: cryptoKittiesContract.methods.transfer(to, tokenId).encodeABI()
+      data: this.contract.methods.transfer(to, tokenId).encodeABI()
     };
   }
 

@@ -9,6 +9,7 @@ export default class API {
 
   async getTokens() {
     return new Promise((resolve, reject) => {
+      console.log(`${this.openSeaLambdaUrl}/nft?address=${this.address}`); // todo remove dev item
       fetch(`${this.openSeaLambdaUrl}/nft?address=${this.address}`, {
         mode: 'cors',
         cache: 'no-cache',
@@ -20,6 +21,7 @@ export default class API {
           if (newData.message) {
             throw Error(newData.message);
           }
+          // console.log(newData); // todo remove dev item
           resolve(newData);
         })
         .catch(error => {
@@ -38,6 +40,12 @@ export default class API {
   }
 
   async getNftDetailsApi(contract, params) {
+    console.log({
+      jsonrpc: '2.0',
+      method: '',
+      params,
+      id: 83
+    }); // todo remove dev item
     return await fetch(`${this.openSeaLambdaUrl}/nft`, {
       mode: 'cors',
       cache: 'no-cache',
@@ -52,6 +60,7 @@ export default class API {
     })
       .then(data => data.json())
       .then(data => {
+        // console.log(data); // todo remove dev item
         return data.result.tokenContracts.find(item => {
           return item.contractIdAddress === contract;
         });

@@ -46,7 +46,7 @@ export default class NftCollection {
   }
 
   activate() {
-    this.getFirstTokenSet().catch(this.errorHandler);
+    return this.getFirstTokenSet();
   }
 
   getPanelDetails() {
@@ -244,9 +244,10 @@ export default class NftCollection {
   }
 
   getPrevious() {
-    if (this.currentPage >= 1) {
+    if (this.currentPage >= 2) {
       this.currentPage--;
       return this.getPageState();
     }
+    return this.getPageState();
   }
 }
