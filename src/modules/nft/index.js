@@ -8,17 +8,14 @@ export default class NFT {
     this.nft = new Nft({
       network: this.network,
       address: this.address,
-      tokenSetUpdateHook: this.updateActiveTokenSet.bind(this),
       setAvailableContracts: this.setAvailableContracts.bind(this),
       web3: this.web3,
       errorHandler: this.errorHandler
     });
     this.availableContracts = [];
     this.selectedContract = {};
-    this.activeTokenSet = [];
     this.currentActive = '';
     this.currentPageState = '';
-    this.activateResolver = '';
     this.ready = false;
   }
 
@@ -42,7 +39,6 @@ export default class NFT {
           });
       } catch (e) {
         reject(e);
-        // this.errorHandler(e);
       }
     });
   }
@@ -65,30 +61,24 @@ export default class NFT {
 
   setActiveContract(contractAddress) {
     return new Promise(resolve => {
-      // if (!contractAddress) return this.selectedContract;
       if (!this.nft.nftConfig[contractAddress]) {
         this.errorHandler('No NFTs found for contract address');
         resolve();
       }
-      // this.activateResolver = resolve;
       this.currentActive = this.nft.nftConfig[contractAddress];
       resolve(this.nft.nftConfig[contractAddress].activate());
     });
   }
 
-  async getPageValues() {
-    try {
-      this.currentPageState = await this.currentActive.getPageState();
-      return this.currentPageState;
-    } catch (e) {
-      this.errorHandler(e);
+  getPageValues() {
+    return this.currentActive.getPageState().catch(() => {
       return {
         name: 'unknown',
         currentPage: 0,
         count: 0,
         tokens: []
       };
-    }
+    });
   }
 
   hasNextPage() {
@@ -100,38 +90,17 @@ export default class NFT {
   }
 
   async nextPage() {
-    try {
-      return this.currentActive.getNext();
-    } catch (e) {
-      this.errorHandler(e);
-    }
+    return new Promise((resolve, reject) => {
+      this.currentActive.getNext().then(resolve).catch(reject);
+    });
   }
 
   priorPage() {
-    try {
-      return this.currentActive.getPrevious();
-    } catch (e) {
-      this.errorHandler(e);
-    }
+    return this.currentActive.getPrevious();
   }
 
   selectNftsToShow() {
-    try {
-      return this.currentActive.selectNftsToShow();
-    } catch (e) {
-      this.errorHandler(e);
-    }
-  }
-
-  updateActiveTokenSet(tokenSet) {
-    try {
-      if (this.activateResolver) {
-        this.activateResolver(tokenSet);
-      }
-      this.activeTokenSet = tokenSet;
-    } catch (e) {
-      this.errorHandler(e);
-    }
+    return this.currentActive.selectNftsToShow();
   }
 
   setAvailableContracts(contracts) {

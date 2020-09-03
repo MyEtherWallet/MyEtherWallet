@@ -4,7 +4,6 @@ import Sender from './senders';
 
 export default class NftCollection {
   constructor(props) {
-    this.tokenSetUpdateHook = props.tokenSetUpdateHook;
     this.address = props.address;
     this.api = props.api;
     this.web3 = props.web3;
@@ -37,16 +36,14 @@ export default class NftCollection {
     });
   }
 
-  getRetrievedCount() {
-    return this.tokens.length;
-  }
-
   getTokens() {
     return this.tokens;
   }
 
   activate() {
-    return this.getFirstTokenSet();
+    return new Promise((resolve, reject) => {
+      this.getFirstTokenSet().then(resolve).catch(reject);
+    });
   }
 
   getPanelDetails() {
@@ -63,9 +60,8 @@ export default class NftCollection {
       .on('transactionHash', () => {
         this.removeSentNft(tokenId);
       })
-      .on('error', err => {
+      .on('error', () => {
         this.resetNFT();
-        this.errorHandler(err);
       });
   }
 
@@ -165,15 +161,14 @@ export default class NftCollection {
     }
   }
 
-  async getNftsToShow() {
+  getNftsToShow() {
     this.nftToShowList = this.selectNftsToShow();
   }
 
-  async getFirstTokenSet() {
+  getFirstTokenSet() {
     return new Promise((resolve, reject) => {
       this.getNftDetails()
         .then(() => {
-          this.tokenSetUpdateHook(this.tokens);
           if (this.count > 9) {
             this.getNftDetails(this.contract, 9, 18, true)
               .then(() => {
@@ -194,13 +189,18 @@ export default class NftCollection {
         let startIndex =
           this.currentPage * this.countPerPage - this.countPerPage;
         let endIndex = this.currentPage * this.countPerPage;
-        if (this.tokens.length >= this.count) {
+        if (
+          this.tokens.length >= this.count ||
+          this.tokens.length >= endIndex
+        ) {
           this.startIndex = startIndex;
           this.endIndex = endIndex;
+          this.collectionLoading = false;
           resolve(this.getPageState());
           return;
         }
         if (this.collectionLoading) {
+          resolve(this.getPageState());
           return;
         }
 
@@ -235,7 +235,9 @@ export default class NftCollection {
 
   getNext() {
     this.getNftsToShow();
+
     this.currentPage++;
+
     if (this.tokens.length <= this.currentPage * this.countPerPage) {
       this.collectionLoading = true;
       return this.incrementTokenList();

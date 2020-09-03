@@ -7,7 +7,6 @@ export default class Nft {
     this.active = true;
     this.network = environment.network || { type: { name: 'ETH' } };
     this.activeAddress = environment.address;
-    this.tokenSetUpdateHook = environment.tokenSetUpdateHook;
     this.setAvailableContracts = environment.setAvailableContracts;
     this.errorHandler = environment.errorHandler || console.error;
     this.web3 = environment.web3;
@@ -31,7 +30,6 @@ export default class Nft {
     return create;
   }
 
-  //======================================================================
   setSelectedContract(selectedContract) {
     this.selectedContract = selectedContract;
   }
@@ -57,18 +55,15 @@ export default class Nft {
       if (!configData.error) {
         try {
           configData.tokenContracts.forEach(data => {
-            this.ownedTokenBasicDetails.push({
-              name: data.name,
-              count: data.owned_asset_count,
-              contract: data.contractIdAddress
-            });
             nftData[data.contractIdAddress] = new NftCollection({
               details: data,
               api: this.api,
               address: this.activeAddress,
-              tokenSetUpdateHook: this.tokenSetUpdateHook,
               web3: this.web3
             });
+            this.ownedTokenBasicDetails.push(
+              nftData[data.contractIdAddress].getPanelDetails()
+            );
           });
           this.nftConfig = { ...nftData };
           selectedContract = Object.keys(this.nftConfig)[0];

@@ -349,14 +349,14 @@ const data = {
         },
         {
           owner: '0xab95286ca61b7c94659d853f1fba629508ab4d67',
-          token_id: '227992272',
+          token_id: '2279294773',
           image_url:
-            'https://lh3.googleusercontent.com/UGFue9IH5rmqXXtzwH1aZLVah3O__2QMevjCvRCu-uDy1O0ncZLmzsgQNO8qVH6cjLrzcgzfDvMJ0INhC0Ej-3k',
+            'https://lh3.googleusercontent.com/OKFksVyyzX-cq5j8l3GDwncrpuWtxSRktUPAZSPmgbIkg8gkzssmDuKgkjE6SNEN8zNES2b8hUsUJGQmb-eKtM4',
           contract: '0x0e3a2a1f2146d86a604adc220b4967a898d7fe07',
-          name: 'Eager Gryphon ID #227992272',
+          name: 'Rift Scholar ID #227994773',
           description:
-            'Whenever your opponent casts a spell, this creature gains +2 strength.\n\n Quality distribution for this proto (355): 33042 meteorite; 1738 shadow; 392 gold; 73 diamond.',
-          id: 16338234,
+            'Roar: Draw two cards.\n\n Quality distribution for this proto (112): 33354 meteorite; 1736 shadow; 358 gold; 57 diamond.',
+          id: 16338237,
           collection_name: 'Gods Unchained',
           external_link: null
         }
