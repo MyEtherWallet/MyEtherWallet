@@ -7,7 +7,6 @@ export default class NftCollection {
     this.address = props.address;
     this.api = props.api;
     this.web3 = props.web3;
-    this.errorHandler = props.errorHandler || console.error;
     const details = props.details;
 
     this.name = details.name;
@@ -83,15 +82,17 @@ export default class NftCollection {
   }
 
   async getPageState() {
-    if (this.tokens.length === 0) {
-      await this.getNftDetails();
-    }
-    return {
-      name: this.name,
-      currentPage: this.currentPage,
-      count: this.count,
-      tokens: this.selectNftsToShow()
-    };
+    return new Promise((resolve, reject) => {
+      if (this.tokens.length === 0) {
+        return this.getNftDetails().then(resolve).catch(reject);
+      }
+      return resolve({
+        name: this.name,
+        currentPage: this.currentPage,
+        count: this.count,
+        tokens: this.selectNftsToShow()
+      });
+    });
   }
 
   selectNftsToShow() {
@@ -115,50 +116,44 @@ export default class NftCollection {
   }
 
   async getNftDetails(contract, startIndex = -1, endIndex = -1) {
-    try {
-      let params;
-      if (startIndex >= 0 && endIndex >= 0) {
-        params = {
-          address: this.address,
-          contractAddresses: this.contracts,
-          startIndex,
-          endIndex
-        };
-      } else {
-        params = {
-          address: this.address,
-          contractAddresses: this.contracts
-        };
-      }
-
-      const tokenParse = item => {
-        return {
-          description: item.description,
-          name: item.name,
-          token_id: item.token_id,
-          contract: item.contract
-        };
+    let params;
+    if (startIndex >= 0 && endIndex >= 0) {
+      params = {
+        address: this.address,
+        contractAddresses: this.contracts,
+        startIndex,
+        endIndex
       };
-
-      return await this.api
-        .getNftDetailsApi(this.contract, params)
-        .then(data => {
-          let allTokens = [];
-          if (!this.initialSetRetrieved) {
-            this.initialSetRetrieved = true;
-          }
-          if (!data) {
-            return this.tokens;
-          }
-          allTokens = data.tokens.map(tokenParse);
-
-          this.tokens = allTokens;
-
-          return allTokens;
-        });
-    } catch (e) {
-      this.errorHandler(e);
+    } else {
+      params = {
+        address: this.address,
+        contractAddresses: this.contracts
+      };
     }
+
+    const tokenParse = item => {
+      return {
+        description: item.description,
+        name: item.name,
+        token_id: item.token_id,
+        contract: item.contract
+      };
+    };
+
+    return this.api.getNftDetailsApi(this.contract, params).then(data => {
+      let allTokens = [];
+      if (!this.initialSetRetrieved) {
+        this.initialSetRetrieved = true;
+      }
+      if (!data) {
+        return this.tokens;
+      }
+      allTokens = data.tokens.map(tokenParse);
+
+      this.tokens = allTokens;
+
+      return allTokens;
+    });
   }
 
   getNftsToShow() {

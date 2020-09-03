@@ -9,6 +9,7 @@ import configs from '@/modules/nft/src/config';
 jest.setMock('node-fetch', fetch);
 
 describe('NFT Module', () => {
+  const network = {type: {name: 'ETH'}}
   const web3 = new Web3(
     'https://mainnet.infura.io/v3/7d06294ad2bd432887eada360c5e1986'
   );
@@ -155,6 +156,7 @@ describe('NFT Module', () => {
             });
           }
           nft = new NFT({
+            network,
             address,
             web3
           });
@@ -271,16 +273,10 @@ describe('NFT Module', () => {
           return Promise.resolve(JSON.stringify(mockDataa66));
         });
       }
-      const errorHandler = err => {
-        // eslint-disable-next-line
-        console.log('ERROR HANDLER');
-        // eslint-disable-next-line
-        console.log(err);
-      };
       nft = new NFT({
         address,
         web3,
-        errorHandler
+        network
       });
       nft.init(contractAddress).then(() => {
         done();

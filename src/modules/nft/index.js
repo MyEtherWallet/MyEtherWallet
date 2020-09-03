@@ -1,16 +1,14 @@
 import Nft from './src';
 export default class NFT {
-  constructor({ network, address, web3, errorHandler }) {
+  constructor({ network, address, web3 }) {
     this.network = network;
     this.address = address;
     this.web3 = web3;
-    this.errorHandler = errorHandler || console.error;
     this.nft = new Nft({
       network: this.network,
       address: this.address,
       setAvailableContracts: this.setAvailableContracts.bind(this),
-      web3: this.web3,
-      errorHandler: this.errorHandler
+      web3: this.web3
     });
     this.availableContracts = [];
     this.selectedContract = {};
@@ -36,7 +34,8 @@ export default class NFT {
             this.currentPageState = this.currentActive.getPageState();
             this.ready = true;
             resolve(this.currentPageState);
-          });
+          })
+          .catch(reject)
       } catch (e) {
         reject(e);
       }
@@ -60,10 +59,9 @@ export default class NFT {
   }
 
   setActiveContract(contractAddress) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       if (!this.nft.nftConfig[contractAddress]) {
-        this.errorHandler('No NFTs found for contract address');
-        resolve();
+        reject(Error('No NFTs found for contract address'));
       }
       this.currentActive = this.nft.nftConfig[contractAddress];
       resolve(this.nft.nftConfig[contractAddress].activate());
@@ -82,11 +80,7 @@ export default class NFT {
   }
 
   hasNextPage() {
-    try {
-      return this.currentActive.hasNextPage();
-    } catch (e) {
-      this.errorHandler(e);
-    }
+    return this.currentActive.hasNextPage();
   }
 
   async nextPage() {
