@@ -43,6 +43,7 @@
 
 <script>
 import accessKeystoreOverlay from '../access-keystore-overlay/AccessKeystoreOverlay';
+import Keystore from '@/modules/wallets/utils/Keystore.js';
 
 const TITLES = {
   keystoreFile: 'Keystore File',
@@ -111,7 +112,13 @@ export default {
       return !this.step ? 'Software' : this.titles[this.type];
     }
   },
-  mounted() {},
+  mounted() {
+    this.keystoreInstance = new Keystore(
+      true /*temporary value*/,
+      window.Worker,
+      window.origin
+    );
+  },
   methods: {
     btnCall(str) {
       if (TYPES.includes(str)) {
@@ -124,7 +131,10 @@ export default {
     handleKeystoreUpload(e) {
       this.file = e;
     },
-    unlockKeystoreWallet() {},
+    unlockKeystoreWallet(password, file) {
+      console.log('got these:', password, file);
+      this.keystoreInstance.unlock(file, password);
+    },
     accessBack() {
       if (!this.step) {
         this.close('showSoftware');

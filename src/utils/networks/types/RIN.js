@@ -1,6 +1,6 @@
 import tokens from '@/_generated/tokens/tokens-rin.json';
 import contracts from '@/_generated/contracts/contract-abi-rin.json';
-import rin from '@/assets/images/icons/network.svg';
+import rin from '@/assets/images/networks/network.svg';
 import { RIN } from '../tlds';
 
 export default {
