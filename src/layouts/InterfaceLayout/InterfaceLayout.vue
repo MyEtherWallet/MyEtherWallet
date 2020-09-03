@@ -813,7 +813,6 @@ export default {
           this.highestGas = new BigNumber(
             this.web3.utils.fromWei(res, 'gwei')
           ).toString();
-          console.log(this.highestGas);
           this.setGasPrice(this.highestGas);
         })
         .catch(e => {
