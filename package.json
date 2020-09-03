@@ -27,7 +27,9 @@
     "update:lists": "node fetchLists/index.js",
     "update:mainlists": "node fetchLists/fetchMainLists.js",
     "update:packages": "node package-test.js",
-    "update:swap": "node compileBaseSwapOptions.js"
+    "update:swap": "node compileBaseSwapOptions.js",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
     "@aave/protocol-js": "1.0.1",
@@ -71,7 +73,8 @@
     "vue-toasted": "1.1.28",
     "vuex": "3.5.1",
     "walletlink": "2.0.2",
-    "xss": "1.0.8"
+    "xss": "1.0.8",
+    "snyk": "^1.388.0"
   },
   "devDependencies": {
     "@ensdomains/address-encoder": "0.1.7",
@@ -188,5 +191,6 @@
     "marked": "^0.6.2"
   },
   "license": "MIT",
-  "repository": "https://github.com/myetherwallet/myetherwallet"
+  "repository": "https://github.com/myetherwallet/myetherwallet",
+  "snyk": true
 }
