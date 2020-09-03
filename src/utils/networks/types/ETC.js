@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-etc.json';
-import contracts from '@/contracts/contract-abi-etc.json';
+import tokens from '@/_generated/tokens/tokens-etc.json';
+import contracts from '@/_generated/contracts/contract-abi-etc.json';
 import etc from '@/assets/images/networks/etc.svg';
 
 export default {

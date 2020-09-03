@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-pirl.json';
-import contracts from '@/contracts/contract-abi-pirl.json';
+import tokens from '@/_generated/tokens/tokens-pirl.json';
+import contracts from '@/_generated/contracts/contract-abi-pirl.json';
 import pirl from '@/assets/images/networks/pirl.svg';
 
 export default {

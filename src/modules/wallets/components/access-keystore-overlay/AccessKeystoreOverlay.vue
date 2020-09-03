@@ -14,9 +14,7 @@
           >
             <div class="sheet-content">
               <div class="items">
-                <p class="mew-heading-1">
-                  Upload my Keystore File
-                </p>
+                <p class="mew-heading-1">Upload my Keystore File</p>
                 <p>
                   Please upload the keystore file that <br />
                   unlocks your wallet.
@@ -44,7 +42,7 @@
                 ref="jsonInput"
                 type="file"
                 name="file"
-                style="display: none;"
+                style="display: none"
                 @change="uploadFile"
               />
             </div>

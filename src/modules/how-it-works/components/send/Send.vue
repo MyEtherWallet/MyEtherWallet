@@ -15,9 +15,7 @@
             <v-img src="@/assets/images/icons/icon-send-mew.svg" />
           </div>
           <div>
-            <div class="mb-1 font-weight-bold subtitle-1">
-              Send Transaction
-            </div>
+            <div class="mb-1 font-weight-bold subtitle-1">Send Transaction</div>
             <p>
               Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor sed
               stet takimata ipsum invidunt, est ea no dolor.

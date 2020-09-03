@@ -22,7 +22,7 @@ import {
   UBQ,
   TT,
   PHT
-} from '@/networks/types';
+} from '@/utils/networks/types';
 import {
   ledgerEthereum,
   ledgerLiveEthereum,

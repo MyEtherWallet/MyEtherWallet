@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-rsk.json';
-import contracts from '@/contracts/contract-abi-rsk.json';
+import tokens from '@/_generated/tokens/tokens-rsk.json';
+import contracts from '@/_generated/contracts/contract-abi-rsk.json';
 import rsk from '@/assets/images/networks/rsk.svg';
 import { RSK } from '../tlds';
 

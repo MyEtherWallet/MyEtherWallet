@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-akroma.json';
-import contracts from '@/contracts/contract-abi-akroma.json';
+import tokens from '@/_generated/tokens/tokens-akroma.json';
+import contracts from '@/_generated/contracts/contract-abi-akroma.json';
 import aka from '@/assets/images/networks/aka.svg';
 
 export default {

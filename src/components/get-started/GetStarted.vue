@@ -3,9 +3,7 @@
     <v-container>
       <div class="d-flex align-center px-6">
         <div>
-          <h2 class="white--text mb-3">
-            Ready? Get your wallet today.
-          </h2>
+          <h2 class="white--text mb-3">Ready? Get your wallet today.</h2>
           <p class="white--text ma-0">
             Still don't know what MEW is?
             <a

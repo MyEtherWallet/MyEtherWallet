@@ -54,16 +54,12 @@
             </div>
             <div>
               <div class="mb-3">
-                <div class="mew-heading-3 font-weight-bold">
-                  Results
-                </div>
+                <div class="mew-heading-3 font-weight-bold">Results</div>
               </div>
               <v-card flat color="tableHeader" class="pa-10">
                 <div class="d-flex justify-space-between align-center">
                   <div>
-                    <div class="mew-heading-1 mb-2">
-                      mewwallet.crypto
-                    </div>
+                    <div class="mew-heading-1 mb-2">mewwallet.crypto</div>
                     <div>
                       <span class="font-weight-medium">0.0823234234</span>
                       ETH ($40.00)
@@ -133,7 +129,7 @@
                   outlined
                   color="tableHeader"
                   class="pa-4 d-flex align-center justify-space-between bordered-red"
-                  style="border-color: var(--v-error-base) !important;"
+                  style="border-color: var(--v-error-base) !important"
                 >
                   <div class="d-flex align-center">
                     <img
