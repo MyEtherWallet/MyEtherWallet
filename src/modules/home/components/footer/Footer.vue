@@ -2,107 +2,24 @@
   <div class="mew-component--home-footer titlePrimary--text">
     <v-container class="pt-12 pb-6">
       <v-row>
-        <v-col cols="2">
-          <div class="subtitle-1 font-weight-bold mb-1">Tools</div>
-          <v-list class="titlePrimary--text">
-            <v-list-item class="px-0">Verify Message</v-list-item>
-            <v-list-item class="px-0">Txn Status</v-list-item>
-            <v-list-item class="px-0">View Wallet Info</v-list-item>
-            <v-list-item class="px-0">MyEtherWallet CX</v-list-item>
-            <v-list-item class="px-0">Send Offline Helper</v-list-item>
-            <v-list-item class="px-0">Submit Dapp</v-list-item>
-            <v-list-item class="px-0">All Tools</v-list-item>
-          </v-list>
-        </v-col>
-        <v-col cols="2">
-          <div class="subtitle-1 font-weight-bold mb-1">MEW</div>
+        <v-col v-for="(f, fkey) in footers" :key="fkey" cols="3">
+          <div class="subtitle-1 font-weight-bold mb-1">{{ f.title }}</div>
           <v-list>
-            <v-list-item class="px-0">How It Works</v-list-item>
-            <v-list-item class="px-0">Company</v-list-item>
-            <v-list-item class="px-0">Why MEW</v-list-item>
-            <v-list-item class="px-0">Team</v-list-item>
-            <v-list-item class="px-0">Help Center</v-list-item>
-            <v-list-item class="px-0">Support</v-list-item>
-            <v-list-item class="px-0">
-              <a
-                class="color--inherit"
-                href="https://www.mewtopia.com/"
-                target="_blank"
+            <v-list-item v-for="(d, dkey) in f.data" :key="dkey" class="px-0">
+              <router-link
+                v-if="d.routerLink"
+                :to="{ name: d.routerLink, query: d.query }"
               >
-                MEWtopia
+                {{ d.label }}
+              </router-link>
+              <a v-if="d.link" :href="d.link" target="_blank">
+                {{ d.label }}
               </a>
             </v-list-item>
           </v-list>
         </v-col>
-        <v-col cols="2">
-          <div class="subtitle-1 font-weight-bold mb-1">Hardware Wallets</div>
-          <v-list>
-            <v-list-item class="px-0">
-              <a
-                class="color--inherit"
-                href="https://www.ledger.com/?r=fa4b"
-                target="_blank"
-              >
-                Ledger Wallet
-              </a>
-            </v-list-item>
-            <v-list-item class="px-0">
-              <a
-                class="color--inherit"
-                href="https://shiftcrypto.ch/?ref=mew"
-                target="_blank"
-              >
-                Digital Bitbox
-              </a>
-            </v-list-item>
-            <v-list-item class="px-0">
-              <a
-                class="color--inherit"
-                href="https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site"
-                target="_blank"
-              >
-                Ether Card
-              </a>
-            </v-list-item>
-            <v-list-item class="px-0">
-              <a
-                class="color--inherit"
-                href="https://trezor.io/?offer_id=12&aff_id=2029"
-                target="_blank"
-              >
-                Trezor
-              </a>
-            </v-list-item>
-            <v-list-item class="px-0">
-              <a
-                class="color--inherit"
-                href="http://lddy.no/a4im"
-                target="_blank"
-              >
-                KeepKey
-              </a>
-            </v-list-item>
-            <v-list-item class="px-0">
-              <a
-                class="color--inherit"
-                href="http://shop.sirinlabs.com/?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf"
-                target="_blank"
-              >
-                Finney
-              </a>
-            </v-list-item>
-            <v-list-item class="px-0">
-              <a
-                class="color--inherit"
-                href="https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate"
-                target="_blank"
-              >
-                Billfodl
-              </a>
-            </v-list-item>
-          </v-list>
-        </v-col>
-        <v-col>
+
+        <v-col cols="3">
           <div class="subtitle-1 font-weight-bold mb-5 d-flex align-center">
             Love
             <mew-icon
@@ -131,7 +48,7 @@
 
             <div>
               <div class="mb-n2">ETH Donation</div>
-              <div class="overline">
+              <div v-show="false" class="overline">
                 Address: 0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D
               </div>
             </div>
@@ -149,7 +66,7 @@
             />
             <div>
               <div class="mb-n2">BTC Donation</div>
-              <div class="overline">
+              <div v-show="false" class="overline">
                 Address: 1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9
               </div>
             </div>
@@ -188,7 +105,7 @@
         <v-spacer />
         <div class="social-icons d-flex align-center">
           <a
-            v-for="(i, key) in icons"
+            v-for="(i, key) in socialIcons"
             :key="key"
             :href="i.link"
             target="_blank"
@@ -231,6 +148,77 @@
 <script>
 export default {
   data: () => ({
+    footers: [
+      {
+        title: 'Hardware Wallets',
+        data: [
+          { label: 'Ledger wallet', link: 'https://www.ledger.com/?r=fa4b' },
+          { label: 'Bitbox', link: 'https://shiftcrypto.ch/?ref=mew' },
+          {
+            label: 'Ether card',
+            link:
+              'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
+          },
+          { label: 'Trezor', link: 'https://trezor.io/' },
+          { label: 'KeepKey', link: 'http://lddy.no/a4im' },
+          {
+            label: 'Finney',
+            link:
+              'http://shop.sirinlabs.com/?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
+          },
+          {
+            label: 'Billfodl',
+            link:
+              'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
+          },
+          { label: 'Secalot', link: 'https://www.secalot.com/' }
+        ]
+      },
+      {
+        title: 'Mew',
+        data: [
+          { label: 'About us', routerLink: 'CompanyPage' },
+          { label: 'How it works', routerLink: 'CompanyPage' },
+          { label: 'Team', routerLink: 'CompanyPage' },
+          { label: 'Help center', routerLink: 'CompanyPage' },
+          { label: 'Customer support', routerLink: 'CompanyPage' },
+          { label: 'MEW topia', link: 'https://www.mewtopia.com/' },
+          { label: 'Press', routerLink: 'CompanyPage' }
+        ]
+      },
+      {
+        title: 'Tools',
+        data: [
+          { label: 'MEW wallet', routerLink: 'Dashboard' },
+          {
+            label: 'MEW CX',
+            link:
+              'https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?utm_source=chrome-ntp-icon'
+          },
+          {
+            label: 'Verify message',
+            routerLink: 'Tools',
+            query: { tab: '4' }
+          },
+          {
+            label: 'Send offline help',
+            routerLink: 'Tools',
+            query: { tab: '3' }
+          },
+          {
+            label: 'Transaction status',
+            routerLink: 'SendTX'
+          },
+          {
+            label: 'Watch only address',
+            routerLink: 'Tools',
+            query: { tab: '1' }
+          },
+          { label: 'Submit Dapp', routerLink: 'DappsCenter' },
+          { label: 'Convert units', routerLink: 'Tools', query: { tab: '2' } }
+        ]
+      }
+    ],
     select: 'en',
     languages: [
       {
@@ -264,7 +252,7 @@ export default {
         flag: require('@/assets/images/flags/japan.png')
       }
     ],
-    icons: [
+    socialIcons: [
       {
         link: 'https://www.facebook.com/MyEtherWallet',
         icon: 'facebook'
@@ -321,6 +309,9 @@ a {
 
 <style lang="scss">
 .mew-component--home-footer {
+  a {
+    color: var(--v-titlePrimary-base) !important;
+  }
   .v-select__selection {
     color: #80deea !important;
     width: 100%;
