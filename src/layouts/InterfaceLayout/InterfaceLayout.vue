@@ -287,7 +287,8 @@ export default {
       'setAccountBalance',
       'setENS',
       'decryptWallet',
-      'toggleSideMenu'
+      'toggleSideMenu',
+      'setGasPrice'
     ]),
     checkPrefilled() {
       const _self = this;
@@ -812,6 +813,8 @@ export default {
           this.highestGas = new BigNumber(
             this.web3.utils.fromWei(res, 'gwei')
           ).toString();
+          console.log(this.highestGas);
+          this.setGasPrice(this.highestGas);
         })
         .catch(e => {
           Toast.responseHandler(e, Toast.ERROR);

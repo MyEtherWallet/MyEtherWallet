@@ -309,59 +309,33 @@ export default {
       });
     },
     gasPriceInputs() {
+      const regularPrice = new BigNumber(this.gasPrice).div(1).toFixed(0);
+      const medGasPriceValue = new BigNumber(this.gasPrice)
+        .times(1.0714285714286)
+        .plus(21.428571428571)
+        .toFixed(0);
+      const fastGasPriceValue = new BigNumber(this.gasPrice)
+        .times(1.1428571428571)
+        .plus(42.857142857145)
+        .toFixed(0);
+
       return {
         economy: {
-          gwei: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice).div(1).toFixed(0),
-              'gwei'
-            )
-          ).toFixed(),
-          eth: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice).div(1).toFixed(0),
-              'ether'
-            )
-          ).toFixed()
+          gwei: new BigNumber(utils.fromWei(regularPrice, 'gwei')).toFixed(),
+          eth: new BigNumber(utils.fromWei(regularPrice, 'ether')).toFixed()
         },
         regular: {
           gwei: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice)
-                .times(1.0714285714286)
-                .plus(21.428571428571)
-                .toFixed(0),
-              'gwei'
-            )
+            utils.fromWei(medGasPriceValue, 'gwei')
           ).toFixed(),
-          eth: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice)
-                .times(1.0714285714286)
-                .plus(21.428571428571)
-                .toFixed(0),
-              'ether'
-            )
-          ).toFixed()
+          eth: new BigNumber(utils.fromWei(medGasPriceValue, 'ether')).toFixed()
         },
         fast: {
           gwei: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice)
-                .times(1.1428571428571)
-                .plus(42.857142857145)
-                .toFixed(0),
-              'gwei'
-            )
+            utils.fromWei(fastGasPriceValue, 'gwei')
           ).toFixed(),
           eth: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice)
-                .div(1.1428571428571)
-                .plus(42.857142857145)
-                .toFixed(0),
-              'ether'
-            )
+            utils.fromWei(fastGasPriceValue, 'ether')
           ).toFixed()
         }
       };
