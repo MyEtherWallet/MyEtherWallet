@@ -4,12 +4,8 @@
       class="border-radius--10px card-content d-flex align-center justify-space-between"
     >
       <div>
-        <h2 class="white--text">
-          Newbie in crypto?
-        </h2>
-        <h2 class="white--text">
-          Join our journey to MEW.
-        </h2>
+        <h2 class="white--text">Newbie in crypto?</h2>
+        <h2 class="white--text">Join our journey to MEW.</h2>
       </div>
       <mew-button
         btn-link="https://www.mewtopia.com/"

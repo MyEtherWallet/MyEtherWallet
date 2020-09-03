@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-egem.json';
-import contracts from '@/contracts/contract-abi-egem.json';
+import tokens from '@/_generated/tokens/tokens-egem.json';
+import contracts from '@/_generated/contracts/contract-abi-egem.json';
 import egem from '@/assets/images/networks/egem.svg';
 
 export default {

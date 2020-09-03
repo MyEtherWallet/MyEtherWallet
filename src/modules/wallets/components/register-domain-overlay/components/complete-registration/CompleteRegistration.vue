@@ -39,9 +39,7 @@
           stream
         ></v-progress-linear>
       </v-sheet>
-      <div class="mew-heading-2 mt-6">
-        Processing the registration request
-      </div>
+      <div class="mew-heading-2 mt-6">Processing the registration request</div>
       <v-sheet width="100%" max-width="300px" class="mx-auto mt-3">
         Please do not exit the Dapp or close your browser, it takes a short
         while for registration…

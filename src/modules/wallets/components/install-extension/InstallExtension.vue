@@ -1,9 +1,7 @@
 <template>
   <div class="expandHeader">
     <block-title :data="titleData">
-      <h5 class="white--text ma-0">
-        Please select a browser from below.
-      </h5>
+      <h5 class="white--text ma-0">Please select a browser from below.</h5>
     </block-title>
 
     <v-sheet
@@ -18,9 +16,7 @@
           height="80"
         />
         <h5 class="mt-7 font-weight-bold">Install MEW chrome Extension</h5>
-        <router-link
-          :to="{ name: 'AccessWalletBrowserExtensionAccess' }"
-        >
+        <router-link :to="{ name: 'AccessWalletBrowserExtensionAccess' }">
           <mew-button button-size="xlarge" title="Install" class="mt-7" />
         </router-link>
       </div>

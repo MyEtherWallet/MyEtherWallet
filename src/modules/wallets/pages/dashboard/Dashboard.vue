@@ -18,7 +18,7 @@
                 @onBtnClick="onBtnClick"
               />
               <mew-button
-                style="border-radius: 100% !important;"
+                style="border-radius: 100% !important"
                 class="options-btn ml-2"
                 button-size="small"
                 icon-type="mdi"
@@ -63,9 +63,7 @@
           />
           <v-sheet color="transparent" max-width="360px">
             <div class="pa-12">
-              <h2 class="mb-6">
-                My ETH balance is empty
-              </h2>
+              <h2 class="mb-6">My ETH balance is empty</h2>
               <mew-button
                 :has-full-width="false"
                 title="Buy ETH with a credit card"
@@ -136,9 +134,7 @@
           />
           <v-sheet color="transparent" max-width="360px">
             <div class="pa-12">
-              <h2 class="mb-6">
-                My token list is empty
-              </h2>
+              <h2 class="mb-6">My token list is empty</h2>
               <mew-button
                 class="ml-auto ml-n3"
                 :has-full-width="false"

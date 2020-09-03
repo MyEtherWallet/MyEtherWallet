@@ -75,7 +75,13 @@ export default class NameManager {
         const ensResponse = response[ETH_REGISTRAR];
         resolve(
           ensResponse.map(item => {
-            return new EthNameModule(item.name); // something like this. Still needs polish
+            return new PermanentNameModule(
+              item.name,
+              this.address,
+              this.network,
+              this.web3,
+              this.ens
+            );
           })
         );
       });

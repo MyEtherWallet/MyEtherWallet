@@ -31,9 +31,7 @@
               </phrase-block>
 
               <mew-expand-panel is-toggle has-dividers :panel-items="exPanel">
-                <template v-slot:panelBody1>
-                  Input needs to be added
-                </template>
+                <template v-slot:panelBody1> Input needs to be added </template>
               </mew-expand-panel>
 
               <div class="d-flex justify-center mt-6">
@@ -70,7 +68,7 @@
 
               <v-sheet max-width="600px" class="mx-auto">
                 <phrase-block class="mb-2 d-flex align-center">
-                  <div style="min-width: 60px;">5.</div>
+                  <div style="min-width: 60px">5.</div>
                   <v-radio-group
                     v-model="radioGroup1"
                     hide-details
@@ -84,7 +82,7 @@
                   </v-radio-group>
                 </phrase-block>
                 <phrase-block class="mb-2 d-flex align-center">
-                  <div style="min-width: 60px;">5.</div>
+                  <div style="min-width: 60px">5.</div>
                   <v-radio-group
                     v-model="radioGroup2"
                     hide-details
@@ -98,7 +96,7 @@
                   </v-radio-group>
                 </phrase-block>
                 <phrase-block class="mb-2 d-flex align-center">
-                  <div style="min-width: 60px;">5.</div>
+                  <div style="min-width: 60px">5.</div>
                   <v-radio-group
                     v-model="radioGroup3"
                     hide-details

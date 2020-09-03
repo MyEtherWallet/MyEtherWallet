@@ -29,6 +29,7 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
+    "@ensdomains/dnsregistrar": "0.3.9",
     "@myetherwallet/mew-components": "0.5.2-beta",
     "@sentry/browser": "5.21.1",
     "@sentry/integrations": "5.21.1",
@@ -87,7 +88,7 @@
     "package-json": "6.5.0",
     "postcss-import": "12.0.1",
     "postcss-url": "8.0.0",
-    "prettier": "2.0.5",
+    "prettier": "2.1.1",
     "raw-loader": "4.0.1",
     "remark-cli": "8.0.1",
     "remark-preset-lint-recommended": "4.0.1",
@@ -106,7 +107,7 @@
     "vue-cli-plugin-vuetify": "2.0.7",
     "vue-i18n": "8.21.0",
     "vue-template-compiler": "2.6.12",
-    "vuetify": "2.3.9",
+    "vuetify": "2.3.10",
     "wallet-address-validator": "0.2.4",
     "web3": "1.2.11",
     "web3-core-helpers": "1.2.11",

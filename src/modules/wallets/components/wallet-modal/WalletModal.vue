@@ -14,9 +14,7 @@
               class="d-flex align-center justify-center pt-7 pb-4 mew-component--woo-commerce"
             >
               <v-btn-toggle v-model="toggle_exclusive" mandatory>
-                <v-btn small class="btn text-transform--initial">
-                  Card
-                </v-btn>
+                <v-btn small class="btn text-transform--initial"> Card </v-btn>
                 <v-btn small class="btn text-transform--initial">
                   Bitcoin
                 </v-btn>
