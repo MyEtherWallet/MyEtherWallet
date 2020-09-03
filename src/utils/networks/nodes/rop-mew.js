@@ -2,7 +2,7 @@ import { ROP } from '../types';
 export default {
   type: ROP,
   service: 'myetherwallet.com',
-  url: 'https://api.myetherwallet.com/rop',
+  url: 'https://nodes.mewapi.io/rpc/rop',
   port: 443,
   auth: false,
   username: '',

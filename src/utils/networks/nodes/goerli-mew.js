@@ -1,8 +1,8 @@
-import { ETH } from '../types';
+import { GOERLI } from '../types';
 export default {
-  type: ETH,
+  type: GOERLI,
   service: 'myetherwallet.com',
-  url: 'https://nodes.mewapi.io/rpc/eth',
+  url: 'https://nodes.mewapi.io/rpc/goerli',
   port: 443,
   auth: false,
   username: '',
