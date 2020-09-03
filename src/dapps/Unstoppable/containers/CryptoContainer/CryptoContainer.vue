@@ -46,7 +46,7 @@
                 balance < convertedEthPrice ? 'disabled' : '',
                 'large-round-button-green-filled clickable pay-button'
               ]"
-              :disabled="(loading || balance  < convertedEthPrice)"
+              :disabled="loading || balance < convertedEthPrice"
               @click="submit"
             >
               <span v-show="!loading">

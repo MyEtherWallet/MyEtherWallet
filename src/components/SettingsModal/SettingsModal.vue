@@ -34,7 +34,7 @@
                     />
                     <label :for="key">
                       {{ $t('interface.' + key) }}
-                      ({{ gasPriceInputs[key].gwei }}
+                      ({{ displayedGasPriceValue(gasPriceInputs[key].gwei) }}
                       {{ $t('common.gas.gwei') }})
                     </label>
                   </div>
@@ -327,13 +327,19 @@ export default {
         regular: {
           gwei: new BigNumber(
             utils.fromWei(
-              new BigNumber(this.gasPrice).times(1.5).toFixed(0),
+              new BigNumber(this.gasPrice)
+                .times(1.0714285714286)
+                .plus(21.428571428571)
+                .toFixed(0),
               'gwei'
             )
           ).toFixed(),
           eth: new BigNumber(
             utils.fromWei(
-              new BigNumber(this.gasPrice).times(1.5).toFixed(0),
+              new BigNumber(this.gasPrice)
+                .times(1.0714285714286)
+                .plus(21.428571428571)
+                .toFixed(0),
               'ether'
             )
           ).toFixed()
@@ -341,13 +347,19 @@ export default {
         fast: {
           gwei: new BigNumber(
             utils.fromWei(
-              new BigNumber(this.gasPrice).times(2).toFixed(0),
+              new BigNumber(this.gasPrice)
+                .times(1.1428571428571)
+                .plus(42.857142857145)
+                .toFixed(0),
               'gwei'
             )
           ).toFixed(),
           eth: new BigNumber(
             utils.fromWei(
-              new BigNumber(this.gasPrice).div(2).toFixed(0),
+              new BigNumber(this.gasPrice)
+                .div(1.1428571428571)
+                .plus(42.857142857145)
+                .toFixed(0),
               'ether'
             )
           ).toFixed()
@@ -383,6 +395,11 @@ export default {
   },
   methods: {
     ...mapActions('main', ['setGasPrice', 'setAddressBook']),
+    displayedGasPriceValue(value) {
+      return value.includes('.')
+        ? `~${new BigNumber(value).toFixed(2).toString()}`
+        : value;
+    },
     setDataFromImportedFile() {
       const reader = new FileReader();
       const notifObj = {};

@@ -54,7 +54,7 @@
                 <b-spinner
                   label="Large Spinner"
                   variant="secondary"
-                  style="width: 50px; height: 50px;"
+                  style="width: 50px; height: 50px"
                 ></b-spinner>
               </div>
               <div v-show="hasImage(nft)" class="product-img">

@@ -1,3 +1,14 @@
+### Release v5.7.7
+
+### Bug
+
+- Add a max check to Aave withdraw [#2540](https://github.com/MyEtherWallet/MyEtherWallet/pull/2540)
+
+### Devop
+
+- Update gasprice calculations [#2559](https://github.com/MyEtherWallet/MyEtherWallet/pull/2559)
+- Allow users to renew expired ENS names [#2554](https://github.com/MyEtherWallet/MyEtherWallet/pull/2554)
+
 ### Release v5.7.6-hotfix.1
 
 ### Devop

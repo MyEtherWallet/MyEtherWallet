@@ -173,6 +173,10 @@ export default {
         return {};
       }
     },
+    isMax: {
+      type: Boolean,
+      default: false
+    },
     activeDepositTab: {
       type: Boolean,
       default: false
@@ -312,7 +316,7 @@ export default {
       return hasIcon(currency);
     },
     checkForAmount() {
-      if (this.actionTitle === this.actionTitles.withdraw) {
+      if (this.actionTitle === this.actionTitles.withdraw && this.isMax) {
         const underlyingBalance = new BigNumber(
           this.token.user.currentUnderlyingBalance
         );
