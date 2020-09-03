@@ -42,7 +42,7 @@
                 ref="jsonInput"
                 type="file"
                 name="file"
-                style="display: none"
+                style="display: none;"
                 @change="uploadFile"
               />
             </div>
@@ -62,6 +62,7 @@
           >
             <div class="password-container">
               <mew-input
+                v-model="password"
                 label="Password"
                 placeholder="Enter my keystore password"
               />
@@ -69,7 +70,7 @@
                 title="Access My Wallet"
                 button-size="xlarge"
                 :has-full-width="true"
-                @click.native="unlockKeystoreWallet"
+                @click.native="unlockBtn"
               />
             </div>
           </v-sheet>
@@ -98,7 +99,9 @@ export default {
   },
   data() {
     return {
-      file: {}
+      file: {},
+      keystoreInstance: {},
+      password: ''
     };
   },
   methods: {
@@ -119,6 +122,9 @@ export default {
       const jsonInput = this.$refs.jsonInput;
       jsonInput.value = '';
       jsonInput.click();
+    },
+    unlockBtn() {
+      this.unlockKeystoreWallet(this.password, this.file);
     }
   }
 };
