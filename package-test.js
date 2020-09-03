@@ -40,18 +40,7 @@ const EXCEPTIONS = [
   'ethereumjs-util',
   '@makerdao/dai-plugin-migrations',
   'worker-loader',
-  'is-ipfs',
-  // Revert these after release
-  'subscriptions-transport-ws',
-  'vue',
-  '@vue/cli-plugin-babel',
-  '@vue/cli-plugin-eslint',
-  '@vue/cli-plugin-pwa',
-  '@vue/cli-plugin-unit-jest',
-  '@vue/cli-service',
-  'eslint',
-  'trezor-connect',
-  'vue-template-compiler'
+  'is-ipfs'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

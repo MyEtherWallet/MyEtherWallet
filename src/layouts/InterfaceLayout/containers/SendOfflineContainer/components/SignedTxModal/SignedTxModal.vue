@@ -16,7 +16,7 @@
         <input
           ref="signedTxInput"
           :value="JSON.parse(signedTx).rawTransaction"
-          style="position: absolute; top: 0; opacity: 0;"
+          style="position: absolute; top: 0; opacity: 0"
           autocomplete="off"
         />
       </div>
