@@ -1,6 +1,6 @@
 import WalletInterface from './WalletInterface';
 import { KEYSTORE as keyStoreType } from './bip44/walletTypes';
-import walletWorker from 'worker-loader!@/helpers/wallet.worker.js';
+import walletWorker from 'worker-loader!@/plugins/wallet.worker.js';
 import { walletRequirePass, createBlob } from './helpers.js';
 import Wallet from 'ethereumjs-wallet';
 

@@ -105,7 +105,6 @@ export default {
   },
   methods: {
     close(type) {
-      console.log('got here??');
       this[type] = false;
     }
   }
