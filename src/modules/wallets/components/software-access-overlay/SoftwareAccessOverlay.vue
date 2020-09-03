@@ -35,6 +35,7 @@
       <access-keystore-overlay
         v-else-if="step === 1"
         :btn-call="btnCall"
+        :unlock-keystore-wallet="unlockKeystoreWallet"
         @keystore="handleKeystoreUpload"
       />
     </template>
@@ -129,6 +130,7 @@ export default {
       this.step = 1;
     },
     handleKeystoreUpload(e) {
+      console.log('received file', e);
       this.file = e;
     },
     unlockKeystoreWallet(password, file) {

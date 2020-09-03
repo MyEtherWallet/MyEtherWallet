@@ -42,7 +42,7 @@
                 ref="jsonInput"
                 type="file"
                 name="file"
-                style="display: none;"
+                style="display: none"
                 @change="uploadFile"
               />
             </div>
@@ -99,10 +99,14 @@ export default {
   },
   data() {
     return {
-      file: {},
       keystoreInstance: {},
       password: ''
     };
+  },
+  watch: {
+    password(newval) {
+      console.log(newval);
+    }
   },
   methods: {
     uploadFile(e) {
@@ -110,7 +114,6 @@ export default {
       const reader = new FileReader();
       reader.onloadend = evt => {
         try {
-          // self.file = JSON.parse(evt.target.result);
           self.$emit('keystore', evt.target.result);
         } catch (e) {
           throw new Error(e);
@@ -124,6 +127,7 @@ export default {
       jsonInput.click();
     },
     unlockBtn() {
+      console.log('got here', this.password, this.file);
       this.unlockKeystoreWallet(this.password, this.file);
     }
   }
