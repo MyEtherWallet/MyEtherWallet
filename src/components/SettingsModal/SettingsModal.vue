@@ -334,9 +334,6 @@ export default {
           this.customGas = 1;
         }
       }
-    },
-    gasPrice() {
-      this.saveGasChanges();
     }
   },
   mounted() {
