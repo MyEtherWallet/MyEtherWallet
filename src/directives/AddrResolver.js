@@ -43,7 +43,9 @@ const AddrResolver = {
     });
     const removeElements = function () {
       vnode.elm.parentNode.parentNode
-        .querySelectorAll('.resolver-error, .resolver-addr')
+        .querySelectorAll(
+          '.resolver-error, .resolver-addr, .contract-addr-resolved'
+        )
         .forEach(e => e.remove());
     };
     const appendElement = function (ele) {
@@ -72,6 +74,13 @@ const AddrResolver = {
         if (!checkDarklist(domain)) {
           _this.isValidAddress = true;
           _this.hexAddress = toChecksumAddress(domain);
+          checkAddressIsContract(domain).then(res => {
+            if (res) {
+              errorPar.classList.add('contract-addr-resolved');
+              errorPar.innerText = _this.$t('errorsGlobal.address-is-contract');
+              appendElement(errorPar);
+            }
+          });
         }
       } else if (Misc.isValidENSAddress(domain)) {
         if (network.type.ens === '' || ens === null || ens === undefined) {
@@ -89,8 +98,13 @@ const AddrResolver = {
               if (!checkDarklist(address)) {
                 _this.hexAddress = address;
                 _this.isValidAddress = true;
-                errorPar.innerText = address;
-                appendElement(errorPar);
+                checkAddressIsContract(address).then(res => {
+                  errorPar.classList.add('contract-addr-resolved');
+                  errorPar.innerText = res
+                    ? _this.$t('errorsGlobal.address-is-contract')
+                    : address;
+                  appendElement(errorPar);
+                });
               }
             })
             .catch(() => {
@@ -105,8 +119,13 @@ const AddrResolver = {
                     if (!checkDarklist(address)) {
                       _this.hexAddress = toChecksumAddress(address);
                       _this.isValidAddress = true;
-                      errorPar.innerText = address;
-                      appendElement(errorPar);
+                      checkAddressIsContract(address).then(res => {
+                        errorPar.classList.add('contract-addr-resolved');
+                        errorPar.innerText = res
+                          ? _this.$t('errorsGlobal.address-is-contract')
+                          : address;
+                        appendElement(errorPar);
+                      });
                     }
                   })
                   .catch(() => {
@@ -249,9 +268,15 @@ const AddrResolver = {
               parentCurrency === network.type.name
                 ? toChecksumAddress(address)
                 : address;
-            messagePar.classList.add('resolver-addr');
-            messagePar.innerText = _this.hexAddress;
-            appendElement(messagePar);
+            checkAddressIsContract(address).then(res => {
+              messagePar.classList.add(
+                res ? 'contract-addr-resolved' : 'resolver-addr'
+              );
+              messagePar.innerText = res
+                ? _this.$t('errorsGlobal.address-is-contract')
+                : _this.hexADdress;
+              appendElement(messagePar);
+            });
           }
         } catch (err) {
           _this.isValidAddress = false;
@@ -276,6 +301,13 @@ const AddrResolver = {
       } else {
         resolveViaENS(domain);
       }
+    };
+
+    const checkAddressIsContract = async function (addr) {
+      const web3 = vnode.context.$store.state.main.web3;
+      const isContract = await web3.eth.getCode(addr);
+      // returns true if it is a contract
+      return isContract !== '0x';
     };
   }
 };
