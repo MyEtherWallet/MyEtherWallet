@@ -32,10 +32,16 @@
         </v-sheet>
         <div class="spacer-y-medium" />
       </div>
-      <access-keystore-overlay
-        v-else-if="step === 1"
+      <access-keystore
+        v-else-if="showKeystore"
         :btn-call="btnCall"
         :unlock-keystore-wallet="unlockKeystoreWallet"
+        @keystore="handleKeystoreUpload"
+      />
+      <access-mnemonic
+        v-else-if="showMnemonic"
+        :btn-call="btnCall"
+        :unlock-mnemonic-wallet="unlockKeystoreWallet"
         @keystore="handleKeystoreUpload"
       />
     </template>
@@ -43,8 +49,10 @@
 </template>
 
 <script>
-import accessKeystoreOverlay from '../access-keystore-overlay/AccessKeystoreOverlay';
+import accessKeystore from '../access-keystore/AccessKeystore';
+import accessMnemonic from '../access-mnemonic/AccessMnemonic';
 import Keystore from '@/modules/wallets/utils/Keystore.js';
+import { MnemonicWallet } from '@/modules/wallets/utils/software';
 
 const TITLES = {
   keystoreFile: 'Keystore File',
@@ -57,7 +65,8 @@ const TYPES = ['keystoreFile', 'mnemonic', 'privateKey', 'keystorePasasword'];
 export default {
   name: 'AccessWalletSoftware',
   components: {
-    accessKeystoreOverlay
+    accessKeystore,
+    accessMnemonic
   },
   props: {
     open: {
@@ -111,6 +120,18 @@ export default {
   computed: {
     title() {
       return !this.step ? 'Software' : this.titles[this.type];
+    },
+    showKeystore() {
+      return (
+        this.step &&
+        (this.type === 'keystoreFile' || this.type === 'keystorePasasword')
+      );
+    },
+    showMnemonic() {
+      return this.step && this.type === 'mnemonic';
+    },
+    showPrivKey() {
+      return this.step && this.type === 'privateKey';
     }
   },
   mounted() {
@@ -130,12 +151,17 @@ export default {
       this.step = 1;
     },
     handleKeystoreUpload(e) {
-      console.log('received file', e);
       this.file = e;
     },
     unlockKeystoreWallet(password, file) {
       console.log('got these:', password, file);
       this.keystoreInstance.unlock(file, password);
+    },
+    unlockMnemonicWallet(phrase, password = '') {
+      MnemonicWallet(phrase, password).then(wallet => {
+        // use design for paths found in keepkey's designs
+        console.log(wallet);
+      });
     },
     accessBack() {
       if (!this.step) {
@@ -145,7 +171,6 @@ export default {
       this.step -= 1;
     },
     overlayClose() {
-      console.log('got here?? 12345');
       this.close('showSoftware');
     }
   }

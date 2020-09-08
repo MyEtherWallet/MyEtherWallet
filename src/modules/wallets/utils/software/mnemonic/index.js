@@ -3,8 +3,11 @@ import { Transaction } from 'ethereumjs-tx';
 import { hashPersonalMessage, toBuffer, ecsign } from 'ethereumjs-util';
 import { MNEMONIC as mnemonicType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
-import HDWalletInterface from '@/wallets/HDWalletInterface';
-import { getSignTransactionObject, calculateChainIdFromV } from '../../utils';
+import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
+import {
+  getSignTransactionObject,
+  calculateChainIdFromV
+} from '../../helpers.js';
 import errorHandler from './errorHandler';
 import store from '@/store';
 import commonGenerator from '@/helpers/commonGenerator';

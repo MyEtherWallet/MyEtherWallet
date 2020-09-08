@@ -1,4 +1,8 @@
-import { Toast } from '@/helpers';
+const Toast = {
+  responseHandler: function (text, type) {
+    console.log(`type:${type} `, text);
+  }
+};
 import Vue from 'vue';
 const ERRORS = {
   errorUnexpected: 'bitboxError.unexpected',
