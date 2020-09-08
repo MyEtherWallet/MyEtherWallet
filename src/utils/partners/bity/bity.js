@@ -5,7 +5,11 @@ import {
   swapNotificationStatuses
 } from '../partnersConfig';
 import { utils } from '../helpers';
-import { Toast } from '@/helpers';
+const Toast = {
+responseHandler: function(text, type) {
+console.log(`type:${type} `, text);
+}
+}
 import {
   getRates,
   openOrder,

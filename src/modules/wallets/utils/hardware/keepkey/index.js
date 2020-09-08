@@ -6,14 +6,14 @@ import {
 } from '@keepkey/keepkey.js';
 import { KEEPKEY as keepkeyType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
-import HDWalletInterface from '@/wallets/HDWalletInterface';
+import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
 import { getUint8Tx } from './utils';
 import {
   getBufferFromHex,
   sanitizeHex,
   getSignTransactionObject,
   calculateChainIdFromV
-} from '../../utils';
+} from '../../helpers.js';
 import HDKey from 'hdkey';
 import { toBuffer } from 'ethereumjs-util';
 import { Transaction } from 'ethereumjs-tx';

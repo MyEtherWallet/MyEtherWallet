@@ -62,9 +62,9 @@
           >
             <div class="password-container">
               <mew-input
-                v-model="password"
                 label="Password"
                 placeholder="Enter my keystore password"
+                type="password"
               />
               <mew-button
                 title="Access My Wallet"
@@ -82,7 +82,7 @@
 
 <script>
 export default {
-  name: 'AccessWalletSoftware',
+  name: 'AccessKeystore',
   props: {
     open: {
       type: Boolean,
@@ -105,7 +105,7 @@ export default {
   },
   watch: {
     password(newval) {
-      console.log(newval);
+      console.log('asdfasdfasdfas hakdog', newval);
     }
   },
   methods: {
@@ -127,8 +127,11 @@ export default {
       jsonInput.click();
     },
     unlockBtn() {
-      console.log('got here', this.password, this.file);
-      this.unlockKeystoreWallet(this.password, this.file);
+      console.log('got here', this.password);
+      this.unlockKeystoreWallet(this.password);
+    },
+    handlePasswordChange(e) {
+      console.log(e, 'asdfasd');
     }
   }
 };

@@ -1,4 +1,8 @@
-import { Toast } from '@/helpers';
+const Toast = {
+  responseHandler: function (text, type) {
+    console.log(`type:${type} `, text);
+  }
+};
 import Vue from 'vue';
 const ERRORS = {
   'Failed to sign with Ledger device: U2F TIMEOUT': 'ledgerError.failedToSign',

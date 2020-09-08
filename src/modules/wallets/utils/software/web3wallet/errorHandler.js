@@ -1,4 +1,8 @@
-import { Toast } from '@/helpers';
+const Toast = {
+  responseHandler: function (text, type) {
+    console.log(`type:${type} `, text);
+  }
+};
 const ERRORS = {
   REJECT_TX:
     'Returned error: Error: MetaMask Tx Signature: User denied transaction signature.'

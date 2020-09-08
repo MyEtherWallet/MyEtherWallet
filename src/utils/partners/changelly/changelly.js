@@ -1,7 +1,11 @@
 import BigNumber from 'bignumber.js';
 
 import { networkSymbols } from '../partnersConfig';
-import { Toast } from '@/helpers';
+const Toast = {
+responseHandler: function(text, type) {
+console.log(`type:${type} `, text);
+}
+}
 
 import {
   notificationStatuses,

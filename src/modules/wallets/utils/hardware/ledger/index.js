@@ -5,7 +5,7 @@ import u2fTransport from '@ledgerhq/hw-transport-u2f';
 import webUsbTransport from '@ledgerhq/hw-transport-webusb';
 import { LEDGER as ledgerType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
-import HDWalletInterface from '@/wallets/HDWalletInterface';
+import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
 import * as HDKey from 'hdkey';
 import platform from 'platform';
 import store from '@/store';
@@ -15,7 +15,7 @@ import {
   getBufferFromHex,
   sanitizeHex,
   calculateChainIdFromV
-} from '../../utils';
+} from '../../helpers.js';
 import { toBuffer } from 'ethereumjs-util';
 import errorHandler from './errorHandler';
 

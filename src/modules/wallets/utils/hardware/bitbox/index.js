@@ -4,8 +4,12 @@ import DigitalBitboxUsb from './digitalBitboxUsb';
 import DigitalBitboxEth from './digitalBitboxEth';
 import { BITBOX as bitboxType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
-import HDWalletInterface from '@/wallets/HDWalletInterface';
-import { Toast } from '@/helpers';
+import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
+const Toast = {
+  responseHandler: function (text, type) {
+    console.log(`type:${type} `, text);
+  }
+};
 import errorHandler from './errorHandler';
 import * as HDKey from 'hdkey';
 import store from '@/store';
@@ -14,7 +18,7 @@ import {
   sanitizeHex,
   getBufferFromHex,
   calculateChainIdFromV
-} from '../../utils';
+} from '../../helpers.js';
 import commonGenerator from '@/helpers/commonGenerator';
 
 const NEED_PASSWORD = true;
