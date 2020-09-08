@@ -186,7 +186,11 @@
     "hoek": "^4.2.0",
     "mem": "^4.0.0",
     "marked": "^0.6.2",
-    "decompress": ">=4.2.1"
+    "decompress": ">=4.2.1",
+    "dot-prop": ">=5.1.1",
+    "elliptic": ">=6.5.3",
+    "bl": ">=4.0.3",
+    "serialize-javascript": ">=3.1.0"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
