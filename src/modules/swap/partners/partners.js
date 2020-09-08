@@ -53,26 +53,26 @@ export default class SwapProviders {
 
     this.providerRatesRecieved = [];
 
-    let checkCount = 0;
-    if (environmentSupplied.network !== BASE_CURRENCY) {
-      const checkIfAllRatesReceived = setInterval(() => {
-        checkCount++;
-        this.checkIfRatesPresent();
-        if (this.ratesRetrieved || checkCount > 20) {
-          this.providerRatesRecieved = Object.keys(this.providerRateUpdates);
-          clearInterval(checkIfAllRatesReceived);
-        }
-      }, 150);
-    } else {
-      const checkIfAllRatesReceived = setInterval(() => {
-        checkCount++;
-        this.checkIfRatesPresent();
-        if (this.ratesRetrieved || checkCount > 50) {
-          this.providerRatesRecieved = Object.keys(this.providerRateUpdates);
-          clearInterval(checkIfAllRatesReceived);
-        }
-      }, 150);
-    }
+    // let checkCount = 0;
+    // if (environmentSupplied.network !== BASE_CURRENCY) {
+    //   const checkIfAllRatesReceived = setInterval(() => {
+    //     checkCount++;
+    //     this.checkIfRatesPresent();
+    //     if (this.ratesRetrieved || checkCount > 20) {
+    //       this.providerRatesRecieved = Object.keys(this.providerRateUpdates);
+    //       clearInterval(checkIfAllRatesReceived);
+    //     }
+    //   }, 150);
+    // } else {
+    //   const checkIfAllRatesReceived = setInterval(() => {
+    //     checkCount++;
+    //     this.checkIfRatesPresent();
+    //     if (this.ratesRetrieved || checkCount > 50) {
+    //       this.providerRatesRecieved = Object.keys(this.providerRateUpdates);
+    //       clearInterval(checkIfAllRatesReceived);
+    //     }
+    //   }, 150);
+    // }
 
     this.initialCurrencyArrays = this.buildInitialCurrencyArrays();
   }
@@ -190,27 +190,27 @@ export default class SwapProviders {
   }
 
   async updateRateEstimate(fromCurrency, toCurrency, fromValue) {
-    if (this.haveProviderRates) {
-      const providersFound = [];
-      const callsToMake = [];
-      if (
-        +fromValue > 0 &&
-        fromCurrency !== toCurrency &&
-        !Number.isNaN(+fromValue)
-      ) {
-        this.providers.forEach(provider => {
-          if (provider.validSwap(fromCurrency, toCurrency)) {
-            callsToMake.push(provider.getRate.bind(provider));
-            providersFound.push(provider.name);
-          }
-        });
-        return { providersFound, callsToMake };
-      }
+    // if (this.haveProviderRates) {
+    const providersFound = [];
+    const callsToMake = [];
+    if (
+      +fromValue > 0 &&
+      fromCurrency !== toCurrency &&
+      !Number.isNaN(+fromValue)
+    ) {
+      this.providers.forEach(provider => {
+        if (provider.validSwap(fromCurrency, toCurrency)) {
+          callsToMake.push(provider.getRate.bind(provider));
+          providersFound.push(provider.name);
+        }
+      });
+      return { providersFound, callsToMake };
     }
-    return {
-      providersFound: [],
-      callsToMake: []
-    };
+    // }
+    // return {
+    //   providersFound: [],
+    //   callsToMake: []
+    // };
   }
 
   async standAloneRateEstimate(

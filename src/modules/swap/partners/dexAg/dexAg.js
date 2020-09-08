@@ -10,7 +10,8 @@ import {
   SUPPORTED_DEXES,
   MARKET_IMPACT_CUTOFF
 } from './config';
-import dexAgCalls from './dexAg-calls';
+
+import DexAgCalls from './dexAg-calls';
 
 import debug from 'debug';
 import { utils } from '../helpers';
@@ -24,7 +25,8 @@ const defaultErrorHandler = (...e) => {
 export default class DexAg {
   constructor(props = {}) {
     this.errorHandler = props.errorHandler || defaultErrorHandler;
-    this.setUpUpdater = props.setUpUpdater || function () {};
+    this.dexAgCalls = new DexAgCalls();
+    this.setUpUpdater = props.setUpUpdater// || function () {};
     this.rateRetrievedUpdater = props.rateRetrievedUpdater || function () {};
     this.name = DexAg.getName();
     this.baseCurrency = 'ETH';
@@ -43,6 +45,7 @@ export default class DexAg {
     this.getSupportedCurrencies(this.network);
     this.getFee();
     this.platformGasPrice = props.gasPrice || -1;
+
   }
 
   static getName() {
@@ -89,7 +92,8 @@ export default class DexAg {
 
   async getSupportedDexes() {
     try {
-      this.SUPPORTED_DEXES = await dexAgCalls.supportedDexes();
+      this.setUpUpdater(this.name, 'initializing');
+      this.SUPPORTED_DEXES = await this.dexAgCalls.supportedDexes();
       if (!this.SUPPORTED_DEXES || !Array.isArray(this.SUPPORTED_DEXES)) {
         this.SUPPORTED_DEXES = SUPPORTED_DEXES;
       }
@@ -103,17 +107,17 @@ export default class DexAg {
       const {
         currencyDetails,
         tokenDetails
-      } = await dexAgCalls.getSupportedCurrencies(this.network);
+      } = await this.dexAgCalls.getSupportedCurrencies(this.network);
       this.currencyDetails = currencyDetails;
       this.tokenDetails = tokenDetails;
-
       if (Object.keys(this.tokenDetails).length > 0) {
-        this.setUpUpdater(this.name);
+        this.setUpUpdater(this.name, true);
       }
       // this.hasRates =
       //   Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {
       errorLogger(e);
+      throw e;
     }
   }
 
@@ -151,12 +155,12 @@ export default class DexAg {
     return new Promise(resolve => {
       const wrapGetRate = async () => {
         try {
-          const vals = await dexAgCalls.getPrice(
+          const vals = await this.dexAgCalls.getPrice(
             fromCurrency,
             toCurrency,
             fromValue
           );
-
+          console.log(vals); // todo remove dev item
           resolve(
             vals.map(val => {
               const isKnownToWork = this.SUPPORTED_DEXES.includes(val.dex);
@@ -173,6 +177,7 @@ export default class DexAg {
             })
           );
         } catch (e) {
+          console.log(e);
           resolve({
             fromCurrency,
             toCurrency,
@@ -437,7 +442,7 @@ export default class DexAg {
   }
 
   async createTransaction(swapDetails, dexToUse) {
-    return dexAgCalls.createTransaction({ dex: dexToUse, ...swapDetails });
+    return this.dexAgCalls.createTransaction({ dex: dexToUse, ...swapDetails });
   }
 
   getTokenAddress(token) {

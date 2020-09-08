@@ -72,8 +72,11 @@ export default class Changelly {
       } = await this.changellyCalls.getSupportedCurrencies(this.network);
       this.currencyDetails = currencyDetails;
       this.tokenDetails = tokenDetails;
-      this.hasRates =
-        Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
+      if (Object.keys(this.tokenDetails).length > 0) {
+        this.setUpUpdater(this.name, true);
+      }
+      // this.hasRates =
+      //   Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {
       errorLogger(e);
     }

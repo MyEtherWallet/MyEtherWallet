@@ -143,6 +143,7 @@ export default class Simplex {
         });
         this.minFiat = utils.createProxy(minFiat, MIN_FIAT);
         this.maxFiat = utils.createProxy(maxFiat, MAX_FIAT);
+        this.setUpUpdater(this.name, true);
       });
     });
   }

@@ -43,6 +43,8 @@ const defaultErrorHandler = (...e) => {
 export default class BitySwap {
   constructor(props = {}) {
     this.errorHandler = props.errorHandler || defaultErrorHandler;
+    this.setUpUpdater = props.setUpUpdater || function () {};
+    this.rateRetrievedUpdater = props.rateRetrievedUpdater || function () {};
     this.bityCalls = new BityCalls(this.errorHandler);
     this.name = BitySwap.getName();
     this.network = props.network || networkSymbols.ETH;
@@ -122,7 +124,10 @@ export default class BitySwap {
           }
         }
       });
-      this.hasRates = data.length > 0 ? this.hasRates + 1 : 0;
+      if (data.length > 0) {
+        this.setUpUpdater(this.name, true);
+      }
+      // this.hasRates = data.length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {
       this.errorHandler('bity-rate-failed', 1, true);
     }
