@@ -76,7 +76,9 @@ const AddrResolver = {
           _this.hexAddress = toChecksumAddress(domain);
           checkAddressIsContract(domain).then(res => {
             if (res) {
-              errorPar.classList.add('contract-addr-resolved');
+              if (res) {
+                errorPar.classList.add('contract-addr-resolved');
+              }
               errorPar.innerText = _this.$t('errorsGlobal.address-is-contract');
               appendElement(errorPar);
             }
@@ -99,7 +101,9 @@ const AddrResolver = {
                 _this.hexAddress = address;
                 _this.isValidAddress = true;
                 checkAddressIsContract(address).then(res => {
-                  errorPar.classList.add('contract-addr-resolved');
+                  if (res) {
+                    errorPar.classList.add('contract-addr-resolved');
+                  }
                   errorPar.innerText = res
                     ? _this.$t('errorsGlobal.address-is-contract')
                     : address;
@@ -120,7 +124,9 @@ const AddrResolver = {
                       _this.hexAddress = toChecksumAddress(address);
                       _this.isValidAddress = true;
                       checkAddressIsContract(address).then(res => {
-                        errorPar.classList.add('contract-addr-resolved');
+                        if (res) {
+                          errorPar.classList.add('contract-addr-resolved');
+                        }
                         errorPar.innerText = res
                           ? _this.$t('errorsGlobal.address-is-contract')
                           : address;
