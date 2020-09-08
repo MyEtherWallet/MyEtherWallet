@@ -17,6 +17,7 @@ import HybridWalletInterface from '../walletInterface';
 const V1_SIGNAL_URL = 'https://connect.mewapi.io';
 const V2_SIGNAL_URL = 'wss://connect2.mewapi.io/staging';
 const IS_HARDWARE = true;
+let thisAddress = null;
 
 class MEWconnectWallet {
   constructor() {
@@ -46,11 +47,15 @@ class MEWconnectWallet {
           };
         }
       }
+      if (!tx.from && thisAddress) {
+        tx.from = thisAddress;
+      }
       const networkId = tx.chainId;
       return new Promise(resolve => {
         if (!tx.gasLimit) {
           tx.gasLimit = tx.gas;
         }
+
         this.mewConnect.sendRtcMessage('signTx', JSON.stringify(tx));
         this.mewConnect.once('signTx', result => {
           tx = new Transaction(sanitizeHex(result), {
@@ -113,6 +118,7 @@ const signalerConnect = (url, mewConnect) => {
       });
       mewConnect.sendRtcMessage('address', '');
       mewConnect.once('address', data => {
+        thisAddress = data.address;
         resolve(data.address);
       });
     });

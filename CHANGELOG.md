@@ -1,3 +1,7 @@
+### Bug
+
+- Add from field if missing for MEW wallet [#]()
+
 ### Release v5.7.7
 
 ### Bug
