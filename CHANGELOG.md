@@ -1,6 +1,6 @@
 ### Bug
 
-- Add from field if missing for MEW wallet [#]()
+- Add from field if missing for MEW wallet [#2573](https://github.com/MyEtherWallet/MyEtherWallet/pull/2573)
 
 ### Release v5.7.7
 
