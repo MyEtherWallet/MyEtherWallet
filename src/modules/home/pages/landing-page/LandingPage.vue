@@ -3,20 +3,18 @@
     <landing />
     <div class="py-10" />
 
-    <features />
-    <div class="py-12" />
-    <div class="py-6" />
-
-    <why-mew />
-    <div class="py-12" />
-
-    <join />
-    <div class="py-12" />
-
-    <partners />
-    <div class="py-12" />
-
-    <get-started />
+    <div v-show="false">
+      <features />
+      <div class="py-12" />
+      <div class="py-6" />
+      <why-mew />
+      <div class="py-12" />
+      <join />
+      <div class="py-12" />
+      <partners />
+      <div class="py-12" />
+      <get-started />
+    </div>
   </div>
 </template>
 

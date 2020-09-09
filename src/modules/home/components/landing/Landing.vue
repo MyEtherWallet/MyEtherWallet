@@ -37,9 +37,9 @@
         </v-card>
       </v-container>
     </div>
-    <div class="mobile-content d-block d-lg-none expandHeader">
+    <div class="mobile-content d-block d-lg-none expandHeader pt-5">
       <v-container>
-        <v-card color="transparent" flat tile max-width="430px">
+        <v-card color="transparent" flat tile max-width="400px" class="mx-auto">
           <h1 class="white--text font-weight-bold banner-top-title">
             Ethereum's Original Wallet
           </h1>
@@ -101,7 +101,9 @@ export default {
 }
 
 .mobile-content {
-  background-image: url('~@/assets/images/backgrounds/bg-homepage-spaceman.svg');
-  padding: 0 0 20rem 0;
+  background-image: url('~@/assets/images/backgrounds/bg-homepage-spaceman-center.svg');
+  background-position: bottom center;
+  background-size: 88rem;
+  padding: 0 0 30rem 0;
 }
 </style>
