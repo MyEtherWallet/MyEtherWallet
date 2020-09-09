@@ -183,7 +183,6 @@
     "cryptiles": "^4.1.2",
     "jquery": "^3.4.0",
     "handlebars": "^4.5.3",
-    "hoek": "^4.2.0",
     "mem": "^4.0.0",
     "marked": "^0.6.2",
     "decompress": ">=4.2.1",
