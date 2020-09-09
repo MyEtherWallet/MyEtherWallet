@@ -266,16 +266,13 @@ export default {
   },
   watch: {
     web3() {
-      console.log('who');
       this.setupOnlineEnvironment();
     },
     address(val) {
-      console.log('is calling');
       if (val) this.setupOnlineEnvironment();
     }
   },
   mounted() {
-    console.log('this mfer');
     this.setupOnlineEnvironment();
   },
   destroyed() {
@@ -785,7 +782,6 @@ export default {
           this.getBalance();
           this.setTokens();
           this.setNonce();
-          console.log('is this getting called over and over??');
           this.getHighestGas();
           this.getBlockUpdater().then(_sub => {
             this.pollBlock = _sub;
