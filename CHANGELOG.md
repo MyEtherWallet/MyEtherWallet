@@ -1,6 +1,12 @@
+### Release v5.7.8
+
 ### Bug
 
 - Add from field if missing for MEW wallet [#2573](https://github.com/MyEtherWallet/MyEtherWallet/pull/2573)
+
+### Feature
+
+- Add warning when user enters a contract [#2574](https://github.com/MyEtherWallet/MyEtherWallet/pull/2574)
 
 ### Release v5.7.7
 
