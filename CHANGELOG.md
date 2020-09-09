@@ -1,6 +1,6 @@
-### Release v5.7.7-hotfix.1
+### Release v5.7.8
 
-### Hotfix
+### Bug
 
 - Gas estimate calculation fix [#2566](https://github.com/MyEtherWallet/MyEtherWallet/pull/2566)
 
