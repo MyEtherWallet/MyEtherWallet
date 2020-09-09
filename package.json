@@ -30,7 +30,7 @@
     "update:swap": "node compileBaseSwapOptions.js"
   },
   "dependencies": {
-    "@aave/protocol-js": "1.0.1",
+    "@aave/protocol-js": "1.0.3",
     "@coolwallets/eth": "0.2.0-beta.1",
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",
@@ -111,7 +111,7 @@
     "codecov": "3.7.2",
     "copy-webpack-plugin": "6.1.0",
     "detectrtc": "1.4.1",
-    "eslint": "7.7.0",
+    "eslint": "7.8.1",
     "eslint-plugin-prettier": "3.1.4",
     "eslint-plugin-security": "1.4.0",
     "eslint-plugin-vue": "6.2.2",
