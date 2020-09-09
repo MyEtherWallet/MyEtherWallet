@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--landing-header expandHeader">
-    <div class="d-none d-lg-block desktop-header py-5">
+    <div class="desktop-content d-none d-lg-block py-5">
       <v-container class="d-flex align-center">
         <router-link :to="{ name: 'Home', query: {} }">
           <v-img src="@/assets/images/icons/logo-mew.png" max-width="130" />
@@ -22,7 +22,7 @@
       </v-container>
     </div>
 
-    <div class="d-block d-lg-none mobile-header py-8">
+    <div class="mobile-content d-block d-lg-none py-8">
       <v-container class="d-flex align-center">
         <mew-button
           class="mobile-menu-button ml-n4"
