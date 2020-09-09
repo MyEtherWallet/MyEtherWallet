@@ -16,6 +16,5 @@
   "access-denied": "You dont have necessary permission to perform this task, make sure you are logged in as admin",
   "unable-to-reset-device": "Unable to reset device, try unplugging and replugging",
   "u2f-not-supported": "U2F Not supported by browser!",
-  "address-is-contract-contact": "Address provided is a contract address!",
-  "address-is-contract": "The address provided belongs to a smart contract. Funds sent directly to a contract address can not be recovered."
+  "address-is-contract": "The address provided belongs to a smart contract. Funds sent directly to a contract address may not be recoverable."
 }
