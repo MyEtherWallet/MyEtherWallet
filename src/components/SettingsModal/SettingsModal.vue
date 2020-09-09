@@ -38,13 +38,6 @@
                       {{ $t('common.gas.gwei') }})
                     </label>
                   </div>
-                  <p class="hidden">
-                    {{ gasPriceInputs[key].eth }} {{ network.type.name }}
-                    <span v-if="ethPrice !== 0 && network.type.name === 'ETH'">
-                      ($
-                      {{ convert(gasPriceInputs[key].eth) }})
-                    </span>
-                  </p>
                 </li>
                 <li :class="selectedGasType === 'other' ? 'selected' : ''">
                   <div>
@@ -273,10 +266,6 @@ export default {
     blockie: Blockie
   },
   props: {
-    gasPrice: {
-      type: String,
-      default: '0'
-    },
     address: {
       type: String,
       default: ''
@@ -299,7 +288,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['network', 'online', 'addressBook']),
+    ...mapState('main', ['network', 'online', 'addressBook', 'gasPrice']),
     sortedAddressBook() {
       return this.addressBook.slice().sort((a, b) => {
         a = a.nickname.toString().toLowerCase();
@@ -309,60 +298,24 @@ export default {
       });
     },
     gasPriceInputs() {
+      const regularPrice = new BigNumber(this.gasPrice).div(1).toFixed(0);
+      let medGasPriceValue = new BigNumber(this.gasPrice).times(
+        1.0714285714286
+      );
+      medGasPriceValue = medGasPriceValue.plus(21.428571428571).toFixed(0);
+      let fastGasPriceValue = new BigNumber(this.gasPrice).times(
+        1.1428571428571
+      );
+      fastGasPriceValue = fastGasPriceValue.plus(42.857142857145).toFixed(0);
       return {
         economy: {
-          gwei: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice).div(1).toFixed(0),
-              'gwei'
-            )
-          ).toFixed(),
-          eth: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice).div(1).toFixed(0),
-              'ether'
-            )
-          ).toFixed()
+          gwei: new BigNumber(regularPrice).toFixed()
         },
         regular: {
-          gwei: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice)
-                .times(1.0714285714286)
-                .plus(21.428571428571)
-                .toFixed(0),
-              'gwei'
-            )
-          ).toFixed(),
-          eth: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice)
-                .times(1.0714285714286)
-                .plus(21.428571428571)
-                .toFixed(0),
-              'ether'
-            )
-          ).toFixed()
+          gwei: new BigNumber(medGasPriceValue).toFixed()
         },
         fast: {
-          gwei: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice)
-                .times(1.1428571428571)
-                .plus(42.857142857145)
-                .toFixed(0),
-              'gwei'
-            )
-          ).toFixed(),
-          eth: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice)
-                .div(1.1428571428571)
-                .plus(42.857142857145)
-                .toFixed(0),
-              'ether'
-            )
-          ).toFixed()
+          gwei: new BigNumber(fastGasPriceValue).toFixed()
         }
       };
     }
@@ -381,9 +334,6 @@ export default {
           this.customGas = 1;
         }
       }
-    },
-    gasPrice() {
-      this.saveGasChanges();
     }
   },
   mounted() {

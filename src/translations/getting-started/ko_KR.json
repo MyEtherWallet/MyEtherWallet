@@ -13,7 +13,7 @@
   },
   "what-is-blockchain": {
     "title": "What is Blockchain?",
-    "desc1": "The term 'blockchain' refers to a public, decentalized spreadsheet, similar to a ledger. It's maintained by people all over the world, who remotely mine transactions to make them a part of the blockchain, permanently.",
+    "desc1": "The term 'blockchain' refers to a public, decentralized spreadsheet, similar to a ledger. It's maintained by people all over the world, who remotely mine transactions to make them a part of the blockchain, permanently.",
     "desc2": "When you use MEW, you are accessing the blockchain directly. It's your responsibility to take all necessary security precautions when you do this. Please do your research, knowledge is power! (Read on for a link to our Help Center.)"
   },
   "title-security": "About Security",
