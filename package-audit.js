@@ -30,4 +30,5 @@ execute('npm audit --json', json => {
     }
   }
   if (!auditPass) process.exit(1);
+  else console.info('AUDIT Passed!')
 });
