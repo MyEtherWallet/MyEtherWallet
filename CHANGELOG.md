@@ -4,6 +4,10 @@
 
 - Gas estimate calculation fix [#2566](https://github.com/MyEtherWallet/MyEtherWallet/pull/2566)
 
+### Feature
+
+- Add warning when user enters a contract [#2574](https://github.com/MyEtherWallet/MyEtherWallet/pull/2574)
+
 ### Release v5.7.7
 
 ### Bug
