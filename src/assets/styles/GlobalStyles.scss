@@ -4,6 +4,11 @@
     max-width: 1185px !important;
   }
 }
+@media (max-width: 959px) {
+  .container {
+    padding: 0 1.5rem !important;
+  }
+}
 
 /* Remove default background color */
 .theme--light.v-application {
@@ -48,15 +53,15 @@
   background-color: transparent !important;
 }
 .v-application .v-btn.mew-button .v-btn__content {
-  font-size: 14px !important;
+  font-size: 0.875rem !important;
   font-weight: 500 !important;
 }
 .corner-btn {
   color: var(--v-primary-base);
   font-weight: 500;
   position: absolute;
-  top: -25px;
-  right: 10px;
+  top: -1.56rem;
+  right: 0.63rem;
   cursor: pointer;
   filter: brightness(1);
 
@@ -70,52 +75,49 @@
   font-family: monospace !important;
 }
 i {
-  font-family: 'Material Icons' !important;
+  font-family: "Material Icons" !important;
 }
 div {
-  font-size: 14px;
-  line-height: 21px;
+  font-size: 0.88rem;
+  line-height: 1.3rem;
+  font-weight: 400;
   padding: 0;
   margin: 0;
 }
 p {
-  font-size: 14px;
-  line-height: 21px;
-  letter-spacing: 0.3px;
+  font-size: 0.88rem;
+  line-height: 1.3rem;
+  font-weight: 400;
 }
 h1 {
   font-size: 40px;
   line-height: 50px;
-  font-weight: 900;
-  padding: 0;
-  margin: 0;
+  font-weight: 400;
 }
 h2 {
-  font-size: 30px;
-  line-height: 37px;
+  font-size: 1.88rem;
+  line-height: 2.31rem;
   font-weight: 700;
-  padding: 0;
-  margin: 0;
 }
 h3 {
-  font-size: 24px;
+  font-size: 1.5rem;
+  line-height: 2.31rem;
   font-weight: 400;
-  line-height: 27px;
 }
 h4 {
-  font-size: 22px;
+  font-size: 1.38rem;
+  line-height: 2.31rem;
   font-weight: 400;
-  line-height: 27px;
 }
 h5 {
-  font-size: 16px;
+  font-size: 1rem;
+  line-height: 1.44rem;
   font-weight: 400;
-  line-height: 23px;
 }
 h6 {
-  font-size: 12px;
+  font-size: 0.75rem;
+  line-height: 0.85rem;
   font-weight: 400;
-  line-height: initial;
 }
 
 /* ========== Text ========== */
@@ -186,5 +188,5 @@ h6 {
   display: block !important;
 }
 .spacer-y-medium {
-  height: 80px;
+  height: 5rem;
 }

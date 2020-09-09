@@ -29,7 +29,7 @@ import getStarted from '@/components/get-started/GetStarted';
 import partners from '@/components/partners/Partners';
 
 export default {
-  name: 'Home',
+  name: 'LandingPage',
   components: {
     landing,
     features,
