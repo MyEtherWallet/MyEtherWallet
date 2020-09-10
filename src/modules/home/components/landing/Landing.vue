@@ -40,7 +40,7 @@
     <div class="mobile-content d-block d-lg-none expandHeader pt-5">
       <v-container>
         <v-card color="transparent" flat tile max-width="400px" class="mx-auto">
-          <h1 class="white--text font-weight-bold banner-top-title">
+          <h1 class="white--text font-weight-bold">
             Ethereum's Original Wallet
           </h1>
           <p class="white--text mt-3">
@@ -51,7 +51,7 @@
           </p>
           <div class="mt-9">
             <mew-button
-              class="mb-4 width--full"
+              class="mb-3 width--full"
               :has-full-width="false"
               title="Create a new wallet"
               button-size="xlarge"

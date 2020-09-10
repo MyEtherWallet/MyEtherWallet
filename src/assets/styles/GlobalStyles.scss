@@ -9,6 +9,11 @@
     padding: 0 1.5rem !important;
   }
 }
+@media (max-width: 1263px) {
+  html {
+    font-size: 14px !important;
+  }
+}
 
 /* Remove default background color */
 .theme--light.v-application {
@@ -43,11 +48,6 @@
   color: white !important;
 }
 
-/* Reset text transform for Vuetify button */
-.v-btn__content {
-  text-transform: initial;
-}
-
 /* ========== Fix MEW components ========== */
 .theme--dark.v-expansion-panels .v-expansion-panel {
   background-color: transparent !important;
@@ -70,6 +70,15 @@
   }
 }
 
+.v-application .v-btn.mew-button .v-btn__content span {
+  text-transform: initial;
+  font-size: 0.88rem !important;
+}
+.v-application .v-btn.xlarge-btn {
+  height: 3.875rem !important;
+  min-height: 3.875rem !important;
+}
+
 /* ========== CSS Style Reset ========== */
 .monospace {
   font-family: monospace !important;
@@ -90,8 +99,8 @@ p {
   font-weight: 400;
 }
 h1 {
-  font-size: 40px;
-  line-height: 50px;
+  font-size: 3rem;
+  line-height: 3.3rem;
   font-weight: 400;
 }
 h2 {
@@ -101,12 +110,12 @@ h2 {
 }
 h3 {
   font-size: 1.5rem;
-  line-height: 2.31rem;
+  line-height: 1.9rem;
   font-weight: 400;
 }
 h4 {
   font-size: 1.38rem;
-  line-height: 2.31rem;
+  line-height: 1.6rem;
   font-weight: 400;
 }
 h5 {

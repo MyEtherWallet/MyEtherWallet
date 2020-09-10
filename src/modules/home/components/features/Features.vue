@@ -60,12 +60,12 @@
         max-width="400px"
         class="mx-auto text-center px-5"
       >
-        <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
+        <h4 class="font-weight-bold text-uppercase textPrimary--text">
           Features
-        </div>
-        <h2 class="mb-9">
+        </h4>
+        <h3 class="font-weight-bold mb-9">
           All-in-one gateway to your Ethereum Blockchain service
-        </h2>
+        </h3>
       </v-sheet>
       <v-container>
         <v-tabs v-model="mobileTab" fixed-tabs>
@@ -167,7 +167,7 @@ export default {
       display: none;
     }
     .v-tabs-bar {
-      height: 60px;
+      height: 3.5rem;
     }
     .v-tab {
       padding: 0;
