@@ -7,13 +7,12 @@ export default class API {
     this.retryCount = 0;
   }
 
-  async getTokens() {
+  getTokens() {
     return new Promise((resolve, reject) => {
       fetch(`${this.openSeaLambdaUrl}/nft?address=${this.address}`, {
         mode: 'cors',
         cache: 'no-cache',
-        method: 'GET',
-        'Cache-Control': 'no-cache'
+        method: 'GET'
       })
         .then(data => data.json())
         .then(newData => {
@@ -37,12 +36,11 @@ export default class API {
     });
   }
 
-  async getNftDetailsApi(contract, params) {
-    return await fetch(`${this.openSeaLambdaUrl}/nft`, {
+  getNftDetailsApi(contract, params) {
+    return fetch(`${this.openSeaLambdaUrl}/nft`, {
       mode: 'cors',
       cache: 'no-cache',
       method: 'POST',
-      'Cache-Control': 'no-cache',
       body: JSON.stringify({
         jsonrpc: '2.0',
         method: '',

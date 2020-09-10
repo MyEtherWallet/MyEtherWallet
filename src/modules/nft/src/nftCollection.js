@@ -115,44 +115,50 @@ export default class NftCollection {
     }
   }
 
-  async getNftDetails(contract, startIndex = -1, endIndex = -1) {
-    let params;
-    if (startIndex >= 0 && endIndex >= 0) {
-      params = {
-        address: this.address,
-        contractAddresses: this.contracts,
-        startIndex,
-        endIndex
-      };
-    } else {
-      params = {
-        address: this.address,
-        contractAddresses: this.contracts
-      };
-    }
-
-    const tokenParse = item => {
-      return {
-        description: item.description,
-        name: item.name,
-        token_id: item.token_id,
-        contract: item.contract
-      };
-    };
-
-    return this.api.getNftDetailsApi(this.contract, params).then(data => {
-      let allTokens = [];
-      if (!this.initialSetRetrieved) {
-        this.initialSetRetrieved = true;
+  getNftDetails(contract, startIndex = -1, endIndex = -1) {
+    return new Promise((resolve, reject) => {
+      let params;
+      if (startIndex >= 0 && endIndex >= 0) {
+        params = {
+          address: this.address,
+          contractAddresses: this.contracts,
+          startIndex,
+          endIndex
+        };
+      } else {
+        params = {
+          address: this.address,
+          contractAddresses: this.contracts
+        };
       }
-      if (!data) {
-        return this.tokens;
-      }
-      allTokens = data.tokens.map(tokenParse);
 
-      this.tokens = allTokens;
+      const tokenParse = item => {
+        return {
+          description: item.description,
+          name: item.name,
+          token_id: item.token_id,
+          contract: item.contract
+        };
+      };
 
-      return allTokens;
+      this.api
+        .getNftDetailsApi(this.contract, params)
+        .then(data => {
+          let allTokens = [];
+          if (!this.initialSetRetrieved) {
+            this.initialSetRetrieved = true;
+          }
+          if (!data) {
+            resolve(this.tokens);
+            return;
+          }
+          allTokens = data.tokens.map(tokenParse);
+
+          this.tokens = allTokens;
+
+          resolve(allTokens);
+        })
+        .catch(reject);
     });
   }
 

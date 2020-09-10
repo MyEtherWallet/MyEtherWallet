@@ -22,10 +22,9 @@ export default class Nft {
     });
   }
 
-  static async init(environment) {
+  static init(environment) {
     const create = new Nft(environment);
-    await create.setup();
-    return create;
+    return create.setup();
   }
 
   setSelectedContract(selectedContract) {
@@ -34,15 +33,6 @@ export default class Nft {
 
   getOwnedTokenBasicDetails() {
     return this.ownedTokenBasicDetails;
-  }
-
-  hasImage(nft) {
-    if (nft.customNft || nft.image === '') {
-      return true;
-    }
-    if (nft.loaded) {
-      return true;
-    }
   }
 
   async setup() {
@@ -73,11 +63,11 @@ export default class Nft {
               reject(e);
             }
           } else {
-            reject(configData.error)
+            reject(configData.error);
           }
         });
       }
-      reject(Error('Nft Module is only available on mainnet'))
+      reject(Error('Nft Module is only available on mainnet'));
     });
   }
 
