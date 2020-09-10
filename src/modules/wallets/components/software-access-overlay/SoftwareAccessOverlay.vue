@@ -135,6 +135,7 @@ export default {
     }
   },
   mounted() {
+    console.log(window.Worker);
     this.keystoreInstance = new Keystore(
       true /*temporary value*/,
       window.Worker,
@@ -153,9 +154,8 @@ export default {
     handleKeystoreUpload(e) {
       this.file = e;
     },
-    unlockKeystoreWallet(password, file) {
-      console.log('got these:', password, file);
-      this.keystoreInstance.unlock(file, password);
+    unlockKeystoreWallet(e, password = '123456789') {
+      this.keystoreInstance.unlock(this.file, password).catch(console.log);
     },
     unlockMnemonicWallet(phrase, password = '') {
       MnemonicWallet(phrase, password).then(wallet => {
