@@ -68,7 +68,7 @@
         </h2>
       </v-sheet>
       <v-container>
-        <v-tabs v-model="mobileTab">
+        <v-tabs v-model="mobileTab" fixed-tabs>
           <v-tab v-for="item in mobileItems" :key="item.tab">
             {{ item.tab }}
           </v-tab>
@@ -76,10 +76,11 @@
 
         <v-tabs-items v-model="mobileTab">
           <v-tab-item v-for="item in mobileItems" :key="item.tab">
-            <img class="tab-image" :src="item.img" :alt="item.tab" />
+            <img class="tab-image mx-n10" :src="item.img" :alt="item.tab" />
           </v-tab-item>
         </v-tabs-items>
       </v-container>
+      <div class="py-2" />
     </div>
   </div>
 </template>
@@ -128,7 +129,6 @@ export default {
 
 <style lang="scss">
 .mew-component--features {
-  background-color: var(--v-overlayBg-base);
   .desktop-content {
     .features-tabs-container {
       background-image: url(../../../../assets/images/backgrounds/bg-waves-color.png);
@@ -146,6 +146,7 @@ export default {
     }
   }
   .mobile-content {
+    background-color: var(--v-overlayBg-base);
     .v-tabs {
       //margin: 0 -10px;
     }
@@ -174,7 +175,7 @@ export default {
       text-transform: initial;
 
       @media (max-width: 399px) {
-        min-width: 22vw;
+        min-width: 20vw;
       }
     }
     .v-tab--active {
@@ -186,12 +187,12 @@ export default {
     }
 
     .tab-image {
-      width: 100%;
+      width: 105%;
       max-width: 500px;
     }
 
     .v-window-item {
-      height: 120vw;
+      height: 125vw;
       max-height: 680px;
       display: flex;
       justify-content: center;

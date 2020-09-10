@@ -2,12 +2,9 @@
   <div>
     <landing />
     <features />
-    <div class="py-12" />
-    <div class="py-6" />
 
+    <why-mew />
     <div v-show="false">
-      <why-mew />
-      <div class="py-12" />
       <join />
       <div class="py-12" />
       <partners />
