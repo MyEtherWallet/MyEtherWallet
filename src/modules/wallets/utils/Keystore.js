@@ -15,7 +15,7 @@ export default class Keystore {
   unlock(jsonFile, password) {
     const needsPw = walletRequirePass(jsonFile);
     if (needsPw && (password !== '' || password.length !== 0)) {
-      if (this.online && this.worker && this.origin) {
+      if (this.online && undefined && this.origin) {
         let locResolve, locReject;
         const worker = new walletWorker();
 
@@ -53,15 +53,18 @@ export default class Keystore {
         Object.keys(jsonFile).forEach(key => {
           newFile[key.toLowerCase()] = jsonFile[key];
         });
-        console.log(newFile, jsonFile);
-        const _wallet = Wallet.fromV3(newFile, this.password, true);
-        const newWallet = new WalletInterface(
-          Buffer.from(_wallet._privKey),
-          false,
-          keyStoreType
-        );
+        // currently bugged, fix incoming in new version: https://github.com/ethereumjs/ethereumjs-wallet/pull/135
+        Wallet.fromV3(newFile, password, true)
+          .then(_wallet => {
+            const newWallet = new WalletInterface(
+              Buffer.from(_wallet._privKey),
+              false,
+              keyStoreType
+            );
 
-        resolve(newWallet);
+            resolve(newWallet);
+          })
+          .catch(console.log);
       });
     }
     return new Error('Missing password!');
@@ -69,7 +72,7 @@ export default class Keystore {
 
   generate(password) {
     return new Promise((resolve, reject) => {
-      if (this.online && this.worker && this.origin) {
+      if (this.online && this.windowWorker && this.origin) {
         const worker = new walletWorker();
         worker.postMessage({ type: 'createWallet', data: [password] });
         worker.onmessage = e => {
