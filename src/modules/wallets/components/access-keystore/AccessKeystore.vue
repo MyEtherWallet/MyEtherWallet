@@ -114,7 +114,7 @@ export default {
       const reader = new FileReader();
       reader.onloadend = evt => {
         try {
-          self.$emit('keystore', evt.target.result);
+          self.$emit('keystore', JSON.parse(evt.target.result));
         } catch (e) {
           throw new Error(e);
         }

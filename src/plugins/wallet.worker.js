@@ -1,4 +1,5 @@
-import { Wallet, Configs } from '@/helpers';
+import Wallet from 'ethereumjs-wallet';
+import walletConfigs from '@/modules/wallets/utils/walletConfigs.js';
 
 const fromMyEtherWalletV2 = json => {
   if (json.privKey.length !== 64) {
@@ -22,8 +23,8 @@ const create = password => {
   const createdWallet = {};
   const wallet = new Wallet.generate();
   createdWallet.walletJson = wallet.toV3(password, {
-    kdf: Configs.wallet.kdf,
-    n: Configs.wallet.n
+    kdf: walletConfigs.kdf,
+    n: walletConfigs.n
   });
   createdWallet.name = wallet.getV3Filename();
   return createdWallet;

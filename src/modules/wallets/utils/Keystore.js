@@ -1,4 +1,5 @@
 import WalletInterface from './WalletInterface';
+import walletConfigs from './walletConfigs.js';
 import { KEYSTORE as keyStoreType } from './bip44/walletTypes';
 import walletWorker from 'worker-loader!@/plugins/wallet.worker.js';
 import { walletRequirePass, createBlob } from './helpers.js';
@@ -13,52 +14,57 @@ export default class Keystore {
 
   unlock(jsonFile, password) {
     const needsPw = walletRequirePass(jsonFile);
-    return new Promise((resolve, reject) => {
-      if (!needsPw && !(password === '' || password.length === 0)) {
-        if (this.online && this.worker && this.origin) {
-          const worker = new walletWorker();
+    if (needsPw && (password !== '' || password.length !== 0)) {
+      if (this.online && this.worker && this.origin) {
+        let locResolve, locReject;
+        const worker = new walletWorker();
 
-          worker.postMessage({
-            type: 'unlockWallet',
-            data: [jsonFile, password]
-          });
-          worker.onmessage = function (e) {
-            const obj = {
-              file: jsonFile,
-              name: e.data.filename
-            };
-            const newWallet = new WalletInterface(
-              Buffer.from(e.data._privKey),
-              false,
-              keyStoreType,
-              '',
-              JSON.stringify(obj)
-            );
-
-            resolve(newWallet);
+        worker.postMessage({
+          type: 'unlockWallet',
+          data: [jsonFile, password]
+        });
+        worker.onmessage = function (e) {
+          const obj = {
+            file: jsonFile,
+            name: e.data.filename
           };
-
-          worker.onerror = function (e) {
-            reject(e);
-          };
-        } else {
-          const newFile = {};
-          Object.keys(jsonFile).forEach(key => {
-            newFile[key.toLowerCase()] = jsonFile[key];
-          });
-          const _wallet = Wallet.fromV3(newFile, this.password, true);
           const newWallet = new WalletInterface(
-            Buffer.from(_wallet._privKey),
+            Buffer.from(e.data._privKey),
             false,
-            keyStoreType
+            keyStoreType,
+            '',
+            JSON.stringify(obj)
           );
 
-          resolve(newWallet);
-        }
-      } else {
-        reject(new Error('Missing password!'));
+          locResolve(newWallet);
+        };
+
+        worker.onerror = function (e) {
+          locReject(e);
+        };
+
+        return new Promise((resolve, reject) => {
+          locResolve = resolve;
+          locReject = reject;
+        });
       }
-    });
+      return new Promise(resolve => {
+        const newFile = {};
+        Object.keys(jsonFile).forEach(key => {
+          newFile[key.toLowerCase()] = jsonFile[key];
+        });
+        console.log(newFile, jsonFile);
+        const _wallet = Wallet.fromV3(newFile, this.password, true);
+        const newWallet = new WalletInterface(
+          Buffer.from(_wallet._privKey),
+          false,
+          keyStoreType
+        );
+
+        resolve(newWallet);
+      });
+    }
+    return new Error('Missing password!');
   }
 
   generate(password) {
@@ -77,10 +83,7 @@ export default class Keystore {
         };
       } else {
         const wallet = new Wallet.generate();
-        const file = wallet.toV3(password, {
-          kdf: 'scrypt',
-          n: 131072
-        });
+        const file = wallet.toV3(password, walletConfigs);
         const name = wallet.getV3Filename();
         resolve({
           file: createBlob(file, 'mime'),
