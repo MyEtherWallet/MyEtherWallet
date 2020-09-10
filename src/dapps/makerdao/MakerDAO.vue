@@ -32,6 +32,22 @@
       >
         Withdraw Overlay
       </div>
+
+      <manageMyVaultOverlay :open="openManageMyVaultOverlay" />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="openManageMyVaultOverlay = true"
+      >
+        Manage MyVault Overlay
+      </div>
+
+      <migrateOverlay :open="openMigrateOverlay" />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="openMigrateOverlay = true"
+      >
+        Migrate Overlay
+      </div>
     </div>
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
@@ -162,16 +178,20 @@
 <script>
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import transactionConfirmationOverlay from '@/modules/wallets/components/transaction-confirmation-overlay/TransactionConfirmationOverlay';
-import collateralizeDaiOverlay from '@/modules/wallets/components/collateralize-dai-overlay/CollateralizeDaiOverlay';
-import depositDaiOverlay from '@/modules/wallets/components/deposit-dai-overlay/DepositDaiOverlay';
-import withdrawDaiOverlay from '@/modules/wallets/components/withdraw-dai-overlay/WithdrawDaiOverlay';
+import collateralizeDaiOverlay from '@/modules/wallets/components/maker-dao-collateralize-dai-overlay/CollateralizeDaiOverlay';
+import depositDaiOverlay from '@/modules/wallets/components/maker-dao-deposit-dai-overlay/DepositDaiOverlay';
+import withdrawDaiOverlay from '@/modules/wallets/components/maker-dao-withdraw-dai-overlay/WithdrawDaiOverlay';
+import manageMyVaultOverlay from '@/modules/wallets/components/maker-dao-manage-my-vault-overlay/ManageMyVaultOverlay';
+import migrateOverlay from '@/modules/wallets/components/maker-dao-migrate-overlay/MigrateOverlay';
 
 export default {
   components: {
     transactionConfirmationOverlay,
     collateralizeDaiOverlay,
     depositDaiOverlay,
-    withdrawDaiOverlay
+    withdrawDaiOverlay,
+    manageMyVaultOverlay,
+    migrateOverlay
   },
   data() {
     return {
@@ -179,6 +199,8 @@ export default {
       openCollateralizeDaiOverlay: false,
       openDepositDaiOverlay: false,
       openWithdrawDaiOverlay: false,
+      openManageMyVaultOverlay: false,
+      openMigrateOverlay: false,
       walletBalanceTableHeaders: [
         {
           text: 'Asset',
@@ -255,7 +277,7 @@ export default {
             '0x68f6ce1e607d6a6ec6fb1aaa6f43bb8210658f49065ae5a7325c5771ea1100e8'
         },
         {
-          activity: 'Deposited 12.00000 DAI',
+          activity: 'Deposited 32.00000 DAI',
           date: '01/02/2020, 2:16:32 PM',
           txHash:
             '0x68f6ce1e607d6a6ec6fb1aaa6f43bb8210658f49065ae5a7325c5771ea1100e8'

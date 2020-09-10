@@ -178,6 +178,9 @@ h6 {
 .border-radius--10px {
   border-radius: 10px !important;
 }
+.border-radius--5px {
+  border-radius: 5px !important;
+}
 
 /* ========== Other ========== */
 
@@ -196,9 +199,15 @@ h6 {
 .width--full {
   width: 100%;
 }
+.vertical-align--middle {
+  vertical-align: middle;
+}
 .display--block {
   display: block !important;
 }
 .spacer-y-medium {
   height: 5rem;
+}
+.box-shadow--sm {
+  box-shadow: 0 2px 7px var(--v-boxShadow-base) !important;
 }

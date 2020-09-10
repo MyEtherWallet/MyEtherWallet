@@ -1,15 +1,31 @@
 <template>
   <div class="mew-component-fix--name-manager">
-    <div>
+    <div class="d-flex align-center">
       <register-domain-overlay
         :open="registerOverlay"
         :close="closeRegisterOverlay"
       />
       <div
-        class="cursor--pointer font-weight-bold"
+        class="cursor--pointer font-weight-bold mr-4"
         @click="registerOverlay = true"
       >
         Register Domain Overlay
+      </div>
+
+      <add-owned-domain-overlay :open="addOwnedDomainOverlay" />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="addOwnedDomainOverlay = true"
+      >
+        Add Owned Domain Overlay
+      </div>
+
+      <transfer-domain-overlay :open="transferDomainOverlay" />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="transferDomainOverlay = true"
+      >
+        Transfer Domain Overlay
       </div>
     </div>
     <mew6-white-sheet>
@@ -223,14 +239,23 @@
 
 <script>
 import BG from '@/assets/images/backgrounds/bg-ens.png';
-import registerDomainOverlay from '@/modules/wallets/components/register-domain-overlay/RegisterDomainOverlay';
+import registerDomainOverlay from '@/modules/wallets/components/ens-manager-register-domain-overlay/RegisterDomainOverlay';
+import addOwnedDomainOverlay from '@/modules/wallets/components/ens-manager-add-owned-domain-overlay/AddOwnedDomainOverlay';
+import transferDomainOverlay from '@/modules/wallets/components/ens-manager-transfer-domain-overlay/TransferDomainOverlay';
 import domainBtn from '@/modules/wallets/components/domain-btn/DomainBtn';
 
 export default {
-  components: { registerDomainOverlay, domainBtn },
+  components: {
+    registerDomainOverlay,
+    addOwnedDomainOverlay,
+    transferDomainOverlay,
+    domainBtn
+  },
   data() {
     return {
       registerOverlay: false,
+      addOwnedDomainOverlay: false,
+      transferDomainOverlay: false,
       domainFunctions: [
         { label: 'Transfer Domain' },
         { label: 'Renew Domain', expire: '07/21/2020' },
