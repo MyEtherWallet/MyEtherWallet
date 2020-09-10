@@ -30,15 +30,9 @@
   },
   "dependencies": {
     "@myetherwallet/mew-components": "0.5.2-beta",
-<<<<<<< HEAD
-    "@sentry/browser": "5.22.3",
-    "@sentry/integrations": "5.22.3",
-    "@unstoppabledomains/resolution": "1.6.2",
-=======
     "@sentry/browser": "5.21.1",
     "@sentry/integrations": "5.21.1",
     "@unstoppabledomains/resolution": "1.6.0",
->>>>>>> v6/update-dapps-overlays
     "highcharts": "8.2.0",
     "highcharts-vue": "1.3.5",
     "idna-uts46": "1.1.0",
