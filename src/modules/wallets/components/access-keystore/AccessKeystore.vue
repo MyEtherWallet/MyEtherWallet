@@ -85,14 +85,6 @@
 export default {
   name: 'AccessKeystore',
   props: {
-    open: {
-      type: Boolean,
-      default: false
-    },
-    btnCall: {
-      type: Function,
-      default: () => {}
-    },
     unlockKeystoreWallet: {
       type: Function,
       default: () => {}

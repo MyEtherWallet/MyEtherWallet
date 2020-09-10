@@ -44,6 +44,10 @@
         :unlock-mnemonic-wallet="unlockKeystoreWallet"
         @keystore="handleKeystoreUpload"
       />
+      <access-private-key
+        v-else-if="showPrivKey"
+        :unlock-mnemonic-wallet="unlockPrivateKeyWallet"
+      />
     </template>
   </mew-overlay>
 </template>
@@ -51,9 +55,12 @@
 <script>
 import accessKeystore from '../access-keystore/AccessKeystore';
 import accessMnemonic from '../access-mnemonic/AccessMnemonic';
+import accessPrivateKey from '../access-private-key/AccessPrivateKey';
 import Keystore from '@/modules/wallets/utils/Keystore.js';
 import { MnemonicWallet } from '@/modules/wallets/utils/software';
-
+import WalletInterface from '@/modules/wallets/utils/WalletInterface';
+import { PRIV_KEY as privKeyType } from '@/modules/wallets/utils/bip44/walletTypes';
+import { mapActions } from 'vuex';
 const TITLES = {
   keystoreFile: 'Keystore File',
   mnemonic: 'Mnemonic Phrase',
@@ -66,7 +73,8 @@ export default {
   name: 'AccessWalletSoftware',
   components: {
     accessKeystore,
-    accessMnemonic
+    accessMnemonic,
+    accessPrivateKey
   },
   props: {
     open: {
@@ -142,6 +150,7 @@ export default {
     );
   },
   methods: {
+    ...mapActions(['decryptWallet']),
     btnCall(str) {
       if (TYPES.includes(str)) {
         this.type = str;
@@ -156,6 +165,17 @@ export default {
     unlockKeystoreWallet(e, password) {
       console.log(password);
       // this.keystoreInstance.unlock(this.file, password).catch(console.log);
+    },
+    unlockPrivateKeyWallet(privateKey) {
+      const walletInstance = new WalletInterface(
+        privateKey,
+        false,
+        privKeyType
+      );
+
+      this.decryptWallet([walletInstance]).then(() => {
+        console.log('wallet added succesfully!');
+      });
     },
     unlockMnemonicWallet(phrase, password = '') {
       MnemonicWallet(phrase, password).then(wallet => {
