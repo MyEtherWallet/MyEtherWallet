@@ -86,16 +86,15 @@
     </div>
     <div class="mobile-content d-block d-lg-none">
       <div class="py-7" />
-
       <v-container>
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
-          <v-sheet color="transparent">
+          <v-sheet color="transparent" max-width="500px" class="mb-9">
             <h5 class="font-weight-bold text-uppercase textPrimary--text mb-1">
               Why Mew
             </h5>
-            <h3 class="font-weight-bold mb-9">
+            <h2 class="font-weight-bolder">
               Make Ethereum Blockchain easy and secure
-            </h3>
+            </h2>
           </v-sheet>
 
           <info-card

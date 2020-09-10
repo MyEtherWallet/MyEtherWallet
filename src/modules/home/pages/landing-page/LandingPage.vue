@@ -4,9 +4,8 @@
     <features />
     <why-mew />
     <join />
+    <partners />
     <div v-show="false">
-      <div class="py-12" />
-      <partners />
       <div class="py-12" />
       <get-started />
     </div>

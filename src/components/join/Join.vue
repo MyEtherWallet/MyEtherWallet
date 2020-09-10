@@ -29,9 +29,9 @@
       <div class="card-content">
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <div class="mb-10">
-            <h2 class="white--text">
+            <h1 class="white--text">
               Newbie in crypto?
-            </h2>
+            </h1>
             <h2 class="white--text">
               Join our journey to MEW.
             </h2>

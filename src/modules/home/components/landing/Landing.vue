@@ -40,7 +40,7 @@
     <div class="mobile-content d-block d-lg-none expandHeader pt-5">
       <v-container>
         <v-card color="transparent" flat tile max-width="500px" class="mx-auto">
-          <h1 class="white--text font-weight-bold">
+          <h1 class="white--text font-weight-bold mb-4">
             Ethereum's Original Wallet
           </h1>
           <p class="white--text mt-3">
@@ -49,7 +49,7 @@
             platform allows you to generate wallets, interact with smart
             contracts, and so much more.
           </p>
-          <div class="mt-9">
+          <div class="mt-12">
             <mew-button
               class="mb-3 width--full"
               :has-full-width="false"

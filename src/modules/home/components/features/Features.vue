@@ -55,30 +55,33 @@
     </div>
     <div class="mobile-content d-block d-lg-none">
       <div class="py-7" />
-      <v-sheet
-        color="transparent"
-        max-width="500px"
-        class="mx-auto text-center px-5"
-      >
-        <h5 class="font-weight-bold text-uppercase textPrimary--text">
-          Features
-        </h5>
-        <h3 class="font-weight-bold mb-9">
-          All-in-one gateway to your Ethereum Blockchain service
-        </h3>
-      </v-sheet>
       <v-container>
-        <v-tabs v-model="mobileTab" fixed-tabs>
-          <v-tab v-for="item in mobileItems" :key="item.tab">
-            {{ item.tab }}
-          </v-tab>
-        </v-tabs>
+        <v-sheet color="transparent" max-width="500px" class="mx-auto">
+          <v-sheet
+            color="transparent"
+            max-width="400px"
+            class="mx-auto text-center mb-9"
+          >
+            <h5 class="font-weight-bold text-uppercase textPrimary--text">
+              Features
+            </h5>
+            <h3 class="font-weight-bold">
+              All-in-one gateway to your Ethereum Blockchain service
+            </h3>
+          </v-sheet>
 
-        <v-tabs-items v-model="mobileTab">
-          <v-tab-item v-for="item in mobileItems" :key="item.tab">
-            <img class="tab-image mx-n10" :src="item.img" :alt="item.tab" />
-          </v-tab-item>
-        </v-tabs-items>
+          <v-tabs v-model="mobileTab" fixed-tabs>
+            <v-tab v-for="item in mobileItems" :key="item.tab">
+              {{ item.tab }}
+            </v-tab>
+          </v-tabs>
+
+          <v-tabs-items v-model="mobileTab">
+            <v-tab-item v-for="item in mobileItems" :key="item.tab">
+              <img class="tab-image mx-n10" :src="item.img" :alt="item.tab" />
+            </v-tab-item>
+          </v-tabs-items>
+        </v-sheet>
       </v-container>
       <div class="py-2" />
     </div>
