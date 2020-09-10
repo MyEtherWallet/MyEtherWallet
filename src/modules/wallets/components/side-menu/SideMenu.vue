@@ -50,7 +50,7 @@ export default {
 
 <style lang="scss" scoped>
 .mew-component--sidemenu {
-  background-image: url('~@/assets/images/backgrounds/bg-light.png');
+  background-image: url('~@/assets/images/backgrounds/bg-light.jpg');
   background-position: -336px 0px;
   background-size: 663px;
   position: relative;

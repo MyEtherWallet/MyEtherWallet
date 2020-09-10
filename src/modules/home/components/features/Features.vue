@@ -57,12 +57,12 @@
       <div class="py-7" />
       <v-sheet
         color="transparent"
-        max-width="400px"
+        max-width="500px"
         class="mx-auto text-center px-5"
       >
-        <h4 class="font-weight-bold text-uppercase textPrimary--text">
+        <h5 class="font-weight-bold text-uppercase textPrimary--text">
           Features
-        </h4>
+        </h5>
         <h3 class="font-weight-bold mb-9">
           All-in-one gateway to your Ethereum Blockchain service
         </h3>
@@ -147,9 +147,6 @@ export default {
   }
   .mobile-content {
     background-color: var(--v-overlayBg-base);
-    .v-tabs {
-      //margin: 0 -10px;
-    }
     .v-item-group {
       background-color: transparent !important;
       justify-content: center !important;

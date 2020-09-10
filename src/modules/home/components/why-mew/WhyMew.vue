@@ -90,12 +90,12 @@
       <v-container>
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <v-sheet color="transparent">
-            <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
+            <h5 class="font-weight-bold text-uppercase textPrimary--text mb-1">
               Why Mew
-            </div>
-            <h2 class="mew-subtitle mb-9">
+            </h5>
+            <h3 class="font-weight-bold mb-9">
               Make Ethereum Blockchain easy and secure
-            </h2>
+            </h3>
           </v-sheet>
 
           <info-card
@@ -161,7 +161,7 @@
           </info-card>
         </v-sheet>
       </v-container>
-      <div class="py-4" />
+      <div class="py-7" />
     </div>
   </div>
 </template>
