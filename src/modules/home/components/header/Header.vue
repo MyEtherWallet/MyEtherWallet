@@ -25,7 +25,7 @@
     <div class="mobile-content d-block d-lg-none py-8">
       <v-container class="d-flex align-center">
         <mew-button
-          class="mobile-menu-button ml-n2"
+          class="mobile-menu-button ml-n2 mr-n1"
           color-theme="white"
           btn-style="transparent"
           icon="mdi-text"
