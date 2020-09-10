@@ -1,0 +1,70 @@
+{
+  "jsonrpc": "2.0",
+  "result": [
+    {
+      "dex": "uniswap",
+      "price": "1098.7530674862599",
+      "pair": {
+        "base": "ETH",
+        "quote": "BAT"
+      },
+      "marketImpact": "20.25"
+    },
+    {
+      "dex": "uniswap_v2",
+      "price": "1370.49819889016651735584",
+      "pair": {
+        "base": "ETH",
+        "quote": "BAT"
+      }
+    },
+    {
+      "dex": "kyber",
+      "price": "1370.49819889015843704982",
+      "pair": {
+        "base": "ETH",
+        "quote": "BAT"
+      }
+    },
+    {
+      "dex": "bancor",
+      "price": "1356.379655307458",
+      "pair": {
+        "base": "ETH",
+        "quote": "BAT"
+      }
+    },
+    {
+      "dex": "oasis",
+      "price": "273.73216780458403399076",
+      "pair": {
+        "base": "ETH",
+        "quote": "BAT"
+      },
+      "marketImpact": "80.13"
+    },
+    {
+      "dex": "zero_x",
+      "price": "1306.56382641997144717859",
+      "pair": {
+        "base": "ETH",
+        "quote": "BAT"
+      },
+      "marketImpact": "5.17"
+    },
+    {
+      "dex": "ag",
+      "price": "1372.33446176310534386199",
+      "pair": {
+        "base": "ETH",
+        "quote": "BAT"
+      },
+      "liquidity": {
+        "uniswap": 3,
+        "uniswap_v2": 74,
+        "bancor": 23
+      }
+    }
+  ],
+  "id": "74cdb5ef-a047-4c0d-b1ad-f3b40e4f6303"
+}

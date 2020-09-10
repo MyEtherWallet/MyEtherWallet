@@ -1,6 +1,9 @@
 import fetch from 'node-fetch';
 
 function post(url = ``, data = {}, opts = {}) {
+  // console.log("-------------------------------"); // todo remove dev item
+  // console.log(url); // todo remove dev item
+  // console.log(data); // todo remove dev item
   const defaultOptions = {
     mode: 'cors',
     cache: 'no-cache',
@@ -14,7 +17,10 @@ function post(url = ``, data = {}, opts = {}) {
     ...opts,
     ...{ method: 'POST' }
   };
-  return fetch(url, options).then(response => response.json());
+  return fetch(url, options).then(response => response.json())/*.then(res => {
+    console.log(res);
+    return res;
+  });*/
 }
 
 function get(url = ``, opts = {}) {

@@ -2,6 +2,7 @@ import debugLogger from 'debug';
 import { changellyMethods, requireExtraId } from './config';
 import { swapApiEndpoints } from '../partnersConfig';
 import { utils, post } from '../helpers';
+import fs from 'fs';
 
 const errorLogger = debugLogger('v5-error:changelly-api');
 
@@ -76,7 +77,10 @@ export default class ChangellyCalls {
           buildPath(),
           utils.buildPayload(changellyMethods[network].currenciesFull, {})
         );
-
+        fs.writeFileSync(
+          '/home/steve/mew/MyEtherWallet/src/modules/swap/tests/ApiResponses/changellyGetCurrenciesFull.json',
+          JSON.stringify(results)
+        );
         if (results.error) {
           throw Error(results.error.message);
         }

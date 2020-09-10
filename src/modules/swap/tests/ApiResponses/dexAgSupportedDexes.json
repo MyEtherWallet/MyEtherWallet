@@ -1,0 +1,15 @@
+{
+  "jsonrpc": "2.0",
+  "result": [
+    "uniswap",
+    "bancor",
+    "kyber",
+    "zero_x",
+    "radar-relay",
+    "oasis",
+    "synthetix",
+    "curvefi",
+    "ag"
+  ],
+  "id": "74cdb5ef-a047-4c0d-b1ad-f3b40e4f6303"
+}
