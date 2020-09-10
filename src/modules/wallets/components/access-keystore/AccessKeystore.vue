@@ -62,6 +62,7 @@
           >
             <div class="password-container">
               <mew-input
+                v-model="password"
                 label="Password"
                 placeholder="Enter my keystore password"
                 type="password"
@@ -103,11 +104,6 @@ export default {
       password: ''
     };
   },
-  watch: {
-    password(newval) {
-      console.log('asdfasdfasdfas hakdog', newval);
-    }
-  },
   methods: {
     uploadFile(e) {
       const self = this;
@@ -127,7 +123,6 @@ export default {
       jsonInput.click();
     },
     unlockBtn() {
-      console.log('got here', this.password);
       this.unlockKeystoreWallet(this.password);
     },
     handlePasswordChange(e) {
