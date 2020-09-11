@@ -7,9 +7,7 @@
           color="transparent"
           class="mb-6 mx-auto text-center"
         >
-          <h2 class="mb-3">
-            1. Select a Collateral Type
-          </h2>
+          <h2 class="mb-3">1. Select a Collateral Type</h2>
           <div>
             Each collateral type has its own risk parameters. You can lock up
             additional collateral types later..
@@ -41,9 +39,7 @@
       </div>
 
       <div>
-        <h2 class="text-center mb-10">
-          2. Deposit ETH and Generate DAI
-        </h2>
+        <h2 class="text-center mb-10">2. Deposit ETH and Generate DAI</h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="600px" class="pa-8">
             <v-row class="mb-5">
@@ -116,21 +112,13 @@
                 color="deep-purple accent-3"
                 group
               >
-                <v-btn value="25">
-                  25%
-                </v-btn>
+                <v-btn value="25"> 25% </v-btn>
 
-                <v-btn value="50">
-                  50%
-                </v-btn>
+                <v-btn value="50"> 50% </v-btn>
 
-                <v-btn value="75">
-                  75%
-                </v-btn>
+                <v-btn value="75"> 75% </v-btn>
 
-                <v-btn value="100">
-                  Max
-                </v-btn>
+                <v-btn value="100"> Max </v-btn>
               </v-btn-toggle>
             </v-sheet>
 
@@ -158,21 +146,13 @@
                 color="deep-purple accent-3"
                 group
               >
-                <v-btn value="25">
-                  25%
-                </v-btn>
+                <v-btn value="25"> 25% </v-btn>
 
-                <v-btn value="50">
-                  50%
-                </v-btn>
+                <v-btn value="50"> 50% </v-btn>
 
-                <v-btn value="75">
-                  75%
-                </v-btn>
+                <v-btn value="75"> 75% </v-btn>
 
-                <v-btn value="100">
-                  Max
-                </v-btn>
+                <v-btn value="100"> Max </v-btn>
               </v-btn-toggle>
             </v-sheet>
 
@@ -188,9 +168,7 @@
       </div>
 
       <div>
-        <h2 class="text-center mb-10">
-          Collateralize DAI
-        </h2>
+        <h2 class="text-center mb-10">Collateralize DAI</h2>
         <mew6-white-sheet>
           <v-sheet
             color="transparent"

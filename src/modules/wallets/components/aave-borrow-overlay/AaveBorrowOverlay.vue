@@ -2,9 +2,7 @@
   <mew-overlay :show-overlay="open">
     <template v-slot:mewOverlayBody>
       <div>
-        <h2 class="text-center mb-10">
-          Select the token you want to borrow
-        </h2>
+        <h2 class="text-center mb-10">Select the token you want to borrow</h2>
         <mew6-white-sheet>
           <v-sheet
             color="transparent"
@@ -18,16 +16,10 @@
                 placeholder="Search for token name"
               />
               <div class="d-flex align-center">
-                <div class="mr-5">
-                  Type of token
-                </div>
+                <div class="mr-5">Type of token</div>
                 <v-btn-toggle v-model="tokenType" dense>
-                  <v-btn value="all">
-                    All
-                  </v-btn>
-                  <v-btn value="stable">
-                    Stable
-                  </v-btn>
+                  <v-btn value="all"> All </v-btn>
+                  <v-btn value="stable"> Stable </v-btn>
                 </v-btn-toggle>
               </div>
             </div>
@@ -42,9 +34,7 @@
         </mew6-white-sheet>
       </div>
       <div>
-        <h2 class="text-center mb-10">
-          Select your interest rate
-        </h2>
+        <h2 class="text-center mb-10">Select your interest rate</h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="500px" class="pa-10">
             <div class="mb-10">
@@ -89,9 +79,7 @@
       </div>
 
       <div>
-        <h2 class="text-center mb-10">
-          Borrow
-        </h2>
+        <h2 class="text-center mb-10">Borrow</h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="600px" class="pa-8">
             <div class="d-flex">
@@ -144,21 +132,13 @@
                 color="deep-purple accent-3"
                 group
               >
-                <v-btn value="25">
-                  25%
-                </v-btn>
+                <v-btn value="25"> 25% </v-btn>
 
-                <v-btn value="50">
-                  50%
-                </v-btn>
+                <v-btn value="50"> 50% </v-btn>
 
-                <v-btn value="75">
-                  75%
-                </v-btn>
+                <v-btn value="75"> 75% </v-btn>
 
-                <v-btn value="100">
-                  Max
-                </v-btn>
+                <v-btn value="100"> Max </v-btn>
               </v-btn-toggle>
             </v-sheet>
 
@@ -177,9 +157,7 @@
         </mew6-white-sheet>
       </div>
       <div>
-        <h2 class="text-center mb-10">
-          Confirmation
-        </h2>
+        <h2 class="text-center mb-10">Confirmation</h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="500px" class="pa-10">
             <v-card
@@ -214,9 +192,7 @@
                 <div class="d-flex align-center">
                   Next Health Factor <info-tooltip class="ml-2" text="Health" />
                 </div>
-                <div class="font-weight-bold secondary--text">
-                  Stable
-                </div>
+                <div class="font-weight-bold secondary--text">Stable</div>
               </div>
             </div>
 
@@ -243,9 +219,7 @@
       </div>
 
       <div>
-        <h2 class="text-center mb-10">
-          Confirmation
-        </h2>
+        <h2 class="text-center mb-10">Confirmation</h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="500px" class="pa-10">
             <div class="text-center">
@@ -267,9 +241,7 @@
       </div>
 
       <div>
-        <h2 class="text-center mb-10">
-          Processing
-        </h2>
+        <h2 class="text-center mb-10">Processing</h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="500px" class="pa-10">
             <div class="text-center">

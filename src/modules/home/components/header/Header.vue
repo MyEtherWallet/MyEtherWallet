@@ -31,7 +31,7 @@
           icon="mdi-text"
           icon-type="mdi"
           icon-align="left"
-          style="border-radius: 100% !important;"
+          style="border-radius: 100% !important"
         />
 
         <v-spacer></v-spacer>

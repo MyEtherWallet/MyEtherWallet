@@ -1,9 +1,7 @@
 <template>
   <div class="expandHeader">
     <block-title :data="titleData">
-      <h5 class="white--text ma-0">
-        Please select a browser from below.
-      </h5>
+      <h5 class="white--text ma-0">Please select a browser from below.</h5>
     </block-title>
     <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
       <v-row>

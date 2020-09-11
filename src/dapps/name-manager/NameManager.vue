@@ -60,9 +60,7 @@
                 <v-card flat color="tableHeader" class="pa-10">
                   <div class="d-flex justify-space-between align-center">
                     <div>
-                      <div class="mew-heading-1 mb-2">
-                        mewwallet.crypto
-                      </div>
+                      <div class="mew-heading-1 mb-2">mewwallet.crypto</div>
                       <div>
                         <span class="font-weight-medium">0.0823234234</span>
                         ETH ($40.00)

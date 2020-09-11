@@ -76,9 +76,7 @@
                       />
                       <div>Not Available</div>
                     </div>
-                    <div>
-                      Buy crypto with a credit card.
-                    </div>
+                    <div>Buy crypto with a credit card.</div>
                   </v-card>
                 </v-col>
                 <v-col>

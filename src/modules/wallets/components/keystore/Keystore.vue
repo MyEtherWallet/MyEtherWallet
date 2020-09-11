@@ -62,9 +62,7 @@
         <v-sheet color="white" class="border-radius--10px pa-12">
           <div class="d-flex align-center">
             <div class="mr-8">
-              <div class="subtitle-1 font-weight-bold grey--text">
-                STEP 3.
-              </div>
+              <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
               <div class="headline font-weight-bold mb-3">You are done!</div>
               <p class="mb-6">
                 Congratulation! Please use the MEWconnect App to scan this QR

@@ -2,9 +2,7 @@
   <mew-overlay :show-overlay="open">
     <template v-slot:mewOverlayBody>
       <div>
-        <h2 class="text-center mb-10">
-          Deposit
-        </h2>
+        <h2 class="text-center mb-10">Deposit</h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="600px" class="pa-8">
             <v-card flat color="informationBlock" class="pa-6 mx-2">
@@ -50,21 +48,13 @@
                 color="deep-purple accent-3"
                 group
               >
-                <v-btn value="25">
-                  25%
-                </v-btn>
+                <v-btn value="25"> 25% </v-btn>
 
-                <v-btn value="50">
-                  50%
-                </v-btn>
+                <v-btn value="50"> 50% </v-btn>
 
-                <v-btn value="75">
-                  75%
-                </v-btn>
+                <v-btn value="75"> 75% </v-btn>
 
-                <v-btn value="100">
-                  Max
-                </v-btn>
+                <v-btn value="100"> Max </v-btn>
               </v-btn-toggle>
             </v-sheet>
 

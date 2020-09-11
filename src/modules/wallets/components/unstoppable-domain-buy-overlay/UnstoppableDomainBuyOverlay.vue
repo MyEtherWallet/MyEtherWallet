@@ -31,7 +31,7 @@
                 outlined
                 color="informationBlock"
                 class="pa-4 d-flex align-center justify-space-between bordered-red"
-                style="border-color: var(--v-error-base) !important;"
+                style="border-color: var(--v-error-base) !important"
               >
                 <div class="d-flex align-center">
                   <img
@@ -99,7 +99,7 @@
               </div>
             </v-sheet>
             <v-progress-linear
-              style="margin: 130px auto 40px auto; max-width: 200px;"
+              style="margin: 130px auto 40px auto; max-width: 200px"
               indeterminate
               color="primary"
             ></v-progress-linear>
