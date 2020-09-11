@@ -12,7 +12,7 @@
                     <div class="primary--text">
                       <v-icon
                         class="circle-icon primary--text mr-1"
-                        style="font-size: 20px;"
+                        style="font-size: 20px"
                       >
                         mdi-check-circle
                       </v-icon>

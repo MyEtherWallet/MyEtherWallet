@@ -9,9 +9,7 @@
     />
     <!-- For Development Only ------------------------------------------------->
     <div class="dev-only d-flex align-center">
-      <div class="white--text mr-5">
-        For development only --->
-      </div>
+      <div class="white--text mr-5">For development only ---></div>
       <v-switch
         v-model="dark"
         hide-details

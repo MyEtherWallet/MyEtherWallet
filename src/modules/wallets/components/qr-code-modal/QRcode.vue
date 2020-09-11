@@ -6,9 +6,7 @@
         class="mx-auto"
         src="@/assets/images/snippets/mobile/qr-code-mew-connect-blue.png"
       />
-      <div class="mt-3 mb-6 text-center grey--text">
-        iOS 9.0 or up
-      </div>
+      <div class="mt-3 mb-6 text-center grey--text">iOS 9.0 or up</div>
       <v-btn-toggle class="d-flex">
         <v-btn class="d-flex align-center flex-grow-1" color="#001425">
           <img class="mt-n1" src="@/assets/images/icons/icon-apple-white.svg" />

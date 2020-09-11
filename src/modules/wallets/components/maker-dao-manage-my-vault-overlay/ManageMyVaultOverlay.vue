@@ -2,18 +2,14 @@
   <mew-overlay :show-overlay="open">
     <template v-slot:mewOverlayBody>
       <div>
-        <h2 class="text-center mb-10">
-          Manage My Vault
-        </h2>
+        <h2 class="text-center mb-10">Manage My Vault</h2>
         <mew6-white-sheet>
           <v-sheet
             color="transparent"
             width="700px"
             class="pa-8 mew-component--aave-borrow-overlay"
           >
-            <div class="mew-heading-2 mb-5">
-              ETH-A Vault #375
-            </div>
+            <div class="mew-heading-2 mb-5">ETH-A Vault #375</div>
 
             <v-row>
               <v-col>
@@ -71,9 +67,7 @@
                 <table class="width--full">
                   <tbody>
                     <tr>
-                      <td class="vertical-align--middle py-6">
-                        ETH locked
-                      </td>
+                      <td class="vertical-align--middle py-6">ETH locked</td>
                       <td class="text-right">
                         <div class="d-flex align-center justify-end">
                           <div class="mr-4">
