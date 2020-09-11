@@ -32,7 +32,7 @@
     "@myetherwallet/mew-components": "0.5.2-beta",
     "@sentry/browser": "5.21.1",
     "@sentry/integrations": "5.21.1",
-    "@unstoppabledomains/resolution": "1.6.0",
+    "@unstoppabledomains/resolution": "1.6.2",
     "highcharts": "8.2.0",
     "highcharts-vue": "1.3.5",
     "idna-uts46": "1.1.0",
