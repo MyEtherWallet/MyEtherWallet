@@ -15,9 +15,7 @@
     <div class="mt-5">
       <v-row class="py-0">
         <v-col class="d-flex align-center py-1 my-0 text-uppercase" cols="4">
-          <v-icon color="titlePrimary">
-            mdi-circle-medium
-          </v-icon>
+          <v-icon color="titlePrimary">mdi-circle-medium</v-icon>
           <h6 class="searchText--text font-weight-medium">Send</h6>
           <img
             class="ml-1"
@@ -34,9 +32,7 @@
 
       <v-row class="py-0">
         <v-col class="d-flex align-center py-1 my-0 text-uppercase" cols="4">
-          <v-icon color="#f5a623">
-            mdi-circle-medium
-          </v-icon>
+          <v-icon color="#f5a623">mdi-circle-medium</v-icon>
           <h6 class="searchText--text font-weight-medium">Transaction Fee</h6>
         </v-col>
         <v-col class="py-0 my-0 text-right" cols="4"
@@ -48,9 +44,7 @@
 
       <v-row class="py-0">
         <v-col class="d-flex align-center py-1 my-0 text-uppercase" cols="4">
-          <v-icon color="transparent">
-            mdi-circle-medium
-          </v-icon>
+          <v-icon color="transparent">mdi-circle-medium</v-icon>
           <h6 class="searchText--text font-weight-medium">Total Pay</h6>
         </v-col>
         <v-col class="py-0 my-0 text-right font-weight-medium" cols="4"
