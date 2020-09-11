@@ -1,11 +1,8 @@
 <template>
   <div class="expandHeader">
     <block-title :data="titleData">
-      <h5 class="white--text ma-0">
-        Please select a browser from below.
-      </h5>
+      <h5 class="white--text ma-0">Please select a browser from below.</h5>
     </block-title>
-
     <v-sheet
       color="white"
       max-width="450px"
@@ -28,9 +25,7 @@
         <h5 class="font-weight-bold text-center mb-0 mt-7">
           Please use MEW on a secure (SSL/HTTPS) connection to connect.
         </h5>
-
         <mew-checkbox label="I agree MEW browser Extension user Terms." />
-
         <router-link
           :to="{ name: 'AccessWalletBrowserExtensionAccess', query: {} }"
           class="display--block"

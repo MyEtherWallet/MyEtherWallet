@@ -18,20 +18,13 @@
                 placeholder="Search for token name"
               />
               <div class="d-flex align-center">
-                <div class="mr-5">
-                  Type of token
-                </div>
+                <div class="mr-5">Type of token</div>
                 <v-btn-toggle v-model="tokenType" dense>
-                  <v-btn value="all">
-                    All
-                  </v-btn>
-                  <v-btn value="stable">
-                    Stable
-                  </v-btn>
+                  <v-btn value="all">All</v-btn>
+                  <v-btn value="stable">Stable</v-btn>
                 </v-btn-toggle>
               </div>
             </div>
-
             <mew-table
               class="token-table"
               :has-color="false"
@@ -42,9 +35,7 @@
         </mew6-white-sheet>
       </div>
       <div>
-        <h2 class="text-center mb-10">
-          Select your interest rate
-        </h2>
+        <h2 class="text-center mb-10">Select your interest rate</h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="500px" class="pa-10">
             <div class="mb-10">
@@ -87,11 +78,8 @@
           </v-sheet>
         </mew6-white-sheet>
       </div>
-
       <div>
-        <h2 class="text-center mb-10">
-          Borrow
-        </h2>
+        <h2 class="text-center mb-10">Borrow</h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="600px" class="pa-8">
             <div class="d-flex">
@@ -118,7 +106,6 @@
                 <div>$ 13.64</div>
               </v-card>
             </div>
-
             <div class="mx-12 my-8">
               <div class="mew-heading-3 mb-2">
                 How much would you like to borrow?
@@ -128,11 +115,9 @@
                 specific amount or use the percentage buttons below.
               </div>
             </div>
-
             <v-sheet max-width="300px" class="mx-auto" color="transparent">
               <mew-input placeholder=" " label="Amount" />
             </v-sheet>
-
             <v-sheet
               max-width="250px"
               class="mx-auto mt-n2"
@@ -144,24 +129,12 @@
                 color="deep-purple accent-3"
                 group
               >
-                <v-btn value="25">
-                  25%
-                </v-btn>
-
-                <v-btn value="50">
-                  50%
-                </v-btn>
-
-                <v-btn value="75">
-                  75%
-                </v-btn>
-
-                <v-btn value="100">
-                  Max
-                </v-btn>
+                <v-btn value="25">25%</v-btn>
+                <v-btn value="50">50%</v-btn>
+                <v-btn value="75">75%</v-btn>
+                <v-btn value="100">Max</v-btn>
               </v-btn-toggle>
             </v-sheet>
-
             <div class="d-flex justify-center mt-6">
               <mew-button title="Borrow" button-size="xlarge" />
             </div>
@@ -177,9 +150,7 @@
         </mew6-white-sheet>
       </div>
       <div>
-        <h2 class="text-center mb-10">
-          Confirmation
-        </h2>
+        <h2 class="text-center mb-10">Confirmation</h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="500px" class="pa-10">
             <v-card
@@ -214,14 +185,10 @@
                 <div class="d-flex align-center">
                   Next Health Factor <info-tooltip class="ml-2" text="Health" />
                 </div>
-                <div class="font-weight-bold secondary--text">
-                  Stable
-                </div>
+                <div class="font-weight-bold secondary--text">Stable</div>
               </div>
             </div>
-
             <v-divider class="mt-6 mb-3" />
-
             <div>
               <div class="d-flex align-center justify-space-between py-2">
                 <div>Gas Fee</div>
@@ -232,20 +199,15 @@
                 <div class="font-weight-bold">0.000142 ETH ($0.31)</div>
               </div>
             </div>
-
             <v-divider class="mt-3 mb-10" />
-
             <div class="d-flex justify-center mt-8">
               <mew-button title="Confirm to deposit" button-size="xlarge" />
             </div>
           </v-sheet>
         </mew6-white-sheet>
       </div>
-
       <div>
-        <h2 class="text-center mb-10">
-          Confirmation
-        </h2>
+        <h2 class="text-center mb-10">Confirmation</h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="500px" class="pa-10">
             <div class="text-center">
@@ -267,9 +229,7 @@
       </div>
 
       <div>
-        <h2 class="text-center mb-10">
-          Processing
-        </h2>
+        <h2 class="text-center mb-10">Processing</h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="500px" class="pa-10">
             <div class="text-center">
@@ -396,11 +356,9 @@ export default {
   border-radius: 100% !important;
   margin: auto;
 }
-
 .stable-icon {
   background-color: var(--v-secondary-base);
 }
-
 .variable-icon {
   background-color: var(--v-warning-darken1);
 }

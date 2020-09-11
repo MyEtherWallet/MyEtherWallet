@@ -2,9 +2,7 @@
   <mew-overlay :show-overlay="open">
     <template v-slot:mewOverlayBody>
       <div>
-        <h2 class="text-center mb-10">
-          Select the token you want to deposit
-        </h2>
+        <h2 class="text-center mb-10">Select the token you want to deposit</h2>
         <mew6-white-sheet>
           <v-sheet
             color="transparent"
@@ -31,7 +29,6 @@
                 </v-btn-toggle>
               </div>
             </div>
-
             <mew-table
               class="token-table"
               :has-color="false"
@@ -42,9 +39,7 @@
         </mew6-white-sheet>
       </div>
       <div>
-        <h2 class="text-center mb-10">
-          Deposit
-        </h2>
+        <h2 class="text-center mb-10">Deposit</h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="500px" class="pa-10">
             <div>
@@ -71,9 +66,7 @@
                 </div>
               </div>
             </div>
-
             <v-divider class="mt-6 mb-3" />
-
             <div>
               <div class="d-flex align-center justify-space-between py-2">
                 <div>Gas Fee</div>
@@ -84,9 +77,7 @@
                 <div class="font-weight-bold">0.000142 ETH ($0.31)</div>
               </div>
             </div>
-
             <v-divider class="mt-3 mb-10" />
-
             <div class="d-flex justify-center mt-8">
               <mew-button title="Confirm" button-size="xlarge" />
             </div>
@@ -94,9 +85,7 @@
         </mew6-white-sheet>
       </div>
       <div>
-        <h2 class="text-center mb-10">
-          Confirmation
-        </h2>
+        <h2 class="text-center mb-10">Confirmation</h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="500px" class="pa-10">
             <v-card
@@ -139,9 +128,7 @@
                 </div>
               </div>
             </div>
-
             <v-divider class="mt-6 mb-3" />
-
             <div>
               <div class="d-flex align-center justify-space-between py-2">
                 <div>Gas Fee</div>
@@ -152,20 +139,15 @@
                 <div class="font-weight-bold">0.000142 ETH ($0.31)</div>
               </div>
             </div>
-
             <v-divider class="mt-3 mb-10" />
-
             <div class="d-flex justify-center mt-8">
               <mew-button title="Confirm to deposit" button-size="xlarge" />
             </div>
           </v-sheet>
         </mew6-white-sheet>
       </div>
-
       <div>
-        <h2 class="text-center mb-10">
-          Deposite
-        </h2>
+        <h2 class="text-center mb-10">Deposite</h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="600px" class="pa-8">
             <div class="d-flex">
@@ -192,7 +174,6 @@
                 <div>$ 13.64</div>
               </v-card>
             </div>
-
             <div class="mx-12 my-8">
               <div class="mew-heading-3 mb-2">
                 How much would you like to deposit?
@@ -202,11 +183,9 @@
                 specific amount or use the percentage buttons below.
               </div>
             </div>
-
             <v-sheet max-width="300px" class="mx-auto" color="transparent">
               <mew-input placeholder=" " label="Amount" />
             </v-sheet>
-
             <v-sheet
               max-width="250px"
               class="mx-auto mt-n2"
@@ -218,21 +197,10 @@
                 color="deep-purple accent-3"
                 group
               >
-                <v-btn value="25">
-                  25%
-                </v-btn>
-
-                <v-btn value="50">
-                  50%
-                </v-btn>
-
-                <v-btn value="75">
-                  75%
-                </v-btn>
-
-                <v-btn value="100">
-                  Max
-                </v-btn>
+                <v-btn value="25">25%</v-btn>
+                <v-btn value="50">50%</v-btn>
+                <v-btn value="75">75%</v-btn>
+                <v-btn value="100">Max</v-btn>
               </v-btn-toggle>
             </v-sheet>
 
@@ -251,9 +219,7 @@
         </mew6-white-sheet>
       </div>
       <div>
-        <h2 class="text-center mb-10">
-          Confirmation
-        </h2>
+        <h2 class="text-center mb-10">Confirmation</h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="500px" class="pa-10">
             <div class="text-center">
@@ -273,11 +239,8 @@
           </v-sheet>
         </mew6-white-sheet>
       </div>
-
       <div>
-        <h2 class="text-center mb-10">
-          Processing
-        </h2>
+        <h2 class="text-center mb-10">Processing</h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="500px" class="pa-10">
             <div class="text-center">

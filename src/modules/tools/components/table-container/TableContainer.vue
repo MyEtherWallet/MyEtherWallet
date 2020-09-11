@@ -19,9 +19,7 @@
       </div>
       <div class="ml-auto">
         <v-btn icon depressed color="white">
-          <v-icon>
-            mdi-dots-vertical
-          </v-icon>
+          <v-icon>mdi-dots-vertical</v-icon>
         </v-btn>
       </div>
     </div>
@@ -33,9 +31,7 @@
           class="mr-4 mt-1"
         />
         <div>
-          <div class="font-weight-medium input-label--text">
-            Total Value
-          </div>
+          <div class="font-weight-medium input-label--text">Total Value</div>
           <h5 class="font-weight-bold">$2,231.31</h5>
           <div class="textSecondary--text">12.00431 ETH</div>
         </div>
@@ -46,9 +42,7 @@
         <div class="textSecondary--text">8.00431 ETH</div>
       </div>
       <div>
-        <div class="font-weight-medium input-label--text">
-          Value of Tokens
-        </div>
+        <div class="font-weight-medium input-label--text">Value of Tokens</div>
         <h5 class="font-weight-bold">$231.31</h5>
         <div class="textSecondary--text">4 tokens</div>
       </div>

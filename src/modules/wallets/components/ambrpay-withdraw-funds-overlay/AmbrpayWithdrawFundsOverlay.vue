@@ -40,7 +40,7 @@
             <v-divider class="mt-4 mb-12" />
 
             <div class="mb-3 font-weight-medium text-center">
-              <v-icon style="font-size: 10rem;" class="mb-10 primary--text">
+              <v-icon class="circle-icon mb-10 primary--text">
                 mdi-check-circle-outline
               </v-icon>
               <v-sheet color="transparent" max-width="300px" class="mx-auto">
@@ -78,4 +78,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.circle-icon {
+  font-size: 10rem;
+}
+</style>
