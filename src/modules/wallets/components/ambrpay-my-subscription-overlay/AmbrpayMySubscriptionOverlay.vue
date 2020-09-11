@@ -16,9 +16,9 @@
                       >
                         mdi-check-circle
                       </v-icon>
-                      <span class="font-weight-medium primary--text">
-                        Active
-                      </span>
+                      <span class="font-weight-medium primary--text"
+                        >Active</span
+                      >
                       (Next payment 09/19/2019)
                     </div>
                   </v-expansion-panel-header>

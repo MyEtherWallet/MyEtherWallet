@@ -16,16 +16,10 @@
                 placeholder="Search for token name"
               />
               <div class="d-flex align-center">
-                <div class="mr-5">
-                  Type of token
-                </div>
+                <div class="mr-5">Type of token</div>
                 <v-btn-toggle v-model="tokenType" dense>
-                  <v-btn value="all">
-                    All
-                  </v-btn>
-                  <v-btn value="stable">
-                    Stable
-                  </v-btn>
+                  <v-btn value="all">All</v-btn>
+                  <v-btn value="stable">Stable</v-btn>
                 </v-btn-toggle>
               </div>
             </div>

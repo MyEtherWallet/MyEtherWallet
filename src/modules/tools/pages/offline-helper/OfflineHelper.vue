@@ -69,7 +69,7 @@
             :panel-items="exPannel1"
             class="mt-4 mb-10 swap-expend"
           >
-            <template v-slot:panelBody1 style="margin-bottom: -1px !important;">
+            <template v-slot:panelBody1 style="margin-bottom: -1px !important">
               1
             </template>
             <template v-slot:panelBody2>
