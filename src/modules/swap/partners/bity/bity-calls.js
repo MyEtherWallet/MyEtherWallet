@@ -17,6 +17,7 @@ export default class BityCalls {
         buildPath(),
         utils.buildPayload(bityMethods.getCryptoRates)
       );
+
       if (results.error) {
         utils.checkErrorJson(results);
       }
@@ -33,6 +34,7 @@ export default class BityCalls {
         buildPath(),
         utils.buildPayload(bityMethods.getFiatRates)
       );
+
       if (results.error) {
         utils.checkErrorJson(results);
       }
@@ -49,6 +51,7 @@ export default class BityCalls {
         buildPath(),
         utils.buildPayload(bityMethods.getEstimate, orderInfo)
       );
+
       if (results.error) {
         utils.checkErrorJson(results);
       }

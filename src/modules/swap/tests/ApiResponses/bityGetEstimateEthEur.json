@@ -1,0 +1,19 @@
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "input": {
+      "object_information_optional": false,
+      "amount": "1",
+      "currency": "ETH",
+      "minimum_amount": "0.027960296379141619"
+    },
+    "output": { "amount": "309.57", "currency": "EUR" },
+    "price_breakdown": {
+      "customer_trading_fee": {
+        "amount": "0.007934260062280132",
+        "currency": "ETH"
+      }
+    }
+  },
+  "id": "eb635216-3561-4216-b647-e23878534ce6"
+}

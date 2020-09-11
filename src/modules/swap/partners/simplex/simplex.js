@@ -156,7 +156,7 @@ export default class Simplex {
     try {
       let simplexRateDetails, updateType;
 
-      if (this.canQuote(fromValue, toValue.fromCurrency)) {
+      if (this.canQuote(fromValue, toValue, fromCurrency)) {
         if (this.isFiat(fromCurrency) && isFiat) {
           updateType = 'updateFiat';
         } else {
@@ -199,6 +199,7 @@ export default class Simplex {
         maxValue: this.maxFiat[fromCurrency]
       };
     } catch (e) {
+      console.log(e); // todo remove dev item
       return {
         fromCurrency: fromCurrency,
         toCurrency: toCurrency,
@@ -214,6 +215,7 @@ export default class Simplex {
 
   async updateFiat(fromCurrency, toCurrency, fromValue) {
     if (fromValue <= 0) fromValue = this.minFiat[fromCurrency] + 1;
+
     const result = await this.simplexApi.getQuote({
       digital_currency: toCurrency,
       fiat_currency: fromCurrency,
@@ -247,6 +249,8 @@ export default class Simplex {
       requested_currency: toCurrency,
       requested_amount: +toValue
     });
+    console.log(result); // todo remove dev item
+
     if (result.error) {
       return { error: result.result, fromValue: 0, toValue: toValue };
     }

@@ -1,16 +1,9 @@
 import {
-  SwapProviders,
-  providers,
   bestProviderForQuantity,
-  // bestProviderForQuantity
   bestRateForQuantity,
-  // isValidEntry,
-  providerNames
-  // supportedProviders,
-  // BASE_CURRENCY,
-  // fiat,
-  // MIN_SWAP_AMOUNT,
-  // ERC20
+  providerNames,
+  providers,
+  SwapProviders
 } from './partners';
 import BigNumber from 'bignumber.js';
 import EventEmitter from 'events';
@@ -51,10 +44,8 @@ export default class Swap extends EventEmitter {
   }
 
   setupCompleteUpdater(value, status) {
-    console.log(value, status); // todo remove dev item
     // this.setUpMap[value] = status;
     if (typeof status === 'boolean' || typeof status === 'string') {
-      console.log(value, status); // todo remove dev item
 
       this.setUpMap[value] = status;
       if (typeof status === 'boolean' && status) {
@@ -133,7 +124,6 @@ export default class Swap extends EventEmitter {
       this.swap
         .updateRateEstimate(fromCurrency, toCurrency, fromValue, toValue)
         .then(({ providersFound, callsToMake }) => {
-          console.log('callsToMake', callsToMake); // todo remove dev item
           this.providersFound = providersFound;
           Promise.all(
             callsToMake.map(func =>
@@ -150,7 +140,6 @@ export default class Swap extends EventEmitter {
               }
               return agg;
             }, []);
-
             if (
               results.every(
                 entry =>
@@ -201,6 +190,10 @@ export default class Swap extends EventEmitter {
           });
         });
     });
+  }
+
+  getProvider(name){
+    return this.swap.getProvider(name);
   }
 
   intermediateGasCheck() {}

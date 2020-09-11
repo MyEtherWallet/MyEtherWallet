@@ -1,0 +1,17 @@
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "input": {
+      "object_information_optional": true,
+      "amount": "1",
+      "currency": "BTC",
+      "minimum_amount": "0.00100000"
+    },
+    "output": { "amount": "27.577274376797029841", "currency": "ETH" },
+    "price_breakdown": {
+      "customer_trading_fee": { "amount": "0.00790321", "currency": "BTC" },
+      "non-verified_fee": { "amount": "0.00400000", "currency": "BTC" }
+    }
+  },
+  "id": "bb0722a2-9016-4747-8db8-a234b54e778d"
+}

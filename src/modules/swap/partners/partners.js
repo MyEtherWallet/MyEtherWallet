@@ -207,10 +207,10 @@ export default class SwapProviders {
       return { providersFound, callsToMake };
     }
     // }
-    // return {
-    //   providersFound: [],
-    //   callsToMake: []
-    // };
+    return {
+      providersFound: [],
+      callsToMake: []
+    };
   }
 
   async standAloneRateEstimate(

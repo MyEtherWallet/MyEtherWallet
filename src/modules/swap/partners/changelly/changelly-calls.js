@@ -102,7 +102,6 @@ export default class ChangellyCalls {
             }
           ])
         );
-
         if (results.error) {
           throw Error(results.error.message);
         }

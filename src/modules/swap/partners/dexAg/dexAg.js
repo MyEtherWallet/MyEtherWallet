@@ -39,6 +39,7 @@ export default class DexAg {
     this.useFixed = true;
     this.tokenDetails = {};
     this.web3 = props.web3;
+    this.feeAmount = 0.02;
     this.approvalGasLimit = 100000;
     this.tradeGasLimitBase = 1000000;
     this.getSupportedDexes();
@@ -160,7 +161,6 @@ export default class DexAg {
             toCurrency,
             fromValue
           );
-          console.log(vals); // todo remove dev item
           resolve(
             vals.map(val => {
               const isKnownToWork = this.SUPPORTED_DEXES.includes(val.dex);

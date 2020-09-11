@@ -1,0 +1,7 @@
+{
+  "amountNaN": {
+    "error": true,
+    "result": ["requested_amount required and must be a number"]
+  },
+  "invalidAmount": { "error": true, "result": {} }
+}
