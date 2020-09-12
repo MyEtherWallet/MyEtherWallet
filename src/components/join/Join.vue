@@ -6,8 +6,10 @@
           class="border-radius--10px card-content d-flex align-center justify-space-between"
         >
           <div>
-            <h2 class="white--text">Newbie in crypto?</h2>
-            <h2 class="white--text">Join our journey to MEW.</h2>
+            <h2 class="font-weight--700 white--text">Newbie in crypto?</h2>
+            <h2 class="font-weight--700 white--text">
+              Join our journey to MEW.
+            </h2>
           </div>
           <mew-button
             btn-link="https://www.mewtopia.com/"
@@ -25,8 +27,10 @@
       <div class="card-content">
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <div class="mb-10">
-            <h2 class="white--text">Newbie in crypto?</h2>
-            <h2 class="white--text">Join our journey to MEW.</h2>
+            <h1 class="font-weight--700 white--text">Newbie in crypto?</h1>
+            <h1 class="font-weight--700 white--text">
+              Join our journey to MEW.
+            </h1>
           </div>
           <mew-button
             btn-link="https://www.mewtopia.com/"

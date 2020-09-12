@@ -48,7 +48,7 @@
     "@ledgerhq/hw-app-eth": "5.22.0",
     "@ledgerhq/hw-transport-u2f": "5.22.0",
     "@ledgerhq/hw-transport-webusb": "5.22.0",
-    "@myetherwallet/mewconnect-web-client": "2.1.4",
+    "@myetherwallet/mewconnect-web-client": "2.1.5-beta.1",
     "@vue/cli-plugin-babel": "4.5.4",
     "@vue/cli-plugin-eslint": "4.5.4",
     "@vue/cli-plugin-pwa": "4.5.4",

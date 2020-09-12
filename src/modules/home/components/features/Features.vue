@@ -10,7 +10,7 @@
         <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
           Features
         </div>
-        <h2 class="mb-9">
+        <h2 class="font-weight--700 mb-9">
           All-in-one gateway to your Ethereum Blockchain service
         </h2>
       </v-sheet>
@@ -62,12 +62,12 @@
             max-width="400px"
             class="mx-auto text-center mb-9"
           >
-            <h5 class="font-weight-bold text-uppercase textPrimary--text">
+            <h5 class="font-weight-bold text-uppercase textPrimary--text mb-2">
               Features
             </h5>
-            <h3 class="font-weight-bold">
+            <h1 class="font-weight--700">
               All-in-one gateway to your Ethereum Blockchain service
-            </h3>
+            </h1>
           </v-sheet>
 
           <v-tabs v-model="mobileTab" fixed-tabs>
