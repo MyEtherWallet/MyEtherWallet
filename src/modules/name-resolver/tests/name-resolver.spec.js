@@ -9,7 +9,7 @@ const nameResolver = new NameResolver({
   port: 443
 });
 describe('Ethereum Name Resolver', () => {
-  test('it should ens name: myetherwallet.eth', () => {
+  xtest('it should ens name: myetherwallet.eth', () => {
     return nameResolver.resolveName('myetherwallet.eth').then(addr => {
       expect(addr).toBe('0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D');
     });

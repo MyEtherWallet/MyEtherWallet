@@ -48,6 +48,12 @@
   color: white !important;
 }
 
+.v-application ol,
+.v-application ul {
+  list-style-type: none;
+  padding-left: 0 !important;
+}
+
 /* ========== Fix MEW components ========== */
 .theme--dark.v-expansion-panels .v-expansion-panel {
   background-color: transparent !important;
@@ -106,7 +112,7 @@ h1 {
 h2 {
   font-size: 1.88rem;
   line-height: 2.31rem;
-  font-weight: 400;
+  font-weight: 700;
 }
 h3 {
   font-size: 1.5rem;
