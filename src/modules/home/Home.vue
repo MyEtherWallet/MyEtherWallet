@@ -2,7 +2,7 @@
   <v-sheet>
     <header-home />
     <router-view />
-    <footer-home v-show="false" />
+    <footer-home />
   </v-sheet>
 </template>
 

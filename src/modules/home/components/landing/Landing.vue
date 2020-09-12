@@ -39,7 +39,7 @@
     </div>
     <div class="mobile-content d-block d-lg-none expandHeader pt-5">
       <v-container>
-        <v-card color="transparent" flat tile max-width="500px" class="mx-auto">
+        <v-card color="transparent" flat tile max-width="400px" class="mx-auto">
           <div
             class="white--text font-weight-bold mb-4"
             style="font-size: 3rem; line-height: 3.3rem"

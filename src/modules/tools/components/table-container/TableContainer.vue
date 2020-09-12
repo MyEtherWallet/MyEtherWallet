@@ -19,7 +19,7 @@
       </div>
       <div class="ml-auto">
         <v-btn icon depressed color="white">
-          <v-icon> mdi-dots-vertical </v-icon>
+          <v-icon>mdi-dots-vertical</v-icon>
         </v-btn>
       </div>
     </div>

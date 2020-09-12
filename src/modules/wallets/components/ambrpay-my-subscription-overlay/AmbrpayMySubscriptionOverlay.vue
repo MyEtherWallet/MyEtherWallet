@@ -11,14 +11,14 @@
                   <v-expansion-panel-header>
                     <div class="primary--text">
                       <v-icon
-                        class="primary--text mr-1"
+                        class="circle-icon primary--text mr-1"
                         style="font-size: 20px"
                       >
                         mdi-check-circle
                       </v-icon>
-                      <span class="font-weight-medium primary--text">
-                        Active
-                      </span>
+                      <span class="font-weight-medium primary--text"
+                        >Active</span
+                      >
                       (Next payment 09/19/2019)
                     </div>
                   </v-expansion-panel-header>
@@ -92,5 +92,11 @@ export default {
     margin-top: 0 !important;
     border-radius: 4px !important;
   }
+}
+</style>
+
+<style lang="scss" scoped>
+.circle-icon {
+  font-size: 10rem;
 }
 </style>

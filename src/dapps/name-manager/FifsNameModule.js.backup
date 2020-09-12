@@ -1,3 +1,5 @@
+import NameManagerInterface from './interface/NameManagerInterface';
+
 export default class FifsNameModule extends NameManagerInterface {
   constructor(name, address, network, web3, ens) {
     super(name, address, network, web3, ens);

@@ -3,7 +3,6 @@
     <div class="desktop-content d-none d-lg-block">
       <div class="py-12" />
       <div class="py-6" />
-
       <v-container>
         <v-sheet color="transparent" max-width="400px">
           <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
@@ -88,7 +87,7 @@
       <div class="py-7" />
       <v-container>
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
-          <v-sheet color="transparent" max-width="500px" class="mb-9">
+          <v-sheet color="transparent" max-width="400px" class="mb-9">
             <h5 class="font-weight-bold text-uppercase textPrimary--text mb-2">
               Why Mew
             </h5>

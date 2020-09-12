@@ -5,10 +5,7 @@
     <why-mew />
     <join />
     <partners />
-    <div v-show="false">
-      <div class="py-12" />
-      <get-started />
-    </div>
+    <get-started />
   </div>
 </template>
 

@@ -19,6 +19,7 @@
           </v-col>
         </v-row>
       </v-container>
+      <div class="py-12" />
     </div>
     <div class="mobile-content d-block d-lg-none">
       <div class="py-7" />
