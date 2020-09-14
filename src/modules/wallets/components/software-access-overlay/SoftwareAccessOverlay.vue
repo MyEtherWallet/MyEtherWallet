@@ -56,11 +56,14 @@
 import accessKeystore from '../access-keystore/AccessKeystore';
 import accessMnemonic from '../access-mnemonic/AccessMnemonic';
 import accessPrivateKey from '../access-private-key/AccessPrivateKey';
-import Keystore from '@/modules/wallets/utils/Keystore.js';
 import { MnemonicWallet } from '@/modules/wallets/utils/software';
 import WalletInterface from '@/modules/wallets/utils/WalletInterface';
-import { PRIV_KEY as privKeyType } from '@/modules/wallets/utils/bip44/walletTypes';
+import {
+  PRIV_KEY as privKeyType,
+  KEYSTORE as keyStoreType
+} from '@/modules/wallets/utils/bip44/walletTypes';
 import { mapActions } from 'vuex';
+import { unlockKeystore } from '@/modules/wallets/utils/helpers.js';
 const TITLES = {
   keystoreFile: 'Keystore File',
   mnemonic: 'Mnemonic Phrase',
@@ -121,8 +124,7 @@ export default {
       ],
       type: '',
       step: 0,
-      file: {},
-      keystoreModule: {}
+      file: {}
     };
   },
   computed: {
@@ -142,13 +144,6 @@ export default {
       return this.step && this.type === 'privateKey';
     }
   },
-  mounted() {
-    this.keystoreInstance = new Keystore(
-      true /*temporary value*/,
-      window.Worker,
-      window.origin
-    );
-  },
   methods: {
     ...mapActions(['decryptWallet']),
     btnCall(str) {
@@ -163,8 +158,33 @@ export default {
       this.file = e;
     },
     unlockKeystoreWallet(e, password) {
-      console.log(password);
-      // this.keystoreInstance.unlock(this.file, password).catch(console.log);
+      unlockKeystore(this.file, password)
+        .then(res => {
+          // not sure what res is for now
+          const obj = {
+            file: this.file,
+            name: res.data.filename
+          };
+
+          const walletInstance = new WalletInterface(
+            Buffer.from(e.data._privKey),
+            false,
+            keyStoreType,
+            '',
+            JSON.stringify(obj)
+          );
+
+          this.decryptWallet([walletInstance])
+            .then(() => {
+              console.log('wallet added succesfully!');
+            })
+            .catch(e => {
+              console.log(e);
+            });
+        })
+        .catch(e => {
+          console.log(e);
+        });
     },
     unlockPrivateKeyWallet(privateKey) {
       const walletInstance = new WalletInterface(
@@ -173,9 +193,13 @@ export default {
         privKeyType
       );
 
-      this.decryptWallet([walletInstance]).then(() => {
-        console.log('wallet added succesfully!');
-      });
+      this.decryptWallet([walletInstance])
+        .then(() => {
+          console.log('wallet added succesfully!');
+        })
+        .catch(e => {
+          console.log(e);
+        });
     },
     unlockMnemonicWallet(phrase, password = '') {
       MnemonicWallet(phrase, password).then(wallet => {
