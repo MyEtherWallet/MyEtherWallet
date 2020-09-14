@@ -68,18 +68,21 @@ export default {
   },
   data() {
     return {
-      keystoreInstance: {},
-      password: ''
+      phrase: '',
+      password: '',
+      length: 12
     };
   },
-  watch: {
-    password(newval) {
-      console.log('asdfasdfasdfas hakdog', newval);
+  computed: {
+    mnemonicPhraseInputs() {
+      return this.phrase === ''
+        ? new Array(this.length)
+        : this.phrase.split(' ');
     }
   },
   methods: {
     unlockBtn() {
-      this.unlockMnemonicPhrase(this.password);
+      this.unlockMnemonicPhrase(this.phrase, this.password);
     }
   }
 };
