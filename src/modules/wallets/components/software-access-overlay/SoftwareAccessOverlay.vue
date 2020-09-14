@@ -41,8 +41,7 @@
       <access-mnemonic
         v-else-if="showMnemonic"
         :btn-call="btnCall"
-        :unlock-mnemonic-wallet="unlockKeystoreWallet"
-        @keystore="handleKeystoreUpload"
+        :unlock-mnemonic-wallet="unlockMnemonicWallet"
       />
       <access-private-key
         v-else-if="showPrivKey"
@@ -68,10 +67,18 @@ const TITLES = {
   keystoreFile: 'Keystore File',
   mnemonic: 'Mnemonic Phrase',
   privateKey: 'Private Key',
-  keystorePasasword: 'Keystore File Password'
+  keystorePasasword: 'Keystore File Password',
+  mnemonicPath: 'Mnemonic Wallet Path'
 };
 
-const TYPES = ['keystoreFile', 'mnemonic', 'privateKey', 'keystorePasasword'];
+const TYPES = [
+  'keystoreFile',
+  'mnemonic',
+  'privateKey',
+  'keystorePasasword',
+  'mnemonicPath'
+];
+
 export default {
   name: 'AccessWalletSoftware',
   components: {
@@ -138,7 +145,9 @@ export default {
       );
     },
     showMnemonic() {
-      return this.step && this.type === 'mnemonic';
+      return (
+        this.step && (this.type === 'mnemonic' || this.type === 'mnemonicPath')
+      );
     },
     showPrivKey() {
       return this.step && this.type === 'privateKey';
