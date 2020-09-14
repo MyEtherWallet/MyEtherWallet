@@ -39,7 +39,7 @@
                 <mew-input />
 
                 <mew-checkbox
-                  label="To access my wallet, I accept Terms."
+                  label="To access my wallet, I accept "
                   :link="link"
                 />
                 <mew-button
@@ -69,7 +69,7 @@
               </mew-expand-panel>
 
               <mew-checkbox
-                label="To access my wallet, I accept Terms."
+                label="To access my wallet, I accept "
                 :link="link"
               />
 

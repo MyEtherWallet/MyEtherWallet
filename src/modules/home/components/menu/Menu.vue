@@ -2,7 +2,7 @@
   <div class="d-flex align-center">
     <router-link
       class="white--text text-decoration--none"
-      :to="{ name: 'HowItWorks', params: {} }"
+      :to="{ name: 'HowItWorks' }"
     >
       How it works
     </router-link>
