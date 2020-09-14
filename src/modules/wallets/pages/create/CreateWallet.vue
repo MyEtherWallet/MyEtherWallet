@@ -15,71 +15,79 @@
       </h5>
     </block-title>
 
-    <v-sheet color="transparent" max-width="650px" class="mx-auto">
-      <a href="https://www.mewwallet.com/" target="_blank">
-        <mew-super-button
-          class="mew-wallet-btn mb-5"
-          color-theme="basic"
-          title="Get MEWwallet"
-          subtitle="MEW Brings a hardware wallet style security to your iOS or Android
+    <v-container>
+      <v-sheet color="transparent" max-width="650px" class="mx-auto">
+        <a href="https://www.mewwallet.com/" target="_blank">
+          <mew-super-button
+            btn-mode="large-right-image"
+            class="mb-5"
+            color-theme="basic"
+            title="Get MEWwallet"
+            subtitle="MEW Brings a hardware wallet style security to your iOS or Android
               smartphone, helping you to secure your funds as never before."
-          title-icon="mdi-shield-check"
-          title-icon-type="mdi"
-          right-icon-type="img"
-          title-icon-class="primary--text"
-        >
-          <template v-slot:contentSlot>
-            <img
-              class="mew-wallet-img"
-              :src="require('@/assets/images/snippets/bg-mew-wallet.png')"
-            />
-            <div class="app-stores">
+            title-mdi-icon="mdi-shield-check"
+            title-icon-class="primary--text"
+          >
+            <template v-slot:contentBelowTitle>
+              <div class="mt-6">
+                <img
+                  src="@/assets/images/icons/button-app-store.png"
+                  alt="Apple app store"
+                  style="height: 30px"
+                  class="mr-2"
+                />
+                <img
+                  src="@/assets/images/icons/button-play-store.png"
+                  alt="Google play store"
+                  style="height: 30px"
+                />
+              </div>
+            </template>
+            <template v-slot:contentRight>
               <img
-                src="@/assets/images/icons/button-app-store.png"
-                alt="Apple app store"
+                class="mew-wallet-img"
+                src="@/assets/images/snippets/bg-mew-wallet.png"
+                alt="MEWwallet"
+                style="height: 190px"
               />
-              <img
-                src="@/assets/images/icons/button-play-store.png"
-                alt="Google play store"
-              />
-            </div>
-          </template>
-        </mew-super-button>
-      </a>
+            </template>
+          </mew-super-button>
+        </a>
 
-      <a
-        href="https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?utm_source=chrome-ntp-icon"
-        target="_blank"
-      >
-        <mew-super-button
-          class="mew-cx-btn mb-5"
-          color-theme="basic"
-          title="MEW CX"
-          subtitle="MEWcx is a secure and convinient way to create and manage your
+        <a
+          href="https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?utm_source=chrome-ntp-icon"
+          target="_blank"
+        >
+          <mew-super-button
+            class="mew-cx-btn mb-5"
+            color-theme="basic"
+            title="MEW CX"
+            subtitle="MEWcx is a secure and convinient way to create and manage your
                 wallet. Click here to download today."
-          title-icon="mdi-shield-check"
-          title-icon-type="mdi"
-          right-icon-type="img"
-          title-icon-class="primary--text"
-          :right-icon="require('@/assets/images/icons/icon-mew-cx.png')"
-          btn-link="https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en"
-        >
-        </mew-super-button>
-      </a>
+            title-icon="mdi-shield-check"
+            title-icon-type="mdi"
+            right-icon-type="img"
+            title-icon-class="primary--text"
+            :right-icon="require('@/assets/images/icons/icon-mew-cx.png')"
+            btn-link="https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en"
+          >
+          </mew-super-button>
+        </a>
 
-      <mew-super-button
-        class="mb-5"
-        color-theme="outline"
-        title="Software"
-        subtitle="Keystore files / Mnemonic phrase is highly sensitive information, and
+        <mew-super-button
+          class="mb-5"
+          color-theme="outline"
+          title="Software"
+          subtitle="Keystore files / Mnemonic phrase is highly sensitive information, and
           they should only be used in offline settings by experienced users."
-        title-icon="mdi-alert"
-        title-icon-class="warning--text text--darken-1"
-        note="NOT RECOMMANDED"
-        title-icon-type="mdi"
-        @click.native="showSoftware = !showSoftware"
-      />
-    </v-sheet>
+          title-icon="mdi-alert"
+          title-icon-class="warning--text text--darken-1"
+          note="NOT RECOMMANDED"
+          title-icon-type="mdi"
+          @click.native="showSoftware = !showSoftware"
+        />
+      </v-sheet>
+    </v-container>
 
     <div class="spacer-y-medium" />
     <toast
@@ -122,6 +130,7 @@ export default {
 </script>
 
 <style lang="scss">
+/*
 .mew-component--create-wallet {
   .mew-button {
     padding: 5px 30px !important;
@@ -174,4 +183,5 @@ export default {
     }
   }
 }
+*/
 </style>

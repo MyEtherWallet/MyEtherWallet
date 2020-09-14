@@ -18,7 +18,9 @@ import VueI18n from 'vue-i18n';
 import vuetify from '@/plugins/vuetify';
 
 import whiteSheet from '@/components/white-sheet/WhiteSheet.vue';
+import MewSuperButton from '@/components/temporary-mew-components/MewSuperButton/MewSuperButton.vue';
 Vue.component('mew6-white-sheet', whiteSheet);
+Vue.component('mew-super-button', MewSuperButton);
 
 Vue.prototype.$eventHub = new Vue();
 
