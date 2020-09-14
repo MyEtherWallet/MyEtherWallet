@@ -18,15 +18,19 @@
             placeholder="Enter my Private Key"
           />
           <v-container class="password-container">
-            <v-col align="center" justify="start">
+            <v-col align="center" justify="center">
               <mew-button
                 title="Access My Wallet"
                 button-size="large"
+                :disabled="!disableBtn"
                 @click.native="unlockBtn"
               />
               <mew-checkbox
-                label="To access my wallet, I accept Terms."
+                v-model="acceptTerms"
+                label="To access my wallet, I accept "
                 :link="link"
+                class="justify-center"
+                :checkbox-toggle="toggleCheckBox"
               />
             </v-col>
           </v-container>
@@ -37,8 +41,9 @@
 </template>
 
 <script>
+import { isHexString } from 'ethereumjs-util';
 export default {
-  name: 'AccessPrivateKEy',
+  name: 'AccessPrivateKey',
   props: {
     unlockPrivateKeyWallet: {
       type: Function,
@@ -48,15 +53,33 @@ export default {
   data() {
     return {
       privateKey: '',
+      acceptTerms: false,
       link: {
         title: 'Terms',
         url: 'https://www.myetherwallet.com/terms-of-service'
       }
     };
   },
+  computed: {
+    disableBtn() {
+      return this.acceptTerms && this.isPrivKey;
+    },
+    isPrivKey() {
+      const _priv = this.privateKey.replace('0x', '');
+      return isHexString('0x' + _priv, 32) && this.privateKey !== '';
+    },
+    actualPrivateKey() {
+      return this.privateKey.substr(0, 2) === '0x'
+        ? this.privateKey.replace('0x', '')
+        : this.privateKey;
+    }
+  },
   methods: {
     unlockBtn() {
-      this.unlockPrivateKeyWallet(this.privateKey);
+      this.unlockPrivateKeyWallet(this.actualPrivateKey);
+    },
+    toggleCheckBox() {
+      this.acceptTerms = !this.acceptTerms;
     }
   }
 };

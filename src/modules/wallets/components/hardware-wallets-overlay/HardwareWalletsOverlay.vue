@@ -12,7 +12,7 @@
             connected and unlocked.
             <span
               class="primary--text cursor--pointer"
-              @click="$router.push({ name: 'BuyHardwareWallet', params: {} })"
+              @click="$router.push({ name: 'BuyHardwareWallet' })"
             >
               Buy hardware wallet
             </span>

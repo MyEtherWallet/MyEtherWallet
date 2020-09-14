@@ -45,7 +45,7 @@
       />
       <access-private-key
         v-else-if="showPrivKey"
-        :unlock-mnemonic-wallet="unlockPrivateKeyWallet"
+        :unlock-private-key-wallet="unlockPrivateKeyWallet"
       />
     </template>
   </mew-overlay>
@@ -63,6 +63,7 @@ import {
 } from '@/modules/wallets/utils/bip44/walletTypes';
 import { mapActions } from 'vuex';
 import { unlockKeystore } from '@/modules/wallets/utils/helpers.js';
+
 const TITLES = {
   keystoreFile: 'Keystore File',
   mnemonic: 'Mnemonic Phrase',
@@ -185,7 +186,7 @@ export default {
 
           this.decryptWallet([walletInstance])
             .then(() => {
-              console.log('wallet added succesfully!');
+              this.$router.push({ name: 'Dashboard' });
             })
             .catch(e => {
               console.log(e);
@@ -201,10 +202,9 @@ export default {
         false,
         privKeyType
       );
-
       this.decryptWallet([walletInstance])
         .then(() => {
-          console.log('wallet added succesfully!');
+          this.$router.push({ name: 'Dashboard' });
         })
         .catch(e => {
           console.log(e);

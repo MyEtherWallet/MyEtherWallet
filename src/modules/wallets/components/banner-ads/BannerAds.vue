@@ -25,7 +25,7 @@
         <template v-slot:slide2>
           <div
             class="ad2 px-5 d-flex flex-column justify-center"
-            @click="$router.push({ name: 'BuyHardwareWallet', params: {} })"
+            @click="$router.push({ name: 'BuyHardwareWallet' })"
           >
             <div class="title font-weight-bold mb-n1">Hardware wallets</div>
             <div class="mb-2">Take a look at our hardware wallets!</div>

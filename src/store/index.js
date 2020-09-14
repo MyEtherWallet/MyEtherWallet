@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import State from './state';
-import Mutations from './mutations';
-import Actions from './actions';
+import State from './state.js';
+import Mutations from './mutations.js';
+import Actions from './actions.js';
 
 Vue.use(Vuex);
 

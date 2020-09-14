@@ -35,7 +35,7 @@ export default {
   methods: {
     redirectToDashboard() {
       if (this.$route.name === 'Wallet') {
-        this.$router.push({ name: 'Dashboard', params: {} });
+        this.$router.push({ name: 'Dashboard' });
       }
     }
   }
