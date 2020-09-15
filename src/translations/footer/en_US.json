@@ -44,5 +44,6 @@
     "header": "Press Kit",
     "subtext": "Announcements can be found on our {mediumlink}. For press and media inquiries, please contact: {hyperlink}",
     "medium": "Medium blog"
-  }
+  },
+  "ethvm": "EthVM"
 }

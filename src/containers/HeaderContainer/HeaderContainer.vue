@@ -108,8 +108,17 @@
                     <template slot="button-content">
                       <p>{{ $t('interface.tx-history') }}</p>
                     </template>
+                    <b-dropdown-item
+                      v-show="network.type.name === 'ETH'"
+                      :href="'https://www.ethvm.com/address/' + address"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      >{{ $t('header.ethvm') }} ({{
+                        network.type.name
+                      }})</b-dropdown-item
+                    >
                     <b-dropdown-item :href="explorerUrl" target="_blank">
-                      <p>{{ serviceUrl }} ({{ network.type.name }})</p>
+                      {{ serviceUrl }} ({{ network.type.name }})
                     </b-dropdown-item>
                     <b-dropdown-item
                       v-show="network.type.name === 'ETH'"

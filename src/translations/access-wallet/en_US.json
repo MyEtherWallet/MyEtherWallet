@@ -1,6 +1,6 @@
 {
   "mewconnect": {
-    "option-text": "To see your mobile wallet MEW web.",
+    "option-text": "To see your mobile wallet on MEW web.",
     "modal": {
       "title": "Mobile Access",
       "text1": "Please use MEW wallet App to scan the QR code above",
