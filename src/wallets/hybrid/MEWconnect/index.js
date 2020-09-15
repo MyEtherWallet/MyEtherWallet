@@ -54,9 +54,9 @@ class MEWconnectWallet {
       return new Promise(resolve => {
         if (!tx.gas && tx.gasLimit) {
           tx.gas = tx.gasLimit;
-          delete tx['gasLimit']
+          delete tx['gasLimit'];
         } else if (tx.gas && tx.gasLimit) {
-          delete tx['gasLimit']
+          delete tx['gasLimit'];
         }
 
         this.mewConnect.sendRtcMessage('signTx', JSON.stringify(tx));
