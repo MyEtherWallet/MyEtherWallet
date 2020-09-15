@@ -68,7 +68,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('main', ['network',  'wallet']),
+    ...mapState('main', ['network', 'wallet']),
     buttonCheckEtherscan() {
       return {
         // eslint-disable-next-line
@@ -107,7 +107,10 @@ export default {
       window.open(this.txHashExlporrer, '_blank');
     },
     goToEthVm() {
-      const ethVmLink = this.txHashExlporrer.replace('https://etherscan.io/tx/', 'https://www.ethvm.com/tx/');
+      const ethVmLink = this.txHashExlporrer.replace(
+        'https://etherscan.io/tx/',
+        'https://www.ethvm.com/tx/'
+      );
       // eslint-disable-next-line
       window.open(ethVmLink, '_blank');
     },

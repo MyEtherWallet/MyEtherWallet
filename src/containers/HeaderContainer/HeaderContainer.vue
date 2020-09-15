@@ -113,7 +113,9 @@
                       :href="'https://www.ethvm.com/address/' + address"
                       target="_blank"
                       rel="noopener noreferrer"
-                    >{{ $t('header.ethvm') }} ({{ network.type.name }})</b-dropdown-item
+                      >{{ $t('header.ethvm') }} ({{
+                        network.type.name
+                      }})</b-dropdown-item
                     >
                     <b-dropdown-item :href="explorerUrl" target="_blank">
                       {{ serviceUrl }} ({{ network.type.name }})
