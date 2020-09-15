@@ -116,9 +116,7 @@ export default {
     },
     unlockBtn() {
       this.unlockKeystoreWallet(this.password);
-    },
-    handlePasswordChange(e) {
-      console.log(e, 'asdfasd');
+      this.password = '';
     }
   }
 };

@@ -7,42 +7,59 @@
         :rounded="true"
         :max-width="740"
         :min-width="740"
-        :max-height="340"
         :min-height="340"
       >
         <div class="sheet-content">
-          <div class="items">
-            <p class="mew-heading-1">Upload my Keystore File</p>
-            <p>
-              Please upload the keystore file that <br />
-              unlocks your wallet.
-            </p>
-            <br />
-            <br />
-            <mew-button
-              title="Upload..."
-              btn-style="outline"
-              color-theme="primary"
-              button-size="xlarge"
-              :has-full-width="true"
-              :shows-active-state="true"
-              @click.native="uploadBtn"
-            />
+          <v-container>
+            <v-row align="center" justify="space-between">
+              <v-col cols="8">
+                <p class="mew-heading-1">Enter Mnemonic Phrase</p>
+                <p>
+                  Please type the mnemonic phrase you wrote down in the right
+                  order.
+                </p>
+              </v-col>
+              <v-col cols="4">
+                <v-select
+                  v-model="length"
+                  :label="`${length} words`"
+                  :items="[12, 24]"
+                  outlined
+                />
+              </v-col>
+            </v-row>
+          </v-container>
+          <v-sheet class="mnemonic-phrase-container" elevation="2">
+            <v-container>
+              <v-row align="center" justify="space-around">
+                <v-col v-for="n in length" :key="`mnemonicInput${n}`" cols="2">
+                  <div class="mnemonic-input">
+                    <label :for="`mnemonicInput${n}`">{{ n }}. </label>
+                    <input
+                      :ref="`mnemonicInput${n}`"
+                      v-model="phrase[n]"
+                      :name="`mnemonicInput${n}`"
+                    />
+                  </div>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-sheet>
+          <div class="extra-word-container">
+            <v-container>
+              <v-row align="center" justify="space-between">
+                <p class="mew-heading-3">Extra Word</p>
+                <mew-switch v-model="hasExtraWord" label="extra word" />
+              </v-row>
+            </v-container>
+            <div v-show="hasExtraWord">
+              <mew-input
+                v-model="extraWord"
+                label="Extra word"
+                placeholder="Extra word"
+              />
+            </div>
           </div>
-          <div class="items">
-            <img
-              src="@/assets/images/backgrounds/bg-spaceman.png"
-              width="100%"
-            />
-          </div>
-
-          <input
-            ref="jsonInput"
-            type="file"
-            name="file"
-            style="display: none"
-            @change="uploadFile"
-          />
         </div>
       </v-sheet>
     </div>
@@ -68,16 +85,37 @@ export default {
   },
   data() {
     return {
-      phrase: '',
-      password: '',
-      length: 12
+      extraWord: '',
+      phrase: {},
+      length: 12,
+      hasExtraWord: false
     };
   },
   computed: {
-    mnemonicPhraseInputs() {
-      return this.phrase === ''
-        ? new Array(this.length)
-        : this.phrase.split(' ');
+    parsedPhrase() {
+      return Object.values(this.phrase).join(' ');
+    },
+    isValidMnemonic() {
+      return this.parsedPhrase.length === this.length;
+    }
+  },
+  watch: {
+    hasExtraWord(newVal) {
+      console.log(newVal);
+    },
+    phrase: {
+      deep: true,
+      handler: function (newval) {
+        const splitVal = newval[1].split(' ');
+        if (splitVal.length === 12 || splitVal.length === 24) {
+          this.length = splitVal.length;
+          const newObj = {};
+          splitVal.forEach((item, idx) => {
+            newObj[idx + 1] = item;
+          });
+          this.phrase = newObj;
+        }
+      }
     }
   },
   methods: {
@@ -103,16 +141,40 @@ export default {
 
 .sheet-content {
   padding: 48px 68px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   height: 100%;
-  position: relative;
+}
 
-  .items {
-    height: 100%;
-    width: calc(740px / 2);
+.mnemonic-phrase-container {
+  border-radius: 5px !important;
+  border: 1px solid rgb(230, 235, 239) !important; // hard coding this color for now based on abstract
+
+  .mnemonic-input {
+    width: 100%;
+    position: relative;
+
+    input {
+      width: 100%;
+      padding-left: 21px;
+      padding-bottom: 2px;
+      border-bottom: 1px solid rgb(230, 235, 239) !important; // hard coding this color for now based on abstract
+
+      &:focus {
+        outline: none !important;
+        border-bottom: 1px solid black !important; // hard coding this color for now based on abstract
+      }
+    }
+
+    label {
+      position: absolute;
+    }
   }
+}
+
+.extra-word-container {
+  margin-top: 25px;
+  border-top: 1px solid rgb(230, 235, 239) !important; // hard coding this color for now based on abstract
+  border-bottom: 1px solid rgb(230, 235, 239) !important; // hard coding this color for now based on abstract
+  padding: 0 20px;
 }
 
 .password-container {
