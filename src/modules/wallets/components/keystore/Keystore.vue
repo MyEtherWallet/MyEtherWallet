@@ -70,7 +70,7 @@
 
     <v-sheet v-if="step === 3" color="white" class="border-radius--10px pa-12">
       <div class="d-flex align-center">
-        <div class="mr-8">
+        <div>
           <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
           <div class="headline font-weight-bold mb-3">You are done!</div>
           <p class="mb-6">
@@ -78,28 +78,31 @@
             in order to access your new wallet. And you are done!
           </p>
           <v-img
-            class="d-block d-sm-none"
+            class="d-block d-sm-none mx-auto mt-12 mb-12"
             max-width="250px"
             src="@/assets/images/icons/icon-keystore-mew.png"
           />
-          <mew-button
-            title="Access my wallet"
-            button-size="xlarge"
-            :has-full-width="false"
-            class="mb-5"
-            @click.native="step = 1"
-          />
-          <p class="mt-4 mb-0">
-            Need help?
-            <router-link
-              class="primary--text text-decoration--none font-weight-bold"
-              to="/"
-              >Get helps from MEWconnect</router-link
-            >
-          </p>
+
+          <div class="d-flex flex-column">
+            <mew-button
+              title="Access my wallet"
+              button-size="xlarge"
+              :has-full-width="false"
+              class="mb-5"
+              @click.native="step = 1"
+            />
+
+            <div class="mt-3 mb-0 text-center">
+              <router-link
+                class="primary--text text-decoration--none font-weight-bold"
+                to="/"
+                >Back to home</router-link
+              >
+            </div>
+          </div>
         </div>
         <v-img
-          class="d-none d-sm-block"
+          class="d-none d-sm-block ml-8"
           max-width="250px"
           src="@/assets/images/icons/icon-keystore-mew.png"
         />
