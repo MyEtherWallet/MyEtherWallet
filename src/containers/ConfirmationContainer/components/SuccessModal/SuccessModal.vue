@@ -83,7 +83,7 @@ export default {
       return {
         // eslint-disable-next-line
         title: this.$t('sendTx.success.button-check-explorer', {
-          explorrerName: 'EthVm'
+          explorrerName: this.$t('footer.ethvm')
         }),
         buttonStyle: 'green-border',
         fullWidth: true
