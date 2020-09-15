@@ -1,3 +1,9 @@
+### Release v5.7.8-hotfix.1
+
+### Devop
+
+- Add option to use EthVM [#2582](https://github.com/MyEtherWallet/MyEtherWallet/pull/2582)
+
 ### Release v5.7.8
 
 ### Bug
