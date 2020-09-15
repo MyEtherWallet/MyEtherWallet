@@ -77,6 +77,7 @@ export default {
   methods: {
     unlockBtn() {
       this.unlockPrivateKeyWallet(this.actualPrivateKey);
+      this.privateKey = '';
     },
     toggleCheckBox() {
       this.acceptTerms = !this.acceptTerms;

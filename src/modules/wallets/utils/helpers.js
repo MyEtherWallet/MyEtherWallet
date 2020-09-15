@@ -32,7 +32,7 @@ const createKeystore = password => {
   createdWallet.name = wallet.getV3Filename();
   return createdWallet;
 };
-const keystoreUnlock = (file, password) => {
+const unlockKeystore = (file, password) => {
   const newFile = {};
   // Small hack because non strict wasn't working..
   Object.keys(file).forEach(key => {
@@ -127,5 +127,5 @@ export {
   walletRequirePass,
   createBlob,
   createKeystore,
-  keystoreUnlock
+  unlockKeystore
 };
