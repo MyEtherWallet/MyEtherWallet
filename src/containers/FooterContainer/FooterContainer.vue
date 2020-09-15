@@ -217,6 +217,10 @@ export default {
               href: 'https://www.mewcx.com'
             },
             {
+              text: 'footer.ethvm',
+              href: 'https://www.ethvm.com/'
+            },
+            {
               text: 'buyHardwareWallet.page.title',
               to: '/hardware-wallet-affiliates'
             },
