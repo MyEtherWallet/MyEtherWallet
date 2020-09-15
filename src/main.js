@@ -19,8 +19,12 @@ import vuetify from '@/plugins/vuetify';
 
 import whiteSheet from '@/components/white-sheet/WhiteSheet.vue';
 import MewSuperButton from '@/components/temporary-mew-components/MewSuperButton/MewSuperButton.vue';
+import MewStepper from '@/components/temporary-mew-components/MewStepper/MewStepper.vue';
+import MewStepperHeader from '@/components/temporary-mew-components/MewStepperHeader/MewStepperHeader.vue';
 Vue.component('mew6-white-sheet', whiteSheet);
 Vue.component('mew-super-button', MewSuperButton);
+Vue.component('mew-stepper', MewStepper);
+Vue.component('mew-stepper-header', MewStepperHeader);
 
 Vue.prototype.$eventHub = new Vue();
 

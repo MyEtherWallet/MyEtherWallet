@@ -31,7 +31,7 @@
       </div>
     </div>
 
-    <div v-if="btnMode === 'standard'" class="btn--a">
+    <div v-if="btnMode === 'standard'" class="standard">
       <v-btn
         :class="[
           getClasses(),
@@ -364,15 +364,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.btn--b {
-  border-radius: 10px;
-}
 .large-right-image {
+  border-radius: 10px;
 }
 </style>
 
 <style lang="scss">
-.global--mew-component--mew-super-button .btn--a {
+.global--mew-component--mew-super-button .standard {
   .v-btn {
     letter-spacing: 0 !important;
   }
