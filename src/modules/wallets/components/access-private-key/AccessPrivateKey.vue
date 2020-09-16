@@ -30,7 +30,6 @@
                 label="To access my wallet, I accept "
                 :link="link"
                 class="justify-center"
-                :checkbox-toggle="toggleCheckBox"
               />
             </v-col>
           </v-container>
@@ -78,9 +77,6 @@ export default {
     unlockBtn() {
       this.unlockPrivateKeyWallet(this.actualPrivateKey);
       this.privateKey = '';
-    },
-    toggleCheckBox() {
-      this.acceptTerms = !this.acceptTerms;
     }
   }
 };

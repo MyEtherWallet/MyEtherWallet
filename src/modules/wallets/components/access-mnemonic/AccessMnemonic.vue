@@ -3,13 +3,13 @@
     <div class="sheet-container">
       <v-sheet
         :outlined="true"
-        color="white"
+        :color="sheetColor"
         :rounded="true"
         :max-width="740"
-        :min-width="740"
+        :min-width="475"
         :min-height="340"
       >
-        <div class="sheet-content">
+        <div v-if="step === 1" class="sheet-content">
           <v-container>
             <v-row align="center" justify="space-between">
               <v-col cols="8">
@@ -45,28 +45,101 @@
               </v-row>
             </v-container>
           </v-sheet>
-          <div class="extra-word-container">
-            <v-container>
-              <v-row align="center" justify="space-between">
-                <p class="mew-heading-3">Extra Word</p>
-                <mew-switch v-model="hasExtraWord" label="extra word" />
-              </v-row>
-            </v-container>
-            <div v-show="hasExtraWord">
-              <mew-input
-                v-model="extraWord"
-                label="Extra word"
-                placeholder="Extra word"
-              />
-            </div>
+          <div class="mt-10">
+            <mew-expand-panel
+              :has-dividers="true"
+              :is-toggle="true"
+              :panel-items="panelItem"
+            >
+              <template v-slot:panelBody1>
+                <mew-input
+                  v-model="extraWord"
+                  type="password"
+                  label="Extra word"
+                  placeholder="Extra word"
+                />
+              </template>
+            </mew-expand-panel>
           </div>
+          <v-container class="password-container">
+            <v-col align="center" justify="center">
+              <mew-button
+                title="Access My Wallet"
+                button-size="large"
+                :disabled="!disableBtn"
+                @click.native="unlockBtn"
+              />
+              <mew-checkbox
+                v-model="acceptTerms"
+                label="To access my wallet, I accept "
+                :link="link"
+                class="justify-center"
+              />
+            </v-col>
+          </v-container>
         </div>
+        <v-container
+          v-if="step === 2"
+          class="overlay-content pa-8 mt-10"
+          fill-height
+        >
+          <v-row align="center" justify="center">
+            <v-col cols="12">
+              <mew-select
+                v-model="selectedPath"
+                label="HD Derivation Path"
+                :items="paths"
+              />
+              <v-row align="center" justify="center">
+                <v-col cols="6">
+                  <mew-button
+                    button-size="medium"
+                    title="Choose Path"
+                    has-full-width
+                    @click.native="setPath"
+                  />
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-container>
+        <v-container v-if="step === 3">
+          <v-row align="center" justify="center">
+            <v-col cols="12">
+              <mew-expand-panel
+                :interactive-content="true"
+                :panel-items="panelItems"
+              >
+                <template v-slot:panelBody1>
+                  <span>Panel slot example</span>
+                  <button>
+                    {{ interactiveContent ? 'Click me' : 'You cant click me' }}
+                  </button>
+                </template>
+                <template v-slot:panelBody2>
+                  <span>Panel slot example</span>
+                  <button>
+                    {{ interactiveContent ? 'Click me' : 'You cant click me' }}
+                  </button>
+                </template>
+              </mew-expand-panel>
+            </v-col>
+          </v-row>
+        </v-container>
       </v-sheet>
     </div>
   </div>
 </template>
 
 <script>
+import { MNEMONIC as mnemonicType } from '@/modules/wallets/utils/bip44/walletTypes';
+import paths from '@/modules/wallets/utils/bip44';
+const parsedPaths = paths[mnemonicType].map(item => {
+  const newObj = {};
+  newObj['name'] = item['label'];
+  newObj['value'] = item['path'];
+  return newObj;
+});
 export default {
   name: 'AccessMnemonic',
   props: {
@@ -78,7 +151,19 @@ export default {
       type: Function,
       default: () => {}
     },
-    unlockMnemonicPhrase: {
+    unlockMnemonicWallet: {
+      type: Function,
+      default: () => {}
+    },
+    step: {
+      type: Number,
+      default: 1
+    },
+    setMnemonicPath: {
+      type: Function,
+      default: () => {}
+    },
+    setAddress: {
       type: Function,
       default: () => {}
     }
@@ -88,21 +173,55 @@ export default {
       extraWord: '',
       phrase: {},
       length: 12,
-      hasExtraWord: false
+      acceptTerms: false,
+      link: {
+        title: 'Terms',
+        url: 'https://www.myetherwallet.com/terms-of-service'
+      },
+      paths: parsedPaths,
+      selectedPath: null,
+      wallet: {},
+      panelItems: [
+        {
+          name: 'Network'
+        },
+        {
+          name: 'Address to interact with'
+        }
+      ]
     };
   },
   computed: {
+    sheetColor() {
+      return this.step < 3 ? 'white' : 'transparent';
+    },
     parsedPhrase() {
       return Object.values(this.phrase).join(' ');
     },
     isValidMnemonic() {
-      return this.parsedPhrase.length === this.length;
+      return Object.keys(this.phrase).length === this.length;
+    },
+    disableBtn() {
+      return this.isValidMnemonic && this.acceptTerms;
+    },
+    revertedPath() {
+      const newObj = {};
+      if (this.selectedPath !== null) {
+        newObj['path'] = this.selectedPath['value'];
+        newObj['label'] = this.selectedPath['name'];
+        return newObj;
+      }
+      return this.selectedPath;
+    },
+    panelItem() {
+      return [
+        {
+          name: 'Extra Word'
+        }
+      ];
     }
   },
   watch: {
-    hasExtraWord(newVal) {
-      console.log(newVal);
-    },
     phrase: {
       deep: true,
       handler: function (newval) {
@@ -120,7 +239,13 @@ export default {
   },
   methods: {
     unlockBtn() {
-      this.unlockMnemonicPhrase(this.phrase, this.password);
+      this.unlockMnemonicWallet(this.parsedPhrase, this.extraWord);
+    },
+    setPath() {
+      this.setMnemonicPath(this.selectedPath);
+    },
+    setMnemonicWallet() {
+      this.setAddress(this.wallet);
     }
   }
 };
