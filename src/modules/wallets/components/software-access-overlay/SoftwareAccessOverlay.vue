@@ -8,45 +8,46 @@
     @closeOverlay="close"
   >
     <template v-slot:mewOverlayBody>
-      <div v-if="!step">
-        <v-sheet color="transparent" max-width="650px" class="mx-auto px-5">
-          <v-row>
-            <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
-              <mew-super-button
-                :title="btn.label"
-                :subtitle="btn.description"
-                :right-icon="btn.icon"
-                icon-type="img"
-                color-theme="basic"
-                @click.native="btn.fn"
-              />
-            </v-col>
-            <v-col cols="12" sm="12">
-              <warning-sheet
-                title="Not Recommended"
-                description="This information is sensetive, and these options should only be used in offline settings by experienced crypto users."
-                :link-obj="warningSheetObj"
-              />
-            </v-col>
-          </v-row>
-        </v-sheet>
-        <div class="spacer-y-medium" />
-      </div>
-      <access-keystore
-        v-else-if="showKeystore"
-        :btn-call="btnCall"
-        :unlock-keystore-wallet="unlockKeystoreWallet"
-        @keystore="handleKeystoreUpload"
-      />
-      <access-mnemonic
-        v-else-if="showMnemonic"
-        :btn-call="btnCall"
-        :unlock-mnemonic-wallet="unlockMnemonicWallet"
-      />
-      <access-private-key
-        v-else-if="showPrivKey"
-        :unlock-private-key-wallet="unlockPrivateKeyWallet"
-      />
+      <v-sheet color="transparent" max-width="650px" class="mx-auto px-5">
+        <v-row v-if="!step">
+          <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
+            <mew-super-button
+              :title="btn.label"
+              :subtitle="btn.description"
+              :right-icon="btn.icon"
+              icon-type="img"
+              color-theme="basic"
+              @click.native="btn.fn"
+            />
+          </v-col>
+        </v-row>
+        <access-keystore
+          v-else-if="showKeystore"
+          :btn-call="btnCall"
+          :unlock-keystore-wallet="unlockKeystoreWallet"
+          @keystore="handleKeystoreUpload"
+        />
+        <access-mnemonic
+          v-else-if="showMnemonic"
+          :btn-call="btnCall"
+          :unlock-mnemonic-wallet="unlockMnemonicWallet"
+          :step="step"
+          :set-mnemonic-path="setMnemonicPath"
+          :hw-wallet-instance="hwWalletInstance"
+        />
+        <access-private-key
+          v-else-if="showPrivKey"
+          :unlock-private-key-wallet="unlockPrivateKeyWallet"
+        />
+        <v-col cols="12" sm="12">
+          <warning-sheet
+            title="Not Recommended"
+            description="This information is sensetive, and these options should only be used in offline settings by experienced crypto users."
+            :link-obj="warningSheetObj"
+          />
+        </v-col>
+      </v-sheet>
+      <div class="spacer-y-medium" />
     </template>
   </mew-overlay>
 </template>
@@ -69,7 +70,8 @@ const TITLES = {
   mnemonic: 'Mnemonic Phrase',
   privateKey: 'Private Key',
   keystorePasasword: 'Keystore File Password',
-  mnemonicPath: 'Mnemonic Wallet Path'
+  mnemonicPath: 'Mnemonic Wallet Path',
+  mnemonicAddress: 'Confirm Network & Address'
 };
 
 const TYPES = [
@@ -77,7 +79,8 @@ const TYPES = [
   'mnemonic',
   'privateKey',
   'keystorePasasword',
-  'mnemonicPath'
+  'mnemonicPath',
+  'mnemonicAddress'
 ];
 
 export default {
@@ -132,7 +135,8 @@ export default {
       ],
       type: '',
       step: 0,
-      file: {}
+      file: {},
+      hwWalletInstance: {}
     };
   },
   computed: {
@@ -147,7 +151,10 @@ export default {
     },
     showMnemonic() {
       return (
-        this.step && (this.type === 'mnemonic' || this.type === 'mnemonicPath')
+        this.step &&
+        (this.type === 'mnemonic' ||
+          this.type === 'mnemonicPath' ||
+          this.type === 'mnemonicAddress')
       );
     },
     showPrivKey() {
@@ -162,7 +169,7 @@ export default {
       } else {
         throw new Error('Not a valid type!');
       }
-      this.step = 1;
+      this.step += 1;
     },
     handleKeystoreUpload(e) {
       this.file = e;
@@ -212,9 +219,21 @@ export default {
     },
     unlockMnemonicWallet(phrase, password = '') {
       MnemonicWallet(phrase, password).then(wallet => {
-        // use design for paths found in keepkey's designs
-        console.log(wallet);
+        this.hwWalletInstance = wallet;
+        this.btnCall('mnemonicPath');
       });
+    },
+    setMnemonicPath() {
+      this.btnCall('mnemonicAddress');
+    },
+    setAddress(wallet) {
+      this.decryptWallet([wallet])
+        .then(() => {
+          this.$router.push({ name: 'Dashboard' });
+        })
+        .catch(e => {
+          console.log(e);
+        });
     },
     accessBack() {
       if (!this.step) {
