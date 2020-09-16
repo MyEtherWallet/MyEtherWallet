@@ -110,18 +110,8 @@
                 :interactive-content="true"
                 :panel-items="panelItems"
               >
-                <template v-slot:panelBody1>
-                  <span>Panel slot example</span>
-                  <button>
-                    {{ interactiveContent ? 'Click me' : 'You cant click me' }}
-                  </button>
-                </template>
-                <template v-slot:panelBody2>
-                  <span>Panel slot example</span>
-                  <button>
-                    {{ interactiveContent ? 'Click me' : 'You cant click me' }}
-                  </button>
-                </template>
+                <template v-slot:panelBody1> yo wot m8 </template>
+                <template v-slot:panelBody2> yo wot m8 </template>
               </mew-expand-panel>
             </v-col>
           </v-row>
