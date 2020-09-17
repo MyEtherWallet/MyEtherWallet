@@ -6,10 +6,10 @@ import {
 } from '../partnersConfig';
 import { utils } from '../helpers';
 const Toast = {
-responseHandler: function(text, type) {
-console.log(`type:${type} `, text);
-}
-}
+  responseHandler: function (text, type) {
+    console.log(`type:${type} `, text);
+  }
+};
 import {
   getRates,
   openOrder,

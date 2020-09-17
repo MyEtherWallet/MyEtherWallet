@@ -34,6 +34,7 @@
           :step="step"
           :set-mnemonic-path="setMnemonicPath"
           :hw-wallet-instance="hwWalletInstance"
+          :set-address="setAddress"
         />
         <access-private-key
           v-else-if="showPrivKey"
@@ -227,13 +228,17 @@ export default {
       this.btnCall('mnemonicAddress');
     },
     setAddress(wallet) {
-      this.decryptWallet([wallet])
-        .then(() => {
-          this.$router.push({ name: 'Dashboard' });
-        })
-        .catch(e => {
-          console.log(e);
-        });
+      try {
+        this.decryptWallet([wallet])
+          .then(() => {
+            this.$router.push({ name: 'Dashboard' });
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      } catch (e) {
+        console.log(e);
+      }
     },
     accessBack() {
       if (!this.step) {
