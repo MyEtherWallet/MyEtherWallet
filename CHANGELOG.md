@@ -1,3 +1,7 @@
+### Bug
+
+- Only send gas limit value as 'gas' to phone for signing [#2586](https://github.com/MyEtherWallet/MyEtherWallet/pull/2586)
+
 ### Release v5.7.8-hotfix.1
 
 ### Devop
