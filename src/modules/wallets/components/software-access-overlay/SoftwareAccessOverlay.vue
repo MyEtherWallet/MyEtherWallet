@@ -137,12 +137,13 @@ export default {
       type: '',
       step: 0,
       file: {},
-      hwWalletInstance: {}
+      hwWalletInstance: {},
+      steps: {}
     };
   },
   computed: {
     title() {
-      return !this.step ? 'Software' : this.titles[this.type];
+      return !this.step ? 'Software' : this.titles[this.steps[this.step]];
     },
     showKeystore() {
       return (
@@ -171,6 +172,7 @@ export default {
         throw new Error('Not a valid type!');
       }
       this.step += 1;
+      this.steps[this.step] = str;
     },
     handleKeystoreUpload(e) {
       this.file = e;

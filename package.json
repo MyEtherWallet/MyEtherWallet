@@ -52,13 +52,13 @@
     "@ledgerhq/hw-transport-webusb": "5.23.0",
     "@mdi/font": "5.5.55",
     "@myetherwallet/mewconnect-web-client": "2.1.5-beta.1",
-    "@vue/cli-plugin-babel": "4.5.4",
-    "@vue/cli-plugin-eslint": "4.5.4",
-    "@vue/cli-plugin-pwa": "4.5.4",
-    "@vue/cli-plugin-unit-jest": "4.5.4",
-    "@vue/cli-service": "4.5.4",
+    "@vue/cli-plugin-babel": "4.5.6",
+    "@vue/cli-plugin-eslint": "4.5.6",
+    "@vue/cli-plugin-pwa": "4.5.6",
+    "@vue/cli-plugin-unit-jest": "4.5.6",
+    "@vue/cli-service": "4.5.6",
     "@vue/eslint-config-prettier": "6.0.0",
-    "@vue/test-utils": "1.0.5",
+    "@vue/test-utils": "1.1.0",
     "@xkeshi/vue-qrcode": "git+https://github.com/MyEtherWallet/vue-qrcode.git",
     "axios": "0.20.0",
     "babel-core": "7.0.0-bridge.0",
@@ -77,7 +77,7 @@
     "ethereum-ens": "0.8.0",
     "ethereumjs-common": "1.5.2",
     "ethereumjs-tx": "2.1.2",
-    "ethereumjs-util": "7.0.4",
+    "ethereumjs-util": "7.0.5",
     "ethereumjs-wallet": "1.0.0",
     "ethjs-unit": "0.1.6",
     "hdkey": "2.0.1",
@@ -122,17 +122,6 @@
   "engines": {
     "node": ">= 10.0.0 < 12.0.0",
     "npm": ">= 6.0.0"
-  },
-  "greenkeeper": {
-    "ignore": [
-      "graphql",
-      "ethereum-ens",
-      "multicoin-address-validator",
-      "@xkeshi/vue-qrcode",
-      "vee-validate",
-      "sass-loader",
-      "@vue/test-utils"
-    ]
   },
   "resolutions": {
     "acorn": "6.4.0",
