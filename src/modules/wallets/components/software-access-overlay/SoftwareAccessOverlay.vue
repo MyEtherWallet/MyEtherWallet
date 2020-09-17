@@ -5,7 +5,7 @@
     right-btn-text="Cancel"
     :back="accessBack"
     :close="overlayClose"
-    @closeOverlay="close"
+    @closeOverlay="overlayClose"
   >
     <template v-slot:mewOverlayBody>
       <v-sheet color="transparent" max-width="650px" class="mx-auto px-5">

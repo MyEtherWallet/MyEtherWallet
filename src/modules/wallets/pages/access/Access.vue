@@ -66,7 +66,7 @@
     </v-sheet>
     <div class="spacer-y-medium" />
     <browser-extension-overlay :open="showBrowser" :close="close" />
-    <hardware-wallets-overlay :open="showHardware" :close="close" />
+    <hardware-access-overlay :open="showHardware" :close="close" />
     <mobile-apps-overlay :open="showMobile" :close="close" />
     <software-access-overlay :open="showSoftware" :close="close" />
   </div>
@@ -75,7 +75,7 @@
 <script>
 import blockTitle from '@/components/block-title/BlockTitle';
 import browserExtensionOverlay from '@/modules/wallets/components/browser-extension-overlay/BrowserExtensionOverlay';
-import hardwareWalletsOverlay from '@/modules/wallets/components/hardware-wallets-overlay/HardwareWalletsOverlay';
+import hardwareAccessOverlay from '@/modules/wallets/components/hardware-access-overlay/HardwareAccessOverlay.';
 import mobileAppsOverlay from '@/modules/wallets/components/mobile-apps-overlay/MobileAppsOverlay';
 import softwareAccessOverlay from '@/modules/wallets/components/software-access-overlay/SoftwareAccessOverlay';
 
@@ -84,7 +84,7 @@ export default {
   components: {
     blockTitle,
     browserExtensionOverlay,
-    hardwareWalletsOverlay,
+    hardwareAccessOverlay,
     mobileAppsOverlay,
     softwareAccessOverlay
   },
