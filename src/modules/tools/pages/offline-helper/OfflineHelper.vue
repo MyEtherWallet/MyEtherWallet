@@ -5,7 +5,7 @@
     <mew-stepper :items="items" :on-step="3">
       <template v-slot:outsideStepContent1>
         <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-          <bordered-white-sheet class="px-7">
+          <border-block md-shadow md-border class="px-7">
             <v-radio-group v-model="networkSelected">
               <div v-for="(item, i) in networks" :key="i">
                 <div class="text-uppercase font-weight-bold subtitle-1 mb-1">
@@ -30,7 +30,7 @@
                 <divider-line v-if="networks.length != i + 1" class="my-5" />
               </div>
             </v-radio-group>
-          </bordered-white-sheet>
+          </border-block>
         </v-sheet>
         <mew-button
           button-size="xlarge"
@@ -91,11 +91,11 @@
 
 <script>
 import blockTitle from '@/components/block-title/BlockTitle';
-import borderedWhiteSheet from '@/components/bordered-white-sheet/BorderedWhiteSheet';
+import borderBlock from '@/components/border-block/BorderBlock.vue';
 import dividerLine from '@/components/divider-line/DividerLine';
 
 export default {
-  components: { blockTitle, borderedWhiteSheet, dividerLine },
+  components: { blockTitle, borderBlock, dividerLine },
   data: () => ({
     details: [
       { title: 'Sender', value: '0x1208D377499bd32c1b995cAEEcA0BE297c242926' },

@@ -2,7 +2,7 @@
   <v-sheet color="transparent" max-width="800px" class="mx-auto">
     <mew-stepper-header :tabs="tabs" :active-tab="step" class="mb-6" />
     <div v-if="step === 1">
-      <v-sheet color="white" class="border-radius--10px pa-12">
+      <v-sheet color="white" class="border-radius--10px pa-4 pa-sm-12">
         <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
         <div class="headline font-weight-bold mb-5">Create password</div>
 
@@ -34,7 +34,7 @@
     </div>
 
     <div v-if="step === 2">
-      <v-sheet color="white" class="border-radius--10px pa-12">
+      <v-sheet color="white" class="border-radius--10px pa-4 pa-sm-12">
         <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
         <div class="headline font-weight-bold">Download keystore file</div>
         <div class="mb-5">
@@ -68,7 +68,11 @@
       />
     </div>
 
-    <v-sheet v-if="step === 3" color="white" class="border-radius--10px pa-12">
+    <v-sheet
+      v-if="step === 3"
+      color="white"
+      class="border-radius--10px pa-4 pa-sm-12"
+    >
       <div class="d-flex align-center">
         <div>
           <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
@@ -79,7 +83,7 @@
           </p>
           <v-img
             class="d-block d-sm-none mx-auto mt-12 mb-12"
-            max-width="250px"
+            max-width="170px"
             src="@/assets/images/icons/icon-keystore-mew.png"
           />
 
@@ -119,10 +123,6 @@ export default {
   name: 'MewConnect',
   components: { borderButton },
   props: {
-    step1: {
-      type: Number,
-      default: 2
-    },
     updateStep: {
       type: Function,
       default: () => {}
