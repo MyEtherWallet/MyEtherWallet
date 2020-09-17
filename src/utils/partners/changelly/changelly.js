@@ -2,10 +2,10 @@ import BigNumber from 'bignumber.js';
 
 import { networkSymbols } from '../partnersConfig';
 const Toast = {
-responseHandler: function(text, type) {
-console.log(`type:${type} `, text);
-}
-}
+  responseHandler: function (text, type) {
+    console.log(`type:${type} `, text);
+  }
+};
 
 import {
   notificationStatuses,

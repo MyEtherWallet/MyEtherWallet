@@ -7,7 +7,6 @@ const LAST_PATH = (state, lastPath) => {
 };
 
 const DECRYPT_WALLET = (state, wallet) => {
-  console.log('finally here', state, wallet);
   state.wallet = wallet;
   state.account['address'] = wallet.getAddressString();
   state.account['isHardware'] = wallet.isHardware;

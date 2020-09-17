@@ -3,7 +3,7 @@
     <div class="sheet-container">
       <v-sheet
         :outlined="true"
-        :color="sheetColor"
+        :color="'white'"
         :rounded="true"
         :max-width="740"
         :min-width="475"
@@ -49,7 +49,12 @@
             <mew-expand-panel
               :has-dividers="true"
               :is-toggle="true"
-              :panel-items="panelItem"
+              :interactive-content="true"
+              :panel-items="[
+                {
+                  name: 'Extra Word'
+                }
+              ]"
             >
               <template v-slot:panelBody1>
                 <mew-input
@@ -64,16 +69,10 @@
           <v-container class="password-container">
             <v-col align="center" justify="center">
               <mew-button
-                title="Access My Wallet"
+                title="Next"
                 button-size="large"
-                :disabled="!disableBtn"
+                :disabled="!isValidMnemonic"
                 @click.native="unlockBtn"
-              />
-              <mew-checkbox
-                v-model="acceptTerms"
-                label="To access my wallet, I accept "
-                :link="link"
-                class="justify-center"
               />
             </v-col>
           </v-container>
@@ -94,8 +93,9 @@
                 <v-col cols="6">
                   <mew-button
                     button-size="medium"
-                    title="Choose Path"
+                    title="Next"
                     has-full-width
+                    :disable="!selectedPath"
                     @click.native="setPath"
                   />
                 </v-col>
@@ -110,9 +110,107 @@
                 :interactive-content="true"
                 :panel-items="panelItems"
               >
-                <template v-slot:panelBody1> yo wot m8 </template>
-                <template v-slot:panelBody2> yo wot m8 </template>
+                <template v-slot:panelBody1>
+                  <div class="network-container">
+                    <v-radio-group v-model="selectedNetwork">
+                      <div v-for="type in networkTypes" :key="type">
+                        <p class="text-capitalize mew-header-block">
+                          {{ type }}
+                        </p>
+                        <v-container>
+                          <v-row align="center" justify="space-between">
+                            <v-col
+                              v-for="(item, idx) in Networks[type]"
+                              :key="item.service + idx"
+                              cols="6"
+                            >
+                              <v-radio
+                                :label="item.service"
+                                :value="item.url"
+                              />
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </div>
+                    </v-radio-group>
+                  </div>
+                </template>
+                <template v-slot:panelBody2>
+                  <div>
+                    <v-radio-group v-model="selectedAddress">
+                      <table width="100%">
+                        <tr class="table-header">
+                          <th width="50%" class="align-center">Address</th>
+                          <th width="25%" class="align-center">Eth Balance</th>
+                          <th width="25%" class="align-center"># of Tokens</th>
+                        </tr>
+                        <tr
+                          v-for="acc in accounts"
+                          v-show="accounts.length > 0"
+                          :key="acc.address"
+                        >
+                          <td>
+                            <v-row justify="space-around">
+                              <v-col cols="1">
+                                <v-radio label="" :value="acc.address" />
+                              </v-col>
+                              <v-col cols="8" class="text-truncate">
+                                <span>{{ acc.address }}</span>
+                                <input
+                                  :ref="acc.address"
+                                  :value="acc.address"
+                                  class="address-copy-input"
+                                />
+                              </v-col>
+                              <v-col cols="2">
+                                <v-row>
+                                  <v-icon
+                                    small
+                                    class="cursor--pointer"
+                                    @click="copy(acc.address)"
+                                    >mdi-content-copy</v-icon
+                                  >
+                                  <v-icon
+                                    small
+                                    class="cursor--pointer"
+                                    @click="launchExplorrer(acc.address)"
+                                    >mdi-launch</v-icon
+                                  >
+                                </v-row>
+                              </v-col>
+                            </v-row>
+                          </td>
+                          <td>
+                            {{
+                              acc.balance === 'Loading..'
+                                ? acc.balance
+                                : `${acc.balance} ${network.type.name}`
+                            }}
+                          </td>
+                          <td>{{ acc.tokens }}</td>
+                        </tr>
+                        <tr v-show="accounts.length === 0">
+                          Loading...
+                        </tr>
+                      </table>
+                    </v-radio-group>
+                  </div>
+                </template>
               </mew-expand-panel>
+              <div class="d-flex align-center flex-column">
+                <mew-button
+                  title="Access My Wallet"
+                  button-size="large"
+                  :disabled="!(selectedAddress && acceptTerms)"
+                  @click.native="setMnemonicWallet"
+                />
+                <mew-checkbox
+                  v-model="acceptTerms"
+                  label="To access my wallet, I accept "
+                  :link="link"
+                  class="justify-center"
+                />
+              </div>
             </v-col>
           </v-row>
         </v-container>
@@ -124,12 +222,16 @@
 <script>
 import { MNEMONIC as mnemonicType } from '@/modules/wallets/utils/bip44/walletTypes';
 import paths from '@/modules/wallets/utils/bip44';
+import { mapState } from 'vuex';
 const parsedPaths = paths[mnemonicType].map(item => {
   const newObj = {};
   newObj['name'] = item['label'];
   newObj['value'] = item['path'];
   return newObj;
 });
+
+const MAX_ADDRESSES = 5;
+
 export default {
   name: 'AccessMnemonic',
   props: {
@@ -156,6 +258,12 @@ export default {
     setAddress: {
       type: Function,
       default: () => {}
+    },
+    hwWalletInstance: {
+      type: Object,
+      default: () => {
+        return {};
+      }
     }
   },
   data() {
@@ -170,7 +278,7 @@ export default {
       },
       paths: parsedPaths,
       selectedPath: null,
-      wallet: {},
+      selectedAddress: '',
       panelItems: [
         {
           name: 'Network'
@@ -178,10 +286,24 @@ export default {
         {
           name: 'Address to interact with'
         }
-      ]
+      ],
+      selectedNetwork: '',
+      accounts: [],
+      currentIdx: 0
     };
   },
   computed: {
+    ...mapState(['Networks', 'network']),
+    networkTypes() {
+      const showFirst = ['ETH', 'ROP', 'RIN'];
+      const typeArr = Object.keys(this.Networks).filter(item => {
+        if (!showFirst.includes(item)) {
+          return item;
+        }
+      });
+      typeArr.unshift('ETH', 'ROP', 'RIN');
+      return typeArr;
+    },
     sheetColor() {
       return this.step < 3 ? 'white' : 'transparent';
     },
@@ -190,9 +312,6 @@ export default {
     },
     isValidMnemonic() {
       return Object.keys(this.phrase).length === this.length;
-    },
-    disableBtn() {
-      return this.isValidMnemonic && this.acceptTerms;
     },
     revertedPath() {
       const newObj = {};
@@ -203,15 +322,26 @@ export default {
       }
       return this.selectedPath;
     },
-    panelItem() {
-      return [
-        {
-          name: 'Extra Word'
-        }
-      ];
+    wallet() {
+      const wallet = this.accounts.find(item => {
+        return item.address === this.selectedAddress;
+      });
+
+      return wallet ? wallet : null;
     }
   },
   watch: {
+    selectedNetwork(newVal) {
+      Object.values(this.Networks).forEach(itm => {
+        const found = itm.find(network => {
+          return network.url === newVal;
+        });
+
+        if (found) {
+          this.$store.state.network = found; // replace with dispatch + new web3 instance
+        }
+      });
+    },
     phrase: {
       deep: true,
       handler: function (newval) {
@@ -225,9 +355,53 @@ export default {
           this.phrase = newObj;
         }
       }
+    },
+    selectedPath: {
+      deep: true,
+      handler: function () {
+        this.setAddresses();
+      }
+    },
+    accounts: {
+      deep: true,
+      handler: function (newVal) {
+        this.accounts = newVal;
+      }
     }
   },
+  mounted() {
+    this.selectedNetwork = this.network.url;
+  },
   methods: {
+    copy(addr) {
+      this.$refs[addr][0].select();
+      document.execCommand('copy');
+    },
+    launchExplorrer(addr) {
+      // eslint-disable-next-line
+      window.open(
+        this.network.type.blockExplorerAddr.replace('[[address]]', addr),
+        '_blank'
+      );
+    },
+    async setAddresses() {
+      this.accounts = [];
+      for (let i = this.currentIdx; i < this.currentIdx + MAX_ADDRESSES; i++) {
+        const account = await this.hwWalletInstance.getAccount(i);
+        this.accounts.push({
+          address: account.getAddressString(),
+          account: account,
+          idx: i,
+          balance: 'Loading..',
+          tokens: 'Loading..'
+        });
+      }
+
+      this.currentIdx += MAX_ADDRESSES;
+      this.selectedAddress = this.accounts[
+        this.currentIdx - MAX_ADDRESSES
+      ].address;
+    },
     unlockBtn() {
       this.unlockMnemonicWallet(this.parsedPhrase, this.extraWord);
     },
@@ -235,13 +409,33 @@ export default {
       this.setMnemonicPath(this.selectedPath);
     },
     setMnemonicWallet() {
-      this.setAddress(this.wallet);
+      this.setAddress(this.wallet.account);
+    },
+    nextAddressSet() {
+      this.setAddresses();
+    },
+    previousAddressSet() {
+      this.currentIndex =
+        this.currentIndex - 2 * MAX_ADDRESSES < 0
+          ? 0
+          : this.currentIndex - 2 * MAX_ADDRESSES;
+      this.setAddresses();
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.table-header {
+  text-align: center;
+  background-color: #f0f0f0;
+  th {
+    color: #96a8b6;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+}
+
 .component-container {
   width: 100%;
 }
@@ -294,5 +488,16 @@ export default {
 
 .password-container {
   padding: 26px;
+}
+
+.network-container {
+  max-height: 250px;
+  overflow: scroll;
+}
+
+.address-copy-input {
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
 }
 </style>
