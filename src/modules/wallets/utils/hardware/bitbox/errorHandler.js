@@ -1,17 +1,19 @@
 const Toast = {
-  responseHandler: function (text, type) {
-    console.log(`type:${type} `, text);
-  }
+  responseHandler: (err, type) => {
+    console.log(err, type);
+  },
+  ERROR: 'error',
+  WARN: 'warn'
 };
 import Vue from 'vue';
 const ERRORS = {
   errorUnexpected: 'bitboxError.unexpected',
-  errorInvalidPassword: 'bitboxError.invalidPassword',
-  errorUserAbort: 'bitboxError.userAbort',
-  errorUserTimeout: 'bitboxError.userTimeout',
-  errorNotInitialized: 'bitboxError.notInitialized',
-  errorUpgradeFirmware: 'bitboxError.upgradeFirmware',
-  errorUnsupportedFirmware: 'bitboxError.unsupportedFirmware'
+  errorInvalidPassword: 'bitboxError.invalid-password',
+  errorUserAbort: 'bitboxError.user-abort',
+  errorUserTimeout: 'bitboxError.user-timeout',
+  errorNotInitialized: 'bitboxError.not-initialized',
+  errorUpgradeFirmware: 'bitboxError.upgrade-firmware',
+  errorUnsupportedFirmware: 'bitboxError.unsupported-firmware'
 };
 const WARNING = {};
 

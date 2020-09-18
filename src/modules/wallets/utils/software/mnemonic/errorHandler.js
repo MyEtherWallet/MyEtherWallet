@@ -1,7 +1,9 @@
 const Toast = {
-  responseHandler: function (text, type) {
-    console.log(`type:${type} `, text);
-  }
+  responseHandler: (err, type) => {
+    console.log(err, type);
+  },
+  ERROR: 'error',
+  WARN: 'warn'
 };
 const ERRORS = {};
 const WARNING = {};

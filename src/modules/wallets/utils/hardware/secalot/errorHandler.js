@@ -1,21 +1,23 @@
 const Toast = {
-  responseHandler: function (text, type) {
-    console.log(`type:${type} `, text);
-  }
+  responseHandler: (err, type) => {
+    console.log(err, type);
+  },
+  ERROR: 'error',
+  WARN: 'warn'
 };
 import Vue from 'vue';
 
 const ERRORS = {
-  'Sign failed': 'secalotError.signFailed',
-  "Cannot read property 'requestId' of null": 'secalotError.notConnected',
+  'Sign failed': 'secalotError.sign-failed',
+  "Cannot read property 'requestId' of null": 'secalotError.not-connected',
   'Please update your Secalot firmware to version 4 or greater.':
-    'secalotError.updateFirmwareToV4',
+    'secalotError.update-firmware-to-v4',
   'Ethereum wallet on your Secalot is not initialized.':
-    'secalotError.walletNotInitialized',
+    'secalotError.wallet-not-initialized',
   'Invalid PIN-code. Be careful, after entering a wrong PIN-code three times in a row, your Secalot Ethereum wallet would be permanently wiped.':
-    'secalotError.lastPinTry',
-  'PIN-code not verified.': 'secalotError.invalidPinCode',
-  'Invalid PIN-code length.': 'secalotError.invalidPinCodeLength',
+    'secalotError.last-pin-try',
+  'PIN-code not verified.': 'secalotError.invalid-pin-code',
+  'Invalid PIN-code length.': 'secalotError.invalid-pin-code-length',
   'Operation timed out.': 'secalotError.timeout'
 };
 const WARNING = {};

@@ -1,9 +1,9 @@
 import utils from 'web3-utils';
-import { toPayload } from './jsonrpc';
+import { toPayload } from '../jsonrpc';
 import EthCalls from '../web3Calls';
 import store from 'store';
 import BigNumber from 'bignumber.js';
-import { Misc } from '@/helpers';
+import toBuffer from '@/helpers/toBuffer';
 
 export default async ({ payload, requestManager }, res, next) => {
   if (payload.method !== 'eth_getTransactionCount') return next();
@@ -27,12 +27,12 @@ export default async ({ payload, requestManager }, res, next) => {
     const cachedNonceBN = new BigNumber(cached.nonce);
     if (timeDiff > 15) {
       cached = {
-        nonce: Misc.sanitizeHex(liveNonceBN.toString(16)),
+        nonce: sanitizeHex(liveNonceBN.toString(16)),
         timestamp: +new Date()
       };
     } else if (liveNonceBN.isGreaterThan(cachedNonceBN)) {
       cached = {
-        nonce: Misc.sanitizeHex(liveNonceBN.toString(16)),
+        nonce: sanitizeHex(liveNonceBN.toString(16)),
         timestamp: +new Date()
       };
     }

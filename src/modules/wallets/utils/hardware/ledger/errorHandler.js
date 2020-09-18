@@ -1,49 +1,53 @@
 const Toast = {
-  responseHandler: function (text, type) {
-    console.log(`type:${type} `, text);
-  }
+  responseHandler: (err, type) => {
+    console.log(err, type);
+  },
+  ERROR: 'error',
+  WARN: 'warn'
 };
 import Vue from 'vue';
 const ERRORS = {
-  'Failed to sign with Ledger device: U2F TIMEOUT': 'ledgerError.failedToSign',
+  'Failed to sign with Ledger device: U2F TIMEOUT':
+    'ledgerError.failed-to-sign',
   'Failed to sign with Ledger device: U2F DEVICE_INELIGIBLE':
-    'ledgerError.failedSignIneligible',
-  'No Ledger device found (timeout)': 'ledgerError.noDevice',
-  'Ledger Device is busy': 'ledgerError.deviceBusy1',
-  'Ledger device: UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown0x6804',
+    'ledgerError.failed-sign-ineligible',
+  'No Ledger device found (timeout)': 'ledgerError.no-device',
+  'Ledger Device is busy': 'ledgerError.device-busy-1',
+  'Ledger device: UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown-0x6804',
   'Ledger device: Invalid data received (0x6a80)':
-    'ledgerError.invalidData0x6a80',
+    'ledgerError.invalid-data-0x6a80',
   'Ledger device: CLA_NOT_SUPPORTED (0x6e00)':
-    'ledgerError.claNotSupport0x6e00',
-  'Ledger Device is busy (lock getAddress)': 'ledgerError.deviceBusy2',
-  'Ledger device: INS_NOT_SUPPORTED (0x6d00)': 'ledgerError.wrongWallet',
+    'ledgerError.cla-not-support-0x6e00',
+  'Ledger Device is busy (lock getAddress)': 'ledgerError.device-busy-2',
+  'Ledger device: INS_NOT_SUPPORTED (0x6d00)': 'ledgerError.wrong-wallet',
   'Ledger Device is busy (lock provideERC20TokenInformation)':
-    'ledgerError.deviceBusy1',
-  'Ledger Device is busy (lock signTransaction)': 'ledgerError.deviceBusy1',
-  'Ledger Device is busy (lock signPersonalMessage)': 'ledgerError.deviceBusy1',
+    'ledgerError.device-busy-1',
+  'Ledger Device is busy (lock signTransaction)': 'ledgerError.device-busy-1',
+  'Ledger Device is busy (lock signPersonalMessage)':
+    'ledgerError.device-busy-1',
   'TransportError: Failed to sign with Ledger device: U2F OTHER_ERROR':
-    'ledgerError.failedToSignOther',
-  'TransportStatusError: Ledger device: UNKNOWN_ERROR (0x6801)':
-    'ledgerError.unknown0x6801',
-  'TransportStatusError: Ledger device: UNKNOWN_ERROR (0x6804)':
-    'ledgerError.unknown0x6804',
-  'Invalid networkId signature returned.': 'ledgerError.invalidNetworkID',
-  'EthAppPleaseEnableContractData: Please enable Contract data on the Ethereum app Settings':
-    'ledgerError.enableContractData',
+    'ledgerError.failed-to-sign-other',
+  'UNKNOWN_ERROR (0x6801)': 'ledgerError.unknown-0x6801',
+  'UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown-0x6804',
+  'Invalid networkId signature returned.': 'ledgerError.invalid-network-id',
+  'Please enable Contract data on the Ethereum app Settings':
+    'ledgerError.enable-contract-data',
   'TransportInterfaceNotAvailable: The interface number provided is not supported by the device in its current configuration.':
-    'ledgerError.transportInterface',
-  'No device selected.': 'ledgerError.noDeviceSelected',
+    'ledgerError.transport-interface',
+  'No device selected.': 'ledgerError.no-device-selected',
   'Incompatible EIP155-based V 10 and chain id 1. See the second parameter of the Transaction constructor to set the chain id.':
-    'ledgerError.appAndNetworkMismatch',
-  'DisconnectedDeviceDuringOperation: The device was disconnected':
-    'ledgerError.deviceDisconnected',
-  'AbortError: The transfer was cancelled': 'ledgerError.deniedByUser'
+    'ledgerError.app-and-network-mismatch',
+  'The device was disconnected': 'ledgerError.device-disconnected',
+  'The transfer was cancelled': 'ledgerError.denied-by-user',
+  'Unable to claim interface.': 'ledgerError.unable-to-claim',
+  'No WebUSB interface found for your Ledger device. Please upgrade firmware or contact techsupport.':
+    'ledgerError.no-interface-found'
 };
 const WARNING = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':
-    'ledgerError.deniedByUser0x6985',
+    'ledgerError.denied-by-user-0x6985',
   "U2F browser support is needed for Ledger. Please use Chrome, Opera or Firefox with a U2F extension. Also make sure you're on an HTTPS connection":
-    'ledgerError.unsupportedBrowserU2f'
+    'ledgerError.unsupported-browser-u2f'
 };
 
 export default err => {

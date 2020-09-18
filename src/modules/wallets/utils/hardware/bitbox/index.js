@@ -1,15 +1,18 @@
 import { Transaction } from 'ethereumjs-tx';
-import { hashPersonalMessage, toBuffer } from 'ethereumjs-util';
+import { hashPersonalMessage } from 'ethereumjs-util';
 import DigitalBitboxUsb from './digitalBitboxUsb';
 import DigitalBitboxEth from './digitalBitboxEth';
 import { BITBOX as bitboxType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
 const Toast = {
-  responseHandler: function (text, type) {
-    console.log(`type:${type} `, text);
-  }
+  responseHandler: (err, type) => {
+    console.log(err, type);
+  },
+  ERROR: 'error',
+  WARN: 'warn'
 };
+import toBuffer from '@/helpers/toBuffer';
 import errorHandler from './errorHandler';
 import * as HDKey from 'hdkey';
 import store from '@/store';
@@ -18,8 +21,9 @@ import {
   sanitizeHex,
   getBufferFromHex,
   calculateChainIdFromV
-} from '../../helpers.js';
+} from '../../utils';
 import commonGenerator from '@/helpers/commonGenerator';
+import Vue from 'vue';
 
 const NEED_PASSWORD = true;
 
@@ -44,7 +48,7 @@ class BitBoxWallet {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.network)
+        common: commonGenerator(store.state.main.network)
       });
       const networkId = tx.getChainId();
       const result = await this.bitbox.signTransaction(
@@ -58,10 +62,10 @@ class BitBoxWallet {
       if (signedChainId !== networkId)
         Toast.responseHandler(
           new Error(
-            'Invalid networkId signature returned. Expected: ' +
-              networkId +
-              ', Got: ' +
-              signedChainId,
+            Vue.$i18n.t('errorsGlobal.invalid-network-id-sig', {
+              got: signedChainId,
+              expected: networkId
+            }),
             'InvalidNetworkId'
           ),
           false
