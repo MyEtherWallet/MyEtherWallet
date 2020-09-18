@@ -3,7 +3,7 @@ import {
   getSignTransactionObject,
   sanitizeHex,
   calculateChainIdFromV
-} from './helpers';
+} from './utils';
 import {
   hashPersonalMessage,
   publicToAddress,

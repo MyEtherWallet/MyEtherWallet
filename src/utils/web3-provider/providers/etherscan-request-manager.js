@@ -4,7 +4,7 @@ import EtherscanProxy from '../etherscan-proxy';
 class EtherscanRequestManager {
   constructor(host, options) {
     this.host = host;
-    this.apikey = options.apikey || 'DSH5B24BQYKD1AD8KUCDY3SAQSS6ZAU175';
+    this.apikey = options.apikey;
     this.proxy = new EtherscanProxy(this.host, this.apikey);
     return new Web3RequestManager(this);
   }

@@ -1,18 +1,20 @@
 const Toast = {
-  responseHandler: function (text, type) {
-    console.log(`type:${type} `, text);
-  }
+  responseHandler: (err, type) => {
+    console.log(err, type);
+  },
+  ERROR: 'error',
+  WARN: 'warn'
 };
 const ERRORS = {};
 const WARNING = {};
 
 export default err => {
-  const errorValues = Object.values(ERRORS);
-  const warningValues = Object.values(WARNING);
+  const errorValues = Object.keys(ERRORS);
+  const warningValues = Object.keys(WARNING);
   if (errorValues.includes(err.message)) {
-    Toast.responseHandler(err, Toast.ERROR);
+    Toast.responseHandler(ERRORS[err.message], Toast.ERROR);
   } else if (warningValues.includes(err.message)) {
-    Toast.responseHandler(err, Toast.WARN);
+    Toast.responseHandler(WARNING[err.message], Toast.WARN);
   } else {
     Toast.responseHandler(err, false);
   }
