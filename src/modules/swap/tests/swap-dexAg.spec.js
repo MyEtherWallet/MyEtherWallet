@@ -1,16 +1,16 @@
 import Swap from '../index';
 import Web3 from 'web3';
 import fetch from 'jest-fetch-mock';
-import { responseSelector } from './ApiResponses/responseSelector';
+// import { responseSelector } from './ApiResponses/responseSelector';
 //
-jest.setMock('node-fetch', fetch);
+// jest.setMock('node-fetch', fetch);
 
 describe('Swap Module - DexAg', () => {
   let swap;
   beforeAll(() => {
-    fetch.enableMocks();
-    fetch.resetMocks();
-    fetch.mockResponse(responseSelector);
+    // fetch.enableMocks();
+    // fetch.resetMocks();
+    // fetch.mockResponse(responseSelector);
     const web3 = new Web3(
       'https://mainnet.infura.io/v3/7d06294ad2bd432887eada360c5e1986'
     );
@@ -34,6 +34,7 @@ describe('Swap Module - DexAg', () => {
     });
 
     swap.on('setup-complete', () => {
+      console.log(swap.callOther('convertToTokenWei', 'BAT', 100)); // todo remove dev item
       done();
     });
   }, 30000);

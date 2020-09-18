@@ -91,7 +91,8 @@ export default class BitySwap {
       const exitData = exitRates.pairs;
       const rates = await this.bityCalls.getRates();
       const data = rates.objects;
-
+      console.log(rates); // todo remove dev item
+      console.log(exitData); // todo remove dev item
       exitData.forEach(entry => {
         if (entry.enabled) {
           data.forEach(rateEntry => {
@@ -129,7 +130,9 @@ export default class BitySwap {
       }
       // this.hasRates = data.length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {
-      this.errorHandler('bity-rate-failed', 1, true);
+      console.log(e); // todo remove dev item
+      throw Error('bity-rate-failed')
+      // this.errorHandler('bity-rate-failed', 1, true);
     }
   }
 

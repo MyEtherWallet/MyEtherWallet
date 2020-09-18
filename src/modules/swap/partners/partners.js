@@ -53,27 +53,6 @@ export default class SwapProviders {
 
     this.providerRatesRecieved = [];
 
-    // let checkCount = 0;
-    // if (environmentSupplied.network !== BASE_CURRENCY) {
-    //   const checkIfAllRatesReceived = setInterval(() => {
-    //     checkCount++;
-    //     this.checkIfRatesPresent();
-    //     if (this.ratesRetrieved || checkCount > 20) {
-    //       this.providerRatesRecieved = Object.keys(this.providerRateUpdates);
-    //       clearInterval(checkIfAllRatesReceived);
-    //     }
-    //   }, 150);
-    // } else {
-    //   const checkIfAllRatesReceived = setInterval(() => {
-    //     checkCount++;
-    //     this.checkIfRatesPresent();
-    //     if (this.ratesRetrieved || checkCount > 50) {
-    //       this.providerRatesRecieved = Object.keys(this.providerRateUpdates);
-    //       clearInterval(checkIfAllRatesReceived);
-    //     }
-    //   }, 150);
-    // }
-
     this.initialCurrencyArrays = this.buildInitialCurrencyArrays();
   }
 
@@ -110,9 +89,9 @@ export default class SwapProviders {
     this.ownedTokenList = tokens;
   }
 
-  getProviders() {
-    return utils.mapToObject(this.providers);
-  }
+  // getProviders() {
+  //   return utils.mapToObject(this.providers);
+  // }
 
   getProvider(name) {
     if (!this.isProvider(name))
@@ -404,6 +383,7 @@ export default class SwapProviders {
   }
 
   static getTokenDecimals(currency) {
+    console.log(currency); // todo remove dev item
     if (SwapProviders.isToken(currency)) {
       return EthereumTokens[currency].decimals;
     } else if (currency === 'ETH') {

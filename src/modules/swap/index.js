@@ -55,12 +55,17 @@ export default class Swap extends EventEmitter {
 
   initialize() {}
 
+  callOther(call, ...args){
+    return this.swap[call].apply(this.swap, args)
+  }
+
   setErrorHandler(name) {
     name = '';
     return name.indexOf('.') > 0;
   }
 
   setupCompleteUpdater(value, status) {
+    console.log(value, status); // todo remove dev item
     // this.setUpMap[value] = status;
     if (typeof status === 'boolean' || typeof status === 'string') {
       this.setUpMap[value] = status;
