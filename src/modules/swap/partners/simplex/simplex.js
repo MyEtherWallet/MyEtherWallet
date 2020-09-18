@@ -23,8 +23,8 @@ const defaultErrorHandler = (...e) => {
 export default class Simplex {
   constructor(props = {}) {
     this.errorHandler = props.errorHandler || defaultErrorHandler;
-    this.setUpUpdater = props.setUpUpdater || function(){};
-    this.rateRetrievedUpdater = props.rateRetrievedUpdater || function(){};
+    this.setUpUpdater = props.setUpUpdater || function () {};
+    this.rateRetrievedUpdater = props.rateRetrievedUpdater || function () {};
     this.simplexApi = new SimplexApi(this.errorHandler);
     this.name = Simplex.getName();
     this.network = props.network || networkSymbols.ETH;
@@ -156,6 +156,10 @@ export default class Simplex {
     try {
       let simplexRateDetails, updateType;
 
+      if (!this.withinBounds(fromValue, fromCurrency)) {
+        fromValue = this.minFiat[fromCurrency];
+      }
+
       if (this.canQuote(fromValue, toValue, fromCurrency)) {
         if (this.isFiat(fromCurrency) && isFiat) {
           updateType = 'updateFiat';
@@ -188,6 +192,7 @@ export default class Simplex {
         toCurrency,
         this.minFiat[fromCurrency] + 1
       );
+
       this.internalEstimateRate = simplexRateDetails.rate;
 
       return {
@@ -214,7 +219,8 @@ export default class Simplex {
   }
 
   async updateFiat(fromCurrency, toCurrency, fromValue) {
-    if (fromValue <= 0) fromValue = this.minFiat[fromCurrency] + 1;
+    if (fromValue <= this.minFiat[fromCurrency] || !fromValue)
+      fromValue = +this.minFiat[fromCurrency] + 1;
 
     const result = await this.simplexApi.getQuote({
       digital_currency: toCurrency,
@@ -222,7 +228,8 @@ export default class Simplex {
       requested_currency: fromCurrency,
       requested_amount: +fromValue
     });
-
+    console.log('updateFiat'); // todo remove dev item
+    console.log(result); // todo remove dev item
     if (result.error) {
       return { error: result.result, fromValue: fromValue, toValue: 0 };
     }
@@ -242,15 +249,15 @@ export default class Simplex {
   }
 
   async updateDigital(fromCurrency, toCurrency, fromValue, toValue) {
-    if (toValue <= 0) toValue = 1;
+    if (toValue <= 0 || !toValue) toValue = 1;
     const result = await this.simplexApi.getQuote({
       digital_currency: toCurrency,
       fiat_currency: fromCurrency,
       requested_currency: toCurrency,
       requested_amount: +toValue
     });
+    console.log('updateDigital'); // todo remove dev item
     console.log(result); // todo remove dev item
-
     if (result.error) {
       return { error: result.result, fromValue: 0, toValue: toValue };
     }

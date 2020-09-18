@@ -6,13 +6,18 @@ import changellyGetCurrenciesFull from './changellyGetCurrenciesFull.json';
 import changellyGetFixRate from './changellyGetFixRate.json';
 import changellyGetFixRateBtcEth from './changellyGetFixRateBtcEth.json';
 import changellyGetFixRateEthBtc from './changellyGetFixRateEthBtc.json';
+import changellyOneEthToBat from './changellyOneEthToBat.json';
+import changellyCreateTransactionEthBat from './changellyCreateTransactionEthBat.json';
+import changellyManaToBat from './changellyManaToBat.json'
 import dexAgGetPrice from './dexAgGetPrice.json';
 import dexAgGetSupportedCurrencies from './dexAgGetSupportedCurrencies.json';
 import dexAgSupportedDexes from './dexAgSupportedDexes.json';
+import dexAgCreateTransaction from './dexAgCreateTransaction.json';
 import simplexCurrentCurrencies from './simplexCurrentCurrencies.json';
 import simplexExchangeRates from './simplexExchangeRates.json';
 import simplexUpdateDigital from './simplexUpdateDigital.json';
-import simplexUpdateFiat from './simplexUpdateFiat.json'
+import simplexUpdateFiat from './simplexUpdateFiat.json';
+import simplexUpdateFiatMin from './simplexUpdateFiat_Min.json';
 import simplexErrors from './simplexErrors.json';
 
 const emptyResponse = {
@@ -20,7 +25,16 @@ const emptyResponse = {
   result: [],
   id: '74cdb5ef-a047-4c0d-b1ad-f3b40e4f6303'
 };
-export function responseSelector(req) {
+export function responseSelector(req, explicitlyNamed) {
+  if (explicitlyNamed) {
+    switch (explicitlyNamed) {
+      case 'changellyOneEthToBat':
+        return () => {
+          console.log('changellyOneEthToBat'); // todo remove dev item
+          return Promise.resolve(JSON.stringify(changellyOneEthToBat));
+        };
+    }
+  }
   if (req.body) {
     const body = JSON.parse(req.body.toString());
     console.log(body); // todo remove dev item
@@ -56,9 +70,29 @@ export function responseSelector(req) {
             body.params[0].to === 'BTC'
           ) {
             return Promise.resolve(JSON.stringify(changellyGetFixRateEthBtc));
+          } else if (
+            body.params[0].from === 'ETH' &&
+            body.params[0].to === 'BAT' &&
+            body.params[0]
+          ) {
+            console.log('changellyGetFixRate'); // todo remove dev item
+            return Promise.resolve(JSON.stringify(changellyOneEthToBat));
+          } else if (
+            body.params[0].from === 'MANA' &&
+            body.params[0].to === 'BAT' &&
+            body.params[0]
+          ) {
+            console.log('changellyGetFixRate'); // todo remove dev item
+            return Promise.resolve(JSON.stringify(changellyManaToBat));
           }
           console.log('changellyGetFixRate'); // todo remove dev item
           return Promise.resolve(JSON.stringify(changellyGetFixRate));
+        case 'createFixTransaction':
+          if (body.params.from === 'eth' && body.params.to === 'bat') {
+            return Promise.resolve(
+              JSON.stringify(changellyCreateTransactionEthBat)
+            );
+          }
       }
     } else if (req.url.includes('dexag')) {
       switch (body.method) {
@@ -74,9 +108,25 @@ export function responseSelector(req) {
           console.log('dexAgGetPrice'); // todo remove dev item
 
           return Promise.resolve(JSON.stringify(dexAgGetPrice));
+        case 'createTransaction':
+          if (
+            body.params.transactionParams.fromCurrency === 'ETH' &&
+            body.params.transactionParams.toCurrency === 'BAT'
+          ) {
+            console.log('dexAgCreateTransaction'); // todo remove dev item
+            return Promise.resolve(JSON.stringify(dexAgCreateTransaction));
+          }
       }
     } else if (req.url.includes('apiccswap')) {
+      // console.log(body); // todo remove dev item
       if (
+        req.url.includes('quote') &&
+        body.requested_currency === 'USD' &&
+        +body.requested_amount === 51
+      ) {
+        console.log('simplexUpdateFiatMin'); // todo remove dev item
+        return Promise.resolve(JSON.stringify(simplexUpdateFiatMin));
+      } else if (
         req.url.includes('quote') &&
         body.requested_currency === 'USD' &&
         body.requested_amount <= 50

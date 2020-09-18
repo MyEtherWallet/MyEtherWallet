@@ -1,16 +1,16 @@
 {
   "error": false,
   "result": {
-    "user_id": "d6e73839-d626-4c06-88f6-74b0a8cdf19b",
-    "quote_id": "4547c7e8-4339-4015-b78d-70e957812aac",
+    "user_id": "f9fa397b-f0eb-4648-8b24-82f56fb1ad1c",
+    "quote_id": "5b6b643e-7810-4ae9-83d5-871bc4abe15e",
     "wallet_id": "myetherwallet",
-    "digital_money": { "currency": "ETH", "amount": 1 },
+    "digital_money": { "currency": "ETH", "amount": 0.09890199 },
     "fiat_money": {
       "currency": "USD",
-      "base_amount": 397.49,
-      "total_amount": 419.12
+      "base_amount": 39.31,
+      "total_amount": 50
     },
-    "valid_until": "2020-09-14T20:37:19.153Z",
+    "valid_until": "2020-09-14T20:37:18.014Z",
     "supported_digital_currencies": ["BTC", "BCH", "LTC", "ETH"],
     "supported_fiat_currencies": [
       "JPY",

@@ -90,6 +90,8 @@ export default class ChangellyCalls {
   }
 
   async getRate(fromCurrency, toCurrency, fromValue, network) {
+    console.log('getRate(fromCurrency, toCurrency, fromValue, network)', fromCurrency, toCurrency, fromValue, network); // todo remove dev item
+
     try {
       if (changellyMethods[network]) {
         const results = await post(
@@ -102,6 +104,7 @@ export default class ChangellyCalls {
             }
           ])
         );
+        console.log(results); // todo remove dev item
         if (results.error) {
           throw Error(results.error.message);
         }
@@ -114,6 +117,7 @@ export default class ChangellyCalls {
   }
 
   async getResultAmount(fromCurrency, toCurrency, fromValue, network) {
+    console.log('getResultAmount(fromCurrency, toCurrency, fromValue, network)', fromCurrency, toCurrency, fromValue, network); // todo remove dev item
     try {
       if (changellyMethods[network]) {
         const results = await post(
@@ -124,6 +128,7 @@ export default class ChangellyCalls {
             amount: fromValue
           })
         );
+        console.log(results); // todo remove dev item
 
         if (results.error) {
           throw Error(results.error.message);
@@ -137,6 +142,7 @@ export default class ChangellyCalls {
   }
 
   async getMin(fromCurrency, toCurrency, fromValue, network) {
+    console.log('getMin(fromCurrency, toCurrency, fromValue, network)', fromCurrency, toCurrency, fromValue, network); // todo remove dev item
     try {
       if (changellyMethods[network]) {
         const results = await post(
@@ -146,6 +152,7 @@ export default class ChangellyCalls {
             to: checkAndChange(toCurrency)
           })
         );
+        console.log(results); // todo remove dev item
 
         if (results.error) {
           throw Error(results.error.message);
@@ -189,6 +196,7 @@ export default class ChangellyCalls {
             transactionParams
           )
         );
+        console.log(results); // todo remove dev item
 
         if (results.error) {
           throw Error(results.error.message);
@@ -229,6 +237,7 @@ export default class ChangellyCalls {
   }
 
   async getFixRate(fromCurrency, toCurrency, fromValue, network) {
+    console.log('getFixRate(fromCurrency, toCurrency, fromValue, network)', fromCurrency, toCurrency, fromValue, network); // todo remove dev item
     try {
       if (changellyMethods[network]) {
         const results = await post(
@@ -240,6 +249,7 @@ export default class ChangellyCalls {
             }
           ])
         );
+        console.log(results); // todo remove dev item
 
         if (results.error) {
           throw Error(results.error.message);
@@ -262,6 +272,7 @@ export default class ChangellyCalls {
             transactionParams
           )
         );
+        console.log(results); // todo remove dev item
 
         if (results.error) {
           throw Error(results.error.message);

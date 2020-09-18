@@ -1,0 +1,24 @@
+{
+  "jsonrpc": "2.0",
+  "id": "aa62f9f8-ed8f-4e1a-83bf-fa1a83f6a768",
+  "result": {
+    "id": "xzouvdzx0de0u15q",
+    "apiExtraFee": "0.3",
+    "changellyFee": "0.5",
+    "payinExtraId": null,
+    "payoutExtraId": null,
+    "refundAddress": "0x43689531907482BEE7e650D18411E284A7337A66",
+    "refundExtraId": null,
+    "amountExpectedFrom": "1.00000000",
+    "amountExpectedTo": "1492.66367512",
+    "amountTo": "1492.66367512",
+    "kycRequired": true,
+    "payTill": "2020-09-18T00:11:15.992Z",
+    "status": "new",
+    "currencyFrom": "eth",
+    "currencyTo": "bat",
+    "payinAddress": "0xae0aa5c80786171fb55354cbfaa2dd3a3b48826f",
+    "payoutAddress": "0x43689531907482BEE7e650D18411E284A7337A66",
+    "createdAt": "2020-09-17T23:56:15.000Z"
+  }
+}

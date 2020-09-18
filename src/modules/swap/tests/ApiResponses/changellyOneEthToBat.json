@@ -1,0 +1,18 @@
+{
+  "jsonrpc": "2.0",
+  "id": "0f1bbaa0-4578-4aab-9bea-59f04c2daf0e",
+  "result": [
+    {
+      "id": "e08f8be3e288c27c024c1d1e2cc116f5c293cdd86dea77feed855f924b90f2075372006bee",
+      "result": "1492.4417985265",
+      "from": "eth",
+      "to": "bat",
+      "max": "10.02049126",
+      "maxFrom": "10.02049126",
+      "maxTo": "14999.99999999",
+      "min": "0.39250000",
+      "minFrom": "0.39250000",
+      "minTo": "587.54604406"
+    }
+  ]
+}

@@ -33,7 +33,24 @@ export default class Swap extends EventEmitter {
   }
 
   setSelectedProvider(provider) {
-    this.selectedProvider = provider;
+    let providerSet = false;
+    if (typeof provider === 'object') {
+      providerSet = true;
+      this.selectedProvider = provider;
+    } else {
+      const selected = this.providerData.find(item => {
+        return item.provider === provider;
+      });
+      if (selected) {
+        providerSet = true;
+        this.selectedProvider = selected;
+      }
+    }
+    if (providerSet) {
+      this.bestRate(this.selectedProvider.provider);
+      // this.updateEstimateHelper('from', this.selectedProvider);
+      return this.selectedProvider;
+    }
   }
 
   initialize() {}
@@ -46,7 +63,6 @@ export default class Swap extends EventEmitter {
   setupCompleteUpdater(value, status) {
     // this.setUpMap[value] = status;
     if (typeof status === 'boolean' || typeof status === 'string') {
-
       this.setUpMap[value] = status;
       if (typeof status === 'boolean' && status) {
         this.currencyArraySet = this.swap.buildInitialCurrencyArrays();
@@ -103,6 +119,20 @@ export default class Swap extends EventEmitter {
       console.error(e);
     }
     return null;
+  }
+
+  async startSwap(toAddress, fromAddress, refundAddress) {
+    return new Promise((resolve, reject) => {
+      const dataPack = {
+        providerDetails: this.selectedProvider,
+        fromValue: this.fromValue,
+        toValue: this.toValue,
+        toAddress,
+        fromAddress,
+        refundAddress
+      };
+      return this.swap.startSwap(dataPack).then(resolve).catch(reject);
+    });
   }
 
   async updateRateEstimate(
@@ -192,7 +222,7 @@ export default class Swap extends EventEmitter {
     });
   }
 
-  getProvider(name){
+  getProvider(name) {
     return this.swap.getProvider(name);
   }
 
@@ -216,10 +246,10 @@ export default class Swap extends EventEmitter {
     toValue,
     selectedProvider
   ) {
-    if (this.simplexUpdate) {
-      this.simplexUpdate = false;
-      return;
-    }
+    // if (this.simplexUpdate) {
+    //   this.simplexUpdate = false;
+    //   return;
+    // }
 
     let /*fromValue, toValue,*/ simplexProvider, simplexRateDetails;
     switch (input) {
@@ -241,15 +271,16 @@ export default class Swap extends EventEmitter {
         break;
       case `${providerNames.simplex}to`:
         this.simplexUpdate = true;
-        simplexProvider = this.swap.getProvider(this.providerNames.simplex);
-
+        simplexProvider = this.swap.getProvider(providerNames.simplex);
+        console.log(fromValue, toValue, fromCurrency); // todo remove dev item
         if (simplexProvider.canQuote(fromValue, toValue, fromCurrency)) {
+          console.log(input); // todo remove dev item
           simplexRateDetails = await simplexProvider.updateDigital(
             fromCurrency,
             toCurrency,
             toValue
           );
-
+          console.log('1', simplexRateDetails); // todo remove dev item
           fromValue = simplexRateDetails.fromValue;
           toValue = simplexRateDetails.toValue;
         } else {
@@ -258,16 +289,26 @@ export default class Swap extends EventEmitter {
             toCurrency,
             -1
           );
+          console.log('2', simplexRateDetails); // todo remove dev item
 
-          const rate = new BigNumber(simplexRateDetails.toValue)
-            .div(simplexRateDetails.fromValue)
-            .toString(10);
-
-          fromValue = this.swap.calculateFromValue(toValue, rate, fromCurrency);
+          // const rate = new BigNumber(simplexRateDetails.toValue)
+          //   .div(simplexRateDetails.fromValue)
+          //   .toString(10);
+          fromValue = simplexRateDetails.fromValue;
+          toValue = simplexRateDetails.toValue;
+          // fromValue = this.swap.calculateFromValue(toValue, rate, fromCurrency);
+          console.log({
+            fromCurrency,
+            toCurrency,
+            fromValue,
+            toValue
+          }); // todo remove dev item
         }
 
         break;
       case `${providerNames.simplex}from`:
+        console.log(input); // todo remove dev item
+
         this.simplexUpdate = true;
         simplexProvider = this.swap.getProvider(providerNames.simplex);
         if (simplexProvider.canQuote(fromValue, toValue, fromCurrency)) {
@@ -302,6 +343,8 @@ export default class Swap extends EventEmitter {
         this.intermediateGasCheck();
         break;
     }
+    this.fromValue = fromValue;
+    this.toValue = toValue;
     return {
       fromCurrency,
       toCurrency,
