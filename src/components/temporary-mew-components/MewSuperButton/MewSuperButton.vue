@@ -1,14 +1,60 @@
 <template>
   <div class="global--mew-component--mew-super-button">
     <div
+      v-if="btnMode === 'small-right-image'"
+      class="small-right-image"
+      :class="[
+        colorTheme === 'basic' ? 'white titlePrimary--text' : '',
+        colorTheme === 'outline' ? 'btn-outline' : ''
+      ]"
+    >
+      <div if="note" class="top-right-note">{{ note }}</div>
+      <div class="d-flex align-center justify-space-between pa-7 pa-sm-9">
+        <div>
+          <div class="d-flex align-center mb-2">
+            <h4 class="font-weight-bold">{{ title }}</h4>
+            <v-icon
+              v-if="titleMdiIcon"
+              class="ml-2"
+              :class="titleIconClass"
+              size="21"
+            >
+              {{ titleMdiIcon }}
+            </v-icon>
+          </div>
+          <div>{{ subtitle }}</div>
+        </div>
+        <div v-if="rightIcons" class="ml-1 d-flex align-center">
+          <img
+            v-for="(i, key) in rightIcons"
+            :key="key"
+            :style="rightIcons.length < 2 ? 'height: 70px' : 'height: 40px'"
+            :src="i"
+            :alt="title"
+            class="ml-2"
+          />
+        </div>
+        <img
+          v-if="rightIcon"
+          style="height: 70px"
+          :src="rightIcon"
+          :alt="title"
+          class="ml-3"
+        />
+      </div>
+    </div>
+    <div
       v-if="btnMode === 'large-right-image'"
-      class="btn--b large-right-image"
-      :class="[colorTheme === 'basic' ? 'white titlePrimary--text' : '']"
+      class="large-right-image"
+      :class="[
+        colorTheme === 'basic' ? 'white titlePrimary--text' : '',
+        colorTheme === 'outline' ? 'btn-outline' : ''
+      ]"
     >
       <div class="d-flex align-end justify-space-between">
-        <div class="pa-9">
+        <div class="pa-7 pa-sm-9">
           <div class="d-flex align-center mb-2">
-            <div class="mew-heading-2 font-weight-bold">{{ title }}</div>
+            <h4 class="font-weight-bold">{{ title }}</h4>
             <v-icon
               v-if="titleMdiIcon"
               class="ml-2"
@@ -21,7 +67,6 @@
           <div>{{ subtitle }}</div>
           <slot name="contentBelowTitle"></slot>
         </div>
-
         <div class="d-none d-sm-block mr-8" style="line-height: 0">
           <slot name="contentRight"></slot>
         </div>
@@ -30,7 +75,6 @@
         <slot name="contentRight"></slot>
       </div>
     </div>
-
     <div v-if="btnMode === 'standard'" class="standard">
       <v-btn
         :class="[
@@ -175,6 +219,12 @@ export default {
     titleMdiIcon: {
       type: String,
       default: ''
+    },
+    rightIcons: {
+      type: Array,
+      default: function () {
+        return [];
+      }
     },
     /**
      * The number of cols for the left side to take up.
@@ -364,8 +414,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.large-right-image {
+.large-right-image,
+.small-right-image {
   border-radius: 10px;
+}
+
+.small-right-image {
+  position: relative;
+  .top-right-note {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: orange;
+  }
+}
+
+.btn-outline {
+  border: 1px solid white;
+  color: white;
 }
 </style>
 

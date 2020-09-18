@@ -59,31 +59,29 @@
           target="_blank"
         >
           <mew-super-button
-            class="mew-cx-btn mb-5"
+            btn-mode="small-right-image"
+            class="mb-5"
             color-theme="basic"
             title="MEW CX"
             subtitle="MEWcx is a secure and convinient way to create and manage your
                 wallet. Click here to download today."
-            title-icon="mdi-shield-check"
-            title-icon-type="mdi"
-            right-icon-type="img"
+            title-mdi-icon="mdi-shield-check"
             title-icon-class="primary--text"
             :right-icon="require('@/assets/images/icons/icon-mew-cx.png')"
-            btn-link="https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en"
           >
           </mew-super-button>
         </a>
 
         <mew-super-button
+          btn-mode="small-right-image"
           class="mb-5"
           color-theme="outline"
           title="Software"
           subtitle="Keystore files / Mnemonic phrase is highly sensitive information, and
           they should only be used in offline settings by experienced users."
-          title-icon="mdi-alert"
+          title-mdi-icon="mdi-shield-check"
           title-icon-class="warning--text text--darken-1"
           note="NOT RECOMMANDED"
-          title-icon-type="mdi"
           @click.native="showSoftware = !showSoftware"
         />
       </v-sheet>
