@@ -341,7 +341,8 @@ export default {
       ],
       selectedNetwork: '',
       accounts: [],
-      currentIdx: 0
+      currentIdx: 0,
+      addressPage: 0
     };
   },
   computed: {
@@ -450,6 +451,7 @@ export default {
       }
 
       this.currentIdx += MAX_ADDRESSES;
+      this.addressPage += 1;
       this.selectedAddress = this.accounts[0].address;
     },
     unlockBtn() {
@@ -465,10 +467,12 @@ export default {
       this.setAddresses();
     },
     previousAddressSet() {
-      this.currentIndex =
-        this.currentIndex - 2 * MAX_ADDRESSES < 0
-          ? 0
-          : this.currentIndex - 2 * MAX_ADDRESSES;
+      const pageDeductor = this.currentIdx / MAX_ADDRESSES;
+      const idxDeductor = this.addressPage * MAX_ADDRESSES;
+      this.addressPage -=
+        this.currentIdx <= 10 ? pageDeductor : pageDeductor - 1;
+      this.currentIdx -=
+        this.currentIdx <= 10 ? idxDeductor : idxDeductor - MAX_ADDRESSES;
       this.setAddresses();
     }
   }
