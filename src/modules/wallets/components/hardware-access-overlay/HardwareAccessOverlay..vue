@@ -40,7 +40,7 @@
           </v-container>
         </v-sheet>
       </div>
-      <mew6-white-sheet v-else-if="step === 1">
+      <mew6-white-sheet v-else-if="step === 1 && showPaths">
         <div class="overlay-content pa-8">
           <div class="text-center mb-8">
             <img :src="icon" alt="Network Icon" height="60" />
@@ -219,7 +219,11 @@
                   title="Access My Wallet"
                   button-size="large"
                   :disabled="!(selectedAddress && acceptTerms)"
-                  @click.native="setWallet"
+                  @click.native="
+                    () => {
+                      setWallet(wallet.account);
+                    }
+                  "
                 />
                 <mew-checkbox
                   v-model="acceptTerms"
@@ -232,11 +236,55 @@
           </v-row>
         </v-container>
       </v-sheet>
+      <v-sheet
+        v-else-if="showQrCode"
+        :outlined="true"
+        color="white"
+        :rounded="true"
+        :max-width="740"
+        :min-width="475"
+        :min-height="340"
+      >
+        <v-container>
+          <v-row align="center" justify="center">
+            <v-col cols="9">
+              <v-row align="center" justify="center">
+                <qrcode :value="qrcode" :options="{ size: 186 }" />
+              </v-row>
+              <v-row
+                v-show="walletType === 'xwalletType'"
+                align="center"
+                justify="space-around"
+              >
+                <a
+                  href="https://apps.apple.com/us/app/xwallet-by-pundi-x/id1321754661"
+                  target="_blank"
+                >
+                  <img
+                    src="@/assets/images/icons/button-app-store.png"
+                    alt="Apple app store"
+                  />
+                </a>
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.pundix.xwallet&hl=en_US"
+                >
+                  <img
+                    src="@/assets/images/icons/button-play-store.png"
+                    alt="Google play store"
+                  />
+                </a>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-sheet>
     </template>
   </mew-overlay>
 </template>
 
 <script>
+import qrcode from '@xkeshi/vue-qrcode';
+
 import bcvaultWallet from '@/modules/wallets/utils/hardware/bcvault';
 import bitboxWallet from '@/modules/wallets/utils/hardware/bitbox';
 import bitbox02Wallet from '@/modules/wallets/utils/hardware/bitbox02';
@@ -279,66 +327,79 @@ const walletHolder = {
     create: ledgerWallet,
     when: 1,
     hasPaths: true,
-    requiresPassword: false
+    requiresPassword: false,
+    needsQr: false
   },
   [trezorType]: {
     create: trezorWallet,
     when: 1,
     hasPaths: true,
-    requiresPassword: false
+    requiresPassword: false,
+    needsQr: false
   },
   [bitboxType]: {
     create: bitboxWallet,
     when: 2,
     hasPaths: true,
-    requiresPassword: true
+    requiresPassword: true,
+    needsQr: false
   },
   [bitbox02Type]: {
     create: bitbox02Wallet,
     when: 2,
     hasPaths: true,
-    requiresPassword: false
+    requiresPassword: false,
+    needsQr: false
   },
   [secalotType]: {
     create: secalotWallet,
     when: 2,
     hasPaths: true,
-    requiresPassword: true
+    requiresPassword: true,
+    needsQr: false
   },
   [keepkeyType]: {
     create: keepkeyWallet,
     when: 1,
     hasPaths: true,
-    requiresPassword: false
+    requiresPassword: false,
+    needsQr: false
   },
   [finneyType]: {
     create: mewconnectWallet,
-    when: 2,
+    when: 1,
     hasPaths: false,
-    requiresPassword: false
+    requiresPassword: false,
+    needsQr: true
   },
   [xwalletType]: {
     create: mewconnectWallet,
-    when: 2,
+    when: 1,
     hasPaths: false,
-    requiresPassword: false
+    requiresPassword: false,
+    needsQr: true
   },
   [bcvaultType]: {
     create: bcvaultWallet,
     when: 1,
     hasPaths: false,
-    requiresPassword: false
+    requiresPassword: false,
+    needsQr: false
   },
   [coolwalletType]: {
     create: coolwalletWallet,
     when: 2,
     hasPaths: false,
-    requiresPassword: true
+    requiresPassword: true,
+    needsQr: false
   }
 };
 
 export default {
   name: 'HardwareAccessOverlay',
+  components: {
+    qrcode: qrcode
+  },
   filters: {
     concatAddress(val) {
       // should probably be moved globablly
@@ -433,7 +494,8 @@ export default {
         title: 'Terms',
         url: 'https://www.myetherwallet.com/terms-of-service'
       },
-      addressPage: 0
+      addressPage: 0,
+      qrcode: ''
     };
   },
   computed: {
@@ -450,6 +512,12 @@ export default {
     },
     showNetworkAddresses() {
       return Object.keys(this.hwWalletInstance).length > 0 && this.step >= 1;
+    },
+    showQrCode() {
+      return this.wallets[this.walletType].needsQr;
+    },
+    showPaths() {
+      return this.wallets[this.walletType].hasPaths;
     },
     icon() {
       if (this.selectedLedgerApp !== '') {
@@ -529,6 +597,7 @@ export default {
           try {
             this.setAddresses();
           } catch (e) {
+            // eslint-disable-next-line
             console.log(e);
           }
         }
@@ -556,33 +625,69 @@ export default {
         this.step += 1;
         this.steps[this.step] = actualString;
         if (this.wallets[actualString].when === this.step) {
-          this.wallets[actualString].create().then(instance => {
-            this.walletInstance = instance;
-          });
+          if (!this.wallets[actualString].requiresPassword) {
+            this.wallets[actualString].create().then(instance => {
+              this.walletInstance = instance;
+            });
+          } else if (this.wallets[actualString].needsQr) {
+            new this.wallets[actualString].create(this.generateQr).then(
+              wallet => {
+                this.unlockQrcode(wallet);
+              }
+            );
+          } else {
+            this.wallets[actualString].create().then(instance => {
+              this.walletInstance = instance;
+            });
+          }
         } else if (this.wallets[actualString].when < this.step) {
           this[`unlock${actualString}`]();
         }
       } catch (e) {
+        // eslint-disable-next-line
         console.log(e);
       }
     },
+    generateQr(code) {
+      this.qrcode = code;
+    },
     unlockledger() {
+      this.unlockPathOnly();
+    },
+    unlocktrezor() {
+      this.unlockPathOnly();
+    },
+    unlockbitbox() {
+      this.unlockPathAndPassword();
+    },
+    unlockbitbox02() {
+      this.unlockPathOnly();
+    },
+    unlocksecalot() {
+      this.unlockPathAndPassword();
+    },
+    unlockkeepkey() {},
+    unlockfinney() {},
+    unlockxwallet() {},
+    unlockbc_vault() {},
+    unlockcool_wallet() {},
+    unlockPathOnly() {
       this.wallets[this.walletType]
         .create(this.selectedPath.value)
         .then(_hwWallet => {
           this.hwWalletInstance = _hwWallet;
         });
     },
-    unlocktrezor() {},
-    unlockbitbox() {},
-    unlockbitbox02() {},
-    unlocksecalot() {},
-    unlockkeepkey() {},
-    unlockmew_connect() {},
-    unlockfinney() {},
-    unlockxwallet() {},
-    unlockbc_vault() {},
-    unlockcool_wallet() {},
+    unlockPathAndPassword() {
+      this.wallets[this.walletType]
+        .create(this.selectedPath.value)
+        .then(_hwWallet => {
+          this.hwWalletInstance = _hwWallet;
+        });
+    },
+    unlockQrcode(wallet) {
+      this.setWallet(wallet);
+    },
     async setAddresses() {
       try {
         this.accounts = [];
@@ -605,6 +710,7 @@ export default {
         this.currentIdx += MAX_ADDRESSES;
         this.selectedAddress = this.accounts[0].address;
       } catch (e) {
+        // eslint-disable-next-line
         console.log(e);
       }
     },
@@ -620,16 +726,18 @@ export default {
         this.currentIdx <= 10 ? idxDeductor : idxDeductor - MAX_ADDRESSES;
       this.setAddresses();
     },
-    setWallet() {
+    setWallet(wallet) {
       try {
-        this.decryptWallet([this.wallet.account])
+        this.decryptWallet([wallet])
           .then(() => {
             this.$router.push({ name: 'Dashboard' });
           })
           .catch(e => {
+            // eslint-disable-next-line
             console.log(e);
           });
       } catch (e) {
+        // eslint-disable-next-line
         console.log(e);
       }
     }
