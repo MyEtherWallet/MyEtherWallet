@@ -1,6 +1,7 @@
 const Toast = {
   responseHandler: (err, type) => {
-    console.log(err, type);
+    // eslint-disable-next-line
+console.log(err, type);
   },
   ERROR: 'error',
   WARN: 'warn'
