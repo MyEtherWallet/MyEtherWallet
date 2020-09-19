@@ -7,7 +7,7 @@ import { toPayload } from '../jsonrpc';
 import * as locStore from 'store';
 import { getSanitizedTx } from './utils';
 import BigNumber from 'bignumber.js';
-import toBuffer from '@/helpers/toBuffer';
+import sanitizeHex from '@/helpers/sanitizeHex';
 
 const setEvents = (promiObj, tx, dispatch) => {
   promiObj
