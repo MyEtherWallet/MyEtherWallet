@@ -199,10 +199,12 @@ export default {
               this.$router.push({ name: 'Dashboard' });
             })
             .catch(e => {
+              // eslint-disable-next-line
               console.log(e);
             });
         })
         .catch(e => {
+          // eslint-disable-next-line
           console.log(e);
         });
     },
@@ -217,6 +219,7 @@ export default {
           this.$router.push({ name: 'Dashboard' });
         })
         .catch(e => {
+          // eslint-disable-next-line
           console.log(e);
         });
     },
@@ -236,9 +239,11 @@ export default {
             this.$router.push({ name: 'Dashboard' });
           })
           .catch(e => {
+            // eslint-disable-next-line
             console.log(e);
           });
       } catch (e) {
+        // eslint-disable-next-line
         console.log(e);
       }
     },
