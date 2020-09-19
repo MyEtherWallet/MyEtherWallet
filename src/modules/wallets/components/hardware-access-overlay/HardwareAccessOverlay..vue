@@ -525,7 +525,6 @@ export default {
     hwWalletInstance: {
       deep: true,
       handler: function (newVal) {
-        console.log(Object.keys(newVal).length);
         if (Object.keys(newVal).length > 0) {
           try {
             this.setAddresses();
@@ -534,9 +533,6 @@ export default {
           }
         }
       }
-    },
-    currentIdx(newVal) {
-      console.log(newVal, this.addressPage);
     }
   },
   mounted() {
