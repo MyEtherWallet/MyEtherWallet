@@ -7,7 +7,8 @@ import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
 const Toast = {
   responseHandler: (err, type) => {
-    console.log(err, type);
+    // eslint-disable-next-line
+console.log(err, type);
   },
   ERROR: 'error',
   WARN: 'warn'

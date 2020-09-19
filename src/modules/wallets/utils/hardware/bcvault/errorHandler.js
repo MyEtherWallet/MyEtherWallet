@@ -1,6 +1,7 @@
 const Toast = {
   responseHandler: (err, type) => {
-    console.log(err, type);
+    // eslint-disable-next-line
+console.log(err, type);
   },
   ERROR: 'error',
   WARN: 'warn'
@@ -25,8 +26,6 @@ const WARNING = {
 };
 
 export default err => {
-  // eslint-disable-next-line
-  console.log(err, JSON.stringify(err));
   // web errors
   if (err.hasOwnProperty('jsError')) {
     Toast.responseHandler(
