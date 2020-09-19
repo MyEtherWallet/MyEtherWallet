@@ -22,6 +22,7 @@ import MewSuperButton from '@/components/temporary-mew-components/MewSuperButton
 import MewStepper from '@/components/temporary-mew-components/MewStepper/MewStepper.vue';
 import MewStepperHeader from '@/components/temporary-mew-components/MewStepperHeader/MewStepperHeader.vue';
 import MewSelect from '@/components/temporary-mew-components/MewSelect/MewSelect.vue';
+import MewOverlay from '@/components/temporary-mew-components/MewOverlay/MewOverlay.vue';
 //import MewExpandPanel from '@/components/temporary-mew-components/MewExpandPanel/MewExpandPanel.vue';
 
 Vue.component('mew6-white-sheet', whiteSheet);
@@ -29,6 +30,7 @@ Vue.component('mew-super-button', MewSuperButton);
 Vue.component('mew-stepper', MewStepper);
 Vue.component('mew-stepper-header', MewStepperHeader);
 Vue.component('mew-select', MewSelect);
+Vue.component('mew-overlay', MewOverlay);
 //Vue.component('mew-expand-panel', MewExpandPanel);
 
 Vue.prototype.$eventHub = new Vue();

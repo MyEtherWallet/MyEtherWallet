@@ -82,7 +82,7 @@
           title-mdi-icon="mdi-shield-check"
           title-icon-class="warning--text text--darken-1"
           note="NOT RECOMMANDED"
-          @click.native="showSoftware = !showSoftware"
+          @click.native="showSoftware = true"
         />
       </v-sheet>
     </v-container>
@@ -96,13 +96,16 @@
       toast-type="info"
     />
 
-    <software-overlay :open="showSoftware" />
+    <software-overlay
+      :open="showSoftware"
+      @closeOverlay="showSoftware = false"
+    />
   </div>
 </template>
 
 <script>
 import blockTitle from '@/components/block-title/BlockTitle';
-import SoftwareOverlay from '@/modules/wallets/components/software-overlay/SoftwareOverlay';
+import SoftwareOverlay from '@/modules/wallets/components/create-wallet-software-overlay/CreateWalletSoftwareOverlay';
 
 export default {
   name: 'CreateNewWallet',

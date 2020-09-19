@@ -83,41 +83,44 @@
               subtitle="Use Browser Extension to access my wallet"
               title-mdi-icon="mdi-shield-check"
               title-icon-class="primary--text"
-              :right-icons="[require('@/assets/images/icons/icon-mew-cx.png')]"
+              :right-icon="require('@/assets/images/icons/icon-mew-cx.png')"
             />
           </router-link>
         </div>
         <div>
-          <router-link
-            :to="{ name: 'HomeCreateWalletSoftware', query: {} }"
-            class="display--block"
-          >
-            <mew-super-button
-              btn-mode="small-right-image"
-              color-theme="outline"
-              title="Software"
-              subtitle="Keystore files, Mnemonic phrase, Private key"
-              title-mdi-icon="mdi-alert"
-              title-icon-class="warning--text text--darken-1"
-              note="NOT RECOMMANDED"
-            />
-          </router-link>
+          <mew-super-button
+            btn-mode="small-right-image"
+            color-theme="outline"
+            title="Software"
+            subtitle="Keystore files, Mnemonic phrase, Private key"
+            title-mdi-icon="mdi-alert"
+            title-icon-class="warning--text text--darken-1"
+            note="NOT RECOMMANDED"
+            @click.native="showSoftware = true"
+          />
         </div>
       </v-sheet>
       <div class="spacer-y-medium" />
     </v-container>
+    <software-overlay
+      :open="showSoftware"
+      @closeOverlay="showSoftware = false"
+    />
   </div>
 </template>
 
 <script>
 import blockTitle from '@/components/block-title/BlockTitle';
+import SoftwareOverlay from '@/modules/wallets/components/access-wallet-software-overlay/AccessWalletSoftwareOverlay';
 
 export default {
   name: 'CreateNewWallet',
   components: {
-    blockTitle
+    blockTitle,
+    'software-overlay': SoftwareOverlay
   },
   data: () => ({
+    showSoftware: false,
     titleData: {
       textProps: 'white--text',
       toptitle: '',

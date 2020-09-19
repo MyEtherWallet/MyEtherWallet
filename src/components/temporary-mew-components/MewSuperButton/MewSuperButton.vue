@@ -414,6 +414,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.global--mew-component--mew-super-button {
+  cursor: pointer;
+}
+
 .large-right-image,
 .small-right-image {
   border-radius: 10px;
