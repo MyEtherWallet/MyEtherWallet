@@ -7,8 +7,8 @@ function buildPath() {
 }
 
 export default class BityCalls {
-  constructor(errorHandler) {
-    this.handleOrThrow = utils.handleOrThrow(errorHandler);
+  constructor() {
+    this.handleOrThrow = utils.handleOrThrow;
   }
 
   async getRates() {

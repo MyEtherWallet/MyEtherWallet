@@ -102,32 +102,31 @@ const checkErrorJson = results => {
   throw Error(results.error.message);
 };
 
-const handleOrThrow = errorHandler => {
-  return (e, source) => {
-    if (source === 'suppress') {
+const handleOrThrow = (e, source) => {
+  if (source === 'suppress') {
+    return;
+  } else if (source === 'handle') {
+    throw Error('swap-error');
+    // errorHandler('Swap Error', 1, true);
+  } else if (source) {
+    throw Error('abort');
+  }
+  // typeErrors
+  if (e instanceof TypeError) {
+    if (e.message === 'Failed to fetch') {
       return;
-    } else if (source === 'handle') {
-      errorHandler('Swap Error', 1, true);
-    } else if (source) {
-      throw Error('abort');
-    }
-    // typeErrors
-    if (e instanceof TypeError) {
-      if (e.message === 'Failed to fetch') {
-        return;
-      }
-      throw e;
-    } else if (e.message) {
-      if (
-        e.message.includes('This order can not be placed') &&
-        e.message.includes('bity.com')
-      ) {
-        errorHandler(e.message, 3);
-        return;
-      }
     }
     throw e;
-  };
+  } else if (e.message) {
+    if (
+      e.message.includes('This order can not be placed') &&
+      e.message.includes('bity.com')
+    ) {
+      throw Error('bity-cannot-place-error');
+      // return;
+    }
+  }
+  throw e;
 };
 
 export {

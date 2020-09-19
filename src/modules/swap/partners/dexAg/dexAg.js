@@ -42,9 +42,9 @@ export default class DexAg {
     this.feeAmount = 0.02;
     this.approvalGasLimit = 100000;
     this.tradeGasLimitBase = 1000000;
-    this.getSupportedDexes();
-    this.getSupportedCurrencies(this.network);
-    this.getFee();
+    this.getSupportedDexes().catch()
+    this.getSupportedCurrencies(this.network).catch()
+    this.getFee().catch()
     this.platformGasPrice = props.gasPrice || -1;
 
   }
@@ -118,6 +118,7 @@ export default class DexAg {
       //   Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {
       errorLogger(e);
+      this.setUpUpdater(this.name, 'error');
       throw e;
     }
   }

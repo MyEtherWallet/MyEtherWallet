@@ -2,8 +2,8 @@ import { host } from './config';
 import { utils, post, get } from '../helpers';
 
 export default class SimplexApi {
-  constructor(errorHandler) {
-    this.handleOrThrow = utils.handleOrThrow(errorHandler);
+  constructor() {
+    this.handleOrThrow = utils.handleOrThrow;
   }
 
   getCurrencies() {

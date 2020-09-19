@@ -58,7 +58,10 @@ export default class BitySwap {
     this.fiatCurrencies = Object.keys(bityFiatCurrencies);
     this.rates = new Map();
     this.disabledTo = ['BTC'];
-    this.retrieveRates();
+
+    this.getSupportedCurrencies().catch(() => {
+      this.setupComplete = false;
+    });
   }
 
   static getName() {
@@ -84,56 +87,81 @@ export default class BitySwap {
     return this.hasRates > 0 && this.rates.size > 0;
   }
 
-  async retrieveRates() {
-    try {
-      if (!this.isValidNetwork) return;
-      const exitRates = await this.bityCalls.getExitRates();
-      const exitData = exitRates.pairs;
-      const rates = await this.bityCalls.getRates();
-      const data = rates.objects;
-      console.log(rates); // todo remove dev item
-      console.log(exitData); // todo remove dev item
-      exitData.forEach(entry => {
-        if (entry.enabled) {
-          data.forEach(rateEntry => {
-            if (
-              rateEntry.pair === entry.input + entry.output &&
-              !this.fiatCurrencies.includes(entry.input)
-            ) {
-              this.rates.set(
-                `${entry.input}/${entry.output}`,
-                parseFloat(rateEntry.rate_we_buy)
-              );
+  getSupportedCurrencies() {
+    // try {
+    if (!this.isValidNetwork) return;
+    return this.bityCalls
+      .getExitRates()
+      .then(exitRates => {
+        const exitData = exitRates.pairs;
+        this.bityCalls
+          .getRates()
+          .then(rates => {
+            const data = rates.objects;
+            exitData.forEach(entry => {
+              if (entry.enabled) {
+                data.forEach(rateEntry => {
+                  if (
+                    rateEntry.pair === entry.input + entry.output &&
+                    !this.fiatCurrencies.includes(entry.input)
+                  ) {
+                    this.rates.set(
+                      `${entry.input}/${entry.output}`,
+                      parseFloat(rateEntry.rate_we_buy)
+                    );
+                  }
+                });
+              }
+            });
+            data.forEach(pair => {
+              if (~this.mainPairs.indexOf(pair.pair.substring(3))) {
+                if (
+                  pair.is_enabled &&
+                  !this.fiatCurrencies.includes(pair.source)
+                ) {
+                  this.rates.set(
+                    `${pair.source}/${pair.target}`,
+                    parseFloat(pair.rate_we_sell)
+                  );
+                }
+              } else if (~this.mainPairs.indexOf(pair.pair.substring(0, 3))) {
+                if (
+                  pair.is_enabled &&
+                  !this.fiatCurrencies.includes(pair.source)
+                ) {
+                  this.rates.set(
+                    `${pair.source}/${pair.target}`,
+                    parseFloat(pair.rate_we_buy)
+                  );
+                }
+              }
+            });
+            if (data.length > 0) {
+              this.setUpUpdater(this.name, true);
             }
+          })
+          .catch(err => {
+            this.setUpUpdater(this.name, 'error');
+            console.log(err); // todo remove dev item
+            this.setUpUpdater(this.name, 'error');
+            throw Error('bity-rate-failed');
           });
-        }
+      })
+      .catch(err => {
+        this.setUpUpdater(this.name, 'error');
+        console.log(err); // todo remove dev item
+        this.setUpUpdater(this.name, 'error');
+        throw Error('bity-rate-failed');
       });
-      data.forEach(pair => {
-        if (~this.mainPairs.indexOf(pair.pair.substring(3))) {
-          if (pair.is_enabled && !this.fiatCurrencies.includes(pair.source)) {
-            this.rates.set(
-              `${pair.source}/${pair.target}`,
-              parseFloat(pair.rate_we_sell)
-            );
-          }
-        } else if (~this.mainPairs.indexOf(pair.pair.substring(0, 3))) {
-          if (pair.is_enabled && !this.fiatCurrencies.includes(pair.source)) {
-            this.rates.set(
-              `${pair.source}/${pair.target}`,
-              parseFloat(pair.rate_we_buy)
-            );
-          }
-        }
-      });
-      if (data.length > 0) {
-        this.setUpUpdater(this.name, true);
-      }
-      // this.hasRates = data.length > 0 ? this.hasRates + 1 : 0;
-    } catch (e) {
-      console.log(e); // todo remove dev item
-      throw Error('bity-rate-failed')
-      // this.errorHandler('bity-rate-failed', 1, true);
-    }
+
+    // this.hasRates = data.length > 0 ? this.hasRates + 1 : 0;
+    // } catch (e) {
+    //   this.setUpUpdater(this.name, 'error');
+    //   console.log(e); // todo remove dev item
+    //   this.setUpUpdater(this.name, 'error');
+    //   throw Error('bity-rate-failed');
+    //   // this.errorHandler('bity-rate-failed', 1, true);
+    // }
   }
 
   _getRate(fromToken, toToken) {

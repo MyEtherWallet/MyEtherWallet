@@ -20,8 +20,8 @@ function checkAndChange(value) {
 }
 
 export default class ChangellyCalls {
-  constructor(errorHandler) {
-    this.handleOrThrow = utils.handleOrThrow(errorHandler);
+  constructor() {
+    this.handleOrThrow = utils.handleOrThrow;
   }
 
   async getSupportedCurrencies(network) {
@@ -104,7 +104,6 @@ export default class ChangellyCalls {
             }
           ])
         );
-        console.log(results); // todo remove dev item
         if (results.error) {
           throw Error(results.error.message);
         }
@@ -128,7 +127,6 @@ export default class ChangellyCalls {
             amount: fromValue
           })
         );
-        console.log(results); // todo remove dev item
 
         if (results.error) {
           throw Error(results.error.message);
@@ -152,7 +150,6 @@ export default class ChangellyCalls {
             to: checkAndChange(toCurrency)
           })
         );
-        console.log(results); // todo remove dev item
 
         if (results.error) {
           throw Error(results.error.message);
@@ -196,7 +193,6 @@ export default class ChangellyCalls {
             transactionParams
           )
         );
-        console.log(results); // todo remove dev item
 
         if (results.error) {
           throw Error(results.error.message);
@@ -249,7 +245,6 @@ export default class ChangellyCalls {
             }
           ])
         );
-        console.log(results); // todo remove dev item
 
         if (results.error) {
           throw Error(results.error.message);
@@ -272,7 +267,6 @@ export default class ChangellyCalls {
             transactionParams
           )
         );
-        console.log(results); // todo remove dev item
 
         if (results.error) {
           throw Error(results.error.message);

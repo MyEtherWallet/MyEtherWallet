@@ -55,8 +55,8 @@ export default class Swap extends EventEmitter {
 
   initialize() {}
 
-  callOther(call, ...args){
-    return this.swap[call].apply(this.swap, args)
+  callOther(call, ...args) {
+    return this.swap[call].apply(this.swap, args);
   }
 
   setErrorHandler(name) {
@@ -70,29 +70,25 @@ export default class Swap extends EventEmitter {
     if (typeof status === 'boolean' || typeof status === 'string') {
       this.setUpMap[value] = status;
       if (typeof status === 'boolean' && status) {
+        // Incrementally build token sets as new collections arrive
         this.currencyArraySet = this.swap.buildInitialCurrencyArrays();
         this.emit('ready');
       }
       const setupProviders = Object.keys(this.setUpMap);
       this.complete = true;
       for (let i = 0; i < setupProviders.length; i++) {
-        if (
-          typeof this.setUpMap[setupProviders[i]] !== 'boolean' ||
-          !this.setUpMap[setupProviders[i]]
-        ) {
+        if (!this.setUpMap[setupProviders[i]]) {
           this.complete = false;
+        }
+        if (this.setUpMap[setupProviders[i]] === 'error') {
+          this.providerListSetupRetry = true;
         }
       }
       if (this.complete) {
+        console.log('setup-complete'); // todo remove dev item
         this.emit('setup-complete');
       }
     }
-    // if (
-    //   typeof this.setUpMap[value] === 'boolean' ||
-    //   typeof this.setUpMap[value] === 'string'
-    // ) {
-    //   this.setUpMap[value] = status;
-    // }
   }
 
   availableFromCurrencies(value) {

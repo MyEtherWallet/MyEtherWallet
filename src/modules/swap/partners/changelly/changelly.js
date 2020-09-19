@@ -43,10 +43,11 @@ export default class Changelly {
     this.getRateForUnit =
       typeof props.getRateForUnit === 'boolean' ? props.getRateForUnit : false;
     this.hasRates = 0;
-    this.currencyDetails = props.currencies || ChangellyCurrencies;
+    this.currencyDetails = []; //props.currencies || ChangellyCurrencies;
     this.useFixed = true;
     this.tokenDetails = {};
-    this.getSupportedCurrencies(this.network);
+    this.getSupportedCurrencies(this.network)
+      .catch()
   }
 
   static getName() {
@@ -78,7 +79,9 @@ export default class Changelly {
       // this.hasRates =
       //   Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {
+      this.setUpUpdater(this.name, 'error');
       errorLogger(e);
+      throw e;
     }
   }
 

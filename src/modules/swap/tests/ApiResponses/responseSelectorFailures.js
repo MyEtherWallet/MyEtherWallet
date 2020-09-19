@@ -107,7 +107,7 @@ export function responseSelector(req, explicitlyNamed) {
 
           return Promise.resolve(JSON.stringify(dexAgGetSupportedCurrencies));
         case 'getPrice':
-          if (body.params.fromToken === 'ERR') {
+          if (body.params[0].from === 'ERR') {
             return Promise.reject(JSON.stringify(changellyGetFixRateBtcEth));
           }
           console.log('dexAgGetPrice'); // todo remove dev item

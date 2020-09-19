@@ -7,8 +7,8 @@ function buildPath() {
 }
 
 export default class DexAgCalls {
-  constructor(errorHandler) {
-    this.handleOrThrow = utils.handleOrThrow(errorHandler);
+  constructor() {
+    this.handleOrThrow = utils.handleOrThrow;
   }
 
   async getSupportedCurrencies() {
@@ -70,8 +70,7 @@ export default class DexAgCalls {
           transactionParams
         })
       );
-      console.log(results); // todo remove dev item
-      console.log(results.result.metadata); // todo remove dev item
+
       if (results.error) {
         utils.checkErrorJson(results);
       }

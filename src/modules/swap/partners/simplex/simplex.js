@@ -41,7 +41,7 @@ export default class Simplex {
 
     this.currentOrder = {};
 
-    this.getCurrencyExchangeRates();
+    this.getSupportedCurrencies();
   }
 
   static getName() {
@@ -105,7 +105,7 @@ export default class Simplex {
     );
   }
 
-  getCurrencyExchangeRates() {
+  async getSupportedCurrencies() {
     this.simplexApi.getCurrencies().then(res => {
       try {
         if (Object.keys(res.result).length > 0) {
@@ -123,6 +123,8 @@ export default class Simplex {
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
+        this.setUpUpdater(this.name, 'error');
+        throw e;
       }
       this.simplexApi.getExchangeRates(BASE_CURRENCY).then(rawResult => {
         const result = rawResult.result.rates;
