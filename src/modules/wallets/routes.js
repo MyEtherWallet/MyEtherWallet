@@ -20,7 +20,10 @@ export default {
     {
       path: 'dashboard',
       name: 'Dashboard',
-      component: Dashboard
+      component: Dashboard,
+      meta: {
+        requiresAuth: false
+      }
     },
     {
       path: 'send',
@@ -30,7 +33,10 @@ export default {
         {
           path: 'send-tx',
           name: 'SendTX',
-          component: Send
+          component: Send,
+          meta: {
+            requiresAuth: false
+          }
         },
         {
           path: 'offline',
