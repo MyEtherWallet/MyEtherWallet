@@ -18,7 +18,7 @@
             :class="['cc', getIcon(selectedCurrency.symbol), 'cc-icon']"
             class="currency-symbol"
           />
-          {{ selectedCurrency.symbol }}
+          <span class="pad-it">{{ selectedCurrency.symbol }} </span>
           <span class="subname">- {{ selectedCurrency.name }}</span>
         </div>
         <div
@@ -31,7 +31,7 @@
               @error="iconFallback"
             />
           </figure>
-          {{ selectedCurrency.symbol }}
+          <span class="pad-it">{{ selectedCurrency.symbol }} </span>
           <span class="subname">- {{ selectedCurrency.name }}</span>
         </div>
         <i
@@ -92,8 +92,6 @@
               <span class="pad-it">{{ curr.symbol }} </span>
               <span class="subname">- {{ curr.name }}</span>
             </div>
-
-            <p v-show="!token">{{ curr.name }}</p>
           </div>
         </div>
       </div>
