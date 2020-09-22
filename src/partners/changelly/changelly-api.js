@@ -24,7 +24,9 @@ const getSupportedCurrencies = async network => {
               symbol: currencyList[i].name.toUpperCase(),
               name: currencyList[i].fullName,
               fixRateEnabled: currencyList[i].fixRateEnabled,
-              address: currencyList[i].contractAddress ? currencyList[i].contractAddress : null
+              address: currencyList[i].contractAddress
+                ? currencyList[i].contractAddress
+                : null
             };
             if (currencyList[i].name === 'usdt') {
               currencyList[i].name = 'usdt Omni';
