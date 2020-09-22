@@ -9,6 +9,11 @@
         </v-container>
         <wallet-footer class="mt-10 box-shadow" />
       </div>
+      <div>
+        <network />
+        <div class="pa-4"></div>
+        <swap />
+      </div>
     </div>
   </v-sheet>
 </template>
@@ -17,12 +22,16 @@
 import sideMenu from './components/side-menu/SideMenu';
 import walletHeader from './components/header/Header';
 import walletFooter from './components/footer/Footer';
+import network from '@/modules/wallets/components/network/Network';
+import swap from '@/modules/wallets/components/swap/Swap';
 
 export default {
   components: {
     walletFooter,
     sideMenu,
-    walletHeader
+    walletHeader,
+    network,
+    swap
   },
   watch: {
     $route() {

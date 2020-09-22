@@ -1,16 +1,25 @@
 <template>
-  <div>
+  <v-container>
     <div class="d-flex">
       <div class="flex-grow-1">
         <mew6-white-sheet>
-          <interface-wrap title="Send Transaction">
+          <interface-wrap :title="$t('sendTx.send-tx')">
             <div>
+              <div class="d-flex justify-end">
+                <mew-button
+                  :title="$t('sendTx.entire-bal')"
+                  btn-style="transparent"
+                />
+              </div>
               <div class="d-flex">
-                <mew-select :items="coins" label="Type" class="mr-3" />
+                <mew-select
+                  :items="coins"
+                  :label="$t('sendTx.type')"
+                  class="mr-3"
+                />
                 <div class="position--relative flex-grow-1">
-                  <div class="corner-btn">Entire balance</div>
                   <mew-input
-                    label="Amount"
+                    :label="$t('sendTx.type')"
                     placeholder=" "
                     right-label="$23,232.93"
                     value="10.23472384"
@@ -19,19 +28,19 @@
               </div>
 
               <address-select
-                copy-tooltip="Copy"
-                save-tooltip="Save"
+                :copy-tooltip="$t('common.copy')"
+                :save-tooltip="$t('common.save')"
                 :enable-save-address="true"
-                label="To Address"
+                :label="$t('sendTx.send-addr')"
                 :items="addresses"
-                placeholder="Please enter an address"
-                success-toast="Success"
+                :placeholder="$t('sendTx.enter-addr')"
+                :success-toast="$t('sendTx.success.title')"
                 :is-valid-address="true"
                 @emitSelectedValue="getSelectedValue"
               />
             </div>
 
-            <mew-expand-panel is-toggle has-dividers :panel-items="exPannel">
+            <mew-expand-panel is-toggle has-dividers :panel-items="expandPanel">
               <template v-slot:panelBody1>
                 <div>
                   <mew-input label="Gas Price" placeholder=" " value="40" />
@@ -74,32 +83,23 @@
         </mew6-white-sheet>
       </div>
       <div class="pa-4"></div>
-      <div>
-        <network />
-        <div class="pa-4"></div>
-        <swap />
-      </div>
     </div>
-  </div>
+  </v-container>
 </template>
 
 <script>
 import interfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';
 import divider from '@/components/dividerx/DividerX';
-import network from '@/modules/wallets/components/network/Network';
-import swap from '@/modules/wallets/components/swap/Swap';
 
 export default {
   components: {
     divider,
-    interfaceWrap,
-    network,
-    swap
+    interfaceWrap
   },
   data() {
     return {
-      exPannel: [
+      expandPanel: [
         {
           name: 'Advanced',
           subtext: 'Gas & Data'

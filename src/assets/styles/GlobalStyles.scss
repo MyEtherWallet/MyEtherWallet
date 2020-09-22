@@ -52,12 +52,9 @@
   font-weight: 500 !important;
 }
 .corner-btn {
-  color: var(--v-primary-base);
-  font-weight: 500;
   position: absolute;
   top: -25px;
   right: 10px;
-  cursor: pointer;
   filter: brightness(1);
 
   &:hover {

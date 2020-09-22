@@ -21,7 +21,7 @@
   "data": "Data",
   "data-gas": "Data & Gas Limit",
   "dep-amount": "Deposit Amount",
-  "button-entire": "Entire Balance",
+  "entire-bal": "Entire Balance",
   "transaction-receipt": "Transaction Receipt",
   "confirmation": {
     "title": "Confirmation",
@@ -50,5 +50,6 @@
   "at-block": "at block",
   "invalid-signature": "Invalid Signature",
   "signed-chain-id": "Signed Chain ID",
-  "chain-no-match": "does not match chain id for selected network"
+  "chain-no-match": "does not match chain id for selected network",
+  "enter-addr": "Please enter an address"
 }

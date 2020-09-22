@@ -2,7 +2,7 @@ import nodeList from '@/utils/networks';
 import store from 'store';
 const storedNetwork = store.get('network');
 let network = nodeList['ETH'][0];
-if (storedNetwork.type.name !== 'CUS') {
+if (storedNetwork && storedNetwork.type.name !== 'CUS') {
   const iteratableArr = nodeList[storedNetwork.type.name];
   network = storedNetwork;
   network.type = nodeList[storedNetwork.type.name][0].type;
