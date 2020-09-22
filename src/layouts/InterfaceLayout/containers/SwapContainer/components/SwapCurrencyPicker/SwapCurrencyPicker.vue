@@ -161,6 +161,22 @@ export default {
       address: ''
     };
   },
+  computed: {
+    ...mapState('main', ['network', 'web3', 'online']),
+    networkTokens() {
+      const newTokenObj = {};
+      const matchedNetwork = masterFile.filter(item => {
+        return (
+          item.network.toLowerCase() === this.network.type.name.toLowerCase()
+        );
+      });
+      matchedNetwork.forEach(item => {
+        newTokenObj[toChecksumAddress(item.contract_address)] = item;
+      });
+
+      return newTokenObj;
+    }
+  },
   watch: {
     overrideCurrency(newVal) {
       this.selectedCurrency = newVal;
@@ -202,22 +218,6 @@ export default {
       } else {
         this.selectedCurrency = { name: 'Bitcoin', symbol: 'BTC' };
       }
-    }
-  },
-  computed: {
-    ...mapState('main', ['network', 'web3', 'online']),
-    networkTokens() {
-      const newTokenObj = {};
-      const matchedNetwork = masterFile.filter(item => {
-        return (
-          item.network.toLowerCase() === this.network.type.name.toLowerCase()
-        );
-      });
-      matchedNetwork.forEach(item => {
-        newTokenObj[toChecksumAddress(item.contract_address)] = item;
-      });
-
-      return newTokenObj;
     }
   },
   methods: {
