@@ -105,7 +105,6 @@ export default class DexAg {
       this.hasRates =
         Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {
-      console.log(e); // todo remove dev item
       errorLogger(e);
     }
   }
