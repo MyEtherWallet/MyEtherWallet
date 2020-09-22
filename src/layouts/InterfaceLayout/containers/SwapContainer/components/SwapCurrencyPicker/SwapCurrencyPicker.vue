@@ -9,30 +9,31 @@
         ]"
         @click="openDropdown"
       >
-        <p>
-          <div v-if="!iconFetcher(selectedCurrency.symbol)"
-             class="name-and-icon-container">
-                <span
-                  :class="['cc', getIcon(selectedCurrency.symbol), 'cc-icon']"
-                  class="currency-symbol"
-                />
-        {{ selectedCurrency.symbol }}
-        <span class="subname">- {{ selectedCurrency.name }}</span>
-      </div>
-          <div
-        v-if="iconFetcher(selectedCurrency.symbol)"
-        class="name-and-icon-container"
-          >
-            <figure class="token-icon" v-lazy-load>
-              <img
-                :data-url="iconFetcher(selectedCurrency.symbol)"
-                @error="iconFallback"
-              />
-            </figure>
-            {{ selectedCurrency.symbol }}
-            <span class="subname">- {{ selectedCurrency.name }}</span>
-          </div>
-        </p>
+        <p></p>
+        <div
+          v-if="!iconFetcher(selectedCurrency.symbol)"
+          class="name-and-icon-container"
+        >
+          <span
+            :class="['cc', getIcon(selectedCurrency.symbol), 'cc-icon']"
+            class="currency-symbol"
+          />
+          {{ selectedCurrency.symbol }}
+          <span class="subname">- {{ selectedCurrency.name }}</span>
+        </div>
+        <div
+          v-if="iconFetcher(selectedCurrency.symbol)"
+          class="name-and-icon-container"
+        >
+          <figure v-lazy-load class="token-icon">
+            <img
+              :data-url="iconFetcher(selectedCurrency.symbol)"
+              @error="iconFallback"
+            />
+          </figure>
+          {{ selectedCurrency.symbol }}
+          <span class="subname">- {{ selectedCurrency.name }}</span>
+        </div>
         <i
           v-if="selectable"
           :class="['fa', open ? 'fa-angle-up' : 'fa-angle-down']"
@@ -64,33 +65,34 @@
             ]"
             @click="selectCurrency(curr)"
           >
-            <p>
-              <div  v-if="!iconFetcher(curr.symbol)" class="name-and-icon-container">
-                <span
-                  v-if="!iconFetcher(curr.symbol)"
-                  :class="['cc', getIcon(curr.symbol), 'cc-icon']"
-                  class="currency-symbol"
-                />
-            <span class="pad-it">{{ curr.symbol }} </span>
-            <span class="subname">- {{ curr.name }}</span>
-          </div>
+            <p></p>
+            <div
+              v-if="!iconFetcher(curr.symbol)"
+              class="name-and-icon-container"
+            >
+              <span
+                v-if="!iconFetcher(curr.symbol)"
+                :class="['cc', getIcon(curr.symbol), 'cc-icon']"
+                class="currency-symbol"
+              />
+              <span class="pad-it">{{ curr.symbol }} </span>
+              <span class="subname">- {{ curr.name }}</span>
+            </div>
             <div
               v-if="iconFetcher(curr.symbol)"
               class="name-and-icon-container"
             >
-              <figure class="token-icon" v-lazy-load>
+              <figure v-lazy-load class="token-icon">
                 <img
                   :data-url="iconFetcher(curr.symbol)"
                   @error="iconFallback"
                 />
               </figure>
 
-            <span class="pad-it">{{ curr.symbol }} </span>
-            <span class="subname">- {{ curr.name }}</span>
+              <span class="pad-it">{{ curr.symbol }} </span>
+              <span class="subname">- {{ curr.name }}</span>
             </div>
 
-            </p>
-            <p />
             <p v-show="!token">{{ curr.name }}</p>
           </div>
         </div>
@@ -105,7 +107,7 @@ import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import { hasIcon } from '@/partners';
 import masterFile from '@/_generated/master-file.json';
 import { toChecksumAddress } from '@/helpers/addressUtils';
-import {mapState} from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   props: {
@@ -133,8 +135,7 @@ export default {
     },
     swapTokenAddress: {
       type: Function,
-      default: function () {
-      }
+      default: function () {}
     },
     defaultValue: {
       type: Object,
@@ -224,20 +225,20 @@ export default {
       evt.target.src = this.network.type.icon;
     },
     iconFetcher(tok) {
-      try{
-        if(tok === 'ETH') return false;
+      try {
+        if (tok === 'ETH') return false;
         const address = this.swapTokenAddress(tok);
-        if(!address) {
-            try {
-              // eslint-disable-next-line
+        if (!address) {
+          try {
+            // eslint-disable-next-line
              return require(`@/assets/images/currency/coins/AllImages/${tok}.svg`);
-            } catch (e) {
-              if(this.getIcon(tok)){
-                return false;
-              }
-              // eslint-disable-next-line
-              return require(`@/assets/images/icons/web-solution.svg`);
+          } catch (e) {
+            if (this.getIcon(tok)) {
+              return false;
             }
+            // eslint-disable-next-line
+              return require(`@/assets/images/icons/web-solution.svg`);
+          }
         }
         const token = this.networkTokens[toChecksumAddress(address)];
         if (token) {
@@ -250,10 +251,9 @@ export default {
           return tokenSrc;
         }
         return this.network.type.icon;
-      } catch (e){
-        console.log(e)
+      } catch (e) {
+        console.log(e);
       }
-
     },
     getIcon(currency) {
       return hasIcon(currency);

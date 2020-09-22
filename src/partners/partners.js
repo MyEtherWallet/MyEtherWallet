@@ -83,6 +83,12 @@ export default class SwapProviders {
       const areEth = Object.values(tokens).filter(
         item => item.address !== null
       );
+      console.log(
+        areEth.find(item => {
+          return item.symbol === 'YFI';
+        })
+      ); // todo remove dev item
+      this.updateProviderRates = this.updateProviderRates + 1;
       if (this.ethereumTokenList.length === 0) {
         this.ethereumTokenList = areEth;
       } else {
