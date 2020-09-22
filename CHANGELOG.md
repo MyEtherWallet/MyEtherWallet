@@ -1,3 +1,7 @@
+### Bug
+
+- Get Eth token icons from ethereum-lists for swap  [#2592](https://github.com/MyEtherWallet/MyEtherWallet/pull/2592)
+
 ### Release v5.7.8-hotfix.1
 
 ### Devop
