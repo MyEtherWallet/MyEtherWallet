@@ -1,10 +1,6 @@
 <template>
   <div>
-    <mew-overlay
-      :show-overlay="open"
-      :title="typeTitle"
-      @closeOverlay="closeOverlay"
-    >
+    <mew-overlay :show-overlay="open" @closeOverlay="closeOverlay">
       <template v-slot:mewOverlayBody>
         <v-sheet
           v-if="type === '' && step === 0"
@@ -12,6 +8,8 @@
           max-width="650px"
           class="mx-auto pt-5 mew-component--software-overlay"
         >
+          <h2 class="text-center mb-10">Software</h2>
+
           <mew-super-button
             class="mb-5"
             btn-mode="small-right-image"
@@ -92,15 +90,6 @@ export default {
     type: '',
     step: 0
   }),
-  computed: {
-    typeTitle() {
-      return this.type === ''
-        ? 'Software'
-        : this.type === 'keystore'
-        ? 'Keystore file'
-        : 'Mnemonic phrase';
-    }
-  },
   watch: {
     type(newVal) {
       if (newVal === '') {

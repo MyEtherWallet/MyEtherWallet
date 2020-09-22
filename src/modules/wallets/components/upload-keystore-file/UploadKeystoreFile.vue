@@ -1,5 +1,7 @@
 <template>
   <v-sheet color="transparent" max-width="650px" width="100%" class="mx-auto">
+    <h2 class="text-center mb-10">Keystore file</h2>
+
     <mew6-white-sheet v-if="currentPage === 1" class="pa-10">
       <div class="d-flex align-center">
         <div>
