@@ -252,7 +252,7 @@ export default {
         }
         return this.network.type.icon;
       } catch (e) {
-        console.log(e);
+        return this.network.type.icon;
       }
     },
     getIcon(currency) {
