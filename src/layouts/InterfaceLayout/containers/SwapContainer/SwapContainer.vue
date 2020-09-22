@@ -48,6 +48,7 @@
                 :currencies="fromArray"
                 :override-currency="overrideFrom"
                 :from-source="true"
+                :swap-token-address="getTokenAddress"
                 page="SwapContainerFrom"
                 @selectedCurrency="setFromCurrency"
               />
@@ -87,6 +88,7 @@
                 :currencies="toArray"
                 :override-currency="overrideTo"
                 :from-source="false"
+                :swap-token-address="getTokenAddress"
                 page="SwapContainerTo"
                 @selectedCurrency="setToCurrency"
               />
@@ -585,6 +587,9 @@ export default {
     );
   },
   methods: {
+    getTokenAddress(currency){
+      return this.swap.getTokenAddress(currency, true)
+    },
     reset() {
       this.lastFeeEstimate = new BigNumber(0);
       this.gasNotice = false;
