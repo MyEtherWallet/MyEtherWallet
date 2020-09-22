@@ -60,7 +60,8 @@ import Vuetify, {
   VThemeProvider,
   VRadio,
   VRadioGroup,
-  VProgressLinear
+  VProgressLinear,
+  VFileInput
 } from 'vuetify/lib';
 import 'vuetify/dist/vuetify.min.css';
 
@@ -126,7 +127,8 @@ Vue.use(Vuetify, {
     VThemeProvider,
     VRadio,
     VRadioGroup,
-    VProgressLinear
+    VProgressLinear,
+    VFileInput
   }
 });
 

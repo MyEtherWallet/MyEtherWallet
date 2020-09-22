@@ -54,24 +54,29 @@
             description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users."
           />
         </v-sheet>
-        <div v-else-if="type === 'keystore'">
-          <keystore :update-step="updateStep" :step="step" />
-        </div>
-        <div v-else-if="type === 'mnemonic'">
-          <mnemonic-phrase :update-step="updateStep" :step="step" />
-        </div>
+        <upload-keystore-file
+          v-else-if="type === 'keystore'"
+          :update-step="updateStep"
+          :step="step"
+        />
+
+        <insert-mnemonic-phrase
+          v-else-if="type === 'mnemonic'"
+          :update-step="updateStep"
+          :step="step"
+        />
       </template>
     </mew-overlay>
   </div>
 </template>
 
 <script>
-import keystore from '@/modules/wallets/components/keystore/Keystore';
-import mnemonicPhrase from '@/modules/wallets/components/mnemonic-phrase/MnemonicPhrase';
+import uploadKeystoreFile from '@/modules/wallets/components/upload-keystore-file/UploadKeystoreFile';
+import insertMnemonicPhrase from '@/modules/wallets/components/insert-mnemonic-phrase/InsertMnemonicPhrase';
 
 export default {
   name: 'Software',
-  components: { keystore, mnemonicPhrase },
+  components: { uploadKeystoreFile, insertMnemonicPhrase },
   props: {
     open: {
       type: Boolean,
@@ -92,8 +97,8 @@ export default {
       return this.type === ''
         ? 'Software'
         : this.type === 'keystore'
-        ? 'Keystore File'
-        : 'Mnemonic Phrase';
+        ? 'Keystore file'
+        : 'Mnemonic phrase';
     }
   },
   watch: {

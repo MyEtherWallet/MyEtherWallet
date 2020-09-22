@@ -2,8 +2,8 @@
   <div
     :class="[
       $vuetify.theme.dark ? 'box-shadow-dark' : 'box-shadow-light',
-      smBorder ? 'sm-border' : '',
-      mdBorder ? 'md-border' : '',
+      smBorderRadius ? 'sm-border-radius' : '',
+      mdBorderRadius ? 'md-border-radius' : '',
       smShadow ? 'sm-shadow' : '',
       mdShadow ? 'md-shadow' : ''
     ]"
@@ -15,11 +15,11 @@
 <script>
 export default {
   props: {
-    mdBorder: {
+    smBorderRadius: {
       default: false,
       type: Boolean
     },
-    smBorder: {
+    mdBorderRadius: {
       default: false,
       type: Boolean
     },
@@ -32,11 +32,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.sm-border {
+.sm-border-radius {
   border: 1px solid var(--v-inputBorder-base);
   border-radius: 5px;
 }
-.md-border {
+.md-border-radius {
   border: 1px solid var(--v-inputBorder-base);
   border-radius: 10px;
 }
