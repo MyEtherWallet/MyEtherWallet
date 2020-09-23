@@ -614,7 +614,7 @@ export default {
       ],
       ledgerApps: parsedAppPaths,
       wallets: walletHolder,
-      // resetable
+      // resettable
       step: 0,
       steps: {},
       hwWalletInstance: {},

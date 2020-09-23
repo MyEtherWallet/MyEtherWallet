@@ -67,7 +67,7 @@
     <div class="spacer-y-medium" />
     <browser-extension-overlay :open="showBrowser" :close="close" />
     <hardware-access-overlay :open="showHardware" :close="close" />
-    <mobile-apps-overlay :open="showMobile" :close="close" />
+    <mobile-access-overlay :open="showMobile" :close="close" />
     <software-access-overlay :open="showSoftware" :close="close" />
   </div>
 </template>
@@ -76,7 +76,7 @@
 import blockTitle from '@/components/block-title/BlockTitle';
 import browserExtensionOverlay from '@/modules/wallets/components/browser-extension-overlay/BrowserExtensionOverlay';
 import hardwareAccessOverlay from '@/modules/wallets/components/hardware-access-overlay/HardwareAccessOverlay.';
-import mobileAppsOverlay from '@/modules/wallets/components/mobile-apps-overlay/MobileAppsOverlay';
+import mobileAccessOverlay from '@/modules/wallets/components/mobile-access-overlay/MobileAccessOverlay';
 import softwareAccessOverlay from '@/modules/wallets/components/software-access-overlay/SoftwareAccessOverlay';
 
 export default {
@@ -85,7 +85,7 @@ export default {
     blockTitle,
     browserExtensionOverlay,
     hardwareAccessOverlay,
-    mobileAppsOverlay,
+    mobileAccessOverlay,
     softwareAccessOverlay
   },
   data() {
