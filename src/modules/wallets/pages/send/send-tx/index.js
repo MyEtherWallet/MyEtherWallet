@@ -1,10 +1,17 @@
 import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
-import getLatestPrices from '@/modules/tokens/index';
+import TokensList from '@/modules/tokens/index';
+
 export default class SendTransaction {
-  constructor(balance) {
+  constructor(balance, apollo) {
     this.balance = balance;
-    this.getLatestPrices = new getLatestPrices();
+    this.apollo = apollo;
+    this.tokens = new TokensList(apollo);
+  }
+  getOwnersERC20Tokens(hash) {
+    console.error('getOwnersERC20Tokens', hash);
+    console.error('tokens', TokensList);
+    TokensList.getOwnersERC20Tokens(hash);
   }
   getFixedBal() {
     return new BigNumber(utils.fromWei(this.balance, 'ether')).toFixed();

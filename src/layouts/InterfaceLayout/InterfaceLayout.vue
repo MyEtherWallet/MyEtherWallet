@@ -497,7 +497,8 @@ export default {
           });
 
           if (found) this.notifyExpiredNames();
-        });c
+        });
+        c;
       }
     },
     notifyExpiredNames() {

@@ -13,7 +13,7 @@
             </div>
             <div class="d-flex">
               <mew-select
-                :items="coins"
+                :items="tokens"
                 :label="$t('sendTx.type')"
                 class="mr-3"
               />
@@ -88,10 +88,10 @@
 
 <script>
 import interfaceWrap from '@/components/interface-wrap/InterfaceWrap';
-import eth from '@/assets/images/currencies/icon-eth-blue.svg';
+// import eth from '@/assets/images/currencies/icon-eth-blue.svg';
 import divider from '@/components/dividerx/DividerX';
-import sendTransaction from './index.js';
-import { getLatestPrices } from '@/modules/tokens/getLatestPrices.graphql';
+import SendTransaction from './index';
+import TokensList from '@/modules/tokens/index';
 
 export default {
   components: {
@@ -128,38 +128,34 @@ export default {
           resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
         }
       ],
-      coins: [
-        {
-          name: 'ETH',
-          subtext: 'Ethereum',
-          value: 'Ethereum',
-          img: eth
-        }
+      tokens: [
+        // {
+        //   name: 'ETH',
+        //   subtext: 'Ethereum',
+        //   value: 'Ethereum',
+        //   img: eth
+        // }
       ]
     };
   },
   mounted() {
-    this.sendTx = new sendTransaction(this.account.balance);
+    this.sendTx = new SendTransaction(this.account.balance, this.$apollo);
+    this.tokensList = new TokensList(this.$apollo);
     this.fixedBal = this.sendTx.getFixedBal();
-    this.getSelectedValue()
+    this.getOwnersERC20Tokens();
   },
   methods: {
     getSelectedValue(value) {
       this.addressValue = value;
     },
     sendEntireBal() {
-      // this.amount = this.sendTx.getEntireBal();
-      console.error("in here???", this.$apollo)
-      this.$apollo
-        .query({
-          query: getLatestPrices
-        })
-        .then(response => {
-          console.error('response', response)
-        })
-        .catch(error => {
-          console.error('error', error)
-        });
+      this.amount = this.sendTx.getEntireBal();
+    },
+    async getOwnersERC20Tokens() {
+      this.tokens = await this.tokensList.getOwnersERC20Tokens(
+        '0x43689531907482BEE7e650D18411E284A7337A66'
+      );
+      console.error('tokens', this.tokens);
     }
   }
 };
