@@ -1,6 +1,6 @@
 <template>
   <div class="global--mew-component--mew-super-button">
-    <v-btn
+    <div
       v-if="btnMode === 'small-right-image'"
       class="small-right-image"
       :class="[
@@ -10,9 +10,9 @@
       ]"
     >
       <div if="note" class="top-right-note">{{ note }}</div>
-      <div class="d-flex align-center justify-space-between pa-7 pa-sm-9">
+      <div class="d-flex align-center justify-space-between pa-7 pa-sm-8">
         <div>
-          <div class="d-flex align-center mb-2">
+          <div class="d-flex align-center">
             <h4 class="font-weight-bold">{{ title }}</h4>
             <v-icon
               v-if="titleMdiIcon"
@@ -23,27 +23,32 @@
               {{ titleMdiIcon }}
             </v-icon>
           </div>
-          <div>{{ subtitle }}</div>
+          <div v-if="subtitle" class="mt-2">{{ subtitle }}</div>
         </div>
         <div v-if="rightIcons" class="ml-1 d-flex align-center">
           <img
             v-for="(i, key) in rightIcons"
             :key="key"
-            :style="rightIcons.length < 2 ? 'height: 70px' : 'height: 40px'"
+            :style="
+              !rightIconHeight && rightIcons.length < 2
+                ? 'height: 70px'
+                : 'height: 40px'
+            "
             :src="i"
             :alt="title"
             class="ml-2"
+            :height="rightIconHeight"
           />
         </div>
         <img
           v-if="rightIcon"
-          style="height: 70px"
           :src="rightIcon"
           :alt="title"
           class="ml-3"
+          :height="rightIconHeight"
         />
       </div>
-    </v-btn>
+    </div>
     <div
       v-if="btnMode === 'large-right-image'"
       class="large-right-image"
@@ -226,6 +231,10 @@ export default {
       default: function () {
         return [];
       }
+    },
+    rightIconHeight: {
+      type: Number,
+      default: 70
     },
     /**
      * The number of cols for the left side to take up.

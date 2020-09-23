@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@keepkey/keepkey.js": "1.2.3",
-    "@ledgerhq/hw-app-eth": "5.23.0",
+    "@ledgerhq/hw-app-eth": "5.24.0",
     "@ledgerhq/hw-transport-u2f": "5.22.0",
     "@ledgerhq/hw-transport-webusb": "5.23.0",
     "@myetherwallet/mewconnect-web-client": "2.1.5-beta.1",

@@ -15,7 +15,7 @@
           </router-link>
         </h5>
       </block-title>
-      <v-sheet color="transparent" max-width="650px" class="mx-auto">
+      <v-sheet color="transparent" max-width="550px" class="mx-auto">
         <div class="mb-5">
           <router-link
             :to="{ name: 'AccessWalletHardwareWallets', query: {} }"

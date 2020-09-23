@@ -6,9 +6,9 @@
     <v-sheet color="transparent" max-width="400px" class="mx-auto px-5">
       <div v-for="(btn, key) in buttons" :key="key" class="mb-3">
         <router-link :to="btn.to" class="display--block">
-          <v-btn
-            class="d-flex align-center justify-space-between py-6 px-6 text-transform--initial border-radius--5px"
-            style="width: 100%; height: initial"
+          <div
+            class="white titlePrimary--text d-flex align-center justify-space-between py-6 px-6 text-transform--initial border-radius--5px"
+            style="width: 100%; height: initial; letter-spacing: initial"
           >
             <div class="d-flex align-center">
               <img
@@ -20,7 +20,7 @@
               <div>{{ btn.label }}</div>
             </div>
             <div>Install</div>
-          </v-btn>
+          </div>
         </router-link>
       </div>
     </v-sheet>

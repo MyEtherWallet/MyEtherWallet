@@ -1,59 +1,65 @@
 <template>
   <div class="expandHeader pb-12">
-    <block-title :data="titleData" />
+    <v-container>
+      <block-title :data="titleData" />
 
-    <v-sheet color="transparent" max-width="1000px" class="mx-auto">
-      <v-row>
-        <v-col v-for="(b, key) in buttons" :key="key" cols="6">
-          <a :href="b.link" target="_blank">
-            <v-sheet color="white" class="border-radius--10px pa-10">
-              <div class="d-flex align-center justify-space-between">
-                <div class="pr-9">
-                  <img
-                    v-if="b.logoImg"
-                    height="32"
-                    :src="b.logoImg"
-                    alt="Logo"
-                    class="mb-3"
-                  />
-                  <div
-                    v-if="b.logoText"
-                    class="d-flex align-center logo-text mb-3"
-                  >
-                    <div>{{ b.logoText }}</div>
-                  </div>
-                  <h6
-                    class="text-uppercase font-weight-bold primary--text text--lighten-1"
-                  >
-                    {{ b.priceNote }}
-                  </h6>
-
-                  <div class="d-flex">
-                    <h5 class="mr-1 font-weight-black">{{ b.currency }}</h5>
-                    <h3 class="text-uppercase font-weight-bold">
-                      {{ b.price }}
-                    </h3>
-                  </div>
+      <v-sheet color="transparent" max-width="1000px" class="mx-auto">
+        <v-row>
+          <v-col v-for="(b, key) in buttons" :key="key" cols="12" sm="6">
+            <a :href="b.link" target="_blank">
+              <v-sheet
+                color="white"
+                class="border-radius--10px pa-10"
+                style="height: 100%"
+              >
+                <div class="d-flex align-center justify-space-between">
                   <div>
-                    {{ b.note }}
+                    <img
+                      v-if="b.logoImg"
+                      height="32"
+                      :src="b.logoImg"
+                      alt="Logo"
+                      class="mb-3"
+                    />
+                    <div
+                      v-if="b.logoText"
+                      class="d-flex align-center logo-text mb-3"
+                    >
+                      <div>{{ b.logoText }}</div>
+                    </div>
+                    <h6
+                      class="text-uppercase font-weight-bold primary--text text--lighten-1"
+                    >
+                      {{ b.priceNote }}
+                    </h6>
+
+                    <div class="d-flex">
+                      <h5 class="mr-1 font-weight-black">{{ b.currency }}</h5>
+                      <h3 class="text-uppercase font-weight-bold">
+                        {{ b.price }}
+                      </h3>
+                    </div>
+                    <div>
+                      {{ b.note }}
+                    </div>
+                    <div class="mt-3 primary--text font-weight-medium">
+                      Learn more >
+                    </div>
                   </div>
-                  <div class="mt-3 primary--text font-weight-medium">
-                    Learn more >
+                  <div class="d-none d-md-block pl-9">
+                    <img
+                      class="wallet-img"
+                      :src="b.walletImg"
+                      alt="Hardware Wallet"
+                    />
                   </div>
                 </div>
-                <div>
-                  <img
-                    class="wallet-img"
-                    :src="b.walletImg"
-                    alt="Hardware Wallet"
-                  />
-                </div>
-              </div>
-            </v-sheet>
-          </a>
-        </v-col>
-      </v-row>
-    </v-sheet>
+              </v-sheet>
+            </a>
+          </v-col>
+        </v-row>
+      </v-sheet>
+    </v-container>
   </div>
 </template>
 
