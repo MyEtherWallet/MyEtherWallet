@@ -23,7 +23,10 @@
     "update:lists": "node fetchLists/index.js",
     "update:mainlists": "node fetchLists/fetchMainLists.js",
     "update:packages": "node package-test.js",
-    "update:swap": "node compileBaseSwapOptions.js"
+    "update:swap": "node compileBaseSwapOptions.js",
+    "apollo": "apollo",
+    "apollo:schema": "apollo service:download src/apollo/schemas/api.json",
+    "apollo:codegen": "npm run apollo:schema && apollo client:codegen src/apollo/global/globalTypes.json --target=json"
   },
   "gitHooks": {
     "pre-commit": "npm run lint && npm run test"
@@ -63,8 +66,9 @@
     "subscriptions-transport-ws": "0.9.18"
   },
   "devDependencies": {
+    "apollo": "2.30.2",
     "@keepkey/keepkey.js": "1.2.3",
-    "@ledgerhq/hw-app-eth": "5.23.0",
+    "@ledgerhq/hw-app-eth": "5.24.0",
     "@ledgerhq/hw-transport-u2f": "5.22.0",
     "@ledgerhq/hw-transport-webusb": "5.23.0",
     "@mdi/font": "5.5.55",
@@ -107,7 +111,7 @@
     "package-json": "6.5.0",
     "postcss-import": "12.0.1",
     "postcss-url": "8.0.0",
-    "prettier": "2.1.1",
+    "prettier": "2.1.2",
     "raw-loader": "4.0.1",
     "remark-cli": "8.0.1",
     "remark-preset-lint-recommended": "4.0.1",

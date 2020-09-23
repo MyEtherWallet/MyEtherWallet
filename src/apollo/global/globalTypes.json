@@ -1,0 +1,111 @@
+{
+	"operations": [
+		{
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/modules/tokens/getLatestPrices.graphql",
+			"operationName": "getLatestPrices",
+			"operationType": "query",
+			"rootType": "Query",
+			"variables": [],
+			"source": "query getLatestPrices {\n  getLatestPrices {\n    __typename\n    id\n    symbol\n    name\n    image\n    contract\n    current_price\n    market_cap\n    total_volume\n    price_change_24h\n    total_supply\n  }\n}",
+			"fields": [
+				{
+					"responseName": "getLatestPrices",
+					"fieldName": "getLatestPrices",
+					"type": "[TokenMarketInfo]!",
+					"isConditional": false,
+					"isDeprecated": false,
+					"fields": [
+						{
+							"responseName": "__typename",
+							"fieldName": "__typename",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "id",
+							"fieldName": "id",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "symbol",
+							"fieldName": "symbol",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "name",
+							"fieldName": "name",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "image",
+							"fieldName": "image",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "contract",
+							"fieldName": "contract",
+							"type": "String",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "current_price",
+							"fieldName": "current_price",
+							"type": "Float",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "market_cap",
+							"fieldName": "market_cap",
+							"type": "Float",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "total_volume",
+							"fieldName": "total_volume",
+							"type": "Float",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "price_change_24h",
+							"fieldName": "price_change_24h",
+							"type": "Float",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "total_supply",
+							"fieldName": "total_supply",
+							"type": "String",
+							"isConditional": false,
+							"isDeprecated": false
+						}
+					],
+					"fragmentSpreads": [],
+					"inlineFragments": []
+				}
+			],
+			"fragmentSpreads": [],
+			"inlineFragments": [],
+			"fragmentsReferenced": [],
+			"sourceWithFragments": "query getLatestPrices {\n  getLatestPrices {\n    __typename\n    id\n    symbol\n    name\n    image\n    contract\n    current_price\n    market_cap\n    total_volume\n    price_change_24h\n    total_supply\n  }\n}",
+			"operationId": "402f0593f5157e7ec00b832e8e83a5bc180d9b76afdeff94a923ebedcfb05bd7"
+		}
+	],
+	"fragments": [],
+	"typesUsed": [],
+	"unionTypes": [],
+	"interfaceTypes": []
+}
