@@ -5,6 +5,7 @@
     right-btn-text="Cancel"
     :back="accessBack"
     :close="overlayClose"
+    :left-btn-text="step > 0 ? 'Back' : ''"
   >
     <template v-slot:mewOverlayBody>
       <div v-if="!step">
