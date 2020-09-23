@@ -61,7 +61,8 @@ import Vuetify, {
   VRadio,
   VRadioGroup,
   VProgressLinear,
-  VFileInput
+  VFileInput,
+  VSimpleCheckbox
 } from 'vuetify/lib';
 import 'vuetify/dist/vuetify.min.css';
 
@@ -128,7 +129,8 @@ Vue.use(Vuetify, {
     VRadio,
     VRadioGroup,
     VProgressLinear,
-    VFileInput
+    VFileInput,
+    VSimpleCheckbox
   }
 });
 

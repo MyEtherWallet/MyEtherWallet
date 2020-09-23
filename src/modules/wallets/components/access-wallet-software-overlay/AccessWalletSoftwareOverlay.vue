@@ -58,7 +58,7 @@
           :step="step"
         />
 
-        <insert-mnemonic-phrase
+        <enter-mnemonic-phrase
           v-else-if="type === 'mnemonic'"
           :update-step="updateStep"
           :step="step"
@@ -70,11 +70,11 @@
 
 <script>
 import uploadKeystoreFile from '@/modules/wallets/components/upload-keystore-file/UploadKeystoreFile';
-import insertMnemonicPhrase from '@/modules/wallets/components/insert-mnemonic-phrase/InsertMnemonicPhrase';
+import enterMnemonicPhrase from '@/modules/wallets/components/enter-mnemonic-phrase/EnterMnemonicPhrase';
 
 export default {
   name: 'Software',
-  components: { uploadKeystoreFile, insertMnemonicPhrase },
+  components: { uploadKeystoreFile, enterMnemonicPhrase },
   props: {
     open: {
       type: Boolean,

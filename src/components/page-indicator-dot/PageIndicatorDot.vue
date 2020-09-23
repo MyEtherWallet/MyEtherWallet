@@ -4,7 +4,7 @@
       v-for="(i, k) in items"
       :ref="k"
       :key="k"
-      class="indicator-dot mx-1"
+      class="indicator-dot mx-2"
     ></div>
   </div>
 </template>

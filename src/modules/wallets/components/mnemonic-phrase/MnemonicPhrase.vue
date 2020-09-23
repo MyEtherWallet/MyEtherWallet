@@ -39,7 +39,9 @@
             has-dividers
             :panel-items="extraWordsPanel"
           >
-            <template v-slot:panelBody1> Input needs to be added </template>
+            <template v-slot:panelBody1>
+              <mew-input label="Extra word" placeholder=" " />
+            </template>
           </mew-expand-panel>
 
           <div class="d-flex justify-center mt-6">
