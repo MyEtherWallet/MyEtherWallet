@@ -27,7 +27,7 @@
         >
           <figure v-lazy-load class="token-icon">
             <img
-              :data-url="iconFetcher(selectedCurrency.symbol)"
+              :src="iconFetcher(selectedCurrency.symbol)"
               @error="iconFallback"
             />
           </figure>
