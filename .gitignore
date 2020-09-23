@@ -18,6 +18,7 @@ selenium-debug.log
 /tests/unit/coverage/
 release
 chrome-extension
+.env
 
 # Generated files
 src/_generated
