@@ -1,5 +1,10 @@
-const configs = {
-  APOLLO_HTTP: process.env.VUE_APP_HTTP_LINK || '',
-  APOLLO_WS: process.env.VUE_APP_WS_CLIENT || ''
+module.exports = {
+  client: {
+      service: {
+          name: 'api',
+          url: 'https://hbfzqg7jia.execute-api.us-west-2.amazonaws.com/dev',
+          includes: ['**/*.graphql'],
+          excludes: ['node_modules/**/*']
+      }
+  }
 }
-export default configs

@@ -91,6 +91,7 @@ import interfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';
 import divider from '@/components/dividerx/DividerX';
 import sendTransaction from './index.js';
+import { getLatestPrices } from '@/modules/tokens/getLatestPrices.graphql';
 
 export default {
   components: {
@@ -137,18 +138,28 @@ export default {
       ]
     };
   },
-  computed: {
-  },
   mounted() {
     this.sendTx = new sendTransaction(this.account.balance);
     this.fixedBal = this.sendTx.getFixedBal();
+    this.getSelectedValue()
   },
   methods: {
     getSelectedValue(value) {
       this.addressValue = value;
     },
     sendEntireBal() {
-      this.amount = this.sendTx.getEntireBal();
+      // this.amount = this.sendTx.getEntireBal();
+      console.error("in here???", this.$apollo)
+      this.$apollo
+        .query({
+          query: getLatestPrices
+        })
+        .then(response => {
+          console.error('response', response)
+        })
+        .catch(error => {
+          console.error('error', error)
+        });
     }
   }
 };

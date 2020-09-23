@@ -4,9 +4,7 @@ module.exports = {
     WITH_NETWORK: false,
     VERSION: 'test',
     NODE_ENV: 'test',
-    ROUTER_MODE: 'hash',
-    VUE_APP_HTTP_LINK: 'https://hbfzqg7jia.execute-api.us-west-2.amazonaws.com/dev',
-    VUE_APP_WS_CLIENT: 'wss://61s5id4f8c.execute-api.us-west-2.amazonaws.com/dev'
+    ROUTER_MODE: 'hash'
   },
   collectCoverageFrom: ['src/**/*.{js,vue}'],
   coveragePathIgnorePatterns: [
