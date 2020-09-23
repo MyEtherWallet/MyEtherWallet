@@ -17,6 +17,20 @@ import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
 import vuetify from '@/plugins/vuetify';
 
+/* Apollo  */
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import ApolloClient from 'apollo-client';
+import { split } from 'apollo-link';
+import { HttpLink } from 'apollo-link-http';
+import { WebSocketLink } from 'apollo-link-ws';
+import { getMainDefinition } from 'apollo-utilities';
+import VueApollo from 'vue-apollo';
+import { SubscriptionClient } from 'subscriptions-transport-ws';
+import { onError } from 'apollo-link-error';
+import ApolloConfig from '../apollo.config';
+
+
+
 import whiteSheet from '@/components/white-sheet/WhiteSheet.vue';
 Vue.component('mew6-white-sheet', whiteSheet);
 
@@ -91,3 +105,11 @@ Sentry.init({
     });
   }
 });
+
+// Apollo (Graphql)
+
+const httpLink = new HttpLink({
+  uri: ApolloConfig.APOLLO_HTTP
+});
+
+console.error("httpLink", ApolloConfig)

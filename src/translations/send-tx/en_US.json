@@ -51,5 +51,6 @@
   "invalid-signature": "Invalid Signature",
   "signed-chain-id": "Signed Chain ID",
   "chain-no-match": "does not match chain id for selected network",
-  "enter-addr": "Please enter an address"
+  "enter-addr": "Please enter an address",
+  "gas-data": "Gas & Data"
 }

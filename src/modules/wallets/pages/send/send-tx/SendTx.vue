@@ -4,24 +4,25 @@
       <mew6-white-sheet>
         <interface-wrap :title="$t('sendTx.send-tx')">
           <div>
-            <div class="d-flex justify-end">
+            <div class="d-flex justify-end mr-3 entire-bal">
               <mew-button
                 :title="$t('sendTx.entire-bal')"
                 btn-style="transparent"
+                @click.native="sendEntireBal"
               />
             </div>
             <div class="d-flex">
               <mew-select
                 :items="coins"
-                :label="$t('sendTx.amount')"
+                :label="$t('sendTx.type')"
                 class="mr-3"
               />
               <div class="position--relative flex-grow-1">
                 <mew-input
-                  :label="$t('sendTx.type')"
+                  :label="$t('sendTx.amount')"
                   placeholder=" "
-                  right-label="$23,232.93"
-                  value="10.23472384"
+                  :right-label="fixedBal"
+                  :value="amount"
                 />
               </div>
             </div>
@@ -30,7 +31,7 @@
               :copy-tooltip="$t('common.copy')"
               :save-tooltip="$t('common.save')"
               :enable-save-address="true"
-              :label="$t('sendTx.send-addr')"
+              :label="$t('sendTx.to-addr')"
               :items="addresses"
               :placeholder="$t('sendTx.enter-addr')"
               :success-toast="$t('sendTx.success.title')"
@@ -72,7 +73,7 @@
           </div>
           <div class="text-center mt-4">
             <mew-button
-              :title="$t('sendTx.clear-all')"
+              :title="$t('common.clear-all')"
               :has-full-width="false"
               button-size="small"
               btn-style="transparent"
@@ -89,6 +90,7 @@
 import interfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';
 import divider from '@/components/dividerx/DividerX';
+import sendTransaction from './index.js';
 
 export default {
   components: {
@@ -97,10 +99,17 @@ export default {
   },
   data() {
     return {
+      // will remove this once we get state
+      account: {
+        balance: '20000000000000000000000'
+      },
+      sendTx: null,
+      amount: '0',
+      fixedBal: '0',
       expandPanel: [
         {
-          name: 'Advanced',
-          subtext: 'Gas & Data'
+          name: this.$t('common.advanced'),
+          subtext: this.$t('sendTx.gas-data')
         }
       ],
       addressValue: '',
@@ -128,10 +137,28 @@ export default {
       ]
     };
   },
+  computed: {
+  },
+  mounted() {
+    this.sendTx = new sendTransaction(this.account.balance);
+    this.fixedBal = this.sendTx.getFixedBal();
+  },
   methods: {
     getSelectedValue(value) {
       this.addressValue = value;
+    },
+    sendEntireBal() {
+      this.amount = this.sendTx.getEntireBal();
     }
   }
 };
 </script>
+
+<style lang="scss">
+// change this on mew components
+.entire-bal {
+  .mew-button {
+    padding: 0 !important;
+  }
+}
+</style>
