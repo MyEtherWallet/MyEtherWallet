@@ -1,11 +1,12 @@
 <template>
   <div class="global--mew-component--mew-super-button">
-    <div
+    <v-btn
       v-if="btnMode === 'small-right-image'"
       class="small-right-image"
       :class="[
         colorTheme === 'basic' ? 'white titlePrimary--text' : '',
-        colorTheme === 'outline' ? 'btn-outline' : ''
+        colorTheme === 'outline' ? 'btn-outline' : '',
+        colorTheme === 'white' ? 'white titlePrimary--text' : ''
       ]"
     >
       <div if="note" class="top-right-note">{{ note }}</div>
@@ -42,7 +43,7 @@
           class="ml-3"
         />
       </div>
-    </div>
+    </v-btn>
     <div
       v-if="btnMode === 'large-right-image'"
       class="large-right-image"

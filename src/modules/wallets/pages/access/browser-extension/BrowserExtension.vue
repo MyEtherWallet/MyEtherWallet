@@ -3,18 +3,26 @@
     <block-title :data="titleData">
       <h5 class="white--text ma-0">Please select a browser from below.</h5>
     </block-title>
-    <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
-      <v-row>
-        <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="6">
-          <router-link :to="btn.to" class="display--block">
-            <mew-super-button
-              :title="btn.label"
-              :right-icon="btn.icon"
-              icon-type="img"
-            />
-          </router-link>
-        </v-col>
-      </v-row>
+    <v-sheet color="transparent" max-width="400px" class="mx-auto px-5">
+      <div v-for="(btn, key) in buttons" :key="key" class="mb-3">
+        <router-link :to="btn.to" class="display--block">
+          <v-btn
+            class="d-flex align-center justify-space-between py-6 px-6 text-transform--initial border-radius--5px"
+            style="width: 100%; height: initial"
+          >
+            <div class="d-flex align-center">
+              <img
+                class="mr-2"
+                :src="btn.icon"
+                :alt="btn.label"
+                style="height: 38px"
+              />
+              <div>{{ btn.label }}</div>
+            </div>
+            <div>Install</div>
+          </v-btn>
+        </router-link>
+      </div>
     </v-sheet>
     <div class="spacer-y-medium" />
   </div>

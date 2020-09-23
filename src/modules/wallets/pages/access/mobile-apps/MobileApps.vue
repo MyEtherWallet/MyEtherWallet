@@ -10,10 +10,11 @@
         <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
           <router-link :to="btn.to" class="display--block">
             <mew-super-button
+              color-theme="white"
+              btn-mode="small-right-image"
               :title="btn.label"
               :subtitle="btn.description"
               :right-icon="btn.icon"
-              icon-type="img"
             />
           </router-link>
         </v-col>
