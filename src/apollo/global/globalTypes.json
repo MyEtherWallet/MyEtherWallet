@@ -1,7 +1,7 @@
 {
 	"operations": [
 		{
-			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/modules/tokens/getLatestPrices.graphql",
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/modules/tokens/tokens.graphql",
 			"operationName": "getLatestPrices",
 			"operationType": "query",
 			"rootType": "Query",
@@ -102,9 +102,173 @@
 			"fragmentsReferenced": [],
 			"sourceWithFragments": "query getLatestPrices {\n  getLatestPrices {\n    __typename\n    id\n    symbol\n    name\n    image\n    contract\n    current_price\n    market_cap\n    total_volume\n    price_change_24h\n    total_supply\n  }\n}",
 			"operationId": "402f0593f5157e7ec00b832e8e83a5bc180d9b76afdeff94a923ebedcfb05bd7"
+		},
+		{
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/modules/tokens/tokens.graphql",
+			"operationName": "getOwnersERC20Tokens",
+			"operationType": "query",
+			"rootType": "Query",
+			"variables": [
+				{
+					"name": "hash",
+					"type": "String!"
+				},
+				{
+					"name": "_nextKey",
+					"type": "String"
+				}
+			],
+			"source": "query getOwnersERC20Tokens($hash: String!, $_nextKey: String) {\n  getOwnersERC20Tokens(owner: $hash, nextKey: $_nextKey) {\n    __typename\n    owners {\n      __typename\n      tokenInfo {\n        __typename\n        ...TokenFragment\n        contract\n      }\n      balance\n    }\n    nextKey\n  }\n}",
+			"fields": [
+				{
+					"responseName": "getOwnersERC20Tokens",
+					"fieldName": "getOwnersERC20Tokens",
+					"type": "ERC20TokenOwners!",
+					"args": [
+						{
+							"name": "owner",
+							"value": {
+								"kind": "Variable",
+								"variableName": "hash"
+							},
+							"type": "String!"
+						},
+						{
+							"name": "nextKey",
+							"value": {
+								"kind": "Variable",
+								"variableName": "_nextKey"
+							},
+							"type": "String"
+						}
+					],
+					"isConditional": false,
+					"description": "Returns a list of all ERC20Tokens owned by an address",
+					"isDeprecated": false,
+					"fields": [
+						{
+							"responseName": "__typename",
+							"fieldName": "__typename",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "owners",
+							"fieldName": "owners",
+							"type": "[ERC20TokenBalance]!",
+							"isConditional": false,
+							"isDeprecated": false,
+							"fields": [
+								{
+									"responseName": "__typename",
+									"fieldName": "__typename",
+									"type": "String!",
+									"isConditional": false,
+									"isDeprecated": false
+								},
+								{
+									"responseName": "tokenInfo",
+									"fieldName": "tokenInfo",
+									"type": "EthTokenInfo!",
+									"isConditional": false,
+									"isDeprecated": false,
+									"fields": [
+										{
+											"responseName": "__typename",
+											"fieldName": "__typename",
+											"type": "String!",
+											"isConditional": false,
+											"isDeprecated": false
+										},
+										{
+											"responseName": "contract",
+											"fieldName": "contract",
+											"type": "String!",
+											"isConditional": false,
+											"isDeprecated": false
+										}
+									],
+									"fragmentSpreads": [
+										"TokenFragment"
+									],
+									"inlineFragments": []
+								},
+								{
+									"responseName": "balance",
+									"fieldName": "balance",
+									"type": "String!",
+									"isConditional": false,
+									"isDeprecated": false
+								}
+							],
+							"fragmentSpreads": [],
+							"inlineFragments": []
+						},
+						{
+							"responseName": "nextKey",
+							"fieldName": "nextKey",
+							"type": "String",
+							"isConditional": false,
+							"isDeprecated": false
+						}
+					],
+					"fragmentSpreads": [],
+					"inlineFragments": []
+				}
+			],
+			"fragmentSpreads": [],
+			"inlineFragments": [],
+			"fragmentsReferenced": [
+				"TokenFragment"
+			],
+			"sourceWithFragments": "query getOwnersERC20Tokens($hash: String!, $_nextKey: String) {\n  getOwnersERC20Tokens(owner: $hash, nextKey: $_nextKey) {\n    __typename\n    owners {\n      __typename\n      tokenInfo {\n        __typename\n        ...TokenFragment\n        contract\n      }\n      balance\n    }\n    nextKey\n  }\n}\nfragment TokenFragment on EthTokenInfo {\n  __typename\n  name\n  symbol\n  decimals\n}",
+			"operationId": "e4101db0908e197d2029ecaa177d66a6f12d1794f28b9cadf3a5e658e79c3e37"
 		}
 	],
-	"fragments": [],
+	"fragments": [
+		{
+			"typeCondition": "EthTokenInfo",
+			"possibleTypes": [
+				"EthTokenInfo"
+			],
+			"fragmentName": "TokenFragment",
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/modules/tokens/tokens.graphql",
+			"source": "fragment TokenFragment on EthTokenInfo {\n  __typename\n  name\n  symbol\n  decimals\n}",
+			"fields": [
+				{
+					"responseName": "__typename",
+					"fieldName": "__typename",
+					"type": "String!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "name",
+					"fieldName": "name",
+					"type": "String",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "symbol",
+					"fieldName": "symbol",
+					"type": "String",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "decimals",
+					"fieldName": "decimals",
+					"type": "Int",
+					"isConditional": false,
+					"isDeprecated": false
+				}
+			],
+			"fragmentSpreads": [],
+			"inlineFragments": []
+		}
+	],
 	"typesUsed": [],
 	"unionTypes": [],
 	"interfaceTypes": []
