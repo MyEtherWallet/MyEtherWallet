@@ -1,3 +1,13 @@
+### Release v5.7.8-hotfix.3
+
+### Hotfix
+
+- Weird gasprice setting [#2595](https://github.com/MyEtherWallet/MyEtherWallet/pull/2595)
+
+### Bug
+
+- Get Eth token icons from ethereum-lists for swap  [#2592](https://github.com/MyEtherWallet/MyEtherWallet/pull/2592)
+
 ### Release v5.7.8-hotfix.2
 
 ### Bug

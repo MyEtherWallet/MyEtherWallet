@@ -810,10 +810,11 @@ export default {
       this.web3.eth
         .getGasPrice()
         .then(res => {
-          this.highestGas = new BigNumber(
+          const parsedGas = new BigNumber(
             this.web3.utils.fromWei(res, 'gwei')
           ).toString();
-          this.setGasPrice(this.highestGas);
+          this.setGasPrice(parsedGas);
+          this.highestGas = parsedGas;
         })
         .catch(e => {
           Toast.responseHandler(e, Toast.ERROR);
