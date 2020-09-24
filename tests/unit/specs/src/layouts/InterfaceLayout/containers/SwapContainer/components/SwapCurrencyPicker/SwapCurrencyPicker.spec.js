@@ -61,16 +61,6 @@ describe('SwapCurrencyPicker.vue', () => {
     ).toBe(-1);
   });
 
-  it('should render correct selectedCurrency data', () => {
-    const dropDownContainer = wrapper.vm.$el.querySelector(
-      '.dropdown-container'
-    );
-    // expect(dropDownContainer.querySelector('span').textContent.trim()).toEqual("- " + wrapper.vm.$data.selectedCurrency.name);
-    expect(dropDownContainer.querySelectorAll('p')[1].textContent).toBe(
-      wrapper.vm.$data.selectedCurrency.name
-    );
-  });
-
   it('should render correct fromSource data', () => {
     wrapper.setProps({ fromSource: false });
     expect(wrapper.vm.$data.selectedCurrency.name).toEqual('Bitcoin');
