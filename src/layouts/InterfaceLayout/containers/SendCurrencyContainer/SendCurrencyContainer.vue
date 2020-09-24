@@ -67,7 +67,8 @@
           </div>
           <div class="fee-value">
             <div class="gwei">
-              {{ displayedGasPrice(gasPrice) }} {{ $t('common.gas.gwei') }}
+              {{ displayedGasPrice(actualGasPrice) }}
+              {{ $t('common.gas.gwei') }}
               <!--(Economic)-->
             </div>
             <div v-show="network.type.name === 'ETH'" class="usd">
@@ -172,6 +173,7 @@ import ethUnit from 'ethjs-unit';
 import utils from 'web3-utils';
 import fetch from 'node-fetch';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
+import { getGasBasedOnType } from '@/helpers/gasMultiplier';
 
 export default {
   components: {
@@ -256,11 +258,14 @@ export default {
       'online',
       'gasLimitWarning'
     ]),
+    actualGasPrice() {
+      return getGasBasedOnType(this.gasPrice);
+    },
     showGasWarning() {
-      return this.gasPrice >= this.gasLimitWarning;
+      return this.actualGasPrice >= this.gasLimitWarning;
     },
     txFee() {
-      return new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
+      return new BigNumber(ethUnit.toWei(this.actualGasPrice, 'gwei')).times(
         this.gasLimit || 0
       );
     },
@@ -471,7 +476,7 @@ export default {
           this.balanceDefault > 0
             ? this.balanceDefault.minus(
                 ethUnit.fromWei(
-                  new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei'))
+                  new BigNumber(ethUnit.toWei(this.actualGasPrice, 'gwei'))
                     .times(this.gasLimit)
                     .toString(),
                   'ether'
@@ -508,8 +513,8 @@ export default {
         from: coinbase,
         value: this.txValue,
         to: this.txTo,
-        gasPrice: Misc.sanitizeHex(
-          ethUnit.toWei(this.gasPrice, 'gwei').toString(16)
+        actualGasPrice: Misc.sanitizeHex(
+          ethUnit.toWei(this.actualGasPrice, 'gwei').toString(16)
         ),
         data: this.txData
       };
@@ -531,8 +536,8 @@ export default {
         const nonce = await this.web3.eth.getTransactionCount(coinbase);
         const raw = {
           nonce: Misc.sanitizeHex(new BigNumber(nonce).toString(16)),
-          gasPrice: Misc.sanitizeHex(
-            ethUnit.toWei(this.gasPrice, 'gwei').toString(16)
+          actualGasPrice: Misc.sanitizeHex(
+            ethUnit.toWei(this.actualGasPrice, 'gwei').toString(16)
           ),
           gasLimit: Misc.sanitizeHex(new BigNumber(this.gasLimit).toString(16)),
           to: this.txTo,
