@@ -29,7 +29,7 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "@myetherwallet/mew-components": "0.5.2-beta",
+    "@myetherwallet/mew-components": "0.5.6-beta",
     "@sentry/browser": "5.23.0",
     "@sentry/integrations": "5.23.0",
     "@unstoppabledomains/resolution": "1.6.2",

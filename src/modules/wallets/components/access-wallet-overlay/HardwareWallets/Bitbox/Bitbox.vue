@@ -1,102 +1,97 @@
 <template>
   <mew-overlay
     :show-overlay="open"
-    title="1. Connect with Finney"
     right-btn-text="Cancel"
     @closeOverlay="$emit('close')"
   >
-    <template v-slot:mewComponent>
-      <mew-tabs :items="tabs">
-        <template v-slot:tabContent1>
-          <div>
-            <h2 class="text-center pb-8">Select BitBox wallet</h2>
-            <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
-              <v-row>
-                <v-col
-                  v-for="(btn, key) in buttons"
-                  :key="key"
-                  cols="12"
-                  sm="12"
-                >
-                  <mew-super-button
-                    right-icon-type="img"
-                    :right-icon="btn.icon"
-                    :title="btn.label"
-                  />
-                </v-col>
-              </v-row>
-            </v-sheet>
+    <template v-slot:mewOverlayBody>
+      <v-container v-if="step === 1">
+        <h2 class="text-center mb-10">1. Enter your password</h2>
+        <mew6-white-sheet max-width="600px" class="mx-auto pa-4 pa-sm-12">
+          <div class="mb-6 font-weight-bold">Enter your Bitbox password.</div>
+          <v-text-field
+            label="Password"
+            :type="showPassword ? 'text' : 'password'"
+            placeholder="Enter keystore file password"
+            outlined
+            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            @click:append="showPassword = !showPassword"
+          />
+          <mew-checkbox
+            class="justify-center"
+            label="To access my wallet, I accept"
+            :link="linkToTerms"
+          />
+
+          <div class="d-flex justify-center mt-2">
+            <mew-button
+              title="Access my wallet"
+              button-size="xlarge"
+              :has-full-width="false"
+              @click.native="step = 2"
+            />
           </div>
-        </template>
-        <template v-slot:tabContent2>
-          <div>
-            <h2 class="text-center pb-8">1. Enter your password</h2>
-            <mew6-white-sheet>
-              <div class="overlay-content pa-8 text-center">
-                <div class="font-weight-bold mb-8">
-                  Please enter the passwordof your BitBox device.
-                </div>
-
-                <mew-input />
-
-                <mew-checkbox
-                  label="To access my wallet, I accept Terms."
-                  :link="link"
-                />
-                <mew-button
-                  button-size="xlarge"
-                  has-full-width
-                  title="Connect with Ledger"
-                  @click.native="activeTab = 2"
-                />
-              </div>
-            </mew6-white-sheet>
+        </mew6-white-sheet>
+      </v-container>
+      <v-container v-if="step === 2">
+        <h2 class="text-center mb-10">1. Match your encryption pairing code</h2>
+        <mew6-white-sheet max-width="600px" class="mx-auto pa-4 pa-sm-12">
+          <div class="mb-4 font-weight-bold">
+            Please confirm the encryption pairing code matches what is shown on
+            your BitBox 02.
           </div>
-        </template>
-        <template v-slot:tabContent2>
+
           <div>
-            <h2 class="text-center pb-8">2. Confirm network & address</h2>
-            <div class="overlay-content">
-              <mew-expand-panel :panel-items="panelItems">
-                <template v-slot:panelBody1>
-                  <GroupRadioButtons :buttons="networkButtons" />
-                </template>
-              </mew-expand-panel>
-
-              <mew-expand-panel :panel-items="panelItems">
-                <template v-slot:panelBody1>
-                  <address-table />
-                </template>
-              </mew-expand-panel>
-
-              <mew-checkbox
-                label="To access my wallet, I accept Terms."
-                :link="link"
-              />
-
-              <mew-button
-                button-size="xlarge"
-                has-full-width
-                title="Access my wallet"
-                @click.native="activeTab = 0"
-              />
-            </div>
+            Notice: You need to enter BitBox 02 password to unlock your device
+            first.
           </div>
-        </template>
-      </mew-tabs>
+
+          <v-sheet max-width="200px" class="mx-auto mt-10 text-center">
+            <v-row>
+              <v-col v-for="(c, key) in pairingCode" :key="key" cols="6">
+                <h4>
+                  <strong class="monospace">{{ c }}</strong>
+                </h4>
+              </v-col>
+            </v-row>
+          </v-sheet>
+
+          <mew-checkbox
+            class="justify-center"
+            label="To access my wallet, I accept"
+            :link="linkToTerms"
+          />
+
+          <div class="d-flex justify-center mt-2">
+            <mew-button
+              title="Access my wallet"
+              button-size="xlarge"
+              :has-full-width="false"
+              @click.native="step = 2"
+            />
+          </div>
+        </mew6-white-sheet>
+      </v-container>
+      <v-container v-if="step === 3">
+        <h2 class="text-center mb-10">1. Enter your password</h2>
+        <mew6-white-sheet max-width="600px" class="mx-auto">
+          <address-table />
+        </mew6-white-sheet>
+      </v-container>
+
+      <page-indicator-dot class="mt-4" :items="3" :current-item="step" />
     </template>
   </mew-overlay>
 </template>
 
 <script>
-// TODO: add component in mew components
-// import GroupRadioButtons from '@/components/Buttons/GroupRadioButtons';
 import addressTable from './components/AddressTable/AddressTable';
+import pageIndicatorDot from '@/components/page-indicator-dot/PageIndicatorDot';
 
 export default {
   components: {
-    // GroupRadioButtons,
-    addressTable
+    addressTable,
+    pageIndicatorDot
   },
   props: {
     open: { default: false, type: Boolean },
@@ -109,89 +104,16 @@ export default {
   },
   data() {
     return {
-      link: {
-        title: 'Terms',
+      step: 1,
+      showPassword: false,
+      linkToTerms: {
+        title: 'Terms.',
         url: 'https://www.myetherwallet.com/terms-of-service'
       },
-      panelItems: [
-        {
-          name: 'Network',
-          subtext: 'ETH - myetherapi.com'
-        },
-        {
-          name: 'Address to interact with',
-          subtext: '',
-          tooltip: 'Tooltip'
-        }
-      ],
-      tabs: [
-        {
-          name: ''
-        },
-        {
-          name: ''
-        },
-        {
-          name: ''
-        }
-      ],
-      buttons: [
-        {
-          label: 'Bitbox 01',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')
-        },
-        {
-          label: 'Bitbox 02',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')
-        }
-      ],
-      networkButtons: [
-        {
-          groupName: 'ETH',
-          btns: [
-            { label: 'myetherapi.com', value: 'eth-myetherapi' },
-            { label: 'infura.io', value: 'eth-infura' },
-            { label: 'giveth.io', value: 'eth-giveth' },
-            { label: 'therscan.io', value: 'eth-therscan' }
-          ]
-        },
-        {
-          groupName: 'ROP',
-          btns: [
-            { label: 'etherscan.io', value: 'rop-etherscan' },
-            { label: 'infura.io', value: 'rop-infura' },
-            { label: 'giveth.io', value: 'rop-giveth' },
-            { label: 'therscan.io', value: 'rop-therscan' }
-          ]
-        },
-        {
-          groupName: 'RIN',
-          btns: [
-            { label: 'etherscan.io', value: 'rin-etherscan' },
-            { label: 'infura.io', value: 'rin-infura' },
-            { label: 'giveth.io', value: 'rin-giveth' },
-            { label: 'therscan.io', value: 'rin-therscan' }
-          ]
-        }
-      ],
-      appSelect: 'eth',
-      derivationPathSelect: '1',
-      activeTab: 0,
-      apps: [
-        { label: 'Ethereum', value: 'eth' },
-        { label: 'SometingElse', value: 'smt' }
-      ],
-      derivationPath: [
-        { label: `m/44'/60'/0'`, value: '1' },
-        { label: `m/44'/60'/0'`, value: '2' }
-      ]
+      pairingCode: ['AUNEF', 'NE237', 'ALUC3', 'A86N0']
     };
   }
 };
 </script>
 
-<style lang="scss" scoped>
-.overlay-content {
-  width: 500px;
-}
-</style>
+<style lang="scss" scoped></style>
