@@ -334,6 +334,10 @@ const toggleTempHide = function ({ commit }) {
   commit('TOGGLE_TEMP_HIDE');
 };
 
+const setEthGasPrice = function ({ commit }, val) {
+  commit('SET_ETH_GASPRICE', val);
+};
+
 export default {
   addNotification,
   addSwapNotification,
@@ -360,5 +364,6 @@ export default {
   setAddressBook,
   toggleSideMenu,
   setLocale,
-  toggleTempHide
+  toggleTempHide,
+  setEthGasPrice
 };
