@@ -257,7 +257,7 @@ import store from 'store';
 import { Toast } from '@/helpers';
 import { mapState, mapActions } from 'vuex';
 import Blockie from '@/components/Blockie';
-
+import { getEconomy, getRegular, getFast } from '@/helpers/gasMultiplier';
 export default {
   name: 'Settings',
   components: {
@@ -299,24 +299,15 @@ export default {
       });
     },
     gasPriceInputs() {
-      const regularPrice = new BigNumber(this.locGasPrice).div(1).toFixed(0);
-      let medGasPriceValue = new BigNumber(this.locGasPrice).times(
-        1.0714285714286
-      );
-      medGasPriceValue = medGasPriceValue.plus(21.428571428571).toFixed(0);
-      let fastGasPriceValue = new BigNumber(this.locGasPrice).times(
-        1.1428571428571
-      );
-      fastGasPriceValue = fastGasPriceValue.plus(42.857142857145).toFixed(0);
       return {
         economy: {
-          gwei: new BigNumber(regularPrice).toFixed()
+          gwei: getEconomy(this.locGasPrice)
         },
         regular: {
-          gwei: new BigNumber(medGasPriceValue).toFixed()
+          gwei: getRegular(this.locGasPrice)
         },
         fast: {
-          gwei: new BigNumber(fastGasPriceValue).toFixed()
+          gwei: getFast(this.locGasPrice)
         }
       };
     }
@@ -337,6 +328,9 @@ export default {
         }
       }
     }
+    // locGasPrice() {
+    //   this.saveGasChanges();
+    // }
   },
   mounted() {
     if (this.online) {
