@@ -1,3 +1,10 @@
+### Release v5.7.8-hotfix.3
+
+### Hotfix
+
+- Weird gasprice setting []()
+
+
 ### Release v5.7.8-hotfix.2
 
 ### Bug

@@ -284,7 +284,8 @@ export default {
       popup: false,
       currentAddressIdx: null,
       addrBookModalTitle: '',
-      modalAction: ''
+      modalAction: '',
+      locGasPrice: 0
     };
   },
   computed: {
@@ -298,12 +299,12 @@ export default {
       });
     },
     gasPriceInputs() {
-      const regularPrice = new BigNumber(this.gasPrice).div(1).toFixed(0);
-      let medGasPriceValue = new BigNumber(this.gasPrice).times(
+      const regularPrice = new BigNumber(this.locGasPrice).div(1).toFixed(0);
+      let medGasPriceValue = new BigNumber(this.locGasPrice).times(
         1.0714285714286
       );
       medGasPriceValue = medGasPriceValue.plus(21.428571428571).toFixed(0);
-      let fastGasPriceValue = new BigNumber(this.gasPrice).times(
+      let fastGasPriceValue = new BigNumber(this.locGasPrice).times(
         1.1428571428571
       );
       fastGasPriceValue = fastGasPriceValue.plus(42.857142857145).toFixed(0);
@@ -322,6 +323,7 @@ export default {
   },
   watch: {
     customGas(newVal) {
+      store.set('customGasPrice', newVal);
       if (newVal !== '') {
         if (new BigNumber(newVal).gte(1)) {
           const toGwei = new BigNumber(
@@ -339,6 +341,7 @@ export default {
   mounted() {
     if (this.online) {
       this.getEthPrice();
+      this.locGasPrice = this.gasPrice;
     }
     this.exportConfig();
     this.getGasType();
@@ -393,6 +396,7 @@ export default {
     getGasType() {
       const type = store.get('gasPriceType');
       const amt = store.get('gasPrice');
+      const customGas = store.get('customGasPrice') || 0;
       if (type) {
         this.selectedGasType = type;
       }
@@ -403,8 +407,8 @@ export default {
             new BigNumber(this.gasPriceInputs[type].gwei).toNumber()
           );
         } else {
-          this.customGas = amt;
-          this.setGasPrice(new BigNumber(amt).toNumber());
+          this.customGas = customGas;
+          this.setGasPrice(new BigNumber(customGas).toNumber());
         }
       }
     },
@@ -421,7 +425,9 @@ export default {
           ).toNumber()
         );
       } else {
-        this.setGasPrice(new BigNumber(this.customGas).toNumber());
+        const gasPrice = new BigNumber(this.customGas).toNumber();
+        store.set('customGasPrice', gasPrice);
+        this.setGasPrice(gasPrice);
       }
       if (this.$refs.gasDropdown) {
         this.$refs.gasDropdown.dropdownOpen = false;
