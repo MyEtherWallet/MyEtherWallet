@@ -132,6 +132,10 @@ const TOGGLE_TEMP_HIDE = function (state) {
   state.tempHide = !state.tempHide;
 };
 
+const SET_ETH_GASPRICE = function (state, val) {
+  state.ethGasPrice = val;
+};
+
 export default {
   ADD_NOTIFICATION,
   ADD_SWAP_TRANSACTION,
@@ -154,5 +158,6 @@ export default {
   SAVE_QUERY_VAL,
   SET_ADDRESS_BOOK,
   SET_LOCALE,
-  TOGGLE_TEMP_HIDE
+  TOGGLE_TEMP_HIDE,
+  SET_ETH_GASPRICE
 };

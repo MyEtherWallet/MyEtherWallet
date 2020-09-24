@@ -384,7 +384,7 @@ export default {
     this.$eventHub.$off('open-settings');
   },
   methods: {
-    ...mapActions('main', ['setLocale', 'setGasPrice']),
+    ...mapActions('main', ['setLocale', 'setGasPrice', 'setEthGasPrice']),
     getCurrentLang() {
       const storedLocale = this.supportedLanguages.find(item => {
         return item.langCode === this.locale;
@@ -403,6 +403,7 @@ export default {
             'gwei'
           );
           this.setGasPrice(this.gasPrice);
+          this.setEthGasPrice(this.gasPrice);
         })
         .catch(e => {
           Toast.responseHandler(e, Toast.ERROR);

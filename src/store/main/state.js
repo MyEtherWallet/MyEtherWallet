@@ -59,7 +59,8 @@ const state = {
   addressBook: addressBook,
   locale: store.get('locale') !== undefined ? store.get('locale') : 'en_US',
   tempHide: false,
-  gasLimitWarning: 100
+  gasLimitWarning: 100,
+  ethGasPrice: 0
 };
 
 export default state;
