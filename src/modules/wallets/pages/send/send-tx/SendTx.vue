@@ -26,7 +26,6 @@
                 />
               </div>
             </div>
-
             <address-select
               :copy-tooltip="$t('common.copy')"
               :save-tooltip="$t('common.save')"
@@ -43,8 +42,16 @@
           <mew-expand-panel is-toggle has-dividers :panel-items="expandPanel">
             <template v-slot:panelBody1>
               <div>
-                <mew-input label="Gas Price" placeholder=" " value="40" />
-                <mew-input label="Gas Limit" placeholder=" " value="21000" />
+                <mew-input
+                  :label="$t('common.gas.price')"
+                  placeholder=" "
+                  value="40"
+                />
+                <mew-input
+                  :label="$t('common.gas.limit')"
+                  placeholder=" "
+                  value="21000"
+                />
               </div>
 
               <div class="d-flex justify-space-between px-5">
@@ -91,18 +98,26 @@ import interfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 // import eth from '@/assets/images/currencies/icon-eth-blue.svg';
 import divider from '@/components/dividerx/DividerX';
 import SendTransaction from './index';
-import TokensList from '@/modules/tokens/index';
 
 export default {
   components: {
     divider,
     interfaceWrap
   },
+  props: {
+    ownersTokens: {
+      type: Array,
+      default: () => {
+        return [];
+      }
+    }
+  },
   data() {
     return {
       // will remove this once we get state
       account: {
-        balance: '20000000000000000000000'
+        balance: '20000000000000000000000',
+        address: '0x43689531907482BEE7e650D18411E284A7337A66'
       },
       sendTx: null,
       amount: '0',
@@ -138,11 +153,14 @@ export default {
       ]
     };
   },
+  watch: {
+    ownersTokens(newVal, oldVal) {
+      console.error('asdfad', newVal, oldVal);
+    }
+  },
   mounted() {
     this.sendTx = new SendTransaction(this.account.balance, this.$apollo);
-    this.tokensList = new TokensList(this.$apollo);
     this.fixedBal = this.sendTx.getFixedBal();
-    this.getOwnersERC20Tokens();
   },
   methods: {
     getSelectedValue(value) {
@@ -150,12 +168,6 @@ export default {
     },
     sendEntireBal() {
       this.amount = this.sendTx.getEntireBal();
-    },
-    async getOwnersERC20Tokens() {
-      this.tokens = await this.tokensList.getOwnersERC20Tokens(
-        '0x43689531907482BEE7e650D18411E284A7337A66'
-      );
-      console.error('tokens', this.tokens);
     }
   }
 };
