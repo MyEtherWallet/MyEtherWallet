@@ -3,6 +3,7 @@
     :show-overlay="open"
     title="1. Connect with Trezor"
     right-btn-text="Cancel"
+    @closeOverlay="$emit('close')"
   >
     <template v-slot:mewComponent>
       <mew-tabs :items="tabs" is-block>

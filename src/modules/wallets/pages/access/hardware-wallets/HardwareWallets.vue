@@ -24,24 +24,27 @@
               :right-icon="btn.icon"
               :right-icon-class="15"
               :right-icon-height="45"
-              @click.native="openOverlay(btn.overlayName)"
+              @click.native="overlayName = btn.overlayName"
             />
           </v-col>
         </v-row>
       </v-sheet>
       <div class="spacer-y-medium" />
     </v-container>
+    <access-wallet-overlay :open="overlayName" @reset="overlayName = ''" />
   </div>
 </template>
 
 <script>
 import blockTitle from '@/components/block-title/BlockTitle';
+import accessWalletOverlay from '@/modules/wallets/components/access-wallet-overlay/AccessWalletOverlay';
 
 export default {
   name: 'CreateNewWallet',
-  components: { blockTitle },
+  components: { blockTitle, accessWalletOverlay },
   data() {
     return {
+      overlayName: '',
       titleData: {
         textProps: 'white--text',
         toptitle: '',
@@ -53,55 +56,50 @@ export default {
         {
           label: 'Ledger',
           icon: require('@/assets/images/icons/hardware-wallets/icon-ledger.svg'),
-          overlayName: 'accessWalletLedger'
+          overlayName: 'ledger'
         },
         {
           label: 'Bitbox',
           icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg'),
-          overlayName: 'accessWalletBitbox'
+          overlayName: 'bitbox'
         },
         {
           label: 'FINNEY',
           icon: require('@/assets/images/icons/hardware-wallets/icon-finney.svg'),
-          overlayName: 'accessWalletFinney'
+          overlayName: 'finney'
         },
         {
           label: 'Secalot',
           icon: require('@/assets/images/icons/hardware-wallets/icon-secalot.svg'),
-          overlayName: 'accessWalletSecalot'
+          overlayName: 'secalot'
         },
         {
           label: 'KeepKey',
           icon: require('@/assets/images/icons/hardware-wallets/icon-keepkey.svg'),
-          overlayName: 'accessWalletKeepKey'
+          overlayName: 'keepkey'
         },
         {
           label: 'Trezor',
           icon: require('@/assets/images/icons/hardware-wallets/icon-trezor.svg'),
-          overlayName: 'accessWalletTrezor'
+          overlayName: 'trezor'
         },
         {
           label: 'CoolWallet',
           icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
-          overlayName: 'accessWalletCoolWallet'
+          overlayName: 'coolwallet'
         },
         {
           label: 'BC Vault',
           icon: require('@/assets/images/icons/hardware-wallets/icon-bcvault.svg'),
-          overlayName: 'accessWalletBCVault'
+          overlayName: 'bcvault'
         },
         {
           label: 'XWallet',
           icon: require('@/assets/images/icons/hardware-wallets/icon-xwallet.svg'),
-          overlayName: 'accessWalletXWallet'
+          overlayName: 'xwallet'
         }
       ]
     };
-  },
-  methods: {
-    openOverlay(name) {
-      this.$store.commit('openOverlay', name);
-    }
   }
 };
 </script>

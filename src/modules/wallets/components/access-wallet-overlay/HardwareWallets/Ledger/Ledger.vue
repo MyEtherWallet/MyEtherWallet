@@ -3,6 +3,7 @@
     :show-overlay="open"
     title="1. Connect with Ledger"
     right-btn-text="Cancel"
+    @closeOverlay="$emit('close')"
   >
     <template v-slot:mewComponent>
       <mew-tabs :items="tabs" is-block>
@@ -111,6 +112,11 @@ export default {
         { label: `m/44'/60'/0'`, value: '2' }
       ]
     };
+  },
+  watch: {
+    open(newVal) {
+      console.log(newVal);
+    }
   }
 };
 </script>
