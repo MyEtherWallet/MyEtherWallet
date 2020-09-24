@@ -1,3 +1,7 @@
+### Devop
+
+- Add low gas price warning [#2582](https://github.com/MyEtherWallet/MyEtherWallet/pull/2582)
+
 ### Release v5.7.8-hotfix.2
 
 ### Bug
