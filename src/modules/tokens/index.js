@@ -56,16 +56,18 @@ export default class Tokenslist {
     tokens.forEach(token => {
       let foundToken;
       if (this.tokensInfo) {
-        foundToken = this.tokensInfo.get(token.tokenInfo.contract);
+        foundToken = this.tokensInfo.get(
+          token.tokenInfo.contract.toLowerCase()
+        );
       }
-      // console.error("the token", theToken)
+      console.error('the token', foundToken);
       formattedList.push({
         name: token.tokenInfo.symbol,
         subtext: token.tokenInfo.name,
         value: token.tokenInfo.name,
         balance: token.balance,
         contract: token.tokenInfo.contract,
-        image: foundToken ? foundToken.image : null
+        img: foundToken ? foundToken.image : null
       });
     });
     return formattedList;

@@ -13,7 +13,7 @@
             </div>
             <div class="d-flex">
               <mew-select
-                :items="tokens"
+                :items="ownersTokens"
                 :label="$t('sendTx.type')"
                 class="mr-3"
               />
@@ -142,25 +142,13 @@ export default {
           nickname: 'nickname',
           resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
         }
-      ],
-      tokens: [
-        // {
-        //   name: 'ETH',
-        //   subtext: 'Ethereum',
-        //   value: 'Ethereum',
-        //   img: eth
-        // }
       ]
     };
-  },
-  watch: {
-    ownersTokens(newVal, oldVal) {
-      console.error('asdfad', newVal, oldVal);
-    }
   },
   mounted() {
     this.sendTx = new SendTransaction(this.account.balance, this.$apollo);
     this.fixedBal = this.sendTx.getFixedBal();
+    console.error('ownersToken', this.ownersTokens)
   },
   methods: {
     getSelectedValue(value) {

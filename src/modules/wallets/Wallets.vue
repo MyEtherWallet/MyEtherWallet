@@ -60,7 +60,6 @@ export default {
       this.ownersTokens = await this.tokensList.getOwnersERC20Tokens(
         this.account.address
       );
-      console.error('tokensssss', this.ownersTokens)
     },
     redirectToDashboard() {
       if (this.$route.name === 'Wallet') {
