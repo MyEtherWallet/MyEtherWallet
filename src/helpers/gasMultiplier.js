@@ -21,6 +21,18 @@ const getFast = gasPrice => {
   return new BigNumber(initialValue).toFixed();
 };
 
+const fastToEconomy = gasPrice => {
+  let initialValue = new BigNumber(gasPrice).minus(FAST_CONST);
+  initialValue = initialValue.div(FAST_MULTIPLIER).toFixed(0);
+  return new BigNumber(initialValue).toFixed();
+};
+
+const regularToEconomy = gasPrice => {
+  let initialValue = new BigNumber(gasPrice).minus(MED_CONST);
+  initialValue = initialValue.div(MED_MULTIPLIER).toFixed(0);
+  return new BigNumber(initialValue).toFixed();
+};
+
 const getGasBasedOnType = gasPrice => {
   const gasPriceType = store.get('gasPriceType') || 'economy';
   const storedPrice = store.get('gasPrice') || 0;
@@ -36,4 +48,11 @@ const getGasBasedOnType = gasPrice => {
   }
 };
 
-export { getEconomy, getRegular, getFast, getGasBasedOnType };
+export {
+  getEconomy,
+  getRegular,
+  getFast,
+  getGasBasedOnType,
+  fastToEconomy,
+  regularToEconomy
+};

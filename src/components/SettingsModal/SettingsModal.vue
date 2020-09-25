@@ -257,7 +257,13 @@ import store from 'store';
 import { Toast } from '@/helpers';
 import { mapState, mapActions } from 'vuex';
 import Blockie from '@/components/Blockie';
-import { getEconomy, getRegular, getFast } from '@/helpers/gasMultiplier';
+import {
+  getEconomy,
+  getRegular,
+  getFast,
+  fastToEconomy,
+  regularToEconomy
+} from '@/helpers/gasMultiplier';
 export default {
   name: 'Settings',
   components: {
@@ -285,7 +291,7 @@ export default {
       currentAddressIdx: null,
       addrBookModalTitle: '',
       modalAction: '',
-      locGasPrice: 0
+      locGasPrice: 41
     };
   },
   computed: {
@@ -301,15 +307,23 @@ export default {
     gasPriceInputs() {
       return {
         economy: {
-          gwei: getEconomy(this.locGasPrice)
+          gwei: getEconomy(this.baseGasPrice)
         },
         regular: {
-          gwei: getRegular(this.locGasPrice)
+          gwei: getRegular(this.baseGasPrice)
         },
         fast: {
-          gwei: getFast(this.locGasPrice)
+          gwei: getFast(this.baseGasPrice)
         }
       };
+    },
+    baseGasPrice() {
+      const type = store.get('gasPriceType') || 'economy';
+      return type === 'fast'
+        ? fastToEconomy(this.gasPrice)
+        : type === 'regular'
+        ? regularToEconomy(this.gasPrice)
+        : this.gasPrice;
     }
   },
   watch: {
@@ -328,14 +342,10 @@ export default {
         }
       }
     }
-    // locGasPrice() {
-    //   this.saveGasChanges();
-    // }
   },
   mounted() {
     if (this.online) {
       this.getEthPrice();
-      this.locGasPrice = this.gasPrice;
     }
     this.exportConfig();
     this.getGasType();
