@@ -177,7 +177,7 @@ import {
   MNEMONIC as MNEMONIC_TYPE,
   BCVAULT as BC_VAULT
 } from '@/wallets/bip44/walletTypes';
-
+import { getGasBasedOnType } from '@/helpers/gasMultiplier.js';
 import ExpiryAbi from './expiryAbi.js';
 
 const ENS_TOKEN_ADDRESS = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
@@ -807,13 +807,18 @@ export default {
       });
     },
     getHighestGas() {
+      const gasType = store.get('gasPriceType') || 'economy';
       this.web3.eth
         .getGasPrice()
         .then(res => {
           const parsedGas = new BigNumber(
             this.web3.utils.fromWei(res, 'gwei')
           ).toString();
-          this.setGasPrice(parsedGas);
+          if (gasType === 'economy') {
+            this.setGasPrice(parsedGas);
+          } else {
+            this.setGasPrice(getGasBasedOnType(parsedGas));
+          }
           this.highestGas = parsedGas;
         })
         .catch(e => {
