@@ -290,8 +290,7 @@ export default {
       popup: false,
       currentAddressIdx: null,
       addrBookModalTitle: '',
-      modalAction: '',
-      locGasPrice: 41
+      modalAction: ''
     };
   },
   computed: {
