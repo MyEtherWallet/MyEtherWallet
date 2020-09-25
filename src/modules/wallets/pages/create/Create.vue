@@ -96,13 +96,13 @@
 
 <script>
 import blockTitle from '@/components/block-title/BlockTitle';
-import SoftwareOverlay from '@/modules/wallets/components/software-overlay/SoftwareOverlay';
+import SoftwareCreateOverlay from '@/modules/wallets/components/software-create-overlay/SoftwareCreateOverlay';
 
 export default {
   name: 'CreateNewWallet',
   components: {
     blockTitle,
-    'software-overlay': SoftwareOverlay
+    'software-overlay': SoftwareCreateOverlay
   },
   data: () => ({
     toastLink: {
