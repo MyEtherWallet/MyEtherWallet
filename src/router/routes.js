@@ -13,6 +13,7 @@ const routes = [
   {
     path: '/',
     component: Home,
+    props: true,
     children: [
       {
         path: '',
