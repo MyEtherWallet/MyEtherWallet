@@ -92,7 +92,6 @@ export default {
       }
 
       this.$emit('reset');
-      console.log(newVal);
     }
   }
 };

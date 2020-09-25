@@ -112,11 +112,6 @@ export default {
         { label: `m/44'/60'/0'`, value: '2' }
       ]
     };
-  },
-  watch: {
-    open(newVal) {
-      console.log(newVal);
-    }
   }
 };
 </script>
