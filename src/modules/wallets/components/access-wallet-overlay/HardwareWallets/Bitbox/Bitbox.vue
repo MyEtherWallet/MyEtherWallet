@@ -125,7 +125,33 @@
           <h2 class="text-center mb-10">3. Confirm network & address</h2>
 
           <mew-expand-panel :panel-items="changeNetwork" class="mb-2">
-            <template v-slot:panelBody1> aaaaa </template>
+            <template v-slot:panelBody1>
+              <v-radio-group v-model="networkSelected">
+                <div v-for="(network, i) in networks" :key="i">
+                  <div class="text-uppercase font-weight-bold subtitle-1 mb-1">
+                    {{ network.label }}
+                  </div>
+
+                  <v-row no-gutters>
+                    <v-col
+                      v-for="button in network.buttons"
+                      :key="button.value"
+                      cols="12"
+                      sm="6"
+                      class="mt-2"
+                    >
+                      <v-radio
+                        :label="button.name"
+                        :value="button.value"
+                      ></v-radio>
+                    </v-col>
+                  </v-row>
+
+                  <div>{{ network.id }}</div>
+                  <divider-line v-if="networks.length != i + 1" class="my-5" />
+                </div>
+              </v-radio-group>
+            </template>
           </mew-expand-panel>
 
           <mew-expand-panel :panel-items="addressToInteract">
@@ -166,10 +192,12 @@
 
 <script>
 import pageIndicatorDot from '@/components/page-indicator-dot/PageIndicatorDot';
+import dividerLine from '@/components/divider-line/DividerLine';
 
 export default {
   components: {
-    pageIndicatorDot
+    pageIndicatorDot,
+    dividerLine
   },
   props: {
     open: { default: false, type: Boolean },
@@ -241,10 +269,45 @@ export default {
         {
           name: 'Address to interact with'
         }
+      ],
+      networkSelected: null,
+      networks: [
+        {
+          label: 'eth',
+          buttons: [
+            { name: 'myetherapi.com', value: 'myetherapi' },
+            { name: 'infura.io', value: 'infura' },
+            { name: 'giveth.io', value: 'giveth' },
+            { name: 'therscan.io', value: 'therscan' }
+          ]
+        },
+        {
+          label: 'rop',
+          buttons: [
+            { name: 'myetherapi.com', value: 'myetherapi1' },
+            { name: 'infura.io', value: 'infura1' },
+            { name: 'giveth.io', value: 'giveth1' },
+            { name: 'therscan.io', value: 'therscan1' }
+          ]
+        },
+        {
+          label: 'rin',
+          buttons: [
+            { name: 'myetherapi.com', value: 'myetherapi2' },
+            { name: 'infura.io', value: 'infura2' },
+            { name: 'giveth.io', value: 'giveth2' },
+            { name: 'therscan.io', value: 'therscan2' }
+          ]
+        }
       ]
     };
   }
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+.v-input--selection-controls {
+  padding: 0;
+  margin: 0;
+}
+</style>
