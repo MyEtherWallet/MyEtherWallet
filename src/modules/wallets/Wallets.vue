@@ -7,7 +7,8 @@
           <wallet-header />
           <router-view :owners-tokens="ownersTokens" />
         </v-container>
-        <wallet-footer class="mt-10 box-shadow" />
+        <!-- need to redo this / incorrect placement -->
+        <!-- <wallet-footer class="mt-10 box-shadow" /> -->
       </div>
       <div>
         <network />
