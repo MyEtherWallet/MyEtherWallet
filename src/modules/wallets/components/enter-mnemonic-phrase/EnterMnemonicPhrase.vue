@@ -49,28 +49,25 @@
 
       <div v-if="currentPage === 2" class="confirm">
         <h2 class="text-center mb-10">2. Confirm network & address</h2>
-        <mew6-white-sheet class="pa-2 mb-4">
-          <mew-expand-panel :panel-items="changeNetwork">
-            <template v-slot:panelBody1> aaaaa </template>
-          </mew-expand-panel>
-        </mew6-white-sheet>
 
-        <mew6-white-sheet class="pa-2">
-          <mew-expand-panel :panel-items="addressToInteract">
-            <template v-slot:panelBody1>
-              <mew-table
-                :table-headers="tableHeaders"
-                :table-data="tableData"
-                has-select
-              />
-              <div class="d-flex align-center justify-center mt-5">
-                <div class="cursor--pointer mx-4">&lt; Previous</div>
-                <div class="cursor--pointer mx-4">Next &gt;</div>
-              </div>
-            </template>
-          </mew-expand-panel>
-        </mew6-white-sheet>
+        <mew-expand-panel :panel-items="changeNetwork" class="mb-2">
+          <template v-slot:panelBody1> aaaaa </template>
+        </mew-expand-panel>
 
+        <mew-expand-panel :panel-items="addressToInteract">
+          <template v-slot:panelBody1>
+            <mew-table
+              style="margin: 0 -24px"
+              :table-headers="tableHeaders"
+              :table-data="tableData"
+              has-select
+            />
+            <div class="d-flex align-center justify-center mt-5">
+              <div class="cursor--pointer mx-4">&lt; Previous</div>
+              <div class="cursor--pointer mx-4">Next &gt;</div>
+            </div>
+          </template>
+        </mew-expand-panel>
         <mew-checkbox
           class="mt-5 justify-center"
           label="To access my wallet, I accept"
@@ -204,11 +201,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-.mew-component--insert-mnemonic-phrase {
-  .confirm .mew-expand-panel .v-expansion-panel {
-    margin-bottom: 0 !important;
-  }
-}
-</style>

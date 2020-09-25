@@ -22,7 +22,6 @@
               color-theme="basic"
               :title="btn.label"
               :right-icon="btn.icon"
-              :right-icon-class="15"
               :right-icon-height="45"
               @click.native="overlayName = btn.overlayName"
             />

@@ -2,9 +2,9 @@
   <div class="d-flex align-center justify-center py-5">
     <div
       v-for="(i, k) in items"
-      :ref="k"
       :key="k"
       class="indicator-dot mx-2"
+      :class="k + 1 === currentItem ? 'active' : ''"
     ></div>
   </div>
 </template>
@@ -17,17 +17,7 @@ export default {
     currentItem: { default: 1, type: Number }
   },
   data: () => ({}),
-  watch: {
-    currentItem(newVal) {
-      for (let c = 0; c < this.items; c++) {
-        this.$refs[c][0].classList.remove('active');
-      }
-      this.$refs[newVal - 1][0].classList.add('active');
-    }
-  },
-  mounted() {
-    this.$refs[0][0].classList.add('active');
-  }
+  watch: {}
 };
 </script>
 
