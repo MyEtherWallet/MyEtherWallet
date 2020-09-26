@@ -115,7 +115,7 @@
               <mew-button
                 title="Swap"
                 :has-full-width="false"
-                button-size="xlarge"
+                btn-size="xlarge"
               />
             </div>
           </interface-wrap>

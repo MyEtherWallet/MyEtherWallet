@@ -32,7 +32,7 @@
                   />
                   <mew-button
                     :has-full-width="false"
-                    button-size="xlarge"
+                    btn-size="xlarge"
                     title="Register domain"
                   />
                 </div>
@@ -95,7 +95,7 @@
               <mew-button
                 btn-style="outline"
                 title="+ Add domain you own"
-                button-size="large"
+                btn-size="large"
               />
             </div>
             <div>

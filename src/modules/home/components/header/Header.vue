@@ -12,7 +12,7 @@
         title="MEW tools"
         color-theme="white"
         :has-full-width="false"
-        button-size="large"
+        btn-size="large"
         btn-style="outline"
         icon="mdi-view-module"
         icon-type="mdi"

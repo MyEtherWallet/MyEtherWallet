@@ -24,14 +24,14 @@
                 class="mr-3"
                 :has-full-width="false"
                 title="Create a new wallet"
-                button-size="xlarge"
+                btn-size="xlarge"
                 @click.native="routeTo('create')"
               />
               <mew-button
                 :has-full-width="false"
                 btn-style="outline"
                 title="Access my wallet"
-                button-size="xlarge"
+                btn-size="xlarge"
                 @click.native="routeTo('access')"
               />
             </div>

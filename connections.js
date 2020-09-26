@@ -60,5 +60,6 @@ module.exports = [
   'ws://127.0.0.1:8178',
   'https://viewm.moonicorn.network:443',
   'https://localhost:1991', // server for bcvault
-  'https://hbfzqg7jia.execute-api.us-west-2.amazonaws.com/dev'
+  'https://hbfzqg7jia.execute-api.us-west-2.amazonaws.com/dev',
+  'https://assets.coingecko.com:443'
 ];

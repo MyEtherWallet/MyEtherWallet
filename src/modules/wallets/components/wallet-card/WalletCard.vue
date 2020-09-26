@@ -36,14 +36,14 @@
       <div class="d-flex align-center">
         <div class="bottom-buttons">
           <mew-button
-            button-size="small"
+            btn-size="small"
             color-theme="white"
             btn-style="transparent"
             icon="mdi-printer"
             icon-type="mdi"
           ></mew-button>
           <mew-button
-            button-size="small"
+            btn-size="small"
             color-theme="white"
             btn-style="transparent"
             icon="mdi-file-document-outline"
@@ -56,7 +56,7 @@
           btn-style="outline"
           title="SWITCH >"
           color-theme="white"
-          button-size="small"
+          btn-size="small"
           @click.native="openChangeAddress = true"
         />
       </div>

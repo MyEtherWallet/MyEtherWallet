@@ -34,7 +34,7 @@
     </mew-expand-panel>
     <div class="d-flex justify-center my-8">
       <mew-button
-        button-size="xlarge"
+        btn-size="xlarge"
         title="Continue on your device"
         @click.native="activeTab = 1"
       />

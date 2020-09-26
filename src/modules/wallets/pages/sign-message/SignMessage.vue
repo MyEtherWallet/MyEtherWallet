@@ -16,7 +16,7 @@
               <mew-button
                 title="Sign"
                 :has-full-width="false"
-                button-size="xlarge"
+                btn-size="xlarge"
                 @click.native="openOverlay('SignMessageConfirmation')"
               />
             </div>
@@ -24,7 +24,7 @@
               <mew-button
                 title="Clear all"
                 :has-full-width="false"
-                button-size="small"
+                btn-size="small"
                 btn-style="transparent"
               />
             </div>

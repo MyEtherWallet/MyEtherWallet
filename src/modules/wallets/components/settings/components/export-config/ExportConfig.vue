@@ -5,7 +5,7 @@
       file into your local computer.
     </v-sheet>
     <div class="d-flex justify-center mt-5">
-      <mew-button title="Export" button-size="xlarge" />
+      <mew-button title="Export" btn-size="xlarge" />
     </div>
   </div>
 </template>

@@ -21,7 +21,7 @@
                 <mew-select label="HD derivation path" />
               </div>
               <mew-button
-                button-size="xlarge"
+                btn-size="xlarge"
                 title="Connect with Secalot"
                 has-full-width
                 @click.native="activeTab = 1"

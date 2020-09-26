@@ -6,7 +6,7 @@
     :has-indicator="true"
   >
     <template v-slot:moduleBody>
-      <div class="full-width px-16 pt-3">
+      <div class="full-width px-15 pt-3">
         <div class="d-flex justify-end mr-3 entire-bal">
           <mew-button
             :title="$t('sendTx.entire-bal')"
@@ -14,84 +14,94 @@
             @click.native="sendEntireBal"
           />
         </div>
-        <div class="d-flex">
-          <mew-select
-            :items="ownersTokens"
-            :label="$t('sendTx.type')"
-            class="mr-3"
-          />
-          <div class="position--relative flex-grow-1">
-            <mew-input
-              :label="$t('sendTx.amount')"
-              placeholder=" "
-              :right-label="fixedBal"
-              :value="amount"
-            />
-          </div>
-        </div>
-        <address-select
-          :copy-tooltip="$t('common.copy')"
-          :save-tooltip="$t('common.save')"
-          :enable-save-address="true"
-          :label="$t('sendTx.to-addr')"
-          :items="addresses"
-          :placeholder="$t('sendTx.enter-addr')"
-          :success-toast="$t('sendTx.success.title')"
-          :is-valid-address="true"
-          @emitSelectedValue="getSelectedValue"
-        />
+        <v-container class="pt-0">
+          <v-row>
+            <v-col cols="6">
+              <mew-select
+                :items="ownersTokens"
+                :label="$t('sendTx.type')"
+                class="mr-3"
+              />
+            </v-col>
+            <v-col cols="6">
+              <mew-input
+                :label="$t('sendTx.amount')"
+                placeholder=" "
+                :right-label="fixedBal"
+                :value="amount"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12">
+              <address-select
+                :copy-tooltip="$t('common.copy')"
+                :save-tooltip="$t('common.save')"
+                :enable-save-address="true"
+                :label="$t('sendTx.to-addr')"
+                :items="addresses"
+                :placeholder="$t('sendTx.enter-addr')"
+                :success-toast="$t('sendTx.success.title')"
+                :is-valid-address="true"
+                @emitSelectedValue="getSelectedValue"
+              />
+            </v-col>
+          </v-row>
+        </v-container>
       </div>
 
-      <mew-expand-panel
-        is-toggle
-        has-dividers
-        :panel-items="expandPanel"
-        class="px-16"
-      >
-        <template v-slot:panelBody1>
-          <div>
-            <mew-input
-              :label="$t('common.gas.price')"
-              placeholder=" "
-              value="40"
-            />
-            <mew-input
-              :label="$t('common.gas.limit')"
-              placeholder=" "
-              value="21000"
-            />
-          </div>
-
-          <div class="d-flex justify-space-between px-5">
-            <div class="mew-body font-weight-medium d-flex align-center">
-              {{ $t('sendTx.tx-fee') }}
-              <info-tooltip class="ml-1" text="Tx fees" />
+      <v-container>
+        <mew-expand-panel
+          is-toggle
+          has-dividers
+          :panel-items="expandPanel"
+          class="px-15"
+        >
+          <template v-slot:panelBody1>
+            <div>
+              <mew-input
+                :label="$t('common.gas.price')"
+                placeholder=" "
+                value="40"
+              />
+              <mew-input
+                :label="$t('common.gas.limit')"
+                placeholder=" "
+                value="21000"
+              />
             </div>
-            <div>$0.177</div>
-          </div>
-          <divider dot class="mt-5" />
-          <mew-input
-            :label="$t('sendTx.add-data')"
-            placeholder=" "
-            value
-            class="mt-10 mb-n5"
-          />
-        </template>
-      </mew-expand-panel>
+
+            <div class="d-flex justify-space-between px-5">
+              <div class="mew-body font-weight-medium d-flex align-center">
+                {{ $t('sendTx.tx-fee') }}
+                <info-tooltip class="ml-1" text="Tx fees" />
+              </div>
+              <div>$0.177</div>
+            </div>
+            <divider dot class="mt-5" />
+            <mew-input
+              :label="$t('sendTx.add-data')"
+              placeholder=" "
+              value
+              class="mt-10 mb-n5"
+            />
+          </template>
+        </mew-expand-panel>
+      </v-container>
 
       <div class="d-flex flex-column mt-12">
         <div class="text-center">
           <mew-button
             :title="$t('sendTx.send')"
             :has-full-width="false"
-            button-size="xlarge"
+            btn-size="xlarge"
           />
         </div>
         <div class="text-center mt-4">
           <mew-button
             :title="$t('common.clear-all')"
             :has-full-width="false"
-            button-size="small"
+            btn-size="small"
             btn-style="transparent"
           />
         </div>
@@ -153,7 +163,6 @@ export default {
   mounted() {
     this.sendTx = new SendTransaction(this.account.balance, this.$apollo);
     this.fixedBal = this.sendTx.getFixedBal();
-    console.error('ownersToken', this.ownersTokens);
   },
   methods: {
     getSelectedValue(value) {
@@ -167,10 +176,9 @@ export default {
 </script>
 
 <style lang="scss">
-// change this on mew components
 .entire-bal {
   .mew-button {
-    padding: 0 !important;
+    margin-bottom: -12px;
   }
 }
 </style>

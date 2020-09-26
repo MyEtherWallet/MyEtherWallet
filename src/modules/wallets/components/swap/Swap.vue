@@ -5,7 +5,7 @@
         <span class="mew-heading-2">{{ $t('common.swap') }}</span>
         <mew-button
           btn-style="transparent"
-          button-size="small"
+          btn-size="small"
           :title="$t('common.more') + '...'"
         />
       </div>

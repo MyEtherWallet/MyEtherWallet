@@ -47,7 +47,7 @@
                 />
                 <mew-button
                   :has-full-width="false"
-                  button-size="xlarge"
+                  btn-size="xlarge"
                   title="Check availability"
                 />
               </div>
@@ -177,10 +177,10 @@
                   <mew-button
                     title="Back"
                     btn-style="outline"
-                    button-size="xlarge"
+                    btn-size="xlarge"
                     class="mr-3"
                   />
-                  <mew-button title="Pay" button-size="xlarge" />
+                  <mew-button title="Pay" btn-size="xlarge" />
                 </div>
               </v-sheet>
             </div>
@@ -195,7 +195,7 @@
               <mew-button
                 btn-style="outline"
                 title="+ Add domain you own"
-                button-size="large"
+                btn-size="large"
               />
             </div>
             <div>

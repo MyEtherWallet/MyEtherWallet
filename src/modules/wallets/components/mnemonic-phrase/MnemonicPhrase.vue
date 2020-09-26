@@ -12,7 +12,7 @@
 
               <div class="d-flex align-center justify-end pb-4">
                 <mew-button
-                  button-size="medium"
+                  btn-size="medium"
                   icon="mdi-sync"
                   icon-type="mdi"
                   icon-align="left"
@@ -37,7 +37,7 @@
               <div class="d-flex justify-center mt-6">
                 <mew-button
                   title="I wrote them down"
-                  button-size="xlarge"
+                  btn-size="xlarge"
                   :has-full-width="false"
                   @click.native="linkToStep(2)"
                 />
@@ -118,7 +118,7 @@
               <div class="d-flex justify-center mb-3">
                 <mew-button
                   title="Verify"
-                  button-size="xlarge"
+                  btn-size="xlarge"
                   :has-full-width="false"
                   @click.native="linkToStep(3)"
                 />
@@ -147,7 +147,7 @@
 
                 <mew-button
                   title="Access my wallet"
-                  button-size="xlarge"
+                  btn-size="xlarge"
                   :has-full-width="false"
                   @click.native="linkToStep(3)"
                 />

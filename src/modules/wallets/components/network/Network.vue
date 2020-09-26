@@ -11,7 +11,7 @@
           <span class="mew-heading-2 mr-2">{{ $t('common.network') }}</span>
           <mew-button
             class="title-button"
-            button-size="small"
+            btn-size="small"
             color-theme="secondary"
             icon-type="mdi"
             icon="mdi-chevron-right"

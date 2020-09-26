@@ -7,7 +7,7 @@
       <mew-input label="Address name" placeholder=" " />
       <mew-button
         title="Add"
-        button-size="xlarge"
+        btn-size="xlarge"
         class="mt-3 mx-auto display--block"
       />
     </div>

@@ -7,7 +7,7 @@
           <v-sheet color="transparent" width="600px" class="pa-8">
             <address-select />
             <div class="d-flex justify-center mt-2">
-              <mew-button title="Pay" button-size="xlarge" />
+              <mew-button title="Pay" btn-size="xlarge" />
             </div>
           </v-sheet>
         </mew6-white-sheet>
