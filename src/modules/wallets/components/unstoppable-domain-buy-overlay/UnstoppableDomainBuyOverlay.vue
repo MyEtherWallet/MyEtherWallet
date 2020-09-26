@@ -76,7 +76,7 @@
               </v-card>
 
               <div class="d-flex justify-center mt-5">
-                <mew-button title="Pay" button-size="xlarge" />
+                <mew-button title="Pay" btn-size="xlarge" />
               </div>
             </v-sheet>
           </div>

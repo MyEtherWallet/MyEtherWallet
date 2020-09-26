@@ -37,7 +37,7 @@
                 </v-radio-group>
                 <div class="d-flex justify-center">
                   <mew-button
-                    button-size="xlarge"
+                    btn-size="xlarge"
                     title="Change"
                     class="mt-3"
                   />
@@ -73,7 +73,7 @@
                 </mew-expand-panel>
 
                 <div class="d-flex justify-center">
-                  <mew-button button-size="xlarge" title="Save" />
+                  <mew-button btn-size="xlarge" title="Save" />
                 </div>
               </div>
             </div>

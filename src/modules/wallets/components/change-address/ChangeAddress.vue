@@ -26,7 +26,7 @@
               />
 
               <div class="text-center">
-                <mew-button title="Connect with Ledger" button-size="xlarge" />
+                <mew-button title="Connect with Ledger" btn-size="xlarge" />
               </div>
             </div>
           </mew6-white-sheet>
@@ -47,7 +47,7 @@
           </v-sheet>
           <div class="pa-8">
             <div class="text-center">
-              <mew-button title="Access My Wallet" button-size="xlarge" />
+              <mew-button title="Access My Wallet" btn-size="xlarge" />
             </div>
           </div>
         </template>

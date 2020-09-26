@@ -33,7 +33,7 @@
           :to="{ name: 'AccessWalletBrowserExtensionAccess' }"
           class="display--block"
         >
-          <mew-button title="Access my wallet" button-size="xlarge" />
+          <mew-button title="Access my wallet" btn-size="xlarge" />
         </router-link>
       </div>
     </v-sheet>

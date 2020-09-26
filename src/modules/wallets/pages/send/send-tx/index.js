@@ -9,8 +9,6 @@ export default class SendTransaction {
     this.tokens = new TokensList(apollo);
   }
   getOwnersERC20Tokens(hash) {
-    console.error('getOwnersERC20Tokens', hash);
-    console.error('tokens', TokensList);
     TokensList.getOwnersERC20Tokens(hash);
   }
   getFixedBal() {

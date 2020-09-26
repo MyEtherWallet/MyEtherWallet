@@ -73,7 +73,7 @@
             />
 
             <div class="d-flex justify-center mt-9">
-              <mew-button title="Deposit" button-size="xlarge"></mew-button>
+              <mew-button title="Deposit" btn-size="xlarge"></mew-button>
             </div>
           </v-sheet>
         </template>
@@ -138,7 +138,7 @@
             />
 
             <div class="d-flex justify-center mt-9">
-              <mew-button title="Borrow" button-size="xlarge"></mew-button>
+              <mew-button title="Borrow" btn-size="xlarge"></mew-button>
             </div>
           </v-sheet>
         </template>

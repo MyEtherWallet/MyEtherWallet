@@ -21,7 +21,7 @@
               <mew-button
                 title="Sign Transaction"
                 :has-full-width="false"
-                button-size="xlarge"
+                btn-size="xlarge"
               />
             </div>
           </interface-wrap>

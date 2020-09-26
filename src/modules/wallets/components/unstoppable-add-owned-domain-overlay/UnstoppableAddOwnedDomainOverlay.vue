@@ -15,7 +15,7 @@
             />
             <mew-button
               :has-full-width="false"
-              button-size="xlarge"
+              btn-size="xlarge"
               title="Search"
             />
           </div>
@@ -35,7 +35,7 @@
             </div>
             <mew-button
               :has-full-width="false"
-              button-size="large"
+              btn-size="large"
               title="Add to list"
               btn-style="outline"
             />

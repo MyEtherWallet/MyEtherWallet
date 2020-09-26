@@ -21,7 +21,7 @@
       </v-radio-group>
     </div>
     <div class="mt-8 d-flex justify-center">
-      <mew-button title="Update" button-size="xlarge" />
+      <mew-button title="Update" btn-size="xlarge" />
     </div>
   </div>
 </template>

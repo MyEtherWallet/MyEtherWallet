@@ -33,7 +33,7 @@
           </bordered-white-sheet>
         </v-sheet>
         <mew-button
-          button-size="xlarge"
+          btn-size="xlarge"
           title="Change"
           class="mx-auto display--block"
         />
@@ -46,15 +46,15 @@
             <mew-button
               class="mr-3"
               title="Back"
-              button-size="xlarge"
+              btn-size="xlarge"
               btn-style="outline"
             />
-            <mew-button title="Next" button-size="xlarge" />
+            <mew-button title="Next" btn-size="xlarge" />
           </div>
           <mew-button
             class="mt-5 display--block mx-auto"
             title="Export JSON file"
-            button-size="small"
+            btn-size="small"
             btn-style="transparent"
           />
         </v-sheet>

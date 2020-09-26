@@ -13,7 +13,7 @@
         title="Get Started"
         btn-style="outline"
         color-theme="white"
-        button-size="xlarge"
+        btn-size="xlarge"
       />
     </v-sheet>
   </v-container>

@@ -21,7 +21,7 @@
             <v-col align="center" justify="center">
               <mew-button
                 title="Access My Wallet"
-                button-size="large"
+                btn-size="large"
                 :disabled="!disableBtn"
                 @click.native="unlockBtn"
               />

@@ -43,7 +43,7 @@
               <mew-button
                 btn-style="outline"
                 title="Collateralize DAI"
-                button-size="small"
+                btn-size="small"
                 class="display--block"
               />
             </div>
@@ -74,14 +74,14 @@
                   :has-full-width="true"
                   btn-style="outline"
                   title="Withdraw"
-                  button-size="xlarge"
+                  btn-size="xlarge"
                 ></mew-button>
               </v-col>
               <v-col cols="6">
                 <mew-button
                   :has-full-width="true"
                   title="Deposit"
-                  button-size="xlarge"
+                  btn-size="xlarge"
                 ></mew-button>
               </v-col>
             </v-row>
@@ -107,7 +107,7 @@
               <mew-button
                 :has-full-width="false"
                 title="Collateralize DAI"
-                button-size="small"
+                btn-size="small"
                 btn-style="outline"
               />
             </div>
@@ -133,7 +133,7 @@
                   <mew-button
                     :has-full-width="false"
                     title="+ Add Vault"
-                    button-size="medium"
+                    btn-size="medium"
                     btn-style="transparent"
                   />
                 </div>
@@ -144,7 +144,7 @@
               </v-col>
             </v-row>
             <div class="d-flex justify-center mt-5">
-              <mew-button title="Deposit" button-size="xlarge"></mew-button>
+              <mew-button title="Deposit" btn-size="xlarge"></mew-button>
             </div>
           </v-sheet>
         </template>

@@ -34,7 +34,7 @@
                     <mew-button
                       title="Confirm and sign"
                       :has-full-width="false"
-                      button-size="xlarge"
+                      btn-size="xlarge"
                       @click.native="activeTab = 1"
                     />
                   </div>
@@ -56,7 +56,7 @@
                   <mew-button
                     title="Copy & Close"
                     :has-full-width="false"
-                    button-size="xlarge"
+                    btn-size="xlarge"
                     @click.native="activeTab = 0"
                   />
                 </div>

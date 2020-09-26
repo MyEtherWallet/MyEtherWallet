@@ -25,7 +25,7 @@
                   title="Upload..."
                   btn-style="outline"
                   color-theme="primary"
-                  button-size="xlarge"
+                  btn-size="xlarge"
                   :has-full-width="true"
                   :shows-active-state="true"
                   @click.native="uploadBtn"
@@ -69,7 +69,7 @@
               />
               <mew-button
                 title="Access My Wallet"
-                button-size="xlarge"
+                btn-size="xlarge"
                 :has-full-width="true"
                 @click.native="unlockBtn"
               />

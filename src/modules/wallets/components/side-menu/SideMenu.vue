@@ -14,7 +14,7 @@
       color-theme="white"
       btn-style="outline"
       title="Buy ETH here"
-      button-size="large"
+      btn-size="large"
       :icon="require('@/assets/images/icons/icon-mastercard-mew.png')"
       icon-type="img"
       icon-align="right"

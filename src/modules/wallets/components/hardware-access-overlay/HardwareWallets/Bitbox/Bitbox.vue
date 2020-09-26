@@ -43,7 +43,7 @@
                   :link="link"
                 />
                 <mew-button
-                  button-size="xlarge"
+                  btn-size="xlarge"
                   has-full-width
                   title="Connect with Ledger"
                   @click.native="activeTab = 2"
@@ -74,7 +74,7 @@
               />
 
               <mew-button
-                button-size="xlarge"
+                btn-size="xlarge"
                 has-full-width
                 title="Access my wallet"
                 @click.native="activeTab = 0"

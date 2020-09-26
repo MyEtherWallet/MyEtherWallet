@@ -20,7 +20,7 @@
           :btn-link="link()"
           title="Get a new wallet"
           color-theme="white"
-          button-size="xlarge"
+          btn-size="xlarge"
           icon="newWallet"
           icon-align="left"
           icon-type="mew"

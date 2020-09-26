@@ -43,7 +43,7 @@
           value="0 Gwei"
           class="flex-grow-1 mr-3"
         />
-        <mew-button title="Confirm" button-size="xlarge" />
+        <mew-button title="Confirm" btn-size="xlarge" />
       </div> -->
     </v-sheet>
   </div>

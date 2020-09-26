@@ -6,7 +6,7 @@
     </div>
     <div class="d-flex align-start">
       <v-file-input color="primary" label="Upload file..." filled />
-      <mew-button class="ml-3" title="Confirm & Import" button-size="xlarge" />
+      <mew-button class="ml-3" title="Confirm & Import" btn-size="xlarge" />
     </div>
   </div>
 </template>

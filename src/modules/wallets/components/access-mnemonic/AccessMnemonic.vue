@@ -70,7 +70,7 @@
             <v-col align="center" justify="center">
               <mew-button
                 title="Next"
-                button-size="large"
+                btn-size="large"
                 :disabled="!isValidMnemonic"
                 @click.native="unlockBtn"
               />
@@ -92,7 +92,7 @@
               <v-row align="center" justify="center">
                 <v-col cols="6">
                   <mew-button
-                    button-size="medium"
+                    btn-size="medium"
                     title="Next"
                     has-full-width
                     :disable="!selectedPath"
@@ -220,7 +220,7 @@
                           icon="mdi-chevron-left"
                           icon-type="mdi"
                           :has-full-width="false"
-                          button-size="small"
+                          btn-size="small"
                           icon-align="left"
                           btn-style="transparent"
                           @click.native="previousAddressSet"
@@ -231,7 +231,7 @@
                           icon="mdi-chevron-right"
                           icon-type="mdi"
                           :has-full-width="false"
-                          button-size="small"
+                          btn-size="small"
                           icon-align="right"
                           btn-style="transparent"
                           @click.native="nextAddressSet"
@@ -244,7 +244,7 @@
               <div class="d-flex align-center flex-column">
                 <mew-button
                   title="Access My Wallet"
-                  button-size="large"
+                  btn-size="large"
                   :disabled="!(selectedAddress && acceptTerms)"
                   @click.native="setMnemonicWallet"
                 />

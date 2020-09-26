@@ -16,7 +16,7 @@
         <div>Duration:</div>
         <div>04:23:31</div>
       </div>
-      <mew-button button-size="xlarge" color-theme="error" title="Disconnect" />
+      <mew-button btn-size="xlarge" color-theme="error" title="Disconnect" />
     </v-card>
   </v-tooltip>
 </template>

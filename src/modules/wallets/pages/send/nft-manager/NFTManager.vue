@@ -31,7 +31,7 @@
                         :has-full-width="false"
                         btn-style="outline"
                         title="Send"
-                        button-size="large"
+                        btn-size="large"
                       />
                     </v-card>
                   </div>
@@ -63,7 +63,7 @@
                         :has-full-width="false"
                         btn-style="outline"
                         title="Send"
-                        button-size="large"
+                        btn-size="large"
                       />
                     </v-card>
                   </div>
@@ -95,7 +95,7 @@
                         :has-full-width="false"
                         btn-style="outline"
                         title="Send"
-                        button-size="large"
+                        btn-size="large"
                       />
                     </v-card>
                   </div>
@@ -127,7 +127,7 @@
                         :has-full-width="false"
                         btn-style="outline"
                         title="Send"
-                        button-size="large"
+                        btn-size="large"
                       />
                     </v-card>
                   </div>

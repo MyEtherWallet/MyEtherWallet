@@ -15,7 +15,7 @@
               />
               <mew-button
                 title="Create"
-                button-size="xlarge"
+                btn-size="xlarge"
                 :has-full-width="false"
               />
             </div>
@@ -47,7 +47,7 @@
             <div class="d-flex justify-center mt-6">
               <mew-button
                 title="Acknowledge & Download"
-                button-size="xlarge"
+                btn-size="xlarge"
                 :has-full-width="false"
               />
             </div>
@@ -70,7 +70,7 @@
               </p>
               <mew-button
                 title="Access my wallet"
-                button-size="xlarge"
+                btn-size="xlarge"
                 :has-full-width="false"
                 class="mb-5"
               />

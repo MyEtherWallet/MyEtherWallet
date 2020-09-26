@@ -16,15 +16,15 @@ export default class Tokenslist {
       .then(response => {
         console.error('get latet prices', response);
         if (response && response.data) {
-          // this.tokensInfo = response.data.getLatestPrices;
-          this.tokensInfo = new Map();
+          // this.tokensData = response.data.getLatestPrices;
+          this.tokensData = new Map();
           response.data.getLatestPrices.forEach(token => {
             if (token.contract) {
-              this.tokensInfo.set(token.contract.toLowerCase(), token);
+              this.tokensData.set(token.contract.toLowerCase(), token);
             }
           });
         }
-        return this.tokensInfo;
+        return this.tokensData;
       })
       .catch(error => {
         console.error('error', error);
@@ -32,6 +32,9 @@ export default class Tokenslist {
       });
   }
   getOwnersERC20Tokens(hash) {
+    if (this.tokensData && this.tokensData.length === 0) {
+      this.getLatestPrices();
+    }
     return this.apollo
       .query({
         query: getOwnersERC20Tokens,
@@ -52,11 +55,11 @@ export default class Tokenslist {
   }
   formatOwnersERC20Tokens(tokens) {
     const formattedList = [];
-    // console.error('tokens', this.tokensInfo);
+    console.error('tokens', this.tokensData);
     tokens.forEach(token => {
       let foundToken;
-      if (this.tokensInfo) {
-        foundToken = this.tokensInfo.get(
+      if (this.tokensData) {
+        foundToken = this.tokensData.get(
           token.tokenInfo.contract.toLowerCase()
         );
       }

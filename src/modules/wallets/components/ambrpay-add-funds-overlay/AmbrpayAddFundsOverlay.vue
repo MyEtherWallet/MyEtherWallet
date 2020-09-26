@@ -22,7 +22,7 @@
             <mew-input label="Amount" placeholder=" " />
 
             <div class="d-flex justify-center">
-              <mew-button title="Add" button-size="xlarge" />
+              <mew-button title="Add" btn-size="xlarge" />
             </div>
           </v-sheet>
         </mew6-white-sheet>

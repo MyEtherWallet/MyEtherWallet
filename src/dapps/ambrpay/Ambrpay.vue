@@ -58,7 +58,7 @@
           <mew-button
             :has-full-width="false"
             title="Start Recurring"
-            button-size="xlarge"
+            btn-size="xlarge"
           />
         </div>
         <div class="d-flex justify-center mt-4">
@@ -66,7 +66,7 @@
             :has-full-width="false"
             btn-style="transparent"
             title="My Subscription (2)"
-            button-size="small"
+            btn-size="small"
           />
         </div>
       </v-sheet>

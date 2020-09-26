@@ -20,7 +20,7 @@
               <mew-button
                 style="border-radius: 100% !important"
                 class="options-btn ml-2"
-                button-size="small"
+                btn-size="small"
                 icon-type="mdi"
                 icon="mdi-dots-vertical"
                 btn-style="transparent"
@@ -46,7 +46,7 @@
             <mew-button
               :has-full-width="false"
               title="Send Transaction"
-              button-size="xlarge"
+              btn-size="xlarge"
               @click.native="goTo('HomeAccessWallet')"
             />
           </v-col>
@@ -67,7 +67,7 @@
               <mew-button
                 :has-full-width="false"
                 title="Buy ETH with a credit card"
-                button-size="xlarge"
+                btn-size="xlarge"
               />
               <div class="d-flex align-center mt-4">
                 <div>We accept credit card</div>
@@ -112,7 +112,7 @@
                 class="ml-auto"
                 :has-full-width="false"
                 title="All tokens"
-                button-size="small"
+                btn-size="small"
                 btn-style="transparent"
                 @click.native="goTo('HomeAccessWallet')"
               />
@@ -139,7 +139,7 @@
                 class="ml-auto ml-n3"
                 :has-full-width="false"
                 :title="'+ ' + 'Add custom tokens'"
-                button-size="xsmall"
+                btn-size="xsmall"
                 btn-style="transparent"
                 @click.native="goTo('HomeAccessWallet')"
               />

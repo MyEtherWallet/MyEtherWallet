@@ -59,7 +59,7 @@
             />
           </div>
           <mew-button
-            button-size="xlarge"
+            btn-size="xlarge"
             title="Unlock wallet"
             has-full-width
             @click.native="nextStep"
@@ -192,7 +192,7 @@
                           icon="mdi-chevron-left"
                           icon-type="mdi"
                           :has-full-width="false"
-                          button-size="small"
+                          btn-size="small"
                           icon-align="left"
                           btn-style="transparent"
                           :disabled="addressPage <= 1"
@@ -204,7 +204,7 @@
                           icon="mdi-chevron-right"
                           icon-type="mdi"
                           :has-full-width="false"
-                          button-size="small"
+                          btn-size="small"
                           icon-align="right"
                           btn-style="transparent"
                           @click.native="nextAddressSet"
@@ -217,7 +217,7 @@
               <div class="d-flex align-center flex-column">
                 <mew-button
                   title="Access My Wallet"
-                  button-size="large"
+                  btn-size="large"
                   :disabled="!(selectedAddress && acceptTerms)"
                   @click.native="
                     () => {
