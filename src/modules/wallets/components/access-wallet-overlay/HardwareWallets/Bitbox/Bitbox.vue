@@ -14,6 +14,7 @@
         >
           <h2 class="text-center mb-10">Select BitBox wallet</h2>
           <mew-super-button
+            :selected="bitBoxSelected === 1"
             class="mb-4"
             btn-mode="small-right-image"
             color-theme="basic"
@@ -22,8 +23,10 @@
               require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')
             "
             :right-icon-height="45"
+            @click.native="bitBoxSelected = 1"
           />
           <mew-super-button
+            :selected="bitBoxSelected === 2"
             btn-mode="small-right-image"
             color-theme="basic"
             title="BitBox 02"
@@ -31,6 +34,7 @@
               require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')
             "
             :right-icon-height="45"
+            @click.native="bitBoxSelected = 2"
           />
 
           <div class="d-flex justify-center mt-8">
@@ -71,6 +75,32 @@
             </div>
           </mew6-white-sheet>
           <page-indicator-dot class="mt-4" :items="3" :current-item="1" />
+        </div>
+
+        <div v-if="step === 2" class="full-width">
+          <h2 class="text-center mb-10">2. Connect with BitBox</h2>
+          <mew6-white-sheet max-width="600px" class="mx-auto pa-4 pa-sm-12">
+            <div class="text-center mb-10">
+              <img
+                src="@/assets/images/currencies/icon-eth-blue.svg"
+                alt="App"
+                height="80"
+              />
+            </div>
+
+            <mew-select :items="apps" />
+            <mew-select :items="derivationPath" />
+
+            <div class="d-flex justify-center mt-2">
+              <mew-button
+                title="Connect with BitBox"
+                button-size="xlarge"
+                :has-full-width="false"
+                @click.native="step += 1"
+              />
+            </div>
+          </mew6-white-sheet>
+          <page-indicator-dot class="mt-4" :items="3" :current-item="2" />
         </div>
 
         <div v-if="step === 3" class="full-width">
@@ -299,7 +329,24 @@ export default {
             { name: 'therscan.io', value: 'therscan2' }
           ]
         }
-      ]
+      ],
+      apps: [
+        {
+          name: 'Ethereum',
+          value: 'ethereum'
+        }
+      ],
+      derivationPath: [
+        {
+          name: "m/44'/60'/0",
+          value: "m/44'/60'/0"
+        },
+        {
+          name: "m/44'/60'/0",
+          value: "m/44'/60'/0"
+        }
+      ],
+      bitBoxSelected: null
     };
   }
 };

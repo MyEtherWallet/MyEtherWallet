@@ -1,52 +1,54 @@
 <template>
   <div class="global--mew-component--mew-super-button">
-    <div
-      v-if="btnMode === 'small-right-image'"
-      class="small-right-image"
-      :class="[
-        colorTheme === 'basic' ? 'white titlePrimary--text' : '',
-        colorTheme === 'outline' ? 'btn-outline' : '',
-        colorTheme === 'white' ? 'white titlePrimary--text' : ''
-      ]"
-    >
-      <div if="note" class="top-right-note">{{ note }}</div>
-      <div class="d-flex align-center justify-space-between pa-7 pa-sm-8">
-        <div>
-          <div class="d-flex align-center">
-            <h4 class="font-weight-bold">{{ title }}</h4>
-            <v-icon
-              v-if="titleMdiIcon"
-              class="ml-2"
-              :class="titleIconClass"
-              size="21"
-            >
-              {{ titleMdiIcon }}
-            </v-icon>
+    <div :class="selected ? 'selected' : ''" style="border-radius: 10px">
+      <div
+        v-if="btnMode === 'small-right-image'"
+        class="small-right-image selected"
+        :class="[
+          colorTheme === 'basic' ? 'white titlePrimary--text' : '',
+          colorTheme === 'outline' ? 'btn-outline' : '',
+          colorTheme === 'white && !selected' ? 'white titlePrimary--text' : ''
+        ]"
+      >
+        <div if="note" class="top-right-note">{{ note }}</div>
+        <div class="d-flex align-center justify-space-between pa-7 pa-sm-8">
+          <div>
+            <div class="d-flex align-center">
+              <h4 class="font-weight-bold">{{ title }}</h4>
+              <v-icon
+                v-if="titleMdiIcon"
+                class="ml-2"
+                :class="titleIconClass"
+                size="21"
+              >
+                {{ titleMdiIcon }}
+              </v-icon>
+            </div>
+            <div v-if="subtitle" class="mt-2">{{ subtitle }}</div>
           </div>
-          <div v-if="subtitle" class="mt-2">{{ subtitle }}</div>
-        </div>
-        <div v-if="rightIcons" class="ml-1 d-flex align-center">
+          <div v-if="rightIcons" class="ml-1 d-flex align-center">
+            <img
+              v-for="(i, key) in rightIcons"
+              :key="key"
+              :style="
+                !rightIconHeight && rightIcons.length < 2
+                  ? 'height: 70px'
+                  : 'height: 40px'
+              "
+              :src="i"
+              :alt="title"
+              class="ml-2"
+              :height="rightIconHeight"
+            />
+          </div>
           <img
-            v-for="(i, key) in rightIcons"
-            :key="key"
-            :style="
-              !rightIconHeight && rightIcons.length < 2
-                ? 'height: 70px'
-                : 'height: 40px'
-            "
-            :src="i"
+            v-if="rightIcon"
+            :src="rightIcon"
             :alt="title"
-            class="ml-2"
+            class="ml-3"
             :height="rightIconHeight"
           />
         </div>
-        <img
-          v-if="rightIcon"
-          :src="rightIcon"
-          :alt="title"
-          class="ml-3"
-          :height="rightIconHeight"
-        />
       </div>
     </div>
     <div
@@ -235,6 +237,10 @@ export default {
     rightIconHeight: {
       type: Number,
       default: 70
+    },
+    selected: {
+      type: Boolean,
+      default: false
     },
     /**
      * The number of cols for the left side to take up.
@@ -446,6 +452,10 @@ export default {
 .btn-outline {
   border: 1px solid white;
   color: white;
+}
+
+.selected {
+  border: 1px solid var(--v-primary-base) !important;
 }
 </style>
 
