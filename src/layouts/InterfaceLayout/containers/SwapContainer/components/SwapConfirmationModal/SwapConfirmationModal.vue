@@ -177,6 +177,7 @@ export default {
       return '';
     },
     calculatedFee() {
+      console.log(this.gasPrice);
       const feeTotal = this.totalFee.times(this.gasPrice);
       const feeInEth = unit.fromWei(unit.toWei(feeTotal, 'gwei'), 'ether');
       return new BigNumber(feeInEth).toFormat(6).toString();
