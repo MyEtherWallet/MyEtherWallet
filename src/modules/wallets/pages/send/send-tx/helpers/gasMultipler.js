@@ -39,4 +39,23 @@ const getGasByType = gasPrice => {
   }
 };
 
-export { getEconomy, getRegular, getFast, getGasByType };
+const fastToEconomy = gasPrice => {
+  let value = new BigNumber(gasPrice).minus(FAST_CONST);
+  value = value.div(FAST_MULTIPLIER).toFixed(0);
+  return new BigNumber(value).toFixed();
+};
+
+const regularToEconomy = gasPrice => {
+  let value = new BigNumber(gasPrice).minus(MED_CONST);
+  value = value.div(MED_MULTIPLIER).toFixed(0);
+  return new BigNumber(value).toFixed();
+};
+
+export {
+  getEconomy,
+  getRegular,
+  getFast,
+  fastToEconomy,
+  regularToEconomy,
+  getGasByType
+};

@@ -1,6 +1,5 @@
 {
-  "notAValidAmountTotal": "Not enough ",
-  "toSend": "to send.",
+  "notEnoughToSend": "Not enough {type} to send.",
   "invalidValue": "Invalid value",
   "wrongPassPhrase": "Passphrase given is incorrect!",
   "browserNonU2f": "Browser not u2f compliant. Try using Chrome or Opera!",
