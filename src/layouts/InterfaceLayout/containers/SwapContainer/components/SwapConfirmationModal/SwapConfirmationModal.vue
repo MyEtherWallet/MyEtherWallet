@@ -382,6 +382,7 @@ export default {
       }
     },
     async swapStarted(swapDetails) {
+      this.totalFee = new BigNumber(0);
       if (swapDetails.isExitToFiat && !swapDetails.bypass) return;
       this.timeUpdater(swapDetails);
       try {
