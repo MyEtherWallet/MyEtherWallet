@@ -32,7 +32,7 @@ export default class Tokenslist {
       });
   }
   getOwnersERC20Tokens(hash) {
-    if (this.tokensData && this.tokensData.length === 0) {
+    if (!this.tokensData || this.tokensData.length === 0) {
       this.getLatestPrices();
     }
     return this.apollo
