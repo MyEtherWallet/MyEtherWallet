@@ -7,7 +7,6 @@ import {
   TIME_SWAP_VALID,
   PROVIDER_NAME,
   PROXY_CONTRACT_ADDRESS,
-  SUPPORTED_DEXES,
   MARKET_IMPACT_CUTOFF
 } from './config';
 import dexAgCalls from './dexAg-calls';
@@ -34,7 +33,6 @@ export default class DexAg {
     this.tokenUpdate = props.tokenUpdate;
     this.approvalGasLimit = 100000;
     this.tradeGasLimitBase = 1000000;
-    this.getSupportedDexes();
     this.getSupportedCurrencies(this.network);
     this.getFee();
     this.platformGasPrice = props.gasPrice || -1;
@@ -79,17 +77,6 @@ export default class DexAg {
       this.feeAmount = feeAmount / 10000;
     } catch (e) {
       this.feeAmount = 0.02;
-    }
-  }
-
-  async getSupportedDexes() {
-    try {
-      this.SUPPORTED_DEXES = await dexAgCalls.supportedDexes();
-      if (!this.SUPPORTED_DEXES || !Array.isArray(this.SUPPORTED_DEXES)) {
-        this.SUPPORTED_DEXES = SUPPORTED_DEXES;
-      }
-    } catch (e) {
-      this.SUPPORTED_DEXES = SUPPORTED_DEXES;
     }
   }
 
@@ -151,15 +138,12 @@ export default class DexAg {
 
           resolve(
             vals.map(val => {
-              const isKnownToWork = this.SUPPORTED_DEXES.includes(val.dex);
               const bnPrice = new BigNumber(val.price);
               return {
                 fromCurrency,
                 toCurrency,
                 provider: val.dex !== 'ag' ? val.dex : 'dexag',
-                rate: isKnownToWork
-                  ? bnPrice.minus(bnPrice.times(this.feeAmount)).toNumber()
-                  : 0,
+                rate: bnPrice.minus(bnPrice.times(this.feeAmount)).toNumber(),
                 additional: { source: 'dexag' }
               };
             })
@@ -377,10 +361,8 @@ export default class DexAg {
 
   async startSwap(swapDetails) {
     swapDetails.maybeToken = true;
-
-    const dexToUse = this.SUPPORTED_DEXES.includes(swapDetails.provider)
-      ? swapDetails.provider
-      : 'ag';
+    const dexToUse =
+      swapDetails.provider !== 'dexag' ? swapDetails.provider : 'ag';
 
     const tradeDetails = await this.createTransaction(swapDetails, dexToUse);
 

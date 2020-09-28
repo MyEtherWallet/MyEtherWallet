@@ -1,3 +1,7 @@
+### Devop
+
+- remove prior restriction on dexes displayed when using dexag [#]()
+
 ### Release v5.7.8-hotfix.3
 
 ### Hotfix
