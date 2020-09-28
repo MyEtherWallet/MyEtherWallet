@@ -179,13 +179,6 @@ export default {
     calculatedFee() {
       const feeTotal = this.totalFee.times(this.gasPrice);
       const feeInEth = unit.fromWei(unit.toWei(feeTotal, 'gwei'), 'ether');
-      // eslint-disable-next-line
-      console.log(
-        this.gasPrice,
-        this.totalFee.toString(),
-        feeTotal.toString(),
-        new BigNumber(feeInEth).toFormat(6).toString()
-      );
       return new BigNumber(feeInEth).toFormat(6).toString();
     },
     calculatedFeeUsd() {
