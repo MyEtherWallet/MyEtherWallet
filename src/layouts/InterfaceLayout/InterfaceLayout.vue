@@ -810,6 +810,7 @@ export default {
     },
     getHighestGas() {
       const gasType = store.get('gasPriceType') || 'economy';
+      const getCustomGas = store.get('customGasPrice');
       this.web3.eth
         .getGasPrice()
         .then(res => {
@@ -818,6 +819,8 @@ export default {
           ).toString();
           if (gasType === 'economy') {
             this.setGasPrice(parsedGas);
+          } else if (gasType === 'custom' && getCustomGas) {
+            this.setGasPrice(getCustomGas);
           } else {
             this.setGasPrice(getGasBasedOnType(parsedGas));
           }
