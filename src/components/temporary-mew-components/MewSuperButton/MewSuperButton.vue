@@ -7,7 +7,7 @@
         :class="[
           colorTheme === 'basic' ? 'white titlePrimary--text' : '',
           colorTheme === 'outline' ? 'btn-outline' : '',
-          colorTheme === 'white && !selected' ? 'white titlePrimary--text' : ''
+          colorTheme === 'white' ? 'white titlePrimary--text' : ''
         ]"
       >
         <div if="note" class="top-right-note">{{ note }}</div>
