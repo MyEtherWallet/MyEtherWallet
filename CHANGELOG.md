@@ -1,3 +1,7 @@
+### Feature
+
+- Add Pocket Network as provider for Ethereum networks[#2600](https://github.com/MyEtherWallet/MyEtherWallet/pull/2600)
+
 ### Release v5.7.8-hotfix.1
 
 ### Devop
