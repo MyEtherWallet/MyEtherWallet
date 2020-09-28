@@ -560,6 +560,7 @@ export default {
       const fetchedNonce = await this.web3.eth
         .getTransactionCount(this.account.address)
         .catch(e => {
+          console.log(e, 'hello there!');
           Toast.responseHandler(e, Toast.ERROR);
         });
       this.nonce = new BigNumber(fetchedNonce).toString();
@@ -577,30 +578,34 @@ export default {
           }
         ];
         const contract = new web3.eth.Contract(contractAbi);
-        const data = contract.methods
-          .balanceOf(this.account.address)
-          .encodeABI();
-        const balance = await web3.eth
-          .call({
-            to: token.address,
-            data: data
-          })
-          .then(res => {
-            let tokenBalance;
-            if (Number(res) === 0 || res === '0x') {
-              tokenBalance = '0';
-            } else {
-              const denominator = new BigNumber(10).pow(token.decimals);
-              tokenBalance = new BigNumber(res).div(denominator).toString();
-            }
-            return tokenBalance;
-          })
-          .catch(e => {
-            Toast.responseHandler(e, false);
-          });
+        if (this.account.address && this.account.address !== '') {
+          const data = contract.methods
+            .balanceOf(this.account.address)
+            .encodeABI();
+          const balance = await web3.eth
+            .call({
+              to: token.address,
+              data: data
+            })
+            .then(res => {
+              let tokenBalance;
+              if (Number(res) === 0 || res === '0x') {
+                tokenBalance = '0';
+              } else {
+                const denominator = new BigNumber(10).pow(token.decimals);
+                tokenBalance = new BigNumber(res).div(denominator).toString();
+              }
+              return tokenBalance;
+            })
+            .catch(e => {
+              console.log(e, 'hello there! 8');
+              Toast.responseHandler(e, false);
+            });
 
-        return balance;
+          return balance;
+        }
       } catch (e) {
+        console.log(e, 'hello there! 9');
         Toast.responseHandler(e, Toast.ERROR);
       }
     },
@@ -690,6 +695,7 @@ export default {
             this.receivedTokens = true;
           })
           .catch(e => {
+            console.log(e, 'hello there! 1');
             Toast.responseHandler(e, Toast.ERROR);
           });
       } else {
@@ -705,6 +711,7 @@ export default {
           this.updateBlockNumber(res);
         })
         .catch(e => {
+          console.log(e, 'hello there! 2');
           Toast.responseHandler(e, Toast.ERROR);
         });
     },
@@ -718,6 +725,7 @@ export default {
             this.setAccountBalance(res);
           })
           .catch(e => {
+            console.log(e, 'hello there! 3');
             Toast.responseHandler(e, Toast.ERROR);
           });
       }
@@ -732,6 +740,7 @@ export default {
           }
         });
       } catch (e) {
+        console.log(e, 'hello there! 4');
         Toast.responseHandler(e, Toast.ERROR);
       }
     },
@@ -822,6 +831,7 @@ export default {
           this.highestGas = parsedGas;
         })
         .catch(e => {
+          console.log(e, 'hello there! 5');
           Toast.responseHandler(e, Toast.ERROR);
         });
     },
@@ -869,6 +879,7 @@ export default {
             }
           })
           .catch(e => {
+            console.log(e, 'hello there! 6');
             Toast.responseHandler(e, false);
           });
       }, 500);
@@ -885,6 +896,7 @@ export default {
 
         window.web3.eth.getAccounts((err, accounts) => {
           if (err) {
+            console.log(err, 'hello there! 7');
             Toast.responseHandler(err, false);
             clearInterval(this.pollAddress);
           }
