@@ -169,8 +169,14 @@ export default {
       this.addressValue = value;
     },
     sendEntireBal() {
-      this.amount = this.sendTx.getEntireBal();
-    }
+      this.amount = this.sendTx.entireBal();
+    },
+    displayedGasPrice(val) {
+      const newVal = val.toString();
+      return newVal.toString().includes('.')
+        ? `~ ${new BigNumber(newVal).toFixed(2).toString()}`
+        : newVal;
+    },
   }
 };
 </script>
