@@ -2,7 +2,6 @@ import HttpProvider from './providers/http-provider';
 import GivenProvider from './providers/given-provider';
 import WSProvider from './providers/ws-provider';
 import EtherscanProvider from './providers/etherscan-provider';
-import PocketProvider from './providers/pocket-provider';
 import { WEB3_WALLET } from '../bip44/walletTypes';
 class MEWProvider {
   constructor(host, options, store, eventHub) {
@@ -11,8 +10,6 @@ class MEWProvider {
     } else if (host && typeof host === 'string') {
       if (host.includes('etherscan')) {
         return new EtherscanProvider(host, options, store, eventHub);
-      } else if (host.includes('pokt')) {
-        return new PocketProvider(host, options, store, eventHub);
       } else if (/^http(s)?:\/\//i.test(host)) {
         return new HttpProvider(host, options, store, eventHub);
       } else if (/^ws(s)?:\/\//i.test(host)) {

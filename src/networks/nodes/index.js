@@ -18,20 +18,19 @@ import ftmscan from './ftmscan';
 import go from './go';
 import kovethscan from './kov-ethscan';
 import kovinfura from './kov-infura';
-import kovpocket from './kov-pocket';
 import kovmew from './kov-mew';
 import kovmewws from './kov-mew-ws';
+import kovpocket from './kov-pocket';
 import metadium from './meta';
 import music from './music';
 import pirl from './pirl';
 import poa from './poa';
-import poapocket from './poa-pocket';
 import rinmew from './rin-mew';
 import rinmewws from './rin-mew-ws';
 import rinethscan from './rin-ethscan';
 import rininfura from './rin-infura';
-import rinpocket from './rin-pocket';
 import rininfuraws from './rin-infura-ws';
+import rinpocket from './rin-pocket';
 import ropinfura from './rop-infura';
 import ropinfuraws from './rop-infura-ws';
 import ropmew from './rop-mew';
@@ -92,7 +91,6 @@ export {
   music,
   pirl,
   poa,
-  poapocket,
   reosc,
   rinethscan,
   rininfura,
@@ -102,9 +100,9 @@ export {
   rinpocket,
   ropinfura,
   ropinfuraws,
-  roppocket,
   ropmew,
   ropmewws,
+  roppocket,
   rskpublic,
   rsktestpublic,
   tomo,
