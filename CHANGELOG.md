@@ -1,6 +1,6 @@
 ### Devop
 
-- remove prior restriction on dexes displayed when using dexag [#]()
+- remove prior restriction on dexes displayed when using dexag [#2601](https://github.com/MyEtherWallet/MyEtherWallet/pull/2601)
 
 ### Release v5.7.8-hotfix.3
 
