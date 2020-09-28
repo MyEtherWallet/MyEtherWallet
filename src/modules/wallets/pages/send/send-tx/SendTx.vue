@@ -28,7 +28,7 @@
                 :label="$t('sendTx.amount')"
                 placeholder=" "
                 :right-label="fixedBal"
-                :value="amount"
+                @input="getAmount"
               />
             </v-col>
           </v-row>
@@ -62,7 +62,7 @@
               <mew-input
                 :label="$t('common.gas.price')"
                 placeholder=" "
-                value="40"
+                :value="displayedGasPrice"
               />
               <mew-input
                 :label="$t('common.gas.limit')"
@@ -130,6 +130,7 @@ export default {
   data() {
     return {
       // will remove this once we get state
+      gasPrice: '40',
       account: {
         balance: '20000000000000000000000',
         address: '0x43689531907482BEE7e650D18411E284A7337A66'
@@ -160,8 +161,16 @@ export default {
       ]
     };
   },
+  computed: {
+    displayedGasPrice() {
+      const gasPrice = this.gasPrice.toString();
+      return gasPrice.includes('.')
+        ? `~ ${this.sendTx.getFixedGas().toString()}`
+        : gasPrice;
+    }
+  },
   mounted() {
-    this.sendTx = new SendTransaction(this.account.balance, this.$apollo);
+    this.sendTx = new SendTransaction(this.account, this.$apollo);
     this.fixedBal = this.sendTx.getFixedBal();
   },
   methods: {
@@ -171,12 +180,9 @@ export default {
     sendEntireBal() {
       this.amount = this.sendTx.entireBal();
     },
-    displayedGasPrice(val) {
-      const newVal = val.toString();
-      return newVal.toString().includes('.')
-        ? `~ ${new BigNumber(newVal).toFixed(2).toString()}`
-        : newVal;
-    },
+    getAmount(value) {
+      console.error('value', value);
+    }
   }
 };
 </script>

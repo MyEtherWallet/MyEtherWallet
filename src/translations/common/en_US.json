@@ -126,7 +126,8 @@
     "gwei": "gwei",
     "uppercase-gwei": "Gwei",
     "wei": "wei",
-    "fee": "Fee"
+    "fee": "Fee",
+    "name": "Gas"
   },
   "search": "Search",
   "loading": "Loading",
