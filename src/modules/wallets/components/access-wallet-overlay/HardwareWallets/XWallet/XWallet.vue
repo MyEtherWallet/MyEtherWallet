@@ -1,57 +1,49 @@
 <template>
-  <mew-overlay
-    :show-overlay="open"
-    title="1. Connect with XWallet"
-    right-btn-text="Cancel"
-    @closeOverlay="$emit('close')"
-  >
-    <template v-slot:mewComponent>
-      <mew-tabs :items="tabs" is-block>
-        <template v-slot:tabContent1>
-          <mew6-white-sheet>
-            <div class="overlay-content pa-8">
-              <div class="text-center mb-8">
-                <img
-                  src="@/assets/images/currencies/icon-eth-blue.svg"
-                  alt="Eth icon"
-                  height="60"
-                />
-              </div>
-              <div>
-                <mew-select label="App opened in XWallet" />
-                <mew-select label="HD derivation path" />
-              </div>
-              <mew-button
-                button-size="xlarge"
-                title="Connect with XWallet"
-                has-full-width
-                @click.native="activeTab = 1"
+  <div class="mew-component--access-wallet-bitbox">
+    <mew-overlay
+      :show-overlay="open"
+      right-btn-text="Cancel"
+      @closeOverlay="$emit('close')"
+    >
+      <template v-slot:mewOverlayBody>
+        <div class="full-width">
+          <h2 class="text-center mb-10">Scan the QR code</h2>
+          <mew6-white-sheet max-width="500px" class="mx-auto pa-4 pa-sm-12">
+            <div class="mb-3 font-weight-bold">
+              Please use Pundi X Savings account by MEW to scan the QR code
+              below.
+            </div>
+
+            <div class="text-center mt-10 mb-10">
+              <img src="@/assets/images/temp/qr.png" alt="QR code" />
+            </div>
+
+            <div
+              class="d-block d-sm-flex align-center justify-center text-center"
+            >
+              <img
+                src="@/assets/images/icons/button-app-store.png"
+                alt="App store"
+                height="40"
+                class="mx-1"
+              />
+              <img
+                src="@/assets/images/icons/button-play-store.png"
+                alt="Play store"
+                height="40"
+                class="mx-1"
               />
             </div>
           </mew6-white-sheet>
-        </template>
-        <template v-slot:tabContent2>
-          <mew6-white-sheet>
-            <GroupRadioButtons :buttons="networkButtons" />
-            <address-table />
-          </mew6-white-sheet>
-        </template>
-      </mew-tabs>
-    </template>
-  </mew-overlay>
+        </div>
+      </template>
+    </mew-overlay>
+  </div>
 </template>
 
 <script>
-// TODO: add component in mew components
-// import GroupRadioButtons from '@/components/Buttons/GroupRadioButtons';
-import addressTable from './components/AddressTable/AddressTable';
-
 export default {
-  components: {
-    // GroupRadioButtons,
-
-    addressTable
-  },
+  components: {},
   props: {
     open: { default: false, type: Boolean },
     close: {
@@ -62,62 +54,9 @@ export default {
     }
   },
   data() {
-    return {
-      tabs: [
-        {
-          name: ''
-        },
-        {
-          name: ''
-        }
-      ],
-      networkButtons: [
-        {
-          groupName: 'ETH',
-          btns: [
-            { label: 'myetherapi.com', value: 'eth-myetherapi' },
-            { label: 'infura.io', value: 'eth-infura' },
-            { label: 'giveth.io', value: 'eth-giveth' },
-            { label: 'therscan.io', value: 'eth-therscan' }
-          ]
-        },
-        {
-          groupName: 'ROP',
-          btns: [
-            { label: 'etherscan.io', value: 'rop-etherscan' },
-            { label: 'infura.io', value: 'rop-infura' },
-            { label: 'giveth.io', value: 'rop-giveth' },
-            { label: 'therscan.io', value: 'rop-therscan' }
-          ]
-        },
-        {
-          groupName: 'RIN',
-          btns: [
-            { label: 'etherscan.io', value: 'rin-etherscan' },
-            { label: 'infura.io', value: 'rin-infura' },
-            { label: 'giveth.io', value: 'rin-giveth' },
-            { label: 'therscan.io', value: 'rin-therscan' }
-          ]
-        }
-      ],
-      appSelect: 'eth',
-      derivationPathSelect: '1',
-      activeTab: 0,
-      apps: [
-        { label: 'Ethereum', value: 'eth' },
-        { label: 'SometingElse', value: 'smt' }
-      ],
-      derivationPath: [
-        { label: `m/44'/60'/0'`, value: '1' },
-        { label: `m/44'/60'/0'`, value: '2' }
-      ]
-    };
+    return {};
   }
 };
 </script>
 
-<style lang="scss" scoped>
-.overlay-content {
-  width: 500px;
-}
-</style>
+<style lang="scss" scoped></style>
