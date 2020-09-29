@@ -810,18 +810,18 @@ export default {
     },
     getHighestGas() {
       const gasType = store.get('gasPriceType') || 'economy';
-      const getCustomGas = store.get('customGasPrice');
+      const getCustomGas = store.get('customGasPrice') || 0;
       this.web3.eth
         .getGasPrice()
         .then(res => {
-          const parsedGas = new BigNumber(
-            this.web3.utils.fromWei(res, 'gwei')
-          ).toString();
+          const parsedGas = new BigNumber(this.web3.utils.fromWei(res, 'gwei'))
+            .toFixed(9)
+            .toString();
           store.set('fetchedGasPrice', parsedGas);
           if (gasType === 'economy') {
             this.setGasPrice(parsedGas);
           } else if (gasType === 'other' && getCustomGas) {
-            this.setGasPrice(getCustomGas);
+            this.setGasPrice(new BigNumber(getCustomGas).toFixed(9));
           } else {
             this.setGasPrice(getGasBasedOnType(parsedGas));
           }

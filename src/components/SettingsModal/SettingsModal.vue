@@ -334,7 +334,7 @@ export default {
       if (newVal !== '') {
         if (new BigNumber(newVal).gte(1)) {
           const toGwei = new BigNumber(
-            utils.toWei(`${new BigNumber(newVal).toFixed(2)}`, 'gwei')
+            utils.toWei(`${new BigNumber(newVal).toFixed(9)}`, 'gwei')
           ).toFixed();
           this.customGasEth = new BigNumber(
             `${utils.fromWei(toGwei, 'ether')}`
