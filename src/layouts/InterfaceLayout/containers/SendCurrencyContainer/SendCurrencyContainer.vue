@@ -67,7 +67,7 @@
           </div>
           <div class="fee-value">
             <div class="gwei">
-              {{ displayedGasPrice(gasPrice) }}
+              {{ displayedGasPrice }}
               {{ $t('common.gas.gwei') }}
               <!--(Economic)-->
             </div>
@@ -257,9 +257,9 @@ export default {
       return this.gasPrice >= this.gasLimitWarning;
     },
     txFee() {
-      return new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
-        this.gasLimit || 0
-      );
+      return new BigNumber(
+        ethUnit.toWei(new BigNumber(this.gasPrice).toFixed(7), 'gwei')
+      ).times(this.gasLimit || 0);
     },
     txFeeEth() {
       if (new BigNumber(this.txFee).gt(0)) {
@@ -390,6 +390,16 @@ export default {
           .toString();
       }
       return '--';
+    },
+    displayedGasPrice() {
+      const newVal = this.gasPrice.toString();
+      const showMore = `~${new BigNumber(newVal).toString()}`;
+      const showSome = `~${new BigNumber(newVal).toFixed(2).toString()}`;
+      return newVal.includes('.')
+        ? new BigNumber(newVal).lt(1)
+          ? showMore
+          : showSome
+        : newVal;
     }
   },
   watch: {
@@ -408,16 +418,6 @@ export default {
     if (this.online && this.network.type.name === 'ETH') this.getEthPrice();
   },
   methods: {
-    displayedGasPrice(val) {
-      const newVal = val.toString();
-      const showMore = `~${new BigNumber(newVal).toString()}`;
-      const showSome = `~${new BigNumber(newVal).toFixed(2).toString()}`;
-      return newVal.includes('.')
-        ? new BigNumber(newVal).lt(1)
-          ? showMore
-          : showSome
-        : newVal;
-    },
     clear() {
       this.toData = '';
       this.toValue = '0';
