@@ -1,8 +1,9 @@
 import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
 import { getGasByType } from './helpers/gasMultipler';
-import { sanitizeHex } from '@/helpers/sanitizeHex';
-import { validateHexString } from '@/helpers/validateHexString';
+import sanitizeHex from '@/helpers/sanitizeHex';
+import validateHexString from '@/helpers/validateHexString';
+import { Transaction } from 'ethereumjs-tx';
 export default class SendTransaction {
   constructor(account, web3, gasPrice) {
     this.account = account;
@@ -20,9 +21,7 @@ export default class SendTransaction {
   }
   // returns if gas limit is valid
   isValidGasLimit(gasLimit) {
-    return (this.gasLimit = new BigNumber(gasLimit).gte(0)
-      ? gasLimit
-      : '21000');
+    return new BigNumber(gasLimit).gte(0) ? gasLimit : '21000';
   }
   // get fixed gas
   getFixedGas(val) {
@@ -35,8 +34,20 @@ export default class SendTransaction {
     ).toFixed();
   }
   // get the address' entire balance
-  entireBal() {
-    return this.account.balance;
+  getEntireBal(currency, balance, gasLimit) {
+    if (this.isToken(currency)) {
+      return currency.balance;
+    }
+    return balance > 0
+      ? balance.minus(
+          utils.fromWei(
+            new BigNumber(utils.toWei(this.finalGasPrice, 'gwei')).times(
+              gasLimit
+            ).toString,
+            'ether'
+          )
+        )
+      : 0;
   }
   // get final gas price
   finalGasPrice() {
@@ -48,28 +59,37 @@ export default class SendTransaction {
   }
   // tx fee
   txFee(gasLimit) {
-    return new BigNumber(utils.toWei(this.finalGasPrice, 'gwei')).times(
+    return new BigNumber(utils.toWei(this.finalGasPrice(), 'gwei')).times(
       gasLimit || 0
     );
   }
   // tx fee in ether
-  txFeeEth() {
-    if (new BigNumber(this.txFee).gt(0)) {
-      return utils.fromWei(this.txFee, 'ether');
+  txFeeETH(gasLimit) {
+    if (new BigNumber(this.txFee(gasLimit)).gt(0)) {
+      const txFee = this.txFee(gasLimit).toFixed();
+      return utils.fromWei(txFee, 'ether');
     }
     return '0';
+  }
+  // tx fee in usd
+  txFeeUSD(gasLimit, ethPrice) {
+    return new BigNumber(
+      new BigNumber(this.txFeeETH(gasLimit)).times(new BigNumber(ethPrice))
+    )
+      .toFixed(2)
+      .toString();
   }
   // account balance in ether
   balanceEth() {
     return new BigNumber(utils.fromWei(this.account.balance, 'ether'));
   }
   // estimate gas from coinbase
-  async estimateGas(value, to, gasPrice, data) {
+  async estimateGas(value, address, gasPrice, data) {
     const coinbase = await this.web3.eth.getCoinbase();
     const params = {
       from: coinbase,
       value: value,
-      to: to,
+      to: address,
       gasPrice: sanitizeHex.sanitizeHex(
         utils.toWei(gasPrice, 'gwei').toString(16)
       ),
@@ -78,11 +98,11 @@ export default class SendTransaction {
     this.web3.eth
       .estimateGas(params)
       .then(gasLimit => {
-        this.gasLimit = gasLimit;
+        return gasLimit;
       })
       .catch(error => {
         console.log('error', error);
-        this.gasLimit = -1;
+        return -1;
         // throw error
       });
   }
@@ -144,7 +164,6 @@ export default class SendTransaction {
     }
     return decimals.length <= 18;
   }
-
   // token transfer abi
   getTokenTransferABI(amount, decimals, hash) {
     const jsonInterface = [
@@ -167,12 +186,66 @@ export default class SendTransaction {
       new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toFixed()
     );
   }
-
   // transaction data
-  getTxData(amount, decimals, address) {
-    if (this.isToken) {
-      return this.getTokenTransferABI(this.amount, decimals, address);
+  getTxData(amount, decimals, address, currency) {
+    if (this.isToken(currency)) {
+      return this.getTokenTransferABI(amount, decimals, address);
     }
     return sanitizeHex(this.data);
+  }
+  // transaction value
+  getTxValue(currency, amount) {
+    if (this.isToken(currency)) {
+      return '0x00';
+    }
+    return sanitizeHex(amount);
+  }
+  // transaction address
+  getTxAddress(currency, hash) {
+    // ask about this
+    return this.isToken(currency)
+      ? currency.address.toLowerCase()
+      : hash.toLowerCase().trim();
+  }
+  // get eth price
+  async getEthPrice() {
+    const price = await fetch('https://cryptorates.mewapi.io/ticker?filter=ETH')
+      .then(response => {
+        const json = response.json();
+        return json;
+      })
+      .catch(error => {
+        console.error('error', error);
+        return 0;
+        // throw error
+      });
+    return typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
+  }
+  // submit transaction
+  async submitTransaction(gasLimit, address, amount, data) {
+    try {
+      const coinbase = await this.web3.eth.getCoinbase();
+      const nonce = await this.web3.eth.getTransactionCount(coinbase);
+      const raw = {
+        nonce: sanitizeHex(new BigNumber(nonce).toString(16)),
+        actualGasPrice: sanitizeHex(
+          utils.toWei(this.finalGasPrice, 'gwei').toString(16)
+        ),
+        gasLimit: sanitizeHex(new BigNumber(gasLimit).toString(16)),
+        to: address,
+        value: amount,
+        data: data
+      };
+      const _tx = new Transaction(raw);
+      const json = _tx.toJSON(true);
+      json.from = coinbase;
+      this.web3.eth.sendTransaction(json).catch(error => {
+        return error;
+      });
+      this.clear();
+    } catch (error) {
+      return error;
+      // Toast.responseHandler(e, Toast.ERROR);
+    }
   }
 }

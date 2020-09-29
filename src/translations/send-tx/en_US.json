@@ -14,7 +14,7 @@
   "tx-fee": "Transaction Fee",
   "tx-hash": "Transaction Hash",
   "max-tx-fee": "Max Transaction Fee",
-  "cost-eth-convert": "Cost {txFeeEth} ETH = ${convert}",
+  "cost-eth-usd": "Cost {eth} ETH = ${usd}",
   "add-data": "Add Data",
   "ph-add-data": "Add Data (e.g. 0x7834f874g298hf298h234f)",
   "nonce": "Nonce",
