@@ -28,6 +28,7 @@
                 :label="$t('sendTx.amount')"
                 placeholder=" "
                 :right-label="fixedBal"
+                :value="amount"
                 @input="getAmount"
               />
             </v-col>
@@ -35,6 +36,7 @@
           <v-row>
             <v-col cols="12">
               <address-select
+                :value="address"
                 :copy-tooltip="$t('common.copy')"
                 :save-tooltip="$t('common.save')"
                 :enable-save-address="true"
@@ -42,7 +44,7 @@
                 :items="addresses"
                 :placeholder="$t('sendTx.enter-addr')"
                 :success-toast="$t('sendTx.success.title')"
-                :is-valid-address="true"
+                :is-valid-address="isValidAddress"
                 @emitSelectedValue="getSelectedValue"
               />
             </v-col>
@@ -63,11 +65,13 @@
                 :label="$t('common.gas.price')"
                 placeholder=" "
                 :value="displayedGasPrice"
+                @input="getGasPrice"
               />
               <mew-input
                 :label="$t('common.gas.limit')"
                 placeholder=" "
-                value="21000"
+                :value="gasLimit"
+                @input="getGasLimit"
               />
             </div>
 
@@ -125,10 +129,15 @@ export default {
       default: () => {
         return [];
       }
+    },
+    gasLimit: {
+      type: String,
+      default: '21000'
     }
   },
   data() {
     return {
+      address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
       // will remove this once we get state
       gasPrice: '40',
       account: {
@@ -167,6 +176,17 @@ export default {
       return gasPrice.includes('.')
         ? `~ ${this.sendTx.getFixedGas().toString()}`
         : gasPrice;
+    },
+    allValidInputs() {
+      return (
+        this.sendTx.checkAmount().valid &&
+        this.isValidAddress &&
+        this.sendTx.isValidGasLimit &&
+        this.sendTx.isValidData
+      );
+    },
+    isValidAddress() {
+      return this.sendTx ? this.sendTx.isValidAddress(this.address) : false;
     }
   },
   mounted() {
@@ -181,6 +201,12 @@ export default {
       this.amount = this.sendTx.entireBal();
     },
     getAmount(value) {
+      this.amount = value;
+    },
+    getGasPrice(value) {
+      console.error('value', value);
+    },
+    getGasLimit(value) {
       console.error('value', value);
     }
   }
