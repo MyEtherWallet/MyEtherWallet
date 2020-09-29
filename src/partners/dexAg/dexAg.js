@@ -33,6 +33,7 @@ export default class DexAg {
     this.tokenUpdate = props.tokenUpdate;
     this.approvalGasLimit = 100000;
     this.tradeGasLimitBase = 1000000;
+    this.getSupportedDexes();
     this.getSupportedCurrencies(this.network);
     this.getFee();
     this.platformGasPrice = props.gasPrice || -1;
@@ -77,6 +78,17 @@ export default class DexAg {
       this.feeAmount = feeAmount / 10000;
     } catch (e) {
       this.feeAmount = 0.02;
+    }
+  }
+
+  async getSupportedDexes() {
+    try {
+      this.EXCLUDED_DEXES = await dexAgCalls.excludedDexes();
+      if (!this.EXCLUDED_DEXES || !Array.isArray(this.EXCLUDED_DEXES)) {
+        this.EXCLUDED_DEXES = [];
+      }
+    } catch (e) {
+      this.EXCLUDED_DEXES = [];
     }
   }
 
@@ -138,12 +150,15 @@ export default class DexAg {
 
           resolve(
             vals.map(val => {
+              const notExcluded = !this.EXCLUDED_DEXES.includes(val.dex);
               const bnPrice = new BigNumber(val.price);
               return {
                 fromCurrency,
                 toCurrency,
                 provider: val.dex !== 'ag' ? val.dex : 'dexag',
-                rate: bnPrice.minus(bnPrice.times(this.feeAmount)).toNumber(),
+                rate: notExcluded
+                  ? bnPrice.minus(bnPrice.times(this.feeAmount)).toNumber()
+                  : 0,
                 additional: { source: 'dexag' }
               };
             })
