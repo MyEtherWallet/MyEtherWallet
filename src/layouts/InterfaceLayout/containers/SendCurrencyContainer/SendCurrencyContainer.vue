@@ -410,8 +410,12 @@ export default {
   methods: {
     displayedGasPrice(val) {
       const newVal = val.toString();
-      return newVal.toString().includes('.')
-        ? `~ ${new BigNumber(newVal).toFixed(2).toString()}`
+      const showMore = `~${new BigNumber(newVal).toString()}`;
+      const showSome = `~${new BigNumber(newVal).toFixed(2).toString()}`;
+      return newVal.includes('.')
+        ? new BigNumber(newVal).lt(1)
+          ? showMore
+          : showSome
         : newVal;
     },
     clear() {

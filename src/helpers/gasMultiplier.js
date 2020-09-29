@@ -6,31 +6,41 @@ const FAST_CONST = 42.857142857145;
 const FAST_MULTIPLIER = 1.1428571428571;
 
 const getEconomy = gasPrice => {
-  return new BigNumber(gasPrice).div(1).toFixed(0);
+  return gasPrice > 1
+    ? new BigNumber(gasPrice).div(1)
+    : new BigNumber(gasPrice).div(1).toFixed();
 };
 const getRegular = gasPrice => {
   let initialValue = new BigNumber(gasPrice).times(MED_MULTIPLIER);
-  initialValue = initialValue.plus(MED_CONST).toFixed(0);
+  initialValue = initialValue.plus(MED_CONST);
 
-  return new BigNumber(initialValue).toFixed();
+  return gasPrice > 1
+    ? new BigNumber(initialValue)
+    : new BigNumber(initialValue).toFixed();
 };
 const getFast = gasPrice => {
   let initialValue = new BigNumber(gasPrice).times(FAST_MULTIPLIER);
-  initialValue = initialValue.plus(FAST_CONST).toFixed(0);
+  initialValue = initialValue.plus(FAST_CONST);
 
-  return new BigNumber(initialValue).toFixed();
+  return gasPrice > 1
+    ? new BigNumber(initialValue)
+    : new BigNumber(initialValue).toFixed();
 };
 
 const fastToEconomy = gasPrice => {
   let initialValue = new BigNumber(gasPrice).minus(FAST_CONST);
-  initialValue = initialValue.div(FAST_MULTIPLIER).toFixed(0);
-  return new BigNumber(initialValue).toFixed();
+  initialValue = initialValue.div(FAST_MULTIPLIER);
+  return gasPrice > 1
+    ? new BigNumber(initialValue)
+    : new BigNumber(initialValue).toFixed();
 };
 
 const regularToEconomy = gasPrice => {
   let initialValue = new BigNumber(gasPrice).minus(MED_CONST);
-  initialValue = initialValue.div(MED_MULTIPLIER).toFixed(0);
-  return new BigNumber(initialValue).toFixed();
+  initialValue = initialValue.div(MED_MULTIPLIER);
+  return gasPrice > 1
+    ? new BigNumber(initialValue)
+    : new BigNumber(initialValue).toFixed();
 };
 
 const getGasBasedOnType = gasPrice => {
