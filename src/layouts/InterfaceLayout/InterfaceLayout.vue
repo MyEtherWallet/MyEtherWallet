@@ -817,7 +817,6 @@ export default {
           const parsedGas = new BigNumber(
             this.web3.utils.fromWei(res, 'gwei')
           ).toString();
-          console.log(parsedGas);
           if (gasType === 'economy') {
             this.setGasPrice(parsedGas);
           } else if (gasType === 'custom' && getCustomGas) {
