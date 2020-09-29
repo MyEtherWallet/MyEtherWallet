@@ -56,7 +56,7 @@ const regularToEconomy = gasPrice => {
 
 const getGasBasedOnType = gasPrice => {
   const gasPriceType = store.get('gasPriceType') || 'economy';
-  const storedPrice = store.get('gasPrice') || 0;
+  const storedPrice = store.get('customGasPrice') || 0;
   switch (gasPriceType) {
     case 'economy':
       return getEconomy(gasPrice);
