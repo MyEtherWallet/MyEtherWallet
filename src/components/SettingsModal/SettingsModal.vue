@@ -352,13 +352,14 @@ export default {
   methods: {
     ...mapActions('main', ['setGasPrice', 'setAddressBook']),
     displayedGasPriceValue(value) {
+      const newVal = new BigNumber(value).toString();
       const showMore = `~${new BigNumber(value).toString()}`;
       const showSome = `~${new BigNumber(value).toFixed(2).toString()}`;
-      return value.includes('.')
-        ? new BigNumber(value).lt(1)
+      return newVal.includes('.')
+        ? new BigNumber(newVal).lt(25)
           ? showMore
           : showSome
-        : value;
+        : newVal;
     },
     setDataFromImportedFile() {
       const reader = new FileReader();
