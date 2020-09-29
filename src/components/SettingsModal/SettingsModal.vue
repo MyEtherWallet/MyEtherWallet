@@ -317,12 +317,15 @@ export default {
       };
     },
     baseGasPrice() {
+      const fetchedGasPrice =
+        store.get('fetchedGasPrice') || store.get('gasPrice') || 41;
       const type = store.get('gasPriceType') || 'economy';
+      const gasPrice = type === 'other' ? fetchedGasPrice : this.gasPrice;
       return type === 'fast'
-        ? fastToEconomy(this.gasPrice)
+        ? fastToEconomy(gasPrice)
         : type === 'regular'
-        ? regularToEconomy(this.gasPrice)
-        : this.gasPrice;
+        ? regularToEconomy(gasPrice)
+        : gasPrice;
     }
   },
   watch: {
@@ -348,6 +351,7 @@ export default {
     }
     this.exportConfig();
     this.getGasType();
+    this.customGas = store.get('customGasPrice') || 0;
   },
   methods: {
     ...mapActions('main', ['setGasPrice', 'setAddressBook']),
