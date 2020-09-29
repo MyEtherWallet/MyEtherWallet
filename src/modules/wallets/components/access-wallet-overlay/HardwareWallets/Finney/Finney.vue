@@ -42,16 +42,8 @@
 </template>
 
 <script>
-// TODO: add component in mew components
-// import GroupRadioButtons from '@/components/Buttons/GroupRadioButtons';
-import addressTable from './components/AddressTable/AddressTable';
-
 export default {
-  components: {
-    // GroupRadioButtons,
-
-    addressTable
-  },
+  components: {},
   props: {
     open: { default: false, type: Boolean },
     close: {
