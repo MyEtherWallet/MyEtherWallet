@@ -280,7 +280,7 @@ export default {
   data() {
     return {
       inputFileName: '',
-      selectedGasType: 'regular',
+      selectedGasType: 'economy',
       customGas: 0,
       customGasEth: 0,
       ethPrice: 0,
