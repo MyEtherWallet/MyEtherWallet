@@ -1,46 +1,97 @@
 <template>
   <v-sheet color="transparent">
-    <mew-stepper :items="steppers" :on-step="3">
-      <template v-slot:outsideStepContent1>
+    <mew-stepper :items="steppers" :on-step="step">
+      <template v-if="step === 1" v-slot:outsideStepContent1>
         <div class="mnemonic-step1">
-          <v-sheet>
-            <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
-            <div class="headline font-weight-bold mb-5">
-              Write down the words
+          <v-sheet class="pa-12">
+            <v-container>
+              <v-row align-items="center" justify="space-between">
+                <v-col cols="6">
+                  <div class="subtitle-1 font-weight-bold grey--text">
+                    STEP 1.
+                  </div>
+                  <div class="headline font-weight-bold mb-5">
+                    Write down the words
+                  </div>
+                </v-col>
+                <v-col cols="6">
+                  <v-row align-content="center" justify="end">
+                    <mew-button
+                      button-size="medium"
+                      icon="mdi-sync"
+                      icon-type="mdi"
+                      icon-align="left"
+                      title="Random"
+                      btn-style="transparent"
+                      color-theme="basic"
+                      @click.native="setPhrase"
+                    />
+
+                    <div class="selector ml-3">
+                      <mew-select
+                        v-model="phraseSize"
+                        :items="mnemonicOptions"
+                      />
+                    </div>
+                  </v-row>
+                </v-col>
+              </v-row>
+            </v-container>
+            <v-sheet class="mnemonic-phrase-container pa-10" elevation="2">
+              <v-container>
+                <v-row align="center" justify="space-around">
+                  <v-col
+                    v-for="(word, idx) in phrase"
+                    :key="`mnemonicInput${idx}`"
+                    cols="2"
+                  >
+                    <div class="mnemonic-input">
+                      <label :for="`mnemonicInput${idx}`"
+                        >{{ idx + 1 }}.
+                      </label>
+                      <input
+                        :ref="`mnemonicInput${idx}`"
+                        :name="`mnemonicInput${idx}`"
+                        readonly
+                        :value="word"
+                      />
+                    </div>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-sheet>
+
+            <div class="mt-10">
+              <mew-expand-panel
+                :has-dividers="true"
+                :is-toggle="true"
+                :interactive-content="true"
+                :panel-items="[
+                  {
+                    name: 'Extra Word'
+                  }
+                ]"
+              >
+                <template v-slot:panelBody1>
+                  <mew-input
+                    v-model="extraWord"
+                    type="password"
+                    label="Extra word"
+                    placeholder="Extra word"
+                  />
+                </template>
+              </mew-expand-panel>
             </div>
-
-            <div class="d-flex align-center justify-end pb-4">
-              <mew-button
-                button-size="medium"
-                icon="mdi-sync"
-                icon-type="mdi"
-                icon-align="left"
-                title="Random"
-                btn-style="transparent"
-                color-theme="basic"
-                @click.native="setPhrases"
-              />
-
-              <div class="selector ml-3">
-                <mew-select :items="mnemonicOptions" />
-              </div>
-            </div>
-            <phrase-block class="mb-8">
-              <mnemonic-phrase-table :data="phrases" />
-            </phrase-block>
-
-            <mew-expand-panel is-toggle has-dividers :panel-items="exPanel">
-              <template v-slot:panelBody1> Input needs to be added </template>
-            </mew-expand-panel>
-
-            <div class="d-flex justify-center mt-6">
-              <mew-button
-                title="I wrote them down"
-                button-size="xlarge"
-                :has-full-width="false"
-                @click.native="linkToStep(2)"
-              />
-            </div>
+            <v-container class="password-container">
+              <v-col align="center" justify="center">
+                <mew-button
+                  title="Next"
+                  button-size="large"
+                  :disabled="!isValidMnemonic"
+                  @click.native="next"
+                />
+              </v-col>
+            </v-container>
           </v-sheet>
           <warning-sheet
             class="mt-5"
@@ -53,8 +104,9 @@
         </div>
       </template>
 
-      <template v-slot:outsideStepContent2>
-        <div>
+      <template v-if="step === 2" v-slot:outsideStepContent2>
+        Hello step 2
+        <!-- <div>
           <v-sheet>
             <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
             <div class="mb-10">
@@ -128,11 +180,12 @@
             title="NOT RECOMMENDED"
             description="Not recommanded"
           />
-        </div>
+        </div> -->
       </template>
 
-      <template v-slot:outsideStepContent3>
-        <v-sheet>
+      <template v-if="step === 3" v-slot:outsideStepContent3>
+        Hello step 3
+        <!-- <v-sheet>
           <div class="d-flex align-center">
             <div class="mr-8">
               <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
@@ -161,7 +214,7 @@
               src="@/assets/images/icons/icon-keystore-mew.png"
             />
           </div>
-        </v-sheet>
+        </v-sheet> -->
       </template>
     </mew-stepper>
   </v-sheet>
@@ -169,15 +222,18 @@
 
 <script>
 import phraseBlock from '../phrase-block/PhraseBlock';
-import mnemonicPhraseTable from '../mnemonic-phrase-table/MnemonicPhraseTable';
 import MnemonicTools from '@/helpers/mnemonicTools';
 export default {
   name: 'MewConnect',
   components: {
-    phraseBlock,
-    mnemonicPhraseTable
+    phraseBlock
   },
   data: () => ({
+    extraWord: '',
+    link: {
+      title: 'Learn more',
+      url: 'https://www.myetherwallet.com/terms-of-service'
+    },
     titleData: {
       textProps: 'white--text',
       toptitle: '',
@@ -212,16 +268,70 @@ export default {
         value: 24
       }
     ],
-    phrases: []
+    phraseSize: {
+      name: '12 words',
+      value: 12
+    },
+    phrase: [],
+    step: 1
   }),
-  method: {
-    setPhrases() {
-      if (this.phraseSize == '12 words') {
-        this.phrases = MnemonicTools.phrase12();
-      } else {
-        this.phrases = MnemonicTools.phrase24();
+  computed: {
+    isValidMnemonic() {
+      return this.phrase.length === this.phraseSize.value;
+    }
+  },
+  watch: {
+    phraseSize: {
+      deep: true,
+      handler: function (newVal) {
+        this.phraseSize = newVal;
+        this.setPhrase();
       }
+    },
+    phrase: {
+      deep: true
+    }
+  },
+  mounted() {
+    this.setPhrase();
+  },
+  methods: {
+    setPhrase() {
+      this.phraseSize.value === 12
+        ? (this.phrase = MnemonicTools.phrase12())
+        : (this.phrase = MnemonicTools.phrase24());
+    },
+    next() {
+      this.step += 1;
     }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.mnemonic-phrase-container {
+  border-radius: 5px !important;
+  border: 1px solid rgb(230, 235, 239) !important; // hard coding this color for now based on abstract
+
+  .mnemonic-input {
+    width: 100%;
+    position: relative;
+
+    input {
+      width: 100%;
+      padding-left: 21px;
+      padding-bottom: 2px;
+      border-bottom: 1px solid rgb(230, 235, 239) !important; // hard coding this color for now based on abstract
+
+      &:focus {
+        outline: none !important;
+        border-bottom: 1px solid black !important; // hard coding this color for now based on abstract
+      }
+    }
+
+    label {
+      position: absolute;
+    }
+  }
+}
+</style>
