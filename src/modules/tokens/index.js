@@ -1,22 +1,17 @@
 import { getLatestPrices, getOwnersERC20Tokens } from './tokens.graphql';
-
+import ethImg from '@/assets/images/networks/eth.svg';
 export default class Tokenslist {
   constructor(apollo) {
     this.apollo = apollo;
-    // this.getLatestPrices();
-    // console.error("tokens", apolloClient)
   }
   getLatestPrices() {
-    console.error('in here');
     return this.apollo
       .query({
         query: getLatestPrices,
         fetchPolicy: 'cache-first'
       })
       .then(response => {
-        console.error('get latet prices', response);
         if (response && response.data) {
-          // this.tokensData = response.data.getLatestPrices;
           this.tokensData = new Map();
           response.data.getLatestPrices.forEach(token => {
             if (token.contract) {
@@ -55,7 +50,6 @@ export default class Tokenslist {
   }
   formatOwnersERC20Tokens(tokens) {
     const formattedList = [];
-    console.error('tokens', this.tokensData);
     tokens.forEach(token => {
       let foundToken;
       if (this.tokensData) {
@@ -63,14 +57,15 @@ export default class Tokenslist {
           token.tokenInfo.contract.toLowerCase()
         );
       }
-      console.error('the token', foundToken);
+      // need to eventually change image to check tokens network rather than just use eth network (if theres no image from coingecko)
       formattedList.push({
         name: token.tokenInfo.symbol,
+        symbol: token.tokenInfo.symbol,
         subtext: token.tokenInfo.name,
         value: token.tokenInfo.name,
         balance: token.balance,
         contract: token.tokenInfo.contract,
-        img: foundToken ? foundToken.image : null
+        img: foundToken ? foundToken.image : ethImg
       });
     });
     return formattedList;
