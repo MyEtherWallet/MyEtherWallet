@@ -173,7 +173,6 @@ import ethUnit from 'ethjs-unit';
 import utils from 'web3-utils';
 import fetch from 'node-fetch';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
-import store from '@/store';
 
 export default {
   components: {
@@ -256,10 +255,6 @@ export default {
     ]),
     showGasWarning() {
       return this.gasPrice >= this.gasLimitWarning;
-    },
-    actualGasPrice() {
-      const storedGasPrice = store.get('gasPrice') || 0;
-      return storedGasPrice > this.gasPrice ? storedGasPrice : this.gasPrice;
     },
     txFee() {
       return new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
