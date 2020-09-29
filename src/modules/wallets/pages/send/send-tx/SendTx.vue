@@ -21,6 +21,7 @@
                 :items="ownersTokens"
                 :label="$t('sendTx.type')"
                 class="mr-3"
+                @input="setCurrency"
               />
             </v-col>
             <v-col cols="6">
@@ -45,7 +46,7 @@
                 :placeholder="$t('sendTx.enter-addr')"
                 :success-toast="$t('sendTx.success.title')"
                 :is-valid-address="isValidAddress()"
-                @emitSelectedValue="setToAddress"
+                @input="setAddress"
               />
             </v-col>
           </v-row>
@@ -321,7 +322,7 @@ export default {
     isValidAddress() {
       return this.sendTx ? this.sendTx.isValidAddress(this.address) : false;
     },
-    setToAddress(value) {
+    setAddress(value) {
       this.address = value;
       console.error('in here???');
     },
@@ -339,6 +340,9 @@ export default {
     },
     setGasLimit(value) {
       this.customGasLimit = value;
+    },
+    setCurrency(value) {
+      this.selectedCurrency = value;
     }
   }
 };
