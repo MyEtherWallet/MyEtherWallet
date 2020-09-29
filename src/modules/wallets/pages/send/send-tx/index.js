@@ -2,15 +2,31 @@ import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
 import { getGasByType } from './helpers/gasMultipler';
 import { sanitizeHex } from '@/helpers/sanitizeHex';
-
+import { validateHexString } from '@/helpers/validateHexString';
 export default class SendTransaction {
   constructor(account, web3, gasPrice) {
     this.account = account;
     this.web3 = web3;
     this.gasPrice = gasPrice;
   }
+  // returns if address is valid
+  isValidAddress(hash) {
+    return utils.isAddress(hash);
+  }
+
+  // returns if gas limit is valid
+  isValidData(value) {
+    return validateHexString(value);
+  }
+  // returns if gas limit is valid
+  isValidGasLimit(gasLimit) {
+    return (this.gasLimit = new BigNumber(gasLimit).gte(0)
+      ? gasLimit
+      : '21000');
+  }
+  // get fixed gas
   getFixedGas(val) {
-    new BigNumber(val).toFixed(2);
+    return new BigNumber(val).toFixed(2);
   }
   // fixed balance in ether
   getFixedBal() {
@@ -31,9 +47,9 @@ export default class SendTransaction {
     return this.finalGasPrice >= gasLimitWarning;
   }
   // tx fee
-  txFee() {
+  txFee(gasLimit) {
     return new BigNumber(utils.toWei(this.finalGasPrice, 'gwei')).times(
-      this.gasLimit || 0
+      gasLimit || 0
     );
   }
   // tx fee in ether
@@ -119,6 +135,7 @@ export default class SendTransaction {
     // right now amount is always returning in ETH
     return new BigNumber(amount).plus(this.txFeeEth).lte(this.balanceEth);
   }
+  // returns whether it has valid decimals
   hasValidDecimals(amount, currency) {
     const decimals = (amount + '').split('.')[1];
     if (!decimals) return true;
@@ -126,5 +143,36 @@ export default class SendTransaction {
       return decimals.length <= this.currency.decimals;
     }
     return decimals.length <= 18;
+  }
+
+  // token transfer abi
+  getTokenTransferABI(amount, decimals, hash) {
+    const jsonInterface = [
+      {
+        constant: false,
+        inputs: [
+          { name: '_to', type: 'address' },
+          { name: '_amount', type: 'uint256' }
+        ],
+        name: 'transfer',
+        outputs: [{ name: '', type: 'bool' }],
+        payable: false,
+        stateMutability: 'nonpayable',
+        type: 'function'
+      }
+    ];
+    const contract = new this.web3.eth.Contract(jsonInterface);
+    return contract.methods.transfer(
+      hash.toLowerCase(),
+      new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toFixed()
+    );
+  }
+
+  // transaction data
+  getTxData(amount, decimals, address) {
+    if (this.isToken) {
+      return this.getTokenTransferABI(this.amount, decimals, address);
+    }
+    return sanitizeHex(this.data);
   }
 }
