@@ -15,6 +15,7 @@
       :data="data"
       :nonce="nonce"
       :show-gas-warning="showGasWarning"
+      :show-low-gas-warning="showLowGasWarning"
     />
     <confirm-collection-modal
       v-if="fromAddress !== null"
@@ -25,6 +26,7 @@
       :un-signed-array="unSignedArray"
       :sending="sending"
       :show-gas-warning="showCollectionGasWarning"
+      :show-collection-low-gas-warning="showCollectionLowGasWarning"
     />
     <confirm-modal
       v-if="fromAddress !== null"
@@ -177,7 +179,8 @@ export default {
       'web3',
       'account',
       'network',
-      'gasLimitWarning'
+      'gasLimitWarning',
+      'ethGasPrice'
     ]),
     fromAddress() {
       if (this.account) {
@@ -193,6 +196,17 @@ export default {
     },
     showGasWarning() {
       return this.gasPrice >= this.gasLimitWarning;
+    },
+    showLowGasWarning() {
+      return Math.floor(this.ethGasPrice * 0.75) >= this.gasPrice;
+    },
+    showCollectionLowGasWarning() {
+      const foundGasAboveLimit = this.unSignedArray.find(item => {
+        return BigNumber(Math.floor(this.ethGasPrice * 0.75)).gte(
+          item.gasPrice
+        );
+      });
+      return foundGasAboveLimit ? true : false;
     }
   },
   watch: {
