@@ -119,7 +119,11 @@
               </div>
               <div v-show="!validAddress" class="error-message-container">
                 <p>
-                  {{ $t('swap.supply-valid-addr', { currency: toCurrency }) }}
+                  {{
+                    $t('swap.warning.supply-valid-addr', {
+                      currency: toCurrency
+                    })
+                  }}
                 </p>
               </div>
             </div>
@@ -160,7 +164,11 @@
               </div>
               <div v-show="!validRefundAddress" class="error-message-container">
                 <p>
-                  {{ $t('swap.supply-valid-addr', { currency: fromCurrency }) }}
+                  {{
+                    $t('swap.warning.supply-valid-addr', {
+                      currency: fromCurrency
+                    })
+                  }}
                 </p>
               </div>
             </div>

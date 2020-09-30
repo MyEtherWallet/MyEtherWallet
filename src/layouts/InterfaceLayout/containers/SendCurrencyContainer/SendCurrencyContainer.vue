@@ -67,7 +67,7 @@
           </div>
           <div class="fee-value">
             <div class="gwei">
-              {{ displayedGasPrice(actualGasPrice) }}
+              {{ displayedGasPrice }}
               {{ $t('common.gas.gwei') }}
               <!--(Economic)-->
             </div>
@@ -173,7 +173,6 @@ import ethUnit from 'ethjs-unit';
 import utils from 'web3-utils';
 import fetch from 'node-fetch';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
-import { getGasBasedOnType } from '@/helpers/gasMultiplier';
 
 export default {
   components: {
@@ -227,10 +226,6 @@ export default {
     getBalance: {
       type: Function,
       default: function () {}
-    },
-    highestGas: {
-      type: String,
-      default: '0'
     }
   },
   data() {
@@ -258,14 +253,11 @@ export default {
       'online',
       'gasLimitWarning'
     ]),
-    actualGasPrice() {
-      return getGasBasedOnType(this.gasPrice);
-    },
     showGasWarning() {
-      return this.actualGasPrice >= this.gasLimitWarning;
+      return this.gasPrice >= this.gasLimitWarning;
     },
     txFee() {
-      return new BigNumber(ethUnit.toWei(this.actualGasPrice, 'gwei')).times(
+      return new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
         this.gasLimit || 0
       );
     },
@@ -398,6 +390,16 @@ export default {
           .toString();
       }
       return '--';
+    },
+    displayedGasPrice() {
+      const newVal = this.gasPrice.toString();
+      const showMore = `~${new BigNumber(newVal).toString()}`;
+      const showSome = `~${new BigNumber(newVal).toFixed(2).toString()}`;
+      return newVal.includes('.')
+        ? new BigNumber(newVal).lt(1)
+          ? showMore
+          : showSome
+        : newVal;
     }
   },
   watch: {
@@ -416,12 +418,6 @@ export default {
     if (this.online && this.network.type.name === 'ETH') this.getEthPrice();
   },
   methods: {
-    displayedGasPrice(val) {
-      const newVal = val.toString();
-      return newVal.toString().includes('.')
-        ? `~ ${new BigNumber(newVal).toFixed(2).toString()}`
-        : newVal;
-    },
     clear() {
       this.toData = '';
       this.toValue = '0';
@@ -476,7 +472,7 @@ export default {
           this.balanceDefault > 0
             ? this.balanceDefault.minus(
                 ethUnit.fromWei(
-                  new BigNumber(ethUnit.toWei(this.actualGasPrice, 'gwei'))
+                  new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei'))
                     .times(this.gasLimit)
                     .toString(),
                   'ether'
@@ -513,8 +509,8 @@ export default {
         from: coinbase,
         value: this.txValue,
         to: this.txTo,
-        actualGasPrice: Misc.sanitizeHex(
-          ethUnit.toWei(this.actualGasPrice, 'gwei').toString(16)
+        gasPrice: Misc.sanitizeHex(
+          ethUnit.toWei(this.gasPrice, 'gwei').toString(16)
         ),
         data: this.txData
       };
@@ -536,9 +532,6 @@ export default {
         const nonce = await this.web3.eth.getTransactionCount(coinbase);
         const raw = {
           nonce: Misc.sanitizeHex(new BigNumber(nonce).toString(16)),
-          actualGasPrice: Misc.sanitizeHex(
-            ethUnit.toWei(this.actualGasPrice, 'gwei').toString(16)
-          ),
           gasLimit: Misc.sanitizeHex(new BigNumber(this.gasLimit).toString(16)),
           to: this.txTo,
           value: this.txValue,
