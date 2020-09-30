@@ -431,6 +431,7 @@ export default {
       uploadInput.click();
     },
     saveGasChanges() {
+      store.set('gasPriceType', this.selectedGasType);
       if (this.gasPriceInputs[this.selectedGasType] !== undefined) {
         this.setGasPrice(
           new BigNumber(
@@ -447,7 +448,6 @@ export default {
       }
     },
     selectGasType(type) {
-      store.set('gasPriceType', type);
       this.selectedGasType = type;
       if (type === 'other') {
         this.$refs.customInput.focus();
