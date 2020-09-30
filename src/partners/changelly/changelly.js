@@ -33,6 +33,7 @@ export default class Changelly {
   constructor(props = {}) {
     this.name = Changelly.getName();
     this.network = props.network || networkSymbols.ETH;
+    this.tokenUpdate = props.tokenUpdate;
     this.getRateForUnit =
       typeof props.getRateForUnit === 'boolean' ? props.getRateForUnit : false;
     this.hasRates = 0;
@@ -65,6 +66,7 @@ export default class Changelly {
       } = await changellyApi.getSupportedCurrencies(this.network);
       this.currencyDetails = currencyDetails;
       this.tokenDetails = tokenDetails;
+      this.tokenUpdate(tokenDetails);
       this.hasRates =
         Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {

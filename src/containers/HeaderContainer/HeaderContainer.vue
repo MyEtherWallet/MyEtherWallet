@@ -25,7 +25,6 @@
       <settings-modal
         v-if="address !== null"
         ref="settings"
-        :gas-price="gasPrice"
         :address="address"
       />
       <logout-modal ref="logout" />
@@ -237,14 +236,13 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import store from 'store';
-import { Misc, Toast } from '@/helpers';
+import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import NotificationsContainer from '@/containers/NotificationsContainer';
 import UserReminderButton from '@/components/UserReminderButton';
 import SettingsModal from '@/components/SettingsModal';
 import LogoutModal from '@/components/LogoutModal';
 import IssueLogModal from '@/components/IssueLogModal';
-import BigNumber from 'bignumber.js';
 import MobileMenu from './components/MobileMenu';
 import DisconnectedModal from '@/components/DisconnectedModal';
 import DecisionTree from '@/components/DecisionTree';
@@ -281,7 +279,6 @@ export default {
       isMobileMenuOpen: false,
       isHomePage: true,
       showGetFreeWallet: false,
-      gasPrice: '0',
       error: {},
       resolver: () => {},
       isMewCx: isMewCx,
@@ -332,12 +329,6 @@ export default {
         this.isHomePage = true;
       }
     },
-    address() {
-      this.setHighGasPrice();
-    },
-    web3() {
-      this.setHighGasPrice();
-    },
     locale() {
       this.getCurrentLang();
     }
@@ -384,7 +375,7 @@ export default {
     this.$eventHub.$off('open-settings');
   },
   methods: {
-    ...mapActions('main', ['setLocale', 'setGasPrice']),
+    ...mapActions('main', ['setLocale', 'setGasPrice', 'setEthGasPrice']),
     getCurrentLang() {
       const storedLocale = this.supportedLanguages.find(item => {
         return item.langCode === this.locale;
@@ -393,20 +384,6 @@ export default {
       this._i18n.locale = this.locale;
       this.currentFlag = storedLocale.flag;
       this.currentName = storedLocale.name;
-    },
-    setHighGasPrice() {
-      this.web3.eth
-        .getGasPrice()
-        .then(res => {
-          this.gasPrice = this.web3.utils.fromWei(
-            new BigNumber(res).toString(),
-            'gwei'
-          );
-          this.setGasPrice(this.gasPrice);
-        })
-        .catch(e => {
-          Toast.responseHandler(e, Toast.ERROR);
-        });
     },
     openSettings() {
       this.$refs.settings.$refs.settings.show();

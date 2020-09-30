@@ -1,3 +1,22 @@
+### Release v5.7.9
+
+### Devop
+
+- remove prior restriction on dexes displayed when using dexag [#2601](https://github.com/MyEtherWallet/MyEtherWallet/pull/2601)
+- Add low gas price warning [#2582](https://github.com/MyEtherWallet/MyEtherWallet/pull/2582)
+
+### Bug
+
+- Weird gasprice setting [#2595](https://github.com/MyEtherWallet/MyEtherWallet/pull/2595)
+- Get Eth token icons from ethereum-lists for swap  [#2592](https://github.com/MyEtherWallet/MyEtherWallet/pull/2592)
+
+### Release v5.7.8-hotfix.2
+
+### Bug
+
+- Only send gas limit value as 'gas' to phone for signing [#2586](https://github.com/MyEtherWallet/MyEtherWallet/pull/2586)
+- Fix erroneously showing view transaction button with metamask  [#2586](https://github.com/MyEtherWallet/MyEtherWallet/pull/2586)
+
 ### Release v5.7.8-hotfix.1
 
 ### Devop
