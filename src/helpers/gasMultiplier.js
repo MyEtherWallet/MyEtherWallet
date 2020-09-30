@@ -9,9 +9,7 @@ const OLD_FAST_CONST = 1.5;
 const LIMITER = 25;
 
 const getEconomy = gasPrice => {
-  return gasPrice > 1
-    ? new BigNumber(gasPrice).div(1)
-    : new BigNumber(gasPrice).div(1).toFixed(9);
+  return new BigNumber(gasPrice).div(1).toFixed(9);
 };
 const getRegular = gasPrice => {
   if (gasPrice > LIMITER) {
