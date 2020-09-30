@@ -7,7 +7,6 @@ import {
   TIME_SWAP_VALID,
   PROVIDER_NAME,
   PROXY_CONTRACT_ADDRESS,
-  SUPPORTED_DEXES,
   MARKET_IMPACT_CUTOFF
 } from './config';
 import dexAgCalls from './dexAg-calls';
@@ -84,12 +83,12 @@ export default class DexAg {
 
   async getSupportedDexes() {
     try {
-      this.SUPPORTED_DEXES = await dexAgCalls.supportedDexes();
-      if (!this.SUPPORTED_DEXES || !Array.isArray(this.SUPPORTED_DEXES)) {
-        this.SUPPORTED_DEXES = SUPPORTED_DEXES;
+      this.EXCLUDED_DEXES = await dexAgCalls.excludedDexes();
+      if (!this.EXCLUDED_DEXES || !Array.isArray(this.EXCLUDED_DEXES)) {
+        this.EXCLUDED_DEXES = [];
       }
     } catch (e) {
-      this.SUPPORTED_DEXES = SUPPORTED_DEXES;
+      this.EXCLUDED_DEXES = [];
     }
   }
 
@@ -151,13 +150,13 @@ export default class DexAg {
 
           resolve(
             vals.map(val => {
-              const isKnownToWork = this.SUPPORTED_DEXES.includes(val.dex);
+              const notExcluded = !this.EXCLUDED_DEXES.includes(val.dex);
               const bnPrice = new BigNumber(val.price);
               return {
                 fromCurrency,
                 toCurrency,
                 provider: val.dex !== 'ag' ? val.dex : 'dexag',
-                rate: isKnownToWork
+                rate: notExcluded
                   ? bnPrice.minus(bnPrice.times(this.feeAmount)).toNumber()
                   : 0,
                 additional: { source: 'dexag' }
@@ -377,10 +376,8 @@ export default class DexAg {
 
   async startSwap(swapDetails) {
     swapDetails.maybeToken = true;
-
-    const dexToUse = this.SUPPORTED_DEXES.includes(swapDetails.provider)
-      ? swapDetails.provider
-      : 'ag';
+    const dexToUse =
+      swapDetails.provider !== 'dexag' ? swapDetails.provider : 'ag';
 
     const tradeDetails = await this.createTransaction(swapDetails, dexToUse);
 

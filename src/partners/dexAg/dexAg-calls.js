@@ -96,11 +96,11 @@ const createTransaction = async transactionParams => {
   }
 };
 
-const supportedDexes = async () => {
+const excludedDexes = async () => {
   try {
     const results = await post(
       buildPath(),
-      utils.buildPayload(dexAgMethods.supportedDexes, {})
+      utils.buildPayload(dexAgMethods.excludedDexes, {})
     );
     if (results.error) {
       utils.checkErrorJson(results);
@@ -116,6 +116,6 @@ export default {
   getSupportedCurrencies,
   getPrice,
   createTransaction,
-  supportedDexes,
+  excludedDexes,
   estimateGas
 };

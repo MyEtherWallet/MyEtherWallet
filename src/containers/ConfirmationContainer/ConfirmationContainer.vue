@@ -134,7 +134,7 @@ export default {
       nonce: '',
       gasLimit: '21000',
       data: '0x',
-      gasPrice: 0,
+      gasPrice: '0',
       parsedBalance: 0,
       toAddress: '',
       transactionFee: '',
@@ -510,8 +510,9 @@ export default {
       this.nonce = tx.nonce === '0x' ? 0 : new BigNumber(tx.nonce).toFixed();
       this.data = tx.data;
       this.gasLimit = new BigNumber(tx.gas).toFixed();
-      this.gasPrice = parseInt(
-        unit.fromWei(new BigNumber(tx.gasPrice).toFixed(), 'gwei')
+      this.gasPrice = unit.fromWei(
+        new BigNumber(tx.gasPrice).toFixed(),
+        'gwei'
       );
       this.toAddress = tx.to;
       this.amount = tx.value === '0x' ? '0' : new BigNumber(tx.value).toFixed();
@@ -626,7 +627,7 @@ export default {
       this.nonce = '';
       this.gasLimit = '21000';
       this.data = '0x';
-      this.gasPrice = 0;
+      this.gasPrice = '0';
       this.parsedBalance = 0;
       this.toAddress = '';
       this.transactionFee = '';
