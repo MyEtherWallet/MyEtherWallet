@@ -3,6 +3,7 @@
 ### Devop
 
 - remove prior restriction on dexes displayed when using dexag [#2601](https://github.com/MyEtherWallet/MyEtherWallet/pull/2601)
+- Add low gas price warning [#2582](https://github.com/MyEtherWallet/MyEtherWallet/pull/2582)
 
 ### Bug
 

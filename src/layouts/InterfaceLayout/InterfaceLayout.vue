@@ -296,7 +296,8 @@ export default {
       'setENS',
       'decryptWallet',
       'toggleSideMenu',
-      'setGasPrice'
+      'setGasPrice',
+      'setEthGasPrice'
     ]),
     checkPrefilled() {
       const _self = this;
@@ -825,7 +826,6 @@ export default {
           const parsedGas = getEconomy(
             this.web3.utils.fromWei(res, 'gwei')
           ).toString();
-          store.set('fetchedGasPrice', parsedGas);
           if (gasType === 'economy') {
             this.setGasPrice(parsedGas);
           } else if (gasType === 'other' && getCustomGas) {
@@ -834,6 +834,7 @@ export default {
             this.setGasPrice(getGasBasedOnType(parsedGas));
           }
           this.highestGas = parsedGas;
+          this.setEthGasPrice(this.highestGas);
         })
         .catch(e => {
           Toast.responseHandler(e, Toast.ERROR);
