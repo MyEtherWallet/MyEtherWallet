@@ -1,5 +1,9 @@
 ### Release v5.7.9
 
+### Devop
+
+- remove prior restriction on dexes displayed when using dexag [#2601](https://github.com/MyEtherWallet/MyEtherWallet/pull/2601)
+
 ### Bug
 
 - Weird gasprice setting [#2595](https://github.com/MyEtherWallet/MyEtherWallet/pull/2595)

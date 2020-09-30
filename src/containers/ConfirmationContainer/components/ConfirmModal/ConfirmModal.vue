@@ -143,8 +143,8 @@ export default {
       default: ''
     },
     gasPrice: {
-      type: Number,
-      default: 0
+      type: String,
+      default: '0'
     },
     nonce: {
       type: String,
