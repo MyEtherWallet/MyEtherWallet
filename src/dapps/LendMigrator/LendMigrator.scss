@@ -1,0 +1,56 @@
+@import '~@/scss/GlobalVariables';
+
+.lend-migrator-container {
+  background-color: $white;
+  border-radius: 4px;
+  grid-area: main;
+  overflow: hidden;
+  margin-bottom: 10px;
+
+  .total-container {
+    align-items: center;
+    justify-content: space-between;
+
+    .button-link {
+      color: $mew-green;
+      background: none;
+      border: none;
+      &:hover {
+        color: $light-grey-5;
+      }
+    }
+    
+  }
+
+  .lend-title {
+    font-weight: 600;
+    font-size: 24px;
+  }
+
+  input {
+    background-color: $light-grey-1;
+    border: 0;
+    border-radius: 4px;
+    padding: 13px 15px;
+    width: 100%;
+  }
+
+  // button {
+  //   border-radius: 4px;
+  //   border: 1px solid $mew-green;
+  //   color: $white;
+  //   cursor: pointer;
+  //   background-color: $mew-green;
+  //   padding: 15px;
+
+  //   span {
+  //     font-size: 11px;
+  //   }
+
+  //   &:hover {
+  //     background-color: $mew-green;
+  //     border: 1px solid $mew-green;
+  //     color: $white;
+  //   }
+  // }
+}
