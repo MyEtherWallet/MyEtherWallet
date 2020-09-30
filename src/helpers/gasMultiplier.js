@@ -21,7 +21,7 @@ const getRegular = gasPrice => {
     return new BigNumber(initialValue).toFixed(9);
   }
 
-  return gasPrice * 1.25;
+  return new BigNumber(gasPrice).times(1.25).toFixed(9);
 };
 const getFast = gasPrice => {
   if (gasPrice > LIMITER) {
@@ -31,7 +31,12 @@ const getFast = gasPrice => {
     return new BigNumber(initialValue).toFixed(9);
   }
 
-  return gasPrice * 1.5;
+  return new BigNumber(gasPrice).times(1.5).toFixed(9);
+};
+
+const getOther = () => {
+  const storedPrice = store.get('customGasPrice') || 0;
+  return new BigNumber(storedPrice).toFixed(9);
 };
 
 const fastToEconomy = gasPrice => {
@@ -56,7 +61,6 @@ const regularToEconomy = gasPrice => {
 
 const getGasBasedOnType = gasPrice => {
   const gasPriceType = store.get('gasPriceType') || 'economy';
-  const storedPrice = store.get('customGasPrice') || 0;
   switch (gasPriceType) {
     case 'economy':
       return getEconomy(gasPrice);
@@ -65,7 +69,7 @@ const getGasBasedOnType = gasPrice => {
     case 'fast':
       return getFast(gasPrice);
     default:
-      return storedPrice;
+      return getOther();
   }
 };
 
@@ -73,6 +77,7 @@ export {
   getEconomy,
   getRegular,
   getFast,
+  getOther,
   getGasBasedOnType,
   fastToEconomy,
   regularToEconomy

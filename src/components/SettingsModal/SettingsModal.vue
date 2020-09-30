@@ -261,6 +261,7 @@ import {
   getEconomy,
   getRegular,
   getFast,
+  getOther,
   fastToEconomy,
   regularToEconomy
 } from '@/helpers/gasMultiplier';
@@ -351,7 +352,7 @@ export default {
     }
     this.exportConfig();
     this.getGasType();
-    this.customGas = store.get('customGasPrice') || 0;
+    this.customGas = getOther();
   },
   methods: {
     ...mapActions('main', ['setGasPrice', 'setAddressBook']),
@@ -408,7 +409,7 @@ export default {
     getGasType() {
       const type = store.get('gasPriceType');
       const amt = store.get('gasPrice');
-      const customGas = store.get('customGasPrice') || 0;
+      const customGas = getOther();
       if (type) {
         this.selectedGasType = type;
       }
@@ -437,7 +438,7 @@ export default {
           ).toNumber()
         );
       } else {
-        const gasPrice = new BigNumber(this.customGas).toNumber();
+        const gasPrice = new BigNumber(this.customGas).toNumber().toFixed(9);
         store.set('customGasPrice', gasPrice);
         this.setGasPrice(gasPrice);
       }
