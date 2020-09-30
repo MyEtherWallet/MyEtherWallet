@@ -230,11 +230,6 @@ export default {
       apps: ['Ethereum', 'SometingElse'],
       derivationPath: [`m/44'/60'/0'`, `m/44'/60'/2'`]
     };
-  },
-  watch: {
-    open(newVal) {
-      console.log(newVal);
-    }
   }
 };
 </script>
