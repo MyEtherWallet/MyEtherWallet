@@ -274,6 +274,10 @@ export default {
     },
     address(val) {
       if (val) this.setupOnlineEnvironment();
+    },
+    network() {
+      this.clearIntervals();
+      this.setupOnlineEnvironment();
     }
   },
   mounted() {
