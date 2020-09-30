@@ -36,7 +36,7 @@
     "@myetherwallet/mew-components": "0.5.7-beta",
     "@sentry/browser": "5.24.2",
     "@sentry/integrations": "5.24.2",
-    "@unstoppabledomains/resolution": "1.6.2",
+    "@unstoppabledomains/resolution": "1.8.1",
     "@walletconnect/browser": "1.0.0",
     "@walletconnect/qrcode-modal": "1.2.2",
     "bitbox02-api": "0.6.0",
