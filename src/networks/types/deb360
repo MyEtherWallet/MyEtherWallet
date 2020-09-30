@@ -1,0 +1,22 @@
+import tokens from '@/_generated/tokens/tokens-deb360.json';
+import contracts from '@/_generated/contracts/contract-abi-deb360.json';
+import deb from '@/assets/images/networks/deb.svg';
+
+export default {
+  name: ‘DEB’,
+  name_long: ‘Callisto’,
+  homePage: ‘
+https://callisto.network/'
+,
+  blockExplorerTX: ‘
+https://explorer.callisto.network/tx/[[txHash]]'
+,
+  blockExplorerAddr: ‘
+https://explorer.callisto.network/account/[[address]]'
+,
+  chainID: 820,
+  tokens: tokens,
+  contracts: contracts,
+  icon: clo,
+  currencyName: ‘DEB’
+};
