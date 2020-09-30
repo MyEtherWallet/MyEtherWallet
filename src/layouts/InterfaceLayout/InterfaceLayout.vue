@@ -177,7 +177,11 @@ import {
   MNEMONIC as MNEMONIC_TYPE,
   BCVAULT as BC_VAULT
 } from '@/wallets/bip44/walletTypes';
-import { getGasBasedOnType } from '@/helpers/gasMultiplier.js';
+import {
+  getGasBasedOnType,
+  getOther,
+  getEconomy
+} from '@/helpers/gasMultiplier.js';
 import ExpiryAbi from './expiryAbi.js';
 
 const ENS_TOKEN_ADDRESS = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
@@ -810,18 +814,18 @@ export default {
     },
     getHighestGas() {
       const gasType = store.get('gasPriceType') || 'economy';
-      const getCustomGas = store.get('customGasPrice') || 0;
+      const getCustomGas = getOther();
       this.web3.eth
         .getGasPrice()
         .then(res => {
-          const parsedGas = new BigNumber(this.web3.utils.fromWei(res, 'gwei'))
-            .toFixed(9)
-            .toString();
+          const parsedGas = getEconomy(
+            this.web3.utils.fromWei(res, 'gwei')
+          ).toString();
           store.set('fetchedGasPrice', parsedGas);
           if (gasType === 'economy') {
             this.setGasPrice(parsedGas);
           } else if (gasType === 'other' && getCustomGas) {
-            this.setGasPrice(new BigNumber(getCustomGas).toFixed(9));
+            this.setGasPrice(getCustomGas);
           } else {
             this.setGasPrice(getGasBasedOnType(parsedGas));
           }

@@ -257,9 +257,9 @@ export default {
       return this.gasPrice >= this.gasLimitWarning;
     },
     txFee() {
-      return new BigNumber(
-        ethUnit.toWei(new BigNumber(this.gasPrice).toFixed(7), 'gwei')
-      ).times(this.gasLimit || 0);
+      return new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
+        this.gasLimit || 0
+      );
     },
     txFeeEth() {
       if (new BigNumber(this.txFee).gt(0)) {
@@ -532,9 +532,6 @@ export default {
         const nonce = await this.web3.eth.getTransactionCount(coinbase);
         const raw = {
           nonce: Misc.sanitizeHex(new BigNumber(nonce).toString(16)),
-          gasPrice: Misc.sanitizeHex(
-            ethUnit.toWei(this.gasPrice, 'gwei').toString(16)
-          ),
           gasLimit: Misc.sanitizeHex(new BigNumber(this.gasLimit).toString(16)),
           to: this.txTo,
           value: this.txValue,
