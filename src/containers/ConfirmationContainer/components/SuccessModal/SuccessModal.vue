@@ -25,7 +25,7 @@
           :click-function="goToLink"
         />
         <standard-button
-          v-show="network.type.name === 'ETH'"
+          v-show="network.type.name === 'ETH' && txHashExlporrer"
           :options="buttonCheckEthVm"
           :click-function="goToEthVm"
         />

@@ -81,7 +81,7 @@
   "cannot-exceed-tkn-bal": "Cannot exceed your token balance of {amount}",
   "lend-title": "LEND Migrator",
   "lend-popover": "Migrate your LEND tokens to AAVE today",
-  "total-amount": "Total LEND Amount",
+  "total-amount": "Total LEND Amount to migrate",
   "migrate": "Migrate LEND to AAVE",
   "total-lend": "Total LEND Balance"
 }
