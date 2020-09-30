@@ -5,6 +5,7 @@
     right-btn-text="Cancel"
     :back="accessBack"
     :close="overlayClose"
+    :left-btn-text="step > 0 ? 'Back' : ''"
     @closeOverlay="overlayClose"
   >
     <template v-slot:mewOverlayBody>
@@ -25,7 +26,9 @@
           v-else-if="showKeystore"
           :btn-call="btnCall"
           :unlock-keystore-wallet="unlockKeystoreWallet"
+          :step="step"
           @keystore="handleKeystoreUpload"
+          @updateStep="handleStep"
         />
         <access-mnemonic
           v-else-if="showMnemonic"
@@ -70,7 +73,7 @@ const TITLES = {
   keystoreFile: 'Keystore File',
   mnemonic: 'Mnemonic Phrase',
   privateKey: 'Private Key',
-  keystorePasasword: 'Keystore File Password',
+  keystorePassword: 'Keystore File Password',
   mnemonicPath: 'Mnemonic Wallet Path',
   mnemonicAddress: 'Confirm Network & Address'
 };
@@ -79,7 +82,7 @@ const TYPES = [
   'keystoreFile',
   'mnemonic',
   'privateKey',
-  'keystorePasasword',
+  'keystorePassword',
   'mnemonicPath',
   'mnemonicAddress'
 ];
@@ -148,7 +151,7 @@ export default {
     showKeystore() {
       return (
         this.step &&
-        (this.type === 'keystoreFile' || this.type === 'keystorePasasword')
+        (this.type === 'keystoreFile' || this.type === 'keystorePassword')
       );
     },
     showMnemonic() {
@@ -163,8 +166,18 @@ export default {
       return this.step && this.type === 'privateKey';
     }
   },
+  watch: {
+    step(newVal, oldVal) {
+      if (oldVal > newVal) {
+        delete this.steps[oldVal];
+      }
+    }
+  },
   methods: {
     ...mapActions(['decryptWallet']),
+    handleStep(e) {
+      this.step += e;
+    },
     btnCall(str) {
       if (TYPES.includes(str)) {
         this.type = str;
@@ -176,18 +189,19 @@ export default {
     },
     handleKeystoreUpload(e) {
       this.file = e;
+      this.btnCall('keystorePassword');
     },
-    unlockKeystoreWallet(e, password) {
+    unlockKeystoreWallet(password) {
       unlockKeystore(this.file, password)
         .then(res => {
           // not sure what res is for now
           const obj = {
             file: this.file,
-            name: res.data.filename
+            name: res.getV3Filename()
           };
 
           const walletInstance = new WalletInterface(
-            Buffer.from(e.data._privKey),
+            Buffer.from(res.privateKey),
             false,
             keyStoreType,
             '',

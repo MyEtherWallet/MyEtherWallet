@@ -1,5 +1,5 @@
-import WalletConnect from '@walletconnect/browser';
-import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
+// import WalletConnect from '@walletconnect/browser';
+// import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
 import store from '@/store';
 import { Transaction } from 'ethereumjs-tx';
 import { WALLET_CONNECT as walletConnectType } from '../../bip44/walletTypes';

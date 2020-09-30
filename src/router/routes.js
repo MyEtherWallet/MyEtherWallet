@@ -4,7 +4,7 @@ import TeamPage from '@/modules/team/Team';
 import BuyHardwareWallet from '@/modules/hardware/Hardware';
 import ToolsPage from '@/modules/tools/Tools';
 import LandingPage from '@/modules/home/pages/landing-page/LandingPage';
-import CreateWallet from '@/modules/wallets/pages/create/CreateWallet';
+import CreateWallet from '@/modules/wallets/pages/create/Create';
 import AccessWallet from '@/modules/wallets/pages/access/Access';
 import HowItWorks from '@/modules/how-it-works/HowItWorks';
 import WalletRoutes from '@/modules/wallets/routes.js';

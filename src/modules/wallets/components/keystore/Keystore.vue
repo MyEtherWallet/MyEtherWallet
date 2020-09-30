@@ -8,15 +8,19 @@
             <div class="headline font-weight-bold mb-5">Create password</div>
             <div class="d-flex align-start">
               <mew-input
+                v-model="password"
                 hint="Password must be 8 or more charactors"
                 label="Password"
-                placeholder=" "
+                placeholder="Password"
                 class="mr-3 flex-grow-1"
+                type="password"
               />
               <mew-button
                 title="Create"
                 btn-size="xlarge"
                 :has-full-width="false"
+                :disabled="password === '' || password.length < 7"
+                @click.native="createWallet"
               />
             </div>
           </v-sheet>
@@ -49,8 +53,16 @@
                 title="Acknowledge & Download"
                 btn-size="xlarge"
                 :has-full-width="false"
+                @click.native="downloadWallet"
               />
             </div>
+            <a
+              ref="downloadLink"
+              :href="walletFile"
+              rel="noopener noreferrer"
+              :download="name"
+              class="link"
+            />
           </v-sheet>
           <warning-sheet
             title="NOT RECOMMENDED"
@@ -63,23 +75,22 @@
           <div class="d-flex align-center">
             <div class="mr-8">
               <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
-              <div class="headline font-weight-bold mb-3">You are done!</div>
+              <div class="headline font-weight-bold mb-3">Well done!</div>
               <p class="mb-6">
-                Congratulation! Please use the MEWconnect App to scan this QR
-                code in order to access your new wallet. And you are done!
+                Congratulations! You have created a new wallet successfully.
               </p>
               <mew-button
                 title="Access my wallet"
                 btn-size="xlarge"
                 :has-full-width="false"
                 class="mb-5"
+                @click.native="goToAccess"
               />
               <p class="mt-4 mb-0">
-                Need help?
                 <router-link
                   class="primary--text text-decoration--none font-weight-bold"
                   to="/"
-                  >Get helps from MEWconnect</router-link
+                  >Back to Home page</router-link
                 >
               </p>
             </div>
@@ -96,8 +107,10 @@
 </template>
 
 <script>
+import Wallet from 'ethereumjs-wallet';
+import { createBlob } from '@/modules/wallets/utils/helpers.js';
 export default {
-  name: 'MewConnect',
+  name: 'CreateKeystore',
   props: {
     step: {
       type: Number,
@@ -108,21 +121,77 @@ export default {
       default: () => {}
     }
   },
-  data: () => ({
-    items: [
-      {
-        step: 1,
-        name: 'STEP 1. Create password'
-      },
-      {
-        step: 2,
-        name: 'STEP 2. Download keystore file'
-      },
-      {
-        step: 3,
-        name: 'STEP 3. Well done'
+  data() {
+    return {
+      warningData: [
+        {
+          title: "Don't lose it",
+          description: "If you lose your file, we can't recover it for you.",
+          img: 'paperPlane'
+        },
+        {
+          title: "Don't share it",
+          description:
+            'This file gives permanent access to your wallet. Be careful where you use it.',
+          img: 'thief'
+        },
+        {
+          title: 'Make a Backup',
+          description:
+            'Secure it like the millions of dollars it may one day be worth.',
+          img: 'copy'
+        }
+      ],
+      items: [
+        {
+          step: 1,
+          name: 'STEP 1. Create password'
+        },
+        {
+          step: 2,
+          name: 'STEP 2. Download keystore file'
+        },
+        {
+          step: 3,
+          name: 'STEP 3. Well done'
+        }
+      ],
+      password: '',
+      walletFile: '',
+      name: ''
+    };
+  },
+  methods: {
+    createWallet() {
+      try {
+        const wallet = Wallet.generate();
+        wallet
+          .toV3(this.password)
+          .then(res => {
+            this.walletFile = createBlob(res);
+            this.name = wallet.getV3Filename();
+            this.updateStep(2);
+          })
+          .catch(console.log);
+      } catch (e) {
+        console.log(e);
       }
-    ]
-  })
+    },
+    downloadWallet() {
+      this.$refs.downloadLink.click();
+      this.updateStep(3);
+    },
+    goToAccess() {
+      this.$router.push({ name: 'AccessWallet' });
+    }
+  }
 };
 </script>
+<style lang="scss" scoped>
+.link {
+  opacity: 0;
+  position: absolute;
+  top: 100000px;
+  z-index: -1;
+}
+</style>
