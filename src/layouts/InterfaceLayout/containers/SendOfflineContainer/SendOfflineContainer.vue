@@ -314,9 +314,6 @@ export default {
     }
   },
   watch: {
-    highestGas(newVal) {
-      this.localGasPrice = newVal;
-    },
     nonce(newVal) {
       this.localNonce = newVal;
     },

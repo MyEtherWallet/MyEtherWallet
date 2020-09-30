@@ -4,11 +4,27 @@
     <b-container class="text-center">
       <div class="pt-4 lend-title">{{ $t('dappsAave.lend-title') }}</div>
       <div class="d-flex mt-4 mb-1 total-container entire-bal">
-        <p>{{ $t('dappsAave.total-lend') }}: {{ lendBalance }}</p>
-        <button class="button-link">{{ $t('sendTx.button-entire') }}</button>
+        <p>
+          {{ $t('dappsAave.total-lend') }}:
+          <span class="balance">{{ lendBalance }}</span>
+        </p>
+        <button class="button-link" @click="setEntireBalance">
+          {{ $t('sendTx.button-entire') }}
+        </button>
       </div>
-      <input type="text" :placeholder="$t('dappsAave.total-amount')" />
-      <button class="large-round-button-green-filled mt-3">
+      <input
+        v-model="amount"
+        type="text"
+        :placeholder="$t('dappsAave.total-amount')"
+      />
+      <button
+        :class="[
+          'large-round-button-green-filled',
+          'mt-3',
+          disabled ? 'disabled' : ''
+        ]"
+        @click="getRatio"
+      >
         {{ $t('dappsAave.migrate') }}
       </button>
     </b-container>
@@ -17,6 +33,11 @@
 
 <script>
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
+import lendToAaveMigrator from './abi/lendToAaveMigrator';
+import BigNumber from 'bignumber.js';
+import { mapState } from 'vuex';
+import { Toast } from '@/helpers';
+// const LEND_MIGRATOR_AAVE_ADDRESS = '0x317625234562B1526Ea2FaC4030Ea499C5291de4';
 
 export default {
   components: {
@@ -32,19 +53,50 @@ export default {
   },
   data() {
     return {
-      lendBalance: 0
+      amount: 0
     };
   },
-  mounted() {
-    this.getLENDBal();
-  },
-  methods: {
-    getLENDBal() {
-      this.lendToken = this.tokensWithBalance.find(item => {
-        console.error('item', item.symbol);
+  computed: {
+    ...mapState('main', ['web3', 'account']),
+    lendBalance() {
+      const lendToken = this.tokensWithBalance.find(item => {
         return item.symbol === 'LEND';
       });
-      console.error('lend', this.lendToken);
+      return lendToken ? new BigNumber(lendToken.balance).toFixed() : 0;
+    },
+    disabled() {
+      if (this.amount > 0 && this.amount <= this.lendBalance) {
+        return false;
+      }
+      return true;
+    }
+  },
+  methods: {
+    async getRatio() {
+      // change abi and address once contract is enabled
+      const contract = new this.web3.eth.Contract(
+        lendToAaveMigrator,
+        '0x86241b6c526998582556F7C0342D8863b604B17b'
+      );
+      const lendAaveRatio = await contract.methods.LEND_AAVE_RATIO().call();
+      lendAaveRatio > 1
+        ? this.migrate(contract)
+        : Toast.responseHandler(this.$t('dappAave.invalid-ratio'), Toast.ERROR);
+    },
+    setEntireBalance() {
+      this.amount = this.lendBalance;
+    },
+    async migrate(contract) {
+      await contract.methods
+        .migrateFromLEND(parseInt(this.amount))
+        .send({ from: this.account.address })
+        .once('receipt', response => {
+          console.error('receipt', response);
+        })
+        .on('error', error => {
+          Toast.responseHandler(error, Toast.ERROR);
+          console.error('error', error);
+        });
     }
   }
 };

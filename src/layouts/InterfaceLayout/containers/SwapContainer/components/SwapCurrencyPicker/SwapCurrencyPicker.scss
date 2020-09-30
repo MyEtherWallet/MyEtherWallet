@@ -4,6 +4,42 @@
   background-color: $background-color-1;
   border: 1px solid $mew-green;
 }
+.name-and-icon-container {
+  display: flex;
+  align-items: center;
+  color: $dark-blue-12;
+
+  a {
+    color: $dark-blue-12 !important;
+  }
+
+  img {
+    //margin-right: 15px;
+    height: 30px;
+    width: 30px;
+    text-align: center;
+  }
+}
+
+.pad-it {
+  padding-left: 10px;
+}
+
+.token-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  text-align: center;
+  //padding: 1px;
+  border: 1px solid $dark-grey-11;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    resize: both;
+  }
+}
 
 .cc-icon {
   font-size: 26px;
