@@ -257,7 +257,14 @@ import store from 'store';
 import { Toast } from '@/helpers';
 import { mapState, mapActions } from 'vuex';
 import Blockie from '@/components/Blockie';
-
+import {
+  getEconomy,
+  getRegular,
+  getFast,
+  getOther,
+  fastToEconomy,
+  regularToEconomy
+} from '@/helpers/gasMultiplier';
 export default {
   name: 'Settings',
   components: {
@@ -274,7 +281,7 @@ export default {
   data() {
     return {
       inputFileName: '',
-      selectedGasType: 'regular',
+      selectedGasType: 'economy',
       customGas: 0,
       customGasEth: 0,
       ethPrice: 0,
@@ -298,34 +305,39 @@ export default {
       });
     },
     gasPriceInputs() {
-      const regularPrice = new BigNumber(this.gasPrice).div(1).toFixed(0);
-      let medGasPriceValue = new BigNumber(this.gasPrice).times(
-        1.0714285714286
-      );
-      medGasPriceValue = medGasPriceValue.plus(21.428571428571).toFixed(0);
-      let fastGasPriceValue = new BigNumber(this.gasPrice).times(
-        1.1428571428571
-      );
-      fastGasPriceValue = fastGasPriceValue.plus(42.857142857145).toFixed(0);
       return {
         economy: {
-          gwei: new BigNumber(regularPrice).toFixed()
+          gwei: getEconomy(this.baseGasPrice)
         },
         regular: {
-          gwei: new BigNumber(medGasPriceValue).toFixed()
+          gwei: getRegular(this.baseGasPrice)
         },
         fast: {
-          gwei: new BigNumber(fastGasPriceValue).toFixed()
+          gwei: getFast(this.baseGasPrice)
         }
       };
+    },
+    baseGasPrice() {
+      // computed hack to make it react to network
+      this.network;
+      const fetchedGasPrice =
+        store.get('fetchedGasPrice') || store.get('gasPrice') || 41;
+      const type = store.get('gasPriceType') || 'economy';
+      const gasPrice = type === 'other' ? fetchedGasPrice : this.gasPrice;
+      return type === 'fast'
+        ? fastToEconomy(gasPrice)
+        : type === 'regular'
+        ? regularToEconomy(gasPrice)
+        : gasPrice;
     }
   },
   watch: {
     customGas(newVal) {
+      store.set('customGasPrice', newVal);
       if (newVal !== '') {
         if (new BigNumber(newVal).gte(1)) {
           const toGwei = new BigNumber(
-            utils.toWei(`${newVal}`, 'gwei')
+            utils.toWei(`${new BigNumber(newVal).toFixed(9)}`, 'gwei')
           ).toFixed();
           this.customGasEth = new BigNumber(
             `${utils.fromWei(toGwei, 'ether')}`
@@ -342,13 +354,19 @@ export default {
     }
     this.exportConfig();
     this.getGasType();
+    this.customGas = getOther();
   },
   methods: {
     ...mapActions('main', ['setGasPrice', 'setAddressBook']),
     displayedGasPriceValue(value) {
-      return value.includes('.')
-        ? `~${new BigNumber(value).toFixed(2).toString()}`
-        : value;
+      const newVal = new BigNumber(value).toString();
+      const showMore = `~${new BigNumber(value).toString()}`;
+      const showSome = `~${new BigNumber(value).toFixed(2).toString()}`;
+      return newVal.includes('.')
+        ? new BigNumber(newVal).lt(25)
+          ? showMore
+          : showSome
+        : newVal;
     },
     setDataFromImportedFile() {
       const reader = new FileReader();
@@ -393,6 +411,7 @@ export default {
     getGasType() {
       const type = store.get('gasPriceType');
       const amt = store.get('gasPrice');
+      const customGas = getOther();
       if (type) {
         this.selectedGasType = type;
       }
@@ -403,8 +422,8 @@ export default {
             new BigNumber(this.gasPriceInputs[type].gwei).toNumber()
           );
         } else {
-          this.customGas = amt;
-          this.setGasPrice(new BigNumber(amt).toNumber());
+          this.customGas = customGas;
+          this.setGasPrice(new BigNumber(customGas).toNumber());
         }
       }
     },
@@ -414,6 +433,7 @@ export default {
       uploadInput.click();
     },
     saveGasChanges() {
+      store.set('gasPriceType', this.selectedGasType);
       if (this.gasPriceInputs[this.selectedGasType] !== undefined) {
         this.setGasPrice(
           new BigNumber(
@@ -421,14 +441,15 @@ export default {
           ).toNumber()
         );
       } else {
-        this.setGasPrice(new BigNumber(this.customGas).toNumber());
+        const gasPrice = new BigNumber(this.customGas).toNumber().toFixed(9);
+        store.set('customGasPrice', gasPrice);
+        this.setGasPrice(gasPrice);
       }
       if (this.$refs.gasDropdown) {
         this.$refs.gasDropdown.dropdownOpen = false;
       }
     },
     selectGasType(type) {
-      store.set('gasPriceType', type);
       this.selectedGasType = type;
       if (type === 'other') {
         this.$refs.customInput.focus();
