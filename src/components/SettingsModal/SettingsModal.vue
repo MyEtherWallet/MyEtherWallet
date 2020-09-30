@@ -318,6 +318,8 @@ export default {
       };
     },
     baseGasPrice() {
+      // computed hack to make it react to network
+      this.network;
       const fetchedGasPrice =
         store.get('fetchedGasPrice') || store.get('gasPrice') || 41;
       const type = store.get('gasPriceType') || 'economy';
