@@ -1,6 +1,14 @@
 <template>
   <div class="component-container">
-    <mew-carousel carousel-height="400" :total-slides="2">
+    <mew-carousel
+      v-model="keystoreProgress"
+      carousel-height="400"
+      carousel-width="740"
+      :total-slides="2"
+      :ripple="false"
+      :cycle="false"
+      :show-arrows="false"
+    >
       <template v-slot:slide1>
         <div class="sheet-container">
           <v-sheet
@@ -9,7 +17,6 @@
             :rounded="true"
             :max-width="740"
             :min-width="740"
-            :max-height="340"
             :min-height="340"
           >
             <div class="sheet-content">
@@ -88,6 +95,10 @@ export default {
     unlockKeystoreWallet: {
       type: Function,
       default: () => {}
+    },
+    step: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -95,6 +106,16 @@ export default {
       keystoreInstance: {},
       password: ''
     };
+  },
+  computed: {
+    keystoreProgress: {
+      get() {
+        return !this.step ? 0 : this.step - 1;
+      },
+      set(newVal) {
+        this.$emit('input', newVal);
+      }
+    }
   },
   methods: {
     uploadFile(e) {

@@ -5,6 +5,7 @@
     right-btn-text="Cancel"
     :back="accessBack"
     :close="overlayClose"
+    :left-btn-text="step > 0 ? 'Back' : ''"
   >
     <template v-slot:mewOverlayBody>
       <div v-if="!step">
@@ -40,32 +41,88 @@
           </v-container>
         </v-sheet>
       </div>
-      <mew6-white-sheet v-else-if="step === 1 && showPaths">
-        <div class="overlay-content pa-8">
-          <div class="text-center mb-8">
-            <img :src="icon" alt="Network Icon" height="60" />
-          </div>
-          <div>
-            <mew-select
-              v-if="walletType === 'ledger'"
-              v-model="selectedLedgerApp"
-              label="Opened Ledger App"
-              :items="ledgerApps"
-            />
-            <mew-select
-              v-model="selectedPath"
-              label="HD derivation path"
-              :items="paths"
-            />
-          </div>
-          <mew-button
-            btn-size="xlarge"
-            title="Unlock wallet"
-            has-full-width
-            @click.native="nextStep"
-          />
-        </div>
-      </mew6-white-sheet>
+      <v-sheet
+        v-else-if="showQrCode"
+        :outlined="true"
+        color="white"
+        :rounded="true"
+        :max-width="740"
+        :min-width="475"
+        :min-height="340"
+      >
+        <v-container>
+          <v-row align="center" justify="center">
+            <v-col cols="9">
+              <p v-if="walletType === 'xwallet'" class="mew-heading-3">
+                Please use Pundi X Savings account to scan the QR code below.
+              </p>
+              <p v-else class="mew-heading-3">
+                Please use FINNEY to scan the QR code below.
+              </p>
+              <v-row align="center" justify="center">
+                <qrcode :value="qrcode" :options="{ size: 186 }" />
+              </v-row>
+              <v-row
+                v-show="walletType === 'xwallet'"
+                align="center"
+                justify="space-around"
+              >
+                <a
+                  href="https://apps.apple.com/us/app/xwallet-by-pundi-x/id1321754661"
+                  target="_blank"
+                >
+                  <img
+                    src="@/assets/images/icons/button-app-store.png"
+                    alt="Apple app store"
+                  />
+                </a>
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.pundix.xwallet&hl=en_US"
+                >
+                  <img
+                    src="@/assets/images/icons/button-play-store.png"
+                    alt="Google play store"
+                  />
+                </a>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-sheet>
+      <v-sheet
+        v-else-if="showSelectBitbox"
+        :outlined="true"
+        color="transparent"
+        :rounded="true"
+        :max-width="740"
+        :min-width="575"
+        :min-height="340"
+      >
+        <v-container>
+          <v-row align="center" justify="center">
+            <v-col cols="10">
+              <div class="button-container pt-2">
+                <mew-super-button
+                  title="Bitbox"
+                  :cols-num="6"
+                  color-theme="basic"
+                  right-icon="bitbox"
+                  @click.native="setSelectedBitbox(0)"
+                />
+              </div>
+              <div class="button-container pt-2 mb-4">
+                <mew-super-button
+                  title="Bitbox 2"
+                  :cols-num="6"
+                  color-theme="basic"
+                  right-icon="bitbox"
+                  @click.native="setSelectedBitbox(1)"
+                />
+              </div>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-sheet>
       <v-sheet
         v-else-if="showNetworkAddresses"
         :outlined="true"
@@ -237,47 +294,81 @@
         </v-container>
       </v-sheet>
       <v-sheet
-        v-else-if="showQrCode"
+        v-else-if="showPassword"
         :outlined="true"
         color="white"
         :rounded="true"
         :max-width="740"
-        :min-width="475"
+        :min-width="575"
         :min-height="340"
       >
         <v-container>
           <v-row align="center" justify="center">
-            <v-col cols="9">
-              <v-row align="center" justify="center">
-                <qrcode :value="qrcode" :options="{ size: 186 }" />
-              </v-row>
-              <v-row
-                v-show="walletType === 'xwalletType'"
-                align="center"
-                justify="space-around"
-              >
-                <a
-                  href="https://apps.apple.com/us/app/xwallet-by-pundi-x/id1321754661"
-                  target="_blank"
-                >
-                  <img
-                    src="@/assets/images/icons/button-app-store.png"
-                    alt="Apple app store"
-                  />
-                </a>
-                <a
-                  href="https://play.google.com/store/apps/details?id=com.pundix.xwallet&hl=en_US"
-                >
-                  <img
-                    src="@/assets/images/icons/button-play-store.png"
-                    alt="Google play store"
-                  />
-                </a>
-              </v-row>
+            <v-col cols="10">
+              <p class="mew-heading-3">
+                Please enter the password of your
+                <span class="text-capitalize">{{ walletType }}</span> device.
+              </p>
+              <v-container>
+                <v-row align="center" justify="center">
+                  <v-col cols="10">
+                    <mew-input
+                      v-model="password"
+                      label="Password"
+                      placeholder="Enter your password"
+                      :type="walletType === 'cool_wallet' ? 'text' : 'password'"
+                    />
+                    <div class="d-flex align-center flex-column">
+                      <mew-button
+                        title="Access My Wallet"
+                        button-size="xlarge"
+                        :disabled="!(password !== '' && acceptTerms)"
+                        @click.native="
+                          () => {
+                            nextStep();
+                          }
+                        "
+                      />
+                      <mew-checkbox
+                        v-model="acceptTerms"
+                        label="To access my wallet, I accept "
+                        :link="link"
+                        class="justify-center"
+                      />
+                    </div>
+                  </v-col>
+                </v-row>
+              </v-container>
             </v-col>
           </v-row>
         </v-container>
       </v-sheet>
+      <mew6-white-sheet v-else-if="showPaths">
+        <div class="overlay-content pa-8">
+          <div class="text-center mb-8">
+            <img :src="icon" alt="Network Icon" height="60" />
+          </div>
+          <div>
+            <mew-select
+              v-if="walletType === 'ledger'"
+              v-model="selectedLedgerApp"
+              label="Opened Ledger App"
+              :items="ledgerApps"
+            />
+            <mew-select
+              v-model="selectedPath"
+              label="HD derivation path"
+              :items="paths"
+            />
+          </div>
+          <mew-button
+            button-size="xlarge"
+            title="Unlock wallet"
+            has-full-width
+            @click.native="nextStep"
+          />
+        </div>
+      </mew6-white-sheet>
     </template>
   </mew-overlay>
 </template>
@@ -328,70 +419,111 @@ const walletHolder = {
     when: 1,
     hasPaths: true,
     requiresPassword: false,
-    needsQr: false
+    needsQr: false,
+    titles: {
+      1: '1. Connect with Ledger',
+      2: '2. Confirm Network & Address'
+    }
   },
   [trezorType]: {
     create: trezorWallet,
     when: 1,
     hasPaths: true,
     requiresPassword: false,
-    needsQr: false
+    needsQr: false,
+    titles: {
+      1: '1. Connect with Trezor',
+      2: '2. Confirm Network & Address'
+    }
   },
   [bitboxType]: {
     create: bitboxWallet,
-    when: 2,
+    when: 4,
     hasPaths: true,
     requiresPassword: true,
-    needsQr: false
+    needsQr: false,
+    titles: {
+      1: '1. Select BitBox Wallet',
+      2: '2. Connect with BitBox',
+      3: '3. Enter your password',
+      4: '4. Confirm Network & Address'
+    }
   },
   [bitbox02Type]: {
     create: bitbox02Wallet,
-    when: 2,
+    when: 3,
     hasPaths: true,
     requiresPassword: false,
-    needsQr: false
+    needsQr: false,
+    titles: {
+      1: '1. Select BitBox Wallet',
+      // 2: 'Match your encryption pairing code',
+      2: '2. Connect with BitBox',
+      3: '3. Confirm Network & Address'
+    }
   },
   [secalotType]: {
     create: secalotWallet,
     when: 2,
     hasPaths: true,
     requiresPassword: true,
-    needsQr: false
+    needsQr: false,
+    titles: {
+      1: '1. Enter your password',
+      2: '2. Connect with Secalot',
+      3: '3. Confirm Network & Address'
+    }
   },
   [keepkeyType]: {
     create: keepkeyWallet,
     when: 1,
     hasPaths: true,
     requiresPassword: false,
-    needsQr: false
+    needsQr: false,
+    titles: {
+      1: '1. Connect with KeepKey'
+    }
   },
   [finneyType]: {
     create: mewconnectWallet,
     when: 1,
     hasPaths: false,
     requiresPassword: false,
-    needsQr: true
+    needsQr: true,
+    titles: {
+      1: '1. Connect with Finney'
+    }
   },
   [xwalletType]: {
     create: mewconnectWallet,
     when: 1,
     hasPaths: false,
     requiresPassword: false,
-    needsQr: true
+    needsQr: true,
+    titles: {
+      1: '1. Connect with XWallet'
+    }
   },
   [bcvaultType]: {
     create: bcvaultWallet,
     when: 1,
     hasPaths: false,
     requiresPassword: false,
-    needsQr: false
+    needsQr: false,
+    titles: {
+      1: '1. Connect with BC Vault'
+    }
   },
   [coolwalletType]: {
     create: coolwalletWallet,
     when: 2,
     hasPaths: false,
     requiresPassword: true,
-    needsQr: false
+    needsQr: false,
+    titles: {
+      1: '1. Connect with CoolWallet',
+      2: '2. Confirm Network & Address'
+    }
   }
 };
 
@@ -468,16 +600,10 @@ export default {
           type: xwalletType
         }
       ],
-      step: 0,
-      steps: {},
-      hwWalletInstance: {},
-      selectedPath: null,
-      wallets: walletHolder,
-      walletInstance: {},
-      walletType: '',
-      selectedLedgerApp: '',
-      ledgerApps: parsedAppPaths,
-      selectedAddress: '',
+      link: {
+        title: 'Terms',
+        url: 'https://www.myetherwallet.com/terms-of-service'
+      },
       panelItems: [
         {
           name: 'Network'
@@ -486,14 +612,21 @@ export default {
           name: 'Address to interact with'
         }
       ],
+      ledgerApps: parsedAppPaths,
+      wallets: walletHolder,
+      // resettable
+      step: 0,
+      steps: {},
+      hwWalletInstance: {},
+      selectedPath: null,
+      walletType: '',
+      selectedLedgerApp: '',
+      selectedAddress: '',
+      password: '',
       selectedNetwork: '',
       accounts: [],
       currentIdx: 0,
       acceptTerms: false,
-      link: {
-        title: 'Terms',
-        url: 'https://www.myetherwallet.com/terms-of-service'
-      },
       addressPage: 0,
       qrcode: ''
     };
@@ -510,14 +643,34 @@ export default {
       typeArr.unshift('ETH', 'ROP', 'RIN');
       return typeArr;
     },
+    showSelectBitbox() {
+      return this.walletType.includes('bitbox') && this.step === 1;
+    },
     showNetworkAddresses() {
-      return Object.keys(this.hwWalletInstance).length > 0 && this.step >= 1;
+      return (
+        Object.keys(this.hwWalletInstance).length > 0 &&
+        this.step >= 1 &&
+        this.step > this.wallets[this.walletType].when
+      );
     },
     showQrCode() {
-      return this.wallets[this.walletType].needsQr;
+      return (
+        this.wallets[this.walletType].needsQr &&
+        this.step === this.wallets[this.walletType].when
+      );
     },
     showPaths() {
-      return this.wallets[this.walletType].hasPaths;
+      return (
+        (this.step >= 1 && this.step <= 3) ||
+        (this.wallets[this.walletType].hasPaths &&
+          this.step < this.wallets[this.walletType].when)
+      );
+    },
+    showPassword() {
+      return (
+        this.wallets[this.walletType].requiresPassword &&
+        (this.step === 3 || this.step === 1)
+      );
     },
     icon() {
       if (this.selectedLedgerApp !== '') {
@@ -568,7 +721,9 @@ export default {
       return newArr;
     },
     title() {
-      return !this.step ? 'Hardware Wallets' : this.steps[this.step];
+      return !this.step
+        ? 'Hardware Wallets'
+        : this.wallets[this.walletType].titles[this.step];
     },
     wallet() {
       const wallet = this.accounts.find(item => {
@@ -576,6 +731,11 @@ export default {
       });
 
       return wallet ? wallet : null;
+    },
+    hasPath() {
+      return this.selectedPath && this.selectedPath.hasOwnProperty('value')
+        ? this.selectedPath.value
+        : this.selectedPath;
     }
   },
   watch: {
@@ -609,11 +769,34 @@ export default {
   },
   methods: {
     ...mapActions(['decryptWallet']),
+    reset() {
+      this.step = 0;
+      this.steps = {};
+      this.hwWalletInstance = {};
+      this.selectedPath = null;
+      this.walletType = '';
+      this.selectedLedgerApp = '';
+      this.selectedAddress = '';
+      this.password = '';
+      this.selectedNetwork = '';
+      this.accounts = [];
+      this.currentIdx = 0;
+      this.acceptTerms = false;
+      this.addressPage = 0;
+      this.qrcode = '';
+    },
     accessBack() {
-      !this.step ? this.close() : (this.step -= 1);
+      !this.step ? this.close('showHardware') : (this.step -= 1);
+      if (!this.step) {
+        delete this.steps[this.step + 1];
+      }
+
+      if (this.step === 1) {
+        this.reset();
+      }
     },
     overlayClose() {
-      this.close();
+      this.close('showHardware');
     },
     nextStep(str) {
       try {
@@ -625,23 +808,15 @@ export default {
         this.step += 1;
         this.steps[this.step] = actualString;
         if (this.wallets[actualString].when === this.step) {
-          if (!this.wallets[actualString].requiresPassword) {
-            this.wallets[actualString].create().then(instance => {
-              this.walletInstance = instance;
-            });
-          } else if (this.wallets[actualString].needsQr) {
+          if (this.wallets[actualString].needsQr) {
             new this.wallets[actualString].create(this.generateQr).then(
               wallet => {
-                this.unlockQrcode(wallet);
+                this[`unlock${actualString}`](wallet);
               }
             );
           } else {
-            this.wallets[actualString].create().then(instance => {
-              this.walletInstance = instance;
-            });
+            this[`unlock${actualString}`]();
           }
-        } else if (this.wallets[actualString].when < this.step) {
-          this[`unlock${actualString}`]();
         }
       } catch (e) {
         // eslint-disable-next-line
@@ -658,31 +833,54 @@ export default {
       this.unlockPathOnly();
     },
     unlockbitbox() {
-      this.unlockPathAndPassword();
+      this.unlockPathAndPassword(this.hasPath, this.password);
     },
     unlockbitbox02() {
       this.unlockPathOnly();
     },
     unlocksecalot() {
-      this.unlockPathAndPassword();
+      this.unlockPathAndPassword(this.hasPath, this.password);
     },
-    unlockkeepkey() {},
-    unlockfinney() {},
-    unlockxwallet() {},
+    unlockfinney(wallet) {
+      this.unlockQrcode(wallet);
+    },
+    unlockxwallet(wallet) {
+      this.unlockQrcode(wallet);
+    },
     unlockbc_vault() {},
-    unlockcool_wallet() {},
+    unlockkeepkey() {},
+    unlockcool_wallet() {
+      this.unlockPathAndPassword(null, this.password);
+    },
+    setSelectedBitbox(val) {
+      if (!val) {
+        this.walletType = bitboxType;
+      } else {
+        this.walletType = bitbox02Type;
+      }
+
+      this.nextStep();
+    },
     unlockPathOnly() {
       this.wallets[this.walletType]
-        .create(this.selectedPath.value)
+        .create(this.hasPath)
         .then(_hwWallet => {
           this.hwWalletInstance = _hwWallet;
+        })
+        .catch(() => {
+          this.step -= 1;
+          this.hwWalletInstance = {};
         });
     },
-    unlockPathAndPassword() {
+    unlockPathAndPassword(path, password) {
       this.wallets[this.walletType]
-        .create(this.selectedPath.value)
+        .create(path, password)
         .then(_hwWallet => {
           this.hwWalletInstance = _hwWallet;
+        })
+        .catch(() => {
+          this.step -= 1;
+          this.hwWalletInstance = {};
         });
     },
     unlockQrcode(wallet) {
