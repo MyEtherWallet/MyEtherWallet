@@ -81,6 +81,16 @@ const dapps = {
     supportedNetworks: [ETH.name],
     lastUpdated: '2/26/2020',
     releaseDate: '2/26/2020'
+  },
+  lendMigrator: {
+    route: '/interface/dapps/lend-migrator',
+    icon: aave,
+    // iconDisabled: aaveDisabled,
+    title: 'dappsAave.lend-title',
+    desc: 'dappsAave.lend-popover',
+    supportedNetworks: [ETH.name],
+    lastUpdated: '9/30/2020',
+    releaseDate: '9/30/2020'
   }
 };
 
