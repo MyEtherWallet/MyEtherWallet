@@ -117,7 +117,7 @@ export default class SendTransaction {
   checkAmount(amount, currency) {
     if (new BigNumber(amount).lt(0)) {
       return {
-        msg: this.$t('errorsGlobal.invalid-value'),
+        msg: Vue.t('errorsGlobal.invalid-value'),
         valid: false
       };
     }
@@ -132,14 +132,14 @@ export default class SendTransaction {
         msg: hasBalance
           ? ''
           : !hasAmountToken
-          ? this.$t('errorsGlobal.not-enough-to-send', {
+          ? Vue.t('errorsGlobal.not-enough-to-send', {
               type: currency.symbol
             })
           : !hasGas
-          ? this.$t('errorsGlobal.not-enough-to-send', {
-              type: Vue.$i18n.t('common.gas.name')
+          ? Vue.t('errorsGlobal.not-enough-to-send', {
+              type: Vue.t('common.gas.name')
             })
-          : Vue.$i18n.t('errorsGlobal.invalid-value')
+          : Vue.t('errorsGlobal.invalid-value')
       };
     }
     return {
@@ -147,10 +147,10 @@ export default class SendTransaction {
       msg: this.hasAmount
         ? ''
         : !this.hasAmount
-        ? Vue.$i18n.t('errorsGlobal.not-enough-to-send', {
+        ? Vue.t('errorsGlobal.not-enough-to-send', {
             type: this.network.type.currencyName
           })
-        : Vue.$i18n.t('errorsGlobal.invalid-value')
+        : Vue.t('errorsGlobal.invalid-value')
     };
   }
   hasAmount(amount) {
@@ -182,18 +182,18 @@ export default class SendTransaction {
         type: 'function'
       }
     ];
-    const contract = new this.web3.eth.Contract(jsonInterface);
+    const contract = this.web3.eth.Contract(jsonInterface);
     return contract.methods.transfer(
       hash.toLowerCase(),
       new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toFixed()
     );
   }
   // transaction data
-  getTxData(amount, decimals, address, currency) {
+  getTxData(amount, decimals, address, currency, data) {
     if (this.isToken(currency)) {
       return this.getTokenTransferABI(amount, decimals, address);
     }
-    return sanitizeHex(this.data);
+    return sanitizeHex(data);
   }
   // transaction value
   getTxValue(currency, amount) {
