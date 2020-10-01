@@ -42,6 +42,66 @@
         </v-sheet>
       </div>
       <v-sheet
+        v-if="showBCVault"
+        :outlined="true"
+        color="white"
+        :rounded="true"
+        :min-width="475"
+        class="pa-5"
+      >
+        <div class="d-flex flex-column align-center justify-center">
+          <div
+            v-if="accounts.length === 0 && bcvaultLoading"
+            class="text-center bcvault-address-container"
+          >
+            <v-progress-circular indeterminate />
+            <p class="text-center mew-subtitle">Loading...</p>
+            <p class="text-center mew-heading-1">
+              Please follow the prompts from the BCVault app and Hardware Wallet
+            </p>
+          </div>
+          <div
+            v-else-if="accounts.length === 0 && !bcvaultLoading"
+            class="text-center"
+          >
+            <v-icon color="titlePrimary"> mdi-alert </v-icon>
+            <p class="text-center mew-heading-1">
+              Connection timed out or user cancelled action or no account found!
+            </p>
+          </div>
+          <div v-else class="text-center">
+            <div
+              v-for="acc in accounts"
+              :key="acc.address"
+              :class="[
+                'pa-4 bcvault-address rounded d-flex flex-row align-center justify-space-between ma-2',
+                selectedAddress === acc.userDataRaw + acc.address
+                  ? 'bcvault-active'
+                  : ''
+              ]"
+              @click="setBCvaultAddress(acc.userDataRaw + acc.address)"
+            >
+              <blockie
+                :address="acc.userDataRaw + acc.address"
+                width="30px"
+                height="30px"
+              />
+              <span>{{ acc.userDataRaw + acc.address }}</span>
+            </div>
+            <mew-button
+              title="Access Wallet"
+              color-theme="primary"
+              :has-full-width="false"
+              button-size="medium"
+              icon-align="left"
+              btn-style="background"
+              :disabled="selectedAddress === ''"
+              @click.native="nextStep"
+            />
+          </div>
+        </div>
+      </v-sheet>
+      <v-sheet
         v-else-if="showQrCode"
         :outlined="true"
         color="white"
@@ -420,6 +480,7 @@ const walletHolder = {
     hasPaths: true,
     requiresPassword: false,
     needsQr: false,
+    accountOnly: false,
     titles: {
       1: '1. Connect with Ledger',
       2: '2. Confirm Network & Address'
@@ -431,6 +492,7 @@ const walletHolder = {
     hasPaths: true,
     requiresPassword: false,
     needsQr: false,
+    accountOnly: false,
     titles: {
       1: '1. Connect with Trezor',
       2: '2. Confirm Network & Address'
@@ -442,6 +504,7 @@ const walletHolder = {
     hasPaths: true,
     requiresPassword: true,
     needsQr: false,
+    accountOnly: false,
     titles: {
       1: '1. Select BitBox Wallet',
       2: '2. Connect with BitBox',
@@ -455,6 +518,7 @@ const walletHolder = {
     hasPaths: true,
     requiresPassword: false,
     needsQr: false,
+    accountOnly: false,
     titles: {
       1: '1. Select BitBox Wallet',
       // 2: 'Match your encryption pairing code',
@@ -468,6 +532,7 @@ const walletHolder = {
     hasPaths: true,
     requiresPassword: true,
     needsQr: false,
+    accountOnly: false,
     titles: {
       1: '1. Enter your password',
       2: '2. Connect with Secalot',
@@ -480,6 +545,7 @@ const walletHolder = {
     hasPaths: true,
     requiresPassword: false,
     needsQr: false,
+    accountOnly: false,
     titles: {
       1: '1. Connect with KeepKey'
     }
@@ -506,10 +572,11 @@ const walletHolder = {
   },
   [bcvaultType]: {
     create: bcvaultWallet,
-    when: 1,
+    when: 2,
     hasPaths: false,
     requiresPassword: false,
     needsQr: false,
+    accountOnly: true,
     titles: {
       1: '1. Connect with BC Vault'
     }
@@ -520,6 +587,7 @@ const walletHolder = {
     hasPaths: false,
     requiresPassword: true,
     needsQr: false,
+    accountOnly: false,
     titles: {
       1: '1. Connect with CoolWallet',
       2: '2. Confirm Network & Address'
@@ -628,7 +696,9 @@ export default {
       currentIdx: 0,
       acceptTerms: false,
       addressPage: 0,
-      qrcode: ''
+      qrcode: '',
+      bcvaultLoading: false,
+      walletInstance: {}
     };
   },
   computed: {
@@ -653,8 +723,13 @@ export default {
         this.step > this.wallets[this.walletType].when
       );
     },
+    showBCVault() {
+      return this.walletType === bcvaultType;
+    },
     showQrCode() {
       return (
+        this.walletType !== '' &&
+        this.wallets[this.walletType] &&
         this.wallets[this.walletType].needsQr &&
         this.step === this.wallets[this.walletType].when
       );
@@ -662,12 +737,16 @@ export default {
     showPaths() {
       return (
         (this.step >= 1 && this.step <= 3) ||
-        (this.wallets[this.walletType].hasPaths &&
+        (this.walletType !== '' &&
+          this.wallets[this.walletType] &&
+          this.wallets[this.walletType].hasPaths &&
           this.step < this.wallets[this.walletType].when)
       );
     },
     showPassword() {
       return (
+        this.walletType !== '' &&
+        this.wallets[this.walletType] &&
         this.wallets[this.walletType].requiresPassword &&
         (this.step === 3 || this.step === 1)
       );
@@ -769,6 +848,9 @@ export default {
   },
   methods: {
     ...mapActions(['decryptWallet']),
+    setBCvaultAddress(address) {
+      this.selectedAddress = address;
+    },
     reset() {
       this.step = 0;
       this.steps = {};
@@ -784,6 +866,7 @@ export default {
       this.acceptTerms = false;
       this.addressPage = 0;
       this.qrcode = '';
+      this.walletInstance = {};
     },
     accessBack() {
       !this.step ? this.close('showHardware') : (this.step -= 1);
@@ -806,6 +889,26 @@ export default {
           this.walletType = actualString;
         }
         this.step += 1;
+        // bcvault initializes on step 1 but unlocks at step 2
+        if (this.wallets[actualString].accountOnly && this.step === 1) {
+          this.bcvaultLoading = true;
+          this.walletInstance = this.wallets[actualString].create();
+          this.walletInstance
+            .init()
+            .then(res => {
+              if (res.length > 1) {
+                this.accounts = res;
+                this.bcvaultLoading = false;
+              } else if (res.length === 1) {
+                this[`unlock${actualString}`](
+                  res[0].userRawData + res[0].address
+                );
+              }
+            })
+            .catch(() => {
+              this.bcvaultLoading = false;
+            });
+        }
         this.steps[this.step] = actualString;
         if (this.wallets[actualString].when === this.step) {
           if (this.wallets[actualString].needsQr) {
@@ -847,7 +950,11 @@ export default {
     unlockxwallet(wallet) {
       this.unlockQrcode(wallet);
     },
-    unlockbc_vault() {},
+    unlockbc_vault(address) {
+      const actualAddress = address ? address : this.selectedAddress;
+      const _wallet = this.walletInstance.getAccount(actualAddress);
+      this.setWallet(_wallet);
+    },
     unlockkeepkey() {},
     unlockcool_wallet() {
       this.unlockPathAndPassword(null, this.password);
@@ -977,5 +1084,18 @@ table {
   opacity: 0;
   position: absolute;
   z-index: -1;
+}
+
+.bcvault-active {
+  background-color: #dcfff9 !important;
+  border-color: #05c0a5 !important;
+}
+
+.bcvault-address {
+  cursor: pointer;
+  border: 1px solid #0b1a40;
+}
+.bcvault-address-container {
+  width: 100%;
 }
 </style>
