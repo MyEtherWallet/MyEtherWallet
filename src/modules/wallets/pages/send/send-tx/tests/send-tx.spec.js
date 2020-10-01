@@ -108,10 +108,43 @@ describe('Send Transaction', () => {
   test('it should get token transfer abi', () => {
     const response = sendTransaction.getTokenTransferABI(
       20,
-      1,
       18,
       '0x43d29d6dc3346a812b10b572ffb52fc7668bf8ba'
     );
     expect(response).toBe(true);
+  });
+  test('it should get transaction data', () => {
+    const response = sendTransaction.getTxData(
+      20,
+      18,
+      '0x43d29d6dc3346a812b10b572ffb52fc7668bf8ba',
+      { symbol: 'ETH' },
+      '0x00'
+    );
+    expect(response).toBe('0x00');
+  });
+  test('it should get transaction value', () => {
+    const response = sendTransaction.getTxValue({ symbol: 'ETH' }, '20');
+    expect(response).toBe('0x20');
+  });
+  test('it should get transaction address', () => {
+    const response = sendTransaction.getTxAddress(
+      { symbol: 'ETH' },
+      '0x43d29d6dc3346a812b10b572ffb52fc7668bf8ba'
+    );
+    expect(response).toBe('0x43d29d6dc3346a812b10b572ffb52fc7668bf8ba');
+  });
+  test('it should get eth price', () => {
+    const response = sendTransaction.getEthPrice();
+    expect(response).toBe('');
+  });
+  test('it should submit transaction', () => {
+    const response = sendTransaction.submitTransaction(
+      '21000',
+      '0x43d29d6dc3346a812b10b572ffb52fc7668bf8ba',
+      '20',
+      '0x00'
+    );
+    expect(response).toBe('');
   });
 });
