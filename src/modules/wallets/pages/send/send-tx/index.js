@@ -1,21 +1,24 @@
 import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
-import { getGasByType } from './helpers/gasMultipler';
+import { getGasBasedOnType } from './helpers/gasMultipler';
 import sanitizeHex from '@/helpers/sanitizeHex';
 import validateHexString from '@/helpers/validateHexString';
 import { Transaction } from 'ethereumjs-tx';
+import Vue from 'vue';
+
 export default class SendTransaction {
-  constructor(account, web3, gasPrice) {
+  constructor(account, web3, gasPrice, network) {
     this.account = account;
     this.web3 = web3;
     this.gasPrice = gasPrice;
+    this.network = network;
   }
   // returns if address is valid
   isValidAddress(hash) {
     return utils.isAddress(hash);
   }
 
-  // returns if gas limit is valid
+  // returns if data is valid
   isValidData(value) {
     return validateHexString(value);
   }
@@ -28,30 +31,32 @@ export default class SendTransaction {
     return new BigNumber(val).toFixed(2);
   }
   // fixed balance in ether
-  getFixedBal() {
-    return new BigNumber(
-      utils.fromWei(this.account.balance, 'ether')
-    ).toFixed();
+  getBalETH() {
+    const balance = new BigNumber(this.account.balance).toString();
+    return new BigNumber(utils.fromWei(balance, 'ether')).toFixed();
   }
   // get the address' entire balance
   getEntireBal(currency, balance, gasLimit) {
     if (this.isToken(currency)) {
       return currency.balance;
     }
+    const gasPrice = new BigNumber(this.finalGasPrice()).toString();
     return balance > 0
-      ? balance.minus(
-          utils.fromWei(
-            new BigNumber(utils.toWei(this.finalGasPrice, 'gwei')).times(
-              gasLimit
-            ).toString,
-            'ether'
+      ? new BigNumber(balance)
+          .minus(
+            utils.fromWei(
+              new BigNumber(utils.toWei(gasPrice, 'gwei'))
+                .times(gasLimit)
+                .toString(),
+              'ether'
+            )
           )
-        )
+          .toFixed()
       : 0;
   }
   // get final gas price
   finalGasPrice() {
-    return getGasByType(this.gasPrice);
+    return getGasBasedOnType(this.gasPrice);
   }
   // show warning if gasPrice is greater than gas limit warning
   showWarning(gasLimitWarning) {
@@ -90,20 +95,17 @@ export default class SendTransaction {
       from: coinbase,
       value: value,
       to: address,
-      gasPrice: sanitizeHex.sanitizeHex(
-        utils.toWei(gasPrice, 'gwei').toString(16)
-      ),
+      gasPrice: sanitizeHex(utils.toWei(gasPrice, 'gwei').toString(16)),
       data: data
     };
-    this.web3.eth
+    await this.web3.eth
       .estimateGas(params)
       .then(gasLimit => {
+        console.error('gasLimit', gasLimit);
         return gasLimit;
       })
-      .catch(error => {
-        console.log('error', error);
+      .catch(() => {
         return -1;
-        // throw error
       });
   }
   // check if it is a token
@@ -130,14 +132,14 @@ export default class SendTransaction {
         msg: hasBalance
           ? ''
           : !hasAmountToken
-          ? this.$tc('errorsGlobal.not-enough-to-send', {
+          ? this.$t('errorsGlobal.not-enough-to-send', {
               type: currency.symbol
             })
           : !hasGas
-          ? this.$tc('errorsGlobal.not-enough-to-send', {
-              type: this.$t('common.gas.name')
+          ? this.$t('errorsGlobal.not-enough-to-send', {
+              type: Vue.$i18n.t('common.gas.name')
             })
-          : this.$t('errorsGlobal.invalid-value')
+          : Vue.$i18n.t('errorsGlobal.invalid-value')
       };
     }
     return {
@@ -145,10 +147,10 @@ export default class SendTransaction {
       msg: this.hasAmount
         ? ''
         : !this.hasAmount
-        ? this.$tc('errorsGlobal.not-enough-to-send', {
+        ? Vue.$i18n.t('errorsGlobal.not-enough-to-send', {
             type: this.network.type.currencyName
           })
-        : this.$t('errorsGlobal.invalid-value')
+        : Vue.$i18n.t('errorsGlobal.invalid-value')
     };
   }
   hasAmount(amount) {
@@ -214,10 +216,8 @@ export default class SendTransaction {
         const json = response.json();
         return json;
       })
-      .catch(error => {
-        console.error('error', error);
+      .catch(() => {
         return 0;
-        // throw error
       });
     return typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
   }
@@ -245,7 +245,6 @@ export default class SendTransaction {
       this.clear();
     } catch (error) {
       return error;
-      // Toast.responseHandler(e, Toast.ERROR);
     }
   }
 }

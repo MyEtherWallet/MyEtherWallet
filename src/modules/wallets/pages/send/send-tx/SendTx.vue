@@ -28,7 +28,7 @@
               <mew-input
                 :label="$t('sendTx.amount')"
                 placeholder=" "
-                :right-label="fixedBalance"
+                :right-label="balanceETH"
                 :value="amount"
                 @input="setAmount"
               />
@@ -119,12 +119,19 @@
         </div>
       </div>
     </template>
+    <toast
+      ref="toast"
+      :text="toastMsg"
+      :toast-type="toastType"
+      :duration="1000"
+    />
   </mew-module>
 </template>
 
 <script>
 import SendTransaction from './index';
 import utils from 'web3-utils';
+import web3Instance from './web3-delete';
 
 export default {
   props: {
@@ -162,6 +169,7 @@ export default {
   data() {
     return {
       // will remove this once we get state
+      web3: web3Instance,
       gasPrice: '400000',
       account: {
         balance: '20000000000000000000000',
@@ -190,14 +198,17 @@ export default {
       },
       online: true,
       // end of removing
+      toastType: '',
+      toastMsg: '',
       ethPrice: 0,
       customGasLimit: '',
       address: '',
       sendTx: null,
       amount: '0',
-      fixedBalance: '0',
+      balanceETH: '0',
       selectedCurrency: '',
       data: '',
+      clearAll: false,
       expandPanel: [
         {
           name: this.$t('common.advanced'),
@@ -208,7 +219,6 @@ export default {
   },
   computed: {
     multiwatch() {
-      // what does the new date /1000 do ?
       return (
         this.amount,
         this.isValidAddress(),
@@ -232,10 +242,11 @@ export default {
   mounted() {
     this.sendTx = new SendTransaction(
       this.account,
-      this.$apollo,
-      this.gasPrice
+      this.web3,
+      this.gasPrice,
+      this.network
     );
-    this.fixedBalance = this.sendTx.getFixedBal();
+    this.balanceETH = this.sendTx.getBalETH();
     this.customGasLimit = this.gasLimit;
     this.online && this.network.type.name === 'ETH' ? this.getEthPrice() : null;
   },
@@ -250,10 +261,10 @@ export default {
           this.data
         )
         .then(response => {
-          console.error('response', response);
+          console.log('response', response);
         })
         .catch(error => {
-          console.error('error', error);
+          this.error = error;
         });
     },
     prefillForm() {
@@ -270,11 +281,10 @@ export default {
         this.address = this.prefilledAddress;
         this.gasLimit = this.customGasLimit;
         this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
-        this.advancedExpand = true; //have to add mew-expand
-        // Toast.responseHandler(
-        //   'Form has been prefilled. Please proceed with caution!',
-        //   Toast.WARN
-        // );
+        this.advancedExpand = true; // need to add to mew components
+        this.toastType = 'warning';
+        this.toastMsg = this.$t('sendTx.prefilled-warning');
+        this.$refs.toast.showToast();
         this.clearPrefilled();
       }
     },
@@ -284,12 +294,13 @@ export default {
       this.address = '';
       this.gasLimit = '21000';
       this.isValidAddress = false;
-      this.advancedExpand = false; //figure out mewExpand
-      this.clearAddress = !this.clearAddress; //figure out address selector
+      this.advancedExpand = false; // need to add to mew components
+      this.clearAll = !this.clearAll; //need to add this to mew components
       this.selectedCurrency = {
         name: this.network.type.name_long,
         symbol: this.network.type.currencyName
       };
+      console.error('this', this.address, this.amount);
     },
     getEthPrice() {
       this.sendTx.getEthPrice().then(response => {
@@ -301,6 +312,17 @@ export default {
       return gasPrice.includes('.')
         ? `~ ${this.sendTx.getFixedGas().toString()}`
         : gasPrice;
+    },
+    isAmountValid() {
+      const checkAmount = this.sendTx
+        ? this.sendTx.checkAmount(this.amount, this.selectedCurrency)
+        : { valid: false, msg: this.$t('errorsGlobal.something-went-wrong') };
+      if (!this.checkAmount.valid) {
+        this.toastType = 'error';
+        this.toastMsg = this.checkAmount.msg;
+        this.$refs.toast.showToast();
+      }
+      return checkAmount ? checkAmount.valid : false;
     },
     allValidInputs() {
       return (
@@ -324,12 +346,11 @@ export default {
     },
     setAddress(value) {
       this.address = value;
-      console.error('in here???');
     },
     setEntireBal() {
       this.amount = this.sendTx.getEntireBal(
         this.selectedCurrency,
-        this.fixedBalance
+        this.balanceETH
       );
     },
     setAmount(value) {

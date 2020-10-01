@@ -23,7 +23,7 @@ export default class Tokenslist {
       })
       .catch(error => {
         console.error('error', error);
-        return error;
+        throw error;
       });
   }
   getOwnersERC20Tokens(hash) {
@@ -45,7 +45,8 @@ export default class Tokenslist {
         }
       })
       .catch(error => {
-        return error;
+        console.error("error", error);
+        throw error;
       });
   }
   formatOwnersERC20Tokens(tokens) {
