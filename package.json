@@ -106,6 +106,7 @@
     "ethereumjs-wallet": "1.0.1",
     "ethjs-unit": "0.1.6",
     "hdkey": "2.0.1",
+    "husky": "^4.3.0",
     "imagemin-mozjpeg": "9.0.0",
     "imagemin-webpack-plugin": "2.4.2",
     "jest-skipped-reporter": "0.0.5",
