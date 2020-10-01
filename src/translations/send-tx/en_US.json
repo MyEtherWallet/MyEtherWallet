@@ -52,5 +52,6 @@
   "signed-chain-id": "Signed Chain ID",
   "chain-no-match": "does not match chain id for selected network",
   "enter-addr": "Please enter an address",
-  "gas-data": "Gas & Data"
+  "gas-data": "Gas & Data",
+  "prefilled-warning": "Form has been prefilled. Please proceed with caution!"
 }
