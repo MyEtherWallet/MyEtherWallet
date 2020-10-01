@@ -16,13 +16,22 @@
           </div>
         </v-col>
       </v-row>
+
+      <divider-line text="OR" class="pt-3 pb-9" />
+
+      <div class="d-block d-sm-flex text-center mb-4">
+        <mew-input label="Customize" placeholder=" " class="mr-3 flex-grow-1" />
+        <mew-button title="Confirm" />
+      </div>
     </v-sheet>
   </div>
 </template>
 
 <script>
+import dividerLine from '@/components/divider-line/DividerLine';
+
 export default {
-  components: {},
+  components: { dividerLine },
   props: {},
   data() {
     return {
@@ -62,8 +71,10 @@ export default {
   background-color: #d0f4f8;
   opacity: 0.5;
   cursor: pointer;
-  user-selct: none;
+  user-select: none;
   width: 100%;
+  border: 1px solid transparent;
+
   &.active {
     border: 1px solid var(--v-primary-base);
     background-color: #f2fafa;
