@@ -118,12 +118,8 @@ export default {
       await contract.methods
         .migrateFromLEND(parseInt(this.amount))
         .send({ from: this.account.address })
-        .once('receipt', response => {
-          console.error('receipt', response);
-        })
         .on('error', error => {
           Toast.responseHandler(error, Toast.ERROR);
-          console.error('error', error);
         });
     }
   }
