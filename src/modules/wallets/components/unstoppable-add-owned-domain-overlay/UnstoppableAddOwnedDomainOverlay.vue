@@ -54,7 +54,7 @@
                     <div class="mr-2">
                       0xf55914186a692a3335fF44ae107FA724b1074dDC
                     </div>
-                    <copy-btn
+                    <copy-button
                       text="0xf55914186a692a3335fF44ae107FA724b1074dDC"
                     />
                   </td>
@@ -66,7 +66,7 @@
                     <div class="mr-2">
                       0xf55914186a692a3335fF44ae107FA724b1074dDC
                     </div>
-                    <copy-btn
+                    <copy-button
                       text="0xf55914186a692a3335fF44ae107FA724b1074dDC"
                     />
                   </td>
@@ -92,10 +92,10 @@
 </template>
 
 <script>
-import copyBtn from '@/components/copy-btn/CopyBtn';
+import copyButton from '@/components/buttons/copy-button/CopyButton';
 
 export default {
-  components: { copyBtn },
+  components: { copyButton },
   props: {
     open: { default: false, type: Boolean },
     close: {

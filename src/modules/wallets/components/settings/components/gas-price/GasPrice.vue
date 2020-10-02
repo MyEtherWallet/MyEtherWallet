@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pb-4 pb-sm-0">
     <div>Please select a default gas price for your transaction fee</div>
     <v-sheet color="transparent" max-width="500px" class="mx-auto">
       <v-row class="mt-6">
@@ -19,9 +19,14 @@
 
       <divider-line text="OR" class="pt-3 pb-9" />
 
-      <div class="d-block d-sm-flex text-center mb-4">
-        <mew-input label="Customize" placeholder=" " class="mr-3 flex-grow-1" />
-        <mew-button title="Confirm" />
+      <div class="d-block d-sm-flex text-center">
+        <mew-input
+          label="Customize"
+          placeholder=" "
+          right-label="$0.00 (- min)"
+          class="mr-3 flex-grow-1"
+        />
+        <mew-button title="Confirm" button-size="xlarge" />
       </div>
     </v-sheet>
   </div>

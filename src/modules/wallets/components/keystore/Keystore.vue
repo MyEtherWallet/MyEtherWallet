@@ -118,7 +118,7 @@
 </template>
 
 <script>
-import borderButton from '@/components/buttons/BorderButton/BorderButton.vue';
+import borderButton from '@/components/buttons/border-button/BorderButton.vue';
 export default {
   name: 'MewConnect',
   components: { borderButton },

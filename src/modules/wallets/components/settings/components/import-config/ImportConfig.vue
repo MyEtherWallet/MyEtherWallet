@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="pb-4 pb-sm-0">
     <div class="descriptions mb-7">
       Please upload the file, and click the button on the left top to open and
       import you configuration file from your local computer.
     </div>
-    <div class="d-flex align-start">
+    <div class="d-block d-sm-flex align-start text-center">
       <v-file-input color="primary" label="Upload file..." filled />
       <mew-button class="ml-3" title="Confirm & Import" button-size="xlarge" />
     </div>
