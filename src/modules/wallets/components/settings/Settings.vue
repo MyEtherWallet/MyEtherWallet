@@ -1,5 +1,10 @@
 <template>
-  <mew-overlay :show-overlay="open" right-btn-text="Close" left-btn-text="Back">
+  <mew-overlay
+    :show-overlay="open"
+    right-btn-text="Close"
+    left-btn-text="Back"
+    @closeOverlay="$emit('close')"
+  >
     <template v-slot:mewOverlayBody>
       <div v-if="!editMode && !addMode">
         <h2 class="text-center mb-10">Settings</h2>

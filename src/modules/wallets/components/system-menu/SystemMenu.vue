@@ -21,7 +21,7 @@
 
     <div
       class="menu-item cursor--pointer d-flex align-center px-3 py-2"
-      @click="logoutOpen = true"
+      @click="openLogout = true"
     >
       <img
         width="26"
@@ -39,13 +39,13 @@
     </div>
 
     <mew-popup
-      :is-open="logoutOpen"
+      :is-open="openLogout"
       title="Are you sure you want to log out?"
       :button-left="logout.btnLeft"
       :button-right="logout.btnRight"
       popup-type="confirm"
     ></mew-popup>
-    <settings :open="openSettings" :close="closeSettings" />
+    <settings :open="openSettings" @close="openSettings = false" />
   </div>
 </template>
 
@@ -56,7 +56,7 @@ export default {
   components: { settings },
   data() {
     return {
-      logoutOpen: false,
+      openLogout: false,
       logout: {
         btnLeft: {
           name: 'Cancel',
@@ -69,11 +69,6 @@ export default {
       },
       openSettings: false
     };
-  },
-  methods: {
-    closeSettings() {
-      this.openSettings = false;
-    }
   }
 };
 </script>

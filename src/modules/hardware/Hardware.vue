@@ -67,7 +67,7 @@
 import blockTitle from '@/components/block-title/BlockTitle';
 
 export default {
-  name: 'HowItWorks',
+  name: 'Hardware',
   components: { blockTitle },
   data: () => ({
     buttons: [
