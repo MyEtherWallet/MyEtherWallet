@@ -2,6 +2,7 @@
 
 ### Devop
 
+- Update mobile settings overlay [#2609](https://github.com/MyEtherWallet/MyEtherWallet/pull/2609)
 - Update mobile access wallet hardware overlays [#2602](https://github.com/MyEtherWallet/MyEtherWallet/pull/2602)
 - Update mobile access wallet layout. [#2596](https://github.com/MyEtherWallet/MyEtherWallet/pull/2596)
 - Update mobile create wallet [#2585](https://github.com/MyEtherWallet/MyEtherWallet/pull/2585)
