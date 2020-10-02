@@ -1,5 +1,6 @@
 import SendTransaction from '../index';
 import web3Instance from '../web3-delete';
+import VueTestUtils from '@vue/test-utils';
 
 const sendTransaction = new SendTransaction(
   // account
@@ -66,7 +67,7 @@ describe('Send Transaction', () => {
   });
   test('it should return tx fee', () => {
     const response = sendTransaction.txFee('21000');
-    expect(response).toEqual('1890000000000000');
+    expect(response).toBe('1890000000000000');
   });
   test('it should return tx fee in eth', () => {
     const response = sendTransaction.txFeeETH('21000');
@@ -76,18 +77,17 @@ describe('Send Transaction', () => {
     const response = sendTransaction.txFeeUSD('21000', '300');
     expect(response).toBe('0.57');
   });
-  test('it should return balance in eth', () => {
-    const response = sendTransaction.balanceEth();
-    expect(response).toEqual('1');
-  });
   test('it should estimate gas', () => {
-    const response = sendTransaction.estimateGas(
-      '200',
-      '0x43d29d6dc3346a812b10b572ffb52fc7668bf8ba',
-      '90',
-      '0x00'
-    );
-    expect(response).toBe(21000);
+    sendTransaction
+      .estimateGas(
+        '200',
+        '0x43d29d6dc3346a812b10b572ffb52fc7668bf8ba',
+        '90',
+        '0x00'
+      )
+      .then(response => {
+        expect(response).toBe(21000);
+      });
   });
   test('it should check if its a token', () => {
     const response = sendTransaction.isToken({ symbol: 'BAT' });
@@ -95,7 +95,7 @@ describe('Send Transaction', () => {
   });
   test('it should check amount', () => {
     const response = sendTransaction.checkAmount(200, { symbol: 'BAT' });
-    expect(response).toBe({});
+    expect(response).toMatchObject({ msg: '', valid: false });
   });
   test('it should check if have enough amount', () => {
     const response = sendTransaction.hasAmount(1);
@@ -135,16 +135,20 @@ describe('Send Transaction', () => {
     expect(response).toBe('0x43d29d6dc3346a812b10b572ffb52fc7668bf8ba');
   });
   test('it should get eth price', () => {
-    const response = sendTransaction.getEthPrice();
-    expect(response).toBe('');
+    sendTransaction.getEthPrice().then(response => {
+      expect(response).toBe(true);
+    });
   });
   test('it should submit transaction', () => {
-    const response = sendTransaction.submitTransaction(
-      '21000',
-      '0x43d29d6dc3346a812b10b572ffb52fc7668bf8ba',
-      '20',
-      '0x00'
-    );
-    expect(response).toBe('');
+    sendTransaction
+      .submitTransaction(
+        '21000',
+        '0x43d29d6dc3346a812b10b572ffb52fc7668bf8ba',
+        '20',
+        '0x00'
+      )
+      .then(response => {
+        expect(response).toBe(true);
+      });
   });
 });

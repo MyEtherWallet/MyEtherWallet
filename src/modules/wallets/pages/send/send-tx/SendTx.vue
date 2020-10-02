@@ -170,7 +170,7 @@ export default {
     return {
       // will remove this once we get state
       web3: web3Instance,
-      gasPrice: '400000',
+      gasPrice: '90',
       account: {
         balance: '20000000000000000000000',
         address: '0x43689531907482BEE7e650D18411E284A7337A66'
@@ -300,7 +300,6 @@ export default {
         name: this.network.type.name_long,
         symbol: this.network.type.currencyName
       };
-      console.error('this', this.address, this.amount);
     },
     getEthPrice() {
       this.sendTx.getEthPrice().then(response => {
@@ -326,7 +325,7 @@ export default {
     },
     allValidInputs() {
       return (
-        this.sendTx.checkAmount(this.amount, this.selectedCurrency).valid &&
+        this.isAmountValid() &&
         this.isValidAddress() &&
         this.sendTx.isValidGasLimit(this.customGasLimit) &&
         this.sendTx.isValidData(this.data)
