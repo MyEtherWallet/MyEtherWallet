@@ -1,7 +1,12 @@
 export default {
   eth: {
     sendTransaction(params) {
-      console.log('params', params);
+      return new Promise((resolve, reject) => {
+        if (params) {
+          return resolve(true);
+        }
+        return reject();
+      });
     },
     getTransactionCount(params) {
       console.log('params', params);

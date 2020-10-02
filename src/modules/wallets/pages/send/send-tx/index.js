@@ -5,7 +5,6 @@ import sanitizeHex from '@/helpers/sanitizeHex';
 import validateHexString from '@/helpers/validateHexString';
 import { Transaction } from 'ethereumjs-tx';
 import Vue from 'vue';
-
 export default class SendTransaction {
   constructor(account, web3, gasPrice, network) {
     this.account = account;
@@ -30,10 +29,11 @@ export default class SendTransaction {
   getFixedGas(val) {
     return new BigNumber(val).toFixed(2);
   }
-  // fixed balance in ether
+  // account balance in ether
   getBalETH() {
-    const balance = new BigNumber(this.account.balance).toString();
-    return new BigNumber(utils.fromWei(balance, 'ether')).toFixed();
+    return new BigNumber(
+      utils.fromWei(this.account.balance, 'ether')
+    ).toFixed();
   }
   // get the address' entire balance
   getEntireBal(currency, balance, gasLimit) {
@@ -64,14 +64,14 @@ export default class SendTransaction {
   }
   // tx fee
   txFee(gasLimit) {
-    return new BigNumber(utils.toWei(this.finalGasPrice(), 'gwei')).times(
-      gasLimit || 0
-    );
+    return new BigNumber(utils.toWei(this.finalGasPrice(), 'gwei'))
+      .times(gasLimit || 0)
+      .toFixed();
   }
   // tx fee in ether
   txFeeETH(gasLimit) {
     if (new BigNumber(this.txFee(gasLimit)).gt(0)) {
-      const txFee = this.txFee(gasLimit).toFixed();
+      const txFee = this.txFee(gasLimit);
       return utils.fromWei(txFee, 'ether');
     }
     return '0';
@@ -83,10 +83,6 @@ export default class SendTransaction {
     )
       .toFixed(2)
       .toString();
-  }
-  // account balance in ether
-  balanceEth() {
-    return new BigNumber(utils.fromWei(this.account.balance, 'ether'));
   }
   // estimate gas from coinbase
   async estimateGas(value, address, gasPrice, data) {
@@ -101,7 +97,6 @@ export default class SendTransaction {
     await this.web3.eth
       .estimateGas(params)
       .then(gasLimit => {
-        console.error('gasLimit', gasLimit);
         return gasLimit;
       })
       .catch(() => {
@@ -117,14 +112,15 @@ export default class SendTransaction {
   checkAmount(amount, currency) {
     if (new BigNumber(amount).lt(0)) {
       return {
-        msg: Vue.t('errorsGlobal.invalid-value'),
+        // TODO: figure out translations to pass tests
+        msg: Vue.$i18n ? Vue.$i18n.t('errorsGlobal.invalid-value') : '',
         valid: false
       };
     }
     // if the currency type is a token
     if (this.isToken(currency)) {
       const hasAmountToken = new BigNumber(amount).lte(currency.balance);
-      const hasGas = new BigNumber(this.txFeeEth).lte(this.balanceEth);
+      const hasGas = new BigNumber(this.txFeeEth).lte(this.getBalETH());
       const hasBalance =
         hasAmountToken && hasGas && this.hasValidDecimals(amount, currency);
       return {
@@ -132,14 +128,20 @@ export default class SendTransaction {
         msg: hasBalance
           ? ''
           : !hasAmountToken
-          ? Vue.t('errorsGlobal.not-enough-to-send', {
-              type: currency.symbol
-            })
+          ? Vue.$i18n // TODO: figure out translations to pass tests
+            ? Vue.$i18n.t('errorsGlobal.not-enough-to-send', {
+                type: currency.symbol
+              })
+            : ''
           : !hasGas
-          ? Vue.t('errorsGlobal.not-enough-to-send', {
-              type: Vue.t('common.gas.name')
-            })
-          : Vue.t('errorsGlobal.invalid-value')
+          ? Vue.$i18n // TODO: figure out translations to pass tests
+            ? Vue.$i18n.t('errorsGlobal.not-enough-to-send', {
+                type: Vue.$i18n.t('common.gas.name')
+              })
+            : ''
+          : Vue.$i18n // TODO: figure out translations to pass tests
+          ? Vue.$i18n.t('errorsGlobal.invalid-value')
+          : ''
       };
     }
     return {
@@ -147,15 +149,19 @@ export default class SendTransaction {
       msg: this.hasAmount
         ? ''
         : !this.hasAmount
-        ? Vue.t('errorsGlobal.not-enough-to-send', {
-            type: this.network.type.currencyName
-          })
-        : Vue.t('errorsGlobal.invalid-value')
+        ? Vue.$i18n // TODO: figure out translations to pass tests
+          ? Vue.$i18n.t('errorsGlobal.not-enough-to-send', {
+              type: this.network.type.currencyName
+            })
+          : ''
+        : Vue.$i18n // TODO: figure out translations to pass tests
+        ? Vue.$i18n.t('errorsGlobal.invalid-value')
+        : ''
     };
   }
   hasAmount(amount) {
     // right now amount is always returning in ETH
-    return new BigNumber(amount).plus(this.txFeeEth).lte(this.balanceEth);
+    return new BigNumber(amount).plus(this.txFeeEth).lte(this.getBalETH());
   }
   // returns whether it has valid decimals
   hasValidDecimals(amount, currency) {
@@ -239,9 +245,14 @@ export default class SendTransaction {
       const _tx = new Transaction(raw);
       const json = _tx.toJSON(true);
       json.from = coinbase;
-      this.web3.eth.sendTransaction(json).catch(error => {
-        return error;
-      });
+      this.web3.eth
+        .sendTransaction(json)
+        .then(response => {
+          return response;
+        })
+        .catch(error => {
+          return error;
+        });
       this.clear();
     } catch (error) {
       return error;
