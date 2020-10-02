@@ -263,13 +263,13 @@
 </template>
 
 <script>
-import phraseBlock from '../phrase-block/PhraseBlock';
+// import phraseBlock from '../phrase-block/PhraseBlock';
 import MnemonicTools from '@/helpers/mnemonicTools';
 export default {
   name: 'CreateMnemonicPhrase',
-  components: {
-    phraseBlock
-  },
+  // components: {
+  //   phraseBlock
+  // },
   data: () => ({
     extraWord: '',
     extraWordVerification: '',
