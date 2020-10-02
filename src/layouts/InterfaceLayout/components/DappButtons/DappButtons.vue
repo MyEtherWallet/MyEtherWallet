@@ -4,7 +4,7 @@
       'dapps-button',
       supported ? '' : 'disabled',
       title === dappsTitle.aave || title === dappsTitle.lendMigrator
-        ? 'aave-icon'
+        ? 'top-row'
         : ''
     ]"
     @click="navigateTo"
