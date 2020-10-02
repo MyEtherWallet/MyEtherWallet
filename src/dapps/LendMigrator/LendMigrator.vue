@@ -38,7 +38,6 @@ import ERC20 from './abi/erc20';
 import BigNumber from 'bignumber.js';
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
-import utils from 'web3-utils';
 
 const LEND_MIGRATOR_PROXY_ADDRESS =
   '0x317625234562B1526Ea2FaC4030Ea499C5291de4';

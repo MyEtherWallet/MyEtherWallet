@@ -1,3 +1,6 @@
+### Feature
+- Add LEND to AAVE migrator [#2606] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2606/files)
+
 ### Release v5.7.9
 
 ### Devop
