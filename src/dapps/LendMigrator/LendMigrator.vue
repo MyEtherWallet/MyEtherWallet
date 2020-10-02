@@ -23,7 +23,7 @@
           'mt-3',
           disabled ? 'disabled' : ''
         ]"
-        @click="getRatio"
+        @click="startMigration"
       >
         {{ $t('dappsAave.migrate') }}
       </button>
@@ -34,10 +34,16 @@
 <script>
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import lendToAaveMigrator from './abi/lendToAaveMigrator';
+import ERC20 from './abi/erc20';
 import BigNumber from 'bignumber.js';
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
-// const LEND_MIGRATOR_AAVE_ADDRESS = '0x317625234562B1526Ea2FaC4030Ea499C5291de4';
+import utils from 'web3-utils';
+
+const LEND_MIGRATOR_PROXY_ADDRESS =
+  '0x317625234562B1526Ea2FaC4030Ea499C5291de4';
+const LEND_MIGRATOR_ABI_ADDRESS = '0x86241b6c526998582556F7C0342D8863b604B17b';
+const LEND_ADDRESS = '0x80fB784B7eD66730e8b1DBd9820aFD29931aab03';
 
 export default {
   components: {
@@ -72,11 +78,33 @@ export default {
     }
   },
   methods: {
+    async startMigration() {
+      const contract = new this.web3.eth.Contract(ERC20, LEND_ADDRESS);
+      const data = contract.methods
+        .approve(
+          LEND_MIGRATOR_PROXY_ADDRESS,
+          utils.toWei(this.amount, 'ether').toString()
+        )
+        .encodeABI();
+
+      this.web3.eth
+        .sendTransaction({
+          from: this.account.address,
+          to: LEND_ADDRESS,
+          value: 0,
+          data: data
+        })
+        .then(() => {
+          this.getRatio();
+        })
+        .catch(error => {
+          Toast.responseHandler(error, Toast.ERROR);
+        });
+    },
     async getRatio() {
-      // change abi and address once contract is enabled
       const contract = new this.web3.eth.Contract(
         lendToAaveMigrator,
-        '0x86241b6c526998582556F7C0342D8863b604B17b'
+        LEND_MIGRATOR_ABI_ADDRESS
       );
       const lendAaveRatio = await contract.methods.LEND_AAVE_RATIO().call();
       lendAaveRatio > 1
