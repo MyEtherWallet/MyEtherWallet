@@ -86,7 +86,6 @@ const dapps = {
   lendMigrator: {
     route: '/interface/dapps/lend-migrator',
     icon: lendMigrator,
-    // iconDisabled: aaveDisabled,
     title: 'dappsAave.lend-title',
     desc: 'dappsAave.lend-popover',
     supportedNetworks: [ETH.name],
