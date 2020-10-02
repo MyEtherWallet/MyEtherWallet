@@ -23,7 +23,7 @@
           'mt-3',
           disabled ? 'disabled' : ''
         ]"
-        @click="startMigration"
+        @click="migrate"
       >
         {{ $t('dappsAave.migrate') }}
       </button>
@@ -42,7 +42,6 @@ import utils from 'web3-utils';
 
 const LEND_MIGRATOR_PROXY_ADDRESS =
   '0x317625234562B1526Ea2FaC4030Ea499C5291de4';
-const LEND_MIGRATOR_ABI_ADDRESS = '0x86241b6c526998582556F7C0342D8863b604B17b';
 const LEND_ADDRESS = '0x80fB784B7eD66730e8b1DBd9820aFD29931aab03';
 
 export default {
@@ -59,7 +58,9 @@ export default {
   },
   data() {
     return {
-      amount: 0
+      amount: 0,
+      hasEnoughRatio: false,
+      lendMigratorContract: ''
     };
   },
   computed: {
@@ -71,56 +72,72 @@ export default {
       return lendToken ? new BigNumber(lendToken.balance).toFixed() : 0;
     },
     disabled() {
-      if (this.amount > 0 && this.amount <= this.lendBalance) {
+      if (
+        this.amount > 0 &&
+        this.amount <= this.lendBalance &&
+        this.hasEnoughRatio
+      ) {
         return false;
       }
       return true;
     }
   },
+  mounted() {
+    this.getRatio();
+  },
   methods: {
-    async startMigration() {
-      const contract = new this.web3.eth.Contract(ERC20, LEND_ADDRESS);
-      const data = contract.methods
-        .approve(
-          LEND_MIGRATOR_PROXY_ADDRESS,
-          utils.toWei(this.amount, 'ether').toString()
-        )
+    async migrate() {
+      const estimatedAmount = new BigNumber(this.amount)
+        .times(new BigNumber(10).pow(18))
+        .toString();
+      const lendContract = new this.web3.eth.Contract(ERC20, LEND_ADDRESS);
+      const lendApproveData = await lendContract.methods
+        .approve(LEND_MIGRATOR_PROXY_ADDRESS, estimatedAmount)
         .encodeABI();
 
-      this.web3.eth
-        .sendTransaction({
-          from: this.account.address,
-          to: LEND_ADDRESS,
-          value: 0,
-          data: data
-        })
-        .then(() => {
-          this.getRatio();
-        })
+      const lendMigrateData = await this.lendMigratorContract.methods
+        .migrateFromLEND(estimatedAmount)
+        .encodeABI();
+
+      this.web3.mew
+        .sendBatchTransactions([
+          {
+            from: this.account.address,
+            to: LEND_ADDRESS,
+            value: 0,
+            gasPrice: '100000',
+            data: lendApproveData
+          },
+          {
+            from: this.account.address,
+            to: LEND_MIGRATOR_PROXY_ADDRESS,
+            gasPrice: '200000',
+            value: 0,
+            data: lendMigrateData
+          }
+        ])
         .catch(error => {
           Toast.responseHandler(error, Toast.ERROR);
         });
     },
     async getRatio() {
-      const contract = new this.web3.eth.Contract(
+      this.lendMigratorContract = new this.web3.eth.Contract(
         lendToAaveMigrator,
-        LEND_MIGRATOR_ABI_ADDRESS
+        LEND_MIGRATOR_PROXY_ADDRESS
       );
-      const lendAaveRatio = await contract.methods.LEND_AAVE_RATIO().call();
-      lendAaveRatio > 1
-        ? this.migrate(contract)
-        : Toast.responseHandler(this.$t('dappAave.invalid-ratio'), Toast.ERROR);
+      const lendAaveRatio = await this.lendMigratorContract.methods
+        .LEND_AAVE_RATIO()
+        .call();
+      this.hasEnoughRatio =
+        lendAaveRatio > 1
+          ? true
+          : Toast.responseHandler(
+              this.$t('dappAave.invalid-ratio'),
+              Toast.ERROR
+            );
     },
     setEntireBalance() {
       this.amount = this.lendBalance;
-    },
-    async migrate(contract) {
-      await contract.methods
-        .migrateFromLEND(parseInt(this.amount))
-        .send({ from: this.account.address })
-        .on('error', error => {
-          Toast.responseHandler(error, Toast.ERROR);
-        });
     }
   }
 };

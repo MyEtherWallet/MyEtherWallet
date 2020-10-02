@@ -3,7 +3,9 @@
     :class="[
       'dapps-button',
       supported ? '' : 'disabled',
-      title === dappsTitle.aave ? 'aave-icon' : ''
+      title === dappsTitle.aave || title === dappsTitle.lendMigrator
+        ? 'aave-icon'
+        : ''
     ]"
     @click="navigateTo"
   >
@@ -70,6 +72,7 @@ export default {
       dappsTitle: {
         ambrpay: 'Ambrpay',
         aave: 'Aave',
+        lendMigrator: 'LEND Migrator',
         unstoppableDomains: 'Unstoppable Domains'
       }
     };
