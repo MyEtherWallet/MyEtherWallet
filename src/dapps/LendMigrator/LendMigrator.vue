@@ -6,7 +6,10 @@
       <div class="d-flex mt-4 mb-1 total-container entire-bal">
         <p>
           {{ $t('dappsAave.total-lend') }}:
-          <span class="balance">{{ lendBalance }}</span>
+          <span class="balance"
+            ><span v-if="!loading">{{ lendBalance }} </span>
+            <i v-if="loading" class="fa fa-spin fa-spinner fa-lg" />
+          </span>
         </p>
         <button class="button-link" @click="setEntireBalance">
           {{ $t('sendTx.button-entire') }}
@@ -59,7 +62,8 @@ export default {
     return {
       amount: 0,
       hasEnoughRatio: false,
-      lendMigratorContract: ''
+      lendMigratorContract: '',
+      loading: false
     };
   },
   computed: {
@@ -97,25 +101,30 @@ export default {
       const lendMigrateData = await this.lendMigratorContract.methods
         .migrateFromLEND(estimatedAmount)
         .encodeABI();
-
+      this.amount = 0;
+      this.loading = true;
       this.web3.mew
         .sendBatchTransactions([
           {
             from: this.account.address,
             to: LEND_ADDRESS,
             value: 0,
-            gasPrice: '100000',
+            gas: 100000,
             data: lendApproveData
           },
           {
             from: this.account.address,
             to: LEND_MIGRATOR_PROXY_ADDRESS,
-            gasPrice: '200000',
+            gas: 200000,
             value: 0,
             data: lendMigrateData
           }
         ])
+        .then(() => {
+          this.loading = false;
+        })
         .catch(error => {
+          this.loading = false;
           Toast.responseHandler(error, Toast.ERROR);
         });
     },
