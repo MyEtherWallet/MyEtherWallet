@@ -2,7 +2,7 @@
   <div class="mew-component--side-info-network">
     <changeNetworkOverlay
       :open="openNetworkOverlay"
-      :close="closeNetworkOverlay"
+      @close="openNetworkOverlay = false"
     />
 
     <mew6-white-sheet sideinfo class="px-7 py-5 d-flex justify-space-between">
@@ -39,11 +39,6 @@ export default {
     return {
       openNetworkOverlay: false
     };
-  },
-  methods: {
-    closeNetworkOverlay() {
-      this.openNetworkOverlay = false;
-    }
   }
 };
 </script>

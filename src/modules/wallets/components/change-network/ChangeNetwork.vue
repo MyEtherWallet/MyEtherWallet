@@ -1,5 +1,10 @@
 <template>
-  <mew-overlay :show-overlay="open" right-btn-text="Close">
+  <mew-overlay
+    :show-overlay="open"
+    left-btn-text=""
+    right-btn-text="Close"
+    @closeOverlay="$emit('close')"
+  >
     <template v-slot:mewOverlayBody>
       <h2 class="text-center mb-10">Network</h2>
       <button-tabs
