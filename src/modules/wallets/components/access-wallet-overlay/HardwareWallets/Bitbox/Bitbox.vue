@@ -88,8 +88,8 @@
               />
             </div>
 
-            <mew-select :items="apps" />
-            <mew-select :items="derivationPath" />
+            <mew-select label="App opened in BitBox" :items="apps" />
+            <mew-select label="HD derivation path" :items="derivationPath" />
 
             <div class="d-flex justify-center mt-2">
               <mew-button
