@@ -1,11 +1,12 @@
 import nodeList from '@/utils/networks';
 import store from 'store';
-const storedNetwork = store.get('network');
+const storedNetwork = store.get('network') || { type: {} };
 let network = nodeList['ETH'][0];
 if (storedNetwork.type.name !== 'CUS') {
-  const iteratableArr = nodeList[storedNetwork.type.name];
+  const iteratableArr = nodeList[storedNetwork.type.name  || 'ETH'];
   network = storedNetwork;
-  network.type = nodeList[storedNetwork.type.name][0].type;
+  console.log('may need to remove to ETH fallbacks || ETH here'); // todo remove dev item
+  network.type = nodeList[storedNetwork.type.name || 'ETH'][0].type;
   for (let index = 0; index < iteratableArr.length; index++) {
     if (storedNetwork.service === iteratableArr[index].service) {
       network = iteratableArr[index];

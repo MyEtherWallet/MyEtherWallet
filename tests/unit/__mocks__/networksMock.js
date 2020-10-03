@@ -1,4 +1,4 @@
-import nodeList from '../../../src/networks';
+import nodeList from '../../../src/utils/networks';
 const _nodeList = {};
 for (const net in nodeList) {
   const _net = [nodeList[net][0]];
