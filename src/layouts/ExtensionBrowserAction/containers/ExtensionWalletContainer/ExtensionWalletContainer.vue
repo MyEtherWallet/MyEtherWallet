@@ -12,11 +12,11 @@
       :loading="loading"
     />
     <div v-if="loading" class="loading-container">
-          <div>
-            <i class="fa fa-lg fa-spin fa-spinner" />
-          </div>
-          <p>Loading wallets....</p>
-        </div>
+      <div>
+        <i class="fa fa-lg fa-spin fa-spinner" />
+      </div>
+      <p>Loading wallets....</p>
+    </div>
     <div v-else-if="!hasAccounts" class="no-wallet-found">
       <div class="text-and-img-container">
         <img src="@/assets/images/icons/alien.png" />
