@@ -105,7 +105,7 @@
     "babel-eslint": "10.1.0",
     "babel-jest": "25.2.3",
     "bc-vault-js": "2.0.4",
-    "bignumber.js": "9.0.0",
+    "bignumber.js": "9.0.1",
     "bip39": "3.0.2",
     "bitbox02-api": "0.6.0",
     "bootstrap-vue": "2.15.0",
