@@ -791,7 +791,6 @@ export default {
       };
     },
     async getBalance() {
-      console.log(this.wallet);
       if (this.wallet.identifier !== 'mnemonic') {
         const balance = await this.web3.eth.getBalance(
           this.wallet.getChecksumAddressString()
