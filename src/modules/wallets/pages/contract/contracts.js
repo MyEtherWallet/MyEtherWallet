@@ -475,7 +475,7 @@ export default class Contracts {
     }
   }
 
-  contractArgs() {
+  get contractArgs() {
     try {
       // const _contractArgs = [];
       console.log(this.selectedMethod); // todo remove dev item
@@ -498,10 +498,11 @@ export default class Contracts {
           return _contractArgs;
         }, []);
       }
-      // return _contractArgs;
+      return [];
     } catch (e) {
       // eslint-disable-next-line
       console.error(e);
+      throw e;
     }
   }
   createTypeValidatingProxy(item) {
