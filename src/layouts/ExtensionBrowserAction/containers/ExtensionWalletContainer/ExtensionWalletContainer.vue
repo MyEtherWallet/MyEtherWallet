@@ -11,7 +11,13 @@
       :add-watch-only="addWatchOnlyWallet"
       :loading="loading"
     />
-    <div v-if="!hasAccounts" class="no-wallet-found">
+    <div v-if="loading" class="loading-container">
+          <div>
+            <i class="fa fa-lg fa-spin fa-spinner" />
+          </div>
+          <p>Loading wallets....</p>
+        </div>
+    <div v-else-if="!hasAccounts" class="no-wallet-found">
       <div class="text-and-img-container">
         <img src="@/assets/images/icons/alien.png" />
         <p>{{ $t('mewcx.no-wallet-found') }}</p>
@@ -198,8 +204,9 @@ export default {
   data() {
     return {
       loading: false,
-      watchOnlyAddresses: [],
-      myWallets: [],
+      // watchOnlyAddresses: [],
+      // myWallets: [],
+      allAccounts: [],
       totalBalance: '0',
       search: '',
       showMyWallets: 0
@@ -207,6 +214,16 @@ export default {
   },
   computed: {
     ...mapState('main', ['web3', 'network', 'linkQuery']),
+    watchOnlyAddresses() {
+      return this.allAccounts.filter(item => {
+        return item.type !== 'wallet';
+      });
+    },
+    myWallets() {
+      return this.allAccounts.filter(item => {
+        return item.type === 'wallet';
+      });
+    },
     showLength() {
       return this.showMyWallets === 0
         ? this.myWallets.length
@@ -319,13 +336,12 @@ export default {
 
       return this.network.type.icon;
     },
-    async processAccounts(accs) {
+    processAccounts(accs) {
       this.totalBalance = '0';
       this.loading = true;
       let balance = new BigNumber(this.totalBalance);
-      const watchOnlyAddresses = [];
-      const myWallets = [];
-      for await (const account of accs) {
+      const accounts = [];
+      for (const account of accs) {
         if (account !== undefined) {
           const address = toChecksumAddress(account.address).toLowerCase();
           delete account['address'];
@@ -333,12 +349,13 @@ export default {
           account['type'] = parsedItemWallet.type;
           account['address'] = address;
           account['nickname'] = parsedItemWallet.nick;
-          await this.setToken(address).then(res => {
-            account['tokenBalance'] = res;
-          });
-          await this.getBalance(address)
+          const addressTokens = this.setToken(address);
+          const addressBalance = this.getBalance(address);
+
+          Promise.all([addressTokens, addressBalance])
             .then(res => {
-              const locBalance = web3utils.fromWei(res);
+              const locBalance = web3utils.fromWei(res[1]);
+              account['tokenBalance'] = res[0];
               account['balance'] = new BigNumber(locBalance).toString();
               balance = balance.plus(locBalance);
               if (parsedItemWallet.type === 'wallet') {
@@ -352,20 +369,12 @@ export default {
               );
               account['balance'] = 0;
             });
-          if (parsedItemWallet.type !== 'wallet') {
-            watchOnlyAddresses.push(account);
-          } else {
-            myWallets.push(account);
-          }
+          accounts.push(account);
+          this.loading = false;
         }
       }
 
-      this.watchOnlyAddresses = watchOnlyAddresses;
-      this.myWallets = myWallets;
-      if (this.myWallets.length === 0 && this.watchOnlyAddresses.length > 0) {
-        this.showMyWallets = 1;
-      }
-      this.loading = false;
+      this.allAccounts = accounts;
     },
     setToken(address) {
       const tokens = [];
@@ -388,7 +397,7 @@ export default {
             delete token.addr;
             tokens.push(token);
           });
-          this.loading = false;
+          // this.loading = false;
           return tokens.sort(sortByBalance);
         })
         .catch(() => {
@@ -397,7 +406,7 @@ export default {
             token['logo'] = this.iconFetch(token.address);
             tokens.push(token);
           });
-          this.loading = false;
+          // this.loading = false;
           return tokens;
         });
     },
