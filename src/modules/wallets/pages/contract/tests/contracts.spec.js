@@ -1,8 +1,8 @@
 import Contracts from '../contracts';
 import Web3 from 'web3';
 import tempDevAbi from './tempDevAbi';
-import erc20ABI from './contractsForDeploy/ERC20_ABI.json';
-import erc20Bytecode from './contractsForDeploy/ERC20_Bytecode';
+import erc20ABI from './contractsForDeploy/Type_Demo_ABI.json';
+import erc20Bytecode from './contractsForDeploy/Type_Demo_Bytecode';
 // import fetch from 'jest-fetch-mock';
 import ganache from 'ganache-core';
 // const useMockFetch = false;
@@ -90,7 +90,7 @@ describe('Contracts Module', () => {
     //   console.log(item); // todo remove dev item
     //   return item.value !== null && item.valid;
     // })
-    const res = contract.deploy()
+    const res = contract.deploy(null, true);
     console.log(res); // todo remove dev item
     res.then(promiEvent => {
       console.log(promiEvent); // todo remove dev item
@@ -98,19 +98,39 @@ describe('Contracts Module', () => {
     });
     // done();
   });
-  test('it should deploy contract', done => {
+  test('it should interact with contract - constant', done => {
+    contract.selectedFunction('twoOutCallTwo').then(() => {
+      done();
+    });
+    // contract.setSelectedMethodInputValue('value', 100, 'to', addresses[1]);
+    // contract.write()
+    //   .then(ers => {
+    //     console.log(ers); // todo remove dev item
+    //     done()
+    //   })
+  });
+  test('it should interact with contract - write', done => {
     contract.selectedFunction('transfer');
-    contract.setSelectedMethodInputValue('from', addresses[0], 'to', addresses[1]);
-    contract.write()
-      .then(ers => {
-        console.log(ers); // todo remove dev item
-        done()
-      })
-    // contract.setSelectedMethodInputValue();
-
-
-
-
-    // done();
+    contract.setSelectedMethodInputValue('value', 100, 'to', addresses[1]);
+    contract.write().then(ers => {
+      console.log(ers); // todo remove dev item
+      done();
+    });
+  });
+  test('it should interact with contract - call', done => {
+    contract.selectedFunction('balanceOf');
+    contract.setSelectedMethodInputValue('owner', addresses[1]);
+    contract.write().then(ers => {
+      console.log(ers); // todo remove dev item
+      done();
+    });
+  });
+  test('it should interact with contract - multi-output', done => {
+    contract.selectedFunction('twoOutCall');
+    // contract.setSelectedMethodInputValue('owner', addresses[1]);
+    contract.write().then(ers => {
+      console.log(ers); // todo remove dev item
+      done();
+    });
   });
 });
