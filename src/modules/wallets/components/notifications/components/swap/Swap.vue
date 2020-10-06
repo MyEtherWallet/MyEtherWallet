@@ -1,9 +1,14 @@
 <template>
   <v-expansion-panel>
     <v-expansion-panel-header color="warning">
-      <v-card class="d-flex align-center pr-3" color="transparent" flat>
-        <div class="mr-6 d-flex align-center">
-          <v-icon color="orange" large>mdi-circle-medium</v-icon>
+      <v-card
+        class="d-block d-sm-flex align-center"
+        color="transparent"
+        flat
+        max-width="95%"
+      >
+        <div class="mr-6 d-flex align-center mb-2 mb-sm-0">
+          <v-icon color="orange" large> mdi-circle-medium </v-icon>
           <blockie
             :address="address"
             :size="8"
@@ -12,7 +17,7 @@
             height="40px"
           />
         </div>
-        <div>
+        <div class="text-overflow--ellipsis pr-sm-2">
           <div class="d-flex align-center">
             <div class="mr-1">To:</div>
             <EllipsisBlock
@@ -28,9 +33,9 @@
             <div>{{ toAmount }}</div>
           </div>
         </div>
-        <div class="ml-auto text-right">
+        <div class="d-flex d-sm-block ml-sm-auto text-sm-right mt-2 mt-sm-0">
           <badge badge-type="swap" badge-title="SWAP" />
-          <div>{{ time }} ago</div>
+          <div class="ml-2 ml-sm-0">{{ time }} ago</div>
         </div>
       </v-card>
     </v-expansion-panel-header>
@@ -38,8 +43,12 @@
       <v-divider class="mb-4" />
       <v-card flat color="warning">
         <ul class="list-style-type--none">
-          <li v-for="(d, key) in data" :key="key">
-            <div>{{ d.label }}</div>
+          <li
+            v-for="(d, key) in data"
+            :key="key"
+            class="d-flex align-start justify-space-between"
+          >
+            <div class="pr-2">{{ d.label }}</div>
             <EllipsisBlock
               v-if="d.ellipsis"
               max-width="200px"
@@ -47,7 +56,9 @@
               :class="d.color + '--text'"
               :text="d.value"
             />
-            <div v-else :class="d.color + '--text'">{{ d.value }}</div>
+            <div v-else class="text-right" :class="d.color + '--text'">
+              {{ d.value }}
+            </div>
           </li>
         </ul>
       </v-card>
@@ -99,9 +110,6 @@ $border-size: 5px;
 ul {
   padding-left: 0 !important;
   li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     padding: 5px;
   }
 }

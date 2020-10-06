@@ -1,22 +1,12 @@
 <template>
-  <v-sheet :max-width="maxWidth" color="transparent">
-    <div
-      :class="
-        isHovering && expendable
-          ? 'word-break--break-all'
-          : 'text-overflow--ellipsis'
-      "
-      @mouseover="isHovering = true"
-      @mouseout="isHovering = false"
-    >
-      <v-tooltip top>
-        <template v-if="text" v-slot:activator="{ on, attrs }">
-          <span v-bind="attrs" v-on="on">{{ text }}</span>
-        </template>
-        <span v-if="text">{{ text }}</span>
-      </v-tooltip>
-      <slot />
-    </div>
+  <v-sheet :max-width="maxWidth" color="transparent" class="ellipsis">
+    <v-tooltip top>
+      <template v-if="text" v-slot:activator="{ on, attrs }">
+        <span v-bind="attrs" v-on="on">{{ text }}</span>
+      </template>
+      <span v-if="text">{{ text }}</span>
+    </v-tooltip>
+    <slot />
   </v-sheet>
 </template>
 
@@ -24,10 +14,6 @@
 export default {
   components: {},
   props: {
-    expendable: {
-      type: Boolean,
-      default: false
-    },
     maxWidth: {
       type: String,
       default: ''
@@ -42,3 +28,11 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>

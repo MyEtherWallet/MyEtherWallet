@@ -12,7 +12,7 @@
             height="40px"
           />
         </div>
-        <div>
+        <div class="text-overflow--ellipsis pr-2">
           <div class="d-flex align-center">
             <div class="mr-1">to:</div>
             <EllipsisBlock
