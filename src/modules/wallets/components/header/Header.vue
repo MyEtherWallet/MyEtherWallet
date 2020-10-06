@@ -26,7 +26,7 @@
       <div class="position--relative">
         <notification-overlay
           :open="openNotifications"
-          :close="closeNotifications"
+          @close="openNotifications = false"
         />
         <v-btn icon @click="openNotifications = true">
           <img src="@/assets/images/icons/icon-notifications.svg" />
@@ -53,11 +53,6 @@ export default {
   },
   data: () => {
     return { openNotifications: false };
-  },
-  methods: {
-    closeNotifications() {
-      this.openNotifications = false;
-    }
   }
 };
 </script>

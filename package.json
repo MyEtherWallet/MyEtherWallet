@@ -40,7 +40,7 @@
     "pocket-js-web3-provider": "0.0.3",
     "register-service-worker": "1.7.1",
     "vue": "2.6.12",
-    "vue-router": "3.4.3",
+    "vue-router": "3.4.5",
     "vuex": "3.5.1"
   },
   "devDependencies": {
@@ -62,11 +62,11 @@
     "babel-eslint": "10.1.0",
     "babel-jest": "26.3.0",
     "bc-vault-js": "2.0.4",
-    "bignumber.js": "9.0.0",
+    "bignumber.js": "9.0.1",
     "bip39": "3.0.2",
     "codecov": "3.7.2",
     "copy-webpack-plugin": "6.1.1",
-    "eslint": "7.9.0",
+    "eslint": "7.10.0",
     "eslint-plugin-prettier": "3.1.4",
     "eslint-plugin-security": "1.4.0",
     "eslint-plugin-vue": "6.2.2",
