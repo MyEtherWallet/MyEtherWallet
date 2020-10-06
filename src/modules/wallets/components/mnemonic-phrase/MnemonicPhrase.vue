@@ -2,7 +2,7 @@
   <v-sheet color="transparent">
     <mew-stepper :items="steppers" :on-step="step">
       <template v-if="step === 1" v-slot:outsideStepContent1>
-        <div class="mnemonic-step1">
+        <div>
           <v-sheet class="pa-12">
             <v-container>
               <v-row align-items="center" justify="space-between">
@@ -85,7 +85,7 @@
             <v-container class="password-container">
               <v-col align="center" justify="center">
                 <mew-button
-                  title="Next"
+                  title="I wrote them down"
                   button-size="large"
                   :disabled="!isValidMnemonic"
                   @click.native="next"
@@ -105,7 +105,49 @@
       </template>
 
       <template v-if="step === 2" v-slot:outsideStepContent2>
-        Hello step 2
+        <v-sheet class="pa-12">
+          <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
+          <div class="mb-10">
+            <div class="headline font-weight-bold">Verification</div>
+            <div>
+              Please select the correct words based on their numbers, and enter
+              the extra word if you have one.
+            </div>
+          </div>
+          <div class="pa-12">
+            <div v-for="(item, idx) in generatedVerification" :key="item + idx">
+              <p>{{ Object.keys(item)[0] }}.</p>
+              <v-container>
+                <v-row align="center" justify="space-around" class="text-left">
+                  <div
+                    v-for="word in Object.values(Object.values(item)[0])"
+                    :key="word"
+                  >
+                    {{ word }}
+                  </div>
+                </v-row>
+              </v-container>
+            </div>
+            <div class="mt-10">
+              <mew-input
+                v-model="extraWord"
+                type="password"
+                label="Extra word"
+                placeholder="Extra word"
+              />
+            </div>
+            <v-container class="password-container">
+              <v-col align="center" justify="center">
+                <mew-button
+                  title="Verify"
+                  button-size="large"
+                  :disabled="!isValidMnemonic"
+                  @click.native="next"
+                />
+              </v-col>
+            </v-container>
+          </div>
+        </v-sheet>
         <!-- <div>
           <v-sheet>
             <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
@@ -221,15 +263,16 @@
 </template>
 
 <script>
-import phraseBlock from '../phrase-block/PhraseBlock';
+// import phraseBlock from '../phrase-block/PhraseBlock';
 import MnemonicTools from '@/helpers/mnemonicTools';
 export default {
-  name: 'MewConnect',
-  components: {
-    phraseBlock
-  },
+  name: 'CreateMnemonicPhrase',
+  // components: {
+  //   phraseBlock
+  // },
   data: () => ({
     extraWord: '',
+    extraWordVerification: '',
     link: {
       title: 'Learn more',
       url: 'https://www.myetherwallet.com/terms-of-service'
@@ -278,6 +321,30 @@ export default {
   computed: {
     isValidMnemonic() {
       return this.phrase.length === this.phraseSize.value;
+    },
+    extraWordMatch() {
+      return this.extraWord === this.extraWordVerification;
+    },
+    generatedVerification() {
+      const words = MnemonicTools.phrase24();
+      const idxs = [];
+      while (idxs.length < 3) {
+        const random = Math.floor(Math.random() * this.phrase.length) + 1;
+        if (idxs.indexOf(random) === -1) {
+          idxs.push(random);
+        }
+      }
+
+      const output = idxs.map(item => {
+        return {
+          [item]: {
+            1: this.phrase[item],
+            2: words[this.randomNumberGenerator()],
+            3: words[this.randomNumberGenerator()]
+          }
+        };
+      });
+      return output;
     }
   },
   watch: {
@@ -303,6 +370,9 @@ export default {
     },
     next() {
       this.step += 1;
+    },
+    randomNumberGenerator() {
+      return Math.floor(Math.random() * 24) + 1;
     }
   }
 };

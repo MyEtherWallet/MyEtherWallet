@@ -1,7 +1,7 @@
 <template>
   <white-sheet class="watch-only-address-table">
     <div class="block-header d-flex align-center">
-      <blockie
+      <mew-blockie
         height="35px"
         width="35px"
         address="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"

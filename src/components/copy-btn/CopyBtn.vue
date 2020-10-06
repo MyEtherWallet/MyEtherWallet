@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--copy-btn">
-    <toast ref="toast" text="Copied" toast-type="success" :duration="1000" />
+    <mew-toast ref="toast" text="Copied" toast-type="success" :duration="1000" />
     <div class="copy-icon d-flex justify-center" @click="onBtnClick()">
       <img src="@/assets/images/icons/icon-copy.svg" alt="Copy" />
     </div>

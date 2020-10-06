@@ -25,7 +25,7 @@
             <div class="d-flex align-center justify-end">
               <div class="mr-3">Health factor</div>
               <div class="primary--text font-weight-bold mr-3">2.45345</div>
-              <info-tooltip text="Health factor" />
+              <mew-tooltip text="Health factor" />
             </div>
 
             <v-row>
@@ -82,7 +82,7 @@
             <div class="d-flex align-center justify-end">
               <div class="mr-3">Health factor</div>
               <div class="primary--text font-weight-bold mr-3">2.45345</div>
-              <info-tooltip text="Health factor" />
+              <mew-tooltip text="Health factor" />
             </div>
 
             <v-row>

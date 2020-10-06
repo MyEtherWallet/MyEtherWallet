@@ -163,7 +163,7 @@
                                 </v-col>
                                 <v-col cols="8" class="text-truncate">
                                   <v-row justify="space-around">
-                                    <blockie
+                                    <mew-blockie
                                       width="25px"
                                       height="25px"
                                       :address="acc.address"

@@ -6,7 +6,7 @@
     <div class="info-container px-4 pt-5 pb-3">
       <div class="d-flex">
         <div class="blockie-img">
-          <blockie
+          <mew-blockie
             :address="address"
             :size="8"
             :scale="16"

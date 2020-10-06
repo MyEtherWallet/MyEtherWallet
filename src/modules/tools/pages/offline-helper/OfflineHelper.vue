@@ -41,7 +41,7 @@
 
       <template v-slot:outsideStepContent2>
         <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-          <address-select label="From Address" />
+          <mew-address-select label="From Address" />
           <div class="d-flex justify-center mt-2">
             <mew-button
               class="mr-3"

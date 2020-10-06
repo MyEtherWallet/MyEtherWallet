@@ -18,6 +18,7 @@
           <v-row>
             <v-col cols="6">
               <mew-select
+                ref="mewSelect"
                 :items="ownersTokens"
                 :label="$t('sendTx.type')"
                 class="mr-3"
@@ -26,6 +27,7 @@
             </v-col>
             <v-col cols="6">
               <mew-input
+                ref="mewInput"
                 :label="$t('sendTx.amount')"
                 placeholder=" "
                 :right-label="balanceETH"
@@ -36,7 +38,8 @@
           </v-row>
           <v-row>
             <v-col cols="12">
-              <address-select
+              <mew-address-select
+                ref="addressSelect"
                 :value="address"
                 :copy-tooltip="$t('common.copy')"
                 :save-tooltip="$t('common.save')"
@@ -55,6 +58,7 @@
 
       <v-container>
         <mew-expand-panel
+          ref="expandPanel"
           is-toggle
           has-dividers
           :panel-items="expandPanel"
@@ -79,9 +83,9 @@
             <div class="d-flex justify-space-between px-5 border-bottom pb-5">
               <div class="mew-body font-weight-medium d-flex align-center">
                 {{ $t('sendTx.tx-fee') }}
-                <info-tooltip class="ml-1" text="" />
+                <mew-tooltip class="ml-1" text="" />
               </div>
-              <div v-show="network.type.name === 'ETH'">
+              <div v-show="network.type.name === networkTypes[0]">
                 <i18n path="sendTx.cost-eth-usd" tag="div">
                   <span slot="eth">{{ txFeeETH() }}</span>
                   <span slot="usd">{{ txFeeUSD() }}</span>
@@ -119,7 +123,7 @@
         </div>
       </div>
     </template>
-    <toast
+    <mew-toast
       ref="toast"
       :text="toastMsg"
       :toast-type="toastType"
@@ -198,11 +202,12 @@ export default {
       },
       online: true,
       // end of removing
+      networkTypes: ['ETH'],
       toastType: '',
       toastMsg: '',
       ethPrice: 0,
       customGasLimit: '',
-      address: '',
+      address: {},
       sendTx: null,
       amount: '0',
       balanceETH: '0',
@@ -281,7 +286,7 @@ export default {
         this.address = this.prefilledAddress;
         this.gasLimit = this.customGasLimit;
         this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
-        this.advancedExpand = true; // need to add to mew components
+        this.$refs.expandPanel.setToggle(true);
         this.toastType = 'warning';
         this.toastMsg = this.$t('sendTx.prefilled-warning');
         this.$refs.toast.showToast();
@@ -289,13 +294,17 @@ export default {
       }
     },
     clear() {
+      this.data = '';
       this.address = '';
       this.amount = '0';
       this.address = '';
       this.gasLimit = '21000';
+      this.gasPrice = '90';
       this.isValidAddress = false;
-      this.advancedExpand = false; // need to add to mew components
-      this.clearAll = !this.clearAll; //need to add this to mew components
+      this.$refs.expandPanel.setToggle(false);
+      this.$refs.mewSelect.clear();
+      this.$refs.addressSelect.clear();
+      this.$refs.mewInput.clear();
       this.selectedCurrency = {
         name: this.network.type.name_long,
         symbol: this.network.type.currencyName
