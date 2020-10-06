@@ -18,7 +18,7 @@
                 </div>
               </div>
 
-              <address-select
+              <mew-address-select
                 copy-tooltip="Copy"
                 save-tooltip="Save"
                 :enable-save-address="true"
@@ -41,7 +41,7 @@
                 <div class="d-flex justify-space-between px-5">
                   <div class="mew-body font-weight-medium d-flex align-center">
                     Transaction Fee
-                    <info-tooltip class="ml-1" text="Tx fees" />
+                    <mew-tooltip class="ml-1" text="Tx fees" />
                   </div>
                   <div>$0.177</div>
                 </div>

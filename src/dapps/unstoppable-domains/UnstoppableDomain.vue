@@ -207,7 +207,7 @@
                         <v-col cols="6">
                           <div class="d-flex align-center">
                             <div>Registrant</div>
-                            <blockie width="25px" height="25px" class="mx-3" />
+                            <mew-blockie width="25px" height="25px" class="mx-3" />
                             <div class="monospace text-overflow--ellipsis">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>
@@ -216,7 +216,7 @@
                         <v-col cols="6">
                           <div class="d-flex align-center">
                             <div>Controller</div>
-                            <blockie width="25px" height="25px" class="mx-3" />
+                            <mew-blockie width="25px" height="25px" class="mx-3" />
                             <div class="monospace text-overflow--ellipsis">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>
@@ -261,7 +261,7 @@
                         <v-col cols="6">
                           <div class="d-flex align-center">
                             <div>Registrant</div>
-                            <blockie width="25px" height="25px" class="mx-3" />
+                            <mew-blockie width="25px" height="25px" class="mx-3" />
                             <div class="monospace text-overflow--ellipsis">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>
@@ -270,7 +270,7 @@
                         <v-col cols="6">
                           <div class="d-flex align-center">
                             <div>Controller</div>
-                            <blockie width="25px" height="25px" class="mx-3" />
+                            <mew-blockie width="25px" height="25px" class="mx-3" />
                             <div class="monospace text-overflow--ellipsis">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>

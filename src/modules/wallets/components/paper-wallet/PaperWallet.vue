@@ -45,7 +45,7 @@
                 color="transparent"
                 class="mr-4"
               >
-                <blockie
+                <mew-blockie
                   :address="address"
                   :size="8"
                   :scale="16"

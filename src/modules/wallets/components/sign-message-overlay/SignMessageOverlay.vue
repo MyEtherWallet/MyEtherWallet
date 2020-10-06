@@ -12,7 +12,7 @@
               <h2 class="text-center pb-8">Confirmation</h2>
               <mew6-white-sheet>
                 <div class="overlay-content pa-8">
-                  <address-select
+                  <mew-address-select
                     copy-tooltip="Copy"
                     save-tooltip="Save"
                     :enable-save-address="true"

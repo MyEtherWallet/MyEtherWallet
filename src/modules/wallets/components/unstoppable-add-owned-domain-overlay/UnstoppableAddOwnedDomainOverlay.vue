@@ -50,7 +50,7 @@
                 <tr>
                   <td>Registrant</td>
                   <td class="d-flex align-center">
-                    <Blockie height="30px" width="30px" class="mr-2" />
+                    <mew-blockie height="30px" width="30px" class="mr-2" />
                     <div class="mr-2">
                       0xf55914186a692a3335fF44ae107FA724b1074dDC
                     </div>
@@ -62,7 +62,7 @@
                 <tr>
                   <td>Controller</td>
                   <td class="d-flex align-center">
-                    <Blockie height="30px" width="30px" class="mr-2" />
+                    <mew-blockie height="30px" width="30px" class="mr-2" />
                     <div class="mr-2">
                       0xf55914186a692a3335fF44ae107FA724b1074dDC
                     </div>

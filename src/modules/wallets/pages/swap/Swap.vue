@@ -17,7 +17,7 @@
                 <mew-input label="Amount" placeholder=" " />
               </div>
             </div>
-            <address-select
+            <mew-address-select
               class="mt-5"
               copy-tooltip="Copy"
               save-tooltip="Save"

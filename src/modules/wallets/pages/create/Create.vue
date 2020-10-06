@@ -82,7 +82,7 @@
     </v-sheet>
 
     <div class="spacer-y-medium" />
-    <toast
+    <mew-toast
       ref="toast"
       can-close
       :link-obj="toastLink"
