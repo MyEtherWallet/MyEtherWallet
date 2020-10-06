@@ -10,10 +10,10 @@
       @mouseout="isHovering = false"
     >
       <v-tooltip top>
-        <template v-slot:activator="{ on, attrs }">
+        <template v-if="text" v-slot:activator="{ on, attrs }">
           <span v-bind="attrs" v-on="on">{{ text }}</span>
         </template>
-        <span>{{ text }}</span>
+        <span v-if="text">{{ text }}</span>
       </v-tooltip>
       <slot />
     </div>

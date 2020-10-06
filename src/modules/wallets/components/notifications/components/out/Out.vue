@@ -5,7 +5,7 @@
         <div class="mr-6 d-flex align-center">
           <v-icon color="error" large>mdi-circle-medium</v-icon>
           <blockie
-            address="0xabc23787066c571a61274929746895c24fa9dbfc"
+            :address="address"
             :size="8"
             :scale="16"
             width="40px"
@@ -13,19 +13,19 @@
           />
         </div>
         <div>
-          <EllipsisBlock
-            max-width="200px"
-            class="monospace"
-            text="To: 0xabc23787066c571a61274929746895c24fa9dbfc"
-          />
-          <div>
-            Abount: 0.000234
-            <span class="text-uppercase"> ETH </span>
+          <div class="d-flex align-center">
+            <div class="mr-1">to:</div>
+            <EllipsisBlock
+              max-width="200px"
+              class="monospace"
+              :text="address"
+            />
           </div>
+          <div>Abount: {{ amount }}</div>
         </div>
         <div class="ml-auto text-right">
           <badge badge-type="txOut" badge-title="OUT" />
-          <div>1 min ago</div>
+          <div>{{ time }} ago</div>
         </div>
       </v-card>
     </v-expansion-panel-header>
@@ -33,43 +33,16 @@
       <v-divider class="mb-4" />
       <v-card flat color="errorOutlineActive">
         <ul class="list-style-type--none">
-          <li>
-            <div flat>Transaction hash:</div>
-            <v-card max-width="300px" color="transparent" flat>
-              <EllipsisBlock
-                max-width="200px"
-                class="monospace"
-                text="0xabc23787066c571a61274929746895c24fa9dbfc"
-              />
-            </v-card>
-          </li>
-          <li>
-            <div>Gas price:</div>
-            <div>41 Gwei</div>
-          </li>
-          <li>
-            <div>Gas limit:</div>
-            <div>400000</div>
-          </li>
-          <li>
-            <div>Max transaction fee:</div>
-            <div>0.0002342 ETH ($0.09)</div>
-          </li>
-          <li>
-            <div>Nonce:</div>
-            <div>2534</div>
-          </li>
-          <li>
-            <div>Time:</div>
-            <div>13:22:22</div>
-          </li>
-          <li>
-            <div>Status:</div>
-            <div>Succeed</div>
-          </li>
-          <li>
-            <div>Error message:</div>
-            <div>None</div>
+          <li v-for="(d, key) in data" :key="key">
+            <div>{{ d.label }}</div>
+            <EllipsisBlock
+              v-if="d.ellipsis"
+              max-width="200px"
+              class="monospace"
+              :class="d.color + '--text'"
+              :text="d.value"
+            />
+            <div v-else :class="d.color + '--text'">{{ d.value }}</div>
           </li>
         </ul>
       </v-card>
