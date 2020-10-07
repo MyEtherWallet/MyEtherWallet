@@ -12,7 +12,11 @@
                 class="mr-3 flex-grow-1"
                 @input="setContractAddress"
               />
-              <mew-select :items="mergedContracts" label="Contract Type" @input="selectedContract"/>
+              <mew-select
+                :items="mergedContracts"
+                label="Contract Type"
+                @input="selectedContract"
+              />
             </div>
             <v-textarea
               v-model="abi"
@@ -88,7 +92,6 @@
                 </div>
                 <div class="bool-items"></div>
               </div>
-              <!--              <mew-input :label="`${input.name} (${input.type})`"> </mew-input>-->
             </div>
             <div v-show="hasInputs" class="text-center mt-3">
               <mew-button
@@ -99,7 +102,8 @@
                 @click.native="write"
               />
             </div>
-            Result
+            <p>Result</p>
+            <!-- TODO FOR TRANSLATE -->
             <div
               v-for="(output, idx) in getOutputs()"
               v-show="noOutput"
@@ -214,18 +218,7 @@ export default {
   },
   mounted() {
     this.activeContract = new Contracts(this.account.address, undefined, 0);
-    // todo remove dev item
-    // this.activeContract.setContractAddress(this.contractAddress);
-    // this.activeContract.setAbi(this.abi);
-    // this.canInteract = this.activeContract.contractActive;
-    // console.log(this.activeContract.contractActive); // todo remove dev item
   },
-  // deactivated(){
-  //   this.activeContract.reset();
-  // },
-  // beforeDestroy () {
-  //   this.activeContract.reset();
-  // },
   methods: {
     getOutputs() {
       return this.outputs;
@@ -257,25 +250,24 @@ export default {
       this.activeContract.clear();
     },
     showInteract() {
-      console.log(this.interact); // todo remove dev item
       this.interact = true;
       this.$set(this, 'methods', this.activeContract.contractMethodNames);
-      console.log(this.methods); // todo remove dev item
     },
     methodSelect(evt) {
-      this.activeContract.selectedFunction(evt).then(res => {
-        this.$set(this, 'outputs', res.outputs);
-        this.hasInputs = Object.keys(res.inputs).length > 0;
-      })
-      .catch(err => {
-
-      })
+      this.activeContract
+        .selectedFunction(evt)
+        .then(res => {
+          this.$set(this, 'outputs', res.outputs);
+          this.hasInputs = Object.keys(res.inputs).length > 0;
+        })
+        .catch(e => {
+          // eslint-disable-next-line
+          console.error(e);
+        });
     },
     setContractAddress(evt) {
       this.contractAddress = evt;
       this.activeContract.setContractAddress(this.contractAddress);
-      // this.canInteract = this.activeContract.contractActive;
-      // console.log(this.activeContract.contractActive); // todo remove dev item
     },
     resetDefaults() {
       this.abi = '';
@@ -286,11 +278,8 @@ export default {
       this.result = '';
       this.loading = false;
       this.value = 0;
-      // this.inputs = {};
       this.clearCurrency = !this.clearCurrency;
       this.activeContract.reset();
-      console.log('resetDefaults'); // todo remove dev item
-      // this.canInteract = this.activeContract.contractActive;
     },
     isValidInput() {
       return Contracts.isContractArgValid.apply(this, arguments);

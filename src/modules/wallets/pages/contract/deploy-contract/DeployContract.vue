@@ -19,10 +19,8 @@
               placeholder=" "
               @input="abiInput($event)"
             ></v-textarea>
-            {{ showInputs }}
             <mew-input label="Contract name" placeholder=" " />
             <div v-show="showInputs">
-              {{ inputs }}
               <div
                 v-for="(input, idx) in inputs"
                 :key="input.name + idx"
@@ -41,7 +39,7 @@
                 >
                   <div class="bool-items">
                     <mew-switch
-                      :value="false"
+                      :value="input.value"
                       :label="input.name"
                       @input="valueInput(input.name, $event)"
                     />
@@ -65,7 +63,6 @@
                 @input="ethPayable($event)"
               />
             </div>
-            {{canDeploy}}
             <div class="text-center mt-3">
               <mew-button
                 title="Sign Transaction"
@@ -149,22 +146,12 @@ export default {
   },
   computed: {
     ...mapState(['network', 'gasPrice', 'account', 'web3']),
-    mergedContracts() {
-      // const customContracts = store.get('customContracts') || [];
-      // const concatContracts = this.network.type.contracts.concat(
-      //   customContracts
-      // );
-      // return concatContracts;
-    },
     txValue() {
       return sanitizeHex(unit.toWei(this.value, 'ether').toString(16));
     },
     showInputs() {
       return this.activeContract.abiValid && this.activeContract.byteCodeValid;
     },
-    // canDeploy() {
-    //   return this.activeContract.canDeploy;
-    // },
     payableConstructor() {
       return this.activeContract.payableConstructor;
     }
@@ -180,29 +167,26 @@ export default {
       this.activeContract.deploy(this.ethValue);
       this.activeContract.clear();
       this.inputs = {};
-      this.canDeploy = false;
-      console.log(this.activeContract.canDeploy); // todo remove dev item
-      console.log(this.activeContract); // todo remove dev item
+      // this.canDeploy = false;
     },
     byteCodeInput(value) {
       this.activeContract.setByteCode(value);
       if (this.activeContract.abiValid && this.activeContract.byteCodeValid) {
         this.getInputs();
+        this.canDeploy = this.activeContract.canDeploy;
       }
     },
     abiInput(value) {
       this.activeContract.setAbi(value);
       if (this.activeContract.abiValid && this.activeContract.byteCodeValid) {
         this.getInputs();
+        this.canDeploy = this.activeContract.canDeploy;
       }
     },
     getInputs() {
       this.inputs = this.activeContract.constructorInputs;
     },
     valueInput(name, value) {
-      console.log('valueInput 1 ', name, value); // todo remove dev item
-      // this.inputs[idx] = evt;
-      // console.log(this.inputs); // todo remove dev item
       this.activeContract.setDeployArg(name, value);
       this.canDeploy = this.activeContract.canDeploy;
     },

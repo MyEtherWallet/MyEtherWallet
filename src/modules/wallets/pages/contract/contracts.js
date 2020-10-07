@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
 import { address, bool, bytes, int, string, uint } from './solidityTypes';
-import { isAddress } from '@/helpers/addressUtils';
+// import { isAddress } from '@/helpers/addressUtils';
 import sanitizeHex from '@/helpers/sanitizeHex';
 import * as ethUnit from 'ethjs-unit';
 import { Transaction } from 'ethereumjs-tx';
@@ -37,6 +37,7 @@ export default class Contracts {
       this.userAddress = address;
       this.address = '';
       this.inputs = {};
+      // eslint-disable-next-line
       this.web3 =
         web3 ||
         new Web3(
@@ -51,7 +52,6 @@ export default class Contracts {
       this.selectedMethodName = '';
       this.selectedMethodInputs = {};
       this.noInputs = false;
-      this.selectedMethodInputValues = {};
       // ===========
       this.constructorABI = null;
       this.constructorInputs = {};
@@ -75,10 +75,6 @@ export default class Contracts {
   }
 
   reset() {
-    this.constructorABI = null;
-    this.constructorInputs = {};
-    this.txByteCode = null;
-    this.noConstructorInputs = false;
     this.address = '';
     this.inputs = {};
     this.ABI = null;
@@ -86,9 +82,14 @@ export default class Contracts {
     this.selectedMethod = { inputs: [] };
     this.selectedMethodName = '';
     this.selectedMethodInputs = {};
-    this.selectedMethodInputs = {};
-    this.selectedMethodInputValues = {};
-    console.log('reset'); // todo remove dev item
+    this.noInputs = false;
+    // ===========
+    this.constructorABI = null;
+    this.constructorInputs = {};
+    this.txByteCode = null;
+    this.noConstructorInputs = false;
+    this.contractsDeployed = [];
+    this.contractMethodDetails = {};
   }
 
   updateGasPrice(gasPrice) {
@@ -99,6 +100,7 @@ export default class Contracts {
     try {
       return !!Contracts.validateABI(this.ABI);
     } catch (e) {
+      // eslint-disable-next-line
       console.error(e); // todo replace with proper error
       return false;
     }
@@ -120,6 +122,7 @@ export default class Contracts {
     try {
       return this.address !== '' && utils.isAddress(this.address); // todo replace with helper
     } catch (e) {
+      // eslint-disable-next-line
       console.error(e); // todo replace with proper error
       return false;
     }
@@ -182,7 +185,6 @@ export default class Contracts {
   }
 
   get contractMethodNames() {
-    console.log('contractMethodNames', this.contractMethods); // todo remove dev item
     if (this.contractMethods.length > 0 && this.contractActive) {
       return this.contractMethods.reduce((acc, cur) => {
         acc.push(cur.name);
@@ -199,7 +201,6 @@ export default class Contracts {
   setSelectedMethodInputValue(name, value) {
     if (arguments.length > 2) {
       for (let i = 0; i < arguments.length - 1; i = i + 2) {
-        console.log(arguments[i], arguments[i + 1]); // todo remove dev item
         if (!this.selectedMethodInputs[arguments[i]])
           throw Error(`${arguments[i]} is not an expected input`);
         this.selectedMethodInputs[arguments[i]].value = arguments[i + 1];
@@ -233,7 +234,7 @@ export default class Contracts {
         }
       } catch (e) {
         // eslint-disable-next-line
-      console.error(e);
+        console.error(e);
         this.ABI = null;
         reject(e);
       }
@@ -274,7 +275,7 @@ export default class Contracts {
         }
       } catch (e) {
         // eslint-disable-next-line
-      console.error(e);
+        console.error(e);
         reject(e);
       }
     });
@@ -285,7 +286,6 @@ export default class Contracts {
     return new Promise((resolve, reject) => {
       if (!this.address || this.address === '')
         return reject(Error(`No contract address specified`));
-      console.log(`selectedFunction(${methodName})`); // todo remove dev item
       this.selectedMethodName = methodName;
       this.selectedMethodInputs = {};
       this.selectedMethodOutputs = {};
@@ -400,7 +400,6 @@ export default class Contracts {
   deploy(withValue, keepMethods = false) {
     return new Promise((resolve, reject) => {
       try {
-        console.log('canDeploy', this.canDeploy); // todo remove dev item
         if (!this.canDeploy) return Promise.reject();
         const rawTx = {};
         if (this.constructorABI.payable && withValue)
@@ -439,7 +438,6 @@ export default class Contracts {
     return _deployArgs;
   }
   setDeployArg(name, value) {
-    console.log(name, value); // todo remove dev item
     this.constructorInputs[name].value = value;
   }
   setByteCode(txByteCode) {
@@ -470,11 +468,7 @@ export default class Contracts {
     return '0x';
   }
   async estimateGas(params) {
-    return this.web3.eth.estimateGas(params).catch(err => {
-      // Toast.responseHandler(err, Toast.WARN);
-      // eslint-disable-next-line
-      console.error(err); // todo replace with proper error
-    });
+    return this.web3.eth.estimateGas(params);
   }
   async getNonce(address) {
     return this.web3.eth.getTransactionCount(address);
@@ -532,29 +526,20 @@ export default class Contracts {
     }
     this.loading = true;
     if (this.selectedMethod.constant === true) {
-      console.log('CONSTANT'); // todo remove dev item
-
       return contract.methods[this.selectedMethod.name](...this.contractArgs)
         .call({ from: this.userAddress.toLowerCase() })
         .then(res => {
           // todo change just so that it returns a new object (such as using ... or similar)
-          const results = {};
           if (Object.keys(this.selectedMethodOutputs).length === 1) {
             const key = '0';
-            results[key] = {};
-            results[key].value = res;
-            results[key].name = this.selectedMethodOutputs[key].name;
-            results[key].type = this.selectedMethodOutputs[key].type;
+            this.selectedMethodOutputs[key].value = res;
           } else if (
             typeof res === 'object' &&
             Object.keys(this.selectedMethodOutputs).length > 1
           ) {
             Object.keys(res).forEach(key => {
               if (this.selectedMethodOutputs[key]) {
-                results[key] = {};
-                results[key].value = res;
-                results[key].name = this.selectedMethodOutputs[key].name;
-                results[key].type = this.selectedMethodOutputs[key].type;
+                this.selectedMethodOutputs[key].value = res;
                 this.selectedMethodOutputs[key].value = res[key];
               }
             });
@@ -564,7 +549,7 @@ export default class Contracts {
           //   this.selectedMethodOutputs.result = JSON.stringify(res);
           // } else this.selectedMethodOutputs.result = res;
           // this.loading = false;
-          return { outputs: results };
+          return { outputs: { ...this.selectedMethodOutputs } };
         })
         .catch(e => {
           this.loading = false;
@@ -590,7 +575,7 @@ export default class Contracts {
       .catch(e => {
         this.loading = false;
         // eslint-disable-next-line
-          console.error(e); // todo remove dev item
+        console.error(e); // todo remove dev item
         // Toast.responseHandler(e, Toast.ERROR);
         errored = true;
       });
@@ -608,12 +593,11 @@ export default class Contracts {
         to: this.address.toLowerCase(),
         data: data
       };
-      console.log(raw); // todo remove dev item
       this.loading = false;
       this.clear();
       return web3.eth.sendTransaction(raw).catch(err => {
         // eslint-disable-next-line
-          console.error(err); // todo remove dev item
+        console.error(err); // todo remove dev item
         // Toast.responseHandler(err, Toast.ERROR);
       });
     }
@@ -621,8 +605,6 @@ export default class Contracts {
 
   get contractArgs() {
     try {
-      // const _contractArgs = [];
-      console.log(this.selectedMethod); // todo remove dev item
       if (this.selectedMethod) {
         this.inputs = this.selectedMethodInputs;
         return this.selectedMethod.inputs.reduce((_contractArgs, item) => {
@@ -665,14 +647,8 @@ export default class Contracts {
           }
         } else if (prop === 'value' && value === null) {
           obj.valid = false;
-        } else if (prop === 'clear') {
-          obj.valid = false;
         }
         obj[prop] = value;
-
-        // The default behavior to store the value
-        // obj[prop] = value;
-
         // Indicate success
         return true;
       },
@@ -698,7 +674,6 @@ export default class Contracts {
     }
   }
   static validateABI(json) {
-    console.log(json); // todo remove dev item
     if (json === '') return false;
     try {
       JSON.parse(json);
@@ -770,9 +745,8 @@ export default class Contracts {
       });
     } catch (e) {
       // Toast.responseHandler(e, Toast.ERROR);
+      // eslint-disable-next-line
+      console.error(e);
     }
-  }
-  getEntireBal() {
-    return '20000';
   }
 }
