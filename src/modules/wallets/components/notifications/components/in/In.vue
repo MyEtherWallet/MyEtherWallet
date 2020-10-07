@@ -1,5 +1,9 @@
 <template>
   <v-expansion-panel class="exp-panel" :class="active ? 'active' : ''">
+    <v-btn color="error" class="delete-button" icon>
+      <v-icon dark> mdi-close-circle </v-icon>
+    </v-btn>
+
     <v-expansion-panel-header color="notificationIn">
       <v-card
         class="d-block d-sm-flex align-center"
@@ -96,7 +100,11 @@ export default {
   data() {
     return { isHovering: false };
   },
-  methods: {}
+  methods: {
+    clicked() {
+      console.log('Clicked');
+    }
+  }
 };
 </script>
 
@@ -137,5 +145,12 @@ ul {
   &.active {
     border: 1px solid var(--v-primary-base);
   }
+}
+
+.delete-button {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  z-index: 1;
 }
 </style>

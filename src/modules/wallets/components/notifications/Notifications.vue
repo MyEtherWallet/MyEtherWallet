@@ -28,8 +28,8 @@
         <h2 class="text-center mb-2">Notifications</h2>
         <div class="d-flex align-center justify-space-between">
           <div>
-            <v-icon color="white" class="edit mr-2">mdi-pencil-outline</v-icon>
-            6 notifications
+            <div>6 notifications</div>
+            <v-btn small color="error" dark> Delete all </v-btn>
           </div>
           <v-sheet color="transparent" max-width="150px">
             <mew-select />

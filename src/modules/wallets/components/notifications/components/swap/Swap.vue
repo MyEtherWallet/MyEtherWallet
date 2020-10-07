@@ -1,5 +1,9 @@
 <template>
   <v-expansion-panel class="exp-panel" :class="active ? 'active' : ''">
+    <v-btn color="error" class="delete-button" icon>
+      <v-icon dark> mdi-close-circle </v-icon>
+    </v-btn>
+
     <v-expansion-panel-header color="notificationSwap">
       <v-card
         class="d-block d-sm-flex align-center"
@@ -146,5 +150,12 @@ ul {
   &.active {
     border: 1px solid var(--v-warning-darken1);
   }
+}
+
+.delete-button {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  z-index: 1;
 }
 </style>
