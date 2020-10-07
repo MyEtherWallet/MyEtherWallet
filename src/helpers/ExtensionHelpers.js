@@ -39,11 +39,13 @@ const addWalletToStore = (
     if (addType === 'edit') {
       if (foundNickname) {
         Toast.responseHandler('mewcx.nickname-found', Toast.WARN);
+        callback(true);
         return;
       }
     } else {
       if (foundAddress) {
         Toast.responseHandler('mewcx.address-already-stored', Toast.ERROR);
+        callback(true);
         return;
       }
     }
@@ -60,7 +62,7 @@ const addWalletToStore = (
       chrome.storage.sync.set(obj, callback);
     } catch (e) {
       Toast.responseHandler(this.$t('mewcx.something-went-wrong'), Toast.ERROR);
-      callback(false);
+      callback(true);
     }
   });
 };
