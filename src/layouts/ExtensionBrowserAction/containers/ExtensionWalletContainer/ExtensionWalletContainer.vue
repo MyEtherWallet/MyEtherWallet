@@ -205,7 +205,7 @@ export default {
     return {
       loading: false,
       allAccounts: [],
-      totalBalance: '0',
+      totalBalance: 0,
       search: '',
       showMyWallets: 0
     };
@@ -335,7 +335,7 @@ export default {
       return this.network.type.icon;
     },
     processAccounts(accs) {
-      this.totalBalance = '0';
+      this.totalBalance = 0;
       this.loading = true;
       const accounts = [];
       for (const account of accs) {
@@ -355,7 +355,10 @@ export default {
               account['tokenBalance'] = res[0];
               account['balance'] = new BigNumber(locBalance).toString();
               if (parsedItemWallet.type === 'wallet') {
-                this.totalBalance += new BigNumber(locBalance).toString();
+                const balance = new BigNumber(this.totalBalance)
+                  .plus(locBalance)
+                  .toFixed();
+                this.totalBalance = balance;
               }
             })
             .catch(() => {
@@ -412,13 +415,15 @@ export default {
     addWallet() {
       this.$refs.addWalletModal.$refs.addMyWallet.$refs.modalWrapper.show();
     },
-    addWatchOnlyWalletCb() {
+    addWatchOnlyWalletCb(hasError) {
       this.loading = false;
-      this.$refs.watchOnlyModal.$refs.watchOnlyWallet.$refs.modalWrapper.hide();
-      this.$eventHub.$emit(
-        'showSuccessModal',
-        'Successfully added a watch only wallet!'
-      );
+      if (!hasError) {
+        this.$refs.watchOnlyModal.$refs.watchOnlyWallet.$refs.modalWrapper.hide();
+        this.$eventHub.$emit(
+          'showSuccessModal',
+          'Successfully added a watch only wallet!'
+        );
+      }
     },
     addWatchOnlyWallet(name, address) {
       this.loading = true;
