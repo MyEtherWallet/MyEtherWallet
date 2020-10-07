@@ -1,6 +1,6 @@
 <template>
-  <v-expansion-panel>
-    <v-expansion-panel-header color="warning">
+  <v-expansion-panel class="exp-panel" :class="active ? 'active' : ''">
+    <v-expansion-panel-header color="notificationSwap">
       <v-card
         class="d-block d-sm-flex align-center"
         color="transparent"
@@ -10,11 +10,13 @@
         <div class="mr-6 d-flex align-center mb-2 mb-sm-0">
           <v-icon color="orange" large> mdi-circle-medium </v-icon>
           <blockie
+            type="swap"
             :address="address"
             :size="8"
             :scale="16"
             width="40px"
             height="40px"
+            class="mr-3"
           />
         </div>
         <div class="text-overflow--ellipsis pr-sm-2">
@@ -29,34 +31,36 @@
 
           <div class="d-flex align-center">
             <div>{{ fromAmount }}</div>
-            <v-icon>mdi-arrow-right-bold</v-icon>
+            <v-icon color="titlePrimary" small class="mx-1"
+              >mdi-arrow-right-bold</v-icon
+            >
             <div>{{ toAmount }}</div>
           </div>
         </div>
         <div class="d-flex d-sm-block ml-sm-auto text-sm-right mt-2 mt-sm-0">
           <badge badge-type="swap" badge-title="SWAP" />
-          <div class="ml-2 ml-sm-0">{{ time }} ago</div>
+          <div class="mt-0 mt-sm-1 ml-2 ml-sm-0">{{ time }} ago</div>
         </div>
       </v-card>
     </v-expansion-panel-header>
-    <v-expansion-panel-content color="warning">
+    <v-expansion-panel-content color="notificationSwap">
       <v-divider class="mb-4" />
-      <v-card flat color="warning">
+      <v-card flat color="notificationSwap">
         <ul class="list-style-type--none">
           <li
             v-for="(d, key) in data"
             :key="key"
-            class="d-flex align-start justify-space-between"
+            class="d-block d-sm-flex align-start justify-space-between"
           >
-            <div class="pr-2">{{ d.label }}</div>
+            <div class="pr-2 font-weight-bold">{{ d.label }}</div>
             <EllipsisBlock
               v-if="d.ellipsis"
               max-width="200px"
-              class="monospace"
+              class="monospace text-sm-right"
               :class="d.color + '--text'"
               :text="d.value"
             />
-            <div v-else class="text-right" :class="d.color + '--text'">
+            <div v-else class="text-sm-right" :class="d.color + '--text'">
               {{ d.value }}
             </div>
           </li>
@@ -95,6 +99,10 @@ export default {
     data: {
       type: Array,
       default: () => []
+    },
+    active: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -130,5 +138,13 @@ ul {
 
 .v-expansion-panel-header--active {
   border-radius: $border-size $border-size 0 0;
+}
+
+.exp-panel {
+  border: 1px solid transparent;
+  border-radius: 5px;
+  &.active {
+    border: 1px solid var(--v-warning-darken1);
+  }
 }
 </style>

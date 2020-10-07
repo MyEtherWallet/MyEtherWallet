@@ -1,8 +1,25 @@
 <template lang="html">
-  <div class="position--relative">
-    <div ref="identicon" class="address-identicon" />
-    <div class="currency">
-      <img src="@/assets/images/currencies/icon-eth-blue.svg" alt="currency" />
+  <div>
+    <div v-if="type !== 'swap'" class="position--relative">
+      <div ref="identicon" class="address-identicon" />
+      <div class="currency">
+        <img
+          src="@/assets/images/currencies/icon-eth-blue.svg"
+          alt="currency"
+        />
+      </div>
+    </div>
+    <div v-if="type === 'swap'" class="position--relative swap-icons">
+      <img
+        class="from"
+        src="@/assets/images/currencies/icon-eth-blue.svg"
+        alt="currency"
+      />
+      <img
+        class="to"
+        src="@/assets/images/currencies/icon-eth-blue.svg"
+        alt="currency"
+      />
     </div>
   </div>
 </template>
@@ -12,6 +29,7 @@ import { Blockies } from '@/helpers';
 
 export default {
   props: {
+    type: { type: String, default: '' },
     address: {
       type: String,
       default: ''
@@ -96,6 +114,22 @@ export default {
   img {
     width: 100%;
     height: 100%;
+  }
+}
+
+.swap-icons {
+  .from {
+    position: relative;
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+  .to {
+    border-radius: 50%;
+    border: 2px solid white;
+
+    position: absolute;
+    top: 0px;
+    left: 20px;
   }
 }
 </style>

@@ -62,7 +62,8 @@ import Vuetify, {
   VRadioGroup,
   VProgressLinear,
   VFileInput,
-  VSimpleCheckbox
+  VSimpleCheckbox,
+  VPagination
 } from 'vuetify/lib';
 import 'vuetify/dist/vuetify.min.css';
 
@@ -130,7 +131,8 @@ Vue.use(Vuetify, {
     VRadioGroup,
     VProgressLinear,
     VFileInput,
-    VSimpleCheckbox
+    VSimpleCheckbox,
+    VPagination
   }
 });
 
@@ -199,7 +201,10 @@ export default new Vuetify({
         },
         disabled: '#cecece',
         tableHeader: '#f9f9f9',
-        informationBlock: '#f9f9f9'
+        informationBlock: '#f9f9f9',
+        notificationIn: '#f2fafa',
+        notificationOut: '#ffd7dc',
+        notificationSwap: '#fff2dc'
       },
       dark: {
         primaryHover: '#1eb19b',
@@ -259,7 +264,10 @@ export default new Vuetify({
         },
         disabled: '#1f2b42',
         tableHeader: '#0f1320',
-        informationBlock: '#0f1320'
+        informationBlock: '#0f1320',
+        notificationIn: '#0f1320',
+        notificationOut: '#0f1320',
+        notificationSwap: '#0f1320'
       }
     }
   }

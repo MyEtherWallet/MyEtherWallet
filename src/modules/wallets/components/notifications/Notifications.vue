@@ -7,7 +7,34 @@
   >
     <template v-slot:mewOverlayBody>
       <v-sheet class="transparent" max-width="700px" width="100%">
-        <h2 class="text-center mb-10">Notifications</h2>
+        <v-sheet
+          color="transparent"
+          max-width="350px"
+          class="d-flex align-center justify-space-between mx-auto mb-6"
+        >
+          <div>
+            <v-icon color="primary" large> mdi-circle-medium </v-icon>
+            Succeed
+          </div>
+          <div>
+            <v-icon color="orange" large> mdi-circle-medium </v-icon>
+            Pending
+          </div>
+          <div>
+            <v-icon color="error" large> mdi-circle-medium </v-icon>
+            Failed
+          </div>
+        </v-sheet>
+        <h2 class="text-center mb-2">Notifications</h2>
+        <div class="d-flex align-center justify-space-between">
+          <div>
+            <v-icon color="white" class="edit mr-2">mdi-pencil-outline</v-icon>
+            6 notifications
+          </div>
+          <v-sheet color="transparent" max-width="150px">
+            <mew-select />
+          </v-sheet>
+        </div>
         <mew6-white-sheet>
           <div class="pa-4">
             <div class="mt-4">
@@ -18,12 +45,14 @@
                   amount="0.000234 ETH"
                   time="1 min"
                   :data="inData"
+                  active
                 />
                 <Out
                   address="0xabc23787066c571a61274929746895c24fa9dbfc"
                   amount="0.000234 XMR"
                   time="1 min"
                   :data="outData"
+                  active
                 />
                 <Swap
                   address="0xabc23787066c571a61274929746895c24fa9dbfc"
@@ -31,6 +60,7 @@
                   to-amount="0.000234 XMR"
                   time="1 min"
                   :data="swapData"
+                  active
                 />
               </v-expansion-panels>
             </div>
@@ -73,6 +103,9 @@
           </div>
         </mew6-white-sheet>
       </v-sheet>
+      <div class="text-center py-6">
+        <v-pagination v-model="page" :length="6"></v-pagination>
+      </div>
     </template>
   </mew-overlay>
 </template>
@@ -89,6 +122,7 @@ export default {
   },
   data() {
     return {
+      page: null,
       inData: [
         {
           label: 'Transaction hash',
@@ -204,3 +238,13 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.edit {
+  width: 37px;
+  height: 37px;
+  border-radius: 100%;
+  background-color: var(--v-primary-base);
+  cursor: pointer;
+}
+</style>
