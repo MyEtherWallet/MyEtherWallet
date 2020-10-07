@@ -42,18 +42,18 @@
         </div>
       </template>
       <div v-if="!detailsShown" class="notification-item-container">
-        <ul
+        <div
           v-if="
             sortedNotifications !== undefined &&
             Object.keys(sortedNotifications).length > 0
           "
         >
-          <li
+          <ul
             v-for="(notification, address) in sortedNotifications"
             v-show="notification.length > 0"
             :key="address"
           >
-            <div class="address-header">
+            <li class="address-header">
               {{ address }}
               <div>
                 <i
@@ -67,44 +67,39 @@
                   @click="collapseAll(address)"
                 />
               </div>
-            </div>
-            <div v-if="notification.length > 0">
-              <div
-                v-for="(noti, idx) in notification"
-                :key="noti.id + idx"
-                class="notification-item"
+            </li>
+            <li
+              v-for="(noti, idx) in notification"
+              :key="noti.id + idx"
+              class="notification-item"
+            >
+              <keep-alive
+                :max="10"
+                :exclude="['transaction-notification', 'transaction-error']"
               >
-                <keep-alive
-                  :max="10"
-                  :exclude="['transaction-notification', 'transaction-error']"
+                <component
+                  :is="useComponent(noti.type)"
+                  :expand="expand(idx, noti, address)"
+                  :shown="shown"
+                  :notice="noti"
+                  :convert-to-gwei="convertToGwei"
+                  :convert-to-eth="convertToEth"
+                  :get-fiat-value="getFiatValue"
+                  :date-string="dateString"
+                  :time-string="timeString"
+                  :hash-link="hashLink"
+                  :address-link="addressLink"
+                  :process-status="processStatus"
+                  :error-message-string="errorMessageString"
+                  :index="idx"
+                  :child-update-notification="childUpdateNotification(idx)"
+                  @showDetails="showDetails"
                 >
-                  <component
-                    :is="useComponent(noti.type)"
-                    :expand="expand(idx, noti, address)"
-                    :shown="shown"
-                    :notice="noti"
-                    :convert-to-gwei="convertToGwei"
-                    :convert-to-eth="convertToEth"
-                    :get-fiat-value="getFiatValue"
-                    :date-string="dateString"
-                    :time-string="timeString"
-                    :hash-link="hashLink"
-                    :address-link="addressLink"
-                    :process-status="processStatus"
-                    :error-message-string="errorMessageString"
-                    :index="idx"
-                    :child-update-notification="childUpdateNotification(idx)"
-                    @showDetails="showDetails"
-                  >
-                  </component>
-                </keep-alive>
-              </div>
-            </div>
-            <div v-else class="notification-no-item">
-              {{ $t('common.notifications.no-notifications') }}
-            </div>
-          </li>
-        </ul>
+                </component>
+              </keep-alive>
+            </li>
+          </ul>
+        </div>
         <div v-else class="notification-no-item">
           {{ $t('common.notifications.no-notifications') }}
         </div>
