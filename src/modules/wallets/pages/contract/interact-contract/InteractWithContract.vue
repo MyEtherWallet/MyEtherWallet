@@ -6,12 +6,13 @@
           <interface-wrap title="Interact with contract">
             <div class="d-flex">
               <mew-input
+                :value="contractAddress"
                 label="Contract Address"
                 placeholder=" "
                 class="mr-3 flex-grow-1"
                 @input="setContractAddress"
               />
-              <mew-select :items="contractType" label="Contract Type" />
+              <mew-select :items="mergedContracts" label="Contract Type" @input="selectedContract"/>
             </div>
             <v-textarea
               v-model="abi"
@@ -25,6 +26,7 @@
             <div class="text-center mt-3">
               <mew-button
                 title="Interact"
+                :disabled="!canInteract"
                 :has-full-width="false"
                 button-size="xlarge"
                 @click.native="showInteract()"
@@ -36,14 +38,15 @@
                 :has-full-width="false"
                 button-size="small"
                 btn-style="transparent"
+                @click.native="resetDefaults()"
               />
             </div>
           </interface-wrap>
         </mew6-white-sheet>
         <mew-overlay
-          :show-overlay="show"
-          :close="showInteract"
-          :back="showInteract"
+          :show-overlay="interact"
+          :close="closeInteract"
+          :back="backInteract"
         >
           <template v-slot:mewOverlayBody>
             <mew-select
@@ -82,35 +85,27 @@
                     :label="input.name"
                     @input="valueInput(input.name, $event)"
                   />
-                  <!--                  <mew-checkbox-->
-                  <!--                    v-model="inputs[input.name]"-->
-                  <!--                    :value="false"-->
-                  <!--                    :label="$t('contract.false')"-->
-                  <!--                    type="radio"-->
-                  <!--                    checked-->
-                  <!--                  />-->
                 </div>
                 <div class="bool-items"></div>
               </div>
               <!--              <mew-input :label="`${input.name} (${input.type})`"> </mew-input>-->
             </div>
-            {{ hasInputs }}
             <div v-show="hasInputs" class="text-center mt-3">
               <mew-button
-                title="Sign Transaction"
+                title="Write"
                 :has-full-width="false"
                 button-size="xlarge"
                 :disabled="false"
                 @click.native="write"
               />
             </div>
+            Result
             <div
               v-for="(output, idx) in getOutputs()"
+              v-show="noOutput"
               :key="output.name + idx"
               class="input-item-container"
             >
-              {{ output }}
-              {{ output.value }}
               <mew-input
                 v-if="getType(output.type).type !== 'radio'"
                 :disabled="true"
@@ -118,23 +113,6 @@
                 :value="output.value"
                 class="non-bool-input"
               />
-              <div
-                v-if="getType(output.type).type === 'radio'"
-                class="bool-input-container"
-              >
-                <div class="bool-items">
-                  <mew-switch :value="false" :label="output.name" />
-                  <!--                  <mew-checkbox-->
-                  <!--                    v-model="inputs[input.name]"-->
-                  <!--                    :value="false"-->
-                  <!--                    :label="$t('contract.false')"-->
-                  <!--                    type="radio"-->
-                  <!--                    checked-->
-                  <!--                  />-->
-                </div>
-                <div class="bool-items"></div>
-              </div>
-              <!--              <mew-input :label="`${input.name} (${input.type})`"> </mew-input>-->
             </div>
           </template>
         </mew-overlay>
@@ -179,44 +157,28 @@ export default {
   },
   data() {
     return {
-      show: false,
+      interact: false,
+      // canInteract: false,
       tempDevAbi: tempDevAbi,
       activeContract: {},
       // inputs: {},
       hasInputs: false,
+      hasOutputs: false,
       outputs: {},
-      abi: [],
-      methods: [
-        {
-          text: 'func1',
-          value: function () {
-            console.log('function 1');
-          }
-        },
-        {
-          text: 'func2',
-          value: function () {
-            console.log('function 2');
-          }
-        }
-      ],
-      contractType: [
-        {
-          name: 'Contract 1',
-          subtext: 'Eth',
-          value: '1'
-        }
-      ]
+      abi: tempDevAbi,
+      contractAddress: '0x27AADe85642CA89cf219945D4bfB731498ca01FD',
+      methods: [],
+      contractType: []
     };
   },
   computed: {
     ...mapState(['network', 'gasPrice', 'account', 'web3']),
     mergedContracts() {
-      // const customContracts = store.get('customContracts') || [];
-      // const concatContracts = this.network.type.contracts.concat(
-      //   customContracts
-      // );
-      // return concatContracts;
+      const customContracts = /*store.get('customContracts') ||*/ [];
+      const concatContracts = this.network.type.contracts.concat(
+        customContracts
+      );
+      return concatContracts;
     },
     isValidAbi() {
       try {
@@ -231,9 +193,11 @@ export default {
     },
     noInput() {
       return false;
-      // return (
-      //   this.selectedMethod.constant && this.selectedMethod.inputs.length === 0
-      // );
+    },
+    noOutput() {
+      return (
+        !this.activeContract.hasOutputs || this.activeContract.isMethodConstant
+      );
     },
     resType() {
       return typeof this.result;
@@ -241,51 +205,27 @@ export default {
     inputs() {
       return this.activeContract.selectedMethodInputs;
     },
-    // outputs(){
-    //   console.log(this.activeContract.selectedMethodOutputs); // todo remove dev item
-    //   return this.activeContract.selectedMethodOutputs;
-    // },
-    // allValid() {
-    //   let _allvalid = true;
-    //   if (this.selectedMethod.inputs) {
-    //     this.selectedMethod.inputs.forEach(item => {
-    //       if (
-    //         !this.isValidInput(
-    //           this.inputs[item.name],
-    //           this.getType(item.type).solidityType
-    //         )
-    //       )
-    //         _allvalid = false;
-    //     });
-    //   }
-    //   return _allvalid && this.isValidAbi && this.isValidAddress;
-    // },
-    // contractArgs() {
-    //   const _contractArgs = [];
-    //   if (this.selectedMethod) {
-    //     this.selectedMethod.inputs.forEach(item => {
-    //       if (item.type.includes('[]')) {
-    //         const parsedItem = this.formatInput(this.inputs[item.name]);
-    //         _contractArgs.push(parsedItem);
-    //       } else if (item.type === 'address') {
-    //         _contractArgs.push(this.inputs[item.name].toLowerCase().trim());
-    //       } else if (item.includes === 'uint') {
-    //         const number = new BigNumber(this.inputs[item.name].trim());
-    //         _contractArgs.push(number.toFixed());
-    //       } else {
-    //         _contractArgs.push(this.inputs[item.name]);
-    //       }
-    //     });
-    //   }
-    //   return _contractArgs;
-    // },
     txValue() {
       return sanitizeHex(unit.toWei(this.value, 'ether').toString(16));
+    },
+    canInteract() {
+      return this.activeContract.contractActive;
     }
   },
   mounted() {
     this.activeContract = new Contracts(this.account.address, undefined, 0);
+    // todo remove dev item
+    // this.activeContract.setContractAddress(this.contractAddress);
+    // this.activeContract.setAbi(this.abi);
+    // this.canInteract = this.activeContract.contractActive;
+    // console.log(this.activeContract.contractActive); // todo remove dev item
   },
+  // deactivated(){
+  //   this.activeContract.reset();
+  // },
+  // beforeDestroy () {
+  //   this.activeContract.reset();
+  // },
   methods: {
     getOutputs() {
       return this.outputs;
@@ -294,61 +234,63 @@ export default {
       if (this.activeContract.isMethodConstant) {
         this.activeContract.write().then(res => {
           this.outputs = res.outputs;
-          console.log('write result', res.outputs); // todo remove dev item
-          // this.$set(this, 'outputs', res);
+          this.hasOutputs = true;
         });
+      } else {
+        this.activeContract.write();
       }
     },
     valueInput(name, value) {
-      console.log('valueInput 1 ', name, value); // todo remove dev item
-      // this.inputs[idx] = evt;
-      // console.log(this.inputs); // todo remove dev item
       this.activeContract.setSelectedMethodInputValue(name, value);
-      // this.inputs = this.activeContract.selectedMethodInputs
     },
     setAndCheckAbi(evt) {
       this.abi = evt;
+      this.activeContract.setAbi(this.abi);
+      // this.canInteract = this.activeContract.contractActive;
+    },
+    closeInteract() {
+      this.interact = false;
+      this.resetDefaults();
+    },
+    backInteract() {
+      this.interact = false;
+      this.activeContract.clear();
     },
     showInteract() {
-      console.log(this.show); // todo remove dev item
-      this.show = !this.show;
-      this.activeContract.setAbi(this.abi);
+      console.log(this.interact); // todo remove dev item
+      this.interact = true;
       this.$set(this, 'methods', this.activeContract.contractMethodNames);
       console.log(this.methods); // todo remove dev item
     },
     methodSelect(evt) {
       this.activeContract.selectedFunction(evt).then(res => {
-        console.log(
-          'this.activeContract.methodInputs',
-          this.activeContract.selectedMethodInputs
-        ); // todo remove dev item
-        // this.inputs = this.activeContract.selectedMethodInputs
         this.$set(this, 'outputs', res.outputs);
-        // // this.inputs = this.activeContract.selectedMethodInputs;
         this.hasInputs = Object.keys(res.inputs).length > 0;
-        console.log(Object.keys(res.inputs)); // todo remove dev item
-        console.log(res.inputs); // todo remove dev item
-        console.log(res.outputs); // todo remove dev item
-        // if(res.result){
-        //
-        // }
-        console.log('inputs', this.inputs); // todo remove dev item
-      });
+      })
+      .catch(err => {
+
+      })
     },
     setContractAddress(evt) {
-      this.activeContract.setContractAddress(evt);
+      this.contractAddress = evt;
+      this.activeContract.setContractAddress(this.contractAddress);
+      // this.canInteract = this.activeContract.contractActive;
+      // console.log(this.activeContract.contractActive); // todo remove dev item
     },
     resetDefaults() {
       this.abi = '';
-      this.address = '';
+      this.contractAddress = '';
       this.interact = false;
       this.contractMethods = [];
       this.selectedMethod = {};
       this.result = '';
       this.loading = false;
       this.value = 0;
-      this.inputs = {};
+      // this.inputs = {};
       this.clearCurrency = !this.clearCurrency;
+      this.activeContract.reset();
+      console.log('resetDefaults'); // todo remove dev item
+      // this.canInteract = this.activeContract.contractActive;
     },
     isValidInput() {
       return Contracts.isContractArgValid.apply(this, arguments);
@@ -361,8 +303,10 @@ export default {
         this.abi = '';
       } else {
         this.abi = JSON.stringify(selected.abi);
+        this.activeContract.setAbi(this.abi);
       }
-      this.address = selected.address;
+      this.contractAddress = selected.address;
+      this.activeContract.setContractAddress(this.contractAddress);
     },
     formatInput() {
       return Contracts.formatInput.apply(this, arguments);
