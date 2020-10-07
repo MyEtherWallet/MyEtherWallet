@@ -68,8 +68,8 @@
                 />
               </div>
             </div>
-            <ul v-if="notification.length > 0">
-              <li
+            <div v-if="notification.length > 0">
+              <div
                 v-for="(noti, idx) in notification"
                 :key="noti.id + idx"
                 class="notification-item"
@@ -98,8 +98,8 @@
                   >
                   </component>
                 </keep-alive>
-              </li>
-            </ul>
+              </div>
+            </div>
             <div v-else class="notification-no-item">
               {{ $t('common.notifications.no-notifications') }}
             </div>

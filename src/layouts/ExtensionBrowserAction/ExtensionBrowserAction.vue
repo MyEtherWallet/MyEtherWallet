@@ -53,7 +53,7 @@ export default {
     fetchNewStore(changes) {
       const relevantChange = changes
         ? Object.keys(changes).find(item => {
-            return item === 'defNetwork' || isAddress(isAddress);
+            return item === 'defNetwork' || isAddress(item);
           })
         : true;
       if (relevantChange) {

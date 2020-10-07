@@ -204,8 +204,6 @@ export default {
   data() {
     return {
       loading: false,
-      // watchOnlyAddresses: [],
-      // myWallets: [],
       allAccounts: [],
       totalBalance: '0',
       search: '',
@@ -339,7 +337,6 @@ export default {
     processAccounts(accs) {
       this.totalBalance = '0';
       this.loading = true;
-      let balance = new BigNumber(this.totalBalance);
       const accounts = [];
       for (const account of accs) {
         if (account !== undefined) {
@@ -357,9 +354,8 @@ export default {
               const locBalance = web3utils.fromWei(res[1]);
               account['tokenBalance'] = res[0];
               account['balance'] = new BigNumber(locBalance).toString();
-              balance = balance.plus(locBalance);
               if (parsedItemWallet.type === 'wallet') {
-                this.totalBalance = balance.toString();
+                this.totalBalance += new BigNumber(locBalance).toString();
               }
             })
             .catch(() => {
@@ -370,11 +366,11 @@ export default {
               account['balance'] = 0;
             });
           accounts.push(account);
-          this.loading = false;
         }
       }
 
       this.allAccounts = accounts;
+      this.loading = false;
     },
     setToken(address) {
       const tokens = [];

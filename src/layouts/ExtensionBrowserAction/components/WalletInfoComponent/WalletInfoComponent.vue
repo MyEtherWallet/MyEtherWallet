@@ -456,6 +456,12 @@ export default {
         this.tokens = newValue;
       },
       deep: true
+    },
+    walletToken: {
+      handler: function () {
+        this.processTokens();
+      },
+      deep: true
     }
   },
   created() {
