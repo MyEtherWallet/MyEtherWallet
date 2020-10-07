@@ -32,10 +32,12 @@ const validateHexString = str => {
 };
 
 export default class Method {
-  constructor(abi, address, web3, gasPrice, storeHandler) {
+  constructor(abi, contractAddress, address, web3, gasPrice, storeHandler) {
     try {
       this.userAddress = address;
-      this.address = '';
+      this.address = contractAddress;
+      this.name = abi.name;
+      this.constant = abi.constant;
       this.inputs = {};
       this.web3 =
         web3 ||
@@ -44,9 +46,10 @@ export default class Method {
           // 'wss://mainnet.infura.io/ws/v3/7d06294ad2bd432887eada360c5e1986'
         );
       this.gasPrice = gasPrice;
-      this.ABI = null;
+      this.ABI = abi;
+      this.selectedFunction(abi);
       this.contractMethods = [];
-      this.selectedMethod = { inputs: [] };
+      this.selectedMethod = abi;
       this.storeContractAddress = storeHandler || function () {};
       this.selectedMethodName = '';
       this.selectedMethodInputs = {};
@@ -69,8 +72,8 @@ export default class Method {
     this.constructorInputs = {};
     this.txByteCode = null;
     this.noConstructorInputs = false;
-    Object.keys(this.selectedMethodInputs).forEach(item => {
-      return this.selectedMethodInputs[item].clear;
+    Object.keys(this.inputs).forEach(item => {
+      return this.inputs[item].clear;
     });
   }
 
@@ -85,8 +88,8 @@ export default class Method {
     this.contractMethods = [];
     this.selectedMethod = { inputs: [] };
     this.selectedMethodName = '';
-    this.selectedMethodInputs = {};
-    this.selectedMethodInputs = {};
+    this.inputs = {};
+    this.inputs = {};
     this.selectedMethodInputValues = {};
     console.log('reset'); // todo remove dev item
   }
@@ -95,72 +98,9 @@ export default class Method {
     this.gasPrice = gasPrice;
   }
 
-  get hasABI() {
-    try {
-      return !!Method.validateABI(this.ABI);
-    } catch (e) {
-      console.error(e); // todo replace with proper error
-      return false;
-    }
-  }
-
-  get abiValid() {
-    return this.hasABI && typeof this.ABI === 'object';
-  }
-
-  get byteCodeValid() {
-    try {
-      return !!this.txByteCode && this.txByteCode.substring(0, 2) === '0x';
-    } catch (e) {
-      return false;
-    }
-  }
-
-  get hasContractAddress() {
-    try {
-      return this.address !== '' && utils.isAddress(this.address); // todo replace with helper
-    } catch (e) {
-      console.error(e); // todo replace with proper error
-      return false;
-    }
-  }
-
-  get contractActive() {
-    return this.hasABI && this.hasContractAddress;
-  }
-
-  get payableConstructor() {
-    if (this.constructorABI) {
-      return this.constructorABI.payable;
-    }
-    return false;
-  }
-
-  get canDeploy() {
-    return (
-      this.hasABI &&
-      this.hasConstructorABI &&
-      this.txByteCode !== null &&
-      ((Object.values(this.constructorInputs).every(item => {
-        return item.value !== null && item.valid;
-      }) &&
-        Object.values(this.constructorInputs).length > 0) ||
-        this.noConstructorInputs)
-    );
-  }
-
-  get hasConstructorABI() {
-    if (this.constructorABI) {
-      return Object.keys(this.constructorABI).length > 0;
-    }
-    return false;
-  }
-
   get methodInputs() {
-    if (this.selectedMethod) {
-      return this.selectedMethodInputs;
-    }
-    return {};
+    return this.inputs;
+
   }
   get isMethodConstant() {
     return this.selectedMethod.constant;
@@ -171,25 +111,10 @@ export default class Method {
 
   get hasOutputs() {
     try {
-      return Object.keys(this.selectedMethodOutputs).length > 0;
+      return Object.keys(this.outputs).length > 0;
     } catch (e) {
       return false;
     }
-  }
-
-  get canInteract() {
-    return this.hasABI && this.hasContractAddress;
-  }
-
-  get contractMethodNames() {
-    console.log('contractMethodNames', this.contractMethods); // todo remove dev item
-    if (this.contractMethods.length > 0 && this.contractActive) {
-      return this.contractMethods.reduce((acc, cur) => {
-        acc.push(cur.name);
-        return acc;
-      }, []);
-    }
-    return [];
   }
 
   setStoreHandler(storeHandler) {
@@ -200,85 +125,21 @@ export default class Method {
     if (arguments.length > 2) {
       for (let i = 0; i < arguments.length - 1; i = i + 2) {
         console.log(arguments[i], arguments[i + 1]); // todo remove dev item
-        if (!this.selectedMethodInputs[arguments[i]])
+        if (!this.inputs[arguments[i]])
           throw Error(`${arguments[i]} is not an expected input`);
-        this.selectedMethodInputs[arguments[i]].value = arguments[i + 1];
+        this.inputs[arguments[i]].value = arguments[i + 1];
       }
     } else {
-      if (!this.selectedMethodInputs[name])
-        throw Error(`${name} is not an expected input`);
-      this.selectedMethodInputs[name].value = value;
+      if (!this.inputs[name]) throw Error(`${name} is not an expected input`);
+      this.inputs[name].value = value;
     }
   }
 
   isInputValid(name) {
-    if (!this.selectedMethodInputs[name])
-      throw Error(`${name} is not an expected input`);
-    return this.selectedMethodInputs[name].valid;
+    if (!this.inputs[name]) throw Error(`${name} is not an expected input`);
+    return this.inputs[name].valid;
   }
 
-  setAbi(abi) {
-    return new Promise((resolve, reject) => {
-      try {
-        if (abi) {
-          this.ABI = this.parseJSON(abi);
-          this.processAbi(this.ABI)
-            .then(resolve)
-            .catch(err => {
-              this.ABI = null;
-              reject(err);
-            });
-        } else {
-          this.ABI = null;
-        }
-      } catch (e) {
-        // eslint-disable-next-line
-        console.error(e);
-        this.ABI = null;
-        reject(e);
-      }
-    });
-  }
-
-  setContractAddress(address) {
-    this.address = address;
-  }
-
-  processAbi(jsonAbi) {
-    return new Promise((resolve, reject) => {
-      try {
-        if (jsonAbi !== '') {
-          if (Array.isArray(jsonAbi)) {
-            this.contractMethods = jsonAbi.filter(item => {
-              if (item.type !== 'constructor' && item.constant !== undefined) {
-                return item;
-              }
-            });
-            this.contractMethodDetails = jsonAbi.reduce((acc, cur) => {
-              if (cur.type !== 'constructor' && cur.constant !== undefined) {
-                cur.result = cur.constant;
-                acc[cur.name] = cur;
-              }
-              if (cur.type === 'constructor') {
-                this.constructorABI = cur;
-                this.abiConstructor();
-              }
-              return acc;
-            }, {});
-            resolve();
-          } else {
-            reject('invalid abi');
-          }
-        } else {
-          reject('processAbi error');
-        }
-      } catch (e) {
-        // eslint-disable-next-line
-        console.error(e);
-        reject(e);
-      }
-    });
-  }
   selectedFunction(method) {
     // todo make this and getting contract args similar to how a constructor is handled
     // todo remove using map and see constructor setup
@@ -295,28 +156,21 @@ export default class Method {
       try {
         if (!method.hasOwnProperty('constant')) return;
         this.selectedMethod = method;
-        this.selectedMethodInputs = this.selectedMethod.inputs.reduce(
-          (acc, cur) => {
-            const itemProxy = this.createTypeValidatingProxy(cur);
-            itemProxy.value = null;
-            itemProxy.result = null;
-            acc[cur.name] = itemProxy;
-            return acc;
-          },
-          {}
-        );
+        this.inputs = this.selectedMethod.inputs.reduce((acc, cur) => {
+          const itemProxy = this.createTypeValidatingProxy(cur);
+          itemProxy.value = null;
+          itemProxy.result = null;
+          acc[cur.name] = itemProxy;
+          return acc;
+        }, {});
         this.noInputs = this.selectedMethod.inputs.length === 0;
-        this.selectedMethodOutputs = this.selectedMethod.outputs.reduce(
-          (acc, cur, idx) => {
-            const itemProxy = this.createTypeValidatingProxy(cur);
-            itemProxy.value = null;
-            itemProxy.result = null;
-            acc[idx.toString()] = itemProxy;
-            return acc;
-          },
-          {}
-        );
-        this.selectedMethodName = methodName;
+        this.outputs = this.selectedMethod.outputs.reduce((acc, cur, idx) => {
+          const itemProxy = this.createTypeValidatingProxy(cur);
+          itemProxy.value = null;
+          itemProxy.result = null;
+          acc[idx.toString()] = itemProxy;
+          return acc;
+        }, {});
         if (method.constant === true && method.inputs.length === 0) {
           const contract = new this.web3.eth.Contract(
             [method],
@@ -325,21 +179,21 @@ export default class Method {
           contract.methods[methodName]()
             .call({ from: this.userAddress.toLowerCase() })
             .then(res => {
-              if (Object.keys(this.selectedMethodOutputs).length === 1) {
-                this.selectedMethodOutputs['0'].value = res;
+              if (Object.keys(this.outputs).length === 1) {
+                this.outputs['0'].value = res;
               } else if (
                 typeof res === 'object' &&
-                Object.keys(this.selectedMethodOutputs).length > 1
+                Object.keys(this.outputs).length > 1
               ) {
                 Object.keys(res).forEach(key => {
-                  if (this.selectedMethodOutputs[key]) {
-                    this.selectedMethodOutputs[key].value = res[key];
+                  if (this.outputs[key]) {
+                    this.outputs[key].value = res[key];
                   }
                 });
               }
               resolve({
-                inputs: this.selectedMethodInputs,
-                outputs: this.selectedMethodOutputs
+                inputs: this.inputs,
+                outputs: this.outputs
               });
             })
             .catch(e => {
@@ -352,8 +206,8 @@ export default class Method {
         } else {
           this.result = '';
           resolve({
-            inputs: this.selectedMethodInputs,
-            outputs: this.selectedMethodOutputs
+            inputs: this.inputs,
+            outputs: this.outputs
           });
         }
         this.loading = false;
@@ -384,30 +238,30 @@ export default class Method {
         .then(res => {
           // todo change just so that it returns a new object (such as using ... or similar)
           const results = {};
-          if (Object.keys(this.selectedMethodOutputs).length === 1) {
+          if (Object.keys(this.outputs).length === 1) {
             const key = '0';
             results[key] = {};
             results[key].value = res;
-            results[key].name = this.selectedMethodOutputs[key].name;
-            results[key].type = this.selectedMethodOutputs[key].type;
+            results[key].name = this.outputs[key].name;
+            results[key].type = this.outputs[key].type;
           } else if (
             typeof res === 'object' &&
-            Object.keys(this.selectedMethodOutputs).length > 1
+            Object.keys(this.outputs).length > 1
           ) {
             Object.keys(res).forEach(key => {
-              if (this.selectedMethodOutputs[key]) {
+              if (this.outputs[key]) {
                 results[key] = {};
                 results[key].value = res;
-                results[key].name = this.selectedMethodOutputs[key].name;
-                results[key].type = this.selectedMethodOutputs[key].type;
-                this.selectedMethodOutputs[key].value = res[key];
+                results[key].name = this.outputs[key].name;
+                results[key].type = this.outputs[key].type;
+                this.outputs[key].value = res[key];
               }
             });
           }
           console.log('res', res); // todo remove dev item
           // if (Array.isArray(res)) {
-          //   this.selectedMethodOutputs.result = JSON.stringify(res);
-          // } else this.selectedMethodOutputs.result = res;
+          //   this.outputs.result = JSON.stringify(res);
+          // } else this.outputs.result = res;
           // this.loading = false;
           return { outputs: results };
         })
@@ -469,10 +323,9 @@ export default class Method {
       // const _contractArgs = [];
       console.log(this.selectedMethod); // todo remove dev item
       if (this.selectedMethod) {
-        this.inputs = this.selectedMethodInputs;
         return this.selectedMethod.inputs.reduce((_contractArgs, item) => {
-          const value = this.selectedMethodInputs[item.name].value;
-          console.log(this.selectedMethodInputs, item.name, value); // todo remove dev item
+          const value = this.inputs[item.name].value;
+          console.log(this.inputs, item.name, value); // todo remove dev item
           if (item.type.includes('[]')) {
             const parsedItem = Method.formatInput(value);
             _contractArgs.push(parsedItem);

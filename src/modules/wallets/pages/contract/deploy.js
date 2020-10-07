@@ -32,7 +32,7 @@ const validateHexString = str => {
 };
 
 export default class Deploy {
-  constructor(address, web3, gasPrice, storeHandler) {
+  constructor(abi, txByteCode, address, web3, gasPrice, storeHandler) {
     try {
       this.userAddress = address;
       this.address = '';
@@ -44,7 +44,9 @@ export default class Deploy {
           // 'wss://mainnet.infura.io/ws/v3/7d06294ad2bd432887eada360c5e1986'
         );
       this.gasPrice = gasPrice;
-      this.ABI = null;
+      this.ABI = abi;
+      this.processAbi(abi);
+      this.setByteCode(txByteCode);
       this.contractMethods = [];
       this.selectedMethod = { inputs: [] };
       this.storeContractAddress = storeHandler || function () {};
@@ -55,7 +57,7 @@ export default class Deploy {
       // ===========
       this.constructorABI = null;
       this.constructorInputs = {};
-      this.txByteCode = null;
+      this.txByteCode = txByteCode;
       this.contractsDeployed = [];
       this.noConstructorInputs = false;
     } catch (e) {
@@ -146,25 +148,6 @@ export default class Deploy {
       return Object.keys(this.constructorABI).length > 0;
     }
     return false;
-  }
-
-  get hasInputs() {
-    return this.noInputs;
-  }
-
-  get canInteract() {
-    return this.hasABI && this.hasContractAddress;
-  }
-
-  get contractMethodNames() {
-    console.log('contractMethodNames', this.contractMethods); // todo remove dev item
-    if (this.contractMethods.length > 0 && this.contractActive) {
-      return this.contractMethods.reduce((acc, cur) => {
-        acc.push(cur.name);
-        return acc;
-      }, []);
-    }
-    return [];
   }
 
   setStoreHandler(storeHandler) {

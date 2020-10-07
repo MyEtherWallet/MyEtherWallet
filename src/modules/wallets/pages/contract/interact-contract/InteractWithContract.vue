@@ -12,7 +12,11 @@
                 class="mr-3 flex-grow-1"
                 @input="setContractAddress"
               />
-              <mew-select :items="mergedContracts" label="Contract Type" @input="selectedContract"/>
+              <mew-select
+                :items="mergedContracts"
+                label="Contract Type"
+                @input="selectedContract"
+              />
             </div>
             <v-textarea
               v-model="abi"
@@ -165,8 +169,8 @@ export default {
       hasInputs: false,
       hasOutputs: false,
       outputs: {},
-      abi: tempDevAbi,
-      contractAddress: '0x27AADe85642CA89cf219945D4bfB731498ca01FD',
+      abi: [],
+      contractAddress: '',
       methods: [],
       contractType: []
     };
@@ -263,13 +267,13 @@ export default {
       console.log(this.methods); // todo remove dev item
     },
     methodSelect(evt) {
-      this.activeContract.selectedFunction(evt).then(res => {
-        this.$set(this, 'outputs', res.outputs);
-        this.hasInputs = Object.keys(res.inputs).length > 0;
-      })
-      .catch(err => {
-
-      })
+      this.activeContract
+        .selectedFunction(evt)
+        .then(res => {
+          this.$set(this, 'outputs', res.outputs);
+          this.hasInputs = Object.keys(res.inputs).length > 0;
+        })
+        .catch(err => {});
     },
     setContractAddress(evt) {
       this.contractAddress = evt;
