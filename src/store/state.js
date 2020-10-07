@@ -5,6 +5,7 @@ let network = nodeList['ETH'][0];
 if (storedNetwork.type.name !== 'CUS') {
   const iteratableArr = nodeList[storedNetwork.type.name || 'ETH'];
   network = storedNetwork;
+  // eslint-disable-next-line
   console.log('may need to remove to ETH fallbacks || ETH here'); // todo remove dev item
   network.type = nodeList[storedNetwork.type.name || 'ETH'][0].type;
   for (let index = 0; index < iteratableArr.length; index++) {
