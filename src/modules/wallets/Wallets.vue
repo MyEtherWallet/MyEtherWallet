@@ -1,16 +1,26 @@
 <template>
-  <v-sheet color="walletBg">
-    <div class="d-flex align-stretch">
-      <side-menu class="box-shadow" />
-      <div class="flex-grow-1 d-flex flex-column justify-space-between">
-        <v-container>
-          <wallet-header />
-          <router-view />
-        </v-container>
-        <wallet-footer class="mt-10 box-shadow" />
+  <div>
+    <div class="d-block d-lg-none walletBg">
+      <side-menu mobile />
+      <v-sheet max-width="420px" class="mx-auto px-2" color="transparent">
+        <wallet-header mobile />
+        <router-view mobile />
+      </v-sheet>
+      <wallet-footer mobile class="mt-10 box-shadow" />
+    </div>
+    <div class="d-none d-lg-block walletBg">
+      <div class="d-flex align-stretch">
+        <side-menu class="box-shadow" />
+        <div class="flex-grow-1 d-flex flex-column justify-space-between">
+          <v-container>
+            <wallet-header />
+            <router-view />
+          </v-container>
+          <wallet-footer class="mt-10 box-shadow" />
+        </div>
       </div>
     </div>
-  </v-sheet>
+  </div>
 </template>
 
 <script>

@@ -5,7 +5,7 @@
       @close="openNetworkOverlay = false"
     />
 
-    <mew6-white-sheet sideinfo class="px-7 py-5 d-flex justify-space-between">
+    <mew6-white-sheet full-width class="px-7 py-5 d-flex justify-space-between">
       <div>
         <div class="d-flex align-center">
           <span class="mew-heading-2 mr-2">{{ $t('common.network') }}</span>

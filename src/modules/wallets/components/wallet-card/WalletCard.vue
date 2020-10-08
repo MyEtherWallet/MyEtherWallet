@@ -121,6 +121,12 @@ export default {
 }
 .blockie-img {
   position: relative;
+
+  .blockie-image {
+    border: 2px solid white;
+    border-radius: 100%;
+  }
+
   img {
     position: absolute;
     bottom: 0px;
