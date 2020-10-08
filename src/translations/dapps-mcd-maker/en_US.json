@@ -166,7 +166,7 @@
   "check-balance": "Check Balance",
   "your-cdps": "Your CDPs",
   "migrate-description": "Exchange your old DAI (aka SAI) for the new DAI.",
-  "transfer-cdp-description": "Transfer your old CDP to a Multi-Collateral Vault.",
+  "transfer-cdp-description": "Manage your Multi-Collateral Vault to pay back DAI or withdraw your collateral.",
   "manage-your-vault-description": "Make changes to your Vault or close it out.",
   "create-vault-description": "Open a Multi-Collateral Vault to generate DAI based on your collateral.",
   "deposit-dai": "Deposit DAI to earn annual interest.",

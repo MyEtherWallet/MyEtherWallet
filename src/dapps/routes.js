@@ -5,6 +5,7 @@ import scheduleTransactionRoutes from './ScheduleTransaction/routes';
 import makerDaiRoutes from './MakerDai/routes';
 import ambrpayRoutes from './Ambrpay/routes';
 import aaveRoutes from './Aave/routes';
+import lendMigratorRoutes from './LendMigrator/routes';
 
 const routes = {
   manageENS: manageENSRoutes,
@@ -13,7 +14,8 @@ const routes = {
   scheduleTransaction: scheduleTransactionRoutes,
   makerDaiRoutes: makerDaiRoutes,
   aaveDLP: aaveRoutes,
-  amberpay: ambrpayRoutes
+  amberpay: ambrpayRoutes,
+  lendMigrator: lendMigratorRoutes
 };
 
 export default routes;

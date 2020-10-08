@@ -11,17 +11,17 @@
       <div class="the-form">
         <div class="domain-name">
           <input
-            v-model="localDomainName"
-            :class="[domainNameErr ? 'errored' : '']"
+            v-model="localSearch"
+            :class="[searchErr ? 'errored' : '']"
             :placeholder="$t('unstoppable.ph.six-char')"
             type="text"
             name=""
           />
-          <span :class="localDomainName !== '' ? 'move-right' : ''"
+          <span :class="localSearch !== '' ? 'move-right' : ''"
             >.{{ tld }}</span
           >
           <img
-            v-if="localDomainName !== ''"
+            v-if="localSearch !== ''"
             class="close"
             src="@/assets/images/icons/close.png"
             @click="clearInput()"
@@ -30,7 +30,7 @@
         <div class="submit-button-container">
           <button
             :class="[
-              domainNameErr || localDomainName === '' ? 'disabled' : '',
+              searchErr || localSearch === '' ? 'disabled' : '',
               'submit-button large-round-button-green-filled clickable'
             ]"
             @click.prevent="checkDomain"
@@ -43,57 +43,103 @@
         </div>
       </div>
       <div class="error-message-container">
-        <p v-show="domainNameErr" class="erroredMsg">
-          <span v-if="!isValidLength && localDomainName !== ''">
+        <p v-show="searchErr" class="erroredMsg">
+          <span v-if="!isValidLength && localSearch !== ''">
             {{ $t('unstoppable.warning.not-enough-char') }}
           </span>
           <span v-else> {{ $t('unstoppable.warning.invalid-symbol') }} </span>
         </p>
       </div>
     </form>
-
-    <div
-      v-if="isDomainAvail.checked === true && localDomainName !== ''"
-      class="result-wrapper"
-    >
-      <div class="result-title">
-        <span>{{ $t('unstoppable.result') }}</span>
-      </div>
-      <div
-        :class="[
-          'result-container',
-          isDomainAvail.isAvailable ? 'avail-container' : 'unavail-container'
-        ]"
-      >
-        <div class="left-container">
-          <span class="domain-name">{{ localDomainName }}.{{ tld }}</span>
-          <span v-if="isDomainAvail.isAvailable">
-            <span class="eth-text"
-              >{{ convertedEthPrice }} {{ $t('common.currency.eth') }}</span
-            >
-            <span class="price-text">(${{ domainPrice }})</span>
-          </span>
+    <div v-if="cart.length" class="cart-container">
+      <span class="cart-left">
+        <div>
+          <span class="bold">{{ $t('unstoppable.cart') }}:</span>
+          {{ cart.length }} {{ $t('unstoppable.items') }}
         </div>
-        <div class="right-container">
-          <div
-            :class="[
-              'title',
-              isDomainAvail.isAvailable ? 'avail-text' : 'unavail-text'
-            ]"
-          >
-            {{
-              isDomainAvail.isAvailable
-                ? $t('unstoppable.is-available')
-                : $t('unstoppable.unavailable')
-            }}
+        <div
+          v-for="cartItem of cart"
+          :key="`${cartItem.label}.${cartItem.extension}`"
+          class="cart-items-container"
+        >
+          <div class="cart-item-row">
+            <span
+              >{{ cartItem.label }}.{{ cartItem.extension }} - ${{
+                cartItem.price
+              }}</span
+            >
+            <img
+              class="cart-close"
+              src="@/assets/images/icons/close.png"
+              @click="removeFromCart(cartItem)"
+            />
           </div>
-          <button
-            v-if="isDomainAvail.isAvailable"
-            class="mid-round-button-green-filled buy-btn"
-            @click="registerDomain()"
-          >
-            {{ $t('unstoppable.buy') }}
-          </button>
+        </div>
+        <div class="cart-total-container">
+          <span class="bold">{{ $t('unstoppable.total') }}:</span> ${{
+            cart.reduce((a, b) => {
+              return a + b.price;
+            }, 0)
+          }}
+        </div>
+      </span>
+      <button class="mid-round-button-green-filled buy-btn" @click="checkout()">
+        {{ $t('unstoppable.checkout') }}
+      </button>
+    </div>
+    <div
+      v-for="searchResult of searchResults"
+      :key="searchResult.label"
+      class="results-wrapper"
+    >
+      <div class="result-wrapper">
+        <div v-if="searchResult.first" class="result-title">
+          <span>{{ $t('unstoppable.result') }}</span>
+        </div>
+        <div
+          :class="[
+            'result-container',
+            searchResult.available ? 'avail-container' : 'unavail-container'
+          ]"
+        >
+          <div class="left-container">
+            <span class="domain-name">{{ searchResult.label }}.{{ tld }}</span>
+            <span v-if="searchResult.available">
+              <span class="eth-text"
+                >~ {{ convertedEthPrice(searchResult.price) }}
+                {{ $t('common.currency.eth') }}</span
+              >
+              <span class="price-text">(${{ searchResult.price }})</span>
+            </span>
+          </div>
+          <div class="right-container">
+            <div
+              :class="[
+                'title',
+                searchResult.available ? 'avail-text' : 'unavail-text'
+              ]"
+            >
+              {{
+                searchResult.available
+                  ? $t('unstoppable.is-available')
+                  : $t('unstoppable.unavailable')
+              }}
+            </div>
+            <button
+              v-if="searchResult.available && !isItemInCart(searchResult)"
+              class="mid-round-button-green-filled buy-btn"
+              @click="addToCart(searchResult)"
+            >
+              {{ $t('unstoppable.add-to-cart') }}
+            </button>
+            <button
+              v-if="searchResult.available && isItemInCart(searchResult)"
+              class="mid-round-button-green-filled buy-btn"
+              @click="removeFromCart(searchResult)"
+            >
+              {{ $t('unstoppable.undo') }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -121,6 +167,20 @@ export default {
       type: Function,
       default: function () {}
     },
+    addItemToCart: {
+      type: Function,
+      default: function () {}
+    },
+    removeItemFromCart: {
+      type: Function,
+      default: function () {}
+    },
+    searchResults: {
+      type: Array,
+      default: () => {
+        return [];
+      }
+    },
     loading: {
       type: Boolean,
       default: false
@@ -133,62 +193,67 @@ export default {
       type: String,
       default: 'crypto'
     },
-    domainNameErr: {
-      type: Boolean,
-      default: false
-    },
-    isDomainAvail: {
-      type: Object,
-      default: function () {
-        return {
-          isChecked: false,
-          isAvailable: false
-        };
+    cart: {
+      type: Array,
+      default: () => {
+        return [];
       }
     },
-    domainPrice: {
-      type: Number,
-      default: 0
+    searchErr: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
-      localDomainName: this.hostName,
+      localSearch: this.hostName,
       ethPrice: 0
     };
   },
   computed: {
     ...mapState('main', ['online']),
     isValidLength() {
-      return this.localDomainName.replace(`.${this.tld}`, '').length >= 6;
-    },
-    convertedEthPrice() {
-      let ethConvertPrice = 0;
-      if (this.domainPrice > 0) {
-        ethConvertPrice = new BigNumber(this.domainPrice)
-          .dividedBy(this.ethPrice)
-          .toFixed(8);
-      }
-      return ethConvertPrice;
+      return this.localSearch.replace(`.${this.tld}`, '').length >= 6;
     }
   },
   watch: {
-    localDomainName(newVal) {
-      this.$emit('domainNameChange', newVal);
+    localSearch(newVal) {
+      this.$emit('searchChange', newVal);
     },
-    domainName(newVal) {
-      this.localDomainName = newVal;
+    search(newVal) {
+      this.localSearch = newVal;
     }
   },
   mounted() {
     if (this.online) this.getEthPrice();
   },
   methods: {
-    registerDomain() {
+    checkout() {
       this.$router.push({ name: 'payWithCrypto' });
     },
+    addToCart(item) {
+      this.addItemToCart(item);
+    },
+    removeFromCart(item) {
+      this.removeItemFromCart(item);
+    },
+    isItemInCart(item) {
+      return this.cart.map(cartItem => cartItem.label).includes(item.label);
+    },
+    convertedEthPrice(domainPrice) {
+      let ethConvertPrice = 0;
+      if (!this.ethPrice) {
+        return 'Unknown';
+      }
+      if (domainPrice > 0) {
+        ethConvertPrice = new BigNumber(domainPrice)
+          .dividedBy(this.ethPrice)
+          .toFixed(8);
+      }
+      return ethConvertPrice;
+    },
     clearInput() {
-      this.localDomainName = '';
+      this.localSearch = '';
     },
     async getEthPrice() {
       const price = await fetch(
