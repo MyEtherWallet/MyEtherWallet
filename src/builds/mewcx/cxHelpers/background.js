@@ -3,7 +3,7 @@ import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
 import Misc from '@/helpers/misc';
 import { extractRootDomain } from './extractRootDomain';
 import MiddleWare from '@/wallets/web3-provider/middleware';
-import localStorage from 'store';
+import locStore from 'store';
 import {
   mewCxFetchAccounts,
   mewCxSignTx,
@@ -101,14 +101,9 @@ chrome.storage.sync.get(null, networkChanger);
 chrome.storage.onChanged.addListener(items => {
   Object.keys(items).forEach(item => {
     if (isAddress(item)) {
-      const currentNotifications = JSON.parse(
-        localStorage.getItem('notifications')
-      );
+      const currentNotifications = JSON.parse(locStore.get('notifications'));
       currentNotifications[item] = [];
-      localStorage.setItem(
-        'notifications',
-        JSON.stringify(currentNotifications)
-      );
+      locStore.get('notifications', JSON.stringify(currentNotifications));
     }
 
     if (
