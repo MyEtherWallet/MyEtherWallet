@@ -20,19 +20,13 @@ export default {
     {
       path: 'dashboard',
       name: 'Dashboard',
-      component: Dashboard,
-      meta: {
-        requiresAuth: false
-      }
+      component: Dashboard
     },
     {
       path: 'send-tx',
       name: 'SendTX',
       component: Send,
-      props: { default: true, sidebar: false },
-      meta: {
-        requiresAuth: false
-      }
+      props: { default: true, sidebar: false }
     },
     {
       path: 'offline',
