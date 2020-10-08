@@ -207,7 +207,7 @@ export default {
       toastMsg: '',
       ethPrice: 0,
       customGasLimit: '',
-      address: {},
+      address: '',
       sendTx: null,
       amount: '0',
       balanceETH: '0',
