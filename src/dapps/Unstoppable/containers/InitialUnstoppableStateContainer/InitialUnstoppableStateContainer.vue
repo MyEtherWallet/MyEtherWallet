@@ -57,7 +57,11 @@
           <span class="bold">{{ $t('unstoppable.cart') }}:</span>
           {{ cart.length }} {{ $t('unstoppable.items') }}
         </div>
-        <div v-for="cartItem of cart" class="cart-items-container">
+        <div
+          v-for="cartItem of cart"
+          :key="`${cartItem.label}.${cartItem.extension}`"
+          class="cart-items-container"
+        >
           <div class="cart-item-row">
             <span
               >{{ cartItem.label }}.{{ cartItem.extension }} - ${{
@@ -173,7 +177,9 @@ export default {
     },
     searchResults: {
       type: Array,
-      default: []
+      default: () => {
+        return [];
+      }
     },
     loading: {
       type: Boolean,
@@ -189,7 +195,9 @@ export default {
     },
     cart: {
       type: Array,
-      default: []
+      default: () => {
+        return [];
+      }
     },
     searchErr: {
       type: Boolean,

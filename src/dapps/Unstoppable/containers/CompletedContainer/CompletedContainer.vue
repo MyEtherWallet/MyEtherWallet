@@ -10,7 +10,11 @@
       </h3>
       <h5 class="middle-copy">
         {{ $t('unstoppable.following-been-claimed') }}:
-        <h4 v-for="domain of domainsClaimed" class="domain-container">
+        <h4
+          v-for="domain of domainsClaimed"
+          :key="`${domain.label}.${domain.extension}`"
+          class="domain-container"
+        >
           {{ domain.label + '.' + domain.extension }}
         </h4>
       </h5>
@@ -38,7 +42,9 @@ export default {
   props: {
     domainsClaimed: {
       type: Array,
-      default: ''
+      default: () => {
+        return [];
+      }
     },
     account: {
       type: Object,

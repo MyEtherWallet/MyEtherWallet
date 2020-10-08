@@ -350,7 +350,7 @@
           <a
             ref="downloadLink"
             :href="downloadFile"
-            :download="walletName"
+            :download="downloadName !== '' ? downloadName : walletName"
             rel="noopener noreferrer"
           ></a>
         </div>
@@ -473,7 +473,8 @@ export default {
       showPaths: false,
       accounts: [],
       currentIndex: 0,
-      downloadFile: ''
+      downloadFile: '',
+      downloadName: ''
     };
   },
   computed: {
@@ -937,6 +938,7 @@ export default {
         const blob = createBlob(e.data.walletJson, 'mime');
         this.downloadFile = blob;
         this.file = e.data.walletJson;
+        this.downloadName = e.data.name;
         this.backupWallet();
         ExtensionHelpers.addWalletToStore(
           `0x${e.data.walletJson.address}`,

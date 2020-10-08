@@ -4,7 +4,7 @@
       <h3>
         {{ $t('unstoppable.transfer-pending') }}
       </h3>
-      <h5 v-for="domain in domains" class="middle-copy">
+      <h5 v-for="domain in domains" :key="domain.name" class="middle-copy">
         <b>{{ domain.name }}</b>
         {{
           domain.status !== 'MINED'
@@ -75,20 +75,6 @@ export default {
       this.$router.push('/interface/dapps/unstoppable');
     }
   },
-  methods: {
-    etherscanLink(txHash) {
-      return 'https://etherscan.io/tx/' + txHash;
-    },
-    translateStatus(status) {
-      if (status === 'MINED') {
-        return 'unstoppable.confirmed';
-      }
-      if (status === 'PENDING') {
-        return 'unstoppable.pending';
-      }
-      return 'unstoppable.failed';
-    }
-  },
   mounted() {
     this.interval = setInterval(() => {
       fetch(
@@ -133,6 +119,20 @@ export default {
   beforeDestroy() {
     if (this.interval) {
       clearInterval(this.interval);
+    }
+  },
+  methods: {
+    etherscanLink(txHash) {
+      return 'https://etherscan.io/tx/' + txHash;
+    },
+    translateStatus(status) {
+      if (status === 'MINED') {
+        return 'unstoppable.confirmed';
+      }
+      if (status === 'PENDING') {
+        return 'unstoppable.pending';
+      }
+      return 'unstoppable.failed';
     }
   }
 };
