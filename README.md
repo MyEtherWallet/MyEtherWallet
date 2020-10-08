@@ -37,7 +37,8 @@ MyEtherWallet is a doorway to the XinFin blockchain, allowing users to manage th
 3. run `npm i` to install node packages.
 4. run `npm build .` You can also use the offline version by opening the index file from the dist folder with your preferred browser
 5. start `npm run dev`
-6. App should be running in `https://localhost:8080`
+6. npm rebuild node-sass
+7. App should be running in `https://localhost:8080`
 
 
 ### Errors :- 
