@@ -3,7 +3,10 @@
     <div class="crypto-container">
       <div class="domain-header">
         <div class="items-container">
-          <h4 v-for="cartItem of cart">
+          <h4
+            v-for="cartItem of cart"
+            :key="`${cartItem.label}.${cartItem.extension}`"
+          >
             {{ cartItem.label + '.' + cartItem.extension }} - ${{
               cartItem.price
             }}
@@ -166,7 +169,9 @@ export default {
   props: {
     cart: {
       type: Array,
-      default: []
+      default: () => {
+        return [];
+      }
     },
     email: {
       type: String,
