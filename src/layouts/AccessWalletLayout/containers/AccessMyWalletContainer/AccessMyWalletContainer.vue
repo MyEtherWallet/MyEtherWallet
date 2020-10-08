@@ -130,16 +130,16 @@ export default {
       walletConstructor: function() {},
       hardwareBrand: '',
       buttons: [
-        // {
-        //   func: this.hardwareModalOpen,
-        //   title: this.$t('common.hardware'),
-        //   desc: 'Ledger wallet, Trezor, Digital bitbox, Secalot, Keepkey',
-        //   recommend: '',
-        //   tooltip: '',
-        //   img: hardwareImg,
-        //   disabled: false,
-        //   classname: 'button-hardware'
-        // },
+        {
+          func: this.hardwareModalOpen,
+          title: this.$t('common.hardware'),
+          desc: 'Coming Soon Ledger Wallet Support',
+          recommend: '',
+          tooltip: '',
+          img: hardwareImg,
+          disabled: false,
+          classname: 'button-hardware'
+        },
         // {
         //   func: this.metamaskModalOpen,
         //   title: 'MetaMask',

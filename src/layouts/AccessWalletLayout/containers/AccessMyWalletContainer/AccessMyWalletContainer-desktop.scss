@@ -3,9 +3,9 @@
   .buttons-container {
     display: grid;
     grid-column-gap: 20px;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     margin: 0 auto;
-    max-width: 200px;
+    max-width: 700px;
     position: relative;
     text-align: center;
   }
