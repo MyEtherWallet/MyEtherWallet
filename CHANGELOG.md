@@ -1,3 +1,14 @@
+### Release v5.7.10
+
+### Feature
+
+- Add LEND to AAVE migrator [#2606](https://github.com/MyEtherWallet/MyEtherWallet/pull/2606)
+- Unstoppable add to cart and suggested search [#2516](https://github.com/MyEtherWallet/MyEtherWallet/pull/2516)
+
+### Bug
+
+- fix weird interaction with favorites, speed up loading wallets and favorites, fix some issues when adding wallets via mnemonic, use keystore filename when backing up instead of nickname [#2612](https://github.com/MyEtherWallet/MyEtherWallet/pull/2612)
+
 ### Release v5.7.9
 
 ### Devop

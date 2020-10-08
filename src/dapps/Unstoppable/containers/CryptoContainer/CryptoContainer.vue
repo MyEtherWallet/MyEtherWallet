@@ -2,12 +2,21 @@
   <div>
     <div class="crypto-container">
       <div class="domain-header">
-        <h4>{{ domainName }}</h4>
+        <div class="items-container">
+          <h4
+            v-for="cartItem of cart"
+            :key="`${cartItem.label}.${cartItem.extension}`"
+          >
+            {{ cartItem.label + '.' + cartItem.extension }} - ${{
+              cartItem.price
+            }}
+          </h4>
+        </div>
         <h4 class="domain-price">
           <span class="eth-text"
             >{{ convertedEthPrice }} {{ $t('common.currency.eth') }}</span
           >
-          <span class="price-text">(${{ domainPrice }})</span>
+          <span class="price-text">(${{ cartTotal }})</span>
         </h4>
       </div>
       <div class="crypto-form-container">
@@ -23,6 +32,7 @@
         </div>
         <div v-show="!paymentAddress || !paymentAmount">
           <div class="eth-balance-container">
+            <span class="your-bal">{{ $t('unstoppable.your-balance') }}</span>
             <div class="right-container">
               <img src="@/assets/images/currency/eth.svg" alt="eth" />
               <div class="balance">
@@ -30,7 +40,6 @@
                 <span class="eth-text">{{ $t('common.currency.eth') }}</span>
               </div>
             </div>
-            <span class="your-bal">{{ $t('unstoppable.your-balance') }}</span>
           </div>
           <span v-show="balance < convertedEthPrice" class="error-message">
             {{ $t('unstoppable.insufficient-balance') }}
@@ -158,13 +167,11 @@ import { Toast } from '@/helpers';
 
 export default {
   props: {
-    domainName: {
-      type: String,
-      default: ''
-    },
-    domainPrice: {
-      type: Number,
-      default: 0
+    cart: {
+      type: Array,
+      default: () => {
+        return [];
+      }
     },
     email: {
       type: String,
@@ -198,10 +205,15 @@ export default {
   },
   computed: {
     ...mapState('main', ['online']),
+    cartTotal() {
+      return this.cart.reduce((a, b) => {
+        return a + b.price;
+      }, 0);
+    },
     convertedEthPrice() {
       let ethConvertPrice = 0;
-      if (this.domainPrice > 0) {
-        ethConvertPrice = new BigNumber(this.domainPrice)
+      if (this.cartTotal > 0) {
+        ethConvertPrice = new BigNumber(this.cartTotal)
           .dividedBy(this.ethPrice)
           .toFixed(8);
       }
@@ -216,7 +228,7 @@ export default {
     }
   },
   beforeMount() {
-    if (this.domainName === '' || !this.domainPrice) {
+    if (!this.cart.length) {
       this.$router.push({ name: 'unstoppableInitialState' });
     }
     this.interval = setInterval(() => {
@@ -329,15 +341,13 @@ export default {
           },
           body: JSON.stringify({
             order: {
-              domains: [
-                {
-                  name: this.domainName,
-                  owner: { address: this.account.address },
-                  resolution: {
-                    crypto: { ETH: { address: this.account.address } }
-                  }
+              domains: this.cart.map(cartItem => ({
+                name: cartItem.label + '.' + cartItem.extension,
+                owner: { address: this.account.address },
+                resolution: {
+                  crypto: { ETH: { address: this.account.address } }
                 }
-              ],
+              })),
               payment: { type: 'coinbase' }
             }
           })

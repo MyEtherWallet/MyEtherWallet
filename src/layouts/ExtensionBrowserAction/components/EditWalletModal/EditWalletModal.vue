@@ -68,12 +68,14 @@ export default {
         this.saveWalletCb
       );
     },
-    saveWalletCb() {
-      Toast.responseHandler(
-        this.$t('mewcx.wallet-update-success'),
-        Toast.SUCCESS
-      );
-      this.$refs.editModal.$refs.modalWrapper.hide();
+    saveWalletCb(hasError) {
+      if (!hasError) {
+        Toast.responseHandler(
+          this.$t('mewcx.wallet-update-success'),
+          Toast.SUCCESS
+        );
+        this.$refs.editModal.$refs.modalWrapper.hide();
+      }
     }
   }
 };
