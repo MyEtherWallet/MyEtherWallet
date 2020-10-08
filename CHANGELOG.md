@@ -2,7 +2,8 @@
 
 ### Feature
 
-- Add LEND to AAVE migrator [#2606](https://github.com/MyEtherWallet/MyEtherWallet/pull/2606/files)
+- Add LEND to AAVE migrator [#2606](https://github.com/MyEtherWallet/MyEtherWallet/pull/2606)
+- Unstoppable add to cart and suggested search [#2516](https://github.com/MyEtherWallet/MyEtherWallet/pull/2516)
 
 ### Bug
 
