@@ -702,10 +702,8 @@ export default {
       if (this.selectedPath !== path) {
         this.currentIndex = 0;
         this.accounts = [];
-      } else {
-        this.currentIndex = 0;
-        this.accounts = [];
       }
+
       this.selectedPath = path;
       this.wallet.init(path).then(() => {
         for (let i = this.currentIndex; i < this.currentIndex + 5; i++) {
@@ -793,10 +791,12 @@ export default {
       };
     },
     async getBalance() {
-      const balance = await this.web3.eth.getBalance(
-        this.wallet.getChecksumAddressString()
-      );
-      this.balance = this.web3.utils.fromWei(balance);
+      if (this.wallet.identifier !== 'mnemonic') {
+        const balance = await this.web3.eth.getBalance(
+          this.wallet.getChecksumAddressString()
+        );
+        this.balance = this.web3.utils.fromWei(balance);
+      }
     },
     generateWalletViaPriv() {
       const parsedPrivKey =
@@ -954,17 +954,19 @@ export default {
         worker.terminate();
       };
     },
-    storeWalletCb() {
+    storeWalletCb(hasError) {
       this.loading = false;
-      this.$eventHub.$emit(
-        'showSuccessModal',
-        'Successfully added a wallet!',
-        null
-      );
-      if (this.linkQuery.hasOwnProperty('connectionRequest')) {
-        this.sendAddressToRequest(this.wallet.getChecksumAddressString());
+      if (!hasError) {
+        this.$eventHub.$emit(
+          'showSuccessModal',
+          'Successfully added a wallet!',
+          null
+        );
+        if (this.linkQuery.hasOwnProperty('connectionRequest')) {
+          this.sendAddressToRequest(this.wallet.getChecksumAddressString());
+        }
+        this.$refs.addMyWallet.$refs.modalWrapper.hide();
       }
-      this.$refs.addMyWallet.$refs.modalWrapper.hide();
     }
   }
 };
