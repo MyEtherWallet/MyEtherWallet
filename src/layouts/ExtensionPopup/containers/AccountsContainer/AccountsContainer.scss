@@ -55,6 +55,10 @@
     overflow-y: scroll;
     padding-right: 15px;
   }
+
+  .watch-only {
+    max-height: 230px !important;
+  }
 }
 
 .no-wallet-container {
