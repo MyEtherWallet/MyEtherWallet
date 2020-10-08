@@ -9,12 +9,10 @@
         {{ $t('unstoppable.congratulations') }}
       </h3>
       <h5 class="middle-copy">
-        <b>{{ domainName + ' ' }}</b>
-        {{
-          $t('unstoppable.transfer-complete', {
-            address: address
-          })
-        }}
+        {{ $t('unstoppable.following-been-claimed') }}:
+        <h4 v-for="domain of domainsClaimed" class="domain-container">
+          {{ domain.label + '.' + domain.extension }}
+        </h4>
       </h5>
       <h5>
         {{ $t('unstoppable.complete-manage-on-one') + ' ' }}
@@ -38,8 +36,8 @@
 <script>
 export default {
   props: {
-    domainName: {
-      type: String,
+    domainsClaimed: {
+      type: Array,
       default: ''
     },
     account: {
@@ -53,7 +51,7 @@ export default {
     }
   },
   beforeMount() {
-    if (!this.domainName) {
+    if (!this.domainsClaimed.length) {
       this.$router.push('/interface/dapps/unstoppable');
     }
   },
