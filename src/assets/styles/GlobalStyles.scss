@@ -94,7 +94,7 @@
   font-family: monospace !important;
 }
 i {
-  font-family: 'Material Icons' !important;
+  font-family: "Material Icons" !important;
 }
 div {
   font-size: 0.88rem;
@@ -202,7 +202,6 @@ h6 {
 }
 
 /* ========== Other ========== */
-
 .overflow--hidden {
   overflow: hidden !important;
 }
@@ -229,4 +228,9 @@ h6 {
 }
 .box-shadow--sm {
   box-shadow: 0 2px 7px var(--v-boxShadow-base) !important;
+}
+
+/* ========== Mobile ========== */
+.mobile-max-width {
+  max-width: 420px;
 }

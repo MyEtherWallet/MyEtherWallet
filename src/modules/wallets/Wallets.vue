@@ -2,10 +2,10 @@
   <div>
     <div class="d-block d-lg-none walletBg">
       <side-menu mobile />
-      <v-sheet max-width="420px" class="mx-auto px-2" color="transparent">
+      <div class="mx-auto px-2 mobile-max-width">
         <wallet-header mobile />
         <router-view mobile />
-      </v-sheet>
+      </div>
       <wallet-footer mobile class="mt-10 box-shadow" />
     </div>
     <div class="d-none d-lg-block walletBg">
