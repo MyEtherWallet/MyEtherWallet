@@ -2,7 +2,7 @@
   <div>
     <div class="d-block d-lg-none walletBg">
       <side-menu mobile />
-      <div class="mx-auto px-2 mobile-max-width">
+      <div class="mx-auto px-2 preset--mobile-max-width">
         <wallet-header mobile />
         <router-view mobile />
       </div>

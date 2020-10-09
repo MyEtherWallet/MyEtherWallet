@@ -1,7 +1,9 @@
 <template>
   <div class="basic" style="z-index: 1">
     <div v-if="mobile" class="mew-component--sidemenu-mobile">
-      <div class="px-4 pt-2 mx-auto d-flex flex-column mobile-max-width">
+      <div
+        class="px-4 pt-2 mx-auto d-flex flex-column preset--mobile-max-width"
+      >
         <div class="mb-4 d-flex align-center justify-space-between">
           <router-link :to="{ name: 'Dashboard' }">
             <img width="120" src="@/assets/images/icons/logo-mew.png" />
