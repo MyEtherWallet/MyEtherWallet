@@ -50,18 +50,38 @@
           color="transparent"
           class="mx-auto"
         >
+          <v-btn
+            class="mb-4 full-width text-transform--initial"
+            outlined
+            color="white"
+            large
+          >
+            <v-icon class="mr-2">mdi-apps</v-icon>
+            MEW tools
+            <v-icon class="ml-2">mdi-chevron-down</v-icon>
+          </v-btn>
+
           <wallet-card />
-          <mew-button
-            has-full-width
-            class="buy-eth-button mt-4 mb-6"
-            color-theme="white"
-            btn-style="outline"
-            title="Buy ETH here"
-            button-size="large"
-            :icon="require('@/assets/images/icons/icon-mastercard-mew.png')"
-            icon-type="img"
-            icon-align="right"
-          />
+          <v-btn
+            class="mb-4 full-width text-transform--initial mt-4 mb-6"
+            outlined
+            color="white"
+            large
+          >
+            Buy ETH here
+            <img
+              src="@/assets/images/icons/icon-mastercard-mew.png"
+              alt="Master card"
+              height="16"
+              class="ml-3"
+            />
+            <img
+              src="@/assets/images/icons/icon-visa-white.png"
+              alt="Master card"
+              height="11"
+              class="ml-1"
+            />
+          </v-btn>
         </v-sheet>
       </div>
     </div>
@@ -77,16 +97,26 @@
         </router-link>
       </div>
       <wallet-card />
-      <mew-button
-        class="buy-eth-button mt-4 mb-6"
-        color-theme="white"
-        btn-style="outline"
-        title="Buy ETH here"
-        button-size="large"
-        :icon="require('@/assets/images/icons/icon-mastercard-mew.png')"
-        icon-type="img"
-        icon-align="right"
-      />
+      <v-btn
+        class="mb-4 full-width text-transform--initial mt-4 mb-6"
+        outlined
+        color="white"
+        large
+      >
+        Buy ETH here
+        <img
+          src="@/assets/images/icons/icon-mastercard-mew.png"
+          alt="Master card"
+          height="16"
+          class="ml-3"
+        />
+        <img
+          src="@/assets/images/icons/icon-visa-white.png"
+          alt="Master card"
+          height="11"
+          class="ml-1"
+        />
+      </v-btn>
       <accordion-menu class="mt-4" />
       <divider class="my-5 mx-1" />
       <system-menu />
@@ -160,22 +190,5 @@ export default {
 
 .white-icon {
   filter: grayscale(1) brightness(5);
-}
-</style>
-
-<style lang="scss">
-.mew-component--sidemenu {
-  .buy-eth-button {
-    font-size: 14px !important;
-    font-weight: 400 !important;
-    padding: 0 25px !important;
-    .v-btn__content {
-      display: flex;
-      justify-content: space-between;
-    }
-    img {
-      height: 20px !important;
-    }
-  }
 }
 </style>
