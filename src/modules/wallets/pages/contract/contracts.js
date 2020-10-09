@@ -32,13 +32,7 @@ export default class Contracts {
       this.userAddress = address;
       this.address = '';
       this.inputs = {};
-      this.web3 =
-        web3 ||
-        new Web3(
-          // 'https://ropsten.infura.io/v3/c9b249497d074ab59c47a97bdfe6b401'
-          'HTTP://127.0.0.1:7545'
-          // 'wss://mainnet.infura.io/ws/v3/7d06294ad2bd432887eada360c5e1986'
-        );
+      this.web3 = web3 || new Web3('HTTP://127.0.0.1:7545');
       this.gasPrice = gasPrice;
       this.ABI = null;
       this.contractMethods = [];
