@@ -1,20 +1,13 @@
 import Contracts from '../contracts';
 import Web3 from 'web3';
-import tempDevAbi from './tempDevAbi';
 import erc20ABI from './contractsForDeploy/Type_Demo_ABI.json';
 import erc20Bytecode from './contractsForDeploy/Type_Demo_Bytecode';
-// import fetch from 'jest-fetch-mock';
 import ganache from 'ganache-core';
-// const useMockFetch = false;
-
-// console.log(ganache); // todo remove dev item
-// jest.setMock('node-fetch', fetch);
 
 describe('Contracts Module', () => {
   let contract, web3, addresses;
 
   beforeAll(done => {
-    const testKeyPath = __dirname + '/testkeys.json';
     // empower between barrel artist either fantasy typical drop finish surprise million derive
     const providerOptions = {
       accounts: [
@@ -34,13 +27,8 @@ describe('Contracts Module', () => {
           balance: 100000000000000000000000
         }
       ]
-      // account_keys_path: testKeyPath
-      // total_accounts: 10
     };
     const provider = ganache.provider(providerOptions);
-    // const keys = fs.readFileSync(testKeyPath, 'utf8');
-    // console.log(keys.addresses); // todo remove dev item
-    // console.log(Object.keys(keys)); // todo remove dev item
     provider.send(
       {
         jsonrpc: '2.0',
@@ -49,88 +37,62 @@ describe('Contracts Module', () => {
         id: 0
       },
       (err, res) => {
-        console.log(res); // todo remove dev item
-        console.log(err); // todo remove dev item
         addresses = res.result;
         web3 = new Web3(provider, null, {
           transactionConfirmationBlocks: 1
         });
-        // console.log(web3.eth.personal.listAccounts); // todo remove dev item
-        // console.log(web3.eth.accounts); // todo remove dev item
         contract = new Contracts(addresses[0], web3, 60);
         done();
       }
     );
-    // console.log(provider.listAccounts()); // todo remove dev item
-
-    // fetch.enableMocks();
-    // fetch.resetMocks();
-    // fetch.mockResponse(responseSelector);
   });
   // afterAll(() => {});
   test('it should setup', done => {
     const contractAddress = value => {
       expect(value).toBeTruthy();
-      console.log(value); // todo remove dev item
     };
     contract.setStoreHandler(contractAddress);
     contract.setAbi(erc20ABI);
     contract.setByteCode(erc20Bytecode);
-    console.log(contract.abiConstructor); // todo remove dev item
-    console.log(contract.deployArgs); // todo remove dev item
     contract.setDeployArg('name', 'demo');
     contract.setDeployArg('symbol', 'symbol');
     contract.setDeployArg('decimals', 10);
-    console.log(Object.values(contract.constructorInputs)); // todo remove dev item
-    console.log(contract.constructorInputs); // todo remove dev item
-    console.log(contract.hasABI); // todo remove dev item
-    console.log(contract.hasConstructorABI); // todo remove dev item
-    console.log(contract.canDeploy); // todo remove dev item
-    // Object.values(contract.constructorInputs).every(item => {
-    //   console.log(item); // todo remove dev item
-    //   return item.value !== null && item.valid;
-    // })
     const res = contract.deploy(null, true);
-    console.log(res); // todo remove dev item
-    res.then(promiEvent => {
-      console.log(promiEvent); // todo remove dev item
+    res.then(() => {
+      contract.setContractAddress(contract.deployedContractAddress);
       done();
     });
-    // done();
   });
   test('it should interact with contract - constant', done => {
-    contract.selectedFunction('twoOutCallTwo').then(() => {
+    contract.selectedFunction('decimals').then(res => {
+      expect(res.outputs['0'].value).toBe('10');
       done();
     });
-    // contract.setSelectedMethodInputValue('value', 100, 'to', addresses[1]);
-    // contract.write()
-    //   .then(ers => {
-    //     console.log(ers); // todo remove dev item
-    //     done()
-    //   })
   });
   test('it should interact with contract - write', done => {
-    contract.selectedFunction('transfer');
-    contract.setSelectedMethodInputValue('value', 100, 'to', addresses[1]);
-    contract.write().then(ers => {
-      console.log(ers); // todo remove dev item
-      done();
+    contract.selectedFunction('transfer').then(() => {
+      contract.setSelectedMethodInputValue('value', 100);
+      contract.setSelectedMethodInputValue('to', addresses[1]);
+      contract.write().then(() => {
+        done();
+      });
     });
   });
   test('it should interact with contract - call', done => {
-    contract.selectedFunction('balanceOf');
-    contract.setSelectedMethodInputValue('owner', addresses[1]);
-    contract.write().then(ers => {
-      console.log(ers); // todo remove dev item
-      done();
+    contract.selectedFunction('balanceOf').then(() => {
+      contract.setSelectedMethodInputValue('owner', addresses[1]);
+      contract.write().then(ers => {
+        expect(ers.outputs['0'].value).toBe('100');
+        done();
+      });
     });
   });
   test('it should interact with contract - multi-output', done => {
-    contract.selectedFunction('twoOutCall');
-    // contract.setSelectedMethodInputValue('owner', addresses[1]);
-    contract.write().then(ers => {
-      console.log(ers); // todo remove dev item
-      done();
+    contract.selectedFunction('twoOutCall').then(() => {
+      contract.write().then(ers => {
+        expect(Object.keys(ers.outputs).length).toBe(2);
+        done();
+      });
     });
   });
 });

@@ -19,10 +19,8 @@
               placeholder=" "
               @input="abiInput($event)"
             ></v-textarea>
-            {{ showInputs }}
             <mew-input label="Contract name" placeholder=" " />
             <div v-show="showInputs">
-              {{ inputs }}
               <div
                 v-for="(input, idx) in inputs"
                 :key="input.name + idx"
@@ -65,7 +63,6 @@
                 @input="ethPayable($event)"
               />
             </div>
-            {{canDeploy}}
             <div class="text-center mt-3">
               <mew-button
                 title="Sign Transaction"
@@ -92,7 +89,6 @@
 import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import Network from '@/modules/wallets/components/network/Network';
 import Swap from '@/modules/wallets/components/swap/Swap';
-import tempDevAbi from '../tests/contractsForDeploy/Type_Demo_ABI';
 import { mapState } from 'vuex';
 import * as unit from 'ethjs-unit';
 import Contracts from '../contracts';
@@ -117,54 +113,23 @@ export default {
   data() {
     return {
       show: false,
-      tempDevAbi: tempDevAbi,
       activeContract: {},
       noInput: false,
       canDeploy: false,
       inputs: {},
       ethValue: 0,
       abi: [],
-      methods: [
-        {
-          text: 'func1',
-          value: function () {
-            console.log('function 1');
-          }
-        },
-        {
-          text: 'func2',
-          value: function () {
-            console.log('function 2');
-          }
-        }
-      ],
-      contractType: [
-        {
-          name: 'Contract 1',
-          subtext: 'Eth',
-          value: '1'
-        }
-      ]
+      methods: []
     };
   },
   computed: {
     ...mapState(['network', 'gasPrice', 'account', 'web3']),
-    mergedContracts() {
-      // const customContracts = store.get('customContracts') || [];
-      // const concatContracts = this.network.type.contracts.concat(
-      //   customContracts
-      // );
-      // return concatContracts;
-    },
     txValue() {
       return sanitizeHex(unit.toWei(this.value, 'ether').toString(16));
     },
     showInputs() {
       return this.activeContract.abiValid && this.activeContract.byteCodeValid;
     },
-    // canDeploy() {
-    //   return this.activeContract.canDeploy;
-    // },
     payableConstructor() {
       return this.activeContract.payableConstructor;
     }
@@ -181,8 +146,6 @@ export default {
       this.activeContract.clear();
       this.inputs = {};
       this.canDeploy = false;
-      console.log(this.activeContract.canDeploy); // todo remove dev item
-      console.log(this.activeContract); // todo remove dev item
     },
     byteCodeInput(value) {
       this.activeContract.setByteCode(value);
@@ -200,9 +163,6 @@ export default {
       this.inputs = this.activeContract.constructorInputs;
     },
     valueInput(name, value) {
-      console.log('valueInput 1 ', name, value); // todo remove dev item
-      // this.inputs[idx] = evt;
-      // console.log(this.inputs); // todo remove dev item
       this.activeContract.setDeployArg(name, value);
       this.canDeploy = this.activeContract.canDeploy;
     },

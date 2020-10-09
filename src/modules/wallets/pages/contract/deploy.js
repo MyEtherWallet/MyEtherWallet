@@ -1,7 +1,6 @@
 import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
 import { address, bool, bytes, int, string, uint } from './solidityTypes';
-import { isAddress } from '@/helpers/addressUtils';
 import sanitizeHex from '@/helpers/sanitizeHex';
 import * as ethUnit from 'ethjs-unit';
 import { Transaction } from 'ethereumjs-tx';
@@ -36,7 +35,6 @@ export default class Deploy {
     try {
       this.userAddress = address;
       this.address = '';
-      this.inputs = {};
       this.web3 =
         web3 ||
         new Web3(
@@ -45,21 +43,14 @@ export default class Deploy {
         );
       this.gasPrice = gasPrice;
       this.ABI = abi;
-      this.processAbi(abi);
-      this.setByteCode(txByteCode);
-      this.contractMethods = [];
-      this.selectedMethod = { inputs: [] };
       this.storeContractAddress = storeHandler || function () {};
-      this.selectedMethodName = '';
-      this.selectedMethodInputs = {};
-      this.noInputs = false;
-      this.selectedMethodInputValues = {};
       // ===========
       this.constructorABI = null;
       this.constructorInputs = {};
       this.txByteCode = txByteCode;
       this.contractsDeployed = [];
       this.noConstructorInputs = false;
+      this.abiConstructor();
     } catch (e) {
       // eslint-disable-next-line
       console.error(e);
@@ -82,7 +73,6 @@ export default class Deploy {
     this.inputs = {};
     this.ABI = null;
     this.contractMethods = [];
-    console.log('reset'); // todo remove dev item
   }
 
   updateGasPrice(gasPrice) {
@@ -93,7 +83,8 @@ export default class Deploy {
     try {
       return !!Deploy.validateABI(this.ABI);
     } catch (e) {
-      console.error(e); // todo replace with proper error
+      // eslint-disable-next-line
+      console.error(e);
       return false;
     }
   }
@@ -114,7 +105,8 @@ export default class Deploy {
     try {
       return this.address !== '' && utils.isAddress(this.address); // todo replace with helper
     } catch (e) {
-      console.error(e); // todo replace with proper error
+      // eslint-disable-next-line
+      console.error(e);
       return false;
     }
   }
@@ -159,12 +151,9 @@ export default class Deploy {
       try {
         if (abi) {
           this.ABI = this.parseJSON(abi);
-          this.processAbi(this.ABI)
-            .then(resolve)
-            .catch(err => {
-              this.ABI = null;
-              reject(err);
-            });
+          if (this.byteCodeValid) {
+            this.abiConstructor();
+          }
         } else {
           this.ABI = null;
         }
@@ -177,49 +166,15 @@ export default class Deploy {
     });
   }
 
-  setContractAddress(address) {
-    this.address = address;
-  }
-
-  processAbi(jsonAbi) {
-    return new Promise((resolve, reject) => {
-      try {
-        if (jsonAbi !== '') {
-          if (Array.isArray(jsonAbi)) {
-            jsonAbi.reduce((acc, cur) => {
-              if (cur.type === 'constructor') {
-                this.constructorABI = cur;
-                this.abiConstructor();
-              }
-              return acc;
-            }, {});
-            resolve();
-          } else {
-            reject('invalid abi');
-          }
-        } else {
-          reject('processAbi error');
-        }
-      } catch (e) {
-        // eslint-disable-next-line
-        console.error(e);
-        reject(e);
-      }
-    });
-  }
   abiConstructor() {
     try {
       this.constructorInputs = {};
-      if (this.hasABI) {
-        if (!this.constructorABI.hasOwnProperty('inputs')) {
-          this.ABI.forEach(item => {
-            if (item.type === 'constructor') {
-              this.constructorABI = item;
-            }
-          });
-        }
-
-        // Sets radio buttons to false due to vue reactivity
+      if (this.hasABI && this.byteCodeValid) {
+        this.ABI.forEach(item => {
+          if (item.type === 'constructor') {
+            this.constructorABI = item;
+          }
+        });
         if (
           this.constructorABI &&
           this.constructorABI.hasOwnProperty('inputs')
@@ -244,7 +199,6 @@ export default class Deploy {
   deploy(withValue, keepMethods = false) {
     return new Promise((resolve, reject) => {
       try {
-        console.log('canDeploy', this.canDeploy); // todo remove dev item
         if (!this.canDeploy) return Promise.reject();
         const rawTx = {};
         if (this.constructorABI.payable && withValue)
@@ -283,7 +237,6 @@ export default class Deploy {
     return _deployArgs;
   }
   setDeployArg(name, value) {
-    console.log(name, value); // todo remove dev item
     this.constructorInputs[name].value = value;
   }
   setByteCode(txByteCode) {
@@ -300,6 +253,9 @@ export default class Deploy {
       } else {
         this.txByteCode = null;
       }
+      if (this.hasABI) {
+        this.abiConstructor();
+      }
     } catch (e) {
       this.txByteCode = null;
     }
@@ -315,9 +271,8 @@ export default class Deploy {
   }
   async estimateGas(params) {
     return this.web3.eth.estimateGas(params).catch(err => {
-      // Toast.responseHandler(err, Toast.WARN);
       // eslint-disable-next-line
-      console.error(err); // todo replace with proper error
+      console.error(err);
     });
   }
   async getNonce(address) {
@@ -383,7 +338,6 @@ export default class Deploy {
           obj.valid = false;
         }
         obj[prop] = value;
-        // Indicate success
         return true;
       },
       get: (target, prop) => {
@@ -444,6 +398,7 @@ export default class Deploy {
     } catch (e) {
       // eslint-disable-next-line
       console.error(e);
+      return false;
     }
   }
   static getType(inputType) {
@@ -478,10 +433,8 @@ export default class Deploy {
         return item.replace(' ', '');
       });
     } catch (e) {
-      // Toast.responseHandler(e, Toast.ERROR);
+      // eslint-disable-next-line
+      console.error(e);
     }
-  }
-  getEntireBal() {
-    return '20000';
   }
 }

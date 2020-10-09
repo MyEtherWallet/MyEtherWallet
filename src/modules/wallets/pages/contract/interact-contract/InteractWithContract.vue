@@ -24,7 +24,7 @@
               outlined
               name="input-7-4"
               label="ABI/JSON Interface"
-              @change="setAndCheckAbi"
+              @change="setAbi"
             ></v-textarea>
 
             <div class="text-center mt-3">
@@ -76,7 +76,6 @@
                     );
                   }
                 ]"
-                class="non-bool-input"
                 @input="valueInput(input.name, $event)"
               />
               <div
@@ -92,20 +91,19 @@
                 </div>
                 <div class="bool-items"></div>
               </div>
-              <!--              <mew-input :label="`${input.name} (${input.type})`"> </mew-input>-->
             </div>
             <div v-show="hasInputs" class="text-center mt-3">
               <mew-button
-                title="Write"
+                :title="hasOutputs() ? 'Result' : 'Write'"
                 :has-full-width="false"
                 button-size="xlarge"
-                :disabled="false"
+                :disabled="!inputsValid"
                 @click.native="write"
               />
             </div>
-            Result
+            <div class="pa-4"></div>
             <div
-              v-for="(output, idx) in getOutputs()"
+              v-for="(output, idx) in outputs"
               v-show="noOutput"
               :key="output.name + idx"
               class="input-item-container"
@@ -135,10 +133,9 @@
 import { mapState } from 'vuex';
 import { isAddress } from '@/helpers/addressUtils';
 import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
-
+import store from 'store';
 import Network from '@/modules/wallets/components/network/Network';
 import Swap from '@/modules/wallets/components/swap/Swap';
-// import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import Contracts from '../contracts';
 import tempDevAbi from '../tests/contractsForDeploy/Type_Demo_ABI';
@@ -162,12 +159,9 @@ export default {
   data() {
     return {
       interact: false,
-      // canInteract: false,
-      tempDevAbi: tempDevAbi,
+      inputsValid: false,
       activeContract: {},
-      // inputs: {},
       hasInputs: false,
-      hasOutputs: false,
       outputs: {},
       abi: [],
       contractAddress: '',
@@ -178,11 +172,18 @@ export default {
   computed: {
     ...mapState(['network', 'gasPrice', 'account', 'web3']),
     mergedContracts() {
-      const customContracts = /*store.get('customContracts') ||*/ [];
-      const concatContracts = this.network.type.contracts.concat(
+      const customContracts = store.get('customContracts') || [];
+      const mergedContracts = this.network.type.contracts.concat(
         customContracts
       );
-      return concatContracts;
+      return [
+        { name: 'select a contract', abi: '', address: '' },
+        {
+          name: 'demo',
+          abi: tempDevAbi,
+          address: '0xAEf115Cd6723A44aD9901DB3134762392814fE17'
+        }
+      ].concat(mergedContracts);
     },
     isValidAbi() {
       try {
@@ -218,69 +219,8 @@ export default {
   },
   mounted() {
     this.activeContract = new Contracts(this.account.address, undefined, 0);
-    // todo remove dev item
-    // this.activeContract.setContractAddress(this.contractAddress);
-    // this.activeContract.setAbi(this.abi);
-    // this.canInteract = this.activeContract.contractActive;
-    // console.log(this.activeContract.contractActive); // todo remove dev item
   },
-  // deactivated(){
-  //   this.activeContract.reset();
-  // },
-  // beforeDestroy () {
-  //   this.activeContract.reset();
-  // },
   methods: {
-    getOutputs() {
-      return this.outputs;
-    },
-    write() {
-      if (this.activeContract.isMethodConstant) {
-        this.activeContract.write().then(res => {
-          this.outputs = res.outputs;
-          this.hasOutputs = true;
-        });
-      } else {
-        this.activeContract.write();
-      }
-    },
-    valueInput(name, value) {
-      this.activeContract.setSelectedMethodInputValue(name, value);
-    },
-    setAndCheckAbi(evt) {
-      this.abi = evt;
-      this.activeContract.setAbi(this.abi);
-      // this.canInteract = this.activeContract.contractActive;
-    },
-    closeInteract() {
-      this.interact = false;
-      this.resetDefaults();
-    },
-    backInteract() {
-      this.interact = false;
-      this.activeContract.clear();
-    },
-    showInteract() {
-      console.log(this.interact); // todo remove dev item
-      this.interact = true;
-      this.$set(this, 'methods', this.activeContract.contractMethodNames);
-      console.log(this.methods); // todo remove dev item
-    },
-    methodSelect(evt) {
-      this.activeContract
-        .selectedFunction(evt)
-        .then(res => {
-          this.$set(this, 'outputs', res.outputs);
-          this.hasInputs = Object.keys(res.inputs).length > 0;
-        })
-        .catch(err => {});
-    },
-    setContractAddress(evt) {
-      this.contractAddress = evt;
-      this.activeContract.setContractAddress(this.contractAddress);
-      // this.canInteract = this.activeContract.contractActive;
-      // console.log(this.activeContract.contractActive); // todo remove dev item
-    },
     resetDefaults() {
       this.abi = '';
       this.contractAddress = '';
@@ -290,17 +230,36 @@ export default {
       this.result = '';
       this.loading = false;
       this.value = 0;
-      // this.inputs = {};
+      this.outputs = {};
       this.clearCurrency = !this.clearCurrency;
       this.activeContract.reset();
-      console.log('resetDefaults'); // todo remove dev item
-      // this.canInteract = this.activeContract.contractActive;
     },
-    isValidInput() {
-      return Contracts.isContractArgValid.apply(this, arguments);
+    getOutputs() {
+      return this.outputs;
     },
-    getType() {
-      return Contracts.getType.apply(this, arguments);
+    hasOutputs() {
+      return Object.values(this.outputs).every(item => item.value !== null);
+    },
+    write() {
+      if (this.activeContract.isMethodConstant) {
+        this.activeContract.write().then(res => {
+          this.outputs = res.outputs;
+        });
+      } else {
+        this.activeContract.write();
+      }
+    },
+    valueInput(name, value) {
+      this.activeContract.setSelectedMethodInputValue(name, value);
+      this.inputsValid = this.activeContract.inputsValid;
+    },
+    setAbi(evt) {
+      this.abi = evt;
+      this.activeContract.setAbi(this.abi);
+    },
+    setContractAddress(evt) {
+      this.contractAddress = evt;
+      this.activeContract.setContractAddress(this.contractAddress);
     },
     selectedContract(selected) {
       if (selected.abi === '') {
@@ -312,6 +271,38 @@ export default {
       this.contractAddress = selected.address;
       this.activeContract.setContractAddress(this.contractAddress);
     },
+    closeInteract() {
+      this.interact = false;
+      this.resetDefaults();
+    },
+    backInteract() {
+      this.interact = false;
+      this.activeContract.clear();
+    },
+    showInteract() {
+      this.interact = true;
+      this.$set(this, 'methods', this.activeContract.contractMethodNames);
+    },
+    methodSelect(evt) {
+      this.activeContract
+        .selectedFunction(evt)
+        .then(res => {
+          this.$set(this, 'outputs', res.outputs);
+          this.hasInputs = Object.keys(res.inputs).length > 0;
+        })
+        .catch(e => {
+          // eslint-disable-next-line
+          console.error(e);
+        });
+    },
+
+    isValidInput() {
+      return Contracts.isContractArgValid.apply(this, arguments);
+    },
+    getType() {
+      return Contracts.getType.apply(this, arguments);
+    },
+
     formatInput() {
       return Contracts.formatInput.apply(this, arguments);
     },
