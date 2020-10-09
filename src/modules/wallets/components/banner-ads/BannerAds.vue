@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--banner-ads cursor--pointer">
-    <mew6-white-sheet>
+    <mew6-white-sheet :sideinfo="!mobile">
       <mew-carousel class="box-shadow" carousel-height="145" :total-slides="2">
         <template v-slot:slide1>
           <a href="https://www.mewwallet.com/" target="_blank">
@@ -64,7 +64,14 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    mobile: {
+      type: Boolean,
+      default: false
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div v-if="mobile" class="basic mew-component--sidemenu-mobile">
+  <div class="basic" style="z-index: 1">
+    <div v-if="mobile" class="mew-component--sidemenu-mobile">
       <v-sheet
         color="transparent"
         class="px-4 pt-2 mx-auto d-flex flex-column"
@@ -70,7 +70,7 @@
 
     <v-sheet
       v-else
-      color="basic"
+      color="transparent"
       class="mew-component--sidemenu px-4 pb-7 pt-10 d-flex flex-column"
     >
       <div class="mb-4">

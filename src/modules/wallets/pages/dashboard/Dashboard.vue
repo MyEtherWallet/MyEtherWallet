@@ -1,36 +1,34 @@
 <template>
   <div>
-    <div v-if="mobile">
-      <network class="mb-4" />
+    <div v-if="mobile" class="mew-component--dashboard-mobile">
+      <network mobile class="mb-4" />
       <mew6-white-sheet class="mew-component--eth-balance pa-7 pb-4 mb-4">
-        <div class="d-flex">
-          <mew-module
-            class="block-title"
-            subtitle="My Eth Balance"
-            title="24.842 ETH"
-            caption="$4,032.35"
-            :icon="require('@/assets/images/currencies/eth.png')"
-            icon-align="left"
+        <mew-module
+          class="block-title"
+          subtitle="My Eth Balance"
+          title="24.842 ETH"
+          caption="$4,032.35"
+          :icon="require('@/assets/images/currencies/eth.png')"
+          icon-align="left"
+        />
+
+        <div class="d-flex align-center py-4">
+          <mew-toggle-button
+            class="flex-grow-1"
+            :button-group="chartButtons"
+            @onBtnClick="onBtnClick"
           />
-          <div class="ml-auto">
-            <div class="d-flex align-center">
-              <mew-toggle-button
-                :button-group="chartButtons"
-                @onBtnClick="onBtnClick"
-              />
-              <mew-button
-                style="border-radius: 100% !important"
-                class="options-btn ml-2"
-                button-size="small"
-                icon-type="mdi"
-                icon="mdi-dots-vertical"
-                btn-style="transparent"
-                color-theme="secondary"
-              />
-            </div>
-          </div>
+          <mew-button
+            style="border-radius: 100% !important"
+            class="options-btn ml-2"
+            button-size="small"
+            icon-type="mdi"
+            icon="mdi-dots-vertical"
+            btn-style="transparent"
+            color-theme="secondary"
+          />
         </div>
-        <chart :key="chart1d.key" :data="chart1d.data" class="mt-5" />
+        <chart :key="chart1d.key" :data="chart1d.data" class="mt-5 mx-n8" />
         <v-row class="align-center">
           <v-col class="d-flex align-center justify-center">
             <div class="font-weight-bold">ETH PRICE</div>
@@ -43,9 +41,9 @@
             >
             <div class="ml-5">$321.55 / 1 ETH</div>
           </v-col>
-          <v-col class="text-right">
+          <v-col class="text-center">
             <mew-button
-              :has-full-width="false"
+              has-full-width
               title="Send Transaction"
               button-size="xlarge"
               @click.native="goTo('HomeAccessWallet')"
@@ -53,7 +51,38 @@
           </v-col>
         </v-row>
       </mew6-white-sheet>
+
+      <mew6-white-sheet class="mew-component--my-token-value mb-4">
+        <div class="pa-7 pb-0">
+          <mew-module
+            class="block-title"
+            subtitle="My Tokens Value"
+            title="$3,132.25"
+            :icon="require('@/assets/images/icons/icon-token-grey.png')"
+            icon-align="left"
+          >
+          </mew-module>
+          <mew-button
+            class="mt-3"
+            title="All tokens..."
+            button-size="small"
+            btn-style="transparent"
+            @click.native="goTo('HomeAccessWallet')"
+          />
+        </div>
+        <div class="pa-3">
+          <tokenTable
+            v-for="(t, key) in tableData"
+            :key="key"
+            class="mt-3"
+            :data="t"
+          />
+        </div>
+      </mew6-white-sheet>
+      <swap mobile class="mb-4" />
+      <banner-ads mobile class="mb-4" />
     </div>
+
     <div v-else class="d-flex mew-component--dashboard">
       <div class="flex-grow-1">
         <mew6-white-sheet class="mew-component--eth-balance pa-7 pb-4">
@@ -223,13 +252,15 @@ import swap from '@/modules/wallets/components/swap/Swap';
 import bannerAds from '@/modules/wallets/components/banner-ads/BannerAds';
 import staticData from './staticData.js';
 import chart from '@/modules/wallets/components/chart/Chart';
+import tokenTable from './components/tokenTable/TokenTable';
 
 export default {
   components: {
     chart,
     swap,
     network,
-    bannerAds
+    bannerAds,
+    tokenTable
   },
   props: {
     mobile: {
@@ -361,6 +392,14 @@ export default {
       opacity: 0.3;
       filter: saturate(1) brightness(0.47) contrast(5);
     }
+  }
+}
+
+.mew-component--dashboard-mobile {
+  .mew-toggle-btn {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
   }
 }
 </style>
