@@ -39,7 +39,7 @@
                 >
                   <div class="bool-items">
                     <mew-switch
-                      :value="input.value"
+                      :value="false"
                       :label="input.name"
                       @input="valueInput(input.name, $event)"
                     />
@@ -89,7 +89,6 @@
 import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import Network from '@/modules/wallets/components/network/Network';
 import Swap from '@/modules/wallets/components/swap/Swap';
-import tempDevAbi from '../tests/contractsForDeploy/Type_Demo_ABI';
 import { mapState } from 'vuex';
 import * as unit from 'ethjs-unit';
 import Contracts from '../contracts';
@@ -114,34 +113,13 @@ export default {
   data() {
     return {
       show: false,
-      tempDevAbi: tempDevAbi,
       activeContract: {},
       noInput: false,
       canDeploy: false,
       inputs: {},
       ethValue: 0,
       abi: [],
-      methods: [
-        {
-          text: 'func1',
-          value: function () {
-            console.log('function 1');
-          }
-        },
-        {
-          text: 'func2',
-          value: function () {
-            console.log('function 2');
-          }
-        }
-      ],
-      contractType: [
-        {
-          name: 'Contract 1',
-          subtext: 'Eth',
-          value: '1'
-        }
-      ]
+      methods: []
     };
   },
   computed: {
@@ -167,20 +145,18 @@ export default {
       this.activeContract.deploy(this.ethValue);
       this.activeContract.clear();
       this.inputs = {};
-      // this.canDeploy = false;
+      this.canDeploy = false;
     },
     byteCodeInput(value) {
       this.activeContract.setByteCode(value);
       if (this.activeContract.abiValid && this.activeContract.byteCodeValid) {
         this.getInputs();
-        this.canDeploy = this.activeContract.canDeploy;
       }
     },
     abiInput(value) {
       this.activeContract.setAbi(value);
       if (this.activeContract.abiValid && this.activeContract.byteCodeValid) {
         this.getInputs();
-        this.canDeploy = this.activeContract.canDeploy;
       }
     },
     getInputs() {
