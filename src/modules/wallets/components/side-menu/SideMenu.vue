@@ -50,16 +50,7 @@
           color="transparent"
           class="mx-auto"
         >
-          <v-btn
-            class="mb-4 full-width text-transform--initial"
-            outlined
-            color="white"
-            large
-          >
-            <v-icon class="mr-2">mdi-apps</v-icon>
-            MEW tools
-            <v-icon class="ml-2">mdi-chevron-down</v-icon>
-          </v-btn>
+          <mewTools mobile class="mb-4" />
 
           <wallet-card />
           <v-btn
@@ -136,6 +127,7 @@ import systemMenu from '@/modules/wallets/components/system-menu/SystemMenu';
 import themeSwitch from '@/modules/wallets/components/theme-switch/ThemeSwitch';
 import version from '@/modules/wallets/components/version/Version';
 import divider from '@/modules/wallets/components/divider/Divider';
+import mewTools from '@/modules/wallets/components/mewTools/MewTools';
 
 export default {
   components: {
@@ -146,7 +138,8 @@ export default {
     systemMenu,
     themeSwitch,
     version,
-    divider
+    divider,
+    mewTools
   },
   props: {
     mobile: {
