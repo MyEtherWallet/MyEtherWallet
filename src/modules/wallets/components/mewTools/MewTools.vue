@@ -18,12 +18,12 @@
       </template>
 
       <div class="pa-3 white">
-        <v-row no-gutters>
+        <v-row>
           <v-col
             v-for="(t, key) in tools"
             :key="key"
             cols="4"
-            class="text-center pa-2"
+            class="text-center cursor--pointer"
           >
             <img :src="t.img" :alt="t.label" height="60" />
             <div>{{ t.label }}</div>
