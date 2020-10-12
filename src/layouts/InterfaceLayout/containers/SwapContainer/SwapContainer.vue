@@ -27,7 +27,9 @@
       <div class="title-block">
         <interface-container-title :title="$t('common.swap')" />
       </div>
-
+      <div v-if="showWarning" class="swap-warning-message">
+        {{ $t('swap.warning.currency-warning', { currency: toCurrency }) }}
+      </div>
       <div class="form-content-container">
         <div class="send-form">
           <div class="form-block amount-to-address">
@@ -46,6 +48,7 @@
                 :currencies="fromArray"
                 :override-currency="overrideFrom"
                 :from-source="true"
+                :swap-token-address="getTokenAddress"
                 page="SwapContainerFrom"
                 @selectedCurrency="setFromCurrency"
               />
@@ -85,6 +88,7 @@
                 :currencies="toArray"
                 :override-currency="overrideTo"
                 :from-source="false"
+                :swap-token-address="getTokenAddress"
                 page="SwapContainerTo"
                 @selectedCurrency="setToCurrency"
               />
@@ -307,6 +311,7 @@ export default {
       lastBestRate: 0,
       lastFeeEstimate: new BigNumber(0),
       bitySpecialCurrencies: ['BTC', 'REP'],
+      warningCurrencies: ['VET'],
       selectedProvider: {},
       swapDetails: {},
       currencyDetails: {},
@@ -353,6 +358,7 @@ export default {
       gasNotice: false,
       moreEthNeeded: false,
       recalculating: true,
+      showWarning: false,
       exitToFiatCallback: () => {},
       sendSignedCallback: () => {},
       debounceUpdateEstimate: {},
@@ -530,9 +536,15 @@ export default {
       this.swap.updateNetwork(this.network.type.name, this.web3);
     },
     ['swap.updateProviderRates']() {
-      const { toArray, fromArray } = this.swap.initialCurrencyLists;
-      this.toArray = toArray;
-      this.fromArray = fromArray;
+      try {
+        const { toArray, fromArray } = this.swap.buildInitialCurrencyArrays();
+        this.toArray = toArray;
+        this.fromArray = fromArray;
+      } catch (e) {
+        const { toArray, fromArray } = this.swap.initialCurrencyLists;
+        this.toArray = toArray;
+        this.fromArray = fromArray;
+      }
     },
     ['swap.haveProviderRates']() {
       this.haveProviderRates = this.swap.ratesRetrieved;
@@ -581,6 +593,9 @@ export default {
     );
   },
   methods: {
+    getTokenAddress(currency) {
+      return this.swap.getTokenAddress(currency, true);
+    },
     reset() {
       this.lastFeeEstimate = new BigNumber(0);
       this.gasNotice = false;
@@ -829,6 +844,7 @@ export default {
     },
     async updateRateEstimate(fromCurrency, toCurrency, fromValue, to) {
       if (this.haveProviderRates) {
+        this.showWarning = this.warningCurrencies.includes(toCurrency);
         this.loadingData = true;
         this.recalculating = true;
         this.noProvidersPair = { fromCurrency, toCurrency };

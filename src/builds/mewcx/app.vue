@@ -13,6 +13,8 @@ import FooterContainer from '@/containers/FooterContainer';
 import HeaderContainer from '@/containers/HeaderContainer';
 import ConfirmationContainer from '@/containers/ConfirmationContainer';
 import LogoutWarningModal from '@/components/LogoutWarningModal';
+import BigNumber from 'bignumber.js';
+import utils from 'web3-utils';
 
 import { mapState, mapActions } from 'vuex';
 
@@ -25,7 +27,7 @@ export default {
     'logout-warning-modal': LogoutWarningModal
   },
   computed: {
-    ...mapState('main', ['wallet', 'Networks'])
+    ...mapState('main', ['wallet', 'Networks', 'web3'])
   },
   watch: {
     $route(to, from) {
@@ -65,10 +67,22 @@ export default {
           });
         }
         _self.switchNetwork(network).then(() => {
-          _self.setWeb3Instance();
+          _self.setWeb3Instance().then(() => {
+            _self.web3.eth.getGasPrice().then(res => {
+              _self.setGasPrice(
+                utils.fromWei(new BigNumber(res).toString(), 'gwei')
+              );
+            });
+          });
         });
       } else {
-        _self.setWeb3Instance();
+        _self.setWeb3Instance().then(() => {
+          _self.web3.eth.getGasPrice().then(res => {
+            _self.setGasPrice(
+              utils.fromWei(new BigNumber(res).toString(), 'gwei')
+            );
+          });
+        });
       }
     });
   },
@@ -78,7 +92,7 @@ export default {
     });
   },
   methods: {
-    ...mapActions('main', ['setWeb3Instance', 'switchNetwork'])
+    ...mapActions('main', ['setWeb3Instance', 'switchNetwork', 'setGasPrice'])
   }
 };
 </script>

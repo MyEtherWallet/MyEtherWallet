@@ -24,6 +24,11 @@
           :options="buttonCheckEtherscan"
           :click-function="goToLink"
         />
+        <standard-button
+          v-show="network.type.name === 'ETH' && txHashExlporrer"
+          :options="buttonCheckEthVm"
+          :click-function="goToEthVm"
+        />
         <standard-button :options="buttonOk" :click-function="hideModal" />
       </div>
     </div>
@@ -63,12 +68,22 @@ export default {
     }
   },
   computed: {
-    ...mapState('main', ['network']),
+    ...mapState('main', ['network', 'wallet']),
     buttonCheckEtherscan() {
       return {
         // eslint-disable-next-line
         title: this.$t('sendTx.success.button-check-explorer', {
           explorrerName: this.explorrerName
+        }),
+        buttonStyle: 'green-border',
+        fullWidth: true
+      };
+    },
+    buttonCheckEthVm() {
+      return {
+        // eslint-disable-next-line
+        title: this.$t('sendTx.success.button-check-explorer', {
+          explorrerName: this.$t('footer.ethvm')
         }),
         buttonStyle: 'green-border',
         fullWidth: true
@@ -90,6 +105,14 @@ export default {
     goToLink() {
       // eslint-disable-next-line
       window.open(this.txHashExlporrer, '_blank');
+    },
+    goToEthVm() {
+      const ethVmLink = this.txHashExlporrer.replace(
+        'https://etherscan.io/tx/',
+        'https://www.ethvm.com/tx/'
+      );
+      // eslint-disable-next-line
+      window.open(ethVmLink, '_blank');
     },
     hideModal() {
       if (this.linkTo !== '/') {

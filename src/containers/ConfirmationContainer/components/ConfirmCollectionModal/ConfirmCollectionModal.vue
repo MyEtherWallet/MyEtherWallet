@@ -28,6 +28,12 @@
             {{ network.type.currencyName }}
           </p>
         </div>
+        <div v-if="showGasWarning" class="gas-price-warning">
+          {{ $t('errorsGlobal.high-gas-limit-warning') }}
+        </div>
+        <div v-else-if="showCollectionLowGasWarning" class="gas-price-warning">
+          {{ $t('errorsGlobal.low-gas-price') }}
+        </div>
         <div class="modal-content-body">
           <div
             v-for="(item, idx) in unSignedArray"
@@ -154,6 +160,14 @@ export default {
       default: false
     },
     isHardwareWallet: {
+      type: Boolean,
+      default: false
+    },
+    showGasWarning: {
+      type: Boolean,
+      default: false
+    },
+    showCollectionLowGasWarning: {
       type: Boolean,
       default: false
     }

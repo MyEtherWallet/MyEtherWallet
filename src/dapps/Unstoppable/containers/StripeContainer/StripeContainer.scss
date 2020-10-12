@@ -4,6 +4,11 @@
   @extend %template-container;
 }
 
+.items-container {
+  display: flex;
+  flex-direction: column;
+}
+
 .domain-header {
   background-color: $light-green-1;
   padding: 25px;

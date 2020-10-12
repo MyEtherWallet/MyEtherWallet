@@ -1,7 +1,7 @@
 <template>
   <div class="crypto-kitties-details">
     <div class="crypto-kitties-details-content-container">
-      <back-button style="display: inline;" @click.native="goBack" />
+      <back-button style="display: inline" @click.native="goBack" />
 
       <div class="grid-container">
         <div class="product-title-mobile mt-4">

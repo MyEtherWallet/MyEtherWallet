@@ -67,7 +67,8 @@
           </div>
           <div class="fee-value">
             <div class="gwei">
-              {{ gasPrice }} {{ $t('common.gas.gwei') }}
+              {{ displayedGasPrice }}
+              {{ $t('common.gas.gwei') }}
               <!--(Economic)-->
             </div>
             <div v-show="network.type.name === 'ETH'" class="usd">
@@ -225,10 +226,6 @@ export default {
     getBalance: {
       type: Function,
       default: function () {}
-    },
-    highestGas: {
-      type: String,
-      default: '0'
     }
   },
   data() {
@@ -393,6 +390,16 @@ export default {
           .toString();
       }
       return '--';
+    },
+    displayedGasPrice() {
+      const newVal = this.gasPrice.toString();
+      const showMore = `~${new BigNumber(newVal).toString()}`;
+      const showSome = `~${new BigNumber(newVal).toFixed(2).toString()}`;
+      return newVal.includes('.')
+        ? new BigNumber(newVal).lt(1)
+          ? showMore
+          : showSome
+        : newVal;
     }
   },
   watch: {
@@ -525,9 +532,6 @@ export default {
         const nonce = await this.web3.eth.getTransactionCount(coinbase);
         const raw = {
           nonce: Misc.sanitizeHex(new BigNumber(nonce).toString(16)),
-          gasPrice: Misc.sanitizeHex(
-            ethUnit.toWei(this.gasPrice, 'gwei').toString(16)
-          ),
           gasLimit: Misc.sanitizeHex(new BigNumber(this.gasLimit).toString(16)),
           to: this.txTo,
           value: this.txValue,

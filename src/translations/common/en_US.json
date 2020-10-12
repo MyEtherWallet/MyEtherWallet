@@ -148,16 +148,16 @@
   "having-issues": "Having issues?",
   "issue-info": "Issue information",
   "learn-more": "Learn more",
-  "dapps": "Dapps",
+  "dapps": "DApps",
   "gas": {
     "current-gas": "Current Gas Price",
-    "limit": "Gas Limit (ranges from 21,000 to 500,000)",
+    "limit": "Gas Limit (usually ranges from 21,000 to 500,000)",
     "price": "Gas Price (in Gwei)",
     "gwei": "Gwei",
     "wei": "Wei",
     "fee": "Fee",
     "string": "Gas",
-    "price-range": "Gas Price ranges from 5 gwei to 50 gwei"
+    "price-range": "Gas Price ranges from 5 gwei to infinity."
   },
   "search": "Search",
   "loading": "Loading",

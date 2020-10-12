@@ -5,7 +5,8 @@ const ERRORS = {
   CardLocked: 'coolWalletError.card-locked',
   AlreadyRegistered: 'coolWalletError.already-registered',
   NoWalletInstance: 'coolWalletError.no-wallet-instance',
-  'navigator.bluetooth is undefined': 'coolWalletError.no-bluetooth'
+  'navigator.bluetooth is undefined': 'coolWalletError.no-bluetooth',
+  MaxAppRegistered: 'coolWalletError.max-app-instance'
 };
 const WARNING = {};
 

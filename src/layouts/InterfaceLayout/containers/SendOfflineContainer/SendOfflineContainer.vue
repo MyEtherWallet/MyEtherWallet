@@ -160,7 +160,7 @@
             ref="jsonInput"
             type="file"
             name="file"
-            style="display: none;"
+            style="display: none"
             @change="uploadFile"
           />
           <div
@@ -314,9 +314,6 @@ export default {
     }
   },
   watch: {
-    highestGas(newVal) {
-      this.localGasPrice = newVal;
-    },
     nonce(newVal) {
       this.localNonce = newVal;
     },

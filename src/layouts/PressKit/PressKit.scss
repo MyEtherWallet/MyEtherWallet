@@ -1,0 +1,67 @@
+@import '~@/scss/GlobalVariables';
+
+.wrap {
+  background-color: $background-color-3;
+  background-image: url('~@/assets/images/background/right.png'),
+    url('~@/assets/images/background/left.png');
+  background-repeat: no-repeat, no-repeat;
+}
+
+// Desktop
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .wrap {
+    padding: 100px 0;
+    background-position: right top, left 80px;
+  }
+}
+
+// Tablet
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .wrap {
+    padding: 50px 0;
+    background-position: calc(100% + 35px) -70px, -60px 80px;
+    background-size: 100px, 200px;
+  }
+}
+
+// Mobile
+@media all and (max-width: $mobile-width) {
+  .wrap {
+    padding: 50px 0;
+    background-position: calc(100% + 35px) -70px, -60px 80px;
+    background-size: 100px, 170px;
+  }
+}
+
+.subtitle {
+  max-width: 550px;
+  margin: 20px auto 0 auto;
+  line-height: 25px;
+}
+
+.press-item {
+  background-color: white;
+  border-radius: 5px;
+  overflow: hidden;
+
+  .img-asset {
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.light {
+      background-color: #184f90;
+    }
+
+    > img {
+      width: 70%;
+    }
+  }
+}
+
+.btn {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  padding: 11px 26px !important;
+}

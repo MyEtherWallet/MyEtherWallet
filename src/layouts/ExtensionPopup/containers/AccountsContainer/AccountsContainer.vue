@@ -42,7 +42,7 @@
           class="tab-container"
         >
           <network-component />
-          <div class="wallet-component-container">
+          <div class="wallet-component-container watch-only">
             <wallet-view-component
               v-for="item in watchOnlyWallets"
               v-show="watchOnlyWallets.length > 0"
@@ -172,8 +172,7 @@ export default {
       hasMyWallets: true,
       totalBalance: 0,
       loading: false,
-      watchOnlyWallets: [],
-      myWallets: [],
+      allWallets: [],
       quickSend: false,
       selectedWallet: {}
     };
@@ -189,6 +188,19 @@ export default {
         .times(this.totalBalance)
         .toFixed(2);
       return `$ ${balance}`;
+    },
+    myWallets() {
+      return this.allWallets.filter(item => {
+        return item.type !== WATCH_ONLY;
+      });
+    },
+    watchOnlyWallets() {
+      return this.allWallets.filter(item => {
+        return item.type === WATCH_ONLY;
+      });
+    },
+    hasWallets() {
+      return this.myOwnWallets.length > 0 || this.watchOnlyWallets.length > 0;
     }
   },
   watch: {
@@ -212,41 +224,27 @@ export default {
     });
   },
   methods: {
-    async parseReceivedWallets() {
+    parseReceivedWallets() {
       this.loading = true;
       this.totalBalance = 0;
-      const watchOnlyWallets = [];
-      const myOwnWallets = [];
-      let totalBalance = new BigNumber(this.totalBalance);
+      const allWallets = [];
       for (const account of this.accounts) {
         const address = Object.keys(account)[0];
         const parsedValue = JSON.parse(account[address]);
-        if (parsedValue.type === WATCH_ONLY) {
+        Promise.all([this.fetchBalance(address)]).then(res => {
+          if (parsedValue.type !== WATCH_ONLY) {
+            this.totalBalance += res[0];
+          }
           const reformObj = Object.assign({}, parsedValue, {
             address: address,
-            balance: await this.fetchBalance(address)
+            balance: res[0],
+            type: parsedValue.type
           });
-          watchOnlyWallets.push(reformObj);
-        } else if (parsedValue.type !== WATCH_ONLY) {
-          const balance = await this.fetchBalance(address);
-          totalBalance = totalBalance.plus(balance);
-          const reformObj = Object.assign({}, parsedValue, {
-            address: address,
-            balance: balance
-          });
-          myOwnWallets.push(reformObj);
-        }
-      }
-
-      if (myOwnWallets.length === 0 && watchOnlyWallets.length > 0) {
-        this.hasMyWallets = false;
-      } else {
-        this.hasMyWallets = true;
+          allWallets.push(reformObj);
+        });
       }
       this.loading = false;
-      this.totalBalance = totalBalance;
-      this.watchOnlyWallets = watchOnlyWallets;
-      this.myWallets = myOwnWallets;
+      this.allWallets = allWallets;
     },
     async fetchBalance(address) {
       if (address !== '0x' || isAddress(address)) {
