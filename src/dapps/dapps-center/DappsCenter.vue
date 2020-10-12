@@ -1,10 +1,10 @@
 <template>
   <mew6-white-sheet class="mew-component-fix--dapps-center">
     <mew-banner :text-obj="title" :banner-img="bannerImage" />
-    <div class="pa-8">
+    <div class="pa-4 pa-md-8 pt-8">
       <div class="mew-heading-1 px-4 mb-2">MEW Dapps</div>
       <v-row>
-        <v-col v-for="(dapp, key) in mewDapps" :key="key" cols="4" sm="4">
+        <v-col v-for="(dapp, key) in mewDapps" :key="key" cols="12" lg="4">
           <mew-super-button
             :title="dapp.title"
             :subtitle="dapp.subtitle"
@@ -18,10 +18,10 @@
         </v-col>
       </v-row>
     </div>
-    <div class="pa-8">
+    <div class="pa-4 pa-md-8 pt-0 pt-md-0">
       <div class="mew-heading-1 px-4 mb-2">Recent</div>
       <v-row>
-        <v-col v-for="(dapp, key) in recent" :key="key" cols="4" sm="4">
+        <v-col v-for="(dapp, key) in recent" :key="key" cols="12" lg="4">
           <mew-super-button
             :title="dapp.title"
             :subtitle="dapp.subtitle"

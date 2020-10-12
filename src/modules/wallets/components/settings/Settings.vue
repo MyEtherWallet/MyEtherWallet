@@ -5,24 +5,24 @@
     left-btn-text="Back"
     @closeOverlay="$emit('close')"
   >
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <div v-if="!editMode && !addMode">
         <h2 class="text-center mb-10">Settings</h2>
         <v-sheet color="transparent" max-width="700px">
           <mew-expand-panel :panel-items="panelItems">
-            <template v-slot:panelBody1>
+            <template #panelBody1>
               <gas-price />
             </template>
-            <template v-slot:panelBody2>
+            <template #panelBody2>
               <import-config />
             </template>
-            <template v-slot:panelBody3>
+            <template #panelBody3>
               <export-config />
             </template>
-            <template v-slot:panelBody4>
+            <template #panelBody4>
               <contact-address @add="addMode = true" @edit="editMode = true" />
             </template>
-            <template v-slot:panelBody5>
+            <template #panelBody5>
               <notifications />
             </template>
           </mew-expand-panel>

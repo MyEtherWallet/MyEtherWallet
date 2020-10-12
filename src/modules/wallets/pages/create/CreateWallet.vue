@@ -28,7 +28,7 @@
             title-mdi-icon="mdi-shield-check"
             title-icon-class="primary--text"
           >
-            <template v-slot:contentBelowTitle>
+            <template #contentBelowTitle>
               <div class="mt-6">
                 <img
                   src="@/assets/images/icons/button-app-store.png"
@@ -43,7 +43,7 @@
                 />
               </div>
             </template>
-            <template v-slot:contentRight>
+            <template #contentRight>
               <img
                 class="mew-wallet-img"
                 src="@/assets/images/snippets/bg-mew-wallet.png"

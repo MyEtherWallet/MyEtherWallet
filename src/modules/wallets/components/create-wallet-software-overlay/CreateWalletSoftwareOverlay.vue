@@ -5,7 +5,7 @@
       :title="typeTitle"
       @closeOverlay="closeOverlay"
     >
-      <template v-slot:mewOverlayBody>
+      <template #mewOverlayBody>
         <v-sheet
           v-if="type === '' && step === 0"
           color="transparent"
@@ -108,7 +108,7 @@ export default {
   },
   methods: {
     closeOverlay() {
-      this.$emit('closeOverlay');
+      this.$emit('close-overlay');
       this.close();
     },
     createType(type) {

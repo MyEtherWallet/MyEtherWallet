@@ -14,7 +14,7 @@
       return-object
       outlined
     >
-      <template v-slot:selection="{ item }">
+      <template #selection="{ item }">
         <div class="d-flex align-center justify-center">
           <img v-if="item.img" class="item-img" :src="item.img" />
           <span class="text-uppercase"
@@ -25,7 +25,7 @@
           >
         </div>
       </template>
-      <template v-slot:item="data">
+      <template #item="data">
         <img v-if="data.item.img" class="item-img" :src="data.item.img" />
         <span class="text-uppercase"
           >{{ data.item.name ? data.item.name : data.item }}

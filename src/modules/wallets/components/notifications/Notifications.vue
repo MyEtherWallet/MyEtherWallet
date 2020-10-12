@@ -5,7 +5,7 @@
     right-btn-text="Close"
     @closeOverlay="$emit('close')"
   >
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <v-sheet class="transparent" max-width="700px" width="100%">
         <v-sheet
           color="transparent"

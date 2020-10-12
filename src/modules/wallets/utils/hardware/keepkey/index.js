@@ -45,7 +45,7 @@ class KeepkeyWallet {
     this.keepkey = KeepKey.withWebUSB(device);
     this.keepkey.device.events.on(String(MESSAGETYPE_PINMATRIXREQUEST), () => {
       this.eventHub.$emit(
-        'showHardwarePinMatrix',
+        'show-hardware-pin-matrix',
         { name: this.identifier },
         pin => {
           this.keepkey.acknowledgeWithPin(pin).catch(errorHandler);
@@ -54,7 +54,7 @@ class KeepkeyWallet {
     });
     this.keepkey.device.events.on(String(MESSAGETYPE_PASSPHRASEREQUEST), () => {
       this.eventHub.$emit(
-        'showHardwarePassword',
+        'show-hardware-password',
         { name: this.identifier },
         passPhrase => {
           this.keepkey
@@ -110,9 +110,9 @@ class KeepkeyWallet {
       if (signedChainId !== networkId)
         throw new Error(
           'Invalid networkId signature returned. Expected: ' +
-            networkId +
-            ', Got: ' +
-            signedChainId,
+          networkId +
+          ', Got: ' +
+          signedChainId,
           'InvalidNetworkId'
         );
       return getSignTransactionObject(tx);

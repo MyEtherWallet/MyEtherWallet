@@ -39,7 +39,7 @@
             has-dividers
             :panel-items="extraWordsPanel"
           >
-            <template v-slot:panelBody1>
+            <template #panelBody1>
               <mew-input label="Extra word" placeholder=" " />
             </template>
           </mew-expand-panel>

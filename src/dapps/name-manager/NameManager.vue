@@ -31,14 +31,18 @@
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
-        <template v-slot:tabContent1>
-          <v-sheet max-width="700px" color="transparent" class="py-12 mx-auto">
+        <template #tabContent1>
+          <v-sheet
+            max-width="700px"
+            color="transparent"
+            class="py-12 px-4 mx-auto"
+          >
             <div class="tab-width">
               <div class="mb-5">
                 <div class="mew-heading-2 mb-8">
                   Find your blockchain domain
                 </div>
-                <div class="d-flex align-start">
+                <div class="d-block d-lg-flex align-start">
                   <mew-input
                     :has-clear-btn="true"
                     right-label=".ctypto"
@@ -102,7 +106,7 @@
             </div>
           </v-sheet>
         </template>
-        <template v-slot:tabContent2>
+        <template #tabContent2>
           <div class="pa-12">
             <div class="d-flex align-center justify-space-between mb-7">
               <h4 class="font-weight-bold">
@@ -116,7 +120,7 @@
             </div>
             <div>
               <mew-expand-panel :panel-items="myDomains">
-                <template v-slot:panelBody1>
+                <template #panelBody1>
                   <div>
                     <div class="header-block bg_datablock">
                       <v-row>
@@ -170,7 +174,7 @@
                     </div>
                   </div>
                 </template>
-                <template v-slot:panelBody2>
+                <template #panelBody2>
                   <div>
                     <div class="header-block bg_datablock">
                       <v-row>

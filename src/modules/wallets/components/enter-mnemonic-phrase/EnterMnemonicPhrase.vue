@@ -31,7 +31,7 @@
             has-dividers
             :panel-items="extraWordsPanel"
           >
-            <template v-slot:panelBody1>
+            <template #panelBody1>
               <mew-input label="Extra word" placeholder=" " />
             </template>
           </mew-expand-panel>
@@ -51,7 +51,7 @@
         <h2 class="text-center mb-10">2. Confirm network & address</h2>
 
         <mew-expand-panel :panel-items="changeNetwork" class="mb-2">
-          <template v-slot:panelBody1>
+          <template #panelBody1>
             <v-radio-group v-model="networkSelected">
               <div v-for="(network, i) in networks" :key="i">
                 <div class="text-uppercase font-weight-bold subtitle-1 mb-1">
@@ -81,7 +81,7 @@
         </mew-expand-panel>
 
         <mew-expand-panel :panel-items="addressToInteract">
-          <template v-slot:panelBody1>
+          <template #panelBody1>
             <mew-table
               style="margin: 0 -24px"
               :table-headers="tableHeaders"

@@ -29,7 +29,7 @@
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
-        <template v-slot:tabContent1>
+        <template #tabContent1>
           <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
             <div class="mb-5">
               <div class="mb-3">
@@ -186,7 +186,7 @@
             </div>
           </v-sheet>
         </template>
-        <template v-slot:tabContent2>
+        <template #tabContent2>
           <div class="pa-12">
             <div class="d-flex align-center justify-space-between mb-7">
               <h4 class="font-weight-bold">
@@ -200,7 +200,7 @@
             </div>
             <div>
               <mew-expand-panel :panel-items="myDomains">
-                <template v-slot:panelBody1>
+                <template #panelBody1>
                   <div>
                     <div class="header-block bg_datablock">
                       <v-row>
@@ -254,7 +254,7 @@
                     </div>
                   </div>
                 </template>
-                <template v-slot:panelBody2>
+                <template #panelBody2>
                   <div>
                     <div class="header-block bg_datablock">
                       <v-row>

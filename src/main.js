@@ -25,13 +25,13 @@ import MewSelect from '@/components/temporary-mew-components/MewSelect/MewSelect
 import MewOverlay from '@/components/temporary-mew-components/MewOverlay/MewOverlay.vue';
 import MewExpandPanel from '@/components/temporary-mew-components/MewExpandPanel/MewExpandPanel.vue';
 
-Vue.component('mew6-white-sheet', whiteSheet);
-Vue.component('mew-super-button', MewSuperButton);
-Vue.component('mew-stepper', MewStepper);
-Vue.component('mew-stepper-header', MewStepperHeader);
-Vue.component('mew-select', MewSelect);
-Vue.component('mew-overlay', MewOverlay);
-Vue.component('mew-expand-panel', MewExpandPanel);
+Vue.component('Mew6WhiteSheet', whiteSheet);
+Vue.component('MewSuperButton', MewSuperButton);
+Vue.component('MewStepper', MewStepper);
+Vue.component('MewStepperHeader', MewStepperHeader);
+Vue.component('MewSelect', MewSelect);
+Vue.component('MewOverlay', MewOverlay);
+Vue.component('MewExpandPanel', MewExpandPanel);
 
 Vue.prototype.$eventHub = new Vue();
 
@@ -98,7 +98,7 @@ Sentry.init({
       walletType: identifier
     };
     return new Promise(resolve => {
-      vue.$eventHub.$emit('issueModal', event, resolve);
+      vue.$eventHub.$emit('issue-modal', event, resolve);
     }).then(res => {
       return res === true ? event : null;
     });

@@ -5,9 +5,9 @@
     right-btn-text="Cancel"
     @closeOverlay="$emit('close')"
   >
-    <template v-slot:mewComponent>
+    <template #mewComponent>
       <mew-tabs :items="tabs" is-block>
-        <template v-slot:tabContent1>
+        <template #tabContent1>
           <mew6-white-sheet>
             <div class="overlay-content pa-8">
               <div class="text-center mb-8">
@@ -30,7 +30,7 @@
             </div>
           </mew6-white-sheet>
         </template>
-        <template v-slot:tabContent2>
+        <template #tabContent2>
           <mew6-white-sheet>
             <GroupRadioButtons :buttons="networkButtons" />
             <address-table />

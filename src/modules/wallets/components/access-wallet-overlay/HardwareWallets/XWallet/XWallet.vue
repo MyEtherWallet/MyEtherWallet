@@ -5,7 +5,7 @@
       right-btn-text="Cancel"
       @closeOverlay="$emit('close')"
     >
-      <template v-slot:mewOverlayBody>
+      <template #mewOverlayBody>
         <div class="full-width">
           <h2 class="text-center mb-10">Scan the QR code</h2>
           <mew6-white-sheet max-width="500px" class="mx-auto pa-4 pa-sm-12">

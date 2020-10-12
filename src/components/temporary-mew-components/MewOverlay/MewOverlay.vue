@@ -148,7 +148,7 @@ export default {
   },
   methods: {
     closeOverlay() {
-      this.$emit('closeOverlay');
+      this.$emit('close-overlay');
       this.close();
     },
     goBack() {

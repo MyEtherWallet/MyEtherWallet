@@ -59,7 +59,7 @@
               url: 'www.myetherwallet.com'
             }"
           >
-            <template v-slot:titleIconContainer>
+            <template #titleIconContainer>
               <img
                 src="@/assets/images/icons/icon-appstore-apple-dark.svg"
                 alt="Apple app store"
@@ -70,7 +70,7 @@
                 alt="Android store"
               />
             </template>
-            <template v-slot:cardImg>
+            <template #cardImg>
               <img
                 class="card-img"
                 width="200"
@@ -135,7 +135,7 @@
               url: 'www.myetherwallet.com'
             }"
           >
-            <template v-slot:titleIconContainer>
+            <template #titleIconContainer>
               <div class="ml-2">
                 <img
                   src="@/assets/images/icons/icon-appstore-apple-dark.svg"
@@ -148,7 +148,7 @@
                 />
               </div>
             </template>
-            <template v-slot:cardImg>
+            <template #cardImg>
               <img
                 class="card-img"
                 width="200"

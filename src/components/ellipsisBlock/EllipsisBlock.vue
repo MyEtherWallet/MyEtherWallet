@@ -1,7 +1,7 @@
 <template>
   <v-sheet :max-width="maxWidth" color="transparent" class="ellipsis">
     <v-tooltip top>
-      <template v-if="text" v-slot:activator="{ on, attrs }">
+      <template v-if="text" #activator="{ on, attrs }">
         <span v-bind="attrs" v-on="on">{{ text }}</span>
       </template>
       <span v-if="text">{{ text }}</span>

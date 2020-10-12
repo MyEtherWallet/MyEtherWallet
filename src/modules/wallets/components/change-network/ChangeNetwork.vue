@@ -5,7 +5,7 @@
     right-btn-text="Close"
     @closeOverlay="$emit('close')"
   >
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <h2 class="text-center mb-10">Network</h2>
       <button-tabs
         v-model="activeTab"
@@ -64,7 +64,7 @@
                 has-dividers
                 :panel-items="exPannel"
               >
-                <template v-slot:panelBody1>
+                <template #panelBody1>
                   <mew-input label="Username" placeholder=" " />
                   <mew-input label="Password" placeholder=" " />
                 </template>

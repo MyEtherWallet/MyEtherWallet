@@ -1,7 +1,7 @@
 <template>
   <div class="mew-component--mew-tools">
     <v-dialog v-model="dialog" width="320">
-      <template v-slot:activator="{ on, attrs }">
+      <template #activator="{ on, attrs }">
         <v-btn
           v-if="mobile"
           v-bind="attrs"

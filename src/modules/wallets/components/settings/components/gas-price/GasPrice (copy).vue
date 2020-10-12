@@ -3,7 +3,7 @@
     <div>Please select a default gas price for your transaction fee</div>
     <v-sheet color="transparent" max-width="500px" class="mx-auto">
       <mew-toggle-button :button-group="3" button-type="custom">
-        <template v-slot:btn1>
+        <template #btn1>
           <mew-super-button
             title="Economic"
             subtitle="1 Gwei"
@@ -13,7 +13,7 @@
             :is-column="true"
           />
         </template>
-        <template v-slot:btn2>
+        <template #btn2>
           <mew-super-button
             title="Regular"
             subtitle="2 Gwei"
@@ -23,7 +23,7 @@
             :is-column="true"
           />
         </template>
-        <template v-slot:btn3>
+        <template #btn3>
           <mew-super-button
             title="Fast"
             subtitle="3 Gwei"
