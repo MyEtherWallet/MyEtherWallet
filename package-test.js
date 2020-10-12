@@ -36,15 +36,10 @@ const EXCEPTIONS = [
   'ethereumjs-wallet',
   '@makerdao/dai-plugin-mcd',
   '@makerdao/dai-plugin-migrations',
-  'sass-loader',
   'ethereumjs-util',
   '@makerdao/dai-plugin-migrations',
   'worker-loader',
-  // remove after release
-  'is-ipfs',
-  'codecov',
-  'eslint-plugin-vue',
-  'uuid'
+  'eslint-plugin-vue'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
