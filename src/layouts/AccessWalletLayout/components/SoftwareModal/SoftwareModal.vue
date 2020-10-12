@@ -36,7 +36,7 @@
           ref="jsonInput"
           type="file"
           name="file"
-          style="display: none;"
+          style="display: none"
           @change="uploadFile"
         />
       </div>

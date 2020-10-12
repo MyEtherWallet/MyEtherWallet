@@ -82,7 +82,7 @@
         <a
           ref="downloadLink"
           :href="downloadFile"
-          :download="nickname"
+          :download="toV3Name"
           rel="noopener noreferrer"
         ></a>
       </div>
@@ -162,7 +162,7 @@
           </div>
           <div class="wallet-value-container">
             <p class="title">
-              {{ ($t('mewcx.value-of-tokens', { plural: '' })) }}
+              {{ $t('mewcx.value-of-tokens', { plural: '' }) }}
             </p>
             <p class="dollar-amt">{{ walletTokensWithBalance.total }}</p>
             <p class="value">
@@ -343,7 +343,7 @@ export default {
     },
     balance: {
       type: String,
-      default: ''
+      default: '0'
     },
     usd: {
       type: Number,
@@ -374,7 +374,8 @@ export default {
       path: 'access',
       password: '',
       downloadFile: '',
-      tokens: []
+      tokens: [],
+      toV3Name: ''
     };
   },
   computed: {
@@ -453,6 +454,12 @@ export default {
     tokens: {
       handler: function (newValue) {
         this.tokens = newValue;
+      },
+      deep: true
+    },
+    walletToken: {
+      handler: function () {
+        this.processTokens();
       },
       deep: true
     }
@@ -534,9 +541,20 @@ export default {
       this.$refs.downloadLink.click();
     },
     generateBlob() {
-      const wallet = JSON.parse(this.wallet).priv;
-      const blob = createBlob(wallet, 'mime');
+      const priv = JSON.parse(this.wallet).priv;
+      const blob = createBlob(priv, 'mime');
+      this.toV3Name = this.generateName(this.address);
       this.downloadFile = blob;
+    },
+    generateName(address) {
+      const stamp = new Date();
+      // from ethereumjs-wallet getV3Filename
+      return [
+        'UTC--',
+        stamp.toJSON().replace(/:/g, '-'),
+        '--',
+        address.toString('hex')
+      ].join('');
     },
     viewWallet() {
       this.loading = true;

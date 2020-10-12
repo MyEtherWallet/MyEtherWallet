@@ -7,5 +7,5 @@
   "success": "Success",
   "error": "Error",
   "waiting-for-hash": "Waiting for Transaction Hash",
-  "confirm-transactions": "Confirmation (Total of {unSignedArray} transactions)`"
+  "confirm-transactions": "Confirmation (Total of {unSignedArray} transactions)"
 }

@@ -1,4 +1,5 @@
 const ConvertUnits = () => import('@/layouts/ConvertUnits');
+const PressKit = () => import('@/layouts/PressKit');
 const TeamLayout = () => import('@/layouts/TeamLayout');
 const SecurityPolicy = () => import('@/layouts/SecurityPolicy');
 const PrivacyPolicyLayout = () => import('@/layouts/PrivacyPolicyLayout');
@@ -83,6 +84,12 @@ const router = [
     path: '/convert-units',
     name: 'ConvertUnits',
     component: ConvertUnits,
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/press-kit',
+    name: 'PressKit',
+    component: PressKit,
     meta: { requiresAuth: false }
   },
   {

@@ -177,7 +177,11 @@ import {
   MNEMONIC as MNEMONIC_TYPE,
   BCVAULT as BC_VAULT
 } from '@/wallets/bip44/walletTypes';
-
+import {
+  getGasBasedOnType,
+  getOther,
+  getEconomy
+} from '@/helpers/gasMultiplier.js';
 import ExpiryAbi from './expiryAbi.js';
 
 const ENS_TOKEN_ADDRESS = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
@@ -270,6 +274,10 @@ export default {
     },
     address(val) {
       if (val) this.setupOnlineEnvironment();
+    },
+    network() {
+      this.clearIntervals();
+      this.setupOnlineEnvironment();
     }
   },
   mounted() {
@@ -287,7 +295,9 @@ export default {
       'setAccountBalance',
       'setENS',
       'decryptWallet',
-      'toggleSideMenu'
+      'toggleSideMenu',
+      'setGasPrice',
+      'setEthGasPrice'
     ]),
     checkPrefilled() {
       const _self = this;
@@ -532,7 +542,7 @@ export default {
           });
           tokens = tokens.concat(filteredNetwork).map(item => {
             if (!item.hasOwnProperty('balance')) {
-              item.balance = 0;
+              item.balance = 'Load';
             }
             return item;
           });
@@ -576,29 +586,31 @@ export default {
           }
         ];
         const contract = new web3.eth.Contract(contractAbi);
-        const data = contract.methods
-          .balanceOf(this.account.address)
-          .encodeABI();
-        const balance = await web3.eth
-          .call({
-            to: token.address,
-            data: data
-          })
-          .then(res => {
-            let tokenBalance;
-            if (Number(res) === 0 || res === '0x') {
-              tokenBalance = 0;
-            } else {
-              const denominator = new BigNumber(10).pow(token.decimals);
-              tokenBalance = new BigNumber(res).div(denominator).toString();
-            }
-            return tokenBalance;
-          })
-          .catch(e => {
-            Toast.responseHandler(e, false);
-          });
+        if (this.account.address && this.account.address !== '') {
+          const data = contract.methods
+            .balanceOf(this.account.address)
+            .encodeABI();
+          const balance = await web3.eth
+            .call({
+              to: token.address,
+              data: data
+            })
+            .then(res => {
+              let tokenBalance;
+              if (Number(res) === 0 || res === '0x') {
+                tokenBalance = '0';
+              } else {
+                const denominator = new BigNumber(10).pow(token.decimals);
+                tokenBalance = new BigNumber(res).div(denominator).toString();
+              }
+              return tokenBalance;
+            })
+            .catch(e => {
+              Toast.responseHandler(e, false);
+            });
 
-        return balance;
+          return balance;
+        }
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);
       }
@@ -644,7 +656,21 @@ export default {
           }
           return convertedToken;
         });
-      this.tokens = tokens.sort(sortByBalance);
+      this.tokens = tokens
+        .sort((a, b) => {
+          const a1 = typeof a.balance,
+            b1 = typeof b.balance;
+          return a1 > b1
+            ? -1
+            : a1 < b1
+            ? 1
+            : a.balance < b.balance
+            ? -1
+            : a.balance > b.balance
+            ? 1
+            : 0;
+        })
+        .sort(sortByBalance);
       this.setTokensWithBalance();
     },
     setTokensWithBalance() {
@@ -772,6 +798,9 @@ export default {
             this.pollBlock = _sub;
           });
         }
+      } else {
+        this.receivedTokens = true;
+        this.tokens = this.network.type.tokens;
       }
     }),
     async getBlockUpdater() {
@@ -789,12 +818,23 @@ export default {
       });
     },
     getHighestGas() {
+      const gasType = store.get('gasPriceType') || 'economy';
+      const getCustomGas = getOther();
       this.web3.eth
         .getGasPrice()
         .then(res => {
-          this.highestGas = new BigNumber(
+          const parsedGas = getEconomy(
             this.web3.utils.fromWei(res, 'gwei')
           ).toString();
+          if (gasType === 'economy') {
+            this.setGasPrice(parsedGas);
+          } else if (gasType === 'other' && getCustomGas) {
+            this.setGasPrice(getCustomGas);
+          } else {
+            this.setGasPrice(getGasBasedOnType(parsedGas));
+          }
+          this.highestGas = parsedGas;
+          this.setEthGasPrice(this.highestGas);
         })
         .catch(e => {
           Toast.responseHandler(e, Toast.ERROR);

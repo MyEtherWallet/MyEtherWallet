@@ -13,7 +13,6 @@ const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
 // Lock @vue packages due to complications on updating
 // @vue/test-utils - breaking tests beginning at 5.2.5-hotfix-2 (with version 1.0.0-beta.30)
 const EXCEPTIONS = [
-  'graphql',
   'canvas',
   'ethereum-ens',
   'babel-jest',
@@ -33,10 +32,15 @@ const EXCEPTIONS = [
   'i18n-iso-countries',
   '@myetherwallet/mewconnect-web-client',
   '@walletconnect/browser',
+  '@walletconnect/qrcode-modal',
   'ethereumjs-wallet',
   '@makerdao/dai-plugin-mcd',
+  '@makerdao/dai-plugin-migrations',
   'sass-loader',
-  'ethereumjs-util'
+  'ethereumjs-util',
+  '@makerdao/dai-plugin-migrations',
+  'worker-loader',
+  'is-ipfs'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

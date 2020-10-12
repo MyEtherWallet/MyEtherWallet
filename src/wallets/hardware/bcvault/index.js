@@ -131,12 +131,7 @@ class BCVault {
     };
     const msgSigner = async msg => {
       const result = await this.bcWallet
-        .SignData(
-          this.deviceNumber[0],
-          this.bcWalletType,
-          this.selectedAddress,
-          msg
-        )
+        .SignData(this.deviceNumber[0], this.bcWalletType, address, msg)
         .catch(errorHandler);
       if (result) {
         const signature = result.substr(2);

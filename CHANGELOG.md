@@ -1,9 +1,126 @@
+### Release v5.7.10
+
+### Feature
+
+- Add LEND to AAVE migrator [#2606](https://github.com/MyEtherWallet/MyEtherWallet/pull/2606)
+- Unstoppable add to cart and suggested search [#2516](https://github.com/MyEtherWallet/MyEtherWallet/pull/2516)
+
+### Bug
+
+- fix weird interaction with favorites, speed up loading wallets and favorites, fix some issues when adding wallets via mnemonic, use keystore filename when backing up instead of nickname [#2612](https://github.com/MyEtherWallet/MyEtherWallet/pull/2612)
+
+### Release v5.7.9
+
+### Devop
+
+- remove prior restriction on dexes displayed when using dexag [#2601](https://github.com/MyEtherWallet/MyEtherWallet/pull/2601)
+- Add low gas price warning [#2582](https://github.com/MyEtherWallet/MyEtherWallet/pull/2582)
+
+### Bug
+
+- Weird gasprice setting [#2595](https://github.com/MyEtherWallet/MyEtherWallet/pull/2595)
+- Get Eth token icons from ethereum-lists for swap  [#2592](https://github.com/MyEtherWallet/MyEtherWallet/pull/2592)
+
+### Release v5.7.8-hotfix.2
+
+### Bug
+
+- Only send gas limit value as 'gas' to phone for signing [#2586](https://github.com/MyEtherWallet/MyEtherWallet/pull/2586)
+- Fix erroneously showing view transaction button with metamask  [#2586](https://github.com/MyEtherWallet/MyEtherWallet/pull/2586)
+
+### Release v5.7.8-hotfix.1
+
+### Devop
+
+- Add option to use EthVM [#2582](https://github.com/MyEtherWallet/MyEtherWallet/pull/2582)
+
+### Release v5.7.8
+
+### Bug
+
+- Add from field if missing for MEW wallet [#2573](https://github.com/MyEtherWallet/MyEtherWallet/pull/2573)
+- Gas estimate calculation fix [#2566](https://github.com/MyEtherWallet/MyEtherWallet/pull/2566)
+
+### Feature
+
+- Add warning when user enters a contract [#2574](https://github.com/MyEtherWallet/MyEtherWallet/pull/2574)
+
+### Release v5.7.7
+
+### Bug
+
+- Add a max check to Aave withdraw [#2540](https://github.com/MyEtherWallet/MyEtherWallet/pull/2540)
+
+### Devop
+
+- Update gasprice calculations [#2559](https://github.com/MyEtherWallet/MyEtherWallet/pull/2559)
+- Allow users to renew expired ENS names [#2554](https://github.com/MyEtherWallet/MyEtherWallet/pull/2554)
+
+### Release v5.7.6-hotfix.1
+
+### Devop
+
+- Remove twitter popup [#2551](https://github.com/MyEtherWallet/MyEtherWallet/pull/2551)
+
+### Release v5.7.6
+
+### Bug
+
+- Better token load on offline and cx gas price [#2545](https://github.com/MyEtherWallet/MyEtherWallet/pull/2545)
+- Fix missed cases for gas price too high, add warning for VET [#2544](https://github.com/MyEtherWallet/MyEtherWallet/pull/2544)
+
+### Devop
+
+- Add Press kit page [#2547](https://github.com/MyEtherWallet/MyEtherWallet/pull/2547)
+- Add transaction fee estimate and high gas warning to swap [#2549](https://github.com/MyEtherWallet/MyEtherWallet/pull/2549)
+
+### Release v5.7.5
+
+### Devop
+
+- Update MEW wallet from MEWconnect [#2542](https://github.com/MyEtherWallet/MyEtherWallet/pull/2542)
+
+### Release v5.7.4
+
+### Devop
+
+- Update empty decision tree md files [#2538](https://github.com/MyEtherWallet/MyEtherWallet/pull/2538)
+
+### Bug
+
+- Fix modal UI bug [#2537](https://github.com/MyEtherWallet/MyEtherWallet/pull/2537)
+- Fix cx networks import [#2529](https://github.com/MyEtherWallet/MyEtherWallet/pull/2529)
+
+### Release v5.7.3-hotfix.1
+
+### Devop
+
+- Twitter popup [#2533](https://github.com/MyEtherWallet/MyEtherWallet/pull/2533)
+
+### Bug
+
+- Fix sign message for bcvault [#2527](https://github.com/MyEtherWallet/MyEtherWallet/pull/2527)
+
+### Release v5.7.3
+
+### Devop
+
+- Add gas check for kyber swaps [#2524](https://github.com/MyEtherWallet/MyEtherWallet/pull/2524)
+
+### Bug
+
+- Change token so even if contract succeeds some can still be loaded, show renew ens [#2523](https://github.com/MyEtherWallet/MyEtherWallet/pull/2523)
+- CW error catch, Gaslimit warning for collection, more bcvault fixes [#2521](https://github.com/MyEtherWallet/MyEtherWallet/pull/2521)
+- Remove contract when not sending tokens [#2525](https://github.com/MyEtherWallet/MyEtherWallet/pull/2525)
+- Fix sign message for bcvault [#2527](https://github.com/MyEtherWallet/MyEtherWallet/pull/2527)
+
 ### Release v5.7.2
 
 ### Bug
 
 - Remove disabled message and button on firefox for bcvault, add error when no account received [#2499](https://github.com/MyEtherWallet/MyEtherWallet/pull/2499)
 - CX hang possible fix [#2507](https://github.com/MyEtherWallet/MyEtherWallet/pull/2507)
+
 ### Devop
 
 - Use Batch EstimateGas [#2417](https://github.com/MyEtherWallet/MyEtherWallet/pull/2417)

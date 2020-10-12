@@ -36,7 +36,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['network', 'web3'])
+    ...mapState('main', ['network', 'web3', 'Networks'])
   },
   created() {
     window.chrome.storage.onChanged.addListener(this.fetchNewStore);
@@ -70,24 +70,24 @@ export default {
         ExtensionHelpers.getAccounts(this.getAccountsCb);
       });
     },
-    async fetchEthBalance() {
-      const price = await fetch(
-        'https://cryptorates.mewapi.io/ticker?filter=ETH'
-      )
+    fetchEthBalance() {
+      const price = fetch('https://cryptorates.mewapi.io/ticker?filter=ETH')
         .then(res => {
           return res.json();
         })
         .catch(() => {
           return 0;
         });
-      const priceAvailable = price.hasOwnProperty('data')
-        ? price.data.ETH.quotes.USD.price
-        : price;
-      this.convertedBalance = `$ ${new BigNumber(priceAvailable)
-        .times(this.totalBalance)
-        .toFixed(2)}`;
+      price.then(res => {
+        const priceAvailable = res.hasOwnProperty('data')
+          ? res.data.ETH.quotes.USD.price
+          : res;
+        this.convertedBalance = `$ ${new BigNumber(priceAvailable)
+          .times(this.totalBalance)
+          .toFixed(2)}`;
 
-      this.ethPrice = priceAvailable;
+        this.ethPrice = priceAvailable;
+      });
     },
     getAccountsCb(res) {
       const accounts = Object.keys(res)

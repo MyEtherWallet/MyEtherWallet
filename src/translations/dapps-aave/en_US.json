@@ -78,5 +78,10 @@
   "cannot-borrow": "You do not have enough available to borrow.",
   "greater-than": "Must be greater than 0",
   "cannot-exceed-bal": "Cannot exceed balance of {amount}",
-  "cannot-exceed-tkn-bal": "Cannot exceed your token balance of {amount}"
+  "cannot-exceed-tkn-bal": "Cannot exceed your token balance of {amount}",
+  "lend-title": "LEND Migrator",
+  "lend-popover": "Migrate your LEND tokens to AAVE today",
+  "total-amount": "Total LEND Amount to migrate",
+  "migrate": "Migrate LEND to AAVE",
+  "total-lend": "Total LEND Balance"
 }

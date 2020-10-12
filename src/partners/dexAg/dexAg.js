@@ -7,7 +7,6 @@ import {
   TIME_SWAP_VALID,
   PROVIDER_NAME,
   PROXY_CONTRACT_ADDRESS,
-  SUPPORTED_DEXES,
   MARKET_IMPACT_CUTOFF
 } from './config';
 import dexAgCalls from './dexAg-calls';
@@ -31,6 +30,7 @@ export default class DexAg {
     this.useFixed = true;
     this.tokenDetails = {};
     this.web3 = props.web3;
+    this.tokenUpdate = props.tokenUpdate;
     this.approvalGasLimit = 100000;
     this.tradeGasLimitBase = 1000000;
     this.getSupportedDexes();
@@ -83,12 +83,12 @@ export default class DexAg {
 
   async getSupportedDexes() {
     try {
-      this.SUPPORTED_DEXES = await dexAgCalls.supportedDexes();
-      if (!this.SUPPORTED_DEXES || !Array.isArray(this.SUPPORTED_DEXES)) {
-        this.SUPPORTED_DEXES = SUPPORTED_DEXES;
+      this.EXCLUDED_DEXES = await dexAgCalls.excludedDexes();
+      if (!this.EXCLUDED_DEXES || !Array.isArray(this.EXCLUDED_DEXES)) {
+        this.EXCLUDED_DEXES = [];
       }
     } catch (e) {
-      this.SUPPORTED_DEXES = SUPPORTED_DEXES;
+      this.EXCLUDED_DEXES = [];
     }
   }
 
@@ -100,6 +100,7 @@ export default class DexAg {
       } = await dexAgCalls.getSupportedCurrencies(this.network);
       this.currencyDetails = currencyDetails;
       this.tokenDetails = tokenDetails;
+      this.tokenUpdate(tokenDetails);
       this.hasRates =
         Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {
@@ -149,13 +150,13 @@ export default class DexAg {
 
           resolve(
             vals.map(val => {
-              const isKnownToWork = this.SUPPORTED_DEXES.includes(val.dex);
+              const notExcluded = !this.EXCLUDED_DEXES.includes(val.dex);
               const bnPrice = new BigNumber(val.price);
               return {
                 fromCurrency,
                 toCurrency,
                 provider: val.dex !== 'ag' ? val.dex : 'dexag',
-                rate: isKnownToWork
+                rate: notExcluded
                   ? bnPrice.minus(bnPrice.times(this.feeAmount)).toNumber()
                   : 0,
                 additional: { source: 'dexag' }
@@ -328,16 +329,17 @@ export default class DexAg {
         data: tradeDetails.trade.data,
         value: tradeDetails.trade.value
       };
-      if (
-        tradeDetails.metadata.gasPrice &&
-        swapDetails.provider === 'bancor' &&
-        this.platformGasPrice > 0
-      ) {
+
+      const checkGas =
+        tradeDetails.metadata.gasPrice && this.platformGasPrice > 0;
+
+      if (checkGas) {
         const gasPrice = new BigNumber(tradeDetails.metadata.gasPrice);
         const platformGasPrice = this.web3.utils.toWei(
           this.platformGasPrice.toString(),
           'gwei'
         );
+
         if (gasPrice.lte(platformGasPrice)) {
           Toast.responseHandler(`gas-too-high`, 1, true);
           throw Error('abort');
@@ -374,10 +376,8 @@ export default class DexAg {
 
   async startSwap(swapDetails) {
     swapDetails.maybeToken = true;
-
-    const dexToUse = this.SUPPORTED_DEXES.includes(swapDetails.provider)
-      ? swapDetails.provider
-      : 'ag';
+    const dexToUse =
+      swapDetails.provider !== 'dexag' ? swapDetails.provider : 'ag';
 
     const tradeDetails = await this.createTransaction(swapDetails, dexToUse);
 

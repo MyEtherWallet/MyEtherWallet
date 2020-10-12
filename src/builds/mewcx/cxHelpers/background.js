@@ -3,7 +3,7 @@ import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
 import Misc from '@/helpers/misc';
 import { extractRootDomain } from './extractRootDomain';
 import MiddleWare from '@/wallets/web3-provider/middleware';
-import localStorage from 'store';
+import locStore from 'store';
 import {
   mewCxFetchAccounts,
   mewCxSignTx,
@@ -26,6 +26,7 @@ import {
   WEB3_INJECT_SUCCESS
 } from './cxEvents';
 import utils from 'web3-utils';
+import BigNumber from 'bignumber.js';
 const chrome = window.chrome;
 chrome.tabs.onUpdated.addListener(onUpdatedCb);
 chrome.tabs.onActivated.addListener(onActivatedCb);
@@ -65,11 +66,21 @@ const networkChanger = items => {
     // eslint-disable-next-line
     if (!!network) {
       store.dispatch('main/switchNetwork', network).then(() => {
-        store.dispatch('main/setWeb3Instance', network.url).then(() => {
-          chrome.storage.sync.set({
-            defChainID: store.state.main.network.type.chainID
+        store
+          .dispatch('main/setWeb3Instance', network.url)
+          .then(() => {
+            chrome.storage.sync.set({
+              defChainID: store.state.main.network.type.chainID
+            });
+          })
+          .then(() => {
+            store.state.main.web3.eth.getGasPrice().then(res => {
+              store.dispatch(
+                'main/setGasPrice',
+                utils.fromWei(new BigNumber(res).toString(), 'gwei')
+              );
+            });
           });
-        });
       });
     }
   } else {
@@ -90,14 +101,9 @@ chrome.storage.sync.get(null, networkChanger);
 chrome.storage.onChanged.addListener(items => {
   Object.keys(items).forEach(item => {
     if (isAddress(item)) {
-      const currentNotifications = JSON.parse(
-        localStorage.getItem('notifications')
-      );
+      const currentNotifications = JSON.parse(locStore.get('notifications'));
       currentNotifications[item] = [];
-      localStorage.setItem(
-        'notifications',
-        JSON.stringify(currentNotifications)
-      );
+      locStore.get('notifications', JSON.stringify(currentNotifications));
     }
 
     if (
