@@ -54,7 +54,7 @@
                 }})</b-dropdown-item
               >
             </b-nav-item-dropdown>
-            <b-nav-item>
+            <div class="notification-menu-container">
               <notification
                 v-if="
                   $route.fullPath.includes('view-wallet-info') ||
@@ -68,7 +68,7 @@
                   !$route.fullPath.includes('interface')
                 "
               />
-            </b-nav-item>
+            </div>
             <b-nav-item-dropdown
               v-if="address !== null"
               right
