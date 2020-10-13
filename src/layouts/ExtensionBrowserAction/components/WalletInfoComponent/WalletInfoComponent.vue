@@ -460,7 +460,6 @@ export default {
         });
         return totalTokenAmt.toNumber();
       } catch (e) {
-        console.log(e);
         return 0;
       }
     },
