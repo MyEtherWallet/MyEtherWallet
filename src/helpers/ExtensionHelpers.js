@@ -2,7 +2,6 @@ import Toast from './responseHandler';
 import { toChecksumAddress, isAddress } from './addressUtils';
 import { MnemonicWallet } from '@/wallets';
 import Misc from './misc';
-import store from 'store';
 
 const getAccounts = callback => {
   const chrome = window.chrome;
@@ -81,7 +80,6 @@ const deleteWalletFromStore = (addr, callback) => {
     });
   });
   try {
-    store.remove(addr);
     chrome.storage.sync.remove(toChecksumAddress(addr), callback);
     chrome.storage.sync.get('favorites', item => {
       const favorites = JSON.parse(item.favorites);
