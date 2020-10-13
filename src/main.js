@@ -25,14 +25,6 @@ import MewSelect from '@/components/temporary-mew-components/MewSelect/MewSelect
 import MewOverlay from '@/components/temporary-mew-components/MewOverlay/MewOverlay.vue';
 import MewExpandPanel from '@/components/temporary-mew-components/MewExpandPanel/MewExpandPanel.vue';
 
-Vue.component('Mew6WhiteSheet', whiteSheet);
-Vue.component('MewSuperButton', MewSuperButton);
-Vue.component('MewStepper', MewStepper);
-Vue.component('MewStepperHeader', MewStepperHeader);
-Vue.component('MewSelect', MewSelect);
-Vue.component('MewOverlay', MewOverlay);
-Vue.component('MewExpandPanel', MewExpandPanel);
-
 Vue.prototype.$eventHub = new Vue();
 
 //Router
@@ -46,6 +38,14 @@ Vue.use(Vuex);
 Object.keys(mewComponents).forEach(name => {
   Vue.component(name, mewComponents[name]);
 });
+
+Vue.component('Mew6WhiteSheet', whiteSheet);
+Vue.component('MewSuperButton', MewSuperButton);
+Vue.component('MewStepper2', MewStepper);
+Vue.component('MewStepperHeader2', MewStepperHeader);
+Vue.component('MewSelect2', MewSelect);
+Vue.component('MewOverlay2', MewOverlay);
+Vue.component('MewExpandPanel2', MewExpandPanel);
 
 // // Define vue-i18n
 Vue.use(VueI18n);

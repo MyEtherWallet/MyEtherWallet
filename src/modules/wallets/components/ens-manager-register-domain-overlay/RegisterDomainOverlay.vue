@@ -3,6 +3,7 @@
     :show-overlay="open"
     title="Register domain"
     right-btn-text="Cancel"
+    @closeOverlay="$emit('close')"
   >
     <template #mewOverlayBody>
       <DomainTaken />

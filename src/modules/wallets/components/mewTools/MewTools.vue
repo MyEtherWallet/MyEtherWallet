@@ -45,6 +45,7 @@ export default {
   },
   data() {
     return {
+      dialog: false,
       tools: [
         {
           label: 'MEW web',

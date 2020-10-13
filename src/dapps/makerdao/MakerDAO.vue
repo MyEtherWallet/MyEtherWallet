@@ -53,9 +53,12 @@
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
         <template #tabContent1>
-          <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
-            <div class="d-flex align-center justify-space-between">
-              <div class="mew-heading-3">DAI Balance</div>
+          <v-sheet
+            color="transparent"
+            max-width="700px"
+            class="mx-auto py-12 px-4"
+          >
+            <div class="d-flex justify-end">
               <mew-button
                 btn-style="outline"
                 title="Collateralize DAI"
@@ -65,13 +68,14 @@
             </div>
 
             <v-row>
-              <v-col cols="6">
+              <v-col cols="12" lg="6">
+                <div class="mew-heading-3">DAI Balance</div>
                 <h3 class="font-weight-bold">
                   30.1234 <span class="mew-body">DAI</span>
                 </h3>
                 <div>$30.12</div>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="12" lg="6">
                 <div class="d-flex">
                   <div class="walletBg px-6 py-3 mr-3 flex-grow-1">
                     <div>Savings to Date</div>
@@ -85,19 +89,19 @@
               </v-col>
             </v-row>
             <v-row class="mt-4">
-              <v-col cols="6" class="text-right">
+              <v-col cols="12" lg="6">
                 <mew-button
                   :has-full-width="true"
                   btn-style="outline"
                   title="Withdraw"
-                  button-size="xlarge"
+                  btn-size="xlarge"
                 ></mew-button>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="12" lg="6" class="mt-n3 mt-lg-0">
                 <mew-button
                   :has-full-width="true"
                   title="Deposit"
-                  button-size="xlarge"
+                  btn-size="xlarge"
                 ></mew-button>
               </v-col>
             </v-row>

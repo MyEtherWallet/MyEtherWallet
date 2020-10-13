@@ -3,7 +3,7 @@
     <div class="d-flex align-center">
       <register-domain-overlay
         :open="registerOverlay"
-        :close="closeRegisterOverlay"
+        @close="registerOverlay = false"
       />
       <div
         class="cursor--pointer font-weight-bold mr-4"
@@ -12,7 +12,10 @@
         Register Domain Overlay
       </div>
 
-      <add-owned-domain-overlay :open="addOwnedDomainOverlay" />
+      <add-owned-domain-overlay
+        :open="addOwnedDomainOverlay"
+        @close="addOwnedDomainOverlay = false"
+      />
       <div
         class="cursor--pointer font-weight-bold mr-4"
         @click="addOwnedDomainOverlay = true"
@@ -20,7 +23,10 @@
         Add Owned Domain Overlay
       </div>
 
-      <transfer-domain-overlay :open="transferDomainOverlay" />
+      <transfer-domain-overlay
+        :open="transferDomainOverlay"
+        @close="transferDomainOverlay = false"
+      />
       <div
         class="cursor--pointer font-weight-bold mr-4"
         @click="transferDomainOverlay = true"
@@ -48,10 +54,16 @@
                     right-label=".ctypto"
                     label="Domain name"
                     placeholder=" "
-                    class="mr-3 flex-grow-1"
+                    class="mr-lg-3 flex-grow-1"
                   />
                   <mew-button
-                    :has-full-width="false"
+                    class="d-block d-lg-none"
+                    has-full-width
+                    button-size="xlarge"
+                    title="Register domain"
+                  />
+                  <mew-button
+                    class="d-none d-lg-block"
                     button-size="xlarge"
                     title="Register domain"
                   />
@@ -62,7 +74,9 @@
                   <div class="mew-heading-3 font-weight-bold">Results</div>
                 </div>
                 <v-card flat color="tableHeader" class="pa-10">
-                  <div class="d-flex justify-space-between align-center">
+                  <div
+                    class="d-block d-lg-flex justify-space-between align-center"
+                  >
                     <div>
                       <div class="mew-heading-1 mb-2">mewwallet.crypto</div>
                       <div>
@@ -70,7 +84,7 @@
                         ETH ($40.00)
                       </div>
                     </div>
-                    <div class="d-flex align-center">
+                    <div class="d-flex align-center mt-3 mt-lg-0">
                       <div class="mew-heading-3 primary--text mr-6">
                         Available
                       </div>
@@ -80,9 +94,13 @@
                 </v-card>
                 <div class="py-2"></div>
                 <v-card flat color="tableHeader" class="pa-10">
-                  <div class="d-flex align-center justify-space-between mb-8">
+                  <div
+                    class="d-block d-lg-flex align-center justify-space-between mb-8"
+                  >
                     <div class="mew-heading-1">myetherwallet.crypto</div>
-                    <div class="mew-heading-3 orange--text">Unavailable</div>
+                    <div class="mew-heading-3 orange--text mt-3 mt-lg-0">
+                      Unavailable
+                    </div>
                   </div>
                   <v-list-item
                     v-for="(r, key) in results"
@@ -107,24 +125,32 @@
           </v-sheet>
         </template>
         <template #tabContent2>
-          <div class="pa-12">
-            <div class="d-flex align-center justify-space-between mb-7">
+          <v-sheet
+            max-width="700px"
+            color="transparent"
+            class="py-12 px-4 mx-auto"
+          >
+            <div
+              class="d-block d-lg-flex align-center justify-space-between mb-7"
+            >
               <h4 class="font-weight-bold">
                 My domains <span class="font-weight-regular">(1)</span>
               </h4>
               <mew-button
                 btn-style="outline"
                 title="+ Add domain you own"
-                button-size="large"
+                button-size="small"
+                class="mt-4 mt-lg-0"
               />
             </div>
+
             <div>
               <mew-expand-panel :panel-items="myDomains">
                 <template #panelBody1>
                   <div>
                     <div class="header-block bg_datablock">
                       <v-row>
-                        <v-col cols="6">
+                        <v-col cols="12" lg="6">
                           <div class="d-flex align-center">
                             <div>Registrant</div>
                             <blockie width="25px" height="25px" class="mx-3" />
@@ -133,7 +159,7 @@
                             </div>
                           </div>
                         </v-col>
-                        <v-col cols="6">
+                        <v-col cols="12" lg="6">
                           <div class="d-flex align-center">
                             <div>Controller</div>
                             <blockie width="25px" height="25px" class="mx-3" />
@@ -146,7 +172,7 @@
                     </div>
                     <div>
                       <div
-                        class="d-flex align-center justify-space-between border-bottom py-5 px-0"
+                        class="d-block d-lg-flex align-center justify-space-between border-bottom py-5 px-0"
                       >
                         <div class="mew-heading-3">
                           What do you want to do with the domain?
@@ -159,7 +185,8 @@
                           <v-col
                             v-for="(f, key) in domainFunctions"
                             :key="key"
-                            cols="2"
+                            cols="6"
+                            lg="2"
                             class="text-center"
                           >
                             <mew-icon icon-name="ensManager" :img-height="75" />
@@ -178,7 +205,7 @@
                   <div>
                     <div class="header-block bg_datablock">
                       <v-row>
-                        <v-col cols="6">
+                        <v-col cols="12" lg="6">
                           <div class="d-flex align-center">
                             <div>Registrant</div>
                             <blockie width="25px" height="25px" class="mx-3" />
@@ -187,7 +214,7 @@
                             </div>
                           </div>
                         </v-col>
-                        <v-col cols="6">
+                        <v-col cols="12" lg="6">
                           <div class="d-flex align-center">
                             <div>Controller</div>
                             <blockie width="25px" height="25px" class="mx-3" />
@@ -200,7 +227,7 @@
                     </div>
                     <div>
                       <div
-                        class="d-flex align-center justify-space-between border-bottom py-5 px-0"
+                        class="d-block d-lg-flex align-center justify-space-between border-bottom py-5 px-0"
                       >
                         <div class="mew-heading-3">
                           What do you want to do with the domain?
@@ -213,7 +240,8 @@
                           <v-col
                             v-for="(f, key) in domainFunctions"
                             :key="key"
-                            cols="2"
+                            cols="6"
+                            lg="2"
                             class="text-center"
                           >
                             <mew-icon icon-name="ensManager" :img-height="75" />
@@ -232,7 +260,7 @@
               <domain-btn domain="iamexpired.eth" badge="expired" />
               <domain-btn domain="almostexpired.eth" badge="expired" />
             </div>
-          </div>
+          </v-sheet>
         </template>
       </mew-tabs>
     </mew6-white-sheet>
@@ -317,11 +345,6 @@ export default {
         }
       ]
     };
-  },
-  methods: {
-    closeRegisterOverlay() {
-      this.registerOverlay = false;
-    }
   }
 };
 </script>
