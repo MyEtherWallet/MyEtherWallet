@@ -1,3 +1,8 @@
+### Bug
+
+- CX backup fix, generate wallet redirect fix, notifications fix [#2624](https://github.com/MyEtherWallet/MyEtherWallet/pull/2624)
+
+
 ### Release v5.7.10
 
 ### Feature
