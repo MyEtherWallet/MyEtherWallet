@@ -100,10 +100,10 @@ chrome.storage.sync.get(null, networkChanger);
 // Listens for network changes and sets background store to match client store
 chrome.storage.onChanged.addListener(items => {
   Object.keys(items).forEach(item => {
-    if (isAddress(item)) {
+    if (isAddress(item) && items[item].hasOwnProperty('newValue')) {
       const currentNotifications = JSON.parse(locStore.get('notifications'));
       currentNotifications[item] = [];
-      locStore.get('notifications', JSON.stringify(currentNotifications));
+      locStore.set('notifications', JSON.stringify(currentNotifications));
     }
 
     if (
