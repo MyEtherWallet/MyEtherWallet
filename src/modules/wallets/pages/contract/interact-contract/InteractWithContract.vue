@@ -84,12 +84,11 @@
               >
                 <div class="bool-items">
                   <mew-switch
-                    :value="false"
+                    :value="input.value"
                     :label="input.name"
                     @input="valueInput(input.name, $event)"
                   />
                 </div>
-                <div class="bool-items"></div>
               </div>
             </div>
             <div v-show="hasInputs" class="text-center mt-3">
@@ -110,6 +109,13 @@
             >
               <mew-input
                 v-if="getType(output.type).type !== 'radio'"
+                :disabled="true"
+                :label="`${output.name} (${output.type})`"
+                :value="output.value"
+                class="non-bool-input"
+              />
+              <mew-input
+                v-if="getType(output.type).type === 'radio'"
                 :disabled="true"
                 :label="`${output.name} (${output.type})`"
                 :value="output.value"
@@ -181,7 +187,7 @@ export default {
         {
           name: 'demo',
           abi: tempDevAbi,
-          address: '0xAEf115Cd6723A44aD9901DB3134762392814fE17'
+          address: '0x98FE501cc73Ec0FA702c71BAAFc3471F4f266fAD'
         }
       ].concat(mergedContracts);
     },

@@ -19,7 +19,7 @@
               placeholder=" "
               @input="abiInput($event)"
             ></v-textarea>
-            <mew-input label="Contract name" placeholder=" " />
+            <mew-input label="Contract name" placeholder=" " @input="setContractName($event)"/>
             <div v-show="showInputs">
               <div
                 v-for="(input, idx) in inputs"
@@ -39,19 +39,27 @@
                 >
                   <div class="bool-items">
                     <mew-switch
-                      :value="false"
+                      :value="input.value"
                       :label="input.name"
                       @input="valueInput(input.name, $event)"
                     />
-                    <!--                  <mew-checkbox-->
-                    <!--                    v-model="inputs[input.name]"-->
-                    <!--                    :value="false"-->
-                    <!--                    :label="$t('contract.false')"-->
-                    <!--                    type="radio"-->
-                    <!--                    checked-->
-                    <!--                  />-->
+                                      <mew-checkbox
+                                        v-model="input.value"
+                                        :value="false"
+                                        :label="$t('contract.false')"
+                                        type="radio"
+                                        checked
+                                      />
                   </div>
-                  <div class="bool-items"></div>
+                  <div class="bool-items">
+                    <mew-checkbox
+                      v-model="input.value"
+                      :value="true"
+                      :label="$t('contract.false')"
+                      type="radio"
+                      checked
+                    />
+                  </div>
                 </div>
                 <!--              <mew-input :label="`${input.name} (${input.type})`"> </mew-input>-->
               </div>
@@ -112,6 +120,7 @@ export default {
   },
   data() {
     return {
+      contractName: '',
       show: false,
       activeContract: {},
       noInput: false,
@@ -142,7 +151,7 @@ export default {
       this.show = !this.show;
     },
     deploy() {
-      this.activeContract.deploy(this.ethValue);
+      this.activeContract.deploy(this.ethValue, this.contractName);
       this.activeContract.clear();
       this.inputs = {};
       this.canDeploy = false;
@@ -168,6 +177,9 @@ export default {
     },
     ethPayable(value) {
       this.ethValue = value;
+    },
+    setContractName(name){
+      this.contractName = name;
     },
     getType() {
       return Contracts.getType.apply(this, arguments);

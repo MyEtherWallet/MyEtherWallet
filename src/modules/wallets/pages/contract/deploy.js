@@ -1,11 +1,10 @@
 import BigNumber from 'bignumber.js';
+import store from 'store';
 import utils from 'web3-utils';
 import { address, bool, bytes, int, string, uint } from './solidityTypes';
 import sanitizeHex from '@/helpers/sanitizeHex';
 import * as ethUnit from 'ethjs-unit';
 import { Transaction } from 'ethereumjs-tx';
-
-import Web3 from 'web3';
 import { bufferToHex, generateAddress, toBuffer } from 'ethereumjs-util';
 
 const stringToArray = str => {
@@ -31,20 +30,13 @@ const validateHexString = str => {
 };
 
 export default class Deploy {
-  constructor(abi, txByteCode, address, web3, gasPrice, storeHandler) {
+  constructor(abi, txByteCode, address, web3, gasPrice) {
     try {
       this.userAddress = address;
       this.address = '';
-      this.web3 =
-        web3 ||
-        new Web3(
-          'HTTP://127.0.0.1:7545'
-          // 'wss://mainnet.infura.io/ws/v3/7d06294ad2bd432887eada360c5e1986'
-        );
+      this.web3 = web3;
       this.gasPrice = gasPrice;
       this.ABI = abi;
-      this.storeContractAddress = storeHandler || function () {};
-      // ===========
       this.constructorABI = null;
       this.constructorInputs = {};
       this.txByteCode = txByteCode;
@@ -62,17 +54,14 @@ export default class Deploy {
     this.constructorInputs = {};
     this.txByteCode = null;
     this.noConstructorInputs = false;
-  }
-
-  reset() {
-    this.constructorABI = null;
-    this.constructorInputs = {};
-    this.txByteCode = null;
-    this.noConstructorInputs = false;
-    this.address = '';
     this.inputs = {};
     this.ABI = null;
     this.contractMethods = [];
+  }
+
+  reset() {
+    this.clear();
+    this.address = '';
   }
 
   updateGasPrice(gasPrice) {
@@ -80,13 +69,7 @@ export default class Deploy {
   }
 
   get hasABI() {
-    try {
-      return !!Deploy.validateABI(this.ABI);
-    } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
-      return false;
-    }
+    return !!Deploy.validateABI(this.ABI);
   }
 
   get abiValid() {
@@ -101,23 +84,11 @@ export default class Deploy {
     }
   }
 
-  get hasContractAddress() {
-    try {
-      return this.address !== '' && utils.isAddress(this.address); // todo replace with helper
-    } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
-      return false;
-    }
-  }
-
-  get contractActive() {
-    return this.hasABI && this.hasContractAddress;
-  }
-
   get payableConstructor() {
     if (this.constructorABI) {
-      return this.constructorABI.payable;
+      return this.constructorABI.stateMutability
+        ? this.constructorABI.stateMutability === 'payable'
+        : this.constructorABI.payable;
     }
     return false;
   }
@@ -142,28 +113,8 @@ export default class Deploy {
     return false;
   }
 
-  setStoreHandler(storeHandler) {
-    this.storeContractAddress = storeHandler;
-  }
-
-  setAbi(abi) {
-    return new Promise((resolve, reject) => {
-      try {
-        if (abi) {
-          this.ABI = this.parseJSON(abi);
-          if (this.byteCodeValid) {
-            this.abiConstructor();
-          }
-        } else {
-          this.ABI = null;
-        }
-      } catch (e) {
-        // eslint-disable-next-line
-        console.error(e);
-        this.ABI = null;
-        reject(e);
-      }
-    });
+  setDeployArg(name, value) {
+    this.constructorInputs[name].value = value;
   }
 
   abiConstructor() {
@@ -196,7 +147,7 @@ export default class Deploy {
       return {};
     }
   }
-  deploy(withValue, keepMethods = false) {
+  deploy(withValue, contractName) {
     return new Promise((resolve, reject) => {
       try {
         if (!this.canDeploy) return Promise.reject();
@@ -208,7 +159,7 @@ export default class Deploy {
         else rawTx.value = '0x00';
         rawTx.data = this.txData();
         if (rawTx.data !== '0x') {
-          this.sendTransaction(rawTx, keepMethods)
+          this.sendTransaction(rawTx, contractName)
             .then(res => {
               resolve(res);
             })
@@ -236,30 +187,7 @@ export default class Deploy {
     }
     return _deployArgs;
   }
-  setDeployArg(name, value) {
-    this.constructorInputs[name].value = value;
-  }
-  setByteCode(txByteCode) {
-    try {
-      if (typeof txByteCode === 'object') {
-        if (txByteCode.hasOwnProperty('object'))
-          this.txByteCode =
-            txByteCode.object.substring(0, 2) === '0x'
-              ? txByteCode.object
-              : '0x' + txByteCode.object;
-      } else if (typeof txByteCode === 'string') {
-        this.txByteCode =
-          txByteCode.substring(0, 2) === '0x' ? txByteCode : '0x' + txByteCode;
-      } else {
-        this.txByteCode = null;
-      }
-      if (this.hasABI) {
-        this.abiConstructor();
-      }
-    } catch (e) {
-      this.txByteCode = null;
-    }
-  }
+
   txData() {
     if (this.canDeploy) {
       return new this.web3.eth.Contract(this.ABI)
@@ -281,7 +209,7 @@ export default class Deploy {
   getGasPrice() {
     return sanitizeHex(ethUnit.toWei(this.gasPrice, 'gwei').toString(16));
   }
-  sendTransaction(tx, keepMethods = false) {
+  sendTransaction(tx, contractName) {
     let coinbase;
     return this.web3.eth
       .getCoinbase()
@@ -308,14 +236,38 @@ export default class Deploy {
           generateAddress(toBuffer(coinbase), toBuffer(results[1]))
         );
         this.address = contractAddr;
-        this.storeContractAddress(contractAddr);
+        this.pushContractToStore(contractAddr, contractName);
         this.contractsDeployed.push(contractAddr);
-        this.clear(keepMethods);
+        this.clear();
         return this.web3.eth.sendTransaction(json);
       })
       .catch(err => {
         throw err;
       });
+  }
+
+  pushContractToStore(addr, contractName) {
+    const localStoredContract = store.get('customContracts') || [];
+    const itemIndex = localStoredContract.findIndex(item => {
+      return item.name.toLowerCase() === contractName.toLowerCase();
+    });
+    if (itemIndex === -1) {
+      const storableObj = {
+        abi: this.ABI,
+        address: addr,
+        comment: '',
+        name: contractName
+      };
+      localStoredContract.push(storableObj);
+    } else {
+      localStoredContract[itemIndex] = {
+        abi: this.ABI,
+        address: addr,
+        comment: '',
+        name: contractName
+      };
+    }
+    store.set('customContracts', localStoredContract);
   }
 
   createTypeValidatingProxy(item) {

@@ -3,7 +3,6 @@ import utils from 'web3-utils';
 import { address, bool, bytes, int, string, uint } from './solidityTypes';
 import sanitizeHex from '@/helpers/sanitizeHex';
 import * as ethUnit from 'ethjs-unit';
-import Web3 from 'web3';
 
 const stringToArray = str => {
   return str.replace(/[^a-zA-Z0-9_,]+/g, '').split(',');
@@ -36,12 +35,7 @@ export default class Method {
       this.constant = abi.constant || abi.stateMutability === 'view';
       this.inputs = {};
       this.outputs = {};
-      this.web3 =
-        web3 ||
-        new Web3(
-          'HTTP://127.0.0.1:7545'
-          // 'wss://mainnet.infura.io/ws/v3/7d06294ad2bd432887eada360c5e1986'
-        );
+      this.web3 = web3;
       this.gasPrice = gasPrice;
       this.ABI = abi;
 
@@ -176,7 +170,7 @@ export default class Method {
                     this.outputs['0'].value = JSON.stringify(res);
                   }
                 } else {
-                  this.outputs['0'].value = res;
+                  this.outputs['0'].value = res.toString();
                 }
               } else if (
                 typeof res === 'object' &&
@@ -236,7 +230,7 @@ export default class Method {
           }
           if (Object.keys(this.outputs).length === 1) {
             const key = '0';
-            this.outputs[key].value = result || res;
+            this.outputs[key].value = result || res.toString();
           } else if (
             typeof res === 'object' &&
             Object.keys(this.outputs).length > 1
@@ -328,16 +322,10 @@ export default class Method {
     return new Proxy(item, {
       set: (obj, prop, value) => {
         if (prop === 'value' && value !== null) {
-          if (
-            Method.isContractArgValid(
-              value,
-              Method.getType(obj.type).solidityType
-            )
-          ) {
-            obj.valid = true;
-          } else {
-            obj.valid = false;
-          }
+          obj.valid = !!Method.isContractArgValid(
+            value,
+            Method.getType(obj.type).solidityType
+          );
         } else if (prop === 'value' && value === null) {
           obj.valid = false;
         } else if (prop === 'clear') {
@@ -358,7 +346,7 @@ export default class Method {
   }
   static isContractArgValid(value, solidityType) {
     try {
-      if (!value) value = '';
+      if (!value && typeof value !== 'boolean') value = '';
       if (solidityType.includes('[]')) {
         const parsedValue = Array.isArray(value) ? value : stringToArray(value);
         const type = solidityType.replace('[]', '');
@@ -373,8 +361,7 @@ export default class Method {
       if (solidityType === string) return true;
       if (solidityType.includes(bytes))
         return value.substr(0, 2) === '0x' && validateHexString(value);
-      if (solidityType === bool)
-        return typeof value === typeof true || typeof value === typeof false;
+      if (solidityType === bool) return typeof value === 'boolean';
       return false;
     } catch (e) {
       // eslint-disable-next-line

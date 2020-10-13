@@ -50,6 +50,8 @@ export default class Contracts {
 
   clear() {
     this.txByteCode = null;
+    this.ABI = null;
+    this.address = '';
   }
 
   reset() {
@@ -60,32 +62,26 @@ export default class Contracts {
     this.contractMethods = [];
     this.selectedMethod = { inputs: [] };
     this.contractMethodDetails = {};
+    this.deployer = null;
   }
 
   updateGasPrice(gasPrice) {
+    if (this.deployer) {
+      this.deployer.updateGasPrice(gasPrice);
+    }
     this.gasPrice = gasPrice;
   }
 
   get hasABI() {
-    try {
-      return !!Contracts.validateABI(this.ABI);
-    } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
-      return false;
-    }
+    return !!Contracts.parseABI(this.ABI);
   }
 
   get abiValid() {
-    return this.hasABI && typeof this.ABI === 'object';
+    return this.hasABI && !!Contracts.validateABI(this.ABI);
   }
 
   get byteCodeValid() {
-    try {
-      return !!this.txByteCode && this.txByteCode.substring(0, 2) === '0x';
-    } catch (e) {
-      return false;
-    }
+    return !!this.txByteCode && this.txByteCode.substring(0, 2) === '0x';
   }
 
   get constructorInputs() {
@@ -96,13 +92,7 @@ export default class Contracts {
   }
 
   get hasContractAddress() {
-    try {
-      return this.address !== '' && utils.isAddress(this.address); // todo replace with helper
-    } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
-      return false;
-    }
+    return this.address !== '' && utils.isAddress(this.address); // todo replace with helper
   }
 
   get contractActive() {
@@ -138,15 +128,11 @@ export default class Contracts {
   }
 
   get isMethodConstant() {
-    return this.selectedMethod.constant;
+    return !!this.selectedMethod.constant;
   }
 
   get hasOutputs() {
-    try {
-      return this.selectedMethod.hasOutputs;
-    } catch (e) {
-      return false;
-    }
+    return !!this.selectedMethod.hasOutputs;
   }
 
   get selectedMethodInputs() {
@@ -154,7 +140,11 @@ export default class Contracts {
   }
 
   get inputsValid() {
-    return this.selectedMethod.inputsValid;
+    try {
+      return this.selectedMethod.inputsValid;
+    } catch (e) {
+      return false;
+    }
   }
 
   get contractMethodNames() {
@@ -167,19 +157,27 @@ export default class Contracts {
     return [];
   }
 
-  setStoreHandler(storeHandler) {
-    this.storeContractAddress = storeHandler;
-  }
-
   setSelectedMethodInputValue(name, value) {
     this.selectedMethod.setSelectedMethodInputValue(name, value);
+  }
+  deploy(withValue, contractName) {
+    this.clear();
+    return this.deployer.deploy(withValue, contractName);
+  }
+
+  setDeployArg(name, value) {
+    this.deployer.setDeployArg(name, value);
+  }
+
+  async write(txValue) {
+    return this.selectedMethod.write(txValue);
   }
 
   setAbi(abi) {
     return new Promise((resolve, reject) => {
       try {
         if (abi) {
-          this.ABI = Contracts.validateABI(abi);
+          this.ABI = Contracts.parseABI(abi);
           if (this.contractActive) {
             this.processAbi(this.ABI)
               .then(resolve)
@@ -229,7 +227,7 @@ export default class Contracts {
               }
             });
             this.contractMethodDetails = this.ABI.reduce((acc, cur) => {
-              if (cur.type !== 'constructor' && cur.type !== 'event') {
+              if (cur.type === 'function') {
                 acc[cur.name] = cur;
               }
               return acc;
@@ -252,6 +250,7 @@ export default class Contracts {
     return new Promise((resolve, reject) => {
       if (this.contractMethodDetails[methodName] instanceof Method) {
         this.selectedMethod = this.contractMethodDetails[methodName];
+        this.selectedMethod.updateGasPrice(this.gasPrice);
         resolve({
           inputs: this.selectedMethod.inputs,
           outputs: this.selectedMethod.outputs
@@ -293,13 +292,7 @@ export default class Contracts {
       return {};
     }
   }
-  deploy(withValue, keepMethods = false) {
-    return this.deployer.deploy(withValue, keepMethods);
-  }
 
-  setDeployArg(name, value) {
-    this.deployer.setDeployArg(name, value);
-  }
   setByteCode(txByteCode) {
     try {
       if (typeof txByteCode === 'object') {
@@ -314,6 +307,9 @@ export default class Contracts {
       } else {
         this.txByteCode = null;
       }
+      if (!validateHexString(this.txByteCode)) {
+        this.txByteCode = null;
+      }
       if (this.hasABI) {
         this.abiConstructor();
       }
@@ -322,11 +318,31 @@ export default class Contracts {
     }
   }
 
-  async write(txValue) {
-    return this.selectedMethod.write(txValue);
+  static validateABI(json) {
+    if (json === '') return false;
+    try {
+      if (Array.isArray(json)) {
+        if (json.length > 0) {
+          return json.every(item => {
+            if (item.type === 'constructor') {
+              return !!item.type && !!item.inputs;
+            }
+            if (item.type === 'function') {
+              return !!item.type && !!item.inputs && !!item.outputs;
+            }
+            if (item.type !== 'function' || item.type !== 'constructor') {
+              return !!item.type;
+            }
+          });
+        }
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
   }
 
-  static validateABI(json) {
+  static parseABI(json) {
     if (json === '') return false;
     try {
       const value = JSON.parse(json);
