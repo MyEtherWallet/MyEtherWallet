@@ -303,7 +303,7 @@
       ref="verifyWalletModal"
       :wallet="wallet"
       :usd="usd"
-      :nickname="nickname"
+      :nickname="actualFileName"
       :tokens-with-dollar="tokensWithDollarAmount"
       :token-total="convertedTokenTotal"
       :wallet-balance="walletBalance"
@@ -388,6 +388,9 @@ export default {
   },
   computed: {
     ...mapState('main', ['network', 'web3']),
+    actualFileName() {
+      return this.generateName(this.address);
+    },
     showBalanceReminder() {
       if (this.network.type.name === 'ETH' && this.walletType !== 'watchOnly') {
         return this.showLowBalance;

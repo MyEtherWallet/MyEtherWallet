@@ -384,6 +384,7 @@ import BigNumber from 'bignumber.js';
 import { MnemonicWallet } from '@/wallets';
 import { SELECTED_MEW_CX_ACC } from '@/builds/mewcx/cxHelpers/cxEvents.js';
 import createBlob from '@/helpers/createBlob.js';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 
 const TITLES = {
   0: {
@@ -939,7 +940,9 @@ export default {
         this.downloadFile = blob;
         this.file = e.data.walletJson;
         this.downloadName = e.data.name;
-        this.backupWallet();
+        this.selectedAddress = toChecksumAddress(
+          `0x${e.data.walletJson.address}`
+        );
         ExtensionHelpers.addWalletToStore(
           `0x${e.data.walletJson.address}`,
           JSON.stringify(e.data.walletJson),
@@ -964,8 +967,9 @@ export default {
           'Successfully added a wallet!',
           null
         );
+        this.backupWallet();
         if (this.linkQuery.hasOwnProperty('connectionRequest')) {
-          this.sendAddressToRequest(this.wallet.getChecksumAddressString());
+          this.sendAddressToRequest(this.selectedAddress);
         }
         this.$refs.addMyWallet.$refs.modalWrapper.hide();
       }

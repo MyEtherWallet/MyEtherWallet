@@ -182,9 +182,7 @@ export default {
             this.viewPrint();
           }
         }
-      ],
-      walletJson: '',
-      filename: ''
+      ]
     };
   },
   computed: {
@@ -196,6 +194,12 @@ export default {
           ? '0x'
           : this.wallet.getAddressString()
         : '0x';
+    },
+    filename() {
+      return this.nickname;
+    },
+    walletJson() {
+      return createBlob(this.file, 'mime');
     }
   },
   watch: {
@@ -211,10 +215,6 @@ export default {
           });
       }
     }
-  },
-  mounted() {
-    this.walletJson = createBlob(this.file, 'mime');
-    this.filename = this.nickname;
   },
   methods: {
     ...mapActions('main', ['clearWallet']),
