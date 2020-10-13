@@ -146,6 +146,7 @@ chrome.runtime.onMessage.addListener(function (request, _, callback) {
     payload: request.payload,
     id: extensionID
   };
+
   const middleware = new MiddleWare();
   middleware.use(csErrors);
   middleware.use(csInjectedWeb3);
