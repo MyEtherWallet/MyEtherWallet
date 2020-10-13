@@ -40,7 +40,7 @@ const EXCEPTIONS = [
   'ethereumjs-util',
   '@makerdao/dai-plugin-migrations',
   'worker-loader',
-  'is-ipfs'
+  'eslint-plugin-vue'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
