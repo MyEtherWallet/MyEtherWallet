@@ -281,19 +281,11 @@ export default {
     },
     wallets(newVal) {
       this.totalBalance = 0;
-      try {
-        this.processAccounts(newVal);
-      } catch (e) {
-        console.log(e);
-      }
+      this.processAccounts(newVal);
     },
     network() {
       this.totalBalance = 0;
-      try {
-        this.processAccounts(this.wallets);
-      } catch (e) {
-        console.log(e);
-      }
+      this.processAccounts(this.wallets);
     }
   },
   mounted() {
