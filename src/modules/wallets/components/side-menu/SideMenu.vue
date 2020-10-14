@@ -1,6 +1,15 @@
 <template>
   <div class="basic" style="z-index: 1">
     <div v-if="mobile" class="mew-component--sidemenu-mobile">
+      <v-bottom-sheet v-model="mobileMenu">
+        <v-sheet color="basic" class="py-12 px-8">
+          <accordion-menu
+            class="preset--mobile-max-width mx-auto"
+            @route-change="mobileMenu = false"
+          />
+        </v-sheet>
+      </v-bottom-sheet>
+
       <div
         class="px-4 pt-2 mx-auto d-flex flex-column preset--mobile-max-width"
       >
@@ -38,7 +47,7 @@
               </div>
             </div>
             <div class="mr-n3">
-              <v-btn fab icon large>
+              <v-btn fab icon large @click="mobileMenu = true">
                 <v-icon color="white" large>mdi-menu</v-icon>
               </v-btn>
             </div>
@@ -147,8 +156,8 @@ export default {
       default: false
     }
   },
-  data: () => {
-    return { openNotifications: false };
+  data() {
+    return { openNotifications: false, mobileMenu: false };
   }
 };
 </script>

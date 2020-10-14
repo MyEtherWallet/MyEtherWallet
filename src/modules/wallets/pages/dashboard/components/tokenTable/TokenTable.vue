@@ -13,7 +13,7 @@
           <h5 class="font-weight-bold">2234.22</h5>
         </div>
       </div>
-      <mew-button title="Trade" button-size="small" btn-style="outline" />
+      <mew-button title="Trade" btn-size="small" btn-style="outline" />
     </div>
 
     <ul class="mt-3">

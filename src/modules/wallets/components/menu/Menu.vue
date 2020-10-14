@@ -26,7 +26,8 @@
           height="26"
           :src="mainItems.iconLight"
         />
-        <div>{{ mainItems.name }}</div>
+        <div class="d-none d-lg-block">{{ mainItems.name }}</div>
+        <h3 class="d-block d-lg-none">{{ mainItems.name }}</h3>
         <v-icon v-if="mainItems.children" class="ml-auto dark">
           mdi-chevron-down
         </v-icon>
@@ -41,10 +42,11 @@
           v-for="(subItems, subKey) in mainItems.children"
           :key="subKey"
           :ref="subItems.routeName"
-          class="cursor--pointer pl-12 pr-3 py-1"
+          class="cursor--pointer pl-12 pr-3 py-2"
           @click="routerPush(subItems.routeName)"
         >
-          <span class="pl-2">{{ subItems.name }}</span>
+          <span class="d-none d-lg-block pl-2">{{ subItems.name }}</span>
+          <h4 class="d-block d-lg-none pl-2">{{ subItems.name }}</h4>
         </div>
       </div>
     </div>
@@ -195,6 +197,7 @@ export default {
       }
     },
     routerPush(routeName) {
+      this.$emit('route-change');
       this.$router.push({ name: routeName, params: {} });
     }
   }
