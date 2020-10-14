@@ -1,4 +1,4 @@
-// import WalletLink from 'walletlink';
+import WalletLink from 'walletlink';
 
 import store from '@/store';
 import { Transaction } from 'ethereumjs-tx';

@@ -3,16 +3,16 @@
     <home-header title="Tools" />
     <v-container class="mt-8 mb-12">
       <mew-tabs :is-vertical="true" :items="items">
-        <template v-slot:tabItemContent1>
+        <template #tabItemContent1>
           <watch-only />
         </template>
-        <template v-slot:tabItemContent2>
+        <template #tabItemContent2>
           <convert />
         </template>
-        <template v-slot:tabItemContent3>
+        <template #tabItemContent3>
           <offline-helper />
         </template>
-        <template v-slot:tabItemContent4>
+        <template #tabItemContent4>
           <verify />
         </template>
       </mew-tabs>

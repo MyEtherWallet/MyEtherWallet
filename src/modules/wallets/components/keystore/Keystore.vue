@@ -1,7 +1,7 @@
 <template>
   <v-sheet color="transparent" max-width="800px" class="mx-auto">
     <mew-stepper :items="items" :on-step="step">
-      <template v-if="step === 1" v-slot:outsideStepContent1>
+      <template v-if="step === 1" #outsideStepContent1>
         <div>
           <v-sheet color="white" class="border-radius--10px pa-12">
             <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
@@ -30,7 +30,7 @@
           />
         </div>
       </template>
-      <template v-if="step === 2" v-slot:outsideStepContent2>
+      <template v-if="step === 2" #outsideStepContent2>
         <div>
           <v-sheet color="white" class="border-radius--10px pa-12">
             <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
@@ -70,7 +70,7 @@
           />
         </div>
       </template>
-      <template v-if="step === 3" v-slot:outsideStepContent3>
+      <template v-if="step === 3" #outsideStepContent3>
         <v-sheet color="white" class="border-radius--10px pa-12">
           <div class="d-flex align-center">
             <div class="mr-8">

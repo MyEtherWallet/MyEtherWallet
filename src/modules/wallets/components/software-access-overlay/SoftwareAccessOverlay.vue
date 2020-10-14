@@ -8,7 +8,7 @@
     :left-btn-text="step > 0 ? 'Back' : ''"
     @closeOverlay="overlayClose"
   >
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <v-sheet color="transparent" max-width="650px" class="mx-auto px-5">
         <v-row v-if="!step">
           <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">

@@ -45,7 +45,7 @@ export default class Tokenslist {
         }
       })
       .catch(error => {
-        console.error("error", error);
+        console.error('error', error);
         throw error;
       });
   }

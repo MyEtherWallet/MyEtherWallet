@@ -1,7 +1,7 @@
 <template>
   <v-sheet color="transparent">
     <mew-stepper :items="steppers" :on-step="step">
-      <template v-if="step === 1" v-slot:outsideStepContent1>
+      <template v-if="step === 1" #outsideStepContent1>
         <div>
           <v-sheet class="pa-12">
             <v-container>
@@ -72,7 +72,7 @@
                   }
                 ]"
               >
-                <template v-slot:panelBody1>
+                <template #panelBody1>
                   <mew-input
                     v-model="extraWord"
                     type="password"
@@ -104,7 +104,7 @@
         </div>
       </template>
 
-      <template v-if="step === 2" v-slot:outsideStepContent2>
+      <template v-if="step === 2" #outsideStepContent2>
         <v-sheet class="pa-12">
           <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
           <div class="mb-10">
@@ -225,7 +225,7 @@
         </div> -->
       </template>
 
-      <template v-if="step === 3" v-slot:outsideStepContent3>
+      <template v-if="step === 3" #outsideStepContent3>
         Hello step 3
         <!-- <v-sheet>
           <div class="d-flex align-center">

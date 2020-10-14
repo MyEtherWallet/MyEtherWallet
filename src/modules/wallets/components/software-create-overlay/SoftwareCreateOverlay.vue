@@ -1,7 +1,7 @@
 <template>
   <div>
     <mew-overlay :show-overlay="open" :title="typeTitle">
-      <template v-slot:mewOverlayBody>
+      <template #mewOverlayBody>
         <v-sheet
           v-if="type === '' && step === 0"
           color="transparent"

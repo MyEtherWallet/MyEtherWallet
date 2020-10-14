@@ -1,6 +1,5 @@
 import SendTransaction from '../index';
 import web3Instance from '../web3-delete';
-import VueTestUtils from '@vue/test-utils';
 
 const sendTransaction = new SendTransaction(
   // account

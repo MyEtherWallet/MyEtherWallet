@@ -5,7 +5,7 @@
     right-btn-text="Close"
     left-btn-text="Back"
   >
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <mew6-white-sheet class="mt-4">
         <transactionConfirmation />
       </mew6-white-sheet>

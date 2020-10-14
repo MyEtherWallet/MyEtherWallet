@@ -5,7 +5,7 @@
     :has-elevation="true"
     :has-indicator="true"
   >
-    <template v-slot:moduleBody>
+    <template #moduleBody>
       <div class="full-width px-15 pt-3">
         <div class="d-flex justify-end mr-3 entire-bal">
           <mew-button
@@ -64,7 +64,7 @@
           :panel-items="expandPanel"
           class="px-15"
         >
-          <template v-slot:panelBody1>
+          <template #panelBody1>
             <div>
               <mew-input
                 :label="$t('common.gas.price')"
@@ -284,7 +284,7 @@ export default {
           : '';
         this.amount = this.prefilledAmount;
         this.address = this.prefilledAddress;
-        this.gasLimit = this.customGasLimit;
+        // this.gasLimit = this.customGasLimit;
         this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
         this.$refs.expandPanel.setToggle(true);
         this.toastType = 'warning';
@@ -298,7 +298,6 @@ export default {
       this.address = '';
       this.amount = '0';
       this.address = '';
-      this.gasLimit = '21000';
       this.gasPrice = '90';
       this.isValidAddress = false;
       this.$refs.expandPanel.setToggle(false);

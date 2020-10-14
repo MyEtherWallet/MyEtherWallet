@@ -1,6 +1,6 @@
 <template>
   <mew-overlay :show-overlay="open">
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <div class="pa-8">
         <h2 class="text-center mb-10">Add an owned domain</h2>
         <v-sheet color="transparent" width="700px">

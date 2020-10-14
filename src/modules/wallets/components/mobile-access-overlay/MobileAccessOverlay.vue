@@ -6,7 +6,7 @@
     :close="overlayClose"
     left-btn-text=""
   >
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <v-sheet color="transparent" max-width="450px" class="mx-auto px-5">
         <v-row>
           <v-col v-for="(btn, key) in buttons" :key="key" cols="9" sm="12">
@@ -16,7 +16,7 @@
               color-theme="basic"
               @click.native="btn.fn"
             >
-              <template v-slot:contentSlot>
+              <template #contentSlot>
                 <img class="icon" :src="btn.icon" />
               </template>
             </mew-super-button>

@@ -30,7 +30,7 @@ import { onError } from 'apollo-link-error';
 import ApolloConfig from '../configs';
 
 import whiteSheet from '@/components/white-sheet/WhiteSheet.vue';
-Vue.component('mew6-white-sheet', whiteSheet);
+Vue.component('Mew6WhiteSheet', whiteSheet);
 
 Vue.prototype.$eventHub = new Vue();
 

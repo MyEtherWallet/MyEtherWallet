@@ -36,7 +36,7 @@
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
-        <template v-slot:tabContent1>
+        <template #tabContent1>
           <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
             <div class="d-flex align-center justify-space-between">
               <div class="mew-heading-3">DAI Balance</div>
@@ -101,7 +101,7 @@
             </div>
           </v-sheet>
         </template>
-        <template v-slot:tabContent2>
+        <template #tabContent2>
           <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
             <div class="text-right">
               <mew-button

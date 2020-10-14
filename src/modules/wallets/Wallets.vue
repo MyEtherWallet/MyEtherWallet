@@ -22,14 +22,14 @@
 <script>
 import sideMenu from './components/side-menu/SideMenu';
 import walletHeader from './components/header/Header';
-import walletFooter from './components/footer/Footer';
+// import walletFooter from './components/footer/Footer';
 import network from '@/modules/wallets/components/network/Network';
 import swap from '@/modules/wallets/components/swap/Swap';
 import TokensList from '@/modules/tokens/index';
 
 export default {
   components: {
-    walletFooter,
+    // walletFooter,
     sideMenu,
     walletHeader,
     network,

@@ -4,12 +4,12 @@
     title="Register domain"
     right-btn-text="Cancel"
   >
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <DomainTaken />
       <mew-stepper :items="stepperItems" :on-step="onStep">
-        <template v-slot:outsideStepContent1><Step1 /></template>
-        <template v-slot:outsideStepContent2><Step2 /></template>
-        <template v-slot:outsideStepContent3><Step3 /></template>
+        <template #outsideStepContent1><Step1 /></template>
+        <template #outsideStepContent2><Step2 /></template>
+        <template #outsideStepContent3><Step3 /></template>
       </mew-stepper>
     </template>
   </mew-overlay>
