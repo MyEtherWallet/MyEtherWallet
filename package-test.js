@@ -39,7 +39,12 @@ const EXCEPTIONS = [
   'ethereumjs-util',
   '@makerdao/dai-plugin-migrations',
   'worker-loader',
-  'eslint-plugin-vue'
+  'eslint-plugin-vue',
+  '@vue/cli-plugin-babel',
+  '@vue/cli-plugin-eslint',
+  '@vue/cli-plugin-pwa',
+  '@vue/cli-plugin-unit-jest',
+  '@vue/cli-service'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
