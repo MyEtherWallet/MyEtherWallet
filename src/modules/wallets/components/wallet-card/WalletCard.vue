@@ -70,6 +70,7 @@
 import changeAddress from '@/modules/wallets/components/change-address/ChangeAddress';
 import paperWallet from '@/modules/wallets/components/paper-wallet/PaperWallet';
 import qrCodePopup from '@/modules/wallets/components/qr-code-popup/QRcodePopup';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -80,11 +81,14 @@ export default {
   data() {
     return {
       openChangeAddress: false,
-      openPaperWallet: false,
-      address: '0xc2a933600c3fe776777b4000665409c61493d417'
+      openPaperWallet: false
     };
   },
   computed: {
+    ...mapState(['account']),
+    address() {
+      return this.account.address;
+    },
     lastFour() {
       return this.address.substring(
         this.address.length - 4,

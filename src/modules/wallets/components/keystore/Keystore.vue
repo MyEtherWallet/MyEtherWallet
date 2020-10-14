@@ -24,7 +24,7 @@
               />
             </div>
           </v-sheet>
-          <warning-sheet
+          <mew-warning-sheet
             title="NOT RECOMMENDED"
             description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
           />
@@ -64,7 +64,7 @@
               class="link"
             />
           </v-sheet>
-          <warning-sheet
+          <mew-warning-sheet
             title="NOT RECOMMENDED"
             description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
           />

@@ -44,7 +44,7 @@
           :unlock-private-key-wallet="unlockPrivateKeyWallet"
         />
         <v-col cols="12" sm="12">
-          <warning-sheet
+          <mew-warning-sheet
             title="Not Recommended"
             description="This information is sensetive, and these options should only be used in offline settings by experienced crypto users."
             :link-obj="warningSheetObj"

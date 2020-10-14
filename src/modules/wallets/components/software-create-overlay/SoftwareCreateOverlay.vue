@@ -40,7 +40,7 @@
             "
           />
 
-          <warning-sheet
+          <mew-warning-sheet
             class="mew-component--warning"
             title="NOT RECOMMENDED"
             :link-obj="linkToLearnMore"

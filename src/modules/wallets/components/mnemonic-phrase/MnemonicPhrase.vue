@@ -93,7 +93,7 @@
               </v-col>
             </v-container>
           </v-sheet>
-          <warning-sheet
+          <mew-warning-sheet
             class="mt-5"
             title="Caution"
             description="DO NOT take a screenshot or
@@ -218,7 +218,7 @@
             </div>
           </v-sheet>
 
-          <warning-sheet
+          <mew-warning-sheet
             title="NOT RECOMMENDED"
             description="Not recommanded"
           />
