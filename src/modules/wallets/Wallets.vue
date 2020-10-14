@@ -5,15 +5,19 @@
       <div class="flex-grow-1 d-flex flex-column justify-space-between">
         <v-container>
           <wallet-header />
-          <router-view :owners-tokens="ownersTokens" />
+          <v-row>
+            <v-col cols="9">
+              <router-view :owners-tokens="ownersTokens" />
+            </v-col>
+            <v-col cols="3">
+              <network />
+              <div class="pa-4"></div>
+              <swap />
+              <div class="pa-4"></div>
+              <banner-ads />
+            </v-col>
+          </v-row>
         </v-container>
-        <!-- need to redo this / incorrect placement -->
-        <!-- <wallet-footer class="mt-10 box-shadow" /> -->
-      </div>
-      <div>
-        <network />
-        <div class="pa-4"></div>
-        <swap />
       </div>
     </div>
   </v-sheet>
@@ -22,18 +26,18 @@
 <script>
 import sideMenu from './components/side-menu/SideMenu';
 import walletHeader from './components/header/Header';
-// import walletFooter from './components/footer/Footer';
 import network from '@/modules/wallets/components/network/Network';
 import swap from '@/modules/wallets/components/swap/Swap';
+import bannerAds from '@/modules/wallets/components/banner-ads/BannerAds';
 import TokensList from '@/modules/tokens/index';
 
 export default {
   components: {
-    // walletFooter,
     sideMenu,
     walletHeader,
     network,
-    swap
+    swap,
+    bannerAds
   },
   data() {
     return {

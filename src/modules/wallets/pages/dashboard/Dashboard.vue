@@ -151,29 +151,16 @@
       </div>
     </div>
     <div class="pa-4"></div>
-    <div>
-      <network />
-      <div class="pa-4"></div>
-      <swap />
-      <div class="pa-4"></div>
-      <banner-ads />
-    </div>
   </div>
 </template>
 
 <script>
-import network from '@/modules/wallets/components/network/Network';
-import swap from '@/modules/wallets/components/swap/Swap';
-import bannerAds from '@/modules/wallets/components/banner-ads/BannerAds';
 import staticData from './staticData.js';
 import chart from '@/modules/wallets/components/chart/Chart';
 
 export default {
   components: {
-    chart,
-    swap,
-    network,
-    bannerAds
+    chart
   },
   data() {
     return staticData;

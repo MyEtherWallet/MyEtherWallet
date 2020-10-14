@@ -39,7 +39,7 @@
         @click.native="activeTab = 1"
       />
     </div>
-    <warning-sheet :description="warningDescription" />
+    <mew-warning-sheet :description="warningDescription" />
   </v-sheet>
 </template>
 

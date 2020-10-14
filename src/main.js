@@ -22,12 +22,11 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import ApolloClient from 'apollo-client';
 import { split } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
-import { WebSocketLink } from 'apollo-link-ws';
+// import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import VueApollo from 'vue-apollo';
-import { SubscriptionClient } from 'subscriptions-transport-ws';
+// import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { onError } from 'apollo-link-error';
-import ApolloConfig from '../configs';
 
 import whiteSheet from '@/components/white-sheet/WhiteSheet.vue';
 Vue.component('Mew6WhiteSheet', whiteSheet);
@@ -58,17 +57,17 @@ Vue.$i18n = i18n;
 
 // Apollo (Graphql)
 const httpLink = new HttpLink({
-  uri: ApolloConfig.APOLLO_HTTP
+  uri: 'https://nft.mewapi.io'
 });
 
-const subscriptionClient = new SubscriptionClient(
-  ApolloConfig.APOLLO_WS,
-  { lazy: true, reconnect: true },
-  null,
-  []
-);
+// const subscriptionClient = new SubscriptionClient(
+//   ApolloConfig.APOLLO_WS,
+//   { lazy: true, reconnect: true },
+//   null,
+//   []
+// );
 
-const wsLink = new WebSocketLink(subscriptionClient);
+// const wsLink = new WebSocketLink(subscriptionClient);
 
 // Development mode
 const onErrorLink = onError(({ graphQLErrors }) => {
@@ -96,7 +95,7 @@ const link = split(
       definition.operation === 'subscription'
     );
   },
-  wsLink,
+  // wsLink,
   onErrorLink.concat(httpLink)
 );
 
