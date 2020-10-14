@@ -16,10 +16,20 @@
         <mew6-white-sheet>
           <v-sheet
             color="transparent"
-            width="700px"
-            class="pa-8 mew-component--aave-borrow-overlay"
+            class="pa-3 pa-lg-8 mew-component--aave-borrow-overlay"
           >
-            <mew-table :table-headers="tableHeader" :table-data="tableData" />
+            <mew-table
+              class="d-none d-lg-block"
+              :table-headers="tableHeader"
+              :table-data="tableData"
+            />
+
+            <mobile-table
+              v-for="(d, key) in mobileTableData"
+              :key="key"
+              :table-data="d"
+              class="d-block d-lg-none mb-3"
+            />
 
             <mew-expand-panel
               class="mt-10"
@@ -29,7 +39,7 @@
 
             <div class="d-flex justify-center mt-8">
               <mew-button
-                button-size="xlarge"
+                btn-size="xlarge"
                 title="Continue"
                 @click.native="activeTab = 1"
               />
@@ -41,30 +51,12 @@
       <div>
         <h2 class="text-center mb-10">2. Deposit ETH and Generate DAI</h2>
         <mew6-white-sheet>
-          <v-sheet color="transparent" width="600px" class="pa-8">
-            <v-row class="mb-5">
-              <v-col cols="6" md="6">
-                <div class="mew-heading-3 mb-2">My Collateralization Ratio</div>
-                <div>65.34% (Min 150%)</div>
-              </v-col>
-              <v-col cols="6" md="6">
-                <div class="mew-heading-3 mb-2">My Liquidation Price</div>
-                <div>$420.53</div>
-              </v-col>
-              <v-col cols="6" md="6">
-                <div class="mew-heading-3 mb-2">Current ETH Price</div>
-                <div>$120.53</div>
-              </v-col>
-              <v-col cols="6" md="6">
-                <div class="mew-heading-3 mb-2">Stability Fee</div>
-                <div>4.00%</div>
-              </v-col>
-            </v-row>
-            <div class="d-flex mx-n2">
+          <v-sheet color="transparent" class="pa-3 pa-lg-8">
+            <div class="d-block d-lg-flex mx-n2 mb-3">
               <v-card
                 flat
                 color="informationBlock"
-                class="pa-6 mx-2 flex-grow-1"
+                class="pa-6 mx-2 flex-grow-1 mb-3 mb-lg-0"
               >
                 <div class="font-weight-bold mb-2">My ETH Balance</div>
                 <div class="mew-heading-1 mb-1">
@@ -87,7 +79,26 @@
               </v-card>
             </div>
 
-            <div class="mx-12 my-8">
+            <v-row class="mb-5">
+              <v-col cols="12" lg="6" md="6">
+                <div class="mew-heading-3 mb-2">My Collateralization Ratio</div>
+                <div>65.34% (Min 150%)</div>
+              </v-col>
+              <v-col cols="12" lg="6" md="6">
+                <div class="mew-heading-3 mb-2">My Liquidation Price</div>
+                <div>$420.53</div>
+              </v-col>
+              <v-col cols="12" lg="6" md="6">
+                <div class="mew-heading-3 mb-2">Current ETH Price</div>
+                <div>$120.53</div>
+              </v-col>
+              <v-col cols="12" lg="6" md="6">
+                <div class="mew-heading-3 mb-2">Stability Fee</div>
+                <div>4.00%</div>
+              </v-col>
+            </v-row>
+
+            <div class="mx-0 mx-lg-12 my-8">
               <div class="mew-heading-3 mb-2">
                 How much ETH would you like to lock in your Vault?
               </div>
@@ -122,7 +133,7 @@
               </v-btn-toggle>
             </v-sheet>
 
-            <div class="mx-12 my-8">
+            <div class="mx-0 mx-lg-12 my-8">
               <div class="mew-heading-3 mb-2">
                 How much DAI would you like to generate?
               </div>
@@ -172,8 +183,7 @@
         <mew6-white-sheet>
           <v-sheet
             color="transparent"
-            width="700px"
-            class="px-8 py-1 mew-component--aave-borrow-overlay"
+            class="px-3 px-lg-8 py-1 mew-component--aave-borrow-overlay"
           >
             <table class="width--full">
               <tbody>
@@ -211,8 +221,10 @@
 </template>
 
 <script>
+import mobileTable from '@/components/mobile-table/MobileTable';
+
 export default {
-  components: {},
+  components: { mobileTable },
   props: {
     open: { default: false, type: Boolean },
     close: {
@@ -224,6 +236,59 @@ export default {
   },
   data() {
     return {
+      mobileTableData: [
+        [
+          {
+            label: 'Activity',
+            value: 'Deposited 12.0000 DAI'
+          },
+          {
+            label: 'Date',
+            value: '01/02/2020, 2:16:32 PM'
+          },
+          {
+            label: 'TX Hash',
+            value:
+              '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+            link:
+              'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+          }
+        ],
+        [
+          {
+            label: 'Activity',
+            value: 'Deposited 12.0000 DAI'
+          },
+          {
+            label: 'Date',
+            value: '01/02/2020, 2:16:32 PM'
+          },
+          {
+            label: 'TX Hash',
+            value:
+              '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+            link:
+              'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+          }
+        ],
+        [
+          {
+            label: 'Activity',
+            value: 'Deposited 12.0000 DAI'
+          },
+          {
+            label: 'Date',
+            value: '01/02/2020, 2:16:32 PM'
+          },
+          {
+            label: 'TX Hash',
+            value:
+              '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+            link:
+              'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+          }
+        ]
+      ],
       vaultAmount: 25,
       daiAmount: 25,
       tableHeader: [

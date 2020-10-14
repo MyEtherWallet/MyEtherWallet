@@ -31,7 +31,7 @@
         <div
           v-if="t.link"
           class="font-weight-bold text-overflow--ellipsis primary--text"
-          style="max-width: 50%"
+          style="max-width: 120px"
         >
           <a :href="t.link" target="_blank">{{ t.value }}</a>
         </div>

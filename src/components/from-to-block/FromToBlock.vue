@@ -1,7 +1,12 @@
 <template>
   <div class="position--relative superPrimary border-radius--5px">
     <div class="right-arrow d-flex align-center justify-center">
-      <v-icon class="searchText--text">mdi-arrow-right-thick</v-icon>
+      <v-icon class="d-none d-lg-block searchText--text"
+        >mdi-arrow-right-thick</v-icon
+      >
+      <v-icon class="d-block d-lg-none searchText--text"
+        >mdi-arrow-down-thick</v-icon
+      >
     </div>
     <v-row>
       <v-col cols="12" lg="6" class="text-center px-10 py-6">
