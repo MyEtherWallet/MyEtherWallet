@@ -288,6 +288,7 @@
       :address="address"
       :remove-wallet="removeWallet"
       :nickname="nickname"
+      :loading="loading"
       @password="e => (password = e)"
     />
     <password-only-modal
@@ -615,9 +616,9 @@ export default {
         });
 
         worker.onmessage = () => {
-          this.loading = false;
           ExtensionHelpers.deleteWalletFromStore(this.address, () => {
             this.$refs.removeWalletModal.$refs.removeWalletModal.$refs.modalWrapper.hide();
+            this.loading = false;
             Toast.responseHandler(
               this.$t('mewcx.remove-wallet-successfully'),
               Toast.SUCCESS
