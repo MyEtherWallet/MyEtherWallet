@@ -7,7 +7,7 @@
     :close="overlayClose"
     :left-btn-text="step > 0 ? 'Back' : ''"
   >
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <div v-if="!step">
         <div class="text-center">
           Select a hardware wallet to access. Make sure <br />
@@ -31,7 +31,7 @@
                     color-theme="basic"
                     @click.native="nextStep(button.type)"
                   >
-                    <template v-slot:contentSlot>
+                    <template #contentSlot>
                       <img :src="button.icon" />
                     </template>
                   </mew-super-button>
@@ -199,7 +199,7 @@
                 :interactive-content="true"
                 :panel-items="panelItems"
               >
-                <template v-slot:panelBody1>
+                <template #panelBody1>
                   <div class="network-container">
                     <v-radio-group v-model="selectedNetwork">
                       <div v-for="type in networkTypes" :key="type">
@@ -224,7 +224,7 @@
                     </v-radio-group>
                   </div>
                 </template>
-                <template v-slot:panelBody2>
+                <template #panelBody2>
                   <div>
                     <v-radio-group v-model="selectedAddress">
                       <table width="100%">

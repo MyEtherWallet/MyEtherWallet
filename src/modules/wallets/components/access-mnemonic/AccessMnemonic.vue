@@ -56,7 +56,7 @@
                 }
               ]"
             >
-              <template v-slot:panelBody1>
+              <template #panelBody1>
                 <mew-input
                   v-model="extraWord"
                   type="password"
@@ -110,7 +110,7 @@
                 :interactive-content="true"
                 :panel-items="panelItems"
               >
-                <template v-slot:panelBody1>
+                <template #panelBody1>
                   <div class="network-container">
                     <v-radio-group v-model="selectedNetwork">
                       <div v-for="type in networkTypes" :key="type">
@@ -135,7 +135,7 @@
                     </v-radio-group>
                   </div>
                 </template>
-                <template v-slot:panelBody2>
+                <template #panelBody2>
                   <div>
                     <v-radio-group v-model="selectedAddress">
                       <table width="100%">

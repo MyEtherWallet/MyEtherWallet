@@ -9,7 +9,7 @@
       :cycle="false"
       :show-arrows="false"
     >
-      <template v-slot:slide1>
+      <template #slide1>
         <div class="sheet-container">
           <v-sheet
             :outlined="true"
@@ -56,7 +56,7 @@
           </v-sheet>
         </div>
       </template>
-      <template v-slot:slide2>
+      <template #slide2>
         <div class="sheet-container">
           <v-sheet
             :outlined="true"

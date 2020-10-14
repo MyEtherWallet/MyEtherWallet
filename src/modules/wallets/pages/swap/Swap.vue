@@ -97,7 +97,7 @@
               :panel-items="exPannel"
               class="mt-4 mb-10 swap-expend"
             >
-              <template v-slot:panelBody1>
+              <template #panelBody1>
                 <mew-input
                   label="Gas Price"
                   placeholder=" "

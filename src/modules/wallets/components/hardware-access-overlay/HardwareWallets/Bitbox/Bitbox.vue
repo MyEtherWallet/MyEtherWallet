@@ -4,9 +4,9 @@
     title="1. Connect with Finney"
     right-btn-text="Cancel"
   >
-    <template v-slot:mewComponent>
+    <template #mewComponent>
       <mew-tabs :items="tabs">
-        <template v-slot:tabContent1>
+        <template #tabContent1>
           <div>
             <h2 class="text-center pb-8">Select BitBox wallet</h2>
             <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
@@ -27,7 +27,7 @@
             </v-sheet>
           </div>
         </template>
-        <template v-slot:tabContent2>
+        <template #tabContent2>
           <div>
             <h2 class="text-center pb-8">1. Enter your password</h2>
             <mew6-white-sheet>
@@ -52,18 +52,18 @@
             </mew6-white-sheet>
           </div>
         </template>
-        <template v-slot:tabContent2>
+        <template #tabContent3>
           <div>
             <h2 class="text-center pb-8">2. Confirm network & address</h2>
             <div class="overlay-content">
               <mew-expand-panel :panel-items="panelItems">
-                <template v-slot:panelBody1>
+                <template #panelBody1>
                   <GroupRadioButtons :buttons="networkButtons" />
                 </template>
               </mew-expand-panel>
 
               <mew-expand-panel :panel-items="panelItems">
-                <template v-slot:panelBody1>
+                <template #panelBody1>
                   <address-table />
                 </template>
               </mew-expand-panel>

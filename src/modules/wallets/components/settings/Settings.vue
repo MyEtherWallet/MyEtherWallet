@@ -5,18 +5,18 @@
     right-btn-text="Close"
     left-btn-text="Back"
   >
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <mew-expand-panel :panel-items="panelItems">
-        <template v-slot:panelBody1>
+        <template #panelBody1>
           <gas-price />
         </template>
-        <template v-slot:panelBody2>
+        <template #panelBody2>
           <import-config />
         </template>
-        <template v-slot:panelBody3>
+        <template #panelBody3>
           <export-config />
         </template>
-        <template v-slot:panelBody4>
+        <template #panelBody4>
           <notifications />
         </template>
       </mew-expand-panel>

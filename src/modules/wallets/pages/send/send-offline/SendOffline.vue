@@ -32,7 +32,7 @@
             </div>
 
             <mew-expand-panel is-toggle has-dividers :panel-items="exPannel">
-              <template v-slot:panelBody1>
+              <template #panelBody1>
                 <div>
                   <mew-input label="Gas Price" placeholder=" " value="40" />
                   <mew-input label="Gas Limit" placeholder=" " value="21000" />

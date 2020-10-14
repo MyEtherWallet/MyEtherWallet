@@ -25,7 +25,7 @@
           :note="btn.note"
           @click.native="btn.fn"
         >
-          <template v-slot:contentSlot>
+          <template #contentSlot>
             <img :src="btn.rightIcon" width="100px" />
           </template>
         </mew-super-button>

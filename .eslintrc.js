@@ -27,7 +27,8 @@ module.exports = {
     'security/detect-new-buffer': 'off',
     'security/detect-object-injection': 'off',
     'require-atomic-updates': 'off',
-    'no-prototype-builtins': 'off'
+    'no-prototype-builtins': 'off',
+    'vue/custom-event-name-casing': 'off'
   },
   parserOptions: {
     parser: 'babel-eslint'

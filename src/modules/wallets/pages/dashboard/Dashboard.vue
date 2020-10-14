@@ -107,7 +107,7 @@
             :icon="require('@/assets/images/icons/icon-token-grey.png')"
             icon-align="left"
           >
-            <template v-slot:rightHeaderContainer>
+            <template #rightHeaderContainer>
               <mew-button
                 class="ml-auto"
                 :has-full-width="false"

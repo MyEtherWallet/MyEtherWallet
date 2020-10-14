@@ -2,19 +2,19 @@
   <div class="mew-component--how-it-works">
     <home-header title="How it works" />
     <mew-tabs :items="mewTabs" has-underline>
-      <template v-slot:tabContent1>
+      <template #tabContent1>
         <send />
       </template>
-      <template v-slot:tabContent2>
+      <template #tabContent2>
         <swap />
       </template>
-      <template v-slot:tabContent3>
+      <template #tabContent3>
         <dapps-center />
       </template>
-      <template v-slot:tabContent4>
+      <template #tabContent4>
         <tokens />
       </template>
-      <template v-slot:tabContent5>
+      <template #tabContent5>
         <more />
       </template>
     </mew-tabs>

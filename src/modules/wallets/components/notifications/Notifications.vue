@@ -4,7 +4,7 @@
     title="Notifications"
     right-btn-text="Close"
   >
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <tx-notification
         badge-type="in"
         tx-status="success"

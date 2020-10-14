@@ -5,7 +5,7 @@
       right-btn-text="Close"
       left-btn-text="Back"
     >
-      <template v-slot:mewOverlayBody>
+      <template #mewOverlayBody>
         <div class="overlay-tabs">
           <v-tabs v-model="activeTab" color="transparent">
             <v-tab-item>
