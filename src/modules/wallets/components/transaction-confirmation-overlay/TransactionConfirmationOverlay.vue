@@ -4,6 +4,7 @@
     :show-overlay="open"
     right-btn-text="Close"
     left-btn-text="Back"
+    @closeOverlay="$emit('close')"
   >
     <template #mewOverlayBody>
       <mew6-white-sheet class="mt-4">

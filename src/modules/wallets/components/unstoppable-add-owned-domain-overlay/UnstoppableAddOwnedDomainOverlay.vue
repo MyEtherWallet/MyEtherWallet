@@ -1,5 +1,5 @@
 <template>
-  <mew-overlay :show-overlay="open">
+  <mew-overlay :show-overlay="open" @closeOverlay="$emit('close')">
     <template #mewOverlayBody>
       <div class="pa-8">
         <h2 class="text-center mb-10">Add an owned domain</h2>

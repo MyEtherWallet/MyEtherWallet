@@ -4,29 +4,33 @@
       <v-icon class="searchText--text">mdi-arrow-right-thick</v-icon>
     </div>
     <v-row>
-      <v-col cols="6" class="text-center px-10 py-6">
+      <v-col cols="12" lg="6" class="text-center px-10 py-6">
         <div class="blockie mb-3">
-          <blockie width="36px" height="36px" :address="from" />
+          <mew-blockie width="36px" height="36px" :address="from" />
         </div>
         <h6 class="font-weight-bold text-uppercase searchText--text">
           From address
         </h6>
-        <div class="d-flex align-center">
-          <div class="text-uppercase monospace address">{{ from }}</div>
+        <div class="d-flex align-center justify-center">
+          <div class="text-uppercase monospace address" style="max-width: 80px">
+            {{ from }}
+          </div>
           <div class="text-uppercase monospace">
             {{ from.substr(to.length - 5) }}
           </div>
         </div>
       </v-col>
-      <v-col cols="6" class="text-center px-10 py-6">
+      <v-col cols="12" lg="6" class="text-center px-10 py-6">
         <div class="blockie mb-3">
-          <blockie width="36px" height="36px" :address="to" />
+          <mew-blockie width="36px" height="36px" :address="to" />
         </div>
         <h6 class="font-weight-bold text-uppercase searchText--text">
           To address
         </h6>
-        <div class="d-flex align-center">
-          <div class="text-uppercase monospace address">{{ to }}</div>
+        <div class="d-flex align-center justify-center">
+          <div class="text-uppercase monospace address" style="max-width: 80px">
+            {{ to }}
+          </div>
           <div class="text-uppercase monospace">
             {{ to.substr(to.length - 5) }}
           </div>

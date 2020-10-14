@@ -1,5 +1,5 @@
 <template>
-  <v-sheet color="transparent" max-width="600px" class="pa-8">
+  <v-sheet color="transparent" max-width="600px" class="pa-3 pa-lg-8">
     <from-to-block
       from="0x300be4b1183dca9046349e9e01b1e0c08e362964"
       to="0x02fb7f333fd493b39b79ba57b6d510c64eaa3dc0"
@@ -34,12 +34,12 @@
     </mew-expand-panel>
     <div class="d-flex justify-center my-8">
       <mew-button
-        button-size="xlarge"
+        btn-size="xlarge"
         title="Continue on your device"
         @click.native="activeTab = 1"
       />
     </div>
-    <warning-sheet :description="warningDescription" />
+    <mew-warning-sheet :description="warningDescription" class="mx-2" />
   </v-sheet>
 </template>
 

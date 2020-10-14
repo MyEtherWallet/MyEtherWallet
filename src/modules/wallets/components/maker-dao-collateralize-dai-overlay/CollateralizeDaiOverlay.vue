@@ -1,5 +1,5 @@
 <template>
-  <mew-overlay :show-overlay="open">
+  <mew-overlay :show-overlay="open" @closeOverlay="$emit('close')">
     <template #mewOverlayBody>
       <div>
         <v-sheet
