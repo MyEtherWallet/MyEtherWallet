@@ -138,12 +138,12 @@
             </div>
             <div class="wallet-value-container">
               <p class="title">{{ $t('mewcx.total-wallet-value') }}</p>
-              <p class="dollar-amt">
-                {{
-                  network.type.name === 'ETH'
-                    ? walletTokensWithBalance.totalWalletBalance
-                    : fixedEthBalance
-                }}
+              <i
+                v-if="fetchingTokens && fetchingBalance"
+                class="fa fa-lg fa-spin fa-spinner"
+              />
+              <p v-else class="dollar-amt">
+                {{ isEth ? walletBalance : fixedEthBalance }}
               </p>
             </div>
           </div>
@@ -151,32 +151,34 @@
             <p class="title">
               {{ network.type.currencyName }} {{ $t('mewcx.balance') }}
             </p>
-            <p class="dollar-amt">
-              {{
-                network.type.name === 'ETH' ? convertedBalance : fixedEthBalance
-              }}
-            </p>
-            <p v-if="network.type.name === 'ETH'" class="value">
-              {{ fixedEthBalance }}
-            </p>
+            <i v-if="fetchingBalance" class="fa fa-lg fa-spin fa-spinner" />
+            <div v-else>
+              <p class="dollar-amt">
+                {{ isEth ? convertedBalance : fixedEthBalance }}
+              </p>
+              <p v-if="isEth" class="value">
+                {{ fixedEthBalance }}
+              </p>
+            </div>
           </div>
           <div class="wallet-value-container">
             <p class="title">
               {{ $t('mewcx.value-of-tokens', { plural: '' }) }}
             </p>
-            <p class="dollar-amt">{{ walletTokensWithBalance.total }}</p>
-            <p class="value">
-              {{ walletTokensWithBalance.tokensWDollarAmtLength }}
-              {{ $t('mewcx.tokens') }}
-            </p>
+            <i v-if="fetchingTokens" class="fa fa-lg fa-spin fa-spinner" />
+            <div v-else>
+              <p class="dollar-amt">{{ convertedTokenTotal }}</p>
+              <p class="value">
+                {{ tokensWithDollarAmount.length }}
+                {{ $t('mewcx.tokens') }}
+              </p>
+            </div>
           </div>
         </div>
         <div
           :class="[
             'view-all-container',
-            walletTokensWithBalance.tokensWDollarAmt.length > 0
-              ? ''
-              : 'disable-token-show'
+            tokensWithDollarAmount.length > 0 ? '' : 'disable-token-show'
           ]"
           @click.stop="showTokens = !showTokens"
         >
@@ -191,7 +193,7 @@
         </div>
       </div>
       <div v-show="showTokens" class="wallet-tokens">
-        <table v-if="walletTokensWithBalance.tokensWDollarAmt.length > 0">
+        <table v-if="tokensWithDollarAmount.length > 0">
           <tr class="table-header">
             <th>
               {{ $t('mewcx.token.name') }}
@@ -213,7 +215,7 @@
             </th>
           </tr>
           <tr
-            v-for="(token, idx) in walletTokensWithBalance.tokensWDollarAmt"
+            v-for="(token, idx) in tokensWithDollarAmount"
             :key="token.symbol + `${idx}`"
             class="table-body"
           >
@@ -280,6 +282,7 @@
       :address="address"
       :remove-wallet="removeWallet"
       :nickname="nickname"
+      :loading="loading"
       @password="e => (password = e)"
     />
     <password-only-modal
@@ -295,8 +298,10 @@
       ref="verifyWalletModal"
       :wallet="wallet"
       :usd="usd"
-      :nickname="nickname"
-      :wallet-tokens-with-balance="walletTokensWithBalance"
+      :nickname="actualFileName"
+      :tokens-with-dollar="tokensWithDollarAmount"
+      :token-total="convertedTokenTotal"
+      :wallet-balance="walletBalance"
       :file="file"
     />
   </div>
@@ -308,6 +313,7 @@ import EditWalletModal from '../EditWalletModal';
 import RemoveWalletModal from '../RemoveWalletModal';
 import { mapState, mapActions } from 'vuex';
 import { Toast, Misc, ExtensionHelpers } from '@/helpers';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 import masterFile from '@/_generated/master-file.json';
 import PasswordOnlyModal from '../PasswordOnlyModal';
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
@@ -315,7 +321,10 @@ import { WalletInterface } from '@/wallets';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import VerifyDetailsModal from '../VerifyDetailsModal';
 import createBlob from '@/helpers/createBlob.js';
-
+import web3utils from 'web3-utils';
+import TokenBalance from '@myetherwallet/eth-token-balance';
+import sortByBalance from '@/helpers/sortByBalance.js';
+import { ETH } from '@/networks/types';
 export default {
   components: {
     blockie: Blockie,
@@ -341,10 +350,6 @@ export default {
       type: String,
       default: 'watchOnly'
     },
-    balance: {
-      type: String,
-      default: '0'
-    },
     usd: {
       type: Number,
       default: 0
@@ -358,30 +363,31 @@ export default {
     page: {
       type: String,
       default: ''
-    },
-    walletToken: {
-      type: Array,
-      default: () => {}
     }
   },
   data() {
     return {
       loading: false,
       showTokens: false,
-      masterFile: masterFile,
       favorited: false,
       balanceWarnHidden: true,
       path: 'access',
       password: '',
       downloadFile: '',
       tokens: [],
-      toV3Name: ''
+      toV3Name: '',
+      balance: 0,
+      fetchingTokens: false,
+      fetchingBalance: false
     };
   },
   computed: {
     ...mapState('main', ['network', 'web3']),
+    actualFileName() {
+      return this.generateName(this.address);
+    },
     showBalanceReminder() {
-      if (this.network.type.name === 'ETH' && this.walletType !== 'watchOnly') {
+      if (this.isEth && this.walletType !== 'watchOnly') {
         return this.showLowBalance;
       }
       return false;
@@ -420,34 +426,70 @@ export default {
       const currencyBalance = new BigNumber(this.balance).toFixed(3);
       return `${currencyBalance} ${this.network.type.currencyName}`;
     },
-    walletTokensWithBalance() {
-      const tokensWithBalance = this.tokens;
-      let totalTokenAmt = new BigNumber(0);
-      const tokensWithDollarAmt = [];
-      tokensWithBalance.forEach(item => {
+    tokensWithDollarAmount() {
+      const hasDollarAmount = this.tokens.filter(item => {
         if (this.prices[item.symbol]) {
-          const convertedBalancePrice = new BigNumber(
-            this.prices[item.symbol].quotes.USD.price
-          ).times(item.balance);
-          totalTokenAmt = totalTokenAmt.plus(convertedBalancePrice);
-          tokensWithDollarAmt.push({
-            tokenMew: item,
-            tokenData: this.prices[item.symbol]
-          });
+          return item;
         }
       });
 
-      const currencyDollar = new BigNumber(this.balance).times(this.usd);
-      const totalWalletBalance = currencyDollar.plus(totalTokenAmt).toNumber();
-      const obj = {
-        tokens: tokensWithBalance,
-        length: tokensWithBalance.length,
-        tokensWDollarAmt: tokensWithDollarAmt,
-        tokensWDollarAmtLength: tokensWithDollarAmt.length,
-        total: this.toDollar(totalTokenAmt.toNumber()),
-        totalWalletBalance: this.toDollar(totalWalletBalance)
-      };
-      return obj;
+      const returnedTokens =
+        hasDollarAmount.length > 0
+          ? hasDollarAmount.map(item => {
+              return {
+                tokenMew: item,
+                tokenData: this.prices[item.symbol]
+              };
+            })
+          : [];
+      return returnedTokens;
+    },
+    tokenTotal() {
+      try {
+        let totalTokenAmt = new BigNumber(0);
+        this.tokens.forEach(token => {
+          if (this.prices[token.symbol]) {
+            totalTokenAmt = totalTokenAmt.plus(
+              new BigNumber(this.prices[token.symbol].quotes.USD.price).times(
+                token.balance
+              )
+            );
+          }
+        });
+        return totalTokenAmt.toNumber();
+      } catch (e) {
+        return 0;
+      }
+    },
+    convertedTokenTotal() {
+      return this.toDollar(this.tokenTotal);
+    },
+    walletBalance() {
+      try {
+        const balance = new BigNumber(this.balance)
+          .times(this.usd)
+          .plus(this.tokenTotal)
+          .toNumber();
+        return this.toDollar(balance);
+      } catch (e) {
+        return this.toDollar(0);
+      }
+    },
+    networkTokens() {
+      const newTokenObj = {};
+      const matchedNetwork = masterFile.filter(item => {
+        return (
+          item.network.toLowerCase() === this.network.type.name.toLowerCase()
+        );
+      });
+      matchedNetwork.forEach(item => {
+        newTokenObj[toChecksumAddress(item.contract_address)] = item;
+      });
+
+      return newTokenObj;
+    },
+    isEth() {
+      return this.network.type.name === ETH.name;
     }
   },
   watch: {
@@ -457,11 +499,12 @@ export default {
       },
       deep: true
     },
-    walletToken: {
-      handler: function () {
-        this.processTokens();
-      },
-      deep: true
+    balance(newVal) {
+      this.$emit('balanceUpdate', newVal);
+    },
+    web3() {
+      this.setToken();
+      this.getBalance();
     }
   },
   created() {
@@ -472,8 +515,11 @@ export default {
     if (this.wallet !== '') {
       this.generateBlob();
     }
-    if (this.walletToken.length > 0) {
-      this.processTokens();
+    try {
+      this.setToken();
+      this.getBalance();
+    } catch (e) {
+      Toast.responseHandler(this.$t('mewcx.something-went-wrong'), Toast.ERROR);
     }
   },
   destroyed() {
@@ -481,11 +527,64 @@ export default {
   },
   methods: {
     ...mapActions('main', ['decryptWallet']),
-    processTokens() {
-      const tokens = this.walletToken.filter(item => {
-        return item.balance !== 'Load' && new BigNumber(item.balance).gt(0);
-      });
-      this.tokens = this.tokens.concat(tokens);
+    iconFetch(address) {
+      const token = this.networkTokens[toChecksumAddress(address)];
+      if (token) {
+        const tokenSrc =
+          token.icon_png !== ''
+            ? `https://img.mewapi.io/?image=${token.icon_png}&width=50&height=50&fit=scale-down`
+            : token.icon !== ''
+            ? `https://img.mewapi.io/?image=${token.icon}&width=50&height=50&fit=scale-down`
+            : this.network.type.icon;
+        return tokenSrc;
+      }
+
+      return this.network.type.icon;
+    },
+    setToken() {
+      this.fetchingTokens = true;
+      const tb = new TokenBalance(this.web3.currentProvider);
+      tb.getBalance(this.address, true, true, true, {
+        gas: '0x11e1a300'
+      })
+        .then(res => {
+          const tokens = [];
+          res.forEach(token => {
+            const balance = token.balance;
+            delete token.balance;
+            token.balance = new BigNumber(balance).gt(0)
+              ? new BigNumber(balance)
+                  .div(new BigNumber(10).pow(token.decimals))
+                  .toFixed(3)
+              : 0;
+            token.address = token.addr;
+            token.logo = this.iconFetch(token.addr);
+            delete token.addr;
+            tokens.push(token);
+          });
+          const sorted = tokens.sort(sortByBalance).filter(item => {
+            return new BigNumber(item.balance).gt(0);
+          });
+          this.tokens = sorted;
+          this.fetchingTokens = false;
+        })
+        .catch(() => {
+          this.tokens = [];
+          this.fetchingTokens = false;
+        });
+    },
+    getBalance() {
+      this.fetchingBalance = true;
+      this.web3.eth
+        .getBalance(this.address)
+        .then(res => {
+          this.fetchingBalance = false;
+          this.balance = web3utils.fromWei(res);
+        })
+        .catch(() => {
+          this.balance = 0;
+          this.fetchingBalance = 0;
+        });
     },
     iconFallback(evt) {
       evt.target.src = this.network.type.icon;
@@ -514,9 +613,9 @@ export default {
         });
 
         worker.onmessage = () => {
-          this.loading = false;
           ExtensionHelpers.deleteWalletFromStore(this.address, () => {
             this.$refs.removeWalletModal.$refs.removeWalletModal.$refs.modalWrapper.hide();
+            this.loading = false;
             Toast.responseHandler(
               this.$t('mewcx.remove-wallet-successfully'),
               Toast.SUCCESS
