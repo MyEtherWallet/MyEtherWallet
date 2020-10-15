@@ -42,7 +42,7 @@ Object.keys(mewComponents).forEach(name => {
 Vue.component('Mew6WhiteSheet', whiteSheet);
 Vue.component('MewSuperButton', MewSuperButton);
 Vue.component('MewStepper2', MewStepper);
-Vue.component('MewStepperHeader2', MewStepperHeader);
+Vue.component('MewStepperHeader', MewStepperHeader);
 Vue.component('MewSelect2', MewSelect);
 Vue.component('MewOverlay2', MewOverlay);
 Vue.component('MewExpandPanel2', MewExpandPanel);

@@ -42,8 +42,8 @@ export default {
   components: {},
   props: {
     data: {
-      type: Array,
-      default: () => []
+      type: Object,
+      default: () => {}
     }
   },
   data() {

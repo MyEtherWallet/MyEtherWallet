@@ -67,7 +67,7 @@
               </v-card>
             </div>
             <div class="d-flex justify-center mt-8">
-              <mew-button title="Continue" button-size="xlarge" />
+              <mew-button title="Continue" btn-size="xlarge" />
             </div>
             <warning-sheet
               class="mb-n6 mx-n3"
@@ -134,14 +134,14 @@
               </v-btn-toggle>
             </v-sheet>
             <div class="d-flex justify-center mt-6">
-              <mew-button title="Borrow" button-size="xlarge" />
+              <mew-button title="Borrow" btn-size="xlarge" />
             </div>
             <div class="d-flex justify-center mt-4">
               <mew-button
                 title="Cancel"
                 btn-style="transparent"
                 color-theme="error"
-                button-size="small"
+                btn-size="small"
               />
             </div>
           </v-sheet>
@@ -175,13 +175,13 @@
               <div class="d-flex align-center justify-space-between py-2">
                 <div class="d-flex align-center">
                   Current Health Factor
-                  <info-tooltip class="ml-2" text="Health" />
+                  <mew-tooltip class="ml-2" text="Health" />
                 </div>
                 <div class="font-weight-bold secondary--text">2.4725%</div>
               </div>
               <div class="d-flex align-center justify-space-between py-2">
                 <div class="d-flex align-center">
-                  Next Health Factor <info-tooltip class="ml-2" text="Health" />
+                  Next Health Factor <mew-tooltip class="ml-2" text="Health" />
                 </div>
                 <div class="font-weight-bold secondary--text">Stable</div>
               </div>
@@ -199,7 +199,7 @@
             </div>
             <v-divider class="mt-3 mb-10" />
             <div class="d-flex justify-center mt-8">
-              <mew-button title="Confirm to deposit" button-size="xlarge" />
+              <mew-button title="Confirm to deposit" btn-size="xlarge" />
             </div>
           </v-sheet>
         </mew6-white-sheet>

@@ -13,15 +13,15 @@
         />
 
         <div class="d-flex align-center py-4">
-          <mew-toggle-button
-            class="flex-grow-1"
+          <mew-toggle
+            class="flex-grow-1 mr-2"
             :button-group="chartButtons"
             @onBtnClick="onBtnClick"
           />
           <mew-button
             style="border-radius: 100% !important"
             class="options-btn ml-2"
-            button-size="small"
+            btn-size="small"
             icon-type="mdi"
             icon="mdi-dots-vertical"
             btn-style="transparent"
@@ -45,7 +45,7 @@
             <mew-button
               has-full-width
               title="Send Transaction"
-              button-size="xlarge"
+              btn-size="xlarge"
               @click.native="goTo('HomeAccessWallet')"
             />
           </v-col>
@@ -65,7 +65,7 @@
           <mew-button
             class="mt-3"
             title="All tokens..."
-            button-size="small"
+            btn-size="small"
             btn-style="transparent"
             @click.native="goTo('HomeAccessWallet')"
           />
@@ -97,14 +97,14 @@
             />
             <div class="ml-auto">
               <div class="d-flex align-center">
-                <mew-toggle-button
+                <mew-toggle
                   :button-group="chartButtons"
                   @onBtnClick="onBtnClick"
                 />
                 <mew-button
                   style="border-radius: 100% !important"
                   class="options-btn ml-2"
-                  button-size="small"
+                  btn-size="small"
                   icon-type="mdi"
                   icon="mdi-dots-vertical"
                   btn-style="transparent"
@@ -130,7 +130,7 @@
               <mew-button
                 :has-full-width="false"
                 title="Send Transaction"
-                button-size="xlarge"
+                btn-size="xlarge"
                 @click.native="goTo('HomeAccessWallet')"
               />
             </v-col>
@@ -151,7 +151,7 @@
                 <mew-button
                   :has-full-width="false"
                   title="Buy ETH with a credit card"
-                  button-size="xlarge"
+                  btn-size="xlarge"
                 />
                 <div class="d-flex align-center mt-4">
                   <div>We accept credit card</div>
@@ -196,7 +196,7 @@
                   class="ml-auto"
                   :has-full-width="false"
                   title="All tokens"
-                  button-size="small"
+                  btn-size="small"
                   btn-style="transparent"
                   @click.native="goTo('HomeAccessWallet')"
                 />
@@ -223,7 +223,7 @@
                   class="ml-auto ml-n3"
                   :has-full-width="false"
                   :title="'+ ' + 'Add custom tokens'"
-                  button-size="xsmall"
+                  btn-size="xsmall"
                   btn-style="transparent"
                   @click.native="goTo('HomeAccessWallet')"
                 />
@@ -279,7 +279,7 @@ export default {
 
 <style lang="scss">
 .mew-component--dashboard {
-  .mew-toggle-btn {
+  .mew-toggle {
     .v-btn {
       padding: 8px !important;
       height: initial !important;
@@ -396,7 +396,7 @@ export default {
 }
 
 .mew-component--dashboard-mobile {
-  .mew-toggle-btn {
+  .mew-toggle {
     width: 100%;
     display: flex;
     justify-content: space-between;

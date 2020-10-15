@@ -59,12 +59,12 @@
                   <mew-button
                     class="d-block d-lg-none"
                     has-full-width
-                    button-size="xlarge"
+                    btn-size="xlarge"
                     title="Register domain"
                   />
                   <mew-button
                     class="d-none d-lg-block"
-                    button-size="xlarge"
+                    btn-size="xlarge"
                     title="Register domain"
                   />
                 </div>
@@ -139,7 +139,7 @@
               <mew-button
                 btn-style="outline"
                 title="+ Add domain you own"
-                button-size="small"
+                btn-size="small"
                 class="mt-4 mt-lg-0"
               />
             </div>

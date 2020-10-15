@@ -133,6 +133,7 @@
 
               <mobile-table
                 token="DAI"
+                button="Trade"
                 :table-data="mobileTableData"
                 class="d-block d-lg-none"
               />

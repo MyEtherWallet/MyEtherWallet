@@ -1,7 +1,10 @@
 <template>
   <div class="mew-component-fix--aave">
     <div class="d-flex align-center">
-      <deposit-overlay :open="openDepositOverlay" />
+      <deposit-overlay
+        :open="openDepositOverlay"
+        @close="openDepositOverlay = false"
+      />
       <div
         class="cursor--pointer font-weight-bold mr-4"
         @click="openDepositOverlay = true"
@@ -9,7 +12,10 @@
         Deposit Overlay
       </div>
 
-      <borrow-overlay :open="openBorrowOverlay" />
+      <borrow-overlay
+        :open="openBorrowOverlay"
+        @close="openBorrowOverlay = false"
+      />
       <div
         class="cursor--pointer font-weight-bold mr-4"
         @click="openBorrowOverlay = true"
@@ -21,15 +27,19 @@
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
         <template #tabContent1>
-          <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
+          <v-sheet
+            color="transparent"
+            max-width="700px"
+            class="mx-auto px-4 py-12"
+          >
             <div class="d-flex align-center justify-end">
               <div class="mr-3">Health factor</div>
               <div class="primary--text font-weight-bold mr-3">2.45345</div>
-              <info-tooltip text="Health factor" />
+              <mew-tooltip text="Health factor" />
             </div>
 
             <v-row>
-              <v-col cols="6">
+              <v-col cols="12" lg="6">
                 <div class="tableHeader pa-5 border-radius--5px">
                   <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
                   <h3 class="font-weight-bold">$40.00</h3>
@@ -45,7 +55,7 @@
                   <mew-progress-bar class="mt-2" :balance-obj="balance" />
                 </div>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="12" lg="6">
                 <div class="tableHeader pa-5 border-radius--5px">
                   <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
                   <h3 class="font-weight-bold">$40.00</h3>
@@ -67,20 +77,24 @@
               :table-data="depositsTableData"
             />
             <div class="d-flex justify-center mt-9">
-              <mew-button title="Deposit" button-size="xlarge"></mew-button>
+              <mew-button title="Deposit" btn-size="xlarge"></mew-button>
             </div>
           </v-sheet>
         </template>
         <template #tabContent2>
-          <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
+          <v-sheet
+            color="transparent"
+            max-width="700px"
+            class="mx-auto px-4 py-12"
+          >
             <div class="d-flex align-center justify-end">
               <div class="mr-3">Health factor</div>
               <div class="primary--text font-weight-bold mr-3">2.45345</div>
-              <info-tooltip text="Health factor" />
+              <mew-tooltip text="Health factor" />
             </div>
 
             <v-row>
-              <v-col cols="6">
+              <v-col cols="12" lg="6">
                 <div class="tableHeader pa-5 border-radius--5px">
                   <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
                   <h3 class="font-weight-bold">$40.00</h3>
@@ -96,7 +110,7 @@
                   <mew-progress-bar class="mt-2" :balance-obj="balance" />
                 </div>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="12" lg="6">
                 <div class="tableHeader pa-5 border-radius--5px">
                   <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
                   <h3 class="font-weight-bold">$40.00</h3>
@@ -125,7 +139,7 @@
               :table-data="borrowingsTableData"
             />
             <div class="d-flex justify-center mt-9">
-              <mew-button title="Borrow" button-size="xlarge"></mew-button>
+              <mew-button title="Borrow" btn-size="xlarge"></mew-button>
             </div>
           </v-sheet>
         </template>

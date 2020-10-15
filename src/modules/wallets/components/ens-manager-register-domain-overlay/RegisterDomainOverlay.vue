@@ -8,9 +8,9 @@
     <template #mewOverlayBody>
       <DomainTaken />
       <mew-stepper :items="stepperItems" :on-step="onStep">
-        <template #outsideStepContent1><Step1 /></template>
-        <template #outsideStepContent2><Step2 /></template>
-        <template #outsideStepContent3><Step3 /></template>
+        <template #stepperContent1><Step1 /></template>
+        <template #stepperContent2><Step2 /></template>
+        <template #stepperContent3><Step3 /></template>
       </mew-stepper>
     </template>
   </mew-overlay>

@@ -237,7 +237,7 @@ export default {
     color: white;
   }
   .sub-menu {
-    max-height: 200px;
+    max-height: 300px;
   }
 
   .light {

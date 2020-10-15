@@ -13,7 +13,7 @@
           <h5 v-if="tokenValue" class="font-weight-bold">{{ tokenValue }}</h5>
         </div>
       </div>
-      <mew-button title="Trade" btn-size="small" btn-style="outline" />
+      <mew-button :title="button" btn-size="small" btn-style="outline" />
     </div>
 
     <div v-if="vault" class="d-flex align-center justify-space-between mb-3">
@@ -45,6 +45,10 @@
 export default {
   components: {},
   props: {
+    button: {
+      type: String,
+      default: ''
+    },
     token: {
       type: String,
       default: ''
