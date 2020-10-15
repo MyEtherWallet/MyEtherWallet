@@ -3,7 +3,7 @@ import GivenProvider from './providers/given-provider';
 import WSProvider from './providers/ws-provider';
 import EtherscanProvider from './providers/etherscan-provider';
 import PocketProvider from './providers/pocket-provider';
-import { WEB3_WALLET } from '../bip44/walletTypes';
+import { WEB3_WALLET } from '@/modules/wallets/utils/bip44/walletTypes';
 class MEWProvider {
   constructor(host, options, store, eventHub) {
     if (store.state.wallet && store.state.wallet.identifier == WEB3_WALLET) {

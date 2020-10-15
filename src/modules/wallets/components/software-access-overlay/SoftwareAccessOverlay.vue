@@ -174,7 +174,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['decryptWallet']),
+    ...mapActions(['setWallet']),
     handleStep(e) {
       this.step += e;
     },
@@ -208,9 +208,9 @@ export default {
             JSON.stringify(obj)
           );
 
-          this.decryptWallet([walletInstance])
+          this.setWallet([walletInstance])
             .then(() => {
-              this.$router.push({ name: 'Dashboard' });
+              this.$router.push({ name: 'Wallets' });
             })
             .catch(e => {
               // eslint-disable-next-line
@@ -228,9 +228,9 @@ export default {
         false,
         privKeyType
       );
-      this.decryptWallet([walletInstance])
+      this.setWallet([walletInstance])
         .then(() => {
-          this.$router.push({ name: 'Dashboard' });
+          this.$router.push({ name: 'Wallets' });
         })
         .catch(e => {
           // eslint-disable-next-line
@@ -248,9 +248,9 @@ export default {
     },
     setAddress(wallet) {
       try {
-        this.decryptWallet([wallet])
+        this.setWallet([wallet])
           .then(() => {
-            this.$router.push({ name: 'Dashboard' });
+            this.$router.push({ name: 'Wallets' });
           })
           .catch(e => {
             // eslint-disable-next-line
