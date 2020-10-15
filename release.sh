@@ -5,6 +5,7 @@ REPO="$3"
 CHANGELOG=`awk -v version="$RELEASE" '/### Release / {printit = $3 == version}; printit;' 'CHANGELOG.md'`
 mkdir release
 cd dist; zip -r ../release/MyEtherWallet-$RELEASE.zip *; cd ..
+cd chrome-extension; zip -r ../release/MEW-CX-$RELEASE.zip *; cd ..
 
 if [ -n "$4" ]; then
     for f in release/*; do
@@ -13,6 +14,7 @@ if [ -n "$4" ]; then
 fi
 
 sha256sum ./release/MyEtherWallet-$RELEASE.zip > ./release/MyEtherWallet-$RELEASE-CHECKSUM-SHA256
+sha256sum ./release/MEW-CX-$RELEASE.zip > ./release/MEW-CX-$RELEASE-CHECKSUM-SHA256
 
 GH_API="https://api.github.com"
 GH_REPO="$GH_API/repos/$REPO"
