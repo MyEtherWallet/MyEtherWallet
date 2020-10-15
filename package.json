@@ -80,8 +80,8 @@
     "@ethereum-alarm-clock/lib": "0.3.5",
     "@keepkey/keepkey.js": "1.2.3",
     "@ledgerhq/hw-app-eth": "5.24.0",
-    "@ledgerhq/hw-transport-u2f": "5.22.0",
-    "@ledgerhq/hw-transport-webusb": "5.25.0",
+    "@ledgerhq/hw-transport-u2f": "5.26.0",
+    "@ledgerhq/hw-transport-webusb": "5.26.0",
     "@makerdao/currency": "0.9.9",
     "@makerdao/dai": "0.29.0",
     "@makerdao/dai-plugin-config": "0.2.15",
@@ -164,7 +164,7 @@
     "web3-utils": "1.2.7",
     "webpack": "4.44.2",
     "weekstart": "1.0.1",
-    "worker-loader": "2.0.0",
+    "worker-loader": "3.0.2",
     "zxcvbn": "4.4.2"
   },
   "engines": {
