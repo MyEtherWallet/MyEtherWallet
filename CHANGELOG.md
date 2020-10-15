@@ -1,3 +1,9 @@
+
+### Devop
+
+- Better handling of new ABI structure[#2622](https://github.com/MyEtherWallet/MyEtherWallet/pull/2622)
+
+
 ### Release v5.7.10
 
 ### Feature
