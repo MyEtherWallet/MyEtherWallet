@@ -1,6 +1,12 @@
+### Release v5.7.11
+
 ### Bug
 
 - CX backup fix, generate wallet redirect fix, notifications fix [#2624](https://github.com/MyEtherWallet/MyEtherWallet/pull/2624)
+
+### Devop
+
+- Better handling of new ABI structure[#2622](https://github.com/MyEtherWallet/MyEtherWallet/pull/2622)
 
 
 ### Release v5.7.10
