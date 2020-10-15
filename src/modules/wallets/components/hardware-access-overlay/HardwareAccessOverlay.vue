@@ -847,7 +847,7 @@ export default {
     this.selectedNetwork = this.network.url;
   },
   methods: {
-    ...mapActions(['decryptWallet']),
+    ...mapActions(['setWallet']),
     setBCvaultAddress(address) {
       this.selectedAddress = address;
     },
@@ -1033,7 +1033,7 @@ export default {
     },
     setWallet(wallet) {
       try {
-        this.decryptWallet([wallet])
+        this.setWallet([wallet])
           .then(() => {
             this.$router.push({ name: 'Dashboard' });
           })

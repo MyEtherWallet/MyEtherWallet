@@ -6,7 +6,7 @@ import {
   MEW_CONNECT,
   WALLET_CONNECT,
   WALLET_LINK
-} from '@/wallets/bip44/walletTypes';
+} from '@/modules/wallets/utils/bip44/walletTypes';
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
 import {
@@ -105,60 +105,38 @@ const pruneNotifications = ({ commit, state }) => {
   }
 };
 
-const addCustomPath = function ({ commit, state }, val) {
-  const newPaths = { ...state.customPaths };
-  newPaths[val.label] = { label: val.label, path: val.path };
-  commit('ADD_CUSTOM_PATH', newPaths);
+const updateTransaction = function ({ commit, state }, val) {
+  // address, index, object
+  const address = val[0].toLowerCase();
+  const newNotif = {};
+  Object.keys(state.transactions).forEach(item => {
+    newNotif[item] = state.transactions[item];
+  });
+
+  const entryIndex = newNotif[address].findIndex(entry => {
+    return entry.orderId === val[1];
+  });
+
+  newNotif[address][entryIndex].status = val[2];
+  commit('UPDATE_SWAP_TRANSACTION', newNotif);
 };
 
-const removeCustomPath = function ({ commit, state }, val) {
-  const newPaths = { ...state.customPaths };
-  delete newPaths[val.label];
-  commit('ADD_CUSTOM_PATH', newPaths);
-};
+const updateNotification = function ({ commit, state }, val) {
+  // address, index, object
+  const address = val[0].toLowerCase();
+  const newNotif = {};
+  Object.keys(state.notifications).forEach(item => {
+    newNotif[item] = state.notifications[item];
+  });
 
-const checkIfOnline = function ({ commit, dispatch }, val) {
-  if (val) dispatch('setWeb3Instance');
-  commit('CHECK_IF_ONLINE', val);
-};
-
-const gettingStartedDone = function ({ commit }) {
-  commit('GETTING_STARTED_DONE');
-};
-
-const clearWallet = function ({ commit, state }) {
-  const linkTo = state.path !== '' ? state.path : '/';
-  if (
-    state.wallet &&
-    (state.wallet.identifier === MEW_CONNECT ||
-      state.wallet.identifier === WALLET_CONNECT ||
-      state.wallet.identifier === WALLET_LINK)
-  ) {
-    state.wallet.getConnection().disconnect();
-  }
-  Vue.router.push(linkTo);
-  commit('CLEAR_WALLET');
-};
-
-const createAndSignTx = function ({ commit }, val) {
-  commit('CREATE_AND_SIGN_TX', val);
-};
-
-const decryptWallet = function ({ commit, dispatch }, params) {
-  // if the wallet param (param[0]) is undefined or null then all the subsequent setup steps will also fail.
-  // just explicitly stop it here.
-  if (params[0] !== undefined && params[0] !== null) {
-    commit('DECRYPT_WALLET', params[0]);
-    dispatch('setWeb3Instance', params[1]);
+  const idIndex = newNotif[address].findIndex(entry => entry.id === val[2].id);
+  if (idIndex > -1) {
+    newNotif[address][idIndex] = val[2];
   } else {
-    // Could replace this (sentry gets triggered) with a toast, to handle more gracefully
-    // Or some means of informing the user of an issue
-    return Promise.reject(
-      Error(
-        'Received null or undefined wallet parameter. Please refresh the page and try again'
-      )
-    );
+    newNotif[address][val[1]] = val[2];
   }
+
+  commit('UPDATE_NOTIFICATION', newNotif);
 };
 
 const removeNotification = function ({ commit, state }, val) {
@@ -176,6 +154,54 @@ const removeNotification = function ({ commit, state }, val) {
   }
 
   commit('UPDATE_NOTIFICATION', newNotif);
+};
+
+const addCustomPath = function ({ commit, state }, val) {
+  const newPaths = { ...state.customPaths };
+  newPaths[val.label] = { label: val.label, path: val.path };
+  commit('ADD_CUSTOM_PATH', newPaths);
+};
+
+const removeCustomPath = function ({ commit, state }, val) {
+  const newPaths = { ...state.customPaths };
+  delete newPaths[val.label];
+  commit('ADD_CUSTOM_PATH', newPaths);
+};
+
+const setOnlineStatus = function ({ commit, dispatch }, val) {
+  if (val) dispatch('setWeb3Instance');
+  commit('SET_ONLINE_STATUS', val);
+};
+
+const removeWallet = function ({ commit, state }) {
+  const linkTo = state.path !== '' ? state.path : '/';
+  if (
+    state.wallet &&
+    (state.wallet.identifier === MEW_CONNECT ||
+      state.wallet.identifier === WALLET_CONNECT ||
+      state.wallet.identifier === WALLET_LINK)
+  ) {
+    state.wallet.getConnection().disconnect();
+  }
+  Vue.router.push(linkTo);
+  commit('REMOVE_WALLET');
+};
+
+const setWallet = function ({ commit, dispatch }, params) {
+  // if the wallet param (param[0]) is undefined or null then all the subsequent setup steps will also fail.
+  // just explicitly stop it here.
+  if (params[0] !== undefined && params[0] !== null) {
+    commit('SET_WALLET', params[0]);
+    dispatch('setWeb3Instance', params[1]);
+  } else {
+    // Could replace this (sentry gets triggered) with a toast, to handle more gracefully
+    // Or some means of informing the user of an issue
+    return Promise.reject(
+      Error(
+        'Received null or undefined wallet parameter. Please refresh the page and try again'
+      )
+    );
+  }
 };
 
 const setAccountBalance = function ({ commit }, balance) {
@@ -270,65 +296,23 @@ const setWeb3Instance = function ({ dispatch, commit, state }, provider) {
   commit('SET_WEB3_INSTANCE', web3Instance);
 };
 
-const switchNetwork = function ({ commit }, networkObj) {
-  commit('SWITCH_NETWORK', networkObj);
+const setNetwork = function ({ commit }, networkObj) {
+  commit('SET_NETWORK', networkObj);
 };
 const setENS = function ({ commit }, ens) {
   commit('SET_ENS', ens);
-};
-
-const toggleSideMenu = function ({ commit }) {
-  commit('TOGGLE_SIDEMENU');
-};
-
-const updateNotification = function ({ commit, state }, val) {
-  // address, index, object
-  const address = val[0].toLowerCase();
-  const newNotif = {};
-  Object.keys(state.notifications).forEach(item => {
-    newNotif[item] = state.notifications[item];
-  });
-
-  const idIndex = newNotif[address].findIndex(entry => entry.id === val[2].id);
-  if (idIndex > -1) {
-    newNotif[address][idIndex] = val[2];
-  } else {
-    newNotif[address][val[1]] = val[2];
-  }
-
-  commit('UPDATE_NOTIFICATION', newNotif);
-};
-
-const updateTransaction = function ({ commit, state }, val) {
-  // address, index, object
-  const address = val[0].toLowerCase();
-  const newNotif = {};
-  Object.keys(state.transactions).forEach(item => {
-    newNotif[item] = state.transactions[item];
-  });
-
-  const entryIndex = newNotif[address].findIndex(entry => {
-    return entry.orderId === val[1];
-  });
-
-  newNotif[address][entryIndex].status = val[2];
-  commit('UPDATE_SWAP_TRANSACTION', newNotif);
 };
 
 const setLastPath = function ({ commit }, val) {
   commit('SET_LAST_PATH', val);
 };
 
-const updateBlockNumber = function ({ commit }, val) {
-  commit('UPDATE_BLOCK_NUMBER', val);
+const setBlockNumber = function ({ commit }, val) {
+  commit('SET_BLOCK_NUMBER', val);
 };
 
-const saveQueryVal = function ({ commit }, val) {
-  commit('SAVE_QUERY_VAL', val);
-};
-
-const toggleTempHide = function ({ commit }) {
-  commit('TOGGLE_TEMP_HIDE');
+const setLinkQuery = function ({ commit }, val) {
+  commit('SET_LINK_QUERY', val);
 };
 
 const setEthGasPrice = function ({ commit }, val) {
@@ -339,28 +323,24 @@ export default {
   addNotification,
   addSwapNotification,
   addCustomPath,
-  checkIfOnline,
-  clearWallet,
-  createAndSignTx,
-  decryptWallet,
+  removeWallet,
+  setWallet,
   pruneNotifications,
   removeCustomPath,
   removeNotification,
+  setOnlineStatus,
   setAccountBalance,
   setGasPrice,
   setState,
   setENS,
   setLastPath,
   setWeb3Instance,
-  switchNetwork,
+  setNetwork,
   updateNotification,
   updateTransaction,
-  gettingStartedDone,
-  updateBlockNumber,
-  saveQueryVal,
+  setBlockNumber,
+  setLinkQuery,
   setAddressBook,
-  toggleSideMenu,
   setLocale,
-  toggleTempHide,
   setEthGasPrice
 };

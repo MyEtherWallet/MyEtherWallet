@@ -13,12 +13,17 @@ import DappRoutes from '@/dapps/routes.js';
 
 export default {
   path: '/wallet',
-  name: 'Wallet',
+  name: 'Wallets',
   component: Wallets,
-  props: { default: true, sidebar: false },
+  props: true,
   children: [
     {
-      path: 'dashboard',
+      path: '',
+      name: 'WalletDashboard',
+      component: Dashboard
+    },
+    {
+      path: '/dashbard',
       name: 'Dashboard',
       component: Dashboard
     },
@@ -26,7 +31,7 @@ export default {
       path: 'send-tx',
       name: 'SendTX',
       component: Send,
-      props: { default: true, sidebar: false }
+      props: true
     },
     {
       path: 'offline',

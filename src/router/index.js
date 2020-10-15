@@ -29,9 +29,11 @@ router.beforeResolve((to, ___, next) => {
       store.dispatch('saveQueryVal', blankObj);
     }
     if (store.state.wallet === null) {
+      console.log('WHERE?????', store.state.wallet);
       store.dispatch('setLastPath', to.path);
       next({ name: 'AccessWallet' });
     } else {
+      console.log('WHERE????? 1', store.state.wallet);
       if (store.state.path !== '') {
         const localPath = store.state.path;
         store.dispatch('setLastPath', '');

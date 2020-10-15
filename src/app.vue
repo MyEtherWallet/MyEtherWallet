@@ -9,8 +9,22 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 export default {
-  name: 'App'
+  name: 'App',
+  mounted() {
+    this.setOnlineStatus(window.navigator.onLine);
+    // Window events to watch out if the online status changes
+    window.addEventListener('offline', () => {
+      this.setOnlineStatus(false);
+    });
+    window.addEventListener('online', () => {
+      this.setOnlineStatus(true);
+    });
+  },
+  methods: {
+    ...mapActions(['setOnlineStatus'])
+  }
 };
 </script>
 

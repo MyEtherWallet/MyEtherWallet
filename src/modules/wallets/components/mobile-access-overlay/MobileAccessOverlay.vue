@@ -65,12 +65,12 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['decryptWallet']),
+    ...mapActions(['setWallet']),
     openWalletConnect() {
       try {
         WalletConnectWallet()
           .then(_newWallet => {
-            this.decryptWallet([_newWallet]).then(() => {
+            this.setWallet([_newWallet]).then(() => {
               this.$router.push({ name: 'Dashboard' });
             });
           })
@@ -85,7 +85,7 @@ export default {
       try {
         WalletLinkWallet()
           .then(_newWallet => {
-            this.decryptWallet([_newWallet]).then(() => {
+            this.setWallet([_newWallet]).then(() => {
               this.$router.push({ name: 'Dashboard' });
             });
           })

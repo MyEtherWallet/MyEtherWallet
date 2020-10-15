@@ -57,14 +57,15 @@ export default {
   mounted() {
     this.tokensList = new TokensList(this.$apollo);
     this.tokens = this.tokensList.getLatestPrices(this.$apollo);
-    this.getOwnersTokens();
-    this.redirectToDashboard();
+    this.getOwnersTokens().then(res => {
+      console.log(res);
+      this.ownersTokens = res;
+    });
+    // this.redirectToDashboard();
   },
   methods: {
-    async getOwnersTokens() {
-      this.ownersTokens = await this.tokensList.getOwnersERC20Tokens(
-        this.account.address
-      );
+    getOwnersTokens() {
+      return this.tokensList.getOwnersERC20Tokens(this.account.address);
     },
     redirectToDashboard() {
       if (this.$route.name === 'Wallet') {
