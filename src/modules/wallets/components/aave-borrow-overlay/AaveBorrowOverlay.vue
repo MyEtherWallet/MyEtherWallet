@@ -1,21 +1,25 @@
 <template>
   <mew-overlay :show-overlay="open" @closeOverlay="$emit('close')">
     <template #mewOverlayBody>
-      <div>
+      <div class="width--full">
         <h2 class="text-center mb-10">Select the token you want to borrow</h2>
-        <mew6-white-sheet>
-          <v-sheet
-            color="transparent"
-            width="700px"
-            class="pa-8 mew-component--aave-borrow-overlay"
-          >
-            <div class="d-flex align-center justify-space-between mb-6">
+
+        <v-sheet
+          color="transparent"
+          max-width="700px"
+          width="100%"
+          class="mx-auto mew-component--aave-borrow-overlay"
+        >
+          <mew6-white-sheet class="pa-4 pa-lg-8">
+            <div
+              class="d-block d-lg-flex align-center justify-space-between mb-6"
+            >
               <mew-input
-                class="search"
+                class="search mb-6 mb-lg-0"
                 is-search
                 placeholder="Search for token name"
               />
-              <div class="d-flex align-center">
+              <div class="d-flex align-center justify-end">
                 <div class="mr-5">Type of token</div>
                 <v-btn-toggle v-model="tokenType" dense>
                   <v-btn value="all">All</v-btn>
@@ -24,18 +28,32 @@
               </div>
             </div>
             <mew-table
-              class="token-table"
+              class="d-none d-lg-block token-table"
               :has-color="false"
               :table-headers="tableHeaders"
               :table-data="tableData"
             />
-          </v-sheet>
-        </mew6-white-sheet>
+            <mobile-table
+              v-for="(d, key) in mobileTableData"
+              :key="key"
+              token="DAI"
+              button="Deposit"
+              :table-data="d"
+              class="d-block d-lg-none mb-3"
+            />
+          </mew6-white-sheet>
+        </v-sheet>
       </div>
-      <div>
+
+      <div class="width--full">
         <h2 class="text-center mb-10">Select your interest rate</h2>
-        <mew6-white-sheet>
-          <v-sheet color="transparent" width="500px" class="pa-10">
+        <v-sheet
+          color="transparent"
+          max-width="500px"
+          width="100%"
+          class="mx-auto"
+        >
+          <mew6-white-sheet class="pa-4 pa-lg-10">
             <div class="mb-10">
               Select the type of rate for your loan. Please click on the desired
               rate type and read the info box for more information.
@@ -73,13 +91,19 @@
               class="mb-n6 mx-n3"
               description="You cannot choose stable for reserves being used as collateral. Disable the collateral usage and try again."
             />
-          </v-sheet>
-        </mew6-white-sheet>
+          </mew6-white-sheet>
+        </v-sheet>
       </div>
-      <div>
+      <div class="width--full">
         <h2 class="text-center mb-10">Borrow</h2>
-        <mew6-white-sheet>
-          <v-sheet color="transparent" width="600px" class="pa-8">
+
+        <v-sheet
+          color="transparent"
+          max-width="600px"
+          width="100%"
+          class="mx-auto"
+        >
+          <mew6-white-sheet class="pa-4 pa-lg-8">
             <div class="d-flex">
               <v-card
                 flat
@@ -144,13 +168,20 @@
                 btn-size="small"
               />
             </div>
-          </v-sheet>
-        </mew6-white-sheet>
+          </mew6-white-sheet>
+        </v-sheet>
       </div>
-      <div>
+
+      <div class="width--full">
         <h2 class="text-center mb-10">Confirmation</h2>
-        <mew6-white-sheet>
-          <v-sheet color="transparent" width="500px" class="pa-10">
+
+        <v-sheet
+          color="transparent"
+          max-width="500px"
+          width="100%"
+          class="mx-auto"
+        >
+          <mew6-white-sheet class="pa-4 pa-lg-10">
             <v-card
               flat
               color="informationBlock"
@@ -201,13 +232,20 @@
             <div class="d-flex justify-center mt-8">
               <mew-button title="Confirm to deposit" btn-size="xlarge" />
             </div>
-          </v-sheet>
-        </mew6-white-sheet>
+          </mew6-white-sheet>
+        </v-sheet>
       </div>
-      <div>
+
+      <div class="width--full">
         <h2 class="text-center mb-10">Confirmation</h2>
-        <mew6-white-sheet>
-          <v-sheet color="transparent" width="500px" class="pa-10">
+
+        <v-sheet
+          color="transparent"
+          max-width="500px"
+          width="100%"
+          class="mx-auto"
+        >
+          <mew6-white-sheet class="pa-4 pa-lg-10">
             <div class="text-center">
               <mew-icon icon-name="clock" :img-height="120" />
               <div class="mew-subtitle textSecondary--text mt-3">00:00</div>
@@ -222,14 +260,20 @@
                 working on your request.
               </v-sheet>
             </div>
-          </v-sheet>
-        </mew6-white-sheet>
+          </mew6-white-sheet>
+        </v-sheet>
       </div>
 
-      <div>
+      <div class="width--full">
         <h2 class="text-center mb-10">Processing</h2>
-        <mew6-white-sheet>
-          <v-sheet color="transparent" width="500px" class="pa-10">
+
+        <v-sheet
+          color="transparent"
+          max-width="500px"
+          width="100%"
+          class="mx-auto"
+        >
+          <mew6-white-sheet class="pa-4 pa-lg-10">
             <div class="text-center">
               <v-sheet width="100%" max-width="200px" class="mx-auto mb-8">
                 <v-progress-linear
@@ -249,16 +293,18 @@
                 short while for registration…
               </v-sheet>
             </div>
-          </v-sheet>
-        </mew6-white-sheet>
+          </mew6-white-sheet>
+        </v-sheet>
       </div>
     </template>
   </mew-overlay>
 </template>
 
 <script>
+import mobileTable from '@/components/mobile-table/MobileTable';
+
 export default {
-  components: {},
+  components: { mobileTable },
   props: {
     open: { default: false, type: Boolean },
     close: {
@@ -270,6 +316,76 @@ export default {
   },
   data() {
     return {
+      mobileTableData: [
+        [
+          {
+            label: 'Activity',
+            value: 'Deposited 12.0000 DAI'
+          },
+          {
+            label: 'Date',
+            value: '01/02/2020, 2:16:32 PM'
+          },
+          {
+            label: 'TX Hash',
+            value:
+              '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+            link:
+              'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+          }
+        ],
+        [
+          {
+            label: 'Activity',
+            value: 'Deposited 12.0000 DAI'
+          },
+          {
+            label: 'Date',
+            value: '01/02/2020, 2:16:32 PM'
+          },
+          {
+            label: 'TX Hash',
+            value:
+              '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+            link:
+              'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+          }
+        ],
+        [
+          {
+            label: 'Activity',
+            value: 'Deposited 12.0000 DAI'
+          },
+          {
+            label: 'Date',
+            value: '01/02/2020, 2:16:32 PM'
+          },
+          {
+            label: 'TX Hash',
+            value:
+              '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+            link:
+              'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+          }
+        ],
+        [
+          {
+            label: 'Activity',
+            value: 'Deposited 12.0000 DAI'
+          },
+          {
+            label: 'Date',
+            value: '01/02/2020, 2:16:32 PM'
+          },
+          {
+            label: 'TX Hash',
+            value:
+              '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+            link:
+              'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+          }
+        ]
+      ],
       amount: '25',
       tokenType: 'all',
       tableHeaders: [

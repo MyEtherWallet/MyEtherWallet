@@ -13,7 +13,20 @@
           <h5 v-if="tokenValue" class="font-weight-bold">{{ tokenValue }}</h5>
         </div>
       </div>
-      <mew-button :title="button" btn-size="small" btn-style="outline" />
+      <div class="d-flex">
+        <div
+          v-if="button"
+          class="primary--text font-weight-bold cursor--pointer"
+        >
+          {{ button }}
+        </div>
+        <div
+          v-if="button2"
+          class="primary--text font-weight-bold ml-4 cursor--pointer"
+        >
+          {{ button2 }}
+        </div>
+      </div>
     </div>
 
     <div v-if="vault" class="d-flex align-center justify-space-between mb-3">
@@ -46,6 +59,10 @@ export default {
   components: {},
   props: {
     button: {
+      type: String,
+      default: ''
+    },
+    button2: {
       type: String,
       default: ''
     },
