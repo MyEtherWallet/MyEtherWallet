@@ -210,7 +210,11 @@ export default {
 
           this.setWallet([walletInstance])
             .then(() => {
-              this.$router.push({ name: 'Wallets' });
+              if (this.$store.state.path !== '') {
+                this.$router.push({ name: 'Wallets' });
+              } else {
+                this.$router.push({ to: this.$store.state.path });
+              }
             })
             .catch(e => {
               // eslint-disable-next-line
@@ -230,7 +234,11 @@ export default {
       );
       this.setWallet([walletInstance])
         .then(() => {
-          this.$router.push({ name: 'Wallets' });
+          if (this.$store.state.path !== '') {
+            this.$router.push({ name: 'Wallets' });
+          } else {
+            this.$router.push({ to: this.$store.state.path });
+          }
         })
         .catch(e => {
           // eslint-disable-next-line
@@ -250,7 +258,11 @@ export default {
       try {
         this.setWallet([wallet])
           .then(() => {
-            this.$router.push({ name: 'Wallets' });
+            if (this.$store.state.path !== '') {
+              this.$router.push({ name: 'Wallets' });
+            } else {
+              this.$router.push({ to: this.$store.state.path });
+            }
           })
           .catch(e => {
             // eslint-disable-next-line

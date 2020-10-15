@@ -13,17 +13,16 @@ import DappRoutes from '@/dapps/routes.js';
 
 export default {
   path: '/wallet',
-  name: 'Wallets',
   component: Wallets,
   props: true,
   children: [
     {
       path: '',
-      name: 'WalletDashboard',
+      name: 'Wallets',
       component: Dashboard
     },
     {
-      path: '/dashbard',
+      path: '/dashboard',
       name: 'Dashboard',
       component: Dashboard
     },
