@@ -1,3 +1,12 @@
+### Release v5.7.11
+
+### Feature
+
+- Unstoppable Domains Twitter verification [#2591](https://github.com/MyEtherWallet/MyEtherWallet/pull/2591)
+
+### Bug
+
+- CX backup fix, generate wallet redirect fix, notifications fix [#2624](https://github.com/MyEtherWallet/MyEtherWallet/pull/2624)
 
 ### Devop
 
