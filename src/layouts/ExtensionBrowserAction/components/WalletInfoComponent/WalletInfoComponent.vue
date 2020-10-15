@@ -143,9 +143,7 @@
                 class="fa fa-lg fa-spin fa-spinner"
               />
               <p v-else class="dollar-amt">
-                {{
-                  network.type.name === 'ETH' ? walletBalance : fixedEthBalance
-                }}
+                {{ isEth ? walletBalance : fixedEthBalance }}
               </p>
             </div>
           </div>
@@ -156,13 +154,9 @@
             <i v-if="fetchingBalance" class="fa fa-lg fa-spin fa-spinner" />
             <div v-else>
               <p class="dollar-amt">
-                {{
-                  network.type.name === 'ETH'
-                    ? convertedBalance
-                    : fixedEthBalance
-                }}
+                {{ isEth ? convertedBalance : fixedEthBalance }}
               </p>
-              <p v-if="network.type.name === 'ETH'" class="value">
+              <p v-if="isEth" class="value">
                 {{ fixedEthBalance }}
               </p>
             </div>
@@ -330,7 +324,7 @@ import createBlob from '@/helpers/createBlob.js';
 import web3utils from 'web3-utils';
 import TokenBalance from '@myetherwallet/eth-token-balance';
 import sortByBalance from '@/helpers/sortByBalance.js';
-
+import { ETH } from '@/networks/types';
 export default {
   components: {
     blockie: Blockie,
@@ -393,7 +387,7 @@ export default {
       return this.generateName(this.address);
     },
     showBalanceReminder() {
-      if (this.network.type.name === 'ETH' && this.walletType !== 'watchOnly') {
+      if (this.isEth && this.walletType !== 'watchOnly') {
         return this.showLowBalance;
       }
       return false;
@@ -493,6 +487,9 @@ export default {
       });
 
       return newTokenObj;
+    },
+    isEth() {
+      return this.network.type.name === ETH.name;
     }
   },
   watch: {
@@ -522,7 +519,7 @@ export default {
       this.setToken();
       this.getBalance();
     } catch (e) {
-      Toast.responseHandler('Something went wrong!', Toast.ERROR);
+      Toast.responseHandler(this.$t('mewcx.something-went-wrong'), Toast.ERROR);
     }
   },
   destroyed() {
