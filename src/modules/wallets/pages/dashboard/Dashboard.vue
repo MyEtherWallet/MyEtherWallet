@@ -13,10 +13,7 @@
           />
           <div class="ml-auto">
             <div class="d-flex align-center">
-              <mew-toggle-button
-                :button-group="chartButtons"
-                @onBtnClick="onBtnClick"
-              />
+              <mew-toggle-button :button-group="chartButtons" />
               <mew-button
                 style="border-radius: 100% !important"
                 class="options-btn ml-2"
@@ -47,7 +44,7 @@
               :has-full-width="false"
               title="Send Transaction"
               btn-size="xlarge"
-              @click.native="goTo('HomeAccessWallet')"
+              @click.native="navigateToSend"
             />
           </v-col>
         </v-row>
@@ -114,7 +111,6 @@
                 title="All tokens"
                 btn-size="small"
                 btn-style="transparent"
-                @click.native="goTo('HomeAccessWallet')"
               />
             </template>
           </mew-module>
@@ -141,7 +137,6 @@
                 :title="'+ ' + 'Add custom tokens'"
                 btn-size="xsmall"
                 btn-style="transparent"
-                @click.native="goTo('HomeAccessWallet')"
               />
             </div>
           </v-sheet>
@@ -166,7 +161,9 @@ export default {
     return staticData;
   },
   methods: {
-    onBtnClick() {}
+    navigateToSend() {
+      this.$router.push({ name: 'SendTX' });
+    }
   }
 };
 </script>
