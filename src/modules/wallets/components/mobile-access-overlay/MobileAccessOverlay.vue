@@ -65,7 +65,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['setWallet']),
+    ...mapActions('wallet', ['setWallet']),
     openWalletConnect() {
       try {
         WalletConnectWallet()

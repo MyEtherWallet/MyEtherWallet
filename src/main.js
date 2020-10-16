@@ -22,10 +22,10 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import ApolloClient from 'apollo-client';
 import { split } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
-// import { WebSocketLink } from 'apollo-link-ws';
+import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import VueApollo from 'vue-apollo';
-// import { SubscriptionClient } from 'subscriptions-transport-ws';
+import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { onError } from 'apollo-link-error';
 
 import whiteSheet from '@/components/white-sheet/WhiteSheet.vue';
@@ -57,17 +57,17 @@ Vue.$i18n = i18n;
 
 // Apollo (Graphql)
 const httpLink = new HttpLink({
-  uri: 'https://nft.mewapi.io'
+  uri: 'https://api.ethvm.com'
 });
 
-// const subscriptionClient = new SubscriptionClient(
-//   ApolloConfig.APOLLO_WS,
-//   { lazy: true, reconnect: true },
-//   null,
-//   []
-// );
+const subscriptionClient = new SubscriptionClient(
+  'wss://apiws.ethvm.com',
+  { lazy: true, reconnect: true },
+  null,
+  []
+);
 
-// const wsLink = new WebSocketLink(subscriptionClient);
+const wsLink = new WebSocketLink(subscriptionClient);
 
 // Development mode
 const onErrorLink = onError(({ graphQLErrors }) => {
@@ -95,7 +95,7 @@ const link = split(
       definition.operation === 'subscription'
     );
   },
-  // wsLink,
+  wsLink,
   onErrorLink.concat(httpLink)
 );
 
@@ -141,16 +141,25 @@ Sentry.init({
   release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event) {
     const network =
-      !store && !store.state && !store.state.network
-        ? store.state.network.type.name
+      !store &&
+      !store.state &&
+      !store.state.wallet &&
+      !store.state.wallet.network
+        ? store.state.wallet.network.type.name
         : '';
     const service =
-      !store && !store.state && !store.state.network
-        ? store.state.network.service
+      !store &&
+      !store.state &&
+      !store.state.wallet &&
+      !store.state.wallet.network
+        ? store.state.wallet.network.service
         : '';
     const identifier =
-      !store && !store.state && !store.state.account
-        ? store.state.account.identifier
+      !store &&
+      !store.state &&
+      !store.state.wallet &&
+      !store.state.wallet.account
+        ? store.state.wallet.account.identifier
         : '';
     event.tags = {
       network: network,

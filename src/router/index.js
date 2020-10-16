@@ -15,7 +15,7 @@ import routes from './routes';
 //       blankObj[key] = Misc.stripTags(query[key]);
 //     }
 
-//     store.dispatch('main/saveQueryVal', blankObj);
+//     store.dispatch(/saveQueryVal', blankObj);
 //   }
 // };
 const getLangBasePath = () => {
@@ -42,17 +42,14 @@ router.beforeResolve((to, from, next) => {
   if (to.meta.hasOwnProperty('requiresAuth')) {
     next();
   } else {
-    if (store.state.main.wallet === null) {
-      store.dispatch('setLastPath', to.path);
-      next({ name: 'AccessWalletLayout' });
+    if (store.state.wallet === null) {
+      store.dispatch('global/setLastPath', to.path);
+      next({ name: 'AccessWallet' });
     } else {
-      if (store.state.main.path !== '') {
-        const localPath = store.state.main.path;
-        store.dispatch('setLastPath', '');
-        next({ path: localPath });
-      } else {
-        next();
+      if (store.state.path !== '') {
+        store.dispatch('global/setLastPath', '');
       }
+      next();
     }
   }
 });

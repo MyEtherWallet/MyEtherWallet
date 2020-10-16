@@ -1,0 +1,94 @@
+{
+  "title": "Get a New Wallet",
+  "sub-title": "Already have a wallet?",
+  "page-footer-title": "Want to learn more about Blockchain or MEW? Please go to {faq}",
+  "welcome": {
+    "title": "Welcome to MEW",
+    "desc": "Please take a moment to read through this short introduction. It’s very important for your own security that you understand these warnings. Ignoring this step will highly increase the chances of your funds being lost or stolen, in which case we won’t be able to help you. {skip} at your own risk.",
+    "button-skip": "Skip"
+  },
+  "mew-wallet": {
+    "title": "Recommended Method",
+    "desc": "Download the MEW wallet app",
+    "details": "It’s simple, fast, and secure.",
+    "scan": "Scan to Download",
+    "version": {
+      "ios": "iOS 10.0 or up",
+      "android": "Android 8.0 or up"
+    },
+    "android": "Android",
+    "ios": "iOS",
+    "tooltip": "This method of access is recommended for its security. Make sure to keep your recovery information safe!",
+    "download-today": "Download our App today!",
+    "redirect-store": "Sit tight, we are redirecting you to the right store..."
+  },
+  "password": {
+    "do-not-forget": "DO NOT FORGET",
+    "do-not-forget-save-pw": "{do-not-forget} to save your password. You will need this {key-pass} File to unlock your wallet.",
+    "key-pass": "Password + Keystore",
+    "password-strength": "Password strength"
+  },
+  "keystore": {
+    "title-tab": "By Keystore File",
+    "title-save": "Save My Keystore File",
+    "message-wait": "Please wait while we generate your keystore file...",
+    "button-download": "Download Keystore File",
+    "loose": {
+      "title": "Don't Lose It",
+      "desc": "Be careful, it can not be recovered if you lose it."
+    },
+    "share": {
+      "title": "Don't Share It",
+      "desc": "Your funds will be stolen if you use this file on a malicious phishing site."
+    },
+    "backup": {
+      "title": "Make a Backup",
+      "desc": "Secure it like the millions of dollars it may one day be worth."
+    }
+  },
+  "mnemonic": {
+    "title": "Your Mnemonic Phrase",
+    "title-tab": "By Mnemonic Phrase",
+    "extra-word": "Extra Word",
+    "value": "Value",
+    "please-enter-9-char": "Please Enter At Least 9 Characters",
+    "invalid-mnemonic": "Error: Invalid Mnemonic",
+    "do-you-extra-word": "Do you have an Extra Word?",
+    "access-wallet-extra-word-popover": "Some mnemonic phrases are generated with an extra word chosen by the user for added security. It acts as a 13th or 25th word to your phrase, sometimes referred to as a 'password'. If you did not create an extra word when you made your phrase, you should leave this field blank.",
+    "extra-word-popover": "You can add an extra word to your phrase for added security. However, you will need this word everytime you wish to access your phrase. Some wallets may not support adding an extra word when using mnemonic phrases.",
+    "popover": "A mnemonic phrase is a list of 12 - 24 words that can be used to access your wallet.",
+    "random": "随机",
+    "button-wrote-it-down": "I Wrote Down My Mnemonic Phrase",
+    "type-in": "Type in your extra word",
+    "do-not-forget-save-mnemonic": "{do-not-forget} to save your mnemonic phrase. You will need this to access your wallet.",
+    "warning": {
+      "write-down": "Write Down Mnemonic Phrase Key",
+      "extra-word": "If you choose to include an extra word, understand you will ALWAYS need this extra word with your mnemonic phrase. You can not change it. It becomes a permanent part of your phrase."
+    },
+    "verify": {
+      "title": "Verification",
+      "text": "Please enter and fill out the empty boxes below to verify your mnemonic phrase key",
+      "button": "验证"
+    },
+    "print": {
+      "print-title": "Print Preview"
+    },
+    "table": {
+      "title": "助记短语",
+      "safe-place": "Please Keep This Sheet at a Very Safe Place. It is your property!",
+      "cannot-change-pw": "We {cannot} change your mnemonic phrase or extra word. This is your wallet key. Please {do-not-forget} to save it. You will need {requirements} to access your wallet.",
+      "cannot": "CAN NOT",
+      "change-pw": "change your password. Please",
+      "do-not-forget": "DO NOT FORGET",
+      "requirements": "this PHRASE and EXTRA WORD (if used)"
+    },
+    "invalid-network-id": "Invalid networkId signature returned. Expected: {networkId} , Got: {signedChainId} InvalidNetworkId",
+    "fields-missing": "Some fields are still missing!",
+    "does-not-match-extra-word": "Mnemonic and extra word doesn't match! Please check your input!",
+    "input-does-not-match": "Mnemonic doesn't match! Please write it down correctly!"
+  },
+  "created": {
+    "title": "Success",
+    "text": "You have created your wallet successfully."
+  }
+}

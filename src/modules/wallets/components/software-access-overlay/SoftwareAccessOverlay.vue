@@ -66,7 +66,7 @@ import {
   PRIV_KEY as privKeyType,
   KEYSTORE as keyStoreType
 } from '@/modules/wallets/utils/bip44/walletTypes';
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import { unlockKeystore } from '@/modules/wallets/utils/helpers.js';
 
 const TITLES = {
@@ -145,6 +145,7 @@ export default {
     };
   },
   computed: {
+    ...mapState('global', ['path']),
     title() {
       return !this.step ? 'Software' : this.titles[this.steps[this.step]];
     },
@@ -174,7 +175,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setWallet']),
+    ...mapActions('wallet', ['setWallet']),
     handleStep(e) {
       this.step += e;
     },
@@ -210,10 +211,10 @@ export default {
 
           this.setWallet([walletInstance])
             .then(() => {
-              if (this.$store.state.path !== '') {
-                this.$router.push({ name: 'Wallets' });
+              if (this.path !== '') {
+                this.$router.push({ path: this.path });
               } else {
-                this.$router.push({ to: this.$store.state.path });
+                this.$router.push({ name: 'Wallets' });
               }
             })
             .catch(e => {
@@ -234,10 +235,10 @@ export default {
       );
       this.setWallet([walletInstance])
         .then(() => {
-          if (this.$store.state.path !== '') {
-            this.$router.push({ name: 'Wallets' });
+          if (this.path !== '') {
+            this.$router.push({ path: this.path });
           } else {
-            this.$router.push({ to: this.$store.state.path });
+            this.$router.push({ name: 'Wallets' });
           }
         })
         .catch(e => {
@@ -258,10 +259,10 @@ export default {
       try {
         this.setWallet([wallet])
           .then(() => {
-            if (this.$store.state.path !== '') {
-              this.$router.push({ name: 'Wallets' });
+            if (this.path !== '') {
+              this.$router.push({ path: this.path });
             } else {
-              this.$router.push({ to: this.$store.state.path });
+              this.$router.push({ name: 'Wallets' });
             }
           })
           .catch(e => {

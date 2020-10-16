@@ -29,7 +29,7 @@ class WalletConnectWallet {
     this.walletConnect.on('disconnect', () => {
       if (!this.isKilled) {
         store._vm.$eventHub.$emit('mewConnectDisconnected');
-        store.dispatch('main/clearWallet');
+        store.dispatch('wallet/removeWallet');
       }
     });
 
@@ -43,7 +43,7 @@ class WalletConnectWallet {
       const txSigner = tx => {
         const from = tx.from;
         tx = new Transaction(tx, {
-          common: commonGenerator(store.state.main.network)
+          common: commonGenerator(store.state.wallet.network)
         });
         const txJSON = tx.toJSON(true);
         txJSON.from = from;
@@ -52,7 +52,7 @@ class WalletConnectWallet {
           .sendTransaction(txJSON)
           .then(hash => {
             prom.eventEmitter.emit('transactionHash', hash);
-            store.state.main.web3.eth.sendTransaction.method._confirmTransaction(
+            store.state.wallet.web3.eth.sendTransaction.method._confirmTransaction(
               prom,
               hash,
               { params: [txJSON] }

@@ -15,13 +15,13 @@ import sanitizeHex from '@/helpers/sanitizeHex';
 const setEvents = (promiObj, tx, dispatch) => {
   promiObj
     .once('transactionHash', hash => {
-      dispatch('addNotification', ['Hash', tx.from, tx, hash]);
+      dispatch('wallet/addNotification', ['Hash', tx.from, tx, hash]);
     })
     .once('receipt', res => {
-      dispatch('addNotification', ['Receipt', tx.from, tx, res]);
+      dispatch('wallet/addNotification', ['Receipt', tx.from, tx, res]);
     })
     .on('error', err => {
-      dispatch('addNotification', ['Error', tx.from, tx, err]);
+      dispatch('wallet/addNotification', ['Error', tx.from, tx, err]);
     });
 };
 export default async (

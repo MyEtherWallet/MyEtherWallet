@@ -24,24 +24,6 @@ const SET_BLOCK_NUMBER = function (state, blockNumber) {
   state.blockNumber = blockNumber;
 };
 
-const SET_ONLINE_STATUS = async function (state, status) {
-  state.online = status;
-  if (state.online) {
-    const darkList = await fetch(
-      'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/addresses/addresses-darklist.json'
-    )
-      .then(res => res.json())
-      .catch(() => {
-        console.log('ERROR FETCHING GITHUB ADDRESES');
-        // Toast.responseHandler(e, Toast.ERROR);
-      });
-    state.darklist = {
-      data: darkList,
-      timestamp: Date.now()
-    };
-  }
-};
-
 const REMOVE_WALLET = function (state) {
   state.wallet = null;
   state.account = {
@@ -89,17 +71,8 @@ const SET_ADDRESS_BOOK = function (state, val) {
   store.set('addressBook', val);
 };
 
-const SET_LAST_PATH = function (state, val) {
-  state.path = val;
-};
-
 const SET_WEB3_INSTANCE = function (state, web3) {
   state.web3 = web3;
-};
-
-const SET_LOCALE = function (state, { locale, save }) {
-  state.locale = locale;
-  if (save) store.set('locale', locale);
 };
 
 const SET_NETWORK = function (state, networkObj) {
@@ -140,16 +113,18 @@ const SET_ETH_GASPRICE = function (state, val) {
   store.set('fetchedGasPrice', val);
 };
 
+const SET_USD = function (state, val) {
+  state.usd = val;
+};
+
 export default {
   ADD_NOTIFICATION,
   ADD_SWAP_TRANSACTION,
   ADD_CUSTOM_PATH,
-  SET_ONLINE_STATUS,
   REMOVE_WALLET,
   SET_WALLET,
   INIT_STATES,
   SET_ACCOUNT_BALANCE,
-  SET_LAST_PATH,
   SET_GAS_PRICE,
   SET_ENS,
   SET_WEB3_INSTANCE,
@@ -161,7 +136,7 @@ export default {
   SET_BLOCK_NUMBER,
   SET_LINK_QUERY,
   SET_ADDRESS_BOOK,
-  SET_LOCALE,
   TOGGLE_TEMP_HIDE,
-  SET_ETH_GASPRICE
+  SET_ETH_GASPRICE,
+  SET_USD
 };

@@ -1,6 +1,5 @@
 import url from 'url';
 import web3 from 'web3';
-import Vue from 'vue';
 import MEWProvider from '@/utils/web3-provider';
 import {
   MEW_CONNECT,
@@ -168,13 +167,7 @@ const removeCustomPath = function ({ commit, state }, val) {
   commit('ADD_CUSTOM_PATH', newPaths);
 };
 
-const setOnlineStatus = function ({ commit, dispatch }, val) {
-  if (val) dispatch('setWeb3Instance');
-  commit('SET_ONLINE_STATUS', val);
-};
-
 const removeWallet = function ({ commit, state }) {
-  const linkTo = state.path !== '' ? state.path : '/';
   if (
     state.wallet &&
     (state.wallet.identifier === MEW_CONNECT ||
@@ -183,7 +176,6 @@ const removeWallet = function ({ commit, state }) {
   ) {
     state.wallet.getConnection().disconnect();
   }
-  Vue.router.push(linkTo);
   commit('REMOVE_WALLET');
 };
 
@@ -214,14 +206,6 @@ const setGasPrice = function ({ commit }, gasPrice) {
 
 const setAddressBook = function ({ commit }, addressBook) {
   commit('SET_ADDRESS_BOOK', addressBook);
-};
-
-const setState = function ({ commit }, stateObj) {
-  commit('INIT_STATES', stateObj);
-};
-
-const setLocale = function ({ commit }, val) {
-  commit('SET_LOCALE', val);
 };
 
 const setWeb3Instance = function ({ dispatch, commit, state }, provider) {
@@ -303,20 +287,16 @@ const setENS = function ({ commit }, ens) {
   commit('SET_ENS', ens);
 };
 
-const setLastPath = function ({ commit }, val) {
-  commit('SET_LAST_PATH', val);
-};
-
 const setBlockNumber = function ({ commit }, val) {
   commit('SET_BLOCK_NUMBER', val);
 };
 
-const setLinkQuery = function ({ commit }, val) {
-  commit('SET_LINK_QUERY', val);
-};
-
 const setEthGasPrice = function ({ commit }, val) {
   commit('SET_ETH_GASPRICE', val);
+};
+
+const setUSD = function ({ commit }, val) {
+  commit('SET_USD', val);
 };
 
 export default {
@@ -328,19 +308,15 @@ export default {
   pruneNotifications,
   removeCustomPath,
   removeNotification,
-  setOnlineStatus,
   setAccountBalance,
   setGasPrice,
-  setState,
   setENS,
-  setLastPath,
   setWeb3Instance,
   setNetwork,
   updateNotification,
   updateTransaction,
   setBlockNumber,
-  setLinkQuery,
   setAddressBook,
-  setLocale,
-  setEthGasPrice
+  setEthGasPrice,
+  setUSD
 };

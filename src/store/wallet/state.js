@@ -26,31 +26,23 @@ const customPaths =
   store.get('customPaths') !== undefined ? store.get('customPaths') : {};
 
 const state = {
-  account: {
-    balance: 0,
-    address: null,
-    isHardware: false,
-    identifier: '',
-    nickname: ''
-  },
+  balance: 0,
+  address: null,
+  isHardware: false,
+  identifier: '',
+  nickname: '',
   customPaths: customPaths,
   ens: null,
-  Errors: {},
-  ethDonationAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
   gasPrice: gasPrice,
-  Networks: nodeList,
   network: network,
   notifications: notifications,
-  path: '',
-  online: true,
   transactions: {},
   wallet: null,
   web3: {},
   blockNumber: 0,
-  linkQuery: {},
   addressBook: addressBook,
-  locale: store.get('locale') !== undefined ? store.get('locale') : 'en_US',
-  gasLimitWarning: 100
+  gasLimitWarning: 100,
+  usd: 0
 };
 
 export default state;

@@ -36,7 +36,7 @@ class MEWconnectWallet {
     const txSigner = async tx => {
       let tokenInfo;
       if (tx.data.slice(0, 10) === '0xa9059cbb') {
-        tokenInfo = store.state.main.network.type.tokens.find(
+        tokenInfo = store.state.wallet.network.type.tokens.find(
           entry => entry.address.toLowerCase() === tx.to.toLowerCase()
         );
         if (tokenInfo) {
@@ -59,7 +59,7 @@ class MEWconnectWallet {
         this.mewConnect.sendRtcMessage('signTx', JSON.stringify(tx));
         this.mewConnect.once('signTx', result => {
           tx = new Transaction(sanitizeHex(result), {
-            common: commonGenerator(store.state.main.network)
+            common: commonGenerator(store.state.wallet.network)
           });
           const signedChainId = calculateChainIdFromV(tx.v);
           if (signedChainId !== networkId)
@@ -113,7 +113,7 @@ const signalerConnect = (url, mewConnect) => {
       mewConnect.on('RtcClosedEvent', () => {
         if (mewConnect.getConnectonState()) {
           store._vm.$eventHub.$emit('mewConnectDisconnected');
-          store.dispatch('main/clearWallet');
+          store.dispatch('wallet/removeWallet');
         }
       });
       mewConnect.sendRtcMessage('address', '');

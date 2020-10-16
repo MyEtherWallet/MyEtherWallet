@@ -23,7 +23,7 @@ export default {
     });
   },
   methods: {
-    ...mapActions(['setOnlineStatus'])
+    ...mapActions('global', ['setOnlineStatus'])
   }
 };
 </script>

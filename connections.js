@@ -60,6 +60,7 @@ module.exports = [
   'ws://127.0.0.1:8178',
   'https://viewm.moonicorn.network:443',
   'https://localhost:1991', // server for bcvault
-  'https://hbfzqg7jia.execute-api.us-west-2.amazonaws.com/dev',
-  'wss://www.walletlink.org:443'
+  'https://hbfzqg7jia.execute-api.us-west-2.amazonaws.com/dev:443',
+  'wss://www.walletlink.org:443',
+  'https://api.ethvm.com:443'
 ];
