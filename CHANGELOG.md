@@ -1,3 +1,7 @@
+### Bug
+
+- fix interact with contract constant check to an existence check [#2627](https://github.com/MyEtherWallet/MyEtherWallet/pull/2627)
+
 ### Release v5.7.11
 
 ### Feature
@@ -11,7 +15,6 @@
 ### Devop
 
 - Better handling of new ABI structure[#2622](https://github.com/MyEtherWallet/MyEtherWallet/pull/2622)
-
 
 ### Release v5.7.10
 

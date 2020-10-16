@@ -456,7 +456,9 @@ export default {
             if (Array.isArray(jsonAbi)) {
               this.contractMethods = jsonAbi.filter(item => {
                 if (
-                  item.type !== 'constructor' && (item.constant !== undefined || item.stateMutability !== undefined)
+                  item.type !== 'constructor' &&
+                  (item.constant !== undefined ||
+                    item.stateMutability !== undefined)
                 ) {
                   return item;
                 }
