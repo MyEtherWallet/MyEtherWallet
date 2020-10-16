@@ -14,7 +14,7 @@
             height="50px"
             class="blockie-image"
           />
-          <qr-code-popup title="Address QR Code" :value="{{ address }}">
+          <qr-code-popup title="Address QR Code" :value="address">
             <img src="@/assets/images/icons/icon-qr-code-mew.svg" />
           </qr-code-popup>
         </div>
@@ -22,7 +22,9 @@
           <div class="font-weight-medium d-flex align-center">
             <div>MY ACCOUNT VALUE</div>
           </div>
-          <div class="headline font-weight-bold monospace">$7,244.58</div>
+          <div class="headline font-weight-bold monospace">
+            {{ convertedBalance }}
+          </div>
         </div>
       </div>
       <div class="component--address d-flex align-center mt-1">
@@ -68,6 +70,7 @@ import changeAddress from '@/modules/wallets/components/change-address/ChangeAdd
 import paperWallet from '@/modules/wallets/components/paper-wallet/PaperWallet';
 import qrCodePopup from '@/modules/wallets/components/qr-code-popup/QRcodePopup';
 import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -82,12 +85,16 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address']),
+    ...mapState('wallet', ['address', 'usd', 'balance']),
     lastFour() {
       return this.address.substring(
         this.address.length - 4,
         this.address.length
       );
+    },
+    convertedBalance() {
+      const balance = BigNumber(this.balance).times(this.usd);
+      return `$ ${balance.toFixed(2).toString()}`;
     }
   },
   methods: {

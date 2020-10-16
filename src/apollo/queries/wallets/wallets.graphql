@@ -3,3 +3,10 @@ query getEthBalance($hash: String!) {
       balance
     }
 }
+
+query getUSDPrice {
+  getLatestPrices {
+        id
+        current_price
+    }
+}

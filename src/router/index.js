@@ -42,11 +42,11 @@ router.beforeResolve((to, from, next) => {
   if (to.meta.hasOwnProperty('requiresAuth')) {
     next();
   } else {
-    if (store.state.wallet === null) {
+    if (store.state.wallet.address === null) {
       store.dispatch('global/setLastPath', to.path);
       next({ name: 'AccessWallet' });
     } else {
-      if (store.state.path !== '') {
+      if (store.state.global.path !== '') {
         store.dispatch('global/setLastPath', '');
       }
       next();
