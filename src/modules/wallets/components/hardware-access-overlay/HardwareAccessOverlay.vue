@@ -702,7 +702,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(['Networks', 'network']),
+    ...mapState('global', ['Networks']),
+    ...mapState('wallet', ['network']),
     networkTypes() {
       const showFirst = ['ETH', 'ROP', 'RIN'];
       const typeArr = Object.keys(this.Networks).filter(item => {
@@ -825,7 +826,7 @@ export default {
         });
 
         if (found) {
-          this.$store.state.network = found; // replace with dispatch + new web3 instance
+          this.setNetwork(found);
         }
       });
     },
@@ -847,7 +848,7 @@ export default {
     this.selectedNetwork = this.network.url;
   },
   methods: {
-    ...mapActions(['setWallet']),
+    ...mapActions('wallet', ['setWallet', 'setNetwork']),
     setBCvaultAddress(address) {
       this.selectedAddress = address;
     },

@@ -1,14 +1,13 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import State from './state.js';
-import Mutations from './mutations.js';
-import Actions from './actions.js';
+import global from './global';
+import wallet from './wallet';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: State,
-  mutations: Mutations,
-  actions: Actions,
-  strict: false
+  modules: {
+    global: global,
+    wallet: wallet
+  }
 });

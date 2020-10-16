@@ -266,7 +266,7 @@
 <script>
 import { MNEMONIC as mnemonicType } from '@/modules/wallets/utils/bip44/walletTypes';
 import paths from '@/modules/wallets/utils/bip44';
-import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 const parsedPaths = paths[mnemonicType].map(item => {
   const newObj = {};
   newObj['name'] = item['label'];
@@ -346,7 +346,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(['Networks', 'network']),
+    ...mapState('global', ['Networks']),
+    ...mapState('wallet', ['network']),
     networkTypes() {
       const showFirst = ['ETH', 'ROP', 'RIN'];
       const typeArr = Object.keys(this.Networks).filter(item => {
@@ -391,7 +392,7 @@ export default {
         });
 
         if (found) {
-          this.$store.state.network = found; // replace with dispatch + new web3 instance
+          this.setNetwork(found);
         }
       });
     },
@@ -426,6 +427,7 @@ export default {
     this.selectedNetwork = this.network.url;
   },
   methods: {
+    ...mapActions('wallet', ['setNetwork']),
     copy(addr) {
       this.$refs[addr][0].select();
       document.execCommand('copy');

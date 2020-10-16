@@ -1,0 +1,23 @@
+{
+  "generate-info": "Сгенерировать информацию",
+  "signed-tx": "Подписанная транзакция",
+  "nonce": "Nonce-Число",
+  "select-network": "Выберите Сеть",
+  "tx-details": "Детали Транзакции",
+  "tx-status": "Статус Транзакции",
+  "offline-helper": "Помощник для оффлайн транзакций",
+  "export-json": "Экспорт JSON файл",
+  "upload-json": "Загрузить JSON файл",
+  "block-hash": "Хеш Блока",
+  "block-number": "Номер блока",
+  "contract-address": "Адрес контракта",
+  "cumulative-gas-used": "Суммарный Использованный Газ",
+  "from": "с",
+  "gas-used": "Использованный Газ",
+  "logs": "логи",
+  "logs-bloom": "Логи Bloom",
+  "status": "Статус",
+  "to": "На",
+  "transaction-hash": "Хеш транзакции",
+  "transaction-index": "Индекс транзакции"
+}

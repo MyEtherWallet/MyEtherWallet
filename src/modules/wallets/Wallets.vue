@@ -29,7 +29,9 @@ import walletHeader from './components/header/Header';
 import network from '@/modules/wallets/components/network/Network';
 import swap from '@/modules/wallets/components/swap/Swap';
 import bannerAds from '@/modules/wallets/components/banner-ads/BannerAds';
-import TokensList from '@/modules/tokens/index';
+import TokensList from '@/apollo/queries/tokens/index';
+import WalletCalls from '@/apollo/queries/wallets/index';
+import { mapActions, mapState } from 'vuex';
 
 export default {
   components: {
@@ -42,36 +44,25 @@ export default {
   data() {
     return {
       tokens: [],
-      ownersTokens: [],
-      account: {
-        balance: '20000000000000000000000',
-        address: '0x43689531907482BEE7e650D18411E284A7337A66'
-      }
+      ownersTokens: []
     };
   },
-  watch: {
-    $route() {
-      this.redirectToDashboard();
-    }
+  computed: {
+    ...mapState('wallet', ['address'])
   },
   mounted() {
-    this.tokensList = new TokensList(this.$apollo);
-    this.tokens = this.tokensList.getLatestPrices(this.$apollo);
-    this.getOwnersTokens().then(res => {
+    const tokensList = new TokensList(this.$apollo);
+    tokensList.getOwnersERC20Tokens(this.address).then(res => {
       console.log(res);
       this.ownersTokens = res;
     });
-    // this.redirectToDashboard();
+    const walletCalls = new WalletCalls(this.$apollo);
+    walletCalls.getBalance(this.address).then(res => {
+      this.setAccountBalance(res);
+    });
   },
   methods: {
-    getOwnersTokens() {
-      return this.tokensList.getOwnersERC20Tokens(this.account.address);
-    },
-    redirectToDashboard() {
-      if (this.$route.name === 'Wallet') {
-        this.$router.push({ name: 'Dashboard' });
-      }
-    }
+    ...mapActions('wallet', ['setAccountBalance'])
   }
 };
 </script>

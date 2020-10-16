@@ -14,10 +14,7 @@
             height="50px"
             class="blockie-image"
           />
-          <qr-code-popup
-            title="Address QR Code"
-            value="0x85b74f0ad686252a817c1a7fd70b600c098dc38c"
-          >
+          <qr-code-popup title="Address QR Code" :value="{{ address }}">
             <img src="@/assets/images/icons/icon-qr-code-mew.svg" />
           </qr-code-popup>
         </div>
@@ -32,7 +29,7 @@
         <div class="monospace full-address">{{ address }}</div>
         <div class="monospace last-four">{{ lastFour }}</div>
       </div>
-      <div class="mb-2">OWNED 3 DOMAINS ></div>
+      <!-- <div class="mb-2">OWNED 3 DOMAINS ></div> -->
       <div class="d-flex align-center">
         <div class="bottom-buttons">
           <mew-button
@@ -50,7 +47,7 @@
             icon-type="mdi"
           ></mew-button>
         </div>
-        <mew-button
+        <!-- <mew-button
           class="ml-auto switch-button"
           :has-full-width="false"
           btn-style="outline"
@@ -58,7 +55,7 @@
           color-theme="white"
           btn-size="small"
           @click.native="openChangeAddress = true"
-        />
+        /> -->
       </div>
     </div>
     <change-address :open="openChangeAddress" :close="closeChangeAddress" />
@@ -85,10 +82,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account']),
-    address() {
-      return this.account.address;
-    },
+    ...mapState('wallet', ['address']),
     lastFour() {
       return this.address.substring(
         this.address.length - 4,

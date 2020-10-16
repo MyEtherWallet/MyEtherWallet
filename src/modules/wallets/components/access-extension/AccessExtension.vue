@@ -57,11 +57,6 @@ export default {
         centered: true
       }
     };
-  },
-  methods: {
-    openOverlay(name) {
-      this.$store.commit('openOverlay', name);
-    }
   }
 };
 </script>
