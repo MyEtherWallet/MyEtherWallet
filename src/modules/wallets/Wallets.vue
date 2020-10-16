@@ -32,6 +32,7 @@ import bannerAds from '@/modules/wallets/components/banner-ads/BannerAds';
 import TokensList from '@/apollo/queries/tokens/index';
 import WalletCalls from '@/apollo/queries/wallets/index';
 import { mapActions, mapState } from 'vuex';
+import utils from 'web3-utils';
 
 export default {
   components: {
@@ -48,21 +49,32 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address'])
+    ...mapState('wallet', ['address']),
+    ...mapState('global', ['online'])
   },
   mounted() {
-    const tokensList = new TokensList(this.$apollo);
-    tokensList.getOwnersERC20Tokens(this.address).then(res => {
-      console.log(res);
-      this.ownersTokens = res;
-    });
-    const walletCalls = new WalletCalls(this.$apollo);
-    walletCalls.getBalance(this.address).then(res => {
-      this.setAccountBalance(res);
-    });
+    if (this.online) {
+      this.getTokens();
+      this.getPriceAndBalance();
+    }
   },
   methods: {
-    ...mapActions('wallet', ['setAccountBalance'])
+    ...mapActions('wallet', ['setAccountBalance', 'setUSD']),
+    getTokens() {
+      const tokensList = new TokensList(this.$apollo);
+      tokensList.getOwnersERC20Tokens(this.address).then(res => {
+        this.ownersTokens = res;
+      });
+    },
+    getPriceAndBalance() {
+      const walletCalls = new WalletCalls(this.$apollo);
+      walletCalls.getBalance(this.address).then(res => {
+        this.setAccountBalance(utils.fromWei(res));
+      });
+      walletCalls.getUSDPrice(this.address).then(res => {
+        this.setUSD(res);
+      });
+    }
   }
 };
 </script>

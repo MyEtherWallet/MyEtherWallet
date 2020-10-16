@@ -39,7 +39,7 @@ export default async (
   try {
     tx.nonce = !tx.nonce
       ? await store.state.web3.eth.getTransactionCount(
-          store.state.wallet.getAddressString()
+          store.state.instance.getAddressString()
         )
       : tx.nonce;
     tx.gas = !tx.gas ? await ethCalls.estimateGas(localTx) : tx.gas;
@@ -51,8 +51,8 @@ export default async (
   getSanitizedTx(tx)
     .then(_tx => {
       if (
-        store.state.wallet.identifier === WEB3_WALLET ||
-        store.state.wallet.identifier === WALLET_CONNECT
+        store.state.identifier === WEB3_WALLET ||
+        store.state.identifier === WALLET_CONNECT
       ) {
         eventHub.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx, _promiObj => {
           setEvents(_promiObj, _tx, store.dispatch);
@@ -72,12 +72,12 @@ export default async (
 
           _promiObj
             .once('transactionHash', hash => {
-              if (store.state.wallet !== null) {
+              if (store.state.instance !== null) {
                 const localStoredObj = locStore.get(
-                  utils.sha3(store.state.wallet.getChecksumAddressString())
+                  utils.sha3(store.state.instance.getChecksumAddressString())
                 );
                 locStore.set(
-                  utils.sha3(store.state.wallet.getChecksumAddressString()),
+                  utils.sha3(store.state.instance.getChecksumAddressString()),
                   {
                     nonce: sanitizeHex(
                       new BigNumber(localStoredObj.nonce).plus(1).toString(16)

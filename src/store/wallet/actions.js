@@ -70,7 +70,7 @@ const pruneNotifications = ({ commit, state }) => {
   const removeEntries = async entries => {
     const entry = entries.pop();
     if (entry) {
-      const address = state.account.address.toLowerCase();
+      const address = state.address.toLowerCase();
 
       const idIndex = newNotif[address].findIndex(item => item.id === entry.id);
       if (idIndex > -1) {
@@ -80,8 +80,8 @@ const pruneNotifications = ({ commit, state }) => {
     }
     return newNotif;
   };
-  if (!newNotif[state.account.address]) return;
-  const check = newNotif[state.account.address]
+  if (!newNotif[state.address]) return;
+  const check = newNotif[state.address]
     .filter(item => item.network === state.network.type.name)
     .sort((a, b) => {
       a = a.timestamp;
@@ -197,7 +197,7 @@ const setWallet = function ({ commit, dispatch }, params) {
 };
 
 const setAccountBalance = function ({ commit }, balance) {
-  commit('SET_ACCOUNT_BALANCE', balance);
+  commit('SET_BALANCE', balance);
 };
 
 const setGasPrice = function ({ commit }, gasPrice) {
@@ -252,7 +252,7 @@ const setWeb3Instance = function ({ dispatch, commit, state }, provider) {
           ? web3Instance.eth.estimateGas(localTx)
           : arr[i].gas);
         const nonce = await (arr[i].nonce === undefined
-          ? web3Instance.eth.getTransactionCount(state.account.address)
+          ? web3Instance.eth.getTransactionCount(state.address)
           : arr[i].nonce);
         arr[i].nonce = new BigNumber(nonce + i).toFixed();
         arr[i].gas = gas;

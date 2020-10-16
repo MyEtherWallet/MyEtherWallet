@@ -26,22 +26,20 @@ const SET_BLOCK_NUMBER = function (state, blockNumber) {
 
 const REMOVE_WALLET = function (state) {
   state.wallet = null;
-  state.account = {
-    balance: 0,
-    address: null,
-    isHardWare: null,
-    identifier: ''
-  };
+  this.balance = 0;
+  this.address = null;
+  this.isHardWare = null;
+  this.identifier = '';
 };
 
 const SET_WALLET = function (state, wallet) {
   state.wallet = wallet;
-  state.account['address'] = wallet.getAddressString();
-  state.account['isHardware'] = wallet.isHardware;
-  state.account['identifier'] = wallet.identifier;
+  state.address = wallet.getAddressString();
+  state.isHardware = wallet.isHardware;
+  state.identifier = wallet.identifier;
   if (!wallet.hasOwnProperty('isHardWare')) {
-    state.account['nickname'] = wallet.getNickname();
-    state.account['keystore'] = wallet.getKeystore();
+    state.nickname = wallet.getNickname();
+    state.keystore = wallet.getKeystore();
   }
 };
 
@@ -51,10 +49,8 @@ const INIT_STATES = function (state, stateObj) {
   });
 };
 
-const SET_ACCOUNT_BALANCE = function (state, balance) {
-  const newObj = Object.assign({}, state.account);
-  newObj.balance = balance;
-  state.account = newObj;
+const SET_BALANCE = function (state, balance) {
+  state.balance = balance;
 };
 
 const SET_ENS = function (state, ens) {
@@ -124,7 +120,7 @@ export default {
   REMOVE_WALLET,
   SET_WALLET,
   INIT_STATES,
-  SET_ACCOUNT_BALANCE,
+  SET_BALANCE,
   SET_GAS_PRICE,
   SET_ENS,
   SET_WEB3_INSTANCE,

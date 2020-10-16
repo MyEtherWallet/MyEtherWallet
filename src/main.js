@@ -155,11 +155,8 @@ Sentry.init({
         ? store.state.wallet.network.service
         : '';
     const identifier =
-      !store &&
-      !store.state &&
-      !store.state.wallet &&
-      !store.state.wallet.account
-        ? store.state.wallet.account.identifier
+      !store && !store.state && !store.state.wallet
+        ? store.state.wallet.identifier
         : '';
     event.tags = {
       network: network,

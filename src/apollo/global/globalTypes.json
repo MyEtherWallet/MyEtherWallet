@@ -1,7 +1,7 @@
 {
 	"operations": [
 		{
-			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/modules/tokens/tokens.graphql",
+			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwallet/src/apollo/queries/tokens/tokens.graphql",
 			"operationName": "getLatestPrices",
 			"operationType": "query",
 			"rootType": "Query",
@@ -104,7 +104,7 @@
 			"operationId": "402f0593f5157e7ec00b832e8e83a5bc180d9b76afdeff94a923ebedcfb05bd7"
 		},
 		{
-			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/modules/tokens/tokens.graphql",
+			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwallet/src/apollo/queries/tokens/tokens.graphql",
 			"operationName": "getOwnersERC20Tokens",
 			"operationType": "query",
 			"rootType": "Query",
@@ -224,6 +224,109 @@
 			],
 			"sourceWithFragments": "query getOwnersERC20Tokens($hash: String!, $_nextKey: String) {\n  getOwnersERC20Tokens(owner: $hash, nextKey: $_nextKey) {\n    __typename\n    owners {\n      __typename\n      tokenInfo {\n        __typename\n        ...TokenFragment\n        contract\n      }\n      balance\n    }\n    nextKey\n  }\n}\nfragment TokenFragment on EthTokenInfo {\n  __typename\n  name\n  symbol\n  decimals\n}",
 			"operationId": "e4101db0908e197d2029ecaa177d66a6f12d1794f28b9cadf3a5e658e79c3e37"
+		},
+		{
+			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwallet/src/apollo/queries/wallets/wallets.graphql",
+			"operationName": "getEthBalance",
+			"operationType": "query",
+			"rootType": "Query",
+			"variables": [
+				{
+					"name": "hash",
+					"type": "String!"
+				}
+			],
+			"source": "query getEthBalance($hash: String!) {\n  getEthBalance(owner: $hash) {\n    __typename\n    balance\n  }\n}",
+			"fields": [
+				{
+					"responseName": "getEthBalance",
+					"fieldName": "getEthBalance",
+					"type": "EthOwner!",
+					"args": [
+						{
+							"name": "owner",
+							"value": {
+								"kind": "Variable",
+								"variableName": "hash"
+							},
+							"type": "String!"
+						}
+					],
+					"isConditional": false,
+					"description": "------------------------------------------------\nETH:\n------------------------------------------------",
+					"isDeprecated": false,
+					"fields": [
+						{
+							"responseName": "__typename",
+							"fieldName": "__typename",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "balance",
+							"fieldName": "balance",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						}
+					],
+					"fragmentSpreads": [],
+					"inlineFragments": []
+				}
+			],
+			"fragmentSpreads": [],
+			"inlineFragments": [],
+			"fragmentsReferenced": [],
+			"sourceWithFragments": "query getEthBalance($hash: String!) {\n  getEthBalance(owner: $hash) {\n    __typename\n    balance\n  }\n}",
+			"operationId": "e577a92be9f5470547613c7e15fce43c50f910c2f78d61043d7bcc55c7a3b742"
+		},
+		{
+			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwallet/src/apollo/queries/wallets/wallets.graphql",
+			"operationName": "getUSDPrice",
+			"operationType": "query",
+			"rootType": "Query",
+			"variables": [],
+			"source": "query getUSDPrice {\n  getLatestPrices {\n    __typename\n    id\n    current_price\n  }\n}",
+			"fields": [
+				{
+					"responseName": "getLatestPrices",
+					"fieldName": "getLatestPrices",
+					"type": "[TokenMarketInfo]!",
+					"isConditional": false,
+					"isDeprecated": false,
+					"fields": [
+						{
+							"responseName": "__typename",
+							"fieldName": "__typename",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "id",
+							"fieldName": "id",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "current_price",
+							"fieldName": "current_price",
+							"type": "Float",
+							"isConditional": false,
+							"isDeprecated": false
+						}
+					],
+					"fragmentSpreads": [],
+					"inlineFragments": []
+				}
+			],
+			"fragmentSpreads": [],
+			"inlineFragments": [],
+			"fragmentsReferenced": [],
+			"sourceWithFragments": "query getUSDPrice {\n  getLatestPrices {\n    __typename\n    id\n    current_price\n  }\n}",
+			"operationId": "4662e8ece32b2d7238d5e4d2e6de08e27d3aad85fb62d757c23e0709aa8f1b19"
 		}
 	],
 	"fragments": [
@@ -233,7 +336,7 @@
 				"EthTokenInfo"
 			],
 			"fragmentName": "TokenFragment",
-			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/modules/tokens/tokens.graphql",
+			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwallet/src/apollo/queries/tokens/tokens.graphql",
 			"source": "fragment TokenFragment on EthTokenInfo {\n  __typename\n  name\n  symbol\n  decimals\n}",
 			"fields": [
 				{

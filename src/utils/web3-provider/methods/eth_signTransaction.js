@@ -17,7 +17,7 @@ export default async (
   const ethCalls = new EthCalls(requestManager);
   tx.nonce = !tx.nonce
     ? await store.state.web3.eth.getTransactionCount(
-        store.state.wallet.getAddressString()
+        store.state.instance.getAddressString()
       )
     : tx.nonce;
   tx.gas = !tx.gas ? await ethCalls.estimateGas(localTx) : tx.gas;
@@ -27,7 +27,7 @@ export default async (
     : tx.gasPrice;
   getSanitizedTx(tx)
     .then(_tx => {
-      if (store.state.wallet.identifier === WEB3_WALLET) {
+      if (store.state.identifier === WEB3_WALLET) {
         res(new Error('web3 wallets doesnt support eth_signTransaction'));
       } else {
         if (_tx.hasOwnProperty('generateOnly')) {
