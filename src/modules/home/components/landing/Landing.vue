@@ -23,14 +23,14 @@
               class="mr-3"
               :has-full-width="false"
               title="Create a new wallet"
-              button-size="xlarge"
+              btn-size="xlarge"
               @click.native="$router.push({ name: 'CreateWallet', params: {} })"
             />
             <mew-button
               :has-full-width="false"
               btn-style="outline"
               title="Access my wallet"
-              button-size="xlarge"
+              btn-size="xlarge"
               @click.native="$router.push({ name: 'AccessWallet', params: {} })"
             />
           </div>
@@ -57,7 +57,7 @@
               class="mb-3 width--full"
               :has-full-width="false"
               title="Create a new wallet"
-              button-size="xlarge"
+              btn-size="xlarge"
               @click.native="$router.push({ name: 'CreateWallet', params: {} })"
             />
             <mew-button
@@ -65,7 +65,7 @@
               :has-full-width="false"
               btn-style="outline"
               title="Access my wallet"
-              button-size="xlarge"
+              btn-size="xlarge"
               @click.native="$router.push({ name: 'AccessWallet', params: {} })"
             />
           </div>
