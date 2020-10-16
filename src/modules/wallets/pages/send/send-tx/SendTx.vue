@@ -30,7 +30,7 @@
                 ref="mewInput"
                 :label="$t('sendTx.amount')"
                 placeholder=" "
-                :right-label="balanceETH"
+                :right-label="balance"
                 :value="amount"
                 @input="setAmount"
               />
@@ -40,7 +40,7 @@
             <v-col cols="12">
               <mew-address-select
                 ref="addressSelect"
-                :value="address"
+                :value="toAddress"
                 :copy-tooltip="$t('common.copy')"
                 :save-tooltip="$t('common.save')"
                 :enable-save-address="true"
@@ -66,12 +66,12 @@
         >
           <template #panelBody1>
             <div>
-              <mew-input
+              <!-- <mew-input
                 :label="$t('common.gas.price')"
                 placeholder=" "
                 :value="displayedGasPrice()"
                 @input="setGasPrice"
-              />
+              /> -->
               <mew-input
                 :label="$t('common.gas.limit')"
                 placeholder=" "
@@ -85,7 +85,7 @@
                 {{ $t('sendTx.tx-fee') }}
                 <mew-tooltip class="ml-1" text="" />
               </div>
-              <div v-show="network.type.name === networkTypes[0]">
+              <div v-show="isEth">
                 <i18n path="sendTx.cost-eth-usd" tag="div">
                   <span slot="eth">{{ txFeeETH() }}</span>
                   <span slot="usd">{{ txFeeUSD() }}</span>
@@ -135,7 +135,8 @@
 <script>
 import SendTransaction from './index';
 import utils from 'web3-utils';
-import web3Instance from './web3-delete';
+import { mapState } from 'vuex';
+import { ETH } from '@/utils/networks/types';
 
 export default {
   props: {
@@ -172,13 +173,6 @@ export default {
   },
   data() {
     return {
-      // will remove this once we get state
-      web3: web3Instance,
-      gasPrice: '90',
-      account: {
-        balance: '20000000000000000000000',
-        address: '0x43689531907482BEE7e650D18411E284A7337A66'
-      },
       addresses: [
         {
           address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
@@ -193,24 +187,13 @@ export default {
           resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
         }
       ],
-      network: {
-        type: {
-          name: 'ETH',
-          name_long: 'Ethereum',
-          currencyName: 'ETH'
-        }
-      },
-      online: true,
-      // end of removing
-      networkTypes: ['ETH'],
       toastType: '',
       toastMsg: '',
       ethPrice: 0,
       customGasLimit: '',
-      address: '',
+      toAddress: '',
       sendTx: null,
       amount: '0',
-      balanceETH: '0',
       selectedCurrency: '',
       data: '',
       clearAll: false,
@@ -223,6 +206,17 @@ export default {
     };
   },
   computed: {
+    ...mapState('wallet', [
+      'balance',
+      'network',
+      'gasPrice',
+      'web3',
+      'address'
+    ]),
+    ...mapState('global', ['online']),
+    isEth() {
+      return this.network.type.name === ETH.name;
+    },
     multiwatch() {
       return (
         this.amount,
@@ -246,14 +240,13 @@ export default {
   },
   mounted() {
     this.sendTx = new SendTransaction(
-      this.account,
+      this.address,
       this.web3,
       this.gasPrice,
       this.network
     );
-    this.balanceETH = this.sendTx.getBalETH();
     this.customGasLimit = this.gasLimit;
-    this.online && this.network.type.name === 'ETH' ? this.getEthPrice() : null;
+    this.online && this.isEth ? this.getEthPrice() : null;
   },
   methods: {
     send() {
@@ -261,7 +254,7 @@ export default {
       this.sendTx
         .submitTransaction(
           this.customGasLimit,
-          this.address,
+          this.toAddress,
           this.amount,
           this.data
         )
@@ -283,7 +276,7 @@ export default {
           ? this.prefilledData
           : '';
         this.amount = this.prefilledAmount;
-        this.address = this.prefilledAddress;
+        this.toAddress = this.prefilledAddress;
         // this.gasLimit = this.customGasLimit;
         this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
         this.$refs.expandPanel.setToggle(true);
@@ -295,9 +288,9 @@ export default {
     },
     clear() {
       this.data = '';
-      this.address = '';
+      this.toAddress = '';
       this.amount = '0';
-      this.address = '';
+      this.toAddress = '';
       this.gasPrice = '90';
       this.isValidAddress = false;
       this.$refs.expandPanel.setToggle(false);
@@ -349,15 +342,15 @@ export default {
       return '--';
     },
     isValidAddress() {
-      return this.sendTx ? this.sendTx.isValidAddress(this.address) : false;
+      return this.sendTx ? this.sendTx.isValidAddress(this.toAddress) : false;
     },
     setAddress(value) {
-      this.address = value;
+      this.toAddress = value;
     },
     setEntireBal() {
       this.amount = this.sendTx.getEntireBal(
         this.selectedCurrency,
-        this.balanceETH
+        this.balance
       );
     },
     setAmount(value) {

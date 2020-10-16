@@ -25,7 +25,7 @@ const SET_BLOCK_NUMBER = function (state, blockNumber) {
 };
 
 const REMOVE_WALLET = function (state) {
-  state.wallet = null;
+  state.instance = null;
   this.balance = 0;
   this.address = null;
   this.isHardWare = null;
@@ -33,13 +33,12 @@ const REMOVE_WALLET = function (state) {
 };
 
 const SET_WALLET = function (state, wallet) {
-  state.wallet = wallet;
+  state.instance = wallet;
   state.address = wallet.getAddressString();
   state.isHardware = wallet.isHardware;
   state.identifier = wallet.identifier;
   if (!wallet.hasOwnProperty('isHardWare')) {
     state.nickname = wallet.getNickname();
-    state.keystore = wallet.getKeystore();
   }
 };
 

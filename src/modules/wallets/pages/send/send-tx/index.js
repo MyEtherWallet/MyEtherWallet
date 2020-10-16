@@ -6,8 +6,8 @@ import validateHexString from '@/helpers/validateHexString';
 import { Transaction } from 'ethereumjs-tx';
 import Vue from 'vue';
 export default class SendTransaction {
-  constructor(account, web3, gasPrice, network) {
-    this.account = account;
+  constructor(balance, web3, gasPrice, network) {
+    this.balance = balance;
     this.web3 = web3;
     this.gasPrice = gasPrice;
     this.network = network;
@@ -29,11 +29,9 @@ export default class SendTransaction {
   getFixedGas(val) {
     return new BigNumber(val).toFixed(2);
   }
-  // account balance in ether
+  // balance balance in ether
   getBalETH() {
-    return new BigNumber(
-      utils.fromWei(this.account.balance, 'ether')
-    ).toFixed();
+    return new BigNumber(utils.fromWei(this.balance, 'ether')).toFixed();
   }
   // get the address' entire balance
   getEntireBal(currency, balance, gasLimit) {
@@ -215,23 +213,14 @@ export default class SendTransaction {
       ? currency.address.toLowerCase()
       : hash.toLowerCase().trim();
   }
-  // get eth price
-  async getEthPrice() {
-    const price = await fetch('https://cryptorates.mewapi.io/ticker?filter=ETH')
-      .then(response => {
-        const json = response.json();
-        return json;
-      })
-      .catch(() => {
-        return 0;
-      });
-    return typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
-  }
   // submit transaction
   async submitTransaction(gasLimit, address, amount, data) {
     try {
+      console.log('hello');
       const coinbase = await this.web3.eth.getCoinbase();
+      console.log('there', coinbase);
       const nonce = await this.web3.eth.getTransactionCount(coinbase);
+      console.log('general');
       const raw = {
         nonce: sanitizeHex(new BigNumber(nonce).toString(16)),
         actualGasPrice: sanitizeHex(
@@ -243,8 +232,10 @@ export default class SendTransaction {
         data: data
       };
       const _tx = new Transaction(raw);
+      console.log('kenobi');
       const json = _tx.toJSON(true);
       json.from = coinbase;
+      console.log('you');
       this.web3.eth
         .sendTransaction(json)
         .then(response => {
@@ -253,8 +244,10 @@ export default class SendTransaction {
         .catch(error => {
           return error;
         });
+      console.log('are');
       this.clear();
     } catch (error) {
+      console.log(error);
       return error;
     }
   }

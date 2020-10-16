@@ -24,6 +24,11 @@
 </template>
 
 <script>
+import BigNumber from 'bignumber.js';
+import { mapActions, mapState } from 'vuex';
+import utils from 'web3-utils';
+import store from 'store';
+
 import sideMenu from './components/side-menu/SideMenu';
 import walletHeader from './components/header/Header';
 import network from '@/modules/wallets/components/network/Network';
@@ -31,8 +36,12 @@ import swap from '@/modules/wallets/components/swap/Swap';
 import bannerAds from '@/modules/wallets/components/banner-ads/BannerAds';
 import TokensList from '@/apollo/queries/tokens/index';
 import WalletCalls from '@/apollo/queries/wallets/index';
-import { mapActions, mapState } from 'vuex';
-import utils from 'web3-utils';
+
+import {
+  getGasBasedOnType,
+  getOther,
+  getEconomy
+} from '@/helpers/gasPriceHelper.js';
 
 export default {
   components: {
@@ -49,7 +58,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address']),
+    ...mapState('wallet', ['address', 'web3']),
     ...mapState('global', ['online'])
   },
   mounted() {
@@ -59,7 +68,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions('wallet', ['setAccountBalance', 'setUSD']),
+    ...mapActions('wallet', [
+      'setAccountBalance',
+      'setUSD',
+      'setGasPrice',
+      'setEthGasPrice'
+    ]),
     getTokens() {
       const tokensList = new TokensList(this.$apollo);
       tokensList.getOwnersERC20Tokens(this.address).then(res => {
@@ -67,12 +81,27 @@ export default {
       });
     },
     getPriceAndBalance() {
+      const gasType = store.get('gasPriceType') || 'economy';
+      const getCustomGas = getOther();
       const walletCalls = new WalletCalls(this.$apollo);
       walletCalls.getBalance(this.address).then(res => {
-        this.setAccountBalance(utils.fromWei(res));
+        this.setAccountBalance(BigNumber(utils.fromWei(res)).toString());
       });
       walletCalls.getUSDPrice(this.address).then(res => {
         this.setUSD(res);
+      });
+      this.web3.eth.getGasPrice().then(res => {
+        const parsedGas = getEconomy(
+          this.web3.utils.fromWei(res, 'gwei')
+        ).toString();
+        if (gasType === 'economy') {
+          this.setGasPrice(parsedGas);
+        } else if (gasType === 'other' && getCustomGas) {
+          this.setGasPrice(getCustomGas);
+        } else {
+          this.setGasPrice(getGasBasedOnType(parsedGas));
+        }
+        this.setEthGasPrice(utils.fromWei(res, 'gwei'));
       });
     }
   }

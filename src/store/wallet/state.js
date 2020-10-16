@@ -26,23 +26,23 @@ const customPaths =
   store.get('customPaths') !== undefined ? store.get('customPaths') : {};
 
 const state = {
-  balance: 0,
   address: null,
-  isHardware: false,
-  identifier: '',
-  nickname: '',
+  addressBook: addressBook,
+  balance: '0',
+  blockNumber: 0,
   customPaths: customPaths,
   ens: null,
+  gasLimitWarning: 100,
   gasPrice: gasPrice,
+  identifier: '',
+  isHardware: false,
   network: network,
+  nickname: '',
   notifications: notifications,
   transactions: {},
-  wallet: null,
-  web3: {},
-  blockNumber: 0,
-  addressBook: addressBook,
-  gasLimitWarning: 100,
-  usd: 0
+  usd: 0,
+  instance: null,
+  web3: {}
 };
 
 export default state;

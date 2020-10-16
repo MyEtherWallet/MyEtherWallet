@@ -169,12 +169,12 @@ const removeCustomPath = function ({ commit, state }, val) {
 
 const removeWallet = function ({ commit, state }) {
   if (
-    state.wallet &&
-    (state.wallet.identifier === MEW_CONNECT ||
-      state.wallet.identifier === WALLET_CONNECT ||
-      state.wallet.identifier === WALLET_LINK)
+    state.instance &&
+    (state.instance.identifier === MEW_CONNECT ||
+      state.instance.identifier === WALLET_CONNECT ||
+      state.instance.identifier === WALLET_LINK)
   ) {
-    state.wallet.getConnection().disconnect();
+    state.instance.getConnection().disconnect();
   }
   commit('REMOVE_WALLET');
 };
@@ -273,7 +273,7 @@ const setWeb3Instance = function ({ dispatch, commit, state }, provider) {
         'showTxCollectionConfirmModal',
         arr,
         batchSignCallback,
-        state.wallet.isHardware
+        state.instance.isHardware
       );
     });
   };
