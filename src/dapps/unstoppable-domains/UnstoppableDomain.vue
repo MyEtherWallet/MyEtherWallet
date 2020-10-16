@@ -1,14 +1,17 @@
 <template>
   <div class="mew-component-fix--unstoppable-domain">
     <div class="d-flex align-center">
-      <buy-overlay :open="buyOverlay" :close="closeBuyOverlay" />
+      <buy-overlay :open="buyOverlay" @close="buyOverlay = false" />
       <div
         class="cursor--pointer font-weight-bold mr-4"
         @click="buyOverlay = true"
       >
         Buy Domain Overlay
       </div>
-      <add-owned-domain-overlay :open="addOverlay" :close="closeAddOverlay" />
+      <add-owned-domain-overlay
+        :open="addOverlay"
+        @close="addOverlay = false"
+      />
       <div
         class="cursor--pointer font-weight-bold mr-4"
         @click="addOverlay = true"
@@ -17,7 +20,7 @@
       </div>
       <transfer-domain-overlay
         :open="transferOverlay"
-        :close="closeTransferOverlay"
+        @close="transferOverlay = false"
       />
       <div
         class="cursor--pointer font-weight-bold mr-4"
@@ -30,24 +33,28 @@
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
         <template #tabContent1>
-          <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
+          <v-sheet
+            color="transparent"
+            max-width="700px"
+            class="mx-auto py-12 px-4"
+          >
             <div class="mb-5">
               <div class="mb-3">
                 <div class="mew-heading-3 font-weight-bold">
                   Find your blockchain domain
                 </div>
               </div>
-              <div class="d-flex align-start">
+              <div class="d-block d-lg-flex align-start">
                 <mew-input
                   :has-clear-btn="true"
                   right-label=".ctypto"
                   label="Domain name"
                   placeholder=" "
-                  class="mr-3 flex-grow-1"
+                  class="mr-lg-3 flex-grow-1"
                 />
                 <mew-button
                   :has-full-width="false"
-                  button-size="xlarge"
+                  btn-size="xlarge"
                   title="Check availability"
                 />
               </div>
@@ -56,8 +63,10 @@
               <div class="mb-3">
                 <div class="mew-heading-3 font-weight-bold">Results</div>
               </div>
-              <v-card flat color="tableHeader" class="pa-10">
-                <div class="d-flex justify-space-between align-center">
+              <v-card flat color="tableHeader" class="pa-4 pa-lg-10">
+                <div
+                  class="d-block d-lg-flex justify-space-between align-center"
+                >
                   <div>
                     <div class="mew-heading-1 mb-2">mewwallet.crypto</div>
                     <div>
@@ -65,22 +74,26 @@
                       ETH ($40.00)
                     </div>
                   </div>
-                  <div class="d-flex align-center">
+                  <div class="d-block d-lg-flex align-center mt-4 mt-lg-0">
                     <div class="mew-heading-3 primary--text mr-6">
                       Available
                     </div>
-                    <mew-button title="Buy"></mew-button>
+                    <mew-button class="mt-3 mt-lg-0" title="Buy"></mew-button>
                   </div>
                 </div>
               </v-card>
               <div class="py-2"></div>
-              <v-card flat color="tableHeader" class="pa-10">
-                <div class="d-flex align-center justify-space-between mb-8">
+              <v-card flat color="tableHeader" class="pa-4 pa-lg-10">
+                <div
+                  class="d-block d-lg-flex align-center justify-space-between mb-4 mb-lg-8"
+                >
                   <div class="mew-heading-1">myetherwallet.crypto</div>
-                  <div class="mew-heading-3 orange--text">Unavailable</div>
+                  <div class="mew-heading-3 orange--text mt-4 mt-lg-0">
+                    Unavailable
+                  </div>
                 </div>
 
-                <v-divider class="mb-5" />
+                <v-divider class="mb-2 mb-lg-5" />
 
                 <v-list-item
                   v-for="(r, key) in results"
@@ -108,9 +121,9 @@
               <v-card
                 flat
                 color="tableHeader"
-                class="d-flex align-center justify-space-between pa-10 mb-10"
+                class="d-block d-lg-flex align-center justify-space-between pa-4 pa-lg-10 mb-10"
               >
-                <div class="mew-heading-1">mewwallet.crypto</div>
+                <div class="mew-heading-1 mb-4 mb-lg-0">mewwallet.crypto</div>
                 <div>
                   <span class="font-weight-medium">0.0341234234 ETH</span>
                   ($40.00)
@@ -119,8 +132,8 @@
 
               <v-sheet color="transparent" max-width="400px" class="mx-auto">
                 <div class="d-flex align-center justify-space-between mb-5">
-                  <div class="mew-heading-1">Pay with Crypto</div>
-                  <div class="font-weight-medium primary--text">
+                  <h4 class="font-weight-bold">Pay with Crypto</h4>
+                  <div class="font-weight-medium primary--text text-right">
                     Pay with Credit Card
                   </div>
                 </div>
@@ -177,25 +190,28 @@
                   <mew-button
                     title="Back"
                     btn-style="outline"
-                    button-size="xlarge"
+                    btn-size="xlarge"
                     class="mr-3"
                   />
-                  <mew-button title="Pay" button-size="xlarge" />
+                  <mew-button title="Pay" btn-size="xlarge" />
                 </div>
               </v-sheet>
             </div>
           </v-sheet>
         </template>
         <template #tabContent2>
-          <div class="pa-12">
-            <div class="d-flex align-center justify-space-between mb-7">
+          <div class="pa-4 pa-lg-12">
+            <div
+              class="d-block d-lg-flex align-center justify-space-between mb-7"
+            >
               <h4 class="font-weight-bold">
                 My domains <span class="font-weight-regular">(1)</span>
               </h4>
               <mew-button
+                class="mt-3 mt-lg-0"
                 btn-style="outline"
                 title="+ Add domain you own"
-                button-size="large"
+                btn-size="large"
               />
             </div>
             <div>
@@ -204,7 +220,7 @@
                   <div>
                     <div class="header-block bg_datablock">
                       <v-row>
-                        <v-col cols="6">
+                        <v-col cols="12" lg="6">
                           <div class="d-flex align-center">
                             <div>Registrant</div>
                             <blockie width="25px" height="25px" class="mx-3" />
@@ -213,7 +229,7 @@
                             </div>
                           </div>
                         </v-col>
-                        <v-col cols="6">
+                        <v-col cols="12" lg="6">
                           <div class="d-flex align-center">
                             <div>Controller</div>
                             <blockie width="25px" height="25px" class="mx-3" />
@@ -226,12 +242,12 @@
                     </div>
                     <div>
                       <div
-                        class="d-flex align-center justify-space-between border-bottom py-5 px-0"
+                        class="d-block d-lg-flex align-center justify-space-between border-bottom py-5 px-0"
                       >
                         <div class="mew-heading-3">
                           What do you want to do with the domain?
                         </div>
-                        <div>Parent - ETH</div>
+                        <div class="mt-3 mt-lg-0">Parent - ETH</div>
                       </div>
                       <v-divider></v-divider>
                       <div class="pa-5">
@@ -239,7 +255,8 @@
                           <v-col
                             v-for="(f, key) in domainFunctions"
                             :key="key"
-                            cols="2"
+                            cols="6"
+                            lg="2"
                             class="text-center"
                           >
                             <mew-icon icon-name="ensManager" :img-height="75" />
@@ -258,7 +275,7 @@
                   <div>
                     <div class="header-block bg_datablock">
                       <v-row>
-                        <v-col cols="6">
+                        <v-col cols="12" lg="6">
                           <div class="d-flex align-center">
                             <div>Registrant</div>
                             <blockie width="25px" height="25px" class="mx-3" />
@@ -267,7 +284,7 @@
                             </div>
                           </div>
                         </v-col>
-                        <v-col cols="6">
+                        <v-col cols="12" lg="6">
                           <div class="d-flex align-center">
                             <div>Controller</div>
                             <blockie width="25px" height="25px" class="mx-3" />
@@ -280,12 +297,12 @@
                     </div>
                     <div>
                       <div
-                        class="d-flex align-center justify-space-between border-bottom py-5 px-0"
+                        class="d-block d-lg-flex align-center justify-space-between border-bottom py-5 px-0"
                       >
                         <div class="mew-heading-3">
                           What do you want to do with the domain?
                         </div>
-                        <div>Parent - ETH</div>
+                        <div class="mt-3 mt-lg-0">Parent - ETH</div>
                       </div>
                       <v-divider></v-divider>
                       <div class="pa-5">
@@ -293,7 +310,8 @@
                           <v-col
                             v-for="(f, key) in domainFunctions"
                             :key="key"
-                            cols="2"
+                            cols="6"
+                            lg="2"
                             class="text-center"
                           >
                             <mew-icon icon-name="ensManager" :img-height="75" />
@@ -400,17 +418,6 @@ export default {
         }
       ]
     };
-  },
-  methods: {
-    closeBuyOverlay() {
-      this.buyOverlay = false;
-    },
-    closeAddOverlay() {
-      this.addOverlay = false;
-    },
-    closeTransferOverlay() {
-      this.transferOverlay = false;
-    }
   }
 };
 </script>

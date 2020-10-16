@@ -1,87 +1,94 @@
 <template>
   <mew-overlay :show-overlay="open" @closeOverlay="$emit('close')">
     <template #mewOverlayBody>
-      <div>
+      <div class="width--full">
         <h2 class="text-center mb-10">Buy domain</h2>
-        <mew6-white-sheet>
-          <div class="pa-8">
-            <v-sheet
-              color="transparent"
-              width="600px"
-              class="mx-auto mb-10 border-radius--10px informationBlock py-5 px-7"
-            >
-              <div class="d-flex align-center justify-space-between mb-3">
-                <div>Domain name:</div>
-                <div class="font-weight-medium">mewwallet.crypto</div>
-              </div>
-              <div class="d-flex align-center justify-space-between">
-                <div>Price:</div>
-                <div class="font-weight-medium">0.002353234 ETH ($40.00)</div>
-              </div>
-            </v-sheet>
-            <v-sheet color="transparent" width="450px" class="mx-auto">
-              <div class="d-flex align-center justify-space-between mb-5">
-                <div class="mew-heading-1">Pay with Crypto</div>
-                <div class="font-weight-medium primary--text">
-                  Pay with Credit Card
+        <v-sheet
+          color="transparent"
+          max-width="600px"
+          width="100%"
+          class="mx-auto"
+        >
+          <mew6-white-sheet>
+            <div class="pa-8">
+              <div
+                class="mx-auto mb-10 border-radius--10px informationBlock py-5 px-7"
+              >
+                <div class="d-flex align-center justify-space-between mb-3">
+                  <div>Domain name:</div>
+                  <div class="font-weight-medium">mewwallet.crypto</div>
+                </div>
+                <div class="d-flex align-center justify-space-between">
+                  <div>Price:</div>
+                  <div class="font-weight-medium">0.002353234 ETH ($40.00)</div>
                 </div>
               </div>
 
-              <v-card
-                outlined
-                color="informationBlock"
-                class="pa-4 d-flex align-center justify-space-between bordered-red"
-                style="border-color: var(--v-error-base) !important"
-              >
-                <div class="d-flex align-center">
-                  <img
-                    src="@/assets/images/currencies/icon-eth-blue.svg"
-                    alt="Crypto"
-                  />
-                  <div class="font-weight-medium ml-3">
-                    0.0341234234
-                    <span class="primary--text">ETH</span>
+              <div>
+                <div class="d-flex align-center justify-space-between mb-5">
+                  <h4 class="font-weight-bold'">Pay with Crypto</h4>
+                  <div class="font-weight-medium primary--text text-right">
+                    Pay with Credit Card
                   </div>
                 </div>
-                <v-icon class="primary--text">mdi-check-circle</v-icon>
-              </v-card>
 
-              <div class="error--text mt-3 mb-7 font-weight-medium">
-                Insufficient balance.
-                <a
-                  href="https://ccswap.myetherwallet.com/#/"
-                  target="_blank"
-                  class="text-decoration--underline"
+                <v-card
+                  outlined
+                  color="informationBlock"
+                  class="pa-4 d-flex align-center justify-space-between bordered-red"
+                  style="border-color: var(--v-error-base) !important"
                 >
-                  Buy more ETH
-                </a>
-              </div>
-
-              <v-card
-                flat
-                color="informationBlock"
-                class="mt-3 pa-4 d-flex align-center justify-space-between"
-              >
-                <div class="d-flex align-center">
-                  <img
-                    src="@/assets/images/icons/icon-fiat-white.svg"
-                    alt="Fiat"
-                  />
-                  <div class="font-weight-medium ml-3">
-                    40.23
-                    <span class="primary--text">USD</span>
+                  <div class="d-flex align-center">
+                    <img
+                      src="@/assets/images/currencies/icon-eth-blue.svg"
+                      alt="Crypto"
+                    />
+                    <div class="font-weight-medium ml-3">
+                      0.0341234234
+                      <span class="primary--text">ETH</span>
+                    </div>
                   </div>
-                </div>
-                <v-icon>mdi-check-circle-outline</v-icon>
-              </v-card>
+                  <v-icon class="primary--text">mdi-check-circle</v-icon>
+                </v-card>
 
-              <div class="d-flex justify-center mt-5">
-                <mew-button title="Pay" button-size="xlarge" />
+                <div class="error--text mt-3 mb-7 font-weight-medium">
+                  Insufficient balance.
+                  <a
+                    href="https://ccswap.myetherwallet.com/#/"
+                    target="_blank"
+                    class="text-decoration--underline"
+                  >
+                    Buy more ETH
+                  </a>
+                </div>
+
+                <v-card
+                  flat
+                  color="informationBlock"
+                  class="mt-3 pa-4 d-flex align-center justify-space-between"
+                >
+                  <div class="d-flex align-center">
+                    <img
+                      src="@/assets/images/icons/icon-fiat-white.svg"
+                      alt="Fiat"
+                    />
+                    <div class="font-weight-medium ml-3">
+                      40.23
+                      <span class="primary--text">USD</span>
+                    </div>
+                  </div>
+                  <v-icon>mdi-check-circle-outline</v-icon>
+                </v-card>
+
+                <div class="d-flex justify-center mt-5">
+                  <mew-button title="Pay" btn-size="xlarge" />
+                </div>
               </div>
-            </v-sheet>
-          </div>
-        </mew6-white-sheet>
+            </div>
+          </mew6-white-sheet>
+        </v-sheet>
       </div>
+
       <div>
         <h2 class="text-center mb-10">Confirmation</h2>
         <mew6-white-sheet>
@@ -142,7 +149,7 @@
               </v-sheet>
             </div>
             <div class="d-flex justify-center mt-9">
-              <mew-button title="Register" button-size="xlarge" />
+              <mew-button title="Register" btn-size="xlarge" />
             </div>
           </div>
           <div class="py-5"></div>
