@@ -18,7 +18,7 @@
                 </div>
               </div>
 
-              <address-select
+              <mew-address-select
                 copy-tooltip="Copy"
                 save-tooltip="Save"
                 :enable-save-address="true"
