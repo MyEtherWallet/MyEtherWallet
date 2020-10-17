@@ -2,6 +2,7 @@
 
 ### Devop
 
+- Update mobile Dapps pages [#2629](https://github.com/MyEtherWallet/MyEtherWallet/pull/2629)
 - Update mobile wallet > dashboard page [#2619](https://github.com/MyEtherWallet/MyEtherWallet/pull/2619)
 - Update mobile notification overlay [#2613](https://github.com/MyEtherWallet/MyEtherWallet/pull/2613)
 - Update mobile change network overlay [#2610](https://github.com/MyEtherWallet/MyEtherWallet/pull/2610)
