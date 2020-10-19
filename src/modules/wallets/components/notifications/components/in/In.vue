@@ -99,11 +99,6 @@ export default {
   },
   data() {
     return { isHovering: false };
-  },
-  methods: {
-    clicked() {
-      console.log('Clicked');
-    }
   }
 };
 </script>
