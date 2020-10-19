@@ -8,44 +8,45 @@
           class="mb-6 mx-auto text-center"
         >
           <h2 class="mb-3">1. Select a Collateral Type</h2>
-          <div>
+          <div class="mb-7">
             Each collateral type has its own risk parameters. You can lock up
             additional collateral types later..
           </div>
-        </v-sheet>
-        <mew6-white-sheet>
-          <v-sheet
-            color="transparent"
-            class="pa-3 pa-lg-8 mew-component--aave-borrow-overlay"
-          >
-            <mew-table
-              class="d-none d-lg-block"
-              :table-headers="tableHeader"
-              :table-data="tableData"
-            />
 
-            <mobile-table
-              v-for="(d, key) in mobileTableData"
-              :key="key"
-              :table-data="d"
-              class="d-block d-lg-none mb-3"
-            />
-
-            <mew-expand-panel
-              class="mt-10"
-              :panel-items="panelItems"
-              has-dividers
-            />
-
-            <div class="d-flex justify-center mt-8">
-              <mew-button
-                btn-size="xlarge"
-                title="Continue"
-                @click.native="activeTab = 1"
+          <mew6-white-sheet>
+            <v-sheet
+              color="transparent"
+              class="pa-3 pa-lg-8 mew-component--aave-borrow-overlay"
+            >
+              <mew-table
+                class="d-none d-lg-block"
+                :table-headers="tableHeader"
+                :table-data="tableData"
               />
-            </div>
-          </v-sheet>
-        </mew6-white-sheet>
+
+              <mobile-table
+                v-for="(d, key) in mobileTableData"
+                :key="key"
+                :table-data="d"
+                class="d-block d-lg-none mb-3"
+              />
+
+              <mew-expand-panel
+                class="mt-10"
+                :panel-items="panelItems"
+                has-dividers
+              />
+
+              <div class="d-flex justify-center mt-8">
+                <mew-button
+                  btn-size="xlarge"
+                  title="Continue"
+                  @click.native="activeTab = 1"
+                />
+              </div>
+            </v-sheet>
+          </mew6-white-sheet>
+        </v-sheet>
       </div>
 
       <div>
@@ -188,7 +189,7 @@
             <table class="width--full">
               <tbody>
                 <tr>
-                  <td class="font-weight-bold vertical-align--middle py-8">
+                  <td class="font-weight-bold vertical-align--middle py-8 pr-4">
                     Upgrade SAI to DAI
                   </td>
                   <td class="text-right">
@@ -196,7 +197,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td class="font-weight-bold vertical-align--middle py-8">
+                  <td class="font-weight-bold vertical-align--middle py-8 pr-4">
                     Migrate Single Collateral CDP to Multi-Collateral Vault
                   </td>
                   <td class="text-right">
@@ -204,7 +205,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td class="font-weight-bold vertical-align--middle py-8">
+                  <td class="font-weight-bold vertical-align--middle py-8 pr-4">
                     DAI Savings
                   </td>
                   <td class="text-right">

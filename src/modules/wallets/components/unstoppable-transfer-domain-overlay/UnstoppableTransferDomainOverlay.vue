@@ -8,7 +8,7 @@
             color="transparent"
             max-width="600px"
             width="100%"
-            class="pa-4 pa-lg-8"
+            class="pa-3 pa-lg-8"
           >
             <mew-address-select />
             <div class="d-flex justify-center mt-2">
@@ -23,7 +23,7 @@
           <transaction-confirmation />
         </mew6-white-sheet>
         <mew6-white-sheet>
-          <div class="pa-4 pa-lg-8">
+          <div class="pa-3 pa-lg-8">
             <v-sheet
               color="transparent"
               class="mx-auto border-radius--10px informationBlock py-5 px-7"

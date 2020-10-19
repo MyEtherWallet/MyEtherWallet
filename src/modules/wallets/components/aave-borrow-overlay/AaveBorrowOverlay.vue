@@ -10,7 +10,7 @@
           width="100%"
           class="mx-auto mew-component--aave-borrow-overlay"
         >
-          <mew6-white-sheet class="pa-4 pa-lg-8">
+          <mew6-white-sheet class="pa-3 pa-lg-8">
             <div
               class="d-block d-lg-flex align-center justify-space-between mb-6"
             >
@@ -53,7 +53,7 @@
           width="100%"
           class="mx-auto"
         >
-          <mew6-white-sheet class="pa-4 pa-lg-10">
+          <mew6-white-sheet class="pa-3 pa-lg-10">
             <div class="mb-10">
               Select the type of rate for your loan. Please click on the desired
               rate type and read the info box for more information.
@@ -181,7 +181,7 @@
           width="100%"
           class="mx-auto"
         >
-          <mew6-white-sheet class="pa-4 pa-lg-10">
+          <mew6-white-sheet class="pa-3 pa-lg-10">
             <v-card
               flat
               color="informationBlock"
@@ -245,7 +245,7 @@
           width="100%"
           class="mx-auto"
         >
-          <mew6-white-sheet class="pa-4 pa-lg-10">
+          <mew6-white-sheet class="pa-3 pa-lg-10">
             <div class="text-center">
               <mew-icon icon-name="clock" :img-height="120" />
               <div class="mew-subtitle textSecondary--text mt-3">00:00</div>
@@ -273,7 +273,7 @@
           width="100%"
           class="mx-auto"
         >
-          <mew6-white-sheet class="pa-4 pa-lg-10">
+          <mew6-white-sheet class="pa-3 pa-lg-10">
             <div class="text-center">
               <v-sheet width="100%" max-width="200px" class="mx-auto mb-8">
                 <v-progress-linear

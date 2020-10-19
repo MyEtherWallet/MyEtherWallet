@@ -4,10 +4,15 @@
       <div>
         <h2 class="text-center mb-10">Transfer domain</h2>
         <mew6-white-sheet>
-          <v-sheet color="transparent" width="600px" class="pa-8">
-            <address-select />
+          <v-sheet
+            color="transparent"
+            max-width="600px"
+            width="100%"
+            class="pa-3 pa-lg-8"
+          >
+            <mew-address-select />
             <div class="d-flex justify-center mt-2">
-              <mew-button title="Pay" button-size="xlarge" />
+              <mew-button title="Pay" btn-size="xlarge" />
             </div>
           </v-sheet>
         </mew6-white-sheet>
@@ -18,7 +23,7 @@
           <transaction-confirmation />
         </mew6-white-sheet>
         <mew6-white-sheet>
-          <div class="pa-8">
+          <div class="pa-3 pa-lg-8">
             <v-sheet
               color="transparent"
               class="mx-auto mb-10 border-radius--10px informationBlock py-5 px-7"

@@ -4,8 +4,13 @@
       <div>
         <h2 class="text-center mb-10">Deposit</h2>
         <mew6-white-sheet>
-          <v-sheet color="transparent" width="600px" class="pa-8">
-            <v-card flat color="informationBlock" class="pa-6 mx-2">
+          <v-sheet
+            color="transparent"
+            max-width="600px"
+            width="100%"
+            class="pa-3 pa-lg-8"
+          >
+            <v-card flat color="informationBlock" class="pa-6">
               <div class="d-flex justify-space-between align-center">
                 <div>
                   <div class="mew-heading-3 mb-1">DAI Balance</div>
@@ -22,7 +27,7 @@
               </div>
             </v-card>
 
-            <div class="mx-12 my-8">
+            <div class="mx-4 mx-lg-12 my-8">
               <div class="mew-heading-3 mb-2">
                 How many DAI do you want to deposit?
               </div>
@@ -59,7 +64,7 @@
             </v-sheet>
 
             <div class="d-flex justify-center mt-6">
-              <mew-button title="Deposit" button-size="xlarge" />
+              <mew-button title="Deposit" btn-size="xlarge" />
             </div>
           </v-sheet>
         </mew6-white-sheet>

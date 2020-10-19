@@ -6,7 +6,7 @@
     @closeOverlay="$emit('close')"
   >
     <template #mewOverlayBody>
-      <DomainTaken />
+      <domain-taken />
       <mew-stepper :items="stepperItems" :on-step="onStep">
         <template #stepperContent1><Step1 /></template>
         <template #stepperContent2><Step2 /></template>
@@ -20,10 +20,10 @@
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
-import DomainTaken from './components/domain-taken/DomainTaken';
+import domainTaken from './components/domain-taken/DomainTaken';
 
 export default {
-  components: { Step1, Step2, Step3, DomainTaken },
+  components: { Step1, Step2, Step3, domainTaken },
   props: {
     open: { default: false, type: Boolean },
     close: {

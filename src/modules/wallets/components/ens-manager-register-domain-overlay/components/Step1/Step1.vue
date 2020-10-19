@@ -1,8 +1,10 @@
 <template>
   <mew6-white-sheet>
     <v-sheet width="100%" max-width="600px" class="mx-auto pa-8">
-      <div class="d-flex align-center bg_datablock pa-6 border-radius--10px">
-        <v-icon class="check-icon primary--text mr-3">
+      <div
+        class="d-block d-lg-flex align-center bg_datablock pa-6 border-radius--10px text-center text-lg-left"
+      >
+        <v-icon class="check-icon primary--text mr-lg-3 mb-4 mb-lg-0">
           mdi-check-circle-outline
         </v-icon>
         <div>

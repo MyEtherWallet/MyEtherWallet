@@ -6,13 +6,14 @@
         <mew6-white-sheet>
           <v-sheet
             color="transparent"
-            width="700px"
-            class="pa-8 mew-component--aave-borrow-overlay"
+            max-width="700px"
+            width="100%"
+            class="pa-3 pa-lg-8 mew-component--aave-borrow-overlay"
           >
             <div class="mew-heading-2 mb-5">ETH-A Vault #375</div>
 
             <v-row>
-              <v-col>
+              <v-col cols="12" lg="6">
                 <div class="font-weight-bold mb-2 ml-2">Liquidation Price</div>
                 <div class="informationBlock border-radius--5px pa-5">
                   <div class="mew-heading-3 font-weight-regular mb-2">
@@ -35,7 +36,7 @@
                   </div>
                 </div>
               </v-col>
-              <v-col>
+              <v-col cols="12" lg="6">
                 <div class="font-weight-bold mb-2 ml-2">
                   Collateralization Ratio
                 </div>
@@ -162,6 +163,13 @@
               <mew-table
                 :table-headers="tableHeaders"
                 :table-data="tableData"
+                class="d-none d-lg-block"
+              />
+              <mobile-table
+                v-for="(d, key) in mobileTableData"
+                :key="key"
+                :table-data="d"
+                class="d-block d-lg-none mb-3"
               />
             </div>
           </v-sheet>
@@ -172,8 +180,10 @@
 </template>
 
 <script>
+import mobileTable from '@/components/mobile-table/MobileTable';
+
 export default {
-  components: {},
+  components: { mobileTable },
   props: {
     open: { default: false, type: Boolean },
     close: {
@@ -185,6 +195,76 @@ export default {
   },
   data() {
     return {
+      mobileTableData: [
+        [
+          {
+            label: 'Activity',
+            value: 'Deposited 12.0000 DAI'
+          },
+          {
+            label: 'Date',
+            value: '01/02/2020, 2:16:32 PM'
+          },
+          {
+            label: 'TX Hash',
+            value:
+              '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+            link:
+              'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+          }
+        ],
+        [
+          {
+            label: 'Activity',
+            value: 'Deposited 12.0000 DAI'
+          },
+          {
+            label: 'Date',
+            value: '01/02/2020, 2:16:32 PM'
+          },
+          {
+            label: 'TX Hash',
+            value:
+              '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+            link:
+              'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+          }
+        ],
+        [
+          {
+            label: 'Activity',
+            value: 'Deposited 12.0000 DAI'
+          },
+          {
+            label: 'Date',
+            value: '01/02/2020, 2:16:32 PM'
+          },
+          {
+            label: 'TX Hash',
+            value:
+              '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+            link:
+              'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+          }
+        ],
+        [
+          {
+            label: 'Activity',
+            value: 'Deposited 12.0000 DAI'
+          },
+          {
+            label: 'Date',
+            value: '01/02/2020, 2:16:32 PM'
+          },
+          {
+            label: 'TX Hash',
+            value:
+              '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+            link:
+              'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+          }
+        ]
+      ],
       tableHeaders: [
         {
           text: 'Activity',

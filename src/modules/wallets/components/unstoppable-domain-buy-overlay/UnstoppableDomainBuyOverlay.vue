@@ -10,7 +10,7 @@
           class="mx-auto"
         >
           <mew6-white-sheet>
-            <div class="pa-8">
+            <div class="pa-3 pa-lg-8">
               <div
                 class="mx-auto mb-10 border-radius--10px informationBlock py-5 px-7"
               >
@@ -26,7 +26,7 @@
 
               <div>
                 <div class="d-flex align-center justify-space-between mb-5">
-                  <h4 class="font-weight-bold'">Pay with Crypto</h4>
+                  <h4 class="font-weight-bold">Pay with Crypto</h4>
                   <div class="font-weight-medium primary--text text-right">
                     Pay with Credit Card
                   </div>
@@ -95,7 +95,7 @@
           <transaction-confirmation />
         </mew6-white-sheet>
         <mew6-white-sheet>
-          <div class="pa-8">
+          <div class="pa-3 pa-lg-8">
             <v-sheet
               color="transparent"
               class="mx-auto mb-10 border-radius--10px informationBlock py-5 px-7"
