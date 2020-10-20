@@ -37,7 +37,7 @@ const productionPlugins = [
       maxConcurrentRoutes: 40,
       ignoreHTTPSErrors: true,
       devtools: true,
-      renderAfterElementExists: '#app'
+      renderAfterDocumentEvent: 'render-event',
       // renderAfterDocumentEvent: 'render-event'
     }),
   }),

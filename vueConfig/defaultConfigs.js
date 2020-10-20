@@ -49,6 +49,7 @@ module.exports = {
     }
   },
   optimization: {
+    usedExports: true,
     splitChunks: {
       chunks: 'all',
       cacheGroups: {

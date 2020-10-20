@@ -80,6 +80,7 @@ export default {
     this.$refs.logoutWarningModal.$refs.logoutWarningModal.$on('hidden', () => {
       window.scrollTo(0, 0);
     });
+    document.dispatchEvent(new Event('render-event'));
   },
   destroyed() {
     window.removeEventListener('PWA_UPDATED');

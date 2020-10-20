@@ -28,7 +28,7 @@
     "update:mainlists": "node fetchLists/fetchMainLists.js",
     "update:packages": "node package-test.js",
     "update:swap": "node compileBaseSwapOptions.js",
-    "renderer": "NODE_OPTIONS='--max-old-space-size=4092' vue-cli-service build && npm run serve-production",
+    "renderer": "NODE_OPTIONS='--max-old-space-size=4092' npm run build:hash && npm run serve-production",
     "serve-production": "node bin/server.js"
   },
   "dependencies": {

@@ -3,7 +3,6 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import * as Sentry from '@sentry/browser';
 import * as Integrations from '@sentry/integrations';
-import injectInitialState from './inject-initial-state';
 import { getApp } from '@/builds/configs';
 import BootstrapVue from 'bootstrap-vue';
 import { MEW_CX } from '@/builds/configs/types';
@@ -133,11 +132,7 @@ const vue = new Vue({
   i18n,
   router,
   store,
-  render: h => h(getApp()),
-  mounted () {
-    // You'll need this for renderAfterDocumentEvent.
-    document.dispatchEvent(new Event('render-event'))
-  }
+  render: h => h(getApp())
 });
 
 // During pre-rendering the initial state is
@@ -148,7 +143,11 @@ if (window.__INITIAL_STATE__) store.replaceState(window.__INITIAL_STATE__);
 router.beforeResolve(async (to, from, next) => {
   try {
     const components = router.getMatchedComponents(to);
-
+    const injectInitialState = function injectInitialState(state) {
+      const script = document.createElement(`script`);
+      script.innerHTML = `window.__INITIAL_STATE__ = ${JSON.stringify(state)}`;
+      document.head.appendChild(script);
+    };
     // By using `await` we make sure to wait
     // for the API request made by the `fetch()`
     // method to resolve before rendering the view.
