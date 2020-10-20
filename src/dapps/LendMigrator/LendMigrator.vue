@@ -102,7 +102,6 @@ export default {
       const lendMigrateData = await this.lendMigratorContract.methods
         .migrateFromLEND(amountAsHex)
         .encodeABI();
-      this.amount = 0;
       this.loading = true;
       this.web3.mew
         .sendBatchTransactions([
@@ -122,6 +121,7 @@ export default {
           }
         ])
         .then(() => {
+          this.amount = 0;
           this.loading = false;
         })
         .catch(error => {
