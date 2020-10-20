@@ -12,14 +12,14 @@
       <div>
         <div class="d-flex align-center">
           <span class="mew-heading-2 mr-2">{{ $t('common.network') }}</span>
-          <mew-button
+          <v-btn
+            depressed
+            color="secondary"
             class="title-button"
-            button-size="small"
-            color-theme="secondary"
-            icon-type="mdi"
-            icon="mdi-chevron-right"
             @click.native="openNetworkOverlay = true"
-          />
+          >
+            <v-icon>mdi-chevron-right</v-icon>
+          </v-btn>
         </div>
 
         <div class="mt-4">
@@ -55,13 +55,10 @@ export default {
 <style lang="scss">
 .mew-component--side-info-network {
   .title-button {
-    padding: 0 !important;
-    min-width: 28px !important;
     height: 28px !important;
-    text-align: center;
-    i {
-      margin-right: 0 !important;
-    }
+    min-width: 28px !important;
+    padding: 0 !important;
+    border-radius: 5px;
   }
 }
 </style>
