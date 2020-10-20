@@ -1,4 +1,5 @@
 ### Bug
+
 - Handle changelly rep as repv2 [#2632](https://github.com/MyEtherWallet/MyEtherWallet/pull/2632)
 
 ### Release v5.7.11
@@ -14,7 +15,6 @@
 ### Devop
 
 - Better handling of new ABI structure[#2622](https://github.com/MyEtherWallet/MyEtherWallet/pull/2622)
-
 
 ### Release v5.7.10
 

@@ -37,6 +37,11 @@ const getSupportedCurrencies = async network => {
               details.symbol = 'USDT';
               details.name = 'Tether USD';
             }
+            if (currencyList[i].name === 'rep') {
+              currencyList[i].name = 'REPV2';
+              details.symbol = 'REPV2';
+              details.name = 'Auger V2';
+            }
             currencyDetails[details.symbol] = details;
             tokenDetails[details.symbol] = details;
           }
