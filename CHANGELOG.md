@@ -1,3 +1,6 @@
+### Bug
+- Handle changelly rep as repv2 [#2632](https://github.com/MyEtherWallet/MyEtherWallet/pull/2632)
+
 ### Release v5.7.11
 
 ### Feature
