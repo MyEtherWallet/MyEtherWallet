@@ -92,14 +92,15 @@ export default {
     async migrate() {
       const estimatedAmount = new BigNumber(this.amount)
         .times(new BigNumber(10).pow(18))
-        .toString();
+        .toString(16);
+      const amountAsHex = '0x' + estimatedAmount;
       const lendContract = new this.web3.eth.Contract(ERC20, LEND_ADDRESS);
       const lendApproveData = await lendContract.methods
-        .approve(LEND_MIGRATOR_PROXY_ADDRESS, estimatedAmount)
+        .approve(LEND_MIGRATOR_PROXY_ADDRESS, amountAsHex)
         .encodeABI();
 
       const lendMigrateData = await this.lendMigratorContract.methods
-        .migrateFromLEND(estimatedAmount)
+        .migrateFromLEND(amountAsHex)
         .encodeABI();
       this.amount = 0;
       this.loading = true;
