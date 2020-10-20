@@ -1,5 +1,5 @@
 ### Devop
-- Add ethereum token for ens domain and fix removeElements()
+- Add ethereum token for ens domain and fix removeElements in AddrResolver
 
 ### Release v5.7.11
 
