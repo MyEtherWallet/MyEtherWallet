@@ -1,3 +1,6 @@
+### Devop
+- Add ethereum token for ens domain and fix removeElements()
+
 ### Release v5.7.11
 
 ### Feature
