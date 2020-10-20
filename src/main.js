@@ -133,7 +133,11 @@ const vue = new Vue({
   i18n,
   router,
   store,
-  render: h => h(getApp())
+  render: h => h(getApp()),
+  mounted () {
+    // You'll need this for renderAfterDocumentEvent.
+    document.dispatchEvent(new Event('render-event'))
+  }
 });
 
 // During pre-rendering the initial state is
@@ -164,6 +168,7 @@ router.beforeResolve(async (to, from, next) => {
 
   return next();
 });
+
 const integration = new Integrations.Vue({ Vue, attachProps: true });
 const sentryVersion = BUILD_TYPE === MEW_CX ? `${VERSION}-cx` : VERSION;
 Sentry.init({
