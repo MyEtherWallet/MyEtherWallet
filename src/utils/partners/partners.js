@@ -240,7 +240,7 @@ export default class SwapProviders {
                 minValue: entry.minValue || 0,
                 maxValue: entry.maxValue || 0,
                 computeConversion: function (_fromValue) {
-                  return new BigNumber(_fromValue)
+                  return BigNumber(_fromValue)
                     .times(this.rate)
                     .toFixed(6)
                     .toString(10);
@@ -271,8 +271,8 @@ export default class SwapProviders {
   calculateFromValue(toValue, bestRate, currency) {
     const decimals = this.decimalForCalculation(currency);
     return checkInvalidOrMissingValue(
-      new BigNumber(toValue)
-        .div(new BigNumber(bestRate))
+      BigNumber(toValue)
+        .div(BigNumber(bestRate))
         .toFixed(decimals)
         .toString(10),
       false
@@ -282,8 +282,8 @@ export default class SwapProviders {
   calculateToValue(fromValue, bestRate, currency) {
     const decimals = this.decimalForCalculation(currency);
     return checkInvalidOrMissingValue(
-      new BigNumber(fromValue)
-        .times(new BigNumber(bestRate))
+      BigNumber(fromValue)
+        .times(BigNumber(bestRate))
         .toFixed(decimals)
         .toString(10),
       true
@@ -305,14 +305,14 @@ export default class SwapProviders {
 
   convertToTokenWei(token, value) {
     const decimals = SwapProviders.getTokenDecimals(token);
-    const denominator = new BigNumber(10).pow(decimals);
-    return new BigNumber(value).times(denominator).toFixed(0).toString(10);
+    const denominator = BigNumber(10).pow(decimals);
+    return BigNumber(value).times(denominator).toFixed(0).toString(10);
   }
 
   convertToTokenBase(token, value) {
     const decimals = SwapProviders.getTokenDecimals(token);
-    const denominator = new BigNumber(10).pow(decimals);
-    return new BigNumber(value).div(denominator).toString(10);
+    const denominator = BigNumber(10).pow(decimals);
+    return BigNumber(value).div(denominator).toString(10);
   }
 
   async startSwap({

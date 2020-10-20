@@ -86,8 +86,8 @@ class BCVault {
       });
       const newTx = {};
       newTx['feeCount'] = web3Utils.hexToNumber(bufferToHex(tx['gasLimit']));
-      newTx['feePrice'] = new BigNumber(bufferToHex(tx['gasPrice'])).toString();
-      newTx['amount'] = new BigNumber(bufferToHex(tx['value'])).toString() || 0;
+      newTx['feePrice'] = BigNumber(bufferToHex(tx['gasPrice'])).toString();
+      newTx['amount'] = BigNumber(bufferToHex(tx['value'])).toString() || 0;
       if (bufferToHex(tx['data']) !== '0x') {
         newTx['contractData'] = bufferToHex(tx['data']);
       }

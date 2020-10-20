@@ -9,32 +9,32 @@ const OLD_FAST_CONST = 1.5;
 const LIMITER = 25;
 
 const getEconomy = gasPrice => {
-  return new BigNumber(gasPrice).div(1).toFixed(9);
+  return BigNumber(gasPrice).div(1).toFixed(9);
 };
 const getRegular = gasPrice => {
   if (gasPrice > LIMITER) {
-    let initialValue = new BigNumber(gasPrice).times(MED_MULTIPLIER);
+    let initialValue = BigNumber(gasPrice).times(MED_MULTIPLIER);
     initialValue = initialValue.plus(MED_CONST);
 
-    return new BigNumber(initialValue).toFixed(9);
+    return BigNumber(initialValue).toFixed(9);
   }
 
-  return new BigNumber(gasPrice).times(1.25).toFixed(9);
+  return BigNumber(gasPrice).times(1.25).toFixed(9);
 };
 const getFast = gasPrice => {
   if (gasPrice > LIMITER) {
-    let initialValue = new BigNumber(gasPrice).times(FAST_MULTIPLIER);
+    let initialValue = BigNumber(gasPrice).times(FAST_MULTIPLIER);
     initialValue = initialValue.plus(FAST_CONST);
 
-    return new BigNumber(initialValue).toFixed(9);
+    return BigNumber(initialValue).toFixed(9);
   }
 
-  return new BigNumber(gasPrice).times(1.5).toFixed(9);
+  return BigNumber(gasPrice).times(1.5).toFixed(9);
 };
 
 const getOther = () => {
   const storedPrice = store.get('customGasPrice') || 0;
-  return new BigNumber(storedPrice).toFixed(9);
+  return BigNumber(storedPrice).toFixed(9);
 };
 
 const fastToEconomy = gasPrice => {
@@ -42,9 +42,9 @@ const fastToEconomy = gasPrice => {
   if (LIMITER > oldConverted) {
     return oldConverted;
   }
-  let initialValue = new BigNumber(gasPrice).minus(FAST_CONST);
+  let initialValue = BigNumber(gasPrice).minus(FAST_CONST);
   initialValue = initialValue.div(FAST_MULTIPLIER);
-  return new BigNumber(initialValue).toFixed(9);
+  return BigNumber(initialValue).toFixed(9);
 };
 
 const regularToEconomy = gasPrice => {
@@ -52,9 +52,9 @@ const regularToEconomy = gasPrice => {
   if (LIMITER > oldConverted) {
     return oldConverted;
   }
-  let initialValue = new BigNumber(gasPrice).minus(MED_CONST);
+  let initialValue = BigNumber(gasPrice).minus(MED_CONST);
   initialValue = initialValue.div(MED_MULTIPLIER);
-  return new BigNumber(initialValue).toFixed(9);
+  return BigNumber(initialValue).toFixed(9);
 };
 
 const getGasBasedOnType = gasPrice => {

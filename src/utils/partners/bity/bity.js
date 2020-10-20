@@ -158,7 +158,7 @@ export default class BitySwap {
   }
 
   calculateRate(inVal, outVal) {
-    return new BigNumber(outVal).div(inVal);
+    return BigNumber(outVal).div(inVal);
   }
 
   async getRate(fromCurrency, toCurrency, fromValue) {
@@ -179,8 +179,8 @@ export default class BitySwap {
       provider: this.name,
       rate: rate,
       toValue: expRate.output.amount,
-      minValue: new BigNumber(expRate.input.minimum_amount).plus(
-        new BigNumber(expRate.input.minimum_amount).times(0.000001)
+      minValue: BigNumber(expRate.input.minimum_amount).plus(
+        BigNumber(expRate.input.minimum_amount).times(0.000001)
       ), // because we truncate the number at 6 decimal places
       maxValue: this.fiatCurrencies.includes(toCurrency)
         ? this.getChfEquivalentMaxMin(fromCurrency, true)
@@ -206,8 +206,8 @@ export default class BitySwap {
       toCurrency,
       provider: this.name,
       rate: rate,
-      minValue: new BigNumber(expRate.input.minimum_amount).plus(
-        new BigNumber(expRate.input.minimum_amount).times(0.000001)
+      minValue: BigNumber(expRate.input.minimum_amount).plus(
+        BigNumber(expRate.input.minimum_amount).times(0.000001)
       ), // because we truncate the number at 6 decimal places
       maxValue: this.fiatCurrencies.includes(toCurrency)
         ? this.getChfEquivalentMaxMin(fromCurrency, true)
@@ -242,11 +242,11 @@ export default class BitySwap {
     }
     const btcRate = this._getRate(currency, BASE_EQUIVALENT_CURRENCY);
     return max
-      ? new BigNumber(this.maxValue)
-          .div(new BigNumber(btcRate))
+      ? BigNumber(this.maxValue)
+          .div(BigNumber(btcRate))
           .toFixed(6, BigNumber.ROUND_UP)
-      : new BigNumber(this.minValue)
-          .div(new BigNumber(btcRate))
+      : BigNumber(this.minValue)
+          .div(BigNumber(btcRate))
           .toFixed(6, BigNumber.ROUND_UP);
   }
 
@@ -256,20 +256,20 @@ export default class BitySwap {
     }
     const chfRate = this._getRate(cryptoCurrency, FIAT_EQUIVALENT_CURRENCY);
     return max
-      ? new BigNumber(this.fiatMaxValue)
-          .div(new BigNumber(chfRate))
+      ? BigNumber(this.fiatMaxValue)
+          .div(BigNumber(chfRate))
           .toFixed(6, BigNumber.ROUND_UP)
-      : new BigNumber(this.fiatMinValue)
-          .div(new BigNumber(chfRate))
+      : BigNumber(this.fiatMinValue)
+          .div(BigNumber(chfRate))
           .toFixed(6, BigNumber.ROUND_UP);
   }
 
   validityCheck(fromCurrency, fromValue, toCurrency, toValue) {
     if (this.fiatCurrencies.includes(toCurrency)) {
       if (
-        new BigNumber(fromValue)
+        BigNumber(fromValue)
           .times(
-            new BigNumber(this._getRate(fromCurrency, FIAT_EQUIVALENT_CURRENCY))
+            BigNumber(this._getRate(fromCurrency, FIAT_EQUIVALENT_CURRENCY))
           )
           .toFixed(2) < this.fiatMinValue
       )

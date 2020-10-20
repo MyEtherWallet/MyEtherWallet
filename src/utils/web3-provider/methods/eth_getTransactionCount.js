@@ -23,8 +23,8 @@ export default async ({ payload, requestManager }, res, next) => {
     Math.round((new Date().getTime() - cached.timestamp) / 1000) / 60;
   if (timeDiff > 1) {
     const liveNonce = await ethCalls.getTransactionCount(addr);
-    const liveNonceBN = new BigNumber(liveNonce);
-    const cachedNonceBN = new BigNumber(cached.nonce);
+    const liveNonceBN = BigNumber(liveNonce);
+    const cachedNonceBN = BigNumber(cached.nonce);
     if (timeDiff > 15) {
       cached = {
         nonce: sanitizeHex(liveNonceBN.toString(16)),
