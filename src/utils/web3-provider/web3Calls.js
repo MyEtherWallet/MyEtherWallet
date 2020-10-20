@@ -8,41 +8,48 @@ class Web3Calls {
         name: 'getId',
         call: 'net_version',
         params: 0,
-        outputFormatter: utils.hexToNumber
+        outputFormatter: utils.hexToNumber,
+        requestManager
       }),
       new Method({
         name: 'getGasPrice',
         call: 'eth_gasPrice',
-        params: 0
+        params: 0,
+        requestManager
       }),
       new Method({
         name: 'getBlockNumber',
         call: 'eth_blockNumber',
-        params: 0
+        params: 0,
+        requestManager
       }),
       new Method({
         name: 'getBlockByNumber',
         call: 'eth_getBlockByNumber',
-        params: 2
+        params: 2,
+        requestManager
       }),
       new Method({
         name: 'estimateGas',
         call: 'eth_estimateGas',
         params: 1,
         inputFormatter: [formatters.inputCallFormatter],
-        outputFormatter: utils.hexToNumber
+        outputFormatter: utils.hexToNumber,
+        requestManager
       }),
       new Method({
         name: 'sendSignedTransaction',
         call: 'eth_sendRawTransaction',
         params: 1,
-        inputFormatter: [null]
+        inputFormatter: [null],
+        requestManager
       }),
       new Method({
         name: 'getTransactionReceipt',
         call: 'eth_getTransactionReceipt',
         params: 1,
-        inputFormatter: [null]
+        inputFormatter: [null],
+        requestManager
       }),
       new Method({
         name: 'getTransactionCount',
@@ -62,13 +69,13 @@ class Web3Calls {
           function () {
             return 'latest';
           }
-        ]
+        ],
+        requestManager
       })
     ];
     this.ethereumCalls = {};
     ethereumCalls.forEach(call => {
       call.attachToObject(this.ethereumCalls);
-      call.setRequestManager(requestManager);
     });
     return this.ethereumCalls;
   }
