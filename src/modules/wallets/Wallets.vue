@@ -91,9 +91,7 @@ export default {
         this.setUSD(res);
       });
       this.web3.eth.getGasPrice().then(res => {
-        const parsedGas = getEconomy(
-          this.web3.utils.fromWei(res, 'gwei')
-        ).toString();
+        const parsedGas = getEconomy(res).toString();
         if (gasType === 'economy') {
           this.setGasPrice(parsedGas);
         } else if (gasType === 'other' && getCustomGas) {
@@ -101,7 +99,7 @@ export default {
         } else {
           this.setGasPrice(getGasBasedOnType(parsedGas));
         }
-        this.setEthGasPrice(utils.fromWei(res, 'gwei'));
+        this.setEthGasPrice(res, 'gwei');
       });
     }
   }

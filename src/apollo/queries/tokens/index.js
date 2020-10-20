@@ -1,5 +1,7 @@
 import { getLatestPrices, getOwnersERC20Tokens } from './tokens.graphql';
 import ethImg from '@/assets/images/networks/eth.svg';
+
+const ETH_ID = 'ethereum';
 export default class Tokenslist {
   constructor(apollo) {
     this.apollo = apollo;
@@ -14,8 +16,11 @@ export default class Tokenslist {
         if (response && response.data) {
           this.tokensData = new Map();
           response.data.getLatestPrices.forEach(token => {
-            if (token.contract) {
-              this.tokensData.set(token.contract.toLowerCase(), token);
+            if (token.id === ETH_ID || token.contract) {
+              this.tokensData.set(
+                token.contract ? token.contract.toLowerCase() : ETH_ID,
+                token
+              );
             }
           });
         }
@@ -51,6 +56,7 @@ export default class Tokenslist {
   }
   formatOwnersERC20Tokens(tokens) {
     const formattedList = [];
+    const eth = this.tokensData.get(ETH_ID);
     tokens.forEach(token => {
       let foundToken;
       if (this.tokensData) {
@@ -66,8 +72,17 @@ export default class Tokenslist {
         value: token.tokenInfo.name,
         balance: token.balance,
         contract: token.tokenInfo.contract,
-        img: foundToken ? foundToken.image : ethImg
+        img: foundToken ? foundToken.image : ethImg,
+        decimals: token.tokenInfo.decimals
       });
+    });
+    formattedList.unshift({
+      name: eth.symbol,
+      symbol: eth.symbol,
+      subtext: eth.name,
+      value: eth.name,
+      balance: eth.balance,
+      img: eth.image
     });
     return formattedList;
   }

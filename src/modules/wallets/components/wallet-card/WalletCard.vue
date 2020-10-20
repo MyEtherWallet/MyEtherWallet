@@ -47,6 +47,7 @@
             btn-style="transparent"
             icon="mdi-file-document-outline"
             icon-type="mdi"
+            @click.native="copyAddress"
           ></mew-button>
         </div>
         <!-- <mew-button
@@ -71,6 +72,7 @@ import paperWallet from '@/modules/wallets/components/paper-wallet/PaperWallet';
 import qrCodePopup from '@/modules/wallets/components/qr-code-popup/QRcodePopup';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
+import clipboardCopy from 'clipboard-copy';
 
 export default {
   components: {
@@ -103,6 +105,9 @@ export default {
     },
     closePaperWallet() {
       this.openPaperWallet = false;
+    },
+    copyAddress() {
+      clipboardCopy(this.address);
     }
   }
 };

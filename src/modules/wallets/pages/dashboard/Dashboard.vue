@@ -13,7 +13,7 @@
           />
           <div class="ml-auto">
             <div class="d-flex align-center">
-              <mew-toggle-button :button-group="chartButtons" />
+              <mew-toggle :button-group="chartButtons" />
               <mew-button
                 style="border-radius: 100% !important"
                 class="options-btn ml-2"
@@ -52,7 +52,7 @@
 
       <div class="pa-4"></div>
 
-      <div class="mew-component--no-eth-balance">
+      <div v-if="showBalance" class="mew-component--no-eth-balance">
         <mew6-white-sheet class="position--relative">
           <div
             class="bg-container"
@@ -152,6 +152,7 @@
 <script>
 import staticData from './staticData.js';
 import chart from '@/modules/wallets/components/chart/Chart';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -159,6 +160,12 @@ export default {
   },
   data() {
     return staticData;
+  },
+  computed: {
+    ...mapState('wallet', ['balance']),
+    showBalance() {
+      return this.balannce === 0;
+    }
   },
   methods: {
     navigateToSend() {

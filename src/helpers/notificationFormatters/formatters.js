@@ -42,7 +42,7 @@ const parseStatus = status => {
     return status;
   } else if (typeof status === 'string') {
     if (status.slice(0, 2) === '0x') {
-      return new BigNumber(status).gt(0);
+      return BigNumber(status).gt(0);
     }
     return status.toLowerCase() === 'true';
   }
@@ -78,16 +78,16 @@ const formatTransactionHash = (val, network) => {
         hash: val[txIndexes.response],
         to: val[txIndexes.txDetails] ? val[txIndexes.txDetails].to : '',
         amount: val[txIndexes.txDetails]
-          ? new BigNumber(val[txIndexes.txDetails].value).toString()
+          ? BigNumber(val[txIndexes.txDetails].value).toString()
           : '0',
         nonce: val[txIndexes.txDetails]
-          ? new BigNumber(val[txIndexes.txDetails].nonce).toString()
+          ? BigNumber(val[txIndexes.txDetails].nonce).toString()
           : '0',
         gasPrice: val[txIndexes.txDetails]
-          ? new BigNumber(val[txIndexes.txDetails].gasPrice).toString()
+          ? BigNumber(val[txIndexes.txDetails].gasPrice).toString()
           : '0',
         gasLimit: val[txIndexes.txDetails]
-          ? new BigNumber(val[txIndexes.txDetails].gas).toString()
+          ? BigNumber(val[txIndexes.txDetails].gas).toString()
           : '0',
         tokenTransferTo: val[txIndexes.txDetails]
           ? val[txIndexes.txDetails].tokenTransferTo
@@ -112,14 +112,12 @@ const formatTransactionReciept = (entry, val) => {
   entry.body.errorMessage = parseStatus(val[txIndexes.response].status)
     ? ''
     : INVESTIGATE_FAILURE_KEY;
-  entry.body.gasUsed = new BigNumber(
-    val[txIndexes.response].gasUsed
-  ).toString();
+  entry.body.gasUsed = BigNumber(val[txIndexes.response].gasUsed).toString();
   if (val[txIndexes.response].contractAddress) {
     entry.body.contractAddress = val[txIndexes.response].contractAddress;
     entry.type = notificationType.CONTRACT_CREATION;
   }
-  entry.body.blockNumber = new BigNumber(
+  entry.body.blockNumber = BigNumber(
     val[txIndexes.response].blockNumber
   ).toString();
 
@@ -153,10 +151,10 @@ const formatTransactionError = (val, network) => {
         ? val[txIndexes.txDetails].hash
         : undefined,
       to: val[txIndexes.txDetails].to,
-      amount: new BigNumber(val[txIndexes.txDetails].value).toString(),
-      nonce: new BigNumber(val[txIndexes.txDetails].nonce).toString(),
-      gasPrice: new BigNumber(val[txIndexes.txDetails].gasPrice).toString(),
-      gasLimit: new BigNumber(val[txIndexes.txDetails].gas).toString()
+      amount: BigNumber(val[txIndexes.txDetails].value).toString(),
+      nonce: BigNumber(val[txIndexes.txDetails].nonce).toString(),
+      gasPrice: BigNumber(val[txIndexes.txDetails].gasPrice).toString(),
+      gasLimit: BigNumber(val[txIndexes.txDetails].gas).toString()
     },
     expanded: false
   };
@@ -227,10 +225,10 @@ const formatSwap = (val, network) => {
   if (isEthereum) {
     formatted.body = {
       ...formatted.body,
-      amount: new BigNumber(val[swapIndexes.txDetails].value).toString(),
-      nonce: new BigNumber(val[swapIndexes.txDetails].nonce).toString(),
-      gasPrice: new BigNumber(val[swapIndexes.txDetails].gasPrice).toString(),
-      gasLimit: new BigNumber(val[swapIndexes.txDetails].gas).toString()
+      amount: BigNumber(val[swapIndexes.txDetails].value).toString(),
+      nonce: BigNumber(val[swapIndexes.txDetails].nonce).toString(),
+      gasPrice: BigNumber(val[swapIndexes.txDetails].gasPrice).toString(),
+      gasLimit: BigNumber(val[swapIndexes.txDetails].gas).toString()
     };
   }
 
@@ -244,7 +242,7 @@ const formatSwapReciept = async (entry, val) => {
       : notificationStatuses.FAILED;
     entry.body.timeRemaining = -1;
     if (Number.isNaN(entry.body.gasLimit)) {
-      entry.body.gasLimit = new BigNumber(
+      entry.body.gasLimit = BigNumber(
         val[swapIndexes.response].gasUsed
       ).toString();
     }
@@ -260,7 +258,7 @@ const formatSwapErrorUpdate = (entry, val) => {
   entry.body.errorMessage = val[swapIndexes.response].hasOwnProperty('message')
     ? val[swapIndexes.response].message
     : val[swapIndexes.response];
-  entry.body.blockNumber = new BigNumber(
+  entry.body.blockNumber = BigNumber(
     val[swapIndexes.response].blockNumber
   ).toString();
   return entry;
@@ -284,10 +282,10 @@ const formatSwapError = (val, network) => {
         ? val[swapIndexes.response].message
         : val[swapIndexes.response],
       hash: undefined,
-      amount: new BigNumber(val[swapIndexes.txDetails].value).toString(),
-      nonce: new BigNumber(val[swapIndexes.txDetails].nonce).toString(),
-      gasPrice: new BigNumber(val[swapIndexes.txDetails].gasPrice).toString(),
-      gasLimit: new BigNumber(val[swapIndexes.txDetails].gas).toString(),
+      amount: BigNumber(val[swapIndexes.txDetails].value).toString(),
+      nonce: BigNumber(val[swapIndexes.txDetails].nonce).toString(),
+      gasPrice: BigNumber(val[swapIndexes.txDetails].gasPrice).toString(),
+      gasLimit: BigNumber(val[swapIndexes.txDetails].gas).toString(),
       to: val[swapIndexes.details].toAddress,
       from: val[swapIndexes.details].fromAddress,
       fromValue: val[swapIndexes.details].fromValue,

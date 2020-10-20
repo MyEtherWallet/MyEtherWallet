@@ -254,7 +254,7 @@ const setWeb3Instance = function ({ dispatch, commit, state }, provider) {
         const nonce = await (arr[i].nonce === undefined
           ? web3Instance.eth.getTransactionCount(state.address)
           : arr[i].nonce);
-        arr[i].nonce = new BigNumber(nonce + i).toFixed();
+        arr[i].nonce = BigNumber(nonce + i).toFixed();
         arr[i].gas = gas;
         arr[i].chainId = !arr[i].chainId
           ? state.network.type.chainID

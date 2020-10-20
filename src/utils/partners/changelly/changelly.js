@@ -154,7 +154,7 @@ export default class Changelly {
   }
 
   calculateRate(inVal, outVal) {
-    return new BigNumber(outVal).div(inVal);
+    return BigNumber(outVal).div(inVal);
   }
 
   async getMarketRate(fromCurrency, toCurrency, fromValue) {
@@ -174,9 +174,9 @@ export default class Changelly {
         )
       ]);
 
-      const minAmount = new BigNumber(changellyDetails[0])
+      const minAmount = BigNumber(changellyDetails[0])
         .times(0.001)
-        .plus(new BigNumber(changellyDetails[0]))
+        .plus(BigNumber(changellyDetails[0]))
         .toFixed();
 
       const estValueResponse = changellyDetails[1][0];

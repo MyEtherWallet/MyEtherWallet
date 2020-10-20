@@ -28,11 +28,10 @@
             <v-col cols="6">
               <mew-input
                 ref="mewInput"
+                v-model="amount"
                 :label="$t('sendTx.amount')"
                 placeholder=" "
-                :right-label="balance"
-                :value="amount"
-                @input="setAmount"
+                :right-label="currencyBalance"
               />
             </v-col>
           </v-row>
@@ -73,10 +72,10 @@
                 @input="setGasPrice"
               /> -->
               <mew-input
-                :label="$t('common.gas.limit')"
-                placeholder=" "
                 :value="customGasLimit"
-                @input="setGasLimit"
+                :label="$t('common.gas.limit')"
+                placeholder=""
+                @input="setCustomGasLimit"
               />
             </div>
 
@@ -94,9 +93,9 @@
             </div>
             <!-- question: what kind of data do people usually send ? -->
             <mew-input
+              v-model="data"
               :label="$t('sendTx.add-data')"
               placeholder=" "
-              :value="data"
               class="mt-10 mb-n5"
             />
           </template>
@@ -133,9 +132,11 @@
 </template>
 
 <script>
-import SendTransaction from './index';
 import utils from 'web3-utils';
 import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
+
+import SendTransaction from './index';
 import { ETH } from '@/utils/networks/types';
 
 export default {
@@ -194,8 +195,8 @@ export default {
       toAddress: '',
       sendTx: null,
       amount: '0',
-      selectedCurrency: '',
-      data: '',
+      selectedCurrency: {},
+      data: '0x',
       clearAll: false,
       expandPanel: [
         {
@@ -225,6 +226,13 @@ export default {
         this.selectedCurrency,
         new Date().getTime() / 1000
       );
+    },
+    currencyBalance() {
+      return this.selectedCurrency.balance
+        ? BigNumber(this.selectedCurrency.balance)
+            .div(BigNumber(10).pow(this.selectedCurrency.decimals))
+            .toString()
+        : this.balance;
     }
   },
   watch: {
@@ -233,9 +241,31 @@ export default {
     }, 500),
     network(newVal) {
       if (this.online && newVal.type.name === 'ETH') this.getEthPrice();
+      this.setSendTransaction();
     },
     isPrefilled() {
       this.prefillForm();
+    },
+    ownersTokens: {
+      hander: newVal => {
+        this.selectedCurrency = newVal[0];
+      },
+      deep: true
+    },
+    amount() {
+      this.generateData();
+    },
+    toAddress() {
+      this.generateData();
+    },
+    gasPrice() {
+      this.setSendTransaction();
+    },
+    address() {
+      this.setSendTransaction();
+    },
+    selectedCurrency() {
+      this.generateData();
     }
   },
   mounted() {
@@ -249,6 +279,50 @@ export default {
     this.online && this.isEth ? this.getEthPrice() : null;
   },
   methods: {
+    setSendTransaction() {
+      this.sendTx = new SendTransaction(
+        this.address,
+        this.web3,
+        this.gasPrice,
+        this.network
+      );
+    },
+    generateData() {
+      try {
+        if (this.toAddress !== '') {
+          const decimals = this.selectedCurrency.decimals
+            ? this.selectedCurrency.decimals
+            : null;
+          const estimateGasAddress = this.selectedCurrency.decimals
+            ? this.selectedCurrency.contract
+            : this.toAddress;
+          this.data = this.sendTx.getTxData(
+            this.amount,
+            decimals,
+            this.toAddress,
+            this.selectedCurrency
+          );
+
+          this.sendTx
+            .estimateGas(
+              this.amount,
+              estimateGasAddress,
+              this.gasPrice,
+              this.data
+            )
+            .then(res => {
+              this.customGasLimit = BigNumber(res).toString();
+            })
+            .catch(e => {
+              // esling-disable-next-line
+              console.log(e);
+            });
+        }
+      } catch (e) {
+        // esling-disable-next-line
+        console.log(e);
+      }
+    },
     send() {
       window.scrollTo(0, 0);
       this.sendTx
@@ -256,7 +330,8 @@ export default {
           this.customGasLimit,
           this.toAddress,
           this.amount,
-          this.data
+          this.data,
+          this.selectedCurrency.contract
         )
         .then(response => {
           // eslint-disable-next-line
@@ -278,7 +353,7 @@ export default {
           : '';
         this.amount = this.prefilledAmount;
         this.toAddress = this.prefilledAddress;
-        // this.gasLimit = this.customGasLimit;
+        this.customGasLimit = this.gasLimit;
         this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
         this.$refs.expandPanel.setToggle(true);
         this.toastType = 'warning';
@@ -354,13 +429,13 @@ export default {
         this.balance
       );
     },
-    setAmount(value) {
-      this.amount = value;
-    },
-    setGasPrice(value) {
-      this.gasPrice = value;
-    },
-    setGasLimit(value) {
+    // setAmount(value) {
+    //   this.amount = value;
+    // },
+    // setGasPrice(value) {
+    //   this.gasPrice = value;
+    // },
+    setCustomGasLimit(value) {
       this.customGasLimit = value;
     },
     setCurrency(value) {

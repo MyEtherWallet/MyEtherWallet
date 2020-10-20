@@ -80,7 +80,7 @@ export default async (
                   utils.sha3(store.state.instance.getChecksumAddressString()),
                   {
                     nonce: sanitizeHex(
-                      new BigNumber(localStoredObj.nonce).plus(1).toString(16)
+                      BigNumber(localStoredObj.nonce).plus(1).toString(16)
                     ),
                     timestamp: localStoredObj.timestamp
                   }
