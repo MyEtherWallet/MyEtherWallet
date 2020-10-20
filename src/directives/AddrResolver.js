@@ -113,6 +113,7 @@ const AddrResolver = {
               if (!checkDarklist(address)) {
                 _this.hexAddress = address;
                 _this.isValidAddress = true;
+                const ethAddressDisplay = `<img style="padding:1em" src="${ethereumLogo}"/><span style="font-weight: 600">${address}</span>`;
                 checkAddressIsContract(address).then(res => {
                   if (res) {
                     errorPar.classList.add('contract-addr-resolved');
@@ -120,13 +121,11 @@ const AddrResolver = {
                   errorPar.innerText = res
                     ? _this.$t('errorsGlobal.address-is-contract')
                     : '';
-                  errorPar.innerHTML = !res
-                    ? `<img style="padding:1em" src="${ethereumLogo}"/><span style="font-weight: 600">${address}</span>`
-                    : '';
+                  errorPar.innerHTML = !res ? ethAddressDisplay : '';
 
                   appendElement(errorPar);
                 });
-                errorPar.innerHTML = `<img style="padding:1em" src="${ethereumLogo}"/><span style="font-weight: 600">${address}</span>`;
+                errorPar.innerHTML = ethAddressDisplay;
                 appendElement(messageDiv);
               }
             })

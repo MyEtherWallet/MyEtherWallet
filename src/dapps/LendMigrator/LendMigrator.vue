@@ -45,6 +45,7 @@ import { Toast } from '@/helpers';
 const LEND_MIGRATOR_PROXY_ADDRESS =
   '0x317625234562B1526Ea2FaC4030Ea499C5291de4';
 const LEND_ADDRESS = '0x80fB784B7eD66730e8b1DBd9820aFD29931aab03';
+const LEND_SYMBOL = 'LEND';
 
 export default {
   components: {
@@ -70,7 +71,7 @@ export default {
     ...mapState('main', ['web3', 'account']),
     lendBalance() {
       const lendToken = this.tokensWithBalance.find(item => {
-        return item.symbol === 'LEND';
+        return item.symbol === LEND_SYMBOL;
       });
       return lendToken ? new BigNumber(lendToken.balance).toFixed() : 0;
     },
