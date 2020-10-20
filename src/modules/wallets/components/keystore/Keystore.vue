@@ -172,8 +172,10 @@ export default {
             this.name = wallet.getV3Filename();
             this.updateStep(2);
           })
+          // eslint-disable-next-line
           .catch(console.log);
       } catch (e) {
+        // eslint-disable-next-line
         console.log(e);
       }
     },

@@ -7,6 +7,7 @@ import {
 import { utils } from '../helpers';
 const Toast = {
   responseHandler: function (text, type) {
+    // eslint-disable-next-line
     console.log(`type:${type} `, text);
   }
 };

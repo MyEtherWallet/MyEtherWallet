@@ -216,11 +216,8 @@ export default class SendTransaction {
   // submit transaction
   async submitTransaction(gasLimit, address, amount, data) {
     try {
-      console.log('hello');
       const coinbase = await this.web3.eth.getCoinbase();
-      console.log('there', coinbase);
       const nonce = await this.web3.eth.getTransactionCount(coinbase);
-      console.log('general');
       const raw = {
         nonce: sanitizeHex(new BigNumber(nonce).toString(16)),
         actualGasPrice: sanitizeHex(
@@ -232,10 +229,8 @@ export default class SendTransaction {
         data: data
       };
       const _tx = new Transaction(raw);
-      console.log('kenobi');
       const json = _tx.toJSON(true);
       json.from = coinbase;
-      console.log('you');
       this.web3.eth
         .sendTransaction(json)
         .then(response => {
@@ -244,10 +239,8 @@ export default class SendTransaction {
         .catch(error => {
           return error;
         });
-      console.log('are');
       this.clear();
     } catch (error) {
-      console.log(error);
       return error;
     }
   }
