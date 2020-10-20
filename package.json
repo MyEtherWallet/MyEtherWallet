@@ -27,7 +27,9 @@
     "update:lists": "node fetchLists/index.js",
     "update:mainlists": "node fetchLists/fetchMainLists.js",
     "update:packages": "node package-test.js",
-    "update:swap": "node compileBaseSwapOptions.js"
+    "update:swap": "node compileBaseSwapOptions.js",
+    "renderer": "NODE_OPTIONS='--max-old-space-size=4092' vue-cli-service build && npm run serve-production",
+    "serve-production": "node bin/server.js"
   },
   "dependencies": {
     "@aave/protocol-js": "1.0.3",
@@ -75,6 +77,7 @@
     "xss": "1.0.8"
   },
   "devDependencies": {
+    "express": "4.16.3",
     "@ensdomains/address-encoder": "0.1.8",
     "@ensdomains/dnsregistrar": "0.3.9",
     "@ethereum-alarm-clock/lib": "0.3.5",
@@ -137,6 +140,7 @@
     "package-json": "6.5.0",
     "postcss-import": "12.0.1",
     "postcss-url": "8.0.0",
+    "prerender-spa-plugin": "3.4.0",
     "prettier": "2.1.2",
     "raw-loader": "4.0.2",
     "remark-cli": "8.0.1",
@@ -148,7 +152,7 @@
     "stylelint": "13.7.2",
     "stylelint-config-prettier": "8.0.2",
     "stylelint-config-standard": "20.0.0",
-    "trezor-connect": "8.1.15",
+    "trezor-connect": "8.1.16",
     "u2f-api": "1.1.1",
     "uglify-es": "3.3.9",
     "uuid": "8.3.1",

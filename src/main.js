@@ -3,6 +3,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import * as Sentry from '@sentry/browser';
 import * as Integrations from '@sentry/integrations';
+import injectInitialState from './inject-initial-state';
 import { getApp } from '@/builds/configs';
 import BootstrapVue from 'bootstrap-vue';
 import { MEW_CX } from '@/builds/configs/types';
@@ -135,6 +136,34 @@ const vue = new Vue({
   render: h => h(getApp())
 });
 
+// During pre-rendering the initial state is
+// injected into the global scope, here we
+// fill the store with the initial state.
+if (window.__INITIAL_STATE__) store.replaceState(window.__INITIAL_STATE__);
+
+router.beforeResolve(async (to, from, next) => {
+  try {
+    const components = router.getMatchedComponents(to);
+
+    // By using `await` we make sure to wait
+    // for the API request made by the `fetch()`
+    // method to resolve before rendering the view.
+    await Promise.all(components.map(x => x.fetch && x.fetch({ store })));
+
+    // The `injectInitialState()` function injects
+    // the current state as a global variable
+    // `__INITIAL_STATE__` if the page is currently
+    // pre-rendered.
+    if (window.__PRERENDER_INJECTED) injectInitialState(store.state);
+  } catch (error) {
+    // This is the place for error handling in
+    // case the API request fails for example.
+    // eslint-disable-next-line
+    console.log(error);
+  }
+
+  return next();
+});
 const integration = new Integrations.Vue({ Vue, attachProps: true });
 const sentryVersion = BUILD_TYPE === MEW_CX ? `${VERSION}-cx` : VERSION;
 Sentry.init({

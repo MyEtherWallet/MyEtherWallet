@@ -20,18 +20,11 @@ const errorLogger = debug('v5:partners-changelly');
 const disabled = [];
 
 function checkAndChange(value) {
-  if(!value) return value;
   if (value === 'USDT Omni') {
     return 'usdt';
   }
   if (value === 'USDT') {
     return 'usdt20';
-  }
-  if (value.toLowerCase() === 'repv2'){
-    return 'rep'
-  }
-  if (value.toLowerCase() === 'rep'){
-    return 'repv2'
   }
   return value;
 }
