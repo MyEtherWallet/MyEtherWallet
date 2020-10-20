@@ -44,15 +44,18 @@ const AddrResolver = {
       actualProcess(address);
     });
     const removeElements = function () {
-      vnode.elm.parentNode.parentNode
-        .querySelectorAll(
-          '.resolution-container',
-          '.resolver-error',
-          '.resolver-addr',
-          '.contract-addr-resolved',
-          '.twitter-verify'
-        )
-        .forEach(e => e.remove());
+      const elements = [
+        '.resolution-container',
+        '.resolver-error',
+        '.resolver-addr',
+        '.contract-addr-resolved',
+        '.twitter-verify'
+      ];
+      elements.forEach(e =>
+        vnode.elm.parentNode.parentNode
+          .querySelectorAll(e)
+          .forEach(e => e.remove())
+      );
     };
     const appendElement = function (ele) {
       removeElements();
@@ -116,10 +119,14 @@ const AddrResolver = {
                   }
                   errorPar.innerText = res
                     ? _this.$t('errorsGlobal.address-is-contract')
-                    : address;
+                    : '';
+                  errorPar.innerHTML = !res
+                    ? `<img style="padding:1em" src="${ethereumLogo}"/><span style="font-weight: 600">${address}</span>`
+                    : '';
+
                   appendElement(errorPar);
                 });
-                errorPar.innerText = address;
+                errorPar.innerHTML = `<img style="padding:1em" src="${ethereumLogo}"/><span style="font-weight: 600">${address}</span>`;
                 appendElement(messageDiv);
               }
             })
