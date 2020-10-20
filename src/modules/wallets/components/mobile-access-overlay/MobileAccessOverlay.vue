@@ -78,6 +78,7 @@ export default {
             WalletConnectWallet.errorHandler(e);
           });
       } catch (e) {
+        // eslint-disable-next-line
         console.log(e);
       }
     },
@@ -93,6 +94,7 @@ export default {
             WalletLinkWallet.errorHandler(e);
           });
       } catch (e) {
+        // eslint-disable-next-line
         console.log(e);
       }
     },

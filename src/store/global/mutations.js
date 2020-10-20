@@ -8,6 +8,7 @@ const SET_ONLINE_STATUS = async function (state, status) {
     )
       .then(res => res.json())
       .catch(() => {
+        // eslint-disable-next-line
         console.log('ERROR FETCHING GITHUB ADDRESES');
         // Toast.responseHandler(e, Toast.ERROR);
       });

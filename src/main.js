@@ -74,7 +74,8 @@ const onErrorLink = onError(({ graphQLErrors }) => {
   if (graphQLErrors && process.env.NODE_ENV !== 'production') {
     graphQLErrors.map(({ message, locations, path }) => {
       const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`;
-      console.log(newError);
+      // eslint-disable-next-line
+      console.error(newError);
     });
   }
 
