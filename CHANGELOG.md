@@ -1,3 +1,13 @@
+### Release v5.7.12
+
+### Feature
+
+* Add support for currency type [#2631](https://github.com/MyEtherWallet/MyEtherWallet/pull/2631)
+
+### Bug
+
+* Handle changelly rep as repv2 [#2632](https://github.com/MyEtherWallet/MyEtherWallet/pull/2632)
+
 ### Devop
 
 * Update packages [#2634](https://github.com/MyEtherWallet/MyEtherWallet/pull/2634)
