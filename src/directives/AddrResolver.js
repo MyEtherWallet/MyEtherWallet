@@ -44,15 +44,18 @@ const AddrResolver = {
       actualProcess(address);
     });
     const removeElements = function () {
-      vnode.elm.parentNode.parentNode
-        .querySelectorAll(
-          '.resolution-container',
-          '.resolver-error',
-          '.resolver-addr',
-          '.contract-addr-resolved',
-          '.twitter-verify'
-        )
-        .forEach(e => e.remove());
+      const elements = [
+        '.resolution-container',
+        '.resolver-error',
+        '.resolver-addr',
+        '.contract-addr-resolved',
+        '.twitter-verify'
+      ];
+      elements.forEach(e =>
+        vnode.elm.parentNode.parentNode
+          .querySelectorAll(e)
+          .forEach(e => e.remove())
+      );
     };
     const appendElement = function (ele) {
       removeElements();
@@ -110,16 +113,19 @@ const AddrResolver = {
               if (!checkDarklist(address)) {
                 _this.hexAddress = address;
                 _this.isValidAddress = true;
+                const ethAddressDisplay = `<img style="padding:1em" src="${ethereumLogo}"/><span style="font-weight: 600">${address}</span>`;
                 checkAddressIsContract(address).then(res => {
                   if (res) {
                     errorPar.classList.add('contract-addr-resolved');
                   }
                   errorPar.innerText = res
                     ? _this.$t('errorsGlobal.address-is-contract')
-                    : address;
+                    : '';
+                  errorPar.innerHTML = !res ? ethAddressDisplay : '';
+
                   appendElement(errorPar);
                 });
-                errorPar.innerText = address;
+                errorPar.innerHTML = ethAddressDisplay;
                 appendElement(messageDiv);
               }
             })
