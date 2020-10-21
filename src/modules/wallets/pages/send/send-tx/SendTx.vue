@@ -146,6 +146,8 @@
       <div>
         <network />
         <div class="pa-4"></div>
+        <txHistory />
+        <div class="pa-4"></div>
         <myEthBalance />
         <div class="pa-4"></div>
         <swap />

@@ -6,8 +6,46 @@
         <div class="primary--text font-weight--500">EthVM</div>
       </div>
 
-      <div class="mt-5">
-        <txBlock address="0x68dcd0743ea5dea3f03c6e49bbfb1eb72ab050a3" />
+      <div class="mt-5 tx-blocks">
+        <txBlock
+          class="mb-5"
+          address="0x68dcd0743ea5dea3f03c6e49bbfb1eb72ab050a3"
+          amount="0.0023"
+          time="1m"
+          direction="in"
+          status="success"
+        />
+        <txBlock
+          class="mb-5"
+          address="0x68dcd0743ea5dea3f03c6e49bbfb1eb72ab050a3"
+          amount="0.0023"
+          time="1m"
+          direction="out"
+          status="pending"
+        />
+        <txBlock
+          class="mb-5"
+          address="0x68dcd0743ea5dea3f03c6e49bbfb1eb72ab050a3"
+          amount="0.0023"
+          time="1m"
+          direction="out"
+          status="pending"
+        />
+        <txBlock
+          class="mb-5"
+          address="0x68dcd0743ea5dea3f03c6e49bbfb1eb72ab050a3"
+          amount="0.0023"
+          time="1m"
+          direction="out"
+          status="pending"
+        />
+        <txBlock
+          address="0x68dcd0743ea5dea3f03c6e49bbfb1eb72ab050a3"
+          amount="0.0023"
+          time="1m"
+          direction="swap"
+          status="error"
+        />
       </div>
     </mew6-white-sheet>
   </div>
@@ -30,4 +68,11 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.mew-component--side-info-tx-history {
+  .tx-blocks {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+}
+</style>
