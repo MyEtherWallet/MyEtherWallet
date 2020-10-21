@@ -8,13 +8,13 @@
 
 **Please keep in mind we cannot recover private keys.**
 
-* * *
+***
 
 #### Contact Form:
 
-- Email us at [support@myetherwallet.com](mailto:support@myetherwallet.com)
+* Email us at <mailto:support@myetherwallet.com>
 
-- <p>Include a detailed description of the issue.</p>
+* <p>Include a detailed description of the issue.</p>
   <note>Please include as many details as possible, such as phone / computer model, OS number, version of the app / site you are using, browser version etc.</note>
 
-- Attach screenshots (optional)
+* Attach screenshots (optional)
