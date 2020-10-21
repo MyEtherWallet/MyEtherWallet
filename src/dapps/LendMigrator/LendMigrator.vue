@@ -45,6 +45,7 @@ import { Toast } from '@/helpers';
 const LEND_MIGRATOR_PROXY_ADDRESS =
   '0x317625234562B1526Ea2FaC4030Ea499C5291de4';
 const LEND_ADDRESS = '0x80fB784B7eD66730e8b1DBd9820aFD29931aab03';
+const LEND_SYMBOL = 'LEND';
 
 export default {
   components: {
@@ -70,7 +71,7 @@ export default {
     ...mapState('main', ['web3', 'account']),
     lendBalance() {
       const lendToken = this.tokensWithBalance.find(item => {
-        return item.symbol === 'LEND';
+        return item.symbol === LEND_SYMBOL;
       });
       return lendToken ? new BigNumber(lendToken.balance).toFixed() : 0;
     },
@@ -92,16 +93,16 @@ export default {
     async migrate() {
       const estimatedAmount = new BigNumber(this.amount)
         .times(new BigNumber(10).pow(18))
-        .toString();
+        .toString(16);
+      const amountAsHex = '0x' + estimatedAmount;
       const lendContract = new this.web3.eth.Contract(ERC20, LEND_ADDRESS);
       const lendApproveData = await lendContract.methods
-        .approve(LEND_MIGRATOR_PROXY_ADDRESS, estimatedAmount)
+        .approve(LEND_MIGRATOR_PROXY_ADDRESS, amountAsHex)
         .encodeABI();
 
       const lendMigrateData = await this.lendMigratorContract.methods
-        .migrateFromLEND(estimatedAmount)
+        .migrateFromLEND(amountAsHex)
         .encodeABI();
-      this.amount = 0;
       this.loading = true;
       this.web3.mew
         .sendBatchTransactions([
@@ -121,6 +122,7 @@ export default {
           }
         ])
         .then(() => {
+          this.amount = 0;
           this.loading = false;
         })
         .catch(error => {
