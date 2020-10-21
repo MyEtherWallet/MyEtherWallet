@@ -6,7 +6,7 @@
         <div class="primary--text font-weight--500">EthVM</div>
       </div>
 
-      <div class="mt-5 tx-blocks">
+      <div class="mt-5 ml-n5 mr-n5 pr-5 tx-blocks custom-scroll-bar">
         <txBlock
           class="mb-5"
           address="0x68dcd0743ea5dea3f03c6e49bbfb1eb72ab050a3"

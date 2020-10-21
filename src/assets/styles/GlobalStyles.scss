@@ -237,3 +237,39 @@ h6 {
 .preset--mobile-max-width {
   max-width: 420px;
 }
+
+.custom-scroll-bar {
+  &::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+  &::-webkit-scrollbar-button {
+    width: 0px;
+    height: 0px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #4f4f4f;
+    border: 0px none #ffffff;
+    border-radius: 50px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #3b3b3b;
+  }
+  &::-webkit-scrollbar-thumb:active {
+    background: #4b4949;
+  }
+  &::-webkit-scrollbar-track {
+    background: #e1dfdf;
+    border: 0px none #ffffff;
+    border-radius: 39px;
+  }
+  &::-webkit-scrollbar-track:hover {
+    background: #ddd5d5;
+  }
+  &::-webkit-scrollbar-track:active {
+    background: #dedede;
+  }
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
