@@ -123,9 +123,9 @@
 </template>
 
 <script>
-import transactionConfirmation from '@/modules/wallets/components/transaction-confirmation/TransactionConfirmation';
+// import transactionConfirmation from '@/modules/wallets/components/transaction-confirmation/TransactionConfirmation';
 export default {
-  components: { transactionConfirmation },
+  // components: { transactionConfirmation },
   props: {
     open: { default: false, type: Boolean },
     close: {

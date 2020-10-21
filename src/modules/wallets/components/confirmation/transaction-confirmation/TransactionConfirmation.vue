@@ -1,33 +1,29 @@
 <template>
   <v-sheet color="transparent" max-width="600px" class="pa-8">
-    <from-to-block
-      from="0x300be4b1183dca9046349e9e01b1e0c08e362964"
-      to="0x02fb7f333fd493b39b79ba57b6d510c64eaa3dc0"
-      class="mb-2"
-    />
+    <from-to-block :from="from" :to="to" class="mb-2" />
     <balance-block />
     <mew-expand-panel>
       <template #panelBody1 :panel-items="panelItems">
         <div class="px-3">
           <div class="d-flex justify-space-between mb-2">
             <div>Network</div>
-            <div>ETH by myetherwallet.com</div>
+            <div>{{ network.type.name }} by {{ network.service }}</div>
           </div>
           <div class="d-flex justify-space-between mb-2">
             <div>Gas Price</div>
-            <div>40 <span class="primary--text">GWEI</span></div>
+            <div>{{ gasPrice }} <span class="primary--text">GWEI</span></div>
           </div>
           <div class="d-flex justify-space-between mb-2">
             <div>Gas Limit</div>
-            <div>21000 <span class="primary--text">WEI</span></div>
+            <div>{{ gasLimit }}</div>
           </div>
           <div class="d-flex justify-space-between mb-2">
             <div>Nonce</div>
-            <div>17</div>
+            <div>{{ nonce }}</div>
           </div>
           <div class="d-flex justify-space-between">
             <div>Data</div>
-            <div>0x</div>
+            <div>{{ data }}</div>
           </div>
         </div>
       </template>
@@ -51,6 +47,36 @@ export default {
   components: {
     fromToBlock,
     balanceBlock
+  },
+  props: {
+    to: {
+      type: String,
+      default: ''
+    },
+    from: {
+      type: String,
+      default: ''
+    },
+    data: {
+      type: String,
+      default: ''
+    },
+    gasPrice: {
+      type: String,
+      default: ''
+    },
+    gasLimit: {
+      type: String,
+      default: ''
+    },
+    nonce: {
+      type: Number,
+      default: 0
+    },
+    network: {
+      type: Object,
+      default: () => {}
+    }
   },
   data: function () {
     return {

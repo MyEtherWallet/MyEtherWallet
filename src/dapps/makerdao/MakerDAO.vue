@@ -1,7 +1,7 @@
 <template>
   <div class="mew-component-fix--maker-dao">
     <div class="d-flex align-center">
-      <transactionConfirmationOverlay :open="openTXConfirmationOverlay" />
+      <!-- <transactionConfirmationOverlay :open="openTXConfirmationOverlay" /> -->
       <div
         class="cursor--pointer font-weight-bold mr-4"
         @click="openTXConfirmationOverlay = true"
@@ -155,14 +155,14 @@
 
 <script>
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
-import transactionConfirmationOverlay from '@/modules/wallets/components/transaction-confirmation-overlay/TransactionConfirmationOverlay';
+// import transactionConfirmationOverlay from '@/modules/wallets/components/transaction-confirmation-overlay/TransactionConfirmationOverlay';
 import collateralizeDaiOverlay from '@/modules/wallets/components/collateralize-dai-overlay/CollateralizeDaiOverlay';
 import depositDaiOverlay from '@/modules/wallets/components/deposit-dai-overlay/DepositDaiOverlay';
 import withdrawDaiOverlay from '@/modules/wallets/components/withdraw-dai-overlay/WithdrawDaiOverlay';
 
 export default {
   components: {
-    transactionConfirmationOverlay,
+    // transactionConfirmationOverlay,
     collateralizeDaiOverlay,
     depositDaiOverlay,
     withdrawDaiOverlay
