@@ -300,7 +300,12 @@ const AddrResolver = {
               );
             } else {
               messagePar.classList.add('resolver-addr');
-              messagePar.innerHTML = `<img style="padding:1em" src="${ethereumLogo}"/><span style="font-weight: 600">${_this.hexAddress}</span>`;
+              messagePar.style.cssText = 'display:flex;align-items:center';
+              messagePar.innerHTML = `${
+                parentCurrency === 'ETH'
+                  ? `<img style="padding:1em" src="${ethereumLogo}"/>`
+                  : `<p style="padding:1em .5em 1em 1em">${parentCurrency} Address: </p>`
+              }<span style="font-weight: 600">${_this.hexAddress}</span>`;
               const twitterUsername = await resolution.cns
                 .twitter(domain)
                 .catch(() => null);
@@ -330,7 +335,7 @@ const AddrResolver = {
                   err.code != 'UnsupportedDomain'
                     ? resolution.serviceName(domain)
                     : '',
-                currencyTicker: parentCurrency
+                recordName: parentCurrency
               }
             );
             appendElement(messageDiv);
