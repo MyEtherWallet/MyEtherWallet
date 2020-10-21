@@ -185,7 +185,7 @@ const stringToArray = str => {
 };
 
 const isContractArgValid = (value, solidityType) => {
-  if (!value) value = '';
+  if (!value && typeof value !== 'boolean') value = '';
   if (solidityType.includes('[]')) {
     const parsedValue = Array.isArray(value) ? value : stringToArray(value);
     const type = solidityType.replace('[]', '');
