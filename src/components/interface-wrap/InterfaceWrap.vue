@@ -1,9 +1,9 @@
 <template>
-  <div class="pt-8">
+  <div class="pt-5 pt-lg-8">
     <div class="left-border pl-7 headline font-weight-bold mb-1">
       {{ title }}
     </div>
-    <div class="pa-10">
+    <div class="pa-3 pa-lg-10">
       <slot />
     </div>
   </div>
