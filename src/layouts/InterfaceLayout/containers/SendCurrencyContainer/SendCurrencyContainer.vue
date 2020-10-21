@@ -253,6 +253,9 @@ export default {
       'online',
       'gasLimitWarning'
     ]),
+    currency() {
+      return this.selectedCurrency.symbol;
+    },
     showGasWarning() {
       return this.gasPrice >= this.gasLimitWarning;
     },
