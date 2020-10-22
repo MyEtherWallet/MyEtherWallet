@@ -15,13 +15,19 @@ import sanitizeHex from '@/helpers/sanitizeHex';
 const setEvents = (promiObj, tx, dispatch) => {
   promiObj
     .once('transactionHash', hash => {
-      dispatch('wallet/addNotification', ['Hash', tx.from, tx, hash]);
+      dispatch('wallet/addNotification', ['Hash', tx.from, tx, hash], {
+        root: true
+      });
     })
     .once('receipt', res => {
-      dispatch('wallet/addNotification', ['Receipt', tx.from, tx, res]);
+      dispatch('wallet/addNotification', ['Receipt', tx.from, tx, res], {
+        root: true
+      });
     })
     .on('error', err => {
-      dispatch('wallet/addNotification', ['Error', tx.from, tx, err]);
+      dispatch('wallet/addNotification', ['Error', tx.from, tx, err], {
+        root: true
+      });
     });
 };
 export default async (
@@ -72,6 +78,7 @@ export default async (
 
           _promiObj
             .once('transactionHash', hash => {
+              console.log(hash);
               if (store.state.instance !== null) {
                 const localStoredObj = locStore.get(
                   utils.sha3(store.state.instance.getChecksumAddressString())
@@ -89,6 +96,7 @@ export default async (
               res(null, toPayload(payload.id, hash));
             })
             .on('error', err => {
+              console.log(err);
               res(err);
             });
           setEvents(_promiObj, _tx, store.dispatch);
