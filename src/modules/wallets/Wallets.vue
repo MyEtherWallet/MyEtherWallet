@@ -57,25 +57,39 @@ export default {
   data() {
     return {
       tokens: [],
-      ownersTokens: []
+      ownersTokens: [],
+      manualBlockFetch: () => {}
     };
   },
   computed: {
     ...mapState('wallet', ['address', 'web3']),
     ...mapState('global', ['online'])
   },
+  watch: {
+    web3() {
+      this.web3.eth.clearSubscriptions();
+      clearInterval(this.manualBlockFetch);
+      this.subscribeToBlockNumber();
+    }
+  },
   mounted() {
     if (this.online) {
       this.getTokens();
       this.getPriceAndBalance();
+      this.subscribeToBlockNumber();
     }
+  },
+  destroyed() {
+    this.web3.eth.clearSubscriptions();
+    clearInterval(this.manualBlockFetch);
   },
   methods: {
     ...mapActions('wallet', [
       'setAccountBalance',
       'setUSD',
       'setGasPrice',
-      'setEthGasPrice'
+      'setEthGasPrice',
+      'setBlockNumber'
     ]),
     getTokens() {
       const tokensList = new TokensList(this.$apollo);
@@ -104,6 +118,33 @@ export default {
         }
         this.setEthGasPrice(res, 'gwei');
       });
+    },
+    subscribeToBlockNumber() {
+      this.web3.eth
+        .subscribe('newBlockHeaders', error => {
+          if (error) {
+            if (
+              error.message.includes(
+                "The current provider doesn't support subscriptions"
+              )
+            ) {
+              this.manualBlockSubscription();
+              return;
+            }
+            this.$eventHub.$emit('error', error);
+          }
+        })
+        .on('data', res => {
+          this.setBlockNumber(res);
+        });
+    },
+    manualBlockSubscription() {
+      const _self = this;
+      this.manualBlockFetch = setInterval(() => {
+        _self.web3.eth.getBlockNumber().then(res => {
+          _self.setBlockNumber(res);
+        });
+      }, 14000);
     }
   }
 };

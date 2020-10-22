@@ -1,13 +1,7 @@
 import BigNumber from 'bignumber.js';
 
 import { networkSymbols } from '../partnersConfig';
-const Toast = {
-  responseHandler: function (text, type) {
-    // eslint-disable-next-line
-    console.log(`type:${type} `, text);
-  }
-};
-
+import Toast from '@/components/toast';
 import {
   notificationStatuses,
   ChangellyCurrencies,
@@ -348,7 +342,7 @@ export default class Changelly {
       );
       return Changelly.parseChangellyStatus(status);
     } catch (e) {
-      Toast.responseHandler(e, false);
+      Toast(e, {}, 'sentry');
     }
   }
 

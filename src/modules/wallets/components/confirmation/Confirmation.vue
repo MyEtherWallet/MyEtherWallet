@@ -54,7 +54,7 @@ export default {
       return this.tx.data;
     },
     gasPrice() {
-      return utils.fromWei(utils.hexToNumberString(this.tx.gasPrice), 'gwei');
+      return utils.hexToNumberString(this.tx.gasPrice);
     },
     gasLimit() {
       return utils.hexToNumberString(this.tx.gasLimit);

@@ -1,11 +1,4 @@
-const Toast = {
-  responseHandler: (err, type) => {
-    // eslint-disable-next-line
-    console.log(err, type);
-  },
-  ERROR: 'error',
-  WARN: 'warn'
-};
+import Toast from '@/components/toast';
 import Vue from 'vue';
 const ERRORS = {
   27010: 'bcvaultError.invalid-device-pin-or-password',
@@ -28,28 +21,23 @@ const WARNING = {
 export default err => {
   // web errors
   if (err.hasOwnProperty('jsError')) {
-    Toast.responseHandler(
-      Vue.$i18n.t(WARNING[`jsError${err.jsError}`]),
-      Toast.WARN
-    );
+    Toast(Vue.$i18n.t(WARNING[`jsError${err.jsError}`]), {}, 'warning');
     return;
   } else if (err.hasOwnProperty('BCHttpResponse')) {
     // request succeded but the device returned error
-    Toast.responseHandler(
-      Vue.$i18n.t(ERRORS[err.BCHttpResponse.errorCode]),
-      Toast.ERROR
-    );
+    Toast(Vue.$i18n.t(ERRORS[err.BCHttpResponse.errorCode]), {}, 'error');
     return;
   } else if (err.hasOwnProperty('HttpResponse')) {
     // request when the server errors
-    Toast.responseHandler(err.HttpResponse, false);
+    Toast(err.HttpResponse, false);
   } else if (err.hasOwnProperty('DaemonHttpResponse')) {
-    Toast.responseHandler(
+    Toast(
       Vue.$i18n.t(ERRORS[`daemonError${err.DaemonHttpResponse.daemonError}`]),
-      Toast.ERROR
+      {},
+      'error'
     );
     return;
   } else {
-    Toast.responseHandler(err, false);
+    Toast(err, {}, 'sentry');
   }
 };

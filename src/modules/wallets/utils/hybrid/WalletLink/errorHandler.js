@@ -1,11 +1,4 @@
-const Toast = {
-  responseHandler: (err, type) => {
-    // eslint-disable-next-line
-console.log(err, type);
-  },
-  ERROR: 'error',
-  WARN: 'warn'
-};
+import Toast from '@/components/toast';
 const ERRORS = {
   'User denied account authorization': 'user denied the authorization',
   'User denied transaction signature': 'user denied the transaction',
@@ -19,10 +12,10 @@ export default err => {
   const errorValues = Object.keys(ERRORS);
   const warningValues = Object.keys(WARNING);
   if (errorValues.includes(err.message)) {
-    Toast.responseHandler(ERRORS[err.message], Toast.ERROR);
+    Toast(ERRORS[err.message], {}, 'error');
   } else if (warningValues.includes(err.message)) {
-    Toast.responseHandler(WARNING[err.message], Toast.WARN);
+    Toast(WARNING[err.message], {}, 'warning');
   } else {
-    Toast.responseHandler(err, false);
+    Toast(err, {}, 'sentry');
   }
 };

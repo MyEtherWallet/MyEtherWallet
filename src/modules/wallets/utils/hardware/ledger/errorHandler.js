@@ -1,11 +1,4 @@
-const Toast = {
-  responseHandler: (err, type) => {
-    // eslint-disable-next-line
-console.log(err, type);
-  },
-  ERROR: 'error',
-  WARN: 'warn'
-};
+import Toast from '@/components/toast';
 import Vue from 'vue';
 const ERRORS = {
   'Failed to sign with Ledger device: U2F TIMEOUT':
@@ -68,16 +61,10 @@ export default err => {
   });
 
   if (foundError) {
-    Toast.responseHandler(
-      `${Vue.$i18n.t(ERRORS[foundError])}${expected}`,
-      Toast.ERROR
-    );
+    Toast(`${Vue.$i18n.t(ERRORS[foundError])}${expected}`, {}, 'error');
   } else if (foundWarning) {
-    Toast.responseHandler(
-      `${Vue.$i18n.t(WARNING[foundWarning])}${expected}`,
-      Toast.WARN
-    );
+    Toast(`${Vue.$i18n.t(WARNING[foundWarning])}${expected}`, {}, 'warning');
   } else {
-    Toast.responseHandler(err, false);
+    Toast(err, {}, 'sentry');
   }
 };

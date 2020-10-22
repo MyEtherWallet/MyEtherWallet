@@ -1,7 +1,7 @@
 <template>
   <v-sheet max-width="600px" class="pa-8">
     <from-to-block :from="from" :to="to" class="mb-2" />
-    <!-- <balance-block /> -->
+    <balance-block />
     <mew-expand-panel :panel-items="panelItems" :is-toggle="true">
       <template #panelBody1>
         <div class="px-3">
@@ -41,12 +41,12 @@
 
 <script>
 import fromToBlock from '@/components/from-to-block/FromToBlock';
-// import balanceBlock from '@/components/balance-block/BalanceBlock';
+import balanceBlock from '@/components/balance-block/BalanceBlock';
 
 export default {
   components: {
-    fromToBlock
-    // balanceBlock
+    fromToBlock,
+    balanceBlock
   },
   props: {
     to: {
