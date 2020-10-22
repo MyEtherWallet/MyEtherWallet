@@ -1,5 +1,6 @@
 <template>
   <v-sheet color="walletBg">
+    <confirmation />
     <div class="d-flex align-stretch">
       <side-menu class="box-shadow" />
       <div class="flex-grow-1 d-flex flex-column justify-space-between">
@@ -29,14 +30,15 @@ import { mapActions, mapState } from 'vuex';
 import utils from 'web3-utils';
 import store from 'store';
 
+import TokensList from '@/apollo/queries/tokens/index';
+import WalletCalls from '@/apollo/queries/wallets/index';
+
 import sideMenu from './components/side-menu/SideMenu';
 import walletHeader from './components/header/Header';
 import network from '@/modules/wallets/components/network/Network';
 import swap from '@/modules/wallets/components/swap/Swap';
 import bannerAds from '@/modules/wallets/components/banner-ads/BannerAds';
-import TokensList from '@/apollo/queries/tokens/index';
-import WalletCalls from '@/apollo/queries/wallets/index';
-
+import confirmation from '@/modules/wallets/components/confirmation/Confirmation';
 import {
   getGasBasedOnType,
   getOther,
@@ -49,7 +51,8 @@ export default {
     walletHeader,
     network,
     swap,
-    bannerAds
+    bannerAds,
+    confirmation
   },
   data() {
     return {

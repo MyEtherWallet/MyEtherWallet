@@ -1,9 +1,9 @@
 <template>
-  <v-sheet color="transparent" max-width="600px" class="pa-8">
+  <v-sheet max-width="600px" class="pa-8">
     <from-to-block :from="from" :to="to" class="mb-2" />
-    <balance-block />
-    <mew-expand-panel>
-      <template #panelBody1 :panel-items="panelItems">
+    <!-- <balance-block /> -->
+    <mew-expand-panel :panel-items="panelItems" :is-toggle="true">
+      <template #panelBody1>
         <div class="px-3">
           <div class="d-flex justify-space-between mb-2">
             <div>Network</div>
@@ -31,8 +31,8 @@
     <div class="d-flex justify-center my-8">
       <mew-button
         btn-size="xlarge"
-        title="Continue on your device"
-        @click.native="activeTab = 1"
+        title="Confirm and Send"
+        @click.native="send"
       />
     </div>
     <mew-warning-sheet :description="warningDescription" />
@@ -41,12 +41,12 @@
 
 <script>
 import fromToBlock from '@/components/from-to-block/FromToBlock';
-import balanceBlock from '@/components/balance-block/BalanceBlock';
+// import balanceBlock from '@/components/balance-block/BalanceBlock';
 
 export default {
   components: {
-    fromToBlock,
-    balanceBlock
+    fromToBlock
+    // balanceBlock
   },
   props: {
     to: {
@@ -76,6 +76,10 @@ export default {
     network: {
       type: Object,
       default: () => {}
+    },
+    send: {
+      type: Function,
+      default: () => {}
     }
   },
   data: function () {
@@ -85,8 +89,7 @@ export default {
       open: false,
       panelItems: [
         {
-          name: 'Network',
-          subtext: 'ETH - myetherapi.com'
+          name: 'Details'
         }
       ],
       activeTab: 0
