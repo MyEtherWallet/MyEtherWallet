@@ -5,13 +5,16 @@
         <router-view />
       </v-sheet>
     </v-main>
+    <toast />
   </v-app>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
+import toast from '@/components/toast/Toast.vue';
 export default {
   name: 'App',
+  components: { toast },
   mounted() {
     this.setOnlineStatus(window.navigator.onLine);
     // Window events to watch out if the online status changes

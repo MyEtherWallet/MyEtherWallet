@@ -226,9 +226,6 @@ export default class SendTransaction {
 
       const raw = {
         nonce: sanitizeHex(BigNumber(nonce).toString(16)),
-        actualGasPrice: sanitizeHex(
-          BigNumber(this.finalGasPrice()).toString(16)
-        ),
         gasLimit: sanitizeHex(BigNumber(gasLimit).toString(16)),
         to: toAddress,
         value: sanitizeHex(

@@ -21,24 +21,33 @@
 
         <div class="mt-4">
           <!-- placeholders -->
-          <div class="mb-1">ETH - myetherwallet.com</div>
-          <div>Last Block: #5699679</div>
+          <div class="mb-1">{{ type }} - {{ service }}</div>
+          <div>Last Block: {{ blockNumber }}</div>
         </div>
       </div>
-      <mew-icon icon-name="ETH" :img-height="65" />
+      <mew-icon :icon-name="type" :img-height="65" />
     </mew6-white-sheet>
   </div>
 </template>
 
 <script>
 import changeNetworkOverlay from '../change-network/ChangeNetwork';
-
+import { mapState } from 'vuex';
 export default {
   components: { changeNetworkOverlay },
   data() {
     return {
       openNetworkOverlay: false
     };
+  },
+  computed: {
+    ...mapState('wallet', ['blockNumber', 'network']),
+    type() {
+      return this.network.type.name;
+    },
+    service() {
+      return this.network.service;
+    }
   },
   methods: {
     closeNetworkOverlay() {

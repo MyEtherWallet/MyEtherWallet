@@ -1,11 +1,4 @@
-const Toast = {
-  responseHandler: (err, type) => {
-    // eslint-disable-next-line
-console.log(err, type);
-  },
-  ERROR: 'error',
-  WARN: 'warn'
-};
+import Toast from '@/components/toast';
 const ERRORS = {
   REJECT_TX:
     'Returned error: Error: MetaMask Tx Signature: User denied transaction signature.',
@@ -19,10 +12,10 @@ export default err => {
   const errorValues = Object.values(ERRORS);
   const warningValues = Object.values(WARNING);
   if (errorValues.includes(err.message)) {
-    Toast.responseHandler(err, Toast.ERROR);
+    Toast(err, {}, 'error');
   } else if (warningValues.includes(err.message)) {
-    Toast.responseHandler(err, Toast.WARN);
+    Toast(err, {}, 'warning');
   } else {
-    Toast.responseHandler(err, false);
+    Toast(err, {}, 'sentry');
   }
 };

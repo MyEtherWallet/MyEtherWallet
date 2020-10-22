@@ -1,4 +1,4 @@
-import unit from 'ethjs-unit';
+// import unit from 'ethjs-unit';
 import utils from 'web3-utils';
 import EthCalls from '../web3Calls';
 import {
@@ -37,7 +37,7 @@ export default async (
 ) => {
   if (payload.method !== 'eth_sendTransaction') return next();
   const tx = Object.assign({}, payload.params[0]);
-  tx.gasPrice = unit.toWei(store.state.gasPrice, 'gwei').toString();
+  tx.gasPrice = BigNumber(store.state.gasPrice).toFixed();
   const localTx = Object.assign({}, tx);
   delete localTx['gas'];
   delete localTx['nonce'];
@@ -78,7 +78,6 @@ export default async (
 
           _promiObj
             .once('transactionHash', hash => {
-              console.log(hash);
               if (store.state.instance !== null) {
                 const localStoredObj = locStore.get(
                   utils.sha3(store.state.instance.getChecksumAddressString())
@@ -96,7 +95,6 @@ export default async (
               res(null, toPayload(payload.id, hash));
             })
             .on('error', err => {
-              console.log(err);
               res(err);
             });
           setEvents(_promiObj, _tx, store.dispatch);
