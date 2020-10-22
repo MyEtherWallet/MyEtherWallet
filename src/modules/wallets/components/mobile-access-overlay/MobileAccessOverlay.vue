@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import Toast from '@/components/toast';
 import { WalletConnectWallet, WalletLinkWallet } from '@/modules/wallets/utils';
 import { mapActions } from 'vuex';
 export default {
@@ -78,8 +79,7 @@ export default {
             WalletConnectWallet.errorHandler(e);
           });
       } catch (e) {
-        // eslint-disable-next-line
-        console.log(e);
+        Toast(e, {}, 'error');
       }
     },
     openWalletLink() {
@@ -94,8 +94,7 @@ export default {
             WalletLinkWallet.errorHandler(e);
           });
       } catch (e) {
-        // eslint-disable-next-line
-        console.log(e);
+        Toast(e, {}, 'error');
       }
     },
     overlayClose() {

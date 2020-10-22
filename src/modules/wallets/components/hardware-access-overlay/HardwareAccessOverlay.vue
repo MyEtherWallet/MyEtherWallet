@@ -436,6 +436,7 @@
 <script>
 import qrcode from '@xkeshi/vue-qrcode';
 
+import Toast from '@/components/toast';
 import bcvaultWallet from '@/modules/wallets/utils/hardware/bcvault';
 import bitboxWallet from '@/modules/wallets/utils/hardware/bitbox';
 import bitbox02Wallet from '@/modules/wallets/utils/hardware/bitbox02';
@@ -837,8 +838,7 @@ export default {
           try {
             this.setAddresses();
           } catch (e) {
-            // eslint-disable-next-line
-            console.log(e);
+            newVal.errorHandler(e);
           }
         }
       }
@@ -923,8 +923,7 @@ export default {
           }
         }
       } catch (e) {
-        // eslint-disable-next-line
-        console.log(e);
+        Toast(e, {}, 'error');
       }
     },
     generateQr(code) {
@@ -1017,7 +1016,7 @@ export default {
         this.selectedAddress = this.accounts[0].address;
       } catch (e) {
         // eslint-disable-next-line
-        console.log(e);
+        this.hwWalletInstance.errorHandler(e)
       }
     },
     nextAddressSet() {
@@ -1040,11 +1039,11 @@ export default {
           })
           .catch(e => {
             // eslint-disable-next-line
-            console.log(e);
+            Toast(e, {}, 'error');
           });
       } catch (e) {
         // eslint-disable-next-line
-        console.log(e);
+        Toast(e, {}, 'error');
       }
     }
   }
