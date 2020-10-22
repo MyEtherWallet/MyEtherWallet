@@ -1,125 +1,13 @@
 <template>
-  <div class="mew-component--swap">
-    <div class="d-flex">
+  <div>
+    <div class="d-block d-lg-none">
+      <network mobile class="mb-4" />
+      <main-content class="mb-4" />
+      <tx-history title="Swap history" mobile />
+    </div>
+    <div class="d-none d-lg-flex">
       <div class="flex-grow-1">
-        <mew6-white-sheet>
-          <interface-wrap title="Swap">
-            <div class="d-flex">
-              <div>
-                <mew-select :items="coins" label="From" />
-                <mew-input label="Amount" placeholder=" " />
-              </div>
-              <div class="px-6 mb-8 d-flex align-center">
-                <img :src="swap" height="35" />
-              </div>
-              <div>
-                <mew-select :items="coins" label="To" />
-                <mew-input label="Amount" placeholder=" " />
-              </div>
-            </div>
-            <address-select
-              class="mt-5"
-              copy-tooltip="Copy"
-              save-tooltip="Save"
-              :enable-save-address="true"
-              label="label"
-              :items="addresses"
-              placeholder="Please enter an address"
-              success-toast="Success"
-              :is-valid-address="false"
-              @emitSelectedValue="getSelectedValue"
-            />
-
-            <div class="mt-5">
-              <div class="mew-heading-3">Select a provider</div>
-              <v-row>
-                <v-col cols="6" lg="6" sm="12">
-                  <v-card flat color="tableHeader" class="pa-6">
-                    <div class="d-flex align-center justify-space-between mb-3">
-                      <img
-                        :class="$vuetify.theme.dark ? 'invert' : ''"
-                        :src="kyber"
-                        alt="Kyber network"
-                        height="35"
-                      />
-                      <mew-checkbox />
-                    </div>
-                    <div class="font-weight-medium">1 ETH = 2.4235634 XMR</div>
-                    <div>0.01 ETH (From Min.)</div>
-                    <div>28.77344534 ETH (Max.)</div>
-                  </v-card>
-                </v-col>
-                <v-col>
-                  <v-card flat color="tableHeader" class="pa-6">
-                    <div class="d-flex align-center justify-space-between mb-3">
-                      <img
-                        :class="$vuetify.theme.dark ? 'invert' : ''"
-                        :src="changelly"
-                        alt="Changelly"
-                        height="35"
-                      />
-                      <mew-checkbox />
-                    </div>
-                    <div class="font-weight-medium">1 ETH = 2.4235634 XMR</div>
-                    <div>0.01 ETH (From Min.)</div>
-                    <div>28.77344534 ETH (Max.)</div>
-                  </v-card>
-                </v-col>
-                <v-col>
-                  <v-card disabled flat color="tableHeader" class="pa-6">
-                    <div class="d-flex align-center justify-space-between mb-3">
-                      <img
-                        :class="$vuetify.theme.dark ? 'invert' : ''"
-                        :src="simplex"
-                        alt="Simplex"
-                        height="35"
-                      />
-                      <div>Not Available</div>
-                    </div>
-                    <div>Buy crypto with a credit card.</div>
-                  </v-card>
-                </v-col>
-                <v-col>
-                  <v-card disabled flat color="tableHeader" class="pa-6">
-                    <div class="d-flex align-center justify-space-between mb-3">
-                      <img :src="bity" alt="Bity" height="35" />
-                      <div>Not Available</div>
-                    </div>
-                    <div>Swap ETH and ERC20 tokens.</div>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </div>
-
-            <mew-expand-panel
-              is-toggle
-              has-dividers
-              :panel-items="exPannel"
-              class="mt-4 mb-10 swap-expend"
-            >
-              <template #panelBody1>
-                <mew-input
-                  label="Gas Price"
-                  placeholder=" "
-                  right-label="Gwei"
-                />
-                <mew-input
-                  label="Gas Limit"
-                  placeholder=" "
-                  right-label="Wei"
-                />
-              </template>
-            </mew-expand-panel>
-
-            <div class="text-center">
-              <mew-button
-                title="Swap"
-                :has-full-width="false"
-                button-size="xlarge"
-              />
-            </div>
-          </interface-wrap>
-        </mew6-white-sheet>
+        <main-content />
       </div>
       <div class="pa-4"></div>
       <div>
@@ -140,86 +28,21 @@ import Network from '@/modules/wallets/components/network/Network';
 import Swap from '@/modules/wallets/components/swap/Swap';
 import txHistory from '@/modules/wallets/components/transaction-history/TransactionHistory';
 import myTokenValue from '@/modules/wallets/components/my-token-value/MyTokenValue';
-import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
-import eth from '@/assets/images/currencies/icon-eth-blue.svg';
-import SwapIcon from '@/assets/images/icons/icon-swap.svg';
-import KyberNetwork from '@/assets/images/icons/icon-kyber-network.svg';
-import Changelly from '@/assets/images/icons/icon-changelly.png';
-import Simplex from '@/assets/images/icons/icon-simplex.png';
-import Bity from '@/assets/images/icons/icon-bity.png';
+import mainContent from './components/main-content/MainContent';
 
 export default {
   components: {
     network: Network,
     swap: Swap,
-    'interface-wrap': InterfaceWrap,
     txHistory,
-    myTokenValue
+    myTokenValue,
+    mainContent
   },
   data() {
-    return {
-      exPannel: [
-        {
-          name: 'Transaction Fee',
-          subtext: '$0.077',
-          tooltip:
-            'Transaction fee is automatically caculated. If you want to customize the Transaction fee, you can do it from here.'
-        }
-      ],
-      swap: SwapIcon,
-      kyber: KyberNetwork,
-      changelly: Changelly,
-      simplex: Simplex,
-      bity: Bity,
-      addresses: [
-        {
-          address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
-          currency: 'ETH',
-          nickname: 'My Address',
-          resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-        },
-        {
-          address: '0x43689531907482BEE7e650D18411E284A7337A66',
-          currency: 'ETH',
-          nickname: 'nickname',
-          resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-        }
-      ],
-      coins: [
-        {
-          name: 'ETH',
-          subtext: 'Ethereum',
-          value: 'Ethereum',
-          img: eth
-        }
-      ]
-    };
+    return {};
   },
-  methods: {
-    getSelectedValue(value) {
-      this.addressValue = value;
-    }
-  }
+  methods: {}
 };
 </script>
 
-<style lang="scss" scoped>
-.v-input--selection-controls {
-  padding: 0;
-  margin: 0;
-}
-
-.invert {
-  filter: invert(100%);
-}
-</style>
-
-<style lang="scss">
-.mew-component--swap {
-  .swap-expend {
-    .v-application .white {
-      background-color: transparent !important;
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>
