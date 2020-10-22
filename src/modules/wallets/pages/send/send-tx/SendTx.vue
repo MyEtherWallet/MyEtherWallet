@@ -138,6 +138,7 @@ import BigNumber from 'bignumber.js';
 
 import SendTransaction from './index';
 import { ETH } from '@/utils/networks/types';
+import Toast from '@/components/toast';
 
 export default {
   props: {
@@ -240,7 +241,7 @@ export default {
       if (this.validInputs) this.customGasLimit = this.sendTx.estimateGas();
     }, 500),
     network(newVal) {
-      if (this.online && newVal.type.name === 'ETH') this.getEthPrice();
+      if (this.online && this.isEth) this.getEthPrice();
       this.setSendTransaction();
     },
     isPrefilled() {
@@ -314,13 +315,11 @@ export default {
               this.customGasLimit = BigNumber(res).toString();
             })
             .catch(e => {
-              // esling-disable-next-line
-              console.log(e);
+              Toast(e, {}, 'error');
             });
         }
       } catch (e) {
-        // esling-disable-next-line
-        console.log(e);
+        Toast(e, {}, 'error');
       }
     },
     send() {
@@ -334,8 +333,16 @@ export default {
           this.selectedCurrency.contract
         )
         .then(response => {
-          // eslint-disable-next-line
-          console.log('response', response);
+          Toast(
+            "Cheers! Your transaction is being processed. A notification will be sent to you when it's completed. Track in ",
+            {
+              title: 'EthVM',
+              url: this.network.type.blockExplorerTX.replace(
+                '[[txHash]]',
+                response
+              )
+            }
+          );
         })
         .catch(error => {
           this.error = error;

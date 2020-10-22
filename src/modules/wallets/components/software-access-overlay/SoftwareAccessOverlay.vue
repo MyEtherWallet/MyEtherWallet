@@ -68,6 +68,7 @@ import {
 } from '@/modules/wallets/utils/bip44/walletTypes';
 import { mapActions, mapState } from 'vuex';
 import { unlockKeystore } from '@/modules/wallets/utils/helpers.js';
+import Toast from '@/components/toast';
 
 const TITLES = {
   keystoreFile: 'Keystore File',
@@ -218,13 +219,11 @@ export default {
               }
             })
             .catch(e => {
-              // eslint-disable-next-line
-              console.log(e);
+              Toast(e, {}, 'error');
             });
         })
         .catch(e => {
-          // eslint-disable-next-line
-          console.log(e);
+          Toast(e, {}, 'error');
         });
     },
     unlockPrivateKeyWallet(privateKey) {
@@ -242,8 +241,7 @@ export default {
           }
         })
         .catch(e => {
-          // eslint-disable-next-line
-          console.log(e);
+          Toast(e, {}, 'error');
         });
     },
     unlockMnemonicWallet(phrase, password = '') {
@@ -266,12 +264,10 @@ export default {
             }
           })
           .catch(e => {
-            // eslint-disable-next-line
-            console.log(e);
+            Toast(e, {}, 'error');
           });
       } catch (e) {
-        // eslint-disable-next-line
-        console.log(e);
+        Toast(e, {}, 'error');
       }
     },
     accessBack() {

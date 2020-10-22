@@ -107,6 +107,7 @@
 </template>
 
 <script>
+import Toast from '@/components/toast';
 import Wallet from 'ethereumjs-wallet';
 import { createBlob } from '@/modules/wallets/utils/helpers.js';
 export default {
@@ -172,11 +173,11 @@ export default {
             this.name = wallet.getV3Filename();
             this.updateStep(2);
           })
-          // eslint-disable-next-line
-          .catch(console.log);
+          .catch(e => {
+            Toast(e, {}, 'error');
+          });
       } catch (e) {
-        // eslint-disable-next-line
-        console.log(e);
+        Toast(e, {}, 'error');
       }
     },
     downloadWallet() {
