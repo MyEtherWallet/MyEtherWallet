@@ -244,12 +244,12 @@ h6 {
     height: 2px;
   }
   &::-webkit-scrollbar-button {
-    width: 0px;
-    height: 0px;
+    width: 0;
+    height: 0;
   }
   &::-webkit-scrollbar-thumb {
     background: #4f4f4f;
-    border: 0px none #ffffff;
+    border: 0 none #fff;
     border-radius: 50px;
   }
   &::-webkit-scrollbar-thumb:hover {
@@ -260,7 +260,7 @@ h6 {
   }
   &::-webkit-scrollbar-track {
     background: #e1dfdf;
-    border: 0px none #ffffff;
+    border: 0 none #fff;
     border-radius: 39px;
   }
   &::-webkit-scrollbar-track:hover {

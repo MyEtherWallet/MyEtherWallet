@@ -3,8 +3,8 @@
     <div class="d-block d-lg-none">
       <network mobile class="mb-4" />
       <myEthBalance mobile class="mb-4" />
-      <main-content class="mb-4" />
-      <txHistory mobile />
+      <main-content title="Transaction history" class="mb-4" />
+      <tx-history mobile />
     </div>
 
     <div class="d-none d-lg-flex">
@@ -16,7 +16,9 @@
         <div>
           <network />
           <div class="pa-4"></div>
-          <txHistory />
+          <tx-history title="Transaction history" />
+          <div class="pa-4"></div>
+          <myEthBalance />
           <div class="pa-4"></div>
           <swap />
         </div>

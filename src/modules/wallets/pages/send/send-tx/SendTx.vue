@@ -4,7 +4,7 @@
       <network mobile class="mb-4" />
       <myEthBalance mobile class="mb-4" />
       <main-content class="mb-4" />
-      <txHistory mobile />
+      <tx-history title="Transaction history" mobile />
     </div>
 
     <div class="d-none d-lg-flex">
@@ -15,7 +15,7 @@
       <div>
         <network />
         <div class="pa-4"></div>
-        <txHistory />
+        <tx-history title="Transaction history" />
         <div class="pa-4"></div>
         <myEthBalance />
         <div class="pa-4"></div>

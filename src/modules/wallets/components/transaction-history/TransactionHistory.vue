@@ -2,7 +2,7 @@
   <div class="mew-component--side-info-tx-history">
     <mew6-white-sheet :sideinfo="!mobile" class="px-7 py-5">
       <div class="d-flex align-center justify-space-between">
-        <div class="mew-heading-2">Transaction history</div>
+        <div class="mew-heading-2">{{ title }}</div>
         <div class="primary--text font-weight--500">EthVM</div>
       </div>
 
@@ -60,6 +60,10 @@ export default {
     mobile: {
       type: Boolean,
       default: false
+    },
+    title: {
+      type: String,
+      default: ''
     }
   },
   data() {

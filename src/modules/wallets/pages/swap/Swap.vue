@@ -125,6 +125,10 @@
       <div>
         <network />
         <div class="pa-4"></div>
+        <tx-history title="Swap history" mobile />
+        <div class="pa-4"></div>
+        <myTokenValue />
+        <div class="pa-4"></div>
         <swap />
       </div>
     </div>
@@ -134,7 +138,8 @@
 <script>
 import Network from '@/modules/wallets/components/network/Network';
 import Swap from '@/modules/wallets/components/swap/Swap';
-
+import txHistory from '@/modules/wallets/components/transaction-history/TransactionHistory';
+import myTokenValue from '@/modules/wallets/components/my-token-value/MyTokenValue';
 import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
@@ -147,7 +152,9 @@ export default {
   components: {
     network: Network,
     swap: Swap,
-    'interface-wrap': InterfaceWrap
+    'interface-wrap': InterfaceWrap,
+    txHistory,
+    myTokenValue
   },
   data() {
     return {
