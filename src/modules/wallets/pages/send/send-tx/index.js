@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
-import { getGasBasedOnType } from './helpers/gasMultipler';
+import { getGasBasedOnType } from '@/helpers/gasPriceHelper.js';
 import sanitizeHex from '@/helpers/sanitizeHex';
 import validateHexString from '@/helpers/validateHexString';
 import { Transaction } from 'ethereumjs-tx';
