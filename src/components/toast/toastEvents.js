@@ -1,5 +1,6 @@
 export default {
   success: 'toastSuccess',
   warning: 'toastWarning',
-  error: 'toastError'
+  error: 'toastError',
+  info: 'toastInfo'
 };

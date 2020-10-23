@@ -27,6 +27,8 @@ import EventNames from '@/utils/web3-provider/events.js';
 import transactionConfirmation from './transaction-confirmation/TransactionConfirmation';
 import utils from 'web3-utils';
 import { mapState } from 'vuex';
+
+import { EventBus } from '@/plugins/eventBus';
 export default {
   name: 'ConfirmationContainer',
   components: {
@@ -65,7 +67,7 @@ export default {
   },
   created() {
     const _self = this;
-    this.$eventHub.$on(EventNames.SHOW_TX_CONFIRM_MODAL, (tx, resolver) => {
+    EventBus.$on(EventNames.SHOW_TX_CONFIRM_MODAL, (tx, resolver) => {
       _self.title = 'Transaction Confirmation';
       _self.tx = tx;
       _self.resolver = resolver;

@@ -12,6 +12,8 @@ import { getSanitizedTx } from './utils';
 import BigNumber from 'bignumber.js';
 import sanitizeHex from '@/helpers/sanitizeHex';
 
+import { EventBus } from '@/plugins/eventBus';
+
 const setEvents = (promiObj, tx, dispatch) => {
   promiObj
     .once('transactionHash', hash => {
@@ -30,11 +32,7 @@ const setEvents = (promiObj, tx, dispatch) => {
       });
     });
 };
-export default async (
-  { payload, store, requestManager, eventHub },
-  res,
-  next
-) => {
+export default async ({ payload, store, requestManager }, res, next) => {
   if (payload.method !== 'eth_sendTransaction') return next();
   const tx = Object.assign({}, payload.params[0]);
   tx.gasPrice = BigNumber(store.state.gasPrice).toFixed();
@@ -60,7 +58,7 @@ export default async (
         store.state.identifier === WEB3_WALLET ||
         store.state.identifier === WALLET_CONNECT
       ) {
-        eventHub.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx, _promiObj => {
+        EventBus.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx, _promiObj => {
           setEvents(_promiObj, _tx, store.dispatch);
           _promiObj
             .once('transactionHash', hash => {
@@ -71,7 +69,7 @@ export default async (
             });
         });
       } else {
-        eventHub.$emit(EventNames.SHOW_TX_CONFIRM_MODAL, _tx, _response => {
+        EventBus.$emit(EventNames.SHOW_TX_CONFIRM_MODAL, _tx, _response => {
           const _promiObj = store.state.web3.eth.sendSignedTransaction(
             _response.rawTransaction
           );

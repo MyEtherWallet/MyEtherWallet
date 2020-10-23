@@ -219,11 +219,11 @@ export default {
               }
             })
             .catch(e => {
-              Toast(e, {}, 'error');
+              Toast(e.message, {}, 'error');
             });
         })
         .catch(e => {
-          Toast(e, {}, 'error');
+          Toast(e.message, {}, 'error');
         });
     },
     unlockPrivateKeyWallet(privateKey) {
@@ -241,7 +241,7 @@ export default {
           }
         })
         .catch(e => {
-          Toast(e, {}, 'error');
+          Toast(e.message, {}, 'error');
         });
     },
     unlockMnemonicWallet(phrase, password = '') {
@@ -264,10 +264,10 @@ export default {
             }
           })
           .catch(e => {
-            Toast(e, {}, 'error');
+            Toast(e.message, {}, 'error');
           });
       } catch (e) {
-        Toast(e, {}, 'error');
+        Toast(e.message, {}, 'error');
       }
     },
     accessBack() {

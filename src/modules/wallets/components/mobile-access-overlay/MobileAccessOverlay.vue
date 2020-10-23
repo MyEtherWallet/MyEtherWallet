@@ -79,7 +79,7 @@ export default {
             WalletConnectWallet.errorHandler(e);
           });
       } catch (e) {
-        Toast(e, {}, 'error');
+        Toast(e.message, {}, 'error');
       }
     },
     openWalletLink() {
@@ -94,7 +94,7 @@ export default {
             WalletLinkWallet.errorHandler(e);
           });
       } catch (e) {
-        Toast(e, {}, 'error');
+        Toast(e.message, {}, 'error');
       }
     },
     overlayClose() {

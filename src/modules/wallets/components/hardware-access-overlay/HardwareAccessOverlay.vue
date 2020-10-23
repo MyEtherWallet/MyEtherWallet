@@ -923,7 +923,7 @@ export default {
           }
         }
       } catch (e) {
-        Toast(e, {}, 'error');
+        Toast(e.message, {}, 'error');
       }
     },
     generateQr(code) {
@@ -1039,11 +1039,11 @@ export default {
           })
           .catch(e => {
             // eslint-disable-next-line
-            Toast(e, {}, 'error');
+            Toast(e.message, {}, 'error');
           });
       } catch (e) {
         // eslint-disable-next-line
-        Toast(e, {}, 'error');
+        Toast(e.message, {}, 'error');
       }
     }
   }
