@@ -2,7 +2,6 @@ import ToastEvents from './toastEvents';
 import Vue from 'vue';
 import * as Sentry from '@sentry/browser';
 export default (text, link, type) => {
-  const instance = new Vue();
   const acceptableTypes = ['success', 'error', 'warning', 'sentry'];
   if (!acceptableTypes.includes(type)) {
     throw new Error(
@@ -14,6 +13,5 @@ export default (text, link, type) => {
     Sentry.captureException(text);
     return;
   }
-  console.log(instance.$eventHub);
   Vue.$eventHub.$emit(ToastEvents[type], text, link, type);
 };
