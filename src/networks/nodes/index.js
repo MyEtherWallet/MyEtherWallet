@@ -1,5 +1,6 @@
 import akaremote from './aka-remote';
 import ath from './ath';
+import bscMainnet from './bsc-mainnet';
 import clo from './clo';
 import egem from './egem';
 import ella from './ella';
@@ -61,6 +62,7 @@ import ewt from './ewt';
 export {
   akaremote,
   ath,
+  bscMainnet,
   clo,
   egem,
   ella,
