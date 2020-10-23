@@ -1,4 +1,4 @@
-import Toast from '@/components/toast';
+import { Toast, WARNING, ERROR, SENTRY } from '@/components/toast';
 import Vue from 'vue';
 
 const ERRORS = {
@@ -15,13 +15,13 @@ const ERRORS = {
   'Unsupported device': 'bitbox02Error.unsupported-device'
 };
 
-const WARNING = {
+const WARNINGS = {
   'Attestation failed': 'bitbox02Error.attestation-failed'
 };
 
 export default err => {
   const errorValues = Object.keys(ERRORS);
-  const warningValues = Object.keys(WARNING);
+  const warningValues = Object.keys(WARNINGS);
   const foundError = errorValues.find(item => {
     return (
       item.includes(err.message) ||
@@ -36,10 +36,10 @@ export default err => {
   });
 
   if (foundError) {
-    Toast(Vue.$i18n.t(ERRORS[foundError]), {}, 'error');
+    Toast(Vue.$i18n.t(ERRORS[foundError]), {}, ERROR);
   } else if (foundWarning) {
-    Toast(Vue.$i18n.t(WARNING[foundWarning]), {}, 'warning');
+    Toast(Vue.$i18n.t(WARNINGS[foundWarning]), {}, WARNING);
   } else {
-    Toast(err, {}, 'sentry');
+    Toast(err, {}, SENTRY);
   }
 };

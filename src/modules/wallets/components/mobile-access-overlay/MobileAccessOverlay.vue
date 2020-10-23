@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import Toast from '@/components/toast';
+import { Toast, SENTRY } from '@/components/toast';
 import { WalletConnectWallet, WalletLinkWallet } from '@/modules/wallets/utils';
 import { mapActions } from 'vuex';
 export default {
@@ -79,7 +79,7 @@ export default {
             WalletConnectWallet.errorHandler(e);
           });
       } catch (e) {
-        Toast(e.message, {}, 'error');
+        Toast(e.message, {}, SENTRY);
       }
     },
     openWalletLink() {
@@ -94,7 +94,7 @@ export default {
             WalletLinkWallet.errorHandler(e);
           });
       } catch (e) {
-        Toast(e.message, {}, 'error');
+        Toast(e.message, {}, SENTRY);
       }
     },
     overlayClose() {

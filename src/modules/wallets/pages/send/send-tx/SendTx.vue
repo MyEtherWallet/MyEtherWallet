@@ -138,7 +138,7 @@ import BigNumber from 'bignumber.js';
 
 import SendTransaction from './index';
 import { ETH } from '@/utils/networks/types';
-import Toast from '@/components/toast';
+import { Toast, ERROR, SENTRY, SUCCESS } from '@/components/toast';
 
 export default {
   props: {
@@ -240,7 +240,7 @@ export default {
     multiwatch: utils._.debounce(function () {
       if (this.validInputs) this.customGasLimit = this.sendTx.estimateGas();
     }, 500),
-    network(newVal) {
+    network() {
       if (this.online && this.isEth) this.getEthPrice();
       this.setSendTransaction();
     },
@@ -315,11 +315,11 @@ export default {
               this.customGasLimit = BigNumber(res).toString();
             })
             .catch(e => {
-              Toast(e.message, {}, 'error');
+              Toast(e, {}, ERROR);
             });
         }
       } catch (e) {
-        Toast(e.message, {}, 'error');
+        Toast(e, {}, SENTRY);
       }
     },
     send() {
@@ -333,6 +333,7 @@ export default {
           this.selectedCurrency.contract
         )
         .then(response => {
+          console.log(response);
           Toast(
             "Cheers! Your transaction is being processed. A notification will be sent to you when it's completed. Track in ",
             {
@@ -342,7 +343,8 @@ export default {
                 response
               )
             },
-            'success'
+            SUCCESS,
+            5000
           );
         })
         .catch(error => {

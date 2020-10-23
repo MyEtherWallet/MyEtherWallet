@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { v4 as uuid } from 'uuid';
-import { Toast } from '@/helpers';
+import { Toast, ERROR } from '@/components/toast';
 
 import {
   INVESTIGATE_FAILURE_KEY,
@@ -102,7 +102,7 @@ const formatTransactionHash = (val, network) => {
       expanded: false
     };
   } catch (e) {
-    Toast.responseHandler('error-parsing-tx-details', 3);
+    Toast('error-parsing-tx-details', {}, ERROR);
   }
 };
 

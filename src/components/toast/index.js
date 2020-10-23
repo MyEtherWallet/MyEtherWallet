@@ -1,7 +1,12 @@
 import ToastEvents from './toastEvents';
 import { EventBus } from '@/plugins/eventBus';
 import * as Sentry from '@sentry/browser';
-export default (text, link, type) => {
+const SUCCESS = 'success';
+const ERROR = 'error';
+const WARNING = 'warning';
+const INFO = 'info';
+const SENTRY = 'sentry';
+const Toast = (text, link, type) => {
   const acceptableTypes = ['success', 'error', 'warning', 'info', 'sentry'];
   if (!type && !acceptableTypes.includes(type)) {
     throw new Error(
@@ -18,3 +23,5 @@ export default (text, link, type) => {
   }
   EventBus.$emit(ToastEvents[type], text, link);
 };
+
+export { SUCCESS, ERROR, WARNING, INFO, Toast, SENTRY };

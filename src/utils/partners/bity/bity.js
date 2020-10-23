@@ -5,7 +5,6 @@ import {
   swapNotificationStatuses
 } from '../partnersConfig';
 import { utils } from '../helpers';
-import Toast from '@/components/toast';
 import {
   getRates,
   openOrder,
@@ -30,6 +29,8 @@ import {
   FIAT_MIN,
   FIAT_MAX
 } from './config';
+
+import { Toast, SENTRY } from '@/components/toast';
 
 function disabledPairing(currencyList, symbol, invalid, side) {
   if (currencyList[symbol]) {
@@ -485,7 +486,7 @@ export default class BitySwap {
         }
       }
     } catch (e) {
-      Toast(e, {}, 'sentry');
+      Toast(e, {}, SENTRY);
     }
     return swapNotificationStatuses.PENDING;
   }
@@ -518,7 +519,7 @@ export default class BitySwap {
           return swapNotificationStatuses.CANCELLED;
       }
     } catch (e) {
-      Toast.responseHandler(e, false);
+      Toast.responseHandler(e, {}, SENTRY);
     }
     return swapNotificationStatuses.PENDING;
   }

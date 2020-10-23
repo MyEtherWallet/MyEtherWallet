@@ -68,7 +68,7 @@ import {
 } from '@/modules/wallets/utils/bip44/walletTypes';
 import { mapActions, mapState } from 'vuex';
 import { unlockKeystore } from '@/modules/wallets/utils/helpers.js';
-import Toast from '@/components/toast';
+import { Toast, ERROR, SENTRY } from '@/components/toast';
 
 const TITLES = {
   keystoreFile: 'Keystore File',
@@ -210,20 +210,10 @@ export default {
             JSON.stringify(obj)
           );
 
-          this.setWallet([walletInstance])
-            .then(() => {
-              if (this.path !== '') {
-                this.$router.push({ path: this.path });
-              } else {
-                this.$router.push({ name: 'Wallets' });
-              }
-            })
-            .catch(e => {
-              Toast(e.message, {}, 'error');
-            });
+          this.setAddress(walletInstance);
         })
         .catch(e => {
-          Toast(e.message, {}, 'error');
+          Toast(e.message, {}, ERROR);
         });
     },
     unlockPrivateKeyWallet(privateKey) {
@@ -241,7 +231,7 @@ export default {
           }
         })
         .catch(e => {
-          Toast(e.message, {}, 'error');
+          Toast(e, {}, SENTRY);
         });
     },
     unlockMnemonicWallet(phrase, password = '') {
@@ -264,10 +254,10 @@ export default {
             }
           })
           .catch(e => {
-            Toast(e.message, {}, 'error');
+            Toast(e, {}, SENTRY);
           });
       } catch (e) {
-        Toast(e.message, {}, 'error');
+        Toast(e, {}, SENTRY);
       }
     },
     accessBack() {

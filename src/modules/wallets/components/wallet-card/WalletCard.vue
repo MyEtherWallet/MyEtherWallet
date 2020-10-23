@@ -73,7 +73,7 @@ import qrCodePopup from '@/modules/wallets/components/qr-code-popup/QRcodePopup'
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import clipboardCopy from 'clipboard-copy';
-import Toast from '@/components/toast';
+import { Toast, INFO } from '@/components/toast';
 
 export default {
   components: {
@@ -109,7 +109,7 @@ export default {
     },
     copyAddress() {
       clipboardCopy(this.address);
-      Toast(`Copied ${this.address} successfully!`, {}, 'info');
+      Toast(`Copied ${this.address} successfully!`, {}, INFO);
     }
   }
 };

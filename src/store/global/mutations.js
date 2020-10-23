@@ -1,5 +1,5 @@
 import store from 'store';
-
+import { Toast, ERROR } from '@/components/toast';
 const SET_ONLINE_STATUS = async function (state, status) {
   state.online = status;
   if (state.online) {
@@ -7,10 +7,8 @@ const SET_ONLINE_STATUS = async function (state, status) {
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/addresses/addresses-darklist.json'
     )
       .then(res => res.json())
-      .catch(() => {
-        // eslint-disable-next-line
-        console.log('ERROR FETCHING GITHUB ADDRESES');
-        // Toast.responseHandler(e, Toast.ERROR);
+      .catch(e => {
+        Toast(e.message, {}, ERROR);
       });
     state.darklist = {
       data: darkList,

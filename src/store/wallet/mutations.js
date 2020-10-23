@@ -1,5 +1,4 @@
 import store from 'store';
-// import { Toast } from '@/helpers';
 
 const ADD_NOTIFICATION = function (state, newNotif) {
   state.notifications = newNotif;

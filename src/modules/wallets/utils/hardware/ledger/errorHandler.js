@@ -1,4 +1,4 @@
-import Toast from '@/components/toast';
+import { Toast, WARNING, ERROR, SENTRY } from '@/components/toast';
 import Vue from 'vue';
 const ERRORS = {
   'Failed to sign with Ledger device: U2F TIMEOUT':
@@ -37,7 +37,7 @@ const ERRORS = {
   'No WebUSB interface found for your Ledger device. Please upgrade firmware or contact techsupport.':
     'ledgerError.no-interface-found'
 };
-const WARNING = {
+const WARNINGS = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':
     'ledgerError.denied-by-user-0x6985',
   "U2F browser support is needed for Ledger. Please use Chrome, Opera or Firefox with a U2F extension. Also make sure you're on an HTTPS connection":
@@ -49,7 +49,7 @@ export default err => {
     ? err.message.substr(err.message.indexOf('Expected'), err.message.length)
     : err.substr(err.indexOf('Expected'), err.message);
   const errorValues = Object.keys(ERRORS);
-  const warningValues = Object.keys(WARNING);
+  const warningValues = Object.keys(WARNINGS);
   const foundError = errorValues.find(item => {
     if (err && err.message.includes(item)) return item;
     return item.includes(err.message) || item.includes(err);
@@ -61,10 +61,10 @@ export default err => {
   });
 
   if (foundError) {
-    Toast(`${Vue.$i18n.t(ERRORS[foundError])}${expected}`, {}, 'error');
+    Toast(`${Vue.$i18n.t(ERRORS[foundError])}${expected}`, {}, ERROR);
   } else if (foundWarning) {
-    Toast(`${Vue.$i18n.t(WARNING[foundWarning])}${expected}`, {}, 'warning');
+    Toast(`${Vue.$i18n.t(WARNINGS[foundWarning])}${expected}`, {}, WARNING);
   } else {
-    Toast(err, {}, 'sentry');
+    Toast(err, {}, SENTRY);
   }
 };
