@@ -163,6 +163,8 @@ Sentry.init({
       service: service,
       walletType: identifier
     };
+    // eslint-disable-next-line
+    console.log(event)
     return new Promise(resolve => {
       EventBus.$emit('issueModal', event, resolve);
     }).then(res => {

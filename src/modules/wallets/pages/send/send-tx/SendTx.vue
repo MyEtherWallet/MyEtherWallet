@@ -332,11 +332,7 @@ export default {
           this.data,
           this.selectedCurrency.contract
         )
-        .once('transactionHash', res => {
-          console.log(res);
-        })
         .then(response => {
-          console.log(response);
           Toast(
             'Cheers! Your transaction was mined. Check it in ',
             {

@@ -16,6 +16,9 @@
           :nonce="nonce"
           :network="network"
           :send="send"
+          :tx-fee="txFee"
+          :tx-fee-usd="txFeeUSD"
+          :value="value"
         />
       </template>
     </mew-overlay>
@@ -27,6 +30,7 @@ import EventNames from '@/utils/web3-provider/events.js';
 import transactionConfirmation from './transaction-confirmation/TransactionConfirmation';
 import utils from 'web3-utils';
 import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
 
 import { EventBus } from '@/plugins/eventBus';
 export default {
@@ -45,7 +49,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['network', 'instance']),
+    ...mapState('wallet', ['network', 'instance', 'usd']),
     to() {
       return this.tx.to;
     },
@@ -56,13 +60,24 @@ export default {
       return this.tx.data;
     },
     gasPrice() {
-      return utils.hexToNumberString(this.tx.gasPrice);
+      return utils.fromWei(utils.hexToNumberString(this.tx.gasPrice), 'gwei');
     },
     gasLimit() {
       return utils.hexToNumberString(this.tx.gasLimit);
     },
     nonce() {
       return utils.hexToNumber(this.tx.nonce);
+    },
+    txFee() {
+      return utils.fromWei(
+        BigNumber(this.tx.gasPrice).times(this.tx.gasLimit).toFixed()
+      );
+    },
+    txFeeUSD() {
+      return BigNumber(this.txFee).times(this.usd).toFixed(2);
+    },
+    value() {
+      return utils.hexToNumberString(this.tx.value);
     }
   },
   created() {
@@ -71,7 +86,6 @@ export default {
       _self.title = 'Transaction Confirmation';
       _self.tx = tx;
       _self.resolver = resolver;
-
       _self.instance
         .signTransaction(tx)
         .then(res => {
