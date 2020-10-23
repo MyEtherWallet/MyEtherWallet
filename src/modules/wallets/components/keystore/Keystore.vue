@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import Toast from '@/components/toast';
+import { Toast, SENTRY, ERROR } from '@/components/toast';
 import Wallet from 'ethereumjs-wallet';
 import { createBlob } from '@/modules/wallets/utils/helpers.js';
 export default {
@@ -174,10 +174,10 @@ export default {
             this.updateStep(2);
           })
           .catch(e => {
-            Toast(e.message, {}, 'error');
+            Toast(e.message, {}, ERROR);
           });
       } catch (e) {
-        Toast(e.message, {}, 'error');
+        Toast(e, {}, SENTRY);
       }
     },
     downloadWallet() {

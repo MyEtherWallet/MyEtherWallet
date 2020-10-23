@@ -436,7 +436,7 @@
 <script>
 import qrcode from '@xkeshi/vue-qrcode';
 
-import Toast from '@/components/toast';
+import { Toast, ERROR } from '@/components/toast';
 import bcvaultWallet from '@/modules/wallets/utils/hardware/bcvault';
 import bitboxWallet from '@/modules/wallets/utils/hardware/bitbox';
 import bitbox02Wallet from '@/modules/wallets/utils/hardware/bitbox02';
@@ -923,7 +923,7 @@ export default {
           }
         }
       } catch (e) {
-        Toast(e.message, {}, 'error');
+        Toast(e.message, {}, ERROR);
       }
     },
     generateQr(code) {
@@ -1015,8 +1015,7 @@ export default {
         this.currentIdx += MAX_ADDRESSES;
         this.selectedAddress = this.accounts[0].address;
       } catch (e) {
-        // eslint-disable-next-line
-        this.hwWalletInstance.errorHandler(e)
+        this.hwWalletInstance.errorHandler(e);
       }
     },
     nextAddressSet() {
@@ -1038,12 +1037,10 @@ export default {
             this.$router.push({ name: 'Dashboard' });
           })
           .catch(e => {
-            // eslint-disable-next-line
-            Toast(e.message, {}, 'error');
+            Toast(e.message, {}, ERROR);
           });
       } catch (e) {
-        // eslint-disable-next-line
-        Toast(e.message, {}, 'error');
+        Toast(e.message, {}, ERROR);
       }
     }
   }

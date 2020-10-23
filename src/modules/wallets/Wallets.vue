@@ -45,7 +45,7 @@ import {
   getEconomy
 } from '@/helpers/gasPriceHelper.js';
 
-import { EventBus } from '@/plugins/eventBus';
+import { Toast, ERROR } from '@/components/toast';
 
 export default {
   components: {
@@ -133,7 +133,7 @@ export default {
               this.manualBlockSubscription();
               return;
             }
-            EventBus.$emit(error.message, {}, 'error');
+            Toast(error.message, {}, ERROR);
           }
         })
         .on('data', res => {
@@ -142,11 +142,16 @@ export default {
     },
     manualBlockSubscription() {
       const _self = this;
-      this.manualBlockFetch = setInterval(() => {
-        _self.web3.eth.getBlockNumber().then(res => {
-          _self.setBlockNumber(res);
-        });
-      }, 14000);
+      // fetch initially
+      _self.web3.eth.getBlockNumber().then(res => {
+        _self.setBlockNumber(res);
+        // rerun in 14 secs
+        _self.manualBlockFetch = setInterval(() => {
+          _self.web3.eth.getBlockNumber().then(res => {
+            _self.setBlockNumber(res);
+          });
+        }, 14000);
+      });
     }
   }
 };

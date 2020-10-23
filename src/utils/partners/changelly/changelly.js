@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 
 import { networkSymbols } from '../partnersConfig';
-import Toast from '@/components/toast';
+import { Toast, WARNING, ERROR, SENTRY } from '@/components/toast';
 import {
   notificationStatuses,
   ChangellyCurrencies,
@@ -342,7 +342,7 @@ export default class Changelly {
       );
       return Changelly.parseChangellyStatus(status);
     } catch (e) {
-      Toast(e, {}, 'sentry');
+      Toast(e, {}, SENTRY);
     }
   }
 

@@ -67,7 +67,6 @@ export default {
       return Object.values(obj)[0];
     },
     callToast(ref) {
-      console.log(ref, this.$refs);
       this.$refs[ref][0].showToast();
     }
   }

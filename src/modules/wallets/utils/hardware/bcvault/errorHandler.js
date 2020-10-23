@@ -1,4 +1,4 @@
-import Toast from '@/components/toast';
+import { Toast, WARNING, ERROR, SENTRY } from '@/components/toast';
 import Vue from 'vue';
 const ERRORS = {
   27010: 'bcvaultError.invalid-device-pin-or-password',
@@ -9,7 +9,7 @@ const ERRORS = {
   40449: 'bcvaultError.user-cancelled-action',
   daemonError0x6901: 'bcvaultError.daemon0x6901'
 };
-const WARNING = {
+const WARNINGS = {
   jsError1: 'bcvaultError.browser-popup',
   jsErrormew1: 'bcvaultError.only-one-wallet',
   jsErrormew2: 'bcvaultError.can-only-sign-eth',
@@ -21,23 +21,23 @@ const WARNING = {
 export default err => {
   // web errors
   if (err.hasOwnProperty('jsError')) {
-    Toast(Vue.$i18n.t(WARNING[`jsError${err.jsError}`]), {}, 'warning');
+    Toast(Vue.$i18n.t(WARNINGS[`jsError${err.jsError}`]), {}, WARNING);
     return;
   } else if (err.hasOwnProperty('BCHttpResponse')) {
     // request succeded but the device returned error
-    Toast(Vue.$i18n.t(ERRORS[err.BCHttpResponse.errorCode]), {}, 'error');
+    Toast(Vue.$i18n.t(ERRORS[err.BCHttpResponse.errorCode]), {}, ERROR);
     return;
   } else if (err.hasOwnProperty('HttpResponse')) {
     // request when the server errors
-    Toast(err.HttpResponse, false);
+    Toast(err.HttpResponse, {}, SENTRY);
   } else if (err.hasOwnProperty('DaemonHttpResponse')) {
     Toast(
       Vue.$i18n.t(ERRORS[`daemonError${err.DaemonHttpResponse.daemonError}`]),
       {},
-      'error'
+      ERROR
     );
     return;
   } else {
-    Toast(err, {}, 'sentry');
+    Toast(err, {}, SENTRY);
   }
 };
