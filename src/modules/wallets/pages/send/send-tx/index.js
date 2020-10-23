@@ -222,8 +222,7 @@ export default class SendTransaction {
       const coinbase = await this.web3.eth.getCoinbase();
       const nonce = await this.web3.eth.getTransactionCount(coinbase);
       const toAddress = data === '0x' ? address : contractAddress;
-      const actualAmount = data !== '0x' ? amount : 0;
-
+      const actualAmount = data === '0x' ? amount : 0;
       const raw = {
         nonce: sanitizeHex(BigNumber(nonce).toString(16)),
         gasLimit: sanitizeHex(BigNumber(gasLimit).toString(16)),

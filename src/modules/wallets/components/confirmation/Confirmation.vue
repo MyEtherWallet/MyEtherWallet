@@ -77,7 +77,7 @@ export default {
       return BigNumber(this.txFee).times(this.usd).toFixed(2);
     },
     value() {
-      return utils.hexToNumberString(this.tx.value);
+      return utils.fromWei(utils.hexToNumberString(this.tx.value));
     }
   },
   created() {
