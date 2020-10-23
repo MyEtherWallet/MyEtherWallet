@@ -24,7 +24,7 @@
           />
         </v-col>
         <v-col class="py-0 my-0 text-right" cols="4">
-          <span> - {{ value }}</span>
+          <span> - {{ value }} </span>
           <span class="searchText--text font-weight-medium">{{
             currency
           }}</span></v-col
@@ -123,7 +123,7 @@ export default {
       return `$ ${value}`;
     },
     formattedTx() {
-      return `$ ${this.txFeeUSD}`;
+      return `$ ${BigNumber(this.txFeeUSD).toFixed(2)}`;
     },
     progressBar() {
       const toSendPercent = (this.value * 100) / this.balance;

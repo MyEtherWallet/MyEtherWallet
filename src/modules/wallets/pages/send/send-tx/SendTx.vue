@@ -28,10 +28,11 @@
             <v-col cols="6">
               <mew-input
                 ref="mewInput"
-                v-model="amount"
+                :value="amount"
                 :label="$t('sendTx.amount')"
                 placeholder=" "
                 :right-label="currencyBalance"
+                @input="setAmount"
               />
             </v-col>
           </v-row>
@@ -64,6 +65,18 @@
           class="px-15"
         >
           <template #panelBody1>
+            <div class="d-flex justify-space-between px-5 border-bottom pb-5">
+              <div class="mew-body font-weight-medium d-flex align-center">
+                {{ $t('sendTx.tx-fee') }}
+                <mew-tooltip class="ml-1" text="" />
+              </div>
+              <div v-show="isEth">
+                <i18n path="sendTx.cost-eth-usd" tag="div">
+                  <span slot="eth">{{ txFeeETH() }}</span>
+                  <span slot="usd">{{ txFeeUSD() }}</span>
+                </i18n>
+              </div>
+            </div>
             <div>
               <!-- <mew-input
                 :label="$t('common.gas.price')"
@@ -79,19 +92,6 @@
               />
             </div>
 
-            <div class="d-flex justify-space-between px-5 border-bottom pb-5">
-              <div class="mew-body font-weight-medium d-flex align-center">
-                {{ $t('sendTx.tx-fee') }}
-                <mew-tooltip class="ml-1" text="" />
-              </div>
-              <div v-show="isEth">
-                <i18n path="sendTx.cost-eth-usd" tag="div">
-                  <span slot="eth">{{ txFeeETH() }}</span>
-                  <span slot="usd">{{ txFeeUSD() }}</span>
-                </i18n>
-              </div>
-            </div>
-            <!-- question: what kind of data do people usually send ? -->
             <mew-input
               v-model="data"
               :label="$t('sendTx.add-data')"
@@ -438,9 +438,9 @@ export default {
         this.balance
       );
     },
-    // setAmount(value) {
-    //   this.amount = value;
-    // },
+    setAmount(value) {
+      this.amount = value;
+    },
     // setGasPrice(value) {
     //   this.gasPrice = value;
     // },
