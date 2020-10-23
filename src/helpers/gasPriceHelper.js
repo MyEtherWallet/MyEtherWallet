@@ -1,12 +1,22 @@
 import BigNumber from 'bignumber.js';
 import store from 'store';
-const MED_CONST = 21.428571428571;
+// import web3Utils from 'web3-utils';
+
+const MED_CONST = 21428571428.571;
 const MED_MULTIPLIER = 1.0714285714286;
-const FAST_CONST = 42.857142857145;
+const FAST_CONST = 42857142857.145;
 const FAST_MULTIPLIER = 1.1428571428571;
 const OLD_MED_CONST = 1.25;
 const OLD_FAST_CONST = 1.5;
-const LIMITER = 25;
+const LIMITER = 25000000000;
+
+// const toGwei = gasPrice => {
+//   return web3Utils.fromWei(BigNumber(gasPrice).toString(), 'gwei');
+// };
+
+// const toWei = gasPrice => {
+//   return web3Utils.toWei(BigNumber(gasPrice).toString(), 'gwei');
+// };
 
 const getEconomy = gasPrice => {
   return BigNumber(gasPrice).div(1).toFixed(9);

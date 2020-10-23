@@ -1,7 +1,7 @@
 <template>
   <v-sheet max-width="600px" class="pa-8">
     <from-to-block :from="from" :to="to" class="mb-2" />
-    <balance-block />
+    <balance-block :tx-fee="txFee" :tx-fee-usd="txFeeUSD" :value="value" />
     <mew-expand-panel :panel-items="panelItems" :is-toggle="true">
       <template #panelBody1>
         <div class="px-3">
@@ -80,6 +80,18 @@ export default {
     send: {
       type: Function,
       default: () => {}
+    },
+    txFee: {
+      type: String,
+      default: '0'
+    },
+    txFeeUSD: {
+      type: String,
+      default: '0'
+    },
+    value: {
+      type: String,
+      default: '0'
     }
   },
   data: function () {

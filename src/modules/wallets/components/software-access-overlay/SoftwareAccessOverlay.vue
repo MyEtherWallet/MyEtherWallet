@@ -170,8 +170,10 @@ export default {
   },
   watch: {
     step(newVal, oldVal) {
-      if (oldVal > newVal) {
-        delete this.steps[oldVal];
+      if (oldVal) {
+        if (oldVal > newVal) {
+          delete this.steps[oldVal];
+        }
       }
     }
   },
