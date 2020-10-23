@@ -332,15 +332,18 @@ export default {
           this.data,
           this.selectedCurrency.contract
         )
+        .once('transactionHash', res => {
+          console.log(res);
+        })
         .then(response => {
           console.log(response);
           Toast(
-            "Cheers! Your transaction is being processed. A notification will be sent to you when it's completed. Track in ",
+            'Cheers! Your transaction was mined. Check it in ',
             {
               title: this.network.service,
               url: this.network.type.blockExplorerTX.replace(
                 '[[txHash]]',
-                response
+                response.blockHash
               )
             },
             SUCCESS,

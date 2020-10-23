@@ -90,6 +90,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
                   }
                 );
               }
+              console.log('gets here???');
               res(null, toPayload(payload.id, hash));
             })
             .on('error', err => {
