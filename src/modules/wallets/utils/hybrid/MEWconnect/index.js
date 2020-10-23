@@ -18,6 +18,7 @@ const V1_SIGNAL_URL = 'https://connect.mewapi.io';
 const V2_SIGNAL_URL = 'wss://connect2.mewapi.io/staging';
 const IS_HARDWARE = true;
 let thisAddress = null;
+import { EventBus } from '@/plugins/eventBus';
 
 class MEWconnectWallet {
   constructor() {
@@ -112,7 +113,7 @@ const signalerConnect = (url, mewConnect) => {
     mewConnect.on('RtcConnectedEvent', () => {
       mewConnect.on('RtcClosedEvent', () => {
         if (mewConnect.getConnectonState()) {
-          store._vm.$eventHub.$emit('mewConnectDisconnected');
+          EventBus.$emit('mewConnectDisconnected');
           store.dispatch('wallet/removeWallet');
         }
       });

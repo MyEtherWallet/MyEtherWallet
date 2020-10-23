@@ -45,6 +45,8 @@ import {
   getEconomy
 } from '@/helpers/gasPriceHelper.js';
 
+import { EventBus } from '@/plugins/eventBus';
+
 export default {
   components: {
     sideMenu,
@@ -131,7 +133,7 @@ export default {
               this.manualBlockSubscription();
               return;
             }
-            this.$eventHub.$emit('error', error);
+            EventBus.$emit(error.message, {}, 'error');
           }
         })
         .on('data', res => {

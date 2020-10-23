@@ -16,7 +16,6 @@ import '@/plugins/registerServiceWorker';
 import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
 import vuetify from '@/plugins/vuetify';
-import eventHub from '@/plugins/eventHub';
 
 /* Apollo  */
 import { InMemoryCache } from 'apollo-cache-inmemory';
@@ -28,11 +27,10 @@ import { getMainDefinition } from 'apollo-utilities';
 import VueApollo from 'vue-apollo';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { onError } from 'apollo-link-error';
+import { EventBus } from '@/plugins/eventBus';
 
 import whiteSheet from '@/components/white-sheet/WhiteSheet.vue';
 Vue.component('Mew6WhiteSheet', whiteSheet);
-
-Vue.use(eventHub);
 
 //Router
 Vue.use(Router);
@@ -118,7 +116,7 @@ const apolloProvider = new VueApollo({
 Vue.use(VueApollo);
 
 /* eslint-disable no-new */
-const vue = new Vue({
+new Vue({
   el: '#app',
   i18n,
   router,
@@ -166,7 +164,7 @@ Sentry.init({
       walletType: identifier
     };
     return new Promise(resolve => {
-      vue.$eventHub.$emit('issueModal', event, resolve);
+      EventBus.$emit('issueModal', event, resolve);
     }).then(res => {
       return res === true ? event : null;
     });

@@ -2,11 +2,11 @@
   <div>
     <mew-toast
       v-for="toast in toastGenerator"
-      :ref="getRef(toast)"
+      :ref="getName(toast)"
       :key="getName(toast) + getRef(toast)"
       :persistent="false"
-      :duration="1500"
-      :toast-type="getName(toast)"
+      :duration="duration"
+      :toast-type="getRef(toast)"
       :text="text"
       :link-object="linkObj"
       @closed="onClose"
@@ -15,12 +15,14 @@
 </template>
 <script>
 import ToastEvents from './toastEvents.js';
+import { EventBus } from '@/plugins/eventBus.js';
 export default {
   name: 'Toast',
   data() {
     return {
       text: '',
-      linkObj: {}
+      linkObj: {},
+      duration: 3000
     };
   },
   computed: {
@@ -28,17 +30,27 @@ export default {
       const initialArray = Object.keys(ToastEvents);
       return initialArray.map(item => {
         return {
-          [item]: item.replace('toast').toLowerCase()
+          [item]: ToastEvents[item]
         };
       });
     }
   },
-  created() {
+  beforeMount() {
     Object.keys(ToastEvents).forEach(item => {
-      this.$eventHub.$on(ToastEvents[item], (text, obj) => {
+      EventBus.$on(ToastEvents[item], (text, obj, duration) => {
         this.text = text;
         this.linkObj = obj;
-        this.$refs[ToastEvents[item]].showToast();
+        this.duration = duration ? duration : 3000;
+        this.callToast(ToastEvents[item]);
+      });
+    });
+  },
+  beforeDestroy() {
+    Object.keys(ToastEvents).forEach(item => {
+      EventBus.$off(ToastEvents[item], () => {
+        this.text = '';
+        this.linkObj = {};
+        this.duration = 3000;
       });
     });
   },
@@ -46,12 +58,17 @@ export default {
     onClose() {
       this.text = '';
       this.linkObj = {};
+      this.duration = 3000;
     },
     getRef(obj) {
       return Object.keys(obj)[0];
     },
     getName(obj) {
       return Object.values(obj)[0];
+    },
+    callToast(ref) {
+      console.log(ref, this.$refs);
+      this.$refs[ref][0].showToast();
     }
   }
 };

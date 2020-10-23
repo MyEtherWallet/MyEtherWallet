@@ -16,6 +16,8 @@ import {
 } from '@/helpers/notificationFormatters';
 import BigNumber from 'bignumber.js';
 
+import { EventBus } from '@/plugins/eventBus';
+
 const addNotification = function ({ dispatch, commit, state }, val) {
   let address;
 
@@ -225,15 +227,10 @@ const setWeb3Instance = function ({ dispatch, commit, state }, provider) {
       })
     : {};
   const web3Instance = new web3(
-    new MEWProvider(
-      provider ? provider : parsedUrl,
-      options,
-      {
-        state,
-        dispatch
-      },
-      this._vm.$eventHub
-    )
+    new MEWProvider(provider ? provider : parsedUrl, options, {
+      state,
+      dispatch
+    })
   );
   web3Instance.currentProvider.sendAsync = web3Instance.currentProvider.send;
   web3Instance['mew'] = {};
@@ -269,7 +266,7 @@ const setWeb3Instance = function ({ dispatch, commit, state }, provider) {
       const batchSignCallback = promises => {
         resolve(promises);
       };
-      this._vm.$eventHub.$emit(
+      EventBus.$emit(
         'showTxCollectionConfirmModal',
         arr,
         batchSignCallback,

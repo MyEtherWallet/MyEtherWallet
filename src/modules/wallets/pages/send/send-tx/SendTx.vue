@@ -315,11 +315,11 @@ export default {
               this.customGasLimit = BigNumber(res).toString();
             })
             .catch(e => {
-              Toast(e, {}, 'error');
+              Toast(e.message, {}, 'error');
             });
         }
       } catch (e) {
-        Toast(e, {}, 'error');
+        Toast(e.message, {}, 'error');
       }
     },
     send() {
@@ -336,12 +336,13 @@ export default {
           Toast(
             "Cheers! Your transaction is being processed. A notification will be sent to you when it's completed. Track in ",
             {
-              title: 'EthVM',
+              title: this.network.service,
               url: this.network.type.blockExplorerTX.replace(
                 '[[txHash]]',
                 response
               )
-            }
+            },
+            'success'
           );
         })
         .catch(error => {

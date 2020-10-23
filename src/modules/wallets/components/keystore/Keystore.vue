@@ -174,10 +174,10 @@ export default {
             this.updateStep(2);
           })
           .catch(e => {
-            Toast(e, {}, 'error');
+            Toast(e.message, {}, 'error');
           });
       } catch (e) {
-        Toast(e, {}, 'error');
+        Toast(e.message, {}, 'error');
       }
     },
     downloadWallet() {
