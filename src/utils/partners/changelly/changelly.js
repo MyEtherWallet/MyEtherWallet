@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 
 import { networkSymbols } from '../partnersConfig';
-import { Toast, WARNING, ERROR, SENTRY } from '@/components/toast';
+import { Toast, SENTRY } from '@/components/toast';
 import {
   notificationStatuses,
   ChangellyCurrencies,
