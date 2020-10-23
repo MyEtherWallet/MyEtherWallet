@@ -16,6 +16,7 @@ import '@/plugins/registerServiceWorker';
 import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
 import vuetify from '@/plugins/vuetify';
+import eventHub from '@/plugins/eventHub';
 
 /* Apollo  */
 import { InMemoryCache } from 'apollo-cache-inmemory';
@@ -31,7 +32,7 @@ import { onError } from 'apollo-link-error';
 import whiteSheet from '@/components/white-sheet/WhiteSheet.vue';
 Vue.component('Mew6WhiteSheet', whiteSheet);
 
-Vue.prototype.$eventHub = new Vue();
+Vue.use(eventHub);
 
 //Router
 Vue.use(Router);
