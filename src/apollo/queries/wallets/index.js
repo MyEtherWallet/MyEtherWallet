@@ -1,4 +1,5 @@
 import { getEthBalance, getUSDPrice } from './wallets.graphql';
+import { Toast, ERROR } from '@/components/toast';
 export default class WalletCalls {
   constructor(apollo) {
     this.apollo = apollo;
@@ -15,8 +16,7 @@ export default class WalletCalls {
         return response.data.getEthBalance.balance;
       })
       .catch(err => {
-        console.error('error', err);
-        throw err;
+        Toast(err.message, {}, ERROR);
       });
   }
   getUSDPrice() {
@@ -35,8 +35,7 @@ export default class WalletCalls {
         return null;
       })
       .catch(err => {
-        console.error('error', err);
-        throw err;
+        Toast(err.message, {}, ERROR);
       });
   }
 }

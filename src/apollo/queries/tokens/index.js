@@ -1,5 +1,6 @@
 import { getLatestPrices, getOwnersERC20Tokens } from './tokens.graphql';
 import ethImg from '@/assets/images/networks/eth.svg';
+import { Toast, ERROR } from '@/components/toast';
 
 const ETH_ID = 'ethereum';
 export default class Tokenslist {
@@ -27,7 +28,8 @@ export default class Tokenslist {
         return this.tokensData;
       })
       .catch(error => {
-        console.error('error', error);
+        Toast(error.message, {}, ERROR);
+
         throw error;
       });
   }
@@ -50,7 +52,8 @@ export default class Tokenslist {
         }
       })
       .catch(error => {
-        console.error('error', error);
+        Toast(error.message, {}, ERROR);
+
         throw error;
       });
   }
