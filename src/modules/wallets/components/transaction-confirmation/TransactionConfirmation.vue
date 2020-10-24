@@ -6,8 +6,8 @@
       class="mb-2"
     />
     <balance-block />
-    <mew-expand-panel>
-      <template #panelBody1 :panel-items="panelItems">
+    <mew-expand-panel :panel-items="panelItems">
+      <template #panelBody1>
         <div class="px-3">
           <div class="d-flex justify-space-between mb-2">
             <div>Network</div>
