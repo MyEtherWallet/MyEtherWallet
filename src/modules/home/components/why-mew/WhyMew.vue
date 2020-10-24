@@ -14,7 +14,7 @@
         </v-sheet>
 
         <div class="d-flex">
-          <info-card
+          <mew-info-card
             class="d-flex align-end block-box-shadow"
             title="Friendly to use"
             desc="Access the Ethereum blockchains original and most-trusted wallet client, now with a host of new features all contained in an elegant, easy and friendly interface."
@@ -27,7 +27,7 @@
           <div class="pa-4"></div>
 
           <div class="d-flex flex-column">
-            <info-card
+            <mew-info-card
               class="full-height"
               max-width="600"
               title="Swap easily"
@@ -38,7 +38,7 @@
               }"
             />
             <div class="pa-4"></div>
-            <info-card
+            <mew-info-card
               class="full-height"
               max-width="600"
               title="Hardware wallets support"
@@ -51,7 +51,7 @@
           </div>
 
           <div class="pa-4"></div>
-          <info-card
+          <mew-info-card
             title="MEWwallet"
             desc="MEW brings a hardware wallet style security to your iOS or Android smart phone, helping you to secure your funds as never before."
             :link="{
@@ -78,7 +78,7 @@
                 alt="MEW wallet"
               />
             </template>
-          </info-card>
+          </mew-info-card>
         </div>
       </v-container>
       <div class="py-12" />
@@ -96,7 +96,7 @@
             </h1>
           </v-sheet>
 
-          <info-card
+          <mew-info-card
             class="d-flex align-end block-box-shadow"
             title="Friendly to use"
             desc="Access the Ethereum blockchains original and most-trusted wallet client, now with a host of new features all contained in an elegant, easy and friendly interface."
@@ -107,7 +107,7 @@
             :icon="require('@/assets/images/icons/icon-faces-mew.svg')"
           />
 
-          <info-card
+          <mew-info-card
             class="full-height"
             title="Swap easily"
             desc="Partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20."
@@ -117,7 +117,7 @@
             }"
           />
 
-          <info-card
+          <mew-info-card
             class="full-height"
             title="Hardware wallets support"
             desc="MEW offers support for all major hardware wallets including Ledger, Trezor, and many more."
@@ -127,7 +127,7 @@
             }"
           />
 
-          <info-card
+          <mew-info-card
             title="MEWwallet"
             desc="MEW brings a hardware wallet style security to your iOS or Android smart phone, helping you to secure your funds as never before."
             :link="{
@@ -156,7 +156,7 @@
                 alt="MEW wallet"
               />
             </template>
-          </info-card>
+          </mew-info-card>
         </v-sheet>
       </v-container>
       <div class="py-7" />
@@ -176,7 +176,7 @@ export default {
   .card-img {
     margin-bottom: -5px;
   }
-  .info-card {
+  .mew-info-card {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05) !important;
     border: 1px solid var(--v-primaryOutlineActive-base) !important;
   }
@@ -186,12 +186,12 @@ export default {
   .card-img {
     margin-bottom: -5px;
   }
-  .info-card {
+  .mew-info-card {
     max-width: initial !important;
     width: 100%;
     margin-bottom: 1rem;
   }
-  .info-card {
+  .mew-info-card {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05) !important;
     border: 1px solid var(--v-primaryOutlineActive-base) !important;
   }

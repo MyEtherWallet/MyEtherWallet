@@ -40,7 +40,7 @@
     "pocket-js-web3-provider": "0.0.3",
     "register-service-worker": "1.7.1",
     "vue": "2.6.12",
-    "vue-router": "3.4.6",
+    "vue-router": "3.4.7",
     "vuex": "3.5.1"
   },
   "devDependencies": {

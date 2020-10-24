@@ -1,13 +1,18 @@
 <template>
-  <v-sheet color="transparent" max-width="500px" class="pa-3 pa-lg-8">
-    <from-to-block
-      from="0x300be4b1183dca9046349e9e01b1e0c08e362964"
-      to="0x02fb7f333fd493b39b79ba57b6d510c64eaa3dc0"
-      class="mb-2"
-    />
-    <balance-block />
-    <mew-expand-panel>
-      <template #panelBody1 :panel-items="panelItems">
+  <v-sheet color="transparent" max-width="600px" class="pa-3 pa-lg-8">
+    <div class="mb-4 text-center">
+      <h2 class="font-weight-bold error--text">09:25</h2>
+      <div class="text-uppercase searchText--text font-weight-bold">
+        Time remaining
+      </div>
+    </div>
+
+    <swap-from-to-block from="0.05" to="0.234" class="mb-2" />
+
+    <mew-address-select class="mt-10" label="Receiving Address" />
+
+    <mew-expand-panel :panel-items="panelItems" has-dividers is-toggle>
+      <template #panelBody1>
         <div class="px-3">
           <div class="d-flex justify-space-between mb-2">
             <div>Network</div>
@@ -35,7 +40,7 @@
     <div class="d-flex justify-center my-8">
       <mew-button
         btn-size="xlarge"
-        title="Continue on your device"
+        title="Confirm & Swap"
         @click.native="activeTab = 1"
       />
     </div>
@@ -44,13 +49,11 @@
 </template>
 
 <script>
-import fromToBlock from '@/components/from-to-block/FromToBlock';
-import balanceBlock from '@/components/balance-block/BalanceBlock';
+import swapFromToBlock from '@/components/from-to-block/SwapFromToBlock';
 
 export default {
   components: {
-    fromToBlock,
-    balanceBlock
+    swapFromToBlock
   },
   data: function () {
     return {
@@ -59,8 +62,7 @@ export default {
       open: false,
       panelItems: [
         {
-          name: 'Network',
-          subtext: 'ETH - myetherapi.com'
+          name: 'Details'
         }
       ],
       activeTab: 0

@@ -1,113 +1,132 @@
 <template>
-  <mew6-white-sheet>
-    <interface-wrap title="Swap">
-      <div class="d-flex">
-        <div>
-          <mew-select :items="coins" label="From" />
-          <mew-input label="Amount" placeholder=" " />
-        </div>
-        <div class="px-6 mb-8 d-flex align-center">
-          <img :src="swap" height="35" />
-        </div>
-        <div>
-          <mew-select :items="coins" label="To" />
-          <mew-input label="Amount" placeholder=" " />
-        </div>
-      </div>
-      <mew-address-select
-        class="mt-5"
-        copy-tooltip="Copy"
-        save-tooltip="Save"
-        :enable-save-address="true"
-        label="label"
-        :items="addresses"
-        placeholder="Please enter an address"
-        success-toast="Success"
-        :is-valid-address="false"
-        @emitSelectedValue="getSelectedValue"
-      />
+  <div>
+    <transactionConfirmationOverlay
+      swap
+      :open="openTXConfirmationOverlay"
+      @close="openTXConfirmationOverlay = false"
+    />
+    <div
+      class="cursor--pointer font-weight-bold mr-4"
+      @click="openTXConfirmationOverlay = true"
+    >
+      Confirmation Overlay
+    </div>
 
-      <div class="mt-5">
-        <div class="mew-heading-3">Select a provider</div>
-        <v-row>
-          <v-col cols="6" lg="6" sm="12">
-            <v-card flat color="tableHeader" class="pa-6">
-              <div class="d-flex align-center justify-space-between mb-3">
-                <img
-                  :class="$vuetify.theme.dark ? 'invert' : ''"
-                  :src="kyber"
-                  alt="Kyber network"
-                  height="35"
-                />
-                <mew-checkbox />
-              </div>
-              <div class="font-weight-medium">1 ETH = 2.4235634 XMR</div>
-              <div>0.01 ETH (From Min.)</div>
-              <div>28.77344534 ETH (Max.)</div>
-            </v-card>
-          </v-col>
-          <v-col>
-            <v-card flat color="tableHeader" class="pa-6">
-              <div class="d-flex align-center justify-space-between mb-3">
-                <img
-                  :class="$vuetify.theme.dark ? 'invert' : ''"
-                  :src="changelly"
-                  alt="Changelly"
-                  height="35"
-                />
-                <mew-checkbox />
-              </div>
-              <div class="font-weight-medium">1 ETH = 2.4235634 XMR</div>
-              <div>0.01 ETH (From Min.)</div>
-              <div>28.77344534 ETH (Max.)</div>
-            </v-card>
-          </v-col>
-          <v-col>
-            <v-card disabled flat color="tableHeader" class="pa-6">
-              <div class="d-flex align-center justify-space-between mb-3">
-                <img
-                  :class="$vuetify.theme.dark ? 'invert' : ''"
-                  :src="simplex"
-                  alt="Simplex"
-                  height="35"
-                />
-                <div>Not Available</div>
-              </div>
-              <div>Buy crypto with a credit card.</div>
-            </v-card>
-          </v-col>
-          <v-col>
-            <v-card disabled flat color="tableHeader" class="pa-6">
-              <div class="d-flex align-center justify-space-between mb-3">
-                <img :src="bity" alt="Bity" height="35" />
-                <div>Not Available</div>
-              </div>
-              <div>Swap ETH and ERC20 tokens.</div>
-            </v-card>
-          </v-col>
-        </v-row>
-      </div>
+    <mew6-white-sheet>
+      <interface-wrap title="Swap">
+        <div class="d-flex flex-column flex-lg-row justify-center align-center">
+          <div>
+            <mew-select :items="coins" label="From" />
+            <mew-input label="Amount" placeholder=" " />
+          </div>
+          <div class="px-6 mb-8 d-flex align-center">
+            <img
+              :class="$vuetify.breakpoint.mdAndDown ? 'rotate' : ''"
+              :src="swap"
+              height="35"
+            />
+          </div>
+          <div>
+            <mew-select :items="coins" label="To" />
+            <mew-input label="Amount" placeholder=" " />
+          </div>
+        </div>
+        <mew-address-select
+          class="mt-5"
+          copy-tooltip="Copy"
+          save-tooltip="Save"
+          :enable-save-address="true"
+          label="label"
+          :items="addresses"
+          placeholder="Please enter an address"
+          success-toast="Success"
+          :is-valid-address="false"
+          @emitSelectedValue="getSelectedValue"
+        />
 
-      <mew-expand-panel
-        is-toggle
-        has-dividers
-        :panel-items="exPannel"
-        class="mt-4 mb-10 swap-expend"
-      >
-        <template #panelBody1>
-          <mew-input label="Gas Price" placeholder=" " right-label="Gwei" />
-          <mew-input label="Gas Limit" placeholder=" " right-label="Wei" />
-        </template>
-      </mew-expand-panel>
+        <div class="mt-5">
+          <div class="mew-heading-3">Select a provider</div>
+          <v-row>
+            <v-col cols="6" lg="6" sm="12">
+              <v-card flat color="tableHeader" class="pa-6">
+                <div class="d-flex align-center justify-space-between mb-3">
+                  <img
+                    :class="$vuetify.theme.dark ? 'invert' : ''"
+                    :src="kyber"
+                    alt="Kyber network"
+                    height="35"
+                  />
+                  <mew-checkbox />
+                </div>
+                <div class="font-weight-medium">1 ETH = 2.4235634 XMR</div>
+                <div>0.01 ETH (From Min.)</div>
+                <div>28.77344534 ETH (Max.)</div>
+              </v-card>
+            </v-col>
+            <v-col>
+              <v-card flat color="tableHeader" class="pa-6">
+                <div class="d-flex align-center justify-space-between mb-3">
+                  <img
+                    :class="$vuetify.theme.dark ? 'invert' : ''"
+                    :src="changelly"
+                    alt="Changelly"
+                    height="35"
+                  />
+                  <mew-checkbox />
+                </div>
+                <div class="font-weight-medium">1 ETH = 2.4235634 XMR</div>
+                <div>0.01 ETH (From Min.)</div>
+                <div>28.77344534 ETH (Max.)</div>
+              </v-card>
+            </v-col>
+            <v-col>
+              <v-card disabled flat color="tableHeader" class="pa-6">
+                <div class="d-flex align-center justify-space-between mb-3">
+                  <img
+                    :class="$vuetify.theme.dark ? 'invert' : ''"
+                    :src="simplex"
+                    alt="Simplex"
+                    height="35"
+                  />
+                  <div>Not Available</div>
+                </div>
+                <div>Buy crypto with a credit card.</div>
+              </v-card>
+            </v-col>
+            <v-col>
+              <v-card disabled flat color="tableHeader" class="pa-6">
+                <div class="d-flex align-center justify-space-between mb-3">
+                  <img :src="bity" alt="Bity" height="35" />
+                  <div>Not Available</div>
+                </div>
+                <div>Swap ETH and ERC20 tokens.</div>
+              </v-card>
+            </v-col>
+          </v-row>
+        </div>
 
-      <div class="text-center">
-        <mew-button title="Swap" :has-full-width="false" btn-size="xlarge" />
-      </div>
-    </interface-wrap>
-  </mew6-white-sheet>
+        <mew-expand-panel
+          is-toggle
+          has-dividers
+          :panel-items="exPannel"
+          class="mt-4 mb-10 swap-expend"
+        >
+          <template #panelBody1>
+            <mew-input label="Gas Price" placeholder=" " right-label="Gwei" />
+            <mew-input label="Gas Limit" placeholder=" " right-label="Wei" />
+          </template>
+        </mew-expand-panel>
+
+        <div class="text-center">
+          <mew-button title="Swap" :has-full-width="false" btn-size="xlarge" />
+        </div>
+      </interface-wrap>
+    </mew6-white-sheet>
+  </div>
 </template>
 
 <script>
+import transactionConfirmationOverlay from '@/modules/wallets/components/transaction-confirmation-overlay/TransactionConfirmationOverlay';
 import interfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
@@ -117,10 +136,12 @@ import Simplex from '@/assets/images/icons/icon-simplex.png';
 import Bity from '@/assets/images/icons/icon-bity.png';
 export default {
   components: {
-    interfaceWrap
+    interfaceWrap,
+    transactionConfirmationOverlay
   },
   data() {
     return {
+      openTXConfirmationOverlay: false,
       exPannel: [
         {
           name: 'Transaction Fee',
@@ -174,5 +195,9 @@ export default {
 
 .invert {
   filter: invert(100%);
+}
+
+.rotate {
+  transform: rotate(90deg);
 }
 </style>

@@ -3,8 +3,8 @@
     <div class="d-block d-lg-none">
       <network mobile class="mb-4" />
       <myEthBalance mobile class="mb-4" />
-      <main-content title="Transaction history" class="mb-4" />
-      <tx-history mobile />
+      <main-content class="mb-4" />
+      <tx-history title="Transaction history" mobile />
     </div>
 
     <div class="d-none d-lg-flex">

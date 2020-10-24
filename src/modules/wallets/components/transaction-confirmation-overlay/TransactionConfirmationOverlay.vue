@@ -8,7 +8,8 @@
   >
     <template #mewOverlayBody>
       <mew6-white-sheet class="mt-4">
-        <transactionConfirmation />
+        <swapTransactionConfirmation v-if="swap" />
+        <transactionConfirmation v-else />
       </mew6-white-sheet>
     </template>
   </mew-overlay>
@@ -16,12 +17,15 @@
 
 <script>
 import transactionConfirmation from '../transaction-confirmation/TransactionConfirmation';
+import swapTransactionConfirmation from '../transaction-confirmation/SwapTransactionConfirmation';
 
 export default {
   components: {
-    transactionConfirmation
+    transactionConfirmation,
+    swapTransactionConfirmation
   },
   props: {
+    swap: { default: false, type: Boolean },
     open: { default: false, type: Boolean },
     close: {
       default: function () {
