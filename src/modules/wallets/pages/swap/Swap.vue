@@ -2,6 +2,7 @@
   <div>
     <div class="d-block d-lg-none">
       <network mobile class="mb-4" />
+      <myTokenValue mobile class="mb-4" />
       <main-content class="mb-4" />
       <tx-history title="Swap history" mobile />
     </div>

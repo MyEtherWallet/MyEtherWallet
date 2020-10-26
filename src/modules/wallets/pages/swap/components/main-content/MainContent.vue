@@ -47,7 +47,7 @@
         <div class="mt-5">
           <div class="mew-heading-3">Select a provider</div>
           <v-row>
-            <v-col cols="6" lg="6" sm="12">
+            <v-col cols="12" lg="6">
               <v-card flat color="tableHeader" class="pa-6">
                 <div class="d-flex align-center justify-space-between mb-3">
                   <img
@@ -63,7 +63,7 @@
                 <div>28.77344534 ETH (Max.)</div>
               </v-card>
             </v-col>
-            <v-col>
+            <v-col cols="12" lg="6">
               <v-card flat color="tableHeader" class="pa-6">
                 <div class="d-flex align-center justify-space-between mb-3">
                   <img
@@ -79,7 +79,7 @@
                 <div>28.77344534 ETH (Max.)</div>
               </v-card>
             </v-col>
-            <v-col>
+            <v-col cols="12" lg="6">
               <v-card disabled flat color="tableHeader" class="pa-6">
                 <div class="d-flex align-center justify-space-between mb-3">
                   <img
@@ -93,7 +93,7 @@
                 <div>Buy crypto with a credit card.</div>
               </v-card>
             </v-col>
-            <v-col>
+            <v-col cols="12" lg="6">
               <v-card disabled flat color="tableHeader" class="pa-6">
                 <div class="d-flex align-center justify-space-between mb-3">
                   <img :src="bity" alt="Bity" height="35" />
