@@ -31,7 +31,8 @@ import transactionConfirmation from './transaction-confirmation/TransactionConfi
 import utils from 'web3-utils';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-
+import { Toast, SUCCESS } from '@/components/toast';
+import getService from '@/helpers/getService';
 import { EventBus } from '@/plugins/eventBus';
 export default {
   name: 'ConfirmationContainer',
@@ -60,24 +61,28 @@ export default {
       return this.tx.data;
     },
     gasPrice() {
-      return utils.fromWei(utils.hexToNumberString(this.tx.gasPrice), 'gwei');
+      const gasPrice = this.tx.gasPrice ? this.tx.gasPrice : '0x';
+      return utils.fromWei(utils.hexToNumberString(gasPrice), 'gwei');
     },
     gasLimit() {
-      return utils.hexToNumberString(this.tx.gasLimit);
+      const gasLimit = this.tx.gasLimit ? this.tx.gasLimit : '0x';
+      return utils.hexToNumberString(gasLimit);
     },
     nonce() {
       return utils.hexToNumber(this.tx.nonce);
     },
     txFee() {
-      return utils.fromWei(
-        BigNumber(this.tx.gasPrice).times(this.tx.gasLimit).toFixed()
+      const parsedTxFee = utils.fromWei(
+        BigNumber(this.gasPrice).times(this.gasLimit).toString()
       );
+      return BigNumber(parsedTxFee).toFixed(2);
     },
     txFeeUSD() {
       return BigNumber(this.txFee).times(this.usd).toFixed(2);
     },
     value() {
-      return utils.fromWei(utils.hexToNumberString(this.tx.value));
+      const parsedValue = this.tx.value ? this.tx.value : '0x';
+      return utils.fromWei(utils.hexToNumberString(parsedValue));
     }
   },
   created() {
@@ -105,6 +110,18 @@ export default {
     },
     send() {
       this.resolver(this.signedTxObject);
+      Toast(
+        'Transaction is being mined. Check here ',
+        {
+          title: `${getService(this.network.type.blockExplorerTX)}`,
+          url: this.network.type.blockExplorerTX.replace(
+            '[[txHash]]',
+            this.signedTxObject.tx.hash
+          )
+        },
+        SUCCESS,
+        5000
+      );
       this.overlayClose();
     }
   }

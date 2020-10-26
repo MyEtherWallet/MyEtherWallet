@@ -35,6 +35,14 @@ export default {
       });
     }
   },
+  watch: {
+    linkObj: {
+      handler: function (newVal) {
+        this.linkObj = newVal;
+      },
+      deep: true
+    }
+  },
   beforeMount() {
     Object.keys(ToastEvents).forEach(item => {
       EventBus.$on(ToastEvents[item], (text, obj, duration) => {
@@ -67,7 +75,8 @@ export default {
       return Object.values(obj)[0];
     },
     callToast(ref) {
-      this.$refs[ref][0].showToast();
+      if (this.$refs[ref] && this.$refs[ref].length > 0)
+        this.$refs[ref][0].showToast();
     }
   }
 };
