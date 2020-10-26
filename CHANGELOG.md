@@ -6,6 +6,7 @@
 
 * fix interact with contract constant check to an existence check [#2627](https://github.com/MyEtherWallet/MyEtherWallet/pull/2627)
 * Add ethereum token for ens domain and fix removeElements in AddrResolver
+* Update rates and min dai for makerDao [#2646](https://github.com/MyEtherWallet/MyEtherWallet/pull/2646)
 
 ### Release v5.7.11
 
