@@ -36,7 +36,7 @@
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",
     "@ensdomains/dnsregistrar": "0.3.9",
-    "@myetherwallet/mew-components": "0.5.18-beta",
+    "@myetherwallet/mew-components": "0.5.20-beta",
     "@sentry/browser": "5.26.0",
     "@sentry/integrations": "5.26.0",
     "@unstoppabledomains/resolution": "1.8.3",
