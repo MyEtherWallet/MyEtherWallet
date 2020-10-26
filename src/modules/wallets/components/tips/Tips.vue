@@ -1,5 +1,5 @@
 <template>
-  <mew6-white-sheet sideinfo class="px-7 py-5">
+  <mew6-white-sheet :sideinfo="!mobile" class="px-7 py-5">
     <div class="mew-heading-2">Tips</div>
     <div class="mt-3">
       Include your nickname and where you use the nickname so someone else
@@ -11,6 +11,12 @@
 
 <script>
 export default {
+  props: {
+    mobile: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {};
   }
