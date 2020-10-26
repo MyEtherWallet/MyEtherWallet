@@ -6,7 +6,7 @@ const ERROR = 'error';
 const WARNING = 'warning';
 const INFO = 'info';
 const SENTRY = 'sentry';
-const Toast = (text, link, type) => {
+const Toast = (text, link, type, duration) => {
   const acceptableTypes = ['success', 'error', 'warning', 'info', 'sentry'];
   if (!type && !acceptableTypes.includes(type)) {
     throw new Error(
@@ -21,7 +21,7 @@ const Toast = (text, link, type) => {
     Sentry.captureException(text);
     return;
   }
-  EventBus.$emit(ToastEvents[type], text, link);
+  EventBus.$emit(ToastEvents[type], text, link, duration);
 };
 
 export { SUCCESS, ERROR, WARNING, INFO, Toast, SENTRY };

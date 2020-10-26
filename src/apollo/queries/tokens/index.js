@@ -1,6 +1,7 @@
 import { getLatestPrices, getOwnersERC20Tokens } from './tokens.graphql';
 import ethImg from '@/assets/images/networks/eth.svg';
 import { Toast, ERROR } from '@/components/toast';
+import store from '@/store';
 
 const ETH_ID = 'ethereum';
 export default class Tokenslist {
@@ -28,9 +29,7 @@ export default class Tokenslist {
         return this.tokensData;
       })
       .catch(error => {
-        Toast(error.message, {}, ERROR);
-
-        throw error;
+        return Toast(error.message, {}, ERROR);
       });
   }
   getOwnersERC20Tokens(hash) {
@@ -52,14 +51,12 @@ export default class Tokenslist {
         }
       })
       .catch(error => {
-        Toast(error.message, {}, ERROR);
-
-        throw error;
+        return Toast(error.message, {}, ERROR);
       });
   }
   formatOwnersERC20Tokens(tokens) {
     const formattedList = [];
-    const eth = this.tokensData.get(ETH_ID);
+    const eth = this.tokensData ? this.tokensData.get(ETH_ID) : null;
     tokens.forEach(token => {
       let foundToken;
       if (this.tokensData) {
@@ -79,14 +76,25 @@ export default class Tokenslist {
         decimals: token.tokenInfo.decimals
       });
     });
-    formattedList.unshift({
-      name: eth.symbol,
-      symbol: eth.symbol,
-      subtext: eth.name,
-      value: eth.name,
-      balance: eth.balance,
-      img: eth.image
-    });
+    if (eth) {
+      formattedList.unshift({
+        name: eth.symbol,
+        symbol: eth.symbol,
+        subtext: eth.name,
+        value: eth.name,
+        balance: eth.balance,
+        img: eth.image
+      });
+    } else {
+      formattedList.unshift({
+        name: 'ETH',
+        symbol: 'ETH',
+        subtext: 'Ethereum',
+        value: 'Ethereum',
+        balance: store.state.wallet.balance,
+        img: ethImg
+      });
+    }
     return formattedList;
   }
 }

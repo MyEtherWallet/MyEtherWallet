@@ -9,7 +9,7 @@
       <div class="full-width px-15 pt-3">
         <div class="d-flex justify-end mr-3 entire-bal">
           <mew-button
-            :title="$t('sendTx.entire-bal')"
+            :title="$t('sendTx.button-entire')"
             btn-style="transparent"
             @click.native="setEntireBal"
           />
@@ -139,6 +139,7 @@ import BigNumber from 'bignumber.js';
 import SendTransaction from './index';
 import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR, SENTRY, SUCCESS } from '@/components/toast';
+import getService from '@/helpers/getService';
 
 export default {
   props: {
@@ -191,7 +192,6 @@ export default {
       ],
       toastType: '',
       toastMsg: '',
-      ethPrice: 0,
       customGasLimit: '',
       toAddress: '',
       sendTx: null,
@@ -202,7 +202,7 @@ export default {
       expandPanel: [
         {
           name: this.$t('common.advanced'),
-          subtext: this.$t('sendTx.gas-data')
+          subtext: this.$t('sendTx.data-gas')
         }
       ]
     };
@@ -213,7 +213,8 @@ export default {
       'network',
       'gasPrice',
       'web3',
-      'address'
+      'address',
+      'usd'
     ]),
     ...mapState('global', ['online']),
     isEth() {
@@ -241,15 +242,14 @@ export default {
       if (this.validInputs) this.customGasLimit = this.sendTx.estimateGas();
     }, 500),
     network() {
-      if (this.online && this.isEth) this.getEthPrice();
       this.setSendTransaction();
     },
     isPrefilled() {
       this.prefillForm();
     },
     ownersTokens: {
-      hander: newVal => {
-        this.selectedCurrency = newVal[0];
+      handler: function (newVal) {
+        this.selectedCurrency = newVal.length > 0 ? newVal[0] : {};
       },
       deep: true
     },
@@ -277,7 +277,6 @@ export default {
       this.network
     );
     this.customGasLimit = this.gasLimit;
-    this.online && this.isEth ? this.getEthPrice() : null;
   },
   methods: {
     setSendTransaction() {
@@ -303,7 +302,6 @@ export default {
             this.toAddress,
             this.selectedCurrency
           );
-
           this.sendTx
             .estimateGas(
               this.amount,
@@ -324,19 +322,19 @@ export default {
     },
     send() {
       window.scrollTo(0, 0);
-      this.sendTx
-        .submitTransaction(
-          this.customGasLimit,
-          this.toAddress,
-          this.amount,
-          this.data,
-          this.selectedCurrency.contract
-        )
+      const send = this.sendTx.submitTransaction(
+        this.customGasLimit,
+        this.toAddress,
+        this.amount,
+        this.data,
+        this.selectedCurrency.contract
+      );
+      send
         .then(response => {
           Toast(
             'Cheers! Your transaction was mined. Check it in ',
             {
-              title: this.network.service,
+              title: `${getService(this.network.type.blockExplorerTX)}`,
               url: this.network.type.blockExplorerTX.replace(
                 '[[txHash]]',
                 response.blockHash
@@ -387,11 +385,6 @@ export default {
         symbol: this.network.type.currencyName
       };
     },
-    getEthPrice() {
-      this.sendTx.getEthPrice().then(response => {
-        this.ethPrice = response;
-      });
-    },
     displayedGasPrice() {
       const gasPrice = this.gasPrice.toString();
       return gasPrice.includes('.')
@@ -418,11 +411,16 @@ export default {
       );
     },
     txFeeETH() {
+      // little hack to make this computed react to other changes
+      this.data;
+      this.selectedCurrency;
+      this.toAddress;
+      this.amount;
       return this.sendTx ? this.sendTx.txFeeETH(this.customGasLimit) : '0';
     },
     txFeeUSD() {
-      if (this.ethPrice && this.sendTx) {
-        return this.sendTx.txFeeUSD(this.customGasLimit, this.ethPrice);
+      if (this.usd && this.sendTx) {
+        return this.sendTx.txFeeUSD(this.customGasLimit, this.usd);
       }
       return '--';
     },

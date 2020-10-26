@@ -63,9 +63,9 @@ export default class SendTransaction {
   }
   // tx fee
   txFee(gasLimit) {
-    return BigNumber(utils.toWei(this.finalGasPrice(), 'gwei'))
+    return BigNumber(this.finalGasPrice())
       .times(gasLimit || 0)
-      .toFixed();
+      .toFixed(0);
   }
   // tx fee in ether
   txFeeETH(gasLimit) {
