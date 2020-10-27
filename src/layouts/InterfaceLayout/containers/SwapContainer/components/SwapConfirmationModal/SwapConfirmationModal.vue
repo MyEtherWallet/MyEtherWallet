@@ -80,7 +80,11 @@
       </div>
       <!--<p> Exchange Rate: 0.000</p>-->
       <div
-        :class="[swapReady ? '' : 'disable', 'confirm-send-button']"
+        :class="[
+          swapReady ? '' : 'disabled',
+          timerHasEnded ? 'disabled' : '',
+          'confirm-send-button'
+        ]"
         @click="sendTransaction"
       >
         <button-with-qrcode
@@ -189,6 +193,9 @@ export default {
     },
     showGasWarning() {
       return this.gasPrice >= this.gasLimitWarning;
+    },
+    timerHasEnded() {
+      return this.timeRemaining === 'expired';
     }
   },
   watch: {
