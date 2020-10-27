@@ -44,7 +44,7 @@
                   {{ $t('mewcx.value-of-tokens', { plural: 's' }) }}
                 </p>
                 <p v-if="network.type.name === 'ETH'" class="dollar-amt">
-                  {{ walletTokensWithBalance.totalWalletBalance }}
+                  {{ walletBalance }}
                 </p>
               </div>
             </div>
@@ -60,9 +60,9 @@
               <p class="wallet-title">
                 {{ $t('mewcx.value-of-tokens', { plural: '' }) }}
               </p>
-              <p class="dollar-amt">{{ walletTokensWithBalance.total }}</p>
+              <p class="dollar-amt">{{ tokenTotal }}</p>
               <p class="value">
-                {{ walletTokensWithBalance.tokensWDollarAmtLength }}
+                {{ tokensWithDollarAmount.length }}
                 {{ $t('mewcx.tokens') }}
               </p>
             </div>
@@ -97,7 +97,6 @@
 import { mapState, mapActions } from 'vuex';
 import MewcxModalWrapper from '../../wrappers/MewcxModalWrapper';
 import Blockie from '@/components/Blockie';
-import BigNumber from 'bignumber.js';
 import { Toast } from '@/helpers';
 
 import privKey from '@/assets/images/icons/private-key.svg';
@@ -128,9 +127,19 @@ export default {
       type: String,
       default: ''
     },
-    walletTokensWithBalance: {
-      type: Object,
-      default: () => {}
+    tokensWithDollarAmount: {
+      type: Array,
+      default: () => {
+        return [];
+      }
+    },
+    tokenTotal: {
+      type: String,
+      default: '$ 0.00'
+    },
+    walletBalance: {
+      type: String,
+      default: '$ 0.00'
     },
     file: {
       type: Object,
@@ -140,7 +149,6 @@ export default {
   data() {
     return {
       ethBalance: '0',
-      tokenTotalValue: '0',
       buttons: [
         {
           title: 'mewcx.keystore-file',
@@ -174,9 +182,7 @@ export default {
             this.viewPrint();
           }
         }
-      ],
-      walletJson: '',
-      filename: ''
+      ]
     };
   },
   computed: {
@@ -189,16 +195,11 @@ export default {
           : this.wallet.getAddressString()
         : '0x';
     },
-    totalValue() {
-      const totalBalance = new BigNumber(this.usd).times(this.ethBalance);
-      const combinedValue = new BigNumber(this.tokenTotalValue)
-        .plus(totalBalance)
-        .toFixed(2);
-
-      return `$ ${combinedValue}`;
+    filename() {
+      return this.nickname;
     },
-    convertedEthValue() {
-      return `$ ${new BigNumber(this.ethBalance).times(this.usd).toFixed(2)}`;
+    walletJson() {
+      return createBlob(this.file, 'mime');
     }
   },
   watch: {
@@ -214,10 +215,6 @@ export default {
           });
       }
     }
-  },
-  mounted() {
-    this.walletJson = createBlob(this.file, 'mime');
-    this.filename = this.nickname;
   },
   methods: {
     ...mapActions('main', ['clearWallet']),

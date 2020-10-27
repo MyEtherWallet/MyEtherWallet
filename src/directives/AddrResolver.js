@@ -10,6 +10,8 @@ import ethMew from '@/networks/nodes/eth-mew';
 import RegistryAbi from '@/dapps/ManageENS/ABI/registryAbi.js';
 import ResolverAbi from '@/dapps/ManageENS/ABI/resolverAbi.js';
 import * as nameHashPckg from 'eth-ens-namehash';
+import twitterVerifiedLogo from '@/assets/images/etc/twitter_verified_logo.svg';
+import ethereumLogo from '@/assets/images/etc/ethereum_logo.svg';
 
 const AddrResolver = {
   bind: function (el, binding, vnode) {
@@ -42,11 +44,18 @@ const AddrResolver = {
       actualProcess(address);
     });
     const removeElements = function () {
-      vnode.elm.parentNode.parentNode
-        .querySelectorAll(
-          '.resolver-error, .resolver-addr, .contract-addr-resolved'
-        )
-        .forEach(e => e.remove());
+      const elements = [
+        '.resolution-container',
+        '.resolver-error',
+        '.resolver-addr',
+        '.contract-addr-resolved',
+        '.twitter-verify'
+      ];
+      elements.forEach(e =>
+        vnode.elm.parentNode.parentNode
+          .querySelectorAll(e)
+          .forEach(e => e.remove())
+      );
     };
     const appendElement = function (ele) {
       removeElements();
@@ -64,8 +73,12 @@ const AddrResolver = {
     const resolveViaENS = function (domain) {
       const _this = vnode.context;
       const ens = _this.$store.state.main.ens;
+
       const errorPar = document.createElement('p');
       errorPar.classList.add('resolver-error');
+      const messageDiv = document.createElement('div');
+      messageDiv.classList.add('resolution-container');
+      messageDiv.appendChild(errorPar);
       if (
         (parentCurrency === network.type.name ||
           EthereumTokens[parentCurrency]) &&
@@ -92,7 +105,7 @@ const AddrResolver = {
           errorPar.innerText = _this.$t('ens.ens-resolver.no-resolver', {
             network: network.type.name[0]
           });
-          appendElement(errorPar);
+          appendElement(messageDiv);
         } else {
           checkAvatar(domain);
           getMultiCoinAddress(ens, normalise(domain), parentCurrency)
@@ -100,15 +113,20 @@ const AddrResolver = {
               if (!checkDarklist(address)) {
                 _this.hexAddress = address;
                 _this.isValidAddress = true;
+                const ethAddressDisplay = `<img style="padding:1em" src="${ethereumLogo}"/><span style="font-weight: 600">${address}</span>`;
                 checkAddressIsContract(address).then(res => {
                   if (res) {
                     errorPar.classList.add('contract-addr-resolved');
                   }
                   errorPar.innerText = res
                     ? _this.$t('errorsGlobal.address-is-contract')
-                    : address;
+                    : '';
+                  errorPar.innerHTML = !res ? ethAddressDisplay : '';
+
                   appendElement(errorPar);
                 });
+                errorPar.innerHTML = ethAddressDisplay;
+                appendElement(messageDiv);
               }
             })
             .catch(() => {
@@ -130,7 +148,7 @@ const AddrResolver = {
                         errorPar.innerText = res
                           ? _this.$t('errorsGlobal.address-is-contract')
                           : address;
-                        appendElement(errorPar);
+                        appendElement(messageDiv);
                       });
                     }
                   })
@@ -143,7 +161,7 @@ const AddrResolver = {
                     _this.isValidAddress = false;
                     _this.hexAddress = '';
                     _this.avatar = '';
-                    appendElement(errorPar);
+                    appendElement(messageDiv);
                   });
               } else {
                 // eslint-disable-next-line
@@ -154,7 +172,7 @@ const AddrResolver = {
                 _this.isValidAddress = false;
                 _this.hexAddress = '';
                 _this.avatar = '';
-                appendElement(errorPar);
+                appendElement(messageDiv);
               }
             });
         }
@@ -190,7 +208,7 @@ const AddrResolver = {
             } else {
               errorPar.innerText = '';
             }
-            appendElement(errorPar);
+            appendElement(messageDiv);
           }
         } catch (e) {
           if (e.message.includes('Missing validator for currency: ')) {
@@ -199,7 +217,7 @@ const AddrResolver = {
             errorPar.innerText = _this.$t('swap.warning.unable-validate-addr', {
               currency: parentCurrency
             });
-            appendElement(errorPar);
+            appendElement(messageDiv);
           } else {
             throw e;
           }
@@ -256,7 +274,10 @@ const AddrResolver = {
     };
 
     const resolveDomain = async function (domain) {
+      const messageDiv = document.createElement('div');
       const messagePar = document.createElement('p');
+      messageDiv.appendChild(messagePar);
+      messageDiv.classList.add('resolution-container');
       const _this = vnode.context;
       if (
         domain.indexOf('.') > 0 &&
@@ -264,25 +285,41 @@ const AddrResolver = {
         /^[a-zA-Z\-\.0-9]*\.(zil|crypto)$/.test(domain)
       ) {
         try {
-          const address = await resolution.addressOrThrow(
-            domain,
-            parentCurrency
-          );
+          const address = await resolution.addr(domain, parentCurrency);
           if (!checkDarklist(address)) {
             _this.isValidAddress = true;
             _this.hexAddress =
               parentCurrency === network.type.name
                 ? toChecksumAddress(address)
                 : address;
-            checkAddressIsContract(address).then(res => {
-              messagePar.classList.add(
-                res ? 'contract-addr-resolved' : 'resolver-addr'
+            const contractAddress = await checkAddressIsContract(address);
+            if (contractAddress) {
+              messagePar.classList.add('contract-addr-resolved');
+              messagePar.innerText = _this.$t(
+                'errorsGlobal.address-is-contract'
               );
-              messagePar.innerText = res
-                ? _this.$t('errorsGlobal.address-is-contract')
-                : _this.hexADdress;
-              appendElement(messagePar);
-            });
+            } else {
+              messagePar.classList.add('resolver-addr');
+              messagePar.style.cssText = 'display:flex;align-items:center';
+              messagePar.innerHTML = `${
+                parentCurrency === 'ETH'
+                  ? `<img style="padding:1em" src="${ethereumLogo}"/>`
+                  : `<p style="padding:1em .5em 1em 1em">${parentCurrency} Address: </p>`
+              }<span style="font-weight: 600">${_this.hexAddress}</span>`;
+              const twitterUsername = await resolution.cns
+                .twitter(domain)
+                .catch(() => null);
+              if (twitterUsername) {
+                const twitterVerifiedPar = document.createElement('p');
+                twitterVerifiedPar.classList.add('twitter-verify');
+
+                twitterVerifiedPar.innerHTML = `<div style="display:flex; align-items:center; padding: 0 0 1em 1em"><img style="padding: 0 6px 0 0"src="${twitterVerifiedLogo}" /> <a href="https://twitter.com/${twitterUsername}" target="_blank" style="margin-right:5px; font-weight:600">@${twitterUsername}</a> - ${_this.$t(
+                  'ens.unstoppableResolution.twitter-verified'
+                )} <a href="https://chain.link/" target="_blank" rel="noopener noreferrer" style="margin-left: 5px">Chainlink</a></div>`;
+                messageDiv.appendChild(twitterVerifiedPar);
+              }
+            }
+            appendElement(messageDiv);
           }
         } catch (err) {
           _this.isValidAddress = false;
@@ -298,10 +335,10 @@ const AddrResolver = {
                   err.code != 'UnsupportedDomain'
                     ? resolution.serviceName(domain)
                     : '',
-                currencyTicker: parentCurrency
+                recordName: parentCurrency
               }
             );
-            appendElement(messagePar);
+            appendElement(messageDiv);
           } else throw err;
         }
       } else {
