@@ -4,7 +4,7 @@
 
 const package = require('./package.json');
 const packageJson = require('package-json');
-const SAFE_TIME = Number.MAX_SAFE_INTEGER; // make builds reproducible, prevent failure
+const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
 // babel-jest 24.0.0 is breaking all the tests [2-1-19]
 //@xkeshi/vue-qrcode no longer maintained, forked out to mew
 //multicoin-address-validator not enough downloads
