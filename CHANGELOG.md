@@ -1,3 +1,6 @@
+### Bug 
+* Add allowance check for LEND migrator [#2649](https://github.com/MyEtherWallet/MyEtherWallet/pull/2649)
+
 ### Release v5.7.12
 
 ### Feature
