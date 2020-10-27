@@ -1,3 +1,7 @@
+### Bug
+
+* Disable button when swap expires, disable click outside swap modal [#2648](https://github.com/MyEtherWallet/MyEtherWallet/pull/2648)
+
 ### Release v5.7.12
 
 ### Feature
