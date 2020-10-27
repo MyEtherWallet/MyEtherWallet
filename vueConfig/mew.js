@@ -6,42 +6,47 @@ const defaultConfigs = require('./defaultConfigs');
 const PrerenderSpaPlugin = require('prerender-spa-plugin');
 const path = require('path');
 
-const productionPlugins = [
-  new PrerenderSpaPlugin({
-    staticDir: '/home/steve/mew/z_SCRAPs/MyEtherWallet/dist',
-    routes: ['/'],
-    postProcess (renderedRoute) {
-      // Ignore any redirects.
-      renderedRoute.route = renderedRoute.originalRoute
-      // Basic whitespace removal. (Don't use this in production.)
-      renderedRoute.html = renderedRoute.html.split(/>[\s]+</gmi).join('><')
-      // Remove /index.html from the output path if the dir name ends with a .html file extension.
-      // For example: /dist/dir/special.html/index.html -> /dist/dir/special.html
-      if (renderedRoute.route.endsWith('.html')) {
-        renderedRoute.outputPath = path.join(__dirname, 'dist', renderedRoute.route)
-      }
+const productionPlugins = () => {
+  if(process.env.NODE_ENV === 'production' ){
+    return   [
+      new PrerenderSpaPlugin({
+        staticDir: path.join(path.resolve(__dirname,'../') , 'dist'),
+        routes: ['/'],
+        postProcess (renderedRoute) {
+          // Ignore any redirects.
+          renderedRoute.route = renderedRoute.originalRoute
+          // Basic whitespace removal. (Don't use this in production.)
+          renderedRoute.html = renderedRoute.html.split(/>[\s]+</gmi).join('><')
+          // Remove /index.html from the output path if the dir name ends with a .html file extension.
+          // For example: /dist/dir/special.html/index.html -> /dist/dir/special.html
+          if (renderedRoute.route.endsWith('.html')) {
+            renderedRoute.outputPath = path.join(__dirname, 'dist', renderedRoute.route)
+          }
 
-      return renderedRoute
-    },
-    renderer: new PrerenderSpaPlugin.PuppeteerRenderer({
-      injectProperty: '__PRERENDER_INJECTED',
-      // We need to inject a value so we're able to
-      // detect if the page is currently pre-rendered.
-      inject: {},
-      // Our view component is rendered after the API
-      // request has fetched all the necessary data,
-      // so we create a snapshot of the page after the
-      // `data-view` attribute exists in the DOM.
-      // renderAfterElementExists: '[data-view]',
-      headless: false,
-      maxConcurrentRoutes: 40,
-      ignoreHTTPSErrors: true,
-      devtools: true,
-      renderAfterDocumentEvent: 'render-event',
-      // renderAfterDocumentEvent: 'render-event'
-    }),
-  }),
-];
+          return renderedRoute
+        },
+        renderer: new PrerenderSpaPlugin.PuppeteerRenderer({
+          injectProperty: '__PRERENDER_INJECTED',
+          // We need to inject a value so we're able to
+          // detect if the page is currently pre-rendered.
+          inject: {},
+          // Our view component is rendered after the API
+          // request has fetched all the necessary data,
+          // so we create a snapshot of the page after the
+          // `data-view` attribute exists in the DOM.
+          // renderAfterElementExists: '[data-view]',
+          headless: false,
+          maxConcurrentRoutes: 40,
+          ignoreHTTPSErrors: true,
+          devtools: true,
+          renderAfterDocumentEvent: 'render-event',
+          // renderAfterDocumentEvent: 'render-event'
+        }),
+      }),
+    ]
+  }
+  return [];
+};
 
 const webpackConfig = {
   devtool: defaultConfigs.devtool,
@@ -69,7 +74,7 @@ const webpackConfig = {
         }
       ]
     }),
-    ...productionPlugins
+    ...productionPlugins()
   ]),
   optimization: defaultConfigs.optimization
 };
