@@ -1,8 +1,8 @@
 <template>
   <div class="mew-component--side-info-tx-history">
-    <mew6-white-sheet :sideinfo="!mobile" class="px-7 py-5">
+    <mew6-white-sheet :sideinfo="!mobile" class="px-5 px-lg-7 py-5">
       <div class="d-flex align-center justify-space-between">
-        <div class="mew-heading-2">{{ title }}</div>
+        <h4 class="font-weight-bold">{{ title }}</h4>
         <div class="primary--text font-weight--500">EthVM</div>
       </div>
 

@@ -5,8 +5,8 @@
       to="0x02fb7f333fd493b39b79ba57b6d510c64eaa3dc0"
       class="mb-2"
     />
-    <balance-block />
-    <mew-expand-panel :panel-items="panelItems">
+    <balance-block class="mb-10" />
+    <mew-expand-panel :panel-items="panelItems" has-dividers>
       <template #panelBody1>
         <div class="px-3">
           <div class="d-flex justify-space-between mb-2">

@@ -7,7 +7,7 @@
 
     <mew6-white-sheet
       :sideinfo="!mobile"
-      class="px-7 py-5 d-flex justify-space-between"
+      class="px-5 px-lg-7 py-5 d-flex justify-space-between"
     >
       <div>
         <div class="d-flex align-center">

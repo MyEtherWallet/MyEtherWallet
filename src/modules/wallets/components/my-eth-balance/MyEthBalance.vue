@@ -1,10 +1,10 @@
 <template>
   <div class="mew-component--side-info-balance">
-    <mew6-white-sheet :sideinfo="!mobile" class="px-7 py-5">
+    <mew6-white-sheet :sideinfo="!mobile" class="px-5 px-lg-7 py-5">
       <div class="d-flex align-center justify-space-between">
         <div>
           <div class="d-flex align-center">
-            <span class="mew-heading-2 mr-2">My ETH balance</span>
+            <h4 class="font-weight-bold mr-2">My ETH balance</h4>
           </div>
 
           <div class="mt-4">

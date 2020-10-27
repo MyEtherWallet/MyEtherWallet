@@ -1,6 +1,6 @@
 <template>
   <mew6-white-sheet :sideinfo="!mobile">
-    <div class="px-7 pt-5">
+    <div class="px-5 px-lg-7 py-5">
       <div class="d-flex align-center justify-space-between">
         <span class="mew-heading-2">{{ $t('common.swap') }}</span>
         <mew-button
