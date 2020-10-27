@@ -26,7 +26,7 @@
           'mt-3',
           disabled ? 'disabled' : ''
         ]"
-        @click="migrate"
+        @click="checkAllowance"
       >
         {{ $t('dappsAave.migrate') }}
       </button>
