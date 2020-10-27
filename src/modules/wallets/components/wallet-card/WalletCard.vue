@@ -41,6 +41,7 @@
             btn-style="transparent"
             icon="mdi-printer"
             icon-type="mdi"
+            @click.native="openPaperWallet = true"
           ></mew-button>
           <mew-button
             button-size="small"
@@ -61,8 +62,11 @@
         />
       </div>
     </div>
-    <change-address :open="openChangeAddress" :close="closeChangeAddress" />
-    <paper-wallet :open="openPaperWallet" :close="closePaperWallet" />
+    <change-address
+      :open="openChangeAddress"
+      @close="openChangeAddress = false"
+    />
+    <paper-wallet :open="openPaperWallet" @close="openPaperWallet = false" />
   </div>
 </template>
 

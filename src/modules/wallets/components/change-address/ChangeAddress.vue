@@ -3,6 +3,7 @@
     :show-overlay="open"
     title="1. Connect with Ledger"
     right-btn-text="Close"
+    @closeOverlay="$emit('close')"
   >
     <template #mewOverlayBody>
       <mew-tabs :items="tabs" is-block>
