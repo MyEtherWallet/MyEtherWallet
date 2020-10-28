@@ -30,7 +30,7 @@ export default class WalletCalls {
         });
 
         if (ethereumPrice) {
-          return ethereumPrice[0].current_price;
+          return ethereumPrice[0];
         }
         return null;
       })

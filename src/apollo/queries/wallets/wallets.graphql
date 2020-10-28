@@ -8,5 +8,7 @@ query getUSDPrice {
   getLatestPrices {
         id
         current_price
+        market_cap
+        price_change_24h
     }
 }

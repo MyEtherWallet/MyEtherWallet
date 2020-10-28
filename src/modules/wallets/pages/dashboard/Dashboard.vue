@@ -5,10 +5,10 @@
         <div class="d-flex">
           <mew-module
             class="block-title"
-            subtitle="My Eth Balance"
-            title="24.842 ETH"
-            caption="$4,032.35"
-            :icon="require('@/assets/images/currencies/eth.png')"
+            :subtitle="subtitle"
+            :title="title"
+            :caption="convertedBalance"
+            :icon="network.type.icon"
             icon-align="left"
           />
           <div class="ml-auto">
@@ -29,15 +29,22 @@
         <chart :key="chart1d.key" :data="chart1d.data" class="mt-5" />
         <v-row class="align-center">
           <v-col class="d-flex align-center justify-center">
-            <div class="font-weight-bold">ETH PRICE</div>
-            <div class="ml-2 font-weight-regular text-color--mew-green">
-              3.12%
+            <div class="font-weight-bold">
+              {{ network.type.currenyName }} PRICE
             </div>
-            <v-icon class="primary--text body-2">mdi-arrow-up-bold</v-icon>
-            <v-icon v-if="false" class="light_red--text body-2"
-              >mdi-arrow-down-bold</v-icon
+            <div class="ml-2 font-weight-regular text-color--mew-green">
+              $ {{ usd.price_change_24h }}
+            </div>
+            <v-icon
+              :class="[
+                priceChange ? 'primary--text' : 'light_red--text',
+                'body-2'
+              ]"
+              >{{ priceChangeArrow }}</v-icon
             >
-            <div class="ml-5">$321.55 / 1 ETH</div>
+            <div class="ml-5">
+              $ {{ usd.current_price }} / 1 {{ network.type.currenyName }}
+            </div>
           </v-col>
           <v-col class="text-right">
             <mew-button
@@ -52,7 +59,7 @@
 
       <div class="pa-4"></div>
 
-      <div v-if="showBalance" class="mew-component--no-eth-balance">
+      <div v-if="showBuyEth" class="mew-component--no-eth-balance">
         <mew6-white-sheet class="position--relative">
           <div
             class="bg-container"
@@ -60,10 +67,12 @@
           />
           <v-sheet color="transparent" max-width="360px">
             <div class="pa-12">
-              <h2 class="mb-6">My ETH balance is empty</h2>
+              <h2 class="mb-6">
+                My {{ network.type.currenyName }} balance is empty
+              </h2>
               <mew-button
                 :has-full-width="false"
-                title="Buy ETH with a credit card"
+                :title="`Buy ${network.type.currenyName} with a credit card`"
                 btn-size="xlarge"
               />
               <div class="d-flex align-center mt-4">
@@ -86,7 +95,8 @@
                 />
               </div>
               <div class="text-color--gray1 mt-12">
-                Tip: You can also send your ETH here from another wallet!
+                Tip: You can also send your {{ network.type.currenyName }} here
+                from another wallet!
               </div>
             </div>
           </v-sheet>
@@ -153,18 +163,43 @@
 import staticData from './staticData.js';
 import chart from '@/modules/wallets/components/chart/Chart';
 import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
     chart
   },
+  props: {
+    ownersTokens: {
+      type: Array,
+      default: () => {
+        return [];
+      }
+    }
+  },
   data() {
     return staticData;
   },
   computed: {
-    ...mapState('wallet', ['balance']),
-    showBalance() {
+    ...mapState('wallet', ['balance', 'usd', 'network']),
+    showBuyEth() {
       return this.balannce === 0;
+    },
+    convertedBalance() {
+      const converted = BigNumber(this.balance).times(this.usd.current_price);
+      return `$ ${converted.toFixed(2)}`;
+    },
+    title() {
+      return `${this.balance} ${this.network.type.currencyName}`;
+    },
+    subtitle() {
+      return `My ${this.network.type.currencyName} Balance`;
+    },
+    priceChangeArrow() {
+      return this.priceChange > 0 ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
+    },
+    priceChange() {
+      return this.usd.price_change_24h > 0;
     }
   },
   methods: {
