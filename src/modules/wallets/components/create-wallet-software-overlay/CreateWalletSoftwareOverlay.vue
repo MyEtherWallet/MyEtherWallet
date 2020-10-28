@@ -3,7 +3,7 @@
     <mew-overlay
       :show-overlay="open"
       :title="typeTitle"
-      @closeOverlay="closeOverlay"
+      @closeOverlay="$emit('close')"
     >
       <template #mewOverlayBody>
         <v-sheet
@@ -107,10 +107,6 @@ export default {
     }
   },
   methods: {
-    closeOverlay() {
-      this.$emit('close-overlay');
-      this.close();
-    },
     createType(type) {
       this.type = type ? type : '';
     },

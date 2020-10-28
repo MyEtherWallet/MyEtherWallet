@@ -2,10 +2,10 @@
   <div>
     <v-container>
       <v-row align="center">
-        <v-col cols="5">
-          <block-title no-page-title :data="titleData" class="pr-8" />
+        <v-col cols="12" lg="5">
+          <block-title no-page-title :data="titleData" class="pr-lg-8" />
         </v-col>
-        <v-col cols="7">
+        <v-col cols="12" lg="7">
           <v-img
             src="@/assets/images/backgrounds/bg-spaceman.png"
             max-width="100%"

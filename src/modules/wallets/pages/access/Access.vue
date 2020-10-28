@@ -17,10 +17,7 @@
       </block-title>
       <v-sheet color="transparent" max-width="550px" class="mx-auto">
         <div class="mb-5">
-          <router-link
-            :to="{ name: 'AccessWalletHardwareWallets', query: {} }"
-            class="display--block"
-          >
+          <a href="https://www.mewwallet.com/" target="_blank">
             <mew-super-button
               btn-mode="small-right-image"
               color-theme="basic"
@@ -32,7 +29,7 @@
                 require('@/assets/images/icons/icon-mew-connect.png')
               "
             />
-          </router-link>
+          </a>
         </div>
         <div class="mb-5">
           <router-link
@@ -102,10 +99,7 @@
       </v-sheet>
       <div class="spacer-y-medium" />
     </v-container>
-    <software-overlay
-      :open="showSoftware"
-      @closeOverlay="showSoftware = false"
-    />
+    <software-overlay :open="showSoftware" @close="showSoftware = false" />
   </div>
 </template>
 

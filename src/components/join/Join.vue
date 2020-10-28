@@ -17,7 +17,7 @@
             title="Get Started"
             btn-style="outline"
             color-theme="white"
-            button-size="xlarge"
+            btn-size="xlarge"
           />
         </div>
       </v-container>
@@ -38,7 +38,7 @@
             title="Get Started"
             btn-style="outline"
             color-theme="white"
-            button-size="xlarge"
+            btn-size="xlarge"
           />
         </v-sheet>
       </div>

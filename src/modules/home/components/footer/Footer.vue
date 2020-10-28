@@ -46,7 +46,7 @@
                 class="mr-2"
               />
               <div>
-                <div class="mb-n2">ETH Donation</div>
+                <div>ETH Donation</div>
                 <div v-show="false" class="overline">
                   Address: 0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D
                 </div>
@@ -64,7 +64,7 @@
                 class="mr-2"
               />
               <div>
-                <div class="mb-n2">BTC Donation</div>
+                <div>BTC Donation</div>
                 <div v-show="false" class="overline">
                   Address: 1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9
                 </div>

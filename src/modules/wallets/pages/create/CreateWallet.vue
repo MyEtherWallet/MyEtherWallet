@@ -88,7 +88,7 @@
     </v-container>
 
     <div class="spacer-y-medium" />
-    <toast
+    <mew-toast
       ref="toast"
       can-close
       :link-obj="toastLink"
@@ -96,10 +96,7 @@
       toast-type="info"
     />
 
-    <software-overlay
-      :open="showSoftware"
-      @closeOverlay="showSoftware = false"
-    />
+    <software-overlay :open="showSoftware" @close="showSoftware = false" />
   </div>
 </template>
 

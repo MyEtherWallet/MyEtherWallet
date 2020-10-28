@@ -1,6 +1,6 @@
 <template>
   <div>
-    <mew-overlay :show-overlay="open" @closeOverlay="closeOverlay">
+    <mew-overlay :show-overlay="open" @closeOverlay="$emit('close')">
       <template #mewOverlayBody>
         <v-sheet
           v-if="type === '' && step === 0"
@@ -100,10 +100,6 @@ export default {
     }
   },
   methods: {
-    closeOverlay() {
-      this.$emit('close-overlay');
-      this.close();
-    },
     createType(type) {
       this.type = type ? type : '';
     },

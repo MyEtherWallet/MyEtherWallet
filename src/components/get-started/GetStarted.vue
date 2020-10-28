@@ -19,15 +19,16 @@
             </p>
           </div>
           <v-spacer />
-          <mew-button
-            btn-link="/create-wallet"
-            title="Get a new wallet"
-            color-theme="white"
-            button-size="xlarge"
-            icon="newWallet"
-            icon-align="left"
-            icon-type="mew"
-          />
+          <router-link :to="{ name: 'CreateWallet', query: {} }">
+            <mew-button
+              title="Get a new wallet"
+              color-theme="white"
+              button-size="xlarge"
+              icon="newWallet"
+              icon-align="left"
+              icon-type="mew"
+            />
+          </router-link>
         </div>
       </v-container>
     </div>

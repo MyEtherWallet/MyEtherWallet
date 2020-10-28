@@ -2,7 +2,7 @@
   <div>
     <v-container>
       <v-row>
-        <v-col cols="6">
+        <v-col cols="12" lg="6" class="mb-10 mb-lg-0">
           <v-sheet max-width="400px">
             <v-img
               src="@/assets/images/icons/icon-message2-mew.svg"
@@ -11,17 +11,17 @@
               aspect-ratio="1"
               class="mb-5"
             />
-            <block-title no-page-title :data="titleData" />
-            <mew-button
-              class="mt-5"
-              btn-link="https://www.mewtopia.com/"
-              :has-full-width="false"
-              title="Contact Support"
-              button-size="xlarge"
-            />
+            <block-title no-page-title :data="support" />
+            <a href="mailto:support@myetherwallet.com" target="_blank">
+              <mew-button
+                class="mt-5"
+                title="Contact Support"
+                btn-size="xlarge"
+              />
+            </a>
           </v-sheet>
         </v-col>
-        <v-col cols="6">
+        <v-col cols="12" lg="6">
           <v-sheet max-width="400px">
             <v-img
               src="@/assets/images/icons/icon-community-mew.svg"
@@ -30,7 +30,7 @@
               aspect-ratio="1"
               class="mb-5"
             />
-            <block-title no-page-title :data="titleData" />
+            <block-title no-page-title :data="community" />
             <div class="d-flex align-center mt-5">
               <v-btn
                 v-for="(i, key) in icons"
@@ -81,7 +81,13 @@ export default {
         img: Github
       }
     ],
-    titleData: {
+    support: {
+      title: 'Support center',
+      description:
+        'Need #MEWteam support? Get in touch and we’ll get back as soon as we can.',
+      centered: false
+    },
+    community: {
       title: 'Community',
       description:
         'MEW has partnered with Bity, Kyber Network, and Simplex to allow users to swap fiat to crypto, ETH and BTC.',
