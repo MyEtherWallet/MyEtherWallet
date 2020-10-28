@@ -78,7 +78,7 @@ export default {
       return BigNumber(parsedTxFee).toFixed(2);
     },
     txFeeUSD() {
-      return BigNumber(this.txFee).times(this.usd).toFixed(2);
+      return BigNumber(this.txFee).times(this.usd.current_price).toFixed(2);
     },
     value() {
       const parsedValue = this.tx.value ? this.tx.value : '0x';

@@ -419,8 +419,11 @@ export default {
       return this.sendTx ? this.sendTx.txFeeETH(this.customGasLimit) : '0';
     },
     txFeeUSD() {
-      if (this.usd && this.sendTx) {
-        return this.sendTx.txFeeUSD(this.customGasLimit, this.usd);
+      if (this.usd.current_price && this.sendTx) {
+        return this.sendTx.txFeeUSD(
+          this.customGasLimit,
+          this.usd.current_price
+        );
       }
       return '--';
     },

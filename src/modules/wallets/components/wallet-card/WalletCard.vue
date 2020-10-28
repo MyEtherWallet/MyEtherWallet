@@ -96,7 +96,7 @@ export default {
       );
     },
     convertedBalance() {
-      const balance = BigNumber(this.balance).times(this.usd);
+      const balance = BigNumber(this.balance).times(this.usd.current_price);
       return `$ ${balance.toFixed(2).toString()}`;
     }
   },

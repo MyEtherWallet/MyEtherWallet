@@ -2,6 +2,7 @@ import { getLatestPrices, getOwnersERC20Tokens } from './tokens.graphql';
 import ethImg from '@/assets/images/networks/eth.svg';
 import { Toast, ERROR } from '@/components/toast';
 import store from '@/store';
+import BigNumber from 'bignumber.js';
 
 const ETH_ID = 'ethereum';
 export default class Tokenslist {
@@ -64,6 +65,11 @@ export default class Tokenslist {
           token.tokenInfo.contract.toLowerCase()
         );
       }
+      const usdBalance = foundToken
+        ? BigNumber(foundToken.balance)
+            .times(foundToken.current_price)
+            .toFixed(0)
+        : 0;
       // need to eventually change image to check tokens network rather than just use eth network (if theres no image from coingecko)
       formattedList.push({
         name: token.tokenInfo.symbol,
@@ -73,7 +79,10 @@ export default class Tokenslist {
         balance: token.balance,
         contract: token.tokenInfo.contract,
         img: foundToken ? foundToken.image : ethImg,
-        decimals: token.tokenInfo.decimals
+        decimals: token.tokenInfo.decimals,
+        market_cap: foundToken ? foundToken.market_cap : null,
+        price_change_24h: foundToken ? foundToken.price_change_24h : null,
+        usdBalance: usdBalance
       });
     });
     if (eth) {
@@ -83,7 +92,9 @@ export default class Tokenslist {
         subtext: eth.name,
         value: eth.name,
         balance: eth.balance,
-        img: eth.image
+        img: eth.image,
+        market_cap: eth.market_cap,
+        price_change_24h: eth.price_change_24h
       });
     } else {
       formattedList.unshift({
@@ -92,7 +103,9 @@ export default class Tokenslist {
         subtext: 'Ethereum',
         value: 'Ethereum',
         balance: store.state.wallet.balance,
-        img: ethImg
+        img: ethImg,
+        market_cap: null,
+        price_change_24h: null
       });
     }
     return formattedList;
