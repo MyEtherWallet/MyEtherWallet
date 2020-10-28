@@ -15,37 +15,35 @@
       <div v-if="activeTab === 1">
         <mew6-white-sheet class="mt-7">
           <div class="pa-8">
-            <div>
-              <v-radio-group v-model="networkSelected">
-                <div v-for="(item, i) in networks" :key="i">
-                  <div class="text-uppercase font-weight-bold subtitle-1 mb-1">
-                    {{ item.label }}
-                  </div>
-
-                  <v-row no-gutters>
-                    <v-col
-                      v-for="button in item.buttons"
-                      :key="button.value"
-                      cols="12"
-                      md="6"
-                      class="mt-2"
-                    >
-                      <v-radio
-                        :label="button.name"
-                        :value="button.value"
-                      ></v-radio>
-                    </v-col>
-                  </v-row>
-
-                  <div>{{ item.id }}</div>
-                  <divider-line v-if="networks.length != i + 1" class="my-5" />
+            <v-radio-group v-model="networkSelected">
+              <div v-for="(item, i) in networks" :key="i">
+                <div class="text-uppercase font-weight-bold subtitle-1 mb-1">
+                  {{ item.label }}
                 </div>
-              </v-radio-group>
-            </div>
+
+                <v-row no-gutters>
+                  <v-col
+                    v-for="button in item.buttons"
+                    :key="button.value"
+                    cols="12"
+                    md="6"
+                    class="mt-2"
+                  >
+                    <v-radio
+                      :label="button.name"
+                      :value="button.value"
+                    ></v-radio>
+                  </v-col>
+                </v-row>
+
+                <div>{{ item.id }}</div>
+                <divider-line v-if="networks.length != i + 1" class="my-5" />
+              </div>
+            </v-radio-group>
           </div>
         </mew6-white-sheet>
         <div class="d-flex justify-center mt-5">
-          <mew-button button-size="xlarge" title="Change" class="mt-3" />
+          <mew-button btn-size="xlarge" title="Change" class="mt-3" />
         </div>
       </div>
 
@@ -53,7 +51,7 @@
         <mew6-white-sheet class="mt-7">
           <div class="pa-4 pa-md-8">
             <div>
-              <address-select label="Network" :items="addresses" />
+              <mew-address-select label="Network" :items="addresses" />
               <mew-input label="ETH Node Name" placeholder="Type node name" />
               <mew-input label="URL" placeholder="Type URL" />
               <mew-input label="Port" placeholder="Type port number" />
@@ -71,7 +69,7 @@
               </mew-expand-panel>
 
               <div class="d-flex justify-center">
-                <mew-button button-size="xlarge" title="Save" />
+                <mew-button btn-size="xlarge" title="Save" />
               </div>
             </div>
           </div>

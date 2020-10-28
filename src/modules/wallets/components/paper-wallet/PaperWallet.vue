@@ -36,14 +36,12 @@
               </div>
             </div>
             <div class="mt-5 d-flex align-center">
-              <v-sheet
-                :width="blockieSize"
-                :height="blockieSize"
-                color="transparent"
+              <mew-blockie
+                :address="address"
+                width="60px"
+                height="60px"
                 class="mr-4"
-              >
-                <mew-blockie :address="address" width="60px" height="60px" />
-              </v-sheet>
+              />
               <v-sheet color="transparent" max-width="400px">
                 <div class="subtitle-1 font-weight-black text-uppercase">
                   My address icon
