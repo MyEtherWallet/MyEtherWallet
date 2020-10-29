@@ -2,8 +2,13 @@
   <div class="mew-component--tools">
     <home-header title="Tools" />
 
-    <div class="expandHeader px-3 mt-n7 d-block d-lg-none">
-      <v-sheet max-width="500px" width="100%" class="mx-auto">
+    <div class="expandHeader mobile-menu px-3 mt-n7 d-block d-lg-none">
+      <v-sheet
+        max-width="500px"
+        width="100%"
+        class="mx-auto"
+        color="expandHeader"
+      >
         <v-select
           v-model="currentMenu"
           :items="items"
@@ -15,7 +20,12 @@
     </div>
 
     <v-container class="mt-8 mb-12">
-      <div class="d-block d-lg-none">mobile</div>
+      <div class="d-block d-lg-none">
+        <watch-only v-if="currentMenu === 'watch'" />
+        <convert v-if="currentMenu === 'convert'" />
+        <offline-helper v-if="currentMenu === 'offline'" />
+        <verify v-if="currentMenu === 'verify'" />
+      </div>
       <mew-tabs class="d-none d-lg-block" :is-vertical="true" :items="items">
         <template #tabItemContent1>
           <watch-only />
@@ -78,6 +88,20 @@ export default {
 </script>
 <style lang="scss">
 .mew-component--tools {
+  .mobile-menu {
+    .v-input__slot {
+      margin: 0;
+    }
+    .v-select__selection {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    .v-select__selection,
+    .v-icon {
+      color: white !important;
+    }
+  }
+
   .v-tabs {
     .v-slide-group {
       border-right: 1px solid var(--v-inputBorder-base) !important;
