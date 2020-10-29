@@ -1,4 +1,6 @@
 import ABI from './ABI';
+import configs from './config';
+import Vue from 'vue';
 
 export default class Sender {
   constructor({ address, web3, tokens, contractAddresses = [] }) {
@@ -8,14 +10,14 @@ export default class Sender {
     this.address = address;
     this.isCryptoKitties = false;
     if (!this.web3) {
-      throw Error('NFT Module requires Web3');
+      throw Error(
+        Vue.$i18n
+          ? Vue.$i18n.t('nftManager.requires-web3')
+          : 'NFT Module requires Web3'
+      );
     }
     this.contract = new this.web3.eth.Contract(ABI);
-    if (
-      this.contractAddresses.includes(
-        '0x06012c8cf97bead5deae237070f9587f8e7a266d'
-      )
-    ) {
+    if (this.contractAddresses.includes(configs.cryptoKittiesContract)) {
       this.isCryptoKitties = true;
     }
   }
@@ -23,7 +25,11 @@ export default class Sender {
   send(to, tokenId) {
     const details = this.getTokenDetails(tokenId);
     if (!details) {
-      throw Error('token id not found');
+      throw Error(
+        Vue.$i18n
+          ? Vue.$i18n.t('nftManager.token-id-not-found')
+          : 'token id not found'
+      );
     }
     let raw;
     if (this.isCryptoKitties) {

@@ -1,4 +1,5 @@
 import Nft from './src';
+
 export default class NFT {
   constructor({ network, address, web3 }) {
     this.network = network;
@@ -61,7 +62,7 @@ export default class NFT {
   setActiveContract(contractAddress) {
     return new Promise((resolve, reject) => {
       if (!this.nft.nftConfig[contractAddress]) {
-        reject(Error('No NFTs found for contract address'));
+        reject(Error(''));
       }
       this.currentActive = this.nft.nftConfig[contractAddress];
       resolve(this.nft.nftConfig[contractAddress].activate());

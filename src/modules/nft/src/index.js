@@ -1,11 +1,12 @@
 import configs from './config';
 import API from './api';
 import NftCollection from './nftCollection';
+import Vue from 'vue';
 
 export default class Nft {
   constructor(environment = {}) {
     this.active = true;
-    this.network = environment.network || { type: { name: 'ETH' } };
+    this.network = environment.network || { type: { name: configs.mainnet } };
     this.activeAddress = environment.address;
     this.setAvailableContracts = environment.setAvailableContracts;
     this.web3 = environment.web3;
@@ -39,7 +40,7 @@ export default class Nft {
     return new Promise((resolve, reject) => {
       const nftData = {};
       let selectedContract;
-      if (this.network.type.name === 'ETH') {
+      if (this.network.type.name ===  configs.mainnet) {
         return this.api.getTokens().then(configData => {
           if (!configData.error) {
             try {
@@ -67,14 +68,14 @@ export default class Nft {
           }
         });
       }
-      reject(Error('Nft Module is only available on mainnet'));
+      reject(Error(Vue.$i18n ? Vue.$i18n.t('nftManager.no-nfts-for-address') :  'Nft Module is only available on mainnet'));
     });
   }
 
   async getFirstTokenSet(selectedContract) {
     return new Promise((resolve, reject) => {
       if (!this.nftConfig[selectedContract]) {
-        reject(`NFT contract [${selectedContract}] not found for address`);
+        reject(Vue.$i18n ? Vue.$i18n.t('nftManager.no-nfts-for-address', {selectedContract}) :  `NFT contract [${selectedContract}] not found for address`);
       }
       this.nftConfig[selectedContract]
         .getNftDetails(selectedContract)

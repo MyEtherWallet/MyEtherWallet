@@ -18,5 +18,9 @@
   "name": "NFT name",
   "invalid-addr": "Invalid address given.",
   "nft": "NFT",
-  "manager": "Manager"
+  "manager": "Manager",
+  "no-nfts-for-address": "No NFTs found for contract address",
+  "contract-not-found": "NFT contract [{selectedContract}] not found for address",
+  "token-id-not-found": "token id not found",
+  "requires-web3": "NFT Module requires Web3"
 }
