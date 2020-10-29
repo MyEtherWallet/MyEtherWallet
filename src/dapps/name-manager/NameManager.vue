@@ -15,7 +15,7 @@
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
-        <template v-slot:tabContent1>
+        <template #tabContent1>
           <v-sheet max-width="700px" color="transparent" class="py-12 mx-auto">
             <div class="tab-width">
               <div class="mb-5">
@@ -32,7 +32,7 @@
                   />
                   <mew-button
                     :has-full-width="false"
-                    button-size="xlarge"
+                    btn-size="xlarge"
                     title="Register domain"
                   />
                 </div>
@@ -44,9 +44,7 @@
                 <v-card flat color="tableHeader" class="pa-10">
                   <div class="d-flex justify-space-between align-center">
                     <div>
-                      <div class="mew-heading-1 mb-2">
-                        mewwallet.crypto
-                      </div>
+                      <div class="mew-heading-1 mb-2">mewwallet.crypto</div>
                       <div>
                         <span class="font-weight-medium">0.0823234234</span>
                         ETH ($40.00)
@@ -88,7 +86,7 @@
             </div>
           </v-sheet>
         </template>
-        <template v-slot:tabContent2>
+        <template #tabContent2>
           <div class="pa-12">
             <div class="d-flex align-center justify-space-between mb-7">
               <h4 class="font-weight-bold">
@@ -97,19 +95,23 @@
               <mew-button
                 btn-style="outline"
                 title="+ Add domain you own"
-                button-size="large"
+                btn-size="large"
               />
             </div>
             <div>
               <mew-expand-panel :panel-items="myDomains">
-                <template v-slot:panelBody1>
+                <template #panelBody1>
                   <div>
                     <div class="header-block bg_datablock">
                       <v-row>
                         <v-col cols="6">
                           <div class="d-flex align-center">
                             <div>Registrant</div>
-                            <blockie width="25px" height="25px" class="mx-3" />
+                            <mew-blockie
+                              width="25px"
+                              height="25px"
+                              class="mx-3"
+                            />
                             <div class="monospace text-overflow--ellipsis">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>
@@ -118,7 +120,11 @@
                         <v-col cols="6">
                           <div class="d-flex align-center">
                             <div>Controller</div>
-                            <blockie width="25px" height="25px" class="mx-3" />
+                            <mew-blockie
+                              width="25px"
+                              height="25px"
+                              class="mx-3"
+                            />
                             <div class="monospace text-overflow--ellipsis">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>
@@ -156,14 +162,18 @@
                     </div>
                   </div>
                 </template>
-                <template v-slot:panelBody2>
+                <template #panelBody2>
                   <div>
                     <div class="header-block bg_datablock">
                       <v-row>
                         <v-col cols="6">
                           <div class="d-flex align-center">
                             <div>Registrant</div>
-                            <blockie width="25px" height="25px" class="mx-3" />
+                            <mew-blockie
+                              width="25px"
+                              height="25px"
+                              class="mx-3"
+                            />
                             <div class="monospace text-overflow--ellipsis">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>
@@ -172,7 +182,11 @@
                         <v-col cols="6">
                           <div class="d-flex align-center">
                             <div>Controller</div>
-                            <blockie width="25px" height="25px" class="mx-3" />
+                            <mew-blockie
+                              width="25px"
+                              height="25px"
+                              class="mx-3"
+                            />
                             <div class="monospace text-overflow--ellipsis">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>

@@ -15,28 +15,28 @@
           :items="mewTabs"
           is-block
         >
-          <template v-slot:tabContent1>
+          <template #tabContent1>
             <img
               class="pt-7 pb-3 tab-image-content"
               :src="require('@/assets/images/backgrounds/bg-send-page.png')"
               alt="Send"
             />
           </template>
-          <template v-slot:tabContent2>
+          <template #tabContent2>
             <img
               class="pt-7 tab-image-content"
               :src="require('@/assets/images/backgrounds/bg-swap-page.png')"
               alt="Swap"
             />
           </template>
-          <template v-slot:tabContent3>
+          <template #tabContent3>
             <img
               class="pt-7 tab-image-content"
               :src="require('@/assets/images/backgrounds/bg-dapps-page.png')"
               alt="Dapps"
             />
           </template>
-          <template v-slot:tabContent4>
+          <template #tabContent4>
             <img
               class="pt-7 tab-image-content"
               :src="require('@/assets/images/backgrounds/bg-tokens-page.png')"

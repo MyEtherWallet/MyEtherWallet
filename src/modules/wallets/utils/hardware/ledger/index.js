@@ -5,7 +5,7 @@ import u2fTransport from '@ledgerhq/hw-transport-u2f';
 import webUsbTransport from '@ledgerhq/hw-transport-webusb';
 import { LEDGER as ledgerType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
-import HDWalletInterface from '@/wallets/HDWalletInterface';
+import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
 import * as HDKey from 'hdkey';
 import platform from 'platform';
 import store from '@/store';
@@ -16,8 +16,9 @@ import {
   sanitizeHex,
   calculateChainIdFromV
 } from '../../utils';
-import { toBuffer } from 'ethereumjs-util';
+import toBuffer from '@/helpers/toBuffer';
 import errorHandler from './errorHandler';
+import Vue from 'vue';
 
 const NEED_PASSWORD = false;
 const OPEN_TIMEOUT = 10000;
@@ -61,7 +62,7 @@ class ledgerWallet {
     }
     const txSigner = async tx => {
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.network)
+        common: commonGenerator(store.state.wallet.network)
       });
       const networkId = tx.getChainId();
       tx.raw[6] = networkId;
@@ -89,10 +90,10 @@ class ledgerWallet {
       const signedChainId = calculateChainIdFromV(tx.v);
       if (signedChainId !== networkId)
         throw new Error(
-          'Invalid networkId signature returned. Expected: ' +
-            networkId +
-            ', Got: ' +
-            signedChainId,
+          Vue.$i18n.t('errorsGlobal.invalid-network-id-sig', {
+            got: signedChainId,
+            expected: networkId
+          }),
           'InvalidNetworkId'
         );
       return getSignTransactionObject(tx);

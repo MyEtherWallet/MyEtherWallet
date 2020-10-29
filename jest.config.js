@@ -4,7 +4,7 @@ module.exports = {
     WITH_NETWORK: false,
     VERSION: 'test',
     NODE_ENV: 'test',
-    ROUTER_MODE: 'hash',
+    ROUTER_MODE: 'hash'
   },
   collectCoverageFrom: ['src/**/*.{js,vue}'],
   coveragePathIgnorePatterns: [
@@ -23,7 +23,7 @@ module.exports = {
     '^.+\\.jsx?$': 'babel-jest'
   },
   moduleNameMapper: {
-    '^@/networks$': '<rootDir>/tests/unit/__mocks__/networksMock.js',
+    '^@/utils/networks$': '<rootDir>/tests/unit/__mocks__/networksMock.js',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@@/(.*)$': '<rootDir>/tests/unit/$1',
     '^@/tests$': '<rootDir>/tests/index.js',

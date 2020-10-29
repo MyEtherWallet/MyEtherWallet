@@ -151,17 +151,6 @@
     "node": ">= 10.0.0 < 12.0.0",
     "npm": ">= 6.0.0"
   },
-  "greenkeeper": {
-    "ignore": [
-      "graphql",
-      "ethereum-ens",
-      "multicoin-address-validator",
-      "@xkeshi/vue-qrcode",
-      "vee-validate",
-      "sass-loader",
-      "@vue/test-utils"
-    ]
-  },
   "resolutions": {
     "acorn": "6.4.0",
     "cryptiles": "4.1.2",

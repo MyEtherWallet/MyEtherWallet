@@ -82,13 +82,13 @@ export default class Simplex {
 
   withinBounds(amount) {
     return (
-      new BigNumber(amount).gt(new BigNumber(this.minFiat)) &&
-      new BigNumber(amount).lt(new BigNumber(this.maxFiat))
+      BigNumber(amount).gt(BigNumber(this.minFiat)) &&
+      BigNumber(amount).lt(BigNumber(this.maxFiat))
     );
   }
 
   calculateRate(inVal, outVal) {
-    return new BigNumber(outVal).div(new BigNumber(inVal));
+    return BigNumber(outVal).div(BigNumber(inVal));
   }
 
   async getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
@@ -230,11 +230,9 @@ export default class Simplex {
 
   canOrder(fiatAmount, digitalAmount) {
     return (
-      new BigNumber(fiatAmount).gte(new BigNumber(this.minFiat)) &&
-      new BigNumber(new BigNumber(fiatAmount)).lte(
-        new BigNumber(this.maxFiat)
-      ) &&
-      new BigNumber(digitalAmount).gt(0)
+      BigNumber(fiatAmount).gte(BigNumber(this.minFiat)) &&
+      BigNumber(BigNumber(fiatAmount)).lte(BigNumber(this.maxFiat)) &&
+      BigNumber(digitalAmount).gt(0)
     );
   }
 

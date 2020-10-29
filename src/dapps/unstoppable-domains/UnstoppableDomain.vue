@@ -29,7 +29,7 @@
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
-        <template v-slot:tabContent1>
+        <template #tabContent1>
           <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
             <div class="mb-5">
               <div class="mb-3">
@@ -47,23 +47,19 @@
                 />
                 <mew-button
                   :has-full-width="false"
-                  button-size="xlarge"
+                  btn-size="xlarge"
                   title="Check availability"
                 />
               </div>
             </div>
             <div>
               <div class="mb-3">
-                <div class="mew-heading-3 font-weight-bold">
-                  Results
-                </div>
+                <div class="mew-heading-3 font-weight-bold">Results</div>
               </div>
               <v-card flat color="tableHeader" class="pa-10">
                 <div class="d-flex justify-space-between align-center">
                   <div>
-                    <div class="mew-heading-1 mb-2">
-                      mewwallet.crypto
-                    </div>
+                    <div class="mew-heading-1 mb-2">mewwallet.crypto</div>
                     <div>
                       <span class="font-weight-medium">0.0823234234</span>
                       ETH ($40.00)
@@ -133,7 +129,7 @@
                   outlined
                   color="tableHeader"
                   class="pa-4 d-flex align-center justify-space-between bordered-red"
-                  style="border-color: var(--v-error-base) !important;"
+                  style="border-color: var(--v-error-base) !important"
                 >
                   <div class="d-flex align-center">
                     <img
@@ -181,16 +177,16 @@
                   <mew-button
                     title="Back"
                     btn-style="outline"
-                    button-size="xlarge"
+                    btn-size="xlarge"
                     class="mr-3"
                   />
-                  <mew-button title="Pay" button-size="xlarge" />
+                  <mew-button title="Pay" btn-size="xlarge" />
                 </div>
               </v-sheet>
             </div>
           </v-sheet>
         </template>
-        <template v-slot:tabContent2>
+        <template #tabContent2>
           <div class="pa-12">
             <div class="d-flex align-center justify-space-between mb-7">
               <h4 class="font-weight-bold">
@@ -199,19 +195,23 @@
               <mew-button
                 btn-style="outline"
                 title="+ Add domain you own"
-                button-size="large"
+                btn-size="large"
               />
             </div>
             <div>
               <mew-expand-panel :panel-items="myDomains">
-                <template v-slot:panelBody1>
+                <template #panelBody1>
                   <div>
                     <div class="header-block bg_datablock">
                       <v-row>
                         <v-col cols="6">
                           <div class="d-flex align-center">
                             <div>Registrant</div>
-                            <blockie width="25px" height="25px" class="mx-3" />
+                            <mew-blockie
+                              width="25px"
+                              height="25px"
+                              class="mx-3"
+                            />
                             <div class="monospace text-overflow--ellipsis">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>
@@ -220,7 +220,11 @@
                         <v-col cols="6">
                           <div class="d-flex align-center">
                             <div>Controller</div>
-                            <blockie width="25px" height="25px" class="mx-3" />
+                            <mew-blockie
+                              width="25px"
+                              height="25px"
+                              class="mx-3"
+                            />
                             <div class="monospace text-overflow--ellipsis">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>
@@ -258,14 +262,18 @@
                     </div>
                   </div>
                 </template>
-                <template v-slot:panelBody2>
+                <template #panelBody2>
                   <div>
                     <div class="header-block bg_datablock">
                       <v-row>
                         <v-col cols="6">
                           <div class="d-flex align-center">
                             <div>Registrant</div>
-                            <blockie width="25px" height="25px" class="mx-3" />
+                            <mew-blockie
+                              width="25px"
+                              height="25px"
+                              class="mx-3"
+                            />
                             <div class="monospace text-overflow--ellipsis">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>
@@ -274,7 +282,11 @@
                         <v-col cols="6">
                           <div class="d-flex align-center">
                             <div>Controller</div>
-                            <blockie width="25px" height="25px" class="mx-3" />
+                            <mew-blockie
+                              width="25px"
+                              height="25px"
+                              class="mx-3"
+                            />
                             <div class="monospace text-overflow--ellipsis">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>

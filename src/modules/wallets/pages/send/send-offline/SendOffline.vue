@@ -18,7 +18,7 @@
                 </div>
               </div>
 
-              <address-select
+              <mew-address-select
                 copy-tooltip="Copy"
                 save-tooltip="Save"
                 :enable-save-address="true"
@@ -32,7 +32,7 @@
             </div>
 
             <mew-expand-panel is-toggle has-dividers :panel-items="exPannel">
-              <template v-slot:panelBody1>
+              <template #panelBody1>
                 <div>
                   <mew-input label="Gas Price" placeholder=" " value="40" />
                   <mew-input label="Gas Limit" placeholder=" " value="21000" />
@@ -41,7 +41,7 @@
                 <div class="d-flex justify-space-between px-5">
                   <div class="mew-body font-weight-medium d-flex align-center">
                     Transaction Fee
-                    <info-tooltip class="ml-1" text="Tx fees" />
+                    <mew-tooltip class="ml-1" text="Tx fees" />
                   </div>
                   <div>$0.177</div>
                 </div>
@@ -59,14 +59,14 @@
               <mew-button
                 title="Send"
                 :has-full-width="false"
-                button-size="xlarge"
+                btn-size="xlarge"
               />
             </div>
             <div class="text-center mt-4">
               <mew-button
                 title="Clear all"
                 :has-full-width="false"
-                button-size="small"
+                btn-size="small"
                 btn-style="transparent"
               />
             </div>

@@ -17,7 +17,7 @@
                 <mew-input label="Amount" placeholder=" " />
               </div>
             </div>
-            <address-select
+            <mew-address-select
               class="mt-5"
               copy-tooltip="Copy"
               save-tooltip="Save"
@@ -76,9 +76,7 @@
                       />
                       <div>Not Available</div>
                     </div>
-                    <div>
-                      Buy crypto with a credit card.
-                    </div>
+                    <div>Buy crypto with a credit card.</div>
                   </v-card>
                 </v-col>
                 <v-col>
@@ -99,7 +97,7 @@
               :panel-items="exPannel"
               class="mt-4 mb-10 swap-expend"
             >
-              <template v-slot:panelBody1>
+              <template #panelBody1>
                 <mew-input
                   label="Gas Price"
                   placeholder=" "
@@ -117,7 +115,7 @@
               <mew-button
                 title="Swap"
                 :has-full-width="false"
-                button-size="xlarge"
+                btn-size="xlarge"
               />
             </div>
           </interface-wrap>

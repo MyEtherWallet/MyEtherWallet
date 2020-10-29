@@ -19,11 +19,12 @@
     "refresh": "Refresh Balance"
   },
   "addr": {
-    "button-switch": "Switch"
+    "button-switch": "Switch",
+    "copied-private-key": "Successfully copied Private Key!"
   },
   "tokens": {
     "custom": "Custom Tokens",
-    "warning-offline":   "Can't load balances in offline mode",
+    "warning-offline": "Can't load balances in offline mode",
     "no-tokens": "No tokens found :(",
     "modal": {
       "title": "Add Custom Tokens",
@@ -34,13 +35,17 @@
         "decimals": "Invalid Decimal. Decimal can only be between 0 and 18.",
         "addr": "Invalid address given."
       }
-    }
+    },
+    "token-added-success": "Successfully added token!"
   },
   "ads": {
     "buy-with-credit": "Buy ETH with Credit Card",
     "ios": "Available for iOS",
     "android": "and Android",
-    "twitter": "Follow us on Twitter"
+    "twitter": "Follow us on Twitter",
+    "new": "new",
+    "mew-wallet": "MEW wallet {new} {officially-released}",
+    "officially-released": "Officially Released"
   },
   "menu": {
     "string": "Menu",
@@ -54,7 +59,6 @@
     "sign-message": "Sign Message"
   },
   "actions": "Actions",
-  "download": "Download",
   "view-all": "View All",
   "settings": "Settings",
   "logout": "Log Out",
@@ -68,7 +72,7 @@
   "tx-history": "Transaction History",
   "investigate": "Use the transaction hash to investigate why this transaction failed.",
   "contract-creation": "Contract Creation",
-  "mewconnect-disconnected": "Seems like you are disconnected from MEWconnect, please reconnect using the App.",
+  "mewconnect-disconnected": "Seems like you are disconnected from MEWconnect / MEW wallet, please reconnect using the App.",
   "config": {
     "tx-speed": "Transaction Speed",
     "import": "Import Configuration",
@@ -78,11 +82,46 @@
     "import-short": "Import",
     "export": "Export Configurations",
     "export-desc": "Please click the button below to download your configuration file into your local computer.",
-    "upload-f": "Upload File..."
+    "upload-f": "Upload File...",
+    "add-contact": "Add Contact"
   },
   "no-avail": "This function is not available.",
-  "dashboard-swap": "MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20.",
+  "dashboard-swap": "MEW has partnered with DEX.AG, Changelly, Bity, and Simplex to offer competitive rates for all ETH and token swaps, as well as ETH <-> Fiat and ETH <-> BTC",
   "etherscan-tx-url": "https://etherscan.io/tx/[[txHash]]",
-  "etherscan-address-url": "https://etherscan.io/address/[[address]]"
+  "etherscan-address-url": "https://etherscan.io/address/[[address]]",
+  "address-book": {
+    "edit": "Edit",
+    "add": "Add",
+    "title": "Manage Contact Addresses",
+    "add-up-to": "You can add up to 10 contact addresses maximum.",
+    "nickname": "Nickname",
+    "remove-addr": "Remove Address",
+    "add-addr": "Add address to contact book",
+    "cannot-add": "Cannot add without an address",
+    "successfully-added": "Successfully added to the address book",
+    "already-exists": "This address already exists in the contact book",
+    "add-new": "Add a New Contact",
+    "edit-addr": "Edit Address",
+    "address": "Address",
+    "update": "Update",
+    "success-update": "Successfully updated",
+    "save-addr": "Save Address"
+  },
+  "web3-not-found": "Web3 Instance not found!",
+  "import-error": "Something went wrong while importing file, please make sure it is a valid file",
+  "account-content": {
+    "header": "MY ADDRESS ICON",
+    "subheader": "Always look for this icon when sending to this wallet",
+    "paper": "Paper Wallet",
+    "link2": "https://www.myetherwallet.com",
+    "my-priv": "MY PRIVATE KEY",
+    "warning": "Please Keep Your Paper Wallet at a {safe} Place! {extend}",
+    "dont-share-priv-key": "Please {doNot} Share Your Private Key With Anyone!",
+    "safe": "SAFE",
+    "do-not": "DO NOT"
+  },
+  "select-item": "Select an item",
+  "economy": "Economy",
+  "regular": "Regular",
+  "fast": "Fast"
 }
-

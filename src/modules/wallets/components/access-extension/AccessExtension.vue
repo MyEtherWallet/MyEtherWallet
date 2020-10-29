@@ -1,9 +1,7 @@
 <template>
   <div class="expandHeader">
     <block-title :data="titleData">
-      <h5 class="white--text ma-0">
-        Please select a browser from below.
-      </h5>
+      <h5 class="white--text ma-0">Please select a browser from below.</h5>
     </block-title>
 
     <v-sheet
@@ -32,10 +30,10 @@
         <mew-checkbox label="I agree MEW browser Extension user Terms." />
 
         <router-link
-          :to="{ name: 'AccessWalletBrowserExtensionAccess', query: {} }"
+          :to="{ name: 'AccessWalletBrowserExtensionAccess' }"
           class="display--block"
         >
-          <mew-button title="Access my wallet" button-size="xlarge" />
+          <mew-button title="Access my wallet" btn-size="xlarge" />
         </router-link>
       </div>
     </v-sheet>
@@ -59,11 +57,6 @@ export default {
         centered: true
       }
     };
-  },
-  methods: {
-    openOverlay(name) {
-      this.$store.commit('openOverlay', name);
-    }
   }
 };
 </script>

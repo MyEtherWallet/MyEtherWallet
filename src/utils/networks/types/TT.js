@@ -1,5 +1,5 @@
-import contracts from '@/contracts/contract-abi-tt.json';
-import tokens from '@/tokens/tokens-tt.json';
+import contracts from '@/_generated/contracts/contract-abi-tt.json';
+import tokens from '@/_generated/tokens/tokens-tt.json';
 import thundercore from '@/assets/images/networks/thundercore.svg';
 
 export default {

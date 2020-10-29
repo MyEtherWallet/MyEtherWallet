@@ -1,11 +1,11 @@
 {
-  "txTotal": "Transaction Total",
-  "scanQrCode": "Scan QR code to send/swap instantly",
-  "signingAddr": "Signing Address",
-  "messageInHex": "Message in hex",
-  "confirmSigning": "Confirm Signing",
-  "approveOnDevice": "Please Approve on Hardware Wallet",
+  "tx-total": "Transaction Total",
+  "signing-addr": "Signing Address",
+  "message-in-hex": "Message in hex",
+  "confirm-signing": "Confirm Signing",
+  "approve-on-device": "Please Approve on Hardware Wallet",
   "success": "Success",
   "error": "Error",
-  "waiting-for-hash": "Waiting for Transaction Hash"
+  "waiting-for-hash": "Waiting for Transaction Hash",
+  "confirm-transactions": "Confirmation (Total of {unSignedArray} transactions)"
 }

@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-ubq.json';
-import contracts from '@/contracts/contract-abi-ubq.json';
+import tokens from '@/_generated/tokens/tokens-ubq.json';
+import contracts from '@/_generated/contracts/contract-abi-ubq.json';
 import ubq from '@/assets/images/networks/ubq.svg';
 
 export default {

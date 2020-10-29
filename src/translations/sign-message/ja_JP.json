@@ -1,0 +1,7 @@
+{
+  "title": "Sign Message",
+  "desc": "Include your nickname and where you use the nickname so someone else cannot use it. Include a specific reason for the message so it cannot be reused for a different purpose.",
+  "message": "Message",
+  "sign": "Sign",
+  "signed": "Signed Message"
+}

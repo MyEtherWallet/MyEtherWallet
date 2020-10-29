@@ -5,7 +5,7 @@
     title="My paper wallet"
     right-btn-text="Close"
   >
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <v-sheet max-width="800px">
         <mew6-white-sheet>
           <div class="pa-10">
@@ -45,7 +45,7 @@
                 color="transparent"
                 class="mr-4"
               >
-                <blockie
+                <mew-blockie
                   :address="address"
                   :size="8"
                   :scale="16"
@@ -153,7 +153,7 @@
         </mew6-white-sheet>
 
         <div class="d-flex justify-center mt-12">
-          <mew-button title="Print" button-size="xlarge" />
+          <mew-button title="Print" btn-size="xlarge" />
         </div>
       </v-sheet>
     </template>

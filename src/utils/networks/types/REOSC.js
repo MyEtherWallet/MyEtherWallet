@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-reosc.json';
-import contracts from '@/contracts/contract-abi-reosc.json';
+import tokens from '@/_generated/tokens/tokens-reosc.json';
+import contracts from '@/_generated/contracts/contract-abi-reosc.json';
 import reosc from '@/assets/images/networks/reosc.svg';
 
 export default {

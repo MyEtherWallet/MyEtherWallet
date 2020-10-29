@@ -1,8 +1,8 @@
 <template>
   <mew-overlay :show-overlay="open" title="Network" right-btn-text="Close">
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <mew-tabs :items="tabs" is-block>
-        <template v-slot:tabContent1>
+        <template #tabContent1>
           <mew6-white-sheet>
             <div class="pa-8">
               <div>
@@ -36,17 +36,13 @@
                   </div>
                 </v-radio-group>
                 <div class="d-flex justify-center">
-                  <mew-button
-                    button-size="xlarge"
-                    title="Change"
-                    class="mt-3"
-                  />
+                  <mew-button btn-size="xlarge" title="Change" class="mt-3" />
                 </div>
               </div>
             </div>
           </mew6-white-sheet>
         </template>
-        <template v-slot:tabContent2>
+        <template #tabContent2>
           <mew6-white-sheet>
             <div class="pa-8">
               <div>
@@ -66,14 +62,14 @@
                   has-dividers
                   :panel-items="exPannel"
                 >
-                  <template v-slot:panelBody1>
+                  <template #panelBody1>
                     <mew-input label="Username" placeholder=" " />
                     <mew-input label="Password" placeholder=" " />
                   </template>
                 </mew-expand-panel>
 
                 <div class="d-flex justify-center">
-                  <mew-button button-size="xlarge" title="Save" />
+                  <mew-button btn-size="xlarge" title="Save" />
                 </div>
               </div>
             </div>

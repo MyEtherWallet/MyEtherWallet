@@ -5,7 +5,7 @@
         <mew6-white-sheet>
           <interface-wrap title="NFT Manager">
             <mew-tabs :items="items" is-vertical>
-              <template v-slot:tabItemContent1>
+              <template #tabItemContent1>
                 <div>
                   <div class="d-flex justify-space-between mb-5">
                     <h5 class="font-weight-bold">CryptoKitties</h5>
@@ -31,13 +31,13 @@
                         :has-full-width="false"
                         btn-style="outline"
                         title="Send"
-                        button-size="large"
+                        btn-size="large"
                       />
                     </v-card>
                   </div>
                 </div>
               </template>
-              <template v-slot:tabItemContent2>
+              <template #tabItemContent2>
                 <div>
                   <div class="d-flex justify-space-between mb-5">
                     <h5 class="font-weight-bold">Gods Unchained</h5>
@@ -63,13 +63,13 @@
                         :has-full-width="false"
                         btn-style="outline"
                         title="Send"
-                        button-size="large"
+                        btn-size="large"
                       />
                     </v-card>
                   </div>
                 </div>
               </template>
-              <template v-slot:tabItemContent3>
+              <template #tabItemContent3>
                 <div>
                   <div class="d-flex justify-space-between mb-5">
                     <h5 class="font-weight-bold">CryptoFlowers</h5>
@@ -95,13 +95,13 @@
                         :has-full-width="false"
                         btn-style="outline"
                         title="Send"
-                        button-size="large"
+                        btn-size="large"
                       />
                     </v-card>
                   </div>
                 </div>
               </template>
-              <template v-slot:tabItemContent4>
+              <template #tabItemContent4>
                 <div>
                   <div class="d-flex justify-space-between mb-5">
                     <h5 class="font-weight-bold">MyCryptoHeros</h5>
@@ -127,7 +127,7 @@
                         :has-full-width="false"
                         btn-style="outline"
                         title="Send"
-                        button-size="large"
+                        btn-size="large"
                       />
                     </v-card>
                   </div>

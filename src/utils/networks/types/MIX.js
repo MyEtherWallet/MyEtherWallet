@@ -1,6 +1,6 @@
-import tokens from '@/tokens/tokens-mix.json';
-import contracts from '@/contracts/contract-abi-mix.json';
-import mix from '@/assets/images/networks/default.svg';
+import tokens from '@/_generated/tokens/tokens-mix.json';
+import contracts from '@/_generated/contracts/contract-abi-mix.json';
+import mix from '@/assets/images/networks/network.svg';
 
 export default {
   name: 'MIX',

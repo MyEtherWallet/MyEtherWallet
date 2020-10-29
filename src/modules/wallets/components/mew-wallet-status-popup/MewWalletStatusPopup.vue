@@ -1,6 +1,6 @@
 <template>
   <v-tooltip open-on-click :open-on-hover="false" bottom open-delay="0">
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <div class="user-select--none" v-on="on"><slot /></div>
     </template>
     <v-card color="transparent" width="180px" class="px-1 py-3" flat>
@@ -16,7 +16,7 @@
         <div>Duration:</div>
         <div>04:23:31</div>
       </div>
-      <mew-button button-size="xlarge" color-theme="error" title="Disconnect" />
+      <mew-button btn-size="xlarge" color-theme="error" title="Disconnect" />
     </v-card>
   </v-tooltip>
 </template>

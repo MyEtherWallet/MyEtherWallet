@@ -1,8 +1,6 @@
 <template>
   <mew-overlay title="Deposit" :show-overlay="open" right-btn-text="Close">
-    <template v-slot:mewOverlayBody>
-      Deposit
-    </template>
+    <template #mewOverlayBody> Deposit </template>
   </mew-overlay>
 </template>
 

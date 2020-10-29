@@ -1,8 +1,7 @@
 import BigNumber from 'bignumber.js';
 
 import { networkSymbols } from '../partnersConfig';
-import { Toast } from '@/helpers';
-
+import { Toast, SENTRY } from '@/components/toast';
 import {
   notificationStatuses,
   ChangellyCurrencies,
@@ -149,7 +148,7 @@ export default class Changelly {
   }
 
   calculateRate(inVal, outVal) {
-    return new BigNumber(outVal).div(inVal);
+    return BigNumber(outVal).div(inVal);
   }
 
   async getMarketRate(fromCurrency, toCurrency, fromValue) {
@@ -169,9 +168,9 @@ export default class Changelly {
         )
       ]);
 
-      const minAmount = new BigNumber(changellyDetails[0])
+      const minAmount = BigNumber(changellyDetails[0])
         .times(0.001)
-        .plus(new BigNumber(changellyDetails[0]))
+        .plus(BigNumber(changellyDetails[0]))
         .toFixed();
 
       const estValueResponse = changellyDetails[1][0];
@@ -343,7 +342,7 @@ export default class Changelly {
       );
       return Changelly.parseChangellyStatus(status);
     } catch (e) {
-      Toast.responseHandler(e, false);
+      Toast(e, {}, SENTRY);
     }
   }
 

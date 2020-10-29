@@ -1,0 +1,14 @@
+query getEthBalance($hash: String!) {
+    getEthBalance(owner: $hash) {
+      balance
+    }
+}
+
+query getUSDPrice {
+  getLatestPrices {
+        id
+        current_price
+        market_cap
+        price_change_24h
+    }
+}

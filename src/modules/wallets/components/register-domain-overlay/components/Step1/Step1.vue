@@ -18,7 +18,7 @@
 
       <div class="font-weight-bold text-center">Price: 0.0031 ETH ($12.31)</div>
       <div class="d-flex justify-center mt-6">
-        <mew-button title="Request registration" button-size="xlarge" />
+        <mew-button title="Request registration" btn-size="xlarge" />
       </div>
     </v-sheet>
   </mew6-white-sheet>

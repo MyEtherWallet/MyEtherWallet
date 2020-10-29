@@ -3,7 +3,7 @@
     <block-title max-width="600px" no-page-title :data="title" class="mb-7" />
 
     <mew-stepper :items="items" :on-step="3">
-      <template v-slot:outsideStepContent1>
+      <template #outsideStepContent1>
         <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
           <bordered-white-sheet class="px-7">
             <v-radio-group v-model="networkSelected">
@@ -33,34 +33,34 @@
           </bordered-white-sheet>
         </v-sheet>
         <mew-button
-          button-size="xlarge"
+          btn-size="xlarge"
           title="Change"
           class="mx-auto display--block"
         />
       </template>
 
-      <template v-slot:outsideStepContent2>
+      <template #outsideStepContent2>
         <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-          <address-select label="From Address" />
+          <mew-address-select label="From Address" />
           <div class="d-flex justify-center mt-2">
             <mew-button
               class="mr-3"
               title="Back"
-              button-size="xlarge"
+              btn-size="xlarge"
               btn-style="outline"
             />
-            <mew-button title="Next" button-size="xlarge" />
+            <mew-button title="Next" btn-size="xlarge" />
           </div>
           <mew-button
             class="mt-5 display--block mx-auto"
             title="Export JSON file"
-            button-size="small"
+            btn-size="small"
             btn-style="transparent"
           />
         </v-sheet>
       </template>
 
-      <template v-slot:outsideStepContent3>
+      <template #outsideStepContent3>
         <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
           <v-textarea outlined label="Signature" value="Value"></v-textarea>
           <mew-expand-panel
@@ -69,10 +69,10 @@
             :panel-items="exPannel1"
             class="mt-4 mb-10 swap-expend"
           >
-            <template v-slot:panelBody1 style="margin-bottom: -1px !important;">
+            <template #panelBody1 style="margin-bottom: -1px !important">
               1
             </template>
-            <template v-slot:panelBody2>
+            <template #panelBody2>
               <div
                 v-for="(d, key) in details"
                 :key="key"

@@ -5,22 +5,19 @@
         <div class="d-flex">
           <mew-module
             class="block-title"
-            subtitle="My Eth Balance"
-            title="24.842 ETH"
-            caption="$4,032.35"
-            :icon="require('@/assets/images/currencies/eth.png')"
+            :subtitle="subtitle"
+            :title="title"
+            :caption="convertedBalance"
+            :icon="network.type.icon"
             icon-align="left"
           />
           <div class="ml-auto">
             <div class="d-flex align-center">
-              <mew-toggle-button
-                :button-group="chartButtons"
-                @onBtnClick="onBtnClick"
-              />
+              <mew-toggle :button-group="chartButtons" />
               <mew-button
-                style="border-radius: 100% !important;"
+                style="border-radius: 100% !important"
                 class="options-btn ml-2"
-                button-size="small"
+                btn-size="small"
                 icon-type="mdi"
                 icon="mdi-dots-vertical"
                 btn-style="transparent"
@@ -32,22 +29,29 @@
         <chart :key="chart1d.key" :data="chart1d.data" class="mt-5" />
         <v-row class="align-center">
           <v-col class="d-flex align-center justify-center">
-            <div class="font-weight-bold">ETH PRICE</div>
-            <div class="ml-2 font-weight-regular text-color--mew-green">
-              3.12%
+            <div class="font-weight-bold">
+              {{ network.type.currenyName }} PRICE
             </div>
-            <v-icon class="primary--text body-2">mdi-arrow-up-bold</v-icon>
-            <v-icon v-if="false" class="light_red--text body-2"
-              >mdi-arrow-down-bold</v-icon
+            <div class="ml-2 font-weight-regular text-color--mew-green">
+              $ {{ usd.price_change_24h }}
+            </div>
+            <v-icon
+              :class="[
+                priceChange ? 'primary--text' : 'light_red--text',
+                'body-2'
+              ]"
+              >{{ priceChangeArrow }}</v-icon
             >
-            <div class="ml-5">$321.55 / 1 ETH</div>
+            <div class="ml-5">
+              $ {{ usd.current_price }} / 1 {{ network.type.currenyName }}
+            </div>
           </v-col>
           <v-col class="text-right">
             <mew-button
               :has-full-width="false"
               title="Send Transaction"
-              button-size="xlarge"
-              @click.native="goTo('HomeAccessWallet')"
+              btn-size="xlarge"
+              @click.native="navigateToSend"
             />
           </v-col>
         </v-row>
@@ -55,7 +59,7 @@
 
       <div class="pa-4"></div>
 
-      <div class="mew-component--no-eth-balance">
+      <div v-if="showBuyEth" class="mew-component--no-eth-balance">
         <mew6-white-sheet class="position--relative">
           <div
             class="bg-container"
@@ -64,12 +68,12 @@
           <v-sheet color="transparent" max-width="360px">
             <div class="pa-12">
               <h2 class="mb-6">
-                My ETH balance is empty
+                My {{ network.type.currenyName }} balance is empty
               </h2>
               <mew-button
                 :has-full-width="false"
-                title="Buy ETH with a credit card"
-                button-size="xlarge"
+                :title="`Buy ${network.type.currenyName} with a credit card`"
+                btn-size="xlarge"
               />
               <div class="d-flex align-center mt-4">
                 <div>We accept credit card</div>
@@ -91,7 +95,8 @@
                 />
               </div>
               <div class="text-color--gray1 mt-12">
-                Tip: You can also send your ETH here from another wallet!
+                Tip: You can also send your {{ network.type.currenyName }} here
+                from another wallet!
               </div>
             </div>
           </v-sheet>
@@ -109,14 +114,13 @@
             :icon="require('@/assets/images/icons/icon-token-grey.png')"
             icon-align="left"
           >
-            <template v-slot:rightHeaderContainer>
+            <template #rightHeaderContainer>
               <mew-button
                 class="ml-auto"
                 :has-full-width="false"
                 title="All tokens"
-                button-size="small"
+                btn-size="small"
                 btn-style="transparent"
-                @click.native="goTo('HomeAccessWallet')"
               />
             </template>
           </mew-module>
@@ -136,16 +140,13 @@
           />
           <v-sheet color="transparent" max-width="360px">
             <div class="pa-12">
-              <h2 class="mb-6">
-                My token list is empty
-              </h2>
+              <h2 class="mb-6">My token list is empty</h2>
               <mew-button
                 class="ml-auto ml-n3"
                 :has-full-width="false"
                 :title="'+ ' + 'Add custom tokens'"
-                button-size="xsmall"
+                btn-size="xsmall"
                 btn-style="transparent"
-                @click.native="goTo('HomeAccessWallet')"
               />
             </div>
           </v-sheet>
@@ -155,35 +156,56 @@
       </div>
     </div>
     <div class="pa-4"></div>
-    <div>
-      <network />
-      <div class="pa-4"></div>
-      <swap />
-      <div class="pa-4"></div>
-      <banner-ads />
-    </div>
   </div>
 </template>
 
 <script>
-import network from '@/modules/wallets/components/network/Network';
-import swap from '@/modules/wallets/components/swap/Swap';
-import bannerAds from '@/modules/wallets/components/banner-ads/BannerAds';
 import staticData from './staticData.js';
 import chart from '@/modules/wallets/components/chart/Chart';
+import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
-    chart,
-    swap,
-    network,
-    bannerAds
+    chart
+  },
+  props: {
+    ownersTokens: {
+      type: Array,
+      default: () => {
+        return [];
+      }
+    }
   },
   data() {
     return staticData;
   },
+  computed: {
+    ...mapState('wallet', ['balance', 'usd', 'network']),
+    showBuyEth() {
+      return this.balannce === 0;
+    },
+    convertedBalance() {
+      const converted = BigNumber(this.balance).times(this.usd.current_price);
+      return `$ ${converted.toFixed(2)}`;
+    },
+    title() {
+      return `${this.balance} ${this.network.type.currencyName}`;
+    },
+    subtitle() {
+      return `My ${this.network.type.currencyName} Balance`;
+    },
+    priceChangeArrow() {
+      return this.priceChange > 0 ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
+    },
+    priceChange() {
+      return this.usd.price_change_24h > 0;
+    }
+  },
   methods: {
-    onBtnClick() {}
+    navigateToSend() {
+      this.$router.push({ name: 'SendTX' });
+    }
   }
 };
 </script>

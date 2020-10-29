@@ -3,9 +3,7 @@
     <v-container>
       <div class="d-flex align-center px-6">
         <div>
-          <h2 class="white--text mb-3">
-            Ready? Get your wallet today.
-          </h2>
+          <h2 class="white--text mb-3">Ready? Get your wallet today.</h2>
           <p class="white--text ma-0">
             Still don't know what MEW is?
             <a
@@ -19,10 +17,10 @@
         </div>
         <v-spacer />
         <mew-button
-          btn-link="/create-wallet"
+          :btn-link="link()"
           title="Get a new wallet"
           color-theme="white"
-          button-size="xlarge"
+          btn-size="xlarge"
           icon="newWallet"
           icon-align="left"
           icon-type="mew"
@@ -38,6 +36,11 @@ export default {
   components: {},
   data() {
     return {};
+  },
+  methods: {
+    link() {
+      return `${window.location.origin}/wallet/create`;
+    }
   }
 };
 </script>

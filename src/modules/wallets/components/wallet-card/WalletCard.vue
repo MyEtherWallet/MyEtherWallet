@@ -6,7 +6,7 @@
     <div class="info-container px-4 pt-5 pb-3">
       <div class="d-flex">
         <div class="blockie-img">
-          <blockie
+          <mew-blockie
             :address="address"
             :size="8"
             :scale="16"
@@ -14,10 +14,7 @@
             height="50px"
             class="blockie-image"
           />
-          <qr-code-popup
-            title="Address QR Code"
-            value="0x85b74f0ad686252a817c1a7fd70b600c098dc38c"
-          >
+          <qr-code-popup title="Address QR Code" :value="address">
             <img src="@/assets/images/icons/icon-qr-code-mew.svg" />
           </qr-code-popup>
         </div>
@@ -25,40 +22,43 @@
           <div class="font-weight-medium d-flex align-center">
             <div>MY ACCOUNT VALUE</div>
           </div>
-          <div class="headline font-weight-bold monospace">$7,244.58</div>
+          <div class="headline font-weight-bold monospace">
+            {{ convertedBalance }}
+          </div>
         </div>
       </div>
       <div class="component--address d-flex align-center mt-1">
         <div class="monospace full-address">{{ address }}</div>
         <div class="monospace last-four">{{ lastFour }}</div>
       </div>
-      <div class="mb-2">OWNED 3 DOMAINS ></div>
+      <!-- <div class="mb-2">OWNED 3 DOMAINS ></div> -->
       <div class="d-flex align-center">
         <div class="bottom-buttons">
           <mew-button
-            button-size="small"
+            btn-size="small"
             color-theme="white"
             btn-style="transparent"
             icon="mdi-printer"
             icon-type="mdi"
           ></mew-button>
           <mew-button
-            button-size="small"
+            btn-size="small"
             color-theme="white"
             btn-style="transparent"
             icon="mdi-file-document-outline"
             icon-type="mdi"
+            @click.native="copyAddress"
           ></mew-button>
         </div>
-        <mew-button
+        <!-- <mew-button
           class="ml-auto switch-button"
           :has-full-width="false"
           btn-style="outline"
           title="SWITCH >"
           color-theme="white"
-          button-size="small"
+          btn-size="small"
           @click.native="openChangeAddress = true"
-        />
+        /> -->
       </div>
     </div>
     <change-address :open="openChangeAddress" :close="closeChangeAddress" />
@@ -70,6 +70,10 @@
 import changeAddress from '@/modules/wallets/components/change-address/ChangeAddress';
 import paperWallet from '@/modules/wallets/components/paper-wallet/PaperWallet';
 import qrCodePopup from '@/modules/wallets/components/qr-code-popup/QRcodePopup';
+import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
+import clipboardCopy from 'clipboard-copy';
+import { Toast, INFO } from '@/components/toast';
 
 export default {
   components: {
@@ -80,16 +84,20 @@ export default {
   data() {
     return {
       openChangeAddress: false,
-      openPaperWallet: false,
-      address: '0xc2a933600c3fe776777b4000665409c61493d417'
+      openPaperWallet: false
     };
   },
   computed: {
+    ...mapState('wallet', ['address', 'usd', 'balance']),
     lastFour() {
       return this.address.substring(
         this.address.length - 4,
         this.address.length
       );
+    },
+    convertedBalance() {
+      const balance = BigNumber(this.balance).times(this.usd.current_price);
+      return `$ ${balance.toFixed(2).toString()}`;
     }
   },
   methods: {
@@ -98,6 +106,10 @@ export default {
     },
     closePaperWallet() {
       this.openPaperWallet = false;
+    },
+    copyAddress() {
+      clipboardCopy(this.address);
+      Toast(`Copied ${this.address} successfully!`, {}, INFO);
     }
   }
 };

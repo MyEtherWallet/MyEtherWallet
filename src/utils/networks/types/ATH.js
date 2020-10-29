@@ -1,6 +1,6 @@
-import tokens from '@/tokens/tokens-ath.json';
-import contracts from '@/contracts/contract-abi-ath.json';
-import ath from '@/assets/images/networks/default.svg';
+import tokens from '@/_generated/tokens/tokens-ath.json';
+import contracts from '@/_generated/contracts/contract-abi-ath.json';
+import ath from '@/assets/images/networks/network.svg';
 
 export default {
   name: 'ATH',
