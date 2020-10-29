@@ -13,20 +13,19 @@
           />
           <div class="ml-auto">
             <div class="d-flex align-center">
-              <mew-toggle :button-group="chartButtons" />
-              <mew-button
-                style="border-radius: 100% !important"
-                class="options-btn ml-2"
-                btn-size="small"
-                icon-type="mdi"
-                icon="mdi-dots-vertical"
-                btn-style="transparent"
-                color-theme="secondary"
+              <mew-toggle
+                :button-group="chartButtons"
+                @onBtnClick="handleBtnClick"
               />
             </div>
           </div>
         </div>
-        <chart :key="chart1d.key" :data="chart1d.data" class="mt-5" />
+        <div v-if="chartData.length > 0">
+          <chart :data="chartData" class="mt-5" />
+        </div>
+        <div v-else>
+          <p class="mew-heading-1 text-center">No chart data available!</p>
+        </div>
         <v-row class="align-center">
           <v-col class="d-flex align-center justify-center">
             <div class="font-weight-bold">
@@ -37,7 +36,7 @@
             </div>
             <v-icon
               :class="[
-                priceChange ? 'primary--text' : 'light_red--text',
+                priceChange ? 'primary--text' : 'light_red--text error-text',
                 'body-2'
               ]"
               >{{ priceChangeArrow }}</v-icon
@@ -160,11 +159,12 @@
 </template>
 
 <script>
-import staticData from './staticData.js';
+// import staticData from './staticData.js';
 import chart from '@/modules/wallets/components/chart/Chart';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-
+import WalletCalls from '@/apollo/queries/wallets/index';
+import utils from 'web3-utils';
 export default {
   components: {
     chart
@@ -178,10 +178,122 @@ export default {
     }
   },
   data() {
-    return staticData;
+    return {
+      chartButtons: ['1D', '1W', '1M', '1Y'],
+      tableHeaders: [
+        {
+          text: 'Token',
+          value: 'token',
+          sortable: false,
+          filterable: false,
+          containsLink: false,
+          width: '100px'
+        },
+        {
+          text: 'Price',
+          value: 'price',
+          sortable: false,
+          filterable: false,
+          containsLink: false,
+          width: '100px'
+        },
+        {
+          text: 'Market Cap',
+          value: 'cap',
+          sortable: false,
+          filterable: false,
+          containsLink: false,
+          width: '120px'
+        },
+        {
+          text: '24H Changes',
+          value: 'change',
+          sortable: false,
+          filterable: false,
+          containsLink: false,
+          width: '120px'
+        },
+        {
+          text: 'Token Value',
+          value: 'value',
+          sortable: false,
+          filterable: false,
+          containsLink: false,
+          width: '100px'
+        },
+        {
+          text: '',
+          value: 'callToAction',
+          sortable: false,
+          filterable: false,
+          containsLink: false,
+          width: '140px'
+        }
+      ],
+      tableData: [
+        {
+          token: 'XMR',
+          price: '$8.23',
+          cap: '$1.23B',
+          change: '2.23%',
+          status: '+',
+          changeData: {
+            x: [1, 4, 10, 4],
+            y: [0, 1, 34, 43]
+          },
+          value: '$27.54',
+          callToAction: 'Trade'
+        },
+        {
+          token: 'AMIS',
+          price: '$23.11',
+          cap: '$5.22B',
+          change: '0.43%',
+          status: '-',
+          changeData: {
+            x: [1, 4, 10, 4],
+            y: [0, 1, 34, 43]
+          },
+          value: '$27.54',
+          callToAction: 'Trade'
+        },
+        {
+          token: 'JCK',
+          price: '$3.65',
+          cap: '$0.43B',
+          change: '10.23%',
+          status: '+',
+          changeData: {
+            x: [1, 4, 10, 4],
+            y: [0, 1, 34, 43]
+          },
+          value: '$27.54',
+          callToAction: 'Trade'
+        },
+        {
+          token: 'AMN',
+          price: '$10.72',
+          cap: '0.11B',
+          change: '8.88%',
+          value: '$27.54',
+          status: '-',
+          changeData: {
+            x: [1, 4, 10, 4],
+            y: [0, 1, 34, 43]
+          },
+          callToAction: 'Trade'
+        }
+      ],
+      chart: {
+        data: [],
+        key: ''
+      },
+      chartData: [],
+      key: ''
+    };
   },
   computed: {
-    ...mapState('wallet', ['balance', 'usd', 'network']),
+    ...mapState('wallet', ['balance', 'usd', 'network', 'address']),
     showBuyEth() {
       return this.balannce === 0;
     },
@@ -202,7 +314,72 @@ export default {
       return this.usd.price_change_24h > 0;
     }
   },
+  watch: {
+    chartData: {
+      handler: () => {},
+      deep: true
+    }
+  },
+  mounted() {
+    this.setDataYesterday();
+  },
   methods: {
+    handleBtnClick(e) {
+      switch (e) {
+        case this.chartButtons[0]:
+          this.setDataYesterday();
+          break;
+        case this.chartButtons[1]:
+          this.setDataWeek();
+          break;
+        case this.chartButtons[2]:
+          this.setDataMonth();
+          break;
+        case this.chartButtons[3]:
+          this.setDataYear();
+          break;
+        default:
+          this.setDataMonth();
+      }
+    },
+    setDataMonth() {
+      const timeString = new Date();
+      const lastMonth = timeString.getTime() - 1000 * 60 * 60 * 24 * 31;
+      this.key = '1m';
+      this.getBalanceHistory(lastMonth, 'days');
+    },
+    setDataYear() {
+      const timeString = new Date();
+      const lastYear = timeString.getTime() - 1000 * 60 * 60 * 24 * 365;
+      this.key = '1y';
+      this.getBalanceHistory(lastYear, 'days');
+    },
+    setDataWeek() {
+      const timeString = new Date();
+      const lastWeek = timeString.getTime() - 1000 * 60 * 60 * 24 * 7;
+      this.key = '1w';
+      this.getBalanceHistory(lastWeek, 'days');
+    },
+    setDataYesterday() {
+      const timeString = new Date();
+      const yesterday = timeString.getTime() - 1000 * 60 * 60 * 24 * 1;
+      this.key = '1d';
+      this.getBalanceHistory(yesterday, 'hours');
+    },
+    getBalanceHistory(timeString, scale) {
+      const wallet = new WalletCalls(this.$apollo);
+      wallet.getBalanceHistory(timeString, this.address, scale).then(res => {
+        this.chartData = res.data.getTimeseriesData.items.map(item => {
+          const fromWei = utils.fromWei(item.value);
+          const value = BigNumber(fromWei).toFixed(4);
+          const returnedValue = BigNumber(value).toNumber();
+          const actualTimeStamp = BigNumber(item.timestamp)
+            .times(1000)
+            .toNumber();
+          return [actualTimeStamp, returnedValue];
+        });
+      });
+    },
     navigateToSend() {
       this.$router.push({ name: 'SendTX' });
     }
