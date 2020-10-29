@@ -287,7 +287,7 @@
 			"operationType": "query",
 			"rootType": "Query",
 			"variables": [],
-			"source": "query getUSDPrice {\n  getLatestPrices {\n    __typename\n    id\n    current_price\n  }\n}",
+			"source": "query getUSDPrice {\n  getLatestPrices {\n    __typename\n    id\n    current_price\n    market_cap\n    price_change_24h\n  }\n}",
 			"fields": [
 				{
 					"responseName": "getLatestPrices",
@@ -316,6 +316,20 @@
 							"type": "Float",
 							"isConditional": false,
 							"isDeprecated": false
+						},
+						{
+							"responseName": "market_cap",
+							"fieldName": "market_cap",
+							"type": "Float",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "price_change_24h",
+							"fieldName": "price_change_24h",
+							"type": "Float",
+							"isConditional": false,
+							"isDeprecated": false
 						}
 					],
 					"fragmentSpreads": [],
@@ -325,8 +339,112 @@
 			"fragmentSpreads": [],
 			"inlineFragments": [],
 			"fragmentsReferenced": [],
-			"sourceWithFragments": "query getUSDPrice {\n  getLatestPrices {\n    __typename\n    id\n    current_price\n  }\n}",
-			"operationId": "4662e8ece32b2d7238d5e4d2e6de08e27d3aad85fb62d757c23e0709aa8f1b19"
+			"sourceWithFragments": "query getUSDPrice {\n  getLatestPrices {\n    __typename\n    id\n    current_price\n    market_cap\n    price_change_24h\n  }\n}",
+			"operationId": "26a9b515a72e9321f2215d7f56d2c1cfc2de061f8b237b44f37cbab310abc4a0"
+		},
+		{
+			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwallet/src/apollo/queries/wallets/wallets.graphql",
+			"operationName": "getBalanceHistory",
+			"operationType": "query",
+			"rootType": "Query",
+			"variables": [
+				{
+					"name": "timeString",
+					"type": "Int!"
+				},
+				{
+					"name": "key",
+					"type": "String!"
+				},
+				{
+					"name": "scale",
+					"type": "String!"
+				}
+			],
+			"source": "query getBalanceHistory($timeString: Int!, $key: String!, $scale: String!) {\n  getTimeseriesData(fromT: $timeString, key: $key, scale: $scale) {\n    __typename\n    items {\n      __typename\n      value\n      timestamp\n    }\n  }\n}",
+			"fields": [
+				{
+					"responseName": "getTimeseriesData",
+					"fieldName": "getTimeseriesData",
+					"type": "TimeseriesResponse!",
+					"args": [
+						{
+							"name": "fromT",
+							"value": {
+								"kind": "Variable",
+								"variableName": "timeString"
+							},
+							"type": "Int!"
+						},
+						{
+							"name": "key",
+							"value": {
+								"kind": "Variable",
+								"variableName": "key"
+							},
+							"type": "String!"
+						},
+						{
+							"name": "scale",
+							"value": {
+								"kind": "Variable",
+								"variableName": "scale"
+							},
+							"type": "TimeseriesScale!"
+						}
+					],
+					"isConditional": false,
+					"isDeprecated": false,
+					"fields": [
+						{
+							"responseName": "__typename",
+							"fieldName": "__typename",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "items",
+							"fieldName": "items",
+							"type": "[TimeseriesData]!",
+							"isConditional": false,
+							"isDeprecated": false,
+							"fields": [
+								{
+									"responseName": "__typename",
+									"fieldName": "__typename",
+									"type": "String!",
+									"isConditional": false,
+									"isDeprecated": false
+								},
+								{
+									"responseName": "value",
+									"fieldName": "value",
+									"type": "String!",
+									"isConditional": false,
+									"isDeprecated": false
+								},
+								{
+									"responseName": "timestamp",
+									"fieldName": "timestamp",
+									"type": "Int!",
+									"isConditional": false,
+									"isDeprecated": false
+								}
+							],
+							"fragmentSpreads": [],
+							"inlineFragments": []
+						}
+					],
+					"fragmentSpreads": [],
+					"inlineFragments": []
+				}
+			],
+			"fragmentSpreads": [],
+			"inlineFragments": [],
+			"fragmentsReferenced": [],
+			"sourceWithFragments": "query getBalanceHistory($timeString: Int!, $key: String!, $scale: String!) {\n  getTimeseriesData(fromT: $timeString, key: $key, scale: $scale) {\n    __typename\n    items {\n      __typename\n      value\n      timestamp\n    }\n  }\n}",
+			"operationId": "1d122e549a65c93c0e2b1c843c291283050b501bb7653675fa5548f6632ad77e"
 		}
 	],
 	"fragments": [

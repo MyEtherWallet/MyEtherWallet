@@ -30,7 +30,7 @@ import { mapActions, mapState } from 'vuex';
 import utils from 'web3-utils';
 import store from 'store';
 
-import TokensList from '@/apollo/queries/tokens/index';
+import TokenCalls from '@/apollo/queries/tokens/index';
 import WalletCalls from '@/apollo/queries/wallets/index';
 
 import sideMenu from './components/side-menu/SideMenu';
@@ -94,7 +94,7 @@ export default {
       'setBlockNumber'
     ]),
     getTokens() {
-      const tokensList = new TokensList(this.$apollo);
+      const tokensList = new TokenCalls(this.$apollo);
       tokensList.getOwnersERC20Tokens(this.address).then(res => {
         this.ownersTokens = res;
       });

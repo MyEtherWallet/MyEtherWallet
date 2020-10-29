@@ -12,3 +12,13 @@ query getUSDPrice {
         price_change_24h
     }
 }
+
+query getBalanceHistory($timeString: Int!, $key: String!, $scale: TimeseriesScale!, $_nextKey: String) {
+  getTimeseriesData(fromT: $timeString, key: $key, scale: $scale, nextKey: $_nextKey){
+      items {
+        value
+        timestamp
+      }
+      nextKey
+  }
+}
