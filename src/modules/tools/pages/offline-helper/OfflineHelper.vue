@@ -33,7 +33,7 @@
           </border-block>
         </v-sheet>
         <mew-button
-          button-size="xlarge"
+          btn-size="xlarge"
           title="Change"
           class="mx-auto display--block"
         />
@@ -41,20 +41,20 @@
 
       <template #outsideStepContent2>
         <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-          <address-select label="From Address" />
+          <mew-address-select label="From Address" />
           <div class="d-flex justify-center mt-2">
             <mew-button
               class="mr-3"
               title="Back"
-              button-size="xlarge"
+              btn-size="xlarge"
               btn-style="outline"
             />
-            <mew-button title="Next" button-size="xlarge" />
+            <mew-button title="Next" btn-size="xlarge" />
           </div>
           <mew-button
             class="mt-5 display--block mx-auto"
             title="Export JSON file"
-            button-size="small"
+            btn-size="small"
             btn-style="transparent"
           />
         </v-sheet>

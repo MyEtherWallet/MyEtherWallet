@@ -1,8 +1,22 @@
 <template>
   <div class="mew-component--tools">
     <home-header title="Tools" />
+
+    <div class="expandHeader px-3 mt-n7 d-block d-lg-none">
+      <v-sheet max-width="500px" width="100%" class="mx-auto">
+        <v-select
+          v-model="currentMenu"
+          :items="items"
+          item-text="name"
+          item-value="val"
+          outlined
+        ></v-select>
+      </v-sheet>
+    </div>
+
     <v-container class="mt-8 mb-12">
-      <mew-tabs :is-vertical="true" :items="items">
+      <div class="d-block d-lg-none">mobile</div>
+      <mew-tabs class="d-none d-lg-block" :is-vertical="true" :items="items">
         <template #tabItemContent1>
           <watch-only />
         </template>
@@ -24,7 +38,6 @@
 <script>
 import homeHeader from '@/components/home-header/HomeHeader';
 import getStarted from '@/components/get-started/GetStarted';
-
 import watchOnly from './pages/watch-only/WatchOnly';
 import convert from './pages/convert/Convert';
 import offlineHelper from './pages/offline-helper/OfflineHelper';
@@ -41,18 +54,23 @@ export default {
     verify
   },
   data: () => ({
+    currentMenu: 'watch',
     items: [
       {
-        name: 'Watch only address'
+        name: 'Watch only address',
+        val: 'watch'
       },
       {
-        name: 'Convert units'
+        name: 'Convert units',
+        val: 'convert'
       },
       {
-        name: 'Send offline helper'
+        name: 'Send offline helper',
+        val: 'offline'
       },
       {
-        name: 'Verify message'
+        name: 'Verify message',
+        val: 'verify'
       }
     ]
   })

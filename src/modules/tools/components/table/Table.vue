@@ -50,7 +50,7 @@ export default {
 
     mewTableData: [
       {
-        token: 'Monero(XMR)',
+        token: 'Monero(XMR1)',
         price: '$8.23',
         cap: '$1.23B',
         change: '2.23%',
@@ -63,7 +63,7 @@ export default {
         myValue: '$227.54'
       },
       {
-        token: 'Monero(XMR)',
+        token: 'Monero(XMR2)',
         price: '$8.23',
         cap: '$1.23B',
         change: '2.23%',
@@ -76,7 +76,7 @@ export default {
         myValue: '$227.54'
       },
       {
-        token: 'Monero(XMR)',
+        token: 'Monero(XMR3)',
         price: '$8.23',
         cap: '$1.23B',
         change: '2.23%',
@@ -89,7 +89,7 @@ export default {
         myValue: '$227.54'
       },
       {
-        token: 'Monero(XMR)',
+        token: 'Monero(XMR4)',
         price: '$8.23',
         cap: '$1.23B',
         change: '2.23%',
@@ -102,7 +102,7 @@ export default {
         myValue: '$227.54'
       },
       {
-        token: 'Monero(XMR)',
+        token: 'Monero(XMR5)',
         price: '$8.23',
         cap: '$1.23B',
         change: '2.23%',

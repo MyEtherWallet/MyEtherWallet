@@ -2,15 +2,17 @@
   <div>
     <block-title max-width="600px" no-page-title :data="title" class="mb-7" />
     <table-container />
-    <div class="py-3">
-      <address-select label="To address" :items="addresses"></address-select>
-      <mew-input label="Address name" placeholder=" " />
-      <mew-button
-        title="Add"
-        button-size="xlarge"
-        class="mt-3 mx-auto display--block"
-      />
-    </div>
+    <mew-address-select
+      class="mt-12"
+      label="Address"
+      :items="addresses"
+    ></mew-address-select>
+    <mew-input label="Address name" placeholder=" " />
+    <mew-button
+      title="Add"
+      btn-size="xlarge"
+      class="mt-3 mx-auto display--block"
+    />
   </div>
 </template>
 
