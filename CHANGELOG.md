@@ -1,3 +1,7 @@
+### Devop
+
+* normalize address when verifying massages [#2650](https://github.com/MyEtherWallet/MyEtherWallet/pull/2650)
+
 ### Release v5.7.12
 
 ### Feature
