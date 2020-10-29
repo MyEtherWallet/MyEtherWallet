@@ -130,7 +130,7 @@
     "imagemin-webpack-plugin": "2.4.2",
     "jest-canvas-mock": "2.3.0",
     "jest-skipped-reporter": "0.0.5",
-    "marked": "1.2.0",
+    "marked": "1.2.2",
     "mew-maker-plugin": "0.0.2",
     "multicoin-address-validator": "git+https://github.com/MyEtherWallet/multicoin-address-validator.git",
     "node-sass": "4.14.1",
