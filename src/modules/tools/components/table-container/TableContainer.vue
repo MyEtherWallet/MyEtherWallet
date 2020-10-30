@@ -7,14 +7,13 @@
         address="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
         class="mr-4 blockie"
       />
-      <div>
+      <div class="text-overflow--ellipsis">
         <div class="font-weight-medium">Elmo's wallet 04</div>
         <div class="d-flex align-center">
-          <ellipsisBlock
-            white
-            class="mr-1"
-            text="0x7cb1496bf4f450c7f5a2ea65731ca6248da72789"
-          />
+          <div v-if="false" white class="text-overflow--ellipsis">
+            0x98d9964e1764654dtrhtrggfrv3049t04i
+          </div>
+          <ellipsis-block white text="0x98d9964e1764654dtrhtrggfrv3049t04i" />
           <copy-btn white text="0x98d9964e1764654dtrhtrggfrv3049t04i" />
         </div>
       </div>
