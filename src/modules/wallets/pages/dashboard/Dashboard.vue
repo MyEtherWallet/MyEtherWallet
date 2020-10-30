@@ -139,7 +139,7 @@
           />
           <v-sheet color="transparent" max-width="360px">
             <div class="pa-12">
-              <h2 class="mb-6">My token list is empty</h2>
+              <h2 class="mb-6">My custom token list is empty</h2>
               <mew-button
                 class="ml-auto ml-n3"
                 :has-full-width="false"
@@ -159,7 +159,6 @@
 </template>
 
 <script>
-// import staticData from './staticData.js';
 import chart from '@/modules/wallets/components/chart/Chart';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -284,10 +283,6 @@ export default {
           callToAction: 'Trade'
         }
       ],
-      chart: {
-        data: [],
-        key: ''
-      },
       chartData: [],
       key: ''
     };
