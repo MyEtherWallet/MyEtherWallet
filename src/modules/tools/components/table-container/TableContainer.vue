@@ -24,8 +24,8 @@
       </div>
     </div>
 
-    <div class="d-block d-lg-none pa-5">
-      <div class="d-flex align-center justify-space-between py-4">
+    <div class="white d-block d-lg-none px-5">
+      <div class="d-flex align-center justify-space-between pt-6 pb-2">
         <h5 class="font-weight-medium">ETH Balance</h5>
         <div class="text-right">
           <h5 class="font-weight-bold">$2,000.00</h5>
@@ -50,6 +50,8 @@
           <div class="primary--text">18.00123 ETH</div>
         </div>
       </div>
+
+      <divider />
     </div>
 
     <div class="pa-7 d-none d-lg-flex justify-space-between align-center">
@@ -91,6 +93,19 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
+
+    <div
+      class="text-center py-4 primary--text font-weight-medium"
+      @click="openPanel"
+    >
+      {{ panel.length == 0 ? 'Show tokens' : 'Hide tokens' }}
+      <v-icon
+        :class="panel.length == 0 ? '' : 'r180'"
+        class="rotate"
+        color="primary"
+        >mdi-chevron-down</v-icon
+      >
+    </div>
   </white-sheet>
 </template>
 

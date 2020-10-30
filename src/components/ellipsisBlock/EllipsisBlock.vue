@@ -2,6 +2,7 @@
   <v-sheet
     :class="white ? 'white--text' : ''"
     :max-width="maxWidth"
+    min-width="90px"
     color="transparent"
     class="ellipsis position--relative"
   >

@@ -232,6 +232,13 @@ h6 {
 .box-shadow--sm {
   box-shadow: 0 2px 7px var(--v-boxShadow-base) !important;
 }
+.rotate{
+  transition: all 800ms ease;
+  &.r180 {
+    transform: rotate(180deg);
+  }
+
+}
 
 /* ========== Mobile ========== */
 .preset--mobile-max-width {

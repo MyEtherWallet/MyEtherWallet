@@ -60,7 +60,7 @@
     "axios": "0.20.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.1.0",
-    "babel-jest": "26.5.2",
+    "babel-jest": "26.6.1",
     "bc-vault-js": "2.0.4",
     "bignumber.js": "9.0.1",
     "bip39": "3.0.2",
