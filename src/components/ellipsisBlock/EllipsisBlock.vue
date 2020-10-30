@@ -4,7 +4,7 @@
       <template v-if="text" #activator="{ on, attrs }">
         <span v-bind="attrs" v-on="on">{{ text }}</span>
       </template>
-      <span v-if="text">{{ text }}</span>
+      <span v-if="text" :class="white ? 'white--text' : ''">{{ text }}</span>
     </v-tooltip>
     <slot />
   </v-sheet>
@@ -21,6 +21,10 @@ export default {
     text: {
       type: String,
       default: ''
+    },
+    white: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

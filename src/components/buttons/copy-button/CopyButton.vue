@@ -7,7 +7,11 @@
       :duration="1000"
     />
     <div class="copy-icon d-flex justify-center" @click="onBtnClick()">
-      <img src="@/assets/images/icons/icon-copy.svg" alt="Copy" />
+      <img
+        :class="white ? 'white-icon' : ''"
+        src="@/assets/images/icons/icon-copy.svg"
+        alt="Copy"
+      />
     </div>
     <input ref="textToCopy" class="text-input" type="text" :value="text" />
   </div>
@@ -19,6 +23,10 @@ export default {
     text: {
       default: '',
       type: String
+    },
+    white: {
+      default: false,
+      type: Boolean
     }
   },
   data() {
@@ -53,6 +61,10 @@ export default {
   img {
     height: 15px;
     width: 15px;
+
+    &.white-icon {
+      filter: invert(1);
+    }
   }
 }
 </style>

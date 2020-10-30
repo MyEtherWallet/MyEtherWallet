@@ -10,11 +10,12 @@
       <div>
         <div class="font-weight-medium">Elmo's wallet 04</div>
         <div class="d-flex align-center">
-          <div class="monospace">0x98d9964e1764654d…7</div>
-          <!-- <CopyButton
-            color="white"
-            text="0x98d9964e1764654dtrhtrggfrv3049t04i"
-          /> -->
+          <ellipsisBlock
+            white
+            class="mr-1"
+            text="0x7cb1496bf4f450c7f5a2ea65731ca6248da72789"
+          />
+          <copy-btn white text="0x98d9964e1764654dtrhtrggfrv3049t04i" />
         </div>
       </div>
       <div class="ml-auto">
@@ -23,7 +24,36 @@
         </v-btn>
       </div>
     </div>
-    <div class="pa-7 d-flex justify-space-between align-center">
+
+    <div class="d-block d-lg-none pa-5">
+      <div class="d-flex align-center justify-space-between py-4">
+        <h5 class="font-weight-medium">ETH Balance</h5>
+        <div class="text-right">
+          <h5 class="font-weight-bold">$2,000.00</h5>
+          <div class="primary--text">8.00123 ETH</div>
+        </div>
+      </div>
+
+      <div class="d-flex align-center justify-space-between py-4">
+        <h5 class="font-weight-medium">Value of Tokens</h5>
+        <div class="text-right">
+          <h5 class="font-weight-bold">$200.00</h5>
+          <div class="primary--text">4 Tokens</div>
+        </div>
+      </div>
+
+      <divider />
+
+      <div class="d-flex align-center justify-space-between py-4">
+        <h5 class="font-weight-medium">Total Wallet Value</h5>
+        <div class="text-right">
+          <h5 class="font-weight-bold">$2,000.22</h5>
+          <div class="primary--text">18.00123 ETH</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pa-7 d-none d-lg-flex justify-space-between align-center">
       <div class="d-flex align-start">
         <img
           src="@/assets/images/currencies/icon-eth-blue.svg"
@@ -66,11 +96,14 @@
 </template>
 
 <script>
+import ellipsisBlock from '@/components/ellipsisBlock/EllipsisBlock';
+import copyBtn from '@/components/buttons/copy-button/CopyButton';
+import divider from '@/components/divider-line/DividerLine';
 import toolTable from '../table/Table';
 import WhiteSheet from '@/components/white-sheet/WhiteSheet';
 
 export default {
-  components: { toolTable, WhiteSheet },
+  components: { ellipsisBlock, divider, copyBtn, toolTable, WhiteSheet },
   data: () => ({ panel: [] }),
   methods: {
     openPanel() {
