@@ -10,7 +10,7 @@
         <mew-button
           title="Add"
           btn-size="xlarge"
-          class="mt-3 mx-auto display--block"
+          class="mt-1 mx-auto display--block"
         />
       </v-card>
     </v-dialog>

@@ -10,7 +10,7 @@
         color="expandHeader"
       >
         <v-select
-          v-model="currentMenu"
+          v-model="currentTool"
           :items="items"
           item-text="name"
           item-value="val"
@@ -21,11 +21,12 @@
 
     <v-container class="mt-8 mb-12">
       <div class="d-block d-lg-none">
-        <watch-only v-if="currentMenu === 'watch'" />
-        <convert v-if="currentMenu === 'convert'" />
-        <offline-helper v-if="currentMenu === 'offline'" />
-        <verify v-if="currentMenu === 'verify'" />
+        <watch-only v-if="currentTool === 'watch'" />
+        <convert v-if="currentTool === 'convert'" />
+        <offline-helper v-if="currentTool === 'offline'" />
+        <verify v-if="currentTool === 'verify'" />
       </div>
+
       <mew-tabs class="d-none d-lg-block" :is-vertical="true" :items="items">
         <template #tabItemContent1>
           <watch-only />
@@ -64,7 +65,7 @@ export default {
     verify
   },
   data: () => ({
-    currentMenu: 'watch',
+    currentTool: 'watch',
     items: [
       {
         name: 'Watch only address',
@@ -83,9 +84,34 @@ export default {
         val: 'verify'
       }
     ]
-  })
+  }),
+  watch: {
+    $route() {
+      this.setCurrentTool();
+    },
+    currentTool(val) {
+      this.$router.replace({ name: 'Tools', query: { tool: val } });
+      //this.setCurrentTool();
+    }
+  },
+  mounted() {
+    this.setCurrentTool();
+  },
+  methods: {
+    setCurrentTool() {
+      const tools = ['watch', 'convert', 'offline', 'verify'];
+
+      // Check if tool value from URL is valid
+      if (tools.includes(this.$route.query.tool)) {
+        this.currentTool = this.$route.query.tool;
+      } else {
+        this.currentTool = 'watch';
+      }
+    }
+  }
 };
 </script>
+
 <style lang="scss">
 .mew-component--tools {
   .mobile-menu {
