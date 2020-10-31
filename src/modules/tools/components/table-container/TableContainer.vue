@@ -95,7 +95,7 @@
     </v-expansion-panels>
 
     <div
-      class="text-center py-4 primary--text font-weight-medium"
+      class="d-lg-none text-center py-4 primary--text font-weight-medium"
       @click="openPanel"
     >
       {{ panel.length == 0 ? 'Show tokens' : 'Hide tokens' }}
