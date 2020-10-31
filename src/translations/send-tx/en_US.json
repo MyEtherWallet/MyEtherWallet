@@ -16,8 +16,13 @@
   "tx-hash": "Transaction Hash",
   "max-tx-fee": "Max Transaction Fee",
   "cost-eth-convert": "Cost {txFeeEth} ETH = ${convert}",
-  "add-data": "Add Data",
+  "add-data-as": {
+    "title": "Add Data As",
+    "original": "Original",
+    "utf-8": "UTF-8"
+  },
   "ph-add-data": "Add Data (e.g. 0x7834f874g298hf298h234f)",
+  "ph-add-utf-8": "Add UTF-8 (e.g. Lorem ipsum dolor sit amet)",
   "nonce": "Nonce",
   "data": "Data",
   "data-gas": "Data & Gas Limit",

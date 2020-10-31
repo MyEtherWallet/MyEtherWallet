@@ -205,6 +205,17 @@
         width: 100%;
       }
 
+      textarea {
+        background-color: $background-color-1;
+        border: 0;
+        padding: 13px 15px;
+        width: 100%;
+      }
+
+      .add-data-as-picker-container {
+        margin-left: auto;
+      }
+
       .good-button-container {
         align-items: center;
         display: flex;

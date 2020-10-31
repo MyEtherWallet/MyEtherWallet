@@ -109,12 +109,25 @@
         >
           <div class="margin-container">
             <div v-show="!isToken" class="the-form user-input">
-              <p>{{ $t('sendTx.add-data') }}</p>
+              <p>{{ $t('sendTx.add-data-as.title') }}</p>
+              <add-data-as-picker @selected="addDataAs = $event" />
+            </div>
+            <div v-show="!isToken" class="the-form user-input">
+              <p>{{ $t('sendTx.data') }}</p>
               <input
+                v-if="addDataAs === 'original'"
                 v-model="toData"
                 :placeholder="$t('sendTx.ph-add-data')"
                 type="text"
                 autocomplete="off"
+              />
+              <textarea
+                v-if="addDataAs === 'utf-8'"
+                :value="showAsUtf8(toData)"
+                :placeholder="$t('sendTx.ph-add-utf-8')"
+                type="text"
+                autocomplete="off"
+                @change="toData = utf8ToData($event.target.value)"
               />
               <i
                 :class="[
@@ -173,11 +186,13 @@ import ethUnit from 'ethjs-unit';
 import utils from 'web3-utils';
 import fetch from 'node-fetch';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
+import AddDataAsPicker from '@/layouts/InterfaceLayout/components/AddDataAsPicker';
 
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'currency-picker': CurrencyPicker,
+    'add-data-as-picker': AddDataAsPicker,
     'dropdown-address-selector': DropDownAddressSelector
   },
   props: {
@@ -237,6 +252,7 @@ export default {
       toValue: '0',
       gasLimit: '21000',
       toData: '',
+      addDataAs: 'original',
       selectedCurrency: '',
       ethPrice: 0,
       clearAddress: false
@@ -563,7 +579,15 @@ export default {
         });
       this.ethPrice =
         typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
-    }
+    },
+    showAsUtf8(s) {
+      return Misc.validateHexString(this.toData)
+        ? Buffer.from(s.startsWith('0x') ? s.substring(2) : s, 'hex').toString(
+            'utf8'
+          )
+        : 'Invalid hex data!';
+    },
+    utf8ToData: s => '0x' + Buffer.from(s, 'utf8').toString('hex')
   }
 };
 </script>
