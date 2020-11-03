@@ -19,11 +19,7 @@ import vuetify from '@/plugins/vuetify';
 
 import whiteSheet from '@/components/white-sheet/WhiteSheet.vue';
 import MewSuperButton from '@/components/temporary-mew-components/MewSuperButton/MewSuperButton.vue';
-import MewStepper from '@/components/temporary-mew-components/MewStepper/MewStepper.vue';
 import MewStepperHeader from '@/components/temporary-mew-components/MewStepperHeader/MewStepperHeader.vue';
-import MewSelect from '@/components/temporary-mew-components/MewSelect/MewSelect.vue';
-import MewOverlay from '@/components/temporary-mew-components/MewOverlay/MewOverlay.vue';
-import MewExpandPanel from '@/components/temporary-mew-components/MewExpandPanel/MewExpandPanel.vue';
 
 Vue.prototype.$eventHub = new Vue();
 
@@ -41,11 +37,7 @@ Object.keys(mewComponents).forEach(name => {
 
 Vue.component('Mew6WhiteSheet', whiteSheet);
 Vue.component('MewSuperButton', MewSuperButton);
-Vue.component('MewStepper2', MewStepper);
 Vue.component('MewStepperHeader', MewStepperHeader);
-Vue.component('MewSelect2', MewSelect);
-Vue.component('MewOverlay2', MewOverlay);
-Vue.component('MewExpandPanel2', MewExpandPanel);
 
 // // Define vue-i18n
 Vue.use(VueI18n);

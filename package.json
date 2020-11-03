@@ -29,7 +29,7 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "@myetherwallet/mew-components": "0.5.18-beta",
+    "@myetherwallet/mew-components": "0.5.21-beta",
     "@sentry/browser": "5.26.0",
     "@sentry/integrations": "5.26.0",
     "@unstoppabledomains/resolution": "1.8.3",
@@ -40,7 +40,7 @@
     "pocket-js-web3-provider": "0.0.3",
     "register-service-worker": "1.7.1",
     "vue": "2.6.12",
-    "vue-router": "3.4.7",
+    "vue-router": "3.4.8",
     "vuex": "3.5.1"
   },
   "devDependencies": {
@@ -57,7 +57,7 @@
     "@vue/eslint-config-prettier": "6.0.0",
     "@vue/test-utils": "1.1.0",
     "@xkeshi/vue-qrcode": "git+https://github.com/MyEtherWallet/vue-qrcode.git",
-    "axios": "0.20.0",
+    "axios": "0.21.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.1.0",
     "babel-jest": "26.6.1",
@@ -86,7 +86,7 @@
     "node-sass": "4.14.1",
     "package-json": "6.5.0",
     "postcss-import": "13.0.0",
-    "postcss-url": "8.0.0",
+    "postcss-url": "10.0.0",
     "prettier": "2.1.2",
     "raw-loader": "4.0.2",
     "remark-cli": "9.0.0",

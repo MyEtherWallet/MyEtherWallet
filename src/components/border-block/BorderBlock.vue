@@ -1,14 +1,16 @@
 <template>
   <div
     :class="[
-      $vuetify.theme.dark ? 'box-shadow-dark' : 'box-shadow-light',
       smBorderRadius ? 'sm-border-radius' : '',
       mdBorderRadius ? 'md-border-radius' : '',
       smShadow ? 'sm-shadow' : '',
-      mdShadow ? 'md-shadow' : ''
+      mdShadow ? 'md-shadow' : '',
+      maxHeight ? 'py-1 pr-1' : ''
     ]"
   >
-    <slot />
+    <div :style="cssVars" class="custom-scroll-bar max-height">
+      <slot />
+    </div>
   </div>
 </template>
 
@@ -23,9 +25,27 @@ export default {
       default: false,
       type: Boolean
     },
+    smShadow: {
+      default: false,
+      type: Boolean
+    },
     mdShadow: {
       default: false,
       type: Boolean
+    },
+    maxHeight: {
+      default: '',
+      type: String
+    }
+  },
+  data() {
+    return {};
+  },
+  computed: {
+    cssVars() {
+      return {
+        '--max-height': this.maxHeight
+      };
     }
   }
 };
@@ -45,5 +65,10 @@ export default {
 }
 .md-shadow {
   box-shadow: 0 10px 15px var(--v-boxShadow-base) !important;
+}
+
+.max-height {
+  max-height: var(--max-height);
+  overflow: auto;
 }
 </style>

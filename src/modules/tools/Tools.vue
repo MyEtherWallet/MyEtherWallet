@@ -90,7 +90,7 @@ export default {
       this.setCurrentTool();
     },
     currentTool(val) {
-      this.$router.replace({ name: 'Tools', query: { tool: val } });
+      this.$router.push({ name: 'Tools', query: { tool: val } });
       //this.setCurrentTool();
     }
   },

@@ -236,7 +236,9 @@ h6 {
   box-shadow: 0 2px 7px var(--v-boxShadow-base) !important;
 }
 .rotate {
-  transition: all 1200ms ease;
+  &.transition {
+    transition: all 1200ms ease;
+  }
   &.r180 {
     transform: rotate(180deg);
   }
