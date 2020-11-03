@@ -358,12 +358,12 @@ export default {
           {
             label: 'Verify message',
             routerLink: 'Tools',
-            query: { tab: '4' }
+            query: { tool: 'verify' }
           },
           {
             label: 'Send offline help',
             routerLink: 'Tools',
-            query: { tab: '3' }
+            query: { tool: 'offline' }
           },
           {
             label: 'Transaction status',
@@ -372,10 +372,14 @@ export default {
           {
             label: 'Watch only address',
             routerLink: 'Tools',
-            query: { tab: '1' }
+            query: { tool: 'watch' }
           },
           { label: 'Submit Dapp', routerLink: 'DappsCenter' },
-          { label: 'Convert units', routerLink: 'Tools', query: { tab: '2' } }
+          {
+            label: 'Convert units',
+            routerLink: 'Tools',
+            query: { tool: 'convert' }
+          }
         ]
       }
     ],
