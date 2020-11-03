@@ -36,7 +36,7 @@ export default class NFT {
             this.ready = true;
             resolve(this.currentPageState);
           })
-          .catch(reject)
+          .catch(reject);
       } catch (e) {
         reject(e);
       }
@@ -100,5 +100,12 @@ export default class NFT {
 
   setAvailableContracts(contracts) {
     this.availableContracts = contracts;
+  }
+
+  getImageUrl(tokenId, contract) {
+    console.log('currentActive', this.currentActive); // todo remove dev item
+
+    if (!contract) contract = this.currentActive.contract;
+    return this.currentActive.getImageUrl(contract, tokenId);
   }
 }

@@ -25,6 +25,7 @@ export default class NftCollection {
     this.loadedTo = 0;
     this.initialSetRetrieved = false;
     this.tokens = details.tokens;
+    this.nftUrl = `${configs.url}/getImage`;
     this.nftToShowList = [];
     this.isActive = false;
     this.sender = new Sender({
@@ -160,6 +161,10 @@ export default class NftCollection {
         })
         .catch(reject);
     });
+  }
+
+  getImageUrl(contract, tokenId){
+    return `${this.nftUrl}?contract=${contract}&tokenId=${tokenId}`
   }
 
   getNftsToShow() {
