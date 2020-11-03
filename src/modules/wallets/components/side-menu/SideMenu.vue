@@ -59,7 +59,19 @@
           color="transparent"
           class="mx-auto"
         >
-          <mewTools mobile class="mb-4" />
+          <mew-tools v-model="mewTools" />
+          <v-btn
+            v-if="mobile"
+            class="full-width text-transform--initial mb-4"
+            outlined
+            color="white"
+            large
+            @click="mewTools = true"
+          >
+            <v-icon class="mr-2">mdi-apps</v-icon>
+            MEW tools
+            <v-icon class="ml-2">mdi-chevron-down</v-icon>
+          </v-btn>
 
           <wallet-card />
           <v-btn
@@ -157,7 +169,7 @@ export default {
     }
   },
   data() {
-    return { openNotifications: false, mobileMenu: false };
+    return { mewTools: false, openNotifications: false, mobileMenu: false };
   }
 };
 </script>

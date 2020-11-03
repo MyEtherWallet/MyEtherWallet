@@ -1,5 +1,7 @@
 <template>
   <div class="mew-component--landing-header expandHeader">
+    <mew-tools v-model="mewTools" />
+
     <div class="desktop-content d-none d-lg-block py-5">
       <v-container class="d-flex align-center">
         <router-link :to="{ name: 'Home', query: {} }">
@@ -18,6 +20,7 @@
           icon="mdi-view-module"
           icon-type="mdi"
           icon-align="left"
+          @click.native="mewTools = true"
         />
       </v-container>
     </div>
@@ -49,6 +52,7 @@
           :icon="require('@/assets/images/icons/icon-grid-dot.png')"
           icon-type="img"
           icon-align="left"
+          @click.native="mewTools = true"
         />
       </v-container>
     </div>
@@ -57,11 +61,14 @@
 
 <script>
 import homeMenu from '../menu/Menu';
+import mewTools from '@/modules/wallets/components/mewTools/MewTools';
 
 export default {
   name: 'Header',
-  components: { homeMenu },
-  data: () => ({})
+  components: { mewTools, homeMenu },
+  data: () => ({
+    mewTools: false
+  })
 };
 </script>
 

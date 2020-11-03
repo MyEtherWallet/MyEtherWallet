@@ -1,22 +1,6 @@
 <template>
   <div class="mew-component--mew-tools">
-    <v-dialog v-model="dialog" width="320">
-      <template #activator="{ on, attrs }">
-        <v-btn
-          v-if="mobile"
-          v-bind="attrs"
-          class="full-width text-transform--initial"
-          outlined
-          color="white"
-          large
-          v-on="on"
-        >
-          <v-icon class="mr-2">mdi-apps</v-icon>
-          MEW tools
-          <v-icon class="ml-2">mdi-chevron-down</v-icon>
-        </v-btn>
-      </template>
-
+    <v-dialog v-model="dialog" width="320" @input="$emit('input', dialog)">
       <div class="pa-3 white">
         <v-row>
           <v-col
@@ -38,7 +22,7 @@
 export default {
   components: {},
   props: {
-    mobile: {
+    value: {
       type: Boolean,
       default: false
     }
@@ -77,6 +61,11 @@ export default {
         }
       ]
     };
+  },
+  watch: {
+    value(newVal) {
+      this.dialog = newVal;
+    }
   }
 };
 </script>
