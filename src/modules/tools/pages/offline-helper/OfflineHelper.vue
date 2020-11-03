@@ -1,5 +1,31 @@
 <template>
   <div>
+    <v-dialog v-model="dialog" persistent max-width="500">
+      <v-sheet color="white" class="pa-5">
+        <h3 class="font-weight-bold mb-5 text-center">Transction status</h3>
+        <div class="tableHeader pa-5 mb-2">
+          <div class="font-weight-bold">Transaction Hash</div>
+          <ellipsis-block
+            text="0xf267c8145dce9092463c6582c8c6f00677e2ab626c8cfc64ea997725ab14a16c"
+          />
+        </div>
+        <div class="tableHeader pa-5">
+          <div class="font-weight-bold">Transaction receipt</div>
+          <ellipsis-block
+            text="0xf267c8145dce9092463c6582c8c6f00677e2ab626c8cfc64ea997725ab14a16c"
+          />
+        </div>
+        <div class="text-center">
+          <mew-button
+            class="mt-6"
+            title="Okay"
+            btn-size="xlarge"
+            @click.native="dialog = false"
+          />
+        </div>
+      </v-sheet>
+    </v-dialog>
+
     <block-title max-width="600px" no-page-title :data="title" class="mb-7" />
 
     <mew-stepper
@@ -145,6 +171,7 @@
             title="Confirm & Send"
             btn-size="xlarge"
             class="mx-1 mb-3"
+            @click.native="dialog = true"
           />
         </div>
         <mew-button
@@ -167,6 +194,7 @@ import dividerLine from '@/components/divider-line/DividerLine';
 export default {
   components: { ellipsisBlock, blockTitle, borderBlock, dividerLine },
   data: () => ({
+    dialog: false,
     currentStep: 3,
     details: [
       {
