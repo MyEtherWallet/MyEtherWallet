@@ -1,4 +1,8 @@
-import { getEthBalance, getUSDPrice } from './wallets.graphql';
+import {
+  getEthBalance,
+  getUSDPrice,
+  getBalanceHistory
+} from './wallets.graphql';
 import { Toast, ERROR } from '@/components/toast';
 export default class WalletCalls {
   constructor(apollo) {
@@ -37,5 +41,23 @@ export default class WalletCalls {
       .catch(err => {
         Toast(err.message, {}, ERROR);
       });
+  }
+
+  getBalanceHistory(timeString, address, scale, nextKey) {
+    const key = `ACCOUNT_BALANCE_PREFIX_AVG-0xETH-${address}`;
+    const actualTimeString = Math.floor(timeString / 1000);
+    const acceptableScales = ['seconds', 'minutes', 'hours', 'days'];
+    if (!acceptableScales.includes(scale)) {
+      throw new Error('Scale not valid.');
+    }
+    return this.apollo.query({
+      query: getBalanceHistory,
+      variables: {
+        timeString: actualTimeString,
+        key: key,
+        scale: scale,
+        _nextKey: nextKey
+      }
+    });
   }
 }
