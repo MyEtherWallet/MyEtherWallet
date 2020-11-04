@@ -39,7 +39,7 @@
           <div class="d-flex justify-center mt-6">
             <mew-button
               title="Next"
-              button-size="xlarge"
+              btn-size="xlarge"
               :has-full-width="false"
               @click.native="currentPage = 2"
             />
@@ -103,7 +103,7 @@
         <div class="d-flex justify-center mt-2">
           <mew-button
             title="Access my wallet"
-            button-size="xlarge"
+            btn-size="xlarge"
             :has-full-width="false"
             @click.native="currentPage = 1"
           />
@@ -112,7 +112,7 @@
 
       <page-indicator-dot class="mt-4" :items="2" :current-item="currentPage" />
 
-      <warning-sheet
+      <mew-warning-sheet
         title="NOT RECOMMENDED"
         description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
       />

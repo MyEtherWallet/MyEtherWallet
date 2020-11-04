@@ -3,7 +3,7 @@
     <h2 class="text-center mb-10">Keystore file</h2>
 
     <mew6-white-sheet v-if="currentPage === 1" class="pa-10">
-      <div class="d-flex align-center">
+      <div class="d-flex flex-column-reverse flex-lg-row align-center">
         <div>
           <h4 class="font-weight-bold mb-4">Upload my keystore file</h4>
           <div class="mb-10">Upload keystore file to unlock your wallet.</div>
@@ -29,14 +29,14 @@
         @click:append="showPassword = !showPassword"
       />
       <div class="d-flex justify-center">
-        <mew-button title="Access my wallet" button-size="xlarge" />
+        <mew-button title="Access my wallet" btn-size="xlarge" />
       </div>
       <div @click="currentPage = 1">Next page</div>
     </mew6-white-sheet>
 
     <page-indicator-dot class="mt-4" :items="2" :current-item="currentPage" />
 
-    <warning-sheet
+    <mew-warning-sheet
       title="NOT RECOMMENDED"
       description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users. Learn more"
     />
