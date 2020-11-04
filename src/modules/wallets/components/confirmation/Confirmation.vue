@@ -72,11 +72,9 @@ export default {
       return utils.hexToNumber(this.tx.nonce);
     },
     txFee() {
-      console.log('this might be erroring', this.gasPrice);
       const parsedTxFee = BigNumber(utils.toWei(this.gasPrice, 'gwei'))
         .times(this.gasLimit)
         .toString();
-      console.log('it gets here tho', parsedTxFee);
       return utils.fromWei(parsedTxFee);
     },
     txFeeUSD() {

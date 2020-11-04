@@ -24,7 +24,7 @@
     <system-menu />
     <divider class="my-5 mx-1" />
     <theme-switch class="px-5" />
-    <version class="px-5" />
+    <div class="searchText--text">v{{ version }}</div>
   </v-sheet>
 </template>
 
@@ -33,7 +33,6 @@ import walletCard from '@/modules/wallets/components/wallet-card/WalletCard';
 import accordionMenu from '@/modules/wallets/components/menu/Menu';
 import systemMenu from '@/modules/wallets/components/system-menu/SystemMenu';
 import themeSwitch from '@/modules/wallets/components/theme-switch/ThemeSwitch';
-import version from '@/modules/wallets/components/version/Version';
 import divider from '@/modules/wallets/components/divider/Divider';
 
 export default {
@@ -42,8 +41,12 @@ export default {
     accordionMenu,
     systemMenu,
     themeSwitch,
-    version,
     divider
+  },
+  data() {
+    return {
+      version: process.env.VERSION
+    };
   }
 };
 </script>
