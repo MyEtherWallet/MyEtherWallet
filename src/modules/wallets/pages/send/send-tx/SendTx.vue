@@ -270,12 +270,7 @@ export default {
     }
   },
   mounted() {
-    this.sendTx = new SendTransaction(
-      this.address,
-      this.web3,
-      this.gasPrice,
-      this.network
-    );
+    this.setSendTransaction();
     this.customGasLimit = this.gasLimit;
   },
   methods: {
