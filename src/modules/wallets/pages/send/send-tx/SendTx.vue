@@ -19,7 +19,7 @@
             <v-col cols="6">
               <mew-select
                 ref="mewSelect"
-                :items="ownersTokens"
+                :items="tokens"
                 :label="$t('sendTx.type')"
                 class="mr-3"
                 @input="setCurrency"
@@ -230,16 +230,42 @@ export default {
       );
     },
     currencyBalance() {
-      return this.selectedCurrency.balance
+      return this.selectedCurrency.symbol !== this.network.type.currencyName &&
+        this.selectedCurrency.balance
         ? BigNumber(this.selectedCurrency.balance)
             .div(BigNumber(10).pow(this.selectedCurrency.decimals))
             .toString()
         : this.balance;
+    },
+    tokens() {
+      const eth = {
+        name: this.network.type.name,
+        symbol: this.network.type.name,
+        subtext: this.network.type.name_long,
+        value: this.network.type.name_long,
+        balance: this.balance,
+        img: this.network.type.icon,
+        market_cap: null,
+        price_change_24h: null
+      };
+
+      const copiedTokens = this.ownersTokens.slice();
+      copiedTokens.unshift(eth);
+      return copiedTokens;
     }
   },
   watch: {
     multiwatch: utils._.debounce(function () {
-      if (this.validInputs) this.customGasLimit = this.sendTx.estimateGas();
+      if (this.validInputs) {
+        this.sendTx
+          .estimateGas(this.amount, this.toAddress, this.gasPrice, this.data)
+          .then(res => {
+            this.customGasLimit = res;
+          })
+          .catch(e => {
+            Toast(e, {}, ERROR);
+          });
+      }
     }, 500),
     network() {
       this.setSendTransaction();
@@ -431,7 +457,8 @@ export default {
     setEntireBal() {
       this.amount = this.sendTx.getEntireBal(
         this.selectedCurrency,
-        this.balance
+        this.balance,
+        this.customGasLimit
       );
     },
     setAmount(value) {
@@ -444,6 +471,7 @@ export default {
       this.customGasLimit = value;
     },
     setCurrency(value) {
+      console.log('should be called twice', value);
       this.selectedCurrency = value;
     }
   }

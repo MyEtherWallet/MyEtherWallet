@@ -23,13 +23,13 @@
             height="17"
           />
         </v-col>
-        <v-col class="py-0 my-0 text-right" cols="4">
+        <v-col class="py-0 my-0 text-right" cols="5">
           <span> - {{ value }} </span>
           <span class="searchText--text font-weight-medium">{{
             currency
           }}</span></v-col
         >
-        <v-col v-if="isEth" class="py-0 my-0 text-right" cols="4">
+        <v-col v-if="isEth" class="py-0 my-0 text-right" cols="3">
           <span> - {{ valueUsd }} </span>
         </v-col>
       </v-row>
@@ -39,11 +39,11 @@
           <v-icon color="#f5a623"> mdi-circle-medium </v-icon>
           <h6 class="searchText--text font-weight-medium">Transaction Fee</h6>
         </v-col>
-        <v-col class="py-0 my-0 text-right" cols="4">
+        <v-col class="py-0 my-0 text-right" cols="5">
           <span> - {{ txFee }} </span>
           <span class="searchText--text font-weight-medium">ETH</span></v-col
         >
-        <v-col v-if="isEth" class="py-0 my-0 text-right" cols="4">
+        <v-col v-if="isEth" class="py-0 my-0 text-right" cols="3">
           <span> - {{ formattedTx }} </span>
         </v-col>
       </v-row>
@@ -53,7 +53,7 @@
           <v-icon color="transparent"> mdi-circle-medium </v-icon>
           <h6 class="searchText--text font-weight-medium">Total Pay</h6>
         </v-col>
-        <v-col class="py-0 my-0 text-right font-weight-medium" cols="4">
+        <v-col class="py-0 my-0 text-right font-weight-medium" cols="5">
           <span>{{ total }} </span>
           <span class="searchText--text font-weight-medium">{{
             currency
@@ -62,7 +62,7 @@
         <v-col
           v-if="isEth"
           class="py-0 my-0 text-right font-weight-medium"
-          cols="4"
+          cols="3"
         >
           {{ totalUsd }}
         </v-col>
@@ -126,8 +126,8 @@ export default {
       return `$ ${BigNumber(this.txFeeUSD).toFixed(2)}`;
     },
     progressBar() {
-      const toSendPercent = (this.value * 100) / this.balance;
-      const txFeePercent = (this.txFee * 100) / this.balance;
+      const toSendPercent = BigNumber(this.value).times(100).div(this.balance);
+      const txFeePercent = BigNumber(this.txFee).times(100).div(this.balance);
       return {
         total: this.balance,
         data: [

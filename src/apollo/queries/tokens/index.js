@@ -1,7 +1,6 @@
 import { getLatestPrices, getOwnersERC20Tokens } from './tokens.graphql';
 import ethImg from '@/assets/images/networks/eth.svg';
 import { Toast, ERROR } from '@/components/toast';
-import store from '@/store';
 import BigNumber from 'bignumber.js';
 
 const ETH_ID = 'ethereum';
@@ -57,7 +56,6 @@ export default class Tokenslist {
   }
   formatOwnersERC20Tokens(tokens) {
     const formattedList = [];
-    const eth = this.tokensData ? this.tokensData.get(ETH_ID) : null;
     tokens.forEach(token => {
       let foundToken;
       if (this.tokensData) {
@@ -85,29 +83,6 @@ export default class Tokenslist {
         usdBalance: usdBalance
       });
     });
-    if (eth) {
-      formattedList.unshift({
-        name: eth.symbol,
-        symbol: eth.symbol,
-        subtext: eth.name,
-        value: eth.name,
-        balance: eth.balance,
-        img: eth.image,
-        market_cap: eth.market_cap,
-        price_change_24h: eth.price_change_24h
-      });
-    } else {
-      formattedList.unshift({
-        name: 'ETH',
-        symbol: 'ETH',
-        subtext: 'Ethereum',
-        value: 'Ethereum',
-        balance: store.state.wallet.balance,
-        img: ethImg,
-        market_cap: null,
-        price_change_24h: null
-      });
-    }
     return formattedList;
   }
 }
