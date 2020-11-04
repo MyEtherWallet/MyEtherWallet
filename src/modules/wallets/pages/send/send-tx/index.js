@@ -32,26 +32,19 @@ export default class SendTransaction {
   }
   // balance balance in ether
   getBalETH() {
-    return BigNumber(utils.fromWei(this.balance, 'ether')).toFixed();
+    return BigNumber(utils.fromWei(this.balance)).toFixed();
   }
   // get the address' entire balance
   getEntireBal(currency, balance, gasLimit) {
+    const finalGas = this.finalGasPrice();
     if (this.isToken(currency)) {
       return currency.balance;
     }
-    const gasPrice = BigNumber(this.finalGasPrice()).toString();
-    return balance > 0
-      ? BigNumber(balance)
-          .minus(
-            utils.fromWei(
-              BigNumber(utils.toWei(gasPrice, 'gwei'))
-                .times(gasLimit)
-                .toString(),
-              'ether'
-            )
-          )
-          .toFixed()
-      : 0;
+
+    const gasPrice = BigNumber(finalGas).toString();
+    const fee = BigNumber(gasPrice).times(gasLimit);
+    const parsedFee = utils.fromWei(fee.toString());
+    return balance > 0 ? BigNumber(balance).minus(parsedFee).toFixed() : 0;
   }
   // get final gas price
   finalGasPrice() {
@@ -96,7 +89,7 @@ export default class SendTransaction {
         from: res,
         value: this.parsedAmount(actualAmount),
         to: address,
-        gasPrice: sanitizeHex(BigNumber(gasPrice).toString(16)),
+        gasPrice: sanitizeHex(BigNumber(gasPrice).toString()),
         data: data
       };
       return this.web3.eth.estimateGas(params);
