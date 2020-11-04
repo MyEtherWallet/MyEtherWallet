@@ -19,5 +19,10 @@ export default {
     supportedTld: RIN
   },
   icon: rin,
-  currencyName: 'RIN'
+  currencyName: 'RIN',
+  isEthVMSupported: {
+    supported: false,
+    url: null,
+    websocket: null
+  }
 };
