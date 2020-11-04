@@ -471,7 +471,6 @@ export default {
       this.customGasLimit = value;
     },
     setCurrency(value) {
-      console.log('should be called twice', value);
       this.selectedCurrency = value;
     }
   }
