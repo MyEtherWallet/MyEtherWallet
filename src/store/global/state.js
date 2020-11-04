@@ -3,7 +3,6 @@ import store from 'store';
 
 const state = {
   Errors: {},
-  ethDonationAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
   Networks: nodeList,
   path: '',
   online: true,
