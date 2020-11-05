@@ -8,7 +8,7 @@
       :duration="duration"
       :toast-type="getRef(toast)"
       :text="text"
-      :link-object="linkObj"
+      :link-obj="linkObj"
       @closed="onClose"
     />
   </div>
