@@ -1,6 +1,6 @@
 ### Devop
 
-* Update address validation package [#](https://github.com/MyEtherWallet/MyEtherWallet/pull/)
+* Update address validation package [#2652](https://github.com/MyEtherWallet/MyEtherWallet/pull/2652)
 
 ### Release v5.7.12
 
