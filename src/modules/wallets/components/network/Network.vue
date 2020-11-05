@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import changeNetworkOverlay from '../change-network/ChangeNetwork';
+import changeNetworkOverlay from './change-network/ChangeNetwork';
 import { mapState } from 'vuex';
 export default {
   components: { changeNetworkOverlay },

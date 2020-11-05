@@ -137,7 +137,7 @@ export default {
           }
         })
         .on('data', res => {
-          this.setBlockNumber(res);
+          this.setBlockNumber(res.number);
         });
     },
     manualBlockSubscription() {
