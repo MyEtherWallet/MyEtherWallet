@@ -122,7 +122,6 @@ export default {
       });
     },
     subscribeToBlockNumber() {
-      console.log('should be called again');
       this.web3.eth
         .subscribe('newBlockHeaders', error => {
           if (error) {
@@ -138,7 +137,6 @@ export default {
           }
         })
         .on('data', res => {
-          console.log(res);
           this.setBlockNumber(res.number);
         });
     },
@@ -146,12 +144,10 @@ export default {
       const _self = this;
       // fetch initially
       _self.web3.eth.getBlockNumber().then(res => {
-        console.log(res);
         _self.setBlockNumber(res);
         // rerun in 14 secs
         _self.manualBlockFetch = setInterval(() => {
           _self.web3.eth.getBlockNumber().then(res => {
-            console.log(res);
             _self.setBlockNumber(res);
           });
         }, 14000);
