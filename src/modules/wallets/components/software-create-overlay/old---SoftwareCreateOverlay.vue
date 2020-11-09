@@ -1,10 +1,6 @@
 <template>
   <div>
-    <mew-overlay
-      :show-overlay="open"
-      :title="typeTitle"
-      @closeOverlay="$emit('close')"
-    >
+    <mew-overlay :show-overlay="open" :title="typeTitle">
       <template #mewOverlayBody>
         <v-sheet
           v-if="type === '' && step === 0"
@@ -14,16 +10,14 @@
         >
           <mew-super-button
             class="mb-5"
-            btn-mode="small-right-image"
             color-theme="basic"
             title="Keystore File"
             subtitle="Keystore file contains all the sensitive information of your wallet.
                   We don't recommand using this method to create your wallet."
-            title-mdi-icon="mdi-shield-check"
-            title-icon-class="primary--text"
             :right-icon="
               require('@/assets/images/icons/icon-keystore-file.svg')
             "
+            right-icon-type="img"
             @click.native="
               () => {
                 createType('keystore');
@@ -32,15 +26,13 @@
           />
 
           <mew-super-button
-            class="mb-5"
-            btn-mode="small-right-image"
+            class="mb-1"
             color-theme="basic"
             title="Mnemonic phrase"
             subtitle="Mnemonic Phrase can be lost or stolen by someone else. We don't
                   recommand using this method to create your wallet."
-            title-mdi-icon="mdi-shield-check"
-            title-icon-class="primary--text"
             :right-icon="require('@/assets/images/icons/icon-mnemonic.svg')"
+            right-icon-type="img"
             @click.native="
               () => {
                 createType('mnemonic');
@@ -48,7 +40,7 @@
             "
           />
 
-          <warning-sheet
+          <mew-warning-sheet
             class="mew-component--warning"
             title="NOT RECOMMENDED"
             :link-obj="linkToLearnMore"
@@ -116,3 +108,50 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.mew-component--software-overlay {
+  .mew-button {
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.05) !important;
+    padding: 5px 30px !important;
+    div {
+      letter-spacing: 0;
+    }
+    .title-wrapper {
+      margin-bottom: 10px;
+
+      > div:first-child {
+        font-size: 22px !important;
+        margin-right: 3px;
+      }
+      .title-icon {
+        font-size: 20px !important;
+      }
+    }
+    div:nth-child(2) {
+      font-weight: 400 !important;
+      line-height: 20px;
+    }
+  }
+  .v-icon.v-icon {
+    font-size: 32px !important;
+  }
+}
+
+.mew-component--warning {
+  border-radius: 10px;
+  overflow: hidden;
+  > .row {
+    margin: 0 !important;
+  }
+  span:first-child {
+    font-size: 16px !important;
+    margin-bottom: 7px;
+  }
+
+  a {
+    text-decoration: underline;
+    margin-top: 3px;
+  }
+}
+</style>
