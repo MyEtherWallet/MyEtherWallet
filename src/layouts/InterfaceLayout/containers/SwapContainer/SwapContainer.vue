@@ -754,7 +754,7 @@ export default {
             this.fromCurrency
           );
           this.intermediateGasCheck();
-          this.gasCheck(this.fromCurrency, this.toCurrency);
+          this.gasCheck();
           break;
         case 'from':
           this.toValue = this.swap.calculateToValue(
@@ -763,7 +763,7 @@ export default {
             this.toCurrency
           );
           this.intermediateGasCheck();
-          this.gasCheck(this.fromCurrency, this.toCurrency);
+          this.gasCheck();
           break;
         case `${this.providerNames.simplex}to`:
           this.simplexUpdate = true;
@@ -842,7 +842,7 @@ export default {
           this.toValue = toValue;
           this.fromValue = fromValue;
           this.intermediateGasCheck();
-          this.gasCheck(this.fromCurrency, this.toCurrency);
+          this.gasCheck();
           break;
       }
     },

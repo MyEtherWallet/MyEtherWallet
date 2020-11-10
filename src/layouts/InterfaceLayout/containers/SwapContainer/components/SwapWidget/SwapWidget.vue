@@ -1131,9 +1131,15 @@ export default {
       }
     },
     async gasCheck() {
-      console.log('gasCheck'); // todo remove dev item
       try {
-        if(!this.selectedProvider.provider) return;
+        if(!SwapProviders.isToken(this.fromCurrency) || !SwapProviders.isToken(this.toCurrency)){
+          this.gasNotice = false;
+          return;
+        }
+        if(!this.selectedProvider.provider) {
+          this.gasNotice = false;
+          return;
+        }
         const providerDetails = this.providerList.find(entry => {
           return entry.provider === this.selectedProvider.provider;
         });
@@ -1159,17 +1165,19 @@ export default {
         if (!enoughForGas) {
           throw Error('notEnoughWithGas');
         }
+        this.gasNotice = false;
       } catch (e) {
         if (e.message === 'marketImpactAbort') {
           this.finalizingSwap = false;
-          Toast.responseHandler('liquidity-too-low', 1, true);
+          // Toast.responseHandler('liquidity-too-low', 1, true);
           return;
         } else if (e.message === 'notEnoughWithGas') {
           this.finalizingSwap = false;
           this.gasNotice = true;
-          Toast.responseHandler('not-enough-eth-gas', 1, true);
+          // Toast.responseHandler('not-enough-eth-gas', 1, true);
           return;
         }
+        this.gasNotice = false;
       }
     },
     async swapConfirmationModalOpen() {
