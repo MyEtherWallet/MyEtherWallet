@@ -4,17 +4,24 @@ const storedNetwork = store.get('network');
 let network = nodeList['ETH'][0];
 if (storedNetwork && storedNetwork.type.name !== 'CUS') {
   const iteratableArr = nodeList[storedNetwork.type.name];
-  network = storedNetwork;
-  network.type = nodeList[storedNetwork.type.name][0].type;
-  for (let index = 0; index < iteratableArr.length; index++) {
-    if (storedNetwork.service === iteratableArr[index].service) {
-      network = iteratableArr[index];
-      break;
+  const matchNetwork = iteratableArr.find(item => {
+    if (item.service === storedNetwork.service) {
+      return item;
     }
+  });
+  // check and assign node if its a websocket node
+  if (matchNetwork && matchNetwork.url.includes('wss')) {
+    network = matchNetwork;
+    network.type = nodeList[matchNetwork.type.name][0].type;
   }
-} else {
-  network = storedNetwork ? storedNetwork : nodeList['ETH'][0];
+} else if (storedNetwork && storedNetwork.type.name === 'CUS') {
+  if (storedNetwork.url.includes('wss')) {
+    network = storedNetwork;
+    network.type = nodeList[storedNetwork.type.name][0].type;
+  }
 }
+console.log(network);
+store.set('network', network);
 
 const addressBook =
   store.get('addressBook') !== undefined ? store.get('addressBook') : [];
