@@ -48,7 +48,7 @@
             "
           />
 
-          <warning-sheet
+          <mew-warning-sheet
             class="mew-component--warning"
             title="NOT RECOMMENDED"
             :link-obj="linkToLearnMore"
@@ -67,12 +67,13 @@
 </template>
 
 <script>
+import MewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import keystore from '@/modules/wallets/components/keystore/Keystore';
 import mnemonicPhrase from '@/modules/wallets/components/mnemonic-phrase/MnemonicPhrase';
 
 export default {
   name: 'Software',
-  components: { keystore, mnemonicPhrase },
+  components: { keystore, mnemonicPhrase, 'mew-super-button': MewSuperButton },
   props: {
     open: {
       type: Boolean,
