@@ -1,3 +1,7 @@
+## Devop
+
+* Check that user has enough (amount + gas price)  to proceed even before they click to continue in swap [#2655](https://github.com/MyEtherWallet/MyEtherWallet/pull/2655)
+
 ### Bug
 
 * Gas price bug on batch tx [#2654](https://github.com/MyEtherWallet/MyEtherWallet/pull/2654)
