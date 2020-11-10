@@ -190,7 +190,8 @@ export default {
     },
     showCollectionGasWarning() {
       const foundGasAboveLimit = this.unSignedArray.find(item => {
-        return BigNumber(item.gasPrice).gte(this.gasLimitWarning);
+        const parsedGasPrice = this.web3.utils.fromWei(item.gasPrice, 'gwei');
+        return BigNumber(parsedGasPrice).gte(this.gasLimitWarning);
       });
       return foundGasAboveLimit ? true : false;
     },

@@ -1,3 +1,7 @@
+### Bug
+
+* Gas price bug on batch tx [#2654](https://github.com/MyEtherWallet/MyEtherWallet/pull/2654)
+
 ### Release v5.7.12-hotfix.1
 
 ### Bug
