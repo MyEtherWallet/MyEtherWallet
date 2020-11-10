@@ -1193,7 +1193,6 @@ export default {
           }
         }
       } catch (e) {
-        console.log(e.message); // todo remove dev item
         if (e.message === 'marketImpactAbort') {
           this.finalizingSwap = false;
           Toast.responseHandler('liquidity-too-low', 1, true);
