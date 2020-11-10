@@ -45,8 +45,6 @@ import {
   getEconomy
 } from '@/helpers/gasPriceHelper.js';
 
-import { Toast, ERROR } from '@/components/toast';
-
 export default {
   components: {
     sideMenu,
@@ -122,23 +120,12 @@ export default {
       });
     },
     subscribeToBlockNumber() {
-      this.web3.eth
-        .subscribe('newBlockHeaders', error => {
-          if (error) {
-            if (
-              error.message.includes(
-                "The current provider doesn't support subscriptions"
-              )
-            ) {
-              this.manualBlockSubscription();
-              return;
-            }
-            Toast(error.message, {}, ERROR);
-          }
-        })
-        .on('data', res => {
-          this.setBlockNumber(res.number);
-        });
+      this.web3.eth.getBlockNumber().then(res => {
+        this.setBlockNumber(res);
+      });
+      this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
+        this.setBlockNumber(res.number);
+      });
     },
     manualBlockSubscription() {
       const _self = this;
