@@ -25,10 +25,10 @@
         <v-tab-item v-for="(item, i) in items" :key="item + i">
           <v-slide-x-reverse-transition :hide-on-leave="true" mode="out-in">
             lklklkl
-                        <slot :name="'tabItemContent'" />
+<!--                        <slot :name="'tabItemContent'" />-->
 
             <!--            <slot />-->
-<!--            <slot :name="'tabItemContent' + (i + 1)" />-->
+            <slot :name="'tabItemContent' + (i + 1)" />
           </v-slide-x-reverse-transition>
         </v-tab-item>
       </v-tabs-items>
@@ -37,8 +37,8 @@
     <div v-for="(item, i) in items" :key="item + i">
       <v-slide-x-reverse-transition :hide-on-leave="true" mode="out-in">
         lklklkl
-        <slot />
-                <slot v-if="onTab === i" :name="'tabContent'" />
+<!--        <slot />-->
+                <slot v-if="onTab === i" :name="'tabContent' + (i + 1)" />
       </v-slide-x-reverse-transition>
     </div>
   </div>

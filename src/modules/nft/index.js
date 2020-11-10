@@ -85,9 +85,12 @@ export default class NFT {
   }
 
   async nextPage() {
-    return new Promise((resolve, reject) => {
-      this.currentActive.getNext().then(resolve).catch(reject);
-    });
+    if (this.currentActive.hasNextPage()) {
+      return new Promise((resolve, reject) => {
+        this.currentActive.getNext().then(resolve).catch(reject);
+      });
+    }
+    return Promise.resolve();
   }
 
   priorPage() {
@@ -103,7 +106,7 @@ export default class NFT {
   }
 
   getImageUrl(tokenId, contract) {
-    console.log('currentActive', this.currentActive); // todo remove dev item
+    // console.log('currentActive', this.currentActive); // todo remove dev item
 
     if (!contract) contract = this.currentActive.contract;
     return this.currentActive.getImageUrl(contract, tokenId);

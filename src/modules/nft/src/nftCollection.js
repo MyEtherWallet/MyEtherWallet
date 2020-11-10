@@ -42,7 +42,12 @@ export default class NftCollection {
 
   activate() {
     return new Promise((resolve, reject) => {
-      this.getFirstTokenSet().then(resolve).catch(reject);
+      if (this.tokens.length === 0) {
+        console.log('activate: this.tokens.length', this.tokens.length); // todo remove dev item
+        this.getFirstTokenSet().then(resolve).catch(reject);
+      } else {
+        resolve();
+      }
     });
   }
 
@@ -85,6 +90,7 @@ export default class NftCollection {
   async getPageState() {
     return new Promise((resolve, reject) => {
       if (this.tokens.length === 0) {
+        console.log('this.tokens.length', this.tokens.length); // todo remove dev item
         return this.getNftDetails().then(resolve).catch(reject);
       }
       return resolve({
@@ -156,15 +162,15 @@ export default class NftCollection {
           allTokens = data.tokens.map(tokenParse);
 
           this.tokens = allTokens;
-
+          this.isActive = true;
           resolve(allTokens);
         })
         .catch(reject);
     });
   }
 
-  getImageUrl(contract, tokenId){
-    return `${this.nftUrl}?contract=${contract}&tokenId=${tokenId}`
+  getImageUrl(contract, tokenId) {
+    return `${this.nftUrl}?contract=${contract}&tokenId=${tokenId}`;
   }
 
   getNftsToShow() {

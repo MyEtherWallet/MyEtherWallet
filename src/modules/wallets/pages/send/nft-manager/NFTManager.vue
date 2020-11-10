@@ -4,70 +4,39 @@
       <div class="flex-grow-1">
         <mew6-white-sheet>
           <interface-wrap title="NFT Manager">
-            <!--            <v-tabs
-              :vertical="true">
-              <v-tab
-                class="mew-heading-2"
-                v-for="(item, i) in items"
-                :key="item + i"
-              >
-                {{i}}
-              </v-tab>
-            </v-tabs>
-            <div>
-              <div class="d-flex justify-space-between mb-5">
-                <h5 class="font-weight-bold">CryptoKitties</h5>
-                <div>Total 3</div>
-              </div>
-              <div>
-                <v-card
-                  v-for="(kitty, key) in CryptoKitties"
-                  :key="key"
-                  flat
-                  color="tableHeader"
-                  class="border-radius&#45;&#45;5px pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
-                >
-                  <div class="d-flex align-center">
-                    <img
-                      height="100"
-                      :src="kitty.image"
-                      alt="Crypto Kitty"
-                    />
-                    <div class="ml-5">#{{ kitty.number }}</div>
-                  </div>
-                  <mew-button
-                    :has-full-width="false"
-                    btn-style="outline"
-                    title="Send"
-                    btn-size="large"
-                  />
-                </v-card>
-              </div>
-            </div>-->
             <mew-nft-tabs :items="items" is-vertical @onTab="getActive">
-              <template #tabItemContent>
-                <div>
+              <template
+                v-for="(contract, idx) in showContracts"
+                :slot="'tabItemContent' + (idx + 1)"
+              >
+                <!--                {{ contract }}-->
+                <div :key="idx">
                   <div class="d-flex justify-space-between mb-5">
                     <h5 class="font-weight-bold">
                       {{ showContracts[tabActive].name }}
                     </h5>
                     <div>Total {{ showContracts[tabActive].count }}</div>
                   </div>
-                  <div>
-                    {{showItems}}
+                  <div v-if="tokens.length === 0">
+                    Loading
+                  </div>
+                  <div v-if="tokens.length !== 0">
+                    <button @click="nextPage">next</button>
+                    <button @click="priorPage">prior</button>
                     <v-card
-                      v-for="(kitty, key) in showItems"
+                      v-for="(kitty, key) in tokens"
                       :key="key"
                       flat
                       color="tableHeader"
                       class="border-radius--5px pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
                     >
-                      {{ kitty }}
+                      <!--                      {{ kitty.image }}-->
                       <div class="d-flex align-center">
                         <img
                           height="100"
-                          :src="kitty.image"
+                          :src="kitty.image ? kitty.image : imageUrl(kitty.token_id)"
                           alt="Crypto Kitty"
+                          @error="iconFallback"
                         />
                         <div class="ml-5">#{{ kitty.name }}</div>
                       </div>
@@ -140,7 +109,8 @@ export default {
       ],
       showContracts: [],
       showItems: [],
-      tabActive: 1
+      tabActive: 1,
+      tokens: []
     };
   },
   computed: {
@@ -153,7 +123,9 @@ export default {
       'usd'
     ]),
     ...mapState('global', ['online']),
-    tokens() {}
+    // tokens() {
+    //   return this.nft.selectNftsToShow();
+    // }
   },
   mounted() {
     console.log(this.network, this.address, this.web3); // todo remove dev item
@@ -165,30 +137,102 @@ export default {
     this.nft.init().then(res => {
       console.log(res); // todo remove dev item
       this.ready = true;
-      console.log(this.nft.getAvailableContracts()); // todo remove dev item
+      // console.log(this.nft.getAvailableContracts()); // todo remove dev item
       const detailsRaw = this.nft.getAvailableContracts();
       this.showContracts = detailsRaw;
       this.items = detailsRaw.map(item => {
         return { name: `${item.name} (${item.count})` };
       });
+      this.getActive(0);
+      // this.showContracts = this.showContracts.map(item => {
+      //   item.tokens = [];
+      // });
     });
   },
   methods: {
+    iconFallback(e) {
+      console.log('err', e); // todo remove dev item
+    },
+    nextPage() {
+      this.nft.nextPage().then(() => {
+        this.tokens = this.nft.selectNftsToShow()
+        console.log('this.tokens', this.tokens); // todo remove dev item
+      })
+    },
+    priorPage(){
+      this.nft.priorPage();
+      this.tokens = this.nft.selectNftsToShow()
+      console.log('this.tokens', this.tokens); // todo remove dev item
+    },
+    imageUrl(token_id){
+      return this.nft.getImageUrl(token_id)
+    },
     getActive(val) {
       this.tabActive = val;
-      console.log(val); // todo remove dev item
-      console.log(this.nft.getAvailableContracts()[val]); // todo remove dev item
+      // console.log(val); // todo remove dev item
+      // console.log('this.showContracts', this.showContracts); // todo remove dev item
+      // console.log('getAvailableContracts', this.nft.getAvailableContracts()); // todo remove dev item
+      if (this.showContracts.length === 0) {
+        this.showContracts = this.nft.getAvailableContracts();
+      }
+      // this.showContracts = this.showContracts.map(item => {
+      //   item.tokens = [];
+      // });
+      this.tokens = [];
       this.nft
         .setActiveContract(this.nft.getAvailableContracts()[val].contract)
         .then(res => {
-          console.log('setActiveContract', res); // todo remove dev item
+          // console.log('setActiveContract', res); // todo remove dev item
           this.nft.getPageValues().then(result => {
-            console.log('getPageValues', result); // todo remove dev item
-            this.showItems = result.tokens.map(item => {
-              item.image = this.nft.getImageUrl(item.token_id);
-              return item;
-            });
-            console.log('showItems', this.showItems); // todo remove dev item
+            // console.log('getPageValues', result); // todo remove dev item
+            if (result.tokens && Array.isArray(result.tokens)) {
+              // this.showItems = result.tokens.map(item => {
+              //   item.image = this.nft.getImageUrl(item.token_id);
+              //   return item;
+              // });
+              this.tokens = this.nft.selectNftsToShow();
+              // this.showContracts.forEach((item, idx) => {
+              //   // console.log('showContracts', item); // todo remove dev item
+              //   // if (!this.nft.getAvailableContracts()[val]) return false;
+              //   if (
+              //     item.contract.toLowerCase() ===
+              //     this.nft.getAvailableContracts()[val].contract.toLowerCase()
+              //   ) {
+              //     const tokens = result.tokens.map(item => {
+              //       item.image = this.nft.getImageUrl(item.token_id);
+              //       return item;
+              //     });
+              //     this.$set(this, 'tokens', tokens);
+              //   }
+              // });
+              this.$nextTick();
+              // if (value) {
+              //   console.log(
+              //     'showitems',
+              //     this.showItems,
+              //     'show contracts',
+              //     this.showContracts
+              //   ); // todo remove dev item
+              //   value.tokens = this.showItems;
+              // }
+            } else {
+              this.showItems = [];
+            }
+
+            console.log('getAvailableContracts 2', this.nft.selectNftsToShow()); // todo remove dev item
+
+            // const value = this.showContracts.find(item => {
+            //   console.log('showContracts', item); // todo remove dev item
+            //   if (!this.nft.getAvailableContracts()[val]) return false;
+            //   return (
+            //     item.contract.toLowerCase() ===
+            //     this.nft.getAvailableContracts()[val].contract.toLowerCase()
+            //   );
+            // });
+            // if (value) {
+            //   value.tokens = this.showItems;
+            // }
+            // console.log('showItems', this.showItems); // todo remove dev item
           });
         });
     }
