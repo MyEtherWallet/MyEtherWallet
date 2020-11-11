@@ -1,154 +1,201 @@
 <template>
-  <v-sheet color="transparent">
-    <mew-stepper :items="steppers" :on-step="step">
-      <template v-if="step === 1" #outsideStepContent1>
-        <div>
-          <v-sheet class="pa-12">
-            <v-container>
-              <v-row align-items="center" justify="space-between">
-                <v-col cols="6">
-                  <div class="subtitle-1 font-weight-bold grey--text">
-                    STEP 1.
-                  </div>
-                  <div class="headline font-weight-bold mb-5">
-                    Write down the words
-                  </div>
-                </v-col>
-                <v-col cols="6">
-                  <v-row align-content="center" justify="end">
-                    <mew-button
-                      button-size="medium"
-                      icon="mdi-sync"
-                      icon-type="mdi"
-                      icon-align="left"
-                      title="Random"
-                      btn-style="transparent"
-                      color-theme="basic"
-                      @click.native="setPhrase"
-                    />
+  <v-sheet
+    class="mew-component--mnemonic-phrase"
+    max-width="800px"
+    color="transparent"
+  >
+    <mew-stepper :items="steppers" :on-step="step"> </mew-stepper>
 
-                    <div class="selector ml-3">
-                      <mew-select
-                        v-model="phraseSize"
-                        :items="mnemonicOptions"
-                      />
-                    </div>
-                  </v-row>
-                </v-col>
-              </v-row>
-            </v-container>
-            <v-sheet class="mnemonic-phrase-container pa-10" elevation="2">
-              <v-container>
-                <v-row align="center" justify="space-around">
-                  <v-col
-                    v-for="(word, idx) in phrase"
-                    :key="`mnemonicInput${idx}`"
-                    cols="2"
-                  >
-                    <div class="mnemonic-input">
-                      <label :for="`mnemonicInput${idx}`"
-                        >{{ idx + 1 }}.
-                      </label>
-                      <input
-                        :ref="`mnemonicInput${idx}`"
-                        :name="`mnemonicInput${idx}`"
-                        readonly
-                        :value="word"
-                      />
-                    </div>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-sheet>
+    <div v-if="step === 1">
+      <v-sheet color="white" class="border-radius--10px pa-4 pa-sm-12">
+        <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
+        <div class="headline font-weight-bold mb-5">Write down the words</div>
+        <div class="d-flex align-center justify-end pb-4">
+          <mew-button
+            button-size="medium"
+            icon="mdi-sync"
+            icon-type="mdi"
+            icon-align="left"
+            title="Random"
+            btn-style="transparent"
+            color-theme="primary"
+            @click.native="setPhrases"
+          />
+          <v-select
+            v-model="phraseSize"
+            style="max-width: 150px"
+            hide-details
+            dense
+            item-text="name"
+            item-value="value"
+            :items="mnemonicOptions"
+            label=""
+            outlined
+          ></v-select>
+        </div>
+        <phrase-block class="mb-8">
+          <mnemonic-phrase-table :data="phrases" />
+        </phrase-block>
 
-            <div class="mt-10">
-              <mew-expand-panel
-                :has-dividers="true"
-                :is-toggle="true"
-                :interactive-content="true"
-                :panel-items="[
-                  {
-                    name: 'Extra Word'
-                  }
-                ]"
-              >
-                <template #panelBody1>
-                  <mew-input
-                    v-model="extraWord"
-                    type="password"
-                    label="Extra word"
-                    placeholder="Extra word"
-                  />
-                </template>
-              </mew-expand-panel>
-            </div>
-            <v-container class="password-container">
-              <v-col align="center" justify="center">
-                <mew-button
-                  title="I wrote them down"
-                  button-size="large"
-                  :disabled="!isValidMnemonic"
-                  @click.native="next"
-                />
-              </v-col>
-            </v-container>
-          </v-sheet>
-          <mew-warning-sheet
-            class="mt-5"
-            title="Caution"
-            description="DO NOT take a screenshot or
-            share this phrase with anyone. This phrase acts as the PRIVATE KEY to access
-            your wallet."
-            :link-obj="link"
+        <mew-expand-panel is-toggle has-dividers :panel-items="extraWordsPanel">
+          <template #panelBody1>
+            <mew-input label="Extra word" placeholder=" " />
+          </template>
+        </mew-expand-panel>
+
+        <div class="d-flex justify-center mt-6">
+          <mew-button
+            title="I wrote them down"
+            button-size="xlarge"
+            :has-full-width="false"
+            @click.native="step = 2"
           />
         </div>
-      </template>
+      </v-sheet>
+      <warning-sheet
+        title="NOT RECOMMENDED"
+        description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
+      />
+    </div>
 
-      <template v-if="step === 2" #outsideStepContent2>
-        <v-sheet class="pa-12">
-          <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
-          <div class="mb-10">
-            <div class="headline font-weight-bold">Verification</div>
-            <div>
-              Please select the correct words based on their numbers, and enter
-              the extra word if you have one.
-            </div>
-          </div>
-          <div class="pa-12">
-            <div v-for="(item, idx) in generatedVerification" :key="item + idx">
-              <p>{{ Object.keys(item)[0] }}.</p>
-              <v-container>
-                <v-row align="center" justify="space-around" class="text-left">
-                  <div
-                    v-for="word in Object.values(Object.values(item)[0])"
-                    :key="word"
-                  >
-                    {{ word }}
-                  </div>
-                </v-row>
-              </v-container>
-            </div>
-            <div class="mt-10">
+    <div v-if="step === 1">
+      <v-sheet class="pa-12">
+        <v-container>
+          <v-row align-items="center" justify="space-between">
+            <v-col cols="6">
+              <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
+              <div class="headline font-weight-bold mb-5">
+                Write down the words
+              </div>
+            </v-col>
+            <v-col cols="6">
+              <v-row align-content="center" justify="end">
+                <mew-button
+                  button-size="medium"
+                  icon="mdi-sync"
+                  icon-type="mdi"
+                  icon-align="left"
+                  title="Random"
+                  btn-style="transparent"
+                  color-theme="basic"
+                  @click.native="setPhrase"
+                />
+
+                <div class="selector ml-3">
+                  <mew-select v-model="phraseSize" :items="mnemonicOptions" />
+                </div>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-container>
+        <v-sheet class="mnemonic-phrase-container pa-10" elevation="2">
+          <v-container>
+            <v-row align="center" justify="space-around">
+              <v-col
+                v-for="(word, idx) in phrase"
+                :key="`mnemonicInput${idx}`"
+                cols="2"
+              >
+                <div class="mnemonic-input">
+                  <label :for="`mnemonicInput${idx}`">{{ idx + 1 }}. </label>
+                  <input
+                    :ref="`mnemonicInput${idx}`"
+                    :name="`mnemonicInput${idx}`"
+                    readonly
+                    :value="word"
+                  />
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-sheet>
+
+        <div class="mt-10">
+          <mew-expand-panel
+            :has-dividers="true"
+            :is-toggle="true"
+            :interactive-content="true"
+            :panel-items="[
+              {
+                name: 'Extra Word'
+              }
+            ]"
+          >
+            <template #panelBody1>
               <mew-input
                 v-model="extraWord"
                 type="password"
                 label="Extra word"
                 placeholder="Extra word"
               />
-            </div>
-            <v-container class="password-container">
-              <v-col align="center" justify="center">
-                <mew-button
-                  title="Verify"
-                  button-size="large"
-                  :disabled="!isValidMnemonic"
-                  @click.native="next"
-                />
-              </v-col>
-            </v-container>
-          </div>
-        </v-sheet>
-        <!-- <div>
+            </template>
+          </mew-expand-panel>
+        </div>
+        <v-container class="password-container">
+          <v-col align="center" justify="center">
+            <mew-button
+              title="I wrote them down"
+              button-size="large"
+              :disabled="!isValidMnemonic"
+              @click.native="next"
+            />
+          </v-col>
+        </v-container>
+      </v-sheet>
+      <mew-warning-sheet
+        class="mt-5"
+        title="Caution"
+        description="DO NOT take a screenshot or
+            share this phrase with anyone. This phrase acts as the PRIVATE KEY to access
+            your wallet."
+        :link-obj="link"
+      />
+    </div>
+
+    <v-sheet v-if="step === 2" class="pa-12">
+      <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
+      <div class="mb-10">
+        <div class="headline font-weight-bold">Verification</div>
+        <div>
+          Please select the correct words based on their numbers, and enter the
+          extra word if you have one.
+        </div>
+      </div>
+      <div class="pa-12">
+        <div v-for="(item, idx) in generatedVerification" :key="item + idx">
+          <p>{{ Object.keys(item)[0] }}.</p>
+          <v-container>
+            <v-row align="center" justify="space-around" class="text-left">
+              <div
+                v-for="word in Object.values(Object.values(item)[0])"
+                :key="word"
+              >
+                {{ word }}
+              </div>
+            </v-row>
+          </v-container>
+        </div>
+        <div class="mt-10">
+          <mew-input
+            v-model="extraWord"
+            type="password"
+            label="Extra word"
+            placeholder="Extra word"
+          />
+        </div>
+        <v-container class="password-container">
+          <v-col align="center" justify="center">
+            <mew-button
+              title="Verify"
+              button-size="large"
+              :disabled="!isValidMnemonic"
+              @click.native="next"
+            />
+          </v-col>
+        </v-container>
+      </div>
+    </v-sheet>
+    <!-- <div>
           <v-sheet>
             <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
             <div class="mb-10">
@@ -223,11 +270,10 @@
             description="Not recommanded"
           />
         </div> -->
-      </template>
 
-      <template v-if="step === 3" #outsideStepContent3>
-        Hello step 3
-        <!-- <v-sheet>
+    <div v-if="step === 3">
+      Hello step 3
+      <!-- <v-sheet>
           <div class="d-flex align-center">
             <div class="mr-8">
               <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
@@ -257,19 +303,18 @@
             />
           </div>
         </v-sheet> -->
-      </template>
-    </mew-stepper>
+    </div>
   </v-sheet>
 </template>
 
 <script>
-// import phraseBlock from '../phrase-block/PhraseBlock';
+import phraseBlock from '../phrase-block/PhraseBlock';
 import MnemonicTools from '@/helpers/mnemonicTools';
 export default {
   name: 'CreateMnemonicPhrase',
-  // components: {
-  //   phraseBlock
-  // },
+  components: {
+    phraseBlock
+  },
   data: () => ({
     extraWord: '',
     extraWordVerification: '',
@@ -402,6 +447,18 @@ export default {
     label {
       position: absolute;
     }
+  }
+}
+</style>
+
+<style lang="scss">
+.mew-component--mnemonic-phrase .mew-stepper.v-stepper {
+  background: transparent !important;
+}
+.mew-component--mnemonic-phrase {
+  .v-input--selection-controls {
+    margin-top: 0;
+    padding-top: 0;
   }
 }
 </style>
