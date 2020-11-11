@@ -450,7 +450,7 @@ export default {
     validSwap() {
       // initial chack.  will provide an alert on the next screen if no address is provided
       if (this.recalculating) return false;
-      if(this.gasNotice) return false;
+      if (this.gasNotice) return false;
       const canExit =
         this.isExitToFiat && this.fromCurrency !== this.baseCurrency
           ? this.exitFromAddress !== ''
@@ -1011,11 +1011,14 @@ export default {
     },
     async gasCheck() {
       try {
-        if(!SwapProviders.isToken(this.fromCurrency) || !SwapProviders.isToken(this.toCurrency)){
+        if (
+          !SwapProviders.isToken(this.fromCurrency) ||
+          !SwapProviders.isToken(this.toCurrency)
+        ) {
           this.gasNotice = false;
           return;
         }
-        if(!this.selectedProvider.provider) {
+        if (!this.selectedProvider.provider) {
           this.gasNotice = false;
           return;
         }
