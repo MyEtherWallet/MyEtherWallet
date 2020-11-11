@@ -4,7 +4,8 @@
     max-width="800px"
     color="transparent"
   >
-    <mew-stepper :items="steppers" :on-step="step"> </mew-stepper>
+    <mew-stepper class="mx-n12 mx-md-0" :items="steppers" :on-step="step">
+    </mew-stepper>
 
     <div v-if="step === 1">
       <v-sheet color="white" class="border-radius--10px pa-4 pa-sm-12">
@@ -12,14 +13,14 @@
         <div class="headline font-weight-bold mb-5">Write down the words</div>
         <div class="d-flex align-center justify-end pb-4">
           <mew-button
-            button-size="medium"
+            btn-size="medium"
             icon="mdi-sync"
             icon-type="mdi"
             icon-align="left"
             title="Random"
             btn-style="transparent"
             color-theme="primary"
-            @click.native="setPhrases"
+            @click.native="setPhrase"
           />
           <v-select
             v-model="phraseSize"
@@ -34,81 +35,8 @@
           ></v-select>
         </div>
         <phrase-block class="mb-8">
-          <mnemonic-phrase-table :data="phrases" />
+          <mnemonic-phrase-table :data="phrase" />
         </phrase-block>
-
-        <mew-expand-panel is-toggle has-dividers :panel-items="extraWordsPanel">
-          <template #panelBody1>
-            <mew-input label="Extra word" placeholder=" " />
-          </template>
-        </mew-expand-panel>
-
-        <div class="d-flex justify-center mt-6">
-          <mew-button
-            title="I wrote them down"
-            button-size="xlarge"
-            :has-full-width="false"
-            @click.native="step = 2"
-          />
-        </div>
-      </v-sheet>
-      <warning-sheet
-        title="NOT RECOMMENDED"
-        description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
-      />
-    </div>
-
-    <div v-if="step === 1">
-      <v-sheet class="pa-12">
-        <v-container>
-          <v-row align-items="center" justify="space-between">
-            <v-col cols="6">
-              <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
-              <div class="headline font-weight-bold mb-5">
-                Write down the words
-              </div>
-            </v-col>
-            <v-col cols="6">
-              <v-row align-content="center" justify="end">
-                <mew-button
-                  button-size="medium"
-                  icon="mdi-sync"
-                  icon-type="mdi"
-                  icon-align="left"
-                  title="Random"
-                  btn-style="transparent"
-                  color-theme="basic"
-                  @click.native="setPhrase"
-                />
-
-                <div class="selector ml-3">
-                  <mew-select v-model="phraseSize" :items="mnemonicOptions" />
-                </div>
-              </v-row>
-            </v-col>
-          </v-row>
-        </v-container>
-        <v-sheet class="mnemonic-phrase-container pa-10" elevation="2">
-          <v-container>
-            <v-row align="center" justify="space-around">
-              <v-col
-                v-for="(word, idx) in phrase"
-                :key="`mnemonicInput${idx}`"
-                cols="2"
-              >
-                <div class="mnemonic-input">
-                  <label :for="`mnemonicInput${idx}`">{{ idx + 1 }}. </label>
-                  <input
-                    :ref="`mnemonicInput${idx}`"
-                    :name="`mnemonicInput${idx}`"
-                    readonly
-                    :value="word"
-                  />
-                </div>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-sheet>
 
         <div class="mt-10">
           <mew-expand-panel
@@ -131,28 +59,121 @@
             </template>
           </mew-expand-panel>
         </div>
-        <v-container class="password-container">
-          <v-col align="center" justify="center">
-            <mew-button
-              title="I wrote them down"
-              button-size="large"
-              :disabled="!isValidMnemonic"
-              @click.native="next"
-            />
-          </v-col>
-        </v-container>
+
+        <div class="d-flex justify-center mt-6">
+          <mew-button
+            title="I wrote them down"
+            btn-size="xlarge"
+            :has-full-width="false"
+            @click.native="step = 2"
+          />
+        </div>
       </v-sheet>
       <mew-warning-sheet
-        class="mt-5"
-        title="Caution"
-        description="DO NOT take a screenshot or
-            share this phrase with anyone. This phrase acts as the PRIVATE KEY to access
-            your wallet."
-        :link-obj="link"
+        title="NOT RECOMMENDED"
+        description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
       />
     </div>
 
-    <v-sheet v-if="step === 2" class="pa-12">
+    <div v-if="step === 2">
+      <v-sheet color="white" class="border-radius--10px pa-4 pa-sm-12">
+        <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
+        <div class="headline font-weight-bold">Verification</div>
+        <div class="mb-5">
+          Please select the correct words based on their numbers, and enter the
+          extra word if you have one.
+        </div>
+
+        <v-sheet max-width="600px" class="mx-auto">
+          <border-block
+            sm-border-radius
+            sm-shadow
+            class="mb-2 d-flex align-center px-5 py-1"
+          >
+            <div style="min-width: 30px">5.</div>
+            <v-radio-group
+              v-model="radioGroup1"
+              hide-details
+              class="width--full"
+            >
+              <v-row>
+                <v-col v-for="n in 3" :key="n" cols="12" sm="4">
+                  <v-radio label="Radia" :value="n"></v-radio>
+                </v-col>
+              </v-row>
+            </v-radio-group>
+          </border-block>
+          <border-block
+            sm-border-radius
+            sm-shadow
+            class="mb-2 d-flex align-center px-5 py-1"
+          >
+            <div style="min-width: 30px">5.</div>
+            <v-radio-group
+              v-model="radioGroup2"
+              hide-details
+              class="width--full"
+            >
+              <v-row>
+                <v-col v-for="n in 3" :key="n" cols="12" sm="4">
+                  <v-radio label="Radiaaaao" :value="n"></v-radio>
+                </v-col>
+              </v-row>
+            </v-radio-group>
+          </border-block>
+          <border-block
+            sm-border-radius
+            sm-shadow
+            class="mb-2 d-flex align-center px-5 py-1"
+          >
+            <div style="min-width: 30px">5.</div>
+            <v-radio-group
+              v-model="radioGroup3"
+              hide-details
+              class="width--full"
+            >
+              <v-row>
+                <v-col v-for="n in 3" :key="n" cols="12" sm="4">
+                  <v-radio label="Radiaaerge" :value="n"></v-radio>
+                </v-col>
+              </v-row>
+            </v-radio-group>
+          </border-block>
+          <mew-input
+            v-model="extraWord"
+            label="Extra word"
+            placeholder="Please confirm your extra word"
+            class="mt-10 mb-3"
+          />
+        </v-sheet>
+
+        <v-btn
+          v-if="false"
+          depressed
+          x-large
+          color="primary"
+          class="text-transform--initial"
+          @click="step = 3"
+        >
+          Acknowledge & Download
+        </v-btn>
+
+        <div class="d-flex justify-center mt-6">
+          <mew-button
+            title="Verify"
+            btn-size="xlarge"
+            :disabled="!isValidMnemonic"
+            @click.native="next"
+          />
+        </div>
+      </v-sheet>
+      <mew-warning-sheet
+        title="NOT RECOMMENDED"
+        description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
+      />
+    </div>
+
+    <!-- <v-sheet v-if="step === 2" class="pa-12">
       <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
       <div class="mb-10">
         <div class="headline font-weight-bold">Verification</div>
@@ -187,14 +208,14 @@
           <v-col align="center" justify="center">
             <mew-button
               title="Verify"
-              button-size="large"
+              btn-size="large"
               :disabled="!isValidMnemonic"
               @click.native="next"
             />
           </v-col>
         </v-container>
       </div>
-    </v-sheet>
+    </v-sheet>-->
     <!-- <div>
           <v-sheet>
             <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
@@ -258,7 +279,7 @@
             <div class="d-flex justify-center mb-3">
               <mew-button
                 title="Verify"
-                button-size="xlarge"
+                btn-size="xlarge"
                 :has-full-width="false"
                 @click.native="linkToStep(3)"
               />
@@ -271,51 +292,71 @@
           />
         </div> -->
 
-    <div v-if="step === 3">
-      Hello step 3
-      <!-- <v-sheet>
-          <div class="d-flex align-center">
-            <div class="mr-8">
-              <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
-              <div class="headline font-weight-bold mb-3">Well done!</div>
-              <p class="mb-6">
-                Congratulations! You have created a new wallet successfully.
-              </p>
+    <v-sheet
+      v-if="step === 3"
+      color="white"
+      class="border-radius--10px pa-4 pa-sm-12"
+    >
+      <div class="d-flex align-center">
+        <div>
+          <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
+          <div class="headline font-weight-bold mb-3">Well done</div>
+          <p class="mb-6">
+            Congratulation! Please use the MEWconnect App to scan this QR code
+            in order to access your new wallet. And you are done!
+          </p>
+          <v-img
+            class="d-block d-sm-none mx-auto mt-12 mb-12"
+            max-width="170px"
+            src="@/assets/images/icons/icon-keystore-mew.png"
+          />
 
-              <mew-button
-                title="Access my wallet"
-                button-size="xlarge"
-                :has-full-width="false"
-                @click.native="linkToStep(3)"
-              />
-
-              <p class="mt-4 mb-0">
-                <router-link
-                  class="primary--text text-decoration--none font-weight-bold"
-                  to="/"
-                  >Back to homepages</router-link
-                >
-              </p>
-            </div>
-            <v-img
-              max-width="250px"
-              src="@/assets/images/icons/icon-keystore-mew.png"
+          <div class="d-flex flex-column">
+            <mew-button
+              title="Access my wallet"
+              btn-size="xlarge"
+              :has-full-width="false"
+              class="mb-5"
+              @click.native="step = 1"
             />
+
+            <div class="mt-3 mb-0 text-center">
+              <router-link
+                class="primary--text text-decoration--none font-weight-bold"
+                to="/"
+                >Back to home</router-link
+              >
+            </div>
           </div>
-        </v-sheet> -->
-    </div>
+        </div>
+        <v-img
+          class="d-none d-sm-block ml-8"
+          max-width="250px"
+          src="@/assets/images/icons/icon-keystore-mew.png"
+        />
+      </div>
+    </v-sheet>
+
+    <div class="spacer-y-medium" />
   </v-sheet>
 </template>
 
 <script>
+import borderBlock from '@/components/border-block/BorderBlock.vue';
+import mnemonicPhraseTable from '../mnemonic-phrase-table/MnemonicPhraseTable';
 import phraseBlock from '../phrase-block/PhraseBlock';
 import MnemonicTools from '@/helpers/mnemonicTools';
 export default {
   name: 'CreateMnemonicPhrase',
   components: {
+    borderBlock,
+    mnemonicPhraseTable,
     phraseBlock
   },
   data: () => ({
+    radioGroup1: {},
+    radioGroup2: {},
+    radioGroup3: {},
     extraWord: '',
     extraWordVerification: '',
     link: {
@@ -356,12 +397,9 @@ export default {
         value: 24
       }
     ],
-    phraseSize: {
-      name: '12 words',
-      value: 12
-    },
+    phraseSize: 12,
     phrase: [],
-    step: 1
+    step: 3
   }),
   computed: {
     isValidMnemonic() {
@@ -409,7 +447,8 @@ export default {
   },
   methods: {
     setPhrase() {
-      this.phraseSize.value === 12
+      console.log(this.phraseSize + ' --------------------');
+      this.phraseSize === 12
         ? (this.phrase = MnemonicTools.phrase12())
         : (this.phrase = MnemonicTools.phrase24());
     },
@@ -454,11 +493,5 @@ export default {
 <style lang="scss">
 .mew-component--mnemonic-phrase .mew-stepper.v-stepper {
   background: transparent !important;
-}
-.mew-component--mnemonic-phrase {
-  .v-input--selection-controls {
-    margin-top: 0;
-    padding-top: 0;
-  }
 }
 </style>
