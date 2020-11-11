@@ -1132,11 +1132,14 @@ export default {
     },
     async gasCheck() {
       try {
-        if(!SwapProviders.isToken(this.fromCurrency) || !SwapProviders.isToken(this.toCurrency)){
+        if (
+          !SwapProviders.isToken(this.fromCurrency) ||
+          !SwapProviders.isToken(this.toCurrency)
+        ) {
           this.gasNotice = false;
           return;
         }
-        if(!this.selectedProvider.provider) {
+        if (!this.selectedProvider.provider) {
           this.gasNotice = false;
           return;
         }
