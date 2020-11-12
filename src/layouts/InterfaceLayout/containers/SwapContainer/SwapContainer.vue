@@ -450,6 +450,7 @@ export default {
     validSwap() {
       // initial chack.  will provide an alert on the next screen if no address is provided
       if (this.recalculating) return false;
+      if (this.gasNotice) return false;
       const canExit =
         this.isExitToFiat && this.fromCurrency !== this.baseCurrency
           ? this.exitFromAddress !== ''
@@ -753,6 +754,7 @@ export default {
             this.fromCurrency
           );
           this.intermediateGasCheck();
+          this.gasCheck();
           break;
         case 'from':
           this.toValue = this.swap.calculateToValue(
@@ -761,6 +763,7 @@ export default {
             this.toCurrency
           );
           this.intermediateGasCheck();
+          this.gasCheck();
           break;
         case `${this.providerNames.simplex}to`:
           this.simplexUpdate = true;
@@ -839,6 +842,7 @@ export default {
           this.toValue = toValue;
           this.fromValue = fromValue;
           this.intermediateGasCheck();
+          this.gasCheck();
           break;
       }
     },
@@ -1002,6 +1006,59 @@ export default {
           )
           .lte(0);
       } else {
+        this.gasNotice = false;
+      }
+    },
+    async gasCheck() {
+      try {
+        if (
+          !SwapProviders.isToken(this.fromCurrency) ||
+          !SwapProviders.isToken(this.toCurrency)
+        ) {
+          this.gasNotice = false;
+          return;
+        }
+        if (!this.selectedProvider.provider) {
+          this.gasNotice = false;
+          return;
+        }
+        const providerDetails = this.providerList.find(entry => {
+          return entry.provider === this.selectedProvider.provider;
+        });
+        let swapDetails = {
+          providerDetails: providerDetails,
+          fromValue: this.fromValue,
+          toValue: this.toValue,
+          toAddress: this.toAddress || this.currentAddress,
+          fromAddress: this.currentAddress,
+          refundAddress: SwapProviders.isToken(providerDetails.fromCurrency)
+            ? this.currentAddress
+            : this.refundAddress,
+          exitFromAddress:
+            this.isExitToFiat && this.fromCurrency === this.baseCurrency
+              ? this.currentAddress
+              : this.exitFromAddress
+        };
+        swapDetails = await this.swap.startSwap(swapDetails);
+        if (swapDetails.marketImpact) {
+          throw Error('marketImpactAbort');
+        }
+        const enoughForGas = await this.checkForEnoughGas(swapDetails);
+        if (!enoughForGas) {
+          throw Error('notEnoughWithGas');
+        }
+        this.gasNotice = false;
+      } catch (e) {
+        if (e.message === 'marketImpactAbort') {
+          this.finalizingSwap = false;
+          // Toast.responseHandler('liquidity-too-low', 1, true);
+          return;
+        } else if (e.message === 'notEnoughWithGas') {
+          this.finalizingSwap = false;
+          this.gasNotice = true;
+          // Toast.responseHandler('not-enough-eth-gas', 1, true);
+          return;
+        }
         this.gasNotice = false;
       }
     },
