@@ -11,6 +11,8 @@ import ambrpayDisabled from '@/assets/images/icons/dapps/ambrpay-disabled.png';
 import aave from '@/assets/images/icons/dapps/aave.svg';
 import lendMigrator from '@/assets/images/icons/dapps/lend-migrator.svg';
 import unstoppable from '@/assets/images/icons/dapps/unstoppable.png';
+import staked from '@/assets/images/icons/dapps/staked-logo.png';
+
 import { ETH, GOERLI, ROP, RIN, KOV } from '@/networks/types';
 
 const dapps = {
@@ -91,6 +93,15 @@ const dapps = {
     supportedNetworks: [ETH.name],
     lastUpdated: '10/2/2020',
     releaseDate: '10/2/2020'
+  },
+  staked: {
+    route: '/interface/dapps/staked',
+    icon: staked,
+    title: 'dappsStaked.title',
+    desc: 'dappsStaked.desc',
+    supportedNetworks: [ETH.name],
+    lastUpdated: '11/10/2020',
+    releaseDate: '11/10/2020'
   }
 };
 
