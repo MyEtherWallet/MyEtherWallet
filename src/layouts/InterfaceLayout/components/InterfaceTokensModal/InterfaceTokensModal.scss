@@ -13,6 +13,13 @@
     width: 100%;
   }
 
+  .custom-input-text-1::placeholder {
+    color: $dark-blue-12 !important;
+  }
+  .custom-input-text-1::-webkit-input-placeholder {
+    color: $dark-blue-12 !important;
+  }
+
   button {
     max-width: 300px;
     width: 100%;
