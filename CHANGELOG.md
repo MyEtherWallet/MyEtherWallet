@@ -1,6 +1,7 @@
 ### Bug
 
 * Disable button when swap expires, disable click outside swap modal [#2648](https://github.com/MyEtherWallet/MyEtherWallet/pull/2648)
+* Add allowance check for LEND migrator [#2649](https://github.com/MyEtherWallet/MyEtherWallet/pull/2649)
 
 ### Devop
 
@@ -10,6 +11,7 @@
 ### Release v5.7.12
 
 ## Devop
+
 
 * Check that user has enough (amount + gas price)  to proceed even before they click to continue in swap [#2655](https://github.com/MyEtherWallet/MyEtherWallet/pull/2655)
 
