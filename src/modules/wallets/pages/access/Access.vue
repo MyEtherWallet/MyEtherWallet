@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import MewSuperButton from '@/components/mewSuperButton/MewSuperButton';
+import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import blockTitle from '@/components/block-title/BlockTitle';
 import browserExtensionOverlay from '@/modules/wallets/components/browser-extension-overlay/BrowserExtensionOverlay';
 import hardwareAccessOverlay from '@/modules/wallets/components/hardware-access-overlay/HardwareAccessOverlay';
@@ -60,7 +60,7 @@ export default {
     hardwareAccessOverlay,
     mobileAccessOverlay,
     softwareAccessOverlay,
-    'mew-super-button': MewSuperButton
+    mewSuperButton
   },
   data() {
     return {
@@ -91,7 +91,8 @@ export default {
           titleIcon: 'mdi-shield-check',
           titleIconClass: 'primary--text',
           fn: () => {
-            this.open('showBrowser');
+            //this.open('showBrowser');
+            this.$router.push({ name: 'BrowserExtension' });
           }
         },
         {
@@ -103,7 +104,8 @@ export default {
           titleIcon: 'mdi-shield-check',
           titleIconClass: 'primary--text',
           fn: () => {
-            this.open('showHardware');
+            //this.open('showHardware');
+            this.$router.push({ name: 'HardwareWallets' });
           }
         },
         {
@@ -118,7 +120,8 @@ export default {
           titleIcon: 'mdi-shield-check',
           titleIconClass: 'primary--text',
           fn: () => {
-            this.open('showMobile');
+            //this.open('showMobile');
+            this.$router.push({ name: 'MobileApps' });
           }
         },
         {
