@@ -1,0 +1,19 @@
+{
+  "title": "Staked",
+  "desc": "Helps institutional investors reliably crypto assets",
+  "about": "Staked helps institutional investors reliably and securely compound their crypto assets by 5% - 100% annually via staking and lending.",
+  "current-stake-title": "Current Staking APR%",
+  "total-eth-title": "Total ETH Staked",
+  "steps": {
+    "1": "Stake Amount",
+    "2": "Upload the Keystore File",
+    "3": "Review & Sign",
+    "4": "Done"
+  },
+  "amount-stake": "Amount of ETH to Stake",
+  "validator-required": "{number} Validators Required (@32ETH/ Validator {learn-more})",
+  "what-is-eth2": "What is ETH2 address? {learn-more}",
+  "do-not-have-eth2": "Don't have an ETH2 address? {generate}",
+  "generate": "Generate"
+
+}

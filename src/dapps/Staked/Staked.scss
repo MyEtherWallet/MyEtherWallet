@@ -1,0 +1,48 @@
+@import '~@/scss/GlobalVariables';
+
+.staked-wrapper {
+  background-color: $white;
+  border-radius: 4px;
+  grid-area: main;
+  margin-bottom: 10px;
+  overflow: hidden;
+  .button-container {
+    width: 100%;
+  }
+  .stats-container {
+    flex-direction: column;
+    width: 100%;
+    .staking-percent {
+      color: $dark-green-5;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .total-eth-percent {
+      color: $light-blue-1;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    span {
+      color: $light-grey-18;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  .about-container {
+    background-color: $light-green-1;
+    border-radius: 4px;
+    color: $dark-blue-1;
+    margin-top: 10px;
+    padding: 30px;
+  }
+  .footer {
+    align-items: center;
+    color: $dark-blue-13;
+    flex-direction: column;
+    justify-content: center;
+    .learn, .generate {
+      color: $mew-green;
+    }
+  }
+}
