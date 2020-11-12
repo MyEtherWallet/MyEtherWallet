@@ -2,15 +2,32 @@
 
 * Disable button when swap expires, disable click outside swap modal [#2648](https://github.com/MyEtherWallet/MyEtherWallet/pull/2648)
 
+### Devop
+
+* Update address validation package [#2652](https://github.com/MyEtherWallet/MyEtherWallet/pull/2652)
+* normalize address when verifying massages [#2650](https://github.com/MyEtherWallet/MyEtherWallet/pull/2650)
+
+### Release v5.7.12
+
+## Devop
+
+* Check that user has enough (amount + gas price)  to proceed even before they click to continue in swap [#2655](https://github.com/MyEtherWallet/MyEtherWallet/pull/2655)
+
+### Bug
+
+* Gas price bug on batch tx [#2654](https://github.com/MyEtherWallet/MyEtherWallet/pull/2654)
+
+### Release v5.7.12-hotfix.1
+
+### Bug
+
+* Add BSC imports [#2645](https://github.com/MyEtherWallet/MyEtherWallet/pull/2645)
+
 ### Release v5.7.12
 
 ### Feature
 
 * Add support for currency type [#2631](https://github.com/MyEtherWallet/MyEtherWallet/pull/2631)
-
-### Bug
-
-* Handle changelly rep as repv2 [#2632](https://github.com/MyEtherWallet/MyEtherWallet/pull/2632)
 
 ### Devop
 
@@ -18,6 +35,7 @@
 
 ### Bug
 
+* Handle changelly rep as repv2 [#2632](https://github.com/MyEtherWallet/MyEtherWallet/pull/2632)
 * fix interact with contract constant check to an existence check [#2627](https://github.com/MyEtherWallet/MyEtherWallet/pull/2627)
 * Add ethereum token for ens domain and fix removeElements in AddrResolver
 
