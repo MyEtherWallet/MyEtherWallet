@@ -417,6 +417,7 @@ export default {
     },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
+      if (raw.lt(0)) return '0';
       return raw.times(100).toString();
     },
     displayFixedValue(raw, decimals = 3) {
