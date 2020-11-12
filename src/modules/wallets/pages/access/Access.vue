@@ -80,7 +80,9 @@ export default {
           rightIcon: require('@/assets/images/icons/icon-mew-connect.png'),
           titleIcon: 'mdi-shield-check',
           titleIconClass: 'primary--text',
-          fn: () => {}
+          fn: () => {
+            window.open('https://www.mewwallet.com', '_blank');
+          }
         },
         {
           color: 'basic',
