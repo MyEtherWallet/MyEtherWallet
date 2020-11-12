@@ -3,6 +3,7 @@
 ### Bug
 
 * Update rates and min dai for makerDao [#2646](https://github.com/MyEtherWallet/MyEtherWallet/pull/2646)
+* Disable button when swap expires, disable click outside swap modal [#2648](https://github.com/MyEtherWallet/MyEtherWallet/pull/2648)
 * Add allowance check for LEND migrator [#2649](https://github.com/MyEtherWallet/MyEtherWallet/pull/2649)
 
 ### Devop
