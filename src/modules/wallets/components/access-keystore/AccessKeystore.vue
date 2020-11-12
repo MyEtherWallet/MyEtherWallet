@@ -1,96 +1,69 @@
 <template>
-  <div class="component-container">
-    <mew-carousel
-      v-model="keystoreProgress"
-      carousel-height="400"
-      carousel-width="740"
-      :total-slides="2"
-      :ripple="false"
-      :cycle="false"
-      :show-arrows="false"
-    >
-      <template #slide1>
-        <div class="sheet-container">
-          <v-sheet
-            :outlined="true"
-            color="white"
-            :rounded="true"
-            :max-width="740"
-            :min-width="740"
-            :min-height="340"
-          >
-            <div class="sheet-content">
-              <div class="items">
-                <p class="mew-heading-1">Upload my Keystore File</p>
-                <p>
-                  Please upload the keystore file that <br />
-                  unlocks your wallet.
-                </p>
-                <br />
-                <br />
-                <mew-button
-                  title="Upload..."
-                  btn-style="outline"
-                  color-theme="primary"
-                  btn-size="xlarge"
-                  :has-full-width="true"
-                  :shows-active-state="true"
-                  @click.native="uploadBtn"
-                />
-              </div>
-              <div class="items">
-                <img
-                  src="@/assets/images/backgrounds/bg-spaceman.png"
-                  width="100%"
-                />
-              </div>
+  <div class="component-container mt-5">
+    <mew6-white-sheet v-if="keystoreProgress === 0" class="pa-4 pa-lg-10">
+      <div class="d-flex flex-column-reverse flex-lg-row align-center">
+        <div>
+          <h4 class="font-weight-bold mb-4">Upload my keystore file</h4>
+          <div class="mb-10">
+            Please upload the keystore file that unlocks your wallet.
+          </div>
+          <mew-button
+            title="Upload..."
+            btn-style="outline"
+            color-theme="primary"
+            btn-size="xlarge"
+            :has-full-width="true"
+            :shows-active-state="true"
+            @click.native="uploadBtn"
+          />
+        </div>
+        <div class="text-center text-lg-right mb-5 mb-lg-0">
+          <img
+            src="@/assets/images/icons/keystore-file.jpg"
+            alt="Keystore File"
+            style="width: 85%"
+          />
+        </div>
 
-              <input
-                ref="jsonInput"
-                type="file"
-                name="file"
-                style="display: none"
-                @change="uploadFile"
-              />
-            </div>
-          </v-sheet>
-        </div>
-      </template>
-      <template #slide2>
-        <div class="sheet-container">
-          <v-sheet
-            :outlined="true"
-            color="white"
-            :rounded="true"
-            :max-width="475"
-            :min-width="475"
-            :max-height="215"
-            :min-height="215"
-          >
-            <div class="password-container">
-              <mew-input
-                v-model="password"
-                label="Password"
-                placeholder="Enter my keystore password"
-                type="password"
-              />
-              <mew-button
-                title="Access My Wallet"
-                btn-size="xlarge"
-                :has-full-width="true"
-                @click.native="unlockBtn"
-              />
-            </div>
-          </v-sheet>
-        </div>
-      </template>
-    </mew-carousel>
+        <input
+          ref="jsonInput"
+          type="file"
+          name="file"
+          style="display: none"
+          @change="uploadFile"
+        />
+      </div>
+    </mew6-white-sheet>
+
+    <mew6-white-sheet v-if="keystoreProgress === 1" class="pa-4 pa-lg-10">
+      <mew-input
+        v-model="password"
+        label="Password"
+        placeholder="Enter my keystore password"
+        type="password"
+      />
+      <mew-button
+        title="Access My Wallet"
+        btn-size="xlarge"
+        :has-full-width="true"
+        @click.native="unlockBtn"
+      />
+    </mew6-white-sheet>
+
+    <page-indicator-dot
+      class="mt-4"
+      :items="2"
+      :current-item="keystoreProgress + 1"
+    />
   </div>
 </template>
 
 <script>
+import pageIndicatorDot from '@/components/page-indicator-dot/PageIndicatorDot';
+
 export default {
   name: 'AccessKeystore',
+  components: { pageIndicatorDot },
   props: {
     unlockKeystoreWallet: {
       type: Function,
