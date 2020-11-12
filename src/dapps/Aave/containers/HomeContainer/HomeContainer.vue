@@ -215,12 +215,14 @@ export default {
             .div(this.userSummary.totalCollateralETH)
             .times(100)
             .toFixed(4);
-          this.compositionCollateral.push({
-            symbol: reserve.reserve.symbol,
-            amount: reserve.currentUnderlyingBalanceETH,
-            percentage: percentage,
-            color: colors.length > 0 ? colors.shift() : '#fff'
-          });
+          if (percentage > 1) {
+            this.compositionCollateral.push({
+              symbol: reserve.reserve.symbol,
+              amount: reserve.currentUnderlyingBalanceETH,
+              percentage: percentage,
+              color: colors.length > 0 ? colors.shift() : '#fff'
+            });
+          }
         }
         if (reserve.currentBorrowsETH > 0) {
           borrowLimitEth = new BigNumber(this.userSummary.availableBorrowsETH)
