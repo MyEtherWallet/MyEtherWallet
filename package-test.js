@@ -44,7 +44,9 @@ const EXCEPTIONS = [
   '@vue/cli-plugin-eslint',
   '@vue/cli-plugin-pwa',
   '@vue/cli-plugin-unit-jest',
-  '@vue/cli-service'
+  '@vue/cli-service',
+  'postcss-import',
+  'webpack'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
