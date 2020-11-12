@@ -87,6 +87,7 @@
             timerHasEnded ? 'disabled' : '',
             'confirm-send-button submit-button large-round-button-green-filled clickable'
           ]"
+          @click="sendTransaction"
         >
           {{ $t('common.continue') }}
         </div>
