@@ -1,0 +1,49 @@
+@import '~@/scss/GlobalVariables';
+
+.review-step {
+  color: $light-grey-18;
+  flex-direction: column;
+  div {
+    justify-content: space-between;
+  }
+  .address-container, .review-container {
+    background-color: $light-green-1;
+    border-radius: 4px;
+    flex-direction: column;
+    padding: 20px;
+    width: 100%;
+    .eth-value {
+      color: $dark-blue-13;
+      font-weight: 500;
+    }
+    .convert-value {
+      color: $dark-grey-14;
+    }
+    .number {
+      color: $light-blue-1;
+    }
+    .title {
+      color: $dark-blue-13;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .address {
+      color: $dark-blue-1;
+    }
+  }
+  .switch {
+    align-items: center;
+    justify-content: center;
+    .link {
+      color: $mew-green
+    }
+
+    input[type=checkbox]:after {
+      content: " ";
+      background-color: $mew-green;
+      color: $white;
+      display: inline-block;
+      visibility: visible;
+    }
+  }
+}

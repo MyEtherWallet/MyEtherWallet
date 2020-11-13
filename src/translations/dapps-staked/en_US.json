@@ -11,9 +11,18 @@
     "4": "Done"
   },
   "amount-stake": "Amount of ETH to Stake",
-  "validator-required": "{number} Validators Required (@32ETH/ Validator {learn-more})",
+  "amount": "Amount",
+  "total": "Total",
+  "sign": "Sign",
+  "one-time-fee": "One Time Fee",
+  "validator-required": "{number} Validators Required",
+  "validator-required-eth-per": "{number} Validators Required (@32ETH/ Validator {learn-more})",
   "what-is-eth2": "What is ETH2 address? {learn-more}",
   "do-not-have-eth2": "Don't have an ETH2 address? {generate}",
-  "generate": "Generate"
-
+  "generate": "Generate",
+  "choose-file": "Choose File",
+  "upload": "Upload your keystore file",
+  "withdraw-title": "ETH2 Withdrawal Address",
+  "read-and-agree": "I have read and agree to {terms-of-service}",
+  "terms-of-service": "Staked’s Terms of Service"
 }

@@ -22,7 +22,8 @@
     </div>
     <stepper
       :steps="steps"
-      @completed-step="completeStep"
+      :set-data="setData"
+      @complete-step="completeStep"
       @active-step="isStepActive"
       @stepper-finished="alert"
     />
@@ -58,6 +59,7 @@ export default {
   },
   data() {
     return {
+      data: {},
       staked: staked,
       steps: [
         {
@@ -87,6 +89,10 @@ export default {
     };
   },
   methods: {
+    setData(data) {
+      this.data[data.key] = data.value;
+      console.error('this', this.data)
+    },
     completeStep(payload) {
       this.steps.forEach(step => {
         if (step.name === payload.name) {

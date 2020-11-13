@@ -9,11 +9,19 @@
         <template v-for="(step, index) in steps">
           <div
             :key="index"
-            :class="['step', isStepActive(index)]"
+            :class="[
+              'step',
+              isStepActive(index)
+                ? 'activated'
+                : index > currentStep.index
+                ? 'deactivated'
+                : 'completed'
+            ]"
             :style="{ width: `${100 / steps.length}%` }"
           >
             <div class="circle mb-2">
-              {{ step.name }}
+              <span v-if="index >= currentStep.index">{{ step.name }}</span>
+              <i v-if="index < currentStep.index" class="fa fa-check" />
             </div>
             <div class="step-title">
               <span>{{ step.title }}</span>
@@ -28,18 +36,15 @@
         :leave-active-class="leaveAnimation"
         mode="out-in"
       >
-        <step-one />
+        <step-one v-if="isStepActive(0)" @completed="proceed" />
+        <step-two v-if="isStepActive(1)" @completed="proceed" />
+        <step-three v-if="isStepActive(2)" @completed="proceed" />
       </transition>
     </div>
-    <div
-      :class="['button-container', currentStep.index > 0 ? '' : 'only-next']"
-    >
+    <div class="button-container">
       <button
         v-if="currentStep.index > 0"
-        :class="[
-          'large-round-button-green-filled mt-3 stepper-button previous',
-          !canContinue ? 'deactivated' : ''
-        ]"
+        :class="'mt-3 stepper-button previous'"
         @click="backStep()"
       >
         {{ $t('common.back') }}
@@ -47,31 +52,46 @@
       <button
         :class="[
           'large-round-button-green-filled mt-3 stepper-button next',
-          !canContinue ? 'deactivated' : ''
+          !canContinue ? 'deactivated' : '',
+          currentStep.index === 0 ? 'only-next' : ''
         ]"
         @click="nextStep()"
       >
-        {{ finalStep ? $t('dappsStaked.steps.4') : $t('common.next') }}
+        {{
+          finalStep
+            ? $t('dappsStaked.steps.4')
+            : currentStep.index === 2
+            ? $t('dappsStaked.sign')
+            : $t('common.next')
+        }}
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import stepOne from './steps/Amount/Amount';
+import stepOne from './steps/SetAmount/SetAmount';
+import stepTwo from './steps/Upload/Upload';
+import stepThree from './steps/Review/Review';
 
 export default {
   components: {
-    stepOne: stepOne
+    stepOne,
+    stepTwo,
+    stepThree
   },
   props: {
     steps: {
       type: Array,
-      default: () => {}
+      default: () => []
     },
     reset: {
       type: Boolean,
       default: false
+    },
+    setData: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
@@ -101,7 +121,8 @@ export default {
     reset(val) {
       if (!val) {
         return;
-      }      this.init();
+      }
+      this.init();
       this.previousStep = {};
       this.$nextTick(() => {
         this.$emit('reset', true);
@@ -110,14 +131,13 @@ export default {
   },
   created() {
     this.init();
-
   },
   methods: {
     isStepActive(index) {
       if (this.currentStep.index === index) {
-        return 'activated';
+        return true;
       }
-      return 'deactivated';
+      return false;
     },
     activateStep(index, back = false) {
       if (this.steps[index]) {
@@ -172,8 +192,10 @@ export default {
         this.activateStep(currentIndex, true);
       }
     },
-    proceed(payload) {
-      this.canContinue = payload.value;
+    proceed(param) {
+      this.canContinue = true;
+      console.error('in here');
+      this.setData(param);
     },
     changeNextBtnValue(payload) {
       this.nextButton[this.currentStep.name] = payload.nextBtnValue;
