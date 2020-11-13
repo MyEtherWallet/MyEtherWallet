@@ -1,5 +1,5 @@
 <template>
-  <div class="component-container mt-5">
+  <div class="mt-5">
     <mew6-white-sheet v-if="keystoreProgress === 0" class="pa-4 pa-lg-10">
       <div class="d-flex flex-column-reverse flex-lg-row align-center">
         <div>
@@ -116,34 +116,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.component-container {
-  width: 100%;
-}
-
-.sheet-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  height: 100%;
-}
-
-.sheet-content {
-  padding: 48px 68px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  position: relative;
-
-  .items {
-    height: 100%;
-    width: calc(740px / 2);
-  }
-}
-
-.password-container {
-  padding: 26px;
-}
-</style>
+<style lang="scss" scoped></style>
