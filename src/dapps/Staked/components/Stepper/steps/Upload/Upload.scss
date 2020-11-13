@@ -1,0 +1,51 @@
+@import '~@/scss/GlobalVariables';
+
+.upload-step {
+  flex-direction: column;
+  .upload-container {
+    div {
+      align-items: center;
+      background: $light-grey-17;
+      border: none;
+      border-radius: 4px;
+      color: $dark-grey-14;
+      height: 52px;
+      margin-right: 5px;
+      padding-left: 10px;
+      width: 80%;
+
+      .file {
+        color: dark-blue-13;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+    input[type='file'] {
+      display: none;
+    }
+    label {
+      align-items: center;
+      background-color: $white;
+      border: 1px solid $mew-green;
+      border-radius: 4px;
+      color: $mew-green;
+      cursor: pointer;
+      justify-content: center;
+      width: 120px;
+    }
+  }
+  .address-container {
+    background-color: $light-green-1;
+    flex-direction: column;
+    width: 100%;
+    .title {
+      color: $dark-blue-13;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .address {
+      color: $dark-blue-1;
+    }
+  }
+}

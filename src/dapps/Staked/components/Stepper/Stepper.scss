@@ -126,6 +126,25 @@
             opacity: .35;
           }
         }
+        &.completed {
+          .circle {
+            align-items: center;
+            background: $white;
+            border: 2px solid $dark-green-4;
+            border-radius: 50%;
+            color: $white;
+            display: flex;
+            justify-content: center;
+            height: 30px;
+            width: 30px;
+            .fa {
+              color: $dark-green-4;
+            }
+          }
+          .step-title {
+            color: $dark-green-4;
+          }
+        }
         .circle {
           align-items: center;
           background: $dark-blue-6;
@@ -162,24 +181,40 @@
     margin: 1.5rem 0;
   }
   .button-container {
-    position: relative;
+    align-items: center;
     display: flex;
     justify-content: center;
-    align-items: center;
-    // &.only-next {
-    //   justify-content: flex-end;
-    // }
+    position: relative;
     .stepper-button {
-      width: 60%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       &.next {
         @include shadow(1);
         &.deactivated {
           background-color: #cccccc !important;
           cursor: not-allowed !important;
         }
+        margin-left: 10px;
+        width: 30%;
+      }
+      &.only-next {
+        width: 60%;
+        margin-left: 0;
       }
       &.previous {
-        color: #333333;
+        background-color: $white;
+        border: 1px solid $mew-green;
+        border-radius: 6px;
+        color: $mew-green;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        user-select: none;
+        display: inline-block;
+        text-align: center;
+        padding: 21px 25px;
+        width: 25%;
       }
     }
   }

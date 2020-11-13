@@ -1,7 +1,7 @@
 <template>
   <div class="amount-step d-flex">
     <span class="title">{{ $t('dappsStaked.amount-stake') }}</span>
-    <i18n class="subtitle" path="dappsStaked.validator-required">
+    <i18n class="subtitle" path="dappsStaked.validator-required-eth-per">
       <span slot="number" class="num">1</span>
       <!-- need to add link -->
       <span slot="learn-more" class="learn">{{ $t('common.learn-more') }}</span>
@@ -21,7 +21,7 @@
         <div :class="isActive(3) ? 'active' : ''" @click="setAmount(3)">
           128 {{ $t('common.currency.eth') }}
         </div>
-    </div>
+      </div>
     </div>
   </div>
 </template>
@@ -45,11 +45,12 @@ export default {
     },
     setAmount(idx) {
       this.amount = types[idx];
+      this.$emit('completed', { key: 'amount', value: this.amount });
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import 'Amount.scss';
+@import 'SetAmount.scss';
 </style>
