@@ -125,7 +125,7 @@ h3 {
 }
 h4 {
   font-size: 1.38rem;
-  line-height: 2rem;
+  line-height: 1.6rem;
   font-weight: 400;
 }
 h5 {
@@ -181,6 +181,9 @@ h6 {
 .font-weight--800 {
   font-weight: 800 !important;
 }
+.nowrap {
+  white-space: nowrap;
+}
 
 /* ========== Cursor ========== */
 .pointer-event--none {
@@ -232,7 +235,53 @@ h6 {
 .box-shadow--sm {
   box-shadow: 0 2px 7px var(--v-boxShadow-base) !important;
 }
+.rotate {
+  &.transition {
+    transition: all 1200ms ease;
+  }
+  &.r180 {
+    transform: rotate(180deg);
+  }
+  &.r90 {
+    transform: rotate(90deg);
+  }
+}
 
+.custom-scroll-bar {
+  &::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+  &::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #4f4f4f;
+    border: 0 none #fff;
+    border-radius: 50px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #3b3b3b;
+  }
+  &::-webkit-scrollbar-thumb:active {
+    background: #4b4949;
+  }
+  &::-webkit-scrollbar-track {
+    background: #e1dfdf;
+    border: 0 none #fff;
+    border-radius: 39px;
+  }
+  &::-webkit-scrollbar-track:hover {
+    background: #ddd5d5;
+  }
+  &::-webkit-scrollbar-track:active {
+    background: #dedede;
+  }
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
 /* ========== Mobile ========== */
 .preset--mobile-max-width {
   max-width: 420px;
