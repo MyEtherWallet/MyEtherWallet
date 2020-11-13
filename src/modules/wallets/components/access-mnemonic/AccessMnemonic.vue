@@ -94,29 +94,31 @@
       </mew6-white-sheet>
     </div>
 
-    <div v-if="step === 3">
+    <div v-if="step === 1">
       <h3 class="font-weight-bold text-center mb-10">
         3. Confirm network & address
       </h3>
 
       <mew-expand-panel :interactive-content="true" :panel-items="panelItems">
         <template #panelBody1>
-          <div class="network-container">
+          <div class="network-container custom-scroll-bar ml-3 mr-n3 pr-3">
             <v-radio-group v-model="selectedNetwork">
               <div v-for="(type, i) in networkTypes" :key="type">
                 <h5 class="text-capitalize font-weight-bold">
                   {{ type }}
                 </h5>
-                <v-row align="center" justify="space-between">
-                  <v-col
-                    v-for="(item, idx) in Networks[type]"
-                    :key="item.service + idx"
-                    cols="12"
-                    sm="6"
-                  >
-                    <v-radio :label="item.service" :value="item.url" />
-                  </v-col>
-                </v-row>
+                <v-container>
+                  <v-row align="center" justify="space-between">
+                    <v-col
+                      v-for="(item, idx) in Networks[type]"
+                      :key="item.service + idx"
+                      cols="12"
+                      sm="6"
+                    >
+                      <v-radio :label="item.service" :value="item.url" />
+                    </v-col>
+                  </v-row>
+                </v-container>
                 <divider-line
                   v-if="networkTypes.length != i + 1"
                   class="mt-3 mb-5"
@@ -550,13 +552,9 @@ table {
   padding: 0 20px;
 }
 
-.password-container {
-  padding: 26px;
-}
-
 .network-container {
   max-height: 250px;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .address-copy-input {

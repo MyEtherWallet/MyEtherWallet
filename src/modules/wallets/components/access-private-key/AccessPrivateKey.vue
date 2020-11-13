@@ -1,42 +1,28 @@
 <template>
-  <v-container fluid>
-    <v-row align="center" justify="center">
-      <v-sheet
-        :outlined="true"
-        color="white"
-        :rounded="true"
-        :max-width="740"
-        :min-width="740"
-        :max-height="340"
-        :min-height="340"
-      >
-        <div class="sheet-content">
-          <p class="mew-heading-1">Enter my Private Key</p>
-          <mew-input
-            v-model="privateKey"
-            label="Private Key"
-            placeholder="Enter my Private Key"
-          />
-          <v-container class="password-container">
-            <v-col align="center" justify="center">
-              <mew-button
-                title="Access My Wallet"
-                btn-size="large"
-                :disabled="!disableBtn"
-                @click.native="unlockBtn"
-              />
-              <mew-checkbox
-                v-model="acceptTerms"
-                label="To access my wallet, I accept "
-                :link="link"
-                class="justify-center"
-              />
-            </v-col>
-          </v-container>
-        </div>
-      </v-sheet>
-    </v-row>
-  </v-container>
+  <div class="mt-5">
+    <mew6-white-sheet class="pa-4 pa-lg-10">
+      <h4 class="font-weight-bold mb-6">Enter my private key</h4>
+      <mew-input
+        v-model="privateKey"
+        label="Private Key"
+        placeholder="Enter my Private Key"
+      />
+      <div class="text-center">
+        <mew-checkbox
+          v-model="acceptTerms"
+          label="To access my wallet, I accept "
+          :link="link"
+          class="justify-center"
+        />
+        <mew-button
+          title="Access my wallet"
+          btn-size="xlarge"
+          :disabled="!disableBtn"
+          @click.native="unlockBtn"
+        />
+      </div>
+    </mew6-white-sheet>
+  </div>
 </template>
 
 <script>
@@ -81,9 +67,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.sheet-content {
-  padding: 48px;
-}
-</style>
