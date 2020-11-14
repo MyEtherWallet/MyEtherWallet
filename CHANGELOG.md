@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Update mobile access wallet [#2663](https://github.com/MyEtherWallet/MyEtherWallet/pull/2663)
 * Update mobile create wallet [#2661](https://github.com/MyEtherWallet/MyEtherWallet/pull/2661)
 * Finalize routes [#2556](https://github.com/MyEtherWallet/MyEtherWallet/pull/2556)
 * Update/Add landing, create wallet, access wallet pages [#2493](https://github.com/MyEtherWallet/MyEtherWallet/pull/2493)
