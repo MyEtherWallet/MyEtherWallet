@@ -47,22 +47,22 @@ export default {
         {
           label: 'Chrome',
           icon: require('@/assets/images/icons/icon-chrome.svg'),
-          to: { name: 'AccessWalletBrowserExtensionInstall', query: {} }
+          to: { name: 'BrowserExtensionInstall', query: {} }
         },
         {
           label: 'Firefox',
           icon: require('@/assets/images/icons/icon-firefox.svg'),
-          to: { name: 'AccessWalletBrowserExtensionInstall', query: {} }
+          to: { name: 'BrowserExtensionInstall', query: {} }
         },
         {
           label: 'Opera',
           icon: require('@/assets/images/icons/icon-opera.svg'),
-          to: { name: 'AccessWalletBrowserExtensionInstall', query: {} }
+          to: { name: 'BrowserExtensionInstall', query: {} }
         },
         {
           label: 'Brave',
           icon: require('@/assets/images/icons/icon-brave.png'),
-          to: { name: 'AccessWalletBrowserExtensionInstall', query: {} }
+          to: { name: 'BrowserExtensionInstall', query: {} }
         }
       ]
     };
