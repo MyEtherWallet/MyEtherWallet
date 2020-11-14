@@ -106,8 +106,8 @@ export default {
           titleIcon: 'mdi-shield-check',
           titleIconClass: 'primary--text',
           fn: () => {
-            //this.open('showHardware');
-            this.$router.push({ name: 'HardwareWallets' });
+            this.open('showHardware');
+            //this.$router.push({ name: 'HardwareWallets' });
           }
         },
         {
