@@ -1,0 +1,18 @@
+@import '~@/scss/GlobalVariables';
+
+.confirmation-container {
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  .title {
+    color: $dark-blue-6;
+  }
+  i {
+    color: $mew-green;
+    font-size: 120px;
+  }
+  span {
+    color: $dark-blue-1;
+    width: 295px;
+  }
+}

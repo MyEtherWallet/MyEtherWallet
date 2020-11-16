@@ -27,7 +27,10 @@
       @active-step="isStepActive"
       @stepper-finished="alert"
     />
-    <div class="footer d-flex pb-5">
+    <div
+      v-if="currentStepIdx === 0 || currentStepIdx === 1"
+      class="footer d-flex pb-5"
+    >
       <i18n path="dappsStaked.what-is-eth2">
         <!-- need to add link -->
         <span slot="learn-more" class="learn">{{
@@ -60,6 +63,7 @@ export default {
   data() {
     return {
       data: {},
+      currentStepIdx: 0,
       staked: staked,
       steps: [
         {
@@ -91,7 +95,6 @@ export default {
   methods: {
     setData(data) {
       this.data[data.key] = data.value;
-      console.error('this', this.data)
     },
     completeStep(payload) {
       this.steps.forEach(step => {
@@ -101,6 +104,7 @@ export default {
       });
     },
     isStepActive(payload) {
+      this.currentStepIdx = payload.index;
       this.steps.forEach(step => {
         if (step.name === payload.name) {
           if (step.completed === true) {
