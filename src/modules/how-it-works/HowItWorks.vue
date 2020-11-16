@@ -68,6 +68,9 @@ export default {
 
 <style lang="scss">
 .mew-component--how-it-works {
+  .v-slide-group__prev {
+    display: none !important;
+  }
   .v-slide-group__content {
     display: flex !important;
     justify-content: center !important;
