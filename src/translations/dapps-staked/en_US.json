@@ -24,5 +24,7 @@
   "upload": "Upload your keystore file",
   "withdraw-title": "ETH2 Withdrawal Address",
   "read-and-agree": "I have read and agree to {terms-of-service}",
-  "terms-of-service": "Staked’s Terms of Service"
+  "terms-of-service": "Staked’s Terms of Service",
+  "done-desc": "Your request is converting. A notification will be sent to you while it’s completed.",
+  "track-ethvm": "Track in EthVM"
 }

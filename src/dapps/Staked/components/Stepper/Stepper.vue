@@ -39,6 +39,7 @@
         <step-one v-if="isStepActive(0)" @completed="proceed" />
         <step-two v-if="isStepActive(1)" @completed="proceed" />
         <step-three v-if="isStepActive(2)" @completed="proceed" />
+        <step-four v-if="isStepActive(3)" @completed="proceed" />
       </transition>
     </div>
     <div class="button-container">
@@ -47,7 +48,11 @@
         :class="'mt-3 stepper-button previous'"
         @click="backStep()"
       >
-        {{ $t('common.back') }}
+        {{
+          currentStep.index === 3
+            ? $t('dappsStaked.track-ethvm')
+            : $t('common.back')
+        }}
       </button>
       <button
         :class="[
@@ -73,12 +78,14 @@
 import stepOne from './steps/SetAmount/SetAmount';
 import stepTwo from './steps/Upload/Upload';
 import stepThree from './steps/Review/Review';
+import stepFour from './steps/Done/Done';
 
 export default {
   components: {
     stepOne,
     stepTwo,
-    stepThree
+    stepThree,
+    stepFour
   },
   props: {
     steps: {
@@ -124,9 +131,9 @@ export default {
       }
       this.init();
       this.previousStep = {};
-      this.$nextTick(() => {
-        this.$emit('reset', true);
-      });
+      // this.$nextTick(() => {
+      //   this.$emit('reset', true);
+      // });
     }
   },
   created() {
@@ -139,7 +146,7 @@ export default {
       }
       return false;
     },
-    activateStep(index, back = false) {
+    activateStep(index) {
       if (this.steps[index]) {
         this.previousStep = this.currentStep;
         this.currentStep = {
@@ -151,19 +158,20 @@ export default {
         } else {
           this.finalStep = false;
         }
-        if (!back) {
-          this.$emit('completed-step', this.previousStep);
-        }
+        // if (!back) {
+        //   this.$emit('completed-step', this.previousStep);
+        // }
       }
       this.$emit('active-step', this.currentStep);
     },
     nextStepAction() {
       this.nextButton[this.currentStep.name] = true;
       if (this.canContinue) {
-        if (this.finalStep) {
-          this.$emit('stepper-finished', this.currentStep);
-        }
-        const currentIndex = this.currentStep.index + 1;
+        // if (this.finalStep) {
+        //   this.$emit('stepper-finished', this.currentStep);
+        // }
+        const currentIndex =
+          this.currentStep.index === 3 ? 0 : this.currentStep.index + 1;
         this.activateStep(currentIndex);
       }
       this.canContinue = false;
@@ -174,32 +182,31 @@ export default {
         this.nextStepAction();
       }
       this.canContinue = false;
-      this.$emit(
-        'before-next-step',
-        { currentStep: this.currentStep },
-        (next = true) => {
-          this.canContinue = true;
-          if (next) {
-            this.nextStepAction();
-          }
-        }
-      );
+      // this.$emit(
+      //   'before-next-step',
+      //   { currentStep: this.currentStep },
+      //   (next = true) => {
+      //     this.canContinue = true;
+      //     if (next) {
+      //       this.nextStepAction();
+      //     }
+      //   }
+      // );
     },
     backStep() {
-      this.$emit('clicking-back');
       const currentIndex = this.currentStep.index - 1;
+      if (this.currentStep.index === 3) {
+        window.open('https://www.ethvm.com/', '_blank');
+        return;
+      }
+      // this.$emit('clicking-back');
       if (currentIndex >= 0) {
         this.activateStep(currentIndex, true);
       }
     },
     proceed(param) {
       this.canContinue = true;
-      console.error('in here');
       this.setData(param);
-    },
-    changeNextBtnValue(payload) {
-      this.nextButton[this.currentStep.name] = payload.nextBtnValue;
-      this.$forceUpdate();
     },
     init() {
       // Initiate stepper

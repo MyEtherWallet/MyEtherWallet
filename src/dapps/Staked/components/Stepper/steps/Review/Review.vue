@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     agree() {
-      this.$emit('completed', { key: 'done', value: true });
+      this.$emit('completed', { key: 'review', value: true });
     }
   }
 };
