@@ -22,27 +22,26 @@
           <div class="font-weight-medium d-flex align-center">
             <div>MY ACCOUNT VALUE</div>
           </div>
-          <div class="headline font-weight-bold monospace">
-            {{ convertedBalance }}
-          </div>
+          <div class="headline font-weight-bold monospace">$7,244.58</div>
         </div>
       </div>
       <div class="component--address d-flex align-center mt-1">
         <div class="monospace full-address">{{ address }}</div>
         <div class="monospace last-four">{{ lastFour }}</div>
       </div>
-      <!-- <div class="mb-2">OWNED 3 DOMAINS ></div> -->
+      <div class="mb-2">OWNED 3 DOMAINS ></div>
       <div class="d-flex align-center">
         <div class="bottom-buttons">
           <mew-button
-            btn-size="small"
+            button-size="small"
             color-theme="white"
             btn-style="transparent"
             icon="mdi-printer"
             icon-type="mdi"
+            @click.native="openPaperWallet = true"
           ></mew-button>
           <mew-button
-            btn-size="small"
+            button-size="small"
             color-theme="white"
             btn-style="transparent"
             icon="mdi-file-document-outline"
@@ -50,19 +49,22 @@
             @click.native="copyAddress"
           ></mew-button>
         </div>
-        <!-- <mew-button
+        <mew-button
           class="ml-auto switch-button"
           :has-full-width="false"
           btn-style="outline"
           title="SWITCH >"
           color-theme="white"
-          btn-size="small"
+          button-size="small"
           @click.native="openChangeAddress = true"
-        /> -->
+        />
       </div>
     </div>
-    <change-address :open="openChangeAddress" :close="closeChangeAddress" />
-    <paper-wallet :open="openPaperWallet" :close="closePaperWallet" />
+    <change-address
+      :open="openChangeAddress"
+      @close="openChangeAddress = false"
+    />
+    <paper-wallet :open="openPaperWallet" @close="openPaperWallet = false" />
   </div>
 </template>
 
@@ -133,6 +135,12 @@ export default {
 }
 .blockie-img {
   position: relative;
+
+  .blockie-image {
+    border: 2px solid white;
+    border-radius: 100%;
+  }
+
   img {
     position: absolute;
     bottom: 0px;
