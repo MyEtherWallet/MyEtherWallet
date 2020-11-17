@@ -2,13 +2,18 @@
   <div>
     <block-title max-width="600px" no-page-title :data="title" class="mb-7" />
 
-    <div class="d-flex">
+    <div class="d-block d-lg-flex">
       <div>
         <mew-select :items="coins" label="From" />
         <mew-input label="Amount" placeholder=" " />
       </div>
-      <div class="px-6 mb-8 d-flex align-center">
-        <img :src="swap" height="35" />
+      <div class="px-6 mb-8 d-flex align-center justify-center">
+        <img
+          :src="swap"
+          height="35"
+          class="rotate"
+          :class="$vuetify.breakpoint.mdAndDown ? 'r90' : ''"
+        />
       </div>
       <div>
         <mew-select :items="coins" label="To" />

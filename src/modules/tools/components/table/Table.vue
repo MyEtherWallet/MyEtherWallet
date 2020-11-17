@@ -1,14 +1,42 @@
 <template>
   <div class="more-actions--table">
-    <mew-table :table-headers="mewTableHeader" :table-data="mewTableData">
+    <mew-table
+      class="d-none d-lg-block"
+      :table-headers="mewTableHeader"
+      :table-data="mewTableData"
+    >
     </mew-table>
+
+    <div class="d-block d-lg-none px-2 mb-n2">
+      <mobile-table
+        class="my-3"
+        button="Trade"
+        token="XMR"
+        token-value="27.54"
+        :table-data="mobileTable"
+      />
+      <mobile-table
+        class="my-3"
+        button="Trade"
+        token="XMR"
+        token-value="27.54"
+        :table-data="mobileTable"
+      />
+    </div>
   </div>
 </template>
 
 <script>
+import mobileTable from '@/components/mobile-table/MobileTable';
 export default {
-  components: {},
+  components: { mobileTable },
   data: () => ({
+    mobileTable: [
+      { label: 'Price', value: '$8.34' },
+      { label: 'Market Cap', value: '$1.53B' },
+      { label: '24h Changes', value: '0.25%' },
+      { label: 'Token Value', value: '$228.34' }
+    ],
     mewTableHeader: [
       {
         text: 'Token name',
@@ -50,7 +78,7 @@ export default {
 
     mewTableData: [
       {
-        token: 'Monero(XMR)',
+        token: 'Monero(XMR1)',
         price: '$8.23',
         cap: '$1.23B',
         change: '2.23%',
@@ -63,7 +91,7 @@ export default {
         myValue: '$227.54'
       },
       {
-        token: 'Monero(XMR)',
+        token: 'Monero(XMR2)',
         price: '$8.23',
         cap: '$1.23B',
         change: '2.23%',
@@ -76,7 +104,7 @@ export default {
         myValue: '$227.54'
       },
       {
-        token: 'Monero(XMR)',
+        token: 'Monero(XMR3)',
         price: '$8.23',
         cap: '$1.23B',
         change: '2.23%',
@@ -89,7 +117,7 @@ export default {
         myValue: '$227.54'
       },
       {
-        token: 'Monero(XMR)',
+        token: 'Monero(XMR4)',
         price: '$8.23',
         cap: '$1.23B',
         change: '2.23%',
@@ -102,7 +130,7 @@ export default {
         myValue: '$227.54'
       },
       {
-        token: 'Monero(XMR)',
+        token: 'Monero(XMR5)',
         price: '$8.23',
         cap: '$1.23B',
         change: '2.23%',
