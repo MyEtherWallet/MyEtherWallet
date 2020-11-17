@@ -1,26 +1,43 @@
 <template>
   <div>
-    <block-title max-width="600px" no-page-title :data="title" class="mb-7" />
-    <table-container />
-    <div class="py-3">
-      <mew-address-select label="To address" :items="addresses" />
-      <mew-input label="Address name" placeholder=" " />
-      <mew-button
-        title="Add"
-        btn-size="xlarge"
-        class="mt-3 mx-auto display--block"
+    <v-dialog v-model="addDialog" max-width="500" width="100%">
+      <v-card class="pa-4 pa-lg-8">
+        <mew-address-select
+          label="Address"
+          :items="addresses"
+        ></mew-address-select>
+        <mew-input label="Address name" placeholder=" " />
+        <mew-button
+          title="Add"
+          btn-size="xlarge"
+          class="mt-1 mx-auto display--block"
+        />
+      </v-card>
+    </v-dialog>
+
+    <div class="d-block d-sm-flex justify-space-between mb-7">
+      <block-title max-width="600px" no-page-title :data="title" />
+      <text-button
+        class="mt-3 mt-sm-0"
+        label="Add more"
+        plus
+        @click.native="addDialog = true"
       />
     </div>
+
+    <table-container />
   </div>
 </template>
 
 <script>
+import textButton from '@/components/buttons/text-button/TextButton';
 import blockTitle from '@/components/block-title/BlockTitle';
 import tableContainer from '../../components/table-container/TableContainer';
 
 export default {
-  components: { blockTitle, tableContainer },
+  components: { textButton, blockTitle, tableContainer },
   data: () => ({
+    addDialog: false,
     addresses: [
       {
         address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
