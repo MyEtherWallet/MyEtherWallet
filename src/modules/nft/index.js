@@ -51,8 +51,24 @@ export default class NFT {
     return this.currentActive.send(to, tokenId);
   }
 
+  sendData(to, tokenId){
+    return this.currentActive.sendData(to, tokenId);
+  }
+
+  txFeeETH(gasLimit, gasPrice){
+    return this.currentActive.txFeeETH(gasLimit, gasPrice)
+  }
+
+  txFeeUSD(gasLimit, ethPrice, gasPrice){
+    return this.currentActive.txFeeUSD(gasLimit, ethPrice, gasPrice)
+  }
+
   removeSentNft(tokenId) {
     this.currentActive.removeSentNft(tokenId);
+  }
+
+  getTokenCount(){
+    return this.currentActive.getTokenCount();
   }
 
   getAvailableContracts() {
@@ -69,6 +85,10 @@ export default class NFT {
     });
   }
 
+  getActiveName(){
+    return this.currentActive.name;
+  }
+
   getPageValues() {
     return this.currentActive.getPageState().catch(() => {
       return {
@@ -78,6 +98,10 @@ export default class NFT {
         tokens: []
       };
     });
+  }
+
+  hasPages(){
+    return this.currentActive.countPerPage < this.currentActive.getTokenCount();
   }
 
   hasNextPage() {
@@ -106,8 +130,6 @@ export default class NFT {
   }
 
   getImageUrl(tokenId, contract) {
-    // console.log('currentActive', this.currentActive); // todo remove dev item
-
     if (!contract) contract = this.currentActive.contract;
     return this.currentActive.getImageUrl(contract, tokenId);
   }
