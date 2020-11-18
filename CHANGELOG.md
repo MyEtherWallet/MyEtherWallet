@@ -2,6 +2,7 @@
 
 ### Devop
 
+* update mobile notification [#2671](https://github.com/MyEtherWallet/MyEtherWallet/pull/2671)
 * update mobile side menu [#2670](https://github.com/MyEtherWallet/MyEtherWallet/pull/2670)
 * update mobile tools [#2669](https://github.com/MyEtherWallet/MyEtherWallet/pull/2669)
 * update mobile how it works [#2668](https://github.com/MyEtherWallet/MyEtherWallet/pull/2668)
