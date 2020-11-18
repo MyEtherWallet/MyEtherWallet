@@ -9,7 +9,7 @@ import configs from '@/modules/nft/src/config';
 jest.setMock('node-fetch', fetch);
 
 describe('NFT Module', () => {
-  const network = {type: {name: 'ETH'}}
+  const network = { type: { name: 'ETH' } };
   const web3 = new Web3(
     'https://mainnet.infura.io/v3/7d06294ad2bd432887eada360c5e1986'
   );
@@ -354,7 +354,7 @@ describe('NFT Module', () => {
     }, 10000);
 
     test('it should return the nft token set', () => {
-      const activeShown = nft.selectNftsToShow()
+      const activeShown = nft.selectNftsToShow();
       const tokensShown3 = activeShown.reduce((acc, val) => {
         acc.push(val.token_id);
         return acc;
@@ -363,10 +363,8 @@ describe('NFT Module', () => {
     }, 10000);
 
     test('it should return the current active contract', () => {
-      nft.currentActiveContract
+      nft.currentActiveContract;
       expect(nft.currentActiveContract).toEqual(contractAddress);
     }, 10000);
-
-
   });
 });

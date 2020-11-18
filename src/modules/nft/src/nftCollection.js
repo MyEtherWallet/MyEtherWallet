@@ -16,7 +16,7 @@ export default class NftCollection {
     this.currentPage = 1;
     this.countPerPage = configs.countPerPage || 9;
     this.selectedContract = details.contractIdAddress;
-    this.imageContractBase = this.contracts[0].contract
+    this.imageContractBase = this.contracts[0].contract;
     this.nftConfig = props.details;
     this.count = details.owned_asset_count;
     this.startIndex = 0;
@@ -41,8 +41,8 @@ export default class NftCollection {
     return this.tokens;
   }
 
-  getTokenCount(){
-    return this.tokens.length
+  getTokenCount() {
+    return this.tokens.length;
   }
 
   activate() {
@@ -74,16 +74,16 @@ export default class NftCollection {
       });
   }
 
-  sendData(to, tokenId){
-    return this.sender.sendData(to, tokenId)
+  sendData(to, tokenId) {
+    return this.sender.sendData(to, tokenId);
   }
 
-  txFeeETH(gasLimit, gasPrice){
-    return this.sender.txFeeETH(gasLimit, gasPrice)
+  txFeeETH(gasLimit, gasPrice) {
+    return this.sender.txFeeETH(gasLimit, gasPrice);
   }
 
-  txFeeUSD(gasLimit, ethPrice, gasPrice){
-    return this.sender.txFeeUSD(gasLimit, ethPrice, gasPrice)
+  txFeeUSD(gasLimit, ethPrice, gasPrice) {
+    return this.sender.txFeeUSD(gasLimit, ethPrice, gasPrice);
   }
 
   removeSentNft(token_id) {
@@ -127,7 +127,7 @@ export default class NftCollection {
     }
     try {
       if (!this.tokens) return [];
-      this.sender.updateTokens(this.tokens)
+      this.sender.updateTokens(this.tokens);
       return this.tokens.length > this.countPerPage
         ? this.tokens.slice(startIndex, endIndex)
         : this.tokens;

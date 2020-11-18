@@ -24,7 +24,7 @@ export default class Sender {
     }
   }
 
-  updateTokens(tokens){
+  updateTokens(tokens) {
     this.tokens = tokens;
   }
 
@@ -119,6 +119,6 @@ export default class Sender {
   }
 
   getTokenDetails(tokenId) {
-    return this.tokens.find(item => (item.token_id == tokenId));
+    return this.tokens.find(item => item.token_id == tokenId);
   }
 }

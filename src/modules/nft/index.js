@@ -51,23 +51,23 @@ export default class NFT {
     return this.currentActive.send(to, tokenId);
   }
 
-  sendData(to, tokenId){
+  sendData(to, tokenId) {
     return this.currentActive.sendData(to, tokenId);
   }
 
-  txFeeETH(gasLimit, gasPrice){
-    return this.currentActive.txFeeETH(gasLimit, gasPrice)
+  txFeeETH(gasLimit, gasPrice) {
+    return this.currentActive.txFeeETH(gasLimit, gasPrice);
   }
 
-  txFeeUSD(gasLimit, ethPrice, gasPrice){
-    return this.currentActive.txFeeUSD(gasLimit, ethPrice, gasPrice)
+  txFeeUSD(gasLimit, ethPrice, gasPrice) {
+    return this.currentActive.txFeeUSD(gasLimit, ethPrice, gasPrice);
   }
 
   removeSentNft(tokenId) {
     this.currentActive.removeSentNft(tokenId);
   }
 
-  getTokenCount(){
+  getTokenCount() {
     return this.currentActive.getTokenCount();
   }
 
@@ -85,7 +85,7 @@ export default class NFT {
     });
   }
 
-  getActiveName(){
+  getActiveName() {
     return this.currentActive.name;
   }
 
@@ -100,7 +100,7 @@ export default class NFT {
     });
   }
 
-  hasPages(){
+  hasPages() {
     return this.currentActive.countPerPage < this.currentActive.getTokenCount();
   }
 

@@ -3,7 +3,6 @@ const configs = {
   countPerPage: 9,
   cryptoKittiesContract: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
   mainnet: 'ETH'
-}
+};
 
-
-export default  configs;
+export default configs;
