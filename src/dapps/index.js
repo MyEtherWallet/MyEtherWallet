@@ -91,6 +91,15 @@ const dapps = {
     supportedNetworks: [ETH.name],
     lastUpdated: '10/2/2020',
     releaseDate: '10/2/2020'
+  },
+  gntMigrator: {
+    route: '/interface/dapps/gnt-migrator',
+    icon: ambrpay,
+    title: 'dappsAave.lend-title',
+    desc: 'dappsAave.lend-popover',
+    supportedNetworks: [ETH.name],
+    lastUpdated: '10/2/2020',
+    releaseDate: '10/2/2020'
   }
 };
 
