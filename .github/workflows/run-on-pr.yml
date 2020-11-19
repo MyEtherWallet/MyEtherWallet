@@ -33,6 +33,9 @@ jobs:
       - name: build
         run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
 
+      - name: check lint
+        run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run lint"
+
       - name: add to codecov
         run: |
           ci_env='-e GITHUB_ACTION -e GITHUB_REF -e GITHUB_HEAD_REF -e GITHUB_SHA -e GITHUB_REPOSITORY -e GITHUB_RUN_ID'
