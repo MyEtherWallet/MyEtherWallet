@@ -46,13 +46,11 @@
                       color="tableHeader"
                       class="border-radius--5px pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
                     >
-                      <!--                      {{ kitty.image }}-->
                       <div class="d-flex align-center">
                         <img
                           height="100"
                           :src="kitty.image ? kitty.image : imageUrl(kitty)"
                           alt="Crypto Kitty"
-                          @error="iconFallback"
                         />
                         <div class="ml-5 pa-10">#{{ kitty.name }}</div>
                       </div>
@@ -83,7 +81,6 @@
             height="151"
             :src="selectedNft.image ? selectedNft.image : imageUrl(selectedNft)"
             alt="Crypto Kitty"
-            @error="iconFallback"
           />
           <div class="d-flex flex-column align-content-center">
             <div class="ma-5">#{{ selectedNft.name }}</div>
@@ -154,6 +151,12 @@
       <div class="pa-4"></div>
       <div></div>
     </div>
+    <mew-toast
+      ref="toast"
+      :text="toastMsg"
+      :toast-type="toastType"
+      :duration="1000"
+    />
   </div>
 </template>
 
@@ -163,6 +166,8 @@ import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import { mapState } from 'vuex';
 import sanitizeHex from '../../../../../helpers/sanitizeHex';
 import BigNumber from 'bignumber.js';
+import { Toast, SUCCESS } from '@/components/toast';
+import getService from '@/helpers/getService';
 
 export default {
   components: {
@@ -265,14 +270,30 @@ export default {
     sendTx() {
       if (this.toAddress !== '') {
         try {
-          // this.nft.send(this.toAddress, this.selectedNft.token_id);
-          this.nft.removeSentNft(this.selectedNft.token_id);
+          this.nft
+            .send(this.toAddress, this.selectedNft.token_id)
+            .then(response => {
+              this.updateValues();
+              Toast(
+                'Cheers! Your transaction was mined. Check it in ',
+                {
+                  title: `${getService(this.network.type.blockExplorerTX)}`,
+                  url: this.network.type.blockExplorerTX.replace(
+                    '[[txHash]]',
+                    response.blockHash
+                  )
+                },
+                SUCCESS,
+                5000
+              );
+            });
           this.updateValues();
           this.open = !this.open;
           this.selectedNft = {};
         } catch (e) {
-          // eslint-disable-next-line
-                  console.error(e);
+          this.toastType = 'warning';
+          this.toastMsg = e.message;
+          this.$refs.toast.showToast();
         }
       }
     },
@@ -324,7 +345,9 @@ export default {
           this.txFeeInUSD = this.txFeeUSD();
         });
       } catch (e) {
-        console.log(e);
+        this.toastType = 'warning';
+        this.toastMsg = e.message;
+        this.$refs.toast.showToast();
       }
     },
     setCustomGasLimit() {},
@@ -333,10 +356,6 @@ export default {
     },
     setAddress(address) {
       this.toAddress = address;
-    },
-    iconFallback(e) {
-      // eslint-disable-next-line
-      console.log('err', e);
     },
     nextPage() {
       this.nft.nextPage().then(() => {
