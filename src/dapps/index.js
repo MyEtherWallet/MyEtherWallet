@@ -95,8 +95,8 @@ const dapps = {
   gntMigrator: {
     route: '/interface/dapps/gnt-migrator',
     icon: ambrpay,
-    title: 'dappsAave.lend-title',
-    desc: 'dappsAave.lend-popover',
+    title: 'dappsMisc.gnt-title',
+    desc: 'dappsMisc.gnt-popover',
     supportedNetworks: [ETH.name],
     lastUpdated: '10/2/2020',
     releaseDate: '10/2/2020'
