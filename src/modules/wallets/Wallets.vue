@@ -1,27 +1,27 @@
 <template>
-  <v-sheet color="walletBg">
+  <div>
     <confirmation />
-    <div class="d-flex align-stretch">
-      <side-menu class="box-shadow" />
-      <div class="flex-grow-1 d-flex flex-column justify-space-between">
-        <v-container>
-          <wallet-header />
-          <v-row>
-            <v-col cols="9">
-              <router-view :owners-tokens="ownersTokens" />
-            </v-col>
-            <v-col cols="3">
-              <network />
-              <div class="pa-4"></div>
-              <swap />
-              <div class="pa-4"></div>
-              <banner-ads />
-            </v-col>
-          </v-row>
-        </v-container>
+    <div class="d-block d-lg-none walletBg">
+      <side-menu mobile />
+      <div class="mx-auto px-2 preset--mobile-max-width">
+        <wallet-header mobile />
+        <router-view mobile :owners-tokens="ownersTokens" />
+      </div>
+      <wallet-footer mobile class="mt-10 box-shadow" />
+    </div>
+    <div class="d-none d-lg-block walletBg">
+      <div class="d-flex align-stretch">
+        <side-menu class="box-shadow" />
+        <div class="flex-grow-1 d-flex flex-column justify-space-between">
+          <v-container>
+            <wallet-header />
+            <router-view :owners-tokens="ownersTokens" />
+          </v-container>
+          <wallet-footer class="mt-10 box-shadow" />
+        </div>
       </div>
     </div>
-  </v-sheet>
+  </div>
 </template>
 
 <script>
@@ -29,15 +29,11 @@ import BigNumber from 'bignumber.js';
 import { mapActions, mapState } from 'vuex';
 import utils from 'web3-utils';
 import store from 'store';
-
 import TokenCalls from '@/apollo/queries/tokens/index';
 import WalletCalls from '@/apollo/queries/wallets/index';
-
 import sideMenu from './components/side-menu/SideMenu';
 import walletHeader from './components/header/Header';
-import network from '@/modules/wallets/components/network/Network';
-import swap from '@/modules/wallets/components/swap/Swap';
-import bannerAds from '@/modules/wallets/components/banner-ads/BannerAds';
+import walletFooter from './components/footer/Footer';
 import confirmation from '@/modules/wallets/components/confirmation/Confirmation';
 import {
   getGasBasedOnType,
@@ -49,9 +45,7 @@ export default {
   components: {
     sideMenu,
     walletHeader,
-    network,
-    swap,
-    bannerAds,
+    walletFooter,
     confirmation
   },
   data() {
