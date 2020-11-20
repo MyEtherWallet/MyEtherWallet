@@ -41,6 +41,7 @@ export default {
   },
   watch: {
     $route(to, from) {
+      console.error('to', to, from)
       if (
         !from.meta.hasOwnProperty('requiresAuth') &&
         to.meta.hasOwnProperty('requiresAuth') &&

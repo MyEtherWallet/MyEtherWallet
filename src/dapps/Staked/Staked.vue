@@ -39,9 +39,14 @@
       </i18n>
       <i18n path="dappsStaked.do-not-have-eth2">
         <!-- need to add link -->
-        <span slot="generate" class="generate">{{
-          $t('dappsStaked.generate')
-        }}</span>
+        <router-link
+          slot="generate"
+          class="generate"
+          :to="{ path: '/generate-address' }"
+          target="_blank"
+        >
+          {{ $t('dappsStaked.generate') }}
+        </router-link>
       </i18n>
     </div>
   </div>
@@ -51,6 +56,8 @@
 import backButton from '@/layouts/InterfaceLayout/components/BackButton';
 import staked from '@/assets/images/icons/dapps/staked.png';
 import stepper from './components/Stepper/Stepper';
+import axios from 'axios';
+import KeyStore, { verifyKeystore } from '@myetherwallet/eth2-keystore';
 // import stepOne from './components/AmountStep/AmountStep.vue';
 // import StepTwo from './StepTwo.vue';
 
@@ -92,7 +99,37 @@ export default {
       ]
     };
   },
+  mounted() {
+    this.getTimeseriesData();
+  },
   methods: {
+    goToGenerate() {
+      this.$router.push('/generate-address');
+    },
+    getTimeseriesData() {
+      const api_key = 'YOUR API KEY';
+      const currency = 'CURRENCY NAME';
+      const interval = 1;
+      const num_entries = 10;
+      axios
+        .get(
+          `/yields/currency/${currency}/timeseries?api_key=${api_key}&interval=${interval}&num_entries=${num_entries}&extended=true`,
+          {
+            header: {
+              'Content-Type': 'application/js'
+            }
+          }
+        )
+        .then(response => {
+          console.log('response', response);
+        })
+        .catch(() => {
+          // Toast.responseHandler(
+          //   new Error('There is an error. Please try again'),
+          //   Toast.ERROR
+          // );
+        });
+    },
     setData(data) {
       this.data[data.key] = data.value;
     },

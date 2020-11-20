@@ -7,7 +7,13 @@
       <span slot="learn-more" class="learn">{{ $t('common.learn-more') }}</span>
     </i18n>
     <div class="action-container">
-      <input v-model="amount" type="number" placeholder="0" />
+      <input
+        v-model="amount"
+        type="number"
+        placeholder="0"
+        @change="setAmount"
+      />
+      <span v-if="hasError">hello</span>
       <div class="percentage-container pt-2">
         <div :class="isActive(0) ? 'active' : ''" @click="setAmount(0)">
           32 {{ $t('common.currency.eth') }}
@@ -27,13 +33,13 @@
 </template>
 
 <script>
-const types = ['32', '64', '96', '128'];
+const types = [32, 64, 96, 128];
 
 export default {
   data() {
     return {
-      amount: '',
-      disabled: false
+      amount: 0,
+      hasError: false
     };
   },
   methods: {
@@ -44,7 +50,14 @@ export default {
       return false;
     },
     setAmount(idx) {
-      this.amount = types[idx];
+      if (idx || idx === 0) {
+        this.amount = types[idx];
+      }
+      if (this.amount !== 32 && this.amount % 32 !== 0) {
+        this.hasError = true;
+        console.error('in here')
+        return false;
+      }
       this.$emit('completed', { key: 'amount', value: this.amount });
     }
   }
