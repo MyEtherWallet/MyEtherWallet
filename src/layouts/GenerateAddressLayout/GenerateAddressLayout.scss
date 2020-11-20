@@ -1,0 +1,61 @@
+@import '~@/scss/GlobalVariables';
+
+.generate-address-layout {
+  align-items: center;
+  background-color: $light-grey-2;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px;
+
+  .title {
+    color: $dark-blue-6;
+    font-size: 30px;
+    font-weight: 500;
+  }
+
+  .desc {
+    color: $dark-blue-1;
+    text-align: center;
+    width: 50%;
+
+    span {
+      color: $mew-green;
+      text-decoration: underline;
+    }
+  }
+
+  .password-container {
+    align-items: center;
+    background-color: $white;
+    border-radius: 4px;
+    flex-direction: column;
+    padding: 50px;
+    width: 500px;
+
+    .title-container {
+      align-items: center;
+      justify-content: center;
+      span {
+        color: $dark-blue-2;
+        font-size: 20px;
+        font-weight: 500;
+      }
+    }
+
+    input {
+      background-color: $light-grey-17;
+      border: none;
+      height: 52px;
+      padding-left: 20px;
+      width: 100%;
+    }
+  }
+
+  .warning {
+    span {
+      color: $red-1;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+  }
+}

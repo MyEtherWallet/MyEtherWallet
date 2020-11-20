@@ -18,7 +18,7 @@
   "validator-required": "{number} Validators Required",
   "validator-required-eth-per": "{number} Validators Required (@32ETH/ Validator {learn-more})",
   "what-is-eth2": "What is ETH2 address? {learn-more}",
-  "do-not-have-eth2": "Don't have an ETH2 address? {generate}",
+  "do-not-have-eth2": "Don't have it yet? {generate} an ETH2 address",
   "generate": "Generate",
   "choose-file": "Choose File",
   "upload": "Upload your keystore file",
@@ -26,5 +26,22 @@
   "read-and-agree": "I have read and agree to {terms-of-service}",
   "terms-of-service": "Staked’s Terms of Service",
   "done-desc": "Your request is converting. A notification will be sent to you while it’s completed.",
-  "track-ethvm": "Track in EthVM"
+  "track-ethvm": "Track in EthVM",
+  "attention": "Attention",
+  "generate-address": {
+    "create": "Create the Password",
+    "create-pw": "Create your password here",
+    "confirm-pw": "Confirm your password",
+    "title": "Generate ETH2 Address",
+    "desc": "ETH2 addresses are also known 'validator keypairs'. Each validator will receive a keystore file, recovery phrase, and a public key for their ETH2 stake. What is an ETH2 address? {learn-more}",
+    "warning": "Don't lose your {password-keystore} or recovery phrase! They hold your keys and are necessary for future access. {no-one}, so it's very important you take care of them.",
+    "no-one": "No one can recover these for you",
+    "attention": "Attention",
+    "password-keystore": "ETH2 keystore + Password",
+    "password-strength": "Password strength",
+    "v-weak": "Very Weak",
+    "weak": "Weak",
+    "good": "Good",
+    "strong": "Strong"
+  }
 }
