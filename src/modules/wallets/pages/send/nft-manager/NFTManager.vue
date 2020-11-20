@@ -124,7 +124,6 @@
                     :disabled="true"
                     :label="$t('common.gas.limit')"
                     placeholder=""
-                    @input="setCustomGasLimit"
                   />
                 </div>
 
@@ -142,7 +141,7 @@
               btn-style="outline"
               title="Confirm & send"
               btn-size="large"
-              :disabled="toAddress === ''"
+              :disabled="validValues"
               @click.native="sendTx(selectedNft)"
             />
           </div>
@@ -184,20 +183,7 @@ export default {
       tokens: [],
       open: false,
       selectedNft: {},
-      addresses: [
-        {
-          address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
-          currency: 'ETH',
-          nickname: 'My Address',
-          resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-        },
-        {
-          address: '0x43689531907482BEE7e650D18411E284A7337A66',
-          currency: 'ETH',
-          nickname: 'nickname',
-          resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-        }
-      ],
+      addresses: [],
       expandPanel: [
         {
           name: this.$t('common.advanced'),
@@ -209,7 +195,6 @@ export default {
       toastMsg: '',
       customGasLimit: '',
       toAddress: '',
-      // sendTx: null,
       amount: '0',
       selectedCurrency: {},
       data: '0x',
@@ -241,6 +226,9 @@ export default {
         return this.nft.hasNextPage();
       }
       return false;
+    },
+    validValues() {
+      return this.isValidAddress();
     }
   },
   mounted() {
@@ -268,7 +256,7 @@ export default {
       this.open = !this.open;
     },
     sendTx() {
-      if (this.toAddress !== '') {
+      if (this.validValues) {
         try {
           this.nft
             .send(this.toAddress, this.selectedNft.token_id)
@@ -350,9 +338,8 @@ export default {
         this.$refs.toast.showToast();
       }
     },
-    setCustomGasLimit() {},
     isValidAddress() {
-      return true;
+      return this.nft ? this.nft.isValidAddress(this.toAddress) : false;
     },
     setAddress(address) {
       this.toAddress = address;

@@ -1,4 +1,5 @@
 import Nft from './src';
+import utils from 'web3-utils';
 
 export default class NFT {
   constructor({ network, address, web3 }) {
@@ -45,6 +46,10 @@ export default class NFT {
 
   get currentActiveContract() {
     return this.currentActive.contract;
+  }
+
+  isValidAddress(hash) {
+    return utils.isAddress(hash);
   }
 
   send(to, tokenId) {
