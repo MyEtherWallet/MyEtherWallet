@@ -1,6 +1,7 @@
 <template>
   <v-sheet
     :max-width="maxWidth"
+    :min-width="minWidth"
     :width="fullWidth ? '100%' : ''"
     color="mewBg"
     class="mew-component--white-sheet border-radius--10px"
@@ -20,6 +21,7 @@ export default {
     sideinfo: { default: false, type: Boolean },
     overflowHidden: { default: false, type: Boolean },
     maxWidth: { default: '', type: String },
+    minWidth: { default: '', type: String },
     fullWidth: { default: false, type: Boolean }
   }
 };
