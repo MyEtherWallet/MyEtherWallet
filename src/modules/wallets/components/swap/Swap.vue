@@ -1,11 +1,11 @@
 <template>
-  <mew6-white-sheet sideinfo>
-    <div class="px-7 pt-5">
+  <mew6-white-sheet :sideinfo="!mobile">
+    <div class="px-5 px-lg-7 py-5">
       <div class="d-flex align-center justify-space-between">
         <span class="mew-heading-2">{{ $t('common.swap') }}</span>
         <mew-button
           btn-style="transparent"
-          btn-size="small"
+          button-size="small"
           :title="$t('common.more') + '...'"
         />
       </div>
@@ -48,6 +48,12 @@
 <script>
 export default {
   components: {},
+  props: {
+    mobile: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       swapData: [
