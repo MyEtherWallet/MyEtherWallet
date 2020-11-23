@@ -42,6 +42,12 @@
     "v-weak": "Very Weak",
     "weak": "Weak",
     "good": "Good",
-    "strong": "Strong"
+    "strong": "Strong",
+    "download": "Download Keystore File",
+    "mnemonic-title": "Write Down Phrase & Download file",
+    "mnemonic-desc": "Please write down mnemonic phrase keys below, and continue to download the keystore file. Why I need the mnemonic phrase? {learn-more}",
+    "message-wait": "Please wait while we generate your keystore file...",
+    "start-to-stake": "Start to Stake",
+    "generated-successfully": "Your have generated an ETH2 address successfully."
   }
 }

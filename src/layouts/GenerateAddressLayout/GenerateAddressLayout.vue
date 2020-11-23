@@ -5,16 +5,75 @@
       <!-- change to link -->
       <span slot="learn-more">{{ $t('common.learn-more') }}</span>
     </i18n>
-    <create-password />
+    <create-password v-if="onCreatePw" @createPw="createPw" />
+    <mnemonic-phrase
+      v-if="onMnemonic"
+      :generating="generating"
+      :mnemonic="mnemonic"
+      :keystore-json="keystoreJson"
+      :keystore-name="keystoreName"
+      @onContinue="onContinue"
+    />
+    <success v-if="onSuccess" />
   </div>
 </template>
 
 <script>
 import createPassword from './components/CreatePassword/CreatePassword';
+import KeyStore, { verifyKeystore } from '@myetherwallet/eth2-keystore';
+import mnemonicPhrase from './components/MnemonicPhrase/MnemonicPhrase';
+import success from './components/Success/Success';
+import createBlob from '@/helpers/createBlob.js';
 
 export default {
   components: {
-    createPassword
+    createPassword,
+    mnemonicPhrase,
+    success
+  },
+  data() {
+    return {
+      mnemonic: '',
+      onCreatePw: true,
+      generating: false,
+      onMnemonic: false,
+      onSuccess: false,
+      keystoreJson: '',
+      keystoreName: ''
+    };
+  },
+  methods: {
+    onContinue() {
+      this.onMnemonic = false;
+      this.onSuccess = true;
+    },
+    async createPw(pw) {
+      this.generating = true;
+      const ks = new KeyStore();
+      // get mnemonic
+      const mnemonic = await ks.getMnemonic();
+      this.mnemonic = mnemonic.split(' ');
+      this.onCreatePw = false;
+      this.onMnemonic = true;
+      // console.log(this.mnemonic);
+      //generates the keystore json
+      const genSigningKeystore = await ks.toSigningKeystore(pw);
+      this.keystoreJson = createBlob(genSigningKeystore, 'mime');
+      this.generating = false;
+      this.keystoreName =
+        'keystore-' +
+        genSigningKeystore.path.split('/').join('_') +
+        Date.now() +
+        '.json';
+      //verify generated keystore
+      await verifyKeystore(genSigningKeystore, pw).catch(error => {
+        console.log('error', error);
+      });
+      //generates the keystore json
+      const genWithdrawalKeystore = await ks.toWithdrawalKeystore(pw);
+      //verify generated keystore
+      const res2 = await verifyKeystore(genWithdrawalKeystore, pw);
+    }
   }
 };
 </script>

@@ -75,14 +75,20 @@
         </div>
       </div>
       <label class="switch mt-4 d-flex">
-        <input type="checkbox" @click="agree" />
+        <input type="checkbox" @click="agree = !agree" />
         <i18n class="ml-2" tag="span" path="dappsStaked.read-and-agree">
           <span slot="terms-of-service" class="link">{{
             $t('dappsStaked.terms-of-service')
           }}</span>
         </i18n>
       </label>
-      <button class="large-round-button-green-filled mt-5">
+      <button
+        :class="[
+          disabled ? 'disabled' : '',
+          'large-round-button-green-filled mt-5'
+        ]"
+        @click="onContinue"
+      >
         {{ $t('common.continue') }}
         <img alt src="~@/assets/images/icons/right-arrow.png" />
       </button>
@@ -121,17 +127,32 @@ export default {
       pw: '',
       confirmedPw: '',
       showPassword: false,
-      showConfirmPassword: false
+      showConfirmPassword: false,
+      agree: false,
+      strength: '',
+      strengthClass: ''
     };
   },
+  computed: {
+    disabled() {
+      if (
+        this.pw &&
+        this.confirmedPw &&
+        this.errors.items.length === 0 &&
+        this.agree &&
+        this.strengthClass === 'strong'
+      ) {
+        return false;
+      }
+      return true;
+    }
+  },
   methods: {
-    agree() {
-      return true
+    onContinue() {
+      this.$emit('createPw', this.pw);
     },
     async updateValue(value) {
       const score = await zxcvbn(value).score;
-
-      this.$emit('value', value);
       switch (score) {
         case 1:
           this.strength = this.$t('dappsStaked.generate-address.v-weak');
