@@ -76,9 +76,8 @@ export default {
           return item.symbol === SYMBOL;
         });
         return lendToken ? new BigNumber(lendToken.balance).toFixed() : 0;
-      } else {
-        return this.updatedBalance;
       }
+      return this.updatedBalance;
     },
     disabled() {
       if (this.amount > 0 && this.amount <= this.lendBalance) {
