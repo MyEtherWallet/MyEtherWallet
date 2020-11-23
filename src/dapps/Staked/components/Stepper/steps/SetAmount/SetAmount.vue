@@ -55,7 +55,6 @@ export default {
       }
       if (this.amount !== 32 && this.amount % 32 !== 0) {
         this.hasError = true;
-        console.error('in here')
         return false;
       }
       this.$emit('completed', { key: 'amount', value: this.amount });
