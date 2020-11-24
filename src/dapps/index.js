@@ -99,8 +99,8 @@ const dapps = {
     title: 'dappsMisc.gnt-title',
     desc: 'dappsMisc.gnt-popover',
     supportedNetworks: [ETH.name],
-    lastUpdated: '10/2/2020',
-    releaseDate: '10/2/2020'
+    lastUpdated: '11/24/2020',
+    releaseDate: '11/24/2020'
   }
 };
 
