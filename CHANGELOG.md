@@ -1,6 +1,10 @@
+### Bug
+
+- Fix subdomain transfer [#2675](https://github.com/MyEtherWallet/MyEtherWallet/pull/2675)
+
 ### Devop
 
-- Update Musicoin with new node []()
+- Update Musicoin with new node [#2667](https://github.com/MyEtherWallet/MyEtherWallet/pull/2667)
 
 ### Release v5.7.13
 
