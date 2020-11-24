@@ -7,13 +7,24 @@
       <span slot="learn-more" class="learn">{{ $t('common.learn-more') }}</span>
     </i18n>
     <div class="action-container">
-      <input
-        v-model="amount"
-        type="number"
-        placeholder="0"
-        @change="setAmount"
-      />
-      <span v-if="hasError">hello</span>
+      <div class="input-container">
+        <img
+          :alt="$t('common.currency.ethereum')"
+          class="currency-icon"
+          src="@/assets/images/currency/eth.svg"
+        />
+        <input
+          v-model="amount"
+          type="number"
+          placeholder="0"
+          @keyup="setAmount"
+          @change="setAmount"
+        />
+        <span class="usd-amount">{{ usdPrice }}</span>
+      </div>
+      <div v-if="hasError" class="error mt-2">
+        {{ $t('dappsStaked.error-set-amount') }}
+      </div>
       <div class="percentage-container pt-2">
         <div :class="isActive(0) ? 'active' : ''" @click="setAmount(0)">
           32 {{ $t('common.currency.eth') }}
@@ -33,16 +44,49 @@
 </template>
 
 <script>
+import { Toast } from '@/helpers';
+import BigNumber from 'bignumber.js';
+
 const types = [32, 64, 96, 128];
 
 export default {
   data() {
     return {
       amount: 0,
-      hasError: false
+      ethPrice: ''
     };
   },
+  computed: {
+    hasError() {
+      if (this.amount > 0) {
+        return this.amount !== 32 && this.amount % 32 !== 0;
+      }
+      return false;
+    },
+    usdPrice() {
+      if (this.ethPrice) {
+        return new BigNumber(this.ethPrice).times(this.amount);
+      }
+      return 0;
+    }
+  },
+  mounted() {
+    this.getEthPrice();
+  },
   methods: {
+    async getEthPrice() {
+      const price = await fetch(
+        'https://cryptorates.mewapi.io/ticker?filter=ETH'
+      )
+        .then(res => {
+          return res.json();
+        })
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+        });
+
+      this.ethPrice = price && price.data ? price.data.ETH.quotes.USD.price : 0;
+    },
     isActive(idx) {
       if (this.amount === types[idx]) {
         return true;
@@ -50,14 +94,18 @@ export default {
       return false;
     },
     setAmount(idx) {
-      if (idx || idx === 0) {
+      if (Number.isInteger(idx) && idx < 4) {
         this.amount = types[idx];
       }
-      if (this.amount !== 32 && this.amount % 32 !== 0) {
-        this.hasError = true;
-        return false;
-      }
-      this.$emit('completed', { key: 'amount', value: this.amount });
+      this.$emit(
+        'completed',
+        !this.hasError,
+        {
+          key: 'amount',
+          value: this.amount
+        },
+        this.ethPrice
+      );
     }
   }
 };

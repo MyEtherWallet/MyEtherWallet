@@ -38,7 +38,11 @@
       >
         <step-one v-if="isStepActive(0)" @completed="proceed" />
         <step-two v-if="isStepActive(1)" @completed="proceed" />
-        <step-three v-if="isStepActive(2)" @completed="proceed" />
+        <step-three
+          v-if="isStepActive(2)"
+          :details="details"
+          @completed="proceed"
+        />
         <step-four v-if="isStepActive(3)" @completed="proceed" />
       </transition>
     </div>
@@ -98,6 +102,10 @@ export default {
     },
     setData: {
       type: Function,
+      default: () => {}
+    },
+    details: {
+      type: Object,
       default: () => {}
     }
   },
@@ -204,9 +212,12 @@ export default {
         this.activateStep(currentIndex, true);
       }
     },
-    proceed(param) {
-      this.canContinue = true;
+    proceed(canContinue, param, ethPrice) {
+      this.canContinue = canContinue;
       this.setData(param);
+      if (ethPrice) {
+        this.setData({ key: 'ethPrice', value: ethPrice });
+      }
     },
     init() {
       // Initiate stepper

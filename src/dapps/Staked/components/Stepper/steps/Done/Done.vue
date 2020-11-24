@@ -9,7 +9,7 @@
 <script>
 export default {
   mounted() {
-    this.$emit('completed', { key: 'done', value: true });
+    this.$emit('completed', true, { key: 'done', value: true });
   }
 };
 </script>

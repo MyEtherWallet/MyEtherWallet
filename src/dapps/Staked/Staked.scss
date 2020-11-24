@@ -47,3 +47,27 @@
     }
   }
 }
+
+.warning-container {
+  background-color: $light-orange-3;
+  padding: 30px;
+  i {
+    color: $light-orange-1;
+    font-size: 16px;
+    margin-right: 10px;
+    margin-top: 5px;
+  }
+  span {
+    color: $dark-blue-2;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .warning {
+    span {
+      color: $red-1;
+      font-weight: 500;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+  }
+}
