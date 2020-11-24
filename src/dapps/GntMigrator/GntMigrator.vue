@@ -65,7 +65,8 @@ export default {
       lendMigratorContract: '',
       loading: false,
       balanceUpdate: false,
-      updatedBalance: 0
+      updatedBalance: 0,
+      miningLockout: false
     };
   },
   computed: {
@@ -80,6 +81,7 @@ export default {
       return this.updatedBalance;
     },
     disabled() {
+      if(this.miningLockout) return true;
       if (this.amount > 0 && this.amount <= this.lendBalance) {
         return false;
       }
@@ -113,8 +115,10 @@ export default {
         value: 0,
         data: migrateData
       };
+      this.miningLockout = true;
       this.web3.eth.estimateGas(params).then(res => {
         this.loading = false;
+        this.amount = 0;
         this.web3.eth
           .sendTransaction({
             from: this.account.address,
@@ -124,12 +128,14 @@ export default {
             data: migrateData
           })
           .then(() => {
+            this.miningLockout = false;
             this.amount = 0;
             this.loading = false;
             this.getUpdatedBalance();
           })
           .catch(error => {
             this.loading = false;
+            this.miningLockout = false;
             Toast.responseHandler(error, Toast.ERROR);
           });
       });
