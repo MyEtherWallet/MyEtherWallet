@@ -3,14 +3,17 @@
     <div class="review-container">
       <div class="d-flex">
         <span class="title">{{ $t('dappsStaked.amount-stake') }}</span>
-        <i18n tag="span" path="dappsStaked.validators-required">
+        <i18n tag="span" path="dappsStaked.validator-required">
           <span slot="number" class="number">1</span>
         </i18n>
       </div>
       <div class="d-flex mt-4">
         <span>{{ $t('dappsStaked.amount') }}:</span>
         <span class="eth-value"
-          >32 ETH <span class="convert-value">($14,000)</span></span
+          >{{ details.amount
+          }}<span class="convert-value ml-1"
+            >({{ '$' + usdPrice(details.amount) }})</span
+          ></span
         >
       </div>
       <div class="d-flex mt-4">
@@ -28,7 +31,7 @@
     </div>
     <div class="address-container mt-3 d-flex">
       <span class="title">{{ $t('dappsStaked.withdraw-title') }}</span>
-      <span class="address mt-2">{{ address }}</span>
+      <span class="address mt-2">{{ details.address }}</span>
     </div>
     <label class="switch mt-4 d-flex">
       <input type="checkbox" @click="agree" />
@@ -42,17 +45,24 @@
 </template>
 
 <script>
+import BigNumber from 'bignumber.js';
+
 export default {
   props: {
-    address: {
-      default:
-        '8c5942ab6420644d681ce7b70df0f95737a9db493cfa4da52c08a398554aab19ccde4467d8e2dbec8c972725b0063130',
-      type: String
+    details: {
+      type: Object,
+      default: () => {}
     }
   },
   methods: {
+    usdPrice(amount) {
+      if (this.details.ethPrice) {
+        return new BigNumber(this.details.ethPrice).times(amount);
+      }
+      return 0;
+    },
     agree() {
-      this.$emit('completed', { key: 'review', value: true });
+      this.$emit('completed', true, { key: 'review', value: true });
     }
   }
 };

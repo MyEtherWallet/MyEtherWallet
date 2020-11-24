@@ -28,6 +28,9 @@
   "done-desc": "Your request is converting. A notification will be sent to you while it’s completed.",
   "track-ethvm": "Track in EthVM",
   "attention": "Attention",
+  "error-set-amount": "Please enter or select a multiple of 32 ETH",
+  "error-keystore": "Please upload a valid keystore file",
+  "warning": "During Phase 0, users are only able to deposit and stake their ETH. Users will not be able to withdraw their ETH until Phase 2, which may not go into effect until 2022.",
   "generate-address": {
     "create": "Create the Password",
     "create-pw": "Create your password here",

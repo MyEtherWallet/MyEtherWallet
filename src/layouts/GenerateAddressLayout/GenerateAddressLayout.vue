@@ -24,6 +24,7 @@ import KeyStore, { verifyKeystore } from '@myetherwallet/eth2-keystore';
 import mnemonicPhrase from './components/MnemonicPhrase/MnemonicPhrase';
 import success from './components/Success/Success';
 import createBlob from '@/helpers/createBlob.js';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
@@ -55,24 +56,19 @@ export default {
       this.mnemonic = mnemonic.split(' ');
       this.onCreatePw = false;
       this.onMnemonic = true;
-      // console.log(this.mnemonic);
       //generates the keystore json
-      const genSigningKeystore = await ks.toSigningKeystore(pw);
-      this.keystoreJson = createBlob(genSigningKeystore, 'mime');
+      const genWithdrawalKeystore = await ks.toWithdrawalKeystore(pw);
+      this.keystoreJson = createBlob(genWithdrawalKeystore, 'mime');
       this.generating = false;
       this.keystoreName =
         'keystore-' +
-        genSigningKeystore.path.split('/').join('_') +
+        genWithdrawalKeystore.path.split('/').join('_') +
         Date.now() +
         '.json';
       //verify generated keystore
-      await verifyKeystore(genSigningKeystore, pw).catch(error => {
-        console.log('error', error);
+      await verifyKeystore(genWithdrawalKeystore, pw).catch(error => {
+        Toast.responseHandler(error, Toast.ERROR);
       });
-      //generates the keystore json
-      const genWithdrawalKeystore = await ks.toWithdrawalKeystore(pw);
-      //verify generated keystore
-      const res2 = await verifyKeystore(genWithdrawalKeystore, pw);
     }
   }
 };

@@ -8,7 +8,7 @@
               <span class="staking-percent">12.38%</span>
               <span>{{ $t('dappsStaked.current-stake-title') }}</span>
             </div>
-            <div class="d-flex stats-container px-2">
+            <div class="d-flex stats-container px-3">
               <span class="total-eth-percent">2.38%</span>
               <span>{{ $t('dappsStaked.total-eth-title') }}</span>
             </div>
@@ -22,6 +22,7 @@
     </div>
     <stepper
       :steps="steps"
+      :details="details"
       :set-data="setData"
       @complete-step="completeStep"
       @active-step="isStepActive"
@@ -49,6 +50,13 @@
         </router-link>
       </i18n>
     </div>
+    <div class="warning-container d-flex">
+      <div><i class="fa fa-exclamation-triangle" /></div>
+      <div>
+        <span>{{ $t('dappsStaked.generate-address.attention') }}</span>
+        <p class="warning mt-2">{{ $t('dappsStaked.warning') }}</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -57,7 +65,7 @@ import backButton from '@/layouts/InterfaceLayout/components/BackButton';
 import staked from '@/assets/images/icons/dapps/staked.png';
 import stepper from './components/Stepper/Stepper';
 import axios from 'axios';
-import KeyStore, { verifyKeystore } from '@myetherwallet/eth2-keystore';
+// import KeyStore, { verifyKeystore } from '@myetherwallet/eth2-keystore';
 // import stepOne from './components/AmountStep/AmountStep.vue';
 // import StepTwo from './StepTwo.vue';
 
@@ -69,7 +77,7 @@ export default {
   },
   data() {
     return {
-      data: {},
+      details: {},
       currentStepIdx: 0,
       staked: staked,
       steps: [
@@ -131,7 +139,7 @@ export default {
         });
     },
     setData(data) {
-      this.data[data.key] = data.value;
+      this.details[data.key] = data.value;
     },
     completeStep(payload) {
       this.steps.forEach(step => {

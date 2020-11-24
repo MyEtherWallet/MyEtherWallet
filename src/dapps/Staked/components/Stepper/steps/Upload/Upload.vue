@@ -2,16 +2,16 @@
   <div class="upload-step d-flex">
     <div class="upload-container d-flex">
       <div class="d-flex">
-        <span v-if="!file">
-          <img class="mx-3" :src="printerIcon" alt="printer-icon" />
-          {{ $t('dappsStaked.upload') }}
-        </span>
-        <span v-if="file" class="file">{{ file }}</span>
+        <img class="mx-3" :src="printerIcon" alt="printer-icon" />
+        <span>{{ fileName ? fileName : $t('dappsStaked.upload') }}</span>
       </div>
       <label class="d-flex" for="keystore">{{
         $t('dappsStaked.choose-file')
       }}</label>
       <input id="keystore" type="file" @change="upload" />
+    </div>
+    <div v-if="hasError" class="error mt-2">
+      {{ $t('dappsStaked.error-keystore') }}
     </div>
     <div v-if="address" class="address-container mt-3 pa-3 d-flex">
       <span class="title">{{ $t('dappsStaked.withdraw-title') }}</span>
@@ -22,22 +22,43 @@
 
 <script>
 import printerIcon from '@/assets/images/icons/dapps/staked-upload-icon.svg';
+import { Toast } from '@/helpers';
 
 export default {
   data() {
     return {
       amount: '',
       disabled: false,
-      file: '',
-      address:
-        '8c5942ab6420644d681ce7b70df0f95737a9db493cfa4da52c08a398554aab19ccde4467d8e2dbec8c972725b0063130',
+      fileName: '',
+      address: '',
+      hasError: false,
       printerIcon: printerIcon
     };
   },
   methods: {
-    upload(file) {
-      this.$emit('completed', { key: 'address', value: this.address });
-      console.log('file', file);
+    upload(e) {
+      const self = this;
+      const reader = new FileReader();
+      reader.onloadend = function (evt) {
+        try {
+          self.file = JSON.parse(evt.target.result);
+          if (self.file.version === 4) {
+            self.address = self.file.pubkey;
+            self.hasError = false;
+          } else {
+            self.hasError = true;
+            self.address = '';
+          }
+          self.$emit('completed', !self.hasError, {
+            key: 'address',
+            value: self.address
+          });
+        } catch (e) {
+          Toast.responseHandler(e, Toast.ERROR);
+        }
+      };
+      reader.readAsBinaryString(e.target.files[0]);
+      this.fileName = e.target.files[0].name;
     }
   }
 };

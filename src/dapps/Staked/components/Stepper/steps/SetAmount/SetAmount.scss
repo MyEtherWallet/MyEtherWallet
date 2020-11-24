@@ -29,8 +29,7 @@
       border: none;
       border-radius: 4px;
       height: 52px;
-      margin-top: 20px;
-      padding-left: 10px;
+      padding-left: 45px;
       width: 100%;
     }
     .percentage-container {
@@ -52,5 +51,26 @@
         color: $mew-green;
       }
     }
+  }
+  .input-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    margin-top: 20px;
+    img {
+      position: absolute;
+      left: 469px;
+    }
+    .usd-amount {
+      color: $light-grey-18;
+      font-weight: 500;
+      position: absolute;
+      right: 620px;
+    }
+  }
+
+  .error {
+    color: $red-1;
   }
 }
