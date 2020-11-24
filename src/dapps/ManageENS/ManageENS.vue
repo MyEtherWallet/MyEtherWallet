@@ -441,7 +441,7 @@ export default {
       });
     },
     transferDomain(toAddress) {
-      if (this.registrarType === REGISTRAR_TYPES.FIFS) {
+      if (this.registrarType === REGISTRAR_TYPES.FIFS || this.isSubDomain) {
         this.web3.eth
           .sendTransaction({
             from: this.account.address,
@@ -455,22 +455,18 @@ export default {
             Toast.responseHandler(err, false);
           });
       } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
-        if (!this.isSubDomain) {
-          const registryTransferTx = this.setController(toAddress, true);
-          const safeTransferTx = {
-            from: this.account.address,
-            to: this.registrarAddress,
-            data: this.registrarContract.methods
-              .transferFrom(this.account.address, toAddress, this.labelHash)
-              .encodeABI(),
-            value: 0
-          };
-          this.web3.mew.sendBatchTransactions(
-            [registryTransferTx, safeTransferTx].filter(Boolean)
-          );
-        } else {
-          console.log(this.ens.transfer);
-        }
+        const registryTransferTx = this.setController(toAddress, true);
+        const safeTransferTx = {
+          from: this.account.address,
+          to: this.registrarAddress,
+          data: this.registrarContract.methods
+            .transferFrom(this.account.address, toAddress, this.labelHash)
+            .encodeABI(),
+          value: 0
+        };
+        this.web3.mew.sendBatchTransactions(
+          [registryTransferTx, safeTransferTx].filter(Boolean)
+        );
       }
     },
     getDecodedAddress(_coinItem) {

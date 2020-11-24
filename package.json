@@ -145,7 +145,7 @@
     "sass-loader": "10.1.0",
     "sinon": "9.2.1",
     "store": "2.0.12",
-    "stylelint": "13.7.2",
+    "stylelint": "13.8.0",
     "stylelint-config-prettier": "8.0.2",
     "stylelint-config-standard": "20.0.0",
     "trezor-connect": "8.1.18",
