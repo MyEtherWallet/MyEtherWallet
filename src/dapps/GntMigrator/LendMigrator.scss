@@ -1,0 +1,47 @@
+@import '~@/scss/GlobalVariables';
+
+.lend-migrator-container {
+  background-color: $white;
+  border-radius: 4px;
+  grid-area: main;
+  overflow: hidden;
+  margin-bottom: 10px;
+
+  .total-container {
+    align-items: center;
+    justify-content: space-between;
+
+    .button-link {
+      color: $mew-green;
+      background: none;
+      border: none;
+      &:hover {
+        color: $light-grey-5;
+      }
+    }
+  }
+
+  .balance {
+    font-weight: 600;
+  }
+
+  .lend-title {
+    font-weight: 600;
+    font-size: 24px;
+  }
+
+  input {
+    background-color: $light-grey-1;
+    border: 0;
+    border-radius: 4px;
+    padding: 13px 15px;
+    width: 100%;
+  }
+
+  .disabled {
+    background-color: $dark-grey-11;
+    border: none;
+    color: $white;
+    pointer-events: none;
+  }
+}

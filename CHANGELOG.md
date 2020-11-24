@@ -11,10 +11,13 @@
 * Update address validation package [#2652](https://github.com/MyEtherWallet/MyEtherWallet/pull/2652)
 * normalize address when verifying massages [#2650](https://github.com/MyEtherWallet/MyEtherWallet/pull/2650)
 
+### Feature
+
+* Golem GNT -> GLM Migrator [#2672](https://github.com/MyEtherWallet/MyEtherWallet/pull/2672)
+
 ### Release v5.7.12
 
 ## Devop
-
 
 * Check that user has enough (amount + gas price)  to proceed even before they click to continue in swap [#2655](https://github.com/MyEtherWallet/MyEtherWallet/pull/2655)
 
