@@ -48,15 +48,11 @@
     </div>
     <div class="button-container">
       <button
-        v-if="currentStep.index > 0"
+        v-if="currentStep.index > 0 && currentStep.index !== 3"
         :class="'mt-3 stepper-button previous'"
         @click="backStep()"
       >
-        {{
-          currentStep.index === 3
-            ? $t('dappsStaked.track-ethvm')
-            : $t('common.back')
-        }}
+        {{ $t('common.back') }}
       </button>
       <button
         :class="[

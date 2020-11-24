@@ -20,7 +20,7 @@
           @keyup="setAmount"
           @change="setAmount"
         />
-        <span class="usd-amount">{{ usdPrice }}</span>
+        <span class="usd-amount">{{ '$' + usdPrice }}</span>
       </div>
       <div v-if="hasError" class="error mt-2">
         {{ $t('dappsStaked.error-set-amount') }}
