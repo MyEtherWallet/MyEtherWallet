@@ -81,7 +81,7 @@ export default {
       return this.updatedBalance;
     },
     disabled() {
-      if(this.miningLockout) return true;
+      if (this.miningLockout) return true;
       if (this.amount > 0 && this.amount <= this.lendBalance) {
         return false;
       }
