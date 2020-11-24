@@ -67,6 +67,7 @@
       :txt-records="txtRecords"
       :set-record="setRecord"
       :usd="usd"
+      :is-sub-domain="isSubDomain"
       :is-controller="isController"
       :set-controller="setController"
       :has-deed="hasDeed"
@@ -454,18 +455,22 @@ export default {
             Toast.responseHandler(err, false);
           });
       } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
-        const registryTransferTx = this.setController(toAddress, true);
-        const safeTransferTx = {
-          from: this.account.address,
-          to: this.registrarAddress,
-          data: this.registrarContract.methods
-            .transferFrom(this.account.address, toAddress, this.labelHash)
-            .encodeABI(),
-          value: 0
-        };
-        this.web3.mew.sendBatchTransactions(
-          [registryTransferTx, safeTransferTx].filter(Boolean)
-        );
+        if (!this.isSubDomain) {
+          const registryTransferTx = this.setController(toAddress, true);
+          const safeTransferTx = {
+            from: this.account.address,
+            to: this.registrarAddress,
+            data: this.registrarContract.methods
+              .transferFrom(this.account.address, toAddress, this.labelHash)
+              .encodeABI(),
+            value: 0
+          };
+          this.web3.mew.sendBatchTransactions(
+            [registryTransferTx, safeTransferTx].filter(Boolean)
+          );
+        } else {
+          console.log(this.ens.transfer);
+        }
       }
     },
     getDecodedAddress(_coinItem) {
