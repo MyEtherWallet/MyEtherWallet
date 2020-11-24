@@ -1,5 +1,19 @@
 ### Release v5.7.13
 
+### Feature
+
+* Golem GNT -> GLM Migrator [#2672](https://github.com/MyEtherWallet/MyEtherWallet/pull/2672)
+
+### Bug
+
+* Fix subdomain transfer [#2675](https://github.com/MyEtherWallet/MyEtherWallet/pull/2675)
+
+### Devop
+
+* Update Musicoin with new node [#2667](https://github.com/MyEtherWallet/MyEtherWallet/pull/2667)
+
+### Release v5.7.13
+
 ### Bug
 
 * Update rates and min dai for makerDao [#2646](https://github.com/MyEtherWallet/MyEtherWallet/pull/2646)
@@ -10,10 +24,6 @@
 
 * Update address validation package [#2652](https://github.com/MyEtherWallet/MyEtherWallet/pull/2652)
 * normalize address when verifying massages [#2650](https://github.com/MyEtherWallet/MyEtherWallet/pull/2650)
-
-### Feature
-
-* Golem GNT -> GLM Migrator [#2672](https://github.com/MyEtherWallet/MyEtherWallet/pull/2672)
 
 ### Release v5.7.12
 
