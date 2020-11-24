@@ -82,7 +82,9 @@ export default {
     },
     disabled() {
       if (this.miningLockout) return true;
-      if (this.amount > 0 && this.amount <= this.lendBalance) {
+      const amount = new BigNumber(this.amount);
+      const balance = new BigNumber(this.lendBalance);
+      if (amount.gt(0) && amount.lte(balance)) {
         return false;
       }
       return true;
