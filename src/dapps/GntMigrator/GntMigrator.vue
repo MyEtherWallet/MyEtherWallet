@@ -81,7 +81,6 @@ export default {
       return this.updatedBalance;
     },
     disabled() {
-      if (this.miningLockout) return true;
       const amount = new BigNumber(this.amount);
       const balance = new BigNumber(this.lendBalance);
       if (amount.gt(0) && amount.lte(balance)) {
