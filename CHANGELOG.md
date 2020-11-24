@@ -1,3 +1,9 @@
+### Release v5.7.13
+
+### Feature
+
+* Golem GNT -> GLM Migrator [#2672](https://github.com/MyEtherWallet/MyEtherWallet/pull/2672)
+
 ### Bug
 
 * Fix subdomain transfer [#2675](https://github.com/MyEtherWallet/MyEtherWallet/pull/2675)

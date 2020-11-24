@@ -17,7 +17,6 @@ jobs:
         run: |
           git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^master$'
           git checkout $GITHUB_SHA
-
       - name: setup env
         run: |
           docker build -t mew-build-container .
@@ -32,7 +31,6 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{steps.node-version.outputs.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-${{steps.node-version.outputs.NODE_VERSION}}-
-
       - name: npm install
         run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
 
