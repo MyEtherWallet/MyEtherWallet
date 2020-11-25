@@ -8,6 +8,15 @@
   overflow: hidden;
   .button-container {
     width: 100%;
+    @media all and (max-width: 730px) {
+      align-items: baseline;
+      flex-direction: column;
+    }
+  }
+  .stats-wrapper {
+    @media all and (max-width: 730px) {
+      padding: 20px 25px;
+    }
   }
   .stats-container {
     flex-direction: column;
@@ -41,7 +50,8 @@
     color: $dark-blue-13;
     flex-direction: column;
     justify-content: center;
-    .learn, .generate {
+    .learn,
+    .generate {
       color: $mew-green;
       cursor: pointer;
     }

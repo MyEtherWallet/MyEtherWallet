@@ -3,7 +3,11 @@
     <div class="review-container">
       <div class="d-flex">
         <span class="title">{{ $t('dappsStaked.amount-stake') }}</span>
-        <i18n tag="span" path="dappsStaked.validator-required">
+        <i18n
+          class="align-right"
+          tag="span"
+          path="dappsStaked.validator-required"
+        >
           <span slot="number" class="number">1</span>
         </i18n>
       </div>

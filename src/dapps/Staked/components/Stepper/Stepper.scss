@@ -1,21 +1,16 @@
-
 @import '~@/scss/GlobalVariables';
 
 @mixin shadow($level: 1) {
   @if $level==1 {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-  }
-  @else if $level==2 {
+  } @else if $level==2 {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-  }
-  @else if $level==3 {
+  } @else if $level==3 {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-  }
-  @else if $level==4 {
+  } @else if $level==4 {
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-  }
-  @else if $level==5 {
-    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+  } @else if $level==5 {
+    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
   }
 }
 
@@ -24,23 +19,19 @@
     @media (max-width: 767px) {
       @content;
     }
-  }
-  @else if $class==sm {
+  } @else if $class==sm {
     @media (min-width: 768px) {
       @content;
     }
-  }
-  @else if $class==md {
+  } @else if $class==md {
     @media (min-width: 992px) {
       @content;
     }
-  }
-  @else if $class==lg {
+  } @else if $class==lg {
     @media (min-width: 1200px) {
       @content;
     }
-  }
-  @else {
+  } @else {
     @warn "Breakpoint mixin supports: xs, sm, md, lg";
   }
 }
@@ -52,7 +43,7 @@
   .top {
     .stepper-button-top {
       z-index: 20;
-      padding: .4rem;
+      padding: 0.4rem;
       border-radius: 100rem;
       cursor: pointer;
       position: absolute;
@@ -64,22 +55,23 @@
         color: #3383c8;
         right: 1%;
         &.deactivated {
-          border: 2px solid #cccccc !important;
-          color: #cccccc;
+          border: 2px solid #ccc !important;
+          color: #ccc;
           cursor: not-allowed !important;
         }
       }
       &.previous {
-        color: #333333;
+        color: #333;
         left: 1%;
       }
     }
+
     display: flex;
     align-items: center;
     position: relative;
     justify-content: center;
     .divider-line {
-      border-bottom: 1px solid #cccccc;
+      border-bottom: 1px solid #ccc;
       height: 2px;
       position: absolute;
       @include breakpoint(xs) {
@@ -123,7 +115,7 @@
             // }
           }
           .step-title {
-            opacity: .35;
+            opacity: 0.35;
           }
         }
         &.completed {
@@ -192,9 +184,10 @@
       &.next {
         @include shadow(1);
         &.deactivated {
-          background-color: #cccccc !important;
+          background-color: #ccc !important;
           cursor: not-allowed !important;
         }
+
         margin-left: 10px;
         width: 30%;
       }
