@@ -96,6 +96,7 @@ import { hasIcon } from '@/partners';
 import masterFile from '@/_generated/master-file.json';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import { mapState } from 'vuex';
+import Fuse from 'fuse.js'
 
 export default {
   props: {
@@ -167,8 +168,7 @@ export default {
   },
   watch: {
     overrideCurrency(newVal) {
-      console.log('newVal', newVal); // todo remove dev item
-      if(Object.keys(newVal).length > 0){
+      if (Object.keys(newVal).length > 0) {
         this.selectedCurrency = newVal;
       }
     },
@@ -180,16 +180,27 @@ export default {
     },
     search(newVal) {
       if (newVal !== '') {
-        this.localCurrencies = this.currencies.filter(curr => {
-          if (curr.name && curr.symbol) {
-            if (
-              curr.name.toLowerCase().includes(newVal.toLowerCase()) ||
-              curr.symbol.toLowerCase().includes(newVal.toLowerCase())
-            ) {
-              return curr;
+        this.localCurrencies = this.currencies
+          .filter(curr => {
+            if (curr.name && curr.symbol) {
+              if (
+                curr.name.toLowerCase().includes(newVal.toLowerCase()) ||
+                curr.symbol.toLowerCase().includes(newVal.toLowerCase())
+              ) {
+                return curr;
+              }
             }
-          }
-        });
+          })
+        const options = {
+          includeScore: true,
+          findAllMatches: true,
+          keys: ['symbol', 'name']
+        }
+        const fuse = new Fuse(this.localCurrencies, options)
+        let result = fuse.search(newVal)
+        this.localCurrencies = result.map(item => {
+          return item.item;
+        })
       } else {
         this.rebuildLocalCurrencyList(this.currencies);
       }
