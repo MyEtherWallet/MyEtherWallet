@@ -1,3 +1,17 @@
+### Release v5.7.14
+
+### Feature
+
+* Golem GNT -> GLM Migrator [#2672](https://github.com/MyEtherWallet/MyEtherWallet/pull/2672)
+
+### Bug
+
+* Fix subdomain transfer [#2675](https://github.com/MyEtherWallet/MyEtherWallet/pull/2675)
+
+### Devop
+
+* Update Musicoin with new node [#2667](https://github.com/MyEtherWallet/MyEtherWallet/pull/2667)
+
 ### Release v5.7.13
 
 ### Bug
@@ -14,7 +28,6 @@
 ### Release v5.7.12
 
 ## Devop
-
 
 * Check that user has enough (amount + gas price)  to proceed even before they click to continue in swap [#2655](https://github.com/MyEtherWallet/MyEtherWallet/pull/2655)
 

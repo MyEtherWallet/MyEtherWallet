@@ -1,5 +1,10 @@
 [
   {
+    "name": "420",
+    "version": "1.0",
+    "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
+  },
+  {
     "name": "accepte",
     "version": "1.0",
     "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
@@ -15,12 +20,27 @@
     "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
   },
   {
+    "name": "atleeroy",
+    "version": "1.0",
+    "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
+  },
+  {
     "name": "atpeepeth",
     "version": "1.0",
     "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
   },
   {
+    "name": "awake",
+    "version": "1.0",
+    "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
+  },
+  {
     "name": "begsfor",
+    "version": "1.0",
+    "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
+  },
+  {
+    "name": "blockchainboss",
     "version": "1.0",
     "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
   },
@@ -35,7 +55,7 @@
     "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
   },
   {
-    "name": "blockchainboss",
+    "name": "btcaddress",
     "version": "1.0",
     "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
   },
@@ -50,17 +70,32 @@
     "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
   },
   {
-    "name": "codeinecrazy",
-    "version": "1.0",
-    "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
-  },
-  {
     "name": "cryptoking",
     "version": "1.0",
     "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
   },
   {
     "name": "deserves",
+    "version": "1.0",
+    "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
+  },
+  {
+    "name": "dev",
+    "version": "1.0",
+    "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
+  },
+  {
+    "name": "doesexist",
+    "version": "1.0",
+    "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
+  },
+  {
+    "name": "doesntexist",
+    "version": "1.0",
+    "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
+  },
+  {
+    "name": "doexist",
     "version": "1.0",
     "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
   },
@@ -80,17 +115,32 @@
     "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
   },
   {
+    "name": "hack",
+    "version": "1.0",
+    "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
+  },
+  {
+    "name": "isfund",
+    "version": "1.0",
+    "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
+  },
+  {
+    "name": "isfunds",
+    "version": "1.0",
+    "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
+  },
+  {
+    "name": "ismoney",
+    "version": "1.0",
+    "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
+  },
+  {
     "name": "paynonym",
     "version": "1.0",
     "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
   },
   {
     "name": "sendmecrypto",
-    "version": "1.0",
-    "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
-  },
-  {
-    "name": "mollypercocet",
     "version": "1.0",
     "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
   },
@@ -110,17 +160,12 @@
     "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
   },
   {
-    "name": "trustsnobank",
+    "name": "trustnobank",
     "version": "1.0",
     "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
   },
   {
     "name": "wantsome",
-    "version": "1.0",
-    "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
-  },
-  {
-    "name": "xannyfamily",
     "version": "1.0",
     "registrar": "0xe65d8AAF34CB91087D1598e0A15B582F57F217d9"
   }
