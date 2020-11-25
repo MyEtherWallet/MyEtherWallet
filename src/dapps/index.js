@@ -11,6 +11,7 @@ import ambrpayDisabled from '@/assets/images/icons/dapps/ambrpay-disabled.png';
 import aave from '@/assets/images/icons/dapps/aave.svg';
 import lendMigrator from '@/assets/images/icons/dapps/lend-migrator.svg';
 import unstoppable from '@/assets/images/icons/dapps/unstoppable.png';
+import golem from '@/assets/images/icons/dapps/Golem_Submark_Positive_RGB.svg';
 import { ETH, GOERLI, ROP, RIN, KOV } from '@/networks/types';
 
 const dapps = {
@@ -91,6 +92,15 @@ const dapps = {
     supportedNetworks: [ETH.name],
     lastUpdated: '10/2/2020',
     releaseDate: '10/2/2020'
+  },
+  gntMigrator: {
+    route: '/interface/dapps/gnt-migrator',
+    icon: golem,
+    title: 'dappsMisc.gnt-title',
+    desc: 'dappsMisc.gnt-popover',
+    supportedNetworks: [ETH.name],
+    lastUpdated: '11/24/2020',
+    releaseDate: '11/24/2020'
   }
 };
 
