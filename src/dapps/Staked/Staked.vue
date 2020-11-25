@@ -3,7 +3,7 @@
     <div class="header-container d-flex">
       <back-button class="button-container" :title="$t('common.exit-dapp')">
         <template v-slot:right>
-          <div class="d-flex">
+          <div class="d-flex stats-wrapper">
             <div class="d-flex stats-container">
               <span class="staking-percent">12.38%</span>
               <span>{{ $t('dappsStaked.current-stake-title') }}</span>
@@ -50,7 +50,7 @@
         </router-link>
       </i18n>
     </div>
-    <div class="warning-container d-flex">
+    <div v-if="currentStepIdx === 0" class="warning-container d-flex">
       <div><i class="fa fa-exclamation-triangle" /></div>
       <div>
         <span>{{ $t('dappsStaked.generate-address.attention') }}</span>

@@ -3,7 +3,9 @@
     <div class="upload-container d-flex">
       <div class="d-flex">
         <img class="mx-3" :src="printerIcon" alt="printer-icon" />
-        <span>{{ fileName ? fileName : $t('dappsStaked.upload') }}</span>
+        <span class="filename">{{
+          fileName ? fileName : $t('dappsStaked.upload')
+        }}</span>
       </div>
       <label class="d-flex" for="keystore">{{
         $t('dappsStaked.choose-file')

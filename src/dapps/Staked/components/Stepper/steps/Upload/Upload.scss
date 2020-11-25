@@ -13,13 +13,22 @@
       margin-right: 5px;
       padding-left: 10px;
       width: 80%;
+      @media all and (max-width: 630px) {
+        margin-right: 0;
+        width: 100%;
+      }
 
       .file {
-        color: dark-blue-13;
+        color: $dark-blue-13;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
+    }
+    .filename {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     input[type='file'] {
       display: none;
@@ -33,6 +42,14 @@
       cursor: pointer;
       justify-content: center;
       width: 120px;
+      @media all and (max-width: 630px) {
+        margin-top: 5px;
+        padding: 15px;
+        width: 100%;
+      }
+    }
+    @media all and (max-width: 630px) {
+      flex-direction: column;
     }
   }
   .address-container {

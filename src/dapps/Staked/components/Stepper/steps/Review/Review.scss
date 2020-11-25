@@ -6,7 +6,13 @@
   div {
     justify-content: space-between;
   }
-  .address-container, .review-container {
+  .review-container {
+    @media all and (max-width: $mobile-width) {
+      margin-top: 20px;
+    }
+  }
+  .address-container,
+  .review-container {
     background-color: $light-green-1;
     border-radius: 4px;
     flex-direction: column;
@@ -31,15 +37,19 @@
       color: $dark-blue-1;
     }
   }
+  .align-right,
+  .eth-value {
+    text-align: right;
+  }
   .switch {
     align-items: center;
     justify-content: center;
     .link {
-      color: $mew-green
+      color: $mew-green;
     }
 
-    input[type=checkbox]:after {
-      content: " ";
+    input[type='checkbox']::after {
+      content: ' ';
       background-color: $mew-green;
       color: $white;
       display: inline-block;

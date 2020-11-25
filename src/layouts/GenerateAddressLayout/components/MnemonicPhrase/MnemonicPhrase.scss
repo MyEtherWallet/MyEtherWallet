@@ -7,7 +7,7 @@
   flex-direction: column;
   padding: 50px;
   width: 500px;
-  
+
   .title-container {
     flex-direction: column;
     align-items: center;
@@ -27,7 +27,8 @@
   .button-container {
     flex-direction: column;
     width: 100%;
-    button, a {
+    button,
+    a {
       cursor: pointer;
       display: block;
       margin: 0 auto;
@@ -37,7 +38,7 @@
       width: 100%;
       position: relative;
       margin-top: 40px;
-  
+
       img {
         position: absolute;
         right: 20px;
@@ -46,7 +47,6 @@
       }
     }
   }
-
 
   .mnemonic-container {
     background-color: $light-green-1;

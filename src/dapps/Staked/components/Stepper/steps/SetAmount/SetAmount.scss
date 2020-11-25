@@ -19,11 +19,12 @@
     font-size: 16px;
     font-weight: 600;
   }
-  .subtitle {
-    color: $light-grey-18;
-  }
   .action-container {
     width: 60%;
+    @media all and (max-width: $mobile-width) {
+      white-space: nowrap;
+      width: 100%;
+    }
     input {
       background: $light-grey-17;
       border: none;
@@ -35,7 +36,7 @@
     .percentage-container {
       align-items: center;
       display: flex;
-  
+
       div {
         color: $light-grey-18;
         cursor: pointer;
@@ -44,7 +45,7 @@
         padding: 8px;
         width: 100%;
       }
-  
+
       .active {
         border-radius: 4px;
         border: 1px solid $mew-green;
@@ -57,16 +58,17 @@
     align-items: center;
     justify-content: center;
     flex-direction: row;
+    position: relative;
     margin-top: 20px;
     img {
       position: absolute;
-      left: 469px;
+      left: 10px;
     }
     .usd-amount {
       color: $light-grey-18;
       font-weight: 500;
       position: absolute;
-      right: 620px;
+      right: 10px;
     }
   }
 
