@@ -169,6 +169,14 @@
           </div>
         </div>
 
+        <div v-if="showAlternates" class="send-form">
+          <div v-for="alt in alternates">
+            <button v-if="alt.hasValue" @click="setAltToPrimary(alt)">
+              {{ fromValue }} {{fromCurrency}}/{{alt.computeConversion(fromValue) || alt.toValue}} {{alt.symbol}}
+            </button>
+          </div>
+        </div>
+
         <div class="send-form">
           <div class="title-container">
             <div class="title title-and-copy">
@@ -366,7 +374,8 @@ export default {
       unableToValidate: false,
       unableToValidateExit: false,
       unableToValidateRefund: false,
-      overrideAddress: false
+      overrideAddress: false,
+      alternates: [{symbol: 'RENBTC', rates: [], computeConversion: ()=> {}, hasValue: false}, {symbol: 'WBTC', rates: [], computeConversion: ()=> {}, hasValue: false}, {symbol: 'PBTC', rates: [], computeConversion: ()=> {}, hasValue: false}]
     };
   },
   computed: {
@@ -524,9 +533,31 @@ export default {
       return this.isExitToFiat && this.fromCurrency === this.baseCurrency
         ? this.currentAddress
         : this.exitFromAddress;
+    },
+    showAlternates() {
+      if (this.toCurrency === 'BTC') {
+        return true;
+      }
+      return false;
+    },
+    getAlternatives() {
+      if (this.toCurrency === 'BTC') {
+        return true;
+      }
+      return false;
     }
   },
   watch: {
+    toCurrency(value){
+      if (value === 'BTC') {
+        this.standAloneRateEstimate();
+      }
+    },
+    fromValue(){
+      if (this.toCurrency === 'BTC') {
+        this.standAloneRateEstimate();
+      }
+    },
     ['gasPrice'](value) {
       if (!this.selectedProvider) {
         this.selectedProvider = {};
@@ -562,6 +593,7 @@ export default {
         this.fromValue,
         'from'
       );
+      this.standAloneRateEstimate();
     },
     network(newVal) {
       this.providerData = [];
@@ -596,6 +628,37 @@ export default {
   methods: {
     getTokenAddress(currency) {
       return this.swap.getTokenAddress(currency, true);
+    },
+    async standAloneRateEstimate() {
+      this.alternates.forEach(val => {
+        this.swap
+          .standAloneRateEstimate(this.fromCurrency, val.symbol, this.fromValue)
+          .then(res => {
+            if(res){
+              const idx = this.alternates.findIndex(item => item.symbol === res[0].toCurrency)
+              if(idx > -1){
+                this.alternates[idx].rates = res[0].rate;
+                this.alternates[idx].fromValue = res[0].fromValue;
+                this.alternates[idx].toValue = res[0].computeConversion(this.fromValue)
+                this.alternates[idx].computeConversion = res[0].computeConversion.bind(res[0])
+                this.alternates[idx].hasValue = true;
+                return res;
+              }
+            }
+          })
+        return {symbol: val.symbol, rates: []}
+      })
+
+    },
+    setAltToPrimary(newCurrency){
+      const details = this.toArray.find(item => item.symbol.toLowerCase() === newCurrency.symbol.toLowerCase())
+      this.toCurrency = newCurrency.symbol;
+      this.overrideTo = {};
+      this.$nextTick(() => {
+        this.overrideTo = details;
+        this.setToCurrency(newCurrency)
+      })
+
     },
     reset() {
       this.lastFeeEstimate = new BigNumber(0);

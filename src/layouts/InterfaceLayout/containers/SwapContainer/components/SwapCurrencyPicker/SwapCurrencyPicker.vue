@@ -167,7 +167,10 @@ export default {
   },
   watch: {
     overrideCurrency(newVal) {
-      this.selectedCurrency = newVal;
+      console.log('newVal', newVal); // todo remove dev item
+      if(Object.keys(newVal).length > 0){
+        this.selectedCurrency = newVal;
+      }
     },
     selectedCurrency(newVal) {
       this.$emit('selectedCurrency', newVal, this.fromSource ? 'to' : 'from');
