@@ -1,6 +1,6 @@
 <template>
   <mew-overlay :show-overlay="open">
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <div>
         <h2 class="text-center mb-10">Transfer domain</h2>
         <mew6-white-sheet>
@@ -15,7 +15,7 @@
       <div>
         <h2 class="text-center mb-10">Confirmation</h2>
         <mew6-white-sheet>
-          <transaction-confirmation />
+          <!-- <transaction-confirmation /> -->
         </mew6-white-sheet>
         <mew6-white-sheet>
           <div class="pa-8">
@@ -53,10 +53,10 @@
 </template>
 
 <script>
-import transactionConfirmation from '@/modules/wallets/components/transaction-confirmation/TransactionConfirmation';
+// import transactionConfirmation from '@/modules/wallets/components/transaction-confirmation/TransactionConfirmation';
 
 export default {
-  components: { transactionConfirmation },
+  // components: { transactionConfirmation },
   props: {
     open: { default: false, type: Boolean },
     close: {

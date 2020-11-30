@@ -18,6 +18,7 @@ const V1_SIGNAL_URL = 'https://connect.mewapi.io';
 const V2_SIGNAL_URL = 'wss://connect2.mewapi.io/staging';
 const IS_HARDWARE = true;
 let thisAddress = null;
+import { EventBus } from '@/plugins/eventBus';
 
 class MEWconnectWallet {
   constructor() {
@@ -36,7 +37,7 @@ class MEWconnectWallet {
     const txSigner = async tx => {
       let tokenInfo;
       if (tx.data.slice(0, 10) === '0xa9059cbb') {
-        tokenInfo = store.state.main.network.type.tokens.find(
+        tokenInfo = store.state.wallet.network.type.tokens.find(
           entry => entry.address.toLowerCase() === tx.to.toLowerCase()
         );
         if (tokenInfo) {
@@ -59,7 +60,7 @@ class MEWconnectWallet {
         this.mewConnect.sendRtcMessage('signTx', JSON.stringify(tx));
         this.mewConnect.once('signTx', result => {
           tx = new Transaction(sanitizeHex(result), {
-            common: commonGenerator(store.state.main.network)
+            common: commonGenerator(store.state.wallet.network)
           });
           const signedChainId = calculateChainIdFromV(tx.v);
           if (signedChainId !== networkId)
@@ -112,8 +113,8 @@ const signalerConnect = (url, mewConnect) => {
     mewConnect.on('RtcConnectedEvent', () => {
       mewConnect.on('RtcClosedEvent', () => {
         if (mewConnect.getConnectonState()) {
-          store._vm.$eventHub.$emit('mewConnectDisconnected');
-          store.dispatch('main/clearWallet');
+          EventBus.$emit('mewConnectDisconnected');
+          store.dispatch('wallet/removeWallet');
         }
       });
       mewConnect.sendRtcMessage('address', '');

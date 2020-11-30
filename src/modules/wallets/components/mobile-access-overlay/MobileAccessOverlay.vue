@@ -6,7 +6,7 @@
     :close="overlayClose"
     left-btn-text=""
   >
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <v-sheet color="transparent" max-width="450px" class="mx-auto px-5">
         <v-row>
           <v-col v-for="(btn, key) in buttons" :key="key" cols="9" sm="12">
@@ -16,7 +16,7 @@
               color-theme="basic"
               @click.native="btn.fn"
             >
-              <template v-slot:contentSlot>
+              <template #contentSlot>
                 <img class="icon" :src="btn.icon" />
               </template>
             </mew-super-button>
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import { Toast, SENTRY } from '@/components/toast';
 import { WalletConnectWallet, WalletLinkWallet } from '@/modules/wallets/utils';
 import { mapActions } from 'vuex';
 export default {
@@ -65,12 +66,12 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['decryptWallet']),
+    ...mapActions('wallet', ['setWallet']),
     openWalletConnect() {
       try {
         WalletConnectWallet()
           .then(_newWallet => {
-            this.decryptWallet([_newWallet]).then(() => {
+            this.setWallet([_newWallet]).then(() => {
               this.$router.push({ name: 'Dashboard' });
             });
           })
@@ -78,14 +79,14 @@ export default {
             WalletConnectWallet.errorHandler(e);
           });
       } catch (e) {
-        console.log(e);
+        Toast(e.message, {}, SENTRY);
       }
     },
     openWalletLink() {
       try {
         WalletLinkWallet()
           .then(_newWallet => {
-            this.decryptWallet([_newWallet]).then(() => {
+            this.setWallet([_newWallet]).then(() => {
               this.$router.push({ name: 'Dashboard' });
             });
           })
@@ -93,7 +94,7 @@ export default {
             WalletLinkWallet.errorHandler(e);
           });
       } catch (e) {
-        console.log(e);
+        Toast(e.message, {}, SENTRY);
       }
     },
     overlayClose() {

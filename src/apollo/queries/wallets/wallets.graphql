@@ -1,0 +1,24 @@
+query getEthBalance($hash: String!) {
+    getEthBalance(owner: $hash) {
+      balance
+    }
+}
+
+query getUSDPrice {
+  getLatestPrices {
+        id
+        current_price
+        market_cap
+        price_change_24h
+    }
+}
+
+query getBalanceHistory($timeString: Int!, $key: String!, $scale: TimeseriesScale!, $_nextKey: String) {
+  getTimeseriesData(fromT: $timeString, key: $key, scale: $scale, nextKey: $_nextKey){
+      items {
+        value
+        timestamp
+      }
+      nextKey
+  }
+}

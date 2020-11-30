@@ -21,6 +21,7 @@ import errorHandler from './errorHandler';
 import store from '@/store';
 import commonGenerator from '@/helpers/commonGenerator';
 import Vue from 'vue';
+import { EventBus } from '@/plugins/eventBus';
 
 const { MessageType } = Messages;
 const {
@@ -31,11 +32,10 @@ const {
 const NEED_PASSWORD = false;
 
 class KeepkeyWallet {
-  constructor(eventHub) {
+  constructor() {
     this.identifier = keepkeyType;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
-    this.eventHub = eventHub;
     this.supportedPaths = bip44Paths[keepkeyType];
   }
   async init(basePath) {
@@ -45,7 +45,7 @@ class KeepkeyWallet {
     const device = new WebUSBDevice({ usbDevice });
     this.keepkey = KeepKey.withWebUSB(device);
     this.keepkey.device.events.on(String(MESSAGETYPE_PINMATRIXREQUEST), () => {
-      this.eventHub.$emit(
+      EventBus.$emit(
         'showHardwarePinMatrix',
         { name: this.identifier },
         pin => {
@@ -54,7 +54,7 @@ class KeepkeyWallet {
       );
     });
     this.keepkey.device.events.on(String(MESSAGETYPE_PASSPHRASEREQUEST), () => {
-      this.eventHub.$emit(
+      EventBus.$emit(
         'showHardwarePassword',
         { name: this.identifier },
         passPhrase => {
@@ -92,7 +92,7 @@ class KeepkeyWallet {
     }
     const txSigner = async tx => {
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.main.network)
+        common: commonGenerator(store.state.wallet.network)
       });
       const hexTx = getUint8Tx(tx);
       const networkId = tx.getChainId();
@@ -152,8 +152,8 @@ class KeepkeyWallet {
     return this.supportedPaths;
   }
 }
-const createWallet = async (basePath, eventHub) => {
-  const _keepkeyWallet = new KeepkeyWallet(eventHub);
+const createWallet = async basePath => {
+  const _keepkeyWallet = new KeepkeyWallet();
   await _keepkeyWallet.init(basePath);
   return _keepkeyWallet;
 };

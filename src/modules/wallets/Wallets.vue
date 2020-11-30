@@ -1,71 +1,138 @@
 <template>
-  <v-sheet color="walletBg">
-    <div class="d-flex align-stretch">
-      <side-menu class="box-shadow" />
-      <div class="flex-grow-1 d-flex flex-column justify-space-between">
-        <v-container>
-          <wallet-header />
-          <router-view :owners-tokens="ownersTokens" />
-        </v-container>
-        <!-- need to redo this / incorrect placement -->
-        <!-- <wallet-footer class="mt-10 box-shadow" /> -->
+  <div>
+    <confirmation />
+    <div class="d-block d-lg-none walletBg">
+      <side-menu mobile />
+      <div class="mx-auto px-2 preset--mobile-max-width">
+        <wallet-header mobile />
+        <router-view mobile :owners-tokens="ownersTokens" />
       </div>
-      <div>
-        <network />
-        <div class="pa-4"></div>
-        <swap />
+      <wallet-footer mobile class="mt-10 box-shadow" />
+    </div>
+    <div class="d-none d-lg-block walletBg">
+      <div class="d-flex align-stretch">
+        <side-menu class="box-shadow" />
+        <div class="flex-grow-1 d-flex flex-column justify-space-between">
+          <v-container>
+            <wallet-header />
+            <router-view :owners-tokens="ownersTokens" />
+          </v-container>
+          <wallet-footer class="mt-10 box-shadow" />
+        </div>
       </div>
     </div>
-  </v-sheet>
+  </div>
 </template>
 
 <script>
+import BigNumber from 'bignumber.js';
+import { mapActions, mapState } from 'vuex';
+import utils from 'web3-utils';
+import store from 'store';
+import TokenCalls from '@/apollo/queries/tokens/index';
+import WalletCalls from '@/apollo/queries/wallets/index';
 import sideMenu from './components/side-menu/SideMenu';
 import walletHeader from './components/header/Header';
 import walletFooter from './components/footer/Footer';
-import network from '@/modules/wallets/components/network/Network';
-import swap from '@/modules/wallets/components/swap/Swap';
-import TokensList from '@/modules/tokens/index';
+import confirmation from '@/modules/wallets/components/confirmation/Confirmation';
+import {
+  getGasBasedOnType,
+  getOther,
+  getEconomy
+} from '@/helpers/gasPriceHelper.js';
 
 export default {
   components: {
-    walletFooter,
     sideMenu,
     walletHeader,
-    network,
-    swap
+    walletFooter,
+    confirmation
   },
   data() {
     return {
       tokens: [],
       ownersTokens: [],
-      account: {
-        balance: '20000000000000000000000',
-        address: '0x43689531907482BEE7e650D18411E284A7337A66'
-      }
+      manualBlockFetch: () => {}
     };
   },
+  computed: {
+    ...mapState('wallet', ['address', 'web3']),
+    ...mapState('global', ['online'])
+  },
   watch: {
-    $route() {
-      this.redirectToDashboard();
+    web3() {
+      this.web3.eth.clearSubscriptions();
+      clearInterval(this.manualBlockFetch);
+      this.subscribeToBlockNumber();
     }
   },
   mounted() {
-    this.tokensList = new TokensList(this.$apollo);
-    this.tokens = this.tokensList.getLatestPrices(this.$apollo);
-    this.getOwnersTokens();
-    this.redirectToDashboard();
+    if (this.online) {
+      this.getTokens();
+      this.getPriceAndBalance();
+      this.subscribeToBlockNumber();
+    }
+  },
+  destroyed() {
+    this.web3.eth.clearSubscriptions();
+    clearInterval(this.manualBlockFetch);
   },
   methods: {
-    async getOwnersTokens() {
-      this.ownersTokens = await this.tokensList.getOwnersERC20Tokens(
-        this.account.address
-      );
+    ...mapActions('wallet', [
+      'setAccountBalance',
+      'setUSD',
+      'setGasPrice',
+      'setEthGasPrice',
+      'setBlockNumber'
+    ]),
+    getTokens() {
+      const tokensList = new TokenCalls(this.$apollo);
+      tokensList.getOwnersERC20Tokens(this.address).then(res => {
+        this.ownersTokens = res;
+      });
     },
-    redirectToDashboard() {
-      if (this.$route.name === 'Wallet') {
-        this.$router.push({ name: 'Dashboard' });
-      }
+    getPriceAndBalance() {
+      const gasType = store.get('gasPriceType') || 'economy';
+      const getCustomGas = getOther();
+      const walletCalls = new WalletCalls(this.$apollo);
+      walletCalls.getBalance(this.address).then(res => {
+        this.setAccountBalance(BigNumber(utils.fromWei(res)).toString());
+      });
+      walletCalls.getUSDPrice(this.address).then(res => {
+        this.setUSD(res);
+      });
+      this.web3.eth.getGasPrice().then(res => {
+        const parsedGas = getEconomy(res).toString();
+        if (gasType === 'economy') {
+          this.setGasPrice(parsedGas);
+        } else if (gasType === 'other' && getCustomGas) {
+          this.setGasPrice(getCustomGas);
+        } else {
+          this.setGasPrice(getGasBasedOnType(parsedGas));
+        }
+        this.setEthGasPrice(res, 'gwei');
+      });
+    },
+    subscribeToBlockNumber() {
+      this.web3.eth.getBlockNumber().then(res => {
+        this.setBlockNumber(res);
+      });
+      this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
+        this.setBlockNumber(res.number);
+      });
+    },
+    manualBlockSubscription() {
+      const _self = this;
+      // fetch initially
+      _self.web3.eth.getBlockNumber().then(res => {
+        _self.setBlockNumber(res);
+        // rerun in 14 secs
+        _self.manualBlockFetch = setInterval(() => {
+          _self.web3.eth.getBlockNumber().then(res => {
+            _self.setBlockNumber(res);
+          });
+        }, 14000);
+      });
     }
   }
 };

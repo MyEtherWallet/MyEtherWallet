@@ -1,5 +1,5 @@
-// import WalletConnect from '@walletconnect/browser';
-// import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
+import WalletConnect from '@walletconnect/browser';
+import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
 import store from '@/store';
 import { Transaction } from 'ethereumjs-tx';
 import { WALLET_CONNECT as walletConnectType } from '../../bip44/walletTypes';
@@ -12,6 +12,8 @@ import PromiEvent from 'web3-core-promievent';
 
 const BRIDGE_URL = 'https://bridge.walletconnect.org';
 const IS_HARDWARE = true;
+
+import { EventBus } from '@/plugins/eventBus';
 
 class WalletConnectWallet {
   constructor() {
@@ -28,8 +30,8 @@ class WalletConnectWallet {
     this.isKilled = true;
     this.walletConnect.on('disconnect', () => {
       if (!this.isKilled) {
-        store._vm.$eventHub.$emit('mewConnectDisconnected');
-        store.dispatch('main/clearWallet');
+        EventBus.$emit('mewConnectDisconnected');
+        store.dispatch('wallet/removeWallet');
       }
     });
 
@@ -43,7 +45,7 @@ class WalletConnectWallet {
       const txSigner = tx => {
         const from = tx.from;
         tx = new Transaction(tx, {
-          common: commonGenerator(store.state.main.network)
+          common: commonGenerator(store.state.wallet.network)
         });
         const txJSON = tx.toJSON(true);
         txJSON.from = from;
@@ -52,7 +54,7 @@ class WalletConnectWallet {
           .sendTransaction(txJSON)
           .then(hash => {
             prom.eventEmitter.emit('transactionHash', hash);
-            store.state.main.web3.eth.sendTransaction.method._confirmTransaction(
+            store.state.wallet.web3.eth.sendTransaction.method._confirmTransaction(
               prom,
               hash,
               { params: [txJSON] }

@@ -7,23 +7,54 @@
         address="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
         class="mr-4 blockie"
       />
-      <div>
+      <div class="text-overflow--ellipsis">
         <div class="font-weight-medium">Elmo's wallet 04</div>
         <div class="d-flex align-center">
-          <div class="monospace">0x98d9964e1764654d…7</div>
-          <!-- <CopyButton
-            color="white"
-            text="0x98d9964e1764654dtrhtrggfrv3049t04i"
-          /> -->
+          <div v-if="false" white class="text-overflow--ellipsis">
+            0x98d9964e1764654dtrhtrggfrv3049t04i
+          </div>
+          <ellipsis-block white text="0x98d9964e1764654dtrhtrggfrv3049t04i" />
+          <copy-btn white text="0x98d9964e1764654dtrhtrggfrv3049t04i" />
         </div>
       </div>
       <div class="ml-auto">
         <v-btn icon depressed color="white">
-          <v-icon> mdi-dots-vertical </v-icon>
+          <v-icon>mdi-dots-vertical</v-icon>
         </v-btn>
       </div>
     </div>
-    <div class="pa-7 d-flex justify-space-between align-center">
+
+    <div class="white d-block d-lg-none px-5">
+      <div class="d-flex align-center justify-space-between pt-6 pb-2">
+        <h5 class="font-weight-medium">ETH Balance</h5>
+        <div class="text-right">
+          <h5 class="font-weight-bold">$2,000.00</h5>
+          <div class="primary--text">8.00123 ETH</div>
+        </div>
+      </div>
+
+      <div class="d-flex align-center justify-space-between py-4">
+        <h5 class="font-weight-medium">Value of Tokens</h5>
+        <div class="text-right">
+          <h5 class="font-weight-bold">$200.00</h5>
+          <div class="primary--text">4 Tokens</div>
+        </div>
+      </div>
+
+      <divider />
+
+      <div class="d-flex align-center justify-space-between py-4">
+        <h5 class="font-weight-medium">Total Wallet Value</h5>
+        <div class="text-right">
+          <h5 class="font-weight-bold">$2,000.22</h5>
+          <div class="primary--text">18.00123 ETH</div>
+        </div>
+      </div>
+
+      <divider />
+    </div>
+
+    <div class="pa-7 d-none d-lg-flex justify-space-between align-center">
       <div class="d-flex align-start">
         <img
           src="@/assets/images/currencies/icon-eth-blue.svg"
@@ -62,16 +93,32 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
+
+    <div
+      class="d-lg-none text-center py-4 primary--text font-weight-medium"
+      @click="openPanel"
+    >
+      {{ panel.length == 0 ? 'Show tokens' : 'Hide tokens' }}
+      <v-icon
+        :class="panel.length == 0 ? '' : 'r180'"
+        class="rotate"
+        color="primary"
+        >mdi-chevron-down</v-icon
+      >
+    </div>
   </white-sheet>
 </template>
 
 <script>
+import ellipsisBlock from '@/components/ellipsisBlock/EllipsisBlock';
+import copyBtn from '@/components/buttons/copy-button/CopyButton';
+import divider from '@/components/divider-line/DividerLine';
 import toolTable from '../table/Table';
 import WhiteSheet from '@/components/white-sheet/WhiteSheet';
 
 export default {
-  components: { toolTable, WhiteSheet },
-  data: () => ({ panel: [0] }),
+  components: { ellipsisBlock, divider, copyBtn, toolTable, WhiteSheet },
+  data: () => ({ panel: [] }),
   methods: {
     openPanel() {
       this.panel = this.panel.length == 0 ? [0] : [];

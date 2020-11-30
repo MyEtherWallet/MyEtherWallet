@@ -1,6 +1,6 @@
 <template>
   <mew-overlay :show-overlay="open">
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <div>
         <h2 class="text-center mb-10">Buy domain</h2>
         <mew6-white-sheet>
@@ -123,9 +123,9 @@
 </template>
 
 <script>
-import transactionConfirmation from '@/modules/wallets/components/transaction-confirmation/TransactionConfirmation';
+// import transactionConfirmation from '@/modules/wallets/components/transaction-confirmation/TransactionConfirmation';
 export default {
-  components: { transactionConfirmation },
+  // components: { transactionConfirmation },
   props: {
     open: { default: false, type: Boolean },
     close: {

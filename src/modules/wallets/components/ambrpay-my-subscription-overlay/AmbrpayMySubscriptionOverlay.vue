@@ -1,6 +1,6 @@
 <template>
   <mew-overlay :show-overlay="open">
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <div>
         <h2 class="text-center mb-10">My subscription</h2>
         <mew6-white-sheet>
