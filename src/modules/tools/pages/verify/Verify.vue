@@ -4,13 +4,13 @@
     <v-textarea outlined label="Signature" value="Value"></v-textarea>
     <mew-button
       title="Verify"
-      button-size="xlarge"
+      btn-size="xlarge"
       class="display--block mx-auto mt-5"
     />
     <mew-button
       btn-style="transparent"
       title="Clean all"
-      button-size="small"
+      btn-size="small"
       class="display--block mx-auto mt-5"
     />
   </div>

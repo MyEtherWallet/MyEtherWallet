@@ -1,14 +1,14 @@
 <template>
   <div>
-    <transaction-confirmation />
+    <!-- <transaction-confirmation /> -->
   </div>
 </template>
 
 <script>
-import TransactionConfirmation from '@/modules/wallets/components/transaction-confirmation/TransactionConfirmation';
+// import TransactionConfirmation from '@/modules/wallets/components/transaction-confirmation/TransactionConfirmation';
 
 export default {
-  components: { TransactionConfirmation },
+  // components: { TransactionConfirmation },
   props: {},
   data() {
     return {};

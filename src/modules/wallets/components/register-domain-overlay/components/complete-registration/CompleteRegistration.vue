@@ -28,7 +28,7 @@
         </v-sheet>
       </div>
       <div class="d-flex justify-center mt-9">
-        <mew-button title="Register" button-size="xlarge" />
+        <mew-button title="Register" btn-size="xlarge" />
       </div>
     </div>
     <div class="text-center mt-10">

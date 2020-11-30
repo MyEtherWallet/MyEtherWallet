@@ -17,7 +17,7 @@
               btn-link="https://www.mewtopia.com/"
               :has-full-width="false"
               title="Contact Support"
-              button-size="xlarge"
+              btn-size="xlarge"
             />
           </v-sheet>
         </v-col>

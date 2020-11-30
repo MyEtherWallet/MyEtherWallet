@@ -20,12 +20,12 @@
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
-        <template v-slot:tabContent1>
+        <template #tabContent1>
           <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
             <div class="d-flex align-center justify-end">
               <div class="mr-3">Health factor</div>
               <div class="primary--text font-weight-bold mr-3">2.45345</div>
-              <info-tooltip text="Health factor" />
+              <mew-tooltip text="Health factor" />
             </div>
 
             <v-row>
@@ -73,16 +73,16 @@
             />
 
             <div class="d-flex justify-center mt-9">
-              <mew-button title="Deposit" button-size="xlarge"></mew-button>
+              <mew-button title="Deposit" btn-size="xlarge"></mew-button>
             </div>
           </v-sheet>
         </template>
-        <template v-slot:tabContent2>
+        <template #tabContent2>
           <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
             <div class="d-flex align-center justify-end">
               <div class="mr-3">Health factor</div>
               <div class="primary--text font-weight-bold mr-3">2.45345</div>
-              <info-tooltip text="Health factor" />
+              <mew-tooltip text="Health factor" />
             </div>
 
             <v-row>
@@ -138,7 +138,7 @@
             />
 
             <div class="d-flex justify-center mt-9">
-              <mew-button title="Borrow" button-size="xlarge"></mew-button>
+              <mew-button title="Borrow" btn-size="xlarge"></mew-button>
             </div>
           </v-sheet>
         </template>

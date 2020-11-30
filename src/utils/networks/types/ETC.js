@@ -12,5 +12,10 @@ export default {
   tokens: tokens,
   contracts: contracts,
   icon: etc,
-  currencyName: 'ETC'
+  currencyName: 'ETC',
+  isEthVMSupported: {
+    supported: false,
+    url: null,
+    websocket: null
+  }
 };
