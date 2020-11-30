@@ -1,5 +1,7 @@
 <template>
   <v-sheet
+    :max-width="maxWidth"
+    :width="fullWidth ? '100%' : ''"
     color="mewBg"
     class="mew-component--white-sheet border-radius--10px"
     :class="[
@@ -16,7 +18,9 @@
 export default {
   props: {
     sideinfo: { default: false, type: Boolean },
-    overflowHidden: { default: false, type: Boolean }
+    overflowHidden: { default: false, type: Boolean },
+    maxWidth: { default: '', type: String },
+    fullWidth: { default: false, type: Boolean }
   }
 };
 </script>

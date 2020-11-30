@@ -247,11 +247,6 @@ h6 {
   }
 }
 
-/* ========== Mobile ========== */
-.preset--mobile-max-width {
-  max-width: 420px;
-}
-
 .custom-scroll-bar {
   &::-webkit-scrollbar {
     width: 2px;
@@ -286,4 +281,8 @@ h6 {
   &::-webkit-scrollbar-corner {
     background: transparent;
   }
+}
+/* ========== Mobile ========== */
+.preset--mobile-max-width {
+  max-width: 420px;
 }
