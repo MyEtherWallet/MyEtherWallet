@@ -1,107 +1,211 @@
 <template>
   <div>
+    <v-dialog v-model="dialog" persistent max-width="500">
+      <v-sheet color="white" class="pa-5">
+        <h3 class="font-weight-bold mb-5 text-center">Transction status</h3>
+        <div class="tableHeader pa-5 mb-2">
+          <div class="font-weight-bold">Transaction Hash</div>
+          <ellipsis-block
+            text="0xf267c8145dce9092463c6582c8c6f00677e2ab626c8cfc64ea997725ab14a16c"
+          />
+        </div>
+        <div class="tableHeader pa-5">
+          <div class="font-weight-bold">Transaction receipt</div>
+          <ellipsis-block
+            text="0xf267c8145dce9092463c6582c8c6f00677e2ab626c8cfc64ea997725ab14a16c"
+          />
+        </div>
+        <div class="text-center">
+          <mew-button
+            class="mt-6"
+            title="Okay"
+            btn-size="xlarge"
+            @click.native="dialog = false"
+          />
+        </div>
+      </v-sheet>
+    </v-dialog>
+
     <block-title max-width="600px" no-page-title :data="title" class="mb-7" />
 
-    <mew-stepper :items="items" :on-step="3">
-      <template #outsideStepContent1>
-        <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-          <bordered-white-sheet class="px-7">
-            <v-radio-group v-model="networkSelected">
-              <div v-for="(item, i) in networks" :key="i">
-                <div class="text-uppercase font-weight-bold subtitle-1 mb-1">
-                  {{ item.label }}
-                </div>
+    <mew-stepper
+      class="mx-n12 mx-sm-0"
+      :items="stepperItems"
+      :on-step="currentStep"
+    ></mew-stepper>
 
-                <v-row no-gutters>
-                  <v-col
-                    v-for="button in item.buttons"
-                    :key="button.value"
-                    cols="6"
-                    class="mt-2"
-                  >
-                    <v-radio
-                      :label="button.name"
-                      :value="button.value"
-                    ></v-radio>
-                  </v-col>
-                </v-row>
+    <h5
+      v-if="$vuetify.breakpoint.mdAndDown"
+      class="text-center font-weight-medium"
+    >
+      {{ stepperItems[currentStep - 1].name }}
+    </h5>
 
-                <div>{{ item.id }}</div>
-                <divider-line v-if="networks.length != i + 1" class="my-5" />
+    <div v-if="currentStep === 1">
+      <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
+        <border-block
+          md-shadow
+          md-border-radius
+          class="px-7"
+          max-height="300px"
+        >
+          <v-radio-group v-model="networkSelected">
+            <div v-for="(item, i) in networks" :key="i">
+              <div class="text-uppercase font-weight-bold subtitle-1 mb-1">
+                {{ item.label }}
               </div>
-            </v-radio-group>
-          </bordered-white-sheet>
-        </v-sheet>
-        <mew-button
-          btn-size="xlarge"
-          title="Change"
-          class="mx-auto display--block"
-        />
-      </template>
 
-      <template #outsideStepContent2>
-        <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-          <mew-address-select label="From Address" />
-          <div class="d-flex justify-center mt-2">
-            <mew-button
-              class="mr-3"
-              title="Back"
-              btn-size="xlarge"
-              btn-style="outline"
-            />
-            <mew-button title="Next" btn-size="xlarge" />
-          </div>
+              <v-row no-gutters>
+                <v-col
+                  v-for="button in item.buttons"
+                  :key="button.value"
+                  cols="12"
+                  md="6"
+                  class="mt-2"
+                >
+                  <v-radio :label="button.name" :value="button.value"></v-radio>
+                </v-col>
+              </v-row>
+
+              <div>{{ item.id }}</div>
+              <divider-line v-if="networks.length != i + 1" class="my-5" />
+            </div>
+          </v-radio-group>
+        </border-block>
+      </v-sheet>
+      <mew-button
+        btn-size="xlarge"
+        title="Next"
+        class="mx-auto display--block"
+        @click.native="currentStep = 2"
+      />
+    </div>
+
+    <div v-if="currentStep === 2">
+      <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
+        <mew-address-select label="From Address" />
+        <mew-expand-panel
+          is-toggle
+          has-dividers
+          :panel-items="exPannelStep2"
+          class="mt-4 mb-10 swap-expend"
+        >
+          <template #panelBody1>
+            <div
+              v-for="(d, key) in details"
+              :key="key"
+              class="d-flex align-center justify-space-between mb-3"
+            >
+              <div v-if="d.title" class="pr-3">{{ d.title }}</div>
+              <div v-if="d.value" class="text-right">{{ d.value }}</div>
+              <ellipsis-block v-if="d.address" :text="d.address" />
+            </div>
+          </template>
+        </mew-expand-panel>
+        <div class="d-block d-lg-flex justify-center mt-2 text-center">
           <mew-button
-            class="mt-5 display--block mx-auto"
-            title="Export JSON file"
-            btn-size="small"
-            btn-style="transparent"
+            class="mx-1 mb-3"
+            title="Back"
+            btn-size="xlarge"
+            btn-style="outline"
+            @click.native="currentStep = 1"
           />
-        </v-sheet>
-      </template>
+          <mew-button
+            class="mx-1 mb-3"
+            title="Next"
+            btn-size="xlarge"
+            @click.native="currentStep = 3"
+          />
+        </div>
+        <mew-button
+          class="mt-2 display--block mx-auto"
+          title="Export JSON file"
+          btn-size="small"
+          btn-style="transparent"
+        />
+      </v-sheet>
+    </div>
 
-      <template #outsideStepContent3>
-        <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-          <v-textarea outlined label="Signature" value="Value"></v-textarea>
-          <mew-expand-panel
-            is-toggle
-            has-dividers
-            :panel-items="exPannel1"
-            class="mt-4 mb-10 swap-expend"
-          >
-            <template #panelBody1 style="margin-bottom: -1px !important">
-              1
-            </template>
-            <template #panelBody2>
-              <div
-                v-for="(d, key) in details"
-                :key="key"
-                class="d-flex align-center justify-space-between mb-3"
-              >
-                <div>{{ d.title }}</div>
-                <div>{{ d.value }}</div>
-              </div>
-            </template>
-          </mew-expand-panel>
-        </v-sheet>
-      </template>
-    </mew-stepper>
+    <div v-if="currentStep === 3">
+      <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
+        <v-textarea outlined label="Signature" value="Value"></v-textarea>
+        <mew-expand-panel
+          is-toggle
+          has-dividers
+          :panel-items="exPannelStep3"
+          class="mt-4 mb-10 swap-expend"
+        >
+          <template #panelBody1>
+            <div
+              v-for="(d, key) in details"
+              :key="key"
+              class="d-flex align-center justify-space-between mb-3"
+            >
+              <div v-if="d.title" class="pr-3">{{ d.title }}</div>
+              <div v-if="d.value" class="text-right">{{ d.value }}</div>
+              <ellipsis-block v-if="d.address" :text="d.address" />
+            </div>
+          </template>
+          <template #panelBody2>
+            <div
+              v-for="(d, key) in details"
+              :key="key"
+              class="d-flex align-center justify-space-between mb-3"
+            >
+              <div v-if="d.title" class="pr-3">{{ d.title }}</div>
+              <div v-if="d.value" class="text-right">{{ d.value }}</div>
+              <ellipsis-block v-if="d.address" :text="d.address" />
+            </div>
+          </template>
+        </mew-expand-panel>
+
+        <div class="d-block d-lg-flex justify-center mt-2 text-center">
+          <mew-button
+            class="mx-1 mb-3"
+            title="Back"
+            btn-size="xlarge"
+            btn-style="outline"
+            @click.native="currentStep = 2"
+          />
+          <mew-button
+            title="Confirm & Send"
+            btn-size="xlarge"
+            class="mx-1 mb-3"
+            @click.native="dialog = true"
+          />
+        </div>
+        <mew-button
+          class="mt-2 display--block mx-auto"
+          title="Upload JSON file"
+          btn-size="small"
+          btn-style="transparent"
+        />
+      </v-sheet>
+    </div>
   </div>
 </template>
 
 <script>
+import ellipsisBlock from '@/components/ellipsisBlock/EllipsisBlock';
 import blockTitle from '@/components/block-title/BlockTitle';
-import borderedWhiteSheet from '@/components/bordered-white-sheet/BorderedWhiteSheet';
+import borderBlock from '@/components/border-block/BorderBlock.vue';
 import dividerLine from '@/components/divider-line/DividerLine';
 
 export default {
-  components: { blockTitle, borderedWhiteSheet, dividerLine },
+  components: { ellipsisBlock, blockTitle, borderBlock, dividerLine },
   data: () => ({
+    dialog: false,
+    currentStep: 3,
     details: [
-      { title: 'Sender', value: '0x1208D377499bd32c1b995cAEEcA0BE297c242926' },
+      {
+        title: 'Sender',
+        value: '',
+        address: '0x1208D377499bd32c1b995cAEEcA0BE297c242926'
+      },
       {
         title: 'Receiver',
-        value: '0x1208D377499bd32c1b995cAEEcA0BE297c242926'
+        value: '',
+        address: '0x1208D377499bd32c1b995cAEEcA0BE297c242926'
       },
       { title: 'Nonce', value: '0' },
       { title: 'Value', value: '1 ETH' },
@@ -149,7 +253,12 @@ export default {
       description:
         'This is a recommended way to view your balance. You can only view your balance via this option.'
     },
-    exPannel1: [
+    exPannelStep2: [
+      {
+        name: 'Details'
+      }
+    ],
+    exPannelStep3: [
       {
         name: 'Raw transaction'
       },
@@ -157,18 +266,18 @@ export default {
         name: 'Details'
       }
     ],
-    items: [
+    stepperItems: [
       {
         step: 1,
-        name: 'STEP 1. Create password'
+        name: 'STEP 1. Select network'
       },
       {
         step: 2,
-        name: 'STEP 2. Download keystore file'
+        name: 'STEP 2. Generate information'
       },
       {
         step: 3,
-        name: 'STEP 3. Well done'
+        name: 'STEP 3. Signed transaction'
       }
     ]
   })
