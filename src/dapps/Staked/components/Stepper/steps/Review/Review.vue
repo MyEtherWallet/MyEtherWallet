@@ -14,8 +14,8 @@
       <div class="d-flex mt-4">
         <span>{{ $t('dappsStaked.amount') }}:</span>
         <span class="eth-value"
-          >{{ details.amount
-          }}<span class="convert-value ml-1"
+          >{{ details.amount }} {{ $t('common.currency.eth') }}
+          <span class="convert-value ml-1"
             >({{ '$' + usdPrice(details.amount) }})</span
           ></span
         >
@@ -23,13 +23,15 @@
       <div class="d-flex mt-4">
         <span>{{ $t('dappsStaked.one-time-fee') }}:</span>
         <span class="eth-value"
-          >0.002 ETH <span class="convert-value">($14,000)</span>
+          >{{ oneTimeFee }} {{ $t('common.currency.eth') }}
+          <span class="convert-value">({{ '$' + usdPrice(oneTimeFee) }})</span>
         </span>
       </div>
       <div class="d-flex mt-4">
         <span>{{ $t('dappsStaked.total') }}:</span>
         <span class="eth-value"
-          >32.02 ETH <span class="convert-value">($14,000)</span>
+          >{{ getTotal }} {{ $t('common.currency.eth') }}
+          <span class="convert-value">({{ '$' + usdPrice(getTotal) }})</span>
         </span>
       </div>
     </div>
@@ -56,6 +58,18 @@ export default {
     details: {
       type: Object,
       default: () => {}
+    }
+  },
+  data() {
+    return {
+      oneTimeFee: '0.01'
+    };
+  },
+  computed: {
+    getTotal() {
+      return new BigNumber(this.oneTimeFee)
+        .plus(this.details.amount)
+        .toFixed(4);
     }
   },
   methods: {

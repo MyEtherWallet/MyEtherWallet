@@ -17,8 +17,46 @@ import BigNumber from 'bignumber.js';
 export default class MakerCDP extends MakerCdpBase {
   constructor(cdpId, web3, services, sysVars) {
     super(cdpId, web3, services, sysVars);
-    this.minDai = 20.0;
+    this.minDaiValue = 20.0;
+    if (Object.keys(this.dustValues).length > 0) {
+      try {
+        if (this.dustValues['ETH']) {
+          this.minDaiValue = daiMath
+            .debtValue(1, this.dustValues['ETH'].dust)
+            .toBigNumber()
+            .toFixed(18);
+        }
+      } catch (e) {
+        // eslint-disable-next-line
+        console.error(e);
+      }
+    }
+    this.dustpolling();
     this.DAI_NAME = 'DAI';
+    this.contractAddresses = addresses;
+  }
+
+  dustpolling() {
+    if (!Object.keys(this.dustValues).length > 0) {
+      const checker = setInterval(() => {
+        try {
+          if (Object.keys(this.dustValues).length > 0) {
+            clearInterval(checker);
+            this.minDaiValue = daiMath
+              .debtValue(1, this.dustValues['ETH'].dust)
+              .toBigNumber()
+              .toFixed(18);
+          }
+        } catch (e) {
+          // eslint-disable-next-line
+          console.error(e);
+        }
+      }, 250);
+    }
+  }
+
+  get minDai() {
+    return this.minDaiValue;
   }
 
   // Getters
@@ -70,6 +108,7 @@ export default class MakerCDP extends MakerCdpBase {
     }
 
     const urns = await getUrns(this.web3, this.cdpId, this.cdpType);
+    this.urns = urns;
     const value = this.cdpTypeObject.currency.wei(urns.ink);
     if (!this.cdp.collateralAmount.toBigNumber().eq(value.toBigNumber())) {
       this.override['collateralAmount'] = this.cdpTypeObject.currency.wei(
@@ -209,7 +248,10 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   async getRawProxyAllowanceforMkr() {
-    const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_GOV);
+    const contract = new this.web3.eth.Contract(
+      ERC20,
+      this.contractAddresses.MCD_GOV
+    );
     return await contract.methods
       .allowance(this.currentAddress, this.proxyAddress)
       .call();
@@ -294,6 +336,11 @@ export default class MakerCDP extends MakerCdpBase {
       this.cdpTypeObject = this.mcdManager
         .get('mcd:cdpType')
         .getCdpType(null, type.name);
+      this.minDaiValue = daiMath
+        .debtValue(1, this.dustValues[type.symbol].dust)
+        .toBigNumber()
+        .toFixed(18);
+      super.cdpType = type.name;
     }
   }
 
