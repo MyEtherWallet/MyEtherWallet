@@ -1,15 +1,26 @@
 <template>
   <mew-overlay
     :show-overlay="open"
-    title="Change Network"
     left-btn-text=""
     right-btn-text="Close"
-    :close="close"
+    @closeOverlay="$emit('close')"
   >
     <template #mewOverlayBody>
-      <mew6-white-sheet>
-        <v-sheet color="white" min-width="500px" class="mx-auto pa-8">
-          <div>
+      <h2 class="text-center mb-10">Network</h2>
+      <button-tabs
+        v-model="activeTab"
+        :tabs="['Change network', 'Add network / HTTP']"
+      />
+
+      <v-sheet
+        v-if="activeTab === 1"
+        color="transparent"
+        max-width="700px"
+        width="100%"
+        class="mx-auto"
+      >
+        <mew6-white-sheet full-width class="mt-7">
+          <div class="pa-8">
             <v-radio-group v-model="networkSelected">
               <div v-for="(item, i) in typeNames" :key="i">
                 <div class="text-uppercase font-weight-bold subtitle-1 mb-1">
@@ -20,7 +31,8 @@
                   <v-col
                     v-for="network in networks[item]"
                     :key="network.value"
-                    cols="6"
+                    cols="12"
+                    md="6"
                     class="mt-2"
                   >
                     <v-radio
@@ -31,25 +43,56 @@
                 </v-row>
 
                 <div>{{ item.id }}</div>
-                <divider-line v-if="types.length != i + 1" class="my-5" />
+                <divider-line v-if="typeNames.length != i + 1" class="my-5" />
               </div>
             </v-radio-group>
           </div>
-        </v-sheet>
-      </mew6-white-sheet>
+        </mew6-white-sheet>
+      </v-sheet>
+
+      <div v-if="activeTab === 2">
+        <mew6-white-sheet class="mt-7">
+          <div class="pa-4 pa-md-8">
+            <div>
+              <mew-address-select label="Network" :items="addresses" />
+              <mew-input label="ETH Node Name" placeholder="Type node name" />
+              <mew-input label="URL" placeholder="Type URL" />
+              <mew-input label="Port" placeholder="Type port number" />
+
+              <mew-expand-panel
+                class="mb-7"
+                is-toggle
+                has-dividers
+                :panel-items="exPannel"
+              >
+                <template #panelBody1>
+                  <mew-input label="Username" placeholder=" " />
+                  <mew-input label="Password" placeholder=" " />
+                </template>
+              </mew-expand-panel>
+
+              <div class="d-flex justify-center">
+                <mew-button btn-size="xlarge" title="Save" />
+              </div>
+            </div>
+          </div>
+        </mew6-white-sheet>
+      </div>
     </template>
   </mew-overlay>
 </template>
 
 <script>
 import dividerLine from '@/components/divider-line/DividerLine';
+import buttonTabs from '@/components/tabs/buttonTabs/ButtonTabs';
 import * as nodes from '@/utils/networks/nodes';
 import * as types from '@/utils/networks/types';
 import { mapState, mapActions } from 'vuex';
 import { Toast, SUCCESS } from '@/components/toast';
 export default {
   components: {
-    dividerLine
+    dividerLine,
+    buttonTabs
   },
   props: {
     open: { type: Boolean, default: false },
@@ -57,6 +100,15 @@ export default {
   },
   data() {
     return {
+      activeTab: 1,
+      tabs: [
+        {
+          name: 'Change network'
+        },
+        {
+          name: 'Add network / HTTP'
+        }
+      ],
       networkSelected: null,
       types: types,
       nodes: nodes
