@@ -20,7 +20,6 @@ if (storedNetwork && storedNetwork.type.name !== 'CUS') {
     network.type = nodeList[storedNetwork.type.name][0].type;
   }
 }
-console.log(network);
 store.set('network', network);
 
 const addressBook =

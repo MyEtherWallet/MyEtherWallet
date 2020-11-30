@@ -43,7 +43,6 @@ export default class SendTransaction {
 
     const gasPrice = BigNumber(finalGas).toFixed(0);
     const fee = BigNumber(gasPrice).times(gasLimit);
-    console.log(fee.toString());
     const parsedFee = utils.fromWei(fee.toString());
     return balance > 0 ? BigNumber(balance).minus(parsedFee).toFixed() : 0;
   }
