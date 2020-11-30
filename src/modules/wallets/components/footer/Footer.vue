@@ -1,15 +1,21 @@
 <template>
   <div class="mew-component--wallet-footer">
     <v-sheet color="mewBg" class="py-6 px-10">
-      <v-container class="d-flex align-center justify-space-between py-0">
-        <div class="titlePrimary--text">
+      <v-container
+        class="d-flex align-center justify-space-between py-0"
+        :class="mobile ? 'flex-column-reverse' : ''"
+      >
+        <div
+          class="titlePrimary--text text-center"
+          :class="mobile ? 'mt-1' : ''"
+        >
           ©2020 MyEtherWallet. All rights reserved. Pricing taken from
           <a class="text-decoration--none" href="/" targe="_blank"
             >CoinMarketCap</a
           >
         </div>
         <div class="d-flex align-center titlePrimary--text">
-          <v-sheet width="150" color="transparent">
+          <v-sheet color="transparent">
             <v-select
               v-model="select"
               append-icon="mdi-chevron-down"
@@ -34,6 +40,12 @@
 <script>
 export default {
   components: {},
+  props: {
+    mobile: {
+      type: Boolean,
+      default: false
+    }
+  },
   data: () => ({
     select: 'en',
     languages: [
@@ -98,6 +110,11 @@ export default {
   }
   .v-select .v-icon {
     color: var(--v-titlePrimary-base) !important;
+  }
+
+  .v-select__selection {
+    max-width: 100%;
+    text-overflow: unset !important;
   }
 }
 </style>
