@@ -43,7 +43,7 @@ class BitBox02Wallet {
         this.attestation = attestationResult;
       },
       () => {
-        store.dispatch('main/clearWallet');
+        store.dispatch('wallet/removeWallet');
       },
       status => {
         this.status = status;
@@ -68,7 +68,7 @@ class BitBox02Wallet {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.main.network)
+        common: commonGenerator(store.state.wallet.network)
       });
       const networkId = tx.getChainId();
       const signingData = {

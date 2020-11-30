@@ -1,11 +1,4 @@
-const Toast = {
-  responseHandler: (err, type) => {
-    // eslint-disable-next-line
-console.log(err, type);
-  },
-  ERROR: 'error',
-  WARN: 'warn'
-};
+import { Toast, WARNING, ERROR, SENTRY } from '@/components/toast';
 import Vue from 'vue';
 
 const ERRORS = {
@@ -28,11 +21,11 @@ const ERRORS = {
   'TrezorConnect not yet initialized': 'trezor.trezor-connect-not-initialized'
 };
 
-const WARNING = {};
+const WARNINGS = {};
 
 export default err => {
   const errorValues = Object.keys(ERRORS);
-  const warningValues = Object.keys(WARNING);
+  const warningValues = Object.keys(WARNINGS);
   const foundError = errorValues.find(item => {
     return err.message.includes(item) || item.includes(err);
   });
@@ -42,10 +35,10 @@ export default err => {
   });
 
   if (foundError) {
-    Toast.responseHandler(Vue.$i18n.t(ERRORS[foundError]), Toast.ERROR);
+    Toast(Vue.$i18n.t(ERRORS[foundError]), {}, ERROR);
   } else if (foundWarning) {
-    Toast.responseHandler(Vue.$i18n.t(WARNING[foundWarning]), Toast.WARN);
+    Toast(Vue.$i18n.t(WARNINGS[foundWarning]), {}, WARNING);
   } else {
-    Toast.responseHandler(err, false);
+    Toast(err, {}, SENTRY);
   }
 };

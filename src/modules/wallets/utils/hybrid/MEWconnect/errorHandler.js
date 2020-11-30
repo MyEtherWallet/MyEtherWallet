@@ -1,22 +1,15 @@
-const Toast = {
-  responseHandler: (err, type) => {
-    // eslint-disable-next-line
-console.log(err, type);
-  },
-  ERROR: 'error',
-  WARN: 'warn'
-};
+import { Toast, WARNING, ERROR, SENTRY } from '@/components/toast';
 const ERRORS = {};
-const WARNING = {};
+const WARNINGS = {};
 
 export default err => {
   const errorValues = Object.keys(ERRORS);
-  const warningValues = Object.keys(WARNING);
+  const warningValues = Object.keys(WARNINGS);
   if (errorValues.includes(err.message)) {
-    Toast.responseHandler(ERRORS[err.message], Toast.ERROR);
+    Toast(ERRORS[err.message], {}, ERROR);
   } else if (warningValues.includes(err.message)) {
-    Toast.responseHandler(WARNING[err.message], Toast.WARN);
+    Toast(WARNINGS[err.message], {}, WARNING);
   } else {
-    Toast.responseHandler(err, false);
+    Toast(err, {}, SENTRY);
   }
 };

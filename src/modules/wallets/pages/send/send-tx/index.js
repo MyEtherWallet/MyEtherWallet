@@ -1,13 +1,14 @@
 import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
-import { getGasBasedOnType } from './helpers/gasMultipler';
+import { getGasBasedOnType } from '@/helpers/gasPriceHelper.js';
 import sanitizeHex from '@/helpers/sanitizeHex';
 import validateHexString from '@/helpers/validateHexString';
 import { Transaction } from 'ethereumjs-tx';
 import Vue from 'vue';
+
 export default class SendTransaction {
-  constructor(account, web3, gasPrice, network) {
-    this.account = account;
+  constructor(balance, web3, gasPrice, network) {
+    this.balance = balance;
     this.web3 = web3;
     this.gasPrice = gasPrice;
     this.network = network;
@@ -23,36 +24,28 @@ export default class SendTransaction {
   }
   // returns if gas limit is valid
   isValidGasLimit(gasLimit) {
-    return new BigNumber(gasLimit).gte(0) ? gasLimit : '21000';
+    return BigNumber(gasLimit).gte(0) ? gasLimit : '21000';
   }
   // get fixed gas
   getFixedGas(val) {
-    return new BigNumber(val).toFixed(2);
+    return BigNumber(val).toFixed(2);
   }
-  // account balance in ether
+  // balance balance in ether
   getBalETH() {
-    return new BigNumber(
-      utils.fromWei(this.account.balance, 'ether')
-    ).toFixed();
+    return BigNumber(utils.fromWei(this.balance)).toFixed();
   }
   // get the address' entire balance
   getEntireBal(currency, balance, gasLimit) {
+    const finalGas = this.finalGasPrice();
     if (this.isToken(currency)) {
       return currency.balance;
     }
-    const gasPrice = new BigNumber(this.finalGasPrice()).toString();
-    return balance > 0
-      ? new BigNumber(balance)
-          .minus(
-            utils.fromWei(
-              new BigNumber(utils.toWei(gasPrice, 'gwei'))
-                .times(gasLimit)
-                .toString(),
-              'ether'
-            )
-          )
-          .toFixed()
-      : 0;
+
+    const gasPrice = BigNumber(finalGas).toFixed(0);
+    const fee = BigNumber(gasPrice).times(gasLimit);
+    console.log(fee.toString());
+    const parsedFee = utils.fromWei(fee.toString());
+    return balance > 0 ? BigNumber(balance).minus(parsedFee).toFixed() : 0;
   }
   // get final gas price
   finalGasPrice() {
@@ -64,13 +57,13 @@ export default class SendTransaction {
   }
   // tx fee
   txFee(gasLimit) {
-    return new BigNumber(utils.toWei(this.finalGasPrice(), 'gwei'))
+    return BigNumber(this.finalGasPrice())
       .times(gasLimit || 0)
-      .toFixed();
+      .toFixed(0);
   }
   // tx fee in ether
   txFeeETH(gasLimit) {
-    if (new BigNumber(this.txFee(gasLimit)).gt(0)) {
+    if (BigNumber(this.txFee(gasLimit)).gt(0)) {
       const txFee = this.txFee(gasLimit);
       return utils.fromWei(txFee, 'ether');
     }
@@ -78,30 +71,30 @@ export default class SendTransaction {
   }
   // tx fee in usd
   txFeeUSD(gasLimit, ethPrice) {
-    return new BigNumber(
-      new BigNumber(this.txFeeETH(gasLimit)).times(new BigNumber(ethPrice))
+    return BigNumber(
+      BigNumber(this.txFeeETH(gasLimit)).times(BigNumber(ethPrice))
     )
       .toFixed(2)
       .toString();
   }
+
+  parsedAmount(amount) {
+    return utils.toWei(BigNumber(amount).toString(), 'ether').toString(16);
+  }
+
   // estimate gas from coinbase
-  async estimateGas(value, address, gasPrice, data) {
-    const coinbase = await this.web3.eth.getCoinbase();
-    const params = {
-      from: coinbase,
-      value: value,
-      to: address,
-      gasPrice: sanitizeHex(utils.toWei(gasPrice, 'gwei').toString(16)),
-      data: data
-    };
-    await this.web3.eth
-      .estimateGas(params)
-      .then(gasLimit => {
-        return gasLimit;
-      })
-      .catch(() => {
-        return -1;
-      });
+  estimateGas(value, address, gasPrice, data) {
+    const actualAmount = data !== '0x' ? 0 : value;
+    return this.web3.eth.getCoinbase().then(res => {
+      const params = {
+        from: res,
+        value: this.parsedAmount(actualAmount),
+        to: address,
+        gasPrice: sanitizeHex(BigNumber(gasPrice).toString()),
+        data: data
+      };
+      return this.web3.eth.estimateGas(params);
+    });
   }
   // check if it is a token
   isToken(currency) {
@@ -110,7 +103,7 @@ export default class SendTransaction {
   }
   // check if its a valid amount
   checkAmount(amount, currency) {
-    if (new BigNumber(amount).lt(0)) {
+    if (BigNumber(amount).lt(0)) {
       return {
         // TODO: figure out translations to pass tests
         msg: Vue.$i18n ? Vue.$i18n.t('errorsGlobal.invalid-value') : '',
@@ -119,8 +112,8 @@ export default class SendTransaction {
     }
     // if the currency type is a token
     if (this.isToken(currency)) {
-      const hasAmountToken = new BigNumber(amount).lte(currency.balance);
-      const hasGas = new BigNumber(this.txFeeEth).lte(this.getBalETH());
+      const hasAmountToken = BigNumber(amount).lte(currency.balance);
+      const hasGas = BigNumber(this.txFeeEth).lte(this.getBalETH());
       const hasBalance =
         hasAmountToken && hasGas && this.hasValidDecimals(amount, currency);
       return {
@@ -161,7 +154,7 @@ export default class SendTransaction {
   }
   hasAmount(amount) {
     // right now amount is always returning in ETH
-    return new BigNumber(amount).plus(this.txFeeEth).lte(this.getBalETH());
+    return BigNumber(amount).plus(this.txFeeEth).lte(this.getBalETH());
   }
   // returns whether it has valid decimals
   hasValidDecimals(amount, currency) {
@@ -188,16 +181,18 @@ export default class SendTransaction {
         type: 'function'
       }
     ];
-    const contract = this.web3.eth.Contract(jsonInterface);
-    return contract.methods.transfer(
-      hash.toLowerCase(),
-      new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toFixed()
-    );
+    const contract = new this.web3.eth.Contract(jsonInterface);
+    const power = BigNumber(10).pow(decimals);
+    const tokenAmount = BigNumber(amount).times(power);
+    return contract.methods
+      .transfer(hash.toLowerCase(), tokenAmount.toFixed())
+      .encodeABI();
   }
   // transaction data
-  getTxData(amount, decimals, address, currency, data) {
-    if (this.isToken(currency)) {
-      return this.getTokenTransferABI(amount, decimals, address);
+  getTxData(amount, decimals, address, currency) {
+    let data = '0x';
+    if (this.isToken(currency) && address !== '' && decimals) {
+      data = this.getTokenTransferABI(amount, decimals, address);
     }
     return sanitizeHex(data);
   }
@@ -215,45 +210,27 @@ export default class SendTransaction {
       ? currency.address.toLowerCase()
       : hash.toLowerCase().trim();
   }
-  // get eth price
-  async getEthPrice() {
-    const price = await fetch('https://cryptorates.mewapi.io/ticker?filter=ETH')
-      .then(response => {
-        const json = response.json();
-        return json;
-      })
-      .catch(() => {
-        return 0;
-      });
-    return typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
-  }
   // submit transaction
-  async submitTransaction(gasLimit, address, amount, data) {
+  async submitTransaction(gasLimit, address, amount, data, contractAddress) {
     try {
       const coinbase = await this.web3.eth.getCoinbase();
       const nonce = await this.web3.eth.getTransactionCount(coinbase);
+      const toAddress = data === '0x' ? address : contractAddress;
+      const actualAmount = data === '0x' ? amount : 0;
       const raw = {
-        nonce: sanitizeHex(new BigNumber(nonce).toString(16)),
-        actualGasPrice: sanitizeHex(
-          utils.toWei(this.finalGasPrice, 'gwei').toString(16)
+        nonce: sanitizeHex(BigNumber(nonce).toString(16)),
+        gasLimit: sanitizeHex(BigNumber(gasLimit).toString(16)),
+        to: toAddress,
+        value: sanitizeHex(
+          BigNumber(this.parsedAmount(actualAmount)).toString(16)
         ),
-        gasLimit: sanitizeHex(new BigNumber(gasLimit).toString(16)),
-        to: address,
-        value: amount,
         data: data
       };
       const _tx = new Transaction(raw);
       const json = _tx.toJSON(true);
       json.from = coinbase;
-      this.web3.eth
-        .sendTransaction(json)
-        .then(response => {
-          return response;
-        })
-        .catch(error => {
-          return error;
-        });
-      this.clear();
+      // this.clear();
+      return this.web3.eth.sendTransaction(json);
     } catch (error) {
       return error;
     }

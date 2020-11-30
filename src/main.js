@@ -27,12 +27,10 @@ import { getMainDefinition } from 'apollo-utilities';
 import VueApollo from 'vue-apollo';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { onError } from 'apollo-link-error';
-import ApolloConfig from '../configs';
+import { EventBus } from '@/plugins/eventBus';
 
 import whiteSheet from '@/components/white-sheet/WhiteSheet.vue';
-Vue.component('mew6-white-sheet', whiteSheet);
-
-Vue.prototype.$eventHub = new Vue();
+Vue.component('Mew6WhiteSheet', whiteSheet);
 
 //Router
 Vue.use(Router);
@@ -58,11 +56,11 @@ Vue.$i18n = i18n;
 
 // Apollo (Graphql)
 const httpLink = new HttpLink({
-  uri: ApolloConfig.APOLLO_HTTP
+  uri: 'https://api.ethvm.com'
 });
 
 const subscriptionClient = new SubscriptionClient(
-  ApolloConfig.APOLLO_WS,
+  'wss://apiws.ethvm.com',
   { lazy: true, reconnect: true },
   null,
   []
@@ -75,7 +73,8 @@ const onErrorLink = onError(({ graphQLErrors }) => {
   if (graphQLErrors && process.env.NODE_ENV !== 'production') {
     graphQLErrors.map(({ message, locations, path }) => {
       const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`;
-      console.log(newError);
+      // eslint-disable-next-line
+      console.error(newError);
     });
   }
 
@@ -117,7 +116,7 @@ const apolloProvider = new VueApollo({
 Vue.use(VueApollo);
 
 /* eslint-disable no-new */
-const vue = new Vue({
+new Vue({
   el: '#app',
   i18n,
   router,
@@ -142,24 +141,32 @@ Sentry.init({
   release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event) {
     const network =
-      !store && !store.state && !store.state.network
-        ? store.state.network.type.name
+      !store &&
+      !store.state &&
+      !store.state.wallet &&
+      !store.state.wallet.network
+        ? store.state.wallet.network.type.name
         : '';
     const service =
-      !store && !store.state && !store.state.network
-        ? store.state.network.service
+      !store &&
+      !store.state &&
+      !store.state.wallet &&
+      !store.state.wallet.network
+        ? store.state.wallet.network.service
         : '';
     const identifier =
-      !store && !store.state && !store.state.account
-        ? store.state.account.identifier
+      !store && !store.state && !store.state.wallet
+        ? store.state.wallet.identifier
         : '';
     event.tags = {
       network: network,
       service: service,
       walletType: identifier
     };
+    // eslint-disable-next-line
+    console.log(event)
     return new Promise(resolve => {
-      vue.$eventHub.$emit('issueModal', event, resolve);
+      EventBus.$emit('issueModal', event, resolve);
     }).then(res => {
       return res === true ? event : null;
     });

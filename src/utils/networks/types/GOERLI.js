@@ -19,5 +19,10 @@ export default {
     supportedTld: GOERLI
   },
   icon: goerli,
-  currencyName: 'GöETH'
+  currencyName: 'GöETH',
+  isEthVMSupported: {
+    supported: false,
+    url: null,
+    websocket: null
+  }
 };

@@ -19,5 +19,10 @@ export default {
     supportedTld: ETH
   },
   icon: eth,
-  currencyName: 'ETH'
+  currencyName: 'ETH',
+  isEthVMSupported: {
+    supported: true,
+    url: 'http://api.ethvm.com/',
+    websocket: null
+  }
 };

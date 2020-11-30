@@ -1,7 +1,7 @@
 import Web3WSProvider from './ws-web3-provider';
 import { Manager as Web3RequestManager } from 'web3-core-requestmanager';
 import MiddleWare from '../middleware';
-import workerTimer from '@/helpers/webWorkerTimer';
+import workerTimer from '@/helpers/webWorkerTimer.js';
 import {
   ethSendTransaction,
   ethSignTransaction,

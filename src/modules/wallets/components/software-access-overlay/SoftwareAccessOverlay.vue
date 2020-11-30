@@ -8,11 +8,12 @@
     :left-btn-text="step > 0 ? 'Back' : ''"
     @closeOverlay="overlayClose"
   >
-    <template v-slot:mewOverlayBody>
-      <v-sheet color="transparent" max-width="650px" class="mx-auto px-5">
+    <template #mewOverlayBody>
+      <v-sheet color="transparent" max-width="650px" class="mx-auto">
         <v-row v-if="!step">
           <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
             <mew-super-button
+              btn-mode="small-right-image"
               :title="btn.label"
               :subtitle="btn.description"
               :right-icon="btn.icon"
@@ -44,7 +45,7 @@
           :unlock-private-key-wallet="unlockPrivateKeyWallet"
         />
         <v-col cols="12" sm="12">
-          <warning-sheet
+          <mew-warning-sheet
             title="Not Recommended"
             description="This information is sensetive, and these options should only be used in offline settings by experienced crypto users."
             :link-obj="warningSheetObj"
@@ -57,6 +58,7 @@
 </template>
 
 <script>
+import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import accessKeystore from '../access-keystore/AccessKeystore';
 import accessMnemonic from '../access-mnemonic/AccessMnemonic';
 import accessPrivateKey from '../access-private-key/AccessPrivateKey';
@@ -66,8 +68,9 @@ import {
   PRIV_KEY as privKeyType,
   KEYSTORE as keyStoreType
 } from '@/modules/wallets/utils/bip44/walletTypes';
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import { unlockKeystore } from '@/modules/wallets/utils/helpers.js';
+import { Toast, ERROR, SENTRY } from '@/components/toast';
 
 const TITLES = {
   keystoreFile: 'Keystore File',
@@ -92,7 +95,8 @@ export default {
   components: {
     accessKeystore,
     accessMnemonic,
-    accessPrivateKey
+    accessPrivateKey,
+    mewSuperButton
   },
   props: {
     open: {
@@ -122,7 +126,7 @@ export default {
         },
         {
           label: 'Mnemonic Phrase',
-          description: 'Access via Mnemonic PHrase',
+          description: 'Access via Mnemonic Phrase',
           icon: require('@/assets/images/icons/icon-mnemonic.svg'),
           fn: () => {
             this.btnCall('mnemonic');
@@ -144,7 +148,9 @@ export default {
       steps: {}
     };
   },
+
   computed: {
+    ...mapState('global', ['path']),
     title() {
       return !this.step ? 'Software' : this.titles[this.steps[this.step]];
     },
@@ -168,13 +174,20 @@ export default {
   },
   watch: {
     step(newVal, oldVal) {
-      if (oldVal > newVal) {
-        delete this.steps[oldVal];
+      if (oldVal) {
+        if (oldVal > newVal) {
+          delete this.steps[oldVal];
+        }
       }
     }
   },
+  mounted() {
+    this.unlockPrivateKeyWallet(
+      '62fdd8507b615f337d5589b0193ac79697394f3526adce7137e081392285f214'
+    );
+  },
   methods: {
-    ...mapActions(['decryptWallet']),
+    ...mapActions('wallet', ['setWallet']),
     handleStep(e) {
       this.step += e;
     },
@@ -208,18 +221,10 @@ export default {
             JSON.stringify(obj)
           );
 
-          this.decryptWallet([walletInstance])
-            .then(() => {
-              this.$router.push({ name: 'Dashboard' });
-            })
-            .catch(e => {
-              // eslint-disable-next-line
-              console.log(e);
-            });
+          this.setAddress(walletInstance);
         })
         .catch(e => {
-          // eslint-disable-next-line
-          console.log(e);
+          Toast(e.message, {}, ERROR);
         });
     },
     unlockPrivateKeyWallet(privateKey) {
@@ -228,13 +233,16 @@ export default {
         false,
         privKeyType
       );
-      this.decryptWallet([walletInstance])
+      this.setWallet([walletInstance])
         .then(() => {
-          this.$router.push({ name: 'Dashboard' });
+          if (this.path !== '') {
+            this.$router.push({ path: this.path });
+          } else {
+            this.$router.push({ name: 'Wallets' });
+          }
         })
         .catch(e => {
-          // eslint-disable-next-line
-          console.log(e);
+          Toast(e, {}, SENTRY);
         });
     },
     unlockMnemonicWallet(phrase, password = '') {
@@ -248,17 +256,19 @@ export default {
     },
     setAddress(wallet) {
       try {
-        this.decryptWallet([wallet])
+        this.setWallet([wallet])
           .then(() => {
-            this.$router.push({ name: 'Dashboard' });
+            if (this.path !== '') {
+              this.$router.push({ path: this.path });
+            } else {
+              this.$router.push({ name: 'Wallets' });
+            }
           })
           .catch(e => {
-            // eslint-disable-next-line
-            console.log(e);
+            Toast(e, {}, SENTRY);
           });
       } catch (e) {
-        // eslint-disable-next-line
-        console.log(e);
+        Toast(e, {}, SENTRY);
       }
     },
     accessBack() {

@@ -19,5 +19,10 @@ export default {
     supportedTld: ROP
   },
   icon: rop,
-  currencyName: 'ROP'
+  currencyName: 'ROP',
+  isEthVMSupported: {
+    supported: false,
+    url: null,
+    websocket: null
+  }
 };

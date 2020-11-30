@@ -29,7 +29,7 @@
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
-        <template v-slot:tabContent1>
+        <template #tabContent1>
           <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
             <div class="mb-5">
               <div class="mb-3">
@@ -186,7 +186,7 @@
             </div>
           </v-sheet>
         </template>
-        <template v-slot:tabContent2>
+        <template #tabContent2>
           <div class="pa-12">
             <div class="d-flex align-center justify-space-between mb-7">
               <h4 class="font-weight-bold">
@@ -200,14 +200,18 @@
             </div>
             <div>
               <mew-expand-panel :panel-items="myDomains">
-                <template v-slot:panelBody1>
+                <template #panelBody1>
                   <div>
                     <div class="header-block bg_datablock">
                       <v-row>
                         <v-col cols="6">
                           <div class="d-flex align-center">
                             <div>Registrant</div>
-                            <mew-blockie width="25px" height="25px" class="mx-3" />
+                            <mew-blockie
+                              width="25px"
+                              height="25px"
+                              class="mx-3"
+                            />
                             <div class="monospace text-overflow--ellipsis">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>
@@ -216,7 +220,11 @@
                         <v-col cols="6">
                           <div class="d-flex align-center">
                             <div>Controller</div>
-                            <mew-blockie width="25px" height="25px" class="mx-3" />
+                            <mew-blockie
+                              width="25px"
+                              height="25px"
+                              class="mx-3"
+                            />
                             <div class="monospace text-overflow--ellipsis">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>
@@ -254,14 +262,18 @@
                     </div>
                   </div>
                 </template>
-                <template v-slot:panelBody2>
+                <template #panelBody2>
                   <div>
                     <div class="header-block bg_datablock">
                       <v-row>
                         <v-col cols="6">
                           <div class="d-flex align-center">
                             <div>Registrant</div>
-                            <mew-blockie width="25px" height="25px" class="mx-3" />
+                            <mew-blockie
+                              width="25px"
+                              height="25px"
+                              class="mx-3"
+                            />
                             <div class="monospace text-overflow--ellipsis">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>
@@ -270,7 +282,11 @@
                         <v-col cols="6">
                           <div class="d-flex align-center">
                             <div>Controller</div>
-                            <mew-blockie width="25px" height="25px" class="mx-3" />
+                            <mew-blockie
+                              width="25px"
+                              height="25px"
+                              class="mx-3"
+                            />
                             <div class="monospace text-overflow--ellipsis">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>

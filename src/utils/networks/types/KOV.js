@@ -12,5 +12,10 @@ export default {
   tokens: tokens,
   contracts: contracts,
   icon: kov,
-  currencyName: 'KOV'
+  currencyName: 'KOV',
+  isEthVMSupported: {
+    supported: false,
+    url: null,
+    websocket: null
+  }
 };

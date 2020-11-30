@@ -5,11 +5,11 @@
     :has-elevation="true"
     :has-indicator="true"
   >
-    <template v-slot:moduleBody>
+    <template #moduleBody>
       <div class="full-width px-15 pt-3">
         <div class="d-flex justify-end mr-3 entire-bal">
           <mew-button
-            :title="$t('sendTx.entire-bal')"
+            :title="$t('sendTx.button-entire')"
             btn-style="transparent"
             @click.native="setEntireBal"
           />
@@ -19,7 +19,7 @@
             <v-col cols="6">
               <mew-select
                 ref="mewSelect"
-                :items="ownersTokens"
+                :items="tokens"
                 :label="$t('sendTx.type')"
                 class="mr-3"
                 @input="setCurrency"
@@ -28,10 +28,10 @@
             <v-col cols="6">
               <mew-input
                 ref="mewInput"
+                :value="amount"
                 :label="$t('sendTx.amount')"
                 placeholder=" "
-                :right-label="balanceETH"
-                :value="amount"
+                :right-label="currencyBalance"
                 @input="setAmount"
               />
             </v-col>
@@ -40,7 +40,7 @@
             <v-col cols="12">
               <mew-address-select
                 ref="addressSelect"
-                :value="address"
+                :value="toAddress"
                 :copy-tooltip="$t('common.copy')"
                 :save-tooltip="$t('common.save')"
                 :enable-save-address="true"
@@ -64,39 +64,38 @@
           :panel-items="expandPanel"
           class="px-15"
         >
-          <template v-slot:panelBody1>
-            <div>
-              <mew-input
-                :label="$t('common.gas.price')"
-                placeholder=" "
-                :value="displayedGasPrice()"
-                @input="setGasPrice"
-              />
-              <mew-input
-                :label="$t('common.gas.limit')"
-                placeholder=" "
-                :value="customGasLimit"
-                @input="setGasLimit"
-              />
-            </div>
-
+          <template #panelBody1>
             <div class="d-flex justify-space-between px-5 border-bottom pb-5">
               <div class="mew-body font-weight-medium d-flex align-center">
                 {{ $t('sendTx.tx-fee') }}
                 <mew-tooltip class="ml-1" text="" />
               </div>
-              <div v-show="network.type.name === networkTypes[0]">
+              <div v-show="isEth">
                 <i18n path="sendTx.cost-eth-usd" tag="div">
                   <span slot="eth">{{ txFeeETH() }}</span>
                   <span slot="usd">{{ txFeeUSD() }}</span>
                 </i18n>
               </div>
             </div>
-            <!-- question: what kind of data do people usually send ? -->
+            <div>
+              <!-- <mew-input
+                :label="$t('common.gas.price')"
+                placeholder=" "
+                :value="displayedGasPrice()"
+                @input="setGasPrice"
+              /> -->
+              <mew-input
+                :value="customGasLimit"
+                :label="$t('common.gas.limit')"
+                placeholder=""
+                @input="setCustomGasLimit"
+              />
+            </div>
+
             <mew-input
+              v-model="data"
               :label="$t('sendTx.add-data')"
               placeholder=" "
-              :value="data"
               class="mt-10 mb-n5"
             />
           </template>
@@ -133,9 +132,14 @@
 </template>
 
 <script>
-import SendTransaction from './index';
 import utils from 'web3-utils';
-import web3Instance from './web3-delete';
+import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
+
+import SendTransaction from './index';
+import { ETH } from '@/utils/networks/types';
+import { Toast, ERROR, SENTRY, SUCCESS } from '@/components/toast';
+import getService from '@/helpers/getService';
 
 export default {
   props: {
@@ -172,13 +176,6 @@ export default {
   },
   data() {
     return {
-      // will remove this once we get state
-      web3: web3Instance,
-      gasPrice: '90',
-      account: {
-        balance: '20000000000000000000000',
-        address: '0x43689531907482BEE7e650D18411E284A7337A66'
-      },
       addresses: [
         {
           address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
@@ -193,36 +190,36 @@ export default {
           resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
         }
       ],
-      network: {
-        type: {
-          name: 'ETH',
-          name_long: 'Ethereum',
-          currencyName: 'ETH'
-        }
-      },
-      online: true,
-      // end of removing
-      networkTypes: ['ETH'],
       toastType: '',
       toastMsg: '',
-      ethPrice: 0,
       customGasLimit: '',
-      address: '',
+      toAddress: '',
       sendTx: null,
       amount: '0',
-      balanceETH: '0',
-      selectedCurrency: '',
-      data: '',
+      selectedCurrency: {},
+      data: '0x',
       clearAll: false,
       expandPanel: [
         {
           name: this.$t('common.advanced'),
-          subtext: this.$t('sendTx.gas-data')
+          subtext: this.$t('sendTx.data-gas')
         }
       ]
     };
   },
   computed: {
+    ...mapState('wallet', [
+      'balance',
+      'network',
+      'gasPrice',
+      'web3',
+      'address',
+      'usd'
+    ]),
+    ...mapState('global', ['online']),
+    isEth() {
+      return this.network.type.name === ETH.name;
+    },
     multiwatch() {
       return (
         this.amount,
@@ -231,42 +228,142 @@ export default {
         this.selectedCurrency,
         new Date().getTime() / 1000
       );
+    },
+    currencyBalance() {
+      return this.selectedCurrency.symbol !== this.network.type.currencyName &&
+        this.selectedCurrency.balance
+        ? BigNumber(this.selectedCurrency.balance)
+            .div(BigNumber(10).pow(this.selectedCurrency.decimals))
+            .toString()
+        : this.balance;
+    },
+    tokens() {
+      const eth = {
+        name: this.network.type.name,
+        symbol: this.network.type.name,
+        subtext: this.network.type.name_long,
+        value: this.network.type.name_long,
+        balance: this.balance,
+        img: this.network.type.icon,
+        market_cap: null,
+        price_change_24h: null
+      };
+
+      const copiedTokens = this.ownersTokens.slice();
+      copiedTokens.unshift(eth);
+      return copiedTokens;
     }
   },
   watch: {
     multiwatch: utils._.debounce(function () {
-      if (this.validInputs) this.customGasLimit = this.sendTx.estimateGas();
+      if (this.validInputs) {
+        this.sendTx
+          .estimateGas(this.amount, this.toAddress, this.gasPrice, this.data)
+          .then(res => {
+            this.customGasLimit = res;
+          })
+          .catch(e => {
+            Toast(e, {}, ERROR);
+          });
+      }
     }, 500),
-    network(newVal) {
-      if (this.online && newVal.type.name === 'ETH') this.getEthPrice();
+    network() {
+      this.setSendTransaction();
     },
     isPrefilled() {
       this.prefillForm();
+    },
+    ownersTokens: {
+      handler: function (newVal) {
+        this.selectedCurrency = newVal.length > 0 ? newVal[0] : {};
+      },
+      deep: true
+    },
+    amount() {
+      this.generateData();
+    },
+    toAddress() {
+      this.generateData();
+    },
+    gasPrice() {
+      this.setSendTransaction();
+    },
+    address() {
+      this.setSendTransaction();
+    },
+    selectedCurrency() {
+      this.generateData();
     }
   },
   mounted() {
-    this.sendTx = new SendTransaction(
-      this.account,
-      this.web3,
-      this.gasPrice,
-      this.network
-    );
-    this.balanceETH = this.sendTx.getBalETH();
+    this.setSendTransaction();
     this.customGasLimit = this.gasLimit;
-    this.online && this.network.type.name === 'ETH' ? this.getEthPrice() : null;
   },
   methods: {
+    setSendTransaction() {
+      this.sendTx = new SendTransaction(
+        this.address,
+        this.web3,
+        this.gasPrice,
+        this.network
+      );
+    },
+    generateData() {
+      try {
+        if (this.toAddress !== '') {
+          const decimals = this.selectedCurrency.decimals
+            ? this.selectedCurrency.decimals
+            : null;
+          const estimateGasAddress = this.selectedCurrency.decimals
+            ? this.selectedCurrency.contract
+            : this.toAddress;
+          this.data = this.sendTx.getTxData(
+            this.amount,
+            decimals,
+            this.toAddress,
+            this.selectedCurrency
+          );
+          this.sendTx
+            .estimateGas(
+              this.amount,
+              estimateGasAddress,
+              this.gasPrice,
+              this.data
+            )
+            .then(res => {
+              this.customGasLimit = BigNumber(res).toString();
+            })
+            .catch(e => {
+              Toast(e, {}, ERROR);
+            });
+        }
+      } catch (e) {
+        Toast(e, {}, SENTRY);
+      }
+    },
     send() {
       window.scrollTo(0, 0);
-      this.sendTx
-        .submitTransaction(
-          this.customGasLimit,
-          this.address,
-          this.amount,
-          this.data
-        )
+      const send = this.sendTx.submitTransaction(
+        this.customGasLimit,
+        this.toAddress,
+        this.amount,
+        this.data,
+        this.selectedCurrency.contract
+      );
+      send
         .then(response => {
-          console.log('response', response);
+          Toast(
+            'Cheers! Your transaction was mined. Check it in ',
+            {
+              title: `${getService(this.network.type.blockExplorerTX)}`,
+              url: this.network.type.blockExplorerTX.replace(
+                '[[txHash]]',
+                response.blockHash
+              )
+            },
+            SUCCESS,
+            5000
+          );
         })
         .catch(error => {
           this.error = error;
@@ -283,8 +380,8 @@ export default {
           ? this.prefilledData
           : '';
         this.amount = this.prefilledAmount;
-        this.address = this.prefilledAddress;
-        this.gasLimit = this.customGasLimit;
+        this.toAddress = this.prefilledAddress;
+        this.customGasLimit = this.gasLimit;
         this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
         this.$refs.expandPanel.setToggle(true);
         this.toastType = 'warning';
@@ -295,10 +392,9 @@ export default {
     },
     clear() {
       this.data = '';
-      this.address = '';
+      this.toAddress = '';
       this.amount = '0';
-      this.address = '';
-      this.gasLimit = '21000';
+      this.toAddress = '';
       this.gasPrice = '90';
       this.isValidAddress = false;
       this.$refs.expandPanel.setToggle(false);
@@ -309,11 +405,6 @@ export default {
         name: this.network.type.name_long,
         symbol: this.network.type.currencyName
       };
-    },
-    getEthPrice() {
-      this.sendTx.getEthPrice().then(response => {
-        this.ethPrice = response;
-      });
     },
     displayedGasPrice() {
       const gasPrice = this.gasPrice.toString();
@@ -341,33 +432,42 @@ export default {
       );
     },
     txFeeETH() {
+      // little hack to make this computed react to other changes
+      this.data;
+      this.selectedCurrency;
+      this.toAddress;
+      this.amount;
       return this.sendTx ? this.sendTx.txFeeETH(this.customGasLimit) : '0';
     },
     txFeeUSD() {
-      if (this.ethPrice && this.sendTx) {
-        return this.sendTx.txFeeUSD(this.customGasLimit, this.ethPrice);
+      if (this.usd.current_price && this.sendTx) {
+        return this.sendTx.txFeeUSD(
+          this.customGasLimit,
+          this.usd.current_price
+        );
       }
       return '--';
     },
     isValidAddress() {
-      return this.sendTx ? this.sendTx.isValidAddress(this.address) : false;
+      return this.sendTx ? this.sendTx.isValidAddress(this.toAddress) : false;
     },
     setAddress(value) {
-      this.address = value;
+      this.toAddress = value;
     },
     setEntireBal() {
       this.amount = this.sendTx.getEntireBal(
         this.selectedCurrency,
-        this.balanceETH
+        this.balance,
+        this.customGasLimit
       );
     },
     setAmount(value) {
       this.amount = value;
     },
-    setGasPrice(value) {
-      this.gasPrice = value;
-    },
-    setGasLimit(value) {
+    // setGasPrice(value) {
+    //   this.gasPrice = value;
+    // },
+    setCustomGasLimit(value) {
       this.customGasLimit = value;
     },
     setCurrency(value) {

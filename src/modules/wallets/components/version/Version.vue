@@ -1,12 +1,14 @@
 <template>
-  <div class="searchText--text">V 6.0.0</div>
+  <div class="searchText--text">v{{ version }}</div>
 </template>
 
 <script>
 export default {
   components: {},
   data() {
-    return {};
+    return {
+      version: process.env.VERSION
+    };
   }
 };
 </script>
