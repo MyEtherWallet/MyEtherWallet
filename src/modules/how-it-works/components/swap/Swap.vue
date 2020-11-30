@@ -1,18 +1,24 @@
 <template>
-  <div class="component-container position--relative">
+  <div class="component-container position--relative pb-12 pb-lg-0">
     <img
       src="@/assets/images/backgrounds/bg-bubbles.png"
       class="block-background-pattern"
     />
     <v-container>
+      <div class="py-7" />
+      <v-sheet color="transparent" max-width="500px" class="mx-auto mb-10">
+        <div class="display-1 font-weight-bold text-sm-center white--text">
+          All-in-one gateway to your Ethereum Blockchain service
+        </div>
+      </v-sheet>
       <v-row class="align-center">
-        <v-col cols="6">
+        <v-col cols="12" lg="6">
           <v-img
-            class="my-8 block-image"
+            class="mb-8 block-image"
             src="@/assets/images/snippets/swap-page.png"
           />
         </v-col>
-        <v-col cols="6" class="text-content pl-12">
+        <v-col cols="12" lg="6" class="text-content pl-12">
           <block-title no-page-title :data="titleData" class="mb-12 pl-12" />
           <div class="mb-4 d-flex">
             <div class="mr-3">

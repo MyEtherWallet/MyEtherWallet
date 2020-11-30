@@ -48,7 +48,7 @@
           </div>
         </div>
         <div class="mt-12">
-          <address-select />
+          <mew-address-select />
           <div class="d-flex justify-space-between">
             <mew-select label="Type" place-holder=" " class="mr-3" />
             <mew-input label="Amount" placeholder=" " class="flex-grow-1" />
@@ -58,7 +58,7 @@
           <mew-button
             :has-full-width="false"
             title="Start Recurring"
-            button-size="xlarge"
+            btn-size="xlarge"
           />
         </div>
         <div class="d-flex justify-center mt-4">
@@ -66,7 +66,7 @@
             :has-full-width="false"
             btn-style="transparent"
             title="My Subscription (2)"
-            button-size="small"
+            btn-size="small"
           />
         </div>
       </v-sheet>

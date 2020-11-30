@@ -72,8 +72,8 @@ class BCVault {
   getAccount(address) {
     const path = null;
     const txSigner = async tx => {
-      const web3Utils = store.state.main.web3.utils;
-      if (store.state.main.network.type.chainID !== 1) {
+      const web3Utils = store.state.wallet.web3.utils;
+      if (store.state.wallet.network.type.chainID !== 1) {
         errorHandler({
           jsError: 'mew2'
         });
@@ -82,12 +82,12 @@ class BCVault {
       delete tx['from'];
       tx['from'] = address;
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.main.network)
+        common: commonGenerator(store.state.wallet.network)
       });
       const newTx = {};
       newTx['feeCount'] = web3Utils.hexToNumber(bufferToHex(tx['gasLimit']));
-      newTx['feePrice'] = new BigNumber(bufferToHex(tx['gasPrice'])).toString();
-      newTx['amount'] = new BigNumber(bufferToHex(tx['value'])).toString() || 0;
+      newTx['feePrice'] = BigNumber(bufferToHex(tx['gasPrice'])).toString();
+      newTx['amount'] = BigNumber(bufferToHex(tx['value'])).toString() || 0;
       if (bufferToHex(tx['data']) !== '0x') {
         newTx['contractData'] = bufferToHex(tx['data']);
       }

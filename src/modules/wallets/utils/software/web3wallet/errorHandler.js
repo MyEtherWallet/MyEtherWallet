@@ -1,11 +1,4 @@
-const Toast = {
-  responseHandler: (err, type) => {
-    // eslint-disable-next-line
-console.log(err, type);
-  },
-  ERROR: 'error',
-  WARN: 'warn'
-};
+import { Toast, WARNING, ERROR, SENTRY } from '@/components/toast';
 const ERRORS = {
   REJECT_TX:
     'Returned error: Error: MetaMask Tx Signature: User denied transaction signature.',
@@ -13,16 +6,16 @@ const ERRORS = {
   "Can't sign messages from a burner account!":
     "Can't sign messages from a burner account!"
 };
-const WARNING = {};
+const WARNINGS = {};
 
 export default err => {
   const errorValues = Object.values(ERRORS);
-  const warningValues = Object.values(WARNING);
+  const warningValues = Object.values(WARNINGS);
   if (errorValues.includes(err.message)) {
-    Toast.responseHandler(err, Toast.ERROR);
+    Toast(err.message, {}, ERROR);
   } else if (warningValues.includes(err.message)) {
-    Toast.responseHandler(err, Toast.WARN);
+    Toast(err.message, {}, WARNING);
   } else {
-    Toast.responseHandler(err, false);
+    Toast(err, {}, SENTRY);
   }
 };

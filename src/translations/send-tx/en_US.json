@@ -5,6 +5,7 @@
   "sender": "Sender",
   "receiver": "Receiver",
   "send-tx": "Send Transaction",
+  "send-tx-break": "Send {transaction}",
   "send-offline": "Send Offline",
   "to-addr": "To Address",
   "from-addr": "From Address",
@@ -14,7 +15,7 @@
   "tx-fee": "Transaction Fee",
   "tx-hash": "Transaction Hash",
   "max-tx-fee": "Max Transaction Fee",
-  "cost-eth-convert": "Cost {txFeeEth} ETH = ${convert}",
+  "cost-eth-usd": "Cost {txFeeEth} ETH = ${usd}",
   "add-data": "Add Data",
   "ph-add-data": "Add Data (e.g. 0x7834f874g298hf298h234f)",
   "nonce": "Nonce",
@@ -22,6 +23,7 @@
   "data-gas": "Data & Gas Limit",
   "dep-amount": "Deposit Amount",
   "button-entire": "Entire Balance",
+  "enter-addr": "Enter address",
   "transaction-receipt": "Transaction Receipt",
   "confirmation": {
     "title": "Confirmation",
@@ -35,20 +37,21 @@
     "tx": "Signed Transaction",
     "raw": "Raw",
     "button-copy-cont": "Copy and Continue",
-    "scan":"Scan QR code",
+    "scan": "Scan QR code",
     "or": "or",
     "download": "Download JSON"
   },
   "success": {
     "title": "Success",
     "sub-title": "Transaction sent!",
-    "button-check-status": "Check Status on Etherscan.io"
+    "button-check-status": "Check Status on Etherscan.io",
+    "button-check-explorer": "Check Status on {explorrerName}"
   },
+  "invalid-data": "Provided data is invalid or empty!",
   "via-contract": "Via Contract",
   "import-json": "Import JSON",
   "retrieved": "Retrieved",
   "at-block": "at block",
   "invalid-signature": "Invalid Signature",
-  "signed-chain-id": "Signed Chain ID",
-  "chain-no-match": "does not match chain id for selected network"
+  "signed-chain-id": "Signed Chain ID {network} does not match chain id for selected network"
 }

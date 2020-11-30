@@ -4,7 +4,7 @@
     :show-overlay="open"
     right-btn-text="Close"
   >
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <div>Collateralize DAI Overlay</div>
       <div>Manage My Vault</div>
       <div>Migrate</div>

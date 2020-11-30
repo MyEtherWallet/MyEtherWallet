@@ -60,11 +60,11 @@ export default {
       logoutOpen: false,
       logout: {
         btnLeft: {
-          name: 'Cancel',
+          title: 'Cancel',
           colorTheme: 'basic'
         },
         btnRight: {
-          name: 'Log out',
+          title: 'Log out',
           colorTheme: 'error'
         }
       },

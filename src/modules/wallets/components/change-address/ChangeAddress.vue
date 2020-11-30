@@ -4,9 +4,9 @@
     title="1. Connect with Ledger"
     right-btn-text="Close"
   >
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <mew-tabs :items="tabs" is-block>
-        <template v-slot:tabContent0>
+        <template #tabContent0>
           <mew6-white-sheet>
             <div class="pa-8">
               <div class="mt-2 mb-9 text-center">
@@ -26,16 +26,16 @@
               />
 
               <div class="text-center">
-                <mew-button title="Connect with Ledger" button-size="xlarge" />
+                <mew-button title="Connect with Ledger" btn-size="xlarge" />
               </div>
             </div>
           </mew6-white-sheet>
         </template>
-        <template v-slot:tabContent2>
+        <template #tabContent2>
           <v-sheet max-width="750px">
             <mew-expand-panel :panel-items="panelItems">
-              <template v-slot:panelBody1> </template>
-              <template v-slot:panelBody2>
+              <template #panelBody1> </template>
+              <template #panelBody2>
                 <mew-table
                   has-select
                   has-color
@@ -47,7 +47,7 @@
           </v-sheet>
           <div class="pa-8">
             <div class="text-center">
-              <mew-button title="Access My Wallet" button-size="xlarge" />
+              <mew-button title="Access My Wallet" btn-size="xlarge" />
             </div>
           </div>
         </template>

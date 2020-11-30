@@ -4,7 +4,7 @@ module.exports = {
     WITH_NETWORK: false,
     VERSION: 'test',
     NODE_ENV: 'test',
-    ROUTER_MODE: 'hash',
+    ROUTER_MODE: 'hash'
   },
   collectCoverageFrom: ['src/**/*.{js,vue}'],
   coveragePathIgnorePatterns: [

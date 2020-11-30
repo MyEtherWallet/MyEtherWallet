@@ -26,7 +26,7 @@ const logger = debugLogger('v5:kyber-swap');
 const errorLogger = debugLogger('v5-error:kyber');
 
 const toBigNumber = num => {
-  return new BigNumber(num);
+  return BigNumber(num);
 };
 
 export default class Kyber {
@@ -222,8 +222,8 @@ export default class Kyber {
   }
 
   calculateTrueRate(topRate) {
-    return new BigNumber(topRate)
-      .minus(new BigNumber(topRate).times(new BigNumber(FEE_RATE)))
+    return BigNumber(topRate)
+      .minus(BigNumber(topRate).times(BigNumber(FEE_RATE)))
       .toNumber();
   }
 
@@ -253,7 +253,7 @@ export default class Kyber {
       fromValueWei
     );
     logger(rates);
-    if (new BigNumber(rates['expectedRate']).eq(new BigNumber(0))) {
+    if (BigNumber(rates['expectedRate']).eq(BigNumber(0))) {
       return -1;
     }
     return rates['expectedRate'];
@@ -263,7 +263,7 @@ export default class Kyber {
     const fromWei = this.convertToTokenWei(fromToken, fromValue);
     logger(fromWei);
     const inWei = await this.getExpectedRate(fromToken, toToken, fromWei);
-    if (new BigNumber(inWei).gt(-1)) {
+    if (BigNumber(inWei).gt(-1)) {
       return this.convertToTokenBase(kyberBaseCurrency, inWei);
     }
     return -1;
@@ -372,11 +372,11 @@ export default class Kyber {
         .allowance(fromAddress, this.getKyberNetworkAddress())
         .call();
 
-      if (new BigNumber(currentAllowance).gt(new BigNumber(0))) {
+      if (BigNumber(currentAllowance).gt(BigNumber(0))) {
         if (
-          new BigNumber(currentAllowance)
-            .minus(new BigNumber(fromValueWei))
-            .lt(new BigNumber(0))
+          BigNumber(currentAllowance)
+            .minus(BigNumber(fromValueWei))
+            .lt(BigNumber(0))
         ) {
           return { approve: true, reset: true };
         }
@@ -389,12 +389,12 @@ export default class Kyber {
       fromCurrency === kyberBaseCurrency ||
       toCurrency === kyberBaseCurrency
     ) {
-      userCap = new BigNumber(
+      userCap = BigNumber(
         await this.callKyberContract('getUserCapInWei', fromAddress)
       )
         .times(0.95)
         .gt(
-          new BigNumber(
+          BigNumber(
             fromCurrency === kyberBaseCurrency ? fromValueWei : toValueWei
           )
         );
@@ -402,7 +402,7 @@ export default class Kyber {
 
     if (
       userCap &&
-      new BigNumber(
+      BigNumber(
         await this.callKyberContract(
           'getBalance',
           this.getTokenAddress(fromCurrency),
@@ -518,8 +518,8 @@ export default class Kyber {
     swapDetails.dataForInitialization = await this.generateDataForTransactions(
       swapDetails
     );
-    swapDetails.toValue = new BigNumber(finalRate).times(
-      new BigNumber(swapDetails.fromValue).toFixed(18).toString()
+    swapDetails.toValue = BigNumber(finalRate).times(
+      BigNumber(swapDetails.fromValue).toFixed(18).toString()
     );
 
     swapDetails.finalRate = this.calculateNormalizedExchangeRate(
@@ -527,8 +527,8 @@ export default class Kyber {
       swapDetails.fromValue
     );
     swapDetails.providerReceives = swapDetails.fromValue;
-    swapDetails.providerSends = new BigNumber(finalRate).times(
-      new BigNumber(swapDetails.fromValue)
+    swapDetails.providerSends = BigNumber(finalRate).times(
+      BigNumber(swapDetails.fromValue)
     );
     swapDetails.parsed = {
       sendToAddress: this.getKyberNetworkAddress(),
@@ -546,9 +546,9 @@ export default class Kyber {
 
   // Helpers
   MinRateWeiAdjustment(minRateWei) {
-    const minRateWeiBN = new BigNumber(minRateWei);
+    const minRateWeiBN = BigNumber(minRateWei);
     return minRateWeiBN
-      .minus(minRateWeiBN.times(new BigNumber(MIN_RATE_BUFFER)))
+      .minus(minRateWeiBN.times(BigNumber(MIN_RATE_BUFFER)))
       .toFixed(0)
       .toString();
   }
@@ -591,7 +591,7 @@ export default class Kyber {
 
   getTokenDecimals(token) {
     try {
-      return new BigNumber(this.currencies[token].decimals).toNumber();
+      return BigNumber(this.currencies[token].decimals).toNumber();
     } catch (e) {
       errorLogger(e);
       throw Error(
@@ -625,19 +625,19 @@ export default class Kyber {
   }
 
   calculateNormalizedExchangeRate(toValue, fromValue) {
-    return new BigNumber(toValue).div(fromValue).toString(10);
+    return BigNumber(toValue).div(fromValue).toString(10);
   }
 
   convertToTokenBase(token, value) {
     const decimals = this.getTokenDecimals(token);
-    const denominator = new BigNumber(10).pow(decimals);
-    return new BigNumber(value).div(denominator).toString(10);
+    const denominator = BigNumber(10).pow(decimals);
+    return BigNumber(value).div(denominator).toString(10);
   }
 
   convertToTokenWei(token, value) {
     const decimals = this.getTokenDecimals(token);
-    const denominator = new BigNumber(10).pow(decimals);
-    return new BigNumber(value)
+    const denominator = BigNumber(10).pow(decimals);
+    return BigNumber(value)
       .times(denominator)
       .integerValue(BigNumber.ROUND_DOWN)
       .toString(10);

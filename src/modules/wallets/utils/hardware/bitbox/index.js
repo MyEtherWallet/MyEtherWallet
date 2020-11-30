@@ -5,14 +5,7 @@ import DigitalBitboxEth from './digitalBitboxEth';
 import { BITBOX as bitboxType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
-const Toast = {
-  responseHandler: (err, type) => {
-    // eslint-disable-next-line
-console.log(err, type);
-  },
-  ERROR: 'error',
-  WARN: 'warn'
-};
+import { Toast, SENTRY } from '@/components/toast';
 import toBuffer from '@/helpers/toBuffer';
 import errorHandler from './errorHandler';
 import * as HDKey from 'hdkey';
@@ -49,7 +42,7 @@ class BitBoxWallet {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.main.network)
+        common: commonGenerator(store.state.wallet.network)
       });
       const networkId = tx.getChainId();
       const result = await this.bitbox.signTransaction(
@@ -61,7 +54,7 @@ class BitBoxWallet {
       tx.s = getBufferFromHex(sanitizeHex(result.s));
       const signedChainId = calculateChainIdFromV(tx.v);
       if (signedChainId !== networkId)
-        Toast.responseHandler(
+        Toast(
           new Error(
             Vue.$i18n.t('errorsGlobal.invalid-network-id-sig', {
               got: signedChainId,
@@ -69,7 +62,8 @@ class BitBoxWallet {
             }),
             'InvalidNetworkId'
           ),
-          false
+          {},
+          SENTRY
         );
       return getSignTransactionObject(tx);
     };

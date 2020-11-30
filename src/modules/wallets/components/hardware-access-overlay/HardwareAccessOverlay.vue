@@ -7,7 +7,7 @@
     :close="overlayClose"
     :left-btn-text="step > 0 ? 'Back' : ''"
   >
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <div v-if="!step">
         <div class="text-center">
           Select a hardware wallet to access. Make sure <br />
@@ -26,15 +26,14 @@
               <v-col v-for="button in buttons" :key="button.label" cols="6">
                 <div class="button-container">
                   <mew-super-button
+                    btn-mode="small-right-image"
                     :title="button.label"
                     :cols-num="6"
                     color-theme="basic"
+                    :right-icon="button.icon"
+                    :right-icon-height="45"
                     @click.native="nextStep(button.type)"
-                  >
-                    <template v-slot:contentSlot>
-                      <img :src="button.icon" />
-                    </template>
-                  </mew-super-button>
+                  />
                 </div>
               </v-col>
             </v-row>
@@ -81,7 +80,7 @@
               ]"
               @click="setBCvaultAddress(acc.userDataRaw + acc.address)"
             >
-              <blockie
+              <mew-blockie
                 :address="acc.userDataRaw + acc.address"
                 width="30px"
                 height="30px"
@@ -92,7 +91,7 @@
               title="Access Wallet"
               color-theme="primary"
               :has-full-width="false"
-              button-size="medium"
+              btn-size="medium"
               icon-align="left"
               btn-style="background"
               :disabled="selectedAddress === ''"
@@ -149,40 +148,38 @@
           </v-row>
         </v-container>
       </v-sheet>
+
       <v-sheet
         v-else-if="showSelectBitbox"
-        :outlined="true"
         color="transparent"
-        :rounded="true"
-        :max-width="740"
-        :min-width="575"
-        :min-height="340"
+        max-width="450px"
+        width="100%"
       >
-        <v-container>
-          <v-row align="center" justify="center">
-            <v-col cols="10">
-              <div class="button-container pt-2">
-                <mew-super-button
-                  title="Bitbox"
-                  :cols-num="6"
-                  color-theme="basic"
-                  right-icon="bitbox"
-                  @click.native="setSelectedBitbox(0)"
-                />
-              </div>
-              <div class="button-container pt-2 mb-4">
-                <mew-super-button
-                  title="Bitbox 2"
-                  :cols-num="6"
-                  color-theme="basic"
-                  right-icon="bitbox"
-                  @click.native="setSelectedBitbox(1)"
-                />
-              </div>
-            </v-col>
-          </v-row>
-        </v-container>
+        <mew-super-button
+          class="mb-4"
+          btn-mode="small-right-image"
+          title="Bitbox"
+          :cols-num="6"
+          color-theme="basic"
+          :right-icon-height="45"
+          :right-icon="
+            require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')
+          "
+          @click.native="setSelectedBitbox(0)"
+        />
+        <mew-super-button
+          btn-mode="small-right-image"
+          title="Bitbox 2"
+          :cols-num="6"
+          color-theme="basic"
+          :right-icon-height="45"
+          :right-icon="
+            require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')
+          "
+          @click.native="setSelectedBitbox(1)"
+        />
       </v-sheet>
+
       <v-sheet
         v-else-if="showNetworkAddresses"
         :outlined="true"
@@ -199,7 +196,7 @@
                 :interactive-content="true"
                 :panel-items="panelItems"
               >
-                <template v-slot:panelBody1>
+                <template #panelBody1>
                   <div class="network-container">
                     <v-radio-group v-model="selectedNetwork">
                       <div v-for="type in networkTypes" :key="type">
@@ -224,7 +221,7 @@
                     </v-radio-group>
                   </div>
                 </template>
-                <template v-slot:panelBody2>
+                <template #panelBody2>
                   <div>
                     <v-radio-group v-model="selectedAddress">
                       <table width="100%">
@@ -252,7 +249,7 @@
                                 </v-col>
                                 <v-col cols="8" class="text-truncate">
                                   <v-row justify="space-around">
-                                    <blockie
+                                    <mew-blockie
                                       width="25px"
                                       height="25px"
                                       :address="acc.address"
@@ -309,7 +306,7 @@
                           icon="mdi-chevron-left"
                           icon-type="mdi"
                           :has-full-width="false"
-                          button-size="small"
+                          btn-size="small"
                           icon-align="left"
                           btn-style="transparent"
                           :disabled="addressPage <= 1"
@@ -321,7 +318,7 @@
                           icon="mdi-chevron-right"
                           icon-type="mdi"
                           :has-full-width="false"
-                          button-size="small"
+                          btn-size="small"
                           icon-align="right"
                           btn-style="transparent"
                           @click.native="nextAddressSet"
@@ -334,7 +331,7 @@
               <div class="d-flex align-center flex-column">
                 <mew-button
                   title="Access My Wallet"
-                  button-size="large"
+                  btn-size="large"
                   :disabled="!(selectedAddress && acceptTerms)"
                   @click.native="
                     () => {
@@ -381,7 +378,7 @@
                     <div class="d-flex align-center flex-column">
                       <mew-button
                         title="Access My Wallet"
-                        button-size="xlarge"
+                        btn-size="xlarge"
                         :disabled="!(password !== '' && acceptTerms)"
                         @click.native="
                           () => {
@@ -422,7 +419,7 @@
             />
           </div>
           <mew-button
-            button-size="xlarge"
+            btn-size="xlarge"
             title="Unlock wallet"
             has-full-width
             @click.native="nextStep"
@@ -435,7 +432,8 @@
 
 <script>
 import qrcode from '@xkeshi/vue-qrcode';
-
+import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
+import { Toast, ERROR } from '@/components/toast';
 import bcvaultWallet from '@/modules/wallets/utils/hardware/bcvault';
 import bitboxWallet from '@/modules/wallets/utils/hardware/bitbox';
 import bitbox02Wallet from '@/modules/wallets/utils/hardware/bitbox02';
@@ -445,7 +443,6 @@ import ledgerWallet from '@/modules/wallets/utils/hardware/ledger';
 import secalotWallet from '@/modules/wallets/utils/hardware/secalot';
 import trezorWallet from '@/modules/wallets/utils/hardware/trezor';
 import mewconnectWallet from '@/modules/wallets/utils/hybrid/MEWconnect';
-
 import appPaths from '@/modules/wallets/utils/hardware/ledger/appPaths.js';
 import allPaths from '@/modules/wallets/utils/bip44';
 import { mapState, mapActions } from 'vuex';
@@ -598,7 +595,8 @@ const walletHolder = {
 export default {
   name: 'HardwareAccessOverlay',
   components: {
-    qrcode: qrcode
+    qrcode: qrcode,
+    mewSuperButton
   },
   filters: {
     concatAddress(val) {
@@ -702,7 +700,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(['Networks', 'network']),
+    ...mapState('global', ['Networks']),
+    ...mapState('wallet', ['network']),
     networkTypes() {
       const showFirst = ['ETH', 'ROP', 'RIN'];
       const typeArr = Object.keys(this.Networks).filter(item => {
@@ -825,7 +824,7 @@ export default {
         });
 
         if (found) {
-          this.$store.state.network = found; // replace with dispatch + new web3 instance
+          this.setNetwork(found);
         }
       });
     },
@@ -836,8 +835,7 @@ export default {
           try {
             this.setAddresses();
           } catch (e) {
-            // eslint-disable-next-line
-            console.log(e);
+            newVal.errorHandler(e);
           }
         }
       }
@@ -847,7 +845,7 @@ export default {
     this.selectedNetwork = this.network.url;
   },
   methods: {
-    ...mapActions(['decryptWallet']),
+    ...mapActions('wallet', ['setWallet', 'setNetwork']),
     setBCvaultAddress(address) {
       this.selectedAddress = address;
     },
@@ -922,8 +920,7 @@ export default {
           }
         }
       } catch (e) {
-        // eslint-disable-next-line
-        console.log(e);
+        Toast(e.message, {}, ERROR);
       }
     },
     generateQr(code) {
@@ -1015,8 +1012,7 @@ export default {
         this.currentIdx += MAX_ADDRESSES;
         this.selectedAddress = this.accounts[0].address;
       } catch (e) {
-        // eslint-disable-next-line
-        console.log(e);
+        this.hwWalletInstance.errorHandler(e);
       }
     },
     nextAddressSet() {
@@ -1033,17 +1029,15 @@ export default {
     },
     setWallet(wallet) {
       try {
-        this.decryptWallet([wallet])
+        this.setWallet([wallet])
           .then(() => {
             this.$router.push({ name: 'Dashboard' });
           })
           .catch(e => {
-            // eslint-disable-next-line
-            console.log(e);
+            Toast(e.message, {}, ERROR);
           });
       } catch (e) {
-        // eslint-disable-next-line
-        console.log(e);
+        Toast(e.message, {}, ERROR);
       }
     }
   }

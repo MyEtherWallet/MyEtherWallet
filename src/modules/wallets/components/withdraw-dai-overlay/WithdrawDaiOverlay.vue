@@ -1,6 +1,6 @@
 <template>
   <mew-overlay title="Withdraw" :show-overlay="open" right-btn-text="Close">
-    <template v-slot:mewOverlayBody> Withdraw </template>
+    <template #mewOverlayBody> Withdraw </template>
   </mew-overlay>
 </template>
 

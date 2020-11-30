@@ -1,6 +1,6 @@
 <template>
   <mew-overlay :show-overlay="open">
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <div class="pa-8">
         <h2 class="text-center mb-10">Add an owned domain</h2>
         <v-sheet color="transparent" width="700px">
@@ -15,7 +15,7 @@
             />
             <mew-button
               :has-full-width="false"
-              button-size="xlarge"
+              btn-size="xlarge"
               title="Search"
             />
           </div>
@@ -35,7 +35,7 @@
             </div>
             <mew-button
               :has-full-width="false"
-              button-size="large"
+              btn-size="large"
               title="Add to list"
               btn-style="outline"
             />
@@ -50,7 +50,7 @@
                 <tr>
                   <td>Registrant</td>
                   <td class="d-flex align-center">
-                    <Blockie height="30px" width="30px" class="mr-2" />
+                    <mew-blockie height="30px" width="30px" class="mr-2" />
                     <div class="mr-2">
                       0xf55914186a692a3335fF44ae107FA724b1074dDC
                     </div>
@@ -62,7 +62,7 @@
                 <tr>
                   <td>Controller</td>
                   <td class="d-flex align-center">
-                    <Blockie height="30px" width="30px" class="mr-2" />
+                    <mew-blockie height="30px" width="30px" class="mr-2" />
                     <div class="mr-2">
                       0xf55914186a692a3335fF44ae107FA724b1074dDC
                     </div>

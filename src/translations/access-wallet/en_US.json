@@ -1,22 +1,39 @@
 {
   "mewconnect": {
-    "option-text": "Use MEWconnect to access my wallet",
+    "option-text": "To see your mobile wallet on MEW web.",
     "modal": {
-      "title": "Access by MEWconnect",
-      "text1": "Please use MEWconnect App to scan the QR code above",
-      "text2": "Don't have the App? Download now."
+      "title": "Mobile Access",
+      "text1": "Please use MEW wallet App to scan the QR code above",
+      "text2": "Don't have the app? {action}",
+      "download-now": "Download now."
     },
-    "warning": "MEWconnect is not compatible with iPads."
+    "scan": "Scan QR code with MEW wallet App",
+    "warning": "MEW wallet is not compatible with iPads.",
+    "instructions": {
+      "step1": "Step 1: {first}",
+      "step2": "Step 2: {second}",
+      "step3": "Step 3: {third}",
+      "first": "Open MEW wallet App",
+      "second": "Tap {icon-pos}",
+      "icon-pos": "icon on the top right",
+      "third": "Scan the QR code"
+    }
+  },
+  "mobile-app": {
+    "option-title": "Mobile App",
+    "examples": "WalletConnect; WalletLink",
+    "modal": {
+      "title": "Access by Mobile App"
+    },
+    "mew-wallet": "MEW wallet"
   },
   "finney": {
-    "scan-qr": "To connect, scan the QR code from",
+    "scan-info": "To connect, scan the QR code from {wallet} app on your {finney-bc}",
     "finney-wallet": "FinneyWallet",
-    "app-on": "app on your",
     "finney-bc": "FINNEY™ BLOCKCHAIN SMARTPHONE",
-    "get-your": "Get your",
-    "finney": "FINNEY™",
-    "now": "now",
-    "mobile": "moble",
+    "get-finney": "Get your {finney-title} now",
+    "finney-title": "FINNEY™",
+    "mobile": "mobile",
     "finney-connect": "FINNEY Connect"
   },
   "hardware": {
@@ -27,8 +44,17 @@
     "modal": {
       "title": "Access by Hardware",
       "button-buy": "Buy Now",
-      "button-choose": "Choose a Hardware"
-    }
+      "button-choose": "Continue"
+    },
+    "examples": "Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet"
+  },
+  "bitbox": {
+    "modal": {
+      "title": "Select BitBox wallet"
+    },
+    "bitbox02": "BitBox02",
+    "pairing": "Please confirm the encryption pairing code matches what is shown on your BitBox02.",
+    "unlock": "Enter BitBox02 password to unlock."
   },
   "software": {
     "option-title": "Software",
@@ -57,6 +83,7 @@
   },
   "mnemonic": {
     "string": "Mnemonic Phrase",
+    "value": "Value",
     "modal": {
       "title": "Access by Mnemonic Phrase",
       "text": "Please type in your mnemonic phrase."
@@ -69,13 +96,14 @@
     }
   },
   "private-key": {
-    "string":  "Private Key",
+    "string": "Private Key",
     "modal": {
       "title": "Access by Private Key",
       "placeholder": "Enter Private Key"
-    }
+    },
+    "do-not-share": "Please {do-not} share your private key to anyone! You may lose your money if you share it"
   },
-  "network-addr":{
+  "network-addr": {
     "string": "Network and Address",
     "addr-to-interact": "Address to Interact With",
     "id": "ID",
@@ -92,7 +120,7 @@
   },
   "pin": {
     "string": "PIN",
-    "enter": "Enter PIN for your",
+    "enter": "Enter PIN for your {device}",
     "layout": "The PIN layout is displayed on your Hardware wallet",
     "access": "To access my wallet,",
     "accept": "I accept the",
@@ -100,40 +128,27 @@
   },
   "json-file": "Keystore File",
   "accept-terms": "To Access my Wallet, I accept {terms}",
-  "hdDerivationPath": "HD Derivation Path",
-  "customPaths": "Custom Paths",
-  "addCustomPath": "Add Custom Path",
-  "interactAddr": "Address to Interact With",
+  "hd-derivation-path": "HD Derivation Path",
+  "custom-paths": "Custom Paths",
+  "add-custom-path": "Add Custom Path",
+  "interact-addr": "Address to Interact With",
   "id": "ID",
-  "acceptTerms": "To Access my Wallet, I accept",
-  "accessBySoftware": "Access by Software",
-  "accessByHardware": "Access by Hardware",
-  "accessByMnemonicPhrase": "Access by Mnemonic Phrase",
-  "accessByWeb3Wallet": "Access by MetaMask",
-  "accessByPrivateKey": "Access by Private Key",
-  "networkAndAddress": "Network and Address",
-  "pleaseTypeInMnemonicPhrase": "Please type in your mnemonic phrase.",
-  "accessDeviceAddresses": "Choose a Hardware",
+  "network-and-address": "Network and Address",
+  "please-type-in-mnemonic-phrase": "Please type in your mnemonic phrase.",
   "password": "Password",
-  "mewConnectDesc": "Use MEWconnect to access my wallet",
-  "web3WalletDesc": "Use a Web3 Wallet to access my wallet",
-  "installWeb3WalletModalDesc": "Please install a Web3 Wallet and refresh your page.",
+  "access-wallet-or": "or",
+  "web3-wallet-desc": "MetaMask; Dapper",
+  "web3-wallet": "MEW CX",
   "refresh": "Refresh",
-  "unlockWeb3Wallet": "Can't access wallet! Please unlock your wallet through the Web3 Wallet extension",
-  "web3WalletModalDesc": "Please use MyEtherWallet on a secure (SSL/HTTPS) connection to connect.",
-  "softwareDesc": "Keystore file, Private key, Mnemonic phrase",
-  "notRecommended": "Not recommended",
-  "unlock": "Unlock wallet",
-  "installWeb3Wallet": "Install MetaMask",
-  "tryAgain": "Try Again",
-  "invalidPathDesc": "The path: {path} is not valid for this device",
-  "invalidPathDescCont": "",
-  "mewConnectTitle": "Access by MEWconnect",
-  "mewConnectDesc1": "Please use MEWconnect App to scan the QR code above",
-  "mewConnectDesc2": "Don't have the App? Download now.",
-  "notARecommendedWay": "This is not a recommended way to access your wallet. Due to the sensitivity of the information involved, these options should only be used in offline settings by experienced users.",
-  "buyHardwareWallet": "Purchase a hardware wallet for the highest security when accessing your crypto.",
-  "buyHardwareWalletLink": "Purchase a hardware wallet....",
-  "connectDevice": "Please make sure your device is connected.",
-  "buy": "Buy Now"
+  "unlock-web3-wallet": "Can't access wallet! Please unlock your wallet through the Browser Extension",
+  "try-again": "Try Again",
+  "invalid-path-desc": "The path: {path} is not valid for this device",
+  "wallet-info": "Wallet Information",
+  "wallet-options": "Check your transaction history, download a new keystore file, print a paper wallet, and more!",
+  "xwallet-desc": "Use Pundi X Savings account by MEW to scan the QR code above",
+  "xwallet-title": "Access by XWallet",
+  "get-it-now": "Get It Now",
+  "or": "OR CONNECT WITH",
+  "wallet-connect": "WalletConnect",
+  "wallet-link": "WalletLink"
 }
