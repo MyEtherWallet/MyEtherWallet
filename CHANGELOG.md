@@ -2,6 +2,7 @@
 
 ### Devop
 
+* update mobile tools [#2669](https://github.com/MyEtherWallet/MyEtherWallet/pull/2669)
 * update mobile how it works [#2668](https://github.com/MyEtherWallet/MyEtherWallet/pull/2668)
 * Update mobile access wallet [#2663](https://github.com/MyEtherWallet/MyEtherWallet/pull/2663)
 * Update mobile create wallet [#2661](https://github.com/MyEtherWallet/MyEtherWallet/pull/2661)
