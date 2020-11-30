@@ -9,10 +9,11 @@
     @closeOverlay="overlayClose"
   >
     <template #mewOverlayBody>
-      <v-sheet color="transparent" max-width="650px" class="mx-auto px-5">
+      <v-sheet color="transparent" max-width="650px" class="mx-auto">
         <v-row v-if="!step">
           <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
             <mew-super-button
+              btn-mode="small-right-image"
               :title="btn.label"
               :subtitle="btn.description"
               :right-icon="btn.icon"
@@ -57,6 +58,7 @@
 </template>
 
 <script>
+import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import accessKeystore from '../access-keystore/AccessKeystore';
 import accessMnemonic from '../access-mnemonic/AccessMnemonic';
 import accessPrivateKey from '../access-private-key/AccessPrivateKey';
@@ -93,7 +95,8 @@ export default {
   components: {
     accessKeystore,
     accessMnemonic,
-    accessPrivateKey
+    accessPrivateKey,
+    mewSuperButton
   },
   props: {
     open: {
@@ -123,7 +126,7 @@ export default {
         },
         {
           label: 'Mnemonic Phrase',
-          description: 'Access via Mnemonic PHrase',
+          description: 'Access via Mnemonic Phrase',
           icon: require('@/assets/images/icons/icon-mnemonic.svg'),
           fn: () => {
             this.btnCall('mnemonic');

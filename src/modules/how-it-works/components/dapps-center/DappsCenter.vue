@@ -1,8 +1,19 @@
 <template>
   <div class="component-container">
-    <v-container class="py-9">
-      <v-row class="align-center">
-        <v-col cols="5" class="text-content pr-12">
+    <v-container>
+      <div class="py-7" />
+
+      <v-sheet color="transparent" max-width="500px" class="mx-auto mb-10">
+        <div class="display-1 font-weight-bold text-sm-center">
+          All-in-one gateway to your Ethereum Blockchain service
+        </div>
+      </v-sheet>
+      <v-row class="flex-column-reverse flex-lg-row align-center">
+        <v-col
+          cols="12"
+          lg="5"
+          class="text-content pr-12 mt-12 mt-lg-0 pb-12 pb-lg-0"
+        >
           <block-title no-page-title :data="titleData" class="mb-12 pl-12" />
           <div class="mb-4 d-flex">
             <div class="mr-3">
@@ -38,7 +49,7 @@
           </div>
         </v-col>
 
-        <v-col cols="7">
+        <v-col cols="12" lg="7">
           <v-img
             class="block-image"
             src="@/assets/images/snippets/new-dapps-page.png"

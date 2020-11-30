@@ -26,15 +26,14 @@
               <v-col v-for="button in buttons" :key="button.label" cols="6">
                 <div class="button-container">
                   <mew-super-button
+                    btn-mode="small-right-image"
                     :title="button.label"
                     :cols-num="6"
                     color-theme="basic"
+                    :right-icon="button.icon"
+                    :right-icon-height="45"
                     @click.native="nextStep(button.type)"
-                  >
-                    <template #contentSlot>
-                      <img :src="button.icon" />
-                    </template>
-                  </mew-super-button>
+                  />
                 </div>
               </v-col>
             </v-row>
@@ -92,7 +91,7 @@
               title="Access Wallet"
               color-theme="primary"
               :has-full-width="false"
-              button-size="medium"
+              btn-size="medium"
               icon-align="left"
               btn-style="background"
               :disabled="selectedAddress === ''"
@@ -149,40 +148,38 @@
           </v-row>
         </v-container>
       </v-sheet>
+
       <v-sheet
         v-else-if="showSelectBitbox"
-        :outlined="true"
         color="transparent"
-        :rounded="true"
-        :max-width="740"
-        :min-width="575"
-        :min-height="340"
+        max-width="450px"
+        width="100%"
       >
-        <v-container>
-          <v-row align="center" justify="center">
-            <v-col cols="10">
-              <div class="button-container pt-2">
-                <mew-super-button
-                  title="Bitbox"
-                  :cols-num="6"
-                  color-theme="basic"
-                  right-icon="bitbox"
-                  @click.native="setSelectedBitbox(0)"
-                />
-              </div>
-              <div class="button-container pt-2 mb-4">
-                <mew-super-button
-                  title="Bitbox 2"
-                  :cols-num="6"
-                  color-theme="basic"
-                  right-icon="bitbox"
-                  @click.native="setSelectedBitbox(1)"
-                />
-              </div>
-            </v-col>
-          </v-row>
-        </v-container>
+        <mew-super-button
+          class="mb-4"
+          btn-mode="small-right-image"
+          title="Bitbox"
+          :cols-num="6"
+          color-theme="basic"
+          :right-icon-height="45"
+          :right-icon="
+            require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')
+          "
+          @click.native="setSelectedBitbox(0)"
+        />
+        <mew-super-button
+          btn-mode="small-right-image"
+          title="Bitbox 2"
+          :cols-num="6"
+          color-theme="basic"
+          :right-icon-height="45"
+          :right-icon="
+            require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')
+          "
+          @click.native="setSelectedBitbox(1)"
+        />
       </v-sheet>
+
       <v-sheet
         v-else-if="showNetworkAddresses"
         :outlined="true"
@@ -381,7 +378,7 @@
                     <div class="d-flex align-center flex-column">
                       <mew-button
                         title="Access My Wallet"
-                        button-size="xlarge"
+                        btn-size="xlarge"
                         :disabled="!(password !== '' && acceptTerms)"
                         @click.native="
                           () => {
@@ -422,7 +419,7 @@
             />
           </div>
           <mew-button
-            button-size="xlarge"
+            btn-size="xlarge"
             title="Unlock wallet"
             has-full-width
             @click.native="nextStep"
@@ -435,7 +432,7 @@
 
 <script>
 import qrcode from '@xkeshi/vue-qrcode';
-
+import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import { Toast, ERROR } from '@/components/toast';
 import bcvaultWallet from '@/modules/wallets/utils/hardware/bcvault';
 import bitboxWallet from '@/modules/wallets/utils/hardware/bitbox';
@@ -446,7 +443,6 @@ import ledgerWallet from '@/modules/wallets/utils/hardware/ledger';
 import secalotWallet from '@/modules/wallets/utils/hardware/secalot';
 import trezorWallet from '@/modules/wallets/utils/hardware/trezor';
 import mewconnectWallet from '@/modules/wallets/utils/hybrid/MEWconnect';
-
 import appPaths from '@/modules/wallets/utils/hardware/ledger/appPaths.js';
 import allPaths from '@/modules/wallets/utils/bip44';
 import { mapState, mapActions } from 'vuex';
@@ -599,7 +595,8 @@ const walletHolder = {
 export default {
   name: 'HardwareAccessOverlay',
   components: {
-    qrcode: qrcode
+    qrcode: qrcode,
+    mewSuperButton
   },
   filters: {
     concatAddress(val) {
