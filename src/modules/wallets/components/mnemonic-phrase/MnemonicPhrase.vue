@@ -447,7 +447,6 @@ export default {
   },
   methods: {
     setPhrase() {
-      console.log(this.phraseSize + ' --------------------');
       this.phraseSize === 12
         ? (this.phrase = MnemonicTools.phrase12())
         : (this.phrase = MnemonicTools.phrase24());
