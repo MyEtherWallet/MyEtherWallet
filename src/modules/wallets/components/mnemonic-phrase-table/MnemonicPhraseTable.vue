@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col v-for="(p, key) in data" :key="key" lg="2" md="3" sm="4">
+    <v-col v-for="(p, key) in data" :key="key" cols="6" lg="2" md="3" sm="4">
       <div class="phrase">
         <span>{{ key + 1 }}.</span> {{ p }}
       </div>
@@ -28,5 +28,11 @@ export default {
   span {
     color: var(--v-primary-base);
   }
+}
+</style>
+
+<style lang="scss">
+.v-application .v-input input {
+  min-height: initial !important;
 }
 </style>
