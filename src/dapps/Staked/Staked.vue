@@ -5,11 +5,21 @@
         <template v-slot:right>
           <div class="d-flex stats-wrapper">
             <div class="d-flex stats-container">
-              <span class="staking-percent">12.38%</span>
+              <i
+                v-if="!apr"
+                class="fa fa-spinner fa-spin staking-percent mb-1"
+              />
+              <span v-if="apr" class="staking-percent">{{ apr }}%</span>
               <span>{{ $t('dappsStaked.current-stake-title') }}</span>
             </div>
             <div class="d-flex stats-container px-3">
-              <span class="total-eth-percent">2.38%</span>
+              <i
+                v-if="!totalStaked"
+                class="fa fa-spinner fa-spin total-eth-percent mb-1"
+              />
+              <span v-if="totalStaked" class="total-eth-percent">{{
+                totalStaked
+              }}</span>
               <span>{{ $t('dappsStaked.total-eth-title') }}</span>
             </div>
           </div>
@@ -17,7 +27,7 @@
       </back-button>
     </div>
     <div class="about-container">
-      <img :src="staked" height="20px" alt="Staked Logo" />
+      <img :src="stakedLogo" height="20px" alt="Staked Logo" />
       <p class="pt-2">{{ $t('dappsStaked.about') }}</p>
     </div>
     <stepper
@@ -26,7 +36,6 @@
       :set-data="setData"
       @complete-step="completeStep"
       @active-step="isStepActive"
-      @stepper-finished="alert"
     />
     <div
       v-if="currentStepIdx === 0 || currentStepIdx === 1"
@@ -62,24 +71,28 @@
 
 <script>
 import backButton from '@/layouts/InterfaceLayout/components/BackButton';
-import staked from '@/assets/images/icons/dapps/staked.png';
+import stakedLogo from '@/assets/images/icons/dapps/staked.png';
 import stepper from './components/Stepper/Stepper';
 import axios from 'axios';
-// import KeyStore, { verifyKeystore } from '@myetherwallet/eth2-keystore';
-// import stepOne from './components/AmountStep/AmountStep.vue';
-// import StepTwo from './StepTwo.vue';
+import calculateEth2Rewards from './helpers/calculateRewards';
+import BigNumber from 'bignumber.js';
+import { mapState } from 'vuex';
+import { Toast } from '@/helpers';
+
+const eth2ContractAddress = '0x00000000219ab540356cBB839Cbe05303d7705Fa';
 
 export default {
   components: {
     backButton,
     stepper
-    // stepOne
   },
   data() {
     return {
       details: {},
       currentStepIdx: 0,
-      staked: staked,
+      totalStaked: '',
+      stakedLogo: stakedLogo,
+      apr: '',
       steps: [
         {
           name: 1,
@@ -89,57 +102,107 @@ export default {
         {
           name: 2,
           title: this.$t('dappsStaked.steps.2'),
-          // component: StepTwo,
           completed: false
         },
         {
           name: 3,
           title: this.$t('dappsStaked.steps.3'),
-          // component: StepTwo,
           completed: false
         },
         {
           name: 4,
           title: this.$t('dappsStaked.steps.4'),
-          // component: StepTwo,
           completed: false
         }
       ]
     };
   },
+  computed: {
+    ...mapState('main', ['account', 'web3']),
+    validatorsCount() {
+      if (this.details.amount) {
+        return new BigNumber(this.details.amount).dividedBy(32).toFixed();
+      }
+      return 0;
+    }
+  },
   mounted() {
-    this.getTimeseriesData();
+    this.apr = new BigNumber(calculateEth2Rewards({})).times(100).toFixed(2);
+    this.web3.eth
+      .getBalance(eth2ContractAddress.toLowerCase())
+      .then(res => {
+        const raw = this.web3.utils.fromWei(res);
+        this.totalStaked = new BigNumber(raw).toFormat(0);
+      })
+      .catch(err => {
+        Toast.responseHandler(err, Toast.ERROR);
+      });
   },
   methods: {
     goToGenerate() {
       this.$router.push('/generate-address');
     },
-    getTimeseriesData() {
-      const api_key = 'YOUR API KEY';
-      const currency = 'CURRENCY NAME';
-      const interval = 1;
-      const num_entries = 10;
-      axios
-        .get(
-          `/yields/currency/${currency}/timeseries?api_key=${api_key}&interval=${interval}&num_entries=${num_entries}&extended=true`,
-          {
-            header: {
-              'Content-Type': 'application/js'
-            }
-          }
-        )
+    startProvision() {
+      axios({
+        method: 'post',
+        data: {
+          address: this.account.address,
+          withdrawalKey: this.details.address.value,
+          validatorsCount: this.validatorsCount
+        },
+        url: 'https://staked.mewwallet.dev/provision'
+      })
         .then(response => {
+          response && response.provisioning_request_uuid
+            ? this.startPolling()
+            : Toast.responseHandler(
+                this.$t('dappsStaked.error-try-again'),
+                Toast.ERROR
+              );
           console.log('response', response);
         })
-        .catch(() => {
-          // Toast.responseHandler(
-          //   new Error('There is an error. Please try again'),
-          //   Toast.ERROR
-          // );
+        .catch(err => {
+          console.error('err', err);
+          Toast.responseHandler(err, Toast.ERROR);
+        });
+    },
+    startPolling(id) {
+      const interval = setInterval(() => {
+        axios({
+          method: 'get',
+          data: {
+            provisioning_request_uuid: id
+          },
+          url: 'https://staked.mewwallet.dev/status'
+        })
+          .then(response => {
+            console.log('response', response);
+            clearInterval(interval);
+          })
+          .catch(err => {
+            console.error('err', err);
+            Toast.responseHandler(err, Toast.ERROR);
+          });
+      }, 5000);
+    },
+    sendTransaction(data) {
+      this.web3.eth
+        .sendTransaction({
+          from: this.account.address,
+          // to: LEND_ADDRESS,
+          value: 0,
+          gas: 100000,
+          data: data
+        })
+        .catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
         });
     },
     setData(data) {
       this.details[data.key] = data.value;
+      if (this.details.review === true) {
+        this.startProvision();
+      }
     },
     completeStep(payload) {
       this.steps.forEach(step => {
@@ -157,10 +220,6 @@ export default {
           }
         }
       });
-    },
-    // Executed when @stepper-finished event is triggered
-    alert(payload) {
-      console.log('done', payload);
     }
   }
 };

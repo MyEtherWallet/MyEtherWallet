@@ -45,6 +45,7 @@ import dappsAave from './dapps-aave/en_US';
 import header from './header/en_US';
 import dappsMCDMaker from './dapps-mcd-maker/en_US';
 import dappsStaked from './dapps-staked/en_US';
+import dappsMisc from './dapps-misc/en_US';
 
 const en_US = {
   common: common,
@@ -92,6 +93,7 @@ const en_US = {
   dappsAave: dappsAave,
   header: header,
   dappsMCDMaker: dappsMCDMaker,
-  dappsStaked: dappsStaked
+  dappsStaked: dappsStaked,
+  dappsMisc: dappsMisc
 };
 export default en_US;

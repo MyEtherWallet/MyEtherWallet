@@ -171,9 +171,6 @@ export default {
     nextStepAction() {
       this.nextButton[this.currentStep.name] = true;
       if (this.canContinue) {
-        // if (this.finalStep) {
-        //   this.$emit('stepper-finished', this.currentStep);
-        // }
         const currentIndex =
           this.currentStep.index === 3 ? 0 : this.currentStep.index + 1;
         this.activateStep(currentIndex);
@@ -186,24 +183,9 @@ export default {
         this.nextStepAction();
       }
       this.canContinue = false;
-      // this.$emit(
-      //   'before-next-step',
-      //   { currentStep: this.currentStep },
-      //   (next = true) => {
-      //     this.canContinue = true;
-      //     if (next) {
-      //       this.nextStepAction();
-      //     }
-      //   }
-      // );
     },
     backStep() {
       const currentIndex = this.currentStep.index - 1;
-      if (this.currentStep.index === 3) {
-        window.open('https://www.ethvm.com/', '_blank');
-        return;
-      }
-      // this.$emit('clicking-back');
       if (currentIndex >= 0) {
         this.activateStep(currentIndex, true);
       }
