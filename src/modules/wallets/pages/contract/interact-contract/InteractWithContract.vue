@@ -9,6 +9,14 @@
       <div class="flex-grow-1">
         <mew6-white-sheet>
           <interface-wrap title="Interact with contract">
+            <div class="d-block d-lg-flex">
+              <mew-input
+                label="Contract Address"
+                placeholder=" "
+                class="mr-lg-3 flex-grow-1"
+              />
+              <mew-select :items="contractType" label="Contract Type" />
+            </div>
             <v-textarea
               no-resize
               outlined
@@ -19,16 +27,16 @@
 
             <div class="text-center mt-3">
               <mew-button
-                title="Sign"
+                title="Interact"
                 :has-full-width="false"
-                btn-size="xlarge"
+                button-size="xlarge"
               />
             </div>
             <div class="text-center mt-4">
               <mew-button
                 title="Clear all"
                 :has-full-width="false"
-                btn-size="small"
+                button-size="small"
                 btn-style="transparent"
               />
             </div>
