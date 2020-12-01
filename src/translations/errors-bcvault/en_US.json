@@ -1,0 +1,15 @@
+{
+  "invalid-device-pin-or-password": "Can't unlock wallet. Device pin or Device global password invalid!",
+  "closed-modal": "User closed BCVault modal!",
+  "user-cancelled-action": "User cancelled action!",
+  "user-no-action": "No user action received, closing connection.",
+  "browser-popup": "Could not create popup! Please enable popups in your browser!",
+  "only-one-wallet": "You only have 1 Ethereum wallet stored in this device",
+  "daemon0x6901": "Daemon error: 0x6901",
+  "can-only-sign-eth": "BCVault doesn't support other chains other than ETH main net.",
+  "check-daemon": "BCVault daemon might be turned off. Please see settings on BC Vault app.",
+  "no-account-found": "No account returned! Please make sure to create an account on the BCVault app!",
+  "no-device-found": "No device found! Please make sure that you have your hardware wallet connected!",
+  "session-error": "No device detected or no account found!",
+  "https-issue": "BC Vault server issue! Please make sure the Daemon is running on the BCVault app!"
+}

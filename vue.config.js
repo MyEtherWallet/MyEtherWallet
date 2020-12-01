@@ -5,6 +5,12 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJS = require('uglify-es');
 const env_vars = require('./ENV_VARS');
 const allowedConnections = require('./connections');
+const version = require('./package.json').version;
+const vars = {
+    VERSION: version,
+    BTC_DONATION_ADDRESS: "1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9",
+    ETH_DONATION_ADDRESS: "0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
+}
 const webpackConfig = {
   devtool: false,
   node: {
@@ -19,7 +25,7 @@ const webpackConfig = {
       'Strict-Transport-Security':
         'max-age=63072000; includeSubdomains; preload',
       'Content-Security-Policy':
-        "default-src 'self' blob:; frame-src 'self' www.walletlink.org:443 connect.trezor.io:443 viewm.moonicorn.network:443; img-src 'self' nft2.mewapi.io:443 cdn.stateofthedapps.com:443 data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src " +
+        "default-src 'self' blob:; frame-src 'self' www.walletlink.org:443 connect.trezor.io:443 viewm.moonicorn.network:443; img-src 'self' assets.coingecko.com:443 nft2.mewapi.io:443 cdn.stateofthedapps.com:443 data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src " +
         allowedConnections.join(' ') +
         ';',
       'X-Content-Type-Options': 'nosniff',
@@ -60,7 +66,8 @@ const webpackConfig = {
           }
         }
       ]
-    })
+    }),
+    new webpack.EnvironmentPlugin(vars)
   ],
   optimization: {
     splitChunks: {
@@ -87,6 +94,15 @@ const exportObj = {
       clientsClaim: true,
       navigateFallback: '/index.html'
     }
+  },
+  chainWebpack: config => {
+    // GraphQL Loader
+    config.module
+    .rule('graphql')
+    .test(/\.graphql$/)
+    .use('graphql-tag/loader')
+    .loader('graphql-tag/loader')
+    .end()
   }
 };
 module.exports = exportObj;

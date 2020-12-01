@@ -8,6 +8,7 @@ const nameResolver = new NameResolver({
   url: 'https://cloudflare-eth.com',
   port: 443
 });
+
 describe('Ethereum Name Resolver', () => {
   test('it should ens name: myetherwallet.eth', () => {
     return nameResolver.resolveName('myetherwallet.eth').then(addr => {

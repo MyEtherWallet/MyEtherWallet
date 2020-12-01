@@ -24,14 +24,14 @@
               <mew-button
                 title="Interact"
                 :has-full-width="false"
-                button-size="xlarge"
+                btn-size="xlarge"
               />
             </div>
             <div class="text-center mt-4">
               <mew-button
                 title="Clear all"
                 :has-full-width="false"
-                button-size="small"
+                btn-size="small"
                 btn-style="transparent"
               />
             </div>

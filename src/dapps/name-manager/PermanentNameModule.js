@@ -1,10 +1,12 @@
 import OldEnsAbi from './ABI/oldEnsAbi.js';
 import OldDeedAbi from './ABI/oldDeedAbi.js';
-import { uploadFileToIpfs, getHashFromFile } from './services';
+import getHashFromFile from './services/getHashFromFile.js';
+import uploadFileToIpfs from './services/uploadFileToIpfs.js';
 import contentHash from 'content-hash';
 import BigNumber from 'bignumber.js';
-import NameManagerInterface from './interface/NameManagerInterface';
+import NameManagerInterface from './interface/NameManagerInterface.js';
 import * as nameHashPckg from 'eth-ens-namehash';
+import DNSRegistrar from '@ensdomains/dnsregistrar';
 
 const OLD_ENS_ADDRESS = '0x6090a6e47849629b7245dfa1ca21d94cd15878ef';
 const BURNER_ADDRESS = '0x0000000000000000000000000000000000000000';

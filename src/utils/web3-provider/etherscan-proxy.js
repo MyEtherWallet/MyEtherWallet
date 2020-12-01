@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { toPayload } from './methods/jsonrpc';
+import { toPayload } from './jsonrpc';
 
 const toQueryString = params => {
   return Object.keys(params)
@@ -15,6 +15,9 @@ class EtherscanProxy {
   }
   etherscanXHR(isGET, params) {
     return new Promise((resolve, reject) => {
+      Object.keys(params).forEach(
+        key => params[key] === undefined && delete params[key]
+      );
       const qString = isGET
         ? '?' + toQueryString(Object.assign(params, { apikey: this.apikey }))
         : '';

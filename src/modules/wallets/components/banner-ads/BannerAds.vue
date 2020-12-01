@@ -2,7 +2,7 @@
   <div class="mew-component--banner-ads cursor--pointer">
     <mew6-white-sheet>
       <mew-carousel class="box-shadow" carousel-height="145" :total-slides="2">
-        <template v-slot:slide1>
+        <template #slide1>
           <a href="https://www.mewwallet.com/" target="_blank">
             <div class="ad1 px-5 d-flex flex-column justify-center">
               <div class="title font-weight-bold mb-n1">MEW wallet App</div>
@@ -22,10 +22,10 @@
             </div>
           </a>
         </template>
-        <template v-slot:slide2>
+        <template #slide2>
           <div
             class="ad2 px-5 d-flex flex-column justify-center"
-            @click="$router.push({ name: 'BuyHardwareWallet', params: {} })"
+            @click="$router.push({ name: 'BuyHardwareWallet' })"
           >
             <div class="title font-weight-bold mb-n1">Hardware wallets</div>
             <div class="mb-2">Take a look at our hardware wallets!</div>

@@ -1,6 +1,6 @@
 <template>
   <mew-overlay :show-overlay="open">
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <div>AaveBorrowOverlay</div>
     </template>
   </mew-overlay>

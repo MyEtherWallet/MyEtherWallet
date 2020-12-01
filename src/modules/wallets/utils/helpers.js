@@ -1,4 +1,59 @@
+import Wallet from 'ethereumjs-wallet';
+import walletConfigs from '@/modules/wallets/utils/walletConfigs.js';
+
 import { bufferToInt } from 'ethereumjs-util';
+/* These needs to be changed further due to the new async library */
+const fromMyEtherWalletV2 = json => {
+  if (json.privKey.length !== 64) {
+    throw new Error('Invalid private key length');
+  }
+  const privKey = new Buffer(json.privKey, 'hex');
+  return new Wallet(privKey);
+};
+const getWalletFromPrivKeyFile = (jsonfile, password) => {
+  2;
+  if (jsonfile.encseed != null) return Wallet.fromEthSale(jsonfile, password);
+  else if (jsonfile.Crypto != null || jsonfile.crypto != null)
+    return Wallet.fromV3(jsonfile, password, true);
+  else if (jsonfile.hash != null)
+    return Wallet.ThirdParty.fromEtherWallet(jsonfile, password);
+  else if (jsonfile.publisher == 'MyEtherWallet')
+    return fromMyEtherWalletV2(jsonfile);
+  throw new Error('Invalid Wallet file');
+};
+
+const createKeystore = password => {
+  const createdWallet = {};
+  const wallet = new Wallet.generate();
+  createdWallet.walletJson = wallet.toV3(password, {
+    kdf: walletConfigs.kdf,
+    n: walletConfigs.n
+  });
+  createdWallet.name = wallet.getV3Filename();
+  return createdWallet;
+};
+const unlockKeystore = (file, password) => {
+  const newFile = {};
+  // Small hack because non strict wasn't working..
+  Object.keys(file).forEach(key => {
+    newFile[key.toLowerCase()] = file[key];
+  });
+
+  return getWalletFromPrivKeyFile(newFile, password);
+};
+
+/* End Comment */
+
+const walletRequirePass = ethjson => {
+  if (!ethjson) return false;
+  if (ethjson.encseed != null) return true;
+  else if (ethjson.Crypto != null || ethjson.crypto != null) return true;
+  else if (ethjson.hash != null && ethjson.locked) return true;
+  else if (ethjson.hash != null && !ethjson.locked) return false;
+  else if (ethjson.publisher == 'MyEtherWallet' && !ethjson.encrypted)
+    return false;
+  return true;
+};
 
 const getBufferFromHex = hex => {
   hex = sanitizeHex(hex);
@@ -51,6 +106,16 @@ const calculateChainIdFromV = v => {
   if (chainId < 0) chainId = 0;
   return chainId;
 };
+
+const createBlob = (str, mime) => {
+  const string = typeof str === 'object' ? JSON.stringify(str) : str;
+  if (string === null) return '';
+  const blob = new Blob([string], {
+    type: mime
+  });
+  return window.URL.createObjectURL(blob);
+};
+
 export {
   getBufferFromHex,
   bufferToHex,
@@ -58,5 +123,9 @@ export {
   sanitizeHex,
   padLeftEven,
   getHexTxObject,
-  calculateChainIdFromV
+  calculateChainIdFromV,
+  walletRequirePass,
+  createBlob,
+  createKeystore,
+  unlockKeystore
 };

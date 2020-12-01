@@ -1,6 +1,6 @@
 <template>
   <mew-overlay :show-overlay="open">
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <div>
         <h2 class="text-center mb-10">Add funds</h2>
         <mew6-white-sheet>
@@ -22,7 +22,7 @@
             <mew-input label="Amount" placeholder=" " />
 
             <div class="d-flex justify-center">
-              <mew-button title="Add" button-size="xlarge" />
+              <mew-button title="Add" btn-size="xlarge" />
             </div>
           </v-sheet>
         </mew6-white-sheet>

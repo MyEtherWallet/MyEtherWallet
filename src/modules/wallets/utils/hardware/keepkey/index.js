@@ -6,7 +6,7 @@ import {
 } from '@keepkey/keepkey.js';
 import { KEEPKEY as keepkeyType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
-import HDWalletInterface from '@/wallets/HDWalletInterface';
+import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
 import { getUint8Tx } from './utils';
 import {
   getBufferFromHex,
@@ -15,11 +15,13 @@ import {
   calculateChainIdFromV
 } from '../../utils';
 import HDKey from 'hdkey';
-import { toBuffer } from 'ethereumjs-util';
+import toBuffer from '@/helpers/toBuffer';
 import { Transaction } from 'ethereumjs-tx';
 import errorHandler from './errorHandler';
 import store from '@/store';
 import commonGenerator from '@/helpers/commonGenerator';
+import Vue from 'vue';
+import { EventBus } from '@/plugins/eventBus';
 
 const { MessageType } = Messages;
 const {
@@ -30,11 +32,10 @@ const {
 const NEED_PASSWORD = false;
 
 class KeepkeyWallet {
-  constructor(eventHub) {
+  constructor() {
     this.identifier = keepkeyType;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
-    this.eventHub = eventHub;
     this.supportedPaths = bip44Paths[keepkeyType];
   }
   async init(basePath) {
@@ -44,7 +45,7 @@ class KeepkeyWallet {
     const device = new WebUSBDevice({ usbDevice });
     this.keepkey = KeepKey.withWebUSB(device);
     this.keepkey.device.events.on(String(MESSAGETYPE_PINMATRIXREQUEST), () => {
-      this.eventHub.$emit(
+      EventBus.$emit(
         'showHardwarePinMatrix',
         { name: this.identifier },
         pin => {
@@ -53,7 +54,7 @@ class KeepkeyWallet {
       );
     });
     this.keepkey.device.events.on(String(MESSAGETYPE_PASSPHRASEREQUEST), () => {
-      this.eventHub.$emit(
+      EventBus.$emit(
         'showHardwarePassword',
         { name: this.identifier },
         passPhrase => {
@@ -91,7 +92,7 @@ class KeepkeyWallet {
     }
     const txSigner = async tx => {
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.network)
+        common: commonGenerator(store.state.wallet.network)
       });
       const hexTx = getUint8Tx(tx);
       const networkId = tx.getChainId();
@@ -109,10 +110,10 @@ class KeepkeyWallet {
       const signedChainId = calculateChainIdFromV(tx.v);
       if (signedChainId !== networkId)
         throw new Error(
-          'Invalid networkId signature returned. Expected: ' +
-            networkId +
-            ', Got: ' +
-            signedChainId,
+          Vue.$i18n.t('errorsGlobal.invalid-network-id-sig', {
+            got: signedChainId,
+            expected: networkId
+          }),
           'InvalidNetworkId'
         );
       return getSignTransactionObject(tx);
@@ -151,8 +152,8 @@ class KeepkeyWallet {
     return this.supportedPaths;
   }
 }
-const createWallet = async (basePath, eventHub) => {
-  const _keepkeyWallet = new KeepkeyWallet(eventHub);
+const createWallet = async basePath => {
+  const _keepkeyWallet = new KeepkeyWallet();
   await _keepkeyWallet.init(basePath);
   return _keepkeyWallet;
 };

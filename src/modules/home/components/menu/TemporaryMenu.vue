@@ -53,19 +53,19 @@ export default {
             sub: [
               {
                 label: 'Send transaction',
-                to: { name: 'SendTX', query: {} }
+                to: { name: 'SendTX' }
               },
               {
                 label: 'Explore Dapps',
-                to: { name: 'DappsCenter', query: {} }
+                to: { name: 'DappsCenter' }
               },
               {
                 label: 'Swap tokens',
-                to: { name: 'Swap', query: {} }
+                to: { name: 'Swap' }
               },
               {
                 label: 'Sign message',
-                to: { name: 'SignMessage', query: {} }
+                to: { name: 'SignMessage' }
               }
             ]
           },

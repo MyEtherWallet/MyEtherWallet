@@ -128,7 +128,7 @@ export default class NameManagerInterface {
         from: this.addressVal,
         to: this.publicResolverAddressVal,
         data: this.resolverContract.methods.multicall(multicalls).encodeABI(),
-        gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed(),
+        gasPrice: BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed(),
         value: 0
       };
       return this.web3Val.eth.sendTransaction(tx);

@@ -1,16 +1,18 @@
-import { Toast } from '@/helpers';
+import { Toast, WARNING, ERROR, SENTRY } from '@/components/toast';
 import Vue from 'vue';
 const ERRORS = {
-  'No device selected.': 'keepkeyError.noDeviceSelected',
-  'Invalid PIN': 'keepkeyError.invalidPin',
-  'Unable to claim interface.': 'keepKey.cantClaim',
+  'No device selected.': 'keepkeyError.no-device-selected',
+  'Invalid PIN': 'keepkeyError.invalid-pin',
+  'Unable to claim interface.': 'keepKey.cant-claim',
   'WebUSB is not available in this browser. We recommend trying Chrome.':
-    'keepKey.browserNotSupported'
+    'keepKey.browser-not-supported',
+  'Unexpected Message': 'keepKey.generic-error',
+  'Unknown message type received': 'keepKey.generic-error'
 };
-const WARNING = {};
+const WARNINGS = {};
 export default err => {
   const errorValues = Object.keys(ERRORS);
-  const warningValues = Object.keys(WARNING);
+  const warningValues = Object.keys(WARNINGS);
   const foundError = errorValues.find(item => {
     return item.includes(err.message) || item.includes(err);
   });
@@ -20,10 +22,10 @@ export default err => {
   });
 
   if (foundError) {
-    Toast.responseHandler(Vue.$i18n.t(ERRORS[foundError]), Toast.ERROR);
+    Toast(Vue.$i18n.t(ERRORS[foundError]), {}, ERROR);
   } else if (foundWarning) {
-    Toast.responseHandler(Vue.$i18n.t(WARNING[foundWarning]), Toast.WARN);
+    Toast(Vue.$i18n.t(WARNINGS[foundWarning]), {}, WARNING);
   } else {
-    Toast.responseHandler(err, false);
+    Toast(err, {}, SENTRY);
   }
 };

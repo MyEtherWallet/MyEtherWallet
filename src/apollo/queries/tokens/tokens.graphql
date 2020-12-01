@@ -1,0 +1,33 @@
+fragment TokenFragment on EthTokenInfo {
+    name
+    symbol
+    decimals
+}
+
+query getLatestPrices {
+    getLatestPrices {
+        id
+        symbol
+        name
+        image
+        contract
+        current_price
+        market_cap
+        total_volume
+        price_change_24h
+        total_supply
+    }
+}
+
+query getOwnersERC20Tokens($hash: String!, $_nextKey: String) {
+    getOwnersERC20Tokens(owner: $hash, nextKey: $_nextKey) {
+        owners {
+            tokenInfo {
+                ...TokenFragment
+                contract
+            }
+            balance
+        }
+        nextKey
+    }
+}

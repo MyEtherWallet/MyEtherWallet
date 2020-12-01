@@ -1,15 +1,15 @@
-import { Toast } from '@/helpers';
+import { Toast, WARNING, ERROR, SENTRY } from '@/components/toast';
 const ERRORS = {};
-const WARNING = {};
+const WARNINGS = {};
 
 export default err => {
   const errorValues = Object.values(ERRORS);
-  const warningValues = Object.values(WARNING);
+  const warningValues = Object.values(WARNINGS);
   if (errorValues.includes(err.message)) {
-    Toast.responseHandler(err, Toast.ERROR);
+    Toast(err.message, {}, ERROR);
   } else if (warningValues.includes(err.message)) {
-    Toast.responseHandler(err, Toast.WARN);
+    Toast(err.message, {}, WARNING);
   } else {
-    Toast.responseHandler(err, false);
+    Toast(err, {}, SENTRY);
   }
 };
