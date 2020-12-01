@@ -93,11 +93,14 @@ export default {
             {
               name: 'Send Offline',
               routeName: 'SendOffline'
-            },
+            }
+            /*
+            ,
             {
               name: 'NFT Manager',
               routeName: 'NFTManager'
             }
+            */
           ]
         },
         {

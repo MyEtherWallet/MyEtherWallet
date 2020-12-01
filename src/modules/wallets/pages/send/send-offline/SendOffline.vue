@@ -1,101 +1,154 @@
 <template>
   <div>
-    <div class="d-flex">
+    <div class="d-block d-lg-none">
+      <network mobile class="mb-4" />
+      <myEthBalance mobile class="mb-4" />
+    </div>
+
+    <div class="d-flex mt-4 mt-lg-0">
       <div class="flex-grow-1">
         <mew6-white-sheet>
-          <interface-wrap title="Send Offline">
-            <div>
-              <div class="d-flex">
-                <mew-select :items="coins" label="Type" class="mr-3" />
-                <div class="position--relative flex-grow-1">
-                  <div class="corner-btn">Entire balance</div>
-                  <mew-input
-                    label="Amount"
-                    placeholder=" "
-                    right-label="$23,232.93"
-                    value="10.23472384"
-                  />
-                </div>
-              </div>
+          <interface-wrap title="Send Transaction">
+            <mew-select
+              ref="mewSelect"
+              :items="tokens"
+              :label="$t('sendTx.type')"
+              @input="setCurrency"
+            />
 
-              <mew-address-select
-                copy-tooltip="Copy"
-                save-tooltip="Save"
-                :enable-save-address="true"
-                label="To Address"
-                :items="addresses"
-                placeholder="Please enter an address"
-                success-toast="Success"
-                :is-valid-address="true"
-                @emitSelectedValue="getSelectedValue"
+            <div class="mb-2 text-right">
+              <v-btn
+                color="primary"
+                class="text-transform--initial mb-2"
+                x-small
+                text
+                @click.native="setEntireBal"
+              >
+                {{ $t('sendTx.button-entire') }}
+              </v-btn>
+              <mew-input
+                ref="mewInput"
+                :value="amount"
+                :label="$t('sendTx.amount')"
+                placeholder=" "
+                :right-label="currencyBalance"
+                @input="setAmount"
               />
             </div>
 
-            <mew-expand-panel is-toggle has-dividers :panel-items="exPannel">
+            <mew-address-select
+              copy-tooltip="Copy"
+              save-tooltip="Save"
+              :enable-save-address="true"
+              label="To Address"
+              :items="addresses"
+              placeholder="Please enter an address"
+              success-toast="Success"
+              :is-valid-address="true"
+              class="mb-2"
+              @emitSelectedValue="getSelectedValue"
+            />
+
+            <mew-expand-panel
+              ref="expandPanel"
+              is-toggle
+              has-dividers
+              :panel-items="expandPanel"
+            >
               <template #panelBody1>
-                <div>
-                  <mew-input label="Gas Price" placeholder=" " value="40" />
-                  <mew-input label="Gas Limit" placeholder=" " value="21000" />
+                <div class="font-weight-medium d-flex align-center mb-3">
+                  <div>{{ $t('sendTx.tx-fee') }}</div>
+                  <mew-tooltip class="ml-1" text="" />
                 </div>
 
-                <div class="d-flex justify-space-between px-5">
-                  <div class="mew-body font-weight-medium d-flex align-center">
-                    Transaction Fee
-                    <mew-tooltip class="ml-1" text="Tx fees" />
-                  </div>
-                  <div>$0.177</div>
+                <div v-show="isEth">
+                  <i18n path="sendTx.cost-eth-usd" tag="div">
+                    <span slot="eth">{{ txFeeETH() }}</span>
+                    <span slot="usd">{{ txFeeUSD() }}</span>
+                  </i18n>
                 </div>
-                <Divider dot class="mt-5" />
+
                 <mew-input
-                  label="Add Data"
+                  :value="customGasLimit"
+                  :label="$t('common.gas.limit')"
+                  placeholder=""
+                  @input="setCustomGasLimit"
+                />
+
+                <mew-input
+                  v-model="data"
+                  class="mt-4"
+                  :label="$t('sendTx.add-data')"
                   placeholder=" "
-                  value
-                  class="mt-10 mb-n5"
                 />
               </template>
             </mew-expand-panel>
 
-            <div class="text-center mt-12">
-              <mew-button
-                title="Send"
-                :has-full-width="false"
-                btn-size="xlarge"
-              />
-            </div>
-            <div class="text-center mt-4">
-              <mew-button
-                title="Clear all"
-                :has-full-width="false"
-                btn-size="small"
-                btn-style="transparent"
-              />
+            <div class="d-flex flex-column mt-12">
+              <div class="text-center">
+                <mew-button
+                  :title="$t('sendTx.send')"
+                  :has-full-width="false"
+                  btn-size="xlarge"
+                  @click.native="send()"
+                />
+              </div>
+              <div class="text-center mt-4">
+                <mew-button
+                  :title="$t('common.clear-all')"
+                  :has-full-width="false"
+                  btn-size="small"
+                  btn-style="transparent"
+                  @click.native="clear()"
+                />
+              </div>
             </div>
           </interface-wrap>
         </mew6-white-sheet>
       </div>
-      <div class="pa-4"></div>
-      <div>
+
+      <div class="pa-4 d-none d-lg-block"></div>
+
+      <div class="d-none d-lg-block">
         <network />
+        <div class="pa-4"></div>
+        <tx-history title="Transaction history" />
+        <div class="pa-4"></div>
+        <myEthBalance />
         <div class="pa-4"></div>
         <swap />
       </div>
     </div>
+
+    <div class="d-block d-lg-none">
+      <tx-history class="mt-4" title="Transaction history" mobile />
+      <swap class="mt-4" mobile />
+    </div>
+
+    <mew-toast
+      ref="toast"
+      :text="toastMsg"
+      :toast-type="toastType"
+      :duration="1000"
+    />
   </div>
 </template>
 
 <script>
 import network from '@/modules/wallets/components/network/Network';
+import txHistory from '@/modules/wallets/components/transaction-history/TransactionHistory';
+import myEthBalance from '@/modules/wallets/components/my-eth-balance/MyEthBalance';
 import swap from '@/modules/wallets/components/swap/Swap';
 import interfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';
-import divider from '@/components/dividerx/DividerX';
 
 export default {
   components: {
+    txHistory,
+    myEthBalance,
     network,
     swap,
-    interfaceWrap,
-    divider
+    interfaceWrap
   },
   data() {
     return {

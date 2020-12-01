@@ -129,11 +129,10 @@
       </div>
     </div>
 
-    <tx-history
-      class="mt-4 d-block d-lg-none"
-      title="Transaction history"
-      mobile
-    />
+    <div class="d-block d-lg-none">
+      <tx-history class="mt-4" title="Transaction history" mobile />
+      <swap class="mt-4" mobile />
+    </div>
 
     <mew-toast
       ref="toast"
