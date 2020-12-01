@@ -114,7 +114,7 @@
         <div v-if="showAlternates" class="btc-alternates">
           <div no-body class="mb-1">
             <div class="title-container" @click="toggleAlternates">
-              <h3>Get BTC Exposure On Enthereum</h3>
+              <h3>{{ $t('swap.alternates.title') }}</h3>
               <i
                 :class="[
                   openAltnernates ? 'fa-chevron-up' : 'fa-chevron-down',
@@ -129,8 +129,7 @@
             >
               <div class="btc-body">
                 <p>
-                  Swap for wBTC, renBTC, or pBTC and own Bitcoin compatible with
-                  Ethereum applications.
+                  {{ $t('swap.alternates.body') }}
                 </p>
                 <div v-if="!loadingData" class="alternative-btn-container">
                   <div v-for="alt in alternates" :key="alt.symbol">
