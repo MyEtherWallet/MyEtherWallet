@@ -1,5 +1,4 @@
 import SendTransaction from '../index';
-import web3Instance from '../web3-delete';
 
 const sendTransaction = new SendTransaction(
   // account
@@ -7,8 +6,6 @@ const sendTransaction = new SendTransaction(
     balance: '1000000000000000000',
     address: '0x43689531907482BEE7e650D18411E284A7337A66'
   },
-  // web3
-  web3Instance,
   // gasPrice
   '90',
   // network
@@ -21,7 +18,7 @@ const sendTransaction = new SendTransaction(
   }
 );
 
-describe('Send Transaction', () => {
+xdescribe('Send Transaction', () => {
   test('it should validate address', () => {
     const response = sendTransaction.isValidAddress(
       '0x43d29d6dc3346a812b10b572ffb52fc7668bf8ba'
