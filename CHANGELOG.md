@@ -2,6 +2,7 @@
 
 ### Devop
 
+* update mobile send tx [#2686](https://github.com/MyEtherWallet/MyEtherWallet/pull/2686)
 * update mobile dashboard [#2673](https://github.com/MyEtherWallet/MyEtherWallet/pull/2673)
 * update mobile notification [#2671](https://github.com/MyEtherWallet/MyEtherWallet/pull/2671)
 * update mobile side menu [#2670](https://github.com/MyEtherWallet/MyEtherWallet/pull/2670)
