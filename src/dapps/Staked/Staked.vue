@@ -143,18 +143,20 @@ export default {
       this.$router.push('/generate-address');
     },
     startProvision() {
-      axios({
-        method: 'post',
-        data: {
-          address: this.account.address,
-          withdrawalKey: this.details.address.value,
-          validatorsCount: this.validatorsCount
-        },
-        url: 'https://staked.mewwallet.dev/provision'
-      })
+      const params = {
+        address: this.account.address,
+        withdrawalKey: this.details.address,
+        validatorsCount: this.validatorsCount
+      };
+      axios
+        .post('https://staked.mewwallet.dev/provision', params, {
+          header: {
+            'Content-Type': 'application/json'
+          }
+        })
         .then(response => {
-          response && response.provisioning_request_uuid
-            ? this.startPolling()
+          response && response.data.provisioning_request_uuid
+            ? this.startPolling(response.data.provisioning_request_uuid)
             : Toast.responseHandler(
                 this.$t('dappsStaked.error-try-again'),
                 Toast.ERROR
@@ -167,14 +169,20 @@ export default {
         });
     },
     startPolling(id) {
+      console.error('id', id)
       const interval = setInterval(() => {
-        axios({
-          method: 'get',
-          data: {
-            provisioning_request_uuid: id
-          },
-          url: 'https://staked.mewwallet.dev/status'
-        })
+        axios
+          .get(
+            'https://staked.mewwallet.dev/status',
+            {
+              provisioning_request_uuid: id
+            },
+            {
+              header: {
+                'Content-Type': 'application/json'
+              }
+            }
+          )
           .then(response => {
             console.log('response', response);
             clearInterval(interval);
@@ -200,7 +208,8 @@ export default {
     },
     setData(data) {
       this.details[data.key] = data.value;
-      if (this.details.review === true) {
+      if (data.key === 'review' && data.value === true) {
+        console.error('in here')
         this.startProvision();
       }
     },
