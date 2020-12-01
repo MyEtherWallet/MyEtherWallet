@@ -1,24 +1,24 @@
-import { Toast } from '@/helpers';
+import { Toast, WARNING, ERROR, SENTRY } from '@/components/toast';
 import Vue from 'vue';
 
 const ERRORS = {
-  'Sign failed': 'secalotError.signFailed',
-  "Cannot read property 'requestId' of null": 'secalotError.notConnected',
+  'Sign failed': 'secalotError.sign-failed',
+  "Cannot read property 'requestId' of null": 'secalotError.not-connected',
   'Please update your Secalot firmware to version 4 or greater.':
-    'secalotError.updateFirmwareToV4',
+    'secalotError.update-firmware-to-v4',
   'Ethereum wallet on your Secalot is not initialized.':
-    'secalotError.walletNotInitialized',
+    'secalotError.wallet-not-initialized',
   'Invalid PIN-code. Be careful, after entering a wrong PIN-code three times in a row, your Secalot Ethereum wallet would be permanently wiped.':
-    'secalotError.lastPinTry',
-  'PIN-code not verified.': 'secalotError.invalidPinCode',
-  'Invalid PIN-code length.': 'secalotError.invalidPinCodeLength',
+    'secalotError.last-pin-try',
+  'PIN-code not verified.': 'secalotError.invalid-pin-code',
+  'Invalid PIN-code length.': 'secalotError.invalid-pin-code-length',
   'Operation timed out.': 'secalotError.timeout'
 };
-const WARNING = {};
+const WARNINGS = {};
 
 export default err => {
   const errorValues = Object.keys(ERRORS);
-  const warningValues = Object.keys(WARNING);
+  const warningValues = Object.keys(WARNINGS);
   const foundError = errorValues.find(item => {
     return item.includes(err.message) || item.includes(err);
   });
@@ -28,10 +28,10 @@ export default err => {
   });
 
   if (foundError) {
-    Toast.responseHandler(Vue.$i18n.t(ERRORS[foundError]), Toast.ERROR);
+    Toast(Vue.$i18n.t(ERRORS[foundError]), {}, ERROR);
   } else if (foundWarning) {
-    Toast.responseHandler(Vue.$i18n.t(WARNING[foundWarning]), Toast.WARN);
+    Toast(Vue.$i18n.t(WARNINGS[foundWarning]), {}, WARNING);
   } else {
-    Toast.responseHandler(err, false);
+    Toast(err, {}, SENTRY);
   }
 };

@@ -1,7 +1,7 @@
 <template>
   <div class="mew-component-fix--maker-dao">
     <div class="d-flex align-center">
-      <transactionConfirmationOverlay :open="openTXConfirmationOverlay" />
+      <!-- <transactionConfirmationOverlay :open="openTXConfirmationOverlay" /> -->
       <div
         class="cursor--pointer font-weight-bold mr-4"
         @click="openTXConfirmationOverlay = true"
@@ -36,14 +36,14 @@
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
-        <template v-slot:tabContent1>
+        <template #tabContent1>
           <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
             <div class="d-flex align-center justify-space-between">
               <div class="mew-heading-3">DAI Balance</div>
               <mew-button
                 btn-style="outline"
                 title="Collateralize DAI"
-                button-size="small"
+                btn-size="small"
                 class="display--block"
               />
             </div>
@@ -74,14 +74,14 @@
                   :has-full-width="true"
                   btn-style="outline"
                   title="Withdraw"
-                  button-size="xlarge"
+                  btn-size="xlarge"
                 ></mew-button>
               </v-col>
               <v-col cols="6">
                 <mew-button
                   :has-full-width="true"
                   title="Deposit"
-                  button-size="xlarge"
+                  btn-size="xlarge"
                 ></mew-button>
               </v-col>
             </v-row>
@@ -101,13 +101,13 @@
             </div>
           </v-sheet>
         </template>
-        <template v-slot:tabContent2>
+        <template #tabContent2>
           <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
             <div class="text-right">
               <mew-button
                 :has-full-width="false"
                 title="Collateralize DAI"
-                button-size="small"
+                btn-size="small"
                 btn-style="outline"
               />
             </div>
@@ -115,19 +115,13 @@
             <v-row>
               <v-col cols="6">
                 <div class="walletBg pa-5 border-radius--5px">
-                  <h5 class="mb-2 font-weight-bold">
-                    Total Collateral Locked
-                  </h5>
-                  <h3 class="font-weight-bold">
-                    $42.03
-                  </h3>
+                  <h5 class="mb-2 font-weight-bold">Total Collateral Locked</h5>
+                  <h3 class="font-weight-bold">$42.03</h3>
                 </div>
               </v-col>
               <v-col cols="6">
                 <div class="walletBg pa-5 border-radius--5px">
-                  <h5 class="mb-2 font-weight-bold">
-                    Total DAI Debt
-                  </h5>
+                  <h5 class="mb-2 font-weight-bold">Total DAI Debt</h5>
                   <h3 class="font-weight-bold">
                     30.20<span class="mew-body"> DAI</span>
                   </h3>
@@ -139,7 +133,7 @@
                   <mew-button
                     :has-full-width="false"
                     title="+ Add Vault"
-                    button-size="medium"
+                    btn-size="medium"
                     btn-style="transparent"
                   />
                 </div>
@@ -150,7 +144,7 @@
               </v-col>
             </v-row>
             <div class="d-flex justify-center mt-5">
-              <mew-button title="Deposit" button-size="xlarge"></mew-button>
+              <mew-button title="Deposit" btn-size="xlarge"></mew-button>
             </div>
           </v-sheet>
         </template>
@@ -161,14 +155,14 @@
 
 <script>
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
-import transactionConfirmationOverlay from '@/modules/wallets/components/transaction-confirmation-overlay/TransactionConfirmationOverlay';
+// import transactionConfirmationOverlay from '@/modules/wallets/components/transaction-confirmation-overlay/TransactionConfirmationOverlay';
 import collateralizeDaiOverlay from '@/modules/wallets/components/collateralize-dai-overlay/CollateralizeDaiOverlay';
 import depositDaiOverlay from '@/modules/wallets/components/deposit-dai-overlay/DepositDaiOverlay';
 import withdrawDaiOverlay from '@/modules/wallets/components/withdraw-dai-overlay/WithdrawDaiOverlay';
 
 export default {
   components: {
-    transactionConfirmationOverlay,
+    // transactionConfirmationOverlay,
     collateralizeDaiOverlay,
     depositDaiOverlay,
     withdrawDaiOverlay

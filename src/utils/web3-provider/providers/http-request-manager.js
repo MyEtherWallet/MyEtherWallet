@@ -13,11 +13,11 @@ class HttpRequestManager {
         config.headers[header.name] = header.value;
       });
     }
-    this.request = axios.create(config);
+    this.requestAxios = axios.create(config);
     return new Web3RequestManager(this);
   }
   send(payload, callback) {
-    this.request
+    this.requestAxios
       .post(this.host, payload)
       .then(result => {
         callback(null, result.data);

@@ -44,6 +44,7 @@
       :button-left="logout.btnLeft"
       :button-right="logout.btnRight"
       popup-type="confirm"
+      @onClick="logoutFn"
     ></mew-popup>
     <settings :open="openSettings" :close="closeSettings" />
   </div>
@@ -59,11 +60,11 @@ export default {
       logoutOpen: false,
       logout: {
         btnLeft: {
-          name: 'Cancel',
+          title: 'Cancel',
           colorTheme: 'basic'
         },
         btnRight: {
-          name: 'Log out',
+          title: 'Log out',
           colorTheme: 'error'
         }
       },
@@ -73,6 +74,12 @@ export default {
   methods: {
     closeSettings() {
       this.openSettings = false;
+    },
+    logoutFn(res) {
+      this.logoutOpen = false;
+      if (res.name === 'Log out') {
+        this.$router.push({ name: 'Home' });
+      }
     }
   }
 };

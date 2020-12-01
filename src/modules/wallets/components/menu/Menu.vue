@@ -195,7 +195,7 @@ export default {
       }
     },
     routerPush(routeName) {
-      this.$router.push({ name: routeName, params: {} });
+      this.$router.push({ name: routeName });
     }
   }
 };

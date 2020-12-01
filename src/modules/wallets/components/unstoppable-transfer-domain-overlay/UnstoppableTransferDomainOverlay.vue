@@ -1,13 +1,13 @@
 <template>
   <mew-overlay :show-overlay="open">
-    <template v-slot:mewOverlayBody>
+    <template #mewOverlayBody>
       <div>
         <h2 class="text-center mb-10">Transfer domain</h2>
         <mew6-white-sheet>
           <v-sheet color="transparent" width="600px" class="pa-8">
-            <address-select />
+            <mew-address-select />
             <div class="d-flex justify-center mt-2">
-              <mew-button title="Pay" button-size="xlarge" />
+              <mew-button title="Pay" btn-size="xlarge" />
             </div>
           </v-sheet>
         </mew6-white-sheet>
@@ -15,7 +15,7 @@
       <div>
         <h2 class="text-center mb-10">Confirmation</h2>
         <mew6-white-sheet>
-          <transaction-confirmation />
+          <!-- <transaction-confirmation /> -->
         </mew6-white-sheet>
         <mew6-white-sheet>
           <div class="pa-8">
@@ -29,7 +29,7 @@
               </div>
             </v-sheet>
             <v-progress-linear
-              style="margin: 130px auto 40px auto; max-width: 200px;"
+              style="margin: 130px auto 40px auto; max-width: 200px"
               indeterminate
               color="primary"
             ></v-progress-linear>
@@ -53,10 +53,10 @@
 </template>
 
 <script>
-import transactionConfirmation from '@/modules/wallets/components/transaction-confirmation/TransactionConfirmation';
+// import transactionConfirmation from '@/modules/wallets/components/transaction-confirmation/TransactionConfirmation';
 
 export default {
-  components: { transactionConfirmation },
+  // components: { transactionConfirmation },
   props: {
     open: { default: false, type: Boolean },
     close: {

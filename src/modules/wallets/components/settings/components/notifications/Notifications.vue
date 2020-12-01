@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pb-4">
     <mew-switch label="Receive the notifications from MEW" />
     <div class="tableHeader pa-8 border-radius--5px">
       <div class="mew-heading-3">

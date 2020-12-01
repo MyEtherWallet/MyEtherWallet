@@ -19,7 +19,7 @@
       </div>
 
       <div class="d-flex justify-center mt-6">
-        <mew-button title="Okay" button-size="xlarge" />
+        <mew-button title="Okay" btn-size="xlarge" />
       </div>
     </mew6-white-sheet>
   </v-sheet>

@@ -1,51 +1,50 @@
 <template>
   <div class="expandHeader">
-    <block-title :data="titleData">
-      <h5 class="white--text ma-0">
-        Select a hardware to access your wallet. Make sure your device is
-        connected and unlocked.
-        <span
-          class="primary--text cursor--pointer"
-          @click="$router.push({ name: 'BuyHardwareWallet', params: {} })"
-        >
-          Buy hardware wallet
-        </span>
-      </h5>
-    </block-title>
-
-    <v-sheet color="transparent" max-width="850px" class="mx-auto px-5">
-      <v-row>
-        <v-col
-          v-for="(btn, key) in buttons"
-          :key="key"
-          class="btn-container"
-          cols="12"
-          sm="6"
-        >
-          <mew-super-button
-            font-class="mew-heading-2"
-            :title="btn.label"
-            @click.native="openOverlay(btn.overlayName)"
+    <v-container>
+      <block-title :data="titleData">
+        <h5 class="white--text ma-0">
+          Select a hardware to access your wallet. Make sure your device is
+          connected and unlocked.
+          <span
+            class="primary--text cursor--pointer"
+            @click="$router.push({ name: 'BuyHardwareWallet', params: {} })"
           >
-            <template v-slot:contentSlot>
-              <img :src="btn.icon" :alt="btn.label" />
-            </template>
-          </mew-super-button>
-        </v-col>
-      </v-row>
-    </v-sheet>
-    <div class="spacer-y-medium" />
+            Buy hardware wallet
+          </span>
+        </h5>
+      </block-title>
+
+      <v-sheet color="transparent" max-width="750px" class="mx-auto">
+        <v-row>
+          <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="6">
+            <mew-super-button
+              btn-mode="small-right-image"
+              color-theme="basic"
+              :title="btn.label"
+              :right-icon="btn.icon"
+              :right-icon-height="45"
+              @click.native="overlayName = btn.overlayName"
+            />
+          </v-col>
+        </v-row>
+      </v-sheet>
+      <div class="spacer-y-medium" />
+    </v-container>
+    <access-wallet-overlay :open="overlayName" @reset="overlayName = ''" />
   </div>
 </template>
 
 <script>
+import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import blockTitle from '@/components/block-title/BlockTitle';
+import accessWalletOverlay from '@/modules/wallets/components/access-wallet-overlay/AccessWalletOverlay';
 
 export default {
   name: 'CreateNewWallet',
-  components: { blockTitle },
+  components: { mewSuperButton, blockTitle, accessWalletOverlay },
   data() {
     return {
+      overlayName: '',
       titleData: {
         textProps: 'white--text',
         toptitle: '',
@@ -57,61 +56,50 @@ export default {
         {
           label: 'Ledger',
           icon: require('@/assets/images/icons/hardware-wallets/icon-ledger.svg'),
-          overlayName: 'accessWalletLedger'
+          overlayName: 'ledger'
         },
         {
           label: 'Bitbox',
           icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg'),
-          overlayName: 'accessWalletBitbox'
+          overlayName: 'bitbox'
         },
         {
           label: 'FINNEY',
           icon: require('@/assets/images/icons/hardware-wallets/icon-finney.svg'),
-          overlayName: 'accessWalletFinney'
+          overlayName: 'finney'
         },
         {
           label: 'Secalot',
           icon: require('@/assets/images/icons/hardware-wallets/icon-secalot.svg'),
-          overlayName: 'accessWalletSecalot'
+          overlayName: 'secalot'
         },
         {
           label: 'KeepKey',
           icon: require('@/assets/images/icons/hardware-wallets/icon-keepkey.svg'),
-          overlayName: 'accessWalletKeepKey'
+          overlayName: 'keepkey'
         },
         {
           label: 'Trezor',
           icon: require('@/assets/images/icons/hardware-wallets/icon-trezor.svg'),
-          overlayName: 'accessWalletTrezor'
+          overlayName: 'trezor'
         },
         {
           label: 'CoolWallet',
           icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
-          overlayName: 'accessWalletCoolWallet'
+          overlayName: 'coolwallet'
         },
         {
           label: 'BC Vault',
           icon: require('@/assets/images/icons/hardware-wallets/icon-bcvault.svg'),
-          overlayName: 'accessWalletBCVault'
+          overlayName: 'bcvault'
         },
         {
           label: 'XWallet',
           icon: require('@/assets/images/icons/hardware-wallets/icon-xwallet.svg'),
-          overlayName: 'accessWalletXWallet'
+          overlayName: 'xwallet'
         }
       ]
     };
-  },
-  methods: {
-    openOverlay(name) {
-      this.$store.commit('openOverlay', name);
-    }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.btn-container {
-  max-height: 100px;
-}
-</style>

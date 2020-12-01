@@ -1,23 +1,20 @@
 <template>
-  <v-container>
+  <v-container class="pb-12 pb-lg-0">
     <div class="py-7" />
-    <v-sheet max-width="500px" class="mx-auto">
-      <div class="display-1 font-weight-bold text-center">
+    <v-sheet color="transparent" max-width="500px" class="mx-auto mb-12">
+      <div class="display-1 font-weight-bold text-sm-center">
         All-in-one gateway to your Ethereum Blockchain service
       </div>
     </v-sheet>
-    <div class="py-10" />
-    <v-row>
-      <v-col cols="5" class="text-content pr-12">
+    <v-row class="flex-column-reverse flex-lg-row">
+      <v-col cols="12" lg="5" class="text-content pr-12 mt-4 mt-lg-0">
         <block-title no-page-title :data="titleData" class="mb-12 pl-12" />
         <div class="mb-4 d-flex">
           <div class="mr-3">
             <v-img src="@/assets/images/icons/icon-send-mew.svg" />
           </div>
           <div>
-            <div class="mb-1 font-weight-bold subtitle-1">
-              Send Transaction
-            </div>
+            <div class="mb-1 font-weight-bold subtitle-1">Send Transaction</div>
             <p>
               Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor sed
               stet takimata ipsum invidunt, est ea no dolor.
@@ -61,7 +58,7 @@
           </div>
         </div>
       </v-col>
-      <v-col cols="7">
+      <v-col cols="12" lg="7">
         <v-img src="@/assets/images/snippets/send-tx-page.png" class="mt-n6" />
       </v-col>
     </v-row>
