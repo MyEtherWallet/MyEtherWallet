@@ -181,11 +181,6 @@ export default {
       }
     }
   },
-  mounted() {
-    this.unlockPrivateKeyWallet(
-      '62fdd8507b615f337d5589b0193ac79697394f3526adce7137e081392285f214'
-    );
-  },
   methods: {
     ...mapActions('wallet', ['setWallet']),
     handleStep(e) {
