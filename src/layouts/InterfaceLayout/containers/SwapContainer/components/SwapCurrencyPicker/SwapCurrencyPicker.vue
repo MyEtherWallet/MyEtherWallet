@@ -196,7 +196,7 @@ export default {
           keys: ['symbol', 'name']
         };
         const fuse = new Fuse(this.localCurrencies, options);
-        let result = fuse.search(newVal);
+        const result = fuse.search(newVal);
         this.localCurrencies = result.map(item => {
           return item.item;
         });

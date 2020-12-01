@@ -111,7 +111,51 @@
           </div>
           <!-- form-block amount-to-address -->
         </div>
-
+        <div v-if="showAlternates" class="btc-alternates">
+          <div no-body class="mb-1">
+            <div class="title-container" @click="toggleAlternates">
+              <h3>Get BTC Exposure On Enthereum</h3>
+              <i
+                :class="[
+                  openAltnernates ? 'fa-chevron-up' : 'fa-chevron-down',
+                  'fa'
+                ]"
+              />
+            </div>
+            <b-collapse
+              v-model="openAltnernates"
+              accordion="btc-alternatives"
+              role="tabpanel"
+            >
+              <div class="btc-body">
+                <p>
+                  Swap for wBTC, renBTC, or pBTC and own Bitcoin compatible with
+                  Ethereum applications.
+                </p>
+                <div v-if="!loadingData" class="alternative-btn-container">
+                  <div v-for="alt in alternates" :key="alt.symbol">
+                    <button
+                      v-if="alt.hasValue"
+                      class="alternative-btn"
+                      @click="setAltToPrimary(alt)"
+                    >
+                      {{ fromValue }} {{ fromCurrency }} /
+                      {{ alt.computeConversion(fromValue) || alt.toValue }}
+                      {{ alt.symbol }}
+                    </button>
+                  </div>
+                </div>
+                <div v-else class="alternative-btn-container">
+                  <div v-for="items in [0, 1, 2]" :key="`items-${items}`">
+                    <button class="alternative-btn">
+                      <div class="text-line"></div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </b-collapse>
+          </div>
+        </div>
         <div v-if="!isExitToFiat && !isBityCryptoToCrypto()" class="send-form">
           <div class="the-form gas-amount">
             <swap-address-selector
@@ -135,7 +179,6 @@
             Amount will be sent to your current wallet address.
           </div>
         </div>
-
         <div
           v-if="isExitToFiat && fromCurrency !== baseCurrency"
           class="send-form"
@@ -153,7 +196,6 @@
             />
           </div>
         </div>
-
         <div v-if="showRefundAddress" class="send-form">
           <div class="the-form gas-amount">
             <swap-address-selector
@@ -166,14 +208,6 @@
               @validAddress="validRefundAddress = $event"
               @unableToValidate="unableToValidateRefund = $event"
             />
-          </div>
-        </div>
-
-        <div v-if="showAlternates" class="send-form">
-          <div v-for="alt in alternates">
-            <button v-if="alt.hasValue" @click="setAltToPrimary(alt)">
-              {{ fromValue }} {{fromCurrency}}/{{alt.computeConversion(fromValue) || alt.toValue}} {{alt.symbol}}
-            </button>
           </div>
         </div>
 
@@ -375,7 +409,27 @@ export default {
       unableToValidateExit: false,
       unableToValidateRefund: false,
       overrideAddress: false,
-      alternates: [{symbol: 'RENBTC', rates: [], computeConversion: ()=> {}, hasValue: false}, {symbol: 'WBTC', rates: [], computeConversion: ()=> {}, hasValue: false}, {symbol: 'PBTC', rates: [], computeConversion: ()=> {}, hasValue: false}]
+      openAltnernates: true,
+      alternates: [
+        {
+          symbol: 'RENBTC',
+          rates: [],
+          computeConversion: () => {},
+          hasValue: false
+        },
+        {
+          symbol: 'WBTC',
+          rates: [],
+          computeConversion: () => {},
+          hasValue: false
+        },
+        {
+          symbol: 'PBTC',
+          rates: [],
+          computeConversion: () => {},
+          hasValue: false
+        }
+      ]
     };
   },
   computed: {
@@ -548,12 +602,12 @@ export default {
     }
   },
   watch: {
-    toCurrency(value){
+    toCurrency(value) {
       if (value === 'BTC') {
         this.standAloneRateEstimate();
       }
     },
-    fromValue(){
+    fromValue() {
       if (this.toCurrency === 'BTC') {
         this.standAloneRateEstimate();
       }
@@ -634,31 +688,40 @@ export default {
         this.swap
           .standAloneRateEstimate(this.fromCurrency, val.symbol, this.fromValue)
           .then(res => {
-            if(res){
-              const idx = this.alternates.findIndex(item => item.symbol === res[0].toCurrency)
-              if(idx > -1){
+            if (res) {
+              const idx = this.alternates.findIndex(
+                item => item.symbol === res[0].toCurrency
+              );
+              if (idx > -1) {
                 this.alternates[idx].rates = res[0].rate;
                 this.alternates[idx].fromValue = res[0].fromValue;
-                this.alternates[idx].toValue = res[0].computeConversion(this.fromValue)
-                this.alternates[idx].computeConversion = res[0].computeConversion.bind(res[0])
+                this.alternates[idx].toValue = res[0].computeConversion(
+                  this.fromValue
+                );
+                this.alternates[
+                  idx
+                ].computeConversion = res[0].computeConversion.bind(res[0]);
                 this.alternates[idx].hasValue = true;
                 return res;
               }
             }
-          })
-        return {symbol: val.symbol, rates: []}
-      })
-
+          });
+        return { symbol: val.symbol, rates: [] };
+      });
     },
-    setAltToPrimary(newCurrency){
-      const details = this.toArray.find(item => item.symbol.toLowerCase() === newCurrency.symbol.toLowerCase())
+    toggleAlternates() {
+      this.openAltnernates = !this.openAltnernates;
+    },
+    setAltToPrimary(newCurrency) {
+      const details = this.toArray.find(
+        item => item.symbol.toLowerCase() === newCurrency.symbol.toLowerCase()
+      );
       this.toCurrency = newCurrency.symbol;
       this.overrideTo = {};
       this.$nextTick(() => {
         this.overrideTo = details;
-        this.setToCurrency(newCurrency)
-      })
-
+        this.setToCurrency(newCurrency);
+      });
     },
     reset() {
       this.lastFeeEstimate = new BigNumber(0);
