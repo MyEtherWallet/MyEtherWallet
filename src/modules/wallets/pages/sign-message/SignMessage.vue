@@ -1,6 +1,12 @@
 <template>
   <div>
-    <div class="d-flex">
+    <div class="d-block d-lg-none">
+      <tips mobile class="mb-4" />
+      <network mobile class="mb-4" />
+      <myEthBalance mobile class="mb-4" />
+    </div>
+
+    <div class="d-flex mt-4 mt-lg-0">
       <div class="flex-grow-1">
         <mew6-white-sheet>
           <interface-wrap title="Sign Message">
@@ -31,22 +37,45 @@
           </interface-wrap>
         </mew6-white-sheet>
       </div>
-      <div class="pa-4"></div>
-      <div>
+
+      <div class="pa-4 d-none d-lg-block"></div>
+
+      <div class="d-none d-lg-block">
         <tips />
+        <div class="pa-4"></div>
+        <network />
+        <div class="pa-4"></div>
+        <tx-history title="Transaction history" />
+        <div class="pa-4"></div>
+        <myEthBalance />
+        <div class="pa-4"></div>
+        <swap />
       </div>
+    </div>
+
+    <div class="d-block d-lg-none">
+      <tx-history class="mt-4" title="Transaction history" mobile />
+      <swap class="mt-4" mobile />
     </div>
   </div>
 </template>
 
 <script>
 import tips from '@/modules/wallets/components/tips/Tips';
-import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
+import interfaceWrap from '@/components/interface-wrap/InterfaceWrap';
+import txHistory from '@/modules/wallets/components/transaction-history/TransactionHistory';
+import network from '@/modules/wallets/components/network/Network';
+import swap from '@/modules/wallets/components/swap/Swap';
+import myEthBalance from '@/modules/wallets/components/my-eth-balance/MyEthBalance';
 
 export default {
   components: {
     tips,
-    'interface-wrap': InterfaceWrap
+    interfaceWrap,
+    swap,
+    txHistory,
+    network,
+    myEthBalance
   },
   data() {
     return {};
