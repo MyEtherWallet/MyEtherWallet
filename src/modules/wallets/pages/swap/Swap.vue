@@ -1,16 +1,27 @@
 <template>
   <div class="mew-component--swap">
-    <div class="d-flex">
+    <div class="d-block d-lg-none">
+      <network mobile class="mb-4" />
+      <myEthBalance mobile class="mb-4" />
+    </div>
+
+    <div class="d-flex mt-4 mt-lg-0">
       <div class="flex-grow-1">
         <mew6-white-sheet>
           <interface-wrap title="Swap">
-            <div class="d-flex">
+            <div
+              class="d-flex flex-column flex-lg-row justify-center align-center"
+            >
               <div>
                 <mew-select :items="coins" label="From" />
                 <mew-input label="Amount" placeholder=" " />
               </div>
               <div class="px-6 mb-8 d-flex align-center">
-                <img :src="swap" height="35" />
+                <img
+                  :class="$vuetify.breakpoint.mdAndDown ? 'rotate' : ''"
+                  :src="swap"
+                  height="35"
+                />
               </div>
               <div>
                 <mew-select :items="coins" label="To" />
@@ -33,7 +44,7 @@
             <div class="mt-5">
               <div class="mew-heading-3">Select a provider</div>
               <v-row>
-                <v-col cols="6" lg="6" sm="12">
+                <v-col cols="12" lg="6">
                   <v-card flat color="tableHeader" class="pa-6">
                     <div class="d-flex align-center justify-space-between mb-3">
                       <img
@@ -49,7 +60,7 @@
                     <div>28.77344534 ETH (Max.)</div>
                   </v-card>
                 </v-col>
-                <v-col>
+                <v-col cols="12" lg="6">
                   <v-card flat color="tableHeader" class="pa-6">
                     <div class="d-flex align-center justify-space-between mb-3">
                       <img
@@ -65,7 +76,7 @@
                     <div>28.77344534 ETH (Max.)</div>
                   </v-card>
                 </v-col>
-                <v-col>
+                <v-col cols="12" lg="6">
                   <v-card disabled flat color="tableHeader" class="pa-6">
                     <div class="d-flex align-center justify-space-between mb-3">
                       <img
@@ -79,7 +90,7 @@
                     <div>Buy crypto with a credit card.</div>
                   </v-card>
                 </v-col>
-                <v-col>
+                <v-col cols="12" lg="6">
                   <v-card disabled flat color="tableHeader" class="pa-6">
                     <div class="d-flex align-center justify-space-between mb-3">
                       <img :src="bity" alt="Bity" height="35" />
@@ -121,12 +132,23 @@
           </interface-wrap>
         </mew6-white-sheet>
       </div>
-      <div class="pa-4"></div>
-      <div>
+
+      <div class="pa-4 d-none d-lg-block"></div>
+
+      <div class="d-none d-lg-block">
         <network />
+        <div class="pa-4"></div>
+        <tx-history title="Transaction history" />
+        <div class="pa-4"></div>
+        <myEthBalance />
         <div class="pa-4"></div>
         <swap />
       </div>
+    </div>
+
+    <div class="d-block d-lg-none">
+      <tx-history class="mt-4" title="Transaction history" mobile />
+      <swap class="mt-4" mobile />
     </div>
   </div>
 </template>
@@ -134,7 +156,8 @@
 <script>
 import Network from '@/modules/wallets/components/network/Network';
 import Swap from '@/modules/wallets/components/swap/Swap';
-
+import txHistory from '@/modules/wallets/components/transaction-history/TransactionHistory';
+import myEthBalance from '@/modules/wallets/components/my-eth-balance/MyEthBalance';
 import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
@@ -147,7 +170,9 @@ export default {
   components: {
     network: Network,
     swap: Swap,
-    'interface-wrap': InterfaceWrap
+    'interface-wrap': InterfaceWrap,
+    txHistory,
+    myEthBalance
   },
   data() {
     return {
@@ -204,6 +229,10 @@ export default {
 
 .invert {
   filter: invert(100%);
+}
+
+.rotate {
+  transform: rotate(90deg);
 }
 </style>
 
