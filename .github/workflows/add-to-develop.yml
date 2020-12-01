@@ -22,9 +22,10 @@ jobs:
           cache-name: cache-node-modules
         with:
           path: node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{steps.node-version.outputs.NODE_VERSIONN}}-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{steps.node-version.outputs.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{steps.node-version.outputs.NODE_VERSIONN}}-
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{steps.node-version.outputs.NODE_VERSION}}-
+
       - name: npm install
         run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
 
