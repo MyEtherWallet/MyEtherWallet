@@ -100,9 +100,9 @@ const dapps = {
     icon: staked,
     title: 'dappsStaked.title',
     desc: 'dappsStaked.desc',
-    supportedNetworks: [ETH.name],
-    lastUpdated: '11/10/2020',
-    releaseDate: '11/10/2020'
+    supportedNetworks: [ETH.name, GOERLI.name],
+    lastUpdated: '12/8/2020',
+    releaseDate: '12/8/2020'
   },
   gntMigrator: {
     route: '/interface/dapps/gnt-migrator',
