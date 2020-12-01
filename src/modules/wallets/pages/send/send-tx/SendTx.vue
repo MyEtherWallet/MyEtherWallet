@@ -1,31 +1,31 @@
 <template>
-  <mew-module
-    class="d-flex flex-grow-1 pt-6"
-    :title="$t('sendTx.send-tx')"
-    :has-elevation="true"
-    :has-indicator="true"
-  >
-    <template #moduleBody>
-      <div class="full-width px-15 pt-3">
-        <div class="d-flex justify-end mr-3 entire-bal">
-          <mew-button
-            :title="$t('sendTx.button-entire')"
-            btn-style="transparent"
-            @click.native="setEntireBal"
-          />
-        </div>
-        <v-container class="pt-0">
-          <v-row>
-            <v-col cols="6">
-              <mew-select
-                ref="mewSelect"
-                :items="tokens"
-                :label="$t('sendTx.type')"
-                class="mr-3"
-                @input="setCurrency"
-              />
-            </v-col>
-            <v-col cols="6">
+  <div>
+    <div class="d-block d-lg-none">
+      <network mobile class="mb-4" />
+      <myEthBalance mobile class="mb-4" />
+    </div>
+
+    <div class="d-flex mt-4 mt-lg-0">
+      <div class="flex-grow-1">
+        <mew6-white-sheet>
+          <interface-wrap title="Send Transaction">
+            <mew-select
+              ref="mewSelect"
+              :items="tokens"
+              :label="$t('sendTx.type')"
+              @input="setCurrency"
+            />
+
+            <div class="mb-2 text-right">
+              <v-btn
+                color="primary"
+                class="text-transform--initial mb-2"
+                x-small
+                text
+                @click.native="setEntireBal"
+              >
+                {{ $t('sendTx.button-entire') }}
+              </v-btn>
               <mew-input
                 ref="mewInput"
                 :value="amount"
@@ -34,115 +34,143 @@
                 :right-label="currencyBalance"
                 @input="setAmount"
               />
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12">
-              <mew-address-select
-                ref="addressSelect"
-                :value="toAddress"
-                :copy-tooltip="$t('common.copy')"
-                :save-tooltip="$t('common.save')"
-                :enable-save-address="true"
-                :label="$t('sendTx.to-addr')"
-                :items="addresses"
-                :placeholder="$t('sendTx.enter-addr')"
-                :success-toast="$t('sendTx.success.title')"
-                :is-valid-address="isValidAddress()"
-                @input="setAddress"
-              />
-            </v-col>
-          </v-row>
-        </v-container>
-      </div>
-
-      <v-container>
-        <mew-expand-panel
-          ref="expandPanel"
-          is-toggle
-          has-dividers
-          :panel-items="expandPanel"
-          class="px-15"
-        >
-          <template #panelBody1>
-            <div class="d-flex justify-space-between px-5 border-bottom pb-5">
-              <div class="mew-body font-weight-medium d-flex align-center">
-                {{ $t('sendTx.tx-fee') }}
-                <mew-tooltip class="ml-1" text="" />
-              </div>
-              <div v-show="isEth">
-                <i18n path="sendTx.cost-eth-usd" tag="div">
-                  <span slot="eth">{{ txFeeETH() }}</span>
-                  <span slot="usd">{{ txFeeUSD() }}</span>
-                </i18n>
-              </div>
             </div>
-            <div>
-              <!-- <mew-input
+
+            <mew-address-select
+              ref="addressSelect"
+              :value="toAddress"
+              :copy-tooltip="$t('common.copy')"
+              :save-tooltip="$t('common.save')"
+              :enable-save-address="true"
+              :label="$t('sendTx.to-addr')"
+              :items="addresses"
+              :placeholder="$t('sendTx.enter-addr')"
+              :success-toast="$t('sendTx.success.title')"
+              :is-valid-address="isValidAddress()"
+              class="mb-2"
+              @input="setAddress"
+            />
+
+            <mew-expand-panel
+              ref="expandPanel"
+              is-toggle
+              has-dividers
+              :panel-items="expandPanel"
+            >
+              <template #panelBody1>
+                <div class="font-weight-medium d-flex align-center mb-3">
+                  <div>{{ $t('sendTx.tx-fee') }}</div>
+                  <mew-tooltip class="ml-1" text="" />
+                </div>
+
+                <div v-show="isEth">
+                  <i18n path="sendTx.cost-eth-usd" tag="div">
+                    <span slot="eth">{{ txFeeETH() }}</span>
+                    <span slot="usd">{{ txFeeUSD() }}</span>
+                  </i18n>
+                </div>
+
+                <!-- <mew-input
                 :label="$t('common.gas.price')"
                 placeholder=" "
                 :value="displayedGasPrice()"
                 @input="setGasPrice"
-              /> -->
-              <mew-input
-                :value="customGasLimit"
-                :label="$t('common.gas.limit')"
-                placeholder=""
-                @input="setCustomGasLimit"
-              />
+                /> -->
+
+                <mew-input
+                  :value="customGasLimit"
+                  :label="$t('common.gas.limit')"
+                  placeholder=""
+                  @input="setCustomGasLimit"
+                />
+
+                <mew-input
+                  v-model="data"
+                  class="mt-4"
+                  :label="$t('sendTx.add-data')"
+                  placeholder=" "
+                />
+              </template>
+            </mew-expand-panel>
+
+            <div class="d-flex flex-column mt-12">
+              <div class="text-center">
+                <mew-button
+                  :title="$t('sendTx.send')"
+                  :has-full-width="false"
+                  btn-size="xlarge"
+                  @click.native="send()"
+                />
+              </div>
+              <div class="text-center mt-4">
+                <mew-button
+                  :title="$t('common.clear-all')"
+                  :has-full-width="false"
+                  btn-size="small"
+                  btn-style="transparent"
+                  @click.native="clear()"
+                />
+              </div>
             </div>
-
-            <mew-input
-              v-model="data"
-              :label="$t('sendTx.add-data')"
-              placeholder=" "
-              class="mt-10 mb-n5"
-            />
-          </template>
-        </mew-expand-panel>
-      </v-container>
-
-      <div class="d-flex flex-column mt-12">
-        <div class="text-center">
-          <mew-button
-            :title="$t('sendTx.send')"
-            :has-full-width="false"
-            btn-size="xlarge"
-            @click.native="send()"
-          />
-        </div>
-        <div class="text-center mt-4">
-          <mew-button
-            :title="$t('common.clear-all')"
-            :has-full-width="false"
-            btn-size="small"
-            btn-style="transparent"
-            @click.native="clear()"
-          />
-        </div>
+          </interface-wrap>
+        </mew6-white-sheet>
       </div>
-    </template>
+
+      <div class="pa-4 d-none d-lg-block"></div>
+
+      <div class="d-none d-lg-block">
+        <network />
+        <div class="pa-4"></div>
+        <tx-history title="Transaction history" />
+        <div class="pa-4"></div>
+        <myEthBalance />
+        <div class="pa-4"></div>
+        <swap />
+      </div>
+    </div>
+
+    <tx-history
+      class="mt-4 d-block d-lg-none"
+      title="Transaction history"
+      mobile
+    />
+
     <mew-toast
       ref="toast"
       :text="toastMsg"
       :toast-type="toastType"
       :duration="1000"
     />
-  </mew-module>
+  </div>
 </template>
 
 <script>
+import interfaceWrap from '@/components/interface-wrap/InterfaceWrap';
+import txHistory from '@/modules/wallets/components/transaction-history/TransactionHistory';
+import network from '@/modules/wallets/components/network/Network';
+import swap from '@/modules/wallets/components/swap/Swap';
+import myEthBalance from '@/modules/wallets/components/my-eth-balance/MyEthBalance';
 import utils from 'web3-utils';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-
 import SendTransaction from './index';
 import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR, SENTRY, SUCCESS } from '@/components/toast';
 import getService from '@/helpers/getService';
 
 export default {
+  components: {
+    swap,
+    interfaceWrap,
+    txHistory,
+    network,
+    myEthBalance
+  },
   props: {
+    mobile: {
+      type: Boolean,
+      default: false
+    },
     prefilledAmount: {
       type: String,
       default: '0'
