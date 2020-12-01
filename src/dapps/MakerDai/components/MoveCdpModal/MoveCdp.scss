@@ -1,0 +1,238 @@
+@import '~@/scss/GlobalVariables';
+
+$confirmation-modal-mobile-width: 500px;
+
+.modal-content {
+  padding: 30px;
+}
+
+.cc-icon {
+  font-size: 36px;
+}
+
+.top-text {
+  margin-bottom: 10px;
+}
+
+.input-container {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+
+  label {
+    color: $dark-blue-2;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px 7px;
+
+    i {
+      font-size: 14px;
+      margin-right: 2px;
+    }
+
+    .input-title {
+      font-size: 16px;
+    }
+  }
+
+  .input-box {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+
+    &.danger {
+      border: 1px solid red;
+    }
+
+    input {
+      background-color: $background-color-1;
+      border: 0;
+      font-size: 14px;
+      padding: 20px;
+      width: 100%;
+    }
+    // needs to be fixed to smoothly match against the input
+    .input-unit {
+      background-color: $background-color-1;
+      border: 0;
+      font-size: 14px;
+      height: 52px;
+      padding: 17px 22px 20px;
+      width: 10%;
+      color: #999;
+      font-weight: 600;
+    }
+  }
+}
+
+.sub-text {
+  .btn {
+    color: #05c0a5;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  padding-bottom: 10px;
+}
+
+.detail-container {
+  display: flex;
+  flex-direction: column;
+  //border-bottom: 1px solid #f9f9f9;
+  border-bottom: 2px solid #eaeaea;
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+}
+
+.detail-info {
+  border-bottom: 2px solid $border-color-6;
+  border-top: 2px solid $border-color-6;
+  padding: 20px 10px;
+
+  .info {
+    align-items: center;
+    color: $text-color-8;
+    display: flex;
+
+    .sliding-switch-white {
+      margin-left: auto;
+    }
+  } // .info
+
+  .expended-info {
+    max-height: 0;
+    transition: max-height 0.3s ease;
+    overflow: hidden;
+
+    &.expended-info-open {
+      max-height: 600px;
+    }
+
+    .padding-container {
+      padding-top: 10px;
+    }
+
+    .grid-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding: 16px 0;
+
+      // Mobile
+      @media all and (max-width: $confirmation-modal-mobile-width) {
+        display: block;
+        padding: 16px 0 0 0;
+      }
+
+      p:nth-child(even) {
+        max-width: 295px;
+        text-align: right;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        // Mobile
+        @media all and (max-width: $confirmation-modal-mobile-width) {
+          max-width: initial;
+          text-align: left;
+        }
+      }
+    }
+  } // .expended-info
+} // .detail-info
+
+.buttons {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > * {
+    width: 100%;
+
+    &:first-child {
+      margin-right: 10px;
+    }
+  }
+}
+
+.time-remaining {
+  text-align: center;
+
+  h1 {
+    font-weight: 500;
+    font-size: 50px;
+    color: $red-2;
+    margin: 0;
+  }
+}
+
+.value {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 13px;
+  margin-top: 13px;
+
+  span {
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+
+.block-title {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+
+.address {
+  line-height: 19px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.swap-detail {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.from-address,
+.to-address {
+  background-color: $background-color-1;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.right-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.confirm-send-button {
+  margin-top: 40px;
+  margin-bottom: 20px;
+  align-items: center;
+  flex-direction: column;
+  display: flex;
+
+  > li {
+    margin: 0 auto;
+    .provider-address-details {
+      text-align: center;
+      margin-right: 15px;
+    }
+  }
+}

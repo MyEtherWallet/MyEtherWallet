@@ -1,0 +1,47 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .col {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    line-height: 0;
+  }
+
+  .popover-button {
+    background-color: transparent;
+    border: 0;
+    margin: 0;
+    padding: 0;
+
+    &:active,
+    &:focus {
+      box-shadow: none;
+    }
+
+    .hover-icon {
+      display: none;
+    }
+
+    img {
+      width: 21px;
+      height: 21px;
+      margin: 0;
+      padding: 0;
+      display: block;
+    }
+
+    &:hover {
+      .nohover-icon {
+        display: none;
+      }
+
+      .hover-icon {
+        display: block;
+      }
+    }
+  }
+
+  .popover-content {
+    font-size: 12px;
+  }
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

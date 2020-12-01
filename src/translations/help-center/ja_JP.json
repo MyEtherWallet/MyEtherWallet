@@ -1,0 +1,22 @@
+{
+  "faqs": {
+    "balances-not-loading": "Balances not loading or showing on MyEtherWallet",
+    "support-other-coins": "Does MyEtherWallet support Bitcoin or other coins (LTC STEEM ZEC)",
+    "eth-not-showing": "ETH or Tokens sent to or from exchange haven't shown up",
+    "where-buy-eth": "Where Can I Buy / Sell / Trade / Exchange my ETH or Tokens?",
+    "what-ico": "What Is An ICO?",
+    "how-buy-eth": "How to buy Ethereum(ETH) with USD?",
+    "random-private-keys": "Couldn't everybody put in random private keys, look for a balance, and send to their own address?",
+    "mew-goes-down": "What happens if MyEtherWallet goes down?",
+    "multisig-contract": "How do I interact with a Multisig Contract?",
+    "current-block-number": "Check the current block number on MyEtherWallet"
+  },
+  "keyword-search": {
+    "lost": "Got lost? Let me help you.",
+    "top-searches": "Top Searches: MEW wallеt / Swap / Send ETH / Security/ Blockchain / Create a Wallet/"
+  },
+  "link-block": {
+    "email-us": "Email us"
+  },
+  "categories": "Categories"
+}

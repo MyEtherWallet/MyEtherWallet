@@ -1,0 +1,145 @@
+@import '~@/scss/GlobalVariables';
+
+.bootstrap-modal .modal-dialog {
+  max-width: 700px;
+}
+
+.qrcode-contents {
+  text-align: center;
+
+  .qrcode-title {
+    margin-bottom: 7px;
+    margin-top: 7px;
+  }
+
+  .qrcode-helper {
+    margin-bottom: 7px;
+  }
+}
+
+.confirmation-modal {
+  .modal-content {
+    padding: 20px;
+
+    .direction {
+      display: flex;
+
+      img {
+        margin: 0 auto;
+      }
+    }
+
+    .tx-info {
+      display: grid;
+      grid-template-columns: 1fr 70px 1fr;
+      padding-bottom: 15px;
+
+      .tx-data {
+        background-color: $background-color-7;
+        border-radius: 10px;
+        padding: 20px;
+
+        h3 {
+          font-size: 20px;
+          margin-top: 10px;
+
+          span {
+            color: $text-color-4;
+            font-size: 20px;
+          }
+        }
+
+        p {
+          width: 200px;
+          word-wrap: break-word;
+        }
+
+        .address-title {
+          font-size: 16px;
+          font-weight: 600;
+          margin-bottom: 5px;
+          margin-top: 10px;
+        }
+      }
+    } // .tx-info
+
+    .detail-info {
+      border-bottom: 2px solid $border-color-6;
+      border-top: 2px solid $border-color-6;
+      padding: 20px 10px;
+
+      .info {
+        align-items: center;
+        color: $text-color-8;
+        display: flex;
+
+        .sliding-switch-white {
+          margin-left: auto;
+        }
+      } // .info
+
+      .expended-info {
+        padding-top: 10px;
+
+        .grid-block {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          padding: 16px 0;
+
+          p:nth-child(even) {
+            max-width: 295px;
+            text-align: right;
+            text-overflow: ellipsis;
+          }
+        }
+      } // .expended-info
+    } // .detail-info
+
+    .submit-button-container {
+      padding: 50px 0 20px;
+      text-align: center;
+
+      .flex-center-align {
+        display: flex;
+
+        .button-with-helper {
+          align-items: center;
+          display: flex;
+          margin: 0 auto;
+
+          .submit-button {
+            display: inline-block;
+          }
+
+          .tooltip-box-2 {
+            margin-left: 15px;
+            text-align: center;
+          }
+        }
+      }
+
+      .learn-more {
+        margin-top: 20px;
+      }
+    }
+  }
+}
+
+.submit-button-container {
+  padding: 60px 0;
+  text-align: center;
+
+  .submit-button {
+    margin: 0 auto;
+    text-align: center;
+    width: 300px;
+  }
+
+  p {
+    margin-top: 20px;
+  }
+}
+
+.tokens {
+  border-radius: 5px;
+}

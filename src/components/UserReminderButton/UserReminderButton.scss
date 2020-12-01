@@ -1,0 +1,41 @@
+@import '~@/scss/GlobalVariables';
+
+.user-reminder-button {
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  opacity: 0.8;
+  text-align: center;
+  min-width: 70px;
+
+  img {
+    cursor: pointer;
+    height: 50px;
+    width: 50px;
+  }
+  p {
+    font-size: 12px;
+    font-weight: 600;
+    color: gray;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+
+  @media all and (max-width: $tablet-width) {
+    bottom: 70px;
+    right: 0;
+    opacity: 1;
+
+    img {
+      height: 30px;
+      width: 30px;
+    }
+
+    p {
+      font-size: 10px;
+      font-weight: 600;
+    }
+  }
+}

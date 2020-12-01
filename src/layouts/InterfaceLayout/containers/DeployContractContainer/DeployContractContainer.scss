@@ -1,0 +1,103 @@
+@import '../InterfaceContainer';
+
+.content-container {
+  @extend %send-form-base;
+}
+
+.deploy-contract-container {
+  @extend %interface-container;
+
+  .send-form {
+    margin-bottom: 30px;
+    .title-container {
+      .title {
+        align-items: flex-end;
+        display: flex;
+        margin-bottom: 10px;
+        padding: 0 8px;
+        width: 100%;
+
+        .select-contract {
+          margin-left: auto;
+        }
+
+        .copy-buttons {
+          color: $text-color-3;
+          margin-left: auto;
+          min-width: 100px;
+          text-align: right;
+
+          span {
+            cursor: pointer;
+            margin-left: 20px;
+          }
+        }
+      }
+    }
+
+    .contract-name {
+      align-items: center;
+      display: flex;
+      position: relative;
+
+      input {
+        background-color: $background-color-1;
+        border: 0;
+        padding: 13px 15px;
+        width: 100%;
+      }
+    }
+  }
+
+  .submit-button-container {
+    margin-top: 60px;
+
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      margin-top: 20px;
+    }
+
+    .bottom-text {
+      text-align: center;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+
+      .submit-button {
+        margin: 0 5px;
+        text-align: center;
+        width: 300px;
+        @media all and (max-width: $mobile-width) {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+.the-form {
+  position: relative;
+  i {
+    position: absolute;
+    bottom: 16px;
+    right: 13px;
+  }
+}
+
+.byte-code {
+  textarea {
+    height: 70px;
+  }
+}
+
+.bool-input-container {
+  display: flex;
+  padding: 0 20px;
+  width: 100%;
+
+  div {
+    padding: 10px;
+  }
+}

@@ -1,0 +1,60 @@
+@import '~@/scss/GlobalVariables';
+
+.modal-contents {
+  padding: 20px;
+
+  p {
+    color: $light-grey-18;
+    font-size: 14px;
+  }
+
+  .button-container {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    text-align: center;
+
+    div {
+      border-radius: 4px;
+      box-shadow: 0 0 5px $light-grey-13;
+      cursor: pointer;
+      height: 150px;
+      padding: 25px;
+      width: 130px;
+    }
+
+    .stable {
+      color: $light-blue-1;
+      font-weight: 500;
+    }
+
+    .variable {
+      color: $light-yellow-4;
+      font-weight: 500;
+    }
+
+    .selected-btn {
+      background-color: $light-grey-13;
+    }
+  }
+
+  .continue-btn-container {
+    text-align: center;
+
+    button {
+      background-color: $mew-green;
+      border: none;
+      border-radius: 4px;
+      color: $white;
+      height: 62px;
+      margin-top: 15px;
+      width: 260px;
+    }
+
+    .disabled {
+      background-color: $dark-grey-11;
+      pointer-events: none;
+    }
+  }
+}

@@ -1,0 +1,24 @@
+@import '~@/scss/GlobalVariables';
+
+.bootstrap-modal {
+  .check-icon {
+    border: 3px solid $border-color-1;
+    border-radius: 200px;
+    color: red;
+    font-size: 90px;
+    margin-bottom: 15px;
+    padding: 25px;
+  }
+
+  .mid-round-button-lightgrey-filled {
+    background-color: $light-grey-5;
+    border: 1px solid $button--border-color-1;
+    border-radius: 6px;
+    color: black;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 15px 40px;
+    user-select: none;
+  }
+}

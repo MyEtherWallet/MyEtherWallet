@@ -1,0 +1,122 @@
+@import '~@/scss/GlobalVariables';
+
+$container-green: $light-green-1;
+
+%template-container {
+  color: $dark-blue-2;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 0;
+}
+
+%btn-container {
+  align-items: center;
+  display: flex;
+  height: 68px;
+  justify-content: center;
+  margin-top: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+%back-btn {
+  color: $dark-blue-2;
+  background-color: $white;
+  border: 1px solid $dark-blue-2;
+  border-radius: 4px;
+  height: 100%;
+  padding: 21px 55px;
+  width: 100%;
+}
+
+.unstoppable-container {
+  background: $white;
+  border-radius: 5px;
+  grid-area: main;
+  overflow: hidden;
+  padding-bottom: 10px;
+
+  > div {
+    background-color: $background-color-white;
+  }
+
+  .branding-container {
+    background: $light-green-1;
+    border-radius: 4px;
+    margin: 10px;
+    padding: 20px;
+
+    .name-container {
+      span {
+        display: inline-block;
+        font-weight: 800;
+        font-size: 12px;
+        line-height: 13px;
+        margin-left: 10px;
+        margin-top: 5px;
+        max-width: 20px;
+        text-transform: uppercase;
+        vertical-align: middle;
+      }
+    }
+
+    .about-text {
+      color: $dark-blue-1;
+      margin-top: 15px;
+    }
+  }
+
+  .submit-button {
+    margin: 0 auto;
+    text-align: center;
+    // width: 300px;
+    @media all and (max-width: 600px) {
+      min-width: 100%;
+      width: 100%;
+    }
+  }
+}
+
+.back-button {
+  display: flex;
+  justify-content: center;
+  margin: 36px 0 25px;
+
+  button {
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 20px;
+    width: 300px;
+  }
+}
+
+.errored {
+  border: 1px solid $red-1 !important;
+  border-radius: 5px;
+  padding: 11px 13px;
+}
+
+.erroredMsg {
+  color: $red-1;
+}
+
+.button-container {
+  background-color: $light-grey-17;
+  border: 1px solid $light-grey-4;
+  border-radius: 4px;
+  padding: 3px;
+  .action-btn {
+    background-color: $light-grey-17;
+    border-radius: 4px;
+    border: none;
+    color: $dark-blue-1;
+    cursor: pointer;
+    padding: 10px 25px;
+  }
+
+  .active-btn {
+    background-color: $dark-blue-2;
+    color: $white;
+    z-index: 1;
+  }
+}

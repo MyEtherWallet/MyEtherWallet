@@ -1,0 +1,11 @@
+@import '~@/scss/GlobalVariables';
+
+.footer-text {
+  text-align: center;
+  p {
+    span {
+      color: $text-color-5;
+      font-weight: 500;
+    }
+  }
+}

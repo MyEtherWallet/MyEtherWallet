@@ -1,0 +1,82 @@
+@import '~@/scss/GlobalVariables';
+.modal-content {
+  padding: 40px;
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 20px 10px;
+  }
+}
+
+.button-container {
+  button {
+    display: inline-block;
+    width: 100%;
+  }
+
+  a {
+    color: $white;
+  }
+}
+
+.modal-metamask {
+  .modal-multi-icons {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+
+    .mew {
+      max-height: 90px;
+    }
+
+    .metamask {
+      height: 110px;
+    }
+
+    img {
+      padding: 0 13px;
+    }
+
+    .logo-small {
+      max-height: 90px;
+    }
+  }
+
+  .content-container {
+    margin-bottom: 30px;
+
+    h4 {
+      font-weight: 400;
+      line-height: 22px;
+      margin: 0 auto;
+      max-width: 400px;
+    }
+  }
+}
+
+.browser-catch {
+  padding: 30px 0;
+  text-align: center;
+
+  h4 {
+    color: $dark-blue-11 !important;
+    font-weight: 500;
+  }
+}
+
+.browser-logo-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  padding: 40px 0 30px;
+
+  img {
+    height: 75px;
+  }
+}

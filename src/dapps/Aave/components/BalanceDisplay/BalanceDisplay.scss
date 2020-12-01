@@ -1,0 +1,156 @@
+@import '~@/scss/GlobalVariables';
+
+.balance-wrapper {
+  background-color: $light-green-1;
+  border-radius: 4px;
+  min-height: 180px;
+  margin-bottom: 10px;
+  padding: 20px;
+  width: 100%;
+}
+
+.border-bottom {
+  border-bottom: 1px solid $light-grey-19;
+}
+
+.earnings-container-height {
+  height: 100%;
+}
+
+.balance-container {
+  padding-bottom: 10px;
+
+  .title {
+    color: $light-grey-18;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .balance {
+    color: $dark-blue-6;
+    font-size: 24px;
+    font-weight: 600;
+    margin-top: 10px;
+  }
+
+  .eth-balance {
+    color: $light-grey-18;
+    font-size: 14px;
+    font-weight: normal;
+    margin-top: 5px;
+  }
+}
+
+.composition-container {
+  padding: 15px;
+
+  .title {
+    color: $light-grey-18;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .row {
+    justify-content: space-between;
+  }
+
+  .percentage {
+    color: $light-blue-1;
+    font-weight: 600;
+  }
+
+  .available {
+    color: $light-grey-18;
+    font-size: 14px;
+    font-weight: 400;
+    margin-left: 5px;
+  }
+}
+
+.no-data {
+  color: $light-grey-20;
+  font-size: 14px;
+  font-weight: normal;
+  text-align: center;
+}
+
+.earnings-container {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+}
+
+.title-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.key-container {
+  align-items: center;
+  display: flex;
+
+  .apr-circle {
+    background: $light-blue-1;
+    border-radius: 5px;
+    height: 11px;
+    margin-right: 5px;
+    width: 11px;
+  }
+
+  .total-circle {
+    background: $light-green-8;
+    border-radius: 5px;
+    height: 11px;
+    margin-left: 15px;
+    margin-right: 5px;
+    width: 11px;
+  }
+
+  span {
+    color: $light-blue-2;
+    font-size: 12px;
+    font-weight: normal;
+    text-align: center;
+  }
+}
+
+.composition-full-bar {
+  background: $dark-grey-13;
+  border-radius: 6.5px;
+  height: 100%;
+  width: 100%;
+}
+
+.composition-wrap {
+  cursor: pointer;
+  display: flex;
+  height: 9px;
+  margin-top: 10px;
+  width: 100%;
+  div {
+    height: 100%;
+    left: 0;
+    top: 0;
+  }
+  .composition-percentage-hover {
+    z-index: 1;
+  }
+
+  .left-border-radius {
+    border-top-left-radius: 6.5px;
+    border-bottom-left-radius: 6.5px;
+  }
+
+  .right-border-radius {
+    border-top-right-radius: 6.5px;
+    border-bottom-right-radius: 6.5px;
+  }
+}
+
+.composition-bar {
+  background: $dark-grey-13;
+  border-radius: 6.5px;
+  height: 9px;
+  width: 100%;
+}

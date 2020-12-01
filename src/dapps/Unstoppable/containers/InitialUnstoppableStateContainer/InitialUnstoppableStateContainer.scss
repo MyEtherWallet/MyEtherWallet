@@ -1,0 +1,397 @@
+@import '../../Unstoppable';
+.initial-state-unstoppable {
+  @extend %template-container;
+
+  padding: 20px;
+}
+.advanced {
+  padding-top: 10px;
+
+  .advanced-content {
+    border-bottom: 2px solid $background-color-1;
+    border-top: 2px solid $background-color-1;
+    display: flex;
+    padding: 0 8px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+  }
+
+  .toggle-button {
+    align-items: center;
+    display: flex;
+    margin-left: auto;
+
+    > span {
+      margin-right: 15px;
+    }
+  }
+}
+
+.send-form {
+  .title-container {
+    align-items: flex-end;
+    display: flex;
+    margin-bottom: 10px;
+
+    .title {
+      padding: 0 15px;
+
+      span {
+        color: $dark-blue-6;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+    }
+
+    p {
+      max-width: 760px;
+    }
+
+    .buttons {
+      margin-bottom: 3px;
+      margin-left: auto;
+    }
+  }
+
+  .the-form {
+    align-items: center;
+    display: flex;
+    height: 62px;
+    justify-content: space-between;
+    position: relative;
+
+    @media all and (max-width: 600px) {
+      flex-direction: column;
+      height: 100%;
+    }
+  }
+
+  .domain-name {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+
+    input {
+      background-color: $light-grey-17;
+      border: none;
+      height: 100%;
+      margin-right: 20px;
+      padding: 13px 15px;
+      width: 100%;
+
+      @media all and (max-width: 600px) {
+        margin-right: 0;
+      }
+    }
+
+    span {
+      font-size: 14px;
+      font-weight: 500;
+      margin-right: 35px;
+      position: absolute;
+      right: 0;
+
+      @media all and (max-width: 600px) {
+        margin-right: 5px;
+      }
+    }
+
+    .close {
+      cursor: pointer;
+      height: 30px;
+      margin-right: 35px;
+      position: absolute;
+      right: 0;
+
+      @media all and (max-width: 600px) {
+        margin-right: 5px;
+      }
+    }
+
+    .move-right {
+      margin-right: 70px;
+
+      @media all and (max-width: 600px) {
+        margin-right: 35px;
+      }
+    }
+  }
+
+  .error-message-container {
+    margin: 7px 0 0 15px;
+    p {
+      color: $text-color-red;
+    }
+  }
+}
+
+.amount-to-address {
+  display: grid;
+  grid-column-gap: 5px;
+  grid-template-columns: 1fr 70px 1fr;
+
+  .title {
+    margin-bottom: 13px;
+    padding: 0 8px;
+  }
+
+  .exchange-icon {
+    color: $text-color-9;
+    font-size: 30px;
+    padding-top: 62px;
+    text-align: center;
+  }
+
+  .to-address {
+    position: relative;
+
+    .title {
+      align-items: center;
+      display: flex;
+      position: relative;
+    }
+
+    img {
+      height: 50px;
+      left: 98px;
+      position: absolute;
+      top: -14px;
+    }
+
+    .copy-button {
+      color: $text--link-color;
+      cursor: pointer;
+      margin-left: auto;
+    }
+
+    .address-block {
+      height: 98px;
+    }
+
+    i {
+      bottom: 13px;
+      position: absolute;
+      right: 13px;
+    }
+
+    textarea {
+      background-color: transparent;
+      border: 0;
+      height: 100%;
+      padding: 13px 15px;
+      resize: none;
+      width: 100%;
+    }
+  }
+}
+
+.submit-button-container {
+  display: flex;
+  height: 100%;
+  justify-content: center;
+
+  button {
+    min-width: 210px;
+    white-space: nowrap;
+    width: 100%;
+  }
+  // // Mobile
+  @media all and (max-width: 600px) {
+    margin-top: 20px;
+    width: 100%;
+  }
+}
+
+.flex-container {
+  border-bottom: 2px solid $background-color-1;
+  border-top: 2px solid $background-color-1;
+  margin-bottom: 40px;
+  margin-top: 40px;
+  padding: 20px 35px;
+
+  .title-container {
+    display: flex;
+
+    .margin-left-auto {
+      margin-left: auto;
+    }
+  }
+}
+
+.domain-check-form {
+  margin-top: 30px;
+
+  .domain-checker {
+    display: flex;
+
+    input {
+      background-color: $background-color-1;
+      border: 0;
+      border-radius: 5px 0 0 5px;
+      // margin-right: 20px;
+      padding: 13px 15px;
+      width: 100%;
+    }
+
+    .check-button {
+      background-color: $button-background-color-1;
+      border-radius: 0 5px 5px 0;
+      color: $text-white;
+      cursor: pointer;
+      font-weight: 500;
+      padding: 13px 40px;
+    }
+  }
+}
+
+.sub-domain-list {
+  margin-top: 30px;
+
+  .title {
+    margin-bottom: 10px;
+  }
+
+  ul {
+    li {
+      align-items: center;
+      border-top: 5px dotted $background-color-1;
+      display: flex;
+      padding: 10px 0;
+    }
+  }
+
+  .buy-button-container {
+    align-items: center;
+    display: flex;
+    margin-left: auto;
+
+    p {
+      margin-right: 10px;
+    }
+  }
+}
+
+.result-wrapper {
+  color: $dark-blue-6;
+  margin-bottom: 15px;
+  .result-title {
+    margin-bottom: 10px;
+    padding: 25px 15px 0 15px;
+    span {
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+
+  .unavail-container {
+    background-color: $light-grey-1;
+    border: 1px solid $light-orange-1;
+  }
+
+  .avail-container {
+    background-color: $light-green-1;
+    border: 1px solid $mew-green;
+  }
+
+  .result-container {
+    align-items: center;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    width: 100%;
+
+    .left-container {
+      display: flex;
+      flex-direction: column;
+      .domain-name {
+        font-size: 20px;
+        font-weight: 600;
+      }
+      .domain-taken {
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .eth-text {
+        font-weight: 500;
+      }
+      .price-text {
+        color: $dark-grey-8;
+        margin-left: 3px;
+      }
+    }
+
+    .right-container {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      @media all and (max-width: 600px) {
+        flex-direction: column;
+      }
+      .buy-btn {
+        padding: 10px 20px;
+        @media all and (max-width: 600px) {
+          width: 100%;
+        }
+      }
+      .title {
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .avail-text {
+        color: $mew-green;
+        margin-right: 10px;
+        @media all and (max-width: 600px) {
+          margin-left: 5px;
+          margin-right: 0;
+        }
+      }
+      .unavail-text {
+        color: $light-orange-1;
+      }
+    }
+  }
+}
+
+.cart-container {
+  background-color: #f2fafa;
+  border: 1px solid #05c0a5;
+  border-radius: 7px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 10px;
+}
+
+.cart-close {
+  width: 25px;
+  cursor: pointer;
+}
+
+.cart-items-container {
+  margin-top: 10px;
+}
+
+.cart-item-row {
+  display: flex;
+  align-items: center;
+}
+
+.cart-left {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-total-container {
+  margin-top: 15px;
+}
+
+.bold {
+  font-weight: bold;
+}

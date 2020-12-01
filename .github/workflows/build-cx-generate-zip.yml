@@ -1,0 +1,51 @@
+name: build cx and generate zip
+
+on:
+  push:
+    branches-ignore:
+      - 'gh-pages'
+      - 'gh-pages-history'
+    tags-ignore:
+      - '*'
+
+jobs:
+  cx-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: setup env
+        run: |
+          docker build -t mew-build-container .
+          echo ::set-output name=NODE_VERSION::$(docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "node --version")
+        id: node-version
+      - name: Cache node modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{steps.node-version.outputs.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{steps.node-version.outputs.NODE_VERSION}}-
+
+      - name: npm install
+        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
+
+      - name: build
+        run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:mewcx"
+
+      - name: generate zip for cx
+        if: contains(github.ref, 'cx')
+        env:
+          AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
+          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          GITHUB_TOKEN: ${{secrets.MEW_BOT_TOKEN}}
+        run: |
+          pip install --user awscli
+          cd chrome-extension && zip -r ../MEW-CX-$GITHUB_SHA.zip * && cd ..
+          aws s3 cp --acl public-read ./MEW-CX-$GITHUB_SHA.zip s3://mewbuilds/cx/MEW-CX-$GITHUB_SHA.zip
+          curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
+            -d "{\"body\": \"Copy of this build can be found at <br/>https://www.mewbuilds.com/cx/MEW-CX-${GITHUB_SHA}.zip<br/> \"}" \
+                            "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/comments"

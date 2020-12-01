@@ -1,0 +1,238 @@
+@import '../../Unstoppable';
+
+.crypto-container {
+  @extend %template-container;
+}
+
+.domain-header {
+  display: flex;
+  flex-direction: row;
+  background-color: $light-green-1;
+  justify-content: space-between;
+  padding: 25px;
+  h4 {
+    font-weight: 600;
+  }
+
+  p {
+    margin-top: 7px;
+    color: $mew-green;
+    font-weight: 500;
+  }
+  .content-right {
+    .domain-price {
+      margin-right: 15px;
+    }
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @media all and (max-width: $mobile-width) {
+      margin-top: 30px;
+    }
+  }
+
+  .eth-text {
+    font-weight: 500;
+  }
+
+  .price-text {
+    color: $dark-grey-8;
+    font-weight: 400;
+    margin-left: 3px;
+  }
+}
+
+.items-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.crypto-form-container {
+  width: 100%;
+  padding-left: 100px;
+  padding-right: 100px;
+  @media all and (max-width: 600px) {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  padding-top: 50px;
+  padding-bottom: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .eth-balance-container {
+    align-items: center;
+    background-color: $light-green-1;
+    border: 1px solid $mew-green;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    padding: 20px;
+
+    .right-container {
+      align-items: center;
+      display: flex;
+    }
+
+    .your-bal {
+      font-size: 12px;
+    }
+
+    .balance {
+      font-weight: 500;
+      margin-left: 5px;
+      text-transform: uppercase;
+    }
+
+    .eth-text {
+      color: $dark-grey-8;
+      font-weight: 400;
+      margin-left: 3px;
+    }
+  }
+
+  .btn-container {
+    @extend %btn-container;
+    .back-btn {
+      @extend %back-btn;
+    }
+  }
+
+  h3 {
+    font-weight: 600;
+  }
+  h5 {
+    font-weight: 600;
+  }
+  .secured-by-crypto {
+    color: #6772e5;
+  }
+  .pay-with-card {
+    font-weight: 500;
+    color: $mew-green;
+    cursor: pointer;
+    text-align: right;
+  }
+  .crypto-form-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+
+    h3 {
+      margin-bottom: 0;
+    }
+  }
+
+  .crypto-form-field-container {
+    margin-top: 20px;
+    width: 100%;
+  }
+  input {
+    background-color: $background-color-1;
+    border: 0;
+    border-radius: 5px 0 0 5px;
+    padding: 13px 15px;
+    margin-top: 5px;
+    width: 100%;
+    font-weight: 500;
+  }
+  .crypto-card-input {
+    margin-top: 10px;
+  }
+  .pay-button {
+    margin-left: 10px;
+    height: 100%;
+    white-space: nowrap;
+    width: 100%;
+  }
+}
+
+.crypto-field-container {
+  margin-top: 15px;
+}
+
+.crypto-field-label {
+  font-size: 12px;
+}
+
+.crypto-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: $light-green-1;
+  border-radius: 4px;
+  padding: 20px;
+  h6 {
+    word-break: break-all;
+  }
+
+  .right {
+    align-items: center;
+    display: flex;
+
+    .payment-addr {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 150px;
+
+      @media all and (max-width: 600px) {
+        width: 200px;
+      }
+    }
+    .eth-icon {
+      height: 20px;
+    }
+
+    .amount-container {
+      align-items: center;
+      display: flex;
+      font-weight: 500;
+      margin-left: 5px;
+
+      .amount-text {
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .eth-text {
+        color: $dark-grey-8;
+        margin-left: 3px;
+      }
+    }
+  }
+}
+
+.qr-code {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+.margin-bottom {
+  margin-bottom: 25px;
+}
+.payment-pending {
+  margin-bottom: 10px;
+}
+
+.hidden {
+  display: 'hidden';
+}
+.copy-button {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.error-message {
+  color: $red-1;
+  font-size: 13px;
+  margin-top: 10px;
+}

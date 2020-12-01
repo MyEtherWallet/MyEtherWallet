@@ -1,0 +1,54 @@
+@import '~@/scss/GlobalVariables';
+
+.modal-container {
+  .balance-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 2em 2em 1em 2em;
+  }
+
+  .funds-txt {
+    color: $dark-blue-2;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .btn-container {
+    text-align: center;
+  }
+
+  .action-container {
+    padding: 2em 2em 1em 2em;
+  }
+}
+
+.eth-text {
+  color: $dark-blue-12;
+  margin-top: 30px;
+  position: absolute;
+  right: 45px;
+  text-align: right;
+}
+
+.confirmation-container {
+  text-align: center;
+
+  .check-icon {
+    border: 3px solid $border-green;
+    border-radius: 200px;
+    color: $text-color-green;
+    font-size: 70px;
+    margin-bottom: 15px;
+    padding: 25px;
+  }
+
+  p {
+    color: $dark-blue-2;
+    font-size: 16px;
+  }
+
+  .mew-txt {
+    color: $mew-green;
+    font-size: 16px;
+  }
+}

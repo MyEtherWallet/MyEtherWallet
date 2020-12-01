@@ -1,0 +1,164 @@
+body {
+  margin: 0 !important;
+  height: 460px !important;
+  width: 300px !important;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.text-container {
+  background-color: #f2fafa;
+  height: 123px;
+  padding: 20px;
+  width: 260px;
+}
+
+.text-container .icons-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 40px 10px;
+  width: 180px;
+}
+
+.text-container .icons-container .icons {
+  height: 50px;
+  width: 50px;
+}
+
+.text-container .icons-container .icon {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 50px;
+  width: 50px;
+}
+
+.actual-text-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.text-container .icons-container .icons.circle {
+  background-color: rgba(177, 177, 177, 0.4);
+  border-radius: 50%;
+}
+
+.text-container .text {
+  background-color: rgba(177, 177, 177, 0.4);
+  border-radius: 12px;
+  height: 15px;
+  margin: 2.5px 0;
+  width: 260px;
+}
+
+.text.middle {
+  width: 130px;
+}
+
+.wallets-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.wallet {
+  align-items: center;
+  display: flex;
+  padding-top: 10px;
+}
+
+.wallet .check {
+  border-radius: 50%;
+  background-color: #999;
+  height: 15px;
+  width: 15px;
+}
+
+.wallet .actual-wallet {
+  background-color: #f2fafa;
+  border-radius: 12px;
+  width: 250px;
+  height: 85px;
+  margin-left: 10px;
+}
+
+.wallet .actual-wallet .burner {
+  background-color: #506175;
+  margin: 35px auto;
+  height: 21px;
+  width: 155px;
+}
+
+.wallet .actual-wallet.not-burner {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+}
+
+.wallet .actual-wallet.not-burner .address-icon {
+  background-color: #506175;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+}
+
+.wallet .actual-wallet.not-burner .text {
+  background-color: #506175;
+  height: 63px;
+  width: 180px;
+}
+
+.buttons-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  height: 70px;
+  width: 300px;
+}
+
+.buttons-container .access,
+.buttons-container .deny {
+  border-radius: 5px;
+  width: 100px;
+  height: 21px;
+  padding: 10px;
+}
+
+.access {
+  align-items: center;
+  background-color: grey;
+  display: flex;
+  justify-content: center;
+}
+
+.deny {
+  align-items: center;
+  border: 1px solid #ff122f;
+  color: #ff122f;
+  display: flex;
+  justify-content: center;
+}
+
+.deny .button-text {
+  background-color: #ff122f;
+}
+
+.access .button-text {
+  background-color: #fff;
+}
+
+.buttons-container * .button-text {
+  text-align: center;
+  height: 15px;
+  width: 80px;
+}

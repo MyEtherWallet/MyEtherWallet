@@ -1,0 +1,44 @@
+@import '~@/scss/GlobalVariables';
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+  position: relative;
+
+  input {
+    background-color: $white;
+    border: none;
+    padding: 15px;
+  }
+
+  .input-with-blockie {
+    padding: 15px 0 15px 50px;
+  }
+
+  label {
+    color: $dark-blue-2;
+    font-weight: bold;
+    padding-left: 10px;
+  }
+
+  .floated-blockie {
+    left: 10px;
+    position: absolute;
+    top: 40px;
+  }
+}
+
+.submit-button {
+  margin-top: 10px;
+  width: 100% !important;
+}
+
+.form-container {
+  margin-top: 120px;
+
+  form {
+    margin: 0 auto;
+    max-width: 500px;
+  }
+}

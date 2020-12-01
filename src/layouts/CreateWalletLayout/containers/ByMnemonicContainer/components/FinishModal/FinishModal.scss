@@ -1,0 +1,21 @@
+@import '~@/scss/GlobalVariables';
+
+.done {
+  .check-icon {
+    border: 3px solid $border-green;
+    border-radius: 200px;
+    color: $text-color-green;
+    font-size: 90px;
+    margin-bottom: 15px;
+    padding: 25px;
+  }
+}
+
+.modal-container-block {
+  padding: 30px;
+}
+
+.button-container {
+  margin-bottom: 0 !important;
+  margin-top: 30px;
+}

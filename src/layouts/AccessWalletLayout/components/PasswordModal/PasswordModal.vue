@@ -1,0 +1,173 @@
+<template>
+  <b-modal
+    ref="password"
+    :title="$t('common.password.string')"
+    hide-footer
+    class="bootstrap-modal modal-software nopadding"
+    centered
+    static
+    lazy
+    @shown="focusInput"
+  >
+    <div>
+      <div class="warning">
+        <warning-message />
+      </div>
+      <form class="password-form">
+        <div class="input-container">
+          <input
+            ref="passwordInput"
+            v-model="password"
+            :type="show ? 'text' : 'password'"
+            :placeholder="$t('common.password.enter')"
+            name="Password"
+            autocomplete="off"
+          />
+          <img
+            v-if="show"
+            alt
+            src="@/assets/images/icons/show-password.svg"
+            @click.prevent="switchViewPassword"
+          />
+          <img
+            v-if="!show"
+            alt
+            src="@/assets/images/icons/hide-password.svg"
+            @click.prevent="switchViewPassword"
+          />
+        </div>
+        <button
+          :disabled="inputValid"
+          class="submit-button large-round-button-green-filled"
+          type="submit"
+          @click.prevent="unlockWallet"
+        >
+          <span v-show="!spinner">{{ $t('common.wallet.access') }}</span>
+          <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
+        </button>
+      </form>
+    </div>
+  </b-modal>
+</template>
+
+<script>
+import { WalletInterface } from '@/wallets';
+import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
+import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
+import { mapState, mapActions } from 'vuex';
+import { Toast, Wallet } from '@/helpers';
+import WarningMessage from '@/components/WarningMessage';
+
+export default {
+  components: {
+    'warning-message': WarningMessage
+  },
+  props: {
+    file: {
+      type: Object,
+      default: function () {
+        return {};
+      }
+    }
+  },
+  data() {
+    return {
+      show: false,
+      password: '',
+      spinner: false
+    };
+  },
+  computed: {
+    ...mapState('main', ['path', 'online']),
+    inputValid() {
+      return (
+        this.file &&
+        this.walletRequirePass(this.file) &&
+        (this.password === '' || this.password.length === 0)
+      );
+    }
+  },
+  watch: {
+    password() {
+      this.error = '';
+    }
+  },
+  methods: {
+    ...mapActions('main', ['decryptWallet']),
+    walletRequirePass(ethjson) {
+      if (!ethjson) return false;
+      if (ethjson.encseed != null) return true;
+      else if (ethjson.Crypto != null || ethjson.crypto != null) return true;
+      else if (ethjson.hash != null && ethjson.locked) return true;
+      else if (ethjson.hash != null && !ethjson.locked) return false;
+      else if (ethjson.publisher == 'MyEtherWallet' && !ethjson.encrypted)
+        return false;
+      return true;
+    },
+    unlockWallet() {
+      this.spinner = true;
+
+      if (this.online && window.Worker && window.origin !== 'null') {
+        const worker = new walletWorker();
+        const self = this;
+        worker.postMessage({
+          type: 'unlockWallet',
+          data: [this.file, this.password]
+        });
+        worker.onmessage = function (e) {
+          const obj = {
+            file: this.file,
+            name: e.data.filename
+          };
+          self.setUnlockedWallet(
+            new WalletInterface(
+              Buffer.from(e.data._privKey),
+              false,
+              keyStoreType,
+              '',
+              JSON.stringify(obj)
+            )
+          );
+        };
+        worker.onerror = function (e) {
+          e.preventDefault();
+          self.spinner = false;
+          Toast.responseHandler(e, Toast.ERROR);
+        };
+      } else {
+        const newFile = {};
+        Object.keys(this.file).forEach(key => {
+          newFile[key.toLowerCase()] = this.file[key];
+        });
+        const _wallet = Wallet.fromV3(newFile, this.password, true);
+        this.setUnlockedWallet(
+          new WalletInterface(
+            Buffer.from(_wallet._privKey),
+            false,
+            keyStoreType
+          )
+        );
+      }
+    },
+    setUnlockedWallet(wallet) {
+      this.decryptWallet([wallet]).then(() => {
+        this.spinner = false;
+        this.password = '';
+        this.$router.push({
+          path: 'interface'
+        });
+      });
+    },
+    switchViewPassword() {
+      this.show = !this.show;
+    },
+    focusInput() {
+      this.password = '';
+      this.$refs.passwordInput.focus();
+    }
+  }
+};
+</script>
+<style lang="scss" scoped>
+@import 'PasswordModal.scss';
+</style>

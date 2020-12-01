@@ -1,0 +1,12 @@
+@import '~@/scss/GlobalVariables';
+@media all and (max-width: $mobile-width) {
+  .wrap {
+    background-color: $background-color-1;
+    padding: 40px 0 55px;
+    text-align: left;
+  }
+
+  .footer-text {
+    max-width: 300px;
+  }
+} // @media all and (max-width: $mobile-width)

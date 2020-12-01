@@ -1,0 +1,133 @@
+@import '../../Unstoppable';
+
+.stripe-container {
+  @extend %template-container;
+}
+
+.items-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.domain-header {
+  background-color: $light-green-1;
+  padding: 25px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  h4 {
+    font-weight: 600;
+  }
+  p {
+    margin-top: 7px;
+    color: $mew-green;
+    font-weight: 500;
+  }
+  .content-right {
+    .domain-price {
+      margin-right: 15px;
+    }
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @media all and (max-width: 600px) {
+      margin-top: 30px;
+    }
+  }
+
+  .eth-text {
+    font-weight: 500;
+  }
+
+  .price-text {
+    color: $dark-grey-8;
+    font-weight: 400;
+    margin-left: 3px;
+  }
+}
+
+.stripe-form-container {
+  width: 100%;
+  padding-left: 100px;
+  padding-right: 100px;
+  @media all and (max-width: 600px) {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  padding-top: 30px;
+  padding-bottom: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  h3 {
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+  h5 {
+    font-weight: 600;
+  }
+  .secured-by-stripe {
+    color: #6772e5;
+  }
+  .pay-with-crypto {
+    font-weight: 500;
+    color: $mew-green;
+    cursor: pointer;
+    text-align: right;
+  }
+  .stripe-form-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+
+    h3 {
+      margin-bottom: 0;
+    }
+  }
+
+  .btn-container {
+    @extend %btn-container;
+    .back-btn {
+      @extend %back-btn;
+    }
+  }
+
+  .stripe-form-field-container {
+    font-size: 16px;
+    margin-top: 20px;
+    width: 100%;
+
+    .form-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-left: 5px;
+    }
+  }
+  input {
+    background-color: $background-color-1;
+    border: 0;
+    border-radius: 5px 0 0 5px;
+    // margin-right: 20px;
+    padding: 13px 15px;
+    margin-top: 5px;
+    width: 100%;
+    font-weight: 500;
+  }
+  .stripe-card-input {
+    margin-top: 10px;
+  }
+  .pay-button {
+    margin-left: 10px;
+    min-height: 68px;
+    width: 100%;
+  }
+}
+
+.error-message {
+  margin-top: 15px;
+  color: $red-1;
+}

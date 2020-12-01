@@ -1,0 +1,43 @@
+@import '~@/scss/GlobalVariables';
+
+.with-icon {
+  color: $mew-green;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.without-icon {
+  margin: 0 !important;
+  p {
+    cursor: pointer;
+    color: $light-blue-2;
+    margin-bottom: 15px;
+  }
+}
+
+.email-prefill-inputs {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 10px 0 30px;
+
+  input,
+  textarea {
+    background-color: $light-grey-1;
+    border: 0;
+    font-size: 14px;
+    margin: 10px 20px;
+    padding: 20px;
+  }
+
+  textarea {
+    min-height: 200px;
+  }
+
+  a {
+    color: $white !important;
+  }
+}

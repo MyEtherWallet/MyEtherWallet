@@ -1,0 +1,15 @@
+{
+  "Uncaught Error: Key derivation failed - possibly wrong passphrase": "errorsGlobal.wrong-passphrase",
+  "mewcx.nickname-found": "mewcx.nickname-found",
+  "mewcx.address-already-stored": "mewcx.address-already-stored",
+  "kyber-token-list-update-failed": "swap.warning.kyber-token-list-update-failed",
+  "kyber-gasLimit-list-update-failed": "swap.warning.kyber-gasLimit-list-update-failed",
+  "kyber-list-update-failed": "swap.warning.kyber-list-update-failed",
+  "Error retrieving trade, try a different dex": "swap.warning.dexag-cannot-complete",
+  "gas-too-high": "swap.warning.gas-too-high",
+  "bity-rate-failed": "swap.notice.bity-rate-failed",
+  "error-parsing-tx-details": "notifications.error-parsing-tx-details",
+  "error-generating-swap": "swap.warning.error-generating-swap",
+  "liquidity-too-low": "swap.warning.liquidity-too-low",
+  "not-enough-eth-gas": "swap.warning.not-enough-eth-gas"
+}

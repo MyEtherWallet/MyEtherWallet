@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>elec-3</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="3.16368638%" y1="100%" x2="53.0949106%" y2="25.0327654%" id="linearGradient-1">
+            <stop stop-color="#F89923" offset="0%"></stop>
+            <stop stop-color="#F49822" offset="51%"></stop>
+            <stop stop-color="#EE9022" offset="69%"></stop>
+            <stop stop-color="#E38725" offset="82%"></stop>
+            <stop stop-color="#D57B28" offset="93%"></stop>
+            <stop stop-color="#C86F29" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="102.121212%" y1="3.65853659%" x2="34.2424242%" y2="98.7804878%" id="linearGradient-2">
+            <stop stop-color="#FBD702" offset="0%"></stop>
+            <stop stop-color="#FBD503" offset="53%"></stop>
+            <stop stop-color="#FBD10D" offset="73%"></stop>
+            <stop stop-color="#FAC917" offset="86%"></stop>
+            <stop stop-color="#F6BC17" offset="97%"></stop>
+            <stop stop-color="#F6B918" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="elec-3">
+            <circle id="Oval" fill="#6F2C91" fill-rule="nonzero" cx="14" cy="14" r="14"></circle>
+            <g id="_Group_" transform="translate(5.000000, 7.000000)" stroke="#FFFFFF" stroke-width="0.08">
+                <polygon id="_Path_" points="10.71 7.03 13.02 7.23 11.32 4.91"></polygon>
+                <polygon id="_Path_2" points="6.88 7.23 10.71 7.03 9.45 5.94"></polygon>
+                <polygon id="_Path_3" points="13.02 7.23 15.69 5.36 11.32 4.91"></polygon>
+                <polygon id="_Path_4" points="9.45 5.94 10.71 7.03 11.32 4.91"></polygon>
+                <polygon id="_Path_5" points="11.32 4.91 7.17 2.79 9.45 5.94"></polygon>
+                <polygon id="_Path_6" points="9.45 5.94 7.17 2.79 6.88 5.36"></polygon>
+                <polygon id="_Path_7" points="15.69 5.36 12.93 3.14 11.32 4.91"></polygon>
+                <polygon id="_Path_8" points="12.93 3.14 7.17 2.79 11.32 4.91"></polygon>
+                <polygon id="_Path_9" points="9.45 0.6 7.17 2.79 12.93 3.14"></polygon>
+                <polygon id="_Path_10" points="11.8 1.14 9.45 0.6 12.93 3.14"></polygon>
+                <polygon id="_Path_11" points="14.57 3.49 12.93 3.14 15.69 5.36"></polygon>
+                <polygon id="_Path_12" points="17.5 6.42 15.69 5.36 17.56 9.42"></polygon>
+                <polygon id="_Path_13" points="10.09 8.74 10.71 7.03 6.88 7.23"></polygon>
+                <polygon id="_Path_14" points="17.56 9.42 15.69 5.36 13.02 7.23"></polygon>
+                <polygon id="_Path_15" points="6.88 5.36 6.88 7.23 9.45 5.94"></polygon>
+                <polygon id="_Path_16" points="6.2 2.66 4.21 3.53 7.17 2.79"></polygon>
+                <polygon id="_Path_17" points="6.88 7.23 10.67 10.83 10.09 8.74"></polygon>
+                <polygon id="_Path_18" points="7.23 11.67 10.67 10.83 3.24 9.51"></polygon>
+                <polyline id="_Path_19" points="7.84 8.16 6.88 7.23 3.24 9.51 10.67 10.83 7.84 8.16"></polyline>
+                <polygon id="_Path_20" points="10.67 10.83 14.99 10.7 10.09 8.74"></polygon>
+                <polygon id="_Path_21" points="13.02 7.23 14.99 10.7 17.56 9.42"></polygon>
+                <polygon id="_Path_22" points="10.71 7.03 14.99 10.7 13.02 7.23"></polygon>
+                <polygon id="_Path_23" points="10.09 8.74 14.99 10.7 10.71 7.03"></polygon>
+                <polygon id="_Path_24" points="0.28 9.83 3.21 11.19 3.24 9.51"></polygon>
+                <polyline id="_Path_25" points="5.97 7.81 6.88 7.23 3.63 6.17 3.24 9.51 5.97 7.81"></polyline>
+                <polygon id="_Path_26" points="6.88 5.36 3.63 6.17 6.88 7.23"></polygon>
+                <polygon id="_Path_27" points="4.21 3.53 3.63 6.17 6.88 5.36"></polygon>
+                <polygon id="_Path_28" points="0.6 7.03 0.28 9.83 3.24 9.51"></polygon>
+                <polygon id="_Path_29" points="7.17 2.79 4.21 3.53 6.88 5.36"></polygon>
+                <polygon id="_Path_30" points="3.63 6.17 0.6 7.03 3.24 9.51"></polygon>
+                <polygon id="_Path_31" points="3.21 11.19 7.23 11.67 3.24 9.51"></polygon>
+            </g>
+            <g id="_Group_2" transform="translate(9.000000, 6.000000)" fill-rule="nonzero">
+                <polygon id="_Path_32" fill="url(#linearGradient-1)" points="2.43 13.96 9.7 6.33 5.29 6.33"></polygon>
+                <polygon id="_Path_33" fill="#F4EB21" points="0.85 8.61 5.26 8.61 9.7 6.33 5.29 6.33"></polygon>
+                <polygon id="_Path_34" fill="url(#linearGradient-2)" points="7.45 0.41 0.85 8.61 5.26 8.61"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,113 @@
+@import '../../Unstoppable';
+
+.confirm-container {
+  @extend %template-container;
+}
+
+.items-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.domain-header {
+  padding: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  h4 {
+    font-weight: 600;
+  }
+
+  background-color: $container-green;
+  p {
+    margin-top: 7px;
+    color: $mew-green;
+    font-weight: 500;
+  }
+  .content-right {
+    .domain-price {
+      margin-right: 15px;
+    }
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @media all and (max-width: $mobile-width) {
+      margin-top: 30px;
+    }
+  }
+}
+
+.confirm-form-container {
+  width: 100%;
+  padding-left: 100px;
+  padding-right: 100px;
+  @media all and (max-width: 600px) {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  padding-top: 30px;
+  padding-bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  h3 {
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+  h5 {
+    font-weight: 600;
+  }
+  .secured-by-confirm {
+    color: #6772e5;
+  }
+  .pay-with-crypto {
+    font-weight: 500;
+    color: $mew-green;
+    cursor: pointer;
+    text-align: right;
+  }
+  .confirm-form-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .confirm-form-field-container {
+    margin-top: 20px;
+    width: 100%;
+  }
+  input {
+    background-color: $background-color-1;
+    border: 0;
+    border-radius: 5px 0 0 5px;
+    // margin-right: 20px;
+    padding: 13px 15px;
+    margin-top: 5px;
+    width: 100%;
+    font-weight: 500;
+  }
+  .confirm-button {
+    height: 100%;
+    margin-left: 10px;
+    width: 100%;
+  }
+}
+
+.confirm-payment-text {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.error-message {
+  margin-top: 15px;
+  color: $red-1;
+}
+
+.btn-container {
+  @extend %btn-container;
+  .back-btn {
+    @extend %back-btn;
+  }
+}

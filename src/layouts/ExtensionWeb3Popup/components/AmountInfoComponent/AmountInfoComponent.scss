@@ -1,0 +1,43 @@
+@import '~@/scss/GlobalVariables';
+
+.amount-info-container {
+  background-color: $light-green-1;
+  border-radius: 5px;
+  border: 1px solid $light-green-1;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  width: 100%;
+
+  .eth-icon {
+    img {
+      width: 30px;
+    }
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .amount-text-container {
+    flex: auto;
+    padding-left: 10px;
+  }
+
+  .amount-text {
+    color: $dark-blue-12;
+    font-size: 20px;
+    font-weight: bold;
+
+    span {
+      color: $dark-grey-11;
+      font-size: 15px;
+      font-weight: normal;
+    }
+  }
+
+  .address-text {
+    font-size: 15px;
+  }
+}

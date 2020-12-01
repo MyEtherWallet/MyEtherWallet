@@ -1,0 +1,107 @@
+@import '~@/scss/GlobalVariables';
+
+a {
+  text-decoration: none;
+  display: block;
+}
+
+.background-block {
+  background-color: $light-green-7;
+  background-image: url('~@/assets/images/ads/mewwallet.png');
+  background-size: 117%;
+  background-clip: border-box;
+  background-position-x: center;
+  background-position-y: top;
+  background-repeat: no-repeat;
+  position: relative;
+  height: 137px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+
+  .inner-content {
+    position: relative;
+    margin-left: 11px;
+
+    .image-content {
+      padding-left: 5px;
+      img {
+        height: 25px;
+        width: initial;
+        padding-left: 10px;
+      }
+    }
+
+    .text-content {
+      position: relative;
+
+      h3,
+      p {
+        color: $black;
+      }
+
+      h3 {
+        font-weight: 600;
+        margin-bottom: 5px;
+
+        @media all and (min-width: 1900px) {
+          font-size: 33px;
+        }
+        @media all and (max-width: 1270px) {
+          font-size: 27px;
+        }
+      }
+
+      p {
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1vw;
+        margin-top: 3px;
+
+        @media all and (min-width: 1900px) {
+          font-size: 19px;
+          line-height: 22px;
+        }
+        @media all and (max-width: 1270px) {
+          font-size: 16px;
+          line-height: 22px;
+        }
+      }
+
+      .new-label {
+        background-color: $red-11;
+        border-radius: 3px;
+        color: $white;
+        font-size: 10px;
+        margin-left: 5px;
+        margin-top: 4px;
+        padding: 3px;
+        position: absolute;
+        text-transform: uppercase;
+        top: 0;
+      }
+    }
+  }
+}
+
+.flex-vertical-center {
+  margin-left: 10px;
+  .top-block {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24px;
+  }
+
+  .bottom-block {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    img {
+      height: 25px;
+      width: initial;
+      margin-right: 5px;
+    }
+  }
+}

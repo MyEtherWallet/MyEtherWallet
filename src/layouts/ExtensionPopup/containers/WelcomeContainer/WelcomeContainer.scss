@@ -1,0 +1,68 @@
+@import '~@/scss/GlobalVariables';
+
+.welcome-section {
+  text-align: center;
+
+  .header {
+    background-color: $dark-blue-12;
+    padding: 17px 0;
+    width: 100%;
+    font-size: 12px;
+    font-weight: 700;
+
+    p {
+      color: #fff;
+    }
+
+    .title {
+      font-size: 22px;
+      margin-bottom: 2px !important;
+    }
+
+    .title-description {
+      font-size: 12px;
+      font-weight: 400;
+    }
+  }
+
+  .content {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 10px 0 0 0;
+
+    .text-content {
+      max-width: 80%;
+      text-align: center;
+
+      p {
+        margin-top: 10px;
+      }
+    }
+  }
+
+  .add-wallet-content {
+    background-color: $mew-green;
+    color: $white;
+    cursor: pointer;
+    padding: 20px 0;
+    text-align: center;
+    width: 100%;
+    font-weight: 700;
+  }
+}
+
+.logo-ex {
+  margin-bottom: 20px;
+}
+
+.logo-mew {
+  margin-bottom: 20px;
+}
+
+.down-arrow {
+  font-size: 40px;
+  margin: 8px 0;
+  color: $light-grey-11;
+}

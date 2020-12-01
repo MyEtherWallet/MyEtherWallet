@@ -1,0 +1,139 @@
+@import '~@/scss/GlobalVariables';
+
+.subscription-container {
+  background-color: $white;
+  border-radius: 4px;
+  grid-area: main;
+  overflow: hidden;
+  margin-bottom: 10px;
+
+  .page-title {
+    text-align: center;
+    margin-top: 30px;
+  }
+
+  button {
+    text-align: center;
+  }
+}
+
+.subscription-content {
+  padding-top: 25px;
+}
+
+.row {
+  justify-content: space-between;
+}
+
+.text-danger {
+  color: $text-color-red;
+}
+
+.label-text {
+  color: $dark-blue-2;
+  font-size: 16px;
+  font-weight: 600;
+  padding-left: 5px;
+}
+
+.action-text {
+  color: $mew-green;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: normal;
+  padding-right: 5px;
+}
+
+.amount-text {
+  display: flex;
+  justify-content: space-between;
+}
+
+.col-12 {
+  padding: 0;
+}
+
+.row-style {
+  position: relative;
+}
+
+.amount-container {
+  padding-left: 10px;
+
+  @media all and (max-width: 767px) {
+    padding: 0;
+  }
+}
+
+.interval-container {
+  @media all and (max-width: 767px) {
+    margin-top: 10px !important;
+  }
+}
+
+.sub-text {
+  color: $dark-blue-12;
+  margin-left: 10px;
+}
+
+.blockie-image {
+  position: absolute;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.input-address {
+  padding-left: 50px;
+}
+
+.token-txt {
+  color: $black;
+}
+
+.fake-input {
+  display: table;
+
+  img {
+    padding-right: 5px;
+  }
+
+  p {
+    display: table-cell;
+    vertical-align: middle;
+  }
+}
+
+.address-block {
+  span {
+    width: 100%;
+  }
+
+  i {
+    background-color: transparent;
+    margin-top: 15px;
+    position: absolute;
+    right: 12px;
+  }
+}
+
+.days-text {
+  color: $dark-blue-12;
+  font-size: 14px;
+  position: absolute;
+  right: 20px;
+  text-align: right;
+  top: 39px;
+  width: 100%;
+}
+
+.active-sub-btn {
+  align-items: center;
+  background: none;
+  border: 1px solid $mew-green;
+  color: $mew-green;
+  margin-right: 10px;
+}
+
+.button-container {
+  justify-content: center;
+}

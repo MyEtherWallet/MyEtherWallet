@@ -1,0 +1,50 @@
+@import '~@/scss/GlobalVariables';
+
+.wallet-side-menu {
+  background-color: $white;
+  height: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 20px 0;
+  padding-right: 50px;
+  //transition: all 0.05s ease;
+  //max-width: 65px;
+
+  max-width: 100%;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    max-width: 100%;
+    //box-shadow: 10px 0 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .wallet-menu {
+    align-items: center;
+    color: $light-grey-10;
+    cursor: pointer;
+    display: flex;
+  }
+}
+
+.icon-block {
+  padding: 20px 25px;
+}
+
+.active {
+  span {
+    color: $black;
+    font-weight: bold;
+  }
+}
+
+@media only screen and (max-width: 1550px) {
+  .wallet-side-menu {
+    transition: all 0.05s ease;
+    max-width: 65px;
+
+    &:hover {
+      max-width: 300px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1) !important;
+    }
+  }
+}

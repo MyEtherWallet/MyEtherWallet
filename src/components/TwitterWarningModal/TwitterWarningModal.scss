@@ -1,0 +1,21 @@
+@import '~@/scss/GlobalVariables';
+
+.modal-contents {
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+
+  a {
+    margin-top: 10px;
+    border-radius: 5px;
+    padding: 10px 15px;
+    background-color: #1da1f2;
+    color: $white !important;
+    &:hover {
+      color: $white !important;
+      text-decoration: none !important;
+    }
+  }
+}

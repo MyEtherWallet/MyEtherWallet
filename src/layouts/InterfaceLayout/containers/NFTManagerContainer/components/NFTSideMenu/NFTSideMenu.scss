@@ -1,0 +1,106 @@
+@import '~@/scss/GlobalVariables';
+
+$collepse-width: 650px;
+
+.desktop-menu {
+  @media all and (max-width: $collepse-width) {
+    display: none;
+  }
+
+  .listing-container {
+    margin-top: 30px;
+  }
+  .input-search-container {
+    margin-bottom: 30px;
+
+    .input-search {
+      position: relative;
+    }
+
+    input {
+      position: relative;
+      border: 0;
+      padding: 20px;
+      padding-left: 50px;
+      background-color: $light-grey-17;
+      width: 100%;
+    }
+
+    img {
+      position: absolute;
+      top: 24px;
+      left: 20px;
+      height: 15px;
+    }
+  }
+
+  ul {
+    li {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-gap: 10px;
+      position: relative;
+      padding: 5px 20px;
+      color: $dark-grey-7;
+      cursor: pointer;
+      user-select: none;
+      &:hover {
+        color: $dark-grey-9;
+      }
+      &.selected {
+        color: $dark-grey-9;
+        font-weight: 600;
+      }
+      .title {
+        grid-column-start: 1;
+        grid-column-end: 2;
+        display: inline-block;
+        width: 120px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      .count {
+        grid-column: 3;
+      }
+      .remove {
+        grid-column: 4;
+        padding-left: 5px;
+        padding-top: 4px;
+      }
+      .add-custom {
+        grid-column-start: 1;
+        grid-column-end: 4;
+      }
+    }
+  }
+}
+
+.mobile-menu {
+  @media all and (min-width: $collepse-width) {
+    display: none;
+  }
+  .input-search-container {
+    margin-bottom: 15px;
+
+    .input-search {
+      position: relative;
+    }
+
+    input {
+      position: relative;
+      border: 0;
+      padding: 20px;
+      padding-left: 50px;
+      background-color: $light-grey-17;
+      width: 100%;
+    }
+
+    img {
+      position: absolute;
+      top: 24px;
+      left: 20px;
+      height: 15px;
+    }
+  }
+}

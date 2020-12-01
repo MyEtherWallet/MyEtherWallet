@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>Checked Copy</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Send" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="my-wallet-1" transform="translate(-1091.000000, -708.000000)">
+            <g id="Group-4-Copy" transform="translate(1073.000000, 689.000000)">
+                <g id="Checked-Copy" transform="translate(19.000000, 20.000000)">
+                    <g id="Checked">
+                        <circle id="Oval" stroke="#FFFFFF" cx="11" cy="11" r="11"></circle>
+                        <g id="Check" transform="translate(5.500000, 6.875000)" fill="#FFFFFF" fill-rule="nonzero">
+                            <polygon id="Shape" points="12.122449 1.89583333 4.04081633 9.47916667 0 5.6875 1.51530612 4.265625 4.04081633 6.63541667 10.6071429 0.473958333"></polygon>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

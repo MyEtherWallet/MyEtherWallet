@@ -1,0 +1,109 @@
+@import '~@/scss/GlobalVariables';
+
+.cc-icon {
+  font-size: 36px;
+}
+
+.icon-image {
+  height: 40px;
+  width: 40px;
+  padding-right: 5px;
+}
+
+.time-remaining {
+  text-align: center;
+
+  h1 {
+    font-weight: 500;
+    font-size: 50px;
+    color: $red-2;
+    margin: 0;
+  }
+}
+
+.value {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 13px;
+  margin-top: 13px;
+
+  span {
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+
+.block-title {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+
+.fee-container {
+  color: #506175;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: center;
+  .fee-estimate {
+    color: #506175;
+    font-size: 15px;
+    font-weight: 600;
+  }
+}
+
+.gas-price-warning .notice {
+  font-size: 9px;
+  line-height: 10px;
+}
+
+.address {
+  line-height: 19px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.swap-detail {
+  display: grid;
+  grid-template-columns: 250px 80px 250px;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.from-address,
+.to-address {
+  background-color: $background-color-1;
+  padding: 20px;
+  border-radius: 5px;
+  overflow-wrap: break-word;
+}
+
+.right-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.confirm-send-button {
+  margin-top: 40px;
+  margin-bottom: 20px;
+  display: flex;
+
+  > * {
+    margin: 0 auto;
+  }
+}
+
+.confirm-send-container {
+  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}

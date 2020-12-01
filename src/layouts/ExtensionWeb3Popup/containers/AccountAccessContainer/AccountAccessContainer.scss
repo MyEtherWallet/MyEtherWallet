@@ -1,0 +1,80 @@
+@import '~@/scss/GlobalVariables';
+
+.connection-request-container {
+  background-color: $light-green-1;
+  padding: 20px;
+
+  .website-logos {
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+    padding: 0 40px 10px;
+  }
+
+  .site-logo {
+    width: 50px;
+  }
+
+  .clip-logo {
+    height: 25px;
+  }
+
+  p {
+    color: $dark-blue-2;
+    font-weight: bold;
+    margin: 0 !important;
+    text-align: center;
+  }
+}
+
+.connection-request {
+  display: flex;
+  flex-direction: column;
+
+  .accounts-container {
+    height: 220px;
+    margin-right: 5px;
+    padding-top: 10px;
+
+    .account-container {
+      max-height: 220px;
+      overflow-y: auto;
+      width: auto !important;
+    }
+  }
+}
+
+%button {
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 21px 55px;
+  user-select: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.submit-button {
+  @extend %button;
+
+  background-color: $mew-green;
+  border: 1px solid $mew-green;
+  color: $white;
+}
+
+.disabled {
+  @extend %button;
+
+  background-color: $dark-grey-11;
+  border: 1px solid $dark-grey-11;
+  pointer-events: none;
+  color: $white;
+}
+
+.warning {
+  padding: 20px;
+  border-radius: 5px;
+  border: 1px solid $light-orange-2;
+  background-color: $light-orange-3;
+  margin: 5px;
+}

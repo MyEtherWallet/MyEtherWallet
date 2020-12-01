@@ -1,0 +1,54 @@
+@import '~@/scss/GlobalVariables';
+
+.wallet-button-option {
+  border-radius: 5px;
+  background-color: $white;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+  max-height: 125px;
+  max-width: 395px;
+  padding: 40px 30px;
+  transition: box-shadow 0.2s ease-out;
+
+  &:hover {
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .img-container {
+    img {
+      height: 45px;
+    }
+  }
+
+  .button-option-title {
+    p {
+      color: $dark-blue-2;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .subtext {
+      color: $light-blue-7;
+    }
+
+    span {
+      font-size: 12px;
+    }
+
+    .recommended {
+      display: flex;
+      align-items: center;
+      padding-top: 5px;
+
+      img {
+        margin-right: 5px;
+        width: 15px;
+      }
+
+      span {
+        color: $mew-green;
+      }
+    }
+  }
+}

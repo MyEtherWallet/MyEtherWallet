@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="35px" height="35px" viewBox="0 0 35 35" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 57.1 (83088) - https://sketch.com -->
+    <title>dashboard</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Dashboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="dashboard" transform="translate(-18.000000, -445.000000)" stroke="#999" stroke-width="2">
+            <g id="Group-3" transform="translate(18.000000, 445.000000)">
+                <g id="Message" transform="translate(9.000000, 9.000000)">
+                    <path d="M17,11.3333333 C17,12.3765379 16.1543156,13.2222222 15.1111111,13.2222222 L3.77777778,13.2222222 L0,17 L0,1.88888889 C0,0.845684361 0.845684361,0 1.88888889,0 L15.1111111,0 C16.1543156,0 17,0.845684361 17,1.88888889 L17,11.3333333 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

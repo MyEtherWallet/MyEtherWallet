@@ -1,0 +1,176 @@
+@import '~@/scss/GlobalVariables';
+
+$confirmation-modal-mobile-width: 500px;
+
+.message {
+  line-height: 19px;
+}
+
+.cc-icon {
+  font-size: 36px;
+}
+
+.modal-content-container {
+  padding: 30px;
+}
+
+.inputs-container {
+  display: flex;
+  flex-direction: column;
+
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+
+    label {
+      color: $dark-blue-2;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 10px 7px;
+
+      i {
+        font-size: 14px;
+        margin-right: 2px;
+      }
+
+      .input-title {
+        font-size: 16px;
+      }
+    }
+
+    .input-box {
+      margin-bottom: 10px;
+      position: relative;
+      border-radius: 4px;
+
+      &.danger {
+        border: 1px solid red;
+      }
+
+      input {
+        background-color: $background-color-1;
+        border: 0;
+        border-radius: 4px;
+        font-size: 14px;
+        padding: 20px;
+        width: 100%;
+      }
+      // needs to be fixed to smoothly match against the input
+      .input-unit {
+        font-size: 14px;
+        color: $light-blue-6;
+        font-weight: 500;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+      }
+    }
+  }
+}
+
+.top-buttons {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  .max-withdraw {
+    margin-left: auto;
+    //border: 1px solid $grey-1;
+    position: relative;
+    font-weight: 500;
+    color: $mew-green;
+    cursor: pointer;
+  }
+}
+
+.sub-text {
+  padding-left: 10px;
+
+  .peth {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+
+    .peth-value {
+      margin-right: 5px;
+    }
+  }
+
+  .above-max {
+    margin-bottom: 2px;
+    color: $red-1;
+    font-weight: 600;
+  }
+
+  .btn {
+    color: $grey-1;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  padding-bottom: 10px;
+}
+
+.buttons {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  > * {
+    width: 100%;
+
+    &:first-child {
+      margin-right: 10px;
+    }
+  }
+}
+
+.padding-container {
+  padding: 0 10px;
+
+  .grid-block {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px 0;
+    p:last-child {
+      margin-left: auto;
+      text-align: right;
+      min-width: 100px;
+    }
+  }
+}
+
+.warning-confirmation {
+  margin-top: 20px;
+  border: 1px solid $light-orange-1;
+  background-color: $light-orange-3;
+  padding: 20px;
+  border-radius: 4px;
+
+  .grid-block {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    .sign {
+      font-size: 30px;
+    }
+    .text-content {
+      .title {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0;
+        padding: 0;
+      }
+      .warning-details {
+        margin-top: 5px;
+        color: $dark-blue-2;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+      .checkbox-label {
+        color: $mew-green;
+        font-weight: 500;
+      }
+    }
+  }
+}

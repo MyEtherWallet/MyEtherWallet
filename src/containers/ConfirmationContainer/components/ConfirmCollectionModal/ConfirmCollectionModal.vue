@@ -1,0 +1,214 @@
+<template>
+  <div>
+    <b-modal
+      ref="confirmCollection"
+      :title="
+        $t('confirmation.confirm-transactions', {
+          unSignedArray: unSignedArray.length
+        })
+      "
+      hide-footer
+      centered
+      class="bootstrap-modal-wide confirmation-modal nopadding"
+      static
+      lazy
+    >
+      <div class="modal-content">
+        <div class="network-info-container">
+          <p>
+            <span>{{ $t('common.network') }}</span>
+            {{ network.type.name }} {{ $t('common.by') }} {{ network.service }}
+          </p>
+          <div>
+            <div class="line" />
+          </div>
+          <p>
+            <span>{{ $t('confirmation.tx-total') }}:</span>
+            {{ txTotal }}
+            {{ network.type.currencyName }}
+          </p>
+        </div>
+        <div v-if="showGasWarning" class="gas-price-warning">
+          {{ $t('errorsGlobal.high-gas-limit-warning') }}
+        </div>
+        <div v-else-if="showCollectionLowGasWarning" class="gas-price-warning">
+          {{ $t('errorsGlobal.low-gas-price') }}
+        </div>
+        <div class="modal-content-body">
+          <div
+            v-for="(item, idx) in unSignedArray"
+            :key="item.to + idx + item.value"
+            class="item"
+          >
+            <div v-b-toggle.prevent="`accordion${idx}`" class="header">
+              <div class="header-item">
+                <img :src="network.type.icon ? network.type.icon : ''" alt />
+                <div>
+                  <p>
+                    - {{ web3.utils.hexToNumberString(item.value) }}
+                    <span>{{ network.type.currencyName }}</span>
+                  </p>
+                  <div>
+                    <span>{{ $t('swap.from') }}</span>
+                    {{ account.address | concatAddr }}
+                  </div>
+                </div>
+              </div>
+              <div
+                v-show="item.to !== '' && item.to !== undefined"
+                class="direction"
+              >
+                <img alt src="~@/assets/images/icons/right-arrow.svg" />
+              </div>
+              <div class="header-item">
+                <img :src="network.type.icon ? network.type.icon : ''" alt />
+                <div>
+                  <p>
+                    + {{ web3.utils.hexToNumberString(item.value) }}
+                    <span>{{ network.type.currencyName }}</span>
+                  </p>
+                  <div>
+                    <span>{{ $t('common.to') }}</span>
+                    {{ item.to | concatAddr }}
+                  </div>
+                </div>
+              </div>
+              <div class="trigger-container">
+                <i class="fa fa-lg fa-angle-up" />
+                <i class="fa fa-lg fa-angle-down" />
+              </div>
+            </div>
+            <b-collapse :id="`accordion${idx}`" class="body">
+              <div class="body-item">
+                <span class="item-title">{{ $t('common.gas.limit') }}t</span>
+                <span>{{ web3.utils.hexToNumberString(item.gas) }}</span>
+              </div>
+              <div class="body-item">
+                <span class="item-title">{{ $t('common.gas.price') }}</span>
+                <span>
+                  {{ web3.utils.fromWei(item.gasPrice, 'gwei') }}
+                  {{ $t('common.gas.gwei') }}
+                </span>
+              </div>
+              <div class="body-item">
+                <span class="item-title">{{ $t('sendTx.nonce') }}</span>
+                <span>{{ web3.utils.hexToNumberString(item.nonce) }}</span>
+              </div>
+              <div class="body-item">
+                <span class="item-title">{{ $t('sendTx.data') }}</span>
+                <span class="data-string">{{ item.input || item.data }}</span>
+              </div>
+            </b-collapse>
+          </div>
+        </div>
+      </div>
+      <div class="submit-button-container">
+        <div class="flex-center-align">
+          <div class="button-with-helper">
+            <div
+              v-show="!sending"
+              ref="ConfirmAndSendButton"
+              :class="[
+                allSigned ? '' : 'disabled',
+                'submit-button large-round-button-green-filled clickable'
+              ]"
+              @click="sendBatchTransactions"
+            >
+              {{ $t(buttonText) }}
+            </div>
+            <div
+              v-show="sending"
+              class="submit-button large-round-button-green-filled clickable disabled"
+            >
+              {{ $t('confirmation.waiting-for-hash') }}
+              <i class="fa fa-spinner fa-spin" />
+            </div>
+          </div>
+        </div>
+        <p class="learn-more">
+          {{ $t('common.have-issues') }}
+          <a
+            href="https://kb.myetherwallet.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >{{ $t('common.learn-more') }}</a
+          >
+        </p>
+      </div>
+    </b-modal>
+  </div>
+</template>
+<script>
+import { mapState } from 'vuex';
+
+export default {
+  props: {
+    unSignedArray: {
+      type: Array,
+      default: () => []
+    },
+    signedArray: {
+      type: Array,
+      default: () => []
+    },
+    sendBatchTransactions: {
+      type: Function,
+      default: () => {}
+    },
+    sending: {
+      type: Boolean,
+      default: false
+    },
+    isHardwareWallet: {
+      type: Boolean,
+      default: false
+    },
+    showGasWarning: {
+      type: Boolean,
+      default: false
+    },
+    showCollectionLowGasWarning: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    ...mapState('main', ['web3', 'network', 'account']),
+    buttonText() {
+      if (!this.allSigned && this.isHardwareWallet) {
+        return 'confirmation.approve-on-device';
+      }
+      return 'sendTx.confirmation.button';
+    },
+    allSigned() {
+      if (this.signedArray.length === 0) return false;
+      for (let i = 0; i < this.signedArray.length; i++) {
+        if (
+          this.signedArray[i].rawTransaction === '' ||
+          this.signedArray[i].rawTransaction === undefined
+        )
+          return false;
+      }
+      return true;
+    },
+    txTotal() {
+      if (this.unSignedArray.length > 0) {
+        const BN = this.web3.utils.BN;
+        let totalGas = new BN();
+        this.unSignedArray.forEach(item => {
+          totalGas = totalGas.add(
+            new BN(item.gasPrice.replace('0x', ''), 'hex').mul(
+              new BN(item.gas.replace('0x', ''), 'hex')
+            )
+          );
+        });
+        return this.web3.utils.fromWei(totalGas.toString(), 'ether').toString();
+      }
+      return 0;
+    }
+  }
+};
+</script>
+<style lang="scss" scoped>
+@import 'ConfirmCollectionModal.scss';
+</style>

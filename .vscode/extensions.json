@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "octref.vetur",
+    "ms-vscode-remote.remote-containers"
+  ]
+}

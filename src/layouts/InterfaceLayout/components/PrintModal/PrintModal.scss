@@ -1,0 +1,24 @@
+@import '~@/scss/GlobalVariables';
+
+.button-container {
+  align-items: center;
+  display: flex;
+
+  .print-button {
+    background-color: $mew-green;
+    border-radius: 5px;
+    color: $white;
+    cursor: pointer;
+    padding: 20px;
+    margin: 20px;
+    text-align: center;
+    width: 200px;
+  }
+}
+
+.print-modal {
+  position: fixed;
+  top: -5000px;
+  left: 0;
+  width: 800px;
+}

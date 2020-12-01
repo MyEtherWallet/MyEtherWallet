@@ -1,0 +1,93 @@
+@import '~@/scss/GlobalVariables';
+
+.ambrpay-container {
+  background-color: $white;
+  border-radius: 4px;
+  grid-area: main;
+  overflow: hidden;
+  margin-bottom: 10px;
+
+  .ambrpay-header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+
+    .title-container {
+      align-items: baseline;
+      display: flex;
+
+      .popover-container {
+        height: 16px;
+        margin-left: 7px;
+        width: 16px;
+      }
+    }
+
+    .withdraw-btn {
+      border: none;
+      background-color: $white;
+      color: $mew-green;
+    }
+
+    .add-btn {
+      border-color: $mew-green;
+      background-color: $white;
+      color: $mew-green;
+    }
+  }
+}
+
+.ambrpay-content {
+  padding: 40px;
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 10px;
+  }
+}
+
+.text-danger {
+  color: $text-color-red;
+}
+
+.page-title {
+  color: $dark-blue-6;
+  font-weight: 600;
+  font-size: 24px;
+}
+
+.funds-container {
+  align-items: center;
+  background-color: $dark-blue-12;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+  padding: 15px;
+
+  .balance-container {
+    text-align: right;
+
+    .fa-spinner {
+      color: $white;
+    }
+  }
+}
+
+.fund-text {
+  color: $white;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.usd-text {
+  color: $white;
+  display: block;
+  text-align: right;
+}

@@ -1,0 +1,247 @@
+@import '../InterfaceContainer';
+
+.send-offline-container {
+  @extend %interface-container;
+
+  .generate-tx {
+    border-radius: 0 0 5px 5px;
+    padding: 40px;
+
+    // Tablet
+    @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+      padding: 20px;
+    }
+
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      padding: 20px 10px;
+    }
+  }
+
+  input,
+  textarea {
+    background-color: $background-color-1;
+    border-radius: 4px;
+  }
+
+  .wrap {
+    .send-form {
+      margin-bottom: 30px;
+
+      &.nopadding {
+        margin-bottom: 0;
+      }
+
+      .title-container {
+        align-items: flex-end;
+        display: flex;
+        margin-bottom: 10px;
+
+        .title {
+          padding: 0 8px;
+
+          .title-helper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2px;
+            h4 {
+              margin-right: 7px;
+            }
+          }
+        }
+
+        .buttons {
+          margin-bottom: 3px;
+          margin-left: auto;
+        }
+      }
+
+      .amount-to-address {
+        @media all and (max-width: 700px) {
+          display: block;
+        }
+
+        .title {
+          margin-bottom: 13px;
+          padding: 0 8px;
+        }
+
+        .type-amount {
+          margin-bottom: 30px;
+          display: grid;
+          grid-template-columns: 2fr 3fr;
+          grid-gap: 5px;
+
+          @media all and (max-width: 700px) {
+            display: block;
+            .type {
+              margin-bottom: 30px;
+            }
+          }
+
+          .dropdown-select-search-1 {
+            background-color: $background-color-1;
+            margin-bottom: 5px;
+            position: relative;
+
+            i {
+              color: $text-color-2;
+              left: 14px;
+              position: absolute;
+              top: 16px;
+            }
+          }
+
+          .amount-number {
+            position: relative;
+
+            input {
+              border: 0;
+              padding: 13px 15px;
+              width: 100%;
+            }
+
+            i {
+              position: absolute;
+              right: 13px;
+              top: 13px;
+            }
+          }
+        }
+
+        .to-address {
+          position: relative;
+
+          .title {
+            align-items: center;
+            display: flex;
+            position: relative;
+
+            img {
+              height: 50px;
+              left: 98px;
+              position: absolute;
+              top: -14px;
+            }
+
+            .copy-button {
+              margin-left: auto;
+            }
+          }
+
+          .address-block {
+            height: 98px;
+
+            i {
+              bottom: 13px;
+              position: absolute;
+              right: 13px;
+            }
+
+            textarea {
+              border: 1px solid $background-color-1;
+              height: 100%;
+              padding: 13px 15px;
+              resize: none;
+              width: 100%;
+            }
+          }
+        }
+      }
+
+      .gas-amount {
+        position: relative;
+
+        input {
+          background-color: $background-color-1;
+          border: 0;
+          padding: 13px 15px;
+          width: 100%;
+        }
+
+        .good-button-container {
+          align-items: center;
+          display: flex;
+          position: absolute;
+          right: 13px;
+          top: 14px;
+
+          p {
+            color: $text--link-color;
+            margin-right: 10px;
+          }
+        }
+      }
+
+      .error-message-container {
+        p {
+          color: $text-color-red;
+          margin: 7px 0 0 15px;
+        }
+      }
+    } // .send-form
+
+    .advanced {
+      padding-top: 10px;
+
+      .advanced-content {
+        border-bottom: 2px solid $background-color-1;
+        border-top: 2px solid $background-color-1;
+        display: flex;
+        padding: 0 8px;
+        padding-bottom: 20px;
+        padding-top: 20px;
+
+        .toggle-button {
+          align-items: center;
+          display: flex;
+          margin-left: auto;
+
+          > span {
+            margin-right: 15px;
+          }
+        }
+      }
+    } // .advanced
+
+    .submit-button-container {
+      margin-top: 60px;
+      text-align: center;
+
+      @media all and (max-width: $mobile-width) {
+        margin-top: 30px;
+      }
+
+      .submit-button {
+        margin: 10px auto;
+        text-align: center;
+        width: 300px;
+
+        // Mobile
+        @media all and (max-width: $mobile-width) {
+          width: 100%;
+        }
+      }
+
+      p {
+        margin-top: 20px;
+      }
+    }
+  }
+
+  .with-resolver {
+    display: block !important;
+  }
+
+  @media all and (max-width: $tablet-width) {
+    .tx-speed-input {
+      display: none;
+    }
+  }
+
+  .blockie-image-icon {
+    position: absolute;
+    left: 108px;
+    top: -5px;
+  }
+}

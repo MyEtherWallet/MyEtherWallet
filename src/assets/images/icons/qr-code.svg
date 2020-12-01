@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="34px" height="34px" viewBox="0 0 34 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+  <title>qr-code</title>
+  <desc>Created with Sketch.</desc>
+  <defs></defs>
+  <g id="Desktop" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="swap-2.1-copy" transform="translate(-866.000000, -913.000000)" fill="#003945" fill-rule="nonzero">
+      <g id="pop-out" transform="translate(401.000000, 207.000000)">
+        <g id="Group-14" transform="translate(189.000000, 692.000000)">
+          <g id="qr-code" transform="translate(276.000000, 14.000000)">
+            <path d="M0,33.1282051 L14.8205128,33.1282051 L14.8205128,19.1794872 L0,19.1794872 L0,33.1282051 Z M2.96387546,21.9694445 L11.8563129,21.9694445 L11.8563129,30.3170262 L2.96387546,30.3170262 L2.96387546,21.9694445 Z" id="Shape"></path>
+            <rect id="Rectangle-path" x="7.84615385" y="24.4102564" width="4.35897436" height="4.35897436"></rect>
+            <rect id="Rectangle-path" x="24.4102564" y="30.5128205" width="4.35897436" height="3.48717949"></rect>
+            <rect id="Rectangle-path" x="30.5128205" y="30.5128205" width="3.48717949" height="3.48717949"></rect>
+            <polygon id="Shape" points="30.3384768 21.9694445 27.5489775 21.9694445 27.5489775 19.1794872 19.1794872 19.1794872 19.1794872 33.1282051 21.9694445 33.1282051 21.9694445 24.7589438 24.7587148 24.7589438 24.7587148 27.5489775 33.1282051 27.5489775 33.1282051 19.1794872 33.1282051 19.1794872 30.3384768 19.1794872"></polygon>
+            <path d="M0,14.8205128 L14.8205128,14.8205128 L14.8205128,0 L0,0 L0,14.8205128 Z M2.96387546,2.96381058 L11.8563129,2.96381058 L11.8563129,11.8560534 L2.96387546,11.8560534 L2.96387546,2.96381058 Z" id="Shape"></path>
+            <rect id="Rectangle-path" x="7.84615385" y="7.84615385" width="4.35897436" height="4.35897436"></rect>
+            <path d="M19.1794872,0 L19.1794872,14.8205128 L33.1282051,14.8205128 L33.1282051,0 L19.1794872,0 Z M30.3382936,11.8560534 L21.9693987,11.8560534 L21.9693987,2.96381058 L30.3382936,2.96381058 L30.3382936,11.8560534 Z" id="Shape"></path>
+            <rect id="Rectangle-path" x="24.4102564" y="7.84615385" width="4.35897436" height="4.35897436"></rect>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

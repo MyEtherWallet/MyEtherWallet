@@ -1,0 +1,64 @@
+.network {
+  min-height: 90px;
+  background-color: #25b0e8;
+  position: relative;
+  border-radius: 5px;
+  padding: 15px 20px;
+  color: white;
+}
+
+.block-image {
+  padding-right: 10px;
+}
+
+.network-type {
+  border: 2px solid white;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  $network-image-size: 40px !important;
+
+  height: $network-image-size;
+  width: $network-image-size;
+
+  img {
+    width: 18px;
+  }
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: -3px;
+}
+
+.information-container {
+  width: calc(100% - 93px);
+
+  p {
+    color: white;
+    margin-bottom: -2px !important;
+  }
+}
+
+.change-button {
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  font-size: 12px;
+  border-radius: 5px;
+  padding: 5px 10px;
+
+  &:active {
+    background-color: #0000001a;
+    color: white;
+  }
+}
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

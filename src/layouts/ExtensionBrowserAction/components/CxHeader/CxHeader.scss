@@ -1,0 +1,169 @@
+@import '~@/scss/GlobalVariables';
+
+.cx-menu {
+  margin: 0 auto;
+}
+
+.cx-header {
+  width: 100%;
+}
+
+.cx-menu-container {
+  min-width: 960px;
+  background-color: white;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+a {
+  text-decoration: none;
+}
+
+.d-flex {
+  display: flex;
+  align-items: center;
+}
+
+.menu-items {
+  p {
+    font-size: 13px;
+  }
+
+  > * {
+    margin-left: 30px;
+  }
+}
+
+.buy-eth {
+  p {
+    margin-left: 2px;
+  }
+}
+
+.spacer {
+  margin: 0 auto;
+}
+
+.settings-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-left: 20px;
+
+  .blockie-image {
+    position: absolute;
+    top: -9px;
+    right: 20px;
+  }
+
+  i {
+    color: $dark-blue-1;
+    font-size: 18px;
+    margin-left: 7px;
+  }
+}
+
+.network-picker-title {
+  padding: 0 15px;
+  text-align: left;
+  position: relative;
+  min-width: 158px;
+
+  .network-title {
+    color: $dark-blue-2;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .network-service {
+    color: $dark-blue-2;
+    font-size: 12px;
+  }
+
+  i {
+    position: absolute;
+  }
+
+  .color {
+    height: 5px;
+    width: 5px;
+    border-radius: 50%;
+    top: 8px;
+    left: 0;
+  }
+
+  .network-caret {
+    color: $dark-blue-2;
+    top: 3px;
+    right: 0;
+  }
+}
+.network-selection-container {
+  border-bottom: 1px solid $dark-grey-11;
+  text-align: left;
+  padding: 15px 25px;
+  position: relative;
+
+  .network-title {
+    color: $dark-blue-2;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .network-service {
+    color: $dark-blue-1;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .active {
+    font-weight: bold;
+    color: $dark-blue-2;
+  }
+
+  i {
+    position: absolute;
+  }
+
+  .color {
+    background-color: $dark-blue-2;
+    height: 5px;
+    width: 5px;
+    border-radius: 50%;
+    top: 23px;
+    left: 10px;
+  }
+
+  .network-caret {
+    color: $dark-blue-2;
+    top: 19px;
+    right: 10px;
+    font-size: small;
+    cursor: pointer;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.showContents-enter-active,
+.showContents-leave-active {
+  transition: all 0.2s;
+  max-height: 230px;
+}
+.showContents-enter,
+.showContents-leave-to {
+  opacity: 0;
+  max-height: 0;
+}
+
+.notification-menu-container {
+  margin: 0 30px;
+  display: flex;
+  align-items: center;
+  i {
+    font-size: 18px;
+    color: $dark-blue-1;
+  }
+}

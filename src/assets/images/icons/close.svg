@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="23px" height="23px" viewBox="0 0 23 23" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Group 8</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-7.2%" y="-13.8%" width="114.5%" height="127.6%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="12" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="8.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0819970561   0 0 0 0 0.11507115   0 0 0 0 0.247367527  0 0 0 0.0332440997 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Finalization" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" font-family="Beirut" font-size="20" font-weight="bold">
+        <g id="my-wallet-02-copy-26" transform="translate(-1067.000000, -865.000000)" fill="#536D8B">
+            <g id="Group-21-Copy-3" filter="url(#filter-1)" transform="translate(452.000000, 582.000000)">
+                <g id="Group-35">
+                    <g id="Group-31" transform="translate(30.000000, 276.000000)">
+                        <g id="Group-21" transform="translate(584.000000, 7.000000)">
+                            <g id="down-arrow" transform="translate(0.000000, 4.000000)">
+                                <text id="&gt;" transform="translate(10.476444, 4.899574) scale(1, -1) rotate(90.000000) translate(-10.476444, -4.899574) ">
+                                    <tspan x="5.97644381" y="9.89957445">&gt;</tspan>
+                                </text>
+                            </g>
+                            <g id="down-arrow" transform="translate(10.500000, 14.000000) scale(1, -1) translate(-10.500000, -14.000000) translate(0.000000, 9.000000)">
+                                <text id="&gt;" transform="translate(10.476444, 4.899574) scale(1, -1) rotate(90.000000) translate(-10.476444, -4.899574) ">
+                                    <tspan x="5.97644381" y="9.89957445">&gt;</tspan>
+                                </text>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

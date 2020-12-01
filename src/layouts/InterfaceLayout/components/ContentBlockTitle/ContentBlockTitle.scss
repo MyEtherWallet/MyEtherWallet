@@ -1,0 +1,15 @@
+@import '~@/scss/GlobalVariables';
+
+.content-block-title {
+  padding: 15px 0;
+  flex-wrap: wrap;
+}
+
+h4 {
+  font-size: 20px;
+  color: $dark-blue-2;
+}
+
+p {
+  color: $light-blue-7;
+}

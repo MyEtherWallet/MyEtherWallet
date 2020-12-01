@@ -1,0 +1,47 @@
+{
+  "name": "MEW CX",
+  "short_name": "MEW CX",
+  "manifest_version": 2,
+  "description": "MyEtherWallet Chrome Extension - Browse the blockchain. Bring your own MEW.",
+  "homepage_url": "https://www.myetherwallet.com/",
+  "icons": {
+    "16": "img/icons/icon16.png",
+    "32": "img/icons/icon32.png",
+    "48": "img/icons/icon48.png",
+    "192": "img/icons/icon192.png"
+  },
+  "browser_action": {
+    "default_icon": "img/icons/icon48.png",
+    "default_title": "MEW CX",
+    "default_popup": "browserActionLoading.html"
+  },
+  "options_page": "index.html",
+  "background": {
+    "persistent": true,
+    "page": "page.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    "cxWeb3.js",
+    "img/*.svg",
+    "img/*.png",
+    "img/*.jpg",
+    "/js"
+  ],
+  "permissions": [
+    "<all_urls>",
+    "storage",
+    "tabs",
+    "activeTab",
+    "downloads",
+    "notifications"
+  ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self' ",
+  "version": "5.3.0"
+}

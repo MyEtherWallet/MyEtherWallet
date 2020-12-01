@@ -1,0 +1,18 @@
+@import '~@/scss/GlobalVariables';
+@import '~@/layouts/ExtensionBrowserAction/wrappers/MewcxModalWrapper/MewcxModalInputs';
+.submit-button {
+  margin-top: 10px;
+  width: 100% !important;
+}
+
+.remove-button {
+  @extend .submit-button;
+
+  color: $red-7;
+  text-align: center;
+}
+
+.modal-contents {
+  max-width: 405px;
+  margin: auto;
+}

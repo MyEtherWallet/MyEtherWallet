@@ -1,0 +1,113 @@
+@import '~@/scss/GlobalVariables';
+
+.verify-content-container {
+  background-color: $white;
+  border-radius: 5px;
+  margin: 0 auto;
+  width: 100%;
+
+  // Desktop
+  @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+    padding: 40px;
+  }
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 20px 10px;
+  }
+}
+
+.send-form {
+  .title-container {
+    .title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 0 8px;
+
+      .copy-buttons {
+        color: $text-color-3;
+        margin-left: auto;
+
+        span {
+          cursor: pointer;
+          margin-left: 20px;
+        }
+      }
+    }
+  }
+
+  .signature {
+    align-items: center;
+    display: flex;
+    position: relative;
+
+    input {
+      background-color: $background-color-1;
+      border: 0;
+      padding: 13px 15px;
+    }
+
+    span {
+      font-size: 20px;
+      font-weight: 600;
+    }
+  }
+}
+
+.submit-button-container {
+  margin-top: 60px;
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    margin-top: 30px;
+  }
+
+  .bottom-text {
+    text-align: center;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+
+    .submit-button {
+      margin: 0 5px;
+      text-align: center;
+      width: 300px;
+
+      // Mobile
+      @media all and (max-width: $mobile-width) {
+        width: 100%;
+      }
+    }
+  }
+}
+
+%message {
+  border-radius: 5px;
+  margin-top: 10px;
+  padding: 20px;
+  text-align: center;
+}
+
+.success-message {
+  @extend %message;
+
+  background-color: $light-green-1;
+  border: 1px solid $mew-green;
+
+  b {
+    word-wrap: break-word;
+  }
+}
+
+.error-message {
+  @extend %message;
+
+  background-color: $red-1;
+}

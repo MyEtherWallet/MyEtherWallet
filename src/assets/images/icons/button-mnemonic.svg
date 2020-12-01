@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.2 (51160) - http://www.bohemiancoding.com/sketch -->
+    <title>mnemonic1</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="53" height="63" rx="3"></rect>
+    </defs>
+    <g id="mnemonic1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-7" transform="translate(24.000000, 19.000000)">
+            <g id="Rectangle-11-Copy">
+                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                <rect stroke="#999999" stroke-width="5.5" x="2.75" y="2.75" width="47.5" height="57.5" rx="3"></rect>
+            </g>
+            <g id="Group-2" transform="translate(12.000000, 13.000000)" fill="#999999" stroke="#979797">
+                <ellipse id="Oval-2" cx="3.58343651" cy="3.47626979" rx="3.58343651" ry="3.47626979"></ellipse>
+                <ellipse id="Oval-2" cx="3.58343651" cy="18.3745689" rx="3.58343651" ry="3.47626979"></ellipse>
+                <ellipse id="Oval-2" cx="3.58343651" cy="32.2796481" rx="3.58343651" ry="3.47626979"></ellipse>
+                <rect id="Rectangle-3" x="11.262229" y="0.993219941" width="17.405263" height="4.96609971" rx="1"></rect>
+                <rect id="Rectangle-3" x="11.262229" y="15.8915191" width="17.405263" height="4.96609971" rx="1"></rect>
+                <rect id="Rectangle-3" x="11.262229" y="29.7965982" width="17.405263" height="4.96609971" rx="1"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

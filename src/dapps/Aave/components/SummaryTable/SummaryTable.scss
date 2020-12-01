@@ -1,0 +1,127 @@
+@import '~@/scss/GlobalVariables';
+
+.summary-table-container {
+  table {
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px $light-blue-12;
+    // table-layout: fixed;
+    width: 100%;
+
+    .token-icon {
+      font-size: 20px;
+      margin-right: 5px;
+      width: 20px;
+      vertical-align: middle;
+    }
+
+    thead {
+      background-color: $light-blue-12;
+      th {
+        color: $light-blue-2;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 10px 0;
+        text-transform: uppercase;
+      }
+      .token-header {
+        padding-left: 35px;
+      }
+      .th-container {
+        color: $light-blue-2;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 10px 0;
+        text-transform: uppercase;
+      }
+      .apr-borrow-header {
+        display: flex;
+      }
+    }
+
+    tbody {
+      .deposit-table-tr {
+        td {
+          width: 200px;
+        }
+      }
+      .borrow-table-tr {
+        td {
+          width: 140px;
+        }
+      }
+      tr {
+        vertical-align: initial;
+        td {
+          color: rgb(11, 40, 64);
+          font-size: 12px;
+          font-weight: 600;
+          padding-bottom: 10px;
+          padding-top: 15px;
+
+          &.button-container {
+            display: inline-block;
+            padding-left: 0;
+            padding-top: 15px;
+            button {
+              background: none;
+              border: none;
+              color: $mew-green;
+              font-size: 14px;
+              font-weight: 500;
+            }
+          }
+        }
+
+        .slider-container {
+          span {
+            font-size: 12px;
+            font-weight: normal;
+            padding-left: 5px;
+          }
+
+          .stable-txt {
+            color: $light-blue-1;
+          }
+
+          .variable-txt {
+            color: $light-yellow-4;
+          }
+        }
+
+        .token-name {
+          color: $dark-blue-2;
+          font-size: 14px;
+          font-weight: 600;
+          padding-left: 30px;
+        }
+
+        .eth-amt {
+          display: block;
+          color: $dark-blue-1;
+          font-size: 12px;
+          font-weight: normal;
+        }
+      }
+
+      .sliding-switch-white {
+        display: inline-block;
+        vertical-align: middle;
+        .borrow-slider {
+          background-color: $light-yellow-4;
+        }
+
+        input:checked + .borrow-slider {
+          background-color: $light-blue-1;
+        }
+
+        .input:focus + .borrow-slider {
+          box-shadow: 0 0 1px $mew-green;
+        }
+      }
+    }
+  }
+
+  .disabled-input {
+    pointer-events: none;
+  }
+}

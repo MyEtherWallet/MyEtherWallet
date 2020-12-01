@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>explanation</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="InVision-V2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="MEW-connect1" transform="translate(-462.000000, -235.000000)">
+            <g id="Group-9" transform="translate(300.000000, 221.000000)">
+                <g id="explanation" transform="translate(163.000000, 15.000000)">
+                    <g>
+                        <circle id="Oval-2" stroke="#FFFFFF" cx="8" cy="8" r="8"></circle>
+                        <text id="?" font-family="AvenirNext-Medium, Avenir Next" font-size="11" font-weight="400" fill="#FFFFFF">
+                            <tspan x="5" y="12">?</tspan>
+                        </text>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

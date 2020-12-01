@@ -1,0 +1,220 @@
+@import '../InterfaceContainer';
+
+$contract-mobile-width: 600px;
+
+.interact-with-contract-container {
+  @extend %interface-container;
+
+  .contract-address-container {
+    margin-bottom: 30px;
+  }
+
+  .send-form {
+    .title-container {
+      .title {
+        align-items: center;
+        display: flex;
+        margin-bottom: 10px;
+        padding: 0 8px;
+        position: relative;
+        width: 100%;
+
+        .select-contract {
+          margin-left: auto;
+          min-width: 230px;
+          position: absolute;
+          right: 0;
+          top: -12px;
+          @media all and (max-width: $contract-mobile-width) {
+            min-width: initial;
+            left: 0;
+            top: 35px;
+          }
+        }
+
+        .copy-buttons {
+          color: $text-color-3;
+          margin-left: auto;
+          min-width: 100px;
+
+          span {
+            cursor: pointer;
+            margin-left: 20px;
+          }
+        }
+      }
+
+      .search-block {
+        margin-left: auto;
+      }
+
+      .buttons {
+        margin-bottom: 3px;
+        margin-left: auto;
+      }
+    }
+
+    .form-block {
+      @extend %form-block-base;
+    }
+
+    .domain-name {
+      align-items: center;
+      display: flex;
+      position: relative;
+
+      input {
+        background-color: $background-color-1;
+        border: 0;
+        padding: 13px 45px 13px 15px;
+        width: 100%;
+      }
+
+      span {
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      i {
+        bottom: 13px;
+        position: absolute;
+        right: 16px;
+      }
+
+      .address-validation-check {
+        bottom: 13px;
+        right: 16px;
+      }
+    }
+  }
+
+  .submit-button-container {
+    margin-top: 60px;
+    text-align: center;
+
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      margin-top: 30px;
+    }
+
+    .submit-button {
+      margin: 0 auto;
+      text-align: center;
+      width: 300px;
+      position: relative;
+      @media all and (max-width: $mobile-width) {
+        width: 100%;
+      }
+    }
+
+    img {
+      position: absolute;
+      right: 25px;
+      top: 25px;
+      width: 30px;
+    }
+  }
+
+  .copy-buttons {
+    span {
+      cursor: pointer;
+    }
+  }
+}
+
+.interact-div {
+  @extend %send-form-base;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 400px;
+}
+
+.contract-methods-container {
+  @extend %send-form-base;
+
+  h4 {
+    margin-bottom: 23px;
+    color: $dark-blue-7;
+  }
+
+  .contract-addr-container {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    .contract-addr {
+      flex: 1;
+      border-bottom: 2px solid $light-grey-4;
+      margin-top: 20px;
+      padding-bottom: 9px;
+
+      p {
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+
+    .picker-container {
+      border: 1px solid $light-grey-14;
+      border-radius: 4px;
+    }
+  }
+}
+
+.input-container {
+  display: flex;
+  position: relative;
+
+  .non-bool-i {
+    position: absolute;
+    right: 10px;
+    top: 13px;
+  }
+}
+
+.interact-buttons {
+  display: flex;
+}
+
+%input-temp {
+  background-color: $background-color-1;
+  border: 0;
+  padding: 13px 15px;
+  width: 100%;
+}
+
+.non-bool-input,
+.result-input {
+  @extend %input-temp;
+}
+
+.method-arguments-container {
+  padding-top: 33px;
+}
+
+.bool-input-container {
+  display: flex;
+
+  .bool-items {
+    padding: 0 10px;
+  }
+}
+
+.result-container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 5px;
+}
+
+.contract-address-title {
+  // Mobile
+  @media all and (max-width: $contract-mobile-width) {
+    margin-bottom: 55px;
+  }
+}
+
+.input-item-container {
+  padding: 10px 0;
+}

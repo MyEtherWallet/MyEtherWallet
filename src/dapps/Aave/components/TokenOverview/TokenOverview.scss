@@ -1,0 +1,97 @@
+@import '~@/scss/GlobalVariables';
+
+.overview-container {
+  background-color: $white;
+  padding: 20px;
+
+  .currency-symbol {
+    font-size: 20px;
+    vertical-align: middle;
+  }
+
+  .token-icon {
+    font-size: 20px;
+    margin-right: 5px;
+    width: 20px;
+    vertical-align: middle;
+  }
+
+  .title {
+    color: $light-grey-18;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .header {
+    border-bottom: 1px solid $light-grey-20;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+  }
+
+  .icon {
+    height: 36px;
+    width: 33px;
+  }
+
+  .body-container {
+    border-bottom: 1px solid $light-grey-20;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    padding-bottom: 15px;
+
+    .left-container {
+      p {
+        color: $light-grey-18;
+        font-size: 14px;
+        margin-top: 10px;
+      }
+    }
+
+    .right-container {
+      p {
+        color: $dark-blue-6;
+        font-size: 14px;
+        font-weight: 600;
+        margin-top: 10px;
+      }
+      .stable-text {
+        color: $light-yellow-4;
+      }
+      .variable-text {
+        color: $light-blue-1;
+      }
+    }
+  }
+  .footer-container {
+    padding-top: 20px;
+
+    .info {
+      color: $light-blue-2;
+      font-size: 14px;
+      text-align: center;
+      padding-top: 20px;
+    }
+    .footer-header {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+
+      .key-container {
+        align-items: center;
+        display: flex;
+        .key {
+          background: $light-blue-1;
+          border-radius: 5px;
+          height: 11px;
+          margin-right: 5px;
+          width: 11px;
+        }
+        p {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}

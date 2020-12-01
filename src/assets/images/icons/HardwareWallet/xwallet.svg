@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="45px" height="45px" viewBox="0 0 45 45" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
+    <title>ic_logo_myetherwallet</title>
+    <desc>Created with Sketch.</desc>
+    <g id="ic_logo_myetherwallet" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="logo-2" transform="translate(6.000000, 6.000000)">
+            <rect id="Rectangle" stroke="#002747" stroke-width="3" x="2" y="2" width="29" height="29" rx="5"></rect>
+            <g id="Group" transform="translate(16.353553, 16.853553) rotate(45.000000) translate(-16.353553, -16.853553) translate(4.853553, 5.353553)" fill="#002747">
+                <path d="M12.7616916,14.4254383 L12.7624742,22.0784383 L9.89290899,22.0784383 L9.8926916,14.4254383 L12.7616916,14.4254383 Z M22.3276916,9.64365564 L22.3276916,12.5132209 L14.6746916,12.5124383 L14.6746916,9.64343825 L22.3276916,9.64365564 Z M7.9796916,9.64343825 L7.9796916,12.5124383 L0.327691595,12.5132209 L0.327691595,9.64365564 L7.9796916,9.64343825 Z M12.7624742,9.64365564 L12.7624742,12.5132209 L9.89290899,12.5132209 L9.89290899,9.64365564 L12.7624742,9.64365564 Z M12.7624742,0.0784382514 L12.7616916,7.73043825 L9.8926916,7.73043825 L9.89290899,0.0784382514 L12.7624742,0.0784382514 Z" id="Combined-Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

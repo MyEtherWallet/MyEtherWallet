@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="47px" height="24px" viewBox="0 0 47 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+  <title>arrow</title>
+  <desc>Created with Sketch.</desc>
+  <defs></defs>
+  <g id="Desktop" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="send-tx-confirm" transform="translate(-696.000000, -359.000000)" fill="#CECECE" fill-rule="nonzero">
+      <g id="Group" transform="translate(401.000000, 207.000000)">
+        <g id="Group-16" transform="translate(19.000000, 76.000000)">
+          <g id="tx-boxes">
+            <g id="arrow" transform="translate(276.000000, 76.000000)">
+              <path d="M31.7375,2.84745763 L34.625,0 L47,12 L34.625,24 L31.7375,21.1525424 L38.95625,14.0338983 L14,14.0338983 L14,9.96610169 L38.95625,9.96610169 L31.7375,2.84745763 Z M6,10 L12,10 L12,14 L6,14 L6,10 Z M0,10 L4,10 L4,14 L0,14 L0,10 Z" id="Combined-Shape"></path>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

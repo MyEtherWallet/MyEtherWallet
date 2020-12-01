@@ -1,0 +1,133 @@
+@import '~@/scss/GlobalVariables';
+
+.balance-wrapper {
+  display: flex;
+  margin: 15px;
+
+  .balance-container {
+    background: $light-green-1;
+    margin: 5px;
+    padding: 20px 30px;
+    width: 100%;
+
+    .title {
+      color: $light-grey-18;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .token-balance {
+      color: $dark-blue-6;
+      font-size: 24px;
+      font-weight: 600;
+      margin-top: 20px;
+    }
+
+    .token-name {
+      color: $dark-blue-6;
+      font-size: 24px;
+      font-weight: 400;
+      margin-top: 20px;
+    }
+
+    .usd-amt {
+      color: $light-grey-18;
+      font-size: 14px;
+      font-weight: normal;
+    }
+  }
+}
+
+@media all and (max-width: $mobile-width) {
+  .balance-wrapper {
+    flex-wrap: wrap;
+  }
+}
+
+.action-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+
+  .action-title {
+    text-transform: lowercase;
+  }
+
+  .action-question {
+    color: $dark-blue-6;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .action-info {
+    color: $light-grey-18;
+    font-size: 14px;
+    font-weight: normal;
+    margin-top: 20px;
+    max-width: 445px;
+  }
+
+  input {
+    background: $light-grey-17;
+    border: none;
+    border-radius: 4px;
+    height: 52px;
+    margin-top: 20px;
+    padding-left: 10px;
+    width: 262px;
+  }
+
+  .take-action-btn {
+    color: $white;
+    border: none;
+    border-radius: 4px;
+    height: 62px;
+    margin-top: 10px;
+    width: 260px;
+
+    &.enabled {
+      background: $mew-green;
+    }
+
+    & .disabled {
+      background: $dark-grey-11;
+      pointer-events: none;
+    }
+  }
+
+  .cancel-btn {
+    background-color: transparent;
+    border: none;
+    color: $red-10;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    margin-top: 10px;
+  }
+
+  .percentage-container {
+    align-items: center;
+    display: flex;
+
+    div {
+      color: $light-grey-18;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      margin: 10px;
+      padding: 8px;
+    }
+
+    .active {
+      border-radius: 4px;
+      border: 1px solid $mew-green;
+      color: $mew-green;
+      width: 49px;
+    }
+  }
+}
+
+.error {
+  color: $red-1;
+}

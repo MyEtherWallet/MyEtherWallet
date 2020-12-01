@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="45px" height="45px" viewBox="0 0 45 45" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>ledger</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-11.4%" y="-32.0%" width="122.8%" height="164.7%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="8" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="7.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.231216447   0 0 0 0 0.249925236   0 0 0 0 0.27173913  0 0 0 0.124180507 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Landing-pages" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Hardware(pop-out)1-Copy-2" transform="translate(-538.000000, -623.000000)" fill-rule="nonzero" stroke-width="3">
+            <g id="pop-out" transform="translate(477.000000, 207.000000)">
+                <g id="Group-6-Copy-2" filter="url(#filter-1)" transform="translate(43.000000, 333.000000)">
+                    <g id="Group" transform="translate(18.000000, 0.000000)">
+                        <g id="Group-7">
+                            <g id="Group-2" transform="translate(12.000000, 90.000000)" stroke="#979797">
+                                <rect id="Rectangle" x="1.5" y="1.5" width="18.0285714" height="29" rx="3"></rect>
+                                <path d="M2.28571429,24.6857143 L18.7428571,13.7142857" id="Line-3" stroke-linecap="square"></path>
+                            </g>
+                            <g id="Group-2" transform="translate(12.000000, 90.000000)" stroke="#0B2840">
+                                <rect id="Rectangle" x="1.5" y="1.5" width="18.0285714" height="29" rx="3"></rect>
+                                <path d="M2.28571429,24.6857143 L18.7428571,13.7142857" id="Line-3" stroke-linecap="square"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

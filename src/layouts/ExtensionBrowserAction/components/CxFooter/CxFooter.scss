@@ -1,0 +1,159 @@
+@import '~@/scss/GlobalVariables';
+
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none;
+
+  * {
+    text-decoration: none;
+  }
+}
+
+.footer {
+  background-color: $footer-background-color;
+  min-width: 960px;
+}
+
+.wrap {
+  color: $text-color-1;
+}
+
+.footer-contents {
+  > div {
+    display: flex;
+    flex-direction: column;
+
+    .content-title {
+      align-items: center;
+      display: flex;
+
+      h3 {
+        font-size: 19px;
+      }
+
+      .open,
+      .close {
+        display: none;
+      }
+    }
+
+    .content-links {
+      margin-top: 20px;
+      max-height: 600px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+
+      .content {
+        margin-bottom: 5px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      .sub-title {
+        color: $text-color-1;
+      }
+
+      p {
+        color: $text--footer-link-color;
+        margin-bottom: 15px;
+      }
+
+      .no-margin {
+        margin-bottom: 3px;
+      }
+    }
+  }
+
+  .donate-us {
+    .content-title {
+      margin-bottom: 20px;
+    }
+
+    .crypto-link {
+      align-items: center;
+      color: $link-text-color-2;
+      display: flex;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding-top: 15px;
+
+      img {
+        height: 30px;
+        vertical-align: top;
+      }
+    }
+
+    p {
+      color: $text--footer-link-color;
+      margin-bottom: 15px;
+    }
+
+    i {
+      border: 1px solid $text--footer-link-color;
+      border-radius: 100px;
+    }
+  }
+}
+
+.foot-note {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid $dark-blue-1;
+  padding: 20px;
+
+  .links {
+    display: flex;
+
+    div {
+      border-right: 1px solid $border-color-2;
+      padding: 0 10px;
+      line-height: 12px;
+    }
+
+    span {
+      color: $text-color-1;
+      font-size: 12px;
+    }
+
+    div:last-child {
+      border-right: 0;
+    }
+  }
+
+  .copyright {
+    text-align: center;
+
+    p {
+      color: $text--footer-link-color;
+      font-size: 12px;
+      line-height: 17px;
+    }
+
+    a {
+      font-size: 12px;
+      color: $white;
+    }
+  }
+
+  .social {
+    i {
+      color: $text--footer-link-color;
+      font-size: 19px;
+      margin-left: 15px;
+    }
+
+    a:first-child i {
+      margin-left: 0;
+    }
+  }
+}
+
+.version {
+  padding-left: 50px;
+}

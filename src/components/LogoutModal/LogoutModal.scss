@@ -1,0 +1,47 @@
+@import '~@/scss/GlobalVariables';
+
+//***************************************************
+// modal-contents
+//***************************************************
+.modal-contents {
+  padding: 40px;
+}
+
+%buttom-temp {
+  border: 1px solid $mew-green;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 18px 45px;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+h2 {
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 15px;
+
+  button {
+    @extend %buttom-temp;
+  }
+
+  .no {
+    background-color: $white;
+    color: $mew-green;
+  }
+
+  .yes {
+    background-color: $mew-green;
+    color: $white;
+  }
+}

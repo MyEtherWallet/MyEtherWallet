@@ -1,0 +1,97 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .modal-container {
+    padding: 20px;
+  }
+
+  .modal-large-text {
+    font-weight: 400;
+    max-width: 330px;
+    display: inline-block;
+  }
+
+  .bootstrap-modal .content-container {
+    margin-bottom: 0;
+  }
+
+  .modal-mew-connect {
+    .content-container-1 {
+      margin: -20px -40px 0;
+      padding: 0 25px;
+
+      .hd-derivation {
+        align-items: center;
+        display: flex;
+
+        .dropdown-button-container {
+          margin-left: auto;
+        }
+      }
+
+      .derivation-brands {
+        font-size: 12px;
+        padding: 15px 0;
+        text-align: left;
+      }
+    } // .content-container-1
+
+    .content-container-2 {
+      background-color: $background-color-1;
+      margin: 0 -40px;
+      margin-bottom: 30px;
+      padding: 0;
+
+      .address-nav {
+        padding: 10px 0;
+        text-align: center;
+
+        span {
+          cursor: pointer;
+          padding: 2px 10px;
+        }
+      }
+
+      .address-block-container {
+        .block-title {
+          padding: 15px 25px;
+        }
+
+        .address-data:nth-child(even) {
+          background-color: $background-color-white;
+        }
+
+        .address-block {
+          color: $text-color-3;
+          display: grid;
+          grid-column-gap: 15px;
+          grid-template-columns: 35px 3fr 2fr 35px;
+          padding: 8px 25px;
+
+          &.table-header {
+            background-color: $background-color-4;
+            color: $text-base-color;
+            font-weight: 600;
+          }
+
+          &.selected {
+            color: $text-color-6;
+            font-weight: 500;
+          }
+
+          li {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+  }
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)
+
+.appstore-button-container {
+  .links-container {
+    display: flex;
+    justify-content: center;
+  }
+}

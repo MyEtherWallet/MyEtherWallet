@@ -1,0 +1,190 @@
+@import '~@/scss/GlobalVariables';
+
+$dapp-button-mobile-width: 650px;
+$dapps-container-mobile-width: 650px;
+
+%interface-container {
+  border-radius: 5px;
+  grid-area: main;
+  overflow: hidden;
+
+  > div {
+    background: $background-color-white;
+  }
+}
+
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -500px 0;
+  }
+  100% {
+    background-position: 300px 0;
+  }
+}
+
+.animated-background {
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  background: #f6f7f8;
+  background: linear-gradient(to right, #eee 8%, #ddd 18%, #eee 33%);
+  //background-size: 100%;
+  //height: 60px;
+  //position: relative;
+}
+
+.dapps-button {
+  background: $light-green-4;
+  border: 1px solid $light-green-4;
+  border-radius: 5px;
+  color: $black;
+  cursor: pointer;
+  height: 100%;
+  padding: 40px 20px;
+  text-align: center;
+
+  @media all and (max-width: $dapp-button-mobile-width) {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    padding: 10px 20px;
+  }
+
+  &:hover {
+    border: 1px solid $mew-green;
+    background-color: $light-green-6;
+  }
+
+  img {
+    //margin-bottom: 15px;
+    @media all and (max-width: $dapp-button-mobile-width) {
+      margin-top: 0;
+      margin-left: -10px;
+      margin-right: 5px;
+    }
+  }
+
+  h4 {
+    margin-bottom: 5px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+}
+
+.disabled {
+  background-color: $white;
+  border: 1px solid $light-grey-6;
+  color: $light-grey-6;
+  pointer-events: none;
+
+  p {
+    color: $light-grey-6;
+  }
+}
+
+.dapps-container {
+  @extend %interface-container;
+
+  min-height: 550px;
+}
+
+.buttons-container {
+  display: grid;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 40px;
+
+  @media all and (max-width: $dapps-container-mobile-width) {
+    > * {
+      margin-bottom: 10px;
+    }
+  }
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  @media all and (max-width: $dapps-container-mobile-width) {
+    display: block;
+    padding: 10px;
+  }
+}
+
+%send-form-base {
+  padding: 40px 60px 0;
+
+  .title-container {
+    align-items: flex-end;
+    display: flex;
+    margin-bottom: 5px;
+  }
+}
+
+%form-block-base {
+  border-radius: 5px;
+
+  .the-form {
+    background-color: $background-color-1;
+    border-radius: 5px;
+  }
+}
+
+.select-contract .dropdown-toggle {
+  border: 0;
+  display: none;
+}
+
+.container-maker {
+  @extend %interface-container;
+
+  .Collateralize-Gene {
+    width: 341px;
+    height: 22px;
+    font-family: AvenirNext;
+    font-size: 16px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #0b2840;
+  }
+
+  .Please-text-somethin {
+    width: 535px;
+    height: 51px;
+    font-family: AvenirNext;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #506175;
+  }
+
+  .Please-text-somethin .text-style-1 {
+    font-family: PingFangSC;
+  }
+
+  .Collateral {
+    width: 199px;
+    height: 22px;
+    font-family: AvenirNext;
+    font-size: 16px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #0b2840;
+  }
+}
