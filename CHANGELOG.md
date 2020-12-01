@@ -2,6 +2,7 @@
 
 ### Devop
 
+* update mobile deploy contract [#2691](https://github.com/MyEtherWallet/MyEtherWallet/pull/2691)
 * update mobile interact with contract [#2690](https://github.com/MyEtherWallet/MyEtherWallet/pull/2690)
 * update mobile sign message [#2689](https://github.com/MyEtherWallet/MyEtherWallet/pull/2689)
 * update mobile swap [#2688](https://github.com/MyEtherWallet/MyEtherWallet/pull/2688)
