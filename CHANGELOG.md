@@ -2,6 +2,7 @@
 
 ### Devop
 
+* update mobile swap [#2688](https://github.com/MyEtherWallet/MyEtherWallet/pull/2688)
 * update mobile send offline [#2687](https://github.com/MyEtherWallet/MyEtherWallet/pull/2687)
 * update mobile send tx [#2686](https://github.com/MyEtherWallet/MyEtherWallet/pull/2686)
 * update mobile dashboard [#2673](https://github.com/MyEtherWallet/MyEtherWallet/pull/2673)
