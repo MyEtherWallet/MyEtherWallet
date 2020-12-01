@@ -118,7 +118,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['account', 'web3']),
+    ...mapState('main', ['account', 'web3', 'gasPrice']),
     validatorsCount() {
       if (this.details.amount) {
         return new BigNumber(this.details.amount).dividedBy(32).toFixed();
@@ -161,22 +161,16 @@ export default {
                 this.$t('dappsStaked.error-try-again'),
                 Toast.ERROR
               );
-          console.log('response', response);
         })
         .catch(err => {
-          console.error('err', err);
           Toast.responseHandler(err, Toast.ERROR);
         });
     },
-    startPolling(id) {
-      console.error('id', id)
+    startPolling(uuid) {
       const interval = setInterval(() => {
         axios
           .get(
-            'https://staked.mewwallet.dev/status',
-            {
-              provisioning_request_uuid: id
-            },
+            `https://staked.mewwallet.dev/status?provisioning_request_uuid=${uuid}`,
             {
               header: {
                 'Content-Type': 'application/json'
@@ -184,32 +178,26 @@ export default {
             }
           )
           .then(response => {
-            console.log('response', response);
+            this.sendTransaction(response.data.transaction);
             clearInterval(interval);
           })
           .catch(err => {
-            console.error('err', err);
             Toast.responseHandler(err, Toast.ERROR);
           });
       }, 5000);
     },
     sendTransaction(data) {
-      this.web3.eth
-        .sendTransaction({
-          from: this.account.address,
-          // to: LEND_ADDRESS,
-          value: 0,
-          gas: 100000,
-          data: data
-        })
-        .catch(err => {
-          Toast.responseHandler(err, Toast.ERROR);
-        });
+      data.from = this.account.address;
+      data.gasPrice = new BigNumber(
+        this.web3.utils.toWei(this.gasPrice, 'gwei')
+      ).toFixed();
+      this.web3.eth.sendTransaction(data).catch(err => {
+        Toast.responseHandler(err, Toast.ERROR);
+      });
     },
     setData(data) {
       this.details[data.key] = data.value;
       if (data.key === 'review' && data.value === true) {
-        console.error('in here')
         this.startProvision();
       }
     },
