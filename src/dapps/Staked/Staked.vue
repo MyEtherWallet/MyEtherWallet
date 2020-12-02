@@ -79,9 +79,7 @@ import calculateEth2Rewards from './helpers/calculateRewards';
 import BigNumber from 'bignumber.js';
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
-
-const eth2ContractAddress = '0x00000000219ab540356cBB839Cbe05303d7705Fa';
-
+import stakeConfigs from './configs';
 export default {
   components: {
     backButton,
@@ -89,6 +87,9 @@ export default {
   },
   data() {
     return {
+      eth2ContractAddress: '',
+      endpoint: '',
+      batchContract: '',
       details: {},
       currentStepIdx: 0,
       totalStaked: '',
@@ -119,7 +120,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['account', 'web3', 'gasPrice']),
+    ...mapState('main', ['account', 'web3', 'gasPrice', 'network']),
     validatorsCount() {
       if (this.details.amount) {
         return new BigNumber(this.details.amount).dividedBy(32).toFixed();
@@ -128,12 +129,19 @@ export default {
     }
   },
   mounted() {
-    this.apr = new BigNumber(calculateEth2Rewards({})).times(100).toFixed(2);
+    this.eth2ContractAddress =
+      stakeConfigs.network[this.network.type.name].depositAddress;
+    this.endpoint = stakeConfigs.network[this.network.type.name].endpoint;
+    this.batchContract =
+      stakeConfigs.network[this.network.type.name].batchContract;
     this.web3.eth
-      .getBalance(eth2ContractAddress.toLowerCase())
+      .getBalance(this.eth2ContractAddress)
       .then(res => {
-        const raw = this.web3.utils.fromWei(res);
+        const raw = this.web3.utils.fromWei(res, 'ether');
         this.totalStaked = new BigNumber(raw).toFormat(0);
+        this.apr = new BigNumber(calculateEth2Rewards({ totalAtStake: raw }))
+          .times(100)
+          .toFixed(2);
       })
       .catch(err => {
         Toast.responseHandler(err, Toast.ERROR);
@@ -150,7 +158,7 @@ export default {
         validatorsCount: this.validatorsCount
       };
       axios
-        .post('https://staked.mewwallet.dev/provision', params, {
+        .post(this.endpoint + '/provision', params, {
           header: {
             'Content-Type': 'application/json'
           }
@@ -170,14 +178,11 @@ export default {
     startPolling(uuid) {
       const interval = setInterval(() => {
         axios
-          .get(
-            `https://staked.mewwallet.dev/status?provisioning_request_uuid=${uuid}`,
-            {
-              header: {
-                'Content-Type': 'application/json'
-              }
+          .get(`${this.endpoint}/status?provisioning_request_uuid=${uuid}`, {
+            header: {
+              'Content-Type': 'application/json'
             }
-          )
+          })
           .then(response => {
             if (response && response.data && response.data.transaction) {
               this.sendTransaction(response.data.transaction);
@@ -191,6 +196,7 @@ export default {
     },
     sendTransaction(data) {
       data.from = this.account.address;
+      data.to = this.batchContract;
       data.gasPrice = new BigNumber(
         this.web3.utils.toWei(this.gasPrice, 'gwei')
       ).toFixed();
