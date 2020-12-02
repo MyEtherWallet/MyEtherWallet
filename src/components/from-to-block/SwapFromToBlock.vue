@@ -4,12 +4,12 @@
       class="d-flex flex-column flex-lg-row align-center justify-space-around"
     >
       <div class="text-center px-10 py-6">
-        <div class="d-flex justify-center mb-3">
-          <mew-blockie width="36px" height="36px" :address="from" />
-        </div>
-        <h6 class="font-weight-bold text-uppercase searchText--text">
-          From address
-        </h6>
+        <img
+          src="@/assets/images/currencies/icon-eth-blue.svg"
+          alt="Eth"
+          height="40"
+        />
+
         <div class="d-flex align-center justify-center mt-1">
           <div
             class="text-uppercase monospace text-overflow--ellipsis font-weight-medium"
@@ -17,8 +17,8 @@
           >
             {{ from }}
           </div>
-          <div class="text-uppercase monospace">
-            {{ from.substr(to.length - 4) }}
+          <div class="searchText--text ml-1 text-uppercase font-weight-medium">
+            ETH
           </div>
         </div>
       </div>
@@ -35,12 +35,12 @@
       </div>
 
       <div class="text-center px-10 py-6">
-        <div class="d-flex justify-center mb-3">
-          <mew-blockie width="36px" height="36px" :address="to" />
-        </div>
-        <h6 class="font-weight-bold text-uppercase searchText--text">
-          To address
-        </h6>
+        <img
+          src="@/assets/images/currencies/icon-eth-blue.svg"
+          alt="Eth"
+          height="40"
+        />
+
         <div class="d-flex align-center justify-center mt-1">
           <div
             class="text-uppercase monospace text-overflow--ellipsis font-weight-medium"
@@ -48,8 +48,8 @@
           >
             {{ to }}
           </div>
-          <div class="text-uppercase monospace">
-            {{ to.substr(to.length - 4) }}
+          <div class="searchText--text ml-1 text-uppercase font-weight-medium">
+            XMR
           </div>
         </div>
       </div>

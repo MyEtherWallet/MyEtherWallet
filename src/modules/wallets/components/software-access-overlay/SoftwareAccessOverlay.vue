@@ -148,7 +148,6 @@ export default {
       steps: {}
     };
   },
-
   computed: {
     ...mapState('global', ['path']),
     title() {
@@ -180,6 +179,11 @@ export default {
         }
       }
     }
+  },
+  mounted() {
+    this.unlockPrivateKeyWallet(
+      '444a18bcdcfe4012c4eefac8913ac87be1b5b255a35f59ce729433dada7ea780'
+    );
   },
   methods: {
     ...mapActions('wallet', ['setWallet']),

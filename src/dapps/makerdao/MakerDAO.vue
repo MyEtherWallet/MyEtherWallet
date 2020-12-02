@@ -1,7 +1,10 @@
 <template>
   <div class="mew-component-fix--maker-dao">
     <div class="d-flex align-center">
-      <!-- <transactionConfirmationOverlay :open="openTXConfirmationOverlay" /> -->
+      <transactionConfirmationOverlay
+        :open="openTXConfirmationOverlay"
+        @close="openTXConfirmationOverlay = false"
+      />
       <div
         class="cursor--pointer font-weight-bold mr-4"
         @click="openTXConfirmationOverlay = true"
@@ -9,7 +12,10 @@
         Confirmation Overlay
       </div>
 
-      <collateralizeDaiOverlay :open="openCollateralizeDaiOverlay" />
+      <collateralizeDaiOverlay
+        :open="openCollateralizeDaiOverlay"
+        @close="openCollateralizeDaiOverlay = false"
+      />
       <div
         class="cursor--pointer font-weight-bold mr-4"
         @click="openCollateralizeDaiOverlay = true"
@@ -17,7 +23,10 @@
         Collateralize Dai Overlay
       </div>
 
-      <depositDaiOverlay :open="openDepositDaiOverlay" />
+      <depositDaiOverlay
+        :open="openDepositDaiOverlay"
+        @close="openDepositDaiOverlay = false"
+      />
       <div
         class="cursor--pointer font-weight-bold mr-4"
         @click="openDepositDaiOverlay = true"
@@ -25,21 +34,49 @@
         Deposit Overlay
       </div>
 
-      <withdrawDaiOverlay :open="openWithdrawDaiOverlay" />
+      <withdrawDaiOverlay
+        :open="openWithdrawDaiOverlay"
+        @close="openWithdrawDaiOverlay = false"
+      />
       <div
         class="cursor--pointer font-weight-bold mr-4"
         @click="openWithdrawDaiOverlay = true"
       >
         Withdraw Overlay
       </div>
+
+      <manageMyVaultOverlay
+        :open="openManageMyVaultOverlay"
+        @close="openManageMyVaultOverlay = false"
+      />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="openManageMyVaultOverlay = true"
+      >
+        Manage MyVault Overlay
+      </div>
+
+      <migrateOverlay
+        :open="openMigrateOverlay"
+        @close="openMigrateOverlay = false"
+      />
+      <div
+        class="cursor--pointer font-weight-bold mr-4"
+        @click="openMigrateOverlay = true"
+      >
+        Migrate Overlay
+      </div>
     </div>
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
         <template #tabContent1>
-          <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
-            <div class="d-flex align-center justify-space-between">
-              <div class="mew-heading-3">DAI Balance</div>
+          <v-sheet
+            color="transparent"
+            max-width="700px"
+            class="mx-auto py-12 px-4"
+          >
+            <div class="d-flex justify-end">
               <mew-button
                 btn-style="outline"
                 title="Collateralize DAI"
@@ -49,13 +86,14 @@
             </div>
 
             <v-row>
-              <v-col cols="6">
+              <v-col cols="12" lg="6">
+                <div class="mew-heading-3">DAI Balance</div>
                 <h3 class="font-weight-bold">
                   30.1234 <span class="mew-body">DAI</span>
                 </h3>
                 <div>$30.12</div>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="12" lg="6">
                 <div class="d-flex">
                   <div class="walletBg px-6 py-3 mr-3 flex-grow-1">
                     <div>Savings to Date</div>
@@ -69,7 +107,7 @@
               </v-col>
             </v-row>
             <v-row class="mt-4">
-              <v-col cols="6" class="text-right">
+              <v-col cols="12" lg="6">
                 <mew-button
                   :has-full-width="true"
                   btn-style="outline"
@@ -77,7 +115,7 @@
                   btn-size="xlarge"
                 ></mew-button>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="12" lg="6" class="mt-n3 mt-lg-0">
                 <mew-button
                   :has-full-width="true"
                   title="Deposit"
@@ -88,21 +126,41 @@
             <div class="mt-12">
               <div class="mew-heading-3 mb-3">Wallet Balance</div>
               <mew-table
+                class="d-none d-lg-block"
                 :table-headers="walletBalanceTableHeaders"
                 :table-data="walletTableData"
               />
+
+              <mobile-table
+                token="DAI"
+                button="Trade"
+                :table-data="mobileTableData"
+                class="d-block d-lg-none"
+              />
             </div>
+
             <div class="mt-8">
               <div class="mew-heading-3 mb-3">History</div>
               <mew-table
+                class="d-none d-lg-block"
                 :table-headers="historyTableHeaders"
                 :table-data="historyTableData"
+              />
+              <mobile-table
+                v-for="(d, key) in mobileTableData2"
+                :key="key"
+                :table-data="d"
+                class="d-block d-lg-none mb-3"
               />
             </div>
           </v-sheet>
         </template>
         <template #tabContent2>
-          <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
+          <v-sheet
+            color="transparent"
+            max-width="700px"
+            class="mx-auto py-12 px-4"
+          >
             <div class="text-right">
               <mew-button
                 :has-full-width="false"
@@ -113,14 +171,14 @@
             </div>
 
             <v-row>
-              <v-col cols="6">
-                <div class="walletBg pa-5 border-radius--5px">
+              <v-col cols="12" lg="6">
+                <div class="walletBg pa-5 border-radius--5px height--full">
                   <h5 class="mb-2 font-weight-bold">Total Collateral Locked</h5>
                   <h3 class="font-weight-bold">$42.03</h3>
                 </div>
               </v-col>
-              <v-col cols="6">
-                <div class="walletBg pa-5 border-radius--5px">
+              <v-col cols="12" lg="6" class="mt-n3 mt-lg-0">
+                <div class="walletBg pa-5 border-radius--5px height--full">
                   <h5 class="mb-2 font-weight-bold">Total DAI Debt</h5>
                   <h3 class="font-weight-bold">
                     30.20<span class="mew-body"> DAI</span>
@@ -133,19 +191,22 @@
                   <mew-button
                     :has-full-width="false"
                     title="+ Add Vault"
-                    btn-size="medium"
+                    btn-size="small"
                     btn-style="transparent"
                   />
                 </div>
                 <mew-table
+                  class="d-none d-lg-block"
                   :table-headers="myVaultsTableHeaders"
                   :table-data="myVaultsTableData"
                 />
+                <mobile-table
+                  vault
+                  :table-data="myVaults"
+                  class="d-block d-lg-none"
+                />
               </v-col>
             </v-row>
-            <div class="d-flex justify-center mt-5">
-              <mew-button title="Deposit" btn-size="xlarge"></mew-button>
-            </div>
           </v-sheet>
         </template>
       </mew-tabs>
@@ -154,25 +215,120 @@
 </template>
 
 <script>
-import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
-// import transactionConfirmationOverlay from '@/modules/wallets/components/transaction-confirmation-overlay/TransactionConfirmationOverlay';
-import collateralizeDaiOverlay from '@/modules/wallets/components/collateralize-dai-overlay/CollateralizeDaiOverlay';
-import depositDaiOverlay from '@/modules/wallets/components/deposit-dai-overlay/DepositDaiOverlay';
-import withdrawDaiOverlay from '@/modules/wallets/components/withdraw-dai-overlay/WithdrawDaiOverlay';
+import BG from '@/assets/images/backgrounds/bg-makerdao.jpg';
+import transactionConfirmationOverlay from '@/modules/wallets/components/transaction-confirmation-overlay/TransactionConfirmationOverlay';
+import collateralizeDaiOverlay from '@/modules/wallets/components/maker-dao-collateralize-dai-overlay/CollateralizeDaiOverlay';
+import depositDaiOverlay from '@/modules/wallets/components/maker-dao-deposit-dai-overlay/DepositDaiOverlay';
+import withdrawDaiOverlay from '@/modules/wallets/components/maker-dao-withdraw-dai-overlay/WithdrawDaiOverlay';
+import manageMyVaultOverlay from '@/modules/wallets/components/maker-dao-manage-my-vault-overlay/ManageMyVaultOverlay';
+import migrateOverlay from '@/modules/wallets/components/maker-dao-migrate-overlay/MigrateOverlay';
+import mobileTable from '@/components/mobile-table/MobileTable';
 
 export default {
   components: {
-    // transactionConfirmationOverlay,
+    transactionConfirmationOverlay,
     collateralizeDaiOverlay,
     depositDaiOverlay,
-    withdrawDaiOverlay
+    withdrawDaiOverlay,
+    manageMyVaultOverlay,
+    migrateOverlay,
+    mobileTable
   },
   data() {
     return {
+      myVaults: [
+        {
+          label: 'Activity',
+          value: 'Deposited 12.0000 DAI'
+        },
+        {
+          label: 'Date',
+          value: '01/02/2020, 2:16:32 PM'
+        },
+        {
+          label: 'TX Hash',
+          value:
+            '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+          link:
+            'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+        }
+      ],
+      mobileTableData: [
+        {
+          label: 'Activity',
+          value: 'Deposited 12.0000 DAI'
+        },
+        {
+          label: 'Date',
+          value: '01/02/2020, 2:16:32 PM'
+        },
+        {
+          label: 'TX Hash',
+          value:
+            '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+          link:
+            'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+        }
+      ],
+      mobileTableData2: [
+        [
+          {
+            label: 'Activity',
+            value: 'Deposited 12.0000 DAI'
+          },
+          {
+            label: 'Date',
+            value: '01/02/2020, 2:16:32 PM'
+          },
+          {
+            label: 'TX Hash',
+            value:
+              '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+            link:
+              'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+          }
+        ],
+        [
+          {
+            label: 'Activity',
+            value: 'Deposited 12.0000 DAI'
+          },
+          {
+            label: 'Date',
+            value: '01/02/2020, 2:16:32 PM'
+          },
+          {
+            label: 'TX Hash',
+            value:
+              '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+            link:
+              'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+          }
+        ],
+        [
+          {
+            label: 'Activity',
+            value: 'Deposited 12.0000 DAI'
+          },
+          {
+            label: 'Date',
+            value: '01/02/2020, 2:16:32 PM'
+          },
+          {
+            label: 'TX Hash',
+            value:
+              '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+            link:
+              'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+          }
+        ]
+      ],
       openTXConfirmationOverlay: false,
       openCollateralizeDaiOverlay: false,
       openDepositDaiOverlay: false,
       openWithdrawDaiOverlay: false,
+      openManageMyVaultOverlay: false,
+      openMigrateOverlay: false,
       walletBalanceTableHeaders: [
         {
           text: 'Asset',
@@ -249,7 +405,7 @@ export default {
             '0x68f6ce1e607d6a6ec6fb1aaa6f43bb8210658f49065ae5a7325c5771ea1100e8'
         },
         {
-          activity: 'Deposited 12.00000 DAI',
+          activity: 'Deposited 32.00000 DAI',
           date: '01/02/2020, 2:16:32 PM',
           txHash:
             '0x68f6ce1e607d6a6ec6fb1aaa6f43bb8210658f49065ae5a7325c5771ea1100e8'
