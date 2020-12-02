@@ -36,6 +36,7 @@
       :set-data="setData"
       @complete-step="completeStep"
       @active-step="isStepActive"
+      @signed="startProvision"
     />
     <div
       v-if="currentStepIdx === 0 || currentStepIdx === 1"
@@ -178,7 +179,9 @@ export default {
             }
           )
           .then(response => {
-            this.sendTransaction(response.data.transaction);
+            if (response && response.data && response.data.transaction) {
+              this.sendTransaction(response.data.transaction);
+            }
             clearInterval(interval);
           })
           .catch(err => {
@@ -197,9 +200,6 @@ export default {
     },
     setData(data) {
       this.details[data.key] = data.value;
-      if (data.key === 'review' && data.value === true) {
-        this.startProvision();
-      }
     },
     completeStep(payload) {
       this.steps.forEach(step => {
