@@ -75,7 +75,7 @@
                   <td>Expiration date</td>
                   <td class="d-flex align-center">
                     03/12/2020 @ 20:30:12
-                    <badge
+                    <mew-badge
                       class="ml-2"
                       badge-title="Expired"
                       badge-type="error"
