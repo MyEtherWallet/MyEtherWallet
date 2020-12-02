@@ -2,6 +2,7 @@
 
 ### Devop
 
+* update mobile name manager [#2695](https://github.com/MyEtherWallet/MyEtherWallet/pull/2695)
 * update mobile name manager [#2694](https://github.com/MyEtherWallet/MyEtherWallet/pull/2694)
 * update mobile dapps center [#2692](https://github.com/MyEtherWallet/MyEtherWallet/pull/2692)
 * update mobile deploy contract [#2691](https://github.com/MyEtherWallet/MyEtherWallet/pull/2691)
