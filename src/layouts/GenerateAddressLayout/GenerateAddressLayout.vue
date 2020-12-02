@@ -63,6 +63,7 @@ export default {
       this.keystoreName =
         'keystore-' +
         genWithdrawalKeystore.path.split('/').join('_') +
+        '-' +
         Date.now() +
         '.json';
       //verify generated keystore

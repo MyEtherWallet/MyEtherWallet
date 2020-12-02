@@ -242,7 +242,7 @@ export default {
             },
             {
               text: 'footer.generate-eth2',
-              to: '/generate-address'
+              to: '/generate-eth2-keystore'
             }
           ]
         },

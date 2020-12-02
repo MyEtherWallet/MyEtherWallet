@@ -53,7 +53,7 @@
         <router-link
           slot="generate"
           class="generate"
-          :to="{ path: '/generate-address' }"
+          :to="{ path: '/generate-eth2-keystore' }"
           target="_blank"
         >
           {{ $t('dappsStaked.generate') }}
@@ -141,7 +141,7 @@ export default {
   },
   methods: {
     goToGenerate() {
-      this.$router.push('/generate-address');
+      this.$router.push('/generate-eth2-keystore');
     },
     startProvision() {
       const params = {
@@ -156,8 +156,8 @@ export default {
           }
         })
         .then(response => {
-          response && response.data.provisioning_request_uuid
-            ? this.startPolling(response.data.provisioning_request_uuid)
+          response && response.data.uuid
+            ? this.startPolling(response.data.uuid)
             : Toast.responseHandler(
                 this.$t('dappsStaked.error-try-again'),
                 Toast.ERROR

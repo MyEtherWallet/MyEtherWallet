@@ -148,7 +148,7 @@ const router = [
     meta: { requiresAuth: false }
   },
   {
-    path: '/generate-address',
+    path: '/generate-eth2-keystore',
     name: 'GenerateAddressLayout',
     component: GenerateAddressLayout,
     meta: { requiresAuth: false }
