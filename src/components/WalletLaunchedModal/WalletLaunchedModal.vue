@@ -12,7 +12,7 @@
       <div class="close-container">
         <img src="@/assets/images/icons/close.png" @click="closeModal()" />
       </div>
-      <div class="modal-container">
+      <!-- <div class="modal-container">
         <div class="left-container">
           <div class="header-container">
             <span>{{ $t('home.mew-wallet-modal.title') }}</span>
@@ -41,7 +41,7 @@
             alt="MEW wallet screenshot"
           />
         </div>
-      </div>
+      </div> -->
     </div>
   </b-modal>
 </template>
