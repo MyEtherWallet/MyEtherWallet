@@ -69,7 +69,10 @@
         {{ $t('dappsStaked.generate-address.password-strength') }}:
         <span :class="[strengthClass, 'ml-1']">{{ strength }}</span>
       </div>
-      <div v-if="errors.items.length > 0" class="errors mt-2">
+      <div v-show="pw.length > 0 && strengthClass !== 'strong'" class="errors">
+        {{ $t('dappsStaked.generate-address.error-pw-strength') }}
+      </div>
+      <div v-if="errors.items.length > 0" class="errors">
         <div v-for="(error, idx) in errors.items" :key="error + idx">
           {{ error.msg }}
         </div>

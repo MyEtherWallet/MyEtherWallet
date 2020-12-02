@@ -22,8 +22,11 @@
         />
         <span class="usd-amount">{{ '$' + usdPrice }}</span>
       </div>
-      <div v-if="hasError" class="error mt-2">
+      <div v-if="hasError && notValidMultiple" class="error mt-2">
         {{ $t('dappsStaked.error-set-amount') }}
+      </div>
+      <div v-if="hasError && notEnoughBalance" class="error mt-2">
+        {{ $t('dappsStaked.error-not-enough-bal') }}
       </div>
       <div class="percentage-container pt-2">
         <div :class="isActive(0) ? 'active' : ''" @click="setAmount(0)">
@@ -46,6 +49,7 @@
 <script>
 import { Toast } from '@/helpers';
 import BigNumber from 'bignumber.js';
+import { mapState } from 'vuex';
 
 const types = [32, 64, 96, 128];
 
@@ -57,9 +61,21 @@ export default {
     };
   },
   computed: {
+    ...mapState('main', ['account', 'web3']),
     hasError() {
+      return this.notValidMultiple || this.notEnoughBalance;
+    },
+    notValidMultiple() {
       if (this.amount > 0) {
         return this.amount !== 32 && this.amount % 32 !== 0;
+      }
+      return false;
+    },
+    notEnoughBalance() {
+      if (this.amount > 0) {
+        return new BigNumber(this.amount).gt(
+          new BigNumber(this.web3.utils.fromWei(this.account.balance))
+        );
       }
       return false;
     },

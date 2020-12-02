@@ -60,12 +60,13 @@ export default {
       default: () => {}
     }
   },
-  data() {
-    return {
-      oneTimeFee: '0.01'
-    };
-  },
   computed: {
+    oneTimeFee() {
+      if (this.details.amount > 32) {
+        return new BigNumber(this.details.amount).times(0.0075);
+      }
+      return 0.03;
+    },
     getTotal() {
       return new BigNumber(this.oneTimeFee)
         .plus(this.details.amount)

@@ -179,6 +179,9 @@ export default {
       this.$forceUpdate();
     },
     nextStep() {
+      if (this.currentStep.index === 2) {
+        this.$emit('signed');
+      }
       if (!this.$listeners || !this.$listeners['before-next-step']) {
         this.nextStepAction();
       }

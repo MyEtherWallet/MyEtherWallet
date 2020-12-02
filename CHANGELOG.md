@@ -1,5 +1,5 @@
 ### Feature 
-* ETH2 Staking Feature [#2662](https://github.com/MyEtherWallet/MyEtherWallet/pull/2662)
+* Eth2 Staking Feature [#2662](https://github.com/MyEtherWallet/MyEtherWallet/pull/2662)
 
 ### Release v5.7.14
 
