@@ -1,5 +1,5 @@
 import DappsCenter from './dapps-center/DappsCenter';
-import NameManager from './name-manager/NameManager';
+import DomainManager from './domain-manager/DomainManager';
 import MakerDAO from './makerdao/MakerDAO';
 import Aave from './aave/Aave';
 import Ambrpay from './ambrpay/Ambrpay';
@@ -13,8 +13,8 @@ export default [
   },
   {
     path: 'name-manager',
-    name: 'NameManager',
-    component: NameManager
+    name: 'DomainManager',
+    component: DomainManager
   },
   {
     path: 'maker-dao',

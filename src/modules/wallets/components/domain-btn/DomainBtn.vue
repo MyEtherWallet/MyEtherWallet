@@ -4,7 +4,7 @@
   >
     <div class="d-flex align-center">
       <div class="mew-heading-3">{{ domain }}</div>
-      <badge
+      <mew-badge
         v-if="badge"
         class="ml-3"
         :badge-title="badge"

@@ -41,7 +41,7 @@
           v-for="(subItems, subKey) in mainItems.children"
           :key="subKey"
           :ref="subItems.routeName"
-          class="cursor--pointer pl-12 pr-3 py-1"
+          class="cursor--pointer pl-12 pr-3 py-2"
           @click="routerPush(subItems.routeName)"
         >
           <span class="pl-2">{{ subItems.name }}</span>
@@ -121,7 +121,7 @@ export default {
             },
             {
               name: 'ENS manager',
-              routeName: 'NameManager'
+              routeName: 'DomainManager'
             },
             {
               name: 'MakerDAO',
@@ -237,7 +237,7 @@ export default {
     color: white;
   }
   .sub-menu {
-    max-height: 200px;
+    max-height: 400px;
   }
 
   .light {
