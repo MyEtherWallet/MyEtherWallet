@@ -1,7 +1,10 @@
 <template>
   <div class="mew-component-fix--aave">
     <div class="d-flex align-center">
-      <deposit-overlay :open="openDepositOverlay" />
+      <deposit-overlay
+        :open="openDepositOverlay"
+        @close="openDepositOverlay = false"
+      />
       <div
         class="cursor--pointer font-weight-bold mr-4"
         @click="openDepositOverlay = true"
@@ -9,7 +12,10 @@
         Deposit Overlay
       </div>
 
-      <borrow-overlay :open="openBorrowOverlay" />
+      <borrow-overlay
+        :open="openBorrowOverlay"
+        @close="openBorrowOverlay = false"
+      />
       <div
         class="cursor--pointer font-weight-bold mr-4"
         @click="openBorrowOverlay = true"
@@ -21,7 +27,11 @@
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
         <template #tabContent1>
-          <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
+          <v-sheet
+            color="transparent"
+            max-width="700px"
+            class="mx-auto px-4 py-12"
+          >
             <div class="d-flex align-center justify-end">
               <div class="mr-3">Health factor</div>
               <div class="primary--text font-weight-bold mr-3">2.45345</div>
@@ -29,14 +39,12 @@
             </div>
 
             <v-row>
-              <v-col cols="6">
+              <v-col cols="12" lg="6">
                 <div class="tableHeader pa-5 border-radius--5px">
                   <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
                   <h3 class="font-weight-bold">$40.00</h3>
                   <div class="mt-2">0 ETH</div>
-
                   <v-divider class="my-4" />
-
                   <div class="d-flex justify-space-between">
                     <div class="font-weight-medium">Composition</div>
                     <div class="d-flex align-center">
@@ -47,14 +55,12 @@
                   <mew-progress-bar class="mt-2" :balance-obj="balance" />
                 </div>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="12" lg="6">
                 <div class="tableHeader pa-5 border-radius--5px">
                   <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
                   <h3 class="font-weight-bold">$40.00</h3>
                   <div class="mt-2">0 ETH</div>
-
                   <v-divider class="my-4" />
-
                   <div class="d-flex justify-space-between">
                     <div class="font-weight-medium">Composition</div>
                     <div class="d-flex align-center">
@@ -66,19 +72,33 @@
                 </div>
               </v-col>
             </v-row>
-
-            <mew-table
-              :table-headers="depositsTableHeader"
-              :table-data="depositsTableData"
-            />
-
+            <div class="mt-10">
+              <mew-table
+                class="d-none d-lg-block mb-3"
+                :table-headers="depositsTableHeader"
+                :table-data="depositsTableData"
+              />
+              <mobile-table
+                v-for="(d, key) in mobileTableData"
+                :key="key"
+                token="DAI"
+                button="Deposit"
+                button2="Withdraw"
+                :table-data="d"
+                class="d-block d-lg-none mb-3"
+              />
+            </div>
             <div class="d-flex justify-center mt-9">
               <mew-button title="Deposit" btn-size="xlarge"></mew-button>
             </div>
           </v-sheet>
         </template>
         <template #tabContent2>
-          <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
+          <v-sheet
+            color="transparent"
+            max-width="700px"
+            class="mx-auto px-4 py-12"
+          >
             <div class="d-flex align-center justify-end">
               <div class="mr-3">Health factor</div>
               <div class="primary--text font-weight-bold mr-3">2.45345</div>
@@ -86,14 +106,12 @@
             </div>
 
             <v-row>
-              <v-col cols="6">
+              <v-col cols="12" lg="6">
                 <div class="tableHeader pa-5 border-radius--5px">
                   <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
                   <h3 class="font-weight-bold">$40.00</h3>
                   <div class="mt-2">0 ETH</div>
-
                   <v-divider class="my-4" />
-
                   <div class="d-flex justify-space-between">
                     <div class="font-weight-medium">Composition</div>
                     <div class="d-flex align-center">
@@ -104,14 +122,12 @@
                   <mew-progress-bar class="mt-2" :balance-obj="balance" />
                 </div>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="12" lg="6">
                 <div class="tableHeader pa-5 border-radius--5px">
                   <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
                   <h3 class="font-weight-bold">$40.00</h3>
                   <div class="mt-2">0 ETH</div>
-
                   <v-divider class="my-4" />
-
                   <div class="d-flex justify-space-between">
                     <div class="font-weight-medium">Composition</div>
                     <div class="d-flex align-center">
@@ -123,7 +139,6 @@
                 </div>
               </v-col>
             </v-row>
-
             <div
               class="tableHeader pa-5 border-radius--5px d-flex align-center justify-space-between"
             >
@@ -131,11 +146,21 @@
               <div class="font-weight-bold">65.04%</div>
             </div>
 
-            <mew-table
-              class="mt-3"
-              :table-headers="borrowingsTableHeader"
-              :table-data="borrowingsTableData"
-            />
+            <div class="mt-10">
+              <mew-table
+                class="d-none d-lg-block"
+                :table-headers="borrowingsTableHeader"
+                :table-data="borrowingsTableData"
+              />
+              <mobile-table
+                v-for="(d, key) in mobileTableData"
+                :key="key"
+                token="DAI"
+                button="Deposit"
+                :table-data="d"
+                class="d-block d-lg-none mb-3"
+              />
+            </div>
 
             <div class="d-flex justify-center mt-9">
               <mew-button title="Borrow" btn-size="xlarge"></mew-button>
@@ -148,14 +173,85 @@
 </template>
 
 <script>
+import mobileTable from '@/components/mobile-table/MobileTable';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import depositOverlay from '@/modules/wallets/components/aave-deposit-overlay/AaveDepositOverlay';
 import borrowOverlay from '@/modules/wallets/components/aave-borrow-overlay/AaveBorrowOverlay';
 
 export default {
-  components: { depositOverlay, borrowOverlay },
+  components: { mobileTable, depositOverlay, borrowOverlay },
   data() {
     return {
+      mobileTableData: [
+        [
+          {
+            label: 'Activity',
+            value: 'Deposited 12.0000 DAI'
+          },
+          {
+            label: 'Date',
+            value: '01/02/2020, 2:16:32 PM'
+          },
+          {
+            label: 'TX Hash',
+            value:
+              '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+            link:
+              'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+          }
+        ],
+        [
+          {
+            label: 'Activity',
+            value: 'Deposited 12.0000 DAI'
+          },
+          {
+            label: 'Date',
+            value: '01/02/2020, 2:16:32 PM'
+          },
+          {
+            label: 'TX Hash',
+            value:
+              '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+            link:
+              'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+          }
+        ],
+        [
+          {
+            label: 'Activity',
+            value: 'Deposited 12.0000 DAI'
+          },
+          {
+            label: 'Date',
+            value: '01/02/2020, 2:16:32 PM'
+          },
+          {
+            label: 'TX Hash',
+            value:
+              '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+            link:
+              'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+          }
+        ],
+        [
+          {
+            label: 'Activity',
+            value: 'Deposited 12.0000 DAI'
+          },
+          {
+            label: 'Date',
+            value: '01/02/2020, 2:16:32 PM'
+          },
+          {
+            label: 'TX Hash',
+            value:
+              '0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0',
+            link:
+              'https://www.ethvm.com/tx/0xd74ba6354b1189d7bdb71045446f893d2e4dae082dfe20e6db3cd3d243d1f3b0'
+          }
+        ]
+      ],
       openDepositOverlay: false,
       openBorrowOverlay: false,
       depositsTableHeader: [
