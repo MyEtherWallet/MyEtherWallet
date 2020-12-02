@@ -5,7 +5,11 @@
   background-color: $light-grey-2;
   flex-direction: column;
   justify-content: center;
+  text-align: center;
   padding: 80px;
+  @media all and (max-width: 500px) {
+    padding: 40px;
+  }
 
   .title {
     color: $dark-blue-6;
@@ -16,38 +20,13 @@
   .desc {
     color: $dark-blue-1;
     text-align: center;
-    width: 50%;
+    @media all and (max-width: 500px) {
+      padding-bottom: 20px;
+    }
 
     span {
       color: $mew-green;
       text-decoration: underline;
-    }
-  }
-
-  .password-container {
-    align-items: center;
-    background-color: $white;
-    border-radius: 4px;
-    flex-direction: column;
-    padding: 50px;
-    width: 500px;
-
-    .title-container {
-      align-items: center;
-      justify-content: center;
-      span {
-        color: $dark-blue-2;
-        font-size: 20px;
-        font-weight: 500;
-      }
-    }
-
-    input {
-      background-color: $light-grey-17;
-      border: none;
-      height: 52px;
-      padding-left: 20px;
-      width: 100%;
     }
   }
 

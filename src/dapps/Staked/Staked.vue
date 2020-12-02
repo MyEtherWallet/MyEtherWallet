@@ -146,6 +146,14 @@ export default {
       .catch(err => {
         Toast.responseHandler(err, Toast.ERROR);
       });
+    // this.web3.eth
+    //   .getFees(this.eth2ContractAddress)
+    //   .then(res => {
+    //     console.error("res", res)
+    //   })
+    //   .catch(err => {
+    //     Toast.responseHandler(err, Toast.ERROR);
+    //   });
   },
   methods: {
     goToGenerate() {
