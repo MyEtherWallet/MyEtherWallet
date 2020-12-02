@@ -131,7 +131,7 @@
                 <p>
                   {{ $t('swap.alternates.body') }}
                 </p>
-                <div v-if="false" class="alternative-btn-container">
+                <div v-if="!loadingData" class="alternative-btn-container">
                   <div v-for="alt in alternates" :key="alt.symbol">
                     <button
                       v-if="alt.hasValue"
