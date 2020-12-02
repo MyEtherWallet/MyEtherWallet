@@ -184,12 +184,22 @@ export default {
             }
           })
           .then(response => {
-            if (response && response.data && response.data.transaction) {
+            if (
+              response &&
+              response.data &&
+              response.data.raw.length === parseInt(this.validatorsCount)
+            ) {
               this.sendTransaction(response.data.transaction);
+              clearInterval(interval);
             }
-            clearInterval(interval);
           })
           .catch(err => {
+            if (
+              err.response.status === 404 &&
+              err.response.data.msg ===
+                'Requested provisioning_request_uuid not found'
+            )
+              return;
             Toast.responseHandler(err, Toast.ERROR);
           });
       }, 5000);
