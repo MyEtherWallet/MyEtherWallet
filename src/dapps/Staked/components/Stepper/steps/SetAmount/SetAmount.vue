@@ -26,7 +26,7 @@
         />
         <span class="usd-amount">{{ '$' + usdPrice }}</span>
       </div>
-      <div v-if="hasError" class="error mt-2">
+      <div v-if="notValidMultiple" class="error mt-2">
         {{ $t('dappsStaked.error-set-amount') }}
       </div>
       <div v-if="hasError && notEnoughBalance" class="error mt-2">
@@ -71,7 +71,7 @@ export default {
       return this.notValidMultiple || this.notEnoughBalance;
     },
     notValidMultiple() {
-      return this.amount % 32 !== 0;
+      return this.amount <= 0 || this.amount % 32 !== 0;
     },
     notEnoughBalance() {
       return (

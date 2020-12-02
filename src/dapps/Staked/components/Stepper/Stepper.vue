@@ -135,9 +135,6 @@ export default {
       }
       this.init();
       this.previousStep = {};
-      // this.$nextTick(() => {
-      //   this.$emit('reset', true);
-      // });
     }
   },
   created() {
@@ -162,9 +159,6 @@ export default {
         } else {
           this.finalStep = false;
         }
-        // if (!back) {
-        //   this.$emit('completed-step', this.previousStep);
-        // }
       }
       this.$emit('active-step', this.currentStep);
     },
