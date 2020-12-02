@@ -75,16 +75,19 @@ export default {
   },
   methods: {
     nameTextAndClassValue(obj) {
-      if (obj.gracePeriod && !obj.expired) {
-        return {
-          text: this.$t('ens.renew'),
-          class: 'renew-class'
-        };
-      } else if (obj.expired && !obj.gracePeriod) {
-        return {
-          text: this.$t('ens.register'),
-          class: 'expired-class'
-        };
+      const isSubdomain = obj.name.split('.').length > 1;
+      if (!isSubdomain) {
+        if (obj.gracePeriod && !obj.expired) {
+          return {
+            text: this.$t('ens.renew'),
+            class: 'renew-class'
+          };
+        } else if (obj.expired && !obj.gracePeriod) {
+          return {
+            text: this.$t('ens.register'),
+            class: 'expired-class'
+          };
+        }
       }
       return {
         text: this.$t('ens.manage'),
