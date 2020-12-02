@@ -164,8 +164,8 @@ export default {
           }
         })
         .then(response => {
-          response && response.data.uuid
-            ? this.startPolling(response.data.uuid)
+          response && response.data.provisioning_request_uuid
+            ? this.startPolling(response.data.provisioning_request_uuid)
             : Toast.responseHandler(
                 this.$t('dappsStaked.error-try-again'),
                 Toast.ERROR
@@ -195,6 +195,7 @@ export default {
           })
           .catch(err => {
             if (
+              err.response &&
               err.response.status === 404 &&
               err.response.data.msg ===
                 'Requested provisioning_request_uuid not found'
