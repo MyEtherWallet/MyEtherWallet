@@ -2,6 +2,7 @@
 
 ### Devop
 
+* update mobile ambrpay [#2697](https://github.com/MyEtherWallet/MyEtherWallet/pull/2697)
 * update mobile aave [#2696](https://github.com/MyEtherWallet/MyEtherWallet/pull/2696)
 * update mobile maker dao [#2695](https://github.com/MyEtherWallet/MyEtherWallet/pull/2695)
 * update mobile name manager [#2694](https://github.com/MyEtherWallet/MyEtherWallet/pull/2694)
