@@ -664,6 +664,12 @@ export default {
         },
         { tokensWithBalance: this.tokensWithBalance }
       );
+    },
+    alternates: {
+      deep: true,
+      handler: function (newVal) {
+        this.alternates = newVal;
+      }
     }
   },
   mounted() {
