@@ -12,6 +12,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    @media all and (max-width: 500px) {
+      padding: 0 50px;
+    }
     .title {
       color: $dark-blue-2;
       font-size: 20px;
@@ -38,6 +41,9 @@
       width: 100%;
       position: relative;
       margin-top: 40px;
+      &:hover, &:active {
+        text-decoration: none;
+      }
 
       img {
         position: absolute;
@@ -57,6 +63,9 @@
     grid-template-columns: 1fr 1fr 1fr;
     padding: 30px;
     width: 100%;
+    @media all and (max-width: 500px) {
+      padding: 30 50px;
+    }
 
     .number {
       color: $light-grey-21;
