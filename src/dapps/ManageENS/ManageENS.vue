@@ -67,6 +67,7 @@
       :txt-records="txtRecords"
       :set-record="setRecord"
       :usd="usd"
+      :is-sub-domain="isSubDomain"
       :is-controller="isController"
       :set-controller="setController"
       :has-deed="hasDeed"
@@ -440,7 +441,7 @@ export default {
       });
     },
     transferDomain(toAddress) {
-      if (this.registrarType === REGISTRAR_TYPES.FIFS) {
+      if (this.registrarType === REGISTRAR_TYPES.FIFS || this.isSubDomain) {
         this.web3.eth
           .sendTransaction({
             from: this.account.address,
