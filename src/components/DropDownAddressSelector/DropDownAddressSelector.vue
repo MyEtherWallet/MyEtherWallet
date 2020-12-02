@@ -153,6 +153,10 @@ export default {
     hideCopy: {
       type: Boolean,
       default: false
+    },
+    fillAddress: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -218,6 +222,18 @@ export default {
         val === true
           ? resolverTxtElem.classList.add('hidden')
           : resolverTxtElem.classList.remove('hidden');
+      }
+    },
+    fillAddress(val) {
+      if (val) {
+        this.hexAddress = this.account.address;
+        this.$refs.addressInput.value = this.account.address;
+        this.selectedAddress = this.account.address;
+      } else {
+        this.selectedAddress = '';
+        this.isValidAddress = false;
+        this.hexAddress = '';
+        this.$refs.addressInput.value = '';
       }
     }
   },

@@ -25,7 +25,7 @@
     "kyber-slippage": "Slippage of {value}% possible"
   },
   "alternates": {
-    "title": "Get BTC Exposure On Enthereum",
+    "title": "Get BTC Exposure On Ethereum",
     "body": "Swap for wBTC, renBTC, or pBTC and own Bitcoin compatible with Ethereum applications."
   },
   "warning": {

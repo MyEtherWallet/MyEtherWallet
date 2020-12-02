@@ -131,7 +131,7 @@
                 <p>
                   {{ $t('swap.alternates.body') }}
                 </p>
-                <div v-if="!loadingData" class="alternative-btn-container">
+                <div v-if="false" class="alternative-btn-container">
                   <div v-for="alt in alternates" :key="alt.symbol">
                     <button
                       v-if="alt.hasValue"
@@ -145,11 +145,9 @@
                   </div>
                 </div>
                 <div v-else class="alternative-btn-container">
-                  <div v-for="items in [0, 1, 2]" :key="`items-${items}`">
-                    <button class="alternative-btn">
-                      <div class="text-line"></div>
-                    </button>
-                  </div>
+                  <button class="alternative-btn">
+                    <div class="text-line"></div>
+                  </button>
                 </div>
               </div>
             </b-collapse>
@@ -160,6 +158,7 @@
             <swap-address-selector
               :currency="toCurrency"
               :current-address="currentAddress"
+              :fill-address="fillAddress"
               :copybutton="true"
               :title="$t('sendTx.to-addr')"
               :clear-address="overrideAddress"
@@ -455,6 +454,9 @@ export default {
         errorLogger(e);
       }
       return null;
+    },
+    fillAddress() {
+      return SwapProviders.isToken(this.toCurrency);
     },
     fromBelowMinAllowed() {
       if (new BigNumber(MIN_SWAP_AMOUNT).gt(new BigNumber(this.fromValue)))
