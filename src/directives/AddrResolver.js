@@ -347,6 +347,9 @@ const AddrResolver = {
     };
 
     const checkAddressIsContract = async function (addr) {
+      if (addr.substring(0,3) === 'xdc') {
+        addr = "0x" + addr.substring(3);
+      }
       const web3 = vnode.context.$store.state.main.web3;
       const isContract = await web3.eth.getCode(addr);
       // returns true if it is a contract
