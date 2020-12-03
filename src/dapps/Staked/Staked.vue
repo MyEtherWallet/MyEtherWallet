@@ -36,7 +36,8 @@
       :set-data="setData"
       @complete-step="completeStep"
       @active-step="isStepActive"
-      @signed="startProvision"
+      @stakeEth2="startProvision"
+      @sendTransaction="sendTransaction"
     />
     <div
       v-if="currentStepIdx === 0 || currentStepIdx === 1"
@@ -87,6 +88,7 @@ export default {
   },
   data() {
     return {
+      transactionData: {},
       eth2ContractAddress: '',
       endpoint: '',
       batchContract: '',
@@ -114,6 +116,11 @@ export default {
         {
           name: 4,
           title: this.$t('dappsStaked.steps.4'),
+          completed: false
+        },
+        {
+          name: 5,
+          title: this.$t('dappsStaked.steps.5'),
           completed: false
         }
       ]
@@ -146,14 +153,6 @@ export default {
       .catch(err => {
         Toast.responseHandler(err, Toast.ERROR);
       });
-    // this.web3.eth
-    //   .getFees(this.eth2ContractAddress)
-    //   .then(res => {
-    //     console.error("res", res)
-    //   })
-    //   .catch(err => {
-    //     Toast.responseHandler(err, Toast.ERROR);
-    //   });
   },
   methods: {
     goToGenerate() {
@@ -197,11 +196,24 @@ export default {
               response.data &&
               response.data.raw.length === parseInt(this.validatorsCount)
             ) {
-              this.sendTransaction(response.data.transaction);
+              this.details.currentValidatorsStaked = this.details.amount / 32;
+              this.details.totalValidators = this.details.amount / 32;
+              this.transactionData = response.data.transaction;
               clearInterval(interval);
             }
           })
           .catch(err => {
+            if (
+              err.response &&
+              err.response.status === 424 &&
+              err.response.data.msg ===
+                'Not all validators have been provisioned'
+            ) {
+              this.details.currentValidatorsStaked = err.response.data.current;
+              this.details.totalValidators = err.response.data.total;
+              console.log('details', this.details)
+              return;
+            }
             if (
               err.response &&
               err.response.status === 404 &&
@@ -213,13 +225,13 @@ export default {
           });
       }, 5000);
     },
-    sendTransaction(data) {
-      data.from = this.account.address;
-      data.to = this.batchContract;
-      data.gasPrice = new BigNumber(
+    sendTransaction() {
+      this.transactionData.from = this.account.address;
+      this.transactionData.to = this.batchContract;
+      this.transactionData.gasPrice = new BigNumber(
         this.web3.utils.toWei(this.gasPrice, 'gwei')
       ).toFixed();
-      this.web3.eth.sendTransaction(data).catch(err => {
+      this.web3.eth.sendTransaction(this.transactionData).catch(err => {
         Toast.responseHandler(err, Toast.ERROR);
       });
     },
