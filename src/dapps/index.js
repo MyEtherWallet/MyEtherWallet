@@ -11,9 +11,9 @@ import ambrpayDisabled from '@/assets/images/icons/dapps/ambrpay-disabled.png';
 import aave from '@/assets/images/icons/dapps/aave.svg';
 import lendMigrator from '@/assets/images/icons/dapps/lend-migrator.svg';
 import unstoppable from '@/assets/images/icons/dapps/unstoppable.png';
-import staked from '@/assets/images/icons/dapps/staked-logo.png';
-
+import staked from '@/assets/images/icons/dapps/staked-logo.svg';
 import golem from '@/assets/images/icons/dapps/Golem_Submark_Positive_RGB.svg';
+
 import { ETH, GOERLI, ROP, RIN, KOV } from '@/networks/types';
 
 const dapps = {
