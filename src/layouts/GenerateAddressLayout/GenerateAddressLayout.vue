@@ -1,10 +1,18 @@
 <template>
   <div class="generate-address-layout d-flex">
     <div class="title">{{ $t('dappsStaked.generate-address.title') }}</div>
-    <i18n tag="div" class="desc" path="dappsStaked.generate-address.desc">
+    <i18n
+      v-if="onCreatePw"
+      tag="div"
+      class="desc"
+      path="dappsStaked.generate-address.desc"
+    >
       <!-- change to link -->
       <span slot="learn-more">{{ $t('common.learn-more') }}</span>
     </i18n>
+    <div v-else class="desc">
+      {{ $t('dappsStaked.generate-address.desc2') }}
+    </div>
     <create-password v-if="onCreatePw" @createPw="createPw" />
     <mnemonic-phrase
       v-if="onMnemonic"
@@ -14,7 +22,7 @@
       :keystore-name="keystoreName"
       @onContinue="onContinue"
     />
-    <success v-if="onSuccess" />
+    <success v-if="onSuccess" :address="address" />
   </div>
 </template>
 
@@ -40,7 +48,8 @@ export default {
       onMnemonic: false,
       onSuccess: false,
       keystoreJson: '',
-      keystoreName: ''
+      keystoreName: '',
+      address: ''
     };
   },
   methods: {
@@ -66,6 +75,8 @@ export default {
         '-' +
         Date.now() +
         '.json';
+      const address = await ks.getPublicKey();
+      this.address = address.toString('hex');
       //verify generated keystore
       await verifyKeystore(genWithdrawalKeystore, pw).catch(error => {
         Toast.responseHandler(error, Toast.ERROR);

@@ -1,13 +1,13 @@
 {
   "title": "Staked",
-  "desc": "Helps institutional investors reliably crypto assets",
+  "desc": "Stake your ETH on Ethereum 2.0 and watch your rewards grow",
   "about": "Staked helps institutional investors reliably and securely compound their crypto assets by 5% - 100% annually via staking and lending.",
   "current-stake-title": "Current Staking APR%",
   "total-eth-title": "Total ETH Staked",
   "steps": {
     "1": "Stake Amount",
     "2": "Upload the Keystore File",
-    "3": "Review & Sign", 
+    "3": "Review & Sign",
     "4": "Stake on Eth2",
     "5": "Done"
   },
@@ -41,6 +41,7 @@
     "confirm-pw": "Confirm your password",
     "title": "Generate an Eth2 Address",
     "desc": "Eth2 addresses are also known 'validator keypairs'. Each validator will receive a keystore file, recovery phrase, and a public key for their Eth2 stake. What is an Eth2 address? {learn-more}",
+    "desc2": "Eth2 withdrawal addresses are used to withdraw your staked ETH and rewards. Each validator will receive an Eth2 withdrawal address, a keystore file, and a recovery phrase for their Eth2 stake.",
     "warning": "Don't lose your {password-keystore}! They hold your keys and are necessary for future access. {no-one}, so it's very important you take care of them.",
     "no-one": "No one can recover these for you",
     "attention": "Attention",
@@ -54,9 +55,10 @@
     "strong": "Strong",
     "download": "Download Keystore File",
     "mnemonic-title": "Write Down Phrase & Download file",
-    "mnemonic-desc": "Please write down your recovery phrase and download your keystore file. Keep both of these secure, we cannot recover them for you. Why do I need both? {learn-more}",
+    "mnemonic-desc": "Please write down your recovery phrase and download your keystore file. Keep both of these secure, we cannot recover them for you.",
     "message-wait": "Please wait while we generate your keystore file...",
     "start-to-stake": "Start to Stake",
-    "generated-successfully": "Your have generated an Eth2 address successfully."
+    "generated-successfully": "Your have generated an Eth2 address successfully.",
+    "withdrawal-address": "Eth2 Withdrawal Address"
   }
 }

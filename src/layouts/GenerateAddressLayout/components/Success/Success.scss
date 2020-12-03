@@ -27,6 +27,15 @@
     }
   }
 
+  .withdrawal-address-container {
+    width: 100%;
+    background: $light-green-1;
+    padding: 25px;
+    margin: 10px 0;
+    word-wrap: break-word;
+    text-align: left;
+  }
+
   i {
     border: 3px solid #05c0a5;
     border-radius: 200px;
