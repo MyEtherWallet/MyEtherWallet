@@ -33,7 +33,7 @@
     <print-modal
       ref="printModal"
       :priv-key="!wallet"
-      :address="account.address"
+      :address="  'xdc' + account.address.substring(2)"
     />
     <expired-names-modal ref="expiredNames" />
     <bcvault-address-modal

@@ -289,8 +289,8 @@ export default {
   data() {
     return {
       types: networkTypes,
-      selectedNetworkName: 'ETH',
-      chainID: networkTypes['ETH'].chainID,
+      selectedNetworkName: 'XDC',
+      chainID: networkTypes['XDC'].chainID,
       port: 443,
       name: '',
       url: '',

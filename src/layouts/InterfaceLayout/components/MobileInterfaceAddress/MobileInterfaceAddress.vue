@@ -2,21 +2,21 @@
   <div>
     <address-qrcode-modal ref="qrcode" :address="account.address" />
     <div class="wrap d-flex align-items-center">
-      <blockie :address="address" :size="8" :scale="16" class="blockie-image" />
+      <blockie :address="newAddress" :size="8" :scale="16" class="blockie-image" />
       <div class="address-contents">
         <div class="title">{{ $t('common.addr') }}</div>
         <div class="d-flex address">
           <div class="address-begin">
             {{
-              address !== null && address !== ''
-                ? address.substring(0, address.length - 4)
+              newAddress !== null && newAddress !== ''
+                ? newAddress.substring(0, newAddress.length - 4)
                 : ''
             }}
           </div>
           <div class="address-end">
             {{
-              address !== null && address !== ''
-                ? address.substring(address.length - 4, address.length)
+              newAddress !== null && newAddress !== ''
+                ? newAddress.substring(newAddress.length - 4, newAddress.length)
                 : ''
             }}
           </div>
@@ -84,7 +84,9 @@ export default {
   },
   data() {
     return {
-      hasMultipleAddr: false
+      hasMultipleAddr: false,
+      newAddress: 'xdc' + this.$props.address.substring(2)
+
     };
   },
   computed: {

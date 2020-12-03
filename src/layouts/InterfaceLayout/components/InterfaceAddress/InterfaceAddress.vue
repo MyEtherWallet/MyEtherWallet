@@ -3,7 +3,7 @@
     <div class="info-block address">
       <div class="block-image">
         <blockie
-          :address="address"
+          :address="newAddress"
           :size="8"
           :scale="16"
           width="64px"
@@ -12,7 +12,7 @@
         />
         <input
           ref="copyAddress"
-          :value="address"
+          :value="newAddress"
           class="hidden-input"
           autocomplete="off"
         />
@@ -20,7 +20,7 @@
       <div class="block-content">
         <div class="information-container">
           <h2>{{ $t('common.addr') }}</h2>
-          <p class="address">{{ address }}</p>
+          <p class="address">{{ newAddress }}</p>
         </div>
         <div class="icon-container">
           <button
@@ -138,7 +138,9 @@ export default {
   },
   data() {
     return {
-      hasMultipleAddr: false
+      hasMultipleAddr: false,
+      newAddress: "xdc" + this.$props.address.substring(2),
+
     };
   },
   computed: {

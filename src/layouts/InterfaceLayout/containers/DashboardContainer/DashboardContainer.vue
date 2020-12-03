@@ -15,50 +15,7 @@
         </div>
       </div>
 
-      <div class="container--card block--swap">
-        <div class="flex--row--align-center title">
-          <h4>{{ $t('common.swap') }}</h4>
-          <button
-            class="title-button prevent-user-select"
-            @click="goTo('swap')"
-          >
-            {{ $t('common.more') }}
-          </button>
-        </div>
-        <p class="section-description">
-          {{ $t('interface.dashboard-swap') }}
-        </p>
-        <div class="swap-info">
-          <div v-for="pair in swapPairs" :key="pair.from + pair.to">
-            <div
-              :class="isOnlineAndEth ? 'swap-enabled' : 'swap-disabled'"
-              class="swap-to clickable"
-              @click.prevent="showSwapWidget(pair)"
-            >
-              <p class="monospace">
-                {{ pair.amt }} {{ pair.from }} / {{ pair.rate }} {{ pair.to }}
-              </p>
-              <div class="margin--left--auto flex--row--align-center">
-                <span v-if="!getIcon(pair.from)" class="currency-symbol">
-                  <img :src="iconFetcher(pair.from)" class="icon-image" />
-                </span>
-                <span
-                  v-if="getIcon(pair.from)"
-                  :class="['currency-symbol', 'cc', pair.from, 'cc-icon']"
-                ></span>
-                <img src="@/assets/images/icons/swap-widget.svg" alt />
-                <span v-if="!getIcon(pair.to)" class="currency-symbol">
-                  <img :src="iconFetcher(pair.to)" class="icon-image" />
-                </span>
-                <span
-                  v-if="getIcon(pair.to)"
-                  :class="['currency-symbol', 'cc', pair.to, 'cc-icon']"
-                ></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+     
     </div>
 
     <div class="container--card bottom--buttons">

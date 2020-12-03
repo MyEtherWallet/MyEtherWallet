@@ -18,7 +18,7 @@
     <div class="identicon-container">
       <p>{{ direction | capitalize }} {{ $t('common.addr') }}</p>
     </div>
-    <div class="address">{{ checksumAddress }}</div>
+    <div class="address">{{ checksumAddress.replace('0x', 'XDC') }}</div>
   </div>
 </template>
 
@@ -41,7 +41,7 @@ export default {
     },
     currency: {
       type: String,
-      default: 'eth'
+      default: 'xdc'
     },
     tokenTransferTo: {
       type: String,

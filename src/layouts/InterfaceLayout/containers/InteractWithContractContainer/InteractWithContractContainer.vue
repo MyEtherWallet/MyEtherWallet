@@ -7,6 +7,7 @@
           <div class="title">
             <h4 class="contract-address-title">
               {{ $t('contract.addr') }}
+              {{newAdd}}
             </h4>
             <div class="select-contract no-border">
               <currency-picker
@@ -309,6 +310,10 @@ export default {
     },
     isValidAddress() {
       return isAddress(this.address);
+    },
+    newAdd() {
+     this.address = this.oldAddress.replace('xdc', '0x')
+     return "";
     },
     noInput() {
       return (

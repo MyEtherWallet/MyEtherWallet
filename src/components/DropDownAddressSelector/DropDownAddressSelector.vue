@@ -144,7 +144,7 @@ export default {
     },
     currency: {
       type: String,
-      default: 'ETH'
+      default: 'XDC'
     },
     clearAddress: {
       type: Boolean,

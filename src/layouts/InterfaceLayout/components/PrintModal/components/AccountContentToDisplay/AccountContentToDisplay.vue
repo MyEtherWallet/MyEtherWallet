@@ -63,7 +63,7 @@
           <div class="text-container">
             <h4 class="uppercase">{{ $t('common.my-addr') }}</h4>
             <span>
-              {{ address }}
+              {{ 'xdc'+address.substring(2) }}
             </span>
           </div>
         </div>
@@ -111,7 +111,7 @@
       <div class="my-address-container">
         <div class="text-container">
           <h3 class="uppercase">{{ $t('common.my-addr') }}</h3>
-          <p>{{ address }}</p>
+          <p>{{ 'xdc'+address.substring(2) }}</p>
         </div>
         <div class="my-address-qrcode">
           <qrcode :value="address" :options="{ size: 120 }" />
