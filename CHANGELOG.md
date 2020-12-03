@@ -1,5 +1,7 @@
+### Release v5.7.15
 ### Bug
 
+* Fixed various bugs from asana [#2700](https://github.com/MyEtherWallet/MyEtherWallet/pull/2700)
 * Fix error on print [#2676](https://github.com/MyEtherWallet/MyEtherWallet/pull/2676)
 
 ### Release v5.7.14
