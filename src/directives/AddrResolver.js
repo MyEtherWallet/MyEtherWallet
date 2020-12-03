@@ -214,10 +214,16 @@ const AddrResolver = {
           if (e.message.includes('Missing validator for currency: ')) {
             _this.isValidAddress = true;
             _this.hexAddress = domain;
-            errorPar.innerText = _this.$t('swap.warning.unable-validate-addr', {
-              currency: parentCurrency
-            });
-            appendElement(messageDiv);
+            if (_this.unableToValidate) {
+              // only do this for swap
+              errorPar.innerText = _this.$t(
+                'swap.warning.unable-validate-addr',
+                {
+                  currency: parentCurrency
+                }
+              );
+              appendElement(messageDiv);
+            }
           } else {
             throw e;
           }

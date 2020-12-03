@@ -146,7 +146,7 @@ import MobileInterfaceNetwork from './components/MobileInterfaceNetwork';
 import ExpiredNamesModal from './components/ExpiredNamesModal';
 import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
-import { Toast } from '@/helpers';
+import { Toast, Misc } from '@/helpers';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
@@ -526,6 +526,10 @@ export default {
           });
           tokens = tokens.map(token => {
             token.address = token.addr;
+            token.email = Misc.stripTags(token.email);
+            token.name = Misc.stripTags(token.name);
+            token.symbol = Misc.stripTags(token.symbol);
+            token.website = Misc.stripTags(token.website);
             delete token.addr;
             return token;
           });
