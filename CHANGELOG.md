@@ -1,4 +1,5 @@
 ### Feature
+
 * Eth2 Staking Feature [#2662](https://github.com/MyEtherWallet/MyEtherWallet/pull/2662)
 
 ### Bug
