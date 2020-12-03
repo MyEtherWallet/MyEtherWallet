@@ -108,7 +108,7 @@
           <span slot="password-keystore">{{
             $t('dappsStaked.generate-address.password-keystore')
           }}</span>
-          <span slot="no-one"
+          <span slot="no-one" class="uppercase"
             >{{ $t('dappsStaked.generate-address.no-one') }}
           </span>
         </i18n>

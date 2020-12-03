@@ -1,14 +1,15 @@
 <template>
   <div class="amount-step d-flex">
     <span class="title">{{ $t('dappsStaked.amount-stake') }}</span>
-    <i18n
-      v-if="!notValidMultiple"
-      class="subtitle"
-      path="dappsStaked.validator-required-eth-per"
-    >
-      <span slot="number" class="num">{{ amount / 32 }}</span>
-      <!-- need to add link -->
-      <span slot="learn-more" class="learn">{{ $t('common.learn-more') }}</span>
+    <i18n class="subtitle" path="dappsStaked.validator-required-eth-per">
+      <span slot="number" class="num">1</span>
+      <a
+        slot="learn-more"
+        target="_blank"
+        href="https://launchpad.ethereum.org/faq"
+        class="learn"
+        >{{ $t('common.learn-more') }}</a
+      >
     </i18n>
     <div class="action-container">
       <div class="input-container">
@@ -71,7 +72,7 @@ export default {
       return this.notValidMultiple || this.notEnoughBalance;
     },
     notValidMultiple() {
-      return this.amount <= 0 || this.amount % 32 !== 0;
+      return this.amount && (this.amount <= 0 || this.amount % 32 !== 0);
     },
     notEnoughBalance() {
       return (

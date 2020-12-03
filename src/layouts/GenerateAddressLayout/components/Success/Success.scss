@@ -7,6 +7,9 @@
   flex-direction: column;
   padding: 50px;
   width: 500px;
+  @media all and (max-width: 500px) {
+    width: 300px;
+  }
 
   .button-container {
     flex-direction: column;
@@ -38,5 +41,10 @@
     border: none;
     color: $white;
     pointer-events: none;
+  }
+
+  .generate-again {
+    border: none;
+    padding-top: 0;
   }
 }
