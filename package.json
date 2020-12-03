@@ -109,6 +109,7 @@
     "bip39": "3.0.3",
     "bitbox02-api": "0.8.0",
     "bootstrap-vue": "2.15.0",
+    "clipboard-copy": "4.0.1",
     "codecov": "3.8.1",
     "copy-webpack-plugin": "6.3.2",
     "detectrtc": "1.4.1",
