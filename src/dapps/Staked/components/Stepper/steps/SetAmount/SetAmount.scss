@@ -5,6 +5,9 @@
   display: flex;
   flex-direction: column;
   text-align: center;
+  @media all and (max-width: 500px) {
+    margin-top: 30px;
+  }
   .subtitle {
     color: $light-grey-18;
     .num {
@@ -22,7 +25,6 @@
   .action-container {
     width: 60%;
     @media all and (max-width: $mobile-width) {
-      white-space: nowrap;
       width: 100%;
     }
     input {
