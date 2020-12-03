@@ -6,9 +6,9 @@
         <i18n
           class="align-right"
           tag="span"
-          path="dappsStaked.validator-required"
+          path="dappsStaked.validator-created"
         >
-          <span slot="number" class="number">1</span>
+          <span slot="number" class="number">{{ details.amount / 32 }}</span>
         </i18n>
       </div>
       <div class="d-flex mt-4">
@@ -42,9 +42,13 @@
     <label class="switch mt-4 d-flex">
       <input type="checkbox" @click="agree" />
       <i18n class="ml-2" tag="span" path="dappsStaked.read-and-agree">
-        <span slot="terms-of-service" class="link">{{
-          $t('dappsStaked.terms-of-service')
-        }}</span>
+        <a
+          slot="terms-of-service"
+          target="_blank"
+          href="https://staked.us/terms/"
+          class="link"
+          >{{ $t('dappsStaked.terms-of-service') }}</a
+        >
       </i18n>
     </label>
   </div>
@@ -52,6 +56,8 @@
 
 <script>
 import BigNumber from 'bignumber.js';
+import stakeConfigs from '@/dapps/Staked/configs';
+import { mapState } from 'vuex';
 
 export default {
   props: {
@@ -60,20 +66,55 @@ export default {
       default: () => {}
     }
   },
+  data() {
+    return {
+      agreed: false,
+      oneTimeFee: ''
+    };
+  },
   computed: {
-    oneTimeFee() {
-      if (this.details.amount > 32) {
-        return new BigNumber(this.details.amount).times(0.0075);
-      }
-      return 0.03;
-    },
+    ...mapState('main', ['network', 'web3']),
     getTotal() {
       return new BigNumber(this.oneTimeFee)
         .plus(this.details.amount)
         .toFixed(4);
     }
   },
+  mounted() {
+    this.getFees();
+  },
   methods: {
+    async getFees() {
+      const batchContract =
+        stakeConfigs.network[this.network.type.name].batchContract;
+      const abi = [
+        {
+          inputs: [
+            {
+              internalType: 'uint256',
+              name: 'numValidators',
+              type: 'uint256'
+            }
+          ],
+          name: 'getFees',
+          outputs: [
+            {
+              internalType: 'uint256',
+              name: '',
+              type: 'uint256'
+            }
+          ],
+          stateMutability: 'view',
+          type: 'function'
+        }
+      ];
+      const contract = new this.web3.eth.Contract(abi, batchContract);
+      const fees = await contract.methods.getFees(this.details.amount).call();
+      this.oneTimeFee = this.web3.utils.fromWei(
+        new BigNumber(fees).toString(),
+        'ether'
+      );
+    },
     usdPrice(amount) {
       if (this.details.ethPrice) {
         return new BigNumber(this.details.ethPrice).times(amount);
@@ -81,7 +122,11 @@ export default {
       return 0;
     },
     agree() {
-      this.$emit('completed', true, { key: 'review', value: true });
+      this.agreed = !this.agreed;
+      this.$emit('completed', this.agreed, {
+        key: 'review',
+        value: this.agreed
+      });
     }
   }
 };

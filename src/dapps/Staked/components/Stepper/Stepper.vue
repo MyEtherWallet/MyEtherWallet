@@ -43,12 +43,17 @@
           :details="details"
           @completed="proceed"
         />
-        <step-four v-if="isStepActive(3)" @completed="proceed" />
+        <step-four
+          v-if="isStepActive(3)"
+          :details="details"
+          @completed="proceed"
+        />
+        <step-five v-if="isStepActive(4)" @completed="proceed" />
       </transition>
     </div>
     <div class="button-container">
       <button
-        v-if="currentStep.index > 0 && currentStep.index !== 3"
+        v-if="currentStep.index > 0 && currentStep.index !== 4"
         :class="'mt-3 stepper-button previous'"
         @click="backStep()"
       >
@@ -66,7 +71,7 @@
           finalStep
             ? $t('dappsStaked.steps.4')
             : currentStep.index === 2
-            ? $t('dappsStaked.sign')
+            ? $t('dappsStaked.enable-staking')
             : $t('common.next')
         }}
       </button>
@@ -78,14 +83,16 @@
 import stepOne from './steps/SetAmount/SetAmount';
 import stepTwo from './steps/Upload/Upload';
 import stepThree from './steps/Review/Review';
-import stepFour from './steps/Done/Done';
+import stepFour from './steps/InProgress/InProgress';
+import stepFive from './steps/Done/Done';
 
 export default {
   components: {
     stepOne,
     stepTwo,
     stepThree,
-    stepFour
+    stepFour,
+    stepFive
   },
   props: {
     steps: {
@@ -166,7 +173,7 @@ export default {
       this.nextButton[this.currentStep.name] = true;
       if (this.canContinue) {
         const currentIndex =
-          this.currentStep.index === 3 ? 0 : this.currentStep.index + 1;
+          this.currentStep.index === 4 ? 0 : this.currentStep.index + 1;
         this.activateStep(currentIndex);
       }
       this.canContinue = false;
@@ -174,7 +181,10 @@ export default {
     },
     nextStep() {
       if (this.currentStep.index === 2) {
-        this.$emit('signed');
+        this.$emit('stakeEth2');
+      }
+      if (this.currentStep.index === 3) {
+        this.$emit('sendTransaction');
       }
       if (!this.$listeners || !this.$listeners['before-next-step']) {
         this.nextStepAction();

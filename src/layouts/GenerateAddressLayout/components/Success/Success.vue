@@ -10,6 +10,12 @@
       >
         {{ $t('dappsStaked.generate-address.start-to-stake') }}
       </button>
+      <button
+        :class="['generate-again large-round-button-green-border mt-3']"
+        @click="generateAgain"
+      >
+        {{ $t('dappsStaked.generate-address.generate-again') }}
+      </button>
     </div>
   </div>
 </template>
@@ -19,6 +25,9 @@ export default {
   methods: {
     startToStake() {
       this.$router.push('/access-my-wallet');
+    },
+    generateAgain() {
+      this.$router.push('/generate-eth2-keystore');
     }
   }
 };

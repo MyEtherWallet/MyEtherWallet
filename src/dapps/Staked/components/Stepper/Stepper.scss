@@ -73,6 +73,7 @@
     .divider-line {
       border-bottom: 1px solid #ccc;
       height: 2px;
+      margin-bottom: 4px;
       position: absolute;
       @include breakpoint(xs) {
         width: 90%;
@@ -100,9 +101,9 @@
           width: 100% !important;
         }
         &.deactivated {
-          @include breakpoint(xs) {
-            display: none;
-          }
+          // @include breakpoint(xs) {
+          //   display: none;
+          // }
           .circle {
             background: $white;
             border-radius: 50%;
@@ -189,7 +190,7 @@
         }
 
         margin-left: 10px;
-        width: 30%;
+        // width: 30%;
       }
       &.only-next {
         width: 60%;
