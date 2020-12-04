@@ -3,13 +3,6 @@
     <span class="title">{{ $t('dappsStaked.amount-stake') }}</span>
     <i18n class="subtitle" path="dappsStaked.validator-required-eth-per">
       <span slot="number" class="num">1</span>
-      <a
-        slot="learn-more"
-        target="_blank"
-        href="https://launchpad.ethereum.org/faq"
-        class="learn"
-        >{{ $t('common.learn-more') }}</a
-      >
     </i18n>
     <div class="action-container">
       <div class="input-container">
