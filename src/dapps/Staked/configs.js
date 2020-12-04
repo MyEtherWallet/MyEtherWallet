@@ -8,7 +8,7 @@ export default {
     ETH: {
       depositAddress: '0x00000000219ab540356cBB839Cbe05303d7705Fa',
       endpoint: 'https://staked.mewapi.io',
-      batchContract: ''
+      batchContract: '0xF243A92eB7D4B4F6A00A57888B887bd01ec6fd12'
     }
   }
 };
