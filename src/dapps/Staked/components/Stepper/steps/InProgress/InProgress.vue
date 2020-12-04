@@ -34,10 +34,7 @@ export default {
   watch: {
     details: {
       handler: function (newVal) {
-        if (
-          newVal &&
-          newVal.totalValidators === newVal.currentValidatorsStaked
-        ) {
+        if (newVal && newVal.currentValidatorsStaked === this.total) {
           this.$emit('completed', true, { key: 'stake', value: true });
         }
       },
