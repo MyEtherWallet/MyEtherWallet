@@ -18,7 +18,7 @@
   .address-container,
   .review-container {
     background-color: $light-green-1;
-    border-radius: 4px;
+    border-radius: 5px;
     flex-direction: column;
     padding: 20px;
     width: 100%;
@@ -51,11 +51,11 @@
     text-align: center;
     align-items: start;
     align-self: center;
+    max-width: 650px;
 
     .switch {
-      align-items: center;
+      align-items: start;
       justify-content: start;
-      max-width: 750px;
       width: 100%;
       span {
         text-align: left;
@@ -73,7 +73,8 @@
       }
 
       input {
-        margin-right: 5px;
+        margin-right: 10px;
+        margin-top: 4px;
       }
     }
   }
