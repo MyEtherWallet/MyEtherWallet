@@ -86,7 +86,7 @@
     "add-contact": "Add Contact"
   },
   "no-avail": "This function is not available.",
-  "dashboard-swap": "MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC20.",
+  "dashboard-swap": "MEW has partnered with DEX.AG, Changelly, Bity, and Simplex to offer competitive rates for all ETH and token swaps, as well as ETH <-> Fiat and ETH <-> BTC",
   "etherscan-tx-url": "https://etherscan.io/tx/[[txHash]]",
   "etherscan-address-url": "https://etherscan.io/address/[[address]]",
   "address-book": {
@@ -107,6 +107,7 @@
     "success-update": "Successfully updated",
     "save-addr": "Save Address"
   },
+  "web3-not-found": "Web3 Instance not found!",
   "import-error": "Something went wrong while importing file, please make sure it is a valid file",
   "account-content": {
     "header": "MY ADDRESS ICON",
@@ -114,7 +115,8 @@
     "paper": "Paper Wallet",
     "link2": "https://www.myetherwallet.com",
     "my-priv": "MY PRIVATE KEY",
-    "warning": "Please Keep Your Paper Wallet at a {safe} Place! Please {do-not} Share Your Private Key With Anyone!",
+    "warning": "Please Keep Your Paper Wallet at a {safe} Place! {extend}",
+    "dont-share-priv-key": "Please {doNot} Share Your Private Key With Anyone!",
     "safe": "SAFE",
     "do-not": "请勿"
   },
