@@ -4,12 +4,12 @@
     <h2 class="title">{{ $t('confirmation.success') }}</h2>
     <span>{{ $t('dappsStaked.done-desc') }}</span>
     <div class="explorrer-container">
-      <a :href="explorrer" target="_blank">{{
+      <a class="explorrer-link" :href="explorrer" target="_blank">{{
         $t('sendTx.success.button-check-explorer', {
           explorrerName: explorrerName
         })
       }}</a>
-      <a v-if="showEthvm" :href="ethvm" target="_blank">
+      <a v-if="showEthvm" class="explorrer-link" :href="ethvm" target="_blank">
         {{
           $t('sendTx.success.button-check-explorer', {
             explorrerName: $t('footer.ethvm')
