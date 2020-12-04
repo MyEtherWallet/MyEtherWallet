@@ -45,8 +45,13 @@
   .eth-value {
     text-align: right;
   }
-  .checkbox-container {
+  .checkboxes-container {
     flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    align-items: start;
+    align-self: center;
+
     .switch {
       align-items: center;
       justify-content: center;
@@ -61,6 +66,10 @@
         color: $white;
         display: inline-block;
         visibility: visible;
+      }
+
+      input {
+        margin-right: 5px;
       }
     }
   }

@@ -41,7 +41,7 @@
       <span class="title">{{ $t('dappsStaked.withdraw-title') }}</span>
       <span class="address mt-2">{{ details.address }}</span>
     </div>
-    <div class="checkbox-container d-flex">
+    <div class="checkboxes-container d-flex">
       <label class="switch mt-4 d-flex">
         <input type="checkbox" @click="agreeBeaconChain" />
         <span>
@@ -87,8 +87,8 @@ export default {
   },
   data() {
     return {
-      agreed: false,
       oneTimeFee: '',
+      agreed: false,
       agreedBeaconChain: false,
       agreedFundsLost: false
     };
@@ -102,14 +102,16 @@ export default {
     },
     validatorPl() {
       const isPlural = this.details.amount / 32 > 1 ? 2 : 1;
-      return this.$t('dappsStaked.validator', isPlural);
+      return this.$tc('dappsStaked.validator', isPlural);
     },
     emitWhenAllIsValid() {
+      console.log(this.agreed, this.agreedBeaconChain, this.agreedBeaconChain);
       if (this.agreed && this.agreedBeaconChain && this.agreedBeaconChain) {
         this.$emit('completed', true, {
           key: 'review',
           value: true
         });
+        console.log('got here reight?');
       }
 
       return null;
@@ -117,6 +119,29 @@ export default {
   },
   mounted() {
     this.getFees();
+    // "multiwatch" watcher
+    this.$watch(
+      () => {
+        // returns the value to callback when this changes
+        return this.agreed && this.agreedBeaconChain && this.agreedFundsLost;
+      },
+      function (val) {
+        if (val) {
+          this.$emit('completed', true, {
+            key: 'review',
+            value: true
+          });
+        } else {
+          this.$emit('completed', false, {
+            key: 'review',
+            value: false
+          });
+        }
+      },
+      {
+        immediate: true
+      }
+    );
   },
   methods: {
     async getFees() {
@@ -157,12 +182,15 @@ export default {
       return 0;
     },
     agree() {
+      console.log('clicked agree');
       this.agreed = !this.agreed;
     },
     agreeBeaconChain() {
+      console.log('clicked agreeBeaconChain');
       this.agreedBeaconChain = !this.agreedBeaconChain;
     },
     agreeFundsLost() {
+      console.log('clicked agreeFundsLost');
       this.agreedFundsLost = !this.agreedFundsLost;
     }
   }
