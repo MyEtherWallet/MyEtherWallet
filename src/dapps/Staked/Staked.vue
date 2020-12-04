@@ -39,6 +39,7 @@
       @stakeEth2="startProvision"
       @sendTransaction="sendTransaction"
     />
+
     <div v-if="currentStepIdx === 0" class="warning-container d-flex">
       <div><i class="fa fa-exclamation-triangle" /></div>
       <div>
@@ -174,8 +175,22 @@ export default {
               response.data &&
               response.data.raw.length === parseInt(this.validatorsCount)
             ) {
-              this.details.currentValidatorsStaked = this.details.amount / 32;
-              this.details.totalValidators = this.details.amount / 32;
+              const validatorStaked = this.details.amount / 32;
+              if (this.details.hasOwnProperty('currentValidatorsStaked')) {
+                this.details.currentValidatorsStaked = validatorStaked;
+              } else {
+                this.$set(
+                  this.details,
+                  'currentValidatorsStaked',
+                  validatorStaked
+                );
+              }
+
+              if (this.details.hasOwnProperty('totalValidators')) {
+                this.details.totalValidators = validatorStaked;
+              } else {
+                this.$set(this.details, 'totalValidators', validatorStaked);
+              }
               this.transactionData = response.data.transaction;
               clearInterval(interval);
             }
@@ -187,8 +202,27 @@ export default {
               err.response.data.msg ===
                 'Not all validators have been provisioned'
             ) {
-              this.details.currentValidatorsStaked = err.response.data.current;
-              this.details.totalValidators = err.response.data.total;
+              if (this.details.hasOwnProperty('currentValidatorsStaked')) {
+                this.details.currentValidatorsStaked =
+                  err.response.data.current;
+              } else {
+                this.$set(
+                  this.details,
+                  'currentValidatorsStaked',
+                  err.response.data.current
+                );
+              }
+
+              if (this.details.hasOwnProperty('totalValidators')) {
+                this.details.totalValidators = err.response.data.total;
+              } else {
+                this.$set(
+                  this.details,
+                  'totalValidators',
+                  err.response.data.total
+                );
+              }
+
               return;
             }
             if (

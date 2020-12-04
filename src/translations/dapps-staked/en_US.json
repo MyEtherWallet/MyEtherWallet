@@ -34,6 +34,7 @@
   "terms-of-service": "I understand that MEW has no control over any assets I choose to associate with these keys. I willingly assume all risk of loss, including that which comes as a result of protocol or key failure.",
   "done-desc": "Your request is converting. A notification will be sent to you while it’s completed.",
   "track-ethvm": "Track in EthVM",
+  "stake-on-eth2": "Stake on Eth2",
   "attention": "Attention",
   "error-not-enough-bal": "There is not enough balance in your account",
   "error-try-again": "Something went wrong! Please try again or contact our support at support@myetherwallet.com.",

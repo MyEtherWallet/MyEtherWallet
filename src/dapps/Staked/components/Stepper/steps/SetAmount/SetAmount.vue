@@ -85,7 +85,6 @@ export default {
     'account.balance': {
       deep: true,
       handler: function (val) {
-        console.log(val);
         this.balance = val;
       }
     }

@@ -105,13 +105,11 @@ export default {
       return this.$tc('dappsStaked.validator', isPlural);
     },
     emitWhenAllIsValid() {
-      console.log(this.agreed, this.agreedBeaconChain, this.agreedBeaconChain);
       if (this.agreed && this.agreedBeaconChain && this.agreedBeaconChain) {
         this.$emit('completed', true, {
           key: 'review',
           value: true
         });
-        console.log('got here reight?');
       }
 
       return null;
@@ -182,15 +180,12 @@ export default {
       return 0;
     },
     agree() {
-      console.log('clicked agree');
       this.agreed = !this.agreed;
     },
     agreeBeaconChain() {
-      console.log('clicked agreeBeaconChain');
       this.agreedBeaconChain = !this.agreedBeaconChain;
     },
     agreeFundsLost() {
-      console.log('clicked agreeFundsLost');
       this.agreedFundsLost = !this.agreedFundsLost;
     }
   }
