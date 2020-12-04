@@ -80,6 +80,17 @@
         }}
       </button>
     </div>
+    <div v-if="isStepActive(1)" class="what-is-eth2">
+      <i18n path="dappsStaked.what-is-eth2">
+        <a
+          slot="learn-more"
+          href="https://kb.myetherwallet.com/en/diving-deeper/eth2-address/"
+          target="_blank"
+        >
+          {{ $t('common.learn-more') }}
+        </a>
+      </i18n>
+    </div>
   </div>
 </template>
 
@@ -102,6 +113,10 @@ export default {
     steps: {
       type: Array,
       default: () => []
+    },
+    txHash: {
+      type: String,
+      default: ''
     },
     reset: {
       type: Boolean,
@@ -157,6 +172,11 @@ export default {
       },
       deep: true,
       immediate: true
+    },
+    txHash(val) {
+      if (val) {
+        this.nextStepAction();
+      }
     }
   },
   created() {
@@ -195,12 +215,12 @@ export default {
       this.$forceUpdate();
     },
     nextStep() {
-      console.log(this.$listeners);
       if (this.currentStep.index === 2) {
         this.$emit('stakeEth2');
       }
       if (this.currentStep.index === 3) {
         this.$emit('sendTransaction');
+        return;
       }
       if (!this.$listeners || !this.$listeners['before-next-step']) {
         this.nextStepAction();
