@@ -13,7 +13,7 @@
       :keystore-name="keystoreName"
       @onContinue="onContinue"
     />
-    <success v-if="onSuccess" :address="address" />
+    <success v-if="onSuccess" :address="address" :reset="reset" />
   </div>
 </template>
 
@@ -44,6 +44,16 @@ export default {
     };
   },
   methods: {
+    reset() {
+      this.mnemonic = '';
+      this.onCreatePw = true;
+      this.generating = false;
+      this.onMnemonic = false;
+      this.onSuccess = false;
+      this.keystoreJson = '';
+      this.keystoreName = '';
+      this.address = '';
+    },
     onContinue() {
       this.onMnemonic = false;
       this.onSuccess = true;
