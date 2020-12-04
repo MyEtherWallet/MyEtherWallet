@@ -48,7 +48,7 @@
           :details="details"
           @completed="proceed"
         />
-        <step-five v-if="isStepActive(4)" @completed="proceed" />
+        <step-five v-if="isStepActive(4)" :hash="txHash" @completed="proceed" />
       </transition>
     </div>
     <div class="button-container">
@@ -68,17 +68,28 @@
         @click="nextStep()"
       >
         {{
-          finalStep
+          finalStep && currentStep.index !== 4
             ? $t('dappsStaked.steps.4')
             : currentStep.index === 2
             ? $t('dappsStaked.enable-staking')
             : currentStep.index === 3
             ? $t('dappsStaked.stake-on-eth2')
             : currentStep.index === 4
-            ? $t('common.done')
+            ? $t('dappsStaked.stake-again')
             : $t('common.next')
         }}
       </button>
+    </div>
+    <div v-if="isStepActive(1)" class="what-is-eth2">
+      <i18n path="dappsStaked.what-is-eth2">
+        <a
+          slot="learn-more"
+          href="https://kb.myetherwallet.com/en/diving-deeper/eth2-address/"
+          target="_blank"
+        >
+          {{ $t('common.learn-more') }}
+        </a>
+      </i18n>
     </div>
   </div>
 </template>
@@ -102,6 +113,10 @@ export default {
     steps: {
       type: Array,
       default: () => []
+    },
+    txHash: {
+      type: String,
+      default: ''
     },
     reset: {
       type: Boolean,
@@ -146,6 +161,22 @@ export default {
       }
       this.init();
       this.previousStep = {};
+    },
+    currentStep: {
+      handler: function (newVal, oldVal) {
+        if (newVal.index === 0 && oldVal.index === 4) {
+          this.previousStep = {};
+          this.init();
+          this.$emit('reset');
+        }
+      },
+      deep: true,
+      immediate: true
+    },
+    txHash(val) {
+      if (val && val !== '') {
+        this.nextStepAction();
+      }
     }
   },
   created() {
@@ -189,6 +220,7 @@ export default {
       }
       if (this.currentStep.index === 3) {
         this.$emit('sendTransaction');
+        return;
       }
       if (!this.$listeners || !this.$listeners['before-next-step']) {
         this.nextStepAction();

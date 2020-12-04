@@ -34,10 +34,12 @@
       :steps="steps"
       :details="details"
       :set-data="setData"
+      :tx-hash="txHash"
       @complete-step="completeStep"
       @active-step="isStepActive"
       @stakeEth2="startProvision"
       @sendTransaction="sendTransaction"
+      @reset="reset"
     />
 
     <div v-if="currentStepIdx === 0" class="warning-container d-flex">
@@ -68,14 +70,15 @@ export default {
   data() {
     return {
       transactionData: {},
+      details: {},
+      totalStaked: '',
+      apr: '',
       eth2ContractAddress: '',
       endpoint: '',
       batchContract: '',
-      details: {},
+      txHash: '',
       currentStepIdx: 0,
-      totalStaked: '',
       stakedLogo: stakedLogo,
-      apr: '',
       steps: [
         {
           name: 1,
@@ -114,26 +117,41 @@ export default {
       return 0;
     }
   },
+  watch: {
+    network() {
+      this.reset();
+    }
+  },
   mounted() {
-    this.eth2ContractAddress =
-      stakeConfigs.network[this.network.type.name].depositAddress;
-    this.endpoint = stakeConfigs.network[this.network.type.name].endpoint;
-    this.batchContract =
-      stakeConfigs.network[this.network.type.name].batchContract;
-    this.web3.eth
-      .getBalance(this.eth2ContractAddress)
-      .then(res => {
-        const raw = this.web3.utils.fromWei(res, 'ether');
-        this.totalStaked = new BigNumber(raw).toFormat(0);
-        this.apr = new BigNumber(calculateEth2Rewards({ totalAtStake: raw }))
-          .times(100)
-          .toFixed(2);
-      })
-      .catch(err => {
-        Toast.responseHandler(err, Toast.ERROR);
-      });
+    this.setup();
   },
   methods: {
+    reset() {
+      this.setup();
+      this.transactionData = {};
+      this.details = {};
+      this.totalStaked = '';
+      this.apr = '';
+    },
+    setup() {
+      this.eth2ContractAddress =
+        stakeConfigs.network[this.network.type.name].depositAddress;
+      this.endpoint = stakeConfigs.network[this.network.type.name].endpoint;
+      this.batchContract =
+        stakeConfigs.network[this.network.type.name].batchContract;
+      this.web3.eth
+        .getBalance(this.eth2ContractAddress)
+        .then(res => {
+          const raw = this.web3.utils.fromWei(res, 'ether');
+          this.totalStaked = new BigNumber(raw).toFormat(0);
+          this.apr = new BigNumber(calculateEth2Rewards({ totalAtStake: raw }))
+            .times(100)
+            .toFixed(2);
+        })
+        .catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
+        });
+    },
     goToGenerate() {
       this.$router.push('/generate-eth2-keystore');
     },
@@ -247,9 +265,14 @@ export default {
       this.transactionData.gasPrice = new BigNumber(
         this.web3.utils.toWei(this.gasPrice, 'gwei')
       ).toFixed();
-      this.web3.eth.sendTransaction(this.transactionData).catch(err => {
-        Toast.responseHandler(err, Toast.ERROR);
-      });
+      this.web3.eth
+        .sendTransaction(this.transactionData)
+        .on('transactionHash', res => {
+          this.txHash = res;
+        })
+        .catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
+        });
     },
     setData(data) {
       if (this.details.hasOwnProperty(data.key)) {

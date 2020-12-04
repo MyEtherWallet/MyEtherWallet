@@ -7,7 +7,7 @@
   "steps": {
     "1": "Stake Amount",
     "2": "Upload the Keystore File",
-    "3": "Review & Sign",
+    "3": "Review & Enable",
     "4": "Stake on Eth2",
     "5": "Done"
   },
@@ -22,8 +22,8 @@
   "validator-required": "{number} Validator Required",
   "validator": "Validator | Validators",
   "validator-created": "{number} {validator} will be created",
-  "validator-required-eth-per": "{number} Validator Required (@32ETH/ Validator)",
-  "what-is-eth2": "What is Eth2 address? {learn-more}",
+  "validator-required-eth-per": "{number} Validator Required (@ 32 ETH/ Validator)",
+  "what-is-eth2": "What is an Eth2 address? {learn-more}",
   "do-not-have-eth2": "Don't have it yet? {generate} an Eth2 address",
   "generate": "Generate",
   "choose-file": "Choose File",
@@ -35,18 +35,20 @@
   "done-desc": "Your request is converting. A notification will be sent to you while it’s completed.",
   "track-ethvm": "Track in EthVM",
   "stake-on-eth2": "Stake on Eth2",
+  "stake-again": "Stake Again",
   "attention": "Attention",
   "error-not-enough-bal": "There is not enough balance in your account",
   "error-try-again": "Something went wrong! Please try again or contact our support at support@myetherwallet.com.",
   "error-set-amount": "Please enter or select a multiple of 32 ETH",
   "error-keystore": "Please upload a valid keystore file",
   "warning": "During Phase 0, users are only able to deposit and stake their ETH. Users will not be able to withdraw their ETH until Phase 2, which may not go into effect until 2022.",
+  "completed-validators": "Validator are completed | Validators are completed",
   "generate-address": {
     "create": "Create the Password",
     "create-pw": "Type your password here",
     "confirm-pw": "Confirm your password",
     "title": "Generate an Eth2 Address",
-    "desc": "Eth2 withdrawal addresses are used to withdraw your staked ETH and rewards. Each validator will receive an Eth2 withdrawal address, a keystore file, and a recovery phrase for their Eth2 stake.",
+    "desc": "Eth2 withdrawal addresses are used to withdraw your staked ETH and rewards. You will need your keystore file + password and recovery phrase to withdraw your Eth2 stake and rewards.",
     "warning": "Don't lose your {password-keystore}! They hold your keys and are necessary for future access. {no-one}, so it's very important you take care of them.",
     "no-one": "No one can recover these for you",
     "attention": "Attention",
@@ -59,11 +61,12 @@
     "good": "Good",
     "strong": "Strong",
     "download": "Download Keystore File",
-    "mnemonic-title": "Write Down Phrase & Download file",
+    "mnemonic-title": "Write Down Your Recovery Phrase & Download Your Keystore",
     "mnemonic-desc": "Please write down your recovery phrase and download your keystore file. Keep both of these secure, we cannot recover them for you.",
     "message-wait": "Please wait while we generate your keystore file...",
     "start-to-stake": "Start to Stake",
     "generated-successfully": "Your have generated an Eth2 address successfully.",
-    "withdrawal-address": "Eth2 Withdrawal Address"
+    "withdrawal-address": "Eth2 Withdrawal Address",
+    "pw-agreement": "I understand that MEW has no control over any assets I choose to associate with these keys and willingly assume all risk of loss, including those coming as a result of protocol or key failure."
   }
 }
