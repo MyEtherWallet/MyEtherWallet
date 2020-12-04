@@ -93,6 +93,24 @@ export default {
   mounted() {
     this.balance = this.account.balance;
     this.getEthPrice();
+    this.$watch(
+      () => {
+        // returns the value to callback when this changes
+        return (
+          !this.hasError &&
+          toBN(toWei(this.balance.toString(), 'ether')).gt(
+            toWei('32', 'ether')
+          ) &&
+          this.amount !== 0
+        );
+      },
+      val => {
+        if (val) {
+          this.setAmount(this.amount);
+        }
+      },
+      { immediate: true }
+    );
   },
   methods: {
     async getEthPrice() {
