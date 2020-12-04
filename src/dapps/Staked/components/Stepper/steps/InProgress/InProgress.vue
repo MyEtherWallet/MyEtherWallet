@@ -11,7 +11,9 @@
         <b-progress-bar :value="details.currentValidatorsStaked" animated />
       </b-progress>
       <p class="validator-progress">
-        <strong>{{ details.currentValidatorsStaked }} / {{ total }}</strong>
+        <strong
+          >{{ details.currentValidatorsStaked || '0' }} / {{ total }}</strong
+        >
         Validators are completed
       </p>
     </div>

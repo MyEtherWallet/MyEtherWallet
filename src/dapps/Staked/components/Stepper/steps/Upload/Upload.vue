@@ -56,7 +56,11 @@ export default {
       reader.onloadend = function (evt) {
         try {
           self.file = JSON.parse(evt.target.result);
-          if (self.file.version === 4) {
+          if (
+            self.file.version === 4 &&
+            self.file.pubkey &&
+            self.file.pubkey.length === 96
+          ) {
             self.address = self.file.pubkey;
             self.hasError = false;
           } else {

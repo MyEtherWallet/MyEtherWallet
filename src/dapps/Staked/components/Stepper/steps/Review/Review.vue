@@ -167,7 +167,9 @@ export default {
         }
       ];
       const contract = new this.web3.eth.Contract(abi, batchContract);
-      const fees = await contract.methods.getFees(this.details.amount).call();
+      const fees = await contract.methods
+        .getFees(this.details.amount / 32)
+        .call();
       this.oneTimeFee = this.web3.utils.fromWei(
         new BigNumber(fees).toString(),
         'ether'
