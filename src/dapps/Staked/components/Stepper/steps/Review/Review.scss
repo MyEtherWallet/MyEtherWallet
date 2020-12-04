@@ -54,8 +54,12 @@
 
     .switch {
       align-items: center;
-      justify-content: center;
+      justify-content: start;
       max-width: 750px;
+      width: 100%;
+      span {
+        text-align: left;
+      }
       .link {
         color: $mew-green;
       }
