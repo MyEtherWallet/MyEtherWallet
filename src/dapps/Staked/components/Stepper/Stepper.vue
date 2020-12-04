@@ -48,7 +48,7 @@
           :details="details"
           @completed="proceed"
         />
-        <step-five v-if="isStepActive(4)" @completed="proceed" />
+        <step-five v-if="isStepActive(4)" :hash="txHash" @completed="proceed" />
       </transition>
     </div>
     <div class="button-container">
@@ -68,7 +68,7 @@
         @click="nextStep()"
       >
         {{
-          finalStep
+          finalStep && currentStep.index !== 4
             ? $t('dappsStaked.steps.4')
             : currentStep.index === 2
             ? $t('dappsStaked.enable-staking')
@@ -174,7 +174,7 @@ export default {
       immediate: true
     },
     txHash(val) {
-      if (val) {
+      if (val && val !== '') {
         this.nextStepAction();
       }
     }

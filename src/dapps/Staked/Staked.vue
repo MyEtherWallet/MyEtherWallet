@@ -262,8 +262,7 @@ export default {
       ).toFixed();
       this.web3.eth
         .sendTransaction(this.transactionData)
-        .on('receipt', res => {
-          console.log(res);
+        .on('transactionHash', res => {
           this.txHash = res;
         })
         .catch(err => {

@@ -42,6 +42,7 @@
   "error-set-amount": "Please enter or select a multiple of 32 ETH",
   "error-keystore": "Please upload a valid keystore file",
   "warning": "During Phase 0, users are only able to deposit and stake their ETH. Users will not be able to withdraw their ETH until Phase 2, which may not go into effect until 2022.",
+  "completed-validators": "Validator are completed | Validators are completed",
   "generate-address": {
     "create": "Create the Password",
     "create-pw": "Type your password here",

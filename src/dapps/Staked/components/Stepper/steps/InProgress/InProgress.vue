@@ -16,7 +16,10 @@
           details.currentValidatorsStaked === total ? 'success' : 'primary'
         "
       >
-        <b-progress-bar :value="details.currentValidatorsStaked" animated />
+        <b-progress-bar
+          :value="details.currentValidatorsStaked"
+          :animated="details.currentValidatorsStaked !== total"
+        />
       </b-progress>
       <b-progress
         v-if="!details.currentValidatorsStaked"
@@ -38,7 +41,12 @@
           }}
           / {{ total }}</strong
         >
-        Validators are completed
+        {{
+          $tc(
+            'dappsStaked.completed-validators',
+            details.currentValidatorsStaked > 1 ? 2 : 1
+          )
+        }}
       </p>
     </div>
   </div>
