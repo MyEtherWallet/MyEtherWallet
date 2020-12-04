@@ -1,17 +1,8 @@
 <template>
   <div class="generate-address-layout d-flex">
     <div class="title">{{ $t('dappsStaked.generate-address.title') }}</div>
-    <i18n
-      v-if="onCreatePw"
-      tag="div"
-      class="desc"
-      path="dappsStaked.generate-address.desc"
-    >
-      <!-- change to link -->
-      <span slot="learn-more">{{ $t('common.learn-more') }}</span>
-    </i18n>
-    <div v-else class="desc">
-      {{ $t('dappsStaked.generate-address.desc2') }}
+    <div class="desc">
+      {{ $t('dappsStaked.generate-address.desc') }}
     </div>
     <create-password v-if="onCreatePw" @createPw="createPw" />
     <mnemonic-phrase
