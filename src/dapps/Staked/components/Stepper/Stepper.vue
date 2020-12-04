@@ -53,7 +53,7 @@
     </div>
     <div class="button-container">
       <button
-        v-if="currentStep.index > 0 && currentStep.index !== 4"
+        v-if="currentStep.index > 0 && currentStep.index !== 3"
         :class="'mt-3 stepper-button previous'"
         @click="backStep()"
       >
@@ -72,6 +72,8 @@
             ? $t('dappsStaked.steps.4')
             : currentStep.index === 2
             ? $t('dappsStaked.enable-staking')
+            : currentStep.index === 3
+            ? $t('dappsStaked.stake-on-eth2')
             : $t('common.next')
         }}
       </button>
