@@ -22,4 +22,18 @@
     color: $dark-blue-1;
     text-align: center;
   }
+
+  .explorrer-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 750px;
+    justify-content: space-around;
+    align-items: center;
+
+    .explorrer-link {
+      padding: 15px 25px;
+      border-radius: 5px;
+      border: 1px solid $mew-green;
+    }
+  }
 }
