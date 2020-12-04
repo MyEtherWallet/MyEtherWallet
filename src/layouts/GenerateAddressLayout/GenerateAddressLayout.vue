@@ -53,6 +53,7 @@ export default {
       this.keystoreJson = '';
       this.keystoreName = '';
       this.address = '';
+      window.scrollTo(0, 0);
     },
     onContinue() {
       this.onMnemonic = false;
