@@ -18,7 +18,7 @@
       </button>
       <button
         :class="['generate-again large-round-button-green-border mt-3']"
-        @click="generateAgain"
+        @click="reset"
       >
         {{ $t('dappsStaked.generate-address.generate-again') }}
       </button>
@@ -32,14 +32,15 @@ export default {
     address: {
       type: String,
       default: ''
+    },
+    reset: {
+      type: Function,
+      default: () => {}
     }
   },
   methods: {
     startToStake() {
       this.$router.push('/access-my-wallet');
-    },
-    generateAgain() {
-      this.$router.push('/generate-eth2-keystore');
     }
   }
 };
