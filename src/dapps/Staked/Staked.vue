@@ -247,7 +247,11 @@ export default {
       });
     },
     setData(data) {
-      this.details[data.key] = data.value;
+      if (this.details.hasOwnProperty(data.key)) {
+        this.details[data.key] = data.value;
+      } else {
+        this.$set(this.details, data.key, data.value);
+      }
     },
     completeStep(payload) {
       this.steps.forEach(step => {
