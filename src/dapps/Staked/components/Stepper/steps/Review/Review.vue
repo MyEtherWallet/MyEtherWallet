@@ -44,19 +44,15 @@
     <div class="checkboxes-container d-flex">
       <label class="switch mt-4 d-flex">
         <input type="checkbox" @click="agreeBeaconChain" />
-        <span>
-          {{ $t('dappsStaked.agree-beacon-chain') }}
-        </span>
+        <span>{{ $t('dappsStaked.agree-beacon-chain') }}</span>
       </label>
       <label class="switch mt-4 d-flex">
         <input type="checkbox" @click="agreeFundsLost" />
-        <span>
-          {{ $t('dappsStaked.funds-be-lost') }}
-        </span>
+        <span>{{ $t('dappsStaked.funds-be-lost') }}</span>
       </label>
       <label class="switch mt-4 d-flex">
         <input type="checkbox" @click="agree" />
-        <i18n class="ml-2" tag="span" path="dappsStaked.read-and-agree">
+        <i18n tag="span" path="dappsStaked.read-and-agree">
           <a
             slot="staked"
             target="_blank"
@@ -64,9 +60,7 @@
             class="link"
             >Staked.us</a
           >
-          <span slot="terms-of-service">
-            {{ $t('termsOfService.title') }}
-          </span>
+          <span slot="terms-of-service">{{ $t('termsOfService.title') }}</span>
         </i18n>
       </label>
     </div>

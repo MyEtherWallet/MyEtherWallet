@@ -17,7 +17,11 @@
   .upload-container {
     margin-top: 15px;
     width: 60%;
-    @media all and (max-width: 630px) {
+    @media all and (max-width: 850px) {
+      margin-right: 0;
+      width: 80%;
+    }
+    @media all and (max-width: 660px) {
       margin-right: 0;
       width: 100%;
     }
@@ -31,7 +35,7 @@
       margin-right: 5px;
       padding-left: 10px;
       width: 80%;
-      @media all and (max-width: 630px) {
+      @media all and (max-width: 660px) {
         margin-right: 0;
         width: 100%;
       }
@@ -60,13 +64,13 @@
       cursor: pointer;
       justify-content: center;
       width: 120px;
-      @media all and (max-width: 630px) {
+      @media all and (max-width: 650px) {
         margin-top: 5px;
         padding: 15px;
         width: 100%;
       }
     }
-    @media all and (max-width: 630px) {
+    @media all and (max-width: 650px) {
       flex-direction: column;
     }
   }
@@ -74,7 +78,10 @@
     background-color: $light-green-1;
     flex-direction: column;
     width: 60%;
-    @media all and (max-width: 630px) {
+    @media all and (max-width: 850px) {
+      width: 80%;
+    }
+    @media all and (max-width: 660px) {
       width: 100%;
     }
     .title {
