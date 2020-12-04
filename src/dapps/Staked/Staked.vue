@@ -39,27 +39,6 @@
       @stakeEth2="startProvision"
       @sendTransaction="sendTransaction"
     />
-    <!-- <div
-      v-if="currentStepIdx === 0 || currentStepIdx === 1"
-      class="footer d-flex pb-5"
-    >
-      <i18n path="dappsStaked.what-is-eth2">
-        <span slot="learn-more" class="learn">{{
-          $t('common.learn-more')
-        }}</span>
-      </i18n>
-      <i18n path="dappsStaked.do-not-have-eth2">
-        need to add link
-        <router-link
-          slot="generate"
-          class="generate"
-          :to="{ path: '/generate-eth2-keystore' }"
-          target="_blank"
-        >
-          {{ $t('dappsStaked.generate') }}
-        </router-link>
-      </i18n>
-    </div> -->
     <div v-if="currentStepIdx === 0" class="warning-container d-flex">
       <div><i class="fa fa-exclamation-triangle" /></div>
       <div>

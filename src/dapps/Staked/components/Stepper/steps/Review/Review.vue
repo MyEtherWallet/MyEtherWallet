@@ -1,5 +1,6 @@
 <template>
   <div class="review-step d-flex">
+    <h4 class="main-title">{{ $t('dappsStaked.review-enable') }}</h4>
     <div class="review-container">
       <div class="d-flex">
         <span class="title">{{ $t('dappsStaked.amount-stake') }}</span>
@@ -9,6 +10,7 @@
           path="dappsStaked.validator-created"
         >
           <span slot="number" class="number">{{ details.amount / 32 }}</span>
+          <span slot="validator">{{ validatorPl }}</span>
         </i18n>
       </div>
       <div class="d-flex mt-4">
@@ -39,18 +41,35 @@
       <span class="title">{{ $t('dappsStaked.withdraw-title') }}</span>
       <span class="address mt-2">{{ details.address }}</span>
     </div>
-    <label class="switch mt-4 d-flex">
-      <input type="checkbox" @click="agree" />
-      <i18n class="ml-2" tag="span" path="dappsStaked.read-and-agree">
-        <a
-          slot="terms-of-service"
-          target="_blank"
-          href="https://staked.us/terms/"
-          class="link"
-          >{{ $t('dappsStaked.terms-of-service') }}</a
-        >
-      </i18n>
-    </label>
+    <div class="checkbox-container d-flex">
+      <label class="switch mt-4 d-flex">
+        <input type="checkbox" @click="agreeBeaconChain" />
+        <span>
+          {{ $t('dappsStaked.agree-beacon-chain') }}
+        </span>
+      </label>
+      <label class="switch mt-4 d-flex">
+        <input type="checkbox" @click="agreeFundsLost" />
+        <span>
+          {{ $t('dappsStaked.funds-be-lost') }}
+        </span>
+      </label>
+      <label class="switch mt-4 d-flex">
+        <input type="checkbox" @click="agree" />
+        <i18n class="ml-2" tag="span" path="dappsStaked.read-and-agree">
+          <a
+            slot="staked"
+            target="_blank"
+            href="https://staked.us/terms/"
+            class="link"
+            >Staked.us</a
+          >
+          <span slot="terms-of-service">
+            {{ $t('termsOfService.title') }}
+          </span>
+        </i18n>
+      </label>
+    </div>
   </div>
 </template>
 
@@ -69,7 +88,9 @@ export default {
   data() {
     return {
       agreed: false,
-      oneTimeFee: ''
+      oneTimeFee: '',
+      agreedBeaconChain: false,
+      agreedFundsLost: false
     };
   },
   computed: {
@@ -78,6 +99,20 @@ export default {
       return new BigNumber(this.oneTimeFee)
         .plus(this.details.amount)
         .toFixed(4);
+    },
+    validatorPl() {
+      const isPlural = this.details.amount / 32 > 1 ? 2 : 1;
+      return this.$t('dappsStaked.validator', isPlural);
+    },
+    emitWhenAllIsValid() {
+      if (this.agreed && this.agreedBeaconChain && this.agreedBeaconChain) {
+        this.$emit('completed', true, {
+          key: 'review',
+          value: true
+        });
+      }
+
+      return null;
     }
   },
   mounted() {
@@ -123,10 +158,12 @@ export default {
     },
     agree() {
       this.agreed = !this.agreed;
-      this.$emit('completed', this.agreed, {
-        key: 'review',
-        value: this.agreed
-      });
+    },
+    agreeBeaconChain() {
+      this.agreedBeaconChain = !this.agreedBeaconChain;
+    },
+    agreeFundsLost() {
+      this.agreedFundsLost = !this.agreedFundsLost;
     }
   }
 };

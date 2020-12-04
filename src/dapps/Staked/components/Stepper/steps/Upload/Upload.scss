@@ -2,7 +2,25 @@
 
 .upload-step {
   flex-direction: column;
+  align-items: center;
+
+  .subtitle {
+    color: $light-grey-18;
+  }
+  .title {
+    color: $dark-blue-13;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+
   .upload-container {
+    margin-top: 15px;
+    width: 60%;
+    @media all and (max-width: 630px) {
+      margin-right: 0;
+      width: 100%;
+    }
     div {
       align-items: center;
       background: $light-grey-17;
@@ -55,7 +73,10 @@
   .address-container {
     background-color: $light-green-1;
     flex-direction: column;
-    width: 100%;
+    width: 60%;
+    @media all and (max-width: 630px) {
+      width: 100%;
+    }
     .title {
       color: $dark-blue-13;
       font-size: 16px;

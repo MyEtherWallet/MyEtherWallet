@@ -56,7 +56,8 @@ export default {
   data() {
     return {
       amount: 0,
-      ethPrice: ''
+      ethPrice: '',
+      balance: 0
     };
   },
   computed: {
@@ -70,9 +71,7 @@ export default {
     notEnoughBalance() {
       return (
         this.amount &&
-        toBN(toWei(this.amount.toString(), 'ether')).gt(
-          toBN(this.account.balance)
-        )
+        toBN(toWei(this.amount.toString(), 'ether')).gt(toBN(this.balance))
       );
     },
     usdPrice() {
@@ -82,7 +81,17 @@ export default {
       return 0;
     }
   },
+  watch: {
+    'account.balance': {
+      deep: true,
+      handler: function (val) {
+        console.log(val);
+        this.balance = val;
+      }
+    }
+  },
   mounted() {
+    this.balance = this.account.balance;
     this.getEthPrice();
   },
   methods: {

@@ -1,5 +1,17 @@
 <template>
   <div class="upload-step d-flex">
+    <h4 class="title">{{ $t('dappsStaked.upload') }}</h4>
+    <p class="subtitle">{{ $t('dappsStaked.upload-desc') }}</p>
+    <i18n path="dappsStaked.do-not-have-eth2">
+      <router-link
+        slot="generate"
+        class="generate"
+        :to="{ path: '/generate-eth2-keystore' }"
+        target="_blank"
+      >
+        {{ $t('dappsStaked.generate') }}
+      </router-link>
+    </i18n>
     <div class="upload-container d-flex">
       <div class="d-flex">
         <img class="mx-3" :src="printerIcon" alt="printer-icon" />
