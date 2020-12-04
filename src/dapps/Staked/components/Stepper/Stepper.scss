@@ -190,7 +190,7 @@
         }
 
         margin-left: 10px;
-        // width: 30%;
+        width: 30%;
       }
       &.only-next {
         width: 60%;
@@ -208,6 +208,7 @@
         display: inline-block;
         text-align: center;
         padding: 21px 25px;
+        min-width: 150px;
       }
     }
   }

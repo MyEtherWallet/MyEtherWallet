@@ -75,7 +75,7 @@
             : currentStep.index === 3
             ? $t('dappsStaked.stake-on-eth2')
             : currentStep.index === 4
-            ? $t('common.done')
+            ? $t('dappsStaked.stake-again')
             : $t('common.next')
         }}
       </button>
@@ -146,6 +146,17 @@ export default {
       }
       this.init();
       this.previousStep = {};
+    },
+    currentStep: {
+      handler: function (newVal, oldVal) {
+        if (newVal.index === 0 && oldVal.index === 4) {
+          this.previousStep = {};
+          this.init();
+          this.$emit('reset');
+        }
+      },
+      deep: true,
+      immediate: true
     }
   },
   created() {
@@ -184,6 +195,7 @@ export default {
       this.$forceUpdate();
     },
     nextStep() {
+      console.log(this.$listeners);
       if (this.currentStep.index === 2) {
         this.$emit('stakeEth2');
       }

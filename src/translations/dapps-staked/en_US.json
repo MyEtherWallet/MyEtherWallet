@@ -35,6 +35,7 @@
   "done-desc": "Your request is converting. A notification will be sent to you while it’s completed.",
   "track-ethvm": "Track in EthVM",
   "stake-on-eth2": "Stake on Eth2",
+  "stake-again": "Stake Again",
   "attention": "Attention",
   "error-not-enough-bal": "There is not enough balance in your account",
   "error-try-again": "Something went wrong! Please try again or contact our support at support@myetherwallet.com.",
