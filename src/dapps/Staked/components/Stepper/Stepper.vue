@@ -48,7 +48,12 @@
           :details="details"
           @completed="proceed"
         />
-        <step-five v-if="isStepActive(4)" :hash="txHash" @completed="proceed" />
+        <step-five
+          v-if="isStepActive(4)"
+          :amt="details.amount ? details.amount : '0'"
+          :hash="txHash"
+          @completed="proceed"
+        />
       </transition>
     </div>
     <div class="button-container">

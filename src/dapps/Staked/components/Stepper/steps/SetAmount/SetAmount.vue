@@ -84,6 +84,7 @@ export default {
   watch: {
     'account.balance': {
       deep: true,
+      immediate: true,
       handler: function (val) {
         this.balance = val;
       }
