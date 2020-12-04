@@ -162,7 +162,10 @@ export default {
         });
     },
     startPolling(uuid) {
+      let prevReqComplete = true;
       const interval = setInterval(() => {
+        if (!prevReqComplete) return;
+        prevReqComplete = false;
         axios
           .get(`${this.endpoint}/status?provisioning_request_uuid=${uuid}`, {
             header: {
@@ -170,6 +173,7 @@ export default {
             }
           })
           .then(response => {
+            prevReqComplete = true;
             if (
               response &&
               response.data &&
@@ -196,6 +200,7 @@ export default {
             }
           })
           .catch(err => {
+            prevReqComplete = true;
             if (
               err.response &&
               err.response.status === 424 &&
