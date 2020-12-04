@@ -3,6 +3,10 @@
 .review-step {
   color: $light-grey-18;
   flex-direction: column;
+  .main-title {
+    text-align: center;
+    margin-bottom: 10px;
+  }
   div {
     justify-content: space-between;
   }
@@ -41,19 +45,23 @@
   .eth-value {
     text-align: right;
   }
-  .switch {
-    align-items: center;
-    justify-content: center;
-    .link {
-      color: $mew-green;
-    }
+  .checkbox-container {
+    flex-direction: column;
+    .switch {
+      align-items: center;
+      justify-content: center;
+      max-width: 750px;
+      .link {
+        color: $mew-green;
+      }
 
-    input[type='checkbox']::after {
-      content: ' ';
-      background-color: $mew-green;
-      color: $white;
-      display: inline-block;
-      visibility: visible;
+      input[type='checkbox']::after {
+        content: ' ';
+        background-color: $mew-green;
+        color: $white;
+        display: inline-block;
+        visibility: visible;
+      }
     }
   }
 }
