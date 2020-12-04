@@ -79,11 +79,9 @@
       </div>
       <label class="switch mt-4 d-flex">
         <input type="checkbox" @click="agree = !agree" />
-        <i18n class="ml-2" tag="span" path="dappsStaked.read-and-agree">
-          <span slot="terms-of-service" class="link">{{
-            $t('dappsStaked.terms-of-service')
-          }}</span>
-        </i18n>
+        <span class="ml-2">
+          {{ $t('dappsStaked.generate-address.pw-agreement') }}
+        </span>
       </label>
       <button
         :class="[

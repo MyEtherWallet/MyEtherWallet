@@ -117,6 +117,11 @@ export default {
       return 0;
     }
   },
+  watch: {
+    network() {
+      this.reset();
+    }
+  },
   mounted() {
     this.setup();
   },
@@ -127,7 +132,6 @@ export default {
       this.details = {};
       this.totalStaked = '';
       this.apr = '';
-      console.log('got called from the end');
     },
     setup() {
       this.eth2ContractAddress =

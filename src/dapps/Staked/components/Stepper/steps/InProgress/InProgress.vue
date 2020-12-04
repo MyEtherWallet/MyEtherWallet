@@ -7,12 +7,36 @@
         <br />
         We are creating validators for your Eth2 stake.
       </p>
-      <b-progress :max="total" class="w-100" height="2rem">
+      <b-progress
+        v-if="details.currentValidatorsStaked"
+        :max="total"
+        class="w-100"
+        height="2rem"
+        :variant="
+          details.currentValidatorsStaked === total ? 'success' : 'primary'
+        "
+      >
         <b-progress-bar :value="details.currentValidatorsStaked" animated />
+      </b-progress>
+      <b-progress
+        v-if="!details.currentValidatorsStaked"
+        :max="100"
+        class="w-100"
+        height="2rem"
+        variant="secondary"
+      >
+        <b-progress-bar :value="100" animated>
+          <span>Loading</span>
+        </b-progress-bar>
       </b-progress>
       <p class="validator-progress">
         <strong
-          >{{ details.currentValidatorsStaked || '0' }} / {{ total }}</strong
+          >{{
+            details.currentValidatorsStaked
+              ? details.currentValidatorsStaked
+              : '0'
+          }}
+          / {{ total }}</strong
         >
         Validators are completed
       </p>
