@@ -27,9 +27,9 @@ const isAddress = address => {
   return web3.utils.checkAddressChecksum(address);
 };
 const toChecksumAddress = address => {
-    if (address.substring(0,3) === 'xdc') {
-      address = "0x" + address.substring(3);
-    }
+  if (address.substring(0,3) === 'xdc') {
+    address = "0x" + address.substring(3);
+  }
 const chainID = store.state.main.network
     ? store.state.main.network.type.chainID
     : 1;

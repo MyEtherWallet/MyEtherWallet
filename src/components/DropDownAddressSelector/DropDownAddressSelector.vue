@@ -188,9 +188,9 @@ export default {
       return this.currentAddress
         ? [
             {
-              address: this.currentAddress,
+              address: 'xdc' + this.currentAddress.substring(2),
               currency: BASE_CURRENCY,
-              resolverAddr: this.currentAddress
+              resolverAddr: 'xdc' + this.currentAddress.substring(2)
             },
             ...this.sortedAddressBook
           ]

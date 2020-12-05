@@ -91,6 +91,7 @@ export default {
     signedTx(newVal) {
       const parsedVal = JSON.parse(newVal);
       const rawTx = this.rawTx;
+      console.log(rawTx,"rawTx")
       delete rawTx['generateOnly'];
       const txObj = Object.assign({}, parsedVal.tx, rawTx);
       delete parsedVal['tx'];

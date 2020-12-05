@@ -485,6 +485,7 @@ export default {
   },
   watch: {
     rawSigned(newVal) {
+      console.log(this.getTransactionDetails(newVal),"this.getTransactionDetails(newVal)",newVal);
       this.getTransactionDetails(newVal);
     }
   },
@@ -560,6 +561,7 @@ export default {
       return `${data.slice(0, 20)}...${data.slice(-10)}`;
     },
     getTransactionDetails(rawSigned) {
+      console.log(rawSigned,"rawSigned")
       const positions = {
         nonce: 0,
         gasPrice: 1,
@@ -574,9 +576,13 @@ export default {
       if (rawSigned) this.rawSigned = rawSigned;
       if (this.rawSigned !== '') {
         const sanitizedRawSigned = Misc.sanitizeHex(this.rawSigned);
+        console.log("txsanitizedRawSigned",this.genInfo['chainID'])
+
         const tx = new Transaction(sanitizedRawSigned, {
           chain: this.genInfo['chainID']
         });
+        console.log(tx,"txsanitizedRawSigned",chain)
+
         this.invalidSignature = !tx.verifySignature();
         this.chainID = tx.getChainId();
         this.wrongNetwork = !new BigNumber(
@@ -674,6 +680,7 @@ export default {
       const reader = new FileReader();
       reader.onloadend = function (evt) {
         self.file = JSON.parse(evt.target.result);
+        console.log(self.file.rawTransaction,"self.file.rawTransaction")
         self.getTransactionDetails(self.file.rawTransaction);
       };
       reader.readAsBinaryString(e.target.files[0]);
