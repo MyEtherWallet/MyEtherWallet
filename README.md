@@ -64,6 +64,7 @@ To find out how to disclose a vulnerability visit [hackerone.com/myetherwallet](
 2. Clone the repo: `git clone git@github.com:MyEtherWallet/MyEtherWallet.git`
 3. run `git checkout develop`
 4. run `npm i` to install node packages.
+* SET NODE_OPTIONS=--max_old_space_size=4096
 5. run `npm run build`. You can also use the offline version by opening the index file from the dist folder with your preferred browser
 6. start `npm run dev`
 7. App should be running in `https://localhost:8080`
