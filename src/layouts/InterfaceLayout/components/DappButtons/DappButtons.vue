@@ -22,7 +22,7 @@
       :class="[
         title === dappsTitle.ambrpay
           ? 'ambrpay-icon'
-          : dappsTitle.staked
+          : title === dappsTitle.staked
           ? 'staked-icon'
           : '',
         'dapp-logo',

@@ -2,13 +2,11 @@
   <div class="d-flex confirmation-container">
     <i class="check-icon fa fa-check" aria-hidden="true" />
     <h2 class="title">{{ $t('confirmation.success') }}</h2>
-    <i18n path="dappsStaked.done-desc">
-      <span slot="eth">
-        {{ amt }}
+    <i18n path="dappsStaked.done-desc" tag="span">
+      <span slot="amt">
+        {{ amount }}
       </span>
-      <a slot="staked" href="https://staked.us/" target="_blank">{{
-        $t('dappsStaked.staked')
-      }}</a>
+      <a slot="staked" href="https://staked.us/" target="_blank">Staked.us</a>
     </i18n>
     <div class="explorrer-container">
       <a class="explorrer-link" :href="explorrer" target="_blank">{{
@@ -37,9 +35,14 @@ export default {
       default: ''
     },
     amt: {
-      type: String,
-      default: '0'
+      type: Number,
+      default: 0
     }
+  },
+  data() {
+    return {
+      amount: 0
+    };
   },
   computed: {
     ...mapState('main', ['network']),
@@ -54,6 +57,14 @@ export default {
     },
     explorrerName() {
       return Misc.getService(this.network.type.blockExplorerTX);
+    }
+  },
+  watch: {
+    amt: {
+      handler: function (newval) {
+        this.amount = newval;
+      },
+      immediate: true
     }
   },
   mounted() {

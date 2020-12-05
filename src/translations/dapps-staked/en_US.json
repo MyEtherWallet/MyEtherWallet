@@ -6,7 +6,7 @@
   "total-eth-title": "Total ETH Staked",
   "steps": {
     "1": "Stake Amount",
-    "2": "Upload the Keystore File",
+    "2": "Upload your Keystore File",
     "3": "Review & Enable",
     "4": "Stake on Eth2",
     "5": "Done"
@@ -47,7 +47,7 @@
     "create": "Create the Password",
     "create-pw": "Type your password here",
     "confirm-pw": "Confirm your password",
-    "title": "Write Down Your Recovery Phrase & Download Your Keystore File",
+    "title": "Generate an Eth2 Address",
     "desc": "Eth2 withdrawal addresses are used to withdraw your staked ETH and rewards. You will need your keystore file + password and recovery phrase to withdraw your Eth2 stake and rewards.",
     "warning": "Don't lose your {password-keystore}! They hold your keys and are necessary for future access. {no-one}, so it's very important you take care of them.",
     "no-one": "No one can recover these for you",
@@ -61,7 +61,7 @@
     "good": "Good",
     "strong": "Strong",
     "download": "Download Keystore File",
-    "mnemonic-title": "Write Down Your Recovery Phrase & Download Your Keystore",
+    "mnemonic-title": "Write Down Your Recovery Phrase & Download Your Keystore File",
     "mnemonic-desc": "Please write down your recovery phrase and download your keystore file. Keep both of these secure, we cannot recover them for you.",
     "message-wait": "Please wait while we generate your keystore file...",
     "start-to-stake": "Start to Stake",
