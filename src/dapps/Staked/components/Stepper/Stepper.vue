@@ -50,7 +50,7 @@
         />
         <step-five
           v-if="isStepActive(4)"
-          :amt="details.amount ? details.amount : '0'"
+          :amt="details.amount ? details.amount : 0"
           :hash="txHash"
           @completed="proceed"
         />
