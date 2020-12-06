@@ -2,6 +2,7 @@
 
 ### Devop
 
+* update mobile paper wallet [#2704](https://github.com/MyEtherWallet/MyEtherWallet/pull/2704)
 * update mobile unstoppable domain [#2698](https://github.com/MyEtherWallet/MyEtherWallet/pull/2698)
 * update mobile ambrpay [#2697](https://github.com/MyEtherWallet/MyEtherWallet/pull/2697)
 * update mobile aave [#2696](https://github.com/MyEtherWallet/MyEtherWallet/pull/2696)
