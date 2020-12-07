@@ -31,7 +31,12 @@
     @media (min-width: 1200px) {
       @content;
     }
-  } @else {
+  } @else if $class==xxs {
+    @media (max-width: 300px) {
+      @content;
+    }
+  }
+  @else {
     @warn "Breakpoint mixin supports: xs, sm, md, lg";
   }
 }
@@ -40,6 +45,9 @@
   background-color: $white;
   padding: 40px;
   min-height: 200px;
+  @media all and (max-width: 500px) {
+    padding: 40px 0;
+  }
   .top {
     .stepper-button-top {
       z-index: 20;
@@ -101,9 +109,9 @@
           width: 100% !important;
         }
         &.deactivated {
-          // @include breakpoint(xs) {
-          //   display: none;
-          // }
+          @include breakpoint(xxs) {
+            display: none;
+          }
           .circle {
             background: $white;
             border-radius: 50%;
@@ -172,12 +180,18 @@
   .content {
     overflow: hidden;
     margin: 1.5rem 0;
+    @media all and (max-width: 500px) {
+      padding: 0 40px;
+    }
   }
   .button-container {
     align-items: center;
     display: flex;
     justify-content: center;
     position: relative;
+    @media all and (max-width: 500px) {
+      margin: 0 10px;
+    }
     .stepper-button {
       display: flex;
       align-items: center;
@@ -190,7 +204,6 @@
         }
 
         margin-left: 10px;
-        width: 30%;
       }
       &.only-next {
         width: 60%;

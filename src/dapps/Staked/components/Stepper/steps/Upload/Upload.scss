@@ -3,6 +3,9 @@
 .upload-step {
   flex-direction: column;
   align-items: center;
+  @media all and (max-width: 500px) {
+    margin-top: 30px;
+  }
 
   .subtitle {
     color: $light-grey-18;
@@ -62,6 +65,7 @@
       color: $mew-green;
       cursor: pointer;
       justify-content: center;
+      text-align: center;
       width: 120px;
       @media all and (max-width: 650px) {
         margin-top: 5px;

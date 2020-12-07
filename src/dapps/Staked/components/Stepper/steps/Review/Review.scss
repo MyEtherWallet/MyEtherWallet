@@ -6,6 +6,9 @@
   .main-title {
     text-align: center;
     margin-bottom: 10px;
+    @media all and (max-width: 500px) {
+      margin-top: 30px;
+    }
   }
   div {
     justify-content: space-between;
