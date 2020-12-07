@@ -77,7 +77,7 @@ export default {
         '-' +
         Date.now() +
         '.json';
-      const address = await ks.getPublicKey();
+      const address = await ks.getPublicKey(0, false);
       this.address = address.toString('hex');
       //verify generated keystore
       await verifyKeystore(genWithdrawalKeystore, pw).catch(error => {
