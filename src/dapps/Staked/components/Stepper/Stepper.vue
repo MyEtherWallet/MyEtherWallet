@@ -123,7 +123,7 @@ export default {
       type: String,
       default: ''
     },
-    reset: {
+    resetStepper: {
       type: Boolean,
       default: false
     },
@@ -160,19 +160,21 @@ export default {
     }
   },
   watch: {
-    reset(val) {
-      if (!val) {
-        return;
-      }
-      this.init();
-      this.previousStep = {};
+    resetStepper: {
+      handler: function (val) {
+        if (val === true) {
+          this.init();
+          this.previousStep = {};
+          this.$emit('resetStepperDone');
+        }
+      },
+      deep: true,
+      immediate: true
     },
     currentStep: {
       handler: function (newVal, oldVal) {
         if (newVal.index === 0 && oldVal.index === 4) {
-          this.previousStep = {};
-          this.init();
-          this.$emit('reset');
+          this.reset();
         }
       },
       deep: true,
@@ -188,6 +190,11 @@ export default {
     this.init();
   },
   methods: {
+    reset() {
+      this.previousStep = {};
+      this.init();
+      this.$emit('reset');
+    },
     isStepActive(index) {
       if (this.currentStep.index === index) {
         return true;

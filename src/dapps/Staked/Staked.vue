@@ -35,11 +35,13 @@
       :details="details"
       :set-data="setData"
       :tx-hash="txHash"
+      :reset-stepper="resetStepper"
       @complete-step="completeStep"
       @active-step="isStepActive"
       @stakeEth2="startProvision"
       @sendTransaction="sendTransaction"
       @reset="reset"
+      @resetStepperDone="resetStepperDone"
     />
 
     <div v-if="currentStepIdx === 0" class="warning-container d-flex">
@@ -78,6 +80,7 @@ export default {
       batchContract: '',
       txHash: '',
       currentStepIdx: 0,
+      resetStepper: false,
       stakedLogo: stakedLogo,
       steps: [
         {
@@ -118,20 +121,36 @@ export default {
     }
   },
   watch: {
-    network() {
-      this.reset();
+    network: {
+      deep: true,
+      immediate: true,
+      handler: function (newVal, oldVal) {
+        if (newVal && oldVal && newVal !== oldVal) {
+          if (newVal.type.name === oldVal.type.name) {
+            this.resetStepper = true;
+          }
+          if (newVal.type.name !== oldVal.type.name) {
+            this.reset();
+            this.resetStepper = true;
+          }
+        }
+      }
     }
   },
   mounted() {
     this.setup();
   },
   methods: {
+    resetStepperDone() {
+      this.resetStepper = false;
+    },
     reset() {
       this.setup();
       this.transactionData = {};
       this.details = {};
       this.totalStaked = '';
       this.apr = '';
+      this.resetStepper = false;
     },
     setup() {
       this.eth2ContractAddress =
@@ -139,6 +158,7 @@ export default {
       this.endpoint = stakeConfigs.network[this.network.type.name].endpoint;
       this.batchContract =
         stakeConfigs.network[this.network.type.name].batchContract;
+
       this.web3.eth
         .getBalance(this.eth2ContractAddress)
         .then(res => {
