@@ -145,12 +145,15 @@ export default {
       this.resetStepper = false;
     },
     reset() {
-      this.setup();
       this.transactionData = {};
       this.details = {};
       this.totalStaked = '';
       this.apr = '';
       this.resetStepper = false;
+      this.eth2ContractAddress = '';
+      this.endpoint = '';
+      this.batchContract = '';
+      this.setup();
     },
     setup() {
       this.eth2ContractAddress =
