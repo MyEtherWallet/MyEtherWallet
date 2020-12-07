@@ -1,12 +1,12 @@
 <template>
   <div class="progress-step d-flex">
     <div class="content-container d-flex">
-      <h3>Hang on tight!</h3>
-      <p class="subtitle">
-        Please do not close your browser or exit this Dapp,
-        <br />
-        We are creating validators for your Eth2 stake.
-      </p>
+      <h3>{{ $t('dappsStaked.hang-on') }}</h3>
+      <i18n tag="p" class="subtitle" path="dappsStaked.please-do-not-close">
+        <p slot="creating-validators">
+          {{ $t('dappsStaked.creating-validators') }}
+        </p>
+      </i18n>
       <b-progress
         v-if="details.currentValidatorsStaked"
         :max="total"
