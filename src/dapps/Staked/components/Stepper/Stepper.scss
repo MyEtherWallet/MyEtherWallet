@@ -35,8 +35,7 @@
     @media (max-width: 300px) {
       @content;
     }
-  }
-  @else {
+  } @else {
     @warn "Breakpoint mixin supports: xs, sm, md, lg";
   }
 }
