@@ -1,7 +1,7 @@
 {
-  "title": "Staked",
+  "title": "Stake on Eth2",
   "desc": "Stake your ETH on Ethereum 2.0 and watch your rewards grow",
-  "about": "Staked helps you reliably and securely stake your ETH to create an Eth2 validator and earn up to 21% annualized rewards. All staked ETH and rewards will not be available for withdrawal until a later Phase in 2021/2022. After staking, no further action is required. Staked will create and maintain your validators for you.",
+  "about": "Staked.us helps you reliably and securely stake your ETH to create an Eth2 validator and earn up to 21% annualized rewards. All staked ETH and rewards will not be available for withdrawal until a later Phase in 2021/2022. After staking, no further action is required. Staked.us will create and maintain your validators for you.",
   "current-stake-title": "Current APR",
   "total-eth-title": "Total ETH Staked",
   "steps": {
@@ -11,6 +11,9 @@
     "4": "Stake on Eth2",
     "5": "Done"
   },
+  "hang-on": "Hang on tight!",
+  "please-do-not-close": "Please do not close your browser or exit this DApp, {creating-validators}",
+  "creating-validators":  "Staked.us is creating validators for your Eth2 stake.",
   "amount-stake": "Amount of ETH to Stake",
   "amount": "Amount",
   "total": "Total",
@@ -24,7 +27,7 @@
   "validator-created": "{number} {validator} will be created",
   "validator-required-eth-per": "{number} Validator Required (@ 32 ETH/ Validator)",
   "what-is-eth2": "What is an Eth2 address? {learn-more}",
-  "do-not-have-eth2": "Don't have it yet? {generate} an Eth2 address",
+  "do-not-have-eth2": "Don't have one yet? {generate} an Eth2 address",
   "generate": "Generate",
   "choose-file": "Choose File",
   "upload": "Upload your keystore file",
