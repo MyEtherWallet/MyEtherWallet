@@ -121,6 +121,9 @@ export default {
     }
   },
   watch: {
+    web3() {
+      this.reset();
+    },
     network: {
       deep: true,
       immediate: true,
@@ -129,8 +132,7 @@ export default {
           if (newVal.type.name === oldVal.type.name) {
             this.resetStepper = true;
           }
-          if (newVal.type.name !== oldVal.type.name) {
-            this.reset();
+          if (newVal.service !== oldVal.service) {
             this.resetStepper = true;
           }
         }
