@@ -33,6 +33,7 @@
   "mew-connect-protocol": "Протокол MEWconnect",
   "mew-wallet": "MEW wallet",
   "cool-wallet": "CoolWallet",
+  "generate-eth2": "Generate Eth2 Address",
   "donation": {
     "desc": "MyEtherWallet является ПО с открытым кодом и предоставляется сообществу бесплатно. Все это возможно благодаря вашей поддержке.",
     "ether": "Поддержка в Ethereum",
