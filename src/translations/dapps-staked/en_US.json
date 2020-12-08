@@ -1,6 +1,6 @@
 {
   "title": "Stake on Eth2",
-  "desc": "Stake your ETH on Ethereum 2.0 and watch your rewards grow",
+  "desc": "Stake your ETH on Ethereum 2.0 with Staked.us and watch your rewards grow",
   "about": "Staked.us helps you reliably and securely stake your ETH to create an Eth2 validator and earn up to 21% annualized rewards. All staked ETH and rewards will not be available for withdrawal until a later Phase in 2021/2022. After staking, no further action is required. Staked.us will create and maintain your validators for you.",
   "current-stake-title": "Current APR",
   "total-eth-title": "Total ETH Staked",
@@ -45,7 +45,7 @@
   "error-set-amount": "Please enter or select a multiple of 32 ETH",
   "error-keystore": "Please upload a valid keystore file",
   "warning": "During Phase 0, users are only able to deposit and stake their ETH. Users will not be able to withdraw their ETH until Phase 2, which may not go into effect until 2022.",
-  "completed-validators": "Validator are completed | Validators are completed",
+  "completed-validators": "Validator is completed | Validators are completed",
   "generate-address": {
     "create": "Create the Password",
     "create-pw": "Type your password here",

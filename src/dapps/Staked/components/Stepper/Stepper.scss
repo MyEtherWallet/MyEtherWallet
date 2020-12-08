@@ -200,6 +200,7 @@
         &.deactivated {
           background-color: #ccc !important;
           cursor: not-allowed !important;
+          pointer-events: none;
         }
 
         margin-left: 10px;
