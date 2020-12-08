@@ -3,7 +3,9 @@
     :class="[
       'dapps-button',
       supported ? '' : 'disabled',
-      title === dappsTitle.aave || title === dappsTitle.lendMigrator
+      title === dappsTitle.staked ||
+      title === dappsTitle.lendMigrator ||
+      title === dappsTitle.unstoppableDomains
         ? 'top-row'
         : ''
     ]"
@@ -18,7 +20,11 @@
     <img
       :src="supported ? icon : iconDisabled"
       :class="[
-        title === dappsTitle.ambrpay ? 'ambrpay-icon' : '',
+        title === dappsTitle.ambrpay
+          ? 'ambrpay-icon'
+          : title === dappsTitle.staked
+          ? 'staked-icon'
+          : '',
         'dapp-logo',
         'dapps-icon'
       ]"
@@ -73,7 +79,8 @@ export default {
         ambrpay: 'Ambrpay',
         aave: 'Aave',
         lendMigrator: 'LEND Migrator',
-        unstoppableDomains: 'Unstoppable Domains'
+        unstoppableDomains: 'Unstoppable Domains',
+        staked: 'Staked'
       }
     };
   },
