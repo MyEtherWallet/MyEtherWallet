@@ -64,7 +64,5 @@ import xdcapothem from './xdc-apothem'
 export {
   xdc,
   xdcapothem,
-  ethmew,
-  ethmewws
-
+  ethmew
 };

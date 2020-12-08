@@ -71,6 +71,9 @@ const AddrResolver = {
       } else resolveDomain(e);
     };
     const resolveViaENS = function (domain) {
+      if (domain.substring(0,3) === 'xdc') {
+        domain = "0x" + domain.substring(3);
+      }
       const _this = vnode.context;
       const ens = _this.$store.state.main.ens;
 
@@ -177,8 +180,11 @@ const AddrResolver = {
             });
         }
       } else if (domain !== '') {
+        if (domain.substring(0,3) === 'xdc') {
+          domain = "0x" + domain.substring(3);
+        }
         try {
-          const isValid = MAValidator.validate(domain, parentCurrency);
+          const isValid = true;
           _this.isValidAddress = isValid;
           _this.hexAddress = domain;
           if (!isValid) {
@@ -187,7 +193,7 @@ const AddrResolver = {
             if (domain.length > 0) {
               if (
                 parentCurrency === 'ETH' &&
-                (domain.length !== 42 || !utils.isHexStrict(domain))
+                (domain.length !== 43 || !utils.isHexStrict(domain))
               ) {
                 errorPar.innerText = _this.$t(
                   'ens.ens-resolver.invalid-eth-addr'
@@ -212,6 +218,7 @@ const AddrResolver = {
           }
         } catch (e) {
           if (e.message.includes('Missing validator for currency: ')) {
+            console.log(e,"eeeee")
             _this.isValidAddress = true;
             _this.hexAddress = domain;
             errorPar.innerText = _this.$t('swap.warning.unable-validate-addr', {
