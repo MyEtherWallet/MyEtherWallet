@@ -107,7 +107,8 @@
         @include breakpoint(xs) {
           width: 100% !important;
         }
-        &.deactivated, &.completed {
+        &.deactivated,
+        &.completed {
           @include breakpoint(xxs) {
             display: none;
           }
