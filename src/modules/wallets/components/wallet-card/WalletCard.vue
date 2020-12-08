@@ -32,22 +32,20 @@
       <div class="mb-2">OWNED 3 DOMAINS ></div>
       <div class="d-flex align-center">
         <div class="bottom-buttons">
-          <mew-button
-            button-size="small"
-            color-theme="white"
-            btn-style="transparent"
-            icon="mdi-printer"
-            icon-type="mdi"
-            @click.native="openPaperWallet = true"
-          ></mew-button>
-          <mew-button
-            button-size="small"
-            color-theme="white"
-            btn-style="transparent"
-            icon="mdi-file-document-outline"
-            icon-type="mdi"
-            @click.native="copyAddress"
-          ></mew-button>
+          <v-btn icon @click.native="openPaperWallet = true">
+            <img
+              src="@/assets/images/icons/icon-white-print.png"
+              height="20"
+              alt="Print paper wallet"
+            />
+          </v-btn>
+          <v-btn icon @click.native="copyAddress">
+            <img
+              src="@/assets/images/icons/icon-white-copy.png"
+              height="20"
+              alt="Print paper wallet"
+            />
+          </v-btn>
         </div>
         <mew-button
           class="ml-auto switch-button"

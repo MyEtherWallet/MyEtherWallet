@@ -7,20 +7,19 @@
       </div>
       <div>
         <div class="d-flex align-center mr-3 mb-2">
-          <v-icon class="mr-2" color="titlePrimary" small
-            >mdi-email-open</v-icon
-          >
+          <v-icon class="mr-2" color="black" small>mdi-email-open</v-icon>
           <div>support@myetherwallet.com</div>
         </div>
         <div class="d-flex align-center mr-3">
-          <v-icon class="mr-2" color="titlePrimary" small>mdi-home</v-icon>
+          <v-icon class="mr-2" color="black" small>mdi-home</v-icon>
           <div>https://www.myetherwallet.com</div>
         </div>
       </div>
     </div>
     <div class="mt-5 d-flex align-center">
       <mew-blockie :address="address" width="60px" height="60px" class="mr-4" />
-      <v-sheet color="transparent" max-width="400px">
+
+      <div style="max-width: 400px">
         <div class="subtitle-1 font-weight-black text-uppercase">
           My address icon
         </div>
@@ -31,26 +30,25 @@
             >Safe Place!</span
           >
         </div>
-      </v-sheet>
+      </div>
     </div>
     <div class="mt-4 d-flex align-content-stretch">
-      <v-sheet
-        class="d-flex flex-column justify-center flex-grow-1 px-8 border-radius--10px"
-        :color="gray"
+      <div
+        class="box-gray d-flex flex-column justify-center flex-grow-1 px-8 border-radius--10px mr-5"
       >
         <div class="subtitle-1 font-weight-black text-uppercase">
           My Public Address
         </div>
-        <div>{{ address }}</div>
-      </v-sheet>
+        <div class="monospace">{{ address }}</div>
+      </div>
 
-      <v-sheet height="130px" class="qr-image">
+      <div class="qr-image">
         <VueQrcode :value="address" :options="{ size: 130 }"></VueQrcode>
-      </v-sheet>
+      </div>
     </div>
 
     <div
-      class="cut-line my-5 mx-n4 gray3--text overflow--hidden white-space--nowrap"
+      class="cut-line my-12 mx-n4 gray3--text overflow--hidden white-space--nowrap"
     >
       --------------------------------------------------------------------------------------------------------
     </div>
@@ -59,44 +57,45 @@
       You might LOSE your MONEY if you share this Private Key with anyone!
     </div>
     <div class="mt-4 d-flex align-content-stretch">
-      <v-sheet
-        class="d-flex flex-column justify-center flex-grow-1 px-8 border-radius--10px"
-        :color="gray"
+      <div
+        class="box-gray d-flex flex-column justify-center flex-grow-1 px-8 border-radius--10px mr-5"
       >
         <div class="subtitle-1 font-weight-black text-uppercase">
           My Address
         </div>
-        <div>{{ address }}</div>
-      </v-sheet>
-      <v-sheet height="130px" class="qr-image">
+        <div class="monospace">{{ address }}</div>
+      </div>
+      <div class="qr-image">
         <VueQrcode :value="address" :options="{ size: 130 }"></VueQrcode>
-      </v-sheet>
+      </div>
     </div>
+
+    <div class="py-3"></div>
+
     <div class="mt-4 d-flex align-content-stretch">
-      <v-sheet
-        class="d-flex flex-column justify-center flex-grow-1 px-8 border-radius--10px"
-        :color="gray"
+      <div
+        class="box-gray d-flex flex-column justify-center flex-grow-1 px-8 border-radius--10px mr-5"
       >
         <div class="subtitle-1 font-weight-black text-uppercase red--text">
           My Private Key
         </div>
-        <div>{{ privateKey }}</div>
-      </v-sheet>
-      <v-sheet height="130px" class="qr-image">
+        <div class="monospace">{{ privateKey }}</div>
+      </div>
+      <div class="qr-image">
         <VueQrcode :value="privateKey" :options="{ size: 130 }"></VueQrcode>
-      </v-sheet>
+      </div>
     </div>
     <div
-      class="cut-line my-5 mx-n4 gray3--text overflow--hidden white-space--nowrap"
+      class="cut-line my-12 mx-n4 gray3--text overflow--hidden white-space--nowrap"
     >
       --------------------------------------------------------------------------------------------------------
     </div>
 
-    <div class="text-center">
+    <div v-if="false" class="text-center">
       <img
         src="@/assets/images/backgrounds/bg-paper-wallet.png"
         alt="Spaceman"
-        height="250"
+        height="150"
       />
     </div>
   </div>
@@ -110,19 +109,18 @@ export default {
     VueQrcode
   },
   props: {
-    address: { default: '235235235', type: String },
-    privateKey: { default: '2352362', type: String }
+    address: { default: '', type: String },
+    privateKey: { default: '', type: String }
   },
   data() {
-    return {
-      gray: '#f6f6f6'
-    };
+    return {};
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .qr-image {
+  height: 130px;
   margin: -6px 0;
 }
 
@@ -130,5 +128,14 @@ export default {
   font-size: 22px;
   letter-spacing: 5px;
   text-align: center;
+}
+
+.box-gray {
+  background-color: #f6f6f6;
+  //background-color: white;
+}
+
+div {
+  color: black !important;
 }
 </style>

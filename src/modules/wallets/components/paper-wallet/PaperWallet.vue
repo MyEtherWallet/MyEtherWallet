@@ -8,23 +8,23 @@
   >
     <template #mewOverlayBody>
       <div ref="printContainer" class="to-print">
-        <content-to-print />
+        <content-to-print :address="address" :private-key="key" />
       </div>
 
       <v-sheet color="transparent" max-width="800px">
         <mew6-white-sheet>
           <div class="pa-10">
-            <div class="d-flex justify-space-between align-start">
+            <div class="d-block d-lg-flex justify-space-between align-start">
               <div class="d-flex align-center">
                 <img
                   height="35"
                   src="@/assets/images/icons/logo-mew-dark.png"
                 />
-                <div class="primary--text">
+                <div class="primary--text d-none d-lg-block">
                   <span class="mx-3">|</span>Paper Wallet
                 </div>
               </div>
-              <div>
+              <div class="mt-3 mt-lg-0">
                 <div class="d-flex align-center mr-3 mb-2">
                   <v-icon class="mr-2" color="titlePrimary" small
                     >mdi-email-open</v-icon
@@ -59,15 +59,21 @@
                 </div>
               </v-sheet>
             </div>
-            <div class="mt-4 d-flex align-content-stretch">
+            <div class="mt-4 d-block d-lg-flex align-content-stretch">
               <v-sheet
-                class="d-flex flex-column justify-center flex-grow-1 px-8 border-radius--10px"
-                :color="gray"
+                min-height="100px"
+                class="d-flex flex-column justify-center flex-grow-1 px-8 border-radius--10px mr-0 mr-lg-5"
+                color="tableHeader"
               >
                 <div class="subtitle-1 font-weight-black text-uppercase">
                   My Public Address
                 </div>
-                <div>{{ address }}</div>
+                <div
+                  style="max-width: 50vw"
+                  class="monospace text-overflow--break-word"
+                >
+                  {{ address }}
+                </div>
               </v-sheet>
 
               <v-sheet height="130px" class="qr-image">
@@ -78,25 +84,27 @@
               </v-sheet>
             </div>
 
-            <div
-              class="cut-line my-5 mx-n4 gray3--text overflow--hidden white-space--nowrap"
-            >
-              --------------------------------------------------------------------------------------------------------
-            </div>
+            <div class="cut-line my-7"></div>
 
             <div class="font-weight-black">
               You might LOSE your MONEY if you share this Private Key with
               anyone!
             </div>
-            <div class="mt-4 d-flex align-content-stretch">
+            <div class="mt-4 d-block d-lg-flex align-content-stretch">
               <v-sheet
-                class="d-flex flex-column justify-center flex-grow-1 px-8 border-radius--10px"
-                :color="gray"
+                min-height="100px"
+                class="d-flex flex-column justify-center flex-grow-1 px-8 border-radius--10px mr-0 mr-lg-5"
+                color="tableHeader"
               >
                 <div class="subtitle-1 font-weight-black text-uppercase">
                   My Address
                 </div>
-                <div>{{ address }}</div>
+                <div
+                  style="max-width: 50vw"
+                  class="monospace text-overflow--break-word"
+                >
+                  {{ address }}
+                </div>
               </v-sheet>
               <v-sheet height="130px" class="qr-image">
                 <VueQrcode
@@ -105,33 +113,39 @@
                 ></VueQrcode>
               </v-sheet>
             </div>
-            <div class="mt-4 d-flex align-content-stretch">
+
+            <div class="py-2"></div>
+
+            <div class="mt-4 d-block d-lg-flex align-content-stretch">
               <v-sheet
-                class="d-flex flex-column justify-center flex-grow-1 px-8 border-radius--10px"
-                :color="gray"
+                min-height="100px"
+                class="d-flex flex-column justify-center flex-grow-1 px-8 border-radius--10px mr-0 mr-lg-5"
+                color="tableHeader"
               >
                 <div
                   class="subtitle-1 font-weight-black text-uppercase red--text"
                 >
                   My Private Key
                 </div>
-                <div>{{ key }}</div>
+                <div
+                  style="max-width: 50vw"
+                  class="monospace text-overflow--break-word"
+                >
+                  {{ key }}
+                </div>
               </v-sheet>
               <v-sheet height="130px" class="qr-image">
                 <VueQrcode :value="key" :options="{ size: 130 }"></VueQrcode>
               </v-sheet>
             </div>
-            <div
-              class="cut-line my-5 mx-n4 gray3--text overflow--hidden white-space--nowrap"
-            >
-              --------------------------------------------------------------------------------------------------------
-            </div>
 
-            <div class="text-center">
+            <div v-if="false" class="cut-line my-7"></div>
+
+            <div v-if="false" class="text-center">
               <img
                 src="@/assets/images/backgrounds/bg-paper-wallet.png"
                 alt="Spaceman"
-                height="250"
+                width="250"
               />
             </div>
           </div>
@@ -185,6 +199,8 @@ export default {
         if (screen && screen.toDataURL !== '') {
           printJS({
             printable: screen.toDataURL('image/png'),
+            documentTitle:
+              'MyEtherwallet Paper Wallet (DO NOT SHARE THIS WITH OTHER PEOPLE)',
             type: 'image',
             onError: () => {
               /*
@@ -213,7 +229,7 @@ export default {
 
 <style lang="scss" scoped>
 .overlay-content {
-  width: 800px;
+  //width: 800px;
 }
 
 .qr-image {
@@ -221,9 +237,7 @@ export default {
 }
 
 .cut-line {
-  font-size: 22px;
-  letter-spacing: 5px;
-  text-align: center;
+  border-bottom: 1px dotted black;
 }
 
 .to-print {

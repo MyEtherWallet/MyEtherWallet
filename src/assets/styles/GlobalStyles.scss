@@ -94,7 +94,7 @@
   font-family: monospace !important;
 }
 i {
-  font-family: 'Material Icons' !important;
+  font-family: "Material Icons" !important;
 }
 div {
   font-size: 0.88rem;
@@ -154,6 +154,9 @@ h6 {
 }
 .text-decoration--underline {
   text-decoration: underline;
+}
+.text-overflow--break-word {
+  overflow-wrap: break-word;
 }
 .text-overflow--ellipsis {
   white-space: nowrap;
