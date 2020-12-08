@@ -62,12 +62,13 @@ export default {
         if (screen && screen.toDataURL !== '') {
           printJS({
             printable: screen.toDataURL('image/png'),
-            type: 'image'
-          }).onError(() => {
-            Toast.responseHandler(
-              this.$t('errorsGlobal.print-support-error'),
-              Toast.ERROR
-            );
+            type: 'image',
+            onError: () => {
+              Toast.responseHandler(
+                this.$t('errorsGlobal.print-support-error'),
+                Toast.ERROR
+              );
+            }
           });
         } else {
           Toast.responseHandler(

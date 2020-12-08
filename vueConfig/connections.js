@@ -74,5 +74,7 @@ module.exports = [
   'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket',
   'wss://www.walletlink.org:443',
   'https://estimategas.mewapi.io:443',
-  'https://bsc-dataseed1.binance.org:443'
+  'https://bsc-dataseed1.binance.org:443',
+  'https://staked.mewapi.io:443',
+  'https://stakedtest.mewapi.io:443'
 ];

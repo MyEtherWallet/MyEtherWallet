@@ -1,0 +1,44 @@
+@import '~@/scss/GlobalVariables';
+
+.confirmation-container {
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  @media all and (max-width: 550px) {
+    margin-top: 30px;
+  }
+  .title {
+    color: $dark-blue-6;
+    margin-top: 10px;
+  }
+  i {
+    border: 3px solid #05c0a5;
+    border-radius: 200px;
+    color: #05c0a5;
+    font-size: 90px;
+    margin-bottom: 15px;
+    padding: 25px;
+  }
+  span {
+    color: $dark-blue-1;
+    text-align: center;
+  }
+
+  .explorrer-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 750px;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 20px;
+
+    .explorrer-link {
+      padding: 15px 35px;
+      border-radius: 5px;
+      border: 1px solid $mew-green;
+      margin-top: 10px;
+      width: 280px;
+      text-align: center;
+    }
+  }
+}

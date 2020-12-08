@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.7.14",
+  "version": "5.7.15",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -34,8 +34,8 @@
     "@coolwallets/eth": "0.2.0-beta.1",
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",
-    "@sentry/browser": "5.27.3",
-    "@sentry/integrations": "5.27.3",
+    "@sentry/browser": "5.27.6",
+    "@sentry/integrations": "5.27.6",
     "@unstoppabledomains/resolution": "1.8.3",
     "apollo-cache-inmemory": "1.6.6",
     "apollo-client": "2.6.10",
@@ -109,6 +109,7 @@
     "bip39": "3.0.3",
     "bitbox02-api": "0.8.0",
     "bootstrap-vue": "2.15.0",
+    "clipboard-copy": "4.0.1",
     "codecov": "3.8.1",
     "copy-webpack-plugin": "6.3.2",
     "detectrtc": "1.4.1",
@@ -166,7 +167,8 @@
     "webpack": "4.44.2",
     "weekstart": "1.0.1",
     "worker-loader": "3.0.2",
-    "zxcvbn": "4.4.2"
+    "zxcvbn": "4.4.2",
+    "@myetherwallet/eth2-keystore": "0.2.3"
   },
   "engines": {
     "node": ">= 10.0.0 < 12.0.0",
