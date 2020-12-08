@@ -84,7 +84,13 @@
               </v-sheet>
             </div>
 
-            <div class="cut-line my-7"></div>
+            <div class="cut-line my-7">
+              <img
+                src="@/assets/images/icons/icon-scissor.png"
+                alt="Scissor"
+                height="20"
+              />
+            </div>
 
             <div class="font-weight-black">
               You might LOSE your MONEY if you share this Private Key with
@@ -139,7 +145,13 @@
               </v-sheet>
             </div>
 
-            <div v-if="false" class="cut-line my-7"></div>
+            <div v-if="false" class="cut-line my-7">
+              <img
+                src="@/assets/images/icons/icon-scissor.png"
+                alt="Scissor"
+                height="20"
+              />
+            </div>
 
             <div v-if="false" class="text-center">
               <img
@@ -228,16 +240,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.overlay-content {
-  //width: 800px;
-}
-
 .qr-image {
   margin: -6px 0;
 }
 
 .cut-line {
-  border-bottom: 1px dotted black;
+  border-bottom: 2px dotted black;
+  position: relative;
+  img {
+    position: absolute;
+    left: 10px;
+    top: -9px;
+  }
 }
 
 .to-print {

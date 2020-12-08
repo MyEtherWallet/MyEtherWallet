@@ -48,8 +48,9 @@
     </div>
 
     <div
-      class="cut-line my-12 mx-n4 gray3--text overflow--hidden white-space--nowrap"
+      class="cut-line my-10 mx-n4 gray3--text overflow--hidden white-space--nowrap"
     >
+      <img src="@/assets/images/icons/icon-scissor.png" alt="Scissor" />
       --------------------------------------------------------------------------------------------------------
     </div>
 
@@ -86,8 +87,9 @@
       </div>
     </div>
     <div
-      class="cut-line my-12 mx-n4 gray3--text overflow--hidden white-space--nowrap"
+      class="cut-line my-10 mx-n4 gray3--text overflow--hidden white-space--nowrap"
     >
+      <img src="@/assets/images/icons/icon-scissor.png" alt="Scissor" />
       --------------------------------------------------------------------------------------------------------
     </div>
 
@@ -125,9 +127,17 @@ export default {
 }
 
 .cut-line {
-  font-size: 22px;
+  font-size: 20px;
   letter-spacing: 5px;
   text-align: center;
+  position: relative;
+  padding: 10px 0;
+  img {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    height: 23px;
+  }
 }
 
 .box-gray {
