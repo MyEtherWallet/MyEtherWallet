@@ -1,3 +1,7 @@
+### Feature
+
+* Add Swap alternatives [#2679](https://github.com/MyEtherWallet/MyEtherWallet/pull/2679)
+
 ### Release v5.7.15
 
 ### Feature
