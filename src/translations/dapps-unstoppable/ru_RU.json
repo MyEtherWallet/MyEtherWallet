@@ -29,7 +29,7 @@
     "invalid-symbol": "Недопустимые символы на домене. Пожалуйста, используйте буквенно-цифровые символы или '-'",
     "too-small": "File is too small! Size has to be more than 500kb.",
     "too-big": "File is too big! Size has to be less than 50mb.",
-    "upload-zip": "Please upload a zip file!"
+    "upload-zip": "Пожалуйста, загрузите zip-файл!"
   },
   "toast": {
     "success-register": "Регистрация выполнена успешнo!",
@@ -42,16 +42,16 @@
     "stripe-email-placeholder": "Ваш адрес эл.почты"
   },
   "ipfs": {
-    "processing": "Processing File...",
+    "processing": "Обработка файла...",
     "processing-description": "Please wait for a transaction popup before you leave to make sure your request is processed. After this, you don't have to save your new hash as it has already been saved..",
     "see-website": "To see your site, please visit {domainName} on Unstoppable Chrome Extension or Unstoppable's Browser. You can also open the link on Opera browser!",
-    "hash": "IPFS Hash",
+    "hash": "Хэш IPFS",
     "upload": "Upload my website",
     "error-fetching-hash": "Error getting ipfs hash!",
-    "set-hash": "Set IPFS Hash"
+    "set-hash": "Установить хэш IPFS"
   },
-  "register-domain": "Register Domain",
-  "manage-domain": "Manage Domain",
+  "register-domain": "Регистрация домена",
+  "manage-domain": "Управление доменом",
   "view-transfer-transaction": "Вы можете увидеть транзакцию перевода на",
   "continue": "Продолжить",
   "congratulations": "Поздравляем!",
@@ -64,7 +64,7 @@
   "complete-manage-on-one": "Просмотр и управление доменом на",
   "is-available": "Домен доступен",
   "not-available": "{domain} еще не доступен!",
-  "manage": "Менеджер",
+  "manage": "Управление",
   "buyDomain": "Купить домен",
   "already-owned": "{domain} уже имеет владельца.",
   "search-for-another": "Поиск другого домена",
