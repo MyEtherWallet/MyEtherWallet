@@ -1,5 +1,5 @@
 {
-  "title": "Менеджер ENS",
+  "title": "Управление ENS",
   "dapp-desc": "Регистрация и управление доменом ENS",
   "search-domain-desc": "Поиск доменного имени. После регистрации, вы сможете предлагать своим друзьям отправить ETH на адрес \"_____. th\", вместо вашего публичного адреса (0x.....).",
   "error": {
@@ -10,20 +10,20 @@
     "balance-too-low": "Баланс слишком низкий!",
     "txt-not-supported": "Текстовые записи не поддерживаются!",
     "not-the-owner": "Вы не владелец!",
-    "error-getting-ipfs-hash": "Error getting IPFS Hash!",
-    "file-upload-error": "Uploading file errored",
-    "empty-invalid-ipfs": "Empty or Invalid IPFS Hash"
+    "error-getting-ipfs-hash": "Ошибка при получении хэша IPFS!",
+    "file-upload-error": "Ошибка загрузки файла",
+    "empty-invalid-ipfs": "Пустой или недопустимый хэш IPFS"
   },
   "warning": {
     "contract-not-ready": "Контракт еще не готов, транзакция может не пройти.",
     "not-enough-char": "Доменное имя меньше 3 символов.",
     "invalid-symbol": "Неверные символы в домене",
     "subdomain-is-not-owned": "Этот поддомен никому не принадлежит",
-    "upload-zip": "Please upload a zip file!",
-    "too-small": "File is too small! Size has to be more than 500 bytes.",
-    "too-big": "File is too big! Size has to be less than 50 megabytes.",
-    "currency-already-exists": "Currency {currency} is already added for {domainName}",
-    "text-record-already-exists": "Text Record {txtRecord} input is already added for {domainName}"
+    "upload-zip": "Пожалуйста, загрузите zip-файл!",
+    "too-small": "Файл слишком маленький! Размер должен быть более 500 байт.",
+    "too-big": "Файл слишком большой! Размер должен быть меньше 50 мегабайт.",
+    "currency-already-exists": "Валюта {currency} уже добавлена для {domainName}",
+    "text-record-already-exists": "Текстовая запись {txtRecord} вход уже добавлена для {domainName}"
   },
   "toast": {
     "success-register": "Регистрация выполнена успешнo!",
@@ -36,19 +36,19 @@
     "three-char": "Пожалуйста, введите не менее 3 символов"
   },
   "ens-manager": {
-    "title": "Менеджер ENS",
+    "title": "Управление ENS",
     "description": "Управляйте именами ENS или передайте их кому-то еще"
   },
   "fetching": "Получение имен...",
   "no-names-found": "Не найдено имени ENS для учетной записи {address}!",
   "renew": "Продлить",
-  "manage": "Менеджер",
-  "manage-domain": "Manage Domain",
-  "register-domain": "Register Domain",
-  "release-deed-confirmation": "Do you want to release {deedValueEth} {network}",
-  "ipfs-processing": "Processing File...",
-  "ipfs-processing-description": "Please wait for a transaction popup before you leave to make sure your request is processed.",
-  "ipfs-check-website": "Check your website for {domainName} here:",
+  "manage": "Управление",
+  "manage-domain": "Управление доменом",
+  "register-domain": "Регистрация домена",
+  "release-deed-confirmation": "Вы хотите освободить {deedValueEth} {network}",
+  "ipfs-processing": "Обработка файла...",
+  "ipfs-processing-description": "Пожалуйста, дождитесь всплывающего окна транзакции, прежде чем вы покинете страницу, чтобы убедиться, что ваш запрос обработан.",
+  "ipfs-check-website": "Проверьте ваш сайт для {domainName} здесь:",
   "expired": "Истёк",
   "controller-text": "Похоже, адрес, который вы используете, не является контроллером {domain}. Вы хотите установить {addr} в качестве контроллера для {domain}?",
   "text-record-error": "{value} отсутствует или не является допустимым значением для {name}!",
@@ -59,7 +59,7 @@
   "transfer-to": "Перенести домен ENS на",
   "transfer": "Перевод",
   "transfer-domain": "Передача домена",
-  "release-deed": "Return Deed",
+  "release-deed": "Возврат",
   "register": "Регистрация",
   "hang-on": "Минуту!",
   "finalize-registration": "Мы завершаем регистрацию для ",
@@ -102,12 +102,12 @@
     "domain-not-found": "Доменное имя является недопустимым или не найдено",
     "no-resolver": "Нет резолвера {network} НС в этом узле"
   },
-  "content-hash": "IPFS Hash",
-  "set-hash": "Set IPFS Hash",
-  "upload-my-website": "Upload My Website",
+  "content-hash": "Хэш IPFS",
+  "set-hash": "Установить хэш IPFS",
+  "upload-my-website": "Загрузить мой веб-сайт",
   "unstoppableResolution": {
     "address-reported-error": "Этот адрес в черном списке. Пожалуйста, убедитесь, что вы отправляете средства на правильный адрес.",
-    "twitter-verified": "Twitter Verified by",
+    "twitter-verified": "Twitter подтвержден",
     "UnregisteredDomain": "Домен {domain} не зарегистрирован",
     "UnspecifiedResolver": "Домен {domain} не настроен",
     "UnsupportedDomain": "Домен {domain} не поддерживается",
