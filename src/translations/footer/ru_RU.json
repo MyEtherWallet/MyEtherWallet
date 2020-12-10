@@ -33,7 +33,7 @@
   "mew-connect-protocol": "Протокол MEWconnect",
   "mew-wallet": "MEW wallet",
   "cool-wallet": "CoolWallet",
-  "generate-eth2": "Generate Eth2 Address",
+  "generate-eth2": "Генерировать адрес Eth2",
   "donation": {
     "desc": "MyEtherWallet является ПО с открытым кодом и предоставляется сообществу бесплатно. Все это возможно благодаря вашей поддержке.",
     "ether": "Поддержка в Ethereum",
@@ -42,9 +42,9 @@
   "coingecko": "Coingecko",
   "view-wallet-info": "Смотреть информацию о кошельке",
   "press-kit": {
-    "header": "Press Kit",
-    "subtext": "Announcements can be found on our {mediumlink}. For press and media inquiries, please contact: {hyperlink}",
-    "medium": "Medium blog"
+    "header": "Пресс-кит",
+    "subtext": "Объявления можно найти на нашем {mediumlink}. По вопросам прессы и медиа пожалуйста свяжитесь с: {hyperlink}",
+    "medium": "Medium блоге"
   },
   "ethvm": "EthVM"
 }
