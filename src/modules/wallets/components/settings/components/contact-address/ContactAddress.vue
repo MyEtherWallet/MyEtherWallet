@@ -13,11 +13,11 @@
     <div class="d-flex justify-center mt-5">
       <mew-button
         title="+ Add"
-        button-size="xlarge"
+        btn-size="xlarge"
         @click.native="$emit('add')"
       />
     </div>
-    <div class="text-center" @click="$emit('edit')">Edit</div>
+    <!-- <div class="text-center" @click="$emit('edit')">Edit</div> -->
   </div>
 </template>
 

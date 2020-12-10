@@ -2,7 +2,7 @@
   <div>
     <div
       class="menu-item cursor--pointer d-flex align-center px-3 py-2"
-      @click="openSettings = true"
+      @click="onSettings = !onSettings"
     >
       <img
         width="26"
@@ -46,7 +46,7 @@
       popup-type="confirm"
       @onClick="logoutFn"
     ></mew-popup>
-    <settings :open="openSettings" :close="closeSettings" />
+    <settings :on-settings="onSettings" @closeSettings="closeSettings" />
   </div>
 </template>
 
@@ -68,12 +68,12 @@ export default {
           colorTheme: 'error'
         }
       },
-      openSettings: false
+      onSettings: false
     };
   },
   methods: {
     closeSettings() {
-      this.openSettings = false;
+      this.onSettings = false;
     },
     logoutFn(res) {
       this.logoutOpen = false;

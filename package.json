@@ -68,7 +68,7 @@
     "vue-router": "3.4.9",
     "vuex": "3.6.0",
     "walletlink": "2.0.2",
-    "worker-loader": "3.0.5"
+    "worker-loader": "3.0.6"
   },
   "devDependencies": {
     "@keepkey/keepkey.js": "1.2.3",
@@ -85,7 +85,7 @@
     "@vue/eslint-config-prettier": "6.0.0",
     "@vue/test-utils": "1.1.1",
     "@xkeshi/vue-qrcode": "git+https://github.com/MyEtherWallet/vue-qrcode.git",
-    "apollo": "2.31.1",
+    "apollo": "2.31.2",
     "axios": "0.21.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.1.0",

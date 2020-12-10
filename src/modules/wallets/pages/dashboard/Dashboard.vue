@@ -57,7 +57,7 @@
             >
 
             <div class="ml-5">
-              ${{ usd.current_price }} / 1 {{ network.type.currenyName }} ETH
+              ${{ currency.value }} / 1 {{ network.type.currenyName }} ETH
             </div>
           </v-col>
           <v-col class="text-center">
@@ -142,7 +142,7 @@
                 {{ network.type.currenyName }} PRICE
               </div>
               <div class="ml-2 font-weight-regular text-color--mew-green">
-                ${{ usd.price_change_24h }}
+                ${{ currency.price_change_24h }}
               </div>
               <v-icon
                 :class="[
@@ -152,7 +152,8 @@
                 >{{ priceChangeArrow }}</v-icon
               >
               <div class="ml-5">
-                ${{ usd.current_price }} / 1 {{ network.type.currenyName }} ETH
+                {{ currency.symbol + currency.value }} / 1
+                {{ network.type.currenyName }} ETH
               </div>
             </v-col>
             <v-col class="text-right">
@@ -419,12 +420,12 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['balance', 'usd', 'network', 'address']),
+    ...mapState('wallet', ['balance', 'currency', 'network', 'address']),
     showBuyEth() {
       return this.balannce === 0;
     },
     convertedBalance() {
-      const converted = BigNumber(this.balance).times(this.usd.current_price);
+      const converted = BigNumber(this.balance).times(this.currency.value);
       return `$ ${converted.toFixed(2)}`;
     },
     title() {
@@ -437,7 +438,7 @@ export default {
       return this.priceChange > 0 ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
     },
     priceChange() {
-      return this.usd.price_change_24h > 0;
+      return this.currency.price_change_24h > 0;
     }
   },
   watch: {

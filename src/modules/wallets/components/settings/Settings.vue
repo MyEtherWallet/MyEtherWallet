@@ -1,9 +1,9 @@
 <template>
   <mew-overlay
-    :show-overlay="open"
+    :show-overlay="onSettings"
+    :close="close"
+    left-btn-text=""
     right-btn-text="Close"
-    left-btn-text="Back"
-    @closeOverlay="$emit('close')"
   >
     <template #mewOverlayBody>
       <div v-if="!editMode && !addMode">
@@ -122,7 +122,7 @@ export default {
     copyButton
   },
   props: {
-    open: { default: false, type: Boolean }
+    onSettings: { default: false, type: Boolean }
   },
   data() {
     return {
@@ -161,6 +161,11 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    close() {
+      this.$emit('closeSettings');
+    }
   }
 };
 </script>
