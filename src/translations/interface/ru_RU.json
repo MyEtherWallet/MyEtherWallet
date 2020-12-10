@@ -86,7 +86,7 @@
     "add-contact": "Добавить Контакт"
   },
   "no-avail": "Эта функция недоступна.",
-  "dashboard-swap": "MEW has partnered with DEX.AG, Changelly, Bity, and Simplex to offer competitive rates for all ETH and token swaps, as well as ETH <-> Fiat and ETH <-> BTC",
+  "dashboard-swap": "MEW является партнером DEX.AG, Changelly, Bity и Simplex чтобы предлагать конкурентоспособные тарифы для обмена ETH и токенов, а также ETH <-> Fiat и ETH <-> BTC",
   "etherscan-tx-url": "https://etherscan.io/tx/[[txHash]]",
   "etherscan-address-url": "https://etherscan.io/address/[[address]]",
   "address-book": {
@@ -107,7 +107,7 @@
     "success-update": "Обновление прошло успешно",
     "save-addr": "Сохранить адрес"
   },
-  "web3-not-found": "Web3 Instance not found!",
+  "web3-not-found": "Образец Web3 не найден!",
   "import-error": "Что-то пошло не так при импорте файла, пожалуйста, убедитесь, что файл является допустимым",
   "account-content": {
     "header": "ИКОНКА МОЕГО АДРЕСА",
@@ -115,8 +115,8 @@
     "paper": "Бумажный кошелек",
     "link2": "https://www.myetherwallet.com",
     "my-priv": "МОЙ ЗАКРЫТЫЙ КЛЮЧ",
-    "warning": "Please Keep Your Paper Wallet at a {safe} Place! {extend}",
-    "dont-share-priv-key": "Please {doNot} Share Your Private Key With Anyone!",
+    "warning": "Пожалуйста, храните бумажный кошелек в {safe} месте! Пожалуйста, {do-not} своим закрытым ключом с кем-либо!",
+    "dont-share-priv-key": "Пожалуйста, {doNot} делитесь вашим закрытым ключом с кем-либо!",
     "safe": "БЕЗОПАСНОМ",
     "do-not": "НЕ делитесь"
   },
