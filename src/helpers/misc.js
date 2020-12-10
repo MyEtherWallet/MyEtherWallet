@@ -209,7 +209,6 @@ const isContractArgValid = (value, solidityType) => {
     const tooManyOrMissingParam = hasParam
       ? parsedValue.length === BigNumber(paramValue).toNumber()
       : true;
-    console.log(tooManyOrMissingParam, hasParam, paramValue);
     return tooManyOrMissingParam;
   }
   if (solidityType.includes(uint) || solidityType.includes(int))
