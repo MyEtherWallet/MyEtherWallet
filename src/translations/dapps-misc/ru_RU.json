@@ -1,8 +1,8 @@
 {
   "title": "Aave",
-  "gnt-title": "Golem Migrator",
-  "gnt-popover": "Migrate your old golem tokens today",
+  "gnt-title": "Миграция Golem",
+  "gnt-popover": "Мигрируйте ваши старые токены Golem",
   "total-amount": "Total GLM Amount to migrate",
-  "migrate": "Migrate GNT to GLM",
-  "total-gnt": "Total GLM Balance"
+  "migrate": "Мигрировать GNT в GLM",
+  "total-gnt": "Общий баланс GLM"
 }
