@@ -165,5 +165,5 @@
   "view-wallet-detail": "Детали кошелька",
   "remove-wallet-verification": "Введите пароль кошелька, чтобы удалить его. Пожалуйста, убедитесь, что вы сохранили {privKey}, {mnemPhrase}, или {keystoreFile} и {password} перед удалением вашего кошелька.",
   "lock-wallet": "Закрыть кошелек и выйти",
-  "remove-wallet-successfully": "Removed Wallet Successfully"
+  "remove-wallet-successfully": "Кошелек успешно удален"
 }
