@@ -5,12 +5,9 @@
       <p>{{ $t('common.decision-tree.quick-help') }}</p>
     </button>
 
-    <b-modal
-      ref="DecisionTree"
-      hide-footer
-      hide-header
-      centered
-      static
+    <v-dialog
+      v-model="dialog"
+      width="500"
       class="bootstrap-modal nopadding decision-tree-modal"
     >
       <div class="modal-contents">
@@ -34,25 +31,6 @@
             </p>
             <p v-else class="long-title">{{ currentIndex.title }}</p>
           </div>
-        </div>
-
-        <div class="decision-tree-search hidden">
-          <multiselect
-            v-model="searchSelect"
-            :options="searchOptions"
-            :placeholder="$t('common.search')"
-            label="name"
-            track-by="name"
-          >
-            <span slot="noResult" class="no-result"
-              ><i class="fa fa-meh-o" aria-hidden="true"></i
-              >{{ $t('common.decision-tree.no-results') }}</span
-            >
-          </multiselect>
-          <img class="magnifier" src="@/assets/images/icons/magnifier.svg" />
-          <p class="clear">
-            <i class="fa fa-times-circle" aria-hidden="true"></i>
-          </p>
         </div>
 
         <div class="breadcrumb-container">
@@ -119,40 +97,25 @@
           </button>
         </div>
       </div>
-    </b-modal>
+    </v-dialog>
   </div>
 </template>
 
 <script>
-import Multiselect from 'vue-multiselect';
-import MdContainer from './components/MdContainer';
+import MdContainer from './components/MdContainer/MdContainer';
 import mdIndex from './data/MDIndex.js';
 import marked from 'marked';
-import { Misc } from '@/helpers';
 
 export default {
   name: 'DecisionTree',
   components: {
-    'md-container': MdContainer,
-    multiselect: Multiselect
+    'md-container': MdContainer
   },
   props: {
     button: {
       type: Boolean,
       default: false
     }
-  },
-  data() {
-    const isMewCx = Misc.isMewCx();
-    return {
-      isMewCx: isMewCx,
-      index: mdIndex,
-      currentIndex: mdIndex.ROOT,
-      historyStack: [],
-      showCustomerSupport: false,
-      searchOptions: [],
-      searchSelect: {}
-    };
   },
   computed: {
     historyStackFiltered() {
@@ -161,14 +124,6 @@ export default {
         if (this.historyStack[h].breadcrumb) filtered[h] = this.historyStack[h];
       }
       return filtered;
-    }
-  },
-  watch: {
-    searchSelect(val) {
-      if (val !== null && val.value) {
-        this.getSearchItem(val.value);
-        this.searchSelect = {};
-      }
     }
   },
   beforeMount() {
@@ -221,102 +176,4 @@ export default {
 
 <style lang="scss" scoped>
 @import 'DecisionTree.scss';
-</style>
-
-<style lang="scss">
-@import '~@/scss/GlobalVariables';
-
-.decision-tree-modal {
-  @media all and (min-width: $tablet-width + 1px) {
-    .modal-dialog {
-      width: 400px;
-      position: fixed;
-      right: 50px;
-    }
-  }
-
-  .modal-content {
-    border-radius: 10px;
-  }
-
-  .modal-body {
-    background-color: transparent;
-  }
-
-  .decision-tree-search {
-    .multiselect {
-      height: 100%;
-    }
-    .multiselect__tags {
-      height: 100%;
-    }
-    .multiselect__input {
-      padding-left: 45px !important;
-      padding-right: 50px !important;
-      height: 100%;
-      border: 0;
-      background-color: transparent;
-      width: 100% !important;
-    }
-
-    .multiselect__content-wrapper {
-      overflow: auto;
-      max-height: 550px !important;
-      background-color: #f1f1f1;
-      margin-top: 3px;
-      box-shadow: 0px 4px 10px #00000033;
-      @media all and (max-width: $tablet-width) {
-        max-height: 450px !important;
-      }
-    }
-
-    .multiselect__element {
-      border-bottom: 1px solid #e0e0e0;
-      cursor: pointer;
-      span {
-        display: block;
-      }
-
-      span span {
-        padding: 10px 20px;
-        font-size: 13px;
-        font-weight: 400;
-      }
-
-      &:hover {
-        background-color: #ececec;
-        span {
-          font-weight: 400;
-        }
-      }
-    }
-
-    .multiselect__placeholder {
-      position: absolute;
-      top: 14px;
-      left: 45px;
-    }
-
-    .multiselect__content {
-      width: 100%;
-    }
-    .no-result {
-      padding: 10px 20px;
-      font-size: 14px;
-      font-weight: 600;
-      text-align: center;
-      width: 100%;
-      background-color: black;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-
-      i {
-        font-size: 22px;
-        margin-right: 10px;
-      }
-    }
-  }
-}
 </style>
