@@ -31,7 +31,7 @@
               <i18n path="termsOfService.intro-p1" tag="p">
                 <template v-slot:privPol>
                   <a
-                    href="https://www.myetherwallet.com/privacy-policy"
+                    href="https://wallet.xinfin.network/privacy-policy"
                     target="_blank"
                     rel="noopener noreferrer"
                     >{{ parent.$t('termsOfService.privacy-policy') }}</a
@@ -92,7 +92,7 @@
               >
                 <template v-slot:article1>
                   <a
-                    href="https://kb.myetherwallet.com/en/getting-started/myetherwallet-an-introduction/"
+                    href="https://howto.xinfin.org/XinFinWallet/features/en/getting-started/myetherwallet-an-introduction/"
                     target="_blank"
                     rel="noopener noreferrer"
                     >"{{ parent.$t('termsOfService.article1') }}"</a
@@ -100,7 +100,7 @@
                 </template>
                 <template v-slot:article2>
                   <a
-                    href="https://kb.myetherwallet.com/en/security-and-privacy/pro-tips-how-to-avoid-phishing-scams/"
+                    href="https://howto.xinfin.org/XinFinWallet/features/en/security-and-privacy/pro-tips-how-to-avoid-phishing-scams/"
                     target="_blank"
                     rel="noopener noreferrer"
                     >“{{ parent.$t('termsOfService.article2') }}”</a
@@ -329,11 +329,11 @@
               <i18n path="termsOfService.contact-info-title-p" tag="p">
                 <template v-slot:suppEmail>
                   <a
-                    href="mailto:support@myetherwallet.com"
+                    href="mailto:support@xinfin.org"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    support@myetherwallet.com</a
+                    support@xinfin.org</a
                   >.
                 </template>
               </i18n>

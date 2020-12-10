@@ -12,7 +12,7 @@
       <div class="modal-content">
         {{ $t('common.feedback.send-us-feedback') }}
         <a
-          href="mailto:support@myetherwallet.com"
+          href="mailto:support@xinfin.org"
           target="_blank"
           rel="noopener noreferrer"
           >{{ $t('common.support-email') }}</a

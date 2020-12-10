@@ -46,7 +46,7 @@
         <p class="terms">
           {{ $t('mewcx.by-entering-pw') }}
           <a
-            href="https://www.myetherwallet.com/terms-of-service"
+            href="https://wallet.xinfin.network/terms-of-service"
             target="_blank"
             rel="noopener noreferrer"
           >

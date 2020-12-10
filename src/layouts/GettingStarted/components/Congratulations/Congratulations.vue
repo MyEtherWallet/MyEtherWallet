@@ -15,7 +15,7 @@
               slot="helpCenter"
               rel="noopener noreferrer"
               target="_blank"
-              href="https://kb.myetherwallet.com"
+              href="https://howto.xinfin.org/XinFinWallet/features"
               >{{ $t('common.help-center') }}</a
             >
           </i18n>

@@ -25,7 +25,7 @@
      * We are not affiliated with any tokens or contracts, so if you receive this error please reach out to the support team for the token contract. Links for token support teams can usually be found via Etherscan.io or through a google search. (Make sure you're on the right websites, because there are a lot of fake phishing sites out there!).
 
    * It says **‘Success’**
-     * If the explorer is showing the transaction as a success, it’s likely that you need to [add your funds as a custom token](https://kb.myetherwallet.com/en/tokens/how-to-add-custom-token/).
+     * If the explorer is showing the transaction as a success, it’s likely that you need to [add your funds as a custom token](https://howto.xinfin.org/XinFinWallet/features/en/tokens/how-to-add-custom-token/).
      * If you’re looking for ETH, double-check the address and try connecting to other ETH networks.
 
 3. Other
@@ -37,7 +37,7 @@
 
 #### Contact Form:
 
-* Email us at <mailto:support@myetherwallet.com>
+* Email us at <mailto:support@xinfin.org>
 * <p>Include a detailed description of the issue.</p>
   <note>Please include as many details as possible, such as phone / computer model, OS number, version of the app / site you are using, browser version etc.</note>
 * Attach screenshots (optional)

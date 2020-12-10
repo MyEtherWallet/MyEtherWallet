@@ -176,7 +176,7 @@ export default {
       lowerLinks: [
         {
           title: 'footer.feedback',
-          href: 'mailto:support@myetherwallet.com'
+          href: 'mailto:support@xinfin.org'
         },
         {
           title: 'footer.privacy',
@@ -269,11 +269,11 @@ export default {
             },
             {
               text: 'common.cstm-support',
-              href: 'mailto:support@myetherwallet.com'
+              href: 'mailto:support@xinfin.org'
             },
             {
               text: 'common.help-center',
-              href: 'https://kb.myetherwallet.com'
+              href: 'https://howto.xinfin.org/XinFinWallet/features'
             }
           ]
         }

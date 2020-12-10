@@ -86,7 +86,7 @@
       <p>
         {{ $t('common.having-issues') }}
         <a
-          href="https://kb.myetherwallet.com/"
+          href="https://howto.xinfin.org/XinFinWallet/features/"
           rel="noopener noreferrer"
           target="_blank"
           >{{ $t('common.help-center') }}</a

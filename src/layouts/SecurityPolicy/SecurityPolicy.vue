@@ -18,8 +18,8 @@
           MyEtherWallet website, MEW wallet App, MEWconnect App and MEW CX
         </strong>
         report it to
-        <a href="mailto:bugbounty@myetherwallet.com">
-          bugbounty@myetherwallet.com
+        <a href="mailto:bugbounty@xinfin.org">
+          bugbounty@xinfin.org
         </a>
         according to our guidelines (jump to reporting rules)!
       </p>
@@ -56,7 +56,7 @@
           <td>Scope</td>
           <td>
             <div>
-              <strong>MyEtherWallet.com</strong>
+              <strong>XDC Wallet</strong>
               <div>
                 Code base can be found:
                 <a
@@ -345,7 +345,7 @@
               <li>Text-only injection in error pages</li>
               <li>
                 Any other service not directly hosted or controlled by
-                MyEtherWallet.com. MEW will determine at its discretion whether
+                XDC Wallet. MEW will determine at its discretion whether
                 a vulnerability is eligible for a reward and the amount of the
                 award.
               </li>

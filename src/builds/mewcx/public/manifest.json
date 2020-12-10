@@ -3,7 +3,7 @@
   "short_name": "MEW CX",
   "manifest_version": 2,
   "description": "MyEtherWallet Chrome Extension - Browse the blockchain. Bring your own MEW.",
-  "homepage_url": "https://www.myetherwallet.com/",
+  "homepage_url": "https://wallet.xinfin.network/",
   "icons": {
     "16": "img/icons/icon16.png",
     "32": "img/icons/icon32.png",

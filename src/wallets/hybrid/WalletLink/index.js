@@ -16,7 +16,7 @@ import HybridWalletInterface from '../walletInterface';
 
 const IS_HARDWARE = true;
 const APP_NAME = 'MEW';
-const APP_LOGO = 'https://www.myetherwallet.com/img/icons/icon192.png';
+const APP_LOGO = 'https://wallet.xinfin.network/img/icons/icon192.png';
 class WalletLinkWallet {
   constructor() {
     this.identifier = walletLinkType;

@@ -71,7 +71,7 @@ export default async ({ event, payload }, callback, next) => {
         callback({
           error: {
             message:
-              'Something went wrong! Please try again or contact our support at support@myetherwallet.com'
+              'Something went wrong! Please try again or contact our support at support@xinfin.org'
           }
         });
       }

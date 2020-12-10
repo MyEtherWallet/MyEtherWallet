@@ -80,7 +80,7 @@ export default {
           title: 'gettingStarted.helpful-tips.tip5.title',
           desc: 'gettingStarted.helpful-tips.tip5.desc',
           linkText: 'gettingStarted.helpful-tips.tip5.link',
-          linkUrl: 'mailto:support@myetherwallet.com'
+          linkUrl: 'mailto:support@xinfin.org'
         }
       ]
     };

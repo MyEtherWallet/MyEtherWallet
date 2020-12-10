@@ -263,7 +263,7 @@
             <interface-bottom-text
               :link-text="$t('common.help-center')"
               :question="$t('common.dont-know')"
-              link="https://kb.myetherwallet.com"
+              link="https://howto.xinfin.org/XinFinWallet/features"
             />
           </div>
         </div>

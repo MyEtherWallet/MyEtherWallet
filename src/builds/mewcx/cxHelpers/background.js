@@ -269,7 +269,7 @@ function querycB(tab) {
         helpers.checkUrlSimilarity(tab.url, SEARCH_STRING)
       ) {
         urlRedirect = encodeURI(
-          `https://www.myetherwallet.com/phishing-catcher?phishing-address=${tab.url}`
+          `https://wallet.xinfin.network/phishing-catcher?phishing-address=${tab.url}`
         );
         chrome.tabs.update(null, { url: urlRedirect });
       } else {

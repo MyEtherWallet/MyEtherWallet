@@ -102,7 +102,7 @@ export default {
         '\n\n' +
         this.description;
       // eslint-disable-next-line
-      return `mailto:support@myetherwallet.com?subject=${encodeURIComponent(
+      return `mailto:support@xinfin.org?subject=${encodeURIComponent(
         Misc.stripTags(subject)
       )}&body=${encodeURIComponent(Misc.stripTags(body))}`;
     }

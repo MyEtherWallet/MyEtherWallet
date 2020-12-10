@@ -1,6 +1,6 @@
 <img src="./src/assets/images/logo.png" width="300px"/>
 
-[![Website](https://img.shields.io/website-up-down-green-red/http/myetherwallet.com.svg?label=MyEtherWallet.com\&style=flat-square)](http://www.MyEtherWallet.com/)
+[![Website](https://img.shields.io/website-up-down-green-red/http/myetherwallet.com.svg?label=XDC Wallet\&style=flat-square)](http://wallet.xinfin.network/)
 [![Github All Releases](https://img.shields.io/github/downloads/MyEtherWallet/MyEtherWallet/total.svg?style=flat-square)](https://www.github.com/MyEtherWallet/MyEtherWallet/releases)
 [![GitHub issues](https://img.shields.io/github/issues-raw/MyEtherWallet/MyEtherWallet.svg?style=flat-square)](https://github.com/MyEtherWallet/MyEtherWallet/issues)
 [![Travis](https://img.shields.io/travis/MyEtherWallet/MyEtherWallet.svg?style=flat-square)](https://travis-ci.org/MyEtherWallet/MyEtherWallet)
@@ -24,7 +24,7 @@ MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage 
 
 ## MEW Around the Web
 
-* [Website: https://www.myetherwallet.com/](https://www.myetherwallet.com/)
+* [Website: https://wallet.xinfin.network/](https://wallet.xinfin.network/)
 * [CX: https://chrome.google.com/webstore/detail/myetherwallet-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm](https://chrome.google.com/webstore/detail/myetherwallet-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm)
 * [Anti-phish CX](https://chrome.google.com/webstore/detail/etheraddresslookup/pdknmigbbbhmllnmgdfalmedcmcefdfn)
 * [FB: https://www.facebook.com/MyEtherWallet/](https://www.facebook.com/MyEtherWallet/)

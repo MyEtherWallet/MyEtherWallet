@@ -107,7 +107,7 @@
             </p>
             <p class="ml-2 mr-2">|</p>
             <a
-              href="https://kb.myetherwallet.com/"
+              href="https://howto.xinfin.org/XinFinWallet/features/"
               target="_blank"
               rel="noopener noreferrer"
             >

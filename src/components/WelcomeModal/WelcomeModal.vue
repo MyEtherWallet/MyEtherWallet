@@ -33,8 +33,8 @@
             русском языке, присоединяйтесь к нашему сообществу в
             <a target="_blank" href=" https://vk.com/public190491855">ВК</a>!
             Для поддержки, пишите на
-            <a target="_blank" href="mailto:support@myetherwallet.com"
-              >support@myetherwallet.com</a
+            <a target="_blank" href="mailto:support@xinfin.org"
+              >support@xinfin.org</a
             >. Для самых свежих новостей, подпишитесь на наш
             <a target="_blank" href="https://twitter.com/myetherwallet"
               >Твиттер</a

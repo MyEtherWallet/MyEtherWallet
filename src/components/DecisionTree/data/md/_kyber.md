@@ -2,7 +2,7 @@
 
 #### I see my new tokens in Etherscan.io, but not in MEW.
 
-If you don't see your tokens in MEW, all you have to do is [add them as a custom token](https://kb.myetherwallet.com/en/tokens/how-to-add-custom-token/).
+If you don't see your tokens in MEW, all you have to do is [add them as a custom token](https://howto.xinfin.org/XinFinWallet/features/en/tokens/how-to-add-custom-token/).
 
 ***
 

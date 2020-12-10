@@ -1,13 +1,13 @@
 {
-  "tagline1": "Ethereum's",
+  "tagline1": "XinFin's",
   "tagline2": "Original Wallet",
-  "subheading": "MyEtherWallet (our friends call us MEW) is a free, client-side interface helping you interact with the XinFin blockchain. Our easy-to-use, open-source platform allows you to generate wallets, interact with smart contracts, and so much more.",
+  "subheading": "XDC Wallet, client-side interface helping you interact with the XinFin blockchain. Our easy-to-use, open-source platform allows you to generate wallets, interact with smart contracts, and so much more.",
   "create-new-wallet": {
-    "text": "Generate your own unique XDC Wallet. Receive a public address (0x...) and choose a method for access and recovery."
+    "text": "Generate your own unique XDC Wallet. Receive a public address (xdc...) and choose a method for access and recovery."
   },
   "access-my-wallet": {
     "text": "Connect to the blockchain using the wallet of your choice.",
-    "opt-1": "Send and Swap ETH & Tokens",
+    "opt-1": "Send and Swap XDC & Tokens",
     "opt-2": "Sign & Verify Messages",
     "opt-3": "Interact with Contracts, ENS, Dapps, and more!",
     "button": "Access Now"

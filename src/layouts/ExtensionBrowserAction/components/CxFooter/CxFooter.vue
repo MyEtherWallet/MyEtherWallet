@@ -62,7 +62,7 @@ export default {
       lowerLinks: [
         {
           title: 'footer.feedback',
-          href: 'mailto:support@myetherwallet.com'
+          href: 'mailto:support@xinfin.org'
         },
         {
           title: 'footer.privacy',

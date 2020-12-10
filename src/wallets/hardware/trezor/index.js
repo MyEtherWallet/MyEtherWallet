@@ -20,8 +20,8 @@ const NEED_PASSWORD = false;
 class TrezorWallet {
   constructor() {
     Trezor.manifest({
-      email: 'dev@myetherwallet.com',
-      appUrl: 'https://www.myetherwallet.com'
+      email: 'dev@xinfin.org',
+      appUrl: 'https://wallet.xinfin.network'
     });
 
     this.identifier = trezorType;

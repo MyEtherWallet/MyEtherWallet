@@ -10,7 +10,7 @@
               <a
                 target="_blank"
                 rel="noopener noreferrer"
-                href="https://kb.myetherwallet.com/"
+                href="https://howto.xinfin.org/XinFinWallet/features/"
               >
                 {{ $t('home.faqs.button-see-more') }}
               </a>
@@ -72,7 +72,7 @@ export default {
           content: 'home.faqs.mew-wallet.text',
           linkText: 'home.faqs.button-learn-more',
           link:
-            'https://kb.myetherwallet.com/en/mewwallet/mewwallet-user-guide/'
+            'https://howto.xinfin.org/XinFinWallet/features/en/mewwallet/mewwallet-user-guide/'
         },
         faq2: {
           open: false,
@@ -80,7 +80,7 @@ export default {
           content: 'home.faqs.other-wallets.text',
           linkText: 'home.faqs.button-here',
           link:
-            'https://kb.myetherwallet.com/en/getting-started/how-to-access-your-wallet/'
+            'https://howto.xinfin.org/XinFinWallet/features/en/getting-started/how-to-access-your-wallet/'
         },
         faq3: {
           open: false,
@@ -88,7 +88,7 @@ export default {
           content: 'home.faqs.send-txs.text',
           linkText: 'home.faqs.button-here',
           link:
-            'https://kb.myetherwallet.com/en/transactions/how-to-send-a-transaction/'
+            'https://howto.xinfin.org/XinFinWallet/features/en/transactions/how-to-send-a-transaction/'
         },
         faq4: {
           open: false,
@@ -96,7 +96,7 @@ export default {
           content: 'home.faqs.forgot-pwd.text',
           linkText: 'home.faqs.button-here',
           link:
-            'https://kb.myetherwallet.com/en/security-and-privacy/lost-private-key/'
+            'https://howto.xinfin.org/XinFinWallet/features/en/security-and-privacy/lost-private-key/'
         },
         faq5: {
           open: false,
@@ -104,7 +104,7 @@ export default {
           content: 'home.faqs.create-wallet.text',
           linkText: 'home.faqs.button-here',
           link:
-            'https://kb.myetherwallet.com/en/getting-started/how-to-create-a-wallet/'
+            'https://howto.xinfin.org/XinFinWallet/features/en/getting-started/how-to-create-a-wallet/'
         }
       }
     };

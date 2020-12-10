@@ -3,7 +3,7 @@
     <div v-if="type == 'issues'" class="issues">
       {{ $t('common.having-issues') }}
       <a
-        href="https://kb.myetherwallet.com/"
+        href="https://howto.xinfin.org/XinFinWallet/features/"
         target="_blank"
         rel="noopener noreferrer"
         >{{ $t('common.help-center') }}</a

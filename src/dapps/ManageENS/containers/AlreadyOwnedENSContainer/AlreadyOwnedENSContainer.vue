@@ -121,7 +121,7 @@
     <interface-bottom-text
       :link-text="$t('common.help-center')"
       :question="$t('common.have-issues')"
-      link="https://kb.myetherwallet.com"
+      link="https://howto.xinfin.org/XinFinWallet/features"
     />
   </div>
 </template>

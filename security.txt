@@ -1,12 +1,12 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA512
 
-Contact: mailto:security@myetherwallet.com
+Contact: mailto:security@xinfin.org
 Encryption: https://raw.githubusercontent.com/MyEtherWallet/MyEtherWallet/master/MEW-PUP-KEY-GPG
-Acknowledgments: https://www.myetherwallet.com/security-policy
+Acknowledgments: https://wallet.xinfin.network/security-policy
 Preferred-Languages: en,ru
-Canonical: https://www.myetherwallet.com/.well-known/security.txt
-Policy: https://www.myetherwallet.com/security-policy
+Canonical: https://wallet.xinfin.network/.well-known/security.txt
+Policy: https://wallet.xinfin.network/security-policy
 -----BEGIN PGP SIGNATURE-----
 
 iQJOBAEBCgA4FiEEL8pKHjr0J49607djfwWcD3uaEvAFAl6nTD4aHHN1cHBvcnRA

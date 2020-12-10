@@ -439,14 +439,14 @@ export default {
 
   Recognize_address: {
     title: 'When I unlock my wallet, I recognize the public address',
-    subtitle: '(0x...)',
+    subtitle: '(xdc...)',
     breadcrumb: 'recognize address',
     md: _Recognize_address
   },
 
   Different_address: {
     title: 'When I unlock my wallet, I see an unfamiliar address',
-    subtitle: '(0x...)',
+    subtitle: '(xdc...)',
     breadcrumb: 'different address',
     md: _Different_address
   },
