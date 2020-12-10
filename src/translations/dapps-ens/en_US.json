@@ -69,7 +69,7 @@
   "enable-dns-sec": "Please enable DNSSEC for domain: {domain}",
   "txt": {
     "setup-not-found": "No TXT setup found for {domain}!",
-    "add-txt-type-entry": "On your DNS management console, please add a TXT type DNS entry \" {txtString} \" with a value containing your Ethereum address in the format of \"a=YOURETHEREUMADDRESS\"",
+    "add-txt-type-entry": "On your DNS management console, please add a TXT type DNS entry \" {txtString} \" with a value containing your XinFin address in the format of \"a=YOURETHEREUMADDRESS\"",
     "name-owned": "This name is currently owned in ENS by {owner} but TXT record is no longer available for {domain}!",
     "unclaim-desc": "You can unclaim this {domain} from ENS by clicking the following button",
     "unclaim": "Unclaim"

@@ -8,7 +8,7 @@
   "pay-with-credit-card": "Pay with Credit Card",
   "pay-with-crypto": "Pay with Crypto",
   "send-payment": "Send Payment",
-  "ethereum-payment-address": "Ethereum payment address",
+  "ethereum-payment-address": "XinFin payment address",
   "payment-amount": "Payment Amount",
   "pending-crypto-payment": "Pending Payment: {confirmations} of {confirmationsRequired} confirmations",
   "secured-by-stripe": "Secured Checkout Powered by Stripe",

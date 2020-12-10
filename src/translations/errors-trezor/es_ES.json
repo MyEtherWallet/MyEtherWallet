@@ -7,7 +7,7 @@
   "call-in-progress": "Device call in progress",
   "transport-missing": "Transport is missing",
   "cancelled": "Event cancelled by user",
-  "turn-on-contract-data": "Please enable Contract data on the Ethereum app Settings",
+  "turn-on-contract-data": "Please enable Contract data on the XinFin app Settings",
   "iframe-timeout": "Make sure you enable pop-ups in the browser, and that your ad blocker is not blocking the pop-up",
   "unsupported-browser": "Browser not supported! Please try using Trezor with Chrome or Firefox!",
   "popup-failed-to-open": "Popup failed to open.  Make sure you enable pop-ups in the browser, and that your ad blocker is not blocking the pop-up"

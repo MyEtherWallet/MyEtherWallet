@@ -1,9 +1,9 @@
 {
   "tagline1": "Ethereum's",
   "tagline2": "Original Wallet",
-  "subheading": "MyEtherWallet (our friends call us MEW) is a free, client-side interface helping you interact with the Ethereum blockchain. Our easy-to-use, open-source platform allows you to generate wallets, interact with smart contracts, and so much more.",
+  "subheading": "MyEtherWallet (our friends call us MEW) is a free, client-side interface helping you interact with the XinFin blockchain. Our easy-to-use, open-source platform allows you to generate wallets, interact with smart contracts, and so much more.",
   "create-new-wallet": {
-    "text": "Generate your own unique Ethereum wallet. Receive a public address (0x...) and choose a method for access and recovery."
+    "text": "Generate your own unique XDC Wallet. Receive a public address (0x...) and choose a method for access and recovery."
   },
   "access-my-wallet": {
     "text": "Connect to the blockchain using the wallet of your choice.",
@@ -14,11 +14,11 @@
   },
   "about-mew": {
     "title": "About MEW",
-    "text": "MyEtherWallet - please, call us MEW - puts the Ethereum blockchain at your fingertips. We are a team of crypto-enthusiasts dedicated to bring you the most secure, most intuitive, and dare we say prettiest way to manage your ETH and ERC20 tokens. We're always here to help, and we're never giving away ETH. Cheers!"
+    "text": "MyEtherWallet - please, call us MEW - puts the XinFin blockchain at your fingertips. We are a team of crypto-enthusiasts dedicated to bring you the most secure, most intuitive, and dare we say prettiest way to manage your ETH and ERC20 tokens. We're always here to help, and we're never giving away ETH. Cheers!"
   },
   "join-mew": {
     "title": "Join MEW",
-    "text": "Access the Ethereum blockchain's original and most-trusted wallet client, now with a host of new features all contained in an elegant, easy-to-use interface."
+    "text": "Access the XinFin blockchain's original and most-trusted wallet client, now with a host of new features all contained in an elegant, easy-to-use interface."
   },
   "hardware-support": {
     "title": "Hardware Wallet Support",
@@ -34,7 +34,7 @@
     "button-learn-more": "Learn more...",
     "mew-wallet": {
       "title": "What is MEW wallet?",
-      "text": "MEW wallet is our official fully-fledged mobile app, bringing Ethereum to your iOS or Android phone"
+      "text": "MEW wallet is our official fully-fledged mobile app, bringing XinFin to your iOS or Android phone"
     },
     "create-wallet": {
       "title": "How do I create a new wallet?",
@@ -46,11 +46,11 @@
     },
     "other-wallets": {
       "title": "Can MEW work with other wallets?",
-      "text": "MEW supports many different wallet types including hardware wallets, such as the Ledger Nano S or Trezor, and third-party wallets like MetaMask. We are also open for anyone to use their Ethereum wallets with the appropriate information. Read more"
+      "text": "MEW supports many different wallet types including hardware wallets, such as the Ledger Nano S or Trezor, and third-party wallets like MetaMask. We are also open for anyone to use their XDC Wallets with the appropriate information. Read more"
     },
     "send-txs": {
       "title": "How can I send a transaction?",
-      "text": "MEW lets anyone with a balance of ETH or ERC20 tokens send a transaction, without additional charges. Using the Ethereum blockchain takes gas, which is paid for in ETH, so we recommend having at least .01 ETH to cover around 2 - 3 transactions. Read more"
+      "text": "MEW lets anyone with a balance of ETH or ERC20 tokens send a transaction, without additional charges. Using the XinFin blockchain takes gas, which is paid for in ETH, so we recommend having at least .01 ETH to cover around 2 - 3 transactions. Read more"
     },
     "forgot-pwd": {
       "title": "I forgot my password/private key! What can I do?",
@@ -73,7 +73,7 @@
   "lost-title": "Oops! Looks like you're lost.",
   "mew-wallet-modal": {
     "title": "Official MEW wallet App is now available!",
-    "text": "Buy, hold, and send Ether and tokens. Explore Ethereum on your mobile device. {learn-more}",
+    "text": "Buy, hold, and send Ether and tokens. Explore XinFin on your mobile device. {learn-more}",
     "learn-more": "Learn more",
     "footer-text": "Download our App today!",
     "new": "new",

@@ -1,7 +1,7 @@
 {
   "name": "myetherwallet",
   "version": "5.7.14",
-  "description": "Client side ethereum wallet",
+  "description": "Client side XDC Wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
     "build": "npm run update && vue-cli-service build",

@@ -1,7 +1,7 @@
 {
   "string": "Schedule Transaction",
   "title": "Schedule a transaction",
-  "dapp-desc": "Schedule a transaction using the decentralized Ethereum Alarm Clock protocol",
+  "dapp-desc": "Schedule a transaction using the decentralized XinFin Alarm Clock protocol",
   "warning": {
     "not-enough-eth": " Not enough ETH on account to schedule",
     "amount-higher-balance": "Amount higher than balance",
