@@ -1,5 +1,6 @@
 ### Bug
 
+* Fix contract interaction when arrays have set params [#2719](https://github.com/MyEtherWallet/MyEtherWallet/pull/2719)
 * Fix GLN copy [#2717](https://github.com/MyEtherWallet/MyEtherWallet/pull/2717)
 
 ### Release v5.7.15
