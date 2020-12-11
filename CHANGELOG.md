@@ -3,6 +3,7 @@
 ### Devop
 
 * Remove terms and privacy on translations [#2723](https://github.com/MyEtherWallet/MyEtherWallet/pull/2723)
+
 ### Bug
 
 * Fix contract interaction when arrays have set params [#2719](https://github.com/MyEtherWallet/MyEtherWallet/pull/2719)

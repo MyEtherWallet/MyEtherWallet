@@ -51,7 +51,6 @@ const en_US = {
   home: home,
   footer: footer,
   gettingStarted: gettingStarted,
-
   team: team,
   accessWallet: accessWallet,
   createWallet: createWallet,
