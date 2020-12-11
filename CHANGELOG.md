@@ -1,3 +1,7 @@
+### Bug
+
+* Fix GLN copy [#2717](https://github.com/MyEtherWallet/MyEtherWallet/pull/2717)
+
 ### Release v5.7.15
 
 ### Feature
