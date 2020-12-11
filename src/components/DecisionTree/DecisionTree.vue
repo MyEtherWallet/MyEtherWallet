@@ -1,6 +1,10 @@
 <template>
   <div class="decision-tree-container">
-    <button :class="button ? 'active' : ''" class="show-button" @click="toggle">
+    <button
+      :class="button ? 'active' : ''"
+      class="show-button"
+      @click="dialog = true"
+    >
       <img src="@/assets/images/icons/DecisionTree/need-help.svg" />
       <p>{{ $t('common.decision-tree.quick-help') }}</p>
     </button>
@@ -12,39 +16,50 @@
     >
       <div class="modal-contents">
         <div class="header">
-          <div class="close" @click="close" />
-          <button v-if="historyStack.length > 0" @click="back()">
-            <i class="fa fa-angle-left" aria-hidden="true"></i>
-          </button>
-          <div v-else class="question">
+          <v-btn
+            v-if="historyStack.length > 0"
+            class="mr-2"
+            outlined
+            x-small
+            fab
+            color="white"
+            @click="back()"
+          >
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
+          <div v-else class="mr-2">
             <img src="@/assets/images/icons/DecisionTree/question.svg" />
           </div>
           <div class="tree-title">
             <div v-if="historyStack.length > 0" class="breadcrumb hidden">
-              <p v-for="h in historyStack" :key="h.key">
+              <div v-for="h in historyStack" :key="h.key">
                 <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
                 {{ h.title }}
-              </p>
+              </div>
             </div>
-            <p v-if="currentIndex.title.length < 27">
+            <div v-if="currentIndex.title.length < 27">
               {{ currentIndex.title }}
-            </p>
-            <p v-else class="long-title">{{ currentIndex.title }}</p>
+            </div>
+            <div v-else class="long-title">{{ currentIndex.title }}</div>
           </div>
+
+          <v-btn icon class="ml-auto" @click="dialog = false">
+            <v-icon color="white">mdi-close</v-icon>
+          </v-btn>
         </div>
 
-        <div class="breadcrumb-container">
-          <i class="fa fa-home" aria-hidden="true"></i>&nbsp;{{
-            $t('common.home')
-          }}
-          <span v-for="h in historyStackFiltered" :key="h.key">
-            <i class="fa fa-angle-right" aria-hidden="true"></i>
+        <div class="breadcrumb-container d-flex -align-center">
+          <div class="d-flex align-center">
+            <v-icon small class="mr-1">mdi-home</v-icon>{{ $t('common.home') }}
+          </div>
+          <div v-for="h in historyStackFiltered" :key="h.key">
+            <v-icon small class="ml-auto">mdi-chevron-right</v-icon>
             {{ h.breadcrumb }}
-          </span>
-          <span v-if="currentIndex.breadcrumb">
-            <i class="fa fa-angle-right" aria-hidden="true"></i>
+          </div>
+          <div v-if="currentIndex.breadcrumb">
+            <v-icon small class="ml-auto">mdi-chevron-right</v-icon>
             {{ currentIndex.breadcrumb }}
-          </span>
+          </div>
         </div>
 
         <div ref="mdList" class="md-content">
@@ -52,16 +67,20 @@
             <li
               v-for="(qa, key) in currentIndex.sub"
               :key="key"
-              class="flex--row--align-center"
+              class="d-flex align-center"
               @click="getSub(index[qa])"
             >
               <div class="qa-title-container">
                 <p v-if="!index[qa].md" class="sub-categories">
-                  <i class="fa fa-align-left" aria-hidden="true"></i>
+                  <v-icon small color="#bfbfbf"
+                    >mdi-format-list-bulleted-square</v-icon
+                  >
                   {{ $t('common.decision-tree.subcategories') }}
                 </p>
                 <p v-if="index[qa].md" class="sub-categories">
-                  <i class="fa fa-book" aria-hidden="true"></i>
+                  <v-icon small color="#bfbfbf"
+                    >mdi-file-document-outline</v-icon
+                  >
                   {{ $t('common.read') }}
                 </p>
                 <p class="qa-title">{{ index[qa].title }}</p>
@@ -69,32 +88,42 @@
                   {{ index[qa].subtitle }}
                 </p>
               </div>
-              <i class="fa fa-angle-right ml-auto" aria-hidden="true"></i>
+
+              <v-icon class="ml-auto">mdi-chevron-right</v-icon>
             </li>
           </ul>
           <md-container v-else :md="mdToHtml(currentIndex.md)" />
         </div>
 
-        <div class="footer">
-          <div class="help flex--row--align-center">
-            <p
+        <div class="footer d-flex align-center">
+          <div class="help d-flex align-center">
+            <div
               class="cursor-pointer"
               @click="showCustomerSupport = !showCustomerSupport"
             >
               {{ $t('common.contact-support') }}
-            </p>
-            <p class="ml-2 mr-2">|</p>
+            </div>
+            <div class="ml-2 mr-2">|</div>
             <a
               href="https://kb.myetherwallet.com/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <p>{{ $t('common.help-center') }}</p>
+              <div>{{ $t('common.help-center') }}</div>
             </a>
           </div>
-          <button v-if="historyStack.length > 0" class="ml-auto" @click="top()">
-            <img src="@/assets/images/icons/DecisionTree/home.svg" />
-          </button>
+
+          <v-btn
+            v-if="historyStack.length > 0"
+            x-small
+            outlined
+            fab
+            color="white"
+            class="ml-auto"
+            @click="top()"
+          >
+            <v-icon>mdi-home</v-icon>
+          </v-btn>
         </div>
       </div>
     </v-dialog>
@@ -116,6 +145,17 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  data() {
+    return {
+      dialog: false,
+      index: mdIndex,
+      currentIndex: mdIndex.ROOT,
+      historyStack: [],
+      showCustomerSupport: false,
+      searchOptions: [],
+      searchSelect: {}
+    };
   },
   computed: {
     historyStackFiltered() {
@@ -140,12 +180,6 @@ export default {
   },
   mounted() {},
   methods: {
-    toggle() {
-      this.$refs.DecisionTree.toggle();
-    },
-    close() {
-      this.$refs.DecisionTree.hide();
-    },
     getSearchItem(qa) {
       this.historyStack.push(this.currentIndex);
       this.currentIndex = qa;

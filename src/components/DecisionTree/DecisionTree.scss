@@ -10,6 +10,9 @@
   padding: 0;
   margin: 0;
   min-width: 70px;
+  position: fixed;
+  right: 20px;
+  bottom: 15px;
 
   img {
     height: 50px;
@@ -49,13 +52,11 @@
     //border-radius: 10px 10px 0 0;
     min-height: 65px;
     padding: 10px 20px;
-    padding-right: 60px;
-    padding-left: 63px;
     display: flex;
     align-items: center;
     position: relative;
 
-    p {
+    div {
       color: white;
       font-size: 17px;
       font-weight: 600;
@@ -68,25 +69,6 @@
         line-height: 16px;
       }
       */
-    }
-
-    button {
-      position: absolute;
-      top: auto;
-      bottom: auto;
-      left: 20px;
-      background-color: transparent;
-      color: white;
-      font-size: 15px;
-      border: 1px solid white;
-      border-radius: 100%;
-      cursor: pointer;
-      height: 30px;
-      width: 30px;
-
-      &:hover {
-        background-color: #ffffff26;
-      }
     }
 
     .tree-title {
@@ -111,43 +93,6 @@
       }
       */
     }
-
-    .question {
-      position: absolute;
-      top: auto;
-      bottom: auto;
-      left: 20px;
-    }
-
-    .close {
-      height: 30px;
-      width: 30px;
-      cursor: pointer;
-      position: absolute;
-      right: 20px;
-      top: auto;
-      bottom: auto;
-      &::before {
-        content: "";
-        position: absolute;
-        height: 1px;
-        width: 20px;
-        border-bottom: 1px solid white;
-        left: 5px;
-        top: 13px;
-        transform: rotate(45deg);
-      }
-      &::after {
-        content: "";
-        position: absolute;
-        height: 1px;
-        width: 20px;
-        border-bottom: 1px solid white;
-        left: 5px;
-        top: 13px;
-        transform: rotate(-45deg);
-      }
-    }
   }
 
   .footer {
@@ -158,7 +103,7 @@
     align-items: center;
     position: relative;
 
-    p {
+    div {
       color: white;
       font-size: 14px;
       font-weight: 600;
@@ -171,26 +116,20 @@
       top: auto;
       bottom: auto;
       right: 15px;
-      cursor: pointer;
-      background-color: transparent;
-      border: 0;
-      border-radius: 100%;
-      padding: 0;
-      margin: 0;
-
-      &:hover {
-        background-color: #ffffff26;
-      }
     }
   }
 }
 
 .md-content {
   background-color: white;
-  height: 550px;
+  height: 56vh;
   overflow-y: auto;
   @media all and (max-width: 500px) {
     height: 450px;
+  }
+
+  p {
+    margin-bottom: 0;
   }
 
   ul {
@@ -279,15 +218,17 @@
   background-color: whitesmoke;
   padding: 10px 20px;
   color: #bfbfbf;
-  font-weight: 600;
-  font-size: 11px;
 
   i {
     color: #bfbfbf;
   }
 
-  span {
+  div {
     font-weight: 600;
     font-size: 11px;
   }
+}
+
+.hidden {
+  display: none;
 }
