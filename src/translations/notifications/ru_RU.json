@@ -4,9 +4,10 @@
   "successfully-transferred": "успешно передана",
   "swap-created": "Обмен Создан",
   "processing": "Обработка",
-  "success": "Готово",
+  "success": "Успех",
   "failed": "Сбой",
   "cancelled": "Отменено",
   "error": "Ошибка",
-  "status-error": "Статус Ошибки"
+  "status-error": "Статус Ошибки",
+  "error-parsing-tx-details": "Ошибка обработки деталей транзакции"
 }
