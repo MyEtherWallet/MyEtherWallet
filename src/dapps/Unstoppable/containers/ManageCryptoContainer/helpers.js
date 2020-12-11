@@ -72,7 +72,6 @@ const keyValueRegexes = {
   ETH: new RegExp('^0x[a-fA-F0-9]{40}$'),
   ETC: new RegExp('^0x[a-fA-F0-9]{40}$'),
   LINK: new RegExp('^0x[a-fA-F0-9]{40}$'),
-  LTC: new RegExp('^L[a-km-zA-HJ-NP-Z1-9]{26,33}$'),
   USDC: new RegExp('^0x[a-fA-F0-9]{40}$'),
   BAT: new RegExp('^0x[a-fA-F0-9]{40}$'),
   REP: new RegExp('^0x[a-fA-F0-9]{40}$'),
@@ -139,7 +138,9 @@ const keyValueRegexes = {
 export const isValidRecordKeyValue = (key, value) => {
   value = value.trim();
   if (value) {
-    if (keyValueRegexes[key] && !keyValueRegexes[key].test(value)) {
+    if (key === 'LTC') {
+      return value.startsWith('ltc1') && value.length === 43;
+    } else if (keyValueRegexes[key] && !keyValueRegexes[key].test(value)) {
       return false;
     }
   }
