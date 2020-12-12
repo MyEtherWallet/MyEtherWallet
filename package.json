@@ -58,7 +58,7 @@
     "print-js": "1.5.0",
     "punycode": "2.1.1",
     "regenerator-runtime": "0.13.7",
-    "register-service-worker": "1.7.1",
+    "register-service-worker": "1.7.2",
     "similarity": "1.2.1",
     "subscriptions-transport-ws": "0.9.18",
     "unicode": "12.1.0",
