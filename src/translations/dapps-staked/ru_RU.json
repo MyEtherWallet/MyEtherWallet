@@ -1,5 +1,5 @@
 {
-  "title": "Stake on Eth2",
+  "title": "Стейкинг в Eth2",
   "desc": "Stake your ETH on Ethereum 2.0 with Staked.us and watch your rewards grow",
   "about": "Staked.us helps you reliably and securely stake your ETH to create an Eth2 validator and earn up to 21% annualized rewards. All staked ETH and rewards will not be available for withdrawal until a later Phase in 2021/2022. After staking, no further action is required. Staked.us will create and maintain your validators for you.",
   "current-stake-title": "Current APR",
@@ -8,7 +8,7 @@
     "1": "Stake Amount",
     "2": "Upload your Keystore File",
     "3": "Review & Enable",
-    "4": "Stake on Eth2",
+    "4": "Стейкинг в Eth2",
     "5": "Готово"
   },
   "hang-on": "Минуту!",
@@ -37,7 +37,7 @@
   "terms-of-service": "I understand that MEW has no control over any assets I choose to associate with these keys. I willingly assume all risk of loss, including that which comes as a result of protocol or key failure.",
   "done-desc": "Your stake of {amt} ETH  was sent. Please allow 24-48 hours for your validators to be finalized. {staked} will maintain your validator(s) for you.",
   "track-ethvm": "Track in EthVM",
-  "stake-on-eth2": "Stake on Eth2",
+  "stake-on-eth2": "Стейкинг в Eth2",
   "stake-again": "Stake Again",
   "attention": "Attention",
   "error-not-enough-bal": "There is not enough balance in your account",
