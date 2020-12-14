@@ -69,7 +69,8 @@ const modes = ['add', 'edit'];
 export default {
   props: {
     mode: { default: modes[0], type: String },
-    item: { default: () => {}, type: Object }
+    item: { default: () => {}, type: Object },
+    toAddress: { default: '', type: String }
   },
   data() {
     return {
@@ -131,6 +132,9 @@ export default {
     }
   },
   mounted() {
+    if (this.addMode && this.toAddress) {
+      this.address = this.toAddress;
+    }
     if (this.editMode) {
       this.address = this.item.address;
       this.nickname = this.item.nickname;
@@ -169,14 +173,11 @@ export default {
         address: this.address,
         // currency: 'ETH',
         nickname: this.nickname || this.addressBook.length + 1,
-        idx: this.addressBook.length
       });
-      console.error('addressBook', this.addressBook);
       this.setAddressBook(this.addressBook);
       this.address = '';
       this.nickname = '';
       this.$emit('back');
-      console.error('address', this.addressBook);
     }
   }
 };

@@ -5,6 +5,7 @@
       :table-headers="tableHeaders"
       :table-data="tableData"
       has-color
+      :success-toast="$t('common.copied')"
       @onClick="onEdit"
     />
 
@@ -73,12 +74,10 @@ export default {
         callToAction: 'Edit'
       });
     });
-    console.error('addressbook', this.addressBook)
   },
   methods: {
     onEdit(item) {
-      this.$emit('edit', item)
-      console.error('hello', item)
+      this.$emit('edit', item);
     }
   }
 };

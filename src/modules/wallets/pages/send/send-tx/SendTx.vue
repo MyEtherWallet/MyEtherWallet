@@ -1,136 +1,149 @@
 <template>
-  <mew-module
-    class="d-flex flex-grow-1 pt-6"
-    :title="$t('sendTx.send-tx')"
-    :has-elevation="true"
-    :has-indicator="true"
-  >
-    <template #moduleBody>
-      <div class="full-width px-15 pt-3">
-        <div class="d-flex justify-end mr-3 entire-bal">
-          <mew-button
-            :title="$t('sendTx.button-entire')"
-            btn-style="transparent"
-            @click.native="setEntireBal"
-          />
-        </div>
-        <v-container class="pt-0">
-          <v-row>
-            <v-col cols="6">
-              <mew-select
-                ref="mewSelect"
-                :items="tokens"
-                :label="$t('sendTx.type')"
-                class="mr-3"
-                @input="setCurrency"
-              />
-            </v-col>
-            <v-col cols="6">
-              <mew-input
-                ref="mewInput"
-                :value="amount"
-                :label="$t('sendTx.amount')"
-                placeholder=" "
-                :right-label="currencyBalance"
-                @input="setAmount"
-              />
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12">
-              <mew-address-select
-                ref="addressSelect"
-                :value="toAddress"
-                :copy-tooltip="$t('common.copy')"
-                :save-tooltip="$t('common.save')"
-                :enable-save-address="true"
-                :label="$t('sendTx.to-addr')"
-                :items="addressBook"
-                :placeholder="$t('sendTx.enter-addr')"
-                :success-toast="$t('sendTx.success.title')"
-                :is-valid-address="isValidAddress()"
-                @input="setAddress"
-              />
-            </v-col>
-          </v-row>
-        </v-container>
-      </div>
-
-      <v-container>
-        <mew-expand-panel
-          ref="expandPanel"
-          is-toggle
-          has-dividers
-          :panel-items="expandPanel"
-          class="px-15"
-        >
-          <template #panelBody1>
-            <div class="d-flex justify-space-between px-5 border-bottom pb-5">
-              <div class="mew-body font-weight-medium d-flex align-center">
-                {{ $t('sendTx.tx-fee') }}
-                <mew-tooltip class="ml-1" text="" />
-              </div>
-              <div v-show="isEth">
-                <i18n path="sendTx.cost-eth-usd" tag="div">
-                  <span slot="eth">{{ txFeeETH() }}</span>
-                  <span slot="usd">{{ txFeeUSD() }}</span>
-                </i18n>
-              </div>
-            </div>
-            <div>
-              <!-- <mew-input
-                :label="$t('common.gas.price')"
-                placeholder=" "
-                :value="displayedGasPrice()"
-                @input="setGasPrice"
-              /> -->
-              <mew-input
-                :value="customGasLimit"
-                :label="$t('common.gas.limit')"
-                placeholder=""
-                @input="setCustomGasLimit"
-              />
-            </div>
-
-            <mew-input
-              v-model="data"
-              :label="$t('sendTx.add-data')"
-              placeholder=" "
-              class="mt-10 mb-n5"
+  <div>
+    <mew-module
+      class="d-flex flex-grow-1 pt-6"
+      :title="$t('sendTx.send-tx')"
+      :has-elevation="true"
+      :has-indicator="true"
+    >
+      <template #moduleBody>
+        <div class="full-width px-15 pt-3">
+          <div class="d-flex justify-end mr-3 entire-bal">
+            <mew-button
+              :title="$t('sendTx.button-entire')"
+              btn-style="transparent"
+              @click.native="setEntireBal"
             />
-          </template>
-        </mew-expand-panel>
-      </v-container>
+          </div>
+          <v-container class="pt-0">
+            <v-row>
+              <v-col cols="6">
+                <mew-select
+                  ref="mewSelect"
+                  :items="tokens"
+                  :label="$t('sendTx.type')"
+                  class="mr-3"
+                  @input="setCurrency"
+                />
+              </v-col>
+              <v-col cols="6">
+                <mew-input
+                  ref="mewInput"
+                  :value="amount"
+                  :label="$t('sendTx.amount')"
+                  placeholder=" "
+                  :right-label="currencyBalance"
+                  @input="setAmount"
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <mew-address-select
+                  ref="addressSelect"
+                  :value="toAddress"
+                  :copy-tooltip="$t('common.copy')"
+                  :save-tooltip="$t('common.save')"
+                  :enable-save-address="isValidAddress()"
+                  :label="$t('sendTx.to-addr')"
+                  :items="addressBook"
+                  :placeholder="$t('sendTx.enter-addr')"
+                  :success-toast="$t('sendTx.success.title')"
+                  :is-valid-address="isValidAddress()"
+                  @input="setAddress"
+                  @saveAddress="toggleOverlay"
+                />
+              </v-col>
+            </v-row>
+          </v-container>
+        </div>
 
-      <div class="d-flex flex-column mt-12">
-        <div class="text-center">
-          <mew-button
-            :title="$t('sendTx.send')"
-            :has-full-width="false"
-            btn-size="xlarge"
-            @click.native="send()"
-          />
+        <v-container>
+          <mew-expand-panel
+            ref="expandPanel"
+            is-toggle
+            has-dividers
+            :panel-items="expandPanel"
+            class="px-15"
+          >
+            <template #panelBody1>
+              <div class="d-flex justify-space-between px-5 border-bottom pb-5">
+                <div class="mew-body font-weight-medium d-flex align-center">
+                  {{ $t('sendTx.tx-fee') }}
+                  <mew-tooltip class="ml-1" text="" />
+                </div>
+                <div v-show="isEth">
+                  <i18n path="sendTx.cost-eth-usd" tag="div">
+                    <span slot="eth">{{ txFeeETH() }}</span>
+                    <span slot="usd">{{ txFeeUSD() }}</span>
+                  </i18n>
+                </div>
+              </div>
+              <div>
+                <!-- <mew-input
+                  :label="$t('common.gas.price')"
+                  placeholder=" "
+                  :value="displayedGasPrice()"
+                  @input="setGasPrice"
+                /> -->
+                <mew-input
+                  :value="customGasLimit"
+                  :label="$t('common.gas.limit')"
+                  placeholder=""
+                  @input="setCustomGasLimit"
+                />
+              </div>
+
+              <mew-input
+                v-model="data"
+                :label="$t('sendTx.add-data')"
+                placeholder=" "
+                class="mt-10 mb-n5"
+              />
+            </template>
+          </mew-expand-panel>
+        </v-container>
+
+        <div class="d-flex flex-column mt-12">
+          <div class="text-center">
+            <mew-button
+              :title="$t('sendTx.send')"
+              :has-full-width="false"
+              btn-size="xlarge"
+              @click.native="send()"
+            />
+          </div>
+          <div class="text-center mt-4">
+            <mew-button
+              :title="$t('common.clear-all')"
+              :has-full-width="false"
+              btn-size="small"
+              btn-style="transparent"
+              @click.native="clear()"
+            />
+          </div>
         </div>
-        <div class="text-center mt-4">
-          <mew-button
-            :title="$t('common.clear-all')"
-            :has-full-width="false"
-            btn-size="small"
-            btn-style="transparent"
-            @click.native="clear()"
-          />
-        </div>
-      </div>
-    </template>
-    <mew-toast
-      ref="toast"
-      :text="toastMsg"
-      :toast-type="toastType"
-      :duration="1000"
-    />
+      </template>
+      <mew-toast
+        ref="toast"
+        :text="toastMsg"
+        :toast-type="toastType"
+        :duration="1000"
+      />
+    </mew-module>
     <!-- add and edit the address book -->
-    <add-address v-if="addMode" :mode="'add'" @saveAddress="saveAddress" />
-  </mew-module>
+    <mew-overlay
+      :title="$t('interface.address-book.add-addr')"
+      :show-overlay="addMode"
+      :close="toggleOverlay"
+      left-btn-text=""
+      :right-btn-text="$t('common.close')"
+    >
+      <template #mewOverlayBody>
+        <add-address :to-address="toAddress" mode="add" @back="toggleOverlay" />
+      </template>
+    </mew-overlay>
+  </div>
 </template>
 
 <script>
@@ -294,8 +307,8 @@ export default {
     this.customGasLimit = this.gasLimit;
   },
   methods: {
-    saveAddress() {
-      this.addMode = true;
+    toggleOverlay() {
+      this.addMode = !this.addMode;
     },
     setSendTransaction() {
       this.sendTx = new SendTransaction(
@@ -449,7 +462,7 @@ export default {
       return this.sendTx ? this.sendTx.isValidAddress(this.toAddress) : false;
     },
     setAddress(value) {
-      this.toAddress = value;
+      this.toAddress = value.address ? value.address : value;
     },
     setEntireBal() {
       this.amount = this.sendTx.getEntireBal(
