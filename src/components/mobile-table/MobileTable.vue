@@ -43,7 +43,7 @@
         <div>{{ t.label }}</div>
         <div
           v-if="t.link"
-          class="font-weight-bold text-overflow--ellipsis primary--text"
+          class="font-weight-bold truncate primary--text"
           style="max-width: 120px"
         >
           <a :href="t.link" target="_blank">{{ t.value }}</a>

@@ -13,7 +13,7 @@
       >
         <div class="mr-6 d-flex align-center mb-2 mb-sm-0">
           <v-icon color="orange" large> mdi-circle-medium </v-icon>
-          <blockie
+          <mew-blockie
             type="swap"
             :address="address"
             :size="8"
@@ -23,7 +23,7 @@
             class="mr-3"
           />
         </div>
-        <div class="text-overflow--ellipsis pr-sm-2">
+        <div class="truncate pr-sm-2">
           <div class="d-flex align-center">
             <div class="mr-1">To:</div>
             <EllipsisBlock

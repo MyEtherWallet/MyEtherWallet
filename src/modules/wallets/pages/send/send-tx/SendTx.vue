@@ -45,7 +45,7 @@
                 :save-tooltip="$t('common.save')"
                 :enable-save-address="true"
                 :label="$t('sendTx.to-addr')"
-                :items="addresses"
+                :items="addressBook"
                 :placeholder="$t('sendTx.enter-addr')"
                 :success-toast="$t('sendTx.success.title')"
                 :is-valid-address="isValidAddress()"
@@ -128,6 +128,8 @@
       :toast-type="toastType"
       :duration="1000"
     />
+    <!-- add and edit the address book -->
+    <add-address v-if="addMode" :mode="'add'" @saveAddress="saveAddress" />
   </mew-module>
 </template>
 
@@ -140,8 +142,12 @@ import SendTransaction from './index';
 import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR, SENTRY, SUCCESS } from '@/components/toast';
 import getService from '@/helpers/getService';
+import addAddress from '@/modules/wallets/pages/settings/components/address-book/AddEditAddress';
 
 export default {
+  components: {
+    addAddress
+  },
   props: {
     prefilledAmount: {
       type: String,
@@ -176,20 +182,7 @@ export default {
   },
   data() {
     return {
-      addresses: [
-        {
-          address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
-          currency: 'ETH',
-          nickname: 'My Address',
-          resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-        },
-        {
-          address: '0x43689531907482BEE7e650D18411E284A7337A66',
-          currency: 'ETH',
-          nickname: 'nickname',
-          resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-        }
-      ],
+      addMode: false,
       toastType: '',
       toastMsg: '',
       customGasLimit: '',
@@ -214,7 +207,8 @@ export default {
       'gasPrice',
       'web3',
       'address',
-      'usd'
+      'usd',
+      'addressBook'
     ]),
     ...mapState('global', ['online']),
     isEth() {
@@ -300,6 +294,9 @@ export default {
     this.customGasLimit = this.gasLimit;
   },
   methods: {
+    saveAddress() {
+      this.addMode = true;
+    },
     setSendTransaction() {
       this.sendTx = new SendTransaction(
         this.address,
