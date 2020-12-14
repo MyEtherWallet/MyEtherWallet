@@ -9,13 +9,21 @@
     "dns-sec-not-found": "DNSSEC NOT FOUND!",
     "balance-too-low": "Balance too low!",
     "txt-not-supported": "Not text record support!",
-    "not-the-owner": "You are not the owner!"
+    "not-the-owner": "You are not the owner!",
+    "error-getting-ipfs-hash": "Error getting IPFS Hash!",
+    "file-upload-error": "Uploading file errored",
+    "empty-invalid-ipfs": "Empty or Invalid IPFS Hash"
   },
   "warning": {
     "contract-not-ready": "Contract is not ready yet, transaction might fail.",
     "not-enough-char": "Domain name is less than 3 characters.",
     "invalid-symbol": "Invalid symbols on domain",
-    "subdomain-is-not-owned": "This subdomain is not owned"
+    "subdomain-is-not-owned": "This subdomain is not owned",
+    "upload-zip": "Please upload a zip file!",
+    "too-small": "File is too small! Size has to be more than 500 bytes.",
+    "too-big": "File is too big! Size has to be less than 50 megabytes.",
+    "currency-already-exists": "Currency {currency} is already added for {domainName}",
+    "text-record-already-exists": "Text Record {txtRecord} input is already added for {domainName}"
   },
   "toast": {
     "success-register": "Successfully Registered!",
@@ -35,6 +43,12 @@
   "no-names-found": "No ENS name found for account {address}!",
   "renew": "Renew",
   "manage": "Manage",
+  "manage-domain": "Manage Domain",
+  "register-domain": "Register Domain",
+  "release-deed-confirmation": "Do you want to release {deedValueEth} {network}",
+  "ipfs-processing": "Processing File...",
+  "ipfs-processing-description": "Please wait for a transaction popup before you leave to make sure your request is processed.",
+  "ipfs-check-website": "Check your website for {domainName} here:",
   "expired": "Expired",
   "controller-text": "Looks like the address you're using is not a controller of {domain}. Do you wanna set {addr} as a controller for {domain}?",
   "text-record-error": "{value} is missing or not a valid input for {name}!",
@@ -45,7 +59,7 @@
   "transfer-to": "Transfer ENS domain to",
   "transfer": "Transfer",
   "transfer-domain": "Transfer Domain",
-  "release-deed": "Return",
+  "release-deed": "Return Deed",
   "register": "Register",
   "hang-on": "Hang on tight!",
   "finalize-registration": "We are finalizing the registration for ",
@@ -88,8 +102,12 @@
     "domain-not-found": "Domain name is invalid or not found",
     "no-resolver": "No {network}NS resolver in this node"
   },
+  "content-hash": "IPFS Hash",
+  "set-hash": "Set IPFS Hash",
+  "upload-my-website": "Upload My Website",
   "unstoppableResolution": {
     "address-reported-error": "Address has been reported. Please make sure you are sending funds to the correct address.",
+    "twitter-verified": "Twitter Verified by",
     "UnregisteredDomain": "Domain {domain} is not registered",
     "UnspecifiedResolver": "Domain {domain} is not configured",
     "UnsupportedDomain": "Domain {domain} is not supported",

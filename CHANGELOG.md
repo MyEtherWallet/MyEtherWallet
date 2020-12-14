@@ -1,6 +1,17 @@
+### Release v5.7.16
+
 ### Feature
 
 * Add Swap alternatives [#2679](https://github.com/MyEtherWallet/MyEtherWallet/pull/2679)
+
+### Devop
+
+* Remove terms and privacy on translations [#2723](https://github.com/MyEtherWallet/MyEtherWallet/pull/2723)
+
+### Bug
+
+* Fix contract interaction when arrays have set params [#2719](https://github.com/MyEtherWallet/MyEtherWallet/pull/2719)
+* Fix GLN copy [#2717](https://github.com/MyEtherWallet/MyEtherWallet/pull/2717)
 
 ### Release v5.7.15
 

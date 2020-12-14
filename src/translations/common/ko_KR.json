@@ -35,6 +35,7 @@
   "get-started": "Get Started",
   "tutorial": "Tutorial",
   "what-is-that": "What is that?",
+  "invalid-private-key": "Invalid private key verify the length of the key",
   "confirm-logout": "Are you sure you want to logout of your wallet?",
   "feedback": {
     "send-us-feedback": "If you want to send us your feedback, please use",
@@ -150,12 +151,13 @@
   "dapps": "Dapps",
   "gas": {
     "current-gas": "Current Gas Price",
-    "limit": "Gas Limit",
-    "price": "Gas Price",
+    "limit": "Gas Limit (usually ranges from 21,000 to 500,000)",
+    "price": "Gas Price (in Gwei)",
     "gwei": "Gwei",
     "wei": "Wei",
     "fee": "Fee",
-    "string": "Gas"
+    "string": "Gas",
+    "price-range": "Gas Price ranges from 5 gwei to infinity."
   },
   "search": "Search",
   "loading": "Loading",
@@ -184,5 +186,5 @@
   "language": "Language",
   "logout": "Logout",
   "settings": "Settings",
-  "exit-dapp": "Exit Dapp"
+  "exit-dapp": "Exit DApp"
 }
