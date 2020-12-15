@@ -355,21 +355,6 @@ class CompileSwapOptions {
       );
     }
 
-    // if (Object.keys(this.coinGecko).length > 0) {
-    //   this.coinGecko['THISISADUMMYTOKEN'] = {
-    //     symbol: 'THISISADUMMYTOKEN',
-    //     name: 'For tests',
-    //     decimals: 18,
-    //     contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-    //   };
-    //   if (!fs.existsSync(kyberConfigFolder)) {
-    //     fs.mkdirSync(kyberConfigFolder);
-    //   }
-    //   fs.writeFileSync(
-    //     `${kyberConfigFolder}/currenciesETH.json`,
-    //     JSON.stringify(this.coinGecko)
-    //   );
-    // }
     console.log('Complete');
   }
 }
