@@ -132,6 +132,7 @@
                   {{ $t('swap.alternates.body') }}
                   <a
                     href="https://kb.myetherwallet.com/en/swap/btc-to-ethereum/"
+                    target="_blank"
                     >{{ $t('swap.alternates.learn-more') }}</a
                   >
                 </p>
