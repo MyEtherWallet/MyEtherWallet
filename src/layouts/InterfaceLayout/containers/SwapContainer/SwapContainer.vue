@@ -709,6 +709,11 @@ export default {
                   idx
                 ].computeConversion = res[0].computeConversion.bind(res[0]);
                 this.alternates[idx].hasValue = true;
+                if (this.bestRate > 0) {
+                  this.alternates[idx].hasValue = new BigNumber(res[0].rate)
+                    .div(this.bestRate)
+                    .gte(0.9);
+                }
                 return res;
               }
             }
