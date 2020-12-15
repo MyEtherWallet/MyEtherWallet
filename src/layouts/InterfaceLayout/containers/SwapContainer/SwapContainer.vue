@@ -130,9 +130,13 @@
               <div class="btc-body">
                 <p>
                   {{ $t('swap.alternates.body') }}
+                  <a
+                    href="https://kb.myetherwallet.com/en/swap/btc-to-ethereum/"
+                    >{{ $t('swap.alternates.learn-more') }}</a
+                  >
                 </p>
                 <div v-if="!loadingData" class="alternative-btn-container">
-                  <div v-for="alt in alternates" :key="alt.symbol">
+                  <div v-for="alt in alternativesOrdered" :key="alt.symbol">
                     <button
                       v-if="alt.hasValue"
                       class="alternative-btn"
@@ -600,6 +604,9 @@ export default {
         return true;
       }
       return false;
+    },
+    alternativesOrdered() {
+      return [...this.alternates].sort((a, b) => b.rates - a.rates);
     }
   },
   watch: {
@@ -691,33 +698,36 @@ export default {
       return this.swap.getTokenAddress(currency, true);
     },
     async standAloneRateEstimate() {
+      const checkAndSetup = res => {
+        setTimeout(() => {
+          if (res) {
+            const idx = this.alternates.findIndex(
+              item => item.symbol === res[0].toCurrency
+            );
+            if (idx > -1) {
+              this.alternates[idx].rates = res[0].rate;
+              this.alternates[idx].fromValue = res[0].fromValue;
+              this.alternates[idx].toValue = res[0].computeConversion(
+                this.fromValue
+              );
+              this.alternates[
+                idx
+              ].computeConversion = res[0].computeConversion.bind(res[0]);
+              this.alternates[idx].hasValue = true;
+              if (this.bestRate > 0) {
+                this.alternates[idx].hasValue = new BigNumber(res[0].rate)
+                  .div(this.bestRate)
+                  .gte(0.9);
+              }
+              return res;
+            }
+          }
+        }, 250);
+      };
       this.alternates.forEach(val => {
         this.swap
           .standAloneRateEstimate(this.fromCurrency, val.symbol, this.fromValue)
-          .then(res => {
-            if (res) {
-              const idx = this.alternates.findIndex(
-                item => item.symbol === res[0].toCurrency
-              );
-              if (idx > -1) {
-                this.alternates[idx].rates = res[0].rate;
-                this.alternates[idx].fromValue = res[0].fromValue;
-                this.alternates[idx].toValue = res[0].computeConversion(
-                  this.fromValue
-                );
-                this.alternates[
-                  idx
-                ].computeConversion = res[0].computeConversion.bind(res[0]);
-                this.alternates[idx].hasValue = true;
-                if (this.bestRate > 0) {
-                  this.alternates[idx].hasValue = new BigNumber(res[0].rate)
-                    .div(this.bestRate)
-                    .gte(0.9);
-                }
-                return res;
-              }
-            }
-          });
+          .then(checkAndSetup);
         return { symbol: val.symbol, rates: [] };
       });
     },

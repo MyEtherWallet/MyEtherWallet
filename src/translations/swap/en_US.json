@@ -26,7 +26,8 @@
   },
   "alternates": {
     "title": "Get BTC Exposure On Ethereum",
-    "body": "Swap for wBTC, renBTC, or pBTC and own Bitcoin compatible with Ethereum applications."
+    "body": "Swap for 1-to-1 wrapped tokens WBTC, RENBTC, or PBTC and hold bitcoin compatible with Ethereum applications.",
+    "learn-more": "Learn more."
   },
   "warning": {
     "unable-validate-addr": "Currently unable to validate addresses for {currency}. It is likely correct, but Please double check it is correct before sending.",

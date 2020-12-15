@@ -337,7 +337,7 @@ $swap-custom-mobile-colleps-width: 700px;
       background-color: transparent;
       border-radius: 5px;
       border: 1px solid rgb(11, 40, 64);
-      padding: 11px 49px ;
+      padding: 11px 49px;
       min-width: 258px;
       margin: 10px;
     }
@@ -345,12 +345,12 @@ $swap-custom-mobile-colleps-width: 700px;
 }
 
 // Animation
-@keyframes placeHolderShimmer{
-  0%{
-      background-position: -468px 0
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -468px 0;
   }
-  100%{
-      background-position: 468px 0
+  100% {
+    background-position: 468px 0;
   }
 }
 
@@ -360,8 +360,8 @@ $swap-custom-mobile-colleps-width: 700px;
   animation-iteration-count: infinite;
   animation-name: placeHolderShimmer;
   animation-timing-function: linear;
-  background: #F2F4FA;
-  background: linear-gradient(to right, #F2F4FA 8%, #dcdee3 18%, #F2F4FA 33%);
+  background: #f2f4fa;
+  background: linear-gradient(to right, #f2f4fa 8%, #dcdee3 18%, #f2f4fa 33%);
   background-size: 800px 104px;
   height: 96px;
   position: relative;
