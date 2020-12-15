@@ -42,14 +42,15 @@
                 <mew-address-select
                   ref="addressSelect"
                   :value="toAddress"
+                  :resolved-addr="resolvedAddr"
                   :copy-tooltip="$t('common.copy')"
                   :save-tooltip="$t('common.save')"
-                  :enable-save-address="isValidAddress()"
+                  :enable-save-address="isValidAddress"
                   :label="$t('sendTx.to-addr')"
                   :items="addressBook"
                   :placeholder="$t('sendTx.enter-addr')"
                   :success-toast="$t('sendTx.success.title')"
-                  :is-valid-address="isValidAddress()"
+                  :is-valid-address="isValidAddress"
                   @input="setAddress"
                   @saveAddress="toggleOverlay"
                 />
@@ -156,6 +157,7 @@ import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR, SENTRY, SUCCESS } from '@/components/toast';
 import getService from '@/helpers/getService';
 import addAddress from '@/modules/wallets/pages/settings/components/address-book/AddEditAddress';
+import NameResolver from '@/modules/name-resolver/index';
 
 export default {
   components: {
@@ -195,6 +197,7 @@ export default {
   },
   data() {
     return {
+      resolvedAddr: '',
       addMode: false,
       toastType: '',
       toastMsg: '',
@@ -220,7 +223,7 @@ export default {
       'gasPrice',
       'web3',
       'address',
-      'usd',
+      'currency',
       'addressBook'
     ]),
     ...mapState('global', ['online']),
@@ -230,7 +233,7 @@ export default {
     multiwatch() {
       return (
         this.amount,
-        this.isValidAddress(),
+        this.isValidAddress,
         this.data,
         this.selectedCurrency,
         new Date().getTime() / 1000
@@ -259,6 +262,11 @@ export default {
       const copiedTokens = this.ownersTokens.slice();
       copiedTokens.unshift(eth);
       return copiedTokens;
+    },
+    isValidAddress() {
+      return this.resolvedAddr
+        ? utils.isAddress(this.resolvedAddr)
+        : utils.isAddress(this.toAddress);
     }
   },
   watch: {
@@ -303,10 +311,24 @@ export default {
     }
   },
   mounted() {
+    this.nameResolver = new NameResolver(this.network);
     this.setSendTransaction();
     this.customGasLimit = this.gasLimit;
   },
   methods: {
+    async resolveName() {
+      if (this.nameResolver) {
+        await this.nameResolver
+          .resolveName(this.toAddress)
+          .then(addr => {
+            console.error('addr', addr);
+            this.resolvedAddress = addr;
+          })
+          .catch(() => {
+            this.invalidName = true;
+          });
+      }
+    },
     toggleOverlay() {
       this.addMode = !this.addMode;
     },
@@ -321,6 +343,7 @@ export default {
     generateData() {
       try {
         if (this.toAddress !== '') {
+          this.resolveName();
           const decimals = this.selectedCurrency.decimals
             ? this.selectedCurrency.decimals
             : null;
@@ -406,7 +429,6 @@ export default {
       this.amount = '0';
       this.toAddress = '';
       this.gasPrice = '90';
-      this.isValidAddress = false;
       this.$refs.expandPanel.setToggle(false);
       this.$refs.mewSelect.clear();
       this.$refs.addressSelect.clear();
@@ -436,7 +458,7 @@ export default {
     allValidInputs() {
       return (
         this.isAmountValid() &&
-        this.isValidAddress() &&
+        this.isValidAddress &&
         this.sendTx.isValidGasLimit(this.customGasLimit) &&
         this.sendTx.isValidData(this.data)
       );
@@ -450,16 +472,10 @@ export default {
       return this.sendTx ? this.sendTx.txFeeETH(this.customGasLimit) : '0';
     },
     txFeeUSD() {
-      if (this.usd.current_price && this.sendTx) {
-        return this.sendTx.txFeeUSD(
-          this.customGasLimit,
-          this.usd.current_price
-        );
+      if (this.currency.value && this.sendTx) {
+        return this.sendTx.txFeeUSD(this.customGasLimit, this.currency.value);
       }
       return '--';
-    },
-    isValidAddress() {
-      return this.sendTx ? this.sendTx.isValidAddress(this.toAddress) : false;
     },
     setAddress(value) {
       this.toAddress = value.address ? value.address : value;

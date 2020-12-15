@@ -7,6 +7,7 @@
       :placeholder="$t('interface.address-book.enter-addr')"
       :value="address"
       :rules="addressRules"
+      :resolver-addr="resolvedAddress"
       @input="setAddress"
     />
     <div v-if="editMode" class="full-width d-flex align-center mb-7">
@@ -63,6 +64,7 @@
 <script>
 import utils from 'web3-utils';
 import { mapState, mapActions } from 'vuex';
+import NameResolver from '@/modules/name-resolver/index';
 
 const modes = ['add', 'edit'];
 
@@ -74,6 +76,8 @@ export default {
   },
   data() {
     return {
+      resolvedAddress: '',
+      nameResolver: {},
       currentIdx: null,
       nickname: '',
       address: '',
@@ -82,7 +86,7 @@ export default {
           !this.alreadyExists ||
           this.$t('interface.address-book.already-exists'),
         value =>
-          (value.length > 0 && utils.isAddress(value)) ||
+          (value.length > 0 && !this.validAddress) ||
           this.$t('interface.address-book.invalid-address'),
         value => !!value || this.$t('interface.address-book.addr-required')
       ],
@@ -93,7 +97,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['addressBook']),
+    ...mapState('wallet', ['addressBook', 'network']),
     disabled() {
       if (this.addMode) {
         return (
@@ -111,7 +115,10 @@ export default {
       return true;
     },
     validAddress() {
-      return utils.isAddress(this.address);
+      this.address.length > 0 ? this.resolveName() : null;
+      return this.resolvedAddress.length > 0
+        ? utils.isAddress(this.resolvedAddress)
+        : utils.isAddress(this.address);
     },
     editMode() {
       return this.mode === modes[1];
@@ -132,6 +139,7 @@ export default {
     }
   },
   mounted() {
+    this.nameResolver = new NameResolver(this.network);
     if (this.addMode && this.toAddress) {
       this.address = this.toAddress;
     }
@@ -145,6 +153,18 @@ export default {
   },
   methods: {
     ...mapActions('wallet', ['setAddressBook']),
+    async resolveName() {
+      if (this.nameResolver) {
+        await this.nameResolver
+          .resolveName(this.address)
+          .then(addr => {
+            this.resolvedAddress = addr;
+          })
+          .catch(() => {
+            this.invalidName = true;
+          });
+      }
+    },
     setAddress(value) {
       this.address = value;
     },
@@ -172,7 +192,7 @@ export default {
       this.addressBook.push({
         address: this.address,
         // currency: 'ETH',
-        nickname: this.nickname || this.addressBook.length + 1,
+        nickname: this.nickname || this.addressBook.length + 1
       });
       this.setAddressBook(this.addressBook);
       this.address = '';
