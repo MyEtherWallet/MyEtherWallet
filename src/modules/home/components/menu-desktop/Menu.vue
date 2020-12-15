@@ -12,7 +12,7 @@
       :list-obj="mewMenuCompany"
     />
     <div class="mx-8" />
-    <temporary-menu />
+    <site-menu />
     <div class="mx-8" />
     <a
       href="https://ccswap.myetherwallet.com/#/"
@@ -25,10 +25,10 @@
 </template>
 
 <script>
-import temporaryMenu from './TemporaryMenu';
+import siteMenu from './SiteMenu';
 export default {
-  name: 'Menu',
-  components: { temporaryMenu },
+  name: 'DesktopMenu',
+  components: { siteMenu },
   data: () => ({
     menuResetKey: 1,
     mewMenuCompany: {
