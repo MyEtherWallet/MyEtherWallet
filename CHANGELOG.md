@@ -1,3 +1,30 @@
+### Release v5.7.16
+
+### Feature
+
+* Add Swap alternatives [#2679](https://github.com/MyEtherWallet/MyEtherWallet/pull/2679)
+
+### Devop
+
+* Remove terms and privacy on translations [#2723](https://github.com/MyEtherWallet/MyEtherWallet/pull/2723)
+
+### Bug
+
+* Fix contract interaction when arrays have set params [#2719](https://github.com/MyEtherWallet/MyEtherWallet/pull/2719)
+* Fix GLN copy [#2717](https://github.com/MyEtherWallet/MyEtherWallet/pull/2717)
+* Fix LTC validation for Unstoppable [#2699](https://github.com/MyEtherWallet/MyEtherWallet/pull/2699)
+
+### Release v5.7.15
+
+### Feature
+
+* Eth2 Staking Feature [#2662](https://github.com/MyEtherWallet/MyEtherWallet/pull/2662)
+
+### Bug
+
+* Fixed various bugs from asana [#2693](https://github.com/MyEtherWallet/MyEtherWallet/pull/2693)
+* Fix error on print [#2676](https://github.com/MyEtherWallet/MyEtherWallet/pull/2676)
+
 ### Release v5.7.14
 
 ### Feature

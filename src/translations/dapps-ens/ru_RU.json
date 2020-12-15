@@ -1,5 +1,5 @@
 {
-  "title": "Менеджер ENS",
+  "title": "Управление ENS",
   "dapp-desc": "Регистрация и управление доменом ENS",
   "search-domain-desc": "Поиск доменного имени. После регистрации, вы сможете предлагать своим друзьям отправить ETH на адрес \"_____. th\", вместо вашего публичного адреса (0x.....).",
   "error": {
@@ -7,20 +7,28 @@
     "domain-tld-not-supported": "Домен TLD {parsedTld} не поддерживается в этом узле!",
     "something-went-wrong": "Что-то пошло не так. Попробуйте еще раз.",
     "dns-sec-not-found": "DNSSEC НЕ НАЙДЕН!",
-    "balance-too-low": "Balance too low!",
-    "txt-not-supported": "Not text record support!",
-    "not-the-owner": "You are not the owner!"
+    "balance-too-low": "Баланс слишком низкий!",
+    "txt-not-supported": "Текстовые записи не поддерживаются!",
+    "not-the-owner": "Вы не владелец!",
+    "error-getting-ipfs-hash": "Ошибка при получении хэша IPFS!",
+    "file-upload-error": "Ошибка загрузки файла",
+    "empty-invalid-ipfs": "Пустой или недопустимый хэш IPFS"
   },
   "warning": {
     "contract-not-ready": "Контракт еще не готов, транзакция может не пройти.",
     "not-enough-char": "Доменное имя меньше 3 символов.",
     "invalid-symbol": "Неверные символы в домене",
-    "subdomain-is-not-owned": "This subdomain is not owned"
+    "subdomain-is-not-owned": "Этот поддомен никому не принадлежит",
+    "upload-zip": "Пожалуйста, загрузите zip-файл!",
+    "too-small": "Файл слишком маленький! Размер должен быть более 500 байт.",
+    "too-big": "Файл слишком большой! Размер должен быть меньше 50 мегабайт.",
+    "currency-already-exists": "Валюта {currency} уже добавлена для {domainName}",
+    "text-record-already-exists": "Текстовая запись {txtRecord} вход уже добавлена для {domainName}"
   },
   "toast": {
     "success-register": "Регистрация выполнена успешнo!",
     "unavailable": "Управление ENS на данный момент не доступно",
-    "success": "Success!"
+    "success": "Готово!"
   },
   "check-domain": "Проверить домен",
   "update": "Обновление",
@@ -28,14 +36,20 @@
     "three-char": "Пожалуйста, введите не менее 3 символов"
   },
   "ens-manager": {
-    "title": "Менеджер ENS",
-    "description": "Manage your ENS names or transfer it to someone else"
+    "title": "Управление ENS",
+    "description": "Управляйте именами ENS или передайте их кому-то еще"
   },
-  "fetching": "Fetching names...",
-  "no-names-found": "No ENS name found for account {address}!",
-  "renew": "Renew",
-  "manage": "Менеджер",
-  "expired": "Expired",
+  "fetching": "Получение имен...",
+  "no-names-found": "Не найдено имени ENS для учетной записи {address}!",
+  "renew": "Продлить",
+  "manage": "Управление",
+  "manage-domain": "Управление доменом",
+  "register-domain": "Регистрация домена",
+  "release-deed-confirmation": "Вы хотите освободить {deedValueEth} {network}",
+  "ipfs-processing": "Обработка файла...",
+  "ipfs-processing-description": "Пожалуйста, дождитесь всплывающего окна транзакции, прежде чем вы покинете страницу, чтобы убедиться, что ваш запрос обработан.",
+  "ipfs-check-website": "Проверьте ваш сайт для {domainName} здесь:",
+  "expired": "Истёк",
   "controller-text": "Похоже, адрес, который вы используете, не является контроллером {domain}. Вы хотите установить {addr} в качестве контроллера для {domain}?",
   "text-record-error": "{value} отсутствует или не является допустимым значением для {name}!",
   "set-controller": "Обновить контроллер",
@@ -45,7 +59,7 @@
   "transfer-to": "Перенести домен ENS на",
   "transfer": "Перевод",
   "transfer-domain": "Передача домена",
-  "release-deed": "Return",
+  "release-deed": "Возврат",
   "register": "Регистрация",
   "hang-on": "Минуту!",
   "finalize-registration": "Мы завершаем регистрацию для ",
@@ -88,8 +102,12 @@
     "domain-not-found": "Доменное имя является недопустимым или не найдено",
     "no-resolver": "Нет резолвера {network} НС в этом узле"
   },
+  "content-hash": "Хэш IPFS",
+  "set-hash": "Установить хэш IPFS",
+  "upload-my-website": "Загрузить мой веб-сайт",
   "unstoppableResolution": {
     "address-reported-error": "Этот адрес в черном списке. Пожалуйста, убедитесь, что вы отправляете средства на правильный адрес.",
+    "twitter-verified": "Twitter подтвержден",
     "UnregisteredDomain": "Домен {domain} не зарегистрирован",
     "UnspecifiedResolver": "Домен {domain} не настроен",
     "UnsupportedDomain": "Домен {domain} не поддерживается",

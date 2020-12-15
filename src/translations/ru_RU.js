@@ -6,8 +6,6 @@ import dappsSubmission from './dapps-submission/ru_RU';
 import home from './home/ru_RU';
 import footer from './footer/ru_RU';
 import gettingStarted from './getting-started/ru_RU';
-import privacyPolicy from './privacy-policy/ru_RU';
-import termsOfService from './terms-of-conditions/ru_RU';
 import createWallet from './create-wallet/ru_RU';
 import accessWallet from './access-wallet/ru_RU';
 import interfaceTranslations from './interface/ru_RU';
@@ -46,8 +44,6 @@ const ru_RU = {
   home: home,
   footer: footer,
   gettingStarted: gettingStarted,
-  privacyPol: privacyPolicy,
-  termsOfService: termsOfService,
   team: team,
   accessWallet: accessWallet,
   createWallet: createWallet,

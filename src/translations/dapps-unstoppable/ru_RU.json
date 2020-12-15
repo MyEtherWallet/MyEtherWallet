@@ -1,7 +1,9 @@
 {
   "title": "Unstoppable Domains",
+  "title-manage": "Unstoppable Manage",
   "about-unstoppable": "Поменять криптографический адрес на читаемое имя.",
-  "dapp-desc": "Купить домен .crypto",
+  "dapp-desc": "Buy a .crypto domain or manage your .crypto domains",
+  "dapp-manage-desc": "Manage your .crypto domains",
   "search-domain-prompt": "Найти свой домен блокчейна",
   "stripe-email-prompt": "Адрес электронной почты",
   "stripe-card-prompt": "Данные карты",
@@ -14,14 +16,20 @@
   "secured-by-stripe": "Безопасная оплата с поддержкой Stripe",
   "insufficient-balance": "Недостаточный баланс: добавьте больше ETH в кошелек или оплатите кредитной картой",
   "pay": "Оплатить",
-  "confirm-payment": "Вы собираетесь заплатить ${amount} за {domain}",
+  "confirm-payment": "You are about to pay ${amount} for {numberDomains} domains",
   "error": {
     "stripe-payment": "Оплата не прошла, пожалуйста повторите попытку позже",
-    "something-went-wrong": "Что-то пошло не так. Попробуйте еще раз."
+    "something-went-wrong": "Что-то пошло не так. Попробуйте еще раз.",
+    "no-resolver-set": "No resolver address set",
+    "upload-error": "Error on upload!",
+    "empty-invalid-ipfs": "Empty or Invalid IPFS Hash!"
   },
   "warning": {
     "not-enough-char": "Доменное имя меньше 6 символов.",
-    "invalid-symbol": "Недопустимые символы на домене. Пожалуйста, используйте буквенно-цифровые символы или '-'"
+    "invalid-symbol": "Недопустимые символы на домене. Пожалуйста, используйте буквенно-цифровые символы или '-'",
+    "too-small": "File is too small! Size has to be more than 500kb.",
+    "too-big": "File is too big! Size has to be less than 50mb.",
+    "upload-zip": "Пожалуйста, загрузите zip-файл!"
   },
   "toast": {
     "success-register": "Регистрация выполнена успешнo!",
@@ -33,6 +41,17 @@
     "six-char": "Пожалуйста, введите не менее 6 символов",
     "stripe-email-placeholder": "Ваш адрес эл.почты"
   },
+  "ipfs": {
+    "processing": "Обработка файла...",
+    "processing-description": "Please wait for a transaction popup before you leave to make sure your request is processed. After this, you don't have to save your new hash as it has already been saved..",
+    "see-website": "To see your site, please visit {domainName} on Unstoppable Chrome Extension or Unstoppable's Browser. You can also open the link on Opera browser!",
+    "hash": "Хэш IPFS",
+    "upload": "Upload my website",
+    "error-fetching-hash": "Error getting ipfs hash!",
+    "set-hash": "Установить хэш IPFS"
+  },
+  "register-domain": "Регистрация домена",
+  "manage-domain": "Управление доменом",
   "view-transfer-transaction": "Вы можете увидеть транзакцию перевода на",
   "continue": "Продолжить",
   "congratulations": "Поздравляем!",
@@ -45,14 +64,32 @@
   "complete-manage-on-one": "Просмотр и управление доменом на",
   "is-available": "Домен доступен",
   "not-available": "{domain} еще не доступен!",
-  "manage": "Менеджер",
+  "manage": "Управление",
   "buyDomain": "Купить домен",
   "already-owned": "{domain} уже имеет владельца.",
   "search-for-another": "Поиск другого домена",
   "owner": "Владелец",
-  "result": "Результат",
+  "result": "Results",
+  "status": "Статус",
   "unavailable": "Недоступен",
   "buy": "Купить",
+  "add-to-cart": "Add To Cart",
+  "undo": "Undo",
+  "cart": "Cart",
+  "total": "Всего",
+  "items": "items",
+  "checkout": "Checkout",
+  "is-transferring-to-wallet": "is transferring to your wallet.",
+  "pending": "Pending",
+  "confirmed": "Confirmed",
+  "failed": "Сбой",
+  "following-been-claimed": "The following domains have been claimed",
+  "more-currencies": "More currencies",
+  "save-changes": "Save Changes",
+  "your-address": "Your address",
   "your-balance": "Ваш баланс",
+  "no-crypto-domains-one": "Looks like you don't own any .crypto domains yet! Get your .crypto domain",
+  "no-crypto-domains-two": "здесь",
+  "your-crypto-domains": "Your .crypto domains",
   "address": "Адрес"
 }
