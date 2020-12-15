@@ -1,5 +1,9 @@
 ### Release v5.7.16
 
+### Feature
+
+* Add Swap alternatives [#2679](https://github.com/MyEtherWallet/MyEtherWallet/pull/2679)
+
 ### Devop
 
 * Remove terms and privacy on translations [#2723](https://github.com/MyEtherWallet/MyEtherWallet/pull/2723)
