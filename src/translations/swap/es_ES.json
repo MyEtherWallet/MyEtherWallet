@@ -24,6 +24,11 @@
     "load-rate-error": "An Error occurred while retrieving the rates for {from-currency} to {to-currency}. Please wait a moment and try again",
     "kyber-slippage": "Slippage of {value}% possible"
   },
+  "alternates": {
+    "title": "Get BTC Exposure On Ethereum",
+    "body": "Swap for 1-to-1 wrapped tokens WBTC, RENBTC, or PBTC and hold bitcoin compatible with Ethereum applications.",
+    "learn-more": "Learn more."
+  },
   "warning": {
     "unable-validate-addr": "Currently unable to validate addresses for {currency}. It is likely correct, but Please double check it is correct before sending.",
     "not-valid-addr-src": "Not a valid {currency} address",
