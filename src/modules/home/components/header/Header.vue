@@ -26,7 +26,7 @@
     </div>
 
     <div class="mobile-content d-block d-lg-none py-8">
-      <mobileMenu />
+      <mobileMenu v-model="openMobileMenu" />
 
       <v-container class="d-flex align-center">
         <mew-button
@@ -37,15 +37,16 @@
           icon-type="mdi"
           icon-align="left"
           style="border-radius: 100% !important"
+          @click.native="openMobileMenu = true"
         />
 
-        <v-spacer></v-spacer>
+        <v-spacer />
 
         <router-link :to="{ name: 'Home', query: {} }">
           <v-img src="@/assets/images/icons/logo-mew.png" max-width="130" />
         </router-link>
 
-        <v-spacer></v-spacer>
+        <v-spacer />
 
         <mew-button
           class="mobile-tools-button"
@@ -70,6 +71,7 @@ export default {
   name: 'Header',
   components: { mewTools, desktopMenu, mobileMenu },
   data: () => ({
+    openMobileMenu: false,
     mewTools: false
   })
 };
