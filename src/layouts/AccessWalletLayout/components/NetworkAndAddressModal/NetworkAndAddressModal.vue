@@ -203,7 +203,7 @@
                   />
                 </li>
                 <li class="monospace address-icon-container">
-                  {{ account.account.getChecksumAddressString() | concatAddr }}
+                  {{ "xdc" + account.account.getChecksumAddressString().substring(2) | concatAddr }}
                   <input
                     :ref="`addrInput${account.index}`"
                     :value="account.account.getChecksumAddressString()"
@@ -219,7 +219,7 @@
                   <a
                     :href="
                       getExplorrerLink(
-                        account.account.getChecksumAddressString()
+                        `xdc${account.account.getChecksumAddressString().substring(2)}`
                       )
                     "
                     rel="noopener noreferrer"

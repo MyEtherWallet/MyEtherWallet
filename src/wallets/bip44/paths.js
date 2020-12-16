@@ -14,6 +14,10 @@ const ropsten = {
   path: "m/44'/1'/0'/0",
   label: 'Ropsten Testnet'
 };
+const xdcnetwork = {
+  path: "m/44'/550'/0'/0",
+  label: 'XinFin Network'
+};
 const singularDTV = {
   path: "m/0'/0'/0'",
   label: 'SingularDTV'
@@ -159,6 +163,7 @@ export {
   ledgerEthereumClassic,
   ledgerLiveEthereumClassic,
   ropsten,
+  xdcnetwork,
   singularDTV,
   expanse,
   ubiq,
