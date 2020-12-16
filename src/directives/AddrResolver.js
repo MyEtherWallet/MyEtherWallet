@@ -13,12 +13,9 @@ import * as nameHashPckg from 'eth-ens-namehash';
 import twitterVerifiedLogo from '@/assets/images/etc/twitter_verified_logo.svg';
 import ethereumLogo from '@/assets/images/etc/ethereum_logo.svg';
 
-// Lists of erc20 that won't pass due to having similar coins in MAValidator
-// temporary fix, waiting for https://github.com/christsim/multicoin-address-validator/pull/32
-const KNOWN_EXCEPTIONS = ['GAME'];
-
 const AddrResolver = {
   bind: function (el, binding, vnode) {
+    console.log(vnode.context.$options.name);
     let network = vnode.context.$store.state.main.network;
     let parentCurrency = vnode.context.$parent.currency
       ? vnode.context.$parent.currency
@@ -86,7 +83,8 @@ const AddrResolver = {
       if (
         (parentCurrency === network.type.name ||
           EthereumTokens[parentCurrency] ||
-          KNOWN_EXCEPTIONS.includes(parentCurrency)) &&
+          // checks whether this is happening in swap
+          !_this.hasOwnProperty('unableToValidate')) &&
         Misc.isValidETHAddress(domain)
       ) {
         if (!checkDarklist(domain)) {
