@@ -15,7 +15,6 @@ import ethereumLogo from '@/assets/images/etc/ethereum_logo.svg';
 
 const AddrResolver = {
   bind: function (el, binding, vnode) {
-    console.log(vnode.context.$options.name);
     let network = vnode.context.$store.state.main.network;
     let parentCurrency = vnode.context.$parent.currency
       ? vnode.context.$parent.currency
