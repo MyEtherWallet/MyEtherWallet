@@ -51,6 +51,7 @@
                   :placeholder="$t('sendTx.enter-addr')"
                   :success-toast="$t('sendTx.success.title')"
                   :is-valid-address="isValidAddress"
+                  :rules="rules"
                   @input="setAddress"
                   @saveAddress="toggleOverlay"
                 />
@@ -197,6 +198,7 @@ export default {
   },
   data() {
     return {
+      invalidName: false,
       resolvedAddr: '',
       addMode: false,
       toastType: '',
@@ -227,6 +229,14 @@ export default {
       'addressBook'
     ]),
     ...mapState('global', ['online']),
+    rules() {
+      return [
+        this.isValidAddress ||
+          this.$t('interface.address-book.validations.invalid-address'),
+        value =>
+          !!value || this.$t('interface.address-book.validations.addr-required')
+      ];
+    },
     isEth() {
       return this.network.type.name === ETH.name;
     },
@@ -264,16 +274,22 @@ export default {
       return copiedTokens;
     },
     isValidAddress() {
-      return this.resolvedAddr
-        ? utils.isAddress(this.resolvedAddr)
-        : utils.isAddress(this.toAddress);
+      return utils.isAddress(this.addressToSend);
+    },
+    addressToSend() {
+      return this.resolvedAddr.length > 0 ? this.resolvedAddr : this.toAddress;
     }
   },
   watch: {
     multiwatch: utils._.debounce(function () {
       if (this.validInputs) {
         this.sendTx
-          .estimateGas(this.amount, this.toAddress, this.gasPrice, this.data)
+          .estimateGas(
+            this.amount,
+            this.addressToSend,
+            this.gasPrice,
+            this.data
+          )
           .then(res => {
             this.customGasLimit = res;
           })
@@ -297,7 +313,10 @@ export default {
     amount() {
       this.generateData();
     },
-    toAddress() {
+    toAddress(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.resolvedAddr = '';
+      }
       this.generateData();
     },
     gasPrice() {
@@ -321,8 +340,8 @@ export default {
         await this.nameResolver
           .resolveName(this.toAddress)
           .then(addr => {
-            console.error('addr', addr);
-            this.resolvedAddress = addr;
+            this.invalidName = false;
+            this.resolvedAddr = addr;
           })
           .catch(() => {
             this.invalidName = true;
@@ -349,11 +368,11 @@ export default {
             : null;
           const estimateGasAddress = this.selectedCurrency.decimals
             ? this.selectedCurrency.contract
-            : this.toAddress;
+            : this.addressToSend;
           this.data = this.sendTx.getTxData(
             this.amount,
             decimals,
-            this.toAddress,
+            this.addressToSend,
             this.selectedCurrency
           );
           this.sendTx
@@ -378,7 +397,7 @@ export default {
       window.scrollTo(0, 0);
       const send = this.sendTx.submitTransaction(
         this.customGasLimit,
-        this.toAddress,
+        this.addressToSend,
         this.amount,
         this.data,
         this.selectedCurrency.contract
@@ -425,7 +444,7 @@ export default {
     },
     clear() {
       this.data = '';
-      this.toAddress = '';
+      this.resolvedAddr = '';
       this.amount = '0';
       this.toAddress = '';
       this.gasPrice = '90';
@@ -467,7 +486,7 @@ export default {
       // little hack to make this computed react to other changes
       this.data;
       this.selectedCurrency;
-      this.toAddress;
+      this.addressToSend;
       this.amount;
       return this.sendTx ? this.sendTx.txFeeETH(this.customGasLimit) : '0';
     },

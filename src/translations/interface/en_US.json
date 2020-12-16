@@ -99,17 +99,20 @@
     "enter-nickname": "Enter a nickname",
     "remove-addr": "Remove Address",
     "add-addr": "Add a contact address",
-    "addr-required": "Address is required",
     "successfully-added": "Successfully added to the address book",
-    "already-exists": "This address already exists in the contact book",
     "add-new": "Add a New Contact",
     "edit-addr": "Edit Address",
     "address": "Address",
     "update": "Update",
     "success-update": "Successfully updated",
     "save-addr": "Save Address",
-    "invalid-address": "Invalid Address",
-    "nickname-length": "Nickname cannot be longer than 20 chars"
+    "validations": {
+      "invalid-name": "This is an invalid name",
+      "invalid-address": "Invalid Address",
+      "nickname-length": "Nickname cannot be longer than 20 chars",
+      "already-exists": "This address already exists in the contact book",
+      "addr-required": "Address is required"
+    }
   },
   "web3-not-found": "Web3 Instance not found!",
   "import-error": "Something went wrong while importing file, please make sure it is a valid file",

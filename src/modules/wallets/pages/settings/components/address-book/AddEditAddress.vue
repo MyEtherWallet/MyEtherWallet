@@ -7,7 +7,7 @@
       :placeholder="$t('interface.address-book.enter-addr')"
       :value="address"
       :rules="addressRules"
-      :resolver-addr="resolvedAddress"
+      :resolver-addr="resolvedAddr"
       @input="setAddress"
     />
     <div v-if="editMode" class="full-width d-flex align-center mb-7">
@@ -76,7 +76,7 @@ export default {
   },
   data() {
     return {
-      resolvedAddress: '',
+      resolvedAddr: '',
       nameResolver: {},
       currentIdx: null,
       nickname: '',
@@ -84,15 +84,15 @@ export default {
       addressRules: [
         () =>
           !this.alreadyExists ||
-          this.$t('interface.address-book.already-exists'),
-        value =>
-          (value.length > 0 && !this.validAddress) ||
-          this.$t('interface.address-book.invalid-address'),
-        value => !!value || this.$t('interface.address-book.addr-required')
+          this.$t('interface.address-book.validations.already-exists'),
+        // value =>
+        //   (value.length > 0 && this.validAddress) ||
+        //   this.$t('interface.address-book.validations.invalid-address'),
+        value => !!value || this.$t('interface.address-book.validations.addr-required')
       ],
       nicknameRules: [
         value =>
-          value.length < 20 || this.$t('interface.address-book.nickname-length')
+          value.length < 20 || this.$t('interface.address-book.validations.nickname-length')
       ]
     };
   },
@@ -115,9 +115,9 @@ export default {
       return true;
     },
     validAddress() {
-      this.address.length > 0 ? this.resolveName() : null;
-      return this.resolvedAddress.length > 0
-        ? utils.isAddress(this.resolvedAddress)
+      console.error('this', this.resolvedAddr)
+      return this.resolvedAddr.length > 0
+        ? utils.isAddress(this.resolvedAddr)
         : utils.isAddress(this.address);
     },
     editMode() {
@@ -138,6 +138,12 @@ export default {
       return false;
     }
   },
+  watch: {
+    address() {
+      console.error('in address watch')
+      this.resolveName();
+    }
+  },
   mounted() {
     this.nameResolver = new NameResolver(this.network);
     if (this.addMode && this.toAddress) {
@@ -154,11 +160,13 @@ export default {
   methods: {
     ...mapActions('wallet', ['setAddressBook']),
     async resolveName() {
+      console.error('resolveName')
       if (this.nameResolver) {
         await this.nameResolver
           .resolveName(this.address)
           .then(addr => {
-            this.resolvedAddress = addr;
+            console.error('addr', addr)
+            this.resolvedAddr = addr;
           })
           .catch(() => {
             this.invalidName = true;

@@ -14,7 +14,7 @@
         max-width="700"
         color="transparent"
       >
-        <mew-expand-panel :panel-items="panelItems">
+        <mew-expand-panel :panel-items="panelItems" idx-to-expand="3">
           <template #panelBody1>
             <gas-price />
           </template>

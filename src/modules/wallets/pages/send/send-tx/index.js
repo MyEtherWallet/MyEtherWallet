@@ -65,7 +65,8 @@ export default class SendTransaction {
   }
   // tx fee in usd
   txFeeUSD(gasLimit, ethPrice) {
-    return new BigNumber(this.txFeeETH(gasLimit).times(ethPrice))
+    return BigNumber(this.txFeeETH(gasLimit))
+      .times(BigNumber(ethPrice))
       .toFixed(2)
       .toString();
   }
