@@ -13,6 +13,10 @@ import * as nameHashPckg from 'eth-ens-namehash';
 import twitterVerifiedLogo from '@/assets/images/etc/twitter_verified_logo.svg';
 import ethereumLogo from '@/assets/images/etc/ethereum_logo.svg';
 
+// Lists of erc20 that won't pass due to having similar coins in MAValidator
+// temporary fix, waiting for https://github.com/christsim/multicoin-address-validator/pull/32
+const KNOWN_EXCEPTIONS = ['GAME'];
+
 const AddrResolver = {
   bind: function (el, binding, vnode) {
     let network = vnode.context.$store.state.main.network;
@@ -81,7 +85,8 @@ const AddrResolver = {
       messageDiv.appendChild(errorPar);
       if (
         (parentCurrency === network.type.name ||
-          EthereumTokens[parentCurrency]) &&
+          EthereumTokens[parentCurrency] ||
+          KNOWN_EXCEPTIONS.includes(parentCurrency)) &&
         Misc.isValidETHAddress(domain)
       ) {
         if (!checkDarklist(domain)) {
