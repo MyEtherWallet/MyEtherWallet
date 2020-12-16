@@ -11,6 +11,7 @@
 ### Bug
 
 * Fix contract interaction when arrays have set params [#2719](https://github.com/MyEtherWallet/MyEtherWallet/pull/2719)
+* Fix contract interaction inputs [#2728](https://github.com/MyEtherWallet/MyEtherWallet/pull/2728)
 * Fix GLN copy [#2717](https://github.com/MyEtherWallet/MyEtherWallet/pull/2717)
 * Fix LTC validation for Unstoppable [#2699](https://github.com/MyEtherWallet/MyEtherWallet/pull/2699)
 
