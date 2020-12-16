@@ -25,9 +25,9 @@
     "kyber-slippage": "Возможно проскальзывание {value}%"
   },
   "alternates": {
-    "title": "Get BTC Exposure On Ethereum",
-    "body": "Swap for 1-to-1 wrapped tokens WBTC, RENBTC, or PBTC and hold bitcoin compatible with Ethereum applications.",
-    "learn-more": "Learn more."
+    "title": "Используйте BTC на Ethereum",
+    "body": "Обменивайте биткоин один к одному на обернутые токены WBTC, renBTC или PBTC, чтобы использовать его в приложениях на Ethereum.",
+    "learn-more": "Подробнее."
   },
   "warning": {
     "unable-validate-addr": "В настоящее время не удалось проверить адреса для {currency}. Вероятно, что все правильно, но пожалуйста, убедитесь, что адрес верный перед отправкой.",
