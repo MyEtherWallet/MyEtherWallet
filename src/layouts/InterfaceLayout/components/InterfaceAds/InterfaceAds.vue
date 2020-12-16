@@ -3,7 +3,7 @@
     <div class="global__interface-block__margin-top">
       <a
         :title="$t('interface.ads.twitter')"
-        href="https://twitter.com/intent/follow?screen_name=myetherwallet"
+        href="https://twitter.com/intent/follow?screen_name=XinFin_Official"
         onclick="window.open(this.href, 'twitter-share', 'width=580,height=296');return false;"
         rel="noopener noreferrer"
       >
@@ -29,12 +29,6 @@
         @sliding-start="onSlideStart"
         @sliding-end="onSlideEnd"
       >
-        <b-carousel-slide>
-          <mew-wallet-ad />
-        </b-carousel-slide>
-        <b-carousel-slide>
-          <buy-eth-ad />
-        </b-carousel-slide>
       </b-carousel>
     </div>
   </div>

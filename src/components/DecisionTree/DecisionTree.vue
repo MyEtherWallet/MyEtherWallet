@@ -1,9 +1,5 @@
 <template>
   <div class="decision-tree-container">
-    <button :class="button ? 'active' : ''" class="show-button" @click="toggle">
-      <img src="@/assets/images/icons/DecisionTree/need-help.svg" />
-      <p>{{ $t('common.decision-tree.quick-help') }}</p>
-    </button>
 
     <b-modal
       ref="DecisionTree"
