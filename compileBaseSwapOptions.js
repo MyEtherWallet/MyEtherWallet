@@ -340,6 +340,13 @@ class CompileSwapOptions {
       if (!fs.existsSync(swapConfigFolder)) {
         fs.mkdirSync(swapConfigFolder);
       }
+      if(allTokens.ETH.ETH){
+        allTokens.ETH.ETH = {
+          ...allTokens.ETH.ETH,
+          decimals: 18,
+          contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+        }
+      }
       fs.writeFileSync(
         `${swapConfigFolder}/EthereumTokens.json`,
         JSON.stringify(allTokens.ETH)
