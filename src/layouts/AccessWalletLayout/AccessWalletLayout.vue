@@ -109,7 +109,7 @@
         </div>
       </div>
     </div>
-    <faqs />
+    
   </div>
 </template>
 

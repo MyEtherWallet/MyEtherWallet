@@ -41,7 +41,7 @@
       :addresses="bcVaultWallets"
       :callback-fn="bcVaultCb"
     />
-    <address-qrcode-modal ref="addressQrcodeModal" :address="account.address" />
+    <address-qrcode-modal ref="addressQrcodeModal" :address="  'xdc' + account.address.substring(2)" />
     <!-- Modals ******************************************************** -->
     <!-- Modals ******************************************************** -->
     <!-- Modals ******************************************************** -->

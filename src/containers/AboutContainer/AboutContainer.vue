@@ -23,7 +23,7 @@
                 <img
                   :alt="$t('common.spaceman')"
                   class="spaceman"
-                  src="~@/assets/images/home/spaceman.png"
+                  src="~@/assets/images/home/xdc_network.gif"
                 />
               </div>
             </div>

@@ -43,55 +43,30 @@ export default {
   data() {
     return {
       links: [
-        {
+       {
           img: facebook,
-          to: 'https://www.facebook.com/MyEtherWallet',
-          name: this.$t('home.social.facebook')
+          to: 'https://www.facebook.com/XinFinHybridBlockchain/',
+          name: 'Facebook'
         },
         {
           img: twitter,
-          to: 'https://twitter.com/myetherwallet',
-          name: this.$t('home.social.twitter')
+          to: 'https://twitter.com/XinFin_Official',
+          name: 'Twitter'
         },
         {
           img: medium,
-          to: 'https://medium.com/@myetherwallet',
-          name: this.$t('home.social.medium')
+          to: 'https://medium.com/xinfin',
+          name: 'Medium'
         },
         {
           img: reddit,
-          to: 'https://www.reddit.com/r/myetherwallet',
-          name: this.$t('home.social.reddit')
+          to: 'https://www.reddit.com/r/xinfin/',
+          name: 'reddit'
         },
         {
           img: github,
-          to: 'https://www.github.com/myetherwallet',
-          name: this.$t('home.social.github')
-        },
-        {
-          img: vkontakte,
-          to: 'https://vk.com/public190491855',
-          name: this.$t('home.social.vkontakte')
-        },
-        {
-          img: youtube,
-          to: 'https://www.youtube.com/c/myetherwallet',
-          name: this.$t('home.social.youtube')
-        },
-        {
-          img: mewtopia,
-          to: 'https://www.mewtopia.com',
-          name: this.$t('home.social.mewtopia')
-        },
-        {
-          img: instagram,
-          to: 'https://www.instagram.com/myetherwallet',
-          name: this.$t('home.social.instagram')
-        },
-        {
-          img: telegram,
-          to: 'https://t.me/myetherwallet',
-          name: this.$t('home.social.telegram')
+          to: 'https://github.com/XinFinorg',
+          name: 'github'
         }
       ]
     };

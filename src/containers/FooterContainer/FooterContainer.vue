@@ -53,56 +53,7 @@
                 </div>
               </div>
             </div>
-            <div class="donate-us">
-              <div class="content-title">
-                <i18n path="footer.title.love" tag="h3">
-                  <img
-                    slot="heart"
-                    src="~@/assets/images/icons/heart.svg"
-                    alt
-                  />
-                </i18n>
-              </div>
-              <div class="links">
-                <p>{{ $t('footer.donation.desc') }}</p>
-
-                <a
-                  :href="'https://etherscan.io/address/' + ethDonationAddress"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <div
-                    :data-eth="ethDonationAddress"
-                    class="crypto-link d-flex align-items-center"
-                  >
-                    <img
-                      class="mr-2"
-                      src="~@/assets/images/currency/eth.svg"
-                      alt
-                    />
-                    <div>{{ $t('footer.donation.ether') }}</div>
-                  </div>
-                </a>
-
-                <a
-                  href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <div
-                    class="crypto-link no-padding d-flex align-items-center"
-                    data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
-                  >
-                    <img
-                      class="mr-2"
-                      src="~@/assets/images/currency/btc.svg"
-                      alt
-                    />
-                    <div>{{ $t('footer.donation.bitcoin') }}</div>
-                  </div>
-                </a>
-              </div>
-            </div>
+            
           </div>
           <div class="flex-space-between foot-note">
             <div class="links">
@@ -197,34 +148,6 @@ export default {
           title: 'footer.title.discover',
           contents: [
             {
-              text: 'convertUnits.page.title',
-              to: '/convert-units'
-            },
-            // {
-            //   text:'footer.advanced'),
-            //   to: '/advanced-tools'
-            // },
-            {
-              text: 'footer.mew-wallet',
-              href: 'https://www.mewwallet.com/'
-            },
-            {
-              text: 'footer.mew-connect-protocol',
-              href: 'https://mewconnect.myetherwallet.com/#/'
-            },
-            {
-              text: 'footer.extension',
-              href: 'https://www.mewcx.com'
-            },
-            {
-              text: 'footer.ethvm',
-              href: 'https://www.ethvm.com/'
-            },
-            {
-              text: 'buyHardwareWallet.page.title',
-              to: '/hardware-wallet-affiliates'
-            },
-            {
               text: 'footer.send-offline',
               to: '/send-offline-helper'
             },
@@ -232,88 +155,39 @@ export default {
               text: 'verifyMessage.title',
               to: '/verify-message'
             },
-            {
-              text: 'dappsSubmission.banner-submit.submit-dapp',
-              to: '/dapp-submission'
-            },
-            {
-              text: 'footer.press-kit.header',
-              to: '/press-kit'
-            }
           ]
         },
-        {
-          class: 'e2',
-          title: 'footer.title.affiliates',
-          contents: affiliates
-        },
-        {
-          class: 'e3',
-          title: 'footer.title.mew',
-          contents: [
-            {
-              text: 'footer.about',
-              to: '/#about-mew'
-            },
-            {
-              text: 'footer.team',
-              to: '/team'
-            },
-            {
-              text: 'common.faqs',
-              to: '/#faqs'
-            },
-            {
-              text: 'common.mewtopia',
-              href: 'https://www.mewtopia.com'
-            },
-            {
-              text: 'common.cstm-support',
-              href: 'mailto:support@xinfin.org'
-            },
-            {
-              text: 'common.help-center',
-              href: 'https://howto.xinfin.org/XinFinWallet/features'
-            }
-          ]
-        }
+        
+  
       ],
       links: [
         {
-          to: 'https://www.facebook.com/myetherwallet',
+          to: 'https://www.facebook.com/XinFinHybridBlockchain/',
           class: 'fa-facebook'
         },
         {
-          to: 'https://www.twitter.com/@myetherwallet',
+          to: 'https://twitter.com/XinFin_Official',
           class: 'fa-twitter'
         },
         {
-          to: 'https://www.instagram.com/myetherwallet',
+          to: 'https://www.instagram.com/xinfin_hybridblockchain',
           class: 'fa-instagram'
         },
         {
-          to: 'https://www.linkedin.com/company/myetherwallet',
+          to: 'https://www.linkedin.com/company/xinfin/',
           class: 'fa-linkedin'
         },
         {
-          to: 'https://www.github.com/myetherwallet',
+          to: 'https://www.github.com/XinFinOrg',
           class: 'fa-github'
         },
         {
-          to: 'https://www.reddit.com/r/myetherwallet',
+          to: 'https://www.reddit.com/r/xinfin/',
           class: 'fa-reddit-alien'
         },
         {
-          to: 'https://www.medium.com/@myetherwallet',
+          to: 'https://medium.com/xinfin',
           class: 'fa-medium'
-        },
-        {
-          to: 'https://vk.com/public190491855',
-          class: 'fa-vk'
-        },
-        {
-          to: 'https://t.me/myetherwallet',
-          class: 'fa-telegram'
         }
       ]
     };
