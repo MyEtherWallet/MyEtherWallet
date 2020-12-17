@@ -16,7 +16,7 @@
 * Fix GNT migrator balance not showing sometimes [#2728](https://github.com/MyEtherWallet/MyEtherWallet/pull/2728)
 * Fix LTC validation for Unstoppable [#2699](https://github.com/MyEtherWallet/MyEtherWallet/pull/2699)
 * Add exeption for GameCredits token [#2727](https://github.com/MyEtherWallet/MyEtherWallet/pull/2727)
-* Fix missing decimal for ETH and handle new est. gas error []()
+* Fix missing decimal for ETH and handle new est. gas error [#2730](https://github.com/MyEtherWallet/MyEtherWallet/pull/2730)
 ### Release v5.7.15
 
 ### Feature
