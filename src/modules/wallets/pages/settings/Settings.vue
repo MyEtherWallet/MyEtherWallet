@@ -14,7 +14,10 @@
         max-width="700"
         color="transparent"
       >
-        <mew-expand-panel :panel-items="panelItems" idx-to-expand="3">
+        <mew-expand-panel
+          :panel-items="panelItems"
+          :idx-to-expand="idxToExpand"
+        >
           <template #panelBody1>
             <gas-price />
           </template>
@@ -66,6 +69,7 @@ export default {
   },
   data() {
     return {
+      idxToExpand: null,
       editMode: false,
       addMode: false,
       itemToEdit: {},
@@ -104,7 +108,8 @@ export default {
     }
   },
   methods: {
-    back() {
+    back(idx) {
+      this.idxToExpand = idx ? idx : null;
       this.addMode = false;
       this.editMode = false;
     },
@@ -114,6 +119,7 @@ export default {
     },
     close() {
       this.$emit('closeSettings');
+      this.idxToExpand = null;
       this.addMode = false;
       this.editMode = false;
     }

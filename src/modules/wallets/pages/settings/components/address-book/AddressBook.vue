@@ -71,6 +71,7 @@ export default {
         number: idx + 1,
         address: item.address,
         nickname: item.nickname,
+        resolvedAddr: item.resolvedAddr,
         callToAction: 'Edit'
       });
     });

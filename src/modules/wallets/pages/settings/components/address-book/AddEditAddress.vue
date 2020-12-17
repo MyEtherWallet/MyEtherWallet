@@ -7,13 +7,13 @@
       :placeholder="$t('interface.address-book.enter-addr')"
       :value="address"
       :rules="addressRules"
-      :resolver-addr="resolvedAddr"
+      :resolved-addr="resolvedAddr"
       @input="setAddress"
     />
     <div v-if="editMode" class="full-width d-flex align-center mb-7">
       <mew-blockie
         class="mr-3"
-        address="0xAEcFF9cd2367CdBb726e904cd6397eDFCae6068D"
+        :address="item.resolvedAddr ? item.resolvedAddr : item.address"
         height="45px"
         width="45px"
       />
@@ -25,7 +25,11 @@
           <span id="item-addr" class="monospace mr-3 truncate">
             {{ address }}
           </span>
-          <mew-copy copy-id="item-addr" :is-ref="false" tooltip="hello" />
+          <mew-copy
+            :copy-value="item.address"
+            :is-ref="false"
+            :tooltip="$t('common.copy')"
+          />
         </div>
       </div>
     </div>
@@ -80,20 +84,7 @@ export default {
       nameResolver: {},
       currentIdx: null,
       nickname: '',
-      address: '',
-      addressRules: [
-        () =>
-          !this.alreadyExists ||
-          this.$t('interface.address-book.validations.already-exists'),
-        // value =>
-        //   (value.length > 0 && this.validAddress) ||
-        //   this.$t('interface.address-book.validations.invalid-address'),
-        value => !!value || this.$t('interface.address-book.validations.addr-required')
-      ],
-      nicknameRules: [
-        value =>
-          value.length < 20 || this.$t('interface.address-book.validations.nickname-length')
-      ]
+      address: ''
     };
   },
   computed: {
@@ -114,8 +105,25 @@ export default {
       }
       return true;
     },
+    addressRules() {
+      return [
+        () =>
+          !this.alreadyExists ||
+          this.$t('interface.address-book.validations.already-exists'),
+        this.validAddress ||
+          this.$t('interface.address-book.validations.invalid-address'),
+        value =>
+          !!value || this.$t('interface.address-book.validations.addr-required')
+      ];
+    },
+    nicknameRules() {
+      return [
+        value =>
+          value.length < 20 ||
+          this.$t('interface.address-book.validations.nickname-length')
+      ];
+    },
     validAddress() {
-      console.error('this', this.resolvedAddr)
       return this.resolvedAddr.length > 0
         ? utils.isAddress(this.resolvedAddr)
         : utils.isAddress(this.address);
@@ -140,7 +148,6 @@ export default {
   },
   watch: {
     address() {
-      console.error('in address watch')
       this.resolveName();
     }
   },
@@ -160,12 +167,10 @@ export default {
   methods: {
     ...mapActions('wallet', ['setAddressBook']),
     async resolveName() {
-      console.error('resolveName')
       if (this.nameResolver) {
         await this.nameResolver
           .resolveName(this.address)
           .then(addr => {
-            console.error('addr', addr)
             this.resolvedAddr = addr;
           })
           .catch(() => {
@@ -183,12 +188,12 @@ export default {
       this.addressBook[this.currentIdx].address = this.address;
       this.addressBook[this.currentIdx].nickname = this.nickname;
       this.setAddressBook(this.addressBook);
-      this.$emit('back');
+      this.$emit('back', 3);
     },
     remove() {
       this.addressBook.splice(this.currentIdx, 1);
       this.setAddressBook(this.addressBook);
-      this.$emit('back');
+      this.$emit('back', 3);
     },
     add() {
       if (this.alreadyExists) {
@@ -199,13 +204,14 @@ export default {
       }
       this.addressBook.push({
         address: this.address,
+        resolvedAddr: this.resolvedAddr,
         // currency: 'ETH',
-        nickname: this.nickname || this.addressBook.length + 1
+        nickname: this.nickname || (this.addressBook.length + 1).toString()
       });
       this.setAddressBook(this.addressBook);
       this.address = '';
       this.nickname = '';
-      this.$emit('back');
+      this.$emit('back', 3);
     }
   }
 };
