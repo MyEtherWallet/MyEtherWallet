@@ -994,6 +994,7 @@ export default {
           this.gasCheck();
           break;
       }
+
     },
     async updateRateEstimate(fromCurrency, toCurrency, fromValue, to) {
       if (this.haveProviderRates) {

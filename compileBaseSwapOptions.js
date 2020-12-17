@@ -148,7 +148,7 @@ class CompileSwapOptions {
     other: {}
   }) {
     try {
-      const tokenList = await this.post(
+      const tokenListRaw = await this.post(
         'https://swap.mewapi.io/dexag',
         {
           jsonrpc: '2.0',
@@ -157,6 +157,7 @@ class CompileSwapOptions {
           id: v4()
         }
       );
+      const tokenList = tokenListRaw.result || tokenListRaw;
       const tokenDetails = priorCollected.ETH;
       for (let i = 0; i < tokenList.length; i++) {
         if(!tokenDetails[tokenList[i].symbol] && tokenList[i].address){
@@ -313,7 +314,6 @@ class CompileSwapOptions {
     const coinGeckoTokens = await this.getCoinGeckoTokens();
     const withChangelly = await this.supplyChangellySupported(coinGeckoTokens);
     const allTokens = await this.getDexAgSupported(withChangelly);
-
     for (let i = 0; i < this.needDecimalCheck.length; i++) {
       const decimals = await this.getDecimals(this.needDecimalCheck[i]);
       if (withChangelly.ETH[this.needDecimalCheck[i].symbol] && decimals) {
