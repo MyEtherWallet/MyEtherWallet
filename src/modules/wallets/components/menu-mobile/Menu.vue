@@ -50,49 +50,68 @@ export default {
   },
   data: () => ({
     menu: [
-      { label: 'How it works', to: { name: 'HowItWorks' } },
+      { label: 'Dashboard', to: { name: 'Dashboard' } },
       {
-        label: 'Popular',
+        label: 'Send',
         sub: [
           {
             label: 'Send transaction',
             to: { name: 'SendTX' }
           },
           {
-            label: 'Explore Dapps',
+            label: 'SendTX',
+            to: { name: 'SendOffline' }
+          },
+          {
+            label: 'NFT Manager',
+            to: { name: 'NFTManager' }
+          }
+        ]
+      },
+      { label: 'Swap', to: { name: 'Swap' } },
+      {
+        label: 'Dapps',
+        sub: [
+          {
+            label: 'Dapps Center',
             to: { name: 'DappsCenter' }
           },
           {
-            label: 'Swap tokens',
-            to: { name: 'Swap' }
+            label: 'ENS manager',
+            to: { name: 'NameManager' }
           },
           {
-            label: 'Sign message',
-            to: { name: 'SignMessage' }
+            label: 'MakerDAO',
+            to: { name: 'MakerDAO' }
+          },
+          {
+            label: 'Aave',
+            to: { name: 'Aave' }
+          },
+          {
+            label: 'Ambrpay',
+            to: { name: 'Ambrpay' }
+          },
+          {
+            label: 'Unstoppable Domain',
+            to: { name: 'UnstoppableDomain' }
           }
         ]
       },
       {
-        label: 'More',
+        label: 'Contract',
         sub: [
           {
-            label: 'Watch only address',
-            to: { name: 'Tools', query: { tab: '1' } }
+            label: 'Interact with contract',
+            to: { name: 'InteractWithContract' }
           },
           {
-            label: 'Send offline helper',
-            to: { name: 'Tools', query: { tab: '2' } }
-          },
-          {
-            label: 'Verify message',
-            to: { name: 'Tools', query: { tab: '3' } }
-          },
-          {
-            label: 'Convery units',
-            to: { name: 'Tools', query: { tab: '4' } }
+            label: 'Deploy contract',
+            to: { name: 'DeployContract' }
           }
         ]
-      }
+      },
+      { label: 'Sign Message', to: { name: 'SignMessage' } }
     ]
   }),
   methods: {
