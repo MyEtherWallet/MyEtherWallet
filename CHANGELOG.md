@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Fix how it works UI issues [#2736](https://github.com/MyEtherWallet/MyEtherWallet/pull/2736)
 * update mobile dashboard [#2673](https://github.com/MyEtherWallet/MyEtherWallet/pull/2673)
 * update mobile notification [#2671](https://github.com/MyEtherWallet/MyEtherWallet/pull/2671)
 * update mobile side menu [#2670](https://github.com/MyEtherWallet/MyEtherWallet/pull/2670)
