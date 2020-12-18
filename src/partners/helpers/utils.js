@@ -143,6 +143,9 @@ const handleOrThrow = (e, source) => {
     ) {
       Toast.responseHandler(e.message, 3);
       return;
+    } else if (e.message.includes('insufficient funds for transfer')) {
+      Toast.responseHandler(e.message, 3);
+      return;
     }
   }
   throw e;

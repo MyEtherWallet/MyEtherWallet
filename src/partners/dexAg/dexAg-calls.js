@@ -73,7 +73,12 @@ const estimateGas = async (txs, from) => {
     }
     return results.result;
   } catch (e) {
+    const re = new RegExp('([0-9]+)');
+    const reResult = re[Symbol.match](e.message);
     utils.handleOrThrow(e);
+    if (reResult) {
+      return reResult[0];
+    }
   }
 };
 
