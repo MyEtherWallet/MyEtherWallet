@@ -56,12 +56,12 @@
     "market-cap": "КАПИТАЛИЗАЦИЯ",
     "change": "ИЗМЕНЕНИЯ (24Ч)",
     "amount": "КОЛИЧЕСТВО",
-    "value": "MY VALUE"
+    "value": "ЦЕННОСТЬ"
   },
   "add": "Добавить",
   "refresh": "Обновить",
   "view-all": "Показать все",
-  "cant-find-tokens": "Can't find tokens with value.",
+  "cant-find-tokens": "Не удается найти токены со стоимостью.",
   "add-watch-only": "Добавить кошелек для наблюдения",
   "enter-address": "Пожалуйста, введите адрес кошелька",
   "add-my-wallet": "Добавить кошелёк",
@@ -109,7 +109,7 @@
   "mewcx": "MEW CX",
   "back": "Назад",
   "wallet-qr-code": "QR код кошелька",
-  "value-of-tokens": "Value of Token{plural}",
+  "value-of-tokens": "Ценность токена{plural}",
   "balance": "Баланс",
   "choose-hd-path": "Выберите путь деривации HD",
   "welcome-header": "Расширение MyEtherWallet для Chrome",
