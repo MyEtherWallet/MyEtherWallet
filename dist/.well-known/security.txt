@@ -1,0 +1,26 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Contact: mailto:security@xinfin.org
+Encryption: https://raw.githubusercontent.com/MyEtherWallet/MyEtherWallet/master/MEW-PUP-KEY-GPG
+Acknowledgments: https://wallet.xinfin.network/security-policy
+Preferred-Languages: en,ru
+Canonical: https://wallet.xinfin.network/.well-known/security.txt
+Policy: https://wallet.xinfin.network/security-policy
+-----BEGIN PGP SIGNATURE-----
+
+iQJOBAEBCgA4FiEEL8pKHjr0J49607djfwWcD3uaEvAFAl6nTD4aHHN1cHBvcnRA
+bXlldGhlcndhbGxldC5jb20ACgkQfwWcD3uaEvDKIxAAsSLc8sJMCxb/AqPzfyPw
+kIJj8611OIt6bEOrzLxOxE1sm66GDbpGZWwVDwoZtPNPq7WZKX7lrqmeQV/bEJH/
+azPvLIc21mDFmP6KNn0KFun5+nUFuWng3TGTFAvEQFzV2hrqkbkZsNcw7P+3fJgo
+SAuWh502aAle0xOcJNC9AMuUrJf4n4O+DBuaJ1+78DHKq2k3ycGfYZDz3m3SDeZN
+5JAonz8LI+e90uTUaiufTCieu4asF/MJHi9viOVV8lWiuVrz8mZwdYBF0U67acFt
+dgvnULvCs2fPHO6PSxygHjf0wjL2fIbD7d3Ob3aUQ1DtpwgP9NcbQcAPHga80C1X
+M/9qE7TghJhJ7WhBHCnFZ/5R8+3Qvgc2YTo7pIJyfe3L+hDih5TApFJCahYD2Lu6
+SSa5iQ0t9JF6BPzE6QuwGe01x+kpjWKdTwqxMP56AFCp6huRPpE7FT4xWMSV7Rfg
+dHc2fPRuhxRleygWRLToJ2VlLZzOq5hCf/CuDHGfF6bad8PWrvzBz/zvbKgaZ7gN
+QMbVPVvlTOt532WteRdyotbfiag8umTaQ8Qg82w4/83YmfH5h+531zJ5Kc6ofZpd
+FgI8OQE3QZx9EsCTOggj9HQRoTxVGOpAn/mlveqXPaplg6ss81wFXT1Svm110SOu
+JJqDJueX9KkbwhzZByasIPk=
+=33bS
+-----END PGP SIGNATURE-----
