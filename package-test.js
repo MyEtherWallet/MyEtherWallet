@@ -52,9 +52,6 @@ const EXCEPTIONS = [
   'postcss-url',
   'webpack',
   'copy-webpack-plugin',
-  // remove after release
-  'sinon',
-  'eslint-plugin-prettier'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
