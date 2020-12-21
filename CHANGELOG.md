@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Add Press Kit page [#2742](https://github.com/MyEtherWallet/MyEtherWallet/pull/2742)
 * Fix mew info card UI issues [#2737](https://github.com/MyEtherWallet/MyEtherWallet/pull/2737)
 * Fix how it works UI issues [#2736](https://github.com/MyEtherWallet/MyEtherWallet/pull/2736)
 * update mobile dashboard [#2673](https://github.com/MyEtherWallet/MyEtherWallet/pull/2673)
