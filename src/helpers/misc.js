@@ -8,6 +8,7 @@ import { isHexString, toBuffer as utilsToBuffer } from 'ethereumjs-util';
 import { uint, address, string, bytes, bool, int } from './solidityTypes';
 import xss from 'xss';
 import { MEW_CX } from '@/builds/configs/types';
+import BigNumber from 'bignumber.js';
 
 const toBuffer = v => {
   if (isHexString(v)) {
@@ -148,7 +149,10 @@ const reorderNetworks = () => {
 
 const solidityType = inputType => {
   if (!inputType) inputType = '';
-  if (inputType.includes('[]')) {
+  if (
+    inputType.includes('[') ||
+    inputType.includes(']' || inputType.includes('[]'))
+  ) {
     return { type: 'string', solidityType: `${inputType}` };
   }
   if (inputType.includes(uint)) return { type: 'number', solidityType: uint };
@@ -185,14 +189,27 @@ const stringToArray = str => {
 };
 
 const isContractArgValid = (value, solidityType) => {
-  if (!value) value = '';
-  if (solidityType.includes('[]')) {
+  if (!value && typeof value !== 'boolean') value = '';
+  if (
+    solidityType.includes('[') ||
+    solidityType.includes(']' || solidityType.includes('[]'))
+  ) {
     const parsedValue = Array.isArray(value) ? value : stringToArray(value);
-    const type = solidityType.replace('[]', '');
+    const endOfType = solidityType.indexOf('[');
+    const type = solidityType.substring(0, endOfType);
+    const hasParam =
+      solidityType.substring(endOfType, solidityType.length).length > 2;
+    const paramValue = solidityType.substring(
+      endOfType + 1,
+      solidityType.length - 1
+    );
     for (const parsedItem of parsedValue) {
       if (!isContractArgValid(parsedItem, type)) return false;
     }
-    return true;
+    const tooManyOrMissingParam = hasParam
+      ? parsedValue.length === BigNumber(paramValue).toNumber()
+      : true;
+    return tooManyOrMissingParam;
   }
   if (solidityType.includes(uint) || solidityType.includes(int))
     return value !== '' && !isNaN(value) && isInt(value);

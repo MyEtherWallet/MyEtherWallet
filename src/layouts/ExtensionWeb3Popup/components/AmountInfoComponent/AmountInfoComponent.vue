@@ -5,18 +5,14 @@
     </div>
     <div class="amount-text-container">
       <p class="amount-text">
-        {{ direction === 'to' ? '+' : '-' }} {{ concattedAmount }}
+        {{ directionSymbol }} {{ concattedAmount }}
         <span>{{ currency.toUpperCase() }}</span>
       </p>
       <p class="address-text">
         {{ $t('common.addr') }}:
-        {{
-          currency !== $store.state.main.network.type.name
-            ? concat(receiver)
-            : concat(address)
-        }}
+        {{ displayedAddress }}
       </p>
-      <p v-if="currency !== $store.state.main.network.type.name">
+      <p v-if="isContract">
         {{ $t('common.via-contract-address') }} {{ concat(address) }}
       </p>
     </div>
@@ -49,6 +45,21 @@ export default {
   computed: {
     concattedAmount() {
       return `${this.amount}`.substring(0, 5);
+    },
+    directionSymbol() {
+      return this.direction === 'to' ? '+' : '-';
+    },
+    displayedAddress() {
+      return this.currency !== this.$store.state.main.network.type.name &&
+        this.direction === 'to'
+        ? this.concat(this.receiver)
+        : this.concat(this.address);
+    },
+    isContract() {
+      return (
+        this.currency !== this.$store.state.main.network.type.name &&
+        this.direction === 'to'
+      );
     }
   },
   methods: {

@@ -101,9 +101,15 @@ chrome.storage.sync.get(null, networkChanger);
 chrome.storage.onChanged.addListener(items => {
   Object.keys(items).forEach(item => {
     if (isAddress(item)) {
-      const currentNotifications = JSON.parse(locStore.get('notifications'));
-      currentNotifications[item] = [];
-      locStore.get('notifications', JSON.stringify(currentNotifications));
+      const storedNotifications = locStore.get('notifications') || {};
+      const currentNotifications = storedNotifications;
+      if (items[item].hasOwnProperty('newValue')) {
+        currentNotifications[item] = [];
+        locStore.set('notifications', currentNotifications);
+      } else {
+        delete currentNotifications[item];
+        locStore.set('notifications', currentNotifications);
+      }
     }
 
     if (

@@ -33,7 +33,7 @@
   "collateral": "Залог",
   "current-price-info": "Информация о текущей цене",
   "min-eth-req": "Необходимый минимум ETH",
-  "stability-fee-in-mkr": "Плата за стабильность @{value}% в год в MKR",
+  "stability-fee-in-mkr": "Комиссия за стабильность @{value}% в год",
   "projected-liquidation": "Расчетная ликвидационная цена (ETH/USD)",
   "projected-collat-ratio": "Расчетный коэффициент залога к задолженности",
   "create-instruct": "Укажите количество валюты для залога, чтобы определить, сколько DAI вы хотели бы генерировать.",

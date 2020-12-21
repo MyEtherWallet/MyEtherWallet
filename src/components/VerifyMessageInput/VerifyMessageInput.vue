@@ -126,8 +126,8 @@ export default {
           sig.slice(32, 64)
         );
         if (
-          json.address.replace('0x', '') !==
-          pubToAddress(pubKey).toString('hex')
+          json.address.replace('0x', '').toLowerCase() !==
+          pubToAddress(pubKey).toString('hex').toLowerCase()
         ) {
           this.deleteInput();
           this.showMessage = false;
