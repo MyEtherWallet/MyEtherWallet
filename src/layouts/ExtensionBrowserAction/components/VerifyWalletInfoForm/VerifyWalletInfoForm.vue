@@ -1,16 +1,12 @@
 <template>
   <div class="verify-wallet-container">
     <div class="wallet-verification-container">
-      <div v-if="Object.keys(wallet).length > 0">
-        <blockie
-          width="35px"
-          height="35px"
-          :address="wallet.getAddressString()"
-        />
+      <div>
+        <blockie width="35px" height="35px" :address="address" />
       </div>
       <div class="wallet-information">
         <p>
-          {{ wallet.getAddressString() }}
+          {{ address }}
         </p>
         <div class="balance-container">
           <p class="total-text">{{ $t('mewcx.total-wallet-value') }}</p>
@@ -79,14 +75,6 @@ export default {
     blockie: Blockie
   },
   props: {
-    generateWallet: {
-      type: Function,
-      default: () => {}
-    },
-    generateWalletValidation: {
-      type: Boolean,
-      default: false
-    },
     loading: {
       type: Boolean,
       default: false
@@ -95,9 +83,9 @@ export default {
       type: String,
       default: ''
     },
-    wallet: {
-      type: Object,
-      default: () => {}
+    address: {
+      type: String,
+      default: ''
     },
     walletName: {
       type: String,
