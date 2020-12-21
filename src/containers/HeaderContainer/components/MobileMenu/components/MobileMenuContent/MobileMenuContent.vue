@@ -19,7 +19,7 @@
       </router-link>
 
       <mobile-menu-button
-        :ismenuopen="true"
+        :ismenuopen="false"
         class="ml-auto"
         @click.native="closeMenu"
       />

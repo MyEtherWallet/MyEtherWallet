@@ -1,5 +1,6 @@
 import AKA from './AKA.js';
 import ATH from './ATH.js';
+import BSC from './BSC.js';
 import CLO from './CLO.js';
 import EGEM from './EGEM.js';
 import ELLA from './ELLA.js';
@@ -38,6 +39,7 @@ import EWT from './EWT.js';
 export {
   AKA,
   ATH,
+  BSC,
   CLO,
   EGEM,
   ELLA,

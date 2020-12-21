@@ -1,0 +1,59 @@
+@import '~@/scss/GlobalVariables';
+
+.success-container {
+  align-items: center;
+  background-color: $white;
+  border-radius: 4px;
+  flex-direction: column;
+  padding: 50px;
+  width: 500px;
+  @media all and (max-width: 500px) {
+    width: 300px;
+  }
+
+  .button-container {
+    flex-direction: column;
+    width: 100%;
+    button {
+      cursor: pointer;
+      display: block;
+      margin: 0 auto;
+      max-width: 300px;
+      padding: 20px 0;
+      text-align: center;
+      width: 100%;
+      position: relative;
+      margin-top: 40px;
+    }
+  }
+
+  .withdrawal-address-container {
+    width: 100%;
+    background: $light-green-1;
+    padding: 25px;
+    margin: 10px 0;
+    word-wrap: break-word;
+    text-align: left;
+  }
+
+  i {
+    border: 3px solid #05c0a5;
+    border-radius: 200px;
+    color: #05c0a5;
+    font-size: 90px;
+    margin-bottom: 15px;
+    padding: 25px;
+  }
+
+  .disabled {
+    background-color: $dark-grey-11;
+    border: none;
+    color: $white;
+    pointer-events: none;
+  }
+
+  .generate-again {
+    border: none;
+    padding-top: 0;
+  }
+}

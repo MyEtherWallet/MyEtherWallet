@@ -10,5 +10,8 @@
   "turn-on-contract-data": "Пожалуйста, включите контрактные данные в настройках приложения Ethereum",
   "iframe-timeout": "Убедитесь, что вы включили всплывающие окна в браузере и что блокировщик рекламы не блокирует всплывающее окно",
   "unsupported-browser": "Браузер не поддерживается! Попробуйте использовать Trezor в Chrome или Firefox!",
-  "popup-failed-to-open": "Не удалось открыть всплывающее окно. Убедитесь, что вы включили всплывающие окна в браузере и что ваш блокировщик рекламы не блокирует всплывающее окно"
+  "popup-failed-to-open": "Не удалось открыть всплывающее окно. Убедитесь, что вы включили всплывающие окна в браузере и что ваш блокировщик рекламы не блокирует всплывающее окно",
+  "safety-check-failed": "Safety check failed, make sure you are using latest trezor firmware",
+  "initializing-failed": "Failed to initialize, try unplugging and replugging trezor",
+  "trezor-connect-not-initialized": "TrezorConnect is not yet initialized! try unplugging and replugging Trezor wallet"
 }

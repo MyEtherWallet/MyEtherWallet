@@ -1,0 +1,85 @@
+@import '~@/scss/GlobalVariables';
+
+.review-step {
+  color: $light-grey-18;
+  flex-direction: column;
+  .main-title {
+    text-align: center;
+    margin-bottom: 10px;
+    @media all and (max-width: 500px) {
+      margin-top: 30px;
+    }
+  }
+  div {
+    justify-content: space-between;
+  }
+  .review-container {
+    @media all and (max-width: $mobile-width) {
+      margin-top: 20px;
+    }
+  }
+  .address-container,
+  .review-container {
+    background-color: $light-green-1;
+    border-radius: 5px;
+    flex-direction: column;
+    padding: 20px;
+    width: 100%;
+    .eth-value {
+      color: $dark-blue-13;
+      font-weight: 500;
+    }
+    .convert-value {
+      color: $dark-grey-14;
+    }
+    .number {
+      color: $light-blue-1;
+    }
+    .title {
+      color: $dark-blue-13;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+    .address {
+      color: $dark-blue-1;
+    }
+  }
+  .align-right,
+  .eth-value {
+    text-align: right;
+  }
+  .checkboxes-container {
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    align-items: start;
+    align-self: center;
+    max-width: 650px;
+
+    .switch {
+      align-items: start;
+      justify-content: start;
+      width: 100%;
+      span {
+        text-align: left;
+      }
+      .link {
+        color: $mew-green;
+      }
+
+      input[type='checkbox']::after {
+        content: ' ';
+        background-color: $mew-green;
+        color: $white;
+        display: inline-block;
+        visibility: visible;
+      }
+
+      input {
+        margin-right: 10px;
+        margin-top: 4px;
+      }
+    }
+  }
+}

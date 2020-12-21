@@ -1,10 +1,6 @@
 import eventHandler from './eventHandler';
 import { toPayload } from '../jsonrpc';
 import { getSanitizedTx } from '../methods/utils';
-import utils from 'web3-utils';
-import * as locStore from 'store';
-import BigNumber from 'bignumber.js';
-import { sanitizeHex } from '@/wallets/utils';
 
 import {
   WEB3_SEND_TX,
@@ -78,17 +74,6 @@ export default async ({ payload }, res, next) => {
 
       eventHandler(eventName, obj, resolveName, rejectName)
         .then(response => {
-          if (tx.from !== null) {
-            const localStoredObj = locStore.get(
-              utils.sha3(utils.toChecksumAddress(tx.from))
-            );
-            locStore.set(utils.sha3(utils.toChecksumAddress(tx.from)), {
-              nonce: sanitizeHex(
-                new BigNumber(localStoredObj.nonce).plus(1).toString(16)
-              ),
-              timestamp: localStoredObj.timestamp
-            });
-          }
           res(null, toPayload(payload.id, response.payload));
         })
         .catch(e => {

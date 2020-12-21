@@ -9,6 +9,7 @@ const NotFoundLayout = () => import('@/layouts/NotFoundLayout');
 const GettingStarted = () => import('@/layouts/GettingStarted');
 const SendOfflineHelper = () => import('@/layouts/SendOfflineHelper');
 const VerifyMessageLayout = () => import('@/layouts/VerifyMessageLayout');
+const GenerateAddressLayout = () => import('@/layouts/GenerateAddressLayout');
 const DappSubmission = () => import('@/layouts/DappSubmissionLayout');
 const AboutYourDapp = () =>
   import('@/layouts/DappSubmissionLayout/containers/AboutYourDappContainer');
@@ -144,6 +145,12 @@ const router = [
     path: '/verify-message',
     name: 'VerifyMessageLayout',
     component: VerifyMessageLayout,
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/generate-eth2-keystore',
+    name: 'GenerateAddressLayout',
+    component: GenerateAddressLayout,
     meta: { requiresAuth: false }
   },
   {

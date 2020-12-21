@@ -10,5 +10,6 @@
   "bity-rate-failed": "swap.notice.bity-rate-failed",
   "error-parsing-tx-details": "notifications.error-parsing-tx-details",
   "error-generating-swap": "swap.warning.error-generating-swap",
-  "liquidity-too-low": "swap.warning.liquidity-too-low"
+  "liquidity-too-low": "swap.warning.liquidity-too-low",
+  "not-enough-eth-gas": "swap.warning.not-enough-eth-gas"
 }

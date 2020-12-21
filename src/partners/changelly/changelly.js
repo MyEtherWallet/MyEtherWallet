@@ -20,11 +20,18 @@ const errorLogger = debug('v5:partners-changelly');
 const disabled = [];
 
 function checkAndChange(value) {
+  if (!value) return value;
   if (value === 'USDT Omni') {
     return 'usdt';
   }
   if (value === 'USDT') {
     return 'usdt20';
+  }
+  if (value.toLowerCase() === 'repv2') {
+    return 'rep';
+  }
+  if (value.toLowerCase() === 'rep') {
+    return 'REPV2';
   }
   return value;
 }
@@ -140,8 +147,8 @@ export default class Changelly {
         }, 20000);
 
         const changellyDetails = await changellyCalls.getFixRate(
-          fromCurrency,
-          toCurrency,
+          checkAndChange(fromCurrency).toLowerCase(),
+          checkAndChange(toCurrency).toLowerCase(),
           fromValue,
           this.network
         );
@@ -184,14 +191,14 @@ export default class Changelly {
     try {
       const changellyDetails = await Promise.all([
         changellyCalls.getMin(
-          fromCurrency,
-          toCurrency,
+          checkAndChange(fromCurrency).toLowerCase(),
+          checkAndChange(toCurrency).toLowerCase(),
           fromValue,
           this.network
         ),
         changellyCalls.getRate(
-          fromCurrency,
-          toCurrency,
+          checkAndChange(fromCurrency).toLowerCase(),
+          checkAndChange(toCurrency).toLowerCase(),
           fromValue,
           this.network
         )

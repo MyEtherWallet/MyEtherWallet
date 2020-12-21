@@ -1,0 +1,95 @@
+@import '~@/scss/GlobalVariables';
+
+.mnemonic-phrase-container {
+  align-items: center;
+  background-color: $white;
+  border-radius: 4px;
+  flex-direction: column;
+  padding: 50px;
+  width: 500px;
+  @media all and (max-width: 500px) {
+    width: 350px;
+  }
+  .title-container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .title {
+      color: $dark-blue-2;
+      font-size: 20px;
+      font-weight: 500;
+    }
+    .desc {
+      color: $dark-blue-12;
+      font-size: 14px;
+      text-align: center;
+    }
+  }
+
+  .button-container {
+    flex-direction: column;
+    width: 100%;
+    button,
+    a {
+      cursor: pointer;
+      display: block;
+      margin: 0 auto;
+      max-width: 300px;
+      padding: 20px 0;
+      text-align: center;
+      width: 100%;
+      position: relative;
+      margin-top: 40px;
+      &:hover,
+      &:active {
+        background-color: $mew-green;
+        color: $white;
+        text-decoration: none;
+      }
+
+      img {
+        position: absolute;
+        right: 20px;
+        top: 24px;
+        width: 25px;
+      }
+    }
+  }
+
+  .mnemonic-container {
+    background-color: $light-green-1;
+    border-radius: 4px;
+    display: grid;
+    grid-column-gap: 30px;
+    grid-row-gap: 20px;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 30px;
+    text-align: left;
+    width: 100%;
+    @media all and (max-width: 500px) {
+      grid-template-columns: 1fr 1fr;
+      grid-column-gap: 15px;
+    }
+
+    .number {
+      color: $light-grey-21;
+    }
+    .word {
+      color: $dark-blue-6;
+    }
+  }
+
+  .disabled {
+    background-color: $dark-grey-11;
+    border: none;
+    color: $white;
+    pointer-events: none;
+  }
+}
+
+.generating {
+  p {
+    color: $white;
+    margin-top: 10px;
+  }
+}
