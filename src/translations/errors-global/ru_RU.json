@@ -9,5 +9,13 @@
   "something-went-wrong": "Что-то пошло не так!",
   "signer-address-different": "Адрес подписчика отличается от полученного адреса!",
   "high-gas-limit-warning": "Внимание: Высокая цена газa означает более высокие комиссии за транзакцию.",
-  "invalid-network-id-sig": "Возвращена неверная подпись networkId. Ожидается: {expected} , Получено: {got}"
+  "invalid-network-id-sig": "Возвращена неверная подпись networkId. Ожидается: {expected} , Получено: {got}",
+  "print-support-error": "Print isn't supported or browser does not support print",
+  "network-error": "No network connection please make sure you are connected",
+  "browser-not-supported": "Browser not compliant. Try using Chrome or Opera!",
+  "access-denied": "You dont have necessary permission to perform this task, make sure you are logged in as admin",
+  "unable-to-reset-device": "Unable to reset device, try unplugging and replugging",
+  "u2f-not-supported": "U2F Not supported by browser!",
+  "address-is-contract": "The address provided belongs to a smart contract. Funds sent directly to a contract address may not be recoverable.",
+  "low-gas-price": "Warning: Your gas price is low, which may cause a delayed or dropped transaction."
 }

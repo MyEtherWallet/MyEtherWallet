@@ -86,7 +86,7 @@
     "add-contact": "Добавить Контакт"
   },
   "no-avail": "Эта функция недоступна.",
-  "dashboard-swap": "MEW является партнером Bity, Kyber Network, Changelly и Simplex, чтобы позволить пользователям обменивать фиатные деньги на криптовалюту, эфириум и биткоины, эфириум и ERC20.",
+  "dashboard-swap": "MEW является партнером DEX.AG, Changelly, Bity и Simplex чтобы предлагать конкурентоспособные тарифы для обмена ETH и токенов, а также ETH <-> Fiat и ETH <-> BTC",
   "etherscan-tx-url": "https://etherscan.io/tx/[[txHash]]",
   "etherscan-address-url": "https://etherscan.io/address/[[address]]",
   "address-book": {
@@ -107,6 +107,7 @@
     "success-update": "Обновление прошло успешно",
     "save-addr": "Сохранить адрес"
   },
+  "web3-not-found": "Образец Web3 не найден!",
   "import-error": "Что-то пошло не так при импорте файла, пожалуйста, убедитесь, что файл является допустимым",
   "account-content": {
     "header": "ИКОНКА МОЕГО АДРЕСА",
@@ -115,6 +116,7 @@
     "link2": "https://www.myetherwallet.com",
     "my-priv": "МОЙ ЗАКРЫТЫЙ КЛЮЧ",
     "warning": "Пожалуйста, храните бумажный кошелек в {safe} месте! Пожалуйста, {do-not} своим закрытым ключом с кем-либо!",
+    "dont-share-priv-key": "Пожалуйста, {doNot} делитесь вашим закрытым ключом с кем-либо!",
     "safe": "БЕЗОПАСНОМ",
     "do-not": "НЕ делитесь"
   },
