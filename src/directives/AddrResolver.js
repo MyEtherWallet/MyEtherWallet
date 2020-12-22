@@ -81,7 +81,9 @@ const AddrResolver = {
       messageDiv.appendChild(errorPar);
       if (
         (parentCurrency === network.type.name ||
-          EthereumTokens[parentCurrency]) &&
+          EthereumTokens[parentCurrency] ||
+          // checks whether this is happening in swap
+          !_this.hasOwnProperty('unableToValidate')) &&
         Misc.isValidETHAddress(domain)
       ) {
         if (!checkDarklist(domain)) {

@@ -18,5 +18,7 @@
   "transport-interface": "Указанный номер интерфейса не поддерживается устройством в его текущей конфигурации.",
   "wrong-wallet": "Вы выбрали неправильный кошелек на вашем устройстве",
   "device-disconnected": "Ledger устройство отключилось во время действия.",
-  "denied-by-user": "Пользователь отклонил действие."
+  "denied-by-user": "Пользователь отклонил действие.",
+  "no-interface-found": "Please upgrade firmware or contact support.",
+  "unable-to-claim": "Unable to connect to Ledger, make sure it is not used in another site"
 }

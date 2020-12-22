@@ -1,3 +1,23 @@
+### Release v5.7.16
+
+### Feature
+
+* Add Swap alternatives [#2679](https://github.com/MyEtherWallet/MyEtherWallet/pull/2679)
+
+### Devop
+
+* Remove terms and privacy on translations [#2723](https://github.com/MyEtherWallet/MyEtherWallet/pull/2723)
+
+### Bug
+
+* Fix contract interaction when arrays have set params [#2719](https://github.com/MyEtherWallet/MyEtherWallet/pull/2719)
+* Fix contract interaction inputs [#2729](https://github.com/MyEtherWallet/MyEtherWallet/pull/2729)
+* Fix GLN copy [#2717](https://github.com/MyEtherWallet/MyEtherWallet/pull/2717)
+* Fix GNT migrator balance not showing sometimes [#2728](https://github.com/MyEtherWallet/MyEtherWallet/pull/2728)
+* Fix LTC validation for Unstoppable [#2699](https://github.com/MyEtherWallet/MyEtherWallet/pull/2699)
+* Add exeption for GameCredits token [#2727](https://github.com/MyEtherWallet/MyEtherWallet/pull/2727)
+* Fix missing decimal for ETH and handle new est. gas error [#2730](https://github.com/MyEtherWallet/MyEtherWallet/pull/2730)
+
 ### Release v5.7.15
 
 ### Feature

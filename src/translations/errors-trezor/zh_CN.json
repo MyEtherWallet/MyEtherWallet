@@ -10,5 +10,8 @@
   "turn-on-contract-data": "Please enable Contract data on the Ethereum app Settings",
   "iframe-timeout": "Make sure you enable pop-ups in the browser, and that your ad blocker is not blocking the pop-up",
   "unsupported-browser": "Browser not supported! Please try using Trezor with Chrome or Firefox!",
-  "popup-failed-to-open": "Popup failed to open.  Make sure you enable pop-ups in the browser, and that your ad blocker is not blocking the pop-up"
+  "popup-failed-to-open": "Popup failed to open.  Make sure you enable pop-ups in the browser, and that your ad blocker is not blocking the pop-up",
+  "safety-check-failed": "Safety check failed, make sure you are using latest trezor firmware",
+  "initializing-failed": "Failed to initialize, try unplugging and replugging trezor",
+  "trezor-connect-not-initialized": "TrezorConnect is not yet initialized! try unplugging and replugging Trezor wallet"
 }
