@@ -338,10 +338,13 @@ export default {
         title: 'Mew',
         data: [
           { label: 'About us', routerLink: 'CompanyPage' },
-          { label: 'How it works', routerLink: 'CompanyPage' },
+          { label: 'How it works', routerLink: 'HowItWorks' },
           { label: 'Team', routerLink: 'TeamPage' },
-          { label: 'Help center', routerLink: 'CompanyPage' },
-          { label: 'Customer support', routerLink: 'CompanyPage' },
+          { label: 'Help center', link: 'https://kb.myetherwallet.com/' },
+          {
+            label: 'Customer support',
+            link: 'mailto:support@myetherwallet.com'
+          },
           { label: 'MEW topia', link: 'https://www.mewtopia.com/' },
           { label: 'Press Kit', routerLink: 'PressKit' }
         ]
