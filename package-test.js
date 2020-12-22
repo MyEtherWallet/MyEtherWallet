@@ -51,7 +51,7 @@ const EXCEPTIONS = [
   'postcss-import',
   'postcss-url',
   'webpack',
-  'copy-webpack-plugin'
+  'copy-webpack-plugin',
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
