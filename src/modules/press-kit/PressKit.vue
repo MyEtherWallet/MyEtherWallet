@@ -7,7 +7,7 @@
           <i18n
             path="footer.press-kit.subtext"
             tag="div"
-            class="subtitle text-center"
+            class="h5 text-center mt-3"
           >
             <a
               slot="mediumlink"

@@ -339,7 +339,7 @@ export default {
         data: [
           { label: 'About us', routerLink: 'CompanyPage' },
           { label: 'How it works', routerLink: 'CompanyPage' },
-          { label: 'Team', routerLink: 'CompanyPage' },
+          { label: 'Team', routerLink: 'TeamPage' },
           { label: 'Help center', routerLink: 'CompanyPage' },
           { label: 'Customer support', routerLink: 'CompanyPage' },
           { label: 'MEW topia', link: 'https://www.mewtopia.com/' },
