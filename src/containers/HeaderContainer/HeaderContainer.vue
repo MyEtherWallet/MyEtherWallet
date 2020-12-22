@@ -348,7 +348,6 @@ export default {
     };
 
     this.$eventHub.$on('issueModal', (error, resolve) => {
-      console.log(error);
       let errorPop = store.get('errorPop') || 0;
       errorPop += 1;
       store.set('errorPop', errorPop);
