@@ -1,0 +1,84 @@
+@import '~@/scss/GlobalVariables';
+
+.title {
+  color: $dark-blue-13;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 30px 40px 0 40px;
+}
+
+.validator-container {
+  border-radius: 4px;
+  color: $dark-blue-13;
+  cursor: pointer;
+  flex-direction: column;
+  font-weight: 600;
+  margin: 20px 40px;
+  .top-row {
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 15px 20px;
+    width: 100%;
+    &.pending-expanded {
+      border-bottom: 1px solid $light-orange-1;
+    }
+    &.active-expanded {
+      border-bottom: 1px solid $mew-green;
+    }
+    &.created-expanded {
+      border-bottom: 1px solid $light-blue-1;
+    }
+    .badge {
+      color: $white;
+      margin-left: 10px;
+      padding: 10px;
+      width: 100px;
+    }
+    .pending-badge {
+      background-color: $light-orange-1;
+    }
+    .active-badge {
+      background-color: $dark-green-5;
+    }
+    .created-badge {
+      background-color: $light-blue-1;
+    }
+    .right-container {
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  .more-info {
+    cursor: text;
+    flex-direction: column;
+    padding: 15px 20px;
+    .more-info-row {
+      flex-direction: row;
+      justify-content: space-between;
+      span {
+        width: 50%;
+        word-wrap: break-word
+      }
+      .info-text {
+        color: $light-grey-18;
+        text-align: right;
+      }
+      
+    }
+  }
+}
+
+.pending-container {
+  border: 1px solid $light-orange-1;
+  background-color: $light-orange-3;
+}
+
+.active-container {
+  background-color: $light-green-1;
+  border: 1px solid $mew-green;
+}
+
+.created-container {
+  background-color: $light-blue-14;
+  border: 1px solid $light-blue-1;
+}

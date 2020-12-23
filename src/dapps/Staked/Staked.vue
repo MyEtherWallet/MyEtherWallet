@@ -2,6 +2,26 @@
   <div class="staked-wrapper">
     <div class="header-container d-flex">
       <back-button class="button-container" :title="$t('common.exit-dapp')">
+        <template v-slot:center>
+          <div class="d-flex">
+            <div
+              :class="['tab-btn', activeValidatorsTab ? 'active-tab' : '']"
+              @click="activeValidatorsTab = !activeValidatorsTab"
+            >
+              {{ $tc('dappsStaked.stake') }}
+            </div>
+            <div
+              :class="[
+                'tab-btn',
+                'validators-btn',
+                !activeValidatorsTab ? 'active-tab' : ''
+              ]"
+              @click="activeValidatorsTab = !activeValidatorsTab"
+            >
+              {{ $t('dappsStaked.status') }}
+            </div>
+          </div>
+        </template>
         <template v-slot:right>
           <div class="d-flex stats-wrapper">
             <div class="d-flex stats-container">
@@ -26,35 +46,43 @@
         </template>
       </back-button>
     </div>
-    <div class="about-container">
-      <img :src="stakedLogo" height="20px" alt="Staked Logo" />
-      <p class="pt-2">{{ $t('dappsStaked.about') }}</p>
-    </div>
-    <stepper
-      :steps="steps"
-      :details="details"
-      :set-data="setData"
-      :tx-hash="txHash"
-      :reset-stepper="resetStepper"
-      @complete-step="completeStep"
-      @active-step="isStepActive"
-      @stakeEth2="startProvision"
-      @sendTransaction="sendTransaction"
-      @reset="reset"
-      @resetStepperDone="resetStepperDone"
-    />
+    <div v-if="activeValidatorsTab">
+      <div class="about-container">
+        <img :src="stakedLogo" height="20px" alt="Staked Logo" />
+        <p class="pt-2">{{ $t('dappsStaked.about') }}</p>
+      </div>
+      <stepper
+        :steps="steps"
+        :details="details"
+        :set-data="setData"
+        :tx-hash="txHash"
+        :reset-stepper="resetStepper"
+        @complete-step="completeStep"
+        @active-step="isStepActive"
+        @stakeEth2="startProvision"
+        @sendTransaction="sendTransaction"
+        @reset="reset"
+        @resetStepperDone="resetStepperDone"
+      />
 
-    <div v-if="currentStepIdx === 0" class="warning-container d-flex">
-      <div><i class="fa fa-exclamation-triangle" /></div>
-      <div>
-        <span>{{ $t('dappsStaked.generate-address.attention') }}</span>
-        <p class="warning mt-2">{{ $t('dappsStaked.warning') }}</p>
+      <div v-if="currentStepIdx === 0" class="warning-container d-flex">
+        <div><i class="fa fa-exclamation-triangle" /></div>
+        <div>
+          <span>{{ $t('dappsStaked.generate-address.attention') }}</span>
+          <p class="warning mt-2">{{ $t('dappsStaked.warning') }}</p>
+        </div>
       </div>
     </div>
+    <staked-status
+      v-if="!activeValidatorsTab"
+      :loading-validators="loadingValidators"
+      :validators="myValidators"
+    />
   </div>
 </template>
 
 <script>
+import stakedStatus from './containers/Status/Status';
 import backButton from '@/layouts/InterfaceLayout/components/BackButton';
 import stakedLogo from '@/assets/images/icons/dapps/staked.png';
 import stepper from './components/Stepper/Stepper';
@@ -67,10 +95,12 @@ import stakeConfigs from './configs';
 export default {
   components: {
     backButton,
-    stepper
+    stepper,
+    stakedStatus
   },
   data() {
     return {
+      myValidators: [],
       transactionData: {},
       details: {},
       totalStaked: '',
@@ -82,6 +112,8 @@ export default {
       currentStepIdx: 0,
       resetStepper: false,
       stakedLogo: stakedLogo,
+      loadingValidators: false,
+      activeValidatorsTab: false,
       steps: [
         {
           name: 1,
@@ -141,8 +173,25 @@ export default {
   },
   mounted() {
     this.setup();
+    this.getValidators();
   },
   methods: {
+    async getValidators() {
+      this.loadingValidators = true;
+      await axios
+        .get(`${this.endpoint}/history?address=${this.account.address}`, {
+          header: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(resp => {
+          this.myValidators = resp.data;
+          this.loadingValidators = false;
+        })
+        .catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
+        });
+    },
     resetStepperDone() {
       this.resetStepper = false;
     },
@@ -180,13 +229,13 @@ export default {
     goToGenerate() {
       this.$router.push('/generate-eth2-keystore');
     },
-    startProvision() {
+    async startProvision() {
       const params = {
         address: this.account.address,
         withdrawalKey: this.details.address,
         validatorsCount: this.validatorsCount
       };
-      axios
+      await axios
         .post(this.endpoint + '/provision', params, {
           header: {
             'Content-Type': 'application/json'

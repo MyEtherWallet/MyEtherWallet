@@ -44,42 +44,26 @@ import utils from 'web3-utils';
 
 const OLD_GNT_ADDRESS = '0xa74476443119A942dE498590Fe1f2454d7D4aC0d';
 // const NEW_GNT_ADDRESS = '0x7DD9c5Cba05E151C895FDe1CF355C9A1D5DA6429';
-const SYMBOL = 'GNT';
+// const SYMBOL = 'GNT';
 
 export default {
   components: {
     'back-button': BackButton
   },
-  props: {
-    tokensWithBalance: {
-      type: Array,
-      default: function () {
-        return [];
-      }
-    }
-  },
+
   data() {
     return {
       amount: 0,
       hasEnoughRatio: false,
       lendMigratorContract: '',
       loading: false,
-      balanceUpdate: false,
       updatedBalance: 0,
-      miningLockout: false
+      miningLockout: false,
+      lendBalance: 0
     };
   },
   computed: {
     ...mapState('main', ['web3', 'account']),
-    lendBalance() {
-      if (!this.balanceUpdate) {
-        const lendToken = this.tokensWithBalance.find(item => {
-          return item.symbol === SYMBOL;
-        });
-        return lendToken ? new BigNumber(lendToken.balance).toFixed() : 0;
-      }
-      return this.updatedBalance;
-    },
     disabled() {
       const amount = new BigNumber(this.amount);
       const balance = new BigNumber(this.lendBalance);
@@ -89,18 +73,23 @@ export default {
       return true;
     }
   },
-  mounted() {},
+  mounted() {
+    this.getLendBalance();
+  },
   methods: {
     async checkAllowance() {
       const lendContract = new this.web3.eth.Contract(OLD_GNT, OLD_GNT_ADDRESS);
       this.migrate(lendContract);
       this.loading = true;
     },
-    getLendBalance() {
-      const lendToken = this.tokensWithBalance.find(item => {
-        return item.symbol === SYMBOL;
-      });
-      return lendToken ? new BigNumber(lendToken.balance).toFixed() : 0;
+    async getLendBalance() {
+      const lendContract = new this.web3.eth.Contract(OLD_GNT, OLD_GNT_ADDRESS);
+      const balance = await lendContract.methods
+        .balanceOf(this.account.address)
+        .call();
+      this.lendBalance = new BigNumber(balance)
+        .div(new BigNumber(10).pow(18))
+        .toFixed();
     },
     async migrate(lendContract) {
       const estimatedAmount = new BigNumber(this.amount)
@@ -145,6 +134,7 @@ export default {
       this.amount = this.lendBalance;
     },
     getUpdatedBalance() {
+      this.getLendBalance();
       const abi = [
         {
           constant: true,
@@ -154,7 +144,7 @@ export default {
               type: 'address'
             }
           ],
-          name: 'balanceOf',
+          name: '.methodsbalanceOf',
           outputs: [
             {
               name: '',
@@ -166,13 +156,11 @@ export default {
         }
       ];
       const contract = new this.web3.eth.Contract(abi, OLD_GNT_ADDRESS);
-      this.balanceUpdate = false;
       contract.methods
         .balanceOf(this.account.address)
         .call()
         .then(res => {
           this.updatedBalance = utils.fromWei(res, 'Ether');
-          this.balanceUpdate = true;
         });
     }
   }

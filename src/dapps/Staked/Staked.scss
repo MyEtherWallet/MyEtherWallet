@@ -83,3 +83,24 @@
     }
   }
 }
+
+
+.tab-btn {
+  background-color: $light-grey-17;
+  border: 1px solid $light-grey-4;
+  border-radius: 4px;
+  color: $dark-blue-1;
+  cursor: pointer;
+  padding: 10px 25px;
+}
+
+.active-tab {
+  background-color: $dark-blue-2;
+  color: $white;
+  z-index: 1;
+}
+
+
+.validators-btn {
+  margin-left: -12px;
+}
