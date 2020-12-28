@@ -50,7 +50,8 @@ const EXCEPTIONS = [
   '@vue/cli-service',
   'postcss-import',
   'postcss-url',
-  'webpack'
+  'webpack',
+  'copy-webpack-plugin',
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
