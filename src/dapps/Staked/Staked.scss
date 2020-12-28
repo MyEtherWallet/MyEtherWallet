@@ -9,7 +9,7 @@
   .button-container {
     width: 100%;
     @media all and (max-width: 730px) {
-      align-items: baseline;
+      align-items: center;
       flex-direction: column;
     }
   }

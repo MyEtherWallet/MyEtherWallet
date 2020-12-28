@@ -84,6 +84,7 @@
   "estimated-wait": "Estimated Wait Time",
   "validators-infront": "Validators infront of you",
   "validators-back": "Validators behind you",
-  "queue-speed": " "
-  
+  "queue-speed": "Queue speed",
+  "validators-per": "validators per day",
+  "estimated-activation-timestamp": "Estimated Activation Timestamp"
 }

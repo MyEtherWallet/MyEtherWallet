@@ -75,7 +75,7 @@
     </div>
     <staked-status
       v-if="!activeValidatorsTab"
-      :loading-validators="loadingValidators"
+      :loading="loadingValidators"
       :validators="myValidators"
     />
   </div>
@@ -112,7 +112,7 @@ export default {
       currentStepIdx: 0,
       resetStepper: false,
       stakedLogo: stakedLogo,
-      loadingValidators: false,
+      loadingValidators: true,
       activeValidatorsTab: false,
       steps: [
         {
@@ -189,6 +189,7 @@ export default {
           this.loadingValidators = false;
         })
         .catch(err => {
+          this.loadingValidators = false;
           Toast.responseHandler(err, Toast.ERROR);
         });
     },

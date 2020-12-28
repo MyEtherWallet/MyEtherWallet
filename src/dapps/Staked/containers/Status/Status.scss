@@ -25,7 +25,7 @@
     &.active-expanded {
       border-bottom: 1px solid $mew-green;
     }
-    &.created-expanded {
+    &.deposited-expanded {
       border-bottom: 1px solid $light-blue-1;
     }
     .badge {
@@ -40,7 +40,7 @@
     .active-badge {
       background-color: $dark-green-5;
     }
-    .created-badge {
+    .deposited-badge {
       background-color: $light-blue-1;
     }
     .right-container {
@@ -52,6 +52,10 @@
     cursor: text;
     flex-direction: column;
     padding: 15px 20px;
+    .queue-speed {
+      color: $light-grey-18;
+      font-style: italic;
+    }
     .more-info-row {
       flex-direction: row;
       justify-content: space-between;
@@ -63,7 +67,6 @@
         color: $light-grey-18;
         text-align: right;
       }
-      
     }
   }
 }
@@ -78,7 +81,7 @@
   border: 1px solid $mew-green;
 }
 
-.created-container {
+.deposited-container {
   background-color: $light-blue-14;
   border: 1px solid $light-blue-1;
 }
