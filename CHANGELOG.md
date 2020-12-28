@@ -1,5 +1,7 @@
 ### Feature
-- Staked validators status [#2748](https://github.com/MyEtherWallet/MyEtherWallet/pull/2748)
+
+* Staked validators status [#2748](https://github.com/MyEtherWallet/MyEtherWallet/pull/2748)
+
 ### Release v5.7.16
 
 ### Feature
