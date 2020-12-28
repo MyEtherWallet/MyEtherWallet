@@ -8,8 +8,8 @@
   "daemon0x6901": "Ошибка демона: 0x6901",
   "can-only-sign-eth": "BCVault не поддерживает другие сети кроме основной сети ETH.",
   "check-daemon": "Демон BCVault возможно отключен. Пожалуйста, см. настройки в приложении BC Vault.",
-  "no-account-found": "No account returned! Please make sure to create an account on the BCVault app!",
-  "no-device-found": "No device found! Please make sure that you have your hardware wallet connected!",
-  "session-error": "No device detected or no account found!",
-  "https-issue": "BC Vault server issue! Please make sure the Daemon is running on the BCVault app!"
+  "no-account-found": "Не найдено ни одного аккаунта! Пожалуйста, создайте аккаунт в BCVault приложения!",
+  "no-device-found": "Устройство не найдено! Пожалуйста, убедитесь, что ваш кошелек подключен!",
+  "session-error": "Не обнаружено устройство или не найден аккаунт!",
+  "https-issue": "Проблема с сервером BC Vault! Пожалуйста, убедитесь, что daemon запущен в приложении BCVault!"
 }
