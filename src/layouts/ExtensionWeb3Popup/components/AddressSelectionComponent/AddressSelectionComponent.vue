@@ -34,7 +34,7 @@
       <div class="address-text">
         <div v-if="walletType === 'wallet'">
           <p v-if="nickname !== ''">
-            <b>{{ nickname }}</b>
+            <b>{{ nickname | concatAddr }}</b>
           </p>
           <p>{{ address | concatAddr }}</p>
           <div class="balance">

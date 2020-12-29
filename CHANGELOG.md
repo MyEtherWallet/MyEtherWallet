@@ -1,3 +1,14 @@
+### Feature
+
+* Staked validators status [#2748](https://github.com/MyEtherWallet/MyEtherWallet/pull/2748)
+### Release v5.7.17
+
+### Bug
+
+* Fix wrong values passed to estimateGas in eth_signTransaction method [#2753](https://github.com/MyEtherWallet/MyEtherWallet/pull/2753)
+* mew cx ens bug fix [#2745](https://github.com/MyEtherWallet/MyEtherWallet/pull/2745)
+* mew cx remove duplicate notification due to checksum [#2732](https://github.com/MyEtherWallet/MyEtherWallet/pull/2732)
+
 ### Release v5.7.16
 
 ### Feature
@@ -6,7 +17,7 @@
 
 ### Devop
 
-* Remove terms and privacy on translations [#2723](https://github.com/MyEtherWallet/MyEtherWallet/pull/2723)
+* Remove terms and privacy ona translations [#2723](https://github.com/MyEtherWallet/MyEtherWallet/pull/2723)
 
 ### Bug
 

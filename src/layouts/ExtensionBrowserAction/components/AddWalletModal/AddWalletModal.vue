@@ -35,9 +35,8 @@
               :import="stepChange"
             />
           </div>
-          <div>
+          <div v-show="step === 1" class="generate-wallet-form">
             <generate-wallet-form
-              v-show="step === 1"
               :error="error"
               :loading="loading"
               :generate-wallet="generateWallet"
@@ -283,10 +282,8 @@
             <verify-wallet-info-form
               :error="error"
               :loading="loading"
-              :generate-wallet="generateWallet"
-              :generate-wallet-validation="generateWalletValidation"
               :network="network"
-              :wallet="wallet"
+              :address="selectedAddress"
               :converted-balance="convertedBalance"
               :balance="balance"
               @walletName="updateWalletName"
