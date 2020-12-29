@@ -33,13 +33,11 @@ class MEWconnectWallet {
   init() {
     return new Promise((resolve, reject) => {
       const txSigner = tx => {
-        console.log(tx); // todo remove dev item
         const networkId = tx.chainId;
         tx = new Transaction(tx, {
           common: commonGenerator(store.state.wallet.network)
         });
         const txJSON = tx.toJSON(true);
-        console.log(txJSON); // todo remove dev item
         return new Promise((resolve, reject) => {
           this.connection
             .send('eth_signTransaction', txJSON)
