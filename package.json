@@ -100,7 +100,7 @@
     "@walletconnect/browser": "1.0.0-beta.47",
     "@walletconnect/qrcode-modal": "1.1.0",
     "@xkeshi/vue-qrcode": "git+https://github.com/MyEtherWallet/vue-qrcode.git",
-    "axios": "0.21.0",
+    "axios": "0.21.1",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.1.0",
     "babel-jest": "25.2.3",

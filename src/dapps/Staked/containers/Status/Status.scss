@@ -10,9 +10,6 @@
   .no-validators {
     padding: 30px 40px 0 40px;
   }
-  .no-cursor {
-    pointer-events: none;
-  }
   a {
     color: $dark-blue-13 !important;
     font-weight: normal;
@@ -35,9 +32,6 @@
           align-items: baseline;
           flex-direction: column;
         }
-      }
-      span {
-        text-transform: capitalize;
       }
       &.pending-expanded {
         border-bottom: 1px solid $light-orange-1;
@@ -84,7 +78,6 @@
       .more-info-row {
         flex-direction: row;
         justify-content: space-between;
-        text-transform: capitalize;
         padding: 15px 20px;
         span {
           width: 100%;

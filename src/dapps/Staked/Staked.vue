@@ -5,7 +5,7 @@
         <template v-slot:center>
           <div class="d-flex">
             <div
-              :class="['tab-btn', activeValidatorsTab ? 'active-tab' : '']"
+              :class="['tab-btn', !activeValidatorsTab ? 'active-tab' : '']"
               @click="activeValidatorsTab = !activeValidatorsTab"
             >
               {{ $tc('dappsStaked.stake') }}
@@ -14,7 +14,7 @@
               :class="[
                 'tab-btn',
                 'validators-btn',
-                !activeValidatorsTab ? 'active-tab' : ''
+                activeValidatorsTab ? 'active-tab' : ''
               ]"
               @click="activeValidatorsTab = !activeValidatorsTab"
             >
@@ -46,7 +46,7 @@
         </template>
       </back-button>
     </div>
-    <div v-if="activeValidatorsTab">
+    <div v-if="!activeValidatorsTab">
       <div class="about-container">
         <img :src="stakedLogo" height="20px" alt="Staked Logo" />
         <p class="pt-2">{{ $t('dappsStaked.about') }}</p>
@@ -74,7 +74,7 @@
       </div>
     </div>
     <staked-status
-      v-if="!activeValidatorsTab"
+      v-if="activeValidatorsTab"
       :network="network.type.name"
       :loading="loadingValidators"
       :validators="myValidators"
@@ -174,7 +174,6 @@ export default {
   },
   mounted() {
     this.setup();
-    this.getValidators();
   },
   methods: {
     async getValidators() {
@@ -191,6 +190,14 @@ export default {
         })
         .catch(err => {
           this.loadingValidators = false;
+          this.myValidators = [];
+          if (
+            err.response &&
+            err.response.status === 404 &&
+            err.response.data.msg === 'No matching history found'
+          ) {
+            return;
+          }
           Toast.responseHandler(err, Toast.ERROR);
         });
     },
@@ -227,6 +234,7 @@ export default {
         .catch(err => {
           Toast.responseHandler(err, Toast.ERROR);
         });
+      this.getValidators();
     },
     goToGenerate() {
       this.$router.push('/generate-eth2-keystore');

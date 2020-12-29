@@ -34,16 +34,11 @@
               <span>
                 {{ $tc('dappsStaked.validator', 1) }}:
                 <a
-                  :class="[
-                    'ml-2',
-                    networkTypes[0] === network ? 'no-cursor' : ''
-                  ]"
-                  :href="
-                    'https://beaconscan.com/validator/' + info.validator_key
-                  "
+                  class="ml-2"
+                  :href="getUrl(info.validator_key)"
                   target="_blank"
                 >
-                  {{ truncate(info.validator_key) }}</a
+                  {{ truncate('0x' + info.validator_key) }}</a
                 >
               </span>
               <div :class="['badge ml-4', getBadgeClass(info.status)]">
@@ -125,18 +120,28 @@ export default {
     };
   },
   watch: {
-    loading(newVal) {
-      this.loadingValidators = newVal;
+    loading: {
+      deep: true,
+      immediate: true,
+      handler: function (newVal) {
+        this.loadingValidators = newVal;
+      }
     }
   },
   methods: {
+    getUrl(key) {
+      if (this.network === networkTypes[0]) {
+        return 'https://beaconscan.com/pyrmont/validator/' + '0x' + key;
+      }
+      return 'https://beaconscan.com/main/validator/' + '0x' + key;
+    },
     details(info) {
       // pending
       if (info.status.toLowerCase() === types[0]) {
         return [
           {
             label: this.$tc('dappsStaked.validator', 1),
-            info: info.validator_key
+            info: '0x' + info.validator_key
           },
           {
             label: this.$t('dappsStaked.staked'),
@@ -171,7 +176,7 @@ export default {
         return [
           {
             label: this.$tc('dappsStaked.validator', 1),
-            info: info.validator_key
+            info: '0x' + info.validator_key
           },
           {
             label: this.$t('dappsStaked.staked'),
@@ -206,7 +211,7 @@ export default {
         return [
           {
             label: this.$tc('dappsStaked.validator', 1),
-            info: info.validator_key
+            info: '0x' + info.validator_key
           },
           {
             label: this.$t('dappsStaked.activation-timestamp'),
