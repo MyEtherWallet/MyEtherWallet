@@ -92,7 +92,7 @@
                   :process-status="processStatus"
                   :error-message-string="errorMessageString"
                   :index="idx"
-                  :child-update-notification="childUpdateNotification(idx)"
+                  :child-update-notification="childNotif(idx)"
                   @showDetails="showDetails"
                 >
                 </component>
@@ -118,9 +118,7 @@
           :address-link="addressLink"
           :process-status="processStatus"
           :error-message-string="errorMessageString"
-          :child-update-notification="
-            childUpdateNotification(notificationDetails.index)
-          "
+          :child-update-notification="childNotif(notificationDetails.index)"
         >
         </component>
       </div>
@@ -246,8 +244,9 @@ export default {
       ExtensionHelpers.getAccounts(accs => {
         Object.keys(accs).forEach(item => {
           if (isAddress(item)) {
-            if (!this.notifications[item]) return [];
-            const check = this.notifications[item]
+            const checksummedAddress = this.web3.utils.toChecksumAddress(item);
+            if (!this.notifications[checksummedAddress]) return [];
+            const check = this.notifications[checksummedAddress]
               .filter(entry => entry.network === this.network.type.name)
               .filter(entry => {
                 const isUnResolved =
@@ -263,9 +262,9 @@ export default {
             check.forEach(entry => {
               this.web3.eth.getTransactionReceipt(entry.hash).then(result => {
                 if (result === null) return;
-                const noticeIdx = this.notifications[item].findIndex(
-                  noticeEntry => entry.id === noticeEntry.id
-                );
+                const noticeIdx = this.notifications[
+                  checksummedAddress
+                ].findIndex(noticeEntry => entry.id === noticeEntry.id);
                 if (noticeIdx >= 0) {
                   entry.status = result.status
                     ? notificationStatuses.COMPLETE
@@ -284,7 +283,11 @@ export default {
                       : notificationStatuses.FAILED;
                     entry.body.timeRemaining = -1;
                   }
-                  this.updateNotification([item, noticeIdx, entry]);
+                  this.updateNotification([
+                    checksummedAddress,
+                    noticeIdx,
+                    entry
+                  ]);
                 }
               });
             });
@@ -373,7 +376,7 @@ export default {
         this.updateNotification([address, idx, updatedNotif]);
       });
     },
-    childUpdateNotification(idx) {
+    childNotif(idx) {
       if (typeof idx === 'undefined') return () => {};
       return updatedNotif => {
         this.updateNotification([this.account.address, idx, updatedNotif]);
