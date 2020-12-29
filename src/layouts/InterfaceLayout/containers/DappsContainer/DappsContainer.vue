@@ -5,10 +5,10 @@
       <dapp-buttons
         v-for="dapp in sortedObject"
         :key="dapp.title"
-        :title="$t(dapp.title)"
+        :title="dapp.title"
         :icon="dapp.icon"
         :icon-disabled="dapp.iconDisabled"
-        :desc="$t(dapp.desc)"
+        :desc="dapp.desc"
         :param="dapp.route"
         :supported-networks="dapp.supportedNetworks"
         :release-date="dapp.releaseDate"

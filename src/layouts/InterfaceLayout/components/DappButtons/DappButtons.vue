@@ -31,8 +31,8 @@
       alt
     />
     <div class="title-container">
-      <h4>{{ title }}</h4>
-      <p>{{ desc }}</p>
+      <h4>{{ $t(title) }}</h4>
+      <p>{{ $t(desc) }}</p>
     </div>
   </div>
 </template>
