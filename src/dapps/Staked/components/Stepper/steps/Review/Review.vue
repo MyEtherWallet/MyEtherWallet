@@ -60,7 +60,9 @@
             class="link"
             >Staked.us</a
           >
-          <span slot="terms-of-service">{{ $t('termsOfService.title') }}</span>
+          <span slot="terms-of-service">{{
+            $t('dappsStaked.terms-of-service-title')
+          }}</span>
         </i18n>
       </label>
     </div>
