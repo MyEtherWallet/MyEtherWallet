@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="staked-status">
     <div class="title d-flex">
       {{ $t('dappsStaked.my-validators') }}
       <i
@@ -30,10 +30,14 @@
             ]"
             @click="expand(info.validator_key)"
           >
-            <div>
+            <div class="badge-container d-flex">
               <span>
-                {{ $tc('dappsStaked.key', 1) }}:
+                {{ $tc('dappsStaked.validator', 1) }}:
                 <a
+                  :class="[
+                    'ml-2',
+                    networkTypes[0] === network ? 'no-cursor' : ''
+                  ]"
                   :href="
                     'https://beaconscan.com/validator/' + info.validator_key
                   "
@@ -42,7 +46,7 @@
                   {{ truncate(info.validator_key) }}</a
                 >
               </span>
-              <div :class="['badge', getBadgeClass(info.status)]">
+              <div :class="['badge ml-4', getBadgeClass(info.status)]">
                 {{ info.status }}
               </div>
             </div>
@@ -77,7 +81,10 @@
             <div
               v-for="(detail, detailIdx) in details(info)"
               :key="detailIdx"
-              class="more-info-row d-flex mt-3"
+              :class="[
+                'more-info-row d-flex',
+                detailIdx !== details(info).length - 1 ? 'more-info-border' : ''
+              ]"
             >
               <span>{{ detail.label }}</span>
               <span class="info-text">{{ detail.info }}</span>
@@ -92,7 +99,7 @@
 <script>
 import BigNumber from 'bignumber.js';
 import moment from 'moment';
-
+const networkTypes = ['GOERLI'];
 const types = ['pending', 'deposited', 'active', 'created'];
 export default {
   props: {
@@ -103,13 +110,18 @@ export default {
     loading: {
       type: Boolean,
       default: true
+    },
+    network: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
       expanded: '',
       types: types,
-      loadingValidators: true
+      loadingValidators: true,
+      networkTypes: networkTypes
     };
   },
   watch: {
@@ -257,7 +269,7 @@ export default {
       this.expanded = this.expanded !== idx ? idx : '';
     },
     truncate(str) {
-      return str.slice(0, 10) + '...' + str.slice(str.length - 10, str.length);
+      return str.slice(0, 4) + '...' + str.slice(str.length - 4, str.length);
     },
     getBadgeClass(status) {
       if (status.toLowerCase() === types[0]) {
