@@ -24,8 +24,11 @@
           ]"
         >
           <div
-            :class="['top-row d-flex', getExpandedClasses(idx, info.status)]"
-            @click="expand(idx)"
+            :class="[
+              'top-row d-flex',
+              getExpandedClasses(info.validator_key, info.status)
+            ]"
+            @click="expand(info.validator_key)"
           >
             <div>
               <span>
@@ -50,11 +53,17 @@
                 }}
                 {{ $t('common.currency.eth') }}
               </div>
-              <i v-if="!isExpanded(idx)" class="fa fa-lg fa-caret-down ml-2" />
-              <i v-if="isExpanded(idx)" class="fa fa-lg fa-caret-up ml-2" />
+              <i
+                v-if="!isExpanded(info.validator_key)"
+                class="fa fa-lg fa-caret-down ml-2"
+              />
+              <i
+                v-if="isExpanded(info.validator_key)"
+                class="fa fa-lg fa-caret-up ml-2"
+              />
             </div>
           </div>
-          <div v-if="isExpanded(idx)" class="d-flex more-info">
+          <div v-if="isExpanded(info.validator_key)" class="d-flex more-info">
             <div
               v-if="
                 info.status.toLowerCase() === types[0] ||
