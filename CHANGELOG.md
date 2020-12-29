@@ -1,3 +1,7 @@
+### Feature
+
+* Staked validators status [#2748](https://github.com/MyEtherWallet/MyEtherWallet/pull/2748)
+
 ### Devop
 
 * Update Bity Max [#2758](https://github.com/MyEtherWallet/MyEtherWallet/pull/2758)

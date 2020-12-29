@@ -35,7 +35,8 @@
   "withdraw-title": "Eth2 Withdrawal Address",
   "read-and-agree": "I have read and agree to {staked} {terms-of-service}",
   "terms-of-service": "I understand that MEW has no control over any assets I choose to associate with these keys. I willingly assume all risk of loss, including that which comes as a result of protocol or key failure.",
-  "done-desc": "Your stake of {amt} ETH  was sent. Please allow 24-48 hours for your validators to be finalized. {staked} will maintain your validator(s) for you.",
+  "terms-of-service-title": "terms of service",
+  "done-desc": "Your stake of {amt} ETH  was ,sent. Please allow 24-48 hours for your validators to be finalized. {staked} will maintain your validator(s) for you.",
   "track-ethvm": "Track in EthVM",
   "stake-on-eth2": "Stake on Eth2",
   "stake-again": "Stake Again",
@@ -71,5 +72,19 @@
     "generated-successfully": "Your have generated an Eth2 address successfully.",
     "withdrawal-address": "Eth2 Withdrawal Address",
     "pw-agreement": "I understand that MEW has no control over any assets I choose to associate with these keys and willingly assume all risk of loss, including those coming as a result of protocol or key failure."
-  }
+  },
+  "stake": "Stake",
+  "my-validators": "My Validators",
+  "status": "Status",
+  "no-validators": "You have currently have no validators.",
+  "activation-timestamp": "Activation Timestamp",
+  "staked": "Staked",
+  "apr": "APR",
+  "earnings": "Earnings",
+  "estimated-wait": "Estimated Wait Time",
+  "validators-infront": "Validators infront of you",
+  "validators-back": "Validators behind you",
+  "queue-speed": "Queue speed",
+  "validators-per": "validators per day",
+  "estimated-activation-timestamp": "Estimated Activation Timestamp"
 }
