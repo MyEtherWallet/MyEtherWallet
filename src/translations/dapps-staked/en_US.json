@@ -75,7 +75,7 @@
   "stake": "Stake",
   "my-validators": "My Validators",
   "status": "Status",
-  "no-validators": "You have currently have no validators",
+  "no-validators": "You have currently have no validators.",
   "key": "Key",
   "activation-timestamp": "Activation Timestamp",
   "staked": "Staked",

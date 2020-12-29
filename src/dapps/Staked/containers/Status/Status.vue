@@ -7,7 +7,10 @@
         class="fa fa-spinner fa-spin staking-percent mb-1 ml-2"
       />
     </div>
-    <div v-if="!loadingValidators && validators.length === 0">
+    <div
+      v-if="!loadingValidators && validators.length === 0"
+      class="no-validators"
+    >
       {{ $t('dappsStaked.no-validators') }}
     </div>
     <div v-for="(validator, idx) in validators" :key="idx">
