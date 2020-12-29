@@ -3,5 +3,5 @@
   "invalid-pin": "Неверный PIN",
   "cant-claim": "Невозможно запросить интерфейс. Пожалуйста, убедитесь, что ваше устройство не используется другим приложением",
   "browser-not-supported": "Браузер не поддерживает WebUSB. Пожалуйста, попробуйте Chrome.",
-  "generic-error": "Something went wrong, please disconnect device and try again!"
+  "generic-error": "Что-то пошло не так, пожалуйста отключите устройство и попробуйте еще раз!"
 }

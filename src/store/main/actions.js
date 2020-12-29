@@ -73,7 +73,6 @@ const pruneNotifications = ({ commit, state }) => {
     const entry = entries.pop();
     if (entry) {
       const address = state.account.address.toLowerCase();
-
       const idIndex = newNotif[address].findIndex(item => item.id === entry.id);
       if (idIndex > -1) {
         newNotif[address].splice(idIndex, 1);
@@ -170,7 +169,6 @@ const removeNotification = function ({ commit, state }, val) {
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item];
   });
-
   const idIndex = newNotif[address].findIndex(entry => entry.id === val[1].id);
   if (idIndex > -1) {
     newNotif[address].splice(idIndex, 1);
@@ -291,7 +289,6 @@ const updateNotification = function ({ commit, state }, val) {
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item];
   });
-
   const idIndex = newNotif[address].findIndex(entry => entry.id === val[2].id);
   if (idIndex > -1) {
     newNotif[address][idIndex] = val[2];
@@ -309,7 +306,6 @@ const updateTransaction = function ({ commit, state }, val) {
   Object.keys(state.transactions).forEach(item => {
     newNotif[item] = state.transactions[item];
   });
-
   const entryIndex = newNotif[address].findIndex(entry => {
     return entry.orderId === val[1];
   });

@@ -223,6 +223,8 @@ export default {
             ? `https://img.mewapi.io/?image=${token.icon_png}&width=50&height=50&fit=scale-down`
             : token.icon !== ''
             ? `https://img.mewapi.io/?image=${token.icon}&width=50&height=50&fit=scale-down`
+            : tok.logo && tok.logo.src && tok.logo.src !== ''
+            ? `https://img.mewapi.io/?image=${tok.logo.src}&width=50&height=50&fit=scale-down`
             : this.network.type.icon;
         return tokenSrc;
       } else if (tok.logo && tok.logo.src && tok.logo.src !== '') {
