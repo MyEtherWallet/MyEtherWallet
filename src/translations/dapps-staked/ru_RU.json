@@ -35,7 +35,8 @@
   "withdraw-title": "Адрес для снятия Eth2",
   "read-and-agree": "Я прочитал и согласен с {staked} {terms-of-service}",
   "terms-of-service": "Я понимаю, что MEW не имеет контроля над активами, которые я ассоциирую с этими ключами, и принимаю на себя весь риск потерь, включая те, которые могут произойти в результате сбоя протокола или ключа.",
-  "done-desc": "Ваша ставка {amt} ETH была отправлена. Завершение валидаторов может занять 24-48 часов. В дальнейшем, {staked} будет поддерживать ваш валидатор(ы).",
+  "terms-of-service-title": "terms of service",
+  "done-desc": "Your stake of {amt} ETH  was ,sent. Please allow 24-48 hours for your validators to be finalized. {staked} will maintain your validator(s) for you.",
   "track-ethvm": "Просмотр в EthVM",
   "stake-on-eth2": "Стейкинг в Eth2",
   "stake-again": "Отправить ставку ещё",
@@ -71,5 +72,19 @@
     "generated-successfully": "Вы успешно генерировали адрес Eth2.",
     "withdrawal-address": "Адрес для снятия Eth2",
     "pw-agreement": "Я понимаю, что MEW не имеет контроля над активами, которые я ассоциирую с этими ключами, и принимаю на себя весь риск потерь, включая те, которые могут произойти в результате сбоя протокола или ключа."
-  }
+  },
+  "stake": "Stake",
+  "my-validators": "My Validators",
+  "status": "Статус",
+  "no-validators": "You have currently have no validators.",
+  "activation-timestamp": "Activation Timestamp",
+  "staked": "Staked",
+  "apr": "APR",
+  "earnings": "Доход",
+  "estimated-wait": "Estimated Wait Time",
+  "validators-infront": "Validators infront of you",
+  "validators-back": "Validators behind you",
+  "queue-speed": "Queue speed",
+  "validators-per": "validators per day",
+  "estimated-activation-timestamp": "Estimated Activation Timestamp"
 }
