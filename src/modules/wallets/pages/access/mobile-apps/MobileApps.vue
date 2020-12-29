@@ -29,7 +29,7 @@
 import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import blockTitle from '@/components/block-title/BlockTitle';
 import { Toast, SENTRY } from '@/components/toast';
-import { WalletConnectWallet, WalletLinkWallet } from '@/modules/wallets/utils';
+import { WalletConnectWallet, WalletLinkWallet, MewConnectWallet } from '@/modules/wallets/utils';
 import { mapActions } from 'vuex';
 
 export default {
@@ -55,6 +55,14 @@ export default {
         centered: true
       },
       buttons: [
+        {
+          label: 'MEW Mobile',
+          description: 'Connect wallet with MEW Mobile',
+          icon: require('@/assets/images/icons/icon-mew-connect.png'),
+          fn: () => {
+            this.openMewConnect();
+          }
+        },
         {
           label: 'WalletConnet',
           description: 'Connect wallet with Walletconnet',
@@ -101,6 +109,21 @@ export default {
           })
           .catch(e => {
             WalletLinkWallet.errorHandler(e);
+          });
+      } catch (e) {
+        Toast(e.message, {}, SENTRY);
+      }
+    },
+    openMewConnect() {
+      try {
+        MewConnectWallet()
+          .then(_newWallet => {
+            this.setWallet([_newWallet, _newWallet.connection]).then(() => {
+              this.$router.push({ name: 'Dashboard' });
+            });
+          })
+          .catch(e => {
+            MewConnectWallet.errorHandler(e);
           });
       } catch (e) {
         Toast(e.message, {}, SENTRY);

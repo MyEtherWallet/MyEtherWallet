@@ -1,129 +1,104 @@
 import MEWconnect from '@myetherwallet/mewconnect-web-client';
 import store from '@/store';
 import { Transaction } from 'ethereumjs-tx';
-import { MEW_CONNECT as mewConnectType } from '../../bip44/walletTypes';
+import {
+  MEW_CONNECT as mewConnectType,
+} from '../../bip44/walletTypes';
 import {
   getSignTransactionObject,
   sanitizeHex,
   getBufferFromHex,
   calculateChainIdFromV
 } from '../../utils';
-import { hashPersonalMessage } from 'ethereumjs-util';
+// import { hashPersonalMessage } from 'ethereumjs-util';
 import errorHandler from './errorHandler';
 import commonGenerator from '@/helpers/commonGenerator';
 import toBuffer from '@/helpers/toBuffer';
 import HybridWalletInterface from '../walletInterface';
 
-const V1_SIGNAL_URL = 'https://connect.mewapi.io';
-const V2_SIGNAL_URL = 'wss://connect2.mewapi.io/staging';
 const IS_HARDWARE = true;
-let thisAddress = null;
-import { EventBus } from '@/plugins/eventBus';
+// let thisAddress = null;
+// import { EventBus } from '@/plugins/eventBus';
+// import WalletLink from 'walletlink';
 
 class MEWconnectWallet {
   constructor() {
     this.identifier = mewConnectType;
     this.isHardware = IS_HARDWARE;
-    this.mewConnect = new MEWconnect.Initiator({
-      v1Url: V1_SIGNAL_URL,
-      v2Url: V2_SIGNAL_URL
-    });
-    this.mewConnect.disconnect = () => {
-      this.mewConnect.disconnectRTC();
-    };
+    this.MEWconnect = new MEWconnect.Provider();
+    this.connection = this.MEWconnect.makeWeb3Provider();
+    // this.connection._relay.storage.clear();
+    // this.connection.disconnect = () => {
+    //   // this.connection._relay.storage.clear();
+    // };
   }
-  async init(qrcode) {
-    this.mewConnect.on('codeDisplay', qrcode);
-    const txSigner = async tx => {
-      let tokenInfo;
-      if (tx.data.slice(0, 10) === '0xa9059cbb') {
-        tokenInfo = store.state.wallet.network.type.tokens.find(
-          entry => entry.address.toLowerCase() === tx.to.toLowerCase()
-        );
-        if (tokenInfo) {
-          tx.currency = {
-            symbol: tokenInfo.symbol,
-            decimals: tokenInfo.decimals,
-            address: tokenInfo.address
-          };
-        }
-      }
-      if (!tx.from && thisAddress) {
-        tx.from = thisAddress;
-      }
-      const networkId = tx.chainId;
-      return new Promise(resolve => {
-        if (!tx.gasLimit) {
-          tx.gasLimit = tx.gas;
-        }
-
-        this.mewConnect.sendRtcMessage('signTx', JSON.stringify(tx));
-        this.mewConnect.once('signTx', result => {
-          tx = new Transaction(sanitizeHex(result), {
-            common: commonGenerator(store.state.wallet.network)
-          });
-          const signedChainId = calculateChainIdFromV(tx.v);
-          if (signedChainId !== networkId)
-            throw new Error(
-              'Invalid networkId signature returned. Expected: ' +
-                networkId +
-                ', Got: ' +
-                signedChainId,
-              'InvalidNetworkId'
-            );
-          resolve(getSignTransactionObject(tx));
+  init() {
+    return new Promise((resolve, reject) => {
+      const txSigner = tx => {
+        console.log(tx); // todo remove dev item
+        const networkId = tx.chainId;
+        tx = new Transaction(tx, {
+          common: commonGenerator(store.state.wallet.network)
         });
-      });
-    };
-    const msgSigner = async msg => {
-      return new Promise(resolve => {
-        const msgHash = hashPersonalMessage(toBuffer(msg));
-        this.mewConnect.sendRtcMessage('signMessage', {
-          hash: msgHash.toString('hex'),
-          text: msg
+        const txJSON = tx.toJSON(true);
+        console.log(txJSON); // todo remove dev item
+        return new Promise((resolve, reject) => {
+          this.connection
+            .send('eth_signTransaction', txJSON)
+            .then(signed => {
+              const _tx = new Transaction(signed);
+              const signedChainId = calculateChainIdFromV(_tx.v);
+              if (signedChainId !== networkId)
+                throw new Error(
+                  'Invalid networkId signature returned. Expected: ' +
+                  networkId +
+                  ', Got: ' +
+                  signedChainId,
+                  'InvalidNetworkId'
+                );
+              resolve(getSignTransactionObject(_tx));
+            })
+            .catch(reject);
         });
-        this.mewConnect.once('signMessage', data => {
-          resolve(getBufferFromHex(sanitizeHex(data.sig)));
+      };
+      const msgSigner = msg => {
+        return new Promise((resolve, reject) => {
+          this.connection
+            .send('personal_sign', [
+              '0x' + toBuffer(msg).toString('hex'),
+              this.connection.selectedAddress
+            ])
+            .then(result => {
+              resolve(getBufferFromHex(sanitizeHex(result)));
+            })
+            .catch(reject);
         });
-      });
-    };
-
-    const address = await signalerConnect(V1_SIGNAL_URL, this.mewConnect);
-
-    return new HybridWalletInterface(
-      sanitizeHex(address),
-      this.isHardware,
-      this.identifier,
-      txSigner,
-      msgSigner,
-      this.mewConnect,
-      errorHandler
-    );
+      };
+      this.connection
+        .enable()
+        .then(accounts => {
+          resolve(
+            new HybridWalletInterface(
+              sanitizeHex(accounts[0]),
+              this.isHardware,
+              this.identifier,
+              txSigner,
+              msgSigner,
+              this.connection,
+              errorHandler
+            )
+          );
+        })
+        .catch(reject);
+    });
   }
 }
-const createWallet = async qrcode => {
-  const _MEWconnectWallet = new MEWconnectWallet();
-  const _tWallet = await _MEWconnectWallet.init(qrcode);
+const createWallet = async () => {
+  const meWconnectWallet = new MEWconnectWallet();
+  const _tWallet = await meWconnectWallet.init();
   return _tWallet;
 };
 createWallet.errorHandler = errorHandler;
-const signalerConnect = (url, mewConnect) => {
-  return new Promise(resolve => {
-    mewConnect.initiatorStart(url);
-    mewConnect.on('RtcConnectedEvent', () => {
-      mewConnect.on('RtcClosedEvent', () => {
-        if (mewConnect.getConnectonState()) {
-          EventBus.$emit('mewConnectDisconnected');
-          store.dispatch('wallet/removeWallet');
-        }
-      });
-      mewConnect.sendRtcMessage('address', '');
-      mewConnect.once('address', data => {
-        thisAddress = data.address;
-        resolve(data.address);
-      });
-    });
-  });
-};
 
 export default createWallet;
+
