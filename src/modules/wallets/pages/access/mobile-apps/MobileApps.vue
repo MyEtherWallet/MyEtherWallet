@@ -29,7 +29,11 @@
 import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import blockTitle from '@/components/block-title/BlockTitle';
 import { Toast, SENTRY } from '@/components/toast';
-import { WalletConnectWallet, WalletLinkWallet, MewConnectWallet } from '@/modules/wallets/utils';
+import {
+  WalletConnectWallet,
+  WalletLinkWallet,
+  MewConnectWallet
+} from '@/modules/wallets/utils';
 import { mapActions } from 'vuex';
 
 export default {

@@ -1,9 +1,7 @@
 import MEWconnect from '@myetherwallet/mewconnect-web-client';
 import store from '@/store';
 import { Transaction } from 'ethereumjs-tx';
-import {
-  MEW_CONNECT as mewConnectType,
-} from '../../bip44/walletTypes';
+import { MEW_CONNECT as mewConnectType } from '../../bip44/walletTypes';
 import {
   getSignTransactionObject,
   sanitizeHex,
@@ -51,9 +49,9 @@ class MEWconnectWallet {
               if (signedChainId !== networkId)
                 throw new Error(
                   'Invalid networkId signature returned. Expected: ' +
-                  networkId +
-                  ', Got: ' +
-                  signedChainId,
+                    networkId +
+                    ', Got: ' +
+                    signedChainId,
                   'InvalidNetworkId'
                 );
               resolve(getSignTransactionObject(_tx));
@@ -101,4 +99,3 @@ const createWallet = async () => {
 createWallet.errorHandler = errorHandler;
 
 export default createWallet;
-
