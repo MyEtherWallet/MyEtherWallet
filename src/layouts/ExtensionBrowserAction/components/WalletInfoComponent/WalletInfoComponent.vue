@@ -286,7 +286,7 @@
       @password="e => (password = e)"
     />
     <password-only-modal
-      v-if="wallet !== 'watchOnly'"
+      v-if="walletType !== 'watchOnly'"
       ref="passwordOnlyModal"
       :path="path"
       :valid-input="validInput"
@@ -294,15 +294,15 @@
       @password="e => (password = e)"
     />
     <verify-details-modal
-      v-if="wallet !== 'watchOnly'"
+      v-if="walletType !== 'watchOnly'"
       ref="verifyWalletModal"
-      :wallet="wallet"
       :usd="usd"
       :nickname="actualFileName"
       :tokens-with-dollar="tokensWithDollarAmount"
       :token-total="convertedTokenTotal"
       :wallet-balance="walletBalance"
       :file="file"
+      :type="walletType"
     />
   </div>
 </template>
@@ -338,7 +338,7 @@ export default {
       type: String,
       default: ''
     },
-    wallet: {
+    keystore: {
       type: String,
       default: ''
     },
@@ -395,12 +395,12 @@ export default {
     validInput() {
       return (
         (this.password !== '' || this.password.length > 0) &&
-        this.walletRequirePass(JSON.parse(this.wallet).priv)
+        this.walletRequirePass(JSON.parse(this.keystore).priv)
       );
     },
     file() {
       if (this.walletType !== 'watchOnly') {
-        return JSON.parse(JSON.parse(this.wallet).priv);
+        return JSON.parse(JSON.parse(this.keystore).priv);
       }
       return {};
     },
@@ -409,7 +409,7 @@ export default {
       return lessThan;
     },
     parsedWallet() {
-      return JSON.parse(this.wallet);
+      return JSON.parse(this.keystore);
     },
     convertedBalance() {
       const balance = new BigNumber(this.balance).times(this.usd).toNumber();
@@ -512,7 +512,7 @@ export default {
   },
   mounted() {
     window.chrome.storage.sync.get('favorites', this.checkIfFavorited);
-    if (this.wallet !== '') {
+    if (this.keystore !== '') {
       this.generateBlob();
     }
     try {
@@ -640,7 +640,7 @@ export default {
       this.$refs.downloadLink.click();
     },
     generateBlob() {
-      const priv = JSON.parse(this.wallet).priv;
+      const priv = JSON.parse(this.keystore).priv;
       const blob = createBlob(priv, 'mime');
       this.toV3Name = this.generateName(this.address);
       this.downloadFile = blob;
