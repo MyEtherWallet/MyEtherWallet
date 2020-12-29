@@ -1,3 +1,7 @@
+### Devop
+
+* Update Bity Max [#2758](https://github.com/MyEtherWallet/MyEtherWallet/pull/2758)
+
 ### Release v5.7.17
 
 ### Bug
