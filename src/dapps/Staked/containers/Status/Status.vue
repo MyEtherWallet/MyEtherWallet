@@ -33,12 +33,8 @@
             <div class="badge-container d-flex">
               <span>
                 {{ $tc('dappsStaked.validator', 1) }}:
-                <a
-                  class="ml-2"
-                  :href="getUrl(info.validator_key)"
-                  target="_blank"
-                >
-                  {{ truncate('0x' + info.validator_key) }}</a
+                <span class="ml-2">
+                  {{ truncate('0x' + info.validator_key) }}</span
                 >
               </span>
               <div :class="['badge ml-4', getBadgeClass(info.status)]">
@@ -82,7 +78,18 @@
               ]"
             >
               <span>{{ detail.label }}</span>
-              <span class="info-text">{{ detail.info }}</span>
+              <a
+                v-if="detail.label === $tc('dappsStaked.validator', 1)"
+                class="ml-2 info-text"
+                :href="getUrl(info.validator_key)"
+                target="_blank"
+                >{{ detail.info }}
+              </a>
+              <span
+                v-if="detail.label !== $tc('dappsStaked.validator', 1)"
+                class="info-text"
+                >{{ detail.info }}</span
+              >
             </div>
           </div>
         </div>
@@ -94,7 +101,9 @@
 <script>
 import BigNumber from 'bignumber.js';
 import moment from 'moment';
-const networkTypes = ['GOERLI'];
+import stakeConfigs from '@/dapps/Staked/configs';
+import { mapState } from 'vuex';
+
 const types = ['pending', 'deposited', 'active', 'created'];
 export default {
   props: {
@@ -105,19 +114,17 @@ export default {
     loading: {
       type: Boolean,
       default: true
-    },
-    network: {
-      type: String,
-      default: ''
     }
   },
   data() {
     return {
       expanded: '',
       types: types,
-      loadingValidators: true,
-      networkTypes: networkTypes
+      loadingValidators: true
     };
+  },
+  computed: {
+    ...mapState('main', ['network'])
   },
   watch: {
     loading: {
@@ -130,10 +137,7 @@ export default {
   },
   methods: {
     getUrl(key) {
-      if (this.network === networkTypes[0]) {
-        return 'https://beaconscan.com/pyrmont/validator/' + '0x' + key;
-      }
-      return 'https://beaconscan.com/main/validator/' + '0x' + key;
+      return stakeConfigs.network[this.network.type.name].url + '0x' + key;
     },
     details(info) {
       // pending
