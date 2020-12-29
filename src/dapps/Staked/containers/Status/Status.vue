@@ -188,7 +188,7 @@ export default {
             info: info.validator_key
           },
           {
-            label: this.$t('dappsStaked.activated_timestamp'),
+            label: this.$t('dappsStaked.activation-timestamp'),
             info: moment(info.activation_timestamp).format(
               'MM/DD/YYYY hh:mm:ss'
             )
