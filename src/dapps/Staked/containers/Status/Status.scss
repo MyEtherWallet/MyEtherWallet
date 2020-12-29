@@ -100,20 +100,19 @@
       }
     }
   }
-  
+
   .pending-container {
     border: 1px solid $light-orange-1;
     background-color: $light-orange-3;
   }
-  
+
   .active-container {
     background-color: $light-green-1;
     border: 1px solid $mew-green;
   }
-  
+
   .deposited-container {
     background-color: $light-blue-14;
     border: 1px solid $light-blue-1;
   }
-  
 }
