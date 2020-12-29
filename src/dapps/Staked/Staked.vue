@@ -75,7 +75,7 @@
     </div>
     <staked-status
       v-if="!activeValidatorsTab"
-      :network="this.network.type.name"
+      :network="network.type.name"
       :loading="loadingValidators"
       :validators="myValidators"
     />
