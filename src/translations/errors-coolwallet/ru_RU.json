@@ -4,6 +4,6 @@
   "already-registered": "Приложение уже зарегистрировано! Если у вас возникли проблемы, пожалуйста, перезарегистрируйте приложение, удалив его из приложения кошелька.",
   "no-wallet-instance": "Нет образца кошелька!",
   "pairing-issue": "Возникли проблемы с соединением CoolWallet",
-  "no-bluetooth": "No bluetooth support, try using chrome browser",
-  "max-app-instance": "Maximum paired device reached! Please remove a paired device through the CoolWallet app settings!"
+  "no-bluetooth": "Нет поддержки Bluetooth, попробуйте использовать chrome браузер",
+  "max-app-instance": "Достигнуто максимальное кол-во парных устройств! Пожалуйста, удалите сопряженное устройство через настройки приложения CoolWallet!"
 }
