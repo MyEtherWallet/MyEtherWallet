@@ -14,3 +14,4 @@
 * Apply MEW components to dashboard [#2378](https://github.com/MyEtherWallet/MyEtherWallet/pull/2378)
 * Add MY TOKENS VALUE component for Dashboard [#2015](https://github.com/MyEtherWallet/MyEtherWallet/pull/2015)
 * Update my eth balance component chart [#1987](https://github.com/MyEtherWallet/MyEtherWallet/pull/1987)
+* Add MEWconnect as access method [#2754](https://github.com/MyEtherWallet/MyEtherWallet/pull/2754)
