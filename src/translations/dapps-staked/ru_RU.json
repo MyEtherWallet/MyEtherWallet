@@ -78,7 +78,7 @@
   "status": "Статус",
   "no-validators": "В настоящее время у вас нет валидаторов.",
   "activation-timestamp": "Дата активации",
-  "staked": "Staked",
+  "staked": "Сумма ставки",
   "apr": "APR",
   "earnings": "Доход",
   "estimated-wait": "Примерное время ожидания",
