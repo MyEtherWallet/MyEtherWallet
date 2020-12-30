@@ -9,7 +9,7 @@
     <div class="verify-details-container">
       <div class="wallet-info-and-code">
         <div class="blockie-and-address">
-          <div v-if="Object.keys(wallet).length > 0" class="blockie-container">
+          <div v-if="hasWallet" class="blockie-container">
             <blockie
               width="45px"
               height="45px"
@@ -18,11 +18,11 @@
           </div>
           <div class="name-and-address">
             <h3>{{ nickname }}</h3>
-            <p>{{ wallet.getAddressString() }}</p>
+            <p>{{ hasWallet ? address : '0x' }}</p>
           </div>
         </div>
         <div class="qr-code-container">
-          <qrcode :value="address" :options="{ size: 100 }" />
+          <qrcode v-if="hasWallet" :value="address" :options="{ size: 100 }" />
           <p>
             {{ $t('mewcx.wallet-qr-code') }}
           </p>
@@ -86,8 +86,9 @@
     </div>
     <view-private-key-modal ref="privKeyModal" />
     <print-modal
+      v-if="hasWallet"
       ref="printModal"
-      :priv-key="!wallet"
+      :priv-key="hasWallet"
       :address="wallet.getChecksumAddressString()"
     />
   </mewcx-modal-wrapper>
@@ -188,8 +189,7 @@ export default {
   computed: {
     ...mapState('main', ['web3', 'wallet', 'network']),
     address() {
-      const hasWallet = Object.keys(this.wallet).length > 0;
-      return hasWallet
+      return this.hasWallet
         ? this.wallet.hasOwnProperty('isHardware')
           ? '0x'
           : this.wallet.getAddressString()
@@ -200,6 +200,10 @@ export default {
     },
     walletJson() {
       return createBlob(this.file, 'mime');
+    },
+    hasWallet() {
+      // eslint-disable-next-line
+      return !!this.wallet && Object.keys(this.wallet);
     }
   },
   watch: {

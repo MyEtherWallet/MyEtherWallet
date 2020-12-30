@@ -36,7 +36,7 @@
           :usd="ethPrice"
           :address="wallet.address"
           :balance="wallet.balance"
-          :wallet="wallet.wallet"
+          :keystore="wallet.wallet"
           :nickname="wallet.nickname"
           :wallet-type="wallet.type"
           :wallet-token="wallet.tokenBalance"
