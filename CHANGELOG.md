@@ -1,7 +1,12 @@
+### Release v5.7.17-hotfix.1
+
+* Fix build name for cx []()
+
+### Release v5.7.17
+
 ### Feature
 
 * Staked validators status [#2748](https://github.com/MyEtherWallet/MyEtherWallet/pull/2748)
-### Release v5.7.17
 
 ### Bug
 
