@@ -1,6 +1,6 @@
 ### Release v5.7.17-hotfix.1
 
-* Fix build name for cx []()
+* Fix build name for cx [#2763](https://github.com/MyEtherWallet/MyEtherWallet/pull/2763)
 
 ### Release v5.7.17
 
