@@ -1,3 +1,6 @@
+### Bug
+- Update gas limit for Lend Migrator [#2765](https://github.com/MyEtherWallet/MyEtherWallet/pull/2765)
+
 ### Feature
 
 * Staked validators status [#2748](https://github.com/MyEtherWallet/MyEtherWallet/pull/2748)
