@@ -76,8 +76,8 @@ const LOCAL_STORAGE_KEY = 'linkedPhone';
 const TIME_SWAP_VALID = 600;
 const BITY_MIN = 10; //0.01;
 const FIAT_MIN = 10; // in CHF
-const FIAT_MAX = 5000; // in CHF
-const BITY_MAX = 5000; //3;
+const FIAT_MAX = 1000; // in CHF
+const BITY_MAX = 1000; //3;
 const BITY_DECIMALS = 6;
 const PROVIDER_NAME = 'bity';
 

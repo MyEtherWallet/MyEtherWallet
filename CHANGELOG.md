@@ -8,6 +8,7 @@
 
 * Improve start script [#2647](https://github.com/MyEtherWallet/MyEtherWallet/pull/2647)
 * Forwatch ninja.besu patch [#2764](https://github.com/MyEtherWallet/MyEtherWallet/pull/2764)
+* Update Bity Max [#2758](https://github.com/MyEtherWallet/MyEtherWallet/pull/2758)
 
 ### Release v5.7.17
 
