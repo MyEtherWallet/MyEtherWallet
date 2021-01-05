@@ -75,12 +75,10 @@
 </template>
 
 <script>
-import Blockie from '../blockieWithCurrency/BlockieWithCurrency';
 import EllipsisBlock from '@/components/ellipsisBlock/EllipsisBlock';
 
 export default {
   components: {
-    Blockie,
     EllipsisBlock
   },
   props: {
