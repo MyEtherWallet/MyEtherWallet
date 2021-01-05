@@ -4,6 +4,11 @@
 
 * Fix build name for cx [#2763](https://github.com/MyEtherWallet/MyEtherWallet/pull/2763)
 
+### Devop
+
+* Improve start script [#2647](https://github.com/MyEtherWallet/MyEtherWallet/pull/2647)
+* Forwatch ninja.besu patch [#2764](https://github.com/MyEtherWallet/MyEtherWallet/pull/2764)
+
 ### Release v5.7.17
 
 ### Feature
