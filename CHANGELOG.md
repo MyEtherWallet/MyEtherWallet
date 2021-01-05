@@ -2,6 +2,7 @@
 
 ### Bug
 
+* Update gas limit for Lend Migrator [#2765](https://github.com/MyEtherWallet/MyEtherWallet/pull/2765)
 * Fix build name for cx [#2763](https://github.com/MyEtherWallet/MyEtherWallet/pull/2763)
 
 ### Devop
