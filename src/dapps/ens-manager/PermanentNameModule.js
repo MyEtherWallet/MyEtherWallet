@@ -1,17 +1,17 @@
 import OldEnsAbi from './ABI/oldEnsAbi.js';
 import OldDeedAbi from './ABI/oldDeedAbi.js';
-import getHashFromFile from './services/getHashFromFile.js';
-import uploadFileToIpfs from './services/uploadFileToIpfs.js';
+import getHashFromFile from './manage/services/getHashFromFile.js';
+import uploadFileToIpfs from './manage/services/uploadFileToIpfs.js';
 import contentHash from 'content-hash';
 import BigNumber from 'bignumber.js';
-import NameManagerInterface from './interface/NameManagerInterface.js';
+import ENSManagerInterface from './manage/ENSManagerInterface.js';
 import * as nameHashPckg from 'eth-ens-namehash';
 import DNSRegistrar from '@ensdomains/dnsregistrar';
 
 const OLD_ENS_ADDRESS = '0x6090a6e47849629b7245dfa1ca21d94cd15878ef';
 const BURNER_ADDRESS = '0x0000000000000000000000000000000000000000';
 
-export default class PermanentNameModule extends NameManagerInterface {
+export default class PermanentNameModule extends ENSManagerInterface {
   constructor(name, address, network, web3, ens) {
     super(name, address, network, web3, ens);
     this.deedValueVal = 0;

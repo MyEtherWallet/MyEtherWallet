@@ -443,7 +443,7 @@ export default {
   },
   watch: {
     chartData: {
-      handler: () => {},
+      handler: function () {},
       deep: true
     }
   },

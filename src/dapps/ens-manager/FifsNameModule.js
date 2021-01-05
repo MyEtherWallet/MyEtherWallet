@@ -1,6 +1,6 @@
-import NameManagerInterface from './interface/NameManagerInterface.js';
+import ENSManagerInterface from './manage/ENSManagerInterface.js';
 
-export default class FifsNameModule extends NameManagerInterface {
+export default class FifsNameModule extends ENSManagerInterface {
   constructor(name, address, network, web3, ens) {
     super(name, address, network, web3, ens);
   }

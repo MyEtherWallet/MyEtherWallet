@@ -6,7 +6,7 @@ const ETH_REGISTRAR = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
 import PermanentNameModule from './PermanentNameModule';
 import FifsNameModule from './FifsNameModule';
 
-export default class NameManager {
+export default class ENSManager {
   constructor(network, address, web3, ens) {
     this.network = network;
     this.address = address;

@@ -1,5 +1,5 @@
 import DappsCenter from './dapps-center/DappsCenter';
-import NameManager from './name-manager/NameManager';
+import ENSManager from './ens-manager/ENSManager.vue';
 import MakerDAO from './makerdao/MakerDAO';
 import Aave from './aave/Aave';
 import Ambrpay from './ambrpay/Ambrpay';
@@ -12,9 +12,9 @@ export default [
     component: DappsCenter
   },
   {
-    path: 'name-manager',
-    name: 'NameManager',
-    component: NameManager
+    path: 'ens-manager',
+    name: 'ENSManager',
+    component: ENSManager
   },
   {
     path: 'maker-dao',

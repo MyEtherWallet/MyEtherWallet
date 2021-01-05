@@ -3,14 +3,14 @@ import RegistryAbi from '../ABI/registryAbi.js';
 import BaseRegistrarAbi from '../ABI/baseRegistrarAbi.js';
 import ResolverAbi from '../ABI/resolverAbi.js';
 import RegistrarControllerAbi from '../ABI/registrarControllerAbi.js';
-import multicoins from '../configs/multicoins';
-import textrecords from '../configs/textrecords';
+import multicoins from './configs/multicoins';
+import textrecords from './configs/textrecords';
 import contentHash from 'content-hash';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import registrarInterface from './registrarInterface';
 
-export default class NameManagerInterface {
+export default class ENSManagerInterface {
   constructor(name, address, network, web3, ens) {
     this.addressVal = address ? address : '0x';
     this.networkVal = network ? network : null;
