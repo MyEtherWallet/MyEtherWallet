@@ -5,5 +5,5 @@ module.exports = {
   BUILD_TYPE: JSON.stringify(process.env.BUILD_TYPE || 'web'),
   FULL_SOURCEMAPS: JSON.stringify(process.env.FULL_SOURCEMAPS || 'false'),
   NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-  CX_PROD: JSON.stringify(process.env.PROD)
+  CX_PROD: JSON.stringify(process.env.PROD || 'false')
 };

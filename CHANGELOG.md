@@ -1,7 +1,21 @@
+### Release v5.7.18
+
+### Bug
+
+* Update gas limit for Lend Migrator [#2765](https://github.com/MyEtherWallet/MyEtherWallet/pull/2765)
+* Fix build name for cx [#2763](https://github.com/MyEtherWallet/MyEtherWallet/pull/2763)
+
+### Devop
+
+* Improve start script [#2647](https://github.com/MyEtherWallet/MyEtherWallet/pull/2647)
+* Forwatch ninja.besu patch [#2764](https://github.com/MyEtherWallet/MyEtherWallet/pull/2764)
+* Update Bity Max [#2758](https://github.com/MyEtherWallet/MyEtherWallet/pull/2758)
+
+### Release v5.7.17
+
 ### Feature
 
 * Staked validators status [#2748](https://github.com/MyEtherWallet/MyEtherWallet/pull/2748)
-### Release v5.7.17
 
 ### Bug
 
