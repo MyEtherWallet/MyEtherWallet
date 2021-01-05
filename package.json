@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.7.17",
+  "version": "5.7.18",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -22,7 +22,8 @@
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
     "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash checklockconflicts.sh && npx npm-force-resolutions",
-    "start": "npm run update:mainlists && npm run dev",
+    "start:ci": "npm run update:lists && npm run update:swap && vue-cli-service serve --watch",
+    "start": "npm run dev",
     "start:history": "npm run update:mainlists && ROUTER_MODE=history npm run dev",
     "update": "npm run update:packages && npm run update:lists && npm run update:swap",
     "update:lists": "node fetchLists/index.js",
@@ -76,7 +77,7 @@
     "xss": "1.0.8"
   },
   "devDependencies": {
-    "@ensdomains/address-encoder": "0.2.3",
+    "@ensdomains/address-encoder": "0.2.5",
     "@ensdomains/dnsregistrar": "0.3.9",
     "@ethereum-alarm-clock/lib": "0.3.5",
     "@keepkey/keepkey.js": "1.2.3",
