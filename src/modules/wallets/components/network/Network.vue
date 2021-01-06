@@ -23,8 +23,7 @@
         </div>
 
         <div class="mt-4">
-          <!-- placeholders -->
-          <div class="mb-1">ETH - myetherwallet.com</div>
+          <div class="mb-1">{{ type }} - {{ service }}</div>
           <div>Last Block: {{ blockNumber }}</div>
         </div>
       </div>

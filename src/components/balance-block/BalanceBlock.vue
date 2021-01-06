@@ -94,19 +94,19 @@ export default {
     return {};
   },
   computed: {
-    ...mapState('wallet', ['balance', 'usd', 'network']),
+    ...mapState('wallet', ['balance', 'network', 'currency']),
     isEth() {
       return this.network.type.name === ETH.name;
     },
     balanceUsd() {
       const value = this.isEth
-        ? BigNumber(this.balance).times(this.usd.current_price).toFixed(2)
+        ? BigNumber(this.balance).times(this.currency.value).toFixed(2)
         : this.balance;
       return `$ ${value}`;
     },
     valueUsd() {
       const value = this.isEth
-        ? BigNumber(this.value).times(this.usd.current_price).toFixed(2)
+        ? BigNumber(this.value).times(this.currency.value).toFixed(2)
         : this.value;
       return `$ ${value}`;
     },
@@ -118,7 +118,7 @@ export default {
     },
     totalUsd() {
       const value = this.isEth
-        ? BigNumber(this.total).times(this.usd.current_price).toFixed(2)
+        ? BigNumber(this.total).times(this.currency.value).toFixed(2)
         : 0;
       return `$ ${value}`;
     },

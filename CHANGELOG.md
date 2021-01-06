@@ -3,6 +3,13 @@
 ### Devop
 
 * Add decision tree [#2720](https://github.com/MyEtherWallet/MyEtherWallet/pull/2720)
+* Add Privacy and Terms pages [#2733](https://github.com/MyEtherWallet/MyEtherWallet/pull/2733)
+* update mobile wallet menu [#2731](https://github.com/MyEtherWallet/MyEtherWallet/pull/2731)
+* update mobile front menu [#2726](https://github.com/MyEtherWallet/MyEtherWallet/pull/2726)
+* Update team page [#2743](https://github.com/MyEtherWallet/MyEtherWallet/pull/2743)
+* Add Press Kit page [#2742](https://github.com/MyEtherWallet/MyEtherWallet/pull/2742)
+* Fix mew info card UI issues [#2737](https://github.com/MyEtherWallet/MyEtherWallet/pull/2737)
+* Fix how it works UI issues [#2736](https://github.com/MyEtherWallet/MyEtherWallet/pull/2736)
 * update mobile dashboard [#2673](https://github.com/MyEtherWallet/MyEtherWallet/pull/2673)
 * update mobile notification [#2671](https://github.com/MyEtherWallet/MyEtherWallet/pull/2671)
 * update mobile side menu [#2670](https://github.com/MyEtherWallet/MyEtherWallet/pull/2670)

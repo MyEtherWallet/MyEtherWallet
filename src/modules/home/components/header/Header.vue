@@ -8,7 +8,7 @@
           <v-img src="@/assets/images/icons/logo-mew.png" max-width="130" />
         </router-link>
         <v-spacer></v-spacer>
-        <home-menu class="menu-items" />
+        <desktop-menu class="menu-items" />
         <v-spacer></v-spacer>
         <mew-button
           class="desktop-tools-button px-2"
@@ -26,6 +26,8 @@
     </div>
 
     <div class="mobile-content d-block d-lg-none py-8">
+      <mobileMenu v-model="openMobileMenu" />
+
       <v-container class="d-flex align-center">
         <mew-button
           class="mobile-menu-button ml-n2 mr-n1"
@@ -35,15 +37,16 @@
           icon-type="mdi"
           icon-align="left"
           style="border-radius: 100% !important"
+          @click.native="openMobileMenu = true"
         />
 
-        <v-spacer></v-spacer>
+        <v-spacer />
 
         <router-link :to="{ name: 'Home', query: {} }">
           <v-img src="@/assets/images/icons/logo-mew.png" max-width="130" />
         </router-link>
 
-        <v-spacer></v-spacer>
+        <v-spacer />
 
         <mew-button
           class="mobile-tools-button"
@@ -60,13 +63,15 @@
 </template>
 
 <script>
-import homeMenu from '../menu/Menu';
+import desktopMenu from '../menu-desktop/Menu';
+import mobileMenu from '../menu-mobile/Menu';
 import mewTools from '@/components/mewTools/MewTools';
 
 export default {
   name: 'Header',
-  components: { mewTools, homeMenu },
+  components: { mewTools, desktopMenu, mobileMenu },
   data: () => ({
+    openMobileMenu: false,
     mewTools: false
   })
 };

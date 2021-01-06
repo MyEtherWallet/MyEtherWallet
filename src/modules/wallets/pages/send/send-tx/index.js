@@ -13,11 +13,6 @@ export default class SendTransaction {
     this.gasPrice = gasPrice;
     this.network = network;
   }
-  // returns if address is valid
-  isValidAddress(hash) {
-    return utils.isAddress(hash);
-  }
-
   // returns if data is valid
   isValidData(value) {
     return validateHexString(value);
@@ -30,7 +25,7 @@ export default class SendTransaction {
   getFixedGas(val) {
     return BigNumber(val).toFixed(2);
   }
-  // balance balance in ether
+  // balance in ether
   getBalETH() {
     return BigNumber(utils.fromWei(this.balance)).toFixed();
   }
@@ -70,9 +65,8 @@ export default class SendTransaction {
   }
   // tx fee in usd
   txFeeUSD(gasLimit, ethPrice) {
-    return BigNumber(
-      BigNumber(this.txFeeETH(gasLimit)).times(BigNumber(ethPrice))
-    )
+    return BigNumber(this.txFeeETH(gasLimit))
+      .times(BigNumber(ethPrice))
       .toFixed(2)
       .toString();
   }

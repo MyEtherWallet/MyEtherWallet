@@ -292,8 +292,8 @@ const setEthGasPrice = function ({ commit }, val) {
   commit('SET_ETH_GASPRICE', val);
 };
 
-const setUSD = function ({ commit }, val) {
-  commit('SET_USD', val);
+const setCurrency = function ({ commit }, val) {
+  commit('SET_CURRENCY', val);
 };
 
 export default {
@@ -315,5 +315,5 @@ export default {
   setBlockNumber,
   setAddressBook,
   setEthGasPrice,
-  setUSD
+  setCurrency
 };
