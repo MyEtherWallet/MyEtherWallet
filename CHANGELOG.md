@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Add decision tree [#2720](https://github.com/MyEtherWallet/MyEtherWallet/pull/2720)
 * Add Privacy and Terms pages [#2733](https://github.com/MyEtherWallet/MyEtherWallet/pull/2733)
 * update mobile wallet menu [#2731](https://github.com/MyEtherWallet/MyEtherWallet/pull/2731)
 * update mobile front menu [#2726](https://github.com/MyEtherWallet/MyEtherWallet/pull/2726)

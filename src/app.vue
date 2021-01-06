@@ -1,9 +1,8 @@
 <template>
   <v-app>
     <v-main>
-      <v-sheet>
-        <router-view />
-      </v-sheet>
+      <decision-tree />
+      <router-view />
     </v-main>
     <toast />
   </v-app>
@@ -12,9 +11,11 @@
 <script>
 import { mapActions } from 'vuex';
 import toast from '@/components/toast/Toast.vue';
+import decisionTree from '@/components/DecisionTree/DecisionTree';
+
 export default {
   name: 'App',
-  components: { toast },
+  components: { toast, decisionTree },
   mounted() {
     this.setOnlineStatus(window.navigator.onLine);
     // Window events to watch out if the online status changes
