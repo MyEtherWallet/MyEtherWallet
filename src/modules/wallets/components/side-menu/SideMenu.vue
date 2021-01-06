@@ -1,15 +1,7 @@
 <template>
   <div class="basic" style="z-index: 1">
     <div v-if="mobile" class="mew-component--sidemenu-mobile">
-      <v-bottom-sheet v-model="mobileMenu">
-        <v-sheet color="basic" class="py-12 px-8">
-          <accordion-menu
-            class="preset--mobile-max-width mx-auto"
-            @route-change="mobileMenu = false"
-          />
-        </v-sheet>
-      </v-bottom-sheet>
-
+      <menu-mobile v-model="mobileMenu" />
       <div
         class="px-4 pt-2 mx-auto d-flex flex-column preset--mobile-max-width"
       >
@@ -140,6 +132,7 @@
 </template>
 
 <script>
+import menuMobile from '../menu-mobile/Menu';
 import notificationOverlay from '../notifications/Notifications';
 import mewWalletStatusPopup from '../mew-wallet-status-popup/MewWalletStatusPopup';
 import walletCard from '@/modules/wallets/components/wallet-card/WalletCard';
@@ -152,6 +145,7 @@ import mewTools from '@/modules/wallets/components/mewTools/MewTools';
 
 export default {
   components: {
+    menuMobile,
     notificationOverlay,
     mewWalletStatusPopup,
     walletCard,

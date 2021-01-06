@@ -7,9 +7,9 @@ const env_vars = require('./ENV_VARS');
 const allowedConnections = require('./connections');
 const version = require('./package.json').version;
 const vars = {
-    VERSION: version,
-    BTC_DONATION_ADDRESS: "1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9",
-    ETH_DONATION_ADDRESS: "0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
+  VERSION: version,
+  BTC_DONATION_ADDRESS: "1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9",
+  ETH_DONATION_ADDRESS: "0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
 }
 const webpackConfig = {
   devtool: false,
@@ -98,11 +98,11 @@ const exportObj = {
   chainWebpack: config => {
     // GraphQL Loader
     config.module
-    .rule('graphql')
-    .test(/\.graphql$/)
-    .use('graphql-tag/loader')
-    .loader('graphql-tag/loader')
-    .end()
+      .rule('graphql')
+      .test(/\.graphql$/)
+      .use('graphql-tag/loader')
+      .loader('graphql-tag/loader')
+      .end()
   }
 };
 module.exports = exportObj;

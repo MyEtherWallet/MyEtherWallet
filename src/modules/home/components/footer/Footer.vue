@@ -85,19 +85,14 @@
                 </a>
               </div>
               <div class="px-6 border-right">
-                <a
-                  class="color--inherit"
-                  href="https://www.myetherwallet.com/privacy-policy"
-                  >Privacy</a
-                >
+                <router-link :to="{ name: 'PrivacyPolicy' }">
+                  Privacy
+                </router-link>
               </div>
               <div class="px-6">
-                <a
-                  class="color--inherit"
-                  href="https://www.myetherwallet.com/terms-and-conditions"
-                >
+                <router-link :to="{ name: 'TermsOfService' }">
                   Terms
-                </a>
+                </router-link>
               </div>
             </div>
           </div>

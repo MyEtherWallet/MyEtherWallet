@@ -2,6 +2,9 @@
 
 ### Devop
 
+* Add Privacy and Terms pages [#2733](https://github.com/MyEtherWallet/MyEtherWallet/pull/2733)
+* update mobile wallet menu [#2731](https://github.com/MyEtherWallet/MyEtherWallet/pull/2731)
+* update mobile front menu [#2726](https://github.com/MyEtherWallet/MyEtherWallet/pull/2726)
 * Update team page [#2743](https://github.com/MyEtherWallet/MyEtherWallet/pull/2743)
 * Add Press Kit page [#2742](https://github.com/MyEtherWallet/MyEtherWallet/pull/2742)
 * Fix mew info card UI issues [#2737](https://github.com/MyEtherWallet/MyEtherWallet/pull/2737)
