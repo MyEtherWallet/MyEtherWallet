@@ -244,7 +244,7 @@
 
           <div class="d-flex mt-10">
             <div class="d-flex align-center line-height-small mx-auto">
-              <div class="px-6 border-right">
+              <div class="px-2 px-lg-6 border-right">
                 <a
                   class="color--inherit"
                   href="mailto:support@myetherwallet.com"
@@ -253,14 +253,14 @@
                   Feedback
                 </a>
               </div>
-              <div class="px-6 border-right">
+              <div class="px-2 px-lg-6 border-right">
                 <a
                   class="color--inherit"
                   href="https://www.myetherwallet.com/privacy-policy"
                   >Privacy</a
                 >
               </div>
-              <div class="px-6">
+              <div class="px-2 px-lg-6">
                 <a
                   class="color--inherit"
                   href="https://www.myetherwallet.com/terms-and-conditions"
@@ -338,12 +338,15 @@ export default {
         title: 'Mew',
         data: [
           { label: 'About us', routerLink: 'CompanyPage' },
-          { label: 'How it works', routerLink: 'CompanyPage' },
-          { label: 'Team', routerLink: 'CompanyPage' },
-          { label: 'Help center', routerLink: 'CompanyPage' },
-          { label: 'Customer support', routerLink: 'CompanyPage' },
+          { label: 'How it works', routerLink: 'HowItWorks' },
+          { label: 'Team', routerLink: 'TeamPage' },
+          { label: 'Help center', link: 'https://kb.myetherwallet.com/' },
+          {
+            label: 'Customer support',
+            link: 'mailto:support@myetherwallet.com'
+          },
           { label: 'MEW topia', link: 'https://www.mewtopia.com/' },
-          { label: 'Press', routerLink: 'CompanyPage' }
+          { label: 'Press Kit', routerLink: 'PressKit' }
         ]
       },
       {

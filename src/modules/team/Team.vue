@@ -2,13 +2,22 @@
   <div>
     <home-header title="About us - Team" />
     <div class="py-7" />
-    <v-sheet max-width="700px" class="mx-auto">
-      <block-title no-page-title :data="titleData" />
-    </v-sheet>
-    <div class="py-5" />
     <v-container>
+      <v-sheet max-width="700px" class="mx-auto">
+        <block-title no-page-title :data="titleData" />
+      </v-sheet>
+    </v-container>
+    <div class="py-5" />
+    <v-container class="px-0">
       <v-row class="mx-0">
-        <v-col v-for="t in team" :key="t.key" cols="4" class="px-0 text-center">
+        <v-col
+          v-for="t in team"
+          :key="t.key"
+          cols="12"
+          md="6"
+          lg="4"
+          class="px-0 text-center"
+        >
           <v-img :src="t.img" />
           <div class="mt-6 title font-weight--500">{{ t.name }}</div>
           <div class="grey--text text--lighten-1 mt-1">{{ t.title }}</div>
@@ -48,7 +57,7 @@ export default {
       toptitle: '',
       title: 'Meet the #MEWteam',
       description:
-        'At dolor et sit erat lorem at, dolor magna sed eirmod eos magna takimata ipsum. Eos rebum nonumy ea sit, nonumy sed duo no gubergren sea rebum, stet ut aliquyam amet gubergren erat. Voluptua lorem diam et ea ut, et sanctus justo ea aliquyam vero ipsum est amet sed.',
+        'MyEtherWallet is a group of talented, inspiring, and hardworking individuals from around the world. We share the passion to code, create, and ultimately build an open, accessible and fair financial future, one piece of software at a time.',
       centered: true
     },
     team: [
