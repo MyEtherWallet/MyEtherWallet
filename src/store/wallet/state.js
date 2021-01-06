@@ -30,6 +30,7 @@ const gasPrice =
   store.get('gasPrice') !== undefined ? store.get('gasPrice') : 41;
 const customPaths =
   store.get('customPaths') !== undefined ? store.get('customPaths') : {};
+const currency = store.get('currency') ? store.get('currency') : {};
 
 const state = {
   address: null,
@@ -46,7 +47,7 @@ const state = {
   nickname: '',
   notifications: notifications,
   transactions: {},
-  usd: 0,
+  currency: currency,
   instance: null,
   web3: {}
 };

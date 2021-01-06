@@ -128,7 +128,8 @@ h4 {
   line-height: 1.6rem;
   font-weight: 400;
 }
-h5 {
+h5,
+.h5 {
   font-size: 1rem;
   line-height: 1.44rem;
   font-weight: 400;
@@ -154,11 +155,6 @@ h6 {
 }
 .text-decoration--underline {
   text-decoration: underline;
-}
-.text-overflow--ellipsis {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .word-break--break-all {
   word-break: break-all;

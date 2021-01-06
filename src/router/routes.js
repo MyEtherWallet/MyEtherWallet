@@ -1,6 +1,7 @@
 import Home from '@/modules/home/Home';
 import CompanyPage from '@/modules/company/Company';
 import TeamPage from '@/modules/team/Team';
+import PressKit from '@/modules/press-kit/PressKit';
 import BuyHardwareWallet from '@/modules/hardware/Hardware';
 import ToolsPage from '@/modules/tools/Tools';
 import LandingPage from '@/modules/home/pages/landing-page/LandingPage';
@@ -82,6 +83,14 @@ const routes = [
         path: 'team',
         name: 'TeamPage',
         component: TeamPage,
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'presskit',
+        name: 'PressKit',
+        component: PressKit,
         meta: {
           requiresAuth: false
         }

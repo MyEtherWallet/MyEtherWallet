@@ -22,7 +22,9 @@
           <div class="font-weight-medium d-flex align-center">
             <div>MY ACCOUNT VALUE</div>
           </div>
-          <div class="headline font-weight-bold monospace">$7,244.58</div>
+          <div class="headline font-weight-bold monospace">
+            {{ convertedBalance }}
+          </div>
         </div>
       </div>
       <div class="component--address d-flex align-center mt-1">
@@ -90,7 +92,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address', 'usd', 'balance']),
+    ...mapState('wallet', ['address', 'currency', 'balance']),
     lastFour() {
       return this.address.substring(
         this.address.length - 4,
@@ -98,8 +100,8 @@ export default {
       );
     },
     convertedBalance() {
-      const balance = BigNumber(this.balance).times(this.usd.current_price);
-      return `$ ${balance.toFixed(2).toString()}`;
+      const balance = BigNumber(this.balance).times(this.currency.value);
+      return `${this.currency.symbol + balance.toFixed(2).toString()}`;
     }
   },
   methods: {

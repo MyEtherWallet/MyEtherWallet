@@ -107,8 +107,8 @@ const SET_ETH_GASPRICE = function (state, val) {
   store.set('fetchedGasPrice', val);
 };
 
-const SET_USD = function (state, val) {
-  state.usd = val;
+const SET_CURRENCY = function (state, val) {
+  state.currency = val;
 };
 
 export default {
@@ -132,5 +132,5 @@ export default {
   SET_ADDRESS_BOOK,
   TOGGLE_TEMP_HIDE,
   SET_ETH_GASPRICE,
-  SET_USD
+  SET_CURRENCY
 };
