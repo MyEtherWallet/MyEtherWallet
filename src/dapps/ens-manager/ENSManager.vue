@@ -1,17 +1,10 @@
 <template>
   <div>
-    <div>
-      <register-domain-overlay
-        :open="registerOverlay"
-        :close="closeRegisterOverlay"
-      />
-      <div
-        class="cursor--pointer font-weight-bold"
-        @click="registerOverlay = true"
-      >
-        Register Domain Overlay
-      </div>
-    </div>
+    <register-domain-overlay
+      :on-register="onRegister"
+      :close="closeRegisterOverlay"
+      :name-module="nameModule"
+    />
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="ensBgImg" />
       <mew-tabs :items="tabs" has-underline>
@@ -25,9 +18,8 @@
                 <mew-input
                   :value="name"
                   :has-clear-btn="true"
-                  right-label=".crypto"
                   label="Domain name"
-                  placeholder=" "
+                  placeholder="Please enter at least 3 characters"
                   class="mr-3 flex-grow-1"
                   @input="setName"
                 />
@@ -193,9 +185,9 @@
 
 <script>
 import ensBgImg from '@/assets/images/backgrounds/bg-ens.png';
-import registerDomainOverlay from './register-domain-overlay/RegisterDomainOverlay';
+import registerDomainOverlay from './register/register-domain/RegisterDomain';
 // import domainBtn from '@/modules/wallets/components/domain-btn/DomainBtn';
-import ENSManager from './ENSManager';
+import ENSManager from './index';
 import { mapState } from 'vuex';
 
 export default {
@@ -203,7 +195,9 @@ export default {
   data() {
     return {
       name: '',
-      registerOverlay: false,
+      nameModule: {},
+      ensManager: {},
+      onRegister: false,
       domainFunctions: [
         { label: 'Transfer Domain' },
         { label: 'Renew Domain', expire: '07/21/2020' },
@@ -244,14 +238,32 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['network', 'address', 'web3'])
+    ...mapState('wallet', ['network', 'address', 'web3', 'ens'])
   },
   mounted() {
-    this.ensManager = new ENSManager(this.network)
+    this.ensManager = new ENSManager(
+      this.network,
+      this.address,
+      this.web3,
+      this.ens
+    );
   },
   methods: {
+    findDomain() {
+      this.onRegister = true;
+      const name = this.name + '.eth';
+      this.ensManager
+        .searchName(name)
+        .then(res => {
+          this.nameModule = res;
+          console.error('res', res);
+        })
+        .catch(err => {
+          console.error('err', err);
+        });
+    },
     closeRegisterOverlay() {
-      this.registerOverlay = false;
+      this.onRegister = false;
     },
     setName(name) {
       this.name = name;

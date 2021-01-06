@@ -1,10 +1,9 @@
 const tldSupported = (network, name) => {
-  if (network.hasOwnProperty('ens')) {
+  if (network.type.hasOwnProperty('ens')) {
     const tld = getTld(name);
     const isSupported = network.type.ens.supportedTld.find(item => {
       return tld === item;
     });
-
     return isSupported ? true : false;
   }
   return false;

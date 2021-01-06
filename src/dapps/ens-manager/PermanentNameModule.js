@@ -155,7 +155,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   async _initModule() {
-    // initial valaue for the variables
+    // initial value for the variables
     const formValues = {
       deedValue: 'deedValueVal',
       deedOwner: 'deedOwnerVal',
@@ -170,28 +170,27 @@ export default class PermanentNameModule extends ENSManagerInterface {
       dnsClaim: 'dnsClaimVal',
       dnsStatus: 'dnsStatusVal'
     };
-
+    const object = {};
     Object.keys(formValues).forEach(propName => {
-      Object.defineProperties(this, propName, {
+      Object.defineProperty(object, propName, {
         enumerable: true,
         get: () => {
-          return this[formValues[propName]];
+          return propName;
         },
         set: value => {
-          this[formValues[propName]] = value;
+          propName = value;
         }
       });
     });
     try {
-      await this._initializeNameModuleVal.then(() => {
-        return Promise.all([
-          this._setDeeds,
-          this._setExpiry,
-          this._setContentHash,
-          this._setEnsContracts,
-          this._setDnsContract
-        ]);
-      });
+      const promises = await Promise.all([
+        this._setDeeds,
+        this._setExpiry,
+        this._setContentHash,
+        this._setEnsContracts,
+        this._setDnsContract
+      ]);
+      return promises;
     } catch (e) {
       throw new Error(e);
     }

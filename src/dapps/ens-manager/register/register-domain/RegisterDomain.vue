@@ -1,30 +1,35 @@
 <template>
   <mew-overlay
-    :show-overlay="open"
+    :show-overlay="onRegister"
     title="Register domain"
     right-btn-text="Cancel"
+    :close="close"
   >
     <template #mewOverlayBody>
-      <DomainTaken />
       <mew-stepper :items="stepperItems" :on-step="onStep">
-        <template #outsideStepContent1><Step1 /></template>
-        <template #outsideStepContent2><Step2 /></template>
-        <template #outsideStepContent3><Step3 /></template>
+        <template #stepperContent1><request v-if="onStep === 1" /></template>
+        <template #stepperContent2><register v-if="onStep === 2" /></template>
+        <template #stepperContent3><complete v-if="onStep === 3" /></template>
       </mew-stepper>
     </template>
   </mew-overlay>
 </template>
 
 <script>
-import Step1 from './components/Step1';
-import Step2 from './components/Step2';
-import Step3 from './components/Step3';
-import DomainTaken from './components/domain-taken/DomainTaken';
+import Request from './components/Request/Request';
+import Register from './components/Register/Register';
+import Complete from './components/Complete/Complete';
 
 export default {
-  components: { Step1, Step2, Step3, DomainTaken },
+  components: { Request, Register, Complete },
   props: {
-    open: { default: false, type: Boolean },
+    nameModule: {
+      default: () => {
+        return {};
+      },
+      type: Object
+    },
+    onRegister: { default: false, type: Boolean },
     close: {
       default: function () {
         return {};
@@ -34,7 +39,7 @@ export default {
   },
   data() {
     return {
-      onStep: 3,
+      onStep: 1,
       stepperItems: [
         {
           step: 1,
@@ -53,9 +58,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.check-icon {
-  font-size: 65px !important;
-}
-</style>

@@ -23,7 +23,7 @@ export default class ENSManager {
   searchName(name) {
     return new Promise((resolve, reject) => {
       if (tldSupported(this.network, name)) {
-        switch (this.network.ens.registrarType) {
+        switch (this.network.type.ens.registrarType) {
           case 'permanent':
             resolve(
               new PermanentNameModule(

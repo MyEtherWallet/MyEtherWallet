@@ -40,6 +40,7 @@ import {
   getOther,
   getEconomy
 } from '@/helpers/gasPriceHelper.js';
+import ENS from 'ethereum-ens';
 
 export default {
   components: {
@@ -56,7 +57,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address', 'web3']),
+    ...mapState('wallet', ['address', 'web3', 'network']),
     ...mapState('global', ['online'])
   },
   watch: {
@@ -71,6 +72,7 @@ export default {
       this.getTokens();
       this.getPriceAndBalance();
       this.subscribeToBlockNumber();
+      this.setEthENS();
     }
   },
   destroyed() {
@@ -83,8 +85,15 @@ export default {
       'setCurrency',
       'setGasPrice',
       'setEthGasPrice',
-      'setBlockNumber'
+      'setBlockNumber',
+      'setENS'
     ]),
+    setEthENS() {
+      const ens = this.network.type.ens
+        ? new ENS(this.web3.currentProvider, this.network.type.ens.registry)
+        : null;
+      this.setENS(ens);
+    },
     getTokens() {
       const tokensList = new TokenCalls(this.$apollo);
       tokensList.getOwnersERC20Tokens(this.address).then(res => {

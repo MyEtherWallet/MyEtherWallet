@@ -174,7 +174,7 @@ export default class ENSManagerInterface {
     };
     // create a setter and getter methods for all the variables
     Object.keys(formValues).forEach(propName => {
-      Object.defineProperties(this, propName, {
+      Object.defineProperty(this, propName, {
         enumerable: true,
         get: () => {
           return this[formValues[propName]];
