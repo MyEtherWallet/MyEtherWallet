@@ -112,7 +112,7 @@
                               height="25px"
                               class="mx-3"
                             />
-                            <div class="monospace text-overflow--ellipsis">
+                            <div class="monospace truncate">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>
                           </div>
@@ -125,7 +125,7 @@
                               height="25px"
                               class="mx-3"
                             />
-                            <div class="monospace text-overflow--ellipsis">
+                            <div class="monospace truncate">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>
                           </div>
@@ -174,7 +174,7 @@
                               height="25px"
                               class="mx-3"
                             />
-                            <div class="monospace text-overflow--ellipsis">
+                            <div class="monospace truncate">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>
                           </div>
@@ -187,7 +187,7 @@
                               height="25px"
                               class="mx-3"
                             />
-                            <div class="monospace text-overflow--ellipsis">
+                            <div class="monospace truncate">
                               0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
                             </div>
                           </div>

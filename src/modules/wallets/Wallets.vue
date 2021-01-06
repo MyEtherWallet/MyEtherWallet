@@ -80,7 +80,7 @@ export default {
   methods: {
     ...mapActions('wallet', [
       'setAccountBalance',
-      'setUSD',
+      'setCurrency',
       'setGasPrice',
       'setEthGasPrice',
       'setBlockNumber'
@@ -99,7 +99,13 @@ export default {
         this.setAccountBalance(BigNumber(utils.fromWei(res)).toString());
       });
       walletCalls.getUSDPrice(this.address).then(res => {
-        this.setUSD(res);
+        const usd = {
+          value: res.current_price,
+          symbol: '$',
+          name: 'USD',
+          price_change_24h: res.price_change_24h
+        };
+        this.setCurrency(usd);
       });
       this.web3.eth.getGasPrice().then(res => {
         const parsedGas = getEconomy(res).toString();

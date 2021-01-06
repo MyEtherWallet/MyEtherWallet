@@ -1,4 +1,3 @@
-// NOTE: this is a temporary solution.  This operation will be moved to runtime in the future. Currently it relies on manually updated files.
 const fs = require('fs');
 const { v4: v4 } = require('uuid');
 
@@ -20,7 +19,7 @@ class CompileSwapOptions {
   constructor() {
     this.web3 = new web3('https://api.myetherwallet.com/eth');
     this.changellyBaseOptions = {};
-    this.kyberBaseOptions = {};
+    this.coinGecko = {};
 
     this.needDecimalCheck = [];
   }
@@ -104,10 +103,10 @@ class CompileSwapOptions {
     };
   }
 
-  async getKyberSupported() {
+  async getCoinGeckoTokens() {
     try {
       const tokenList = await this.get(
-        'https://tracker.kyber.network/api/tokens/supported'
+        'https://www.coingecko.com/tokens_list/uniswap/defi_100/v_0_0_0.json'
       );
       const tokenDetails = {};
       for (let i = 0; i < tokenList.length; i++) {
@@ -123,13 +122,13 @@ class CompileSwapOptions {
             symbol: tokenList[i].symbol,
             name: tokenList[i].name.trim(),
             decimals: tokenList[i].decimals,
-            contractAddress: tokenList[i].contractAddress
+            contractAddress: tokenList[i].address
           };
-          this.kyberBaseOptions[symbol] = {
+          this.coinGecko[symbol] = {
             symbol: tokenList[i].symbol,
             name: tokenList[i].name.trim(),
             decimals: tokenList[i].decimals,
-            contractAddress: tokenList[i].contractAddress
+            contractAddress: tokenList[i].address
           };
         }
       }
@@ -138,6 +137,47 @@ class CompileSwapOptions {
       return {
         ETH: tokenDetails,
         other: {}
+      };
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async getDexAgSupported(    priorCollected = {
+    ETH: {},
+    other: {}
+  }) {
+    try {
+      const tokenListRaw = await this.post(
+        'https://swap.mewapi.io/dexag',
+        {
+          jsonrpc: '2.0',
+          method: 'getSupportedCurrencies',
+          params: {},
+          id: v4()
+        }
+      );
+      const tokenList = tokenListRaw.result || tokenListRaw;
+      const tokenDetails = priorCollected.ETH;
+      for (let i = 0; i < tokenList.length; i++) {
+        if(!tokenDetails[tokenList[i].symbol] && tokenList[i].address){
+          this.needDecimalCheck.push({
+            symbol: tokenList[i].symbol.toUpperCase(),
+            contractAddress: tokenList[i].address
+          });
+          const symbol = tokenList[i].symbol.toUpperCase();
+          tokenDetails[symbol] = {
+            symbol: tokenList[i].symbol,
+            name: tokenList[i].name.trim(),
+            decimals: 18,
+            contractAddress: tokenList[i].address
+          };
+        }
+      }
+
+      return {
+        ETH: tokenDetails,
+        other: priorCollected.other
       };
     } catch (e) {
       console.error(e);
@@ -271,13 +311,18 @@ class CompileSwapOptions {
   }
 
   async run() {
-    const kyberTokens = await this.getKyberSupported();
-    const withChangelly = await this.supplyChangellySupported(kyberTokens);
-
+    const coinGeckoTokens = await this.getCoinGeckoTokens();
+    const withChangelly = await this.supplyChangellySupported(coinGeckoTokens);
+    const allTokens = await this.getDexAgSupported(withChangelly);
     for (let i = 0; i < this.needDecimalCheck.length; i++) {
       const decimals = await this.getDecimals(this.needDecimalCheck[i]);
       if (withChangelly.ETH[this.needDecimalCheck[i].symbol] && decimals) {
         withChangelly.ETH[this.needDecimalCheck[i].symbol].decimals = +decimals;
+        if(allTokens.ETH[this.needDecimalCheck[i].symbol]){
+          allTokens.ETH[this.needDecimalCheck[i].symbol].decimals = +decimals;
+        }
+      } else if (allTokens.ETH[this.needDecimalCheck[i].symbol] && decimals) {
+        allTokens.ETH[this.needDecimalCheck[i].symbol].decimals = +decimals;
       }
     }
 
@@ -295,9 +340,16 @@ class CompileSwapOptions {
       if (!fs.existsSync(swapConfigFolder)) {
         fs.mkdirSync(swapConfigFolder);
       }
+      if(allTokens.ETH.ETH){
+        allTokens.ETH.ETH = {
+          ...allTokens.ETH.ETH,
+          decimals: 18,
+          contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+        }
+      }
       fs.writeFileSync(
         `${swapConfigFolder}/EthereumTokens.json`,
-        JSON.stringify(withChangelly.ETH)
+        JSON.stringify(allTokens.ETH)
       );
     }
     if (Object.keys(this.changellyBaseOptions).length > 0) {
@@ -310,21 +362,6 @@ class CompileSwapOptions {
       );
     }
 
-    if (Object.keys(this.kyberBaseOptions).length > 0) {
-      this.kyberBaseOptions['THISISADUMMYTOKEN'] = {
-        symbol: 'THISISADUMMYTOKEN',
-        name: 'For tests',
-        decimals: 18,
-        contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-      };
-      if (!fs.existsSync(kyberConfigFolder)) {
-        fs.mkdirSync(kyberConfigFolder);
-      }
-      fs.writeFileSync(
-        `${kyberConfigFolder}/currenciesETH.json`,
-        JSON.stringify(this.kyberBaseOptions)
-      );
-    }
     console.log('Complete');
   }
 }

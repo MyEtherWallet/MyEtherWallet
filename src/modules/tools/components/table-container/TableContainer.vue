@@ -7,10 +7,10 @@
         address="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
         class="mr-4 blockie"
       />
-      <div class="text-overflow--ellipsis">
+      <div class="truncate">
         <div class="font-weight-medium">Elmo's wallet 04</div>
         <div class="d-flex align-center">
-          <div v-if="false" white class="text-overflow--ellipsis">
+          <div v-if="false" white class="truncate">
             0x98d9964e1764654dtrhtrggfrv3049t04i
           </div>
           <ellipsis-block white text="0x98d9964e1764654dtrhtrggfrv3049t04i" />
