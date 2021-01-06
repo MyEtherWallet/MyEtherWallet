@@ -1,134 +1,151 @@
 <template>
-  <mew-module
-    class="d-flex flex-grow-1 pt-6"
-    :title="$t('sendTx.send-tx')"
-    :has-elevation="true"
-    :has-indicator="true"
-  >
-    <template #moduleBody>
-      <div class="full-width px-15 pt-3">
-        <div class="d-flex justify-end mr-3 entire-bal">
-          <mew-button
-            :title="$t('sendTx.button-entire')"
-            btn-style="transparent"
-            @click.native="setEntireBal"
-          />
-        </div>
-        <v-container class="pt-0">
-          <v-row>
-            <v-col cols="6">
-              <mew-select
-                ref="mewSelect"
-                :items="tokens"
-                :label="$t('sendTx.type')"
-                class="mr-3"
-                @input="setCurrency"
-              />
-            </v-col>
-            <v-col cols="6">
-              <mew-input
-                ref="mewInput"
-                :value="amount"
-                :label="$t('sendTx.amount')"
-                placeholder=" "
-                :right-label="currencyBalance"
-                @input="setAmount"
-              />
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12">
-              <mew-address-select
-                ref="addressSelect"
-                :value="toAddress"
-                :copy-tooltip="$t('common.copy')"
-                :save-tooltip="$t('common.save')"
-                :enable-save-address="true"
-                :label="$t('sendTx.to-addr')"
-                :items="addresses"
-                :placeholder="$t('sendTx.enter-addr')"
-                :success-toast="$t('sendTx.success.title')"
-                :is-valid-address="isValidAddress()"
-                @input="setAddress"
-              />
-            </v-col>
-          </v-row>
-        </v-container>
-      </div>
-
-      <v-container>
-        <mew-expand-panel
-          ref="expandPanel"
-          is-toggle
-          has-dividers
-          :panel-items="expandPanel"
-          class="px-15"
-        >
-          <template #panelBody1>
-            <div class="d-flex justify-space-between px-5 border-bottom pb-5">
-              <div class="mew-body font-weight-medium d-flex align-center">
-                {{ $t('sendTx.tx-fee') }}
-                <mew-tooltip class="ml-1" text="" />
-              </div>
-              <div v-show="isEth">
-                <i18n path="sendTx.cost-eth-usd" tag="div">
-                  <span slot="eth">{{ txFeeETH() }}</span>
-                  <span slot="usd">{{ txFeeUSD() }}</span>
-                </i18n>
-              </div>
-            </div>
-            <div>
-              <!-- <mew-input
-                :label="$t('common.gas.price')"
-                placeholder=" "
-                :value="displayedGasPrice()"
-                @input="setGasPrice"
-              /> -->
-              <mew-input
-                :value="customGasLimit"
-                :label="$t('common.gas.limit')"
-                placeholder=""
-                @input="setCustomGasLimit"
-              />
-            </div>
-
-            <mew-input
-              v-model="data"
-              :label="$t('sendTx.add-data')"
-              placeholder=" "
-              class="mt-10 mb-n5"
+  <div>
+    <mew-module
+      class="d-flex flex-grow-1 pt-6"
+      :title="$t('sendTx.send-tx')"
+      :has-elevation="true"
+      :has-indicator="true"
+    >
+      <template #moduleBody>
+        <div class="full-width px-15 pt-3">
+          <div class="d-flex justify-end mr-3 entire-bal">
+            <mew-button
+              :title="$t('sendTx.button-entire')"
+              btn-style="transparent"
+              @click.native="setEntireBal"
             />
-          </template>
-        </mew-expand-panel>
-      </v-container>
+          </div>
+          <v-container class="pt-0">
+            <v-row>
+              <v-col cols="6">
+                <mew-select
+                  ref="mewSelect"
+                  :items="tokens"
+                  :label="$t('sendTx.type')"
+                  class="mr-3"
+                  @input="setCurrency"
+                />
+              </v-col>
+              <v-col cols="6">
+                <mew-input
+                  ref="mewInput"
+                  :value="amount"
+                  :label="$t('sendTx.amount')"
+                  placeholder=" "
+                  :right-label="currencyBalance"
+                  @input="setAmount"
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <mew-address-select
+                  ref="addressSelect"
+                  :value="toAddress"
+                  :resolved-addr="resolvedAddr"
+                  :copy-tooltip="$t('common.copy')"
+                  :save-tooltip="$t('common.save')"
+                  :enable-save-address="isValidAddress"
+                  :label="$t('sendTx.to-addr')"
+                  :items="addressBook"
+                  :placeholder="$t('sendTx.enter-addr')"
+                  :success-toast="$t('sendTx.success.title')"
+                  :is-valid-address="isValidAddress"
+                  :rules="rules"
+                  @input="setAddress"
+                  @saveAddress="toggleOverlay"
+                />
+              </v-col>
+            </v-row>
+          </v-container>
+        </div>
 
-      <div class="d-flex flex-column mt-12">
-        <div class="text-center">
-          <mew-button
-            :title="$t('sendTx.send')"
-            :has-full-width="false"
-            btn-size="xlarge"
-            @click.native="send()"
-          />
+        <v-container>
+          <mew-expand-panel
+            ref="expandPanel"
+            is-toggle
+            has-dividers
+            :panel-items="expandPanel"
+            class="px-15"
+          >
+            <template #panelBody1>
+              <div class="d-flex justify-space-between px-5 border-bottom pb-5">
+                <div class="mew-body font-weight-medium d-flex align-center">
+                  {{ $t('sendTx.tx-fee') }}
+                  <mew-tooltip class="ml-1" text="" />
+                </div>
+                <div v-show="isEth">
+                  <i18n path="sendTx.cost-eth-usd" tag="div">
+                    <span slot="eth">{{ txFeeETH() }}</span>
+                    <span slot="usd">{{ txFeeUSD() }}</span>
+                  </i18n>
+                </div>
+              </div>
+              <div>
+                <!-- <mew-input
+                  :label="$t('common.gas.price')"
+                  placeholder=" "
+                  :value="displayedGasPrice()"
+                  @input="setGasPrice"
+                /> -->
+                <mew-input
+                  :value="customGasLimit"
+                  :label="$t('common.gas.limit')"
+                  placeholder=""
+                  @input="setCustomGasLimit"
+                />
+              </div>
+
+              <mew-input
+                v-model="data"
+                :label="$t('sendTx.add-data')"
+                placeholder=" "
+                class="mt-10 mb-n5"
+              />
+            </template>
+          </mew-expand-panel>
+        </v-container>
+
+        <div class="d-flex flex-column mt-12">
+          <div class="text-center">
+            <mew-button
+              :title="$t('sendTx.send')"
+              :has-full-width="false"
+              btn-size="xlarge"
+              @click.native="send()"
+            />
+          </div>
+          <div class="text-center mt-4">
+            <mew-button
+              :title="$t('common.clear-all')"
+              :has-full-width="false"
+              btn-size="small"
+              btn-style="transparent"
+              @click.native="clear()"
+            />
+          </div>
         </div>
-        <div class="text-center mt-4">
-          <mew-button
-            :title="$t('common.clear-all')"
-            :has-full-width="false"
-            btn-size="small"
-            btn-style="transparent"
-            @click.native="clear()"
-          />
-        </div>
-      </div>
-    </template>
-    <mew-toast
-      ref="toast"
-      :text="toastMsg"
-      :toast-type="toastType"
-      :duration="1000"
-    />
-  </mew-module>
+      </template>
+      <mew-toast
+        ref="toast"
+        :text="toastMsg"
+        :toast-type="toastType"
+        :duration="1000"
+      />
+    </mew-module>
+    <!-- add and edit the address book -->
+    <mew-overlay
+      :title="$t('interface.address-book.add-addr')"
+      :show-overlay="addMode"
+      :close="toggleOverlay"
+      left-btn-text=""
+      :right-btn-text="$t('common.close')"
+    >
+      <template #mewOverlayBody>
+        <add-address :to-address="toAddress" mode="add" @back="toggleOverlay" />
+      </template>
+    </mew-overlay>
+  </div>
 </template>
 
 <script>
@@ -140,8 +157,13 @@ import SendTransaction from './index';
 import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR, SENTRY, SUCCESS } from '@/components/toast';
 import getService from '@/helpers/getService';
+import addAddress from '@/modules/wallets/pages/settings/components/address-book/AddEditAddress';
+import NameResolver from '@/modules/name-resolver/index';
 
 export default {
+  components: {
+    addAddress
+  },
   props: {
     prefilledAmount: {
       type: String,
@@ -176,20 +198,9 @@ export default {
   },
   data() {
     return {
-      addresses: [
-        {
-          address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
-          currency: 'ETH',
-          nickname: 'My Address',
-          resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-        },
-        {
-          address: '0x43689531907482BEE7e650D18411E284A7337A66',
-          currency: 'ETH',
-          nickname: 'nickname',
-          resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-        }
-      ],
+      invalidName: false,
+      resolvedAddr: '',
+      addMode: false,
       toastType: '',
       toastMsg: '',
       customGasLimit: '',
@@ -214,16 +225,25 @@ export default {
       'gasPrice',
       'web3',
       'address',
-      'usd'
+      'currency',
+      'addressBook'
     ]),
     ...mapState('global', ['online']),
+    rules() {
+      return [
+        this.isValidAddress ||
+          this.$t('interface.address-book.validations.invalid-address'),
+        value =>
+          !!value || this.$t('interface.address-book.validations.addr-required')
+      ];
+    },
     isEth() {
       return this.network.type.name === ETH.name;
     },
     multiwatch() {
       return (
         this.amount,
-        this.isValidAddress(),
+        this.isValidAddress,
         this.data,
         this.selectedCurrency,
         new Date().getTime() / 1000
@@ -252,13 +272,24 @@ export default {
       const copiedTokens = this.ownersTokens.slice();
       copiedTokens.unshift(eth);
       return copiedTokens;
+    },
+    isValidAddress() {
+      return utils.isAddress(this.addressToSend);
+    },
+    addressToSend() {
+      return this.resolvedAddr.length > 0 ? this.resolvedAddr : this.toAddress;
     }
   },
   watch: {
     multiwatch: utils._.debounce(function () {
       if (this.validInputs) {
         this.sendTx
-          .estimateGas(this.amount, this.toAddress, this.gasPrice, this.data)
+          .estimateGas(
+            this.amount,
+            this.addressToSend,
+            this.gasPrice,
+            this.data
+          )
           .then(res => {
             this.customGasLimit = res;
           })
@@ -282,7 +313,10 @@ export default {
     amount() {
       this.generateData();
     },
-    toAddress() {
+    toAddress(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.resolvedAddr = '';
+      }
       this.generateData();
     },
     gasPrice() {
@@ -296,10 +330,27 @@ export default {
     }
   },
   mounted() {
+    this.nameResolver = new NameResolver(this.network);
     this.setSendTransaction();
     this.customGasLimit = this.gasLimit;
   },
   methods: {
+    async resolveName() {
+      if (this.nameResolver) {
+        await this.nameResolver
+          .resolveName(this.toAddress)
+          .then(addr => {
+            this.invalidName = false;
+            this.resolvedAddr = addr;
+          })
+          .catch(() => {
+            this.invalidName = true;
+          });
+      }
+    },
+    toggleOverlay() {
+      this.addMode = !this.addMode;
+    },
     setSendTransaction() {
       this.sendTx = new SendTransaction(
         this.address,
@@ -311,16 +362,17 @@ export default {
     generateData() {
       try {
         if (this.toAddress !== '') {
+          this.resolveName();
           const decimals = this.selectedCurrency.decimals
             ? this.selectedCurrency.decimals
             : null;
           const estimateGasAddress = this.selectedCurrency.decimals
             ? this.selectedCurrency.contract
-            : this.toAddress;
+            : this.addressToSend;
           this.data = this.sendTx.getTxData(
             this.amount,
             decimals,
-            this.toAddress,
+            this.addressToSend,
             this.selectedCurrency
           );
           this.sendTx
@@ -345,7 +397,7 @@ export default {
       window.scrollTo(0, 0);
       const send = this.sendTx.submitTransaction(
         this.customGasLimit,
-        this.toAddress,
+        this.addressToSend,
         this.amount,
         this.data,
         this.selectedCurrency.contract
@@ -392,11 +444,10 @@ export default {
     },
     clear() {
       this.data = '';
-      this.toAddress = '';
+      this.resolvedAddr = '';
       this.amount = '0';
       this.toAddress = '';
       this.gasPrice = '90';
-      this.isValidAddress = false;
       this.$refs.expandPanel.setToggle(false);
       this.$refs.mewSelect.clear();
       this.$refs.addressSelect.clear();
@@ -426,7 +477,7 @@ export default {
     allValidInputs() {
       return (
         this.isAmountValid() &&
-        this.isValidAddress() &&
+        this.isValidAddress &&
         this.sendTx.isValidGasLimit(this.customGasLimit) &&
         this.sendTx.isValidData(this.data)
       );
@@ -435,24 +486,18 @@ export default {
       // little hack to make this computed react to other changes
       this.data;
       this.selectedCurrency;
-      this.toAddress;
+      this.addressToSend;
       this.amount;
       return this.sendTx ? this.sendTx.txFeeETH(this.customGasLimit) : '0';
     },
     txFeeUSD() {
-      if (this.usd.current_price && this.sendTx) {
-        return this.sendTx.txFeeUSD(
-          this.customGasLimit,
-          this.usd.current_price
-        );
+      if (this.currency.value && this.sendTx) {
+        return this.sendTx.txFeeUSD(this.customGasLimit, this.currency.value);
       }
       return '--';
     },
-    isValidAddress() {
-      return this.sendTx ? this.sendTx.isValidAddress(this.toAddress) : false;
-    },
     setAddress(value) {
-      this.toAddress = value;
+      this.toAddress = value.address ? value.address : value;
     },
     setEntireBal() {
       this.amount = this.sendTx.getEntireBal(
