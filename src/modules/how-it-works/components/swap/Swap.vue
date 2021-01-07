@@ -2,7 +2,7 @@
   <div class="component-container position--relative pb-12 pb-lg-0">
     <img
       src="@/assets/images/backgrounds/bg-bubbles.png"
-      class="block-background-pattern"
+      class="d-none d-lg-block block-background-pattern"
     />
     <v-container>
       <div class="py-7" />
@@ -18,7 +18,7 @@
             src="@/assets/images/snippets/swap-page.png"
           />
         </v-col>
-        <v-col cols="12" lg="6" class="text-content pl-12">
+        <v-col cols="12" lg="6" class="text-content pl-lg-12">
           <block-title no-page-title :data="titleData" class="mb-12 pl-12" />
           <div class="mb-4 d-flex">
             <div class="mr-3">
@@ -104,7 +104,7 @@ export default {
   position: absolute;
   top: 80px;
   left: 80px;
-  height: 95%;
+  height: 85%;
 }
 
 .block-image {

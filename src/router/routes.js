@@ -1,6 +1,7 @@
 import Home from '@/modules/home/Home';
 import CompanyPage from '@/modules/company/Company';
 import TeamPage from '@/modules/team/Team';
+import PressKit from '@/modules/press-kit/PressKit';
 import BuyHardwareWallet from '@/modules/hardware/Hardware';
 import ToolsPage from '@/modules/tools/Tools';
 import LandingPage from '@/modules/home/pages/landing-page/LandingPage';
@@ -12,6 +13,8 @@ import BrowserExtension from '@/modules/wallets/pages/access/browser-extension/B
 import BrowserExtensionInstall from '@/modules/wallets/pages/access/browser-extension/install-extension/InstallExtension';
 import BrowserExtensionAccess from '@/modules/wallets/pages/access/browser-extension/access-extension/AccessExtension';
 import HowItWorks from '@/modules/how-it-works/HowItWorks';
+import PrivacyPolicy from '@/modules/privacy-policy/PrivacyPolicy';
+import TermsOfService from '@/modules/terms-of-service/TermsOfService';
 import WalletRoutes from '@/modules/wallets/routes.js';
 
 const routes = [
@@ -32,6 +35,22 @@ const routes = [
         path: 'how-it-works',
         name: 'HowItWorks',
         component: HowItWorks,
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'privacy-policy',
+        name: 'PrivacyPolicy',
+        component: PrivacyPolicy,
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'terms-of-service',
+        name: 'TermsOfService',
+        component: TermsOfService,
         meta: {
           requiresAuth: false
         }
@@ -64,6 +83,14 @@ const routes = [
         path: 'team',
         name: 'TeamPage',
         component: TeamPage,
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'presskit',
+        name: 'PressKit',
+        component: PressKit,
         meta: {
           requiresAuth: false
         }

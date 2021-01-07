@@ -177,7 +177,7 @@ export default {
   .card-img {
     margin-bottom: -5px;
   }
-  .mew-info-card {
+  .info-card {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05) !important;
     border: 1px solid var(--v-primaryOutlineActive-base) !important;
   }
@@ -187,12 +187,12 @@ export default {
   .card-img {
     margin-bottom: -5px;
   }
-  .mew-info-card {
+  .info-card {
     max-width: initial !important;
     width: 100%;
     margin-bottom: 1rem;
   }
-  .mew-info-card {
+  .info-card {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05) !important;
     border: 1px solid var(--v-primaryOutlineActive-base) !important;
   }

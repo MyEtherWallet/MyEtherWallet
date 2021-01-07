@@ -18,7 +18,7 @@
             class="mb-n7"
           />
         </v-col>
-        <v-col cols="12" lg="5" class="text-content pl-12 mt-12 mt-lg-0">
+        <v-col cols="12" lg="5" class="text-content pl-lg-12 mt-12 mt-lg-0">
           <block-title no-page-title :data="titleData" class="mb-12 pl-12" />
           <div class="mb-4 d-flex">
             <div class="mr-3">
