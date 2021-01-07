@@ -4,7 +4,7 @@ import getHashFromFile from './manage/services/getHashFromFile.js';
 import uploadFileToIpfs from './manage/services/uploadFileToIpfs.js';
 import contentHash from 'content-hash';
 import BigNumber from 'bignumber.js';
-import ENSManagerInterface from './manage/ENSManagerInterface.js';
+import ENSManagerInterface from './ENSManagerInterface.js';
 import * as nameHashPckg from 'eth-ens-namehash';
 import DNSRegistrar from '@ensdomains/dnsregistrar';
 
@@ -170,15 +170,15 @@ export default class PermanentNameModule extends ENSManagerInterface {
       dnsClaim: 'dnsClaimVal',
       dnsStatus: 'dnsStatusVal'
     };
-    const object = {};
+    const obj = {};
     Object.keys(formValues).forEach(propName => {
-      Object.defineProperty(object, propName, {
+      Object.defineProperty(obj, propName, {
         enumerable: true,
         get: () => {
-          return propName;
+          return this[formValues[propName]];
         },
         set: value => {
-          propName = value;
+          this[formValues[propName]] = value;
         }
       });
     });
