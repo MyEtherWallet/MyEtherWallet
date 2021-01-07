@@ -33,14 +33,27 @@ class MEWconnectWallet {
   init() {
     return new Promise((resolve, reject) => {
       const txSigner = tx => {
+        console.log('MC', tx); // todo remove dev item
         const networkId = tx.chainId;
         tx = new Transaction(tx, {
           common: commonGenerator(store.state.wallet.network)
         });
+        console.log(store.state.wallet.network); // todo remove dev item
         const txJSON = tx.toJSON(true);
         return new Promise((resolve, reject) => {
+          console.log('txJSON', txJSON, txJSON.chainId); // todo remove dev item
+          console.log(this.connection); // todo remove dev item
+          txJSON.method = 'eth_signTransaction';
+          this.connection
+            // .send('eth_signTransaction', txJSON)
+            .send('eth_gasPrice')
+            .then((results) =>{
+              console.log('gas price', results)
+            })
+            .catch(console.error)
           this.connection
             .send('eth_signTransaction', txJSON)
+            // .send({ method: 'eth_signTransaction', params: [txJSON] })
             .then(signed => {
               const _tx = new Transaction(signed);
               const signedChainId = calculateChainIdFromV(_tx.v);

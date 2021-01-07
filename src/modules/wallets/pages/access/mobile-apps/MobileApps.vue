@@ -122,7 +122,7 @@ export default {
       try {
         MewConnectWallet()
           .then(_newWallet => {
-            this.setWallet([_newWallet, _newWallet.connection]).then(() => {
+            this.setWallet([_newWallet]).then(() => {
               this.$router.push({ name: 'Dashboard' });
             });
           })

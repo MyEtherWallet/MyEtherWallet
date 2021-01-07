@@ -101,6 +101,10 @@ export default {
       walletCalls.getUSDPrice(this.address).then(res => {
         this.setUSD(res);
       });
+      this.web3.eth.getCoinbase()
+      .then(console.log)
+      .catch(console.error)
+      console.log('web3', this.web3, this.web3.eth.getCoinbase()); // todo remove dev item
       this.web3.eth.getGasPrice().then(res => {
         const parsedGas = getEconomy(res).toString();
         if (gasType === 'economy') {
