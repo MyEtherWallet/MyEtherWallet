@@ -447,14 +447,14 @@ import appPaths from '@/modules/wallets/utils/hardware/ledger/appPaths.js';
 import allPaths from '@/modules/wallets/utils/bip44';
 import { mapState, mapActions } from 'vuex';
 
-const parsedAppPaths = appPaths.map(item => {
-  const newObj = {
-    name: item.network.name_long,
-    value: item.network.name_long
-  };
-
-  return newObj;
-});
+// const parsedAppPaths = appPaths.map(item => {
+//   const newObj = {
+//     name: item.network.name_long,
+//     value: item.network.name_long
+//   };
+//
+//   return newObj;
+// });
 
 const MAX_ADDRESSES = 5;
 import {
@@ -679,7 +679,12 @@ export default {
           name: 'Address to interact with'
         }
       ],
-      ledgerApps: parsedAppPaths,
+      ledgerApps: appPaths.map(item => {
+        return {
+          name: item.network.name_long,
+          value: item.network.name_long
+        };
+      }),
       wallets: walletHolder,
       // resettable
       step: 0,
@@ -770,13 +775,12 @@ export default {
             return item.network.name_long === this.selectedLedgerApp.name;
           });
           const path = found ? found.paths : appPaths[0].paths;
-          path.forEach(item => {
-            newArr.push({
+          return path.map(item => {
+            return {
               name: item.label,
               value: item.path
-            });
+            };
           });
-          return newArr;
         }
 
         appPaths[0].paths.forEach(item => {
@@ -795,7 +799,6 @@ export default {
           });
         });
       }
-
       return newArr;
     },
     title() {
@@ -835,7 +838,6 @@ export default {
           try {
             this.setAddresses();
           } catch (e) {
-            console.log(e); // todo remove dev item
             newVal.errorHandler(e);
           }
         }
@@ -878,6 +880,7 @@ export default {
       }
     },
     overlayClose() {
+      this.reset();
       this.close('showHardware');
     },
     nextStep(str) {
@@ -921,7 +924,6 @@ export default {
           }
         }
       } catch (e) {
-        console.log(e); // todo remove dev item
         Toast(e.message, {}, ERROR);
       }
     },
@@ -1014,7 +1016,6 @@ export default {
         this.currentIdx += MAX_ADDRESSES;
         this.selectedAddress = this.accounts[0].address;
       } catch (e) {
-        console.log(e); // todo remove dev item
         this.hwWalletInstance.errorHandler(e);
       }
     },

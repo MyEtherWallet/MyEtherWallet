@@ -230,12 +230,6 @@ export default {
       apps: ['Ethereum', 'SometingElse'],
       derivationPath: [`m/44'/60'/0'`, `m/44'/60'/2'`]
     };
-  },
-  mounted () {
-    console.log('lalalalal'); // todo remove dev item
-  },
-  methods:{
-
   }
 };
 </script>
