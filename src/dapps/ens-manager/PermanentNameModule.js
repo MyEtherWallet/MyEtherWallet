@@ -14,25 +14,25 @@ const BURNER_ADDRESS = '0x0000000000000000000000000000000000000000';
 export default class PermanentNameModule extends ENSManagerInterface {
   constructor(name, address, network, web3, ens) {
     super(name, address, network, web3, ens);
-    this.deedValueVal = 0;
-    this.deedOwnerVal = '0x';
-    this.secretPhraseVal = '';
-    this.expirationVal = null;
-    this.expiredVal = false;
-    this.redeemableVal = false;
+    this.deed = 0;
+    this.deedOwner = '0x';
+    this.secretPhrase = '';
+    this.expiration = null;
+    this.expired = false;
+    this.redeemable = false;
     // Contracts
-    this.oldEnsContractVal = null;
-    this.oldDeedContractVal = null;
-    this.dnsRegistrarContractVal = null;
-    this.dnsClaimVal = null;
-    this.dnsStatusVal = '';
+    this.oldEnsContract = null;
+    this.oldDeedContract = null;
+    this.dnsRegistrarContract = null;
+    this.dnsClaim = null;
+    this.dnsStatus = '';
 
     this._initModule();
   }
 
   register(duration) {
     const _self = this;
-    if (this.ownerVal === '0x') {
+    if (this.owner === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
     return _self
@@ -42,15 +42,15 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   transfer(toAddress) {
-    if (this.ownerVal === '0x') {
+    if (this.owner === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
     return this.setController(toAddress).then(() => {
-      return this.web3Val.eth.sendTransaction({
-        from: this.addressVal,
-        to: this.networkVal.type.ens.registry,
-        data: this.registryContractVal.methods
-          .setOwner(this.nameHashVal, toAddress)
+      return this.web3.eth.sendTransaction({
+        from: this.address,
+        to: this.network.type.ens.registry,
+        data: this.registryContract.methods
+          .setOwner(this.nameHash, toAddress)
           .encodeABI(),
         value: 0
       });
@@ -58,7 +58,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   renew(duration) {
-    if (this.ownerVal === '0x') {
+    if (this.owner === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
 
@@ -66,38 +66,38 @@ export default class PermanentNameModule extends ENSManagerInterface {
       throw new Error('Invalid or missing parameter: Duration');
     }
 
-    const hostName = this.nameVal.replace(
-      `.${this.networkVal.type.ens.registrarTLD}`,
+    const hostName = this.name.replace(
+      `.${this.network.type.ens.registrarTLD}`,
       ''
     );
 
     const ACTUAL_DURATION = Math.ceil(60 * 60 * 24 * 365.25 * duration);
     // Not sure where to place balance checker that's currently present
-    return this.registrarControllerContractVal.methods
-      .rentPrice(this.nameVal, ACTUAL_DURATION)
+    return this.registrarControllerContract.methods
+      .rentPrice(this.name, ACTUAL_DURATION)
       .call()
       .then(res => {
-        const data = this.registrarControllerContractVal.methods
+        const data = this.registrarControllerContract.methods
           .renew(hostName)
           .encodeABI();
         const withFivePercent = BigNumber(res)
           .times(1.05)
-          .integerValue()
+          .integerue()
           .toFixed();
 
         const txObj = {
-          to: this.contractControllerAddressVal,
-          from: this.addressVal,
+          to: this.contractControllerAddress,
+          from: this.address,
           data: data,
           value: withFivePercent
         };
 
-        return this.web3Val.sendTransaction(txObj);
+        return this.web3.sendTransaction(txObj);
       });
   }
 
   releaseDeed() {
-    if (this.ownerVal === '0x') {
+    if (this.owner === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
 
@@ -105,28 +105,28 @@ export default class PermanentNameModule extends ENSManagerInterface {
       throw new Error('Name has no releasable deed!');
     }
 
-    if (this.deedOwnerVal !== this.addressVal) {
+    if (this.deedOwner !== this.address) {
       throw new Error('Redeeming address provided is not the owner!');
     }
     const data = this.oldDeedContract.methods
-      .releaseDeed(this.labelHashVal)
+      .releaseDeed(this.labelHash)
       .encodeABI();
     const obj = {
-      from: this.addressVal,
+      from: this.address,
       to: OLD_ENS_ADDRESS,
       data: data,
       value: 0
     };
 
-    return this.web3Val.eth.sendTransaction(obj);
+    return this.web3.eth.sendTransaction(obj);
   }
 
   setIPFS(file) {
-    if (this.ownerVal === '0x') {
+    if (this.owner === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
 
-    if (this.networkVal.type.name !== 'ETH') {
+    if (this.network.type.name !== 'ETH') {
       throw new Error('Ipfs not supported in this network!');
     }
 
@@ -135,78 +135,79 @@ export default class PermanentNameModule extends ENSManagerInterface {
       .then(hash => {
         const ipfsToHash = `0x${contentHash.fromIpfs(hash)}`;
         const tx = {
-          from: this.addressVal,
-          to: this.resolverAddressVal,
-          data: this.resolverContractVal.methods
-            .setContentHash(this.nameHashVal, ipfsToHash)
+          from: this.address,
+          to: this.resolverAddress,
+          data: this.resolverContract.methods
+            .setContentHash(this.nameHash, ipfsToHash)
             .encodeABI(),
           value: 0
         };
 
-        return this.web3Val.eth.sendTransaction(tx);
+        return this.web3.eth.sendTransaction(tx);
       });
   }
 
   // DNS claim name method
   claim() {
-    return this.dnsClaimVal.submit({
-      from: this.addressVal
+    return this.dnsClaim.submit({
+      from: this.address
     });
   }
 
   async _initModule() {
     // initial value for the variables
-    const formValues = {
-      deedValue: 'deedValueVal',
-      deedOwner: 'deedOwnerVal',
-      secretPhrase: 'secretPhraseVal',
-      expiration: 'expirationVal',
-      expired: 'expiredVal',
-      redeemable: 'redeemableVal',
+    const values = {
+      deed: 'deed',
+      deedOwner: 'deedOwner',
+      secretPhrase: 'secretPhrase',
+      expiration: 'expiration',
+      expired: 'expired',
+      redeemable: 'redeemable',
       // Contracts
-      oldEnsContract: 'oldEnsContractVal',
-      oldDeedContract: 'oldDeedContractVal',
-      dnsRegistrarContract: 'dnsRegistrarContractVal',
-      dnsClaim: 'dnsClaimVal',
-      dnsStatus: 'dnsStatusVal'
+      oldEnsContract: 'oldEnsContract',
+      oldDeedContract: 'oldDeedContract',
+      dnsRegistrarContract: 'dnsRegistrarContract',
+      dnsClaim: 'dnsClaim',
+      dnsStatus: 'dnsStatus'
     };
     const obj = {};
-    Object.keys(formValues).forEach(propName => {
+    Object.keys(values).forEach(propName => {
       Object.defineProperty(obj, propName, {
         enumerable: true,
         get: () => {
-          return this[formValues[propName]];
+          return this[values[propName]];
         },
         set: value => {
-          this[formValues[propName]] = value;
+          this[values[propName]] = value;
         }
       });
     });
     try {
       const promises = await Promise.all([
-        this._setDeeds,
-        this._setExpiry,
-        this._setContentHash,
-        this._setEnsContracts,
-        this._setDnsContract
+        this._setDeeds(),
+        this._setExpiry(),
+        this._setContentHash(),
+        this._setEnsContracts(),
+        this._setDnsContract()
       ]);
       return promises;
     } catch (e) {
+      console.error('e', e)
       throw new Error(e);
     }
   }
 
   async _setExpiry() {
-    const expiryTime = await this.registrarContractVal.methods
-      .nameExpires(this.labelHashVal)
+    const expiryTime = await this.registrarContract.methods
+      .nameExpires(this.labelHash)
       .call();
     this.expired = expiryTime * 1000 < new Date().getTime();
   }
 
   async _setContentHash() {
     try {
-      const hash = await this.resolverContractVal.methods
-        .contenthash(this.nameHashVal)
+      const hash = await this.resolverContract.methods
+        .contenthash(this.nameHash)
         .call();
       this.contentHash = hash && hash !== '' ? contentHash.decode(hash) : '';
     } catch (e) {
@@ -215,19 +216,19 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   async _setEnsContracts() {
-    const web3 = this.web3Val;
-    this._setContractsVal();
+    const web3 = this.web3;
+    this._setContracts();
     this.oldEnsContract = new web3.eth.Contract(OldEnsAbi, OLD_ENS_ADDRESS);
   }
 
   async _setDnsContract() {
     if (!this.name.includes(this.network.ens.registrarTLD)) {
-      this.dnsRegistrarContractVal = new DNSRegistrar(
-        this.web3Val.currentProvider,
-        this.registrarAddressVal
+      this.dnsRegistrarContract = new DNSRegistrar(
+        this.web3.currentProvider,
+        this.registrarAddress
       );
-      this.dnsClaimVal = await this.dnsRegistrar.claim(
-        this.parsedDomainNameVal
+      this.dnsClaim = await this.dnsRegistrar.claim(
+        this.parsedDomainName
       );
       this._setDnsInfo();
     }
@@ -236,37 +237,37 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   async _setDnsInfo() {
-    const _owner = await this.ens.owner(this.parsedDomainNameVal);
-    const isInNewRegistry = await this.registryContractVal.methods
-      .recordExists(nameHashPckg.hash(this.parsedDomainNameVal))
+    const _owner = await this.ens.owner(this.parsedDomainName);
+    const isInNewRegistry = await this.registryContract.methods
+      .recordExists(nameHashPckg.hash(this.parsedDomainName))
       .call();
-    if (this.dnsClaimVal.result.found && !isInNewRegistry) {
-      this.dnsStatusVal = 'claimable';
+    if (this.dnsClaim.result.found && !isInNewRegistry) {
+      this.dnsStatus = 'claimable';
     } else if (
-      this.dnsClaimVal.result.found &&
-      this.dnsClaimVal.getOwner().toLowerCase() === _owner.toLowerCase()
+      this.dnsClaim.result.found &&
+      this.dnsClaim.getOwner().toLowerCase() === _owner.toLowerCase()
     ) {
-      this.dnsStatusVal = 'owned';
-    } else if (this.dnsClaimVal.result.found) {
-      this.dnsStatusVal = 'claimable';
-    } else if (this.dnsClaimVal.result.nsec) {
-      this.dnsStatusVal = 'unclaimable';
+      this.dnsStatus = 'owned';
+    } else if (this.dnsClaim.result.found) {
+      this.dnsStatus = 'claimable';
+    } else if (this.dnsClaim.result.nsec) {
+      this.dnsStatus = 'unclaimable';
     } else {
-      this.dnsStatusVal = 'dnsecerror';
+      this.dnsStatus = 'dnsecerror';
     }
   }
 
   async _setDeeds() {
     if (this.network.type.name === 'ETH') {
-      const web3 = this.web3Val;
+      const web3 = this.web3;
       const entries = await this.oldEnsContract.methods
-        .entries(this.labelHashVal)
+        .entries(this.labelHash)
         .call();
       if (entries[1] !== BURNER_ADDRESS) {
         this.redeemable = true;
         this.oldDeedContract = new web3.eth.Contract(OldDeedAbi, entries[1]);
-        this.deedOwnerVal = await this.oldDeedContract.methods.owner().call();
-        this.deedValue = await this.oldDeedContract.methods.value().call();
+        this.deedOwner = await this.oldDeedContract.methods.owner().call();
+        this.deed = await this.oldDeedContract.methods.value().call();
       } else {
         this.redeemable = false;
       }
@@ -275,47 +276,47 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   async _registerWithDuration(duration) {
-    const utils = this.web3Val.utils;
+    const utils = this.web3.utils;
     const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
     const actualDuration = Math.ceil(SECONDS_YEAR * duration);
     try {
-      const rentPrice = await this.registrarControllerContractVal.methods
-        .rentPrice(this.parsedHostNameVal, actualDuration)
+      const rentPrice = await this.registrarControllerContract.methods
+        .rentPrice(this.parsedHostName, actualDuration)
         .call();
       const withFivePercent = BigNumber(rentPrice)
         .times(1.05)
-        .integerValue()
+        .integerue()
         .toFixed();
-      return this.registrarControllerContractVal.methods
+      return this.registrarControllerContract.methods
         .registerWithConfig(
-          this.parsedHostNameVal,
-          this.addressVal,
+          this.parsedHostName,
+          this.address,
           actualDuration,
-          utils.sha3(this.secretPhraseVal),
-          this.publicResolverAddressVal,
-          this.addressVal
+          utils.sha3(this.secretPhrase),
+          this.publicResolverAddress,
+          this.address
         )
-        .send({ from: this.addressVal, value: withFivePercent });
+        .send({ from: this.address, value: withFivePercent });
     } catch (e) {
       throw new Error(e);
     }
   }
 
   async _createCommitment() {
-    const utils = this.web3Val.utils;
+    const utils = this.web3.utils;
     try {
-      const commitment = await this.registrarControllerContractVal.methods
+      const commitment = await this.registrarControllerContract.methods
         .makeCommitmentWithConfig(
-          this.parsedHostNameVal,
-          this.addressVal,
-          utils.sha3(this.secretPhraseVal),
-          this.publicResolverAddressVal,
-          this.addressVal
+          this.parsedHostName,
+          this.address,
+          utils.sha3(this.secretPhrase),
+          this.publicResolverAddress,
+          this.address
         )
         .call();
-      return this.registrarControllerContractVal.methods
+      return this.registrarControllerContract.methods
         .commit(commitment)
-        .send({ from: this.addressVal });
+        .send({ from: this.address });
     } catch (e) {
       throw new Error(e);
     }
