@@ -27,7 +27,12 @@ export default class PermanentNameModule extends ENSManagerInterface {
     this.dnsClaim = null;
     this.dnsStatus = '';
 
-    this._initModule();
+    const int = setInterval(() => {
+      this._initModule();
+      if (this.registrarContract !== null) {
+        clearInterval(int);
+      }
+    }, 5000);
   }
 
   register(duration) {
@@ -183,25 +188,20 @@ export default class PermanentNameModule extends ENSManagerInterface {
       });
     });
     try {
-      const promises = await Promise.all([
-        this._setDeeds(),
-        this._setExpiry(),
-        this._setContentHash(),
-        this._setEnsContracts(),
-        this._setDnsContract()
-      ]);
-      return promises;
+      return this._setEnsContracts();
     } catch (e) {
-      console.error('e', e)
+      console.error('e', e);
       throw new Error(e);
     }
   }
 
   async _setExpiry() {
+    console.error('this', this.registrarContract)
     const expiryTime = await this.registrarContract.methods
       .nameExpires(this.labelHash)
       .call();
     this.expired = expiryTime * 1000 < new Date().getTime();
+    this._setContentHash();
   }
 
   async _setContentHash() {
@@ -213,23 +213,23 @@ export default class PermanentNameModule extends ENSManagerInterface {
     } catch (e) {
       this.contentHash = '';
     }
+    this._setDnsContract();
   }
 
   async _setEnsContracts() {
     const web3 = this.web3;
     this._setContracts();
     this.oldEnsContract = new web3.eth.Contract(OldEnsAbi, OLD_ENS_ADDRESS);
+    this._setDeeds();
   }
 
   async _setDnsContract() {
-    if (!this.name.includes(this.network.ens.registrarTLD)) {
+    if (!this.name.includes(this.network.type.ens.registrarTLD)) {
       this.dnsRegistrarContract = new DNSRegistrar(
         this.web3.currentProvider,
         this.registrarAddress
       );
-      this.dnsClaim = await this.dnsRegistrar.claim(
-        this.parsedDomainName
-      );
+      this.dnsClaim = await this.dnsRegistrar.claim(this.parsedDomainName);
       this._setDnsInfo();
     }
 
@@ -272,7 +272,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
         this.redeemable = false;
       }
     }
-    return;
+    return this._setExpiry();
   }
 
   async _registerWithDuration(duration) {

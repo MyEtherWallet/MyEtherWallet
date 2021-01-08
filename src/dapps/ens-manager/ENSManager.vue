@@ -239,6 +239,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['network', 'address', 'web3', 'ens'])
+    //add rules
   },
   mounted() {
     this.ensManager = new ENSManager(

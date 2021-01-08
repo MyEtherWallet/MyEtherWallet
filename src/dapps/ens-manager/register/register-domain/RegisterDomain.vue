@@ -7,7 +7,12 @@
   >
     <template #mewOverlayBody>
       <mew-stepper :items="stepperItems" :on-step="onStep">
-        <template #stepperContent1><request v-if="onStep === 1" /></template>
+        <template #stepperContent1
+          ><request
+            v-if="onStep === 1"
+            :is-available="isAvailable"
+            :name="nameModule.name"
+        /></template>
         <template #stepperContent2><register v-if="onStep === 2" /></template>
         <template #stepperContent3><complete v-if="onStep === 3" /></template>
       </mew-stepper>
@@ -55,6 +60,11 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    isAvailable() {
+      return this.nameModule.owner === '0x';
+    }
   }
 };
 </script>

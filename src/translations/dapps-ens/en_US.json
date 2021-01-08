@@ -54,7 +54,7 @@
   "text-record-error": "{value} is missing or not a valid input for {name}!",
   "set-controller": "Update Controller",
   "is-available": "Cheers! This domain is available.",
-  "not-available": "{domain} is not available yet!",
+  "domain-taken": "Domain has been taken",
   "update-resolver": "Update Resolving address",
   "transfer-to": "Transfer ENS domain to",
   "transfer": "Transfer",
@@ -116,5 +116,8 @@
     "UnsupportedCurrency": "{currencyTicker} is not supported",
     "IncorrectResolverInterface": "Domain resolver is configured incorrectly for {method}",
     "RecordNotFound": "No {recordName} record found for {domain}"
+  },
+  "request": {
+    "about-domain": "Once you have a domain name, you can tell your friends to send ETH to your domain name instead of your address."
   }
 }

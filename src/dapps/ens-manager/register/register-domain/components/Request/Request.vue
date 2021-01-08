@@ -6,23 +6,36 @@
     class="mx-auto pa-8"
     rounded
   >
-    <div class="d-flex align-center bg_datablock pa-6 border-radius--10px">
-      <v-icon class="check-icon primary--text mr-3">
-        {{ getIcon() }}
+    <div
+      :class="[
+        'd-flex align-center pa-4 rounded',
+        isAvailable ? 'available' : 'unavailable'
+      ]"
+    >
+      <v-icon size="80" :color="isAvailable ? 'primary' : 'error'" class="mr-3">
+        {{ icon }}
       </v-icon>
       <div>
-        <div class="mew-heading-2 primary--text mb-2">Available</div>
-        <div class="mew-heading-2 error--text mb-1">
-          Domain has been taken
+        <div
+          :class="[
+            'mew-heading-2 mb-2',
+            isAvailable ? 'primary--text' : 'error--text'
+          ]"
+        >
+          {{ isAvailable ? $t('ens.is-available') : $t('ens.domain-taken') }}
         </div>
-        <div class="mew-heading-2">mewdev009.eth</div>
+        <div class="mew-heading-2">{{ name }}</div>
       </div>
     </div>
-    <div class="pa-3 mt-3 mb-7 text-center">
-      Once you have a domain name, you can tell your friends to send ETH to your
-      domain name instead of your address.
+    <div class="pa-1 mt-3 mb-7 text-center">
+      {{ $t('ens.request.about-domain') }}
     </div>
-    <mew-select label="Choose the term to keep your domain" :items="items" />
+    <mew-select
+      :has-filter="false"
+      label="Choose the term to keep your domain"
+      :items="items"
+      @input="setDuration"
+    />
 
     <div class="font-weight-bold text-center">Price: 0.0031 ETH ($12.31)</div>
     <div class="d-flex justify-center mt-6">
@@ -34,29 +47,49 @@
 <script>
 export default {
   components: {},
-  props: {},
+  props: {
+    isAvailable: {
+      default: false,
+      type: Boolean
+    },
+    name: {
+      default: '',
+      type: String
+    }
+  },
   data() {
     return {
       available: false,
-      items: [
-        {
-          name: 'ETH',
-          subtext: 'Ethereum',
-          value: 'Ethereum'
-        }
-      ]
+      duration: ''
     };
   },
+  computed: {
+    icon() {
+      return this.isAvailable
+        ? 'mdi-check-circle-outline'
+        : 'mdi-do-not-disturb';
+    },
+    items() {
+      const items = [];
+      for (let i = 0; i < 20; i++) {
+        items.push({ name: i + 1 + ' ' + 'year' });
+      }
+      return items;
+    }
+  },
   methods: {
-    getIcon() {
-      return this.available ? 'mdi-check-circle-outline' : 'mdi-do-not-disturb'
+    setDuration(val) {
+      this.duration = val;
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.check-icon {
-  font-size: 65px !important;
+.available {
+  background-color: var(--v-superPrimary-base);
+}
+.unavailable {
+  background-color: var(--v-lighten1-base);
 }
 </style>
