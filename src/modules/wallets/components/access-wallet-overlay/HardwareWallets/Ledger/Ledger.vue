@@ -74,7 +74,6 @@
             </v-radio-group>
           </template>
         </mew-expand-panel>
-
         <mew-expand-panel :panel-items="addressToInteract">
           <template #panelBody1>
             <mew-table
@@ -107,6 +106,7 @@
         <page-indicator-dot class="mt-4" :items="2" :current-item="2" />
       </v-sheet>
     </template>
+
   </mew-overlay>
 </template>
 
@@ -230,6 +230,12 @@ export default {
       apps: ['Ethereum', 'SometingElse'],
       derivationPath: [`m/44'/60'/0'`, `m/44'/60'/2'`]
     };
+  },
+  mounted () {
+    console.log('lalalalal'); // todo remove dev item
+  },
+  methods:{
+
   }
 };
 </script>

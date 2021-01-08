@@ -100,7 +100,7 @@ export default {
         })
         .catch(e => {
           this.overlayClose();
-          _self.instance.erroHandler(e);
+          _self.instance.errorHandler(e);
         });
     });
   },

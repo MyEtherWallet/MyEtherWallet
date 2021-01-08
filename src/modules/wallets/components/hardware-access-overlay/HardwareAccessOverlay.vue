@@ -335,7 +335,7 @@
                   :disabled="!(selectedAddress && acceptTerms)"
                   @click.native="
                     () => {
-                      setWallet(wallet.account);
+                      setHardwareWallet(wallet.account);
                     }
                   "
                 />
@@ -449,7 +449,8 @@ import { mapState, mapActions } from 'vuex';
 
 const parsedAppPaths = appPaths.map(item => {
   const newObj = {
-    name: item.network.name_long
+    name: item.network.name_long,
+    value: item.network.name_long
   };
 
   return newObj;
@@ -775,7 +776,6 @@ export default {
               value: item.path
             });
           });
-
           return newArr;
         }
 
@@ -835,6 +835,7 @@ export default {
           try {
             this.setAddresses();
           } catch (e) {
+            console.log(e); // todo remove dev item
             newVal.errorHandler(e);
           }
         }
@@ -920,6 +921,7 @@ export default {
           }
         }
       } catch (e) {
+        console.log(e); // todo remove dev item
         Toast(e.message, {}, ERROR);
       }
     },
@@ -950,7 +952,7 @@ export default {
     unlockbc_vault(address) {
       const actualAddress = address ? address : this.selectedAddress;
       const _wallet = this.walletInstance.getAccount(actualAddress);
-      this.setWallet(_wallet);
+      this.setHardwareWallet(_wallet);
     },
     unlockkeepkey() {},
     unlockcool_wallet() {
@@ -988,7 +990,7 @@ export default {
         });
     },
     unlockQrcode(wallet) {
-      this.setWallet(wallet);
+      this.setHardwareWallet(wallet);
     },
     async setAddresses() {
       try {
@@ -1012,6 +1014,7 @@ export default {
         this.currentIdx += MAX_ADDRESSES;
         this.selectedAddress = this.accounts[0].address;
       } catch (e) {
+        console.log(e); // todo remove dev item
         this.hwWalletInstance.errorHandler(e);
       }
     },
@@ -1027,7 +1030,7 @@ export default {
         this.currentIdx <= 10 ? idxDeductor : idxDeductor - MAX_ADDRESSES;
       this.setAddresses();
     },
-    setWallet(wallet) {
+    setHardwareWallet(wallet) {
       try {
         this.setWallet([wallet])
           .then(() => {
