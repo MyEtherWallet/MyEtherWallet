@@ -118,6 +118,9 @@
     "RecordNotFound": "No {recordName} record found for {domain}"
   },
   "request": {
+    "request-registr": "Request registration",
+    "choose-term": "Choose the term to keep your domain",
+    "estimated-price": "Estimated Price",
     "about-domain": "Once you have a domain name, you can tell your friends to send ETH to your domain name instead of your address."
   }
 }

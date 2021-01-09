@@ -12,6 +12,7 @@
             v-if="onStep === 1"
             :is-available="isAvailable"
             :name="nameModule.name"
+            @onClick="onClick"
         /></template>
         <template #stepperContent2><register v-if="onStep === 2" /></template>
         <template #stepperContent3><complete v-if="onStep === 3" /></template>
@@ -44,6 +45,7 @@ export default {
   },
   data() {
     return {
+      duration: '',
       onStep: 1,
       stepperItems: [
         {
@@ -64,6 +66,16 @@ export default {
   computed: {
     isAvailable() {
       return this.nameModule.owner === '0x';
+    }
+  },
+  methods: {
+    onClick(val) {
+      if (!this.isAvailable) {
+        this.close();
+        return;
+      }
+      this.duration = val;
+      this.onStep += 1;
     }
   }
 };

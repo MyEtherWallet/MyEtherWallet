@@ -192,7 +192,8 @@ export default new Vuetify({
         error: {
           base: '#ff445b',
           lighten1: '#ffd7dc',
-          lighten2: '#e96071'
+          lighten2: '#e96071',
+          lighten3: '#fff3f5'
         },
         warning: {
           base: '#FFF2DC',
@@ -256,7 +257,8 @@ export default new Vuetify({
         error: {
           base: '#ff445b',
           lighten1: '#ffd7dc',
-          lighten2: '#e96071'
+          lighten2: '#e96071',
+          lighten3: '#fff3f5'
         },
         warning: {
           base: '#FFF2DC',
