@@ -202,7 +202,6 @@ export default class ENSManagerInterface {
     const registryAddress = this.network.type.ens.registry;
     this.registrarAddress = await this.ens.owner(registrarTLD);
     this.registryContract = new web3.eth.Contract(RegistryAbi, registryAddress);
-    console.error('registry', this.registryContract)
     this._setPublicResolverAddress();
   }
 

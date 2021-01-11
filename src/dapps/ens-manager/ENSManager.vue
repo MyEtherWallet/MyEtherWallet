@@ -251,12 +251,12 @@ export default {
   },
   methods: {
     findDomain() {
-      this.onRegister = true;
       const name = this.name + '.eth';
       this.ensManager
         .searchName(name)
         .then(res => {
           this.nameModule = res;
+          this.onRegister = true;
           console.error('res', res);
         })
         .catch(err => {

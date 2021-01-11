@@ -120,7 +120,7 @@ export default {
   },
   methods: {
     onClick() {
-      this.$emit('onClick', this.duration);
+      this.$emit('onRequest', this.duration);
     },
     setDuration(val) {
       this.duration = val.name.substr(0, val.name.indexOf(' '));

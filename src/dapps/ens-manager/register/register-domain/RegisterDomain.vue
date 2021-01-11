@@ -12,9 +12,15 @@
             v-if="onStep === 1"
             :is-available="isAvailable"
             :name="nameModule.name"
-            @onClick="onClick"
+            @onRequest="onRequest"
         /></template>
-        <template #stepperContent2><register v-if="onStep === 2" /></template>
+        <template #stepperContent2
+          ><register
+            v-if="onStep === 2"
+            :name="nameModule.name"
+            :duration="duration"
+            :register="register"
+        /></template>
         <template #stepperContent3><complete v-if="onStep === 3" /></template>
       </mew-stepper>
     </template>
@@ -69,7 +75,18 @@ export default {
     }
   },
   methods: {
-    onClick(val) {
+    register() {
+      console.error('in here');
+      this.nameModule
+        .register(this.duration)
+        .then(resp => {
+          console.error('resp', resp);
+        })
+        .catch(err => {
+          console.error('err', err);
+        });
+    },
+    onRequest(val) {
       if (!this.isAvailable) {
         this.close();
         return;

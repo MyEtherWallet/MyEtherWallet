@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 import ENSManagerInterface from './ENSManagerInterface.js';
 import * as nameHashPckg from 'eth-ens-namehash';
 import DNSRegistrar from '@ensdomains/dnsregistrar';
+import { getHostName } from './helpers';
 
 const OLD_ENS_ADDRESS = '0x6090a6e47849629b7245dfa1ca21d94cd15878ef';
 const BURNER_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -37,9 +38,9 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
   register(duration) {
     const _self = this;
-    if (this.owner === '0x') {
-      throw new Error('Owner not set! Please initialize module properly!');
-    }
+    // if (this.owner === '0x') {
+    //   throw new Error('Owner not set! Please initialize module properly!');
+    // }
     return _self
       ._createCommitment()
       .then(() => _self._registerWithDuration(duration))
@@ -196,7 +197,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   async _setExpiry() {
-    console.error('this', this.registrarContract)
+    console.error('this', this.registrarContract);
     const expiryTime = await this.registrarContract.methods
       .nameExpires(this.labelHash)
       .call();
@@ -304,10 +305,19 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
   async _createCommitment() {
     const utils = this.web3.utils;
+    console.error(
+      'variables',
+      getHostName(this.name),
+      this.address,
+      this.secretPhrase,
+      utils.sha3(this.secretPhrase),
+      this.publicResolverAddress,
+      this.address
+    );
     try {
       const commitment = await this.registrarControllerContract.methods
         .makeCommitmentWithConfig(
-          this.parsedHostName,
+          getHostName(this.name),
           this.address,
           utils.sha3(this.secretPhrase),
           this.publicResolverAddress,
@@ -318,6 +328,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
         .commit(commitment)
         .send({ from: this.address });
     } catch (e) {
+      console.error('e', e);
       throw new Error(e);
     }
   }

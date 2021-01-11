@@ -60,7 +60,6 @@
   "transfer": "Transfer",
   "transfer-domain": "Transfer Domain",
   "release-deed": "Return Deed",
-  "register": "Register",
   "hang-on": "Hang on tight!",
   "finalize-registration": "We are finalizing the registration for ",
   "register-progress": "Registration in progress for",
@@ -122,5 +121,10 @@
     "choose-term": "Choose the term to keep your domain",
     "estimated-price": "Estimated Price",
     "about-domain": "Once you have a domain name, you can tell your friends to send ETH to your domain name instead of your address."
+  },
+  "register": {
+    "domain-name": "Domain Name",
+    "term": "Term",
+    "name": "Register"
   }
 }
