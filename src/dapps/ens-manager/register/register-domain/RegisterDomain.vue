@@ -21,7 +21,7 @@
             :duration="duration"
             :register="register"
             :commit="commit"
-            :commited="committed"
+            :committed="committed"
         /></template>
         <template #stepperContent3><complete v-if="onStep === 3" /></template>
       </mew-stepper>
@@ -77,6 +77,12 @@ export default {
       return this.nameModule.owner === '0x';
     }
   },
+  watch: {
+    nameModule(newVal) {
+      this.committed = newVal.createCommitment ? false : true;
+      console.error('nameModule', this.committed)
+    }
+  },
   methods: {
     commit() {
       console.error('in here', this.nameModule);
@@ -91,7 +97,7 @@ export default {
         });
     },
     register() {
-      console.error('in here');
+      console.error('in register');
       this.nameModule
         .register(this.duration)
         .then(resp => {
@@ -106,7 +112,9 @@ export default {
         this.close();
         return;
       }
-      this.nameModule.generateKeyPhrase();
+      if (this.nameModule.generateKeyPhrase) {
+        this.nameModule.generateKeyPhrase();
+      }
       this.duration = val;
       this.onStep += 1;
     }

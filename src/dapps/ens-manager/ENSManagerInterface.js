@@ -2,6 +2,7 @@ import { getTld, getHostName, decodeCoinAddress } from './helpers';
 import RegistryAbi from './ABI/registryAbi.js';
 import BaseRegistrarAbi from './ABI/baseRegistrarAbi.js';
 import ResolverAbi from './ABI/resolverAbi.js';
+import FifsRegistrarAbi from './ABI/fifsRegistrarAbi.js';
 import RegistrarControllerAbi from './ABI/registrarControllerAbi.js';
 import multicoins from './manage/configs/multicoins';
 import textrecords from './manage/configs/textrecords';
@@ -10,7 +11,10 @@ import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import registrarInterface from './manage/registrarInterface';
 import * as nameHashPckg from 'eth-ens-namehash';
-
+const REGISTRAR_TYPES = {
+  FIFS: 'fifs',
+  PERMANENT: 'permanent'
+};
 export default class ENSManagerInterface {
   constructor(name, address, network, web3, ens) {
     this.address = address ? address : '0x';
@@ -191,6 +195,7 @@ export default class ENSManagerInterface {
     try {
       return this._setRegistar();
     } catch (e) {
+      console.error('e', e);
       throw new Error(e);
     }
   }
@@ -247,17 +252,24 @@ export default class ENSManagerInterface {
     const web3 = this.web3;
     const tld = getTld(this.name);
     const registrarTLD = tld ? tld : this.network.type.ens.registrarTLD;
-    this.contractControllerAddress = await this.ens
-      .resolver(registrarTLD, ResolverAbi)
-      .interfaceImplementer(registrarInterface.CONTROLLER);
-    this.registrarControllerContract = new web3.eth.Contract(
-      RegistrarControllerAbi,
-      this.contractControllerAddress
-    );
-    this.registrarContract = new web3.eth.Contract(
-      BaseRegistrarAbi,
-      this.registrarAddress
-    );
+    const abi =
+      this.network.type.ens.registrarType === REGISTRAR_TYPES.FIFS
+        ? FifsRegistrarAbi
+        : BaseRegistrarAbi;
+    this.registrarContract = new web3.eth.Contract(abi, this.registrarAddress);
+    if (this.network.type.ens.registrarType === REGISTRAR_TYPES.PERMANENT) {
+      try {
+        this.contractControllerAddress = await this.ens
+          .resolver(registrarTLD, ResolverAbi)
+          .interfaceImplementer(registrarInterface.CONTROLLER);
+        this.registrarControllerContract = new web3.eth.Contract(
+          RegistrarControllerAbi,
+          this.contractControllerAddress
+        );
+      } catch (e) {
+        console.error('e', e);
+      }
+    }
     this.resolverAddress = await this.registryContract.methods
       .resolver(this.nameHash)
       .call();

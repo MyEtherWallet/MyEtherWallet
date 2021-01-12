@@ -24,7 +24,7 @@
             : $t('ens.register.create-commitment')
         "
         btn-size="xlarge"
-        @click.native="!commited ? commit : register"
+        @click.native="!committed ? commit : register()"
       />
     </div>
   </v-sheet>
@@ -42,8 +42,8 @@ export default {
       default: ''
     },
     committed: {
-      type: String,
-      default: ''
+      type: Boolean,
+      default: false
     },
     register: {
       default: function () {
@@ -57,12 +57,12 @@ export default {
       },
       type: Function
     }
+  },
+  watch: {
+    committed() {
+      console.error('in hereeee')
+    }
   }
-  // data() {
-  //   return {
-  //     committed: false
-  //   };
-  // }
 };
 </script>
 

@@ -6,22 +6,23 @@ export default class FifsNameModule extends ENSManagerInterface {
   }
 
   register() {
-    const address = this.addressVal;
+    console.error('in here', this.registrarContract, this.registryContract)
+    const address = this.address;
     const web3 = this.web3;
-    const data = this.registrarContractVal.methods
-      .register(this.labelHashVal, address)
+    const data = this.registrarContract.methods
+      .register(this.labelHash, address)
       .encodeABI();
     const registerTx = {
       from: address,
       value: 0,
-      to: this.registrarAddressVal,
+      to: this.registrarAddress,
       data: data
     };
     const setResolverTx = {
       from: address,
-      to: this.networkVal.type.ens.registry,
-      data: this.ensRegistryContractVal.methods
-        .setResolver(this.nameHashVal, this.publicResolverAddressVal)
+      to: this.network.type.ens.registry,
+      data: this.registryContract.methods
+        .setResolver(this.nameHash, this.publicResolverAddress)
         .encodeABI(),
       value: 0
     };
@@ -32,10 +33,10 @@ export default class FifsNameModule extends ENSManagerInterface {
 
   transfer(toAddress) {
     return this.web3.eth.sendTransaction({
-      from: this.addressVal,
+      from: this.address,
       to: toAddress,
-      data: this.ensRegistryContractVal.methods
-        .setOwner(this.nameHashVal, toAddress)
+      data: this.registryContract.methods
+        .setOwner(this.nameHash, toAddress)
         .encodeABI(),
       value: 0
     });
