@@ -6,7 +6,6 @@ import egem from './egem';
 import ella from './ella';
 import esn from './esn';
 import etcethereumclassiccooperativeparity from './etc-ethereumclassiccooperative-parity';
-import etcethereumclassiccooperativeparityws from './etc-ethereumclassiccooperative-parity-ws';
 import ethethscan from './eth-ethscan';
 import ethinfura from './eth-infura';
 import ethinfuraws from './eth-infura-ws';
@@ -68,7 +67,6 @@ export {
   ella,
   esn,
   etcethereumclassiccooperativeparity,
-  etcethereumclassiccooperativeparityws,
   ethethscan,
   ethinfura,
   ethinfuraws,

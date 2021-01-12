@@ -9,7 +9,7 @@
   .button-container {
     width: 100%;
     @media all and (max-width: 730px) {
-      align-items: baseline;
+      align-items: center;
       flex-direction: column;
     }
   }
@@ -23,7 +23,7 @@
     flex-direction: column;
     width: 100%;
     .staking-percent {
-      color: $dark-green-5;
+      color: $mew-green;
       font-size: 16px;
       font-weight: bold;
     }
@@ -82,4 +82,23 @@
       text-transform: uppercase;
     }
   }
+}
+
+.tab-btn {
+  background-color: $light-grey-17;
+  border: 1px solid $light-grey-4;
+  border-radius: 4px;
+  color: $dark-blue-1;
+  cursor: pointer;
+  padding: 10px 25px;
+}
+
+.active-tab {
+  background-color: $dark-blue-2;
+  color: $white;
+  z-index: 1;
+}
+
+.validators-btn {
+  margin-left: -12px;
 }

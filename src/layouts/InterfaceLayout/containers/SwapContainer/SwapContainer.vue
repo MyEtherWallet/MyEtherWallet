@@ -111,12 +111,59 @@
           </div>
           <!-- form-block amount-to-address -->
         </div>
-
+        <div v-if="showAlternates" class="btc-alternates">
+          <div no-body class="mb-1">
+            <div class="title-container" @click="toggleAlternates">
+              <h3>{{ $t('swap.alternates.title') }}</h3>
+              <i
+                :class="[
+                  openAltnernates ? 'fa-chevron-up' : 'fa-chevron-down',
+                  'fa'
+                ]"
+              />
+            </div>
+            <b-collapse
+              v-model="openAltnernates"
+              accordion="btc-alternatives"
+              role="tabpanel"
+            >
+              <div class="btc-body">
+                <p>
+                  {{ $t('swap.alternates.body') }}
+                  <a
+                    href="https://kb.myetherwallet.com/en/swap/btc-to-ethereum/"
+                    target="_blank"
+                    >{{ $t('swap.alternates.learn-more') }}</a
+                  >
+                </p>
+                <div v-if="!loadingData" class="alternative-btn-container">
+                  <div v-for="alt in alternativesOrdered" :key="alt.symbol">
+                    <button
+                      v-if="alt.hasValue"
+                      class="alternative-btn"
+                      @click="setAltToPrimary(alt)"
+                    >
+                      {{ fromValue }} {{ fromCurrency }} /
+                      {{ alt.computeConversion(fromValue) || alt.toValue }}
+                      {{ alt.symbol }}
+                    </button>
+                  </div>
+                </div>
+                <div v-else class="alternative-btn-container">
+                  <button class="alternative-btn">
+                    <div class="text-line"></div>
+                  </button>
+                </div>
+              </div>
+            </b-collapse>
+          </div>
+        </div>
         <div v-if="!isExitToFiat && !isBityCryptoToCrypto()" class="send-form">
           <div class="the-form gas-amount">
             <swap-address-selector
               :currency="toCurrency"
               :current-address="currentAddress"
+              :fill-address="fillAddress"
               :copybutton="true"
               :title="$t('sendTx.to-addr')"
               :clear-address="overrideAddress"
@@ -135,7 +182,6 @@
             Amount will be sent to your current wallet address.
           </div>
         </div>
-
         <div
           v-if="isExitToFiat && fromCurrency !== baseCurrency"
           class="send-form"
@@ -153,7 +199,6 @@
             />
           </div>
         </div>
-
         <div v-if="showRefundAddress" class="send-form">
           <div class="the-form gas-amount">
             <swap-address-selector
@@ -366,7 +411,28 @@ export default {
       unableToValidate: false,
       unableToValidateExit: false,
       unableToValidateRefund: false,
-      overrideAddress: false
+      overrideAddress: false,
+      openAltnernates: true,
+      alternates: [
+        {
+          symbol: 'RENBTC',
+          rates: [],
+          computeConversion: () => {},
+          hasValue: false
+        },
+        {
+          symbol: 'WBTC',
+          rates: [],
+          computeConversion: () => {},
+          hasValue: false
+        },
+        {
+          symbol: 'PBTC',
+          rates: [],
+          computeConversion: () => {},
+          hasValue: false
+        }
+      ]
     };
   },
   computed: {
@@ -393,6 +459,9 @@ export default {
         errorLogger(e);
       }
       return null;
+    },
+    fillAddress() {
+      return SwapProviders.isToken(this.toCurrency);
     },
     fromBelowMinAllowed() {
       if (new BigNumber(MIN_SWAP_AMOUNT).gt(new BigNumber(this.fromValue)))
@@ -524,9 +593,34 @@ export default {
       return this.isExitToFiat && this.fromCurrency === this.baseCurrency
         ? this.currentAddress
         : this.exitFromAddress;
+    },
+    showAlternates() {
+      if (this.toCurrency === 'BTC') {
+        return true;
+      }
+      return false;
+    },
+    getAlternatives() {
+      if (this.toCurrency === 'BTC') {
+        return true;
+      }
+      return false;
+    },
+    alternativesOrdered() {
+      return [...this.alternates].sort((a, b) => b.rates - a.rates);
     }
   },
   watch: {
+    toCurrency(value) {
+      if (value === 'BTC') {
+        this.standAloneRateEstimate();
+      }
+    },
+    fromValue() {
+      if (this.toCurrency === 'BTC') {
+        this.standAloneRateEstimate();
+      }
+    },
     ['gasPrice'](value) {
       if (!this.selectedProvider) {
         this.selectedProvider = {};
@@ -562,6 +656,7 @@ export default {
         this.fromValue,
         'from'
       );
+      this.standAloneRateEstimate();
     },
     network(newVal) {
       this.providerData = [];
@@ -577,6 +672,12 @@ export default {
         },
         { tokensWithBalance: this.tokensWithBalance }
       );
+    },
+    alternates: {
+      deep: true,
+      handler: function (newVal) {
+        this.alternates = newVal;
+      }
     }
   },
   mounted() {
@@ -596,6 +697,54 @@ export default {
   methods: {
     getTokenAddress(currency) {
       return this.swap.getTokenAddress(currency, true);
+    },
+    async standAloneRateEstimate() {
+      const checkAndSetup = res => {
+        setTimeout(() => {
+          if (res) {
+            const idx = this.alternates.findIndex(
+              item => item.symbol === res[0].toCurrency
+            );
+            if (idx > -1) {
+              this.alternates[idx].rates = res[0].rate;
+              this.alternates[idx].fromValue = res[0].fromValue;
+              this.alternates[idx].toValue = res[0].computeConversion(
+                this.fromValue
+              );
+              this.alternates[
+                idx
+              ].computeConversion = res[0].computeConversion.bind(res[0]);
+              this.alternates[idx].hasValue = true;
+              if (this.bestRate > 0) {
+                this.alternates[idx].hasValue = new BigNumber(res[0].rate)
+                  .div(this.bestRate)
+                  .gte(0.9);
+              }
+              return res;
+            }
+          }
+        }, 250);
+      };
+      this.alternates.forEach(val => {
+        this.swap
+          .standAloneRateEstimate(this.fromCurrency, val.symbol, this.fromValue)
+          .then(checkAndSetup);
+        return { symbol: val.symbol, rates: [] };
+      });
+    },
+    toggleAlternates() {
+      this.openAltnernates = !this.openAltnernates;
+    },
+    setAltToPrimary(newCurrency) {
+      const details = this.toArray.find(
+        item => item.symbol.toLowerCase() === newCurrency.symbol.toLowerCase()
+      );
+      this.toCurrency = newCurrency.symbol;
+      this.overrideTo = {};
+      this.$nextTick(() => {
+        this.overrideTo = details;
+        this.setToCurrency(newCurrency);
+      });
     },
     reset() {
       this.lastFeeEstimate = new BigNumber(0);

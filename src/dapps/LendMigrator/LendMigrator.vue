@@ -146,7 +146,7 @@ export default {
           {
             from: this.account.address,
             to: LEND_MIGRATOR_PROXY_ADDRESS,
-            gas: 200000,
+            gas: 500000,
             value: 0,
             data: lendMigrateData
           }

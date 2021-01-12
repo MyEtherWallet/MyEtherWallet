@@ -131,7 +131,7 @@
           .circle {
             align-items: center;
             background: $white;
-            border: 2px solid $dark-green-4;
+            border: 2px solid $mew-green;
             border-radius: 50%;
             color: $white;
             display: flex;
@@ -139,11 +139,11 @@
             height: 30px;
             width: 30px;
             .fa {
-              color: $dark-green-4;
+              color: $mew-green;
             }
           }
           .step-title {
-            color: $dark-green-4;
+            color: $mew-green;
           }
         }
         .circle {

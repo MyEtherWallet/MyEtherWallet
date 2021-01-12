@@ -1,8 +1,53 @@
+### Release v5.7.19
+
+### Feature
+
+* Add link to ethplorer.io in Success modal [#2498](https://github.com/MyEtherWallet/MyEtherWallet/pull/2498)
+
+### Release v5.7.18
+
+### Bug
+
+* Update gas limit for Lend Migrator [#2765](https://github.com/MyEtherWallet/MyEtherWallet/pull/2765)
+* Fix build name for cx [#2763](https://github.com/MyEtherWallet/MyEtherWallet/pull/2763)
+
+### Devop
+
+* Improve start script [#2647](https://github.com/MyEtherWallet/MyEtherWallet/pull/2647)
+* Forwatch ninja.besu patch [#2764](https://github.com/MyEtherWallet/MyEtherWallet/pull/2764)
+* Update Bity Max [#2758](https://github.com/MyEtherWallet/MyEtherWallet/pull/2758)
+
+### Release v5.7.17
+
+### Feature
+
+* Staked validators status [#2748](https://github.com/MyEtherWallet/MyEtherWallet/pull/2748)
+
+### Bug
+
+* Fix wrong values passed to estimateGas in eth_signTransaction method [#2753](https://github.com/MyEtherWallet/MyEtherWallet/pull/2753)
+* mew cx ens bug fix [#2745](https://github.com/MyEtherWallet/MyEtherWallet/pull/2745)
+* mew cx remove duplicate notification due to checksum [#2732](https://github.com/MyEtherWallet/MyEtherWallet/pull/2732)
+
 ### Release v5.7.16
 
 ### Feature
 
-- Add link to ethplorer.io in Success modal [#2498](https://github.com/MyEtherWallet/MyEtherWallet/pull/2498)
+* Add Swap alternatives [#2679](https://github.com/MyEtherWallet/MyEtherWallet/pull/2679)
+
+### Devop
+
+* Remove terms and privacy ona translations [#2723](https://github.com/MyEtherWallet/MyEtherWallet/pull/2723)
+
+### Bug
+
+* Fix contract interaction when arrays have set params [#2719](https://github.com/MyEtherWallet/MyEtherWallet/pull/2719)
+* Fix contract interaction inputs [#2729](https://github.com/MyEtherWallet/MyEtherWallet/pull/2729)
+* Fix GLN copy [#2717](https://github.com/MyEtherWallet/MyEtherWallet/pull/2717)
+* Fix GNT migrator balance not showing sometimes [#2728](https://github.com/MyEtherWallet/MyEtherWallet/pull/2728)
+* Fix LTC validation for Unstoppable [#2699](https://github.com/MyEtherWallet/MyEtherWallet/pull/2699)
+* Add exeption for GameCredits token [#2727](https://github.com/MyEtherWallet/MyEtherWallet/pull/2727)
+* Fix missing decimal for ETH and handle new est. gas error [#2730](https://github.com/MyEtherWallet/MyEtherWallet/pull/2730)
 
 ### Release v5.7.15
 
