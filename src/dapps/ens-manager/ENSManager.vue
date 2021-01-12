@@ -251,7 +251,7 @@ export default {
   },
   methods: {
     findDomain() {
-      const name = this.name + '.eth';
+      const name = this.name + '.test';
       this.ensManager
         .searchName(name)
         .then(res => {

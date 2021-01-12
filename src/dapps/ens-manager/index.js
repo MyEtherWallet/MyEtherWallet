@@ -21,6 +21,7 @@ export default class ENSManager {
   }
 
   searchName(name) {
+    console.error('tld', tldSupported(this.network, name), this.network.type.ens.registrarType)
     return new Promise((resolve, reject) => {
       if (tldSupported(this.network, name)) {
         switch (this.network.type.ens.registrarType) {

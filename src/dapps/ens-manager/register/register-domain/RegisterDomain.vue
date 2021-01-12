@@ -20,6 +20,8 @@
             :name="nameModule.name"
             :duration="duration"
             :register="register"
+            :commit="commit"
+            :commited="committed"
         /></template>
         <template #stepperContent3><complete v-if="onStep === 3" /></template>
       </mew-stepper>
@@ -51,6 +53,7 @@ export default {
   },
   data() {
     return {
+      committed: false,
       duration: '',
       onStep: 1,
       stepperItems: [
@@ -75,6 +78,18 @@ export default {
     }
   },
   methods: {
+    commit() {
+      console.error('in here', this.nameModule);
+      this.nameModule
+        .createCommitment()
+        .then(resp => {
+          console.error('committed', resp);
+          this.committed = true;
+        })
+        .catch(err => {
+          console.error('commit err', err);
+        });
+    },
     register() {
       console.error('in here');
       this.nameModule
@@ -83,7 +98,7 @@ export default {
           console.error('resp', resp);
         })
         .catch(err => {
-          console.error('err', err);
+          console.error('register err', err);
         });
     },
     onRequest(val) {
@@ -91,6 +106,7 @@ export default {
         this.close();
         return;
       }
+      this.nameModule.generateKeyPhrase();
       this.duration = val;
       this.onStep += 1;
     }

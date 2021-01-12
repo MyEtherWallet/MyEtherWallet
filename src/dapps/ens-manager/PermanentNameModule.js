@@ -8,7 +8,7 @@ import ENSManagerInterface from './ENSManagerInterface.js';
 import * as nameHashPckg from 'eth-ens-namehash';
 import DNSRegistrar from '@ensdomains/dnsregistrar';
 import { getHostName } from './helpers';
-
+const bip39 = require('bip39');
 const OLD_ENS_ADDRESS = '0x6090a6e47849629b7245dfa1ca21d94cd15878ef';
 const BURNER_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -36,16 +36,17 @@ export default class PermanentNameModule extends ENSManagerInterface {
     }, 5000);
   }
 
-  register(duration) {
-    const _self = this;
-    // if (this.owner === '0x') {
-    //   throw new Error('Owner not set! Please initialize module properly!');
-    // }
-    return _self
-      ._createCommitment()
-      .then(() => _self._registerWithDuration(duration))
-      .then(() => this._initModule()); // might need something more effecient than this
-  }
+  // register(duration) {
+  //   const _self = this;
+  //   // if (this.owner === '0x') {
+  //   //   throw new Error('Owner not set! Please initialize module properly!');
+  //   // }
+  //   _self._generateKeyPhrase()
+  //   return _self
+  //     ._createCommitment()
+  //     .then(() => _self._registerWithDuration(duration))
+  //     .then(() => this._initModule()); // might need something more effecient than this
+  // }
 
   transfer(toAddress) {
     if (this.owner === '0x') {
@@ -160,6 +161,40 @@ export default class PermanentNameModule extends ENSManagerInterface {
     });
   }
 
+  generateKeyPhrase() {
+    const words = [];
+    const min = 0;
+    const max = bip39.wordlists.EN.length;
+
+    for (let i = 0; i < 3; i++) {
+      words.push(
+        bip39.wordlists.EN[Math.floor(Math.random() * (max - min + 1)) + min]
+      );
+    }
+    this.secretPhrase = words.join(' ');
+  }
+
+  async createCommitment() {
+    const utils = this.web3.utils;
+    try {
+      const commitment = await this.registrarControllerContract.methods
+        .makeCommitmentWithConfig(
+          getHostName(this.name),
+          this.address,
+          utils.sha3(this.secretPhrase),
+          this.publicResolverAddress,
+          this.address
+        )
+        .call();
+      return this.registrarControllerContract.methods
+        .commit(commitment)
+        .send({ from: this.address });
+    } catch (e) {
+      console.error('e', e);
+      throw new Error(e);
+    }
+  }
+
   async _initModule() {
     // initial value for the variables
     const values = {
@@ -197,7 +232,6 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   async _setExpiry() {
-    console.error('this', this.registrarContract);
     const expiryTime = await this.registrarContract.methods
       .nameExpires(this.labelHash)
       .call();
@@ -288,6 +322,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
         .times(1.05)
         .integerue()
         .toFixed();
+      console.error('in here with register')
       return this.registrarControllerContract.methods
         .registerWithConfig(
           this.parsedHostName,
@@ -299,36 +334,6 @@ export default class PermanentNameModule extends ENSManagerInterface {
         )
         .send({ from: this.address, value: withFivePercent });
     } catch (e) {
-      throw new Error(e);
-    }
-  }
-
-  async _createCommitment() {
-    const utils = this.web3.utils;
-    console.error(
-      'variables',
-      getHostName(this.name),
-      this.address,
-      this.secretPhrase,
-      utils.sha3(this.secretPhrase),
-      this.publicResolverAddress,
-      this.address
-    );
-    try {
-      const commitment = await this.registrarControllerContract.methods
-        .makeCommitmentWithConfig(
-          getHostName(this.name),
-          this.address,
-          utils.sha3(this.secretPhrase),
-          this.publicResolverAddress,
-          this.address
-        )
-        .call();
-      return this.registrarControllerContract.methods
-        .commit(commitment)
-        .send({ from: this.address });
-    } catch (e) {
-      console.error('e', e);
       throw new Error(e);
     }
   }

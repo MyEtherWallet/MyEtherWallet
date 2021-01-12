@@ -125,6 +125,7 @@
   "register": {
     "domain-name": "Domain Name",
     "term": "Term",
-    "name": "Register"
+    "name": "Register",
+    "create-commitment": "Create commitment"
   }
 }

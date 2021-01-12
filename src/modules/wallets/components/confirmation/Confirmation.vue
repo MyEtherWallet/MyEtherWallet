@@ -4,6 +4,7 @@
       :show-overlay="showOverlay"
       :title="title"
       left-btn-text=""
+      :right-btn-text="$t('common.close')"
       :close="overlayClose"
     >
       <template #mewOverlayBody>

@@ -18,9 +18,13 @@
     </div>
     <div class="d-flex justify-center my-6">
       <mew-button
-        :title="$t('ens.register.name')"
+        :title="
+          committed
+            ? $t('ens.register.name')
+            : $t('ens.register.create-commitment')
+        "
         btn-size="xlarge"
-        @click.native="register()"
+        @click.native="!commited ? commit : register"
       />
     </div>
   </v-sheet>
@@ -37,16 +41,28 @@ export default {
       type: String,
       default: ''
     },
+    committed: {
+      type: String,
+      default: ''
+    },
     register: {
       default: function () {
         return {};
       },
       type: Function
+    },
+    commit: {
+      default: function () {
+        return {};
+      },
+      type: Function
     }
-  },
-  data() {
-    return {};
   }
+  // data() {
+  //   return {
+  //     committed: false
+  //   };
+  // }
 };
 </script>
 
