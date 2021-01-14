@@ -52,6 +52,8 @@ import browserExtensionOverlay from '@/modules/wallets/components/browser-extens
 import hardwareAccessOverlay from '@/modules/wallets/components/hardware-access-overlay/HardwareAccessOverlay';
 import mobileAccessOverlay from '@/modules/wallets/components/mobile-access-overlay/MobileAccessOverlay';
 import softwareAccessOverlay from '@/modules/wallets/components/software-access-overlay/SoftwareAccessOverlay';
+import {MewConnectWallet} from '@/modules/wallets/utils';
+import {SENTRY, Toast} from '@/components/toast';
 export default {
   name: 'AccessWallet',
   components: {
@@ -81,7 +83,8 @@ export default {
           titleIcon: 'mdi-shield-check',
           titleIconClass: 'primary--text',
           fn: () => {
-            window.open('https://www.mewwallet.com', '_blank');
+            this.openMewConnect();
+            // window.open('https://www.mewwallet.com', '_blank');
           }
         },
         {
@@ -151,6 +154,21 @@ export default {
     },
     open(type) {
       this[type] = true;
+    },
+    openMewConnect() {
+      try {
+        MewConnectWallet()
+          .then(_newWallet => {
+            this.setWallet([_newWallet]).then(() => {
+              this.$router.push({ name: 'Dashboard' });
+            });
+          })
+          .catch(e => {
+            MewConnectWallet.errorHandler(e);
+          });
+      } catch (e) {
+        Toast(e.message, {}, SENTRY);
+      }
     }
   }
 };
