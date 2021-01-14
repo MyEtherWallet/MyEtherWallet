@@ -7,10 +7,11 @@ import PermanentNameModule from './PermanentNameModule';
 import FifsNameModule from './FifsNameModule';
 
 export default class ENSManager {
-  constructor(network, address, web3, ens) {
+  constructor(network, address, web3, ens, gasPrice) {
     this.network = network;
     this.address = address;
     this.web3 = web3;
+    this.gasPrice = gasPrice;
     if (
       !network.type.hasOwnProperty('ens') &&
       !network.type.ens.hasOwnProperty('registry')
@@ -31,7 +32,8 @@ export default class ENSManager {
                 this.address,
                 this.network,
                 this.web3,
-                this.ens
+                this.ens,
+                this.gasPrice
               )
             );
             break;
@@ -42,7 +44,8 @@ export default class ENSManager {
                 this.address,
                 this.network,
                 this.web3,
-                this.ens
+                this.ens,
+                this.gasPrice
               )
             );
             break;
@@ -73,8 +76,9 @@ export default class ENSManager {
 
       addressFetch.then(response => {
         const ensResponse = response[ETH_REGISTRAR];
+        console.error('responmse', ensResponse, response)
         resolve(
-          ensResponse.map(item => {
+          ensResponse.tokens.map(item => {
             return new PermanentNameModule(
               item.name,
               this.address,

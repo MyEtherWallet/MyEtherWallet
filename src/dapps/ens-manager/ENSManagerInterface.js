@@ -8,7 +8,7 @@ import multicoins from './manage/configs/multicoins';
 import textrecords from './manage/configs/textrecords';
 import contentHash from 'content-hash';
 import BigNumber from 'bignumber.js';
-import * as unit from 'ethjs-unit';
+import utils from 'web3-utils';
 import registrarInterface from './manage/registrarInterface';
 import * as nameHashPckg from 'eth-ens-namehash';
 const REGISTRAR_TYPES = {
@@ -16,12 +16,12 @@ const REGISTRAR_TYPES = {
   PERMANENT: 'permanent'
 };
 export default class ENSManagerInterface {
-  constructor(name, address, network, web3, ens) {
+  constructor(name, address, network, web3, ens, gasPrice) {
     this.address = address ? address : '0x';
     this.network = network ? network : null;
     this.web3 = web3 ? web3 : null;
     this.ens = ens ? ens : null;
-
+    this.gasPrice = gasPrice ? gasPrice : null;
     // Returned value
     this.name = name ? name : '';
     this.nameHash = nameHashPckg.hash(name);
@@ -134,7 +134,7 @@ export default class ENSManagerInterface {
         from: this.address,
         to: this.publicResolverAddress,
         data: this.resolverContract.methods.multicall(multicalls).encodeABI(),
-        gasPrice: BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed(),
+        gasPrice: BigNumber(utils.toWei(this.gasPrice, 'gwei')).toFixed(),
         value: 0
       };
       return this.web3.eth.sendTransaction(tx);
@@ -195,7 +195,7 @@ export default class ENSManagerInterface {
     try {
       return this._setRegistar();
     } catch (e) {
-      console.error('e', e);
+      console.error('ens maanger init', e);
       throw new Error(e);
     }
   }
@@ -256,6 +256,7 @@ export default class ENSManagerInterface {
       this.network.type.ens.registrarType === REGISTRAR_TYPES.FIFS
         ? FifsRegistrarAbi
         : BaseRegistrarAbi;
+    this.name = !tld ? this.name + '.' + tld : this.name;
     this.registrarContract = new web3.eth.Contract(abi, this.registrarAddress);
     if (this.network.type.ens.registrarType === REGISTRAR_TYPES.PERMANENT) {
       try {
@@ -267,7 +268,7 @@ export default class ENSManagerInterface {
           this.contractControllerAddress
         );
       } catch (e) {
-        console.error('e', e);
+        console.error('set Contracts', e);
       }
     }
     this.resolverAddress = await this.registryContract.methods

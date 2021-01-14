@@ -21,9 +21,9 @@
             <div>Nonce</div>
             <div>{{ nonce }}</div>
           </div>
-          <div class="d-flex justify-space-between data-container">
+          <div class="d-flex justify-space-between">
             <div>Data</div>
-            <div class="truncate">{{ data }}</div>
+            <div class="data">{{ data }}</div>
           </div>
         </div>
       </template>
@@ -117,7 +117,7 @@ export default {
 .v-application .warning {
   border-radius: 10px;
 }
-.data-container {
+.data {
   max-width: 300px;
   text-align: right;
   overflow-wrap: break-word;

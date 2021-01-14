@@ -2,7 +2,7 @@
   <v-sheet
     elevation="10"
     width="100%"
-    max-width="600px"
+    min-width="600px"
     class="mx-auto pa-8"
     rounded
   >

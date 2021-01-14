@@ -1,34 +1,45 @@
 import ENSManagerInterface from './ENSManagerInterface.js';
+import BigNumber from 'bignumber.js';
+import utils from 'web3-utils';
 
 export default class FifsNameModule extends ENSManagerInterface {
-  constructor(name, address, network, web3, ens) {
-    super(name, address, network, web3, ens);
+  constructor(name, address, network, web3, ens, gasPrice) {
+    super(name, address, network, web3, ens, gasPrice);
   }
 
-  register() {
-    console.error('in here', this.registrarContract, this.registryContract)
-    const address = this.address;
-    const web3 = this.web3;
-    const data = this.registrarContract.methods
-      .register(this.labelHash, address)
+  async register() {
+    const data = await this.registrarContract.methods
+      .register(this.labelHash, this.address)
       .encodeABI();
+
     const registerTx = {
-      from: address,
+      from: this.address,
       value: 0,
       to: this.registrarAddress,
       data: data
     };
+
     const setResolverTx = {
-      from: address,
+      from: this.address,
       to: this.network.type.ens.registry,
       data: this.registryContract.methods
         .setResolver(this.nameHash, this.publicResolverAddress)
         .encodeABI(),
-      value: 0
+      value: 0,
+      gasPrice: this.gasPrice
     };
-    return web3.mew.sendBatchTransactions(
-      [registerTx, setResolverTx].filter(Boolean)
-    );
+
+    console.error("register", registerTx, setResolverTx)
+    try {
+      this.web3.mew.sendBatchTransactions(
+        [registerTx, setResolverTx].filter(Boolean)
+      );
+    } catch(e) {
+      console.error('e',e )
+    }
+    // return this.web3.mew.sendBatchTransactions(
+    //   [registerTx, setResolverTx].filter(Boolean)
+    // );
   }
 
   transfer(toAddress) {

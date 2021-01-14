@@ -36,17 +36,10 @@ export default class PermanentNameModule extends ENSManagerInterface {
     }, 5000);
   }
 
-  // register(duration) {
-  //   const _self = this;
-  //   // if (this.owner === '0x') {
-  //   //   throw new Error('Owner not set! Please initialize module properly!');
-  //   // }
-  //   _self._generateKeyPhrase()
-  //   return _self
-  //     ._createCommitment()
-  //     .then(() => _self._registerWithDuration(duration))
-  //     .then(() => this._initModule()); // might need something more effecient than this
-  // }
+  register(duration) {
+    return this._registerWithDuration(duration);
+      // .then(() => this._initModule()); // might need something more effecient than this
+  }
 
   transfer(toAddress) {
     if (this.owner === '0x') {
@@ -190,9 +183,16 @@ export default class PermanentNameModule extends ENSManagerInterface {
         .commit(commitment)
         .send({ from: this.address });
     } catch (e) {
-      console.error('e', e);
+      console.error('create commitment', e);
       throw new Error(e);
     }
+  }
+
+  async getMinimumAge() {
+    const minimumAge = await this.registrarControllerContract.methods
+      .minCommitmentAge()
+      .call();
+    return `${parseInt(minimumAge) + 30}`;
   }
 
   async _initModule() {
@@ -226,7 +226,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
     try {
       return this._setEnsContracts();
     } catch (e) {
-      console.error('e', e);
+      console.error('init module', e);
       throw new Error(e);
     }
   }
@@ -322,7 +322,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
         .times(1.05)
         .integerue()
         .toFixed();
-      console.error('in here with register')
+      console.error('in here with register');
       return this.registrarControllerContract.methods
         .registerWithConfig(
           this.parsedHostName,
@@ -334,6 +334,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
         )
         .send({ from: this.address, value: withFivePercent });
     } catch (e) {
+      console.error('e', e)
       throw new Error(e);
     }
   }

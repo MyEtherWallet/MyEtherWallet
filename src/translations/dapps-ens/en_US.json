@@ -1,6 +1,7 @@
 {
   "title": "ENS Manager",
   "dapp-desc": "Register and manage an ENS domain",
+  "search-domain": "Search for a domain name",
   "search-domain-desc": "Search for a domain name. Once you have registered one, you can tell your friends to send ETH to \"_____.eth\", instead of your public address (0x.....).",
   "error": {
     "permanent-not-available": "ENS Permanent registrar is not available yet, please try again later",
@@ -43,6 +44,7 @@
   "no-names-found": "No ENS name found for account {address}!",
   "renew": "Renew",
   "manage": "Manage",
+  "my-domains": "My Domains",
   "manage-domain": "Manage Domain",
   "register-domain": "Register Domain",
   "release-deed-confirmation": "Do you want to release {deedValueEth} {network}",
@@ -61,6 +63,7 @@
   "transfer-domain": "Transfer Domain",
   "release-deed": "Return Deed",
   "hang-on": "Hang on tight!",
+  "hang-on-committing": "Please do not close your browser or exit this Dapp, we are creating a commitment for your domain.",
   "finalize-registration": "We are finalizing the registration for ",
   "register-progress": "Registration in progress for",
   "domain-old": "{domain} is still in the old registrar!",
@@ -126,6 +129,8 @@
     "domain-name": "Domain Name",
     "term": "Term",
     "name": "Register",
-    "create-commitment": "Create commitment"
+    "create-commitment": "Create commitment",
+    "complete-reg": "Complete Registration",
+    "complete-reg-desc": "Please click 'Register' and follow the prompts to complete a final transaction and complete your domain registration."
   }
 }

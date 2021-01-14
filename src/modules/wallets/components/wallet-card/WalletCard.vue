@@ -100,7 +100,6 @@ export default {
       );
     },
     convertedBalance() {
-      console.error('currency', this.balance)
       const balance = BigNumber(this.balance).times(this.currency.value);
       return `${this.currency.symbol + balance.toFixed(2).toString()}`;
     }

@@ -1,6 +1,7 @@
 <template>
   <div>
     <register-domain-overlay
+      ref="registerDomainOverlay"
       :on-register="onRegister"
       :close="closeRegisterOverlay"
       :name-module="nameModule"
@@ -12,14 +13,15 @@
           <v-sheet max-width="700px" color="transparent" class="py-15 mx-auto">
             <div class="mb-5">
               <div class="mew-heading-2 mb-8 ml-2">
-                Find your blockchain domain
+                {{ $t('ens.search-domain') }}
               </div>
               <div class="d-flex align-start">
                 <mew-input
                   :value="name"
                   :has-clear-btn="true"
-                  label="Domain name"
-                  placeholder="Please enter at least 3 characters"
+                  :rules="rules"
+                  :label="$t('ens.register.domain-name')"
+                  :placeholder="$t('ens.ph.three-char')"
                   class="mr-3 flex-grow-1"
                   @input="setName"
                 />
@@ -27,7 +29,7 @@
                   :disabled="name.length <= 0"
                   :has-full-width="false"
                   btn-size="xlarge"
-                  title="Register domain"
+                  :title="$t('ens.register-domain')"
                   @click.native="findDomain"
                 />
               </div>
@@ -38,7 +40,8 @@
           <div class="pa-12">
             <div class="d-flex align-center justify-space-between mb-7">
               <h4 class="font-weight-bold">
-                My domains <span class="font-weight-regular">(1)</span>
+                {{ $t('ens.my-domains') }}
+                <span class="font-weight-regular">(1)</span>
               </h4>
               <mew-button
                 btn-style="outline"
@@ -199,7 +202,7 @@ export default {
       ensManager: {},
       onRegister: false,
       domainFunctions: [
-        { label: 'Transfer Domain' },
+        { label: this.$t('ens.transfer-domain') },
         { label: 'Renew Domain', expire: '07/21/2020' },
         { label: 'ENS Configurations' },
         { label: 'Manage Multicoins' },
@@ -230,34 +233,57 @@ export default {
       ],
       ensBgImg: ensBgImg,
       topBanner: {
-        title: 'ENS manager',
-        subtext: 'Manage, buy and transfer your ENS assets.',
-        exit: 'Exit Dapp'
+        title: this.$t('ens.title'),
+        subtext: this.$t('ens.dapp-desc'),
+        exit: this.$t('common.exit-dapp')
       },
       tab: 1
     };
   },
   computed: {
-    ...mapState('wallet', ['network', 'address', 'web3', 'ens'])
-    //add rules
+    ...mapState('wallet', ['network', 'address', 'web3', 'ens', 'gasPrice']),
+    rules() {
+      return [
+        this.name.length > 2 || this.$t('ens.warning.not-enough-char'),
+        !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol')
+      ];
+    },
+    hasInvalidChars() {
+      const letters = /^[0-9a-zA-Z]+$/;
+      if (!letters.test(this.name)) {
+        return true;
+      }
+      return false;
+    }
   },
   mounted() {
     this.ensManager = new ENSManager(
       this.network,
       this.address,
       this.web3,
-      this.ens
+      this.ens,
+      this.gasPrice
     );
+    // this.getDomains();
   },
   methods: {
+    getDomains() {
+      this.ensManager
+        .getAllNamesForAddress()
+        .then(res => {
+          console.error('res', res);
+        })
+        .catch(err => {
+          console.error('err', err);
+        });
+    },
     findDomain() {
-      const name = this.name + '.test';
+      const name = this.name + '.eth';
       this.ensManager
         .searchName(name)
         .then(res => {
           this.nameModule = res;
           this.onRegister = true;
-          console.error('res', res);
         })
         .catch(err => {
           console.error('err', err);
@@ -265,6 +291,8 @@ export default {
     },
     closeRegisterOverlay() {
       this.onRegister = false;
+      this.name = '';
+      this.$refs.registerDomainOverlay.clear();
     },
     setName(name) {
       this.name = name;

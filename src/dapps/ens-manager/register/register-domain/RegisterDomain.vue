@@ -1,8 +1,8 @@
 <template>
   <mew-overlay
     :show-overlay="onRegister"
-    title="Register domain"
-    right-btn-text="Cancel"
+    :title="$t('ens.register-domain')"
+    :right-btn-text="$t('common.cancel')"
     :close="close"
   >
     <template #mewOverlayBody>
@@ -22,6 +22,8 @@
             :register="register"
             :commit="commit"
             :committed="committed"
+            :minimum-age="minimumAge"
+            :loading-commit="loadingCommit"
         /></template>
         <template #stepperContent3><complete v-if="onStep === 3" /></template>
       </mew-stepper>
@@ -53,6 +55,8 @@ export default {
   },
   data() {
     return {
+      loadingCommit: false,
+      minimumAge: '',
       committed: false,
       duration: '',
       onStep: 1,
@@ -80,17 +84,27 @@ export default {
   watch: {
     nameModule(newVal) {
       this.committed = newVal.createCommitment ? false : true;
-      console.error('nameModule', this.committed)
+      console.error('nameModule', this.committed);
     }
   },
   methods: {
+    clear() {
+      this.onStep = 1;
+      this.committed = false;
+      this.duration = '';
+    },
     commit() {
-      console.error('in here', this.nameModule);
+      this.loadingCommit = true;
+      this.nameModule.getMinimumAge().then(resp => {
+        this.minimumAge = resp;
+      });
       this.nameModule
         .createCommitment()
         .then(resp => {
-          console.error('committed', resp);
+          this.loadingCommit = false;
           this.committed = true;
+          console.error('committed', resp);
+          console.error('minimum', this.minimumAge);
         })
         .catch(err => {
           console.error('commit err', err);
