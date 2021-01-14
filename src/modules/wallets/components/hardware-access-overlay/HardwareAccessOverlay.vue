@@ -407,7 +407,7 @@
           </div>
           <div>
             <mew-select
-              v-if="walletType === 'ledger'"
+              v-show="walletType === 'ledger'"
               v-model="selectedLedgerApp"
               label="Opened Ledger App"
               :items="ledgerApps"
@@ -447,6 +447,7 @@ import appPaths from '@/modules/wallets/utils/hardware/ledger/appPaths.js';
 import allPaths from '@/modules/wallets/utils/bip44';
 import { mapState, mapActions } from 'vuex';
 
+import ledgerUnlock from './HardwareWallets/Ledger/Ledger'
 // const parsedAppPaths = appPaths.map(item => {
 //   const newObj = {
 //     name: item.network.name_long,
@@ -597,7 +598,8 @@ export default {
   name: 'HardwareAccessOverlay',
   components: {
     qrcode: qrcode,
-    mewSuperButton
+    mewSuperButton,
+    ledgerUnlock
   },
   filters: {
     concatAddress(val) {
@@ -692,7 +694,10 @@ export default {
       hwWalletInstance: {},
       selectedPath: null,
       walletType: '',
-      selectedLedgerApp: '',
+      selectedLedgerApp: {
+        name: '',
+        value: ''
+      },
       selectedAddress: '',
       password: '',
       selectedNetwork: '',
@@ -858,7 +863,10 @@ export default {
       this.hwWalletInstance = {};
       this.selectedPath = null;
       this.walletType = '';
-      this.selectedLedgerApp = '';
+      this.selectedLedgerApp = {
+        name: '',
+        value: ''
+      };
       this.selectedAddress = '';
       this.password = '';
       this.selectedNetwork = '';
