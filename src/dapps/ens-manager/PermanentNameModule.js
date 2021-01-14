@@ -318,11 +318,11 @@ export default class PermanentNameModule extends ENSManagerInterface {
       const rentPrice = await this.registrarControllerContract.methods
         .rentPrice(this.parsedHostName, actualDuration)
         .call();
+      console.error('in here with register', rentPrice);
       const withFivePercent = BigNumber(rentPrice)
         .times(1.05)
         .integerue()
         .toFixed();
-      console.error('in here with register');
       return this.registrarControllerContract.methods
         .registerWithConfig(
           this.parsedHostName,

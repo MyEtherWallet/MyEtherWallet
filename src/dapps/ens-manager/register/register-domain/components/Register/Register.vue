@@ -21,7 +21,6 @@
       </div>
     </div>
     <div
-      v-if="committed"
       class="timer-container d-flex flex-column align-center justify-center mt-4"
     >
       <mew-icon
@@ -31,7 +30,7 @@
       />
       <span class="mew-subtitle primary--text">{{ ticker }}</span>
       <div
-        v-if="committed && !canRegister"
+        v-if="!committed && !canRegister"
         class="d-flex flex-column mt-5 justify-center align-center"
       >
         <span class="mew-heading-2">{{ $t('ens.hang-on') }}</span>
@@ -51,7 +50,7 @@
     </div>
     <div class="d-flex justify-center my-6">
       <mew-button
-        :disabled="(committed && !canRegister) || loadingCommit"
+        :disabled="loadingCommit && !committed"
         :title="
           committed
             ? $t('ens.register.name')
