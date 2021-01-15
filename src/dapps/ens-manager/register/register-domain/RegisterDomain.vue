@@ -84,7 +84,6 @@ export default {
   watch: {
     nameModule(newVal) {
       this.committed = newVal.createCommitment ? false : true;
-      console.error('nameModule', this.committed);
     }
   },
   methods: {
@@ -94,9 +93,9 @@ export default {
       this.duration = '';
     },
     commit() {
-      this.loadingCommit = true;
       this.nameModule.getMinimumAge().then(resp => {
         this.minimumAge = resp;
+        this.loadingCommit = true;
       });
       this.nameModule
         .createCommitment()
@@ -104,7 +103,7 @@ export default {
           this.loadingCommit = false;
           this.committed = true;
           console.error('committed', resp);
-          console.error('minimum', this.minimumAge);
+          console.error('loadingCommnit', this.loadingCommit);
         })
         .catch(err => {
           console.error('commit err', err);

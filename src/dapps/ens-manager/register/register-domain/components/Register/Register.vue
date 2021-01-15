@@ -21,6 +21,7 @@
       </div>
     </div>
     <div
+      v-if="loadingCommit || committed || canRegister"
       class="timer-container d-flex flex-column align-center justify-center mt-4"
     >
       <mew-icon
@@ -30,7 +31,7 @@
       />
       <span class="mew-subtitle primary--text">{{ ticker }}</span>
       <div
-        v-if="!committed && !canRegister"
+        v-if="loadingCommit && !committed && !canRegister"
         class="d-flex flex-column mt-5 justify-center align-center"
       >
         <span class="mew-heading-2">{{ $t('ens.hang-on') }}</span>
@@ -44,7 +45,7 @@
       >
         <span class="mew-heading-2">{{ $t('ens.register.complete-reg') }}</span>
         <span class="mt-3 desc-container">{{
-          $t('ens.complete-reg-desc')
+          $t('ens.register.complete-reg-desc')
         }}</span>
       </div>
     </div>
@@ -111,10 +112,12 @@ export default {
       this.ticker = `0${newVal / 60 < 10 ? Math.ceil(newVal / 60) : '00'}:00`;
     },
     loadingCommit(newVal) {
-      if (newVal) {
+      console.error('loadingCommit', newVal)
+      if (newVal === true) {
         clearInterval(this.timer);
         const startTime = new Date().getTime();
         const endTime = startTime + this.minimumAge * 1000;
+        console.error('minimumAge',)
         if (this.minimumAge > 0) {
           this.timer = setInterval(() => {
             const startInterval = new Date().getTime();
@@ -126,12 +129,19 @@ export default {
             this.ticker = `${
               minutes >= 10 ? minutes : minutes < 0 ? '00' : '0' + minutes
             }:${seconds >= 10 ? seconds : seconds < 0 ? '00' : '0' + seconds}`;
+            console.error('in here?', seconds)
+
             if (seconds < 0) {
               this.canRegister = true;
               clearInterval(this.timer);
             }
           }, 1000);
         }
+      } else if (newVal === false && this.committed) {
+        clearInterval(this.timer);
+        this.canRegister = true;
+        this.ticker = '00:00';
+        console.error('in here')
       } else {
         clearInterval(this.timer);
       }

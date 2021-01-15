@@ -267,16 +267,16 @@ export default {
     // this.getDomains();
   },
   methods: {
-    getDomains() {
-      this.ensManager
-        .getAllNamesForAddress()
-        .then(res => {
-          console.error('res', res);
-        })
-        .catch(err => {
-          console.error('err', err);
-        });
-    },
+    // getDomains() {
+    //   this.ensManager
+    //     .getAllNamesForAddress()
+    //     .then(res => {
+    //       console.error('res', res);
+    //     })
+    //     .catch(err => {
+    //       console.error('err', err);
+    //     });
+    // },
     findDomain() {
       const name = this.name + '.eth';
       this.ensManager

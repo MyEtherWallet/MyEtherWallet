@@ -169,23 +169,24 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
   async createCommitment() {
     const utils = this.web3.utils;
-    try {
-      const commitment = await this.registrarControllerContract.methods
-        .makeCommitmentWithConfig(
-          getHostName(this.name),
-          this.address,
-          utils.sha3(this.secretPhrase),
-          this.publicResolverAddress,
-          this.address
-        )
-        .call();
-      return this.registrarControllerContract.methods
-        .commit(commitment)
-        .send({ from: this.address });
-    } catch (e) {
-      console.error('create commitment', e);
-      throw new Error(e);
-    }
+    return true;
+    // try {
+    //   const commitment = await this.registrarControllerContract.methods
+    //     .makeCommitmentWithConfig(
+    //       getHostName(this.name),
+    //       this.address,
+    //       utils.sha3(this.secretPhrase),
+    //       this.publicResolverAddress,
+    //       this.address
+    //     )
+    //     .call();
+    //   return this.registrarControllerContract.methods
+    //     .commit(commitment)
+    //     .send({ from: this.address });
+    // } catch (e) {
+    //   console.error('create commitment', e);
+    //   throw new Error(e);
+    // }
   }
 
   async getMinimumAge() {
@@ -314,28 +315,29 @@ export default class PermanentNameModule extends ENSManagerInterface {
     const utils = this.web3.utils;
     const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
     const actualDuration = Math.ceil(SECONDS_YEAR * duration);
-    try {
-      const rentPrice = await this.registrarControllerContract.methods
-        .rentPrice(this.parsedHostName, actualDuration)
-        .call();
-      console.error('in here with register', rentPrice);
-      const withFivePercent = BigNumber(rentPrice)
-        .times(1.05)
-        .integerue()
-        .toFixed();
-      return this.registrarControllerContract.methods
-        .registerWithConfig(
-          this.parsedHostName,
-          this.address,
-          actualDuration,
-          utils.sha3(this.secretPhrase),
-          this.publicResolverAddress,
-          this.address
-        )
-        .send({ from: this.address, value: withFivePercent });
-    } catch (e) {
-      console.error('e', e)
-      throw new Error(e);
-    }
+    console.error('rentPrice', this.parsedHostName, actualDuration)
+    const rentPrice = await this.registrarControllerContract.methods
+      .rentPrice(this.parsedHostName, actualDuration)
+      .call();
+    // try {
+    //   const withFivePercent = BigNumber(rentPrice)
+    //     .times(1.05)
+    //     .integerValue()
+    //     .toFixed();
+    //   console.error('heloooo', rentPrice, withFivePercent)
+    //   return this.registrarControllerContract.methods
+    //     .registerWithConfig(
+    //       this.parsedHostName,
+    //       this.address,
+    //       actualDuration,
+    //       utils.sha3(this.secretPhrase),
+    //       this.publicResolverAddress,
+    //       this.address
+    //     )
+    //     .send({ from: this.address, value: withFivePercent });
+    // } catch (e) {
+    //   console.error('e', e)
+    //   throw new Error(e);
+    // }
   }
 }
