@@ -6,7 +6,11 @@
     class="mx-auto pa-8"
     rounded
   >
+    <div v-if="loading" class="d-flex align-center justify-center">
+      <v-progress-circular indeterminate color="primary" />
+    </div>
     <div
+      v-if="!loading"
       :class="[
         'd-flex align-center pa-6 rounded',
         isAvailable ? 'available' : 'unavailable'
@@ -60,6 +64,10 @@ export default {
       default: false,
       type: Boolean
     },
+    loading: {
+      default: false,
+      type: Boolean
+    },
     name: {
       default: '',
       type: String
@@ -91,6 +99,7 @@ export default {
       return items;
     },
     hostName() {
+      // get it from modules
       return getHostName(this.name);
     },
     // double check how this works

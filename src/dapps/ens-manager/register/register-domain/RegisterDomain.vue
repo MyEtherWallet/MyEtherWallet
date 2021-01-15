@@ -12,6 +12,7 @@
             v-if="onStep === 1"
             :is-available="isAvailable"
             :name="nameModule.name"
+            :loading="loading"
             @onRequest="onRequest"
         /></template>
         <template #stepperContent2
@@ -78,7 +79,10 @@ export default {
   },
   computed: {
     isAvailable() {
-      return this.nameModule.owner === '0x';
+      return this.nameModule.isAvailable;
+    },
+    loading() {
+      return this.nameModule.checkingDomainAvail;
     }
   },
   watch: {

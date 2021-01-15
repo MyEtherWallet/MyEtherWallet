@@ -61,6 +61,7 @@ import Vuetify, {
   VRadio,
   VRadioGroup,
   VProgressLinear,
+  VProgressCircular,
   VFileInput,
   VSimpleCheckbox,
   VPagination
@@ -130,6 +131,7 @@ Vue.use(Vuetify, {
     VRadio,
     VRadioGroup,
     VProgressLinear,
+    VProgressCircular,
     VFileInput,
     VSimpleCheckbox,
     VPagination

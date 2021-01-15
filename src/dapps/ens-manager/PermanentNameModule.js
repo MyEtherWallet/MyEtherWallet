@@ -2,12 +2,10 @@ import OldEnsAbi from './ABI/oldEnsAbi.js';
 import OldDeedAbi from './ABI/oldDeedAbi.js';
 import getHashFromFile from './manage/services/getHashFromFile.js';
 import uploadFileToIpfs from './manage/services/uploadFileToIpfs.js';
-import contentHash from 'content-hash';
 import BigNumber from 'bignumber.js';
 import ENSManagerInterface from './ENSManagerInterface.js';
 import * as nameHashPckg from 'eth-ens-namehash';
 import DNSRegistrar from '@ensdomains/dnsregistrar';
-import { getHostName } from './helpers';
 const bip39 = require('bip39');
 const OLD_ENS_ADDRESS = '0x6090a6e47849629b7245dfa1ca21d94cd15878ef';
 const BURNER_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -233,28 +231,18 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   async _setExpiry() {
-    const expiryTime = await this.registrarContract.methods
-      .nameExpires(this.labelHash)
-      .call();
-    this.expired = expiryTime * 1000 < new Date().getTime();
-    this._setContentHash();
-  }
-
-  async _setContentHash() {
-    try {
-      const hash = await this.resolverContract.methods
-        .contenthash(this.nameHash)
+    if (!this.isAvailable) {
+      const expiryTime = await this.registrarContract.methods
+        .nameExpires(this.labelHash)
         .call();
-      this.contentHash = hash && hash !== '' ? contentHash.decode(hash) : '';
-    } catch (e) {
-      this.contentHash = '';
+      this.expired = expiryTime * 1000 < new Date().getTime();
     }
     this._setDnsContract();
   }
 
   async _setEnsContracts() {
     const web3 = this.web3;
-    this._setContracts();
+    // this._setContracts();
     this.oldEnsContract = new web3.eth.Contract(OldEnsAbi, OLD_ENS_ADDRESS);
     this._setDeeds();
   }

@@ -6,11 +6,13 @@ import FifsRegistrarAbi from './ABI/fifsRegistrarAbi.js';
 import RegistrarControllerAbi from './ABI/registrarControllerAbi.js';
 import multicoins from './manage/configs/multicoins';
 import textrecords from './manage/configs/textrecords';
-import contentHash from 'content-hash';
+import supportedCoins from './manage/configs/supportedCoins';
 import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
 import registrarInterface from './manage/registrarInterface';
 import * as nameHashPckg from 'eth-ens-namehash';
+import contentHash from 'content-hash';
+
 const REGISTRAR_TYPES = {
   FIFS: 'fifs',
   PERMANENT: 'permanent'
@@ -27,15 +29,21 @@ export default class ENSManagerInterface {
     this.nameHash = nameHashPckg.hash(name);
     this.txtRecords = null;
     this.multiCoin = null;
-    this.labelHash = web3.utils.sha3(getHostName(name));
+    this.parsedHostName = getHostName(name);
+    this.labelHash = web3.utils.sha3(this.parsedHostName);
     this.owner = '0x';
     this.registrarAddress = '0x';
     this.contractControllerAddress = '0x';
     this.resolverAddress = '0x';
     this.publicResolverAddress = '0x';
+    this.controllerAddress = '0x';
     this.contentHash = '';
     this.textRecordSupport = false;
     this.multicoinSupport = false;
+    this.isAvailable = false;
+    this.isController = false;
+    this.supportedCoins = supportedCoins;
+    this.checkingDomainAvail = true;
 
     // Contracts
     this.publicResolverContract = null;
@@ -44,7 +52,7 @@ export default class ENSManagerInterface {
     this.registrarControllerContract = null;
     this.resolverContract = null;
 
-    this._initializeNameModule();
+    this._init();
   }
 
   setController(address = '') {
@@ -141,9 +149,9 @@ export default class ENSManagerInterface {
     });
   }
 
-  async _initializeNameModule() {
-    if (this.name === '0x') {
-      throw new Error('Owner not set! Please initialize module properly!');
+  async _init() {
+    if (this.name === '') {
+      throw new Error('Name not set! Please initialize module properly!');
     }
     if (this.address === '0x') {
       throw new Error('Address not set! Please initialize module properly!');
@@ -152,9 +160,9 @@ export default class ENSManagerInterface {
       throw new Error('Network not set! Please initialize module properly!');
     }
     if (!this.web3) {
-      throw new Error('Owner not set! Please initialize module properly!');
+      throw new Error('Web3 not set! Please initialize module properly!');
     }
-
+    // initialize values
     const values = {
       address: 'address',
       network: 'network',
@@ -176,7 +184,8 @@ export default class ENSManagerInterface {
       registrarContract: 'registrarContract',
       registryContract: 'registryContract',
       registrarControllerContract: 'registrarControllerContract',
-      resolverContract: 'resolverContract'
+      resolverContract: 'resolverContract',
+      isAvailable: 'isAvailable'
     };
     // create a setter and getter methods for all the variables
     const obj = {};
@@ -193,24 +202,11 @@ export default class ENSManagerInterface {
     });
 
     try {
-      const self = this;
-      const methods = [
-        '_setRegistar',
-        '_setPublicResolverAddress',
-        '_setContracts',
-        '_setOwner',
-        '_setMulticoins',
-        '_setRecords'
-      ];
-      return methods.reduce(function (promise, method) {
-        return promise.then(self[method]());
-      }, Promise.resolve());
+      this._setRegistar();
     } catch (e) {
-      console.error('ens maanger init', e);
-      // throw new Error(e);
+      throw new Error(e);
     }
   }
-
   async _setRegistar() {
     const web3 = this.web3;
     const tld = getTld(this.name);
@@ -218,26 +214,52 @@ export default class ENSManagerInterface {
     const registryAddress = this.network.type.ens.registry;
     this.registryContract = new web3.eth.Contract(RegistryAbi, registryAddress);
     this.registrarAddress = await this.ens.owner(registrarTLD);
-    return this.registrarAddress;
-    // this._setPublicResolverAddress();
-    // ÷ƒ this.registrarAddress;
+    this._setRegistrarContracts();
   }
 
-  async _setOwner() {
-    const isSubDomain = this.name.split('.').length > 2;
-    try {
-      if (!isSubDomain) {
-        this.owner = await this.registrarContract.methods
-          .ownerOf(this.labelHash)
-          .call();
-      } else {
-        this.owner = await this.ens.owner(this.name);
+  async _setRegistrarContracts() {
+    const tld = getTld(this.name);
+    const registrarTLD = tld ? tld : this.network.type.ens.registrarTLD;
+    this.name = !tld ? this.name + '.' + tld : this.name;
+    const web3 = this.web3;
+    const abi =
+      this.network.type.ens.registrarType === REGISTRAR_TYPES.FIFS
+        ? FifsRegistrarAbi
+        : BaseRegistrarAbi;
+    this.registrarContract = new web3.eth.Contract(abi, this.registrarAddress);
+    if (this.network.type.ens.registrarType === REGISTRAR_TYPES.PERMANENT) {
+      try {
+        this.contractControllerAddress = await this.ens
+          .resolver(registrarTLD, ResolverAbi)
+          .interfaceImplementer(registrarInterface.CONTROLLER);
+        this.registrarControllerContract = new web3.eth.Contract(
+          RegistrarControllerAbi,
+          this.contractControllerAddress
+        );
+      } catch (e) {
+        // throw new Error(e);
+        console.error('set Contracts', e);
       }
-    } catch (e) {
-      this.owner = '0x';
     }
-    // return Promise.resolve(true);
-    // this._setContentHash();
+    this._isDomainAvailable();
+  }
+
+  async _isDomainAvailable() {
+    const type = this.network.type.ens.registrarType;
+    const isSubDomain = this.name.split('.').length > 2;
+
+    if (type === REGISTRAR_TYPES.FIFS && !isSubDomain) {
+      const expiryTime = await this.registrarContract.methods
+        .expiryTimes(this.labelHash)
+        .call();
+      this.isAvailable = expiryTime * 1000 < new Date().getTime();
+    } else if (type === REGISTRAR_TYPES.PERMANENT && !isSubDomain) {
+      this.isAvailable = await this.registrarControllerContract.methods
+        .available(this.parsedHostName)
+        .call();
+    }
+    this.checkingDomainAvail = false;
+    this._setPublicResolverAddress();
   }
 
   async _setContentHash() {
@@ -249,8 +271,22 @@ export default class ENSManagerInterface {
     } catch (e) {
       this.contentHash = '';
     }
-    // return Promise.resolve(true);
-    // this._setMulticoins();
+  }
+
+  async _setOwner() {
+    const isSubDomain = this.name.split('.').length > 2;
+    const type = this.network.type.ens.registrarType;
+    try {
+      if (!isSubDomain && type === REGISTRAR_TYPES.PERMANENT) {
+        this.owner = await this.registrarContract.methods
+          .ownerOf(this.labelHash)
+          .call();
+      } else {
+        this.owner = await this.ens.owner(this.name);
+      }
+    } catch (e) {
+      this.owner = '0x';
+    }
   }
 
   async _setPublicResolverAddress() {
@@ -260,36 +296,12 @@ export default class ENSManagerInterface {
     } catch (e) {
       this.publicResolverAddress = '0x';
     }
-    // return Promise.resolve(true);
-    // this._setContracts();
+    this._setResolverContracts();
   }
 
-  async _setContracts() {
+  async _setResolverContracts() {
     const web3 = this.web3;
-    const tld = getTld(this.name);
-    const registrarTLD = tld ? tld : this.network.type.ens.registrarTLD;
-    const abi =
-      this.network.type.ens.registrarType === REGISTRAR_TYPES.FIFS
-        ? FifsRegistrarAbi
-        : BaseRegistrarAbi;
-    this.name = !tld ? this.name + '.' + tld : this.name;
-    console.error('abi', this.registrarAddress, abi)
-    if (this.registrarAddress !== '0x') {
-      this.registrarContract = new web3.eth.Contract(abi, this.registrarAddress);
-    }
-    if (this.network.type.ens.registrarType === REGISTRAR_TYPES.PERMANENT) {
-      try {
-        this.contractControllerAddress = await this.ens
-          .resolver(registrarTLD, ResolverAbi)
-          .interfaceImplementer(registrarInterface.CONTROLLER);
-        this.registrarControllerContract = new web3.eth.Contract(
-          RegistrarControllerAbi,
-          this.contractControllerAddress
-        );
-      } catch (e) {
-        console.error('set Contracts', e);
-      }
-    }
+
     this.resolverAddress = await this.registryContract.methods
       .resolver(this.nameHash)
       .call();
@@ -301,37 +313,90 @@ export default class ENSManagerInterface {
       ResolverAbi,
       this.publicResolverAddress
     );
-    // return Promise.resolve(true);
-    // this._setOwner();
+    this._setMoreInfo();
+  }
+
+  async _setMoreInfo() {
+    if (!this.isAvailable) {
+      this._setOwner();
+      this._setContentHash();
+      this._setTxtRecords();
+      this._checkController();
+      this._setMulticoins();
+    }
+  }
+
+  async _setTxtRecords() {
+    try {
+      console.error('resolver', this.resolverContract)
+      const supportsTxt = await this.resolverContract.methods
+        .supportsInterface(registrarInterface.TEXT_RECORD)
+        .call();
+      this.textRecordSupport = supportsTxt;
+      if (supportsTxt) {
+        this.txtRecords = {};
+        const promises = [];
+        textrecords.forEach(txt => {
+          promises.push(
+            this.resolverContract.methods.text(this.nameHash, txt.name).call()
+          );
+        });
+        Promise.all(promises).then(vals => {
+          vals.forEach((val, idx) => {
+            this.txtRecords[textrecords[idx].name] = val;
+          });
+        });
+      }
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  async _checkController() {
+    // checks the controller of the name
+    const owner = await this.registryContract.methods
+      .owner(this.nameHash)
+      .call();
+    this.controllerAddress = owner;
+    this.isController =
+      this.web3.utils.toChecksumAddress(owner) ===
+      this.web3.utils.toChecksumAddress(this.address);
   }
 
   async _setMulticoins() {
-    let supportsTxt = '';
-    if (this.resolverContract) {
-        supportsTxt = await this.resolverContract.methods
-        .supportsInterface(registrarInterface.TEXT_RECORD)
+    try {
+      const supportMultiCoin = await this.resolverContract.methods
+        .supportsInterface(registrarInterface.MULTICOIN)
         .call();
-    }
-    if (supportsTxt) {
-      this.textRecordSupport = supportsTxt;
-      this.txtRecords = {};
-      const promises = [];
-      textrecords.forEach(txt => {
-        promises.push(
-          this.resolverContract.methods.text(this.nameHash, txt.name).call()
-        );
-      });
-      Promise.all(promises).then(vals => {
-        vals.forEach((val, idx) => {
-          this.txtRecords[textrecords[idx].name] = val;
+      for (const type in this.supportedCoins)
+        this.supportedCoins[type].value = '';
+      if (supportMultiCoin) {
+        const promises = [];
+        const coinTypes = Object.keys(this.supportedCoins);
+        coinTypes.forEach(type => {
+          promises.push(
+            this.ens
+              .resolver(this.name, ResolverAbi)
+              .addr(this.supportedCoins[type].id)
+          );
         });
-      });
-    } else {
-      this.textRecordSupport = supportsTxt;
-      this.txtRecords = null;
+        await Promise.all(promises).then(vals => {
+          vals.forEach((address, idx) => {
+            if (address) {
+              this.supportedCoins[coinTypes[idx]].value = this.supportedCoins[
+                coinTypes[idx]
+              ].encode(new Buffer(address.replace('0x', ''), 'hex'));
+            }
+          });
+        });
+      } else {
+        this.supportedCoins.ETH.value = await this.ens
+          .resolver(this.name)
+          .addr();
+      }
+    } catch (e) {
+      this.supportedCoins.ETH.value = '0x';
     }
-    // return Promise.resolve(true);
-    // this._setRecords();
   }
 
   async _migrateCoinsAndRecords() {
@@ -378,31 +443,27 @@ export default class ENSManagerInterface {
 
   async _setRecords() {
     try {
-      let supportsMulticoin = '';
-      if (this.resolverContract) {
-        console.error('in here')
-        supportsMulticoin = await this.resolverContract.methods
-          .supportsInterface(registrarInterface.MULTICOIN)
-          .call();
-      }
-      
+      const supportsMulticoin = await this.resolverContract.methods
+        .supportsInterface(registrarInterface.MULTICOIN)
+        .call();
+      console.error('supportsMulticoin', supportsMulticoin);
+
       for (const type in multicoins) {
         multicoins[type].value = '';
       }
-      console.error('supports', supportsMulticoin)
+
       if (supportsMulticoin) {
         const types = Object.keys(multicoins);
-        console.error('types', type)
         const promises = types.map(type => {
+          console.error('name', this.name);
           return this.ens
-          .resolver(this.name, ResolverAbi)
-          .addr(multicoins[type].id);
+            .resolver(this.name, ResolverAbi)
+            .addr(multicoins[type].id);
         });
-        console.error('name', this.name, promises)
         this.multicoinSupport = supportsMulticoin;
         this.multiCoin = {};
         await Promise.all(promises).then(vals => {
-          console.error('vals', vals)
+          console.error('vals', vals);
           vals.forEach((address, idx) => {
             if (address) {
               multicoins[types[idx]].value = multicoins[types[idx]].encode(
@@ -418,11 +479,10 @@ export default class ENSManagerInterface {
         this.multiCoin.ETH.value = await this.ens.resolver(this.name).addr();
       }
     } catch (e) {
-      console.error('setRecords',e)
+      console.error('setRecords', e);
       this.multicoinSupport = false;
       this.multiCoin = multicoins;
       this.multiCoin.ETH.value = await this.ens.resolver(this.name).addr();
     }
-    // return Promise.resolve(true);
   }
 }
