@@ -1,3 +1,6 @@
+### 
+* Fix amount unit for Lend Migrator [#2776](https://github.com/MyEtherWallet/MyEtherWallet/pull/2776)
+
 ### Release v5.7.18
 
 ### Bug
