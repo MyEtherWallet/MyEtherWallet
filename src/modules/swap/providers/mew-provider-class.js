@@ -1,20 +1,21 @@
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
 import { BN } from 'ethereumjs-util';
-const HOST_URL = 'https://mainnet.mewwallet.dev/v2';
+const HOST_URL = 'https://qa.mewwallet.dev/v2';
 const GET_LIST = '/swap/list';
 const GET_QUOTE = '/swap/quote';
 const GET_TRADE = '/swap/trade';
-class Dex {
-  constructor(web3) {
+class MEWPClass {
+  constructor(providerName, web3) {
     this.web3 = web3;
+    this.provider = providerName;
   }
   getSupportedTokens() {
     return axios.get(`${HOST_URL}${GET_LIST}`).then(response => {
       const data = response.data;
       return data.map(d => {
         return {
-          contract_address: d.contract_address,
+          contract_address: d.contract_address.toLowerCase(),
           decimals: parseInt(d.decimals),
           icon: d.icon,
           icon_png: d.icon_png,
@@ -27,7 +28,7 @@ class Dex {
   getQuote({ fromT, toT, fromAmount }) {
     const fromAmountBN = new BigNumber(fromAmount);
     const queryAmount = fromAmountBN.div(
-      new BN(10).pow(new BigNumber(fromT.decimals))
+      new BigNumber(10).pow(new BigNumber(fromT.decimals))
     );
     return axios
       .get(`${HOST_URL}${GET_QUOTE}`, {
@@ -38,17 +39,19 @@ class Dex {
         }
       })
       .then(response => {
-        const quotes = response.data.quotes;
+        const quotes = response.data.quotes.filter(
+          q => q.dex === this.provider
+        );
         return quotes.map(q => {
           return {
             dex: q.exchange,
-            service: q.dex,
+            provider: q.dex,
             amount: q.amount
           };
         });
       });
   }
-  trade({ toAddress, service, dex, fromT, toT, fromAmount }) {
+  trade({ fromAddress, toAddress, dex, fromT, toT, fromAmount }) {
     const fromAmountBN = new BigNumber(fromAmount);
     const queryAmount = fromAmountBN.div(
       new BN(10).pow(new BigNumber(fromT.decimals))
@@ -56,8 +59,9 @@ class Dex {
     return axios
       .get(`${HOST_URL}${GET_TRADE}`, {
         params: {
-          address: toAddress,
-          dex: service,
+          address: fromAddress,
+          recipient: toAddress,
+          dex: this.provider,
           exchange: dex,
           platform: 'web',
           fromContractAddress: fromT.contract_address,
@@ -103,4 +107,4 @@ class Dex {
     });
   }
 }
-export default Dex;
+export default MEWPClass;

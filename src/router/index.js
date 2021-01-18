@@ -2,9 +2,6 @@ import Router from 'vue-router';
 import store from '@/store';
 import langShortCodes from '@/translations/getShortCodes';
 import routes from './routes';
-import dex from '@/modules/swap/providers/dexes';
-const d = new dex();
-d.getSupportedTokens().then(console.log);
 const getLangBasePath = () => {
   if (ROUTER_MODE === 'hash') return undefined;
   const locale = window.location.pathname.replace(/^\/([^/]+).*/i, '$1').trim();
