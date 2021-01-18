@@ -6,6 +6,7 @@ import BigNumber from 'bignumber.js';
 import ENSManagerInterface from './ENSManagerInterface.js';
 import * as nameHashPckg from 'eth-ens-namehash';
 import DNSRegistrar from '@ensdomains/dnsregistrar';
+import contentHash from 'content-hash';
 const bip39 = require('bip39');
 const OLD_ENS_ADDRESS = '0x6090a6e47849629b7245dfa1ca21d94cd15878ef';
 const BURNER_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -167,24 +168,23 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
   async createCommitment() {
     const utils = this.web3.utils;
-    return true;
-    // try {
-    //   const commitment = await this.registrarControllerContract.methods
-    //     .makeCommitmentWithConfig(
-    //       getHostName(this.name),
-    //       this.address,
-    //       utils.sha3(this.secretPhrase),
-    //       this.publicResolverAddress,
-    //       this.address
-    //     )
-    //     .call();
-    //   return this.registrarControllerContract.methods
-    //     .commit(commitment)
-    //     .send({ from: this.address });
-    // } catch (e) {
-    //   console.error('create commitment', e);
-    //   throw new Error(e);
-    // }
+    try {
+      const commitment = await this.registrarControllerContract.methods
+        .makeCommitmentWithConfig(
+          getHostName(this.name),
+          this.address,
+          utils.sha3(this.secretPhrase),
+          this.publicResolverAddress,
+          this.address
+        )
+        .call();
+      return this.registrarControllerContract.methods
+        .commit(commitment)
+        .send({ from: this.address });
+    } catch (e) {
+      console.error('create commitment', e);
+      throw new Error(e);
+    }
   }
 
   async getMinimumAge() {

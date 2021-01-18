@@ -55,7 +55,6 @@
 <script>
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { getHostName } from '@/dapps/ens-manager/helpers';
 
 export default {
   components: {},
@@ -69,6 +68,10 @@ export default {
       type: Boolean
     },
     name: {
+      default: '',
+      type: String
+    },
+    hostName: {
       default: '',
       type: String
     }
@@ -97,10 +100,6 @@ export default {
         items.push({ name: i + 1 + ' ' + 'year' });
       }
       return items;
-    },
-    hostName() {
-      // get it from modules
-      return getHostName(this.name);
     },
     // double check how this works
     pricingByLength() {

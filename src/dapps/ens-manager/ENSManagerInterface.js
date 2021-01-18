@@ -328,7 +328,6 @@ export default class ENSManagerInterface {
 
   async _setTxtRecords() {
     try {
-      console.error('resolver', this.resolverContract)
       const supportsTxt = await this.resolverContract.methods
         .supportsInterface(registrarInterface.TEXT_RECORD)
         .call();

@@ -129,7 +129,6 @@ export default {
             this.ticker = `${
               minutes >= 10 ? minutes : minutes < 0 ? '00' : '0' + minutes
             }:${seconds >= 10 ? seconds : seconds < 0 ? '00' : '0' + seconds}`;
-            console.error('in here?', seconds)
 
             if (seconds < 0) {
               this.canRegister = true;
@@ -141,7 +140,7 @@ export default {
         clearInterval(this.timer);
         this.canRegister = true;
         this.ticker = '00:00';
-        console.error('in here')
+        console.error('in here in else if ')
       } else {
         clearInterval(this.timer);
       }

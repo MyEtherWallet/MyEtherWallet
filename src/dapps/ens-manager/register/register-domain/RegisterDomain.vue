@@ -12,6 +12,7 @@
             v-if="onStep === 1"
             :is-available="isAvailable"
             :name="nameModule.name"
+            :host-name="nameModule.parsedHostName"
             :loading="loading"
             @onRequest="onRequest"
         /></template>
