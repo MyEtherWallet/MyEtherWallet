@@ -37,6 +37,8 @@
 import Request from './components/Request/Request';
 import Register from './components/Register/Register';
 import Complete from './components/Complete/Complete';
+import { EventBus } from '@/plugins/eventBus';
+import EventNames from '@/utils/web3-provider/events.js';
 
 export default {
   components: { Request, Register, Complete },
@@ -100,6 +102,9 @@ export default {
     commit() {
       this.nameModule.getMinimumAge().then(resp => {
         this.minimumAge = resp;
+      });
+      // start timer after confirming tx
+      EventBus.$on(EventNames.CONFIRMED_TX, () => {
         this.loadingCommit = true;
       });
       this.nameModule
@@ -115,7 +120,7 @@ export default {
         });
     },
     register() {
-      console.error('in register');
+      console.error('in register', this.duration);
       this.nameModule
         .register(this.duration)
         .then(resp => {

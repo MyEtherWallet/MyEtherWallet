@@ -111,6 +111,7 @@ export default {
     },
     send() {
       this.resolver(this.signedTxObject);
+      EventBus.$emit('confirmedTx');
       Toast(
         'Transaction is being mined. Check here ',
         {

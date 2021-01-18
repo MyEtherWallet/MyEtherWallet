@@ -94,6 +94,14 @@ export default {
       default: '0'
     }
   },
+  watch: {
+    gasLimit(newVal, oldVal) {
+      console.error('gasLimit', newVal, oldVal)
+    },
+    gasPrice(newVal, oldVal) {
+      console.error('gasPrice', newVal, oldVal)
+    }
+  },
   data: function () {
     return {
       warningDescription:
