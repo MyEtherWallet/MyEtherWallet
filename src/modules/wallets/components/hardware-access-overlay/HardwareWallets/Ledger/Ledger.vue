@@ -1,258 +1,13 @@
 <template>
-  <mew-overlay
+  <!--  <mew-overlay
     :show-overlay="open"
     title="1. Connect with Ledger"
     right-btn-text="Cancel"
   >
     <template #mewOverlayBody>
-      <v-sheet
-        v-if="showNetworkAddresses"
-        :outlined="true"
-        color="transparent"
-        :rounded="true"
-        :max-width="740"
-        :min-width="475"
-        :min-height="340"
-      >
-        <v-container>
-          <v-row align="center" justify="center">
-            <v-col cols="12">
-              <mew-expand-panel
-                :interactive-content="true"
-                :panel-items="panelItems"
-              >
-                <template #panelBody1>
-                  <div class="network-container">
-                    <v-radio-group v-model="selectedNetwork">
-                      <div v-for="type in networkTypes" :key="type">
-                        <p class="text-capitalize mew-header-block">
-                          {{ type }}
-                        </p>
-                        <v-container>
-                          <v-row align="center" justify="space-between">
-                            <v-col
-                              v-for="(item, idx) in Networks[type]"
-                              :key="item.service + idx"
-                              cols="6"
-                            >
-                              <v-radio
-                                :label="item.service"
-                                :value="item.url"
-                              />
-                            </v-col>
-                          </v-row>
-                        </v-container>
-                      </div>
-                    </v-radio-group>
-                  </div>
-                </template>
-                <template #panelBody2>
-                  <div>
-                    <v-radio-group v-model="selectedAddress">
-                      <table width="100%">
-                        <thead>
-                        <tr class="table-header">
-                          <th width="50%" class="align-center">Address</th>
-                          <th width="25%" class="align-center">
-                            Eth Balance
-                          </th>
-                          <th width="25%" class="align-center">
-                            # of Tokens
-                          </th>
-                        </tr>
-                        </thead>
-                        <tbody class="table-row-class">
-                        <tr
-                          v-for="acc in accounts"
-                          v-show="accounts.length > 0"
-                          :key="acc.address"
-                        >
-                          <td>
-                            <v-row justify="space-around">
-                              <v-col cols="1">
-                                <v-radio label="" :value="acc.address" />
-                              </v-col>
-                              <v-col cols="8" class="text-truncate">
-                                <v-row justify="space-around">
-                                  <mew-blockie
-                                    width="25px"
-                                    height="25px"
-                                    :address="acc.address"
-                                  />
-                                  <span>{{
-                                      acc.address | concatAddress
-                                    }}</span>
-                                </v-row>
-                                <input
-                                  :ref="acc.address"
-                                  :value="acc.address"
-                                  class="address-copy-input"
-                                />
-                              </v-col>
-                              <v-col cols="2">
-                                <v-row>
-                                  <v-icon
-                                    small
-                                    class="cursor--pointer"
-                                    @click="copy(acc.address)"
-                                  >mdi-content-copy</v-icon
-                                  >
-                                  <v-icon
-                                    small
-                                    class="cursor--pointer"
-                                    @click="launchExplorrer(acc.address)"
-                                  >mdi-launch</v-icon
-                                  >
-                                </v-row>
-                              </v-col>
-                            </v-row>
-                          </td>
-                          <td>
-                            {{
-                              acc.balance === 'Loading..'
-                                ? acc.balance
-                                : `${acc.balance} ${network.type.name}`
-                            }}
-                          </td>
-                          <td>{{ acc.tokens }}</td>
-                        </tr>
-                        <tr v-show="accounts.length === 0">
-                          Loading...
-                        </tr>
-                        </tbody>
-                      </table>
-                    </v-radio-group>
-                    <br />
-                    <v-row align="center" justify="center">
-                      <div>
-                        <mew-button
-                          title="Previous"
-                          color-theme="basic"
-                          icon="mdi-chevron-left"
-                          icon-type="mdi"
-                          :has-full-width="false"
-                          btn-size="small"
-                          icon-align="left"
-                          btn-style="transparent"
-                          :disabled="addressPage <= 1"
-                          @click.native="previousAddressSet"
-                        />
-                        <mew-button
-                          title="Next"
-                          color-theme="basic"
-                          icon="mdi-chevron-right"
-                          icon-type="mdi"
-                          :has-full-width="false"
-                          btn-size="small"
-                          icon-align="right"
-                          btn-style="transparent"
-                          @click.native="nextAddressSet"
-                        />
-                      </div>
-                    </v-row>
-                  </div>
-                </template>
-              </mew-expand-panel>
-              <div class="d-flex align-center flex-column">
-                <mew-button
-                  title="Access My Wallet"
-                  btn-size="large"
-                  :disabled="!(selectedAddress && acceptTerms)"
-                  @click.native="
-                    () => {
-                      setHardwareWallet(wallet.account);
-                    }
-                  "
-                />
-                <mew-checkbox
-                  v-model="acceptTerms"
-                  label="To access my wallet, I accept "
-                  :link="link"
-                  class="justify-center"
-                />
-              </div>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-sheet>
-      <v-sheet
-        v-else-if="showPassword"
-        :outlined="true"
-        color="white"
-        :rounded="true"
-        :max-width="740"
-        :min-width="575"
-        :min-height="340"
-      >
-        <v-container>
-          <v-row align="center" justify="center">
-            <v-col cols="10">
-              <p class="mew-heading-3">
-                Please enter the password of your
-                <span class="text-capitalize">{{ walletType }}</span> device.
-              </p>
-              <v-container>
-                <v-row align="center" justify="center">
-                  <v-col cols="10">
-                    <mew-input
-                      v-model="password"
-                      label="Password"
-                      placeholder="Enter your password"
-                      :type="walletType === 'cool_wallet' ? 'text' : 'password'"
-                    />
-                    <div class="d-flex align-center flex-column">
-                      <mew-button
-                        title="Access My Wallet"
-                        btn-size="xlarge"
-                        :disabled="!(password !== '' && acceptTerms)"
-                        @click.native="
-                          () => {
-                            nextStep();
-                          }
-                        "
-                      />
-                      <mew-checkbox
-                        v-model="acceptTerms"
-                        label="To access my wallet, I accept "
-                        :link="link"
-                        class="justify-center"
-                      />
-                    </div>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-sheet>
-      <mew6-white-sheet v-else-if="showPaths">
-        <div class="overlay-content pa-8">
-          <div class="text-center mb-8">
-            <img :src="icon" alt="Network Icon" height="60" />
-          </div>
-          <div>
-            <mew-select
-              v-show="walletType === 'ledger'"
-              v-model="selectedLedgerApp"
-              label="Opened Ledger App"
-              :items="ledgerApps"
-            />
-            <mew-select
-              v-model="selectedPath"
-              label="HD derivation path"
-              :items="paths"
-            />
-          </div>
-          <mew-button
-            btn-size="xlarge"
-            title="Unlock wallet"
-            has-full-width
-            @click.native="nextStep"
-          />
-        </div>
-      </mew6-white-sheet>
+
     </template>
-<!--    <template #mewComponent>
+&lt;!&ndash;    <template #mewComponent>
       <mew-tabs :items="tabs" is-block>
         <template #tabContent1>
           <mew6-white-sheet>
@@ -283,9 +38,246 @@
             <address-table />
           </mew6-white-sheet>
         </template>
-      </mew-tabs>-->
-<!--    </template>-->
-  </mew-overlay>
+      </mew-tabs>&ndash;&gt;
+&lt;!&ndash;    </template>&ndash;&gt;
+  </mew-overlay>-->
+  <v-sheet
+    v-if="showNetworkAddresses"
+    :outlined="true"
+    color="transparent"
+    :rounded="true"
+    :max-width="740"
+    :min-width="475"
+    :min-height="340"
+  >
+    <v-container>
+      <v-row align="center" justify="center">
+        <v-col cols="12">
+          <mew-expand-panel
+            :interactive-content="true"
+            :panel-items="panelItems"
+          >
+            <template #panelBody1>
+              <div class="network-container">
+                <v-radio-group v-model="selectedNetwork">
+                  <div v-for="type in networkTypes" :key="type">
+                    <p class="text-capitalize mew-header-block">
+                      {{ type }}
+                    </p>
+                    <v-container>
+                      <v-row align="center" justify="space-between">
+                        <v-col
+                          v-for="(item, idx) in Networks[type]"
+                          :key="item.service + idx"
+                          cols="6"
+                        >
+                          <v-radio :label="item.service" :value="item.url" />
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </div>
+                </v-radio-group>
+              </div>
+            </template>
+            <template #panelBody2>
+              <div>
+                <v-radio-group v-model="selectedAddress">
+                  <table width="100%">
+                    <thead>
+                      <tr class="table-header">
+                        <th width="50%" class="align-center">Address</th>
+                        <th width="25%" class="align-center">Eth Balance</th>
+                        <th width="25%" class="align-center"># of Tokens</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-row-class">
+                      <tr
+                        v-for="acc in accounts"
+                        v-show="accounts.length > 0"
+                        :key="acc.address"
+                      >
+                        <td>
+                          <v-row justify="space-around">
+                            <v-col cols="1">
+                              <v-radio label="" :value="acc.address" />
+                            </v-col>
+                            <v-col cols="8" class="text-truncate">
+                              <v-row justify="space-around">
+                                <mew-blockie
+                                  width="25px"
+                                  height="25px"
+                                  :address="acc.address"
+                                />
+                                <span>{{ acc.address | concatAddress }}</span>
+                              </v-row>
+                              <input
+                                :ref="acc.address"
+                                :value="acc.address"
+                                class="address-copy-input"
+                              />
+                            </v-col>
+                            <v-col cols="2">
+                              <v-row>
+                                <v-icon
+                                  small
+                                  class="cursor--pointer"
+                                  @click="copy(acc.address)"
+                                  >mdi-content-copy</v-icon
+                                >
+                                <v-icon
+                                  small
+                                  class="cursor--pointer"
+                                  @click="launchExplorrer(acc.address)"
+                                  >mdi-launch</v-icon
+                                >
+                              </v-row>
+                            </v-col>
+                          </v-row>
+                        </td>
+                        <td>
+                          {{
+                            acc.balance === 'Loading..'
+                              ? acc.balance
+                              : `${acc.balance} ${network.type.name}`
+                          }}
+                        </td>
+                        <td>{{ acc.tokens }}</td>
+                      </tr>
+                      <tr v-show="accounts.length === 0">
+                        Loading...
+                      </tr>
+                    </tbody>
+                  </table>
+                </v-radio-group>
+                <br />
+                <v-row align="center" justify="center">
+                  <div>
+                    <mew-button
+                      title="Previous"
+                      color-theme="basic"
+                      icon="mdi-chevron-left"
+                      icon-type="mdi"
+                      :has-full-width="false"
+                      btn-size="small"
+                      icon-align="left"
+                      btn-style="transparent"
+                      :disabled="addressPage <= 1"
+                      @click.native="previousAddressSet"
+                    />
+                    <mew-button
+                      title="Next"
+                      color-theme="basic"
+                      icon="mdi-chevron-right"
+                      icon-type="mdi"
+                      :has-full-width="false"
+                      btn-size="small"
+                      icon-align="right"
+                      btn-style="transparent"
+                      @click.native="nextAddressSet"
+                    />
+                  </div>
+                </v-row>
+              </div>
+            </template>
+          </mew-expand-panel>
+          <div class="d-flex align-center flex-column">
+            <mew-button
+              title="Access My Wallet"
+              btn-size="large"
+              :disabled="!(selectedAddress && acceptTerms)"
+              @click.native="
+                () => {
+                  setHardwareWallet(wallet.account);
+                }
+              "
+            />
+            <mew-checkbox
+              v-model="acceptTerms"
+              label="To access my wallet, I accept "
+              :link="link"
+              class="justify-center"
+            />
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-sheet>
+  <v-sheet
+    v-else-if="showPassword"
+    :outlined="true"
+    color="white"
+    :rounded="true"
+    :max-width="740"
+    :min-width="575"
+    :min-height="340"
+  >
+    <v-container>
+      <v-row align="center" justify="center">
+        <v-col cols="10">
+          <p class="mew-heading-3">
+            Please enter the password of your
+            <span class="text-capitalize">{{ walletType }}</span> device.
+          </p>
+          <v-container>
+            <v-row align="center" justify="center">
+              <v-col cols="10">
+                <mew-input
+                  v-model="password"
+                  label="Password"
+                  placeholder="Enter your password"
+                  :type="walletType === 'cool_wallet' ? 'text' : 'password'"
+                />
+                <div class="d-flex align-center flex-column">
+                  <mew-button
+                    title="Access My Wallet"
+                    btn-size="xlarge"
+                    :disabled="!(password !== '' && acceptTerms)"
+                    @click.native="
+                      () => {
+                        nextStep();
+                      }
+                    "
+                  />
+                  <mew-checkbox
+                    v-model="acceptTerms"
+                    label="To access my wallet, I accept "
+                    :link="link"
+                    class="justify-center"
+                  />
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-sheet>
+  <mew6-white-sheet v-else-if="showPaths">
+    <div class="overlay-content pa-8">
+      <div class="text-center mb-8">
+        <img :src="icon" alt="Network Icon" height="60" />
+      </div>
+      <div>
+        <mew-select
+          v-show="walletType === 'ledger'"
+          v-model="selectedLedgerApp"
+          label="Opened Ledger App"
+          :items="ledgerApps"
+        />
+        <mew-select
+          v-model="selectedPath"
+          label="HD derivation path"
+          :items="paths"
+        />
+      </div>
+      <mew-button
+        btn-size="xlarge"
+        title="Unlock wallet"
+        has-full-width
+        @click.native="nextStep"
+      />
+    </div>
+  </mew6-white-sheet>
 </template>
 
 <script>
@@ -312,8 +304,8 @@ import { mapState, mapActions } from 'vuex';
 
 const MAX_ADDRESSES = 5;
 import {
-  BITBOX as bitboxType, BITBOX02 as bitbox02Type,
-  LEDGER as ledgerType,
+  BCVAULT as bcvaultType,
+  LEDGER as ledgerType
 } from '@/modules/wallets/utils/bip44/walletTypes.js';
 
 // When value is for when to unlock the wallet through out steps
@@ -329,14 +321,22 @@ const walletHolder = {
       1: '1. Connect with Ledger',
       2: '2. Confirm Network & Address'
     }
-  },
-}
+  }
+};
 
 export default {
   components: {
     // GroupRadioButtons,
-
     // addressTable
+  },
+  filters: {
+    concatAddress(val) {
+      // should probably be moved globablly
+      return `${val.substring(0, 11)}...${val.substring(
+        val.length - 4,
+        val.length
+      )}`;
+    }
   },
   props: {
     open: { default: false, type: Boolean },
@@ -349,6 +349,10 @@ export default {
     walletType: {
       type: String,
       default: ''
+    },
+    change: {
+      default: false,
+      type: Boolean
     }
   },
   data() {
@@ -391,56 +395,150 @@ export default {
       addressPage: 0,
       qrcode: '',
       bcvaultLoading: false,
-      walletInstance: {},
-      tabs: [
-        {
-          name: ''
-        },
-        {
-          name: ''
-        }
-      ],
-      networkButtons: [
-        {
-          groupName: 'ETH',
-          btns: [
-            { label: 'myetherapi.com', value: 'eth-myetherapi' },
-            { label: 'infura.io', value: 'eth-infura' },
-            { label: 'giveth.io', value: 'eth-giveth' },
-            { label: 'therscan.io', value: 'eth-therscan' }
-          ]
-        },
-        {
-          groupName: 'ROP',
-          btns: [
-            { label: 'etherscan.io', value: 'rop-etherscan' },
-            { label: 'infura.io', value: 'rop-infura' },
-            { label: 'giveth.io', value: 'rop-giveth' },
-            { label: 'therscan.io', value: 'rop-therscan' }
-          ]
-        },
-        {
-          groupName: 'RIN',
-          btns: [
-            { label: 'etherscan.io', value: 'rin-etherscan' },
-            { label: 'infura.io', value: 'rin-infura' },
-            { label: 'giveth.io', value: 'rin-giveth' },
-            { label: 'therscan.io', value: 'rin-therscan' }
-          ]
-        }
-      ],
-      appSelect: 'eth',
-      derivationPathSelect: '1',
-      activeTab: 0,
-      apps: [
-        { label: 'Ethereum', value: 'eth' },
-        { label: 'SometingElse', value: 'smt' }
-      ],
-      derivationPath: [
-        { label: `m/44'/60'/0'`, value: '1' },
-        { label: `m/44'/60'/0'`, value: '2' }
-      ]
+      walletInstance: {}
     };
+  },
+  computed: {
+    ...mapState('global', ['Networks']),
+    ...mapState('wallet', ['network']),
+    networkTypes() {
+      const showFirst = ['ETH', 'ROP', 'RIN'];
+      const typeArr = Object.keys(this.Networks).filter(item => {
+        if (!showFirst.includes(item)) {
+          return item;
+        }
+      });
+      typeArr.unshift('ETH', 'ROP', 'RIN');
+      return typeArr;
+    },
+    showSelectBitbox() {
+      return this.walletType.includes('bitbox') && this.step === 1;
+    },
+    showNetworkAddresses() {
+      return (
+        Object.keys(this.hwWalletInstance).length > 0 //&&
+        // this.step >= 1 &&
+        // this.step > this.wallets[this.walletType].when
+      );
+    },
+    showBCVault() {
+      return this.walletType === bcvaultType;
+    },
+    showQrCode() {
+      return (
+        this.walletType !== '' &&
+        this.wallets[this.walletType] &&
+        this.wallets[this.walletType].needsQr &&
+        this.step === this.wallets[this.walletType].when
+      );
+    },
+    showPaths() {
+      return (
+        (this.step >= 1 && this.step <= 3) ||
+        (this.walletType !== '' &&
+          this.wallets[this.walletType] &&
+          this.wallets[this.walletType].hasPaths &&
+          this.step < this.wallets[this.walletType].when)
+      );
+    },
+    showPassword() {
+      return (
+        this.walletType !== '' &&
+        this.wallets[this.walletType] &&
+        this.wallets[this.walletType].requiresPassword &&
+        (this.step === 3 || this.step === 1)
+      );
+    },
+    icon() {
+      if (this.selectedLedgerApp !== '') {
+        const found = appPaths.find(item => {
+          return item.network.name_long === this.selectedLedgerApp.name;
+        });
+
+        return found ? found.network.icon : appPaths[0].network.icon;
+      }
+
+      return appPaths[0].network.icon;
+    },
+    paths() {
+      const newArr = [];
+      if (this.walletType === ledgerType) {
+        if (this.selectedLedgerApp !== '') {
+          const found = appPaths.find(item => {
+            return item.network.name_long === this.selectedLedgerApp.name;
+          });
+          const path = found ? found.paths : appPaths[0].paths;
+          return path.map(item => {
+            return {
+              name: item.label,
+              value: item.path
+            };
+          });
+        }
+
+        appPaths[0].paths.forEach(item => {
+          newArr.push({
+            name: item.label,
+            value: item.path
+          });
+        });
+      }
+
+      if (this.wallets[this.walletType].hasPaths) {
+        allPaths[this.walletType].forEach(item => {
+          newArr.push({
+            name: item.label,
+            value: item.path
+          });
+        });
+      }
+      return newArr;
+    },
+    title() {
+      return !this.step
+        ? 'Hardware Wallets'
+        : this.wallets[this.walletType].titles[this.step];
+    },
+    wallet() {
+      const wallet = this.accounts.find(item => {
+        return item.address === this.selectedAddress;
+      });
+
+      return wallet ? wallet : null;
+    },
+    hasPath() {
+      return this.selectedPath && this.selectedPath.hasOwnProperty('value')
+        ? this.selectedPath.value
+        : this.selectedPath;
+    }
+  },
+  watch: {
+    selectedNetwork(newVal) {
+      Object.values(this.Networks).forEach(itm => {
+        const found = itm.find(network => {
+          return network.url === newVal;
+        });
+
+        if (found) {
+          this.setNetwork(found);
+        }
+      });
+    },
+    hwWalletInstance: {
+      deep: true,
+      handler: function (newVal) {
+        if (Object.keys(newVal).length > 0) {
+          try {
+            this.setAddresses();
+          } catch (e) {
+            newVal.errorHandler(e);
+          }
+        }
+      }
+    }
+  },
+  mounted() {
+    this.selectedNetwork = this.network.url;
   },
   methods: {
     ...mapActions('wallet', ['setWallet', 'setNetwork']),
@@ -489,26 +587,6 @@ export default {
         //   this.walletType = actualString;
         // }
         this.step += 1;
-        // bcvault initializes on step 1 but unlocks at step 2
-        if (this.wallets[actualString].accountOnly && this.step === 1) {
-          this.bcvaultLoading = true;
-          this.walletInstance = this.wallets[actualString].create();
-          this.walletInstance
-            .init()
-            .then(res => {
-              if (res.length > 1) {
-                this.accounts = res;
-                this.bcvaultLoading = false;
-              } else if (res.length === 1) {
-                this[`unlock${actualString}`](
-                  res[0].userRawData + res[0].address
-                );
-              }
-            })
-            .catch(() => {
-              this.bcvaultLoading = false;
-            });
-        }
         this.steps[this.step] = actualString;
         if (this.wallets[actualString].when === this.step) {
           if (this.wallets[actualString].needsQr) {
@@ -518,6 +596,7 @@ export default {
               }
             );
           } else {
+            console.log(this[`unlock${actualString}`]); // todo remove dev item
             this[`unlock${actualString}`]();
           }
         }
@@ -525,73 +604,23 @@ export default {
         Toast(e.message, {}, ERROR);
       }
     },
-    // generateQr(code) {
-    //   this.qrcode = code;
-    // },
     unlockledger() {
       this.unlockPathOnly();
     },
-    // unlocktrezor() {
-    //   this.unlockPathOnly();
-    // },
-    // unlockbitbox() {
-    //   this.unlockPathAndPassword(this.hasPath, this.password);
-    // },
-    // unlockbitbox02() {
-    //   this.unlockPathOnly();
-    // },
-    // unlocksecalot() {
-    //   this.unlockPathAndPassword(this.hasPath, this.password);
-    // },
-    // unlockfinney(wallet) {
-    //   this.unlockQrcode(wallet);
-    // },
-    // unlockxwallet(wallet) {
-    //   this.unlockQrcode(wallet);
-    // },
-    // unlockbc_vault(address) {
-    //   const actualAddress = address ? address : this.selectedAddress;
-    //   const _wallet = this.walletInstance.getAccount(actualAddress);
-    //   this.setHardwareWallet(_wallet);
-    // },
-    // unlockkeepkey() {},
-    // unlockcool_wallet() {
-    //   this.unlockPathAndPassword(null, this.password);
-    // },
-    // setSelectedBitbox(val) {
-    //   if (!val) {
-    //     this.walletType = bitboxType;
-    //   } else {
-    //     this.walletType = bitbox02Type;
-    //   }
-    //
-    //   this.nextStep();
-    // },
     unlockPathOnly() {
+      console.log(this.wallets[this.walletType]); // todo remove dev item
       this.wallets[this.walletType]
         .create(this.hasPath)
         .then(_hwWallet => {
+          console.log(_hwWallet); // todo remove dev item
           this.hwWalletInstance = _hwWallet;
         })
-        .catch(() => {
+        .catch(e => {
+          console.log(e); // todo remove dev item
           this.step -= 1;
           this.hwWalletInstance = {};
         });
     },
-    // unlockPathAndPassword(path, password) {
-    //   this.wallets[this.walletType]
-    //     .create(path, password)
-    //     .then(_hwWallet => {
-    //       this.hwWalletInstance = _hwWallet;
-    //     })
-    //     .catch(() => {
-    //       this.step -= 1;
-    //       this.hwWalletInstance = {};
-    //     });
-    // },
-    // unlockQrcode(wallet) {
-    //   this.setHardwareWallet(wallet);
-    // },
     async setAddresses() {
       try {
         this.accounts = [];
@@ -633,7 +662,11 @@ export default {
       try {
         this.setWallet([wallet])
           .then(() => {
-            this.$router.push({ name: 'Dashboard' });
+            if (!this.change) {
+              this.$router.push({ name: 'Dashboard' });
+            } else {
+              this.close();
+            }
           })
           .catch(e => {
             Toast(e.message, {}, ERROR);

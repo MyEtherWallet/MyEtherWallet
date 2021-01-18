@@ -3,6 +3,7 @@
     :show-overlay="open"
     title="1. Connect with Ledger"
     right-btn-text="Close"
+    :close="doClose"
   >
     <!--        <template #panelBody2>
       <div>
@@ -111,7 +112,11 @@
       </div>
     </template>-->
     <template #mewOverlayBody>
-      <mew-tabs :items="tabs" is-block>
+      <div v-if="walletType === ledgerType">
+        <ledger-unlock :wallet-type="walletType" :change="true" :close="doClose"></ledger-unlock>
+      </div>
+
+   <!--   <mew-tabs :items="tabs" is-block>
         <template #tabContent1>
           <mew6-white-sheet>
             <v-radio-group v-model="selectedAddress">
@@ -153,13 +158,13 @@
                         <v-row>
                           <v-icon
                             small
-                            class="cursor--pointer"
+                            class="cursor&#45;&#45;pointer"
                             @click="copy(acc.address)"
                           >mdi-content-copy</v-icon
                           >
                           <v-icon
                             small
-                            class="cursor--pointer"
+                            class="cursor&#45;&#45;pointer"
                             @click="launchExplorrer(acc.address)"
                           >mdi-launch</v-icon
                           >
@@ -182,27 +187,27 @@
                 </tbody>
               </table>
             </v-radio-group>
-<!--            <div class="pa-8">-->
-<!--              <div class="mt-2 mb-9 text-center">-->
-<!--                <mew-icon icon-name="ETH" img-height="100"></mew-icon>-->
-<!--              </div>-->
-<!--              <mew-select-->
-<!--                :items="apps"-->
-<!--                select-label="Choose your coin"-->
-<!--                placeholder="Search..."-->
-<!--                class="mb-1"-->
-<!--              />-->
-<!--              <mew-select-->
-<!--                :items="path"-->
-<!--                select-label="HD derivation path"-->
-<!--                placeholder="Search..."-->
-<!--                class="mb-1"-->
-<!--              />-->
+&lt;!&ndash;            <div class="pa-8">&ndash;&gt;
+&lt;!&ndash;              <div class="mt-2 mb-9 text-center">&ndash;&gt;
+&lt;!&ndash;                <mew-icon icon-name="ETH" img-height="100"></mew-icon>&ndash;&gt;
+&lt;!&ndash;              </div>&ndash;&gt;
+&lt;!&ndash;              <mew-select&ndash;&gt;
+&lt;!&ndash;                :items="apps"&ndash;&gt;
+&lt;!&ndash;                select-label="Choose your coin"&ndash;&gt;
+&lt;!&ndash;                placeholder="Search..."&ndash;&gt;
+&lt;!&ndash;                class="mb-1"&ndash;&gt;
+&lt;!&ndash;              />&ndash;&gt;
+&lt;!&ndash;              <mew-select&ndash;&gt;
+&lt;!&ndash;                :items="path"&ndash;&gt;
+&lt;!&ndash;                select-label="HD derivation path"&ndash;&gt;
+&lt;!&ndash;                placeholder="Search..."&ndash;&gt;
+&lt;!&ndash;                class="mb-1"&ndash;&gt;
+&lt;!&ndash;              />&ndash;&gt;
 
-<!--              <div class="text-center">-->
-<!--                <mew-button title="Connect with Ledger" btn-size="xlarge" />-->
-<!--              </div>-->
-<!--            </div>-->
+&lt;!&ndash;              <div class="text-center">&ndash;&gt;
+&lt;!&ndash;                <mew-button title="Connect with Ledger" btn-size="xlarge" />&ndash;&gt;
+&lt;!&ndash;              </div>&ndash;&gt;
+&lt;!&ndash;            </div>&ndash;&gt;
           </mew6-white-sheet>
         </template>
         <template #tabContent2>
@@ -213,12 +218,12 @@ one
               </template>
               <template #panelBody2>
                 two
-<!--                <mew-table-->
-<!--                  has-select-->
-<!--                  has-color-->
-<!--                  :table-select-headers="tableHeaders"-->
-<!--                  :table-select-data="tableData"-->
-<!--                />-->
+&lt;!&ndash;                <mew-table&ndash;&gt;
+&lt;!&ndash;                  has-select&ndash;&gt;
+&lt;!&ndash;                  has-color&ndash;&gt;
+&lt;!&ndash;                  :table-select-headers="tableHeaders"&ndash;&gt;
+&lt;!&ndash;                  :table-select-data="tableData"&ndash;&gt;
+&lt;!&ndash;                />&ndash;&gt;
               </template>
             </mew-expand-panel>
           </v-sheet>
@@ -228,17 +233,31 @@ one
             </div>
           </div>
         </template>
-      </mew-tabs>
+      </mew-tabs>-->
     </template>
   </mew-overlay>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-
+import ledgerUnlock from '../hardware-access-overlay/HardwareWallets/Ledger/Ledger.vue'
 const MAX_ADDRESSES = 5;
-
+import {
+  LEDGER as ledgerType,
+  // TREZOR as trezorType,
+  // BITBOX as bitboxType,
+  // BITBOX02 as bitbox02Type,
+  // SECALOT as secalotType,
+  // KEEPKEY as keepkeyType,
+  // FINNEY as finneyType,
+  // XWALLET as xwalletType,
+  // BCVAULT as bcvaultType,
+  // COOLWALLET as coolwalletType
+} from '@/modules/wallets/utils/bip44/walletTypes.js';
 export default {
+  components:{
+    ledgerUnlock
+  },
   filters: {
     concatAddress(val) {
       // should probably be moved globablly
@@ -259,12 +278,13 @@ export default {
   },
   data() {
     return {
+      ledgerType,
       // resettable
       step: 0,
       steps: {},
       hwWalletInstance: {},
       selectedPath: null,
-      walletType: '',
+      // walletType: '',
       selectedLedgerApp: {
         name: '',
         value: ''
@@ -358,12 +378,19 @@ export default {
       'network',
       'address',
       'instance'
-    ])
+    ]),
+    walletType(){
+      return this.instance.identifier;
+    }
   },
   mounted(){
     console.log(this.instance); // todo remove dev item
   },
   methods: {
+    doClose(){
+      this.close()
+      console.log('doClose', this.close); // todo remove dev item
+    },
     async setAddresses() {
       try {
         this.accounts = [];

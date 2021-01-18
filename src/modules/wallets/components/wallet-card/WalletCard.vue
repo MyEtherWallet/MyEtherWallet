@@ -64,7 +64,7 @@
     </div>
     <change-address
       :open="openChangeAddress"
-      @close="openChangeAddress = false"
+      :close="closeChangeAddress"
     />
     <paper-wallet :open="openPaperWallet" @close="openPaperWallet = false" />
   </div>
@@ -106,6 +106,7 @@ export default {
   },
   methods: {
     closeChangeAddress() {
+      console.log('closeChangeAddress'); // todo remove dev item
       this.openChangeAddress = false;
     },
     closePaperWallet() {

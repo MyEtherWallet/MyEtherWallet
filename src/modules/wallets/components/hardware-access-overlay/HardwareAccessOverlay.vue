@@ -155,29 +155,32 @@
         max-width="450px"
         width="100%"
       >
-        <mew-super-button
-          class="mb-4"
-          btn-mode="small-right-image"
-          title="Bitbox"
-          :cols-num="6"
-          color-theme="basic"
-          :right-icon-height="45"
-          :right-icon="
-            require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')
-          "
-          @click.native="setSelectedBitbox(0)"
-        />
-        <mew-super-button
-          btn-mode="small-right-image"
-          title="Bitbox 2"
-          :cols-num="6"
-          color-theme="basic"
-          :right-icon-height="45"
-          :right-icon="
-            require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')
-          "
-          @click.native="setSelectedBitbox(1)"
-        />
+        asdjkldflkdaskjlfsdlkj
+        {{walletType}}
+        <bit-box-unlock :wallet-type="walletType"></bit-box-unlock>
+<!--        <mew-super-button-->
+<!--          class="mb-4"-->
+<!--          btn-mode="small-right-image"-->
+<!--          title="Bitbox"-->
+<!--          :cols-num="6"-->
+<!--          color-theme="basic"-->
+<!--          :right-icon-height="45"-->
+<!--          :right-icon="-->
+<!--            require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')-->
+<!--          "-->
+<!--          @click.native="setSelectedBitbox(0)"-->
+<!--        />-->
+<!--        <mew-super-button-->
+<!--          btn-mode="small-right-image"-->
+<!--          title="Bitbox 2"-->
+<!--          :cols-num="6"-->
+<!--          color-theme="basic"-->
+<!--          :right-icon-height="45"-->
+<!--          :right-icon="-->
+<!--            require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')-->
+<!--          "-->
+<!--          @click.native="setSelectedBitbox(1)"-->
+<!--        />-->
       </v-sheet>
 
       <v-sheet
@@ -401,7 +404,8 @@
         </v-container>
       </v-sheet>
       <mew6-white-sheet v-else-if="showPaths">
-        <div class="overlay-content pa-8">
+        <ledger-unlock :wallet-type="walletType"></ledger-unlock>
+<!--        <div class="overlay-content pa-8">
           <div class="text-center mb-8">
             <img :src="icon" alt="Network Icon" height="60" />
           </div>
@@ -424,7 +428,7 @@
             has-full-width
             @click.native="nextStep"
           />
-        </div>
+        </div>-->
       </mew6-white-sheet>
     </template>
   </mew-overlay>
@@ -448,6 +452,7 @@ import allPaths from '@/modules/wallets/utils/bip44';
 import { mapState, mapActions } from 'vuex';
 
 import ledgerUnlock from './HardwareWallets/Ledger/Ledger'
+import bitBoxUnlock from './HardwareWallets/Bitbox/Bitbox'
 // const parsedAppPaths = appPaths.map(item => {
 //   const newObj = {
 //     name: item.network.name_long,
@@ -536,7 +541,8 @@ const walletHolder = {
       1: '1. Enter your password',
       2: '2. Connect with Secalot',
       3: '3. Confirm Network & Address'
-    }
+    },
+    step: 0
   },
   [keepkeyType]: {
     create: keepkeyWallet,
@@ -599,7 +605,8 @@ export default {
   components: {
     qrcode: qrcode,
     mewSuperButton,
-    ledgerUnlock
+    ledgerUnlock,
+    bitBoxUnlock
   },
   filters: {
     concatAddress(val) {
