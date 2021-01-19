@@ -50,7 +50,7 @@
               placeholder="Please enter an address"
               success-toast="Success"
               :is-valid-address="false"
-              @input="getSelectedValue"
+              @input="setToAddress"
             />
 
             <div class="mt-5">
@@ -97,6 +97,7 @@
                   label="Gas Price"
                   placeholder=" "
                   right-label="Gwei"
+                  :value="gasPriceGwei"
                   disabled
                 />
                 <mew-input
@@ -104,6 +105,7 @@
                   placeholder=" "
                   right-label="Wei"
                   disabled
+                  :value="totalGasLimit"
                 />
               </template>
             </mew-expand-panel>
@@ -113,6 +115,7 @@
                 title="Swap"
                 :has-full-width="false"
                 btn-size="xlarge"
+                @click.native="executeTrade()"
               />
             </div>
           </interface-wrap>
@@ -139,7 +142,7 @@ import Changelly from '@/assets/images/icons/icon-changelly.png';
 import Simplex from '@/assets/images/icons/icon-simplex.png';
 import Bity from '@/assets/images/icons/icon-bity.png';
 import Swapper from '@/modules/swap';
-import utils from 'web3-utils';
+import utils, { toBN, fromWei } from 'web3-utils';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
@@ -155,10 +158,11 @@ export default {
       swapper: null,
       toTokenType: null,
       fromTokenType: null,
-      tokenInValue: '1',
+      tokenInValue: '0.1',
       tokenOutValue: null,
       availableTokens: [],
       availableQuotes: [],
+      currentTrade: null,
       isLoading: false,
       defaults: {
         fromToken: ETH_TOKEN,
@@ -167,7 +171,7 @@ export default {
       exPannel: [
         {
           name: 'Transaction Fee',
-          subtext: '$0.077',
+          subtext: '$0.00',
           tooltip:
             'Transaction fee is automatically caculated. If you want to customize the Transaction fee, you can do it from here.'
         }
@@ -196,7 +200,23 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['web3', 'gasPrice', 'address'])
+    ...mapState('wallet', ['web3', 'gasPrice', 'address', 'network']),
+    totalFees() {
+      return toBN(this.totalGasLimit).mul(toBN(this.gasPrice)).toString();
+    },
+    gasPriceGwei() {
+      return fromWei(this.gasPrice, 'gwei');
+    },
+    totalGasLimit() {
+      if (this.currentTrade) {
+        let totalGas = toBN(0);
+        this.currentTrade.transactions.forEach(tx => {
+          totalGas = totalGas.add(toBN(tx.gas));
+        });
+        return totalGas.toString();
+      }
+      return '0';
+    }
   },
   mounted() {
     this.isLoading = true;
@@ -235,7 +255,7 @@ export default {
         this.setTokenInValue(this.tokenInValue);
       });
     },
-    getSelectedValue(value) {
+    setToAddress(value) {
       console.log(value);
       this.addressValue = value;
     },
@@ -281,7 +301,7 @@ export default {
       this.swapper
         .getTrade({
           fromAddress: this.address,
-          toAddress: this.addressValue,
+          toAddress: this.addressValue.address,
           provider: this.availableQuotes[idx].provider,
           fromT: this.fromTokenType,
           toT: this.toTokenType,
@@ -290,8 +310,16 @@ export default {
             new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
           )
         })
-        .then(console.log);
-    }, 500)
+        .then(trade => {
+          this.currentTrade = trade;
+          this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
+            this.network.type.name
+          }`;
+        });
+    }, 500),
+    executeTrade() {
+      this.swapper.executeTrade(this.currentTrade).then(console.log);
+    }
   }
 };
 </script>

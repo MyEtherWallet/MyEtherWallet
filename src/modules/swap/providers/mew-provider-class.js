@@ -69,12 +69,53 @@ class MEWPClass {
         }
       })
       .then(response => {
-        return response.data.transactions;
-        //const transactions = response.data.transactions;
-        //return this.web3.eth.batchTX;
-        //return statusCheck Object
-        //return {hashes:[]}
+        return {
+          provider: this.provider,
+          transactions: response.data.transactions
+        };
       });
+  }
+  async executeTrade(tradeObj) {
+    const from = await this.web3.eth.getCoinbase();
+    const gasPrice = await this.web3.eth.getGasPrice();
+    if (tradeObj.transactions.length === 1) {
+      return new Promise((resolve, reject) => {
+        this.web3.eth
+          .sendTransaction(
+            Object.assign(tradeObj.transactions[0], {
+              from,
+              gasPrice
+            })
+          )
+          .on('transactionHash', hash => {
+            return resolve({ hashes: [hash] });
+          })
+          .catch(reject);
+      });
+    }
+    const txs = [];
+    tradeObj.transactions.forEach(tx => {
+      tx.from = from;
+      tx.gasPrice = gasPrice;
+      txs.push(tx);
+    });
+
+    return new Promise((resolve, reject) => {
+      let counter = 0;
+      const hashes = [];
+      this.web3.mew
+        .sendBatchTransactions(txs)
+        .then(promises => {
+          promises.forEach(p => {
+            p.on('transactionHash', hash => {
+              hashes.push(hash);
+              counter++;
+              if (counter === promises.length) resolve({ hashes });
+            });
+          });
+        })
+        .catch(reject);
+    });
   }
   getStatus(statusObj) {
     let isSuccess = true;
