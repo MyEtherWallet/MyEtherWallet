@@ -50,7 +50,7 @@
               placeholder="Please enter an address"
               success-toast="Success"
               :is-valid-address="false"
-              @emitSelectedValue="getSelectedValue"
+              @input="getSelectedValue"
             />
 
             <div class="mt-5">
@@ -71,7 +71,10 @@
                         :alt="quote.dexInfo.name"
                         height="35"
                       />
-                      <mew-checkbox />
+                      <mew-checkbox
+                        :value="quote.isSelected"
+                        @input="setProvider($event, idx)"
+                      />
                     </div>
                     <div class="font-weight-medium">
                       1 {{ fromTokenType.symbol }} = {{ quote.rate }}
@@ -94,11 +97,13 @@
                   label="Gas Price"
                   placeholder=" "
                   right-label="Gwei"
+                  disabled
                 />
                 <mew-input
-                  label="Gas Limit"
+                  label="Total Gas Limit"
                   placeholder=" "
                   right-label="Wei"
+                  disabled
                 />
               </template>
             </mew-expand-panel>
@@ -191,7 +196,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['web3'])
+    ...mapState('wallet', ['web3', 'gasPrice', 'address'])
   },
   mounted() {
     this.isLoading = true;
@@ -231,6 +236,7 @@ export default {
       });
     },
     getSelectedValue(value) {
+      console.log(value);
       this.addressValue = value;
     },
     setFromToken(value) {
@@ -255,11 +261,36 @@ export default {
             q.rate = new BigNumber(q.amount)
               .dividedBy(new BigNumber(this.tokenInValue))
               .toString();
+            q.isSelected = false;
             return q;
           });
           this.availableQuotes = quotes;
           this.tokenOutValue = quotes[0].amount;
         });
+    }, 500),
+    setProvider(event, idx) {
+      this.availableQuotes.forEach((q, _idx) => {
+        if (_idx === idx) {
+          q.isSelected = event;
+          if (event) this.getTrade(idx);
+        } else q.isSelected = false;
+      });
+    },
+    getTrade: utils._.debounce(function (idx) {
+      console.log(idx, 'get trade', this.addressValue);
+      this.swapper
+        .getTrade({
+          fromAddress: this.address,
+          toAddress: this.addressValue,
+          provider: this.availableQuotes[idx].provider,
+          fromT: this.fromTokenType,
+          toT: this.toTokenType,
+          dex: this.availableQuotes[idx].dex,
+          fromAmount: new BigNumber(this.tokenInValue).times(
+            new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
+          )
+        })
+        .then(console.log);
     }, 500)
   }
 };

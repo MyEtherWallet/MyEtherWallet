@@ -45,6 +45,11 @@ class Swap {
       });
     });
   }
+  getTrade(tradeInfo) {
+    for (const p of this.providers) {
+      if (p.provider === tradeInfo.provider) return p.getTrade(tradeInfo);
+    }
+  }
 }
 
 export default Swap;

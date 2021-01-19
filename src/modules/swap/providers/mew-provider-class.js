@@ -1,6 +1,5 @@
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
-import { BN } from 'ethereumjs-util';
 const HOST_URL = 'https://qa.mewwallet.dev/v2';
 const GET_LIST = '/swap/list';
 const GET_QUOTE = '/swap/quote';
@@ -51,10 +50,10 @@ class MEWPClass {
         });
       });
   }
-  trade({ fromAddress, toAddress, dex, fromT, toT, fromAmount }) {
+  getTrade({ fromAddress, toAddress, dex, fromT, toT, fromAmount }) {
     const fromAmountBN = new BigNumber(fromAmount);
     const queryAmount = fromAmountBN.div(
-      new BN(10).pow(new BigNumber(fromT.decimals))
+      new BigNumber(10).pow(new BigNumber(fromT.decimals))
     );
     return axios
       .get(`${HOST_URL}${GET_TRADE}`, {
@@ -63,13 +62,14 @@ class MEWPClass {
           recipient: toAddress,
           dex: this.provider,
           exchange: dex,
-          platform: 'web',
+          platform: 'ios',
           fromContractAddress: fromT.contract_address,
           toContractAddress: toT.contract_address,
           amount: queryAmount.toFixed(fromT.decimals)
         }
       })
-      .then(() => {
+      .then(response => {
+        return response.data.transactions;
         //const transactions = response.data.transactions;
         //return this.web3.eth.batchTX;
         //return statusCheck Object
