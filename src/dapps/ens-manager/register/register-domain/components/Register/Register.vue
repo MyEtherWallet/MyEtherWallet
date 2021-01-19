@@ -112,12 +112,10 @@ export default {
       this.ticker = `0${newVal / 60 < 10 ? Math.ceil(newVal / 60) : '00'}:00`;
     },
     loadingCommit(newVal) {
-      console.error('loadingCommit', newVal)
       if (newVal === true) {
         clearInterval(this.timer);
         const startTime = new Date().getTime();
         const endTime = startTime + this.minimumAge * 1000;
-        console.error('minimumAge',)
         if (this.minimumAge > 0) {
           this.timer = setInterval(() => {
             const startInterval = new Date().getTime();
@@ -140,7 +138,6 @@ export default {
         clearInterval(this.timer);
         this.canRegister = true;
         this.ticker = '00:00';
-        console.error('in here in else if ')
       } else {
         clearInterval(this.timer);
       }

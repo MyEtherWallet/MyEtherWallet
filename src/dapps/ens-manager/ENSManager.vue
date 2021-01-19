@@ -192,6 +192,7 @@ import registerDomainOverlay from './register/register-domain/RegisterDomain';
 // import domainBtn from '@/modules/wallets/components/domain-btn/DomainBtn';
 import ENSManager from './index';
 import { mapState } from 'vuex';
+import { Toast, ERROR } from '@/components/toast';
 
 export default {
   components: { registerDomainOverlay },
@@ -286,12 +287,13 @@ export default {
           this.onRegister = true;
         })
         .catch(err => {
-          console.error('err', err);
+          Toast(err, {}, ERROR);
         });
     },
     closeRegisterOverlay() {
       this.onRegister = false;
       this.name = '';
+      this.nameModule = {};
       this.$refs.registerDomainOverlay.clear();
     },
     setName(name) {

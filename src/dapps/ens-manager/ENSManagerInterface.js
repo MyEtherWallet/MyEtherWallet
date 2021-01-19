@@ -237,8 +237,7 @@ export default class ENSManagerInterface {
           this.contractControllerAddress
         );
       } catch (e) {
-        // throw new Error(e);
-        console.error('set Contracts', e);
+        throw new Error(e);
       }
     }
     this._isDomainAvailable();
@@ -445,8 +444,6 @@ export default class ENSManagerInterface {
       const supportsMulticoin = await this.resolverContract.methods
         .supportsInterface(registrarInterface.MULTICOIN)
         .call();
-      console.error('supportsMulticoin', supportsMulticoin);
-
       for (const type in multicoins) {
         multicoins[type].value = '';
       }
@@ -454,7 +451,6 @@ export default class ENSManagerInterface {
       if (supportsMulticoin) {
         const types = Object.keys(multicoins);
         const promises = types.map(type => {
-          console.error('name', this.name);
           return this.ens
             .resolver(this.name, ResolverAbi)
             .addr(multicoins[type].id);
@@ -462,7 +458,6 @@ export default class ENSManagerInterface {
         this.multicoinSupport = supportsMulticoin;
         this.multiCoin = {};
         await Promise.all(promises).then(vals => {
-          console.error('vals', vals);
           vals.forEach((address, idx) => {
             if (address) {
               multicoins[types[idx]].value = multicoins[types[idx]].encode(
@@ -478,7 +473,6 @@ export default class ENSManagerInterface {
         this.multiCoin.ETH.value = await this.ens.resolver(this.name).addr();
       }
     } catch (e) {
-      console.error('setRecords', e);
       this.multicoinSupport = false;
       this.multiCoin = multicoins;
       this.multiCoin.ETH.value = await this.ens.resolver(this.name).addr();

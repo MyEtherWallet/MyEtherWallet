@@ -1,6 +1,4 @@
 import ENSManagerInterface from './ENSManagerInterface.js';
-import BigNumber from 'bignumber.js';
-import utils from 'web3-utils';
 
 export default class FifsNameModule extends ENSManagerInterface {
   constructor(name, address, network, web3, ens, gasPrice) {
@@ -28,18 +26,9 @@ export default class FifsNameModule extends ENSManagerInterface {
       value: 0,
       gasPrice: this.gasPrice
     };
-
-    console.error("register", registerTx, setResolverTx)
-    try {
-      this.web3.mew.sendBatchTransactions(
-        [registerTx, setResolverTx].filter(Boolean)
-      );
-    } catch(e) {
-      console.error('e',e )
-    }
-    // return this.web3.mew.sendBatchTransactions(
-    //   [registerTx, setResolverTx].filter(Boolean)
-    // );
+    return this.web3.mew.sendBatchTransactions(
+      [registerTx, setResolverTx].filter(Boolean)
+    );
   }
 
   transfer(toAddress) {

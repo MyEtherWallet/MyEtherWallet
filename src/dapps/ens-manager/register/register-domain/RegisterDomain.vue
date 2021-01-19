@@ -39,6 +39,7 @@ import Register from './components/Register/Register';
 import Complete from './components/Complete/Complete';
 import { EventBus } from '@/plugins/eventBus';
 import EventNames from '@/utils/web3-provider/events.js';
+import { Toast, ERROR } from '@/components/toast';
 
 export default {
   components: { Request, Register, Complete },
@@ -109,25 +110,22 @@ export default {
       });
       this.nameModule
         .createCommitment()
-        .then(resp => {
+        .then(() => {
           this.loadingCommit = false;
           this.committed = true;
-          console.error('committed', resp);
-          console.error('loadingCommnit', this.loadingCommit);
         })
         .catch(err => {
-          console.error('commit err', err);
+          Toast(err, {}, ERROR);
         });
     },
     register() {
-      console.error('in register', this.duration);
       this.nameModule
         .register(this.duration)
-        .then(resp => {
-          console.error('resp', resp);
+        .then(() => {
+          this.close();
         })
         .catch(err => {
-          console.error('register err', err);
+          Toast(err, {}, ERROR);
         });
     },
     onRequest(val) {

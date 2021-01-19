@@ -168,23 +168,22 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
   async createCommitment() {
     const utils = this.web3.utils;
-    return true;
-    // try {
-    //   const commitment = await this.registrarControllerContract.methods
-    //     .makeCommitmentWithConfig(
-    //       this.parsedHostName,
-    //       this.address,
-    //       utils.sha3(this.secretPhrase),
-    //       this.publicResolverAddress,
-    //       this.address
-    //     )
-    //     .call();
-    //   return this.registrarControllerContract.methods
-    //     .commit(commitment)
-    //     .send({ from: this.address });
-    // } catch (e) {
-    //   throw new Error(e);
-    // }
+    try {
+      const commitment = await this.registrarControllerContract.methods
+        .makeCommitmentWithConfig(
+          this.parsedHostName,
+          this.address,
+          utils.sha3(this.secretPhrase),
+          this.publicResolverAddress,
+          this.address
+        )
+        .call();
+      return this.registrarControllerContract.methods
+        .commit(commitment)
+        .send({ from: this.address });
+    } catch (e) {
+      throw new Error(e);
+    }
   }
 
   async getMinimumAge() {
@@ -225,7 +224,6 @@ export default class PermanentNameModule extends ENSManagerInterface {
     try {
       return this._setEnsContracts();
     } catch (e) {
-      console.error('init module', e);
       throw new Error(e);
     }
   }
@@ -303,7 +301,6 @@ export default class PermanentNameModule extends ENSManagerInterface {
     const utils = this.web3.utils;
     const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
     const actualDuration = Math.ceil(SECONDS_YEAR * duration);
-    console.error('rentPrice', this.parsedHostName, actualDuration);
     try {
       const rentPrice = await this.registrarControllerContract.methods
         .rentPrice(this.parsedHostName, actualDuration)
@@ -321,12 +318,8 @@ export default class PermanentNameModule extends ENSManagerInterface {
           this.publicResolverAddress,
           this.address
         )
-        .send({ from: this.address, value: withFivePercent, gasPrice: this.gasPrice })
-        .once('transactionHash', () => {
-          console.error('in transaction hash');
-        });
+        .send({ from: this.address, value: withFivePercent, gas: '500000' }); //need to check about the gas limit
     } catch (e) {
-      console.error('e', e);
       throw new Error(e);
     }
   }

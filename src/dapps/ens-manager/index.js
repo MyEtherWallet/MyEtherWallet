@@ -76,7 +76,6 @@ export default class ENSManager {
 
       addressFetch.then(response => {
         const ensResponse = response[ETH_REGISTRAR];
-        console.error('responmse', ensResponse, response)
         resolve(
           ensResponse.tokens.map(item => {
             return new PermanentNameModule(
