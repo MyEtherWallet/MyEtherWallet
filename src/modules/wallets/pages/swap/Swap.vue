@@ -1,5 +1,19 @@
 <template>
   <div class="mew-component--swap">
+    <swap-confirmation
+      :to="confirmInfo.to"
+      :from="confirmInfo.from"
+      :from-img="confirmInfo.fromImg"
+      :from-type="confirmInfo.fromType"
+      :to-type="confirmInfo.toType"
+      :to-img="confirmInfo.toImg"
+      :show="confirmInfo.show"
+      :back-func="backFunction"
+      :from-val="confirmInfo.fromVal"
+      :to-val="confirmInfo.toVal"
+      :valid-until="confirmInfo.validUntil"
+      :send="executeTrade"
+    />
     <div class="d-flex">
       <div class="flex-grow-1">
         <mew6-white-sheet>
@@ -45,15 +59,16 @@
               copy-tooltip="Copy"
               save-tooltip="Save"
               :enable-save-address="true"
-              label="label"
+              label="To address"
               :items="addresses"
               placeholder="Please enter an address"
               success-toast="Success"
               :is-valid-address="false"
+              :value="address"
               @input="setToAddress"
             />
 
-            <div class="mt-5">
+            <div v-show="step >= 1" class="mt-5">
               <div class="mew-heading-3">Select a provider</div>
               <v-row>
                 <v-col
@@ -87,6 +102,7 @@
             </div>
 
             <mew-expand-panel
+              v-show="step >= 2"
               is-toggle
               has-dividers
               :panel-items="exPannel"
@@ -110,12 +126,12 @@
               </template>
             </mew-expand-panel>
 
-            <div class="text-center">
+            <div v-show="step >= 2" class="text-center">
               <mew-button
                 title="Swap"
                 :has-full-width="false"
                 btn-size="xlarge"
-                @click.native="executeTrade()"
+                @click.native="showConfirm()"
               />
             </div>
           </interface-wrap>
@@ -134,7 +150,7 @@
 <script>
 import Network from '@/modules/wallets/components/network/Network';
 import Swap from '@/modules/wallets/components/swap/Swap';
-
+import SwapConfirmation from './components/SwapConfirmation';
 import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import KyberNetwork from '@/assets/images/icons/icon-kyber-network.svg';
@@ -149,12 +165,24 @@ const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 export default {
   components: {
+    SwapConfirmation,
     network: Network,
     swap: Swap,
     'interface-wrap': InterfaceWrap
   },
   data() {
     return {
+      step: 0,
+      confirmInfo: {
+        to: '',
+        from: '',
+        fromImg: '',
+        toImg: '',
+        fromType: '',
+        toType: '',
+        validUntil: 0,
+        show: false
+      },
       swapper: null,
       toTokenType: null,
       fromTokenType: null,
@@ -261,12 +289,16 @@ export default {
     },
     setFromToken(value) {
       this.fromTokenType = value;
+      this.setTokenInValue(this.tokenInValue);
     },
     setToToken(value) {
       this.toTokenType = value;
+      this.setTokenInValue(this.tokenInValue);
     },
     setTokenInValue: utils._.debounce(function (value) {
       if (!value || this.isLoading) return;
+      this.availableQuotes = [];
+      this.step = 0;
       this.tokenInValue = value;
       this.swapper
         .getAllQuotes({
@@ -286,18 +318,22 @@ export default {
           });
           this.availableQuotes = quotes;
           this.tokenOutValue = quotes[0].amount;
+          this.step = 1;
         });
     }, 500),
     setProvider(event, idx) {
       this.availableQuotes.forEach((q, _idx) => {
         if (_idx === idx) {
           q.isSelected = event;
-          if (event) this.getTrade(idx);
+          if (event) {
+            this.tokenOutValue = q.amount;
+            this.getTrade(idx);
+          }
         } else q.isSelected = false;
       });
     },
     getTrade: utils._.debounce(function (idx) {
-      console.log(idx, 'get trade', this.addressValue);
+      this.step = 1;
       this.swapper
         .getTrade({
           fromAddress: this.address,
@@ -315,9 +351,28 @@ export default {
           this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
             this.network.type.name
           }`;
+          this.step = 2;
         });
     }, 500),
+    showConfirm() {
+      this.confirmInfo = {
+        from: this.address,
+        to: this.addressValue.address,
+        fromType: this.fromTokenType.symbol,
+        toType: this.toTokenType.symbol,
+        fromImg: this.fromTokenType.img,
+        toImg: this.toTokenType.img,
+        fromVal: this.tokenInValue,
+        toVal: this.tokenOutValue,
+        validUntil: new Date().getTime() + 10 * 60 * 1000,
+        show: true
+      };
+    },
+    backFunction() {
+      this.confirmInfo.show = false;
+    },
     executeTrade() {
+      this.confirmInfo.show = false;
       this.swapper.executeTrade(this.currentTrade).then(console.log);
     }
   }

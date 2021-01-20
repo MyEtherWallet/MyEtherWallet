@@ -4,24 +4,11 @@
       :show-overlay="showOverlay"
       :title="title ? title : 'Confirmation'"
       left-btn-text=""
+      right-btn-text="close"
       :close="overlayClose"
     >
       <template #mewOverlayBody>
         <transaction-confirmation
-          v-if="false"
-          :to="to"
-          :from="from"
-          :data="data"
-          :gas-price="gasPrice"
-          :gas-limit="gasLimit"
-          :nonce="nonce"
-          :network="network"
-          :send="send"
-          :tx-fee="txFee"
-          :tx-fee-usd="txFeeUSD"
-          :value="value"
-        />
-        <swap-confirmation
           v-if="true"
           :to="to"
           :from="from"
@@ -43,7 +30,6 @@
 <script>
 import EventNames from '@/utils/web3-provider/events.js';
 import transactionConfirmation from './transaction-confirmation/TransactionConfirmation';
-import SwapConfirmation from './swap-confirmation/SwapConfirmation';
 import utils from 'web3-utils';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -53,14 +39,7 @@ import { EventBus } from '@/plugins/eventBus';
 export default {
   name: 'ConfirmationContainer',
   components: {
-    transactionConfirmation,
-    SwapConfirmation
-  },
-  props: {
-    confirmationType: {
-      type: String,
-      default: 'tx'
-    }
+    transactionConfirmation
   },
   data() {
     return {
@@ -123,7 +102,7 @@ export default {
         })
         .catch(e => {
           this.overlayClose();
-          _self.instance.erroHandler(e);
+          _self.instance.errorHandler(e);
         });
     });
   },

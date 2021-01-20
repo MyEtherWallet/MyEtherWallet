@@ -5,14 +5,9 @@
     </div>
     <v-row>
       <v-col cols="6" class="text-center px-10 py-6">
-        <img
-          class="mb-2"
-          src="@/assets/images/currencies/eth.png"
-          alt="ETH"
-          height="40"
-        />
+        <img class="mb-2" :src="fromImg" :alt="fromType" height="40" />
         <div class="font-weight-bold text-uppercase">
-          {{ fromVal }}} <span class="searchText--text">ETH</span>
+          {{ fromVal }} <span class="searchText--text">{{ fromType }}</span>
         </div>
         <div class="d-flex align-center">
           <div class="text-uppercase monospace address">{{ from }}</div>
@@ -22,14 +17,9 @@
         </div>
       </v-col>
       <v-col cols="6" class="text-center px-10 py-6">
-        <img
-          class="mb-2"
-          src="@/assets/images/currencies/eth.png"
-          alt="ETH"
-          height="40"
-        />
+        <img class="mb-2" :src="toImg" :alt="toType" height="40" />
         <div class="font-weight-bold text-uppercase">
-          {{ toVal }} <span class="searchText--text">XMR</span>
+          {{ toVal }} <span class="searchText--text">{{ toType }}</span>
         </div>
         <div class="d-flex align-center">
           <div class="text-uppercase monospace address">{{ to }}</div>
@@ -48,7 +38,11 @@ export default {
     from: { default: '', type: String },
     to: { default: '', type: String },
     fromVal: { default: '0', type: String },
-    toVal: { default: '0', type: String }
+    fromImg: { default: '@/assets/images/currencies/eth.png', type: String },
+    toImg: { default: '@/assets/images/currencies/eth.png', type: String },
+    toVal: { default: '0', type: String },
+    toType: { default: 'ETH', type: String },
+    fromType: { default: 'ETH', type: String }
   },
   data() {
     return {};
@@ -74,6 +68,6 @@ export default {
   left: 0;
   bottom: 0;
   right: 0;
-  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 3px 6px rgba(0, 0, 0, 0.1);
 }
 </style>
