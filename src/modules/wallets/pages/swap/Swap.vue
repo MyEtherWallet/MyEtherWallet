@@ -319,7 +319,8 @@ export default {
           this.availableQuotes = quotes;
           this.tokenOutValue = quotes[0].amount;
           this.step = 1;
-        });
+        })
+        .catch(console.log);
     }, 500),
     setProvider(event, idx) {
       this.availableQuotes.forEach((q, _idx) => {

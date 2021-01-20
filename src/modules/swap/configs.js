@@ -84,6 +84,11 @@ export default {
       name: 'One Inch',
       description: '',
       img: require('@/modules/swap/assets/1inch.png')
+    },
+    default: {
+      name: '',
+      description: '',
+      img: require('@/assets/images/icons/icon-swap.svg')
     }
   }
 };

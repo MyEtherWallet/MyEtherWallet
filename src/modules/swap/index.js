@@ -40,7 +40,13 @@ class Swap {
         return 1;
       });
       return allQuotes.map(q => {
-        q.dexInfo = Configs.dexInfo[q.dex];
+        if (Configs.dexInfo[q.dex]) {
+          q.dexInfo = Configs.dexInfo[q.dex];
+        } else {
+          q.dexInfo = Configs.dexInfo.default;
+          q.dexInfo.name = q.dex;
+        }
+
         return q;
       });
     });
