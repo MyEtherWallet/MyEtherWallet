@@ -1,6 +1,6 @@
 const tldSupported = (network, name) => {
   if (network.type.hasOwnProperty('ens')) {
-    const tld = getTld(name);
+    const tld = getTld(name) ? getTld(name) : network.type.ens.registrarTLD;
     const isSupported = network.type.ens.supportedTld.find(item => {
       return tld === item;
     });
@@ -10,9 +10,10 @@ const tldSupported = (network, name) => {
 };
 
 const getTld = name => {
+  const hasTld = name.lastIndexOf('.');
   const splitName = name.split('.');
 
-  return splitName[splitName.length - 1];
+  return hasTld > -1 ? splitName[splitName.length - 1] : '';
 };
 
 const getHostName = name => {

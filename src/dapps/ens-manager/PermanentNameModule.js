@@ -28,8 +28,8 @@ export default class PermanentNameModule extends ENSManagerInterface {
     this.dnsStatus = '';
 
     const int = setInterval(() => {
-      this._initModule();
       if (this.registrarContract !== null) {
+        this._initModule();
         clearInterval(int);
       }
     }, 5000);
@@ -246,7 +246,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   async _setDnsContract() {
-    if (!this.name.includes(this.network.type.ens.registrarTLD)) {
+    if (this.tld && this.tld !== this.network.type.ens.registrarTLD) {
       this.dnsRegistrarContract = new DNSRegistrar(
         this.web3.currentProvider,
         this.registrarAddress

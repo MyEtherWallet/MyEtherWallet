@@ -9,6 +9,7 @@
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="ensBgImg" />
       <mew-tabs :items="tabs" has-underline>
+        <!-- register domain -->
         <template #tabContent1>
           <v-sheet max-width="700px" color="transparent" class="py-15 mx-auto">
             <div class="mb-5">
@@ -37,148 +38,111 @@
           </v-sheet>
         </template>
         <template #tabContent2>
+          <!-- manage domain -->
           <div class="pa-12">
             <div class="d-flex align-center justify-space-between mb-7">
-              <h4 class="font-weight-bold">
+              <span class="mew-heading-2 font-weight-bold">
                 {{ $t('ens.my-domains') }}
-                <span class="font-weight-regular">(1)</span>
-              </h4>
+                <span class="font-weight-regular"
+                  >({{ myDomains.length }})</span
+                >
+              </span>
               <mew-button
                 btn-style="outline"
-                title="+ Add domain you own"
+                :title="$t('ens.manage-domains.add-owned-domain')"
                 btn-size="large"
               />
             </div>
-            <div>
-              <mew-expand-panel :panel-items="myDomains">
-                <template #panelBody1>
-                  <div>
-                    <div class="header-block bg_datablock">
-                      <v-row>
-                        <v-col cols="6">
-                          <div class="d-flex align-center">
-                            <div>Registrant</div>
-                            <mew-blockie
-                              width="25px"
-                              height="25px"
-                              class="mx-3"
-                            />
-                            <div class="monospace truncate">
-                              0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
-                            </div>
-                          </div>
-                        </v-col>
-                        <v-col cols="6">
-                          <div class="d-flex align-center">
-                            <div>Controller</div>
-                            <mew-blockie
-                              width="25px"
-                              height="25px"
-                              class="mx-3"
-                            />
-                            <div class="monospace truncate">
-                              0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
-                            </div>
-                          </div>
-                        </v-col>
-                      </v-row>
-                    </div>
-                    <div>
-                      <div
-                        class="d-flex align-center justify-space-between border-bottom py-5 px-0"
+            <mew-expand-panel class="my-domains" :panel-items="myDomains">
+              <template
+                v-for="(domain, idx) in myDomains"
+                :slot="'panelBody' + (idx + 1)"
+                :class="domain.expired ? 'expired' : 'available'"
+              >
+                <div :key="idx">
+                  <v-row class="justify-space-between">
+                    <v-col cols="4" class="d-flex align-center">
+                      <div>{{ $t('ens.manage-domains.registrant') }}</div>
+                      <mew-blockie
+                        :address="domain.registrarAddress"
+                        width="25px"
+                        height="25px"
+                        class="mx-3"
+                      />
+                      <mew-transform-hash :hash="domain.registrarAddress" />
+                      <mew-copy
+                        class="ml-2 mew-heading-3"
+                        :copy-value="domain.registrarAddress"
+                        :is-ref="false"
+                      />
+                      <a
+                        class="address-link"
+                        :href="
+                          'https://www.ethvm.com/address/' +
+                          domain.registrarAddress
+                        "
+                        target="_blank"
                       >
-                        <div class="mew-heading-3">
-                          What do you want to do with the domain?
-                        </div>
-                        <div>Parent - ETH</div>
-                      </div>
-                      <v-divider></v-divider>
-                      <div class="pa-5">
-                        <v-row>
-                          <v-col
-                            v-for="(f, key) in domainFunctions"
-                            :key="key"
-                            cols="2"
-                            class="text-center"
-                          >
-                            <mew-icon icon-name="ensManager" :img-height="75" />
-                            <div>{{ f.label }}</div>
-                            <div v-if="f.expire" class="orange--text">
-                              <div>Expire at</div>
-                              <div>{{ f.expire }}</div>
-                            </div>
-                          </v-col>
-                        </v-row>
-                      </div>
-                    </div>
-                  </div>
-                </template>
-                <template #panelBody2>
-                  <div>
-                    <div class="header-block bg_datablock">
-                      <v-row>
-                        <v-col cols="6">
-                          <div class="d-flex align-center">
-                            <div>Registrant</div>
-                            <mew-blockie
-                              width="25px"
-                              height="25px"
-                              class="mx-3"
-                            />
-                            <div class="monospace truncate">
-                              0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
-                            </div>
-                          </div>
-                        </v-col>
-                        <v-col cols="6">
-                          <div class="d-flex align-center">
-                            <div>Controller</div>
-                            <mew-blockie
-                              width="25px"
-                              height="25px"
-                              class="mx-3"
-                            />
-                            <div class="monospace truncate">
-                              0xD4289C524f3A75b783497EB5a459a54F6F4df8D1aaaaaaaaaaaaaa
-                            </div>
-                          </div>
-                        </v-col>
-                      </v-row>
-                    </div>
-                    <div>
-                      <div
-                        class="d-flex align-center justify-space-between border-bottom py-5 px-0"
+                        <v-icon small class="call-made"> mdi-call-made </v-icon>
+                      </a>
+                    </v-col>
+                    <v-col cols="4" class="d-flex align-center">
+                      <div>{{ $t('ens.manage-domains.controller') }}</div>
+                      <mew-blockie
+                        :address="domain.controllerAddress"
+                        width="25px"
+                        height="25px"
+                        class="mx-3"
+                      />
+                      <mew-transform-hash :hash="domain.controllerAddress" />
+                      <mew-copy
+                        class="ml-2 mew-heading-3"
+                        :copy-value="domain.controllerAddress"
+                        :is-ref="false"
+                      />
+                      <a
+                        class="address-link"
+                        :href="
+                          'https://www.ethvm.com/address/' +
+                          domain.controllerAddress
+                        "
+                        target="_blank"
                       >
-                        <div class="mew-heading-3">
-                          What do you want to do with the domain?
+                        <v-icon small class="call-made"> mdi-call-made </v-icon>
+                      </a>
+                    </v-col>
+                  </v-row>
+                  <v-row class="align-center justify-space-between py-5 px-0">
+                    <span class="mew-heading-3">
+                      {{ $t('ens.manage-domain.what-to-do') }}
+                    </span>
+                    <!-- not sure what this means -->
+                    <span>Parent - ETH</span>
+                  </v-row>
+                  <v-divider></v-divider>
+                  <v-row class="pa-5">
+                    <v-col
+                      v-for="(f, key) in domainFunctions"
+                      :key="key"
+                      cols="2"
+                      class="text-center"
+                    >
+                      <mew-icon icon-name="ensManager" :img-height="75" />
+                      <div>{{ f.label }}</div>
+                      <div v-if="f.expire" class="orange--text">
+                        <div>
+                          {{
+                            $t('ens.manage-domain.expire-at', {
+                              date: domain.expire
+                            })
+                          }}
                         </div>
-                        <div>Parent - ETH</div>
                       </div>
-                      <v-divider></v-divider>
-                      <div class="pa-5">
-                        <v-row>
-                          <v-col
-                            v-for="(f, key) in domainFunctions"
-                            :key="key"
-                            cols="2"
-                            class="text-center"
-                          >
-                            <mew-icon icon-name="ensManager" :img-height="75" />
-                            <div>{{ f.label }}</div>
-                            <div v-if="f.expire" class="orange--text">
-                              <div>Expire at</div>
-                              <div>{{ f.expire }}</div>
-                            </div>
-                          </v-col>
-                        </v-row>
-                      </div>
-                    </div>
-                  </div>
-                </template>
-              </mew-expand-panel>
-              <!-- <domain-btn domain="iamexpired.eth" badge="expired" />
-              <domain-btn domain="almostexpired.eth" badge="expired" /> -->
-            </div>
+                    </v-col>
+                  </v-row>
+                </div>
+              </template>
+            </mew-expand-panel>
           </div>
         </template>
       </mew-tabs>
@@ -189,7 +153,6 @@
 <script>
 import ensBgImg from '@/assets/images/backgrounds/bg-ens.png';
 import registerDomainOverlay from './register/register-domain/RegisterDomain';
-// import domainBtn from '@/modules/wallets/components/domain-btn/DomainBtn';
 import ENSManager from './index';
 import { mapState } from 'vuex';
 import { Toast, ERROR } from '@/components/toast';
@@ -211,27 +174,11 @@ export default {
         { label: 'Upload Website' },
         { label: 'Return Funds' }
       ],
-      tabs: [{ name: 'Register domain' }, { name: 'Manage domain' }],
-      myDomains: [
-        {
-          name: 'mewdev009.eth',
-          subtext: '',
-          colorTheme: 'superPrimary',
-          warningBadge: {
-            color: 'warning darken-2',
-            text: 'Expire soon'
-          }
-        },
-        {
-          name: 'mewdev008.eth',
-          subtext: '',
-          colorTheme: 'superPrimary',
-          warningBadge: {
-            color: 'warning darken-2',
-            text: 'Expire soon'
-          }
-        }
+      tabs: [
+        { name: this.$t('ens.register-domain') },
+        { name: this.$t('ens.manage-domain') }
       ],
+      myDomains: [],
       ensBgImg: ensBgImg,
       topBanner: {
         title: this.$t('ens.title'),
@@ -250,7 +197,7 @@ export default {
       ];
     },
     hasInvalidChars() {
-      const letters = /^[0-9a-zA-Z]+$/;
+      const letters = /^[0-9a-zA-Z_.-]+$/;
       if (!letters.test(this.name)) {
         return true;
       }
@@ -265,21 +212,39 @@ export default {
       this.ens,
       this.gasPrice
     );
-    // this.getDomains();
+    this.getDomains();
   },
   methods: {
-    // getDomains() {
-    //   this.ensManager
-    //     .getAllNamesForAddress()
-    //     .then(res => {
-    //       console.error('res', res);
-    //     })
-    //     .catch(err => {
-    //       console.error('err', err);
-    //     });
-    // },
+    getDomains() {
+      this.ensManager
+        .getAllNamesForAddress()
+        .then(res => {
+          res.forEach(domain => {
+            domain.colorTheme = domain.expired
+              ? 'errorOutlineActive'
+              : 'superPrimary';
+            domain.warningBadge = domain.expired
+              ? {
+                  color: 'error',
+                  text: this.$t('ens.expired')
+                }
+              : '';
+          });
+
+          console.error('res', res);
+          this.myDomains = res;
+        })
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
+    },
     findDomain() {
-      const name = this.name + '.eth';
+      //make sure there is no empty string after '.'
+      const strLength = this.name.length;
+      const name =
+        this.name[strLength - 1] === '.'
+          ? this.name.substring(0, strLength - 1)
+          : this.name;
       this.ensManager
         .searchName(name)
         .then(res => {
@@ -302,3 +267,12 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+// .my-domains {
+//   .v-expansion-panel-content__wrap {
+//     padding: 0 !important;
+//   }
+// }
+//
+</style>

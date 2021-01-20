@@ -6,7 +6,7 @@
     class="mx-auto pa-10"
     rounded
   >
-    <div class="d-flex flex-column summary-container pa-6 rounded">
+    <div class="d-flex flex-column superPrimary pa-6 rounded">
       <div class="d-flex justify-space-between">
         <span>{{ $t('ens.register.domain-name') }}:</span>
         <span class="font-weight-medium">{{ name }}</span>
@@ -150,9 +150,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.summary-container {
-  background-color: var(--v-superPrimary-base);
-}
 .timer-container {
   .disabled {
     filter: grayscale(100%);

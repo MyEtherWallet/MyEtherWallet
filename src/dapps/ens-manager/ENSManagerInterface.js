@@ -25,7 +25,11 @@ export default class ENSManagerInterface {
     this.ens = ens ? ens : null;
     this.gasPrice = gasPrice ? gasPrice : null;
     // Returned value
-    this.name = name ? name : '';
+    this.tld = getTld(name);
+    this.registrarTLD = this.tld
+      ? this.tld
+      : this.network.type.ens.registrarTLD;
+    this.name = !this.tld ? name + '.' + this.registrarTLD : name;
     this.nameHash = nameHashPckg.hash(name);
     this.txtRecords = null;
     this.multiCoin = null;
@@ -209,18 +213,13 @@ export default class ENSManagerInterface {
   }
   async _setRegistar() {
     const web3 = this.web3;
-    const tld = getTld(this.name);
-    const registrarTLD = tld ? tld : this.network.type.ens.registrarTLD;
     const registryAddress = this.network.type.ens.registry;
     this.registryContract = new web3.eth.Contract(RegistryAbi, registryAddress);
-    this.registrarAddress = await this.ens.owner(registrarTLD);
+    this.registrarAddress = await this.ens.owner(this.registrarTLD);
     this._setRegistrarContracts();
   }
 
   async _setRegistrarContracts() {
-    const tld = getTld(this.name);
-    const registrarTLD = tld ? tld : this.network.type.ens.registrarTLD;
-    this.name = !tld ? this.name + '.' + tld : this.name;
     const web3 = this.web3;
     const abi =
       this.network.type.ens.registrarType === REGISTRAR_TYPES.FIFS
@@ -230,7 +229,7 @@ export default class ENSManagerInterface {
     if (this.network.type.ens.registrarType === REGISTRAR_TYPES.PERMANENT) {
       try {
         this.contractControllerAddress = await this.ens
-          .resolver(registrarTLD, ResolverAbi)
+          .resolver(this.registrarTLD, ResolverAbi)
           .interfaceImplementer(registrarInterface.CONTROLLER);
         this.registrarControllerContract = new web3.eth.Contract(
           RegistrarControllerAbi,
@@ -330,6 +329,7 @@ export default class ENSManagerInterface {
       const supportsTxt = await this.resolverContract.methods
         .supportsInterface(registrarInterface.TEXT_RECORD)
         .call();
+      console.error('does it support txt', supportsTxt);
       this.textRecordSupport = supportsTxt;
       if (supportsTxt) {
         this.txtRecords = {};
@@ -345,8 +345,8 @@ export default class ENSManagerInterface {
           });
         });
       }
-    } catch (e) {
-      throw new Error(e);
+    } catch {
+      this.textRecordSupport = false;
     }
   }
 

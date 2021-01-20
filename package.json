@@ -123,7 +123,7 @@
     "remark-cli": "9.0.0",
     "remark-preset-lint-recommended": "5.0.0",
     "rskjs-util": "1.0.3",
-    "sass": "1.32.0",
+    "sass": "1.32.4",
     "sass-loader": "10.1.1",
     "sinon": "9.2.3",
     "store": "2.0.12",

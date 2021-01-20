@@ -13,7 +13,7 @@
       v-if="!loading"
       :class="[
         'd-flex align-center pa-6 rounded',
-        isAvailable ? 'available' : 'unavailable'
+        isAvailable ? 'superPrimary' : 'error lighten-3'
       ]"
     >
       <v-icon size="80" :color="isAvailable ? 'primary' : 'error'" class="mr-3">
@@ -78,7 +78,6 @@ export default {
   },
   data() {
     return {
-      available: false,
       duration: '1'
     };
   },
@@ -136,12 +135,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.available {
-  background-color: var(--v-superPrimary-base);
-}
-.unavailable {
-  background-color: var(--v-error-lighten3);
-}
-</style>

@@ -132,5 +132,19 @@
     "create-commitment": "Create commitment",
     "complete-reg": "Complete Registration",
     "complete-reg-desc": "Please click 'Register' and follow the prompts to complete a final transaction and complete your domain registration."
+  },
+  "manage-domains": {
+    "renew-domain": "Renew Domain",
+    "ens-config": "Ens Configurations",
+    "manage-multi": "Manage Multicoins",
+    "manage-txt": "Manage Text Records",
+    "upload-site": "Upload Website",
+    "return-funds": "Return funds",
+    "expire-at": "Expire at {date}",
+    "add-owned-domain": "Add an owned domain",
+    "registrant": "Registrant",
+    "controller": "Controller",
+    "what-to-do": "What do you want to do with this domain?"
+
   }
 }
