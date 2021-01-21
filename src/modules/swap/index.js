@@ -1,30 +1,46 @@
-import { OneInch, DexAg } from './providers';
+import { OneInch, DexAg, Changelly } from './providers';
+import { isAddress } from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import Configs from './configs';
-const getUniqueTokens = tokens => {
-  const uniqueContracts = [];
-  const uniqueTokens = [];
-  tokens.forEach(t => {
-    if (uniqueContracts.indexOf(t.contract_address) === -1) {
-      uniqueTokens.push(t);
-      uniqueContracts.push(t.contract_address);
+const mergeIfNotExists = (baseList, newList) => {
+  newList.forEach(t => {
+    for (const bl of baseList) {
+      if (bl.name.toLowerCase() === t.name.toLowerCase()) return;
+      if (
+        bl.contract_address.toLowerCase() === t.contract_address.toLowerCase()
+      )
+        return;
     }
+    baseList.push(t);
   });
-  return uniqueTokens;
+  return baseList;
 };
 class Swap {
   constructor(web3) {
-    this.providers = [new OneInch(web3), new DexAg(web3)];
+    this.providers = [new OneInch(web3), new DexAg(web3), new Changelly(web3)];
   }
   getAllTokens() {
     let allTokens = [];
-    return Promise.all(
-      this.providers.map(p => {
-        return p.getSupportedTokens().then(tokens => {
-          allTokens = allTokens.concat(tokens);
+    return this.providers[0].getSupportedTokens().then(baseList => {
+      allTokens = allTokens.concat(baseList);
+      return Promise.all(
+        this.providers.map((p, idx) => {
+          if (idx === 0) return Promise.resolve();
+          return p.getSupportedTokens().then(tokens => {
+            allTokens = mergeIfNotExists(allTokens, tokens);
+          });
+        })
+      ).then(() => {
+        const sorted = allTokens.sort((a, b) => {
+          if (a.name > b.name) return 1;
+          return -1;
         });
-      })
-    ).then(() => getUniqueTokens(allTokens));
+        return {
+          fromTokens: sorted.filter(t => isAddress(t.contract_address)),
+          toTokens: sorted
+        };
+      });
+    });
   }
   getAllQuotes({ fromT, toT, fromAmount }) {
     let allQuotes = [];
@@ -40,11 +56,11 @@ class Swap {
         return 1;
       });
       return allQuotes.map(q => {
-        if (Configs.dexInfo[q.dex]) {
-          q.dexInfo = Configs.dexInfo[q.dex];
+        if (Configs.exchangeInfo[q.exchange]) {
+          q.exchangeInfo = Configs.exchangeInfo[q.exchange];
         } else {
-          q.dexInfo = Configs.dexInfo.default;
-          q.dexInfo.name = q.dex;
+          q.exchangeInfo = Configs.exchangeInfo.default;
+          q.exchangeInfo.name = q.exchange;
         }
 
         return q;

@@ -4,6 +4,7 @@ const HOST_URL = 'https://qa.mewwallet.dev/v2';
 const GET_LIST = '/swap/list';
 const GET_QUOTE = '/swap/quote';
 const GET_TRADE = '/swap/trade';
+import { isAddress } from 'web3-utils';
 class MEWPClass {
   constructor(providerName, web3) {
     this.web3 = web3;
@@ -16,15 +17,16 @@ class MEWPClass {
         return {
           contract_address: d.contract_address.toLowerCase(),
           decimals: parseInt(d.decimals),
-          icon: d.icon,
-          icon_png: d.icon_png,
-          name: d.name,
+          img: d.icon,
+          name: d.name ? d.name : d.symbol,
           symbol: d.symbol
         };
       });
     });
   }
   getQuote({ fromT, toT, fromAmount }) {
+    if (!isAddress(fromT.contract_address) || !isAddress(toT.contract_address))
+      return Promise.resolve([]);
     const fromAmountBN = new BigNumber(fromAmount);
     const queryAmount = fromAmountBN.div(
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
@@ -43,14 +45,18 @@ class MEWPClass {
         );
         return quotes.map(q => {
           return {
-            dex: q.exchange,
-            provider: q.dex,
+            exchange: q.exchange,
+            provider: this.provider,
             amount: q.amount
           };
         });
+      })
+      .catch(e => {
+        if (e.response.data.msg === 'No matching swap pairs found') return [];
+        return e;
       });
   }
-  getTrade({ fromAddress, toAddress, dex, fromT, toT, fromAmount }) {
+  getTrade({ fromAddress, toAddress, quote, fromT, toT, fromAmount }) {
     const fromAmountBN = new BigNumber(fromAmount);
     const queryAmount = fromAmountBN.div(
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
@@ -61,7 +67,7 @@ class MEWPClass {
           address: fromAddress,
           recipient: toAddress,
           dex: this.provider,
-          exchange: dex,
+          exchange: quote.exchange,
           platform: 'ios',
           fromContractAddress: fromT.contract_address,
           toContractAddress: toT.contract_address,

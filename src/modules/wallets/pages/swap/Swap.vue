@@ -82,8 +82,8 @@
                     <div class="d-flex align-center justify-space-between mb-3">
                       <img
                         :class="$vuetify.theme.dark ? 'invert' : ''"
-                        :src="quote.dexInfo.img"
-                        :alt="quote.dexInfo.name"
+                        :src="quote.exchangeInfo.img"
+                        :alt="quote.exchangeInfo.name"
                         height="35"
                       />
                       <mew-checkbox
@@ -95,7 +95,7 @@
                       1 {{ fromTokenType.symbol }} = {{ quote.rate }}
                       {{ toTokenType.symbol }}
                     </div>
-                    <div>{{ quote.dexInfo.name }}</div>
+                    <div>{{ quote.exchangeInfo.name }}</div>
                   </v-card>
                 </v-col>
               </v-row>
@@ -191,6 +191,7 @@ export default {
       availableTokens: [],
       availableQuotes: [],
       currentTrade: null,
+      allTrades: [],
       isLoading: false,
       defaults: {
         fromToken: ETH_TOKEN,
@@ -211,10 +212,10 @@ export default {
       bity: Bity,
       addresses: [
         {
-          address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+          address: '0x8c08079b06f83b7e04781c290a375e9572f9a90c',
           currency: 'ETH',
           nickname: 'My Address',
-          resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+          resolverAddr: '0x8c08079b06f83b7e04781c290a375e9572f9a90c'
         },
         {
           address: '0x43689531907482BEE7e650D18411E284A7337A66',
@@ -252,10 +253,7 @@ export default {
     this.swapper
       .getAllTokens()
       .then(tokens => {
-        this.availableTokens = tokens.map(t => {
-          t.img = t.icon;
-          return t;
-        });
+        this.availableTokens = tokens;
       })
       .then(() => {
         this.setDefaults();
@@ -263,20 +261,15 @@ export default {
       });
   },
   methods: {
-    removeOneToken(token) {
-      return this.availableTokens.filter(
-        t => t.contract_address !== token.contract_address
-      );
-    },
     getTokenFromAddress(address) {
-      for (const t of this.availableTokens) {
+      for (const t of this.availableTokens.toTokens) {
         if (t.contract_address === address) return t;
       }
       return {};
     },
     setDefaults() {
-      this.fromTokens = this.availableTokens;
-      this.toTokens = this.availableTokens;
+      this.fromTokens = this.availableTokens.fromTokens;
+      this.toTokens = this.availableTokens.toTokens;
       setImmediate(() => {
         this.fromTokenType = this.getTokenFromAddress(this.defaults.fromToken);
         this.toTokenType = this.getTokenFromAddress(this.defaults.toToken);
@@ -298,6 +291,7 @@ export default {
     setTokenInValue: utils._.debounce(function (value) {
       if (!value || this.isLoading) return;
       this.availableQuotes = [];
+      this.allTrades = [];
       this.step = 0;
       this.tokenInValue = value;
       this.swapper
@@ -317,8 +311,10 @@ export default {
             return q;
           });
           this.availableQuotes = quotes;
-          this.tokenOutValue = quotes[0].amount;
-          this.step = 1;
+          if (quotes.length) {
+            this.tokenOutValue = quotes[0].amount;
+            this.step = 1;
+          }
         })
         .catch(console.log);
     }, 500),
@@ -335,6 +331,14 @@ export default {
     },
     getTrade: utils._.debounce(function (idx) {
       this.step = 1;
+      if (this.allTrades[idx]) {
+        this.currentTrade = this.allTrades[idx];
+        this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
+          this.network.type.name
+        }`;
+        this.step = 2;
+        return;
+      }
       this.swapper
         .getTrade({
           fromAddress: this.address,
@@ -342,7 +346,7 @@ export default {
           provider: this.availableQuotes[idx].provider,
           fromT: this.fromTokenType,
           toT: this.toTokenType,
-          dex: this.availableQuotes[idx].dex,
+          quote: this.availableQuotes[idx],
           fromAmount: new BigNumber(this.tokenInValue).times(
             new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
           )
@@ -352,6 +356,7 @@ export default {
           this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
             this.network.type.name
           }`;
+          this.allTrades[idx] = trade;
           this.step = 2;
         });
     }, 500),

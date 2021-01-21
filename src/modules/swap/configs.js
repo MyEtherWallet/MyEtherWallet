@@ -1,5 +1,6 @@
 export default {
-  dexInfo: {
+  ETH: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  exchangeInfo: {
     ag: {
       name: 'X Blaster',
       description: '',
@@ -84,6 +85,11 @@ export default {
       name: 'One Inch',
       description: '',
       img: require('@/modules/swap/assets/1inch.png')
+    },
+    changelly: {
+      name: 'Changelly',
+      description: '',
+      img: require('@/modules/swap/assets/Changelly.png')
     },
     default: {
       name: '',

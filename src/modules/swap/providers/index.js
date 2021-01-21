@@ -1,3 +1,4 @@
 import DexAg from './dex-ag';
 import OneInch from './one-inch';
-export { DexAg, OneInch };
+import Changelly from './changelly';
+export { DexAg, OneInch, Changelly };
