@@ -2,11 +2,11 @@
   <div>
     <home-header title="About us - Company" />
     <div class="py-9" />
-    <what-is-mew />
+    <company-what-is-mew />
     <div class="py-7" />
-    <our-story />
+    <company-our-story />
     <div class="py-10" />
-    <community />
+    <company-community />
     <div class="py-10" />
     <partners />
     <div class="py-9" />
@@ -19,18 +19,20 @@
 import homeHeader from '@/components/home-header/HomeHeader';
 import partners from '@/components/partners/Partners';
 import join from '@/components/join/Join';
-import whatIsMew from './components/what-is-mew/WhatIsMew';
-import ourStory from './components/our-story/OurStory';
-import community from './components/community/Community';
+
+import CompanyWhatIsMew from '../components/companyLayout/CompanyWhatIsMew';
+import CompanyOurStory from '../components/companyLayout/CompanyOurStory';
+import CompanyCommunity from '../components/companyLayout/CompanyCommunity';
 
 export default {
+  name: 'TheCompanyLayout',
   components: {
     homeHeader,
     partners,
     join,
-    whatIsMew,
-    ourStory,
-    community
+    CompanyWhatIsMew,
+    CompanyOurStory,
+    CompanyCommunity
   }
 };
 </script>

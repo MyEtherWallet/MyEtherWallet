@@ -1,7 +1,7 @@
 import TheDefaultView from '@/core/viewDefault/TheDefaultView';
 import TheHomeLayout from '@/core/viewDefault/layouts/TheHomeLayout';
 import TheHowItWorksLayout from '@/core/viewDefault/layouts/TheHowItWorksLayout';
-import CompanyPage from '@/modules/company/Company';
+import TheCompanyLayout from '@/core/viewDefault/layouts/TheCompanyLayout';
 import TeamPage from '@/modules/team/Team';
 import PressKit from '@/modules/press-kit/PressKit';
 import BuyHardwareWallet from '@/modules/hardware/Hardware';
@@ -25,7 +25,7 @@ const routes = [
     children: [
       {
         path: '',
-        name: 'Home',
+        name: 'TheHomeLayout',
         component: TheHomeLayout,
         meta: {
           requiresAuth: false
@@ -33,7 +33,7 @@ const routes = [
       },
       {
         path: 'how-it-works',
-        name: 'HowItWorks',
+        name: 'TheHowItWorksLayout',
         component: TheHowItWorksLayout,
         meta: {
           requiresAuth: false
@@ -73,8 +73,8 @@ const routes = [
       },
       {
         path: 'company',
-        name: 'CompanyPage',
-        component: CompanyPage,
+        name: 'TheCompanyLayout',
+        component: TheCompanyLayout,
         meta: {
           requiresAuth: false
         }
