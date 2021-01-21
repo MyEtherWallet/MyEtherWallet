@@ -1,34 +1,68 @@
 <template>
   <div class="mew-component--mew-tools">
-    <mew-button
-      class="desktop-tools-button px-2 d-none d-lg-block"
-      title="MEW tools"
-      color-theme="white"
-      :has-full-width="false"
-      button-size="large"
-      btn-style="outline"
-      icon="mdi-view-module"
-      icon-type="mdi"
-      icon-align="left"
-      @click.native="mewTools = true"
-    />
+    <v-menu rounded="lg" offset-y bottom left>
+      <template #activator="{ on, attrs }">
+        <!--
+        =============================================================
+        Desktop MEW tools button
+        =============================================================
+        -->
+        <v-btn
+          class="d-none d-lg-block btn px-3"
+          color="white"
+          outlined
+          v-bind="attrs"
+          x-large
+          v-on="on"
+        >
+          <div class="d-flex align-center">
+            <img
+              src="@/assets/images/icons/icon-grid-dot.png"
+              alt="Mew Tools"
+              height="18"
+              class="mr-2"
+            />
+            <div>MEW tools</div>
+          </div>
+        </v-btn>
 
-    <mew-button
-      class="mobile-tools-button d-block d-lg-none"
-      color-theme="white"
-      btn-style="outline"
-      :icon="require('@/assets/images/icons/icon-grid-dot.png')"
-      icon-type="img"
-      icon-align="left"
-    />
+        <!--
+        =============================================================
+        Mobile MEW tools button
+        =============================================================
+        -->
+        <v-btn
+          style="height: 36px; min-width: 36px; padding: 0"
+          color="white"
+          outlined
+          class="d-lg-none"
+          v-bind="attrs"
+          v-on="on"
+        >
+          <img
+            src="@/assets/images/icons/icon-grid-dot.png"
+            alt="Mew Tools"
+            height="20"
+          />
+        </v-btn>
+      </template>
 
-    <div class="outside-container">
-      <div class="pa-3 white mew-tools-menu">
+      <!--
+      =============================================================
+      MEW tools menu
+      =============================================================
+      -->
+      <div
+        class="pa-3 white mew-tools-menu"
+        :class="$vuetify.breakpoint.mdAndDown ? 'mobile' : ''"
+      >
         <v-row>
           <v-col
             v-for="(t, key) in tools"
             :key="key"
-            cols="6"
+            cols="12"
+            sm="12"
+            md="12"
             lg="4"
             class="text-center"
           >
@@ -42,7 +76,7 @@
           </v-col>
         </v-row>
       </div>
-    </div>
+    </v-menu>
   </div>
 </template>
 
@@ -98,70 +132,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.mew-component--mew-tools {
-  position: relative;
+.mew-tools-menu {
+  width: 300px;
 
-  .outside-container {
-    z-index: 9;
-    position: absolute;
-    min-width: 300px;
-    right: 0;
-    top: 0;
-    opacity: 0;
-    padding: 70px 0 0 0;
-    pointer-events: none;
-    transition: opacity 0.1s ease-in-out;
+  &.mobile {
+    width: 130px;
   }
 
-  &:hover .outside-container {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  .mew-tools-menu {
-    border-radius: 5px;
-    box-shadow: 0px 5px 15px rgb(0 0 0 / 20%);
-    position: relative;
-
-    &:before {
-      position: absolute;
-      right: 30px;
-      top: -7px;
-      content: '';
-      width: 0;
-      height: 0;
-      border-left: 7px solid transparent;
-      border-right: 7px solid transparent;
-      border-bottom: 7px solid white;
+  .tools-btn:hover {
+    * {
+      font-weight: 600;
     }
-  }
-}
-
-.tools-btn {
-  padding: 3px;
-
-  &:hover .btn-lable {
-    font-weight: 600;
-  }
-}
-
-.desktop-tools-button {
-  height: 50px !important;
-  width: 140px !important;
-}
-
-$mobile-tools-button-size: 35px;
-.mobile-tools-button {
-  height: $mobile-tools-button-size !important;
-  min-height: $mobile-tools-button-size !important;
-  width: $mobile-tools-button-size !important;
-  min-width: $mobile-tools-button-size !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  img {
-    height: 20px !important;
-    padding: 0 !important;
-    margin: 0 !important;
   }
 }
 </style>
