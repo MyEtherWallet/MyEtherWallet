@@ -34,9 +34,9 @@
 </template>
 
 <script>
-import Request from './components/Request/Request';
-import Register from './components/Register/Register';
-import Complete from './components/Complete/Complete';
+import Request from '../components/register/RegisterRequest';
+import Register from '../components/register/Register';
+import Complete from '../components/register/RegisterComplete';
 import { EventBus } from '@/plugins/eventBus';
 import EventNames from '@/utils/web3-provider/events.js';
 import { Toast, ERROR } from '@/components/toast';

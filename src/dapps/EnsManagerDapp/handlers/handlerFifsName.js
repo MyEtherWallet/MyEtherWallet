@@ -1,4 +1,4 @@
-import ENSManagerInterface from './ENSManagerInterface.js';
+import ENSManagerInterface from './handlerENSManagerInterface.js';
 
 export default class FifsNameModule extends ENSManagerInterface {
   constructor(name, address, network, web3, ens, gasPrice) {

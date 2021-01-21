@@ -1,15 +1,15 @@
-import { getTld, getHostName, decodeCoinAddress } from '../helpers';
-import RegistryAbi from '../ABI/registryAbi.js';
-import BaseRegistrarAbi from '../ABI/baseRegistrarAbi.js';
-import ResolverAbi from '../ABI/resolverAbi.js';
-import FifsRegistrarAbi from '../ABI/fifsRegistrarAbi.js';
-import RegistrarControllerAbi from '../ABI/registrarControllerAbi.js';
-import multicoins from '../configs/multicoins';
-import textrecords from '../configs/textrecords';
-import supportedCoins from '../configs/supportedCoins';
+import { getTld, getHostName, decodeCoinAddress } from './helpers/helperTld';
+import RegistryAbi from './abi/abiRegistry.js';
+import BaseRegistrarAbi from './abi/abiBaseRegistrar.js';
+import ResolverAbi from './abi/abiResolver.js';
+import FifsRegistrarAbi from './abi/abiFifsRegistrar.js';
+import RegistrarControllerAbi from './abi/abiRegistrarController.js';
+import multicoins from './handlerMulticoins';
+import textrecords from './handlerTextRecords';
+import supportedCoins from './handlerSupportedCoins';
 import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
-import registrarInterface from '../configs/registrarInterface';
+import registrarInterface from './configs/configRegistrarInterface';
 import * as nameHashPckg from 'eth-ens-namehash';
 import contentHash from 'content-hash';
 

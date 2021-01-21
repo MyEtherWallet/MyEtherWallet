@@ -1,15 +1,15 @@
 <template>
   <div>
-    <register-domain-overlay
-      ref="registerDomainOverlay"
+    <register-domain
+      ref="registerDomain"
       :on-register="onRegister"
-      :close="closeRegisterOverlay"
+      :close="closeRegister"
       :name-module="nameModule"
     />
-    <manage-domain-overlay
-      ref="manageDomainOverlay"
+    <manage-domain
+      ref="manageDomain"
       :on-manage="onManage"
-      :close="closeManageOverlay"
+      :close="closeManage"
       :type="manageType"
       :transfer="transfer"
       :name-module="nameModule"
@@ -163,14 +163,14 @@
 
 <script>
 import ensBgImg from '@/assets/images/backgrounds/bg-ens.png';
-import registerDomainOverlay from './register/RegisterDomain';
-import manageDomainOverlay from './manage/ManageDomain';
-import ENSManager from './index';
+import registerDomain from './modules/ModuleRegisterDomain';
+import manageDomain from './modules/ModuleManageDomain';
+import ENSManager from './handlers/handlerEnsManager';
 import { mapState } from 'vuex';
 import { Toast, ERROR } from '@/components/toast';
 
 export default {
-  components: { registerDomainOverlay, manageDomainOverlay },
+  components: { registerDomain, manageDomain },
   data() {
     return {
       manageType: '',
@@ -257,7 +257,7 @@ export default {
           Toast(err, {}, ERROR);
         });
     },
-    closeManageOverlay() {
+    closeManage() {
       this.onManage = false;
     },
     transfer(address) {
@@ -271,7 +271,7 @@ export default {
           console.error('err', err);
           Toast(err, {}, ERROR);
         });
-      this.closeManageOverlay();
+      this.closeManage();
     },
     // register domain
     findDomain() {
@@ -291,11 +291,11 @@ export default {
           Toast(err, {}, ERROR);
         });
     },
-    closeRegisterOverlay() {
+    closeRegister() {
       this.onRegister = false;
       this.name = '';
       this.nameModule = {};
-      this.$refs.registerDomainOverlay.clear();
+      this.$refs.registerDomain.clear();
     },
     setName(name) {
       this.name = name;

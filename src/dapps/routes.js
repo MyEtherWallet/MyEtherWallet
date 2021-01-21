@@ -1,5 +1,5 @@
 import DappsCenter from './dapps-center/DappsCenter';
-import ENSManager from './ens-manager/ENSManager.vue';
+import ENSManager from './EnsManagerDapp/TheENSManagerLayout.vue';
 import MakerDAO from './makerdao/MakerDAO';
 import Aave from './aave/Aave';
 import Ambrpay from './ambrpay/Ambrpay';

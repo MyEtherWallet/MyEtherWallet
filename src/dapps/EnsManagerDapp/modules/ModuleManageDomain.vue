@@ -11,29 +11,22 @@
         color="white"
         min-width="600"
       >
-        <addressBook
-          @setResolvedAddr="setResolvedAddr"
-          @setToAddr="setToAddr"
-        />
-        <div class="d-flex align-center justify-center mt-3">
-          <mew-button
-            :title="$t('ens.transfer')"
-            btn-size="xlarge"
-            @click.native="transfer(address)"
-          />
-        </div>
+        <transfer v-if="isTransfer" :transfer="transfer" />
+        <renew v-if="isRenew" :renew="renew" />
       </v-sheet>
     </template>
   </mew-overlay>
 </template>
 
 <script>
-import addressBook from '@/modules/addressBook/AddressBook';
+import renew from '../components/manage/ManageRenew';
+import transfer from '../components/manage/ManageTransfer';
 // import { Toast, ERROR } from '@/components/toast';
-const types = ['transfer'];
+const types = ['transfer', 'renew'];
 export default {
   components: {
-    addressBook
+    transfer,
+    renew
   },
   props: {
     type: {
@@ -54,33 +47,21 @@ export default {
       type: Function
     }
   },
-  data() {
-    return {
-      resolvedAddr: '',
-      toAddress: ''
-    };
-  },
   computed: {
-    address() {
-      return this.resolvedAddr.length > 0 ? this.resolvedAddr : this.toAddress;
+    isTransfer() {
+      return this.type === types[0];
+    },
+    isRenew() {
+      return this.type === types[1];
     },
     overlayTitle() {
-      if (this.type === types[0]) {
+      if (this.isTransfer) {
         return this.$t('ens.transfer-domain');
       }
+      if (this.isRenew) {
+        return this.$t('ens.renew-domain');
+      }
       return this.$t('ens.manage-domain');
-    }
-  },
-  mounted() {
-    this.toAddress = '';
-    this.resolvedAddr = '';
-  },
-  methods: {
-    setResolvedAddr(newVal) {
-      this.resolvedAddr = newVal;
-    },
-    setToAddr(newVal) {
-      this.toAddress = newVal;
     }
   }
 };

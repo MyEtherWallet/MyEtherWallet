@@ -1,9 +1,9 @@
-import OldEnsAbi from '../ABI/oldEnsAbi.js';
-import OldDeedAbi from '../ABI/oldDeedAbi.js';
-import getHashFromFile from '../manage/services/getHashFromFile.js';
-import uploadFileToIpfs from '../manage/services/uploadFileToIpfs.js';
+import OldEnsAbi from './abi/abiOldEns.js';
+import OldDeedAbi from './abi/abiOldDeed.js';
+import getHashFromFile from './helpers/helperGetHashFromFile.js';
+import uploadFileToIpfs from './helpers/helperUploadFileToIpfs.js';
 import BigNumber from 'bignumber.js';
-import ENSManagerInterface from './ENSManagerInterface.js';
+import ENSManagerInterface from './handlerENSManagerInterface.js';
 import * as nameHashPckg from 'eth-ens-namehash';
 import DNSRegistrar from '@ensdomains/dnsregistrar';
 import contentHash from 'content-hash';
@@ -47,7 +47,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
       return this.web3.eth.sendTransaction({
         from: this.address,
         to: this.network.type.ens.registry,
-        data: this.registryContract.methods
+        data: this.registrarContract.methods
           .transferFrom(this.address, toAddress, this.labelHash)
           .encodeABI(),
         value: 0
