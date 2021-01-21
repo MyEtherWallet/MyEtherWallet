@@ -33,8 +33,8 @@ import utils from 'web3-utils';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Toast, SUCCESS } from '@/components/toast';
-import getService from '@/helpers/getService';
-import { EventBus } from '@/plugins/eventBus';
+import getService from '@/core/helpers/getService';
+import { EventBus } from '@/core/plugins/eventBus';
 export default {
   name: 'ConfirmationContainer',
   components: {

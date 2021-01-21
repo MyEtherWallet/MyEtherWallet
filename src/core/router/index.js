@@ -1,8 +1,8 @@
 import Router from 'vue-router';
-import store from '@/store';
+import store from '@/core/store';
 // import { getMode, getRoutes } from '@/builds/configs';
 // import { ExtensionHelpers } from '@/helpers';
-// import { isAddress } from '@/helpers/addressUtils';
+// import { isAddress } from '@/core/helpers/addressUtils';
 // import { Misc } from '@/helpers';
 // import { MEW_CX } from '@/builds/configs/types';
 import langShortCodes from '@/translations/getShortCodes';

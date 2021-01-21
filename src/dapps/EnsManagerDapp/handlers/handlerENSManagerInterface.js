@@ -1,4 +1,5 @@
-import { getTld, getHostName, decodeCoinAddress } from './helpers/helperTld';
+import { getTld, getHostName } from './helpers/helperTld';
+import { decodeCoinAddress } from './helpers/helperMulticoin';
 import RegistryAbi from './abi/abiRegistry.js';
 import BaseRegistrarAbi from './abi/abiBaseRegistrar.js';
 import ResolverAbi from './abi/abiResolver.js';

@@ -39,7 +39,7 @@ import {
   getGasBasedOnType,
   getOther,
   getEconomy
-} from '@/helpers/gasPriceHelper.js';
+} from '@/core/helpers/gasPriceHelper.js';
 import ENS from 'ethereum-ens';
 
 export default {

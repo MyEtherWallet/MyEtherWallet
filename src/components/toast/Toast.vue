@@ -15,7 +15,7 @@
 </template>
 <script>
 import ToastEvents from './toastEvents.js';
-import { EventBus } from '@/plugins/eventBus.js';
+import { EventBus } from '@/core/plugins/eventBus.js';
 export default {
   name: 'Toast',
   data() {

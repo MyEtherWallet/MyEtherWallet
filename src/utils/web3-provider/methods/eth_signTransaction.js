@@ -5,7 +5,7 @@ import { toPayload } from '../jsonrpc';
 import EventNames from '../events';
 import { getSanitizedTx } from './utils';
 
-import { EventBus } from '@/plugins/eventBus';
+import { EventBus } from '@/core/plugins/eventBus';
 
 export default async ({ payload, store, requestManager }, res, next) => {
   if (payload.method !== 'eth_signTransaction') return next();

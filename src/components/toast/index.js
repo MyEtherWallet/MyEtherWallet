@@ -1,5 +1,5 @@
 import ToastEvents from './toastEvents';
-import { EventBus } from '@/plugins/eventBus';
+import { EventBus } from '@/core/plugins/eventBus';
 import * as Sentry from '@sentry/browser';
 const SUCCESS = 'success';
 const ERROR = 'error';

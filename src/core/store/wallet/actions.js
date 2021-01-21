@@ -13,10 +13,10 @@ import {
   swapIndexes,
   addUpdateNotification,
   addUpdateSwapNotification
-} from '@/helpers/notificationFormatters';
+} from '@/core/helpers/notificationFormatters';
 import BigNumber from 'bignumber.js';
 
-import { EventBus } from '@/plugins/eventBus';
+import { EventBus } from '@/core/plugins/eventBus';
 
 const addNotification = function ({ dispatch, commit, state }, val) {
   let address;
