@@ -1,15 +1,15 @@
-import { getTld, getHostName, decodeCoinAddress } from './helpers';
-import RegistryAbi from './ABI/registryAbi.js';
-import BaseRegistrarAbi from './ABI/baseRegistrarAbi.js';
-import ResolverAbi from './ABI/resolverAbi.js';
-import FifsRegistrarAbi from './ABI/fifsRegistrarAbi.js';
-import RegistrarControllerAbi from './ABI/registrarControllerAbi.js';
-import multicoins from './manage/configs/multicoins';
-import textrecords from './manage/configs/textrecords';
-import supportedCoins from './manage/configs/supportedCoins';
+import { getTld, getHostName, decodeCoinAddress } from '../helpers';
+import RegistryAbi from '../ABI/registryAbi.js';
+import BaseRegistrarAbi from '../ABI/baseRegistrarAbi.js';
+import ResolverAbi from '../ABI/resolverAbi.js';
+import FifsRegistrarAbi from '../ABI/fifsRegistrarAbi.js';
+import RegistrarControllerAbi from '../ABI/registrarControllerAbi.js';
+import multicoins from '../configs/multicoins';
+import textrecords from '../configs/textrecords';
+import supportedCoins from '../configs/supportedCoins';
 import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
-import registrarInterface from './manage/registrarInterface';
+import registrarInterface from '../configs/registrarInterface';
 import * as nameHashPckg from 'eth-ens-namehash';
 import contentHash from 'content-hash';
 
@@ -59,17 +59,18 @@ export default class ENSManagerInterface {
     this._init();
   }
 
-  setController(address = '') {
+  setController(address) {
     if (this.owner === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
-    const actualToAddress = address === '' ? this.account : address;
+    const actualToAddress = address === '' ? this.address : address;
     const setControllerTx = {
-      from: this.account,
+      from: this.address,
       to: this.registrarAddress,
       data: this.registrarContract.methods
         .reclaim(this.labelHash, actualToAddress)
         .encodeABI(),
+      gas: '500000',
       value: 0
     };
     return this.web3.eth.sendTransaction(setControllerTx);

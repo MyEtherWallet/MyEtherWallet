@@ -1,7 +1,7 @@
-import OldEnsAbi from './ABI/oldEnsAbi.js';
-import OldDeedAbi from './ABI/oldDeedAbi.js';
-import getHashFromFile from './manage/services/getHashFromFile.js';
-import uploadFileToIpfs from './manage/services/uploadFileToIpfs.js';
+import OldEnsAbi from '../ABI/oldEnsAbi.js';
+import OldDeedAbi from '../ABI/oldDeedAbi.js';
+import getHashFromFile from '../manage/services/getHashFromFile.js';
+import uploadFileToIpfs from '../manage/services/uploadFileToIpfs.js';
 import BigNumber from 'bignumber.js';
 import ENSManagerInterface from './ENSManagerInterface.js';
 import * as nameHashPckg from 'eth-ens-namehash';
@@ -37,7 +37,6 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
   register(duration) {
     return this._registerWithDuration(duration);
-    // .then(() => this._initModule()); // might need something more effecient than this
   }
 
   transfer(toAddress) {
@@ -49,7 +48,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
         from: this.address,
         to: this.network.type.ens.registry,
         data: this.registryContract.methods
-          .setOwner(this.nameHash, toAddress)
+          .transferFrom(this.address, toAddress, this.labelHash)
           .encodeABI(),
         value: 0
       });

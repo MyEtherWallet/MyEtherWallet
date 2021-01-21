@@ -3,8 +3,8 @@ import { tldSupported, getTld } from './helpers';
 const ADDRESS_URL =
   'https://nft2.mewapi.io/tokens?owner={{address}}&chain=mainnet';
 const ETH_REGISTRAR = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
-import PermanentNameModule from './PermanentNameModule';
-import FifsNameModule from './FifsNameModule';
+import PermanentNameModule from './modules/PermanentNameModule';
+import FifsNameModule from './modules/FifsNameModule';
 
 export default class ENSManager {
   constructor(network, address, web3, ens, gasPrice) {

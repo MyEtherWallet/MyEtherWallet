@@ -6,6 +6,14 @@
       :close="closeRegisterOverlay"
       :name-module="nameModule"
     />
+    <manage-domain-overlay
+      ref="manageDomainOverlay"
+      :on-manage="onManage"
+      :close="closeManageOverlay"
+      :type="manageType"
+      :transfer="transfer"
+      :name-module="nameModule"
+    />
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="ensBgImg" />
       <mew-tabs :items="tabs" has-underline>
@@ -47,11 +55,6 @@
                   >({{ myDomains.length }})</span
                 >
               </span>
-              <mew-button
-                btn-style="outline"
-                :title="$t('ens.manage-domains.add-owned-domain')"
-                btn-size="large"
-              />
             </div>
             <mew-expand-panel class="my-domains" :panel-items="myDomains">
               <template
@@ -60,8 +63,9 @@
                 :class="domain.expired ? 'expired' : 'available'"
               >
                 <div :key="idx">
-                  <v-row class="justify-space-between">
-                    <v-col cols="4" class="d-flex align-center">
+                  <div :class="['d-flex justify-space-between pt-5']">
+                    <!-- domain.expired ? 'errorOutlineActive' : 'superPrimary' -->
+                    <div class="d-flex align-center">
                       <div>{{ $t('ens.manage-domains.registrant') }}</div>
                       <mew-blockie
                         :address="domain.registrarAddress"
@@ -85,8 +89,8 @@
                       >
                         <v-icon small class="call-made"> mdi-call-made </v-icon>
                       </a>
-                    </v-col>
-                    <v-col cols="4" class="d-flex align-center">
+                    </div>
+                    <div class="d-flex align-center">
                       <div>{{ $t('ens.manage-domains.controller') }}</div>
                       <mew-blockie
                         :address="domain.controllerAddress"
@@ -110,30 +114,37 @@
                       >
                         <v-icon small class="call-made"> mdi-call-made </v-icon>
                       </a>
-                    </v-col>
-                  </v-row>
-                  <v-row class="align-center justify-space-between py-5 px-0">
+                    </div>
+                  </div>
+                  <div
+                    class="mt-3 d-flex align-center justify-space-between py-5 px-0"
+                  >
                     <span class="mew-heading-3">
-                      {{ $t('ens.manage-domain.what-to-do') }}
+                      {{ $t('ens.manage-domains.what-to-do') }}
                     </span>
-                    <!-- not sure what this means -->
-                    <span>Parent - ETH</span>
-                  </v-row>
+                  </div>
                   <v-divider></v-divider>
                   <v-row class="pa-5">
                     <v-col
-                      v-for="(f, key) in domainFunctions"
+                      v-for="(option, key) in manageDomainOptions"
                       :key="key"
                       cols="2"
                       class="text-center"
                     >
-                      <mew-icon icon-name="ensManager" :img-height="75" />
-                      <div>{{ f.label }}</div>
-                      <div v-if="f.expire" class="orange--text">
+                      <mew-button
+                        title=""
+                        btn-style="transparent"
+                        btn-size="xlarge"
+                        icon-type="mew"
+                        icon="ensManager"
+                        @click.native="manage(option.type, idx)"
+                      />
+                      <div>{{ option.label }}</div>
+                      <div v-if="option.expire" class="orange--text">
                         <div>
                           {{
                             $t('ens.manage-domain.expire-at', {
-                              date: domain.expire
+                              date: option.expire
                             })
                           }}
                         </div>
@@ -152,21 +163,24 @@
 
 <script>
 import ensBgImg from '@/assets/images/backgrounds/bg-ens.png';
-import registerDomainOverlay from './register/register-domain/RegisterDomain';
+import registerDomainOverlay from './register/RegisterDomain';
+import manageDomainOverlay from './manage/ManageDomain';
 import ENSManager from './index';
 import { mapState } from 'vuex';
 import { Toast, ERROR } from '@/components/toast';
 
 export default {
-  components: { registerDomainOverlay },
+  components: { registerDomainOverlay, manageDomainOverlay },
   data() {
     return {
+      manageType: '',
+      onManage: false,
       name: '',
       nameModule: {},
       ensManager: {},
       onRegister: false,
-      domainFunctions: [
-        { label: this.$t('ens.transfer-domain') },
+      manageDomainOptions: [
+        { label: this.$t('ens.transfer-domain'), type: 'transfer' },
         { label: 'Renew Domain', expire: '07/21/2020' },
         { label: 'ENS Configurations' },
         { label: 'Manage Multicoins' },
@@ -215,6 +229,12 @@ export default {
     this.getDomains();
   },
   methods: {
+    //manage domain
+    manage(type, idx) {
+      this.onManage = true;
+      this.manageType = type;
+      this.manageDomainModule = this.myDomains[idx];
+    },
     getDomains() {
       this.ensManager
         .getAllNamesForAddress()
@@ -231,13 +251,29 @@ export default {
               : '';
           });
 
-          console.error('res', res);
           this.myDomains = res;
         })
         .catch(err => {
           Toast(err, {}, ERROR);
         });
     },
+    closeManageOverlay() {
+      this.onManage = false;
+    },
+    transfer(address) {
+      this.manageDomainModule
+        .transfer(address)
+        .then(res => {
+          this.getDomains();
+          console.error('res', res);
+        })
+        .catch(err => {
+          console.error('err', err);
+          Toast(err, {}, ERROR);
+        });
+      this.closeManageOverlay();
+    },
+    // register domain
     findDomain() {
       //make sure there is no empty string after '.'
       const strLength = this.name.length;
@@ -267,12 +303,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-// .my-domains {
-//   .v-expansion-panel-content__wrap {
-//     padding: 0 !important;
-//   }
-// }
-//
-</style>
