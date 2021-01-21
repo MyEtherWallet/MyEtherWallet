@@ -1,11 +1,11 @@
 import TheDefaultView from '@/core/viewDefault/TheDefaultView';
 import TheHomeLayout from '@/core/viewDefault/layouts/TheHomeLayout';
+import TheHowItWorksLayout from '@/core/viewDefault/layouts/TheHowItWorksLayout';
 import CompanyPage from '@/modules/company/Company';
 import TeamPage from '@/modules/team/Team';
 import PressKit from '@/modules/press-kit/PressKit';
 import BuyHardwareWallet from '@/modules/hardware/Hardware';
 import ToolsPage from '@/modules/tools/Tools';
-// import LandingPage from '@/modules/home/pages/landing-page/LandingPage';
 import CreateWallet from '@/modules/wallets/pages/create/Create';
 import AccessWallet from '@/modules/wallets/pages/access/Access';
 import HardwareWallets from '@/modules/wallets/pages/access/hardware-wallets/HardwareWallets';
@@ -13,7 +13,6 @@ import MobileApps from '@/modules/wallets/pages/access/mobile-apps/MobileApps';
 import BrowserExtension from '@/modules/wallets/pages/access/browser-extension/BrowserExtension';
 import BrowserExtensionInstall from '@/modules/wallets/pages/access/browser-extension/install-extension/InstallExtension';
 import BrowserExtensionAccess from '@/modules/wallets/pages/access/browser-extension/access-extension/AccessExtension';
-import HowItWorks from '@/modules/how-it-works/HowItWorks';
 import PrivacyPolicy from '@/modules/privacy-policy/PrivacyPolicy';
 import TermsOfService from '@/modules/terms-of-service/TermsOfService';
 import WalletRoutes from '@/modules/wallets/routes.js';
@@ -35,7 +34,7 @@ const routes = [
       {
         path: 'how-it-works',
         name: 'HowItWorks',
-        component: HowItWorks,
+        component: TheHowItWorksLayout,
         meta: {
           requiresAuth: false
         }

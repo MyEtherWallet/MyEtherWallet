@@ -3,19 +3,19 @@
     <home-header title="How it works" />
     <mew-tabs :items="mewTabs" has-underline>
       <template #tabContent1>
-        <send />
+        <how-it-works-send />
       </template>
       <template #tabContent2>
-        <swap />
+        <how-it-works-swap />
       </template>
       <template #tabContent3>
-        <dapps-center />
+        <how-it-works-dapps-center />
       </template>
       <template #tabContent4>
-        <tokens />
+        <how-it-works-tokens />
       </template>
       <template #tabContent5>
-        <more />
+        <how-it-works-more />
       </template>
     </mew-tabs>
     <get-started />
@@ -24,22 +24,23 @@
 
 <script>
 import homeHeader from '@/components/home-header/HomeHeader';
-import swap from './components/swap/Swap';
-import send from './components/send/Send';
-import dappsCenter from './components/dapps-center/DappsCenter';
-import tokens from './components/tokens/Tokens';
-import more from './components/more/More';
 import getStarted from '@/components/get-started/GetStarted';
 
+import HowItWorksSwap from '../components/howItWorksLayout/HowItWorksSwap';
+import HowItWorksSend from '../components/howItWorksLayout/HowItWorksSend';
+import HowItWorksDappsCenter from '../components/howItWorksLayout/HowItWorksDappsCenter';
+import HowItWorksTokens from '../components/howItWorksLayout/HowItWorksTokens';
+import HowItWorksMore from '../components/howItWorksLayout/HowItWorksMore';
+
 export default {
-  name: 'HowItWorks',
+  name: 'TheHowItWorksLayout',
   components: {
     homeHeader,
-    swap,
-    send,
-    dappsCenter,
-    tokens,
-    more,
+    HowItWorksSwap,
+    HowItWorksSend,
+    HowItWorksDappsCenter,
+    HowItWorksTokens,
+    HowItWorksMore,
     getStarted
   },
   data() {
