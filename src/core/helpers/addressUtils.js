@@ -1,4 +1,4 @@
-import store from '@/store';
+import store from '@/core/store';
 
 import {
   isValidChecksumAddress as isValidRSKChecksumAddress,

@@ -1,4 +1,4 @@
-import { post } from '@/helpers/httpRequests';
+import { post } from '@/core/helpers/httpRequests';
 import { bityMethods } from './config';
 import { swapApiEndpoints } from '../partnersConfig';
 import { utils } from '../helpers';

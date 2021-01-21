@@ -139,7 +139,7 @@ import BigNumber from 'bignumber.js';
 import SendTransaction from './index';
 import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR, SENTRY, SUCCESS } from '@/components/toast';
-import getService from '@/helpers/getService';
+import getService from '@/core/helpers/getService';
 
 export default {
   props: {

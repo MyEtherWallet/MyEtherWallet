@@ -1,6 +1,6 @@
 import WalletLink from 'walletlink';
 
-import store from '@/store';
+import store from '@/core/store';
 import { Transaction } from 'ethereumjs-tx';
 import { WALLET_LINK as walletLinkType } from '../../bip44/walletTypes';
 import {
@@ -10,8 +10,8 @@ import {
   calculateChainIdFromV
 } from '../../utils';
 import errorHandler from './errorHandler';
-import commonGenerator from '@/helpers/commonGenerator';
-import toBuffer from '@/helpers/toBuffer';
+import commonGenerator from '@/core/helpers/commonGenerator';
+import toBuffer from '@/core/helpers/toBuffer';
 import HybridWalletInterface from '../walletInterface';
 
 const IS_HARDWARE = true;

@@ -6,17 +6,17 @@ import { BITBOX as bitboxType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
 import { Toast, SENTRY } from '@/components/toast';
-import toBuffer from '@/helpers/toBuffer';
+import toBuffer from '@/core/helpers/toBuffer';
 import errorHandler from './errorHandler';
 import * as HDKey from 'hdkey';
-import store from '@/store';
+import store from '@/core/store';
 import {
   getSignTransactionObject,
   sanitizeHex,
   getBufferFromHex,
   calculateChainIdFromV
 } from '../../utils';
-import commonGenerator from '@/helpers/commonGenerator';
+import commonGenerator from '@/core/helpers/commonGenerator';
 import Vue from 'vue';
 
 const NEED_PASSWORD = true;

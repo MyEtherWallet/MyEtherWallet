@@ -1,8 +1,8 @@
 import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
-import { getGasBasedOnType } from '@/helpers/gasPriceHelper.js';
-import sanitizeHex from '@/helpers/sanitizeHex';
-import validateHexString from '@/helpers/validateHexString';
+import { getGasBasedOnType } from '@/core/helpers/gasPriceHelper.js';
+import sanitizeHex from '@/core/helpers/sanitizeHex';
+import validateHexString from '@/core/helpers/validateHexString';
 import { Transaction } from 'ethereumjs-tx';
 import Vue from 'vue';
 
