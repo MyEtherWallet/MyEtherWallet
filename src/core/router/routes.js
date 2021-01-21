@@ -1,10 +1,11 @@
-import Home from '@/modules/home/Home';
+import TheDefaultView from '@/core/viewDefault/TheDefaultView';
+import TheHomeLayout from '@/core/viewDefault/layouts/TheHomeLayout';
 import CompanyPage from '@/modules/company/Company';
 import TeamPage from '@/modules/team/Team';
 import PressKit from '@/modules/press-kit/PressKit';
 import BuyHardwareWallet from '@/modules/hardware/Hardware';
 import ToolsPage from '@/modules/tools/Tools';
-import LandingPage from '@/modules/home/pages/landing-page/LandingPage';
+// import LandingPage from '@/modules/home/pages/landing-page/LandingPage';
 import CreateWallet from '@/modules/wallets/pages/create/Create';
 import AccessWallet from '@/modules/wallets/pages/access/Access';
 import HardwareWallets from '@/modules/wallets/pages/access/hardware-wallets/HardwareWallets';
@@ -20,13 +21,13 @@ import WalletRoutes from '@/modules/wallets/routes.js';
 const routes = [
   {
     path: '/',
-    component: Home,
+    component: TheDefaultView,
     props: true,
     children: [
       {
         path: '',
         name: 'Home',
-        component: LandingPage,
+        component: TheHomeLayout,
         meta: {
           requiresAuth: false
         }

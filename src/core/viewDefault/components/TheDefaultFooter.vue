@@ -302,6 +302,7 @@
 
 <script>
 export default {
+  name: 'TheDefaultFooter',
   data: () => ({
     footers: [
       {

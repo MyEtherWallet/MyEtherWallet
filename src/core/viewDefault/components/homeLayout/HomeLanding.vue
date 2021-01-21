@@ -77,7 +77,7 @@
 
 <script>
 export default {
-  name: 'Landing',
+  name: 'HomeLanding',
   components: {},
   methods: {}
 };

@@ -63,12 +63,12 @@
 </template>
 
 <script>
-import desktopMenu from '../menu-desktop/Menu';
-import mobileMenu from '../menu-mobile/Menu';
+import desktopMenu from '@/components/menu-desktop/Menu';
+import mobileMenu from '@/components/menu-mobile/Menu';
 import mewTools from '@/components/mewTools/MewTools';
 
 export default {
-  name: 'Header',
+  name: 'TheDefaultHeader',
   components: { mewTools, desktopMenu, mobileMenu },
   data: () => ({
     openMobileMenu: false,
