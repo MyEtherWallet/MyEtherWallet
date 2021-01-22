@@ -49,6 +49,7 @@ import Semaja from '@/assets/images/team/semaja.jpg';
 import Katya from '@/assets/images/team/katya.jpg';
 
 export default {
+  name: 'TheTeamLayout',
   components: { homeHeader, blockTitle },
   data: () => ({
     titleData: {

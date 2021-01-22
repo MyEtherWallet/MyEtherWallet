@@ -61,7 +61,7 @@
 import blockTitle from '@/components/block-title/BlockTitle';
 
 export default {
-  name: 'HowItWorks',
+  name: 'TheBuyHardwareWalletLayout',
   components: { blockTitle },
   data: () => ({
     buttons: [
