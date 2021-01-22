@@ -42,7 +42,6 @@ import Steve from '@/assets/images/team/steve.jpg';
 import Gage from '@/assets/images/team/gage.jpg';
 import Jessica from '@/assets/images/team/jessica.jpg';
 import David from '@/assets/images/team/david.jpg';
-import Jack from '@/assets/images/team/jack.jpg';
 import Stephen from '@/assets/images/team/stephen.jpg';
 import Brittany from '@/assets/images/team/brittany.jpg';
 import Richie from '@/assets/images/team/richie.jpg';
@@ -71,7 +70,6 @@ export default {
       { img: Gage, name: 'Gage', title: 'Full-Stack Developer' },
       { img: Jessica, name: 'Jessica', title: 'Full-Stack Developer' },
       { img: David, name: 'David', title: 'Front-End Developer' },
-      { img: Jack, name: 'Jack', title: 'Head of UI/UX Design' },
       { img: Stephen, name: 'Stephen', title: 'Educational Project Lead' },
       { img: Brittany, name: 'Brittany', title: 'Operations Coordinator' },
       {

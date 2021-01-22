@@ -2,7 +2,7 @@ import TheDefaultView from '@/core/viewDefault/TheDefaultView';
 import TheHomeLayout from '@/core/viewDefault/layouts/TheHomeLayout';
 import TheHowItWorksLayout from '@/core/viewDefault/layouts/TheHowItWorksLayout';
 import TheCompanyLayout from '@/core/viewDefault/layouts/TheCompanyLayout';
-import TeamPage from '@/modules/team/Team';
+import TheTeamLayout from '@/core/viewDefault/layouts/TheTeamLayout';
 import PressKit from '@/modules/press-kit/PressKit';
 import BuyHardwareWallet from '@/modules/hardware/Hardware';
 import ToolsPage from '@/modules/tools/Tools';
@@ -81,8 +81,8 @@ const routes = [
       },
       {
         path: 'team',
-        name: 'TeamPage',
-        component: TeamPage,
+        name: 'TheTeamLayout',
+        component: TheTeamLayout,
         meta: {
           requiresAuth: false
         }
