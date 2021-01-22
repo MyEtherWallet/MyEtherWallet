@@ -36,7 +36,7 @@ import brittany from '@/assets/images/team/Brittany.jpg';
 import yel from '@/assets/images/team/Gamaliel.jpg';
 import steve from '@/assets/images/team/Steve.jpg';
 import gage from '@/assets/images/team/Gage.jpg';
-import jack from '@/assets/images/team/Jack.jpg';
+import jessica from '@/assets/images/team/Jessica.jpg';
 import david from '@/assets/images/team/David.jpg';
 import alex from '@/assets/images/team/Alex.jpg';
 import misha from '@/assets/images/team/Misha.jpg';
@@ -86,6 +86,11 @@ export default {
           img: steve
         },
         {
+          name: 'Jessica',
+          position: 'Full-Stack Developer',
+          img: jessica
+        },
+        {
           name: 'Gage',
           position: 'Full-Stack Developer',
           img: gage
@@ -94,11 +99,6 @@ export default {
           name: 'David',
           position: 'Front-End Developer',
           img: david
-        },
-        {
-          name: 'Jack',
-          position: 'Head of UI/UX Design',
-          img: jack
         },
         {
           name: 'Stephen',
