@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--mew-tools">
-    <v-menu rounded="lg" offset-y bottom left>
+    <v-menu offset-y bottom left>
       <template #activator="{ on, attrs }">
         <!--
         =============================================================
@@ -134,9 +134,35 @@ export default {
 <style lang="scss" scoped>
 .mew-tools-menu {
   width: 300px;
+  border-radius: 6px;
+  margin-top: 20px;
+  position: relative;
+
+  &:after {
+    position: absolute;
+    top: -7px;
+    right: 55px;
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid white;
+  }
 
   &.mobile {
     width: 130px;
+    &:after {
+      position: absolute;
+      top: -7px;
+      right: 10px;
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-bottom: 7px solid white;
+    }
   }
 
   .tools-btn:hover {
@@ -144,5 +170,11 @@ export default {
       font-weight: 600;
     }
   }
+}
+</style>
+
+<style lang="scss">
+.v-menu__content {
+  border: 0 !important;
 }
 </style>
