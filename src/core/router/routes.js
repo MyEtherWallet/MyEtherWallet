@@ -14,7 +14,7 @@ import BrowserExtension from '@/modules/wallets/pages/access/browser-extension/B
 import BrowserExtensionInstall from '@/modules/wallets/pages/access/browser-extension/install-extension/InstallExtension';
 import BrowserExtensionAccess from '@/modules/wallets/pages/access/browser-extension/access-extension/AccessExtension';
 import ThePrivacyPolicyLayout from '@/core/viewDefault/layouts/ThePrivacyPolicyLayout';
-import TermsOfService from '@/modules/terms-of-service/TermsOfService';
+import TheTermsOfServiceLayout from '@/core/viewDefault/layouts/TheTermsOfServiceLayout';
 import WalletRoutes from '@/modules/wallets/routes.js';
 
 const routes = [

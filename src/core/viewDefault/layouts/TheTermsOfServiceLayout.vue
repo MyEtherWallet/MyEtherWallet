@@ -346,7 +346,9 @@
 </template>
 
 <script>
-export default {};
+export default {
+  name: 'TheTermsOfServiceLayout'
+};
 </script>
 
 <style lang="scss" scoped>
