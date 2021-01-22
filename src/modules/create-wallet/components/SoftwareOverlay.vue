@@ -3,7 +3,8 @@
     <mew-overlay
       :show-overlay="open"
       :title="typeTitle"
-      @closeOverlay="$emit('close')"
+      :right-btn-text="$t('common.cancel')"
+      :close="close"
     >
       <template #mewOverlayBody>
         <v-sheet
@@ -78,6 +79,12 @@ export default {
     open: {
       type: Boolean,
       default: false
+    },
+    close: {
+      default: function () {
+        return {};
+      },
+      type: Function
     }
   },
   data: () => ({
@@ -113,6 +120,9 @@ export default {
     },
     updateStep(step) {
       this.step = step ? step : 0;
+    },
+    closeOverlay() {
+      this.$emit('close');
     }
   }
 };

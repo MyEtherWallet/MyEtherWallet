@@ -6,7 +6,7 @@ import TheTeamLayout from '@/core/viewDefault/layouts/TheTeamLayout';
 import ThePressKitLayout from '@/core/viewDefault/layouts/ThePressKitLayout';
 import TheBuyHardwareWalletLayout from '@/core/viewDefault/layouts/TheBuyHardwareWalletLayout';
 import TheToolsLayout from '@/core/viewDefault/layouts/TheToolsLayout';
-import CreateWallet from '@/modules/wallets/pages/create/Create';
+import TheCreateWalletLayout from '@/core/viewDefault/layouts/TheCreateWalletLayout';
 import AccessWallet from '@/modules/wallets/pages/access/Access';
 import HardwareWallets from '@/modules/wallets/pages/access/hardware-wallets/HardwareWallets';
 import MobileApps from '@/modules/wallets/pages/access/mobile-apps/MobileApps';
@@ -98,7 +98,7 @@ const routes = [
       {
         path: 'wallet/create',
         name: 'CreateWallet',
-        component: CreateWallet,
+        component: TheCreateWalletLayout,
         meta: {
           requiresAuth: false
         }
