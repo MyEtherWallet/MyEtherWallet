@@ -35,6 +35,22 @@ class Changelly {
         });
       });
   }
+  isValidToAddress({ toT, address }) {
+    const type = toT.symbol.toLowerCase();
+    return axios
+      .post(`${HOST_URL}`, {
+        id: uuidv4(),
+        jsonrpc: '2.0',
+        method: 'validateAddress',
+        params: {
+          currency: type,
+          address: address
+        }
+      })
+      .then(response => {
+        return response.data.result;
+      });
+  }
   getQuote({ fromT, toT, fromAmount }) {
     const fromAmountBN = new BigNumber(fromAmount);
     const queryAmount = fromAmountBN.div(
@@ -111,7 +127,6 @@ class Changelly {
           txObj.to = toT.contract_address;
         }
         return this.web3.eth.estimateGas(txObj).then(gas => {
-          console.log(txObj, gas);
           txObj.gas = gas;
           return {
             provider: this.provider,
@@ -134,7 +149,10 @@ class Changelly {
             })
           )
           .on('transactionHash', hash => {
-            return resolve({ hashes: [hash] });
+            return resolve({
+              hashes: [hash],
+              statusObj: { id: tradeObj.response.id }
+            });
           })
           .catch(reject);
       });
@@ -164,34 +182,27 @@ class Changelly {
     });
   }
   getStatus(statusObj) {
-    let isSuccess = true;
-    let isPending = false;
-    const hashes = statusObj.hashes;
-    const promises = [];
-    hashes.forEach(h => {
-      promises.push(
-        this.web3.eth.getTransactionReceipt(h).then(receipt => {
-          if (!receipt.blockNumber) {
-            isPending = true;
-            return;
-          }
-          if (!receipt.status) {
-            isSuccess = false;
-          }
-        })
-      );
-    });
-    return Promise.all(promises).then(() => {
-      if (isPending)
-        return {
-          isPending,
-          isSuccess: false
-        };
-      return {
-        isPending,
-        isSuccess
-      };
-    });
+    return axios
+      .post(`${HOST_URL}`, {
+        id: uuidv4(),
+        jsonrpc: '2.0',
+        method: 'getStatus',
+        params: {
+          id: statusObj.id
+        }
+      })
+      .then(async response => {
+        const submittedStatuses = ['waiting', 'new'];
+        const pendingStatuses = ['confirming', 'exchanging', 'sending'];
+        const completedStatuses = ['finished'];
+        const failedStatuses = ['failed', 'refunded', 'hold', 'expired'];
+        const status = response.data.result;
+        if (submittedStatuses.includes(status)) return Configs.status.SUBMITTED;
+        if (pendingStatuses.includes(status)) return Configs.status.PENDING;
+        if (completedStatuses.includes(status)) return Configs.status.COMPLETED;
+        if (failedStatuses.includes(status)) return Configs.status.COMPLETED;
+        return Configs.status.UNKNOWN;
+      });
   }
 }
 export default Changelly;

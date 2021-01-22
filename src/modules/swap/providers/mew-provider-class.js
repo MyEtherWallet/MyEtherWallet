@@ -5,6 +5,7 @@ const GET_LIST = '/swap/list';
 const GET_QUOTE = '/swap/quote';
 const GET_TRADE = '/swap/trade';
 import { isAddress } from 'web3-utils';
+import Configs from '../configs';
 class MEWPClass {
   constructor(providerName, web3) {
     this.web3 = web3;
@@ -23,6 +24,9 @@ class MEWPClass {
         };
       });
     });
+  }
+  isValidToAddress({ address }) {
+    return Promise.resolve(isAddress(address));
   }
   getQuote({ fromT, toT, fromAmount }) {
     if (!isAddress(fromT.contract_address) || !isAddress(toT.contract_address))
@@ -116,7 +120,8 @@ class MEWPClass {
             p.on('transactionHash', hash => {
               hashes.push(hash);
               counter++;
-              if (counter === promises.length) resolve({ hashes });
+              if (counter === promises.length)
+                resolve({ hashes, statusObj: { hashes } });
             });
           });
         })
@@ -142,15 +147,10 @@ class MEWPClass {
       );
     });
     return Promise.all(promises).then(() => {
-      if (isPending)
-        return {
-          isPending,
-          isSuccess: false
-        };
-      return {
-        isPending,
-        isSuccess
-      };
+      if (isPending) return Configs.status.PENDING;
+      if (!isSuccess) return Configs.status.FAILED;
+      if (isSuccess) return Configs.status.COMPLETED;
+      return Configs.status.UNKNOWN;
     });
   }
 }

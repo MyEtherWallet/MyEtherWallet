@@ -1,4 +1,11 @@
 export default {
+  status: {
+    SUBMITTED: 'SUBMITTED',
+    PENDING: 'PENDING',
+    COMPLETED: 'COMPLETED',
+    FAILED: 'FAILED',
+    UNKNOWN: 'UNKNOWN'
+  },
   ETH: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
   exchangeInfo: {
     ag: {

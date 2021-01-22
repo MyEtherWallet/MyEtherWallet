@@ -277,7 +277,6 @@ export default {
       });
     },
     setToAddress(value) {
-      console.log(value);
       this.addressValue = value;
     },
     setFromToken(value) {
@@ -315,8 +314,7 @@ export default {
             this.tokenOutValue = quotes[0].amount;
             this.step = 1;
           }
-        })
-        .catch(console.log);
+        });
     }, 500),
     setProvider(event, idx) {
       this.availableQuotes.forEach((q, _idx) => {
@@ -379,7 +377,7 @@ export default {
     },
     executeTrade() {
       this.confirmInfo.show = false;
-      this.swapper.executeTrade(this.currentTrade).then(console.log);
+      this.swapper.executeTrade(this.currentTrade);
     }
   }
 };
