@@ -48,7 +48,7 @@ class Changelly {
         }
       })
       .then(response => {
-        return response.data.result;
+        return response.data.result.result;
       });
   }
   getQuote({ fromT, toT, fromAmount }) {
