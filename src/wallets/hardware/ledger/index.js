@@ -1,13 +1,11 @@
 import Ledger from '@ledgerhq/hw-app-eth';
 import { byContractAddress } from '@ledgerhq/hw-app-eth/erc20';
 import { Transaction } from 'ethereumjs-tx';
-import u2fTransport from '@ledgerhq/hw-transport-u2f';
 import webUsbTransport from '@ledgerhq/hw-transport-webusb';
 import { LEDGER as ledgerType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import * as HDKey from 'hdkey';
-import platform from 'platform';
 import store from '@/store';
 import commonGenerator from '@/helpers/commonGenerator';
 import {
@@ -21,8 +19,6 @@ import errorHandler from './errorHandler';
 import Vue from 'vue';
 
 const NEED_PASSWORD = false;
-const OPEN_TIMEOUT = 10000;
-const LISTENER_TIMEOUT = 30000;
 
 class ledgerWallet {
   constructor() {
@@ -139,21 +135,8 @@ const createWallet = async basePath => {
 };
 createWallet.errorHandler = errorHandler;
 
-const isWebUsbSupported = async () => {
-  const isSupported = await webUsbTransport.isSupported();
-  return (
-    isSupported && platform.os.family !== 'Windows' && platform.name !== 'Opera' // take it out later once the windows issue is fixed
-  );
-};
-
 const getLedgerTransport = async () => {
-  let transport;
-  const support = await isWebUsbSupported();
-  if (support) {
-    transport = await webUsbTransport.create();
-  } else {
-    transport = await u2fTransport.create(OPEN_TIMEOUT, LISTENER_TIMEOUT);
-  }
+  const transport = await webUsbTransport.create();
   return transport;
 };
 const getLedgerAppConfig = async _ledger => {
