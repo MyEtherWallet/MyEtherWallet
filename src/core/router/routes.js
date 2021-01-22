@@ -13,7 +13,7 @@ import MobileApps from '@/modules/wallets/pages/access/mobile-apps/MobileApps';
 import BrowserExtension from '@/modules/wallets/pages/access/browser-extension/BrowserExtension';
 import BrowserExtensionInstall from '@/modules/wallets/pages/access/browser-extension/install-extension/InstallExtension';
 import BrowserExtensionAccess from '@/modules/wallets/pages/access/browser-extension/access-extension/AccessExtension';
-import PrivacyPolicy from '@/modules/privacy-policy/PrivacyPolicy';
+import ThePrivacyPolicyLayout from '@/core/viewDefault/layouts/ThePrivacyPolicyLayout';
 import TermsOfService from '@/modules/terms-of-service/TermsOfService';
 import WalletRoutes from '@/modules/wallets/routes.js';
 
@@ -41,8 +41,8 @@ const routes = [
       },
       {
         path: 'privacy-policy',
-        name: 'PrivacyPolicy',
-        component: PrivacyPolicy,
+        name: 'ThePrivacyPolicyLayout',
+        component: ThePrivacyPolicyLayout,
         meta: {
           requiresAuth: false
         }

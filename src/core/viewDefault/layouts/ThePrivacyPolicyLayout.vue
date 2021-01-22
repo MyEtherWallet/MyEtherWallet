@@ -50,6 +50,7 @@
 
 <script>
 export default {
+  name: 'ThePrivacyPolicyLayout',
   data() {
     return {
       items: [
