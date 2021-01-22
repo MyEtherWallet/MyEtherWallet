@@ -35,8 +35,8 @@ export default class PermanentNameModule extends ENSManagerInterface {
     }, 5000);
   }
 
-  register(duration) {
-    return this._registerWithDuration(duration);
+  register(duration, balance) {
+    return this._registerWithDuration(duration, balance);
   }
 
   transfer(toAddress) {
@@ -55,7 +55,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
     });
   }
 
-  renew(duration) {
+  async renew(duration, balance) {
     if (this.owner === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
@@ -63,35 +63,29 @@ export default class PermanentNameModule extends ENSManagerInterface {
     if (duration <= 0) {
       throw new Error('Invalid or missing parameter: Duration');
     }
-
-    const hostName = this.name.replace(
-      `.${this.network.type.ens.registrarTLD}`,
-      ''
-    );
-
     const ACTUAL_DURATION = Math.ceil(60 * 60 * 24 * 365.25 * duration);
-    // Not sure where to place balance checker that's currently present
-    return this.registrarControllerContract.methods
-      .rentPrice(this.name, ACTUAL_DURATION)
-      .call()
-      .then(res => {
-        const data = this.registrarControllerContract.methods
-          .renew(hostName)
-          .encodeABI();
-        const withFivePercent = BigNumber(res)
-          .times(1.05)
-          .integerue()
-          .toFixed();
+    const rentPrice = await this.registrarControllerContract.methods
+      .rentPrice(this.parsedHostName, ACTUAL_DURATION)
+      .call();
+    const hasBalance = new BigNumber(rentPrice).lte(balance);
+    if (!hasBalance) {
+      throw new Error('Not enough balance');
+    }
+    const data = this.registrarControllerContract.methods
+      .renew(this.parsedHostName, ACTUAL_DURATION)
+      .encodeABI();
+    const withFivePercent = BigNumber(rentPrice)
+      .times(1.05)
+      .integerValue()
+      .toFixed();
 
-        const txObj = {
-          to: this.contractControllerAddress,
-          from: this.address,
-          data: data,
-          value: withFivePercent
-        };
-
-        return this.web3.sendTransaction(txObj);
-      });
+    const txObj = {
+      to: this.contractControllerAddress,
+      from: this.address,
+      data: data,
+      value: withFivePercent
+    };
+    return this.web3.eth.sendTransaction(txObj);
   }
 
   releaseDeed() {
@@ -296,7 +290,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
     return this._setExpiry();
   }
 
-  async _registerWithDuration(duration) {
+  async _registerWithDuration(duration, balance) {
     const utils = this.web3.utils;
     const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
     const actualDuration = Math.ceil(SECONDS_YEAR * duration);
@@ -304,6 +298,10 @@ export default class PermanentNameModule extends ENSManagerInterface {
       const rentPrice = await this.registrarControllerContract.methods
         .rentPrice(this.parsedHostName, actualDuration)
         .call();
+      const hasBalance = new BigNumber(rentPrice).gte(balance);
+      if (!hasBalance) {
+        throw new Error('Not enough balance');
+      }
       const withFivePercent = BigNumber(rentPrice)
         .times(1.05)
         .integerValue()

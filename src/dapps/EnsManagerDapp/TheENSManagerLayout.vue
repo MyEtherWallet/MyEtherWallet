@@ -4,6 +4,7 @@
       ref="registerDomain"
       :on-register="onRegister"
       :close="closeRegister"
+      :register="register"
       :name-module="nameModule"
     />
     <manage-domain
@@ -12,7 +13,8 @@
       :close="closeManage"
       :type="manageType"
       :transfer="transfer"
-      :name-module="nameModule"
+      :renew="renew"
+      :name-module="manageDomainModule"
     />
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="ensBgImg" />
@@ -168,11 +170,13 @@ import manageDomain from './modules/ModuleManageDomain';
 import ENSManager from './handlers/handlerEnsManager';
 import { mapState } from 'vuex';
 import { Toast, ERROR } from '@/components/toast';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: { registerDomain, manageDomain },
   data() {
     return {
+      manageDomainModule: {},
       manageType: '',
       onManage: false,
       name: '',
@@ -181,12 +185,23 @@ export default {
       onRegister: false,
       manageDomainOptions: [
         { label: this.$t('ens.transfer-domain'), type: 'transfer' },
-        { label: 'Renew Domain', expire: '07/21/2020' },
-        { label: 'ENS Configurations' },
-        { label: 'Manage Multicoins' },
-        { label: 'Manage Text Records' },
-        { label: 'Upload Website' },
-        { label: 'Return Funds' }
+        {
+          label: this.$t('ens.manage-domains.renew-domain'),
+          expire: '07/21/2020',
+          type: 'renew'
+        },
+        {
+          label: this.$t('ens.manage-domains.manage-multi'),
+          type: 'manageMulticoin'
+        },
+        {
+          label: this.$t('ens.manage-domains.manage-txt'),
+          type: 'manageTxtRecord'
+        },
+        {
+          label: this.$t('ens.manage-domains.manage-site'),
+          type: 'manageUpload'
+        }
       ],
       tabs: [
         { name: this.$t('ens.register-domain') },
@@ -203,7 +218,14 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['network', 'address', 'web3', 'ens', 'gasPrice']),
+    ...mapState('wallet', [
+      'network',
+      'balance',
+      'address',
+      'web3',
+      'ens',
+      'gasPrice'
+    ]),
     rules() {
       return [
         this.name.length > 2 || this.$t('ens.warning.not-enough-char'),
@@ -216,6 +238,10 @@ export default {
         return true;
       }
       return false;
+    },
+    // figure out if wei should be the saved value
+    balanceToWei() {
+      return this.web3.utils.toWei(BigNumber(this.balance).toString(), 'ether');
     }
   },
   mounted() {
@@ -263,12 +289,17 @@ export default {
     transfer(address) {
       this.manageDomainModule
         .transfer(address)
-        .then(res => {
-          this.getDomains();
-          console.error('res', res);
-        })
+        .then(this.getDomains)
         .catch(err => {
-          console.error('err', err);
+          Toast(err, {}, ERROR);
+        });
+      this.closeManage();
+    },
+    renew(duration) {
+      this.manageDomainModule
+        .renew(duration, this.balanceToWei)
+        .then(this.getDomains)
+        .catch(err => {
           Toast(err, {}, ERROR);
         });
       this.closeManage();
@@ -299,6 +330,14 @@ export default {
     },
     setName(name) {
       this.name = name;
+    },
+    register() {
+      this.nameModule
+        .register(this.duration, this.balanceToWei)
+        .then(this.closeRegister)
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
     }
   }
 };

@@ -56,6 +56,12 @@ export default {
         return {};
       },
       type: Function
+    },
+    register: {
+      default: function () {
+        return {};
+      },
+      type: Function
     }
   },
   data() {
@@ -113,16 +119,6 @@ export default {
         .then(() => {
           this.loadingCommit = false;
           this.committed = true;
-        })
-        .catch(err => {
-          Toast(err, {}, ERROR);
-        });
-    },
-    register() {
-      this.nameModule
-        .register(this.duration)
-        .then(() => {
-          this.close();
         })
         .catch(err => {
           Toast(err, {}, ERROR);
