@@ -4,6 +4,10 @@
 
 * Add terms for changelly [#2783](https://github.com/MyEtherWallet/MyEtherWallet/pull/2783)
 
+### Bug
+
+* Fix amount unit for Lend Migrator [#2776](https://github.com/MyEtherWallet/MyEtherWallet/pull/2776)
+
 ### Release v5.7.18
 
 ### Bug
