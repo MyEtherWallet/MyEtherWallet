@@ -1,3 +1,7 @@
+### Devop
+
+* Address no decimals for NEO [#](https://github.com/MyEtherWallet/MyEtherWallet/pull/)
+
 ### Release v5.7.18
 
 ### Bug
