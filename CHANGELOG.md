@@ -1,3 +1,9 @@
+### Release v5.7.19
+
+### Devop
+
+* Add terms for changelly [#2783](https://github.com/MyEtherWallet/MyEtherWallet/pull/2783)
+
 ### Release v5.7.18
 
 ### Bug
