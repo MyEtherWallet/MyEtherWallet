@@ -996,7 +996,7 @@ export default {
       }
     },
     decimalsGenerally(toCurrency) {
-      if(toCurrency.toLowerCase() === 'neo'){
+      if (toCurrency.toLowerCase() === 'neo') {
         return 0;
       }
       return this.fiatCurrenciesArray.includes(toCurrency) ? 2 : 6;
@@ -1054,7 +1054,7 @@ export default {
                   minValue: entry.minValue || 0,
                   maxValue: entry.maxValue || 0,
                   computeConversion: _fromValue => {
-                    const decimals = this.decimalsGenerally(toCurrency)
+                    const decimals = this.decimalsGenerally(toCurrency);
                     return new BigNumber(_fromValue)
                       .times(entry.rate)
                       .toFixed(decimals)
