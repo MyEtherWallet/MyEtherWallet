@@ -21,24 +21,24 @@
 
     <v-container class="mt-8 mb-12">
       <div class="d-block d-lg-none">
-        <watch-only v-if="currentTool === 'watch'" />
-        <convert v-if="currentTool === 'convert'" />
-        <offline-helper v-if="currentTool === 'offline'" />
-        <verify v-if="currentTool === 'verify'" />
+        <module-watch-only v-if="currentTool === 'watch'" />
+        <module-convert v-if="currentTool === 'convert'" />
+        <module-offline-helper v-if="currentTool === 'offline'" />
+        <module-verify v-if="currentTool === 'verify'" />
       </div>
 
       <mew-tabs class="d-none d-lg-block" :is-vertical="true" :items="items">
         <template #tabItemContent1>
-          <watch-only />
+          <module-watch-only />
         </template>
         <template #tabItemContent2>
-          <convert />
+          <module-convert />
         </template>
         <template #tabItemContent3>
-          <offline-helper />
+          <module-offline-helper />
         </template>
         <template #tabItemContent4>
-          <verify />
+          <module-verify />
         </template>
       </mew-tabs>
     </v-container>
@@ -49,20 +49,21 @@
 <script>
 import homeHeader from '@/components/home-header/HomeHeader';
 import getStarted from '@/components/get-started/GetStarted';
-import watchOnly from './pages/watch-only/WatchOnly';
-import convert from './pages/convert/Convert';
-import offlineHelper from './pages/offline-helper/OfflineHelper';
-import verify from './pages/verify/Verify';
+
+import ModuleWatchOnly from '@/modules/tools/ModuleWatchOnly';
+import ModuleConvert from '@/modules/tools/ModuleConvert';
+import ModuleOfflineHelper from '@/modules/tools/ModuleOfflineHelper';
+import ModuleVerify from '@/modules/message/ModuleVerify';
 
 export default {
   name: 'MoreActions',
   components: {
     homeHeader,
     getStarted,
-    watchOnly,
-    convert,
-    offlineHelper,
-    verify
+    ModuleWatchOnly,
+    ModuleConvert,
+    ModuleOfflineHelper,
+    ModuleVerify
   },
   data: () => ({
     currentTool: 'watch',

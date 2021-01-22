@@ -5,7 +5,7 @@ import TheCompanyLayout from '@/core/viewDefault/layouts/TheCompanyLayout';
 import TheTeamLayout from '@/core/viewDefault/layouts/TheTeamLayout';
 import ThePressKitLayout from '@/core/viewDefault/layouts/ThePressKitLayout';
 import TheBuyHardwareWalletLayout from '@/core/viewDefault/layouts/TheBuyHardwareWalletLayout';
-import ToolsPage from '@/modules/tools/Tools';
+import TheToolsLayout from '@/core/viewDefault/layouts/TheToolsLayout';
 import CreateWallet from '@/modules/wallets/pages/create/Create';
 import AccessWallet from '@/modules/wallets/pages/access/Access';
 import HardwareWallets from '@/modules/wallets/pages/access/hardware-wallets/HardwareWallets';
@@ -58,7 +58,7 @@ const routes = [
       {
         path: 'tools',
         name: 'Tools',
-        component: ToolsPage,
+        component: TheToolsLayout,
         meta: {
           requiresAuth: false
         }

@@ -32,9 +32,10 @@
 <script>
 import textButton from '@/components/buttons/text-button/TextButton';
 import blockTitle from '@/components/block-title/BlockTitle';
-import tableContainer from '../../components/table-container/TableContainer';
+import tableContainer from './components/table-container/TableContainer';
 
 export default {
+  name: 'ModuleWatchOnly',
   components: { textButton, blockTitle, tableContainer },
   data: () => ({
     addDialog: false,
