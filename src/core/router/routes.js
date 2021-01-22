@@ -25,7 +25,7 @@ const routes = [
     children: [
       {
         path: '',
-        name: 'TheHomeLayout',
+        name: 'Home',
         component: TheHomeLayout,
         meta: {
           requiresAuth: false
@@ -33,7 +33,7 @@ const routes = [
       },
       {
         path: 'how-it-works',
-        name: 'TheHowItWorksLayout',
+        name: 'HowItWorks',
         component: TheHowItWorksLayout,
         meta: {
           requiresAuth: false
@@ -41,7 +41,7 @@ const routes = [
       },
       {
         path: 'privacy-policy',
-        name: 'ThePrivacyPolicyLayout',
+        name: 'PrivacyPolicy',
         component: ThePrivacyPolicyLayout,
         meta: {
           requiresAuth: false
@@ -50,7 +50,7 @@ const routes = [
       {
         path: 'terms-of-service',
         name: 'TermsOfService',
-        component: TermsOfService,
+        component: TheTermsOfServiceLayout,
         meta: {
           requiresAuth: false
         }
@@ -65,7 +65,7 @@ const routes = [
       },
       {
         path: 'buy-hardware-wallet',
-        name: TheBuyHardwareWalletLayout,
+        name: 'BuyHardwareWallet',
         component: TheBuyHardwareWalletLayout,
         meta: {
           requiresAuth: false
@@ -73,7 +73,7 @@ const routes = [
       },
       {
         path: 'company',
-        name: 'TheCompanyLayout',
+        name: 'CompanyPage',
         component: TheCompanyLayout,
         meta: {
           requiresAuth: false
@@ -81,7 +81,7 @@ const routes = [
       },
       {
         path: 'team',
-        name: 'TheTeamLayout',
+        name: 'TeamPage',
         component: TheTeamLayout,
         meta: {
           requiresAuth: false
@@ -89,7 +89,7 @@ const routes = [
       },
       {
         path: 'presskit',
-        name: 'ThePressKitLayout',
+        name: 'PressKit',
         component: ThePressKitLayout,
         meta: {
           requiresAuth: false
