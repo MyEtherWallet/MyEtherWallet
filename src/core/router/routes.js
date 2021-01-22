@@ -3,7 +3,7 @@ import TheHomeLayout from '@/core/viewDefault/layouts/TheHomeLayout';
 import TheHowItWorksLayout from '@/core/viewDefault/layouts/TheHowItWorksLayout';
 import TheCompanyLayout from '@/core/viewDefault/layouts/TheCompanyLayout';
 import TheTeamLayout from '@/core/viewDefault/layouts/TheTeamLayout';
-import PressKit from '@/modules/press-kit/PressKit';
+import ThePressKitLayout from '@/core/viewDefault/layouts/ThePressKitLayout';
 import BuyHardwareWallet from '@/modules/hardware/Hardware';
 import ToolsPage from '@/modules/tools/Tools';
 import CreateWallet from '@/modules/wallets/pages/create/Create';
@@ -89,8 +89,8 @@ const routes = [
       },
       {
         path: 'presskit',
-        name: 'PressKit',
-        component: PressKit,
+        name: 'ThePressKitLayout',
+        component: ThePressKitLayout,
         meta: {
           requiresAuth: false
         }
