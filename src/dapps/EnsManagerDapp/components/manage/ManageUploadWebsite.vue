@@ -1,21 +1,16 @@
 <template>
   <div>
-    <mew-select
-      :has-filter="false"
-      :label="$t('ens.request.choose-term')"
-      :items="items"
-      @input="setDuration"
+    <mew-input
+      :value="ipfs"
+      :label="$t('ens.content-hash')"
+      :placeholder="$t('ens.enter-hash')"
+      @input="setHash"
     />
-
-    <div class="font-weight-bold text-center">
-      {{ $t('ens.request.estimated-price') }}: {{ estimatedPrice.eth }}
-      {{ $t('common.currency.eth') }} (${{ estimatedPrice.usd }})
-    </div>
     <div class="d-flex align-center justify-center mt-3">
       <mew-button
-        :title="$t('ens.renew')"
+        :title="$t('ens.set-hash')"
         btn-size="xlarge"
-        @click.native="renew(duration)"
+        @click.native="setIPFS(ipfs)"
       />
     </div>
   </div>
@@ -27,59 +22,21 @@ import { mapState } from 'vuex';
 
 export default {
   props: {
-    renew: {
+    setIPFS: {
       default: function () {
         return {};
       },
       type: Function
-    },
-    hostName: {
-      default: '',
-      type: String
     }
   },
   data() {
     return {
-      duration: '1'
+      ipfs: ''
     };
   },
-  computed: {
-    ...mapState('wallet', ['currency']),
-    items() {
-      const items = [];
-      for (let i = 0; i < 20; i++) {
-        items.push({ name: i + 1 + ' ' + 'year' });
-      }
-      return items;
-    },
-    estimatedPrice() {
-      const eth = new BigNumber(this.pricingByLength)
-        .dividedBy(this.currency.value)
-        .times(this.duration)
-        .toFixed(2);
-
-      const usd = new BigNumber(this.pricingByLength)
-        .times(this.duration)
-        .toFixed(2);
-      return {
-        usd: usd,
-        eth: eth
-      };
-    },
-    // double check how this works
-    pricingByLength() {
-      if (this.hostName.length === 3) {
-        return 640;
-      } else if (this.hostName.length === 4) {
-        return 160;
-      }
-
-      return 5;
-    }
-  },
   methods: {
-    setDuration(val) {
-      this.duration = val.name.substr(0, val.name.indexOf(' '));
+    setHash(val) {
+      this.ipfs = val;
     }
   }
 };

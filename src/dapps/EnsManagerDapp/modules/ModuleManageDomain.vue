@@ -12,24 +12,16 @@
         min-width="600"
       >
         <transfer v-if="isTransfer" :transfer="transfer" />
-        <renew v-if="isRenew" :host-name="nameModule.name" :renew="renew" />
+        <renew v-if="isRenew" :host-name="hostName" :renew="renew" />
         <manage-multicoins
           v-if="isManageMulticoin"
-          :host-name="nameModule.name"
-          :renew="renew"
+          :set-multicoin="setMulticoin"
         />
-
         <manage-txt-records
           v-if="isManageTxtRecord"
-          :host-name="nameModule.name"
-          :renew="renew"
+          :set-text-records="setTextRecords"
         />
-
-        <manage-upload-website
-          v-if="isManageUpload"
-          :host-name="nameModule.name"
-          :renew="renew"
-        />
+        <manage-upload-website v-if="isManageUpload" :renew="renew" />
       </v-sheet>
     </template>
   </mew-overlay>
@@ -42,7 +34,6 @@ import manageMulticoins from '../components/manage/ManageMulticoins';
 import manageTxtRecords from '../components/manage/ManageTxtRecords';
 import manageUploadWebsite from '../components/manage/ManageUploadWebsite';
 
-// import { Toast, ERROR } from '@/components/toast';
 const types = [
   'transfer',
   'renew',
@@ -59,11 +50,9 @@ export default {
     manageUploadWebsite
   },
   props: {
-    nameModule: {
-      default: () => {
-        return {};
-      },
-      type: Object
+    hostName: {
+      default: '',
+      type: String
     },
     type: {
       default: '',
@@ -76,6 +65,18 @@ export default {
       type: Function
     },
     transfer: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
+    setTextRecords: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
+    setMulticoin: {
       default: function () {
         return {};
       },
@@ -115,11 +116,11 @@ export default {
       if (this.isManageMulticoin) {
         return this.$t('ens.manage-domains.manage-multi');
       }
-      if (this.isManageTxt) {
+      if (this.isManageTxtRecord) {
         return this.$t('ens.manage-domains.manage-txt');
       }
       if (this.isManageUpload) {
-        return this.$t('ens.manage-domains.manage-site');
+        return this.$t('ens.manage-domains.upload-site');
       }
       return this.$t('ens.manage-domain');
     }

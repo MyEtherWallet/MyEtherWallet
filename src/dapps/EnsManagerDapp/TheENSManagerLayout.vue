@@ -5,7 +5,7 @@
       :on-register="onRegister"
       :close="closeRegister"
       :register="register"
-      :name-module="nameModule"
+      :name-handler="nameHandler"
     />
     <manage-domain
       ref="manageDomain"
@@ -14,7 +14,9 @@
       :type="manageType"
       :transfer="transfer"
       :renew="renew"
-      :name-module="manageDomainModule"
+      :set-text-records="setTextRecords"
+      :set-multicoin="setMulticoin"
+      :host-name="manageDomainHandler.parsedHostName"
     />
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="ensBgImg" />
@@ -176,11 +178,11 @@ export default {
   components: { registerDomain, manageDomain },
   data() {
     return {
-      manageDomainModule: {},
+      manageDomainHandler: {},
       manageType: '',
       onManage: false,
       name: '',
-      nameModule: {},
+      nameHandler: {},
       ensManager: {},
       onRegister: false,
       manageDomainOptions: [
@@ -199,7 +201,7 @@ export default {
           type: 'manageTxtRecord'
         },
         {
-          label: this.$t('ens.manage-domains.manage-site'),
+          label: this.$t('ens.manage-domains.upload-site'),
           type: 'manageUpload'
         }
       ],
@@ -259,7 +261,7 @@ export default {
     manage(type, idx) {
       this.onManage = true;
       this.manageType = type;
-      this.manageDomainModule = this.myDomains[idx];
+      this.manageDomainHandler = this.myDomains[idx];
     },
     getDomains() {
       this.ensManager
@@ -287,7 +289,7 @@ export default {
       this.onManage = false;
     },
     transfer(address) {
-      this.manageDomainModule
+      this.manageDomainHandler
         .transfer(address)
         .then(this.getDomains)
         .catch(err => {
@@ -296,8 +298,26 @@ export default {
       this.closeManage();
     },
     renew(duration) {
-      this.manageDomainModule
+      this.manageDomainHandler
         .renew(duration, this.balanceToWei)
+        .then(this.getDomains)
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
+      this.closeManage();
+    },
+    setMulticoin(coin) {
+      this.manageDomainHandler
+        .setMulticoin(coin)
+        .then(this.getDomains)
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
+      this.closeManage();
+    },
+    setTextRecords(records) {
+      this.manageDomainHandler
+        .setTxtRecord(records)
         .then(this.getDomains)
         .catch(err => {
           Toast(err, {}, ERROR);
@@ -315,7 +335,7 @@ export default {
       this.ensManager
         .searchName(name)
         .then(res => {
-          this.nameModule = res;
+          this.nameHandler = res;
           this.onRegister = true;
         })
         .catch(err => {
@@ -325,14 +345,14 @@ export default {
     closeRegister() {
       this.onRegister = false;
       this.name = '';
-      this.nameModule = {};
+      this.nameHandler = {};
       this.$refs.registerDomain.clear();
     },
     setName(name) {
       this.name = name;
     },
     register() {
-      this.nameModule
+      this.nameHandler
         .register(this.duration, this.balanceToWei)
         .then(this.closeRegister)
         .catch(err => {

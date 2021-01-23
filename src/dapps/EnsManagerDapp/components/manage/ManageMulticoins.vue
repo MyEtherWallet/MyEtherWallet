@@ -1,85 +1,62 @@
 <template>
   <div>
-    <mew-select
-      :has-filter="false"
-      :label="$t('ens.request.choose-term')"
-      :items="items"
-      @input="setDuration"
-    />
-
-    <div class="font-weight-bold text-center">
-      {{ $t('ens.request.estimated-price') }}: {{ estimatedPrice.eth }}
-      {{ $t('common.currency.eth') }} (${{ estimatedPrice.usd }})
+    <div v-for="(coin, idx) in coins" :key="coin + idx">
+      <mew-input
+        :value="coin.value"
+        :label="coin.symbol"
+        :placeholder="coin.name + ' ' + $t('common.addr')"
+        @input="setCoin"
+      />
     </div>
     <div class="d-flex align-center justify-center mt-3">
       <mew-button
-        :title="$t('ens.renew')"
+        :title="$t('common.save')"
         btn-size="xlarge"
-        @click.native="renew(duration)"
+        @click.native="setMulticoin(setCoins)"
       />
     </div>
   </div>
 </template>
 
 <script>
-import BigNumber from 'bignumber.js';
-import { mapState } from 'vuex';
+import multicoins from '@/dapps/EnsManagerDapp/handlers/handlerMulticoins';
 
 export default {
   props: {
-    renew: {
+    setMulticoin: {
       default: function () {
         return {};
       },
       type: Function
-    },
-    hostName: {
-      default: '',
-      type: String
     }
   },
   data() {
     return {
-      duration: '1'
+      setCoins: [],
+      coins: []
     };
   },
-  computed: {
-    ...mapState('wallet', ['currency']),
-    items() {
-      const items = [];
-      for (let i = 0; i < 20; i++) {
-        items.push({ name: i + 1 + ' ' + 'year' });
-      }
-      return items;
-    },
-    estimatedPrice() {
-      const eth = new BigNumber(this.pricingByLength)
-        .dividedBy(this.currency.value)
-        .times(this.duration)
-        .toFixed(2);
-
-      const usd = new BigNumber(this.pricingByLength)
-        .times(this.duration)
-        .toFixed(2);
-      return {
-        usd: usd,
-        eth: eth
-      };
-    },
-    // double check how this works
-    pricingByLength() {
-      if (this.hostName.length === 3) {
-        return 640;
-      } else if (this.hostName.length === 4) {
-        return 160;
-      }
-
-      return 5;
+  mounted() {
+    for (const type in multicoins) {
+      this.coins.push(multicoins[type]);
     }
   },
+  // computed: {
+  //   rules() {
+  //     return [
+  //       this.isValidAddress ||
+  //         this.$t('interface.address-book.validations.invalid-address'),
+  //       value =>
+  //         !!value || this.$t('interface.address-book.validations.addr-required')
+  //     ];
+  //   }
+  // },
   methods: {
-    setDuration(val) {
-      this.duration = val.name.substr(0, val.name.indexOf(' '));
+    // need to make mew-input return the label
+    setCoin(value, label) {
+      const coin = this.coins.find(coin => coin.symbol === label);
+      coin.value = value;
+      this.setCoins.push(coin);
     }
   }
 };

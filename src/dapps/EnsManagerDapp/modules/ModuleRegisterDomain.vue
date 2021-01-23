@@ -11,15 +11,15 @@
           ><request
             v-if="onStep === 1"
             :is-available="isAvailable"
-            :name="nameModule.name"
-            :host-name="nameModule.parsedHostName"
+            :name="nameHandler.name"
+            :host-name="nameHandler.parsedHostName"
             :loading="loading"
             @onRequest="onRequest"
         /></template>
         <template #stepperContent2
           ><register
             v-if="onStep === 2"
-            :name="nameModule.name"
+            :name="nameHandler.name"
             :duration="duration"
             :register="register"
             :commit="commit"
@@ -44,7 +44,7 @@ import { Toast, ERROR } from '@/components/toast';
 export default {
   components: { Request, Register, Complete },
   props: {
-    nameModule: {
+    nameHandler: {
       default: () => {
         return {};
       },
@@ -89,14 +89,14 @@ export default {
   },
   computed: {
     isAvailable() {
-      return this.nameModule.isAvailable;
+      return this.nameHandler.isAvailable;
     },
     loading() {
-      return this.nameModule.checkingDomainAvail;
+      return this.nameHandler.checkingDomainAvail;
     }
   },
   watch: {
-    nameModule(newVal) {
+    nameHandler(newVal) {
       this.committed = newVal.createCommitment ? false : true;
     }
   },
@@ -107,14 +107,15 @@ export default {
       this.duration = '';
     },
     commit() {
-      this.nameModule.getMinimumAge().then(resp => {
+      this.nameHandler.getMinimumAge().then(resp => {
         this.minimumAge = resp;
       });
       // start timer after confirming tx
       EventBus.$on(EventNames.CONFIRMED_TX, () => {
         this.loadingCommit = true;
       });
-      this.nameModule
+      this.nameHandler
+
         .createCommitment()
         .then(() => {
           this.loadingCommit = false;
@@ -129,8 +130,8 @@ export default {
         this.close();
         return;
       }
-      if (this.nameModule.generateKeyPhrase) {
-        this.nameModule.generateKeyPhrase();
+      if (this.nameHandler.generateKeyPhrase) {
+        this.nameHandler.generateKeyPhrase();
       }
       this.duration = val;
       this.onStep += 1;
