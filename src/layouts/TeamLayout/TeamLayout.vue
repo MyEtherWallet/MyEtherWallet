@@ -22,7 +22,7 @@
             v-for="(item, idx) in multiplyBlank"
             v-show="showBlank"
             :key="`blank${idx}`"
-            class="member"
+            class="blank-member"
           >
             <img :src="blank" alt="blank" />
           </div>
