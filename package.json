@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.7.18",
+  "version": "5.7.19",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -32,7 +32,7 @@
     "update:swap": "node compileBaseSwapOptions.js"
   },
   "dependencies": {
-    "@aave/protocol-js": "1.0.3",
+    "@aave/protocol-js": "2.1.1",
     "@coolwallets/eth": "0.2.0-beta.1",
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",
@@ -115,7 +115,7 @@
     "codecov": "3.8.1",
     "copy-webpack-plugin": "6.3.2",
     "detectrtc": "1.4.1",
-    "eslint": "7.16.0",
+    "eslint": "7.18.0",
     "eslint-plugin-prettier": "3.3.1",
     "eslint-plugin-security": "1.4.0",
     "eslint-plugin-vue": "6.2.2",
@@ -156,7 +156,7 @@
     "u2f-api": "1.1.1",
     "uglify-es": "3.3.9",
     "uuid": "8.3.2",
-    "vue-i18n": "8.22.2",
+    "vue-i18n": "8.22.4",
     "vue-stripe-elements-plus": "0.3.2",
     "vue-template-compiler": "2.6.12",
     "vue-worker": "1.2.1",
