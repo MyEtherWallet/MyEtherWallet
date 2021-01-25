@@ -7,6 +7,7 @@
 
 ### Devop
 
+- Replace Jessica's picture [#2786](https://github.com/MyEtherWallet/MyEtherWallet/pull/2786)
 - Update team [#2782](https://github.com/MyEtherWallet/MyEtherWallet/pull/2782)
 - Improve start script [#2647](https://github.com/MyEtherWallet/MyEtherWallet/pull/2647)
 - Forwatch ninja.besu patch [#2764](https://github.com/MyEtherWallet/MyEtherWallet/pull/2764)
