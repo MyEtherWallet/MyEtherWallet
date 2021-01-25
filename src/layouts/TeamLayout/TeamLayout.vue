@@ -36,7 +36,7 @@ import brittany from '@/assets/images/team/Brittany.jpg';
 import yel from '@/assets/images/team/Gamaliel.jpg';
 import steve from '@/assets/images/team/Steve.jpg';
 import gage from '@/assets/images/team/Gage.jpg';
-import jessica from '@/assets/images/team/Jessica.jpg';
+import jessica from '@/assets/images/team/_blank_.jpg';
 import david from '@/assets/images/team/David.jpg';
 import alex from '@/assets/images/team/Alex.jpg';
 import misha from '@/assets/images/team/Misha.jpg';
