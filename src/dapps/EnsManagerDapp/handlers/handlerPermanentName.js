@@ -1,7 +1,6 @@
 import OldEnsAbi from './abi/abiOldEns.js';
 import OldDeedAbi from './abi/abiOldDeed.js';
-import getHashFromFile from './helpers/helperGetHashFromFile.js';
-import uploadFileToIpfs from './helpers/helperUploadFileToIpfs.js';
+import { getHashFromFile, uploadFileToIpfs } from './helpers/helperIpfs.js';
 import BigNumber from 'bignumber.js';
 import ENSManagerInterface from './handlerENSManagerInterface.js';
 import * as nameHashPckg from 'eth-ens-namehash';
@@ -113,7 +112,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
     return this.web3.eth.sendTransaction(obj);
   }
 
-  setIPFS(file) {
+  uploadFile(file) {
     if (this.owner === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
@@ -125,18 +124,22 @@ export default class PermanentNameModule extends ENSManagerInterface {
     return uploadFileToIpfs(file)
       .then(getHashFromFile)
       .then(hash => {
-        const ipfsToHash = `0x${contentHash.fromIpfs(hash)}`;
-        const tx = {
-          from: this.address,
-          to: this.resolverAddress,
-          data: this.resolverContract.methods
-            .setContentHash(this.nameHash, ipfsToHash)
-            .encodeABI(),
-          value: 0
-        };
-
-        return this.web3.eth.sendTransaction(tx);
+        return hash;
       });
+  }
+
+  setIPFSHash(hash) {
+    const ipfsToHash = `0x${contentHash.fromIpfs(hash)}`;
+    const tx = {
+      from: this.address,
+      to: this.resolverAddress,
+      data: this.resolverContract.methods
+        .setContentHash(this.nameHash, ipfsToHash)
+        .encodeABI(),
+      value: 0
+    };
+
+    return this.web3.eth.sendTransaction(tx);
   }
 
   // DNS claim name method

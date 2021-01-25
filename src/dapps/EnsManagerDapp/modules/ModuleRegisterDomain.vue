@@ -36,13 +36,12 @@
 <script>
 import Request from '../components/register/RegisterRequest';
 import Register from '../components/register/Register';
-import Complete from '../components/register/RegisterComplete';
 import { EventBus } from '@/plugins/eventBus';
 import EventNames from '@/utils/web3-provider/events.js';
 import { Toast, ERROR } from '@/components/toast';
 
 export default {
-  components: { Request, Register, Complete },
+  components: { Request, Register },
   props: {
     nameHandler: {
       default: () => {

@@ -56,6 +56,7 @@ export default {
     setCoin(value, label) {
       const coin = this.coins.find(coin => coin.symbol === label);
       coin.value = value;
+      console.error('coin', coin)
       this.setCoins.push(coin);
     }
   }

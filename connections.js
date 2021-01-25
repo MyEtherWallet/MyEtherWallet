@@ -3,6 +3,7 @@ module.exports = [
   'https://localhost:8080',
   'wss://localhost:8080',
   'https://swap.mewapi.io:443',
+  'https://swap.mewapi.io/ipfs',
   'https://apiccswap.myetherwallet.com:443',
   'https://cryptorates.mewapi.io:443',
   'https://cloudflare-dns.com:443',

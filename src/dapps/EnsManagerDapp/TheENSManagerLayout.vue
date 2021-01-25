@@ -9,13 +9,16 @@
     />
     <manage-domain
       ref="manageDomain"
+      :setting-ipfs="settingIpfs"
       :on-manage="onManage"
       :close="closeManage"
       :type="manageType"
       :transfer="transfer"
       :renew="renew"
+      :upload-file="uploadFile"
       :set-text-records="setTextRecords"
       :set-multicoin="setMulticoin"
+      :set-ipfs="setIpfs"
       :host-name="manageDomainHandler.parsedHostName"
     />
     <mew6-white-sheet>
@@ -145,13 +148,13 @@
                       />
                       <div>{{ option.label }}</div>
                       <div v-if="option.expire" class="orange--text">
-                        <div>
+                        <!-- <div>
                           {{
                             $t('ens.manage-domain.expire-at', {
                               date: option.expire
                             })
                           }}
-                        </div>
+                        </div> -->
                       </div>
                     </v-col>
                   </v-row>
@@ -178,6 +181,7 @@ export default {
   components: { registerDomain, manageDomain },
   data() {
     return {
+      settingIpfs: false,
       manageDomainHandler: {},
       manageType: '',
       onManage: false,
@@ -323,6 +327,33 @@ export default {
           Toast(err, {}, ERROR);
         });
       this.closeManage();
+    },
+    uploadFile(file) {
+      this.settingIpfs = true;
+      this.manageDomainHandler
+        .uploadFile(file)
+        .then(this.manageDomainHandler.setIPFSHash)
+        .then(resp => {
+          this.settingIpfs = false;
+          this.uploadedHash = '';
+          console.error('resp', resp)
+        })
+        .catch(err => {
+          console.error('err', err)
+        })
+    },
+    setIpfs(hash) {
+      this.settingIpfs = true;
+      this.manageDomainHandler
+        .setIPFSHash(hash)
+        .then(resp => {
+          this.settingIpfs = false;
+          this.uploadedHash = '';
+          console.error('resp', resp)
+        })
+        .catch(err => {
+          console.error('err', err)
+        })
     },
     // register domain
     findDomain() {

@@ -105,6 +105,8 @@
     "no-resolver": "No {network}NS resolver in this node"
   },
   "content-hash": "IPFS Hash",
+  "enter-hash": "Enter your IPFS Hash",
+  "hash-required": "IPFS Hash required to continue",
   "set-hash": "Set IPFS Hash",
   "upload-my-website": "Upload My Website",
   "unstoppableResolution": {

@@ -21,7 +21,12 @@
           v-if="isManageTxtRecord"
           :set-text-records="setTextRecords"
         />
-        <manage-upload-website v-if="isManageUpload" :renew="renew" />
+        <manage-upload-website
+          v-if="isManageUpload"
+          :setting-ipfs="settingIpfs"
+          :set-ipfs="setIpfs"
+          :upload-file="uploadFile"
+        />
       </v-sheet>
     </template>
   </mew-overlay>
@@ -64,6 +69,10 @@ export default {
       },
       type: Function
     },
+    settingIpfs: {
+      default: false,
+      type: Boolean
+    },
     transfer: {
       default: function () {
         return {};
@@ -77,6 +86,18 @@ export default {
       type: Function
     },
     setMulticoin: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
+    setIpfs: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
+    uploadFile: {
       default: function () {
         return {};
       },
