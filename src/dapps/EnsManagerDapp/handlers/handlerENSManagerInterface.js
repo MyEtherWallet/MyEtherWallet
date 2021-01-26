@@ -23,11 +23,8 @@ export default class ENSManagerInterface {
     this.ens = ens ? ens : null;
     this.gasPrice = gasPrice ? gasPrice : null;
     // Returned value
-    this.tld = getTld(name);
-    this.registrarTLD = this.tld
-      ? this.tld
-      : this.network.type.ens.registrarTLD;
-    this.name = !this.tld ? name + '.' + this.registrarTLD : name;
+    this.tld = getTld(name, network);
+    this.name = name + '.' + this.tld;
     this.nameHash = nameHashPckg.hash(this.name);
     this.txtRecords = null;
     this.multiCoin = null;
@@ -208,7 +205,7 @@ export default class ENSManagerInterface {
     const web3 = this.web3;
     const registryAddress = this.network.type.ens.registry;
     this.registryContract = new web3.eth.Contract(RegistryAbi, registryAddress);
-    this.registrarAddress = await this.ens.owner(this.registrarTLD);
+    this.registrarAddress = await this.ens.owner(this.tld);
     this._setRegistrarContracts();
   }
 
@@ -222,7 +219,7 @@ export default class ENSManagerInterface {
     if (this.network.type.ens.registrarType === REGISTRAR_TYPES.PERMANENT) {
       try {
         this.contractControllerAddress = await this.ens
-          .resolver(this.registrarTLD, ResolverAbi)
+          .resolver(this.tld, ResolverAbi)
           .interfaceImplementer(registrarInterface.CONTROLLER);
         this.registrarControllerContract = new web3.eth.Contract(
           RegistrarControllerAbi,

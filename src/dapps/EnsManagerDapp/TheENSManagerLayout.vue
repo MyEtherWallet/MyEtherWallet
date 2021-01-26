@@ -295,7 +295,6 @@ export default {
     closeManage() {
       this.onManage = false;
       this.settingIpfs = false;
-      this.$refs.manageDomain.reset();
     },
     transfer(address) {
       this.manageDomainHandler

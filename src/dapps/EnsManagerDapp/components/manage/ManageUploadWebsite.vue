@@ -82,7 +82,7 @@ export default {
     },
     rules() {
       return [
-        this.isValidIPFS || this.$t('ens.empty-invalid-ipfs'),
+        this.isValidIPFS || this.$t('ens.error.empty-invalid-ipfs'),
         value => !!value || this.$t('ens.hash-required')
       ];
     }
