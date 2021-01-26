@@ -24,7 +24,7 @@ const uploadFileToIpfs = async _file => {
     formData.append(key, content.body.fields[key]);
   }
   formData.append('file', _file);
-  fetch(content.body.signedUrl, {
+  return fetch(content.body.signedUrl, {
     method: 'POST',
     headers: {
       'Content-Length': _file.size
@@ -34,9 +34,8 @@ const uploadFileToIpfs = async _file => {
     if (!res.ok) {
       return new Error('File upload Error');
     }
-    return;
+    return content.body.hashResponse;
   });
-  return content.body.hashResponse;
 };
 
 const _fetchUploadUrl = () => {
