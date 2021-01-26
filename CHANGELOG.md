@@ -2,6 +2,7 @@
 
 ### Devop
 
+- Remove tab from How-it-works [#2791](https://github.com/MyEtherWallet/MyEtherWallet/pull/2791)
 - Change Access wallet page to a popup [#2788](https://github.com/MyEtherWallet/MyEtherWallet/pull/2788)
 - Add decision tree [#2720](https://github.com/MyEtherWallet/MyEtherWallet/pull/2720)
 - Add Privacy and Terms pages [#2733](https://github.com/MyEtherWallet/MyEtherWallet/pull/2733)
