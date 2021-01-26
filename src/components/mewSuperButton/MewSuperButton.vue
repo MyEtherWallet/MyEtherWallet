@@ -432,6 +432,12 @@ export default {
 <style lang="scss" scoped>
 .global--mew-component--mew-super-button {
   cursor: pointer;
+  box-shadow: 0 10px 20px rgb(0 0 0 / 5%);
+  border-radius: 10px;
+
+  &:hover {
+    box-shadow: 0 10px 20px rgb(0 0 0 / 15%);
+  }
 }
 
 .large-right-image,

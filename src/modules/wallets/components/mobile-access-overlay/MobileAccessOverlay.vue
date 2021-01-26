@@ -7,19 +7,17 @@
     left-btn-text=""
   >
     <template #mewOverlayBody>
-      <v-sheet color="transparent" max-width="450px" class="mx-auto px-5">
+      <v-sheet color="transparent" max-width="450px" class="mx-auto">
         <v-row>
-          <v-col v-for="(btn, key) in buttons" :key="key" cols="9" sm="12">
+          <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
             <mew-super-button
+              color-theme="white"
+              btn-mode="small-right-image"
               :title="btn.label"
               :subtitle="btn.description"
-              color-theme="basic"
+              :right-icon="btn.icon"
               @click.native="btn.fn"
-            >
-              <template #contentSlot>
-                <img class="icon" :src="btn.icon" />
-              </template>
-            </mew-super-button>
+            />
           </v-col>
         </v-row>
       </v-sheet>
@@ -28,11 +26,14 @@
 </template>
 
 <script>
+import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import { Toast, SENTRY } from '@/components/toast';
 import { WalletConnectWallet, WalletLinkWallet } from '@/modules/wallets/utils';
 import { mapActions } from 'vuex';
+
 export default {
   name: 'MobileAccessOverlay',
+  components: { mewSuperButton },
   props: {
     open: {
       type: Boolean,
@@ -45,6 +46,13 @@ export default {
   },
   data() {
     return {
+      titleData: {
+        textProps: 'white--text',
+        toptitle: '',
+        title: 'Mobile apps',
+        description: '',
+        centered: true
+      },
       buttons: [
         {
           label: 'WalletConnet',

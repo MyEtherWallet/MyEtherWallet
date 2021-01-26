@@ -122,8 +122,8 @@ export default {
           titleIcon: 'mdi-shield-check',
           titleIconClass: 'primary--text',
           fn: () => {
-            //this.open('showMobile');
-            this.$router.push({ name: 'MobileApps' });
+            this.open('showMobile');
+            //this.$router.push({ name: 'MobileApps' });
           }
         },
         {
