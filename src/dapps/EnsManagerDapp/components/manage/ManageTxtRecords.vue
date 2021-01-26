@@ -40,7 +40,6 @@ export default {
   },
   methods: {
     rules(idx, record) {
-      console.error('in here', idx, record)
       return [
         !this.textRecords[idx].validate(record.value) ||
           this.$t('ens.text-record-error', { name: record.name })

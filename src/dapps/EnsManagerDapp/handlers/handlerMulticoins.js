@@ -1,5 +1,4 @@
 import { formatsByName } from '@ensdomains/address-encoder';
-import utils from 'web3-utils';
 import MultiCoinValidator from 'multicoin-address-validator';
 import {
   isValidChecksumAddress as isValidRSKChecksumAddress,

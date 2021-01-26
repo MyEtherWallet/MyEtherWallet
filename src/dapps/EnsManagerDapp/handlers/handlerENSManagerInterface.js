@@ -102,7 +102,6 @@ export default class ENSManagerInterface {
     if (isMigrate) return;
 
     const addr = coin.map(item => {
-      console.error('this', this.publicResolverContract);
       return this.publicResolverContract.methods
         .setAddr(this.nameHash, item.id, decodeCoinAddress(item))
         .encodeABI();

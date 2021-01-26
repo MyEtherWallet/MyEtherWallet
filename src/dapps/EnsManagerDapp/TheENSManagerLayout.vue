@@ -332,32 +332,32 @@ export default {
       this.closeManage();
     },
     uploadFile(file) {
-      console.error('in here', file)
+      // console.error('in here', file)
       this.settingIpfs = true;
       this.manageDomainHandler
         .uploadFile(file)
         .then(this.manageDomainHandler.setIPFSHash)
-        .then(resp => {
+        .then(() => {
           this.settingIpfs = false;
           this.uploadedHash = '';
           this.closeManage();
-          console.error('resp', resp);
+          // console.error('resp', resp);
         })
-        .catch(err => {
-          console.error('err', err);
+        .catch(() => {
+          // console.error('err', err);
         });
     },
     setIpfs(hash) {
       this.settingIpfs = true;
       this.manageDomainHandler
         .setIPFSHash(hash)
-        .then(resp => {
+        .then(() => {
           this.settingIpfs = false;
           this.uploadedHash = '';
-          console.error('resp', resp);
+          // console.error('resp', resp);
         })
-        .catch(err => {
-          console.error('err', err);
+        .catch(() => {
+          // console.error('err', err);
         });
     },
     // register domain
