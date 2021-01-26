@@ -112,7 +112,7 @@ export default class ENSManagerInterface {
       to: this.publicResolverAddress,
       data: this.publicResolverContract.methods.multicall(addr).encodeABI(),
       value: 0,
-      gas: 100000
+      gas: 500000
     };
     return this.web3.eth.sendTransaction(setAddrTx);
   }
@@ -141,7 +141,7 @@ export default class ENSManagerInterface {
       to: this.publicResolverAddress,
       data: this.resolverContract.methods.multicall(multicalls).encodeABI(),
       value: 0,
-      gas: 100000
+      gas: 500000
     };
     return this.web3.eth.sendTransaction(tx);
   }

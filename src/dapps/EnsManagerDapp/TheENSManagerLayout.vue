@@ -294,6 +294,8 @@ export default {
     },
     closeManage() {
       this.onManage = false;
+      this.settingIpfs = false;
+      this.$refs.manageDomain.reset();
     },
     transfer(address) {
       this.manageDomainHandler
@@ -332,20 +334,18 @@ export default {
       this.closeManage();
     },
     uploadFile(file) {
-      // console.error('in here', file)
       this.settingIpfs = true;
       this.manageDomainHandler
         .uploadFile(file)
         .then(this.manageDomainHandler.setIPFSHash)
-        .then(() => {
+        .then(resp => {
           this.settingIpfs = false;
-          this.uploadedHash = '';
-          this.closeManage();
-          // console.error('resp', resp);
+          this.uploadedHash = resp;
         })
-        .catch(() => {
-          // console.error('err', err);
+        .catch(err => {
+          Toast(err, {}, ERROR);
         });
+      this.closeManage();
     },
     setIpfs(hash) {
       this.settingIpfs = true;
@@ -353,12 +353,11 @@ export default {
         .setIPFSHash(hash)
         .then(() => {
           this.settingIpfs = false;
-          this.uploadedHash = '';
-          // console.error('resp', resp);
         })
-        .catch(() => {
-          // console.error('err', err);
+        .catch(err => {
+          Toast(err, {}, ERROR);
         });
+      this.closeManage();
     },
     // register domain
     findDomain() {
@@ -382,7 +381,7 @@ export default {
       this.onRegister = false;
       this.name = '';
       this.nameHandler = {};
-      this.$refs.registerDomain.clear();
+      this.$refs.registerDomain.reset();
     },
     setName(name) {
       this.name = name;

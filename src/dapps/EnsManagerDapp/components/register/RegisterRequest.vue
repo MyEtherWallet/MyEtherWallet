@@ -96,7 +96,7 @@ export default {
     items() {
       const items = [];
       for (let i = 0; i < 20; i++) {
-        items.push({ name: i + 1 + ' ' + 'year' });
+        items.push({ name: i + 1 + ' ' + 'year', value: i + 1 });
       }
       return items;
     },
@@ -129,8 +129,8 @@ export default {
     onClick() {
       this.$emit('onRequest', this.duration);
     },
-    setDuration(val) {
-      this.duration = val.name.substr(0, val.name.indexOf(' '));
+    setDuration(item) {
+      this.duration = item.value;
     }
   }
 };

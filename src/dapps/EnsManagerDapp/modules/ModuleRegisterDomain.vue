@@ -102,7 +102,7 @@ export default {
     }
   },
   methods: {
-    clear() {
+    reset() {
       this.onStep = 1;
       this.committed = false;
       this.duration = '';

@@ -3,8 +3,10 @@
     <div v-for="(coin, idx) in coins" :key="coin + idx">
       <mew-input
         :id="idx"
+        class="mb-2"
         :rules="[
-          coin.validate ||
+          v =>
+            coin.validator.validate(v) ||
             $t('ens.ens-resolver.invalid-addr', { coin: coin.name })
         ]"
         :value="coin.value"
@@ -12,6 +14,7 @@
         :placeholder="coin.name + ' ' + $t('common.addr')"
         @input="setCoin"
       />
+      <span v-if="coin.error" class="error--text">{{ coin.error }}</span>
     </div>
     <div class="d-flex align-center justify-center mt-3">
       <mew-button
@@ -37,38 +40,25 @@ export default {
   },
   data() {
     return {
-      setCoins: [],
-      coins: []
+      setCoins: []
     };
   },
-  mounted() {
-    for (const type in multicoins) {
-      this.coins.push(multicoins[type]);
+  computed: {
+    coins() {
+      const coins = [];
+      for (const type in multicoins) {
+        coins.push(multicoins[type]);
+      }
+      return coins;
     }
   },
-  // computed: {
-  //   rules() {
-  //     return [
-  //       this.isValidAddress ||
-  //         this.$t('interface.address-book.validations.invalid-address'),
-  //       value =>
-  //         !!value || this.$t('interface.address-book.validations.addr-required')
-  //     ];
-  //   }
-  // },
   methods: {
-    rules(idx, coin) {
-      if (coin.value) {
-        return [
-          this.coins[idx].validate(coin.value) ||
-            this.$t('ens.ens-resolver.invalid-addr', { coin: coin.name })
-        ];
-      }
-    },
     setCoin(value, id) {
       const coin = this.coins[id];
-      coin.value = coin.validate(value) ? value : '';
-      this.setCoins.push(coin);
+      if (coin.validator.validate(value)) {
+        coin.value = value;
+        this.setCoins.push(coin);
+      }
     }
   }
 };

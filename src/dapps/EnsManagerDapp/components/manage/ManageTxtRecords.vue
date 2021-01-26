@@ -3,7 +3,12 @@
     <div v-for="(record, idx) in textRecords" :key="record + idx">
       <mew-input
         :id="idx"
-        :rules="rules(idx, record)"
+        class="mb-2"
+        :rules="[
+          v =>
+            record.validate(v) ||
+            $t('ens.text-record-error', { name: record.name })
+        ]"
         :value="record.value"
         :label="record.name"
         :placeholder="record.name"
@@ -39,16 +44,12 @@ export default {
     };
   },
   methods: {
-    rules(idx, record) {
-      return [
-        !this.textRecords[idx].validate(record.value) ||
-          this.$t('ens.text-record-error', { name: record.name })
-      ];
-    },
     setRecord(value, id) {
       const record = this.textRecords[id];
-      record.value = record.validate(value) ? value : '';
-      this.setRecords[record.name] = record;
+      if (record.validate(value)) {
+        record.value = value;
+        this.setRecords[record.name] = record;
+      }
     }
   }
 };

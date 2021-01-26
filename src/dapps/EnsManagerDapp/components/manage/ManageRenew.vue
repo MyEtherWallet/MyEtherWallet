@@ -40,7 +40,7 @@ export default {
   },
   data() {
     return {
-      duration: '1'
+      duration: 1
     };
   },
   computed: {
@@ -48,7 +48,7 @@ export default {
     items() {
       const items = [];
       for (let i = 0; i < 20; i++) {
-        items.push({ name: i + 1 + ' ' + 'year' });
+        items.push({ name: i + 1 + ' ' + 'year', value: i + 1 });
       }
       return items;
     },
@@ -78,8 +78,11 @@ export default {
     }
   },
   methods: {
-    setDuration(val) {
-      this.duration = val.name.substr(0, val.name.indexOf(' '));
+    setDuration(item) {
+      this.duration = item.value;
+    },
+    reset() {
+      this.duration = 1;
     }
   }
 };

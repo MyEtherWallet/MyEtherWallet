@@ -11,18 +11,26 @@
         color="white"
         min-width="600"
       >
-        <transfer v-if="isTransfer" :transfer="transfer" />
-        <renew v-if="isRenew" :host-name="hostName" :renew="renew" />
+        <transfer v-if="isTransfer" ref="transfer" :transfer="transfer" />
+        <renew
+          v-if="isRenew"
+          ref="manageRenew"
+          :host-name="hostName"
+          :renew="renew"
+        />
         <manage-multicoins
           v-if="isManageMulticoin"
+          ref="manageMulticoins"
           :set-multicoin="setMulticoin"
         />
         <manage-txt-records
           v-if="isManageTxtRecord"
+          ref="manageRecords"
           :set-text-records="setTextRecords"
         />
         <manage-upload-website
           v-if="isManageUpload"
+          ref="manageWebsite"
           :setting-ipfs="settingIpfs"
           :set-ipfs="setIpfs"
           :upload-file="uploadFile"
@@ -144,6 +152,12 @@ export default {
         return this.$t('ens.manage-domains.upload-site');
       }
       return this.$t('ens.manage-domain');
+    }
+  },
+  methods: {
+    reset() {
+      this.$refs.manageRenew.reset();
+      this.$refs.manageWebsite.reset();
     }
   }
 };

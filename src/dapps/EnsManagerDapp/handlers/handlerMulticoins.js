@@ -5,16 +5,16 @@ import {
   toChecksumAddress as toRSKChecksumAddress
 } from 'rskjs-util';
 
-const types = ['Ethereum'];
+// const types = ['Ethereum'];
 class MValidator {
   constructor(type) {
     this.type = type;
   }
   validate(address) {
     if (!address) return false;
-    if (this.type === types[0]) {
-      return this.utils.isValidAddress(address, this.type);
-    }
+    // if (this.type === types[0]) {
+    //   return this.utils.isValidAddress(address, this.type);
+    // }
     return MultiCoinValidator.validate(address, this.type);
   }
 }
