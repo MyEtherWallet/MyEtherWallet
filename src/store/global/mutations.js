@@ -39,10 +39,6 @@ const SET_ETH_GASPRICE = function (state, val) {
   state.ethGasPrice = val;
 };
 
-const SET_CURRENCY = function (state, val) {
-  state.currency = val;
-};
-
 export default {
   SET_ONLINE_STATUS,
   SET_LOCALE,
@@ -50,6 +46,5 @@ export default {
   SET_NETWORK,
   SET_ADDRESS_BOOK,
   SET_ETH_GASPRICE,
-  SET_CURRENCY,
   INIT_STORE
 };

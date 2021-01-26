@@ -7,10 +7,6 @@ const setLocale = function ({ commit }, val) {
   commit('SET_LOCALE', val);
 };
 
-const setLastPath = function ({ commit }, val) {
-  commit('SET_LAST_PATH', val);
-};
-
 const setGasPrice = function ({ commit }, gasPrice) {
   commit('SET_GAS_PRICE', gasPrice);
 };
@@ -25,17 +21,11 @@ const setEthGasPrice = function ({ commit }, val) {
   commit('SET_ETH_GASPRICE', val);
 };
 
-const setCurrency = function ({ commit }, val) {
-  commit('SET_CURRENCY', val);
-};
-
 export default {
   setOnlineStatus,
   setLocale,
-  setLastPath,
   setNetwork,
   setGasPrice,
   setAddressBook,
-  setEthGasPrice,
-  setCurrency
+  setEthGasPrice
 };

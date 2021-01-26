@@ -53,7 +53,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['instance']),
-    ...mapState('global', ['currency']),
+    ...mapState('external', ['ETHUSDValue', 'test']),
     ...mapGetters('global', ['network']),
     to() {
       return this.tx.to;
@@ -82,7 +82,7 @@ export default {
       return utils.fromWei(parsedTxFee);
     },
     txFeeUSD() {
-      return BigNumber(this.txFee).times(this.currency.value).toFixed(2);
+      return BigNumber(this.txFee).times(this.ETHUSDValue.value).toFixed(2);
     },
     value() {
       const parsedValue = this.tx.value ? this.tx.value : '0x';

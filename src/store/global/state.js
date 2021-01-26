@@ -6,7 +6,6 @@ const state = {
   localStore: true,
   addressBook: [],
   Errors: {},
-  path: '',
   online: true,
   linkQuery: {},
   locale: 'en_US',
@@ -14,7 +13,7 @@ const state = {
   gasLimitWarning: 100,
   gasPrice: toWei('41', 'gwei'),
   currentNetwork: nodeList['ETH'][0],
-  currency: {}
+  preferredCurrency: 'USD'
 };
 state.currentNetwork.type = {
   name: state.currentNetwork.type.name

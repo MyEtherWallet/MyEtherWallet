@@ -189,8 +189,7 @@ export default {
           'active'
         );
       } else {
-        // If there is no matching submenu, make main menu
-        this.$refs['main' + menuItemRef][0].parentNode.classList.add('active');
+        this.$refs['mainDashboard'][0].parentNode.classList.add('active');
       }
     },
     routerPush(routeName) {

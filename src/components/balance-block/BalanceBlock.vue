@@ -95,20 +95,20 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['balance']),
-    ...mapState('global', ['currency']),
+    ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network']),
     isEth() {
       return this.network.type.name === ETH.name;
     },
     balanceUsd() {
       const value = this.isEth
-        ? BigNumber(this.balance).times(this.currency.value).toFixed(2)
+        ? BigNumber(this.balance).times(this.ETHUSDValue.value).toFixed(2)
         : this.balance;
       return `$ ${value}`;
     },
     valueUsd() {
       const value = this.isEth
-        ? BigNumber(this.value).times(this.currency.value).toFixed(2)
+        ? BigNumber(this.value).times(this.ETHUSDValue.value).toFixed(2)
         : this.value;
       return `$ ${value}`;
     },
@@ -120,7 +120,7 @@ export default {
     },
     totalUsd() {
       const value = this.isEth
-        ? BigNumber(this.total).times(this.currency.value).toFixed(2)
+        ? BigNumber(this.total).times(this.ETHUSDValue.value).toFixed(2)
         : 0;
       return `$ ${value}`;
     },

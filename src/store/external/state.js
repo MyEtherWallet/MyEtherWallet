@@ -1,6 +1,10 @@
 const state = {
   localStore: false,
-  darkList: {}
+  darkList: {},
+  path: '',
+  forexRates: {},
+  ETHUSDValue: {},
+  test: 'abc'
 };
 
 export default state;

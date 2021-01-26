@@ -93,7 +93,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address', 'balance']),
-    ...mapState('global', ['currency']),
+    ...mapState('external', ['ETHUSDValue']),
     lastFour() {
       return this.address.substring(
         this.address.length - 4,
@@ -101,8 +101,8 @@ export default {
       );
     },
     convertedBalance() {
-      const balance = BigNumber(this.balance).times(this.currency.value);
-      return `${this.currency.symbol + balance.toFixed(2).toString()}`;
+      const balance = BigNumber(this.balance).times(this.ETHUSDValue.value);
+      return `${this.ETHUSDValue.symbol + balance.toFixed(2).toString()}`;
     }
   },
   methods: {

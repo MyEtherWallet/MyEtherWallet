@@ -220,7 +220,8 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapState('global', ['online', 'gasPrice', 'currency', 'addressBook']),
+    ...mapState('global', ['online', 'gasPrice', 'addressBook']),
+    ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network']),
     rules() {
       return [
@@ -484,8 +485,11 @@ export default {
       return this.sendTx ? this.sendTx.txFeeETH(this.customGasLimit) : '0';
     },
     txFeeUSD() {
-      if (this.currency.value && this.sendTx) {
-        return this.sendTx.txFeeUSD(this.customGasLimit, this.currency.value);
+      if (this.ETHUSDValue.value && this.sendTx) {
+        return this.sendTx.txFeeUSD(
+          this.customGasLimit,
+          this.ETHUSDValue.value
+        );
       }
       return '--';
     },

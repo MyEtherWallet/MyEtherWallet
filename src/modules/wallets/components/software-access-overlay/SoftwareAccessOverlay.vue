@@ -150,7 +150,7 @@ export default {
   },
 
   computed: {
-    ...mapState('global', ['path']),
+    ...mapState('external', ['path']),
     title() {
       return !this.step ? 'Software' : this.titles[this.steps[this.step]];
     },
@@ -233,7 +233,7 @@ export default {
           if (this.path !== '') {
             this.$router.push({ path: this.path });
           } else {
-            this.$router.push({ name: 'Wallets' });
+            this.$router.push({ name: 'Dashboard' });
           }
         })
         .catch(e => {

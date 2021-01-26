@@ -25,11 +25,12 @@ export default {
     window.addEventListener('online', () => {
       this.setOnlineStatus(true);
       this.setDarkList();
+      this.setForexRates();
     });
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
-    ...mapActions('external', ['setDarkList'])
+    ...mapActions('external', ['setDarkList', 'setForexRates'])
   }
 };
 </script>
