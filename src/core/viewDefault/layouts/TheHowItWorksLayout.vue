@@ -1,23 +1,11 @@
 <template>
   <div class="mew-component--how-it-works">
     <home-header title="How it works" />
-    <mew-tabs :items="mewTabs" has-underline>
-      <template #tabContent1>
-        <how-it-works-send />
-      </template>
-      <template #tabContent2>
-        <how-it-works-swap />
-      </template>
-      <template #tabContent3>
-        <how-it-works-dapps-center />
-      </template>
-      <template #tabContent4>
-        <how-it-works-tokens />
-      </template>
-      <template #tabContent5>
-        <how-it-works-more />
-      </template>
-    </mew-tabs>
+    <how-it-works-send />
+    <how-it-works-swap />
+    <how-it-works-dapps-center />
+    <how-it-works-tokens />
+    <how-it-works-more />
     <get-started />
   </div>
 </template>

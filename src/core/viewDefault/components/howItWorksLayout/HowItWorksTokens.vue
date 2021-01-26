@@ -6,11 +6,6 @@
     />
     <v-container>
       <div class="py-7" />
-      <v-sheet color="transparent" max-width="500px" class="mx-auto mb-10">
-        <div class="display-1 font-weight-bold text-sm-center white--text">
-          All-in-one gateway to your Ethereum Blockchain service
-        </div>
-      </v-sheet>
       <v-row class="align-center">
         <v-col cols="12" lg="7">
           <v-img
