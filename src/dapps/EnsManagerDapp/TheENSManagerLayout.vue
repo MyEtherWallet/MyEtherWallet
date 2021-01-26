@@ -341,11 +341,11 @@ export default {
         .then(resp => {
           this.settingIpfs = false;
           this.uploadedHash = resp;
+          this.closeManage();
         })
         .catch(err => {
           Toast(err, {}, ERROR);
         });
-      this.closeManage();
     },
     setIpfs(hash) {
       this.settingIpfs = true;
