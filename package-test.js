@@ -51,7 +51,10 @@ const EXCEPTIONS = [
   'postcss-import',
   'postcss-url',
   'webpack',
-  'copy-webpack-plugin'
+  'copy-webpack-plugin',
+  // update after release
+  'core-js',
+  'stylelint'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
