@@ -10,6 +10,7 @@
         <template #stepperContent1
           ><request
             v-if="onStep === 1"
+            class="mt-3"
             :is-available="isAvailable"
             :name="nameHandler.name"
             :host-name="nameHandler.parsedHostName"
@@ -19,6 +20,7 @@
         <template #stepperContent2
           ><register
             v-if="onStep === 2"
+            class="mt-3"
             :name="nameHandler.name"
             :duration="duration"
             :register="register"
@@ -138,3 +140,9 @@ export default {
   }
 };
 </script>
+<style>
+/* will remove after next mew components update */
+.mew-stepper {
+  background: transparent !important;
+}
+</style>

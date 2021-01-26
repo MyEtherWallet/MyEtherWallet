@@ -23,7 +23,7 @@
     />
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="ensBgImg" />
-      <mew-tabs :items="tabs" has-underline>
+      <mew-tabs class="pt-5" :items="tabs" :is-centered="true" has-underline>
         <!-- register domain -->
         <template #tabContent1>
           <v-sheet max-width="700px" color="transparent" class="py-15 mx-auto">
@@ -63,7 +63,11 @@
                 >
               </span>
             </div>
-            <mew-expand-panel class="my-domains" :panel-items="myDomains">
+            <mew-expand-panel
+              :idx-to-expand="null"
+              class="my-domains"
+              :panel-items="myDomains"
+            >
               <template
                 v-for="(domain, idx) in myDomains"
                 :slot="'panelBody' + (idx + 1)"
@@ -138,12 +142,10 @@
                       cols="2"
                       class="text-center"
                     >
-                      <mew-button
-                        title=""
-                        btn-style="transparent"
-                        btn-size="xlarge"
-                        icon-type="mew"
-                        icon="ensManager"
+                      <mew-icon
+                        class="cursor-pointer"
+                        icon-name="ensManager"
+                        :img-height="70"
                         @click.native="manage(option.type, idx)"
                       />
                       <div>{{ option.label }}</div>
@@ -193,7 +195,7 @@ export default {
         { label: this.$t('ens.transfer-domain'), type: 'transfer' },
         {
           label: this.$t('ens.manage-domains.renew-domain'),
-          expire: '07/21/2020',
+          // expire: '07/21/2020',
           type: 'renew'
         },
         {
@@ -272,6 +274,7 @@ export default {
         .getAllNamesForAddress()
         .then(res => {
           res.forEach(domain => {
+            domain.disabled = domain.expired;
             domain.colorTheme = domain.expired
               ? 'errorOutlineActive'
               : 'superPrimary';
@@ -329,6 +332,7 @@ export default {
       this.closeManage();
     },
     uploadFile(file) {
+      console.error('in here', file)
       this.settingIpfs = true;
       this.manageDomainHandler
         .uploadFile(file)
@@ -336,11 +340,12 @@ export default {
         .then(resp => {
           this.settingIpfs = false;
           this.uploadedHash = '';
-          console.error('resp', resp)
+          this.closeManage();
+          console.error('resp', resp);
         })
         .catch(err => {
-          console.error('err', err)
-        })
+          console.error('err', err);
+        });
     },
     setIpfs(hash) {
       this.settingIpfs = true;
@@ -349,11 +354,11 @@ export default {
         .then(resp => {
           this.settingIpfs = false;
           this.uploadedHash = '';
-          console.error('resp', resp)
+          console.error('resp', resp);
         })
         .catch(err => {
-          console.error('err', err)
-        })
+          console.error('err', err);
+        });
     },
     // register domain
     findDomain() {

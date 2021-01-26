@@ -53,7 +53,7 @@
   "ipfs-check-website": "Check your website for {domainName} here:",
   "expired": "Expired",
   "controller-text": "Looks like the address you're using is not a controller of {domain}. Do you wanna set {addr} as a controller for {domain}?",
-  "text-record-error": "{value} is missing or not a valid input for {name}!",
+  "text-record-error": "Not a valid input for {name}!",
   "set-controller": "Update Controller",
   "is-available": "Cheers! This domain is available.",
   "domain-taken": "Domain has been taken",

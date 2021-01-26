@@ -2,6 +2,11 @@
   <div>
     <div v-for="(coin, idx) in coins" :key="coin + idx">
       <mew-input
+        :id="idx"
+        :rules="[
+          coin.validate ||
+            $t('ens.ens-resolver.invalid-addr', { coin: coin.name })
+        ]"
         :value="coin.value"
         :label="coin.symbol"
         :placeholder="coin.name + ' ' + $t('common.addr')"
@@ -52,11 +57,17 @@ export default {
   //   }
   // },
   methods: {
-    // need to make mew-input return the label
-    setCoin(value, label) {
-      const coin = this.coins.find(coin => coin.symbol === label);
-      coin.value = value;
-      console.error('coin', coin)
+    rules(idx, coin) {
+      if (coin.value) {
+        return [
+          this.coins[idx].validate(coin.value) ||
+            this.$t('ens.ens-resolver.invalid-addr', { coin: coin.name })
+        ];
+      }
+    },
+    setCoin(value, id) {
+      const coin = this.coins[id];
+      coin.value = coin.validate(value) ? value : '';
       this.setCoins.push(coin);
     }
   }

@@ -2,6 +2,8 @@
   <div>
     <div v-for="(record, idx) in textRecords" :key="record + idx">
       <mew-input
+        :id="idx"
+        :rules="rules(idx, record)"
         :value="record.value"
         :label="record.name"
         :placeholder="record.name"
@@ -36,21 +38,17 @@ export default {
       setRecords: {}
     };
   },
-  // computed: {
-  //   rules() {
-  //     return [
-  //       this.isValidAddress ||
-  //         this.$t('interface.address-book.validations.invalid-address'),
-  //       value =>
-  //         !!value || this.$t('interface.address-book.validations.addr-required')
-  //     ];
-  //   }
-  // },
   methods: {
-    // need to make mew-input return the label
-    setRecord(value, name = 'email') {
-      const record = this.textRecords.find(record => record.name === name);
-      record.value = value;
+    rules(idx, record) {
+      console.error('in here', idx, record)
+      return [
+        !this.textRecords[idx].validate(record.value) ||
+          this.$t('ens.text-record-error', { name: record.name })
+      ];
+    },
+    setRecord(value, id) {
+      const record = this.textRecords[id];
+      record.value = record.validate(value) ? value : '';
       this.setRecords[record.name] = record;
     }
   }

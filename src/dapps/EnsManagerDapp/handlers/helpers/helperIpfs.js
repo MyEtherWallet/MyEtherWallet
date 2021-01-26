@@ -1,5 +1,4 @@
 const getHashFromFile = _hash => {
-  console.error('hash1', _hash)
   return fetch('https://swap.mewapi.io/ipfs', {
     headers: {
       'Content-Type': 'application/json'
@@ -10,7 +9,6 @@ const getHashFromFile = _hash => {
       hash: _hash
     })
   }).then(response => {
-    console.error('hash from file', response.json())
     if (response.error) {
       return new Error('Error getting IPFS Hash!');
     }

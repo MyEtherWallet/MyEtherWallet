@@ -8,7 +8,7 @@ const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
 //@xkeshi/vue-qrcode no longer maintained, forked out to mew
 // webpack has a major update
 // copy-webpack-plugin major update
-const EXCEPTIONS = ['@xkeshi/vue-qrcode', 'multicoin-address-validator', 'postcss-import', 'postcss-url', 'webpack','copy-webpack-plugin', 'vuetify'];
+const EXCEPTIONS = ['@xkeshi/vue-qrcode', 'multicoin-address-validator', 'postcss-import', 'postcss-url', 'webpack','copy-webpack-plugin'];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
 };
