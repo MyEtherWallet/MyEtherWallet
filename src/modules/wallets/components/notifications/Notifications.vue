@@ -14,7 +14,7 @@
         >
           <div>
             <v-icon color="primary" large> mdi-circle-medium </v-icon>
-            Succeed
+            Succeed1
           </div>
           <div>
             <v-icon color="orange" large> mdi-circle-medium </v-icon>
@@ -123,6 +123,9 @@
 import In from './components/in/In';
 import Out from './components/out/Out';
 import Swap from './components/swap/Swap';
+import { mapState } from 'vuex';
+import utils from 'web3-utils';
+import Transfers from '@/apollo/queries/notifications';
 
 export default {
   components: { In, Out, Swap },
@@ -131,6 +134,7 @@ export default {
   },
   data() {
     return {
+      convertedNotifications: [],
       selected: 'all',
       items: [
         { label: 'All', val: 'all' },
@@ -249,8 +253,383 @@ export default {
           label: 'Error message',
           value: 'None'
         }
-      ]
+      ],
+      transfers: {},
+      recentTransfersEthVM: []
     };
+  },
+  computed: {
+    ...mapState('wallet', ['notifications', 'address'])
+  },
+  mounted() {
+    console.log(this.notifications); // todo remove dev item
+    this.transfers = new Transfers(this.$apollo);
+    this.transfers.getEthTransfers(this.address).then(res => {
+      this.recentTransfersEthVM = res.transfers;
+      this.convert();
+      console.log(res); // todo remove dev item
+    });
+  },
+  methods: {
+    convert() {
+      /*
+      * amount: "100000000000000"
+blockNumber: "9748862"
+error: false
+errorMessage: ""
+gasLimit: "21000"
+gasPrice: "3000000000"
+gasUsed: "21000"
+hash: "0xc607158b323f0bf12909b1db1dfa7bc6c48c3cf822729a4de74dd40dc407267d"
+nonce: "2"
+to: "0x8d57beb45207389b6041d33d1871c54b138c8f34"
+tokenSymbol: ""
+tokenTransferTo: ""
+tokenTransferVal: ""
+* */
+      const notificationArray = this.notifications[this.address].map(item => {
+        let direction = 'out';
+        const details = this.recentTransfersEthVM.find(thing => {
+          return thing.transfer.transactionHash === item.body.hash;
+        });
+        console.log('details', details); // todo remove dev item
+        if (details) {
+          if (details.transfer.from !== this.address) {
+            direction = 'in';
+
+            return [
+              {
+                label: 'ethVM'
+              },
+              {
+                label: 'TimeStamp',
+                type: item.timestamp
+              },
+              {
+                label: 'Type',
+                type: item.type
+              },
+              {
+                label: 'Direction',
+                type: 'in'
+              },
+              {
+                label: 'Transaction hash',
+                value: item.body.hash,
+                color: 'primary',
+                ellipsis: true
+              },
+              {
+                label: 'Gas price',
+                value: utils.fromWei(item.body.gasPrice, 'gwei')
+              },
+              {
+                label: 'Gas limit',
+                value: item.body.gasLimit
+              },
+              {
+                label: 'Max transaction fee',
+                value: '0.0002342 ETH ($0.09)'
+              },
+              {
+                label: 'Nonce',
+                value: item.body.nonce
+              },
+              {
+                label: 'Time',
+                value: '13:22:22'
+              },
+              {
+                label: 'Status',
+                value: 'In progress',
+                color: 'orange'
+              },
+              {
+                label: 'Error message',
+                value: 'None'
+              }
+            ];
+          } else if (item.type === 'swap') {
+            return [
+              {
+                label: 'TimeStamp',
+                type: item.timestamp
+              },
+              {
+                label: 'Type',
+                type: item.type
+              },
+              {
+                label: 'Direction',
+                type: 'out'
+              },
+              {
+                label: 'Transaction hash',
+                value: item.body.hash,
+                color: 'primary',
+                ellipsis: true
+              },
+              {
+                label: 'Gas price',
+                value: utils.fromWei(item.body.gasPrice, 'gwei')
+              },
+              {
+                label: 'Gas limit',
+                value: item.body.gasLimit
+              },
+              {
+                label: 'Max transaction fee',
+                value: '0.0002342 ETH ($0.09)'
+              },
+              {
+                label: 'Nonce',
+                value: item.body.nonce
+              },
+              {
+                label: 'Time',
+                value: '13:22:22'
+              },
+              {
+                label: 'Status',
+                value: 'In progress',
+                color: 'orange'
+              },
+              {
+                label: 'Error message',
+                value: 'None'
+              }
+            ];
+          }
+          return [
+            {
+              label: 'TimeStamp',
+              type: item.timestamp
+            },
+            {
+              label: 'Type',
+              type: item.type
+            },
+            {
+              label: 'Direction',
+              type: 'out'
+            },
+            {
+              label: 'Transaction hash',
+              value: item.body.hash,
+              color: 'primary',
+              ellipsis: true
+            },
+            {
+              label: 'Gas price',
+              value: utils.fromWei(item.body.gasPrice, 'gwei')
+            },
+            {
+              label: 'Gas limit',
+              value: item.body.gasLimit
+            },
+            {
+              label: 'Max transaction fee',
+              value: '0.0002342 ETH ($0.09)'
+            },
+            {
+              label: 'Nonce',
+              value: item.body.nonce
+            },
+            {
+              label: 'Time',
+              value: '13:22:22'
+            },
+            {
+              label: 'Status',
+              value: 'In progress',
+              color: 'orange'
+            },
+            {
+              label: 'Error message',
+              value: 'None'
+            }
+          ];
+        }
+        return [
+          {
+            label: 'Type',
+            type: item.type
+          },
+          {
+            label: 'Direction',
+            type: direction
+          },
+          {
+            label: 'Transaction hash',
+            value: item.body.hash,
+            color: 'primary',
+            ellipsis: true
+          },
+          {
+            label: 'Gas price',
+            value: utils.fromWei(item.body.gasPrice, 'gwei')
+          },
+          {
+            label: 'Gas limit',
+            value: item.body.gasLimit
+          },
+          {
+            label: 'Max transaction fee',
+            value: '0.0002342 ETH ($0.09)'
+          },
+          {
+            label: 'Nonce',
+            value: item.body.nonce
+          },
+          {
+            label: 'Time',
+            value: '13:22:22'
+          },
+          {
+            label: 'Status',
+            value: 'In progress',
+            color: 'orange'
+          },
+          {
+            label: 'Error message',
+            value: 'None'
+          }
+        ];
+      });
+      console.log(notificationArray); // todo remove dev item
+    },
+    convert2() {
+      /*
+      * amount: "100000000000000"
+blockNumber: "9748862"
+error: false
+errorMessage: ""
+gasLimit: "21000"
+gasPrice: "3000000000"
+gasUsed: "21000"
+hash: "0xc607158b323f0bf12909b1db1dfa7bc6c48c3cf822729a4de74dd40dc407267d"
+nonce: "2"
+to: "0x8d57beb45207389b6041d33d1871c54b138c8f34"
+tokenSymbol: ""
+tokenTransferTo: ""
+tokenTransferVal: ""
+*
+* block: (...)
+from: (...)
+status: (...)
+timestamp: (...)
+to: (...)
+transactionHash: (...)
+txFee: (...)
+* */
+      const notificationArray = this.recentTransfersEthVM.map(item => {
+        let direction = 'out';
+        const details = this.notifications[this.address].find(thing => {
+          return item.transfer.transactionHash === thing.body.hash;
+        });
+        console.log('details', details); // todo remove dev item
+        if (details) {
+          return [
+            {
+              label: 'ethVM'
+            },
+            {
+              label: 'TimeStamp',
+              type: item.timestamp
+            },
+            {
+              label: 'Type',
+              type: item.type
+            },
+            {
+              label: 'Direction',
+              type: 'in'
+            },
+            {
+              label: 'Transaction hash',
+              value: item.body.hash,
+              color: 'primary',
+              ellipsis: true
+            },
+            {
+              label: 'Gas price',
+              value: utils.fromWei(item.body.gasPrice, 'gwei')
+            },
+            {
+              label: 'Gas limit',
+              value: item.body.gasLimit
+            },
+            {
+              label: 'Max transaction fee',
+              value: '0.0002342 ETH ($0.09)'
+            },
+            {
+              label: 'Nonce',
+              value: item.body.nonce
+            },
+            {
+              label: 'Time',
+              value: '13:22:22'
+            },
+            {
+              label: 'Status',
+              value: 'In progress',
+              color: 'orange'
+            },
+            {
+              label: 'Error message',
+              value: 'None'
+            }
+          ];
+        }
+        return [
+          {
+            label: 'Type',
+            type: item.type
+          },
+          {
+            label: 'Direction',
+            type: direction
+          },
+          {
+            label: 'Transaction hash',
+            value: item.body.hash,
+            color: 'primary',
+            ellipsis: true
+          },
+          {
+            label: 'Gas price',
+            value: utils.fromWei(item.body.gasPrice, 'gwei')
+          },
+          {
+            label: 'Gas limit',
+            value: item.body.gasLimit
+          },
+          {
+            label: 'Max transaction fee',
+            value: '0.0002342 ETH ($0.09)'
+          },
+          {
+            label: 'Nonce',
+            value: item.body.nonce
+          },
+          {
+            label: 'Time',
+            value: '13:22:22'
+          },
+          {
+            label: 'Status',
+            value: 'In progress',
+            color: 'orange'
+          },
+          {
+            label: 'Error message',
+            value: 'None'
+          }
+        ];
+      });
+      console.log(notificationArray); // todo remove dev item
+    }
   }
 };
 </script>

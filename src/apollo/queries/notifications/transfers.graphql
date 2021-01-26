@@ -1,0 +1,38 @@
+fragment TokenFragment on EthTokenInfo {
+    name
+    symbol
+    decimals
+}
+
+query getLatestPrices {
+    getLatestPrices {
+        id
+        symbol
+        name
+        image
+        contract
+        current_price
+        market_cap
+        total_volume
+        price_change_24h
+        total_supply
+    }
+}
+
+query getEthTransfersV2 ($owner: String, $filter: TransferFilter, $limit: Int, $nextKey: String) {
+  getEthTransfersV2 (owner: $owner, filter: $filter, limit: $limit, nextKey: $nextKey) {
+    transfers {
+      transfer {
+        transactionHash
+        block
+        timestamp
+        from
+        to
+        txFee
+        status
+      }
+      value
+    }
+    nextKey
+  }
+}

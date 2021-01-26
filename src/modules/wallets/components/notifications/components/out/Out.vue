@@ -33,7 +33,7 @@
           <div>Abount: {{ amount }}</div>
         </div>
         <div class="d-flex d-sm-block ml-sm-auto text-sm-right mt-2 mt-sm-0">
-          <badge badge-type="txOut" badge-title="OUT" />
+          <mew-badge badge-type="txOut" badge-title="OUT" />
           <div class="mt-0 mt-sm-1 ml-2 ml-sm-0">{{ time }} ago</div>
         </div>
       </v-card>
