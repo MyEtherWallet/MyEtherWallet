@@ -18,6 +18,14 @@
               <h6>{{ member.position }}</h6>
             </div>
           </div>
+          <div
+            v-for="(item, idx) in multiplyBlank"
+            v-show="showBlank"
+            :key="`blank${idx}`"
+            class="blank-member"
+          >
+            <img :src="blank" alt="blank" />
+          </div>
         </div>
       </div>
     </div>
@@ -36,12 +44,12 @@ import brittany from '@/assets/images/team/Brittany.jpg';
 import yel from '@/assets/images/team/Gamaliel.jpg';
 import steve from '@/assets/images/team/Steve.jpg';
 import gage from '@/assets/images/team/Gage.jpg';
-import jack from '@/assets/images/team/Jack.jpg';
 import david from '@/assets/images/team/David.jpg';
 import alex from '@/assets/images/team/Alex.jpg';
 import misha from '@/assets/images/team/Misha.jpg';
 import katya from '@/assets/images/team/Katya.jpg';
 import semaja from '@/assets/images/team/Semaja.jpg';
+import blank from '@/assets/images/team/_blank_.jpg';
 
 export default {
   components: {
@@ -49,6 +57,7 @@ export default {
   },
   data() {
     return {
+      blank: blank,
       members: [
         {
           name: 'Kosala',
@@ -96,11 +105,6 @@ export default {
           img: david
         },
         {
-          name: 'Jack',
-          position: 'Head of UI/UX Design',
-          img: jack
-        },
-        {
           name: 'Stephen',
           position: 'Educational Project Lead',
           img: stephen
@@ -127,6 +131,15 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    multiplyBlank() {
+      const members = this.members.length % 3;
+      return members === 2 ? 1 : members === 1 ? 2 : 0;
+    },
+    showBlank() {
+      return this.members.length % 3 !== 0;
+    }
   }
 };
 </script>
