@@ -182,7 +182,6 @@ export default {
       this.removeActiveClasses();
 
       const menuItemRef = this.$route.name;
-
       if (this.$refs[menuItemRef]) {
         // Mark active main menu and submenu
         this.$refs[menuItemRef][0].classList.add('active');
@@ -216,7 +215,6 @@ export default {
   }
 
   .sub-menu {
-    max-height: 0px;
     overflow: hidden;
     transition: all 0.2s ease;
     .active * {

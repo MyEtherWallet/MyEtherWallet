@@ -1,33 +1,55 @@
-import store from 'store';
-import { Toast, ERROR } from '@/components/toast';
-const SET_ONLINE_STATUS = async function (state, status) {
-  state.online = status;
-  if (state.online) {
-    const darkList = await fetch(
-      'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/addresses/addresses-darklist.json'
-    )
-      .then(res => res.json())
-      .catch(e => {
-        Toast(e.message, {}, ERROR);
-      });
-    state.darklist = {
-      data: darkList,
-      timestamp: Date.now()
-    };
+import localStore from 'store';
+import Configs from '../configs';
+const INIT_STORE = function (state) {
+  if (localStore.get(Configs.LOCAL_STORAGE_KEYS.global)) {
+    const savedStore = JSON.parse(
+      localStore.get(Configs.LOCAL_STORAGE_KEYS.global)
+    );
+    if (savedStore.stateVersion === Configs.stateVersion) {
+      Object.assign(state, savedStore);
+    }
   }
 };
-
-const SET_LOCALE = function (state, { locale, save }) {
-  state.locale = locale;
-  if (save) store.set('locale', locale);
+const SET_ONLINE_STATUS = async function (state, status) {
+  state.online = status;
 };
 
-const SET_LAST_PATH = function (state, val) {
-  state.path = val;
+const SET_LOCALE = function (state, { locale }) {
+  state.locale = locale;
+};
+
+const SET_GAS_PRICE = function (state, val) {
+  state.gasPrice = val;
+};
+
+const SET_ADDRESS_BOOK = function (state, val) {
+  state.addressBook = val;
+};
+const SET_NETWORK = function (state, networkObj) {
+  const _netObj = Object.assign({}, networkObj);
+  if (_netObj.type.name !== 'CUS') {
+    _netObj.type = {
+      name: networkObj.type.name
+    };
+  }
+  state.currentNetwork = _netObj;
+};
+
+const SET_ETH_GASPRICE = function (state, val) {
+  state.ethGasPrice = val;
+};
+
+const SET_CURRENCY = function (state, val) {
+  state.currency = val;
 };
 
 export default {
   SET_ONLINE_STATUS,
   SET_LOCALE,
-  SET_LAST_PATH
+  SET_GAS_PRICE,
+  SET_NETWORK,
+  SET_ADDRESS_BOOK,
+  SET_ETH_GASPRICE,
+  SET_CURRENCY,
+  INIT_STORE
 };

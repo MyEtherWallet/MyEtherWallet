@@ -80,11 +80,10 @@ export default {
   methods: {
     ...mapActions('wallet', [
       'setAccountBalance',
-      'setCurrency',
-      'setGasPrice',
       'setEthGasPrice',
       'setBlockNumber'
     ]),
+    ...mapActions('global', ['setCurrency', 'setGasPrice', 'setEthGasPrice']),
     getTokens() {
       const tokensList = new TokenCalls(this.$apollo);
       tokensList.getOwnersERC20Tokens(this.address).then(res => {

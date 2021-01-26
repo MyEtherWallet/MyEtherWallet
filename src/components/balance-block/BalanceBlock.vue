@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { ETH } from '@/utils/networks/types';
 export default {
@@ -94,7 +94,9 @@ export default {
     return {};
   },
   computed: {
-    ...mapState('wallet', ['balance', 'network', 'currency']),
+    ...mapState('wallet', ['balance']),
+    ...mapState('global', ['currency']),
+    ...mapGetters('global', ['network']),
     isEth() {
       return this.network.type.name === ETH.name;
     },

@@ -24,10 +24,12 @@ export default {
     });
     window.addEventListener('online', () => {
       this.setOnlineStatus(true);
+      this.setDarkList();
     });
   },
   methods: {
-    ...mapActions('global', ['setOnlineStatus'])
+    ...mapActions('global', ['setOnlineStatus']),
+    ...mapActions('external', ['setDarkList'])
   }
 };
 </script>

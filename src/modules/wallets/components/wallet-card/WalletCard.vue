@@ -92,7 +92,8 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address', 'currency', 'balance']),
+    ...mapState('wallet', ['address', 'balance']),
+    ...mapState('global', ['currency']),
     lastFour() {
       return this.address.substring(
         this.address.length - 4,
@@ -145,7 +146,6 @@ export default {
 
   img {
     position: absolute;
-    bottom: 0px;
     right: -5px;
     cursor: pointer;
   }

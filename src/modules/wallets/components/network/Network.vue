@@ -34,7 +34,7 @@
 
 <script>
 import changeNetworkOverlay from './change-network/ChangeNetwork';
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   components: { changeNetworkOverlay },
@@ -50,7 +50,8 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['blockNumber', 'network']),
+    ...mapState('wallet', ['blockNumber']),
+    ...mapGetters('global', ['network']),
     type() {
       return this.network.type.name;
     },

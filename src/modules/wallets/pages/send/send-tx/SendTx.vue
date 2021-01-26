@@ -150,7 +150,7 @@
 
 <script>
 import utils from 'web3-utils';
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 
 import SendTransaction from './index';
@@ -219,16 +219,9 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', [
-      'balance',
-      'network',
-      'gasPrice',
-      'web3',
-      'address',
-      'currency',
-      'addressBook'
-    ]),
-    ...mapState('global', ['online']),
+    ...mapState('wallet', ['balance', 'web3', 'address']),
+    ...mapState('global', ['online', 'gasPrice', 'currency', 'addressBook']),
+    ...mapGetters('global', ['network']),
     rules() {
       return [
         this.isValidAddress ||

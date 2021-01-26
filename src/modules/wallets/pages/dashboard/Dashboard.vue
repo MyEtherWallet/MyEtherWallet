@@ -279,7 +279,7 @@
 
 <script>
 import chart from '@/modules/wallets/components/chart/Chart';
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import WalletCalls from '@/apollo/queries/wallets/index';
 import utils from 'web3-utils';
@@ -421,6 +421,8 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['balance', 'currency', 'network', 'address']),
+    ...mapState('global', ['currency']),
+    ...mapGetters('global', ['network']),
     showBuyEth() {
       return this.balannce === 0;
     },
@@ -522,7 +524,7 @@ export default {
       height: initial !important;
       margin-right: 4px !important;
     }
-    .v-btn--active:before {
+    .v-btn--active::before {
       opacity: 0 !important;
     }
   }
