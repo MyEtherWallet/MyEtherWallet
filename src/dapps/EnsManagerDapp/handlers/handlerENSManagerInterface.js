@@ -24,11 +24,11 @@ export default class ENSManagerInterface {
     this.gasPrice = gasPrice ? gasPrice : null;
     // Returned value
     this.tld = getTld(name, network);
-    this.name = name + '.' + this.tld;
+    this.parsedHostName = getHostName(name);
+    this.name = this.parsedHostName + '.' + this.tld;
     this.nameHash = nameHashPckg.hash(this.name);
     this.txtRecords = null;
     this.multiCoin = null;
-    this.parsedHostName = getHostName(name);
     this.labelHash = web3.utils.sha3(this.parsedHostName);
     this.owner = '0x';
     this.registrarAddress = '0x';

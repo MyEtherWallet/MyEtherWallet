@@ -78,7 +78,7 @@ export default {
   },
   data() {
     return {
-      duration: '1'
+      duration: 1
     };
   },
   computed: {
@@ -100,7 +100,7 @@ export default {
       }
       return items;
     },
-    // double check how this works
+    // pricing comes from ens docs
     pricingByLength() {
       if (this.hostName.length === 3) {
         return 640;

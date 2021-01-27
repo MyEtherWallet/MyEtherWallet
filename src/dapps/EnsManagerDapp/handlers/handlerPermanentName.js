@@ -176,7 +176,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
         .call();
       return this.registrarControllerContract.methods
         .commit(commitment)
-        .send({ from: this.address });
+        .send({ from: this.address, gas: '500000' });
     } catch (e) {
       throw new Error(e);
     }
@@ -230,6 +230,11 @@ export default class PermanentNameModule extends ENSManagerInterface {
         .nameExpires(this.labelHash)
         .call();
       this.expired = expiryTime * 1000 < new Date().getTime();
+      if (!this.expired) {
+        const date = new Date(expiryTime * 1000);
+        this.expiration =
+          date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+      }
     }
     this._setDnsContract();
   }

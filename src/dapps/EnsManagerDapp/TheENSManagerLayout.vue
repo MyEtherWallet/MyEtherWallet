@@ -5,7 +5,15 @@
       :on-register="onRegister"
       :close="closeRegister"
       :register="register"
-      :name-handler="nameHandler"
+      :loading-commit="loadingCommit"
+      :commited="committed"
+      :minimum-age="minimumAge"
+      :commit="commit"
+      :name="nameHandler.name"
+      :parsed-host-name="nameHandler.parsedHostName"
+      :is-available="nameHandler.isAvailable"
+      :checking-domain-avail="nameHandler.checkingDomainAvail"
+      :generate-key-phrase="generateKeyPhrase"
     />
     <manage-domain
       ref="manageDomain"
@@ -149,14 +157,17 @@
                         @click.native="manage(option.type, idx)"
                       />
                       <div>{{ option.label }}</div>
-                      <div v-if="option.expire" class="orange--text">
-                        <!-- <div>
+                      <div
+                        v-if="domain.expiration && key === 1"
+                        class="orange--text"
+                      >
+                        <div>
                           {{
-                            $t('ens.manage-domain.expire-at', {
-                              date: option.expire
+                            $t('ens.manage-domains.expire-at', {
+                              date: domain.expiration
                             })
                           }}
-                        </div> -->
+                        </div>
                       </div>
                     </v-col>
                   </v-row>
@@ -178,11 +189,16 @@ import ENSManager from './handlers/handlerEnsManager';
 import { mapState } from 'vuex';
 import { Toast, ERROR } from '@/components/toast';
 import BigNumber from 'bignumber.js';
+import { EventBus } from '@/plugins/eventBus';
+import EventNames from '@/utils/web3-provider/events.js';
 
 export default {
   components: { registerDomain, manageDomain },
   data() {
     return {
+      loadingCommit: false,
+      minimumAge: '',
+      committed: false,
       settingIpfs: false,
       manageDomainHandler: {},
       manageType: '',
@@ -195,7 +211,6 @@ export default {
         { label: this.$t('ens.transfer-domain'), type: 'transfer' },
         {
           label: this.$t('ens.manage-domains.renew-domain'),
-          // expire: '07/21/2020',
           type: 'renew'
         },
         {
@@ -392,6 +407,30 @@ export default {
         .catch(err => {
           Toast(err, {}, ERROR);
         });
+    },
+    commit() {
+      this.nameHandler.getMinimumAge().then(resp => {
+        this.minimumAge = resp;
+      });
+      // start timer after confirming tx
+      EventBus.$on(EventNames.CONFIRMED_TX, () => {
+        this.loadingCommit = true;
+      });
+      this.nameHandler
+        .createCommitment()
+        .then(() => {
+          this.loadingCommit = false;
+          this.committed = true;
+        })
+        .catch(err => {
+          this.closeRegister();
+          Toast(err, {}, ERROR);
+        });
+    },
+    generateKeyPhrase() {
+      if (this.nameHandler.generateKeyPhrase) {
+        this.nameHandler.generateKeyPhrase();
+      }
     }
   }
 };
