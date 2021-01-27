@@ -1,3 +1,9 @@
+### Release v5.7.19-hotfix.1
+
+### Devop
+
+* Revert aave package [#2793](https://github.com/MyEtherWallet/MyEtherWallet/pull/2793)
+
 ### Release v5.7.19
 
 ### Devop
