@@ -12,6 +12,7 @@ const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
 // Matching exceptions with package.json
 // Lock @vue packages due to complications on updating
 // @vue/test-utils - breaking tests beginning at 5.2.5-hotfix-2 (with version 1.0.0-beta.30)
+// @aave/protocol-js - freezes the whole page
 const EXCEPTIONS = [
   'postcss-import',
   'postcss-url',
@@ -52,9 +53,7 @@ const EXCEPTIONS = [
   'postcss-url',
   'webpack',
   'copy-webpack-plugin',
-  // update after release
-  'core-js',
-  'stylelint'
+  '@aave/protocol-js'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
