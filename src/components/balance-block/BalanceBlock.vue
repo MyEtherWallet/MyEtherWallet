@@ -6,7 +6,7 @@
       </v-col>
       <v-col class="text-right pt-0">
         <h5 class="font-weight-bold">{{ balanceUsd }}</h5>
-        <div>{{ balance }} {{ currency }}</div>
+        <div>{{ balanceInETH }} {{ currency }}</div>
       </v-col>
     </v-row>
 
@@ -94,7 +94,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState('wallet', ['balance']),
+    ...mapGetters('wallet', ['balanceInETH']),
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network']),
     isEth() {
@@ -102,8 +102,8 @@ export default {
     },
     balanceUsd() {
       const value = this.isEth
-        ? BigNumber(this.balance).times(this.ETHUSDValue.value).toFixed(2)
-        : this.balance;
+        ? BigNumber(this.balanceInETH).times(this.ETHUSDValue.value).toFixed(2)
+        : this.balanceInETH;
       return `$ ${value}`;
     },
     valueUsd() {
@@ -128,10 +128,14 @@ export default {
       return `$ ${BigNumber(this.txFeeUSD).toFixed(2)}`;
     },
     progressBar() {
-      const toSendPercent = BigNumber(this.value).times(100).div(this.balance);
-      const txFeePercent = BigNumber(this.txFee).times(100).div(this.balance);
+      const toSendPercent = BigNumber(this.value)
+        .times(100)
+        .div(this.balanceInETH);
+      const txFeePercent = BigNumber(this.txFee)
+        .times(100)
+        .div(this.balanceInETH);
       return {
-        total: this.balance,
+        total: this.balanceInETH,
         data: [
           {
             title: 'sendBal',
@@ -153,5 +157,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped></style>

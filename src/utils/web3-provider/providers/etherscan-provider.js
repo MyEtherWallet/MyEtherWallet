@@ -1,5 +1,7 @@
 import EtherScanRequestManger from './etherscan-request-manager';
 import MiddleWare from '../middleware';
+import { EventBus } from '@/plugins/eventBus';
+import VuexStore from '@/store';
 import {
   ethSendTransaction,
   ethSignTransaction,
@@ -14,12 +16,12 @@ import {
 } from '../methods';
 import EtherscanProxy from '../etherscan-proxy';
 class EtherscanProvider {
-  constructor(host, options, store, eventHub) {
+  constructor(host, options) {
     this.host = host;
     this.apikey = options.apikey || 'UDJW3ARXWN9EHMTFUA2FW4V1KA7QZGAGCB';
     options.apikey = this.apikey;
-    this.store = store;
-    this.eventHub = eventHub;
+    this.store = VuexStore;
+    this.eventHub = EventBus;
     this.proxy = new EtherscanProxy(this.host, this.apikey);
     this.requestManager_ = new EtherScanRequestManger(host, options);
     this.requestThrottler = {

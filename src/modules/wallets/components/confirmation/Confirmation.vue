@@ -103,6 +103,7 @@ export default {
           _self.showOverlay = true;
         })
         .catch(e => {
+          console.log(e);
           this.overlayClose();
           _self.instance.errorHandler(e);
         });

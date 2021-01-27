@@ -76,18 +76,12 @@
                 </div>
                 <div v-show="isEth">
                   <i18n path="sendTx.cost-eth-usd" tag="div">
-                    <span slot="eth">{{ txFeeETH() }}</span>
-                    <span slot="usd">{{ txFeeUSD() }}</span>
+                    <span slot="eth">{{ txFeeETH }}</span>
+                    <span slot="usd">{{ txFeeUSD }}</span>
                   </i18n>
                 </div>
               </div>
               <div>
-                <!-- <mew-input
-                  :label="$t('common.gas.price')"
-                  placeholder=" "
-                  :value="displayedGasPrice()"
-                  @input="setGasPrice"
-                /> -->
                 <mew-input
                   :value="customGasLimit"
                   :label="$t('common.gas.limit')"
@@ -149,7 +143,7 @@
 </template>
 
 <script>
-import utils from 'web3-utils';
+import utils, { fromWei, toBN } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 
@@ -223,6 +217,7 @@ export default {
     ...mapState('global', ['online', 'gasPrice', 'addressBook']),
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network']),
+    ...mapGetters('wallet', ['balanceInETH']),
     rules() {
       return [
         this.isValidAddress ||
@@ -244,12 +239,12 @@ export default {
       );
     },
     currencyBalance() {
-      return this.selectedCurrency.symbol !== this.network.type.currencyName &&
-        this.selectedCurrency.balance
-        ? BigNumber(this.selectedCurrency.balance)
-            .div(BigNumber(10).pow(this.selectedCurrency.decimals))
-            .toString()
-        : this.balance;
+      if (this.selectedCurrency.balance)
+        return this.convertToDisplay(
+          this.selectedCurrency.balance,
+          this.selectedCurrency.decimals
+        );
+      return '0';
     },
     tokens() {
       const eth = {
@@ -259,6 +254,7 @@ export default {
         value: this.network.type.name_long,
         balance: this.balance,
         img: this.network.type.icon,
+        decimals: 18,
         market_cap: null,
         price_change_24h: null
       };
@@ -272,6 +268,14 @@ export default {
     },
     addressToSend() {
       return this.resolvedAddr.length > 0 ? this.resolvedAddr : this.toAddress;
+    },
+    txFeeETH() {
+      return fromWei(toBN(this.gasPrice).mul(toBN(this.customGasLimit)));
+    },
+    txFeeUSD() {
+      return new BigNumber(
+        fromWei(toBN(this.gasPrice).mul(toBN(this.customGasLimit)))
+      ).times(this.ETHUSDValue.value);
     }
   },
   watch: {
@@ -347,10 +351,9 @@ export default {
     },
     setSendTransaction() {
       this.sendTx = new SendTransaction(
-        this.address,
         this.web3,
-        this.gasPrice,
-        this.network
+        this.address,
+        this.network.type.currencyName
       );
     },
     generateData() {
@@ -451,10 +454,10 @@ export default {
         symbol: this.network.type.currencyName
       };
     },
-    displayedGasPrice() {
+    async displayedGasPrice() {
       const gasPrice = this.gasPrice.toString();
       return gasPrice.includes('.')
-        ? `~ ${this.sendTx.getFixedGas().toString()}`
+        ? `~ ${await this.sendTx.getFixedGas().toString()}`
         : gasPrice;
     },
     isAmountValid() {
@@ -476,39 +479,28 @@ export default {
         this.sendTx.isValidData(this.data)
       );
     },
-    txFeeETH() {
-      // little hack to make this computed react to other changes
-      this.data;
-      this.selectedCurrency;
-      this.addressToSend;
-      this.amount;
-      return this.sendTx ? this.sendTx.txFeeETH(this.customGasLimit) : '0';
-    },
-    txFeeUSD() {
-      if (this.ETHUSDValue.value && this.sendTx) {
-        return this.sendTx.txFeeUSD(
-          this.customGasLimit,
-          this.ETHUSDValue.value
-        );
-      }
-      return '--';
-    },
     setAddress(value) {
       this.toAddress = value.address ? value.address : value;
     },
-    setEntireBal() {
-      this.amount = this.sendTx.getEntireBal(
-        this.selectedCurrency,
-        this.balance,
-        this.customGasLimit
+    convertToDisplay(amount, decimals) {
+      return BigNumber(amount.toString())
+        .div(BigNumber(10).pow(decimals))
+        .toString();
+    },
+    async setEntireBal() {
+      console.log(this.selectedCurrency);
+      this.amount = this.convertToDisplay(
+        await this.sendTx.getEntireBal(
+          this.selectedCurrency,
+          this.balance,
+          this.customGasLimit
+        ),
+        this.selectedCurrency.decimals
       );
     },
     setAmount(value) {
       this.amount = value;
     },
-    // setGasPrice(value) {
-    //   this.gasPrice = value;
-    // },
     setCustomGasLimit(value) {
       this.customGasLimit = value;
     },

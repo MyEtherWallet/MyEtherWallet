@@ -82,7 +82,7 @@ class BCVault {
       delete tx['from'];
       tx['from'] = address;
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.wallet.network)
+        common: commonGenerator(store.getters['global/network'])
       });
       const newTx = {};
       newTx['feeCount'] = web3Utils.hexToNumber(bufferToHex(tx['gasLimit']));

@@ -11,7 +11,7 @@
           </div>
           <div class="d-flex justify-space-between mb-2">
             <div>Gas Price</div>
-            <div>{{ gasPrice }} <span class="primary--text">GWEI</span></div>
+            <div>{{ gasPrice }} gwei</div>
           </div>
           <div class="d-flex justify-space-between mb-2">
             <div>Gas Limit</div>

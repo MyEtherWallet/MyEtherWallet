@@ -15,7 +15,7 @@ const isAddress = address => {
   ) {
     return true;
   }
-  const chainID = store.state.wallet.network
+  const chainID = store.state.global.getters.network
     ? store.state.wallet.network.type.chainID
     : 1;
   if (chainID === 4 || chainID === 31)

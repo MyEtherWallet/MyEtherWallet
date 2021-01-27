@@ -74,7 +74,7 @@
 import changeAddress from '@/modules/wallets/components/change-address/ChangeAddress';
 import paperWallet from '@/modules/wallets/components/paper-wallet/PaperWallet';
 import qrCodePopup from '@/modules/wallets/components/qr-code-popup/QRcodePopup';
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import clipboardCopy from 'clipboard-copy';
 import { Toast, INFO } from '@/components/toast';
@@ -92,7 +92,8 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address', 'balance']),
+    ...mapGetters('wallet', ['balanceInETH']),
+    ...mapState('wallet', ['address']),
     ...mapState('external', ['ETHUSDValue']),
     lastFour() {
       return this.address.substring(
@@ -101,7 +102,9 @@ export default {
       );
     },
     convertedBalance() {
-      const balance = BigNumber(this.balance).times(this.ETHUSDValue.value);
+      const balance = BigNumber(this.balanceInETH).times(
+        this.ETHUSDValue.value
+      );
       return `${this.ETHUSDValue.symbol + balance.toFixed(2).toString()}`;
     }
   },
