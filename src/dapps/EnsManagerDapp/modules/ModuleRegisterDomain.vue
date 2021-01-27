@@ -119,7 +119,6 @@ export default {
   methods: {
     reset() {
       this.onStep = 1;
-      this.committed = false;
       this.duration = 1;
     },
     onRequest(val) {
@@ -134,9 +133,3 @@ export default {
   }
 };
 </script>
-<style>
-/* will remove after next mew components update */
-.mew-stepper {
-  background: transparent !important;
-}
-</style>

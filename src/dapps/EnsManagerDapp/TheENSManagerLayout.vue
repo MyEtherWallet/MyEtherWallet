@@ -31,7 +31,13 @@
     />
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="ensBgImg" />
-      <mew-tabs class="pt-5" :items="tabs" :is-centered="true" has-underline>
+      <mew-tabs
+        class="pt-5"
+        :items="tabs"
+        :is-centered="true"
+        :active-tab="activeTab"
+        has-underline
+      >
         <!-- register domain -->
         <template #tabContent1>
           <v-sheet max-width="700px" color="transparent" class="py-15 mx-auto">
@@ -73,8 +79,10 @@
             </div>
             <mew-expand-panel
               :idx-to-expand="null"
-              class="my-domains"
+              class="my-domains-panel"
               :panel-items="myDomains"
+              :right-action-text="$t('ens.buy-domain')"
+              @onActionClick="buyDomain"
             >
               <template
                 v-for="(domain, idx) in myDomains"
@@ -82,20 +90,22 @@
                 :class="domain.expired ? 'expired' : 'available'"
               >
                 <div :key="idx">
-                  <div :class="['d-flex justify-space-between pt-5']">
-                    <!-- domain.expired ? 'errorOutlineActive' : 'superPrimary' -->
+                  <div
+                    class="px-7 d-flex justify-space-between py-5 subheader-container"
+                  >
                     <div class="d-flex align-center">
                       <div>{{ $t('ens.manage-domains.registrant') }}</div>
                       <mew-blockie
                         :address="domain.registrarAddress"
                         width="25px"
                         height="25px"
-                        class="mx-3"
+                        class="mx-2"
                       />
                       <mew-transform-hash :hash="domain.registrarAddress" />
                       <mew-copy
-                        class="ml-2 mew-heading-3"
+                        class="ml-2 mew-body"
                         :copy-value="domain.registrarAddress"
+                        :is-small="true"
                         :is-ref="false"
                       />
                       <a
@@ -109,19 +119,20 @@
                         <v-icon small class="call-made"> mdi-call-made </v-icon>
                       </a>
                     </div>
-                    <div class="d-flex align-center">
+                    <div class="d-flex align-center justify-end">
                       <div>{{ $t('ens.manage-domains.controller') }}</div>
                       <mew-blockie
                         :address="domain.controllerAddress"
                         width="25px"
                         height="25px"
-                        class="mx-3"
+                        class="mx-2"
                       />
                       <mew-transform-hash :hash="domain.controllerAddress" />
                       <mew-copy
-                        class="ml-2 mew-heading-3"
+                        class="ml-2 mew-body"
                         :copy-value="domain.controllerAddress"
                         :is-ref="false"
+                        :is-small="true"
                       />
                       <a
                         class="address-link"
@@ -136,14 +147,14 @@
                     </div>
                   </div>
                   <div
-                    class="mt-3 d-flex align-center justify-space-between py-5 px-0"
+                    class="mt-3 d-flex align-center justify-space-between py-5 px-7"
                   >
                     <span class="mew-heading-3">
                       {{ $t('ens.manage-domains.what-to-do') }}
                     </span>
                   </div>
-                  <v-divider></v-divider>
-                  <v-row class="pa-5">
+                  <v-divider class="mx-7"></v-divider>
+                  <v-row class="pa-7">
                     <v-col
                       v-for="(option, key) in manageDomainOptions"
                       :key="key"
@@ -196,6 +207,7 @@ export default {
   components: { registerDomain, manageDomain },
   data() {
     return {
+      activeTab: 0,
       loadingCommit: false,
       minimumAge: '',
       committed: false,
@@ -278,6 +290,9 @@ export default {
     this.getDomains();
   },
   methods: {
+    buyDomain() {
+      this.activeTab = 0;
+    },
     //manage domain
     manage(type, idx) {
       this.onManage = true;
@@ -289,6 +304,7 @@ export default {
         .getAllNamesForAddress()
         .then(res => {
           res.forEach(domain => {
+            domain.hasActiveBorder = !domain.expired;
             domain.disabled = domain.expired;
             domain.colorTheme = domain.expired
               ? 'errorOutlineActive'
@@ -393,6 +409,7 @@ export default {
     },
     closeRegister() {
       this.onRegister = false;
+      this.committed = false;
       this.name = '';
       this.nameHandler = {};
       this.$refs.registerDomain.reset();
@@ -435,3 +452,19 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+.my-domains-panel {
+  .v-expansion-panel-content__wrap {
+    padding: 0;
+  }
+  .active-border {
+    .subheader-container {
+      background-color: var(--v-superPrimary-base);
+      border-top: 1px solid var(--v-primary-base);
+      div {
+        width: 200px;
+      }
+    }
+  }
+}
+</style>
