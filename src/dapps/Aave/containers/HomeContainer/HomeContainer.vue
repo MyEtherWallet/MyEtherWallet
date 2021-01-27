@@ -166,7 +166,7 @@ export default {
     }
   },
   mounted() {
-    // this.userSummary.reservesData ? this.getCompositionPercentages() : '';
+    this.userSummary.reservesData ? this.getCompositionPercentages() : '';
   },
   methods: {
     emitTakeAction(param) {
