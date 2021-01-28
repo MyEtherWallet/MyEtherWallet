@@ -3,6 +3,7 @@
 ### Devop
 
 - Vuex changes [#2787](https://github.com/MyEtherWallet/MyEtherWallet/pull/2787)
+- Add SWAP feature [#2774](https://github.com/MyEtherWallet/MyEtherWallet/pull/2774)
 - Add decision tree [#2720](https://github.com/MyEtherWallet/MyEtherWallet/pull/2720)
 - Add Privacy and Terms pages [#2733](https://github.com/MyEtherWallet/MyEtherWallet/pull/2733)
 - update mobile wallet menu [#2731](https://github.com/MyEtherWallet/MyEtherWallet/pull/2731)
