@@ -248,7 +248,7 @@
 <script>
 import dividerLine from '@/components/divider-line/DividerLine';
 import pageIndicatorDot from '@/components/page-indicator-dot/PageIndicatorDot';
-import phraseBlock from '../phrase-block/PhraseBlock';
+import phraseBlock from '@/components/PhraseBlock';
 import { MNEMONIC as mnemonicType } from '@/modules/wallets/utils/bip44/walletTypes';
 import paths from '@/modules/wallets/utils/bip44';
 import { mapActions, mapState } from 'vuex';

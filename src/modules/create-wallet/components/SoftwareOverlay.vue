@@ -70,11 +70,11 @@
 <script>
 import MewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import keystore from '@/modules/wallets/components/keystore/Keystore';
-import mnemonicPhrase from '@/modules/wallets/components/mnemonic-phrase/MnemonicPhrase';
+import MnemonicPhrase from './MnemonicPhrase';
 
 export default {
   name: 'Software',
-  components: { keystore, mnemonicPhrase, 'mew-super-button': MewSuperButton },
+  components: { keystore, MnemonicPhrase, 'mew-super-button': MewSuperButton },
   props: {
     open: {
       type: Boolean,

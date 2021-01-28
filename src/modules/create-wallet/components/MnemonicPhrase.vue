@@ -343,8 +343,8 @@
 
 <script>
 import borderBlock from '@/components/border-block/BorderBlock.vue';
-import mnemonicPhraseTable from '../mnemonic-phrase-table/MnemonicPhraseTable';
-import phraseBlock from '../phrase-block/PhraseBlock';
+import mnemonicPhraseTable from '@/components/MnemonicPhraseTable';
+import phraseBlock from '@/components/PhraseBlock';
 import MnemonicTools from '@/core/helpers/mnemonicTools';
 export default {
   name: 'CreateMnemonicPhrase',
