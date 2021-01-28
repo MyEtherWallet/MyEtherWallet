@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import TheDefaultHeader from './components/TheDefaultHeader';
-import TheDefaultFooter from './components/TheDefaultFooter';
+import TheDefaultHeader from './components-default/TheDefaultHeader';
+import TheDefaultFooter from './components-default/TheDefaultFooter';
 
 export default {
   name: 'TheDefaultView',

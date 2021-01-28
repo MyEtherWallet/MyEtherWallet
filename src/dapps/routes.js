@@ -1,8 +1,8 @@
 import DappsCenter from './dapps-center/DappsCenter';
 import ENSManager from './EnsManagerDapp/TheENSManagerLayout.vue';
 import MakerDAO from './makerdao/MakerDAO';
-import Aave from './aave/Aave';
-import Ambrpay from './ambrpay/Ambrpay';
+import Aave from './AaveDapp/Aave';
+import Ambrpay from './AmbrpayDapp/Ambrpay';
 import UnstoppableDomain from './unstoppable-domains/UnstoppableDomain';
 
 export default [
