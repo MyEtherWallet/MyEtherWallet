@@ -325,8 +325,6 @@
                   </div>
                 </template>
               </mew-expand-panel>
-              <domain-btn domain="iamexpired.eth" badge="expired" />
-              <domain-btn domain="almostexpired.eth" badge="expired" />
             </div>
           </div>
         </template>
@@ -337,14 +335,12 @@
 
 <script>
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
-import domainBtn from '@/modules/wallets/components/domain-btn/DomainBtn';
-import buyOverlay from '@/modules/wallets/components/unstoppable-domain-buy-overlay/UnstoppableDomainBuyOverlay';
-import addOwnedDomainOverlay from '@/modules/wallets/components/unstoppable-add-owned-domain-overlay/UnstoppableAddOwnedDomainOverlay';
-import transferDomainOverlay from '@/modules/wallets/components/unstoppable-transfer-domain-overlay/UnstoppableTransferDomainOverlay';
+import buyOverlay from './components/UnstoppableDomainBuyOverlay';
+import addOwnedDomainOverlay from './components/UnstoppableAddOwnedDomainOverlay';
+import transferDomainOverlay from './components/UnstoppableTransferDomainOverlay';
 
 export default {
   components: {
-    domainBtn,
     buyOverlay,
     addOwnedDomainOverlay,
     transferDomainOverlay

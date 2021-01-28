@@ -149,8 +149,8 @@
 
 <script>
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
-import depositOverlay from '@/modules/wallets/components/aave-deposit-overlay/AaveDepositOverlay';
-import borrowOverlay from '@/modules/wallets/components/aave-borrow-overlay/AaveBorrowOverlay';
+import depositOverlay from './components/AaveDepositOverlay';
+import borrowOverlay from './components/AaveBorrowOverlay';
 
 export default {
   components: { depositOverlay, borrowOverlay },

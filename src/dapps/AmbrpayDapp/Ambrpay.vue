@@ -76,9 +76,9 @@
 
 <script>
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
-import ambrpayAddFundsOverlay from '@/modules/wallets/components/ambrpay-add-funds-overlay/AmbrpayAddFundsOverlay';
-import ambrpayWithdrawFundsOverlay from '@/modules/wallets/components/ambrpay-withdraw-funds-overlay/AmbrpayWithdrawFundsOverlay';
-import ambrpayMySubscriptionOverlay from '@/modules/wallets/components/ambrpay-my-subscription-overlay/AmbrpayMySubscriptionOverlay';
+import ambrpayAddFundsOverlay from './components/AmbrpayAddFundsOverlay';
+import ambrpayWithdrawFundsOverlay from './components/AmbrpayWithdrawFundsOverlay';
+import ambrpayMySubscriptionOverlay from './components/AmbrpayMySubscriptionOverlay';
 
 export default {
   components: {
