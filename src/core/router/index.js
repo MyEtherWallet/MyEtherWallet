@@ -1,12 +1,8 @@
 import Router from 'vue-router';
 import store from '@/core/store';
-// import { getMode, getRoutes } from '@/builds/configs';
-// import { ExtensionHelpers } from '@/helpers';
-// import { isAddress } from '@/core/helpers/addressUtils';
-// import { Misc } from '@/helpers';
-// import { MEW_CX } from '@/builds/configs/types';
 import langShortCodes from '@/translations/getShortCodes';
-import routes from './routes';
+import routesDefault from './routes-default';
+import routesWallet from './routes-wallet';
 // const storeQuery = query => {
 //   const queryKeys = Object.keys(query);
 //   if (queryKeys.length > 0) {
@@ -18,6 +14,8 @@ import routes from './routes';
 //     store.dispatch(/saveQueryVal', blankObj);
 //   }
 // };
+const routes = [routesDefault, routesWallet];
+
 const getLangBasePath = () => {
   if (ROUTER_MODE === 'hash') return undefined;
   const locale = window.location.pathname.replace(/^\/([^/]+).*/i, '$1').trim();

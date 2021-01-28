@@ -26,11 +26,11 @@
 import homeHeader from '@/components/home-header/HomeHeader';
 import getStarted from '@/components/get-started/GetStarted';
 
-import HowItWorksSwap from '../components/howItWorksLayout/HowItWorksSwap';
-import HowItWorksSend from '../components/howItWorksLayout/HowItWorksSend';
-import HowItWorksDappsCenter from '../components/howItWorksLayout/HowItWorksDappsCenter';
-import HowItWorksTokens from '../components/howItWorksLayout/HowItWorksTokens';
-import HowItWorksMore from '../components/howItWorksLayout/HowItWorksMore';
+import HowItWorksSwap from '../components-default/HowItWorksSwap';
+import HowItWorksSend from '../components-default/HowItWorksSend';
+import HowItWorksDappsCenter from '../components-default/HowItWorksDappsCenter';
+import HowItWorksTokens from '../components-default/HowItWorksTokens';
+import HowItWorksMore from '../components-default/HowItWorksMore';
 
 export default {
   name: 'TheHowItWorksLayout',

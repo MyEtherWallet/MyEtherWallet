@@ -10,9 +10,9 @@
 </template>
 
 <script>
-import HomeLanding from '../components/homeLayout/HomeLanding';
-import HomeFeatures from '../components/homeLayout/HomeFeatures';
-import HomeWhyMew from '../components/homeLayout/HomeWhyMew';
+import HomeLanding from '../components-default/HomeLanding';
+import HomeFeatures from '../components-default/HomeFeatures';
+import HomeWhyMew from '../components-default/HomeWhyMew';
 import join from '@/components/join/Join';
 import getStarted from '@/components/get-started/GetStarted';
 import partners from '@/components/partners/Partners';

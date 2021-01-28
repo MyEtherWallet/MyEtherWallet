@@ -20,9 +20,9 @@ import homeHeader from '@/components/home-header/HomeHeader';
 import partners from '@/components/partners/Partners';
 import join from '@/components/join/Join';
 
-import CompanyWhatIsMew from '../components/companyLayout/CompanyWhatIsMew';
-import CompanyOurStory from '../components/companyLayout/CompanyOurStory';
-import CompanyCommunity from '../components/companyLayout/CompanyCommunity';
+import CompanyWhatIsMew from '../components-default/CompanyWhatIsMew';
+import CompanyOurStory from '../components-default/CompanyOurStory';
+import CompanyCommunity from '../components-default/CompanyCommunity';
 
 export default {
   name: 'TheCompanyLayout',
