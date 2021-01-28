@@ -4,7 +4,6 @@ import { getGasBasedOnType } from '@/helpers/gasPriceHelper.js';
 import sanitizeHex from '@/helpers/sanitizeHex';
 import validateHexString from '@/helpers/validateHexString';
 import { Transaction } from 'ethereumjs-tx';
-
 export default class SendTransaction {
   constructor(web3, address, defaultCurrency) {
     this.address = address;
