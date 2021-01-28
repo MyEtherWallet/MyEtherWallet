@@ -31,7 +31,7 @@
 import EventNames from '@/utils/web3-provider/events.js';
 import transactionConfirmation from './transaction-confirmation/TransactionConfirmation';
 import utils from 'web3-utils';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Toast, SUCCESS } from '@/components/toast';
 import getService from '@/helpers/getService';
@@ -52,7 +52,9 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['network', 'instance', 'currency']),
+    ...mapState('wallet', ['instance']),
+    ...mapState('external', ['ETHUSDValue', 'test']),
+    ...mapGetters('global', ['network']),
     to() {
       return this.tx.to;
     },
@@ -80,7 +82,7 @@ export default {
       return utils.fromWei(parsedTxFee);
     },
     txFeeUSD() {
-      return BigNumber(this.txFee).times(this.currency.value).toFixed(2);
+      return BigNumber(this.txFee).times(this.ETHUSDValue.value).toFixed(2);
     },
     value() {
       const parsedValue = this.tx.value ? this.tx.value : '0x';

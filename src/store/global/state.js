@@ -1,13 +1,22 @@
+import Configs from '../configs';
+import { toWei } from 'web3-utils';
 import nodeList from '@/utils/networks';
-import store from 'store';
 
 const state = {
+  localStore: true,
+  addressBook: [],
   Errors: {},
-  Networks: nodeList,
-  path: '',
   online: true,
   linkQuery: {},
-  locale: store.get('locale') !== undefined ? store.get('locale') : 'en_US'
+  locale: 'en_US',
+  stateVersion: Configs.stateVersion,
+  gasLimitWarning: 100,
+  gasPrice: toWei('41', 'gwei'),
+  currentNetwork: nodeList['ETH'][0],
+  preferredCurrency: 'USD'
+};
+state.currentNetwork.type = {
+  name: state.currentNetwork.type.name
 };
 
 export default state;

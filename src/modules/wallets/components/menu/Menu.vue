@@ -182,7 +182,6 @@ export default {
       this.removeActiveClasses();
 
       const menuItemRef = this.$route.name;
-
       if (this.$refs[menuItemRef]) {
         // Mark active main menu and submenu
         this.$refs[menuItemRef][0].classList.add('active');
@@ -190,8 +189,7 @@ export default {
           'active'
         );
       } else {
-        // If there is no matching submenu, make main menu
-        this.$refs['main' + menuItemRef][0].parentNode.classList.add('active');
+        this.$refs['mainDashboard'][0].parentNode.classList.add('active');
       }
     },
     routerPush(routeName) {
@@ -216,7 +214,6 @@ export default {
   }
 
   .sub-menu {
-    max-height: 0px;
     overflow: hidden;
     transition: all 0.2s ease;
     .active * {

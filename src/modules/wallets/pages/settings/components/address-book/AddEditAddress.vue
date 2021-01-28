@@ -67,7 +67,7 @@
 
 <script>
 import utils from 'web3-utils';
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
 
 const modes = ['add', 'edit'];
@@ -88,7 +88,8 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['addressBook', 'network']),
+    ...mapState('global', ['addressBook', 'network']),
+    ...mapGetters('global', ['network']),
     disabled() {
       if (this.addMode) {
         return (
@@ -165,7 +166,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('wallet', ['setAddressBook']),
+    ...mapActions('global', ['setAddressBook']),
     async resolveName() {
       if (this.nameResolver) {
         await this.nameResolver

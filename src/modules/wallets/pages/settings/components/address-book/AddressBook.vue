@@ -63,7 +63,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['addressBook'])
+    ...mapState('global', ['addressBook'])
   },
   mounted() {
     this.addressBook.forEach((item, idx) => {

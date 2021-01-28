@@ -80,11 +80,11 @@ export default {
   methods: {
     ...mapActions('wallet', [
       'setAccountBalance',
-      'setCurrency',
-      'setGasPrice',
       'setEthGasPrice',
       'setBlockNumber'
     ]),
+    ...mapActions('global', ['setGasPrice', 'setEthGasPrice']),
+    ...mapActions('external', ['setETHUSDValue']),
     getTokens() {
       const tokensList = new TokenCalls(this.$apollo);
       tokensList.getOwnersERC20Tokens(this.address).then(res => {
@@ -105,7 +105,7 @@ export default {
           name: 'USD',
           price_change_24h: res.price_change_24h
         };
-        this.setCurrency(usd);
+        this.setETHUSDValue(usd);
       });
       this.web3.eth.getGasPrice().then(res => {
         const parsedGas = getEconomy(res).toString();

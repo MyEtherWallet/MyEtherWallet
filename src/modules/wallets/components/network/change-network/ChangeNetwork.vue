@@ -87,7 +87,7 @@ import dividerLine from '@/components/divider-line/DividerLine';
 import buttonTabs from '@/components/tabs/buttonTabs/ButtonTabs';
 import * as nodes from '@/utils/networks/nodes';
 import * as types from '@/utils/networks/types';
-import { mapState, mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import { Toast, SUCCESS } from '@/components/toast';
 export default {
   components: {
@@ -115,7 +115,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['network']),
+    ...mapGetters('global', ['network']),
     typeNames() {
       return ['ETH', 'ROP', 'RIN', 'GOERLI', 'KOV', 'ETC'];
     },
@@ -165,7 +165,8 @@ export default {
     this.networkSelected = this.network.url;
   },
   methods: {
-    ...mapActions('wallet', ['setNetwork', 'setWeb3Instance'])
+    ...mapActions('wallet', ['setWeb3Instance']),
+    ...mapActions('global', ['setNetwork'])
   }
 };
 </script>
