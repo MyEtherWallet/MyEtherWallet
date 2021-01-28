@@ -7,7 +7,7 @@ import Swap from './pages/swap/Swap';
 import ContractContainer from './pages/contract/ContractContainer';
 import InteractContract from './pages/contract/interact-contract/InteractWithContract';
 import DeployContract from './pages/contract/deploy-contract/DeployContract';
-import SignMessage from './pages/sign-message/SignMessage';
+import SignMessage from '@/modules/message/ModuleSign';
 import Dapps from '@/dapps/DappsContainer';
 import DappRoutes from '@/dapps/routes.js';
 

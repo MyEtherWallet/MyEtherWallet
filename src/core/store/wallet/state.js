@@ -1,5 +1,6 @@
 import nodeList from '@/utils/networks';
 import store from 'store';
+import { toWei } from 'web3-utils';
 const storedNetwork = store.get('network');
 let network = nodeList['ETH'][0];
 if (storedNetwork && storedNetwork.type.name !== 'CUS') {
@@ -27,7 +28,9 @@ const addressBook =
 const notifications =
   store.get('notifications') !== undefined ? store.get('notifications') : {};
 const gasPrice =
-  store.get('gasPrice') !== undefined ? store.get('gasPrice') : 41;
+  store.get('gasPrice') !== undefined
+    ? store.get('gasPrice')
+    : toWei('41', 'gwei');
 const customPaths =
   store.get('customPaths') !== undefined ? store.get('customPaths') : {};
 const currency = store.get('currency') ? store.get('currency') : {};

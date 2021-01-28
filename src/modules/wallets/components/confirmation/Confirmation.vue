@@ -2,13 +2,14 @@
   <div>
     <mew-overlay
       :show-overlay="showOverlay"
-      :title="title"
+      :title="title ? title : 'Confirmation'"
       left-btn-text=""
       :right-btn-text="$t('common.close')"
       :close="overlayClose"
     >
       <template #mewOverlayBody>
         <transaction-confirmation
+          v-if="true"
           :to="to"
           :from="from"
           :data="data"
@@ -101,7 +102,7 @@ export default {
         })
         .catch(e => {
           this.overlayClose();
-          _self.instance.erroHandler(e);
+          _self.instance.errorHandler(e);
         });
     });
   },
