@@ -26,6 +26,11 @@
     -->
     <v-container>
       <v-sheet color="transparent" max-width="650px" class="mx-auto">
+        <!--
+        =====================================================================================
+          MEW wallet Button
+        =====================================================================================
+        -->
         <a href="https://www.mewwallet.com/" target="_blank">
           <mew-super-button
             btn-mode="large-right-image"
@@ -61,6 +66,11 @@
             </template>
           </mew-super-button>
         </a>
+        <!--
+        =====================================================================================
+          Buy Hardware Button
+        =====================================================================================
+        -->
         <mew-super-button
           btn-mode="small-right-image"
           class="mb-5"
@@ -75,6 +85,11 @@
           @click.native="$router.push({ name: 'BuyHardwareWallet' })"
         >
         </mew-super-button>
+        <!--
+        =====================================================================================
+          Create Software Button
+        =====================================================================================
+        -->
         <mew-super-button
           btn-mode="small-right-image"
           class="mb-5"
@@ -84,11 +99,10 @@
           they should only be used in offline settings by experienced users."
           title-icon-class="warning--text text--darken-1"
           note="NOT RECOMMENDED"
-          @click.native="showSoftware = true"
+          @click.native="showSoftwareModule = true"
         />
       </v-sheet>
     </v-container>
-
     <div class="spacer-y-medium" />
     <mew-toast
       ref="toast"
@@ -97,24 +111,29 @@
       text="Did you know? Hardware wallets offer the highest security for accessing your crypto."
       toast-type="info"
     />
-
-    <module-software :open="showSoftwareModule" :close="closeSoftwareModule" />
+    <!--
+    =====================================================================================
+      Create Wallet with Software Overlay - activates on Create Software Button click
+    =====================================================================================
+    -->
+    <module-create-wallet-software
+      :open="showSoftwareModule"
+      :close="closeSoftwareModule"
+    />
   </div>
 </template>
 
 <script>
 import MewSuperButton from '@/components/mewSuperButton/MewSuperButton';
-import ModuleSoftware from '@/modules/create-wallet/ModuleSoftware';
+import ModuleCreateWalletSoftware from '@/modules/create-wallet/ModuleCreateWalletSoftware';
 import blockTitle from '@/components/block-title/BlockTitle';
-// import SoftwareCreateOverlay from '@/modules/wallets/components/software-create-overlay/SoftwareCreateOverlay';
 
 export default {
   name: 'TheCreateWalletLayout',
   components: {
     blockTitle,
-    // SoftwareCreateOverlay,
     MewSuperButton,
-    ModuleSoftware
+    ModuleCreateWalletSoftware
   },
   data: () => ({
     showSoftwareModule: false,
