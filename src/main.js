@@ -1,6 +1,6 @@
 /* eslint camelcase: 0 */
 import * as Sentry from '@sentry/browser';
-import * as Integrations from '@sentry/integrations';
+// import * as Integrations from '@sentry/integrations';
 import app from './app';
 
 import Vue from 'vue';
@@ -13,7 +13,7 @@ import Vuex from 'vuex';
 import mewComponents from '@myetherwallet/mew-components';
 import languages from '@/translations';
 import '@/core/plugins/registerServiceWorker';
-import { Promise } from 'q';
+// import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
 import vuetify from '@/core/plugins/vuetify';
 
@@ -27,7 +27,7 @@ import { getMainDefinition } from 'apollo-utilities';
 import VueApollo from 'vue-apollo';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { onError } from 'apollo-link-error';
-import { EventBus } from '@/core/plugins/eventBus';
+// import { EventBus } from '@/plugins/eventBus';
 
 import whiteSheet from '@/components/white-sheet/WhiteSheet.vue';
 Vue.component('Mew6WhiteSheet', whiteSheet);
@@ -123,52 +123,55 @@ new Vue({
   store,
   apolloProvider,
   vuetify,
+  beforeCreate() {
+    this.$store.commit('global/INIT_STORE');
+  },
   render: h => h(app)
 });
 
-const integration = new Integrations.Vue({
-  Vue,
-  attachProps: true
-});
+// const integration = new Integrations.Vue({
+//   Vue,
+//   attachProps: true
+// });
 
-// Sentry
-Sentry.init({
-  dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
-  integrations: [integration],
-  maxBreadcrumbs: 0,
-  environment: 'web',
-  requestBodies: 'small',
-  release: NODE_ENV === 'production' ? VERSION : 'develop',
-  beforeSend(event) {
-    const network =
-      !store &&
-      !store.state &&
-      !store.state.wallet &&
-      !store.state.wallet.network
-        ? store.state.wallet.network.type.name
-        : '';
-    const service =
-      !store &&
-      !store.state &&
-      !store.state.wallet &&
-      !store.state.wallet.network
-        ? store.state.wallet.network.service
-        : '';
-    const identifier =
-      !store && !store.state && !store.state.wallet
-        ? store.state.wallet.identifier
-        : '';
-    event.tags = {
-      network: network,
-      service: service,
-      walletType: identifier
-    };
-    // eslint-disable-next-line
-    console.log(event);
-    return new Promise(resolve => {
-      EventBus.$emit('issueModal', event, resolve);
-    }).then(res => {
-      return res === true ? event : null;
-    });
-  }
-});
+// // Sentry
+// Sentry.init({
+//   dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
+//   integrations: [integration],
+//   maxBreadcrumbs: 0,
+//   environment: 'web',
+//   requestBodies: 'small',
+//   release: NODE_ENV === 'production' ? VERSION : 'develop',
+//   beforeSend(event) {
+//     const network =
+//       !store &&
+//       !store.state &&
+//       !store.state.wallet &&
+//       !store.state.wallet.network
+//         ? store.state.wallet.network.type.name
+//         : '';
+//     const service =
+//       !store &&
+//       !store.state &&
+//       !store.state.wallet &&
+//       !store.state.wallet.network
+//         ? store.state.wallet.network.service
+//         : '';
+//     const identifier =
+//       !store && !store.state && !store.state.wallet
+//         ? store.state.wallet.identifier
+//         : '';
+//     event.tags = {
+//       network: network,
+//       service: service,
+//       walletType: identifier
+//     };
+//     // eslint-disable-next-line
+//     console.log(event)
+//     return new Promise(resolve => {
+//       EventBus.$emit('issueModal', event, resolve);
+//     }).then(res => {
+//       return res === true ? event : null;
+//     });
+//   }
+// });

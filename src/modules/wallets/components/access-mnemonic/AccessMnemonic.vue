@@ -251,7 +251,7 @@ import pageIndicatorDot from '@/components/page-indicator-dot/PageIndicatorDot';
 import phraseBlock from '../phrase-block/PhraseBlock';
 import { MNEMONIC as mnemonicType } from '@/modules/wallets/utils/bip44/walletTypes';
 import paths from '@/modules/wallets/utils/bip44';
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 const parsedPaths = paths[mnemonicType].map(item => {
   const newObj = {};
   newObj['name'] = item['label'];
@@ -346,8 +346,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('global', ['Networks']),
-    ...mapState('wallet', ['network']),
+    ...mapGetters('global', ['Networks', 'network']),
     networkTypes() {
       const showFirst = ['ETH', 'ROP', 'RIN'];
       const typeArr = Object.keys(this.Networks).filter(item => {
@@ -427,7 +426,7 @@ export default {
     this.selectedNetwork = this.network.url;
   },
   methods: {
-    ...mapActions('wallet', ['setNetwork']),
+    ...mapActions('global', ['setNetwork']),
     copy(addr) {
       this.$refs[addr][0].select();
       document.execCommand('copy');

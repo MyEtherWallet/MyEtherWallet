@@ -40,11 +40,11 @@ router.beforeResolve((to, from, next) => {
     next();
   } else {
     if (store.state.wallet.address === null) {
-      store.dispatch('global/setLastPath', to.path);
+      store.dispatch('external/setLastPath', to.path);
       next({ name: 'AccessWallet' });
     } else {
-      if (store.state.global.path !== '') {
-        store.dispatch('global/setLastPath', '');
+      if (store.state.external.path !== '') {
+        store.dispatch('external/setLastPath', '');
       }
       next();
     }

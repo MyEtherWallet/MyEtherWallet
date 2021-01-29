@@ -76,5 +76,6 @@ module.exports = [
   'https://estimategas.mewapi.io:443',
   'https://bsc-dataseed1.binance.org:443',
   'https://api.ethvm.com:443',
-  'https://qa.mewwallet.dev:443'
+  'https://qa.mewwallet.dev:443',
+  'https://api.exchangeratesapi.io:443'
 ];

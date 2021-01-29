@@ -159,7 +159,7 @@ import Simplex from '@/assets/images/icons/icon-simplex.png';
 import Bity from '@/assets/images/icons/icon-bity.png';
 import Swapper from '@/modules/swap';
 import utils, { toBN, fromWei } from 'web3-utils';
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
@@ -229,7 +229,9 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['web3', 'gasPrice', 'address', 'network']),
+    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('global', ['gasPrice']),
+    ...mapGetters('global', ['network']),
     totalFees() {
       return toBN(this.totalGasLimit).mul(toBN(this.gasPrice)).toString();
     },

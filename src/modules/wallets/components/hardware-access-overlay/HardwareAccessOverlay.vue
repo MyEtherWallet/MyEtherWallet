@@ -445,7 +445,7 @@ import trezorWallet from '@/modules/wallets/utils/hardware/trezor';
 import mewconnectWallet from '@/modules/wallets/utils/hybrid/MEWconnect';
 import appPaths from '@/modules/wallets/utils/hardware/ledger/appPaths.js';
 import allPaths from '@/modules/wallets/utils/bip44';
-import { mapState, mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 const parsedAppPaths = appPaths.map(item => {
   const newObj = {
@@ -700,8 +700,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('global', ['Networks']),
-    ...mapState('wallet', ['network']),
+    ...mapGetters('global', ['Networks', 'network']),
     networkTypes() {
       const showFirst = ['ETH', 'ROP', 'RIN'];
       const typeArr = Object.keys(this.Networks).filter(item => {
@@ -845,7 +844,8 @@ export default {
     this.selectedNetwork = this.network.url;
   },
   methods: {
-    ...mapActions('wallet', ['setWallet', 'setNetwork']),
+    ...mapActions('wallet', ['setWallet']),
+    ...mapActions('global', ['setNetwork']),
     setBCvaultAddress(address) {
       this.selectedAddress = address;
     },
