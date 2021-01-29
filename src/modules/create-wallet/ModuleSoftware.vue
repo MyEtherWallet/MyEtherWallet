@@ -1,34 +1,128 @@
 <template>
   <div>
-    <mew-super-button
-      btn-mode="small-right-image"
-      class="mb-5"
-      color-theme="outline"
-      title="Software"
-      subtitle="Keystore files / Mnemonic phrase is highly sensitive information, and
-          they should only be used in offline settings by experienced users."
-      title-icon-class="warning--text text--darken-1"
-      note="NOT RECOMMENDED"
-      @click.native="showSoftware = true"
-    />
-    <software-overlay :open="showSoftware" :close="closeOverLay" />
+    <mew-overlay
+      :show-overlay="open"
+      :title="typeTitle"
+      :right-btn-text="$t('common.cancel')"
+      :close="close"
+    >
+      <template #mewOverlayBody>
+        <v-sheet
+          v-if="type === '' && step === 0"
+          color="transparent"
+          max-width="650px"
+          class="mx-auto pt-5 mew-component--software-overlay"
+        >
+          <mew-super-button
+            class="mb-5"
+            btn-mode="small-right-image"
+            color-theme="basic"
+            title="Keystore File"
+            subtitle="Keystore file contains all the sensitive information of your wallet.
+                  We don't recommand using this method to create your wallet."
+            title-mdi-icon="mdi-shield-check"
+            title-icon-class="primary--text"
+            :right-icon="
+              require('@/assets/images/icons/icon-keystore-file.svg')
+            "
+            @click.native="
+              () => {
+                createType('keystore');
+              }
+            "
+          />
+
+          <mew-super-button
+            class="mb-5"
+            btn-mode="small-right-image"
+            color-theme="basic"
+            title="Mnemonic phrase"
+            subtitle="Mnemonic Phrase can be lost or stolen by someone else. We don't
+                  recommand using this method to create your wallet."
+            title-mdi-icon="mdi-shield-check"
+            title-icon-class="primary--text"
+            :right-icon="require('@/assets/images/icons/icon-mnemonic.svg')"
+            @click.native="
+              () => {
+                createType('mnemonic');
+              }
+            "
+          />
+
+          <mew-warning-sheet
+            class="mew-component--warning"
+            title="NOT RECOMMENDED"
+            :link-obj="linkToLearnMore"
+            description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users."
+          />
+        </v-sheet>
+        <div v-else-if="type === 'keystore'">
+          <keystore :update-step="updateStep" :step="step" />
+        </div>
+        <div v-else-if="type === 'mnemonic'">
+          <mnemonic-phrase :update-step="updateStep" :step="step" />
+        </div>
+      </template>
+    </mew-overlay>
   </div>
 </template>
+
 <script>
 import MewSuperButton from '@/components/mewSuperButton/MewSuperButton';
-import SoftwareOverlay from './components/SoftwareOverlay';
+import Keystore from './components/Keystore';
+import MnemonicPhrase from './components/MnemonicPhrase';
+
 export default {
   name: 'ModuleSoftware',
-  components: {
-    MewSuperButton,
-    SoftwareOverlay
+  components: { Keystore, MnemonicPhrase, 'mew-super-button': MewSuperButton },
+  props: {
+    open: {
+      type: Boolean,
+      default: false
+    },
+    close: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    }
   },
   data: () => ({
-    showSoftware: false
+    linkToLearnMore: {
+      url:
+        'https://kb.myetherwallet.com/en/security-and-privacy/not-recommended/',
+      title: 'Learn more'
+    },
+    type: '',
+    step: 0
   }),
+  computed: {
+    typeTitle() {
+      return this.type === ''
+        ? 'Software'
+        : this.type === 'keystore'
+        ? 'Keystore File'
+        : 'Mnemonic Phrase';
+    }
+  },
+  watch: {
+    type(newVal) {
+      if (newVal === '') {
+        this.step = 0;
+      } else {
+        this.step = 1;
+      }
+    }
+  },
   methods: {
-    closeOverLay() {
-      this.showSoftware = false;
+    createType(type) {
+      this.type = type ? type : '';
+    },
+    updateStep(step) {
+      this.step = step ? step : 0;
+    },
+    closeOverlay() {
+      this.$emit('close');
     }
   }
 };
