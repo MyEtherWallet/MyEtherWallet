@@ -26,8 +26,51 @@
     -->
     <v-container>
       <v-sheet color="transparent" max-width="650px" class="mx-auto">
-        <module-mew-wallet />
-
+        <!--
+        =====================================================================================
+          MEW wallet Button
+        =====================================================================================
+        -->
+        <a href="https://www.mewwallet.com/" target="_blank">
+          <mew-super-button
+            btn-mode="large-right-image"
+            class="mb-5"
+            color-theme="basic"
+            title="Get MEW wallet App"
+            subtitle="Download our official app and connect to MEW web using your mobile phone. Available on iOS and Android."
+            title-mdi-icon="mdi-shield-check"
+            title-icon-class="primary--text"
+          >
+            <template #contentBelowTitle>
+              <div class="mt-6">
+                <img
+                  src="@/assets/images/icons/button-app-store.png"
+                  alt="Apple app store"
+                  style="height: 30px"
+                  class="mr-2"
+                />
+                <img
+                  src="@/assets/images/icons/button-play-store.png"
+                  alt="Google play store"
+                  style="height: 30px"
+                />
+              </div>
+            </template>
+            <template #contentRight>
+              <img
+                class="mew-wallet-img"
+                src="@/assets/images/snippets/bg-mew-wallet.png"
+                alt="MEWwallet"
+                style="height: 190px"
+              />
+            </template>
+          </mew-super-button>
+        </a>
+        <!--
+        =====================================================================================
+          Buy Hardware Button
+        =====================================================================================
+        -->
         <mew-super-button
           btn-mode="small-right-image"
           class="mb-5"
@@ -42,10 +85,24 @@
           @click.native="$router.push({ name: 'BuyHardwareWallet' })"
         >
         </mew-super-button>
-        <module-software />
+        <!--
+        =====================================================================================
+          Create Software Button
+        =====================================================================================
+        -->
+        <mew-super-button
+          btn-mode="small-right-image"
+          class="mb-5"
+          color-theme="outline"
+          title="Software"
+          subtitle="Keystore files / Mnemonic phrase is highly sensitive information, and
+          they should only be used in offline settings by experienced users."
+          title-icon-class="warning--text text--darken-1"
+          note="NOT RECOMMENDED"
+          @click.native="showSoftwareModule = true"
+        />
       </v-sheet>
     </v-container>
-
     <div class="spacer-y-medium" />
     <mew-toast
       ref="toast"
@@ -54,29 +111,32 @@
       text="Did you know? Hardware wallets offer the highest security for accessing your crypto."
       toast-type="info"
     />
-
-    <!-- <software-overlay :open="showSoftware" @close="showSoftware = false" /> -->
+    <!--
+    =====================================================================================
+      Create Wallet with Software Overlay - activates on Create Software Button click
+    =====================================================================================
+    -->
+    <module-create-wallet-software
+      :open="showSoftwareModule"
+      :close="closeSoftwareModule"
+    />
   </div>
 </template>
 
 <script>
 import MewSuperButton from '@/components/mewSuperButton/MewSuperButton';
-import ModuleMewWallet from '@/modules/create-wallet/ModuleMewWallet';
-import ModuleSoftware from '@/modules/create-wallet/ModuleSoftware';
-// import ModuleHardWareWallet from '@module/hardware-wallet/ModuleHardwareWallet';
+import ModuleCreateWalletSoftware from '@/modules/create-wallet/ModuleCreateWalletSoftware';
 import blockTitle from '@/components/block-title/BlockTitle';
-// import SoftwareCreateOverlay from '@/modules/wallets/components/software-create-overlay/SoftwareCreateOverlay';
 
 export default {
   name: 'TheCreateWalletLayout',
   components: {
     blockTitle,
-    ModuleMewWallet,
-    // SoftwareCreateOverlay,
     MewSuperButton,
-    ModuleSoftware
+    ModuleCreateWalletSoftware
   },
   data: () => ({
+    showSoftwareModule: false,
     toastLink: {
       title: 'Buy a hardware wallet',
       url: ''
@@ -89,7 +149,12 @@ export default {
       centered: true
     },
     showSoftware: false
-  })
+  }),
+  methods: {
+    closeSoftwareModule() {
+      this.showSoftwareModule = false;
+    }
+  }
 };
 </script>
 
