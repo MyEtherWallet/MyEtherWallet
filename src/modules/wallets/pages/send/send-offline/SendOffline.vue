@@ -85,7 +85,7 @@
 
 <script>
 import network from '@/modules/wallets/components/network/Network';
-import swap from '@/modules/wallets/components/swap/Swap';
+import swap from '@/components/swap/Swap';
 import interfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';
 import divider from '@/components/dividerx/DividerX';

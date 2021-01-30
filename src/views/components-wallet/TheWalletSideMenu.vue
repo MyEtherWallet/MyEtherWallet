@@ -11,14 +11,14 @@
           </router-link>
           <div class="d-flex align-center">
             <div class="mr-n4">
-              <mew-wallet-status-popup>
+              <mobile-status>
                 <v-btn fab icon large>
                   <img
                     class="white-icon"
                     src="@/assets/images/icons/icon-mew-connect.svg"
                   />
                 </v-btn>
-              </mew-wallet-status-popup>
+              </mobile-status>
             </div>
             <div class="position--relative mr-n2">
               <notification-overlay
@@ -132,22 +132,23 @@
 </template>
 
 <script>
-import menuMobile from '../menu-mobile/Menu';
-import notificationOverlay from '../notifications/Notifications';
-import mewWalletStatusPopup from '../mew-wallet-status-popup/MewWalletStatusPopup';
+import notificationOverlay from '@/modules/notifications/ModuleNotifications';
+import mobileStatus from './SideMenuMobileStatus';
 import walletCard from '@/modules/wallets/components/wallet-card/WalletCard';
-import accordionMenu from '@/modules/wallets/components/menu/Menu';
 import systemMenu from '@/modules/wallets/components/system-menu/SystemMenu';
-import themeSwitch from '@/modules/wallets/components/theme-switch/ThemeSwitch';
-import version from '@/modules/wallets/components/version/Version';
-import divider from '@/modules/wallets/components/divider/Divider';
-import mewTools from '@/modules/wallets/components/mewTools/MewTools';
+// need to refactor sidemenu - can probably remove these components
+import accordionMenu from '@/components/menu/Menu';
+import menuMobile from '@/components/menu-mobile/Menu';
+import themeSwitch from '@/components/theme-switch/ThemeSwitch';
+import version from '@/components/version/Version';
+import divider from '@/components/divider/Divider';
+import mewTools from '@/components/mewTools/MewTools';
 
 export default {
   components: {
     menuMobile,
     notificationOverlay,
-    mewWalletStatusPopup,
+    mobileStatus,
     walletCard,
     accordionMenu,
     systemMenu,

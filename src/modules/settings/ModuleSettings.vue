@@ -47,22 +47,22 @@
 </template>
 
 <script>
-import importConfig from './components/import-config/ImportConfig';
-import exportConfig from './components/export-config/ExportConfig';
-import notifications from './components/notifications/Notifications';
-import gasPrice from './components/gas-price/GasPrice';
-import addressBook from './components/address-book/AddressBook';
-import addEditAddress from './components/address-book/AddEditAddress';
+import ImportConfig from './components/SettingsImportConfig';
+import ExportConfig from './components/SettingsExportConfig';
+import Notifications from './components/SettingsNotification';
+import GasPrice from './components/SettingsGasPrice';
+import AddressBook from '@/modules/address-book/ModuleAddressBook';
+import AddEditAddress from '@/modules/address-book/components/AddressBookAddEdit';
 const modes = ['add', 'edit'];
 
 export default {
   components: {
-    importConfig,
-    exportConfig,
-    notifications,
-    gasPrice,
-    addressBook,
-    addEditAddress
+    ImportConfig,
+    ExportConfig,
+    Notifications,
+    GasPrice,
+    AddressBook,
+    AddEditAddress
   },
   props: {
     onSettings: { default: false, type: Boolean }

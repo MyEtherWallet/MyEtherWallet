@@ -35,9 +35,12 @@
 import utils from 'web3-utils';
 import { mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
+import AddAddress from './components/AddressBookAddEdit';
 
 export default {
-  props: {},
+  components: {
+    AddAddress
+  },
   data() {
     return {
       addMode: false,

@@ -1,4 +1,4 @@
-import SendTransaction from '../index';
+import SendTransaction from '../../handlers/handlerSend';
 
 const sendTransaction = new SendTransaction(
   // account

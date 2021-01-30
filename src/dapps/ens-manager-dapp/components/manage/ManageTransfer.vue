@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import addressBook from '@/modules/address-book/modules/ModuleAddressBook';
+import addressBook from '@/modules/address-book/ModuleAddressBook';
 // import { Toast, ERROR } from '@/components/toast';
 export default {
   components: {

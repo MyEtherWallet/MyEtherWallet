@@ -2,7 +2,7 @@
   <div>
     <confirmation />
     <div class="d-block d-lg-none walletBg">
-      <side-menu mobile />
+      <wallet-side-menu mobile />
       <div class="mx-auto px-2 preset--mobile-max-width">
         <wallet-header mobile />
         <router-view mobile :owners-tokens="ownersTokens" />
@@ -11,7 +11,7 @@
     </div>
     <div class="d-none d-lg-block walletBg">
       <div class="d-flex align-stretch">
-        <side-menu class="box-shadow" />
+        <wallet-side-menu class="box-shadow" />
         <div class="flex-grow-1 d-flex flex-column justify-space-between">
           <v-container>
             <wallet-header />
@@ -31,9 +31,9 @@ import utils from 'web3-utils';
 import store from 'store';
 import TokenCalls from '@/apollo/queries/tokens/index';
 import WalletCalls from '@/apollo/queries/wallets/index';
-import sideMenu from './components/side-menu/SideMenu';
-import walletHeader from './components/TheWalletHeader';
-import walletFooter from './components/TheWalletFooter';
+import walletSideMenu from './components-wallet/TheWalletSideMenu';
+import walletHeader from './components-wallet/TheWalletHeader';
+import walletFooter from './components-wallet/TheWalletFooter';
 import confirmation from '@/modules/wallets/components/confirmation/Confirmation';
 import {
   getGasBasedOnType,
@@ -44,7 +44,7 @@ import ENS from 'ethereum-ens';
 
 export default {
   components: {
-    sideMenu,
+    walletSideMenu,
     walletHeader,
     walletFooter,
     confirmation

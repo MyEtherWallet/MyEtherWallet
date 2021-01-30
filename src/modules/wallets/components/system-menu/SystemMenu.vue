@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import settings from '@/modules/wallets/pages/settings/Settings';
+import settings from '@/modules/settings/ModuleSettings';
 
 export default {
   components: { settings },
