@@ -52,11 +52,22 @@
           </div>
         </div>
         <div class="to-address">
+
           <dropdown-address-selector
             :clear-address="clearAddress"
             :title="$t('sendTx.to-addr')"
             @toAddress="getToAddress($event)"
           />
+          <p class="copy-button prevent-user-select" @click="readQRCode">
+          {{ $t('QRCode Scan') }}
+          </p>
+          <div>
+          <p class="error">{{ error }}</p>
+
+          <p class="decode-result">Last result: <b>{{ result }}</b></p>
+
+          <qrcode-stream @decode="onDecode" @init="onInit" />
+        </div>
         </div>
         <div class="tx-fee">
           <div class="title">
@@ -173,12 +184,15 @@ import ethUnit from 'ethjs-unit';
 import utils from 'web3-utils';
 import fetch from 'node-fetch';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
+import { QrcodeStream } from 'vue-qrcode-reader';
+
 
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'currency-picker': CurrencyPicker,
-    'dropdown-address-selector': DropDownAddressSelector
+    'dropdown-address-selector': DropDownAddressSelector,
+    'QrcodeStream' : QrcodeStream 
   },
   props: {
     checkPrefilled: {
@@ -239,7 +253,9 @@ export default {
       toData: '',
       selectedCurrency: '',
       ethPrice: 0,
-      clearAddress: false
+      clearAddress: false,
+      result: '',
+      error: ''
     };
   },
 
@@ -483,6 +499,32 @@ export default {
               )
             : 0;
     },
+
+    readQRCode(result) {
+      this.result = result
+  },
+    onDecode (result) {
+      this.result = result
+  },
+      async onInit (promise) {
+      try {
+        await promise
+      } catch (error) {
+        if (error.name === 'NotAllowedError') {
+          this.error = "ERROR: you need to grant camera access permisson"
+        } else if (error.name === 'NotFoundError') {
+          this.error = "ERROR: no camera on this device"
+        } else if (error.name === 'NotSupportedError') {
+          this.error = "ERROR: secure context required (HTTPS, localhost)"
+        } else if (error.name === 'NotReadableError') {
+          this.error = "ERROR: is the camera already in use?"
+        } else if (error.name === 'OverconstrainedError') {
+          this.error = "ERROR: installed cameras are not suitable"
+        } else if (error.name === 'StreamApiNotSupportedError') {
+          this.error = "ERROR: Stream API is not supported in this browser"
+        }
+      }
+      },
     getTokenTransferABI(amount, decimals) {
       const jsonInterface = [
         {
