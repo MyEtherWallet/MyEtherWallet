@@ -49,7 +49,6 @@
 </template>
 
 <script>
-import MewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import CreateWalletSoftwareOverview from './components/CreateWalletSoftwareOverview';
 import CreateWalletKeystore from './components/CreateWalletKeystore';
 import CreateWalletMnemonicPhrase from './components/CreateWalletMnemonicPhrase';
@@ -60,8 +59,7 @@ export default {
   components: {
     CreateWalletSoftwareOverview,
     CreateWalletKeystore,
-    CreateWalletMnemonicPhrase,
-    MewSuperButton
+    CreateWalletMnemonicPhrase
   },
   props: {
     open: {
