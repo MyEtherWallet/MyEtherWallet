@@ -10,7 +10,7 @@
         Step 1: Write Down Words
       =====================================================================================
       -->
-      <template v-if="step === 1" v-slot:stepperContent1>
+      <template v-if="step === 1" #stepperContent1>
         <v-sheet color="white" class="border-radius--10px pa-4 pa-sm-12">
           <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
           <div class="headline font-weight-bold mb-5">
@@ -84,7 +84,7 @@
         Step 2: Verification
       =====================================================================================
       -->
-      <template v-if="step === 2" v-slot:stepperContent2>
+      <template v-if="step === 2" #stepperContent2>
         <v-sheet color="white" class="border-radius--10px pa-4 pa-sm-12">
           <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
           <div class="headline font-weight-bold">Verification</div>
@@ -186,7 +186,7 @@
         Step 3: Done
       =====================================================================================
       -->
-      <template v-if="step === 3" v-slot:stepperContent3>
+      <template v-if="step === 3" #stepperContent3>
         <v-sheet
           v-if="step === 3"
           color="white"
@@ -212,7 +212,7 @@
                   btn-size="xlarge"
                   :has-full-width="false"
                   class="mb-5"
-                  @click.native="step = 1"
+                  @click.native="reset"
                 />
 
                 <div class="mt-3 mb-0 text-center">
@@ -482,10 +482,14 @@ export default {
         : (this.phrase = MnemonicTools.phrase24());
     },
     next() {
-      this.step += 1;
+      const newStep = this.step + 1;
+      this.updateStep(newStep);
     },
     randomNumberGenerator() {
       return Math.floor(Math.random() * 24) + 1;
+    },
+    reset() {
+      this.updateStep(1);
     }
   }
 };

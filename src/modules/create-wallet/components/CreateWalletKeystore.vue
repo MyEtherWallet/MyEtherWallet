@@ -10,7 +10,7 @@
         Step 1: Create Password
       =====================================================================================
       -->
-      <template v-if="step === 1" v-slot:stepperContent1>
+      <template v-if="step === 1" #stepperContent1>
         <v-sheet color="white" class="border-radius--10px pa-4 pa-sm-12">
           <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
           <div class="headline font-weight-bold mb-5">Create password</div>
@@ -59,7 +59,7 @@
         Step 2: Download Keystore
       =====================================================================================
       -->
-      <template v-if="step === 2" v-slot:stepperContent2>
+      <template v-if="step === 2" #stepperContent2>
         <v-sheet color="white" class="border-radius--10px pa-4 pa-sm-12">
           <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
           <div class="headline font-weight-bold">Download keystore file</div>
@@ -105,7 +105,7 @@
         Step 3: Done
       =====================================================================================
       -->
-      <template v-if="step === 3" v-slot:stepperContent3>
+      <template v-if="step === 3" #stepperContent3>
         <v-sheet color="white" class="border-radius--10px pa-4 pa-sm-12">
           <div class="d-flex align-center">
             <div>
