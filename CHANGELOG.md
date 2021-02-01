@@ -1,3 +1,7 @@
+### Devop
+
+* Update packages from snyk and from the script [#2806](https://github.com/MyEtherWallet/MyEtherWallet/pull/2806)
+
 ### Release v5.7.19-hotfix.1
 
 ### Devop
