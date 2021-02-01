@@ -276,12 +276,12 @@
 </template>
 
 <script>
-import chart from '@/modules/wallets/components/chart/Chart';
+import chart from '@/modules/balance/components/BalanceChart';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import WalletCalls from '@/apollo/queries/wallets/index';
 import utils from 'web3-utils';
-import bannerAds from '@/modules/wallets/components/banner-ads/BannerAds';
+import bannerAds from '@/components/banner-ads/BannerAds';
 import network from '@/modules/wallets/components/network/Network';
 import swap from '@/components/swap/Swap';
 import tokenTable from '@/components/tokenTable/TokenTable';

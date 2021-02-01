@@ -62,7 +62,7 @@
         />
       </div>
     </div>
-    <change-address
+    <address-switch
       :open="openChangeAddress"
       @close="openChangeAddress = false"
     />
@@ -71,9 +71,9 @@
 </template>
 
 <script>
-import changeAddress from '@/modules/wallets/components/change-address/ChangeAddress';
-import paperWallet from '@/modules/wallets/components/paper-wallet/PaperWallet';
-import qrCodePopup from '@/modules/wallets/components/qr-code-popup/QRcodePopup';
+import AddressSwitch from './components/AddressSwitch';
+import paperWallet from './components/AddressPaperWallet';
+import qrCodePopup from './components/AddressQrCode';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import clipboardCopy from 'clipboard-copy';
@@ -81,7 +81,7 @@ import { Toast, INFO } from '@/components/toast';
 
 export default {
   components: {
-    changeAddress,
+    AddressSwitch,
     paperWallet,
     qrCodePopup
   },

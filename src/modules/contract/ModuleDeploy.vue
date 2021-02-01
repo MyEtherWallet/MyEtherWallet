@@ -40,7 +40,7 @@
 <script>
 import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 
-import Network from '@/modules/wallets/components/network/Network';
+import Network from '@/modules/network/ModuleNetwork';
 import Swap from '@/components/swap/Swap';
 
 export default {

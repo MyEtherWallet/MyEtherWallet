@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import changeNetworkOverlay from './change-network/ChangeNetwork';
+import changeNetworkOverlay from './components/NetworkSwitch';
 import { mapGetters, mapState } from 'vuex';
 
 export default {

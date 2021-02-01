@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import mobileStatus from './SideMenuMobileStatus';
+import mobileStatus from './HeaderMobileStatus';
 import notificationOverlay from '@/modules/notifications/ModuleNotifications';
 
 export default {
