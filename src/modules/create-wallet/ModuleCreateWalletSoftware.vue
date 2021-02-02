@@ -29,9 +29,10 @@
         =====================================================================================
         -->
         <create-wallet-keystore
-          v-else-if="type === 'keystore'"
+          v-else-if="type === walletTypes[0]"
           :update-step="nextStep"
           :step="step"
+          :handler-create-wallet="walletHandler"
         />
         <!--
         =====================================================================================
@@ -39,9 +40,10 @@
         =====================================================================================
         -->
         <create-wallet-mnemonic-phrase
-          v-else-if="type === 'mnemonic'"
+          v-else-if="type === walletTypes[1]"
           :update-step="nextStep"
           :step="step"
+          :handler-create-wallet="walletHandler"
         />
       </template>
     </mew-overlay>
@@ -53,6 +55,7 @@ import CreateWalletSoftwareOverview from './components/CreateWalletSoftwareOverv
 import CreateWalletKeystore from './components/CreateWalletKeystore';
 import CreateWalletMnemonicPhrase from './components/CreateWalletMnemonicPhrase';
 import { WALLET_TYPES } from './handlers/helpers';
+import handlerCreateWallet from './handlers/handlerCreateWallet';
 
 export default {
   name: 'ModuleSoftware',
@@ -75,7 +78,9 @@ export default {
   },
   data: () => ({
     type: '',
-    step: 0
+    step: 0,
+    walletTypes: WALLET_TYPES,
+    walletHandler: {}
   }),
   computed: {
     /**
@@ -84,7 +89,7 @@ export default {
     typeTitle() {
       return this.type === ''
         ? 'Create wallet using software'
-        : this.type === WALLET_TYPES[0]
+        : this.type === this.walletTypes[0]
         ? 'Create Wallet with Keystore File'
         : 'Create Wallet with Mnemonic Phrase';
     },
@@ -105,6 +110,12 @@ export default {
         this.setType('');
       }
     }
+  },
+  mounted() {
+    this.walletHandler = new handlerCreateWallet();
+  },
+  destroyed() {
+    this.walletHandler = {};
   },
   methods: {
     /**
