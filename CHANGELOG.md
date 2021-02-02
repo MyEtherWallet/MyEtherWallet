@@ -1,3 +1,7 @@
+### Bug
+
+* store cw appId to prevent reregistering MEW, fix error catch [#2808](https://github.com/MyEtherWallet/MyEtherWallet/pull/2808)
+
 ### Devop
 
 * Update packages from snyk and from the script [#2806](https://github.com/MyEtherWallet/MyEtherWallet/pull/2806)
