@@ -56,7 +56,9 @@
     "interact-contract": "Interact with Contract",
     "message": "Message",
     "deploy": "Deploy Contract",
-    "sign-message": "Sign Message"
+    "sign-message": "Sign Message",
+    "dapps-center": "Dapps Center",
+    "tools": "Tools"
   },
   "actions": "Actions",
   "view-all": "View All",

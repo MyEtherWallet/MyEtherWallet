@@ -282,7 +282,7 @@ import BigNumber from 'bignumber.js';
 import WalletCalls from '@/apollo/queries/wallets/index';
 import utils from 'web3-utils';
 import bannerAds from '@/components/banner-ads/BannerAds';
-import network from '@/modules/wallets/components/network/Network';
+import network from '@/modules/network/ModuleNetwork';
 import swap from '@/components/swap/Swap';
 import tokenTable from '@/components/tokenTable/TokenTable';
 

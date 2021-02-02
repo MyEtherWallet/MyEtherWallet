@@ -1,27 +1,13 @@
 <template>
-  <div>
+  <v-sheet class="d-flex justify-space">
     <confirmation />
-    <div class="d-block d-lg-none walletBg">
-      <wallet-side-menu mobile />
-      <div class="mx-auto px-2 preset--mobile-max-width">
-        <wallet-header mobile />
-        <router-view mobile :owners-tokens="ownersTokens" />
-      </div>
-      <wallet-footer mobile class="mt-10 box-shadow" />
-    </div>
-    <div class="d-none d-lg-block walletBg">
-      <div class="d-flex align-stretch">
-        <wallet-side-menu class="box-shadow" />
-        <div class="flex-grow-1 d-flex flex-column justify-space-between">
-          <v-container>
-            <wallet-header />
-            <router-view :owners-tokens="ownersTokens" />
-          </v-container>
-          <wallet-footer class="mt-10 box-shadow" />
-        </div>
-      </div>
-    </div>
-  </div>
+    <wallet-side-menu />
+    <v-container class="ml-6">
+      <wallet-header />
+      <router-view :owners-tokens="ownersTokens" />
+      <wallet-footer class="mt-10 box-shadow" />
+    </v-container>
+  </v-sheet>
 </template>
 
 <script>
@@ -31,10 +17,10 @@ import utils from 'web3-utils';
 import store from 'store';
 import TokenCalls from '@/apollo/queries/tokens/index';
 import WalletCalls from '@/apollo/queries/wallets/index';
-import walletSideMenu from './components-wallet/TheWalletSideMenu';
-import walletHeader from './components-wallet/TheWalletHeader';
-import walletFooter from './components-wallet/TheWalletFooter';
-import confirmation from './components-wallet/TheWalletTxConfirmation';
+import WalletSideMenu from './components-wallet/TheWalletSideMenu';
+import WalletHeader from './components-wallet/TheWalletHeader';
+import WalletFooter from './components-wallet/TheWalletFooter';
+import Confirmation from './components-wallet/TheWalletTxConfirmation';
 import {
   getGasBasedOnType,
   getOther,
@@ -44,10 +30,10 @@ import ENS from 'ethereum-ens';
 
 export default {
   components: {
-    walletSideMenu,
-    walletHeader,
-    walletFooter,
-    confirmation
+    WalletSideMenu,
+    WalletHeader,
+    WalletFooter,
+    Confirmation
   },
   data() {
     return {
