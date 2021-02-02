@@ -48,7 +48,7 @@ export default class AaveHandler {
       if (param.length > 1) {
         return this.web3.mew.sendBatchTransactions(param);
       }
-      return this.web3.mew.sendBatchTransactions(param[0]);
+      return this.web3.sendTransaction(param[0]);
     }
     return new Error('No Parameters sent!');
   }
