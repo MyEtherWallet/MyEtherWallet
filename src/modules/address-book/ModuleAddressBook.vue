@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="full-width">
     <mew-address-select
       ref="addressSelect"
       :value="toAddress"

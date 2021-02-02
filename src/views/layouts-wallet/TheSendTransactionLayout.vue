@@ -37,9 +37,7 @@
                 />
               </v-col>
             </v-row>
-            <v-row>
-              <address-book />
-            </v-row>
+            <address-book />
           </v-container>
         </div>
 

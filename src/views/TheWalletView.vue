@@ -34,7 +34,7 @@ import WalletCalls from '@/apollo/queries/wallets/index';
 import walletSideMenu from './components-wallet/TheWalletSideMenu';
 import walletHeader from './components-wallet/TheWalletHeader';
 import walletFooter from './components-wallet/TheWalletFooter';
-import confirmation from '@/modules/wallets/components/confirmation/Confirmation';
+import confirmation from './components-wallet/TheWalletTxConfirmation';
 import {
   getGasBasedOnType,
   getOther,
