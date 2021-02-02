@@ -57,7 +57,6 @@
               <template #panelBody1>
                 <mew-input
                   v-model="extraWord"
-                  type="password"
                   label="Extra word"
                   placeholder="Extra word"
                 />
@@ -94,55 +93,29 @@
 
           <v-sheet max-width="600px" class="mx-auto">
             <border-block
+              v-for="(item, idx) in generatedVerification"
+              :key="`${idx}verification`"
               sm-border-radius
               sm-shadow
               class="mb-2 d-flex align-center px-5 py-1"
             >
-              <div style="min-width: 30px">5.</div>
+              <div style="min-width: 30px">{{ getOnlyKey(item) + 1 }}.</div>
               <v-radio-group
-                v-model="radioGroup1"
+                v-model="validateMnemonicValues[getOnlyKey(item)]"
                 hide-details
                 class="width--full"
               >
                 <v-row>
-                  <v-col v-for="n in 3" :key="n" cols="12" sm="4">
-                    <v-radio label="Radia" :value="n"></v-radio>
-                  </v-col>
-                </v-row>
-              </v-radio-group>
-            </border-block>
-            <border-block
-              sm-border-radius
-              sm-shadow
-              class="mb-2 d-flex align-center px-5 py-1"
-            >
-              <div style="min-width: 30px">5.</div>
-              <v-radio-group
-                v-model="radioGroup2"
-                hide-details
-                class="width--full"
-              >
-                <v-row>
-                  <v-col v-for="n in 3" :key="n" cols="12" sm="4">
-                    <v-radio label="Radiaaaao" :value="n"></v-radio>
-                  </v-col>
-                </v-row>
-              </v-radio-group>
-            </border-block>
-            <border-block
-              sm-border-radius
-              sm-shadow
-              class="mb-2 d-flex align-center px-5 py-1"
-            >
-              <div style="min-width: 30px">5.</div>
-              <v-radio-group
-                v-model="radioGroup3"
-                hide-details
-                class="width--full"
-              >
-                <v-row>
-                  <v-col v-for="n in 3" :key="n" cols="12" sm="4">
-                    <v-radio label="Radiaaerge" :value="n"></v-radio>
+                  <v-col
+                    v-for="(entries, id) in getEntries(item)"
+                    :key="entries + id"
+                    cols="12"
+                    sm="4"
+                  >
+                    <v-radio
+                      :label="entries"
+                      :value="`${entries}_${id}`"
+                    ></v-radio>
                   </v-col>
                 </v-row>
               </v-radio-group>
@@ -156,7 +129,7 @@
             />
           </v-sheet>
 
-          <v-btn
+          <!-- <v-btn
             v-if="false"
             depressed
             x-large
@@ -165,14 +138,14 @@
             @click.native="updateStep(3)"
           >
             Acknowledge & Download
-          </v-btn>
+          </v-btn> -->
 
           <div class="d-flex justify-center mt-6">
             <mew-button
               title="Verify"
               btn-size="xlarge"
-              :disabled="!isValidMnemonic"
-              @click.native="next"
+              :disabled="!canVerify"
+              @click.native="verify"
             />
           </div>
         </v-sheet>
@@ -361,7 +334,7 @@
 import borderBlock from '@/components/border-block/BorderBlock.vue';
 import mnemonicPhraseTable from '@/components/MnemonicPhraseTable';
 import phraseBlock from '@/components/PhraseBlock';
-import MnemonicTools from '@/core/helpers/mnemonicTools';
+import { Toast, ERROR } from '@/components/toast';
 export default {
   name: 'CreateWalletMnemonicPhrase',
   components: {
@@ -377,12 +350,16 @@ export default {
     updateStep: {
       type: Function,
       default: () => {}
+    },
+    handlerCreateWallet: {
+      type: Object,
+      default: () => {
+        return {};
+      }
     }
   },
   data: () => ({
-    radioGroup1: {},
-    radioGroup2: {},
-    radioGroup3: {},
+    validateMnemonicValues: {},
     extraWord: '',
     extraWordVerification: '',
     link: {
@@ -424,35 +401,18 @@ export default {
       }
     ],
     phraseSize: 12,
-    phrase: []
+    phrase: [],
+    generatedVerification: []
   }),
   computed: {
+    canVerify() {
+      return this.isValidMnemonic && this.extraWordMatch;
+    },
     isValidMnemonic() {
-      return this.phrase.length === this.phraseSize.value;
+      return this.phrase.length === this.phraseSize;
     },
     extraWordMatch() {
       return this.extraWord === this.extraWordVerification;
-    },
-    generatedVerification() {
-      const words = MnemonicTools.phrase24();
-      const idxs = [];
-      while (idxs.length < 3) {
-        const random = Math.floor(Math.random() * this.phrase.length) + 1;
-        if (idxs.indexOf(random) === -1) {
-          idxs.push(random);
-        }
-      }
-
-      const output = idxs.map(item => {
-        return {
-          [item]: {
-            1: this.phrase[item],
-            2: words[this.randomNumberGenerator()],
-            3: words[this.randomNumberGenerator()]
-          }
-        };
-      });
-      return output;
     },
     stepTwoText() {
       return this.extraWord === ''
@@ -476,10 +436,36 @@ export default {
     this.setPhrase();
   },
   methods: {
+    generateVerification() {
+      this.generatedVerification = this.handlerCreateWallet.getVerification();
+    },
+    getOnlyKey(obj) {
+      return Number(Object.keys(obj)[0]);
+    },
+    getEntries(obj) {
+      return Object.values(obj[this.getOnlyKey(obj)]);
+    },
     setPhrase() {
-      this.phraseSize === 12
-        ? (this.phrase = MnemonicTools.phrase12())
-        : (this.phrase = MnemonicTools.phrase24());
+      this.handlerCreateWallet
+        .generateMnemonic(this.phraseSize)
+        .then(res => {
+          this.phrase = res;
+          this.generateVerification();
+        })
+        .catch(e => {
+          this.generateVerification();
+          Toast(e, {}, ERROR);
+        });
+    },
+    verify() {
+      this.handlerCreateWallet
+        .validateMnemonic(this.validateMnemonicValues)
+        .then(() => {
+          this.next();
+        })
+        .catch(e => {
+          Toast(e, {}, ERROR);
+        });
     },
     next() {
       const newStep = this.step + 1;

@@ -38,6 +38,7 @@
             label="Confirm Password"
             placeholder="Confirm password"
             class="mr-3 flex-grow-1"
+            type="password"
           />
           <div class="d-flex justify-center">
             <mew-button
@@ -151,9 +152,7 @@
 </template>
 
 <script>
-import { Toast, SENTRY, ERROR } from '@/components/toast';
-import Wallet from 'ethereumjs-wallet';
-import { createBlob } from '@/modules/wallets/utils/helpers.js';
+import { Toast, ERROR } from '@/components/toast';
 import borderButton from '@/components/buttons/border-button/BorderButton.vue';
 
 export default {
@@ -169,6 +168,12 @@ export default {
     updateStep: {
       type: Function,
       default: () => {}
+    },
+    handlerCreateWallet: {
+      type: Object,
+      default: () => {
+        return {};
+      }
     }
   },
   data() {
@@ -213,21 +218,16 @@ export default {
   },
   methods: {
     createWallet() {
-      try {
-        const wallet = Wallet.generate();
-        wallet
-          .toV3(this.password)
-          .then(res => {
-            this.walletFile = createBlob(res);
-            this.name = wallet.getV3Filename();
-            this.updateStep(2);
-          })
-          .catch(e => {
-            Toast(e.message, {}, ERROR);
-          });
-      } catch (e) {
-        Toast(e, {}, SENTRY);
-      }
+      this.handlerCreateWallet
+        .generateKeystore(this.password)
+        .then(res => {
+          this.name = res.name;
+          this.walletFile = res.blobUrl;
+          this.updateStep(2);
+        })
+        .catch(e => {
+          Toast(e, {}, ERROR);
+        });
     },
     downloadWallet() {
       this.$refs.downloadLink.click();
