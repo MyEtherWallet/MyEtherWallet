@@ -117,7 +117,7 @@ export default {
         if (to.params.overlay === undefined) {
           next();
         } else if (to.params.overlay === 'software') {
-          const validTypes = [['keystore', 'mnemonic', 'overview']];
+          const validTypes = ['keystore', 'mnemonic', 'overview'];
           if (
             to.query.type === validTypes[0] ||
             to.query.type === validTypes[1] ||
