@@ -16,7 +16,7 @@ export default class CreateWallet {
   generateKeystore(password) {
     return new Promise((resolve, reject) => {
       if (!password && password === '') {
-        reject(new Error('Password missing or invalid!'));
+        reject('Password missing or invalid!');
       }
       try {
         const createdWallet = {};
@@ -46,7 +46,7 @@ export default class CreateWallet {
         this.generateVerification(phrase);
         resolve(phrase);
       } else {
-        reject(new Error('Invalid length!'));
+        reject('Invalid length!');
       }
     });
   }
@@ -85,7 +85,7 @@ export default class CreateWallet {
       });
       if (holder.includes(false)) {
         this.generateVerification(this.phrase);
-        reject(new Error('Wrong values selected, please try again!'));
+        reject('Wrong values selected, please try again!');
       } else {
         resolve(!holder.includes(false));
       }

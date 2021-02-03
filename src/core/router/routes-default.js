@@ -16,6 +16,18 @@ import BrowserExtensionAccess from '@/modules/wallets/pages/access/browser-exten
 import ThePrivacyPolicyLayout from '@/views/layouts-default/ThePrivacyPolicyLayout';
 import TheTermsOfServiceLayout from '@/views/layouts-default/TheTermsOfServiceLayout';
 
+const createWalletProps = route => {
+  const walletType = route.query && route.query.type ? route.query.type : '';
+  const isSoftware =
+    route.params && route.params.overlay && route.params.overlay === 'software'
+      ? true
+      : false;
+
+  return {
+    showSoftwareModule: isSoftware,
+    type: walletType
+  };
+};
 export default {
   path: '/',
   component: TheDefaultView,
@@ -94,11 +106,30 @@ export default {
       }
     },
     {
-      path: 'wallet/create',
+      path: 'wallet/create/:overlay?',
       name: 'CreateWallet',
       component: TheCreateWalletLayout,
+      props: createWalletProps,
       meta: {
         requiresAuth: false
+      },
+      beforeEnter: (to, from, next) => {
+        if (to.params.overlay === undefined) {
+          next();
+        } else if (to.params.overlay === 'software') {
+          const validTypes = ['keystore', 'mnemonic', 'overview'];
+          if (
+            to.query.type === validTypes[0] ||
+            to.query.type === validTypes[1] ||
+            to.query.type === validTypes[2]
+          ) {
+            next();
+          } else {
+            next('*');
+          }
+        } else {
+          next('*');
+        }
       }
     },
     {
