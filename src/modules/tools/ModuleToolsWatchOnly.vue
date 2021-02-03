@@ -25,18 +25,18 @@
       />
     </div>
 
-    <table-container />
+    <tools-table-container />
   </div>
 </template>
 
 <script>
 import textButton from '@/components/buttons/text-button/TextButton';
 import blockTitle from '@/components/block-title/BlockTitle';
-import tableContainer from './components/table-container/TableContainer';
+import ToolsTableContainer from './components/ToolsTableContainer';
 
 export default {
-  name: 'ModuleWatchOnly',
-  components: { textButton, blockTitle, tableContainer },
+  name: 'ModuleToolsWatchOnly',
+  components: { textButton, blockTitle, ToolsTableContainer },
   data: () => ({
     addDialog: false,
     addresses: [

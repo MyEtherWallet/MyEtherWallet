@@ -54,7 +54,7 @@ import { WALLET_TYPES } from './handlers/helpers';
 import handlerCreateWallet from './handlers/handlerCreateWallet';
 
 export default {
-  name: 'ModuleSoftware',
+  name: 'ModuleCreateWalletSoftware',
   components: {
     CreateWalletSoftwareOverview,
     CreateWalletKeystore,

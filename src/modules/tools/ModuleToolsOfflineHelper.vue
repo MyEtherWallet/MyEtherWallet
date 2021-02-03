@@ -192,7 +192,7 @@ import borderBlock from '@/components/border-block/BorderBlock.vue';
 import dividerLine from '@/components/divider-line/DividerLine';
 
 export default {
-  name: 'ModuleOfflineHelper',
+  name: 'ModuleToolsOfflineHelper',
   components: { ellipsisBlock, blockTitle, borderBlock, dividerLine },
   data: () => ({
     dialog: false,

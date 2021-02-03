@@ -44,6 +44,7 @@ import Network from '@/modules/network/ModuleNetwork';
 import Swap from '@/components/swap/Swap';
 
 export default {
+  name: 'ModuleContractDeploy',
   components: {
     'interface-wrap': InterfaceWrap,
     network: Network,

@@ -164,6 +164,7 @@
 import VueQrcode from '@xkeshi/vue-qrcode';
 
 export default {
+  name: 'BalanceAddressPaperWallet',
   components: {
     VueQrcode
   },

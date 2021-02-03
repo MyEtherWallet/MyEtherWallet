@@ -25,7 +25,11 @@
       :right-btn-text="$t('common.close')"
     >
       <template #mewOverlayBody>
-        <add-address :to-address="toAddress" mode="add" @back="toggleOverlay" />
+        <address-book-add-edit
+          :to-address="toAddress"
+          mode="add"
+          @back="toggleOverlay"
+        />
       </template>
     </mew-overlay>
   </div>
@@ -35,11 +39,12 @@
 import utils from 'web3-utils';
 import { mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
-import AddAddress from './components/AddressBookAddEdit';
+import AddressBookAddEdit from './components/AddressBookAddEdit';
 
 export default {
+  name: 'ModuleAddressBook',
   components: {
-    AddAddress
+    AddressBookAddEdit
   },
   data() {
     return {

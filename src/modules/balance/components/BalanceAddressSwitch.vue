@@ -58,6 +58,7 @@
 
 <script>
 export default {
+  name: 'BalanceAddressSwitch',
   props: {
     open: { default: false, type: Boolean },
     close: {

@@ -14,9 +14,9 @@
             height="50px"
             class="blockie-image"
           />
-          <qr-code-popup title="Address QR Code" :value="address">
+          <balance-address-qr-code title="Address QR Code" :value="address">
             <img src="@/assets/images/icons/icon-qr-code-mew.svg" />
-          </qr-code-popup>
+          </balance-address-qr-code>
         </div>
         <div class="ml-4">
           <div class="font-weight-medium d-flex align-center">
@@ -62,28 +62,32 @@
         />
       </div>
     </div>
-    <address-switch
+    <balance-address-switch
       :open="openChangeAddress"
       @close="openChangeAddress = false"
     />
-    <paper-wallet :open="openPaperWallet" @close="openPaperWallet = false" />
+    <balance-address-paper-wallet
+      :open="openPaperWallet"
+      @close="openPaperWallet = false"
+    />
   </div>
 </template>
 
 <script>
-import AddressSwitch from './components/AddressSwitch';
-import paperWallet from './components/AddressPaperWallet';
-import qrCodePopup from './components/AddressQrCode';
+import BalanceAddressSwitch from './components/BalanceAddressSwitch';
+import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
+import BalanceAddressQrCode from './components/BalanceAddressQrCode';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import clipboardCopy from 'clipboard-copy';
 import { Toast, INFO } from '@/components/toast';
 
 export default {
+  name: 'ModuleBalance',
   components: {
-    AddressSwitch,
-    paperWallet,
-    qrCodePopup
+    BalanceAddressSwitch,
+    BalanceAddressPaperWallet,
+    BalanceAddressQrCode
   },
   data() {
     return {

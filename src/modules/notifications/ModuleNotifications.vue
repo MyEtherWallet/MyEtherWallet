@@ -125,6 +125,7 @@ import Out from './components/out/Out';
 import Swap from './components/swap/Swap';
 
 export default {
+  name: 'ModuleNotifications',
   components: { In, Out, Swap },
   props: {
     open: { default: false, type: Boolean }

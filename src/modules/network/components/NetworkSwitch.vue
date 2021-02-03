@@ -90,6 +90,7 @@ import * as types from '@/utils/networks/types';
 import { mapActions, mapGetters } from 'vuex';
 import { Toast, SUCCESS } from '@/components/toast';
 export default {
+  name: 'NetworkSwitch',
   components: {
     dividerLine,
     buttonTabs

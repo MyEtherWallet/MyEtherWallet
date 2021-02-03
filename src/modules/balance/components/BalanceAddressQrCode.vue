@@ -19,6 +19,7 @@
 import vueQrCode from '@xkeshi/vue-qrcode';
 
 export default {
+  name: 'BalanceAddressQrCode',
   components: { vueQrCode },
   props: {
     title: {

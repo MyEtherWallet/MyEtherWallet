@@ -89,7 +89,7 @@
     <v-expansion-panels v-model="panel" multiple flat>
       <v-expansion-panel>
         <v-expansion-panel-content>
-          <tool-table />
+          <tools-table />
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -113,11 +113,12 @@
 import ellipsisBlock from '@/components/ellipsisBlock/EllipsisBlock';
 import copyBtn from '@/components/buttons/copy-button/CopyButton';
 import divider from '@/components/divider-line/DividerLine';
-import toolTable from '../table/Table';
+import ToolsTable from './ToolsTable';
 import WhiteSheet from '@/components/white-sheet/WhiteSheet';
 
 export default {
-  components: { ellipsisBlock, divider, copyBtn, toolTable, WhiteSheet },
+  name: 'ToolsTableContainer',
+  components: { ellipsisBlock, divider, copyBtn, ToolsTable, WhiteSheet },
   data: () => ({ panel: [] }),
   methods: {
     openPanel() {
