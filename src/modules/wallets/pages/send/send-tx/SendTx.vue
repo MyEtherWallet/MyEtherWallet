@@ -231,7 +231,7 @@ export default {
       return [
         value => !!value || "Amount can't be empty!",
         value => {
-          return new toBN(value).gte(0);
+          return new BigNumber(value).gte(0) || "Amount can't be negative!";
         },
         () => {
           if (this.sendTx && this.sendTx.currency) {
@@ -239,8 +239,13 @@ export default {
               this.sendTx.hasEnoughBalance() || 'Not enough balance to send!'
             );
           }
-          return false;
-        }
+          return true;
+        },
+        value =>
+          SendTransaction.helpers.hasValidDecimals(
+            value,
+            this.selectedCurrency.decimals
+          ) || 'Invalid decimal points'
       ];
     },
     gasLimitRules() {

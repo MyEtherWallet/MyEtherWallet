@@ -146,10 +146,10 @@ class SendTransaction {
   }
 }
 SendTransaction.helpers = {
-  hasValidDecimals(amountStr, currency) {
+  hasValidDecimals(amountStr, numDecimals) {
     const decimals = amountStr.split('.')[1];
     if (!decimals) return true;
-    return decimals.length <= currency.decimals;
+    return decimals.length <= numDecimals;
   }
 };
 export default SendTransaction;
