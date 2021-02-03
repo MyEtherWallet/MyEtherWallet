@@ -4,7 +4,7 @@
       class="wallet-sidemenu"
       permanent
       :src="background"
-      width="400"
+      width="300"
       :dark="$vuetify.theme.dark"
     >
       <template #prepend>

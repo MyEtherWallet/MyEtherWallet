@@ -134,7 +134,7 @@
     "u2f-api": "1.2.1",
     "uglify-es": "3.3.9",
     "uuid": "8.3.2",
-    "vue-cli-plugin-vuetify": "2.0.9",
+    "vue-cli-plugin-vuetify": "2.1.0",
     "vue-i18n": "8.22.4",
     "vue-template-compiler": "2.6.12",
     "vuetify": "2.3.21",
