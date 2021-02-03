@@ -3,7 +3,7 @@ import Mutations from './mutations';
 import Actions from './actions';
 import Getters from './getters';
 
-const global = {
+const globalModule = {
   namespaced: true,
   state: State,
   mutations: Mutations,
@@ -12,4 +12,4 @@ const global = {
   strict: false
 };
 
-export default global;
+export default globalModule;
