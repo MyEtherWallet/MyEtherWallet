@@ -29,8 +29,13 @@ import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { onError } from 'apollo-link-error';
 // import { EventBus } from '@/plugins/eventBus';
 
+import { InitialData } from '@/helpers/initialData';
+
 import whiteSheet from '@/components/white-sheet/WhiteSheet.vue';
 Vue.component('Mew6WhiteSheet', whiteSheet);
+
+// Save tokens into local storage
+InitialData.saveTokensLocalStorage();
 
 //Router
 Vue.use(Router);

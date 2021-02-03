@@ -183,7 +183,7 @@ export default {
         validUntil: 0,
         show: false
       },
-      swapper: null,
+      swapper: new Swapper(this.web3),
       toTokenType: null,
       fromTokenType: null,
       tokenInValue: '0.1',
@@ -249,18 +249,9 @@ export default {
       return '0';
     }
   },
-  mounted() {
-    this.isLoading = true;
-    this.swapper = new Swapper(this.web3);
-    this.swapper
-      .getAllTokens()
-      .then(tokens => {
-        this.availableTokens = tokens;
-      })
-      .then(() => {
-        this.setDefaults();
-        this.isLoading = false;
-      });
+  created() {
+    this.availableTokens = JSON.parse(localStorage.getItem('tokens'));
+    this.setDefaults();
   },
   methods: {
     getTokenFromAddress(address) {
