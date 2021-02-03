@@ -1,4 +1,4 @@
-const WALLET_TYPES = ['keystore', 'mnemonic'];
+const WALLET_TYPES = ['keystore', 'mnemonic', 'overview'];
 const keystoreConfig = {
   kdf: 'scrypt',
   n: 131072
