@@ -15,16 +15,16 @@ const isAddress = address => {
   ) {
     return true;
   }
-  const chainID = store.state.global.getters.network
-    ? store.state.wallet.network.type.chainID
+  const chainID = store.getters['global/network']
+    ? store.getters['global/network'].type.chainID
     : 1;
   if (chainID === 4 || chainID === 31)
     return isValidRSKChecksumAddress(address, chainID);
   return web3.utils.checkAddressChecksum(address);
 };
 const toChecksumAddress = address => {
-  const chainID = store.state.wallet.network
-    ? store.state.wallet.network.type.chainID
+  const chainID = store.getters['global/network']
+    ? store.getters['global/network'].type.chainID
     : 1;
   if (chainID === 4 || chainID === 31)
     return toRSKChecksumAddress(address, chainID);
