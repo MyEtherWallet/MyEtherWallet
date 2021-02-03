@@ -33,6 +33,7 @@
                   :label="$t('sendTx.amount')"
                   placeholder=" "
                   :right-label="currencyBalance"
+                  :rules="amtRules"
                   @input="setAmount"
                 />
               </v-col>
@@ -51,7 +52,7 @@
                   :placeholder="$t('sendTx.enter-addr')"
                   :success-toast="$t('sendTx.success.title')"
                   :is-valid-address="isValidAddress"
-                  :rules="rules"
+                  :rules="addressRules"
                   @input="setAddress"
                   @saveAddress="toggleOverlay"
                 />
@@ -86,6 +87,7 @@
                   :value="gasLimit"
                   :label="$t('common.gas.limit')"
                   placeholder=""
+                  :rules="gasLimitRules"
                   @input="setGasLimit"
                 />
               </div>
@@ -94,7 +96,8 @@
                 v-show="!isToken"
                 v-model="data"
                 :label="$t('sendTx.add-data')"
-                placeholder=" "
+                placeholder="0x..."
+                :rules="dataRules"
                 class="mt-10 mb-n5"
               />
             </template>
@@ -216,12 +219,42 @@ export default {
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network']),
     ...mapGetters('wallet', ['balanceInETH']),
-    rules() {
+    addressRules() {
       return [
         this.isValidAddress ||
           this.$t('interface.address-book.validations.invalid-address'),
         value =>
           !!value || this.$t('interface.address-book.validations.addr-required')
+      ];
+    },
+    amtRules() {
+      return [
+        value => !!value || "Amount can't be empty!",
+        value => {
+          return new toBN(value).gte(0);
+        },
+        () => {
+          if (this.sendTx && this.sendTx.currency) {
+            return (
+              this.sendTx.hasEnoughBalance() || 'Not enough balance to send!'
+            );
+          }
+          return false;
+        }
+      ];
+    },
+    gasLimitRules() {
+      return [
+        value => {
+          return !!value && new utils.BN(value).gte(21000);
+        }
+      ];
+    },
+    dataRules() {
+      return [
+        value => {
+          return isHexStrict(value);
+        }
       ];
     },
     displayedGasPrice() {
