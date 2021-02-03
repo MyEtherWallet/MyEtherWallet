@@ -2,6 +2,7 @@
 
 ### Devop
 
+- Fix swap page tokens list loading issue [#2810](https://github.com/MyEtherWallet/MyEtherWallet/pull/2810)
 - Vuex changes [#2787](https://github.com/MyEtherWallet/MyEtherWallet/pull/2787)
 - Add SWAP feature [#2774](https://github.com/MyEtherWallet/MyEtherWallet/pull/2774)
 - Add decision tree [#2720](https://github.com/MyEtherWallet/MyEtherWallet/pull/2720)
