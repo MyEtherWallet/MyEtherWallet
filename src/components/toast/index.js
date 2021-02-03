@@ -7,6 +7,7 @@ const WARNING = 'warning';
 const INFO = 'info';
 const SENTRY = 'sentry';
 const Toast = (text, link, type, duration) => {
+  console.log('got called??');
   const acceptableTypes = ['success', 'error', 'warning', 'info', 'sentry'];
   if (!type && !acceptableTypes.includes(type)) {
     throw new Error(

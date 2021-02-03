@@ -161,8 +161,8 @@
               title="Back"
               btn-size="xlarge"
               btn-style="outline"
-              @click.native="updateStep(1)"
               class="mx-3"
+              @click.native="updateStep(1)"
             />
             <mew-button
               title="Verify"
@@ -323,7 +323,8 @@ export default {
       }
     },
     phrase: {
-      deep: true
+      deep: true,
+      handler: function () {}
     }
   },
   mounted() {
