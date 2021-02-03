@@ -40,7 +40,7 @@
       </div>
       <div class="pa-4"></div>
       <div>
-        <network />
+        <module-network />
         <div class="pa-4"></div>
         <swap />
       </div>
@@ -51,13 +51,14 @@
 <script>
 import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 
-import Network from '@/modules/network/ModuleNetwork';
+import ModuleNetwork from '@/modules/network/ModuleNetwork';
 import Swap from '@/components/swap/Swap';
 
 export default {
+  name: 'ModuleContractInteract',
   components: {
     'interface-wrap': InterfaceWrap,
-    network: Network,
+    ModuleNetwork,
     swap: Swap
   },
   data() {

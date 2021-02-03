@@ -25,7 +25,8 @@
             label="Password"
             placeholder="Enter Password"
             :has-clear-btn="true"
-            class="mr-3 flex-grow-1 mb-6"
+            class="mr-3 flex-grow-1 mb-2"
+            :rules="passwordRulles"
             type="password"
           />
           <!--
@@ -34,22 +35,47 @@
           =====================================================================================
           -->
           <mew-input
+            v-model="cofirmPassword"
             hint=""
             label="Confirm Password"
             placeholder="Confirm password"
             class="mr-3 flex-grow-1"
-            type="password"
+            :rules="passwordConfirmRulles"
           />
-          <div class="d-flex justify-center">
+          <!--
+          =====================================================================================
+            Creat Wallet Button
+          =====================================================================================
+          -->
+          <div v-if="!isGeneratingKeystore" class="d-flex justify-center">
             <mew-button
-              title="Create"
+              title="Create Wallet"
               btn-size="xlarge"
               :has-full-width="false"
-              :disabled="password === '' || password.length < 7"
+              :disabled="!enableCreateButton"
               @click.native="createWallet"
             />
           </div>
+          <!--
+          =====================================================================================
+            Loading State: isGeneratingKeystore = true
+          =====================================================================================
+          -->
+          <v-row v-else justify="center" align="center">
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
+            <p class="mb-0 mx-3">
+              Sit tight while we are encrypting your wallet
+            </p>
+          </v-row>
         </v-sheet>
+        <!--
+        =====================================================================================
+          Warning Block
+        =====================================================================================
+        -->
         <mew-warning-sheet
           title="NOT RECOMMENDED"
           description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
@@ -80,12 +106,21 @@
               </border-button>
             </v-col>
           </v-row>
+
           <div class="d-flex justify-center mt-6">
+            <mew-button
+              title="Back"
+              btn-style="outline"
+              btn-size="xlarge"
+              @click.native="updateStep(1)"
+              class="mx-3"
+            />
             <mew-button
               title="Acknowledge & Download"
               btn-size="xlarge"
               :has-full-width="false"
               @click.native="downloadWallet"
+              class="mx-3"
             />
           </div>
           <a
@@ -122,21 +157,20 @@
                 src="@/assets/images/icons/icon-keystore-mew.png"
               />
 
-              <div class="d-flex flex-column">
+              <div class="d-flex justify-center flex-column">
                 <mew-button
-                  title="Access my wallet"
+                  title="Access Wallet"
                   btn-size="xlarge"
-                  class="mb-5"
+                  :has-full-width="false"
+                  class="mb-3"
                   @click.native="goToAccess"
                 />
-
-                <div class="mt-3 mb-0 text-center">
-                  <router-link
-                    class="primary--text text-decoration--none font-weight-bold"
-                    to="/"
-                    >Back to home</router-link
-                  >
-                </div>
+                <mew-button
+                  title="Create Another Wallet"
+                  :has-full-width="false"
+                  btn-style="transparent"
+                  @click.native="updateStep(1)"
+                />
               </div>
             </div>
             <v-img
@@ -161,14 +195,6 @@ export default {
     'border-button': borderButton
   },
   props: {
-    step: {
-      type: Number,
-      default: 0
-    },
-    updateStep: {
-      type: Function,
-      default: () => {}
-    },
     handlerCreateWallet: {
       type: Object,
       default: () => {
@@ -178,6 +204,7 @@ export default {
   },
   data() {
     return {
+      step: 1,
       warningData: [
         {
           icon: 'paperPlane',
@@ -212,18 +239,38 @@ export default {
         }
       ],
       password: '',
+      cofirmPassword: '',
+      passwordRulles: [
+        value => !!value || 'Required',
+        value => value.length > 7 || 'Password is less then 8 characters'
+      ],
+
       walletFile: '',
-      name: ''
+      name: '',
+      isGeneratingKeystore: false
     };
+  },
+  computed: {
+    enableCreateButton() {
+      return this.password !== '' && this.cofirmPassword === this.password;
+    },
+    passwordConfirmRulles() {
+      return [
+        value => !!value || 'Required',
+        value => value === this.password || 'Passwords do not match'
+      ];
+    }
   },
   methods: {
     createWallet() {
+      this.isGeneratingKeystore = true;
       this.handlerCreateWallet
         .generateKeystore(this.password)
         .then(res => {
           this.name = res.name;
           this.walletFile = res.blobUrl;
           this.updateStep(2);
+          this.isGeneratingKeystore = false;
         })
         .catch(e => {
           Toast(e, {}, ERROR);
@@ -235,6 +282,12 @@ export default {
     },
     goToAccess() {
       this.$router.push({ name: 'AccessWallet' });
+    },
+    /**
+     * Update step
+     */
+    updateStep(step) {
+      this.step = step ? step : 1;
     }
   }
 };

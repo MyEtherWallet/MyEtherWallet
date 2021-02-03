@@ -47,7 +47,7 @@ import blockTitle from '@/components/block-title/BlockTitle';
 import swapIcon from '@/assets/images/icons/icon-swap.svg';
 
 export default {
-  name: 'ModuleConvert',
+  name: 'ModuleToolsConvert',
   components: { blockTitle },
   data: () => ({
     title: {

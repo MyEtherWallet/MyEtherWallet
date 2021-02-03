@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--side-info-network">
-    <changeNetworkOverlay
+    <network-switch
       :open="openNetworkOverlay"
       @close="openNetworkOverlay = false"
     />
@@ -33,11 +33,12 @@
 </template>
 
 <script>
-import changeNetworkOverlay from './components/NetworkSwitch';
+import NetworkSwitch from './components/NetworkSwitch';
 import { mapGetters, mapState } from 'vuex';
 
 export default {
-  components: { changeNetworkOverlay },
+  name: 'ModuleNetwork',
+  components: { NetworkSwitch },
   props: {
     mobile: {
       type: Boolean,

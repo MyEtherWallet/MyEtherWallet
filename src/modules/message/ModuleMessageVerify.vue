@@ -20,7 +20,7 @@
 import blockTitle from '@/components/block-title/BlockTitle';
 
 export default {
-  name: 'ModuleVerify',
+  name: 'ModuleMessageVerify',
   components: { blockTitle },
   data: () => ({
     title: {

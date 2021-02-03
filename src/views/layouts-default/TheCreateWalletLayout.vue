@@ -99,7 +99,7 @@
           they should only be used in offline settings by experienced users."
           title-icon-class="warning--text text--darken-1"
           note="NOT RECOMMENDED"
-          @click.native="showSoftwareModule = true"
+          @click.native="openSoftwareModule"
         />
       </v-sheet>
     </v-container>
@@ -118,6 +118,7 @@
     -->
     <module-create-wallet-software
       :open="showSoftwareModule"
+      :wallet-type="type"
       :close="closeSoftwareModule"
     />
   </div>
@@ -135,8 +136,16 @@ export default {
     MewSuperButton,
     ModuleCreateWalletSoftware
   },
+  props: {
+    showSoftwareModule: {
+      type: Boolean
+    },
+    type: {
+      type: String,
+      default: 'overview'
+    }
+  },
   data: () => ({
-    showSoftwareModule: false,
     toastLink: {
       title: 'Buy a hardware wallet',
       url: ''
@@ -147,12 +156,24 @@ export default {
       title: 'Create a new wallet',
       description: '',
       centered: true
-    },
-    showSoftware: false
+    }
   }),
   methods: {
+    openSoftwareModule() {
+      try {
+        this.$router.push({
+          name: 'CreateWallet',
+          params: { overlay: 'software' },
+          query: { type: 'overview' }
+        });
+      } catch {}
+    },
     closeSoftwareModule() {
-      this.showSoftwareModule = false;
+      try {
+        this.$router.push({
+          name: 'CreateWallet'
+        });
+      } catch {}
     }
   }
 };

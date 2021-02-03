@@ -73,6 +73,7 @@ import NameResolver from '@/modules/name-resolver/index';
 const modes = ['add', 'edit'];
 
 export default {
+  name: 'AddressBookAddEdit',
   props: {
     mode: { default: modes[0], type: String },
     item: { default: () => {}, type: Object },

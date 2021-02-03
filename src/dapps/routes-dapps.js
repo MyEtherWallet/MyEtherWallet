@@ -1,15 +1,15 @@
-import DappsCenter from './dapps-center/DappsCenter';
 import ENSManager from './ens-manager-dapp/TheENSManagerLayout.vue';
 import MakerDAO from './makerdao/MakerDAO';
 import Aave from './aave-dapp/Aave';
-import Ambrpay from './AmbrpayDapp/Ambrpay';
+import Ambrpay from './ambrpay-dapp/TheAmbrpayLayout';
 import UnstoppableDomain from './unstoppable-domains/UnstoppableDomain';
+import Dapps from '@/modules/dapps-center/ModuleDappsCenter';
 
 export default [
   {
-    path: 'center',
-    name: 'DappsCenter',
-    component: DappsCenter
+    path: '',
+    name: 'Dapps',
+    component: Dapps
   },
   {
     path: 'ens-manager',
