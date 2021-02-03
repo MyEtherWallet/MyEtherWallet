@@ -51,14 +51,15 @@
     "string": "Menu",
     "dashboard": "Dashboard",
     "send": "Send",
-    "ntf": "NFT Manager",
+    "nft": "NFT Manager",
     "contract": "Contract",
     "interact-contract": "Interact with Contract",
     "message": "Message",
     "deploy": "Deploy Contract",
     "sign-message": "Sign Message",
     "dapps-center": "Dapps Center",
-    "tools": "Tools"
+    "tools": "Tools",
+    "logout": "Are you sure you want to log out?"
   },
   "actions": "Actions",
   "view-all": "View All",
