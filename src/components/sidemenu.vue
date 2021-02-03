@@ -137,7 +137,7 @@
 <script>
 import notificationOverlay from '@/modules/notifications/ModuleNotifications';
 import mobileStatus from './HeaderMobileStatus';
-import walletCard from '@/modules/balance/ModuleBalance';
+import walletCard from '@/components/wallet-card/WalletCard';
 import systemMenu from './system-menu/SystemMenu';
 // need to refactor sidemenu - can probably remove these components
 import accordionMenu from '@/components/menu/Menu';

@@ -137,7 +137,7 @@ import dapp from '@/assets/images/icons/icon-dapp-center-enable.png';
 import tools from '@/assets/images/icons/icon-contract-enable.png';
 import settings from '@/assets/images/icons/icon-setting-enable.png';
 import logout from '@/assets/images/icons/icon-logout-enable.png';
-import WalletCard from '@/modules/balance/ModuleBalance';
+import WalletCard from '@/components/wallet-card/WalletCard';
 import ModuleSettings from '@/modules/settings/ModuleSettings';
 import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
 import Version from '@/components/version/Version';
