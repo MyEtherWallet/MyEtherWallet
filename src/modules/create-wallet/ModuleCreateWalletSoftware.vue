@@ -85,7 +85,7 @@ export default {
      * @returns correct title of the overlay according to the wallet type selected
      */
     typeTitle() {
-      return this.walletType === WALLET_TYPES[3]
+      return this.walletType === WALLET_TYPES[2]
         ? 'Create wallet using software'
         : this.walletType === WALLET_TYPES[0]
         ? 'Create Wallet with Keystore File'
@@ -96,7 +96,7 @@ export default {
      * if overview, button text is empty
      */
     backBtnText() {
-      return this.walletType === WALLET_TYPES[3] ? '' : 'Back to Software';
+      return this.walletType === WALLET_TYPES[2] ? '' : 'Back to Software';
     }
   },
   mounted() {
