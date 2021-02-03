@@ -64,7 +64,8 @@ import Vuetify, {
   VProgressCircular,
   VFileInput,
   VSimpleCheckbox,
-  VPagination
+  VPagination,
+  VFooter
 } from 'vuetify/lib';
 import 'vuetify/dist/vuetify.min.css';
 
@@ -134,7 +135,8 @@ Vue.use(Vuetify, {
     VProgressCircular,
     VFileInput,
     VSimpleCheckbox,
-    VPagination
+    VPagination,
+    VFooter
   }
 });
 
