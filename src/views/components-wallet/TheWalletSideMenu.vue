@@ -1,203 +1,264 @@
 <template>
-  <div class="basic" style="z-index: 1">
-    <div v-if="mobile" class="mew-component--sidemenu-mobile">
-      <menu-mobile v-model="mobileMenu" />
-      <div
-        class="px-4 pt-2 mx-auto d-flex flex-column preset--mobile-max-width"
-      >
-        <div class="mb-4 d-flex align-center justify-space-between">
-          <router-link :to="{ name: 'Dashboard' }">
-            <img width="120" src="@/assets/images/icons/logo-mew.png" />
-          </router-link>
-          <div class="d-flex align-center">
-            <div class="mr-n4">
-              <mobile-status>
-                <v-btn fab icon large>
-                  <img
-                    class="white-icon"
-                    src="@/assets/images/icons/icon-mew-connect.svg"
-                  />
-                </v-btn>
-              </mobile-status>
-            </div>
-            <div class="position--relative mr-n2">
-              <notification-overlay
-                :open="openNotifications"
-                @close="openNotifications = false"
-              />
-              <v-btn fab icon large @click="openNotifications = true">
-                <img
-                  class="white-icon"
-                  src="@/assets/images/icons/icon-notifications.svg"
-                />
-              </v-btn>
-              <div
-                class="font-weight-bold notification-count cursor--pointer d-flex align-center justify-center white--text error lighten2"
-                @click="openNotifications = true"
-              >
-                3
-              </div>
-            </div>
-            <div class="mr-n3">
-              <v-btn fab icon large @click="mobileMenu = true">
-                <v-icon color="white" large>mdi-menu</v-icon>
-              </v-btn>
-            </div>
-          </div>
-        </div>
-        <v-sheet
-          width="100%"
-          max-width="280px"
-          color="transparent"
-          class="mx-auto"
-        >
-          <mew-tools v-model="mewTools" />
-          <v-btn
-            v-if="mobile"
-            class="full-width text-transform--initial mb-4"
-            outlined
-            color="white"
-            large
-            @click="mewTools = true"
-          >
-            <v-icon class="mr-2">mdi-apps</v-icon>
-            MEW tools
-            <v-icon class="ml-2">mdi-chevron-down</v-icon>
-          </v-btn>
-
-          <wallet-card />
-          <v-btn
-            class="mb-4 full-width text-transform--initial mt-4 mb-6"
-            outlined
-            color="white"
-            large
-          >
-            Buy ETH here
-            <img
-              src="@/assets/images/icons/icon-mastercard-mew.png"
-              alt="Master card"
-              height="16"
-              class="ml-3"
-            />
-            <img
-              src="@/assets/images/icons/icon-visa-white.png"
-              alt="Master card"
-              height="11"
-              class="ml-1"
-            />
-          </v-btn>
-        </v-sheet>
-      </div>
-    </div>
-
-    <v-sheet
-      v-else
-      color="transparent"
-      class="mew-component--sidemenu px-4 pb-7 pt-10 d-flex flex-column"
+  <div>
+    <v-navigation-drawer
+      class="wallet-sidemenu"
+      permanent
+      :src="background"
+      width="400"
+      :dark="$vuetify.theme.dark"
     >
-      <div class="mb-4">
-        <router-link :to="{ name: 'Dashboard' }">
-          <img width="120" src="@/assets/images/icons/logo-mew.png" />
-        </router-link>
-      </div>
-      <wallet-card />
-      <v-btn
-        class="mb-4 full-width text-transform--initial mt-4 mb-6"
-        outlined
-        color="white"
-        large
-      >
-        Buy ETH here
-        <img
-          src="@/assets/images/icons/icon-mastercard-mew.png"
-          alt="Master card"
-          height="16"
-          class="ml-3"
-        />
-        <img
-          src="@/assets/images/icons/icon-visa-white.png"
-          alt="Master card"
-          height="11"
-          class="ml-1"
-        />
-      </v-btn>
-      <accordion-menu class="mt-4" />
-      <divider class="my-5 mx-1" />
-      <system-menu />
-      <divider class="my-5 mx-1" />
-      <theme-switch class="px-5" />
-      <version class="px-5" />
-    </v-sheet>
+      <template #prepend>
+        <div class="pa-5">
+          <div class="my-4">
+            <router-link :to="{ name: 'Dashboard' }">
+              <img width="120" src="@/assets/images/icons/logo-mew.png" />
+            </router-link>
+          </div>
+          <wallet-card />
+          <mew-super-button
+            font-class="mew-body"
+            class="mt-4"
+            title="Buy ETH here"
+            color-theme="outline"
+            style="height: 60px"
+          >
+            <!-- going to change slot name -->
+            <template #contentSlot>
+              <img
+                src="@/assets/images/icons/icon-mastercard-mew.png"
+                alt="Master card"
+                height="16"
+                class="ml-3"
+              />
+              <img
+                src="@/assets/images/icons/icon-visa-white.png"
+                alt="Master card"
+                height="11"
+                class="mx-3"
+              />
+            </template>
+          </mew-super-button>
+        </div>
+      </template>
+      <v-list>
+        <div v-for="(item, idx) in sectionOne" :key="item + idx">
+          <v-list-item v-if="!item.children" :to="item.route">
+            <v-list-item-icon class="mx-3">
+              <img width="26" height="26" :src="item.icon" :alt="item.title" />
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title
+                class="white--text font-weight-regular mew-body"
+                v-text="item.title"
+              />
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-group v-if="item.children" prepend-icon="">
+            <template #activator>
+              <v-list-item-icon class="mx-3">
+                <img
+                  width="26"
+                  height="26"
+                  :src="item.icon"
+                  :alt="item.title"
+                />
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title
+                  class="white--text font-weight-regular mew-body"
+                  v-text="item.title"
+                ></v-list-item-title>
+              </v-list-item-content>
+            </template>
+            <v-list-item
+              v-for="child in item.children"
+              :key="child.title"
+              class="pl-4"
+              :to="child.route"
+            >
+              <v-list-item-content>
+                <v-list-item-title
+                  class="pl-13 white--text font-weight-regular mew-body"
+                  v-text="child.title"
+                ></v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-group>
+        </div>
+      </v-list>
+      <v-divider />
+      <v-list>
+        <v-list-item
+          v-for="(item, idx) in sectionTwo"
+          :key="item + idx"
+          @click="item.fn()"
+        >
+          <v-list-item-icon class="mx-3">
+            <img width="26" height="26" :src="item.icon" :alt="item.title" />
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title
+              class="white--text mew-body font-weight-regular"
+              v-text="item.title"
+            />
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <template #append>
+        <div class="px-10 d-flex align-center justify-space-between">
+          <theme-switch />
+          <version />
+        </div>
+      </template>
+    </v-navigation-drawer>
+    <mew-popup
+      :is-open="showLogoutPopup"
+      :title="$t('interface.menu.logout')"
+      :button-left="logout.btnLeft"
+      :button-right="logout.btnRight"
+      popup-type="confirm"
+      @onClick="onLogout"
+    ></mew-popup>
+    <module-settings
+      :on-settings="onSettings"
+      @closeSettings="toggleSettings"
+    />
   </div>
 </template>
 
 <script>
-import notificationOverlay from '@/modules/notifications/ModuleNotifications';
-import mobileStatus from './HeaderMobileStatus';
-import walletCard from '@/modules/balance/ModuleBalance';
-import systemMenu from './system-menu/SystemMenu';
-// need to refactor sidemenu - can probably remove these components
-import accordionMenu from '@/components/menu/Menu';
-import menuMobile from '@/components/menu-mobile/Menu';
-import themeSwitch from '@/components/theme-switch/ThemeSwitch';
-import version from '@/components/version/Version';
-import divider from '@/components/divider/Divider';
-import mewTools from '@/components/mewTools/MewTools';
+import background from '@/assets/images/backgrounds/bg-light.jpg';
+import dashboard from '@/assets/images/icons/icon-dashboard-enable.png';
+import send from '@/assets/images/icons/icon-send-enable.png';
+import swap from '@/assets/images/icons/icon-swap-enable.png';
+import dapp from '@/assets/images/icons/icon-dapp-center-enable.png';
+import tools from '@/assets/images/icons/icon-contract-enable.png';
+import settings from '@/assets/images/icons/icon-setting-enable.png';
+import logout from '@/assets/images/icons/icon-logout-enable.png';
+import WalletCard from '@/modules/balance/ModuleBalance';
+import ModuleSettings from '@/modules/settings/ModuleSettings';
+import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
+import Version from '@/components/version/Version';
 
 export default {
   components: {
-    menuMobile,
-    notificationOverlay,
-    mobileStatus,
-    walletCard,
-    accordionMenu,
-    systemMenu,
-    themeSwitch,
-    version,
-    divider,
-    mewTools
-  },
-  props: {
-    mobile: {
-      type: Boolean,
-      default: false
-    }
+    WalletCard,
+    ModuleSettings,
+    ThemeSwitch,
+    Version
   },
   data() {
-    return { mewTools: false, openNotifications: false, mobileMenu: false };
+    return {
+      background: background,
+      onSettings: false,
+      showLogoutPopup: false,
+      logout: {
+        btnLeft: {
+          title: 'Cancel',
+          colorTheme: 'basic'
+        },
+        btnRight: {
+          title: 'Log out',
+          colorTheme: 'error'
+        }
+      },
+      sectionOne: [
+        {
+          title: this.$t('interface.menu.dashboard'),
+          route: { name: 'Dashboard' },
+          icon: dashboard
+        },
+        {
+          title: this.$t('interface.menu.send'),
+          icon: send,
+          children: [
+            { title: this.$t('sendTx.send-tx'), route: { name: 'SendTX' } },
+            {
+              title: this.$t('interface.menu.nft'),
+              route: { name: 'NFTManager' }
+            }
+          ]
+        },
+        {
+          title: this.$t('common.swap'),
+          route: { name: 'Swap' },
+          icon: swap
+        },
+        {
+          title: this.$t('interface.menu.dapps-center'),
+          route: { name: 'Dapps' },
+          icon: dapp
+        },
+        {
+          title: this.$t('interface.menu.tools'),
+          icon: tools,
+          children: [
+            {
+              title: this.$t('interface.menu.interact-contract'),
+              route: { name: 'InteractWithContract' }
+            },
+            {
+              title: this.$t('interface.menu.deploy'),
+              route: { name: 'DeployContract' }
+            },
+            {
+              title: this.$t('interface.menu.sign-message'),
+              route: { name: 'SignMessage' }
+            }
+          ]
+        }
+      ],
+      sectionTwo: [
+        {
+          title: this.$t('common.settings'),
+          icon: settings,
+          fn: this.toggleSettings
+        },
+        {
+          title: this.$t('common.logout'),
+          icon: logout,
+          fn: this.toggleLogout
+        }
+      ]
+    };
+  },
+  methods: {
+    toggleSettings() {
+      this.onSettings = !this.onSettings;
+    },
+    onLogout(res) {
+      this.showLogoutPopup = false;
+      if (res.title === this.logout.btnRight.title) {
+        this.$router.push({ name: 'Home' });
+      }
+    },
+    toggleLogout() {
+      this.showLogoutPopup = !this.showLogoutPopup;
+    }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.mew-component--sidemenu {
-  background-image: url('~@/assets/images/backgrounds/bg-light.jpg');
-  background-position: -336px 0px;
-  background-size: 663px;
-  position: relative;
-  width: 300px;
-  min-height: 100vh;
-}
-.mew-component--sidemenu-mobile {
-  background-image: url('~@/assets/images/backgrounds/bg-light.jpg');
-  background-position: top right;
-  background-size: 220%;
-  position: relative;
-  width: 100%;
-}
-
-.notification-count {
-  position: absolute;
-  top: 15px;
-  right: 6px;
-  border-radius: 100%;
-  width: 18px;
-  height: 18px;
-  font-size: 12px;
-  pointer-events: none;
-}
-
-.white-icon {
-  filter: grayscale(1) brightness(5);
+<style lang="scss">
+.wallet-sidemenu {
+  .v-list-item--link {
+    border-top: none;
+  }
+  .v-list-item--active {
+    .v-list-item__content {
+      .v-list-item__title {
+        font-weight: 500 !important;
+      }
+    }
+  }
+  .v-list-group__header__append-icon {
+    .v-icon {
+      color: var(--v-white-base) !important;
+    }
+  }
+  .v-divider {
+    border-color: var(--v-white-base) !important;
+  }
 }
 </style>
