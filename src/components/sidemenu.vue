@@ -65,7 +65,7 @@
             <v-icon class="ml-2">mdi-chevron-down</v-icon>
           </v-btn>
 
-          <wallet-card />
+          <balance-card />
           <v-btn
             class="mb-4 full-width text-transform--initial mt-4 mb-6"
             outlined
@@ -137,7 +137,7 @@
 <script>
 import notificationOverlay from '@/modules/notifications/ModuleNotifications';
 import mobileStatus from './HeaderMobileStatus';
-import walletCard from '@/components/wallet-card/WalletCard';
+import BalanceCard from '@/modules/balance/ModuleBalanceCard';
 import systemMenu from './system-menu/SystemMenu';
 // need to refactor sidemenu - can probably remove these components
 import accordionMenu from '@/components/menu/Menu';
@@ -152,7 +152,7 @@ export default {
     menuMobile,
     notificationOverlay,
     mobileStatus,
-    walletCard,
+    BalanceCard,
     accordionMenu,
     systemMenu,
     themeSwitch,

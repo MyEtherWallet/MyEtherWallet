@@ -1,4 +1,6 @@
 <template>
+  <!-- <v-footer app>
+  </v-footer> -->
   <div class="mew-component--wallet-footer">
     <v-sheet color="mewBg" class="py-6 px-10">
       <v-container

@@ -71,9 +71,9 @@
 </template>
 
 <script>
-import AddressSwitch from '../AddressSwitch';
-import paperWallet from '../AddressPaperWallet';
-import qrCodePopup from '../AddressQrCode';
+import AddressSwitch from './components/AddressSwitch';
+import paperWallet from './components/AddressPaperWallet';
+import qrCodePopup from './components/AddressQrCode';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import clipboardCopy from 'clipboard-copy';
