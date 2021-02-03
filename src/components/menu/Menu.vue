@@ -114,7 +114,7 @@ export default {
             },
             {
               name: 'ENS manager',
-              routeName: 'NameManager'
+              routeName: 'ENSManager'
             },
             {
               name: 'MakerDAO',

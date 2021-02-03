@@ -1,45 +1,72 @@
 <template>
-  <div>
-    <mew-overlay
-      :show-overlay="showOverlay"
-      :title="title ? title : 'Confirmation'"
-      left-btn-text=""
-      :right-btn-text="$t('common.close')"
-      :close="overlayClose"
-    >
-      <template #mewOverlayBody>
-        <transaction-confirmation
-          v-if="true"
-          :to="to"
-          :from="from"
-          :data="data"
-          :gas-price="gasPrice"
-          :gas-limit="gasLimit"
-          :nonce="nonce"
-          :network="network"
-          :send="send"
-          :tx-fee="txFee"
-          :tx-fee-usd="txFeeUSD"
-          :value="value"
-        />
-      </template>
-    </mew-overlay>
-  </div>
+  <mew-overlay
+    :show-overlay="showOverlay"
+    :title="title ? title : 'Confirmation'"
+    left-btn-text=""
+    :right-btn-text="$t('common.close')"
+    :close="overlayClose"
+  >
+    <template #mewOverlayBody>
+      <v-sheet max-width="600px" class="pa-8">
+        <from-to-block :from="from" :to="to" class="mb-2" />
+        <balance-block :tx-fee="txFee" :tx-fee-usd="txFeeUSD" :value="value" />
+        <mew-expand-panel :panel-items="panelItems" :is-toggle="true">
+          <template #panelBody1>
+            <div class="px-3">
+              <div class="d-flex justify-space-between mb-2">
+                <div>Network</div>
+                <div>{{ network.type.name }} by {{ network.service }}</div>
+              </div>
+              <div class="d-flex justify-space-between mb-2">
+                <div>Gas Price</div>
+                <div>
+                  {{ gasPrice }} <span class="primary--text">GWEI</span>
+                </div>
+              </div>
+              <div class="d-flex justify-space-between mb-2">
+                <div>Gas Limit</div>
+                <div>{{ gasLimit }}</div>
+              </div>
+              <div class="d-flex justify-space-between mb-2">
+                <div>Nonce</div>
+                <div>{{ nonce }}</div>
+              </div>
+              <div class="d-flex justify-space-between">
+                <div>Data</div>
+                <div class="data">{{ data }}</div>
+              </div>
+            </div>
+          </template>
+        </mew-expand-panel>
+        <div class="d-flex justify-center my-8">
+          <mew-button
+            btn-size="xlarge"
+            title="Confirm and Send"
+            @click.native="send"
+          />
+        </div>
+        <mew-warning-sheet :description="warningDescription" />
+      </v-sheet>
+    </template>
+  </mew-overlay>
 </template>
 
 <script>
 import EventNames from '@/utils/web3-provider/events.js';
-import transactionConfirmation from './transaction-confirmation/TransactionConfirmation';
 import utils from 'web3-utils';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Toast, SUCCESS } from '@/components/toast';
 import getService from '@/core/helpers/getService';
 import { EventBus } from '@/core/plugins/eventBus';
+import fromToBlock from '@/components/from-to-block/FromToBlock';
+import balanceBlock from '@/components/balance-block/BalanceBlock';
+
 export default {
   name: 'ConfirmationContainer',
   components: {
-    transactionConfirmation
+    fromToBlock,
+    balanceBlock
   },
   data() {
     return {
@@ -48,7 +75,15 @@ export default {
       resolver: () => {},
       title: '',
       signedTxObject: {},
-      signedTx: {}
+      signedTx: {},
+      warningDescription:
+        'Make sure all your transaction details are CORRECT. Canceling or replacing transactions can not be guaranteed to work. You still be charged gas fee even transaction failing. Learn more here…',
+      panelItems: [
+        {
+          name: 'Details'
+        }
+      ],
+      activeTab: 0
     };
   },
   computed: {
@@ -87,6 +122,14 @@ export default {
     value() {
       const parsedValue = this.tx.value ? this.tx.value : '0x';
       return utils.fromWei(utils.hexToNumberString(parsedValue));
+    }
+  },
+  watch: {
+    gasLimit(newVal, oldVal) {
+      console.error('gasLimit', newVal, oldVal);
+    },
+    gasPrice(newVal, oldVal) {
+      console.error('gasPrice', newVal, oldVal);
     }
   },
   created() {
@@ -132,3 +175,10 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+.data {
+  max-width: 300px;
+  text-align: right;
+  overflow-wrap: break-word;
+}
+</style>
