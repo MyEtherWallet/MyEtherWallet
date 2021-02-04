@@ -21,6 +21,7 @@
             title="Buy ETH here"
             color-theme="outline"
             style="height: 60px"
+            @click.native="openSimplex"
           >
             <!-- going to change slot name -->
             <template #contentSlot>
@@ -236,6 +237,9 @@ export default {
     },
     toggleLogout() {
       this.showLogoutPopup = !this.showLogoutPopup;
+    },
+    openSimplex() {
+      window.open('https://ccswap.myetherwallet.com', '_blank');
     }
   }
 };

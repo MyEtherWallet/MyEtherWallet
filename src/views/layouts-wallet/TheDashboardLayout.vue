@@ -88,7 +88,7 @@
             title="All tokens..."
             btn-size="small"
             btn-style="transparent"
-            @click.native="goTo('HomeAccessWallet')"
+            @click.native="navigateToSwap"
           />
         </div>
         <div class="pa-3">
@@ -106,7 +106,10 @@
 
     <div v-else class="d-flex mew-component--dashboard">
       <div class="flex-grow-1">
-        <mew6-white-sheet class="mew-component--eth-balance pa-7 pb-4">
+        <mew6-white-sheet
+          v-if="chartData.length"
+          class="mew-component--eth-balance pa-7 pb-4"
+        >
           <div class="d-flex">
             <mew-module
               class="block-title"
@@ -135,10 +138,7 @@
               </div>
             </div>
           </div>
-          <chart v-if="chartData.length" :data="chartData" class="mt-5" />
-          <div v-else>
-            <p class="mew-heading-1 text-center">No chart data available!</p>
-          </div>
+          <chart :data="chartData" class="mt-5" />
           <v-row class="align-center">
             <v-col class="d-flex align-center justify-center">
               <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
@@ -162,13 +162,11 @@
                 :has-full-width="false"
                 title="Send Transaction"
                 btn-size="xlarge"
-                @click.native="goTo('HomeAccessWallet')"
+                @click.native="navigateToSwap"
               />
             </v-col>
           </v-row>
         </mew6-white-sheet>
-
-        <div class="pa-4"></div>
 
         <div v-if="showBuyEth" class="mew-component--no-eth-balance">
           <mew6-white-sheet class="position--relative">
@@ -185,6 +183,7 @@
                   :has-full-width="false"
                   title="Buy ETH with a credit card"
                   btn-size="xlarge"
+                  btn-link="https://ccswap.myetherwallet.com/#/"
                 />
                 <div class="d-flex align-center mt-4">
                   <div>We accept credit card</div>
@@ -256,10 +255,10 @@
                 <mew-button
                   class="ml-auto ml-n3"
                   :has-full-width="false"
-                  :title="'+ ' + 'Add custom tokens'"
+                  :title="'+ ' + 'Buy ERC20 tokens'"
                   btn-size="xsmall"
                   btn-style="transparent"
-                  @click.native="goTo('HomeAccessWallet')"
+                  @click.native="navigateToSwap"
                 />
               </div>
             </v-sheet>
@@ -272,7 +271,7 @@
       <div>
         <network />
         <div class="pa-4"></div>
-        <swap />
+        <swap :navigate-to-swap="navigateToSwap" />
         <div class="pa-4"></div>
         <banner-ads />
       </div>
@@ -351,7 +350,7 @@ export default {
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network']),
     showBuyEth() {
-      return this.balannce === 0;
+      return this.balance <= 0.075;
     },
     convertedBalance() {
       const converted = BigNumber(this.balance).times(this.ETHUSDValue.value);
@@ -482,6 +481,13 @@ export default {
     },
     navigateToSend() {
       this.$router.push({ name: 'SendTX' });
+    },
+    navigateToSwap(params) {
+      const obj = { name: 'Swap' };
+      if (params) {
+        obj['params'] = params;
+      }
+      this.$router.push(obj);
     }
   }
 };

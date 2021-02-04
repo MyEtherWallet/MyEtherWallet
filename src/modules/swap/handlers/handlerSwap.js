@@ -62,10 +62,19 @@ class Swap {
           q.exchangeInfo = Configs.exchangeInfo.default;
           q.exchangeInfo.name = q.exchange;
         }
-
+        console.log(fromT, toT, fromAmount, q);
         return q;
       });
     });
+  }
+  getQuotesForSet(arr) {
+    console.log(arr);
+    const quotes = [];
+    arr.forEach(itm => {
+      quotes.push(this.getAllQuotes(itm));
+    });
+    console.log(quotes);
+    return Promise.all(quotes);
   }
   getTrade(tradeInfo) {
     for (const p of this.providers) {

@@ -7,6 +7,7 @@
           btn-style="transparent"
           button-size="small"
           :title="$t('common.more') + '...'"
+          @click.native="navigateToSwap"
         />
       </div>
     </div>
@@ -46,12 +47,73 @@
 </template>
 
 <script>
+import handlerSwap from '@/modules/swap/handlers/handlerSwap';
+import { mapState, mapGetters } from 'vuex';
+const STATIC_PAIRS = [
+  {
+    toT: {
+      symbol: 'ETH',
+      decimals: 18
+    },
+    fromT: {
+      symbol: 'BTC'
+    },
+    fromAmount: '100000000000000000'
+  },
+  {
+    toT: {
+      symbol: 'ETH',
+      decimals: 18
+    },
+    fromT: {
+      symbol: 'EUR'
+    },
+    fromAmount: '100000000000000000'
+  },
+  {
+    toT: {
+      symbol: 'ETH',
+      decimals: 18
+    },
+    fromT: {
+      symbol: 'KNC',
+      decimals: 18
+    },
+    fromAmount: '100000000000000000'
+  },
+  {
+    toT: {
+      symbol: 'ETH',
+      decimals: 18
+    },
+    fromT: {
+      symbol: 'DAI',
+      decimals: 18
+    },
+    fromAmount: '100000000000000000'
+  },
+  {
+    toT: {
+      symbol: 'ETH',
+      decimals: 18
+    },
+    fromT: {
+      symbol: 'MKR',
+      decimals: 18
+    },
+    fromAmount: '100000000000000000'
+  }
+];
 export default {
   components: {},
   props: {
     mobile: {
       type: Boolean,
       default: false
+    },
+    navigateToSwap: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
@@ -81,8 +143,36 @@ export default {
           rate: '0.002',
           currency: 'btc'
         }
-      ]
+      ],
+      swapHandler: null,
+      newData: null,
+      loading: false
     };
+  },
+  computed: {
+    ...mapState('wallet', ['web3']),
+    ...mapGetters('global', ['network'])
+  },
+  watch: {
+    web3(newVal) {
+      this.setSwapHandler(newVal);
+    }
+  },
+  mounted() {
+    this.setSwapHandler(this.web3);
+  },
+  methods: {
+    setSwapHandler(val) {
+      this.swapHandler = new handlerSwap(val);
+      this.fetchRates();
+    },
+    fetchRates() {
+      this.newData = null;
+      this.loading = true;
+      this.swapHandler.getQuotesForSet(STATIC_PAIRS).then(res => {
+        console.log(res);
+      });
+    }
   }
 };
 </script>
