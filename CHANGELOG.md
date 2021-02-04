@@ -1,12 +1,16 @@
+### Bug
+
+- Fix #2761 [#2811](https://github.com/MyEtherWallet/MyEtherWallet/pull/2811)
+
 ### Release v5.7.19
 
 ### Devop
 
-* Add terms for changelly [#2783](https://github.com/MyEtherWallet/MyEtherWallet/pull/2783)
+- Add terms for changelly [#2783](https://github.com/MyEtherWallet/MyEtherWallet/pull/2783)
 
 ### Bug
 
-* Fix amount unit for Lend Migrator [#2776](https://github.com/MyEtherWallet/MyEtherWallet/pull/2776)
+- Fix amount unit for Lend Migrator [#2776](https://github.com/MyEtherWallet/MyEtherWallet/pull/2776)
 
 ### Release v5.7.18
 
