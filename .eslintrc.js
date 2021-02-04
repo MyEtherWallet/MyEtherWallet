@@ -13,6 +13,7 @@ module.exports = {
   extends: [
     'plugin:vue/recommended',
     '@vue/prettier',
+    '@vue/typescript',
     'eslint:recommended',
     'plugin:security/recommended'
   ],
@@ -31,7 +32,7 @@ module.exports = {
     'no-prototype-builtins': 'off'
   },
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: '@typescript-eslint/parser'
   },
   plugins: ['security']
 };
