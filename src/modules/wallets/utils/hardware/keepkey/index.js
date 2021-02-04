@@ -92,7 +92,7 @@ class KeepkeyWallet {
     }
     const txSigner = async tx => {
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.wallet.network)
+        common: commonGenerator(store.getters['global/network'])
       });
       const hexTx = getUint8Tx(tx);
       const networkId = tx.getChainId();

@@ -75,7 +75,7 @@ class CoolWallet {
     const address = await this.deviceInstance.getAddress(idx);
     const txSigner = async tx => {
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.wallet.network)
+        common: commonGenerator(store.getters['global/network'])
       });
       const cwTx = {
         data: bufferToHex(tx.data),
@@ -84,7 +84,7 @@ class CoolWallet {
         nonce: bufferToHex(tx.nonce),
         to: bufferToHex(tx.to),
         value: bufferToHex(tx.value),
-        chainId: store.state.wallet.network.type.chainID
+        chainId: store.getters['global/network'].type.chainID
       };
 
       const networkId = tx.getChainId();

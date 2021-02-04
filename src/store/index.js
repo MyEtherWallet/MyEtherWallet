@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import global from './global';
+import globalModule from './global';
 import wallet from './wallet';
 import externalData from './external';
 import Configs from './configs';
@@ -9,7 +9,7 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   modules: {
-    global: global,
+    global: globalModule,
     wallet: wallet,
     external: externalData
   }

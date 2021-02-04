@@ -1,165 +1,115 @@
-import BigNumber from 'bignumber.js';
-import utils from 'web3-utils';
-import { getGasBasedOnType } from '@/helpers/gasPriceHelper.js';
-import sanitizeHex from '@/helpers/sanitizeHex';
-import validateHexString from '@/helpers/validateHexString';
+import { toBN, toHex, toChecksumAddress, isHexStrict } from 'web3-utils';
+import { isAddress } from '@/helpers/addressUtils';
+import SanitizeHex from '@/helpers/sanitizeHex';
 import { Transaction } from 'ethereumjs-tx';
-import Vue from 'vue';
-
-export default class SendTransaction {
-  constructor(balance, web3, gasPrice, network) {
-    this.balance = balance;
-    this.web3 = web3;
-    this.gasPrice = gasPrice;
-    this.network = network;
-  }
-  // returns if data is valid
-  isValidData(value) {
-    return validateHexString(value);
-  }
-  // returns if gas limit is valid
-  isValidGasLimit(gasLimit) {
-    return BigNumber(gasLimit).gte(0) ? gasLimit : '21000';
-  }
-  // get fixed gas
-  getFixedGas(val) {
-    return BigNumber(val).toFixed(2);
-  }
-  // balance in ether
-  getBalETH() {
-    return BigNumber(utils.fromWei(this.balance)).toFixed();
-  }
-  // get the address' entire balance
-  getEntireBal(currency, balance, gasLimit) {
-    const finalGas = this.finalGasPrice();
-    if (this.isToken(currency)) {
-      return currency.balance;
-    }
-
-    const gasPrice = BigNumber(finalGas).toFixed(0);
-    const fee = BigNumber(gasPrice).times(gasLimit);
-    const parsedFee = utils.fromWei(fee.toString());
-    return balance > 0 ? BigNumber(balance).minus(parsedFee).toFixed() : 0;
-  }
-  // get final gas price
-  finalGasPrice() {
-    return getGasBasedOnType(this.gasPrice);
-  }
-  // show warning if gasPrice is greater than gas limit warning
-  showWarning(gasLimitWarning) {
-    return this.finalGasPrice >= gasLimitWarning;
-  }
-  // tx fee
-  txFee(gasLimit) {
-    return BigNumber(this.finalGasPrice())
-      .times(gasLimit || 0)
-      .toFixed(0);
-  }
-  // tx fee in ether
-  txFeeETH(gasLimit) {
-    if (BigNumber(this.txFee(gasLimit)).gt(0)) {
-      const txFee = this.txFee(gasLimit);
-      return utils.fromWei(txFee, 'ether');
-    }
-    return '0';
-  }
-  // tx fee in usd
-  txFeeUSD(gasLimit, ethPrice) {
-    return BigNumber(this.txFeeETH(gasLimit))
-      .times(BigNumber(ethPrice))
-      .toFixed(2)
-      .toString();
-  }
-
-  parsedAmount(amount) {
-    return utils.toWei(BigNumber(amount).toString(), 'ether').toString(16);
-  }
-
-  // estimate gas from coinbase
-  estimateGas(value, address, gasPrice, data) {
-    const actualAmount = data !== '0x' ? 0 : value;
-    return this.web3.eth.getCoinbase().then(res => {
-      const params = {
-        from: res,
-        value: this.parsedAmount(actualAmount),
-        to: address,
-        gasPrice: sanitizeHex(BigNumber(gasPrice).toString()),
-        data: data
-      };
-      return this.web3.eth.estimateGas(params);
-    });
-  }
-  // check if it is a token
-  isToken(currency) {
-    const symbol = this.network.type.currencyName;
-    return currency.symbol !== symbol;
-  }
-  // check if its a valid amount
-  checkAmount(amount, currency) {
-    if (BigNumber(amount).lt(0)) {
-      return {
-        // TODO: figure out translations to pass tests
-        msg: Vue.$i18n ? Vue.$i18n.t('errorsGlobal.invalid-value') : '',
-        valid: false
-      };
-    }
-    // if the currency type is a token
-    if (this.isToken(currency)) {
-      const hasAmountToken = BigNumber(amount).lte(currency.balance);
-      const hasGas = BigNumber(this.txFeeEth).lte(this.getBalETH());
-      const hasBalance =
-        hasAmountToken && hasGas && this.hasValidDecimals(amount, currency);
-      return {
-        valid: hasBalance,
-        msg: hasBalance
-          ? ''
-          : !hasAmountToken
-          ? Vue.$i18n // TODO: figure out translations to pass tests
-            ? Vue.$i18n.t('errorsGlobal.not-enough-to-send', {
-                type: currency.symbol
-              })
-            : ''
-          : !hasGas
-          ? Vue.$i18n // TODO: figure out translations to pass tests
-            ? Vue.$i18n.t('errorsGlobal.not-enough-to-send', {
-                type: Vue.$i18n.t('common.gas.name')
-              })
-            : ''
-          : Vue.$i18n // TODO: figure out translations to pass tests
-          ? Vue.$i18n.t('errorsGlobal.invalid-value')
-          : ''
-      };
-    }
-    return {
-      valid: this.hasAmount && this.hasValidDecimals(amount, currency),
-      msg: this.hasAmount
-        ? ''
-        : !this.hasAmount
-        ? Vue.$i18n // TODO: figure out translations to pass tests
-          ? Vue.$i18n.t('errorsGlobal.not-enough-to-send', {
-              type: this.network.type.currencyName
-            })
-          : ''
-        : Vue.$i18n // TODO: figure out translations to pass tests
-        ? Vue.$i18n.t('errorsGlobal.invalid-value')
-        : ''
+import { mapState, mapGetters } from 'vuex';
+import vuexStore from '@/store';
+import ErrorList from './errors';
+import Web3Contract from 'web3-eth-contract';
+class SendTransaction {
+  constructor() {
+    this.$store = vuexStore;
+    Object.assign(this, mapState('global', ['gasPrice']));
+    Object.assign(this, mapState('wallet', ['balance', 'web3', 'address']));
+    Object.assign(this, mapGetters('global', ['network']));
+    this.currency = null;
+    this.TX = {
+      from: '0x',
+      to: '0x',
+      destination: '0x',
+      nonce: '0x',
+      gasPrice: '0x',
+      gas: '0x5208', //21000
+      value: '0x',
+      destinationValue: '0x',
+      data: '0x'
     };
   }
-  hasAmount(amount) {
-    // right now amount is always returning in ETH
-    return BigNumber(amount).plus(this.txFeeEth).lte(this.getBalETH());
+  setTo(_to) {
+    if (isAddress(_to)) this.TX.destination = _to;
+    else throw ErrorList.INVALID_TO_ADDRESS;
   }
-  // returns whether it has valid decimals
-  hasValidDecimals(amount, currency) {
-    const decimals = (amount + '').split('.')[1];
-    if (!decimals) return true;
-    if (this.isToken(currency)) {
-      return decimals.length <= this.currency.decimals;
+  _setTo() {
+    this.TX.to = this.isToken()
+      ? toChecksumAddress(this.currency.contract)
+      : toChecksumAddress(this.TX.destination);
+  }
+  setFrom(_from) {
+    if (isAddress(_from)) this.TX.from = _from;
+    else throw ErrorList.INVALID_FROM_ADDRESS;
+  }
+  _setGasPrice() {
+    this.TX.gasPrice = toHex(toBN(this.gasPrice()));
+  }
+  setGasLimit(_gasLimit) {
+    this.TX.gas = toHex(toBN(_gasLimit));
+  }
+  setValue(_value) {
+    const _valueBN = toBN(_value);
+    if (!_valueBN.ltn(0)) this.TX.destinationValue = toHex(_valueBN);
+    else throw ErrorList.NEGATIVE_VALUE;
+  }
+  _setValue() {
+    if (this.isToken()) {
+      this.TX.value = '0x00';
+      this.setData(
+        this.getTokenTransferABI(this.TX.destinationValue, this.TX.destination)
+      );
+    } else {
+      this.TX.value = toHex(toBN(this.TX.destinationValue));
     }
-    return decimals.length <= 18;
   }
-  // token transfer abi
-  getTokenTransferABI(amount, decimals, hash) {
+  setData(_data) {
+    if (isHexStrict(_data)) this.TX.data = SanitizeHex(_data);
+    else throw ErrorList.INVALID_DATA_HEX;
+  }
+  setNonce(_nonce) {
+    this.TX.nonce = toHex(toBN(_nonce));
+  }
+  setCurrency(_currency) {
+    this.currency = _currency;
+    this.TX.data = '0x';
+  }
+  getEntireBal() {
+    if (this.isToken()) {
+      return this.currency.balance;
+    }
+    const gasPriceBN = toBN(this.gasPrice());
+    const fee = gasPriceBN.mul(toBN(this.TX.gas));
+    return this.balance().gt(this.balance().sub(fee)) > 0
+      ? this.balance().sub(fee)
+      : 0;
+  }
+  txFee() {
+    return toBN(this.gasPrice()).mul(toBN(this.TX.gas));
+  }
+  estimateGas() {
+    this.setFrom(this.address());
+    this._setTo();
+    this._setValue();
+    this._setGasPrice();
+    return this.web3().eth.estimateGas({
+      data: this.TX.data,
+      from: this.TX.from,
+      to: this.TX.to,
+      value: this.TX.value,
+      gasPrice: this.TX.gasPrice
+    });
+  }
+  isToken() {
+    return this.currency.symbol !== this.network().type.currencyName;
+  }
+  hasEnoughBalance() {
+    const amount = toBN(this.TX.destinationValue);
+    if (this.isToken()) {
+      const hasAmountToken = amount.lte(this.currency.balance);
+      const hasGas = this.txFee().lte(this.balance());
+      return hasAmountToken && hasGas;
+    }
+    return amount.add(this.txFee()).lte(this.balance());
+  }
+  getTokenTransferABI(amount, _toAddress) {
+    amount = toBN(amount);
     const jsonInterface = [
       {
         constant: false,
@@ -174,58 +124,32 @@ export default class SendTransaction {
         type: 'function'
       }
     ];
-    const contract = new this.web3.eth.Contract(jsonInterface);
-    const power = BigNumber(10).pow(decimals);
-    const tokenAmount = BigNumber(amount).times(power);
+    const contract = new Web3Contract(jsonInterface);
     return contract.methods
-      .transfer(hash.toLowerCase(), tokenAmount.toFixed())
+      .transfer(_toAddress.toLowerCase(), amount)
       .encodeABI();
   }
-  // transaction data
-  getTxData(amount, decimals, address, currency) {
-    let data = '0x';
-    if (this.isToken(currency) && address !== '' && decimals) {
-      data = this.getTokenTransferABI(amount, decimals, address);
-    }
-    return sanitizeHex(data);
-  }
-  // transaction value
-  getTxValue(currency, amount) {
-    if (this.isToken(currency)) {
-      return '0x00';
-    }
-    return sanitizeHex(amount);
-  }
-  // transaction address
-  getTxAddress(currency, hash) {
-    // ask about this
-    return this.isToken(currency)
-      ? currency.address.toLowerCase()
-      : hash.toLowerCase().trim();
-  }
-  // submit transaction
-  async submitTransaction(gasLimit, address, amount, data, contractAddress) {
+  async submitTransaction() {
     try {
-      const coinbase = await this.web3.eth.getCoinbase();
-      const nonce = await this.web3.eth.getTransactionCount(coinbase);
-      const toAddress = data === '0x' ? address : contractAddress;
-      const actualAmount = data === '0x' ? amount : 0;
-      const raw = {
-        nonce: sanitizeHex(BigNumber(nonce).toString(16)),
-        gasLimit: sanitizeHex(BigNumber(gasLimit).toString(16)),
-        to: toAddress,
-        value: sanitizeHex(
-          BigNumber(this.parsedAmount(actualAmount)).toString(16)
-        ),
-        data: data
-      };
-      const _tx = new Transaction(raw);
+      this._setTo();
+      this._setValue();
+      this._setGasPrice();
+      const nonce = await this.web3().eth.getTransactionCount(this.address());
+      this.setNonce(nonce);
+      const _tx = new Transaction(this.TX);
       const json = _tx.toJSON(true);
-      json.from = coinbase;
-      // this.clear();
-      return this.web3.eth.sendTransaction(json);
-    } catch (error) {
-      return error;
+      json.from = this.address();
+      return this.web3().eth.sendTransaction(json);
+    } catch (e) {
+      return e;
     }
   }
 }
+SendTransaction.helpers = {
+  hasValidDecimals(amountStr, numDecimals) {
+    const decimals = amountStr.split('.')[1];
+    if (!decimals) return true;
+    return decimals.length <= numDecimals;
+  }
+};
+export default SendTransaction;

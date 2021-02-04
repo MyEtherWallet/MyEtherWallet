@@ -90,7 +90,7 @@ class WalletInterface {
     if (!this.isPubOnly) {
       return new Promise(resolve => {
         const tx = new Transaction(txParams, {
-          common: commonGenerator(store.state.wallet.network)
+          common: commonGenerator(store.getters['global/network'])
         });
         const networkId = tx.getChainId();
         tx.sign(this.privateKey);
