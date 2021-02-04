@@ -127,6 +127,7 @@
 <script>
 import MewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import ModuleCreateWalletSoftware from '@/modules/create-wallet/ModuleCreateWalletSoftware';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import blockTitle from '@/components/block-title/BlockTitle';
 
 export default {
@@ -166,14 +167,18 @@ export default {
           params: { overlay: 'software' },
           query: { type: 'overview' }
         });
-      } catch {}
+      } catch (e) {
+        Toast(e, {}, ERROR);
+      }
     },
     closeSoftwareModule() {
       try {
         this.$router.push({
           name: 'CreateWallet'
         });
-      } catch {}
+      } catch (e) {
+        Toast(e, {}, ERROR);
+      }
     }
   }
 };

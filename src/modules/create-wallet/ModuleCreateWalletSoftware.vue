@@ -50,6 +50,7 @@
 import CreateWalletSoftwareOverview from './components/CreateWalletSoftwareOverview';
 import CreateWalletKeystore from './components/CreateWalletKeystore';
 import CreateWalletMnemonicPhrase from './components/CreateWalletMnemonicPhrase';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { WALLET_TYPES } from './handlers/helpers';
 import handlerCreateWallet from './handlers/handlerCreateWallet';
 
@@ -117,7 +118,9 @@ export default {
           this.$router.push({
             query: { type: 'overview' }
           });
-        } catch {}
+        } catch (e) {
+          Toast(e, {}, ERROR);
+        }
       }
     },
     /**
@@ -130,7 +133,9 @@ export default {
         this.$router.push({
           query: { type: newType }
         });
-      } catch {}
+      } catch (e) {
+        Toast(e, {}, ERROR);
+      }
     }
   }
 };
