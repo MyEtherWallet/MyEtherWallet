@@ -68,6 +68,8 @@
               @input="setToAddress"
             />
 
+            <Loading v-if="isLoadingProvider" />
+
             <div v-show="step >= 1" class="mt-5">
               <div class="mew-heading-3">Select a provider</div>
               <v-row>
@@ -161,6 +163,7 @@ import Swapper from '@/modules/swap';
 import utils, { toBN, fromWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
+import Loading from '@/components/loading/Loading';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 export default {
@@ -168,7 +171,8 @@ export default {
     SwapConfirmation,
     network: Network,
     swap: Swap,
-    'interface-wrap': InterfaceWrap
+    'interface-wrap': InterfaceWrap,
+    Loading
   },
   data() {
     return {
@@ -193,6 +197,7 @@ export default {
       currentTrade: null,
       allTrades: [],
       isLoading: false,
+      isLoadingProvider: false,
       defaults: {
         fromToken: ETH_TOKEN,
         toToken: DAI_TOKEN
@@ -286,6 +291,7 @@ export default {
       this.allTrades = [];
       this.step = 0;
       this.tokenInValue = value;
+      this.isLoadingProvider = true;
       this.swapper
         .getAllQuotes({
           fromT: this.fromTokenType,
@@ -303,6 +309,7 @@ export default {
             return q;
           });
           this.availableQuotes = quotes;
+          this.isLoadingProvider = false;
           if (quotes.length) {
             this.tokenOutValue = quotes[0].amount;
             this.step = 1;

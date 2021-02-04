@@ -1,7 +1,8 @@
 <template>
   <div>
     <confirmation />
-    <div class="d-block d-lg-none walletBg">
+
+    <div v-if="isMobile">
       <side-menu mobile />
       <div class="mx-auto px-2 preset--mobile-max-width">
         <wallet-header mobile />
@@ -9,7 +10,8 @@
       </div>
       <wallet-footer mobile class="mt-10 box-shadow" />
     </div>
-    <div class="d-none d-lg-block walletBg">
+
+    <div v-else>
       <div class="d-flex align-stretch">
         <side-menu class="box-shadow" />
         <div class="flex-grow-1 d-flex flex-column justify-space-between">
@@ -57,7 +59,10 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address', 'web3']),
-    ...mapState('global', ['online'])
+    ...mapState('global', ['online']),
+    isMobile() {
+      return this.$vuetify.breakpoint.mdAndDown;
+    }
   },
   watch: {
     web3() {
