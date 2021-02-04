@@ -136,9 +136,9 @@ import mdIndex from './data/MDIndex.js';
 import marked from 'marked';
 
 export default {
-  name: 'DecisionTree',
+  name: 'ModuleDecisionTree',
   components: {
-    'md-container': MdContainer
+    MdContainer
   },
   props: {
     button: {
