@@ -426,6 +426,37 @@
           />
         </div>
       </mew6-white-sheet>
+      <mew6-white-sheet v-else-if="enterPin">
+        <div class="pin-input-block">
+          <i18n path="accessWallet.pin.enter" tag="p" class="main-title"
+            ><span slot="device"> {{ walletType }} </span></i18n
+          >
+          <p class="sub-title">
+            {{ $t('accessWallet.pin.layout') }}
+          </p>
+          <div class="input-container">
+            <div class="input-headers">
+              <p>{{ $t('accessWallet.pin.string') }}</p>
+              <span @click="keepKeyClear">{{ $t('common.clear') }}</span>
+            </div>
+            <input v-model="pin" type="password" readonly="true" />
+          </div>
+        </div>
+        <div class="button-matrix-block">
+          <button
+            v-for="(pos, idx) in positions"
+            :key="pos + idx"
+            @click="pin += pos"
+          ></button>
+        </div>
+        <mew-button
+          btn-size="xlarge"
+          title="Unlock wallet"
+          has-full-width
+          @click.native="keepKeyPinEnter"
+        />
+      </mew6-white-sheet>
+      {{ enterPin }}
     </template>
   </mew-overlay>
 </template>
@@ -446,15 +477,8 @@ import mewconnectWallet from '@/modules/wallets/utils/hybrid/MEWconnect';
 import appPaths from '@/modules/wallets/utils/hardware/ledger/appPaths.js';
 import allPaths from '@/modules/wallets/utils/bip44';
 import { mapState, mapActions } from 'vuex';
+import { EventBus } from '@/plugins/eventBus';
 
-// const parsedAppPaths = appPaths.map(item => {
-//   const newObj = {
-//     name: item.network.name_long,
-//     value: item.network.name_long
-//   };
-//
-//   return newObj;
-// });
 
 const MAX_ADDRESSES = 5;
 import {
@@ -539,7 +563,7 @@ const walletHolder = {
   },
   [keepkeyType]: {
     create: keepkeyWallet,
-    when: 1,
+    when: 2,
     hasPaths: true,
     requiresPassword: false,
     needsQr: false,
@@ -621,6 +645,7 @@ export default {
   },
   data() {
     return {
+      positions: ['7', '8', '9', '4', '5', '6', '1', '2', '3'],
       buttons: [
         {
           label: 'Ledger',
@@ -703,7 +728,11 @@ export default {
       addressPage: 0,
       qrcode: '',
       bcvaultLoading: false,
-      walletInstance: {}
+      walletInstance: {},
+      enterPin: false,
+      pin: '',
+      callback: () => {},
+      unwatch: () => {}
     };
   },
   computed: {
@@ -741,6 +770,7 @@ export default {
       );
     },
     showPaths() {
+      if (this.enterPin) return false;
       return (
         (this.step >= 1 && this.step <= 3) ||
         (this.walletType !== '' &&
@@ -831,22 +861,21 @@ export default {
           this.setNetwork(found);
         }
       });
-    },
-    hwWalletInstance: {
-      deep: true,
-      handler: function (newVal) {
-        if (Object.keys(newVal).length > 0) {
-          try {
-            this.setAddresses();
-          } catch (e) {
-            newVal.errorHandler(e);
-          }
-        }
-      }
     }
   },
   mounted() {
     this.selectedNetwork = this.network.url;
+    // watcher was falling into an infinite loop with keepkey
+    this.unwatch = this.$watch('hwWalletInstance', function (newVal) {
+      if (Object.keys(newVal).length > 0) {
+        try {
+          this.setAddresses();
+        } catch (e) {
+          newVal.errorHandler(e);
+        }
+        this.unwatch();
+      }
+    })
   },
   methods: {
     ...mapActions('wallet', ['setWallet', 'setNetwork']),
@@ -869,6 +898,7 @@ export default {
       this.addressPage = 0;
       this.qrcode = '';
       this.walletInstance = {};
+      this.enterPin = false;
     },
     accessBack() {
       !this.step ? this.close('showHardware') : (this.step -= 1);
@@ -914,8 +944,6 @@ export default {
         }
         this.steps[this.step] = actualString;
         if (this.wallets[actualString].when === this.step) {
-          console.log('actualString', actualString); // todo remove dev item
-
           if (this.wallets[actualString].needsQr) {
             new this.wallets[actualString].create(this.generateQr).then(
               wallet => {
@@ -959,14 +987,24 @@ export default {
       const _wallet = this.walletInstance.getAccount(actualAddress);
       this.setHardwareWallet(_wallet);
     },
+    keepKeyClear() {
+      this.pin = '';
+    },
+    keepKeyPinEnter() {
+      this.callback(this.pin);
+      this.enterPin = false;
+      this.step += 1;
+      setTimeout(() => {
+        this.callback = () => {};
+      }, 500);
+    },
     unlockkeepkey() {
-      const walletBase = new this.wallets[this.walletType].create()
-        walletBase.init().then(
-        wallet => {
-          console.log('wallet', wallet); // todo remove dev item
-        }
-      );
-      console.log('unlock keepkey'); // todo remove dev item
+      EventBus.$on('showHardwarePinMatrix', callback => {
+        this.step += 1;
+        this.enterPin = true;
+        this.callback = callback;
+      });
+      this.unlockPathOnly();
     },
     unlockcool_wallet() {
       this.unlockPathAndPassword(null, this.password);
@@ -1106,5 +1144,78 @@ table {
 }
 .bcvault-address-container {
   width: 100%;
+}
+
+.pin-input-block {
+  margin-bottom: 30px;
+
+  .input-container {
+    display: flex;
+    flex-direction: column;
+
+    .input-headers {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 10px 5px;
+    }
+
+    p {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    input {
+      background-color: #f9f9f9;
+      border: 1px solid #f9f9f9;
+      font-size: 14px;
+      height: 55px;
+      padding: 0 20px;
+      width: 100%;
+    }
+
+    span {
+      color: #05c0a5;
+      cursor: pointer;
+    }
+  }
+}
+.button-matrix-block {
+  $button-element-size: 70px;
+  $grid-width-size: $button-element-size + 2px;
+
+  margin-top: 30px;
+  display: grid;
+  justify-items: center;
+  justify-content: center;
+  grid-gap: 10px;
+  grid-template-columns: $grid-width-size $grid-width-size $grid-width-size;
+  button {
+    cursor: pointer;
+    background: #dadada;
+    border: 1px solid #dadada;
+    height: $button-element-size;
+    width: $button-element-size;
+    border-radius: 5px;
+    position: relative;
+
+    &:active {
+      background-color: #05c0a5;
+    }
+
+    &::after {
+      height: 8px;
+      width: 8px;
+      background-color: #05c0a5;
+      position: absolute;
+      margin: auto;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      content: '';
+      border-radius: 100%;
+    }
+  }
 }
 </style>

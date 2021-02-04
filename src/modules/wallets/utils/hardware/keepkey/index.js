@@ -37,7 +37,6 @@ class KeepkeyWallet {
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[keepkeyType];
-    console.log('keepkey'); // todo remove dev item
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
@@ -48,7 +47,6 @@ class KeepkeyWallet {
     this.keepkey.device.events.on(String(MESSAGETYPE_PINMATRIXREQUEST), () => {
       EventBus.$emit(
         'showHardwarePinMatrix',
-        { name: this.identifier },
         pin => {
           this.keepkey.acknowledgeWithPin(pin).catch(errorHandler);
         }
