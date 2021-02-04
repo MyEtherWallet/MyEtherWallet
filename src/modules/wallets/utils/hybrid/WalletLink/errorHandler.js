@@ -1,4 +1,9 @@
-import { Toast, WARNING, ERROR, SENTRY } from '@/components/toast';
+import {
+  Toast,
+  WARNING,
+  ERROR,
+  SENTRY
+} from '@/modules/toast/handler/handlerToast';
 const ERRORS = {
   'User denied account authorization': 'user denied the authorization',
   'User denied transaction signature': 'user denied the transaction',

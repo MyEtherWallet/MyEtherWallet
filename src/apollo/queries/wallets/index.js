@@ -3,7 +3,7 @@ import {
   getUSDPrice,
   getBalanceHistory
 } from './wallets.graphql';
-import { Toast, ERROR } from '@/components/toast';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 export default class WalletCalls {
   constructor(apollo) {
     this.apollo = apollo;

@@ -1,4 +1,4 @@
-import { Toast, ERROR } from '@/components/toast';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 const setDarkList = async function ({ commit }) {
   const darkList = await fetch(
     'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/addresses/addresses-darklist.json'

@@ -1,6 +1,6 @@
 import { getLatestPrices, getOwnersERC20Tokens } from './tokens.graphql';
 import ethImg from '@/assets/images/networks/eth.svg';
-import { Toast, ERROR } from '@/components/toast';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
 
 const ETH_ID = 'ethereum';
