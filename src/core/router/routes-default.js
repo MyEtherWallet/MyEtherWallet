@@ -15,19 +15,13 @@ import BrowserExtensionInstall from '@/modules/wallets/pages/access/browser-exte
 import BrowserExtensionAccess from '@/modules/wallets/pages/access/browser-extension/access-extension/AccessExtension';
 import ThePrivacyPolicyLayout from '@/views/layouts-default/ThePrivacyPolicyLayout';
 import TheTermsOfServiceLayout from '@/views/layouts-default/TheTermsOfServiceLayout';
+import {
+  createWalletProps,
+  createRouteGuard,
+  accessWalletProps,
+  accessRouteGuard
+} from './helpers';
 
-const createWalletProps = route => {
-  const walletType = route.query && route.query.type ? route.query.type : '';
-  const isSoftware =
-    route.params && route.params.overlay && route.params.overlay === 'software'
-      ? true
-      : false;
-
-  return {
-    showSoftwareModule: isSoftware,
-    type: walletType
-  };
-};
 export default {
   path: '/',
   component: TheDefaultView,
@@ -113,32 +107,17 @@ export default {
       meta: {
         requiresAuth: false
       },
-      beforeEnter: (to, from, next) => {
-        if (to.params.overlay === undefined) {
-          next();
-        } else if (to.params.overlay === 'software') {
-          const validTypes = ['keystore', 'mnemonic', 'overview'];
-          if (
-            to.query.type === validTypes[0] ||
-            to.query.type === validTypes[1] ||
-            to.query.type === validTypes[2]
-          ) {
-            next();
-          } else {
-            next('*');
-          }
-        } else {
-          next('*');
-        }
-      }
+      beforeEnter: createRouteGuard
     },
     {
-      path: 'wallet/access',
+      path: 'wallet/access/:overlay',
       name: 'AccessWallet',
       component: AccessWallet,
+      props: accessWalletProps,
       meta: {
         requiresAuth: false
-      }
+      },
+      beforeEnter: accessRouteGuard
     },
     {
       path: 'wallet/access/hardware-wallets',
