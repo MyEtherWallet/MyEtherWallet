@@ -37,6 +37,7 @@ class KeepkeyWallet {
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[keepkeyType];
+    console.log('keepkey'); // todo remove dev item
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;

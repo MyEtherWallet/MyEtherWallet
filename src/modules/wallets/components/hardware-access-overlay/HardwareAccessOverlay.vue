@@ -545,7 +545,8 @@ const walletHolder = {
     needsQr: false,
     accountOnly: false,
     titles: {
-      1: '1. Connect with KeepKey'
+      1: '1. Connect with KeepKey',
+      2: '2. Enter your password'
     }
   },
   [finneyType]: {
@@ -913,6 +914,8 @@ export default {
         }
         this.steps[this.step] = actualString;
         if (this.wallets[actualString].when === this.step) {
+          console.log('actualString', actualString); // todo remove dev item
+
           if (this.wallets[actualString].needsQr) {
             new this.wallets[actualString].create(this.generateQr).then(
               wallet => {
@@ -956,7 +959,15 @@ export default {
       const _wallet = this.walletInstance.getAccount(actualAddress);
       this.setHardwareWallet(_wallet);
     },
-    unlockkeepkey() {},
+    unlockkeepkey() {
+      const walletBase = new this.wallets[this.walletType].create()
+        walletBase.init().then(
+        wallet => {
+          console.log('wallet', wallet); // todo remove dev item
+        }
+      );
+      console.log('unlock keepkey'); // todo remove dev item
+    },
     unlockcool_wallet() {
       this.unlockPathAndPassword(null, this.password);
     },
