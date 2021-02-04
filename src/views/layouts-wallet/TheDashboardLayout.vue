@@ -135,7 +135,10 @@
               </div>
             </div>
           </div>
-          <chart :data="chartData" class="mt-5" />
+          <chart v-if="chartData.length" :data="chartData" class="mt-5" />
+          <div v-else>
+            <p class="mew-heading-1 text-center">No chart data available!</p>
+          </div>
           <v-row class="align-center">
             <v-col class="d-flex align-center justify-center">
               <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
@@ -212,12 +215,15 @@
 
         <div class="pa-4"></div>
 
-        <mew6-white-sheet class="mew-component--my-token-value">
+        <mew6-white-sheet
+          v-if="tokensData.length > 0"
+          class="mew-component--my-token-value"
+        >
           <div class="d-flex align-center pa-7 pb-4">
             <mew-module
               class="block-title"
               subtitle="My Tokens Value"
-              title="$3,132.25"
+              :title="`$ ${totalTokensValue}`"
               :icon="require('@/assets/images/icons/icon-token-grey.png')"
               icon-align="left"
             >
@@ -235,11 +241,10 @@
           <mew-table
             :has-color="false"
             :table-headers="tableHeaders"
-            :table-data="tableData"
+            :table-data="tokensData"
           />
         </mew6-white-sheet>
-        <div class="pa-4"></div>
-        <div class="mew-component--empty-token-list">
+        <div v-else class="mew-component--empty-token-list">
           <mew6-white-sheet class="position--relative">
             <div
               class="bg-container"
@@ -313,104 +318,28 @@ export default {
         {
           text: 'Token',
           value: 'token',
-          sortable: false,
-          filterable: false,
-          containsLink: false,
-          width: '100px'
+          sortable: true
         },
         {
           text: 'Price',
           value: 'price',
-          sortable: false,
-          filterable: false,
-          containsLink: false,
-          width: '100px'
+          sortable: true
         },
         {
           text: 'Market Cap',
           value: 'cap',
-          sortable: false,
-          filterable: false,
-          containsLink: false,
-          width: '120px'
+          sortable: true
         },
         {
           text: '24H Changes',
           value: 'change',
-          sortable: false,
-          filterable: false,
-          containsLink: false,
-          width: '120px'
+          sortable: true
         },
         {
           text: 'Token Value',
           value: 'value',
-          sortable: false,
-          filterable: false,
-          containsLink: false,
-          width: '100px'
-        },
-        {
-          text: '',
-          value: 'callToAction',
-          sortable: false,
-          filterable: false,
-          containsLink: false,
-          width: '140px'
-        }
-      ],
-      tableData: [
-        {
-          token: 'XMR',
-          price: '$8.23',
-          cap: '$1.23B',
-          change: '2.23%',
-          status: '+',
-          changeData: {
-            x: [1, 4, 10, 4],
-            y: [0, 1, 34, 43]
-          },
-          value: '$27.54',
-          callToAction: 'Trade'
-        },
-        {
-          token: 'AMIS',
-          price: '$23.11',
-          cap: '$5.22B',
-          change: '0.43%',
-          status: '-',
-          changeData: {
-            x: [1, 4, 10, 4],
-            y: [0, 1, 34, 43]
-          },
-          value: '$27.54',
-          callToAction: 'Trade'
-        },
-        {
-          token: 'JCK',
-          price: '$3.65',
-          cap: '$0.43B',
-          change: '10.23%',
-          status: '+',
-          changeData: {
-            x: [1, 4, 10, 4],
-            y: [0, 1, 34, 43]
-          },
-          value: '$27.54',
-          callToAction: 'Trade'
-        },
-        {
-          token: 'AMN',
-          price: '$10.72',
-          cap: '0.11B',
-          change: '8.88%',
-          value: '$27.54',
-          status: '-',
-          changeData: {
-            x: [1, 4, 10, 4],
-            y: [0, 1, 34, 43]
-          },
-          callToAction: 'Trade'
+          sortable: true,
+          width: '250px'
         }
       ],
       chartData: [],
@@ -439,6 +368,34 @@ export default {
     },
     priceChange() {
       return this.ETHUSDValue.price_change_24h > 0;
+    },
+    tokensData() {
+      return this.ownersTokens
+        .filter(item => {
+          if (item.price_change_24h || item.market_cap) {
+            return item;
+          }
+        })
+        .map(item => {
+          const newObj = {};
+          newObj.value = `$ ${item.usdBalance}`;
+          newObj.token = item.symbol;
+          newObj.cap = item.market_cap;
+          newObj.change = item.price_change_24h;
+          newObj.status = item.price_change_24h > 0 ? '+' : '-';
+          newObj.price = item.price;
+          newObj.tokenImage = item.icon;
+          newObj.usdBalance = item.usdBalance;
+
+          return newObj;
+        });
+    },
+    totalTokensValue() {
+      return new BigNumber(
+        this.tokensData.reduce((acc, currentVal) => {
+          return new BigNumber(acc).plus(currentVal.usdBalance).toFixed();
+        }, 0)
+      ).toFixed(2);
     }
   },
   watch: {
@@ -493,19 +450,35 @@ export default {
       this.key = '1d';
       this.getBalanceHistory(yesterday, 'hours');
     },
-    getBalanceHistory(timeString, scale) {
+    getBalanceHistory(timeString, scale, nextKey) {
+      const todaysDate = new Date().getTime();
       const wallet = new WalletCalls(this.$apollo);
-      wallet.getBalanceHistory(timeString, this.address, scale).then(res => {
-        this.chartData = res.data.getTimeseriesData.items.map(item => {
-          const fromWei = utils.fromWei(item.value);
-          const value = BigNumber(fromWei).toFixed(4);
-          const returnedValue = BigNumber(value).toNumber();
-          const actualTimeStamp = BigNumber(item.timestamp)
-            .times(1000)
-            .toNumber();
-          return [actualTimeStamp, returnedValue];
+      wallet
+        .getBalanceHistory(timeString, todaysDate, this.address, scale, nextKey)
+        .then(res => {
+          const parsedResult = res.data.getTimeseriesData.items.map(item => {
+            const fromWei = utils.fromWei(item.value);
+            const value = BigNumber(fromWei).toFixed(4);
+            const returnedValue = BigNumber(value).toNumber();
+            const actualTimeStamp = BigNumber(item.timestamp)
+              .times(1000)
+              .toNumber();
+            return [actualTimeStamp, returnedValue];
+          });
+          do {
+            if (!res.data.getTimeseriesData.nextKey) {
+              // when null
+              this.chartData = parsedResult;
+            } else {
+              // when key exists
+              const key = res.data.getTimeseriesData.nextKey;
+              const timeString = new Date();
+              const lastYear = timeString.getTime() - 1000 * 60 * 60 * 24 * 365;
+              this.chartData.push(parsedResult);
+              this.getBalanceHistory(lastYear, 'days', key);
+            }
+          } while (res.data.getTimeseriesData.nextKey);
         });
-      });
     },
     navigateToSend() {
       this.$router.push({ name: 'SendTX' });

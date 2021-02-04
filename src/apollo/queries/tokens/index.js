@@ -15,8 +15,8 @@ export default class Tokenslist {
         fetchPolicy: 'cache-first'
       })
       .then(response => {
+        this.tokensData = new Map();
         if (response && response.data) {
-          this.tokensData = new Map();
           response.data.getLatestPrices.forEach(token => {
             if (token.id === ETH_ID || token.contract) {
               this.tokensData.set(
@@ -63,11 +63,15 @@ export default class Tokenslist {
           token.tokenInfo.contract.toLowerCase()
         );
       }
+
+      const denominator = new BigNumber(10).pow(token.tokenInfo.decimals);
       const usdBalance = foundToken
-        ? BigNumber(foundToken.balance)
+        ? new BigNumber(token.balance)
+            .div(denominator)
             .times(foundToken.current_price)
-            .toFixed(0)
-        : 0;
+            .toString()
+        : null;
+      const price = foundToken ? foundToken.current_price : null;
       // need to eventually change image to check tokens network rather than just use eth network (if theres no image from coingecko)
       formattedList.push({
         name: token.tokenInfo.symbol,
@@ -80,9 +84,11 @@ export default class Tokenslist {
         decimals: token.tokenInfo.decimals,
         market_cap: foundToken ? foundToken.market_cap : null,
         price_change_24h: foundToken ? foundToken.price_change_24h : null,
-        usdBalance: usdBalance
+        usdBalance: usdBalance,
+        price: price
       });
     });
+
     return formattedList;
   }
 }

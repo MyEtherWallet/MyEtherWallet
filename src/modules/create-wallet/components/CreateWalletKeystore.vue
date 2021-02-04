@@ -112,15 +112,15 @@
               title="Back"
               btn-style="outline"
               btn-size="xlarge"
-              @click.native="updateStep(1)"
               class="mx-3"
+              @click.native="updateStep(1)"
             />
             <mew-button
               title="Acknowledge & Download"
               btn-size="xlarge"
               :has-full-width="false"
-              @click.native="downloadWallet"
               class="mx-3"
+              @click.native="downloadWallet"
             />
           </div>
           <a
