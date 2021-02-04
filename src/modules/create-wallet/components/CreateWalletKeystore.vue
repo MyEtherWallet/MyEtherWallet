@@ -106,7 +106,6 @@
               </border-button>
             </v-col>
           </v-row>
-
           <div class="d-flex justify-center mt-6">
             <mew-button
               title="Back"
@@ -186,7 +185,7 @@
 </template>
 
 <script>
-import { Toast, ERROR } from '@/components/toast';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import borderButton from '@/components/buttons/border-button/BorderButton.vue';
 
 export default {
