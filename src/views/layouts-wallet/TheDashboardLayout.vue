@@ -418,18 +418,21 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['balance', 'address']),
+    ...mapState('wallet', ['address']),
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network']),
+    ...mapGetters('wallet', ['balanceInETH']),
     showBuyEth() {
       return this.balannce === 0;
     },
     convertedBalance() {
-      const converted = BigNumber(this.balance).times(this.ETHUSDValue.value);
+      const converted = BigNumber(this.balanceInETH).times(
+        this.ETHUSDValue.value
+      );
       return `$ ${converted.toFixed(2)}`;
     },
     title() {
-      return `${this.balance} ${this.network.type.name}`;
+      return `${this.balanceInETH} ${this.network.type.name}`;
     },
     subtitle() {
       return `My ${this.network.type.name} Balance`;

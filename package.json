@@ -72,11 +72,11 @@
   },
   "devDependencies": {
     "@keepkey/keepkey.js": "1.2.3",
-    "@ledgerhq/hw-app-eth": "5.38.0",
+    "@ledgerhq/hw-app-eth": "5.42.1",
     "@ledgerhq/hw-transport-u2f": "5.36.0-deprecated",
     "@ledgerhq/hw-transport-webusb": "5.41.0",
     "@mdi/font": "5.9.55",
-    "@myetherwallet/mewconnect-web-client": "2.1.20-beta.1",
+    "@myetherwallet/mewconnect-web-client": "2.1.22",
     "@vue/cli-plugin-babel": "4.5.11",
     "@vue/cli-plugin-eslint": "4.5.11",
     "@vue/cli-plugin-pwa": "4.5.11",

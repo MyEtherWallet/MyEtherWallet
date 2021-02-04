@@ -77,10 +77,10 @@
 import BalanceAddressSwitch from './components/BalanceAddressSwitch';
 import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
 import BalanceAddressQrCode from './components/BalanceAddressQrCode';
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import clipboardCopy from 'clipboard-copy';
-import { Toast, INFO } from '@/components/toast';
+import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
 
 export default {
   components: {
@@ -95,7 +95,8 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address', 'balance']),
+    ...mapGetters('wallet', ['balanceInETH']),
+    ...mapState('wallet', ['address']),
     ...mapState('external', ['ETHUSDValue']),
     lastFour() {
       return this.address.substring(
@@ -104,7 +105,9 @@ export default {
       );
     },
     convertedBalance() {
-      const balance = BigNumber(this.balance).times(this.ETHUSDValue.value);
+      const balance = BigNumber(this.balanceInETH).times(
+        this.ETHUSDValue.value
+      );
       return `${this.ETHUSDValue.symbol + balance.toFixed(2).toString()}`;
     }
   },

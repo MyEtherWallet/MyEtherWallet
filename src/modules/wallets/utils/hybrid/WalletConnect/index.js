@@ -45,7 +45,7 @@ class WalletConnectWallet {
       const txSigner = tx => {
         const from = tx.from;
         tx = new Transaction(tx, {
-          common: commonGenerator(store.state.wallet.network)
+          common: commonGenerator(store.getters['global/network'])
         });
         const txJSON = tx.toJSON(true);
         txJSON.from = from;

@@ -33,6 +33,7 @@
                   :label="$t('sendTx.amount')"
                   placeholder=" "
                   :right-label="currencyBalance"
+                  :rules="amtRules"
                   @input="setAmount"
                 />
               </v-col>
@@ -55,32 +56,29 @@
                   {{ $t('sendTx.tx-fee') }}
                   <mew-tooltip class="ml-1" text="" />
                 </div>
-                <div v-show="isEth">
+                <div v-show="isEthNetwork">
                   <i18n path="sendTx.cost-eth-usd" tag="div">
-                    <span slot="eth">{{ txFeeETH() }}</span>
-                    <span slot="usd">{{ txFeeUSD() }}</span>
+                    <span slot="eth">{{ txFeeETH }}</span>
+                    <span slot="usd">{{ txFeeUSD }}</span>
                   </i18n>
                 </div>
               </div>
               <div>
-                <!-- <mew-input
-                  :label="$t('common.gas.price')"
-                  placeholder=" "
-                  :value="displayedGasPrice()"
-                  @input="setGasPrice"
-                /> -->
                 <mew-input
-                  :value="customGasLimit"
+                  :value="gasLimit"
                   :label="$t('common.gas.limit')"
                   placeholder=""
-                  @input="setCustomGasLimit"
+                  :rules="gasLimitRules"
+                  @input="setGasLimit"
                 />
               </div>
 
               <mew-input
+                v-show="!isToken"
                 v-model="data"
                 :label="$t('sendTx.add-data')"
-                placeholder=" "
+                placeholder="0x..."
+                :rules="dataRules"
                 class="mt-10 mb-n5"
               />
             </template>
@@ -93,6 +91,7 @@
               :title="$t('sendTx.send')"
               :has-full-width="false"
               btn-size="xlarge"
+              :disabled="!allValidInputs"
               @click.native="send()"
             />
           </div>
@@ -118,13 +117,14 @@
 </template>
 
 <script>
-import utils from 'web3-utils';
+import utils, { fromWei, toBN, isHexStrict } from 'web3-utils';
+import { isAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 
 import SendTransaction from '@/modules/send/handlers/handlerSend';
 import { ETH } from '@/utils/networks/types';
-import { Toast, ERROR, SENTRY, SUCCESS } from '@/components/toast';
+import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import getService from '@/core/helpers/getService';
 import AddressBook from '@/modules/address-book/ModuleAddressBook';
 import NameResolver from '@/modules/name-resolver/index';
@@ -156,13 +156,9 @@ export default {
         return [];
       }
     },
-    gasLimit: {
+    prefilledGasLimit: {
       type: String,
       default: '21000'
-    },
-    tokenSymbol: {
-      type: String,
-      default: ''
     }
   },
   data() {
@@ -172,7 +168,7 @@ export default {
       addMode: false,
       toastType: '',
       toastMsg: '',
-      customGasLimit: '',
+      gasLimit: '21000',
       toAddress: '',
       sendTx: null,
       amount: '0',
@@ -192,7 +188,8 @@ export default {
     ...mapState('global', ['online', 'gasPrice', 'addressBook']),
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network']),
-    rules() {
+    ...mapGetters('wallet', ['balanceInETH']),
+    addressRules() {
       return [
         this.isValidAddress ||
           this.$t('interface.address-book.validations.invalid-address'),
@@ -200,8 +197,51 @@ export default {
           !!value || this.$t('interface.address-book.validations.addr-required')
       ];
     },
-    isEth() {
+    amtRules() {
+      return [
+        value => !!value || "Amount can't be empty!",
+        value => {
+          return new BigNumber(value).gte(0) || "Amount can't be negative!";
+        },
+        () => {
+          if (this.sendTx && this.sendTx.currency) {
+            return (
+              this.sendTx.hasEnoughBalance() || 'Not enough balance to send!'
+            );
+          }
+          return true;
+        },
+        value =>
+          SendTransaction.helpers.hasValidDecimals(
+            value,
+            this.selectedCurrency.decimals
+          ) || 'Invalid decimal points'
+      ];
+    },
+    gasLimitRules() {
+      return [
+        value => {
+          return !!value && new utils.BN(value).gte(21000);
+        }
+      ];
+    },
+    dataRules() {
+      return [
+        value => {
+          return isHexStrict(value);
+        }
+      ];
+    },
+    displayedGasPrice() {
+      const gasPrice = this.gasPrice.toString();
+      return new BigNumber(fromWei(gasPrice, 'gwei')).toFixed(2);
+    },
+    isEthNetwork() {
       return this.network.type.name === ETH.name;
+    },
+    isToken() {
+      if (this.sendTx) return this.sendTx.isToken();
+      return false;
     },
     multiwatch() {
       return (
@@ -213,12 +253,12 @@ export default {
       );
     },
     currencyBalance() {
-      return this.selectedCurrency.symbol !== this.network.type.currencyName &&
-        this.selectedCurrency.balance
-        ? BigNumber(this.selectedCurrency.balance)
-            .div(BigNumber(10).pow(this.selectedCurrency.decimals))
-            .toString()
-        : this.balance;
+      if (this.selectedCurrency.balance)
+        return this.convertToDisplay(
+          this.selectedCurrency.balance,
+          this.selectedCurrency.decimals
+        );
+      return '0';
     },
     tokens() {
       const eth = {
@@ -228,6 +268,7 @@ export default {
         value: this.network.type.name_long,
         balance: this.balance,
         img: this.network.type.icon,
+        decimals: 18,
         market_cap: null,
         price_change_24h: null
       };
@@ -237,7 +278,28 @@ export default {
       return copiedTokens;
     },
     isValidAddress() {
-      return utils.isAddress(this.addressToSend);
+      return isAddress(this.addressToSend);
+    },
+    txFeeETH() {
+      return fromWei(toBN(this.gasPrice).mul(toBN(this.gasLimit)));
+    },
+    txFeeUSD() {
+      return new BigNumber(
+        fromWei(toBN(this.gasPrice).mul(toBN(this.gasLimit)))
+      )
+        .times(this.ETHUSDValue.value)
+        .toFixed(2);
+    },
+    getCalculatedAmount() {
+      const amount = new BigNumber(this.amount)
+        .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
+        .toFixed(0);
+      return toBN(amount);
+    },
+    allValidInputs() {
+      if (this.sendTx && this.sendTx.currency)
+        return this.sendTx.hasEnoughBalance() && this.isValidAddress;
+      return false;
     },
     addressToSend() {
       return this.resolvedAddr.length > 0 ? this.resolvedAddr : this.toAddress;
@@ -245,25 +307,10 @@ export default {
   },
   watch: {
     multiwatch: utils._.debounce(function () {
-      if (this.validInputs) {
-        this.sendTx
-          .estimateGas(
-            this.amount,
-            this.addressToSend,
-            this.gasPrice,
-            this.data
-          )
-          .then(res => {
-            this.customGasLimit = res;
-          })
-          .catch(e => {
-            Toast(e, {}, ERROR);
-          });
+      if (this.allValidInputs) {
+        this.estimateAndSetGas();
       }
     }, 500),
-    network() {
-      this.setSendTransaction();
-    },
     isPrefilled() {
       this.prefillForm();
     },
@@ -274,28 +321,32 @@ export default {
       deep: true
     },
     amount() {
-      this.generateData();
+      this.sendTx.setValue(this.getCalculatedAmount);
     },
     toAddress(newVal, oldVal) {
       if (newVal !== oldVal) {
         this.resolvedAddr = '';
       }
-      this.generateData();
-    },
-    gasPrice() {
-      this.setSendTransaction();
-    },
-    address() {
-      this.setSendTransaction();
+      this.resolveName();
     },
     selectedCurrency() {
-      this.generateData();
+      this.sendTx.setCurrency(this.selectedCurrency);
+      this.data = '0x';
+    },
+    addressToSend() {
+      if (this.isValidAddress) this.sendTx.setTo(this.addressToSend);
+    },
+    data() {
+      if (isHexStrict(this.data)) this.sendTx.setData(this.data);
+    },
+    gasLimit() {
+      this.sendTx.setGasLimit(this.gasLimit);
     }
   },
   mounted() {
     this.nameResolver = new NameResolver(this.network);
     this.setSendTransaction();
-    this.customGasLimit = this.gasLimit;
+    this.gasLimit = this.prefilledGasLimit;
   },
   methods: {
     async resolveName() {
@@ -315,57 +366,23 @@ export default {
       this.addMode = !this.addMode;
     },
     setSendTransaction() {
-      this.sendTx = new SendTransaction(
-        this.address,
-        this.web3,
-        this.gasPrice,
-        this.network
-      );
+      this.sendTx = new SendTransaction(this.$store);
     },
-    generateData() {
-      try {
-        if (this.toAddress !== '') {
-          this.resolveName();
-          const decimals = this.selectedCurrency.decimals
-            ? this.selectedCurrency.decimals
-            : null;
-          const estimateGasAddress = this.selectedCurrency.decimals
-            ? this.selectedCurrency.contract
-            : this.addressToSend;
-          this.data = this.sendTx.getTxData(
-            this.amount,
-            decimals,
-            this.addressToSend,
-            this.selectedCurrency
-          );
-          this.sendTx
-            .estimateGas(
-              this.amount,
-              estimateGasAddress,
-              this.gasPrice,
-              this.data
-            )
-            .then(res => {
-              this.customGasLimit = BigNumber(res).toString();
-            })
-            .catch(e => {
-              Toast(e, {}, ERROR);
-            });
-        }
-      } catch (e) {
-        Toast(e, {}, SENTRY);
-      }
+    estimateAndSetGas() {
+      this.sendTx
+        .estimateGas()
+        .then(res => {
+          this.gasLimit = toBN(res).toString();
+          this.sendTx.setGasLimit(res);
+        })
+        .catch(e => {
+          Toast(e, {}, ERROR);
+        });
     },
     send() {
       window.scrollTo(0, 0);
-      const send = this.sendTx.submitTransaction(
-        this.customGasLimit,
-        this.addressToSend,
-        this.amount,
-        this.data,
-        this.selectedCurrency.contract
-      );
-      send
+      this.sendTx
+        .submitTransaction()
         .then(response => {
           Toast(
             'Cheers! Your transaction was mined. Check it in ',
@@ -391,12 +408,10 @@ export default {
               return item.name.toLowerCase() === this.tokenSymbol.toLowerCase();
             })
           : undefined;
-        this.data = this.sendTx.isValidData(this.prefilledData)
-          ? this.prefilledData
-          : '';
+        this.data = isHexStrict(this.prefilledData) ? this.prefilledData : '';
         this.amount = this.prefilledAmount;
         this.toAddress = this.prefilledAddress;
-        this.customGasLimit = this.gasLimit;
+        this.gasLimit = this.prefilledGasLimit;
         this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
         this.$refs.expandPanel.setToggle(true);
         this.toastType = 'warning';
@@ -420,66 +435,25 @@ export default {
         symbol: this.network.type.currencyName
       };
     },
-    displayedGasPrice() {
-      const gasPrice = this.gasPrice.toString();
-      return gasPrice.includes('.')
-        ? `~ ${this.sendTx.getFixedGas().toString()}`
-        : gasPrice;
-    },
-    isAmountValid() {
-      const checkAmount = this.sendTx
-        ? this.sendTx.checkAmount(this.amount, this.selectedCurrency)
-        : { valid: false, msg: this.$t('errorsGlobal.something-went-wrong') };
-      if (!this.checkAmount.valid) {
-        this.toastType = 'error';
-        this.toastMsg = this.checkAmount.msg;
-        this.$refs.toast.showToast();
-      }
-      return checkAmount ? checkAmount.valid : false;
-    },
-    allValidInputs() {
-      return (
-        this.isAmountValid() &&
-        this.isValidAddress &&
-        this.sendTx.isValidGasLimit(this.customGasLimit) &&
-        this.sendTx.isValidData(this.data)
-      );
-    },
-    txFeeETH() {
-      // little hack to make this computed react to other changes
-      this.data;
-      this.selectedCurrency;
-      this.addressToSend;
-      this.amount;
-      return this.sendTx ? this.sendTx.txFeeETH(this.customGasLimit) : '0';
-    },
-    txFeeUSD() {
-      if (this.ETHUSDValue.value && this.sendTx) {
-        return this.sendTx.txFeeUSD(
-          this.customGasLimit,
-          this.ETHUSDValue.value
-        );
-      }
-      return '--';
-    },
     setAddress(value) {
       this.toAddress = value.address ? value.address : value;
     },
-    setEntireBal() {
-      this.amount = this.sendTx.getEntireBal(
-        this.selectedCurrency,
-        this.balance,
-        this.customGasLimit
+    convertToDisplay(amount, decimals) {
+      return BigNumber(amount.toString())
+        .div(BigNumber(10).pow(decimals))
+        .toString();
+    },
+    async setEntireBal() {
+      this.amount = this.convertToDisplay(
+        this.sendTx.getEntireBal(),
+        this.selectedCurrency.decimals
       );
     },
     setAmount(value) {
       this.amount = value;
     },
-    // setGasPrice(value) {
-    //   this.gasPrice = value;
-    // },
-    setCustomGasLimit(value) {
-      this.customGasLimit = value;
+    setGasLimit(value) {
+      this.gasLimit = value;
     },
     setCurrency(value) {
       this.selectedCurrency = value;

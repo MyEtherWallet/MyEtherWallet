@@ -39,7 +39,7 @@ class WalletLinkWallet {
       const txSigner = tx => {
         const networkId = tx.chainId;
         tx = new Transaction(tx, {
-          common: commonGenerator(store.state.wallet.network)
+          common: commonGenerator(store.getters['global/network'])
         });
         const txJSON = tx.toJSON(true);
         return new Promise((resolve, reject) => {
