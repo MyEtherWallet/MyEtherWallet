@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint camelcase: 0 */
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
@@ -8,24 +9,20 @@ import BootstrapVue from 'bootstrap-vue';
 import { MEW_CX } from '@/builds/configs/types';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
-require(/* webpackPreload: true */ '@/assets/font-awesome.css');
-require(/* webpackPreload: true */ '@/assets/google-fonts.css');
+import(/* webpackPreload: true */ '@/assets/font-awesome.css');
+import(/* webpackPreload: true */ '@/assets/google-fonts.css');
 
 import Vue from 'vue';
 import Router from 'vue-router';
 const originalPush = Router.prototype.push;
 const originalReplace = Router.prototype.replace;
 Router.prototype.push = function push(path) {
-  // @ts-ignore
   return originalPush.call(this, path).catch(err => err);
 };
 Router.prototype.replace = function push(path) {
-  // @ts-ignore
   return originalReplace.call(this, path).catch(err => err);
 };
-// @ts-ignore
 Router.prototype.originalPush = originalPush; // Incase we do want to handle on resolve or on abort
-// @ts-ignore
 Router.prototype.originalReplace = originalReplace; // Incase we do want to handle on resolve or on abort
 import router from '@/router';
 import store from '@/store';
@@ -50,6 +47,7 @@ import ConcatAddr from '@/filters/ConcatAddr';
 import languages from '@/translations';
 import VueMq from 'vue-mq';
 import VeeValidate from 'vee-validate';
+import './registerServiceWorker';
 import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
 import langShortCodes from '@/translations/getShortCodes';
@@ -85,7 +83,6 @@ Vue.component('popover', PopOver);
 
 //Router
 Vue.use(Router);
-// @ts-ignore
 Vue.router = router;
 // Directives!!!
 Vue.directive('click-outside', ClickOutside);
@@ -118,7 +115,6 @@ const i18n = new VueI18n({
   messages: languages,
   silentTranslationWarn: true
 });
-// @ts-ignore
 Vue.$i18n = i18n;
 
 // Register global toasts
@@ -141,30 +137,21 @@ const vue = new Vue({
 });
 
 const integration = new Integrations.Vue({ Vue, attachProps: true });
-// @ts-ignore
 const sentryVersion = BUILD_TYPE === MEW_CX ? `${VERSION}-cx` : VERSION;
-
 Sentry.init({
   dsn:
     'https://8c29b655fc4e433494fbba7bcac35ae3@o382951.ingest.sentry.io/5230441',
   integrations: [integration],
   maxBreadcrumbs: 0,
-  // @ts-ignore
   environment: BUILD_TYPE,
-  // @ts-ignore
   requestBodies: 'small',
-  // @ts-ignore
   release: NODE_ENV === 'production' ? sentryVersion : 'develop',
   beforeSend(event) {
-    // @ts-ignore
     for (const exceptionIdx in event.exception.values) {
-      // @ts-ignore
       if (globalErrorHandler(event.exception.values[exceptionIdx])) {
-        // @ts-ignore
         event.exception.values.splice(exceptionIdx, 1);
       }
     }
-    // @ts-ignore
     if (!event.exception.values.length) return Promise.resolve(null);
     const network =
       store &&
@@ -186,9 +173,7 @@ Sentry.init({
       service,
       walletType
     };
-    // @ts-ignore
     return new Promise(resolve => {
-      // @ts-ignorel
       vue.$eventHub.$emit('issueModal', event, resolve);
     }).then(res => {
       return res === true ? event : null;
