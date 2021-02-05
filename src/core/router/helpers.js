@@ -1,7 +1,8 @@
 import xss from 'xss';
 
 const createWalletProps = route => {
-  const walletType = route.query && route.query.type ? route.query.type : '';
+  const walletType =
+    route.query && route.query.type ? xss(route.query.type) : '';
   const isSoftware =
     route.params && route.params.overlay && route.params.overlay === 'software'
       ? true
@@ -28,7 +29,8 @@ const createRouteGuard = (to, from, next) => {
 };
 
 const accessWalletProps = route => {
-  const walletType = route.query && route.query.type ? route.query.type : '';
+  const walletType =
+    route.query && route.query.type ? xss(route.query.type) : '';
   const isSoftware =
     route.params && route.params.overlay && route.params.overlay === 'hardw'
       ? true
@@ -84,15 +86,13 @@ const accessRouteGuard = (to, from, next) => {
 };
 
 const swapProps = route => {
-  console.log('huh?', route);
   if (Object.keys(route.query).length > 0) {
-    console.log('gets here right?');
     const { fromToken, toToken, amount } = route.query;
     const parsedFromToken = xss(fromToken);
     const parsedToToken = xss(toToken);
     const parsedAmt = xss(amount);
     return {
-      tokenInValue: `${parsedAmt}`,
+      tokenInValue: parsedAmt,
       defaults: {
         fromToken: parsedFromToken,
         toToken: parsedToToken

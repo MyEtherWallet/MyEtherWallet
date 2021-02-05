@@ -1,5 +1,5 @@
 <template>
-  <v-row class="d-flex mew-component--dashboard">
+  <v-row class="mew-component--dashboard">
     <v-col cols="8">
       <mew6-white-sheet
         v-if="chartData.length"
@@ -63,7 +63,7 @@
         </v-row>
       </mew6-white-sheet>
 
-      <div v-if="showBuyEth" class="mew-component--no-eth-balance">
+      <div v-if="showBuyEth" class="mb-4 mew-component--no-eth-balance">
         <mew6-white-sheet class="position--relative">
           <div
             class="bg-container"
@@ -233,7 +233,7 @@ export default {
     ...mapGetters('global', ['network']),
     ...mapGetters('wallet', ['balanceInETH']),
     showBuyEth() {
-      return this.balance <= 0.075;
+      return this.balanceInETH <= 0.075;
     },
     convertedBalance() {
       const converted = BigNumber(this.balanceInETH).times(
@@ -268,7 +268,7 @@ export default {
           newObj.change = item.price_change_24h;
           newObj.status = item.price_change_24h > 0 ? '+' : '-';
           newObj.price = item.price;
-          newObj.tokenImage = item.icon;
+          newObj.tokenImg = item.img;
           newObj.usdBalance = item.usdBalance;
 
           return newObj;
