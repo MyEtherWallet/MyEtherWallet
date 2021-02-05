@@ -246,20 +246,6 @@ export default {
     }
   },
   watch: {
-    '$route.query': {
-      handler: function (val) {
-        if (Object.keys(val).length > 0) {
-          const { fromToken, toToken, amount } = val;
-          this.defaults = {
-            fromToken,
-            toToken
-          };
-          this.tokenInValue = `${amount}`;
-        }
-      },
-      deep: true,
-      immediate: true
-    },
     defaults: {
       handler: function () {
         this.setDefaults();
