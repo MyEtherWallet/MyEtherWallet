@@ -14,7 +14,11 @@
             0x98d9964e1764654dtrhtrggfrv3049t04i
           </div>
           <ellipsis-block white text="0x98d9964e1764654dtrhtrggfrv3049t04i" />
-          <copy-btn white text="0x98d9964e1764654dtrhtrggfrv3049t04i" />
+          <mew-copy
+            copy-value="0x98d9964e1764654dtrhtrggfrv3049t04i"
+            :is-small="true"
+            :tooltip="$t('common.copy')"
+          />
         </div>
       </div>
       <div class="ml-auto">
@@ -112,13 +116,12 @@
 
 <script>
 import ellipsisBlock from '@/components/ellipsisBlock/EllipsisBlock';
-import copyBtn from '@/components/buttons/copy-button/CopyButton';
 import ToolsTable from './ToolsTable';
 import WhiteSheet from '@/components/white-sheet/WhiteSheet';
 
 export default {
   name: 'ToolsTableContainer',
-  components: { ellipsisBlock, copyBtn, ToolsTable, WhiteSheet },
+  components: { ellipsisBlock, ToolsTable, WhiteSheet },
   data: () => ({ panel: [] }),
   methods: {
     openPanel() {
@@ -148,7 +151,7 @@ export default {
     margin: 0 !important;
   }
   .v-icon.v-icon {
-    font-size: 20px;
+    color: var(--v-white-base) !important; //add color to mew-copy
   }
 }
 </style>

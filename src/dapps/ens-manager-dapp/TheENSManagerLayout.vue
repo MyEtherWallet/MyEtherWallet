@@ -82,7 +82,6 @@
                       <mew-copy
                         class="ml-2 mew-heading-3"
                         :copy-value="domain.registrarAddress"
-                        :is-ref="false"
                       />
                       <a
                         class="address-link"
@@ -107,7 +106,6 @@
                       <mew-copy
                         class="ml-2 mew-heading-3"
                         :copy-value="domain.controllerAddress"
-                        :is-ref="false"
                       />
                       <a
                         class="address-link"

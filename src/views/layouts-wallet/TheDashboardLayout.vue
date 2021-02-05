@@ -101,7 +101,7 @@
         </div>
       </mew6-white-sheet>
       <swap mobile class="mb-4" />
-      <banner-ads mobile class="mb-4" />
+      <app-carousel mobile class="mb-4" />
     </div>
 
     <div v-else class="d-flex mew-component--dashboard">
@@ -269,7 +269,7 @@
         <div class="pa-4"></div>
         <swap />
         <div class="pa-4"></div>
-        <banner-ads />
+        <app-carousel />
       </div>
     </div>
   </div>
@@ -281,7 +281,7 @@ import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import WalletCalls from '@/apollo/queries/wallets/index';
 import utils from 'web3-utils';
-import bannerAds from '@/components/banner-ads/BannerAds';
+import AppCarousel from '@/core/components/AppCarousel';
 import network from '@/modules/network/ModuleNetwork';
 import swap from '@/components/swap/Swap';
 import tokenTable from '@/components/tokenTable/TokenTable';
@@ -289,7 +289,7 @@ import tokenTable from '@/components/tokenTable/TokenTable';
 export default {
   components: {
     chart,
-    bannerAds,
+    AppCarousel,
     network,
     swap,
     tokenTable
