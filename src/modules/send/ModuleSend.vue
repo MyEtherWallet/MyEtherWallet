@@ -37,7 +37,7 @@
               />
             </v-col>
           </v-row>
-          <module-address-book />
+          <module-address-book @setAddress="setAddress" />
         </v-container>
       </div>
 
@@ -116,7 +116,6 @@
 
 <script>
 import utils, { fromWei, toBN, isHexStrict } from 'web3-utils';
-import { isAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 
@@ -125,7 +124,6 @@ import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import getService from '@/core/helpers/getService';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-import NameResolver from '@/modules/name-resolver/index';
 
 export default {
   components: {
@@ -162,13 +160,13 @@ export default {
   data() {
     return {
       invalidName: false,
-      resolvedAddr: '',
       addMode: false,
       toastType: '',
       toastMsg: '',
       gasLimit: '21000',
       toAddress: '',
       sendTx: null,
+      isValidAddress: false,
       amount: '0',
       selectedCurrency: {},
       data: '0x',
@@ -183,18 +181,10 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapState('global', ['online', 'gasPrice', 'addressBook']),
+    ...mapState('global', ['online', 'gasPrice']),
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network']),
     ...mapGetters('wallet', ['balanceInETH']),
-    addressRules() {
-      return [
-        this.isValidAddress ||
-          this.$t('interface.address-book.validations.invalid-address'),
-        value =>
-          !!value || this.$t('interface.address-book.validations.addr-required')
-      ];
-    },
     amtRules() {
       return [
         value => !!value || "Amount can't be empty!",
@@ -275,9 +265,6 @@ export default {
       copiedTokens.unshift(eth);
       return copiedTokens;
     },
-    isValidAddress() {
-      return isAddress(this.addressToSend);
-    },
     txFeeETH() {
       return fromWei(toBN(this.gasPrice).mul(toBN(this.gasLimit)));
     },
@@ -298,9 +285,6 @@ export default {
       if (this.sendTx && this.sendTx.currency)
         return this.sendTx.hasEnoughBalance() && this.isValidAddress;
       return false;
-    },
-    addressToSend() {
-      return this.resolvedAddr.length > 0 ? this.resolvedAddr : this.toAddress;
     }
   },
   watch: {
@@ -318,21 +302,15 @@ export default {
       },
       deep: true
     },
+    toAddress() {
+      if (this.isValidAddress) this.sendTx.setTo(this.toAddress);
+    },
     amount() {
       this.sendTx.setValue(this.getCalculatedAmount);
-    },
-    toAddress(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        this.resolvedAddr = '';
-      }
-      this.resolveName();
     },
     selectedCurrency() {
       this.sendTx.setCurrency(this.selectedCurrency);
       this.data = '0x';
-    },
-    addressToSend() {
-      if (this.isValidAddress) this.sendTx.setTo(this.addressToSend);
     },
     data() {
       if (isHexStrict(this.data)) this.sendTx.setData(this.data);
@@ -342,23 +320,13 @@ export default {
     }
   },
   mounted() {
-    this.nameResolver = new NameResolver(this.network);
     this.setSendTransaction();
     this.gasLimit = this.prefilledGasLimit;
   },
   methods: {
-    async resolveName() {
-      if (this.nameResolver) {
-        await this.nameResolver
-          .resolveName(this.toAddress)
-          .then(addr => {
-            this.invalidName = false;
-            this.resolvedAddr = addr;
-          })
-          .catch(() => {
-            this.invalidName = true;
-          });
-      }
+    setAddress(addr, isValidAddress) {
+      this.toAddress = addr;
+      this.isValidAddress = isValidAddress;
     },
     toggleOverlay() {
       this.addMode = !this.addMode;
@@ -420,7 +388,6 @@ export default {
     },
     clear() {
       this.data = '';
-      this.resolvedAddr = '';
       this.amount = '0';
       this.toAddress = '';
       this.gasPrice = '90';
@@ -432,9 +399,6 @@ export default {
         name: this.network.type.name_long,
         symbol: this.network.type.currencyName
       };
-    },
-    setAddress(value) {
-      this.toAddress = value.address ? value.address : value;
     },
     convertToDisplay(amount, decimals) {
       return BigNumber(amount.toString())
