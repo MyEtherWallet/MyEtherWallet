@@ -95,15 +95,13 @@
           </div>
           <v-row class="align-stretch">
             <v-col v-for="(d, key) in warningData" :key="key" cols="12" sm="4">
-              <border-button>
-                <div class="pa-6">
-                  <div class="d-flex justify-center py-3">
-                    <mew-icon :icon-name="d.icon" :img-height="70" />
-                  </div>
-                  <h5 class="font-weight-bold mt-1 mb-2">{{ d.title }}</h5>
-                  <div>{{ d.description }}</div>
+              <div class="pa-6 border-container">
+                <div class="d-flex justify-center py-3">
+                  <mew-icon :icon-name="d.icon" :img-height="70" />
                 </div>
-              </border-button>
+                <h5 class="font-weight-bold mt-1 mb-2">{{ d.title }}</h5>
+                <div>{{ d.description }}</div>
+              </div>
             </v-col>
           </v-row>
           <div class="d-flex justify-center mt-6">
@@ -186,13 +184,9 @@
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import borderButton from '@/components/buttons/border-button/BorderButton.vue';
 
 export default {
   name: 'CreateWalletKeystore',
-  components: {
-    'border-button': borderButton
-  },
   props: {
     handlerCreateWallet: {
       type: Object,
@@ -299,10 +293,15 @@ export default {
   top: 100000px;
   z-index: -1;
 }
-</style>
-
-<style lang="scss">
 .mew-component--keystore .mew-stepper.v-stepper {
   background: transparent !important;
 }
+.border-container {
+  border: 1px solid var(--v-primaryOutlineActive-base);
+  border-radius: 7px;
+  box-shadow: 0 8px 15px var(--v-boxShadow-base);
+  height: 100%;
+}
 </style>
+
+<style lang="scss"></style>
