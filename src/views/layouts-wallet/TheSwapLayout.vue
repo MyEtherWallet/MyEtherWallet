@@ -240,38 +240,39 @@ export default {
     }
   },
   watch: {
-    '$route.query': {
-      handler: function (val) {
-        if (Object.keys(val).length > 0) {
-          const { fromToken, toToken, amount } = val;
-          this.defaults = {
-            fromToken,
-            toToken
-          };
-          this.tokenInValue = `${amount}`;
-        }
-      },
-      deep: true,
-      immediate: true
-    },
+    // '$route.query': {
+    //   handler: function (val) {
+    //     if (Object.keys(val).length > 0) {
+    //       const { fromToken, toToken, amount } = val;
+    //       this.defaults = {
+    //         fromToken,
+    //         toToken
+    //       };
+    //       this.tokenInValue = `${amount}`;
+    //     }
+    //   },
+    //   deep: true,
+    //   immediate: true
+    // },
     defaults: {
-      handler: function () {
+      handler: function (val) {
+        console.log(val);
         this.setDefaults();
       },
       deep: true,
       immediate: true
     }
   },
-  beforeMount() {
-    if (Object.keys(this.$route.query).length > 0) {
-      const { fromToken, toToken, amount } = this.$route.query;
-      this.defaults = {
-        fromToken,
-        toToken
-      };
-      this.tokenInValue = `${amount}`;
-    }
-  },
+  // beforeMount() {
+  //   if (Object.keys(this.$route.query).length > 0) {
+  //     const { fromToken, toToken, amount } = this.$route.query;
+  //     this.defaults = {
+  //       fromToken,
+  //       toToken
+  //     };
+  //     this.tokenInValue = `${amount}`;
+  //   }
+  // },
   mounted() {
     this.isLoading = true;
     this.swapper = new Swapper(this.web3);

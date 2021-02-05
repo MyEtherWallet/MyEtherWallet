@@ -67,7 +67,7 @@
     "vue-apollo": "3.0.5",
     "vue-router": "3.5.1",
     "vuex": "3.6.2",
-    "walletlink": "2.0.2",
+    "walletlink": "2.0.3",
     "worker-loader": "3.0.7"
   },
   "devDependencies": {
@@ -145,7 +145,8 @@
     "web3-core-requestmanager": "1.3.3",
     "web3-utils": "1.3.3",
     "webpack": "4.44.2",
-    "weekstart": "1.0.1"
+    "weekstart": "1.0.1",
+    "xss": "1.0.8"
   },
   "engines": {
     "node": ">= 10.0.0 < 12.0.0",

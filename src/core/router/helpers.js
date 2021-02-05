@@ -1,3 +1,5 @@
+import xss from 'xss';
+
 const createWalletProps = route => {
   const walletType = route.query && route.query.type ? route.query.type : '';
   const isSoftware =
@@ -81,9 +83,28 @@ const accessRouteGuard = (to, from, next) => {
   }
 };
 
+const swapProps = route => {
+  console.log('huh?', route);
+  if (Object.keys(route.query).length > 0) {
+    console.log('gets here right?');
+    const { fromToken, toToken, amount } = route.query;
+    const parsedFromToken = xss(fromToken);
+    const parsedToToken = xss(toToken);
+    const parsedAmt = xss(amount);
+    return {
+      tokenInValue: `${parsedAmt}`,
+      defaults: {
+        fromToken: parsedFromToken,
+        toToken: parsedToToken
+      }
+    };
+  }
+};
+
 export {
   createWalletProps,
   createRouteGuard,
   accessWalletProps,
-  accessRouteGuard
+  accessRouteGuard,
+  swapProps
 };

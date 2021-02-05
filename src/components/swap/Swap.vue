@@ -11,7 +11,7 @@
         />
       </div>
     </div>
-    <div v-if="!loading" class="pa-3">
+    <div v-if="!loading && !error" class="pa-3">
       <v-sheet
         v-for="(data, key) in swapData"
         :key="key"
@@ -51,11 +51,19 @@
       </v-sheet>
     </div>
     <div
-      v-else
-      class="pa-3 d-flex flex-column align-center justify-space-around"
+      v-if="loading"
+      class="pa-3 pb-4 d-flex flex-column align-center justify-space-around"
     >
       <v-progress-circular indeterminate />
-      <h3 ma-3>Loading swap pairs...</h3>
+      <h3 class="ma-3">Loading swap pairs...</h3>
+    </div>
+    <div
+      v-if="error"
+      class="pa-3 pb-4 d-flex flex-column align-center justify-space-around"
+    >
+      <v-progress-circular indeterminate />
+      <h3 class="ma-3">Having issues loading tokens.</h3>
+      <h5 class="mb-2 cursor--pointer" @click="fetchRates">Try again?</h5>
     </div>
   </mew6-white-sheet>
 </template>
@@ -64,6 +72,9 @@
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
+
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+
 const STATIC_PAIRS = [
   {
     toT: {
@@ -155,7 +166,8 @@ export default {
     return {
       swapHandler: null,
       swapData: null,
-      loading: true
+      loading: true,
+      error: false
     };
   },
   computed: {
@@ -176,17 +188,23 @@ export default {
       this.fetchRates();
     },
     fetchRates() {
-      this.swapData = null;
-      this.loading = true;
-      this.swapHandler.getQuotesForSet(STATIC_PAIRS).then(res => {
-        this.swapData = STATIC_PAIRS.map((itm, idx) => {
-          itm['rate'] = new BigNumber(res[idx][0].amount).lte(1)
-            ? res[idx][0].amount
-            : new BigNumber(res[idx][0].amount).toFixed(2);
-          return itm;
+      try {
+        this.swapData = null;
+        this.loading = true;
+        this.swapHandler.getQuotesForSet(STATIC_PAIRS).then(res => {
+          this.swapData = STATIC_PAIRS.map((itm, idx) => {
+            itm['rate'] = new BigNumber(res[idx][0].amount).lte(1)
+              ? res[idx][0].amount
+              : new BigNumber(res[idx][0].amount).toFixed(2);
+            return itm;
+          });
+          this.loading = false;
         });
+      } catch (e) {
         this.loading = false;
-      });
+        this.error = true;
+        Toast(e.message, {}, ERROR);
+      }
     },
     goToSwap(data) {
       const obj = {
