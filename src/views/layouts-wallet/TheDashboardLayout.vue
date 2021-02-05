@@ -1,6 +1,6 @@
 <template>
   <v-row class="d-flex mew-component--dashboard">
-    <v-col cols="9">
+    <v-col cols="8">
       <mew6-white-sheet
         v-if="chartData.length"
         class="mew-component--eth-balance pa-7 pb-4"
@@ -159,7 +159,7 @@
       </div>
     </v-col>
     <v-spacer cols="1" />
-    <v-col cols="3">
+    <v-col cols="4">
       <network />
       <swap class="mt-2" />
       <banner-ads class="mt-2" />
