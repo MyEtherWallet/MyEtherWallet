@@ -325,7 +325,6 @@ export default {
   },
   methods: {
     setAddress(addr, isValidAddress) {
-      console.error('this', addr, isValidAddress)
       this.toAddress = addr;
       this.isValidAddress = isValidAddress;
     },
