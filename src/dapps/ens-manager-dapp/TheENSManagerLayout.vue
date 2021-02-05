@@ -14,12 +14,17 @@
       :transfer="transfer"
       :name-module="nameModule"
     />
-    <mew6-white-sheet>
+    <v-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="ensBgImg" />
       <mew-tabs :items="tabs" has-underline>
         <!-- register domain -->
         <template #tabContent1>
-          <v-sheet max-width="700px" color="transparent" class="py-15 mx-auto">
+          <v-sheet
+            min-height="500px"
+            max-width="700px"
+            color="transparent"
+            class="py-15 mx-auto"
+          >
             <div class="mb-5">
               <div class="mew-heading-2 mb-8 ml-2">
                 {{ $t('ens.search-domain') }}
@@ -47,7 +52,7 @@
         </template>
         <template #tabContent2>
           <!-- manage domain -->
-          <div class="pa-12">
+          <v-sheet min-height="500px" class="pa-12">
             <div class="d-flex align-center justify-space-between mb-7">
               <span class="mew-heading-2 font-weight-bold">
                 {{ $t('ens.my-domains') }}
@@ -154,10 +159,10 @@
                 </div>
               </template>
             </mew-expand-panel>
-          </div>
+          </v-sheet>
         </template>
       </mew-tabs>
-    </mew6-white-sheet>
+    </v-sheet>
   </div>
 </template>
 

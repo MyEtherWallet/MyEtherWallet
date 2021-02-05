@@ -1,5 +1,5 @@
 <template>
-  <v-sheet color="walletBg">
+  <v-sheet height="100%" color="walletBg">
     <the-wallet-side-menu />
     <the-wallet-header />
     <v-container class="pl-10" fluid>
