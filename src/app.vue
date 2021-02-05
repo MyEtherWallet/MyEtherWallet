@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="walletBg">
     <v-main>
       <module-decision-tree />
       <router-view />

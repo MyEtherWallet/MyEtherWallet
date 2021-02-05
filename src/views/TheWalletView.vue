@@ -1,12 +1,12 @@
 <template>
-  <v-sheet class="d-flex justify-space">
-    <module-confirmation />
+  <v-sheet color="walletBg">
     <the-wallet-side-menu />
-    <v-container class="ml-6">
-      <the-wallet-header />
+    <the-wallet-header />
+    <v-container class="pl-10" fluid>
+      <module-confirmation />
       <router-view :owners-tokens="ownersTokens" />
-      <the-wallet-footer class="mt-10 box-shadow" />
     </v-container>
+    <the-wallet-footer />
   </v-sheet>
 </template>
 

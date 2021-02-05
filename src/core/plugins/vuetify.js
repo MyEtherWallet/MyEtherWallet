@@ -65,7 +65,8 @@ import Vuetify, {
   VFileInput,
   VSimpleCheckbox,
   VPagination,
-  VFooter
+  VFooter,
+  VAppBar
 } from 'vuetify/lib';
 import 'vuetify/dist/vuetify.min.css';
 
@@ -136,7 +137,8 @@ Vue.use(Vuetify, {
     VFileInput,
     VSimpleCheckbox,
     VPagination,
-    VFooter
+    VFooter,
+    VAppBar
   }
 });
 
