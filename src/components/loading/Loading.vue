@@ -110,7 +110,7 @@ export default {
   .spaceman {
     position: absolute;
     top: 0;
-    left: 0;
+    left: -170px;
     right: 0;
     margin: 0 auto;
     width: 150px;
