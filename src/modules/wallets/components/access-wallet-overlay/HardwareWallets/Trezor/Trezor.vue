@@ -143,7 +143,7 @@
                   </v-row>
 
                   <div>{{ network.id }}</div>
-                  <divider-line v-if="networks.length != i + 1" class="my-5" />
+                  <v-divider v-if="networks.length != i + 1" class="my-5" />
                 </div>
               </v-radio-group>
             </template>
@@ -187,12 +187,10 @@
 
 <script>
 import pageIndicatorDot from '@/components/page-indicator-dot/PageIndicatorDot';
-import dividerLine from '@/components/divider-line/DividerLine';
 
 export default {
   components: {
-    pageIndicatorDot,
-    dividerLine
+    pageIndicatorDot
   },
   props: {
     open: { default: false, type: Boolean },

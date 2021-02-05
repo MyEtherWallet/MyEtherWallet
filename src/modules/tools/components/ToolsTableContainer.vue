@@ -32,6 +32,7 @@
           <div class="primary--text">8.00123 ETH</div>
         </div>
       </div>
+      <v-divider />
 
       <div class="d-flex align-center justify-space-between py-4">
         <h5 class="font-weight-medium">Value of Tokens</h5>
@@ -41,7 +42,7 @@
         </div>
       </div>
 
-      <divider />
+      <v-divider />
 
       <div class="d-flex align-center justify-space-between py-4">
         <h5 class="font-weight-medium">Total Wallet Value</h5>
@@ -51,7 +52,7 @@
         </div>
       </div>
 
-      <divider />
+      <v-divider />
     </div>
 
     <div class="pa-7 d-none d-lg-flex justify-space-between align-center">
@@ -112,13 +113,12 @@
 <script>
 import ellipsisBlock from '@/components/ellipsisBlock/EllipsisBlock';
 import copyBtn from '@/components/buttons/copy-button/CopyButton';
-import divider from '@/components/divider-line/DividerLine';
 import ToolsTable from './ToolsTable';
 import WhiteSheet from '@/components/white-sheet/WhiteSheet';
 
 export default {
   name: 'ToolsTableContainer',
-  components: { ellipsisBlock, divider, copyBtn, ToolsTable, WhiteSheet },
+  components: { ellipsisBlock, copyBtn, ToolsTable, WhiteSheet },
   data: () => ({ panel: [] }),
   methods: {
     openPanel() {
