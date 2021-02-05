@@ -106,7 +106,6 @@
         <page-indicator-dot class="mt-4" :items="2" :current-item="2" />
       </v-sheet>
     </template>
-
   </mew-overlay>
 </template>
 

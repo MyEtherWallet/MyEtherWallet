@@ -479,7 +479,6 @@ import allPaths from '@/modules/wallets/utils/bip44';
 import { mapState, mapActions } from 'vuex';
 import { EventBus } from '@/plugins/eventBus';
 
-
 const MAX_ADDRESSES = 5;
 import {
   LEDGER as ledgerType,
@@ -875,7 +874,7 @@ export default {
         }
         this.unwatch();
       }
-    })
+    });
   },
   methods: {
     ...mapActions('wallet', ['setWallet', 'setNetwork']),
