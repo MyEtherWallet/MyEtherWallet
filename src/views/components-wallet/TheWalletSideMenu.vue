@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-navigation-drawer
+      app
       class="wallet-sidemenu"
       permanent
       :src="background"
@@ -20,7 +21,7 @@
             class="mt-4"
             title="Buy ETH here"
             color-theme="outline"
-            style="height: 60px"
+            style="height: 46px"
             @click.native="openSimplex"
           >
             <!-- going to change slot name -->
@@ -43,7 +44,7 @@
       </template>
       <v-list>
         <div v-for="(item, idx) in sectionOne" :key="item + idx">
-          <v-list-item v-if="!item.children" :to="item.route">
+          <v-list-item v-if="!item.children" dense :to="item.route">
             <v-list-item-icon class="mx-3">
               <img width="26" height="26" :src="item.icon" :alt="item.title" />
             </v-list-item-icon>
@@ -75,6 +76,7 @@
             <v-list-item
               v-for="child in item.children"
               :key="child.title"
+              dense
               class="pl-4"
               :to="child.route"
             >
@@ -93,6 +95,7 @@
         <v-list-item
           v-for="(item, idx) in sectionTwo"
           :key="item + idx"
+          dense
           @click="item.fn()"
         >
           <v-list-item-icon class="mx-3">

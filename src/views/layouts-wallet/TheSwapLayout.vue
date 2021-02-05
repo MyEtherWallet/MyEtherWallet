@@ -14,8 +14,8 @@
       :valid-until="confirmInfo.validUntil"
       :send="executeTrade"
     />
-    <div class="d-block">
-      <div class="flex-grow-1">
+    <v-row>
+      <v-col cols="9">
         <mew6-white-sheet>
           <interface-wrap title="Swap">
             <div class="d-flex justify-space-between">
@@ -136,8 +136,12 @@
             </div>
           </interface-wrap>
         </mew6-white-sheet>
-      </div>
-    </div>
+      </v-col>
+      <v-spacer cols="1" />
+      <v-col cols="3">
+        <module-network />
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -150,6 +154,7 @@ import Changelly from '@/assets/images/icons/icon-changelly.png';
 import Simplex from '@/assets/images/icons/icon-simplex.png';
 import Bity from '@/assets/images/icons/icon-bity.png';
 import Swapper from '@/modules/swap/handlers/handlerSwap';
+import ModuleNetwork from '@/modules/network/ModuleNetwork';
 import utils, { toBN, fromWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -158,7 +163,8 @@ const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 export default {
   components: {
     SwapConfirmation,
-    'interface-wrap': InterfaceWrap
+    'interface-wrap': InterfaceWrap,
+    ModuleNetwork
   },
   data() {
     return {
@@ -240,39 +246,38 @@ export default {
     }
   },
   watch: {
-    // '$route.query': {
-    //   handler: function (val) {
-    //     if (Object.keys(val).length > 0) {
-    //       const { fromToken, toToken, amount } = val;
-    //       this.defaults = {
-    //         fromToken,
-    //         toToken
-    //       };
-    //       this.tokenInValue = `${amount}`;
-    //     }
-    //   },
-    //   deep: true,
-    //   immediate: true
-    // },
-    defaults: {
+    '$route.query': {
       handler: function (val) {
-        console.log(val);
+        if (Object.keys(val).length > 0) {
+          const { fromToken, toToken, amount } = val;
+          this.defaults = {
+            fromToken,
+            toToken
+          };
+          this.tokenInValue = `${amount}`;
+        }
+      },
+      deep: true,
+      immediate: true
+    },
+    defaults: {
+      handler: function () {
         this.setDefaults();
       },
       deep: true,
       immediate: true
     }
   },
-  // beforeMount() {
-  //   if (Object.keys(this.$route.query).length > 0) {
-  //     const { fromToken, toToken, amount } = this.$route.query;
-  //     this.defaults = {
-  //       fromToken,
-  //       toToken
-  //     };
-  //     this.tokenInValue = `${amount}`;
-  //   }
-  // },
+  beforeMount() {
+    if (Object.keys(this.$route.query).length > 0) {
+      const { fromToken, toToken, amount } = this.$route.query;
+      this.defaults = {
+        fromToken,
+        toToken
+      };
+      this.tokenInValue = `${amount}`;
+    }
+  },
   mounted() {
     this.isLoading = true;
     this.swapper = new Swapper(this.web3);

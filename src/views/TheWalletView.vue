@@ -1,21 +1,12 @@
 <template>
-  <v-sheet class="d-flex justify-space">
-    <module-confirmation />
+  <v-sheet height="100%" color="walletBg">
     <the-wallet-side-menu />
-    <v-container class="ml-6">
-      <the-wallet-header />
-      <div class="d-flex justify-space-between">
-        <router-view :owners-tokens="ownersTokens" />
-        <div v-if="showRightSide" class="pl-4">
-          <network />
-          <div class="pa-4"></div>
-          <swap />
-          <div class="pa-4"></div>
-          <banner-ads />
-        </div>
-      </div>
-      <the-wallet-footer class="mt-10 box-shadow" />
+    <the-wallet-header />
+    <v-container class="pl-10" fluid>
+      <module-confirmation />
+      <router-view :owners-tokens="ownersTokens" />
     </v-container>
+    <the-wallet-footer />
   </v-sheet>
 </template>
 
@@ -30,19 +21,12 @@ import TheWalletFooter from './components-wallet/TheWalletFooter';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import { getGasBasedOnType } from '@/core/helpers/gasPriceHelper.js';
 
-import bannerAds from '@/components/banner-ads/BannerAds';
-import network from '@/modules/network/ModuleNetwork';
-import swap from '@/components/swap/Swap';
-
 export default {
   components: {
     TheWalletSideMenu,
     TheWalletHeader,
     TheWalletFooter,
-    ModuleConfirmation,
-    bannerAds,
-    network,
-    swap
+    ModuleConfirmation
   },
   data() {
     return {
@@ -53,10 +37,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address', 'web3']),
-    ...mapState('global', ['online']),
-    showRightSide() {
-      return !this.$route.fullPath.includes('/dapp');
-    }
+    ...mapState('global', ['online'])
   },
   watch: {
     web3() {

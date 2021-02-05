@@ -1,119 +1,123 @@
 <template>
-  <div class="d-block mew-component--dashboard">
-    <mew6-white-sheet
-      v-if="chartData.length"
-      class="mew-component--eth-balance pa-7 pb-4"
-    >
-      <div class="d-flex">
-        <mew-module
-          class="block-title"
-          :subtitle="subtitle"
-          :title="title"
-          :caption="convertedBalance"
-          :icon="network.type.icon"
-          icon-align="left"
-        />
-        <div class="ml-auto">
-          <div class="d-flex align-center">
-            <mew-toggle
-              :button-group="chartButtons"
-              @onBtnClick="handleBtnClick"
-            />
-            <mew-button
-              v-if="false"
-              style="border-radius: 100% !important"
-              class="options-btn ml-2"
-              btn-size="small"
-              icon-type="mdi"
-              icon="mdi-dots-vertical"
-              btn-style="transparent"
-              color-theme="secondary"
-            />
+  <v-row class="d-flex mew-component--dashboard">
+    <v-col cols="9">
+      <mew6-white-sheet
+        v-if="chartData.length"
+        class="mew-component--eth-balance pa-7 pb-4"
+      >
+        <div class="d-flex">
+          <mew-module
+            class="block-title"
+            :subtitle="subtitle"
+            :title="title"
+            :caption="convertedBalance"
+            :icon="network.type.icon"
+            icon-align="left"
+          />
+          <div class="ml-auto">
+            <div class="d-flex align-center">
+              <mew-toggle
+                :button-group="chartButtons"
+                @onBtnClick="handleBtnClick"
+              />
+              <mew-button
+                v-if="false"
+                style="border-radius: 100% !important"
+                class="options-btn ml-2"
+                btn-size="small"
+                icon-type="mdi"
+                icon="mdi-dots-vertical"
+                btn-style="transparent"
+                color-theme="secondary"
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <chart :data="chartData" class="mt-5" />
-      <v-row class="align-center">
-        <v-col class="d-flex align-center justify-center">
-          <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
-          <div class="ml-2 font-weight-regular text-color--mew-green">
-            ${{ ETHUSDValue.price_change_24h }}
-          </div>
-          <v-icon
-            :class="[
-              priceChange ? 'primary--text' : 'light_red--text error-text',
-              'body-2'
-            ]"
-            >{{ priceChangeArrow }}</v-icon
-          >
-          <div class="ml-5">
-            {{ ETHUSDValue.symbol + ETHUSDValue.value }} / 1
-            {{ network.type.currenyName }} ETH
-          </div>
-        </v-col>
-        <v-col class="text-right">
-          <mew-button
-            :has-full-width="false"
-            title="Send Transaction"
-            btn-size="xlarge"
-            @click.native="navigateToSwap"
-          />
-        </v-col>
-      </v-row>
-    </mew6-white-sheet>
-
-    <div v-if="showBuyEth" class="mew-component--no-eth-balance">
-      <mew6-white-sheet class="position--relative">
-        <div class="bg-container" :class="$vuetify.theme.dark ? 'dark' : ''" />
-        <v-sheet color="transparent" max-width="360px">
-          <div class="pa-12">
-            <h2 class="mb-6">My {{ network.type.name }} balance is empty</h2>
+        <chart :data="chartData" class="mt-5" />
+        <v-row class="align-center">
+          <v-col class="d-flex align-center justify-center">
+            <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
+            <div class="ml-2 font-weight-regular text-color--mew-green">
+              ${{ ETHUSDValue.price_change_24h }}
+            </div>
+            <v-icon
+              :class="[
+                priceChange ? 'primary--text' : 'light_red--text error-text',
+                'body-2'
+              ]"
+              >{{ priceChangeArrow }}</v-icon
+            >
+            <div class="ml-5">
+              {{ ETHUSDValue.symbol + ETHUSDValue.value }} / 1
+              {{ network.type.currenyName }} ETH
+            </div>
+          </v-col>
+          <v-col class="text-right">
             <mew-button
               :has-full-width="false"
-              title="Buy ETH with a credit card"
+              title="Send Transaction"
               btn-size="xlarge"
-              btn-link="https://ccswap.myetherwallet.com/#/"
+              @click.native="navigateToSwap"
             />
-            <div class="d-flex align-center mt-4">
-              <div>We accept credit card</div>
-              <img
-                v-if="!$vuetify.theme.dark"
-                class="ml-2 mr-1"
-                height="21"
-                src="@/assets/images/icons/icon-visa-dark.png"
-              />
-              <img
-                v-if="$vuetify.theme.dark"
-                class="ml-2 mr-2"
-                height="13"
-                src="@/assets/images/icons/icon-visa-white.png"
-              />
-              <img
-                height="18"
-                src="@/assets/images/icons/icon-mastercard-mew.png"
-              />
-            </div>
-            <div class="text-color--gray1 mt-12">
-              Tip: You can also send your ETH here from another wallet!
-            </div>
-          </div>
-        </v-sheet>
+          </v-col>
+        </v-row>
       </mew6-white-sheet>
-    </div>
 
-    <mew6-white-sheet
-      v-if="tokensData.length > 0"
-      class="mew-component--my-token-value"
-    >
-      <div class="d-flex align-center pa-7 pb-4">
-        <mew-module
-          class="block-title"
-          subtitle="My Tokens Value"
-          :title="`$ ${totalTokensValue}`"
-          :icon="require('@/assets/images/icons/icon-token-grey.png')"
-          icon-align="left"
-        >
-          <!-- <template #rightHeaderContainer>
+      <div v-if="showBuyEth" class="mew-component--no-eth-balance">
+        <mew6-white-sheet class="position--relative">
+          <div
+            class="bg-container"
+            :class="$vuetify.theme.dark ? 'dark' : ''"
+          />
+          <v-sheet color="transparent" max-width="360px">
+            <div class="pa-12">
+              <h2 class="mb-6">My {{ network.type.name }} balance is empty</h2>
+              <mew-button
+                :has-full-width="false"
+                title="Buy ETH with a credit card"
+                btn-size="xlarge"
+                btn-link="https://ccswap.myetherwallet.com/#/"
+              />
+              <div class="d-flex align-center mt-4">
+                <div>We accept credit card</div>
+                <img
+                  v-if="!$vuetify.theme.dark"
+                  class="ml-2 mr-1"
+                  height="21"
+                  src="@/assets/images/icons/icon-visa-dark.png"
+                />
+                <img
+                  v-if="$vuetify.theme.dark"
+                  class="ml-2 mr-2"
+                  height="13"
+                  src="@/assets/images/icons/icon-visa-white.png"
+                />
+                <img
+                  height="18"
+                  src="@/assets/images/icons/icon-mastercard-mew.png"
+                />
+              </div>
+              <div class="text-color--gray1 mt-12">
+                Tip: You can also send your ETH here from another wallet!
+              </div>
+            </div>
+          </v-sheet>
+        </mew6-white-sheet>
+      </div>
+
+      <mew6-white-sheet
+        v-if="tokensData.length > 0"
+        class="mew-component--my-token-value"
+      >
+        <div class="d-flex align-center pa-7 pb-4">
+          <mew-module
+            class="block-title"
+            subtitle="My Tokens Value"
+            :title="`$ ${totalTokensValue}`"
+            :icon="require('@/assets/images/icons/icon-token-grey.png')"
+            icon-align="left"
+          >
+            <!-- <template #rightHeaderContainer>
             <mew-button
               class="ml-auto"
               :has-full-width="false"
@@ -122,39 +126,52 @@
               btn-style="transparent"
             />
           </template> -->
-        </mew-module>
-      </div>
-      <mew-table
-        :has-color="false"
-        :table-headers="tableHeaders"
-        :table-data="tokensData"
-      />
-    </mew6-white-sheet>
-    <div v-else class="mew-component--empty-token-list">
-      <mew6-white-sheet class="position--relative">
-        <div class="bg-container" :class="$vuetify.theme.dark ? 'dark' : ''" />
-        <v-sheet color="transparent" max-width="360px">
-          <div class="pa-12">
-            <h2 class="mb-6">My token list is empty</h2>
-            <mew-button
-              class="ml-auto ml-n3"
-              :has-full-width="false"
-              :title="'+ ' + 'Buy ERC20 tokens'"
-              btn-size="xsmall"
-              btn-style="transparent"
-              @click.native="navigateToSwap"
-            />
-          </div>
-        </v-sheet>
-        <div class="py-12" />
-        <div class="py-5" />
+          </mew-module>
+        </div>
+        <mew-table
+          :has-color="false"
+          :table-headers="tableHeaders"
+          :table-data="tokensData"
+        />
       </mew6-white-sheet>
-    </div>
-  </div>
+      <div v-else class="mew-component--empty-token-list">
+        <mew6-white-sheet class="position--relative">
+          <div
+            class="bg-container"
+            :class="$vuetify.theme.dark ? 'dark' : ''"
+          />
+          <v-sheet color="transparent" max-width="360px">
+            <div class="pa-12">
+              <h2 class="mb-6">My token list is empty</h2>
+              <mew-button
+                class="ml-auto ml-n3"
+                :has-full-width="false"
+                :title="'+ ' + 'Buy ERC20 tokens'"
+                btn-size="xsmall"
+                btn-style="transparent"
+                @click.native="navigateToSwap"
+              />
+            </div>
+          </v-sheet>
+          <div class="py-12" />
+          <div class="py-5" />
+        </mew6-white-sheet>
+      </div>
+    </v-col>
+    <v-spacer cols="1" />
+    <v-col cols="3">
+      <network />
+      <swap class="mt-2" />
+      <banner-ads class="mt-2" />
+    </v-col>
+  </v-row>
 </template>
 
 <script>
 import chart from '@/modules/balance/components/BalanceChart';
+import bannerAds from '@/components/banner-ads/BannerAds';
+import network from '@/modules/network/ModuleNetwork';
+import swap from '@/components/swap/Swap';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import WalletCalls from '@/apollo/queries/wallets/index';
@@ -162,7 +179,10 @@ import utils from 'web3-utils';
 
 export default {
   components: {
-    chart
+    chart,
+    bannerAds,
+    network,
+    swap
   },
   props: {
     ownersTokens: {

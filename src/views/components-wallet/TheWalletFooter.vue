@@ -1,55 +1,38 @@
 <template>
-  <!-- <v-footer app>
-  </v-footer> -->
-  <div class="mew-component--wallet-footer">
-    <v-sheet color="mewBg" class="py-6 px-10">
-      <v-container
-        class="d-flex align-center justify-space-between py-0"
-        :class="mobile ? 'flex-column-reverse' : ''"
+  <v-footer color="white" class="d-flex justify-space-between pl-6" inset app>
+    <div class="textSecondary--text text-center">
+      ©2020 MyEtherWallet. All rights reserved. Pricing taken from
+      <a
+        class="titlePrimary--text text-decoration--none"
+        href="/"
+        targe="_blank"
+        >CoinMarketCap</a
       >
-        <div
-          class="titlePrimary--text text-center"
-          :class="mobile ? 'mt-1' : ''"
-        >
-          ©2020 MyEtherWallet. All rights reserved. Pricing taken from
-          <a class="text-decoration--none" href="/" targe="_blank"
-            >CoinMarketCap</a
-          >
-        </div>
-        <div class="d-flex align-center titlePrimary--text">
-          <v-sheet color="transparent">
-            <v-select
-              v-model="select"
-              append-icon="mdi-chevron-down"
-              :items="languages"
-              item-text="name"
-              item-value="value"
-              return-object
-              single-line
-              dark
-            ></v-select>
-          </v-sheet>
-          <div class="mx-4">|</div>
-          <div>Feedback</div>
-          <div class="mx-4">|</div>
-          <div>Support</div>
-        </div>
-      </v-container>
-    </v-sheet>
-  </div>
+    </div>
+    <div class="d-flex align-center titlePrimary--text">
+      <span>Feedback</span>
+      <span class="mx-2">|</span>
+      <span>Support</span>
+      <span class="mx-2">|</span>
+      <v-select
+        v-model="onLanguage"
+        class="language-select"
+        append-icon="mdi-chevron-down"
+        :items="languages"
+        item-text="name"
+        item-value="value"
+        return-object
+        single-line
+      ></v-select>
+    </div>
+  </v-footer>
 </template>
 
 <script>
 export default {
   components: {},
-  props: {
-    mobile: {
-      type: Boolean,
-      default: false
-    }
-  },
   data: () => ({
-    select: 'en',
+    onLanguage: null,
     languages: [
       {
         name: 'English',
@@ -82,41 +65,15 @@ export default {
         flag: require('@/assets/images/flags/japan.png')
       }
     ]
-  })
+  }),
+  mounted() {
+    this.onLanguage = this.languages[0].value;
+  }
 };
 </script>
-
-<style lang="scss">
-.mew-component--wallet-footer {
-  .v-select__selection {
-    color: var(--v-titlePrimary-base) !important;
-    width: 100%;
-    text-align: right;
-  }
-
-  .v-text-field > .v-input__control > .v-input__slot:before,
-  .v-text-field > .v-input__control > .v-input__slot:after,
-  .v-select.v-text-field input,
-  .v-text-field__details {
-    display: none;
-  }
-
-  .v-text-field .v-input__append-inner {
-    margin-left: -15px;
-  }
-
-  .v-text-field,
-  .v-input__slot {
-    margin: 0;
-    padding: 0;
-  }
-  .v-select .v-icon {
-    color: var(--v-titlePrimary-base) !important;
-  }
-
-  .v-select__selection {
-    max-width: 100%;
-    text-overflow: unset !important;
-  }
+<style lang="scss" scoped>
+.language-select {
+  max-width: 130px;
+  margin-top: 10px;
 }
 </style>

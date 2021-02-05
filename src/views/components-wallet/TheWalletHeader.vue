@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div v-if="mobile" class="d-flex align-center px-4 py-6">
+  <v-app-bar class="pl-6" elevation="0" color="walletBg" app>
+    <div class="d-flex align-center">
       <img class="mr-3" src="@/assets/images/icons/icon-puppy-mew.svg" />
       <div>
         <div class="font-weight-bold">MEWtopia</div>
@@ -11,61 +11,47 @@
         </div>
       </div>
     </div>
-
-    <div v-else class="d-flex align-center pt-4 pb-4 px-4">
-      <div class="d-flex align-center">
-        <img class="mr-3" src="@/assets/images/icons/icon-puppy-mew.svg" />
-        <div>
-          <div class="font-weight-bold">MEWtopia</div>
-          <div>
-            Find out what Crypto Wallets is and learn to use MEW securly by
-            using many different mobile wallets.
-            <a href="#">Read...</a>
-          </div>
-        </div>
-      </div>
-      <div class="ml-auto d-flex align-center justify-end">
-        <div class="mr-4">
-          <mobile-status v-if="isMewConnect">
-            <div class="d-flex align-center cursor--pointer">
-              <img src="@/assets/images/icons/icon-mew-connect.svg" />
-              <div class="mew-connect-text ml-1">
-                <div>MEWconnect</div>
-                <div>Connected...</div>
-              </div>
+    <div class="ml-auto d-flex align-center">
+      <!-- <div class="mr-4">
+        <mobile-status v-if="isMewConnect">
+          <div v-if="isMewConnect" class="d-flex align-center cursor--pointer">
+            <img src="@/assets/images/icons/icon-mew-connect.svg" />
+            <div class="mew-connect-text ml-1">
+              <div>MEWconnect</div>
+              <div>Connected...</div>
             </div>
-          </mobile-status>
-        </div>
-        <div class="position--relative">
-          <notification-overlay
-            :open="openNotifications"
-            @close="openNotifications = false"
-          />
-          <v-btn icon @click="openNotifications = true">
-            <img src="@/assets/images/icons/icon-notifications.svg" />
-          </v-btn>
-          <div
-            class="notification-count cursor--pointer d-flex align-center justify-center white--text error lighten2"
-            @click="openNotifications = true"
-          >
-            3
           </div>
+        </mobile-status>
+      </div> -->
+      <div class="d-flex align-center">
+        <v-btn icon @click="openNotifications = true">
+          <img src="@/assets/images/icons/icon-notifications.svg" />
+        </v-btn>
+        <div
+          class="notification-count cursor--pointer d-flex align-center justify-center white--text error lighten2"
+          @click="openNotifications = true"
+        >
+          3
         </div>
       </div>
     </div>
-  </div>
+    <notification-overlay
+      :open="openNotifications"
+      @close="openNotifications = false"
+    />
+  </v-app-bar>
 </template>
 
 <script>
-import mobileStatus from './HeaderMobileStatus';
+// import mobileStatus from './HeaderMobileStatus';
 import notificationOverlay from '@/modules/notifications/ModuleNotifications';
 import { mapState } from 'vuex';
 import { MEW_CONNECT } from '@/modules/wallets/utils/bip44/walletTypes';
 
 export default {
   components: {
-    notificationOverlay,
-    mobileStatus
+    notificationOverlay
+    // mobileStatus
   },
   props: {
     mobile: {
@@ -93,10 +79,10 @@ a {
 }
 
 .notification-count {
-  position: absolute;
   top: 0;
-  right: -10px;
   border-radius: 100%;
+  margin-bottom: 20px;
+  margin-left: -10px;
   width: 18px;
   height: 18px;
   font-size: 12px;
