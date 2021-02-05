@@ -45,7 +45,7 @@
                   </div>
                   <div>$0.177</div>
                 </div>
-                <Divider dot class="mt-5" />
+                <v-divider class="mt-5" />
                 <mew-input
                   label="Add Data"
                   placeholder=" "
@@ -88,14 +88,12 @@ import Network from '@/modules/network/ModuleNetwork';
 import swap from '@/components/swap/Swap';
 import interfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';
-import divider from '@/components/dividerx/DividerX';
 
 export default {
   components: {
     Network,
     swap,
-    interfaceWrap,
-    divider
+    interfaceWrap
   },
   data() {
     return {
