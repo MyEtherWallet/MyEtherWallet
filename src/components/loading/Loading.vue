@@ -27,7 +27,7 @@
           content-class="mew-component--loading--progress"
         ></v-progress-linear>
         <v-sheet
-          max-width="400px"
+          max-width="350px"
           class="text-center mt-5 mx-auto"
           color="transparent"
         >
@@ -98,8 +98,10 @@ export default {
   }
 }
 
-.loading-container {
-  //background-color: white;
+h4 {
+  font-size: 1.38rem;
+  line-height: 1.8rem;
+  font-weight: 400;
 }
 
 .loading-img {

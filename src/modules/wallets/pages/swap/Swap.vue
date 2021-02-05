@@ -3,7 +3,7 @@
     <Loading
       :show="step < 1"
       timer
-      message="Loading coin list and swap providers. Please wait...."
+      message="We are loading supported coins list and swap providers..."
     />
     <swap-confirmation
       :to="confirmInfo.to"
