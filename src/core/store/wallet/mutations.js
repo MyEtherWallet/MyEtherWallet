@@ -32,11 +32,16 @@ const SET_WEB3_INSTANCE = function (state, web3) {
   state.web3 = web3;
 };
 
+const SET_OWNED_DOMAINS = function (state, ensDomains) {
+  state.ensDomains = ensDomains;
+};
+
 export default {
   REMOVE_WALLET,
   SET_WALLET,
   SET_BALANCE,
   SET_ENS,
   SET_WEB3_INSTANCE,
-  SET_BLOCK_NUMBER
+  SET_BLOCK_NUMBER,
+  SET_OWNED_DOMAINS
 };

@@ -56,7 +56,7 @@ import EventNames from '@/utils/web3-provider/events.js';
 import utils from 'web3-utils';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { Toast, SUCCESS } from '@/components/toast';
+import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast.js';
 import getService from '@/core/helpers/getService';
 import { EventBus } from '@/core/plugins/eventBus';
 import fromToBlock from '@/components/from-to-block/FromToBlock';

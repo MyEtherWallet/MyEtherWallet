@@ -43,7 +43,7 @@ const accessRouteGuard = (to, from, next) => {
     next();
   } else {
     const validOverlays = ['hardware', 'mobile', 'software'];
-    if (to.query.type === validvalidOverlays[0]) {
+    if (to.query.type === validOverlays[0]) {
       const validTypes = [
         'overview',
         'ledger',
@@ -62,7 +62,7 @@ const accessRouteGuard = (to, from, next) => {
         next('*');
       }
     }
-    if (to.query.type === validvalidOverlays[1]) {
+    if (to.query.type === validOverlays[1]) {
       const validTypes = ['overview'];
       if (validTypes[0] === to.query.type) {
         next();
@@ -70,7 +70,7 @@ const accessRouteGuard = (to, from, next) => {
         next('*');
       }
     }
-    if (to.query.type === validvalidOverlays[2]) {
+    if (to.query.type === validOverlays[2]) {
       const validTypes = ['keystore', 'mnemonic', 'private-key', 'overview'];
       if (validTypes.includes(to.query.type)) {
         next();

@@ -53,7 +53,7 @@ import dividerLine from '@/components/divider-line/DividerLine';
 import * as nodes from '@/utils/networks/nodes';
 import * as types from '@/utils/networks/types';
 import { mapActions, mapGetters } from 'vuex';
-import { Toast, SUCCESS } from '@/components/toast';
+import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast.js';
 export default {
   name: 'NetworkSwitch',
   components: {

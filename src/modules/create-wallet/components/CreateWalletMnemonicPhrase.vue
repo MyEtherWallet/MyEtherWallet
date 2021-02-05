@@ -235,7 +235,7 @@
 import borderBlock from '@/components/border-block/BorderBlock.vue';
 import mnemonicPhraseTable from '@/components/MnemonicPhraseTable';
 import phraseBlock from '@/components/PhraseBlock';
-import { Toast, ERROR } from '@/components/toast';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast.js';
 export default {
   name: 'CreateWalletMnemonicPhrase',
   components: {

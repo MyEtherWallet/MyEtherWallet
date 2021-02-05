@@ -433,7 +433,7 @@
 <script>
 import qrcode from '@xkeshi/vue-qrcode';
 import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
-import { Toast, ERROR } from '@/components/toast';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast.js';
 import bcvaultWallet from '@/modules/wallets/utils/hardware/bcvault';
 import bitboxWallet from '@/modules/wallets/utils/hardware/bitbox';
 import bitbox02Wallet from '@/modules/wallets/utils/hardware/bitbox02';

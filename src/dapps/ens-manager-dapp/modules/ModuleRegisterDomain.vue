@@ -39,7 +39,7 @@ import Register from '../components/register/Register';
 import Complete from '../components/register/RegisterComplete';
 import { EventBus } from '@/core/plugins/eventBus';
 import EventNames from '@/utils/web3-provider/events.js';
-import { Toast, ERROR } from '@/components/toast';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast.js';
 
 export default {
   components: { Request, Register, Complete },

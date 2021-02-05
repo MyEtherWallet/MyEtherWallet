@@ -482,10 +482,10 @@ export default {
     navigateToSend() {
       this.$router.push({ name: 'SendTX' });
     },
-    navigateToSwap(params) {
+    navigateToSwap(query) {
       const obj = { name: 'Swap' };
-      if (params) {
-        obj['params'] = params;
+      if (query) {
+        obj['query'] = query;
       }
       this.$router.push(obj);
     }

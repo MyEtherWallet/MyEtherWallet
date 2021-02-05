@@ -28,7 +28,7 @@
 <script>
 import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import blockTitle from '@/components/block-title/BlockTitle';
-import { Toast, SENTRY } from '@/components/toast';
+import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast.js';
 import { WalletConnectWallet, WalletLinkWallet } from '@/modules/wallets/utils';
 import { mapActions } from 'vuex';
 

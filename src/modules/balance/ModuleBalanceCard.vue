@@ -80,7 +80,7 @@ import BalanceAddressQrCode from './components/BalanceAddressQrCode';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import clipboardCopy from 'clipboard-copy';
-import { Toast, INFO } from '@/components/toast';
+import { Toast, INFO } from '@/modules/toast/handler/handlerToast.js';
 
 export default {
   components: {

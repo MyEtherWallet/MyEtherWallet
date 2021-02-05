@@ -124,7 +124,12 @@ import BigNumber from 'bignumber.js';
 
 import SendTransaction from '@/modules/send/handlers/handlerSend';
 import { ETH } from '@/utils/networks/types';
-import { Toast, ERROR, SENTRY, SUCCESS } from '@/components/toast';
+import {
+  Toast,
+  ERROR,
+  SENTRY,
+  SUCCESS
+} from '@/modules/toast/handler/handlerToast.js';
 import getService from '@/core/helpers/getService';
 import AddressBook from '@/modules/address-book/ModuleAddressBook';
 import NameResolver from '@/modules/name-resolver/index';
