@@ -1,5 +1,10 @@
 <template>
   <div class="mew-component--swap">
+    <Loading
+      :show="step < 1"
+      timer
+      message="Loading coin list and swap providers. Please wait...."
+    />
     <swap-confirmation
       :to="confirmInfo.to"
       :from="confirmInfo.from"
@@ -161,6 +166,7 @@ import Swapper from '@/modules/swap';
 import utils, { toBN, fromWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
+import Loading from '@/components/loading/Loading';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 export default {
@@ -168,7 +174,8 @@ export default {
     SwapConfirmation,
     network: Network,
     swap: Swap,
-    'interface-wrap': InterfaceWrap
+    'interface-wrap': InterfaceWrap,
+    Loading
   },
   data() {
     return {
