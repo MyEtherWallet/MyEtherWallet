@@ -70,7 +70,7 @@ import {
 } from '@/modules/wallets/utils/bip44/walletTypes';
 import { mapActions, mapState } from 'vuex';
 import { unlockKeystore } from '@/modules/wallets/utils/helpers.js';
-import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast.js';
+import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
 
 const TITLES = {
   keystoreFile: 'Keystore File',

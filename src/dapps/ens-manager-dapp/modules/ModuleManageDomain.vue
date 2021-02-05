@@ -21,7 +21,7 @@
 <script>
 import renew from '../components/manage/ManageRenew';
 import transfer from '../components/manage/ManageTransfer';
-// import { Toast, ERROR } from '@/modules/toast/handler/handlerToast.js';
+// import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 const types = ['transfer', 'renew'];
 export default {
   components: {

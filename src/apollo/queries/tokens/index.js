@@ -11,8 +11,7 @@ export default class Tokenslist {
   getLatestPrices() {
     return this.apollo
       .query({
-        query: getLatestPrices,
-        fetchPolicy: 'cache-first'
+        query: getLatestPrices
       })
       .then(response => {
         this.tokensData = new Map();
@@ -33,26 +32,29 @@ export default class Tokenslist {
       });
   }
   getOwnersERC20Tokens(hash) {
-    if (!this.tokensData || this.tokensData.length === 0) {
-      this.getLatestPrices();
-    }
-    return this.apollo
-      .query({
-        query: getOwnersERC20Tokens,
-        variables: {
-          hash: hash
-        }
-      })
-      .then(response => {
-        if (response && response.data) {
-          return this.formatOwnersERC20Tokens(
-            response.data.getOwnersERC20Tokens.owners
-          );
-        }
-      })
-      .catch(error => {
-        return Toast(error.message, {}, ERROR);
+    return new Promise(resolve => {
+      this.getLatestPrices().then(() => {
+        this.apollo
+          .query({
+            query: getOwnersERC20Tokens,
+            variables: {
+              hash: hash
+            }
+          })
+          .then(response => {
+            if (response && response.data) {
+              resolve(
+                this.formatOwnersERC20Tokens(
+                  response.data.getOwnersERC20Tokens.owners
+                )
+              );
+            }
+          })
+          .catch(error => {
+            return Toast(error.message, {}, ERROR);
+          });
       });
+    });
   }
   formatOwnersERC20Tokens(tokens) {
     const formattedList = [];

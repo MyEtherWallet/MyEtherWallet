@@ -7,8 +7,8 @@ const wallets = {
   namespaced: true,
   state: State,
   mutations: Mutations,
-  getters: Getters,
   actions: Actions,
+  getters: Getters,
   strict: false
 };
 

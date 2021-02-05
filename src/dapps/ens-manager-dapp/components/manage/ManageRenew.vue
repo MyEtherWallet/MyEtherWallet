@@ -13,7 +13,7 @@
 
 <script>
 // import addressBook from '@/modules/address-book/ModuleAddressBook';
-// import { Toast, ERROR } from '@/modules/toast/handler/handlerToast.js';
+// import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 export default {
   // components: {
   //   addressBook

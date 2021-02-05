@@ -7,7 +7,7 @@
           btn-style="transparent"
           button-size="small"
           :title="$t('common.more') + '...'"
-          @click.native="navigateToSwap"
+          @click.native="() => navigateToSwap()"
         />
       </div>
     </div>
@@ -16,7 +16,8 @@
         v-for="(data, key) in swapData"
         :key="key"
         color="tableHeader"
-        class="d-flex align-center justify-space-between border-radius--5px mt-1 py-3 px-4"
+        class="d-flex align-center justify-space-between border-radius--5px mt-1 py-3 px-4 cursor"
+        @click="goToSwap(data)"
       >
         <div class="text-uppercase">
           1 {{ data.fromT.symbol }} / {{ data.rate }} {{ data.toT.symbol }}
@@ -148,10 +149,6 @@ export default {
     mobile: {
       type: Boolean,
       default: false
-    },
-    navigateToSwap: {
-      type: Function,
-      default: () => {}
     }
   },
   data() {
@@ -183,15 +180,42 @@ export default {
       this.loading = true;
       this.swapHandler.getQuotesForSet(STATIC_PAIRS).then(res => {
         this.swapData = STATIC_PAIRS.map((itm, idx) => {
-          itm['rate'] =
-            res[idx][0].amount <= 0
-              ? res[idx][0].amount
-              : new BigNumber(res[idx][0].amount).toFixed(2);
+          itm['rate'] = new BigNumber(res[idx][0].amount).lte(1)
+            ? res[idx][0].amount
+            : new BigNumber(res[idx][0].amount).toFixed(2);
           return itm;
         });
         this.loading = false;
       });
+    },
+    goToSwap(data) {
+      const obj = {
+        fromToken: data.fromT.contract_address,
+        toToken: data.toT.contract_address,
+        amount: 1
+      };
+
+      this.navigateToSwap(obj);
+    },
+    navigateToSwap(query) {
+      const obj = { name: 'Swap' };
+      if (query) {
+        obj['query'] = query;
+      }
+      if (this.$route.name === 'Swap') {
+        // this will allow vue to update query param
+        // within the swap page when user clicks on the pairs again
+        this.$router.replace(obj);
+      } else {
+        this.$router.push(obj);
+      }
     }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.cursor {
+  cursor: pointer;
+}
+</style>

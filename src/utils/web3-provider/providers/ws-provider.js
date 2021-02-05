@@ -2,6 +2,8 @@ import Web3WSProvider from './ws-web3-provider';
 import { Manager as Web3RequestManager } from 'web3-core-requestmanager';
 import MiddleWare from '../middleware';
 import workerTimer from '@/core/helpers/webWorkerTimer.js';
+import { EventBus } from '@/core/plugins/eventBus';
+import VuexStore from '@/core/store';
 import {
   ethSendTransaction,
   ethSignTransaction,
@@ -13,7 +15,7 @@ import {
 } from '../methods';
 const MAX_RETRIES = 10;
 class WSProvider {
-  constructor(host, options, store, eventHub) {
+  constructor(host, options) {
     this.wsProvider = new Web3WSProvider(host, options);
     this.oWSProvider = new Web3WSProvider(host, options);
     this.lastMessage = new Date().getTime();
@@ -21,7 +23,7 @@ class WSProvider {
     const keepAlive = () => {
       if (
         this.wsProvider.connectionId !==
-          store.state.web3.currentProvider.connectionId &&
+          VuexStore.state.wallet.web3.currentProvider.connectionId &&
         this.lastMessage + 1 * 60 * 1000 < new Date().getTime()
       ) {
         this.wsProvider.disconnect();
@@ -84,9 +86,9 @@ class WSProvider {
       }
       const req = {
         payload,
-        store,
+        store: VuexStore,
         requestManager: new Web3RequestManager(this.oWSProvider),
-        eventHub
+        eventHub: EventBus
       };
       const middleware = new MiddleWare();
       middleware.use(ethSendTransaction);

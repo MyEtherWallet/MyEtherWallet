@@ -1,38 +1,48 @@
 <template>
   <v-sheet class="d-flex justify-space">
-    <confirmation />
-    <wallet-side-menu />
+    <module-confirmation />
+    <the-wallet-side-menu />
     <v-container class="ml-6">
-      <wallet-header />
-      <router-view :owners-tokens="ownersTokens" />
-      <wallet-footer class="mt-10 box-shadow" />
+      <the-wallet-header />
+      <div class="d-flex justify-space-between">
+        <router-view :owners-tokens="ownersTokens" />
+        <div class="pl-4">
+          <network />
+          <div class="pa-4"></div>
+          <swap />
+          <div class="pa-4"></div>
+          <banner-ads />
+        </div>
+      </div>
+      <the-wallet-footer class="mt-10 box-shadow" />
     </v-container>
   </v-sheet>
 </template>
 
 <script>
-import BigNumber from 'bignumber.js';
 import { mapActions, mapState } from 'vuex';
-import utils from 'web3-utils';
-import store from 'store';
+import { toBN } from 'web3-utils';
 import TokenCalls from '@/apollo/queries/tokens/index';
 import WalletCalls from '@/apollo/queries/wallets/index';
-import WalletSideMenu from './components-wallet/TheWalletSideMenu';
-import WalletHeader from './components-wallet/TheWalletHeader';
-import WalletFooter from './components-wallet/TheWalletFooter';
-import Confirmation from './components-wallet/TheWalletTxConfirmation';
-import {
-  getGasBasedOnType,
-  getOther,
-  getEconomy
-} from '@/core/helpers/gasPriceHelper.js';
+import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
+import TheWalletHeader from './components-wallet/TheWalletHeader';
+import TheWalletFooter from './components-wallet/TheWalletFooter';
+import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
+import { getGasBasedOnType } from '@/core/helpers/gasPriceHelper.js';
+
+import bannerAds from '@/components/banner-ads/BannerAds';
+import network from '@/modules/network/ModuleNetwork';
+import swap from '@/components/swap/Swap';
 
 export default {
   components: {
-    WalletSideMenu,
-    WalletHeader,
-    WalletFooter,
-    Confirmation
+    TheWalletSideMenu,
+    TheWalletHeader,
+    TheWalletFooter,
+    ModuleConfirmation,
+    bannerAds,
+    network,
+    swap
   },
   data() {
     return {
@@ -64,25 +74,23 @@ export default {
     clearInterval(this.manualBlockFetch);
   },
   methods: {
-    ...mapActions('wallet', [
-      'setAccountBalance',
-      'setEthGasPrice',
-      'setBlockNumber'
-    ]),
-    ...mapActions('global', ['setGasPrice', 'setEthGasPrice']),
+    ...mapActions('wallet', ['setAccountBalance', 'setBlockNumber']),
+    ...mapActions('global', ['setGasPrice']),
     ...mapActions('external', ['setETHUSDValue']),
+    ...mapState('global', ['gasPriceType']),
     getTokens() {
       const tokensList = new TokenCalls(this.$apollo);
       tokensList.getOwnersERC20Tokens(this.address).then(res => {
-        this.ownersTokens = res;
+        this.ownersTokens = res.map(r => {
+          r.balance = toBN(r.balance);
+          return r;
+        });
       });
     },
     getPriceAndBalance() {
-      const gasType = store.get('gasPriceType') || 'economy';
-      const getCustomGas = getOther();
       const walletCalls = new WalletCalls(this.$apollo);
       walletCalls.getBalance(this.address).then(res => {
-        this.setAccountBalance(BigNumber(utils.fromWei(res)).toString());
+        this.setAccountBalance(toBN(res));
       });
       walletCalls.getUSDPrice(this.address).then(res => {
         const usd = {
@@ -94,15 +102,7 @@ export default {
         this.setETHUSDValue(usd);
       });
       this.web3.eth.getGasPrice().then(res => {
-        const parsedGas = getEconomy(res).toString();
-        if (gasType === 'economy') {
-          this.setGasPrice(parsedGas);
-        } else if (gasType === 'other' && getCustomGas) {
-          this.setGasPrice(getCustomGas);
-        } else {
-          this.setGasPrice(getGasBasedOnType(parsedGas));
-        }
-        this.setEthGasPrice(res, 'gwei');
+        this.setGasPrice(getGasBasedOnType(res, this.gasPriceType));
       });
     },
     subscribeToBlockNumber() {
