@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="module-ens">
     <register-domain
       ref="registerDomain"
       :on-register="onRegister"
@@ -303,3 +303,10 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.module-ens {
+  width: 100%;
+  height: 100%;
+}
+</style>

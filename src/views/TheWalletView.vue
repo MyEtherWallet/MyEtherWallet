@@ -6,7 +6,7 @@
       <the-wallet-header />
       <div class="d-flex justify-space-between">
         <router-view :owners-tokens="ownersTokens" />
-        <div class="pl-4">
+        <div v-if="showRightSide" class="pl-4">
           <network />
           <div class="pa-4"></div>
           <swap />
@@ -53,7 +53,10 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address', 'web3']),
-    ...mapState('global', ['online'])
+    ...mapState('global', ['online']),
+    showRightSide() {
+      return !this.$route.fullPath.includes('/dapp');
+    }
   },
   watch: {
     web3() {
@@ -78,6 +81,9 @@ export default {
     ...mapActions('global', ['setGasPrice']),
     ...mapActions('external', ['setETHUSDValue']),
     ...mapState('global', ['gasPriceType']),
+    getOwnDomain() {
+      fetch('');
+    },
     getTokens() {
       const tokensList = new TokenCalls(this.$apollo);
       tokensList.getOwnersERC20Tokens(this.address).then(res => {

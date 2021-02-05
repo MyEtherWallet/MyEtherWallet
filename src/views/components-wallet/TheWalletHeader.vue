@@ -24,9 +24,9 @@
           </div>
         </div>
       </div>
-      <div class="ml-auto d-flex align-center">
+      <div class="ml-auto d-flex align-center justify-end">
         <div class="mr-4">
-          <mobile-status>
+          <mobile-status v-if="isMewConnect">
             <div class="d-flex align-center cursor--pointer">
               <img src="@/assets/images/icons/icon-mew-connect.svg" />
               <div class="mew-connect-text ml-1">
@@ -59,6 +59,8 @@
 <script>
 import mobileStatus from './HeaderMobileStatus';
 import notificationOverlay from '@/modules/notifications/ModuleNotifications';
+import { mapState } from 'vuex';
+import { MEW_CONNECT } from '@/modules/wallets/utils/bip44/walletTypes';
 
 export default {
   components: {
@@ -71,8 +73,14 @@ export default {
       default: false
     }
   },
-  data: () => {
+  data() {
     return { openNotifications: false };
+  },
+  computed: {
+    ...mapState('wallet', ['identifier']),
+    isMewConnect() {
+      return this.identifier === MEW_CONNECT;
+    }
   }
 };
 </script>
