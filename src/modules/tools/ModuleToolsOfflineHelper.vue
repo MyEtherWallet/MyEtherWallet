@@ -68,7 +68,7 @@
               </v-row>
 
               <div>{{ item.id }}</div>
-              <divider-line v-if="networks.length != i + 1" class="my-5" />
+              <v-divider v-if="networks.length != i + 1" class="my-5" />
             </div>
           </v-radio-group>
         </border-block>
@@ -189,11 +189,10 @@
 import ellipsisBlock from '@/components/ellipsisBlock/EllipsisBlock';
 import blockTitle from '@/components/block-title/BlockTitle';
 import borderBlock from '@/components/border-block/BorderBlock.vue';
-import dividerLine from '@/components/divider-line/DividerLine';
 
 export default {
   name: 'ModuleToolsOfflineHelper',
-  components: { ellipsisBlock, blockTitle, borderBlock, dividerLine },
+  components: { ellipsisBlock, blockTitle, borderBlock },
   data: () => ({
     dialog: false,
     currentStep: 3,

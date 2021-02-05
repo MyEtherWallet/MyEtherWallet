@@ -1,6 +1,11 @@
 <template>
   <div class="pb-4 pb-sm-0">
     <div>Please select a default gas price for your transaction fee</div>
+    <!--
+    =====================================================================================
+      Economic / Regular / Fast
+    =====================================================================================
+    -->
     <v-sheet color="transparent" max-width="500px" class="mx-auto">
       <v-row class="mt-6">
         <v-col v-for="(b, key) in buttons" :key="key" cols="12" sm="4">
@@ -16,27 +21,37 @@
           </div>
         </v-col>
       </v-row>
-
-      <divider-line text="OR" class="pt-3 pb-9" />
-
-      <div class="d-block d-sm-flex text-center">
+      <!--
+      =====================================================================================
+        Divider
+      =====================================================================================
+      -->
+      <v-row align="center" class="pt-3 pb-9 px-3">
+        <v-divider />
+        <p class="mb-0 mx-4 basicOutlineActive--text font-weight-bold">OR</p>
+        <v-divider />
+      </v-row>
+      <!--
+      =====================================================================================
+       Custom Gas
+      =====================================================================================
+      -->
+      <v-row align="start" class="px-3">
         <mew-input
           label="Customize"
           placeholder=" "
           right-label="$0.00 (- min)"
-          class="mr-3 flex-grow-1"
+          class="mr-3"
         />
-        <mew-button title="Confirm" button-size="xlarge" />
-      </div>
+        <mew-button title="Confirm" btn-size="xlarge" class="my-1" />
+      </v-row>
     </v-sheet>
   </div>
 </template>
 
 <script>
-import dividerLine from '@/components/divider-line/DividerLine';
-
 export default {
-  components: { dividerLine },
+  name: 'SettingsGasPrice',
   props: {},
   data() {
     return {

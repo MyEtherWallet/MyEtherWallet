@@ -36,19 +36,20 @@ const router = new Router({
   }
 });
 router.beforeResolve((to, from, next) => {
-  if (to.meta.hasOwnProperty('requiresAuth')) {
-    next();
-  } else {
-    if (store.state.wallet.address === null) {
-      store.dispatch('external/setLastPath', to.path);
-      next({ name: 'AccessWallet' });
-    } else {
-      if (store.state.external.path !== '') {
-        store.dispatch('external/setLastPath', '');
-      }
-      next();
-    }
-  }
+  // if (to.meta.hasOwnProperty('requiresAuth')) {
+  //   next();
+  // } else {
+  //   if (store.state.wallet.address === null) {
+  //     store.dispatch('external/setLastPath', to.path);
+  //     next({ name: 'AccessWallet' });
+  //   } else {
+  //     if (store.state.external.path !== '') {
+  //       store.dispatch('external/setLastPath', '');
+  //     }
+  //     next();
+  //   }
+  // }
+  next();
 });
 
 export default router;
