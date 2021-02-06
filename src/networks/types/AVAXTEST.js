@@ -1,7 +1,7 @@
 import avax from '@/assets/images/networks/avax-c.svg';
 
 export default {
-  name: 'AVAXCTEST',
+  name: 'AVAXTEST',
   name_long: 'Avalanche C-Chain Testnet',
   homePage: 'https://www.avalabs.org/',
   blockExplorerTX: 'https://cchain.explorer.avax-test.network/tx/[[txHash]]',

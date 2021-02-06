@@ -1,6 +1,6 @@
-import { AVAXC } from '../types';
+import { AVAX } from '../types';
 export default {
-  type: AVAXC,
+  type: AVAX,
   service: 'avax.network',
   url: 'https://api.avax.network/ext/bc/C/rpc',
   port: 443,

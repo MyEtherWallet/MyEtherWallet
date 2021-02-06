@@ -1,6 +1,6 @@
-import { AVAXCTEST } from '../types';
+import { AVAXTEST } from '../types';
 export default {
-  type: AVAXCTEST,
+  type: AVAXTEST,
   service: 'avax.network',
   url: 'https://api.avax-test.network/ext/bc/C/rpc',
   port: 443,
