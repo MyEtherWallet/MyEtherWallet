@@ -10,19 +10,20 @@
   >
     <template #mewOverlayBody>
       <v-sheet color="transparent" max-width="650px" class="mx-auto">
-        <v-row v-if="!step">
-          <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
-            <mew-super-button
-              btn-mode="small-right-image"
-              :title="btn.label"
-              :subtitle="btn.description"
-              :right-icon="btn.icon"
-              icon-type="img"
-              color-theme="basic"
-              @click.native="btn.fn"
-            />
-          </v-col>
-        </v-row>
+        <div v-if="!step">
+          <mew-super-button
+            v-for="(btn, key) in buttons"
+            :key="key"
+            class="mb-4"
+            btn-mode="small-right-image"
+            :title="btn.label"
+            :subtitle="btn.description"
+            :right-icon="btn.icon"
+            icon-type="img"
+            color-theme="basic"
+            @click.native="btn.fn"
+          />
+        </div>
         <access-keystore
           v-else-if="showKeystore"
           :btn-call="btnCall"
