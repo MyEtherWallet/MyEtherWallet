@@ -16,7 +16,7 @@
     </v-dialog>
 
     <div class="d-block d-sm-flex justify-space-between mb-7">
-      <block-title max-width="600px" no-page-title :data="title" />
+      <app-block-title max-width="600px" no-page-title :data="title" />
       <text-button
         class="mt-3 mt-sm-0"
         label="Add more"
@@ -31,12 +31,12 @@
 
 <script>
 import textButton from '@/components/buttons/text-button/TextButton';
-import blockTitle from '@/components/block-title/BlockTitle';
+import AppBlockTitle from '@/core/components/AppBlockTitle';
 import ToolsTableContainer from './components/ToolsTableContainer';
 
 export default {
   name: 'ModuleToolsWatchOnly',
-  components: { textButton, blockTitle, ToolsTableContainer },
+  components: { textButton, AppBlockTitle, ToolsTableContainer },
   data: () => ({
     addDialog: false,
     addresses: [

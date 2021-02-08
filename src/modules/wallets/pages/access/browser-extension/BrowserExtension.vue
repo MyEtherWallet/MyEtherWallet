@@ -1,8 +1,8 @@
 <template>
   <div class="expandHeader">
-    <block-title :data="titleData">
+    <app-block-title :data="titleData">
       <h5 class="white--text ma-0">Please select a browser from below.</h5>
-    </block-title>
+    </app-block-title>
     <v-sheet color="transparent" max-width="400px" class="mx-auto px-5">
       <div v-for="(btn, key) in buttons" :key="key" class="mb-3">
         <router-link :to="btn.to" class="display--block">
@@ -29,11 +29,11 @@
 </template>
 
 <script>
-import blockTitle from '@/components/block-title/BlockTitle';
+import AppBlockTitle from '@/core/components/AppBlockTitle';
 
 export default {
   name: 'CreateNewWallet',
-  components: { blockTitle },
+  components: { AppBlockTitle },
   data() {
     return {
       titleData: {

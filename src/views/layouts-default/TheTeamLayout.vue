@@ -4,7 +4,7 @@
     <div class="py-7" />
     <v-container>
       <v-sheet max-width="700px" class="mx-auto">
-        <block-title no-page-title :data="titleData" />
+        <app-block-title no-page-title :data="titleData" />
       </v-sheet>
     </v-container>
     <div class="py-5" />
@@ -30,7 +30,7 @@
 
 <script>
 import homeHeader from '@/components/home-header/HomeHeader';
-import blockTitle from '@/components/block-title/BlockTitle';
+import AppBlockTitle from '@/core/components/AppBlockTitle';
 
 import Kosala from '@/assets/images/team/kosala.jpg';
 import Brian from '@/assets/images/team/brian.jpg';
@@ -50,7 +50,7 @@ import Katya from '@/assets/images/team/katya.jpg';
 
 export default {
   name: 'TheTeamLayout',
-  components: { homeHeader, blockTitle },
+  components: { homeHeader, AppBlockTitle },
   data: () => ({
     titleData: {
       textProps: '',

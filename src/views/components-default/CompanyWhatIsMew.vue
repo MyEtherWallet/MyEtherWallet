@@ -3,7 +3,7 @@
     <v-container>
       <v-row align="center">
         <v-col cols="5">
-          <block-title no-page-title :data="titleData" class="pr-8" />
+          <app-block-title no-page-title :data="titleData" class="pr-8" />
         </v-col>
         <v-col cols="7">
           <v-img
@@ -17,10 +17,10 @@
 </template>
 
 <script>
-import blockTitle from '@/components/block-title/BlockTitle';
+import AppBlockTitle from '@/core/components/AppBlockTitle';
 
 export default {
-  components: { blockTitle },
+  components: { AppBlockTitle },
   data: () => ({
     titleData: {
       textProps: '',

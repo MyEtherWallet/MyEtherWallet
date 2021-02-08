@@ -5,7 +5,7 @@
         Layout Title
     =====================================================================================
     -->
-    <block-title :data="titleData">
+    <app-block-title :data="titleData">
       <h5 class="white--text ma-0">
         Please select a method to create a new wallet.
       </h5>
@@ -18,7 +18,7 @@
           Access my wallet
         </router-link>
       </h5>
-    </block-title>
+    </app-block-title>
     <!--
     =====================================================================================
         Options
@@ -128,12 +128,12 @@
 import MewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import ModuleCreateWalletSoftware from '@/modules/create-wallet/ModuleCreateWalletSoftware';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import blockTitle from '@/components/block-title/BlockTitle';
+import AppBlockTitle from '@/core/components/AppBlockTitle';
 
 export default {
   name: 'TheCreateWalletLayout',
   components: {
-    blockTitle,
+    AppBlockTitle,
     MewSuperButton,
     ModuleCreateWalletSoftware
   },

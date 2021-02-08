@@ -9,7 +9,7 @@
         </div>
       </v-sheet>
       <v-sheet max-width="600px" class="mb-12">
-        <block-title no-page-title :data="titleData" class="mb-8" />
+        <app-block-title no-page-title :data="titleData" class="mb-8" />
       </v-sheet>
       <v-row>
         <v-col
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import blockTitle from '@/components/block-title/BlockTitle';
+import AppBlockTitle from '@/core/components/AppBlockTitle';
 import Contract from '@/assets/images/icons/icon-contract-mew.svg';
 import Message from '@/assets/images/icons/icon-message-mew.svg';
 import ViewOnlyWallet from '@/assets/images/icons/icon-view-only-mew.svg';
@@ -43,7 +43,7 @@ import BuyEth from '@/assets/images/icons/icon-buy-eth-mew.svg';
 import AdvancedTools from '@/assets/images/icons/icon-advanced-tools-mew.svg';
 
 export default {
-  components: { blockTitle },
+  components: { AppBlockTitle },
   data: () => ({
     titleData: {
       textProps: '',
