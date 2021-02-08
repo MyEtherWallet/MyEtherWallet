@@ -50,7 +50,6 @@ export default {
     },
     {
       path: 'dapps',
-      name: 'Dapps',
       component: Dapps,
       children: DappRoutes
     },
