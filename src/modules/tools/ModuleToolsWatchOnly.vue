@@ -17,11 +17,15 @@
 
     <div class="d-block d-sm-flex justify-space-between mb-7">
       <app-block-title max-width="600px" no-page-title :data="title" />
-      <text-button
-        class="mt-3 mt-sm-0"
-        label="Add more"
-        plus
-        @click.native="addDialog = true"
+      <mew-button
+        icon-align="left"
+        title="Add More"
+        btn-style="transparent"
+        icon="mdi-plus-circle"
+        icon-type="mdi"
+        btn-size="small"
+        @click="addDialog = true"
+        class="px-0"
       />
     </div>
 
@@ -30,13 +34,12 @@
 </template>
 
 <script>
-import textButton from '@/components/buttons/text-button/TextButton';
 import AppBlockTitle from '@/core/components/AppBlockTitle';
 import ToolsTableContainer from './components/ToolsTableContainer';
 
 export default {
   name: 'ModuleToolsWatchOnly',
-  components: { textButton, AppBlockTitle, ToolsTableContainer },
+  components: { AppBlockTitle, ToolsTableContainer },
   data: () => ({
     addDialog: false,
     addresses: [
