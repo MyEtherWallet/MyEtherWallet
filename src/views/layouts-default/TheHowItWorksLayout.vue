@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--how-it-works">
-    <home-header title="How it works" />
+    <the-layout-header title="How it works" />
     <mew-tabs :items="mewTabs" has-underline>
       <template #tabContent1>
         <how-it-works-send />
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import homeHeader from '@/components/home-header/HomeHeader';
+import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import getStarted from '@/components/get-started/GetStarted';
 
 import HowItWorksSwap from '../components-default/HowItWorksSwap';
@@ -35,7 +35,7 @@ import HowItWorksMore from '../components-default/HowItWorksMore';
 export default {
   name: 'TheHowItWorksLayout',
   components: {
-    homeHeader,
+    TheLayoutHeader,
     HowItWorksSwap,
     HowItWorksSend,
     HowItWorksDappsCenter,

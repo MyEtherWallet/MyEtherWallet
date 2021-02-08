@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--tools">
-    <home-header title="Tools" />
+    <the-layout-header title="Tools" />
 
     <div class="expandHeader mobile-menu px-3 mt-n7 d-block d-lg-none">
       <v-sheet
@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import homeHeader from '@/components/home-header/HomeHeader';
+import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import getStarted from '@/components/get-started/GetStarted';
 
 import ModuleToolsWatchOnly from '@/modules/tools/ModuleToolsWatchOnly';
@@ -58,7 +58,7 @@ import ModuleMessageVerify from '@/modules/message/ModuleMessageVerify';
 export default {
   name: 'MoreActions',
   components: {
-    homeHeader,
+    TheLayoutHeader,
     getStarted,
     ModuleToolsWatchOnly,
     ModuleToolsConvert,
