@@ -1,6 +1,4 @@
 import BigNumber from 'bignumber.js';
-import store from 'store';
-// import web3Utils from 'web3-utils';
 
 const MED_CONST = 21428571428.571;
 const MED_MULTIPLIER = 1.0714285714286;
@@ -10,25 +8,15 @@ const OLD_MED_CONST = 1.25;
 const OLD_FAST_CONST = 1.5;
 const LIMITER = 25000000000;
 
-// const toGwei = gasPrice => {
-//   return web3Utils.fromWei(BigNumber(gasPrice).toString(), 'gwei');
-// };
-
-// const toWei = gasPrice => {
-//   return web3Utils.toWei(BigNumber(gasPrice).toString(), 'gwei');
-// };
-
 const getEconomy = gasPrice => {
-  return BigNumber(gasPrice).div(1).toFixed(0);
+  return BigNumber(gasPrice).toFixed(0);
 };
 const getRegular = gasPrice => {
   if (gasPrice > LIMITER) {
     let initialValue = BigNumber(gasPrice).times(MED_MULTIPLIER);
     initialValue = initialValue.plus(MED_CONST);
-
     return BigNumber(initialValue).toFixed(0);
   }
-
   return BigNumber(gasPrice).times(1.25).toFixed(0);
 };
 const getFast = gasPrice => {
@@ -38,15 +26,8 @@ const getFast = gasPrice => {
 
     return BigNumber(initialValue).toFixed(0);
   }
-
   return BigNumber(gasPrice).times(1.5).toFixed(0);
 };
-
-const getOther = () => {
-  const storedPrice = store.get('customGasPrice') || 0;
-  return BigNumber(storedPrice).toFixed(0);
-};
-
 const fastToEconomy = gasPrice => {
   const oldConverted = gasPrice / OLD_FAST_CONST;
   if (LIMITER > oldConverted) {
@@ -66,18 +47,22 @@ const regularToEconomy = gasPrice => {
   initialValue = initialValue.div(MED_MULTIPLIER);
   return BigNumber(initialValue).toFixed(0);
 };
-
-const getGasBasedOnType = gasPrice => {
-  const gasPriceType = store.get('gasPriceType') || 'economy';
+const gasPriceTypes = {
+  ECONOMY: 'economy',
+  REGULAR: 'regular',
+  FAST: 'fast',
+  STORED: 'stored'
+};
+const getGasBasedOnType = (gasPrice, gasPriceType) => {
   switch (gasPriceType) {
-    case 'economy':
+    case gasPriceTypes.ECONOMY:
       return getEconomy(gasPrice);
-    case 'regular':
+    case gasPriceTypes.REGULAR:
       return getRegular(gasPrice);
-    case 'fast':
+    case gasPriceTypes.FAST:
       return getFast(gasPrice);
     default:
-      return getOther();
+      return getEconomy(gasPrice);
   }
 };
 
@@ -85,8 +70,8 @@ export {
   getEconomy,
   getRegular,
   getFast,
-  getOther,
   getGasBasedOnType,
   fastToEconomy,
-  regularToEconomy
+  regularToEconomy,
+  gasPriceTypes
 };

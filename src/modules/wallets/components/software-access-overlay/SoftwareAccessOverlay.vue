@@ -70,7 +70,7 @@ import {
 } from '@/modules/wallets/utils/bip44/walletTypes';
 import { mapActions, mapState } from 'vuex';
 import { unlockKeystore } from '@/modules/wallets/utils/helpers.js';
-import { Toast, ERROR, SENTRY } from '@/components/toast';
+import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
 
 const TITLES = {
   keystoreFile: 'Keystore File',
@@ -150,7 +150,7 @@ export default {
   },
 
   computed: {
-    ...mapState('global', ['path']),
+    ...mapState('external', ['path']),
     title() {
       return !this.step ? 'Software' : this.titles[this.steps[this.step]];
     },
@@ -233,7 +233,7 @@ export default {
           if (this.path !== '') {
             this.$router.push({ path: this.path });
           } else {
-            this.$router.push({ name: 'Wallets' });
+            this.$router.push({ name: 'Dashboard' });
           }
         })
         .catch(e => {
@@ -279,5 +279,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped></style>
