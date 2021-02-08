@@ -15,7 +15,7 @@
       :send="executeTrade"
     />
     <v-row>
-      <v-col cols="8">
+      <v-col cols="9">
         <mew6-white-sheet>
           <interface-wrap title="Swap">
             <div class="d-flex justify-space-between">
@@ -138,7 +138,7 @@
         </mew6-white-sheet>
       </v-col>
       <v-spacer cols="1" />
-      <v-col cols="4">
+      <v-col cols="3">
         <module-network />
       </v-col>
     </v-row>
@@ -160,11 +160,26 @@ import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
+const AMT = '0.1';
 export default {
   components: {
     SwapConfirmation,
     'interface-wrap': InterfaceWrap,
     ModuleNetwork
+  },
+  props: {
+    fromToken: {
+      type: String,
+      default: ETH_TOKEN
+    },
+    toToken: {
+      type: String,
+      default: DAI_TOKEN
+    },
+    amount: {
+      type: String,
+      default: AMT
+    }
   },
   data() {
     return {
@@ -182,7 +197,7 @@ export default {
       swapper: null,
       toTokenType: null,
       fromTokenType: null,
-      tokenInValue: '0.1',
+      tokenInValue: this.amount,
       tokenOutValue: null,
       availableTokens: [],
       availableQuotes: [],
@@ -190,8 +205,8 @@ export default {
       allTrades: [],
       isLoading: false,
       defaults: {
-        fromToken: ETH_TOKEN,
-        toToken: DAI_TOKEN
+        fromToken: this.fromToken,
+        toToken: this.toToken
       },
       exPannel: [
         {

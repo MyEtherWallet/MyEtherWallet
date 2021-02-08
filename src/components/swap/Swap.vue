@@ -210,7 +210,7 @@ export default {
       const obj = {
         fromToken: data.fromT.contract_address,
         toToken: data.toT.contract_address,
-        amount: 1
+        amount: '1'
       };
 
       this.navigateToSwap(obj);

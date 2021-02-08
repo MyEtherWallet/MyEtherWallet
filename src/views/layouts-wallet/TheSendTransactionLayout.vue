@@ -1,10 +1,10 @@
 <template>
   <v-row>
-    <v-col cols="8">
+    <v-col cols="9">
       <module-send />
     </v-col>
     <v-spacer cols="1" />
-    <v-col cols="4">
+    <v-col cols="3">
       <module-network />
     </v-col>
   </v-row>

@@ -1,6 +1,6 @@
 <template>
   <v-row class="mew-component--dashboard">
-    <v-col cols="8">
+    <v-col cols="9">
       <mew6-white-sheet
         v-if="chartData.length"
         class="mew-component--eth-balance pa-7 pb-4"
@@ -117,6 +117,15 @@
             :icon="require('@/assets/images/icons/icon-token-grey.png')"
             icon-align="left"
           >
+            <!-- <template #rightHeaderContainer>
+            <mew-button
+              class="ml-auto"
+              :has-full-width="false"
+              title="All tokens"
+              btn-size="small"
+              btn-style="transparent"
+            />
+          </template> -->
           </mew-module>
         </div>
         <mew-table
@@ -148,45 +157,27 @@
           <div class="py-5" />
         </mew6-white-sheet>
       </div>
-<<<<<<< HEAD
     </v-col>
-    <v-spacer cols="1" />
-    <v-col cols="4">
+    <v-spacer />
+    <v-col cols="auto">
       <network />
-      <swap class="mt-2" />
-      <banner-ads class="mt-2" />
+      <div class="pa-4"></div>
+      <swap />
+      <div class="pa-4"></div>
+      <app-carousel />
     </v-col>
   </v-row>
-=======
-      <div class="pa-4"></div>
-      <div>
-        <network />
-        <div class="pa-4"></div>
-        <swap />
-        <div class="pa-4"></div>
-        <app-carousel />
-      </div>
-    </div>
-  </div>
->>>>>>> de1a0f0b7b8e7148290115d1b6082713b7ad09ca
 </template>
 
 <script>
 import chart from '@/modules/balance/components/BalanceChart';
-import bannerAds from '@/components/banner-ads/BannerAds';
-import network from '@/modules/network/ModuleNetwork';
-import swap from '@/components/swap/Swap';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import WalletCalls from '@/apollo/queries/wallets/index';
 import utils from 'web3-utils';
-<<<<<<< HEAD
-=======
 import AppCarousel from '@/core/components/AppCarousel';
 import network from '@/modules/network/ModuleNetwork';
 import swap from '@/components/swap/Swap';
-import tokenTable from '@/components/tokenTable/TokenTable';
->>>>>>> de1a0f0b7b8e7148290115d1b6082713b7ad09ca
 
 export default {
   components: {
