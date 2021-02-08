@@ -20,6 +20,7 @@
             <div class="title">
               <h4>{{ $t('sendTx.amount') }}</h4>
               <p
+                v-show="txTo"
                 class="title-button prevent-user-select"
                 @click="sendEntireBalance"
               >
@@ -371,9 +372,12 @@ export default {
       );
     },
     txTo() {
-      return this.isToken
-        ? this.selectedCurrency.address.toLowerCase()
-        : this.hexAddress.toLowerCase().trim();
+      if (this.selectedCurrency || this.hexAddress) {
+        return this.isToken
+          ? this.selectedCurrency.address.toLowerCase()
+          : this.hexAddress.toLowerCase().trim();
+      }
+      return '';
     },
     multiWatch() {
       return (
@@ -475,9 +479,9 @@ export default {
         const params = {
           from: coinbase,
           value: ethUnit.toWei(this.balanceDefault, 'ether'),
-          data: this.txData
+          data: this.txData,
+          to: this.txTo
         };
-        if (this.txTo) params.to = this.txTo;
         this.web3.eth.estimateGas(params).then(gasLimit => {
           this.gasLimit = gasLimit;
           this.toValue =
