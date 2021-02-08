@@ -6,25 +6,34 @@
           <interface-wrap title="Interact with contract">
             <div class="d-flex">
               <mew-input
+                :value="contractAddress"
                 label="Contract Address"
                 placeholder=" "
                 class="mr-3 flex-grow-1"
+                @input="setContractAddress"
               />
-              <mew-select :items="contractType" label="Contract Type" />
+              <mew-select
+                :items="mergedContracts"
+                label="Contract Type"
+                @input="selectedContract"
+              />
             </div>
             <v-textarea
+              v-model="abi"
               no-resize
               outlined
               name="input-7-4"
               label="ABI/JSON Interface"
-              value="constant-:true-inputs-:-name-:-name-outputs-:-name-:-type-:-string-payable-:false-type-:-function-constant-:true-inputs-:-name-:-bid-value-type-:-uint256-name-:-get-buy-price-outputs-:-name-:-token-count-type-:-uint256-name-:-purchase-value-type-:-uint256-payable-:false-type-:-function-constant-:false-inputs-:-name-:-spender-type-:-address-name-:-value-type-:-uint256-name-:-approve-outputs-:-payable-:false-type-:-function-constant-:true-inputs-:-name-:-withdrawn-balance-outputs-:-name-:-type-:-uint256-payable-:false-type-:-function-constant-:false-inputs-:-name-:-value-type-:-uint256-name-:-withdraw-funds-outputs-:-payable-:false-type-:-function-constant-:true-inputs-:-name-:-withdraw-address-outputs-:-name-:-type-:-address-payable-:false-type-:-function-constant-:true-inputs-:-name-:-total-supply-outputs-:-name-:-type-:-uint256-payable-:false-type-:-function-constant-:false-inputs-:-name-:-from-type-:-address-name-:-to-type-:-address-name-:-value-type-:-uint256-name-:-transfer-from-outputs-:-payable-:false-type-:-function-constant-:true-inputs-:-name-:-decimals-outputs-:-name-:-type-:-uint256-payable-:false-type-:-function-constant-:true-inputs-:-name-:-trade-spread-invert-outputs-:-name-:-type-:-uint256-payable-:false-type-:-function-constant-:true-inputs-:-name-:-crowdsale-end-declaration-time-outputs-:-name-:-type-:-uint256-payable-:false-type-:-function-constant-:true-inputs-:-name-:-owner2-outputs-:-name-:-type-:-address-payable-:false-type-:-function-constant-:true-inputs-:-name-:-funding-unlock-fraction-invert-outputs-:-name-:-type-:-uint256-payable-:false-type-:-function-constant-:false-inputs-:-name-:-halt-crowdsale-outputs-:-payable-:false-type-:-function-constant-:true-inputs-:-name-:-owner-type-:-address-name-:-balance-of-outputs-:-name-:-balance-type-:-uint256-payable-:false-type-:-function-constant-:true-inputs-:-name-:-owner1-outputs-:-name-:-type-:-address-payable-:false-type-:-function-constant-:false-inputs-:-name-:-confirm-crowdsale-end-outputs-:-payable-:false-type-:-function-constant-:true-inputs-:-name-:-symbol-outputs-:-name-:-type-:-string-payable-:false-type-:-function-constant-:false-inputs-:-name-:-max-price-type-:-uint256-name-:-buy-limit-outputs-:-payable-:true-type-:-function-constant-:true-inputs-:-name-:-funding-unlock-period-outputs-:-name-:-type-:-uint256-payable-:false-type-:-function-constant-:false-inputs-:-name-:-buy-outputs-:-payable-:true-type-:-function-constant-:false-inputs-:-name-:-to-type-:-address-name-:-value-type-:-uint256-name-:-transfer-outputs-:-payable-:false-type-:-function-constant-:true-inputs-:-name-:-unlocked-balance-outputs-:-name-:-type-:-uint256-payable-:false-type-:-function-constant-:true-inputs-:-name-:-token-price-min-outputs-:-name-:-type-:-uint256-payable-:false-type-:-function-constant-:false-inputs-:-name-:-unlock-funds-outputs-:-payable-:false-type-:-function-constant-:true-inputs-:-name-:-ask-size-tokens-type-:-uint256-name-:-get-sell-price-outputs-:-name-:-sale-value-type-:-uint256-payable-:false-type-:-function-constant-:false-inputs-:-name-:-declare-crowdsale-end-outputs-:-payable-:false-type-:-function-constant-:true-inputs-:-name-:-token-creation-min-outputs-:-name-:-type-:-uint256-payable-:false-type-:-function-constant-:true-inputs-:-name-:-funding-unlock-time-outputs-:-name-:-type-:-uint256-payable-:false-type-:-function-constant-:true-inputs-:-name-:-is-halted-outputs-:-name-:-type-:-bool-payable-:false-type-:-function-constant-:false-inputs-:-name-:-token-count-type-:-uint256-name-:-min-price-type-:-uint256-name-:-sell-limit-outputs-:-payable-:false-type-:-function-constant-:true-inputs-:-name-:-crowdsale-start-block-outputs-:-name-:-type-:-uint256-payable-:false-type-:-function-constant-:true-inputs-:-name-:-min-funding-reached-outputs-:-name-:-type-:-bool-payable-:false-type-:-function-constant-:true-inputs-:-name-:-owner-type-:-address-name-:-spender-type-:-address-name-:-allowance-outputs-:-name-:-remaining-type-:-uint256-payable-:false-type-:-function-constant-:true-inputs-:-name-:-crowdsale-end-lock-time-outputs-:-name-:-type-:-uint256-payable-:false-type-:-function-constant-:false-inputs-:-name-:-token-count-type-:-uint256-name-:-sell-outputs-:-payable-:false-type-:-function-inputs-:-name-:-owner1-type-:-address-name-:-owner2-type-:-address-name-:-withdraw-address-type-:-address-name-:-crowdsale-start-block-type-:-uint256-payable-:false-type-:-constructor-payable-:true-type-:-fallback-anonymous-:false-inputs-:-indexed-:true-name-:-who-type-:-address-indexed-:false-name-:-tokens-type-:-uint256-indexed-:false-name-:-purchase-value-type-:-uint256-indexed-:false-name-:-supply-after-type-:-uint256-name-:-log-buy-type-:-event-anonymous-:false-inputs-:-indexed-:true-name-:-who-type-:-address-indexed-:false-name-:-tokens-type-:-uint256-indexed-:false-name-:-sale-value-type-:-uint256-indexed-:false-name-:-supply-after-type-:-uint256-name-:-log-sell-type-:-event-anonymous-:false-inputs-:-indexed-:false-name-:-amount-type-:-uint256-name-:-log-withdraw-type-:-event-anonymous-:false-inputs-:-indexed-:false-name-:-completed-type-:-bool-name-:-log-crowdsale-end-type-:-event-anonymous-:false-inputs-:-indexed-:true-name-:-owner-type-:-address-indexed-:true-name-:-spender-type-:-address-indexed-:false-name-:-value-type-:-uint256-name-:-approval-type-:-event-anonymous-:false-inputs-:-indexed-:true-name-:-from-type-:-address-indexed-:true-name-:-to-type-:-address-indexed-:false-name-:-value-type-:-uint256-name-:-transfer-type-:-event"
+              @change="setAbi"
             ></v-textarea>
 
             <div class="text-center mt-3">
               <mew-button
                 title="Interact"
+                :disabled="!canInteract"
                 :has-full-width="false"
-                btn-size="xlarge"
+                button-size="xlarge"
+                @click.native="showInteract()"
               />
             </div>
             <div class="text-center mt-4">
@@ -33,10 +42,88 @@
                 :has-full-width="false"
                 btn-size="small"
                 btn-style="transparent"
+                @click.native="resetDefaults()"
               />
             </div>
           </interface-wrap>
         </mew6-white-sheet>
+        <mew-overlay
+          :show-overlay="interact"
+          :close="closeInteract"
+          :back="backInteract"
+        >
+          <template v-slot:mewOverlayBody>
+            <mew-select
+              :label="'Method'"
+              :items="methods"
+              @input="methodSelect"
+            >
+            </mew-select>
+            <div
+              v-for="(input, idx) in inputs"
+              :key="input.name + idx"
+              class="input-item-container"
+            >
+              <mew-input
+                v-if="getType(input.type).type !== 'radio'"
+                :disabled="noInput"
+                :label="`${input.name} (${input.type})`"
+                :rules="[
+                  value => {
+                    return isValidInput(
+                      value,
+                      getType(input.type).solidityType
+                    );
+                  }
+                ]"
+                @input="valueInput(input.name, $event)"
+              />
+              <div
+                v-if="getType(input.type).type === 'radio'"
+                class="bool-input-container"
+              >
+                <div class="bool-items">
+                  <mew-switch
+                    :value="input.value"
+                    :label="input.name"
+                    @input="valueInput(input.name, $event)"
+                  />
+                </div>
+              </div>
+            </div>
+            <div v-show="hasInputs" class="text-center mt-3">
+              <mew-button
+                :title="hasOutputs() ? 'Result' : 'Write'"
+                :has-full-width="false"
+                button-size="xlarge"
+                :disabled="!inputsValid"
+                @click.native="write"
+              />
+            </div>
+            <div class="pa-4"></div>
+            <div
+              v-for="(output, idx) in outputs"
+              v-show="noOutput"
+              :key="output.name + idx"
+              class="input-item-container"
+            >
+              <mew-input
+                v-if="getType(output.type).type !== 'radio'"
+                :disabled="true"
+                :label="`${output.name} (${output.type})`"
+                :value="output.value"
+                class="non-bool-input"
+              />
+              <mew-input
+                v-if="getType(output.type).type === 'radio'"
+                :disabled="true"
+                :label="`${output.name} (${output.type})`"
+                :value="output.value"
+                class="non-bool-input"
+              />
+            </div>
+          </template>
+        </mew-overlay>
       </div>
       <div class="pa-4"></div>
       <div>
@@ -49,10 +136,25 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import { isAddress } from '@/core/helpers/addressUtils';
 import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
-
+import store from 'store';
 import Network from '@/modules/wallets/components/network/Network';
 import Swap from '@/modules/wallets/components/swap/Swap';
+import * as unit from 'ethjs-unit';
+import Contracts from '../contracts';
+import tempDevAbi from '../tests/contractsForDeploy/Type_Demo_ABI';
+const padLeftEven = hex => {
+  hex = hex.length % 2 !== 0 ? '0' + hex : hex;
+  return hex;
+};
+
+const sanitizeHex = hex => {
+  hex = hex.substring(0, 2) == '0x' ? hex.substring(2) : hex;
+  if (hex == '') return '0x';
+  return '0x' + padLeftEven(hex);
+};
 
 export default {
   components: {
@@ -62,14 +164,161 @@ export default {
   },
   data() {
     return {
-      contractType: [
-        {
-          name: 'Contract 1',
-          subtext: 'Eth',
-          value: '1'
-        }
-      ]
+      interact: false,
+      inputsValid: false,
+      activeContract: {},
+      hasInputs: false,
+      outputs: {},
+      abi: [],
+      contractAddress: '',
+      methods: [],
+      contractType: []
     };
+  },
+  computed: {
+    ...mapState('wallet', ['network', 'gasPrice', 'address', 'web3']),
+    mergedContracts() {
+      const customContracts = store.get('customContracts') || [];
+      const mergedContracts = this.network.type.contracts.concat(
+        customContracts
+      );
+      return [
+        { name: 'select a contract', abi: '', address: '' },
+        {
+          name: 'demo',
+          abi: tempDevAbi,
+          address: '0x98FE501cc73Ec0FA702c71BAAFc3471F4f266fAD'
+        }
+      ].concat(mergedContracts);
+    },
+    isValidAbi() {
+      try {
+        JSON.parse(this.abi);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
+    isValidAddress() {
+      return isAddress(this.address);
+    },
+    noInput() {
+      return false;
+    },
+    noOutput() {
+      return (
+        !this.activeContract.hasOutputs || this.activeContract.isMethodConstant
+      );
+    },
+    resType() {
+      return typeof this.result;
+    },
+    inputs() {
+      return this.activeContract.selectedMethodInputs;
+    },
+    txValue() {
+      return sanitizeHex(unit.toWei(this.value, 'ether').toString(16));
+    },
+    canInteract() {
+      return this.activeContract.contractActive;
+    }
+  },
+  mounted() {
+    this.activeContract = new Contracts(this.address, undefined, 0);
+  },
+  methods: {
+    resetDefaults() {
+      this.abi = '';
+      this.contractAddress = '';
+      this.interact = false;
+      this.contractMethods = [];
+      this.selectedMethod = {};
+      this.result = '';
+      this.loading = false;
+      this.value = 0;
+      this.outputs = {};
+      this.clearCurrency = !this.clearCurrency;
+      this.activeContract.reset();
+    },
+    getOutputs() {
+      return this.outputs;
+    },
+    hasOutputs() {
+      return Object.values(this.outputs).every(item => item.value !== null);
+    },
+    write() {
+      if (this.activeContract.isMethodConstant) {
+        this.activeContract.write().then(res => {
+          this.outputs = res.outputs;
+        });
+      } else {
+        this.activeContract.write();
+      }
+    },
+    valueInput(name, value) {
+      this.activeContract.setSelectedMethodInputValue(name, value);
+      this.inputsValid = this.activeContract.inputsValid;
+    },
+    setAbi(evt) {
+      this.abi = evt;
+      this.activeContract.setAbi(this.abi);
+    },
+    setContractAddress(evt) {
+      this.contractAddress = evt;
+      this.activeContract.setContractAddress(this.contractAddress);
+    },
+    selectedContract(selected) {
+      if (selected.abi === '') {
+        this.abi = '';
+      } else {
+        this.abi = JSON.stringify(selected.abi);
+        this.activeContract.setAbi(this.abi);
+      }
+      this.contractAddress = selected.address;
+      this.activeContract.setContractAddress(this.contractAddress);
+    },
+    closeInteract() {
+      this.interact = false;
+      this.resetDefaults();
+    },
+    backInteract() {
+      this.interact = false;
+      this.activeContract.clear();
+    },
+    showInteract() {
+      this.interact = true;
+      this.$set(this, 'methods', this.activeContract.contractMethodNames);
+    },
+    methodSelect(evt) {
+      this.activeContract
+        .selectedFunction(evt)
+        .then(res => {
+          this.$set(this, 'outputs', res.outputs);
+          this.hasInputs = Object.keys(res.inputs).length > 0;
+        })
+        .catch(e => {
+          // eslint-disable-next-line
+          console.error(e);
+        });
+    },
+
+    isValidInput() {
+      return Contracts.isContractArgValid.apply(this, arguments);
+    },
+    getType() {
+      return Contracts.getType.apply(this, arguments);
+    },
+
+    formatInput() {
+      return Contracts.formatInput.apply(this, arguments);
+    },
+    copyToClipboard(ref) {
+      this.$refs[ref].select();
+      document.execCommand('copy');
+    },
+    deleteInput(ref) {
+      this.$refs[ref].value = '';
+    }
   }
 };
 </script>
