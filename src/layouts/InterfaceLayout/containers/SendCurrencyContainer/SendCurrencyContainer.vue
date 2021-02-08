@@ -468,20 +468,31 @@ export default {
     openSettings() {
       this.$eventHub.$emit('open-settings');
     },
-    sendEntireBalance() {
+    async sendEntireBalance() {
       if (this.isToken) this.toValue = this.selectedCurrency.balance;
-      else
-        this.toValue =
-          this.balanceDefault > 0
-            ? this.balanceDefault.minus(
-                ethUnit.fromWei(
-                  new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei'))
-                    .times(this.gasLimit)
-                    .toString(),
-                  'ether'
+      else {
+        const coinbase = await this.web3.eth.getCoinbase();
+        const params = {
+          from: coinbase,
+          value: ethUnit.toWei(this.balanceDefault, 'ether'),
+          data: this.txData
+        };
+        if (this.txTo) params.to = this.txTo;
+        this.web3.eth.estimateGas(params).then(gasLimit => {
+          this.gasLimit = gasLimit;
+          this.toValue =
+            this.balanceDefault > 0
+              ? this.balanceDefault.minus(
+                  ethUnit.fromWei(
+                    new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei'))
+                      .times(gasLimit)
+                      .toString(),
+                    'ether'
+                  )
                 )
-              )
-            : 0;
+              : 0;
+        });
+      }
     },
     getTokenTransferABI(amount, decimals) {
       const jsonInterface = [
