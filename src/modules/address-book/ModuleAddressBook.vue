@@ -1,8 +1,8 @@
 <template>
-  <div class="full-width">
+  <div>
     <mew-address-select
       ref="addressSelect"
-      :value="toAddress"
+      :value="inputAddr"
       :resolved-addr="resolvedAddr"
       :copy-tooltip="$t('common.copy')"
       :save-tooltip="$t('common.save')"
@@ -26,7 +26,7 @@
     >
       <template #mewOverlayBody>
         <address-book-add-edit
-          :to-address="toAddress"
+          :to-address="inputAddr"
           mode="add"
           @back="toggleOverlay"
         />
@@ -37,12 +37,11 @@
 
 <script>
 import utils from 'web3-utils';
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
 import AddressBookAddEdit from './components/AddressBookAddEdit';
 
 export default {
-  name: 'ModuleAddressBook',
   components: {
     AddressBookAddEdit
   },
@@ -50,12 +49,13 @@ export default {
     return {
       addMode: false,
       resolvedAddr: '',
-      toAddress: '',
+      inputAddr: '',
       nameResolver: {}
     };
   },
   computed: {
-    ...mapState('wallet', ['addressBook', 'network']),
+    ...mapState('global', ['addressBook']),
+    ...mapGetters('global', ['network']),
     isValidAddress() {
       return utils.isAddress(this.address);
     },
@@ -68,7 +68,7 @@ export default {
       ];
     },
     address() {
-      return this.resolvedAddr.length > 0 ? this.resolvedAddr : this.toAddress;
+      return this.resolvedAddr.length > 0 ? this.resolvedAddr : this.inputAddr;
     }
   },
   mounted() {
@@ -80,16 +80,16 @@ export default {
     },
     async resolveName() {
       if (this.nameResolver) {
-        await this.nameResolver.resolveName(this.toAddress).then(addr => {
+        await this.nameResolver.resolveName(this.inputAddr).then(addr => {
           this.resolvedAddr = addr;
-          this.$emit('setResolvedAddr', this.resolvedAddr);
+          this.$emit('setAddress', this.resolvedAddr, this.isValidAddress);
         });
       }
     },
     setAddress(value) {
-      this.toAddress = value.address ? value.address : value;
-      this.$emit('setToAddr', this.toAddress);
-      if (utils.isAddress(this.toAddress)) {
+      this.inputAddr = value.address ? value.address : value;
+      this.$emit('setAddress', this.inputAddr, this.isValidAddress);
+      if (!utils.isAddress(this.inputAddr)) {
         this.resolveName();
       }
     }

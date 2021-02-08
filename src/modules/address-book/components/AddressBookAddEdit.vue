@@ -27,7 +27,6 @@
           </span>
           <mew-copy
             :copy-value="item.address"
-            :is-ref="false"
             :tooltip="$t('common.copy')"
           />
         </div>

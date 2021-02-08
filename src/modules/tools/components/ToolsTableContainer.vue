@@ -14,7 +14,11 @@
             0x98d9964e1764654dtrhtrggfrv3049t04i
           </div>
           <ellipsis-block white text="0x98d9964e1764654dtrhtrggfrv3049t04i" />
-          <copy-btn white text="0x98d9964e1764654dtrhtrggfrv3049t04i" />
+          <mew-copy
+            copy-value="0x98d9964e1764654dtrhtrggfrv3049t04i"
+            :is-small="true"
+            :tooltip="$t('common.copy')"
+          />
         </div>
       </div>
       <div class="ml-auto">
@@ -32,6 +36,7 @@
           <div class="primary--text">8.00123 ETH</div>
         </div>
       </div>
+      <v-divider />
 
       <div class="d-flex align-center justify-space-between py-4">
         <h5 class="font-weight-medium">Value of Tokens</h5>
@@ -41,7 +46,7 @@
         </div>
       </div>
 
-      <divider />
+      <v-divider />
 
       <div class="d-flex align-center justify-space-between py-4">
         <h5 class="font-weight-medium">Total Wallet Value</h5>
@@ -51,7 +56,7 @@
         </div>
       </div>
 
-      <divider />
+      <v-divider />
     </div>
 
     <div class="pa-7 d-none d-lg-flex justify-space-between align-center">
@@ -111,14 +116,12 @@
 
 <script>
 import ellipsisBlock from '@/components/ellipsisBlock/EllipsisBlock';
-import copyBtn from '@/components/buttons/copy-button/CopyButton';
-import divider from '@/components/divider-line/DividerLine';
 import ToolsTable from './ToolsTable';
 import WhiteSheet from '@/components/white-sheet/WhiteSheet';
 
 export default {
   name: 'ToolsTableContainer',
-  components: { ellipsisBlock, divider, copyBtn, ToolsTable, WhiteSheet },
+  components: { ellipsisBlock, ToolsTable, WhiteSheet },
   data: () => ({ panel: [] }),
   methods: {
     openPanel() {
@@ -148,7 +151,7 @@ export default {
     margin: 0 !important;
   }
   .v-icon.v-icon {
-    font-size: 20px;
+    color: var(--v-white-base) !important; //add color to mew-copy
   }
 }
 </style>

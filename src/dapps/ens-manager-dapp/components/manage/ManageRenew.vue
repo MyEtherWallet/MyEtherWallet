@@ -1,11 +1,11 @@
 <template>
   <div>
-    <addressBook @setResolvedAddr="setResolvedAddr" @setToAddr="setToAddr" />
+    <addressBook @setAddress="setAddress" />
     <div class="d-flex align-center justify-center mt-3">
       <mew-button
         :title="$t('ens.transfer')"
         btn-size="xlarge"
-        @click.native="transfer(address)"
+        @click.native="transfer(toAddress)"
       />
     </div>
   </div>
@@ -28,24 +28,14 @@ export default {
   },
   data() {
     return {
-      resolvedAddr: '',
       toAddress: ''
     };
   },
-  computed: {
-    address() {
-      return this.resolvedAddr.length > 0 ? this.resolvedAddr : this.toAddress;
-    }
-  },
   mounted() {
     this.toAddress = '';
-    this.resolvedAddr = '';
   },
   methods: {
-    setResolvedAddr(newVal) {
-      this.resolvedAddr = newVal;
-    },
-    setToAddr(newVal) {
+    setAddress(newVal) {
       this.toAddress = newVal;
     }
   }

@@ -38,7 +38,7 @@
                 </v-row>
 
                 <div>{{ item.id }}</div>
-                <divider-line v-if="typeNames.length != i + 1" class="my-5" />
+                <v-divider v-if="typeNames.length != i + 1" class="my-5" />
               </div>
             </v-radio-group>
           </div>
@@ -49,16 +49,12 @@
 </template>
 
 <script>
-import dividerLine from '@/components/divider-line/DividerLine';
 import * as nodes from '@/utils/networks/nodes';
 import * as types from '@/utils/networks/types';
 import { mapActions, mapGetters } from 'vuex';
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 export default {
   name: 'NetworkSwitch',
-  components: {
-    dividerLine
-  },
   props: {
     open: { type: Boolean, default: false },
     close: { type: Function, default: () => {} }
