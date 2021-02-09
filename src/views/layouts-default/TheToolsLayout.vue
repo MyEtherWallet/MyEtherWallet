@@ -42,13 +42,13 @@
         </template>
       </mew-tabs>
     </v-container>
-    <get-started />
+    <app-get-started />
   </div>
 </template>
 
 <script>
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
-import getStarted from '@/components/get-started/GetStarted';
+import AppGetStarted from '@/core/components/AppGetStarted';
 
 import ModuleToolsWatchOnly from '@/modules/tools/ModuleToolsWatchOnly';
 import ModuleToolsConvert from '@/modules/tools/ModuleToolsConvert';
@@ -59,7 +59,7 @@ export default {
   name: 'MoreActions',
   components: {
     TheLayoutHeader,
-    getStarted,
+    AppGetStarted,
     ModuleToolsWatchOnly,
     ModuleToolsConvert,
     ModuleToolsOfflineHelper,

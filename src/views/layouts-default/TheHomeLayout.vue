@@ -5,7 +5,7 @@
     <home-why-mew />
     <join />
     <partners />
-    <get-started />
+    <app-get-started />
   </div>
 </template>
 
@@ -14,7 +14,7 @@ import HomeLanding from '../components-default/HomeLanding';
 import HomeFeatures from '../components-default/HomeFeatures';
 import HomeWhyMew from '../components-default/HomeWhyMew';
 import join from '@/components/join/Join';
-import getStarted from '@/components/get-started/GetStarted';
+import AppGetStarted from '@/core/components/AppGetStarted';
 import partners from '@/components/partners/Partners';
 
 export default {
@@ -24,7 +24,7 @@ export default {
     HomeFeatures,
     HomeWhyMew,
     join,
-    getStarted,
+    AppGetStarted,
     partners
   }
 };
