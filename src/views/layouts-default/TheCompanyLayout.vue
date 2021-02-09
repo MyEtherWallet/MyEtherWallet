@@ -10,7 +10,7 @@
     <div class="py-10" />
     <partners />
     <div class="py-9" />
-    <join />
+    <app-mewtopia-block />
     <div class="py-1" />
   </div>
 </template>
@@ -18,7 +18,7 @@
 <script>
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import partners from '@/components/partners/Partners';
-import join from '@/components/join/Join';
+import AppMewtopiaBlock from '@/core/components/AppMewtopiaBlock';
 
 import CompanyWhatIsMew from '../components-default/CompanyWhatIsMew';
 import CompanyOurStory from '../components-default/CompanyOurStory';
@@ -29,7 +29,7 @@ export default {
   components: {
     TheLayoutHeader,
     partners,
-    join,
+    AppMewtopiaBlock,
     CompanyWhatIsMew,
     CompanyOurStory,
     CompanyCommunity
