@@ -27,20 +27,22 @@ class CoolWallet {
     this.identifier = coolWalletType;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
-    this.appPrivateKey = locStore.get('appPrivateKey')
-      ? locStore.get('appPrivateKey')
+    this.appPrivateKey = locStore.get('coolWallet-appPrivateKey')
+      ? locStore.get('coolWallet-appPrivateKey')
       : '';
-    this.appPublicKey = locStore.get('appPublicKey')
-      ? locStore.get('appPublicKey')
+    this.appPublicKey = locStore.get('coolWallet-appPublicKey')
+      ? locStore.get('coolWallet-appPublicKey')
       : '';
     this.transport = {};
     this.deviceInstance = {};
     this.supportedPaths = bip44Paths[coolWalletType];
     this.firstTimeConnecting =
-      locStore.get('appPublicKey') === null &&
-      locStore.get('appPrivateKey') === null &&
-      locStore.get('appId') === null;
-    this.appId = locStore.get('appId') ? locStore.get('appId') : '';
+      locStore.get('coolWallet-appPublicKey') === null &&
+      locStore.get('coolWallet-appPrivateKey') === null &&
+      locStore.get('coolWallet-appId') === null;
+    this.appId = locStore.get('coolWallet-appId')
+      ? locStore.get('coolWallet-appId')
+      : '';
   }
   init(password) {
     const _this = this;
@@ -55,8 +57,8 @@ class CoolWallet {
                 publicKey: appPublicKey,
                 privateKey: appPrivateKey
               } = generateKeyPair();
-              locStore.set('appPublicKey', appPublicKey);
-              locStore.set('appPrivateKey', appPrivateKey);
+              locStore.set('coolWallet-appPublicKey', appPublicKey);
+              locStore.set('coolWallet-appPrivateKey', appPrivateKey);
               _this.appPrivateKey = appPrivateKey;
               _this.appPublicKey = appPublicKey;
               const coolWalletInstance = new cwsWallet(
@@ -66,7 +68,7 @@ class CoolWallet {
               coolWalletInstance
                 .register(_this.appPublicKey, password, APP_NAME)
                 .then(appId => {
-                  locStore.set('appId', appId);
+                  locStore.set('coolWallet-appId', appId);
                   _this.appId = appId;
                   coolWalletInstance.setAppId(appId);
                   _this.deviceInstance = new cwsETH(
