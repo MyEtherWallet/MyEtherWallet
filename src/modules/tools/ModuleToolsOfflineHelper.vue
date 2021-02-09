@@ -26,7 +26,12 @@
       </v-sheet>
     </v-dialog>
 
-    <block-title max-width="600px" no-page-title :data="title" class="mb-7" />
+    <app-block-title
+      max-width="600px"
+      no-page-title
+      :data="title"
+      class="mb-7"
+    />
 
     <mew-stepper
       class="mx-n12 mx-sm-0"
@@ -187,12 +192,12 @@
 
 <script>
 import ellipsisBlock from '@/components/ellipsisBlock/EllipsisBlock';
-import blockTitle from '@/components/block-title/BlockTitle';
+import AppBlockTitle from '@/core/components/AppBlockTitle';
 import borderBlock from '@/components/border-block/BorderBlock.vue';
 
 export default {
   name: 'ModuleToolsOfflineHelper',
-  components: { ellipsisBlock, blockTitle, borderBlock },
+  components: { ellipsisBlock, AppBlockTitle, borderBlock },
   data: () => ({
     dialog: false,
     currentStep: 3,

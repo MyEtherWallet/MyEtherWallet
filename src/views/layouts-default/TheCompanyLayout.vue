@@ -1,6 +1,6 @@
 <template>
   <div>
-    <home-header title="About us - Company" />
+    <the-layout-header title="About us - Company" />
     <div class="py-9" />
     <company-what-is-mew />
     <div class="py-7" />
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import homeHeader from '@/components/home-header/HomeHeader';
+import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import partners from '@/components/partners/Partners';
 import join from '@/components/join/Join';
 
@@ -27,7 +27,7 @@ import CompanyCommunity from '../components-default/CompanyCommunity';
 export default {
   name: 'TheCompanyLayout',
   components: {
-    homeHeader,
+    TheLayoutHeader,
     partners,
     join,
     CompanyWhatIsMew,

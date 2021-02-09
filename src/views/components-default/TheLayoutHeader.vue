@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: 'HomeHeader',
+  name: 'TheLayoutHeader',
   components: {},
   props: { title: { default: '', type: String } }
 };

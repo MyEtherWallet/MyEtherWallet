@@ -19,7 +19,11 @@
           />
         </v-col>
         <v-col cols="12" lg="6" class="text-content pl-lg-12">
-          <block-title no-page-title :data="titleData" class="mb-12 pl-12" />
+          <app-block-title
+            no-page-title
+            :data="titleData"
+            class="mb-12 pl-12"
+          />
           <div class="mb-4 d-flex">
             <div class="mr-3">
               <v-img src="@/assets/images/currencies/icon-btc-white.svg" />
@@ -78,10 +82,10 @@
 </template>
 
 <script>
-import blockTitle from '@/components/block-title/BlockTitle';
+import AppBlockTitle from '@/core/components/AppBlockTitle';
 
 export default {
-  components: { blockTitle },
+  components: { AppBlockTitle },
   data: () => ({
     titleData: {
       textProps: 'white--text',

@@ -1,6 +1,11 @@
 <template>
   <div>
-    <block-title max-width="600px" no-page-title :data="title" class="mb-7" />
+    <app-block-title
+      max-width="600px"
+      no-page-title
+      :data="title"
+      class="mb-7"
+    />
     <v-textarea outlined label="Signature" value="Value"></v-textarea>
     <mew-button
       title="Verify"
@@ -17,11 +22,11 @@
 </template>
 
 <script>
-import blockTitle from '@/components/block-title/BlockTitle';
+import AppBlockTitle from '@/core/components/AppBlockTitle';
 
 export default {
   name: 'ModuleMessageVerify',
-  components: { blockTitle },
+  components: { AppBlockTitle },
   data: () => ({
     title: {
       title: 'Verify message',

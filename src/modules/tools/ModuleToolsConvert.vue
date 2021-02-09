@@ -1,6 +1,11 @@
 <template>
   <div>
-    <block-title max-width="600px" no-page-title :data="title" class="mb-7" />
+    <app-block-title
+      max-width="600px"
+      no-page-title
+      :data="title"
+      class="mb-7"
+    />
 
     <div class="d-block d-lg-flex">
       <div>
@@ -43,12 +48,12 @@
 </template>
 
 <script>
-import blockTitle from '@/components/block-title/BlockTitle';
+import AppBlockTitle from '@/core/components/AppBlockTitle';
 import swapIcon from '@/assets/images/icons/icon-swap.svg';
 
 export default {
   name: 'ModuleToolsConvert',
-  components: { blockTitle },
+  components: { AppBlockTitle },
   data: () => ({
     title: {
       title: 'Convert units',
