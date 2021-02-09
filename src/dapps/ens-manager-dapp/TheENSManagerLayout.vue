@@ -281,7 +281,7 @@ export default {
     const ens = this.network.type.ens
       ? new ENS(this.web3.currentProvider, this.network.type.ens.registry)
       : null;
-    console.error('ens', ens)
+    console.error('ens', ens);
     this.ensManager = new ENSManager(
       this.network,
       this.address,
