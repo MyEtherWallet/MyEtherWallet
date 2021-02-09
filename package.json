@@ -106,7 +106,7 @@
     "ethereumjs-util": "7.0.7",
     "ethereumjs-wallet": "1.0.1",
     "ethjs-unit": "0.1.6",
-    "ganache-core": "^2.13.2",
+    "ganache-core": "2.13.2",
     "hdkey": "2.0.1",
     "husky": "4.3.8",
     "imagemin-mozjpeg": "9.0.0",
