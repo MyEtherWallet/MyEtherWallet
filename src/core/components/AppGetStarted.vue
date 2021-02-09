@@ -24,7 +24,7 @@
                 has-full-width
                 title="Create a new wallet"
                 btn-size="xlarge"
-                @click="$router.push({ name: 'CreateWallet', params: {} })"
+                @click.native="$router.push({ name: 'CreateWallet' })"
               />
             </v-col>
             <v-col cols="12" sm="4" xl="3" class="py-1">
@@ -33,7 +33,7 @@
                 btn-style="outline"
                 title="Access my wallet"
                 btn-size="xlarge"
-                @click="$router.push({ name: 'AccessWallet', params: {} })"
+                @click.native="$router.push({ name: 'AccessWallet' })"
               />
             </v-col>
           </v-row>
