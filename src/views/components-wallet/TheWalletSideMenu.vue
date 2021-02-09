@@ -112,7 +112,7 @@
       <template #append>
         <div class="px-10 d-flex align-center justify-space-between">
           <theme-switch />
-          <version />
+          <div class="searchText--text">v{{ version }}</div>
         </div>
       </template>
     </v-navigation-drawer>
@@ -143,17 +143,16 @@ import logout from '@/assets/images/icons/icon-logout-enable.png';
 import BalanceCard from '@/modules/balance/ModuleBalanceCard';
 import ModuleSettings from '@/modules/settings/ModuleSettings';
 import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
-import Version from '@/components/version/Version';
 
 export default {
   components: {
     BalanceCard,
     ModuleSettings,
-    ThemeSwitch,
-    Version
+    ThemeSwitch
   },
   data() {
     return {
+      version: process.env.VERSION,
       background: background,
       onSettings: false,
       showLogoutPopup: false,
