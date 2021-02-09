@@ -266,12 +266,10 @@ export default {
     transfer(address) {
       this.manageDomainModule
         .transfer(address)
-        .then(res => {
+        .then(() => {
           this.getDomains();
-          console.error('res', res);
         })
         .catch(err => {
-          console.error('err', err);
           Toast(err, {}, ERROR);
         });
       this.closeManage();
