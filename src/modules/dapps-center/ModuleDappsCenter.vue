@@ -1,43 +1,45 @@
 <template>
-  <mew6-white-sheet>
-    <mew-banner :text-obj="title" :banner-img="bannerImage" />
-    <div class="pa-8">
-      <div class="mew-heading-1 px-4 mb-2">MEW Dapps</div>
-      <v-row>
-        <v-col v-for="(dapp, key) in mewDapps" :key="key" cols="4" sm="4">
-          <mew-super-button
-            :cols-num="8"
-            :title="dapp.title"
-            :subtitle="dapp.subtitle"
-            :tag="dapp.tag"
-            :is-new="dapp.isNew"
-            :title-icon-type="dapp.titleIconType"
-            :title-icon="dapp.titleIcon"
-            :right-icon-type="dapp.rightIconType"
-            :right-icon="dapp.rightIcon"
-            @click.native="routeTo(dapp.path)"
-          />
-        </v-col>
-      </v-row>
-    </div>
-    <div class="pa-8">
-      <div class="mew-heading-1 px-4 mb-2">Recent</div>
-      <v-row>
-        <v-col v-for="(dapp, key) in recent" :key="key" cols="4" sm="4">
-          <mew-super-button
-            :title="dapp.title"
-            :subtitle="dapp.subtitle"
-            :tag="dapp.tag"
-            :is-new="dapp.isNew"
-            :title-icon-type="dapp.titleIconType"
-            :title-icon="dapp.titleIcon"
-            :right-icon-type="dapp.rightIconType"
-            :right-icon="dapp.rightIcon"
-          />
-        </v-col>
-      </v-row>
-    </div>
-  </mew6-white-sheet>
+  <div class="d-block">
+    <mew6-white-sheet>
+      <mew-banner :text-obj="title" :banner-img="bannerImage" />
+      <div class="pa-8">
+        <div class="mew-heading-1 px-4 mb-2">MEW Dapps</div>
+        <v-row>
+          <v-col v-for="(dapp, key) in mewDapps" :key="key" cols="4" sm="4">
+            <mew-super-button
+              :cols-num="8"
+              :title="dapp.title"
+              :subtitle="dapp.subtitle"
+              :tag="dapp.tag"
+              :is-new="dapp.isNew"
+              :title-icon-type="dapp.titleIconType"
+              :title-icon="dapp.titleIcon"
+              :right-icon-type="dapp.rightIconType"
+              :right-icon="dapp.rightIcon"
+              @click.native="routeTo(dapp.path)"
+            />
+          </v-col>
+        </v-row>
+      </div>
+      <div class="pa-8">
+        <div class="mew-heading-1 px-4 mb-2">Recent</div>
+        <v-row>
+          <v-col v-for="(dapp, key) in recent" :key="key" cols="4" sm="4">
+            <mew-super-button
+              :title="dapp.title"
+              :subtitle="dapp.subtitle"
+              :tag="dapp.tag"
+              :is-new="dapp.isNew"
+              :title-icon-type="dapp.titleIconType"
+              :title-icon="dapp.titleIcon"
+              :right-icon-type="dapp.rightIconType"
+              :right-icon="dapp.rightIcon"
+            />
+          </v-col>
+        </v-row>
+      </div>
+    </mew6-white-sheet>
+  </div>
 </template>
 
 <script>

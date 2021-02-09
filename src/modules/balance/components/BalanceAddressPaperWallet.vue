@@ -4,6 +4,7 @@
     :show-overlay="open"
     title="My paper wallet"
     right-btn-text="Close"
+    :close="close"
   >
     <template #mewOverlayBody>
       <v-sheet max-width="800px">
@@ -162,7 +163,7 @@
 
 <script>
 import VueQrcode from '@xkeshi/vue-qrcode';
-
+import { mapState } from 'vuex';
 export default {
   name: 'BalanceAddressPaperWallet',
   components: {
@@ -179,10 +180,14 @@ export default {
   },
   data() {
     return {
-      blockieSize: '70px',
-      address: '0xd7B9A9b2F665849C4071Ad5af77d8c76aa30fb32',
-      key: '89027359234578623478563284756023475603452623457260345'
+      blockieSize: '70px'
     };
+  },
+  computed: {
+    ...mapState('wallet', ['address', 'instance']),
+    key() {
+      return this.instance.getPrivateKeyString();
+    }
   }
 };
 </script>

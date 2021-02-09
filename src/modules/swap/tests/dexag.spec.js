@@ -1,4 +1,4 @@
-import Dexag from '../providers/dex-ag';
+import Dexag from '../handlers/providers/dex-ag';
 jest.setTimeout(10000);
 const dexag = new Dexag();
 describe('DexAG Swap', () => {

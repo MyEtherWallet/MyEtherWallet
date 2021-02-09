@@ -31,7 +31,7 @@
         <div class="monospace full-address">{{ address }}</div>
         <div class="monospace last-four">{{ lastFour }}</div>
       </div>
-      <div class="mb-2">OWNED 3 DOMAINS ></div>
+      <!-- <div class="mb-2">OWNED 3 DOMAINS ></div> -->
       <div class="d-flex align-center">
         <div class="bottom-buttons">
           <mew-button
@@ -52,6 +52,7 @@
           ></mew-button>
         </div>
         <mew-button
+          v-if="isHardware"
           class="ml-auto switch-button"
           :has-full-width="false"
           btn-style="outline"
@@ -68,7 +69,7 @@
     />
     <balance-address-paper-wallet
       :open="openPaperWallet"
-      @close="openPaperWallet = false"
+      :close="closePaperWallet"
     />
   </div>
 </template>
@@ -96,8 +97,11 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['balanceInETH']),
-    ...mapState('wallet', ['address']),
+    ...mapState('wallet', ['address', 'isHardware']),
     ...mapState('external', ['ETHUSDValue']),
+    canSwitch() {
+      return this.isHardware;
+    },
     lastFour() {
       return this.address.substring(
         this.address.length - 4,
@@ -153,6 +157,7 @@ export default {
   img {
     position: absolute;
     right: -5px;
+    top: 30px;
     cursor: pointer;
   }
 }
