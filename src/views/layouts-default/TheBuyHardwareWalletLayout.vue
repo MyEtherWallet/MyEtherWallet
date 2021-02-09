@@ -1,59 +1,64 @@
 <template>
   <div class="expandHeader pb-12">
-    <block-title :data="titleData" />
+    <v-container>
+      <block-title :data="titleData" />
 
-    <v-sheet color="transparent" max-width="1000px" class="mx-auto">
-      <v-row>
-        <v-col v-for="(b, key) in buttons" :key="key" cols="6">
-          <a :href="b.link" target="_blank">
-            <v-sheet color="white" class="border-radius--10px pa-10">
-              <div class="d-flex align-center justify-space-between">
-                <div class="pr-9">
-                  <img
-                    v-if="b.logoImg"
-                    height="32"
-                    :src="b.logoImg"
-                    alt="Logo"
-                    class="mb-3"
-                  />
-                  <div
-                    v-if="b.logoText"
-                    class="d-flex align-center logo-text mb-3"
-                  >
-                    <div>{{ b.logoText }}</div>
-                  </div>
-                  <h6
-                    class="text-uppercase font-weight-bold primary--text text--lighten-1"
-                  >
-                    {{ b.priceNote }}
-                  </h6>
+      <v-sheet color="transparent" max-width="1000px" class="mx-auto">
+        <v-row>
+          <v-col v-for="(b, key) in buttons" :key="key" cols="12" md="6">
+            <a :href="b.link" target="_blank">
+              <v-sheet color="white" class="border-radius--10px pa-5 pa-md-10">
+                <div class="d-flex align-center justify-space-between">
+                  <div class="pr-2 pr-md-9">
+                    <img
+                      v-if="b.logoImg"
+                      :src="b.logoImg"
+                      alt="Logo"
+                      class="mb-3 product-logo"
+                      :class="$vuetify.breakpoint.xsOnly ? 'mobile' : ''"
+                    />
+                    <div
+                      v-if="b.logoText"
+                      class="d-flex align-center logo-text mb-3"
+                    >
+                      <div :class="$vuetify.breakpoint.xsOnly ? 'mobile' : ''">
+                        {{ b.logoText }}
+                      </div>
+                    </div>
+                    <h6
+                      class="text-uppercase font-weight-bold primary--text text--lighten-1"
+                    >
+                      {{ b.priceNote }}
+                    </h6>
 
-                  <div class="d-flex">
-                    <h5 class="mr-1 font-weight-black">{{ b.currency }}</h5>
-                    <h3 class="text-uppercase font-weight-bold">
-                      {{ b.price }}
-                    </h3>
+                    <div class="d-flex">
+                      <h5 class="mr-1 font-weight-black">{{ b.currency }}</h5>
+                      <h3 class="text-uppercase font-weight-bold">
+                        {{ b.price }}
+                      </h3>
+                    </div>
+                    <div>
+                      {{ b.note }}
+                    </div>
+                    <div class="mt-3 primary--text font-weight-medium">
+                      Learn more >
+                    </div>
                   </div>
                   <div>
-                    {{ b.note }}
-                  </div>
-                  <div class="mt-3 primary--text font-weight-medium">
-                    Learn more >
+                    <img
+                      class="wallet-img"
+                      :class="$vuetify.breakpoint.xsOnly ? 'mobile' : ''"
+                      :src="b.walletImg"
+                      alt="Hardware Wallet"
+                    />
                   </div>
                 </div>
-                <div>
-                  <img
-                    class="wallet-img"
-                    :src="b.walletImg"
-                    alt="Hardware Wallet"
-                  />
-                </div>
-              </div>
-            </v-sheet>
-          </a>
-        </v-col>
-      </v-row>
-    </v-sheet>
+              </v-sheet>
+            </a>
+          </v-col>
+        </v-row>
+      </v-sheet>
+    </v-container>
   </div>
 </template>
 
@@ -154,16 +159,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.product-logo {
+  height: 32px;
+  &.mobile {
+    height: 22px;
+  }
+}
+
 .logo-text {
   height: 38px;
   div {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 500;
+
+    &.mobile {
+      font-size: 18px;
+    }
   }
 }
 
 .wallet-img {
   max-height: 140px;
   max-width: 100px;
+
+  &.mobile {
+    max-height: 70px;
+    max-width: 50px;
+  }
 }
 </style>
