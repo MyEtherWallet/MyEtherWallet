@@ -1,5 +1,5 @@
 import { host } from './config';
-import { post, get } from '@/helpers/httpRequests';
+import { post, get } from '@/core/helpers/httpRequests';
 import { utils } from '../helpers';
 
 const getQuote = reqObj => {

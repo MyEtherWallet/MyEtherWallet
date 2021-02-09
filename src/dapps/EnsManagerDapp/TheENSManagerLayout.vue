@@ -198,9 +198,9 @@ import registerDomain from './modules/ModuleRegisterDomain';
 import manageDomain from './modules/ModuleManageDomain';
 import ENSManager from './handlers/handlerEnsManager';
 import { mapState } from 'vuex';
-import { Toast, ERROR } from '@/components/toast';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
-import { EventBus } from '@/plugins/eventBus';
+import { EventBus } from '@/core/plugins/eventBus';
 import EventNames from '@/utils/web3-provider/events.js';
 
 export default {

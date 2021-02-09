@@ -5,8 +5,8 @@ import { BCVAULT as bcVault } from '../../bip44/walletTypes';
 import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
 import errorHandler from './errorHandler';
 import BigNumber from 'bignumber.js';
-import commonGenerator from '@/helpers/commonGenerator';
-import store from '@/store';
+import commonGenerator from '@/core/helpers/commonGenerator';
+import store from '@/core/store';
 import Vue from 'vue';
 
 import {
@@ -82,7 +82,7 @@ class BCVault {
       delete tx['from'];
       tx['from'] = address;
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.wallet.network)
+        common: commonGenerator(store.getters['global/network'])
       });
       const newTx = {};
       newTx['feeCount'] = web3Utils.hexToNumber(bufferToHex(tx['gasLimit']));

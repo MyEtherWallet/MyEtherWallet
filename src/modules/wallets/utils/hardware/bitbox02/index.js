@@ -7,9 +7,9 @@ import * as HDKey from 'hdkey';
 import { Transaction } from 'ethereumjs-tx';
 import { getSignTransactionObject, calculateChainIdFromV } from '../../utils';
 import errorHandler from './errorHandler';
-import store from '@/store';
-import commonGenerator from '@/helpers/commonGenerator';
-import toBuffer from '@/helpers/toBuffer';
+import store from '@/core/store';
+import commonGenerator from '@/core/helpers/commonGenerator';
+import toBuffer from '@/core/helpers/toBuffer';
 
 const NEED_PASSWORD = false;
 
@@ -68,7 +68,7 @@ class BitBox02Wallet {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.wallet.network)
+        common: commonGenerator(store.getters['global/network'])
       });
       const networkId = tx.getChainId();
       const signingData = {

@@ -1,6 +1,6 @@
 'use strict';
 import { toBuffer, stripZeros, rlp } from 'ethereumjs-util';
-import mewToBuffer from '@/helpers/toBuffer';
+import mewToBuffer from '@/core/helpers/toBuffer';
 
 const SecalotEth = function (comm, pinCode) {
   this.comm = comm;

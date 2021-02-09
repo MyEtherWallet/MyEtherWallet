@@ -5,18 +5,18 @@ import DigitalBitboxEth from './digitalBitboxEth';
 import { BITBOX as bitboxType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
-import { Toast, SENTRY } from '@/components/toast';
-import toBuffer from '@/helpers/toBuffer';
+import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
+import toBuffer from '@/core/helpers/toBuffer';
 import errorHandler from './errorHandler';
 import * as HDKey from 'hdkey';
-import store from '@/store';
+import store from '@/core/store';
 import {
   getSignTransactionObject,
   sanitizeHex,
   getBufferFromHex,
   calculateChainIdFromV
 } from '../../utils';
-import commonGenerator from '@/helpers/commonGenerator';
+import commonGenerator from '@/core/helpers/commonGenerator';
 import Vue from 'vue';
 
 const NEED_PASSWORD = true;
@@ -42,7 +42,7 @@ class BitBoxWallet {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.wallet.network)
+        common: commonGenerator(store.getters['global/network'])
       });
       const networkId = tx.getChainId();
       const result = await this.bitbox.signTransaction(

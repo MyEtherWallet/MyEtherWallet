@@ -13,11 +13,11 @@ import {
   isValidPublic,
   privateToPublic
 } from 'ethereumjs-util';
-import toBuffer from '@/helpers/toBuffer';
-import commonGenerator from '@/helpers/commonGenerator';
+import toBuffer from '@/core/helpers/toBuffer';
+import commonGenerator from '@/core/helpers/commonGenerator';
 import { Transaction } from 'ethereumjs-tx';
-import { toChecksumAddress } from '@/helpers/addressUtils';
-import store from '@/store';
+import { toChecksumAddress } from '@/core/helpers/addressUtils';
+import store from '@/core/store';
 class WalletInterface {
   constructor(key, isPub = false, identifier, nick, keystore) {
     this.nickname = nick !== null && nick !== '' ? nick : '';
@@ -90,7 +90,7 @@ class WalletInterface {
     if (!this.isPubOnly) {
       return new Promise(resolve => {
         const tx = new Transaction(txParams, {
-          common: commonGenerator(store.state.wallet.network)
+          common: commonGenerator(store.getters['global/network'])
         });
         const networkId = tx.getChainId();
         tx.sign(this.privateKey);

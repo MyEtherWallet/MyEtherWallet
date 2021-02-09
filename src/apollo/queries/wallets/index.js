@@ -3,7 +3,7 @@ import {
   getUSDPrice,
   getBalanceHistory
 } from './wallets.graphql';
-import { Toast, ERROR } from '@/components/toast';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 export default class WalletCalls {
   constructor(apollo) {
     this.apollo = apollo;
@@ -43,9 +43,10 @@ export default class WalletCalls {
       });
   }
 
-  getBalanceHistory(timeString, address, scale, nextKey) {
+  getBalanceHistory(timeString, todaysDate, address, scale, nextKey) {
     const key = `ACCOUNT_BALANCE_PREFIX_AVG-0xETH-${address}`;
     const actualTimeString = Math.floor(timeString / 1000);
+    const actualTodaysDate = Math.floor(todaysDate / 1000);
     const acceptableScales = ['seconds', 'minutes', 'hours', 'days'];
     if (!acceptableScales.includes(scale)) {
       throw new Error('Scale not valid.');
@@ -54,6 +55,7 @@ export default class WalletCalls {
       query: getBalanceHistory,
       variables: {
         timeString: actualTimeString,
+        todaysDate: actualTodaysDate,
         key: key,
         scale: scale,
         _nextKey: nextKey
