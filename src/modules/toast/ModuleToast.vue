@@ -46,7 +46,6 @@ export default {
   beforeMount() {
     Object.keys(ToastEvents).forEach(item => {
       EventBus.$on(ToastEvents[item], (text, obj, duration) => {
-        console.log('got here?');
         this.text = text;
         this.linkObj = obj;
         this.duration = duration ? duration : 3000;

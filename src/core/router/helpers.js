@@ -1,14 +1,30 @@
-const createWalletProps = route => {
-  const walletType = route.query && route.query.type ? route.query.type : '';
-  const isSoftware =
-    route.params && route.params.overlay && route.params.overlay === 'software'
-      ? true
-      : false;
+import xss from 'xss';
 
-  return {
-    showSoftwareModule: isSoftware,
-    type: walletType
-  };
+const stripQuery = queryObj => {
+  const newObj = {};
+  Object.keys(queryObj).forEach(key => {
+    newObj[key] = xss(queryObj[key]);
+  });
+
+  return newObj;
+};
+
+const createWalletProps = route => {
+  if (Object.keys(route.query).length > 0) {
+    const { type } = stripQuery(route.query);
+    const walletType = type ? type : '';
+    const isSoftware =
+      route.params &&
+      route.params.overlay &&
+      route.params.overlay === 'software'
+        ? true
+        : false;
+
+    return {
+      showSoftwareModule: isSoftware,
+      type: walletType
+    };
+  }
 };
 const createRouteGuard = (to, from, next) => {
   if (to.params.overlay === undefined) {
@@ -26,16 +42,19 @@ const createRouteGuard = (to, from, next) => {
 };
 
 const accessWalletProps = route => {
-  const walletType = route.query && route.query.type ? route.query.type : '';
-  const isSoftware =
-    route.params && route.params.overlay && route.params.overlay === 'hardw'
-      ? true
-      : false;
+  if (Object.keys(route.query).length > 0) {
+    const { type } = stripQuery(route.query);
+    const walletType = type ? DocumentType : '';
+    const isSoftware =
+      route.params && route.params.overlay && route.params.overlay === 'hardw'
+        ? true
+        : false;
 
-  return {
-    showSoftwareModule: isSoftware,
-    type: walletType
-  };
+    return {
+      showSoftwareModule: isSoftware,
+      type: walletType
+    };
+  }
 };
 
 const accessRouteGuard = (to, from, next) => {
@@ -81,9 +100,40 @@ const accessRouteGuard = (to, from, next) => {
   }
 };
 
+const swapProps = route => {
+  if (Object.keys(route.query).length > 0) {
+    const { fromToken, toToken, amount } = stripQuery(route.query);
+    const parsedFromToken = fromToken;
+    const parsedToToken = toToken;
+    const parsedAmt = amount;
+    return {
+      tokenInValue: parsedAmt,
+      defaults: {
+        fromToken: parsedFromToken,
+        toToken: parsedToToken
+      }
+    };
+  }
+};
+
+const swapRouterGuard = (to, from, next) => {
+  const queries = Object.keys(to.query);
+  if (queries.length === 0) {
+    next();
+  } else {
+    const validQueries = ['toToken', 'fromToken', 'amount'];
+    for (let i = 0; i < queries.length; i++) {
+      if (validQueries.includes(queries[i])) return next();
+    }
+    next('*');
+  }
+};
+
 export {
   createWalletProps,
   createRouteGuard,
   accessWalletProps,
-  accessRouteGuard
+  accessRouteGuard,
+  swapProps,
+  swapRouterGuard
 };

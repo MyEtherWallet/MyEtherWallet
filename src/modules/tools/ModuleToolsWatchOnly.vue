@@ -24,8 +24,8 @@
         icon="mdi-plus-circle"
         icon-type="mdi"
         btn-size="small"
-        @click="addDialog = true"
         class="px-0"
+        @click="addDialog = true"
       />
     </div>
 

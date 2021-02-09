@@ -62,6 +62,9 @@ export default {
     ...mapActions('global', ['setGasPrice']),
     ...mapActions('external', ['setETHUSDValue']),
     ...mapState('global', ['gasPriceType']),
+    getOwnDomain() {
+      fetch('');
+    },
     getTokens() {
       const tokensList = new TokenCalls(this.$apollo);
       tokensList.getOwnersERC20Tokens(this.address).then(res => {

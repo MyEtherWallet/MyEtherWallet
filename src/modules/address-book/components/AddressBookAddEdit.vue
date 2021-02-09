@@ -25,10 +25,7 @@
           <span id="item-addr" class="monospace mr-3 truncate">
             {{ address }}
           </span>
-          <mew-copy
-            :copy-value="item.address"
-            :tooltip="$t('common.copy')"
-          />
+          <mew-copy :copy-value="item.address" :tooltip="$t('common.copy')" />
         </div>
       </div>
     </div>

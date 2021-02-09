@@ -109,6 +109,10 @@ const setENS = function ({ commit }, ens) {
   commit('SET_ENS', ens);
 };
 
+const setOwnedDomains = function ({ commit }, ownedDomains) {
+  commit('SET_OWNED_DOMAINS', ownedDomains);
+};
+
 const setBlockNumber = function ({ commit }, val) {
   commit('SET_BLOCK_NUMBER', val);
 };
@@ -119,5 +123,6 @@ export default {
   setAccountBalance,
   setENS,
   setWeb3Instance,
-  setBlockNumber
+  setBlockNumber,
+  setOwnedDomains
 };
