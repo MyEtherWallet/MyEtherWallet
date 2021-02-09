@@ -1,0 +1,144 @@
+<template>
+  <mew-overlay
+    :show-overlay="onRegister"
+    :title="$t('ens.register-domain')"
+    :right-btn-text="$t('common.cancel')"
+    :close="close"
+  >
+    <template #mewOverlayBody>
+      <mew-stepper :items="stepperItems" :on-step="onStep">
+        <template #stepperContent1
+          ><request
+            v-if="onStep === 1"
+            :is-available="isAvailable"
+            :name="nameModule.name"
+            :host-name="nameModule.parsedHostName"
+            :loading="loading"
+            @onRequest="onRequest"
+        /></template>
+        <template #stepperContent2
+          ><register
+            v-if="onStep === 2"
+            :name="nameModule.name"
+            :duration="duration"
+            :register="register"
+            :commit="commit"
+            :committed="committed"
+            :minimum-age="minimumAge"
+            :loading-commit="loadingCommit"
+        /></template>
+        <template #stepperContent3><complete v-if="onStep === 3" /></template>
+      </mew-stepper>
+    </template>
+  </mew-overlay>
+</template>
+
+<script>
+import Request from '../components/register/RegisterRequest';
+import Register from '../components/register/Register';
+import Complete from '../components/register/RegisterComplete';
+import { EventBus } from '@/core/plugins/eventBus';
+import EventNames from '@/utils/web3-provider/events.js';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+
+export default {
+  components: { Request, Register, Complete },
+  props: {
+    nameModule: {
+      default: () => {
+        return {};
+      },
+      type: Object
+    },
+    onRegister: { default: false, type: Boolean },
+    close: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    }
+  },
+  data() {
+    return {
+      loadingCommit: false,
+      minimumAge: '',
+      committed: false,
+      duration: '',
+      onStep: 1,
+      stepperItems: [
+        {
+          step: 1,
+          name: 'STEP 1. Request registration'
+        },
+        {
+          step: 2,
+          name: 'STEP 2. Register domain'
+        },
+        {
+          step: 3,
+          name: 'STEP 3. Complete registration'
+        }
+      ]
+    };
+  },
+  computed: {
+    isAvailable() {
+      return this.nameModule.isAvailable;
+    },
+    loading() {
+      return this.nameModule.checkingDomainAvail;
+    }
+  },
+  watch: {
+    nameModule(newVal) {
+      this.committed = newVal.createCommitment ? false : true;
+    }
+  },
+  methods: {
+    clear() {
+      this.onStep = 1;
+      this.committed = false;
+      this.duration = '';
+    },
+    commit() {
+      this.nameModule.getMinimumAge().then(resp => {
+        this.minimumAge = resp;
+      });
+      // start timer after confirming tx
+      EventBus.$on(EventNames.CONFIRMED_TX, () => {
+        this.loadingCommit = true;
+      });
+      this.nameModule
+        .createCommitment()
+        .then(() => {
+          this.loadingCommit = false;
+          this.committed = true;
+        })
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
+    },
+    register() {
+      this.nameModule
+        .register(this.duration)
+        .then(() => {
+          this.close();
+        })
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
+    },
+    onRequest(val) {
+      if (!this.isAvailable) {
+        this.close();
+        return;
+      }
+      if (this.nameModule.generateKeyPhrase) {
+        this.nameModule.generateKeyPhrase();
+      }
+      this.duration = val;
+      this.onStep += 1;
+    }
+  }
+};
+</script>

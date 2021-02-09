@@ -9,14 +9,14 @@ import { bufferToHex } from 'ethereumjs-util';
 import cwsTransportLib from '@coolwallets/transport-web-ble';
 import Vue from 'vue';
 
-import store from '@/store';
+import store from '@/core/store';
 import {
   getSignTransactionObject,
   sanitizeHex,
   getBufferFromHex,
   calculateChainIdFromV
 } from '../../utils';
-import commonGenerator from '@/helpers/commonGenerator';
+import commonGenerator from '@/core/helpers/commonGenerator';
 
 const NEED_PASSWORD = true;
 const APP_NAME = 'MyEtherWalletV5';
@@ -75,7 +75,7 @@ class CoolWallet {
     const address = await this.deviceInstance.getAddress(idx);
     const txSigner = async tx => {
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.wallet.network)
+        common: commonGenerator(store.getters['global/network'])
       });
       const cwTx = {
         data: bufferToHex(tx.data),
@@ -84,7 +84,7 @@ class CoolWallet {
         nonce: bufferToHex(tx.nonce),
         to: bufferToHex(tx.to),
         value: bufferToHex(tx.value),
-        chainId: store.state.wallet.network.type.chainID
+        chainId: store.getters['global/network'].type.chainID
       };
 
       const networkId = tx.getChainId();

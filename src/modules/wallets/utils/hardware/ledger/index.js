@@ -8,15 +8,15 @@ import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
 import * as HDKey from 'hdkey';
 import platform from 'platform';
-import store from '@/store';
-import commonGenerator from '@/helpers/commonGenerator';
+import store from '@/core/store';
+import commonGenerator from '@/core/helpers/commonGenerator';
 import {
   getSignTransactionObject,
   getBufferFromHex,
   sanitizeHex,
   calculateChainIdFromV
 } from '../../utils';
-import toBuffer from '@/helpers/toBuffer';
+import toBuffer from '@/core/helpers/toBuffer';
 import errorHandler from './errorHandler';
 import Vue from 'vue';
 
@@ -62,7 +62,7 @@ class ledgerWallet {
     }
     const txSigner = async tx => {
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.wallet.network)
+        common: commonGenerator(store.getters['global/network'])
       });
       const networkId = tx.getChainId();
       tx.raw[6] = networkId;

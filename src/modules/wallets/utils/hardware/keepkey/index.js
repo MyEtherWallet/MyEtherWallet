@@ -15,13 +15,13 @@ import {
   calculateChainIdFromV
 } from '../../utils';
 import HDKey from 'hdkey';
-import toBuffer from '@/helpers/toBuffer';
+import toBuffer from '@/core/helpers/toBuffer';
 import { Transaction } from 'ethereumjs-tx';
 import errorHandler from './errorHandler';
-import store from '@/store';
-import commonGenerator from '@/helpers/commonGenerator';
+import store from '@/core/store';
+import commonGenerator from '@/core/helpers/commonGenerator';
 import Vue from 'vue';
-import { EventBus } from '@/plugins/eventBus';
+import { EventBus } from '@/core/plugins/eventBus';
 
 const { MessageType } = Messages;
 const {
@@ -88,7 +88,7 @@ class KeepkeyWallet {
     }
     const txSigner = async tx => {
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.wallet.network)
+        common: commonGenerator(store.getters['global/network'])
       });
       const hexTx = getUint8Tx(tx);
       const networkId = tx.getChainId();

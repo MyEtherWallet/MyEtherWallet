@@ -1,21 +1,21 @@
 <template>
-  <v-app>
+  <v-app class="walletBg">
     <v-main>
-      <decision-tree />
+      <module-decision-tree />
       <router-view />
     </v-main>
-    <toast />
+    <module-toast />
   </v-app>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
-import toast from '@/components/toast/Toast.vue';
-import decisionTree from '@/components/DecisionTree/DecisionTree';
+import ModuleToast from '@/modules/toast/ModuleToast.vue';
+import ModuleDecisionTree from '@/modules/decision-tree/ModuleDecisionTree';
 
 export default {
   name: 'App',
-  components: { toast, decisionTree },
+  components: { ModuleToast, ModuleDecisionTree },
   mounted() {
     this.setOnlineStatus(window.navigator.onLine);
     // Window events to watch out if the online status changes
@@ -24,10 +24,13 @@ export default {
     });
     window.addEventListener('online', () => {
       this.setOnlineStatus(true);
+      this.setDarkList();
+      this.setForexRates();
     });
   },
   methods: {
-    ...mapActions('global', ['setOnlineStatus'])
+    ...mapActions('global', ['setOnlineStatus']),
+    ...mapActions('external', ['setDarkList', 'setForexRates'])
   }
 };
 </script>

@@ -6,9 +6,9 @@ import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
 import { getSignTransactionObject, calculateChainIdFromV } from '../../utils';
 import errorHandler from './errorHandler';
-import store from '@/store';
-import commonGenerator from '@/helpers/commonGenerator';
-import toBuffer from '@/helpers/toBuffer';
+import store from '@/core/store';
+import commonGenerator from '@/core/helpers/commonGenerator';
+import toBuffer from '@/core/helpers/toBuffer';
 import Vue from 'vue';
 
 const bip39 = require('bip39');
@@ -36,7 +36,7 @@ class MnemonicWallet {
     const derivedKey = this.hdKey.derive(this.basePath + '/' + idx);
     const txSigner = async tx => {
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.wallet.network)
+        common: commonGenerator(store.getters['global/network'])
       });
       const networkId = tx.getChainId();
       tx.sign(derivedKey.privateKey);

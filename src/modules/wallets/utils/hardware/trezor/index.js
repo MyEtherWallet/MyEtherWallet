@@ -10,10 +10,10 @@ import {
   getBufferFromHex,
   calculateChainIdFromV
 } from '../../utils';
-import toBuffer from '@/helpers/toBuffer';
+import toBuffer from '@/core/helpers/toBuffer';
 import errorHandler from './errorHandler';
-import store from '@/store';
-import commonGenerator from '@/helpers/commonGenerator';
+import store from '@/core/store';
+import commonGenerator from '@/core/helpers/commonGenerator';
 import Vue from 'vue';
 const NEED_PASSWORD = false;
 
@@ -40,7 +40,7 @@ class TrezorWallet {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
       tx = new Transaction(tx, {
-        common: commonGenerator(store.state.wallet.network)
+        common: commonGenerator(store.getters['global/network'])
       });
       const networkId = tx.getChainId();
       const options = {

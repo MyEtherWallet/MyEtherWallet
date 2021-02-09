@@ -1,4 +1,9 @@
-import { Toast, WARNING, ERROR, SENTRY } from '@/components/toast';
+import {
+  Toast,
+  WARNING,
+  ERROR,
+  SENTRY
+} from '@/modules/toast/handler/handlerToast';
 const ERRORS = {
   'User canceled': 'user cancelled the action',
   'QR Code Modal closed': 'QR code popup closed',

@@ -1,7 +1,7 @@
 <template>
   <div class="expandHeader">
     <v-container>
-      <block-title :data="titleData">
+      <app-block-title :data="titleData">
         <h5 class="white--text ma-0">
           Please select a method to access your wallet.
         </h5>
@@ -14,7 +14,7 @@
             Get a new wallet
           </router-link>
         </h5>
-      </block-title>
+      </app-block-title>
 
       <v-sheet color="transparent" max-width="550px" class="mx-auto">
         <div v-for="btn in buttons" :key="btn.title" class="mb-5">
@@ -47,7 +47,7 @@
 
 <script>
 import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
-import blockTitle from '@/components/block-title/BlockTitle';
+import AppBlockTitle from '@/core/components/AppBlockTitle';
 import browserExtensionOverlay from '@/modules/wallets/components/browser-extension-overlay/BrowserExtensionOverlay';
 import hardwareAccessOverlay from '@/modules/wallets/components/hardware-access-overlay/HardwareAccessOverlay';
 import mobileAccessOverlay from '@/modules/wallets/components/mobile-access-overlay/MobileAccessOverlay';
@@ -55,7 +55,7 @@ import softwareAccessOverlay from '@/modules/wallets/components/software-access-
 export default {
   name: 'AccessWallet',
   components: {
-    blockTitle,
+    AppBlockTitle,
     browserExtensionOverlay,
     hardwareAccessOverlay,
     mobileAccessOverlay,

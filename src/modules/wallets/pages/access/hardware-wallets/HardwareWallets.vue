@@ -1,7 +1,7 @@
 <template>
   <div class="expandHeader">
     <v-container>
-      <block-title :data="titleData">
+      <app-block-title :data="titleData">
         <h5 class="white--text ma-0">
           Select a hardware to access your wallet. Make sure your device is
           connected and unlocked.
@@ -12,7 +12,7 @@
             Buy hardware wallet
           </span>
         </h5>
-      </block-title>
+      </app-block-title>
 
       <v-sheet color="transparent" max-width="750px" class="mx-auto">
         <v-row>
@@ -36,12 +36,12 @@
 
 <script>
 import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
-import blockTitle from '@/components/block-title/BlockTitle';
+import AppBlockTitle from '@/core/components/AppBlockTitle';
 import accessWalletOverlay from '@/modules/wallets/components/access-wallet-overlay/AccessWalletOverlay';
 
 export default {
   name: 'CreateNewWallet',
-  components: { mewSuperButton, blockTitle, accessWalletOverlay },
+  components: { mewSuperButton, AppBlockTitle, accessWalletOverlay },
   data() {
     return {
       overlayName: '',

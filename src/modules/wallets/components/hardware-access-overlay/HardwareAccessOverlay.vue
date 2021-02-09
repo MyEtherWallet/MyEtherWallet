@@ -464,7 +464,7 @@
 <script>
 import qrcode from '@xkeshi/vue-qrcode';
 import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
-import { Toast, ERROR } from '@/components/toast';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import bcvaultWallet from '@/modules/wallets/utils/hardware/bcvault';
 import bitboxWallet from '@/modules/wallets/utils/hardware/bitbox';
 import bitbox02Wallet from '@/modules/wallets/utils/hardware/bitbox02';
@@ -476,8 +476,8 @@ import trezorWallet from '@/modules/wallets/utils/hardware/trezor';
 import mewconnectWallet from '@/modules/wallets/utils/hybrid/MEWconnect';
 import appPaths from '@/modules/wallets/utils/hardware/ledger/appPaths.js';
 import allPaths from '@/modules/wallets/utils/bip44';
-import { mapState, mapActions } from 'vuex';
 import { EventBus } from '@/plugins/eventBus';
+import { mapActions, mapGetters } from 'vuex';
 
 const MAX_ADDRESSES = 5;
 import {
@@ -735,8 +735,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('global', ['Networks']),
-    ...mapState('wallet', ['network']),
+    ...mapGetters('global', ['Networks', 'network']),
     networkTypes() {
       const showFirst = ['ETH', 'ROP', 'RIN'];
       const typeArr = Object.keys(this.Networks).filter(item => {
@@ -877,7 +876,8 @@ export default {
     });
   },
   methods: {
-    ...mapActions('wallet', ['setWallet', 'setNetwork']),
+    ...mapActions('wallet', ['setWallet']),
+    ...mapActions('global', ['setNetwork']),
     setBCvaultAddress(address) {
       this.selectedAddress = address;
     },
