@@ -476,7 +476,7 @@ import trezorWallet from '@/modules/wallets/utils/hardware/trezor';
 import mewconnectWallet from '@/modules/wallets/utils/hybrid/MEWconnect';
 import appPaths from '@/modules/wallets/utils/hardware/ledger/appPaths.js';
 import allPaths from '@/modules/wallets/utils/bip44';
-import { EventBus } from '@/plugins/eventBus';
+import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters } from 'vuex';
 
 const MAX_ADDRESSES = 5;

@@ -1,40 +1,12 @@
 <template>
   <div>
-    <!--    <ledger :open="ledger" @close="ledger = false" />
-    <bitbox :open="bitbox" @close="bitbox = false" />
-    <finney :open="finney" @close="finney = false" />
-    <secalot :open="secalot" @close="secalot = false" />
-    <keepKey :open="keepKey" @close="keepKey = false" />
-    <trezor :open="trezor" @close="trezor = false" />
-    <cool-wallet :open="coolWallet" @close="coolWallet = false" />
-    <bc-vault :open="bcVault" @close="bcVault = false" />
-    <x-wallet :open="xWallet" @close="xWallet = false" />-->
-  </div>
+      </div>
 </template>
 
 <script>
-// todo De-tangle hardware wallet access.  ^ these were not being used and there are two sets of hardware wallet vue page/design components for hardware wallets
-// import ledger from './HardwareWallets/Ledger/Ledger';
-// import bitbox from './HardwareWallets/Bitbox/Bitbox';
-// import finney from './HardwareWallets/Finney/Finney';
-// import secalot from './HardwareWallets/Secalot/Secalot';
-// import keepKey from './HardwareWallets/KeepKey/KeepKey';
-// import trezor from './HardwareWallets/Trezor/Trezor';
-// import coolWallet from './HardwareWallets/CoolWallet/CoolWallet';
-// import bcVault from './HardwareWallets/BCVault/BCVault';
-// import xWallet from './HardwareWallets/XWallet/XWallet';
 
 export default {
   components: {
-    // ledger,
-    // bitbox,
-    // finney,
-    // secalot,
-    // keepKey,
-    // trezor,
-    // coolWallet,
-    // bcVault,
-    // xWallet
   },
   props: {
     open: {
