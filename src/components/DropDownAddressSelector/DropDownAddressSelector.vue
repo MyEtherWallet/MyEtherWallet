@@ -1,6 +1,7 @@
 <template>
   <div class="drop-down-address-selector">
-    <div class="dropdown--title">
+    <!-- Desktop -->
+    <div class="dropdown--title d-none d-sm-flex align-items-center">
       <h4>{{ title }}</h4>
       <div class="top-button-block">
         <button
@@ -20,6 +21,31 @@
         </button>
       </div>
     </div>
+
+    <!-- Mobile -->
+    <div class="dropdown--title text-left d-block d-sm-none">
+      <div class="top-button-block d-flex align-items-center">
+        <h4>{{ title }}</h4>
+
+        <button
+          v-show="!hideCopy"
+          class="title-button prevent-user-select d-block"
+          @click="copyToClipboard($refs.addressInput)"
+        >
+          {{ $t('common.copy') }}
+        </button>
+      </div>
+      <button
+        v-show="!hideCopy"
+        v-if="isValidAddress"
+        class="d-block ml-auto mr-0"
+        :class="['save-addr-txt', !selectedAddress ? 'disabled-txt' : '']"
+        @click="openAddrModal()"
+      >
+        {{ $t('interface.address-book.save-addr') }}
+      </button>
+    </div>
+
     <div class="dropdown--content">
       <div
         :class="dropdownOpen ? 'dropdown-open' : ''"
