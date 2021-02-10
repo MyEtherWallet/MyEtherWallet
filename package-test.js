@@ -53,7 +53,9 @@ const EXCEPTIONS = [
   'postcss-url',
   'webpack',
   'copy-webpack-plugin',
-  '@aave/protocol-js'
+  '@aave/protocol-js',
+  // look into updating this after release
+  'is-ipfs'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
