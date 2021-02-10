@@ -2,16 +2,17 @@
 
 ### Devop
 
-* Add terms for changelly [#2783](https://github.com/MyEtherWallet/MyEtherWallet/pull/2783)
+- Add terms for changelly [#2783](https://github.com/MyEtherWallet/MyEtherWallet/pull/2783)
 
 ### Bug
 
-* Fix amount unit for Lend Migrator [#2776](https://github.com/MyEtherWallet/MyEtherWallet/pull/2776)
+- Fix amount unit for Lend Migrator [#2776](https://github.com/MyEtherWallet/MyEtherWallet/pull/2776)
 
 ### Release v5.7.18
 
 ### Bug
 
+- Fix CryptoKitties UI for Russian language [#2824](https://github.com/MyEtherWallet/MyEtherWallet/pull/2824)
 - Update gas limit for Lend Migrator [#2765](https://github.com/MyEtherWallet/MyEtherWallet/pull/2765)
 - Fix build name for cx [#2763](https://github.com/MyEtherWallet/MyEtherWallet/pull/2763)
 
