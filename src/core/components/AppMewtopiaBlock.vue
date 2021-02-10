@@ -32,7 +32,7 @@
 
 <script>
 export default {
-  name: 'Join',
+  name: 'AppMewtopiaBlock',
   components: {}
 };
 </script>
