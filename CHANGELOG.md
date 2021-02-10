@@ -1,6 +1,9 @@
+### Release v5.7.20
+
 ### Bug
 
 * store cw appId to prevent reregistering MEW, fix error catch [#2808](https://github.com/MyEtherWallet/MyEtherWallet/pull/2808)
+* Fix send entire amount to contracts [#2820](https://github.com/MyEtherWallet/MyEtherWallet/pull/2820)
 
 ### Devop
 
@@ -17,11 +20,11 @@
 
 ### Devop
 
-* Add terms for changelly [#2783](https://github.com/MyEtherWallet/MyEtherWallet/pull/2783)
+- Add terms for changelly [#2783](https://github.com/MyEtherWallet/MyEtherWallet/pull/2783)
 
 ### Bug
 
-* Fix amount unit for Lend Migrator [#2776](https://github.com/MyEtherWallet/MyEtherWallet/pull/2776)
+- Fix amount unit for Lend Migrator [#2776](https://github.com/MyEtherWallet/MyEtherWallet/pull/2776)
 
 ### Release v5.7.18
 
