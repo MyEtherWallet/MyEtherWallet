@@ -604,7 +604,7 @@ export default {
         ).toFixed();
         this.fee = new BigNumber(this.toGwei(this.gasPrice))
           .times(this.gasLimit)
-          .toString();
+          .toFixed();
       }
     },
     async fetchBalanceData() {
@@ -617,7 +617,7 @@ export default {
     },
     toEth(val) {
       if (!val || isNaN(val)) return 0;
-      return web3Utils.fromWei(new BigNumber(val).toString(), 'ether');
+      return web3Utils.fromWei(new BigNumber(val).toFixed(), 'ether');
     },
     toWei(val) {
       if (!val) return 0;

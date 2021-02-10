@@ -8,6 +8,7 @@ import bip44Paths from '../../bip44';
 import { bufferToHex } from 'ethereumjs-util';
 import cwsTransportLib from '@coolwallets/transport-web-ble';
 import Vue from 'vue';
+import locStore from 'store';
 
 import store from '@/store';
 import {
@@ -26,11 +27,22 @@ class CoolWallet {
     this.identifier = coolWalletType;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
-    this.appPrivateKey = '';
-    this.appPublicKey = '';
+    this.appPrivateKey = locStore.get('coolWallet-appPrivateKey')
+      ? locStore.get('coolWallet-appPrivateKey')
+      : '';
+    this.appPublicKey = locStore.get('coolWallet-appPublicKey')
+      ? locStore.get('coolWallet-appPublicKey')
+      : '';
     this.transport = {};
     this.deviceInstance = {};
     this.supportedPaths = bip44Paths[coolWalletType];
+    this.firstTimeConnecting =
+      locStore.get('coolWallet-appPublicKey') === null &&
+      locStore.get('coolWallet-appPrivateKey') === null &&
+      locStore.get('coolWallet-appId') === null;
+    this.appId = locStore.get('coolWallet-appId')
+      ? locStore.get('coolWallet-appId')
+      : '';
   }
   init(password) {
     const _this = this;
@@ -40,29 +52,41 @@ class CoolWallet {
         if (device) {
           cwsTransportLib.connect(device).then(_transport => {
             _this.transport = _transport;
-            const {
-              publicKey: appPublicKey,
-              privateKey: appPrivateKey
-            } = generateKeyPair();
-            _this.appPrivateKey = appPrivateKey;
-            _this.appPublicKey = appPublicKey;
-            const coolWalletInstance = new cwsWallet(
-              _this.transport,
-              this.appPrivateKey
-            );
-            coolWalletInstance
-              .register(this.appPublicKey, password, APP_NAME)
-              .then(appId => {
-                _this.appId = appId;
-                coolWalletInstance.setAppId(appId);
-                _this.deviceInstance = new cwsETH(
-                  _this.transport,
-                  _this.appPrivateKey,
-                  _this.appId
-                );
-                resolve();
-              })
-              .catch(errorHandler);
+            if (_this.firstTimeConnecting) {
+              const {
+                publicKey: appPublicKey,
+                privateKey: appPrivateKey
+              } = generateKeyPair();
+              locStore.set('coolWallet-appPublicKey', appPublicKey);
+              locStore.set('coolWallet-appPrivateKey', appPrivateKey);
+              _this.appPrivateKey = appPrivateKey;
+              _this.appPublicKey = appPublicKey;
+              const coolWalletInstance = new cwsWallet(
+                _this.transport,
+                _this.appPrivateKey
+              );
+              coolWalletInstance
+                .register(_this.appPublicKey, password, APP_NAME)
+                .then(appId => {
+                  locStore.set('coolWallet-appId', appId);
+                  _this.appId = appId;
+                  coolWalletInstance.setAppId(appId);
+                  _this.deviceInstance = new cwsETH(
+                    _this.transport,
+                    _this.appPrivateKey,
+                    _this.appId
+                  );
+                  resolve();
+                })
+                .catch(errorHandler);
+            } else {
+              _this.deviceInstance = new cwsETH(
+                _this.transport,
+                _this.appPrivateKey,
+                _this.appId
+              );
+              resolve();
+            }
           });
         } else {
           reject(new Error('no device'));

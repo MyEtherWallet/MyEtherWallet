@@ -14,18 +14,10 @@ export default err => {
   const errorValues = Object.keys(ERRORS);
   const warningValues = Object.keys(WARNING);
   const foundError = errorValues.find(item => {
-    return (
-      (err.name && err.name.includes(item)) ||
-      item.includes(err.message) ||
-      err.includes(item)
-    );
+    return (err.name && err.name.includes(item)) || item.includes(err.message);
   });
   const foundWarning = warningValues.find(item => {
-    return (
-      (err.name && err.name.includes(item)) ||
-      item.includes(err.message) ||
-      err.includes(item)
-    );
+    return (err.name && err.name.includes(item)) || item.includes(err.message);
   });
 
   if (foundError) {
