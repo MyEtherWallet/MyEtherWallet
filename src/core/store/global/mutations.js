@@ -37,6 +37,12 @@ const SET_NETWORK = function (state, networkObj) {
 const SET_GAS_PRICE_TYPE = function (state, type) {
   state.gasPriceType = type;
 };
+
+const SET_IMPORTED_STATE = function (currentState, newState) {
+  Object.keys(newState).forEach(item => {
+    currentState[item] = newState[item];
+  });
+};
 export default {
   SET_ONLINE_STATUS,
   SET_LOCALE,
@@ -44,5 +50,6 @@ export default {
   SET_NETWORK,
   SET_ADDRESS_BOOK,
   INIT_STORE,
-  SET_GAS_PRICE_TYPE
+  SET_GAS_PRICE_TYPE,
+  SET_IMPORTED_STATE
 };

@@ -21,11 +21,16 @@ const setEthGasPrice = function ({ commit }, val) {
   commit('SET_ETH_GASPRICE', val);
 };
 
+const setImportedState = function ({ commit }, stateObj) {
+  commit('SET_IMPORTED_STATE', stateObj);
+};
+
 export default {
   setOnlineStatus,
   setLocale,
   setNetwork,
   setGasPrice,
   setAddressBook,
-  setEthGasPrice
+  setEthGasPrice,
+  setImportedState
 };
