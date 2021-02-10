@@ -53,7 +53,7 @@ import hardwareAccessOverlay from '@/modules/wallets/components/hardware-access-
 import mobileAccessOverlay from '@/modules/wallets/components/mobile-access-overlay/MobileAccessOverlay';
 import softwareAccessOverlay from '@/modules/wallets/components/software-access-overlay/SoftwareAccessOverlay';
 export default {
-  name: 'AccessWallet',
+  name: 'TheAccessWalletLayout',
   components: {
     AppBlockTitle,
     browserExtensionOverlay,

@@ -7,7 +7,7 @@ import ThePressKitLayout from '@/views/layouts-default/ThePressKitLayout';
 import TheBuyHardwareWalletLayout from '@/views/layouts-default/TheBuyHardwareWalletLayout';
 import TheToolsLayout from '@/views/layouts-default/TheToolsLayout';
 import TheCreateWalletLayout from '@/views/layouts-default/TheCreateWalletLayout';
-import AccessWallet from '@/modules/wallets/pages/access/Access';
+import TheAccessWalletLayout from '@/views/layouts-default/TheAccessWalletLayout';
 import HardwareWallets from '@/modules/wallets/pages/access/hardware-wallets/HardwareWallets';
 import MobileApps from '@/modules/wallets/pages/access/mobile-apps/MobileApps';
 import BrowserExtension from '@/modules/wallets/pages/access/browser-extension/BrowserExtension';
@@ -112,7 +112,7 @@ export default {
     {
       path: 'wallet/access/:overlay',
       name: 'AccessWallet',
-      component: AccessWallet,
+      component: TheAccessWalletLayout,
       props: accessWalletProps,
       meta: {
         requiresAuth: false
