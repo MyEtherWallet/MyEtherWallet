@@ -2,6 +2,7 @@
 
 ### Bug
 
+* Fix #2761 [#2811](https://github.com/MyEtherWallet/MyEtherWallet/pull/2811)
 * store cw appId to prevent reregistering MEW, fix error catch [#2808](https://github.com/MyEtherWallet/MyEtherWallet/pull/2808)
 * Fix send entire amount to contracts [#2820](https://github.com/MyEtherWallet/MyEtherWallet/pull/2820)
 
