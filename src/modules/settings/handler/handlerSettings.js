@@ -1,7 +1,21 @@
-import state from '@/store/global/state';
+import vuexStore from '@/core/store';
+import { mapActions } from 'vuex';
+import { toWei } from 'web3-utils';
 
-export default class Settings() {
+const VALID_FIELDS = [];
+export default class Settings {
   constructor() {
-    this.exportSettings = state;
+    this.$store = vuexStore;
+    Object.assign(this, mapActions('global', ['setImportedState']));
   }
+
+  import(obj) {
+    this.setImportedState(obj);
+  }
+
+  exportStore() {
+    // convert gasPrice to string
+  }
+
+  _validateImportObject(obj) {}
 }
