@@ -32,35 +32,32 @@
         <div class="monospace last-four">{{ lastFour }}</div>
       </div>
       <!-- <div class="mb-2">OWNED 3 DOMAINS ></div> -->
-      <div class="d-flex align-center">
+      <div class="d-flex align-center mt-2">
         <div class="bottom-buttons">
-          <mew-button
-            button-size="small"
-            color-theme="white"
-            btn-style="transparent"
-            icon="mdi-printer"
-            icon-type="mdi"
-            @click.native="openPaperWallet = true"
-          ></mew-button>
-          <mew-button
-            button-size="small"
-            color-theme="white"
-            btn-style="transparent"
-            icon="mdi-file-document-outline"
-            icon-type="mdi"
-            @click.native="copyAddress"
-          ></mew-button>
+          <v-btn icon @click="openPaperWallet = true">
+            <img
+              src="@/assets/images/icons/icon-print-light.png"
+              alt="Print Wallet"
+              height="20"
+            />
+          </v-btn>
+          <v-btn icon @click="copyAddress">
+            <img
+              src="@/assets/images/icons/icon-copy-light.png"
+              alt="Print Wallet"
+              height="20"
+            />
+          </v-btn>
         </div>
-        <mew-button
-          v-if="isHardware"
-          class="ml-auto switch-button"
-          :has-full-width="false"
-          btn-style="outline"
-          title="SWITCH >"
-          color-theme="white"
-          button-size="small"
-          @click.native="openChangeAddress = true"
-        />
+        <v-btn
+          outlined
+          small
+          color="white"
+          class="ml-auto"
+          @click="openChangeAddress = true"
+        >
+          SWITCH >
+        </v-btn>
       </div>
     </div>
     <balance-address-switch
@@ -206,6 +203,9 @@ export default {
     .v-btn__content span {
       font-size: 12px !important;
     }
+  }
+  .mew-button span {
+    font-size: 0.5rem !important;
   }
 }
 </style>
