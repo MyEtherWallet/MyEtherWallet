@@ -86,5 +86,14 @@
   "validators-back": "Validators behind you",
   "queue-speed": "Queue speed",
   "validators-per": "validators per day",
-  "estimated-activation-timestamp": "Estimated Activation Timestamp"
+  "estimated-activation-timestamp": "Estimated Activation Timestamp",
+  "exited-popup": {
+    "title": "Alert with more info",
+    "desc": "There was an incident with our staking partner, Staked.us",
+    "p1": "Your funds are safe, but due to a slashing incident validators allocated to 5 MEW wallet users were stopped. Unfortunately your validator is one of these 5.",
+    "p2": "You can read the full details of what happened here {link}",
+    "p3": "Staked.us has taken corrective action and full original staking amount plus staking rewards will be deposited to your Eth2 withdrawal address once transfers are enabled on Eth2.",
+    "p4": "There is no need for you to do anything, however, if you have any further questions, you are welcome to {contact-mew}",
+    "contact-mew": "contact MEW support."
+  }
 }
