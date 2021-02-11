@@ -1,3 +1,6 @@
+### Bug
+- Disable button on init [#2832](https://github.com/MyEtherWallet/MyEtherWallet/pull/2832)
+
 ### Devop
 - Add exited popup for staked status [#2828](https://github.com/MyEtherWallet/MyEtherWallet/pull/2828)
 ### Release v5.7.20
