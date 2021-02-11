@@ -1,5 +1,4 @@
-### Devop
-- Add exited popup for staked status [#2828](https://github.com/MyEtherWallet/MyEtherWallet/pull/2828)
+
 ### Release v5.7.20
 
 ### Bug
@@ -11,6 +10,7 @@
 
 ### Devop
 
+* Add exited popup for staked status [#2828](https://github.com/MyEtherWallet/MyEtherWallet/pull/2828)
 * Update packages from snyk and from the script [#2806](https://github.com/MyEtherWallet/MyEtherWallet/pull/2806)
 
 ### Release v5.7.19-hotfix.1
