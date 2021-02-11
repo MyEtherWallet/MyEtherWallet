@@ -55,7 +55,10 @@ const EXCEPTIONS = [
   'copy-webpack-plugin',
   '@aave/protocol-js',
   // look into updating this after release
-  'is-ipfs'
+  'is-ipfs',
+  // probably hold off on this one until next iteration
+  '@sentry/browser',
+  '@sentry/integrations'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
