@@ -1,12 +1,14 @@
 <template>
   <v-sheet height="100%" color="walletBg">
     <the-wallet-side-menu />
-    <the-wallet-header />
-    <v-container class="align-center d-flex" fluid>
-      <module-confirmation />
-      <router-view :owners-tokens="ownersTokens" />
-    </v-container>
-    <the-wallet-footer />
+    <div>
+      <the-wallet-header />
+      <v-container class="align-center d-flex" fluid>
+        <module-confirmation />
+        <router-view :owners-tokens="ownersTokens" />
+      </v-container>
+      <the-wallet-footer />
+    </div>
   </v-sheet>
 </template>
 
