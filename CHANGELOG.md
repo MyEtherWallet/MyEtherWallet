@@ -1,16 +1,15 @@
-### Devop
-- Add exited popup for staked status [#2828](https://github.com/MyEtherWallet/MyEtherWallet/pull/2828)
 ### Release v5.7.20
 
 ### Bug
 
+* Disable button on init [#2832](https://github.com/MyEtherWallet/MyEtherWallet/pull/2832)
 * Fix #2761 [#2811](https://github.com/MyEtherWallet/MyEtherWallet/pull/2811)
 * Fix CryptoKitties UI for Russian language [#2824](https://github.com/MyEtherWallet/MyEtherWallet/pull/2824)
 * store cw appId to prevent reregistering MEW, fix error catch [#2808](https://github.com/MyEtherWallet/MyEtherWallet/pull/2808)
 * Fix send entire amount to contracts [#2820](https://github.com/MyEtherWallet/MyEtherWallet/pull/2820)
-
 ### Devop
 
+* Add exited popup for staked status [#2828](https://github.com/MyEtherWallet/MyEtherWallet/pull/2828)
 * Update packages from snyk and from the script [#2806](https://github.com/MyEtherWallet/MyEtherWallet/pull/2806)
 
 ### Release v5.7.19-hotfix.1
