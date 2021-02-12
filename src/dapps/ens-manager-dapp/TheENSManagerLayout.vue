@@ -169,7 +169,7 @@ import ensBgImg from '@/assets/images/backgrounds/bg-ens.png';
 import registerDomain from './modules/ModuleRegisterDomain';
 import manageDomain from './modules/ModuleManageDomain';
 import ENSManager from './handlers/handlerEnsManager';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 export default {
@@ -206,7 +206,8 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['network', 'address', 'web3', 'ens', 'gasPrice']),
+    ...mapState('wallet', ['network', 'address', 'web3', 'ens']),
+    ...mapGetters('global', ['gasPrice']),
     rules() {
       return [
         this.name.length > 2 || this.$t('ens.warning.not-enough-char'),

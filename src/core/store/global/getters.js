@@ -20,9 +20,9 @@ const network = function (state) {
   return network;
 };
 
-const currentGasPrice = function (state) {
+const gasPrice = function (state) {
   return web3Utils.fromWei(
-    getGasBasedOnType(state.gasPrice, state.gasPriceType),
+    getGasBasedOnType(state.baseGasPrice, state.gasPriceType),
     'gwei'
   );
 };
@@ -30,5 +30,5 @@ const currentGasPrice = function (state) {
 export default {
   Networks,
   network,
-  currentGasPrice
+  gasPrice
 };

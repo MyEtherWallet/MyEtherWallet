@@ -19,7 +19,7 @@ const SET_LOCALE = function (state, { locale }) {
 };
 
 const SET_GAS_PRICE = function (state, val) {
-  state.gasPrice = val;
+  state.baseGasPrice = val;
 };
 
 const SET_ADDRESS_BOOK = function (state, val) {
