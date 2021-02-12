@@ -255,6 +255,7 @@ export default {
     init() {
       // Initiate stepper
       this.activateStep(0);
+      this.canContinue = false;
       this.steps.forEach(step => {
         this.nextButton[step.name] = false;
       });
