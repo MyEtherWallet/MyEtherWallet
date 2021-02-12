@@ -81,7 +81,7 @@ export default {
   },
   data() {
     return {
-      duration: 1,
+      duration: 0,
       rentPriceETH: '',
       rentPriceUSD: ''
     };
