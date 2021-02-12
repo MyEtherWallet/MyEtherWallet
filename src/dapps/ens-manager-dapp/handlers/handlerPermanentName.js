@@ -176,6 +176,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
   async createCommitment() {
     const utils = this.web3.utils;
+    const txObj = { from: this.address };
     try {
       const commitment = await this.registrarControllerContract.methods
         .makeCommitmentWithConfig(
@@ -186,9 +187,12 @@ export default class PermanentNameModule extends ENSManagerInterface {
           this.address
         )
         .call();
-      return this.registrarControllerContract.methods
-        .commit(commitment)
-        .send({ from: this.address, gas: '500000' });
+      return this.web3.eth.estimateGas(txObj).then(gas => {
+        txObj.gas = gas;
+        return this.registrarControllerContract.methods
+          .commit(commitment)
+          .send(txObj);
+      });
     } catch (e) {
       throw new Error(e);
     }
@@ -324,16 +328,25 @@ export default class PermanentNameModule extends ENSManagerInterface {
         .times(1.05)
         .integerValue()
         .toFixed();
-      return this.registrarControllerContract.methods
-        .registerWithConfig(
-          this.parsedHostName,
-          this.address,
-          this.getActualDuration(duration),
-          utils.sha3(this.secretPhrase),
-          this.publicResolverAddress,
-          this.address
-        )
-        .send({ from: this.address, value: withFivePercent, gas: '500000' }); //need to check about the gas limit
+
+      const txObj = {
+        from: this.address,
+        value: withFivePercent
+      };
+
+      return this.web3.eth.estimateGas(txObj).then(gas => {
+        txObj.gas = gas;
+        return this.registrarControllerContract.methods
+          .registerWithConfig(
+            this.parsedHostName,
+            this.address,
+            this.getActualDuration(duration),
+            utils.sha3(this.secretPhrase),
+            this.publicResolverAddress,
+            this.address
+          )
+          .send(txObj);
+      });
     } catch (e) {
       throw new Error(e);
     }
