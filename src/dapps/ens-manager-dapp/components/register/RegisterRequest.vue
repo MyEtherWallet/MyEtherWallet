@@ -115,12 +115,14 @@ export default {
   },
   methods: {
     rentPrice() {
-      return this.getRentPrice(this.duration).then(resp => {
-        if (resp) {
-          this.rentPriceETH = resp.eth;
-          this.rentPriceUSD = resp.usd;
-        }
-      });
+      if (this.duration > 0) {
+        return this.getRentPrice(this.duration).then(resp => {
+          if (resp) {
+            this.rentPriceETH = resp.eth;
+            this.rentPriceUSD = resp.usd;
+          }
+        });
+      }
     },
     onClick() {
       this.$emit('onRequest', this.duration);

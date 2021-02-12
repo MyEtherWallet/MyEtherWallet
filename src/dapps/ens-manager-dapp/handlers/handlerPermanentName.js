@@ -76,14 +76,16 @@ export default class PermanentNameModule extends ENSManagerInterface {
       throw new Error('Owner not set! Please initialize module properly!');
     }
 
-    const hasBalance = new BigNumber(this.getRentPrice(duration)).lte(balance);
+    const rentPrice = await this.getRentPrice(duration);
+
+    const hasBalance = new BigNumber(rentPrice).lte(balance);
     if (!hasBalance) {
       throw new Error('Not enough balance');
     }
     const data = this.registrarControllerContract.methods
-      .renew(this.parsedHostName, this.getActualDuration())
+      .renew(this.parsedHostName, this.getActualDuration(duration))
       .encodeABI();
-    const withFivePercent = BigNumber(this.getRentPrice(duration))
+    const withFivePercent = BigNumber(rentPrice)
       .times(1.05)
       .integerValue()
       .toFixed();
@@ -311,13 +313,14 @@ export default class PermanentNameModule extends ENSManagerInterface {
   async _registerWithDuration(duration, balance) {
     const utils = this.web3.utils;
     try {
-      const hasBalance = new BigNumber(this.getRentPrice(duration)).gte(
-        balance
-      );
+      const rentPrice = await this.getRentPrice(duration);
+
+      const hasBalance = new BigNumber(rentPrice).gte(balance);
+
       if (!hasBalance) {
         throw new Error('Not enough balance');
       }
-      const withFivePercent = BigNumber(this.getRentPrice(duration))
+      const withFivePercent = BigNumber(rentPrice)
         .times(1.05)
         .integerValue()
         .toFixed();
@@ -325,7 +328,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
         .registerWithConfig(
           this.parsedHostName,
           this.address,
-          this.getActualDuration,
+          this.getActualDuration(duration),
           utils.sha3(this.secretPhrase),
           this.publicResolverAddress,
           this.address

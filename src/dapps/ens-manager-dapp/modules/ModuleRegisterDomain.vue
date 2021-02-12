@@ -126,7 +126,7 @@ export default {
   methods: {
     reset() {
       this.onStep = 1;
-      this.duration = 1;
+      this.duration = 0;
     },
     onRequest(val) {
       if (!this.isAvailable) {
