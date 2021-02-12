@@ -1,3 +1,5 @@
+### Bug
+- Reset stepper on init [#2840](https://github.com/MyEtherWallet/MyEtherWallet/pull/2840)
 ### Devop
 - Add exited popup for staked status [#2828](https://github.com/MyEtherWallet/MyEtherWallet/pull/2828)
 ### Release v5.7.20
