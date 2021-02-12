@@ -1,7 +1,7 @@
-import Contracts from '../contracts';
+import Contracts from '../handlers/contracts';
 import Web3 from 'web3';
 import erc20ABI from './contractsForDeploy/Type_Demo_ABI.json';
-import erc20Bytecode from './contractsForDeploy/Type_Demo_Bytecode';
+import erc20Bytecode from './contractsForDeploy/Type_Demo_Bytecode.json';
 import ganache from 'ganache-core';
 
 describe('Contracts Module', () => {
@@ -48,15 +48,14 @@ describe('Contracts Module', () => {
   });
   // afterAll(() => {});
 
-
-
   test('it should check static methods', done => {
-    const res = Contracts.isContractArgValid(1,
-      Contracts.getType('int').solidityType)
+    const res = Contracts.isContractArgValid(
+      1,
+      Contracts.getType('int').solidityType
+    );
     expect(res).toBe(true);
     done();
   });
-
 
   test('it should be empty and statuses are false', done => {
     expect(contract.hasABI).toBe(false);
@@ -82,7 +81,7 @@ describe('Contracts Module', () => {
     done();
   });
   test('it should note invalid ABI - 2', done => {
-    contract.setAbi([{inputs: [], name: 'name', outputs: []}]);
+    contract.setAbi([{ inputs: [], name: 'name', outputs: [] }]);
     expect(contract.hasABI).toBe(true);
     expect(contract.abiValid).toBe(false);
     done();
@@ -166,26 +165,28 @@ describe('Contracts Module', () => {
     contract.setContractAddress('');
     contract.setContractAddress(contract.deployedContractAddress);
     contract.setAbi(erc20ABI);
-    expect(contract.contractMethodNames).toStrictEqual([
-      'DECIMALS',
-      'INITIAL_SUPPLY',
-      'allowance',
-      'approve',
-      'balanceOf',
-      'bar',
-      'decimals',
-      'decreaseAllowance',
-      'getbar',
-      'increaseAllowance',
-      'name',
-      'symbol',
-      'totalSupply',
-      'transfer',
-      'transferFrom',
-      'twoOut',
-      'twoOutCall',
-      'twoOutCallTwo'
-    ]);
+    expect(contract.contractMethodNames).toEqual(
+      expect.arrayContaining([
+        'DECIMALS',
+        'INITIAL_SUPPLY',
+        'allowance',
+        'approve',
+        'balanceOf',
+        'bar',
+        'decimals',
+        'decreaseAllowance',
+        'getbar',
+        'increaseAllowance',
+        'name',
+        'symbol',
+        'totalSupply',
+        'transfer',
+        'transferFrom',
+        'twoOut',
+        'twoOutCall',
+        'twoOutCallTwo'
+      ])
+    );
     contract.selectedFunction('decimals').then(res => {
       expect(res.outputs['0'].value).toBe('10');
       done();

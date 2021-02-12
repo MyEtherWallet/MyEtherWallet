@@ -33,7 +33,7 @@ export default class Contracts {
       this.address = '';
       this.inputs = {};
       this.web3 = web3 || new Web3('HTTP://127.0.0.1:7545');
-      this.gasPrice = gasPrice;
+      this.gasPrice = gasPrice || 1;
       this.ABI = null;
       this.contractMethods = [];
       this.selectedMethod = { inputs: [] };

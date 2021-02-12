@@ -94,7 +94,6 @@
 </template>
 
 <script>
-
 export default {
   props: {
     open: { default: false, type: Boolean },

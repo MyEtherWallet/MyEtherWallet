@@ -49,10 +49,12 @@
         </mew6-white-sheet>
         <mew-overlay
           :show-overlay="interact"
+          left-btn-text="back"
+          right-btn-text="close"
           :close="closeInteract"
           :back="backInteract"
         >
-          <template v-slot:mewOverlayBody>
+          <template #mewOverlayBody>
             <mew-select
               :label="'Method'"
               :items="methods"
@@ -125,12 +127,6 @@
           </template>
         </mew-overlay>
       </div>
-      <div class="pa-4"></div>
-      <div>
-        <module-network />
-        <div class="pa-4"></div>
-        <swap />
-      </div>
     </div>
   </div>
 </template>
@@ -140,11 +136,9 @@ import { mapState } from 'vuex';
 import { isAddress } from '@/core/helpers/addressUtils';
 import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import store from 'store';
-import ModuleNetwork from '@/modules/network/ModuleNetwork';
-import Swap from '@/components/swap/Swap';
 import * as unit from 'ethjs-unit';
-import Contracts from '../contracts';
-import tempDevAbi from '../tests/contractsForDeploy/Type_Demo_ABI';
+import Contracts from './handlers/contracts';
+import tempDevAbi from './tests/contractsForDeploy/Type_Demo_ABI';
 const padLeftEven = hex => {
   hex = hex.length % 2 !== 0 ? '0' + hex : hex;
   return hex;
@@ -159,9 +153,7 @@ const sanitizeHex = hex => {
 export default {
   name: 'ModuleContractInteract',
   components: {
-    'interface-wrap': InterfaceWrap,
-    ModuleNetwork,
-    swap: Swap
+    'interface-wrap': InterfaceWrap
   },
   data() {
     return {
@@ -177,10 +169,11 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['network', 'gasPrice', 'address', 'web3']),
+    ...mapState('wallet', ['address', 'web3', 'network']),
+    ...mapState('global', ['currentNetwork', 'gasPrice']),
     mergedContracts() {
       const customContracts = store.get('customContracts') || [];
-      const mergedContracts = this.network.type.contracts.concat(
+      const mergedContracts = this.currentNetwork.type.contracts.concat(
         customContracts
       );
       return [
@@ -225,7 +218,7 @@ export default {
     }
   },
   mounted() {
-    this.activeContract = new Contracts(this.address, undefined, 0);
+    this.activeContract = new Contracts(this.address, this.web3, this.gasPrice);
   },
   methods: {
     resetDefaults() {
@@ -284,6 +277,7 @@ export default {
     },
     backInteract() {
       this.interact = false;
+      this.resetDefaults();
       this.activeContract.clear();
     },
     showInteract() {

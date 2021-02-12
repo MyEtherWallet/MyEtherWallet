@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 import store from 'store';
 import utils from 'web3-utils';
 import { address, bool, bytes, int, string, uint } from './solidityTypes';
-import sanitizeHex from '@/core/helpers/addressUtils';
+import sanitizeHex from '@/core/helpers/sanitizeHex';
 import * as ethUnit from 'ethjs-unit';
 import { Transaction } from 'ethereumjs-tx';
 import { bufferToHex, generateAddress, toBuffer } from 'ethereumjs-util';
@@ -207,6 +207,7 @@ export default class Deploy {
     return this.web3.eth.getTransactionCount(address);
   }
   getGasPrice() {
+    console.log(this.gasPrice); // todo remove dev item
     return sanitizeHex(ethUnit.toWei(this.gasPrice, 'gwei').toString(16));
   }
   sendTransaction(tx, contractName) {

@@ -19,7 +19,11 @@
               placeholder=" "
               @input="abiInput($event)"
             ></v-textarea>
-            <mew-input label="Contract name" placeholder=" " @input="setContractName($event)"/>
+            <mew-input
+              label="Contract name"
+              placeholder=" "
+              @input="setContractName($event)"
+            />
             <div v-show="showInputs">
               <div
                 v-for="(input, idx) in inputs"
@@ -43,13 +47,13 @@
                       :label="input.name"
                       @input="valueInput(input.name, $event)"
                     />
-                                      <mew-checkbox
-                                        v-model="input.value"
-                                        :value="false"
-                                        :label="$t('contract.false')"
-                                        type="radio"
-                                        checked
-                                      />
+                    <mew-checkbox
+                      v-model="input.value"
+                      :value="false"
+                      :label="$t('contract.false')"
+                      type="radio"
+                      checked
+                    />
                   </div>
                   <div class="bool-items">
                     <mew-checkbox
@@ -83,23 +87,21 @@
           </interface-wrap>
         </mew6-white-sheet>
       </div>
-      <div class="pa-4"></div>
-      <div>
-        <network />
-        <div class="pa-4"></div>
-        <swap />
-      </div>
+      <!--      <div class="pa-4"></div>-->
+      <!--      <div>-->
+      <!--        <network />-->
+      <!--        <div class="pa-4"></div>-->
+      <!--        <swap />-->
+      <!--      </div>-->
     </div>
   </div>
 </template>
 
 <script>
 import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
-import Network from '@/modules/network/ModuleNetwork';
-import Swap from '@/components/swap/Swap';
 import { mapState } from 'vuex';
 import * as unit from 'ethjs-unit';
-import Contracts from '../contracts';
+import Contracts from './handlers/contracts';
 
 const padLeftEven = hex => {
   hex = hex.length % 2 !== 0 ? '0' + hex : hex;
@@ -115,9 +117,7 @@ const sanitizeHex = hex => {
 export default {
   name: 'ModuleContractDeploy',
   components: {
-    'interface-wrap': InterfaceWrap,
-    network: Network,
-    swap: Swap
+    'interface-wrap': InterfaceWrap
   },
   data() {
     return {
@@ -133,7 +133,8 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['network', 'gasPrice', 'address', 'web3']),
+    ...mapState('wallet', ['address', 'web3']),
+    ...mapState('global', ['currentNetwork', 'gasPrice']),
     txValue() {
       return sanitizeHex(unit.toWei(this.value, 'ether').toString(16));
     },
@@ -145,7 +146,7 @@ export default {
     }
   },
   mounted() {
-    this.activeContract = new Contracts(this.address, undefined, 0);
+    this.activeContract = new Contracts(this.address, this.web3, this.gasPrice);
   },
   methods: {
     showInteract() {
@@ -179,7 +180,7 @@ export default {
     ethPayable(value) {
       this.ethValue = value;
     },
-    setContractName(name){
+    setContractName(name) {
       this.contractName = name;
     },
     getType() {
