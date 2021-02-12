@@ -12,7 +12,12 @@
         min-width="600"
       >
         <transfer v-if="isTransfer" ref="transfer" :transfer="transfer" />
-        <renew v-if="isRenew" :host-name="hostName" :renew="renew" />
+        <renew
+          v-if="isRenew"
+          :get-rent-price="getRentPrice"
+          :host-name="hostName"
+          :renew="renew"
+        />
         <manage-multicoins
           v-if="isManageMulticoin"
           :set-multicoin="setMulticoin"
@@ -105,6 +110,12 @@ export default {
     },
     onManage: { default: false, type: Boolean },
     close: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
+    getRentPrice: {
       default: function () {
         return {};
       },

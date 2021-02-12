@@ -43,8 +43,8 @@
     />
 
     <div v-if="isAvailable" class="font-weight-bold text-center">
-      {{ $t('ens.request.estimated-price') }}: {{ estimatedPrice.eth }}
-      {{ $t('common.currency.eth') }} (${{ estimatedPrice.usd }})
+      {{ $t('ens.request.estimated-price') }}: {{ rentPriceETH }}
+      {{ $t('common.currency.eth') }} (${{ rentPriceUSD }})
     </div>
     <div class="d-flex justify-center my-6">
       <mew-button :title="btnTitle" btn-size="xlarge" @click.native="onClick" />
@@ -53,12 +53,15 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import BigNumber from 'bignumber.js';
-
 export default {
   components: {},
   props: {
+    getRentPrice: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
     isAvailable: {
       default: false,
       type: Boolean
@@ -78,11 +81,12 @@ export default {
   },
   data() {
     return {
-      duration: 1
+      duration: 1,
+      rentPriceETH: '',
+      rentPriceUSD: ''
     };
   },
   computed: {
-    ...mapState('external', ['ETHUSDValue']),
     btnTitle() {
       return this.isAvailable
         ? this.$t('ens.request.request-registr')
@@ -99,33 +103,25 @@ export default {
         items.push({ name: i + 1 + ' ' + 'year', value: i + 1 });
       }
       return items;
-    },
-    // pricing comes from ens docs
-    pricingByLength() {
-      if (this.hostName.length === 3) {
-        return 640;
-      } else if (this.hostName.length === 4) {
-        return 160;
-      }
-
-      return 5;
-    },
-    estimatedPrice() {
-      const eth = new BigNumber(this.pricingByLength)
-        .dividedBy(this.ETHUSDValue.value)
-        .times(this.duration)
-        .toFixed(4);
-
-      const usd = new BigNumber(this.pricingByLength)
-        .times(this.duration)
-        .toFixed(2);
-      return {
-        usd: usd,
-        eth: eth
-      };
     }
   },
+  watch: {
+    duration() {
+      this.rentPrice();
+    }
+  },
+  mounted() {
+    this.rentPrice();
+  },
   methods: {
+    rentPrice() {
+      return this.getRentPrice(this.duration).then(resp => {
+        if (resp) {
+          this.rentPriceETH = resp.eth;
+          this.rentPriceUSD = resp.usd;
+        }
+      });
+    },
     onClick() {
       this.$emit('onRequest', this.duration);
     },

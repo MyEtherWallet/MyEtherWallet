@@ -15,6 +15,7 @@
             :name="name"
             :host-name="parsedHostName"
             :loading="checkingDomainAvail"
+            :get-rent-price="getRentPrice"
             @onRequest="onRequest"
         /></template>
         <template #stepperContent2
@@ -42,6 +43,12 @@ import Register from '../components/register/Register';
 export default {
   components: { Request, Register },
   props: {
+    getRentPrice: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
     commit: {
       default: function () {
         return {};

@@ -14,6 +14,7 @@
       :is-available="nameHandler.isAvailable"
       :checking-domain-avail="nameHandler.checkingDomainAvail"
       :generate-key-phrase="generateKeyPhrase"
+      :get-rent-price="getRentPrice"
     />
     <manage-domain
       ref="manageDomain"
@@ -28,6 +29,7 @@
       :set-multicoin="setMulticoin"
       :set-ipfs="setIpfs"
       :host-name="manageDomainHandler.parsedHostName"
+      :get-rent-price="getRentPrice"
     />
     <v-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="ensBgImg" />
@@ -206,6 +208,7 @@ import BigNumber from 'bignumber.js';
 import { EventBus } from '@/core/plugins/eventBus';
 import EventNames from '@/utils/web3-provider/events.js';
 import ENS from 'ethereum-ens';
+import { fromWei, toBN } from 'web3-utils';
 
 export default {
   components: { registerDomain, manageDomain },
@@ -257,6 +260,7 @@ export default {
     };
   },
   computed: {
+    ...mapState('external', ['ETHUSDValue']),
     ...mapState('global', ['gasPrice']),
     ...mapGetters('global', ['network']),
     ...mapState('wallet', ['balance', 'address', 'web3']),
@@ -449,6 +453,22 @@ export default {
       if (this.nameHandler.generateKeyPhrase) {
         this.nameHandler.generateKeyPhrase();
       }
+    },
+    getRentPrice(duration) {
+      const handler = this.manageDomainHandler
+        ? this.manageDomainHandler
+        : this.nameHandler;
+      return handler.getRentPrice(duration).then(resp => {
+        if (resp) {
+          const priceFromWei = fromWei(toBN(resp));
+          return {
+            eth: new BigNumber(priceFromWei).toFixed(4),
+            usd: new BigNumber(priceFromWei)
+              .times(this.ETHUSDValue.value)
+              .toFixed(2)
+          };
+        }
+      });
     }
   }
 };

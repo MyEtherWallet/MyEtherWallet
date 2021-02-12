@@ -64,10 +64,12 @@ export default class ENSManagerInterface {
       data: this.registrarContract.methods
         .reclaim(this.labelHash, actualToAddress)
         .encodeABI(),
-      gas: '500000',
       value: 0
     };
-    return this.web3.eth.sendTransaction(setControllerTx);
+    return this.web3.eth.estimateGas(setControllerTx).then(gas => {
+      setControllerTx.gas = gas;
+      return this.web3.eth.sendTransaction(setControllerTx);
+    });
   }
 
   migrate() {
@@ -108,10 +110,13 @@ export default class ENSManagerInterface {
       from: this.address,
       to: this.publicResolverAddress,
       data: this.publicResolverContract.methods.multicall(addr).encodeABI(),
-      value: 0,
-      gas: 500000
+      value: 0
     };
-    return this.web3.eth.sendTransaction(setAddrTx);
+
+    return this.web3.eth.estimateGas(setAddrTx).then(gas => {
+      setAddrTx.gas = gas;
+      return this.web3.eth.sendTransaction(setAddrTx);
+    });
   }
 
   async setTxtRecord(obj) {
@@ -137,10 +142,13 @@ export default class ENSManagerInterface {
       from: this.address,
       to: this.publicResolverAddress,
       data: this.resolverContract.methods.multicall(multicalls).encodeABI(),
-      value: 0,
-      gas: 500000
+      value: 0
     };
-    return this.web3.eth.sendTransaction(tx);
+
+    return this.web3.eth.estimateGas(tx).then(gas => {
+      tx.gas = gas;
+      return this.web3.eth.sendTransaction(tx);
+    });
   }
 
   async _init() {

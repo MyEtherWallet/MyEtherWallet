@@ -8,8 +8,8 @@
     />
 
     <div class="font-weight-bold text-center">
-      {{ $t('ens.request.estimated-price') }}: {{ estimatedPrice.eth }}
-      {{ $t('common.currency.eth') }} (${{ estimatedPrice.usd }})
+      {{ $t('ens.request.estimated-price') }}: {{ rentPriceETH }}
+      {{ $t('common.currency.eth') }} (${{ rentPriceUSD }})
     </div>
     <div class="d-flex align-center justify-center mt-3">
       <mew-button
@@ -22,10 +22,14 @@
 </template>
 
 <script>
-import BigNumber from 'bignumber.js';
-import { mapState } from 'vuex';
 export default {
   props: {
+    getRentPrice: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
     renew: {
       default: function () {
         return {};
@@ -39,41 +43,37 @@ export default {
   },
   data() {
     return {
-      duration: 1
+      duration: 1,
+      rentPriceETH: '',
+      rentPriceUSD: ''
     };
   },
   computed: {
-    ...mapState('external', ['ETHUSDValue']),
     items() {
       const items = [];
       for (let i = 0; i < 20; i++) {
         items.push({ name: i + 1 + ' ' + 'year', value: i + 1 });
       }
       return items;
-    },
-    estimatedPrice() {
-      const eth = new BigNumber(this.pricingByLength)
-        .dividedBy(this.ETHUSDValue.value)
-        .times(this.duration)
-        .toFixed(4);
-      const usd = new BigNumber(this.pricingByLength)
-        .times(this.duration)
-        .toFixed(2);
-      return {
-        usd: usd,
-        eth: eth
-      };
-    },
-    pricingByLength() {
-      if (this.hostName.length === 3) {
-        return 640;
-      } else if (this.hostName.length === 4) {
-        return 160;
-      }
-      return 5;
     }
   },
+  watch: {
+    duration() {
+      this.rentPrice();
+    }
+  },
+  mounted() {
+    this.rentPrice();
+  },
   methods: {
+    rentPrice() {
+      return this.getRentPrice(this.duration).then(resp => {
+        if (resp) {
+          this.rentPriceETH = resp.eth;
+          this.rentPriceUSD = resp.usd;
+        }
+      });
+    },
     setDuration(item) {
       this.duration = item.value;
     },
