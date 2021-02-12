@@ -1,3 +1,6 @@
+### Devop
+
+* Use api instead of token balance for web [#2839](https://github.com/MyEtherWallet/MyEtherWallet/pull/2839)
 ### Release v5.7.20
 
 ### Bug
