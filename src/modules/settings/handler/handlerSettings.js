@@ -26,16 +26,13 @@ export default class Settings {
   // Receives object from file read in module
   // Returns a promise so the module can react accordingly
   importStore(file) {
-    console.log('inside class this?', this);
     return new Promise((resolve, reject) => {
       const _this = this;
-      console.log(_this);
       try {
         const reader = new FileReader();
         reader.onloadend = evt => {
           const file = evt.target.result;
           const obj = JSON.parse(file);
-          console.log(obj);
           const parsedObj = _this._validateImportObject(obj);
 
           // sets the imported state to the store
@@ -58,7 +55,6 @@ export default class Settings {
     const time = new Date();
     const filename = `Store-Export-${time.getTime()}.json`;
     const newObj = Object.assign({}, this.$store.state.global);
-    console.log(this.$store.state.global);
     const stringifiedGasPrice = newObj.gasPrice.toString();
     delete newObj['localStore'];
     delete newObj['gasPrice'];

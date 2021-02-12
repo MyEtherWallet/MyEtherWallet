@@ -11,6 +11,10 @@ const setGasPrice = function ({ commit }, gasPrice) {
   commit('SET_GAS_PRICE', gasPrice);
 };
 
+const setGasPriceType = function ({ commit }, type) {
+  commit('SET_GAS_PRICE_TYPE', type);
+};
+
 const setAddressBook = function ({ commit }, addressBook) {
   commit('SET_ADDRESS_BOOK', addressBook);
 };
@@ -28,6 +32,7 @@ export default {
   setLocale,
   setNetwork,
   setGasPrice,
+  setGasPriceType,
   setAddressBook,
   setImportedState
 };
