@@ -455,7 +455,7 @@ export default {
       }
     },
     getRentPrice(duration) {
-      const handler = this.manageDomainHandler
+      const handler = this.onManage
         ? this.manageDomainHandler
         : this.nameHandler;
       return handler.getRentPrice(duration).then(resp => {
