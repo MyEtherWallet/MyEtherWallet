@@ -207,7 +207,6 @@ export default class Deploy {
     return this.web3.eth.getTransactionCount(address);
   }
   getGasPrice() {
-    console.log(this.gasPrice); // todo remove dev item
     return sanitizeHex(ethUnit.toWei(this.gasPrice, 'gwei').toString(16));
   }
   sendTransaction(tx, contractName) {
