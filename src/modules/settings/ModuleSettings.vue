@@ -22,17 +22,17 @@
             <gas-price />
           </template>
           <template #panelBody2>
-            <import-config />
+            <import-config :import-config="settingsHandler" />
           </template>
           <template #panelBody3>
-            <export-config />
+            <export-config :export-config="settingsHandler.exportStore" />
           </template>
           <template #panelBody4>
             <address-book @add="addMode = !addMode" @edit="onEdit" />
           </template>
-          <template #panelBody5>
+          <!-- <template #panelBody5>
             <notifications />
-          </template>
+          </template> -->
         </mew-expand-panel>
       </v-sheet>
       <!-- add and edit the address book -->
@@ -49,10 +49,11 @@
 <script>
 import ImportConfig from './components/SettingsImportConfig';
 import ExportConfig from './components/SettingsExportConfig';
-import Notifications from './components/SettingsNotification';
+// import Notifications from './components/SettingsNotification';
 import GasPrice from './components/SettingsGasPrice';
 import AddressBook from '@/modules/address-book/ModuleAddressBook';
 import AddEditAddress from '@/modules/address-book/components/AddressBookAddEdit';
+import SettingsHandler from './handler/handlerSettings';
 const modes = ['add', 'edit'];
 
 export default {
@@ -60,7 +61,7 @@ export default {
   components: {
     ImportConfig,
     ExportConfig,
-    Notifications,
+    // Notifications,
     GasPrice,
     AddressBook,
     AddEditAddress
@@ -70,6 +71,7 @@ export default {
   },
   data() {
     return {
+      settingsHandler: null,
       idxToExpand: null,
       editMode: false,
       addMode: false,
@@ -107,6 +109,9 @@ export default {
       }
       return this.$t('common.settings');
     }
+  },
+  created() {
+    this.settingsHandler = new SettingsHandler();
   },
   methods: {
     back(idx) {

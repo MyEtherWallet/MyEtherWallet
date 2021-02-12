@@ -22,6 +22,7 @@ const setEthGasPrice = function ({ commit }, val) {
 };
 
 const setImportedState = function ({ commit }, stateObj) {
+  stateObj['localStore'] = true;
   commit('SET_IMPORTED_STATE', stateObj);
 };
 
