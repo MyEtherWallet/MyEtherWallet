@@ -187,8 +187,8 @@ export default {
     ...mapActions('global', ['setGasPrice', 'setGasPriceType']),
     setSelected(selected) {
       try {
-        this.setGasPriceType(selected).then(() => {
-          this.setGasPrice(getGasBasedOnType(this.localGas, selected));
+        this.setGasPrice(this.localGas).then(() => {
+          this.setGasPriceType(selected);
         });
       } catch (e) {
         Toast(e, {}, SENTRY);
