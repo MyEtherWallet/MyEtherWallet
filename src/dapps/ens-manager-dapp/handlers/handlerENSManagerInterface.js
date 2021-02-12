@@ -83,7 +83,7 @@ export default class ENSManagerInterface {
     }
 
     if (this.publicResolverAddress === this.resolverAddress) {
-      throw new 'Name migrated succesfully!'();
+      throw Error('Name migrated succesfully!');
     }
     const setResolverTx = {
       from: this.address,
@@ -331,6 +331,7 @@ export default class ENSManagerInterface {
       const supportsTxt = await this.resolverContract.methods
         .supportsInterface(registrarInterface.TEXT_RECORD)
         .call();
+      // eslint-disable-next-line
       console.error('does it support txt', supportsTxt);
       this.textRecordSupport = supportsTxt;
       if (supportsTxt) {

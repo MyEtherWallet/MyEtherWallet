@@ -268,9 +268,11 @@ export default {
         .transfer(address)
         .then(res => {
           this.getDomains();
+          // eslint-disable-next-line
           console.error('res', res);
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.error('err', err);
           Toast(err, {}, ERROR);
         });

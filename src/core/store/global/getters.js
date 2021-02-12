@@ -15,7 +15,6 @@ const network = function (state) {
       }
     }
   }
-  console.log(network); // todo remove dev item
   return network;
 };
 export default {
