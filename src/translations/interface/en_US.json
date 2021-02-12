@@ -57,6 +57,7 @@
     "message": "Message",
     "deploy": "Deploy Contract",
     "sign-message": "Sign Message",
+    "verify-message": "Verify Message",
     "dapps-center": "Dapps Center",
     "tools": "Tools",
     "logout": "Are you sure you want to log out?"

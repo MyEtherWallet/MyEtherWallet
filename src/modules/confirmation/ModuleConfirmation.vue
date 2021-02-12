@@ -7,7 +7,6 @@
       right-btn-text="close"
       :close="overlayClose"
     >
-
       <template #mewOverlayBody>
         <confirmation-transaction
           v-if="true"
@@ -33,10 +32,7 @@
       :close="overlayClose"
     >
       <template #mewOverlayBody>
-        <confirmation-messsage
-          v-if="true"
-          :msg="signature"
-        />
+        <confirmation-messsage v-if="true" :msg="signature" />
       </template>
     </mew-overlay>
   </div>
@@ -45,7 +41,7 @@
 <script>
 import EventNames from '@/utils/web3-provider/events.js';
 import ConfirmationTransaction from './components/ConfirmationTransaction';
-import ConfirmationMesssage from './components/ConfirmationMessage'
+import ConfirmationMesssage from './components/ConfirmationMessage';
 import utils from 'web3-utils';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -133,16 +129,14 @@ export default {
       _self.instance
         .signMessage(msg)
         .then(res => {
-         const result = Buffer.from(res).toString('hex')
+          const result = Buffer.from(res).toString('hex');
           _self.signature = JSON.stringify(
             {
               address: _self.address,
               msg: msg,
               sig: result,
               version: '3',
-              signer: _self.isHardware
-                ? _self.identifier
-                : 'MEW'
+              signer: _self.isHardware ? _self.identifier : 'MEW'
             },
             null,
             2
@@ -160,7 +154,6 @@ export default {
   },
   methods: {
     overlayClose() {
-      console.log('close'); // todo remove dev item
       this.showOverlay = false;
       this.showSignOverlay = false;
     },

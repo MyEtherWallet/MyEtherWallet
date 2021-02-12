@@ -2,7 +2,13 @@
   <v-sheet max-width="600px" class="pa-8">
     <div class="px-3">
       <div class="d-flex justify-space-between mb-2">
-        <v-textarea outlined label="Signature" :value="msg" :auto-grow="true" :readonly="true"></v-textarea>
+        <v-textarea
+          outlined
+          label="Signature"
+          :value="msg"
+          :auto-grow="true"
+          :readonly="true"
+        ></v-textarea>
       </div>
     </div>
     <div class="d-flex justify-center my-8">

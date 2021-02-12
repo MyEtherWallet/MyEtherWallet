@@ -1,40 +1,25 @@
 <template>
-  <div>
-    <app-block-title
-      max-width="600px"
-      no-page-title
-      :data="title"
-      class="mb-7"
-    />
-    <v-textarea outlined label="Signature" value="Value"></v-textarea>
-    <mew-button
-      title="Verify"
-      btn-size="xlarge"
-      class="display--block mx-auto mt-5"
-    />
-    <mew-button
-      btn-style="transparent"
-      title="Clean all"
-      btn-size="small"
-      class="display--block mx-auto mt-5"
-    />
-  </div>
+  <v-row>
+    <v-col cols="9">
+      <module-message />
+    </v-col>
+    <v-spacer cols="1" />
+    <v-col cols="3">
+      <module-network />
+    </v-col>
+  </v-row>
 </template>
 
 <script>
-import AppBlockTitle from '@/core/components/AppBlockTitle';
+import ModuleMessage from '@/modules/message/ModuleMessageVerify';
+import ModuleNetwork from '@/modules/network/ModuleNetwork';
 
 export default {
-  name: 'ModuleMessageVerify',
-  components: { AppBlockTitle },
-  data: () => ({
-    title: {
-      title: 'Verify message',
-      description:
-        'This is a recommended way to view your balance. You can only view your balance via this option.'
-    }
-  })
+  components: {
+    ModuleMessage,
+    ModuleNetwork
+  }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss"></style>
