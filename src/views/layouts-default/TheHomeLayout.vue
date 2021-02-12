@@ -3,8 +3,8 @@
     <home-landing />
     <home-features />
     <home-why-mew />
-    <join />
-    <partners />
+    <app-mewtopia-block />
+    <app-partners-block />
     <app-get-started />
   </div>
 </template>
@@ -13,9 +13,9 @@
 import HomeLanding from '../components-default/HomeLanding';
 import HomeFeatures from '../components-default/HomeFeatures';
 import HomeWhyMew from '../components-default/HomeWhyMew';
-import join from '@/components/join/Join';
+import AppMewtopiaBlock from '@/core/components/AppMewtopiaBlock';
 import AppGetStarted from '@/core/components/AppGetStarted';
-import partners from '@/components/partners/Partners';
+import AppPartnersBlock from '@/core/components/AppPartnersBlock';
 
 export default {
   name: 'TheHomeLayout',
@@ -23,9 +23,9 @@ export default {
     HomeLanding,
     HomeFeatures,
     HomeWhyMew,
-    join,
+    AppMewtopiaBlock,
     AppGetStarted,
-    partners
+    AppPartnersBlock
   }
 };
 </script>

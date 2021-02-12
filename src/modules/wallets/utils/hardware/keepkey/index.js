@@ -45,13 +45,9 @@ class KeepkeyWallet {
     const device = new WebUSBDevice({ usbDevice });
     this.keepkey = KeepKey.withWebUSB(device);
     this.keepkey.device.events.on(String(MESSAGETYPE_PINMATRIXREQUEST), () => {
-      EventBus.$emit(
-        'showHardwarePinMatrix',
-        { name: this.identifier },
-        pin => {
-          this.keepkey.acknowledgeWithPin(pin).catch(errorHandler);
-        }
-      );
+      EventBus.$emit('showHardwarePinMatrix', pin => {
+        this.keepkey.acknowledgeWithPin(pin).catch(errorHandler);
+      });
     });
     this.keepkey.device.events.on(String(MESSAGETYPE_PASSPHRASEREQUEST), () => {
       EventBus.$emit(

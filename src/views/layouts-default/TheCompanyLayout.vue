@@ -8,18 +8,17 @@
     <div class="py-10" />
     <company-community />
     <div class="py-10" />
-    <partners />
+    <app-partners-block />
     <div class="py-9" />
-    <join />
+    <app-mewtopia-block />
     <div class="py-1" />
   </div>
 </template>
 
 <script>
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
-import partners from '@/components/partners/Partners';
-import join from '@/components/join/Join';
-
+import AppPartnersBlock from '@/core/components/AppPartnersBlock';
+import AppMewtopiaBlock from '@/core/components/AppMewtopiaBlock';
 import CompanyWhatIsMew from '../components-default/CompanyWhatIsMew';
 import CompanyOurStory from '../components-default/CompanyOurStory';
 import CompanyCommunity from '../components-default/CompanyCommunity';
@@ -28,8 +27,8 @@ export default {
   name: 'TheCompanyLayout',
   components: {
     TheLayoutHeader,
-    partners,
-    join,
+    AppPartnersBlock,
+    AppMewtopiaBlock,
     CompanyWhatIsMew,
     CompanyOurStory,
     CompanyCommunity

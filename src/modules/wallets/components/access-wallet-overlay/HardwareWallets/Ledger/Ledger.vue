@@ -74,7 +74,6 @@
             </v-radio-group>
           </template>
         </mew-expand-panel>
-
         <mew-expand-panel :panel-items="addressToInteract">
           <template #panelBody1>
             <mew-table
