@@ -17,9 +17,6 @@ const setAddressBook = function ({ commit }, addressBook) {
 const setNetwork = function ({ commit }, networkObj) {
   commit('SET_NETWORK', networkObj);
 };
-const setEthGasPrice = function ({ commit }, val) {
-  commit('SET_ETH_GASPRICE', val);
-};
 
 const setImportedState = function ({ commit }, stateObj) {
   stateObj['localStore'] = true;
@@ -32,6 +29,5 @@ export default {
   setNetwork,
   setGasPrice,
   setAddressBook,
-  setEthGasPrice,
   setImportedState
 };
