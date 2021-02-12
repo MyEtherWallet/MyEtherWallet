@@ -2,7 +2,7 @@
   <div class="staked-wrapper">
     <div class="header-container d-flex">
       <back-button class="button-container" :title="$t('common.exit-dapp')">
-        <template v-slot:center>
+        <template #center>
           <div class="d-flex">
             <div
               :class="['tab-btn', !activeValidatorsTab ? 'active-tab' : '']"
@@ -22,7 +22,7 @@
             </div>
           </div>
         </template>
-        <template v-slot:right>
+        <template #right>
           <div class="d-flex stats-wrapper">
             <div class="d-flex stats-container">
               <i
