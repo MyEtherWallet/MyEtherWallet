@@ -113,7 +113,7 @@
                   label="Gas Price"
                   placeholder=" "
                   right-label="Gwei"
-                  :value="gasPriceGwei"
+                  :value="currentGasPrice"
                   disabled
                 />
                 <mew-input
@@ -241,13 +241,9 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['web3', 'address']),
-    ...mapState('global', ['gasPrice']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'currentGasPrice']),
     totalFees() {
       return toBN(this.totalGasLimit).mul(toBN(this.gasPrice)).toString();
-    },
-    gasPriceGwei() {
-      return fromWei(this.gasPrice, 'gwei');
     },
     totalGasLimit() {
       if (this.currentTrade) {
