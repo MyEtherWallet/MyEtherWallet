@@ -197,7 +197,10 @@ export default {
     setCustomGasPrice(customGasPrice) {
       this.setGasPriceType(gasPriceTypes.STORED).then(() => {
         this.setGasPrice(
-          getGasBasedOnType(customGasPrice, gasPriceTypes.STORED)
+          getGasBasedOnType(
+            this.web3.utils.toWei(customGasPrice, 'gwei'),
+            gasPriceTypes.STORED
+          )
         );
       });
     },

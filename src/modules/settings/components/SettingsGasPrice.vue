@@ -43,7 +43,7 @@
           v-model="customGasPrice"
           label="Customize"
           placeholder=" "
-          right-label="1 Gwei"
+          right-label="Gwei"
           class="mr-3"
         />
         <mew-button
