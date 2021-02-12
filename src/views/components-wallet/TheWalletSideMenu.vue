@@ -47,9 +47,7 @@
           <v-list-item
             v-if="!item.children"
             :key="item + idx + 1"
-            dense
             :to="item.route"
-            class="py-2"
           >
             <v-list-item-icon class="mx-3">
               <img width="26" height="26" :src="item.icon" :alt="item.title" />
@@ -149,6 +147,7 @@
 import background from '@/assets/images/backgrounds/bg-light.jpg';
 import dashboard from '@/assets/images/icons/icon-dashboard-enable.png';
 import send from '@/assets/images/icons/icon-send-enable.png';
+import nft from '@/assets/images/icons/icon-nft.png';
 import swap from '@/assets/images/icons/icon-swap-enable.png';
 import dapp from '@/assets/images/icons/icon-dapp-center-enable.png';
 import tools from '@/assets/images/icons/icon-contract-enable.png';
@@ -187,15 +186,14 @@ export default {
           icon: dashboard
         },
         {
-          title: this.$t('interface.menu.send'),
-          icon: send,
-          children: [
-            { title: this.$t('sendTx.send-tx'), route: { name: 'SendTX' } },
-            {
-              title: this.$t('interface.menu.nft'),
-              route: { name: 'NFTManager' }
-            }
-          ]
+          title: this.$t('sendTx.send-tx'),
+          route: { name: 'SendTX' },
+          icon: send
+        },
+        {
+          title: this.$t('interface.menu.nft'),
+          route: { name: 'NFTManager' },
+          icon: nft
         },
         {
           title: this.$t('common.swap'),
