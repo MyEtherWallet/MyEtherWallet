@@ -42,30 +42,13 @@
       </template>
 
       <v-list>
-        <template v-for="(item, idx) in sectionOne">
-          <v-list-item
-            v-if="!item.children"
-            :key="item + idx + 1"
-            :to="item.route"
-          >
-            <v-list-item-icon class="mx-3">
-              <img width="26" height="26" :src="item.icon" :alt="item.title" />
-            </v-list-item-icon>
-
-            <v-list-item-content>
-              <v-list-item-title
-                class="white--text font-weight-regular mew-body"
-                v-text="item.title"
-              />
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-list-group
-            v-if="item.children"
-            :key="item + idx + 2"
-            prepend-icon=""
-          >
-            <template #activator>
+        <v-list-item-group model="menuSelected">
+          <template v-for="(item, idx) in sectionOne">
+            <v-list-item
+              v-if="!item.children"
+              :key="item + idx + 1"
+              :to="item.route"
+            >
               <v-list-item-icon class="mx-3">
                 <img
                   width="26"
@@ -74,29 +57,53 @@
                   :alt="item.title"
                 />
               </v-list-item-icon>
+
               <v-list-item-content>
                 <v-list-item-title
                   class="white--text font-weight-regular mew-body"
                   v-text="item.title"
-                ></v-list-item-title>
-              </v-list-item-content>
-            </template>
-            <v-list-item
-              v-for="child in item.children"
-              :key="child.title"
-              dense
-              class="pl-4"
-              :to="child.route"
-            >
-              <v-list-item-content>
-                <v-list-item-title
-                  class="pl-13 white--text font-weight-regular mew-body"
-                  v-text="child.title"
-                ></v-list-item-title>
+                />
               </v-list-item-content>
             </v-list-item>
-          </v-list-group>
-        </template>
+
+            <v-list-group
+              v-if="item.children"
+              :key="item + idx + 2"
+              prepend-icon=""
+            >
+              <template #activator>
+                <v-list-item-icon class="mx-3">
+                  <img
+                    width="26"
+                    height="26"
+                    :src="item.icon"
+                    :alt="item.title"
+                  />
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title
+                    class="white--text font-weight-regular mew-body"
+                    v-text="item.title"
+                  ></v-list-item-title>
+                </v-list-item-content>
+              </template>
+              <v-list-item
+                v-for="child in item.children"
+                :key="child.title"
+                dense
+                class="pl-4"
+                :to="child.route"
+              >
+                <v-list-item-content>
+                  <v-list-item-title
+                    class="pl-13 white--text font-weight-regular mew-body"
+                    v-text="child.title"
+                  ></v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-group>
+          </template>
+        </v-list-item-group>
       </v-list>
 
       <v-divider class="my-4 mx-6" />
@@ -163,6 +170,7 @@ export default {
   },
   data() {
     return {
+      menuSelected: 0,
       version: process.env.VERSION,
       background: background,
       onSettings: false,
