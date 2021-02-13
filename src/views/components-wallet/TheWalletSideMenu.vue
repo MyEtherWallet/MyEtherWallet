@@ -2,8 +2,7 @@
   <div class="mew--wallet-side-menu">
     <v-navigation-drawer
       app
-      class="wallet-sidemenu custom-scroll-bar"
-      permanent
+      class="wallet-sidemenu"
       :src="background"
       width="300"
       :dark="$vuetify.theme.dark"
@@ -120,13 +119,12 @@
             />
           </v-list-item-content>
         </v-list-item>
-      </v-list>
-      <template #append>
-        <div class="px-10 d-flex align-center justify-space-between">
+
+        <div class="mt-3 px-8 d-flex align-center justify-space-between">
           <theme-switch />
           <div class="searchText--text">v{{ version }}</div>
         </div>
-      </template>
+      </v-list>
     </v-navigation-drawer>
     <mew-popup
       :is-open="showLogoutPopup"
@@ -297,9 +295,10 @@ export default {
 
   .v-navigation-drawer__content {
     margin-right: 5px;
+    margin-bottom: 10px;
     &::-webkit-scrollbar {
-      width: 2px;
-      height: 2px;
+      width: 4px;
+      height: 4px;
     }
     &::-webkit-scrollbar-button {
       width: 0;
