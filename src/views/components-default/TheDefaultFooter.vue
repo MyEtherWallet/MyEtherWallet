@@ -373,7 +373,7 @@ export default {
             routerLink: 'Tools',
             query: { tool: 'watch' }
           },
-          { label: 'Submit Dapp', routerLink: 'DappsCenter' },
+          { label: 'Submit Dapp', routerLink: 'Home' },
           {
             label: 'Convert units',
             routerLink: 'Tools',

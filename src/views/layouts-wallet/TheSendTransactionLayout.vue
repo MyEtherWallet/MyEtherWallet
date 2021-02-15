@@ -1,10 +1,13 @@
 <template>
-  <div class="d-flex">
-    <module-send />
-    <div class="ml-4">
+  <v-row>
+    <v-col cols="9">
+      <module-send />
+    </v-col>
+    <v-spacer cols="1" />
+    <v-col cols="3">
       <module-network />
-    </div>
-  </div>
+    </v-col>
+  </v-row>
 </template>
 
 <script>

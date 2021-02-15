@@ -14,11 +14,11 @@
       :valid-until="confirmInfo.validUntil"
       :send="executeTrade"
     />
-    <div class="d-flex">
-      <div class="flex-grow-1">
+    <v-row>
+      <v-col cols="9">
         <mew6-white-sheet>
           <interface-wrap title="Swap">
-            <div class="d-flex">
+            <div class="d-flex justify-space-between">
               <div>
                 <mew-select
                   :value="fromTokenType"
@@ -136,20 +136,16 @@
             </div>
           </interface-wrap>
         </mew6-white-sheet>
-      </div>
-      <div class="pa-4"></div>
-      <div>
-        <network />
-        <div class="pa-4"></div>
-        <swap />
-      </div>
-    </div>
+      </v-col>
+      <v-spacer cols="1" />
+      <v-col cols="3">
+        <module-network />
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
-import Network from '@/modules/network/ModuleNetwork';
-import Swap from '@/components/swap/Swap';
 import SwapConfirmation from '@/modules/swap/components/SwapConfirmation';
 import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
@@ -157,18 +153,33 @@ import KyberNetwork from '@/assets/images/icons/icon-kyber-network.svg';
 import Changelly from '@/assets/images/icons/icon-changelly.png';
 import Simplex from '@/assets/images/icons/icon-simplex.png';
 import Bity from '@/assets/images/icons/icon-bity.png';
-import Swapper from '@/modules/swap/ModuleSwap';
+import Swapper from '@/modules/swap/handlers/handlerSwap';
+import ModuleNetwork from '@/modules/network/ModuleNetwork';
 import utils, { toBN, fromWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
+const AMT = '0.1';
 export default {
   components: {
     SwapConfirmation,
-    network: Network,
-    swap: Swap,
-    'interface-wrap': InterfaceWrap
+    'interface-wrap': InterfaceWrap,
+    ModuleNetwork
+  },
+  props: {
+    fromToken: {
+      type: String,
+      default: ETH_TOKEN
+    },
+    toToken: {
+      type: String,
+      default: DAI_TOKEN
+    },
+    amount: {
+      type: String,
+      default: AMT
+    }
   },
   data() {
     return {
@@ -186,7 +197,7 @@ export default {
       swapper: null,
       toTokenType: null,
       fromTokenType: null,
-      tokenInValue: '0.1',
+      tokenInValue: this.amount,
       tokenOutValue: null,
       availableTokens: [],
       availableQuotes: [],
@@ -194,8 +205,8 @@ export default {
       allTrades: [],
       isLoading: false,
       defaults: {
-        fromToken: ETH_TOKEN,
-        toToken: DAI_TOKEN
+        fromToken: this.fromToken,
+        toToken: this.toToken
       },
       exPannel: [
         {
@@ -247,6 +258,25 @@ export default {
         return totalGas.toString();
       }
       return '0';
+    }
+  },
+  watch: {
+    defaults: {
+      handler: function () {
+        this.setDefaults();
+      },
+      deep: true,
+      immediate: true
+    }
+  },
+  beforeMount() {
+    if (Object.keys(this.$route.query).length > 0) {
+      const { fromToken, toToken, amount } = this.$route.query;
+      this.defaults = {
+        fromToken,
+        toToken
+      };
+      this.tokenInValue = `${amount}`;
     }
   },
   mounted() {
@@ -398,6 +428,7 @@ export default {
 
 <style lang="scss">
 .mew-component--swap {
+  width: 100%;
   .swap-expend {
     .v-application .white {
       background-color: transparent !important;

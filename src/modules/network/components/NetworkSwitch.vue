@@ -7,13 +7,8 @@
   >
     <template #mewOverlayBody>
       <h2 class="text-center mb-10">Network</h2>
-      <button-tabs
-        v-model="activeTab"
-        :tabs="['Change network', 'Add network / HTTP']"
-      />
 
       <v-sheet
-        v-if="activeTab === 1"
         color="transparent"
         max-width="700px"
         width="100%"
@@ -49,65 +44,23 @@
           </div>
         </mew6-white-sheet>
       </v-sheet>
-
-      <div v-if="activeTab === 2">
-        <mew6-white-sheet class="mt-7">
-          <div class="pa-4 pa-md-8">
-            <div>
-              <mew-address-select label="Network" :items="addresses" />
-              <mew-input label="ETH Node Name" placeholder="Type node name" />
-              <mew-input label="URL" placeholder="Type URL" />
-              <mew-input label="Port" placeholder="Type port number" />
-
-              <mew-expand-panel
-                class="mb-7"
-                is-toggle
-                has-dividers
-                :panel-items="exPannel"
-              >
-                <template #panelBody1>
-                  <mew-input label="Username" placeholder=" " />
-                  <mew-input label="Password" placeholder=" " />
-                </template>
-              </mew-expand-panel>
-
-              <div class="d-flex justify-center">
-                <mew-button btn-size="xlarge" title="Save" />
-              </div>
-            </div>
-          </div>
-        </mew6-white-sheet>
-      </div>
     </template>
   </mew-overlay>
 </template>
 
 <script>
-import buttonTabs from '@/components/tabs/buttonTabs/ButtonTabs';
 import * as nodes from '@/utils/networks/nodes';
 import * as types from '@/utils/networks/types';
 import { mapActions, mapGetters } from 'vuex';
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 export default {
   name: 'NetworkSwitch',
-  components: {
-    buttonTabs
-  },
   props: {
     open: { type: Boolean, default: false },
     close: { type: Function, default: () => {} }
   },
   data() {
     return {
-      activeTab: 1,
-      tabs: [
-        {
-          name: 'Change network'
-        },
-        {
-          name: 'Add network / HTTP'
-        }
-      ],
       networkSelected: null,
       types: types,
       nodes: nodes

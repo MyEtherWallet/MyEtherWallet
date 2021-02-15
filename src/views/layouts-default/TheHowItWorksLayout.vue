@@ -18,13 +18,13 @@
         <how-it-works-more />
       </template>
     </mew-tabs>
-    <get-started />
+    <app-get-started />
   </div>
 </template>
 
 <script>
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
-import getStarted from '@/components/get-started/GetStarted';
+import AppGetStarted from '@/core/components/AppGetStarted';
 
 import HowItWorksSwap from '../components-default/HowItWorksSwap';
 import HowItWorksSend from '../components-default/HowItWorksSend';
@@ -41,7 +41,7 @@ export default {
     HowItWorksDappsCenter,
     HowItWorksTokens,
     HowItWorksMore,
-    getStarted
+    AppGetStarted
   },
   data() {
     return {

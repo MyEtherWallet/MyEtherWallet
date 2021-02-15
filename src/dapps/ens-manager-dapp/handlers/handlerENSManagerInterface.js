@@ -331,8 +331,6 @@ export default class ENSManagerInterface {
       const supportsTxt = await this.resolverContract.methods
         .supportsInterface(registrarInterface.TEXT_RECORD)
         .call();
-      // eslint-disable-next-line
-      console.error('does it support txt', supportsTxt);
       this.textRecordSupport = supportsTxt;
       if (supportsTxt) {
         this.txtRecords = {};

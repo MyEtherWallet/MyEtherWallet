@@ -7,7 +7,8 @@ const state = {
   identifier: '',
   isHardware: false,
   instance: null,
-  web3: {}
+  web3: {},
+  ensDomains: null
 };
 
 export default state;
