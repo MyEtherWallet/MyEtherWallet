@@ -7,9 +7,6 @@ import FifsRegistrarAbi from './abi/abiFifsRegistrar.js';
 import RegistrarControllerAbi from './abi/abiRegistrarController.js';
 import multicoins from './handlerMulticoins';
 import textrecords from './handlerTextRecords';
-import supportedCoins from './handlerSupportedCoins';
-import BigNumber from 'bignumber.js';
-import utils from 'web3-utils';
 import registrarInterface from './configs/configRegistrarInterface';
 import * as nameHashPckg from 'eth-ens-namehash';
 import contentHash from 'content-hash';
@@ -26,15 +23,12 @@ export default class ENSManagerInterface {
     this.ens = ens ? ens : null;
     this.gasPrice = gasPrice ? gasPrice : null;
     // Returned value
-    this.tld = getTld(name);
-    this.registrarTLD = this.tld
-      ? this.tld
-      : this.network.type.ens.registrarTLD;
-    this.name = !this.tld ? name + '.' + this.registrarTLD : name;
-    this.nameHash = nameHashPckg.hash(name);
+    this.tld = getTld(name, network);
+    this.parsedHostName = getHostName(name);
+    this.name = this.parsedHostName + '.' + this.tld;
+    this.nameHash = nameHashPckg.hash(this.name);
     this.txtRecords = null;
     this.multiCoin = null;
-    this.parsedHostName = getHostName(name);
     this.labelHash = web3.utils.sha3(this.parsedHostName);
     this.owner = '0x';
     this.registrarAddress = '0x';
@@ -47,7 +41,6 @@ export default class ENSManagerInterface {
     this.multicoinSupport = false;
     this.isAvailable = false;
     this.isController = false;
-    this.supportedCoins = supportedCoins;
     this.checkingDomainAvail = true;
 
     // Contracts
@@ -71,10 +64,12 @@ export default class ENSManagerInterface {
       data: this.registrarContract.methods
         .reclaim(this.labelHash, actualToAddress)
         .encodeABI(),
-      gas: '500000',
       value: 0
     };
-    return this.web3.eth.sendTransaction(setControllerTx);
+    return this.web3.eth.estimateGas(setControllerTx).then(gas => {
+      setControllerTx.gas = gas;
+      return this.web3.eth.sendTransaction(setControllerTx);
+    });
   }
 
   migrate() {
@@ -83,7 +78,7 @@ export default class ENSManagerInterface {
     }
 
     if (this.publicResolverAddress === this.resolverAddress) {
-      throw new 'Name migrated succesfully!'();
+      return false;
     }
     const setResolverTx = {
       from: this.address,
@@ -94,39 +89,37 @@ export default class ENSManagerInterface {
       value: 0
     };
 
-    return this.web3.sendTransaction(setResolverTx).then(() => {
+    return this.web3.eth.sendTransaction(setResolverTx).then(() => {
       return this._migrateCoinsAndRecords();
     });
   }
-
-  setMulticoin(coin) {
+  async setMulticoin(coin) {
     if (this.owner === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
+    const isMigrate = await this.migrate();
+    if (isMigrate) return;
 
-    this.migrate().then(res => {
-      if (res.hasOwProperty('success')) return true;
+    const addr = coin.map(item => {
+      return this.publicResolverContract.methods
+        .setAddr(this.nameHash, item.id, decodeCoinAddress(item))
+        .encodeABI();
+    });
 
-      const arr = coin.map(item => {
-        return this.publicResolverContract.methods.setAddr(
-          this.nameHash,
-          item.id,
-          decodeCoinAddress(item)
-        );
-      });
+    const setAddrTx = {
+      from: this.address,
+      to: this.publicResolverAddress,
+      data: this.publicResolverContract.methods.multicall(addr).encodeABI(),
+      value: 0
+    };
 
-      const setAddrTx = {
-        from: this.address,
-        to: this.publicResolverAddress,
-        data: this.publicResolverContract.methods.multicall(arr).encodeABI(),
-        value: 0,
-        gas: 100000
-      };
+    return this.web3.eth.estimateGas(setAddrTx).then(gas => {
+      setAddrTx.gas = gas;
       return this.web3.eth.sendTransaction(setAddrTx);
     });
   }
 
-  setTxtRecord(obj) {
+  async setTxtRecord(obj) {
     if (this.address === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
@@ -134,23 +127,26 @@ export default class ENSManagerInterface {
     for (const _record in obj) {
       this.txtRecords[_record] = obj[_record];
     }
-    return this.migrate().then(res => {
-      if (res.hasOwProperty('success')) return;
-      const multicalls = [];
-      for (const i in obj) {
-        multicalls.push(
-          this.resolverContract.methods
-            .setText(this.nameHash, i.toLowerCase(), obj[i])
-            .encodeABI()
-        );
-      }
-      const tx = {
-        from: this.address,
-        to: this.publicResolverAddress,
-        data: this.resolverContract.methods.multicall(multicalls).encodeABI(),
-        gasPrice: BigNumber(utils.toWei(this.gasPrice, 'gwei')).toFixed(),
-        value: 0
-      };
+    const isMigrate = await this.migrate();
+    if (isMigrate) return;
+
+    const multicalls = [];
+    for (const i in obj) {
+      multicalls.push(
+        this.resolverContract.methods
+          .setText(this.nameHash, i.toLowerCase(), obj[i])
+          .encodeABI()
+      );
+    }
+    const tx = {
+      from: this.address,
+      to: this.publicResolverAddress,
+      data: this.resolverContract.methods.multicall(multicalls).encodeABI(),
+      value: 0
+    };
+
+    return this.web3.eth.estimateGas(tx).then(gas => {
+      tx.gas = gas;
       return this.web3.eth.sendTransaction(tx);
     });
   }
@@ -217,7 +213,7 @@ export default class ENSManagerInterface {
     const web3 = this.web3;
     const registryAddress = this.network.type.ens.registry;
     this.registryContract = new web3.eth.Contract(RegistryAbi, registryAddress);
-    this.registrarAddress = await this.ens.owner(this.registrarTLD);
+    this.registrarAddress = await this.ens.owner(this.tld);
     this._setRegistrarContracts();
   }
 
@@ -231,7 +227,7 @@ export default class ENSManagerInterface {
     if (this.network.type.ens.registrarType === REGISTRAR_TYPES.PERMANENT) {
       try {
         this.contractControllerAddress = await this.ens
-          .resolver(this.registrarTLD, ResolverAbi)
+          .resolver(this.tld, ResolverAbi)
           .interfaceImplementer(registrarInterface.CONTROLLER);
         this.registrarControllerContract = new web3.eth.Contract(
           RegistrarControllerAbi,
@@ -301,7 +297,6 @@ export default class ENSManagerInterface {
 
   async _setResolverContracts() {
     const web3 = this.web3;
-
     this.resolverAddress = await this.registryContract.methods
       .resolver(this.nameHash)
       .call();
@@ -367,34 +362,29 @@ export default class ENSManagerInterface {
       const supportMultiCoin = await this.resolverContract.methods
         .supportsInterface(registrarInterface.MULTICOIN)
         .call();
-      for (const type in this.supportedCoins)
-        this.supportedCoins[type].value = '';
+      for (const type in multicoins) multicoins[type].value = '';
       if (supportMultiCoin) {
         const promises = [];
-        const coinTypes = Object.keys(this.supportedCoins);
+        const coinTypes = Object.keys(multicoins);
         coinTypes.forEach(type => {
           promises.push(
-            this.ens
-              .resolver(this.name, ResolverAbi)
-              .addr(this.supportedCoins[type].id)
+            this.ens.resolver(this.name, ResolverAbi).addr(multicoins[type].id)
           );
         });
         await Promise.all(promises).then(vals => {
           vals.forEach((address, idx) => {
             if (address) {
-              this.supportedCoins[coinTypes[idx]].value = this.supportedCoins[
+              multicoins[coinTypes[idx]].value = multicoins[
                 coinTypes[idx]
               ].encode(new Buffer(address.replace('0x', ''), 'hex'));
             }
           });
         });
       } else {
-        this.supportedCoins.ETH.value = await this.ens
-          .resolver(this.name)
-          .addr();
+        multicoins.ETH.value = await this.ens.resolver(this.name).addr();
       }
     } catch (e) {
-      this.supportedCoins.ETH.value = '0x';
+      multicoins.ETH.value = '0x';
     }
   }
 
@@ -434,7 +424,7 @@ export default class ENSManagerInterface {
         value: 0
       };
 
-      return this.web3.sendTransaction(txObj);
+      return this.web3.eth.sendTransaction(txObj);
     } catch (e) {
       throw new Error(e);
     }

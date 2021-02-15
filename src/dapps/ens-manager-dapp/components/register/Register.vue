@@ -14,7 +14,7 @@
       <div class="d-flex justify-space-between">
         <span>{{ $t('ens.register.term') }}:</span>
         <span class="font-weight-medium">{{
-          duration === '1'
+          duration === 1
             ? $tc('ens.commit.year', 1)
             : $tc('ens.commit.year', 2, { duration: duration })
         }}</span>
@@ -76,8 +76,8 @@ export default {
       default: ''
     },
     duration: {
-      type: String,
-      default: ''
+      type: Number,
+      default: 1
     },
     minimumAge: {
       type: String,
