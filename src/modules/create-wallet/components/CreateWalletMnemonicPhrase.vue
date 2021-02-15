@@ -114,35 +114,32 @@
           =====================================================================================
           -->
           <v-sheet max-width="600px" class="mx-auto">
-            <border-block
+            <v-radio-group
               v-for="(item, idx) in generatedVerification"
               :key="`${idx}verification`"
-              sm-border-radius
-              sm-shadow
-              class="mb-2 d-flex align-center px-5 py-1"
+              v-model="validateMnemonicValues[getOnlyKey(item)]"
+              hide-details
+              mandatory
+              row
+              class="radio-group width--full pa-5"
             >
-              <div style="min-width: 30px">{{ getOnlyKey(item) + 1 }}.</div>
-              <v-radio-group
-                v-model="validateMnemonicValues[getOnlyKey(item)]"
-                hide-details
-                mandatory
-                class="width--full"
-              >
-                <v-row>
-                  <v-col
-                    v-for="(entries, id) in getEntries(item)"
-                    :key="entries + id"
-                    cols="12"
-                    sm="4"
-                  >
-                    <v-radio
-                      :label="entries"
-                      :value="`${entries}_${id}`"
-                    ></v-radio>
-                  </v-col>
-                </v-row>
-              </v-radio-group>
-            </border-block>
+              <template #label>
+                <div style="min-width: 30px">{{ getOnlyKey(item) + 1 }}.</div>
+              </template>
+              <v-row>
+                <v-col
+                  v-for="(entries, id) in getEntries(item)"
+                  :key="entries + id"
+                  cols="12"
+                  sm="4"
+                >
+                  <v-radio
+                    :label="entries"
+                    :value="`${entries}_${id}`"
+                  ></v-radio>
+                </v-col>
+              </v-row>
+            </v-radio-group>
             <mew-input
               v-if="extraWord && extraWord !== ''"
               v-model="extraWordVerification"
@@ -232,14 +229,12 @@
 </template>
 
 <script>
-import borderBlock from '@/components/border-block/BorderBlock.vue';
 import mnemonicPhraseTable from '@/components/MnemonicPhraseTable';
 import phraseBlock from '@/components/PhraseBlock';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 export default {
   name: 'CreateWalletMnemonicPhrase',
   components: {
-    borderBlock,
     mnemonicPhraseTable,
     phraseBlock
   },
@@ -387,8 +382,14 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .mew-component--mnemonic-phrase .mew-stepper.v-stepper {
   background: transparent !important;
+}
+
+.radio-group {
+  box-shadow: 0 5px 15px var(--v-boxShadow-base) !important;
+  border: 1px solid var(--v-inputBorder-base);
+  border-radius: 5px;
 }
 </style>
