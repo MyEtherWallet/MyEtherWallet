@@ -2,8 +2,7 @@
   <div class="mew--wallet-side-menu">
     <v-navigation-drawer
       app
-      class="wallet-sidemenu custom-scroll-bar"
-      permanent
+      class="wallet-sidemenu"
       :src="background"
       width="300"
       :dark="$vuetify.theme.dark"
@@ -43,32 +42,13 @@
       </template>
 
       <v-list>
-        <template v-for="(item, idx) in sectionOne">
-          <v-list-item
-            v-if="!item.children"
-            :key="item + idx + 1"
-            dense
-            :to="item.route"
-            class="py-2"
-          >
-            <v-list-item-icon class="mx-3">
-              <img width="26" height="26" :src="item.icon" :alt="item.title" />
-            </v-list-item-icon>
-
-            <v-list-item-content>
-              <v-list-item-title
-                class="white--text font-weight-regular mew-body"
-                v-text="item.title"
-              />
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-list-group
-            v-if="item.children"
-            :key="item + idx + 2"
-            prepend-icon=""
-          >
-            <template #activator>
+        <v-list-item-group model="menuSelected">
+          <template v-for="(item, idx) in sectionOne">
+            <v-list-item
+              v-if="!item.children"
+              :key="item + idx + 1"
+              :to="item.route"
+            >
               <v-list-item-icon class="mx-3">
                 <img
                   width="26"
@@ -77,29 +57,53 @@
                   :alt="item.title"
                 />
               </v-list-item-icon>
+
               <v-list-item-content>
                 <v-list-item-title
                   class="white--text font-weight-regular mew-body"
                   v-text="item.title"
-                ></v-list-item-title>
-              </v-list-item-content>
-            </template>
-            <v-list-item
-              v-for="child in item.children"
-              :key="child.title"
-              dense
-              class="pl-4"
-              :to="child.route"
-            >
-              <v-list-item-content>
-                <v-list-item-title
-                  class="pl-13 white--text font-weight-regular mew-body"
-                  v-text="child.title"
-                ></v-list-item-title>
+                />
               </v-list-item-content>
             </v-list-item>
-          </v-list-group>
-        </template>
+
+            <v-list-group
+              v-if="item.children"
+              :key="item + idx + 2"
+              prepend-icon=""
+            >
+              <template #activator>
+                <v-list-item-icon class="mx-3">
+                  <img
+                    width="26"
+                    height="26"
+                    :src="item.icon"
+                    :alt="item.title"
+                  />
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title
+                    class="white--text font-weight-regular mew-body"
+                    v-text="item.title"
+                  ></v-list-item-title>
+                </v-list-item-content>
+              </template>
+              <v-list-item
+                v-for="child in item.children"
+                :key="child.title"
+                dense
+                class="pl-4"
+                :to="child.route"
+              >
+                <v-list-item-content>
+                  <v-list-item-title
+                    class="pl-13 white--text font-weight-regular mew-body"
+                    v-text="child.title"
+                  ></v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-group>
+          </template>
+        </v-list-item-group>
       </v-list>
 
       <v-divider class="my-4 mx-6" />
@@ -122,13 +126,12 @@
             />
           </v-list-item-content>
         </v-list-item>
-      </v-list>
-      <template #append>
-        <div class="px-10 d-flex align-center justify-space-between">
+
+        <div class="mt-3 px-8 d-flex align-center justify-space-between">
           <theme-switch />
           <div class="searchText--text">v{{ version }}</div>
         </div>
-      </template>
+      </v-list>
     </v-navigation-drawer>
     <mew-popup
       :is-open="showLogoutPopup"
@@ -149,6 +152,7 @@
 import background from '@/assets/images/backgrounds/bg-light.jpg';
 import dashboard from '@/assets/images/icons/icon-dashboard-enable.png';
 import send from '@/assets/images/icons/icon-send-enable.png';
+import nft from '@/assets/images/icons/icon-nft.png';
 import swap from '@/assets/images/icons/icon-swap-enable.png';
 import dapp from '@/assets/images/icons/icon-dapp-center-enable.png';
 import tools from '@/assets/images/icons/icon-contract-enable.png';
@@ -166,6 +170,7 @@ export default {
   },
   data() {
     return {
+      menuSelected: 0,
       version: process.env.VERSION,
       background: background,
       onSettings: false,
@@ -187,15 +192,14 @@ export default {
           icon: dashboard
         },
         {
-          title: this.$t('interface.menu.send'),
-          icon: send,
-          children: [
-            { title: this.$t('sendTx.send-tx'), route: { name: 'SendTX' } },
-            {
-              title: this.$t('interface.menu.nft'),
-              route: { name: 'NFTManager' }
-            }
-          ]
+          title: this.$t('sendTx.send-tx'),
+          route: { name: 'SendTX' },
+          icon: send
+        },
+        {
+          title: this.$t('interface.menu.nft'),
+          route: { name: 'NFTManager' },
+          icon: nft
         },
         {
           title: this.$t('common.swap'),
@@ -299,9 +303,10 @@ export default {
 
   .v-navigation-drawer__content {
     margin-right: 5px;
+    margin-bottom: 10px;
     &::-webkit-scrollbar {
-      width: 2px;
-      height: 2px;
+      width: 4px;
+      height: 4px;
     }
     &::-webkit-scrollbar-button {
       width: 0;
