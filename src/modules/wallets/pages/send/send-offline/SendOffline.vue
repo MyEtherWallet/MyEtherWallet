@@ -3,7 +3,12 @@
     <div class="d-flex">
       <div class="flex-grow-1">
         <mew6-white-sheet>
-          <interface-wrap title="Send Offline">
+          <mew-module
+            class="d-flex flex-grow-1 pt-6"
+            :has-elevation="true"
+            :has-indicator="true"
+            title="Send Offline"
+          >
             <div>
               <div class="d-flex">
                 <mew-select :items="coins" label="Type" class="mr-3" />
@@ -70,7 +75,7 @@
                 btn-style="transparent"
               />
             </div>
-          </interface-wrap>
+          </mew-module>
         </mew6-white-sheet>
       </div>
       <div class="pa-4"></div>
@@ -86,14 +91,12 @@
 <script>
 import Network from '@/modules/network/ModuleNetwork';
 import swap from '@/components/swap/Swap';
-import interfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';
 
 export default {
   components: {
     Network,
-    swap,
-    interfaceWrap
+    swap
   },
   data() {
     return {

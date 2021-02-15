@@ -3,7 +3,7 @@
     <div class="d-flex">
       <div class="flex-grow-1">
         <mew6-white-sheet>
-          <interface-wrap title="Deploy contract">
+          <mew-module class="d-flex flex-grow-1 pt-6" :has-elevation="true" :has-indicator="true" title="Deploy contract">
             <mew-input label="Byte code" placeholder=" " />
 
             <v-textarea
@@ -24,7 +24,7 @@
                 btn-size="xlarge"
               />
             </div>
-          </interface-wrap>
+          </mew-module   class="d-flex flex-grow-1 pt-6" >
         </mew6-white-sheet>
       </div>
       <div class="pa-4"></div>
@@ -38,7 +38,6 @@
 </template>
 
 <script>
-import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 
 import Network from '@/modules/network/ModuleNetwork';
 import Swap from '@/components/swap/Swap';
@@ -46,7 +45,6 @@ import Swap from '@/components/swap/Swap';
 export default {
   name: 'ModuleContractDeploy',
   components: {
-    'interface-wrap': InterfaceWrap,
     network: Network,
     swap: Swap
   }

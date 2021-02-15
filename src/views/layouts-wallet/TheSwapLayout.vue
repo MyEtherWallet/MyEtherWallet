@@ -17,43 +17,49 @@
     <v-row>
       <v-col cols="9">
         <mew6-white-sheet>
-          <interface-wrap title="Swap">
-            <div class="d-flex justify-space-between">
-              <div>
-                <mew-select
-                  :value="fromTokenType"
-                  :items="fromTokens"
-                  label="From"
-                  @input="setFromToken"
-                />
-                <mew-input
-                  label="you'll send"
-                  placeholder=""
-                  :value="tokenInValue"
-                  type="number"
-                  @input="setTokenInValue"
-                />
+          <mew-module
+            :has-elevation="true"
+            :has-indicator="true"
+            class="d-flex flex-grow-1 pt-6"
+            title="Swap">
+            <template #moduleBody>
+              <div class="mt-6 d-flex justify-space-between">
+                <div>
+                  <mew-select
+                    :value="fromTokenType"
+                    :items="fromTokens"
+                    label="From"
+                    @input="setFromToken"
+                  />
+                  <mew-input
+                    label="you'll send"
+                    placeholder=""
+                    :value="tokenInValue"
+                    type="number"
+                    @input="setTokenInValue"
+                  />
+                </div>
+                <div class="px-6 mb-8 d-flex align-center">
+                  <img :src="swapIcon" height="35" />
+                </div>
+                <div>
+                  <mew-select
+                    ref="toToken"
+                    :value="toTokenType"
+                    :items="toTokens"
+                    label="To"
+                    @input="setToToken"
+                  />
+                  <mew-input
+                    label="you'll receive"
+                    placeholder=""
+                    type="number"
+                    disabled
+                    :value="tokenOutValue"
+                  />
+                </div>
               </div>
-              <div class="px-6 mb-8 d-flex align-center">
-                <img :src="swapIcon" height="35" />
-              </div>
-              <div>
-                <mew-select
-                  ref="toToken"
-                  :value="toTokenType"
-                  :items="toTokens"
-                  label="To"
-                  @input="setToToken"
-                />
-                <mew-input
-                  label="you'll receive"
-                  placeholder=""
-                  type="number"
-                  disabled
-                  :value="tokenOutValue"
-                />
-              </div>
-            </div>
+            </template>
             <mew-address-select
               class="mt-5"
               copy-tooltip="Copy"
@@ -134,7 +140,7 @@
                 @click.native="showConfirm()"
               />
             </div>
-          </interface-wrap>
+          </mew-module >
         </mew6-white-sheet>
       </v-col>
       <v-spacer cols="1" />

@@ -3,7 +3,12 @@
     <div class="d-flex">
       <div class="flex-grow-1">
         <mew6-white-sheet>
-          <interface-wrap title="Interact with contract">
+          <mew-module
+            class="d-flex flex-grow-1 pt-6"
+            title="Interact with contract"
+            :has-elevation="true"
+            :has-indicator="true"
+          >
             <div class="d-flex">
               <mew-input
                 label="Contract Address"
@@ -35,7 +40,7 @@
                 btn-style="transparent"
               />
             </div>
-          </interface-wrap>
+          </mew-module>
         </mew6-white-sheet>
       </div>
       <div class="pa-4"></div>
@@ -49,15 +54,12 @@
 </template>
 
 <script>
-import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
-
 import ModuleNetwork from '@/modules/network/ModuleNetwork';
 import Swap from '@/components/swap/Swap';
 
 export default {
   name: 'ModuleContractInteract',
   components: {
-    'interface-wrap': InterfaceWrap,
     ModuleNetwork,
     swap: Swap
   },
