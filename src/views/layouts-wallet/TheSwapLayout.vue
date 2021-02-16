@@ -21,7 +21,8 @@
             :has-elevation="true"
             :has-indicator="true"
             class="d-flex flex-grow-1 pt-6"
-            title="Swap">
+            title="Swap"
+          >
             <template #moduleBody>
               <div class="mt-6 d-flex justify-space-between">
                 <div>
@@ -140,7 +141,7 @@
                 @click.native="showConfirm()"
               />
             </div>
-          </mew-module >
+          </mew-module>
         </mew6-white-sheet>
       </v-col>
       <v-spacer cols="1" />

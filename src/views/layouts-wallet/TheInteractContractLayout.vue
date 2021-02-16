@@ -20,7 +20,6 @@ export default {
     Swap,
     ModuleNetwork
   },
-  data() {
-  }
+  data() {}
 };
 </script>

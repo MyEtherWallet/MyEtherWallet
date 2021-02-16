@@ -139,7 +139,6 @@
                 </div>
               </template>
             </mew-tabs>
-
           </template>
         </mew-module>
       </v-col>

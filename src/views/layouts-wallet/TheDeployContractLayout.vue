@@ -3,7 +3,7 @@
     <module-contract-deploy class="flex-grow-1" />
     <div class="pl-5">
       <network />
-      <swap class="mt-3"/>
+      <swap class="mt-3" />
     </div>
   </div>
 </template>
