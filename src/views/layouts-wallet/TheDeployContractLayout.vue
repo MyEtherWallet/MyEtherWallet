@@ -1,10 +1,7 @@
 <template>
   <div class="d-flex full-width pa-3">
     <module-contract-deploy class="flex-grow-1" />
-    <div class="pl-5">
-      <network />
-      <swap class="mt-3" />
-    </div>
+    <network class="pl-5" />
   </div>
 </template>
 
