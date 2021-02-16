@@ -1,5 +1,6 @@
 <template>
-  <div class="mew-component--ad-get-started">
+  <div class="mew-component--app-mewtopia-block">
+    <!-- Desktop -->
     <div class="desktop-content d-none d-lg-block">
       <v-container>
         <div
@@ -26,10 +27,11 @@
       </v-container>
     </div>
 
+    <!--Mobile -->
     <div class="mobile-content d-block d-lg-none">
       <div class="card-content">
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
-          <div class="mb-10">
+          <div class="mb-8">
             <h1 class="font-weight--700 white--text">Newbie in crypto?</h1>
             <h1 class="font-weight--700 white--text">Explore MEWtopia!</h1>
             <p class="white--text mt-3">
@@ -53,7 +55,7 @@
 
 <script>
 export default {
-  name: 'AdGetStarted',
+  name: 'AppMewtopiaBlock',
   components: {}
 };
 </script>
