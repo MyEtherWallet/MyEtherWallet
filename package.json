@@ -28,8 +28,11 @@
     "apollo:schema": "apollo service:download src/apollo/schemas/api.json",
     "apollo:codegen": "npm run apollo:schema && apollo client:codegen src/apollo/global/globalTypes.json --target=json"
   },
-  "gitHooks": {
-    "pre-commit": "npm run lint && npm run test"
+  "husky": {
+    "hooks": {
+      "pre-commit": "bash ./checkBranch.sh && npm run lint && npm run test",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   },
   "dependencies": {
     "@coolwallets/eth": "0.2.0-beta.1",
@@ -108,9 +111,9 @@
     "ethjs-unit": "0.1.6",
     "hdkey": "2.0.1",
     "husky": "5.0.9",
-    "is-ipfs": "3.0.0",
     "imagemin-mozjpeg": "9.0.0",
     "imagemin-webpack-plugin": "2.4.2",
+    "is-ipfs": "3.0.0",
     "jest-skipped-reporter": "0.0.5",
     "marked": "2.0.0",
     "multicoin-address-validator": "0.4.5",
