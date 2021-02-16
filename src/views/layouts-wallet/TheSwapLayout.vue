@@ -153,7 +153,6 @@
 
 <script>
 import SwapConfirmation from '@/modules/swap/components/SwapConfirmation';
-import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import KyberNetwork from '@/assets/images/icons/icon-kyber-network.svg';
 import Changelly from '@/assets/images/icons/icon-changelly.png';
@@ -170,7 +169,6 @@ const AMT = '0.1';
 export default {
   components: {
     SwapConfirmation,
-    'interface-wrap': InterfaceWrap,
     ModuleNetwork
   },
   props: {
