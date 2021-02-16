@@ -1,9 +1,9 @@
 <template>
-  <div class="d-flex">
+  <div class="d-flex full-width pa-3">
     <module-contract-deploy class="flex-grow-1" />
-    <div>
+    <div class="pl-5">
       <network />
-      <swap />
+      <swap class="mt-3"/>
     </div>
   </div>
 </template>
@@ -14,7 +14,7 @@ import Swap from '@/components/swap/Swap';
 import ModuleContractDeploy from '@/modules/contract/ModuleContractDeploy.vue';
 
 export default {
-  name: 'ModuleContractDeploy',
+  name: '',
   components: {
     Network,
     Swap,

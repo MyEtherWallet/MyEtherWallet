@@ -6,25 +6,27 @@
     title="Deploy contract"
   >
     <template #moduleBody>
-      <mew-input label="Byte code" placeholder=" " />
+      <div class="d-flex flex-column full-width pa-5">
+        <mew-input label="Byte code" placeholder=" " />
 
-      <v-textarea
-        no-resize
-        outlined
-        name="input-7-4"
-        label="ABI/JSON Interface"
-        value=""
-        placeholder=" "
-      ></v-textarea>
+        <v-textarea
+          no-resize
+          outlined
+          name="input-7-4"
+          label="ABI/JSON Interface"
+          value=""
+          placeholder=" "
+        ></v-textarea>
 
-      <mew-input label="Contract name" placeholder=" " />
+        <mew-input label="Contract name" placeholder=" " />
 
-      <div class="text-center mt-3">
-        <mew-button
-          title="Sign Transaction"
-          :has-full-width="false"
-          btn-size="xlarge"
-        />
+        <div class="text-center mt-3">
+          <mew-button
+            title="Sign Transaction"
+            :has-full-width="false"
+            btn-size="xlarge"
+          />
+        </div>
       </div>
     </template>
   </mew-module>
