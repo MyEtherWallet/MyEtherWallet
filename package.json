@@ -2,6 +2,8 @@
   "name": "myetherwallet",
   "version": "6.0.0",
   "description": "Client side ethereum wallet",
+  "license": "MIT",
+  "repository": "https://github.com/myetherwallet/myetherwallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
     "build": "npm run update && vue-cli-service build",
@@ -36,7 +38,7 @@
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",
     "@ensdomains/dnsregistrar": "0.4.0",
-    "@myetherwallet/mew-components": "0.5.28-beta",
+    "@myetherwallet/mew-components": "0.5.32-beta",
     "@sentry/browser": "6.1.0",
     "@sentry/integrations": "6.1.0",
     "@unstoppabledomains/resolution": "1.17.0",
@@ -74,7 +76,7 @@
     "@keepkey/keepkey.js": "1.2.3",
     "@ledgerhq/hw-app-eth": "5.42.1",
     "@ledgerhq/hw-transport-u2f": "5.36.0-deprecated",
-    "@ledgerhq/hw-transport-webusb": "5.41.0",
+    "@ledgerhq/hw-transport-webusb": "5.43.0",
     "@mdi/font": "5.9.55",
     "@myetherwallet/mewconnect-web-client": "2.1.22",
     "@vue/cli-plugin-babel": "4.5.11",
@@ -107,11 +109,12 @@
     "ethereumjs-wallet": "1.0.1",
     "ethjs-unit": "0.1.6",
     "hdkey": "2.0.1",
-    "husky": "4.3.8",
+    "husky": "5.0.9",
+    "is-ipfs": "3.0.0",
     "imagemin-mozjpeg": "9.0.0",
     "imagemin-webpack-plugin": "2.4.2",
     "jest-skipped-reporter": "0.0.5",
-    "marked": "1.2.8",
+    "marked": "2.0.0",
     "multicoin-address-validator": "0.4.5",
     "node-fetch": "2.6.1",
     "node-sass": "5.0.0",
@@ -161,7 +164,5 @@
     "mem": "4.0.0",
     "marked": "0.6.2",
     "lodash": "4.17.19"
-  },
-  "license": "MIT",
-  "repository": "https://github.com/myetherwallet/myetherwallet"
+  }
 }
