@@ -17,8 +17,9 @@
               :title="btn.label"
               :subtitle="btn.description"
               :right-icon="btn.icon"
-              icon-type="img"
+              right-icon-type="img"
               color-theme="basic"
+              font-class="mew-heading-2"
               @click.native="btn.fn"
             />
           </v-col>
@@ -58,7 +59,6 @@
 </template>
 
 <script>
-import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import accessKeystore from '../access-keystore/AccessKeystore';
 import accessMnemonic from '../access-mnemonic/AccessMnemonic';
 import accessPrivateKey from '../access-private-key/AccessPrivateKey';
@@ -95,8 +95,7 @@ export default {
   components: {
     accessKeystore,
     accessMnemonic,
-    accessPrivateKey,
-    mewSuperButton
+    accessPrivateKey
   },
   props: {
     open: {
