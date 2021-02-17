@@ -1,15 +1,19 @@
 <template>
-  <div class="mew-component--landing">
+  <div class="mew-component--app-mewtopia-block">
+    <!-- Desktop -->
     <div class="desktop-content d-none d-lg-block">
       <v-container>
         <div
           class="border-radius--10px card-content d-flex align-center justify-space-between"
         >
           <div>
-            <h2 class="font-weight--700 white--text">Newbie in crypto?</h2>
             <h2 class="font-weight--700 white--text">
-              Join our journey to MEW.
+              Newbie in crypto? Explore MEWtopia!
             </h2>
+            <p class="white--text mt-3">
+              Our media platform where you can learn about crypto, share ideas,
+              and become part of a supportive community.
+            </p>
           </div>
           <mew-button
             btn-link="https://www.mewtopia.com/"
@@ -23,14 +27,17 @@
       </v-container>
     </div>
 
+    <!--Mobile -->
     <div class="mobile-content d-block d-lg-none">
       <div class="card-content">
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
-          <div class="mb-10">
+          <div class="mb-8">
             <h1 class="font-weight--700 white--text">Newbie in crypto?</h1>
-            <h1 class="font-weight--700 white--text">
-              Join our journey to MEW.
-            </h1>
+            <h1 class="font-weight--700 white--text">Explore MEWtopia!</h1>
+            <p class="white--text mt-3">
+              Our media platform where you can learn about crypto, share ideas,
+              and become part of a supportive community.
+            </p>
           </div>
           <mew-button
             btn-link="https://www.mewtopia.com/"
@@ -48,7 +55,7 @@
 
 <script>
 export default {
-  name: 'Join',
+  name: 'AppMewtopiaBlock',
   components: {}
 };
 </script>
