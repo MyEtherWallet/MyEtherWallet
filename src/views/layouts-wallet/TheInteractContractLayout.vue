@@ -10,7 +10,7 @@
 
 <script>
 import ModuleNetwork from '@/modules/network/ModuleNetwork';
-import Swap from '@/components/swap/Swap';
+import Swap from '@/core/components/AppSwap';
 import ModuleContractInteract from '@/modules/contract/ModuleContractInteract.vue';
 
 export default {

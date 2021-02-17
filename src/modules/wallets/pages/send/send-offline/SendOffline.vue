@@ -98,7 +98,7 @@
 
 <script>
 import Network from '@/modules/network/ModuleNetwork';
-import swap from '@/components/swap/Swap';
+import swap from '@/core/components/AppSwap';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';
 
 export default {
