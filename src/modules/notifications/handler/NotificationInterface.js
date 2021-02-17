@@ -23,7 +23,8 @@ const VALID_ARGUMENTS = [
   'fromTxData', // obj
   'toTxData', // obj
   'type', // string
-  'read' // bool
+  'read', // bool
+  'nonce' // number?
 ];
 
 export default class Notification {
