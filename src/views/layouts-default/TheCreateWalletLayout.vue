@@ -42,7 +42,7 @@
             title-icon-type="mdi"
             title-icon-class="primary--text"
           >
-           <!-- need to add this slot -->
+            <!-- need to add this slot -->
             <template #contentBelowTitle>
               <div class="mt-6">
                 <img
