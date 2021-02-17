@@ -24,9 +24,7 @@
         <div class="truncate pr-sm-2">
           <div class="d-flex align-center">
             <div class="mr-1">To:</div>
-            <mew-transform-hash
-              :hash="address"
-            />
+            <mew-transform-hash :hash="address" />
           </div>
           <div>Abount: {{ amount }}</div>
         </div>

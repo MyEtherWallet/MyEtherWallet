@@ -1,7 +1,6 @@
 import OldEnsAbi from './abi/abiOldEns.js';
 import OldDeedAbi from './abi/abiOldDeed.js';
-import getHashFromFile from './helpers/helperGetHashFromFile.js';
-import uploadFileToIpfs from './helpers/helperUploadFileToIpfs.js';
+import { getHashFromFile, uploadFileToIpfs } from './helpers/helperIpfs.js';
 import BigNumber from 'bignumber.js';
 import ENSManagerInterface from './handlerENSManagerInterface.js';
 import * as nameHashPckg from 'eth-ens-namehash';
@@ -35,8 +34,8 @@ export default class PermanentNameModule extends ENSManagerInterface {
     }, 5000);
   }
 
-  register(duration) {
-    return this._registerWithDuration(duration);
+  register(duration, balance) {
+    return this._registerWithDuration(duration, balance);
   }
 
   transfer(toAddress) {
@@ -55,43 +54,49 @@ export default class PermanentNameModule extends ENSManagerInterface {
     });
   }
 
-  renew(duration) {
+  getActualDuration(duration) {
+    const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
+    return Math.ceil(SECONDS_YEAR * duration);
+  }
+
+  async getRentPrice(duration) {
+    if (duration <= 0) {
+      return;
+    }
+    if (this.registrarControllerContract) {
+      const rentPrice = await this.registrarControllerContract.methods
+        .rentPrice(this.parsedHostName, this.getActualDuration(duration))
+        .call();
+      return rentPrice;
+    }
+  }
+
+  async renew(duration, balance) {
     if (this.owner === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
 
-    if (duration <= 0) {
-      throw new Error('Invalid or missing parameter: Duration');
+    const rentPrice = await this.getRentPrice(duration);
+
+    const hasBalance = new BigNumber(rentPrice).lte(balance);
+    if (!hasBalance) {
+      throw new Error('Not enough balance');
     }
+    const data = this.registrarControllerContract.methods
+      .renew(this.parsedHostName, this.getActualDuration(duration))
+      .encodeABI();
+    const withFivePercent = BigNumber(rentPrice)
+      .times(1.05)
+      .integerValue()
+      .toFixed();
 
-    const hostName = this.name.replace(
-      `.${this.network.type.ens.registrarTLD}`,
-      ''
-    );
-
-    const ACTUAL_DURATION = Math.ceil(60 * 60 * 24 * 365.25 * duration);
-    // Not sure where to place balance checker that's currently present
-    return this.registrarControllerContract.methods
-      .rentPrice(this.name, ACTUAL_DURATION)
-      .call()
-      .then(res => {
-        const data = this.registrarControllerContract.methods
-          .renew(hostName)
-          .encodeABI();
-        const withFivePercent = BigNumber(res)
-          .times(1.05)
-          .integerue()
-          .toFixed();
-
-        const txObj = {
-          to: this.contractControllerAddress,
-          from: this.address,
-          data: data,
-          value: withFivePercent
-        };
-
-        return this.web3.sendTransaction(txObj);
-      });
+    const txObj = {
+      to: this.contractControllerAddress,
+      from: this.address,
+      data: data,
+      value: withFivePercent
+    };
+    return this.web3.eth.sendTransaction(txObj);
   }
 
   releaseDeed() {
@@ -119,7 +124,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
     return this.web3.eth.sendTransaction(obj);
   }
 
-  setIPFS(file) {
+  uploadFile(file) {
     if (this.owner === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
@@ -131,18 +136,22 @@ export default class PermanentNameModule extends ENSManagerInterface {
     return uploadFileToIpfs(file)
       .then(getHashFromFile)
       .then(hash => {
-        const ipfsToHash = `0x${contentHash.fromIpfs(hash)}`;
-        const tx = {
-          from: this.address,
-          to: this.resolverAddress,
-          data: this.resolverContract.methods
-            .setContentHash(this.nameHash, ipfsToHash)
-            .encodeABI(),
-          value: 0
-        };
-
-        return this.web3.eth.sendTransaction(tx);
+        return hash;
       });
+  }
+
+  setIPFSHash(hash) {
+    const ipfsToHash = `0x${contentHash.fromIpfs(hash)}`;
+    const tx = {
+      from: this.address,
+      to: this.resolverAddress,
+      data: this.resolverContract.methods
+        .setContentHash(this.nameHash, ipfsToHash)
+        .encodeABI(),
+      value: 0
+    };
+
+    return this.web3.eth.sendTransaction(tx);
   }
 
   // DNS claim name method
@@ -167,6 +176,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
   async createCommitment() {
     const utils = this.web3.utils;
+    const txObj = { from: this.address };
     try {
       const commitment = await this.registrarControllerContract.methods
         .makeCommitmentWithConfig(
@@ -177,9 +187,12 @@ export default class PermanentNameModule extends ENSManagerInterface {
           this.address
         )
         .call();
-      return this.registrarControllerContract.methods
-        .commit(commitment)
-        .send({ from: this.address });
+      return this.web3.eth.estimateGas(txObj).then(gas => {
+        txObj.gas = gas;
+        return this.registrarControllerContract.methods
+          .commit(commitment)
+          .send(txObj);
+      });
     } catch (e) {
       throw new Error(e);
     }
@@ -233,6 +246,11 @@ export default class PermanentNameModule extends ENSManagerInterface {
         .nameExpires(this.labelHash)
         .call();
       this.expired = expiryTime * 1000 < new Date().getTime();
+      if (!this.expired) {
+        const date = new Date(expiryTime * 1000);
+        this.expiration =
+          date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+      }
     }
     this._setDnsContract();
   }
@@ -296,28 +314,39 @@ export default class PermanentNameModule extends ENSManagerInterface {
     return this._setExpiry();
   }
 
-  async _registerWithDuration(duration) {
+  async _registerWithDuration(duration, balance) {
     const utils = this.web3.utils;
-    const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
-    const actualDuration = Math.ceil(SECONDS_YEAR * duration);
     try {
-      const rentPrice = await this.registrarControllerContract.methods
-        .rentPrice(this.parsedHostName, actualDuration)
-        .call();
+      const rentPrice = await this.getRentPrice(duration);
+
+      const hasBalance = new BigNumber(rentPrice).gte(balance);
+
+      if (!hasBalance) {
+        throw new Error('Not enough balance');
+      }
       const withFivePercent = BigNumber(rentPrice)
         .times(1.05)
         .integerValue()
         .toFixed();
-      return this.registrarControllerContract.methods
-        .registerWithConfig(
-          this.parsedHostName,
-          this.address,
-          actualDuration,
-          utils.sha3(this.secretPhrase),
-          this.publicResolverAddress,
-          this.address
-        )
-        .send({ from: this.address, value: withFivePercent, gas: '500000' }); //need to check about the gas limit
+
+      const txObj = {
+        from: this.address,
+        value: withFivePercent
+      };
+
+      return this.web3.eth.estimateGas(txObj).then(gas => {
+        txObj.gas = gas;
+        return this.registrarControllerContract.methods
+          .registerWithConfig(
+            this.parsedHostName,
+            this.address,
+            this.getActualDuration(duration),
+            utils.sha3(this.secretPhrase),
+            this.publicResolverAddress,
+            this.address
+          )
+          .send(txObj);
+      });
     } catch (e) {
       throw new Error(e);
     }

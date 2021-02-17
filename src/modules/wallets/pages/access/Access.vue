@@ -1,7 +1,7 @@
 <template>
   <div class="expandHeader">
     <v-container>
-      <app-block-title :data="titleData">
+      <app-block-title :data="titleData" page-title>
         <h5 class="white--text ma-0">
           Please select a method to access your wallet.
         </h5>

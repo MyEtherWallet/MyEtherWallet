@@ -9,21 +9,25 @@
     @closeOverlay="overlayClose"
   >
     <template #mewOverlayBody>
-      <v-sheet color="transparent" max-width="650px" class="mx-auto">
-        <v-row v-if="!step">
-          <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
+      <v-sheet
+        color="transparent"
+        max-width="650px"
+        class="mx-auto mew--software-access-overlay"
+      >
+        <template v-if="!step">
+          <div v-for="(btn, key) in buttons" :key="key">
             <mew-super-button
-              btn-mode="small-right-image"
               :title="btn.label"
               :subtitle="btn.description"
               :right-icon="btn.icon"
               right-icon-type="img"
               color-theme="basic"
               font-class="mew-heading-2"
+              class="mb-5 mew-super-btn-shadow"
               @click.native="btn.fn"
             />
-          </v-col>
-        </v-row>
+          </div>
+        </template>
         <access-keystore
           v-else-if="showKeystore"
           :btn-call="btnCall"
@@ -45,13 +49,12 @@
           v-else-if="showPrivKey"
           :unlock-private-key-wallet="unlockPrivateKeyWallet"
         />
-        <v-col cols="12" sm="12">
-          <mew-warning-sheet
-            title="Not Recommended"
-            description="This information is sensetive, and these options should only be used in offline settings by experienced crypto users."
-            :link-obj="warningSheetObj"
-          />
-        </v-col>
+        <mew-warning-sheet
+          class="pt-4"
+          title="Not Recommended"
+          description="This information is sensetive, and these options should only be used in offline settings by experienced crypto users."
+          :link-obj="warningSheetObj"
+        />
       </v-sheet>
       <div class="spacer-y-medium" />
     </template>
@@ -134,7 +137,7 @@ export default {
         {
           label: 'Private Key',
           description: 'Access via Private Key',
-          icon: require('@/assets/images/icons/icon-private-key-grey.svg'),
+          icon: require('@/assets/images/icons/icon-private-key-grey.png'),
           fn: () => {
             this.btnCall('privateKey');
           }
@@ -278,3 +281,11 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.mew--software-access-overlay {
+  .warning-sheet {
+    padding-top: 30px !important;
+  }
+}
+</style>
