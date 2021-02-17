@@ -2,9 +2,14 @@
   <div class="mew-component--nft-manager">
     <v-row>
       <v-col cols="9">
-        <mew6-white-sheet>
-          <interface-wrap title="NFT Manager">
-            <mew-tabs :items="items" is-vertical>
+        <mew-module
+          class="d-flex flex-grow-1 pt-6"
+          :has-elevation="true"
+          :has-indicator="true"
+          title="NFT Manager"
+        >
+          <template #moduleBody>
+            <mew-tabs class="mt-5" :items="items" is-vertical>
               <template #tabItemContent1>
                 <div>
                   <div class="d-flex justify-space-between mb-5">
@@ -134,8 +139,8 @@
                 </div>
               </template>
             </mew-tabs>
-          </interface-wrap>
-        </mew6-white-sheet>
+          </template>
+        </mew-module>
       </v-col>
       <v-spacer cols="1" />
       <v-col cols="3">
@@ -148,12 +153,10 @@
 </template>
 
 <script>
-import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import ModuleNetwork from '@/modules/network/ModuleNetwork';
 
 export default {
   components: {
-    'interface-wrap': InterfaceWrap,
     ModuleNetwork
   },
   data() {

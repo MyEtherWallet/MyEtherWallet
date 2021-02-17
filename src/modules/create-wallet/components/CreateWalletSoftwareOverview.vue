@@ -7,13 +7,15 @@
     -->
     <mew-super-button
       class="mb-5"
-      btn-mode="small-right-image"
       color-theme="basic"
+      font-class="mew-heading-2"
       title="Keystore File"
       subtitle="Keystore file contains all the sensitive information of your wallet.
                   We don't recommand using this method to create your wallet."
-      title-mdi-icon="mdi-shield-check"
+      title-icon="mdi-shield-check"
+      title-icon-type="mdi"
       title-icon-class="primary--text"
+      right-icon-type="img"
       :right-icon="require('@/assets/images/icons/icon-keystore-file.svg')"
       @click.native="selectWalletType(walletTypes[0])"
     />
@@ -24,13 +26,15 @@
     -->
     <mew-super-button
       class="mb-5"
-      btn-mode="small-right-image"
       color-theme="basic"
+      font-class="mew-heading-2"
       title="Mnemonic phrase"
       subtitle="Mnemonic Phrase can be lost or stolen by someone else. We don't
                   recommand using this method to create your wallet."
       title-mdi-icon="mdi-shield-check"
+      title-icon-type="mdi"
       title-icon-class="primary--text"
+      right-icon-type="img"
       :right-icon="require('@/assets/images/icons/icon-mnemonic.svg')"
       @click.native="selectWalletType(walletTypes[1])"
     />
@@ -48,11 +52,9 @@
 </template>
 
 <script>
-import MewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import { WALLET_TYPES } from '../handlers/helpers';
 export default {
   name: 'CreateWalletSoftwareOverview',
-  components: { MewSuperButton },
   data: () => ({
     walletTypes: WALLET_TYPES,
     linkToLearnMore: {

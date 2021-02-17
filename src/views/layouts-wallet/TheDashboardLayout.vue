@@ -177,7 +177,7 @@ import WalletCalls from '@/apollo/queries/wallets/index';
 import utils from 'web3-utils';
 import AppCarousel from '@/core/components/AppCarousel';
 import network from '@/modules/network/ModuleNetwork';
-import swap from '@/components/swap/Swap';
+import swap from '@/core/components/AppSwap';
 
 export default {
   components: {
