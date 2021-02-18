@@ -8,11 +8,11 @@ import TheBuyHardwareWalletLayout from '@/views/layouts-default/TheBuyHardwareWa
 import TheToolsLayout from '@/views/layouts-default/TheToolsLayout';
 import TheCreateWalletLayout from '@/views/layouts-default/TheCreateWalletLayout';
 import TheAccessWalletLayout from '@/views/layouts-default/TheAccessWalletLayout';
-import HardwareWallets from '@/modules/wallets/pages/access/hardware-wallets/HardwareWallets';
-import MobileApps from '@/modules/wallets/pages/access/mobile-apps/MobileApps';
-import BrowserExtension from '@/modules/wallets/pages/access/browser-extension/BrowserExtension';
-import BrowserExtensionInstall from '@/modules/wallets/pages/access/browser-extension/install-extension/InstallExtension';
-import BrowserExtensionAccess from '@/modules/wallets/pages/access/browser-extension/access-extension/AccessExtension';
+// import HardwareWallets from '@/modules/wallets/pages/access/hardware-wallets/HardwareWallets';
+// import MobileApps from '@/modules/wallets/pages/access/mobile-apps/MobileApps';
+// import BrowserExtension from '@/modules/wallets/pages/access/browser-extension/BrowserExtension';
+// import BrowserExtensionInstall from '@/modules/wallets/pages/access/browser-extension/install-extension/InstallExtension';
+// import BrowserExtensionAccess from '@/modules/wallets/pages/access/browser-extension/access-extension/AccessExtension';
 import ThePrivacyPolicyLayout from '@/views/layouts-default/ThePrivacyPolicyLayout';
 import TheTermsOfServiceLayout from '@/views/layouts-default/TheTermsOfServiceLayout';
 import {
@@ -110,7 +110,7 @@ export default {
       beforeEnter: createRouteGuard
     },
     {
-      path: 'wallet/access/:overlay',
+      path: 'wallet/access/:overlay?',
       name: 'AccessWallet',
       component: TheAccessWalletLayout,
       props: accessWalletProps,
@@ -118,46 +118,46 @@ export default {
         requiresAuth: false
       },
       beforeEnter: accessRouteGuard
-    },
-    {
-      path: 'wallet/access/hardware-wallets',
-      name: 'HardwareWallets',
-      component: HardwareWallets,
-      meta: {
-        requiresAuth: false
-      }
-    },
-    {
-      path: 'wallet/access/browser-extension',
-      name: 'BrowserExtension',
-      component: BrowserExtension,
-      meta: {
-        requiresAuth: false
-      }
-    },
-    {
-      path: 'wallet/access/browser-extension/install',
-      name: 'BrowserExtensionInstall',
-      component: BrowserExtensionInstall,
-      meta: {
-        requiresAuth: false
-      }
-    },
-    {
-      path: 'wallet/access/browser-extension/access',
-      name: 'BrowserExtensionAccess',
-      component: BrowserExtensionAccess,
-      meta: {
-        requiresAuth: false
-      }
-    },
-    {
-      path: 'wallet/access/mobile-apps',
-      name: 'MobileApps',
-      component: MobileApps,
-      meta: {
-        requiresAuth: false
-      }
     }
+    // {
+    //   path: 'wallet/access/hardware-wallets',
+    //   name: 'HardwareWallets',
+    //   component: HardwareWallets,
+    //   meta: {
+    //     requiresAuth: false
+    //   }
+    // },
+    // {
+    //   path: 'wallet/access/browser-extension',
+    //   name: 'BrowserExtension',
+    //   component: BrowserExtension,
+    //   meta: {
+    //     requiresAuth: false
+    //   }
+    // },
+    // {
+    //   path: 'wallet/access/browser-extension/install',
+    //   name: 'BrowserExtensionInstall',
+    //   component: BrowserExtensionInstall,
+    //   meta: {
+    //     requiresAuth: false
+    //   }
+    // },
+    // {
+    //   path: 'wallet/access/browser-extension/access',
+    //   name: 'BrowserExtensionAccess',
+    //   component: BrowserExtensionAccess,
+    //   meta: {
+    //     requiresAuth: false
+    //   }
+    // },
+    // {
+    //   path: 'wallet/access/mobile-apps',
+    //   name: 'MobileApps',
+    //   component: MobileApps,
+    //   meta: {
+    //     requiresAuth: false
+    //   }
+    // }
   ]
 };

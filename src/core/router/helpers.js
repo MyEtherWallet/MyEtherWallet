@@ -44,14 +44,11 @@ const createRouteGuard = (to, from, next) => {
 const accessWalletProps = route => {
   if (Object.keys(route.query).length > 0) {
     const { type } = stripQuery(route.query);
-    const walletType = type ? DocumentType : '';
-    const isSoftware =
-      route.params && route.params.overlay && route.params.overlay === 'hardw'
-        ? true
-        : false;
-
+    const walletType = type ? type : '';
+    const overlay =
+      route.params && route.params.overlay ? route.params.overlay : '';
     return {
-      showSoftwareModule: isSoftware,
+      overlay: overlay,
       type: walletType
     };
   }
@@ -62,7 +59,7 @@ const accessRouteGuard = (to, from, next) => {
     next();
   } else {
     const validOverlays = ['hardware', 'mobile', 'software'];
-    if (to.query.type === validOverlays[0]) {
+    if (to.params.overlay === validOverlays[0]) {
       const validTypes = [
         'overview',
         'ledger',
@@ -81,7 +78,7 @@ const accessRouteGuard = (to, from, next) => {
         next('*');
       }
     }
-    if (to.query.type === validOverlays[1]) {
+    if (to.params.overlay === validOverlays[1]) {
       const validTypes = ['overview'];
       if (validTypes[0] === to.query.type) {
         next();
@@ -89,7 +86,7 @@ const accessRouteGuard = (to, from, next) => {
         next('*');
       }
     }
-    if (to.query.type === validOverlays[2]) {
+    if (to.params.overlay === validOverlays[2]) {
       const validTypes = ['keystore', 'mnemonic', 'private-key', 'overview'];
       if (validTypes.includes(to.query.type)) {
         next();

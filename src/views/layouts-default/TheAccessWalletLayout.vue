@@ -1,6 +1,11 @@
 <template>
   <div class="expandHeader">
     <v-container>
+      <!--
+      =====================================================================================
+        Layout Title
+      =====================================================================================
+      -->
       <app-block-title :data="titleData">
         <h5 class="white--text ma-0">
           Please select a method to access your wallet.
@@ -15,32 +20,47 @@
           </router-link>
         </h5>
       </app-block-title>
-
-      <v-sheet color="transparent" max-width="550px" class="mx-auto">
-        <div v-for="btn in buttons" :key="btn.title" class="mb-5">
-          <mew-super-button
-            btn-mode="small-right-image"
-            :color-theme="btn.color"
-            :title="btn.title"
-            :subtitle="btn.subtitle"
-            :right-icon="btn.rightIcon"
-            :right-icons="btn.rightIcons"
-            :title-mdi-icon="btn.titleIcon"
-            :title-icon-class="btn.titleIconClass"
-            :note="btn.note"
-            @click.native="btn.fn"
-          >
-            <template #contentSlot>
-              <img :src="btn.rightIcon" width="100px" />
-            </template>
-          </mew-super-button>
-        </div>
-      </v-sheet>
+      <!--
+      =====================================================================================
+        Options
+      =====================================================================================
+      -->
+      <v-container>
+        <v-sheet color="transparent" max-width="650px" class="mx-auto">
+          <div v-for="btn in buttons" :key="btn.title" class="mb-5">
+            <mew-super-button
+              btn-mode="small-right-image"
+              :color-theme="btn.color"
+              :title="btn.title"
+              :subtitle="btn.subtitle"
+              :right-icon="btn.rightIcon"
+              :right-icons="btn.rightIcons"
+              :title-mdi-icon="btn.titleIcon"
+              :title-icon-class="btn.titleIconClass"
+              :note="btn.note"
+              @click.native="btn.fn"
+            >
+              <template #contentSlot>
+                <img :src="btn.rightIcon" width="100px" />
+              </template>
+            </mew-super-button>
+          </div>
+        </v-sheet>
+      </v-container>
+      <!--
+      =====================================================================================
+        Acccess Wallet Module Overlays - activate on Options Button click
+      =====================================================================================
+      -->
       <div class="spacer-y-medium" />
       <browser-extension-overlay :open="showBrowser" :close="close" />
       <hardware-access-overlay :open="showHardware" :close="close" />
       <mobile-access-overlay :open="showMobile" :close="close" />
-      <software-access-overlay :open="showSoftware" :close="close" />
+      <module-access-wallet-software
+        :open="showSoftware"
+        :close="close"
+        :wallet-type="type"
+      />
     </v-container>
   </div>
 </template>
@@ -51,7 +71,10 @@ import AppBlockTitle from '@/core/components/AppBlockTitle';
 import browserExtensionOverlay from '@/modules/wallets/components/browser-extension-overlay/BrowserExtensionOverlay';
 import hardwareAccessOverlay from '@/modules/wallets/components/hardware-access-overlay/HardwareAccessOverlay';
 import mobileAccessOverlay from '@/modules/wallets/components/mobile-access-overlay/MobileAccessOverlay';
-import softwareAccessOverlay from '@/modules/wallets/components/software-access-overlay/SoftwareAccessOverlay';
+import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+
+const VALID_OVERLAYS = ['hardware', 'mobile', 'software'];
 export default {
   name: 'TheAccessWalletLayout',
   components: {
@@ -59,8 +82,18 @@ export default {
     browserExtensionOverlay,
     hardwareAccessOverlay,
     mobileAccessOverlay,
-    softwareAccessOverlay,
+    ModuleAccessWalletSoftware,
     mewSuperButton
+  },
+  props: {
+    overlay: {
+      type: String,
+      default: ''
+    },
+    type: {
+      type: String,
+      default: 'overview'
+    }
   },
   data() {
     return {
@@ -72,6 +105,7 @@ export default {
         centered: true
       },
       buttons: [
+        /* MEW wallet Button */
         {
           color: 'basic',
           title: 'MEWwallet',
@@ -84,6 +118,7 @@ export default {
             window.open('https://www.mewwallet.com', '_blank');
           }
         },
+        /* Browser Extension */
         {
           color: 'basic',
           title: 'Browser Extension',
@@ -97,6 +132,7 @@ export default {
             this.$router.push({ name: 'BrowserExtension' });
           }
         },
+        /* Hardware Wallet */
         {
           color: 'basic',
           title: 'Hardware wallets',
@@ -106,10 +142,10 @@ export default {
           titleIcon: 'mdi-shield-check',
           titleIconClass: 'primary--text',
           fn: () => {
-            this.open('showHardware');
-            //this.$router.push({ name: 'HardwareWallets' });
+            this.open(VALID_OVERLAYS[0]);
           }
         },
+        /* Mobile Apps */
         {
           color: 'basic',
           title: 'Mobile Apps',
@@ -126,30 +162,71 @@ export default {
             this.$router.push({ name: 'MobileApps' });
           }
         },
+        /* Software */
         {
           color: 'outline',
           title: 'Software',
           subtitle: 'Keystore files, Mnemonic phrase, Private key',
-          note: 'NOT RECOMMANDED',
+          note: 'NOT RECOMMENDED',
           rightIcon: '',
           titleIcon: 'mdi-alert',
           titleIconClass: 'warning--text text--darken-1',
           fn: () => {
-            this.open('showSoftware');
+            this.open(VALID_OVERLAYS[2]);
           }
         }
       ],
       showBrowser: false,
-      showHardware: false,
-      showMobile: false,
-      showSoftware: false
+      showMobile: false
     };
   },
-  methods: {
-    close(type) {
-      this[type] = false;
+  computed: {
+    /**
+     * Opens up software module overlay. Returns true if overlay prop from route is VALID_OVERLAYS[2]
+     * @return - boolean
+     */
+    showSoftware() {
+      return this.overlay === VALID_OVERLAYS[2];
     },
+    /**
+     * Opens up harware module overlay. Returns true if overlay prop from route is VALID_OVERLAYS[0]
+     * @return - boolean
+     */
+    showHardware() {
+      return this.overlay === VALID_OVERLAYS[0];
+    }
+  },
+  methods: {
+    /**
+     * Pushes route to empty Access wallet with no props
+     * Consequently closing any open overlay
+     * @type - must be one of the VALID_OVERLAYS
+     */
+    close() {
+      try {
+        this.$router.push({
+          params: null,
+          query: null
+        });
+      } catch (e) {
+        Toast(e, {}, ERROR);
+      }
+    },
+    /**
+     * Pushes a correct router prop for the overlay and sets query prop 'type' to the 'overview'.
+     * Consiquently this will open the correct module overlay.
+     * @type - must be one of the VALID_OVERLAYS
+     */
     open(type) {
+      try {
+        this.$router.push({
+          name: 'AccessWallet',
+          params: { overlay: type },
+          query: { type: 'overview' }
+        });
+      } catch (e) {
+        Toast(e, {}, ERROR);
+      }
       this[type] = true;
     }
   }
