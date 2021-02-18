@@ -44,6 +44,16 @@
         />
         <!--
         =====================================================================================
+         Access With PrivateKey
+        =====================================================================================
+        -->
+        <access-wallet-private-key
+          v-else-if="walletType === types[2]"
+          :handler-access-wallet="accessHandler"
+          @unlock="unclockWallet"
+        />
+        <!--
+        =====================================================================================
           Warning
         =====================================================================================
         -->
@@ -55,28 +65,7 @@
         />
       </v-sheet>
 
-      <!-- <v-sheet color="transparent" max-width="650px" class="mx-auto">
-        <v-row v-if="!step">
-          <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
-            <mew-super-button
-              btn-mode="small-right-image"
-              :title="btn.label"
-              :subtitle="btn.description"
-              :right-icon="btn.icon"
-              icon-type="img"
-              color-theme="basic"
-              @click.native="btn.fn"
-            />
-          </v-col>
-        </v-row>
-        <access-keystore
-          v-else-if="showKeystore"
-          :btn-call="btnCall"
-          :unlock-keystore-wallet="unlockKeystoreWallet"
-          :step="step"
-          @keystore="handleKeystoreUpload"
-          @updateStep="handleStep"
-        />
+      <!--
         <access-mnemonic
           v-else-if="showMnemonic"
           :btn-call="btnCall"
@@ -86,17 +75,6 @@
           :hw-wallet-instance="hwWalletInstance"
           :set-address="setAddress"
         />
-        <access-private-key
-          v-else-if="showPrivKey"
-          :unlock-private-key-wallet="unlockPrivateKeyWallet"
-        />
-        <v-col cols="12" sm="12">
-          <mew-warning-sheet
-            title="Not Recommended"
-            description="This information is sensetive, and these options should only be used in offline settings by experienced crypto users."
-            :link-obj="warningSheetObj"
-          />
-        </v-col>
       </v-sheet> -->
       <div class="spacer-y-medium" />
     </template>
@@ -107,7 +85,7 @@
 import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import AccessWalletKeystore from './software/components/AccessWalletKeystore';
 import accessMnemonic from './software/components/AccessMnemonic';
-import accessPrivateKey from './software/components/AccessPrivateKey';
+import AccessWalletPrivateKey from './software/components/AccessWalletPrivateKey';
 import { mapActions, mapState } from 'vuex';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { SOFTWARE_WALLET_TYPES } from './software/handlers/helpers';
@@ -118,7 +96,7 @@ export default {
   components: {
     AccessWalletKeystore,
     accessMnemonic,
-    accessPrivateKey,
+    AccessWalletPrivateKey,
     mewSuperButton
   },
   props: {
