@@ -20,6 +20,7 @@ const setEvents = (promiObj, tx, dispatch) => {
   const newTxObj = utils._.clone(tx);
   newTxObj.date = new Date().getTime();
   newTxObj.read = false;
+  const isExcempt = newTxObj.handleNotification;
   delete newTxObj['r'];
   delete newTxObj['v'];
   delete newTxObj['s'];
@@ -29,27 +30,32 @@ const setEvents = (promiObj, tx, dispatch) => {
     .once('transactionHash', hash => {
       newTxObj.status = 'PENDING';
       newTxObj.transactionHash = hash;
-
-      const notification = new Notification(newTxObj);
-      dispatch('notifications/addNotification', notification, {
-        root: true
-      });
+      if (!isExcempt) {
+        const notification = new Notification(newTxObj);
+        dispatch('notifications/addNotification', notification, {
+          root: true
+        });
+      }
     })
     .on('receipt', res => {
       newTxObj.transactionHash = res.transactionHash;
       newTxObj.status = 'SUCCESS';
-      const notification = new Notification(newTxObj);
-      dispatch('notifications/updateNotification', notification, {
-        root: true
-      });
+      if (!isExcempt) {
+        const notification = new Notification(newTxObj);
+        dispatch('notifications/updateNotification', notification, {
+          root: true
+        });
+      }
     })
     .on('error', err => {
       newTxObj.status = 'FAILED';
       newTxObj.errMessage = err.message;
-      const notification = new Notification(newTxObj);
-      dispatch('notifications/addNotification', notification, {
-        root: true
-      });
+      if (!isExcempt) {
+        const notification = new Notification(newTxObj);
+        dispatch('notifications/addNotification', notification, {
+          root: true
+        });
+      }
     });
 };
 export default async ({ payload, store, requestManager }, res, next) => {

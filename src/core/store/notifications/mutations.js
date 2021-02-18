@@ -42,35 +42,22 @@ const INIT_STORE = function (state) {
 };
 
 const ADD_NOTIFICATION = function (state, obj) {
-  // removes connection so notifcations can be updated once
-  const arr = Array.prototype.splice.call(state.notifications);
-  arr.push(obj);
-  console.log(arr, state.notifications);
-  state.notifications = arr;
+  state.notifications.push(obj);
 };
 
 const UPDATE_NOTIFICATION = function (state, obj) {
-  // removes connection so notifcations can be updated once
-  const arr = Array.prototype.splice.call(state.notifications);
-  const newMap = arr.map(item => {
-    if (item.txHash === obj.txHash) {
+  state.notifications = state.notifications.map(item => {
+    if (item.transactionHash === obj.transactionHash) {
       item = obj;
     }
     return item;
   });
-  state.notifications = newMap;
 };
 
 const DELETE_NOTIFICATION = function (state, obj) {
-  const arr = Array.prototype.splice.call(state.notifications);
-  const idx = arr.findIndex(item => {
-    if (item.txHash === obj.txHash) {
-      return item;
-    }
+  state.notifications = state.notifications.filter(item => {
+    if (item.transactionHash !== obj.transactionHash) return item;
   });
-
-  if (idx) arr.splice(idx, 1);
-  state.notifications = arr;
 };
 
 export default {
