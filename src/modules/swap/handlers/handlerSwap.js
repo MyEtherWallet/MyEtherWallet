@@ -90,9 +90,9 @@ class Swap {
       if (p.provider === tradeInfo.provider) return p.executeTrade(tradeInfo);
     }
   }
-  getStatus(tradeInfo) {
+  getStatus(statusObj) {
     for (const p of this.providers) {
-      if (p.provider === tradeInfo.provider) return p.getStatus(tradeInfo);
+      if (p.provider === statusObj.provider) return p.getStatus(statusObj);
     }
   }
 }

@@ -139,49 +139,27 @@ class Changelly {
   async executeTrade(tradeObj) {
     const from = await this.web3.eth.getCoinbase();
     const gasPrice = await this.web3.eth.getGasPrice();
-    if (tradeObj.transactions.length === 1) {
-      return new Promise((resolve, reject) => {
-        this.web3.eth
-          .sendTransaction(
-            Object.assign(tradeObj.transactions[0], {
-              from,
-              gasPrice
-            })
-          )
-          .on('transactionHash', hash => {
-            return resolve({
-              hashes: [hash],
-              statusObj: { id: tradeObj.response.id }
-            });
-          })
-          .catch(reject);
-      });
-    }
-    const txs = [];
-    tradeObj.transactions.forEach(tx => {
-      tx.from = from;
-      tx.gasPrice = gasPrice;
-      txs.push(tx);
-    });
 
     return new Promise((resolve, reject) => {
-      let counter = 0;
-      const hashes = [];
-      this.web3.mew
-        .sendBatchTransactions(txs)
-        .then(promises => {
-          promises.forEach(p => {
-            p.on('transactionHash', hash => {
-              hashes.push(hash);
-              counter++;
-              if (counter === promises.length) resolve({ hashes });
-            });
+      this.web3.eth
+        .sendTransaction(
+          Object.assign(tradeObj.transactions[0], {
+            from,
+            gasPrice
+          })
+        )
+        .on('transactionHash', hash => {
+          return resolve({
+            hashes: [hash],
+            provider: this.provider,
+            statusObj: { id: tradeObj.response.id }
           });
         })
         .catch(reject);
     });
   }
   getStatus(statusObj) {
+    statusObj = statusObj.statusObj;
     return axios
       .post(`${HOST_URL}`, {
         id: uuidv4(),
