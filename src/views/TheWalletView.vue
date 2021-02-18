@@ -1,7 +1,7 @@
 <template>
   <v-sheet height="100%" color="walletBg">
     <the-wallet-side-menu />
-    <div class="px-3 pb-3">
+    <div class="px-3">
       <the-wallet-header />
       <v-container class="align-center d-flex pt-2" fluid>
         <module-confirmation />
@@ -9,6 +9,7 @@
       </v-container>
       <the-wallet-footer />
     </div>
+    <div class="bottom-spacing-for-footer py-2"></div>
   </v-sheet>
 </template>
 

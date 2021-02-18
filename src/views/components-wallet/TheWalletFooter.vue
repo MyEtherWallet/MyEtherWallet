@@ -1,7 +1,7 @@
 <template>
-  <v-footer color="mewBg" class="pa-0" inset app>
+  <v-footer color="mewBg" class="mew-component--wallet-footer pa-0" inset app>
     <v-container
-      class="py-0 px-10 d-flex align-center justify-space-between"
+      class="py-6 px-10 d-flex align-center justify-space-between"
       fluid
     >
       <div class="textSecondary--text">
@@ -15,12 +15,11 @@
       </div>
       <div class="d-flex align-center titlePrimary--text">
         <span>Feedback</span>
-        <span class="mx-2">|</span>
+        <span class="mx-5">|</span>
         <span>Support</span>
-        <span class="mx-2">|</span>
+        <span class="mx-5">|</span>
         <v-select
           v-model="onLanguage"
-          class="language-select"
           append-icon="mdi-chevron-down"
           :items="languages"
           item-text="name"
@@ -76,9 +75,39 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
-.language-select {
-  max-width: 130px;
-  margin-top: 10px;
+
+<style lang="scss">
+.mew-component--wallet-footer {
+  .v-select__selection {
+    color: var(--v-titlePrimary-base) !important;
+    width: 100%;
+    text-align: right;
+  }
+
+  .v-text-field > .v-input__control > .v-input__slot:before,
+  .v-text-field > .v-input__control > .v-input__slot:after,
+  .v-select.v-text-field input,
+  .v-text-field__details {
+    display: none;
+  }
+
+  .v-text-field .v-input__append-inner {
+    margin-left: -5px;
+  }
+
+  .v-text-field,
+  .v-input__slot {
+    margin: 0;
+    padding: 0;
+  }
+
+  .v-select .v-icon {
+    color: var(--v-titlePrimary-base) !important;
+  }
+
+  .v-select__selection {
+    max-width: 100%;
+    text-overflow: unset !important;
+  }
 }
 </style>
