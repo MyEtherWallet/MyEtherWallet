@@ -73,8 +73,7 @@ import hardwareAccessOverlay from '@/modules/wallets/components/hardware-access-
 import mobileAccessOverlay from '@/modules/wallets/components/mobile-access-overlay/MobileAccessOverlay';
 import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-
-const VALID_OVERLAYS = ['hardware', 'mobile', 'software'];
+import { ACCESS_VALID_OVERLAYS } from '@/core/router/helpers';
 export default {
   name: 'TheAccessWalletLayout',
   components: {
@@ -142,7 +141,7 @@ export default {
           titleIcon: 'mdi-shield-check',
           titleIconClass: 'primary--text',
           fn: () => {
-            this.open(VALID_OVERLAYS[0]);
+            this.open(ACCESS_VALID_OVERLAYS.HARDWARE);
           }
         },
         /* Mobile Apps */
@@ -159,7 +158,7 @@ export default {
           titleIconClass: 'primary--text',
           fn: () => {
             //this.open('showMobile');
-            this.$router.push({ name: 'MobileApps' });
+            this.$router.push({ name: ACCESS_VALID_OVERLAYS.MOBILE });
           }
         },
         /* Software */
@@ -172,7 +171,7 @@ export default {
           titleIcon: 'mdi-alert',
           titleIconClass: 'warning--text text--darken-1',
           fn: () => {
-            this.open(VALID_OVERLAYS[2]);
+            this.open(ACCESS_VALID_OVERLAYS.SOFTWARE);
           }
         }
       ],
@@ -186,14 +185,14 @@ export default {
      * @return - boolean
      */
     showSoftware() {
-      return this.overlay === VALID_OVERLAYS[2];
+      return this.overlay === ACCESS_VALID_OVERLAYS.SOFTWARE;
     },
     /**
      * Opens up harware module overlay. Returns true if overlay prop from route is VALID_OVERLAYS[0]
      * @return - boolean
      */
     showHardware() {
-      return this.overlay === VALID_OVERLAYS[0];
+      return this.overlay === ACCESS_VALID_OVERLAYS.HARDWARE;
     }
   },
   methods: {

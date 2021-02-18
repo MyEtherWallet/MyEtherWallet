@@ -1,5 +1,46 @@
 <template>
-  <div class="mt-5">
+  <mew-stepper :items="stepperItems" :on-step="step">
+    <!--
+    =====================================================================================
+      Step 1: Enter mnemonic
+    =====================================================================================
+    -->
+    <template v-if="step === 1" #stepperContent1>
+      <v-sheet color="white" class="border-radius--10px pa-4 pa-md-10">
+        <v-row class="align-start justify-start">
+          <v-col cols="12">
+            <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
+            <div class="headline font-weight-bold">
+              Enter your Mnemonic Phrase
+            </div>
+            <p class="mb-3 mb-sm-10 mb-md-5">
+              Please type the mnemonic phrase you wrote down in the right order.
+            </p>
+          </v-col>
+          <div cols="flex-row-reverse">
+            <v-select
+              v-model="length"
+              style="max-width: 150px"
+              hide-details
+              dense
+              item-text="label"
+              item-value="value"
+              :items="mnemonicOptions"
+              label=""
+              outlined
+            ></v-select>
+          </div>
+        </v-row>
+      </v-sheet>
+    </template>
+    <!--
+    =====================================================================================
+      Step 2: Enter Password
+    =====================================================================================
+    -->
+    <template v-if="step === 2" #stepperContent2> </template>
+  </mew-stepper>
+  <!-- <div class="mt-5">
     <div v-if="step === 1">
       <h3 class="font-weight-bold text-center mb-10">
         1. Enter your mnemonic phrase
@@ -10,17 +51,7 @@
           Please type the mnemonic phrase you wrote down in the right order.
         </div>
         <div class="d-flex align-center justify-end pb-4">
-          <v-select
-            v-model="length"
-            style="max-width: 150px"
-            hide-details
-            dense
-            item-text="label"
-            item-value="value"
-            :items="mnemonicOptions"
-            label=""
-            outlined
-          ></v-select>
+
         </div>
         <phrase-block class="mb-8">
           <v-row>
@@ -242,7 +273,7 @@
     </div>
 
     <page-indicator-dot class="mt-4" :items="3" :current-item="step" />
-  </div>
+  </div> -->
 </template>
 
 <script>
@@ -275,6 +306,13 @@ export default {
     phraseBlock
   },
   props: {
+    handlerAccessWallet: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    },
+
     open: {
       type: Boolean,
       default: false
@@ -308,6 +346,16 @@ export default {
   },
   data() {
     return {
+      stepperItems: [
+        {
+          step: 1,
+          name: 'Enter Phrase'
+        },
+        {
+          step: 2,
+          name: 'Enter Password'
+        }
+      ],
       extraWord: '',
       phrase: {},
       length: 12,

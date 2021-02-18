@@ -1,11 +1,11 @@
 import { isHexString } from 'ethereumjs-util';
 
-const SOFTWARE_WALLET_TYPES = [
-  'keystore',
-  'mnemonic',
-  'private-key',
-  'overview'
-];
+const SOFTWARE_WALLET_TYPES = {
+  KEYSTORE: 'keystore',
+  MNEMONIC: 'mnemonic',
+  PRIVATE_KEY: 'private-key',
+  OVERVIEW: 'overview'
+};
 
 const isPrivateKey = key => {
   const _priv = key.replace('0x', '');

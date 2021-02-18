@@ -1,9 +1,9 @@
 <template>
   <!--
-    =====================================================================================
-        Overlay - access using software
-    =====================================================================================
-    -->
+  =====================================================================================
+    Overlay - access using software
+  =====================================================================================
+  -->
   <mew-overlay
     :show-overlay="open"
     :title="title"
@@ -19,7 +19,7 @@
          Overview: prompts user to select options
         =====================================================================================
         -->
-        <v-row v-if="walletType === types[3]">
+        <v-row v-if="walletType === types.OVERVIEW">
           <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
             <mew-super-button
               btn-mode="small-right-image"
@@ -38,7 +38,17 @@
         =====================================================================================
         -->
         <access-wallet-keystore
-          v-if="walletType === types[0]"
+          v-if="walletType === types.KEYSTORE"
+          :handler-access-wallet="accessHandler"
+          @unlock="unclockWallet"
+        />
+        <!--
+        =====================================================================================
+         Access With Mnemonic
+        =====================================================================================
+        -->
+        <access-wallet-mnemonic
+          v-if="walletType === types.MNEMONIC"
           :handler-access-wallet="accessHandler"
           @unlock="unclockWallet"
         />
@@ -48,7 +58,7 @@
         =====================================================================================
         -->
         <access-wallet-private-key
-          v-else-if="walletType === types[2]"
+          v-else-if="walletType === types.PRIVATE_KEY"
           :handler-access-wallet="accessHandler"
           @unlock="unclockWallet"
         />
@@ -64,18 +74,6 @@
           class="mt-6"
         />
       </v-sheet>
-
-      <!--
-        <access-mnemonic
-          v-else-if="showMnemonic"
-          :btn-call="btnCall"
-          :unlock-mnemonic-wallet="unlockMnemonicWallet"
-          :step="step"
-          :set-mnemonic-path="setMnemonicPath"
-          :hw-wallet-instance="hwWalletInstance"
-          :set-address="setAddress"
-        />
-      </v-sheet> -->
       <div class="spacer-y-medium" />
     </template>
   </mew-overlay>
@@ -84,7 +82,7 @@
 <script>
 import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import AccessWalletKeystore from './software/components/AccessWalletKeystore';
-import accessMnemonic from './software/components/AccessMnemonic';
+import AccessWalletMnemonic from './software/components/AccessWalletMnemonic';
 import AccessWalletPrivateKey from './software/components/AccessWalletPrivateKey';
 import { mapActions, mapState } from 'vuex';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
@@ -95,7 +93,7 @@ export default {
   name: 'ModuleAccessWalletSoftware',
   components: {
     AccessWalletKeystore,
-    accessMnemonic,
+    AccessWalletMnemonic,
     AccessWalletPrivateKey,
     mewSuperButton
   },
@@ -127,7 +125,7 @@ export default {
           description: 'Access via Keystore',
           icon: require('@/assets/images/icons/icon-keystore-file.svg'),
           fn: () => {
-            this.setType(SOFTWARE_WALLET_TYPES[0]);
+            this.setType(SOFTWARE_WALLET_TYPES.KEYSTORE);
           }
         },
         /* Mnemonic */
@@ -136,7 +134,7 @@ export default {
           description: 'Access via Mnemonic Phrase',
           icon: require('@/assets/images/icons/icon-mnemonic.svg'),
           fn: () => {
-            this.setType(SOFTWARE_WALLET_TYPES[1]);
+            this.setType(SOFTWARE_WALLET_TYPES.MNEMONIC);
           }
         },
         /* Private Key */
@@ -145,7 +143,7 @@ export default {
           description: 'Access via Private Key',
           icon: require('@/assets/images/icons/icon-private-key-grey.svg'),
           fn: () => {
-            this.setType(SOFTWARE_WALLET_TYPES[2]);
+            this.setType(SOFTWARE_WALLET_TYPES.PRIVATE_KEY);
           }
         }
       ],
@@ -160,7 +158,7 @@ export default {
      * if overview, button text is empty
      */
     backBtnText() {
-      return this.walletType === SOFTWARE_WALLET_TYPES[3]
+      return this.walletType === SOFTWARE_WALLET_TYPES.OVERVIEW
         ? ''
         : 'Select Another Software';
     },
@@ -169,11 +167,11 @@ export default {
      */
     title() {
       switch (this.walletType) {
-        case SOFTWARE_WALLET_TYPES[0]:
+        case SOFTWARE_WALLET_TYPES.KEYSTORE:
           return 'Access Wallet with Keystore File';
-        case SOFTWARE_WALLET_TYPES[1]:
+        case SOFTWARE_WALLET_TYPES.MNEMONIC:
           return 'Access Wallet with Mnemonic Pharse';
-        case SOFTWARE_WALLET_TYPES[2]:
+        case SOFTWARE_WALLET_TYPES.PRIVATE_KEY:
           return 'Access Wallet with Private Key';
         default:
           return 'Select Software Wallet';
@@ -224,10 +222,10 @@ export default {
      * Used in overlay back button
      */
     accessBack() {
-      if (this.walletType !== SOFTWARE_WALLET_TYPES[3]) {
+      if (this.walletType !== SOFTWARE_WALLET_TYPES.OVERVIEW) {
         try {
           this.$router.push({
-            query: { type: 'overview' }
+            query: { type: SOFTWARE_WALLET_TYPES.OVERVIEW }
           });
         } catch (e) {
           Toast(e, {}, ERROR);
@@ -241,7 +239,7 @@ export default {
      * @type - must be one of the SOFTWARE_WALLET_TYPES
      */
     setType(newType) {
-      if (SOFTWARE_WALLET_TYPES.includes(newType)) {
+      if (Object.values(SOFTWARE_WALLET_TYPES).includes(newType)) {
         try {
           this.$router.push({
             query: { type: newType }
