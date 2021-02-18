@@ -86,7 +86,9 @@
                       sm="12"
                     >
                       <v-card flat color="tableHeader" class="pa-6">
-                        <div class="d-flex align-center justify-space-between mb-3">
+                        <div
+                          class="d-flex align-center justify-space-between mb-3"
+                        >
                           <img
                             :class="$vuetify.theme.dark ? 'invert' : ''"
                             :src="quote.exchangeInfo.img"
