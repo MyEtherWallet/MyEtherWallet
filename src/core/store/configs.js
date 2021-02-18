@@ -3,5 +3,5 @@ export default {
     global: 'global-store',
     notifications: 'notifications-store'
   },
-  stateVersion: '1.0.0'
+  stateVersion: '1.0.1'
 };

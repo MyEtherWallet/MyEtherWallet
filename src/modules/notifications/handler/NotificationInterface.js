@@ -6,6 +6,7 @@ NOTE: toTxData can be null if it's just a regular tx
 toTxData and fromTxData = {
   currency: 'ETH',
   amount: 0,
+  to: '0x.....' (only for toTxData)
 }
 
 */
@@ -13,18 +14,25 @@ toTxData and fromTxData = {
 const VALID_TYPES = ['IN', 'SWAP', 'OUT'];
 const VALID_STATUS = ['SUCCESS', 'FAILED', 'PENDING'];
 const VALID_ARGUMENTS = [
-  'txHash', // string
-  'toAddress', // string
-  'fromAddress', // string
+  'transactionHash', // string
+  'to', // string
+  'from', // string
+  'gas', // string
+  'gasLimit', // string
   'gasPrice', // string
+  'data', // number
+  'nonce', // string
+  'value', // string
+  // injected from mew
+  'type', // string
+  'read', // bool
+  'network', // string
   'transactionFee', // string
-  'date', // time string (Date.getTime())
+  'date', // number
   'status', // string
   'fromTxData', // obj
   'toTxData', // obj
-  'type', // string
-  'read', // bool
-  'nonce' // number?
+  'errMessage' // string
 ];
 
 export default class Notification {
@@ -44,11 +52,14 @@ export default class Notification {
       ) {
         this._invalidType(objArr[i]);
       } else if (
-        (objArr[i] === 'toAddress' || objArr[i] === 'fromAddress') &&
+        (objArr[i] === 'to' || objArr[i] === 'from') &&
         !utils.isAddress(obj[objArr[i]])
       ) {
         this._invalidType(objArr[i]);
-      } else if (objArr[i] === 'txHash' && !utils.isHex(obj[objArr[i]])) {
+      } else if (
+        objArr[i] === 'transactionHash' &&
+        !utils.isHex(obj[objArr[i]])
+      ) {
         this._invalidType(objArr[i]);
       }
       this[objArr[i]] = obj[objArr[i]];

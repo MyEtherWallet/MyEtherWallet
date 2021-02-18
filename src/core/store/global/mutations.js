@@ -2,9 +2,7 @@ import localStore from 'store';
 import Configs from '../configs';
 const INIT_STORE = function (state) {
   if (localStore.get(Configs.LOCAL_STORAGE_KEYS.global)) {
-    const savedStore = JSON.parse(
-      localStore.get(Configs.LOCAL_STORAGE_KEYS.global)
-    );
+    const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.global);
     if (savedStore.stateVersion === Configs.stateVersion) {
       Object.assign(state, savedStore);
     }

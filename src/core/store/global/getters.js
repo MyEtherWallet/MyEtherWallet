@@ -1,4 +1,5 @@
 import nodeList from '@/utils/networks';
+import { ETH } from '@/utils/networks/types';
 import { getGasBasedOnType } from '@/core/helpers/gasPriceHelper';
 import web3Utils from 'web3-utils';
 const Networks = function () {
@@ -27,8 +28,13 @@ const currentGasPrice = function (state) {
   );
 };
 
+const isEthNetwork = function (state) {
+  return state.currentNetwork.type.name === ETH.name;
+};
+
 export default {
   Networks,
   network,
-  currentGasPrice
+  currentGasPrice,
+  isEthNetwork
 };
