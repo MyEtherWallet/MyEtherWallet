@@ -24,123 +24,125 @@
             title="Swap"
           >
             <template #moduleBody>
-              <div class="mt-6 d-flex justify-space-between">
-                <div>
-                  <mew-select
-                    :value="fromTokenType"
-                    :items="fromTokens"
-                    label="From"
-                    @input="setFromToken"
-                  />
-                  <mew-input
-                    label="you'll send"
-                    placeholder=""
-                    :value="tokenInValue"
-                    type="number"
-                    @input="setTokenInValue"
-                  />
+              <div class="d-flex flex-column pa-10">
+                <div class="mt-6 d-flex justify-space-between">
+                  <div>
+                    <mew-select
+                      :value="fromTokenType"
+                      :items="fromTokens"
+                      label="From"
+                      @input="setFromToken"
+                    />
+                    <mew-input
+                      label="you'll send"
+                      placeholder=""
+                      :value="tokenInValue"
+                      type="number"
+                      @input="setTokenInValue"
+                    />
+                  </div>
+                  <div class="px-6 mb-8 d-flex align-center">
+                    <img :src="swapIcon" height="35" />
+                  </div>
+                  <div>
+                    <mew-select
+                      ref="toToken"
+                      :value="toTokenType"
+                      :items="toTokens"
+                      label="To"
+                      @input="setToToken"
+                    />
+                    <mew-input
+                      label="you'll receive"
+                      placeholder=""
+                      type="number"
+                      disabled
+                      :value="tokenOutValue"
+                    />
+                  </div>
                 </div>
-                <div class="px-6 mb-8 d-flex align-center">
-                  <img :src="swapIcon" height="35" />
+                <mew-address-select
+                  class="mt-5"
+                  copy-tooltip="Copy"
+                  save-tooltip="Save"
+                  :enable-save-address="true"
+                  label="To address"
+                  :items="addresses"
+                  placeholder="Please enter an address"
+                  success-toast="Success"
+                  :is-valid-address="false"
+                  :value="address"
+                  @input="setToAddress"
+                />
+
+                <div v-show="step >= 1" class="mt-5">
+                  <div class="mew-heading-3">Select a provider</div>
+                  <v-row>
+                    <v-col
+                      v-for="(quote, idx) in availableQuotes"
+                      :key="`quote-${idx}`"
+                      cols="6"
+                      lg="6"
+                      sm="12"
+                    >
+                      <v-card flat color="tableHeader" class="pa-6">
+                        <div class="d-flex align-center justify-space-between mb-3">
+                          <img
+                            :class="$vuetify.theme.dark ? 'invert' : ''"
+                            :src="quote.exchangeInfo.img"
+                            :alt="quote.exchangeInfo.name"
+                            height="35"
+                          />
+                          <mew-checkbox
+                            :value="quote.isSelected"
+                            @input="setProvider($event, idx)"
+                          />
+                        </div>
+                        <div class="font-weight-medium">
+                          1 {{ fromTokenType.symbol }} = {{ quote.rate }}
+                          {{ toTokenType.symbol }}
+                        </div>
+                        <div>{{ quote.exchangeInfo.name }}</div>
+                      </v-card>
+                    </v-col>
+                  </v-row>
                 </div>
-                <div>
-                  <mew-select
-                    ref="toToken"
-                    :value="toTokenType"
-                    :items="toTokens"
-                    label="To"
-                    @input="setToToken"
-                  />
-                  <mew-input
-                    label="you'll receive"
-                    placeholder=""
-                    type="number"
-                    disabled
-                    :value="tokenOutValue"
+
+                <mew-expand-panel
+                  v-show="step >= 2"
+                  is-toggle
+                  has-dividers
+                  :panel-items="exPannel"
+                  class="mt-4 mb-10 swap-expend"
+                >
+                  <template #panelBody1>
+                    <mew-input
+                      label="Gas Price"
+                      placeholder=" "
+                      right-label="Gwei"
+                      :value="gasPriceGwei"
+                      disabled
+                    />
+                    <mew-input
+                      label="Total Gas Limit"
+                      placeholder=" "
+                      right-label="Wei"
+                      disabled
+                      :value="totalGasLimit"
+                    />
+                  </template>
+                </mew-expand-panel>
+
+                <div v-show="step >= 2" class="text-center">
+                  <mew-button
+                    title="Swap"
+                    :has-full-width="false"
+                    btn-size="xlarge"
+                    @click.native="showConfirm()"
                   />
                 </div>
               </div>
             </template>
-            <mew-address-select
-              class="mt-5"
-              copy-tooltip="Copy"
-              save-tooltip="Save"
-              :enable-save-address="true"
-              label="To address"
-              :items="addresses"
-              placeholder="Please enter an address"
-              success-toast="Success"
-              :is-valid-address="false"
-              :value="address"
-              @input="setToAddress"
-            />
-
-            <div v-show="step >= 1" class="mt-5">
-              <div class="mew-heading-3">Select a provider</div>
-              <v-row>
-                <v-col
-                  v-for="(quote, idx) in availableQuotes"
-                  :key="`quote-${idx}`"
-                  cols="6"
-                  lg="6"
-                  sm="12"
-                >
-                  <v-card flat color="tableHeader" class="pa-6">
-                    <div class="d-flex align-center justify-space-between mb-3">
-                      <img
-                        :class="$vuetify.theme.dark ? 'invert' : ''"
-                        :src="quote.exchangeInfo.img"
-                        :alt="quote.exchangeInfo.name"
-                        height="35"
-                      />
-                      <mew-checkbox
-                        :value="quote.isSelected"
-                        @input="setProvider($event, idx)"
-                      />
-                    </div>
-                    <div class="font-weight-medium">
-                      1 {{ fromTokenType.symbol }} = {{ quote.rate }}
-                      {{ toTokenType.symbol }}
-                    </div>
-                    <div>{{ quote.exchangeInfo.name }}</div>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </div>
-
-            <mew-expand-panel
-              v-show="step >= 2"
-              is-toggle
-              has-dividers
-              :panel-items="exPannel"
-              class="mt-4 mb-10 swap-expend"
-            >
-              <template #panelBody1>
-                <mew-input
-                  label="Gas Price"
-                  placeholder=" "
-                  right-label="Gwei"
-                  :value="gasPriceGwei"
-                  disabled
-                />
-                <mew-input
-                  label="Total Gas Limit"
-                  placeholder=" "
-                  right-label="Wei"
-                  disabled
-                  :value="totalGasLimit"
-                />
-              </template>
-            </mew-expand-panel>
-
-            <div v-show="step >= 2" class="text-center">
-              <mew-button
-                title="Swap"
-                :has-full-width="false"
-                btn-size="xlarge"
-                @click.native="showConfirm()"
-              />
-            </div>
           </mew-module>
         </mew6-white-sheet>
       </v-col>
