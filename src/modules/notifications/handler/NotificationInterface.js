@@ -32,7 +32,8 @@ const VALID_ARGUMENTS = [
   'status', // string
   'fromTxData', // obj
   'toTxData', // obj
-  'errMessage' // string
+  'errMessage', // string
+  'swapObj' // obj
 ];
 
 export default class Notification {
