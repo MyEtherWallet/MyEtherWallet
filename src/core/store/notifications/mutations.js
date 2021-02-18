@@ -5,38 +5,11 @@ import Notification from '@/modules/notifications/handler/NotificationInterface'
 const INIT_STORE = function (state) {
   const fetchedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.notifications);
   if (fetchedStore && fetchedStore.notifications.length > 0) {
-    const savedStore = fetchedStore.notifications.map(item => {
-      const {
-        txHash,
-        toAddress,
-        fromAddress,
-        gasPrice,
-        transactionFee,
-        date,
-        status,
-        fromTxData,
-        toTxData,
-        type,
-        read,
-        nonce
-      } = item;
-      return new Notification(
-        txHash,
-        toAddress,
-        fromAddress,
-        gasPrice,
-        transactionFee,
-        date,
-        status,
-        fromTxData,
-        toTxData,
-        type,
-        read,
-        nonce
-      );
+    fetchedStore.notifications = fetchedStore.notifications.map(item => {
+      return new Notification(item);
     });
-    if (savedStore.stateVersion === Configs.stateVersion) {
-      Object.assign(state, savedStore);
+    if (fetchedStore.stateVersion === Configs.stateVersion) {
+      Object.assign(state, fetchedStore);
     }
   }
 };

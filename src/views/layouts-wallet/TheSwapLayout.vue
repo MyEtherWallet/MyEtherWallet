@@ -409,7 +409,12 @@ export default {
     },
     executeTrade() {
       this.confirmInfo.show = false;
-      this.swapper.executeTrade(this.currentTrade);
+      this.swapper.executeTrade(this.currentTrade).then(res => {
+        this.swapper.getStatus(res).then(res => {
+          // eslint-disable-next-line
+          console.log(res);
+        });
+      });
     }
   }
 };
