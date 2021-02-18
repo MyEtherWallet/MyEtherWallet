@@ -90,6 +90,11 @@ class Swap {
       if (p.provider === tradeInfo.provider) return p.executeTrade(tradeInfo);
     }
   }
+  getStatus(tradeInfo) {
+    for (const p of this.providers) {
+      if (p.provider === tradeInfo.provider) return p.getStatus(tradeInfo);
+    }
+  }
 }
 
 export default Swap;
