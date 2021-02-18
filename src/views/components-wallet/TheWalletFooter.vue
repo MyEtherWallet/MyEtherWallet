@@ -1,30 +1,35 @@
 <template>
-  <v-footer color="white" class="d-flex justify-space-between pl-6" inset app>
-    <div class="textSecondary--text text-center">
-      ©2020 MyEtherWallet. All rights reserved. Pricing taken from
-      <a
-        class="titlePrimary--text text-decoration--none"
-        href="/"
-        targe="_blank"
-        >CoinMarketCap</a
-      >
-    </div>
-    <div class="d-flex align-center titlePrimary--text">
-      <span>Feedback</span>
-      <span class="mx-2">|</span>
-      <span>Support</span>
-      <span class="mx-2">|</span>
-      <v-select
-        v-model="onLanguage"
-        class="language-select"
-        append-icon="mdi-chevron-down"
-        :items="languages"
-        item-text="name"
-        item-value="value"
-        return-object
-        single-line
-      ></v-select>
-    </div>
+  <v-footer color="mewBg" class="pa-0" inset app>
+    <v-container
+      class="py-0 px-10 d-flex align-center justify-space-between"
+      fluid
+    >
+      <div class="textSecondary--text">
+        ©2020 MyEtherWallet. All rights reserved. Pricing taken from
+        <a
+          class="titlePrimary--text text-decoration--none"
+          href="/"
+          targe="_blank"
+          >CoinMarketCap</a
+        >
+      </div>
+      <div class="d-flex align-center titlePrimary--text">
+        <span>Feedback</span>
+        <span class="mx-2">|</span>
+        <span>Support</span>
+        <span class="mx-2">|</span>
+        <v-select
+          v-model="onLanguage"
+          class="language-select"
+          append-icon="mdi-chevron-down"
+          :items="languages"
+          item-text="name"
+          item-value="value"
+          return-object
+          single-line
+        ></v-select>
+      </div>
+    </v-container>
   </v-footer>
 </template>
 

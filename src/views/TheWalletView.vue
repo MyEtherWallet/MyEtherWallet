@@ -1,9 +1,9 @@
 <template>
   <v-sheet height="100%" color="walletBg">
     <the-wallet-side-menu />
-    <div>
+    <div class="px-3 pb-3">
       <the-wallet-header />
-      <v-container class="align-center d-flex" fluid>
+      <v-container class="align-center d-flex pt-2" fluid>
         <module-confirmation />
         <router-view :owners-tokens="ownersTokens" />
       </v-container>

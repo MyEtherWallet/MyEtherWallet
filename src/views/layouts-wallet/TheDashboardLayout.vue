@@ -1,8 +1,8 @@
 <template>
   <v-row class="mew-component--dashboard">
-    <v-col cols="9">
+    <v-col cols="8" lg="8">
       <mew6-white-sheet
-        v-if="chartData.length"
+        v-if="true"
         class="mew-component--eth-balance pa-7 pb-4"
       >
         <div class="d-flex">
@@ -158,12 +158,11 @@
         </mew6-white-sheet>
       </div>
     </v-col>
-    <v-spacer />
-    <v-col cols="auto">
+    <v-col cols="4" lg="4">
       <network />
-      <div class="pa-4"></div>
+      <div class="pa-3"></div>
       <swap />
-      <div class="pa-4"></div>
+      <div class="pa-3"></div>
       <app-carousel />
     </v-col>
   </v-row>
@@ -384,6 +383,7 @@ export default {
     align-items: flex-start !important;
   }
 }
+
 .mew-component--eth-balance {
   .options-btn.v-btn {
     padding: 0 !important;
