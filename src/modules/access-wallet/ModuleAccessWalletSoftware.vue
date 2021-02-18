@@ -31,18 +31,6 @@
               @click.native="btn.fn"
             />
           </v-col>
-          <!--
-          =====================================================================================
-            Overview Warning
-          =====================================================================================
-          -->
-          <v-col cols="12" sm="12">
-            <mew-warning-sheet
-              title="Not Recommended"
-              description="This information is sensetive, and these options should only be used in offline settings by experienced crypto users."
-              :link-obj="warningSheetObj"
-            />
-          </v-col>
         </v-row>
         <!--
         =====================================================================================
@@ -53,6 +41,17 @@
           v-if="walletType === types[0]"
           :handler-access-wallet="accessHandler"
           @unlock="unclockWallet"
+        />
+        <!--
+        =====================================================================================
+          Warning
+        =====================================================================================
+        -->
+        <mew-warning-sheet
+          title="Not Recommended"
+          description="This information is sensetive, and these options should only be used in offline settings by experienced crypto users."
+          :link-obj="warningSheetObj"
+          class="mt-6"
         />
       </v-sheet>
 
