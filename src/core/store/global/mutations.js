@@ -3,7 +3,7 @@ import Configs from '../configs';
 const INIT_STORE = function (state) {
   if (localStore.get(Configs.LOCAL_STORAGE_KEYS.global)) {
     const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.global);
-    if (savedStore.stateVersion === Configs.stateVersion) {
+    if (savedStore.stateVersion === Configs.VERSION.global) {
       Object.assign(state, savedStore);
     }
   }

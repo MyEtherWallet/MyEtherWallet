@@ -8,7 +8,7 @@ const INIT_STORE = function (state) {
     fetchedStore.notifications = fetchedStore.notifications.map(item => {
       return new Notification(item);
     });
-    if (fetchedStore.stateVersion === Configs.stateVersion) {
+    if (fetchedStore.stateVersion === Configs.VERSION.notification) {
       Object.assign(state, fetchedStore);
     }
   }
