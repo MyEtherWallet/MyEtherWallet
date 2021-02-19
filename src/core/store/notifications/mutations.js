@@ -1,7 +1,7 @@
 // All mutations will have to receive an object
 import localStore from 'store';
 import Configs from '../configs';
-import Notification from '@/modules/notifications/handler/NotificationInterface';
+import Notification from '@/modules/notifications/handler/handlerNotification';
 const INIT_STORE = function (state) {
   const fetchedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.notifications);
   if (fetchedStore && fetchedStore.notifications.length > 0) {

@@ -13,7 +13,7 @@ import BigNumber from 'bignumber.js';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 
 import { EventBus } from '@/core/plugins/eventBus';
-import Notification from '@/modules/notifications/handler/NotificationInterface';
+import Notification from '@/modules/notifications/handler/handlerNotification';
 
 const setEvents = (promiObj, tx, dispatch) => {
   // create a no reference copy specifically for notification
@@ -48,7 +48,7 @@ const setEvents = (promiObj, tx, dispatch) => {
       }
     })
     .on('error', err => {
-      newTxObj.status = 'FAILED';
+      newTxObj.status = 'ERROR';
       newTxObj.errMessage = err.message;
       if (!isExcempt) {
         const notification = new Notification(newTxObj);

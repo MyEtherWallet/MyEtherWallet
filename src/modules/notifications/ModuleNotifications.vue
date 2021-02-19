@@ -1,135 +1,94 @@
 <template>
-  <mew-overlay
-    left-btn-text=""
-    :show-overlay="open"
-    right-btn-text="Close"
-    @closeOverlay="$emit('close')"
-  >
-    <template #mewOverlayBody>
-      <v-sheet class="transparent" max-width="700px" width="100%">
-        <v-sheet
-          color="transparent"
-          max-width="350px"
-          class="d-flex align-center justify-space-between mx-auto mb-6"
-        >
-          <div>
-            <v-icon color="primary" large> mdi-circle-medium </v-icon>
-            Succeed
-          </div>
-          <div>
-            <v-icon color="orange" large> mdi-circle-medium </v-icon>
-            Pending
-          </div>
-          <div>
-            <v-icon color="error" large> mdi-circle-medium </v-icon>
-            Failed
-          </div>
-        </v-sheet>
-        <h2 class="text-center mb-2">Notifications</h2>
-        <div class="d-flex align-center justify-space-between">
-          <div>
+  <div>
+    <div class="d-flex align-center">
+      <v-btn icon @click="openNotifications = true">
+        <img src="@/assets/images/icons/icon-notifications.svg" />
+      </v-btn>
+      <div
+        class="notification-count cursor--pointer d-flex align-center justify-center white--text error lighten2"
+        @click="openNotifications = true"
+      >
+        {{ notificationCount }}
+      </div>
+    </div>
+    <mew-overlay
+      left-btn-text=""
+      :show-overlay="openNotifications"
+      right-btn-text="Close"
+      @closeOverlay="openNotifications = false"
+    >
+      <template #mewOverlayBody>
+        <v-sheet class="transparent" max-width="700px" width="100%">
+          <v-sheet
+            color="transparent"
+            max-width="350px"
+            class="d-flex align-center justify-space-between mx-auto mb-6"
+          >
+            <div>
+              <v-icon color="primary" large> mdi-circle-medium </v-icon>
+              Success
+            </div>
+            <div>
+              <v-icon color="orange" large> mdi-circle-medium </v-icon>
+              Pending
+            </div>
+            <div>
+              <v-icon color="error" large> mdi-circle-medium </v-icon>
+              Failed
+            </div>
+          </v-sheet>
+          <h2 class="text-center mb-2">Notifications</h2>
+          <div class="d-flex align-center justify-end">
+            <!-- <div>
             <div>6 notifications</div>
             <v-btn depressed x-small color="textSecondary" dark>
               Delete all
             </v-btn>
+          </div> -->
+            <v-sheet color="transparent" max-width="150px">
+              <v-select
+                v-model="selected"
+                flat
+                solo
+                :items="items"
+                item-text="label"
+                item-value="val"
+              ></v-select>
+            </v-sheet>
           </div>
-          <v-sheet color="transparent" max-width="150px">
-            <v-select
-              v-model="selected"
-              flat
-              solo
-              :items="items"
-              item-text="label"
-              item-value="val"
-            ></v-select>
-          </v-sheet>
-        </div>
-        <mew6-white-sheet>
-          <div class="pa-4">
-            <div class="mt-4">
-              <h5 class="text-center font-weight-bold">1/8/2020</h5>
-              <v-expansion-panels hover flat>
-                <In
-                  address="0xabc23787066c571a61274929746895c24fa9dbfc"
-                  amount="0.000234 ETH"
-                  time="1 min"
-                  :data="inData"
-                  active
+          <mew6-white-sheet>
+            <div class="pa-4">
+              <div
+                v-for="data in showNotifications"
+                v-show="hasNotifications"
+                :key="data.transactionHash"
+                class="mt-2"
+              >
+                <mew-notification
+                  :notification="data.notification"
+                  @click.native="markNotificationAsRead(data)"
                 />
-                <Out
-                  address="0xabc23787066c571a61274929746895c24fa9dbfc"
-                  amount="0.000234 XMR"
-                  time="1 min"
-                  :data="outData"
-                  active
-                />
-                <Swap
-                  address="0xabc23787066c571a61274929746895c24fa9dbfc"
-                  from-amount="0.000234 ETH"
-                  to-amount="0.000234 XMR"
-                  time="1 min"
-                  :data="swapData"
-                  active
-                />
-              </v-expansion-panels>
+              </div>
+              <div v-show="!hasNotifications" class="pa-5 text-center">
+                <h3>No notifications to display for {{ address }}</h3>
+              </div>
             </div>
-
-            <div class="mt-4">
-              <h5 class="text-center font-weight-bold">1/7/2020</h5>
-              <v-expansion-panels hover flat>
-                <In
-                  address="0xabc23787066c571a61274929746895c24fa9dbfc"
-                  amount="0.000234 ETH"
-                  time="1 min"
-                  :data="inData"
-                />
-                <Out
-                  address="0xabc23787066c571a61274929746895c24fa9dbfc"
-                  amount="0.000234 XMR"
-                  time="1 min"
-                  :data="outData"
-                />
-                <Out
-                  address="0xabc23787066c571a61274929746895c24fa9dbfc"
-                  amount="0.000234 XMR"
-                  time="1 min"
-                  :data="outData"
-                />
-                <Out
-                  address="0xabc23787066c571a61274929746895c24fa9dbfc"
-                  amount="0.000234 XMR"
-                  time="1 min"
-                  :data="outData"
-                />
-                <Out
-                  address="0xabc23787066c571a61274929746895c24fa9dbfc"
-                  amount="0.000234 XMR"
-                  time="1 min"
-                  :data="outData"
-                />
-              </v-expansion-panels>
-            </div>
-          </div>
-        </mew6-white-sheet>
-      </v-sheet>
-      <div class="text-center py-6">
+          </mew6-white-sheet>
+        </v-sheet>
+        <!-- <div class="text-center py-6">
         <v-pagination v-model="page" :length="6"></v-pagination>
-      </div>
-    </template>
-  </mew-overlay>
+      </div> -->
+      </template>
+    </mew-overlay>
+  </div>
 </template>
 
 <script>
-import In from './components/in/In';
-import Out from './components/out/Out';
-import Swap from './components/swap/Swap';
-
+import { fromWei, toBN } from 'web3-utils';
+import { mapGetters, mapState, mapActions } from 'vuex';
+import Notification from './handler/handlerNotification';
 export default {
   name: 'ModuleNotifications',
-  components: { In, Out, Swap },
-  props: {
-    open: { default: false, type: Boolean }
-  },
   data() {
     return {
       selected: 'all',
@@ -140,118 +99,122 @@ export default {
         { label: 'Swap', val: 'swap' }
       ],
       page: null,
-      inData: [
-        {
-          label: 'Transaction hash',
-          value: '0xabc23787066c571a61274929746895c24fa9dbfc',
-          color: 'primary',
-          ellipsis: true
-        },
-        {
-          label: 'Gas price',
-          value: '41 Gwei'
-        },
-        {
-          label: 'Gas limit',
-          value: '400000'
-        },
-        {
-          label: 'Max transaction fee',
-          value: '0.0002342 ETH ($0.09)'
-        },
-        {
-          label: 'Nonce',
-          value: '2534'
-        },
-        {
-          label: 'Time',
-          value: '13:22:22'
-        },
-        {
-          label: 'Status',
-          value: 'Succeed',
-          color: 'primary'
-        },
-        {
-          label: 'Error message',
-          value: 'None'
-        }
-      ],
-      outData: [
-        {
-          label: 'Transaction hash',
-          value: '0xabc23787066c571a61274929746895c24fa9dbfc',
-          color: 'primary',
-          ellipsis: true
-        },
-        {
-          label: 'Gas price',
-          value: '41 Gwei'
-        },
-        {
-          label: 'Gas limit',
-          value: '400000'
-        },
-        {
-          label: 'Max transaction fee',
-          value: '0.0002342 ETH ($0.09)'
-        },
-        {
-          label: 'Nonce',
-          value: '2534'
-        },
-        {
-          label: 'Time',
-          value: '13:22:22'
-        },
-        {
-          label: 'Status',
-          value: 'Succeed',
-          color: 'primary'
-        },
-        {
-          label: 'Error message',
-          value: 'None'
-        }
-      ],
-      swapData: [
-        {
-          label: 'Transaction hash',
-          value: '0xabc23787066c571a61274929746895c24fa9dbfc',
-          color: 'primary',
-          ellipsis: true
-        },
-        {
-          label: 'Gas price',
-          value: '41 Gwei'
-        },
-        {
-          label: 'Gas limit',
-          value: '400000'
-        },
-        {
-          label: 'Max transaction fee',
-          value: '0.0002342 ETH ($0.09)'
-        },
-        {
-          label: 'Nonce',
-          value: '2534'
-        },
-        {
-          label: 'Time',
-          value: '13:22:22'
-        },
-        {
-          label: 'Status',
-          value: 'In progress',
-          color: 'orange'
-        },
-        {
-          label: 'Error message',
-          value: 'None'
-        }
-      ]
+      inTx: [],
+      openNotifications: false
     };
+  },
+  computed: {
+    ...mapGetters('notifications', [
+      'currentNotifications',
+      'txNotifications',
+      'swapNotifications'
+    ]),
+    ...mapGetters('global', ['network']),
+    ...mapState('wallet', ['address']),
+    hasNotifications() {
+      return this.allNotifications.length > 0;
+    },
+    transformCurrentNoti() {
+      const newArr = this.currentNotifications.map(notification => {
+        const newObj = this.formatObj(notification);
+        return newObj;
+      });
+      return newArr;
+    },
+    transformTxNoti() {
+      const newArr = this.txNotifications.map(notification => {
+        const newObj = this.formatObj(notification);
+        return newObj;
+      });
+      return newArr;
+    },
+    transformSwapNoti() {
+      const newArr = this.swapNotifications.map(notification => {
+        const newObj = this.formatObj(notification);
+        return newObj;
+      });
+      return newArr;
+    },
+    allNotifications() {
+      return this.transformCurrentNoti.concat(this.inTx);
+    },
+    showNotifications() {
+      switch (this.selected) {
+        case 'all':
+          return this.allNotifications;
+        case 'in':
+          return this.inTx;
+        case 'out':
+          return this.transformTxNoti;
+        case 'swapNotifications':
+          return this.transformSwapNoti;
+        default:
+          return this.allNotifications;
+      }
+    },
+    notificationCount() {
+      const unread = this.allNotifications.filter(item => {
+        if (!item.read) {
+          return item;
+        }
+      });
+      return unread.length;
+    }
+  },
+  methods: {
+    ...mapActions('notifications', ['updateNotification']),
+    markNotificationAsRead(notification) {
+      if (!notification.read) {
+        notification.markAsRead().then(res => {
+          const newObj = Object.assign(res);
+          delete newObj.notification;
+          this.updateNotification(new Notification(res));
+        });
+      }
+    },
+    formatObj(obj) {
+      const newObj = {
+        txHash: {
+          value: obj.transactionHash,
+          string: 'Transaction Hash'
+        },
+        gasPrice: {
+          value: `${fromWei(toBN(obj.gasPrice), 'gwei')} Gwei`,
+          string: 'Gas Price'
+        },
+        gasLimit: {
+          value: obj.gasLimit,
+          string: 'Gas Limit'
+        },
+        total: {
+          value: `${obj.transactionFee} ${this.network.type.currencyName}`,
+          string: 'Total Transaction fee'
+        },
+        from: {
+          value: obj.from,
+          string: 'From'
+        },
+        amount: {
+          value: `${obj.value} ${this.network.type.currencyName}`,
+          string: 'Amount'
+        },
+        timestamp: {
+          value: '1 min ago',
+          string: 'Time'
+        },
+        status: {
+          value: obj.status.toLowerCase(),
+          string: 'Status'
+        },
+        type: {
+          value: obj.type.toLowerCase(),
+          string: 'in'
+        }
+      };
+
+      obj.notification = newObj;
+      return obj;
+    }
   }
 };
 </script>
@@ -263,5 +226,15 @@ export default {
   border-radius: 100%;
   background-color: var(--v-primary-base);
   cursor: pointer;
+}
+
+.notification-count {
+  top: 0;
+  border-radius: 100%;
+  margin-bottom: 20px;
+  margin-left: -10px;
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
 }
 </style>

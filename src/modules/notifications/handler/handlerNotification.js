@@ -12,7 +12,7 @@ toTxData and fromTxData = {
 */
 
 const VALID_TYPES = ['IN', 'SWAP', 'OUT'];
-const VALID_STATUS = ['SUCCESS', 'FAILED', 'PENDING'];
+const VALID_STATUS = ['SUCCESS', 'ERROR', 'PENDING'];
 const VALID_ARGUMENTS = [
   'transactionHash', // string
   'to', // string
@@ -71,7 +71,7 @@ export default class Notification {
 
   // updates status and resolves back to ui with the new object
   updateStatus(status) {
-    return Promise(resolve => {
+    return new Promise(resolve => {
       this.status = status;
       resolve(this);
     });
@@ -79,7 +79,7 @@ export default class Notification {
 
   // updates expand and resolves back to ui with the new object
   toggleNotification() {
-    return Promise(resolve => {
+    return new Promise(resolve => {
       this.expanded != this.expanded;
       if (!this.read) this.read = true;
       resolve(this);
@@ -88,7 +88,7 @@ export default class Notification {
 
   // updates read and resolves back to ui with the new object
   markAsRead() {
-    return Promise(resolve => {
+    return new Promise(resolve => {
       this.read = true;
       resolve(this);
     });
@@ -96,7 +96,7 @@ export default class Notification {
 
   // updates read and resolves back to ui with the new object
   markAsUnread() {
-    return Promise(resolve => {
+    return new Promise(resolve => {
       this.read = false;
       resolve(this);
     });

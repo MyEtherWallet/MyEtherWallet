@@ -131,7 +131,7 @@ export default {
           color: 'outline',
           title: 'Software',
           subtitle: 'Keystore files, Mnemonic phrase, Private key',
-          note: 'NOT RECOMMANDED',
+          note: 'NOT RECOMMENDED',
           rightIcon: '',
           titleIcon: 'mdi-alert',
           titleIconClass: 'warning--text text--darken-1',

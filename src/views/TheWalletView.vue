@@ -39,7 +39,7 @@ export default {
   computed: {
     ...mapState('wallet', ['address', 'web3']),
     ...mapState('global', ['online']),
-    ...mapGetters('global', ['isEthNetwork'])
+    ...mapGetters('global', ['isEthNetwork', 'network'])
   },
   watch: {
     web3() {
@@ -65,13 +65,17 @@ export default {
     ...mapActions('external', ['setETHUSDValue']),
     ...mapState('global', ['gasPriceType']),
     getTokens() {
-      const tokensList = new TokenCalls(this.$apollo);
-      tokensList.getOwnersERC20Tokens(this.address).then(res => {
-        this.ownersTokens = res.map(r => {
-          r.balance = toBN(r.balance);
-          return r;
+      if (this.isEthNetwork) {
+        const tokensList = new TokenCalls(this.$apollo);
+        tokensList.getOwnersERC20Tokens(this.address).then(res => {
+          this.ownersTokens = res.map(r => {
+            r.balance = toBN(r.balance);
+            return r;
+          });
         });
-      });
+      } else {
+        this.tokens = this.network.type.tokens;
+      }
     },
     getPriceAndBalance() {
       if (this.isEthNetwork) {

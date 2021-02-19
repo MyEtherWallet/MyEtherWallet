@@ -1,25 +1,39 @@
-const currentNotifcations = function (state, _, rootState) {
+const currentNotifications = function (state, _, rootState, rootGetters) {
   const address = rootState.wallet.address;
+  const currentNetworkType = rootGetters['global/network'].type.name;
   const filteredArray = state.notifications.filter(item => {
-    if (item.toAddress === address) return item;
+    if (item.from === address && item.network === currentNetworkType)
+      return item;
   });
   return filteredArray;
 };
 
-const txNotifications = function (state, _, rootState) {
+const txNotifications = function (state, _, rootState, rootGetters) {
   const address = rootState.wallet.address;
+  const currentNetworkType = rootGetters['global/network'].type.name;
   const filteredArray = state.notifications.filter(item => {
-    if (item.toAddress === address && item.type === 'OUT') return item;
+    if (
+      item.from === address &&
+      item.type === 'OUT' &&
+      item.network === currentNetworkType
+    )
+      return item;
   });
   return filteredArray;
 };
 
-const swapNotifications = function (state, _, rootState) {
+const swapNotifications = function (state, _, rootState, rootGetters) {
   const address = rootState.wallet.address;
+  const currentNetworkType = rootGetters['global/network'].type.name;
   const filteredArray = state.notifications.filter(item => {
-    if (item.toAddress === address && item.type === 'SWAP') return item;
+    if (
+      item.from === address &&
+      item.type === 'SWAP' &&
+      item.network === currentNetworkType
+    )
+      return item;
   });
   return filteredArray;
 };
 
-export default { currentNotifcations, txNotifications, swapNotifications };
+export default { currentNotifications, txNotifications, swapNotifications };
