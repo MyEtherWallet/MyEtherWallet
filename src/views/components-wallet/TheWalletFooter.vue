@@ -1,32 +1,35 @@
 <template>
   <v-footer color="mewBg" class="mew-component--wallet-footer pa-0" inset app>
     <v-container
-      class="py-6 px-10 d-flex align-center justify-space-between"
+      class="py-6 px-10 d-block d-md-flex align-center justify-space-between"
       fluid
     >
-      <div class="textSecondary--text">
+      <div class="textSecondary--text text-center">
         ©2020 MyEtherWallet. All rights reserved. Pricing taken from
         <a
           class="titlePrimary--text text-decoration--none"
           href="/"
           targe="_blank"
-          >CoinMarketCap</a
         >
+          CoinMarketCap
+        </a>
       </div>
-      <div class="d-flex align-center titlePrimary--text">
+      <div class="d-flex align-center justify-center titlePrimary--text">
         <span>Feedback</span>
         <span class="mx-5">|</span>
         <span>Support</span>
         <span class="mx-5">|</span>
-        <v-select
-          v-model="onLanguage"
-          append-icon="mdi-chevron-down"
-          :items="languages"
-          item-text="name"
-          item-value="value"
-          return-object
-          single-line
-        ></v-select>
+        <div style="max-width=200px">
+          <v-select
+            v-model="onLanguage"
+            append-icon="mdi-chevron-down"
+            :items="languages"
+            item-text="name"
+            item-value="value"
+            return-object
+            single-line
+          ></v-select>
+        </div>
       </div>
     </v-container>
   </v-footer>

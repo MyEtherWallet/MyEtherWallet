@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar app elevation="0" color="walletBg" height="75px">
+  <v-app-bar app elevation="0" color="walletBg" height="70px">
     <v-container class="d-flex align-center pt-4 pb-0" fluid>
       <div class="d-flex align-center">
         <img class="ml-2 mr-3" src="@/assets/images/icons/icon-puppy-mew.svg" />

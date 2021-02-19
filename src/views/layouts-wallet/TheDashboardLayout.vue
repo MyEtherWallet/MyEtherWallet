@@ -1,6 +1,6 @@
 <template>
   <v-row class="mew-component--dashboard">
-    <v-col cols="8" lg="8">
+    <v-col cols="12" md="8">
       <mew6-white-sheet
         v-if="true"
         class="mew-component--eth-balance pa-7 pb-4"
@@ -158,7 +158,7 @@
         </mew6-white-sheet>
       </div>
     </v-col>
-    <v-col cols="4" lg="4">
+    <v-col cols="12" md="4">
       <network />
       <div class="pa-3"></div>
       <swap />

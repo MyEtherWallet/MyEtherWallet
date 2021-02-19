@@ -1,15 +1,22 @@
 <template>
   <v-sheet height="100%" color="walletBg">
     <the-wallet-side-menu />
-    <div class="px-3">
+    <div class="px-0 px-md-3">
       <the-wallet-header />
-      <v-container class="align-center d-flex pt-2" fluid>
+
+      <!-- Top spacer for fixed position header -->
+      <div class="pt-4 pt-md-0"></div>
+
+      <v-container class="align-center d-flex" fluid>
         <module-confirmation />
         <router-view :owners-tokens="ownersTokens" />
       </v-container>
+
+      <!-- Bottom spacer for fixed position footer -->
+      <div class="py-8 py-lg-2"></div>
+
       <the-wallet-footer />
     </div>
-    <div class="bottom-spacing-for-footer py-2"></div>
   </v-sheet>
 </template>
 

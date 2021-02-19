@@ -6,7 +6,7 @@
     :has-indicator="true"
   >
     <template #moduleBody>
-      <div class="full-width px-15 pt-3">
+      <div class="full-width px-lg-3 pb-6">
         <div class="d-flex justify-end mr-3 entire-bal">
           <mew-button
             :title="$t('sendTx.button-entire')"

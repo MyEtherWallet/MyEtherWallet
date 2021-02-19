@@ -15,7 +15,7 @@
       :send="executeTrade"
     />
     <v-row>
-      <v-col cols="9">
+      <v-col cols="12" md="8" lg="8">
         <mew6-white-sheet>
           <interface-wrap title="Swap">
             <div class="d-flex justify-space-between">
@@ -137,8 +137,7 @@
           </interface-wrap>
         </mew6-white-sheet>
       </v-col>
-      <v-spacer cols="1" />
-      <v-col cols="3">
+      <v-col cols="12" md="4" lg="4">
         <module-network />
       </v-col>
     </v-row>

@@ -9,7 +9,7 @@
             v-for="(dapp, key) in mewDapps"
             :key="key"
             cols="12"
-            sm="6"
+            md="6"
             lg="4"
           >
             <mew-super-button

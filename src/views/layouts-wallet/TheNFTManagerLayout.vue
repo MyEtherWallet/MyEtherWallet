@@ -1,6 +1,6 @@
 <template>
   <v-row class="mew-component--nft-manager">
-    <v-col cols="8">
+    <v-col cols="12" md="8">
       <mew6-white-sheet full-width>
         <interface-wrap title="NFT Manager">
           <mew-tabs :items="items" is-vertical>
@@ -120,7 +120,7 @@
         </interface-wrap>
       </mew6-white-sheet>
     </v-col>
-    <v-col cols="4">
+    <v-col cols="12" md="4">
       <module-network />
     </v-col>
   </v-row>
