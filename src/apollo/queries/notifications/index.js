@@ -81,7 +81,7 @@ export default class NotificationCalls {
       newObj['status'] = hexToNumber(newObj.status) ? 'SUCCESS' : 'ERROR';
       newObj['type'] = 'IN';
       newObj['value'] = fromWei(newObj.value);
-      newObj['date'] = newObj.timestamp;
+      newObj['date'] = BigNumber(newObj.timestamp).times(1000);
 
       delete newObj.input;
       delete newObj.__typename;

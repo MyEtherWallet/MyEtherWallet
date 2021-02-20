@@ -3,15 +3,15 @@ import localStore from 'store';
 import Configs from '../configs';
 import Notification from '@/modules/notifications/handler/handlerNotification';
 const INIT_STORE = function (state) {
+  console.log('this got called??');
   const fetchedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.notifications);
   if (fetchedStore && fetchedStore.notifications.length > 0) {
     fetchedStore.notifications = fetchedStore.notifications.map(item => {
       return new Notification(item);
     });
-    if (fetchedStore.stateVersion === Configs.VERSION.notification) {
-      console.log(state, fetchedStore);
-      Object.assign(state, fetchedStore);
-    }
+  }
+  if (fetchedStore.stateVersion === Configs.VERSION.notification) {
+    Object.assign(state, fetchedStore);
   }
 };
 

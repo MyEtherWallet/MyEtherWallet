@@ -122,28 +122,36 @@ export default {
         const newObj = this.formatObj(notification);
         return newObj;
       });
-      return newArr;
+      return newArr.sort((a, b) => {
+        a.timestamp > b.timestamp ? 1 : a.timestamp < b.timestamp ? -1 : 0;
+      });
     },
     transformTxNoti() {
       const newArr = this.txNotifications.map(notification => {
         const newObj = this.formatObj(notification);
         return newObj;
       });
-      return newArr;
+      return newArr.sort((a, b) => {
+        a.timestamp > b.timestamp ? 1 : a.timestamp < b.timestamp ? -1 : 0;
+      });
     },
     transformSwapNoti() {
       const newArr = this.swapNotifications.map(notification => {
         const newObj = this.formatObj(notification);
         return newObj;
       });
-      return newArr;
+      return newArr.sort((a, b) => {
+        a.timestamp > b.timestamp ? 1 : a.timestamp < b.timestamp ? -1 : 0;
+      });
     },
     transformInNoti() {
       const newArr = this.inTx.map(notification => {
         const newObj = this.formatObj(notification);
         return newObj;
       });
-      return newArr;
+      return newArr.sort((a, b) => {
+        a.timestamp > b.timestamp ? 1 : a.timestamp < b.timestamp ? -1 : 0;
+      });
     },
     allNotifications() {
       return this.transformCurrentNoti.concat(this.transformInNoti);
@@ -177,7 +185,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.lastFetched);
     this.setupInTx();
   },
   methods: {
@@ -192,10 +199,9 @@ export default {
         const caller = new NotificationsCall(this.$apollo);
         caller.getAllTransfer(this.address).then(res => {
           res.forEach(item => {
-            if (item.date * 1000 < lastFetched) {
+            if (item.date < lastFetched) {
               item.read = true;
             }
-            console.log(item, lastFetched);
             newArr.push(new Notification(item));
           });
           this.inTx = newArr;
@@ -208,7 +214,6 @@ export default {
       if (!notification.read) {
         notification.markAsRead().then(res => {
           delete res.notification;
-          // const newObj = Object.assign(res);
           if (notification.type === 'OUT' || notification.type === 'SWAP') {
             this.updateNotification(new Notification(res));
           } else {

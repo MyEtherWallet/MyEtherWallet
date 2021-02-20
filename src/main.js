@@ -125,7 +125,6 @@ new Vue({
   vuetify,
   beforeCreate() {
     this.$store.commit('global/INIT_STORE');
-    console.log(store);
     this.$store.commit('notifications/INIT_STORE');
   },
   render: h => h(app)
