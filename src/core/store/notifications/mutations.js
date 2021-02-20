@@ -9,6 +9,7 @@ const INIT_STORE = function (state) {
       return new Notification(item);
     });
     if (fetchedStore.stateVersion === Configs.VERSION.notification) {
+      console.log(state, fetchedStore);
       Object.assign(state, fetchedStore);
     }
   }
@@ -33,9 +34,14 @@ const DELETE_NOTIFICATION = function (state, obj) {
   });
 };
 
+const SET_FETCHED_TIME = function (state) {
+  state.lastFetched = new Date().getTime();
+};
+
 export default {
   INIT_STORE,
   ADD_NOTIFICATION,
   UPDATE_NOTIFICATION,
-  DELETE_NOTIFICATION
+  DELETE_NOTIFICATION,
+  SET_FETCHED_TIME
 };

@@ -33,13 +33,14 @@ const VALID_ARGUMENTS = [
   'fromTxData', // obj
   'toTxData', // obj
   'errMessage', // string
-  // 'swapObj' // obj
+  'swapObj', // obj
   'expanded'
 ];
 
 export default class Notification {
   constructor(obj) {
     this.expanded = false;
+    this.read = obj['read'] ? obj['read'] : false;
     // validate passed params before assigning to this
     const objArr = Object.keys(obj);
     for (let i = 0; i < objArr.length; i++) {

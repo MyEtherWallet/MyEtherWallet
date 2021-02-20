@@ -19,7 +19,6 @@ const setEvents = (promiObj, tx, dispatch) => {
   // create a no reference copy specifically for notification
   const newTxObj = utils._.clone(tx);
   newTxObj.date = new Date().getTime();
-  newTxObj.read = false;
   const isExcempt = newTxObj.handleNotification;
   delete newTxObj['r'];
   delete newTxObj['v'];

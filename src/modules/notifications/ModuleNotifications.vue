@@ -5,6 +5,7 @@
         <img src="@/assets/images/icons/icon-notifications.svg" />
       </v-btn>
       <div
+        v-if="notificationCount > 0"
         class="notification-count cursor--pointer d-flex align-center justify-center white--text error lighten2"
         @click="openNotifications = true"
       >
@@ -87,6 +88,7 @@
 import { fromWei, toBN } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from './handler/handlerNotification';
+import NotificationsCall from '@/apollo/queries/notifications';
 export default {
   name: 'ModuleNotifications',
   data() {
@@ -109,8 +111,9 @@ export default {
       'txNotifications',
       'swapNotifications'
     ]),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'isEthNetwork']),
     ...mapState('wallet', ['address']),
+    ...mapState('notifications', ['lastFetched']),
     hasNotifications() {
       return this.allNotifications.length > 0;
     },
@@ -135,8 +138,15 @@ export default {
       });
       return newArr;
     },
+    transformInNoti() {
+      const newArr = this.inTx.map(notification => {
+        const newObj = this.formatObj(notification);
+        return newObj;
+      });
+      return newArr;
+    },
     allNotifications() {
-      return this.transformCurrentNoti.concat(this.inTx);
+      return this.transformCurrentNoti.concat(this.transformInNoti);
     },
     showNotifications() {
       switch (this.selected) {
@@ -161,14 +171,54 @@ export default {
       return unread.length;
     }
   },
+  watch: {
+    network() {
+      this.setupInTx();
+    }
+  },
+  mounted() {
+    console.log(this.lastFetched);
+    this.setupInTx();
+  },
   methods: {
-    ...mapActions('notifications', ['updateNotification']),
+    ...mapActions('notifications', ['updateNotification', 'setFetchedTime']),
+    parsePendingTx(result) {
+      console.log(result);
+    },
+    setupInTx() {
+      if (this.isEthNetwork) {
+        const lastFetched = this.lastFetched;
+        const newArr = [];
+        const caller = new NotificationsCall(this.$apollo);
+        caller.getAllTransfer(this.address).then(res => {
+          res.forEach(item => {
+            if (item.date * 1000 < lastFetched) {
+              item.read = true;
+            }
+            console.log(item, lastFetched);
+            newArr.push(new Notification(item));
+          });
+          this.inTx = newArr;
+          this.setFetchedTime();
+        });
+        caller.subscribeToPending(this.address, this.parsePendingTx);
+      }
+    },
     markNotificationAsRead(notification) {
       if (!notification.read) {
         notification.markAsRead().then(res => {
-          const newObj = Object.assign(res);
-          delete newObj.notification;
-          this.updateNotification(new Notification(res));
+          delete res.notification;
+          // const newObj = Object.assign(res);
+          if (notification.type === 'OUT' || notification.type === 'SWAP') {
+            this.updateNotification(new Notification(res));
+          } else {
+            this.inTx = this.inTx.map(item => {
+              if (item.transactionHash === res.transactionHash) {
+                return new Notification(res);
+              }
+              return item;
+            });
+          }
         });
       }
     },
