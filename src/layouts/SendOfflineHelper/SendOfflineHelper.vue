@@ -205,6 +205,7 @@
                   buttonStyle: 'green',
                   noWalletTerms: true
                 }"
+                :button-disabled="wrongNetwork || invalidSignature"
                 :click-function="stage3Btn"
               />
             </div>
@@ -377,6 +378,8 @@ import StandardButton from '@/components/Buttons/StandardButton';
 import ExpandingOption from '@/components/ExpandingOption';
 import ConfirmationModal from './components/ConfirmationModal';
 import ENS from 'ethereum-ens';
+import commonGenerator from '@/helpers/commonGenerator';
+import { Toast } from '@/helpers';
 export default {
   components: {
     'page-title': PageTitleComponent,
@@ -574,37 +577,39 @@ export default {
       if (rawSigned) this.rawSigned = rawSigned;
       if (this.rawSigned !== '') {
         const sanitizedRawSigned = Misc.sanitizeHex(this.rawSigned);
-        const tx = new Transaction(sanitizedRawSigned, {
-          chain: this.genInfo['chainID']
-        });
-        this.invalidSignature = !tx.verifySignature();
-        this.chainID = tx.getChainId();
-        this.wrongNetwork = !new BigNumber(
-          this.selectedNetwork.type.chainID
-        ).eq(new BigNumber(this.chainID));
-        this.chainID = tx.getChainId();
-
-        if (this.wrongNetwork) {
-          const correctNetwork = this.networkTypes.filter(
-            entry => entry.chainID === this.chainID
-          );
-          if (correctNetwork) this.correctNetwork = correctNetwork[0].name_long;
+        try {
+          const tx = new Transaction(sanitizedRawSigned, {
+            common: commonGenerator(this.selectedNetwork)
+          });
+          this.invalidSignature = !tx.verifySignature();
+          this.chainID = tx.getChainId();
+          this.from = Misc.sanitizeHex(tx.getSenderAddress().toString('hex'));
+          const asJson = tx.toJSON();
+          this.to = asJson[positions.to];
+          this.gasLimit = new BigNumber(asJson[positions.gasLimit]).toFixed();
+          this.nonce = new BigNumber(asJson[positions.nonce]).toFixed();
+          this.value = new BigNumber(asJson[positions.value]).toFixed();
+          this.data = asJson[positions.data];
+          this.minAccountBalance = tx.getUpfrontCost().toString();
+          this.gasPrice = new BigNumber(
+            Misc.sanitizeHex(tx.gasPrice.toString('hex'))
+          ).toFixed();
+          this.fee = new BigNumber(this.toGwei(this.gasPrice))
+            .times(this.gasLimit)
+            .toFixed();
+        } catch (e) {
+          this.wrongNetwork = !new BigNumber(
+            this.selectedNetwork.type.chainID
+          ).eq(new BigNumber(this.chainID));
+          if (this.wrongNetwork) {
+            const correctNetwork = this.networkTypes.filter(
+              entry => entry.chainID === this.chainID
+            );
+            if (correctNetwork.length)
+              this.correctNetwork = correctNetwork[0].name_long;
+          }
+          Toast.responseHandler(e.message, Toast.ERROR);
         }
-        this.from = Misc.sanitizeHex(tx.getSenderAddress().toString('hex'));
-        const asJson = tx.toJSON();
-        this.to = asJson[positions.to];
-        this.gasLimit = new BigNumber(asJson[positions.gasLimit]).toFixed();
-        this.nonce = new BigNumber(asJson[positions.nonce]).toFixed();
-        this.value = new BigNumber(asJson[positions.value]).toFixed();
-
-        this.data = asJson[positions.data];
-        this.minAccountBalance = tx.getUpfrontCost().toString();
-        this.gasPrice = new BigNumber(
-          Misc.sanitizeHex(tx.gasPrice.toString('hex'))
-        ).toFixed();
-        this.fee = new BigNumber(this.toGwei(this.gasPrice))
-          .times(this.gasLimit)
-          .toFixed();
       }
     },
     async fetchBalanceData() {
