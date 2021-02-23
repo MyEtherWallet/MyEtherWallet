@@ -15,6 +15,8 @@
               :title="btn.label"
               :subtitle="btn.description"
               :right-icon="btn.icon"
+              right-icon-type="img"
+              font-class="mew-heading-2"
               @click.native="btn.fn"
             />
           </v-col>
@@ -26,7 +28,6 @@
 </template>
 
 <script>
-import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import AppBlockTitle from '@/core/components/AppBlockTitle';
 import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 import { WalletConnectWallet, WalletLinkWallet } from '@/modules/wallets/utils';
@@ -34,7 +35,7 @@ import { mapActions } from 'vuex';
 
 export default {
   name: 'MobileAccess',
-  components: { mewSuperButton, AppBlockTitle },
+  components: { AppBlockTitle },
   props: {
     open: {
       type: Boolean,

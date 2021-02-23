@@ -33,14 +33,16 @@
         -->
         <a href="https://www.mewwallet.com/" target="_blank">
           <mew-super-button
-            btn-mode="large-right-image"
+            font-class="mew-heading-2"
             class="mb-5"
             color-theme="basic"
             title="Get MEW wallet App"
             subtitle="Download our official app and connect to MEW web using your mobile phone. Available on iOS and Android."
-            title-mdi-icon="mdi-shield-check"
+            title-icon="mdi-shield-check"
+            title-icon-type="mdi"
             title-icon-class="primary--text"
           >
+            <!-- need to add this slot -->
             <template #contentBelowTitle>
               <div class="mt-6">
                 <img
@@ -56,12 +58,12 @@
                 />
               </div>
             </template>
-            <template #contentRight>
+            <template #contentSlot>
               <img
                 class="mew-wallet-img"
                 src="@/assets/images/snippets/bg-mew-wallet.png"
                 alt="MEWwallet"
-                style="height: 190px"
+                style="height: 140px; margin-top: 20px"
               />
             </template>
           </mew-super-button>
@@ -72,32 +74,35 @@
         =====================================================================================
         -->
         <mew-super-button
-          btn-mode="small-right-image"
+          font-class="mew-heading-2"
           class="mb-5"
           color-theme="basic"
           title="Buy a Hardware Wallet"
           subtitle="A hardware wallet offers the highest security for accessing your crypto"
-          title-mdi-icon="mdi-shield-check"
+          title-icon="mdi-shield-check"
+          title-icon-type="mdi"
           title-icon-class="primary--text"
+          right-icon-type="img"
           :right-icon="
             require('@/assets/images/icons/icon-hardware-wallet.png')
           "
           @click.native="$router.push({ name: 'BuyHardwareWallet' })"
-        >
-        </mew-super-button>
+        />
         <!--
         =====================================================================================
           Create Software Button
         =====================================================================================
         -->
         <mew-super-button
-          btn-mode="small-right-image"
+          font-class="mew-heading-2"
           class="mb-5"
           color-theme="outline"
           title="Software"
           subtitle="Keystore files / Mnemonic phrase is highly sensitive information, and
           they should only be used in offline settings by experienced users."
           title-icon-class="warning--text text--darken-1"
+          title-icon="mdi-alert"
+          title-icon-type="mdi"
           note="NOT RECOMMENDED"
           @click.native="openSoftwareModule"
         />
@@ -125,7 +130,6 @@
 </template>
 
 <script>
-import MewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import ModuleCreateWalletSoftware from '@/modules/create-wallet/ModuleCreateWalletSoftware';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import AppBlockTitle from '@/core/components/AppBlockTitle';
@@ -134,7 +138,6 @@ export default {
   name: 'TheCreateWalletLayout',
   components: {
     AppBlockTitle,
-    MewSuperButton,
     ModuleCreateWalletSoftware
   },
   props: {

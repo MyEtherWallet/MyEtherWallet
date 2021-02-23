@@ -1,19 +1,18 @@
 <template>
-  <div class="d-flex">
-    <module-contract-deploy />
-    <div class="ml-4">
-      <module-network />
-    </div>
+  <div class="d-flex full-width pa-3">
+    <module-contract-deploy class="flex-grow-1" />
+    <network class="pl-5" />
   </div>
 </template>
 
 <script>
-import ModuleNetwork from '@/modules/network/ModuleNetwork';
-import ModuleContractDeploy from '@/modules/contract/ModuleContractDeploy';
+import Network from '@/modules/network/ModuleNetwork';
+import ModuleContractDeploy from '@/modules/contract/ModuleContractDeploy.vue';
 
 export default {
+  name: '',
   components: {
-    ModuleNetwork,
+    Network,
     ModuleContractDeploy
   }
 };

@@ -1,9 +1,11 @@
 <template>
-  <div>
-    <div class="d-flex">
-      <div class="flex-grow-1">
-        <mew6-white-sheet>
-          <interface-wrap title="Interact with contract">
+  <mew-module
+    class="d-flex flex-grow-1 pt-6"
+    title="Interact with contract"
+    :has-elevation="true"
+    :has-indicator="true"
+  >
+    <template #moduleBody>
             <div class="d-flex">
               <mew-input
                 :value="contractAddress"
@@ -125,10 +127,7 @@
               />
             </div>
           </template>
-        </mew-overlay>
-      </div>
-    </div>
-  </div>
+          </mew-module>
 </template>
 
 <script>

@@ -1,22 +1,45 @@
 <template>
-  <div class="module-ens">
+  <div class="module-ens full-width">
     <register-domain
       ref="registerDomain"
       :on-register="onRegister"
       :close="closeRegister"
-      :name-module="nameModule"
+      :register="register"
+      :loading-commit="loadingCommit"
+      :commited="committed"
+      :minimum-age="minimumAge"
+      :commit="commit"
+      :name="nameHandler.name"
+      :parsed-host-name="nameHandler.parsedHostName"
+      :is-available="nameHandler.isAvailable"
+      :checking-domain-avail="nameHandler.checkingDomainAvail"
+      :generate-key-phrase="generateKeyPhrase"
+      :get-rent-price="getRentPrice"
     />
     <manage-domain
       ref="manageDomain"
+      :setting-ipfs="settingIpfs"
       :on-manage="onManage"
       :close="closeManage"
       :type="manageType"
       :transfer="transfer"
-      :name-module="nameModule"
+      :renew="renew"
+      :upload-file="uploadFile"
+      :set-text-records="setTextRecords"
+      :set-multicoin="setMulticoin"
+      :set-ipfs="setIpfs"
+      :host-name="manageDomainHandler.parsedHostName"
+      :get-rent-price="getRentPrice"
     />
     <v-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="ensBgImg" />
-      <mew-tabs :items="tabs" has-underline>
+      <mew-tabs
+        class="pt-5"
+        :items="tabs"
+        :is-centered="true"
+        :active-tab="activeTab"
+        has-underline
+      >
         <!-- register domain -->
         <template #tabContent1>
           <v-sheet
@@ -61,27 +84,35 @@
                 >
               </span>
             </div>
-            <mew-expand-panel class="my-domains" :panel-items="myDomains">
+            <mew-expand-panel
+              :idx-to-expand="null"
+              class="my-domains-panel"
+              :panel-items="myDomains"
+              :right-action-text="$t('ens.buy-domain')"
+              @onActionClick="buyDomain"
+            >
               <template
                 v-for="(domain, idx) in myDomains"
                 :slot="'panelBody' + (idx + 1)"
                 :class="domain.expired ? 'expired' : 'available'"
               >
                 <div :key="idx">
-                  <div :class="['d-flex justify-space-between pt-5']">
-                    <!-- domain.expired ? 'errorOutlineActive' : 'superPrimary' -->
+                  <div
+                    class="px-7 d-flex justify-space-between py-5 subheader-container"
+                  >
                     <div class="d-flex align-center">
                       <div>{{ $t('ens.manage-domains.registrant') }}</div>
                       <mew-blockie
                         :address="domain.registrarAddress"
                         width="25px"
                         height="25px"
-                        class="mx-3"
+                        class="mx-2"
                       />
                       <mew-transform-hash :hash="domain.registrarAddress" />
                       <mew-copy
-                        class="ml-2 mew-heading-3"
+                        class="ml-2 mew-body"
                         :copy-value="domain.registrarAddress"
+                        :is-small="true"
                       />
                       <a
                         class="address-link"
@@ -94,18 +125,19 @@
                         <v-icon small class="call-made"> mdi-call-made </v-icon>
                       </a>
                     </div>
-                    <div class="d-flex align-center">
+                    <div class="d-flex align-center justify-end">
                       <div>{{ $t('ens.manage-domains.controller') }}</div>
                       <mew-blockie
                         :address="domain.controllerAddress"
                         width="25px"
                         height="25px"
-                        class="mx-3"
+                        class="mx-2"
                       />
                       <mew-transform-hash :hash="domain.controllerAddress" />
                       <mew-copy
-                        class="ml-2 mew-heading-3"
+                        class="ml-2 mew-body"
                         :copy-value="domain.controllerAddress"
+                        :is-small="true"
                       />
                       <a
                         class="address-link"
@@ -120,34 +152,35 @@
                     </div>
                   </div>
                   <div
-                    class="mt-3 d-flex align-center justify-space-between py-5 px-0"
+                    class="mt-3 d-flex align-center justify-space-between py-5 px-7"
                   >
                     <span class="mew-heading-3">
                       {{ $t('ens.manage-domains.what-to-do') }}
                     </span>
                   </div>
-                  <v-divider></v-divider>
-                  <v-row class="pa-5">
+                  <v-divider class="mx-7"></v-divider>
+                  <v-row class="pa-7">
                     <v-col
                       v-for="(option, key) in manageDomainOptions"
                       :key="key"
                       cols="2"
                       class="text-center"
                     >
-                      <mew-button
-                        title=""
-                        btn-style="transparent"
-                        btn-size="xlarge"
-                        icon-type="mew"
-                        icon="ensManager"
+                      <mew-icon
+                        class="cursor-pointer"
+                        icon-name="ensManager"
+                        :img-height="70"
                         @click.native="manage(option.type, idx)"
                       />
                       <div>{{ option.label }}</div>
-                      <div v-if="option.expire" class="orange--text">
+                      <div
+                        v-if="domain.expiration && key === 1"
+                        class="orange--text"
+                      >
                         <div>
                           {{
-                            $t('ens.manage-domain.expire-at', {
-                              date: option.expire
+                            $t('ens.manage-domains.expire-at', {
+                              date: domain.expiration
                             })
                           }}
                         </div>
@@ -169,27 +202,48 @@ import ensBgImg from '@/assets/images/backgrounds/bg-ens.png';
 import registerDomain from './modules/ModuleRegisterDomain';
 import manageDomain from './modules/ModuleManageDomain';
 import ENSManager from './handlers/handlerEnsManager';
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import BigNumber from 'bignumber.js';
+import { EventBus } from '@/core/plugins/eventBus';
+import EventNames from '@/utils/web3-provider/events.js';
+import ENS from 'ethereum-ens';
+import { fromWei, toBN } from 'web3-utils';
 
 export default {
   components: { registerDomain, manageDomain },
   data() {
     return {
+      activeTab: 0,
+      loadingCommit: false,
+      minimumAge: '',
+      committed: false,
+      settingIpfs: false,
+      manageDomainHandler: {},
       manageType: '',
       onManage: false,
       name: '',
-      nameModule: {},
+      nameHandler: {},
       ensManager: {},
       onRegister: false,
       manageDomainOptions: [
         { label: this.$t('ens.transfer-domain'), type: 'transfer' },
-        { label: 'Renew Domain', expire: '07/21/2020' },
-        { label: 'ENS Configurations' },
-        { label: 'Manage Multicoins' },
-        { label: 'Manage Text Records' },
-        { label: 'Upload Website' },
-        { label: 'Return Funds' }
+        {
+          label: this.$t('ens.manage-domains.renew-domain'),
+          type: 'renew'
+        },
+        {
+          label: this.$t('ens.manage-domains.manage-multi'),
+          type: 'manageMulticoin'
+        },
+        {
+          label: this.$t('ens.manage-domains.manage-txt'),
+          type: 'manageTxtRecord'
+        },
+        {
+          label: this.$t('ens.manage-domains.upload-site'),
+          type: 'manageUpload'
+        }
       ],
       tabs: [
         { name: this.$t('ens.register-domain') },
@@ -206,7 +260,10 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['network', 'address', 'web3', 'ens', 'gasPrice']),
+    ...mapState('external', ['ETHUSDValue']),
+    ...mapState('global', ['gasPrice']),
+    ...mapGetters('global', ['network']),
+    ...mapState('wallet', ['balance', 'address', 'web3']),
     rules() {
       return [
         this.name.length > 2 || this.$t('ens.warning.not-enough-char'),
@@ -219,30 +276,41 @@ export default {
         return true;
       }
       return false;
+    },
+    balanceToWei() {
+      return this.web3.utils.toWei(BigNumber(this.balance).toString(), 'ether');
     }
   },
   mounted() {
+    const ens = this.network.type.ens
+      ? new ENS(this.web3.currentProvider, this.network.type.ens.registry)
+      : null;
     this.ensManager = new ENSManager(
       this.network,
       this.address,
       this.web3,
-      this.ens,
+      ens,
       this.gasPrice
     );
     this.getDomains();
   },
   methods: {
+    buyDomain() {
+      this.activeTab = 0;
+    },
     //manage domain
     manage(type, idx) {
       this.onManage = true;
       this.manageType = type;
-      this.manageDomainModule = this.myDomains[idx];
+      this.manageDomainHandler = this.myDomains[idx];
     },
     getDomains() {
       this.ensManager
         .getAllNamesForAddress()
         .then(res => {
           res.forEach(domain => {
+            domain.hasActiveBorder = !domain.expired;
+            domain.disabled = domain.expired;
             domain.colorTheme = domain.expired
               ? 'errorOutlineActive'
               : 'superPrimary';
@@ -262,12 +330,64 @@ export default {
     },
     closeManage() {
       this.onManage = false;
+      this.settingIpfs = false;
     },
     transfer(address) {
-      this.manageDomainModule
+      this.manageDomainHandler
         .transfer(address)
+        .then(this.getDomains)
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
+      this.closeManage();
+    },
+    renew(duration) {
+      this.manageDomainHandler
+        .renew(duration, this.balanceToWei)
+        .then(this.getDomains)
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
+      this.closeManage();
+    },
+    setMulticoin(coin) {
+      this.manageDomainHandler
+        .setMulticoin(coin)
+        .then(this.getDomains)
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
+      this.closeManage();
+    },
+    setTextRecords(records) {
+      this.manageDomainHandler
+        .setTxtRecord(records)
+        .then(this.getDomains)
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
+      this.closeManage();
+    },
+    uploadFile(file) {
+      this.settingIpfs = true;
+      this.manageDomainHandler
+        .uploadFile(file)
+        .then(this.manageDomainHandler.setIPFSHash)
+        .then(resp => {
+          this.settingIpfs = false;
+          this.uploadedHash = resp;
+          this.closeManage();
+        })
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
+    },
+    setIpfs(hash) {
+      this.settingIpfs = true;
+      this.manageDomainHandler
+        .setIPFSHash(hash)
         .then(() => {
-          this.getDomains();
+          this.settingIpfs = false;
         })
         .catch(err => {
           Toast(err, {}, ERROR);
@@ -285,7 +405,7 @@ export default {
       this.ensManager
         .searchName(name)
         .then(res => {
-          this.nameModule = res;
+          this.nameHandler = res;
           this.onRegister = true;
         })
         .catch(err => {
@@ -294,19 +414,81 @@ export default {
     },
     closeRegister() {
       this.onRegister = false;
+      this.committed = false;
       this.name = '';
-      this.nameModule = {};
-      this.$refs.registerDomain.clear();
+      this.nameHandler = {};
+      this.$refs.registerDomain.reset();
     },
     setName(name) {
       this.name = name;
+    },
+    register() {
+      this.nameHandler
+        .register(this.duration, this.balanceToWei)
+        .then(this.closeRegister)
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
+    },
+    commit() {
+      this.nameHandler.getMinimumAge().then(resp => {
+        this.minimumAge = resp;
+      });
+      // start timer after confirming tx
+      EventBus.$on(EventNames.CONFIRMED_TX, () => {
+        this.loadingCommit = true;
+      });
+      this.nameHandler
+        .createCommitment()
+        .then(() => {
+          this.loadingCommit = false;
+          this.committed = true;
+        })
+        .catch(err => {
+          this.closeRegister();
+          Toast(err, {}, ERROR);
+        });
+    },
+    generateKeyPhrase() {
+      if (this.nameHandler.generateKeyPhrase) {
+        this.nameHandler.generateKeyPhrase();
+      }
+    },
+    getRentPrice(duration) {
+      const handler = this.onManage
+        ? this.manageDomainHandler
+        : this.nameHandler;
+      return handler.getRentPrice(duration).then(resp => {
+        if (resp) {
+          const priceFromWei = fromWei(toBN(resp));
+          return {
+            eth: new BigNumber(priceFromWei).toFixed(4),
+            usd: new BigNumber(priceFromWei)
+              .times(this.ETHUSDValue.value)
+              .toFixed(2)
+          };
+        }
+      });
     }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.module-ens {
-  width: 100%;
+<style lang="scss">
+.my-domains-panel {
+  .v-expansion-panel-content__wrap {
+    padding: 0;
+  }
+  .v-expansion-panel--active > .v-expansion-panel-header {
+    border-radius: 0 !important; //need to update mew components
+  }
+  .active-border {
+    .subheader-container {
+      background-color: var(--v-superPrimary-base);
+      border-top: 1px solid var(--v-primary-base);
+      div {
+        width: 200px;
+      }
+    }
+  }
 }
 </style>
