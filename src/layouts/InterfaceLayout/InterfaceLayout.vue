@@ -107,7 +107,7 @@
           <div class="tokens">
             <interface-tokens
               v-if="$route.fullPath !== '/interface/dapps/aave/action'"
-              :fetch-tokens="setTokens"
+              :fetch-tokens="fetchSetTokens"
               :get-token-balance="getTokenBalance"
               :tokens="tokens"
               :received-tokens="receivedTokens"
@@ -302,6 +302,12 @@ export default {
       'setGasPrice',
       'setEthGasPrice'
     ]),
+    fetchSetTokens() {
+      this.setTokens().then(res => {
+        this.tokens = res;
+        this.receivedTokens = true;
+      });
+    },
     checkPrefilled() {
       const _self = this;
       const hasLinkQuery = Object.keys(_self.linkQuery).length;
@@ -579,7 +585,6 @@ export default {
       store.set('customTokens', customTokenStore);
     },
     fetchTokens() {
-      this.receivedTokens = false;
       return new Promise(resolve => {
         if (
           (this.network.type.chainID === 1 ||
@@ -602,67 +607,61 @@ export default {
                     .div(BigNumber(10).pow(tok.decimals))
                     .toFixed();
                 } else {
-                  tok['balance'] = 'Load';
+                  tok['balance'] = 0;
                 }
                 return tok;
               });
-              this.receivedTokens = true;
               resolve(token);
             });
           } catch (e) {
-            this.receivedTokens = true;
             resolve(this.network.type.tokens);
           }
         } else {
-          this.receivedTokens = true;
           resolve(this.network.type.tokens);
         }
       });
     },
     setTokens() {
       this.tokens = [];
-      this.fetchTokens().then(res => {
-        let tokens = res;
-        tokens = tokens
-          .sort((a, b) => {
-            if (a.name.toUpperCase() < b.name.toUpperCase()) {
-              return -1;
-            } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
-              return 1;
-            }
-            return 0;
-          })
-          .map(token => {
-            const convertedToken = {
-              address: token.address,
-              balance: token.balance ? token.balance : 'Load',
-              decimals: token.decimals,
-              email: token.email,
-              name: token.name,
-              symbol: token.symbol,
-              website: token.website
-            };
+      this.receivedTokens = false;
+      return new Promise(resolve => {
+        if (this.network.type.name === 'ETH') {
+          this.fetchTokens().then(res => {
+            let tokens = res;
+            tokens = tokens
+              .sort((a, b) => {
+                if (a.name.toUpperCase() < b.name.toUpperCase()) {
+                  return -1;
+                } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
+                  return 1;
+                }
+                return 0;
+              })
+              .map(token => {
+                const convertedToken = {
+                  address: token.address,
+                  balance: token.balance,
+                  decimals: token.decimals,
+                  email: token.email,
+                  name: token.name,
+                  symbol: token.symbol,
+                  website: token.website
+                };
 
-            if (token.hasOwnProperty('logo')) {
-              convertedToken['logo'] = token.logo;
-            }
-            return convertedToken;
+                if (token.hasOwnProperty('logo')) {
+                  convertedToken['logo'] = token.logo;
+                }
+                return convertedToken;
+              });
+            resolve(tokens.sort(sortByBalance));
           });
-        this.tokens = tokens
-          .sort((a, b) => {
-            const a1 = typeof a.balance,
-              b1 = typeof b.balance;
-            return a1 > b1
-              ? -1
-              : a1 < b1
-              ? 1
-              : a.balance < b.balance
-              ? -1
-              : a.balance > b.balance
-              ? 1
-              : 0;
-          })
-          .sort(sortByBalance);
+        } else {
+          const tokens = this.network.type.tokens.map(item => {
+            item.balance = 'Load';
+            return item;
+          });
+          resolve(tokens);
+        }
       });
     },
     setTokensWithBalance() {
@@ -783,7 +782,10 @@ export default {
           if (this.network.type.name === ETH.name) this.fetchNames();
           this.getBlock();
           this.getBalance();
-          this.setTokens();
+          this.setTokens().then(res => {
+            this.tokens = res;
+            this.receivedTokens = true;
+          });
           this.setNonce();
           this.getHighestGas();
           this.getBlockUpdater().then(_sub => {

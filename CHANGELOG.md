@@ -1,5 +1,8 @@
+### Release v5.7.21
+
 ### Bug
 
+- Reset stepper on init [#2840](https://github.com/MyEtherWallet/MyEtherWallet/pull/2840)
 - Fix ETC send offline helper bug[#2852](https://github.com/MyEtherWallet/MyEtherWallet/pull/2852)
 
 ### Devop
