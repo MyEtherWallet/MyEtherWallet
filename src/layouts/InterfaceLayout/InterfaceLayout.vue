@@ -602,7 +602,7 @@ export default {
                     .div(BigNumber(10).pow(tok.decimals))
                     .toFixed();
                 } else {
-                  tok['balance'] = 'Load';
+                  tok['balance'] = 0;
                 }
                 return tok;
               });
@@ -621,49 +621,42 @@ export default {
     },
     setTokens() {
       this.tokens = [];
-      this.fetchTokens().then(res => {
-        let tokens = res;
-        tokens = tokens
-          .sort((a, b) => {
-            if (a.name.toUpperCase() < b.name.toUpperCase()) {
-              return -1;
-            } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
-              return 1;
-            }
-            return 0;
-          })
-          .map(token => {
-            const convertedToken = {
-              address: token.address,
-              balance: token.balance ? token.balance : 'Load',
-              decimals: token.decimals,
-              email: token.email,
-              name: token.name,
-              symbol: token.symbol,
-              website: token.website
-            };
+      if (this.network.type.name === 'ETH') {
+        this.fetchTokens().then(res => {
+          let tokens = res;
+          tokens = tokens
+            .sort((a, b) => {
+              if (a.name.toUpperCase() < b.name.toUpperCase()) {
+                return -1;
+              } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
+                return 1;
+              }
+              return 0;
+            })
+            .map(token => {
+              const convertedToken = {
+                address: token.address,
+                balance: token.balance,
+                decimals: token.decimals,
+                email: token.email,
+                name: token.name,
+                symbol: token.symbol,
+                website: token.website
+              };
 
-            if (token.hasOwnProperty('logo')) {
-              convertedToken['logo'] = token.logo;
-            }
-            return convertedToken;
-          });
-        this.tokens = tokens
-          .sort((a, b) => {
-            const a1 = typeof a.balance,
-              b1 = typeof b.balance;
-            return a1 > b1
-              ? -1
-              : a1 < b1
-              ? 1
-              : a.balance < b.balance
-              ? -1
-              : a.balance > b.balance
-              ? 1
-              : 0;
-          })
-          .sort(sortByBalance);
-      });
+              if (token.hasOwnProperty('logo')) {
+                convertedToken['logo'] = token.logo;
+              }
+              return convertedToken;
+            });
+          this.tokens = tokens.sort(sortByBalance);
+        });
+      } else {
+        this.tokens = this.network.type.tokens.map(item => {
+          item.balance = 'Load';
+          return item;
+        });
+      }
     },
     setTokensWithBalance() {
       const customStore = store.get('customTokens');
