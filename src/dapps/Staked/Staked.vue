@@ -209,7 +209,7 @@ export default {
       this.details = {};
       this.totalStaked = '';
       this.apr = '';
-      this.resetStepper = false;
+      this.resetStepper = true;
       this.eth2ContractAddress = '';
       this.endpoint = '';
       this.batchContract = '';

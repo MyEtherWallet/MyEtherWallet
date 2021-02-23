@@ -59,7 +59,8 @@ const EXCEPTIONS = [
   '@stripe/stripe-js',
   // probably hold off on this one until next iteration
   '@sentry/browser',
-  '@sentry/integrations'
+  '@sentry/integrations',
+  'sass-loader'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
