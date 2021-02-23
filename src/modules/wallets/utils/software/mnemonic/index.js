@@ -1,10 +1,13 @@
 import * as HDKey from 'hdkey';
 import { Transaction } from 'ethereumjs-tx';
 import { hashPersonalMessage, ecsign } from 'ethereumjs-util';
-import { MNEMONIC as mnemonicType } from '../../bip44/walletTypes';
-import bip44Paths from '../../bip44';
+import { MNEMONIC as mnemonicType } from '../../../../access-wallet/hardware/handlers/configs/configWalletTypes';
+import bip44Paths from '../../../../access-wallet/hardware/handlers/bip44';
 import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
-import { getSignTransactionObject, calculateChainIdFromV } from '../../utils';
+import {
+  getSignTransactionObject,
+  calculateChainIdFromV
+} from '@/modules/access-wallet/hardware/handlers/helpers/helperHex';
 import errorHandler from './errorHandler';
 import store from '@/core/store';
 import commonGenerator from '@/core/helpers/commonGenerator';

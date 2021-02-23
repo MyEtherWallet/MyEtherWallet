@@ -46,7 +46,7 @@
 // import mobileStatus from './HeaderMobileStatus';
 import notificationOverlay from '@/modules/notifications/ModuleNotifications';
 import { mapState } from 'vuex';
-import { MEW_CONNECT } from '@/modules/wallets/utils/bip44/walletTypes';
+import { MEW_CONNECT } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 
 export default {
   components: {

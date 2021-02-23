@@ -2,8 +2,11 @@ import WalletConnect from '@walletconnect/browser';
 import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
 import store from '@/core/store';
 import { Transaction } from 'ethereumjs-tx';
-import { WALLET_CONNECT as walletConnectType } from '../../bip44/walletTypes';
-import { sanitizeHex, getBufferFromHex } from '../../utils';
+import { WALLET_CONNECT as walletConnectType } from '../../../../access-wallet/hardware/handlers/configs/configWalletTypes';
+import {
+  sanitizeHex,
+  getBufferFromHex
+} from '@/modules/access-wallet/hardware/handlers/helpers/helperHex';
 import errorHandler from './errorHandler';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import toBuffer from '@/core/helpers/toBuffer';

@@ -87,8 +87,8 @@
               <mew-button
                 title="Access My Wallet"
                 btn-size="xlarge"
-                @click.native="unlockBtn"
                 class="ma-2"
+                @click.native="unlockBtn"
               />
             </v-row>
             <!--

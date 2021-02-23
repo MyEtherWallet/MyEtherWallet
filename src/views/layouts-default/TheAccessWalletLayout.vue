@@ -54,8 +54,8 @@
       -->
       <div class="spacer-y-medium" />
       <browser-extension-overlay :open="showBrowser" :close="close" />
-      <hardware-access-overlay :open="showHardware" :close="close" />
       <mobile-access-overlay :open="showMobile" :close="close" />
+      <module-access-wallet-hardware :open="showHardware" :close="close" />
       <module-access-wallet-software
         :open="showSoftware"
         :close="close"
@@ -69,7 +69,7 @@
 import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import AppBlockTitle from '@/core/components/AppBlockTitle';
 import browserExtensionOverlay from '@/modules/wallets/components/browser-extension-overlay/BrowserExtensionOverlay';
-import hardwareAccessOverlay from '@/modules/wallets/components/hardware-access-overlay/HardwareAccessOverlay';
+import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import mobileAccessOverlay from '@/modules/wallets/components/mobile-access-overlay/MobileAccessOverlay';
 import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
@@ -79,7 +79,7 @@ export default {
   components: {
     AppBlockTitle,
     browserExtensionOverlay,
-    hardwareAccessOverlay,
+    ModuleAccessWalletHardware,
     mobileAccessOverlay,
     ModuleAccessWalletSoftware,
     mewSuperButton

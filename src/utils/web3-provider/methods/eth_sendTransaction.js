@@ -4,7 +4,7 @@ import EthCalls from '../web3Calls';
 import {
   WEB3_WALLET,
   WALLET_CONNECT
-} from '@/modules/wallets/utils/bip44/walletTypes';
+} from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 import EventNames from '../events';
 import { toPayload } from '../jsonrpc';
 import * as locStore from 'store';

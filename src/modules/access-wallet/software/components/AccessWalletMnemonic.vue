@@ -279,10 +279,10 @@
 <script>
 import pageIndicatorDot from '@/components/page-indicator-dot/PageIndicatorDot';
 import phraseBlock from '@/components/PhraseBlock';
-import { MNEMONIC as mnemonicType } from '@/modules/wallets/utils/bip44/walletTypes';
-import paths from '@/modules/wallets/utils/bip44';
+import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
+import paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import { mapActions, mapGetters } from 'vuex';
-const parsedPaths = paths[mnemonicType].map(item => {
+const parsedPaths = paths[WALLET_TYPES.mnemonicType].map(item => {
   const newObj = {};
   newObj['name'] = item['label'];
   newObj['value'] = item['path'];
