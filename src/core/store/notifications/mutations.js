@@ -3,7 +3,6 @@ import localStore from 'store';
 import Configs from '../configs';
 import Notification from '@/modules/notifications/handler/handlerNotification';
 const INIT_STORE = function (state) {
-  console.log('this got called??');
   const fetchedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.notifications);
   if (fetchedStore && fetchedStore.notifications.length > 0) {
     fetchedStore.notifications = fetchedStore.notifications.map(item => {

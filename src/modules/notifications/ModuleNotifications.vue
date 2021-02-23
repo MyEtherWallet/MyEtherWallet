@@ -102,7 +102,8 @@ export default {
       ],
       page: null,
       inTx: [],
-      openNotifications: false
+      openNotifications: false,
+      caller: null
     };
   },
   computed: {
@@ -122,36 +123,28 @@ export default {
         const newObj = this.formatObj(notification);
         return newObj;
       });
-      return newArr.sort((a, b) => {
-        a.timestamp > b.timestamp ? 1 : a.timestamp < b.timestamp ? -1 : 0;
-      });
+      return newArr.sort(this.sortByDate);
     },
     transformTxNoti() {
       const newArr = this.txNotifications.map(notification => {
         const newObj = this.formatObj(notification);
         return newObj;
       });
-      return newArr.sort((a, b) => {
-        a.timestamp > b.timestamp ? 1 : a.timestamp < b.timestamp ? -1 : 0;
-      });
+      return newArr.sort(this.sortByDate);
     },
     transformSwapNoti() {
       const newArr = this.swapNotifications.map(notification => {
         const newObj = this.formatObj(notification);
         return newObj;
       });
-      return newArr.sort((a, b) => {
-        a.timestamp > b.timestamp ? 1 : a.timestamp < b.timestamp ? -1 : 0;
-      });
+      return newArr.sort(this.sortByDate);
     },
     transformInNoti() {
       const newArr = this.inTx.map(notification => {
         const newObj = this.formatObj(notification);
         return newObj;
       });
-      return newArr.sort((a, b) => {
-        a.timestamp > b.timestamp ? 1 : a.timestamp < b.timestamp ? -1 : 0;
-      });
+      return newArr.sort(this.sortByDate);
     },
     allNotifications() {
       return this.transformCurrentNoti.concat(this.transformInNoti);
@@ -189,15 +182,37 @@ export default {
   },
   methods: {
     ...mapActions('notifications', ['updateNotification', 'setFetchedTime']),
+    sortByDate(a, b) {
+      return a.timestamp > b.timestamp ? 1 : a.timestamp < b.timestamp ? -1 : 0;
+    },
+    // next key for pendingTx subscription
     parsePendingTx(result) {
-      console.log(result);
+      const data = result.data.pendingTransaction;
+      if (data.to.toLowerCase() === this.address.toLowerCase()) {
+        this.caller.subscribeToTxHash(data, () => {
+          this.caller.getTxDetailFromPending(data).then(res => {
+            const notification = new Notification(res);
+            const foundIdx = this.inTx.findIndex(item => {
+              if (res.transactionHash === item.transactionHash) {
+                return item;
+              }
+            });
+
+            if (foundIdx) {
+              this.inTx.splice(foundIdx, 0, notification);
+            } else {
+              this.inTx.push(notification);
+            }
+          });
+        });
+      }
     },
     setupInTx() {
       if (this.isEthNetwork) {
         const lastFetched = this.lastFetched;
         const newArr = [];
-        const caller = new NotificationsCall(this.$apollo);
-        caller.getAllTransfer(this.address).then(res => {
+        this.caller = new NotificationsCall(this.$apollo);
+        this.caller.getAllTransfer(this.address).then(res => {
           res.forEach(item => {
             if (item.date < lastFetched) {
               item.read = true;
@@ -207,7 +222,7 @@ export default {
           this.inTx = newArr;
           this.setFetchedTime();
         });
-        caller.subscribeToPending(this.address, this.parsePendingTx);
+        this.caller.subscribeToPending(this.address, this.parsePendingTx);
       }
     },
     markNotificationAsRead(notification) {

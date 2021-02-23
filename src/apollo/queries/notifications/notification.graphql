@@ -1,5 +1,5 @@
 query getEthTransfersV2($owner: String!) {
-    getEthTransfersV2(owner: $owner,filter: TO) {
+    getEthTransfersV2(owner: $owner, filter: TO) {
       transfers {
         transfer {
           transactionHash
@@ -35,4 +35,8 @@ subscription pendingTransaction($owner: String!){
     value
     timestamp
   }
+}
+
+subscription transactionEvent($hash: String!){
+  transactionEvent(hash: $hash)
 }

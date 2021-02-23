@@ -4,7 +4,8 @@ import { hexToNumber, fromWei } from 'web3-utils';
 import {
   getEthTransfersV2,
   getTransactionDetails,
-  pendingTransaction
+  pendingTransaction,
+  transactionEvent
 } from './notification.graphql';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 export default class NotificationCalls {
@@ -24,7 +25,10 @@ export default class NotificationCalls {
           this.getTxDetails(response.data.getEthTransfersV2.transfers).then(
             res => {
               resolve(
-                this._formatter(response.data.getEthTransfersV2.transfers, res)
+                this._allTransferFormatter(
+                  response.data.getEthTransfersV2.transfers,
+                  res
+                )
               );
             }
           );
@@ -50,6 +54,22 @@ export default class NotificationCalls {
     return Promise.all(promises);
   }
 
+  getTxDetailFromPending(obj) {
+    return new Promise(response => {
+      this.apollo
+        .query({
+          query: getTransactionDetails,
+          variables: {
+            hash: obj.transactionHash
+          }
+        })
+        .then(res => {
+          const parsedRes = this._allTransferFormatter([obj], [res]);
+          response(parsedRes);
+        });
+    });
+  }
+
   subscribeToPending(owner, nextHandler) {
     const connector = this.apollo.subscribe({
       query: pendingTransaction,
@@ -65,7 +85,22 @@ export default class NotificationCalls {
     });
   }
 
-  _formatter(hashArrObj, txArrObj) {
+  subscribeToTxHash(obj, nextHandler) {
+    const connector = this.apollo.subscribe({
+      query: transactionEvent,
+      variables: {
+        hash: obj.transactionHash
+      }
+    });
+    connector.subscribe({
+      next: nextHandler,
+      error(error) {
+        Toast(error.message, {}, ERROR);
+      }
+    });
+  }
+
+  _allTransferFormatter(hashArrObj, txArrObj) {
     const newArr = [];
     for (let i = 0; i < hashArrObj.length; i++) {
       const newObj = Object.assign(
