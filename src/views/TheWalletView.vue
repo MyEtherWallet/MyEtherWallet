@@ -13,7 +13,7 @@
       </v-container>
 
       <!-- Bottom spacer for fixed position footer -->
-      <div class="py-8 py-lg-2"></div>
+      <div class="py-1 py-lg-2"></div>
 
       <the-wallet-footer />
     </div>

@@ -1,6 +1,11 @@
 <template>
   <v-row class="mew-component--nft-manager">
     <v-col cols="12" md="8">
+      <div v-if="$vuetify.breakpoint.smAndDown">
+        <module-network />
+        <spacer />
+      </div>
+
       <mew6-white-sheet full-width>
         <interface-wrap title="NFT Manager">
           <mew-tabs :items="items" is-vertical>
@@ -120,18 +125,20 @@
         </interface-wrap>
       </mew6-white-sheet>
     </v-col>
-    <v-col cols="12" md="4">
+    <v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="4">
       <module-network />
     </v-col>
   </v-row>
 </template>
 
 <script>
+import Spacer from '../components-wallet/WalletSpacer';
 import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import ModuleNetwork from '@/modules/network/ModuleNetwork';
 
 export default {
   components: {
+    Spacer,
     'interface-wrap': InterfaceWrap,
     ModuleNetwork
   },

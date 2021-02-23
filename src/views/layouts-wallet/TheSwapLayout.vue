@@ -16,9 +16,13 @@
     />
     <v-row>
       <v-col cols="12" md="8" lg="8">
+        <div v-if="$vuetify.breakpoint.smAndDown">
+          <module-network />
+          <spacer />
+        </div>
         <mew6-white-sheet>
           <interface-wrap title="Swap">
-            <div class="d-flex justify-space-between">
+            <div class="d-block d-md-flex justify-space-between">
               <div>
                 <mew-select
                   :value="fromTokenType"
@@ -34,9 +38,15 @@
                   @input="setTokenInValue"
                 />
               </div>
-              <div class="px-6 mb-8 d-flex align-center">
-                <img :src="swapIcon" height="35" />
+
+              <div class="px-6 mb-8 d-flex align-center justify-center">
+                <img
+                  :class="$vuetify.breakpoint.smAndDown ? 'rotate r90' : ''"
+                  :src="swapIcon"
+                  height="35"
+                />
               </div>
+
               <div>
                 <mew-select
                   ref="toToken"
@@ -74,9 +84,8 @@
                 <v-col
                   v-for="(quote, idx) in availableQuotes"
                   :key="`quote-${idx}`"
-                  cols="6"
+                  cols="12"
                   lg="6"
-                  sm="12"
                 >
                   <v-card flat color="tableHeader" class="pa-6">
                     <div class="d-flex align-center justify-space-between mb-3">
@@ -137,7 +146,7 @@
           </interface-wrap>
         </mew6-white-sheet>
       </v-col>
-      <v-col cols="12" md="4" lg="4">
+      <v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="4" lg="4">
         <module-network />
       </v-col>
     </v-row>
@@ -145,6 +154,7 @@
 </template>
 
 <script>
+import Spacer from '../components-wallet/WalletSpacer';
 import SwapConfirmation from '@/modules/swap/components/SwapConfirmation';
 import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
@@ -162,6 +172,7 @@ const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const AMT = '0.1';
 export default {
   components: {
+    Spacer,
     SwapConfirmation,
     'interface-wrap': InterfaceWrap,
     ModuleNetwork

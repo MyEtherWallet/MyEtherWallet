@@ -1,6 +1,11 @@
 <template>
   <v-row class="mew-component--dashboard">
     <v-col cols="12" md="8">
+      <div v-if="$vuetify.breakpoint.smAndDown">
+        <module-network />
+        <spacer />
+      </div>
+
       <mew6-white-sheet
         v-if="true"
         class="mew-component--eth-balance pa-7 pb-4"
@@ -158,31 +163,35 @@
         </mew6-white-sheet>
       </div>
     </v-col>
-    <v-col cols="12" md="4">
-      <network />
-      <div class="pa-3"></div>
+    <v-col class="mt-n2 mt-md-0" cols="12" md="4">
+      <div v-if="$vuetify.breakpoint.mdAndUp">
+        <module-network />
+        <spacer />
+      </div>
       <swap />
-      <div class="pa-3"></div>
+      <spacer />
       <app-carousel />
     </v-col>
   </v-row>
 </template>
 
 <script>
+import Spacer from '../components-wallet/WalletSpacer';
 import chart from '@/modules/balance/components/BalanceChart';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import WalletCalls from '@/apollo/queries/wallets/index';
 import utils from 'web3-utils';
 import AppCarousel from '@/core/components/AppCarousel';
-import network from '@/modules/network/ModuleNetwork';
+import ModuleNetwork from '@/modules/network/ModuleNetwork';
 import swap from '@/components/swap/Swap';
 
 export default {
   components: {
+    Spacer,
     chart,
     AppCarousel,
-    network,
+    ModuleNetwork,
     swap
   },
   props: {
