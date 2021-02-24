@@ -187,16 +187,16 @@ export default {
     },
     // next key for pendingTx subscription
     parsePendingTx(result) {
-      const copyArray = this.inTx;
       const data = result.data.pendingTransaction;
-      data['transactionFee'] = data.txFee;
-      data['date'] = data.timestamp * 1000;
-      delete data.txFee;
-      delete data.__typename;
-      delete data.timestampe;
-      const newNotification = new Notification(data);
-      this.inTx.push(newNotification);
       if (data.to.toLowerCase() === this.address.toLowerCase()) {
+        const copyArray = this.inTx;
+        data['transactionFee'] = data.txFee;
+        data['date'] = data.timestamp * 1000;
+        delete data.txFee;
+        delete data.__typename;
+        delete data.timestamp;
+        const newNotification = new Notification(data);
+        this.inTx.push(newNotification);
         this.caller.subscribeToTxHash(data, () => {
           this.caller.getTxDetailFromPending(data).then(res => {
             const notification = new Notification(res);
@@ -259,7 +259,9 @@ export default {
           string: 'Transaction Hash'
         },
         gasPrice: {
-          value: `${fromWei(toBN(obj.gasPrice), 'gwei')} Gwei`,
+          value: `${
+            obj.gasPrice ? fromWei(toBN(obj.gasPrice), 'gwei') : 0
+          } Gwei`,
           string: 'Gas Price'
         },
         gasLimit: {
@@ -283,12 +285,12 @@ export default {
           string: 'Time'
         },
         status: {
-          value: obj.status.toLowerCase(),
+          value: obj.status ? obj.status.toLowerCase() : '',
           string: 'Status'
         },
         type: {
-          value: obj.type.toLowerCase(),
-          string: 'in'
+          value: obj.type ? obj.type.toLowerCase() : '',
+          string: obj.type ? obj.type.toLowerCase() : ''
         }
       };
 

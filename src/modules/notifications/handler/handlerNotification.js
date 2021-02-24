@@ -33,20 +33,17 @@ const VALID_ARGUMENTS = [
   'fromTxData', // obj
   'toTxData', // obj
   'errMessage', // string
-  'swapObj', // obj
-  'expanded'
+  'swapObj' // obj
 ];
 
 export default class Notification {
   constructor(obj) {
-    this.expanded = false;
     this.read = obj['read'] ? obj['read'] : false;
     // validate passed params before assigning to this
     const objArr = Object.keys(obj);
     for (let i = 0; i < objArr.length; i++) {
       if (!VALID_ARGUMENTS.includes(objArr[i])) {
-        console.log(objArr[i]);
-        this._invalidType('parameters');
+        this._invalidType(objArr[i]);
       } else if (objArr[i] === 'type' && !VALID_TYPES.includes(obj['type'])) {
         this._invalidType(objArr[i]);
       } else if (
