@@ -1,7 +1,7 @@
 <template>
   <div class="expandHeader">
     <v-container>
-      <block-title :data="titleData">
+      <app-block-title :data="titleData" page-title>
         <h5 class="white--text ma-0">
           Please select a method to access your wallet.
         </h5>
@@ -14,27 +14,25 @@
             Get a new wallet
           </router-link>
         </h5>
-      </block-title>
+      </app-block-title>
 
       <v-sheet color="transparent" max-width="550px" class="mx-auto">
-        <div v-for="btn in buttons" :key="btn.title" class="mb-5">
-          <mew-super-button
-            btn-mode="small-right-image"
-            :color-theme="btn.color"
-            :title="btn.title"
-            :subtitle="btn.subtitle"
-            :right-icon="btn.rightIcon"
-            :right-icons="btn.rightIcons"
-            :title-mdi-icon="btn.titleIcon"
-            :title-icon-class="btn.titleIconClass"
-            :note="btn.note"
-            @click.native="btn.fn"
-          >
-            <template #contentSlot>
-              <img :src="btn.rightIcon" width="100px" />
-            </template>
-          </mew-super-button>
-        </div>
+        <mew-super-button
+          v-for="btn in buttons"
+          :key="btn.title"
+          font-class="mew-heading-2"
+          class="mb-5"
+          :color-theme="btn.color"
+          :title="btn.title"
+          :subtitle="btn.subtitle"
+          :right-icon="btn.rightIcon"
+          right-icon-type="img"
+          :title-icon="btn.titleIcon"
+          title-icon-type="mdi"
+          :title-icon-class="btn.titleIconClass"
+          :note="btn.note"
+          @click.native="btn.fn"
+        />
       </v-sheet>
       <div class="spacer-y-medium" />
       <browser-extension-overlay :open="showBrowser" :close="close" />
@@ -46,8 +44,7 @@
 </template>
 
 <script>
-import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
-import blockTitle from '@/components/block-title/BlockTitle';
+import AppBlockTitle from '@/core/components/AppBlockTitle';
 import browserExtensionOverlay from '@/modules/wallets/components/browser-extension-overlay/BrowserExtensionOverlay';
 import hardwareAccessOverlay from '@/modules/wallets/components/hardware-access-overlay/HardwareAccessOverlay';
 import mobileAccessOverlay from '@/modules/wallets/components/mobile-access-overlay/MobileAccessOverlay';
@@ -55,12 +52,11 @@ import softwareAccessOverlay from '@/modules/wallets/components/software-access-
 export default {
   name: 'AccessWallet',
   components: {
-    blockTitle,
+    AppBlockTitle,
     browserExtensionOverlay,
     hardwareAccessOverlay,
     mobileAccessOverlay,
-    softwareAccessOverlay,
-    mewSuperButton
+    softwareAccessOverlay
   },
   data() {
     return {

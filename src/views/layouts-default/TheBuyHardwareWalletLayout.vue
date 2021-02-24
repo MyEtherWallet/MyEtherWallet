@@ -1,6 +1,6 @@
 <template>
   <div class="expandHeader pb-12">
-    <block-title :data="titleData" />
+    <app-block-title :data="titleData" />
 
     <v-sheet color="transparent" max-width="1000px" class="mx-auto">
       <v-row>
@@ -58,11 +58,11 @@
 </template>
 
 <script>
-import blockTitle from '@/components/block-title/BlockTitle';
+import AppBlockTitle from '@/core/components/AppBlockTitle';
 
 export default {
   name: 'TheBuyHardwareWalletLayout',
-  components: { blockTitle },
+  components: { AppBlockTitle },
   data: () => ({
     buttons: [
       {

@@ -5,6 +5,7 @@
 <script>
 import { Chart } from 'highcharts-vue';
 export default {
+  name: 'BalanceChart',
   components: { Chart },
   props: {
     data: {

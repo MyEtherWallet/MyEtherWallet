@@ -8,7 +8,7 @@
     </v-sheet>
     <v-row class="flex-column-reverse flex-lg-row">
       <v-col cols="12" lg="5" class="text-content pr-12 mt-4 mt-lg-0">
-        <block-title no-page-title :data="titleData" class="mb-12 pl-12" />
+        <app-block-title no-page-title :data="titleData" class="mb-12 pl-12" />
         <div class="mb-4 d-flex">
           <div class="mr-3">
             <v-img src="@/assets/images/icons/icon-send-mew.svg" />
@@ -66,10 +66,10 @@
 </template>
 
 <script>
-import blockTitle from '@/components/block-title/BlockTitle';
+import AppBlockTitle from '@/core/components/AppBlockTitle';
 
 export default {
-  components: { blockTitle },
+  components: { AppBlockTitle },
   data: () => ({
     titleData: {
       textProps: '',

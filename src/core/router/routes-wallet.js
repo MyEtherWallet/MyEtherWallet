@@ -7,9 +7,9 @@ import Swap from '@/views/layouts-wallet/TheSwapLayout';
 import InteractContract from '@/views/layouts-wallet/TheInteractContractLayout';
 import DeployContract from '@/views/layouts-wallet/TheDeployContractLayout';
 import SignMessage from '@/views/layouts-wallet/TheSignMessageLayout';
-import Dapps from '@/views/layouts-wallet/TheDappCenterLayout';
-import DappRoutes from '@/dapps/routes.js';
-
+import Dapps from '@/views/layouts-wallet/TheDappCenterLayout.vue';
+import DappRoutes from '@/dapps/routes-dapps.js';
+import { swapProps, swapRouterGuard } from './helpers';
 export default {
   path: '/wallet',
   component: TheWalletView,
@@ -44,11 +44,12 @@ export default {
     {
       path: 'swap',
       name: 'Swap',
-      component: Swap
+      component: Swap,
+      props: swapProps,
+      beforeEnter: swapRouterGuard
     },
     {
       path: 'dapps',
-      name: 'Dapps',
       component: Dapps,
       children: DappRoutes
     },

@@ -56,6 +56,7 @@ import AddEditAddress from '@/modules/address-book/components/AddressBookAddEdit
 const modes = ['add', 'edit'];
 
 export default {
+  name: 'Settings',
   components: {
     ImportConfig,
     ExportConfig,

@@ -25,11 +25,7 @@
           <span id="item-addr" class="monospace mr-3 truncate">
             {{ address }}
           </span>
-          <mew-copy
-            :copy-value="item.address"
-            :is-ref="false"
-            :tooltip="$t('common.copy')"
-          />
+          <mew-copy :copy-value="item.address" :tooltip="$t('common.copy')" />
         </div>
       </div>
     </div>
@@ -73,6 +69,7 @@ import NameResolver from '@/modules/name-resolver/index';
 const modes = ['add', 'edit'];
 
 export default {
+  name: 'AddressBookAddEdit',
   props: {
     mode: { default: modes[0], type: String },
     item: { default: () => {}, type: Object },

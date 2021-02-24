@@ -1,52 +1,84 @@
 <template>
   <div>
-    <addressBook @setResolvedAddr="setResolvedAddr" @setToAddr="setToAddr" />
+    <mew-select
+      :has-filter="false"
+      :label="$t('ens.request.choose-term')"
+      :items="items"
+      @input="setDuration"
+    />
+
+    <div class="font-weight-bold text-center">
+      {{ $t('ens.request.estimated-price') }}: {{ rentPriceETH }}
+      {{ $t('common.currency.eth') }} (${{ rentPriceUSD }})
+    </div>
     <div class="d-flex align-center justify-center mt-3">
       <mew-button
-        :title="$t('ens.transfer')"
+        :title="$t('ens.renew')"
         btn-size="xlarge"
-        @click.native="transfer(address)"
+        @click.native="renew(duration)"
       />
     </div>
   </div>
 </template>
 
 <script>
-// import addressBook from '@/modules/address-book/ModuleAddressBook';
-// import { Toast, ERROR } from '@/components/toast';
 export default {
-  // components: {
-  //   addressBook
-  // },
   props: {
-    transfer: {
+    getRentPrice: {
       default: function () {
         return {};
       },
       type: Function
+    },
+    renew: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
+    hostName: {
+      default: '',
+      type: String
     }
   },
   data() {
     return {
-      resolvedAddr: '',
-      toAddress: ''
+      duration: 0,
+      rentPriceETH: '',
+      rentPriceUSD: ''
     };
   },
   computed: {
-    address() {
-      return this.resolvedAddr.length > 0 ? this.resolvedAddr : this.toAddress;
+    items() {
+      const items = [];
+      for (let i = 0; i < 20; i++) {
+        items.push({ name: i + 1 + ' ' + 'year', value: i + 1 });
+      }
+      return items;
+    }
+  },
+  watch: {
+    duration() {
+      this.rentPrice();
     }
   },
   mounted() {
-    this.toAddress = '';
-    this.resolvedAddr = '';
+    this.rentPrice();
   },
   methods: {
-    setResolvedAddr(newVal) {
-      this.resolvedAddr = newVal;
+    rentPrice() {
+      return this.getRentPrice(this.duration).then(resp => {
+        if (resp) {
+          this.rentPriceETH = resp.eth;
+          this.rentPriceUSD = resp.usd;
+        }
+      });
     },
-    setToAddr(newVal) {
-      this.toAddress = newVal;
+    setDuration(item) {
+      this.duration = item.value;
+    },
+    reset() {
+      this.duration = 1;
     }
   }
 };

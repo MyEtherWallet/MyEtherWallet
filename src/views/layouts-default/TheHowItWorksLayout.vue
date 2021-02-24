@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--how-it-works">
-    <home-header title="How it works" />
+    <the-layout-header title="How it works" />
     <mew-tabs :items="mewTabs" has-underline>
       <template #tabContent1>
         <how-it-works-send />
@@ -18,13 +18,13 @@
         <how-it-works-more />
       </template>
     </mew-tabs>
-    <get-started />
+    <app-get-started />
   </div>
 </template>
 
 <script>
-import homeHeader from '@/components/home-header/HomeHeader';
-import getStarted from '@/components/get-started/GetStarted';
+import TheLayoutHeader from '../components-default/TheLayoutHeader';
+import AppGetStarted from '@/core/components/AppGetStarted';
 
 import HowItWorksSwap from '../components-default/HowItWorksSwap';
 import HowItWorksSend from '../components-default/HowItWorksSend';
@@ -35,13 +35,13 @@ import HowItWorksMore from '../components-default/HowItWorksMore';
 export default {
   name: 'TheHowItWorksLayout',
   components: {
-    homeHeader,
+    TheLayoutHeader,
     HowItWorksSwap,
     HowItWorksSend,
     HowItWorksDappsCenter,
     HowItWorksTokens,
     HowItWorksMore,
-    getStarted
+    AppGetStarted
   },
   data() {
     return {

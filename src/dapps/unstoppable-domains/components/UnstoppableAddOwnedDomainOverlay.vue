@@ -54,8 +54,9 @@
                     <div class="mr-2">
                       0xf55914186a692a3335fF44ae107FA724b1074dDC
                     </div>
-                    <copy-btn
-                      text="0xf55914186a692a3335fF44ae107FA724b1074dDC"
+                    <mew-copy
+                      :tooltip="$t('common.copy')"
+                      copy-value="0xf55914186a692a3335fF44ae107FA724b1074dDC"
                     />
                   </td>
                 </tr>
@@ -66,8 +67,9 @@
                     <div class="mr-2">
                       0xf55914186a692a3335fF44ae107FA724b1074dDC
                     </div>
-                    <copy-btn
-                      text="0xf55914186a692a3335fF44ae107FA724b1074dDC"
+                    <mew-copy
+                      :tooltip="$t('common.copy')"
+                      copy-value="0xf55914186a692a3335fF44ae107FA724b1074dDC"
                     />
                   </td>
                 </tr>
@@ -92,10 +94,7 @@
 </template>
 
 <script>
-import copyBtn from '@/components/copy-btn/CopyBtn';
-
 export default {
-  components: { copyBtn },
   props: {
     open: { default: false, type: Boolean },
     close: {

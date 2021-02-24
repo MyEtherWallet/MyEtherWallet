@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { v4 as uuid } from 'uuid';
-import { Toast, ERROR } from '@/components/toast';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 import {
   INVESTIGATE_FAILURE_KEY,

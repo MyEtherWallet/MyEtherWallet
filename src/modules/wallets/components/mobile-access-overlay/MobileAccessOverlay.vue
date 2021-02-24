@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { Toast, SENTRY } from '@/components/toast';
+import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 import { WalletConnectWallet, WalletLinkWallet } from '@/modules/wallets/utils';
 import { mapActions } from 'vuex';
 export default {

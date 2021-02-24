@@ -1,4 +1,9 @@
-import { Toast, WARNING, ERROR, SENTRY } from '@/components/toast';
+import {
+  Toast,
+  WARNING,
+  ERROR,
+  SENTRY
+} from '@/modules/toast/handler/handlerToast';
 const ERRORS = {
   REJECT_TX:
     'Returned error: Error: MetaMask Tx Signature: User denied transaction signature.',

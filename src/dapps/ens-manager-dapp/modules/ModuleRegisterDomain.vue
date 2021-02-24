@@ -10,16 +10,19 @@
         <template #stepperContent1
           ><request
             v-if="onStep === 1"
+            class="mt-3"
             :is-available="isAvailable"
-            :name="nameModule.name"
-            :host-name="nameModule.parsedHostName"
-            :loading="loading"
+            :name="name"
+            :host-name="parsedHostName"
+            :loading="checkingDomainAvail"
+            :get-rent-price="getRentPrice"
             @onRequest="onRequest"
         /></template>
         <template #stepperContent2
           ><register
             v-if="onStep === 2"
-            :name="nameModule.name"
+            class="mt-3"
+            :name="name"
             :duration="duration"
             :register="register"
             :commit="commit"
@@ -36,19 +39,21 @@
 <script>
 import Request from '../components/register/RegisterRequest';
 import Register from '../components/register/Register';
-import Complete from '../components/register/RegisterComplete';
-import { EventBus } from '@/core/plugins/eventBus';
-import EventNames from '@/utils/web3-provider/events.js';
-import { Toast, ERROR } from '@/components/toast';
 
 export default {
-  components: { Request, Register, Complete },
+  components: { Request, Register },
   props: {
-    nameModule: {
-      default: () => {
+    getRentPrice: {
+      default: function () {
         return {};
       },
-      type: Object
+      type: Function
+    },
+    commit: {
+      default: function () {
+        return {};
+      },
+      type: Function
     },
     onRegister: { default: false, type: Boolean },
     close: {
@@ -56,14 +61,51 @@ export default {
         return {};
       },
       type: Function
+    },
+    register: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
+    generateKeyPhrase: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
+    loadingCommit: {
+      default: false,
+      type: Boolean
+    },
+    committed: {
+      default: false,
+      type: Boolean
+    },
+    minimumAge: {
+      default: '',
+      type: String
+    },
+    name: {
+      default: '',
+      type: String
+    },
+    parsedHostName: {
+      default: '',
+      type: String
+    },
+    isAvailable: {
+      default: false,
+      type: Boolean
+    },
+    checkingDomainAvail: {
+      default: false,
+      type: Boolean
     }
   },
   data() {
     return {
-      loadingCommit: false,
-      minimumAge: '',
-      committed: false,
-      duration: '',
+      duration: 1,
       onStep: 1,
       stepperItems: [
         {
@@ -81,61 +123,17 @@ export default {
       ]
     };
   },
-  computed: {
-    isAvailable() {
-      return this.nameModule.isAvailable;
-    },
-    loading() {
-      return this.nameModule.checkingDomainAvail;
-    }
-  },
-  watch: {
-    nameModule(newVal) {
-      this.committed = newVal.createCommitment ? false : true;
-    }
-  },
   methods: {
-    clear() {
+    reset() {
       this.onStep = 1;
-      this.committed = false;
-      this.duration = '';
-    },
-    commit() {
-      this.nameModule.getMinimumAge().then(resp => {
-        this.minimumAge = resp;
-      });
-      // start timer after confirming tx
-      EventBus.$on(EventNames.CONFIRMED_TX, () => {
-        this.loadingCommit = true;
-      });
-      this.nameModule
-        .createCommitment()
-        .then(() => {
-          this.loadingCommit = false;
-          this.committed = true;
-        })
-        .catch(err => {
-          Toast(err, {}, ERROR);
-        });
-    },
-    register() {
-      this.nameModule
-        .register(this.duration)
-        .then(() => {
-          this.close();
-        })
-        .catch(err => {
-          Toast(err, {}, ERROR);
-        });
+      this.duration = 0;
     },
     onRequest(val) {
       if (!this.isAvailable) {
         this.close();
         return;
       }
-      if (this.nameModule.generateKeyPhrase) {
-        this.nameModule.generateKeyPhrase();
-      }
+      this.generateKeyPhrase();
       this.duration = val;
       this.onStep += 1;
     }

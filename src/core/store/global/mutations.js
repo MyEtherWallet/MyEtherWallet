@@ -34,17 +34,15 @@ const SET_NETWORK = function (state, networkObj) {
   }
   state.currentNetwork = _netObj;
 };
-
-const SET_ETH_GASPRICE = function (state, val) {
-  state.ethGasPrice = val;
+const SET_GAS_PRICE_TYPE = function (state, type) {
+  state.gasPriceType = type;
 };
-
 export default {
   SET_ONLINE_STATUS,
   SET_LOCALE,
   SET_GAS_PRICE,
   SET_NETWORK,
   SET_ADDRESS_BOOK,
-  SET_ETH_GASPRICE,
-  INIT_STORE
+  INIT_STORE,
+  SET_GAS_PRICE_TYPE
 };

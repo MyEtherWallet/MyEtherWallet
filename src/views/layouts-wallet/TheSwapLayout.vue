@@ -14,161 +14,185 @@
       :valid-until="confirmInfo.validUntil"
       :send="executeTrade"
     />
-    <div class="d-flex">
-      <div class="flex-grow-1">
+    <v-row>
+      <v-col cols="12" md="8" lg="8">
+        <module-network
+          v-if="$vuetify.breakpoint.smAndDown"
+          class="pa-2 pa-md-3"
+        />
+
         <mew6-white-sheet>
-          <interface-wrap title="Swap">
-            <div class="d-flex">
-              <div>
-                <mew-select
-                  :value="fromTokenType"
-                  :items="fromTokens"
-                  label="From"
-                  @input="setFromToken"
+          <mew-module
+            :has-elevation="true"
+            :has-indicator="true"
+            class="d-flex flex-grow-1 pt-6"
+            title="Swap"
+          >
+            <template #moduleBody>
+              <div class="d-flex flex-column pa-10">
+                <div class="mt-6 d-flex justify-space-between">
+                  <div>
+                    <mew-select
+                      :value="fromTokenType"
+                      :items="fromTokens"
+                      label="From"
+                      @input="setFromToken"
+                    />
+                    <mew-input
+                      label="you'll send"
+                      placeholder=""
+                      :value="tokenInValue"
+                      type="number"
+                      @input="setTokenInValue"
+                    />
+                  </div>
+                  <div class="px-6 mb-8 d-flex align-center">
+                    <img :src="swapIcon" height="35" />
+                  </div>
+                  <div>
+                    <mew-select
+                      ref="toToken"
+                      :value="toTokenType"
+                      :items="toTokens"
+                      label="To"
+                      @input="setToToken"
+                    />
+                    <mew-input
+                      label="you'll receive"
+                      placeholder=""
+                      type="number"
+                      disabled
+                      :value="tokenOutValue"
+                    />
+                  </div>
+                </div>
+                <mew-address-select
+                  class="mt-5"
+                  copy-tooltip="Copy"
+                  save-tooltip="Save"
+                  :enable-save-address="true"
+                  label="To address"
+                  :items="addresses"
+                  placeholder="Please enter an address"
+                  success-toast="Success"
+                  :is-valid-address="false"
+                  :value="address"
+                  @input="setToAddress"
                 />
-                <mew-input
-                  label="you'll send"
-                  placeholder=""
-                  :value="tokenInValue"
-                  type="number"
-                  @input="setTokenInValue"
-                />
-              </div>
-              <div class="px-6 mb-8 d-flex align-center">
-                <img :src="swapIcon" height="35" />
-              </div>
-              <div>
-                <mew-select
-                  ref="toToken"
-                  :value="toTokenType"
-                  :items="toTokens"
-                  label="To"
-                  @input="setToToken"
-                />
-                <mew-input
-                  label="you'll receive"
-                  placeholder=""
-                  type="number"
-                  disabled
-                  :value="tokenOutValue"
-                />
-              </div>
-            </div>
-            <mew-address-select
-              class="mt-5"
-              copy-tooltip="Copy"
-              save-tooltip="Save"
-              :enable-save-address="true"
-              label="To address"
-              :items="addresses"
-              placeholder="Please enter an address"
-              success-toast="Success"
-              :is-valid-address="false"
-              :value="address"
-              @input="setToAddress"
-            />
 
-            <div v-show="step >= 1" class="mt-5">
-              <div class="mew-heading-3">Select a provider</div>
-              <v-row>
-                <v-col
-                  v-for="(quote, idx) in availableQuotes"
-                  :key="`quote-${idx}`"
-                  cols="6"
-                  lg="6"
-                  sm="12"
+                <div v-show="step >= 1" class="mt-5">
+                  <div class="mew-heading-3">Select a provider</div>
+                  <v-row>
+                    <v-col
+                      v-for="(quote, idx) in availableQuotes"
+                      :key="`quote-${idx}`"
+                      cols="6"
+                      lg="6"
+                      sm="12"
+                    >
+                      <v-card flat color="tableHeader" class="pa-6">
+                        <div
+                          class="d-flex align-center justify-space-between mb-3"
+                        >
+                          <img
+                            :class="$vuetify.theme.dark ? 'invert' : ''"
+                            :src="quote.exchangeInfo.img"
+                            :alt="quote.exchangeInfo.name"
+                            height="35"
+                          />
+                          <mew-checkbox
+                            :value="quote.isSelected"
+                            @input="setProvider($event, idx)"
+                          />
+                        </div>
+                        <div class="font-weight-medium">
+                          1 {{ fromTokenType.symbol }} = {{ quote.rate }}
+                          {{ toTokenType.symbol }}
+                        </div>
+                        <div>{{ quote.exchangeInfo.name }}</div>
+                      </v-card>
+                    </v-col>
+                  </v-row>
+                </div>
+
+                <mew-expand-panel
+                  v-show="step >= 2"
+                  is-toggle
+                  has-dividers
+                  :panel-items="exPannel"
+                  class="mt-4 mb-10 swap-expend"
                 >
-                  <v-card flat color="tableHeader" class="pa-6">
-                    <div class="d-flex align-center justify-space-between mb-3">
-                      <img
-                        :class="$vuetify.theme.dark ? 'invert' : ''"
-                        :src="quote.exchangeInfo.img"
-                        :alt="quote.exchangeInfo.name"
-                        height="35"
-                      />
-                      <mew-checkbox
-                        :value="quote.isSelected"
-                        @input="setProvider($event, idx)"
-                      />
-                    </div>
-                    <div class="font-weight-medium">
-                      1 {{ fromTokenType.symbol }} = {{ quote.rate }}
-                      {{ toTokenType.symbol }}
-                    </div>
-                    <div>{{ quote.exchangeInfo.name }}</div>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </div>
+                  <template #panelBody1>
+                    <mew-input
+                      label="Gas Price"
+                      placeholder=" "
+                      right-label="Gwei"
+                      :value="gasPriceGwei"
+                      disabled
+                    />
+                    <mew-input
+                      label="Total Gas Limit"
+                      placeholder=" "
+                      right-label="Wei"
+                      disabled
+                      :value="totalGasLimit"
+                    />
+                  </template>
+                </mew-expand-panel>
 
-            <mew-expand-panel
-              v-show="step >= 2"
-              is-toggle
-              has-dividers
-              :panel-items="exPannel"
-              class="mt-4 mb-10 swap-expend"
-            >
-              <template #panelBody1>
-                <mew-input
-                  label="Gas Price"
-                  placeholder=" "
-                  right-label="Gwei"
-                  :value="gasPriceGwei"
-                  disabled
-                />
-                <mew-input
-                  label="Total Gas Limit"
-                  placeholder=" "
-                  right-label="Wei"
-                  disabled
-                  :value="totalGasLimit"
-                />
-              </template>
-            </mew-expand-panel>
-
-            <div v-show="step >= 2" class="text-center">
-              <mew-button
-                title="Swap"
-                :has-full-width="false"
-                btn-size="xlarge"
-                @click.native="showConfirm()"
-              />
-            </div>
-          </interface-wrap>
+                <div v-show="step >= 2" class="text-center">
+                  <mew-button
+                    title="Swap"
+                    :has-full-width="false"
+                    btn-size="xlarge"
+                    @click.native="showConfirm()"
+                  />
+                </div>
+              </div>
+            </template>
+          </mew-module>
         </mew6-white-sheet>
-      </div>
-      <div class="pa-4"></div>
-      <div>
-        <network />
-        <div class="pa-4"></div>
-        <swap />
-      </div>
-    </div>
+      </v-col>
+      <v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="4" lg="4">
+        <module-network />
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
-import Network from '@/modules/wallets/components/network/Network';
-import Swap from '@/components/swap/Swap';
 import SwapConfirmation from '@/modules/swap/components/SwapConfirmation';
-import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import KyberNetwork from '@/assets/images/icons/icon-kyber-network.svg';
 import Changelly from '@/assets/images/icons/icon-changelly.png';
 import Simplex from '@/assets/images/icons/icon-simplex.png';
 import Bity from '@/assets/images/icons/icon-bity.png';
-import Swapper from '@/modules/swap/ModuleSwap';
+import Swapper from '@/modules/swap/handlers/handlerSwap';
+import ModuleNetwork from '@/modules/network/ModuleNetwork';
 import utils, { toBN, fromWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
+const AMT = '0.1';
 export default {
   components: {
     SwapConfirmation,
-    network: Network,
-    swap: Swap,
-    'interface-wrap': InterfaceWrap
+    ModuleNetwork
+  },
+  props: {
+    fromToken: {
+      type: String,
+      default: ETH_TOKEN
+    },
+    toToken: {
+      type: String,
+      default: DAI_TOKEN
+    },
+    amount: {
+      type: String,
+      default: AMT
+    }
   },
   data() {
     return {
@@ -186,7 +210,7 @@ export default {
       swapper: null,
       toTokenType: null,
       fromTokenType: null,
-      tokenInValue: '0.1',
+      tokenInValue: this.amount,
       tokenOutValue: null,
       availableTokens: [],
       availableQuotes: [],
@@ -194,8 +218,8 @@ export default {
       allTrades: [],
       isLoading: false,
       defaults: {
-        fromToken: ETH_TOKEN,
-        toToken: DAI_TOKEN
+        fromToken: this.fromToken,
+        toToken: this.toToken
       },
       exPannel: [
         {
@@ -247,6 +271,25 @@ export default {
         return totalGas.toString();
       }
       return '0';
+    }
+  },
+  watch: {
+    defaults: {
+      handler: function () {
+        this.setDefaults();
+      },
+      deep: true,
+      immediate: true
+    }
+  },
+  beforeMount() {
+    if (Object.keys(this.$route.query).length > 0) {
+      const { fromToken, toToken, amount } = this.$route.query;
+      this.defaults = {
+        fromToken,
+        toToken
+      };
+      this.tokenInValue = `${amount}`;
     }
   },
   mounted() {
@@ -398,6 +441,7 @@ export default {
 
 <style lang="scss">
 .mew-component--swap {
+  width: 100%;
   .swap-expend {
     .v-application .white {
       background-color: transparent !important;

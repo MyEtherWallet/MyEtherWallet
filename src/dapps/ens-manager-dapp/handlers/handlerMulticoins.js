@@ -4,7 +4,6 @@ import {
   isValidChecksumAddress as isValidRSKChecksumAddress,
   toChecksumAddress as toRSKChecksumAddress
 } from 'rskjs-util';
-
 class MValidator {
   constructor(type) {
     this.type = type;

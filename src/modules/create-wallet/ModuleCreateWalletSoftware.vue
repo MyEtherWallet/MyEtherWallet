@@ -20,7 +20,7 @@
         =====================================================================================
         -->
         <create-wallet-software-overview
-          v-if="type === ''"
+          v-if="walletType === types[2]"
           @typeSelect="setType"
         />
         <!--
@@ -29,9 +29,7 @@
         =====================================================================================
         -->
         <create-wallet-keystore
-          v-else-if="type === walletTypes[0]"
-          :update-step="nextStep"
-          :step="step"
+          v-else-if="walletType === types[0]"
           :handler-create-wallet="walletHandler"
         />
         <!--
@@ -40,9 +38,7 @@
         =====================================================================================
         -->
         <create-wallet-mnemonic-phrase
-          v-else-if="type === walletTypes[1]"
-          :update-step="nextStep"
-          :step="step"
+          v-else-if="walletType === types[1]"
           :handler-create-wallet="walletHandler"
         />
       </template>
@@ -54,11 +50,12 @@
 import CreateWalletSoftwareOverview from './components/CreateWalletSoftwareOverview';
 import CreateWalletKeystore from './components/CreateWalletKeystore';
 import CreateWalletMnemonicPhrase from './components/CreateWalletMnemonicPhrase';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { WALLET_TYPES } from './handlers/helpers';
 import handlerCreateWallet from './handlers/handlerCreateWallet';
 
 export default {
-  name: 'ModuleSoftware',
+  name: 'ModuleCreateWalletSoftware',
   components: {
     CreateWalletSoftwareOverview,
     CreateWalletKeystore,
@@ -74,12 +71,14 @@ export default {
         return {};
       },
       type: Function
+    },
+    walletType: {
+      type: String,
+      default: ''
     }
   },
   data: () => ({
-    type: '',
-    step: 0,
-    walletTypes: WALLET_TYPES,
+    types: WALLET_TYPES,
     walletHandler: {}
   }),
   computed: {
@@ -87,28 +86,18 @@ export default {
      * @returns correct title of the overlay according to the wallet type selected
      */
     typeTitle() {
-      return this.type === ''
+      return this.walletType === WALLET_TYPES[2]
         ? 'Create wallet using software'
-        : this.type === this.walletTypes[0]
+        : this.walletType === WALLET_TYPES[0]
         ? 'Create Wallet with Keystore File'
         : 'Create Wallet with Mnemonic Phrase';
     },
     /**
      * @returns back button text
-     * if step is 0, button text is empty
+     * if overview, button text is empty
      */
     backBtnText() {
-      return this.step === 0 ? '' : this.$t('common.back');
-    }
-  },
-  watch: {
-    /**
-     * Reset step and wallet type if overlay is closed
-     */
-    open(newVal) {
-      if (newVal === false) {
-        this.setType('');
-      }
+      return this.walletType === WALLET_TYPES[2] ? '' : 'Back to Software';
     }
   },
   mounted() {
@@ -119,36 +108,33 @@ export default {
   },
   methods: {
     /**
-     * Increases step by 1,
-     * Used in keystore and mnemonic creation
-     */
-    nextStep(step) {
-      this.step = step ? step : 0;
-    },
-    /**
-     * Decreases step by 1,
-     * If step is 0, the wallet type is reset, to show the overview screen
+     * Directs user back to software overview
+     * Pushes new route query param
      * Used in overlay back button
      */
     goBack() {
-      if (this.step > 0) {
-        this.step = this.step - 1;
-        if (this.step === 0) {
-          this.type = '';
+      if (this.walletType !== WALLET_TYPES[2]) {
+        try {
+          this.$router.push({
+            query: { type: 'overview' }
+          });
+        } catch (e) {
+          Toast(e, {}, ERROR);
         }
       }
     },
     /**
      * Sets a wallet type and the step according to the provided wallet type
-     * This method is used inCreateOverView component and when overlay is closed
+     * This method is used in create overview component
      * @type - must be one of the WALLET_TYPES or an empty string (this will reset step to 0)
      */
     setType(newType) {
-      this.type = newType ? newType : '';
-      if (this.type === '') {
-        this.step = 0;
-      } else {
-        this.step = 1;
+      try {
+        this.$router.push({
+          query: { type: newType }
+        });
+      } catch (e) {
+        Toast(e, {}, ERROR);
       }
     }
   }

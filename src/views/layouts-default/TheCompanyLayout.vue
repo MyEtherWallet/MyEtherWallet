@@ -1,6 +1,6 @@
 <template>
   <div>
-    <home-header title="About us - Company" />
+    <the-layout-header title="About us - Company" />
     <div class="py-9" />
     <company-what-is-mew />
     <div class="py-7" />
@@ -8,18 +8,17 @@
     <div class="py-10" />
     <company-community />
     <div class="py-10" />
-    <partners />
+    <app-partners-block />
     <div class="py-9" />
-    <join />
+    <app-mewtopia-block />
     <div class="py-1" />
   </div>
 </template>
 
 <script>
-import homeHeader from '@/components/home-header/HomeHeader';
-import partners from '@/components/partners/Partners';
-import join from '@/components/join/Join';
-
+import TheLayoutHeader from '../components-default/TheLayoutHeader';
+import AppPartnersBlock from '@/core/components/AppPartnersBlock';
+import AppMewtopiaBlock from '@/core/components/AppMewtopiaBlock';
 import CompanyWhatIsMew from '../components-default/CompanyWhatIsMew';
 import CompanyOurStory from '../components-default/CompanyOurStory';
 import CompanyCommunity from '../components-default/CompanyCommunity';
@@ -27,9 +26,9 @@ import CompanyCommunity from '../components-default/CompanyCommunity';
 export default {
   name: 'TheCompanyLayout',
   components: {
-    homeHeader,
-    partners,
-    join,
+    TheLayoutHeader,
+    AppPartnersBlock,
+    AppMewtopiaBlock,
     CompanyWhatIsMew,
     CompanyOurStory,
     CompanyCommunity

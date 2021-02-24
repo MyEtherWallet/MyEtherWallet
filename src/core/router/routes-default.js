@@ -15,6 +15,12 @@ import BrowserExtensionInstall from '@/modules/wallets/pages/access/browser-exte
 import BrowserExtensionAccess from '@/modules/wallets/pages/access/browser-extension/access-extension/AccessExtension';
 import ThePrivacyPolicyLayout from '@/views/layouts-default/ThePrivacyPolicyLayout';
 import TheTermsOfServiceLayout from '@/views/layouts-default/TheTermsOfServiceLayout';
+import {
+  createWalletProps,
+  createRouteGuard,
+  accessWalletProps,
+  accessRouteGuard
+} from './helpers';
 
 export default {
   path: '/',
@@ -94,20 +100,24 @@ export default {
       }
     },
     {
-      path: 'wallet/create',
+      path: 'wallet/create/:overlay?',
       name: 'CreateWallet',
       component: TheCreateWalletLayout,
+      props: createWalletProps,
       meta: {
         requiresAuth: false
-      }
+      },
+      beforeEnter: createRouteGuard
     },
     {
-      path: 'wallet/access',
+      path: 'wallet/access/:overlay',
       name: 'AccessWallet',
       component: AccessWallet,
+      props: accessWalletProps,
       meta: {
         requiresAuth: false
-      }
+      },
+      beforeEnter: accessRouteGuard
     },
     {
       path: 'wallet/access/hardware-wallets',

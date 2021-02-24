@@ -34,7 +34,7 @@ const setAccountBalance = function ({ commit }, balance) {
 };
 
 const setWeb3Instance = function (
-  { dispatch, commit, state, rootState, rootGetters },
+  { commit, state, rootState, rootGetters },
   provider
 ) {
   const hostUrl = rootState.global.currentNetwork.url
@@ -58,10 +58,7 @@ const setWeb3Instance = function (
       })
     : {};
   const web3Instance = new web3(
-    new MEWProvider(provider ? provider : parsedUrl, options, {
-      state,
-      dispatch
-    })
+    new MEWProvider(provider ? provider : parsedUrl, options)
   );
   web3Instance.currentProvider.sendAsync = web3Instance.currentProvider.send;
   web3Instance['mew'] = {};
@@ -112,6 +109,10 @@ const setENS = function ({ commit }, ens) {
   commit('SET_ENS', ens);
 };
 
+const setOwnedDomains = function ({ commit }, ownedDomains) {
+  commit('SET_OWNED_DOMAINS', ownedDomains);
+};
+
 const setBlockNumber = function ({ commit }, val) {
   commit('SET_BLOCK_NUMBER', val);
 };
@@ -122,5 +123,6 @@ export default {
   setAccountBalance,
   setENS,
   setWeb3Instance,
-  setBlockNumber
+  setBlockNumber,
+  setOwnedDomains
 };

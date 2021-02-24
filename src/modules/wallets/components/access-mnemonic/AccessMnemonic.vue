@@ -94,7 +94,7 @@
       </mew6-white-sheet>
     </div>
 
-    <div v-if="step === 1">
+    <div v-if="step === 3">
       <h3 class="font-weight-bold text-center mb-10">
         3. Confirm network & address
       </h3>
@@ -119,9 +119,9 @@
                     </v-col>
                   </v-row>
                 </v-container>
-                <divider-line
+                <v-divider
                   v-if="networkTypes.length != i + 1"
-                  class="mt-3 mb-5"
+                  class="mt-0 mb-5"
                 />
               </div>
             </v-radio-group>
@@ -246,7 +246,6 @@
 </template>
 
 <script>
-import dividerLine from '@/components/divider-line/DividerLine';
 import pageIndicatorDot from '@/components/page-indicator-dot/PageIndicatorDot';
 import phraseBlock from '@/components/PhraseBlock';
 import { MNEMONIC as mnemonicType } from '@/modules/wallets/utils/bip44/walletTypes';
@@ -272,7 +271,6 @@ export default {
     }
   },
   components: {
-    dividerLine,
     pageIndicatorDot,
     phraseBlock
   },

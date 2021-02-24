@@ -1,53 +1,45 @@
 <template>
-  <div class="mew-component--wallet-footer">
-    <v-sheet color="mewBg" class="py-6 px-10">
-      <v-container
-        class="d-flex align-center justify-space-between py-0"
-        :class="mobile ? 'flex-column-reverse' : ''"
-      >
-        <div
-          class="titlePrimary--text text-center"
-          :class="mobile ? 'mt-1' : ''"
+  <v-footer color="mewBg" class="mew-component--wallet-footer pa-0" inset app>
+    <v-container
+      class="py-6 px-10 d-block d-md-flex align-center justify-space-between"
+      fluid
+    >
+      <div class="textSecondary--text text-center">
+        ©2020 MyEtherWallet. All rights reserved. Pricing taken from
+        <a
+          class="titlePrimary--text text-decoration--none"
+          href="/"
+          targe="_blank"
         >
-          ©2020 MyEtherWallet. All rights reserved. Pricing taken from
-          <a class="text-decoration--none" href="/" targe="_blank"
-            >CoinMarketCap</a
-          >
+          CoinMarketCap
+        </a>
+      </div>
+      <div class="d-flex align-center justify-center titlePrimary--text">
+        <span>Feedback</span>
+        <span class="mx-5">|</span>
+        <span>Support</span>
+        <span class="mx-5">|</span>
+        <div style="max-width=200px">
+          <v-select
+            v-model="onLanguage"
+            append-icon="mdi-chevron-down"
+            :items="languages"
+            item-text="name"
+            item-value="value"
+            return-object
+            single-line
+          ></v-select>
         </div>
-        <div class="d-flex align-center titlePrimary--text">
-          <v-sheet color="transparent">
-            <v-select
-              v-model="select"
-              append-icon="mdi-chevron-down"
-              :items="languages"
-              item-text="name"
-              item-value="value"
-              return-object
-              single-line
-              dark
-            ></v-select>
-          </v-sheet>
-          <div class="mx-4">|</div>
-          <div>Feedback</div>
-          <div class="mx-4">|</div>
-          <div>Support</div>
-        </div>
-      </v-container>
-    </v-sheet>
-  </div>
+      </div>
+    </v-container>
+  </v-footer>
 </template>
 
 <script>
 export default {
   components: {},
-  props: {
-    mobile: {
-      type: Boolean,
-      default: false
-    }
-  },
   data: () => ({
-    select: 'en',
+    onLanguage: null,
     languages: [
       {
         name: 'English',
@@ -80,7 +72,10 @@ export default {
         flag: require('@/assets/images/flags/japan.png')
       }
     ]
-  })
+  }),
+  mounted() {
+    this.onLanguage = this.languages[0].value;
+  }
 };
 </script>
 
@@ -100,7 +95,7 @@ export default {
   }
 
   .v-text-field .v-input__append-inner {
-    margin-left: -15px;
+    margin-left: -5px;
   }
 
   .v-text-field,
@@ -108,6 +103,7 @@ export default {
     margin: 0;
     padding: 0;
   }
+
   .v-select .v-icon {
     color: var(--v-titlePrimary-base) !important;
   }

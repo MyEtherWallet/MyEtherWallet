@@ -7,11 +7,7 @@ import {
   withdrawDetails
 } from './graphQLHelpers.js';
 
-import {
-  formatUserSummaryData,
-  formatReserves,
-  normalize
-} from '@aave/protocol-js';
+import { formatUserSummaryData, formatReserves } from '@aave/protocol-js';
 
 import moment from 'moment';
 

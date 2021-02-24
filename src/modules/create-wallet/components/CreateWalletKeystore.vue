@@ -25,7 +25,8 @@
             label="Password"
             placeholder="Enter Password"
             :has-clear-btn="true"
-            class="mr-3 flex-grow-1 mb-6"
+            class="mr-3 flex-grow-1 mb-2"
+            :rules="passwordRulles"
             type="password"
           />
           <!--
@@ -34,22 +35,47 @@
           =====================================================================================
           -->
           <mew-input
+            v-model="cofirmPassword"
             hint=""
             label="Confirm Password"
             placeholder="Confirm password"
             class="mr-3 flex-grow-1"
-            type="password"
+            :rules="passwordConfirmRulles"
           />
-          <div class="d-flex justify-center">
+          <!--
+          =====================================================================================
+            Creat Wallet Button
+          =====================================================================================
+          -->
+          <div v-if="!isGeneratingKeystore" class="d-flex justify-center">
             <mew-button
-              title="Create"
+              title="Create Wallet"
               btn-size="xlarge"
               :has-full-width="false"
-              :disabled="password === '' || password.length < 7"
+              :disabled="!enableCreateButton"
               @click.native="createWallet"
             />
           </div>
+          <!--
+          =====================================================================================
+            Loading State: isGeneratingKeystore = true
+          =====================================================================================
+          -->
+          <v-row v-else justify="center" align="center">
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
+            <p class="mb-0 mx-3">
+              Sit tight while we are encrypting your wallet
+            </p>
+          </v-row>
         </v-sheet>
+        <!--
+        =====================================================================================
+          Warning Block
+        =====================================================================================
+        -->
         <mew-warning-sheet
           title="NOT RECOMMENDED"
           description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
@@ -69,22 +95,28 @@
           </div>
           <v-row class="align-stretch">
             <v-col v-for="(d, key) in warningData" :key="key" cols="12" sm="4">
-              <border-button>
-                <div class="pa-6">
-                  <div class="d-flex justify-center py-3">
-                    <mew-icon :icon-name="d.icon" :img-height="70" />
-                  </div>
-                  <h5 class="font-weight-bold mt-1 mb-2">{{ d.title }}</h5>
-                  <div>{{ d.description }}</div>
+              <div class="pa-6 border-container">
+                <div class="d-flex justify-center py-3">
+                  <mew-icon :icon-name="d.icon" :img-height="70" />
                 </div>
-              </border-button>
+                <h5 class="font-weight-bold mt-1 mb-2">{{ d.title }}</h5>
+                <div>{{ d.description }}</div>
+              </div>
             </v-col>
           </v-row>
           <div class="d-flex justify-center mt-6">
             <mew-button
+              title="Back"
+              btn-style="outline"
+              btn-size="xlarge"
+              class="mx-3"
+              @click.native="updateStep(1)"
+            />
+            <mew-button
               title="Acknowledge & Download"
               btn-size="xlarge"
               :has-full-width="false"
+              class="mx-3"
               @click.native="downloadWallet"
             />
           </div>
@@ -122,21 +154,20 @@
                 src="@/assets/images/icons/icon-keystore-mew.png"
               />
 
-              <div class="d-flex flex-column">
+              <div class="d-flex justify-center flex-column">
                 <mew-button
-                  title="Access my wallet"
+                  title="Access Wallet"
                   btn-size="xlarge"
-                  class="mb-5"
+                  :has-full-width="false"
+                  class="mb-3"
                   @click.native="goToAccess"
                 />
-
-                <div class="mt-3 mb-0 text-center">
-                  <router-link
-                    class="primary--text text-decoration--none font-weight-bold"
-                    to="/"
-                    >Back to home</router-link
-                  >
-                </div>
+                <mew-button
+                  title="Create Another Wallet"
+                  :has-full-width="false"
+                  btn-style="transparent"
+                  @click.native="updateStep(1)"
+                />
               </div>
             </div>
             <v-img
@@ -152,23 +183,11 @@
 </template>
 
 <script>
-import { Toast, ERROR } from '@/components/toast';
-import borderButton from '@/components/buttons/border-button/BorderButton.vue';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 export default {
   name: 'CreateWalletKeystore',
-  components: {
-    'border-button': borderButton
-  },
   props: {
-    step: {
-      type: Number,
-      default: 0
-    },
-    updateStep: {
-      type: Function,
-      default: () => {}
-    },
     handlerCreateWallet: {
       type: Object,
       default: () => {
@@ -178,6 +197,7 @@ export default {
   },
   data() {
     return {
+      step: 1,
       warningData: [
         {
           icon: 'paperPlane',
@@ -212,18 +232,38 @@ export default {
         }
       ],
       password: '',
+      cofirmPassword: '',
+      passwordRulles: [
+        value => !!value || 'Required',
+        value => value.length > 7 || 'Password is less then 8 characters'
+      ],
+
       walletFile: '',
-      name: ''
+      name: '',
+      isGeneratingKeystore: false
     };
+  },
+  computed: {
+    enableCreateButton() {
+      return this.password !== '' && this.cofirmPassword === this.password;
+    },
+    passwordConfirmRulles() {
+      return [
+        value => !!value || 'Required',
+        value => value === this.password || 'Passwords do not match'
+      ];
+    }
   },
   methods: {
     createWallet() {
+      this.isGeneratingKeystore = true;
       this.handlerCreateWallet
         .generateKeystore(this.password)
         .then(res => {
           this.name = res.name;
           this.walletFile = res.blobUrl;
           this.updateStep(2);
+          this.isGeneratingKeystore = false;
         })
         .catch(e => {
           Toast(e, {}, ERROR);
@@ -235,6 +275,12 @@ export default {
     },
     goToAccess() {
       this.$router.push({ name: 'AccessWallet' });
+    },
+    /**
+     * Update step
+     */
+    updateStep(step) {
+      this.step = step ? step : 1;
     }
   }
 };
@@ -247,10 +293,15 @@ export default {
   top: 100000px;
   z-index: -1;
 }
-</style>
-
-<style lang="scss">
 .mew-component--keystore .mew-stepper.v-stepper {
   background: transparent !important;
 }
+.border-container {
+  border: 1px solid var(--v-primaryOutlineActive-base);
+  border-radius: 7px;
+  box-shadow: 0 8px 15px var(--v-boxShadow-base);
+  height: 100%;
+}
 </style>
+
+<style lang="scss"></style>

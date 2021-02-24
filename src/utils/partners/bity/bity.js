@@ -30,7 +30,7 @@ import {
   FIAT_MAX
 } from './config';
 
-import { Toast, SENTRY } from '@/components/toast';
+import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 
 function disabledPairing(currencyList, symbol, invalid, side) {
   if (currencyList[symbol]) {

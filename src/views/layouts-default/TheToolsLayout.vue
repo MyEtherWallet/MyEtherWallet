@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--tools">
-    <home-header title="Tools" />
+    <the-layout-header title="Tools" />
 
     <div class="expandHeader mobile-menu px-3 mt-n7 d-block d-lg-none">
       <v-sheet
@@ -21,49 +21,49 @@
 
     <v-container class="mt-8 mb-12">
       <div class="d-block d-lg-none">
-        <module-watch-only v-if="currentTool === 'watch'" />
-        <module-convert v-if="currentTool === 'convert'" />
-        <module-offline-helper v-if="currentTool === 'offline'" />
-        <module-verify v-if="currentTool === 'verify'" />
+        <module-tools-watch-only v-if="currentTool === 'watch'" />
+        <module-tools-convert v-if="currentTool === 'convert'" />
+        <module-tools-offline-helper v-if="currentTool === 'offline'" />
+        <module-message-verify v-if="currentTool === 'verify'" />
       </div>
 
       <mew-tabs class="d-none d-lg-block" :is-vertical="true" :items="items">
         <template #tabItemContent1>
-          <module-watch-only />
+          <module-tools-watch-only />
         </template>
         <template #tabItemContent2>
-          <module-convert />
+          <module-tools-convert />
         </template>
         <template #tabItemContent3>
-          <module-offline-helper />
+          <module-tools-offline-helper />
         </template>
         <template #tabItemContent4>
-          <module-verify />
+          <module-message-verify />
         </template>
       </mew-tabs>
     </v-container>
-    <get-started />
+    <app-get-started />
   </div>
 </template>
 
 <script>
-import homeHeader from '@/components/home-header/HomeHeader';
-import getStarted from '@/components/get-started/GetStarted';
+import TheLayoutHeader from '../components-default/TheLayoutHeader';
+import AppGetStarted from '@/core/components/AppGetStarted';
 
-import ModuleWatchOnly from '@/modules/tools/ModuleWatchOnly';
-import ModuleConvert from '@/modules/tools/ModuleConvert';
-import ModuleOfflineHelper from '@/modules/tools/ModuleOfflineHelper';
-import ModuleVerify from '@/modules/message/ModuleVerify';
+import ModuleToolsWatchOnly from '@/modules/tools/ModuleToolsWatchOnly';
+import ModuleToolsConvert from '@/modules/tools/ModuleToolsConvert';
+import ModuleToolsOfflineHelper from '@/modules/tools/ModuleToolsOfflineHelper';
+import ModuleMessageVerify from '@/modules/message/ModuleMessageVerify';
 
 export default {
   name: 'MoreActions',
   components: {
-    homeHeader,
-    getStarted,
-    ModuleWatchOnly,
-    ModuleConvert,
-    ModuleOfflineHelper,
-    ModuleVerify
+    TheLayoutHeader,
+    AppGetStarted,
+    ModuleToolsWatchOnly,
+    ModuleToolsConvert,
+    ModuleToolsOfflineHelper,
+    ModuleMessageVerify
   },
   data: () => ({
     currentTool: 'watch',
