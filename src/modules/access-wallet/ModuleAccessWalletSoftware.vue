@@ -80,7 +80,6 @@
 </template>
 
 <script>
-import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import AccessWalletKeystore from './software/components/AccessWalletKeystore';
 import AccessWalletMnemonic from './software/components/AccessWalletMnemonic';
 import AccessWalletPrivateKey from './software/components/AccessWalletPrivateKey';
@@ -94,8 +93,7 @@ export default {
   components: {
     AccessWalletKeystore,
     AccessWalletMnemonic,
-    AccessWalletPrivateKey,
-    mewSuperButton
+    AccessWalletPrivateKey
   },
   props: {
     open: {
@@ -197,10 +195,14 @@ export default {
     /**
      * Sets Wallet and Pushes new route query param
      * Used in overlay back button
+     * account is defined in Mnemonic phrase access
      */
-    unclockWallet() {
+    unclockWallet(account = undefined) {
       try {
-        this.setWallet([this.accessHandler.getWalletInstance()])
+        const wallet = !account
+          ? this.accessHandler.getWalletInstance()
+          : account;
+        this.setWallet([wallet])
           .then(() => {
             if (this.path !== '') {
               this.$router.push({ path: this.path });

@@ -7,287 +7,409 @@
     -->
     <template v-if="step === 1" #stepperContent1>
       <v-sheet color="white" class="border-radius--10px pa-4 pa-md-10">
-        <v-row class="align-start justify-start">
+        <v-row class="align-end justify-start mb-3 mb-md-5">
           <v-col cols="12">
+            <!--
+            =====================================================================================
+              Title
+            =====================================================================================
+            -->
             <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
             <div class="headline font-weight-bold">
               Enter your Mnemonic Phrase
             </div>
-            <p class="mb-3 mb-sm-10 mb-md-5">
+            <p class="mb-3">
               Please type the mnemonic phrase you wrote down in the right order.
             </p>
+            <!--
+            =====================================================================================
+             Select number of words
+            =====================================================================================
+            -->
+            <div class="d-flex flex-row-reverse pb-4">
+              <v-select
+                v-model="length"
+                style="max-width: 150px"
+                hide-details
+                dense
+                item-text="label"
+                item-value="value"
+                :items="mnemonicOptions"
+                label=""
+                outlined
+              ></v-select>
+            </div>
+            <!--
+            =====================================================================================
+             Enter Phrase Block
+            =====================================================================================
+            -->
+            <phrase-block class="mb-8">
+              <v-row>
+                <v-col
+                  v-for="n in length"
+                  :key="`mnemonicInput${n}`"
+                  cols="6"
+                  lg="3"
+                  md="3"
+                  sm="4"
+                >
+                  <v-text-field
+                    :ref="`mnemonicInput${n}`"
+                    v-model="phrase[n]"
+                    :name="`mnemonicInput${n}`"
+                    :label="`${n}.`"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </phrase-block>
+            <!--
+            =====================================================================================
+             Extra Word
+            =====================================================================================
+            -->
+            <mew-expand-panel
+              :has-dividers="true"
+              :panel-items="extraWordPanel"
+              :idx-to-expand="null"
+            >
+              <template #panelBody1>
+                <mew-input
+                  v-model="extraWord"
+                  type="password"
+                  label="Enter Extra word"
+                  placeholder="Enter your extra word"
+                />
+              </template>
+            </mew-expand-panel>
+            <!--
+            =====================================================================================
+             Next Button
+            =====================================================================================
+            -->
+            <div class="d-flex justify-center mt-6">
+              <mew-button
+                title="Next"
+                btn-size="xlarge"
+                :disabled="!isValidMnemonic"
+                @click.native="unlockBtn"
+              />
+            </div>
           </v-col>
-          <div cols="flex-row-reverse">
-            <v-select
-              v-model="length"
-              style="max-width: 150px"
-              hide-details
-              dense
-              item-text="label"
-              item-value="value"
-              :items="mnemonicOptions"
-              label=""
-              outlined
-            ></v-select>
-          </div>
         </v-row>
       </v-sheet>
     </template>
     <!--
     =====================================================================================
-      Step 2: Enter Password
+      Step 2: Select Derivation Path
     =====================================================================================
     -->
-    <template v-if="step === 2" #stepperContent2> </template>
-  </mew-stepper>
-  <!-- <div class="mt-5">
-    <div v-if="step === 1">
-      <h3 class="font-weight-bold text-center mb-10">
-        1. Enter your mnemonic phrase
-      </h3>
-      <mew6-white-sheet class="border-radius--10px pa-4 pa-sm-12">
-        <div class="headline font-weight-bold mb-2">Mnemonic phrase</div>
-        <div class="mb-5">
-          Please type the mnemonic phrase you wrote down in the right order.
-        </div>
-        <div class="d-flex align-center justify-end pb-4">
+    <template v-if="step === 2" #stepperContent2>
+      <v-sheet color="white" class="border-radius--10px pa-4 pa-md-10">
+        <v-row class="align-end justify-start">
+          <v-col cols="12">
+            <!--
+            =====================================================================================
+              Title
+            =====================================================================================
+            -->
+            <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
+            <div class="headline font-weight-bold">
+              Select HD Derivation Path
+            </div>
+            <p class="mb-5">
+              Please select HD Derivation Path that you you want to interact
+              with or enter a custom one.
+            </p>
 
-        </div>
-        <phrase-block class="mb-8">
-          <v-row>
-            <v-col
-              v-for="n in length"
-              :key="`mnemonicInput${n}`"
-              cols="6"
-              lg="3"
-              md="3"
-              sm="4"
-            >
-              <v-text-field
-                :ref="`mnemonicInput${n}`"
-                v-model="phrase[n]"
-                :name="`mnemonicInput${n}`"
-                :label="`${n}.`"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-        </phrase-block>
-
-        <div class="mt-10">
-          <mew-expand-panel
-            :has-dividers="true"
-            :is-toggle="true"
-            :interactive-content="true"
-            :panel-items="[
-              {
-                name: 'Extra Word'
-              }
-            ]"
-          >
-            <template #panelBody1>
-              <mew-input
-                v-model="extraWord"
-                type="password"
-                label="Extra word"
-                placeholder="Extra word"
-              />
-            </template>
-          </mew-expand-panel>
-        </div>
-
-        <div class="d-flex justify-center mt-6">
-          <mew-button
-            title="Next"
-            btn-size="xlarge"
-            :disabled="!isValidMnemonic"
-            @click.native="unlockBtn"
-          />
-        </div>
-      </mew6-white-sheet>
-    </div>
-
-    <div v-if="step === 2">
-      <h3 class="font-weight-bold text-center mb-10">
-        2. Confirm network & address
-      </h3>
-      <mew6-white-sheet class="border-radius--10px pa-4 pa-sm-12 text-center">
-        <mew-select
-          v-model="selectedPath"
-          label="HD Derivation Path"
-          :items="paths"
-        />
-        <mew-button
-          btn-size="xlarge"
-          title="Next"
-          :disable="!selectedPath"
-          @click.native="setPath"
-        />
-      </mew6-white-sheet>
-    </div>
-
-    <div v-if="step === 3">
-      <h3 class="font-weight-bold text-center mb-10">
-        3. Confirm network & address
-      </h3>
-
-      <mew-expand-panel :interactive-content="true" :panel-items="panelItems">
-        <template #panelBody1>
-          <div class="network-container custom-scroll-bar ml-3 mr-n3 pr-3">
-            <v-radio-group v-model="selectedNetwork">
-              <div v-for="(type, i) in networkTypes" :key="type">
-                <h5 class="text-capitalize font-weight-bold">
-                  {{ type }}
-                </h5>
-                <v-container>
-                  <v-row align="center" justify="space-between">
-                    <v-col
-                      v-for="(item, idx) in Networks[type]"
-                      :key="item.service + idx"
-                      cols="12"
-                      sm="6"
-                    >
-                      <v-radio :label="item.service" :value="item.url" />
-                    </v-col>
-                  </v-row>
-                </v-container>
-                <v-divider
-                  v-if="networkTypes.length != i + 1"
-                  class="mt-0 mb-5"
-                />
-              </div>
-            </v-radio-group>
-          </div>
-        </template>
-        <template #panelBody2>
-          <div>
-            <v-radio-group v-model="selectedAddress">
-              <table width="100%">
-                <thead>
-                  <tr class="table-header">
-                    <th width="50%" class="align-center">Address</th>
-                    <th width="25%" class="align-center">Eth Balance</th>
-                    <th width="25%" class="align-center"># of Tokens</th>
-                  </tr>
-                </thead>
-                <tbody class="table-row-class">
-                  <tr
-                    v-for="acc in accounts"
-                    v-show="accounts.length > 0"
-                    :key="acc.address"
-                  >
-                    <td>
-                      <v-row justify="space-around">
-                        <v-col cols="1">
-                          <v-radio label="" :value="acc.address" />
-                        </v-col>
-                        <v-col cols="8" class="text-truncate">
-                          <v-row justify="space-around">
-                            <mew-blockie
-                              width="25px"
-                              height="25px"
-                              :address="acc.address"
-                            />
-                            <span>{{ acc.address | concatAddress }}</span>
-                          </v-row>
-                          <input
-                            :ref="acc.address"
-                            :value="acc.address"
-                            class="address-copy-input"
-                          />
-                        </v-col>
-                        <v-col cols="2">
-                          <v-row>
-                            <v-icon
-                              small
-                              class="cursor--pointer"
-                              @click="copy(acc.address)"
-                              >mdi-content-copy</v-icon
-                            >
-                            <v-icon
-                              small
-                              class="cursor--pointer"
-                              @click="launchExplorrer(acc.address)"
-                              >mdi-launch</v-icon
-                            >
-                          </v-row>
-                        </v-col>
-                      </v-row>
-                    </td>
-                    <td>
+            <mew-select
+              v-model="selectedPath"
+              label="Select Path"
+              :has-filter="true"
+              :items="parsedPaths"
+              filter-placeholder="Search Path"
+            />
+          </v-col>
+        </v-row>
+        <!--
+        =====================================================================================
+          Add Custom Path
+        =====================================================================================
+        -->
+        <mew-expand-panel
+          is-toggle
+          :has-dividers="true"
+          :idx-to-expand="null"
+          :panel-items="[
+            {
+              name: 'Add custom path'
+            }
+          ]"
+        >
+          <template #panelBody1>
+            <mew-input
+              v-model="customPathName"
+              label="Enter Alias"
+              placeholder="Enter custom path alias"
+            />
+            <mew-input
+              v-model="customPathValue"
+              label="Enter Path"
+              placeholder="m/44'/1'/0'/0"
+            />
+            <v-row class="align-center justify-center mb-5">
+              <mew-button
+                btn-size="small"
+                title="Add Path"
+                btn-style="outline"
+                :disable="!selectedPath"
+                @click.native="addCustomPath"
+            /></v-row>
+          </template>
+        </mew-expand-panel>
+        <!--
+        =====================================================================================
+          Back/Next Buttons
+        =====================================================================================
+        -->
+        <v-row dense class="align-center justify-center my-2">
+          <v-col cols="12" sm="4" order="last" order-sm="first" class="px-sm-2">
+            <mew-button
+              has-full-width
+              title="Back"
+              btn-style="outline"
+              btn-size="xlarge"
+              @click.native="step = 1"
+            />
+          </v-col>
+          <v-col cols="12" sm="4" class="px-sm-2">
+            <mew-button
+              has-full-width
+              btn-size="xlarge"
+              title="Next"
+              :disable="!selectedPath"
+              @click.native="nextStepThree"
+            />
+          </v-col>
+        </v-row> </v-sheet
+    ></template>
+    <!--
+    =====================================================================================
+      Step 3: Select Address and Network
+    =====================================================================================
+    -->
+    <template v-if="step === 3" #stepperContent3>
+      <v-sheet color="white" class="border-radius--10px pa-4 pa-md-10">
+        <v-row class="align-end justify-start">
+          <v-col cols="12">
+            <!--
+            =====================================================================================
+              Title
+            =====================================================================================
+            -->
+            <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
+            <div class="headline font-weight-bold">
+              Select Address and Network
+            </div>
+            <p class="mb-5">
+              Please select address that you want to interact with and network.
+            </p>
+          </v-col>
+        </v-row>
+        <mew-expand-panel :interactive-content="true" :panel-items="panelItems">
+          <!--
+          =====================================================================================
+            Panel: Select Address
+          =====================================================================================
+          -->
+          <template #panelBody1>
+            <div>
+              <v-radio-group v-model="selectedAddress">
+                <!--
+                =====================================================================================
+                  Table - Header
+                =====================================================================================
+                -->
+                <v-row dense class="table-header">
+                  <v-col offset="2">
+                    <p class="">Adddress</p>
+                  </v-col>
+                  <v-col cols="4" md="3">
+                    <p>ETH Balance</p>
+                  </v-col>
+                  <v-col cols="2">
+                    <p>Tokens</p>
+                  </v-col>
+                </v-row>
+                <!--
+                =====================================================================================
+                  Table - Address Row
+                =====================================================================================
+                -->
+                <v-row
+                  v-for="acc in accounts"
+                  v-show="accounts.length > 0"
+                  :key="acc.address"
+                  dense
+                  class="table-row-class align-center justify-start py-1"
+                >
+                  <v-col cols="1">
+                    <v-radio label="" :value="acc.address" />
+                  </v-col>
+                  <v-col cols="1">
+                    <mew-blockie
+                      width="25px"
+                      height="25px"
+                      :address="acc.address"
+                    />
+                  </v-col>
+                  <v-col>
+                    <v-row dense class="align-center justify-start pl-2 pr-3">
+                      <v-col>
+                        <p>{{ acc.address | concatAddress }}</p>
+                      </v-col>
+                      <v-col>
+                        <mew-copy
+                          is-small
+                          :copy-ref="acc.address"
+                          tooltip="Copy Address"
+                          :copy-value="acc.address"
+                        /> </v-col
+                    ></v-row>
+                  </v-col>
+                  <v-col cols="4" md="3">
+                    <p>
                       {{
                         acc.balance === 'Loading..'
                           ? acc.balance
                           : `${acc.balance} ${network.type.name}`
                       }}
-                    </td>
-                    <td>{{ acc.tokens }}</td>
-                  </tr>
-                  <tr v-show="accounts.length === 0">
-                    Loading...
-                  </tr>
-                </tbody>
-              </table>
-            </v-radio-group>
-            <br />
-            <v-row align="center" justify="center">
-              <div>
-                <mew-button
-                  title="Previous"
-                  color-theme="basic"
-                  icon="mdi-chevron-left"
-                  icon-type="mdi"
-                  btn-size="small"
-                  icon-align="left"
-                  btn-style="transparent"
-                  @click.native="previousAddressSet"
-                />
-                <mew-button
-                  title="Next"
-                  color-theme="basic"
-                  icon="mdi-chevron-right"
-                  icon-type="mdi"
-                  btn-size="small"
-                  icon-align="right"
-                  btn-style="transparent"
-                  @click.native="nextAddressSet"
-                />
-              </div>
-            </v-row>
-          </div>
-        </template>
-      </mew-expand-panel>
-      <div class="d-flex align-center flex-column">
-        <mew-checkbox
-          v-model="acceptTerms"
-          label="To access my wallet, I accept "
-          :link="link"
-          class="justify-center"
-        />
-        <mew-button
-          title="Access My Wallet"
-          btn-size="xlarge"
-          :disabled="!(selectedAddress && acceptTerms)"
-          @click.native="setMnemonicWallet"
-        />
-      </div>
-    </div>
-
-    <page-indicator-dot class="mt-4" :items="3" :current-item="step" />
-  </div> -->
+                    </p>
+                  </v-col>
+                  <v-col cols="2">
+                    <p>{{ !acc.tokens ? acc.tokens : acc.tokens }}</p>
+                  </v-col>
+                </v-row>
+              </v-radio-group>
+              <!--
+              =====================================================================================
+               Previous / Next Buttons
+              =====================================================================================
+              -->
+              <v-row align="center" justify="center">
+                <div>
+                  <mew-button
+                    title="Previous"
+                    color-theme="basic"
+                    icon="mdi-chevron-left"
+                    icon-type="mdi"
+                    btn-size="small"
+                    icon-align="left"
+                    btn-style="transparent"
+                    @click.native="previousAddressSet"
+                  />
+                  <mew-button
+                    title="Next"
+                    color-theme="basic"
+                    icon="mdi-chevron-right"
+                    icon-type="mdi"
+                    btn-size="small"
+                    icon-align="right"
+                    btn-style="transparent"
+                    @click.native="nextAddressSet"
+                  />
+                </div>
+              </v-row>
+            </div>
+          </template>
+          <!--
+          =====================================================================================
+            Panel: Network
+          =====================================================================================
+          -->
+          <template #panelBody2>
+            <div class="network-container custom-scroll-bar ml-3 mr-n3 pr-3">
+              <v-radio-group v-model="selectedNetwork">
+                <div v-for="(type, i) in networkTypes" :key="type">
+                  <h5 class="text-capitalize font-weight-bold">
+                    {{ type }}
+                  </h5>
+                  <v-container>
+                    <v-row dense align="center" justify="space-between">
+                      <v-col
+                        v-for="(item, idx) in Networks[type]"
+                        :key="item.service + idx"
+                        cols="12"
+                        sm="6"
+                      >
+                        <v-radio :label="item.service" :value="item.url" />
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                  <v-divider
+                    v-if="networkTypes.length != i + 1"
+                    class="mt-0 mb-5"
+                  />
+                </div>
+              </v-radio-group>
+            </div>
+          </template>
+        </mew-expand-panel>
+        <!--
+        =====================================================================================
+         Terms
+        =====================================================================================
+        -->
+        <div class="d-flex align-center flex-column">
+          <mew-checkbox
+            v-model="acceptTerms"
+            label="To access my wallet, I accept "
+            :link="link"
+            class="justify-center"
+          />
+        </div>
+        <!--
+        =====================================================================================
+          Back / Access Wallet Buttons
+        =====================================================================================
+        -->
+        <v-row dense class="align-center justify-center my-2">
+          <v-col cols="12" sm="4" order="last" order-sm="first" class="px-sm-2">
+            <mew-button
+              has-full-width
+              title="Back"
+              btn-style="outline"
+              btn-size="xlarge"
+              @click.native="backStepTwo()"
+            />
+          </v-col>
+          <v-col cols="12" sm="4" class="px-sm-2">
+            <mew-button
+              has-full-width
+              btn-size="xlarge"
+              title="Access Wallet"
+              :disabled="!acceptTerms"
+              @click.native="accessWallet()"
+            />
+          </v-col>
+        </v-row>
+      </v-sheet>
+    </template>
+  </mew-stepper>
 </template>
 
 <script>
-import pageIndicatorDot from '@/components/page-indicator-dot/PageIndicatorDot';
 import phraseBlock from '@/components/PhraseBlock';
 import { MNEMONIC as mnemonicType } from '@/modules/wallets/utils/bip44/walletTypes';
 import paths from '@/modules/wallets/utils/bip44';
 import { mapActions, mapGetters } from 'vuex';
-const parsedPaths = paths[mnemonicType].map(item => {
-  const newObj = {};
-  newObj['name'] = item['label'];
-  newObj['value'] = item['path'];
-  return newObj;
-});
+import {
+  Toast,
+  ERROR,
+  SUCCESS,
+  SENTRY
+} from '@/modules/toast/handler/handlerToast';
+import { checkCustomPath } from '../handlers/pathHelper';
 
 const MAX_ADDRESSES = 5;
 
@@ -302,7 +424,6 @@ export default {
     }
   },
   components: {
-    pageIndicatorDot,
     phraseBlock
   },
   props: {
@@ -311,41 +432,12 @@ export default {
       default: () => {
         return {};
       }
-    },
-
-    open: {
-      type: Boolean,
-      default: false
-    },
-    btnCall: {
-      type: Function,
-      default: () => {}
-    },
-    unlockMnemonicWallet: {
-      type: Function,
-      default: () => {}
-    },
-    step: {
-      type: Number,
-      default: 1
-    },
-    setMnemonicPath: {
-      type: Function,
-      default: () => {}
-    },
-    setAddress: {
-      type: Function,
-      default: () => {}
-    },
-    hwWalletInstance: {
-      type: Object,
-      default: () => {
-        return {};
-      }
     }
   },
   data() {
     return {
+      /*Stepper Items */
+      step: 1,
       stepperItems: [
         {
           step: 1,
@@ -353,32 +445,17 @@ export default {
         },
         {
           step: 2,
-          name: 'Enter Password'
+          name: 'Select HD Path'
+        },
+        {
+          step: 3,
+          name: 'Address & Network'
         }
       ],
+      /*Phrase Items: */
       extraWord: '',
       phrase: {},
       length: 12,
-      acceptTerms: false,
-      link: {
-        title: 'Terms',
-        url: 'https://www.myetherwallet.com/terms-of-service'
-      },
-      paths: parsedPaths,
-      selectedPath: null,
-      selectedAddress: '',
-      panelItems: [
-        {
-          name: 'Network'
-        },
-        {
-          name: 'Address to interact with'
-        }
-      ],
-      selectedNetwork: '',
-      accounts: [],
-      currentIdx: 0,
-      addressPage: 0,
       mnemonicOptions: [
         {
           label: '12 words',
@@ -388,11 +465,127 @@ export default {
           label: '24 words',
           value: 24
         }
-      ]
+      ],
+      /* Path Items: */
+      selectedPath: null,
+      customPaths: [],
+      customPathName: '',
+      customPathValue: '',
+      /* Terms Items : */
+      acceptTerms: false,
+      link: {
+        title: 'Terms',
+        url: 'https://www.myetherwallet.com/terms-of-service'
+      },
+      /*Network Items: */
+      selectedNetwork: '',
+      panelNetworkSubstring: '',
+      /* Mnemonic Addresses */
+      selectedAddress: '',
+      accounts: [],
+      currentIdx: 0,
+      addressPage: 0
     };
   },
   computed: {
     ...mapGetters('global', ['Networks', 'network']),
+    /*------------------------------------
+     * STEP 1 ITEMS
+    -------------------------------------*/
+    /**
+     * Property returns panel items for the extra word,used in step 1
+     */
+    extraWordPanel() {
+      return [
+        {
+          name: 'Do you have an extra word?',
+          subtext: this.extraWord && this.extraWord !== '' ? 'Yes' : 'No'
+        }
+      ];
+    },
+    /**
+     * Property validates whether or not all words has been entered
+     * @return booelan
+     */
+    isValidMnemonic() {
+      return Object.keys(this.phrase).length === this.length;
+    },
+
+    /*------------------------------------
+     * STEP 2 ITEMS
+    -------------------------------------*/
+    /**
+     * Property returns defualt Paths + Custom paths, used in Select Path component
+     * Property Interface:
+     * {  name = string -> Name of the Path,
+     *    subtext = string --> Derivation Path,
+     *    value = tring --> Derivation Path
+     * }
+     */
+    parsedPaths() {
+      return paths[mnemonicType]
+        .map(item => {
+          const newObj = {};
+          newObj['name'] = item['label'];
+          newObj['subtext'] = item['path'];
+          newObj['value'] = item['path'];
+          return newObj;
+        })
+        .concat(this.customPaths);
+    },
+    /**
+     * Property returns parsed mnemonic phrase
+     * Is used in unlock wallet method
+     */
+    parsedPhrase() {
+      return Object.values(this.phrase).join(' ');
+    },
+
+    /*------------------------------------
+     * STEP 3 ITEMS
+    -------------------------------------*/
+    /**
+     * Property returns edited version of the selected address. ie: 0x3453...3a3b
+     */
+    panelAddressSubstring() {
+      return this.selectedAddress && this.selectedAddress !== ''
+        ? `${this.selectedAddress.substring(
+            0,
+            6
+          )} ... ${this.selectedAddress.substring(
+            this.selectedAddress.length - 4,
+            this.selectedAddress.length
+          )}`
+        : '';
+    },
+    /**
+     * Property returns expand panel items for the Address and Network
+     */
+    panelItems() {
+      return [
+        {
+          name: 'Address',
+          subtext: this.panelAddressSubstring,
+          colorTheme: 'superPrimary',
+          hasActiveBorder: true
+        },
+        {
+          name: 'Network',
+          subtext: this.panelNetworkSubstring,
+          colorTheme: 'superPrimary',
+          hasActiveBorder: true
+        }
+      ];
+    },
+
+    /**
+     * Property returns default network and nodes items
+     * Property Interface:
+     * {  name = string -> Name of the Path,
+     *    subtext = string --> Derivation Path,
+     *    value = tring --> Derivation Path
+     * }
+     */
     networkTypes() {
       const showFirst = ['ETH', 'ROP', 'RIN'];
       const typeArr = Object.keys(this.Networks).filter(item => {
@@ -403,30 +596,24 @@ export default {
       typeArr.unshift('ETH', 'ROP', 'RIN');
       return typeArr;
     },
-    sheetColor() {
-      return this.step < 3 ? 'white' : 'transparent';
-    },
-    parsedPhrase() {
-      return Object.values(this.phrase).join(' ');
-    },
-    isValidMnemonic() {
-      return Object.keys(this.phrase).length === this.length;
-    },
-    revertedPath() {
-      const newObj = {};
-      if (this.selectedPath !== null) {
-        newObj['path'] = this.selectedPath['value'];
-        newObj['label'] = this.selectedPath['name'];
-        return newObj;
-      }
-      return this.selectedPath;
-    },
-    wallet() {
+
+    /**
+     * Property returns default network and nodes items
+     * Property Interface:
+     * {  name = string -> Name of the Path,
+     *    subtext = string --> Derivation Path,
+     *    value = tring --> Derivation Path
+     * }
+     */
+    walletAccount() {
       const wallet = this.accounts.find(item => {
         return item.address === this.selectedAddress;
       });
-
-      return wallet ? wallet : null;
+      if (wallet) {
+        wallet.account.isHardware = true;
+        return wallet.account;
+      }
+      return wnull;
     }
   },
   watch: {
@@ -435,8 +622,8 @@ export default {
         const found = itm.find(network => {
           return network.url === newVal;
         });
-
         if (found) {
+          this.panelNetworkSubstring = `${found.type.name} - ${found.service}`;
           this.setNetwork(found);
         }
       });
@@ -455,12 +642,6 @@ export default {
         }
       }
     },
-    selectedPath: {
-      deep: true,
-      handler: function () {
-        this.setAddresses();
-      }
-    },
     accounts: {
       deep: true,
       handler: function (newVal) {
@@ -470,13 +651,14 @@ export default {
   },
   mounted() {
     this.selectedNetwork = this.network.url;
+    this.panelNetworkSubstring = `${this.network.type.name} - ${this.network.service}`;
   },
   methods: {
     ...mapActions('global', ['setNetwork']),
-    copy(addr) {
-      this.$refs[addr][0].select();
-      document.execCommand('copy');
-    },
+    /**
+     * Method that launches new tab to an explorer with address clicked
+     * Used in STEP 3, Address Row
+     */
     launchExplorrer(addr) {
       // eslint-disable-next-line
       window.open(
@@ -484,10 +666,17 @@ export default {
         '_blank'
       );
     },
+
+    /**
+     * Async method that gets accounts according to the pagination
+     * Used in STEP 2 and 3
+     */
     async setAddresses() {
       this.accounts = [];
       for (let i = this.currentIdx; i < this.currentIdx + MAX_ADDRESSES; i++) {
-        const account = await this.hwWalletInstance.getAccount(i);
+        const account = await this.handlerAccessWallet
+          .getWalletInstance()
+          .getAccount(i);
         this.accounts.push({
           address: account.getAddressString(),
           account: account,
@@ -496,23 +685,101 @@ export default {
           tokens: 'Loading..'
         });
       }
-
       this.currentIdx += MAX_ADDRESSES;
       this.addressPage += 1;
       this.selectedAddress = this.accounts[0].address;
     },
+    /**
+     * Method unlocks mnemonic phrase;
+     * Direct to second step if mnemonic was valid;
+     * Shows toast on error
+     * Used in STEP 1
+     */
     unlockBtn() {
-      this.unlockMnemonicWallet(this.parsedPhrase, this.extraWord);
+      this.handlerAccessWallet
+        .unlockMnemonicWallet(this.parsedPhrase, this.extraWord)
+        .then(res => {
+          if (res) {
+            this.step = 2;
+          }
+        })
+        .catch(e => {
+          Toast(e, {}, ERROR);
+        });
     },
-    setPath() {
-      this.setMnemonicPath(this.selectedPath);
+    /**
+     * Method adds custom path.
+     * Checks, whether or not the path is valid and already exhists in the parsed paths.
+     * Shows toast message to use on error or successfull addition.
+     * Used in STEP 2
+     */
+    addCustomPath() {
+      try {
+        const customPath = checkCustomPath(this.customPathValue);
+        if (customPath) {
+          if (this.parsedPaths.some(e => e.value === this.customPathValue)) {
+            const error = `Custom path already exhists: ${
+              this.parsedPaths.find(e => e.value === this.customPathValue).name
+            }`;
+            Toast(error, {}, ERROR);
+          } else {
+            const newPath = {
+              name: this.customPathName,
+              subtext: this.customPathValue,
+              value: this.customPathValue
+            };
+            this.customPaths.push(newPath);
+            Toast('You have added custom path successfully.', {}, SUCCESS);
+          }
+        } else {
+          Toast('Custom path is not valid', {}, ERROR);
+        }
+      } catch (error) {
+        Toast(error, {}, ERROR);
+      }
     },
-    setMnemonicWallet() {
-      this.setAddress(this.wallet.account);
+    /**
+     * Methods sets addresses according to the path selected
+     * and switched stepper to step 3
+     * Used in STEP 2
+     */
+    nextStepThree() {
+      this.handlerAccessWallet
+        .updateMnemonicPath(this.selectedPath.value)
+        .then(res => {
+          if (res) {
+            this.step = 3;
+            this.setAddresses();
+          }
+        })
+        .catch(e => {
+          Toast(e, {}, ERROR);
+        });
     },
+    /**
+     * Methods resets all addresses
+     * and switched stepper to step 2
+     * Used in STEP 3
+     */
+    backStepTwo() {
+      this.step = 2;
+      this.selectedAddress = '';
+      this.accounts.splice(0);
+      this.currentIdx = 0;
+      this.addressPage = 0;
+    },
+
+    /**
+     * Methods generates privious derived addresses
+     * Used in STEP 3
+     */
     nextAddressSet() {
       this.setAddresses();
     },
+    /**
+     * Methods generates privious derived addresses
+     * Used in STEP 3
+     */
     previousAddressSet() {
       const pageDeductor = this.currentIdx / MAX_ADDRESSES;
       const idxDeductor = this.addressPage * MAX_ADDRESSES;
@@ -521,6 +788,21 @@ export default {
       this.currentIdx -=
         this.currentIdx <= 10 ? idxDeductor : idxDeductor - MAX_ADDRESSES;
       this.setAddresses();
+    },
+
+    /**
+     * Methods emits parent to unlock wallet
+     * and passes selected wallet account withinMnemonic Phrase
+     * this.walletAccount should always be defined,
+     * check in place if logic was compromised.
+     * Used in STEP 3
+     */
+    accessWallet() {
+      if (this.walletAccount) {
+        this.$emit('unlock', this.walletAccount);
+      } else {
+        Toast('Something went wrong in mnemonic wallet access', {}, SENTRY);
+      }
     }
   }
 };
@@ -532,19 +814,22 @@ table {
 }
 
 .table-header {
-  text-align: center;
+  text-align: start;
   background-color: #f0f0f0;
-  th {
+  p {
     color: #96a8b6;
     font-weight: bold;
     text-transform: uppercase;
+    margin-bottom: 0px;
   }
 }
-
 .table-row-class {
-  tr:nth-child(odd) {
-    background-color: #f9f9f9;
+  p {
+    margin-bottom: 0px;
   }
+}
+.table-row-class:nth-child(odd) {
+  background-color: #f9f9f9;
 }
 
 .component-container {

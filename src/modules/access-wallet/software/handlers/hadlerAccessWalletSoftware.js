@@ -47,14 +47,19 @@ export default class AccessWallet {
   }
 
   /**
-   * Mnemonic Method
+   * Mnemonic Methods
    */
   unlockMnemonicWallet(phrase, password = '') {
-    MnemonicWallet(phrase, password).then(wallet => {
-      this.walletInstance = wallet;
-      // this.setWalletRoute([wallet]);
-      // this.hwWalletInstance = wallet;
-      // this.btnCall('mnemonicPath');
-    });
+    return (this.walletInstance = new MnemonicWallet(phrase, password).then(
+      wallet => {
+        this.walletInstance = wallet;
+        return this.walletInstance;
+      }
+    ));
+  }
+
+  async updateMnemonicPath(path) {
+    await this.walletInstance.init(path);
+    return this.walletInstance;
   }
 }
