@@ -409,11 +409,11 @@ export default {
     },
     executeTrade() {
       this.confirmInfo.show = false;
-      console.log(this.currentTrade);
+      console.log(this.currentTrade, this.confirmInfo, 'current Trade');
       this.swapper.executeTrade(this.currentTrade).then(res => {
-        console.log(res);
+        console.log(res, 'response from trade before fetching status');
         this.swapper.getStatus(res).then(res => {
-          console.log(res);
+          console.log(res, 'got status'); // do the looper on notifications end instead;
         });
       });
     }

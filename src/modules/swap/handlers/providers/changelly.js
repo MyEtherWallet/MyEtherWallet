@@ -145,7 +145,8 @@ class Changelly {
         .sendTransaction(
           Object.assign(tradeObj.transactions[0], {
             from,
-            gasPrice
+            gasPrice,
+            handleNotification: false
           })
         )
         .on('transactionHash', hash => {

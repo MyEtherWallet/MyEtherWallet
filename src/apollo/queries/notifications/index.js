@@ -64,7 +64,7 @@ export default class NotificationCalls {
           }
         })
         .then(res => {
-          const parsedRes = this._allTransferFormatter([obj], [res]);
+          const parsedRes = this._parser(obj, res.data.getTransactionByHash);
           response(parsedRes);
         });
     });
@@ -103,30 +103,35 @@ export default class NotificationCalls {
   _allTransferFormatter(hashArrObj, txArrObj) {
     const newArr = [];
     for (let i = 0; i < hashArrObj.length; i++) {
-      const newObj = Object.assign(
-        {},
-        hashArrObj[i].transfer,
-        txArrObj[i].data.getTransactionByHash
+      newArr.push(
+        this._parser(
+          hashArrObj[i].transfer,
+          txArrObj[i].data.getTransactionByHash
+        )
       );
-      const val = BigNumber(newObj.value);
-      const gasFee = BigNumber(newObj.gasPrice).times(newObj.gasUsed);
-      newObj['gasLimit'] = newObj.gas;
-      newObj['data'] = newObj.input;
-      newObj['transactionFee'] = fromWei(val.plus(gasFee).toFixed());
-      newObj['status'] = hexToNumber(newObj.status) ? 'SUCCESS' : 'ERROR';
-      newObj['type'] = 'IN';
-      newObj['value'] = fromWei(newObj.value);
-      newObj['date'] = BigNumber(newObj.timestamp).times(1000);
-
-      delete newObj.input;
-      delete newObj.__typename;
-      delete newObj.blockHash;
-      delete newObj.contractAddress;
-      delete newObj.gasUsed;
-      delete newObj.timestamp;
-
-      newArr.push(newObj);
     }
     return newArr;
+  }
+
+  _parser(hashObj, txArrObj) {
+    const newObj = Object.assign({}, hashObj, txArrObj);
+    const val = BigNumber(newObj.value);
+    const gasFee = BigNumber(newObj.gasPrice).times(newObj.gasUsed);
+    newObj['gasLimit'] = newObj.gas;
+    newObj['data'] = newObj.input;
+    newObj['transactionFee'] = fromWei(val.plus(gasFee).toFixed());
+    newObj['status'] = hexToNumber(newObj.status) ? 'SUCCESS' : 'ERROR';
+    newObj['type'] = 'IN';
+    newObj['value'] = fromWei(newObj.value);
+    newObj['date'] = BigNumber(newObj.timestamp).times(1000).toFixed();
+
+    delete newObj.input;
+    delete newObj.__typename;
+    delete newObj.blockHash;
+    delete newObj.contractAddress;
+    delete newObj.gasUsed;
+    delete newObj.timestamp;
+
+    return newObj;
   }
 }

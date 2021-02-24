@@ -187,22 +187,32 @@ export default {
     },
     // next key for pendingTx subscription
     parsePendingTx(result) {
+      const copyArray = this.inTx;
       const data = result.data.pendingTransaction;
+      data['transactionFee'] = data.txFee;
+      data['date'] = data.timestamp * 1000;
+      delete data.txFee;
+      delete data.__typename;
+      delete data.timestampe;
+      const newNotification = new Notification(data);
+      this.inTx.push(newNotification);
       if (data.to.toLowerCase() === this.address.toLowerCase()) {
         this.caller.subscribeToTxHash(data, () => {
           this.caller.getTxDetailFromPending(data).then(res => {
             const notification = new Notification(res);
-            const foundIdx = this.inTx.findIndex(item => {
+            const foundIdx = copyArray.findIndex(item => {
               if (res.transactionHash === item.transactionHash) {
                 return item;
               }
             });
 
             if (foundIdx) {
-              this.inTx.splice(foundIdx, 0, notification);
+              copyArray.splice(foundIdx, 0, notification);
+              this.inTx = copyArray;
             } else {
-              this.inTx.push(notification);
+              copyArray.push(notification);
             }
+            this.inTx = copyArray;
           });
         });
       }
