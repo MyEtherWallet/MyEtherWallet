@@ -6,134 +6,127 @@
     :has-indicator="true"
   >
     <template #moduleBody>
-            <div class="d-flex">
-              <mew-input
-                :value="contractAddress"
-                label="Contract Address"
-                placeholder=" "
-                class="mr-3 flex-grow-1"
-                @input="setContractAddress"
-              />
-              <mew-select
-                :items="mergedContracts"
-                label="Contract Type"
-                @input="selectedContract"
-              />
-            </div>
-            <v-textarea
-              v-model="abi"
-              no-resize
-              outlined
-              name="input-7-4"
-              label="ABI/JSON Interface"
-              @change="setAbi"
-            ></v-textarea>
+      <div>
+        <mew-input
+          :value="contractAddress"
+          label="Contract Address"
+          placeholder=" "
+          class="mr-3 flex-grow-1"
+          @input="setContractAddress"
+        />
+        <mew-select
+          :items="mergedContracts"
+          label="Contract Type"
+          @input="selectedContract"
+        />
+        <v-textarea
+          v-model="abi"
+          no-resize
+          outlined
+          name="input-7-4"
+          label="ABI/JSON Interface"
+          @change="setAbi"
+        ></v-textarea>
 
-            <div class="text-center mt-3">
-              <mew-button
-                title="Interact"
-                :disabled="!canInteract"
-                :has-full-width="false"
-                button-size="xlarge"
-                @click.native="showInteract()"
-              />
-            </div>
-            <div class="text-center mt-4">
-              <mew-button
-                title="Clear all"
-                :has-full-width="false"
-                btn-size="small"
-                btn-style="transparent"
-                @click.native="resetDefaults()"
-              />
-            </div>
-          </interface-wrap>
-        </mew6-white-sheet>
-        <mew-overlay
-          :show-overlay="interact"
-          left-btn-text="back"
-          right-btn-text="close"
-          :close="closeInteract"
-          :back="backInteract"
-        >
-          <template #mewOverlayBody>
-            <mew-select
-              :label="'Method'"
-              :items="methods"
-              @input="methodSelect"
-            >
-            </mew-select>
+        <div class="text-center mt-3">
+          <mew-button
+            title="Interact"
+            :disabled="!canInteract"
+            :has-full-width="false"
+            button-size="xlarge"
+            @click.native="showInteract()"
+          />
+        </div>
+        <div class="text-center mt-4">
+          <mew-button
+            title="Clear all"
+            :has-full-width="false"
+            btn-size="small"
+            btn-style="transparent"
+            @click.native="resetDefaults()"
+          />
+        </div>
+      </div>
+
+      <mew-overlay
+        :show-overlay="interact"
+        left-btn-text="back"
+        right-btn-text="close"
+        :close="closeInteract"
+        :back="backInteract"
+      >
+        <template #mewOverlayBody>
+          <mew-select :label="'Method'" :items="methods" @input="methodSelect">
+          </mew-select>
+          <div
+            v-for="(input, idx) in inputs"
+            :key="input.name + idx"
+            class="input-item-container"
+          >
+            <mew-input
+              v-if="getType(input.type).type !== 'radio'"
+              :disabled="noInput"
+              :label="`${input.name} (${input.type})`"
+              :rules="[
+                value => {
+                  return isValidInput(value, getType(input.type).solidityType);
+                }
+              ]"
+              @input="valueInput(input.name, $event)"
+            />
             <div
-              v-for="(input, idx) in inputs"
-              :key="input.name + idx"
-              class="input-item-container"
+              v-if="getType(input.type).type === 'radio'"
+              class="bool-input-container"
             >
-              <mew-input
-                v-if="getType(input.type).type !== 'radio'"
-                :disabled="noInput"
-                :label="`${input.name} (${input.type})`"
-                :rules="[
-                  value => {
-                    return isValidInput(
-                      value,
-                      getType(input.type).solidityType
-                    );
-                  }
-                ]"
-                @input="valueInput(input.name, $event)"
-              />
-              <div
-                v-if="getType(input.type).type === 'radio'"
-                class="bool-input-container"
-              >
-                <div class="bool-items">
-                  <mew-switch
-                    :value="input.value"
-                    :label="input.name"
-                    @input="valueInput(input.name, $event)"
-                  />
-                </div>
+              <div class="bool-items">
+                <mew-switch
+                  :value="input.value"
+                  :label="input.name"
+                  @input="valueInput(input.name, $event)"
+                />
               </div>
             </div>
-            <div v-show="hasInputs" class="text-center mt-3">
-              <mew-button
-                :title="hasOutputs() ? 'Result' : 'Write'"
-                :has-full-width="false"
-                button-size="xlarge"
-                :disabled="!inputsValid"
-                @click.native="write"
-              />
-            </div>
-            <div class="pa-4"></div>
-            <div
-              v-for="(output, idx) in outputs"
-              v-show="noOutput"
-              :key="output.name + idx"
-              class="input-item-container"
-            >
-              <mew-input
-                v-if="getType(output.type).type !== 'radio'"
-                :disabled="true"
-                :label="`${output.name} (${output.type})`"
-                :value="output.value"
-                class="non-bool-input"
-              />
-              <mew-input
-                v-if="getType(output.type).type === 'radio'"
-                :disabled="true"
-                :label="`${output.name} (${output.type})`"
-                :value="output.value"
-                class="non-bool-input"
-              />
-            </div>
-          </template>
-          </mew-module>
+          </div>
+          <div v-show="hasInputs" class="text-center mt-3">
+            <mew-button
+              :title="hasOutputs() ? 'Result' : 'Write'"
+              :has-full-width="false"
+              button-size="xlarge"
+              :disabled="!inputsValid"
+              @click.native="write"
+            />
+          </div>
+          <div class="pa-4"></div>
+          <div
+            v-for="(output, idx) in outputs"
+            v-show="noOutput"
+            :key="output.name + idx"
+            class="input-item-container"
+          >
+            <mew-input
+              v-if="getType(output.type).type !== 'radio'"
+              :disabled="true"
+              :label="`${output.name} (${output.type})`"
+              :value="output.value"
+              class="non-bool-input"
+            />
+            <mew-input
+              v-if="getType(output.type).type === 'radio'"
+              :disabled="true"
+              :label="`${output.name} (${output.type})`"
+              :value="output.value"
+              class="non-bool-input"
+            />
+          </div>
+        </template>
+      </mew-overlay>
+    </template>
+  </mew-module>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import { isAddress } from '@/core/helpers/addressUtils';
-import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import store from 'store';
 import * as unit from 'ethjs-unit';
 import Contracts from './handlers/contracts';
@@ -151,9 +144,7 @@ const sanitizeHex = hex => {
 
 export default {
   name: 'ModuleContractInteract',
-  components: {
-    'interface-wrap': InterfaceWrap
-  },
+  components: {},
   data() {
     return {
       interact: false,

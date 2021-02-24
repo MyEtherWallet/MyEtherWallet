@@ -6,92 +6,93 @@
     title="Deploy contract"
   >
     <template #moduleBody>
-            <mew-input
-              label="Byte code"
-              placeholder=" "
-              @input="byteCodeInput($event)"
-            />
+      <div>
+        <mew-input
+          label="Byte code"
+          placeholder=" "
+          @input="byteCodeInput($event)"
+        />
 
-            <v-textarea
-              no-resize
-              outlined
-              name="input-7-4"
-              label="ABI/JSON Interface"
-              value=""
-              placeholder=" "
-              @input="abiInput($event)"
-            ></v-textarea>
+        <v-textarea
+          no-resize
+          outlined
+          name="input-7-4"
+          label="ABI/JSON Interface"
+          value=""
+          placeholder=" "
+          @input="abiInput($event)"
+        ></v-textarea>
+        <mew-input
+          label="Contract name"
+          placeholder=" "
+          @input="setContractName($event)"
+        />
+        <div v-show="showInputs">
+          <div
+            v-for="(input, idx) in inputs"
+            :key="input.name + idx"
+            class="input-item-container"
+          >
             <mew-input
-              label="Contract name"
-              placeholder=" "
-              @input="setContractName($event)"
+              v-if="getType(input.type).type !== 'radio'"
+              :disabled="noInput"
+              :label="`${input.name} (${input.type})`"
+              class="non-bool-input"
+              @input="valueInput(input.name, $event)"
             />
-            <div v-show="showInputs">
-              <div
-                v-for="(input, idx) in inputs"
-                :key="input.name + idx"
-                class="input-item-container"
-              >
-                <mew-input
-                  v-if="getType(input.type).type !== 'radio'"
-                  :disabled="noInput"
-                  :label="`${input.name} (${input.type})`"
-                  class="non-bool-input"
+            <div
+              v-if="getType(input.type).type === 'radio'"
+              class="bool-input-container"
+            >
+              <div class="bool-items">
+                <mew-switch
+                  :value="input.value"
+                  :label="input.name"
                   @input="valueInput(input.name, $event)"
                 />
-                <div
-                  v-if="getType(input.type).type === 'radio'"
-                  class="bool-input-container"
-                >
-                  <div class="bool-items">
-                    <mew-switch
-                      :value="input.value"
-                      :label="input.name"
-                      @input="valueInput(input.name, $event)"
-                    />
-                    <mew-checkbox
-                      v-model="input.value"
-                      :value="false"
-                      :label="$t('contract.false')"
-                      type="radio"
-                      checked
-                    />
-                  </div>
-                  <div class="bool-items">
-                    <mew-checkbox
-                      v-model="input.value"
-                      :value="true"
-                      :label="$t('contract.false')"
-                      type="radio"
-                      checked
-                    />
-                  </div>
-                </div>
-                <!--              <mew-input :label="`${input.name} (${input.type})`"> </mew-input>-->
+                <mew-checkbox
+                  v-model="input.value"
+                  :value="false"
+                  :label="$t('contract.false')"
+                  type="radio"
+                  checked
+                />
               </div>
-              <mew-input
-                v-if="payableConstructor"
-                :disabled="noInput"
-                :label="`value (ETH)`"
-                class="non-bool-input"
-                @input="ethPayable($event)"
-              />
+              <div class="bool-items">
+                <mew-checkbox
+                  v-model="input.value"
+                  :value="true"
+                  :label="$t('contract.false')"
+                  type="radio"
+                  checked
+                />
+              </div>
             </div>
-            <div class="text-center mt-3">
-              <mew-button
-                title="Sign Transaction"
-                :has-full-width="false"
-                button-size="xlarge"
-                :disabled="!canDeploy"
-                @click.native="deploy"
-              />
-            </div>
+            <!--              <mew-input :label="`${input.name} (${input.type})`"> </mew-input>-->
+          </div>
+          <mew-input
+            v-if="payableConstructor"
+            :disabled="noInput"
+            :label="`value (ETH)`"
+            class="non-bool-input"
+            @input="ethPayable($event)"
+          />
+        </div>
+        <div class="text-center mt-3">
+          <mew-button
+            title="Sign Transaction"
+            :has-full-width="false"
+            button-size="xlarge"
+            :disabled="!canDeploy"
+            @click.native="deploy"
+          />
+        </div>
+      </div>
     </template>
   </mew-module>
 </template>
 
 <script>
-import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import { mapState } from 'vuex';
 import * as unit from 'ethjs-unit';
 import Contracts from './handlers/contracts';
@@ -109,9 +110,7 @@ const sanitizeHex = hex => {
 
 export default {
   name: 'ModuleContractDeploy',
-  components: {
-    'interface-wrap': InterfaceWrap
-  },
+  components: {},
   data() {
     return {
       contractName: '',
