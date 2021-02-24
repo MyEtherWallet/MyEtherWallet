@@ -1,50 +1,49 @@
 <template>
-  <div>
-    <app-block-title
-      max-width="600px"
-      no-page-title
-      :data="title"
-      class="mb-7"
-    />
-    <v-textarea
-      v-model="message"
-      outlined
-      label="Signature"
-      :value="message"
-    ></v-textarea>
-    <div v-if="signResult">
-      <span v-if="didSign">Did Sign</span>
-      <span v-if="didntSign">Didn't sign</span>
-    </div>
-    <mew-button
-      title="Verify"
-      btn-size="xlarge"
-      class="display--block mx-auto mt-5"
-      @click.native="verifyMessage"
-    />
-    <mew-button
-      btn-style="transparent"
-      title="Clean all"
-      btn-size="small"
-      class="display--block mx-auto mt-5"
-      @click.native="clearAll"
-    />
-  </div>
+  <mew-module
+    class="d-flex flex-grow-1 pt-6"
+    :title="title"
+    :has-elevation="true"
+    :has-indicator="true"
+  >
+    <template #moduleBody>
+      <div>
+        <v-textarea
+          v-model="message"
+          outlined
+          label="Signature"
+          :value="message"
+        ></v-textarea>
+
+        <div v-if="signResult">
+          <span v-if="didSign">Did Sign</span>
+          <span v-if="didntSign">Didn't sign</span>
+        </div>
+        <mew-button
+          title="Verify"
+          btn-size="xlarge"
+          class="display--block mx-auto mt-5"
+          @click.native="verifyMessage"
+        />
+        <mew-button
+          btn-style="transparent"
+          title="Clean all"
+          btn-size="small"
+          class="display--block mx-auto mt-5"
+          @click.native="clearAll"
+        />
+      </div>
+    </template>
+  </mew-module>
 </template>
 
 <script>
-import AppBlockTitle from '@/core/components/AppBlockTitle';
 import SignAndVerifyMessage from '@/modules/message/handlers';
 
 export default {
   name: 'ModuleMessageVerify',
-  components: { AppBlockTitle },
   data() {
     return {
-      title: {
-        title: 'Verify Message',
-        description: 'Verify the address signed the message'
-      },
+      title: 'Verify Message',
       didSign: false,
       didntSign: false,
       signResult: false,
