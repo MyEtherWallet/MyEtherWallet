@@ -1,8 +1,13 @@
 <template>
   <v-row class="mew-component--dashboard">
-    <v-col cols="9">
+    <v-col cols="12" md="8">
+      <module-network
+        v-if="$vuetify.breakpoint.smAndDown"
+        class="pa-2 pa-md-3"
+      />
+
       <mew6-white-sheet
-        v-if="chartData.length"
+        v-if="true"
         class="mew-component--eth-balance pa-7 pb-4"
       >
         <div class="d-flex">
@@ -158,12 +163,9 @@
         </mew6-white-sheet>
       </div>
     </v-col>
-    <v-spacer />
-    <v-col cols="auto">
-      <network />
-      <div class="pa-4"></div>
-      <swap />
-      <div class="pa-4"></div>
+    <v-col class="mt-n2 mt-md-0" cols="12" md="4">
+      <module-network v-if="$vuetify.breakpoint.mdAndUp" class="pa-2 pa-md-3" />
+      <swap class="pa-2 pa-md-3" />
       <app-carousel />
     </v-col>
   </v-row>
@@ -176,14 +178,14 @@ import BigNumber from 'bignumber.js';
 import WalletCalls from '@/apollo/queries/wallets/index';
 import utils from 'web3-utils';
 import AppCarousel from '@/core/components/AppCarousel';
-import network from '@/modules/network/ModuleNetwork';
+import ModuleNetwork from '@/modules/network/ModuleNetwork';
 import swap from '@/core/components/AppSwap';
 
 export default {
   components: {
     chart,
     AppCarousel,
-    network,
+    ModuleNetwork,
     swap
   },
   props: {
@@ -384,6 +386,7 @@ export default {
     align-items: flex-start !important;
   }
 }
+
 .mew-component--eth-balance {
   .options-btn.v-btn {
     padding: 0 !important;

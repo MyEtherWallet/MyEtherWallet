@@ -29,7 +29,8 @@ export default {
 
 <style lang="scss" scoped>
 .sideinfo {
-  width: 350px;
+  //width: 350px;
+  width: 100%;
 }
 </style>
 

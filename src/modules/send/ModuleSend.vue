@@ -6,7 +6,7 @@
     :has-indicator="true"
   >
     <template #moduleBody>
-      <div class="full-width px-15 pt-3">
+      <div class="full-width px-lg-3 pb-6">
         <div class="d-flex justify-end mr-3 entire-bal">
           <mew-button
             :title="$t('sendTx.button-entire')"
@@ -14,31 +14,30 @@
             @click.native="setEntireBal"
           />
         </div>
-        <v-container class="pt-0">
-          <v-row>
-            <v-col cols="6">
-              <mew-select
-                ref="mewSelect"
-                :items="tokens"
-                :label="$t('sendTx.type')"
-                class="mr-3"
-                @input="setCurrency"
-              />
-            </v-col>
-            <v-col cols="6">
-              <mew-input
-                ref="mewInput"
-                :value="amount"
-                :label="$t('sendTx.amount')"
-                placeholder=" "
-                :right-label="currencyBalance"
-                :rules="amtRules"
-                @input="setAmount"
-              />
-            </v-col>
-          </v-row>
-          <module-address-book @setAddress="setAddress" />
-        </v-container>
+
+        <v-row>
+          <v-col cols="12" md="6">
+            <mew-select
+              ref="mewSelect"
+              :items="tokens"
+              :label="$t('sendTx.type')"
+              class="mr-3"
+              @input="setCurrency"
+            />
+          </v-col>
+          <v-col cols="12" md="6">
+            <mew-input
+              ref="mewInput"
+              :value="amount"
+              :label="$t('sendTx.amount')"
+              placeholder=" "
+              :right-label="currencyBalance"
+              :rules="amtRules"
+              @input="setAmount"
+            />
+          </v-col>
+        </v-row>
+        <module-address-book @setAddress="setAddress" />
       </div>
 
       <v-container>
@@ -47,7 +46,6 @@
           is-toggle
           has-dividers
           :panel-items="expandPanel"
-          class="px-15"
         >
           <template #panelBody1>
             <div class="d-flex justify-space-between px-5 border-bottom pb-5">

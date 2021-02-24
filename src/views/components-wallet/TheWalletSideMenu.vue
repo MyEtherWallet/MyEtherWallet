@@ -9,7 +9,7 @@
     >
       <template #prepend>
         <div class="pa-5 pb-3">
-          <div class="my-4">
+          <div class="mt-2 mb-4">
             <router-link :to="{ name: 'Dashboard' }">
               <img width="120" src="@/assets/images/icons/logo-mew.png" />
             </router-link>
@@ -263,6 +263,7 @@ export default {
   }
 };
 </script>
+
 <style lang="scss">
 .wallet-sidemenu {
   .v-list-item--link {

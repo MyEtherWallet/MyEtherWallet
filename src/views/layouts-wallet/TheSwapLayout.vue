@@ -15,7 +15,12 @@
       :send="executeTrade"
     />
     <v-row>
-      <v-col cols="9">
+      <v-col cols="12" md="8" lg="8">
+        <module-network
+          v-if="$vuetify.breakpoint.smAndDown"
+          class="pa-2 pa-md-3"
+        />
+
         <mew6-white-sheet>
           <mew-module
             :has-elevation="true"
@@ -148,8 +153,7 @@
           </mew-module>
         </mew6-white-sheet>
       </v-col>
-      <v-spacer cols="1" />
-      <v-col cols="3">
+      <v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="4" lg="4">
         <module-network />
       </v-col>
     </v-row>
