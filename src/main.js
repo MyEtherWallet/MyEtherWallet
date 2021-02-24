@@ -1,3 +1,5 @@
+import '@/assets/fonts/MaterialDesignIcons/css/materialdesignicons.min.css';
+import '@/assets/fonts/Roboto/css/Roboto.css';
 /* eslint camelcase: 0 */
 import * as Sentry from '@sentry/browser';
 // import * as Integrations from '@sentry/integrations';
