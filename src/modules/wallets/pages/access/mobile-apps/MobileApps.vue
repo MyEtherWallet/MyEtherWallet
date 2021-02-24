@@ -1,11 +1,11 @@
 <template>
   <div class="expandHeader">
     <v-container>
-      <block-title :data="titleData">
+      <app-block-title :data="titleData">
         <h5 class="white--text ma-0">
           Select a app that you want to use to connect MEW.
         </h5>
-      </block-title>
+      </app-block-title>
       <v-sheet color="transparent" max-width="450px" class="mx-auto">
         <v-row>
           <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
@@ -15,6 +15,8 @@
               :title="btn.label"
               :subtitle="btn.description"
               :right-icon="btn.icon"
+              right-icon-type="img"
+              font-class="mew-heading-2"
               @click.native="btn.fn"
             />
           </v-col>
@@ -26,15 +28,14 @@
 </template>
 
 <script>
-import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
-import blockTitle from '@/components/block-title/BlockTitle';
-import { Toast, SENTRY } from '@/components/toast';
+import AppBlockTitle from '@/core/components/AppBlockTitle';
+import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 import { WalletConnectWallet, WalletLinkWallet } from '@/modules/wallets/utils';
 import { mapActions } from 'vuex';
 
 export default {
   name: 'MobileAccess',
-  components: { mewSuperButton, blockTitle },
+  components: { AppBlockTitle },
   props: {
     open: {
       type: Boolean,

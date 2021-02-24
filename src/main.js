@@ -7,17 +7,17 @@ import app from './app';
 
 import Vue from 'vue';
 import Router from 'vue-router';
-import router from '@/router';
-import store from '@/store';
+import router from '@/core/router';
+import store from '@/core/store';
 import Vuex from 'vuex';
 
 // etc
 import mewComponents from '@myetherwallet/mew-components';
 import languages from '@/translations';
-import '@/plugins/registerServiceWorker';
+import '@/core/plugins/registerServiceWorker';
 // import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
-import vuetify from '@/plugins/vuetify';
+import vuetify from '@/core/plugins/vuetify';
 
 /* Apollo  */
 import { InMemoryCache } from 'apollo-cache-inmemory';
@@ -29,7 +29,7 @@ import { getMainDefinition } from 'apollo-utilities';
 import VueApollo from 'vue-apollo';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { onError } from 'apollo-link-error';
-// import { EventBus } from '@/plugins/eventBus';
+// import { EventBus } from '@/core/plugins/eventbus';
 
 import whiteSheet from '@/components/white-sheet/WhiteSheet.vue';
 Vue.component('Mew6WhiteSheet', whiteSheet);

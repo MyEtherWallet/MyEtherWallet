@@ -1,4 +1,4 @@
-import Changelly from '../providers/changelly';
+import Changelly from '../handlers/providers/changelly';
 const changelly = new Changelly();
 describe('Changelly Swap', () => {
   test('it should return supported tokens including ETH', () => {

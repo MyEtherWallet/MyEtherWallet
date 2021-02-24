@@ -12,8 +12,8 @@ import {
   calculateChainIdFromV
 } from '../../utils';
 import errorHandler from './errorHandler';
-import store from '@/store';
-import commonGenerator from '@/helpers/commonGenerator';
+import store from '@/core/store';
+import commonGenerator from '@/core/helpers/commonGenerator';
 import Vue from 'vue';
 
 const NEED_PASSWORD = true;

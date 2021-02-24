@@ -1,19 +1,19 @@
 import WalletConnect from '@walletconnect/browser';
 import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
-import store from '@/store';
+import store from '@/core/store';
 import { Transaction } from 'ethereumjs-tx';
 import { WALLET_CONNECT as walletConnectType } from '../../bip44/walletTypes';
 import { sanitizeHex, getBufferFromHex } from '../../utils';
 import errorHandler from './errorHandler';
-import commonGenerator from '@/helpers/commonGenerator';
-import toBuffer from '@/helpers/toBuffer';
+import commonGenerator from '@/core/helpers/commonGenerator';
+import toBuffer from '@/core/helpers/toBuffer';
 import HybridWalletInterface from '../walletInterface';
 import PromiEvent from 'web3-core-promievent';
 
 const BRIDGE_URL = 'https://bridge.walletconnect.org';
 const IS_HARDWARE = true;
 
-import { EventBus } from '@/plugins/eventBus';
+import { EventBus } from '@/core/plugins/eventBus';
 
 class WalletConnectWallet {
   constructor() {

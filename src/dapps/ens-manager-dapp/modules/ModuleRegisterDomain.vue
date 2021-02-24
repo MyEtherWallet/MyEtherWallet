@@ -1,0 +1,142 @@
+<template>
+  <mew-overlay
+    :show-overlay="onRegister"
+    :title="$t('ens.register-domain')"
+    :right-btn-text="$t('common.cancel')"
+    :close="close"
+  >
+    <template #mewOverlayBody>
+      <mew-stepper :items="stepperItems" :on-step="onStep">
+        <template #stepperContent1
+          ><request
+            v-if="onStep === 1"
+            class="mt-3"
+            :is-available="isAvailable"
+            :name="name"
+            :host-name="parsedHostName"
+            :loading="checkingDomainAvail"
+            :get-rent-price="getRentPrice"
+            @onRequest="onRequest"
+        /></template>
+        <template #stepperContent2
+          ><register
+            v-if="onStep === 2"
+            class="mt-3"
+            :name="name"
+            :duration="duration"
+            :register="register"
+            :commit="commit"
+            :committed="committed"
+            :minimum-age="minimumAge"
+            :loading-commit="loadingCommit"
+        /></template>
+        <template #stepperContent3><complete v-if="onStep === 3" /></template>
+      </mew-stepper>
+    </template>
+  </mew-overlay>
+</template>
+
+<script>
+import Request from '../components/register/RegisterRequest';
+import Register from '../components/register/Register';
+
+export default {
+  components: { Request, Register },
+  props: {
+    getRentPrice: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
+    commit: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
+    onRegister: { default: false, type: Boolean },
+    close: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
+    register: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
+    generateKeyPhrase: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
+    loadingCommit: {
+      default: false,
+      type: Boolean
+    },
+    committed: {
+      default: false,
+      type: Boolean
+    },
+    minimumAge: {
+      default: '',
+      type: String
+    },
+    name: {
+      default: '',
+      type: String
+    },
+    parsedHostName: {
+      default: '',
+      type: String
+    },
+    isAvailable: {
+      default: false,
+      type: Boolean
+    },
+    checkingDomainAvail: {
+      default: false,
+      type: Boolean
+    }
+  },
+  data() {
+    return {
+      duration: 1,
+      onStep: 1,
+      stepperItems: [
+        {
+          step: 1,
+          name: 'STEP 1. Request registration'
+        },
+        {
+          step: 2,
+          name: 'STEP 2. Register domain'
+        },
+        {
+          step: 3,
+          name: 'STEP 3. Complete registration'
+        }
+      ]
+    };
+  },
+  methods: {
+    reset() {
+      this.onStep = 1;
+      this.duration = 0;
+    },
+    onRequest(val) {
+      if (!this.isAvailable) {
+        this.close();
+        return;
+      }
+      this.generateKeyPhrase();
+      this.duration = val;
+      this.onStep += 1;
+    }
+  }
+};
+</script>

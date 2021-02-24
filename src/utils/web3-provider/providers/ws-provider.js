@@ -1,9 +1,9 @@
 import Web3WSProvider from './ws-web3-provider';
 import { Manager as Web3RequestManager } from 'web3-core-requestmanager';
 import MiddleWare from '../middleware';
-import workerTimer from '@/helpers/webWorkerTimer.js';
-import { EventBus } from '@/plugins/eventBus';
-import VuexStore from '@/store';
+import workerTimer from '@/core/helpers/webWorkerTimer.js';
+import { EventBus } from '@/core/plugins/eventBus';
+import VuexStore from '@/core/store';
 import {
   ethSendTransaction,
   ethSignTransaction,

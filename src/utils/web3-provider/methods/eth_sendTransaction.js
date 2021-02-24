@@ -10,9 +10,9 @@ import { toPayload } from '../jsonrpc';
 import * as locStore from 'store';
 import { getSanitizedTx } from './utils';
 import BigNumber from 'bignumber.js';
-import sanitizeHex from '@/helpers/sanitizeHex';
+import sanitizeHex from '@/core/helpers/sanitizeHex';
 
-import { EventBus } from '@/plugins/eventBus';
+import { EventBus } from '@/core/plugins/eventBus';
 
 const setEvents = (promiObj, tx, dispatch) => {
   promiObj

@@ -1,4 +1,9 @@
-import { Toast, WARNING, ERROR, SENTRY } from '@/components/toast';
+import {
+  Toast,
+  WARNING,
+  ERROR,
+  SENTRY
+} from '@/modules/toast/handler/handlerToast';
 const ERRORS = {};
 const WARNINGS = {};
 

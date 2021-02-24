@@ -39,11 +39,11 @@ import signMessage from './sign-message/en_US';
 import helpCenter from './help-center/en_US';
 import notifications from './notifications/en_US';
 import mewcx from './mew-cx/en_US';
-import dappsAmbrpay from './dapps-ambrpay/en_US';
+import ambrpay from './dapps-ambrpay/en_US';
 import phishing from './other/phishing/en_US';
-import dappsAave from './dapps-aave/en_US';
+import aave from './dapps-aave/en_US';
 import header from './header/en_US';
-import dappsMCDMaker from './dapps-mcd-maker/en_US';
+import mcdMaker from './dapps-mcd-maker/en_US';
 
 const en_US = {
   common: common,
@@ -86,10 +86,10 @@ const en_US = {
   helpCenter: helpCenter,
   notifications: notifications,
   mewcx: mewcx,
-  dappsAmbrpay: dappsAmbrpay,
+  ambrpay: ambrpay,
   phishing: phishing,
-  dappsAave: dappsAave,
+  aave: aave,
   header: header,
-  dappsMCDMaker: dappsMCDMaker
+  mcdMaker: mcdMaker
 };
 export default en_US;

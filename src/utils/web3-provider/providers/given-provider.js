@@ -1,7 +1,7 @@
 import { Manager as Web3RequestManager } from 'web3-core-requestmanager';
 import MiddleWare from '../middleware';
-import { EventBus } from '@/plugins/eventBus';
-import VuexStore from '@/store';
+import { EventBus } from '@/core/plugins/eventBus';
+import VuexStore from '@/core/store';
 import {
   ethSendTransaction,
   ethSign,

@@ -1,0 +1,395 @@
+<template>
+  <v-sheet
+    class="mew-component--mnemonic-phrase"
+    max-width="800px"
+    color="transparent"
+  >
+    <mew-stepper class="mx-n12 mx-md-0" :items="steppers" :on-step="step">
+      <!--
+      =====================================================================================
+        Step 1: Write Down Words
+      =====================================================================================
+      -->
+      <template v-if="step === 1" #stepperContent1>
+        <v-sheet color="white" class="border-radius--10px pa-4 pa-sm-12">
+          <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
+          <div class="headline font-weight-bold mb-5">
+            Write down these words
+          </div>
+          <!--
+          =====================================================================================
+            Update Button & Word Number Selector
+          =====================================================================================
+          -->
+          <div class="d-flex align-center justify-end pb-4">
+            <mew-button
+              btn-size="medium"
+              icon="mdi-sync"
+              icon-type="mdi"
+              icon-align="left"
+              title="Update"
+              btn-style="transparent"
+              color-theme="primary"
+              @click.native="setPhrase"
+            />
+            <v-select
+              v-model="phraseSize"
+              style="max-width: 150px"
+              hide-details
+              dense
+              item-text="name"
+              item-value="value"
+              :items="mnemonicOptions"
+              label=""
+              outlined
+            ></v-select>
+          </div>
+          <!--
+          =====================================================================================
+            Pharse Table
+          =====================================================================================
+          -->
+          <phrase-block class="mb-8">
+            <mnemonic-phrase-table :data="phrase" />
+          </phrase-block>
+          <!--
+          =====================================================================================
+            Extra Word
+          =====================================================================================
+          -->
+          <div class="mt-10">
+            <mew-expand-panel
+              :has-dividers="true"
+              :is-toggle="true"
+              :interactive-content="true"
+              :panel-items="[
+                {
+                  name: 'Add Extra Word'
+                }
+              ]"
+            >
+              <template #panelBody1>
+                <mew-input
+                  v-model="extraWord"
+                  label="Extra word"
+                  placeholder="Extra word"
+                />
+              </template>
+            </mew-expand-panel>
+          </div>
+          <!--
+          =====================================================================================
+           Button
+          =====================================================================================
+          -->
+          <div class="d-flex justify-center mt-6">
+            <mew-button
+              title="I wrote them down"
+              btn-size="xlarge"
+              :has-full-width="false"
+              @click.native="updateStep(2)"
+            />
+          </div>
+        </v-sheet>
+        <mew-warning-sheet
+          title="NOT RECOMMENDED"
+          description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
+        />
+      </template>
+      <!--
+      =====================================================================================
+        Step 2: Verification
+      =====================================================================================
+      -->
+      <template v-if="step === 2" #stepperContent2>
+        <v-sheet color="white" class="border-radius--10px pa-4 pa-sm-12">
+          <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
+          <div class="headline font-weight-bold">Verification</div>
+          <div class="mb-5">
+            {{ stepTwoText }}
+          </div>
+          <!--
+          =====================================================================================
+           Words Radio Group
+          =====================================================================================
+          -->
+          <v-sheet max-width="600px" class="mx-auto">
+            <v-radio-group
+              v-for="(item, idx) in generatedVerification"
+              :key="`${idx}verification`"
+              v-model="validateMnemonicValues[getOnlyKey(item)]"
+              hide-details
+              mandatory
+              row
+              class="radio-group width--full pa-5"
+            >
+              <template #label>
+                <div style="min-width: 30px">{{ getOnlyKey(item) + 1 }}.</div>
+              </template>
+              <v-row>
+                <v-col
+                  v-for="(entries, id) in getEntries(item)"
+                  :key="entries + id"
+                  cols="12"
+                  sm="4"
+                >
+                  <v-radio
+                    :label="entries"
+                    :value="`${entries}_${id}`"
+                  ></v-radio>
+                </v-col>
+              </v-row>
+            </v-radio-group>
+            <mew-input
+              v-if="extraWord && extraWord !== ''"
+              v-model="extraWordVerification"
+              label="Confirm extra word"
+              placeholder="Please confirm your extra word"
+              class="mt-10 mb-3"
+            />
+          </v-sheet>
+          <!--
+          =====================================================================================
+           Back Button & Verify Button
+          =====================================================================================
+          -->
+          <div class="d-flex justify-center mt-6">
+            <mew-button
+              title="Back"
+              btn-size="xlarge"
+              btn-style="outline"
+              class="mx-3"
+              @click.native="updateStep(1)"
+            />
+            <mew-button
+              title="Verify"
+              btn-size="xlarge"
+              :disabled="!canVerify"
+              @click.native="verify"
+            />
+          </div>
+        </v-sheet>
+        <mew-warning-sheet
+          title="NOT RECOMMENDED"
+          description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
+        />
+      </template>
+      <!--
+      =====================================================================================
+        Step 3: Done
+      =====================================================================================
+      -->
+      <template v-if="step === 3" #stepperContent3>
+        <v-sheet
+          v-if="step === 3"
+          color="white"
+          class="border-radius--10px pa-4 pa-sm-12"
+        >
+          <div class="d-flex align-center">
+            <div>
+              <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
+              <div class="headline font-weight-bold mb-3">Well done</div>
+              <p class="mb-6">
+                Congratulation! Please use the MEWconnect App to scan this QR
+                code in order to access your new wallet. And you are done!
+              </p>
+              <v-img
+                class="d-block d-sm-none mx-auto mt-12 mb-12"
+                max-width="170px"
+                src="@/assets/images/icons/icon-keystore-mew.png"
+              />
+
+              <div class="d-flex flex-column">
+                <mew-button
+                  title="Access Wallet"
+                  btn-size="xlarge"
+                  :has-full-width="false"
+                  class="mb-5"
+                  @click.native="goToAccess"
+                />
+                <mew-button
+                  title="Create Another Wallet"
+                  :has-full-width="false"
+                  btn-style="transparent"
+                  @click.native="updateStep(1)"
+                />
+              </div>
+            </div>
+            <v-img
+              class="d-none d-sm-block ml-8"
+              max-width="250px"
+              src="@/assets/images/icons/icon-keystore-mew.png"
+            />
+          </div>
+        </v-sheet>
+      </template>
+    </mew-stepper>
+    <div class="spacer-y-medium" />
+  </v-sheet>
+</template>
+
+<script>
+import mnemonicPhraseTable from '@/components/MnemonicPhraseTable';
+import phraseBlock from '@/components/PhraseBlock';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+export default {
+  name: 'CreateWalletMnemonicPhrase',
+  components: {
+    mnemonicPhraseTable,
+    phraseBlock
+  },
+  props: {
+    handlerCreateWallet: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    }
+  },
+  data: () => ({
+    step: 1,
+    validateMnemonicValues: {},
+    extraWord: '',
+    extraWordVerification: '',
+    link: {
+      title: 'Learn more',
+      url: 'https://www.myetherwallet.com/terms-of-service'
+    },
+    titleData: {
+      textProps: 'white--text',
+      toptitle: '',
+      title: 'Mnemonic phrase',
+      titleMaxWidth: '',
+      description:
+        'An official, free companion App for MyEtherWallet that helps you secure your funds as never before.',
+      descriptionMaxWidth: '400px',
+      centered: true
+    },
+    steppers: [
+      {
+        step: 1,
+        name: 'STEP 1. Write down the words'
+      },
+      {
+        step: 2,
+        name: 'STEP 2. Verification'
+      },
+      {
+        step: 3,
+        name: 'STEP 3. Well done'
+      }
+    ],
+    mnemonicOptions: [
+      {
+        name: '12 words',
+        value: 12
+      },
+      {
+        name: '24 words',
+        value: 24
+      }
+    ],
+    phraseSize: 12,
+    phrase: [],
+    generatedVerification: []
+  }),
+  computed: {
+    canVerify() {
+      return this.isValidMnemonic && this.extraWordMatch;
+    },
+    isValidMnemonic() {
+      return this.phrase.length === this.phraseSize;
+    },
+    extraWordMatch() {
+      return this.extraWord === this.extraWordVerification;
+    },
+    stepTwoText() {
+      return this.extraWord === ''
+        ? 'Please select correct words based on their numbers.'
+        : 'Please select correct words based on their numbers, and enter your extra word.';
+    }
+  },
+  watch: {
+    phraseSize: {
+      deep: true,
+      handler: function (newVal) {
+        this.phraseSize = newVal;
+        this.setPhrase();
+      }
+    },
+    phrase: {
+      deep: true,
+      handler: function () {}
+    }
+  },
+  mounted() {
+    this.setPhrase();
+  },
+  methods: {
+    generateVerification() {
+      this.generatedVerification = this.handlerCreateWallet.getVerification();
+    },
+    getOnlyKey(obj) {
+      return Number(Object.keys(obj)[0]);
+    },
+    getEntries(obj) {
+      return Object.values(obj[this.getOnlyKey(obj)]);
+    },
+    setPhrase() {
+      this.handlerCreateWallet
+        .generateMnemonic(this.phraseSize)
+        .then(res => {
+          this.phrase = res;
+          this.generateVerification();
+        })
+        .catch(e => {
+          this.generateVerification();
+          Toast(e, {}, ERROR);
+        });
+    },
+    verify() {
+      this.handlerCreateWallet
+        .validateMnemonic(this.validateMnemonicValues)
+        .then(() => {
+          this.updateStep(3);
+        })
+        .catch(e => {
+          Toast(e, {}, ERROR);
+        });
+    },
+    /**
+     * Reroutes to access wallet
+     * Used in Step 3
+     */
+    goToAccess() {
+      this.$router.push({ name: 'AccessWallet' });
+    },
+
+    /**
+     * Updates Step
+     * Resets phrase if step is reset to 1 from step 3 ( user is creating a new wallet)
+     */
+    updateStep(newStep) {
+      if (this.step === 3 && newStep === 1) {
+        this.setPhrase();
+      }
+      this.step = newStep;
+    },
+    randomNumberGenerator() {
+      return Math.floor(Math.random() * 24) + 1;
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.mew-component--mnemonic-phrase .mew-stepper.v-stepper {
+  background: transparent !important;
+}
+
+.radio-group {
+  box-shadow: 0 5px 15px var(--v-boxShadow-base) !important;
+  border: 1px solid var(--v-inputBorder-base);
+  border-radius: 5px;
+}
+</style>

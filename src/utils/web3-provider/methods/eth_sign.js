@@ -1,6 +1,6 @@
 import EventNames from '../events';
 import { toPayload } from '../jsonrpc';
-import { EventBus } from '@/plugins/eventBus';
+import { EventBus } from '@/core/plugins/eventBus';
 export default async ({ payload }, res, next) => {
   if (payload.method !== 'eth_sign') return next();
   const msg = payload.params[1];

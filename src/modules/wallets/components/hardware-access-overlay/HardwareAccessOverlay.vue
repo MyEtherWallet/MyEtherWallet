@@ -26,10 +26,10 @@
               <v-col v-for="button in buttons" :key="button.label" cols="6">
                 <div class="button-container">
                   <mew-super-button
-                    btn-mode="small-right-image"
                     :title="button.label"
                     :cols-num="6"
                     color-theme="basic"
+                    right-icon-type="img"
                     :right-icon="button.icon"
                     :right-icon-height="45"
                     @click.native="nextStep(button.type)"
@@ -157,22 +157,22 @@
       >
         <mew-super-button
           class="mb-4"
-          btn-mode="small-right-image"
           title="Bitbox"
           :cols-num="6"
           color-theme="basic"
           :right-icon-height="45"
+          right-icon-type="img"
           :right-icon="
             require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')
           "
           @click.native="setSelectedBitbox(0)"
         />
         <mew-super-button
-          btn-mode="small-right-image"
           title="Bitbox 2"
           :cols-num="6"
           color-theme="basic"
           :right-icon-height="45"
+          right-icon-type="img"
           :right-icon="
             require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')
           "
@@ -335,7 +335,7 @@
                   :disabled="!(selectedAddress && acceptTerms)"
                   @click.native="
                     () => {
-                      setWallet(wallet.account);
+                      setHardwareWallet(wallet.account);
                     }
                   "
                 />
@@ -426,14 +426,44 @@
           />
         </div>
       </mew6-white-sheet>
+      <mew6-white-sheet v-else-if="enterPin">
+        <div class="pin-input-block">
+          <i18n path="accessWallet.pin.enter" tag="p" class="main-title"
+            ><span slot="device"> {{ walletType }} </span></i18n
+          >
+          <p class="sub-title">
+            {{ $t('accessWallet.pin.layout') }}
+          </p>
+          <div class="input-container">
+            <div class="input-headers">
+              <p>{{ $t('accessWallet.pin.string') }}</p>
+              <span @click="keepKeyClear">{{ $t('common.clear') }}</span>
+            </div>
+            <input v-model="pin" type="password" readonly="true" />
+          </div>
+        </div>
+        <div class="button-matrix-block">
+          <button
+            v-for="(pos, idx) in positions"
+            :key="pos + idx"
+            @click="pin += pos"
+          ></button>
+        </div>
+        <mew-button
+          btn-size="xlarge"
+          title="Unlock wallet"
+          has-full-width
+          @click.native="keepKeyPinEnter"
+        />
+      </mew6-white-sheet>
+      {{ enterPin }}
     </template>
   </mew-overlay>
 </template>
 
 <script>
 import qrcode from '@xkeshi/vue-qrcode';
-import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
-import { Toast, ERROR } from '@/components/toast';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import bcvaultWallet from '@/modules/wallets/utils/hardware/bcvault';
 import bitboxWallet from '@/modules/wallets/utils/hardware/bitbox';
 import bitbox02Wallet from '@/modules/wallets/utils/hardware/bitbox02';
@@ -445,15 +475,8 @@ import trezorWallet from '@/modules/wallets/utils/hardware/trezor';
 import mewconnectWallet from '@/modules/wallets/utils/hybrid/MEWconnect';
 import appPaths from '@/modules/wallets/utils/hardware/ledger/appPaths.js';
 import allPaths from '@/modules/wallets/utils/bip44';
+import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters } from 'vuex';
-
-const parsedAppPaths = appPaths.map(item => {
-  const newObj = {
-    name: item.network.name_long
-  };
-
-  return newObj;
-});
 
 const MAX_ADDRESSES = 5;
 import {
@@ -538,13 +561,14 @@ const walletHolder = {
   },
   [keepkeyType]: {
     create: keepkeyWallet,
-    when: 1,
+    when: 2,
     hasPaths: true,
     requiresPassword: false,
     needsQr: false,
     accountOnly: false,
     titles: {
-      1: '1. Connect with KeepKey'
+      1: '1. Connect with KeepKey',
+      2: '2. Enter your password'
     }
   },
   [finneyType]: {
@@ -595,8 +619,7 @@ const walletHolder = {
 export default {
   name: 'HardwareAccessOverlay',
   components: {
-    qrcode: qrcode,
-    mewSuperButton
+    qrcode
   },
   filters: {
     concatAddress(val) {
@@ -619,6 +642,7 @@ export default {
   },
   data() {
     return {
+      positions: ['7', '8', '9', '4', '5', '6', '1', '2', '3'],
       buttons: [
         {
           label: 'Ledger',
@@ -678,7 +702,12 @@ export default {
           name: 'Address to interact with'
         }
       ],
-      ledgerApps: parsedAppPaths,
+      ledgerApps: appPaths.map(item => {
+        return {
+          name: item.network.name_long,
+          value: item.network.name_long
+        };
+      }),
       wallets: walletHolder,
       // resettable
       step: 0,
@@ -696,7 +725,11 @@ export default {
       addressPage: 0,
       qrcode: '',
       bcvaultLoading: false,
-      walletInstance: {}
+      walletInstance: {},
+      enterPin: false,
+      pin: '',
+      callback: () => {},
+      unwatch: () => {}
     };
   },
   computed: {
@@ -733,6 +766,7 @@ export default {
       );
     },
     showPaths() {
+      if (this.enterPin) return false;
       return (
         (this.step >= 1 && this.step <= 3) ||
         (this.walletType !== '' &&
@@ -768,14 +802,12 @@ export default {
             return item.network.name_long === this.selectedLedgerApp.name;
           });
           const path = found ? found.paths : appPaths[0].paths;
-          path.forEach(item => {
-            newArr.push({
+          return path.map(item => {
+            return {
               name: item.label,
               value: item.path
-            });
+            };
           });
-
-          return newArr;
         }
 
         appPaths[0].paths.forEach(item => {
@@ -794,7 +826,6 @@ export default {
           });
         });
       }
-
       return newArr;
     },
     title() {
@@ -826,22 +857,21 @@ export default {
           this.setNetwork(found);
         }
       });
-    },
-    hwWalletInstance: {
-      deep: true,
-      handler: function (newVal) {
-        if (Object.keys(newVal).length > 0) {
-          try {
-            this.setAddresses();
-          } catch (e) {
-            newVal.errorHandler(e);
-          }
-        }
-      }
     }
   },
   mounted() {
     this.selectedNetwork = this.network.url;
+    // watcher was falling into an infinite loop with keepkey
+    this.unwatch = this.$watch('hwWalletInstance', function (newVal) {
+      if (Object.keys(newVal).length > 0) {
+        try {
+          this.setAddresses();
+        } catch (e) {
+          newVal.errorHandler(e);
+        }
+        this.unwatch();
+      }
+    });
   },
   methods: {
     ...mapActions('wallet', ['setWallet']),
@@ -865,6 +895,7 @@ export default {
       this.addressPage = 0;
       this.qrcode = '';
       this.walletInstance = {};
+      this.enterPin = false;
     },
     accessBack() {
       !this.step ? this.close('showHardware') : (this.step -= 1);
@@ -877,6 +908,7 @@ export default {
       }
     },
     overlayClose() {
+      this.reset();
       this.close('showHardware');
     },
     nextStep(str) {
@@ -950,9 +982,27 @@ export default {
     unlockbc_vault(address) {
       const actualAddress = address ? address : this.selectedAddress;
       const _wallet = this.walletInstance.getAccount(actualAddress);
-      this.setWallet(_wallet);
+      this.setHardwareWallet(_wallet);
     },
-    unlockkeepkey() {},
+    keepKeyClear() {
+      this.pin = '';
+    },
+    keepKeyPinEnter() {
+      this.callback(this.pin);
+      this.enterPin = false;
+      this.step += 1;
+      setTimeout(() => {
+        this.callback = () => {};
+      }, 500);
+    },
+    unlockkeepkey() {
+      EventBus.$on('showHardwarePinMatrix', callback => {
+        this.step += 1;
+        this.enterPin = true;
+        this.callback = callback;
+      });
+      this.unlockPathOnly();
+    },
     unlockcool_wallet() {
       this.unlockPathAndPassword(null, this.password);
     },
@@ -988,7 +1038,7 @@ export default {
         });
     },
     unlockQrcode(wallet) {
-      this.setWallet(wallet);
+      this.setHardwareWallet(wallet);
     },
     async setAddresses() {
       try {
@@ -1027,7 +1077,7 @@ export default {
         this.currentIdx <= 10 ? idxDeductor : idxDeductor - MAX_ADDRESSES;
       this.setAddresses();
     },
-    setWallet(wallet) {
+    setHardwareWallet(wallet) {
       try {
         this.setWallet([wallet])
           .then(() => {
@@ -1091,5 +1141,78 @@ table {
 }
 .bcvault-address-container {
   width: 100%;
+}
+
+.pin-input-block {
+  margin-bottom: 30px;
+
+  .input-container {
+    display: flex;
+    flex-direction: column;
+
+    .input-headers {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 10px 5px;
+    }
+
+    p {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    input {
+      background-color: #f9f9f9;
+      border: 1px solid #f9f9f9;
+      font-size: 14px;
+      height: 55px;
+      padding: 0 20px;
+      width: 100%;
+    }
+
+    span {
+      color: #05c0a5;
+      cursor: pointer;
+    }
+  }
+}
+.button-matrix-block {
+  $button-element-size: 70px;
+  $grid-width-size: $button-element-size + 2px;
+
+  margin-top: 30px;
+  display: grid;
+  justify-items: center;
+  justify-content: center;
+  grid-gap: 10px;
+  grid-template-columns: $grid-width-size $grid-width-size $grid-width-size;
+  button {
+    cursor: pointer;
+    background: #dadada;
+    border: 1px solid #dadada;
+    height: $button-element-size;
+    width: $button-element-size;
+    border-radius: 5px;
+    position: relative;
+
+    &:active {
+      background-color: #05c0a5;
+    }
+
+    &::after {
+      height: 8px;
+      width: 8px;
+      background-color: #05c0a5;
+      position: absolute;
+      margin: auto;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      content: '';
+      border-radius: 100%;
+    }
+  }
 }
 </style>

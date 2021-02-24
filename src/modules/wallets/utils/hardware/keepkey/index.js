@@ -15,13 +15,13 @@ import {
   calculateChainIdFromV
 } from '../../utils';
 import HDKey from 'hdkey';
-import toBuffer from '@/helpers/toBuffer';
+import toBuffer from '@/core/helpers/toBuffer';
 import { Transaction } from 'ethereumjs-tx';
 import errorHandler from './errorHandler';
-import store from '@/store';
-import commonGenerator from '@/helpers/commonGenerator';
+import store from '@/core/store';
+import commonGenerator from '@/core/helpers/commonGenerator';
 import Vue from 'vue';
-import { EventBus } from '@/plugins/eventBus';
+import { EventBus } from '@/core/plugins/eventBus';
 
 const { MessageType } = Messages;
 const {
@@ -45,13 +45,9 @@ class KeepkeyWallet {
     const device = new WebUSBDevice({ usbDevice });
     this.keepkey = KeepKey.withWebUSB(device);
     this.keepkey.device.events.on(String(MESSAGETYPE_PINMATRIXREQUEST), () => {
-      EventBus.$emit(
-        'showHardwarePinMatrix',
-        { name: this.identifier },
-        pin => {
-          this.keepkey.acknowledgeWithPin(pin).catch(errorHandler);
-        }
-      );
+      EventBus.$emit('showHardwarePinMatrix', pin => {
+        this.keepkey.acknowledgeWithPin(pin).catch(errorHandler);
+      });
     });
     this.keepkey.device.events.on(String(MESSAGETYPE_PASSPHRASEREQUEST), () => {
       EventBus.$emit(

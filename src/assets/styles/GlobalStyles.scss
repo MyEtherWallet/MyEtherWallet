@@ -4,12 +4,8 @@
     max-width: 1185px !important;
   }
 }
+
 @media (max-width: 959px) {
-  .container {
-    padding: 0 1.5rem !important;
-  }
-}
-@media (max-width: 1263px) {
   html {
     font-size: 14px !important;
   }
@@ -75,6 +71,9 @@
     filter: brightness(1.15);
   }
 }
+.mew-super-btn-shadow {
+  box-shadow: 0 7px 13px rgba(0, 0, 0, 0.04);
+}
 .v-application .v-input .v-label {
   font-weight: 400 !important;
   font-size: 0.88rem;
@@ -87,6 +86,11 @@
 .v-application .v-btn.xlarge-btn {
   height: 3.875rem !important;
   min-height: 3.875rem !important;
+}
+.mew-overlay-container {
+  .mew-subtitle {
+    padding: 1.8rem 0;
+  }
 }
 
 /* ========== CSS Style Reset ========== */

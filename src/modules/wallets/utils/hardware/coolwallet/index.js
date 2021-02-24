@@ -9,14 +9,14 @@ import { bufferToHex } from 'ethereumjs-util';
 import cwsTransportLib from '@coolwallets/transport-web-ble';
 import Vue from 'vue';
 
-import store from '@/store';
+import store from '@/core/store';
 import {
   getSignTransactionObject,
   sanitizeHex,
   getBufferFromHex,
   calculateChainIdFromV
 } from '../../utils';
-import commonGenerator from '@/helpers/commonGenerator';
+import commonGenerator from '@/core/helpers/commonGenerator';
 
 const NEED_PASSWORD = true;
 const APP_NAME = 'MyEtherWalletV5';
