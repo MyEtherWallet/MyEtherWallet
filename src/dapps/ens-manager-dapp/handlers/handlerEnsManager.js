@@ -52,13 +52,18 @@ export default class ENSManager {
           default:
             reject(
               new Error(
-                `TLD: ${getTld(name)} is not supported in this network!`
+                `TLD: ${getTld(
+                  name,
+                  this.network
+                )} is not supported in this network!`
               )
             );
         }
       }
       reject(
-        new Error(`TLD: ${getTld(name)} is not supported in this network!`)
+        new Error(
+          `TLD: ${getTld(name, this.network)} is not supported in this network!`
+        )
       );
     });
   }

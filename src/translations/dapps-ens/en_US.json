@@ -53,7 +53,7 @@
   "ipfs-check-website": "Check your website for {domainName} here:",
   "expired": "Expired",
   "controller-text": "Looks like the address you're using is not a controller of {domain}. Do you wanna set {addr} as a controller for {domain}?",
-  "text-record-error": "{value} is missing or not a valid input for {name}!",
+  "text-record-error": "Not a valid input for {name}!",
   "set-controller": "Update Controller",
   "is-available": "Cheers! This domain is available.",
   "domain-taken": "Domain has been taken",
@@ -105,6 +105,8 @@
     "no-resolver": "No {network}NS resolver in this node"
   },
   "content-hash": "IPFS Hash",
+  "enter-hash": "Enter your IPFS Hash",
+  "hash-required": "IPFS Hash required to continue",
   "set-hash": "Set IPFS Hash",
   "upload-my-website": "Upload My Website",
   "unstoppableResolution": {
@@ -145,6 +147,6 @@
     "registrant": "Registrant",
     "controller": "Controller",
     "what-to-do": "What do you want to do with this domain?"
-
-  }
+  },
+  "buy-domain": "Buy Domain"
 }
