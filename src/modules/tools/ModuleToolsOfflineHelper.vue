@@ -5,14 +5,14 @@
         <h3 class="font-weight-bold mb-5 text-center">Transction status</h3>
         <div class="tableHeader pa-5 mb-2">
           <div class="font-weight-bold">Transaction Hash</div>
-          <ellipsis-block
-            text="0xf267c8145dce9092463c6582c8c6f00677e2ab626c8cfc64ea997725ab14a16c"
+          <mew-transform-hash
+            hash="0xf267c8145dce9092463c6582c8c6f00677e2ab626c8cfc64ea997725ab14a16c"
           />
         </div>
         <div class="tableHeader pa-5">
           <div class="font-weight-bold">Transaction receipt</div>
-          <ellipsis-block
-            text="0xf267c8145dce9092463c6582c8c6f00677e2ab626c8cfc64ea997725ab14a16c"
+          <mew-transform-hash
+            hash="0xf267c8145dce9092463c6582c8c6f00677e2ab626c8cfc64ea997725ab14a16c"
           />
         </div>
         <div class="text-center">
@@ -96,7 +96,7 @@
             >
               <div v-if="d.title" class="pr-3">{{ d.title }}</div>
               <div v-if="d.value" class="text-right">{{ d.value }}</div>
-              <ellipsis-block v-if="d.address" :text="d.address" />
+              <mew-transform-hash v-if="d.address" :hash="d.address" />
             </div>
           </template>
         </mew-expand-panel>
@@ -141,7 +141,7 @@
             >
               <div v-if="d.title" class="pr-3">{{ d.title }}</div>
               <div v-if="d.value" class="text-right">{{ d.value }}</div>
-              <ellipsis-block v-if="d.address" :text="d.address" />
+              <mew-transform-hash v-if="d.address" :hash="d.address" />
             </div>
           </template>
           <template #panelBody2>
@@ -152,7 +152,7 @@
             >
               <div v-if="d.title" class="pr-3">{{ d.title }}</div>
               <div v-if="d.value" class="text-right">{{ d.value }}</div>
-              <ellipsis-block v-if="d.address" :text="d.address" />
+              <mew-transform-hash v-if="d.address" :hash="d.address" />
             </div>
           </template>
         </mew-expand-panel>
@@ -184,12 +184,11 @@
 </template>
 
 <script>
-import ellipsisBlock from '@/components/ellipsisBlock/EllipsisBlock';
 import AppBlockTitle from '@/core/components/AppBlockTitle';
 
 export default {
   name: 'ModuleToolsOfflineHelper',
-  components: { ellipsisBlock, AppBlockTitle },
+  components: { AppBlockTitle },
   data: () => ({
     dialog: false,
     currentStep: 3,

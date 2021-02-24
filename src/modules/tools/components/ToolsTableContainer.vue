@@ -13,7 +13,7 @@
           <div v-if="false" white class="truncate">
             0x98d9964e1764654dtrhtrggfrv3049t04i
           </div>
-          <ellipsis-block white text="0x98d9964e1764654dtrhtrggfrv3049t04i" />
+          <mew-transform-hash hash="0x98d9964e1764654dtrhtrggfrv3049t04i" />
           <mew-copy
             copy-value="0x98d9964e1764654dtrhtrggfrv3049t04i"
             :is-small="true"
@@ -115,13 +115,12 @@
 </template>
 
 <script>
-import ellipsisBlock from '@/components/ellipsisBlock/EllipsisBlock';
 import ToolsTable from './ToolsTable';
 import WhiteSheet from '@/components/white-sheet/WhiteSheet';
 
 export default {
   name: 'ToolsTableContainer',
-  components: { ellipsisBlock, ToolsTable, WhiteSheet },
+  components: { ToolsTable, WhiteSheet },
   data: () => ({ panel: [] }),
   methods: {
     openPanel() {

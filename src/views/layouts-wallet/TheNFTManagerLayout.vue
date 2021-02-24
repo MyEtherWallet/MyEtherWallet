@@ -1,20 +1,16 @@
 <template>
-  <v-row class="mew-component--nft-manager">
-    <v-col cols="12" md="8">
-      <module-network
-        v-if="$vuetify.breakpoint.smAndDown"
-        class="pa-2 pa-md-3"
-      />
-
-      <mew6-white-sheet full-width>
-        <interface-wrap title="NFT Manager">
-          <mew-tabs :items="items" is-vertical>
-            <template #tabItemContent1>
-              <div>
-                <div class="d-flex justify-space-between mb-5">
-                  <h5 class="font-weight-bold">CryptoKitties</h5>
-                  <div>Total 3</div>
-                </div>
+  <div class="mew-component--nft-manager">
+    <v-row>
+      <v-col cols="12" md="8">
+        <mew-module
+          class="d-flex flex-grow-1 pt-6"
+          :has-elevation="true"
+          :has-indicator="true"
+          title="NFT Manager"
+        >
+          <template #moduleBody>
+            <mew-tabs class="mt-5" :items="items" is-vertical>
+              <template #tabItemContent1>
                 <div>
                   <v-card
                     v-for="(kitty, key) in CryptoKitties"
@@ -35,109 +31,122 @@
                     />
                   </v-card>
                 </div>
-              </div>
-            </template>
-            <template #tabItemContent2>
-              <div>
-                <div class="d-flex justify-space-between mb-5">
-                  <h5 class="font-weight-bold">Gods Unchained</h5>
-                  <div>Total 3</div>
-                </div>
+              </template>
+              <template #tabItemContent2>
                 <div>
-                  <v-card
-                    v-for="(kitty, key) in CryptoKitties"
-                    :key="key"
-                    flat
-                    color="tableHeader"
-                    class="border-radius--5px pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
-                  >
-                    <div class="d-flex align-center">
-                      <img height="100" :src="kitty.image" alt="Crypto Kitty" />
-                      <div class="ml-5">#{{ kitty.number }}</div>
-                    </div>
-                    <mew-button
-                      :has-full-width="false"
-                      btn-style="outline"
-                      title="Send"
-                      btn-size="large"
-                    />
-                  </v-card>
+                  <div class="d-flex justify-space-between mb-5">
+                    <h5 class="font-weight-bold">Gods Unchained</h5>
+                    <div>Total 3</div>
+                  </div>
+                  <div>
+                    <v-card
+                      v-for="(kitty, key) in CryptoKitties"
+                      :key="key"
+                      flat
+                      color="tableHeader"
+                      class="border-radius--5px pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
+                    >
+                      <div class="d-flex align-center">
+                        <img
+                          height="100"
+                          :src="kitty.image"
+                          alt="Crypto Kitty"
+                        />
+                        <div class="ml-5">#{{ kitty.number }}</div>
+                      </div>
+                      <mew-button
+                        :has-full-width="false"
+                        btn-style="outline"
+                        title="Send"
+                        btn-size="large"
+                      />
+                    </v-card>
+                  </div>
                 </div>
-              </div>
-            </template>
-            <template #tabItemContent3>
-              <div>
-                <div class="d-flex justify-space-between mb-5">
-                  <h5 class="font-weight-bold">CryptoFlowers</h5>
-                  <div>Total 3</div>
-                </div>
+              </template>
+              <template #tabItemContent3>
                 <div>
-                  <v-card
-                    v-for="(kitty, key) in CryptoKitties"
-                    :key="key"
-                    flat
-                    color="tableHeader"
-                    class="border-radius--5px pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
-                  >
-                    <div class="d-flex align-center">
-                      <img height="100" :src="kitty.image" alt="Crypto Kitty" />
-                      <div class="ml-5">#{{ kitty.number }}</div>
-                    </div>
-                    <mew-button
-                      :has-full-width="false"
-                      btn-style="outline"
-                      title="Send"
-                      btn-size="large"
-                    />
-                  </v-card>
+                  <div class="d-flex justify-space-between mb-5">
+                    <h5 class="font-weight-bold">CryptoFlowers</h5>
+                    <div>Total 3</div>
+                  </div>
+                  <div>
+                    <v-card
+                      v-for="(kitty, key) in CryptoKitties"
+                      :key="key"
+                      flat
+                      color="tableHeader"
+                      class="border-radius--5px pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
+                    >
+                      <div class="d-flex align-center">
+                        <img
+                          height="100"
+                          :src="kitty.image"
+                          alt="Crypto Kitty"
+                        />
+                        <div class="ml-5">#{{ kitty.number }}</div>
+                      </div>
+                      <mew-button
+                        :has-full-width="false"
+                        btn-style="outline"
+                        title="Send"
+                        btn-size="large"
+                      />
+                    </v-card>
+                  </div>
                 </div>
-              </div>
-            </template>
-            <template #tabItemContent4>
-              <div>
-                <div class="d-flex justify-space-between mb-5">
-                  <h5 class="font-weight-bold">MyCryptoHeros</h5>
-                  <div>Total 3</div>
-                </div>
+              </template>
+              <template #tabItemContent4>
                 <div>
-                  <v-card
-                    v-for="(kitty, key) in CryptoKitties"
-                    :key="key"
-                    flat
-                    color="tableHeader"
-                    class="border-radius--5px pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
-                  >
-                    <div class="d-flex align-center">
-                      <img height="100" :src="kitty.image" alt="Crypto Kitty" />
-                      <div class="ml-5">#{{ kitty.number }}</div>
-                    </div>
-                    <mew-button
-                      :has-full-width="false"
-                      btn-style="outline"
-                      title="Send"
-                      btn-size="large"
-                    />
-                  </v-card>
+                  <div class="d-flex justify-space-between mb-5">
+                    <h5 class="font-weight-bold">MyCryptoHeros</h5>
+                    <div>Total 3</div>
+                  </div>
+                  <div>
+                    <v-card
+                      v-for="(kitty, key) in CryptoKitties"
+                      :key="key"
+                      flat
+                      color="tableHeader"
+                      class="border-radius--5px pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
+                    >
+                      <div class="d-flex align-center">
+                        <img
+                          height="100"
+                          :src="kitty.image"
+                          alt="Crypto Kitty"
+                        />
+                        <div class="ml-5">#{{ kitty.number }}</div>
+                      </div>
+                      <mew-button
+                        :has-full-width="false"
+                        btn-style="outline"
+                        title="Send"
+                        btn-size="large"
+                      />
+                    </v-card>
+                  </div>
                 </div>
-              </div>
-            </template>
-          </mew-tabs>
-        </interface-wrap>
-      </mew6-white-sheet>
-    </v-col>
-    <v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="4">
-      <module-network />
-    </v-col>
-  </v-row>
+              </template>
+            </mew-tabs>
+          </template>
+        </mew-module>
+      </v-col>
+      <v-spacer cols="1" />
+      <v-col cols="3">
+        <div>
+          <module-network />
+        </div>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script>
-import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import ModuleNetwork from '@/modules/network/ModuleNetwork';
 
 export default {
   components: {
-    'interface-wrap': InterfaceWrap,
     ModuleNetwork
   },
   data() {

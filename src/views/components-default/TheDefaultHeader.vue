@@ -1,120 +1,158 @@
 <template>
-  <div class="mew-component--landing-header expandHeader">
+  <div class="default-header expandHeader">
+    <menu-mobile v-model="openMobileMenu" />
     <mew-tools v-model="mewTools" />
-
-    <div class="desktop-content d-none d-lg-block py-5">
-      <v-container class="d-flex align-center">
-        <router-link :to="{ name: 'Home', query: {} }">
-          <v-img src="@/assets/images/icons/logo-mew.png" max-width="130" />
-        </router-link>
-        <v-spacer></v-spacer>
-        <desktop-menu class="menu-items" />
-        <v-spacer></v-spacer>
-        <mew-button
-          class="desktop-tools-button px-2"
-          title="MEW tools"
-          color-theme="white"
-          :has-full-width="false"
-          button-size="large"
-          btn-style="outline"
-          icon="mdi-view-module"
-          icon-type="mdi"
-          icon-align="left"
-          @click.native="mewTools = true"
-        />
-      </v-container>
-    </div>
-
-    <div class="mobile-content d-block d-lg-none py-8">
-      <mobileMenu v-model="openMobileMenu" />
-
-      <v-container class="d-flex align-center">
-        <mew-button
-          class="mobile-menu-button ml-n2 mr-n1"
-          color-theme="white"
-          btn-style="transparent"
-          icon="mdi-text"
-          icon-type="mdi"
-          icon-align="left"
-          style="border-radius: 100% !important"
-          @click.native="openMobileMenu = true"
-        />
-
-        <v-spacer />
-
-        <router-link :to="{ name: 'Home', query: {} }">
-          <v-img src="@/assets/images/icons/logo-mew.png" max-width="130" />
-        </router-link>
-
-        <v-spacer />
-
-        <mew-button
-          class="mobile-tools-button"
-          color-theme="white"
-          btn-style="outline"
-          :icon="require('@/assets/images/icons/icon-grid-dot.png')"
-          icon-type="img"
-          icon-align="left"
-          @click.native="mewTools = true"
-        />
-      </v-container>
-    </div>
+    <v-container fluid class="d-flex align-center py-2">
+      <v-row align="center" no-gutters>
+        <v-col class="d-flex d-md-none" cols="4">
+          <mew-button
+            class="mobile-menu-button ml-n2 mr-n1"
+            color-theme="white"
+            btn-style="transparent"
+            icon="mdi-text"
+            icon-type="mdi"
+            icon-align="left"
+            style="border-radius: 100% !important"
+            @click.native="openMobileMenu = true"
+          />
+        </v-col>
+        <v-col class="pl-md-14" cols="4">
+          <router-link :to="{ name: 'Home', query: {} }">
+            <v-img
+              src="@/assets/images/icons/logo-mew.png"
+              max-height="36"
+              max-width="130"
+            />
+          </router-link>
+        </v-col>
+        <v-col class="justify-space-between d-none d-md-flex" cols="4">
+          <router-link
+            class="white--text text-decoration--none"
+            :to="{ name: 'HowItWorks' }"
+          >
+            How it works
+          </router-link>
+          <mew-menu
+            text-color="white--text"
+            :list-obj="menuObj"
+            @goToPage="routeTo"
+          />
+          <a
+            href="https://ccswap.myetherwallet.com/#/"
+            target="_blank"
+            class="white--text text-decoration--none"
+          >
+            Buy ETH
+          </a>
+        </v-col>
+        <v-col
+          cols="4"
+          :class="$vuetify.breakpoint.mdAndUp ? 'text-center' : 'text-right'"
+        >
+          <mew-button
+            class="px-2"
+            :title="$vuetify.breakpoint.mdAndUp ? 'MEW tools' : ''"
+            color-theme="white"
+            :has-full-width="false"
+            btn-size="large"
+            btn-style="outline"
+            :icon="
+              $vuetify.breakpoint.mdAndUp
+                ? 'mdi-view-module'
+                : require('@/assets/images/icons/icon-grid-dot.png')
+            "
+            :icon-type="$vuetify.breakpoint.mdAndUp ? 'mdi' : 'img'"
+            icon-align="left"
+            @click.native="mewTools = true"
+          />
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <script>
-import desktopMenu from '@/components/menu-desktop/Menu';
-import mobileMenu from '@/components/menu-mobile/Menu';
 import mewTools from '@/components/mewTools/MewTools';
+import MenuMobile from '@/components/menu-mobile/Menu'; // will remove this after adding mobile version to mew-menu
 
 export default {
   name: 'TheDefaultHeader',
-  components: { mewTools, desktopMenu, mobileMenu },
+  components: { mewTools, MenuMobile },
   data: () => ({
+    mewTools: false,
     openMobileMenu: false,
-    mewTools: false
-  })
+    menuObj: {
+      name: 'Wallet actions',
+      items: [
+        {
+          title: 'Popular actions',
+          items: [
+            {
+              title: 'Send transaction',
+              to: { name: 'SendTX' }
+            },
+            {
+              title: 'Explore Dapps',
+              to: { name: 'Dapps' }
+            },
+            {
+              title: 'Swap tokens',
+              to: { name: 'Swap' }
+            },
+            {
+              title: 'Sign message',
+              to: { name: 'SignMessage' }
+            }
+          ]
+        },
+        {
+          title: 'More actions',
+          items: [
+            {
+              title: 'Watch only address',
+              to: { name: 'Tools', query: { tab: '1' } }
+            },
+            {
+              title: 'Send offline helper',
+              to: { name: 'Tools', query: { tab: '2' } }
+            },
+            {
+              title: 'Verify message',
+              to: { name: 'Tools', query: { tab: '3' } }
+            },
+            {
+              title: 'Convery units',
+              to: { name: 'Tools', query: { tab: '4' } }
+            }
+          ]
+        }
+      ]
+    }
+  }),
+  methods: {
+    routeTo(route) {
+      this.$router.push(route);
+    }
+  }
 };
 </script>
 
-<style lang="scss" scoped>
-.menu-items {
-  max-width: 500px;
-}
-</style>
-
 <style lang="scss">
-.mew-component--landing-header {
-  .desktop-tools-button {
-    height: 50px !important;
-    width: 140px !important;
-  }
+// adding mew menu styles here for now, will apply it to mew components
+.v-application {
+  .mew-menu-content {
+    min-width: 200px !important;
 
-  $mobile-tools-button-size: 35px;
-  .mobile-tools-button {
-    height: $mobile-tools-button-size !important;
-    min-height: $mobile-tools-button-size !important;
-    width: $mobile-tools-button-size !important;
-    min-width: $mobile-tools-button-size !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    img {
-      height: 20px !important;
-      padding: 0 !important;
-      margin: 0 !important;
-    }
-  }
+    .v-list {
+      padding-top: 15px !important;
 
-  $mobile-menu-button-size: 45px;
-  .mobile-menu-button {
-    height: $mobile-menu-button-size !important;
-    min-height: $mobile-menu-button-size !important;
-    width: $mobile-menu-button-size !important;
-    min-width: $mobile-menu-button-size !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    i {
-      font-size: 35px;
+      .v-list-item {
+        min-height: 30px !important;
+      }
+      .v-list-item--link {
+        padding-top: 0 !important;
+        padding-bottom: 5px !important;
+      }
     }
   }
 }
