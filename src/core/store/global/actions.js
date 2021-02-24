@@ -20,6 +20,13 @@ const setNetwork = function ({ commit }, networkObj) {
 const setEthGasPrice = function ({ commit }, val) {
   commit('SET_ETH_GASPRICE', val);
 };
+const addCustomPath = function ({ commit }, val) {
+  commit('ADD_CUSTOM_PATH', val);
+};
+
+const deleteCustomPath = function ({ commit }, val) {
+  commit('DELETE_CUSTOM_PATH', val);
+};
 
 export default {
   setOnlineStatus,
@@ -27,5 +34,7 @@ export default {
   setNetwork,
   setGasPrice,
   setAddressBook,
-  setEthGasPrice
+  setEthGasPrice,
+  addCustomPath,
+  deleteCustomPath
 };

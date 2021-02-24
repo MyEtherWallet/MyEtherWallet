@@ -37,6 +37,22 @@ const SET_NETWORK = function (state, networkObj) {
 const SET_GAS_PRICE_TYPE = function (state, type) {
   state.gasPriceType = type;
 };
+const ADD_CUSTOM_PATH = function (state, path) {
+  state.customPaths.push(path);
+};
+
+const DELETE_CUSTOM_PATH = function (state, customPaths) {
+  const idx = state.customPaths.findIndex(item => {
+    if (item.path === customPaths.path) {
+      return item;
+    }
+  });
+
+  if (idx) {
+    state.customPaths.splice(idx, 1);
+  }
+};
+
 export default {
   SET_ONLINE_STATUS,
   SET_LOCALE,
@@ -44,5 +60,7 @@ export default {
   SET_NETWORK,
   SET_ADDRESS_BOOK,
   INIT_STORE,
-  SET_GAS_PRICE_TYPE
+  SET_GAS_PRICE_TYPE,
+  ADD_CUSTOM_PATH,
+  DELETE_CUSTOM_PATH
 };

@@ -163,7 +163,7 @@
                 title="Add Path"
                 btn-style="outline"
                 :disable="!selectedPath"
-                @click.native="addCustomPath"
+                @click.native="saveCustomPath"
             /></v-row>
           </template>
         </mew-expand-panel>
@@ -402,7 +402,7 @@
 import phraseBlock from '@/components/PhraseBlock';
 import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 import paths from '@/modules/access-wallet/hardware/handlers/bip44';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import {
   Toast,
   ERROR,
@@ -468,7 +468,6 @@ export default {
       ],
       /* Path Items: */
       selectedPath: null,
-      customPaths: [],
       customPathName: '',
       customPathValue: '',
       /* Terms Items : */
@@ -489,6 +488,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['Networks', 'network']),
+    ...mapState('global', ['customPaths']),
     /*------------------------------------
      * STEP 1 ITEMS
     -------------------------------------*/
@@ -613,7 +613,7 @@ export default {
         wallet.account.isHardware = true;
         return wallet.account;
       }
-      return wnull;
+      return null;
     }
   },
   watch: {
@@ -654,7 +654,7 @@ export default {
     this.panelNetworkSubstring = `${this.network.type.name} - ${this.network.service}`;
   },
   methods: {
-    ...mapActions('global', ['setNetwork']),
+    ...mapActions('global', ['setNetwork', 'addCustomPath']),
     /**
      * Method that launches new tab to an explorer with address clicked
      * Used in STEP 3, Address Row
@@ -696,7 +696,6 @@ export default {
      * Used in STEP 1
      */
     unlockBtn() {
-      console.log('gets here?');
       this.handlerAccessWallet
         .unlockMnemonicWallet(this.parsedPhrase, this.extraWord)
         .then(res => {
@@ -715,7 +714,7 @@ export default {
      * Shows toast message to use on error or successfull addition.
      * Used in STEP 2
      */
-    addCustomPath() {
+    saveCustomPath() {
       try {
         const customPath = checkCustomPath(this.customPathValue);
         if (customPath) {
@@ -730,8 +729,9 @@ export default {
               subtext: this.customPathValue,
               value: this.customPathValue
             };
-            this.customPaths.push(newPath);
-            Toast('You have added custom path successfully.', {}, SUCCESS);
+            this.addCustomPath(newPath).then(() => {
+              Toast('You have added custom path successfully.', {}, SUCCESS);
+            });
           }
         } else {
           Toast('Custom path is not valid', {}, ERROR);

@@ -15,7 +15,8 @@ const state = {
   gasPrice: toWei('41', 'gwei'),
   gasPriceType: gasPriceTypes.ECONOMY,
   currentNetwork: Object.assign({}, nodeList['ETH'][0]),
-  preferredCurrency: 'USD'
+  preferredCurrency: 'USD',
+  customPaths: []
 };
 state.currentNetwork.type = {
   name: state.currentNetwork.type.name
