@@ -1,10 +1,10 @@
 <template>
   <v-row class="mew-component--dashboard">
     <v-col cols="12" md="8">
-      <div v-if="$vuetify.breakpoint.smAndDown">
-        <module-network />
-        <spacer />
-      </div>
+      <module-network
+        v-if="$vuetify.breakpoint.smAndDown"
+        class="pa-2 pa-md-3"
+      />
 
       <mew6-white-sheet
         v-if="true"
@@ -164,19 +164,14 @@
       </div>
     </v-col>
     <v-col class="mt-n2 mt-md-0" cols="12" md="4">
-      <div v-if="$vuetify.breakpoint.mdAndUp">
-        <module-network />
-        <spacer />
-      </div>
-      <swap />
-      <spacer />
+      <module-network v-if="$vuetify.breakpoint.mdAndUp" class="pa-2 pa-md-3" />
+      <swap class="pa-2 pa-md-3" />
       <app-carousel />
     </v-col>
   </v-row>
 </template>
 
 <script>
-import Spacer from '../components-wallet/WalletSpacer';
 import chart from '@/modules/balance/components/BalanceChart';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -188,7 +183,6 @@ import swap from '@/components/swap/Swap';
 
 export default {
   components: {
-    Spacer,
     chart,
     AppCarousel,
     ModuleNetwork,

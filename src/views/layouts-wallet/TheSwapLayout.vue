@@ -16,10 +16,11 @@
     />
     <v-row>
       <v-col cols="12" md="8" lg="8">
-        <div v-if="$vuetify.breakpoint.smAndDown">
-          <module-network />
-          <spacer />
-        </div>
+        <module-network
+          v-if="$vuetify.breakpoint.smAndDown"
+          class="pa-2 pa-md-3"
+        />
+
         <mew6-white-sheet>
           <interface-wrap title="Swap">
             <div class="d-block d-md-flex justify-space-between">
@@ -154,7 +155,6 @@
 </template>
 
 <script>
-import Spacer from '../components-wallet/WalletSpacer';
 import SwapConfirmation from '@/modules/swap/components/SwapConfirmation';
 import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
@@ -172,7 +172,6 @@ const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const AMT = '0.1';
 export default {
   components: {
-    Spacer,
     SwapConfirmation,
     'interface-wrap': InterfaceWrap,
     ModuleNetwork
