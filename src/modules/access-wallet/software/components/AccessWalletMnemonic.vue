@@ -523,7 +523,7 @@ export default {
      * }
      */
     parsedPaths() {
-      return paths[mnemonicType]
+      return paths[WALLET_TYPES.mnemonicType]
         .map(item => {
           const newObj = {};
           newObj['name'] = item['label'];
@@ -696,6 +696,7 @@ export default {
      * Used in STEP 1
      */
     unlockBtn() {
+      console.log('gets here?');
       this.handlerAccessWallet
         .unlockMnemonicWallet(this.parsedPhrase, this.extraWord)
         .then(res => {
@@ -704,6 +705,7 @@ export default {
           }
         })
         .catch(e => {
+          console.log(e);
           Toast(e, {}, ERROR);
         });
     },

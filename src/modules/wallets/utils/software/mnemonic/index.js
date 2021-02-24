@@ -1,8 +1,8 @@
 import * as HDKey from 'hdkey';
 import { Transaction } from 'ethereumjs-tx';
 import { hashPersonalMessage, ecsign } from 'ethereumjs-util';
-import { MNEMONIC as mnemonicType } from '../../../../access-wallet/hardware/handlers/configs/configWalletTypes';
-import bip44Paths from '../../../../access-wallet/hardware/handlers/bip44';
+import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes.js';
+import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44/index.js';
 import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
 import {
   getSignTransactionObject,
@@ -22,12 +22,12 @@ class MnemonicWallet {
   constructor(mnemonic, password) {
     if (!bip39.validateMnemonic(mnemonic))
       throw Vue.$i18n.t('createWallet.mnemonic.invalid-mnemonic');
-    this.identifier = mnemonicType;
+    this.identifier = WALLET_TYPES.mnemonicType;
     this.isHardware = IS_HARDWARE;
     this.needPassword = NEED_PASSWORD;
     this.mnemonic = mnemonic;
     this.password = password;
-    this.supportedPaths = bip44Paths[mnemonicType];
+    this.supportedPaths = bip44Paths[WALLET_TYPES.mnemonicType];
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
