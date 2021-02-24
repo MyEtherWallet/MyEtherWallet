@@ -400,8 +400,8 @@
 
 <script>
 import phraseBlock from '@/components/PhraseBlock';
-import { MNEMONIC as mnemonicType } from '@/modules/wallets/utils/bip44/walletTypes';
-import paths from '@/modules/wallets/utils/bip44';
+import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
+import paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import { mapActions, mapGetters } from 'vuex';
 import {
   Toast,

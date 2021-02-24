@@ -1,7 +1,7 @@
-import { WEB3_WALLET as web3WalletType } from '../../bip44/walletTypes';
+import { WEB3_WALLET as web3WalletType } from '../../../../access-wallet/hardware/handlers/configs/configWalletTypes';
 import WalletInterface from '@/modules/wallets/utils/WalletInterface.js';
 import Web3 from 'web3';
-import { getBufferFromHex } from '../../utils';
+import { getBufferFromHex } from '@/modules/access-wallet/hardware/handlers/helpers/helperHex';
 import errorHandler from './errorHandler';
 
 class Web3Wallet extends WalletInterface {

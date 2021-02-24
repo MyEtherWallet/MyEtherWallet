@@ -1,13 +1,13 @@
 import MEWconnect from '@myetherwallet/mewconnect-web-client';
 import store from '@/core/store';
 import { Transaction } from 'ethereumjs-tx';
-import { MEW_CONNECT as mewConnectType } from '../../bip44/walletTypes';
+import { MEW_CONNECT as mewConnectType } from '../../../../access-wallet/hardware/handlers/configs/configWalletTypes';
 import {
   getSignTransactionObject,
   sanitizeHex,
   getBufferFromHex,
   calculateChainIdFromV
-} from '../../utils';
+} from '@/modules/access-wallet/hardware/handlers/helpers/helperHex';
 import { hashPersonalMessage } from 'ethereumjs-util';
 import errorHandler from './errorHandler';
 import commonGenerator from '@/core/helpers/commonGenerator';

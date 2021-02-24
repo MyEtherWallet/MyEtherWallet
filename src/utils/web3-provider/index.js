@@ -1,6 +1,6 @@
 import GivenProvider from './providers/given-provider';
 import WSProvider from './providers/ws-provider';
-import { WEB3_WALLET } from '@/modules/wallets/utils/bip44/walletTypes';
+import { WEB3_WALLET } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 import VuexStore from '@/core/store';
 class MEWProvider {
   constructor(host, options) {

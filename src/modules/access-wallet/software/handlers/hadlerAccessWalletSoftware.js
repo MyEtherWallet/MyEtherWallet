@@ -1,9 +1,6 @@
 import { MnemonicWallet } from '@/modules/wallets/utils/software';
 import WalletInterface from '@/modules/wallets/utils/WalletInterface';
-import {
-  PRIV_KEY as privKeyType,
-  KEYSTORE as keyStoreType
-} from '@/modules/wallets/utils/bip44/walletTypes';
+import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 import { unlockKeystore } from '@/modules/wallets/utils/helpers.js';
 
 export default class AccessWallet {
@@ -31,7 +28,7 @@ export default class AccessWallet {
       this.walletInstance = new WalletInterface(
         Buffer.from(res.privateKey),
         false,
-        keyStoreType,
+        WALLET_TYPES.keyStoreType,
         '',
         JSON.stringify(obj)
       );
@@ -43,7 +40,11 @@ export default class AccessWallet {
    * PrivateKey Method
    */
   unlockPrivateKeyWallet(privateKey) {
-    this.walletInstance = new WalletInterface(privateKey, false, privKeyType);
+    this.walletInstance = new WalletInterface(
+      privateKey,
+      false,
+      WALLET_TYPES.privKeyType
+    );
   }
 
   /**

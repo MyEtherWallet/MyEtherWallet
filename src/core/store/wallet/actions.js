@@ -5,7 +5,7 @@ import {
   MEW_CONNECT,
   WALLET_CONNECT,
   WALLET_LINK
-} from '@/modules/wallets/utils/bip44/walletTypes';
+} from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
 import BigNumber from 'bignumber.js';

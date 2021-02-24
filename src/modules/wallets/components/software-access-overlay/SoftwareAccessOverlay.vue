@@ -67,7 +67,7 @@ import WalletInterface from '@/modules/wallets/utils/WalletInterface';
 import {
   PRIV_KEY as privKeyType,
   KEYSTORE as keyStoreType
-} from '@/modules/wallets/utils/bip44/walletTypes';
+} from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 import { mapActions, mapState } from 'vuex';
 import { unlockKeystore } from '@/modules/wallets/utils/helpers.js';
 import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
