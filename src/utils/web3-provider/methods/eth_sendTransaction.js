@@ -16,7 +16,6 @@ import { EventBus } from '@/core/plugins/eventBus';
 import Notification from '@/modules/notifications/handler/handlerNotification';
 
 const setEvents = (promiObj, tx, dispatch) => {
-  console.log(tx, 'within handler');
   // create a no reference copy specifically for notification
   const newTxObj = utils._.clone(tx);
   newTxObj.date = new Date().getTime();

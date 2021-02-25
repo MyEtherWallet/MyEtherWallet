@@ -89,6 +89,7 @@ import { fromWei, toBN } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from './handler/handlerNotification';
 import NotificationsCall from '@/apollo/queries/notifications';
+import Swapper from '@/modules/swap/handlers/handlerSwap';
 export default {
   name: 'ModuleNotifications',
   data() {
@@ -103,7 +104,9 @@ export default {
       page: null,
       inTx: [],
       openNotifications: false,
-      caller: null
+      caller: null,
+      interval: () => {},
+      swapper: null
     };
   },
   computed: {
@@ -113,7 +116,7 @@ export default {
       'swapNotifications'
     ]),
     ...mapGetters('global', ['network', 'isEthNetwork']),
-    ...mapState('wallet', ['address']),
+    ...mapState('wallet', ['address', 'web3']),
     ...mapState('notifications', ['lastFetched']),
     hasNotifications() {
       return this.allNotifications.length > 0;
@@ -135,6 +138,7 @@ export default {
     transformSwapNoti() {
       const newArr = this.swapNotifications.map(notification => {
         const newObj = this.formatObj(notification);
+        newObj.checkSwapStatus(this.swapper);
         return newObj;
       });
       return newArr.sort(this.sortByDate);
@@ -157,7 +161,7 @@ export default {
           return this.inTx;
         case 'out':
           return this.transformTxNoti;
-        case 'swapNotifications':
+        case 'swap':
           return this.transformSwapNoti;
         default:
           return this.allNotifications;
@@ -179,6 +183,7 @@ export default {
   },
   mounted() {
     this.setupInTx();
+    this.swapper = new Swapper(this.web3);
   },
   methods: {
     ...mapActions('notifications', ['updateNotification', 'setFetchedTime']),
@@ -217,6 +222,7 @@ export default {
         });
       }
     },
+
     setupInTx() {
       if (this.isEthNetwork) {
         const lastFetched = this.lastFetched;

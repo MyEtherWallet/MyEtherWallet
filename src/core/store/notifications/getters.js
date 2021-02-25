@@ -2,7 +2,10 @@ const currentNotifications = function (state, _, rootState, rootGetters) {
   const address = rootState.wallet.address;
   const currentNetworkType = rootGetters['global/network'].type.name;
   const filteredArray = state.notifications.filter(item => {
-    if (item.from === address && item.network === currentNetworkType)
+    if (
+      item.from.toLowerCase() === address.toLowerCase() &&
+      item.network === currentNetworkType
+    )
       return item;
   });
   return filteredArray;
@@ -13,7 +16,7 @@ const txNotifications = function (state, _, rootState, rootGetters) {
   const currentNetworkType = rootGetters['global/network'].type.name;
   const filteredArray = state.notifications.filter(item => {
     if (
-      item.from === address &&
+      item.from.toLowerCase() === address.toLowerCase() &&
       item.type === 'OUT' &&
       item.network === currentNetworkType
     )
@@ -27,7 +30,7 @@ const swapNotifications = function (state, _, rootState, rootGetters) {
   const currentNetworkType = rootGetters['global/network'].type.name;
   const filteredArray = state.notifications.filter(item => {
     if (
-      item.from === address &&
+      item.from.toLowerCase() === address.toLowerCase() &&
       item.type === 'SWAP' &&
       item.network === currentNetworkType
     )

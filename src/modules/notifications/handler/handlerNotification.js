@@ -33,7 +33,9 @@ const VALID_ARGUMENTS = [
   'fromTxData', // obj
   'toTxData', // obj
   'errMessage', // string
-  'swapObj' // obj
+  'swapObj', // obj
+  'swapResolved',
+  'swapResolver'
 ];
 
 export default class Notification {
@@ -73,6 +75,23 @@ export default class Notification {
       this.status = status;
       resolve(this);
     });
+  }
+
+  checkSwapStatus(swapper) {
+    this.swapResolver = setInterval(() => {
+      swapper.getStatus(this.swapObj).then(res => {
+        this.status =
+          res === 'COMPLETED'
+            ? 'SUCCESS'
+            : res === 'FAILED' || res === 'UNKOWN'
+            ? 'ERRORED'
+            : res;
+      });
+      if (this.status !== 'PENDING') {
+        this.read = false;
+        clearInterval(this.swapResolver);
+      }
+    }, 2000);
   }
 
   // updates expand and resolves back to ui with the new object
