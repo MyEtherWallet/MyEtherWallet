@@ -149,11 +149,11 @@ class MEWPClass {
     hashes.forEach(h => {
       promises.push(
         this.web3.eth.getTransactionReceipt(h).then(receipt => {
-          if (!receipt.blockNumber) {
+          if (!receipt || (receipt && !receipt.blockNumber)) {
             isPending = true;
             return;
           }
-          if (!receipt.status) {
+          if (receipt && !receipt.status) {
             isSuccess = false;
           }
         })

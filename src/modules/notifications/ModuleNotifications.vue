@@ -103,10 +103,7 @@ export default {
       ],
       page: null,
       inTx: [],
-      openNotifications: false,
-      caller: null,
-      interval: () => {},
-      swapper: null
+      openNotifications: false
     };
   },
   computed: {
@@ -121,9 +118,21 @@ export default {
     hasNotifications() {
       return this.allNotifications.length > 0;
     },
+    swapper() {
+      return new Swapper(this.web3);
+    },
+    caller() {
+      if (this.isEthNetwork) {
+        return new NotificationsCall(this.$apollo);
+      }
+      return null;
+    },
     transformCurrentNoti() {
       const newArr = this.currentNotifications.map(notification => {
         const newObj = this.formatObj(notification);
+        if (newObj.type === 'SWAP') {
+          newObj.checkSwapStatus(this.swapper);
+        }
         return newObj;
       });
       return newArr.sort(this.sortByDate);
@@ -183,7 +192,6 @@ export default {
   },
   mounted() {
     this.setupInTx();
-    this.swapper = new Swapper(this.web3);
   },
   methods: {
     ...mapActions('notifications', ['updateNotification', 'setFetchedTime']),
@@ -222,12 +230,10 @@ export default {
         });
       }
     },
-
     setupInTx() {
       if (this.isEthNetwork) {
         const lastFetched = this.lastFetched;
         const newArr = [];
-        this.caller = new NotificationsCall(this.$apollo);
         this.caller.getAllTransfer(this.address).then(res => {
           res.forEach(item => {
             if (item.date < lastFetched) {

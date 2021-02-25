@@ -1,5 +1,5 @@
-import utils from 'web3-utils';
-
+import { isAddress, isHex } from 'web3-utils';
+import vuexStore from '@/core/store';
 /*
 
 NOTE: toTxData can be null if it's just a regular tx
@@ -55,13 +55,10 @@ export default class Notification {
         this._invalidType(objArr[i]);
       } else if (
         (objArr[i] === 'to' || objArr[i] === 'from') &&
-        !utils.isAddress(obj[objArr[i]])
+        !isAddress(obj[objArr[i]])
       ) {
         this._invalidType(objArr[i]);
-      } else if (
-        objArr[i] === 'transactionHash' &&
-        !utils.isHex(obj[objArr[i]])
-      ) {
+      } else if (objArr[i] === 'transactionHash' && !isHex(obj[objArr[i]])) {
         this._invalidType(objArr[i]);
       } else if (obj[objArr[i]]) {
         this[objArr[i]] = obj[objArr[i]];
@@ -89,18 +86,10 @@ export default class Notification {
       });
       if (this.status !== 'PENDING') {
         this.read = false;
+        vuexStore.dispatch('notification/updateNotification', this);
         clearInterval(this.swapResolver);
       }
-    }, 2000);
-  }
-
-  // updates expand and resolves back to ui with the new object
-  toggleNotification() {
-    return new Promise(resolve => {
-      this.expanded != this.expanded;
-      if (!this.read) this.read = true;
-      resolve(this);
-    });
+    }, 10000);
   }
 
   // updates read and resolves back to ui with the new object
