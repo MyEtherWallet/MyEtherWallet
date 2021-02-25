@@ -22,12 +22,12 @@ class MnemonicWallet {
   constructor(mnemonic, password) {
     if (!bip39.validateMnemonic(mnemonic))
       throw Vue.$i18n.t('createWallet.mnemonic.invalid-mnemonic');
-    this.identifier = WALLET_TYPES.mnemonicType;
+    this.identifier = WALLET_TYPES.MNEMONIC;
     this.isHardware = IS_HARDWARE;
     this.needPassword = NEED_PASSWORD;
     this.mnemonic = mnemonic;
     this.password = password;
-    this.supportedPaths = bip44Paths[WALLET_TYPES.mnemonicType];
+    this.supportedPaths = bip44Paths[WALLET_TYPES.MNEMONIC];
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;

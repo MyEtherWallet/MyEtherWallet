@@ -23,10 +23,10 @@ const NEED_PASSWORD = true;
 
 class BitBoxWallet {
   constructor(password) {
-    this.identifier = WALLET_TYPES.bitboxType;
+    this.identifier = WALLET_TYPES.BITBOX;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
-    this.supportedPaths = bip44Paths[WALLET_TYPES.bitboxType];
+    this.supportedPaths = bip44Paths[WALLET_TYPES.BITBOX];
     this.password = password;
   }
   async init(basePath) {

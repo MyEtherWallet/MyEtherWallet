@@ -176,47 +176,47 @@ export default {
         {
           label: 'Ledger',
           icon: require('@/assets/images/icons/hardware-wallets/icon-ledger.svg'),
-          type: WALLET_TYPES.ledgerType
+          type: WALLET_TYPES.LEDGER
         },
         {
           label: 'Bitbox',
           icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg'),
-          type: WALLET_TYPES.bitboxType
+          type: WALLET_TYPES.BITBOX
         },
         {
           label: 'FINNEY',
           icon: require('@/assets/images/icons/hardware-wallets/icon-finney.svg'),
-          type: WALLET_TYPES.finneyType
+          type: WALLET_TYPES.FINNEY
         },
         {
           label: 'Secalot',
           icon: require('@/assets/images/icons/hardware-wallets/icon-secalot.svg'),
-          type: WALLET_TYPES.secalotType
+          type: WALLET_TYPES.SECALOT
         },
         {
           label: 'KeepKey',
           icon: require('@/assets/images/icons/hardware-wallets/icon-keepkey.svg'),
-          type: WALLET_TYPES.keepkeyType
+          type: WALLET_TYPES.KEEPKEY
         },
         {
           label: 'Trezor',
           icon: require('@/assets/images/icons/hardware-wallets/icon-trezor.svg'),
-          type: WALLET_TYPES.trezorType
+          type: WALLET_TYPES.TREZOR
         },
         {
           label: 'CoolWallet',
           icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
-          type: WALLET_TYPES.coolWalletType
+          type: WALLET_TYPES.COOL_WALLET
         },
         {
           label: 'BC Vault',
           icon: require('@/assets/images/icons/hardware-wallets/icon-bcvault.svg'),
-          type: WALLET_TYPES.bcVaultType
+          type: WALLET_TYPES.BCVAULT
         },
         {
           label: 'XWallet',
           icon: require('@/assets/images/icons/hardware-wallets/icon-xwallet.svg'),
-          type: WALLET_TYPES.xwalletType
+          type: WALLET_TYPES.XWALLET
         }
       ],
       panelItems: [
@@ -314,19 +314,19 @@ export default {
      * On Bc Vault
      */
     onBCVault() {
-      return this.walletType === WALLET_TYPES.bcVaultType;
+      return this.walletType === WALLET_TYPES.BCVAULT;
     },
     /**
      * On Ledger
      */
     onLedger() {
-      return this.walletType === WALLET_TYPES.ledgerType;
+      return this.walletType === WALLET_TYPES.LEDGER;
     },
     /**
      * On CoolWallet
      */
     onCoolWallet() {
-      return this.walletType === WALLET_TYPES.coolWalletType;
+      return this.walletType === WALLET_TYPES.COOL_WALLET;
     },
     /**
      * on QrCode
@@ -343,7 +343,7 @@ export default {
      * On XWallet
      */
     onXwallet() {
-      return this.walletType === WALLET_TYPES.xwalletType;
+      return this.walletType === WALLET_TYPES.XWALLET;
     },
     /**
      * On Password step
@@ -371,7 +371,7 @@ export default {
     },
     paths() {
       const newArr = [];
-      if (this.walletType === WALLET_TYPES.ledgerType) {
+      if (this.walletType === WALLET_TYPES.LEDGER) {
         if (this.selectedLedgerApp !== null) {
           const found = appPaths.find(item => {
             return item.network.name_long === this.selectedLedgerApp.name;
@@ -683,9 +683,9 @@ export default {
      */
     setSelectedBitbox(val) {
       if (!val) {
-        this.walletType = WALLET_TYPES.bitboxType;
+        this.walletType = WALLET_TYPES.BITBOX;
       } else {
-        this.walletType = WALLET_TYPES.bitbox02Type;
+        this.walletType = WALLET_TYPES.BITBOX2;
       }
 
       this.nextStep();

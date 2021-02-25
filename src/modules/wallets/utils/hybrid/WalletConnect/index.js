@@ -2,7 +2,7 @@ import WalletConnect from '@walletconnect/browser';
 import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
 import store from '@/core/store';
 import { Transaction } from 'ethereumjs-tx';
-import { WALLET_CONNECT as walletConnectType } from '../../../../access-wallet/hardware/handlers/configs/configWalletTypes';
+import { WALLET_TYPES } from '../../../../access-wallet/hardware/handlers/configs/configWalletTypes';
 import {
   sanitizeHex,
   getBufferFromHex
@@ -20,7 +20,7 @@ import { EventBus } from '@/core/plugins/eventBus';
 
 class WalletConnectWallet {
   constructor() {
-    this.identifier = walletConnectType;
+    this.identifier = WALLET_TYPES.WALLET_CONNECT;
     this.isHardware = IS_HARDWARE;
     const tempConnection = new WalletConnect({ bridge: BRIDGE_URL });
     if (tempConnection && tempConnection.connected && tempConnection._storage) {

@@ -18,10 +18,10 @@ const NEED_PASSWORD = false;
 
 class BitBox02Wallet {
   constructor() {
-    this.identifier = WALLET_TYPES.bitbox02Type;
+    this.identifier = WALLET_TYPES.BITBOX2;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
-    this.supportedPaths = bip44Paths[WALLET_TYPES.bitbox02Type];
+    this.supportedPaths = bip44Paths[WALLET_TYPES.BITBOX2];
     this.status = undefined;
     this.pairingConfirmed = false;
   }

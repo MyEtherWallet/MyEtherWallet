@@ -33,10 +33,10 @@ const NEED_PASSWORD = false;
 
 class KeepkeyWallet {
   constructor() {
-    this.identifier = WALLET_TYPES.keepkeyType;
+    this.identifier = WALLET_TYPES.KEEPKEY;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
-    this.supportedPaths = bip44Paths[WALLET_TYPES.keepkeyType];
+    this.supportedPaths = bip44Paths[WALLET_TYPES.KEEPKEY];
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;

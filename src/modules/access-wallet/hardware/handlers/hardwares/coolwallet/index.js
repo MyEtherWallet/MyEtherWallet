@@ -23,14 +23,14 @@ const APP_NAME = 'MyEtherWalletV5';
 
 class CoolWallet {
   constructor() {
-    this.identifier = WALLET_TYPES.coolWalletType;
+    this.identifier = WALLET_TYPES.COOL_WALLET;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.appPrivateKey = '';
     this.appPublicKey = '';
     this.transport = {};
     this.deviceInstance = {};
-    this.supportedPaths = bip44Paths[WALLET_TYPES.coolWalletType];
+    this.supportedPaths = bip44Paths[WALLET_TYPES.COOL_WALLET];
   }
   init(password) {
     const _this = this;

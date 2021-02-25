@@ -20,10 +20,10 @@ const NEED_PASSWORD = true;
 
 class SecalotWallet {
   constructor(password) {
-    this.identifier = WALLET_TYPES.secalotType;
+    this.identifier = WALLET_TYPES.SECALOT;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
-    this.supportedPaths = bip44Paths[WALLET_TYPES.secalotType];
+    this.supportedPaths = bip44Paths[WALLET_TYPES.SECALOT];
     this.password = password;
   }
   async init(basePath) {

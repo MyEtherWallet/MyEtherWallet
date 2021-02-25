@@ -1,7 +1,7 @@
 import MEWconnect from '@myetherwallet/mewconnect-web-client';
 import store from '@/core/store';
 import { Transaction } from 'ethereumjs-tx';
-import { MEW_CONNECT as mewConnectType } from '../../../../access-wallet/hardware/handlers/configs/configWalletTypes';
+import { WALLET_TYPES } from '../../../../access-wallet/hardware/handlers/configs/configWalletTypes';
 import {
   getSignTransactionObject,
   sanitizeHex,
@@ -22,7 +22,7 @@ import { EventBus } from '@/core/plugins/eventBus';
 
 class MEWconnectWallet {
   constructor() {
-    this.identifier = mewConnectType;
+    this.identifier = WALLET_TYPES.MEW_CONNECT;
     this.isHardware = IS_HARDWARE;
     this.mewConnect = new MEWconnect.Initiator({
       v1Url: V1_SIGNAL_URL,

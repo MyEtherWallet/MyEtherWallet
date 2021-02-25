@@ -523,7 +523,7 @@ export default {
      * }
      */
     parsedPaths() {
-      return paths[WALLET_TYPES.mnemonicType]
+      return paths[WALLET_TYPES.MNEMONIC]
         .map(item => {
           const newObj = {};
           newObj['name'] = item['label'];

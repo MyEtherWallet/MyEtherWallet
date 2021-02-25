@@ -28,7 +28,7 @@ export default class AccessWallet {
       this.walletInstance = new WalletInterface(
         Buffer.from(res.privateKey),
         false,
-        WALLET_TYPES.keyStoreType,
+        WALLET_TYPES.KEYSTORE,
         '',
         JSON.stringify(obj)
       );
@@ -43,7 +43,7 @@ export default class AccessWallet {
     this.walletInstance = new WalletInterface(
       privateKey,
       false,
-      WALLET_TYPES.privKeyType
+      WALLET_TYPES.PRIV_KEY
     );
   }
 

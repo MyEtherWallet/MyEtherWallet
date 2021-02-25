@@ -1,4 +1,4 @@
-import { WEB3_WALLET as web3WalletType } from '../../../../access-wallet/hardware/handlers/configs/configWalletTypes';
+import { WALLET_TYPES } from '../../../../access-wallet/hardware/handlers/configs/configWalletTypes';
 import WalletInterface from '@/modules/wallets/utils/WalletInterface.js';
 import Web3 from 'web3';
 import { getBufferFromHex } from '@/modules/access-wallet/hardware/handlers/helpers/helperHex';
@@ -9,7 +9,7 @@ class Web3Wallet extends WalletInterface {
     return errorHandler;
   }
   constructor(address) {
-    super(address, true, web3WalletType);
+    super(address, true, WALLET_TYPES.WEB3_WALLET);
     this.errorHandler = errorHandler;
     if (window.ethereum) {
       this.web3 = new Web3(window.ethereum);

@@ -1,10 +1,7 @@
 // import unit from 'ethjs-unit';
 import utils from 'web3-utils';
 import EthCalls from '../web3Calls';
-import {
-  WEB3_WALLET,
-  WALLET_CONNECT
-} from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
+import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 import EventNames from '../events';
 import { toPayload } from '../jsonrpc';
 import * as locStore from 'store';
@@ -58,8 +55,8 @@ export default async ({ payload, store, requestManager }, res, next) => {
   getSanitizedTx(tx)
     .then(_tx => {
       if (
-        store.state.wallet.identifier === WEB3_WALLET ||
-        store.state.wallet.identifier === WALLET_CONNECT
+        store.state.wallet.identifier === WALLET_TYPES.WEB3_WALLET ||
+        store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT
       ) {
         EventBus.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx, _promiObj => {
           setEvents(_promiObj, _tx, store.dispatch);

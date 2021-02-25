@@ -26,10 +26,10 @@ const LISTENER_TIMEOUT = 30000;
 
 class ledgerWallet {
   constructor() {
-    this.identifier = WALLET_TYPES.ledgerType;
+    this.identifier = WALLET_TYPES.LEDGER;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
-    this.supportedPaths = bip44Paths[WALLET_TYPES.ledgerType];
+    this.supportedPaths = bip44Paths[WALLET_TYPES.LEDGER];
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;

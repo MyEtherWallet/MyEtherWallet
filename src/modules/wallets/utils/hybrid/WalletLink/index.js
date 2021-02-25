@@ -2,7 +2,7 @@ import WalletLink from 'walletlink';
 
 import store from '@/core/store';
 import { Transaction } from 'ethereumjs-tx';
-import { WALLET_LINK as walletLinkType } from '../../../../access-wallet/hardware/handlers/configs/configWalletTypes';
+import { WALLET_TYPES } from '../../../../access-wallet/hardware/handlers/configs/configWalletTypes';
 import {
   getSignTransactionObject,
   sanitizeHex,
@@ -19,7 +19,7 @@ const APP_NAME = 'MEW';
 const APP_LOGO = 'https://www.myetherwallet.com/img/icons/icon192.png';
 class WalletLinkWallet {
   constructor() {
-    this.identifier = walletLinkType;
+    this.identifier = WALLET_TYPES.WALLET_LINK;
     this.isHardware = IS_HARDWARE;
     this.walletLink = new WalletLink({
       appName: APP_NAME,

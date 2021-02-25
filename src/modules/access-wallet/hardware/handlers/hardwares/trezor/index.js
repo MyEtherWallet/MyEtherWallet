@@ -24,10 +24,10 @@ class TrezorWallet {
       appUrl: 'https://www.myetherwallet.com'
     });
 
-    this.identifier = WALLET_TYPES.trezorType;
+    this.identifier = WALLET_TYPES.TREZOR;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
-    this.supportedPaths = bip44Paths[WALLET_TYPES.trezorType];
+    this.supportedPaths = bip44Paths[WALLET_TYPES.TREZOR];
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;

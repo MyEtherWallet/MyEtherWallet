@@ -9,12 +9,12 @@ import mnemonicPaths from './mnemonicPaths';
 import coolWalletPaths from './coolWalletPaths';
 
 export default {
-  [WALLET_TYPES.ledgerType]: ledgerPaths,
-  [WALLET_TYPES.trezorType]: trezorPaths,
-  [WALLET_TYPES.bitboxType]: bitboxPaths,
-  [WALLET_TYPES.bitbox02Type]: bitbox02Paths,
-  [WALLET_TYPES.secalotType]: secalotPaths,
-  [WALLET_TYPES.keepkeyType]: keepkeyPaths,
-  [WALLET_TYPES.mnemonicType]: mnemonicPaths,
-  [WALLET_TYPES.coolWalletType]: coolWalletPaths
+  [WALLET_TYPES.LEDGER]: ledgerPaths,
+  [WALLET_TYPES.TREZOR]: trezorPaths,
+  [WALLET_TYPES.BITBOX]: bitboxPaths,
+  [WALLET_TYPES.BITBOX2]: bitbox02Paths,
+  [WALLET_TYPES.SECALOT]: secalotPaths,
+  [WALLET_TYPES.KEEPKEY]: keepkeyPaths,
+  [WALLET_TYPES.MNEMONIC]: mnemonicPaths,
+  [WALLET_TYPES.COOL_WALLET]: coolWalletPaths
 };

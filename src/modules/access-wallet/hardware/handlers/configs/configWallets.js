@@ -14,7 +14,7 @@ import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/
  * different types of available hardware wallets
  */
 export default {
-  [WALLET_TYPES.ledgerType]: {
+  [WALLET_TYPES.LEDGER]: {
     create: ledgerWallet,
     when: 1,
     hasPaths: true,
@@ -26,7 +26,7 @@ export default {
       2: '2. Confirm Network & Address'
     }
   },
-  [WALLET_TYPES.trezorType]: {
+  [WALLET_TYPES.TREZOR]: {
     create: trezorWallet,
     when: 1,
     hasPaths: true,
@@ -38,7 +38,7 @@ export default {
       2: '2. Confirm Network & Address'
     }
   },
-  [WALLET_TYPES.bitboxType]: {
+  [WALLET_TYPES.BITBOX]: {
     create: bitboxWallet,
     when: 4,
     hasPaths: true,
@@ -52,7 +52,7 @@ export default {
       4: '4. Confirm Network & Address'
     }
   },
-  [WALLET_TYPES.bitbox02Type]: {
+  [WALLET_TYPES.BITBOX2]: {
     create: bitbox02Wallet,
     when: 3,
     hasPaths: true,
@@ -66,7 +66,7 @@ export default {
       3: '3. Confirm Network & Address'
     }
   },
-  [WALLET_TYPES.secalotType]: {
+  [WALLET_TYPES.SECALOT]: {
     create: secalotWallet,
     when: 2,
     hasPaths: true,
@@ -79,7 +79,7 @@ export default {
       3: '3. Confirm Network & Address'
     }
   },
-  [WALLET_TYPES.keepkeyType]: {
+  [WALLET_TYPES.KEEPKEY]: {
     create: keepkeyWallet,
     when: 2,
     hasPaths: true,
@@ -91,7 +91,7 @@ export default {
       2: '2. Enter your password'
     }
   },
-  [WALLET_TYPES.finneyType]: {
+  [WALLET_TYPES.FINNEY]: {
     create: mewconnectWallet,
     when: 1,
     hasPaths: false,
@@ -101,7 +101,7 @@ export default {
       1: '1. Connect with Finney'
     }
   },
-  [WALLET_TYPES.xwalletType]: {
+  [WALLET_TYPES.XWALLET]: {
     create: mewconnectWallet,
     when: 1,
     hasPaths: false,
@@ -112,7 +112,7 @@ export default {
       1: '1. Connect with XWallet'
     }
   },
-  [WALLET_TYPES.bcVaultType]: {
+  [WALLET_TYPES.BCVAULT]: {
     create: bcvaultWallet,
     when: 2,
     hasPaths: false,
@@ -123,7 +123,7 @@ export default {
       1: '1. Connect with BC Vault'
     }
   },
-  [WALLET_TYPES.coolWalletType]: {
+  [WALLET_TYPES.COOL_WALLET]: {
     create: coolwalletWallet,
     when: 2,
     hasPaths: false,
