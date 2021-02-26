@@ -30,7 +30,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "bash ./checkBranch.sh && npm run lint && npm run test",
+      "pre-push": "bash ./checkBranch.sh && npm run test",
+      "pre-commit": "npm run lint",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
