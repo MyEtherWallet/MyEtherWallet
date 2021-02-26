@@ -1,57 +1,108 @@
 <template>
-  <!-- TODO: mew-module: need to add icon height, add full-height prop & remove auto-height class-->
-  <mew-module
-    class="auto-height pa-7"
-    :subtitle="subtitle"
-    :title="title"
-    :caption="convertedBalance"
-    icon-align="left"
-  >
-    <template #rightHeaderContainer>
-      <div class="d-flex align-center">
-        <!-- TODO: mew-toggle: add prop to control-->
-        <mew-toggle :button-group="chartButtons" @onBtnClick="onToggle" />
-        <!-- not sure what this button is for, commented out for now -->
-        <!-- <mew-button
-          btn-size="small"
-          icon-type="mdi"
-          icon="mdi-dots-vertical"
-          btn-style="transparent"
-          color-theme="secondary"
-        /> -->
-      </div>
-    </template>
-    <template #moduleBody>
-      <balance-chart :data="chartData" class="full-width mt-5" />
-      <v-row class="align-center">
-        <v-col class="d-flex align-center justify-center">
-          <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
-          <div class="ml-2 font-weight-regular text-color--mew-green">
-            ${{ ETHUSDValue.price_change_24h }}
-          </div>
-          <v-icon
-            :class="[
-              priceChange ? 'primary--text' : 'light_red--text error-text',
-              'body-2'
-            ]"
-            >{{ priceChangeArrow }}</v-icon
-          >
-          <div class="ml-5">
-            {{ ETHUSDValue.symbol + ETHUSDValue.value }} / 1
-            {{ network.type.currenyName }} ETH
-          </div>
-        </v-col>
-        <v-col class="text-right">
-          <mew-button
-            :has-full-width="false"
-            title="Send Transaction"
-            btn-size="xlarge"
-            @click.native="navigateToSwap"
+  <div>
+    <!--
+  =====================================================================================
+    display if the user has an eth balance > 0
+  =====================================================================================
+  -->
+    <!-- TODO: mew-module: need to add icon height, add full-height prop & remove auto-height class-->
+    <mew-module
+      v-if="!showBuyEth"
+      class="auto-height pa-7"
+      :subtitle="subtitle"
+      :title="title"
+      :caption="convertedBalance"
+      icon-align="left"
+    >
+      <template #rightHeaderContainer>
+        <div class="d-flex align-center">
+          <!-- TODO: mew-toggle: add prop to control-->
+          <mew-toggle :button-group="chartButtons" @onBtnClick="onToggle" />
+          <!-- not sure what this button is for, commented out for now -->
+          <!-- <mew-button
+            btn-size="small"
+            icon-type="mdi"
+            icon="mdi-dots-vertical"
+            btn-style="transparent"
+            color-theme="secondary"
+          /> -->
+        </div>
+      </template>
+      <template #moduleBody>
+        <balance-chart :data="chartData" class="full-width mt-5" />
+        <v-row class="align-center">
+          <v-col class="d-flex align-center justify-center">
+            <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
+            <div class="ml-2 font-weight-regular text-color--mew-green">
+              ${{ ETHUSDValue.price_change_24h }}
+            </div>
+            <v-icon
+              :class="[
+                priceChange ? 'primary--text' : 'light_red--text error-text',
+                'body-2'
+              ]"
+              >{{ priceChangeArrow }}</v-icon
+            >
+            <div class="ml-5">
+              {{ ETHUSDValue.symbol + ETHUSDValue.value }} / 1
+              {{ network.type.currenyName }} ETH
+            </div>
+          </v-col>
+          <v-col class="text-right">
+            <mew-button
+              :has-full-width="false"
+              title="Send Transaction"
+              btn-size="xlarge"
+              @click.native="navigateToSwap"
+            />
+          </v-col>
+        </v-row>
+      </template>
+    </mew-module>
+    <!--
+  =====================================================================================
+    display if the user has no eth balance
+  =====================================================================================
+  -->
+    <v-sheet
+      v-else
+      class="module-no-balance pa-7"
+      color="white"
+      max-width="100%"
+    >
+      <div class="pa-12">
+        <h2 class="mb-6">My {{ network.type.name }} balance is empty</h2>
+        <mew-button
+          :has-full-width="false"
+          title="Buy ETH with a credit card"
+          btn-size="xlarge"
+          btn-link="https://ccswap.myetherwallet.com/#/"
+        />
+        <div class="d-flex align-center mt-4">
+          <div>We accept credit card</div>
+          <img
+            v-if="!$vuetify.theme.dark"
+            class="ml-2 mr-1"
+            height="21"
+            src="@/assets/images/icons/icon-visa-dark.png"
           />
-        </v-col>
-      </v-row>
-    </template>
-  </mew-module>
+          <img
+            v-if="$vuetify.theme.dark"
+            class="ml-2 mr-2"
+            height="13"
+            src="@/assets/images/icons/icon-visa-white.png"
+          />
+          <img
+            height="18"
+            src="@/assets/images/icons/icon-mastercard-mew.png"
+          />
+        </div>
+        <div class="text-color--gray1 mt-12">
+          Tip: You can also send your ETH here from another wallet!
+        </div>
+      </div>
+    </v-sheet>
+  </div>
 </template>
 
 <script>
@@ -75,6 +126,9 @@ export default {
     ...mapGetters('global', ['network']),
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapState('external', ['ETHUSDValue']),
+    showBuyEth() {
+      return this.balanceInETH <= 0;
+    },
     priceChangeArrow() {
       return this.priceChange > 0 ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
     },
@@ -156,6 +210,16 @@ export default {
 };
 </script>
 <style class="scss">
+.module-no-balance {
+  background-image: url(~@/assets/images/backgrounds/bg-circle-triangle.png);
+  background-position: right 60px bottom -1px;
+  background-size: 245px;
+  border-radius: 12px;
+  left: 0;
+  top: 0;
+  width: 100%;
+}
+
 /* remove after updating mew-module */
 .auto-height {
   height: auto !important;
