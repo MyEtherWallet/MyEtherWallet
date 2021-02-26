@@ -113,7 +113,6 @@ export default class Notification {
   }
 
   _invalidType(type) {
-    console.log(type);
     throw new Error(
       `Invalid Notification ${type} passed! Please check the parameters passed into the Notification constructor!`
     );
