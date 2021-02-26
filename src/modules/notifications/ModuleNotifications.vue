@@ -61,7 +61,7 @@
             <div class="pa-4">
               <div
                 v-for="data in showNotifications"
-                v-show="hasNotifications"
+                v-show="showNotifications.length > 0"
                 :key="data.transactionHash"
                 class="mt-2"
               >
@@ -70,7 +70,10 @@
                   @click.native="markNotificationAsRead(data)"
                 />
               </div>
-              <div v-show="!hasNotifications" class="pa-5 text-center">
+              <div
+                v-show="showNotifications.length === 0"
+                class="pa-5 text-center"
+              >
                 <h3>No notifications to display for {{ address }}</h3>
               </div>
             </div>
@@ -128,44 +131,52 @@ export default {
       return null;
     },
     transformCurrentNoti() {
-      const newArr = this.currentNotifications.map(notification => {
-        const newObj = this.formatObj(notification);
-        if (newObj.type === 'SWAP') {
-          newObj.checkSwapStatus(this.swapper);
-        }
-        return newObj;
-      });
-      return newArr.sort(this.sortByDate);
+      const newArr = this.currentNotifications
+        .map(notification => {
+          const newObj = this.formatObj(notification);
+          if (newObj.type === 'SWAP') {
+            newObj.checkSwapStatus(this.swapper);
+          }
+          return newObj;
+        })
+        .sort(this.sortByDate);
+      return newArr;
     },
     transformTxNoti() {
-      const newArr = this.txNotifications.map(notification => {
-        const newObj = this.formatObj(notification);
-        return newObj;
-      });
-      return newArr.sort(this.sortByDate);
+      const newArr = this.txNotifications
+        .map(notification => {
+          const newObj = this.formatObj(notification);
+          return newObj;
+        })
+        .sort(this.sortByDate);
+      return newArr;
     },
     transformSwapNoti() {
-      const newArr = this.swapNotifications.map(notification => {
-        const newObj = this.formatObj(notification);
-        newObj.checkSwapStatus(this.swapper);
-        return newObj;
-      });
-      return newArr.sort(this.sortByDate);
+      const newArr = this.swapNotifications
+        .map(notification => {
+          const newObj = this.formatObj(notification);
+          newObj.checkSwapStatus(this.swapper);
+          return newObj;
+        })
+        .sort(this.sortByDate);
+      return newArr;
     },
     transformInNoti() {
-      const newArr = this.inTx.map(notification => {
-        const newObj = this.formatObj(notification);
-        return newObj;
-      });
-      return newArr.sort(this.sortByDate);
+      const newArr = this.inTx
+        .map(notification => {
+          const newObj = this.formatObj(notification);
+          return newObj;
+        })
+        .sort(this.sortByDate);
+      return newArr;
     },
     allNotifications() {
-      return this.transformCurrentNoti.concat(this.transformInNoti);
+      return this.transformCurrentNoti
+        .concat(this.transformInNoti)
+        .sort(this.sortByDate);
     },
     showNotifications() {
       switch (this.selected) {
-        case 'all':
-          return this.allNotifications;
         case 'in':
           return this.inTx;
         case 'out':
@@ -196,7 +207,7 @@ export default {
   methods: {
     ...mapActions('notifications', ['updateNotification', 'setFetchedTime']),
     sortByDate(a, b) {
-      return a.timestamp > b.timestamp ? 1 : a.timestamp < b.timestamp ? -1 : 0;
+      return new Date(a.timestamp) - new Date(b.timestamp);
     },
     // next key for pendingTx subscription
     parsePendingTx(result) {
@@ -268,7 +279,11 @@ export default {
       const newObj = {
         txHash: {
           value: obj.transactionHash,
-          string: 'Transaction Hash'
+          string: 'Transaction Hash',
+          link: `${this.network.type.blockExplorerTX.replace(
+            '[[txHash]]',
+            obj.transactionHash
+          )}`
         },
         gasPrice: {
           value: `${
@@ -284,6 +299,10 @@ export default {
           value: `${obj.transactionFee} ${this.network.type.currencyName}`,
           string: 'Total Transaction fee'
         },
+        to: {
+          value: obj.toTxData && obj.toTxData.to ? obj.toTxData.to : obj.to,
+          string: 'To'
+        },
         from: {
           value: obj.from,
           string: 'From'
@@ -297,13 +316,16 @@ export default {
           string: 'Time'
         },
         status: {
-          value: obj.status ? obj.status.toLowerCase() : '',
+          value: obj.status.toLowerCase(),
           string: 'Status'
         },
         type: {
-          value: obj.type ? obj.type.toLowerCase() : '',
-          string: obj.type ? obj.type.toLowerCase() : ''
-        }
+          value: obj.type.toLowerCase(),
+          string: obj.type
+        },
+        read: obj.read,
+        toObj: obj.toTxData,
+        fromObj: obj.fromTxData
       };
 
       obj.notification = newObj;

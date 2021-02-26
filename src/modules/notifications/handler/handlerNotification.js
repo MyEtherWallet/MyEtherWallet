@@ -41,6 +41,7 @@ const VALID_ARGUMENTS = [
 export default class Notification {
   constructor(obj) {
     this.read = obj['read'] ? obj['read'] : false;
+    this.swapResolver = null;
     // validate passed params before assigning to this
     const objArr = Object.keys(obj);
     for (let i = 0; i < objArr.length; i++) {
@@ -75,21 +76,24 @@ export default class Notification {
   }
 
   checkSwapStatus(swapper) {
-    this.swapResolver = setInterval(() => {
-      swapper.getStatus(this.swapObj).then(res => {
-        this.status =
-          res === 'COMPLETED'
-            ? 'SUCCESS'
-            : res === 'FAILED' || res === 'UNKOWN'
-            ? 'ERRORED'
-            : res;
-      });
-      if (this.status !== 'PENDING') {
-        this.read = false;
-        vuexStore.dispatch('notification/updateNotification', this);
-        clearInterval(this.swapResolver);
-      }
-    }, 10000);
+    if (this.status === 'PENDING') {
+      const _this = this;
+      _this.swapResolver = setInterval(() => {
+        swapper.getStatus(_this.swapObj).then(res => {
+          _this.status =
+            res === 'COMPLETED'
+              ? 'SUCCESS'
+              : res === 'FAILED' || res === 'UNKOWN'
+              ? 'ERRORED'
+              : res;
+        });
+        if (_this.status !== 'PENDING') {
+          _this.read = false;
+          vuexStore.dispatch('notifications/updateNotification', _this);
+          clearInterval(_this.swapResolver);
+        }
+      }, 10000);
+    }
   }
 
   // updates read and resolves back to ui with the new object

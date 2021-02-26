@@ -438,9 +438,9 @@ export default {
             icon: this.confirmInfo.fromImg
           },
           toTxData: {
-            currency: this.confirmInfo.fromType,
-            amount: this.confirmInfo.fromVal,
-            icon: this.confirmInfo.fromImg,
+            currency: this.confirmInfo.toType,
+            amount: this.confirmInfo.toVal,
+            icon: this.confirmInfo.toImg,
             to: this.confirmInfo.to
               ? this.confirmInfo.to
               : this.currentTrade.transactions[idx].to
