@@ -83,6 +83,8 @@
     "@ledgerhq/hw-transport-webusb": "5.43.0",
     "@mdi/font": "5.9.55",
     "@myetherwallet/mewconnect-web-client": "2.1.23-beta.1",
+    "@sentry/tracing": "6.2.0",
+    "@sentry/vue": "6.2.0",
     "@vue/cli-plugin-babel": "4.5.11",
     "@vue/cli-plugin-eslint": "4.5.11",
     "@vue/cli-plugin-pwa": "4.5.11",
