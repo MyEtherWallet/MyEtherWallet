@@ -13,7 +13,7 @@ import BigNumber from 'bignumber.js';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 
 import { EventBus } from '@/core/plugins/eventBus';
-import Notification from '@/modules/notifications/handler/handlerNotification';
+import Notification from '@/modules/notifications/handlers/handlerNotification';
 
 const setEvents = (promiObj, tx, dispatch) => {
   // create a no reference copy specifically for notification

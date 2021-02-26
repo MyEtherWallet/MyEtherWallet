@@ -157,7 +157,7 @@ import Swapper from '@/modules/swap/handlers/handlerSwap';
 import ModuleNetwork from '@/modules/network/ModuleNetwork';
 import utils, { toBN, fromWei } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
-import Notification from '@/modules/notifications/handler/handlerNotification';
+import Notification from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
@@ -421,10 +421,12 @@ export default {
       obj.hashes.forEach((hash, idx) => {
         const notification = {
           transactionHash: hash,
+          transactionFee: fromWei(this.totalFees),
           to: this.currentTrade.transactions[idx].to,
           from: this.confirmInfo.from,
           gas: this.currentTrade.transactions[idx].gas,
           gasPrice: this.currentTrade.transactions[idx].gasPrice,
+          gasLimit: this.totalGasLimit,
           data: this.currentTrade.transactions[idx].data,
           value: this.currentTrade.transactions[idx].value,
           type: 'SWAP',

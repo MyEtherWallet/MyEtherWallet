@@ -93,6 +93,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from './handler/handlerNotification';
 import NotificationsCall from '@/apollo/queries/notifications';
 import Swapper from '@/modules/swap/handlers/handlerSwap';
+import timeAgo from '@/core/helpers/timeAgo';
 export default {
   name: 'ModuleNotifications',
   data() {
@@ -131,15 +132,13 @@ export default {
       return null;
     },
     transformCurrentNoti() {
-      const newArr = this.currentNotifications
-        .map(notification => {
-          const newObj = this.formatObj(notification);
-          if (newObj.type === 'SWAP') {
-            newObj.checkSwapStatus(this.swapper);
-          }
-          return newObj;
-        })
-        .sort(this.sortByDate);
+      const newArr = this.currentNotifications.map(notification => {
+        const newObj = this.formatObj(notification);
+        if (newObj.type === 'SWAP') {
+          newObj.checkSwapStatus(this.swapper);
+        }
+        return newObj;
+      });
       return newArr;
     },
     transformTxNoti() {
@@ -171,9 +170,10 @@ export default {
       return newArr;
     },
     allNotifications() {
-      return this.transformCurrentNoti
+      const sorted = this.transformCurrentNoti
         .concat(this.transformInNoti)
         .sort(this.sortByDate);
+      return sorted;
     },
     showNotifications() {
       switch (this.selected) {
@@ -207,7 +207,7 @@ export default {
   methods: {
     ...mapActions('notifications', ['updateNotification', 'setFetchedTime']),
     sortByDate(a, b) {
-      return new Date(a.timestamp) - new Date(b.timestamp);
+      return new Date(b.date) - new Date(a.date);
     },
     // next key for pendingTx subscription
     parsePendingTx(result) {
@@ -312,7 +312,7 @@ export default {
           string: 'Amount'
         },
         timestamp: {
-          value: '1 min ago',
+          value: timeAgo(toBN(obj.date).toNumber()),
           string: 'Time'
         },
         status: {
