@@ -3,17 +3,6 @@ import store from '@/core/store';
 import langShortCodes from '@/translations/getShortCodes';
 import routesDefault from './routes-default';
 import routesWallet from './routes-wallet';
-// const storeQuery = query => {
-//   const queryKeys = Object.keys(query);
-//   if (queryKeys.length > 0) {
-//     const blankObj = {};
-//     for (const key in query) {
-//       blankObj[key] = Misc.stripTags(query[key]);
-//     }
-
-//     store.dispatch(/saveQueryVal', blankObj);
-//   }
-// };
 const routes = [routesDefault, routesWallet];
 
 const getLangBasePath = () => {
