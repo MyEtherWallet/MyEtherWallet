@@ -5,12 +5,6 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJS = require('uglify-es');
 const env_vars = require('./ENV_VARS');
 const allowedConnections = require('./connections');
-const version = require('./package.json').version;
-const vars = {
-  VERSION: version,
-  BTC_DONATION_ADDRESS: '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9',
-  ETH_DONATION_ADDRESS: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-};
 const webpackConfig = {
   devtool: false,
   node: {
@@ -39,7 +33,6 @@ const webpackConfig = {
       filename: 'sourcemaps/[file].map',
       exclude: /vendors.*.*/
     }),
-    new webpack.DefinePlugin(env_vars),
     new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
     new ImageminPlugin({
       disable: process.env.NODE_ENV !== 'production',
@@ -67,7 +60,7 @@ const webpackConfig = {
         }
       ]
     }),
-    new webpack.EnvironmentPlugin(vars)
+    new webpack.DefinePlugin(env_vars)
   ],
   optimization: {
     splitChunks: {
