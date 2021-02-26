@@ -90,7 +90,7 @@
 <script>
 import { fromWei, toBN } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
-import Notification from './handler/handlerNotification';
+import Notification from './handlers/handlerNotification';
 import NotificationsCall from '@/apollo/queries/notifications';
 import Swapper from '@/modules/swap/handlers/handlerSwap';
 import timeAgo from '@/core/helpers/timeAgo';
