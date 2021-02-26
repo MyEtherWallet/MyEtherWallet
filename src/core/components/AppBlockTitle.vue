@@ -46,7 +46,7 @@ export default {
   name: 'BlockTitle',
   props: {
     maxWidth: { default: '', type: String },
-    znoPageTitle: { default: false, type: Boolean },
+    noPageTitle: { default: false, type: Boolean },
     data: {
       default: function () {
         return {};

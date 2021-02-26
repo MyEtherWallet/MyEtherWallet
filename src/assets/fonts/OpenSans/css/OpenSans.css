@@ -4,6 +4,7 @@
   font-style: normal;
   font-weight: 300;
   src: url('~@/assets/fonts/OpenSans/fonts/open-sans-v17-latin-300.eot');
+
   /* IE9 Compat Modes */
   src: local('Open Sans Light'), local('OpenSans-Light'),
     url('~@/assets/fonts/OpenSans/fonts/open-sans-v17-latin-300.eot?#iefix')
@@ -20,6 +21,7 @@
     /* Safari, Android, iOS */
       url('~@/assets/fonts/OpenSans/fonts/open-sans-v17-latin-300.svg#OpenSans')
       format('svg');
+
   /* Legacy iOS */
 }
 
@@ -29,6 +31,7 @@
   font-style: normal;
   font-weight: 400;
   src: url('~@/assets/fonts/OpenSans/fonts/open-sans-v17-latin-regular.eot');
+
   /* IE9 Compat Modes */
   src: local('Open Sans Regular'), local('OpenSans-Regular'),
     url('~@/assets/fonts/OpenSans/fonts/open-sans-v17-latin-regular.eot?#iefix')
@@ -45,6 +48,7 @@
     /* Safari, Android, iOS */
       url('~@/assets/fonts/OpenSans/fonts/open-sans-v17-latin-regular.svg#OpenSans')
       format('svg');
+
   /* Legacy iOS */
 }
 
@@ -54,6 +58,7 @@
   font-style: normal;
   font-weight: 600;
   src: url('~@/assets/fonts/OpenSans/fonts/open-sans-v17-latin-600.eot');
+
   /* IE9 Compat Modes */
   src: local('Open Sans SemiBold'), local('OpenSans-SemiBold'),
     url('~@/assets/fonts/OpenSans/fonts/open-sans-v17-latin-600.eot?#iefix')
@@ -70,6 +75,7 @@
     /* Safari, Android, iOS */
       url('~@/assets/fonts/OpenSans/fonts/open-sans-v17-latin-600.svg#OpenSans')
       format('svg');
+
   /* Legacy iOS */
 }
 
@@ -79,6 +85,7 @@
   font-style: normal;
   font-weight: 700;
   src: url('~@/assets/fonts/OpenSans/fonts/open-sans-v17-latin-700.eot');
+
   /* IE9 Compat Modes */
   src: local('Open Sans Bold'), local('OpenSans-Bold'),
     url('~@/assets/fonts/OpenSans/fonts/open-sans-v17-latin-700.eot?#iefix')
@@ -95,6 +102,7 @@
     /* Safari, Android, iOS */
       url('~@/assets/fonts/OpenSans/fonts/open-sans-v17-latin-700.svg#OpenSans')
       format('svg');
+
   /* Legacy iOS */
 }
 
@@ -104,6 +112,7 @@
   font-style: normal;
   font-weight: 800;
   src: url('~@/assets/fonts/OpenSans/fonts/open-sans-v17-latin-800.eot');
+
   /* IE9 Compat Modes */
   src: local('Open Sans ExtraBold'), local('OpenSans-ExtraBold'),
     url('~@/assets/fonts/OpenSans/fonts/open-sans-v17-latin-800.eot?#iefix')
@@ -120,5 +129,6 @@
     /* Safari, Android, iOS */
       url('~@/assets/fonts/OpenSans/fonts/open-sans-v17-latin-800.svg#OpenSans')
       format('svg');
+
   /* Legacy iOS */
 }
