@@ -1,11 +1,6 @@
 <template>
-  <v-row class="mew-component--dashboard">
-    <v-col cols="12" md="8">
-      <module-network
-        v-if="$vuetify.breakpoint.smAndDown"
-        class="pa-2 pa-md-3"
-      />
-
+  <the-layout-wallet-grid :total-left-col-items="2" :total-right-col-items="2">
+    <template #leftColItem1>
       <mew6-white-sheet
         v-if="true"
         class="mew-component--eth-balance pa-7 pb-4"
@@ -16,8 +11,6 @@
             :subtitle="subtitle"
             :title="title"
             :caption="convertedBalance"
-            :icon="network.type.icon"
-            icon-align="left"
           />
           <div class="ml-auto">
             <div class="d-flex align-center">
@@ -68,7 +61,7 @@
         </v-row>
       </mew6-white-sheet>
 
-      <div v-if="showBuyEth" class="mb-4 mew-component--no-eth-balance">
+      <div v-if="showBuyEth" class="mew-component--no-eth-balance">
         <mew6-white-sheet class="position--relative">
           <div
             class="bg-container"
@@ -109,7 +102,8 @@
           </v-sheet>
         </mew6-white-sheet>
       </div>
-
+    </template>
+    <template #leftColItem2>
       <mew6-white-sheet
         v-if="tokensData.length > 0"
         class="mew-component--my-token-value"
@@ -162,13 +156,14 @@
           <div class="py-5" />
         </mew6-white-sheet>
       </div>
-    </v-col>
-    <v-col class="mt-n2 mt-md-0" cols="12" md="4">
-      <module-network v-if="$vuetify.breakpoint.mdAndUp" class="pa-2 pa-md-3" />
-      <swap class="pa-2 pa-md-3" />
+    </template>
+    <template #rightColItem1>
+      <swap />
+    </template>
+    <template #rightColItem2>
       <app-carousel />
-    </v-col>
-  </v-row>
+    </template>
+  </the-layout-wallet-grid>
 </template>
 
 <script>
@@ -178,14 +173,13 @@ import BigNumber from 'bignumber.js';
 import WalletCalls from '@/apollo/queries/wallets/index';
 import utils from 'web3-utils';
 import AppCarousel from '@/core/components/AppCarousel';
-import ModuleNetwork from '@/modules/network/ModuleNetwork';
 import swap from '@/core/components/AppSwap';
-
+import TheLayoutWalletGrid from '@/core/components/TheLayoutWalletGrid';
 export default {
   components: {
+    TheLayoutWalletGrid,
     chart,
     AppCarousel,
-    ModuleNetwork,
     swap
   },
   props: {
