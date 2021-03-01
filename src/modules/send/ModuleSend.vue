@@ -157,7 +157,6 @@ export default {
   },
   data() {
     return {
-      invalidName: false,
       addMode: false,
       toastType: '',
       toastMsg: '',

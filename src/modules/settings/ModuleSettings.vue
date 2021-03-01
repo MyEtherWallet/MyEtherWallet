@@ -28,7 +28,27 @@
             <export-config />
           </template>
           <template #panelBody4>
-            <address-book @add="addMode = !addMode" @edit="onEdit" />
+            <div class="pb-4">
+              <div class="mb-4">
+                {{ $t('interface.address-book.add-up-to') }}
+              </div>
+              <mew-table
+                :table-headers="tableHeaders"
+                :table-data="tableData"
+                has-color
+                :success-toast="$t('common.copied')"
+                @onClick="onEdit"
+              />
+
+              <div class="d-flex justify-center mt-5">
+                <mew-button
+                  :disabled="addressBook.length > 10"
+                  title="+ Add"
+                  btn-size="xlarge"
+                  @click.native="addMode = !addMode"
+                />
+              </div>
+            </div>
           </template>
           <template #panelBody5>
             <notifications />
@@ -39,7 +59,7 @@
       <add-edit-address
         v-if="addMode || editMode"
         :item="itemToEdit"
-        :mode="getMode"
+        :mode="onMode"
         @back="back"
       />
     </template>
@@ -51,8 +71,9 @@ import ImportConfig from './components/SettingsImportConfig';
 import ExportConfig from './components/SettingsExportConfig';
 import Notifications from './components/SettingsNotification';
 import GasPrice from './components/SettingsGasPrice';
-import AddressBook from '@/modules/address-book/ModuleAddressBook';
 import AddEditAddress from '@/modules/address-book/components/AddressBookAddEdit';
+import { mapState } from 'vuex';
+
 const modes = ['add', 'edit'];
 
 export default {
@@ -62,7 +83,6 @@ export default {
     ExportConfig,
     Notifications,
     GasPrice,
-    AddressBook,
     AddEditAddress
   },
   props: {
@@ -91,11 +111,44 @@ export default {
         {
           name: 'Notifications'
         }
-      ]
+      ],
+      tableHeaders: [
+        {
+          text: '#',
+          value: 'number',
+          sortable: false,
+          filterable: false,
+          width: '5%'
+        },
+        {
+          text: 'Address',
+          value: 'address',
+          sortable: false,
+          filterable: false,
+          width: '50%'
+        },
+        {
+          text: 'Nickname',
+          value: 'nickname',
+          sortable: false,
+          filterable: false,
+          containsLink: true,
+          width: '20%'
+        },
+        {
+          text: '',
+          value: 'callToAction',
+          sortable: false,
+          filterable: false,
+          width: '20%'
+        }
+      ],
+      tableData: []
     };
   },
   computed: {
-    getMode() {
+    ...mapState('global', ['addressBook']),
+    onMode() {
       return this.addMode ? modes[0] : modes[1];
     },
     title() {
@@ -107,6 +160,23 @@ export default {
       }
       return this.$t('common.settings');
     }
+  },
+  watch: {
+    addressBook: {
+      deep: true,
+      handler: function () {}
+    }
+  },
+  mounted() {
+    this.addressBook.forEach((item, idx) => {
+      this.tableData.push({
+        number: idx + 1,
+        address: item.address,
+        nickname: item.nickname,
+        resolvedAddr: item.resolvedAddr,
+        callToAction: 'Edit'
+      });
+    });
   },
   methods: {
     back(idx) {
