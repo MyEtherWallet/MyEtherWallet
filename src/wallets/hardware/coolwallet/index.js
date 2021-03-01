@@ -27,28 +27,30 @@ class CoolWallet {
     this.identifier = coolWalletType;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
+    this.transport = {};
+    this.deviceInstance = {};
+    this.supportedPaths = bip44Paths[coolWalletType];
+    this.appId = locStore.get('coolWallet-appId')
+      ? locStore.get('coolWallet-appId')
+      : '';
     this.appPrivateKey = locStore.get('coolWallet-appPrivateKey')
       ? locStore.get('coolWallet-appPrivateKey')
       : '';
     this.appPublicKey = locStore.get('coolWallet-appPublicKey')
       ? locStore.get('coolWallet-appPublicKey')
       : '';
-    this.transport = {};
-    this.deviceInstance = {};
-    this.supportedPaths = bip44Paths[coolWalletType];
     this.firstTimeConnecting =
-      locStore.get('coolWallet-appPublicKey') === null &&
-      locStore.get('coolWallet-appPrivateKey') === null &&
-      locStore.get('coolWallet-appId') === null;
-    this.appId = locStore.get('coolWallet-appId')
-      ? locStore.get('coolWallet-appId')
-      : '';
+      this.appPrivateKey === '' &&
+      this.appPublicKey === '' &&
+      this.appId === '';
   }
   init(password) {
     const _this = this;
     return new Promise((resolve, reject) => {
       cwsTransportLib.listen((error, device) => {
-        if (error) reject(error);
+        if (error) {
+          reject(error);
+        }
         if (device) {
           cwsTransportLib.connect(device).then(_transport => {
             _this.transport = _transport;
@@ -61,6 +63,7 @@ class CoolWallet {
               locStore.set('coolWallet-appPrivateKey', appPrivateKey);
               _this.appPrivateKey = appPrivateKey;
               _this.appPublicKey = appPublicKey;
+
               const coolWalletInstance = new cwsWallet(
                 _this.transport,
                 _this.appPrivateKey
