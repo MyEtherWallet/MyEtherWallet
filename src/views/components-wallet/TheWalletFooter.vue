@@ -1,42 +1,71 @@
 <template>
-  <v-footer color="mewBg" class="mew-component--wallet-footer pa-0" inset app>
+  <v-footer
+    color="mewBg"
+    app
+    inset
+    absolute
+    class="mew-component--wallet-footer pa-0"
+  >
     <v-container
-      class="py-6 px-10 d-block d-md-flex align-center justify-space-between"
+      class="d-flex align-center justify-center wallet-content-container pa-6"
       fluid
     >
-      <div class="textSecondary--text text-center">
-        ©2020 MyEtherWallet. All rights reserved. Pricing taken from
-        <a
-          class="titlePrimary--text text-decoration--none"
-          href="/"
-          targe="_blank"
+      <v-row class="align-center justify-space-between">
+        <v-col cols="12" md="7">
+          <p class="mb-0 text-center text-md-left">
+            ©2020 MyEtherWallet. All rights reserved. Pricing taken from
+            <span>
+              <a
+                class="titlePrimary--text text-decoration--none"
+                href="/"
+                target="_blank"
+              >
+                CoinMarketCap
+              </a>
+            </span>
+          </p>
+        </v-col>
+        <v-col
+          cols="12"
+          md="4"
+          lg="3"
+          order="first"
+          order-md="last"
+          class="pb-0 pb-md-2"
         >
-          CoinMarketCap
-        </a>
-      </div>
-      <div class="d-flex align-center justify-center titlePrimary--text">
-        <span>Feedback</span>
-        <span class="mx-5">|</span>
-        <span>Support</span>
-        <span class="mx-5">|</span>
-        <div style="max-width=200px">
-          <v-select
-            v-model="onLanguage"
-            append-icon="mdi-chevron-down"
-            :items="languages"
-            item-text="name"
-            item-value="value"
-            return-object
-            single-line
-          ></v-select>
-        </div>
-      </div>
+          <div
+            class="d-flex align-center justify-center justify-md-end titlePrimary--text"
+          >
+            <span>Feedback</span>
+            <span class="mx-5">|</span>
+            <span>Support</span>
+            <span class="mx-5">|</span>
+            <div style="max-width=200px">
+              <v-select
+                v-model="onLanguage"
+                append-icon="mdi-chevron-down"
+                :items="languages"
+                item-text="name"
+                item-value="value"
+                return-object
+                single-line
+              ></v-select>
+            </div>
+          </div>
+        </v-col>
+      </v-row>
     </v-container>
+    <!-- <v-container
+      class="py-6 px-10 d-block d-md-flex align-center justify-space-between"
+    > -->
+
+    <!-- </v-container>  -->
   </v-footer>
 </template>
 
 <script>
 export default {
+  name: 'TheWalletFooter',
   components: {},
   data: () => ({
     onLanguage: null,
