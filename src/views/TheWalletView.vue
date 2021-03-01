@@ -127,6 +127,6 @@ export default {
   box-shadow: 0 0 15px var(--v-boxShadow-base) !important;
 }
 .wallet-main {
-  background-color: green;
+  background-color: var(--v-walletBg-base);
 }
 </style>
