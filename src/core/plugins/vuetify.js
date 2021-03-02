@@ -66,7 +66,10 @@ import Vuetify, {
   VSimpleCheckbox,
   VPagination,
   VFooter,
-  VAppBar
+  VAppBar,
+  VItem,
+  VItemGroup,
+  VScrollYTransition
 } from 'vuetify/lib';
 import 'vuetify/dist/vuetify.min.css';
 
@@ -138,7 +141,10 @@ Vue.use(Vuetify, {
     VSimpleCheckbox,
     VPagination,
     VFooter,
-    VAppBar
+    VAppBar,
+    VItem,
+    VItemGroup,
+    VScrollYTransition
   }
 });
 
@@ -189,6 +195,10 @@ export default new Vuetify({
         black: '#000',
         mewBg: '#fff',
         walletBg: '#f2f4fa',
+        selectorBg: {
+          base: '#f2fafa',
+          lighten1: '#f8fafc'
+        },
         boxShadow: '#ececec',
         expandHeader: '#184f90',
         primary: '#05c0a5',
@@ -249,6 +259,10 @@ export default new Vuetify({
         white: '#fff',
         mewBg: '#151a29',
         walletBg: '#151a29',
+        selectorBg: {
+          base: '#203554',
+          lighten1: '#0f1320'
+        },
         black: '#000',
         boxShadow: '#3c3c3c',
         expandHeader: '#184f90',

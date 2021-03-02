@@ -81,38 +81,56 @@
                 />
 
                 <div v-show="step >= 1" class="mt-5">
-                  <div class="mew-heading-3">Select a provider</div>
-                  <v-row>
-                    <v-col
-                      v-for="(quote, idx) in availableQuotes"
-                      :key="`quote-${idx}`"
-                      cols="6"
-                      lg="6"
-                      sm="12"
-                    >
-                      <v-card flat color="tableHeader" class="pa-6">
-                        <div
-                          class="d-flex align-center justify-space-between mb-3"
-                        >
-                          <img
-                            :class="$vuetify.theme.dark ? 'invert' : ''"
-                            :src="quote.exchangeInfo.img"
-                            :alt="quote.exchangeInfo.name"
-                            height="35"
-                          />
-                          <mew-checkbox
-                            :value="quote.isSelected"
-                            @input="setProvider($event, idx)"
-                          />
-                        </div>
-                        <div class="font-weight-medium">
-                          1 {{ fromTokenType.symbol }} = {{ quote.rate }}
-                          {{ toTokenType.symbol }}
-                        </div>
-                        <div>{{ quote.exchangeInfo.name }}</div>
-                      </v-card>
-                    </v-col>
-                  </v-row>
+                  <div class="mew-heading-3 mb-5">Select a provider</div>
+                  <v-item-group>
+                    <v-row>
+                      <v-col
+                        v-for="(quote, idx) in availableQuotes"
+                        :key="`quote-${idx}`"
+                        cols="12"
+                        class="mb-n3"
+                      >
+                        <v-item v-slot="{ active, toggle }">
+                          <v-card
+                            :style="
+                              active
+                                ? 'border-color: var(--v-primary-base) !important'
+                                : ''
+                            "
+                            outlined
+                            :color="
+                              active ? 'selectorBg' : 'selectorBg lighten-1'
+                            "
+                            class="d-flex align-center justify-space-between border-radius--10px pl-5 pr-2 py-1"
+                            @click="toggle"
+                          >
+                            <div class="mew-heading-2 font-weight-medium">
+                              {{
+                                (Math.round(quote.rate * 100) / 100).toFixed(3)
+                              }}
+                              {{ toTokenType.symbol }}
+                            </div>
+                            <div class="d-flex align-center">
+                              <img
+                                :class="$vuetify.theme.dark ? 'invert' : ''"
+                                :src="quote.exchangeInfo.img"
+                                :alt="quote.exchangeInfo.name"
+                                height="25"
+                              />
+                              <mew-checkbox
+                                class="ml-3"
+                                :value="active"
+                                @input="setProvider($event, idx)"
+                              />
+                            </div>
+                            <div v-if="false">
+                              {{ quote.exchangeInfo.name }}
+                            </div>
+                          </v-card>
+                        </v-item>
+                      </v-col>
+                    </v-row>
+                  </v-item-group>
                 </div>
 
                 <mew-expand-panel
@@ -436,6 +454,10 @@ export default {
 
 .invert {
   filter: invert(100%);
+}
+
+.border-radius--10px::before {
+  border-radius: 10px !important;
 }
 </style>
 
