@@ -1,5 +1,5 @@
 <template>
-  <the-layout-wallet-grid :total-left-col-items="2" :total-right-col-items="2">
+  <the-wrapper-wallet :total-left-col-items="2" :total-right-col-items="2">
     <template #leftColItem1>
       <module-balance />
     </template>
@@ -12,11 +12,11 @@
     <template #rightColItem2>
       <app-carousel />
     </template>
-  </the-layout-wallet-grid>
+  </the-wrapper-wallet>
 </template>
 
 <script>
-import TheLayoutWalletGrid from '@/core/components/TheLayoutWalletGrid';
+import TheWrapperWallet from '@/core/components/TheWrapperWallet';
 import AppCarousel from '@/core/components/AppCarousel';
 import ModuleBalance from '@/modules/balance/ModuleBalance';
 import ModuleTokens from '@/modules/balance/ModuleTokens';
@@ -28,7 +28,7 @@ export default {
     ModuleBalance,
     ModuleTokens,
     AppSwap,
-    TheLayoutWalletGrid
+    TheWrapperWallet
   }
 };
 </script>
