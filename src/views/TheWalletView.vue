@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="wallet-main">
     <the-wallet-side-menu />
     <the-wallet-header />
-    <v-main class="wallet-main">
+    <v-main>
       <v-container
         class="pa-3 pa-md-5 align-center wallet-content-container"
         fluid
@@ -128,5 +128,6 @@ export default {
 }
 .wallet-main {
   background-color: var(--v-walletBg-base);
+  height: 100%;
 }
 </style>
