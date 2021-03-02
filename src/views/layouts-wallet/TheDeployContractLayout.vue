@@ -1,23 +1,23 @@
 <template>
-  <the-layout-wallet-grid>
+  <the-wrapper-wallet>
     <template #leftColItem1>
       <module-contract-deploy />
     </template>
     <template #rightColItem1>
       <swap />
     </template>
-  </the-layout-wallet-grid>
+  </the-wrapper-wallet>
 </template>
 
 <script>
-import TheLayoutWalletGrid from '@/core/components/TheLayoutWalletGrid';
+import TheWrapperWallet from '@/core/components/TheWrapperWallet';
 import Swap from '@/core/components/AppSwap';
 import ModuleContractDeploy from '@/modules/contract/ModuleContractDeploy.vue';
 
 export default {
   name: 'TheDeployContractLayout',
   components: {
-    TheLayoutWalletGrid,
+    TheWrapperWallet,
     Swap,
     ModuleContractDeploy
   }

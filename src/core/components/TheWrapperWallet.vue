@@ -60,6 +60,7 @@
 <script>
 import ModuleNetwork from '@/modules/network/ModuleNetwork';
 export default {
+  name: 'TheWrapperWallet',
   components: {
     ModuleNetwork
   },
