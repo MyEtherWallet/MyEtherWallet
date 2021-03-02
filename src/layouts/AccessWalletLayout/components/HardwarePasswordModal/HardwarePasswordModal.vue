@@ -85,7 +85,6 @@ export default {
           this.$emit('hardwareWalletOpen', _newWallet);
         })
         .catch(err => {
-          console.log(err, 'is it here?');
           this.walletConstructor.errorHandler(err);
         });
     },
