@@ -1,19 +1,19 @@
 <template>
-  <the-layout-wallet-grid :total-right-col-items="1">
+  <the-wrapper-wallet>
     <template #leftColItem1>
       <module-send />
     </template>
-  </the-layout-wallet-grid>
+  </the-wrapper-wallet>
 </template>
 
 <script>
 import ModuleSend from '@/modules/send/ModuleSend';
-import TheLayoutWalletGrid from '@/core/components/TheLayoutWalletGrid';
+import TheWrapperWallet from '@/core/components/TheWrapperWallet';
 
 export default {
   components: {
     ModuleSend,
-    TheLayoutWalletGrid
+    TheWrapperWallet
   }
 };
 </script>

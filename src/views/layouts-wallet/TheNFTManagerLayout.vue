@@ -1,5 +1,5 @@
 <template>
-  <the-layout-wallet-grid>
+  <the-wrapper-wallet>
     <template #leftColItem1>
       <mew-module
         class="d-flex flex-grow-1 pt-6 mew-component--nft-manager"
@@ -119,14 +119,14 @@
         </template>
       </mew-module>
     </template>
-  </the-layout-wallet-grid>
+  </the-wrapper-wallet>
 </template>
 
 <script>
-import TheLayoutWalletGrid from '@/core/components/TheLayoutWalletGrid';
+import TheWrapperWallet from '@/core/components/TheWrapperWallet';
 export default {
   components: {
-    TheLayoutWalletGrid
+    TheWrapperWallet
   },
   data() {
     return {
