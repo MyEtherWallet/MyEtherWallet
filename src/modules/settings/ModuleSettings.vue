@@ -141,7 +141,9 @@ export default {
       return [
         {
           name: 'Gas price',
-          subtext: `${this.gasPrice} Gwei (${this.gasPriceType})`
+          subtext: `${this.web3.utils.fromWei(this.gasPrice, 'gwei')} Gwei (${
+            this.gasPriceType
+          })`
         },
         {
           name: 'Import configurations'
