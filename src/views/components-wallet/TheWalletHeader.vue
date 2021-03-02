@@ -1,6 +1,17 @@
 <template>
-  <v-app-bar app elevation="0" color="walletBg" height="70px">
-    <v-container class="d-flex align-center pt-4 pb-0" fluid>
+  <v-app-bar
+    elevation="0"
+    color="walletBg"
+    height="70px"
+    class="px-0"
+    inset
+    app
+    absolute
+  >
+    <v-container
+      class="d-flex align-center pt-4 pb-0 px-0 px-md-3 wallet-content-container"
+      fluid
+    >
       <div class="d-flex align-center">
         <img class="ml-2 mr-3" src="@/assets/images/icons/icon-puppy-mew.svg" />
         <div>

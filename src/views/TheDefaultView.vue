@@ -1,7 +1,9 @@
 <template>
   <v-sheet>
     <the-default-header />
-    <router-view />
+    <v-main>
+      <router-view />
+    </v-main>
     <the-default-footer />
   </v-sheet>
 </template>

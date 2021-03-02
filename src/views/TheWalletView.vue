@@ -1,23 +1,18 @@
 <template>
-  <v-sheet height="100%" color="walletBg">
+  <div class="wallet-main">
     <the-wallet-side-menu />
-    <div class="px-0 px-md-3">
-      <the-wallet-header />
-
-      <!-- Top spacer for fixed position header -->
-      <div class="pt-4 pt-md-0"></div>
-
-      <v-container class="align-center d-flex" fluid>
+    <the-wallet-header />
+    <v-main>
+      <v-container
+        class="pa-3 pa-md-5 align-center wallet-content-container"
+        fluid
+      >
         <module-confirmation />
         <router-view :owners-tokens="ownersTokens" />
       </v-container>
-
-      <!-- Bottom spacer for fixed position footer -->
-      <div class="py-1 py-lg-2"></div>
-
-      <the-wallet-footer />
-    </div>
-  </v-sheet>
+    </v-main>
+    <the-wallet-footer />
+  </div>
 </template>
 
 <script>
@@ -124,5 +119,9 @@ export default {
 <style lang="scss" scoped>
 .box-shadow {
   box-shadow: 0 0 15px var(--v-boxShadow-base) !important;
+}
+.wallet-main {
+  background-color: var(--v-walletBg-base);
+  height: 100%;
 }
 </style>

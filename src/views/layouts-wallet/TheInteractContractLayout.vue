@@ -1,15 +1,17 @@
 <template>
-  <div class="d-flex justify-center full-width pa-3">
-    <module-contract-interact class="flex-grow-1" />
-    <div class="pl-5">
-      <module-network />
-      <swap class="mt-3" />
-    </div>
-  </div>
+  <the-layout-wallet-grid>
+    <template #leftColItem1>
+      <module-contract-interact />
+    </template>
+    <template #rightColItem1>
+      <swap />
+    </template>
+  </the-layout-wallet-grid>
 </template>
 
 <script>
-import ModuleNetwork from '@/modules/network/ModuleNetwork';
+import TheLayoutWalletGrid from '@/core/components/TheLayoutWalletGrid';
+
 import Swap from '@/core/components/AppSwap';
 import ModuleContractInteract from '@/modules/contract/ModuleContractInteract.vue';
 
@@ -18,7 +20,7 @@ export default {
   components: {
     ModuleContractInteract,
     Swap,
-    ModuleNetwork
+    TheLayoutWalletGrid
   },
   data() {}
 };
