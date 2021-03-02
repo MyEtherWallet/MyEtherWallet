@@ -18,9 +18,9 @@
         <v-row>
           <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="6">
             <mew-super-button
-              btn-mode="small-right-image"
               color-theme="basic"
               :title="btn.label"
+              right-icon-type="img"
               :right-icon="btn.icon"
               :right-icon-height="45"
               @click.native="overlayName = btn.overlayName"
@@ -35,13 +35,12 @@
 </template>
 
 <script>
-import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import AppBlockTitle from '@/core/components/AppBlockTitle';
 import accessWalletOverlay from '@/modules/wallets/components/access-wallet-overlay/AccessWalletOverlay';
 
 export default {
   name: 'CreateNewWallet',
-  components: { mewSuperButton, AppBlockTitle, accessWalletOverlay },
+  components: { AppBlockTitle, accessWalletOverlay },
   data() {
     return {
       overlayName: '',

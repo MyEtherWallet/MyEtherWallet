@@ -26,10 +26,10 @@
               <v-col v-for="button in buttons" :key="button.label" cols="6">
                 <div class="button-container">
                   <mew-super-button
-                    btn-mode="small-right-image"
                     :title="button.label"
                     :cols-num="6"
                     color-theme="basic"
+                    right-icon-type="img"
                     :right-icon="button.icon"
                     :right-icon-height="45"
                     @click.native="nextStep(button.type)"
@@ -157,22 +157,22 @@
       >
         <mew-super-button
           class="mb-4"
-          btn-mode="small-right-image"
           title="Bitbox"
           :cols-num="6"
           color-theme="basic"
           :right-icon-height="45"
+          right-icon-type="img"
           :right-icon="
             require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')
           "
           @click.native="setSelectedBitbox(0)"
         />
         <mew-super-button
-          btn-mode="small-right-image"
           title="Bitbox 2"
           :cols-num="6"
           color-theme="basic"
           :right-icon-height="45"
+          right-icon-type="img"
           :right-icon="
             require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg')
           "
@@ -463,7 +463,6 @@
 
 <script>
 import qrcode from '@xkeshi/vue-qrcode';
-import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import bcvaultWallet from '@/modules/wallets/utils/hardware/bcvault';
 import bitboxWallet from '@/modules/wallets/utils/hardware/bitbox';
@@ -620,8 +619,7 @@ const walletHolder = {
 export default {
   name: 'HardwareAccessOverlay',
   components: {
-    qrcode: qrcode,
-    mewSuperButton
+    qrcode
   },
   filters: {
     concatAddress(val) {

@@ -202,7 +202,7 @@ import ensBgImg from '@/assets/images/backgrounds/bg-ens.png';
 import registerDomain from './modules/ModuleRegisterDomain';
 import manageDomain from './modules/ModuleManageDomain';
 import ENSManager from './handlers/handlerEnsManager';
-import { mapState, mapGetters, mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
 import { EventBus } from '@/core/plugins/eventBus';

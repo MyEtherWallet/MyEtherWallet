@@ -4,22 +4,10 @@ import { toWei, _ } from 'web3-utils';
 import xss from 'xss';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
-const VALID_FIELDS = [
-  'addressBook',
-  'Errors',
-  'online',
-  'linkQuery',
-  'locale',
-  'stateVersion',
-  'gasLimitWarning',
-  'gasPrice',
-  'gasPriceType',
-  'currentNetwork',
-  'preferredCurrency'
-];
 export default class Settings {
   constructor() {
     this.$store = vuexStore;
+    this.validFields = Object.keys(this.$store.state.global);
     Object.assign(this, mapActions('global', ['setImportedState']));
   }
 
@@ -55,10 +43,6 @@ export default class Settings {
     const time = new Date();
     const filename = `Store-Export-${time.getTime()}.json`;
     const newObj = Object.assign({}, this.$store.state.global);
-    const stringifiedGasPrice = newObj.gasPrice.toString();
-    delete newObj['localStore'];
-    delete newObj['gasPrice'];
-    newObj['gasPrice'] = stringifiedGasPrice;
     const el = document.createElement('a');
     el.setAttribute(
       'href',
@@ -77,7 +61,7 @@ export default class Settings {
   _validateImportObject(obj) {
     const newObj = {};
     _.keys(obj).forEach(item => {
-      if (!_.contains(VALID_FIELDS, item)) {
+      if (!_.contains(this.validFields, item)) {
         // might actually not need to do this, just strip off the ones that aren't valid
         throw new Error(`Found invalid key! ${item}`);
       } else {

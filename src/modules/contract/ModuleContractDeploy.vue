@@ -1,54 +1,39 @@
 <template>
-  <div>
-    <div class="d-flex">
-      <div class="flex-grow-1">
-        <mew6-white-sheet>
-          <interface-wrap title="Deploy contract">
-            <mew-input label="Byte code" placeholder=" " />
+  <mew-module
+    class="d-flex flex-grow-1 pt-6"
+    :has-elevation="true"
+    :has-indicator="true"
+    title="Deploy contract"
+  >
+    <template #moduleBody>
+      <div class="d-flex flex-column full-width pa-5">
+        <mew-input label="Byte code" placeholder=" " />
 
-            <v-textarea
-              no-resize
-              outlined
-              name="input-7-4"
-              label="ABI/JSON Interface"
-              value=""
-              placeholder=" "
-            ></v-textarea>
+        <v-textarea
+          no-resize
+          outlined
+          name="input-7-4"
+          label="ABI/JSON Interface"
+          value=""
+          placeholder=" "
+        ></v-textarea>
 
-            <mew-input label="Contract name" placeholder=" " />
+        <mew-input label="Contract name" placeholder=" " />
 
-            <div class="text-center mt-3">
-              <mew-button
-                title="Sign Transaction"
-                :has-full-width="false"
-                btn-size="xlarge"
-              />
-            </div>
-          </interface-wrap>
-        </mew6-white-sheet>
+        <div class="text-center mt-3">
+          <mew-button
+            title="Sign Transaction"
+            :has-full-width="false"
+            btn-size="xlarge"
+          />
+        </div>
       </div>
-      <div class="pa-4"></div>
-      <div>
-        <network />
-        <div class="pa-4"></div>
-        <swap />
-      </div>
-    </div>
-  </div>
+    </template>
+  </mew-module>
 </template>
 
 <script>
-import InterfaceWrap from '@/components/interface-wrap/InterfaceWrap';
-
-import Network from '@/modules/network/ModuleNetwork';
-import Swap from '@/components/swap/Swap';
-
 export default {
-  name: 'ModuleContractDeploy',
-  components: {
-    'interface-wrap': InterfaceWrap,
-    network: Network,
-    swap: Swap
-  }
+  name: 'ModuleContractDeploy'
 };
 </script>

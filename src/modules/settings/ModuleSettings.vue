@@ -55,7 +55,6 @@
 <script>
 import ImportConfig from './components/SettingsImportConfig';
 import ExportConfig from './components/SettingsExportConfig';
-// import Notifications from './components/SettingsNotification';
 import GasPrice from './components/SettingsGasPrice';
 import AddressBook from '@/modules/address-book/ModuleAddressBook';
 import AddEditAddress from '@/modules/address-book/components/AddressBookAddEdit';
@@ -73,7 +72,6 @@ export default {
   components: {
     ImportConfig,
     ExportConfig,
-    // Notifications,
     GasPrice,
     AddressBook,
     AddEditAddress

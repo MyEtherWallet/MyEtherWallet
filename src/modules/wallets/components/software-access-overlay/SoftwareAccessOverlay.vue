@@ -17,12 +17,12 @@
         <template v-if="!step">
           <div v-for="(btn, key) in buttons" :key="key">
             <mew-super-button
-              btn-mode="small-right-image"
               :title="btn.label"
               :subtitle="btn.description"
               :right-icon="btn.icon"
-              icon-type="img"
+              right-icon-type="img"
               color-theme="basic"
+              font-class="mew-heading-2"
               class="mb-5 mew-super-btn-shadow"
               @click.native="btn.fn"
             />
@@ -62,7 +62,6 @@
 </template>
 
 <script>
-import mewSuperButton from '@/components/mewSuperButton/MewSuperButton';
 import accessKeystore from '../access-keystore/AccessKeystore';
 import accessMnemonic from '../access-mnemonic/AccessMnemonic';
 import accessPrivateKey from '../access-private-key/AccessPrivateKey';
@@ -99,8 +98,7 @@ export default {
   components: {
     accessKeystore,
     accessMnemonic,
-    accessPrivateKey,
-    mewSuperButton
+    accessPrivateKey
   },
   props: {
     open: {

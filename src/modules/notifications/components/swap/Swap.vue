@@ -26,11 +26,7 @@
         <div class="truncate pr-sm-2">
           <div class="d-flex align-center">
             <div class="mr-1">To:</div>
-            <EllipsisBlock
-              max-width="200px"
-              class="monospace"
-              :text="address"
-            />
+            <mew-transform-hash :hash="address" />
           </div>
 
           <div class="d-flex align-center">
@@ -57,12 +53,10 @@
             class="d-block d-sm-flex align-start justify-space-between"
           >
             <div class="pr-2 font-weight-bold">{{ d.label }}</div>
-            <EllipsisBlock
+            <mew-transform-hash
               v-if="d.ellipsis"
-              max-width="200px"
-              class="monospace text-sm-right"
               :class="d.color + '--text'"
-              :text="d.value"
+              :hash="d.value"
             />
             <div v-else class="text-sm-right" :class="d.color + '--text'">
               {{ d.value }}
@@ -75,12 +69,7 @@
 </template>
 
 <script>
-import EllipsisBlock from '@/components/ellipsisBlock/EllipsisBlock';
-
 export default {
-  components: {
-    EllipsisBlock
-  },
   props: {
     address: {
       type: String,
