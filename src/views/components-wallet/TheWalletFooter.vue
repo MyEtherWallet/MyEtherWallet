@@ -55,11 +55,6 @@
         </v-col>
       </v-row>
     </v-container>
-    <!-- <v-container
-      class="py-6 px-10 d-block d-md-flex align-center justify-space-between"
-    > -->
-
-    <!-- </v-container>  -->
   </v-footer>
 </template>
 
