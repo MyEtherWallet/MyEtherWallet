@@ -15,7 +15,7 @@ import Swap from '@/core/components/AppSwap';
 import ModuleContractDeploy from '@/modules/contract/ModuleContractDeploy.vue';
 
 export default {
-  name: 'TheDeplyContractLao',
+  name: 'TheDeplyContractLayout',
   components: {
     TheLayoutWalletGrid,
     Swap,
