@@ -11,6 +11,8 @@ const ERRORS = {
 const WARNING = {};
 
 export default err => {
+  /* eslint-disable-next-line */
+  console.log(err, err.message)
   const errorValues = Object.keys(ERRORS);
   const warningValues = Object.keys(WARNING);
   const foundError = errorValues.find(item => {
