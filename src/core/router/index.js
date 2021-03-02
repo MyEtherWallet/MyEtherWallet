@@ -24,20 +24,20 @@ const router = new Router({
     window.scrollTo(0, 0);
   }
 });
-// router.beforeResolve((to, from, next) => {
-//   if (to.meta.hasOwnProperty('requiresAuth')) {
-//     next();
-//   } else {
-//     if (store.state.wallet.address === null) {
-//       store.dispatch('external/setLastPath', to.path);
-//       next({ name: 'AccessWallet' });
-//     } else {
-//       if (store.state.external.path !== '') {
-//         store.dispatch('external/setLastPath', '');
-//       }
-//       next();
-//     }
-//   }
-// });
+router.beforeResolve((to, from, next) => {
+  if (to.meta.hasOwnProperty('requiresAuth')) {
+    next();
+  } else {
+    if (store.state.wallet.address === null) {
+      store.dispatch('external/setLastPath', to.path);
+      next({ name: 'AccessWallet' });
+    } else {
+      if (store.state.external.path !== '') {
+        store.dispatch('external/setLastPath', '');
+      }
+      next();
+    }
+  }
+});
 
 export default router;
