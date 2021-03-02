@@ -1,5 +1,5 @@
 <template>
-  <the-layout-wallet-grid :total-right-col-items="1">
+  <the-layout-wallet-grid>
     <template #leftColItem1>
       <mew-module
         class="d-flex flex-grow-1 pt-6 mew-component--nft-manager"
