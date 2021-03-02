@@ -84,7 +84,10 @@ export default {
         .then(_newWallet => {
           this.$emit('hardwareWalletOpen', _newWallet);
         })
-        .catch(this.walletConstructor.errorHandler);
+        .catch(err => {
+          console.log(err, 'is it here?');
+          this.walletConstructor.errorHandler(err);
+        });
     },
     switchViewPassword() {
       this.show = !this.show;

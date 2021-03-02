@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { Transaction } from 'ethereumjs-tx';
 import { COOLWALLET as coolWalletType } from '../../bip44/walletTypes';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
@@ -48,17 +47,22 @@ class CoolWallet {
   init(password) {
     const _this = this;
     return new Promise((resolve, reject) => {
-      console.log('setting up listeners');
       cwsTransportLib.listen((error, device) => {
         if (error) {
           reject(error);
         }
         if (device) {
-          console.log('listener found device, connecting');
           cwsTransportLib.connect(device).then(_transport => {
             _this.transport = _transport;
-            console.log('connected, checking if first time');
-            if (_this.firstTimeConnecting) {
+            try {
+              _this.deviceInstance = new cwsETH(
+                _this.transport,
+                _this.appPrivateKey,
+                _this.appId
+              );
+              _this.deviceInstace.getAddress(0);
+              resolve();
+            } catch (e) {
               const {
                 publicKey: appPublicKey,
                 privateKey: appPrivateKey
@@ -67,49 +71,24 @@ class CoolWallet {
               locStore.set('coolWallet-appPrivateKey', appPrivateKey);
               _this.appPrivateKey = appPrivateKey;
               _this.appPublicKey = appPublicKey;
-              console.log(
-                'is first time, create new cwsInstance',
-                _this.transport,
-                _this.appPrivateKey
-              );
               const coolWalletInstance = new cwsWallet(
                 _this.transport,
                 _this.appPrivateKey
               );
-              console.log('is first time, registering');
               coolWalletInstance
                 .register(_this.appPublicKey, password, APP_NAME)
                 .then(appId => {
                   locStore.set('coolWallet-appId', appId);
                   _this.appId = appId;
                   coolWalletInstance.setAppId(appId);
-                  console.log(
-                    'register successful, create new cwsETH instance',
-                    _this.transport,
-                    _this.appPrivateKey,
-                    appId
-                  );
                   _this.deviceInstance = new cwsETH(
                     _this.transport,
                     _this.appPrivateKey,
-                    appId
+                    _this.appId
                   );
                   resolve();
                 })
                 .catch(errorHandler);
-            } else {
-              console.log(
-                'skipping initial registration, and creating cwsETH',
-                _this.transport,
-                _this.appPrivateKey,
-                _this.appId
-              );
-              _this.deviceInstance = new cwsETH(
-                _this.transport,
-                _this.appPrivateKey,
-                _this.appId
-              );
-              resolve();
             }
           });
         } else {
