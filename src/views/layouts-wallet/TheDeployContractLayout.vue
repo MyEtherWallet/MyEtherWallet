@@ -1,18 +1,24 @@
 <template>
-  <div class="d-flex full-width pa-3">
-    <module-contract-deploy class="flex-grow-1" />
-    <network class="pl-5" />
-  </div>
+  <the-layout-wallet-grid>
+    <template #leftColItem1>
+      <module-contract-deploy />
+    </template>
+    <template #rightColItem1>
+      <swap />
+    </template>
+  </the-layout-wallet-grid>
 </template>
 
 <script>
-import Network from '@/modules/network/ModuleNetwork';
+import TheLayoutWalletGrid from '@/core/components/TheLayoutWalletGrid';
+import Swap from '@/core/components/AppSwap';
 import ModuleContractDeploy from '@/modules/contract/ModuleContractDeploy.vue';
 
 export default {
-  name: '',
+  name: 'TheDeployContractLayout',
   components: {
-    Network,
+    TheLayoutWalletGrid,
+    Swap,
     ModuleContractDeploy
   }
 };
