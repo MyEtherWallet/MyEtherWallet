@@ -593,25 +593,52 @@ export default {
         ) {
           try {
             getAddressTokens(this.account.address).then(res => {
+              const tokens = this.network.type.tokens;
               const apiTokens = res.data.getOwnersERC20Tokens.owners;
-              const token = this.network.type.tokens.map(tok => {
-                const found = apiTokens.find(apiT => {
-                  return (
-                    apiT.tokenInfo.contract.toLowerCase() ===
-                    tok.address.toLowerCase()
-                  );
-                });
+              const parsedApiTokens = apiTokens.map(apiT => {
+                const newT = Object.assign(
+                  {},
+                  { balance: apiT.balance },
+                  { address: apiT.tokenInfo.contract },
+                  apiT.tokenInfo
+                );
+                newT['balance'] = BigNumber(newT.balance)
+                  .div(BigNumber(10).pow(newT.decimals))
+                  .toFixed();
+                delete newT['contract'];
+                return newT;
+              });
 
-                if (found) {
-                  tok['balance'] = BigNumber(found.balance)
-                    .div(BigNumber(10).pow(tok.decimals))
-                    .toFixed();
-                } else {
+              // parsedApiTokens.forEach(apiT => {
+              //   const found = tokens.findIndex(tokT => {
+              //     return (
+              //       tokT.address.toLowerCase() === apiT.address.toLowerCase()
+              //     );
+              //   });
+
+              //   if (found !== -1) {
+              //     const foundT = tokens[found];
+              //     foundT.balance = apiT.balance;
+              //     tokens.splice(found, 1, foundT);
+              //   } else {
+              //     apiT.logo = {
+              //       src: '',
+              //       width: '',
+              //       height: '',
+              //       ipfs_hash: ''
+              //     };
+              //     tokens.push(apiT);
+              //   }
+              // });
+
+              tokens.map(tok => {
+                if (!tok.balance) {
                   tok['balance'] = 0;
                 }
+
                 return tok;
               });
-              resolve(token);
+              resolve(tokens);
             });
           } catch (e) {
             resolve(this.network.type.tokens);
@@ -629,14 +656,6 @@ export default {
           this.fetchTokens().then(res => {
             let tokens = res;
             tokens = tokens
-              .sort((a, b) => {
-                if (a.name.toUpperCase() < b.name.toUpperCase()) {
-                  return -1;
-                } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
-                  return 1;
-                }
-                return 0;
-              })
               .map(token => {
                 const convertedToken = {
                   address: token.address,
@@ -652,6 +671,14 @@ export default {
                   convertedToken['logo'] = token.logo;
                 }
                 return convertedToken;
+              })
+              .sort((a, b) => {
+                if (a.name.toUpperCase() < b.name.toUpperCase()) {
+                  return -1;
+                } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
+                  return 1;
+                }
+                return 0;
               });
             resolve(tokens.sort(sortByBalance));
           });
