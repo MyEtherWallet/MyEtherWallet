@@ -1,51 +1,25 @@
 import utils from 'web3-utils';
+import validateHexString from '@/core/helpers/validateHexString';
+import { isInt, stringToArray } from '@/core/helpers/common';
 import { address, bool, bytes, int, string, uint } from './solidityTypes';
 import Method from './method';
 import Deploy from './deploy';
 import Web3 from 'web3';
 
-const stringToArray = str => {
-  return str.replace(/[^a-zA-Z0-9_,]+/g, '').split(',');
-};
-
-const isInt = num => {
-  try {
-    utils.toBN(num);
-    return true;
-  } catch (e) {
-    return false;
-  }
-};
-
-const validateHexString = str => {
-  if (str === '') return true;
-  str =
-    str.substring(0, 2) === '0x'
-      ? str.substring(2).toUpperCase()
-      : str.toUpperCase();
-  return utils.isHex(str);
-};
-
 export default class Contracts {
   constructor(address, web3, gasPrice, storeHandler) {
-    try {
-      this.userAddress = address;
-      this.address = '';
-      this.inputs = {};
-      this.web3 = web3 || new Web3('HTTP://127.0.0.1:7545');
-      this.gasPrice = gasPrice || 1;
-      this.ABI = null;
-      this.contractMethods = [];
-      this.selectedMethod = { inputs: [] };
-      this.storeContractAddress = storeHandler || function () {};
-      this.noInputs = false;
-      // ===========
-      this.deployer = null;
-      this.txByteCode = null;
-    } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
-    }
+    this.userAddress = address;
+    this.address = '';
+    this.inputs = {};
+    this.web3 = web3 || new Web3('HTTP://127.0.0.1:7545');
+    this.gasPrice = gasPrice || 1;
+    this.ABI = null;
+    this.contractMethods = [];
+    this.selectedMethod = { inputs: [] };
+    this.storeContractAddress = storeHandler || function () {};
+    this.noInputs = false;
+    this.deployer = null;
+    this.txByteCode = null;
   }
 
   clear() {
@@ -92,7 +66,7 @@ export default class Contracts {
   }
 
   get hasContractAddress() {
-    return this.address !== '' && utils.isAddress(this.address); // todo replace with helper
+    return this.address !== '' && utils.isAddress(this.address);
   }
 
   get contractActive() {
@@ -192,8 +166,6 @@ export default class Contracts {
           this.ABI = null;
         }
       } catch (e) {
-        // eslint-disable-next-line
-      console.error(e);
         this.ABI = null;
         reject(e);
       }
@@ -201,50 +173,35 @@ export default class Contracts {
   }
 
   setContractAddress(address) {
-    return new Promise((resolve, reject) => {
-      this.address = address;
-      if (this.contractActive) {
-        this.processAbi(this.ABI)
-          .then(resolve)
-          .catch(err => {
-            this.ABI = null;
-            // eslint-disable-next-line
-            console.error(err);
-            reject(err);
-          });
-      }
-    });
+    this.address = address;
+    if (this.contractActive) {
+      return this.processAbi(this.ABI).catch(err => {
+        this.ABI = null;
+        throw err;
+      });
+    }
+    return Promise.resolve();
   }
 
   processAbi() {
-    return new Promise((resolve, reject) => {
-      try {
-        if (this.ABI !== '') {
-          if (Array.isArray(this.ABI)) {
-            this.contractMethods = this.ABI.filter(item => {
-              if (item.type !== 'constructor' && item.type !== 'event') {
-                return item;
-              }
-            });
-            this.contractMethodDetails = this.ABI.reduce((acc, cur) => {
-              if (cur.type === 'function') {
-                acc[cur.name] = cur;
-              }
-              return acc;
-            }, {});
-            resolve();
-          } else {
-            reject('invalid abi');
+    if (this.ABI !== '') {
+      if (Array.isArray(this.ABI)) {
+        this.contractMethods = this.ABI.filter(item => {
+          if (item.type !== 'constructor' && item.type !== 'event') {
+            return item;
           }
-        } else {
-          reject('processAbi error');
-        }
-      } catch (e) {
-        // eslint-disable-next-line
-      console.error(e);
-        reject(e);
+        });
+        this.contractMethodDetails = this.ABI.reduce((acc, cur) => {
+          if (cur.type === 'function') {
+            acc[cur.name] = cur;
+          }
+          return acc;
+        }, {});
+        return;
       }
-    });
+    } else {
+      throw 'processAbi error';
+    }
   }
   selectedFunction(methodName) {
     return new Promise((resolve, reject) => {
@@ -276,20 +233,14 @@ export default class Contracts {
     });
   }
   abiConstructor() {
-    try {
-      if (this.hasABI && this.byteCodeValid) {
-        this.deployer = new Deploy(
-          this.ABI,
-          this.txByteCode,
-          this.userAddress,
-          this.web3,
-          this.gasPrice
-        );
-      }
-    } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
-      return {};
+    if (this.hasABI && this.byteCodeValid) {
+      this.deployer = new Deploy(
+        this.ABI,
+        this.txByteCode,
+        this.userAddress,
+        this.web3,
+        this.gasPrice
+      );
     }
   }
 
@@ -320,26 +271,22 @@ export default class Contracts {
 
   static validateABI(json) {
     if (json === '') return false;
-    try {
-      if (Array.isArray(json)) {
-        if (json.length > 0) {
-          return json.every(item => {
-            if (item.type === 'constructor') {
-              return !!item.type && !!item.inputs;
-            }
-            if (item.type === 'function') {
-              return !!item.type && !!item.inputs && !!item.outputs;
-            }
-            if (item.type !== 'function' || item.type !== 'constructor') {
-              return !!item.type;
-            }
-          });
-        }
+    if (Array.isArray(json)) {
+      if (json.length > 0) {
+        return json.every(item => {
+          if (item.type === 'constructor') {
+            return !!item.type && !!item.inputs;
+          }
+          if (item.type === 'function') {
+            return !!item.type && !!item.inputs && !!item.outputs;
+          }
+          if (item.type !== 'function' || item.type !== 'constructor') {
+            return !!item.type;
+          }
+        });
       }
-      return false;
-    } catch (e) {
-      return false;
     }
+    return false;
   }
 
   static parseABI(json) {
@@ -353,11 +300,6 @@ export default class Contracts {
       }
       return JSON.parse(json);
     } catch (e) {
-      if (Array.isArray(json)) {
-        if (json.length > 0) {
-          return json;
-        }
-      }
       return false;
     }
   }
@@ -382,44 +324,30 @@ export default class Contracts {
         return typeof value === typeof true || typeof value === typeof false;
       return false;
     } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
       return false;
     }
   }
   static getType(inputType) {
-    try {
-      if (!inputType) inputType = '';
-      if (inputType.includes('[]')) {
-        return { type: 'string', solidityType: `${inputType}` };
-      }
-      if (inputType.includes(uint))
-        return { type: 'number', solidityType: uint };
-      if (inputType.includes(address))
-        return { type: 'text', solidityType: address };
-      if (inputType.includes(string))
-        return { type: 'text', solidityType: string };
-      if (inputType.includes(bytes))
-        return { type: 'text', solidityType: bytes };
-      if (inputType.includes(bool))
-        return { type: 'radio', solidityType: bool };
-      return { type: 'text', solidityType: string };
-    } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
+    if (!inputType) inputType = '';
+    if (inputType.includes('[]')) {
+      return { type: 'string', solidityType: `${inputType}` };
     }
+    if (inputType.includes(uint)) return { type: 'number', solidityType: uint };
+    if (inputType.includes(address))
+      return { type: 'text', solidityType: address };
+    if (inputType.includes(string))
+      return { type: 'text', solidityType: string };
+    if (inputType.includes(bytes)) return { type: 'text', solidityType: bytes };
+    if (inputType.includes(bool)) return { type: 'radio', solidityType: bool };
+    return { type: 'text', solidityType: string };
   }
   static formatInput(str) {
-    try {
-      if (str[0] === '[') {
-        return JSON.parse(str);
-      }
-      const newArr = str.split(',');
-      return newArr.map(item => {
-        return item.replace(' ', '');
-      });
-    } catch (e) {
-      // Toast.responseHandler(e, Toast.ERROR);
+    if (str[0] === '[') {
+      return JSON.parse(str);
     }
+    const newArr = str.split(',');
+    return newArr.map(item => {
+      return item.replace(' ', '');
+    });
   }
 }

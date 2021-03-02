@@ -1,52 +1,28 @@
 import BigNumber from 'bignumber.js';
 import store from 'store';
-import utils from 'web3-utils';
+import { isAddress } from '@/core/helpers/addressUtils';
+import { toBN, toHex, toWei } from 'web3-utils';
+import validateHexString from '@/core/helpers/validateHexString';
+import { isInt, stringToArray } from '@/core/helpers/common';
 import { address, bool, bytes, int, string, uint } from './solidityTypes';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 import * as ethUnit from 'ethjs-unit';
 import { Transaction } from 'ethereumjs-tx';
 import { bufferToHex, generateAddress, toBuffer } from 'ethereumjs-util';
 
-const stringToArray = str => {
-  return str.replace(/[^a-zA-Z0-9_,]+/g, '').split(',');
-};
-
-const isInt = num => {
-  try {
-    utils.toBN(num);
-    return true;
-  } catch (e) {
-    return false;
-  }
-};
-
-const validateHexString = str => {
-  if (str === '') return true;
-  str =
-    str.substring(0, 2) === '0x'
-      ? str.substring(2).toUpperCase()
-      : str.toUpperCase();
-  return utils.isHex(str);
-};
-
 export default class Deploy {
   constructor(abi, txByteCode, address, web3, gasPrice) {
-    try {
-      this.userAddress = address;
-      this.address = '';
-      this.web3 = web3;
-      this.gasPrice = gasPrice;
-      this.ABI = abi;
-      this.constructorABI = null;
-      this.constructorInputs = {};
-      this.txByteCode = txByteCode;
-      this.contractsDeployed = [];
-      this.noConstructorInputs = false;
-      this.abiConstructor();
-    } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
-    }
+    this.userAddress = address;
+    this.address = '';
+    this.web3 = web3;
+    this.gasPrice = gasPrice;
+    this.ABI = abi;
+    this.constructorABI = null;
+    this.constructorInputs = {};
+    this.txByteCode = txByteCode;
+    this.contractsDeployed = [];
+    this.noConstructorInputs = false;
+    this.abiConstructor();
   }
 
   clear() {
@@ -69,7 +45,7 @@ export default class Deploy {
   }
 
   get hasABI() {
-    return !!Deploy.validateABI(this.ABI);
+    return Deploy.validateABI(this.ABI);
   }
 
   get abiValid() {
@@ -78,7 +54,7 @@ export default class Deploy {
 
   get byteCodeValid() {
     try {
-      return !!this.txByteCode && this.txByteCode.substring(0, 2) === '0x';
+      return this.txByteCode && this.txByteCode.substring(0, 2) === '0x';
     } catch (e) {
       return false;
     }
@@ -142,8 +118,6 @@ export default class Deploy {
       }
       return this.constructorInputs;
     } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
       return {};
     }
   }
@@ -153,9 +127,7 @@ export default class Deploy {
         if (!this.canDeploy) return Promise.reject();
         const rawTx = {};
         if (this.constructorABI.payable && withValue)
-          rawTx.value = sanitizeHex(
-            ethUnit.toWei(withValue, 'ether').toString(16)
-          );
+          rawTx.value = toHex(toBN(toWei(withValue, 'ether')));
         else rawTx.value = '0x00';
         rawTx.data = this.txData();
         if (rawTx.data !== '0x') {
@@ -198,10 +170,7 @@ export default class Deploy {
     return '0x';
   }
   async estimateGas(params) {
-    return this.web3.eth.estimateGas(params).catch(err => {
-      // eslint-disable-next-line
-      console.error(err);
-    });
+    return this.web3.eth.estimateGas(params);
   }
   async getNonce(address) {
     return this.web3.eth.getTransactionCount(address);
@@ -214,7 +183,7 @@ export default class Deploy {
     return this.web3.eth
       .getCoinbase()
       .then(() => {
-        coinbase = this.userAddress; // todo use actual result from getCoinbase if correctly returns user address
+        coinbase = this.userAddress;
         return Promise.all([
           this.estimateGas({ from: coinbase, ...tx }),
           this.getNonce(coinbase)
@@ -240,35 +209,32 @@ export default class Deploy {
         this.contractsDeployed.push(contractAddr);
         this.clear();
         return this.web3.eth.sendTransaction(json);
-      })
-      .catch(err => {
-        throw err;
       });
   }
 
-  pushContractToStore(addr, contractName) {
-    const localStoredContract = store.get('customContracts') || [];
-    const itemIndex = localStoredContract.findIndex(item => {
-      return item.name.toLowerCase() === contractName.toLowerCase();
-    });
-    if (itemIndex === -1) {
-      const storableObj = {
-        abi: this.ABI,
-        address: addr,
-        comment: '',
-        name: contractName
-      };
-      localStoredContract.push(storableObj);
-    } else {
-      localStoredContract[itemIndex] = {
-        abi: this.ABI,
-        address: addr,
-        comment: '',
-        name: contractName
-      };
-    }
-    store.set('customContracts', localStoredContract);
-  }
+  // pushContractToStore(addr, contractName) {
+  //   const localStoredContract = store.get('customContracts') || [];
+  //   const itemIndex = localStoredContract.findIndex(item => {
+  //     return item.name.toLowerCase() === contractName.toLowerCase();
+  //   });
+  //   if (itemIndex === -1) {
+  //     const storableObj = {
+  //       abi: this.ABI,
+  //       address: addr,
+  //       comment: '',
+  //       name: contractName
+  //     };
+  //     localStoredContract.push(storableObj);
+  //   } else {
+  //     localStoredContract[itemIndex] = {
+  //       abi: this.ABI,
+  //       address: addr,
+  //       comment: '',
+  //       name: contractName
+  //     };
+  //   }
+  //   store.set('customContracts', localStoredContract);
+  // }
 
   createTypeValidatingProxy(item) {
     return new Proxy(item, {
@@ -340,7 +306,7 @@ export default class Deploy {
       }
       if (solidityType.includes(uint) || solidityType.includes(int))
         return value !== '' && !isNaN(value) && isInt(value);
-      if (solidityType === address) return utils.isAddress(value);
+      if (solidityType === address) return isAddress(value);
       if (solidityType === string) return true;
       if (solidityType.includes(bytes))
         return value.substr(0, 2) === '0x' && validateHexString(value);
@@ -348,45 +314,30 @@ export default class Deploy {
         return typeof value === typeof true || typeof value === typeof false;
       return false;
     } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
       return false;
     }
   }
   static getType(inputType) {
-    try {
-      if (!inputType) inputType = '';
-      if (inputType.includes('[]')) {
-        return { type: 'string', solidityType: `${inputType}` };
-      }
-      if (inputType.includes(uint))
-        return { type: 'number', solidityType: uint };
-      if (inputType.includes(address))
-        return { type: 'text', solidityType: address };
-      if (inputType.includes(string))
-        return { type: 'text', solidityType: string };
-      if (inputType.includes(bytes))
-        return { type: 'text', solidityType: bytes };
-      if (inputType.includes(bool))
-        return { type: 'radio', solidityType: bool };
-      return { type: 'text', solidityType: string };
-    } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
+    if (!inputType) inputType = '';
+    if (inputType.includes('[]')) {
+      return { type: 'string', solidityType: `${inputType}` };
     }
+    if (inputType.includes(uint)) return { type: 'number', solidityType: uint };
+    if (inputType.includes(address))
+      return { type: 'text', solidityType: address };
+    if (inputType.includes(string))
+      return { type: 'text', solidityType: string };
+    if (inputType.includes(bytes)) return { type: 'text', solidityType: bytes };
+    if (inputType.includes(bool)) return { type: 'radio', solidityType: bool };
+    return { type: 'text', solidityType: string };
   }
   static formatInput(str) {
-    try {
-      if (str[0] === '[') {
-        return JSON.parse(str);
-      }
-      const newArr = str.split(',');
-      return newArr.map(item => {
-        return item.replace(' ', '');
-      });
-    } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
+    if (str[0] === '[') {
+      return JSON.parse(str);
     }
+    const newArr = str.split(',');
+    return newArr.map(item => {
+      return item.replace(' ', '');
+    });
   }
 }
