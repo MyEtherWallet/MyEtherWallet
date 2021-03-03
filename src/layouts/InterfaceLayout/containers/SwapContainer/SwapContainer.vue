@@ -1175,6 +1175,7 @@ export default {
 
         return enoughToContinue;
       }
+      return true;
     },
     intermediateGasCheck() {
       if (this.fromCurrency === 'ETH' && this.lastFeeEstimate.gt(0)) {
