@@ -1,9 +1,7 @@
 <template>
   <v-app class="walletBg">
-    <v-main>
-      <module-decision-tree />
-      <router-view />
-    </v-main>
+    <module-decision-tree />
+    <router-view />
     <module-toast />
   </v-app>
 </template>
