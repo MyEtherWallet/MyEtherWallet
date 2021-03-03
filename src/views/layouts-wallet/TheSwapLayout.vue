@@ -144,7 +144,6 @@
                                 :alt="quote.exchangeInfo.name"
                                 height="25"
                               />
-                              {{ active }}
                               <mew-checkbox class="ml-3" :value="active" />
                             </div>
                             <div v-if="false">
