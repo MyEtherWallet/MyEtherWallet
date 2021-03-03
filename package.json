@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.7.21",
+  "version": "5.7.22",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -38,7 +38,7 @@
     "@coolwallets/wallet": "0.2.0-beta.1",
     "@sentry/browser": "6.1.0",
     "@sentry/integrations": "6.1.0",
-    "@unstoppabledomains/resolution": "1.19.0",
+    "@unstoppabledomains/resolution": "1.20.0",
     "apollo-cache-inmemory": "1.6.6",
     "apollo-client": "2.6.10",
     "apollo-link-ws": "1.0.20",

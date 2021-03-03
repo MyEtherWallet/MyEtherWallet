@@ -1,5 +1,8 @@
+### Release v5.7.22
+
 ### Bug
 
+* Fix token loading issue [#2871](https://github.com/MyEtherWallet/MyEtherWallet/pull/2871)
 * Fix coolwallet bug when accessing for first time [#2863](https://github.com/MyEtherWallet/MyEtherWallet/pull/2863)
 
 ### Release v5.7.21
