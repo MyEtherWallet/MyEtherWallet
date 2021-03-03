@@ -145,7 +145,7 @@
     "uglify-es": "3.3.9",
     "uuid": "8.3.2",
     "vue-cli-plugin-vuetify": "2.1.0",
-    "vue-i18n": "8.22.4",
+    "vue-i18n": "8.23.0",
     "vue-template-compiler": "2.6.12",
     "vuetify": "2.4.3",
     "wallet-address-validator": "0.2.4",
