@@ -83,6 +83,7 @@
                 <div class="mt-5">
                   <div class="mew-heading-3 mb-5">Select a provider</div>
 
+                  <!-- Dummy skeleton loader for provider list -->
                   <v-row v-if="step == 0">
                     <v-col v-for="btn in 4" :key="btn" cols="12" class="mb-n3">
                       <v-card
@@ -104,7 +105,8 @@
                     </v-col>
                   </v-row>
 
-                  <v-item-group v-show="step >= 1">
+                  <!-- Real provider list -->
+                  <v-item-group v-show="step >= 1" mandatory>
                     <v-row>
                       <v-col
                         v-for="(quote, idx) in availableQuotes"
@@ -124,7 +126,10 @@
                               active ? 'selectorBg' : 'selectorBg lighten-1'
                             "
                             class="d-flex align-center justify-space-between border-radius--10px pl-5 pr-2 py-1"
-                            @click="toggle"
+                            @click="
+                              toggle();
+                              setProvider(idx);
+                            "
                           >
                             <div class="mew-heading-2 font-weight-medium">
                               {{
@@ -139,11 +144,8 @@
                                 :alt="quote.exchangeInfo.name"
                                 height="25"
                               />
-                              <mew-checkbox
-                                class="ml-3"
-                                :value="active"
-                                @input="setProvider($event, idx)"
-                              />
+                              {{ active }}
+                              <mew-checkbox class="ml-3" :value="active" />
                             </div>
                             <div v-if="false">
                               {{ quote.exchangeInfo.name }}
@@ -401,15 +403,13 @@ export default {
           }
         });
     }, 500),
-    setProvider(event, idx) {
+    setProvider(idx) {
       this.availableQuotes.forEach((q, _idx) => {
         if (_idx === idx) {
           q.isSelected = event;
-          if (event) {
-            this.tokenOutValue = q.amount;
-            this.getTrade(idx);
-          }
-        } else q.isSelected = false;
+          this.tokenOutValue = q.amount;
+          this.getTrade(idx);
+        }
       });
     },
     getTrade: utils._.debounce(function (idx) {
