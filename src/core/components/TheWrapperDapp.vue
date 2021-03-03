@@ -12,7 +12,11 @@
       now if there is none available.
     =====================================================================================
     -->
-    <mew-banner :text-obj="bannerText" :banner-img="bannerImg" />
+    <mew-banner
+      :text-obj="bannerText"
+      :banner-img="bannerImg"
+      @closeBanner="onClose"
+    />
     <!--
     =====================================================================================
       Mew Tabs - props: tabItems, activeTab; takes in a slot for each 
@@ -66,6 +70,13 @@ export default {
     activeTab: {
       default: 0,
       type: Number
+    }
+  },
+  methods: {
+    onClose() {
+      this.$router.push({
+        name: 'Dapps'
+      });
     }
   }
 };

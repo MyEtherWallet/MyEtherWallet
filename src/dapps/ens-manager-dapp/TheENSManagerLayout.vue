@@ -7,7 +7,7 @@
   <div>
     <the-wrapper-dapp
       :banner-img="ensBannerImg"
-      :banner-text="topBanner"
+      :banner-text="bannerText"
       :tab-items="tabs"
       :active-tab="activeTab"
     >
@@ -269,7 +269,7 @@ export default {
       ],
       myDomains: [],
       ensBannerImg: ensBannerImg,
-      topBanner: {
+      bannerText: {
         title: this.$t('ens.title'),
         subtext: this.$t('ens.dapp-desc'),
         exit: this.$t('common.exit-dapp')

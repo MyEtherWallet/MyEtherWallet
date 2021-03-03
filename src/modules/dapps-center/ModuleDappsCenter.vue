@@ -4,7 +4,7 @@
       Dapp Center Module
     =====================================================================================
     -->
-  <the-wrapper-dapp :banner-img="bannerImage" :banner-text="title">
+  <the-wrapper-dapp :banner-img="bannerImage" :banner-text="bannerText">
     <template #content>
       <div class="mew-heading-1 px-4 mb-4">MEW Dapps</div>
       <v-row>
@@ -35,7 +35,7 @@ export default {
   data() {
     return {
       bannerImage: bannerImage,
-      title: {
+      bannerText: {
         title: 'Explore MEW Dapps'
       },
       dapps: [
