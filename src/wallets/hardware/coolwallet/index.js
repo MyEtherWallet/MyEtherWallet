@@ -52,39 +52,39 @@ class CoolWallet {
           reject(error);
         }
         if (device) {
-          cwsTransportLib.connect(device).then(_transport => {
+          cwsTransportLib.connect(device).then(async _transport => {
             _this.transport = _transport;
             try {
-              _this.deviceInstance = new cwsETH(
-                _this.transport,
-                _this.appPrivateKey,
-                _this.appId
+              this.deviceInstance = new cwsETH(
+                this.transport,
+                this.appPrivateKey,
+                this.appId
               );
-              _this.deviceInstace.getAddress(0);
+              await this.deviceInstance.getAddress(0);
               resolve();
             } catch (e) {
               const {
                 publicKey: appPublicKey,
                 privateKey: appPrivateKey
               } = generateKeyPair();
-              locStore.set('coolWallet-appPublicKey', appPublicKey);
-              locStore.set('coolWallet-appPrivateKey', appPrivateKey);
-              _this.appPrivateKey = appPrivateKey;
-              _this.appPublicKey = appPublicKey;
+              this.appPrivateKey = appPrivateKey;
+              this.appPublicKey = appPublicKey;
               const coolWalletInstance = new cwsWallet(
-                _this.transport,
-                _this.appPrivateKey
+                this.transport,
+                this.appPrivateKey
               );
-              coolWalletInstance
-                .register(_this.appPublicKey, password, APP_NAME)
+              await coolWalletInstance
+                .register(this.appPublicKey, password, APP_NAME)
                 .then(appId => {
                   locStore.set('coolWallet-appId', appId);
-                  _this.appId = appId;
+                  locStore.set('coolWallet-appPublicKey', appPublicKey);
+                  locStore.set('coolWallet-appPrivateKey', appPrivateKey);
+                  this.appId = appId;
                   coolWalletInstance.setAppId(appId);
-                  _this.deviceInstance = new cwsETH(
-                    _this.transport,
-                    _this.appPrivateKey,
-                    _this.appId
+                  this.deviceInstance = new cwsETH(
+                    this.transport,
+                    this.appPrivateKey,
+                    this.appId
                   );
                   resolve();
                 })
