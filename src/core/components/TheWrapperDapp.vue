@@ -13,7 +13,7 @@
     =====================================================================================
     -->
     <mew-banner
-      :text-obj="bannerText"
+      :text-obj="bannerTextObj"
       :banner-img="bannerImg"
       @closeBanner="onClose"
     />
@@ -53,8 +53,11 @@
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.png';
 
 export default {
-  components: {},
   props: {
+    hasExitBtn: {
+      default: false,
+      type: Boolean
+    },
     bannerImg: {
       default: bannerImage,
       type: String
@@ -70,6 +73,17 @@ export default {
     activeTab: {
       default: 0,
       type: Number
+    }
+  },
+  data() {
+    return {
+      bannerTextObj: {}
+    };
+  },
+  mounted() {
+    if (this.hasExitBtn) {
+      this.bannerTextObj = this.bannerText;
+      this.bannerTextObj.exit = this.$t('common.exit-dapp');
     }
   },
   methods: {

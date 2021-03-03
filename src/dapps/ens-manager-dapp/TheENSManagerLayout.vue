@@ -6,6 +6,7 @@
     -->
   <div>
     <the-wrapper-dapp
+      :has-exit-btn="true"
       :banner-img="ensBannerImg"
       :banner-text="bannerText"
       :tab-items="tabs"
@@ -271,8 +272,7 @@ export default {
       ensBannerImg: ensBannerImg,
       bannerText: {
         title: this.$t('ens.title'),
-        subtext: this.$t('ens.dapp-desc'),
-        exit: this.$t('common.exit-dapp')
+        subtext: this.$t('ens.dapp-desc')
       }
     };
   },
