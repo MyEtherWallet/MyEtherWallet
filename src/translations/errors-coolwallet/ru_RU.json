@@ -6,7 +6,7 @@
   "pairing-issue": "Возникли проблемы с соединением CoolWallet",
   "no-bluetooth": "Нет поддержки Bluetooth, попробуйте использовать chrome браузер",
   "max-app-instance": "Достигнуто максимальное кол-во парных устройств! Пожалуйста, удалите сопряженное устройство через настройки приложения CoolWallet!",
-  "user-cancelled-action": "User cancelled device search!",
-  "generated-pairing-password": "Error with the generated password! Please generate a new pairing password!",
-  "restart-device": "Device pairing error! Please restart device and try again!"
+  "user-cancelled-action": "Пользователь отменил поиск устройства!",
+  "generated-pairing-password": "Ошибка с паролем. Пожалуйста, генерируйте новый пароль!",
+  "restart-device": "Ошибка подключения устройства! Пожалуйста, перезапустите устройство и попробуйте еще раз!"
 }
