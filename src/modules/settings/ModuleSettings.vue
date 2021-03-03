@@ -55,8 +55,12 @@
           </template>
         </mew-expand-panel>
       </v-sheet>
-      <!-- add and edit the address book -->
-      <add-edit-address
+      <!--
+    =====================================================================================
+     Add / Edit Address Book overlay
+    =====================================================================================
+    -->
+      <address-book-add-edit
         v-if="addMode || editMode"
         :item="itemToEdit"
         :mode="onMode"
@@ -71,7 +75,7 @@ import ImportConfig from './components/SettingsImportConfig';
 import ExportConfig from './components/SettingsExportConfig';
 import Notifications from './components/SettingsNotification';
 import GasPrice from './components/SettingsGasPrice';
-import AddEditAddress from '@/modules/address-book/components/AddressBookAddEdit';
+import AddressBookAddEdit from '@/modules/address-book/components/AddressBookAddEdit';
 import { mapState } from 'vuex';
 
 const modes = ['add', 'edit'];
@@ -83,7 +87,7 @@ export default {
     ExportConfig,
     Notifications,
     GasPrice,
-    AddEditAddress
+    AddressBookAddEdit
   },
   props: {
     onSettings: { default: false, type: Boolean }
@@ -164,21 +168,27 @@ export default {
   watch: {
     addressBook: {
       deep: true,
-      handler: function () {}
+      handler: function () {
+        this.getAddressBookTableData();
+      }
     }
   },
   mounted() {
-    this.addressBook.forEach((item, idx) => {
-      this.tableData.push({
-        number: idx + 1,
-        address: item.address,
-        nickname: item.nickname,
-        resolvedAddr: item.resolvedAddr,
-        callToAction: 'Edit'
-      });
-    });
+    this.getAddressBookTableData();
   },
   methods: {
+    getAddressBookTableData() {
+      this.tableData = [];
+      this.addressBook.forEach((item, idx) => {
+        this.tableData.push({
+          number: idx + 1,
+          address: item.address,
+          nickname: item.nickname,
+          resolvedAddr: item.resolvedAddr,
+          callToAction: 'Edit'
+        });
+      });
+    },
     back(idx) {
       this.idxToExpand = idx ? idx : null;
       this.addMode = false;
