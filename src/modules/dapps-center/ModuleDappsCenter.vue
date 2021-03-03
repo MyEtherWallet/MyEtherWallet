@@ -30,6 +30,7 @@
 <script>
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.png';
+
 export default {
   components: { TheWrapperDapp },
   data() {
