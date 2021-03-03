@@ -69,7 +69,8 @@ import Vuetify, {
   VAppBar,
   VItem,
   VItemGroup,
-  VScrollYTransition
+  VScrollYTransition,
+  VSkeletonLoader
 } from 'vuetify/lib';
 import 'vuetify/dist/vuetify.min.css';
 
@@ -144,7 +145,8 @@ Vue.use(Vuetify, {
     VAppBar,
     VItem,
     VItemGroup,
-    VScrollYTransition
+    VScrollYTransition,
+    VSkeletonLoader
   }
 });
 

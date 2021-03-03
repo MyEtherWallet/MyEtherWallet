@@ -80,9 +80,31 @@
                   @input="setToAddress"
                 />
 
-                <div v-show="step >= 1" class="mt-5">
+                <div class="mt-5">
                   <div class="mew-heading-3 mb-5">Select a provider</div>
-                  <v-item-group>
+
+                  <v-row v-if="step == 0">
+                    <v-col v-for="btn in 4" :key="btn" cols="12" class="mb-n3">
+                      <v-card
+                        flat
+                        color="selectorBg lighten-1"
+                        class="d-flex align-center px-5 py-5"
+                      >
+                        <v-skeleton-loader width="300px" type="chip" />
+                        <v-spacer />
+                        <div class="d-flex align-center">
+                          <v-skeleton-loader
+                            width="170px"
+                            type="chip"
+                            class="mr-5"
+                          />
+                          <v-skeleton-loader width="32px" type="chip" />
+                        </div>
+                      </v-card>
+                    </v-col>
+                  </v-row>
+
+                  <v-item-group v-show="step >= 1">
                     <v-row>
                       <v-col
                         v-for="(quote, idx) in availableQuotes"
@@ -468,6 +490,9 @@ export default {
     .v-application .white {
       background-color: transparent !important;
     }
+  }
+  .v-skeleton-loader__chip {
+    width: 100% !important;
   }
 }
 </style>
