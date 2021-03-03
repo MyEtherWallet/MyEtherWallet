@@ -609,27 +609,24 @@ export default {
                 return newT;
               });
 
-              // parsedApiTokens.forEach(apiT => {
-              //   const found = tokens.findIndex(tokT => {
-              //     return (
-              //       tokT.address.toLowerCase() === apiT.address.toLowerCase()
-              //     );
-              //   });
-
-              //   if (found !== -1) {
-              //     const foundT = tokens[found];
-              //     foundT.balance = apiT.balance;
-              //     tokens.splice(found, 1, foundT);
-              //   } else {
-              //     apiT.logo = {
-              //       src: '',
-              //       width: '',
-              //       height: '',
-              //       ipfs_hash: ''
-              //     };
-              //     tokens.push(apiT);
-              //   }
-              // });
+              parsedApiTokens.forEach(apiT => {
+                const found = tokens.findIndex(tokT => {
+                  return (
+                    tokT.address.toLowerCase() === apiT.address.toLowerCase()
+                  );
+                });
+                if (found !== -1) {
+                  tokens[found]['balance'] = apiT.balance;
+                } else {
+                  apiT.logo = {
+                    src: '',
+                    width: '',
+                    height: '',
+                    ipfs_hash: ''
+                  };
+                  tokens.push(apiT);
+                }
+              });
 
               tokens.map(tok => {
                 if (!tok.balance) {

@@ -1,3 +1,7 @@
+### Bug
+
+- Fix token loading issue [#2871](https://github.com/MyEtherWallet/MyEtherWallet/pull/2871)
+
 ### Release v5.7.21
 
 ### Bug
