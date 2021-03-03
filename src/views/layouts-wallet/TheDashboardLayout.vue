@@ -1,20 +1,23 @@
 <template>
-  <v-row>
-    <v-col cols="12" md="8">
-      <module-balance v-if="!showBuyEth" />
+  <the-wrapper-wallet :total-left-col-items="2" :total-right-col-items="2">
+    <template #leftColItem1>
+      <module-balance />
+    </template>
+    <template #leftColItem2>
       <module-tokens />
-    </v-col>
-    <v-col cols="12" md="4">
-      <module-network />
-      <app-swap class="mt-3" />
-      <app-carousel class="mt-3" />
-    </v-col>
-  </v-row>
+    </template>
+    <template #rightColItem1>
+      <app-swap />
+    </template>
+    <template #rightColItem2>
+      <app-carousel />
+    </template>
+  </the-wrapper-wallet>
 </template>
 
 <script>
+import TheWrapperWallet from '@/core/components/TheWrapperWallet';
 import AppCarousel from '@/core/components/AppCarousel';
-import ModuleNetwork from '@/modules/network/ModuleNetwork';
 import ModuleBalance from '@/modules/balance/ModuleBalance';
 import ModuleTokens from '@/modules/balance/ModuleTokens';
 import AppSwap from '@/core/components/AppSwap';
@@ -23,9 +26,9 @@ export default {
   components: {
     AppCarousel,
     ModuleBalance,
-    ModuleNetwork,
     ModuleTokens,
-    AppSwap
+    AppSwap,
+    TheWrapperWallet
   }
 };
 </script>
