@@ -49,7 +49,7 @@ To find out how to disclose a vulnerability visit [hackerone.com/myetherwallet](
 
 ## Getting started
 
-1. Make sure you have NodeJS newer than version 8, but older than version 12, and NPM version 6 or greater.
+1. Make sure you have NodeJS >= 10, but older than version 12, and NPM version 6 or greater.
 2. Open terminal
 3. Clone the repo: `git clone git@github.com:MyEtherWallet/MyEtherWallet.git`
 4. run `npm i` to install node packages.	
