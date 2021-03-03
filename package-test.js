@@ -60,7 +60,8 @@ const EXCEPTIONS = [
   // probably hold off on this one until next iteration
   '@sentry/browser',
   '@sentry/integrations',
-  'sass-loader'
+  'sass-loader',
+  'stylelint'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
