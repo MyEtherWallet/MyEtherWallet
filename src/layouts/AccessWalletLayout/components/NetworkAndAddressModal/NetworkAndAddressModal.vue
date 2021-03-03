@@ -478,22 +478,26 @@ export default {
         });
     },
     async setHDAccounts() {
-      if (!this.web3.eth) this.setWeb3Instance();
-      this.HDAccounts = [];
-      for (
-        let i = this.currentIndex;
-        i < this.currentIndex + MAX_ADDRESSES;
-        i++
-      ) {
-        const account = await this.hardwareWallet.getAccount(i);
-        this.HDAccounts.push({
-          index: i,
-          account: account,
-          balance: 'loading'
-        });
-        this.setBalances();
+      try {
+        if (!this.web3.eth) this.setWeb3Instance();
+        this.HDAccounts = [];
+        for (
+          let i = this.currentIndex;
+          i < this.currentIndex + MAX_ADDRESSES;
+          i++
+        ) {
+          const account = await this.hardwareWallet.getAccount(i);
+          this.HDAccounts.push({
+            index: i,
+            account: account,
+            balance: 'loading'
+          });
+          this.setBalances();
+        }
+        this.currentIndex += MAX_ADDRESSES;
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
       }
-      this.currentIndex += MAX_ADDRESSES;
     },
     nextAddressSet() {
       this.setHDAccounts();
