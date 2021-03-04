@@ -61,19 +61,8 @@
                 />
               </div>
             </div>
-            <mew-address-select
-              class="mt-5"
-              copy-tooltip="Copy"
-              save-tooltip="Save"
-              :enable-save-address="true"
-              label="To address"
-              :items="addresses"
-              placeholder="Please enter an address"
-              success-toast="Success"
-              :is-valid-address="false"
-              :value="address"
-              @input="setToAddress"
-            />
+
+            <module-address-book @setAddress="setToAddress" />
 
             <div class="mt-5">
               <div class="mew-heading-3 mb-5">Select a provider</div>
@@ -185,6 +174,7 @@
 </template>
 
 <script>
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapConfirmation from '@/modules/swap/components/SwapConfirmation';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import KyberNetwork from '@/assets/images/icons/icon-kyber-network.svg';
@@ -201,6 +191,7 @@ const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const AMT = '0.1';
 export default {
   components: {
+    ModuleAddressBook,
     SwapConfirmation,
     ModuleNetwork
   },
