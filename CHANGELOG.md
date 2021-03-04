@@ -2,6 +2,7 @@
 
 ### Devop
 
+- Refactor access wallet, update ui to make it consistent [#2846] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2846)
 - Created Core wallet layout, fixes for header and footer [#2863](https://github.com/MyEtherWallet/MyEtherWallet/pull/2863)
 - Fix sentry [#2858](https://github.com/MyEtherWallet/MyEtherWallet/pull/2858)
 - Fix wallet layouts [#2848](https://github.com/MyEtherWallet/MyEtherWallet/pull/2848)
