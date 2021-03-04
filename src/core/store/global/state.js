@@ -10,7 +10,7 @@ const state = {
   online: true,
   linkQuery: {},
   locale: 'en_US',
-  stateVersion: Configs.stateVersion,
+  stateVersion: Configs.VERSION.global,
   gasLimitWarning: 100,
   gasPrice: toWei('41', 'gwei'),
   gasPriceType: gasPriceTypes.ECONOMY,

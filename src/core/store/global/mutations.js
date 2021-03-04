@@ -2,10 +2,8 @@ import localStore from 'store';
 import Configs from '../configs';
 const INIT_STORE = function (state) {
   if (localStore.get(Configs.LOCAL_STORAGE_KEYS.global)) {
-    const savedStore = JSON.parse(
-      localStore.get(Configs.LOCAL_STORAGE_KEYS.global)
-    );
-    if (savedStore.stateVersion === Configs.stateVersion) {
+    const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.global);
+    if (savedStore.stateVersion === Configs.VERSION.global) {
       Object.assign(state, savedStore);
     }
   }
@@ -37,6 +35,12 @@ const SET_NETWORK = function (state, networkObj) {
 const SET_GAS_PRICE_TYPE = function (state, type) {
   state.gasPriceType = type;
 };
+
+const SET_IMPORTED_STATE = function (currentState, newState) {
+  Object.keys(newState).forEach(item => {
+    currentState[item] = newState[item];
+  });
+};
 export default {
   SET_ONLINE_STATUS,
   SET_LOCALE,
@@ -44,5 +48,6 @@ export default {
   SET_NETWORK,
   SET_ADDRESS_BOOK,
   INIT_STORE,
-  SET_GAS_PRICE_TYPE
+  SET_GAS_PRICE_TYPE,
+  SET_IMPORTED_STATE
 };

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapGetters } from 'vuex';
 import { toBN } from 'web3-utils';
 import TokenCalls from '@/apollo/queries/tokens/index';
 import WalletCalls from '@/apollo/queries/wallets/index';
@@ -36,19 +36,20 @@ export default {
   data() {
     return {
       tokens: [],
-      ownersTokens: [],
-      manualBlockFetch: () => {}
+      ownersTokens: []
     };
   },
   computed: {
     ...mapState('wallet', ['address', 'web3']),
-    ...mapState('global', ['online'])
+    ...mapState('global', ['online']),
+    ...mapGetters('global', ['isEthNetwork', 'network'])
   },
   watch: {
     web3() {
       this.web3.eth.clearSubscriptions();
-      clearInterval(this.manualBlockFetch);
       this.subscribeToBlockNumber();
+      this.getTokens();
+      this.getPriceAndBalance();
     }
   },
   mounted() {
@@ -60,39 +61,45 @@ export default {
   },
   destroyed() {
     this.web3.eth.clearSubscriptions();
-    clearInterval(this.manualBlockFetch);
   },
   methods: {
     ...mapActions('wallet', ['setAccountBalance', 'setBlockNumber']),
     ...mapActions('global', ['setGasPrice']),
     ...mapActions('external', ['setETHUSDValue']),
     ...mapState('global', ['gasPriceType']),
-    getOwnDomain() {
-      fetch('');
-    },
     getTokens() {
-      const tokensList = new TokenCalls(this.$apollo);
-      tokensList.getOwnersERC20Tokens(this.address).then(res => {
-        this.ownersTokens = res.map(r => {
-          r.balance = toBN(r.balance);
-          return r;
+      if (this.isEthNetwork) {
+        const tokensList = new TokenCalls(this.$apollo);
+        tokensList.getOwnersERC20Tokens(this.address).then(res => {
+          this.ownersTokens = res.map(r => {
+            r.balance = toBN(r.balance);
+            return r;
+          });
         });
-      });
+      } else {
+        this.tokens = this.network.type.tokens;
+      }
     },
     getPriceAndBalance() {
-      const walletCalls = new WalletCalls(this.$apollo);
-      walletCalls.getBalance(this.address).then(res => {
-        this.setAccountBalance(toBN(res));
-      });
-      walletCalls.getUSDPrice(this.address).then(res => {
-        const usd = {
-          value: res.current_price,
-          symbol: '$',
-          name: 'USD',
-          price_change_24h: res.price_change_24h
-        };
-        this.setETHUSDValue(usd);
-      });
+      if (this.isEthNetwork) {
+        const walletCalls = new WalletCalls(this.$apollo);
+        walletCalls.getBalance(this.address).then(res => {
+          this.setAccountBalance(toBN(res));
+        });
+        walletCalls.getUSDPrice(this.address).then(res => {
+          const usd = {
+            value: res.current_price,
+            symbol: '$',
+            name: 'USD',
+            price_change_24h: res.price_change_24h
+          };
+          this.setETHUSDValue(usd);
+        });
+      } else {
+        this.web3.eth.getBalance(this.address).then(res => {
+          this.setAccountBalance(toBN(res));
+        });
+      }
       this.web3.eth.getGasPrice().then(res => {
         this.setGasPrice(getGasBasedOnType(res, this.gasPriceType));
       });
@@ -103,19 +110,6 @@ export default {
       });
       this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
         this.setBlockNumber(res.number);
-      });
-    },
-    manualBlockSubscription() {
-      const _self = this;
-      // fetch initially
-      _self.web3.eth.getBlockNumber().then(res => {
-        _self.setBlockNumber(res);
-        // rerun in 14 secs
-        _self.manualBlockFetch = setInterval(() => {
-          _self.web3.eth.getBlockNumber().then(res => {
-            _self.setBlockNumber(res);
-          });
-        }, 14000);
       });
     }
   }

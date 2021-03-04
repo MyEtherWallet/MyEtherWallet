@@ -12,43 +12,44 @@
       </div>
     </div>
     <div v-if="!loading && !error" class="pa-3">
-      <v-sheet
-        v-for="(data, key) in swapData"
-        :key="key"
-        color="tableHeader"
-        class="d-flex align-center justify-space-between border-radius--5px mt-1 py-3 px-4 cursor"
-        @click="goToSwap(data)"
-      >
-        <div class="text-uppercase">
-          1 {{ data.fromT.symbol }} / {{ data.rate }} {{ data.toT.symbol }}
-        </div>
-        <div class="d-flex align-center">
-          <img
-            width="22"
-            :src="
-              require('@/assets/images/currencies/' +
-                data.fromT.symbol.toLowerCase() +
-                '.png')
-            "
-            alt="currency-icon"
-          />
-          <img
-            width="18"
-            class="mx-2"
-            src="@/assets/images/icons/icon-swap-arrow-grey.png"
-            alt="swap-icon"
-          />
-          <img
-            width="22"
-            :src="
-              require('@/assets/images/currencies/' +
-                data.toT.symbol.toLowerCase() +
-                '.png')
-            "
-            alt="eth-icon"
-          />
-        </div>
-      </v-sheet>
+      <div v-for="(data, key) in swapData" :key="key">
+        <v-sheet
+          v-if="data.rate"
+          color="tableHeader"
+          class="d-flex align-center justify-space-between border-radius--5px mt-1 py-3 px-4 cursor"
+          @click="goToSwap(data)"
+        >
+          <div class="text-uppercase">
+            1 {{ data.fromT.symbol }} / {{ data.rate }} {{ data.toT.symbol }}
+          </div>
+          <div class="d-flex align-center">
+            <img
+              width="22"
+              :src="
+                require('@/assets/images/currencies/' +
+                  data.fromT.symbol.toLowerCase() +
+                  '.png')
+              "
+              alt="currency-icon"
+            />
+            <img
+              width="18"
+              class="mx-2"
+              src="@/assets/images/icons/icon-swap-arrow-grey.png"
+              alt="swap-icon"
+            />
+            <img
+              width="22"
+              :src="
+                require('@/assets/images/currencies/' +
+                  data.toT.symbol.toLowerCase() +
+                  '.png')
+              "
+              alt="eth-icon"
+            />
+          </div>
+        </v-sheet>
+      </div>
     </div>
     <div
       v-if="loading"
@@ -193,9 +194,12 @@ export default {
         this.loading = true;
         this.swapHandler.getQuotesForSet(STATIC_PAIRS).then(res => {
           this.swapData = STATIC_PAIRS.map((itm, idx) => {
-            itm['rate'] = new BigNumber(res[idx][0].amount).lte(1)
-              ? res[idx][0].amount
-              : new BigNumber(res[idx][0].amount).toFixed(2);
+            itm['rate'] =
+              res[idx].length === 0
+                ? false
+                : new BigNumber(res[idx][0].amount).lte(1)
+                ? res[idx][0].amount
+                : new BigNumber(res[idx][0].amount).toFixed(2);
             return itm;
           });
           this.loading = false;

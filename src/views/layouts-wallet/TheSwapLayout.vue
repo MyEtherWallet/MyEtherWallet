@@ -170,7 +170,8 @@ import Bity from '@/assets/images/icons/icon-bity.png';
 import Swapper from '@/modules/swap/handlers/handlerSwap';
 import ModuleNetwork from '@/modules/network/ModuleNetwork';
 import utils, { toBN, fromWei } from 'web3-utils';
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState, mapActions } from 'vuex';
+import Notification from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
@@ -306,6 +307,7 @@ export default {
       });
   },
   methods: {
+    ...mapActions('notifications', ['addNotification']),
     getTokenFromAddress(address) {
       for (const t of this.availableTokens.toTokens) {
         if (t.contract_address === address) return t;
@@ -322,7 +324,9 @@ export default {
       });
     },
     setToAddress(value) {
-      this.addressValue = value;
+      this.addressValue = value.hasOwnProperty('address')
+        ? value.address
+        : value;
     },
     setFromToken(value) {
       this.fromTokenType = value;
@@ -385,7 +389,7 @@ export default {
       this.swapper
         .getTrade({
           fromAddress: this.address,
-          toAddress: this.addressValue.address,
+          toAddress: this.addressValue,
           provider: this.availableQuotes[idx].provider,
           fromT: this.fromTokenType,
           toT: this.toTokenType,
@@ -406,7 +410,7 @@ export default {
     showConfirm() {
       this.confirmInfo = {
         from: this.address,
-        to: this.addressValue.address,
+        to: this.addressValue,
         fromType: this.fromTokenType.symbol,
         toType: this.toTokenType.symbol,
         fromImg: this.fromTokenType.img,
@@ -422,7 +426,45 @@ export default {
     },
     executeTrade() {
       this.confirmInfo.show = false;
-      this.swapper.executeTrade(this.currentTrade);
+      this.swapper.executeTrade(this.currentTrade).then(res => {
+        this.swapNotificationFormatter(res);
+      });
+    },
+    swapNotificationFormatter(obj) {
+      obj.hashes.forEach((hash, idx) => {
+        const notification = {
+          transactionHash: hash,
+          transactionFee: fromWei(this.totalFees),
+          to: this.currentTrade.transactions[idx].to,
+          from: this.confirmInfo.from,
+          gas: this.currentTrade.transactions[idx].gas,
+          gasPrice: this.currentTrade.transactions[idx].gasPrice,
+          gasLimit: this.totalGasLimit,
+          data: this.currentTrade.transactions[idx].data,
+          value: this.currentTrade.transactions[idx].value,
+          type: 'SWAP',
+          read: false,
+          network: this.network.type.name,
+          date: new Date().getTime(),
+          status: 'PENDING',
+          fromTxData: {
+            currency: this.confirmInfo.fromType,
+            amount: this.confirmInfo.fromVal,
+            icon: this.confirmInfo.fromImg
+          },
+          toTxData: {
+            currency: this.confirmInfo.toType,
+            amount: this.confirmInfo.toVal,
+            icon: this.confirmInfo.toImg,
+            to: this.confirmInfo.to
+              ? this.confirmInfo.to
+              : this.currentTrade.transactions[idx].to
+          },
+          swapObj: obj
+        };
+
+        this.addNotification(new Notification(notification));
+      });
     }
   }
 };
