@@ -315,6 +315,9 @@ export default {
     },
     gasLimit() {
       this.sendTx.setGasLimit(this.gasLimit);
+    },
+    network() {
+      this.setSendTransaction();
     }
   },
   mounted() {

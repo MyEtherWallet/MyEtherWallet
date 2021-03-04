@@ -19,20 +19,26 @@
           :idx-to-expand="idxToExpand"
         >
           <template #panelBody1>
-            <gas-price />
+            <gas-price
+              :buttons="gasButtons"
+              :selected="gasPriceType"
+              :set-selected="setSelected"
+              :current-gas-price="currentGasPrice"
+              :set-custom-gas-price="setCustomGasPrice"
+            />
           </template>
           <template #panelBody2>
-            <import-config />
+            <import-config :import-config="settingsHandler" />
           </template>
           <template #panelBody3>
-            <export-config />
+            <export-config :export-config="settingsHandler.exportStore" />
           </template>
           <template #panelBody4>
             <address-book @add="addMode = !addMode" @edit="onEdit" />
           </template>
-          <template #panelBody5>
+          <!-- <template #panelBody5>
             <notifications />
-          </template>
+          </template> -->
         </mew-expand-panel>
       </v-sheet>
       <!-- add and edit the address book -->
@@ -49,10 +55,17 @@
 <script>
 import ImportConfig from './components/SettingsImportConfig';
 import ExportConfig from './components/SettingsExportConfig';
-import Notifications from './components/SettingsNotification';
+// import Notifications from './components/SettingsNotification';
 import GasPrice from './components/SettingsGasPrice';
 import AddressBook from '@/modules/address-book/ModuleAddressBook';
 import AddEditAddress from '@/modules/address-book/components/AddressBookAddEdit';
+import SettingsHandler from './handler/handlerSettings';
+import { mapGetters, mapState, mapActions } from 'vuex';
+import { SENTRY, Toast } from '../toast/handler/handlerToast';
+import {
+  getGasBasedOnType,
+  gasPriceTypes
+} from '@/core/helpers/gasPriceHelper';
 const modes = ['add', 'edit'];
 
 export default {
@@ -60,7 +73,7 @@ export default {
   components: {
     ImportConfig,
     ExportConfig,
-    Notifications,
+    // Notifications,
     GasPrice,
     AddressBook,
     AddEditAddress
@@ -70,14 +83,67 @@ export default {
   },
   data() {
     return {
+      settingsHandler: null,
       idxToExpand: null,
       editMode: false,
       addMode: false,
       itemToEdit: {},
-      panelItems: [
+      localGas: null
+    };
+  },
+  computed: {
+    ...mapState('global', ['gasPriceType']),
+    ...mapState('wallet', ['web3']),
+    ...mapGetters('global', ['currentGasPrice']),
+    gasButtons() {
+      const utils = this.web3.utils;
+      const economy = this.localGas
+        ? utils.fromWei(
+            getGasBasedOnType(this.localGas, gasPriceTypes.ECONOMY),
+            'gwei'
+          )
+        : 0;
+      const regular = this.localGas
+        ? utils.fromWei(
+            getGasBasedOnType(this.localGas, gasPriceTypes.REGULAR),
+            'gwei'
+          )
+        : 0;
+      const fast = this.localGas
+        ? utils.fromWei(
+            getGasBasedOnType(this.localGas, gasPriceTypes.FAST),
+            'gwei'
+          )
+        : 0;
+      return [
+        {
+          icon: 'bicycle',
+          title: gasPriceTypes.ECONOMY,
+          gas: `${economy}`
+          // usd: '$0.004',
+          // time: '< 30 min'
+        },
+        {
+          icon: 'car',
+          title: gasPriceTypes.REGULAR,
+          gas: `${regular}`
+          // usd: '$0.008',
+          // time: '< 10 min'
+        },
+        {
+          icon: 'rocket',
+          title: gasPriceTypes.FAST,
+          gas: `${fast}`
+          // usd: '$0.012',
+          // time: '< 5 min'
+        }
+      ];
+    },
+    panelItems() {
+      return [
         {
           name: 'Gas price',
-          subtext: '1 Gwei (Economic)'
+          subtext: `${this.currentGasPrice} Gwei (${this.gasPriceType})`
         },
         {
           name: 'Import configurations'
@@ -87,14 +153,12 @@ export default {
         },
         {
           name: 'Contact Address'
-        },
-        {
-          name: 'Notifications'
         }
-      ]
-    };
-  },
-  computed: {
+        // {
+        //   name: 'Notifications'
+        // }
+      ];
+    },
     getMode() {
       return this.addMode ? modes[0] : modes[1];
     },
@@ -108,7 +172,45 @@ export default {
       return this.$t('common.settings');
     }
   },
+  watch: {
+    onSettings(newVal) {
+      if (newVal) {
+        this.fetchGasPrice();
+      }
+    }
+  },
+  created() {
+    this.settingsHandler = new SettingsHandler();
+    this.fetchGasPrice();
+  },
   methods: {
+    ...mapActions('global', ['setGasPrice', 'setGasPriceType']),
+    setSelected(selected) {
+      try {
+        this.setGasPrice(this.localGas).then(() => {
+          this.setGasPriceType(selected);
+        });
+      } catch (e) {
+        Toast(e, {}, SENTRY);
+      }
+    },
+    setCustomGasPrice(customGasPrice) {
+      this.setGasPriceType(gasPriceTypes.STORED).then(() => {
+        this.setGasPrice(
+          getGasBasedOnType(
+            this.web3.utils.toWei(customGasPrice, 'gwei'),
+            gasPriceTypes.STORED
+          )
+        );
+      });
+    },
+    async fetchGasPrice() {
+      try {
+        this.localGas = await this.web3.eth.getGasPrice();
+      } catch (e) {
+        Toast(e, {}, SENTRY);
+      }
+    },
     back(idx) {
       this.idxToExpand = idx ? idx : null;
       this.addMode = false;
