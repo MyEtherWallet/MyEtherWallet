@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Settings [#2835h](https://github.com/MyEtherWallet/MyEtherWallet/pull/2835)
 * notifications [#2860](https://github.com/MyEtherWallet/MyEtherWallet/pull/2860)
 * Created Core wallet layout, fixes for header and footer [#2863](https://github.com/MyEtherWallet/MyEtherWallet/pull/2863)
 * Fix sentry [#2858](https://github.com/MyEtherWallet/MyEtherWallet/pull/2858)

@@ -277,9 +277,8 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('global', ['network', 'gasPrice']),
     ...mapState('external', ['ETHUSDValue']),
-    ...mapState('global', ['gasPrice']),
-    ...mapGetters('global', ['network']),
     ...mapState('wallet', ['balance', 'address', 'web3']),
     rules() {
       return [

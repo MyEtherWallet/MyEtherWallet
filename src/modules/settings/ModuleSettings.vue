@@ -23,7 +23,7 @@
               :buttons="gasButtons"
               :selected="gasPriceType"
               :set-selected="setSelected"
-              :current-gas-price="currentGasPrice"
+              :gas-price="gasPrice"
               :set-custom-gas-price="setCustomGasPrice"
             />
           </template>
@@ -55,7 +55,6 @@
 <script>
 import ImportConfig from './components/SettingsImportConfig';
 import ExportConfig from './components/SettingsExportConfig';
-// import Notifications from './components/SettingsNotification';
 import GasPrice from './components/SettingsGasPrice';
 import AddressBook from '@/modules/address-book/ModuleAddressBook';
 import AddEditAddress from '@/modules/address-book/components/AddressBookAddEdit';
@@ -73,7 +72,6 @@ export default {
   components: {
     ImportConfig,
     ExportConfig,
-    // Notifications,
     GasPrice,
     AddressBook,
     AddEditAddress
@@ -94,7 +92,7 @@ export default {
   computed: {
     ...mapState('global', ['gasPriceType']),
     ...mapState('wallet', ['web3']),
-    ...mapGetters('global', ['currentGasPrice']),
+    ...mapGetters('global', ['gasPrice']),
     gasButtons() {
       const utils = this.web3.utils;
       const economy = this.localGas
@@ -143,7 +141,9 @@ export default {
       return [
         {
           name: 'Gas price',
-          subtext: `${this.currentGasPrice} Gwei (${this.gasPriceType})`
+          subtext: `${this.web3.utils.fromWei(this.gasPrice, 'gwei')} Gwei (${
+            this.gasPriceType
+          })`
         },
         {
           name: 'Import configurations'

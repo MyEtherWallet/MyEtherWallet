@@ -179,9 +179,9 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapState('global', ['online', 'gasPrice']),
+    ...mapState('global', ['online']),
     ...mapState('external', ['ETHUSDValue']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH']),
     amtRules() {
       return [
@@ -391,7 +391,6 @@ export default {
       this.data = '';
       this.amount = '0';
       this.toAddress = '';
-      this.gasPrice = '90';
       this.$refs.expandPanel.setToggle(false);
       this.$refs.mewSelect.clear();
       this.$refs.addressSelect.clear();
