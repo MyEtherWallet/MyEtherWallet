@@ -35,7 +35,10 @@
   "ph": {
     "three-char": "Please enter at least 3 Characters"
   },
-  "ens-manager": {"title": "ENS Manager", "description": "Manage your ENS names or transfer it to someone else"},
+  "ens-manager": {
+    "title": "ENS Manager",
+    "description": "Manage your ENS names or transfer it to someone else"
+  },
   "fetching": "Fetching names...",
   "no-names-found": "No ENS name found for account {address}!",
   "renew": "Renew",
@@ -104,6 +107,7 @@
   "upload-my-website": "Upload My Website",
   "unstoppableResolution": {
     "address-reported-error": "Address has been reported. Please make sure you are sending funds to the correct address.",
+    "twitter-verified": "Twitter Verified by",
     "UnregisteredDomain": "Domain {domain} is not registered",
     "UnspecifiedResolver": "Domain {domain} is not configured",
     "UnsupportedDomain": "Domain {domain} is not supported",

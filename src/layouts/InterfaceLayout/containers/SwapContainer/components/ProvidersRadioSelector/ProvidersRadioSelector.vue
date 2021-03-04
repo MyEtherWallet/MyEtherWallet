@@ -305,7 +305,7 @@ export default {
         changelly: Changelly,
         dexag: DexAg,
         ag: DexAg,
-        uniswap: UniSwap,
+        uniswap_v2: UniSwap,
         bancor: Bancor,
         zero_x: Zx
       },

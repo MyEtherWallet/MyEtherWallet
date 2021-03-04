@@ -1,4 +1,5 @@
 const ConvertUnits = () => import('@/layouts/ConvertUnits');
+const PressKit = () => import('@/layouts/PressKit');
 const TeamLayout = () => import('@/layouts/TeamLayout');
 const SecurityPolicy = () => import('@/layouts/SecurityPolicy');
 const PrivacyPolicyLayout = () => import('@/layouts/PrivacyPolicyLayout');
@@ -8,6 +9,7 @@ const NotFoundLayout = () => import('@/layouts/NotFoundLayout');
 const GettingStarted = () => import('@/layouts/GettingStarted');
 const SendOfflineHelper = () => import('@/layouts/SendOfflineHelper');
 const VerifyMessageLayout = () => import('@/layouts/VerifyMessageLayout');
+const GenerateAddressLayout = () => import('@/layouts/GenerateAddressLayout');
 const DappSubmission = () => import('@/layouts/DappSubmissionLayout');
 const AboutYourDapp = () =>
   import('@/layouts/DappSubmissionLayout/containers/AboutYourDappContainer');
@@ -86,6 +88,12 @@ const router = [
     meta: { requiresAuth: false }
   },
   {
+    path: '/press-kit',
+    name: 'PressKit',
+    component: PressKit,
+    meta: { requiresAuth: false }
+  },
+  {
     path: '/getting-started',
     name: 'GettingStarted',
     component: GettingStarted,
@@ -137,6 +145,12 @@ const router = [
     path: '/verify-message',
     name: 'VerifyMessageLayout',
     component: VerifyMessageLayout,
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/generate-eth2-keystore',
+    name: 'GenerateAddressLayout',
+    component: GenerateAddressLayout,
     meta: { requiresAuth: false }
   },
   {

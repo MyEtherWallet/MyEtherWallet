@@ -106,19 +106,22 @@ export default {
       });
       this.getBalance();
     },
-    async getBalance() {
+    getBalance() {
+      const proms = [];
       for (let i = 0; i < this.accounts.length; i++) {
         if (isAddress(this.accounts[i].address)) {
-          const balance = await this.web3.eth.getBalance(
-            this.accounts[i].address
-          );
-          const balanceToWei = this.web3.utils.fromWei(balance);
-          const pushableItem = Object.assign({}, this.accounts[i], {
+          proms.push(this.web3.eth.getBalance(this.accounts[i].address));
+        }
+      }
+      Promise.all(proms).then(values => {
+        values.forEach((item, idx) => {
+          const balanceToWei = this.web3.utils.fromWei(item);
+          const pushableItem = Object.assign({}, this.accounts[idx], {
             balance: new BigNumber(balanceToWei).toString()
           });
           this.accWithBal.push(pushableItem);
-        }
-      }
+        });
+      });
     },
     selectAccount(acc) {
       if (this.selectedAccount === acc) {

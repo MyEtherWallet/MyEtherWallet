@@ -26,4 +26,4 @@ Our API still follows the current web3 iteration. Only change is that you'll hav
 
 ## Issues
 
-As with our webapp, you can submit issues at our [Github repo](https://github.com/myetherwallet/myetherwallet/issues) or you can email us at [support@myetherwallet.com](mailto:support@myetherwallet.com)
+As with our webapp, you can submit issues at our [Github repo](https://github.com/myetherwallet/myetherwallet/issues) or you can email us at <mailto:support@myetherwallet.com>

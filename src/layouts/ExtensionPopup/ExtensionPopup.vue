@@ -36,25 +36,16 @@ export default {
     };
   },
   computed: {
-    ...mapState('main', ['network', 'web3'])
+    ...mapState('main', ['network', 'web3', 'Networks'])
   },
   created() {
-    window.chrome.storage.onChanged.addListener(() => {
-      ExtensionHelpers.getAccounts(this.getAccountsCb);
-    });
+    window.chrome.storage.onChanged.addListener(this.fetchNewStore);
   },
   mounted() {
-    ExtensionHelpers.getAccounts(this.getAccountsCb);
-    if (this.network.type.ens) {
-      this.setENS(
-        new ENS(this.web3.currentProvider, this.network.type.ens.registry)
-      );
-    } else {
-      this.setENS(null);
-    }
+    this.fetchNewStore();
   },
   methods: {
-    ...mapActions('main', ['setENS']),
+    ...mapActions('main', ['setENS', 'setWeb3Instance', 'switchNetwork']),
     addWallet() {
       const chrome = window.chrome;
       if (chrome.runtime.openOptionsPage) {
@@ -64,24 +55,39 @@ export default {
         window.open(chrome.runtime.getURL('index.html'));
       }
     },
-    async fetchEthBalance() {
-      const price = await fetch(
-        'https://cryptorates.mewapi.io/ticker?filter=ETH'
-      )
+    fetchNewStore() {
+      window.chrome.storage.sync.get(null, obj => {
+        const defaultNetwork = obj.hasOwnProperty('defNetwork')
+          ? this.Networks[JSON.parse(obj['defNetwork']).key][0]
+          : this.Networks['ETH'][0];
+        this.switchNetwork(defaultNetwork).then(() => {
+          this.setWeb3Instance().then(() => {
+            this.setENS(
+              new ENS(this.web3.currentProvider, this.network.type.ens.registry)
+            );
+          });
+        });
+        ExtensionHelpers.getAccounts(this.getAccountsCb);
+      });
+    },
+    fetchEthBalance() {
+      const price = fetch('https://cryptorates.mewapi.io/ticker?filter=ETH')
         .then(res => {
           return res.json();
         })
         .catch(() => {
           return 0;
         });
-      const priceAvailable = price.hasOwnProperty('data')
-        ? price.data.ETH.quotes.USD.price
-        : price;
-      this.convertedBalance = `$ ${new BigNumber(priceAvailable)
-        .times(this.totalBalance)
-        .toFixed(2)}`;
+      price.then(res => {
+        const priceAvailable = res.hasOwnProperty('data')
+          ? res.data.ETH.quotes.USD.price
+          : res;
+        this.convertedBalance = `$ ${new BigNumber(priceAvailable)
+          .times(this.totalBalance)
+          .toFixed(2)}`;
 
-      this.ethPrice = priceAvailable;
+        this.ethPrice = priceAvailable;
+      });
     },
     getAccountsCb(res) {
       const accounts = Object.keys(res)

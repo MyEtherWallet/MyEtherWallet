@@ -94,7 +94,7 @@
             @click="openManage(value)"
           >
             <b>{{ $t('dappsMCDMaker.vault-id') }}</b>
-            <b-badge variant="light" class="ml-2" style="font-size: 15px;"
+            <b-badge variant="light" class="ml-2" style="font-size: 15px"
               ># {{ value }}</b-badge
             >
           </b-button>

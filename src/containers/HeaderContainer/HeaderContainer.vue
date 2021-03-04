@@ -25,7 +25,6 @@
       <settings-modal
         v-if="address !== null"
         ref="settings"
-        :gas-price="gasPrice"
         :address="address"
       />
       <logout-modal ref="logout" />
@@ -108,8 +107,17 @@
                     <template slot="button-content">
                       <p>{{ $t('interface.tx-history') }}</p>
                     </template>
+                    <b-dropdown-item
+                      v-show="network.type.name === 'ETH'"
+                      :href="'https://www.ethvm.com/address/' + address"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      >{{ $t('header.ethvm') }} ({{
+                        network.type.name
+                      }})</b-dropdown-item
+                    >
                     <b-dropdown-item :href="explorerUrl" target="_blank">
-                      <p>{{ serviceUrl }} ({{ network.type.name }})</p>
+                      {{ serviceUrl }} ({{ network.type.name }})
                     </b-dropdown-item>
                     <b-dropdown-item
                       v-show="network.type.name === 'ETH'"
@@ -228,14 +236,13 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import store from 'store';
-import { Misc, Toast } from '@/helpers';
+import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import NotificationsContainer from '@/containers/NotificationsContainer';
 import UserReminderButton from '@/components/UserReminderButton';
 import SettingsModal from '@/components/SettingsModal';
 import LogoutModal from '@/components/LogoutModal';
 import IssueLogModal from '@/components/IssueLogModal';
-import BigNumber from 'bignumber.js';
 import MobileMenu from './components/MobileMenu';
 import DisconnectedModal from '@/components/DisconnectedModal';
 import DecisionTree from '@/components/DecisionTree';
@@ -272,7 +279,6 @@ export default {
       isMobileMenuOpen: false,
       isHomePage: true,
       showGetFreeWallet: false,
-      gasPrice: '0',
       error: {},
       resolver: () => {},
       isMewCx: isMewCx,
@@ -323,12 +329,6 @@ export default {
         this.isHomePage = true;
       }
     },
-    address() {
-      this.setHighGasPrice();
-    },
-    web3() {
-      this.setHighGasPrice();
-    },
     locale() {
       this.getCurrentLang();
     }
@@ -375,7 +375,7 @@ export default {
     this.$eventHub.$off('open-settings');
   },
   methods: {
-    ...mapActions('main', ['setLocale']),
+    ...mapActions('main', ['setLocale', 'setGasPrice', 'setEthGasPrice']),
     getCurrentLang() {
       const storedLocale = this.supportedLanguages.find(item => {
         return item.langCode === this.locale;
@@ -384,16 +384,6 @@ export default {
       this._i18n.locale = this.locale;
       this.currentFlag = storedLocale.flag;
       this.currentName = storedLocale.name;
-    },
-    setHighGasPrice() {
-      this.web3.eth
-        .getGasPrice()
-        .then(res => {
-          this.gasPrice = new BigNumber(res).toString();
-        })
-        .catch(e => {
-          Toast.responseHandler(e, Toast.ERROR);
-        });
     },
     openSettings() {
       this.$refs.settings.$refs.settings.show();

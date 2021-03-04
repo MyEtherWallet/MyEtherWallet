@@ -277,7 +277,7 @@
 
 .result-wrapper {
   color: $dark-blue-6;
-  margin-bottom: 50px;
+  margin-bottom: 15px;
   .result-title {
     margin-bottom: 10px;
     padding: 25px 15px 0 15px;
@@ -355,4 +355,43 @@
       }
     }
   }
+}
+
+.cart-container {
+  background-color: #f2fafa;
+  border: 1px solid #05c0a5;
+  border-radius: 7px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 10px;
+}
+
+.cart-close {
+  width: 25px;
+  cursor: pointer;
+}
+
+.cart-items-container {
+  margin-top: 10px;
+}
+
+.cart-item-row {
+  display: flex;
+  align-items: center;
+}
+
+.cart-left {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-total-container {
+  margin-top: 15px;
+}
+
+.bold {
+  font-weight: bold;
 }

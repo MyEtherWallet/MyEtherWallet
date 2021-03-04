@@ -20,6 +20,7 @@
             <div class="title">
               <h4>{{ $t('sendTx.amount') }}</h4>
               <p
+                v-show="txTo"
                 class="title-button prevent-user-select"
                 @click="sendEntireBalance"
               >
@@ -67,7 +68,8 @@
           </div>
           <div class="fee-value">
             <div class="gwei">
-              {{ gasPrice }} {{ $t('common.gas.gwei') }}
+              {{ displayedGasPrice }}
+              {{ $t('common.gas.gwei') }}
               <!--(Economic)-->
             </div>
             <div v-show="network.type.name === 'ETH'" class="usd">
@@ -225,10 +227,6 @@ export default {
     getBalance: {
       type: Function,
       default: function () {}
-    },
-    highestGas: {
-      type: String,
-      default: '0'
     }
   },
   data() {
@@ -256,6 +254,9 @@ export default {
       'online',
       'gasLimitWarning'
     ]),
+    currency() {
+      return this.selectedCurrency.symbol;
+    },
     showGasWarning() {
       return this.gasPrice >= this.gasLimitWarning;
     },
@@ -371,9 +372,12 @@ export default {
       );
     },
     txTo() {
-      return this.isToken
-        ? this.selectedCurrency.address.toLowerCase()
-        : this.hexAddress.toLowerCase().trim();
+      if (this.selectedCurrency || this.hexAddress) {
+        return this.isToken
+          ? this.selectedCurrency.address.toLowerCase()
+          : this.hexAddress.toLowerCase().trim();
+      }
+      return '';
     },
     multiWatch() {
       return (
@@ -393,6 +397,16 @@ export default {
           .toString();
       }
       return '--';
+    },
+    displayedGasPrice() {
+      const newVal = this.gasPrice.toString();
+      const showMore = `~${new BigNumber(newVal).toString()}`;
+      const showSome = `~${new BigNumber(newVal).toFixed(2).toString()}`;
+      return newVal.includes('.')
+        ? new BigNumber(newVal).lt(1)
+          ? showMore
+          : showSome
+        : newVal;
     }
   },
   watch: {
@@ -458,20 +472,31 @@ export default {
     openSettings() {
       this.$eventHub.$emit('open-settings');
     },
-    sendEntireBalance() {
+    async sendEntireBalance() {
       if (this.isToken) this.toValue = this.selectedCurrency.balance;
-      else
-        this.toValue =
-          this.balanceDefault > 0
-            ? this.balanceDefault.minus(
-                ethUnit.fromWei(
-                  new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei'))
-                    .times(this.gasLimit)
-                    .toString(),
-                  'ether'
+      else {
+        const coinbase = await this.web3.eth.getCoinbase();
+        const params = {
+          from: coinbase,
+          value: ethUnit.toWei(this.balanceDefault, 'ether'),
+          data: this.txData,
+          to: this.txTo
+        };
+        this.web3.eth.estimateGas(params).then(gasLimit => {
+          this.gasLimit = gasLimit;
+          this.toValue =
+            this.balanceDefault > 0
+              ? this.balanceDefault.minus(
+                  ethUnit.fromWei(
+                    new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei'))
+                      .times(gasLimit)
+                      .toString(),
+                    'ether'
+                  )
                 )
-              )
-            : 0;
+              : 0;
+        });
+      }
     },
     getTokenTransferABI(amount, decimals) {
       const jsonInterface = [
@@ -525,9 +550,6 @@ export default {
         const nonce = await this.web3.eth.getTransactionCount(coinbase);
         const raw = {
           nonce: Misc.sanitizeHex(new BigNumber(nonce).toString(16)),
-          gasPrice: Misc.sanitizeHex(
-            ethUnit.toWei(this.gasPrice, 'gwei').toString(16)
-          ),
           gasLimit: Misc.sanitizeHex(new BigNumber(this.gasLimit).toString(16)),
           to: this.txTo,
           value: this.txValue,

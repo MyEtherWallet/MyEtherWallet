@@ -8,6 +8,7 @@
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
       static
       lazy
+      no-close-on-backdrop
     >
       <div class="time-remaining">
         <h1>{{ timeRemaining }}</h1>
@@ -69,15 +70,27 @@
           <p class="address">{{ fiatDest }}</p>
         </div>
       </div>
+      <div class="fee-container">
+        <span class="fee-estimate">{{ $t('swap.estimated-fee') }}</span>
+        {{ calculatedFee }} ETH (${{ calculatedFeeUsd }})
+      </div>
+      <div v-if="showGasWarning" class="gas-price-warning">
+        {{ $t('errorsGlobal.high-gas-limit-warning') }}
+        <p>{{ $t('swap.current-gas-price', { value: gasPrice }) }}</p>
+        <p class="notice">{{ $t('swap.gas-price-source-notice') }}</p>
+      </div>
       <!--<p> Exchange Rate: 0.000</p>-->
-      <div
-        :class="[swapReady ? '' : 'disable', 'confirm-send-button']"
-        @click="sendTransaction"
-      >
-        <button-with-qrcode
-          :qrcode="qrcode"
-          :buttonname="$t('common.continue')"
-        />
+      <div class="confirm-send-container">
+        <div
+          :class="[
+            swapReady ? '' : 'disabled',
+            timerHasEnded ? 'disabled' : '',
+            'confirm-send-button submit-button large-round-button-green-filled clickable'
+          ]"
+          @click="sendTransaction"
+        >
+          {{ $t('common.continue') }}
+        </div>
       </div>
 
       <help-center-button />
@@ -96,7 +109,6 @@ import { mapState, mapActions } from 'vuex';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 import iconBtc from '@/assets/images/currency/btc.svg';
 import iconEth from '@/assets/images/currency/eth.svg';
-import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 
 import {
@@ -113,7 +125,6 @@ import { Toast } from '@/helpers';
 
 export default {
   components: {
-    'button-with-qrcode': ButtonWithQrCode,
     'help-center-button': HelpCenterButton
   },
   props: {
@@ -143,7 +154,9 @@ export default {
       arrowImage: Arrow,
       fromAddress: {},
       toAddress: {},
-      fiatCurrenciesArray: fiat.map(entry => entry.symbol)
+      fiatCurrenciesArray: fiat.map(entry => entry.symbol),
+      totalFee: new BigNumber(21000),
+      ethPrice: new BigNumber(0)
     };
   },
   computed: {
@@ -153,7 +166,8 @@ export default {
       'web3',
       'account',
       'wallet',
-      'network'
+      'network',
+      'gasLimitWarning'
     ]),
     toFiat() {
       return this.fiatCurrenciesArray.includes(this.toAddress.name);
@@ -163,6 +177,23 @@ export default {
         return this.swapDetails.orderDetails.name;
       }
       return '';
+    },
+    calculatedFee() {
+      const feeTotal = this.totalFee.times(this.gasPrice);
+      const feeInEth = unit.fromWei(unit.toWei(feeTotal, 'gwei'), 'ether');
+      return new BigNumber(feeInEth).toFormat(6).toString();
+    },
+    calculatedFeeUsd() {
+      return new BigNumber(this.calculatedFee)
+        .times(new BigNumber(this.ethPrice))
+        .toFormat(2)
+        .toString();
+    },
+    showGasWarning() {
+      return this.gasPrice >= this.gasLimitWarning;
+    },
+    timerHasEnded() {
+      return this.timeRemaining === 'expired';
     }
   },
   watch: {
@@ -198,6 +229,9 @@ export default {
     },
     getIcon(currency) {
       return hasIcon(currency);
+    },
+    incrementFee(newValue) {
+      this.totalFee = this.totalFee.plus(new BigNumber(newValue));
     },
     timeUpdater(swapDetails) {
       clearInterval(this.timerInterval);
@@ -346,8 +380,15 @@ export default {
       }
     },
     async swapStarted(swapDetails) {
+      this.totalFee = new BigNumber(0);
       if (swapDetails.isExitToFiat && !swapDetails.bypass) return;
       this.timeUpdater(swapDetails);
+      try {
+        await this.fetchEthData();
+      } catch (e) {
+        // eslint-disable-next-line
+            console.error(e);
+      }
       this.swapReady = false;
       this.preparedSwap = {};
       if (
@@ -376,6 +417,7 @@ export default {
               )
               .encodeABI()
           };
+          await this.estimateGas(this.preparedSwap);
         } else if (
           swapDetails.maybeToken &&
           swapDetails.fromCurrency === BASE_CURRENCY
@@ -385,6 +427,7 @@ export default {
             to: swapDetails.providerAddress,
             value: unit.toWei(swapDetails.providerReceives, 'ether')
           };
+          await this.estimateGas(this.preparedSwap);
         } else if (
           swapDetails.maybeToken &&
           this.fiatCurrenciesArray.includes(swapDetails.toCurrency)
@@ -394,14 +437,38 @@ export default {
             to: swapDetails.providerAddress,
             value: unit.toWei(swapDetails.providerReceives, 'ether')
           };
+          await this.estimateGas(this.preparedSwap);
         }
       } else {
         this.preparedSwap = swapDetails.dataForInitialization.map(entry => {
+          if (entry.gas) {
+            this.incrementFee(entry.gas);
+          }
           entry.from = this.account.address;
           return entry;
         });
       }
       this.swapReady = true;
+    },
+    async estimateGas(params) {
+      try {
+        const gasLimit = await this.web3.eth.estimateGas(params);
+        this.incrementFee(gasLimit);
+      } catch (e) {
+        Toast.responseHandler(e, 3);
+      }
+    },
+    async fetchEthData() {
+      try {
+        const url = 'https://cryptorates.mewapi.io/ticker';
+        const fetchValues = await fetch(url);
+        const values = await fetchValues.json();
+        if (!values) return 0;
+        if (!values && !values.data && !values.data['ETH']) return 0;
+        this.ethPrice = new BigNumber(values.data['ETH'].quotes.USD.price);
+      } catch (e) {
+        Toast.responseHandler(e, 3);
+      }
     }
   }
 };

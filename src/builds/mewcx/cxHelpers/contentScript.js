@@ -62,14 +62,17 @@ const varType = variable => {
 };
 
 const stripTags = content => {
-  const insertToDom = new DOMParser().parseFromString(content, 'text/html');
-  insertToDom.body.textContent.replace(/(<([^>]+)>)/gi, '') || '';
-  const string = xss(insertToDom.body.textContent, {
-    whitelist: [],
-    stripIgnoreTag: true,
-    stripIgnoreTagBody: '*'
-  });
-  return string;
+  if (typeof content === 'string') {
+    const insertToDom = new DOMParser().parseFromString(content, 'text/html');
+    insertToDom.body.textContent.replace(/(<([^>]+)>)/gi, '') || '';
+    const string = xss(insertToDom.body.textContent, {
+      whitelist: [],
+      stripIgnoreTag: true,
+      stripIgnoreTagBody: '*'
+    });
+    return string;
+  }
+  return content;
 };
 
 const recursivePayloadStripper = val => {
@@ -146,6 +149,7 @@ chrome.runtime.onMessage.addListener(function (request, _, callback) {
     payload: request.payload,
     id: extensionID
   };
+
   const middleware = new MiddleWare();
   middleware.use(csErrors);
   middleware.use(csInjectedWeb3);
@@ -258,11 +262,13 @@ events[WEB3_DETECTED] = function () {
 };
 
 events[WEB3_RPC_REQUEST] = function (e) {
+  const parsedPayload = recursivePayloadStripper(e.detail);
+  parsedPayload.params = JSON.stringify(parsedPayload.params); // avoid booleans being turned into strings by the cx parser
   chrome.runtime.sendMessage(
     extensionID,
     {
       event: WEB3_RPC_REQUEST,
-      payload: recursivePayloadStripper(e.detail)
+      payload: parsedPayload
     },
     {},
     data => {

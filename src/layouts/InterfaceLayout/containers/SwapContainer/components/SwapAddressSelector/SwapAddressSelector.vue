@@ -4,6 +4,7 @@
       :clear-address="clearAddress"
       :currency="currency"
       :title="title"
+      :fill-address="fillAddress"
       @toAddress="getToAddress($event)"
     />
   </div>
@@ -34,6 +35,10 @@ export default {
       default: 'ETH'
     },
     preFill: {
+      type: Boolean,
+      default: false
+    },
+    fillAddress: {
       type: Boolean,
       default: false
     },

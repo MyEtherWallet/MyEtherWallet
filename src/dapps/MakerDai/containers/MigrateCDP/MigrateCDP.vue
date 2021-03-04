@@ -1,5 +1,5 @@
 <template>
-  <div style="max-width: 500px;">
+  <div style="max-width: 500px">
     <div class="d-flex align-items-center mb-5">
       <h3 class="mr-2">
         {{ $t('dappsMCDMaker.migrate-single-collateral-to-multi-collateral') }}
@@ -24,7 +24,7 @@
       <div v-show="noSaiAvailable && !needsAtLeast20">
         {{ $t('dappsMCDMaker.not-enough-sai') }}
       </div>
-      <div v-show="needsAtLeast20" style="padding: 10px;">
+      <div v-show="needsAtLeast20" style="padding: 10px">
         {{
           $t('dappsMCDMaker.needs-at-least-20', {
             value: migrateContractBalance
@@ -102,7 +102,7 @@
 <script>
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { addresses, ERC20, locateOldCdps } from '../../makerHelpers';
+import { addresses, ERC20 } from '../../makerHelpers';
 import ethUnit from 'ethjs-unit';
 import { Toast } from '@/helpers';
 import DaiIcon from '@/assets/images/currency/coins/AllImages/DAI.svg';
@@ -213,14 +213,7 @@ export default {
         this.getMkrBalance();
       }
     },
-    async findCdps() {
-      const { withProxy, withoutProxy } = await locateOldCdps(
-        this,
-        this.getValueOrFunction('_cdpService')
-      );
-      this.cdpDetailsLoaded = true;
-      this.cdps = withProxy.concat(withoutProxy);
-    },
+    async findCdps() {},
     async beginMigration() {
       if (this.selectedCdp !== 0) {
         this.proxyAddress = this.getValueOrFunction('proxyAddress');

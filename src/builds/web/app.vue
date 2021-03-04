@@ -69,7 +69,6 @@ export default {
   },
   mounted() {
     this.checkIfOnline(navigator.onLine);
-
     if (!store.get('notFirstTimeVisit') && this.$route.fullPath === '/') {
       this.$refs.welcome.$refs.welcome.show();
     }

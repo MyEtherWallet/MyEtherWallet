@@ -42,18 +42,18 @@
         </div>
       </template>
       <div v-if="!detailsShown" class="notification-item-container">
-        <ul
+        <div
           v-if="
             sortedNotifications !== undefined &&
             Object.keys(sortedNotifications).length > 0
           "
         >
-          <li
+          <ul
             v-for="(notification, address) in sortedNotifications"
             v-show="notification.length > 0"
             :key="address"
           >
-            <div class="address-header">
+            <li class="address-header">
               {{ address }}
               <div>
                 <i
@@ -67,44 +67,39 @@
                   @click="collapseAll(address)"
                 />
               </div>
-            </div>
-            <ul v-if="notification.length > 0">
-              <li
-                v-for="(noti, idx) in notification"
-                :key="noti.id + idx"
-                class="notification-item"
+            </li>
+            <li
+              v-for="(noti, idx) in notification"
+              :key="noti.id + idx"
+              class="notification-item"
+            >
+              <keep-alive
+                :max="10"
+                :exclude="['transaction-notification', 'transaction-error']"
               >
-                <keep-alive
-                  :max="10"
-                  :exclude="['transaction-notification', 'transaction-error']"
+                <component
+                  :is="useComponent(noti.type)"
+                  :expand="expand(idx, noti, address)"
+                  :shown="shown"
+                  :notice="noti"
+                  :convert-to-gwei="convertToGwei"
+                  :convert-to-eth="convertToEth"
+                  :get-fiat-value="getFiatValue"
+                  :date-string="dateString"
+                  :time-string="timeString"
+                  :hash-link="hashLink"
+                  :address-link="addressLink"
+                  :process-status="processStatus"
+                  :error-message-string="errorMessageString"
+                  :index="idx"
+                  :child-update-notification="childNotif(idx)"
+                  @showDetails="showDetails"
                 >
-                  <component
-                    :is="useComponent(noti.type)"
-                    :expand="expand(idx, noti, address)"
-                    :shown="shown"
-                    :notice="noti"
-                    :convert-to-gwei="convertToGwei"
-                    :convert-to-eth="convertToEth"
-                    :get-fiat-value="getFiatValue"
-                    :date-string="dateString"
-                    :time-string="timeString"
-                    :hash-link="hashLink"
-                    :address-link="addressLink"
-                    :process-status="processStatus"
-                    :error-message-string="errorMessageString"
-                    :index="idx"
-                    :child-update-notification="childUpdateNotification(idx)"
-                    @showDetails="showDetails"
-                  >
-                  </component>
-                </keep-alive>
-              </li>
-            </ul>
-            <div v-else class="notification-no-item">
-              {{ $t('common.notifications.no-notifications') }}
-            </div>
-          </li>
-        </ul>
+                </component>
+              </keep-alive>
+            </li>
+          </ul>
+        </div>
         <div v-else class="notification-no-item">
           {{ $t('common.notifications.no-notifications') }}
         </div>
@@ -123,9 +118,7 @@
           :address-link="addressLink"
           :process-status="processStatus"
           :error-message-string="errorMessageString"
-          :child-update-notification="
-            childUpdateNotification(notificationDetails.index)
-          "
+          :child-update-notification="childNotif(notificationDetails.index)"
         >
         </component>
       </div>
@@ -251,8 +244,9 @@ export default {
       ExtensionHelpers.getAccounts(accs => {
         Object.keys(accs).forEach(item => {
           if (isAddress(item)) {
-            if (!this.notifications[item]) return [];
-            const check = this.notifications[item]
+            const checksummedAddress = this.web3.utils.toChecksumAddress(item);
+            if (!this.notifications[checksummedAddress]) return [];
+            const check = this.notifications[checksummedAddress]
               .filter(entry => entry.network === this.network.type.name)
               .filter(entry => {
                 const isUnResolved =
@@ -268,9 +262,9 @@ export default {
             check.forEach(entry => {
               this.web3.eth.getTransactionReceipt(entry.hash).then(result => {
                 if (result === null) return;
-                const noticeIdx = this.notifications[item].findIndex(
-                  noticeEntry => entry.id === noticeEntry.id
-                );
+                const noticeIdx = this.notifications[
+                  checksummedAddress
+                ].findIndex(noticeEntry => entry.id === noticeEntry.id);
                 if (noticeIdx >= 0) {
                   entry.status = result.status
                     ? notificationStatuses.COMPLETE
@@ -289,7 +283,11 @@ export default {
                       : notificationStatuses.FAILED;
                     entry.body.timeRemaining = -1;
                   }
-                  this.updateNotification([item, noticeIdx, entry]);
+                  this.updateNotification([
+                    checksummedAddress,
+                    noticeIdx,
+                    entry
+                  ]);
                 }
               });
             });
@@ -378,7 +376,7 @@ export default {
         this.updateNotification([address, idx, updatedNotif]);
       });
     },
-    childUpdateNotification(idx) {
+    childNotif(idx) {
       if (typeof idx === 'undefined') return () => {};
       return updatedNotif => {
         this.updateNotification([this.account.address, idx, updatedNotif]);

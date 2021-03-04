@@ -31,7 +31,7 @@
         </h3>
         <div class="remove-modal-buttons">
           <div
-            :class="[!disable ? '' : 'disabled', 'remove']"
+            :class="[!disable || !loading ? '' : 'disabled', 'remove']"
             @click="removeWallet"
           >
             {{ $t('mewcx.confirm-remove') }}
@@ -46,7 +46,7 @@
               class="warning-text"
             >
               <span slot="privKey"> {{ $t('mewcx.private-key') }}</span>
-              <span slot="mnemPhrase"> {{ $t('mewcx.mnemonic-phraase') }}</span>
+              <span slot="mnemPhrase"> {{ $t('mewcx.mnemonic-phrase') }}</span>
               <span slot="keystoreFile"> {{ $t('mewcx.keystore-file') }}</span>
               <span slot="password"> {{ $t('mewcx.password') }}</span>
             </i18n>
@@ -73,6 +73,10 @@ export default {
     address: {
       type: String,
       default: ''
+    },
+    loading: {
+      type: Boolean,
+      default: false
     },
     removeWallet: {
       type: Function,

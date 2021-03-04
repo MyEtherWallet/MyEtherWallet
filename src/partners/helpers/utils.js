@@ -96,7 +96,18 @@ const isJson = str => {
   }
 };
 
-const checkErrorJson = results => {
+const checkErrorJson = (results, source) => {
+  if (typeof results.error == 'string') {
+    if (results.error === 'Error retrieving trade, try a different dex') {
+      throw Error('Error retrieving trade, try a different dex');
+    }
+  }
+  if (
+    results.error.message.includes('gas required exceeds allowance') &&
+    source === 'eth_estimateGasList'
+  ) {
+    throw Error('Please try a different dex. Problem calculating gas Limit.');
+  }
   if (isJson(results.error.message)) {
     throw Error(JSON.stringify(results.error.message));
   }
@@ -122,6 +133,17 @@ const handleOrThrow = (e, source) => {
       e.message.includes('This order can not be placed') &&
       e.message.includes('bity.com')
     ) {
+      Toast.responseHandler(e.message, 3);
+      return;
+    } else if (
+      e.message.includes('Error retrieving trade, try a different dex') ||
+      e.message.includes(
+        'Please try a different dex. Problem calculating gas Limit.'
+      )
+    ) {
+      Toast.responseHandler(e.message, 3);
+      return;
+    } else if (e.message.includes('insufficient funds for transfer')) {
       Toast.responseHandler(e.message, 3);
       return;
     }

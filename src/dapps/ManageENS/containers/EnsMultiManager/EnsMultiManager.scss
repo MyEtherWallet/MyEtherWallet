@@ -133,13 +133,12 @@
   color: $white;
 
   &:hover {
-    background-color: #ff5a7f;
-    background-color: #ff7795;
+    border-color: #ff7795 !important;
   }
 
   &:active {
-    background-color: #ff5a7f;
-    border-color: #ff7795;
+    background-color: #ff5a7f !important;
+    border-color: #ff7795 !important;
   }
 }
 
@@ -147,9 +146,17 @@
   @extend .action-button;
 
   color: $white;
-  pointer-events: none;
-  background-color: $dark-grey-7;
-  border-color: $dark-grey-7;
+  background-color: $light-orange-1;
+  border-color: $light-orange-3;
+
+  &:hover {
+    border-color: $light-orange-2 !important;
+  }
+
+  &:active {
+    background-color: $light-orange-3 !important;
+    border-color: $light-orange-1 !important;
+  }
 }
 
 .view-button-container {

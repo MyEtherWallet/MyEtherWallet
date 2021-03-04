@@ -4,6 +4,11 @@
   @extend %template-container;
 }
 
+.items-container {
+  display: flex;
+  flex-direction: column;
+}
+
 .domain-header {
   padding: 15px;
   display: flex;

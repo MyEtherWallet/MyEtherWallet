@@ -4,14 +4,24 @@
       <h3>
         {{ $t('unstoppable.transfer-pending') }}
       </h3>
-      <h5 class="middle-copy">
-        {{ $t('unstoppable.domain-transferring-one') }}
-        <b>{{ ' ' + domainName + ' ' }}</b>
+      <h5 v-for="domain in domains" :key="domain.name" class="middle-copy">
+        <b>{{ domain.name }}</b>
         {{
-          $t('unstoppable.domain-transferring-two', {
-            address: address
-          })
+          domain.status !== 'MINED'
+            ? $t('unstoppable.is-transferring-to-wallet')
+            : ''
         }}
+        <br />{{ $t('unstoppable.status') }}:
+        <b> {{ $t(translateStatus(domain.status)) }}</b>
+        <h5 v-show="domain.txHash">
+          {{ $t('unstoppable.view-transfer-transaction') + ' ' }}
+          <a
+            :href="etherscanLink(domain.txHash)"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Etherscan</a
+          >
+        </h5>
       </h5>
       <h5>
         {{ $t('unstoppable.manage-on-one') + ' ' }}
@@ -21,16 +31,9 @@
           rel="noopener noreferrer"
           >unstoppabledomains.com</a
         >
-        <br />
         {{ ' ' + $t('unstoppable.manage-on-two') }}
       </h5>
       <br />
-      <h5 v-show="txHash">
-        {{ $t('unstoppable.view-transfer-transaction') + ' ' }}
-        <a :href="etherscanLink" target="_blank" rel="noopener noreferrer"
-          >Etherscan</a
-        >
-      </h5>
       <div class="spinner-container">
         <i class="fa fa-spinner fa-spin" />
       </div>
@@ -42,10 +45,6 @@
 import { Toast } from '@/helpers';
 export default {
   props: {
-    domainName: {
-      type: String,
-      default: ''
-    },
     account: {
       type: Object,
       default: function () {}
@@ -57,21 +56,22 @@ export default {
     email: {
       type: String,
       default: ''
+    },
+    setDomainsClaimed: {
+      type: Function,
+      default: () => null
     }
   },
   data() {
-    return { txHash: '' };
+    return { domains: [] };
   },
   computed: {
     address() {
       return this.account.address;
-    },
-    etherscanLink() {
-      return 'https://etherscan.io/tx/' + this.txHash;
     }
   },
   beforeMount() {
-    if (!this.domainName || !this.email || !this.orderNumber) {
+    if (!this.email || !this.orderNumber) {
       this.$router.push('/interface/dapps/unstoppable');
     }
   },
@@ -86,16 +86,30 @@ export default {
           }
         })
         .then(({ order }) => {
+          const tmp = [];
           if (order && order.items) {
             for (const item of order.items) {
-              if (item.blockchain && item.blockchain.txHash) {
-                this.txHash = item.blockchain.txHash;
-              }
-              if (item.blockchain && item.blockchain.status === 'MINED') {
-                this.$router.push('/interface/dapps/unstoppable/completed');
-              }
+              tmp.push({
+                name: item.name,
+                status: item?.blockchain?.status,
+                txHash: item?.blockchain?.txHash
+              });
             }
           }
+          this.domains = tmp;
+          for (const domainName in tmp) {
+            const item = tmp[domainName];
+            if (item.status !== 'MINED') {
+              return;
+            }
+          }
+          this.setDomainsClaimed(
+            this.domains.map(domain => ({
+              label: domain.name.split('.')[0],
+              extension: domain.name.split('.')[1]
+            }))
+          );
+          this.$router.push('/interface/dapps/unstoppable/completed');
         })
         .catch(err => {
           Toast.responseHandler(err, Toast.ERROR);
@@ -105,6 +119,20 @@ export default {
   beforeDestroy() {
     if (this.interval) {
       clearInterval(this.interval);
+    }
+  },
+  methods: {
+    etherscanLink(txHash) {
+      return 'https://etherscan.io/tx/' + txHash;
+    },
+    translateStatus(status) {
+      if (status === 'MINED') {
+        return 'unstoppable.confirmed';
+      }
+      if (status === 'PENDING') {
+        return 'unstoppable.pending';
+      }
+      return 'unstoppable.failed';
     }
   }
 };

@@ -90,7 +90,7 @@ export default {
         },
         {
           img: telegram,
-          to: 'https://t.me/myetherwalletofficial',
+          to: 'https://t.me/myetherwallet',
           name: this.$t('home.social.telegram')
         }
       ]

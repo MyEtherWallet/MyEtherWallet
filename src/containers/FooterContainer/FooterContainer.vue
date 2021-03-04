@@ -209,12 +209,16 @@ export default {
               href: 'https://www.mewwallet.com/'
             },
             {
-              text: 'footer.mew-connect',
+              text: 'footer.mew-connect-protocol',
               href: 'https://mewconnect.myetherwallet.com/#/'
             },
             {
               text: 'footer.extension',
               href: 'https://www.mewcx.com'
+            },
+            {
+              text: 'footer.ethvm',
+              href: 'https://www.ethvm.com/'
             },
             {
               text: 'buyHardwareWallet.page.title',
@@ -231,6 +235,14 @@ export default {
             {
               text: 'dappsSubmission.banner-submit.submit-dapp',
               to: '/dapp-submission'
+            },
+            {
+              text: 'footer.press-kit.header',
+              to: '/press-kit'
+            },
+            {
+              text: 'footer.generate-eth2',
+              to: '/generate-eth2-keystore'
             }
           ]
         },

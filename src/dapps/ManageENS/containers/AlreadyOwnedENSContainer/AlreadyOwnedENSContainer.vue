@@ -110,7 +110,11 @@
       >
         {{ $t('ens.manage') }}
       </button>
-      <button v-if="isExpired" class="manage-button" @click="navigateToRenew">
+      <button
+        v-if="!isSubDomain"
+        class="manage-button renew"
+        @click="navigateToRenew"
+      >
         {{ $t('ens.renew') }}
       </button>
     </div>
@@ -146,6 +150,10 @@ export default {
     hostName: {
       type: String,
       default: ''
+    },
+    isSubDomain: {
+      type: Boolean,
+      default: false
     },
     tld: {
       type: String,

@@ -1,5 +1,5 @@
 <template>
-  <div style="max-width: 500px;">
+  <div style="max-width: 500px">
     <div v-if="!ready">
       <loading-sign />
     </div>
@@ -93,9 +93,7 @@
               ]"
             />
             <div v-if="showErrorInfoOrOther" class="input-block-message">
-              <p>
-                Some Error, info, or instructions
-              </p>
+              <p>Some Error, info, or instructions</p>
             </div>
 
             <div class="buttons-container">
@@ -419,6 +417,7 @@ export default {
     },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
+      if (raw.lt(0)) return '0';
       return raw.times(100).toString();
     },
     displayFixedValue(raw, decimals = 3) {

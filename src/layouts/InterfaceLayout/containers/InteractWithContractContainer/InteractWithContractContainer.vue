@@ -182,7 +182,7 @@
             class="non-bool-input"
           />
         </div>
-        <div v-if="selectedMethod.constant">
+        <div v-if="methodConstant(selectedMethod)">
           <div class="title-container">
             <div class="title">
               <h4>{{ $t('contract.result') }}:</h4>
@@ -238,8 +238,9 @@
           <div
             v-if="
               selectedMethod.hasOwnProperty('inputs') &&
-              ((selectedMethod.constant && selectedMethod.inputs.length > 0) ||
-                !selectedMethod.constant)
+              ((methodConstant(selectedMethod) &&
+                selectedMethod.inputs.length > 0) ||
+                !methodConstant(selectedMethod))
             "
             :class="[
               allValid ? '' : 'disabled',
@@ -248,10 +249,10 @@
             ]"
             @click="write"
           >
-            <span v-show="!loading && !selectedMethod.constant">
+            <span v-show="!loading && !methodConstant(selectedMethod)">
               {{ $t('contract.write') }}
             </span>
-            <span v-show="!loading && selectedMethod.constant">{{
+            <span v-show="!loading && methodConstant(selectedMethod)">{{
               $t('contract.read')
             }}</span>
             <i v-show="loading" class="fa fa-spinner fa-spin fa-lg" />
@@ -311,7 +312,8 @@ export default {
     },
     noInput() {
       return (
-        this.selectedMethod.constant && this.selectedMethod.inputs.length === 0
+        this.methodConstant(this.selectedMethod) &&
+        this.selectedMethod.inputs.length === 0
       );
     },
     resType() {
@@ -336,7 +338,10 @@ export default {
       const _contractArgs = [];
       if (this.selectedMethod) {
         this.selectedMethod.inputs.forEach(item => {
-          if (item.type.includes('[]')) {
+          if (
+            item.type.includes('[]') ||
+            (item.type.includes('[') && item.type.includes(']'))
+          ) {
             const parsedItem = this.formatInput(this.inputs[item.name]);
             _contractArgs.push(parsedItem);
           } else if (item.type === 'address') {
@@ -388,13 +393,24 @@ export default {
       }
       this.address = selected.address;
     },
+    methodConstant(methodAbi) {
+      if (methodAbi.constant) return methodAbi.constant;
+      if (methodAbi.stateMutability) {
+        return methodAbi.stateMutability === 'view';
+      }
+      return false;
+    },
     selectedFunction(method) {
-      if (!method.hasOwnProperty('constant')) return;
+      if (
+        !method.hasOwnProperty('constant') &&
+        !method.hasOwnProperty('stateMutability')
+      )
+        return;
       const contract = new this.web3.eth.Contract(
         [method],
         this.address.toLowerCase()
       );
-      if (method.constant === true && method.inputs.length === 0) {
+      if (this.methodConstant(method) && method.inputs.length === 0) {
         contract.methods[method.name]()
           .call({ from: this.account.address.toLowerCase() })
           .then(res => {
@@ -444,7 +460,8 @@ export default {
               this.contractMethods = jsonAbi.filter(item => {
                 if (
                   item.type !== 'constructor' &&
-                  item.constant !== undefined
+                  (item.constant !== undefined ||
+                    item.stateMutability !== undefined)
                 ) {
                   return item;
                 }
@@ -467,7 +484,7 @@ export default {
         this.address.toLowerCase()
       );
       this.loading = true;
-      if (this.selectedMethod.constant === true) {
+      if (this.methodConstant(this.selectedMethod)) {
         contract.methods[this.selectedMethod.name](...this.contractArgs)
           .call({ from: this.account.address.toLowerCase() })
           .then(res => {

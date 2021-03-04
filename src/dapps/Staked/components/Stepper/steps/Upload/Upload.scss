@@ -1,0 +1,107 @@
+@import '~@/scss/GlobalVariables';
+
+.upload-step {
+  flex-direction: column;
+  align-items: center;
+  @media all and (max-width: 500px) {
+    margin-top: 30px;
+  }
+
+  .subtitle {
+    color: $light-grey-18;
+    text-align: center;
+  }
+  .title {
+    color: $dark-blue-13;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 10px;
+  }
+
+  .upload-container {
+    margin-top: 15px;
+    width: 60%;
+    @media all and (max-width: 850px) {
+      margin-right: 0;
+      width: 80%;
+    }
+    @media all and (max-width: 660px) {
+      margin-right: 0;
+      width: 100%;
+    }
+    div {
+      align-items: center;
+      background: $light-grey-17;
+      border: none;
+      border-radius: 4px;
+      color: $dark-grey-14;
+      height: 52px;
+      margin-right: 5px;
+      padding-left: 10px;
+      width: 80%;
+      @media all and (max-width: 660px) {
+        margin-right: 0;
+        width: 100%;
+      }
+
+      .file {
+        color: $dark-blue-13;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+    .filename {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    input[type='file'] {
+      display: none;
+    }
+    label {
+      align-items: center;
+      background-color: $white;
+      border: 1px solid $mew-green;
+      border-radius: 4px;
+      color: $mew-green;
+      cursor: pointer;
+      justify-content: center;
+      text-align: center;
+      width: 120px;
+      @media all and (max-width: 650px) {
+        margin-top: 5px;
+        padding: 15px;
+        width: 100%;
+      }
+    }
+    @media all and (max-width: 650px) {
+      flex-direction: column;
+    }
+  }
+  .address-container {
+    border-radius: 5px;
+    background-color: $light-green-1;
+    flex-direction: column;
+    width: 60%;
+    @media all and (max-width: 850px) {
+      width: 80%;
+    }
+    @media all and (max-width: 660px) {
+      width: 100%;
+    }
+    .title {
+      color: $dark-blue-13;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .address {
+      color: $dark-blue-1;
+      cursor: auto;
+    }
+  }
+  .error {
+    color: $red-1;
+    width: 60%;
+  }
+}

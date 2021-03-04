@@ -55,8 +55,12 @@
       <div class="about-text">{{ $t('unstoppable.about-unstoppable') }}</div>
     </div>
     <router-view
+      :cart="cart"
+      :domains-claimed="domainsClaimed"
+      :search="search"
+      :search-err="searchErr"
       :domain-name="domainName"
-      :domain-price="domainPrice"
+      :search-results="searchResults"
       :token-id="tokenId"
       :check-domain="checkDomain"
       :domain-name-err="domainNameErr"
@@ -68,9 +72,11 @@
       :order-number="orderNumber"
       :set-token-id="setTokenId"
       :set-order-number="setOrderNumber"
-      :is-domain-avail="isDomainAvail"
       :set-domain="setDomain"
-      @domainNameChange="updateDomainName"
+      :set-domains-claimed="setDomainsClaimed"
+      :add-item-to-cart="addItemToCart"
+      :remove-item-from-cart="removeItemFromCart"
+      @searchChange="updateSearch"
     />
   </div>
 </template>
@@ -88,28 +94,28 @@ export default {
   },
   data() {
     return {
+      search: '',
+      searchResults: [],
+      cart: [],
+      domainsClaimed: [],
+      searchErr: false,
       domainName: '',
       tokenId: '',
-      domainPrice: 0,
       domainNameErr: false,
       loading: false,
       orderNumber: 0,
-      email: 'mew@unstoppabledomains.com',
-      isDomainAvail: {
-        checked: false,
-        isAvailable: false
-      }
+      email: 'mew@unstoppabledomains.com'
     };
   },
   computed: {
     ...mapState('main', ['web3', 'network', 'account']),
     tld() {
-      if (!this.domainName) {
+      if (!this.search) {
         return '';
       }
-      const tldPosition = this.domainName.lastIndexOf('.');
+      const tldPosition = this.search.lastIndexOf('.');
       return tldPosition !== -1
-        ? this.domainName.substr(tldPosition + 1, this.domainName.length)
+        ? this.search.substr(tldPosition + 1, this.search.length)
         : '';
     }
   },
@@ -127,6 +133,9 @@ export default {
           name: `manageInitialState`
         });
       }
+    },
+    setDomainsClaimed(domainsClaimed) {
+      this.domainsClaimed = domainsClaimed;
     },
     setDomain(domainName) {
       this.domainName = domainName;
@@ -149,43 +158,38 @@ export default {
     },
     parsedTld() {
       if (this.parsedHostName().length) {
-        const hasTld = this.domainName.lastIndexOf('.');
+        const hasTld = this.search.lastIndexOf('.');
         return hasTld > -1
-          ? this.domainName.substr(hasTld + 1, this.domainName.length)
+          ? this.search.substr(hasTld + 1, this.search.length)
           : this.registrarTLD;
       }
       return '';
     },
-    label() {
-      return this.domainName.replace(`.${this.registrarTLD}`, '');
+    searchLabel() {
+      return this.search.replace(`.${this.registrarTLD}`, '');
     },
-    updateDomainName(value) {
+    updateSearch(value) {
       try {
-        this.domainName =
+        this.search =
           value.replace(`.${this.registrarTLD}`, '') + `.${this.registrarTLD}`;
         if (
-          this.label() &&
-          (!/^[a-z\d-]+$/.test(this.label()) ||
-            this.label().startsWith('xn--') ||
-            this.label().startsWith('0x'))
+          this.searchLabel() &&
+          (!/^[a-z\d-]+$/.test(this.searchLabel()) ||
+            this.searchLabel().startsWith('xn--') ||
+            this.searchLabel().startsWith('0x'))
         ) {
           throw Error('Domain contains invalid characters');
         }
       } catch (e) {
         Toast.responseHandler(e, Toast.WARN);
-        this.domainNameErr = true;
+        this.searchErr = true;
         return;
       }
-      if (this.label() && this.label().length < 6) {
-        this.domainNameErr = true;
+      if (this.searchLabel() && this.searchLabel().length < 6) {
+        this.searchErr = true;
       } else {
-        this.domainNameErr = false;
+        this.searchErr = false;
       }
-
-      this.isDomainAvail = {
-        checked: false,
-        isAvailable: false
-      };
     },
     setOrderNumber(orderNumber) {
       this.orderNumber = orderNumber;
@@ -193,23 +197,47 @@ export default {
     setTokenId(tokenId) {
       this.tokenId = tokenId;
     },
+    addItemToCart(item) {
+      this.cart = [
+        ...this.cart,
+        { price: item.price, label: item.label, extension: item.extension }
+      ];
+    },
+    removeItemFromCart(item) {
+      this.cart = this.cart.filter(cartItem => cartItem.label !== item.label);
+    },
     async checkDomain() {
       this.loading = true;
       try {
         const { domain } = await get(
-          `https://unstoppabledomains.com/api/v1/resellers/myetherwallet/domains/${this.domainName}`
+          `https://unstoppabledomains.com/api/v1/resellers/myetherwallet/domains/${this.search}`
         );
-        if (domain.reselling && domain.reselling.price) {
-          this.domainPrice = domain.reselling.price;
-          this.isDomainAvail.isAvailable = true;
-          this.isDomainAvail.checked = true;
-        } else {
-          const toastText = this.$t('unstoppable.toast.domain-unavailable', {
-            domain: this.domainName
-          });
-          this.isDomainAvail.checked = true;
-          Toast.responseHandler(toastText, Toast.WARN);
+        const results = [
+          {
+            price: domain?.reselling?.price,
+            label: this.searchLabel(),
+            available: domain?.reselling?.price,
+            extension: this.registrarTLD,
+            first: true
+          }
+        ];
+        const url = `https://unstoppabledomains.com/api/v1/resellers/myetherwallet/domains/variations?domains=["${this.search}"]`;
+        const similarities = await fetch(url).then(res => res.json());
+        for (const d in similarities) {
+          for (const similarity of similarities[d]) {
+            if (similarity.extension === this.registrarTLD) {
+              if (!results.map(r => r.label).includes(similarity.label)) {
+                results.push({
+                  label: similarity.label,
+                  extension: this.registrarTLD,
+                  price: similarity.price / 100,
+                  available: true
+                });
+              }
+            }
+          }
         }
+        this.searchResults = results;
       } catch (e) {
         const toastText = this.$t('unstoppable.error.something-went-wrong');
         Toast.responseHandler(toastText, Toast.ERROR);

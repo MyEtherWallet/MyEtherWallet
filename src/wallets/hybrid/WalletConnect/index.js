@@ -18,8 +18,10 @@ class WalletConnectWallet {
     this.identifier = walletConnectType;
     this.isHardware = IS_HARDWARE;
     const tempConnection = new WalletConnect({ bridge: BRIDGE_URL });
-    tempConnection._storage.removeSession();
-    tempConnection.killSession(); // remove any leftover connections
+    if (tempConnection && tempConnection.connected && tempConnection._storage) {
+      tempConnection._storage.removeSession();
+      tempConnection.killSession(); // remove any leftover connections
+    }
     this.walletConnect = new WalletConnect({
       bridge: BRIDGE_URL
     });

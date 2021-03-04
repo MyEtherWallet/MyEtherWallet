@@ -187,7 +187,7 @@ export default {
       buttons: [
         {
           func: this.mewConnectModalOpen,
-          title: 'accessWallet.mobile-app.mew-connect',
+          title: 'accessWallet.mobile-app.mew-wallet',
           desc: 'accessWallet.mobile-app.examples',
           showsOtherExamples: true,
           recommend: '',

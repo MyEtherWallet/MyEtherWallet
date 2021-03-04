@@ -44,8 +44,10 @@
   "search-tokens": "Search Tokens",
   "details": "Details",
   "view-tokens": "View Tokens",
-  "view-all-tokens": "View all Tokens",
-  "hide-all-tokens": "Hide all Tokens",
+  "view-all-tokens": "View My Tokens",
+  "hide-all-tokens": "Hide My Tokens",
+  "trouble-fetching": "Having trouble fetching prices. Tokens will be temporarily disabled",
+  "trouble-fetching-eth": "Having trouble ETH Price. Price conversion will be temporarily unavailable",
   "tokens": "Tokens",
   "create-wallet-password": "Create wallet password",
   "token": {

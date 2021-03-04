@@ -1,21 +1,31 @@
 {
   "mewconnect": {
-    "option-text": "Scan the QR code to access with MEW wallet or MEWconnect",
+    "option-text": "To see your mobile wallet on MEW web.",
     "modal": {
       "title": "Mobile Access",
-      "text1": "Please use MEW wallet or MEWconnect App to scan the QR code above",
-      "text2": "Don't have the MEW wallet app? Download now."
+      "text1": "Please use MEW wallet App to scan the QR code above",
+      "text2": "Don't have the app? {action}",
+      "download-now": "Download now."
     },
-    "protocol": "MEWconnect Protocol",
-    "warning": "MEW wallet and MEWconnect apps are not compatible with iPads."
+    "scan": "Scan QR code with MEW wallet App",
+    "warning": "MEW wallet is not compatible with iPads.",
+    "instructions": {
+      "step1": "Step 1: {first}",
+      "step2": "Step 2: {second}",
+      "step3": "Step 3: {third}",
+      "first": "Open MEW wallet App",
+      "second": "Tap {icon-pos}",
+      "icon-pos": "icon on the top right",
+      "third": "Scan the QR code"
+    }
   },
   "mobile-app": {
     "option-title": "Mobile App",
     "examples": "WalletConnect; WalletLink",
     "modal": {
-      "title": "Mobile Access"
+      "title": "Access by Mobile App"
     },
-    "mew-connect": "MEWconnect"
+    "mew-wallet": "MEW wallet"
   },
   "finney": {
     "scan-info": "To connect, scan the QR code from {wallet} app on your {finney-bc}",
@@ -52,7 +62,7 @@
     "modal": {
       "title": "Access by Software",
       "purchase-text": "Purchase a hardware wallet for the highest security when accessing your crypto.",
-      "purchase-link": "Purchase a hardware wallet...."
+      "purchase-link": "Purchase a hardware wallet"
     }
   },
   "metamask": {

@@ -68,7 +68,6 @@ import MewSupportComponent from './components/MewSupportComponent';
 import axios from 'axios';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal';
 import { Toast } from '@/helpers';
-import FormData from 'form-data';
 
 export default {
   components: {

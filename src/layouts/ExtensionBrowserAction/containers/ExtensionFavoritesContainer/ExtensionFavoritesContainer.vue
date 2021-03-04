@@ -6,7 +6,13 @@
         @search="e => (search = e)"
       />
     </template>
-    <div v-if="!hasAccounts" class="no-wallet-container">
+    <div v-if="loading" class="loading-container">
+      <div>
+        <i class="fa fa-lg fa-spin fa-spinner" />
+      </div>
+      <p>Loading wallets....</p>
+    </div>
+    <div v-else-if="!hasAccounts" class="no-wallet-container">
       <img src="@/assets/images/icons/alien.png" />
       <h3>
         Looks like you don't have any favorite wallets yet. Click the heart next
@@ -30,7 +36,7 @@
           :usd="ethPrice"
           :address="wallet.address"
           :balance="wallet.balance"
-          :wallet="wallet.wallet"
+          :keystore="wallet.wallet"
           :nickname="wallet.nickname"
           :wallet-type="wallet.type"
           :wallet-token="wallet.tokenBalance"
@@ -138,7 +144,6 @@ export default {
             delete token.addr;
             tokens.push(token);
           });
-          this.loading = false;
           return tokens.sort(sortByBalance);
         })
         .catch(() => {
@@ -147,44 +152,44 @@ export default {
             token['logo'] = newLogo;
             tokens.push(token);
           });
-          this.loading = false;
           return tokens;
         });
     },
-    async processAccounts(accs) {
+    processAccounts(accs) {
       this.loading = true;
-      const accounts = [];
-      for await (const account of accs) {
-        if (account !== undefined) {
-          const address = toChecksumAddress(account.address).toLowerCase();
-          delete account['address'];
-          const parsedItemWallet = JSON.parse(account.wallet);
-          account['balance'] = await this.getBalance(address);
-          account['type'] = parsedItemWallet.type;
-          account['address'] = address;
-          account['nickname'] = parsedItemWallet.nick;
-          this.setToken(address).then(res => {
-            account['tokenBalance'] = res;
-          });
-          accounts.push(account);
-        }
-      }
       window.chrome.storage.sync.get('favorites', item => {
         if (Object.keys(item).length > 0) {
           const storedFaves = JSON.parse(item.favorites);
           const favoritedWallets = [];
-          storedFaves.forEach(storedAcc => {
-            const actualAccount = accounts.find(wallet => {
+          const accounts = accs.filter(account => {
+            const stored = storedFaves.find(storedWallet => {
               return (
-                toChecksumAddress(wallet.address).toLowerCase() ===
-                toChecksumAddress(storedAcc.address).toLowerCase()
+                toChecksumAddress(storedWallet.address).toLowerCase() ===
+                toChecksumAddress(account.address).toLowerCase()
               );
             });
 
-            if (actualAccount) {
-              favoritedWallets.push(actualAccount);
-            }
+            if (stored) return account;
           });
+
+          if (accounts.length) {
+            accounts.forEach(account => {
+              const address = toChecksumAddress(account.address).toLowerCase();
+              delete account['address'];
+              const parsedItemWallet = JSON.parse(account.wallet);
+              account['type'] = parsedItemWallet.type;
+              account['address'] = address;
+              account['nickname'] = parsedItemWallet.nick;
+              Promise.all([
+                this.getBalance(address),
+                this.setToken(address)
+              ]).then(res => {
+                account['balance'] = res[0];
+                account['tokenBalance'] = res[1];
+              });
+              favoritedWallets.push(account);
+            });
+          }
           this.favoriteWallets = favoritedWallets;
         }
       });

@@ -20,11 +20,18 @@ const errorLogger = debug('v5:partners-changelly');
 const disabled = [];
 
 function checkAndChange(value) {
+  if (!value) return value;
   if (value === 'USDT Omni') {
     return 'usdt';
   }
   if (value === 'USDT') {
     return 'usdt20';
+  }
+  if (value.toLowerCase() === 'repv2') {
+    return 'rep';
+  }
+  if (value.toLowerCase() === 'rep') {
+    return 'REPV2';
   }
   return value;
 }
@@ -33,6 +40,7 @@ export default class Changelly {
   constructor(props = {}) {
     this.name = Changelly.getName();
     this.network = props.network || networkSymbols.ETH;
+    this.tokenUpdate = props.tokenUpdate;
     this.getRateForUnit =
       typeof props.getRateForUnit === 'boolean' ? props.getRateForUnit : false;
     this.hasRates = 0;
@@ -65,6 +73,7 @@ export default class Changelly {
       } = await changellyApi.getSupportedCurrencies(this.network);
       this.currencyDetails = currencyDetails;
       this.tokenDetails = tokenDetails;
+      this.tokenUpdate(tokenDetails);
       this.hasRates =
         Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {
@@ -138,8 +147,8 @@ export default class Changelly {
         }, 20000);
 
         const changellyDetails = await changellyCalls.getFixRate(
-          fromCurrency,
-          toCurrency,
+          checkAndChange(fromCurrency).toLowerCase(),
+          checkAndChange(toCurrency).toLowerCase(),
           fromValue,
           this.network
         );
@@ -182,14 +191,14 @@ export default class Changelly {
     try {
       const changellyDetails = await Promise.all([
         changellyCalls.getMin(
-          fromCurrency,
-          toCurrency,
+          checkAndChange(fromCurrency).toLowerCase(),
+          checkAndChange(toCurrency).toLowerCase(),
           fromValue,
           this.network
         ),
         changellyCalls.getRate(
-          fromCurrency,
-          toCurrency,
+          checkAndChange(fromCurrency).toLowerCase(),
+          checkAndChange(toCurrency).toLowerCase(),
           fromValue,
           this.network
         )

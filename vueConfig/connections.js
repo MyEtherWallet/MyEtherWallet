@@ -16,7 +16,6 @@ module.exports = [
   'https://jsonrpc.ellaism.io:443',
   'https://api.esn.gonspool.com:443',
   'https://www.ethercluster.com:443',
-  'wss://www.ethercluster.com:443',
   'https://api.etherscan.io:443',
   'https://mainnet.infura.io:443',
   'wss://mainnet.infura.io:443',
@@ -65,12 +64,17 @@ module.exports = [
   'https://rpc.fantom.network:443',
   'https://fantomscan.io:443',
   'https://unstoppabledomains.com:443',
-  'https://perkle-pub.esprezzo.io:443',
+  'https://perkle-pub.esprezzo.io:8501',
   'https://o382951.ingest.sentry.io:443',
   'https://dispatch.pokt.network:443',
   'https://service.gcp.pokt.network:443',
   'https://rpc.fuse.io:443',
-  'https://rpc.energyweb.org/:443',
+  'https://rpc.energyweb.org:443',
   'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket',
-  'wss://www.walletlink.org:443'
+  'wss://www.walletlink.org:443',
+  'https://estimategas.mewapi.io:443',
+  'https://bsc-dataseed1.binance.org:443',
+  'https://staked.mewapi.io:443',
+  'https://stakedtest.mewapi.io:443',
+  'https://api.ethvm.com:443'
 ];

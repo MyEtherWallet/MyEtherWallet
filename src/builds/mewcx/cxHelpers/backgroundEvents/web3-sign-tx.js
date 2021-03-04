@@ -87,7 +87,7 @@ export default async ({ event, payload }, callback, next) => {
             funcHash = hash;
             store.dispatch('main/addNotification', [
               'Hash',
-              txParams.from,
+              store.state.main.web3.utils.toChecksumAddress(txParams.from),
               txParams,
               hash
             ]);
@@ -103,7 +103,7 @@ export default async ({ event, payload }, callback, next) => {
             });
             store.dispatch('main/addNotification', [
               'Receipt',
-              txParams.from,
+              store.state.main.web3.utils.toChecksumAddress(txParams.from),
               txParams,
               res
             ]);
@@ -119,10 +119,11 @@ export default async ({ event, payload }, callback, next) => {
             });
             store.dispatch('main/addNotification', [
               'Error',
-              txParams.from,
+              store.state.main.web3.utils.toChecksumAddress(txParams.from),
               txParams,
               err
             ]);
+            callback(err);
           });
         chrome.notifications.onClicked.addListener(listenerFunc);
       } catch (error) {

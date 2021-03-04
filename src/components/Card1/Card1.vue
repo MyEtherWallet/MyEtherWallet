@@ -2,7 +2,7 @@
   <div class="card">
     <div v-if="loading" class="loading-sign">
       <b-spinner
-        style="width: 4rem; height: 4rem;"
+        style="width: 4rem; height: 4rem"
         variant="primary"
       ></b-spinner>
       <div class="font-weight-bolder mt-3">

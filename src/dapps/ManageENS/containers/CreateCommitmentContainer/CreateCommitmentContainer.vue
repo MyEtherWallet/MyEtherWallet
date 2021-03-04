@@ -5,7 +5,9 @@
         {{
           isCommitment
             ? $t('ens.commit.is-available', { domain: fullDomainName })
-            : `${fullDomainName} is expired!`
+            : isExpired
+            ? `${fullDomainName} is expired!`
+            : fullDomainName
         }}
       </h3>
       <p>
@@ -98,6 +100,10 @@ export default {
     renewName: {
       type: Function,
       default: function () {}
+    },
+    isExpired: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

@@ -44,13 +44,14 @@ export default class SwapProviders {
     this.providerRateUpdates = {};
     this.ownedTokenList = misc.tokensWithBalance || [];
     this.providerRatesRecieved = [];
-
+    environmentSupplied.tokenUpdate = this.tokenListReceived.bind(this);
     if (!this.online) return;
     providers.forEach(entry => {
       this.providerRateUpdates[entry.getName()] = 0;
       this.providers.set(entry.getName(), new entry(environmentSupplied));
     });
-
+    this.ethereumTokenList = [];
+    this.nonEthereumTokenList = [];
     this.providerRatesRecieved = [];
 
     let checkCount = 0;
@@ -75,6 +76,33 @@ export default class SwapProviders {
     }
 
     this.initialCurrencyArrays = this.buildInitialCurrencyArrays();
+  }
+
+  tokenListReceived(tokens) {
+    try {
+      const areEth = Object.values(tokens).filter(
+        item => item.address !== null
+      );
+
+      this.updateProviderRates = this.updateProviderRates + 1;
+      if (this.ethereumTokenList.length === 0) {
+        this.ethereumTokenList = areEth;
+      } else {
+        for (let i = 0; i < areEth.length; i++) {
+          const present = this.ethereumTokenList.find(item => {
+            return (
+              item.address.toLowerCase() === areEth[i].address.toLowerCase()
+            );
+          });
+          if (!present && areEth[i]) {
+            this.ethereumTokenList.push(areEth[i]);
+          }
+        }
+      }
+    } catch (e) {
+      // eslint-disable-next-line
+      console.error(e);
+    }
   }
 
   get initialCurrencyLists() {
@@ -278,8 +306,23 @@ export default class SwapProviders {
     }
   }
 
+  checkIsToken(currency) {
+    if (this.ethereumTokenList.length > 0) {
+      return this.ethereumTokenList.find(item => {
+        return item.symbol.toLowerCase() === currency.toLowerCase();
+      });
+    }
+    return SwapProviders.isToken(currency);
+  }
+
   getTokenAddress(currency, noError) {
-    if (SwapProviders.isToken(currency)) {
+    if (this.checkIsToken(currency)) {
+      if (this.ethereumTokenList.length > 0) {
+        const found = this.ethereumTokenList.find(item => {
+          return item.symbol.toLowerCase() === currency.toLowerCase();
+        });
+        return found.address;
+      }
       return EthereumTokens[currency].contractAddress;
     }
     if (noError) {

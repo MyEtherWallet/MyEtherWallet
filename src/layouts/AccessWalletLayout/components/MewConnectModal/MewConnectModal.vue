@@ -30,10 +30,9 @@
         <qrcode :value="QrCode" :options="{ size: 150 }" />
         <div class="instructions-container">
           <i18n path="accessWallet.mewconnect.instructions.step1" tag="p">
-            <span
-              slot="first"
-              >{{($t('accessWallet.mewconnect.instructions.first'))}}</span
-            >
+            <span slot="first">{{
+              $t('accessWallet.mewconnect.instructions.first')
+            }}</span>
           </i18n>
           <i18n path="accessWallet.mewconnect.instructions.step2" tag="p">
             <i18n
@@ -53,7 +52,7 @@
           </i18n>
           <i18n path="accessWallet.mewconnect.instructions.step3" tag="p">
             <span slot="third"
-              >{{($t('accessWallet.mewconnect.instructions.third'))}}
+              >{{ $t('accessWallet.mewconnect.instructions.third') }}
             </span>
           </i18n>
         </div>

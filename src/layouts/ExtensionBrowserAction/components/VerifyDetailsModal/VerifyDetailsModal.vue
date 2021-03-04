@@ -9,7 +9,7 @@
     <div class="verify-details-container">
       <div class="wallet-info-and-code">
         <div class="blockie-and-address">
-          <div v-if="Object.keys(wallet).length > 0" class="blockie-container">
+          <div v-if="hasWallet" class="blockie-container">
             <blockie
               width="45px"
               height="45px"
@@ -18,11 +18,11 @@
           </div>
           <div class="name-and-address">
             <h3>{{ nickname }}</h3>
-            <p>{{ wallet.getAddressString() }}</p>
+            <p>{{ hasWallet ? address : '0x' }}</p>
           </div>
         </div>
         <div class="qr-code-container">
-          <qrcode :value="address" :options="{ size: 100 }" />
+          <qrcode v-if="hasWallet" :value="address" :options="{ size: 100 }" />
           <p>
             {{ $t('mewcx.wallet-qr-code') }}
           </p>
@@ -44,7 +44,7 @@
                   {{ $t('mewcx.value-of-tokens', { plural: 's' }) }}
                 </p>
                 <p v-if="network.type.name === 'ETH'" class="dollar-amt">
-                  {{ walletTokensWithBalance.totalWalletBalance }}
+                  {{ walletBalance }}
                 </p>
               </div>
             </div>
@@ -58,11 +58,11 @@
             </div>
             <div class="wallet-value-container">
               <p class="wallet-title">
-                {{ ($t('mewcx.value-of-tokens', { plural: '' })) }}
+                {{ $t('mewcx.value-of-tokens', { plural: '' }) }}
               </p>
-              <p class="dollar-amt">{{ walletTokensWithBalance.total }}</p>
+              <p class="dollar-amt">{{ tokenTotal }}</p>
               <p class="value">
-                {{ walletTokensWithBalance.tokensWDollarAmtLength }}
+                {{ tokensWithDollarAmount.length }}
                 {{ $t('mewcx.tokens') }}
               </p>
             </div>
@@ -86,8 +86,9 @@
     </div>
     <view-private-key-modal ref="privKeyModal" />
     <print-modal
+      v-if="hasWallet"
       ref="printModal"
-      :priv-key="!wallet"
+      :priv-key="hasWallet"
       :address="wallet.getChecksumAddressString()"
     />
   </mewcx-modal-wrapper>
@@ -97,7 +98,6 @@
 import { mapState, mapActions } from 'vuex';
 import MewcxModalWrapper from '../../wrappers/MewcxModalWrapper';
 import Blockie from '@/components/Blockie';
-import BigNumber from 'bignumber.js';
 import { Toast } from '@/helpers';
 
 import privKey from '@/assets/images/icons/private-key.svg';
@@ -128,9 +128,19 @@ export default {
       type: String,
       default: ''
     },
-    walletTokensWithBalance: {
-      type: Object,
-      default: () => {}
+    tokensWithDollarAmount: {
+      type: Array,
+      default: () => {
+        return [];
+      }
+    },
+    tokenTotal: {
+      type: String,
+      default: '$ 0.00'
+    },
+    walletBalance: {
+      type: String,
+      default: '$ 0.00'
     },
     file: {
       type: Object,
@@ -140,7 +150,6 @@ export default {
   data() {
     return {
       ethBalance: '0',
-      tokenTotalValue: '0',
       buttons: [
         {
           title: 'mewcx.keystore-file',
@@ -174,31 +183,27 @@ export default {
             this.viewPrint();
           }
         }
-      ],
-      walletJson: '',
-      filename: ''
+      ]
     };
   },
   computed: {
     ...mapState('main', ['web3', 'wallet', 'network']),
     address() {
-      const hasWallet = Object.keys(this.wallet).length > 0;
-      return hasWallet
+      return this.hasWallet
         ? this.wallet.hasOwnProperty('isHardware')
           ? '0x'
           : this.wallet.getAddressString()
         : '0x';
     },
-    totalValue() {
-      const totalBalance = new BigNumber(this.usd).times(this.ethBalance);
-      const combinedValue = new BigNumber(this.tokenTotalValue)
-        .plus(totalBalance)
-        .toFixed(2);
-
-      return `$ ${combinedValue}`;
+    filename() {
+      return this.nickname;
     },
-    convertedEthValue() {
-      return `$ ${new BigNumber(this.ethBalance).times(this.usd).toFixed(2)}`;
+    walletJson() {
+      return createBlob(this.file, 'mime');
+    },
+    hasWallet() {
+      // eslint-disable-next-line
+      return !!this.wallet && Object.keys(this.wallet);
     }
   },
   watch: {
@@ -214,10 +219,6 @@ export default {
           });
       }
     }
-  },
-  mounted() {
-    this.walletJson = createBlob(this.file, 'mime');
-    this.filename = this.nickname;
   },
   methods: {
     ...mapActions('main', ['clearWallet']),

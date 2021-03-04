@@ -7,7 +7,7 @@
           :src="props.options.titleIcon"
           alt
         />
-        <span>{{ props.options.title }}</span>
+        <span>{{ parent.$t(props.options.title) }}</span>
       </div>
     </div>
     <div v-if="props.options.boldSubTitle" class="bold-sub-title">

@@ -73,6 +73,9 @@
               <div v-if="showGasWarning" class="gas-price-warning">
                 {{ $t('errorsGlobal.high-gas-limit-warning') }}
               </div>
+              <div v-else-if="showLowGasWarning" class="gas-price-warning">
+                {{ $t('errorsGlobal.low-gas-price') }}
+              </div>
               <div class="grid-block">
                 <p>{{ $t('sendTx.tx-fee') }}</p>
                 <p>{{ fee }} {{ network.type.currencyName }}</p>
@@ -143,8 +146,8 @@ export default {
       default: ''
     },
     gasPrice: {
-      type: Number,
-      default: 0
+      type: String,
+      default: '0'
     },
     nonce: {
       type: String,
@@ -165,11 +168,16 @@ export default {
     showGasWarning: {
       type: Boolean,
       default: false
+    },
+    showLowGasWarning: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
-      modalDetailInformation: this.showGasWarning || false,
+      modalDetailInformation:
+        this.showGasWarning || this.showLowGasWarning || false,
       transactionSigned: false,
       tokenTransferTo: '',
       tokenTransferVal: '',
@@ -184,6 +192,9 @@ export default {
       this.parseData(newVal);
     },
     showGasWarning(newVal) {
+      this.modalDetailInformation = newVal;
+    },
+    showLowGasWarning(newVal) {
       this.modalDetailInformation = newVal;
     }
   },

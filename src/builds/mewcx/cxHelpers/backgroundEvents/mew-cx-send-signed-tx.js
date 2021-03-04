@@ -25,7 +25,7 @@ export default async ({ event, payload }, callback, next) => {
       funcHash = hash;
       store.dispatch('main/addNotification', [
         'Hash',
-        payload.raw.from,
+        store.state.main.web3.utils.toChecksumAddress(payload.raw.from),
         payload.raw,
         hash
       ]);
@@ -41,7 +41,7 @@ export default async ({ event, payload }, callback, next) => {
       });
       store.dispatch('main/addNotification', [
         'Receipt',
-        payload.raw.from,
+        store.state.main.web3.utils.toChecksumAddress(payload.raw.from),
         payload.raw,
         res
       ]);
@@ -57,7 +57,7 @@ export default async ({ event, payload }, callback, next) => {
       });
       store.dispatch('main/addNotification', [
         'Error',
-        payload.raw.from,
+        store.state.main.web3.utils.toChecksumAddress(payload.raw.from),
         payload.raw,
         err
       ]);

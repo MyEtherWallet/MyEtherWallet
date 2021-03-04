@@ -23,7 +23,10 @@ const getSupportedCurrencies = async network => {
             const details = {
               symbol: currencyList[i].name.toUpperCase(),
               name: currencyList[i].fullName,
-              fixRateEnabled: currencyList[i].fixRateEnabled
+              fixRateEnabled: currencyList[i].fixRateEnabled,
+              address: currencyList[i].contractAddress
+                ? currencyList[i].contractAddress
+                : null
             };
             if (currencyList[i].name === 'usdt') {
               currencyList[i].name = 'usdt Omni';
@@ -33,6 +36,11 @@ const getSupportedCurrencies = async network => {
             if (currencyList[i].name === 'usdt20') {
               details.symbol = 'USDT';
               details.name = 'Tether USD';
+            }
+            if (currencyList[i].name === 'rep') {
+              currencyList[i].name = 'REPV2';
+              details.symbol = 'REPV2';
+              details.name = 'Auger V2';
             }
             currencyDetails[details.symbol] = details;
             tokenDetails[details.symbol] = details;

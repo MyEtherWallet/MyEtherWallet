@@ -157,3 +157,13 @@ a {
   opacity: 0;
   max-height: 0;
 }
+
+.notification-menu-container {
+  margin: 0 30px;
+  display: flex;
+  align-items: center;
+  i {
+    font-size: 18px;
+    color: $dark-blue-1;
+  }
+}

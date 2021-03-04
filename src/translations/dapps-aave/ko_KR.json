@@ -75,8 +75,13 @@
   "next-health-factor-popover": "The new 'health' of your deposited collateral against the amount you're borrowing. The more you deposit, the higher your health factor. Health factors of 1 or less put your collateral at risk of being liquidated.",
   "apy-type-popover": "You can select either a Variable or Stable interest rate. Variable rates will change over time, while stable rates will remain the same.",
   "cannot-withdraw": "Cannot withdraw with a Next Health Factor below 1",
-  "cannot-borrow": "Cannot borrow with a Health Factor below 1",
+  "cannot-borrow": "You do not have enough available to borrow.",
   "greater-than": "Must be greater than 0",
   "cannot-exceed-bal": "Cannot exceed balance of {amount}",
-  "cannot-exceed-tkn-bal": "Cannot exceed your token balance of {amount}"
+  "cannot-exceed-tkn-bal": "Cannot exceed your token balance of {amount}",
+  "lend-title": "LEND Migrator",
+  "lend-popover": "Migrate your LEND tokens to AAVE today",
+  "total-amount": "Total LEND Amount to migrate",
+  "migrate": "Migrate LEND to AAVE",
+  "total-lend": "Total LEND Balance"
 }

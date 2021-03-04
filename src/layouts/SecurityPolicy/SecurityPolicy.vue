@@ -36,9 +36,7 @@
         </div>
         <ul>
           <li>MEW wallet App (Beta version Included)</li>
-          <li>
-            MEWconnect App (Beta version Included)
-          </li>
+          <li>MEWconnect App (Beta version Included)</li>
           <li>Current live version of MyEtherWallet . com</li>
           <li>MEW CX</li>
         </ul>
@@ -283,19 +281,13 @@
               <strong>MEW wallet and MEWconnect apps:</strong>
             </div>
             <ul>
-              <li>
-                Injection, Manipulation of account balance
-              </li>
+              <li>Injection, Manipulation of account balance</li>
               <li>
                 Authentication bypasses, Loss of privileged information
                 (passwords, private keys, etc.)
               </li>
-              <li>
-                Unauthorised Transaction signing
-              </li>
-              <li>
-                Unauthorised P2P connection
-              </li>
+              <li>Unauthorised Transaction signing</li>
+              <li>Unauthorised P2P connection</li>
               <li>
                 Modification of request received by the Mobile application on
                 MCBeta.myetherwallet.com
@@ -335,9 +327,7 @@
                 Merely showing that a page can be iFramed without finding a link
                 on the page to be click-jacked.
               </li>
-              <li>
-                DNS vulnerabilities
-              </li>
+              <li>DNS vulnerabilities</li>
               <li>Denial of service</li>
               <li>Spamming</li>
               <li>
@@ -352,9 +342,7 @@
                 Reports from automated tools or scans (without accompanying
                 demonstration of exploitability)
               </li>
-              <li>
-                Text-only injection in error pages
-              </li>
+              <li>Text-only injection in error pages</li>
               <li>
                 Any other service not directly hosted or controlled by
                 MyEtherWallet.com. MEW will determine at its discretion whether
@@ -371,9 +359,7 @@
           <td>
             <div>
               <ul>
-                <li>
-                  Software bugs that have no security impact.
-                </li>
+                <li>Software bugs that have no security impact.</li>
                 <li>
                   Public User data, such as, public address, balances,
                   transaction information etc. stored unencrypted on external
@@ -407,9 +393,7 @@
       </tbody>
     </table>
 
-    <div>
-      Thank you for helping keep MyEtherWallet and our community safe!
-    </div>
+    <div>Thank you for helping keep MyEtherWallet and our community safe!</div>
   </div>
 </template>
 
