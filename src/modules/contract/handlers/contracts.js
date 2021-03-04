@@ -1,11 +1,11 @@
 import utils from 'web3-utils';
 import validateHexString from '@/core/helpers/validateHexString';
-import { isInt, stringToArray } from '@/core/helpers/common';
-import { address, bool, bytes, int, string, uint } from './solidityTypes';
 import Method from './method';
 import Deploy from './deploy';
 import Web3 from 'web3';
-import {isContractArgValid, getType, validateABI, formatInput} from './common'
+import { validateABI, parseABI } from './common';
+
+console.log(utils); // todo remove dev item
 
 export default class Contracts {
   constructor(address, web3, gasPrice, storeHandler) {
@@ -42,7 +42,7 @@ export default class Contracts {
 
   updateGasPrice(gasPrice) {
     if (this.deployer) {
-      this.deployer.updateGasPrice(gasPrice);
+      this.deployer._updateGasPrice(gasPrice);
     }
     this.gasPrice = gasPrice;
   }
@@ -61,7 +61,7 @@ export default class Contracts {
 
   get constructorInputs() {
     if (this.deployer) {
-      return this.deployer.constructorInputs;
+      return this.deployer._constructorInputs;
     }
     return {};
   }
@@ -76,28 +76,28 @@ export default class Contracts {
 
   get payableConstructor() {
     if (this.deployer) {
-      return this.deployer.payableConstructor;
+      return this.deployer._payableConstructor;
     }
     return false;
   }
 
   get canDeploy() {
     if (this.deployer) {
-      return this.deployer.canDeploy;
+      return this.deployer._canDeploy;
     }
     return false;
   }
 
   get hasConstructorABI() {
     if (this.deployer) {
-      return this.deployer.hasConstructorABI;
+      return this.deployer._hasConstructorABI;
     }
     return false;
   }
 
   get deployedContractAddress() {
     if (this.deployer) {
-      return this.deployer.address;
+      return this.deployer._address;
     }
     return '';
   }
@@ -133,26 +133,26 @@ export default class Contracts {
   }
 
   setSelectedMethodInputValue(name, value) {
-    this.selectedMethod.setSelectedMethodInputValue(name, value);
+    this.selectedMethod._setSelectedMethodInputValue(name, value);
   }
   deploy(withValue, contractName) {
     this.clear();
-    return this.deployer.deploy(withValue, contractName);
+    return this.deployer._deploy(withValue, contractName);
   }
 
   setDeployArg(name, value) {
-    this.deployer.setDeployArg(name, value);
+    this.deployer._setDeployArg(name, value);
   }
 
   async write(txValue) {
-    return this.selectedMethod.write(txValue);
+    return this.selectedMethod._write(txValue);
   }
 
   setAbi(abi) {
     return new Promise((resolve, reject) => {
       try {
         if (abi) {
-          this.ABI = Contracts.parseABI(abi);
+          this.ABI = parseABI(abi);
           if (this.contractActive) {
             this.processAbi(this.ABI)
               .then(resolve)
@@ -214,7 +214,7 @@ export default class Contracts {
           outputs: this.selectedMethod.outputs
         });
       } else {
-        this.contractMethodDetails[methodName] = Method.create(
+        this.contractMethodDetails[methodName] = Method._create(
           this.contractMethodDetails[methodName],
           this.address,
           this.userAddress,
@@ -269,6 +269,4 @@ export default class Contracts {
       this.txByteCode = null;
     }
   }
-
-
 }

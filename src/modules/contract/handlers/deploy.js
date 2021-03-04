@@ -1,15 +1,10 @@
 import BigNumber from 'bignumber.js';
-import store from 'store';
-import { isAddress } from '@/core/helpers/addressUtils';
 import { toBN, toHex, toWei } from 'web3-utils';
-import validateHexString from '@/core/helpers/validateHexString';
-import { isInt, stringToArray } from '@/core/helpers/common';
-import { address, bool, bytes, int, string, uint } from './solidityTypes';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 import * as ethUnit from 'ethjs-unit';
 import { Transaction } from 'ethereumjs-tx';
 import { bufferToHex, generateAddress, toBuffer } from 'ethereumjs-util';
-import {isContractArgValid, getType, validateABI, formatInput} from './common'
+import { isContractArgValid, getType, validateABI } from './common';
 
 export default class Deploy {
   constructor(abi, txByteCode, address, web3, gasPrice) {
@@ -19,7 +14,7 @@ export default class Deploy {
     this.gasPrice = gasPrice;
     this.ABI = abi;
     this.constructorABI = null;
-    this.constructorInputs = {};
+    this._constructorInputs = {};
     this.txByteCode = txByteCode;
     this.contractsDeployed = [];
     this.noConstructorInputs = false;
@@ -28,7 +23,7 @@ export default class Deploy {
 
   clear() {
     this.constructorABI = null;
-    this.constructorInputs = {};
+    this._constructorInputs = {};
     this.txByteCode = null;
     this.noConstructorInputs = false;
     this.inputs = {};
@@ -41,12 +36,12 @@ export default class Deploy {
     this.address = '';
   }
 
-  updateGasPrice(gasPrice) {
+  _updateGasPrice(gasPrice) {
     this.gasPrice = gasPrice;
   }
 
   get hasABI() {
-    return Deploy.validateABI(this.ABI);
+    return validateABI(this.ABI);
   }
 
   get abiValid() {
@@ -61,7 +56,7 @@ export default class Deploy {
     }
   }
 
-  get payableConstructor() {
+  get _payableConstructor() {
     if (this.constructorABI) {
       return this.constructorABI.stateMutability
         ? this.constructorABI.stateMutability === 'payable'
@@ -70,33 +65,33 @@ export default class Deploy {
     return false;
   }
 
-  get canDeploy() {
+  get _canDeploy() {
     return (
       this.hasABI &&
-      this.hasConstructorABI &&
+      this._hasConstructorABI &&
       this.txByteCode !== null &&
-      ((Object.values(this.constructorInputs).every(item => {
+      ((Object.values(this._constructorInputs).every(item => {
         return item.value !== null && item.valid;
       }) &&
-        Object.values(this.constructorInputs).length > 0) ||
+        Object.values(this._constructorInputs).length > 0) ||
         this.noConstructorInputs)
     );
   }
 
-  get hasConstructorABI() {
+  get _hasConstructorABI() {
     if (this.constructorABI) {
       return Object.keys(this.constructorABI).length > 0;
     }
     return false;
   }
 
-  setDeployArg(name, value) {
-    this.constructorInputs[name].value = value;
+  _setDeployArg(name, value) {
+    this._constructorInputs[name].value = value;
   }
 
   abiConstructor() {
     try {
-      this.constructorInputs = {};
+      this._constructorInputs = {};
       if (this.hasABI && this.byteCodeValid) {
         this.ABI.forEach(item => {
           if (item.type === 'constructor') {
@@ -110,22 +105,22 @@ export default class Deploy {
           this.constructorABI.inputs.forEach(item => {
             const itemProxy = this.createTypeValidatingProxy(item);
             itemProxy.value = null;
-            this.constructorInputs[item.name] = itemProxy;
+            this._constructorInputs[item.name] = itemProxy;
           });
           if (this.constructorABI.inputs.length === 0) {
             this.noConstructorInputs = true;
           }
         }
       }
-      return this.constructorInputs;
+      return this._constructorInputs;
     } catch (e) {
       return {};
     }
   }
-  deploy(withValue, contractName) {
+  _deploy(withValue, contractName) {
     return new Promise((resolve, reject) => {
       try {
-        if (!this.canDeploy) return Promise.reject();
+        if (!this._canDeploy) return Promise.reject();
         const rawTx = {};
         if (this.constructorABI.payable && withValue)
           rawTx.value = toHex(toBN(toWei(withValue, 'ether')));
@@ -148,13 +143,13 @@ export default class Deploy {
     if (this.constructorABI) {
       this.constructorABI.inputs.forEach(item => {
         if (item.type.includes('[') && item.type.includes(']')) {
-          const inputs = this.constructorInputs.hasOwnProperty(item.name)
-            ? this.constructorInputs[item.name].value.replace(/\s/g, '')
+          const inputs = this._constructorInputs.hasOwnProperty(item.name)
+            ? this._constructorInputs[item.name].value.replace(/\s/g, '')
             : '';
           const arr = inputs.split(',');
           _deployArgs.push(arr);
         } else {
-          _deployArgs.push(this.constructorInputs[item.name].value);
+          _deployArgs.push(this._constructorInputs[item.name].value);
         }
       });
     }
@@ -162,7 +157,7 @@ export default class Deploy {
   }
 
   txData() {
-    if (this.canDeploy) {
+    if (this._canDeploy) {
       return new this.web3.eth.Contract(this.ABI)
         .deploy({ data: this.txByteCode, arguments: this.deployArgs })
         .encodeABI();
@@ -206,47 +201,18 @@ export default class Deploy {
           generateAddress(toBuffer(coinbase), toBuffer(results[1]))
         );
         this.address = contractAddr;
-        this.pushContractToStore(contractAddr, contractName);
+        this.pushContractToStore(contractAddr, contractName); // TODO remove for new structure
         this.contractsDeployed.push(contractAddr);
         this.clear();
         return this.web3.eth.sendTransaction(json);
       });
   }
 
-  // pushContractToStore(addr, contractName) {
-  //   const localStoredContract = store.get('customContracts') || [];
-  //   const itemIndex = localStoredContract.findIndex(item => {
-  //     return item.name.toLowerCase() === contractName.toLowerCase();
-  //   });
-  //   if (itemIndex === -1) {
-  //     const storableObj = {
-  //       abi: this.ABI,
-  //       address: addr,
-  //       comment: '',
-  //       name: contractName
-  //     };
-  //     localStoredContract.push(storableObj);
-  //   } else {
-  //     localStoredContract[itemIndex] = {
-  //       abi: this.ABI,
-  //       address: addr,
-  //       comment: '',
-  //       name: contractName
-  //     };
-  //   }
-  //   store.set('customContracts', localStoredContract);
-  // }
-
   createTypeValidatingProxy(item) {
     return new Proxy(item, {
       set: (obj, prop, value) => {
         if (prop === 'value' && value !== null) {
-          if (
-            isContractArgValid(
-              value,
-              Deploy.getType(obj.type).solidityType
-            )
-          ) {
+          if (isContractArgValid(value, getType(obj.type).solidityType)) {
             obj.valid = true;
           } else {
             obj.valid = false;
@@ -269,76 +235,4 @@ export default class Deploy {
       }
     });
   }
-  // parseJSON(json) {
-  //   try {
-  //     JSON.parse(json);
-  //     return JSON.parse(json);
-  //   } catch (e) {
-  //     if (Array.isArray(json)) {
-  //       return json;
-  //     }
-  //     return false;
-  //   }
-  // }
-  // static validateABI(json) {
-  //   if (json === '') return false;
-  //   try {
-  //     JSON.parse(json);
-  //     return JSON.parse(json);
-  //   } catch (e) {
-  //     if (Array.isArray(json)) {
-  //       if (json.length > 0) {
-  //         return json;
-  //       }
-  //     }
-  //     return false;
-  //   }
-  // }
-  // static isContractArgValid(value, solidityType) {
-  //   try {
-  //     if (!value) value = '';
-  //     if (solidityType.includes('[]')) {
-  //       const parsedValue = Array.isArray(value) ? value : stringToArray(value);
-  //       const type = solidityType.replace('[]', '');
-  //       for (const parsedItem of parsedValue) {
-  //         if (!isContractArgValid(parsedItem, type)) return false;
-  //       }
-  //       return true;
-  //     }
-  //     if (solidityType.includes(uint) || solidityType.includes(int))
-  //       return value !== '' && !isNaN(value) && isInt(value);
-  //     if (solidityType === address) return isAddress(value);
-  //     if (solidityType === string) return true;
-  //     if (solidityType.includes(bytes))
-  //       return value.substr(0, 2) === '0x' && validateHexString(value);
-  //     if (solidityType === bool)
-  //       return typeof value === typeof true || typeof value === typeof false;
-  //     return false;
-  //   } catch (e) {
-  //     return false;
-  //   }
-  // }
-  // static getType(inputType) {
-  //   if (!inputType) inputType = '';
-  //   if (inputType.includes('[]')) {
-  //     return { type: 'string', solidityType: `${inputType}` };
-  //   }
-  //   if (inputType.includes(uint)) return { type: 'number', solidityType: uint };
-  //   if (inputType.includes(address))
-  //     return { type: 'text', solidityType: address };
-  //   if (inputType.includes(string))
-  //     return { type: 'text', solidityType: string };
-  //   if (inputType.includes(bytes)) return { type: 'text', solidityType: bytes };
-  //   if (inputType.includes(bool)) return { type: 'radio', solidityType: bool };
-  //   return { type: 'text', solidityType: string };
-  // }
-  // static formatInput(str) {
-  //   if (str[0] === '[') {
-  //     return JSON.parse(str);
-  //   }
-  //   const newArr = str.split(',');
-  //   return newArr.map(item => {
-  //     return item.replace(' ', '');
-  //   });
-  // }
 }

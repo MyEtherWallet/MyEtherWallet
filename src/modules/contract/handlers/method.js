@@ -1,30 +1,9 @@
 import BigNumber from 'bignumber.js';
-import utils from 'web3-utils';
-import { address, bool, bytes, int, string, uint } from './solidityTypes';
-import sanitizeHex from '@/core/helpers/addressUtils';
+import * as sanitizeHex from '@/core/helpers/addressUtils';
 import * as ethUnit from 'ethjs-unit';
+import { isContractArgValid, getType, formatInput } from './common';
 
-const stringToArray = str => {
-  return str.replace(/[^a-zA-Z0-9_,]+/g, '').split(',');
-};
 
-const isInt = num => {
-  try {
-    utils.toBN(num);
-    return true;
-  } catch (e) {
-    return false;
-  }
-};
-
-const validateHexString = str => {
-  if (str === '') return true;
-  str =
-    str.substring(0, 2) === '0x'
-      ? str.substring(2).toUpperCase()
-      : str.toUpperCase();
-  return utils.isHex(str);
-};
 
 export default class Method {
   constructor(abi, contractAddress, address, web3, gasPrice) {
@@ -49,7 +28,7 @@ export default class Method {
     }
   }
 
-  static create(abi, contractAddress, address, web3, gasPrice, storeHandler) {
+  static _create(abi, contractAddress, address, web3, gasPrice, storeHandler) {
     return new Promise((resolve, reject) => {
       const method = new Method(
         abi,
@@ -116,7 +95,7 @@ export default class Method {
     this.storeContractAddress = storeHandler;
   }
 
-  setSelectedMethodInputValue(name, value) {
+  _setSelectedMethodInputValue(name, value) {
     if (!this.inputs[name]) throw Error(`${name} is not an expected input`);
     this.inputs[name].value = value;
   }
@@ -207,7 +186,7 @@ export default class Method {
       }
     });
   }
-  async write(txValue) {
+  async _write(txValue) {
     let value;
     const web3 = this.web3;
     const contract = new web3.eth.Contract(
@@ -298,7 +277,7 @@ export default class Method {
         return this.selectedMethod.inputs.reduce((_contractArgs, item) => {
           const value = this.inputs[item.name].value;
           if (item.type.includes('[]')) {
-            const parsedItem = Method.formatInput(value);
+            const parsedItem = formatInput(value);
             _contractArgs.push(parsedItem);
           } else if (item.type === 'address') {
             _contractArgs.push(value.toLowerCase().trim());
@@ -322,9 +301,9 @@ export default class Method {
     return new Proxy(item, {
       set: (obj, prop, value) => {
         if (prop === 'value' && value !== null) {
-          obj.valid = !!Method.isContractArgValid(
+          obj.valid = !!isContractArgValid(
             value,
-            Method.getType(obj.type).solidityType
+            getType(obj.type).solidityType
           );
         } else if (prop === 'value' && value === null) {
           obj.valid = false;
@@ -343,65 +322,5 @@ export default class Method {
         return obj[prop];
       }
     });
-  }
-  static isContractArgValid(value, solidityType) {
-    try {
-      if (!value && typeof value !== 'boolean') value = '';
-      if (solidityType.includes('[]')) {
-        const parsedValue = Array.isArray(value) ? value : stringToArray(value);
-        const type = solidityType.replace('[]', '');
-        for (const parsedItem of parsedValue) {
-          if (!Method.isContractArgValid(parsedItem, type)) return false;
-        }
-        return true;
-      }
-      if (solidityType.includes(uint) || solidityType.includes(int))
-        return value !== '' && !isNaN(value) && isInt(value);
-      if (solidityType === address) return utils.isAddress(value);
-      if (solidityType === string) return true;
-      if (solidityType.includes(bytes))
-        return value.substr(0, 2) === '0x' && validateHexString(value);
-      if (solidityType === bool) return typeof value === 'boolean';
-      return false;
-    } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
-    }
-  }
-  static getType(inputType) {
-    try {
-      if (!inputType) inputType = '';
-      if (inputType.includes('[]')) {
-        return { type: 'string', solidityType: `${inputType}` };
-      }
-      if (inputType.includes(uint))
-        return { type: 'number', solidityType: uint };
-      if (inputType.includes(address))
-        return { type: 'text', solidityType: address };
-      if (inputType.includes(string))
-        return { type: 'text', solidityType: string };
-      if (inputType.includes(bytes))
-        return { type: 'text', solidityType: bytes };
-      if (inputType.includes(bool))
-        return { type: 'radio', solidityType: bool };
-      return { type: 'text', solidityType: string };
-    } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
-    }
-  }
-  static formatInput(str) {
-    try {
-      if (str[0] === '[') {
-        return JSON.parse(str);
-      }
-      const newArr = str.split(',');
-      return newArr.map(item => {
-        return item.replace(' ', '');
-      });
-    } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
-    }
   }
 }
