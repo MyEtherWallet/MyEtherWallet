@@ -16,7 +16,7 @@
             <p class="mb-3 mb-sm-10 mb-md-5">
               Please select keystore file that unlocks your wallet.
             </p>
-            <div class="d-flex align-center justify-center d-md-none">
+            <div class="d-flex align-center justify-center d-sm-none">
               <img
                 src="@/assets/images/icons/keystore-file.jpg"
                 alt="Keystore File"
@@ -40,8 +40,8 @@
               @change="uploadFile"
             />
           </v-col>
-          <v-col cols="12" sm="6" class="d-none d-md-flex">
-            <div class="d-flex align-start justify-md-end">
+          <v-col cols="12" sm="6" class="d-none d-sm-flex">
+            <div class="d-flex align-start justify-sm-end">
               <img
                 src="@/assets/images/icons/keystore-file.jpg"
                 alt="Keystore File"
@@ -96,13 +96,13 @@
               Unlocking State: isUnlockingKeystore = true
             =====================================================================================
             -->
-            <v-row v-else justify="center" align="center">
+            <v-row v-else justify="center" align="center" class="pt-5 pb-9">
               <v-progress-circular
                 indeterminate
                 color="primary"
               ></v-progress-circular>
               <p class="mb-0 mx-3">
-                Sit tight while we are unlockcing your wallet
+                Sit tight while we are unlocking your wallet
               </p>
             </v-row>
           </v-col>
