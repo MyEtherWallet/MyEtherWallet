@@ -234,11 +234,8 @@
                   <v-col offset="2">
                     <p class="">Adddress</p>
                   </v-col>
-                  <v-col cols="4" md="3">
+                  <v-col cols="4" sm="3">
                     <p>ETH Balance</p>
-                  </v-col>
-                  <v-col cols="2">
-                    <p>Tokens</p>
                   </v-col>
                 </v-row>
                 <!--
@@ -253,31 +250,36 @@
                   dense
                   class="table-row-class align-center justify-start py-1"
                 >
-                  <v-col cols="1">
-                    <v-radio label="" :value="acc.address" />
+                  <v-col cols="2" sm="1">
+                    <v-radio label="" :value="acc.address" class="mx-2" />
                   </v-col>
-                  <v-col cols="1">
-                    <mew-blockie
-                      width="25px"
-                      height="25px"
-                      :address="acc.address"
-                    />
-                  </v-col>
-                  <v-col>
-                    <v-row dense class="align-center justify-start pl-2 pr-3">
-                      <v-col>
-                        <p>{{ acc.address | concatAddress }}</p>
+                  <v-col cols="6" sm="8">
+                    <v-row
+                      dense
+                      class="align-center justify-start pl-1 pl-sm-3 pr-2 pr-sm-3"
+                    >
+                      <mew-blockie
+                        width="25px"
+                        height="25px"
+                        :address="acc.address"
+                        class="mr-2"
+                      />
+                      <v-col cols="9" class="d-none d-sm-flex">
+                        <mew-transform-hash :hash="acc.address" />
                       </v-col>
-                      <v-col>
-                        <mew-copy
-                          is-small
-                          :copy-ref="acc.address"
-                          tooltip="Copy Address"
-                          :copy-value="acc.address"
-                        /> </v-col
-                    ></v-row>
+                      <p class="d-block d-sm-none">
+                        {{ acc.address | concatAddressXS }}
+                      </p>
+                      <mew-copy
+                        is-small
+                        :copy-ref="acc.address"
+                        tooltip="Copy Address"
+                        :copy-value="acc.address"
+                        class="ml-2"
+                      />
+                    </v-row>
                   </v-col>
-                  <v-col cols="4" md="3">
+                  <v-col cols="4" sm="3">
                     <p>
                       {{
                         acc.balance === 'Loading..'
@@ -285,9 +287,6 @@
                           : `${acc.balance} ${network.type.name}`
                       }}
                     </p>
-                  </v-col>
-                  <v-col cols="2">
-                    <p>{{ !acc.tokens ? acc.tokens : acc.tokens }}</p>
                   </v-col>
                 </v-row>
               </v-radio-group>
@@ -418,6 +417,12 @@ export default {
   filters: {
     concatAddress(val) {
       return `${val.substring(0, 11)}...${val.substring(
+        val.length - 4,
+        val.length
+      )}`;
+    },
+    concatAddressXS(val) {
+      return `${val.substring(0, 4)}...${val.substring(
         val.length - 4,
         val.length
       )}`;
