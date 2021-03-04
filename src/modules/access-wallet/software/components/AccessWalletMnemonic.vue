@@ -172,26 +172,12 @@
           Back/Next Buttons
         =====================================================================================
         -->
-        <v-row dense class="align-center justify-center my-2">
-          <v-col cols="12" sm="4" order="last" order-sm="first" class="px-sm-2">
-            <mew-button
-              has-full-width
-              title="Back"
-              btn-style="outline"
-              btn-size="xlarge"
-              @click.native="step = 1"
-            />
-          </v-col>
-          <v-col cols="12" sm="4" class="px-sm-2">
-            <mew-button
-              has-full-width
-              btn-size="xlarge"
-              title="Next"
-              :disable="!selectedPath"
-              @click.native="nextStepThree"
-            />
-          </v-col>
-        </v-row> </v-sheet
+        <app-btn-row
+          class="my-2"
+          :next-btn-method="nextStepThree"
+          :back-btn-method="backStepOne"
+          :next-disable="!selectedPath"
+        /> </v-sheet
     ></template>
     <!--
     =====================================================================================
@@ -372,26 +358,13 @@
           Back / Access Wallet Buttons
         =====================================================================================
         -->
-        <v-row dense class="align-center justify-center my-2">
-          <v-col cols="12" sm="4" order="last" order-sm="first" class="px-sm-2">
-            <mew-button
-              has-full-width
-              title="Back"
-              btn-style="outline"
-              btn-size="xlarge"
-              @click.native="backStepTwo()"
-            />
-          </v-col>
-          <v-col cols="12" sm="4" class="px-sm-2">
-            <mew-button
-              has-full-width
-              btn-size="xlarge"
-              title="Access Wallet"
-              :disabled="!acceptTerms"
-              @click.native="accessWallet()"
-            />
-          </v-col>
-        </v-row>
+        <app-btn-row
+          class="my-2"
+          next-btn-text="Access Wallet"
+          :next-btn-method="accessWallet"
+          :back-btn-method="backStepTwo"
+          :next-disable="!acceptTerms"
+        />
       </v-sheet>
     </template>
   </mew-stepper>
@@ -409,7 +382,7 @@ import {
   SENTRY
 } from '@/modules/toast/handler/handlerToast';
 import { checkCustomPath } from '../handlers/pathHelper';
-
+import AppBtnRow from '@/core/components/AppBtnRow';
 const MAX_ADDRESSES = 5;
 
 export default {
@@ -429,7 +402,8 @@ export default {
     }
   },
   components: {
-    phraseBlock
+    phraseBlock,
+    AppBtnRow
   },
   props: {
     handlerAccessWallet: {
@@ -762,6 +736,13 @@ export default {
         .catch(e => {
           Toast(e, {}, ERROR);
         });
+    },
+    /**
+     * Methods changes stepper to step 1
+     * Used in STEP 2
+     */
+    backStepOne() {
+      this.step = 1;
     },
     /**
      * Methods resets all addresses

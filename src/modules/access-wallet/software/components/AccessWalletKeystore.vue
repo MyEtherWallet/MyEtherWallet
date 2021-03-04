@@ -72,25 +72,13 @@
             />
           </v-col>
           <v-col cols="12" class="pt-0">
-            <v-row
+            <app-btn-row
               v-if="!isUnlockingKeystore"
-              class="justify-center align-center pb-5"
-            >
-              <mew-button
-                title="Back"
-                btn-style="outline"
-                btn-size="xlarge"
-                class="ma-2 order-last order-md-first"
-                @click.native="step = 1"
-              />
-
-              <mew-button
-                title="Access My Wallet"
-                btn-size="xlarge"
-                class="ma-2"
-                @click.native="unlockBtn"
-              />
-            </v-row>
+              class="pb-5"
+              next-btn-text="Access Wallet"
+              :next-btn-method="unlockBtn"
+              :back-btn-method="backStepOne"
+            />
             <!--
             =====================================================================================
               Unlocking State: isUnlockingKeystore = true
@@ -114,9 +102,13 @@
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import AppBtnRow from '@/core/components/AppBtnRow';
 
 export default {
   name: 'AccessWalletKeystore',
+  components: {
+    AppBtnRow
+  },
   props: {
     handlerAccessWallet: {
       type: Object,
@@ -187,6 +179,13 @@ export default {
           this.isUnlockingKeystore = false;
           Toast(e.message, {}, ERROR);
         });
+    },
+    /**
+     * Methods changes stepper to step 1
+     * Used in STEP 2
+     */
+    backStepOne() {
+      this.step = 1;
     }
   }
 };
